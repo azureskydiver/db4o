@@ -10,7 +10,7 @@ import com.db4o.ext.*;
  * 
  * @exclude
  */
-public class PBootRecord extends P1Object implements Db4oTypeImpl{
+public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal{
 
     transient YapFile         i_stream;
     public Db4oDatabase       i_db;
@@ -90,7 +90,9 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl{
         if (i_uuidMetaIndex == null) {
             i_uuidMetaIndex = new MetaIndex();
             Transaction systemTrans = i_stream.getSystemTransaction();
+            i_stream.showInternalClasses(true);
             i_stream.setInternal(systemTrans, this, false);
+            i_stream.showInternalClasses(false);
             systemTrans.commit();
         }
         return i_uuidMetaIndex;
@@ -108,7 +110,9 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl{
     void store(int a_depth) {
         if (i_dirty) {
             i_versionGenerator++;
+            i_stream.showInternalClasses(true);
             super.store(a_depth);
+            i_stream.showInternalClasses(false);
         }
         i_dirty = false;
     }

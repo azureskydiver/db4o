@@ -16,10 +16,13 @@ public class GenericClass implements ReflectClass {
     private static final GenericField[] NO_FIELDS = new GenericField[0];
     
     private final Reflector _reflector;
-    private final ReflectClass _delegate;
+    final ReflectClass _delegate;
     
-	private final String _name;
+    private final String _name;
     private final ReflectClass _superclass;
+    
+    private int _id;
+    
     private GenericField[] _fields = NO_FIELDS;
 
     public GenericClass(Reflector reflector, ReflectClass delegateClass, String name, ReflectClass superclass) {
@@ -28,13 +31,6 @@ public class GenericClass implements ReflectClass {
         _name = name;
         _superclass = superclass;
     }
-    
-	public void initFields(GenericField[] fields) {
-		_fields = fields;
-		for (int i = 0; i < _fields.length; i++) {
-		    _fields[i].setIndex(i);
-		}
-	}
 
     public ReflectClass getComponentType() {   //FIXME Find out how this must work.
         if(_delegate != null){
@@ -50,13 +46,6 @@ public class GenericClass implements ReflectClass {
         return null;
     }
 
-    public ReflectField[] getDeclaredFields() {
-        if(_delegate != null){
-            return _delegate.getDeclaredFields();
-        }
-        return _fields;
-    }
-
     public ReflectField getDeclaredField(String name) {
         if(_delegate != null){
             return _delegate.getDeclaredField(name);
@@ -67,6 +56,17 @@ public class GenericClass implements ReflectClass {
             }
         }
         return null;
+    }
+
+    public ReflectField[] getDeclaredFields() {
+        if(_delegate != null){
+            return _delegate.getDeclaredFields();
+        }
+        return _fields;
+    }
+    
+    public int getID(){
+        return _id;
     }
 
     public ReflectMethod getMethod(String methodName, ReflectClass[] paramClasses) {
@@ -86,6 +86,13 @@ public class GenericClass implements ReflectClass {
         }
         return _superclass;
     }
+    
+	public void initFields(GenericField[] fields) {
+		_fields = fields;
+		for (int i = 0; i < _fields.length; i++) {
+		    _fields[i].setIndex(i);
+		}
+	}
 
     public boolean isAbstract() {  //TODO Consider: Will this method still be necessary once constructor logic is pushed into the reflectors?
         if(_delegate != null){
@@ -152,11 +159,19 @@ public class GenericClass implements ReflectClass {
         return _reflector;
     }
     
+    void setId(int id){
+        _id = id;
+    }
+    
     public boolean skipConstructor(boolean flag){
         if(_delegate != null){
             return _delegate.skipConstructor(flag);
         }
         return false;
+    }
+    
+    public String toString(){
+        return "GenericClass " + _name; 
     }
 
     public void useConstructor(ReflectConstructor constructor, Object[] params){
@@ -165,10 +180,6 @@ public class GenericClass implements ReflectClass {
         }
 
         // ignore, we always create a generic object
-    }
-    
-    public String toString(){
-        return "GenericClass " + _name; 
     }
 
 }

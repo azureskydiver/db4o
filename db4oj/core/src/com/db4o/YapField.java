@@ -520,7 +520,7 @@ class YapField implements StoredField {
     void loadHandler(YapStream a_stream) {
         if (i_handlerID < 1) {
             i_handler = null;
-        } else if (i_handlerID <= YapHandlers.maxTypeID()) {
+        } else if (i_handlerID <= a_stream.i_handlers.maxTypeID()) {
             i_handler = a_stream.i_handlers.getHandler(i_handlerID);
         } else {
             i_handler = a_stream.getYapClass(i_handlerID);

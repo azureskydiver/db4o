@@ -274,12 +274,16 @@ public class Transaction {
     void ensureDb4oDatabase(Db4oDatabase a_db){
         Db4oDatabase stored = (Db4oDatabase)i_stream.db4oTypeStored(this,a_db);
         if (stored == null) {
+            i_stream.showInternalClasses(true);
             i_stream.set3(this,a_db, 2, false);
+            i_stream.showInternalClasses(false);
             return;
         }
         if(stored != a_db){
+            i_stream.showInternalClasses(true);
             int id = stored.getID(i_stream);
             i_stream.bind(a_db, id);
+            i_stream.showInternalClasses(false);
         }
     }
 
