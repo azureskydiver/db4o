@@ -1,6 +1,15 @@
 TODO:
 
-- Write detail pane.
+- Hook up detail pane to the database results
+    * Generate detail view (needs to be in a ScrolledComposite)
+    * Bind data values to detail view objects
+    * Generate hyperlinks
+
+- Allow display of query results
+
+- Customize display of nodes
+
+----
 
 - Follow up using the bottom-up strategy getting db4o into Red Hat.
 
