@@ -373,6 +373,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             ObjectSet objectSet = q.execute();
             while (objectSet.hasNext()) {
                 Db4oDatabase storedDatabase = (Db4oDatabase) objectSet.next();
+                activate1(null, storedDatabase, 4);
                 if (storedDatabase.equals(a_object)) {
                     return storedDatabase;
                 }
