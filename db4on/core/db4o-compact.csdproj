@@ -116,7 +116,6 @@
             <Include>
                 <File
                     RelPath = "src\compact\AssemblyInfo.cs"
-                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -130,30 +129,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\compact\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\compact\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\compact\CVS\Root"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\CVS\Root"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "src\core\com\db4o\Array4.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -165,26 +140,6 @@
                 />
                 <File
                     RelPath = "src\core\com\db4o\ByteBuffer4.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\CArray.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\CClass.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\CConstructor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\CField.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -215,11 +170,6 @@
                 />
                 <File
                     RelPath = "src\core\com\db4o\Closure4.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\CMethod.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -264,11 +214,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\CReflect.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\core\com\db4o\Db4o.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -295,6 +240,11 @@
                 />
                 <File
                     RelPath = "src\core\com\db4o\Deploy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\DTrace.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -1029,11 +979,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\Timer4.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\core\com\db4o\Transaction$1.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -1200,11 +1145,6 @@
                 />
                 <File
                     RelPath = "src\core\com\db4o\YapBit.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\YapBlockAwareFile.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -1674,30 +1614,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\config\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\config\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\config\CVS\Root"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\CVS\Root"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "src\core\com\db4o\ext\DatabaseFileLockedException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -1788,16 +1704,24 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\ext\CVS\Entries"
-                    BuildAction = "None"
+                    RelPath = "src\core\com\db4o\foundation\Cool.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\ext\CVS\Repository"
-                    BuildAction = "None"
+                    RelPath = "src\core\com\db4o\foundation\SimpleTimer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\ext\CVS\Root"
-                    BuildAction = "None"
+                    RelPath = "src\core\com\db4o\io\IoAdapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\io\RandomAccessFileAdapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "src\core\com\db4o\messaging\MessageRecipient.cs"
@@ -1808,18 +1732,6 @@
                     RelPath = "src\core\com\db4o\messaging\MessageSender.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\messaging\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\messaging\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\messaging\CVS\Root"
-                    BuildAction = "None"
                 />
                 <File
                     RelPath = "src\core\com\db4o\query\Candidate.cs"
@@ -1852,18 +1764,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\query\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\query\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\query\CVS\Root"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "src\core\com\db4o\reflect\IArray.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -1894,16 +1794,34 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\reflect\CVS\Entries"
-                    BuildAction = "None"
+                    RelPath = "src\core\com\db4o\reflect\jdk\CArray.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\reflect\CVS\Repository"
-                    BuildAction = "None"
+                    RelPath = "src\core\com\db4o\reflect\jdk\CClass.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\reflect\CVS\Root"
-                    BuildAction = "None"
+                    RelPath = "src\core\com\db4o\reflect\jdk\CConstructor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\reflect\jdk\CField.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\reflect\jdk\CMethod.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\reflect\jdk\CReflect.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
                 <File
                     RelPath = "src\core\com\db4o\types\Blob.cs"
@@ -1944,54 +1862,6 @@
                     RelPath = "src\core\com\db4o\types\TransientClass.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\types\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\types\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\types\CVS\Root"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\core\CVS\Root"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\CVS\Root"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\j4o\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\j4o\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\j4o\CVS\Root"
-                    BuildAction = "None"
                 />
                 <File
                     RelPath = "src\j4o\io\BufferedInputStream.cs"
@@ -2059,18 +1929,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\j4o\io\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\j4o\io\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\j4o\io\CVS\Root"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "src\j4o\lang\AssemblyNameHint.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -2136,18 +1994,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\j4o\lang\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\j4o\lang\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\j4o\lang\CVS\Root"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "src\j4o\lang\reflect\Constructor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -2173,33 +2019,14 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\j4o\lang\reflect\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\j4o\lang\reflect\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\j4o\lang\reflect\CVS\Root"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "src\j4o\util\Date.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\j4o\util\CVS\Entries"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\j4o\util\CVS\Repository"
-                    BuildAction = "None"
-                />
-                <File
-                    RelPath = "src\j4o\util\CVS\Root"
-                    BuildAction = "None"
+                    RelPath = "src\j4o\util\Random.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
                 />
             </Include>
         </Files>

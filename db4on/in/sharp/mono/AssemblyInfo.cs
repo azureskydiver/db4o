@@ -3,14 +3,14 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("db4o - database for objects")]
-[assembly: AssemblyDescription("db4o 4.0.003 mono")]
+[assembly: AssemblyDescription("db4o 4.3.001 mono")]
 [assembly: AssemblyConfiguration("mono")]
 [assembly: AssemblyCompany("db4objects Inc., San Mateo, CA, USA")]
 [assembly: AssemblyProduct("db4o - database for objects")]
-[assembly: AssemblyCopyright("db4o 2004")]
+[assembly: AssemblyCopyright("db4o 2005")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]	
-[assembly: AssemblyVersion("4.0.003")]
+[assembly: AssemblyVersion("4.3.001")]
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("")]
