@@ -1,7 +1,5 @@
-/*
- * (c) Copyright 2002 http://www.db4o.com
- * All Rights Reserved.
- */
+/* Copyright (C) 2004, 2005   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.test.reflect;
 
 import com.db4o.reflect.*;
@@ -22,7 +20,7 @@ import com.db4o.reflect.jdk.*;
  * the command line by specifying the classname of your own class that
  * implements IReflect. Alternatively you can call the test(IReflect) method.
  */
-public class TestReflect {
+public class TestReflect extends Test {
 
 	private final IReflect _reflector;
 	private IClass _classReflector;
@@ -33,10 +31,11 @@ public class TestReflect {
 		IReflect reflector1 = new CReflect(Thread.currentThread().getContextClassLoader());
         new TestReflect(reflector1);
 
-        IReflect reflector2 = new DataObjectReflector();
+        DataObjectReflector reflector2 = new DataObjectReflector(reflector1);
         new TestReflect(reflector2);
+        new TestDataObjects(reflector2);
         
-        out("Test successful. Can you think of no more tests?");
+        out("No errors found. :(  Can you think of no more tests?");
 	}
 
 	TestReflect(IReflect reflector) throws ClassNotFoundException {
@@ -56,8 +55,7 @@ public class TestReflect {
 
 		IField[] fields = _classReflector.getDeclaredFields();
 		_assert(
-			fields.length == TestReflectClass.FIELD_COUNT,
-			"getDeclaredFields");
+			fields.length == TestReflectClass.FIELD_COUNT, "getDeclaredFields method failed.");
 		for (int i = 0; i < fields.length; i++) {
 			_assert(fields != null, "getDeclaredFields[" + i + "] is valid");
 			String fieldName = fields[i].getName();
@@ -157,16 +155,6 @@ public class TestReflect {
 		for (int i = 0; i < length; i++) {
 			_assert(array.get(arr,i).equals(array.get(obj, i)), "Array element comparison");
 		}
-	}
-	
-	private void _assert(boolean condition, String msg) {
-		if (!condition) {
-			throw new RuntimeException(msg);
-		}
-	}
-
-	private static void out(String msg) {
-		System.out.println(msg);
 	}
 
 }

@@ -1,19 +1,22 @@
+/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.reflect.dataobjects;
 
 import com.db4o.reflect.*;
 
-public class DataObjectClass implements IClass {
+public class DataClass implements IClass {
 
-    DataObjectClass(String className) {
+    private final String _name;
+
+    public DataClass(String name) {
+        _name = name;
     }
 
     public IClass getComponentType() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public IConstructor[] getDeclaredConstructors() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -32,8 +35,7 @@ public class DataObjectClass implements IClass {
     }
 
     public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+        return _name;
     }
 
     public IClass getSuperclass() {

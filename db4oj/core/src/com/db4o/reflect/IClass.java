@@ -2,9 +2,6 @@
 
 package com.db4o.reflect;
 
-import com.db4o.YapReader;
-
-
 /** 
  * representation for java.lang.Class.
  * <br><br>See the respective documentation in the JDK API.
