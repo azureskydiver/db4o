@@ -1,4 +1,4 @@
-package com.db4o.browser.views;
+package com.db4o.browser.eclipse.views;
 
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -41,7 +41,7 @@ import com.db4o.browser.gui.views.DbBrowserPane;
  * <p>
  */
 
-public class DbBrowser extends ViewPart implements ISelectionProvider {
+public class DbQuery extends ViewPart implements ISelectionProvider {
 	private TableViewer viewer;
 
     /**
@@ -135,6 +135,10 @@ public class DbBrowser extends ViewPart implements ISelectionProvider {
 	 */
 	public void createPartControl(Composite parent) {
         new DbBrowserPane(parent, SWT.NULL);
+//		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+//		viewer.setContentProvider(new ViewContentProvider());
+//		viewer.setLabelProvider(new ViewLabelProvider());
+//		viewer.setInput(getViewSite());
 	}
 
 
