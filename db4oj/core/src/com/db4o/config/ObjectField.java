@@ -30,7 +30,7 @@ public interface ObjectField {
 	 * @see Configuration#activationDepth Why activation?
 	 * @see ObjectClass#cascadeOnActivate
 	 * @see com.db4o.ObjectContainer#activate
-	 * @see com.db4o.ext.ObjectCallbacks Using callbacks</a>
+	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
 	 */
 	public void cascadeOnActivate(boolean flag);
 	

@@ -13,11 +13,13 @@ public interface Db4oCollections {
      * - declare a <code>java.util.List</code> variable in your persistent class.<br>
      * - fill this variable with this method.<br><br>
      * <b>Example:</b><br><br>
-     * <code>class MyClass{<br>
-     * &nbsp;&nbsp;List myList;<br>
-     * }<br><br>
-     * MyClass myObject = new MyClass();<br> 
-     * myObject.myList = objectContainer.ext().collections().newLinkedList();</code><br><br>
+     * <code><pre>
+     * class MyClass{
+     *     List myList;
+     * }
+     * 
+     * MyClass myObject = new MyClass(); 
+     * myObject.myList = objectContainer.ext().collections().newLinkedList();</pre></code><br><br>
      * @return {@link Db4oList}
      * @see Db4oList
      */
@@ -35,11 +37,13 @@ public interface Db4oCollections {
      * - declare a <code>java.util.Map</code> variable in your persistent class.<br>
      * - fill the variable with this method.<br><br>
      * <b>Example:</b><br><br>
-     * <code>class MyClass{<br>
-     * &nbsp;&nbsp;Map myMap;<br>
-     * }<br><br>
-     * MyClass myObject = new MyClass();<br> 
-     * myObject.myMap = objectContainer.ext().collections().newHashMap(0);</code><br><br>
+     * <code><pre>
+     * class MyClass{
+     *     Map myMap;
+     * } 
+     * 
+     * MyClass myObject = new MyClass(); 
+     * myObject.myMap = objectContainer.ext().collections().newHashMap(0);</pre></code><br><br>
      * @param initialSize the initial size of the HashMap
      * @return {@link Db4oMap}
      * @see Db4oMap
@@ -58,11 +62,13 @@ public interface Db4oCollections {
      * - declare a <code>java.util.Map</code> variable in your persistent class.<br>
      * - fill the variable with this method.<br><br>
      * <b>Example:</b><br><br>
-     * <code>class MyClass{<br>
-     * &nbsp;&nbsp;Map myMap;<br>
-     * }<br><br>
-     * MyClass myObject = new MyClass();<br> 
-     * myObject.myMap = objectContainer.ext().collections().newIdentityMap(0);</code><br><br>
+     * <code><pre>
+     * class MyClass{
+     *     Map myMap;
+     * }
+     * 
+     * MyClass myObject = new MyClass(); 
+     * myObject.myMap = objectContainer.ext().collections().newIdentityMap(0);</pre></code><br><br>
      * @param initialSize the initial size of the HashMap
      * @return {@link Db4oMap}
      * @see Db4oMap

@@ -262,7 +262,7 @@ public class Db4o {
     /**
      * returns the version name of the used db4o version.
      * <br><br>
-     * @return version information as a <code>String</code).
+     * @return version information as a <code>String</code>.
      */
     public static final String version () {
     	 return "db4o " + Db4oVersion.name;
