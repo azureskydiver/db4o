@@ -83,7 +83,7 @@ public class JdkReflector implements Reflector{
             clazz = new Class[claxx.length];
             for (int i = 0; i < claxx.length; i++) {
                 if(claxx[i] != null){
-                    clazz[i] = ((JdkClass)claxx[i]).getJavaClass();
+                    clazz[i] = ((JdkClass)claxx[i].getDelegate()).getJavaClass();
                 }
             }
         }
