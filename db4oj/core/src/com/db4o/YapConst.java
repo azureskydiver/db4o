@@ -16,8 +16,8 @@ public final class YapConst
 	static final byte	YAPFILE				= (byte)'Y';
 	static final byte	YAPID				= (byte)'#';
 	static final byte	YAPPOINTER			= (byte)'>';
-	static final byte	YAPCLASSCOLLECTION	= (byte)'A';
-	static final byte	YAPCLASS			= (byte)'C';
+	public static final byte	YAPCLASSCOLLECTION	= (byte)'A';
+	public static final byte	YAPCLASS			= (byte)'C';
 	static final byte	YAPFIELD			= (byte)'F';
 	static final byte	YAPOBJECT			= (byte)'O';
 	static final byte	YAPARRAY			= (byte)'N';
