@@ -1,0 +1,28 @@
+.n
+.0 Contributing
+
+You are invited to contribute to the Doctor project.
+
+The project is hosted on a CVS supplied by  .l http://www.db4o.com db4o ..l .
+
+In case you are interested to contribute your work to Doctor, please post to the doctor
+newsgroup what you intend to do.
+
+The Doctor newsgroup is here:
+.l news://213.203.204.172/doctor news://213.203.204.172/doctor ..l
+
+.1 Issues ..1
+
+.2 Source Code Applet Java ..
+Source code should be executable from within the HTML files created by Doctor.
+Ideally the source code should be editable before it is executed.
+The current plans are, to embed a Java applet for each source file.
+
+.2 Source Code ActiveX Control .NET ..2
+Same as above, ActiveX instead of applet.
+
+.2 Eclipse integration ..
+Editing large Doctor projects could be made simpler by writing an Eclipse plugin.
+The project would require a special Doctor perspective and a tree view that displays
+all commands of all source files.
+

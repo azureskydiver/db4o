@@ -1,0 +1,27 @@
+.n
+.0 Examples
+
+.a1 source
+\.s HelloWorld
+.s HelloWorld
+
+.a1 link
+\.l http://www.db4o.com db4o - database for objects \..l
+.l http://www.db4o.com db4o - database for objects ..l
+
+.a1 graphic
+\.g benchmark.jpg
+.g benchmark.jpg
+
+.a1 bold
+My  \.b bold text.
+My  .b bold text.
+
+.a1 italic
+My  \.i italic text.
+My  .i italic text.
+
+.a1 output
+My \.o output text.
+My .o output text.
+

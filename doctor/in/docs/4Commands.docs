@@ -1,0 +1,28 @@
+.n
+.a0 Commands
+Doctor supplies the following commands:
+
+.1 Commands
+\.s       .l source source code file ..
+\.l        .l link ..
+\.a      anchor
+\.g       .l graphic graphic file ..
+\.?      condition
+\./      comment (invisible in output)
+\._      ignore next carriage return
+\.e      embed other file (use this for structuring of output)
+\.n      new page (ignored in HTML writer)
+\.#      variable (not implemented)
+
+\..      end command ( may refer to it's command(s) e.g.  \..c )
+
+.1 Outlining
+\.0      outline level 0
+\.1      outline level 1
+\.x      outline level x
+
+.1 Formatting Text ..
+\.n      new page
+\.b       .l bold
+\.i       .l italic
+\.o       .l output

@@ -1,0 +1,43 @@
+.n
+.0 Getting started ..
+
+.g directories.jpg
+
+Above you can see the Doctor package and directory structure.
+
+.1 Doctor.java ..
+contains the main method to execute Doctor.
+Add all tasks that you want executed to the "tasks" array ._
+at the beginning of the main() method.
+
+
+.1 Configuration.java
+contains some configuration parameters and paths.
+
+.1 DoctorTask.java
+returns all relevant paths and settings.
+You can override this class and implement individual methods, if you want ._
+Doctor to read and write to and from different paths.
+
+
+.1 .docs files ..1
+"docs" is the extension used for Doctor source files.
+Doctor scans the input directory and subdirectories for all files with the .docs extension.
+(see the variable INPUT_PATH_DOCS in Configuration.java)
+
+
+.1 HTML ..
+HTML is generated from template files in the HTML input path.
+Doctor will add it's content between the body tags.
+(see the variable INPUT_PATH_HTML in Configuration.java)
+
+.2 docs.html ..
+All .docs files will use this template.
+
+.2 outline.html ..
+This template will be used to generate the outline view.
+
+
+.1 Source code ..
+Source code files can be included by specifying their names only, without the .java / .cs extension.
+(see the variable INPUT_PATH_SRC in Configuration.java)

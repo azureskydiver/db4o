@@ -1,0 +1,17 @@
+.0 Doctor ..
+.b Doc .. umentation and Tu .b tor .. ial Generator
+
+.b Author: Carl Rosenberger
+.b Version: 0.10
+
+.l http://www.yetac.com/doctor/doctor0.10.zip Download ..
+
+
+This documentation was written ._
+with  .l http://www.yetac.com/doctor/ Doctor .. .
+It is also available as a  .? HTML .l http://www.yetac.com/doctor/doctor.pdf PDF version ..l . ..? .? PDF .l http://www.yetac.com/doctor/ HTML version ..l . ..?
+
+
+Doctor uses the free (LGPL / MPL) PDF library ._
+ .l http://www.lowagie.com/iText/ iText ..  written ._
+by Bruno Lowagie and Paulo Soares to generate PDF files.

@@ -1,0 +1,12 @@
+.n
+.0 License ..
+"Doctor" IS SUPPLIED AS SOURCE CODE "AS IS" WITHOUT ANY WARRANTY OR LIABILITY.
+THE ENTIRE RISK AS TO THE RESULTS OF THE USAGE OF THE SOFTWARE IS ASSUMED BY YOU.
+
+As of this date, no decision has been taken, under which license the Doctor source code
+will be supplied in the future. It is very likely that the GPL will be chosen.
+
+"Doctor" creates PDF files using  .l http://www.lowagie.com/iText/ iText .. .
+iText is a free Java PDF library created by Bruno Lowagie and Paulo Soares.
+iText is supplied under the MPL and under the LGPL.
+You can download iText  .l http://www.lowagie.com/iText/ here .. , including the sources.

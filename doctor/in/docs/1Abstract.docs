@@ -1,0 +1,49 @@
+.n
+.0 Abstract
+Doctor is a project to ease the writing of tutorials for programming libraries.
+It was initiated to maximize the efficiency of the documentation work for ._
+the  .l http://www.db4o.com db4o object database ..l.
+
+.1 Goals
+The Doctor project was started with the following goals in mind:
+
+.2 Minimize typing work ..
+Expressive structuring, formatting and linking of documents should be possible ._
+as quickly as possible. Opening and closing brackets and quotation marks in XML ._
+and HTML are too verbose to be efficient. Doctor tries to reduce the typing work ._
+to the absolute minimum.
+
+Doctor commands consist of a dot (".") and a single character. ._
+Thanks to  .l mailto:sma@3plus4.de Stefan Matthias Aust ..l for suggesting the dot.
+
+.2 Multiple output formats ..
+At least two different output formats need to be supported:
+HTML and PDF.
+
+.3 HTML
+HTML is the most common platform-independant format.
+
+.3 PDF
+PDF is an excellent format for printing documents.
+
+.2 Embedded source code ..
+Programming libraries usually come with lots of source code to document ._
+features. This source code needs to be integrated into the tutorial very ._
+easily. Ideally the source code should be executable from within the ._
+tutorial. This feature will be supplied in a future version of Doctor.
+Two solutions will be available:
+- a Java applet
+- a .NET ActiveX control
+
+.2 Configurations ..
+Since  .l http://www.db4o.com db4o ..l is available for Java and for .NET, two ._
+different tutorial versions are needed. Accordingly Doctor needs conditional ._
+blocks, similar to #ifdef.
+
+.1 Solution
+Doctor uses it's own special command language.
+See  .l Commands for the syntax chosen.
+
+This documentation was also written with Doctor and it's a good example to get ._
+used to the syntax. The source files of the documentation can be found in ._
+the \../in/ folder of the  .l http://www.yetac.com/doctor/doctor0.10.zip download .. .
