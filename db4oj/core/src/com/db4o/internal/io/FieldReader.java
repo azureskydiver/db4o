@@ -1,11 +1,13 @@
-package com.db4o.ext;
+/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
 
-public class LeanStoredField {
+package com.db4o.internal.io;
+
+public class FieldReader {
 	private String name;
 	private int typeID;
 	private boolean primitive;
 	
-	public LeanStoredField(String name, int typeID,boolean primitive) {
+	public FieldReader(String name, int typeID,boolean primitive) {
 		this.name = name;
 		this.typeID = typeID;
 		this.primitive=primitive;
@@ -30,7 +32,7 @@ public class LeanStoredField {
 		if(obj==null||getClass()!=obj.getClass()) {
 			return false;
 		}
-		LeanStoredField other=(LeanStoredField)obj;
+		FieldReader other=(FieldReader)obj;
 		return name.equals(other.name)&&typeID==other.typeID;
 	}
 

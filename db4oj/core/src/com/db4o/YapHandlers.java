@@ -25,7 +25,7 @@ class YapHandlers {
     private YapClass                i_anyArray;
     private YapClass                i_anyArrayN;
 
-    final YapString                 i_stringHandler;
+    public final YapString          i_stringHandler;
 
     private YapDataType[]           i_handlers;
 
@@ -67,7 +67,7 @@ class YapHandlers {
 	ReflectClass ICLASS_STRING;
     ReflectClass ICLASS_TRANSIENTCLASS;
 
-    YapHandlers(final YapStream a_stream) {
+    YapHandlers(final YapStream a_stream, byte stringEncoding) {
     	
     	_masterStream = a_stream;
     	a_stream.i_handlers = this;
@@ -79,7 +79,7 @@ class YapHandlers {
         i_virtualFields[0] = i_indexes.i_fieldVersion;
         i_virtualFields[1] = i_indexes.i_fieldUUID;
 
-        i_stringHandler = new YapString(a_stream);
+        i_stringHandler = new YapString(a_stream, YapStringIO.forEncoding(stringEncoding));
 
         i_handlers = new YapDataType[] { new YInt(a_stream), new YLong(a_stream), new YFloat(a_stream),
             new YBoolean(a_stream), new YDouble(a_stream), new YByte(a_stream), new YChar(a_stream),

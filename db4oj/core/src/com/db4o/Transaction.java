@@ -10,7 +10,7 @@ import com.db4o.reflect.Reflector;
  */
 public class Transaction {
 
-    final YapStream         i_stream;
+    public final YapStream         i_stream;
 
     final YapFile           i_file;
 

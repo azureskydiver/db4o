@@ -11,8 +11,10 @@ import com.db4o.ext.*;
  * no weak references
  * navigation by ID only both sides need synchronised ClassCollections and
  * MetaInformationCaches
+ * 
+ * @exclude
  */
-class YapObjectCarrier extends YapMemoryFile {
+public class YapObjectCarrier extends YapMemoryFile {
 	
 	YapObjectCarrier (
 		YapStream a_callingStream,
@@ -29,7 +31,6 @@ class YapObjectCarrier extends YapMemoryFile {
 	    i_handlers = i_parent.i_handlers;
 		i_classCollection = i_parent.i_classCollection;
 		i_config = i_parent.i_config;
-		i_stringIo = i_parent.i_stringIo;
 		i_references = new YapReferences(this);
 		initialize2();
 	}

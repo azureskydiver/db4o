@@ -24,7 +24,7 @@ abstract class YapFieldVirtual extends YapField {
     }
 
     int ownLength(YapStream a_stream) {
-        return a_stream.i_stringIo.shortLength(i_name);
+        return a_stream.stringIO().shortLength(i_name);
     }
 
     void initIndex(YapStream a_stream, MetaIndex a_metaIndex) {

@@ -2,8 +2,10 @@
 
 package com.db4o;
 
-class YapStringIO 
-{
+/**
+ * @exclude
+ */
+public class YapStringIO {
     
     protected char[] chars = new char[0];
     
@@ -14,6 +16,16 @@ class YapStringIO
     byte encodingByte(){
 		return YapConst.ISO8859;
 	}
+    
+    static YapStringIO forEncoding(byte encodingByte){
+        switch (encodingByte) {
+        case YapConst.ISO8859:
+        	return new YapStringIO();
+        default:
+            return new YapStringIOUnicode();
+        }
+    }
+
 
 // Currently not needed
 
@@ -39,7 +51,7 @@ class YapStringIO
 	    }
 	}
 	
-	String read(YapReader bytes, int a_length){
+	public String read(YapReader bytes, int a_length){
 	    checkBufferLength(a_length);
 		for(int ii = 0; ii < a_length; ii++){
 			chars[ii] = (char)(bytes._buffer[bytes._offset ++]& 0xff);

@@ -4,15 +4,19 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.internal.io.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.replication.*;
 import com.db4o.types.*;
 
-abstract class YapStream implements ObjectContainer, ExtObjectContainer,
+/**
+ * @exclude
+ */
+public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     TransientClass {
 
-    static final int        HEADER_LENGTH         = 2 + (YapConst.YAPINT_LENGTH * 4);
+    public static final int        HEADER_LENGTH         = 2 + (YapConst.YAPINT_LENGTH * 4);
 
     // The header is:
 
@@ -87,7 +91,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     private List4           i_stillToSet;
 
     // String translator
-    YapStringIO             i_stringIo;
+//    public YapStringIO             i_stringIo;
 
     // used for YapClass and YapClassCollection
     // may be parent or equal to i_trans
@@ -100,7 +104,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     // all the per-YapStream references that we don't
     // want created in YapobjectCarrier
-    YapHandlers             i_handlers;
+    public YapHandlers             i_handlers;
 
     YapStream               i_migrateFrom;
 
@@ -660,7 +664,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return new YapWriter(a_trans, a_length);
     }
 
-    final YapWriter getWriter(Transaction a_trans, int a_address, int a_length) {
+    public final YapWriter getWriter(Transaction a_trans, int a_address, int a_length) {
         if (Debug.exceedsMaximumBlockSize(a_length)) {
             return null;
         }
@@ -791,8 +795,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                 .deepClone(this);
         } catch (CloneNotSupportedException e) {
         }
-        i_handlers = new YapHandlers(this);
-        createStringIO(i_config.i_encoding);
+        i_handlers = new YapHandlers(this, i_config.i_encoding);
         
         if (i_references != null) {
             gc();
@@ -929,6 +932,11 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         }
         return !ta.isDeleted(yo.getID());
     }
+    
+    public ReflectClass[] knownClasses(){
+    	return new ReadAllTheClasses(i_systemTrans).knownClasses();
+    }
+    
 
     public Object lock() {
         return i_lock;
@@ -1108,7 +1116,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return null;
     }
 
-    abstract YapWriter readWriterByID(Transaction a_ta, int a_id);
+    public abstract YapWriter readWriterByID(Transaction a_ta, int a_id);
 
     abstract YapReader readReaderByID(Transaction a_ta, int a_id);
 
@@ -1401,7 +1409,6 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     public abstract boolean setSemaphore(String name, int timeout);
 
     void setStringIo(YapStringIO a_io) {
-        i_stringIo = a_io;
         i_handlers.i_stringHandler.setStringIo(a_io);
     }
 
@@ -1538,60 +1545,9 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         }
     }
 		
-	public LeanStoredClass[] leanStoredClasses() {
-		YapWriter headerreader = getWriter(i_systemTrans, 0, HEADER_LENGTH);
-		headerreader.read();
-		headerreader.incrementOffset(2 + 2 * YapConst.INTEGER_BYTES);
-		int classcollid = headerreader.readInt();
-		YapWriter classcollreader = readWriterByID(i_systemTrans, classcollid);
-		classcollreader.read();
-		int numclasses = classcollreader.readInt();
-		LeanStoredClass[] classes = new LeanStoredClass[numclasses];
-		for (int classidx = 0; classidx < numclasses; classidx++) {
-			int classid = classcollreader.readInt();
-			classes[classidx] = leanStoredClassByID(classid);
-//			System.out.println(classes[classidx]);
-		}
-		return classes;
-	}
-
-	public LeanStoredClass leanStoredClassByName(String name) {
-		LeanStoredClass[] classes=leanStoredClasses();
-		for (int idx = 0; idx < classes.length; idx++) {
-			if(name.equals(classes[idx].name())) {
-				return classes[idx];
-			}
-		}
-		return null;
-	}
-	
-	public LeanStoredClass leanStoredClassByID(int id) {
-		YapWriter classreader=readWriterByID(i_systemTrans,id);
-		classreader.read();
-		int namelength= classreader.readInt();
-		String classname=i_stringIo.read(classreader,namelength);
-		classreader.incrementOffset(YapConst.INTEGER_BYTES); // what's this?
-		int ancestorid=classreader.readInt();
-		int indexid=classreader.readInt();
-		int numfields=classreader.readInt();
-		LeanStoredField[] fields=new LeanStoredField[numfields];
-		for (int i = 0; i < numfields; i++) {
-			String fieldname=null;
-			try {
-				fieldname=i_handlers.i_stringHandler.readShort(classreader);
-			} catch (CorruptionException e) {
-				return null;
-			}
-		    int handlerid=classreader.readInt();
-		    YapBit attribs=new YapBit(classreader.readByte());
-		    boolean isprimitive=attribs.get();
-		    boolean isarray = attribs.get();
-		    boolean ismultidimensional=attribs.get();
-			fields[i]=new LeanStoredField(fieldname,handlerid,isprimitive);
-		}
-		LeanStoredClass clazz=new LeanStoredClass(id,classname,ancestorid,fields);
-		return clazz;
-	}
+    public YapStringIO stringIO(){
+    	return i_handlers.i_stringHandler.i_stringIo;
+    }
 
     Object unmarshall(YapWriter yapBytes) {
         return unmarshall(yapBytes._buffer, yapBytes.getID());

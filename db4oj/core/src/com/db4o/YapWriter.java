@@ -174,7 +174,7 @@ public final class YapWriter extends YapReader {
     }
 
 
-    void read() {
+    public void read() {
         i_trans.i_stream.readBytes(_buffer, i_address,_addressOffset, i_length);
     }
 
