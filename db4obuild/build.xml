@@ -550,11 +550,14 @@
 	</target>
 
 	<target name="copymono">
-		<delete dir="${dir.build.transfer.mono}" />
+		<delete dir="${dir.build.transfer.mono}">
+			<exclude name="src/test/**" />
+		</delete>
 		<mkdir dir="${dir.build.transfer.mono}" />
 		<copy todir="${dir.build.transfer.mono}" >
 			<fileset dir="${dir.dist.mono}">
 				<exclude name="doc/api/**"/>
+				<exclude name="src/test/**"/>
 			</fileset>
 		</copy>
 		<copy todir="${dir.build.transfer.mono}/doc/api" >
