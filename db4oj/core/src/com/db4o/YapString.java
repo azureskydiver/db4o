@@ -61,8 +61,12 @@ final class YapString extends YapIndependantType {
 
     static String invert(String str) {
         StringBuffer buf = new StringBuffer();
-        for (int i = str.length() - 1; i >= 0; i--) {
-            buf.append(str.charAt(i));
+        try{
+	        for (int i = str.length() - 1; i >= 0; i--) {
+	            buf.append(str.charAt(i));
+	        }
+        }catch(Exception e){
+            e.printStackTrace();
         }
         return buf.toString();
     }
@@ -213,8 +217,12 @@ final class YapString extends YapIndependantType {
 
     static String fromIntArray(int[] ints) {
         StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < ints.length; i++) {
-            buf.append((char) ints[i]);
+        try{
+	        for (int i = 0; i < ints.length; i++) {
+	            buf.append((char) ints[i]);
+	        }
+        }catch(Exception e){
+            e.printStackTrace();
         }
         return buf.toString();
     }
