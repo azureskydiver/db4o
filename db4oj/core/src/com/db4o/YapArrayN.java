@@ -16,9 +16,9 @@ final class YapArrayN extends YapArray {
     }
 
     final Object[] allElements(Object a_array) {
-        int[] dim = Array4.dimensions(_stream, a_array);
+        int[] dim = _reflectArray.dimensions(a_array);
         Object[] flat = new Object[elementCount(dim)];
-        Array4.flatten(_stream, a_array, dim, 0, flat, 0);
+        _reflectArray.flatten(a_array, dim, 0, flat, 0);
         return flat;
     }
 
@@ -39,7 +39,7 @@ final class YapArrayN extends YapArray {
     }
 
     final int objectLength(Object a_object) {
-        int[] dim = Array4.dimensions(_stream, a_object);
+        int[] dim = _reflectArray.dimensions(a_object);
         return YapConst.OBJECT_LENGTH
             + (YapConst.YAPINT_LENGTH * ((Debug.arrayTypes ? 2 : 1) + dim.length))
             + (elementCount(dim) * i_handler.linkLength());
@@ -53,7 +53,7 @@ final class YapArrayN extends YapArray {
 	        for (int i = 0; i < objects.length; i++) {
 	            objects[i] = i_handler.read(a_bytes);
 	        }
-	        Array4.shape(_stream, objects, 0, ret[0], dim, 0);
+            _reflectArray.shape(objects, 0, ret[0], dim, 0);
 		}
         return ret[0];
     }
@@ -67,7 +67,7 @@ final class YapArrayN extends YapArray {
 			for (int i = 0; i < objects.length; i++) {
 				objects[i] = i_handler.readQuery(a_trans, a_bytes, true);
 			}
-			Array4.shape(_stream, objects, 0, ret[0], dim, 0);
+            _reflectArray.shape(objects, 0, ret[0], dim, 0);
         }
 		return ret[0];
 	}
@@ -94,7 +94,7 @@ final class YapArrayN extends YapArray {
     }
 
     final void writeNew1(Object a_object, YapWriter a_bytes) {
-        int[] dim = Array4.dimensions(_stream, a_object);
+        int[] dim = _reflectArray.dimensions(a_object);
         writeClass(a_object, a_bytes);
         a_bytes.writeInt(dim.length);
         for (int i = 0; i < dim.length; i++) {
@@ -108,7 +108,7 @@ final class YapArrayN extends YapArray {
 
     private Object element(Object a_array, int a_position) {
         try {
-            return Array4.reflector(_stream).get(a_array, a_position);
+            return _reflectArray.get(a_array, a_position);
         } catch (Exception e) {
             return null;
         }

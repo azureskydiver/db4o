@@ -149,7 +149,7 @@ class YapHandlers {
 	int arrayType(Object a_object) {
     	ReflectClass claxx = _masterStream.reflector().forObject(a_object);
         if (claxx.isArray()) {
-            if (Array4.isNDimensional(claxx)) {
+            if (_masterStream.reflector().array().isNDimensional(claxx)) {
                 return YapConst.TYPE_NARRAY;
             } else {
                 return YapConst.TYPE_ARRAY;
@@ -375,7 +375,7 @@ class YapHandlers {
             return null;
         }
         if (a_class.isArray()) {
-            if (Array4.isNDimensional(a_class)) {
+            if (_masterStream.reflector().array().isNDimensional(a_class)) {
                 return i_anyArrayN;
             }
             return i_anyArray;
