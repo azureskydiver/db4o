@@ -214,6 +214,9 @@ public class PDFWriter extends AbstractWriter {
             raf.close();
             if(command.getMethodName()!=null) {
                 bytes=extractMethod(bytes,command.getMethodName(),command.getParamValue(Source.CMD_FULL));
+                if(bytes.length==0) {
+                	throw new RuntimeException("Method '"+command.getClassName()+"#"+command.getMethodName()+"' not found.");
+                }
             }
             writeSourceCodeBlock(bytes,command.getMethodName());
             String methodname=command.getMethodName();

@@ -348,6 +348,9 @@ public class HtmlWriter extends AbstractWriter {
         writeToFile("<code><br>\r\n");
         if(command!=null&&command.getMethodName()!=null) {
             code=extractMethod(code,command.getMethodName(),command.getParamValue(Source.CMD_FULL));
+            if(code.length==0) {
+            	throw new RuntimeException("Method '"+command.getClassName()+"#"+command.getMethodName()+"' not found.");
+            }
         }
         String codestr=new String(code,"iso8859-1");
         codestr=codestr.replaceAll("&","&amp;");

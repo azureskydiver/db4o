@@ -156,7 +156,7 @@ public abstract class AbstractWriter extends Configuration implements
         String startstr="public static void "+methodName;
         int startidx=src.indexOf(startstr);
         if(startidx<0) {
-            System.err.println("Method '"+methodName+"' not found.");
+            return new byte[0];
         }
         int idx=src.indexOf('{',startidx)+1;
         int brackets=0;
