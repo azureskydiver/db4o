@@ -80,5 +80,11 @@
 		<exec executable="rpm" inputstring="${gpg.pass}">
 			<arg line="--addsign ${dir.mono.rpmbuild}/RPMS/noarch/${db4o.name.short}-1.noarch.rpm" />
 		</exec>		
+		<mkdir dir="${dir.build.transfer.mono}/out" />
+		<copy todir="${dir.build.transfer.mono}/out">
+			<fileset dir="${dir.mono.rpmbuild}/RPMS/noarch" />
+			<fileset dir="${dir.mono.rpmbuild}/SRPMS" />
+			<fileset dir="${dir.mono.rpmbuild}/SOURCES" />
+		</copy>
 	</target>
 </project>
