@@ -14,14 +14,13 @@
  * along with com.swtworkbench.ed; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.db4o.browser.gui;
+package com.db4o.browser.gui.tree;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
@@ -30,7 +29,7 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  * 
  * @author djo
  */
-public class MapFieldNode implements ITreeNode {
+public class IterableFieldNode implements ITreeNode {
 
     /**
      * @param fieldType
@@ -38,16 +37,16 @@ public class MapFieldNode implements ITreeNode {
      * @return
      */
     public static ITreeNode tryToCreate(Field field, Object _instance) {
-        MapFieldNode result;
+        IterableFieldNode result;
         
         Class fieldType = field.getType();
         Method m = null;
         try {
-            m = fieldType.getMethod("keySet", new Class[] {});
+            m = fieldType.getMethod("iterator", new Class[] {});
         } catch (Exception e) { return null; };
         
         try {
-            result = new MapFieldNode(field, _instance, m);
+            result = new IterableFieldNode(field, _instance, m);
             result.iterator();
         } catch (IllegalStateException e) {
             Logger.log().error(e, "Unable to invoke 'iterator()'");
@@ -57,18 +56,16 @@ public class MapFieldNode implements ITreeNode {
     }
 
     private Object _instance;
-	private Method _keySetMethod;
+	private Method _iteratorMethod;
 	private Field _field;
 
 	private Iterator iterator() {
-        Set set;
         try {
-            set = (Set) _keySetMethod.invoke(field(), new Object[] {});
+            return (Iterator) _iteratorMethod.invoke(field(), new Object[] {});
         } catch (Exception e) {
-            Logger.log().error(e, "Unable to invoke 'keySet'");
+            Logger.log().error(e, "Unable to invoke 'iterator'");
             throw new IllegalStateException();
         }
-        return set.iterator();
     }
     
     private Object field() {
@@ -83,11 +80,16 @@ public class MapFieldNode implements ITreeNode {
 		}
     }
     
-
-	public MapFieldNode(Field field, Object instance, Method keySetMethod) {
+	/**
+	 * @param field TODO
+	 * @param instance TODO
+	 * @param field
+	 * @param iterator
+	 */
+	public IterableFieldNode(Field field, Object instance, Method iteratorMethod) {
         _field = field;
         _instance = instance;
-        _keySetMethod = keySetMethod;
+        _iteratorMethod = iteratorMethod;
 	}
     
 	/* (non-Javadoc)

@@ -31,7 +31,7 @@
             	</composite>
 
 		    	<!-- ResultSet browser -->
-		        <sashForm x:id="Sash">
+		        <sashForm x:id="SashForm">
 		            <layoutData x:class="gridData" horizontalSpan="2" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
 		            <layout x:class="gridLayout" numColumns="2"/>
 		            <x:children>

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -21,6 +22,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import com.db4o.browser.gui.standalone.Model;
+import com.db4o.browser.gui.tree.ClassNode;
+import com.db4o.browser.gui.tree.ITreeNode;
 import com.db4o.ext.StoredClass;
 import com.swtworkbench.community.xswt.XSWT;
 
@@ -47,6 +50,7 @@ public class DbBrowserPane extends Composite {
         parent.setLayout(new FillLayout());
         setLayout(new FillLayout());
         contents = XSWT.createl(this, "layout.xswt", getClass());
+        getSashForm().setWeights(new int[] {30, 70});
         Model.open();
         populateTree(Model.storedClasses());
         addDisposeListener(new DisposeListener() {
@@ -58,6 +62,10 @@ public class DbBrowserPane extends Composite {
     
     
     private Map contents = null;
+    
+    private SashForm getSashForm() {
+        return (SashForm) contents.get("SashForm");
+    }
     
     /**
      * Returns the Path Label
