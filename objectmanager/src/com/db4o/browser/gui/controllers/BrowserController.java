@@ -3,6 +3,8 @@
  */
 package com.db4o.browser.gui.controllers;
 
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
 import com.db4o.browser.gui.views.DbBrowserPane;
@@ -27,11 +29,22 @@ public class BrowserController {
 	 */
 	public BrowserController(DbBrowserPane ui) {
         this.ui = ui;
+		
+		// Get the selection service
+		SelectionService selectionService = SelectionService.getDefault();
 
         // Initialize the ObjectTree's controllers
-        TreeViewer tree = ui.getObjectTree();
+        final TreeViewer tree = ui.getObjectTree();
         tree.setContentProvider(new TreeContentProvider());
         tree.setLabelProvider(new TreeLabelProvider());
+		tree.addSelectionChangedListener(selectionService);
+		
+		// Listen to all selection changed events and broadcast them to the rest of the UI
+		selectionService.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				tree.setSelection(event.getSelection());
+			}
+		});
     }
 
 	/**
@@ -46,5 +59,5 @@ public class BrowserController {
         TreeViewer tree = ui.getObjectTree();
         tree.setInput(i);
 	}
-	
+
 }
