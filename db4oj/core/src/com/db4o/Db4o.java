@@ -13,11 +13,11 @@ import com.db4o.reflect.*;
 /**
  * factory class with static methods to configure and start the engine.
  * <br><br>This class serves as a factory class, to open
- * <a href="ObjectContainer.html"><code>ObjectContainer</code></a>
+ * {@link ObjectContainer ObjectContainer}
  * instances on database files.<br><br>
- * The global db4o <a href="config/Configuration.html"><code>Configuration</code></a>
+ * The global db4o {@link com.db4o.config.Configuration Configuration}
  * object for the running Java session is available through the
- * <a href="#configure()"><code>configure()</code></a> method.
+ * {@link #configure configure} method.
  * <br><br>On running the <code>Db4o</code> class it prints the current
  * version to System.out.
  * @see ExtDb4o ExtDb4o for extended functionality.
@@ -70,12 +70,12 @@ public class Db4o {
 
     /**
 	 * returns the global db4o
-	 * <a href="config/Configuration.html"><code>Configuration</code></a> context 
+	 * {@link Configuration Configuration} context 
 	 * for the running JVM session.
 	 * <br><br>
-	 * The <a href="config/Configuration.html"><code>Configuration</code></a>
+	 * The {@link Configuration Configuration}
 	 * can be overriden in each
-	 * <a href="ObjectContainer.html#configure()"><code>ObjectContainer</code></a>.<br><br>
+	 * {@link com.db4o.ext.ExtObjectContainer#configure ObjectContainer}.<br><br>
 	 * @return the global {@link Configuration configuration} context
      */
 	public static Configuration configure(){
@@ -124,23 +124,22 @@ public class Db4o {
 	}
 	
     /**
-     * opens an <a href="ObjectContainer.html"><code>ObjectContainer</code></a>
+     * opens an {@link ObjectContainer ObjectContainer}
 	 * client and connects it to the specified named server and port.
 	 * <br><br>
 	 * The server needs to
-	 * <a href="ObjectServer.html#grantAccess(java.lang.String, java.lang.String)">
-	 * allow access</a> for the specified user and password.
+	 * {@link ObjectServer#grantAccess allow access} for the specified user and password.
 	 * <br><br>
-	 * A client <a href="ObjectContainer.html"><code>ObjectContainer</code></a> can be cast to 
-	 * <a href="ext/ExtClient.html"><code>ExtClient</code></a> to use extended
-	 * <a href="ext/ExtObjectContainer.html"><code>ExtObjectContainer</code></a> 
-	 * and <a href="ext/ExtClient.html"><code>ExtClient</code></a> methods.
+	 * A client {@link ObjectContainer ObjectContainer} can be cast to 
+	 * {@link ExtClient ExtClient} to use extended
+	 * {@link ExtObjectContainer ExtObjectContainer} 
+	 * and {@link ExtClient ExtClient} methods.
 	 * <br><br>
      * @param hostName the host name
      * @param port the port the server is using
      * @param user the user name
      * @param password the user password
-	 * @return an open <a href="ObjectContainer.html"><code>ObjectContainer</code></a>
+	 * @return an open {@link ObjectContainer ObjectContainer}
      * @see ObjectServer#grantAccess
 	 */
 	public static ObjectContainer openClient(String hostName, int port, String user, String password)
@@ -151,18 +150,18 @@ public class Db4o {
 	}
 	
     /**
-     * opens an <a href="ObjectContainer.html"><code>ObjectContainer</code></a>
+     * opens an {@link ObjectContainer ObjectContainer}
 	 * on the specified database file for local use.
 	 * <br><br>Subsidiary calls with the same database file name will return the same
-	 * <a href="ObjectContainer.html"><code>ObjectContainer</code></a> object.<br><br>
+	 * {@link ObjectContainer ObjectContainer} object.<br><br>
 	 * Every call to <code>openFile()</code> requires a corresponding
- 	 * <a href="ObjectContainer.html#close()"><code>ObjectContainer.close()</code></a>.<br><br>
+ 	 * {@link ObjectContainer#close ObjectContainer.close}.<br><br>
  	 * Database files can only be accessed for readwrite access from one process 
  	 * (one Java VM) at one time. All versions except for db4o mobile edition use an
  	 * internal mechanism to lock the database file for other processes. 
      * <br><br>
      * @param databaseFileName the full path to the database file
-	 * @return an open <a href="ObjectContainer.html"><code>ObjectContainer</code></a>
+	 * @return an open {@link ObjectContainer ObjectContainer}
      * @see Configuration#readOnly
      * @see Configuration#encrypt
      * @see Configuration#password
@@ -205,16 +204,16 @@ public class Db4o {
 	
 	
 	 /**
-     * opens an <a href="ObjectServer.html"><code>ObjectServer</code></a>
+     * opens an {@link ObjectServer ObjectServer}
 	 * on the specified database file and port.
      * <br><br>
      * If the server does not need to listen on a port because it will only be used
-     * in embedded mode with {@link ObjectServer#openClient()}, specify '0' as the
+     * in embedded mode with {@link ObjectServer#openClient}, specify '0' as the
      * port number.
      * @param databaseFileName the full path to the database file
      * @param port the port to be used, or 0, if the server should not open a port,
      * because it will only be used with {@link ObjectServer#openClient()}
-	 * @return an <a href="ObjectServer.html"><code>ObjectServer</code></a> listening
+	 * @return an {@link ObjectServer ObjectServer} listening
 	 * on the specified port.
      * @see Configuration#readOnly
      * @see Configuration#encrypt
