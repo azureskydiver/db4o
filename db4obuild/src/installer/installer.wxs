@@ -15,18 +15,32 @@
 			Manufacturer='db4objects Inc.'
 			InstallerVersion='200'
 			Languages='1033'
-			Compressed='yes' />	
+			Compressed='yes' />
 			
-		<CustomAction Id="SetInstallDir"
+		<!--
+			TARGETDIR is the installation directory
+			
+			INSTALLDIR is a property that holds the installation directory value
+		-->
+		<CustomAction Id="InitializeTargetDir"
 					Property="TARGETDIR"
-					Value="c:\db4o-@db4o.version.dotted@"
-					Execute="firstSequence" />					
+					Value="[INSTALLDIR]"
+					Execute="firstSequence" />
+					
+		<CustomAction Id="UpdateTargetDir"
+					Property="TARGETDIR"
+					Value="[INSTALLDIR]"
+					Execute="firstSequence" />
+		
 		
 		<CustomAction Id="Launch_Tutorial"				
 				FileKey="doc.tutorial.db4o_tutorial.exe"
 				ExeCommand=""
 				Execute="firstSequence"
 				Return="asyncNoWait" />
+				
+		
+		<Property Id="INSTALLDIR">c:\db4o-@db4o.version.dotted@</Property>
 		
 		<!-- INSTALLATION SEQUENCE PROPERTIES -->
 		<Property Id="LAUNCHTUTORIAL">1</Property>
@@ -66,7 +80,7 @@
 		
 		<InstallExecuteSequence>
 			<FindRelatedProducts />
-			<Custom Action="SetInstallDir" Before="CostInitialize" />			
+			<Custom Action="InitializeTargetDir" Before="CostInitialize" />			
 			<RemoveExistingProducts Before='InstallInitialize' />
 		</InstallExecuteSequence>
 		
@@ -99,7 +113,7 @@
 		<UI>
 			<InstallUISequence>
 				<FindRelatedProducts />
-				<Custom Action="SetInstallDir" Before="CostInitialize" />
+				<Custom Action="InitializeTargetDir" Before="CostInitialize" />
 				
 				<Show Dialog="WelcomeDialog" After="MigrateFeatureStates" />				
 				<Show Dialog="ProgressDialog" After="WelcomeDialog" />					
@@ -143,6 +157,8 @@
 			<Dialog Id="SelectFolderDialog" Width="370" Height="270" Title="[ProductName]" TrackDiskSpace="yes">
 				<Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="[Button_Next]">
 					<Publish Event="NewDialog" Value="VerifyReadyDialog">1</Publish>
+					<Publish Event="DoAction" Value="UpdateTargetDir">1</Publish>
+					<Publish Event="SetTargetPath" Value="TARGETDIR">1</Publish>
 				</Control>
 				
 				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[Button_Cancel]">
@@ -153,14 +169,14 @@
 					<Publish Event="NewDialog" Value="WelcomeDialog">1</Publish>
 				</Control>
 				
-				<Control Id="FolderEdit" Type="PathEdit" X="18" Y="126" Width="252" Height="18" Property="TARGETDIR" Sunken="yes">
+				<Control Id="FolderEdit" Type="PathEdit" X="18" Y="126" Width="252" Height="18" Property="INSTALLDIR" Sunken="yes">
 					<Condition Action="disable">Installed</Condition>
 				</Control>
 				
 				<Control Id="Browse" Type="PushButton" X="276" Y="126" Width="90" Height="18" Text="[Button_Browse]">
 					<Condition Action="disable">Installed</Condition>
 					
-					<Publish Property="_BrowseProperty" Value="TARGETDIR">1</Publish>
+					<Publish Property="_BrowseProperty" Value="INSTALLDIR">1</Publish>
 					<Publish Event="SpawnDialog" Value="BrowseDialog">1</Publish>
 				</Control>
 					
