@@ -101,7 +101,15 @@
 		<versioninfo path="${dir.n.core.src}/mono" mono="true" keyfile="" version="${db4o.version.full}" />
 	</target>
 
-	<target name="cleanjava" description="Delete all generated files">
+	<target name="clean" description="Delete all generated files">
+		<delete failonerror="false" includeemptydirs="true" description="Removing build folders">
+			<fileset dir="${dir.dist.net.compile}">
+				<include name="**/*" />
+			</fileset>
+			<fileset dir="${dir.sharpen}">
+				<include name="**/*" />
+			</fileset>
+		</delete>
 		<delete failonerror="false" description="Removing all generated files">
 			<fileset dir="${dir.dist}">
 				<include name="**/*" />
@@ -110,9 +118,6 @@
 				<include name="**/*" />
 			</fileset>
 		</delete>
-	</target>
-
-	<target name="cleannet" depends="init" description="Delete all generated C# files">
 		<delete failonerror="false" description="Removing all generated files" includeemptydirs="true">
 			<fileset dir="${dir.n.core.src}">
 				<include name="**/*.cs" />
@@ -163,7 +168,7 @@
 		</copy>
 	</target>
 
-	<target name="compilecorenet" depends="init, cleannet">
+	<target name="compilecorenet" depends="init">
 		<mkdir dir="${dir.sharpen.src}" />
 		<copy todir="${dir.sharpen.src}">
 			<fileset dir="${dir.j.core.src}" excludes="**/JDK_*.java">
@@ -550,11 +555,11 @@
 		<ant dir="${dir.n.tutorial.browser}" />
 	</target>
 
-	<target name="buildjava" depends="cleanjava, doctor, zipjava" description="Full java build" />
+	<target name="buildjava" depends="doctor, zipjava" description="Full java build" />
 
-	<target name="buildnet" depends="cleannet, doctor, zipnet" description="Full NET build" />
+	<target name="buildnet" depends="doctor, zipnet" description="Full NET build" />
 
-	<target name="buildall" depends="buildjava, buildnet" description="Full clean build" />
+	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build" />
 	
 	<target name="serversidecopy">
 		<copy todir="${dir.server.downloads}" overwrite="true">
