@@ -28,19 +28,23 @@ namespace com.db4o.test.soda {
             engine = new STDb4o();
             engine.reset();
             engine.open();
-            startThread(new STClass[]{new STString()});
-            startThread(new STClass[]{new STInteger()});
-            startThread(new STClass[]{new STByte()});
-            startThread(new STClass[]{new STShort()});
-            startThread(new STClass[]{new STBooleanWU()});
-            startThread(new STClass[]{new STArrayListT()});
-            do {
-                try { 
-                    Thread.sleep(300);
-                }  catch (Exception e) { 
-                }
-            }while (runningThreads > 0);
-        }
+			try {
+				startThread(new STClass[]{new STString()});
+				startThread(new STClass[]{new STInteger()});
+				startThread(new STClass[]{new STByte()});
+				startThread(new STClass[]{new STShort()});
+				startThread(new STClass[]{new STBooleanWU()});
+				startThread(new STClass[]{new STArrayListT()});
+				do {
+					try {
+						Thread.sleep(300);
+					}  catch (Exception e) {
+					}
+				}while (runningThreads > 0);
+        	} finally {
+				engine.close();
+			}
+		}
       
         private static void startThread(STClass[] classes) {
             for (int i1 = 0; i1 < classes.Length; i1++) {
