@@ -7,7 +7,7 @@ import com.db4o.query.*;
 import com.db4o.test.*;
 
 public class Jdk5EnumTest {
-	private final static int NUMRUNS=10;
+	private final static int NUMRUNS=1;
     
     public void testSingleStoreRetrieve() {     	
         ObjectContainer db = reopen();
@@ -84,7 +84,7 @@ public class Jdk5EnumTest {
     }    
     
     public void testEnumsInCollections() {
-    	final boolean withDb4oCollections=false;
+    	final boolean withDb4oCollections=true;
 
     	ObjectContainer db=reopen();
 
@@ -172,7 +172,8 @@ public class Jdk5EnumTest {
 			System.err.println("# instances in db: "+result.size());
 			while(result.hasNext()) {
 				Jdk5Enum curenum=(Jdk5Enum)result.next();
-				System.err.println(curenum+" : "+System.identityHashCode(curenum));
+                long id = db.ext().getID(curenum);
+                System.err.println(curenum+"  :  ihc "+System.identityHashCode(curenum) + "  : id " + id);
 			}
 			
 		}

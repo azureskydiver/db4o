@@ -8,7 +8,7 @@ package com.db4o;
  */
 public class DTrace {
     
-    public static final boolean enabled = false;
+    public static final boolean enabled = true;
     
     private static void breakPoint(){
         int placeBreakPointHere = 1;
@@ -21,8 +21,11 @@ public class DTrace {
             
             // addRange(5130);
             
-            addRange(4817);
-            addRangeWithLength(1, 3000);
+            addRange(2404);
+            addRange(567);
+            
+            addRange(11108810);
+            // addRangeWithLength(1, 3000);
             
             // addRangeWithLength(1000000, 10000000);
             
@@ -30,12 +33,15 @@ public class DTrace {
             // addRange(7274611);
             // addRange(17920);
             
+            BIND = new DTrace(true, true, "bind", true);
+            CLOSE = new DTrace(true, true, "close", true);
             COMMIT = new DTrace(true, false, "commit", true);
             CONTINUESET = new DTrace(true, true, "continueset", true);
             FREE = new DTrace(true, true, "free", true);
             FREE_ON_COMMIT = new DTrace(true, true, "trans freeOnCommit", true);
             FREE_ON_ROLLBACK = new DTrace(true, true, "trans freeOnRollback", true);
             GET_SLOT = new DTrace(true, true, "getSlot", true);
+            NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
             READ_ID = new DTrace(true, true, "read ID", true);
             READ_SLOT = new DTrace(true, true, "read slot", true);
             REFERENCE_REMOVED = new DTrace(true, true, "reference removed", true);
@@ -47,8 +53,8 @@ public class DTrace {
             WRITE_BYTES = new DTrace(true, true, "writeBytes", true); 
             WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true, "trans writeUpdateDeleteMembers", true);
             
-            // turnAllOffExceptFor(new DTrace[] {REFERENCE_REMOVED});
-            turnAllOffExceptFor(new DTrace[] {FREE, FREE_ON_COMMIT});
+            // turnAllOffExceptFor(new DTrace[] {FREE, FREE_ON_COMMIT});
+            turnAllOffExceptFor(new DTrace[] {BIND, GET_SLOT, REFERENCE_REMOVED});
          
         }
         return null;
@@ -76,12 +82,15 @@ public class DTrace {
     private static long [] rangeEnd;
     private static int rangeCount;
     
+    public static DTrace BIND;
+    public static DTrace CLOSE;
     public static DTrace COMMIT;
     public static DTrace CONTINUESET;
     public static DTrace FREE;
     public static DTrace FREE_ON_COMMIT;
     public static DTrace FREE_ON_ROLLBACK;
     public static DTrace GET_SLOT;
+    public static DTrace NEW_INSTANCE;
     public static DTrace READ_ID;
     public static DTrace READ_SLOT;
     public static DTrace REFERENCE_REMOVED;
@@ -100,7 +109,7 @@ public class DTrace {
     
     public void log(){
         if(enabled){
-            log(0);
+            log(-1);
         }
     }
     
@@ -112,8 +121,15 @@ public class DTrace {
     
     public void logInfo(String info){
         if(enabled){
-            logEnd(0,0, info );
+            logEnd(-1,0, info );
         }
+    }
+    
+    public void log(long p, String info){
+        if(enabled){
+            logEnd(p, 0, info);
+        }
+        
     }
     
     public void logLength(long start, long length){
@@ -123,7 +139,9 @@ public class DTrace {
     }
     
     public void logEnd(long start, long end){
-        logEnd(start, end, null);
+        if(enabled){
+            logEnd(start, end, null);
+        }
     }
     
     public void logEnd(long start, long end, String info){
@@ -142,7 +160,7 @@ public class DTrace {
                     break;
                 }
 	        }
-	        if(inRange || (start == 0 && end == 0)){
+	        if(inRange || (start == -1 )){
 	            if(_log){
 	                StringBuffer sb = new StringBuffer(":");
 	                if(start != 0){
@@ -151,8 +169,10 @@ public class DTrace {
 	                }
 	                if(end != 0  && start != end){
 		                sb.append(formatInt(end));
-		                sb.append(":");
-	                }
+	                }else{
+                        sb.append(formatInt(0));
+                    }
+                    sb.append(":");
                     if(info != null){
                         sb.append(" " + info + " ");
                         sb.append(":");
@@ -194,7 +214,10 @@ public class DTrace {
     
     private String formatInt(long i){
         if(enabled){
-            String str = "            " + i + " "; 
+            String str = "              ";
+            if( i != 0){
+                str += i + " ";
+            }
             return str.substring(str.length() - 12);
         }
         return null;
