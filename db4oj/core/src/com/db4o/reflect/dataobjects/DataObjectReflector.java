@@ -1,3 +1,5 @@
+/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
+
 package com.db4o.reflect.dataobjects;
 
 import com.db4o.*;
@@ -5,63 +7,52 @@ import com.db4o.reflect.*;
 
 public class DataObjectReflector implements IReflect {
 
-    private final Hashtable4 _iClassByNativeClass = new Hashtable4(1);
+    private final IReflect _delegate;
+    private final Hashtable4 _dataClassByName = new Hashtable4(1);
+
+    public DataObjectReflector(IReflect delegate) {
+        _delegate = delegate;
+    }
 
     public IArray array() {
-        return null;
+        return _delegate.array();
+    }
+
+    public int collectionUpdateDepth(IClass claxx) {
+        return _delegate.collectionUpdateDepth(claxx);
     }
 
     public boolean constructorCallsSupported() {
-        return false;
-    }
-
-    public IClass forName(String className) throws ClassNotFoundException {
-        return new DataObjectClass(className);
+        return _delegate.constructorCallsSupported();
     }
 
     public IClass forClass(Class clazz) {
-        IClass result = (IClass)_iClassByNativeClass.get(clazz);
-        if (result == null) {
-            //result = new DataObjectClass(clazz);
-            _iClassByNativeClass.put(clazz, result);
-        }
-        return result;
+        return _delegate.forClass(clazz);
+    }
+
+    public IClass forName(String className) throws ClassNotFoundException {
+        IClass dataClass = (IClass)_dataClassByName.get(className);
+        return dataClass != null ? dataClass : _delegate.forName(className);
     }
 
     public IClass forObject(Object a_object) {
-        return null;
+        return _delegate.forObject(a_object);
     }
 
-	/* (non-Javadoc)
-	 * @see com.db4o.reflect.IReflect#isCollection(com.db4o.reflect.IClass)
-	 */
-	public boolean isCollection(IClass claxx) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public boolean isCollection(IClass claxx) {
+        return _delegate.isCollection(claxx);
+    }
 
-	/* (non-Javadoc)
-	 * @see com.db4o.reflect.IReflect#registerCollection(java.lang.Class)
-	 */
-	public void registerCollection(Class clazz) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void registerCollection(Class clazz) {
+        _delegate.registerCollection(clazz);
+    }
 
-	/* (non-Javadoc)
-	 * @see com.db4o.reflect.IReflect#registerCollectionUpdateDepth(java.lang.Class, int)
-	 */
-	public void registerCollectionUpdateDepth(Class clazz, int depth) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void registerCollectionUpdateDepth(Class clazz, int depth) {
+        _delegate.registerCollectionUpdateDepth(clazz, depth);
+    }
 
-	/* (non-Javadoc)
-	 * @see com.db4o.reflect.IReflect#collectionUpdateDepth(com.db4o.reflect.IClass)
-	 */
-	public int collectionUpdateDepth(IClass claxx) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    public void registerDataClass(DataClass dataClass) {
+        _dataClassByName.put(dataClass.getName(), dataClass);
+    }
 
 }
