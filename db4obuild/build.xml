@@ -549,11 +549,24 @@
 		<ant dir="${dir.n.tutorial.browser}" />
 	</target>
 
+	<target name="copymono">
+		<delete dir="${dir.build.transfer.mono}" />
+		<mkdir dir="${dir.build.transfer.mono}" />
+		<copy todir="${dir.build.transfer.mono}" >
+			<fileset dir="${dir.dist.mono}">
+				<exclude name="doc/api/**"/>
+			</fileset>
+		</copy>
+		<copy todir="${dir.build.transfer.mono}/doc/api" >
+			<fileset dir="${dir.config}/ndoc" />
+		</copy>
+	</target>
+	
 	<target name="buildjava" depends="doctor, zipjava" description="Full java build" />
 
 	<target name="buildnet" depends="doctor, zipnet" description="Full NET build" />
 	
-	<target name="buildmono" depends="doctor, zipmono" description="Full Mono build" />
+	<target name="buildmono" depends="doctor, zipmono, copymono" description="Full Mono build" />
 
 	<target name="buildall" depends="clean, buildjava, buildnet, buildmono" description="Full clean build" />
 	
