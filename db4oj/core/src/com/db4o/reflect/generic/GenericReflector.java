@@ -13,6 +13,10 @@ public class GenericReflector implements Reflector, DeepClone {
     private Reflector _delegate;
     private GenericArray _array;
     
+    // TODO: _classByName is our fastest access to the classes
+    //      consider to improve access speed by special 
+    //      hashcode, maybe on names
+    
     private final Hashtable4 _classByName = new Hashtable4(1);
     private final Collection4 _classes = new Collection4();
     private final Hashtable4 _classByID = new Hashtable4(1);
@@ -30,11 +34,11 @@ public class GenericReflector implements Reflector, DeepClone {
 	
 	public Object deepClone(Object obj) throws CloneNotSupportedException {
         GenericReflector myClone = new GenericReflector(null, (Reflector)_delegate.deepClone(this));
-        Iterator4 i = _classes.iterator();
-        while(i.hasNext()){
-            GenericClass clazz = (GenericClass)i.next();
-            
-        }
+//        Iterator4 i = _classes.iterator();
+//        while(i.hasNext()){
+//            GenericClass clazz = (GenericClass)i.next();
+//            
+//        }
 		return myClone;
 	}
 
@@ -128,6 +132,7 @@ public class GenericReflector implements Reflector, DeepClone {
         return _delegate.isCollection(claxx);
         
         //TODO: will need knowledge for .NET collections here
+        // possibility: call registercollection with strings
     }
 
     public void registerCollection(Class clazz) {
@@ -137,15 +142,12 @@ public class GenericReflector implements Reflector, DeepClone {
     public void registerCollectionUpdateDepth(Class clazz, int depth) {
         _delegate.registerCollectionUpdateDepth(clazz, depth);
     }
-
-    /**
-     * only used for testing for now, rename
-     */
-    public void registerDataClass(GenericClass dataClass) {
-    	String name = dataClass.getName();
+    
+    public void register(GenericClass clazz) {
+    	String name = clazz.getName();
     	if(_classByName.get(name) == null){
-    		_classByName.put(name, dataClass);
-    		_classes.add(dataClass);
+    		_classByName.put(name, clazz);
+    		_classes.add(clazz);
     	}
     }
     
@@ -157,11 +159,9 @@ public class GenericReflector implements Reflector, DeepClone {
 		Iterator4 i = _classes.iterator();
 		while(i.hasNext()){
             GenericClass clazz = (GenericClass)i.next();
-            if(! _stream.i_handlers.ICLASS_INTERNAL.isAssignableFrom(clazz.getDelegate())){
-                if(! clazz.isPrimitive()){
-                    if(clazz.getID() > _stream.i_handlers.maxTypeID()){
-                        classes.add(clazz);
-                    }
+            if(! _stream.i_handlers.ICLASS_INTERNAL.isAssignableFrom(clazz)){
+                if(! clazz.isSecondClass()){
+                	classes.add(clazz);
                 }
             }
 		}
@@ -181,8 +181,6 @@ public class GenericReflector implements Reflector, DeepClone {
 		headerreader.incrementOffset(2 + 2 * YapConst.YAPINT_LENGTH);
 		int classcollid = headerreader.readInt();
 		YapWriter classcollreader = _stream.readWriterByID(_trans, classcollid);
-		// FIXME: read debug ClassCollection header
-        
         if (Deploy.debug) {
             classcollreader.readBegin(classcollid, YapConst.YAPCLASSCOLLECTION);
         }
@@ -220,7 +218,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		
 		ret = (GenericClass)_classByName.get(classname);
 		if(ret != null){
-            referenceById(ret, id);
+			_classByID.put(id, ret);
 			return ret;
 		}
 		
@@ -232,7 +230,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		ret = new GenericClass(this, nativeClass,classname, ensureClassAvailability(ancestorid));
 		
 		// step 1 only add to _classByID, keep the class out of _classByName and _classes
-        referenceById(ret, id);
+        _classByID.put(id, ret);
 		
 		return ret;
 	}
@@ -248,6 +246,10 @@ public class GenericReflector implements Reflector, DeepClone {
 		int namelength= classreader.readInt();
 		String classname= _stream.stringIO().read(classreader,namelength);
 		
+		// Having the class in the _classByName Map for now indicates
+		// that the class is fully read. This is breakable if we start
+		// returning GenericClass'es in other methods like forName
+		// even if a native class has not been found
 		if(_classByName.get(classname) != null){
 			return;
 		}
@@ -256,7 +258,7 @@ public class GenericReflector implements Reflector, DeepClone {
         _classByName.put(classname, clazz);
 		_classes.add(clazz);
 		
-		//		 skip empty unused int slot, ancestor, index
+		// skip empty unused int slot, ancestor, index
 		classreader.incrementOffset(YapConst.YAPINT_LENGTH * 3);
 		
 		int numfields=classreader.readInt();
@@ -280,10 +282,6 @@ public class GenericReflector implements Reflector, DeepClone {
 		}
 	}
     
-    private void referenceById(GenericClass clazz, int id){
-        clazz.setId(id);
-        _classByID.put(id, clazz);
-    }
 
 	public void registerPrimitiveClass(int id, String name) {
         GenericClass existing = (GenericClass)_classByID.get(id);
@@ -294,7 +292,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		ReflectClass clazz = _delegate.forName(name);
         GenericClass claxx = ensureDelegate(clazz);
         claxx.setSecondClass();
-        referenceById(claxx, id);
+        _classByID.put(id, claxx);
 	}
 
     public void setParent(Reflector reflector) {

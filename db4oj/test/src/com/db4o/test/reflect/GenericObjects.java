@@ -21,7 +21,7 @@ public class GenericObjects extends Test {
 	}
 
 	public void test() throws ClassNotFoundException {		
-		_reflector.registerDataClass(acmeDataClass());
+		_reflector.register(acmeDataClass());
         _iClass = _reflector.forName("com.acme.Person");
         _assert(_iClass.getName().equals("com.acme.Person"));
         _assert(_iClass.getSuperclass() == _objectIClass);
