@@ -4,8 +4,10 @@ package com.db4o;
 
 import com.db4o.reflect.*;
 
-
-interface YapDataType extends YapComparable
+/**
+ *  @exclude
+ */
+public interface YapDataType extends YapComparable
 {
 	
 	void appendEmbedded3(YapWriter a_bytes);

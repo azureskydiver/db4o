@@ -8,8 +8,10 @@ import com.db4o.reflect.*;
 /**
  * Common base class for YapString and YapArray:
  * There is one indirection in the database file to this.
+ * 
+ * @exclude
  */
-abstract class YapIndependantType implements YapDataType
+public abstract class YapIndependantType implements YapDataType
 {
     final YapStream _stream;
     

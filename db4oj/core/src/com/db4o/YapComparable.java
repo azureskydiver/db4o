@@ -2,7 +2,10 @@
 
 package com.db4o;
 
-interface YapComparable {
+/**
+ * @exclude
+ */
+public interface YapComparable {
 	
 	YapComparable prepareComparison(Object obj);
 	
