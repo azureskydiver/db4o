@@ -9,7 +9,6 @@ import com.db4o.io.*;
 import com.db4o.messaging.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.jdk.*;
-import com.db4o.util.io.*;
 
 /**
  * Configuration template for creating new db4o files
