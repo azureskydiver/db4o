@@ -19,6 +19,7 @@ package com.db4o.browser.model.nodes.field;
 import java.lang.reflect.Field;
 
 import com.db4o.browser.model.Database;
+import com.db4o.browser.model.nodes.*;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.InstanceNode;
 
@@ -34,7 +35,7 @@ public class FieldNode implements IModelNode {
     protected Field _field;
 	protected Object value = null;
     protected Object _instance;
-	protected InstanceNode delegate;
+	protected IModelNode delegate;
 	protected Database _database;
     
 	/**
@@ -54,6 +55,10 @@ public class FieldNode implements IModelNode {
 			value = _field.get(_instance);
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to get field value", e);
+		}
+		if(value==null) {
+			delegate=NullNode.INSTANCE;
+			return;
 		}
 		delegate = new InstanceNode(value, database);
 	}
@@ -90,7 +95,7 @@ public class FieldNode implements IModelNode {
 	 * @see com.db4o.browser.model.nodes.IModelNode#getValueString()
 	 */
 	public String getValueString() {
-		return value.toString();
+		return (value==null ? "null" : value.toString());
 	}
 
 	public boolean equals(Object obj) {

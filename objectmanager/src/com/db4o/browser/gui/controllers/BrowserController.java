@@ -3,6 +3,7 @@
  */
 package com.db4o.browser.gui.controllers;
 
+import java.io.*;
 import java.net.*;
 
 import com.db4o.browser.gui.controllers.tree.*;
@@ -73,7 +74,14 @@ public class BrowserController implements IBrowserController {
 		return selectionChangedController;
 	}
 
-	public void addToClasspath(URL url) {
-		ClassLoaderExtender.addToClassPath(new URL[]{url});
+	public void addToClasspath(File file) {
+		try {
+			ClassLoaderExtender.addToClassPath(new URL[]{file.toURL()});
+			URL[] archives=ClassLoaderExtender.getArchives(file);
+			ClassLoaderExtender.addToClassPath(archives);
+		} catch (MalformedURLException e) {
+			// TODO sensible error handling
+			e.printStackTrace();
+		}
 	}
 }
