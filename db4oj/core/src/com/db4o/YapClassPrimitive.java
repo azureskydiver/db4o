@@ -45,8 +45,8 @@ class YapClassPrimitive extends YapClass{
         return i_handler.canHold(a_class);
     }
     
-    public IClass classReflector(YapStream stream){
-    	return i_handler.classReflector(stream);
+    public IClass classReflector(){
+    	return i_handler.classReflector();
     }
     
     void deleteEmbedded1(YapWriter a_bytes, int a_id) {

@@ -14,6 +14,10 @@ final class YapString extends YapIndependantType {
     private YapStringIO i_stringIo; 
     private static final Class i_class = "".getClass();
     
+    public YapString(YapStream stream) {
+        super(stream);
+    }
+    
     public void appendEmbedded3(YapWriter a_bytes) {
         YapWriter bytes = a_bytes.readEmbeddedObject();
         if (bytes != null) {
@@ -42,8 +46,8 @@ final class YapString extends YapIndependantType {
         return str2;
     }
     
-    public IClass classReflector(YapStream stream){
-    	return stream.i_handlers.ICLASS_STRING;
+    public IClass classReflector(){
+    	return _stream.i_handlers.ICLASS_STRING;
     }
 
     public boolean equals(YapDataType a_dataType) {

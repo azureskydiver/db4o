@@ -92,7 +92,7 @@ class YapHandlers {
         i_virtualFields[0] = i_indexes.i_fieldVersion;
         i_virtualFields[1] = i_indexes.i_fieldUUID;
 
-        i_stringHandler = new YapString();
+        i_stringHandler = new YapString(a_stream);
 
         i_handlers = new YapDataType[] { new YInt(a_stream), new YLong(a_stream), new YFloat(a_stream),
             new YBoolean(a_stream), new YDouble(a_stream), new YByte(a_stream), new YChar(a_stream),
@@ -125,7 +125,7 @@ class YapHandlers {
         for (int i = 0; i < CLASSCOUNT; i++) {
             i_yapClasses[i] = new YapClassPrimitive(a_stream, i_handlers[i]);
             i_yapClasses[i].i_id = i + 1; // note that we avoid 0 here
-            i_classByClass.put(i_handlers[i].classReflector(a_stream), i_yapClasses[i]);
+            i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
             if (!Deploy.csharp) {
                 if (i_handlers[i].getPrimitiveJavaClass() != null) {
                 	cacheClass(i_handlers[i].getPrimitiveJavaClass(), i_yapClasses[i]);
@@ -140,7 +140,7 @@ class YapHandlers {
             if (i_yapClasses[idx].i_id > i_maxTypeID) {
                 i_maxTypeID = idx;
             }
-            i_classByClass.put(i_platformTypes[i].classReflector(a_stream), i_yapClasses[idx]);
+            i_classByClass.put(i_platformTypes[i].classReflector(), i_yapClasses[idx]);
             if (!Deploy.csharp) {
                 if (i_platformTypes[i].getPrimitiveJavaClass() != null) {
                 	cacheClass(i_platformTypes[i].getPrimitiveJavaClass(), i_yapClasses[idx]);

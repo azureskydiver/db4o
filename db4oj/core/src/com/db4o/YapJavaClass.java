@@ -8,6 +8,7 @@ import com.db4o.reflect.*;
 abstract class YapJavaClass implements YapDataType {
     
     final YapStream _stream;
+    private IClass _classReflector;
     
     public YapJavaClass(YapStream stream) {
         _stream = stream;
@@ -39,7 +40,7 @@ abstract class YapJavaClass implements YapDataType {
     public boolean equals(YapDataType a_dataType) {
         return (this == a_dataType);
     }
-
+    
     public Class getJavaClass() {
         if (Deploy.csharp) {
             return primitiveNull().getClass();
@@ -119,8 +120,11 @@ abstract class YapJavaClass implements YapDataType {
     }
     
     // FIXME: REFLECTOR This may be very slow and frequently used. Consider caching.
-    public IClass classReflector(YapStream stream){
-    	return stream.i_config.reflector().forClass(getJavaClass());
+    public IClass classReflector(){
+        if(_classReflector == null){
+            _classReflector = _stream.i_config.reflector().forClass(getJavaClass()); 
+        }
+    	return _classReflector;  
     }
 
     public boolean supportsIndex() {

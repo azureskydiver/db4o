@@ -23,7 +23,7 @@ interface YapDataType extends YapComparable
 	
 	Class getPrimitiveJavaClass();
 	
-	IClass classReflector(YapStream stream);
+	IClass classReflector();
 	
 	boolean equals(YapDataType a_dataType); // needed for YapField.equals
 	

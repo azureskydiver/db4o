@@ -298,7 +298,7 @@ class YapField implements StoredField {
             
             boolean dotnetSecondClass = false;
             if(Deploy.csharp){
-            	dotnetSecondClass = Platform.isSecondClass(i_handler.classReflector(getStream()).getJavaClass());	
+            	dotnetSecondClass = Platform.isSecondClass(i_handler.classReflector().getJavaClass());	
             }
             
             
@@ -434,7 +434,7 @@ class YapField implements StoredField {
                     .getPrimitiveJavaClass());
             }
         }
-        return Platform.getTypeForClass(i_handler.classReflector(getStream()).getJavaClass());
+        return Platform.getTypeForClass(i_handler.classReflector().getJavaClass());
     }
     
     public YapStream getStream(){
@@ -542,7 +542,7 @@ class YapField implements StoredField {
     private YapDataType loadJavaField1() {
         try {
         	YapStream stream = i_yapClass.getStream();
-            i_javaField = i_yapClass.classReflector(stream).getDeclaredField(
+            i_javaField = i_yapClass.classReflector().getDeclaredField(
                 i_name);
             if (i_javaField == null) {
                 return null;

@@ -35,7 +35,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         if(yapClass.stateUnread()){
             i_yapClassByBytes.put(yapClass.i_nameBytes, yapClass);
         }else{
-            i_yapClassByClass.put(yapClass.classReflector(i_stream), yapClass);
+            i_yapClassByClass.put(yapClass.classReflector(), yapClass);
         }
         if (yapClass.getID() == 0) {
             yapClass.write(i_stream, i_systemTrans);
@@ -292,7 +292,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         i_yapClassCreationDepth++;
         if (yapClass != null  && yapClass.stateUnread()) {
             yapClass.createConfigAndConstructor(i_yapClassByBytes, i_stream, a_class);
-            IClass claxx = yapClass.classReflector(i_stream);
+            IClass claxx = yapClass.classReflector();
             if(claxx != null){
                 i_yapClassByClass.put(claxx, yapClass);
                 yapClass.readThis();
@@ -318,7 +318,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
                 if(yc.stateUnread()){
                     i_yapClassByBytes.put(yc.readName(i_systemTrans), yc);
                 }else{
-                    i_yapClassByClass.put(yc.classReflector(i_stream), yc);
+                    i_yapClassByClass.put(yc.classReflector(), yc);
                 }
             }
         }

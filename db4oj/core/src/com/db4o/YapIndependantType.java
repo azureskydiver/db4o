@@ -10,6 +10,12 @@ import com.db4o.reflect.*;
  */
 abstract class YapIndependantType implements YapDataType
 {
+    final YapStream _stream;
+    
+    public YapIndependantType(YapStream stream) {
+        _stream = stream;
+    }
+    
     YapWriter i_lastIo;
 	
 	public final void copyValue(Object a_from, Object a_to){
