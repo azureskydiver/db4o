@@ -344,10 +344,14 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         a_yapClass.i_config = config;
         a_yapClass.i_ancestor = a_superYapClass;
         YapConstructor constr = null;
+        
+    	// FIXME: REFLECTOR should work with IClass
+        IClass claxx = i_config.reflector().forClass( a_class);
+        
         if (config != null && config.instantiates()) {
-            constr = new YapConstructor(this, a_class, null, null, true, false);
+            constr = new YapConstructor(this, claxx, null, null, true, false);
         } else {
-            constr = i_handlers.createConstructorStatic(this, a_yapClass, a_class);
+            constr = i_handlers.createConstructorStatic(this, a_yapClass, claxx);
             if (constr == null) {
                 return false;
             }
@@ -715,6 +719,9 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     YapClass getYapClass(int a_id) {
+    	if(DTrace.enabled){
+    		DTrace.YAPCLASS_BY_ID.log(a_id);
+    	}
         if (a_id == 0) {
             return null;
         }

@@ -21,11 +21,7 @@ public class DTrace {
             
             // addRange(5130);
             
-            addRange(2404);
-            addRange(567);
-            
-            addRange(11108810);
-            // addRangeWithLength(1, 3000);
+            addRange(55);
             
             // addRangeWithLength(1000000, 10000000);
             
@@ -50,11 +46,12 @@ public class DTrace {
             TRANS_COMMIT = new DTrace(false, false, "trans commit", false);
             TRANS_DELETE = new DTrace(true, true, "trans delete", true);
             TRANS_DONT_DELETE = new DTrace(true, true, "trans dontDelete", true);
+            YAPCLASS_BY_ID = new DTrace(true, true, "yapclass by id", true);
             WRITE_BYTES = new DTrace(true, true, "writeBytes", true); 
             WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true, "trans writeUpdateDeleteMembers", true);
             
             // turnAllOffExceptFor(new DTrace[] {FREE, FREE_ON_COMMIT});
-            turnAllOffExceptFor(new DTrace[] {BIND, GET_SLOT, REFERENCE_REMOVED});
+            turnAllOffExceptFor(new DTrace[] {YAPCLASS_BY_ID});
          
         }
         return null;
@@ -99,6 +96,8 @@ public class DTrace {
     public static DTrace TRANS_COMMIT;
     public static DTrace TRANS_DONT_DELETE;
     public static DTrace TRANS_DELETE;
+    public static DTrace YAPCLASS_BY_ID;
+    
     public static DTrace WRITE_BYTES;
     public static DTrace WRITE_UPDATE_DELETE_MEMBERS;
     

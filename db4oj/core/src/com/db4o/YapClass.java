@@ -306,21 +306,22 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     private void createConstructor(YapStream a_stream, String a_name) {
-        Class clazz = null;
+        IClass claxx;
         try {
-            clazz = Db4o.classForName(a_stream, a_name);
+        	claxx = a_stream.i_config.reflector().forName(a_name);
         } catch (Throwable t) {
-
+            claxx = null;
         }
-        createConstructor(a_stream, clazz, a_name);
+        
+        createConstructor(a_stream,claxx , a_name);
     }
 
-    private void createConstructor(YapStream a_stream, Class a_class, String a_name) {
+    private void createConstructor(YapStream a_stream, IClass a_class, String a_name) {
         if (i_config != null && i_config.instantiates()) {
             i_constructor = new YapConstructor(a_stream, a_class, null, null, true, false);
         }else{
             if(a_class != null){
-                if(YapConst.CLASS_TRANSIENTCLASS.isAssignableFrom(a_class)){
+                if(YapConst.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class)){
                     a_class = null;
                 }
             }
@@ -687,12 +688,20 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         }
         return null;
     }
+    
+    public IClass reflectorClass(){
+        if (i_constructor == null) {
+            return null;
+        }
+        return i_constructor.reflectorClass();
+    }
 
+    // FIXME: REFLECTOR all callers should call reflectorClass
     public Class getJavaClass() {
         if (i_constructor == null) {
             return null;
         }
-        return i_constructor.javaClass();
+        return reflectorClass().getJavaClass();
     }
 
     YapClass[] getMembersDependancies() {
@@ -1383,7 +1392,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     void createConfigAndConstructor(
         Hashtable4 a_byteHashTable,
         YapStream a_stream,
-        Class a_class) {
+        IClass a_class) {
         if (a_class == null) {
             if (i_nameBytes != null) {
                 i_name = a_stream.i_stringIo.read(i_nameBytes);
@@ -1422,7 +1431,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 		        // The logic further down checks the ancestor YapClass, whether
 	            // or not it is allowed, not to call constructors. The ancestor
 	            // YapClass may possibly have not been loaded yet.
-		        createConstructor(i_stream, getJavaClass(), i_name);
+		        createConstructor(i_stream, reflectorClass(), i_name);
 	        }
 	        
 	        checkDb4oType();
