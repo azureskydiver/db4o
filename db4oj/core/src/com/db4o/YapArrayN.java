@@ -2,6 +2,10 @@
 
 package com.db4o;
 
+/**
+ * n-dimensional array
+ *
+ */
 final class YapArrayN extends YapArray {
 	
 	

@@ -42,27 +42,45 @@ class YapClassPrimitive extends YapClass{
     }
 
     void deleteEmbedded1(YapWriter a_bytes, int a_id) {
-        if (i_handler instanceof YapArray) {
-            ((YapArray) i_handler).deletePrimitiveEmbedded(a_bytes, this);
-            a_bytes.getTransaction().freeOnCommit(
-                a_bytes.getID(),
-                a_bytes.getAddress(),
-                a_bytes.getLength());
-            a_bytes.getTransaction().setPointer(a_bytes.getID(), 0, 0);
-        } else {
-           if(i_handler instanceof YapClassAny){
-                // Recovery for Any-In-Any: Ignore delete 
-                a_bytes.incrementOffset(i_handler.linkLength());
-            }else{
-                i_handler.deleteEmbedded(a_bytes);
+        
+        if(i_handler instanceof YapArray){
+            YapArray ya = (YapArray)i_handler;
+            
+            // TODO: the following checks, whether the array stores
+            // primitives. There is one case that is not covered here:
+            // If a primitive array is stored to an untyped array or
+            // to an Object variable, they would need to be deleted 
+            // and freed also. However, if they are untyped, every 
+            // single one would have to be read an checked and this
+            // would be extremely slow.
+            
+            // Solution: Store information, whether an object is 
+            // primitive in our pointers, in the highest bit of the
+            // length int.
+            
+            if(ya.i_isPrimitive){
+                ya.deletePrimitiveEmbedded(a_bytes, this);
+                a_bytes.getTransaction().freeOnCommit(
+                    a_bytes.getID(),
+                    a_bytes.getAddress(),
+                    a_bytes.getLength());
+                a_bytes.getTransaction().setPointer(a_bytes.getID(), 0, 0);
+                return;
             }
-			
-			// TODO: What's this? Is this freeing call necessary? 
-			//   free(a_bytes.getTransaction(), a_id, a_bytes.getAddress(), a_bytes.getLength());
-			
-			free(a_bytes, a_id);
-			
         }
+        
+       if(i_handler instanceof YapClassAny){
+            // Any-In-Any: Ignore delete 
+            a_bytes.incrementOffset(i_handler.linkLength());
+        }else{
+            i_handler.deleteEmbedded(a_bytes);
+        }
+		
+		// TODO: Was this freeing call necessary? 
+		//   free(a_bytes.getTransaction(), a_id, a_bytes.getAddress(), a_bytes.getLength());
+		
+		free(a_bytes, a_id);
+			
     }
 
     void deleteMembers(YapWriter a_bytes, int a_type) {

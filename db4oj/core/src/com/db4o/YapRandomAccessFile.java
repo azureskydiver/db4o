@@ -334,6 +334,10 @@ class YapRandomAccessFile extends YapFile {
                     checkXBytes(a_bytes.getAddress(), a_bytes.addressOffset(), a_bytes.getLength());
                 }
             }
+            
+            if(DTrace.enabled){
+                DTrace.WRITE_BYTES.logLength(a_bytes.getAddress() + a_bytes.addressOffset(), a_bytes.getLength());
+            }
 
             i_file.blockSeek(a_bytes.getAddress(), a_bytes.addressOffset());
             i_file.write(a_bytes._buffer, a_bytes.getLength());

@@ -75,6 +75,11 @@ final class YapObject extends YapMeta implements ObjectInfo{
 		    if(! i_yapClass.stateOKAndAncestors()){
 		        return false;
 		    }
+            
+            if(DTrace.enabled){
+                DTrace.CONTINUESET.log(getID());
+            }
+            
 		    YapStream stream = a_trans.i_stream;
 			bitFalse(YapConst.CONTINUE);
 			Object obj = getObject();

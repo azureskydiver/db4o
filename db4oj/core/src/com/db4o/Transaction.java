@@ -171,6 +171,12 @@ class Transaction {
 
     void commit() {
         synchronized (i_stream.i_lock) {
+            
+            if(DTrace.enabled){
+                boolean systemTrans = (i_parentTransaction == null);
+                DTrace.TRANS_COMMIT.logInfo( "server == " + i_stream.isServer() + ", systemtrans == " +  systemTrans);
+            }
+            
             commitTransactionListeners();
 
             i_stream.checkNeededUpdates();

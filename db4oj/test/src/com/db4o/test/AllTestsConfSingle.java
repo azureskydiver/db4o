@@ -2,37 +2,27 @@
 
 package com.db4o.test;
 
-public class AllTestsConfSingle {
+public class AllTestsConfSingle implements TestSuite{
+    
+    static TestSuite[] TEST_SUITES = new TestSuite[]{
+        
+        new AllTestsConfSingle()
+    };
 
-    /**
-     * test cases here
-     */
-    public Class[] TESTS =
-        new Class[] {
+    
+    public Class[] tests(){
+        return new Class[] {
         
-        // Soda.class,
-        
-        // Callbacks.class,
-        // CascadeDeleteFalse.class
-       
-//        CollectionActivation.class,
-        // CollectionActivation.class,
-        
-        TreeSetCustomComparable.class
-        
-        
-        // MultipleEvaluationGetObjectCalls.class
+        // Jdk5Tests.class,
+        Rename.class
         
         // SimplestPossible.class,
         
         // ReplicationFeatures.class,
         // MigrationFromEarlierVersion.class,
-
-        
-       // OrClassConstraintInList.class
-       // Soda.class
             
     	};
+    }
 
     /**
       * the number of test runs 
@@ -52,7 +42,7 @@ public class AllTestsConfSingle {
     /**
       * run the tests in client/server mode 
       */
-    public boolean CLIENT_SERVER = true;
+    public boolean CLIENT_SERVER = false;
 
     /**
      * run the test against a memory file instead of disc file
