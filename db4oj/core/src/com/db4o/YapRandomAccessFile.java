@@ -9,14 +9,14 @@ import com.db4o.io.*;
 
 class YapRandomAccessFile extends YapFile {
 
-    private Session                   i_session;
+    private Session            i_session;
 
-    private ObjectFile          i_file;
-    private ObjectFile          i_timerFile;  //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
-    private volatile ObjectFile i_backupFile;
-    private byte[]                    i_timerBytes = new byte[YapConst.LONG_BYTES];
-    
-    private Object                    i_fileLock;
+    private IoAdapter          i_file;
+    private IoAdapter          i_timerFile;                                 //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
+    private volatile IoAdapter i_backupFile;
+    private byte[]             i_timerBytes = new byte[YapConst.LONG_BYTES];
+
+    private Object             i_fileLock;
 
     YapRandomAccessFile(Session a_session) throws Exception {
         super(null);
@@ -46,7 +46,7 @@ class YapRandomAccessFile extends YapFile {
                 Db4o.throwRuntimeException(61);
             }
             try {
-                i_backupFile = i_config.fileFactory().getFile(path, i_file.length());
+                i_backupFile = i_config.i_ioAdapter.open(path, true, i_file.getLength());
             } catch (Exception e) {
                 i_backupFile = null;
                 Db4o.throwRuntimeException(12, path);
@@ -57,29 +57,29 @@ class YapRandomAccessFile extends YapFile {
         byte[] buffer = new byte[bufferlength];
         do {
             synchronized (i_lock) {
-                i_file.regularSeek(pos);
+                i_file.seek(pos);
                 int read = i_file.read(buffer);
-                i_backupFile.regularSeek(pos);
+                i_backupFile.seek(pos);
                 i_backupFile.write(buffer, read);
                 pos += read;
                 i_lock.notify();
             }
-        } while (pos < i_file.length());
+        } while (pos < i_file.getLength());
         synchronized (i_lock) {
             i_backupFile.close();
             i_backupFile = null;
         }
     }
 
-    void blockSize(int blockSize){
+    void blockSize(int blockSize) {
         i_file.blockSize(blockSize);
-        if(i_timerFile != null){
+        if (i_timerFile != null) {
             i_timerFile.blockSize(blockSize);
         }
     }
-    
-    byte blockSize(){
-        return (byte)i_file.blockSize();
+
+    byte blockSize() {
+        return (byte) i_file.blockSize();
     }
 
     boolean close2() {
@@ -104,14 +104,14 @@ class YapRandomAccessFile extends YapFile {
                 Db4o.sessionStopped(i_session);
                 synchronized (i_fileLock) {
                     try {
-                        i_file.unlock();
                         i_file.close();
                         i_file = null;
                         if (needsLockFileThread() && Debug.lockFile) {
                             YapWriter lockBytes = new YapWriter(i_systemTrans,
                                 YapConst.YAPLONG_LENGTH);
                             YLong.writeLong(0, lockBytes);
-                            i_timerFile.blockSeek(i_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
+                            i_timerFile.blockSeek(i_configBlock._address,
+                                YapConfigBlock.ACCESS_TIME_OFFSET);
                             i_timerFile.write(lockBytes._buffer);
                             i_timerFile.close();
                         }
@@ -127,27 +127,35 @@ class YapRandomAccessFile extends YapFile {
     }
 
     void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
-    
+
+        if (Deploy.debug && Deploy.overwrite) {
+            checkXBytes(newAddress, newAddressOffset, length);
+        }
+
         try {
+
+            if (i_backupFile == null) {
+                i_file
+                    .blockCopy(oldAddress, oldAddressOffset, newAddress, newAddressOffset, length);
+                return;
+            }
+
             byte[] copyBytes = new byte[length];
             i_file.blockSeek(oldAddress, oldAddressOffset);
             i_file.read(copyBytes);
-            
-            if (Deploy.debug && Deploy.overwrite) {
-                checkXBytes(newAddress, newAddressOffset, length);
-            }
-            
+
             i_file.blockSeek(newAddress, newAddressOffset);
             i_file.write(copyBytes);
-            
+
             if (i_backupFile != null) {
                 i_backupFile.blockSeek(newAddress, newAddressOffset);
                 i_backupFile.write(copyBytes);
             }
-            
+
         } catch (Exception e) {
             Db4o.throwRuntimeException(16, e);
         }
+
     }
 
     private void checkXBytes(int a_newAddress, int newAddressOffset, int a_length) {
@@ -158,8 +166,7 @@ class YapRandomAccessFile extends YapFile {
                 i_file.read(checkXBytes);
                 for (int i = 0; i < checkXBytes.length; i++) {
                     if (checkXBytes[i] != YapConst.XBYTE) {
-                        String msg = "XByte corruption adress:"
-                            + a_newAddress + " length:"
+                        String msg = "XByte corruption adress:" + a_newAddress + " length:"
                             + a_length;
                         throw new RuntimeException(msg);
                     }
@@ -173,10 +180,6 @@ class YapRandomAccessFile extends YapFile {
     void emergencyClose() {
         super.emergencyClose();
         try {
-            i_file.unlock();
-        } catch (Exception e) {
-        }
-        try {
             i_file.close();
         } catch (Exception e) {
         }
@@ -189,7 +192,7 @@ class YapRandomAccessFile extends YapFile {
 
     long fileLength() {
         try {
-            return i_file.length();
+            return i_file.getLength();
         } catch (Exception e) {
             throw new RuntimeException();
         }
@@ -199,7 +202,7 @@ class YapRandomAccessFile extends YapFile {
         return i_session.fileName();
     }
 
-    private void open() throws Exception{
+    private void open() throws Exception {
         boolean isNew = false;
         if (Deploy.debug) {
             if (Deploy.deleteFile) {
@@ -210,43 +213,40 @@ class YapRandomAccessFile extends YapFile {
                 }
             }
         }
-        try{
-	        if (fileName().length() > 0) {
-	            File existingFile = new File(fileName());
-	            if (!existingFile.exists() || existingFile.length() == 0) {
-	                isNew = true;
-	                logMsg(14, fileName());
-	            }
-	            try {
-	                i_file = i_config.fileFactory().getFile(fileName());
-	                if (Debug.lockFile) {
-	                    if (i_config.i_lockFile && (!i_config.i_readonly)) {
-	                        i_file.lock();
-	                    }
-	                }
-	                if (needsLockFileThread() && Debug.lockFile) {
-	                    i_timerFile = i_config.fileFactory().getFile(fileName());
-	                }
-	            } catch (DatabaseFileLockedException de) {
-	                throw de;
-	            } catch (Exception e) {
-	                Db4o.throwRuntimeException(12, fileName(), e);
-	            }
-	            if (isNew) {
-	                if (i_config.i_reservedStorageSpace > 0) {
-	                    reserve(i_config.i_reservedStorageSpace);
-	                }
-	                configureNewFile();
-	                write(false);
-	                writeHeader(false);
-	            } else {
-	                readThis();
-	            }
-	        } else {
-	            Db4o.throwRuntimeException(21);
-	        }
-        }catch(Exception exc){
-            if(i_references != null){
+        try {
+            if (fileName().length() > 0) {
+                File existingFile = new File(fileName());
+                if (!existingFile.exists() || existingFile.length() == 0) {
+                    isNew = true;
+                    logMsg(14, fileName());
+                }
+                try {
+                    boolean lockFile = Debug.lockFile && i_config.i_lockFile
+                        && (!i_config.i_readonly);
+                    i_file = i_config.i_ioAdapter.open(fileName(), lockFile, 0);
+                    if (needsLockFileThread() && Debug.lockFile) {
+                        i_timerFile = i_config.i_ioAdapter.open(fileName(), false, 0);
+                    }
+                } catch (DatabaseFileLockedException de) {
+                    throw de;
+                } catch (Exception e) {
+                    Db4o.throwRuntimeException(12, fileName(), e);
+                }
+                if (isNew) {
+                    if (i_config.i_reservedStorageSpace > 0) {
+                        reserve(i_config.i_reservedStorageSpace);
+                    }
+                    configureNewFile();
+                    write(false);
+                    writeHeader(false);
+                } else {
+                    readThis();
+                }
+            } else {
+                Db4o.throwRuntimeException(21);
+            }
+        } catch (Exception exc) {
+            if (i_references != null) {
                 i_references.stopTimer();
             }
             throw exc;
@@ -256,11 +256,11 @@ class YapRandomAccessFile extends YapFile {
     void readBytes(byte[] bytes, int address, int length) {
         readBytes(bytes, address, 0, length);
     }
-    
-    void readBytes(byte[] bytes, int address, int addressOffset, int length){
+
+    void readBytes(byte[] bytes, int address, int addressOffset, int length) {
         try {
             i_file.blockSeek(address, addressOffset);
-            i_file.read(bytes,length);
+            i_file.read(bytes, length);
         } catch (Exception e) {
             if (Debug.atHome) {
                 e.printStackTrace();
@@ -277,7 +277,7 @@ class YapRandomAccessFile extends YapFile {
             free(address, byteCount);
         }
     }
-    
+
     void syncFiles() {
         if (!Deploy.csharp) {
             try {
@@ -291,23 +291,23 @@ class YapRandomAccessFile extends YapFile {
     }
 
     boolean writeAccessTime() throws IOException {
-    	if (!needsLockFileThread()){
-    		return true;
-    	}
-    	
-    	if (!Debug.lockFile){
-    		return true;
-    	}
-    	
+        
+        if (!needsLockFileThread()) {
+            return true;
+        }
+
+        if (!Debug.lockFile) {
+            return true;
+        }
+
         synchronized (i_fileLock) {
-            if (i_file == null){
+            if (i_file == null) {
                 return false;
             }
-            
+
             long lockTime = System.currentTimeMillis();
             if (Deploy.debug) {
-                YapWriter lockBytes = new YapWriter(i_systemTrans,
-                    YapConst.YAPLONG_LENGTH);
+                YapWriter lockBytes = new YapWriter(i_systemTrans, YapConst.YAPLONG_LENGTH);
                 YLong.writeLong(lockTime, lockBytes);
                 i_timerFile.blockSeek(i_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
                 i_timerFile.write(lockBytes._buffer);
@@ -327,17 +327,18 @@ class YapRandomAccessFile extends YapFile {
         if (Deploy.debug && !Deploy.flush) {
             return;
         }
-                
+
         try {
-            
+
             if (Deploy.debug && Deploy.overwrite) {
                 if (a_bytes.getID() != YapConst.IGNORE_ID) {
                     checkXBytes(a_bytes.getAddress(), a_bytes.addressOffset(), a_bytes.getLength());
                 }
             }
-            
-            if(DTrace.enabled){
-                DTrace.WRITE_BYTES.logLength(a_bytes.getAddress() + a_bytes.addressOffset(), a_bytes.getLength());
+
+            if (DTrace.enabled) {
+                DTrace.WRITE_BYTES.logLength(a_bytes.getAddress() + a_bytes.addressOffset(),
+                    a_bytes.getLength());
             }
 
             i_file.blockSeek(a_bytes.getAddress(), a_bytes.addressOffset());
@@ -346,12 +347,11 @@ class YapRandomAccessFile extends YapFile {
                 i_backupFile.blockSeek(a_bytes.getAddress(), a_bytes.addressOffset());
                 i_backupFile.write(a_bytes._buffer, a_bytes.getLength());
             }
-            
+
         } catch (Exception e) {
             Db4o.throwRuntimeException(16, e);
         }
     }
-
 
     void writeXBytes(int a_address, int a_length) {
         if (Deploy.debug) {

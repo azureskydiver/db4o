@@ -6,7 +6,6 @@ import java.io.*;
 
 import com.db4o.config.*;
 import com.db4o.io.*;
-import com.db4o.io.jdkdefault.*;
 import com.db4o.messaging.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.jdk.*;
@@ -55,9 +54,8 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     int              i_updateDepth;
     int              i_weakReferenceCollectionInterval  = 1000;
     boolean          i_weakReferences                   = true;
-    private ObjectFileFactory i_fileFactory      = 
-    	new RandomAccessObjectFileFactory();
-    	
+    IoAdapter        i_ioAdapter = new RandomAccessFileAdapter();
+    
     int activationDepth() {
         return i_activationDepth;
     }
@@ -208,6 +206,11 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
             new Exception().printStackTrace();
             Db4o.throwRuntimeException(46);
         }
+    }
+    
+    public void io(IoAdapter adapter){
+        globalSettingOnly();
+        i_ioAdapter = adapter;
     }
 
     public void lockDatabaseFile(boolean flag) {
@@ -396,11 +399,5 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         return cls.getName();
     }
     
-    public ObjectFileFactory fileFactory() {
-    	return i_fileFactory;
-    }
     
-    public void fileFactory(ObjectFileFactory fileFactory) {
-    	i_fileFactory=fileFactory;
-    }    
 }
