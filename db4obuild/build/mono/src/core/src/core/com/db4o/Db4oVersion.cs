@@ -23,6 +23,6 @@ namespace com.db4o {
       
       internal Db4oVersion() : base() {
       }
-      static internal String name = "4.3.001";
+      static internal String name = "4.3.002";
    }
 }
