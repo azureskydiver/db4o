@@ -183,6 +183,9 @@ public final class YapWriter extends YapReader {
         int length = i_length;
         while (length > 0) {
             int read = sock.read(_buffer, offset, length);
+			if(read<0) {
+				break;
+			}
             offset += read;
             length -= read;
         }
