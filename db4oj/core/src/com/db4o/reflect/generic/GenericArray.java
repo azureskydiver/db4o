@@ -37,10 +37,7 @@ public class GenericArray implements ReflectArray{
     
     private ReflectClass delegateClass(ReflectClass a_class){
         if(a_class instanceof GenericClass){
-            ReflectClass claxx = ((GenericClass)a_class).getDelegate();
-            if(claxx != null){
-                return claxx;
-            }
+        	return ((GenericClass)a_class).getDelegate();
         }
         return a_class;
     }

@@ -21,7 +21,6 @@ public class GenericClass implements ReflectClass {
     private final String _name;
     private ReflectClass _superclass;
     
-    private int _id;
     private boolean _isSecondClass;
     
     private GenericField[] _fields = NO_FIELDS;
@@ -37,7 +36,7 @@ public class GenericClass implements ReflectClass {
         if(_delegate != null){
             return _delegate.getComponentType();
         }
-        return null;
+        return this;
     }
 
     public ReflectConstructor[] getDeclaredConstructors() {
@@ -46,6 +45,10 @@ public class GenericClass implements ReflectClass {
         }
         return null;
     }
+    
+    
+    // TODO: consider that classes may have two fields of
+    // the same name after refactoring.
 
     public ReflectField getDeclaredField(String name) {
         if(_delegate != null){
@@ -67,13 +70,12 @@ public class GenericClass implements ReflectClass {
     }
     
     public ReflectClass getDelegate(){
-        return _delegate;
+    	if(_delegate != null){
+    		return _delegate;
+    	}
+        return this;
     }
     
-    public int getID(){
-        return _id;
-    }
-
     public ReflectMethod getMethod(String methodName, ReflectClass[] paramClasses) {
         if(_delegate != null){
             return _delegate.getMethod(methodName, paramClasses);
@@ -106,7 +108,9 @@ public class GenericClass implements ReflectClass {
 		}
 	}
 
-    public boolean isAbstract() {  //TODO Consider: Will this method still be necessary once constructor logic is pushed into the reflectors?
+	 // TODO: Consider: Will this method still be necessary 
+	// once constructor logic is pushed into the reflectors?
+    public boolean isAbstract() { 
         if(_delegate != null){
             return _delegate.isAbstract();
         }
@@ -121,9 +125,18 @@ public class GenericClass implements ReflectClass {
     }
 
     public boolean isAssignableFrom(ReflectClass subclassCandidate) {
+    	
+    	if(subclassCandidate == null){
+    		return false;
+    	}
+    	
         if(_delegate != null){
+        	if( subclassCandidate instanceof GenericClass){
+        		subclassCandidate = ((GenericClass)subclassCandidate).getDelegate();
+        	}
             return _delegate.isAssignableFrom(subclassCandidate);
         }
+        
         if (subclassCandidate == this) {
         	return true;
         }
@@ -176,10 +189,6 @@ public class GenericClass implements ReflectClass {
             return _delegate.reflector();
         }
         return _reflector;
-    }
-    
-    void setId(int id){
-        _id = id;
     }
     
     void setSecondClass(){

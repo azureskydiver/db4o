@@ -394,7 +394,7 @@ public class YapHandlers {
     	return false;
     }
 
-    public int maxTypeID() {
+    int maxTypeID() {
         return i_maxTypeID;
     }
 }

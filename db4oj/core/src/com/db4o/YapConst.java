@@ -43,13 +43,13 @@ public final class YapConst
 	static final int	ADDED_LENGTH		= IDENTIFIER_LENGTH + BRACKETS_LENGTH;
 
 	static final int	SHORT_BYTES			= 2;
-	public static final int	INTEGER_BYTES		= (Deploy.debug && Deploy.debugLong)?11:4;
+	static final int	INTEGER_BYTES		= (Deploy.debug && Deploy.debugLong)?11:4;
 	static final int	LONG_BYTES			= (Deploy.debug && Deploy.debugLong)?20:8;
 	static final int	CHAR_BYTES			= 2;
 
 	static final int	UNSPECIFIED			= Integer.MIN_VALUE + 100; // make sure we don't fall over the -1 cliff
 
-	public static final int	YAPINT_LENGTH		= INTEGER_BYTES + ADDED_LENGTH;
+	public static final int	YAPINT_LENGTH	= INTEGER_BYTES + ADDED_LENGTH;
 	static final int	YAPID_LENGTH		= YAPINT_LENGTH;
 	static final int	YAPLONG_LENGTH		= LONG_BYTES + ADDED_LENGTH;
 	
