@@ -72,7 +72,7 @@ class Sessions extends Collection4{
 		}
 	}
 	
-	Object remove(Object obj){
+	public Object remove(Object obj){
 		synchronized(Db4o.lock){
 			return super.remove(obj);
 		}
