@@ -49,7 +49,7 @@ public final class YapConst
 
 	static final int	UNSPECIFIED			= Integer.MIN_VALUE + 100; // make sure we don't fall over the -1 cliff
 
-	static final int	YAPINT_LENGTH		= INTEGER_BYTES + ADDED_LENGTH;
+	public static final int	YAPINT_LENGTH		= INTEGER_BYTES + ADDED_LENGTH;
 	static final int	YAPID_LENGTH		= YAPINT_LENGTH;
 	static final int	YAPLONG_LENGTH		= LONG_BYTES + ADDED_LENGTH;
 	

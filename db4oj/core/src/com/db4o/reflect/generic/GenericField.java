@@ -11,12 +11,18 @@ public class GenericField implements ReflectField {
 
     private final String _name;
     private final ReflectClass _type;
+    private final boolean _primitive;
+    private final boolean _array;
+    private final boolean _nDimensionalArray;
 
     private int _index = -1;
 
-    public GenericField(String name, ReflectClass type) {
+    public GenericField(String name, ReflectClass clazz, boolean primitive, boolean array, boolean nDimensionalArray) {
         _name = name;
-        _type = type;
+        _type = clazz;
+        _primitive = primitive;
+        _array = array;
+        _nDimensionalArray = nDimensionalArray;
     }
 
     public Object get(Object onObject) {
