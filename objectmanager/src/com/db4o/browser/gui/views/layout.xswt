@@ -48,8 +48,8 @@
 						            <layoutData x:class="gridData" horizontalSpan="2" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"/>
 						            <layout x:class="gridLayout" numColumns="4"/>
 						            <x:children>
-						            	<button text="&lt;"/>
-						            	<button text="&gt;"/>
+						            	<button x:style="ARROW|LEFT"/>
+						            	<button x:style="ARROW|RIGHT"/>
 						            	<button text="&amp;History..."/>
 						            	
 								    	<!-- The Path label -->
