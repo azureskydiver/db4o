@@ -3,6 +3,8 @@
  */
 package com.db4o.browser.gui;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -18,7 +20,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-import com.db4o.ObjectSet;
 import com.db4o.browser.gui.standalone.Model;
 import com.db4o.ext.StoredClass;
 import com.swtworkbench.community.xswt.XSWT;
@@ -129,32 +130,40 @@ public class DbBrowserPane extends Composite {
         Tree theTree = getObjectTree();
         
         for (int i=0; i < contents.length; ++i) {
-            TreeItem item = new TreeItem(theTree, SWT.NULL);
-            item.setData(contents[i]);
-            item.setText(contents[i].getName());
-            new TreeItem(item, SWT.NULL); //Placeholder
+            ITreeNode node = new ClassNode(contents[i]);
+            initTreeItem(new TreeItem(theTree, SWT.NULL), node);
         }
+        
         theTree.addListener (SWT.Expand, new Listener () {
             public void handleEvent (final Event event) {
-                final TreeItem clazz = (TreeItem) event.item;
-                TreeItem [] instances = clazz.getItems ();
-                for (int i= 0; i<instances.length; i++) {
-                    if (instances [i].getData () != null) return;
-                    instances [i].dispose ();
+                // Delete the dummy item if it exists
+                final TreeItem treeItem = (TreeItem) event.item;
+                TreeItem [] childrenItems = treeItem.getItems ();
+                for (int i= 0; i<childrenItems.length; i++) {
+                    if (childrenItems [i].getData () != null) return;
+                    childrenItems [i].dispose ();
                 }
-                StoredClass storedClass = (StoredClass) clazz.getData ();
-                ObjectSet objects = Model.instances(storedClass.getName());
-                if (!objects.hasNext()) return;
-                while (objects.hasNext()) {
-                    Object object = objects.next();
-                    TreeItem item = new TreeItem(clazz, SWT.NULL);
-                    item.setText(object.toString());
-                    item.setData(object);
-//                    if (object.isContainer()) {
-//                        new TreeItem (item, 0);
-//                    }
-                }
+                
+                // Add the real children if they exist
+                ITreeNode node = (ITreeNode) treeItem.getData ();
+                List children = node.children();
+                for (Iterator i = children.iterator(); i.hasNext();) {
+					ITreeNode childNode = (ITreeNode) i.next();
+					initTreeItem(new TreeItem(treeItem, SWT.NULL), childNode);
+				}
             }
         }); 
      }
+
+	/**
+	 * @param parentItem
+	 * @param node
+	 */
+	private void initTreeItem(final TreeItem item, ITreeNode node) {
+		item.setText(node.getText());
+		item.setData(node);
+		if (node.mayHaveChildren()) {
+		  new TreeItem (item, 0); // Placeholder
+		}
+	}
 }
