@@ -1,31 +1,33 @@
 <project name="doctor" default="compiledb4odev" basedir=".">
+
+	<property file="machine.properties" />
 	<property file="ant.properties" />
 
 	<target name="compiledb4odev" depends="" description="Compile db4odev and Doctor sources">
-		<delete dir="${dir.bin.doctor}" includes="**/*"/>
-		<delete dir="${dir.bin.devtools}" includes="**/*"/>
-		<mkdir dir="${dir.bin.doctor}" />
-		<echo message="${dir.lib.doctor}"/>
-		<javac srcdir="${dir.src.doctor}"
-				destdir="${dir.bin.doctor}"
+		<delete dir="${dir.doctor.bin}" includes="**/*"/>
+		<delete dir="${dir.build.bin}" includes="**/*"/>
+		<mkdir dir="${dir.doctor.bin}" />
+		<javac srcdir="${dir.doctor.src}"
+				destdir="${dir.doctor.bin}"
 				debug="off"
 				target="1.3"
 				source="1.3">
 			<classpath>
 				<pathelement path="${path.classpath.full}"/>
-				<fileset dir="${dir.lib.doctor}" includes="*.jar" />
+				<fileset dir="${dir.doctor.lib}" includes="*.jar" />
 			</classpath>	
 		</javac>
-		
-		<mkdir dir="${dir.bin.devtools}" />
-		<javac srcdir="${dir.src.devtools}" destdir="${dir.bin.devtools}" excludes="sharpen/eclipse/**" target="1.1" source="1.2"/>
-		<javac srcdir="${dir.src.devtools}" destdir="${dir.bin.devtools}" includes="sharpen/eclipse/**">
+<!--		
+		<mkdir dir="${dir.build.bin}" />
+		<javac srcdir="${dir.build.src}" destdir="${dir.build.bin}" excludes="sharpen/eclipse/**" target="1.1" source="1.2"/>
+		<javac srcdir="${dir.build.src}" destdir="${dir.build.bin}" includes="sharpen/eclipse/**">
 			<classpath>
-				<dirset dir="${dir.bin.devtools}"/>
+				<dirset dir="${dir.build.bin}"/>
 				<fileset dir="${dir.lib.sharpeneclipse}">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
 		</javac>
+-->
 	</target>
 </project>
