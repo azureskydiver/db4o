@@ -4,7 +4,7 @@ package com.db4o;
 
 
 /**
- * 
+ * @exclude
  */
 public class TreeString extends Tree{
     

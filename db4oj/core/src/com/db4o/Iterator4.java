@@ -2,6 +2,9 @@
 
 package  com.db4o;
 
+/**
+ * @exclude
+ */
 public class Iterator4
 {
 	private List4 i_next;

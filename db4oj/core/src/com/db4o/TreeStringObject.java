@@ -3,7 +3,7 @@
 package com.db4o;
 
 /**
- * 
+ * @exclude
  */
 public class TreeStringObject extends TreeString {
 

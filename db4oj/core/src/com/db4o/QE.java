@@ -2,7 +2,10 @@
 
 package com.db4o;
 
-/**  Query Evaluator - Represents such things as >, >=, <, <=, EQUAL, LIKE, etc.
+/**
+ * Query Evaluator - Represents such things as &gt;, &gt;=, &lt;, &lt;=, EQUAL, LIKE, etc.
+ * 
+ * @exclude
  */
 public class QE
 {

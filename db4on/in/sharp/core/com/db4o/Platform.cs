@@ -17,6 +17,7 @@ using com.db4o.types;
 namespace com.db4o {
 
 
+	/// <exclude />
     public class Platform {
 
         private static String[] oldAssemblyNames;

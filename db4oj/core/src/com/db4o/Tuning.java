@@ -3,7 +3,9 @@
 package com.db4o;
 
 /**
- * Tuning switches for customized versions. 
+ * Tuning switches for customized versions.
+ * 
+ * @exclude
  */
 public class Tuning {
     

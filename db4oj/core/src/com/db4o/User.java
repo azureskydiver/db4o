@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public class User implements Internal{
 	public String name;
 	public String password;

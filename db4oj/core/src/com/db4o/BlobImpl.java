@@ -8,7 +8,9 @@ import com.db4o.types.*;
 
 /**
  * Transfer of blobs to and from the db4o system,
- * if users use the Blob Db4oType.  
+ * if users use the Blob Db4oType.
+ * 
+ * @exclude
  */
 class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
 

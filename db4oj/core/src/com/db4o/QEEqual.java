@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public class QEEqual extends QEAbstract
 {
     void indexBitMap(boolean[] bits){

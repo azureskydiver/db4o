@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 class QResultClient extends QResult {
 
 	private Object[] i_prefetched = new Object[YapConst.PREFETCH_OBJECT_COUNT];

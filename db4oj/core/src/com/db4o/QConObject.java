@@ -5,7 +5,11 @@ package com.db4o;
 import com.db4o.config.*;
 import com.db4o.query.*;
 
-/** Object constraint */
+/**
+ * Object constraint
+ *
+ * @exclude
+ */
 public class QConObject extends QCon {
 
     // the constraining object

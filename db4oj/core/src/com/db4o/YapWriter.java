@@ -6,6 +6,8 @@ import java.io.*;
 
 /**
  * public for .NET conversion reasons
+ * 
+ * @exclude
  */
 public final class YapWriter extends YapReader {
 

@@ -4,6 +4,8 @@ package com.db4o;
 
 /**
  * elements in linked list Collection4
+ * 
+ * @exclude
  */
 public final class List4
 {

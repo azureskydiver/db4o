@@ -8,6 +8,8 @@ import com.db4o.query.*;
  * QQuery is the users hook on our graph.
  * 
  * A QQuery is defined by it's constraints.
+ * 
+ * @exclude
  */
 public class QQuery implements Query {
 

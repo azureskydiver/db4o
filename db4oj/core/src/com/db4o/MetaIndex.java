@@ -4,7 +4,9 @@ package com.db4o;
 
 /**
  * The index record that is written to the database file.
- * Don't obfuscate. 
+ * Don't obfuscate.
+ * 
+ * @exclude
  */
 public class MetaIndex implements Internal{
     

@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public class QEIdentity extends QEEqual
 {
 	int i_objectID;

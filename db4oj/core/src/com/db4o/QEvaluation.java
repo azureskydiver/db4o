@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public class QEvaluation extends QCon {
 
     private transient Object i_evaluation;

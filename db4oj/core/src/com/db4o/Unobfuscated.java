@@ -5,7 +5,7 @@ package com.db4o;
 import com.db4o.config.Configuration;
 
 /**
- * 
+ * @exclude 
  */
 public class Unobfuscated {
     

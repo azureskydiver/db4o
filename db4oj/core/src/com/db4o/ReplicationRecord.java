@@ -6,7 +6,9 @@ import com.db4o.ext.*;
 
 /**
  * tracks the version of the last replication between
- * two Objectcontainers. 
+ * two Objectcontainers.
+ * 
+ *  @exclude
  */
 public class ReplicationRecord implements Internal{
    

@@ -4,9 +4,8 @@ package com.db4o;
 
 import java.lang.reflect.*;
 
-
 /**
- * 
+ * @exclude
  */
 public class Reflection4 {
 

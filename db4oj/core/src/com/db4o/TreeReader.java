@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 final class TreeReader  
 {
 	private final Readable i_template;

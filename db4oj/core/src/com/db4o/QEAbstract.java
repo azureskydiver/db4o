@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public abstract class QEAbstract extends QE{
 	
 	QE add(QE evaluator){

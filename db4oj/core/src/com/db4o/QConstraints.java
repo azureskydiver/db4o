@@ -4,6 +4,9 @@ package com.db4o;
 
 import com.db4o.query.*;
 
+/**
+ * @exclude
+ */
 public class QConstraints extends QCon implements Constraints {
 
 	private Constraint[] i_constraints;

@@ -6,6 +6,8 @@ package com.db4o;
  * non-constraint, only necessary to attach children.
  * Added upon call to Query#descendant, if there is no
  * other place to hook in.
+ * 
+ * @exclude
  */
 public class QConPath extends QConClass {
 	

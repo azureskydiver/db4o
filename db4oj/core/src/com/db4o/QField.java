@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public class QField implements Visitor4{
 	
 	transient Transaction i_trans;

@@ -7,6 +7,9 @@ import java.lang.reflect.*;
 
 import com.db4o.types.*;
 
+/**
+ * @exclude
+ */
 public class JDK {
 	
 	Thread addShutdownHook(Runnable a_runnable){
