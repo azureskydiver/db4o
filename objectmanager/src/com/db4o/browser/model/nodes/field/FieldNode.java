@@ -31,6 +31,7 @@ import com.db4o.browser.model.nodes.InstanceNode;
 public class FieldNode implements IModelNode {
 
     protected Field _field;
+	protected Object value = null;
     protected Object _instance;
 	protected InstanceNode delegate;
     
@@ -45,7 +46,6 @@ public class FieldNode implements IModelNode {
 		if (!_field.isAccessible()) {
             _field.setAccessible(true);
         }
-		Object value = null;
 		try {
 			value = _field.get(_instance);
 		} catch (Exception e) {
@@ -86,7 +86,7 @@ public class FieldNode implements IModelNode {
 	 * @see com.db4o.browser.model.nodes.IModelNode#getValueString()
 	 */
 	public String getValueString() {
-		return _instance.toString();
+		return value.toString();
 	}
 
 }
