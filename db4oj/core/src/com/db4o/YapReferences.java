@@ -22,16 +22,24 @@ class YapReferences implements Runnable {
     }
 
     Object createYapRef(YapObject a_yo, Object obj) {
-        if (!_weak) {  //TODO Klaus: consider a NullObject or testing for null in the caller.
+        
+        if (!_weak) {  
             return obj;
         }
+        
+        // Don't need to worry about null, that has been taken care of in the caller.
+        
         return Platform.createYapRef(_queue, a_yo, obj);
     }
 
     public void run() {
-//        if (_weak) {   //Carl, this "if" is unnecessary because the timer will only be created if _weak. If you agree, please remove it.
+        
+        // Need to check for _weak again here, because this method is also directly
+        // called from YapStream.gc()
+        
+        if (_weak) { 
             Platform.pollReferenceQueue(_stream, _queue);
-//        }
+        }
     }
 
     void startTimer() {
@@ -44,14 +52,16 @@ class YapReferences implements Runnable {
         }
 
         if (_timer != null) {
-        	return; //TODO Consider throwing an IllegalStateException here to detect design problems.
+        	return;
         }
         
         _timer = new SimpleTimer(this, _stream.i_config.i_weakReferenceCollectionInterval, "db4o WeakReference collector");
     }
 
     void stopTimer() {
-    	if (_timer == null) return;
+    	if (_timer == null){
+            return;
+        }
         _timer.stop();
         _timer = null;
     }

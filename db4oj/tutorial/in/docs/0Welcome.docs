@@ -1,6 +1,6 @@
 .0 Welcome
 
-.b db4o is the native Java and .NET object database for embedded applications. ..
+.b db4o is the native Java, .NET and Mono open source object database. ..
 
 This documentation and tutorial is intended to get you started ._
 with db4o and to be a reliable companion while you develop with db4o. ._ 
