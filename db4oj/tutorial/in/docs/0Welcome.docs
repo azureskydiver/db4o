@@ -9,7 +9,7 @@ Before you start, please make sure that you have downloaded the latest ._
 db4o distribution from the  .l http://www.db4o.com db4objects website .. .
 
 .? mono The db4o Mono distribution comes as either a binary or source RPM ._
-package, db4o-4.3.noarch.rpm and db4o-4.3.src.rpm respectively. After you ._
+package, db4o-4.4.noarch.rpm and db4o-4.4.src.rpm respectively. After you ._
 install the noarch RPM package you should find the db4o.dll assembly in ._
 /usr/lib/db4o (or in the respective path of your Linux distribution).
 
@@ -30,7 +30,7 @@ db4o is available for Java, for .NET and for Mono. This tutorial was ._
 written for Mono. The structure of the other distributions may be ._
 considerably different, so please use the tutorial for the version that ._
 you plan to experiment with first. ..? .? java The db4o Java distribution comes ._
-as one zip file, db4o-4.3-java.zip. When ._
+as one zip file, db4o-4.4-java.zip. When ._
 you unzip this file, you get the following directory structure:
 
 .g directoryjava.jpg ..
@@ -39,7 +39,7 @@ you unzip this file, you get the following directory structure:
 This tutorial comes in multiple versions. Make sure ._
 that you use the right one for the right purpose.
 
-.b db4o-4.3/doc/tutorial/index.html .. 
+.b db4o-4.4/doc/tutorial/index.html .. 
 This is the interactive HTML tutorial. Examples can be run "live" ._
 against a db4o database from within the browser. ._
 In order to use the interactive functionality ._
@@ -47,7 +47,7 @@ a Java JRE 1.3 or above needs to be installed and integrated ._
 into the browser. Java security settings have to allow applets to be ._
 run.
 
-.b db4o-4.3/doc/tutorial/db4o-4.3-tutorial.pdf .. 
+.b db4o-4.4/doc/tutorial/db4o-4.4-tutorial.pdf .. 
 The PDF version of the tutorial allows best fulltext ._
 search capabilities. 
 
@@ -57,7 +57,7 @@ written for Java. The structure of the other distributions may be ._
 considerably different, so please use the tutorial for the version that ._
 you plan to experiment with first. ..? .? net The db4o .NET distribution ._
 comes as one MSI installer file, ._
-db4o-4.3-net.msi. After you run the installer, you get the following directory ._
+db4o-4.4-net.msi. After you run the installer, you get the following directory ._
 structure:
 
 .g directorynet.jpg ..
@@ -66,11 +66,11 @@ structure:
 This tutorial comes in multiple versions. Make sure ._
 that you use the right one for the right purpose.
 
-.b db4o-4.3/doc/tutorial/db4o-tutorial.exe .. 
+.b db4o-4.4/doc/tutorial/db4o-tutorial.exe .. 
 This is the interactive tutorial application for .NET. Examples can ._
 be run "live" against a db4o database from within the application.
 
-.b db4o-4.3/doc/tutorial/db4o-4.3-tutorial.pdf .. 
+.b db4o-4.4/doc/tutorial/db4o-4.4-tutorial.pdf .. 
 The PDF version of the tutorial allows best fulltext ._
 search capabilities.
 
