@@ -24,6 +24,7 @@ public class NIOFileAdapter extends IoAdapter {
 	private Map _id2Page;
 	private LinkedList _lruPages;
 	private int _lruLimit;
+	private RandomAccessFile _file;
 	
 	public NIOFileAdapter(int pageSize,int lruLimit) {
 		_pageSize=pageSize;
@@ -32,7 +33,8 @@ public class NIOFileAdapter extends IoAdapter {
 
 	private NIOFileAdapter(String filename,boolean lockFile,long initialLength,int pageSize,int lruLimit) throws IOException {
 		_pageSize=pageSize;
-		_channel = new RandomAccessFile(filename, "rw").getChannel();
+		_file=new RandomAccessFile(filename, "rw");
+		_channel=_file.getChannel();
 		_size=_channel.size();
 		_page=null;
 		_pageId=0;
@@ -53,8 +55,10 @@ public class NIOFileAdapter extends IoAdapter {
 			closePage(curpage);
 		}
 		_id2Page.clear();
+		_lruPages.clear();
 		_page=null;
 		_channel.close();
+		_file.close();
 		//System.err.println("Hits: "+hits+", Misses: "+misses);
 	}
 

@@ -4,6 +4,10 @@ package com.db4o.config;
 
 import com.db4o.types.*;
 
+/**
+ * 
+ * @exclude
+ */
 public class Entry implements Compare, SecondClass
 {
 	public Object key;
