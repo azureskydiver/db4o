@@ -31,7 +31,7 @@ final class YapConstructor {
         
     	IReflect reflector = Db4o.reflector();
     	if(a_stream != null){
-    		reflector = a_stream.i_config.i_reflect;
+    		reflector = a_stream.i_config.reflector();
     	}
     	i_reflectorClass = reflector.forClass(a_class);
 	        

@@ -692,7 +692,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
     
     final YapClass getYapClass(Class a_class, boolean a_create) {
-    	return getYapClass(i_config.i_reflect.forClass(a_class), a_create);
+    	return getYapClass(i_config.reflector().forClass(a_class), a_create);
     }
 
     final YapClass getYapClass(IClass a_class, boolean a_create) {
@@ -1462,7 +1462,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                     return new List4(new List4(a_still, new Integer(a_depth)), yapObject);
                 } else {
                     if (a_object.getClass().isArray()) {
-                        Object[] arr = YapArray.toArray(a_object);
+                        Object[] arr = YapArray.toArray(this, a_object);
                         for (int i = 0; i < arr.length; i++) {
                             a_still = stillTo1(a_still, a_just, arr[i],
                                 a_depth, a_forceUnknownDeactivate);

@@ -72,7 +72,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     }
     
     IClass classReflector() throws ClassNotFoundException {
-    	return i_config.i_reflect.forName(i_name);
+    	return i_config.reflector().forName(i_name);
     }
 
     public void compare(ObjectAttribute comparator) {

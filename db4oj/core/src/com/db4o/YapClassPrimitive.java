@@ -86,9 +86,9 @@ class YapClassPrimitive extends YapClass{
 
     void deleteMembers(YapWriter a_bytes, int a_type) {
         if (a_type == YapConst.TYPE_ARRAY) {
-            new YapArray(this, true).deletePrimitiveEmbedded(a_bytes, this);
+            new YapArray(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
         } else if (a_type == YapConst.TYPE_NARRAY) {
-            new YapArrayN(this, true).deletePrimitiveEmbedded(a_bytes, this);
+            new YapArrayN(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
         }
     }
     

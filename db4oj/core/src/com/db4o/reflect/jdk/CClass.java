@@ -111,6 +111,7 @@ public class CClass implements IClass{
 	public String toString(){
 		return "CClass: " + clazz.getName();
 	}
+
 	
 //	// FIXME: REFLECTOR remove this, it's just needed to keep runnable
 //    //                  but it will make things real slow	                
