@@ -367,10 +367,13 @@
 		</copy>
 		<filehead path="${dir.dist.net.build.src}" before="using" fileext="cs" header="${content.gplheader}" />
 		<copy todir="${dir.dist.net.build}">
-			<fileset dir="${dir.dist}" includes="doc/**" />
 			<fileset dir="${dir.dist}" includes="dll/**/**" />
 			<fileset dir="${dir.j}" includes="GPL.txt" />
 			<fileset dir="${dir.config}" includes="README.txt" />
+		</copy>
+		<mkdir dir="${dir.dist.net.build}/doc/api" />
+		<copy todir="${dir.dist.net.build}/doc/api">
+			<fileset dir="${dir.config}" includes="db4o.chm" />
 		</copy>
 		<zip destfile="${file.dist.net}">
 			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
