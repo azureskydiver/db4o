@@ -16,16 +16,18 @@
  */
 package com.db4o.browser.gui.standalone;
 
+import java.util.Map;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 import com.db4o.browser.gui.views.DbBrowserPane;
+import com.swtworkbench.community.xswt.XSWT;
 
 /**
  * Class StandaloneBrowser.
@@ -50,11 +52,11 @@ public class StandaloneBrowser extends Snippet {
 	 * Build the application menu bar
 	 */
 	private void buildMenuBar() {
-		Menu fileMenu = new Menu(shell, SWT.DROP_DOWN);
+        Map contents = XSWT.createl(shell, "menu.xswt", getClass());
+        MenuItem open = (MenuItem) contents.get("open");
+        MenuItem exit = (MenuItem) contents.get("exit");
         
-        MenuItem item = new MenuItem(fileMenu, SWT.NULL);
-        item.setText("&Open...");
-        item.addSelectionListener(new SelectionAdapter() {
+        open.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(shell, SWT.OPEN);
                 String file = dialog.open();
@@ -64,21 +66,11 @@ public class StandaloneBrowser extends Snippet {
             }
         });
         
-        new MenuItem(fileMenu, SWT.SEPARATOR);
-        item = new MenuItem(fileMenu, SWT.NULL);
-        item.setText("&Exit");
-        item.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
+        exit.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
                 shell.close();
-			}
+            }
         });
-        
-        Menu menuBar = new Menu(shell, SWT.BAR);
-        item = new MenuItem(menuBar, SWT.CASCADE);
-        item.setMenu(fileMenu);
-        item.setText("&File");
-        
-        shell.setMenuBar(menuBar);
 	}
 
 	public static void main(String[] args) {
