@@ -5,7 +5,7 @@ package  com.db4o.config;
  * configuration interface for fields of classes.
  * <br><br><b>Examples: ../com/db4o/samples/translators.</b><br><br>
  * Use the global Configuration object to configure db4o before opening an
- * <a href="../ObjectContainer.html"><code>ObjectContainer</code></a>.<br><br>
+ * {@link com.db4o.ObjectContainer ObjectContainer}.<br><br>
  * <b>Example:</b><br>
  * <code>
  * Configuration config = Db4o.configure();<br>
@@ -41,17 +41,13 @@ public interface ObjectField {
 	 * Setting cascadeOnDelete to true will result in the deletion of
 	 * the object attribute stored in this field on the parent object
 	 * if the parent object is passed to 
-	 * <a href="../ObjectContainer.html#delete(java.lang.Object)">
-	 * <code>ObjectContainer#delete()</code></a>.
+	 * {@link com.db4o.ObjectContainer#delete ObjectContainer#delete()}.
 	 * <br><br>
 	 * <b>Caution !</b><br>
 	 * This setting will also trigger deletion of the old member object, on
-	 * calls to
-	 * <a href="../ObjectContainer.html#set(java.lang.Object)">
-	 * <code>ObjectContainer#set()</code></a>. An example of the behaviour
-	 * can be found in 
-	 * <a href="ObjectClass.html#cascadeOnDelete(boolean)">
-	 * <code>ObjectClass#cascadeOnDelete()</code></a>
+	 * calls to {@link com.db4o.ObjectContainer#set ObjectContainer#set()}.
+	 * An example of the behaviour can be found in 
+	 * {@link ObjectClass#cascadeOnDelete ObjectClass#cascadeOnDelete()}
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * @param flag whether deletes are to be cascaded to the member object.
@@ -68,8 +64,7 @@ public interface ObjectField {
 	 * Setting cascadeOnUpdate to true will result in the update
 	 * of the object attribute stored in this field if the parent object
 	 * is passed to
-	 * <a href="../ObjectContainer.html#set(java.lang.Object)">
-	 * <code>ObjectContainer#set()</code></a>.
+	 * {@link com.db4o.ObjectContainer#set ObjectContainer#set()}.
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * @param flag whether updates are to be cascaded to the member object.
