@@ -9,7 +9,7 @@ import com.db4o.config.Configuration;
  */
 public class Unobfuscated {
     
-    static java.util.Random random;
+    static Object random;
     
 	static boolean createDb4oList(Object a_stream){
 	    ((YapStream)a_stream).checkClosed();
@@ -50,7 +50,7 @@ public class Unobfuscated {
 	        if(random == null){
 	            random = new java.util.Random();
 	        }
-	        return random.nextLong();
+	        return ((java.util.Random)random).nextLong();
 	    }
 	}
 	
