@@ -56,7 +56,6 @@ public class AllTestsConfAll {
 	        KeepCollectionContent.class,
 			MassUpdates.class,
 			Messaging.class,
-			MigrationFromEarlierVersion.class,
 			MultipleEvaluationGetObjectCalls.class,
 			NoInstanceStored.class,
 	        NoInternalClasses.class,

@@ -122,7 +122,7 @@ class P2HashMap extends P1Collection implements Db4oMap, TransactionListener {
     }
 
     private boolean equals(P1HashElement phe, int hashCode, Object key) {
-        return phe.i_hashCode == hashCode && phe.activatedKey(i_activationDepth).equals(key);
+        return phe.i_hashCode == hashCode && phe.activatedKey(elementActivationDepth()).equals(key);
     }
 
     public Object get(Object key) {
@@ -138,7 +138,7 @@ class P2HashMap extends P1Collection implements Db4oMap, TransactionListener {
         while (phe != null) {
             phe.checkActive();
             if (equals(phe, hash, key)) {
-                return phe.activatedObject(i_activationDepth);
+                return phe.activatedObject(elementActivationDepth());
             }
             phe = (P1HashElement)phe.i_next;
         }
@@ -250,7 +250,7 @@ class P2HashMap extends P1Collection implements Db4oMap, TransactionListener {
             phe.checkActive();
             if (equals(phe, entry.i_hashCode, key)) {
                 i_size--;
-                Object ret = phe.activatedObject(i_activationDepth);
+                Object ret = phe.activatedObject(elementActivationDepth());
                 entry.i_next = phe.i_next;
                 store(entry);
                 if (last != null) {
@@ -306,7 +306,7 @@ class P2HashMap extends P1Collection implements Db4oMap, TransactionListener {
                 }
                 modified();
                 i_size--;
-                Object obj = phe.activatedObject(i_activationDepth);
+                Object obj = phe.activatedObject(elementActivationDepth());
                 phe.delete(i_deleteRemoved);
                 return obj;
             }

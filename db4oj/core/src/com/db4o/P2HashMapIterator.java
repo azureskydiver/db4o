@@ -48,7 +48,7 @@ class P2HashMapIterator implements Iterator {
             i_map.checkActive();
             Object ret = null;
             if (i_current != null) {
-                ret = i_current.activatedKey(i_map.i_activationDepth);
+                ret = i_current.activatedKey(i_map.elementActivationDepth());
             }
             getNextCurrent();
             return ret;

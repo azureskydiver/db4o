@@ -210,7 +210,7 @@ class P2LinkedList extends P1Collection implements Db4oList {
             P2ListElementIterator i = iterator4();
             P1ListElement elem = i.move(index);
             if (elem != null) {
-                return elem.activatedObject(i_activationDepth);
+                return elem.activatedObject(elementActivationDepth());
             }
             return null;
         }
@@ -346,7 +346,7 @@ class P2LinkedList extends P1Collection implements Db4oList {
                 previous.update();
             }
             checkRemoved(previous, elem);
-            ret = elem.activatedObject(i_activationDepth);
+            ret = elem.activatedObject(elementActivationDepth());
             elem.delete(i_deleteRemoved);
             return ret;
         }
@@ -410,7 +410,7 @@ class P2LinkedList extends P1Collection implements Db4oList {
                     previous.i_next = newElement;
                     previous.update();
                 }
-                ret = elem.activatedObject(i_activationDepth);
+                ret = elem.activatedObject(elementActivationDepth());
                 elem.delete(i_deleteRemoved);
             } else {
                 i_last = newElement;
@@ -463,7 +463,7 @@ class P2LinkedList extends P1Collection implements Db4oList {
             P2ListElementIterator j = iterator4();
             while (j.hasNext()) {
                 P1ListElement elem = j.nextElement();
-                arr[i++] = elem.activatedObject(i_activationDepth);
+                arr[i++] = elem.activatedObject(elementActivationDepth());
             }
             return arr;
         }
@@ -481,7 +481,7 @@ class P2LinkedList extends P1Collection implements Db4oList {
             P2ListElementIterator j = iterator4();
             while (j.hasNext()) {
                 P1ListElement elem = j.nextElement();
-                a[i++] = elem.activatedObject(i_activationDepth);
+                a[i++] = elem.activatedObject(elementActivationDepth());
             }
             if (a.length > size) {
                 a[size] = null;

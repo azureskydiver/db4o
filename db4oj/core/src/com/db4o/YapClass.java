@@ -317,7 +317,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 
     private void createConstructor(YapStream a_stream, Class a_class, String a_name) {
         if (i_config != null && i_config.instantiates()) {
-            i_constructor = new YapConstructor(a_stream, a_class, null, null, true);
+            i_constructor = new YapConstructor(a_stream, a_class, null, null, true, false);
         }else{
             if(a_class != null){
                 if(YapConst.CLASS_TRANSIENTCLASS.isAssignableFrom(a_class)){
@@ -330,7 +330,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                 }
                 setStateDead();
             }else{ 
-    	        i_constructor = a_stream.i_handlers.createConstructorStatic(a_stream, a_class);
+    	        i_constructor = a_stream.i_handlers.createConstructorStatic(a_stream,this, a_class);
     	        if (i_constructor == null) {
     	            setStateDead();
     	            a_stream.logMsg(7, a_name);
@@ -789,7 +789,6 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     void init(
         YapStream a_stream,
         YapClass a_ancestor,
-        Config4Class a_config,
         YapConstructor a_constructor) {
         i_stream = a_stream;
         i_constructor = a_constructor;
@@ -798,7 +797,6 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             i_index = a_stream.createClassIndex(this);
         }
         i_name = a_constructor.getName();
-        i_config = a_config;
         i_ancestor = a_ancestor;
         bitTrue(YapConst.CHECKED_CHANGES);
     }
@@ -1068,6 +1066,16 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             }
         }
         return length;
+    }
+    
+    boolean noConstructorNeeded() {
+        if(i_config != null && ! i_config.noConstructorNeeded() ){
+            return false;
+        }
+        if(i_ancestor != null){
+            return i_ancestor.noConstructorNeeded();
+        }
+        return true;
     }
 
     int objectLength() {
@@ -1398,6 +1406,14 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         if(i_reader != null && bitIsFalse(YapConst.READING)){
 	        bitTrue(YapConst.READING);
 	        i_ancestor = i_stream.getYapClass(i_reader.readInt());
+	        
+	        if(i_constructor != null && i_constructor.i_dontCallConstructors){
+		        // The logic further down checks the ancestor YapClass, whether
+	            // or not it is allowed, not to call constructors. The ancestor
+	            // YapClass may possibly have not been loaded yet.
+		        createConstructor(i_stream, getJavaClass(), i_name);
+	        }
+	        
 	        checkDb4oType();
 	        int indexID = i_reader.readInt();
 	        if (hasIndex()) {
@@ -1767,6 +1783,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         }
         return str;
     }
+
 
     
 

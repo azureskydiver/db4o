@@ -139,7 +139,11 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     public void minimumActivationDepth(int depth) {
         i_minimumActivationDepth = depth;
     }
-
+    
+    public boolean noConstructorNeeded() {
+        return i_translator == null;
+    }
+    
     public ObjectField objectField(String fieldName) {
         if (i_exceptionalFields == null) {
             i_exceptionalFields = new Hashtable4(16);
@@ -190,4 +194,5 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     public void updateDepth(int depth) {
         i_updateDepth = depth;
     }
+
 }

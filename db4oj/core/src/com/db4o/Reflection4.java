@@ -16,12 +16,23 @@ public class Reflection4 {
 	
 	static Object invoke (String className, String methodName, Class[] paramClasses, Object[] params, Object onObject){
 	    try {
-			    Class clazz = Class.forName(className);
-			    Method method = clazz.getMethod(methodName, paramClasses);
+			    Method method = method(className, methodName, paramClasses);
 				return method.invoke(onObject, params);
 			} catch (Throwable t) {
 			}
 		return null;
 	}
+
+    static Method method(String className, String methodName, Class[] paramClasses) {
+	    try {
+	        Class clazz = Class.forName(className);
+	        Method method = clazz.getMethod(methodName, paramClasses);
+	        return method;
+		} catch (Throwable t) {
+		}
+		return null;
+    }
+	
+	 
 
 }
