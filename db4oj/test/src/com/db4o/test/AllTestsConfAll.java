@@ -84,6 +84,7 @@ public class AllTestsConfAll extends TestSuite{
             QueryForList.class,
 	        QueryNonExistant.class,
 	        Refresh.class,
+            RefreshList.class,
 	        Rename.class,
 	        // ReplicationFeatures.class,
 	        SameSizeOnReopen.class,
