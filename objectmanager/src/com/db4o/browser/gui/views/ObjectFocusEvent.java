@@ -1,7 +1,7 @@
 /*
  * Created on Jan 24, 2005
  */
-package com.db4o.browser.gui;
+package com.db4o.browser.gui.views;
 
 import com.db4o.browser.gui.tree.ITreeNode;
 

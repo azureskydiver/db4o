@@ -20,7 +20,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 
-import com.db4o.browser.gui.DbBrowserPane;
+import com.db4o.browser.gui.views.DbBrowserPane;
 
 
 /**

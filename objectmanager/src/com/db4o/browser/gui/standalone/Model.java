@@ -21,8 +21,6 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
-import com.db4o.reflect.IClass;
-import com.db4o.reflect.jdk.CReflect;
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
@@ -31,17 +29,29 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  * @author djo
  */
 public class Model {
-	private static ObjectContainer container = null;
-    
-    public static void open() {
-        container=Db4o.openFile("c:\\workspace\\com.db4o.browser\\formula1.yap");
+    /**
+     * Open a model object and return it.
+     * 
+     * @return
+     */
+    public static Model open() {
+        return new Model(Db4o.openFile("c:\\workspace\\com.db4o.browser\\formula1.yap"));
     }
     
-    public static StoredClass[] storedClasses() {
+    /**
+     * @param container
+     */
+    public Model(ObjectContainer _container) {
+        container = _container;
+    }
+
+	private ObjectContainer container = null;
+    
+    public StoredClass[] storedClasses() {
        	return container.ext().storedClasses();
     }
     
-    public static ObjectSet instances(String clazz) {
+    public ObjectSet instances(String clazz) {
         Query q = container.query();
 //        IClass toReturn = null;
 //        try {
@@ -58,8 +68,10 @@ public class Model {
         return container.get(toReturn);
     }
     
-    public static void close() {
-        container.close();
+    public void close() {
+        if (container != null)
+            container.close();
+        container = null;
     }
     
 }

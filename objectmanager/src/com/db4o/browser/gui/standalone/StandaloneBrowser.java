@@ -20,7 +20,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Shell;
 
-import com.db4o.browser.gui.DbBrowserPane;
+import com.db4o.browser.gui.views.DbBrowserPane;
 
 /**
  * Class StandaloneBrowser.
@@ -34,8 +34,10 @@ public class StandaloneBrowser extends Snippet {
 	 */
 	protected void constructUI(Shell parent) {
 		parent.setLayout(new FillLayout());
-        new DbBrowserPane(parent, SWT.NULL);
+        DbBrowserPane ui = new DbBrowserPane(parent, SWT.NULL);
 	}
+    
+    
     
 	public static void main(String[] args) {
         new StandaloneBrowser();

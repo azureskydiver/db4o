@@ -31,12 +31,14 @@ import com.db4o.ext.StoredClass;
 public class ClassNode implements ITreeNode {
 
 	private final StoredClass _contents;
+    private final Model _model;
 
 	/**
 	 * @param class1
 	 */
-	public ClassNode(StoredClass contents) {
+	public ClassNode(StoredClass contents, Model model) {
 		_contents = contents;
+        _model = model;
     }
 
     public boolean mayHaveChildren() {
@@ -44,11 +46,11 @@ public class ClassNode implements ITreeNode {
     }
     
     /**
-     * @return a list of nodes (no generics now please)
+     * @return a list of nodes
      */
     public List children() {
         LinkedList result = new LinkedList();
-        ObjectSet objects = Model.instances(_contents.getName());
+        ObjectSet objects = _model.instances(_contents.getName());
         while (objects.hasNext()) {
             Object object = objects.next();
             result.add(new InstanceNode(object));
