@@ -147,7 +147,7 @@ public final class YapConst
     static final int YES = 1;
     static final int DEFAULT = 0;
     
-	public static final YapStringIOUnicode stringIO = new YapStringIOUnicode();
+	static final YapStringIOUnicode stringIO = new YapStringIOUnicode();
 	
 	public static RuntimeException virtualException(){
 		return new RuntimeException();
