@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 interface YapDataType extends YapComparable
 {
 	
@@ -18,6 +19,7 @@ interface YapDataType extends YapComparable
 	
 	int getID();
 	
+    // FIXME: REFLECTOR need to work with IClass here
 	Class getJavaClass();
 	
 	Class getPrimitiveJavaClass();

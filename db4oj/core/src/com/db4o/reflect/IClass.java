@@ -15,13 +15,14 @@ public interface IClass {
 	
 	public IField getDeclaredField(String name);
 	
-	public IMethod getMethod(String methodName, Class[] paramClasses);
+	public IMethod getMethod(String methodName, IClass[] paramClasses);
 	
 	public boolean isAbstract();
 	
 	public boolean isInterface();
 	
 	public Object newInstance();
+	
 	
 }
 

@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.reflect.IClass;
 
 final class YapConst
 {
@@ -107,7 +108,10 @@ final class YapConst
 	static final int MAXIMUM_ARRAY_ENTRIES = 7000000; // 7 Million 
 	static final int MAXIMUM_ARRAY_ENTRIES_PRIMITIVE = MAXIMUM_ARRAY_ENTRIES * 100; // 70 MB for byte arrays
 	
-    static Class CLASS_CLASS;
+	
+    //FIXME: REFLECTOR Remove unneccessary CLASS and ICLASS
+	
+	static Class CLASS_CLASS;
     static Class CLASS_COMPARE;
 	static Class CLASS_DB4ODATABASE;
     static Class CLASS_DB4OTYPE;
@@ -124,6 +128,25 @@ final class YapConst
 	static Class CLASS_STATICFIELD;
 	static Class CLASS_STATICCLASS;
     static Class CLASS_TRANSIENTCLASS;
+    
+    static IClass ICLASS_CLASS;
+    static IClass ICLASS_COMPARE;
+	static IClass ICLASS_DB4ODATABASE;
+    static IClass ICLASS_DB4OTYPE;
+    static IClass ICLASS_DB4OTYPEIMPL;
+    static IClass ICLASS_ENUM;
+	static IClass ICLASS_INTERNAL;
+    static IClass ICLASS_METACLASS;
+    static IClass ICLASS_METAFIELD;
+	static IClass ICLASS_METAINDEX;
+    static IClass ICLASS_OBJECT;
+    static IClass ICLASS_OBJECTCONTAINER;
+    static IClass ICLASS_PBOOTRECORD;
+    static IClass ICLASS_REPLICATIONRECORD;
+	static IClass ICLASS_STATICFIELD;
+	static IClass ICLASS_STATICCLASS;
+    static IClass ICLASS_TRANSIENTCLASS;
+
 	
 	static final String EMBEDDED_CLIENT_USER = "embedded client";
 	
@@ -170,6 +193,29 @@ final class YapConst
         CLASS_STATICFIELD = new StaticField().getClass();
         CLASS_STATICCLASS = new StaticClass().getClass();
         CLASS_TRANSIENTCLASS = db4oClass("types.TransientClass");
+        
+        //FIXME: REFLECTOR Access per-Container reflector or make 
+        //                 sure global Hashtable entries go per-Container
+        ICLASS_CLASS = Db4o.reflector().forClass(CLASS_CLASS);
+		ICLASS_COMPARE = Db4o.reflector().forClass(CLASS_COMPARE);
+		ICLASS_DB4ODATABASE = Db4o.reflector().forClass(CLASS_DB4ODATABASE);
+		ICLASS_DB4OTYPE = Db4o.reflector().forClass(CLASS_DB4OTYPE);
+		ICLASS_DB4OTYPEIMPL = Db4o.reflector().forClass(CLASS_DB4OTYPEIMPL);
+		ICLASS_ENUM = Db4o.reflector().forClass(CLASS_ENUM);
+		ICLASS_INTERNAL = Db4o.reflector().forClass(CLASS_INTERNAL);
+		ICLASS_METACLASS = Db4o.reflector().forClass(CLASS_METACLASS);
+		ICLASS_METAFIELD = Db4o.reflector().forClass(CLASS_METAFIELD);
+		ICLASS_METAINDEX = Db4o.reflector().forClass(CLASS_METAINDEX);
+		ICLASS_OBJECT = Db4o.reflector().forClass(CLASS_OBJECT);
+		ICLASS_OBJECTCONTAINER = Db4o.reflector().forClass(
+				CLASS_OBJECTCONTAINER);
+		ICLASS_PBOOTRECORD = Db4o.reflector().forClass(CLASS_PBOOTRECORD);
+		ICLASS_REPLICATIONRECORD = Db4o.reflector().forClass(
+				CLASS_REPLICATIONRECORD);
+		ICLASS_STATICFIELD = Db4o.reflector().forClass(CLASS_STATICFIELD);
+		ICLASS_STATICCLASS = Db4o.reflector().forClass(CLASS_STATICCLASS);
+		ICLASS_TRANSIENTCLASS = Db4o.reflector().forClass(CLASS_TRANSIENTCLASS);
+		
 	    return null;
 	}
 	

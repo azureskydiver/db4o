@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 class YLong extends YapJavaClass
 {
     

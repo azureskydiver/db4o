@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 /**
  * YapString
  * Legacy rename for C# obfuscator production trouble

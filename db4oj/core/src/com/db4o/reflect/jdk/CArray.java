@@ -18,12 +18,12 @@ public class CArray implements IArray {
         return Array.getLength(array);
     }
 
-    public Object newInstance(Class componentType, int length) {
-        return Array.newInstance(componentType, length);
+    public Object newInstance(IClass componentType, int length) {
+        return Array.newInstance(((CClass)componentType).getJavaClass(), length);
     }
 
-    public Object newInstance(Class componentType, int[] dimensions) {
-        return Array.newInstance(componentType, dimensions);
+    public Object newInstance(IClass componentType, int[] dimensions) {
+        return Array.newInstance(((CClass)componentType).getJavaClass(), dimensions);
     }
 
     public void set(Object onArray, int index, Object element) {

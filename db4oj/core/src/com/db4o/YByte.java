@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 final class YByte extends YapJavaClass
 {
 	static final int LENGTH = 1 + YapConst.ADDED_LENGTH;

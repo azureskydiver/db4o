@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 abstract class YapJavaClass implements YapDataType {
 
     private boolean i_compareToIsNull;

@@ -10,6 +10,7 @@ import java.util.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.jdk.CReflect;
 import com.db4o.types.*;
 
 /**
@@ -400,8 +401,10 @@ public final class Platform {
         String methodName,
         Class[] params) {
         try {
-            IClass classReflector = Db4o.reflector().forName(className);
-            if (classReflector.getMethod(methodName, params) != null) {
+        	IReflect reflector = Db4o.reflector();
+            IClass classReflector = reflector.forName(className);
+            //FIXME: REFLECTOR This is ugly because it binds to a hard reflector
+            if (classReflector.getMethod(methodName, CReflect.toMeta((CReflect)reflector, params)) != null) {
                 return true;
             }
             return false;

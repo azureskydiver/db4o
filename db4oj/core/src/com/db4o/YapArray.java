@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.reflect.IClass;
+
 class YapArray extends YapIndependantType {
 	
     final YapDataType i_handler;
@@ -234,10 +236,10 @@ class YapArray extends YapIndependantType {
     }
 
 	private Object readCreate(Transaction a_trans, YapReader a_reader, int[] a_elements) {
-		Class[] clazz = new Class[1];
+		IClass[] clazz = new IClass[1];
 		a_elements[0] = readElementsAndClass(a_trans, a_reader, clazz);
 		if (i_isPrimitive) {
-			return Array4.reflector().newInstance(i_handler.getPrimitiveJavaClass(), a_elements[0]);
+			return Array4.reflector().newInstance(a_trans.reflector().forClass(i_handler.getPrimitiveJavaClass()), a_elements[0]);
 		} else {
 			if (clazz[0] != null) {
 				return Array4.reflector().newInstance(clazz[0], a_elements[0]);	
@@ -263,9 +265,10 @@ class YapArray extends YapIndependantType {
         }
     }
     
-    int readElementsAndClass(Transaction a_trans, YapReader a_bytes, Class[] clazz){
+    int readElementsAndClass(Transaction a_trans, YapReader a_bytes, IClass[] clazz){
         int elements = a_bytes.readInt();
-        clazz[0] = i_handler.getJavaClass();
+        // FIXME: REFLECTOR need to work with IClass here
+        clazz[0] = a_trans.reflector().forClass(i_handler.getJavaClass());
         if (Debug.arrayTypes && elements < 0) {
             
             // TODO: This one is a terrible low-frequency blunder !!!
@@ -282,9 +285,10 @@ class YapArray extends YapIndependantType {
                 YapClass yc = a_trans.i_stream.getYapClass(- elements);
                 if (yc != null) {
                     if(primitive){
-                        clazz[0] = yc.getPrimitiveJavaClass();
+                        clazz[0] = a_trans.reflector().forClass(yc.getPrimitiveJavaClass());
                     }else{
-                        clazz[0] = yc.getJavaClass();
+                        // FIXME: REFLECTOR need to work with IClass here
+                        clazz[0] = a_trans.reflector().forClass(yc.getJavaClass());
                     }
                 }
             }

@@ -13,14 +13,16 @@ import com.db4o.reflect.*;
  */
 public class CConstructor implements IConstructor{
 	
+	private final IReflect reflector;
 	private final Constructor constructor;
 	
-	public CConstructor(Constructor constructor){
+	public CConstructor(IReflect reflector, Constructor constructor){
+		this.reflector = reflector;
 		this.constructor = constructor;
 	}
 	
-	public Class[] getParameterTypes(){
-		return constructor.getParameterTypes();
+	public IClass[] getParameterTypes(){
+		return CReflect.toMeta(reflector, constructor.getParameterTypes());
 	}
 	
 	public void setAccessible(){

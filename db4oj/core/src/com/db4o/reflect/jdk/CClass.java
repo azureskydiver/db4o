@@ -11,12 +11,11 @@ import com.db4o.reflect.*;
  */
 public class CClass implements IClass{
 	
+	private final IReflect reflector;
 	private final Class clazz;
 	
-	public CClass(Class clazz) throws ClassNotFoundException{
-		if(clazz == null){
-			throw new ClassNotFoundException();
-		}
+	public CClass(IReflect reflector, Class clazz) {
+		this.reflector = reflector;
 		this.clazz = clazz;
 	}
 	
@@ -24,7 +23,7 @@ public class CClass implements IClass{
 		Constructor[] constructors = clazz.getDeclaredConstructors();
 		IConstructor[] reflectors = new IConstructor[constructors.length];
 		for (int i = 0; i < constructors.length; i++) {
-			reflectors[i] = new CConstructor(constructors[i]);
+			reflectors[i] = new CConstructor(reflector, constructors[i]);
 		}
 		return reflectors;
 	}
@@ -46,9 +45,9 @@ public class CClass implements IClass{
 		return reflectors;
 	}
 	
-	public IMethod getMethod(String methodName, Class[] paramClasses){
+	public IMethod getMethod(String methodName, IClass[] paramClasses){
 		try {
-			Method method = clazz.getMethod(methodName, paramClasses);
+			Method method = clazz.getMethod(methodName, CReflect.toNative(paramClasses));
 			if(method == null){
 				return null;
 			}
@@ -73,4 +72,9 @@ public class CClass implements IClass{
 		} 
 		return null;
 	}
+	
+	Class getJavaClass(){
+		return clazz;
+	}
+	
 }

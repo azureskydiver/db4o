@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 final class YDouble extends YLong
 {
     private static final Double i_primitive = new Double(0);

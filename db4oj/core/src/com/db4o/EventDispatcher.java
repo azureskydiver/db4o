@@ -62,7 +62,7 @@ final class EventDispatcher
 		        count = SERVER_COUNT;
 		    }
 		    if(count > 0){
-				Class[] parameterClasses = {YapConst.CLASS_OBJECTCONTAINER};
+				IClass[] parameterClasses = {YapConst.ICLASS_OBJECTCONTAINER};
 				IMethod[] methods = new IMethod[COUNT];
 				for (int i = COUNT -1; i >=0; i--){
 					try{

@@ -152,7 +152,7 @@ class YapHandlers {
         final Class a_class
          ) {
         
-        IReflect reflector = Db4o.reflector();
+        final IReflect reflector = a_stream.i_config.i_reflect;
         IClass classReflector;
         
         try {
@@ -178,7 +178,7 @@ class YapHandlers {
 		                try{
 		                    Object o = constructor.newInstance(null);
 		                    if(o != null){
-		                        return new YapConstructor(a_stream, a_class, new CConstructor(constructor), null, true, true);
+		                        return new YapConstructor(a_stream, a_class, new CConstructor(reflector, constructor), null, true, true);
 		                    }
 		                }catch(Exception e){
 		                    
@@ -226,12 +226,12 @@ class YapHandlers {
                             if(foundConstructor[0]==null) {
 	                            IConstructor constructor = (IConstructor)((TreeIntObject)a_object).i_object;
 	                            try {
-	                                Class[] pTypes = constructor.getParameterTypes();
+	                                IClass[] pTypes = constructor.getParameterTypes();
 	                                Object[] parms = new Object[pTypes.length];
 	                                for (int j = 0; j < parms.length; j++) {
 	                                    for (int k = 0; k < PRIMITIVECOUNT; k++) {
-	                                        if (pTypes[j] == i_handlers[k]
-	                                            .getPrimitiveJavaClass()) {
+	                                        if (pTypes[j] == reflector.forClass(i_handlers[k]
+	                                            .getPrimitiveJavaClass())) {
 	                                            parms[j] = ((YapJavaClass) i_handlers[k])
 	                                                .primitiveNull();
 	                                            break;

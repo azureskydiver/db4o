@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 final class YFloat extends YInt {
     
     private static final Float i_primitive = new Float(0);

@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.reflect.IReflect;
+
 class Transaction {
 
     final YapStream         i_stream;
@@ -462,7 +464,10 @@ class Transaction {
         }
         return ret;
     }
-
+    
+    IReflect reflector(){
+    	return i_stream.i_config.i_reflect;
+    }
 
     void removeFromClassIndex(int a_yapClassID, int a_id) {
         if (Deploy.debug) {
