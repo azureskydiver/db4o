@@ -2,7 +2,10 @@
 
 package com.db4o;
 
-abstract class YapMeta {
+/**
+ * @exclude
+ */
+public abstract class YapMeta {
     
     int i_id = 0; // UID and address of pointer to the object in our file
 

@@ -22,7 +22,7 @@ final class YBoolean extends YapJavaClass
 		return 4;
 	}
 	
-	protected Object defaultValue(){
+	public Object defaultValue(){
 		return i_primitive;
 	}
 	

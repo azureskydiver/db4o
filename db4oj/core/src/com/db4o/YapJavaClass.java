@@ -34,7 +34,7 @@ abstract class YapJavaClass implements YapDataType {
         // do nothing
     }
 
-    protected abstract Object defaultValue();
+    public abstract Object defaultValue();
 
     public void deleteEmbedded(YapWriter a_bytes) {
         a_bytes.incrementOffset(linkLength());

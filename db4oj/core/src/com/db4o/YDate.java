@@ -21,7 +21,7 @@ final class YDate extends YLong
 		}
 	}
 	
-	protected Object defaultValue(){
+	public Object defaultValue(){
 		return PROTO;
 	}
 	

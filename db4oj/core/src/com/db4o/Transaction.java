@@ -4,7 +4,10 @@ package com.db4o;
 
 import com.db4o.reflect.IReflect;
 
-class Transaction {
+/**
+ * @exclude
+ */
+public class Transaction {
 
     final YapStream         i_stream;
 

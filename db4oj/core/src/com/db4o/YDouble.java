@@ -11,7 +11,7 @@ final class YDouble extends YLong
         super(stream);
     }
     
-	protected Object defaultValue(){
+	public Object defaultValue(){
 		return i_primitive;
 	}
 	

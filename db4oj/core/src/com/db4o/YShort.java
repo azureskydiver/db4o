@@ -13,7 +13,7 @@ final class YShort extends YapJavaClass
         super(stream);
     }
     
-	protected Object defaultValue(){
+    public Object defaultValue(){
 		return i_primitive;
 	}
 	

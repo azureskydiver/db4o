@@ -18,7 +18,7 @@ final class YByte extends YapJavaClass
 		return 6;
 	}
 	
-	protected Object defaultValue(){
+	public Object defaultValue(){
 		return i_primitive;
 	}
 	

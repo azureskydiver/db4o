@@ -10,8 +10,8 @@ public class DataObjectReflector implements IReflect {
     private final IReflect _delegate;
     private final Hashtable4 _dataClassByName = new Hashtable4(1);
 
-    public DataObjectReflector(IReflect delegate) {
-        _delegate = delegate;
+    public DataObjectReflector(IReflect reflector) {
+        _delegate = reflector;
     }
 
     public IArray array() {
