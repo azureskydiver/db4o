@@ -336,6 +336,7 @@
 		<copy todir="${dir.dist.net.src.test}">
 			<fileset dir="${dir.n.test}">
 				<include name="**/*.cs" />
+				<include name="**/*.resx" />
 				<include name="*.*" />
 				<exclude name=".*" />
 			</fileset>
@@ -468,8 +469,8 @@
 	<target name="buildnet" depends="cleannet, doctor, zipnet" description="Full NET build" />
 
 	<target name="buildall" depends="buildjava, buildnet" description="Full clean build" />
-
-	<target name="serverside" depends="buildall">
+	
+	<target name="serversidecopy">
 		<copy todir="${dir.server.downloads}" overwrite="true">
 			<fileset dir="${dir.dist}">
 				<include name="*.zip" />
@@ -502,6 +503,8 @@
 		<copy overwrite="true" file="${file.server.net}" tofile="${dir.server.downloads}/db4o2.9.N.zip" />
 		<copy overwrite="true" file="${file.server.net}" tofile="${dir.server.downloads}/db4o30.N.zip" />
 	</target>
+
+	<target name="serverside" depends="buildall, serversidecopy" />
 
 	<target name="sharpeneclipse" depends="init" description="Sharpen Eclipse spike">
 		<java classname="sharpen.eclipse.ASTTestMain">
