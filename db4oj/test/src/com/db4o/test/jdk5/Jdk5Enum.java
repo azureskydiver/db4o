@@ -1,14 +1,15 @@
 package com.db4o.test.jdk5;
 
 
-public enum DataType {
+public enum Jdk5Enum {
+    
     A("A"),
     B("B");
     
     private String type;
     private int count;
 
-    private DataType(String type) {
+    private Jdk5Enum(String type) {
        this.type = type;
        this.count=0;
     }

@@ -1,0 +1,59 @@
+package com.db4o.test.jdk5;
+
+import java.io.*;
+import com.db4o.*;
+import com.db4o.query.*;
+import com.db4o.test.*;
+
+
+public class Jdk5Tests {
+    
+    public void configure(){
+        Db4o.configure().exceptionsOnNotStorable(true);
+    }
+    
+    public void testStoreRetrieve() {
+        
+        ObjectContainer db = Test.objectContainer();
+        
+        
+        Jdk5Data<String> data=new Jdk5Data<String>("Test",Jdk5Enum.A);
+        
+        Test.ensure(Jdk5Enum.A.getCount() == 0);
+        Jdk5Enum.A.incCount();
+        Test.ensure(Jdk5Enum.A.getCount() == 1);
+        Test.ensure(Jdk5Enum.B.getCount() == 0);
+        Test.ensure(data.getType() == Jdk5Enum.A);
+        Test.ensure(data.getSize() == 0);
+        Test.ensure(data.getMax() == Integer.MIN_VALUE);
+        data.add(2,4,6,1,3,5);
+        Test.ensure(data.getSize() == 6);
+        Test.ensure(data.getMax() == 6);
+        db.set(data);
+        Test.reOpen();
+        db = Test.objectContainer();
+        
+        data=null;
+        
+        Query query=db.query();
+        query.constrain(Jdk5Data.class);
+        Query sub=query.descend("type");
+        sub.constrain(Jdk5Enum.class);
+//        sub.constrain(DataType.A);
+//        sub.descend("type").constrain("A");
+        sub.descend("count").constrain(Integer.valueOf(1));
+        ObjectSet result=query.execute();
+        Test.ensure(result.size() == 1);
+        data=(Jdk5Data<String>)result.next();
+        Test.ensure(data.getItem().equals("Test"));
+        //assertSame(DataType.A,data.getType());
+        Test.ensure(Jdk5Enum.A.name().equals(data.getType().name()));
+        Test.ensure(data.getSize() == 6);
+        Test.ensure(data.getMax() == 6);
+        
+        //FIXME: uncommented for Eclipse version
+        // Test.ensure(Data.class.isAnnotationPresent(Db4oObjectClass.class));
+        
+        db.close();
+    }
+}

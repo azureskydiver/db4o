@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Db4oObjectClass {
+public @interface Jdk5Annotation {
 	boolean cascadeOnActivate() default false;
 	boolean cascadeOnUpdate() default false;
 	boolean cascadeOnDelete() default false;
