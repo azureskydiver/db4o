@@ -102,6 +102,10 @@ namespace com.db4o.reflect.net
 		public virtual bool isPrimitive(){
 			return _clazz.isPrimitive();
 		}
+		
+		public virtual bool isSecondClass() {
+            return isPrimitive();
+        }
 
 		public virtual object newInstance(){
 			try{
