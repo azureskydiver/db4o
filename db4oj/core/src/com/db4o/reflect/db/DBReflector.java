@@ -43,7 +43,7 @@ public class DBReflector implements Reflector {
 
 	private ReflectClass createClass(String name) {
 		LeanStoredClass storedClass=db.ext().leanStoredClassByName(name);
-		return (storedClass==null ? null : new DBClass(db.ext(),storedClass));
+		return (storedClass==null ? null : new DBClass(this, db.ext(),storedClass));
 	}
 	
 	public boolean isCollection(ReflectClass claxx) {

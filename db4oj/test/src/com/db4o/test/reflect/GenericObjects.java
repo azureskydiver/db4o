@@ -49,11 +49,11 @@ public class GenericObjects extends Test {
 	}
 
     private GenericClass otherDataClass() {
-        return new GenericClass("anyName", _objectIClass);
+        return new GenericClass(_reflector, "anyName", _objectIClass);
     }
 
     private GenericClass subclass() {
-        return new GenericClass("anyName", _iClass);
+        return new GenericClass(_reflector, "anyName", _iClass);
     }
 
     private void tstFields() {
@@ -71,7 +71,7 @@ public class GenericObjects extends Test {
     }
 
     private GenericClass acmeDataClass() {
-        GenericClass result = new GenericClass("com.acme.Person", _objectIClass);
+        GenericClass result = new GenericClass(_reflector, "com.acme.Person", _objectIClass);
         result.initFields(fields(result));
         return result;
     }

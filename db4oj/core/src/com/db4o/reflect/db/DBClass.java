@@ -4,12 +4,15 @@ import com.db4o.ext.*;
 import com.db4o.reflect.*;
 
 public class DBClass implements ReflectClass {
-	private ExtObjectContainer db;
-	private LeanStoredClass storedClass;
+    
+    private final Reflector _reflector;
+	private final ExtObjectContainer _db;
+	private final LeanStoredClass _storedClass;
 	
-	public DBClass(ExtObjectContainer db,LeanStoredClass storedClass) {
-		this.db=db;
-		this.storedClass=storedClass;
+	public DBClass(Reflector reflector, ExtObjectContainer db,LeanStoredClass storedClass) {
+        _reflector = reflector;
+		_db=db;
+		_storedClass=storedClass;
 	}
 
 	public ReflectClass getComponentType() {
@@ -21,20 +24,20 @@ public class DBClass implements ReflectClass {
 	}
 
 	public ReflectField[] getDeclaredFields() {
-		LeanStoredField[] fields=storedClass.storedFields();
+		LeanStoredField[] fields=_storedClass.storedFields();
 		DBField[] reflectFields=new DBField[fields.length];
 		for (int idx = 0; idx < fields.length; idx++) {
-			DBClass type=new DBClass(db,db.leanStoredClassByID(fields[idx].typeID()));
+			DBClass type=new DBClass(reflector(),_db,_db.leanStoredClassByID(fields[idx].typeID()));
 			reflectFields[idx]=new DBField(type,fields[idx]);
 		}
 		return reflectFields;
 	}
 
 	public ReflectField getDeclaredField(String name) {
-		LeanStoredField[] fields=storedClass.storedFields();
+		LeanStoredField[] fields=_storedClass.storedFields();
 		for (int idx = 0; idx < fields.length; idx++) {
 			if(fields[idx].name().equals(name)) {
-				DBClass type=new DBClass(db,db.leanStoredClassByID(fields[idx].typeID()));
+				DBClass type=new DBClass(reflector(),_db,_db.leanStoredClassByID(fields[idx].typeID()));
 				return new DBField(type,fields[idx]);
 			}
 		}
@@ -47,7 +50,7 @@ public class DBClass implements ReflectClass {
 	}
 
 	public String getName() {
-		return storedClass.name();
+		return _storedClass.name();
 	}
 
 	public ReflectClass getSuperclass() {
@@ -85,6 +88,10 @@ public class DBClass implements ReflectClass {
 		return new DBObject(this);
 	}
 
+    public Reflector reflector() {
+        return _reflector;
+    }
+    
 	public boolean skipConstructor(boolean flag) {
 		return false;
 	}
@@ -100,10 +107,11 @@ public class DBClass implements ReflectClass {
 			return false;
 		}
 		DBClass other = (DBClass) obj;
-		return db.equals(other.db)&&storedClass.equals(other.storedClass);
+		return _db.equals(other._db)&&_storedClass.equals(other._storedClass);
 	}
 	
 	public int hashCode() {
-		return db.hashCode()*29+storedClass.hashCode();
+		return _db.hashCode()*29+_storedClass.hashCode();
 	}
+
 }

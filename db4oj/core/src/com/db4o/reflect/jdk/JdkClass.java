@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.reflect.jdk;
 
@@ -12,49 +12,49 @@ import com.db4o.reflect.*;
  */
 public class JdkClass implements ReflectClass{
 	
-	private final Reflector reflector;
-	private final Class clazz;
-    private ReflectConstructor constructor;
-    private Object[] constructorParams;
+	private final Reflector _reflector;
+	private final Class _clazz;
+    private ReflectConstructor _constructor;
+    private Object[] _constructorParams;
 	
 	public JdkClass(Reflector reflector, Class clazz) {
-		this.reflector = reflector;
-		this.clazz = clazz;
+		_reflector = reflector;
+		_clazz = clazz;
 	}
     
 	public ReflectClass getComponentType() {
-		return reflector.forClass(clazz.getComponentType());
+		return _reflector.forClass(_clazz.getComponentType());
 	}
 
 	public ReflectConstructor[] getDeclaredConstructors(){
-		Constructor[] constructors = clazz.getDeclaredConstructors();
+		Constructor[] constructors = _clazz.getDeclaredConstructors();
 		ReflectConstructor[] reflectors = new ReflectConstructor[constructors.length];
 		for (int i = 0; i < constructors.length; i++) {
-			reflectors[i] = new JdkConstructor(reflector, constructors[i]);
+			reflectors[i] = new JdkConstructor(_reflector, constructors[i]);
 		}
 		return reflectors;
 	}
 	
 	public ReflectField getDeclaredField(String name){
 		try {
-			return new JdkField(reflector, clazz.getDeclaredField(name));
+			return new JdkField(_reflector, _clazz.getDeclaredField(name));
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
 	public ReflectField[] getDeclaredFields(){
-		Field[] fields = clazz.getDeclaredFields();
+		Field[] fields = _clazz.getDeclaredFields();
 		ReflectField[] reflectors = new ReflectField[fields.length];
 		for (int i = 0; i < reflectors.length; i++) {
-			reflectors[i] = new JdkField(reflector, fields[i]);
+			reflectors[i] = new JdkField(_reflector, fields[i]);
 		}
 		return reflectors;
 	}
 	
 	public ReflectMethod getMethod(String methodName, ReflectClass[] paramClasses){
 		try {
-			Method method = clazz.getMethod(methodName, JdkReflector.toNative(paramClasses));
+			Method method = _clazz.getMethod(methodName, JdkReflector.toNative(paramClasses));
 			if(method == null){
 				return null;
 			}
@@ -65,63 +65,67 @@ public class JdkClass implements ReflectClass{
 	}
 	
 	public String getName(){
-		return clazz.getName();
+		return _clazz.getName();
 	}
 	
 	public ReflectClass getSuperclass() {
-		return reflector.forClass(clazz.getSuperclass());
+		return _reflector.forClass(_clazz.getSuperclass());
 	}
 	
 	public boolean isAbstract(){
-		return Modifier.isAbstract(clazz.getModifiers());
+		return Modifier.isAbstract(_clazz.getModifiers());
 	}
 	
 	public boolean isArray() {
-		return clazz.isArray();
+		return _clazz.isArray();
 	}
 
 	public boolean isAssignableFrom(ReflectClass type) {
 		if(!(type instanceof JdkClass)) {
 			return false;
 		}
-		return clazz.isAssignableFrom(((JdkClass)type).getJavaClass());
+		return _clazz.isAssignableFrom(((JdkClass)type).getJavaClass());
 	}
 	
 	public boolean isInstance(Object obj) {
-		return clazz.isInstance(obj);
+		return _clazz.isInstance(obj);
 	}
 	
 	public boolean isInterface(){
-		return clazz.isInterface();
+		return _clazz.isInterface();
 	}
 	
 	public boolean isPrimitive() {
-		return clazz.isPrimitive();
+		return _clazz.isPrimitive();
 	}
     
 	public Object newInstance(){
 		try {
-            if(constructor == null){
-                return clazz.newInstance();
+            if(_constructor == null){
+                return _clazz.newInstance();
             }
-            return constructor.newInstance(constructorParams);
+            return _constructor.newInstance(_constructorParams);
 		} catch (Throwable t) {
 		} 
 		return null;
 	}
 	
 	Class getJavaClass(){
-		return clazz;
+		return _clazz;
 	}
+    
+    public Reflector reflector() {
+        return _reflector;
+    }
 	
     public boolean skipConstructor(boolean flag){
         if(flag){
-            Constructor constructor = Platform.jdk().serializableConstructor(clazz);
+            Constructor constructor = Platform.jdk().serializableConstructor(_clazz);
             if(constructor != null){
                 try{
                     Object o = constructor.newInstance(null);
                     if(o != null){
-                        useConstructor(new JdkConstructor(reflector, constructor), null);
+                        useConstructor(new JdkConstructor(_reflector, constructor), null);
                         return true;
                     }
                 }catch(Exception e){
@@ -134,12 +138,12 @@ public class JdkClass implements ReflectClass{
     }
     
 	public String toString(){
-		return "CClass: " + clazz.getName();
+		return "CClass: " + _clazz.getName();
 	}
     
     public void useConstructor(ReflectConstructor constructor, Object[] params){
-        this.constructor = constructor;
-        constructorParams = params;
+        this._constructor = constructor;
+        _constructorParams = params;
     }
 
 }

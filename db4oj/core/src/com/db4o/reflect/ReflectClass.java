@@ -37,6 +37,8 @@ public interface ReflectClass {
     
 	public Object newInstance();
     
+    public Reflector reflector();
+    
     /**
      * instructs to install or uninstall a special constructor for the 
      * respective platform that avoids calling the constructor for the
