@@ -6,18 +6,19 @@
 	the following entries:
 
 	dir.workspace=<the workspace folder where all projects reside>
-	file.compiler.jdk1.3=<JDK1.3 compatible javac>
+	file.compiler.jdk1.3=<path to jdk 1.3 java compiler>
 	file.rt.jar=<JDK1.3 compatible runtime jar>
 	font.pdf.base=<true type font>
 	dir.dll.wince=<path to .NET CE dll, leave empty if not available>
+	eclipse.home=<eclipse home dir>
 	
 	An example:
 	dir.workspace=C:/_db4o/production
-	file.compiler.jdk1.3=C:/jdk1.3.1/bin/javac.exe
+	file.compiler.jdk1.3=C:/jdk1.3.1_12/bin/javac.exe
 	file.rt.jar=C:/j2sdk1.4.2_02/jre/lib/rt.jar
 	font.pdf.base=C:/WINDOWS/Fonts/VERDANA.TTF
 	dir.dll.wince=C:/Program Files/Microsoft Visual Studio .NET 2003/CompactFrameworkSDK/v1.0.5000/Windows CE/
-	
+	eclipse.home=c:/Program Files/Eclipse	
 -->
 	<property file="machine.properties" />
 	<property file="ant.properties" />
@@ -38,13 +39,12 @@
 		</classpath>
 	</taskdef>
 	
-	<taskdef name="sharpen" classname="sharpen.SharpenAntTask" classpath="${dir.build.lib}/exttools.jar">
+	<taskdef name="updatecsharpproject" classname="com.db4o.devtools.ant.UpdateCSharpProjectAntTask">
 		<classpath>
 			<pathelement location="${dir.build.bin}" />
 			<path path="${path.classpath.full}" />
 		</classpath>
 	</taskdef>
-
 
 	<taskdef name="versioninfo" classname="com.db4o.devtools.ant.VersionInfoAntTask" classpath="${dir.build.lib}/exttools.jar">
 		<classpath>
@@ -59,8 +59,6 @@
 		<mkdir dir="${dir.dist}" />
 		<mkdir dir="${dir.dist.jars}" />
 		<mkdir dir="${dir.sharpen}" />
-		<mkdir dir="${dir.sharpen.in}" />
-		<mkdir dir="${dir.sharpen.out}" />
 		<mkdir dir="${dir.dist.net.build.src}" />
 		<mkdir dir="${dir.dist.mono.build.src}" />
 		<mkdir dir="${dir.dist.doctor}" />
@@ -103,13 +101,13 @@
 	</target>
 
 	<target name="filehead" depends="init" description="Add copyright header to all input sources">
-		<filehead path="${dir.j}" before="package" fileext="java" header="${content.copyrightheader}" />
-		<filehead path="${dir.doctor.src}" before="package" fileext="java" header="${content.copyrightheader}" />
-		<filehead path="${dir.n.in.java}" before="package" fileext="java" header="${content.copyrightheader}" />
-		<filehead path="${dir.n.in.sharp}" before="using" fileext="cs" header="${content.copyrightheader}" />
-		<filehead path="${dir.n.core}" before="using" fileext="cs" header="${content.copyrightheader}" />
-		<filehead path="${dir.n.test}" before="using" fileext="cs" header="${content.copyrightheader}" />
-		<filehead path="${dir.n.tools}" before="using" fileext="cs" header="${content.copyrightheader}" />
+		<filehead path="${dir.j}" beforePattern="package" fileext="java" header="${content.copyrightheader}" />
+		<filehead path="${dir.doctor.src}" beforePattern="package" fileext="java" header="${content.copyrightheader}" />
+		<filehead path="${dir.n.in.java}" beforePattern="package" fileext="java" header="${content.copyrightheader}" />
+		<filehead path="${dir.n.in.sharp}" beforePattern="using|namespace" fileext="cs" header="${content.copyrightheader}" />
+		<filehead path="${dir.n.core}" beforePattern="using|namespace" fileext="cs" header="${content.copyrightheader}" />
+		<filehead path="${dir.n.test}" beforePattern="using|namespace" fileext="cs" header="${content.copyrightheader}" />
+		<filehead path="${dir.n.tools}" beforePattern="using|namespace" fileext="cs" header="${content.copyrightheader}" />
 	</target>
 
 	<target name="compilecorejava" depends="init" description="Compile Db4o core sources">
@@ -140,23 +138,6 @@
 		<copy todir="${dir.build.bin}">
 			<fileset dir="${dir.build.src}" includes="**/*.properties"/>
 		</copy>
-	</target>
-
-	<target name="compilecorenet" depends="init">
-		<mkdir dir="${dir.sharpen.src}" />
-		<copy todir="${dir.sharpen.src}">
-			<fileset dir="${dir.j.core.src}" excludes="**/JDK_*.java">
-				<exclude name="**/com/db4o/config/T*.java" />
-			</fileset>
-		</copy>
-		<copy todir="${dir.sharpen.src}" overwrite="true">
-			<fileset dir="${dir.n.in.java}" />
-		</copy>
-		<mkdir dir="${dir.dist.classes.sharp}" />
-		<depend srcdir="${dir.sharpen.src}" destdir="${dir.dist.classes.sharp}" closure="yes" />
-		<javac srcdir="${dir.sharpen.src}" destdir="${dir.dist.classes.sharp}" debug="off" target="1.1" fork="yes" executable="${file.compiler.jdk1.3}">
-			<classpath path="${path.classpath.full}" />
-		</javac>
 	</target>
 
 	<target name="copycompact" depends="init, sharpen">
@@ -265,7 +246,7 @@
 		<copy todir="${dir.dist.java.src}">
 			<fileset dir="${dir.j.core.src}" />
 		</copy>
-		<filehead path="${dir.dist.java.src}" before="package" fileext="java" header="${content.gplheader}" />
+		<filehead path="${dir.dist.java.src}" beforePattern="package" fileext="java" header="${content.gplheader}" />
 		<zip destfile="${file.java.core.src.zip}">
 			<fileset dir="${dir.dist.java.src}" includes="*/**" excludes="*.zip" />
 		</zip>
@@ -280,7 +261,7 @@
 		<copy todir="${dir.dist.java.src}">
 			<fileset dir="${dir.j.test.src}" />
 		</copy>
-		<filehead path="${dir.dist.java.src}" before="package" fileext="java" header="${content.gplheader}" />
+		<filehead path="${dir.dist.java.src}" beforePattern="package" fileext="java" header="${content.gplheader}" />
 		<zip destfile="${file.java.test.src.zip}">
 			<fileset dir="${dir.dist.java.src}" includes="*/**" excludes="*.zip" />
 		</zip>
@@ -297,7 +278,7 @@
 			<fileset file="${file.java.core.src.zip}" />
 			<fileset file="${file.java.test.src.zip}" />
 		</copy>
-		<filehead path="${dir.dist.java.src}" before="package" fileext="java" header="${content.gplheader}" />
+		<filehead path="${dir.dist.java.src}" beforePattern="package" fileext="java" header="${content.gplheader}" />
 		<copy todir="${dir.dist.java.build.tutorial}">
 			<fileset dir="${dir.j.tutorial.out.java}">
 				<include name="**/**" />
@@ -318,7 +299,7 @@
 		</zip>
 	</target>
 
-	<target name="zipnet" depends="init, compiledllnet, javadoc" description="Zip .NET distribution">
+	<target name="zipnet" depends="init, compiledllnet, compilentutorial" description="Zip .NET distribution">
 		<mkdir dir="${dir.dist.net.src.core}" />
 		<copy todir="${dir.dist.net.src.core}">
 			<fileset dir="${dir.n.core}">
@@ -370,7 +351,25 @@
 				<include name="bin/**/*.dll" />
 			</fileset>
 		</copy>
-		<filehead path="${dir.dist.net.build.src}" before="using" fileext="cs" header="${content.gplheader}" />
+	
+		<filehead path="${dir.dist.net.build.src}" beforePattern="using|namespace" fileext="cs" header="${content.gplheader}" />
+		
+		<updatecsharpproject projectFile="${dir.dist.net.build.src}/core/db4o-net.csproj">
+			<sources dir="${dir.dist.net.build.src}/core">
+				<include name="**/*.cs" />
+				<exclude name="src/mono/**" />
+				<exclude name="src/compact/**" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectFile="${dir.dist.net.build.src}/core/db4o-compact.csdproj">
+			<sources dir="${dir.dist.net.build.src}/core">
+				<include name="**/*.cs" />
+				<exclude name="src/mono/**" />
+				<exclude name="src/net/**" />
+			</sources>
+		</updatecsharpproject>
+	
 		<copy todir="${dir.dist.net.build}">
 			<fileset dir="${dir.dist}" includes="dll/**/**" />
 			<fileset dir="${dir.j}" includes="GPL.txt" />
@@ -434,7 +433,7 @@
 				<include name="bin/**/*.dll" />
 			</fileset>
 		</copy>
-		<filehead path="${dir.dist.mono.build.src}" before="using" fileext="cs" header="${content.gplheader}" />
+		<filehead path="${dir.dist.mono.build.src}" beforePattern="using|namespace" fileext="cs" header="${content.gplheader}" />
 		<copy todir="${dir.dist.mono.build}">
 			<fileset dir="${dir.dist}" includes="doc/**" />
 			<fileset dir="${dir.dist.mono}" includes="dll/**/**" />
@@ -443,33 +442,88 @@
 		</copy>
 	</target>
 	
-	<target name="sharpen" depends="compilecorenet,compilebuild" description="create .NET sources">
-		<jar destfile="${file.sharp.jar}">
-			<fileset dir="${dir.dist.classes.sharp}" excludes="**/JDK_*.class" />
-		</jar>
-		<java classname="jode.decompiler.Main">
+	<target name="install-javatocsharp-plugin">
+		
+		<property name="javatocsharp.core.dir" location="../javatocsharp.core" />
+		
+		<javac debug="true" source="1.5" destdir="${javatocsharp.core.dir}/bin" srcdir="${javatocsharp.core.dir}/src">
 			<classpath>
-				<dirset dir="${dir.build.bin}" />
-				<path path="${path.classpath.full}" />
+				<fileset dir="${eclipse.home}/plugins">
+					<include name="org.eclipse.osgi_*/osgi.jar" />
+					<include name="org.eclipse.core.resources_*/resources.jar" />
+					<include name="org.eclipse.core.runtime_*/runtime.jar" />
+					<include name="org.eclipse.jdt.core_*/jdtcore.jar" />
+				</fileset>
 			</classpath>
-			<arg value="--anonymous" />
-			<arg value="--dest" />
-			<arg value="${dir.sharpen.in}" />
-			<arg value="${file.sharp.jar}" />
+		</javac>
+		
+		<property name="plugin.dir" value="${plugins.home}/javatocsharp.core_1.0.0" />
+		<delete dir="${plugin.dir}" />
+		<mkdir dir="${plugin.dir}" />
+		<jar destfile="${plugin.dir}/javatocsharp.jar" basedir="${javatocsharp.core.dir}/bin" />
+		<copy todir="${plugin.dir}" file="${javatocsharp.core.dir}/plugin.xml" />
+
+	</target>
+	
+	<target name="prepare-conversion-workspace" depends="init">
+		<delete dir="${dir.sharpen}" />
+		<mkdir dir="${dir.sharpen}" />
+		
+		<copy todir="${dir.sharpen}">
+			<fileset dir="..">
+				<include name="db4oj/core/src/**/*.java" />
+				<include name="db4oj/.project" />
+				<include name="db4oj/.classpath" />
+				<include name="db4oj/plugin.xml" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
+			<fileset dir="../db4on/in/java">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+
+	
+	<target name="sharpen" description="create .NET sources" depends="install-javatocsharp-plugin, prepare-conversion-workspace" unless="skip.conversion">
+		
+		<java classname="org.eclipse.core.launcher.Main" fork="yes" failonerror="true">
+			<classpath>
+				<pathelement location="${eclipse.home}/startup.jar" />
+			</classpath>
+			
+			<arg value="-data" />
+			<arg file="${dir.sharpen}" />
+			<arg value="-application" />
+			<arg value="javatocsharp.core.application" />
+			<arg value="db4oj/core/src" />
 		</java>
-		<sharpen inout="${dir.sharpen}" rtjar="${file.rt.jar}" />
-		<copy todir="${dir.n.core.src}/core" overwrite="true">
-			<fileset dir="${dir.sharpen.out}">
-				<include name="**" />
-				<exclude name="**/Lock4.cs" />
+		
+		<copy todir="${dir.n.core.src}/core">
+			<fileset dir="${dir.sharpen}/db4ojcsharp/src">
+				<include name="**/*.cs" />
+				<exclude name="com/db4o/eclipse/**/*.*" />
+				<exclude name="com/db4o/Lock4.cs" />
+				<exclude name="com/db4o/JDK_1*.cs" />
+				<exclude name="com/db4o/JDK_5.cs" />
+				<exclude name="com/db4o/JavaOnly.cs" />
+				<exclude name="com/db4o/config/TSerializable.cs" />
+				<exclude name="com/db4o/config/TCollection.cs" />
+				<exclude name="com/db4o/config/THashtable.cs" />
+				<exclude name="com/db4o/config/TMap.cs" />
+				<exclude name="com/db4o/config/TTreeMap.cs" />
+				<exclude name="com/db4o/config/TTreeSet.cs" />
+				<exclude name="com/db4o/config/TVector.cs" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.n.core.src}" overwrite="true">
-			<fileset dir="${dir.n.in.sharp}" />
+			<fileset dir="${dir.n.in.sharp}">
+				<include name="**/*.cs" />
+			</fileset>
 		</copy>
-		<filehead path="${dir.n.core.src}" before="using" fileext="cs" header="${content.copyrightheader}" />
 	</target>
-
+	
 	<target name="doctor" depends="init, compilecorejava, compiledllnet, compilejtutorial, compilentutorial" description="Run all doctor tasks">
 		<jar destfile="${file.doctor.applets.jar}">
 			<fileset dir="${dir.doctor.bin}" includes="**/com/yetac/doctor/applet/*.class" />
