@@ -75,11 +75,13 @@ public class StandaloneBrowser implements IControlFactory {
         MenuItem newWindow = (MenuItem) choices.get("NewWindow");
         MenuItem close = (MenuItem) choices.get("Close");
 		MenuItem preferences = (MenuItem) choices.get("Preferences");
-		MenuItem addtoclasspath = (MenuItem) choices.get("AddToClasspath");
+		MenuItem adddirtoclasspath = (MenuItem) choices.get("AddDirToClasspath");
+		MenuItem addfiletoclasspath = (MenuItem) choices.get("AddFileToClasspath");
         
         open.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+				dialog.setFilterExtensions(new String[]{"*.yap"});
                 String file = dialog.open();
                 if (file != null) {
                     controller.open(file);
@@ -107,9 +109,19 @@ public class StandaloneBrowser implements IControlFactory {
             }
         });
 
-        addtoclasspath.addSelectionListener(new SelectionAdapter() {
+        adddirtoclasspath.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 DirectoryDialog dialog = new DirectoryDialog(shell, SWT.OPEN);
+                String file = dialog.open();
+                if (file != null) {
+					controller.addToClasspath(new File(file));
+                }
+            }
+        });
+        addfiletoclasspath.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+				dialog.setFilterExtensions(new String[]{"*.jar","*.zip"});
                 String file = dialog.open();
                 if (file != null) {
 					controller.addToClasspath(new File(file));

@@ -4,6 +4,7 @@
 package com.db4o.browser.gui.controllers;
 
 import java.io.*;
+import java.lang.reflect.*;
 import java.net.*;
 
 import com.db4o.browser.gui.controllers.tree.*;
@@ -76,11 +77,17 @@ public class BrowserController implements IBrowserController {
 
 	public void addToClasspath(File file) {
 		try {
-			ClassLoaderExtender.addToClassPath(new URL[]{file.toURL()});
-			URL[] archives=ClassLoaderExtender.getArchives(file);
-			ClassLoaderExtender.addToClassPath(archives);
-		} catch (MalformedURLException e) {
-			// TODO sensible error handling
+			Class urlclclass=Class.forName("java.net.URLClassLoader");
+			ClassLoader loader=getClass().getClassLoader();
+			while(loader!=null) {
+				if(urlclclass.isAssignableFrom(loader.getClass())) {
+					Method addmethod=urlclclass.getDeclaredMethod("addURL",new Class[]{URL.class});
+					addmethod.setAccessible(true);
+					addmethod.invoke(loader,new Object[]{file.toURL()});
+				}
+				loader=loader.getParent();
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
