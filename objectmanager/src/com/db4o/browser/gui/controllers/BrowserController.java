@@ -84,9 +84,11 @@ public class BrowserController implements IBrowserController {
 					Method addmethod=urlclclass.getDeclaredMethod("addURL",new Class[]{URL.class});
 					addmethod.setAccessible(true);
 					addmethod.invoke(loader,new Object[]{file.toURL()});
+					return;
 				}
 				loader=loader.getParent();
 			}
+			System.err.println("Could not find a URLClassLoader.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
