@@ -1204,6 +1204,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\core\com\db4o\YapBlockAwareFile.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\core\com\db4o\YapClass$1.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -1274,7 +1279,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\YapConfig.cs"
+                    RelPath = "src\core\com\db4o\YapConfigBlock.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

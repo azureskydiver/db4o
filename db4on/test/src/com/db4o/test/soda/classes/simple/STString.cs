@@ -83,7 +83,7 @@ namespace com.db4o.test.soda.classes.simple {
             q1 = st.query();
             c1 = q1.constrain(new STString("od"));
             q1.descend("str").constraints().like();
-            st.expectNone(q1);
+            st.expectOne(q1, new STString("dod"));
         }
       
         public void testNotLike() {

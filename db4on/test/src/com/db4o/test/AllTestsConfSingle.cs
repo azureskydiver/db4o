@@ -12,7 +12,7 @@ namespace com.db4o.test {
          * new testcases here
          */
         internal Type[] TESTS = new Type[]{
-            typeof(SimplestPossible),
+            typeof(UpdatingDb4oVersions),
          };
        
         /**
