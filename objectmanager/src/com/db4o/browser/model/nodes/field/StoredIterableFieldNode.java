@@ -21,7 +21,7 @@ import java.util.LinkedList;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
-import com.db4o.browser.model.nodes.InstanceNode;
+import com.db4o.browser.model.nodes.StoredInstanceNode;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.ReflectMethod;
@@ -91,7 +91,9 @@ public class StoredIterableFieldNode extends StoredFieldNode {
         LinkedList results = new LinkedList();
         Iterator i = iterator();
         while (i.hasNext()) {
-            results.addLast(new InstanceNode(i.next(), _database));
+            Object instance = i.next();
+            ReflectClass clazz = _database.reflector().forObject(instance);
+            results.addLast(new StoredInstanceNode(instance, clazz, _database));
         }
         IModelNode[] finalResults = new IModelNode[results.size()];
         int elementNum=0;
@@ -106,8 +108,8 @@ public class StoredIterableFieldNode extends StoredFieldNode {
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.ITreeNode#getText()
 	 */
-	public String getText() {
-		return _field.getName() + ": " + value.getClass().getName();
-	}
+    public String getText() {
+        return _field.getName() + ": " + _database.reflector().forObject(value).getName();
+    }
 
 }

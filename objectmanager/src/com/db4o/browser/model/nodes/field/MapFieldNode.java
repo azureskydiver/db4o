@@ -114,7 +114,7 @@ public class MapFieldNode extends StoredFieldNode {
 	}
 
 	public String getText() {
-		return _field.getName() + ": " + _field.getType();
+        return _field.getName() + ": " + _database.reflector().forObject(value).getName();
 	}
 
 }

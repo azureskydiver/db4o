@@ -18,8 +18,9 @@ package com.db4o.browser.model.nodes.field;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
-import com.db4o.browser.model.nodes.InstanceNode;
 import com.db4o.browser.model.nodes.NullNode;
+import com.db4o.browser.model.nodes.StoredInstanceNode;
+import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
@@ -54,7 +55,8 @@ public class StoredFieldNode implements IModelNode {
 			delegate=NullNode.INSTANCE;
 			return;
 		}
-		delegate = new InstanceNode(value, database);
+        ReflectClass clazz = database.reflector().forObject(value);
+		delegate = new StoredInstanceNode(value, clazz, database);
 	}
 
 	/* (non-Javadoc)
