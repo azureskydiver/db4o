@@ -2,10 +2,11 @@
 
 package com.db4o.reflect.jdk;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Array;
 
-import com.db4o.*;
-import com.db4o.reflect.*;
+import com.db4o.reflect.ReflectArray;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.Reflector;
 
 /**
  * Reflection implementation for Array to map to JDK reflection.
