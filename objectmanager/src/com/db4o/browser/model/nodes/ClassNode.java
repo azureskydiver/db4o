@@ -31,19 +31,23 @@ public class ClassNode implements IModelNode {
     private final Database _database;
 
 	/**
-	 * @param class1
+	 * @param contents
+	 * @param database
 	 */
 	public ClassNode(StoredClass contents, Database database) {
 		_contents = contents;
         _database = database;
     }
 
+    /* (non-Javadoc)
+     * @see com.db4o.browser.model.nodes.IModelNode#mayHaveChildren()
+     */
     public boolean mayHaveChildren() {
         return true;
     }
     
-    /**
-     * @return a list of nodes
+    /* (non-Javadoc)
+     * @see com.db4o.browser.model.nodes.IModelNode#children()
      */
     public IModelNode[] children() {
         ObjectSet objects = _database.instances(_contents.getName());
@@ -56,9 +60,23 @@ public class ClassNode implements IModelNode {
         }
         return result;
     }
+	
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.nodes.IModelNode#getName()
+	 */
+	public String getName() {
+		return "";
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.nodes.IModelNode#getValueString()
+	 */
+	public String getValueString() {
+		return getText();
+	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.nodes.IModelNode#getText()
 	 */
 	public String getText() {
 		return _contents.getName();

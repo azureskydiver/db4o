@@ -91,8 +91,11 @@ public class LayoutGenerator {
 				// Substitute for all tokens
 				String currentRow = row;
 				currentRow = substitute(FIELD_NO_TOKEN, Integer.toString(i), currentRow);
-				currentRow = substitute(FIELD_NAME_TOKEN, "", currentRow);	// FIXME: Need a field name API
-				currentRow = substitute(FIELD_VALUE_TOKEN, node.getText(), currentRow); // FIXME: Need a field value API
+				String fieldName = node.getName();
+				if (!fieldName.equals(""))
+					fieldName += ": ";
+				currentRow = substitute(FIELD_NAME_TOKEN, fieldName, currentRow);
+				currentRow = substitute(FIELD_VALUE_TOKEN, node.getValueString(), currentRow);
 				
 				contents.append(currentRow);
 			}

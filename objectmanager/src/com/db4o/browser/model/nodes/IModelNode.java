@@ -23,16 +23,30 @@ package com.db4o.browser.model.nodes;
  * @author djo
  */
 public interface IModelNode {
-	public abstract boolean mayHaveChildren();
+	public boolean mayHaveChildren();
 
 	/**
 	 * @return an array of child nodes (no generics now please)
 	 */
-	public abstract IModelNode[] children();
+	public IModelNode[] children();
 
 	/**
 	 * @return the text string to display
 	 */
-	public abstract String getText();
+	public String getText();
+	
+	/**
+	 * Return the field name
+	 * 
+	 * @return
+	 */
+	public String getName();
+	
+	/**
+	 * Return the field value as a string
+	 * 
+	 * @return
+	 */
+	public String getValueString();
 }
 
