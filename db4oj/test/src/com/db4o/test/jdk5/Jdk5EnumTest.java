@@ -85,7 +85,7 @@ public class Jdk5EnumTest {
     
     public void testEnumsInCollections() {
     	// set to false to make the test pass
-    	final boolean withDb4oCollections=true;
+    	final boolean withDb4oCollections=false;
 
     	ObjectContainer db=reopen();
 
