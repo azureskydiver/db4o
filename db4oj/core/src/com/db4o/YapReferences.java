@@ -27,8 +27,6 @@ class YapReferences implements Runnable {
             return obj;
         }
         
-        // Don't need to worry about null, that has been taken care of in the caller.
-        
         return Platform.createYapRef(_queue, a_yo, obj);
     }
 
