@@ -3,6 +3,8 @@
  */
 package com.db4o.browser.gui.controllers;
 
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
 import com.db4o.browser.gui.views.DbBrowserPane;
@@ -26,6 +28,11 @@ public class BrowserController {
 	 */
 	public BrowserController(DbBrowserPane ui) {
         this.ui = ui;
+
+        // Initialize the ObjectTree's controllers
+        TreeViewer tree = ui.getObjectTree();
+        tree.setContentProvider(new TreeContentProvider());
+        tree.setLabelProvider(new TreeLabelProvider());
     }
 
 	/**
@@ -35,8 +42,6 @@ public class BrowserController {
 		IGraphIterator i = BrowserCore.getDefault().iterator(file);
         
         TreeViewer tree = ui.getObjectTree();
-        tree.setContentProvider(new TreeContentProvider());
-        tree.setLabelProvider(new TreeLabelProvider());
         tree.setInput(i);
 	}
 	
