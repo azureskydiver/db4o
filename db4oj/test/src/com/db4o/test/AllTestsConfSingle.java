@@ -6,21 +6,14 @@ public class AllTestsConfSingle extends TestSuite{
     
     static TestSuite[] TEST_SUITES = new TestSuite[]{        
         new AllTestsConfSingle(),
-        
-        suite("com.db4o.test.jdk5.Jdk5Tests")
     };
 
     
     public Class[] tests(){
         return new Class[] {
         
-        // Rename.class
+        RefreshList.class
         
-        // SimplestPossible.class,
-        
-        // ReplicationFeatures.class,
-        // MigrationFromEarlierVersion.class,
-            
     	};
     }
 
