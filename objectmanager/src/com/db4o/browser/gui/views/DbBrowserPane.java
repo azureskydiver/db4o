@@ -5,6 +5,7 @@ package com.db4o.browser.gui.views;
 
 import java.util.Map;
 
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -36,15 +37,19 @@ public class DbBrowserPane extends Composite {
 		super(parent, style);
         parent.setLayout(new FillLayout());
         setLayout(new FillLayout());
-        contents = XSWT.createl(this, "layout.xswt", getClass());
+		Rectangle displayBounds = parent.getDisplay().getBounds();
+		if (displayBounds.width > 480 && displayBounds.height > 480)
+	        contents = XSWT.createl(this, "layout-desktop.xswt", getClass());
+		else
+			contents = XSWT.createl(this, "layout.xswt", getClass());
 	}
     
     private Map contents = null;
     
     /**
-     * Returns the Path Label
+     * Returns the Path Label.  On desktop platforms this can be null.
      * 
-     * @return the Path label from the layout
+     * @return the Path label from the layout or null if there is none.
      */
     public Label getPathLabel() {
         return (Label) contents.get("PathLabel");
