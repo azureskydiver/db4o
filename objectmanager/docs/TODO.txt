@@ -1,9 +1,5 @@
 TODO:
 
-- Cleanup current design: fix problems detailed below.
-
-- Rewrite tree code using clear MVC design using JFace.
-
 - Write detail pane.
 
 - Follow up using the bottom-up strategy getting db4o into Red Hat.
@@ -13,11 +9,11 @@ TODO:
 
 - Extending VEP article
 
-*** Work with Sybase, BEA, and Actuate on DB API (after browser spike)
+- Work with Sybase, BEA, and Actuate on DB API (after browser spike)
 
-*** Follow up about getting into OSCon (*done*)
+- Follow up about getting into OSCon (*done*)
 
-After first browser spike done; look at BIRT API; make suggestions for oo improvements.
+- After first browser spike done; look at BIRT API; make suggestions for oo improvements.
 
 ---------------------
 
