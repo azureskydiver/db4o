@@ -310,7 +310,14 @@ class Transaction {
                 if (node != null) {
                     Slot slot = (Slot) ((TreeIntObject) node).i_object;
                     i_file.free(slot.i_address, slot.i_length);
+                    
+                    //TODO: Instead of working with a reference counting
+                    //      system it could work better to push the 
+                    //      information from the system transaction to
+                    //      individual transactions on commit. Consider.
+                    
                     slot.i_references--;
+                    
                     boolean removeNode = true;
                     if (slot.i_references > 0) {
                         Tree tio = TreeInt.find(i_freeOnRollback, id);
