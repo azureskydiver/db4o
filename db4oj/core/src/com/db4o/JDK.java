@@ -5,6 +5,7 @@ package com.db4o;
 import java.io.*;
 import java.lang.reflect.*;
 
+import com.db4o.reflect.*;
 import com.db4o.types.*;
 
 /**
@@ -87,7 +88,7 @@ public class JDK {
 	void setAccessible(Object a_accessible) {
 	}
     
-    boolean storeStaticFieldValues(Class clazz) {
+    boolean storeStaticFieldValues(IReflect reflector, IClass clazz) {
         return false;
     }
 	
