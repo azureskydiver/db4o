@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import java.lang.reflect.*;
+
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
 import com.db4o.types.*;
@@ -145,9 +147,13 @@ class YapHandlers {
     }
 
     final YapConstructor createConstructorStatic(final YapStream a_stream,
-        final Class a_class) {
+        final YapClass a_yapClass,
+        final Class a_class
+         ) {
+        
         IReflect reflector = Db4o.reflector();
         IClass classReflector;
+        
         try {
             classReflector = reflector.forName(a_class.getName());
         } catch (ClassNotFoundException e) {
@@ -160,16 +166,36 @@ class YapHandlers {
             return null;
         }
         if (classReflector.isAbstract() || classReflector.isInterface()) {
-            return new YapConstructor(a_stream, a_class, null, null, false);
+            return new YapConstructor(a_stream, a_class, null, null, false, false);
         }
+        
+        if(! Deploy.csharp){
+	        if(Platform.noConstructorNeeded()){
+	            if(a_yapClass.noConstructorNeeded()){
+		            Constructor constructor = Platform.jdk().serializableConstructor(a_class);
+		            if(constructor != null){
+		                try{
+		                    Object o = constructor.newInstance(null);
+		                    if(o != null){
+		                        return new YapConstructor(a_stream, a_class, new CConstructor(constructor), null, true, true);
+		                    }
+		                }catch(Exception e){
+		                    
+		                }
+		            }
+	            }
+	        }
+        }
+        
         if (a_stream.i_config.i_testConstructors) {
             Object o = classReflector.newInstance();
             if (o != null) {
-                return new YapConstructor(a_stream, a_class, null, null, true);
+                return new YapConstructor(a_stream, a_class, null, null, true, false);
             }
         } else {
-            return new YapConstructor(a_stream, a_class, null, null, true);
+            return new YapConstructor(a_stream, a_class, null, null, true, false);
         }
+        
         if (reflector.constructorCallsSupported()) {
             try {
                 
@@ -214,7 +240,7 @@ class YapHandlers {
 	                                Object res = constructor.newInstance(parms);
 	                                if (res != null) {
 	                                    foundConstructor[0] = new YapConstructor(a_stream, a_class,
-	                                  constructor, parms, true);
+	                                  constructor, parms, true, false);
 	                                }
 	                            } catch (Throwable t) {
 	                                if(Debug.atHome){

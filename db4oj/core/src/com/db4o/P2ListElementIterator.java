@@ -52,7 +52,7 @@ class P2ListElementIterator implements Iterator {
             synchronized (i_next.streamLock()) {
                 i_preprevious = i_previous;
                 i_previous = i_next;
-                Object obj = i_next.activatedObject(i_list.i_activationDepth);
+                Object obj = i_next.activatedObject(i_list.elementActivationDepth());
                 i_next = i_next.i_next;
                 checkNextActive();
                 return obj;

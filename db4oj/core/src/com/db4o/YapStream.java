@@ -327,20 +327,22 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     abstract long currentVersion();
     
     boolean createYapClass(YapClass a_yapClass, Class a_class, YapClass a_superYapClass) {
-        Config4Class config = i_config.configClass(a_class.getName());
         if (YapConst.CLASS_TRANSIENTCLASS.isAssignableFrom(a_class)) {
             return false;
         }
+        Config4Class config = i_config.configClass(a_class.getName());
+        a_yapClass.i_config = config;
+        a_yapClass.i_ancestor = a_superYapClass;
         YapConstructor constr = null;
         if (config != null && config.instantiates()) {
-            constr = new YapConstructor(this, a_class, null, null, true);
+            constr = new YapConstructor(this, a_class, null, null, true, false);
         } else {
-            constr = i_handlers.createConstructorStatic(this, a_class);
+            constr = i_handlers.createConstructorStatic(this, a_yapClass, a_class);
             if (constr == null) {
                 return false;
             }
         }
-        a_yapClass.init(this, a_superYapClass, config, constr);
+        a_yapClass.init(this, a_superYapClass, constr);
         return true;
     }
 

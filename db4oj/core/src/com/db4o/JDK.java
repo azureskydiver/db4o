@@ -3,6 +3,7 @@
 package com.db4o;
 
 import java.io.*;
+import java.lang.reflect.*;
 
 import com.db4o.types.*;
 
@@ -63,6 +64,10 @@ public class JDK {
 	
 	void removeShutdownHook(Thread a_thread){
 		
+	}
+	
+	Constructor serializableConstructor(Class clazz){
+	    return null;
 	}
 
 	void setAccessible(Object a_accessible) {

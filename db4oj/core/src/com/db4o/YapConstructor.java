@@ -12,17 +12,20 @@ final class YapConstructor {
 
     private final IConstructor i_constructor;
     private final Object[] i_params;
+    final boolean i_dontCallConstructors;
 
     YapConstructor(
         YapStream a_stream,
         Class a_class,
         IConstructor a_constructor,
         Object[] a_params,
-        boolean a_checkDispatcher) {
+        boolean a_checkDispatcher,
+        boolean a_dontCallConstructors) {
         
         i_javaClass = a_class;
         i_constructor = a_constructor;
         i_params = a_params;
+        i_dontCallConstructors = a_dontCallConstructors;
 	        try {
 	            if (a_stream == null || a_stream.i_config.i_reflect instanceof CReflect) {
 	                i_reflectorClass = new CClass(a_class);

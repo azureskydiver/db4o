@@ -3,6 +3,7 @@
 package com.db4o;
 
 import java.io.*;
+import java.lang.reflect.*;
 import java.text.*;
 import java.util.*;
 
@@ -12,22 +13,28 @@ import com.db4o.reflect.*;
 import com.db4o.types.*;
 
 public final class Platform {
-    static final String ACCESSIBLEOBJECT = "java.lang.reflect.AccessibleObject";
+    
+
     static private int collectionCheck;
-    static private final int DONT_USE = -1;
 
     static private JDK jdkWrapper;
     static private int nioCheck;
 
     static private int setAccessibleCheck;
     static private int shutDownHookCheck;
+    static int noConstructorCheck;
     static ShutDownRunnable shutDownRunnable;
 
     static Thread shutDownThread;
+    
+    // int values for features availability checks
     static private final int UNCHECKED = 0;
-
+    static final int DONT_USE = -1;
     static private final int USE = 1;
 
+    static final String ACCESSIBLEOBJECT = "java.lang.reflect.AccessibleObject";
+    static final String REFLECTIONFACTORY = "sun.reflect.ReflectionFactory";
+    static final String GETCONSTRUCTOR = "newConstructorForSerialization";
     static final String UTIL = "java.util.";
     static final String DB4O_CONFIG = "com.db4o.config."; 
     
@@ -387,6 +394,23 @@ public final class Platform {
             return false;
         }
     }
+    
+    static boolean noConstructorNeeded() {
+        if (noConstructorCheck == UNCHECKED) {
+            
+            if(methodIsAvailable(
+                REFLECTIONFACTORY,
+                GETCONSTRUCTOR,
+                new Class[]{Class.class, Constructor.class}
+                )){
+                
+                noConstructorCheck = USE;
+                return true;
+            }
+            noConstructorCheck = DONT_USE;
+        }
+        return noConstructorCheck == USE;
+    }
 
     private static final boolean noNIO() {
         try {
@@ -500,5 +524,6 @@ public final class Platform {
     }
 
 	private static final Class[] SIMPLE_CLASSES = JavaOnly.SIMPLE_CLASSES;
+
 	
 }
