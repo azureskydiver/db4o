@@ -535,8 +535,8 @@ public final class Platform {
         }
     }
     
-    public static boolean storeStaticFieldValues(Class clazz) {
-        return jdk().storeStaticFieldValues(clazz);
+    public static boolean storeStaticFieldValues(IReflect reflector, IClass claxx) {
+        return jdk().storeStaticFieldValues(reflector, claxx);
     }
 
     private static final void translate(Config4Impl config, ObjectClass oc, String to) {

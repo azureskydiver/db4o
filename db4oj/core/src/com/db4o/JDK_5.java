@@ -2,25 +2,28 @@
 
 package com.db4o;
 
+import com.db4o.reflect.*;
+
 
 class JDK_5 extends JDK_1_4 {
     
-    private Class enumClass;
+    private IClass enumClass;
     
-    boolean storeStaticFieldValues(Class clazz) {
+    boolean storeStaticFieldValues(IReflect reflector, IClass claxx) {
         
-        if(clazz == null){
+        if(claxx == null){
             return false;
         }
         
         if(enumClass == null){
             try {
-                enumClass = Class.forName(Platform.ENUM);
+                enumClass = reflector.forClass(Class.forName(Platform.ENUM));
             } catch (ClassNotFoundException e) {
                 return false;
             }
         }
-        return enumClass.isAssignableFrom(clazz);
+        
+        return enumClass.isAssignableFrom(claxx);
     }
 
 }
