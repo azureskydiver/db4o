@@ -324,6 +324,8 @@ public final class Platform {
         return JavaOnly.isCollectionTranslator(a_config); 
     }
     
+    // FIXME: REFLECTOR Check on .NET, if we want to work with 
+    //                  IClass in this method.
     static final boolean isSecondClass(Class a_class){
     	return false;
     }

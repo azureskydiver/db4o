@@ -396,8 +396,10 @@ class YapHandlers {
     
     public final boolean isSecondClass(Object a_object){
     	if(a_object != null){
+    		
     		Class clazz = a_object.getClass();
-    		if(i_classByClass.get(clazz) != null){
+    		IClass claxx = _masterStream.i_config.i_reflect.forClass(clazz);
+    		if(i_classByClass.get(claxx) != null){
     			return true;
     		}
     		return Platform.isSecondClass(clazz);
