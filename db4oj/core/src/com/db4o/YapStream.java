@@ -8,7 +8,7 @@ import com.db4o.query.*;
 import com.db4o.types.*;
 
 abstract class YapStream implements ObjectContainer, ExtObjectContainer,
-    TransientClass {
+    TransientClass { //Is TransientClass really necessary here? Will db4o really try to save a YapStream?
 
     static final int        HEADER_LENGTH         = 2 + (YapConst.YAPINT_LENGTH * 4);
 

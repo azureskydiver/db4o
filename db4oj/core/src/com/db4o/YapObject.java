@@ -271,11 +271,11 @@ final class YapObject extends YapMeta implements ObjectInfo{
 	}
 
 	void setObjectWeak(YapStream a_stream, Object a_object) {
-		if (a_stream.i_references.i_weak) {
+		if (a_stream.i_references._weak) {
 			if(i_object != null){
 				Platform.killYapRef(i_object);
 			}
-			i_object = Platform.createYapRef(a_stream.i_references.i_queue, this, a_object);
+			i_object = Platform.createYapRef(a_stream.i_references._queue, this, a_object);
 		} else {
 			i_object = a_object;
 		}

@@ -6,13 +6,13 @@ public class AllTestsConfAll extends TestSuite{
 
 	static protected final String TEST_CONFIGURATION = "AllTestsConfAll";
 	
-    static TestSuite[] TEST_SUITES = new TestSuite[]{
+    protected TestSuite[] TEST_SUITES = new TestSuite[]{
         
         // remove the com.db4o.test.jdk5 package 
         // to run on JDKs prior to 1.5
         
         suite("com.db4o.test.jdk5.Jdk5Tests"),
-        new AllTestsConfAll(),
+        this
         
     };
     
