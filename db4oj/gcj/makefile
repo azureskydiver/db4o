@@ -1,6 +1,8 @@
 #
 # Makefile to build db4o using gcj on Linux or Cygwin
 #
+# Make sure that this directory is the current working directory when invoking make!
+#
 
 all: libdb4o.a libdb4o.so test
 
