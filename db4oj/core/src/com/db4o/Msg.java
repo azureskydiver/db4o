@@ -82,6 +82,12 @@ class Msg implements Cloneable{
 	}
 	
 	public final boolean equals(Object obj) {
+		if(this==obj) {
+			return true;
+		}
+		if(obj==null||obj.getClass()!=this.getClass()) {
+			return false;
+		}
 	    return i_msgID == ((Msg) obj).i_msgID;
 	}
 	
