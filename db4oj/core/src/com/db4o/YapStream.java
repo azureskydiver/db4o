@@ -7,6 +7,7 @@ import com.db4o.ext.*;
 import com.db4o.internal.io.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 import com.db4o.replication.*;
 import com.db4o.types.*;
 
@@ -323,14 +324,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     abstract QResult createQResult(Transaction a_ta);
 
     void createStringIO(byte encoding) {
-        switch (encoding) {
-            case YapConst.ISO8859:
-                setStringIo(new YapStringIO());
-                break;
-            case YapConst.UNICODE:
-                setStringIo(new YapStringIOUnicode());
-                break;
-        }
+    	setStringIo(YapStringIO.forEncoding(encoding));
     }
 
     void createTransaction() {
@@ -934,7 +928,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
     
     public ReflectClass[] knownClasses(){
-    	return new ReadAllTheClasses(i_systemTrans).knownClasses();
+    	return reflector().knownClasses();
     }
     
 
@@ -1129,7 +1123,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         i_classCollection.read(i_systemTrans);
     }
     
-    public Reflector reflector(){
+    public GenericReflector reflector(){
         return i_config.reflector();
     }
 

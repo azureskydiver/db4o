@@ -16,18 +16,7 @@ public class ReadAllTheClasses {
 		_stream = trans.i_stream;
 	}
 	
-	public void readAll(){
-		
-		
-	}
 	
-	public ReflectClass[] knownClasses(){
-		readAll();
-		
-		
-		
-		return null;
-	}
 	
 	public ClassReader[] leanStoredClasses() {
 		YapWriter headerreader = _stream.getWriter(_trans, 0, YapStream.HEADER_LENGTH);

@@ -14,6 +14,7 @@ import com.db4o.messaging.MessageRecipient;
 import com.db4o.messaging.MessageSender;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
+import com.db4o.reflect.generic.*;
 
 /**
  * Configuration template for creating new db4o files
@@ -47,7 +48,8 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     PrintStream      i_outStream;
     String           i_password;
     boolean          i_readonly;
-    private Reflector _reflect;
+    private Reflector _configuredReflector;
+    private GenericReflector _reflector;
     Collection4      i_rename;
     int              i_reservedStorageSpace;
     boolean          i_singleThreadedClient;
@@ -146,6 +148,9 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         }
         if (i_rename != null) {
             ret.i_rename = (Collection4) i_rename.deepClone(ret);
+        }
+        if(_reflector != null){
+        	ret._reflector = (GenericReflector)_reflector.deepClone(ret);
         }
         return ret;
     }
@@ -268,11 +273,17 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         i_readonly = flag;
     }
 
-	Reflector reflector() {
-		if(_reflect== null){
-			_reflect = Platform.createReflector(this); 
+	GenericReflector reflector() {
+		if(_reflector == null){
+			if(_configuredReflector == null){
+				_configuredReflector = Platform.createReflector(this);	
+			}
+			_reflector = new GenericReflector(null, _configuredReflector);
 		}
-		return _reflect;
+		if(! _reflector.hasTransaction() && i_stream != null){
+			_reflector.setTransaction(i_stream.i_systemTrans);
+		}
+		return _reflector;
 	}
 
 	public void reflectWith(Reflector reflect) {
@@ -284,7 +295,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         if (reflect == null) {
             throw new NullPointerException();
         }
-        _reflect = reflect;
+        _configuredReflector = reflect;
     }
 
     public void refreshClasses() {

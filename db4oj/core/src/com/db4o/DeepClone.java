@@ -3,7 +3,7 @@
 package com.db4o;
 
 /** Deep clone */
-interface DeepClone {
+public interface DeepClone {
 
 	/** The parameter allows passing one new object so parent
 	  * references can be corrected on children.*/
