@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.InstanceNode;
 import com.swtworkbench.community.xswt.metalogger.Logger;
@@ -40,21 +41,22 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
 public class IterableFieldNode extends FieldNode {
 
     /**
-     * @param fieldType
      * @param _instance
+     * @param database TODO
+     * @param fieldType
      * @return
      */
-    public static IModelNode tryToCreate(Field field, Object _instance) {
+    public static IModelNode tryToCreate(Field field, Object _instance, Database database) {
         IterableFieldNode result;
         
         Class fieldType = field.getType();
-        Method m = null;
+        Method method = null;
         try {
-            m = fieldType.getMethod("iterator", new Class[] {});
+            method = fieldType.getMethod("iterator", new Class[] {});
         } catch (Exception e) { return null; };
         
         try {
-            result = new IterableFieldNode(field, _instance, m);
+            result = new IterableFieldNode(field, _instance, method, database);
             result.iterator();
         } catch (IllegalStateException e) {
             Logger.log().error(e, "Unable to invoke 'iterator()'");
@@ -88,12 +90,13 @@ public class IterableFieldNode extends FieldNode {
     
 	/**
 	 * @param field TODO
-	 * @param instance TODO
 	 * @param field
+	 * @param instance TODO
+	 * @param database TODO
 	 * @param iterator
 	 */
-	public IterableFieldNode(Field field, Object instance, Method iteratorMethod) {
-        super(field, instance);
+	public IterableFieldNode(Field field, Object instance, Method iteratorMethod, Database database) {
+        super(field, instance, database);
         _iteratorMethod = iteratorMethod;
 	}
     
@@ -111,7 +114,7 @@ public class IterableFieldNode extends FieldNode {
         LinkedList results = new LinkedList();
         Iterator i = iterator();
         while (i.hasNext()) {
-            results.addLast(new InstanceNode(i.next()));
+            results.addLast(new InstanceNode(i.next(), _database));
         }
         IModelNode[] finalResults = new IModelNode[results.size()];
         int elementNum=0;

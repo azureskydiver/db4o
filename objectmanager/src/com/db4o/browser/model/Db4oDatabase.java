@@ -88,5 +88,12 @@ public class Db4oDatabase implements Database {
         }
         return container.get(toReturn);
     }
+	
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.Database#getId(java.lang.Object)
+	 */
+	public long getId(Object object) {
+		return container.ext().getID(object);
+	}
     
 }

@@ -21,6 +21,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.field.FieldNodeFactory;
 
 
@@ -32,12 +33,15 @@ import com.db4o.browser.model.nodes.field.FieldNodeFactory;
 public class InstanceNode implements IModelNode {
     
     private Object _instance;
+	private Database _database;
 
 	/**
+	 * @param database TODO
 	 * @param object
 	 */
-	public InstanceNode(Object instance) {
+	public InstanceNode(Object instance, Database database) {
 		_instance = instance;
+		_database = database;
 	}
     
 	/* (non-Javadoc)
@@ -50,7 +54,7 @@ public class InstanceNode implements IModelNode {
 			Field[] fields = curclazz.getDeclaredFields();
 			for (int i = 0; i < fields.length; i++) {
 				if(!Modifier.isTransient(fields[i].getModifiers())) {
-					results.add(FieldNodeFactory.construct(fields[i], _instance));
+					results.add(FieldNodeFactory.construct(fields[i], _instance, _database));
 				}
 			}
 			curclazz=curclazz.getSuperclass();
@@ -62,7 +66,12 @@ public class InstanceNode implements IModelNode {
 	 * @see com.db4o.browser.gui.ITreeNode#getText()
 	 */
 	public String getText() {
-		return _instance.toString();
+		long id = _database.getId(_instance);
+		if (id > 0) {
+			return _instance.toString() + " (" + _database.getId(_instance) + ")";
+		} else {
+			return _instance.toString();
+		}
 	}
 	
 	/* (non-Javadoc)

@@ -48,4 +48,8 @@ public class MockDatabase extends Assert implements Database {
 		storedClasses.put(storedClass.getName(),storedClass);
 		this.instances.put(storedClass.getName(),instances);
 	}
+	
+	public long getId(Object object) {
+		return System.identityHashCode(object);
+	}
 }

@@ -18,6 +18,7 @@ package com.db4o.browser.model.nodes.field;
 
 import java.lang.reflect.Field;
 
+import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.InstanceNode;
 
@@ -34,14 +35,17 @@ public class FieldNode implements IModelNode {
 	protected Object value = null;
     protected Object _instance;
 	protected InstanceNode delegate;
+	protected Database _database;
     
 	/**
 	 * @param field
+	 * @param database TODO
 	 * @param _instance
 	 */
-	public FieldNode(Field field, Object instance) {
+	public FieldNode(Field field, Object instance, Database database) {
 		_field = field;
         _instance = instance;
+		_database = database;
 
 		if (!_field.isAccessible()) {
             _field.setAccessible(true);
@@ -51,7 +55,7 @@ public class FieldNode implements IModelNode {
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to get field value", e);
 		}
-		delegate = new InstanceNode(value);
+		delegate = new InstanceNode(value, database);
 	}
 
 	/* (non-Javadoc)

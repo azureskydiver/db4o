@@ -19,6 +19,7 @@ package com.db4o.browser.model.nodes.field;
 import java.lang.reflect.Field;
 import java.util.Date;
 
+import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 
 
@@ -58,12 +59,13 @@ public class FieldNodeFactory {
 	/**
      * Construct a FieldNode.  FIXME: Eventually, each class should register
      * itself with the factory rather than hard-coding all of these tests.
-     * 
 	 * @param field
 	 * @param instance
+	 * @param database TODO
+     * 
 	 * @return
 	 */
-	public static IModelNode construct(Field field, Object instance) {
+	public static IModelNode construct(Field field, Object instance, Database database) {
         /*
          * There are 4 use-cases here:
          * 
@@ -76,16 +78,16 @@ public class FieldNodeFactory {
         Class fieldType = field.getType();
         
         if (fieldType.isPrimitive() || typeIn(fieldType, boxedPrimitiveTypes)) {
-            return new PrimitiveFieldNode(field, instance);
+            return new PrimitiveFieldNode(field, instance, database);
         }
         
-        result = IterableFieldNode.tryToCreate(field, instance);
+        result = IterableFieldNode.tryToCreate(field, instance, database);
         if (result != null) return result;
         
-        result = MapFieldNode.tryToCreate(field, instance);
+        result = MapFieldNode.tryToCreate(field, instance, database);
         if (result != null) return result;
         
-		return new FieldNode(field, instance);
+		return new FieldNode(field, instance, database);
 	}
 
 }

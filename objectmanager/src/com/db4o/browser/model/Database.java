@@ -23,4 +23,6 @@ public interface Database {
 	public abstract DatabaseGraphIterator graphIterator(String name);
 
 	public abstract ObjectSet instances(String clazz);
+	
+	public abstract long getId(Object object);
 }
