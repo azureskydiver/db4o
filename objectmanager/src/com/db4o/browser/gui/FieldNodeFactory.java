@@ -35,6 +35,21 @@ public class FieldNodeFactory {
             String.class
     };
 
+    /**
+     * Test to see if clazz is in classArray
+     * 
+     * @param clazz The class to test
+     * @param classArray A bunch of classes
+     * @return if clazz is in classArray
+     */
+    private static boolean typeIn(Class clazz, Class[] classArray) {
+        for (int i = 0; i < classArray.length; i++) {
+            if (classArray[i].isAssignableFrom(clazz))
+                return true;
+        }
+        return false;
+    }
+    
 	/**
      * Construct a FieldNode
      * 
@@ -61,24 +76,10 @@ public class FieldNodeFactory {
         result = IterableFieldNode.tryToCreate(field, _instance);
         if (result != null) return result;
         
- 
+        result = MapFieldNode.tryToCreate(field, _instance);
+        if (result != null) return result;
         
 		return new FieldNode(field, _instance);
-	}
-
-	/**
-     * Test to see if clazz is in classArray
-     * 
-	 * @param clazz The class to test
-	 * @param classArray A bunch of classes
-	 * @return if clazz is in classArray
-	 */
-	private static boolean typeIn(Class clazz, Class[] classArray) {
-        for (int i = 0; i < classArray.length; i++) {
-			if (classArray[i].isAssignableFrom(clazz))
-                return true;
-		}
-		return false;
 	}
 
 }
