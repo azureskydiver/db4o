@@ -60,13 +60,22 @@
 			<fileset dir="${dir.dist.net.compile}">
 				<include name="**/*" />
 			</fileset>
+			<fileset dir="${dir.dist.mono.compile}">
+				<include name="**/*" />
+			</fileset>
 			<fileset dir="${dir.sharpen}">
 				<include name="**/*" />
 			</fileset>
-			<fileset dir="${dir.dist.java.build}">
+			<fileset dir="${dir.dist.java}">
 				<include name="**/*" />
 			</fileset>
-			<fileset dir="${dir.dist.net.build}">
+			<fileset dir="${dir.dist.java}">
+				<include name="**/*" />
+			</fileset>
+			<fileset dir="${dir.dist.net}">
+				<include name="**/*" />
+			</fileset>
+			<fileset dir="${dir.dist.mono}">
 				<include name="**/*" />
 			</fileset>
 		</delete>
@@ -76,12 +85,14 @@
 		<mkdir dir="${dir.sharpen.in}" />
 		<mkdir dir="${dir.sharpen.out}" />
 		<mkdir dir="${dir.dist.net.build.src}" />
+		<mkdir dir="${dir.dist.mono.build.src}" />
 		<mkdir dir="${dir.dist.doctor}" />
 		<mkdir dir="${dir.dist.doc.api}" />
 		<mkdir dir="${dir.dist.java.build.tutorial}" />
 		<mkdir dir="${dir.dist.java.build.tutorial.src}" />
 		<mkdir dir="${dir.dist.dll.net}" />
 		<mkdir dir="${dir.dist.dll.compact}" />
+		<mkdir dir="${dir.dist.dll.mono}" />
 		<loadfile property="content.gplheader" srcfile="${file.gplheader}" encoding="iso-8859-1" />
 		<loadfile property="content.copyrightheader" srcfile="${file.copyrightheader}" encoding="iso-8859-1" />
 		<versioninfo path="${dir.j.core.src}/com/db4o" java="true" version="${db4o.version.full}" />
@@ -181,8 +192,10 @@
 			</fileset>
 		</copy>
 	</target>
-
+	
+	
 	<target name="compiledllnet" depends="init, copycompact, sharpen">
+		
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" />
 		<csc srcdir="${dir.n.core.src}" targettype="library" destfile="${file.dll.net}" debug="false" warnlevel="0" optimize="true">
 			<include name="*.cs" />
@@ -190,6 +203,7 @@
 			<exclude name="mono/**" />
 		</csc>
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" />
+		
 		<versioninfo path="${dir.dist.net.compile}/compact" compact="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" />
 		<copy file="${file.keypair}" todir="${dir.dist.net.compile}" />
 		<exec executable="csc" dir="${dir.dist.net.compile}">
@@ -206,6 +220,16 @@
 		<copy todir="${dir.dist.dll.net}">
 			<fileset dir="${dir.dist.net.compile}" includes="*.dll" />
 		</copy>
+	</target>
+	
+	<target name="compiledllmono" depends="init, copycompact, sharpen">
+		<versioninfo path="${dir.n.core.src}/mono" mono="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" />
+		<csc srcdir="${dir.n.core.src}" targettype="library" destfile="${file.dll.mono}" debug="false" warnlevel="0" optimize="true">
+			<include name="*.cs" />
+			<exclude name="compact/**" />
+			<exclude name="net/**" />
+		</csc>
+		<versioninfo path="${dir.n.core.src}/mono" net="true" keyfile="" version="${db4o.version.full}" />
 	</target>
 
 	<target name="compiletestsjava" depends="compilecorejava" description="Compile Db4o test sources">
@@ -375,6 +399,68 @@
 			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
 		</zip>
 		<ant antfile="build-net-installer.xml" />
+	</target>
+	
+	<target name="zipmono" depends="init, compiledllmono, javadoc" description="Zip Mono distribution">
+		<mkdir dir="${dir.dist.mono.src.core}" />
+		<copy todir="${dir.dist.mono.src.core}">
+			<fileset dir="${dir.n.core}">
+				<include name="**/*.cs" />
+				<include name="*.*" />
+				<exclude name=".*" />
+			</fileset>
+		</copy>
+		<versioninfo path="${dir.dist.mono.src.core}/src/mono" mono="true" keyfile="" version="${db4o.version.full}" />
+		<mkdir dir="${dir.dist.mono.src.tools}" />
+		<copy todir="${dir.dist.mono.src.tools}">
+			<fileset dir="${dir.n.tools}">
+				<include name="**/*.cs" />
+				<include name="*.*" />
+				<exclude name=".*" />
+			</fileset>
+		</copy>
+		<mkdir dir="${dir.dist.mono.src.test}" />
+		<copy todir="${dir.dist.mono.src.test}">
+			<fileset dir="${dir.n.test}">
+				<include name="**/*.cs" />
+				<include name="**/*.resx" />
+				<include name="*.*" />
+				<exclude name=".*" />
+			</fileset>
+		</copy>
+		<delete dir="${dir.n.tutorial.bin}" />
+		<mkdir dir="${dir.n.tutorial.bin}" />
+		<copy todir="${dir.n.tutorial.bin}" file="${file.dll.net}" />
+		<copy todir="${dir.n.tutorial.browser.bin}" file="${file.dll.net}" />
+		<csc targetType="library" destFile="${dir.n.tutorial.bin}/db4o-samples.dll">
+			<src dir="${dir.n.tutorial.src}">
+				<include name="**/*.cs" />
+			</src>
+			<reference dir="${dir.n.tutorial.bin}">
+				<include name="db4o.dll" />
+			</reference>
+		</csc>
+		<copy todir="${dir.dist.mono.build.tutorial}">
+			<fileset dir="${dir.j.tutorial.out.mono}">
+				<include name="**/**" />
+			</fileset>
+			<fileset dir="${dir.n.tutorial}">
+				<include name="src/**/*.cs" />
+			</fileset>
+			<fileset dir="${dir.n.tutorial.browser}">
+				<include name="bin/**/*.dll" />
+			</fileset>
+		</copy>
+		<filehead path="${dir.dist.mono.build.src}" before="using" fileext="cs" header="${content.gplheader}" />
+		<copy todir="${dir.dist.mono.build}">
+			<fileset dir="${dir.dist}" includes="doc/**" />
+			<fileset dir="${dir.dist.mono}" includes="dll/**/**" />
+			<fileset dir="${dir.j}" includes="GPL.txt" />
+			<fileset dir="${dir.config}" includes="README.txt" />
+		</copy>
+		<zip destfile="${file.dist.mono}">
+			<fileset dir="${dir.dist.mono}" includes="${folder.build}/**" />
+		</zip>
 	</target>
 	
 	<target name="sharpen" depends="compilecorenet,compilebuild" description="create .NET sources">
