@@ -6,6 +6,7 @@ using j4o.lang;
 
 namespace com.db4o {
 
+	/// <exclude />
     public class Dynamic {
 
         public static object GetProperty(object obj, string prop){
