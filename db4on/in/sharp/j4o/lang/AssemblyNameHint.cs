@@ -5,7 +5,7 @@ using System;
 namespace j4o.lang {
 
     /// <summary>
-    /// holds a pair of short and long assembly name to help Type.forName()<br>
+    /// holds a pair of short and long assembly name to help Type.forName()<br />
     /// Instances of this class are stored to the db4o database files.
     /// </summary>
     /// 
