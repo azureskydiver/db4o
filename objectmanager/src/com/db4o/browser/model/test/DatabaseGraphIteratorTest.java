@@ -22,8 +22,7 @@ public class DatabaseGraphIteratorTest extends TestCase {
 		DatabaseGraphIterator graphiter=database.graphIterator();
 		assertFalse(graphiter.hasNext());
 		GraphPosition path=graphiter.getPath();
-		// TODO: Exception here
-		// IModelNode current=path.getCurrent();
+		IModelNode current=path.getCurrent();
 	}
 
 	private static class PrimitiveHolder {

@@ -17,6 +17,8 @@
 package com.db4o.browser.model.nodes;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.db4o.browser.model.nodes.field.FieldNodeFactory;
 
@@ -41,12 +43,16 @@ public class InstanceNode implements IModelNode {
 	 * @see com.db4o.browser.gui.ITreeNode#children()
 	 */
 	public IModelNode[] children() {
-        Field[] fields = _instance.getClass().getDeclaredFields();
-        IModelNode[] results = new IModelNode[fields.length];
-        for (int i = 0; i < fields.length; i++) {
-            results[i] = FieldNodeFactory.construct(fields[i], _instance);
+		List results=new ArrayList();
+		Class curclazz=_instance.getClass();
+		while(curclazz!=null) {
+			Field[] fields = curclazz.getDeclaredFields();
+			for (int i = 0; i < fields.length; i++) {
+				results.add(FieldNodeFactory.construct(fields[i], _instance));
+			}
+			curclazz=curclazz.getSuperclass();
 		}
-		return results;
+		return (IModelNode[])results.toArray(new IModelNode[results.size()]);
 	}
     
 	/* (non-Javadoc)
@@ -76,5 +82,19 @@ public class InstanceNode implements IModelNode {
 	 */
 	public boolean hasChildren() {
 		return _instance.getClass().getDeclaredFields().length > 0;
+	}
+	
+	public boolean equals(Object obj) {
+		if(obj==this) {
+			return true;
+		}
+		if(obj==null||getClass()!=obj.getClass()) {
+			return false;
+		}
+		return _instance.equals(((InstanceNode)obj)._instance);
+	}
+	
+	public int hashCode() {
+		return _instance.hashCode();
 	}
 }

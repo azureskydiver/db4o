@@ -87,11 +87,16 @@ public class GraphPosition {
     
     /**
      * Method getCurrent.  Return the current IModelNode in this GraphPosition.
-     * @return IModelNode the current node
+     * 
+     * @return IModelNode the current node or null if the database is empty.
      */
     public IModelNode getCurrent() {
         GraphPathNode current = (GraphPathNode) path.getLast();
-        return current.children[current.selectedChild+1];
+		if (current.children.length > 0) {
+			return current.children[current.selectedChild+1];
+		} else {
+			return null;
+		}
     }
     
     /* (non-Javadoc)

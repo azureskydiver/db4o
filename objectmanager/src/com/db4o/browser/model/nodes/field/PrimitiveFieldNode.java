@@ -18,6 +18,8 @@ package com.db4o.browser.model.nodes.field;
 
 import java.lang.reflect.Field;
 
+import com.db4o.browser.model.nodes.IModelNode;
+
 
 
 /**
@@ -41,5 +43,9 @@ public class PrimitiveFieldNode extends FieldNode {
 	 */
 	public boolean hasChildren() {
 		return false;
+	}
+	
+	public IModelNode[] children() {
+		return new IModelNode[0];
 	}
 }
