@@ -12,6 +12,9 @@ import com.db4o.browser.model.nodes.IModelNode;
 
 /**
  * TreeContentProvider.  The content provider for the object browser tree view.
+ * <p>
+ * This Content Provider uses GraphPosition objects to represent each
+ * tree node.
  *
  * @author djo
  */

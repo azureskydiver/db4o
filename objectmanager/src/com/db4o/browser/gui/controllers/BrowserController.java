@@ -17,12 +17,13 @@ import com.db4o.browser.model.IGraphIterator;
 public class BrowserController {
     
     private DbBrowserPane ui;
+    private String currentFile = null;
 
 	/**
      * Constructor BrowserController.  Create a BrowserController for a
      * particular user interface.
      * 
-	 * @param ui
+	 * @param ui The DbBrowserPane to use as for the user interface
 	 */
 	public BrowserController(DbBrowserPane ui) {
         this.ui = ui;
@@ -34,9 +35,12 @@ public class BrowserController {
     }
 
 	/**
-	 * @param file
+     * Method open.  Open a database file.
+     * 
+	 * @param file The platform-specific path/file name.
 	 */
 	public void open(String file) {
+        currentFile = file;
 		IGraphIterator i = BrowserCore.getDefault().iterator(file);
         
         TreeViewer tree = ui.getObjectTree();
