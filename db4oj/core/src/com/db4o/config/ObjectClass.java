@@ -6,7 +6,7 @@ package  com.db4o.config;
  * configuration interface for classes.
  * <br><br><b>Examples: ../com/db4o/samples/translators/Default.java.</b><br><br>
  * Use the global Configuration object to configure db4o before opening an
- * <a href="../ObjectContainer.html"><code>ObjectContainer</code></a>.<br><br>
+ * {@link com.db4o.ObjectContainer ObjectContainer}.<br><br>
  * <b>Example:</b><br>
  * <code>
  * Configuration config = Db4o.configure();<br>
@@ -58,15 +58,12 @@ public interface ObjectClass {
 	 * <br><br>
 	 * Setting cascadeOnDelete to true will result in the deletion of
 	 * all member objects of instances of this class, if they are 
-	 * passed to 
-	 * <a href="../ObjectContainer.html#delete(java.lang.Object)">
-	 * <code>ObjectContainer#delete()</code></a>.
+	 * passed to
+     * {@link com.db4o.ObjectContainer#delete(Object)}. 
 	 * <br><br>
 	 * <b>Caution !</b><br>
 	 * This setting will also trigger deletion of old member objects, on
-	 * calls to
-	 * <a href="../ObjectContainer.html#set(java.lang.Object)">
-	 * <code>ObjectContainer#set()</code></a>.<br><br>
+	 * calls to {@link com.db4o.ObjectContainer#set(Object)}.<br><br>
 	 * An example of the behaviour:<br>
 	 * <code>
 	 * ObjectContainer con;<br>
@@ -94,10 +91,7 @@ public interface ObjectClass {
 	 * <br><br>
 	 * Setting cascadeOnUpdate to true will result in the update
 	 * of all member objects if a stored instance of this class is passed
-	 * to
-	 * <a href="../ObjectContainer.html#set(java.lang.Object)">
-	 * <code>ObjectContainer#set()</code></a>.
-	 * <br><br>
+	 * to {@link com.db4o.ObjectContainer#set(Object)}.<br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * @param flag whether updates are to be cascaded to member objects.
 	 * @see ObjectField#cascadeOnUpdate
@@ -139,8 +133,8 @@ public interface ObjectClass {
     /**
 	 * sets the maximum activation depth to the desired value.
 	 * <br><br>A class specific setting overrides the
-	 * <a href="Configuration.html#activationDepth(int)">
-	 * global setting</a>.<br><br>
+     * {@link Configuration#activationDepth(int) global setting}
+     * <br><br>
      * @param depth the desired maximum activation depth
 	 * @see Configuration#activationDepth Why activation?
 	 * @see ObjectClass#cascadeOnActivate
@@ -152,8 +146,8 @@ public interface ObjectClass {
     /**
 	 * sets the minimum activation depth to the desired value.
 	 * <br><br>A class specific setting overrides the
-	 * <a href="Configuration.html#activationDepth(int)">
-	 * global setting</a>.<br><br>
+     * {@link Configuration#activationDepth(int) global setting}
+	 * <br><br>
      * @param depth the desired minimum activation depth
 	 * @see Configuration#activationDepth Why activation?
 	 * @see ObjectClass#cascadeOnActivate
@@ -162,11 +156,11 @@ public interface ObjectClass {
 
 
     /**
-	 * returns an <a href="ObjectField.html"><code>ObjectField</code></a> object
+	 * returns an {@link ObjectField ObjectField} object
 	 * to configure the specified field.
 	 * <br><br>
      * @param fieldName the fieldname of the field to be configured.<br><br>
-     * @return an instance of an <a href="ObjectField.html"><code>ObjectField</code></a>
+     * @return an instance of an {@link ObjectField ObjectField}
 	 *  object for configuration.
      */
     public ObjectField objectField (String fieldName);
@@ -213,9 +207,8 @@ public interface ObjectClass {
 	 * Preinstalled translators are documented in the sourcecode of
 	 * com.db4o.samples.translators.Default.java#defaultConfiguration().
 	 * <br><br>Example translators can also be found in this folder.<br><br>
-     * @param translator this may be an
-     * <a href="ObjectTranslator.html"><code>ObjectTranslator</code></a>
-     *  or an <a href="ObjectConstructor.html"><code>ObjectConstructor</code></a>
+     * @param translator this may be an {@link ObjectTranslator ObjectTranslator}
+     *  or an {@link ObjectConstructor ObjectConstructor}
 	 * @see ObjectTranslator
 	 * @see ObjectConstructor
      */
@@ -226,11 +219,10 @@ public interface ObjectClass {
     /**
 	 * specifies the updateDepth for this class.
 	 * <br><br>see the documentation of
-	 * <a href="../ObjectContainer.html#set(java.lang.Object)">
-	 * ObjectContainer.set()</a> for further details.<br><br>
+	 * {@link com.db4o.ObjectContainer#set(Object)}
+	 * for further details.<br><br>
 	 * The default setting is 0: Only the object passed to
-	 * <a href="../ObjectContainer.html#set(java.lang.Object)">
-	 * ObjectContainer.set()</a> will be updated.<br><br>
+	 * {@link com.db4o.ObjectContainer#set(Object)} will be updated.<br><br>
      * @param depth the depth of the desired update for this class.
 	 * @see Configuration#updateDepth
 	 * @see ObjectClass#cascadeOnUpdate
