@@ -93,24 +93,6 @@ public class NavigationController implements IBrowserController {
 	}
 	
 	/**
-	 * Returns if there are elements in the stack that can be undone.
-	 * 
-	 * @return true if an undo operation can be performed; false otherwise.
-	 */
-	private boolean canUndo() {
-		return stackPosition >= 0;
-	}
-	
-	/**
-	 * Returns if there are elements in the stack that can be redone.
-	 * 
-	 * @return true if a redo operation can be performed; false otherwise.
-	 */
-	private boolean canRedo() {
-		return stackPosition < stackMax;
-	}
-	
-	/**
 	 * @param element
 	 */
 	private void add(GraphPosition element) {
