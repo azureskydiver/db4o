@@ -34,7 +34,7 @@ public interface StoredClass
 	 * <br><br>After renaming one or multiple classes the ObjectContainer has
 	 * to be closed and reopened to allow internal caches to be refreshed.
 	 * <br><br>.NET: As the name you should provide [Classname, Assemblyname]<br><br>
-	 * @param name, the new name
+	 * @param name the new name
 	 */
 	public void rename(String name);
 	

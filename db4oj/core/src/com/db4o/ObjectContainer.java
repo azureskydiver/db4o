@@ -223,7 +223,7 @@ public interface ObjectContainer {
      * <code>objectOnUpdate</code></a> is triggered.
      * <a href="ext/ObjectCallbacks.html#objectOnUpdate(com.db4o.ObjectContainer)">
      * <code>objectOnUpdate</code></a> might also be used for cascaded updates.<br><br>
-     * @param <code>Object</code> the object to be stored or updated.
+     * @param obj the object to be stored or updated.
 	 * @see <a href="ext/ExtObjectContainer.html#set(java.lang.Object, int)">
 	 * <code>ExtObjectContainer#set(object, depth)</code></a>
 	 * @see <a href="config/Configuration.html#updateDepth(int)">

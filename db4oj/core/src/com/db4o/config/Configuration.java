@@ -289,7 +289,7 @@ public interface Configuration {
      * - a fully qualified classname.<br>
      * - a Class object.<br>
      * - any object to be used as a template.<br><br>
-     * @param classname, Class object, or example object.<br><br>
+     * @param clazz class name, Class object, or example object.<br><br>
      * @return an instance of an <a href="ObjectClass.html"><code>ObjectClass</code></a>
      *  object for configuration.
      */

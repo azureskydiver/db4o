@@ -41,7 +41,7 @@ public interface StoredField {
 	 * modifies the name of this stored field.
 	 * <br><br>After renaming one or multiple fields the ObjectContainer has
 	 * to be closed and reopened to allow internal caches to be refreshed.<br><br>
-	 * @param name, the new name
+	 * @param name the new name
 	 */
 	public void rename(String name);
 	

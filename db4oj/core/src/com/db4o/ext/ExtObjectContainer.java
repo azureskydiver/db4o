@@ -279,8 +279,8 @@ public interface ExtObjectContainer extends ObjectContainer {
      * <br><br>In addition to the normal storage interface, 
      * <a href="../ObjectContainer.html#set(java.lang.Object)"><code>ObjectContainer#set(Object)</code></a>,
      * this method allows a manual specification of the depth, the passed object is to be updated.<br><br>
-     * @param <code>Object</code> the object to be stored or updated.
-     * @param <code>depth</code> the depth to which the object is to be updated
+     * @param obj the object to be stored or updated.
+     * @param depth the depth to which the object is to be updated
      * @see <br><a href="../ObjectContainer.html#set(java.lang.Object)"><code>ObjectContainer#set(Object)</code></a>
      */
     public void set (Object obj, int depth);
@@ -336,7 +336,7 @@ public interface ExtObjectContainer extends ObjectContainer {
 	* - a fully qualified classname.<br>
 	* - a Class object.<br>
 	* - any object to be used as a template.<br><br>
-	* @param classname, Class object, or example object.<br><br>
+	* @param clazz class name, Class object, or example object.<br><br>
 	* @return an instance of an {@link StoredClass} meta information object.
 	*/
     public StoredClass storedClass(Object clazz);
