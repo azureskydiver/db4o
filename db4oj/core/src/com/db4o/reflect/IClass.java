@@ -39,6 +39,8 @@ public interface IClass {
 
     //FIXME: REFLECTOR Big hack to get a runnable version.
     public Class getJavaClass();
+    
+    public void useConstructor(IConstructor constructor, Object[] params);
 
 	
 }

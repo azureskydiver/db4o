@@ -232,10 +232,15 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     }
 
     public ObjectClass objectClass(Object clazz) {
-        String className = classNameFor(clazz);
-        if (className == null) {
+        
+        IClass claxx = reflectorFor(clazz);
+        
+        if (claxx == null) {
             return null;
         }
+        
+        String className = claxx.getName(); 
+        
         Config4Class c4c = (Config4Class) i_exceptionalClasses.get(className);
         if (c4c == null) {
             c4c = new Config4Class(this, className);
@@ -393,25 +398,23 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         i_weakReferences = flag;
     }
 
-    String classNameFor(Object clazz) {
-        if (clazz == null) {
-            return null;
-        }
-        clazz = Platform.getClassForType(clazz);
-        if (clazz instanceof String) {
-            return (String) clazz;
-        }
-        IClass cls;
+    IClass reflectorFor(Object clazz) {
+        
+        clazz = Platform.getTypeForClass(clazz);
+        
         if(clazz instanceof IClass){
-            cls = (IClass)clazz;
-        }else{
-            if (clazz instanceof Class) {
-                cls = reflector().forClass((Class) clazz);
-            } else {
-                cls = reflector().forObject(clazz);
-            }
+            return (IClass)clazz;
         }
-        return cls.getName();
+        
+        if(clazz instanceof Class){
+            return reflector().forClass((Class)clazz);
+        }
+        
+        if(clazz instanceof String){
+            return reflector().forName((String)clazz);
+        }
+        
+        return reflector().forObject(clazz);
     }
     
     

@@ -53,27 +53,31 @@ final class EventDispatcher
 	}
 	
 	static EventDispatcher forClass(YapStream a_stream, IClass classReflector){
+        
+        if(a_stream == null || classReflector == null){
+            return null;
+        }
+        
 		EventDispatcher dispatcher = null;
-		if(a_stream != null){
-		    int count = 0;
-		    if(a_stream.i_config.i_callbacks){
-		        count = COUNT;
-		    }else if(a_stream.i_config.i_isServer){
-		        count = SERVER_COUNT;
-		    }
-		    if(count > 0){
-				IClass[] parameterClasses = {a_stream.i_handlers.ICLASS_OBJECTCONTAINER};
-				IMethod[] methods = new IMethod[COUNT];
-				for (int i = COUNT -1; i >=0; i--){
-					try{
-						methods[i] = classReflector.getMethod(events[i], parameterClasses);
-						if(dispatcher == null){
-							dispatcher = new EventDispatcher(methods);
-						}
-					}catch(Throwable t){}
-				}
-		    }
-		}
+	    int count = 0;
+	    if(a_stream.i_config.i_callbacks){
+	        count = COUNT;
+	    }else if(a_stream.i_config.i_isServer){
+	        count = SERVER_COUNT;
+	    }
+	    if(count > 0){
+			IClass[] parameterClasses = {a_stream.i_handlers.ICLASS_OBJECTCONTAINER};
+			IMethod[] methods = new IMethod[COUNT];
+			for (int i = COUNT -1; i >=0; i--){
+				try{
+					methods[i] = classReflector.getMethod(events[i], parameterClasses);
+					if(dispatcher == null){
+						dispatcher = new EventDispatcher(methods);
+					}
+				}catch(Throwable t){}
+			}
+	    }
+        
 		return dispatcher;
 	}
 }

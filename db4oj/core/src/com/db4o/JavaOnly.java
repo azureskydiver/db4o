@@ -2,8 +2,6 @@
 
 package com.db4o;
 
-import java.util.*;
-
 import com.db4o.config.*;
 
 class JavaOnly {
