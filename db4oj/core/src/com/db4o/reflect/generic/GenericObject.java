@@ -15,7 +15,7 @@ class GenericObject {
         _fieldValues = new Object[_class.getDeclaredFields().length];
     }
 
-    GenericClass dataClass() {
+    GenericClass genericClass() {
         return _class;
     }
 

@@ -12,7 +12,10 @@ import com.db4o.reflect.*;
 public class GenericReflector implements Reflector, DeepClone {
 
     private Reflector _delegate;
+    
     private final Hashtable4 _classByName = new Hashtable4(1);
+    private final Collection4 _classes = new Collection4();
+    private final Hashtable4 _classByID = new Hashtable4(1);
     
 	private Transaction _trans;
 	private YapStream _stream;
@@ -49,18 +52,52 @@ public class GenericReflector implements Reflector, DeepClone {
         return false;
     }
 
-    public ReflectClass forClass(Class clazz) {
-        return _delegate.forClass(clazz);
+    private void ensureDelegate(ReflectClass clazz){
+        if(clazz != null){
+            ReflectClass claxx = (ReflectClass)_classByName.get(clazz.getName());
+            if(claxx == null){
+                //  We don't have to worry about the superclass, it can be null
+                //  because handling is delegated anyway
+                String name = clazz.getName();
+                claxx = new GenericClass(this,clazz, name,null);
+                _classes.add(claxx);
+                _classByName.put(name, claxx);
+            }
+        }
     }
+    
+    public ReflectClass forClass(Class clazz) {
+        ReflectClass claxx = _delegate.forClass(clazz);
+        ensureDelegate(claxx);
+        return claxx;
+    }
+    
 
     public ReflectClass forName(String className) {
-        ReflectClass dataClass = (ReflectClass)_classByName.get(className);
-        return dataClass != null ? dataClass : _delegate.forName(className);
+        ReflectClass clazz = (ReflectClass)_classByName.get(className);
+        if(clazz != null){
+            return clazz;
+        }
+        clazz = _delegate.forName(className);
+        if(clazz != null){
+            ensureDelegate(clazz);
+            return clazz;
+        }
+        // TODO: do we always want to create a generic class here anyway
+        // maybe with no fields for a start?
+        return null;
     }
 
-    public ReflectClass forObject(Object object) {
-    	if (object instanceof GenericObject) return ((GenericObject)object).dataClass();
-        return _delegate.forObject(object);
+    public ReflectClass forObject(Object obj) {
+        ReflectClass clazz = _delegate.forObject(obj);
+        if(clazz != null){
+            ensureDelegate(clazz);
+            return clazz;
+        }
+    	if (obj instanceof GenericObject){
+            return ((GenericObject)obj).genericClass();
+        }
+        return null;
     }
 
     public boolean isCollection(ReflectClass claxx) {
@@ -81,8 +118,7 @@ public class GenericReflector implements Reflector, DeepClone {
     
 	public ReflectClass[] knownClasses(){
 		readAll();
-		
-		return null;
+        return null;
 	}
 	
 	private void readAll(){
