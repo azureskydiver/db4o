@@ -1,10 +1,11 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.reflect.jdk;
 
+import com.db4o.Db4o;
 import com.db4o.reflect.*;
 
-class CReflect implements IReflect{
+public class CReflect implements IReflect{
 	
 	private final IArray i_array;
 	
