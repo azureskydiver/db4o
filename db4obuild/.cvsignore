@@ -4,3 +4,4 @@ dist
 test
 db4objects.crt
 machine.properties
+installer.log
