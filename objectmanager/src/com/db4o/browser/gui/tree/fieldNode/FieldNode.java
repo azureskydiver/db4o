@@ -14,11 +14,13 @@
  * along with com.swtworkbench.ed; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.db4o.browser.gui.tree;
+package com.db4o.browser.gui.tree.fieldNode;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.db4o.browser.gui.tree.ITreeNode;
 
 
 /**
@@ -28,8 +30,8 @@ import java.util.List;
  */
 public class FieldNode implements ITreeNode {
 
-    private Field _field;
-    private Object _instance;
+    protected Field _field;
+    protected Object _instance;
     
 	/**
 	 * @param field
