@@ -8,7 +8,7 @@ public class Cool {
 	public static void sleepIgnoringInterruption(long millis) {
 		try {
 			Thread.sleep(millis);
-		} catch (InterruptedException ignored) {
+		} catch (Exception ignored) {
    		}
 	}
 
