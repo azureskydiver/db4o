@@ -1,0 +1,57 @@
+<project name="doc40" default="doctordoc40" basedir=".">
+
+	<property file="machine.properties" />
+	<property file="ant.properties" />
+	
+	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
+		<classpath>
+			<pathelement location="${dir.bin.doctor}" />
+			<pathelement location="${dir.doctor}/lib/iText.jar" />
+			<pathelement location="${dir.bin.jtutorial}"/>
+			<pathelement location="${dir.bin.jcore}"/>
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+
+	<target name="doctordoc40" description="Run doctor on doc40 while editing">
+		<doctor name="doc40" 
+				interactive="true" 
+				workspace="${dir.workspace}" 
+				inputsource="${dir.src.jtutorial}/" 
+				sourceextension="java" 
+				outputfile="${db4o.file}tutorial"
+				outputpath="${dir.f1.out.java}" 
+				pdfbasefont="${font.pdf.base}"
+				archive="${filename.jar.doctor.applets}, ${filename.jar.java1.4}, ${filename.jar.tutorial}"
+			   	outlineimage="db4objects1.jpg"
+			   	linkhome="http://www.db4o.com"
+			>
+				<variable name="java" boolean="true"/>
+				<variable name="net" boolean="false"/>
+				<ignoreinputfolder name="net"/>
+			</doctor>
+		<copy todir="${dir.f1.out.java}/docs" overwrite="true">
+			<fileset dir="${dir.dist.doctor}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<doctor name="doc40" 
+			interactive="true" 
+			workspace="${dir.workspace}" 
+			inputsource="${dir.src.ntutorial}/" 
+			sourceextension="cs" 
+			outputpath="${dir.f1.out.net}" 
+			pdfbasefont="${font.pdf.base}"
+			archive="${filename.jar.doctor.applets}, ${filename.jar.java1.4}, ${filename.jar.tutorial}"
+		    outlineimage="db4objects1.jpg"
+		    linkhome="http://www.db4o.com"
+		>
+			<variable name="java" boolean="false"/>
+			<variable name="net" boolean="true"/>
+			<ignoreinputfolder name="java"/>
+		</doctor>
+		<exec executable="cmd" dir="${dir.f1.out.java}">
+			<arg value="/k start index.html"/>
+		</exec>
+	</target>
+</project>

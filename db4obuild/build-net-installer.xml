@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<project name="db4oninstaller" default="build">
+
+	<property file="machine.properties" />
+	<property file="ant.properties" />
+
+	<property name="dir.wix" location="lib/wix" />	
+	<property name="candle.exe" location="${dir.wix}/candle.exe" />
+	<property name="light.exe" location="${dir.wix}/light.exe" />
+	
+	<target name="build">
+		<mkdir dir="bin" />
+		
+		<!--
+		set correct db4o's version in the build scripts
+		-->
+		<copy todir="bin">
+			<fileset dir="src/installer">
+				<include name="installer.wxs" />
+				<include name="extra-parameters.xml" />
+			</fileset>
+			
+			<filterset>
+				<filter token="db4o.version.dotted" value="${db4o.version.dotted}" />
+				<filter token="db4o.version.full" value="${db4o.version.full}" />
+			</filterset>
+		</copy>
+		
+		<exec executable="${candle.exe}" failonerror="true">
+		
+			<env key="resources.dir" path="src/installer/resources" />
+			<env key="appicon" path="${dir.dist.net.build.tutorial}/db4o-tutorial.exe" />
+			
+			<arg value="-nologo" />			
+			<arg value="-out" />
+			<arg file="bin/installer.wixobj" />
+			<arg file="bin/installer.wxs" />
+		</exec>		
+		
+		<csc targettype="exe" destfile="bin/WixBuilder.exe">
+			<src dir="src/installer">
+				<include name="WixBuilder.cs" />
+			</src>
+		</csc>
+		
+		<exec executable="bin/WixBuilder.exe" failonerror="true">
+			<arg file="${dir.dist.net.build}" />
+			<arg file="bin/extra-parameters.xml" />
+			<arg file="bin/files.wxs" />
+		</exec>		
+		
+		<exec executable="${candle.exe}" failonerror="true">
+			<arg value="-nologo" />
+			<arg value="-out" />
+			<arg file="bin/files.wixobj" />
+			<arg file="bin/files.wxs" />			
+		</exec>
+		
+		<property name="installer.msi"
+				location="${dir.dist}/db4o-${db4o.version.dotted}-net.msi" />
+		
+		<exec executable="${light.exe}" failonerror="true">			
+			<arg file="bin/installer.wixobj" />
+			<arg file="bin/files.wixobj" />
+			<arg value="-out" />
+			<arg value="${installer.msi}" />
+		</exec>
+		
+		<echo>msi package successfuly generated: ${installer.msi}</echo>
+	</target>
+	
+</project>

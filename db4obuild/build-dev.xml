@@ -1,0 +1,26 @@
+<project name="dev" default="doctordev" basedir=".">
+
+	<property file="machine.properties" />
+	<property file="ant.properties" />
+	
+	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
+		<classpath>
+			<pathelement location="${dir.bin.doctor}" />
+			<pathelement location="${dir.doctor}/lib/iText.jar" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+
+	<target name="doctordev" description="Run doctor on dev only">
+		<doctor name="dev" workspace="${dir.workspace}" outputfile="dev" pdfbasefont="${font.pdf.base}"/>
+	</target>
+	
+	<target name="serverside" depends="doctordev">
+		<copy todir="D:/website/dev" overwrite="true">
+			<fileset dir="${dir.workspace}/dev/out">
+				<include name="**/**" />
+			</fileset>
+		</copy>
+	</target>
+	
+</project>

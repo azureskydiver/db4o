@@ -1,0 +1,8 @@
+com/db4o/*.java
+com/db4o/query/**.java
+com/db4o/config/**.java
+com/db4o/ext/**.java
+com/db4o/messaging/**.java
+com/db4o/reflect/**.java
+com/db4o/tools/**.java
+com/db4o/types/**.java

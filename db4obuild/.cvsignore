@@ -1,0 +1,5 @@
+bin
+dist
+*.yap
+test
+db4objects.crt

@@ -1,0 +1,483 @@
+<?xml version="1.0"?>
+<project name="db4obuild" default="buildall" basedir=".">
+
+	<property file="machine.properties" />
+	<property file="ant.properties" />
+
+	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
+		<classpath>
+			<pathelement location="${dir.doctor.bin}" />
+			<pathelement location="${dir.doctor.lib}/iText.jar" />
+			<pathelement location="${dir.j.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+
+	<taskdef name="filehead" classname="com.db4o.devtools.ant.FileHeadAntTask">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+	
+	<taskdef name="sharpen" classname="sharpen.SharpenAntTask">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+
+
+	<taskdef name="versioninfo" classname="com.db4o.devtools.ant.VersionInfoAntTask">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+
+	<target name="init" description="Basic initialization">
+		<tstamp />
+		<delete failonerror="false" includeemptydirs="true" description="Removing build folders">
+			<fileset dir="${dir.dist.net.compile}">
+				<include name="**/*" />
+			</fileset>
+			<fileset dir="${dir.sharpen}">
+				<include name="**/*" />
+			</fileset>
+			<fileset dir="${dir.dist.java.build}">
+				<include name="**/*" />
+			</fileset>
+			<fileset dir="${dir.dist.net.build}">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+		<mkdir dir="${dir.dist}" />
+		<mkdir dir="${dir.dist.jars}" />
+		<mkdir dir="${dir.sharpen}" />
+		<mkdir dir="${dir.sharpen.in}" />
+		<mkdir dir="${dir.sharpen.out}" />
+		<mkdir dir="${dir.dist.net.build.src}" />
+		<mkdir dir="${dir.dist.doctor}" />
+		<mkdir dir="${dir.dist.doc.api}" />
+		<mkdir dir="${dir.dist.java.build.tutorial}" />
+		<mkdir dir="${dir.dist.java.build.tutorial.src}" />
+		<mkdir dir="${dir.dist.dll.net}" />
+		<mkdir dir="${dir.dist.dll.compact}" />
+		<loadfile property="content.gplheader" srcfile="${file.gplheader}" encoding="iso-8859-1" />
+		<loadfile property="content.copyrightheader" srcfile="${file.copyrightheader}" encoding="iso-8859-1" />
+		<versioninfo path="${dir.j.core.src}/com/db4o" java="true" version="${db4o.version.full}" />
+		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" />
+		<versioninfo path="${dir.n.core.src}/compact" compact="true" keyfile="" version="${db4o.version.full}" />
+		<versioninfo path="${dir.n.core.src}/mono" mono="true" keyfile="" version="${db4o.version.full}" />
+	</target>
+
+	<target name="cleanjava" description="Delete all generated files">
+		<delete failonerror="false" description="Removing all generated files">
+			<fileset dir="${dir.dist}">
+				<include name="**/*" />
+			</fileset>
+			<fileset dir="${dir.j.tutorial.out.java}">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="cleannet" depends="init" description="Delete all generated C# files">
+		<delete failonerror="false" description="Removing all generated files" includeemptydirs="true">
+			<fileset dir="${dir.n.core.src}">
+				<include name="**/*.cs" />
+			</fileset>
+			<fileset dir="${dir.j.tutorial.out.net}">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="filehead" depends="init" description="Add copyright header to all input sources">
+		<filehead path="${dir.j}" before="package" fileext="java" header="${content.copyrightheader}" />
+		<filehead path="${dir.doctor.src}" before="package" fileext="java" header="${content.copyrightheader}" />
+		<filehead path="${dir.n.in.java}" before="package" fileext="java" header="${content.copyrightheader}" />
+		<filehead path="${dir.n.in.sharp}" before="using" fileext="cs" header="${content.copyrightheader}" />
+		<filehead path="${dir.n.core}" before="using" fileext="cs" header="${content.copyrightheader}" />
+		<filehead path="${dir.n.test}" before="using" fileext="cs" header="${content.copyrightheader}" />
+		<filehead path="${dir.n.tools}" before="using" fileext="cs" header="${content.copyrightheader}" />
+	</target>
+
+	<target name="compilecorejava" depends="init" description="Compile Db4o core sources">
+		<mkdir dir="${dir.dist.classes.java1.4}" />
+		<depend srcdir="${dir.j.core.src}" destdir="${dir.dist.classes.java1.4}" closure="yes" />
+		<javac srcdir="${dir.j.core.src}" destdir="${dir.dist.classes.java1.4}" debug="off" target="1.3" source="1.3">
+			<classpath path="${path.classpath.full}" />
+		</javac>
+		<mkdir dir="${dir.dist.classes.java1.1}" />
+		<depend srcdir="${dir.j.core.src}" destdir="${dir.dist.classes.java1.1}" closure="yes" />
+		<javac srcdir="${dir.j.core.src}" destdir="${dir.dist.classes.java1.1}" debug="off" target="1.1" source="1.2">
+			<classpath path="${path.classpath.full}" />
+		</javac>
+		<jar destfile="${file.java1.4.jar}">
+			<fileset dir="${dir.dist.classes.java1.4}" />
+		</jar>
+		<jar destfile="${file.java1.1.jar}">
+			<fileset dir="${dir.dist.classes.java1.1}" excludes="**/JDK_*.class" />
+		</jar>
+	</target>
+
+	<target name="compilecorenet" depends="init, cleannet">
+		<mkdir dir="${dir.sharpen.src}" />
+		<copy todir="${dir.sharpen.src}">
+			<fileset dir="${dir.j.core.src}" excludes="**/JDK_*.java">
+				<exclude name="**/com/db4o/config/T*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.sharpen.src}" overwrite="true">
+			<fileset dir="${dir.n.in.java}" />
+		</copy>
+		<mkdir dir="${dir.dist.classes.sharp}" />
+		<depend srcdir="${dir.sharpen.src}" destdir="${dir.dist.classes.sharp}" closure="yes" />
+		<javac srcdir="${dir.sharpen.src}" destdir="${dir.dist.classes.sharp}" debug="off" target="1.1" fork="yes" executable="${file.compiler.jdk1.3}">
+			<classpath path="${path.classpath.full}" />
+		</javac>
+	</target>
+
+	<target name="copycompact" depends="init, sharpen">
+		<mkdir dir="${dir.dist.dll.compact}" />
+		<mkdir dir="${dir.dist.net.compile}" />
+		<copy todir="${dir.dist.net.compile}" overwrite="true">
+			<fileset dir="${dir.n.core.src}">
+				<include name="**/*.cs" />
+				<exclude name="net/**" />
+				<exclude name="mono/**" />
+				<exclude name="**/TSerializable.cs" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compiledllnet" depends="init, copycompact, sharpen">
+		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" />
+		<csc srcdir="${dir.n.core.src}" targettype="library" destfile="${file.dll.net}" debug="false" warnlevel="0" optimize="true">
+			<include name="*.cs" />
+			<exclude name="compact/**" />
+			<exclude name="mono/**" />
+		</csc>
+		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" />
+		<versioninfo path="${dir.dist.net.compile}/compact" compact="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" />
+		<copy file="${file.keypair}" todir="${dir.dist.net.compile}" />
+		<exec executable="csc" dir="${dir.dist.net.compile}">
+			<arg value="/optimize" />
+			<arg value="/out:${file.name.compact1}" />
+			<arg value="/target:library" />
+			<arg value="/warn:1" />
+			<arg value="/noconfig" />
+			<arg value="/nostdlib" />
+			<arg value="/r:${dir.dll.wince}mscorlib.dll" />
+			<arg value="/r:${dir.dll.wince}system.dll" />
+			<arg value="/recurse:*.cs" />
+		</exec>
+		<copy todir="${dir.dist.dll.net}">
+			<fileset dir="${dir.dist.net.compile}" includes="*.dll" />
+		</copy>
+	</target>
+
+	<target name="compiletestsjava" depends="compilecorejava" description="Compile Db4o test sources">
+		<mkdir dir="${dir.dist.classes.test}" />
+		<depend srcdir="${dir.j.test.src}" destdir="${dir.dist.classes.test}" closure="yes" />
+		<javac destdir="${dir.dist.classes.test}" debug="on" target="1.3" source="1.3">
+			<classpath>
+				<dirset dir="${dir.dist.classes.java1.4}" />
+				<path path="${path.classpath.full}" />
+			</classpath>
+			<src path="${dir.j.test.src}" />
+			<src path="${dir.j.tools.src}" />
+		</javac>
+	</target>
+
+	<target name="compilejtutorial" depends="compilecorejava" description="Compile Db4o Java tutorial sources">
+		<mkdir dir="${dir.j.bin}" />
+		<javac srcdir="${dir.j.core.src}" destdir="${dir.j.bin}" target="1.3" source="1.3" />
+		<javac srcdir="${dir.j.tutorial.src}" destdir="${dir.j.bin}" classpath="${dir.j.bin}" debug="on" />
+	</target>
+
+	<target name="javadoc" depends="init" description="Build public javadocs">
+		<javadoc classpath="" access="public" windowtitle="db4o - database for objects - documentation" header="db4o ${db4o.version.dotted}" destdir="${dir.dist.doc.api}">
+			<fileset dir="${dir.j.core.src}">
+				<includesfile name="${javadoc.packagelist}" />
+				<excludesfile name="${javadoc.publicexclude}" />
+			</fileset>
+			<group title="Core Engine" packages="com.db4o" />
+			<group title="Query Functionality" packages="com.db4o.query" />
+			<group title="Configuration Features" packages="com.db4o.config" />
+			<group title="Extended Functionality" packages="com.db4o.ext" />
+			<group title="Messaging" packages="com.db4o.messaging" />
+			<group title="Reflection" packages="com.db4o.reflect" />
+			<group title="Tools" packages="com.db4o.tools" />
+			<group title="Types" packages="com.db4o.types" />
+		</javadoc>
+		<copy file="${javadoc.stylesheet}" todir="${dir.dist.doc.api}" overwrite="true" />
+	</target>
+
+	<target name="runtestsjava" depends="compiletestsjava" description="Run db4o AllTests">
+		<java classname="com.db4o.test.AllTests">
+			<classpath>
+				<dirset dir="${dir.dist.classes.java1.4}" />
+				<dirset dir="${dir.dist.classes.test}" />
+				<path path="${path.classpath.full}" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="zipjavasrc" depends="javadoc,compilecorejava,compiletestsjava">
+		<copy todir="${dir.dist.java.src}">
+			<fileset dir="${dir.j.core.src}" />
+		</copy>
+		<filehead path="${dir.dist.java.src}" before="package" fileext="java" header="${content.gplheader}" />
+		<zip destfile="${file.java.core.src.zip}">
+			<fileset dir="${dir.dist.java.src}" includes="*/**" excludes="*.zip" />
+		</zip>
+		<delete includeemptydirs="true">
+			<fileset dir="${dir.dist.java.src}">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="zipjavatest" depends="javadoc,compilecorejava,compiletestsjava">
+		<copy todir="${dir.dist.java.src}">
+			<fileset dir="${dir.j.test.src}" />
+		</copy>
+		<filehead path="${dir.dist.java.src}" before="package" fileext="java" header="${content.gplheader}" />
+		<zip destfile="${file.java.test.src.zip}">
+			<fileset dir="${dir.dist.java.src}" includes="*/**" excludes="*.zip" />
+		</zip>
+		<delete includeemptydirs="true">
+			<fileset dir="${dir.dist.java.src}">
+				<include name="**/*" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="zipjava" depends="zipjavasrc, zipjavatest, init" description="Zip Java distribution">
+		<copy todir="${dir.dist.java.src}">
+			<fileset dir="${dir.j.tools.src}" />
+			<fileset file="${file.java.core.src.zip}" />
+			<fileset file="${file.java.test.src.zip}" />
+		</copy>
+		<filehead path="${dir.dist.java.src}" before="package" fileext="java" header="${content.gplheader}" />
+		<copy todir="${dir.dist.java.build.tutorial}">
+			<fileset dir="${dir.j.tutorial.out.java}">
+				<include name="**/**" />
+			</fileset>
+			<fileset dir="${dir.j.tutorial}">
+				<include name="src/**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.build}">
+			<fileset dir="${dir.dist}" includes="doc/**" />
+			<fileset dir="${dir.dist.java}" includes="lib/**" />
+			<fileset dir="${dir.dist.java}" includes="src/**" />
+			<fileset dir="${dir.j}" includes="GPL.txt" />
+			<fileset dir="${dir.config}" includes="README.txt" />
+		</copy>
+		<zip destfile="${file.dist.java}">
+			<fileset dir="${dir.dist.java}" includes="${folder.build}/**" />
+		</zip>
+	</target>
+
+	<target name="zipnet" depends="init, compiledllnet, javadoc" description="Zip .NET distribution">
+		<mkdir dir="${dir.dist.net.src.core}" />
+		<copy todir="${dir.dist.net.src.core}">
+			<fileset dir="${dir.n.core}">
+				<include name="**/*.cs" />
+				<include name="*.*" />
+				<exclude name=".*" />
+			</fileset>
+		</copy>
+		<versioninfo path="${dir.dist.net.src.core}/src/net" net="true" keyfile="" version="${db4o.version.full}" />
+		<versioninfo path="${dir.dist.net.src.core}/src/compact" compact="true" keyfile="" version="${db4o.version.full}" />
+		<versioninfo path="${dir.dist.net.src.core}/src/mono" mono="true" keyfile="" version="${db4o.version.full}" />
+		<mkdir dir="${dir.dist.net.src.tools}" />
+		<copy todir="${dir.dist.net.src.tools}">
+			<fileset dir="${dir.n.tools}">
+				<include name="**/*.cs" />
+				<include name="*.*" />
+				<exclude name=".*" />
+			</fileset>
+		</copy>
+		<mkdir dir="${dir.dist.net.src.test}" />
+		<copy todir="${dir.dist.net.src.test}">
+			<fileset dir="${dir.n.test}">
+				<include name="**/*.cs" />
+				<include name="*.*" />
+				<exclude name=".*" />
+			</fileset>
+		</copy>
+		<delete dir="${dir.n.tutorial.bin}" />
+		<mkdir dir="${dir.n.tutorial.bin}" />
+		<copy todir="${dir.n.tutorial.bin}" file="${file.dll.net}" />
+		<csc targetType="library" destFile="${dir.n.tutorial.bin}/db4o-samples.dll">
+			<src dir="${dir.n.tutorial.src}">
+				<include name="**/*.cs" />
+			</src>
+			<reference dir="${dir.n.tutorial.bin}">
+				<include name="db4o.dll" />
+			</reference>
+		</csc>
+		<copy todir="${dir.dist.net.build.tutorial}">
+			<fileset dir="${dir.j.tutorial.out.net}">
+				<include name="**/**" />
+			</fileset>
+			<fileset dir="${dir.n.tutorial}">
+				<include name="src/**/*.cs" />
+			</fileset>
+		</copy>
+		<filehead path="${dir.dist.net.build.src}" before="using" fileext="cs" header="${content.gplheader}" />
+		<copy todir="${dir.dist.net.build}">
+			<fileset dir="${dir.dist}" includes="doc/**" />
+			<fileset dir="${dir.dist.net}" includes="dll/**" />
+			<fileset dir="${dir.j}" includes="GPL.txt" />
+			<fileset dir="${dir.config}" includes="README.txt" />
+		</copy>
+		<zip destfile="${file.dist.net}">
+			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
+		</zip>
+		<ant antfile="build-installer.xml" />
+	</target>
+	
+	<target name="sharpen" depends="compilecorenet" description="create .NET sources">
+		<jar destfile="${file.sharp.jar}">
+			<fileset dir="${dir.dist.classes.sharp}" excludes="**/JDK_*.class" />
+		</jar>
+		<java classname="jode.decompiler.Main">
+			<classpath>
+				<dirset dir="${dir.build.bin}" />
+				<path path="${path.classpath.full}" />
+			</classpath>
+			<arg value="--anonymous" />
+			<arg value="--dest" />
+			<arg value="${dir.sharpen.in}" />
+			<arg value="${file.sharp.jar}" />
+		</java>
+		<sharpen inout="${dir.sharpen}" rtjar="${file.rt.jar}" />
+		<copy todir="${dir.n.core.src}/core" overwrite="true">
+			<fileset dir="${dir.sharpen.out}">
+				<include name="**" />
+				<exclude name="**/Lock4.cs" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.n.core.src}" overwrite="true">
+			<fileset dir="${dir.n.in.sharp}" />
+		</copy>
+		<filehead path="${dir.n.core.src}" before="using" fileext="cs" header="${content.copyrightheader}" />
+	</target>
+
+	<target name="doctor" depends="compilecorejava,compilejtutorial,compiledllnet" description="Run all doctor tasks">
+		<jar destfile="${file.doctor.applets.jar}">
+			<fileset dir="${dir.doctor.bin}" includes="**/com/yetac/doctor/applet/*.class" />
+		</jar>
+		<signjar jar="${file.doctor.applets.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa">
+		</signjar>
+		<jar destfile="${file.tutorial.jar}">
+			<fileset dir="${dir.j.bin}" includes="com/db4o/f1/**/*.class" />
+		</jar>
+		<signjar jar="${file.tutorial.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa">
+		</signjar>
+		<doctor name="doctor" workspace="${dir.workspace}" pdfbasefont="${font.pdf.base}" />
+		<doctor name="dev" workspace="${dir.workspace}" outputfile="dev" pdfbasefont="${font.pdf.base}" />
+		<doctor 
+			name="f1" 
+			home="${dir.j.tutorial}" 
+			interactive="true" 
+			workspace="${dir.workspace}" 
+			inputsource="${dir.j.tutorial.src}/" 
+			sourceextension="java" 
+			outputfile="${db4o.file}tutorial" 
+			outputpath="${dir.j.tutorial.out.java}" 
+			pdfbasefont="${font.pdf.base}" 
+			archive="${filename.doctor.applets.jar}, ${filename.java1.4.jar}, ${filename.tutorial.jar}" 
+			outlineimage="db4objects1.jpg" 
+			linkhome="http://www.db4o.com">
+			<variable name="java" boolean="true" />
+			<variable name="net" boolean="false" />
+			<ignoreinputfolder name="net" />
+		</doctor>
+		<copy todir="${dir.j.tutorial.out.java}/docs" overwrite="true">
+			<fileset dir="${dir.dist.doctor}">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${dir.dist.jars}">
+				<include name="${filename.java1.4.jar}" />
+			</fileset>
+		</copy>
+		<signjar jar="${dir.j.tutorial.out.java}/docs/${filename.java1.4.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa">
+		</signjar>
+		<doctor 
+			name="f1" 
+			home="${dir.j.tutorial}" 
+			interactive="true" 
+			workspace="${dir.workspace}" 
+			inputsource="${dir.n.tutorial.src}/" 
+			sourceextension="cs" 
+			outputfile="${db4o.file}tutorial" 
+			outputpath="${dir.j.tutorial.out.net}" 
+			pdfbasefont="${font.pdf.base}" 
+			archive="${filename.doctor.applets.jar}, ${filename.java1.4.jar}, ${filename.tutorial.jar}" 
+			outlineimage="db4objects1.jpg" 
+			linkhome="http://www.db4o.com">
+			<variable name="java" boolean="false" />
+			<variable name="net" boolean="true" />
+			<ignoreinputfolder name="java" />
+		</doctor>
+		<ant dir="${dir.n.tutorial.browser}" />
+	</target>
+
+	<target name="buildjava" depends="cleanjava, doctor, zipjava" description="Full java build" />
+
+	<target name="buildnet" depends="cleannet, doctor, zipnet" description="Full NET build" />
+
+	<target name="buildall" depends="buildjava, buildnet" description="Full clean build" />
+
+	<target name="serverside" depends="buildall">
+		<copy todir="${dir.server.downloads}" overwrite="true">
+			<fileset dir="${dir.dist}">
+				<include name="*.zip" />
+				<include name="*.msi" />
+			</fileset>
+			<fileset dir="${dir.dist.java.build.tutorial}">
+				<include name="*.pdf" />
+			</fileset>
+		</copy>
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o2.5.B.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o2.5.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o2.6.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o2.7.J.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o2.7.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o2.8.J.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o2.8.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o2.9.J.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o2.9.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o2.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o2U.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o30.J.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4o30.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4oD.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4oE.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4oEU.zip" />
+		<copy overwrite="true" file="${file.server.java}" tofile="${dir.server.downloads}/db4oU.zip" />
+		<copy overwrite="true" file="${file.server.net}" tofile="${dir.server.downloads}/db4o2.7.N.zip" />
+		<copy overwrite="true" file="${file.server.net}" tofile="${dir.server.downloads}/db4o2.8.N.zip" />
+		<copy overwrite="true" file="${file.server.net}" tofile="${dir.server.downloads}/db4o2.9.N.zip" />
+		<copy overwrite="true" file="${file.server.net}" tofile="${dir.server.downloads}/db4o30.N.zip" />
+	</target>
+
+	<target name="sharpeneclipse" depends="init" description="Sharpen Eclipse spike">
+		<java classname="sharpen.eclipse.ASTTestMain">
+			<classpath>
+				<dirset dir="${dir.build.bin}" />
+				<fileset dir="${dir.lib.sharpeneclipse}">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+			<arg value="./src/sharpen/eclipse/ASTTestMain.java" />
+		</java>
+	</target>
+</project>
