@@ -231,14 +231,18 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     private void testCasesFromTestSuites() {
         int len = 0;
         for (int i = 0; i < TEST_SUITES.length; i++) {
-            len += TEST_SUITES[i].tests().length;
+            if(TEST_SUITES[i] != null){
+                len += TEST_SUITES[i].tests().length;
+            }
         }
         this.testcases=new Class[len];
         int pos = 0;
         for (int i = 0; i < TEST_SUITES.length; i++) {
-            Class[] temp = TEST_SUITES[i].tests();
-            System.arraycopy(temp,0, testcases, pos, temp.length);
-            pos += temp.length;
+            if(TEST_SUITES[i] != null){
+                Class[] temp = TEST_SUITES[i].tests();
+                System.arraycopy(temp,0, testcases, pos, temp.length);
+                pos += temp.length;
+            }
         }
     }
 

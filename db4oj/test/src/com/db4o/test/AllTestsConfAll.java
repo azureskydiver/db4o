@@ -2,17 +2,15 @@
 
 package com.db4o.test;
 
-public class AllTestsConfAll implements TestSuite{
+public class AllTestsConfAll extends TestSuite{
     
     static TestSuite[] TEST_SUITES = new TestSuite[]{
         
-        // comment next line and remove corresponding package
+        // remove the com.db4o.test.jdk5 package 
         // to run on JDKs prior to 1.5
         
-        new com.db4o.test.jdk5.Jdk5Tests(),
+        suite("com.db4o.test.jdk5.Jdk5Tests"),
         new AllTestsConfAll(),
-
-        // new com.db4o.test.jdk5.Jdk5Tests()
         
     };
     

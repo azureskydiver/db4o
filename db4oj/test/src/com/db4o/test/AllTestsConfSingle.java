@@ -2,13 +2,12 @@
 
 package com.db4o.test;
 
-import com.db4o.test.jdk5.*;
-
-public class AllTestsConfSingle implements TestSuite{
+public class AllTestsConfSingle extends TestSuite{
     
     static TestSuite[] TEST_SUITES = new TestSuite[]{        
         new AllTestsConfSingle(),
-        new Jdk5Tests()
+        
+        suite("com.db4o.test.jdk5.Jdk5Tests")
     };
 
     
