@@ -1,24 +1,18 @@
 package com.db4o.browser.eclipse.views;
 
 
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.*;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.internal.compiler.env.ISourceType;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.eclipse.jdt.internal.compiler.env.*;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
+import org.eclipse.ui.part.*;
+import org.eclipse.ui.views.properties.*;
 
-import com.db4o.browser.gui.views.DbBrowserPane;
-import com.db4o.browser.model.Database;
+import com.db4o.browser.gui.views.*;
+import com.db4o.browser.model.*;
 
 
 public class DbBrowser extends ViewPart implements ISelectionProvider, ISelectionListener {
@@ -123,7 +117,7 @@ public class DbBrowser extends ViewPart implements ISelectionProvider, ISelectio
     
     private void openFile(String selectedFileName) {
         if (model == null) {
-            model = new Database();
+            model = new Db4oDatabase();
 //            ui.setInput(model);
         }
         model.open(selectedFileName);
