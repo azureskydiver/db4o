@@ -112,17 +112,4 @@ class YInt extends YapJavaClass {
         return obj instanceof Integer && val(obj) < i_compareTo;
     }
 
-    private static Object prop(Object obj, String prop) {
-        if (Deploy.csharp) {
-            try {
-                Class[] classes =
-                    new Class[] { Class.forName("System.Object"), Class.forName("System.String")};
-                Object[] objects = new Object[] { obj, prop };
-                return Reflection4.invoke("s4o.Dynamic", "GetProperty", classes, objects, null);
-            } catch (Exception e) {
-            }
-        }
-        return null;
-    }
-
 }

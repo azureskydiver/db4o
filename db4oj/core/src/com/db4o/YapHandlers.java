@@ -39,8 +39,6 @@ class YapHandlers {
 
     YapClass[]                      i_yapClasses;
 
-    static final Class              licenseClass    = new License().getClass();
-
     // need to keep getID Functions in Sync with ArrayIndex
     static final int                YAPANY          = 10;
     static final int                YAPANYID        = 11;
@@ -436,13 +434,11 @@ class YapHandlers {
     
     public final boolean isSecondClass(Object a_object){
     	if(a_object != null){
-    		
-    		Class clazz = a_object.getClass();
-    		IClass claxx = _masterStream.reflector().forClass(clazz);
+    		IClass claxx = _masterStream.reflector().forObject(a_object);
     		if(i_classByClass.get(claxx) != null){
     			return true;
     		}
-    		return Platform.isSecondClass(clazz);
+    		return Platform.isSecondClass(a_object.getClass());
     	}
     	return false;
     }

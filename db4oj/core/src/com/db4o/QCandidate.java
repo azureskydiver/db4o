@@ -74,7 +74,7 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
         if (i_member instanceof Compare) {
             i_member = ((Compare)i_member).compare();
             YapFile stream = getStream();
-            i_yapClass = stream.getYapClass(i_member.getClass(), false);
+            i_yapClass = stream.getYapClass(stream.reflector().forObject(i_member), false);
             i_key = (int)stream.getID(i_member);
             i_bytes = stream.readReaderByID(getTransaction(), i_key);
         }
@@ -414,10 +414,10 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
         	
             YapClass yc = null;
             if (i_bytes != null) {
-                yc = a_stream.getYapClass(a_constraint.getClass(), true);
+                yc = a_stream.getYapClass(a_stream.reflector().forObject(a_constraint), true);
             } else {
                 if (i_member != null) {
-                    yc = a_stream.getYapClass(i_member.getClass(), false);
+                    yc = a_stream.getYapClass(a_stream.reflector().forObject(i_member), false);
                 }
             }
             if (yc != null) {

@@ -138,10 +138,10 @@ public final class Platform {
         if (obj == null) {
             col.add(null);
         } else {
-            Class clazz = obj.getClass();
-            if (clazz.isArray()) {
+            IClass claxx = stream.reflector().forObject(obj);
+            if (claxx.isArray()) {
                 Object[] objects;
-                if (clazz.getComponentType().isArray()) {
+                if (claxx.getComponentType().isArray()) {
                     objects = new YapArrayN(stream, null, false).allElements(obj);
                 } else {
                     objects = new YapArray(stream, null, false).allElements(obj);
@@ -366,9 +366,7 @@ public final class Platform {
     }
     
 
-
-
-    static final Object createInstance(String name) {
+    private static final Object createInstance(String name) {
         try {
             Class clazz = Class.forName(name);
             if(clazz != null){

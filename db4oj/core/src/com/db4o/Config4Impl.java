@@ -393,7 +393,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         i_weakReferences = flag;
     }
 
-    static String classNameFor(Object clazz) {
+    String classNameFor(Object clazz) {
         if (clazz == null) {
             return null;
         }
@@ -401,11 +401,15 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         if (clazz instanceof String) {
             return (String) clazz;
         }
-        Class cls;
-        if (clazz instanceof Class) {
-            cls = (Class) clazz;
-        } else {
-            cls = clazz.getClass();
+        IClass cls;
+        if(clazz instanceof IClass){
+            cls = (IClass)clazz;
+        }else{
+            if (clazz instanceof Class) {
+                cls = reflector().forClass((Class) clazz);
+            } else {
+                cls = reflector().forObject(clazz);
+            }
         }
         return cls.getName();
     }

@@ -12,7 +12,6 @@ import com.db4o.reflect.*;
 final class YapString extends YapIndependantType {
     
     private YapStringIO i_stringIo; 
-    private static final Class i_class = "".getClass();
     
     public YapString(YapStream stream) {
         super(stream);

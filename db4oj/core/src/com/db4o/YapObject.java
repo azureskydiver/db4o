@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.reflect.*;
 
 final class YapObject extends YapMeta implements ObjectInfo{
     
@@ -751,8 +752,8 @@ final class YapObject extends YapMeta implements ObjectInfo{
 			        objToString = obj.toString();
 			    }catch(Exception e){
 			    }
-			    Class clazz = obj.getClass();
-			    str += "\n" + clazz.getName() + "\n" + objToString;
+			    IClass claxx = getYapClass().reflector().forObject(obj);
+			    str += "\n" + claxx.getName() + "\n" + objToString;
 		    }
 		    return str;
 	    }catch(Exception e){

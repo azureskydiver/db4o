@@ -506,7 +506,7 @@ abstract class YapFile extends YapStream {
             i_bootRecord.i_stream = this;
             if (i_bootRecord.initConfig(i_config)) {
                 i_classCollection.reReadYapClass(getYapClass(
-                    YapConst.CLASS_PBOOTRECORD, false));
+                    i_handlers.ICLASS_PBOOTRECORD, false));
                 setInternal(i_systemTrans, i_bootRecord, false);
             }
         } else {
