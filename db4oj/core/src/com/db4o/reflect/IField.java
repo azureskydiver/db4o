@@ -21,8 +21,8 @@ public interface IField {
 	
 	public boolean isTransient();
 	
-	public void set(Object onObject, Object attribute);
+	public void set(Object onObject, Object value);
 	
-	public void setAccessible();
+	public void setAccessible();  //TODO Refactoring suggestion: Let the set(onObject, value) method take care of this.
 	
 }

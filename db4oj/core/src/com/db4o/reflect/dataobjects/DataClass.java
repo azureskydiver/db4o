@@ -7,12 +7,23 @@ import com.db4o.reflect.*;
 public class DataClass implements IClass {
 
     private final String _name;
+    private final IClass _superclass;
+    private final DataField[] _fields;
 
-    public DataClass(String name) {
+    public DataClass(String name, IClass superclass, DataField[] fields) {
         _name = name;
+        _superclass = superclass;
+        _fields = fields;
+        initFieldIndexes();
     }
 
-    public IClass getComponentType() {
+    private void initFieldIndexes() {
+        for (int i = 0; i < _fields.length; i++) {
+            _fields[i].setIndex(i);
+        }
+    }
+
+    public IClass getComponentType() {   //FIXME Find out how this must work.
         return null;
     }
 
@@ -21,16 +32,19 @@ public class DataClass implements IClass {
     }
 
     public IField[] getDeclaredFields() {
-        return new IField[] {};
+        return _fields;
     }
 
     public IField getDeclaredField(String name) {
-        // TODO Auto-generated method stub
+        for (int i = 0; i < _fields.length; i++) {
+            if (_fields[i].getName().equals(name)) {
+                return _fields[i];
+            }
+        }
         return null;
     }
 
     public IMethod getMethod(String methodName, IClass[] paramClasses) {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -39,43 +53,38 @@ public class DataClass implements IClass {
     }
 
     public IClass getSuperclass() {
-        // TODO Auto-generated method stub
-        return null;
+        return _superclass;
     }
 
-    public boolean isAbstract() {
-        // TODO Auto-generated method stub
+    public boolean isAbstract() {  //TODO Consider: Will this method still be necessary once constructor logic is pushed into the reflectors? 
         return false;
     }
 
-    public boolean isArray() {
-        // TODO Auto-generated method stub
+    public boolean isArray() {  //FIXME Find out how this must work.
         return false;
     }
 
-    public boolean isAssignableFrom(IClass type) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean isAssignableFrom(IClass subclassCandidate) {
+        if (subclassCandidate == this) return true;
+        if (!(subclassCandidate instanceof DataClass)) return false;
+        return isAssignableFrom(subclassCandidate.getSuperclass());
     }
 
-    public boolean isInstance(Object obj) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean isInstance(Object candidate) {
+        if (!(candidate instanceof DataObject)) return false;
+        return isAssignableFrom(((DataObject)candidate).getDataClass());
     }
 
     public boolean isInterface() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     public boolean isPrimitive() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     public Object newInstance() {
-        // TODO Auto-generated method stub
-        return null;
+        return new DataObject(this);
     }
 
 
