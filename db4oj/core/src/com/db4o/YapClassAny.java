@@ -60,14 +60,9 @@ final class YapClassAny extends YapClass {
 		return 11;
 	}
 
-	public Class getJavaClass() {
-		return YapConst.CLASS_OBJECT;
-	}
-	
     public IClass classReflector(){
         return _classReflector;
     }
-    
 
 	public boolean hasField(YapStream a_stream, String a_path) {
 		return a_stream.i_classCollection.fieldExists(a_path);

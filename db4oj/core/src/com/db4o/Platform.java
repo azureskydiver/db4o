@@ -10,7 +10,6 @@ import java.util.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
-import com.db4o.reflect.jdk.CReflect;
 import com.db4o.types.*;
 
 /**

@@ -102,10 +102,10 @@ abstract class YapJavaClass implements YapDataType {
     
     public IClass classReflector(){
         if(_classReflector == null){
-            _classReflector = _stream.i_config.reflector().forClass(defaultValue().getClass());
+            _classReflector = _stream.reflector().forClass(defaultValue().getClass());
             Class clazz = primitiveJavaClass();
             if(clazz != null){
-            	_primitiveClassReflector = _stream.i_config.reflector().forClass(clazz);
+            	_primitiveClassReflector = _stream.reflector().forClass(clazz);
             }
         }
     	return _classReflector;  

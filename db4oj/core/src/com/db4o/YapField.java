@@ -54,7 +54,7 @@ class YapField implements StoredField {
         i_state = AVAILABLE;
         YapStream stream =getStream(); 
         i_handler = stream.i_handlers.handlerForClass(
-            stream, stream.i_config.reflector().forClass(a_translator.storedClass()));
+            stream, stream.reflector().forClass(a_translator.storedClass()));
     }
 
     YapField(YapClass a_yapClass, IField a_field, YapDataType a_handler) {

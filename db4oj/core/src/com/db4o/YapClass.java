@@ -311,7 +311,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     private void createConstructor(YapStream a_stream, String a_name) {
         IClass claxx;
         try {
-        	claxx = a_stream.i_config.reflector().forName(a_name);
+        	claxx = a_stream.reflector().forName(a_name);
         } catch (Throwable t) {
             claxx = null;
         }
@@ -1365,7 +1365,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
     
 	IReflect reflector() {
-		return i_stream.i_config.reflector();
+		return i_stream.reflector();
 	}
     
     public void rename(String newName){
@@ -1574,20 +1574,25 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     
     public StoredField storedField(String a_name, Object a_type) {
         synchronized(i_stream.i_lock){
+            IReflect reflector = i_stream.reflector();
     		a_type = Platform.getClassForType(a_type);
+            
     		if(a_type instanceof String){
-    		     try {
-                    a_type = Db4o.classForName((String)a_type);
-                } catch (ClassNotFoundException e) {
+                a_type = reflector.forName((String)a_type);
+                if(a_type == null){
                     return null;
                 }
-    		}
+    		}else{
+                if(a_type instanceof Class){
+                    a_type = reflector.forClass((Class)a_type);
+                }
+            }
     		YapClass yc = null;
-    		if(a_type instanceof Class){
-    		    yc = i_stream.getYapClass((Class)a_type, true);
+    		if(a_type instanceof IClass){
+    		    yc = i_stream.getYapClass((IClass)a_type, true);
     		}else{
     		    if(a_type != null){
-    		        yc = i_stream.getYapClass(a_type.getClass(), true);
+    		        yc = i_stream.getYapClass(reflector.forObject(a_type), true);
     		    }
     		}
     		

@@ -39,7 +39,7 @@ class JDK_1_2 extends JDKReflect {
     }
 
     void flattenCollection2(final YapStream a_stream, Object a_object, final com.db4o.Collection4 col) {
-    	IReflect reflector = a_stream.i_config.reflector();
+    	IReflect reflector = a_stream.reflector();
         if (reflector.isCollection(reflector.forObject(a_object))) {
             forEachCollectionElement(a_object, new Visitor4() {
                 public void visit(Object obj) {

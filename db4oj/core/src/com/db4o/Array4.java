@@ -11,10 +11,10 @@ abstract class Array4 {
 
     public static int[] dimensions(YapStream a_stream, Object a_object) {
         int count = 0;
-        Class clazz = a_object.getClass();
-        while (clazz.isArray()) {
+        IClass claxx = a_stream.reflector().forObject(a_object);
+        while (claxx.isArray()) {
             count++;
-            clazz = clazz.getComponentType();
+            claxx = claxx.getComponentType();
         }
         int dim[] = new int[count];
         for (int i = 0; i < count; i++) {
@@ -29,7 +29,7 @@ abstract class Array4 {
     }
     
     public static IArray reflector(YapStream a_stream){
-    	return a_stream.i_config.reflector().array();
+    	return a_stream.reflector().array();
     }
 
     private static final Object element(YapStream a_stream, Object a_array, int a_position) {

@@ -62,10 +62,6 @@ final class YapString extends YapIndependantType {
         return YapConst.YAPSTRING;
     }
 
-    public Class getJavaClass() {
-        return i_class;
-    }
-
     public YapClass getYapClass(YapStream a_stream) {
         return a_stream.i_handlers.i_yapClasses[getID() - 1];
     }
