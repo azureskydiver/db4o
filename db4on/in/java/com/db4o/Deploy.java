@@ -2,7 +2,11 @@
 
 package  com.db4o;
 
-final class Deploy {
+/**
+ * 
+ * @exclude
+ */
+public final class Deploy {
  	static final boolean demohop = true;
  	static final boolean debug = false;
  	static final boolean overwrite = true;
@@ -11,6 +15,6 @@ final class Deploy {
 	static final boolean flush = true;
 	static final boolean debugLong = true;
 	static final boolean deleteFile = false;
-	static final boolean csharp = true;
+	public static final boolean csharp = true;
 	static final boolean debugQueries = false;
 }
