@@ -66,11 +66,6 @@ public class JdkArray implements ReflectArray {
     public Object get(Object onArray, int index) {
         return Array.get(onArray, index);
     }
-	
-	public Object get(ReflectField field, Object receiver,int index) {
-		Object array = field.get(receiver);
-		return get(array, index);
-	}
     
     public ReflectClass getComponentType(ReflectClass a_class) {
         while (a_class.isArray()) {
@@ -82,11 +77,6 @@ public class JdkArray implements ReflectArray {
     public int getLength(Object array) {
         return Array.getLength(array);
     }
-	
-	public int getLength(ReflectField field, Object receiver) {
-		Object array = field.get(receiver);
-		return getLength(array);
-	}
 
     private final Object getNoExceptions(Object onArray, int index){
         try {
