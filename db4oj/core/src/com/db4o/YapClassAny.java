@@ -72,12 +72,12 @@ final class YapClassAny extends YapClass {
 
 		int id = 0;
 
-		int offset = a_bytes[0].i_offset;
+		int offset = a_bytes[0]._offset;
 		try {
 			id = a_bytes[0].readInt();
 		} catch (Exception e) {
 		}
-		a_bytes[0].i_offset = offset;
+		a_bytes[0]._offset = offset;
 
 		if (id != 0) {
 			YapWriter reader =

@@ -10,20 +10,17 @@ class YapRandomAccessFile extends YapFile {
 
     private Session                   i_session;
 
-    private RandomAccessFile          i_file;
-    private RandomAccessFile          i_timerFile;
-    private volatile RandomAccessFile i_backupFile;
+    private YapBlockAwareFile          i_file;
+    private YapBlockAwareFile          i_timerFile;  //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
+    private volatile YapBlockAwareFile i_backupFile;
     private byte[]                    i_timerBytes = new byte[YapConst.LONG_BYTES];
-    private byte[]                    i_seekBytes;
+    
     private Object                    i_fileLock;
 
     YapRandomAccessFile(Session a_session) throws Exception {
         super(null);
         synchronized (i_lock) {
             i_fileLock = new Object();
-            if (Tuning.symbianSeek) {
-                i_seekBytes = new byte[500];
-            }
             i_session = a_session;
             if (Deploy.debug) {
                 // intentionally no Exception handling
@@ -48,31 +45,40 @@ class YapRandomAccessFile extends YapFile {
                 Db4o.throwRuntimeException(61);
             }
             try {
-                i_backupFile = new RandomAccessFile(path, "rw");
-                i_backupFile.seek(i_file.length() - 1);
-                i_backupFile.write(new byte[] { 0});
+                i_backupFile = new YapBlockAwareFile(path, i_file.getLength());
             } catch (Exception e) {
                 i_backupFile = null;
                 Db4o.throwRuntimeException(12, path);
             }
         }
-        int pos = 0;
-        int bufferlength = 8000;
+        long pos = 0;
+        int bufferlength = 8192;
         byte[] buffer = new byte[bufferlength];
         do {
             synchronized (i_lock) {
-                i_file.seek(pos);
-                int read = i_file.read(buffer, 0, bufferlength);
-                i_backupFile.seek(pos);
-                i_backupFile.write(buffer, 0, read);
+                i_file.regularSeek(pos);
+                int read = i_file.read(buffer);
+                i_backupFile.regularSeek(pos);
+                i_backupFile.write(buffer, read);
                 pos += read;
                 i_lock.notify();
             }
-        } while (pos < i_file.length());
+        } while (pos < i_file.getLength());
         synchronized (i_lock) {
             i_backupFile.close();
             i_backupFile = null;
         }
+    }
+
+    void blockSize(int blockSize){
+        i_file.blockSize(blockSize);
+        if(i_timerFile != null){
+            i_timerFile.blockSize(blockSize);
+        }
+    }
+    
+    byte blockSize(){
+        return (byte)i_file._blockSize;
     }
 
     boolean close2() {
@@ -97,18 +103,15 @@ class YapRandomAccessFile extends YapFile {
                 Db4o.sessionStopped(i_session);
                 synchronized (i_fileLock) {
                     try {
-                        try {
-                            Platform.unlock(i_file);
-                        } catch (Exception e) {
-                        }
+                        i_file.unlock();
                         i_file.close();
                         i_file = null;
-                        if (hasLockFileThread() && Debug.lockFile) {
+                        if (needsLockFileThread() && Debug.lockFile) {
                             YapWriter lockBytes = new YapWriter(i_systemTrans,
                                 YapConst.YAPLONG_LENGTH);
                             YLong.writeLong(0, lockBytes);
-                            i_timerFile.seek(i_timerAddress);
-                            i_timerFile.write(lockBytes.i_bytes);
+                            i_timerFile.blockSeek(i_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
+                            i_timerFile.write(lockBytes._buffer);
                             i_timerFile.close();
                         }
                     } catch (Exception e) {
@@ -122,31 +125,54 @@ class YapRandomAccessFile extends YapFile {
         return stopSession;
     }
 
-    void copy(int a_oldAddress, int a_newAddress, int a_length) {
-
-        // TODO: Check for XBytes in debug mode.
-
+    void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
+    
         try {
-            if (Tuning.symbianSeek) {
-                symbianSeek(a_newAddress);
-            }
-            byte[] copyBytes = new byte[a_length];
-            i_file.seek(a_oldAddress);
+            byte[] copyBytes = new byte[length];
+            i_file.blockSeek(oldAddress, oldAddressOffset);
             i_file.read(copyBytes);
-            i_file.seek(a_newAddress);
+            
+            if (Deploy.debug && Deploy.overwrite) {
+                checkXBytes(newAddress, newAddressOffset, length);
+            }
+            
+            i_file.blockSeek(newAddress, newAddressOffset);
             i_file.write(copyBytes);
+            
+            if (i_backupFile != null) {
+                i_backupFile.blockSeek(newAddress, newAddressOffset);
+                i_backupFile.write(copyBytes);
+            }
+            
         } catch (Exception e) {
             Db4o.throwRuntimeException(16, e);
         }
-        //        if(Deploy.debug){
-        //            writeXBytes(a_oldAddress, a_length);
-        //        }
+    }
+
+    private void checkXBytes(int a_newAddress, int newAddressOffset, int a_length) {
+        if (Deploy.debug && Deploy.overwrite) {
+            try {
+                byte[] checkXBytes = new byte[a_length];
+                i_file.blockSeek(a_newAddress, newAddressOffset);
+                i_file.read(checkXBytes);
+                for (int i = 0; i < checkXBytes.length; i++) {
+                    if (checkXBytes[i] != YapConst.XBYTE) {
+                        String msg = "XByte corruption adress:"
+                            + a_newAddress + " length:"
+                            + a_length;
+                        throw new RuntimeException(msg);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     void emergencyClose() {
         super.emergencyClose();
         try {
-            Platform.unlock(i_file);
+            i_file.unlock();
         } catch (Exception e) {
         }
         try {
@@ -160,9 +186,9 @@ class YapRandomAccessFile extends YapFile {
         i_file = null;
     }
 
-    int fileLength() {
+    long fileLength() {
         try {
-            return (int) i_file.length();
+            return i_file.getLength();
         } catch (Exception e) {
             throw new RuntimeException();
         }
@@ -191,14 +217,14 @@ class YapRandomAccessFile extends YapFile {
 	                logMsg(14, fileName());
 	            }
 	            try {
-	                i_file = new RandomAccessFile(fileName(), "rw");
+	                i_file = new YapBlockAwareFile(fileName());
 	                if (Debug.lockFile) {
 	                    if (i_config.i_lockFile && (!i_config.i_readonly)) {
-	                        Platform.lock(i_file);
+	                        i_file.lock();
 	                    }
 	                }
-	                if (hasLockFileThread() && Debug.lockFile) {
-	                    i_timerFile = new RandomAccessFile(fileName(), "rw");
+	                if (needsLockFileThread() && Debug.lockFile) {
+	                    i_timerFile = new YapBlockAwareFile(fileName());
 	                }
 	            } catch (DatabaseFileLockedException de) {
 	                throw de;
@@ -226,10 +252,14 @@ class YapRandomAccessFile extends YapFile {
         }
     }
 
-    void readBytes(byte[] a_bytes, int a_address, int a_length) {
+    void readBytes(byte[] bytes, int address, int length) {
+        readBytes(bytes, address, 0, length);
+    }
+    
+    void readBytes(byte[] bytes, int address, int addressOffset, int length){
         try {
-            i_file.seek(a_address);
-            i_file.read(a_bytes, 0, a_length);
+            i_file.blockSeek(address, addressOffset);
+            i_file.read(bytes,length);
         } catch (Exception e) {
             if (Debug.atHome) {
                 e.printStackTrace();
@@ -246,13 +276,13 @@ class YapRandomAccessFile extends YapFile {
             free(address, byteCount);
         }
     }
-
+    
     void syncFiles() {
         if (!Deploy.csharp) {
             try {
-                i_file.getFD().sync();
-                if (hasLockFileThread() && Debug.lockFile) {
-                    i_timerFile.getFD().sync();
+                i_file.sync();
+                if (needsLockFileThread() && Debug.lockFile) {
+                    i_timerFile.sync();
                 }
             } catch (Exception e) {
             }
@@ -260,94 +290,71 @@ class YapRandomAccessFile extends YapFile {
     }
 
     boolean writeAccessTime() throws IOException {
-        if (hasLockFileThread() && Debug.lockFile) {
-            synchronized (i_fileLock) {
-                if (i_file == null) {
-                    return false;
-                }
-                long lockTime = System.currentTimeMillis();
-                if (Deploy.debug) {
-                    YapWriter lockBytes = new YapWriter(i_systemTrans,
-                        YapConst.YAPLONG_LENGTH);
-                    YLong.writeLong(lockTime, lockBytes);
-                    i_timerFile.seek(i_timerAddress);
-                    i_timerFile.write(lockBytes.i_bytes);
-                } else {
-                    YLong.writeLong(lockTime, i_timerBytes);
-                    i_timerFile.seek(i_timerAddress);
-                    i_timerFile.write(i_timerBytes);
-                }
+    	if (!needsLockFileThread()){
+    		return true;
+    	}
+    	
+    	if (!Debug.lockFile){
+    		return true;
+    	}
+    	
+        synchronized (i_fileLock) {
+            if (i_file == null){
+                return false;
+            }
+            
+            long lockTime = System.currentTimeMillis();
+            if (Deploy.debug) {
+                YapWriter lockBytes = new YapWriter(i_systemTrans,
+                    YapConst.YAPLONG_LENGTH);
+                YLong.writeLong(lockTime, lockBytes);
+                i_timerFile.blockSeek(i_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
+                i_timerFile.write(lockBytes._buffer);
+            } else {
+                YLong.writeLong(lockTime, i_timerBytes);
+                i_timerFile.blockSeek(i_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
+                i_timerFile.write(i_timerBytes);
             }
         }
         return true;
     }
 
     void writeBytes(YapWriter a_bytes) {
-        if (!i_config.i_readonly) {
-            if (Deploy.debug && !Deploy.flush) {
-                return;
-            } else {
-                try {
-                    if (Deploy.debug && Deploy.overwrite) {
-                        if (a_bytes.getID() != YapConst.IGNORE_ID) {
-                            try {
-                                byte[] checkXBytes = new byte[a_bytes
-                                    .getLength()];
-                                i_file.seek(a_bytes.getAddress());
-                                i_file.read(checkXBytes);
-                                for (int i = 0; i < checkXBytes.length; i++) {
-                                    if (checkXBytes[i] != YapConst.XBYTE) {
-                                        String msg = "XByte corruption adress:"
-                                            + a_bytes.getAddress() + " length:"
-                                            + a_bytes.getLength();
-                                        throw new RuntimeException(msg);
-                                    }
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    if (Tuning.symbianSeek) {
-                        symbianSeek(a_bytes.getAddress());
-                    }
-                    i_file.seek(a_bytes.getAddress());
-                    i_file.write(a_bytes.i_bytes, 0, a_bytes.getLength());
-                    if (i_backupFile != null) {
-                        i_backupFile.seek(a_bytes.getAddress());
-                        i_backupFile.write(a_bytes.i_bytes, 0, a_bytes
-                            .getLength());
-                    }
-                } catch (Exception e) {
-                    Db4o.throwRuntimeException(16, e);
+        if (i_config.i_readonly) {
+            return;
+        }
+        if (Deploy.debug && !Deploy.flush) {
+            return;
+        }
+                
+        try {
+            
+            if (Deploy.debug && Deploy.overwrite) {
+                if (a_bytes.getID() != YapConst.IGNORE_ID) {
+                    checkXBytes(a_bytes.getAddress(), a_bytes.addressOffset(), a_bytes.getLength());
                 }
             }
+
+            i_file.blockSeek(a_bytes.getAddress(), a_bytes.addressOffset());
+            i_file.write(a_bytes._buffer, a_bytes.getLength());
+            if (i_backupFile != null) {
+                i_backupFile.blockSeek(a_bytes.getAddress(), a_bytes.addressOffset());
+                i_backupFile.write(a_bytes._buffer, a_bytes.getLength());
+            }
+            
+        } catch (Exception e) {
+            Db4o.throwRuntimeException(16, e);
         }
     }
 
-    private void symbianSeek(int a_address) throws IOException {
-        if (Tuning.symbianSeek) {
-            if (a_address > i_file.length()) {
-                int len = a_address - (int) i_file.length();
-                i_file.seek(i_file.length());
-                if (len < 500) {
-                    i_file.write(i_seekBytes, 0, len);
-                } else {
-                    i_file.write(new byte[len]);
-                }
-            }
-        }
-    }
 
     void writeXBytes(int a_address, int a_length) {
         if (Deploy.debug) {
             if (Deploy.flush) {
                 if (!i_config.i_readonly) {
                     try {
-                        i_file.seek(a_address);
-                        i_file.write(xBytes(a_address, a_length).i_bytes, 0,
-                            a_length);
+                        i_file.blockSeek(a_address);
+                        i_file.write(xBytes(a_address, a_length)._buffer, a_length);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -100,7 +100,7 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
 
                     if (arrayWrapper != null) {
 
-                        final int offset = arrayBytes[0].i_offset;
+                        final int offset = arrayBytes[0]._offset;
                         boolean outerRes = true;
 
                         // The following construct is worse than not ideal.
@@ -125,7 +125,7 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
 
                                     qcon.setCandidates(candidates);
                                     arrayWrapper.readCandidates(arrayBytes[0], candidates);
-                                    arrayBytes[0].i_offset = offset;
+                                    arrayBytes[0]._offset = offset;
 
                                     final boolean isNot = qcon.isNot();
                                     if (isNot) {
@@ -341,9 +341,9 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
         if(obj instanceof YapReader) {
             /* CHANGED (pr) */
             YapReader reader=(YapReader)obj;
-            int offset=reader.i_offset;
+            int offset=reader._offset;
             obj = reader.toString(getTransaction());
-            reader.i_offset=offset;
+            reader._offset=offset;
         }
         return obj;
     }
@@ -445,14 +445,14 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
         int id = 0;
         read();
         if (i_bytes != null) {
-            final int offset = i_bytes.i_offset;
+            final int offset = i_bytes._offset;
 
             try {
                 id = i_bytes.readInt();
             } catch (Exception e) {
                 return null;
             }
-            i_bytes.i_offset = offset;
+            i_bytes._offset = offset;
 
             if (id != 0) {
                 QCandidate candidate = new QCandidate(candidateCollection, id, true);
@@ -483,7 +483,7 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
             read();
             if (i_bytes != null) {
 
-                i_bytes.i_offset = 0;
+                i_bytes._offset = 0;
                 if (Deploy.debug) {
                     i_bytes.readBegin(0, YapConst.YAPOBJECT);
                 }
@@ -558,13 +558,13 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
             if (i_yapField == null) {
                 readThis(a_activate);
             } else {
-                int offset = i_bytes.i_offset;
+                int offset = i_bytes._offset;
                 try {
                     i_member = i_yapField.readQuery(getTransaction(), i_bytes);
                 } catch (CorruptionException ce) {
                     i_member = null;
                 }
-                i_bytes.i_offset = offset;
+                i_bytes._offset = offset;
                 checkInstanceOfCompare();
             }
         }

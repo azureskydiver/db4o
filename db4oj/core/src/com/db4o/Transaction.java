@@ -32,6 +32,9 @@ class Transaction {
 
     private byte[]          i_bytes = new byte[YapConst.POINTER_LENGTH];
 
+    // contains TreeIntObject nodes
+    // if TreeIntObject#i_object is null then this means DONT delete.
+    // Otherwise TreeIntObject#i_object contains the YapObject
     public Tree          i_delete;  // public for .NET conversion
     
     protected Tree			i_writtenUpdateDeletedMembers;
@@ -194,6 +197,9 @@ class Transaction {
 
     void delete(YapObject a_yo, Object a_object, int a_cascade, boolean a_deleteMembers) {
         int id = a_yo.getID();
+        if(DTrace.enabled){
+            DTrace.TRANS_DELETE.log(id);
+        }
         TreeIntObject tio = (TreeIntObject) TreeInt.find(i_delete, id);
         if (tio == null) {
             tio = new TreeIntObject(id, new Object[] {a_yo,
@@ -215,6 +221,9 @@ class Transaction {
     }
 
     void dontDelete(int a_id, boolean a_deleteMembers) {
+        if(DTrace.enabled){
+            DTrace.TRANS_DONT_DELETE.log(a_id);
+        }
         TreeIntObject tio = (TreeIntObject) TreeInt.find(i_delete, a_id);
         if (tio != null) {
             if(a_deleteMembers && tio.i_object != null){
@@ -317,6 +326,10 @@ class Transaction {
     }
 
     void freeOnCommit(int a_id, int a_address, int a_length) {
+        if(DTrace.enabled){
+            DTrace.FREE_ON_COMMIT.log(a_id);
+            DTrace.FREE_ON_COMMIT.logLength(a_address, a_length);
+        }
         if (a_id == 0) {
             return;
         }
@@ -330,7 +343,7 @@ class Transaction {
             if (node != null) {
                 Slot slot = (Slot) ((TreeIntObject) node).i_object;
                 slot.i_references++;
-                if (Deploy.debug) {
+                if (Debug.atHome) {
                     if (slot.i_address != a_address
                         || slot.i_length != a_length) {
                         System.out
@@ -348,6 +361,11 @@ class Transaction {
     }
 
     void freeOnRollback(int a_id, int a_address, int a_length) {
+        if(DTrace.enabled){
+            DTrace.FREE_ON_ROLLBACK.log(a_id);
+            DTrace.FREE_ON_ROLLBACK.logLength(a_address, a_length);
+        }
+
         if (Deploy.debug) {
             if (a_id == 0) {
                 throw new RuntimeException();
@@ -445,6 +463,9 @@ class Transaction {
             if (a_id == 0) {
                 throw new RuntimeException();
             }
+        }
+        if(DTrace.enabled){
+            DTrace.REMOVE_FROM_CLASS_INDEX.log(a_id);
         }
         removeFromClassIndexTree(i_addToClassIndex, a_yapClassID, a_id);
         i_removeFromClassIndex = addToClassIndexTree(i_removeFromClassIndex,
@@ -655,9 +676,6 @@ class Transaction {
     }
 
     void writePointer(int a_id, int a_address, int a_length) {
-        // System.out.println("Writing Pointer:" + a_id + " " + a_address + " "
-        // + a_length);
-
         i_pointerIo.useSlot(a_id);
         if (Deploy.debug) {
             i_pointerIo.writeBegin(YapConst.YAPPOINTER);
@@ -675,6 +693,9 @@ class Transaction {
 
     void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type, int a_cascade) {
         if(Tree.find(i_writtenUpdateDeletedMembers, new TreeInt(a_id)) == null){
+            if(DTrace.enabled){
+                DTrace.WRITE_UPDATE_DELETE_MEMBERS.log(a_id);
+            }
             i_writtenUpdateDeletedMembers = Tree.add(i_writtenUpdateDeletedMembers, new TreeInt(a_id));
             YapWriter objectBytes = i_stream.readWriterByID(this, a_id);
             if (objectBytes != null) {

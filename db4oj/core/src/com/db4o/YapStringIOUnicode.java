@@ -36,7 +36,7 @@ final class YapStringIOUnicode extends YapStringIO
 	String read(YapReader bytes, int a_length){
 	    checkBufferLength(a_length);
 		for(int ii = 0; ii < a_length; ii++){
-			chars[ii] = (char)((bytes.i_bytes[bytes.i_offset ++]& 0xff) | ((bytes.i_bytes[bytes.i_offset ++]& 0xff) << 8));
+			chars[ii] = (char)((bytes._buffer[bytes._offset ++]& 0xff) | ((bytes._buffer[bytes._offset ++]& 0xff) << 8));
 		}
 		return new String(chars,0,a_length);
 	}
@@ -58,8 +58,8 @@ final class YapStringIOUnicode extends YapStringIO
 	void write(YapReader bytes, String string){
 	    final int len = writetoBuffer(string);
 	    for (int i = 0; i < len; i ++){
-			bytes.i_bytes[bytes.i_offset++] = (byte) (chars[i] & 0xff);
-			bytes.i_bytes[bytes.i_offset++] = (byte) (chars[i] >> 8);
+			bytes._buffer[bytes._offset++] = (byte) (chars[i] & 0xff);
+			bytes._buffer[bytes._offset++] = (byte) (chars[i] >> 8);
 		}
 	}
 	

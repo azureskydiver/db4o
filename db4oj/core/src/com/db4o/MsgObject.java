@@ -57,7 +57,7 @@ class MsgObject extends MsgD {
 		if(embeddedCount == 0){
 			payLoad.removeFirstBytes(LENGTH_FOR_FIRST + addLengthBeforeFirst);
 		}else{
-			payLoad.i_offset += length;
+			payLoad._offset += length;
 			YapWriter[] embedded = new YapWriter[embeddedCount + 1];
 			embedded[0] = payLoad;
 			new YapWriter(payLoad, embedded, 1);  // this line cascades and adds all embedded YapBytes 

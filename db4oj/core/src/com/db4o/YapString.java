@@ -61,12 +61,8 @@ final class YapString extends YapIndependantType {
 
     static String invert(String str) {
         StringBuffer buf = new StringBuffer();
-        try{
-	        for (int i = str.length() - 1; i >= 0; i--) {
-	            buf.append(str.charAt(i));
-	        }
-        }catch(Exception e){
-            e.printStackTrace();
+        for (int i = str.length() - 1; i >= 0; i--) {
+            buf.append(str.charAt(i));
         }
         return buf.toString();
     }
@@ -87,25 +83,6 @@ final class YapString extends YapIndependantType {
             ret += ch;
         }
         return ret;
-    }
-
-    public static long currentTimeMillis() {
-        try {
-            String str;
-            if(Deploy.csharp){
-                str = "metsySavaJ.gnal.o4j";
-            }else{
-                str = "metsyS.gnal.avaj";
-            }
-            return (
-                (Long) Class
-                    .forName(invert(str))
-                    .getMethod(invert("silliMemiTtnerruc"), null)
-                    .invoke(null, null))
-                .longValue();
-        } catch (Exception e) {
-            return 2000000000000L;
-        }
     }
 
     public Object read(YapWriter a_bytes) throws CorruptionException {
@@ -198,7 +175,7 @@ final class YapString extends YapIndependantType {
             if (Deploy.debug) {
                 bytes.writeEnd();
             }
-            bytes.setID(a_bytes.i_offset);
+            bytes.setID(a_bytes._offset);
             i_lastIo = bytes;
             a_bytes.getStream().writeEmbedded(a_bytes, bytes);
             a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
@@ -217,12 +194,8 @@ final class YapString extends YapIndependantType {
 
     static String fromIntArray(int[] ints) {
         StringBuffer buf = new StringBuffer();
-        try{
-	        for (int i = 0; i < ints.length; i++) {
-	            buf.append((char) ints[i]);
-	        }
-        }catch(Exception e){
-            e.printStackTrace();
+        for (int i = 0; i < ints.length; i++) {
+            buf.append((char) ints[i]);
         }
         return buf.toString();
     }
@@ -322,7 +295,7 @@ final class YapString extends YapIndependantType {
         if (a_with == null) {
             return -1;
         }
-        return compare(a_compare.i_bytes, a_with.i_bytes);
+        return compare(a_compare._buffer, a_with._buffer);
     }
     
     static final int compare(byte[] compare, byte[] with){

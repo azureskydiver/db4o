@@ -12,6 +12,8 @@ import com.db4o.types.*;
  */
 class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
 
+    final static int COPYBUFFER_LENGTH=4096;
+    
     public String fileName;
     public String i_ext;
     private transient File i_file;
@@ -39,14 +41,16 @@ class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
 
     private void copy(File from, File to) throws IOException {
         to.delete();
-        FileInputStream fis = new FileInputStream(from);
-        FileOutputStream fos = new FileOutputStream(to);
-        while (fis.available() > 0) {
-            fos.write(fis.read());
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream(from));
+        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(to));
+        byte[] buffer=new byte[COPYBUFFER_LENGTH];
+        int bytesread=-1;
+        while ((bytesread=in.read(buffer))>=0) {
+            out.write(buffer,0,bytesread);
         }
-        fos.flush();
-        fos.close();
-        fis.close();
+        out.flush();
+        out.close();
+        in.close();
     }
 
     public Object createDefault(Transaction a_trans) {

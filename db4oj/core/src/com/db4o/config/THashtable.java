@@ -10,11 +10,11 @@ public class THashtable implements ObjectTranslator
 	public Object onStore(ObjectContainer con, Object object){
 		Hashtable ht = (Hashtable)object;
 		Entry[] entries = new Entry[ht.size()];
-		Enumeration enum = ht.keys();
+		Enumeration enumeration = ht.keys();
 		int i = 0;
-		while(enum.hasMoreElements()){
+		while(enumeration.hasMoreElements()){
 			entries[i] = new Entry();
-			entries[i].key = enum.nextElement();
+			entries[i].key = enumeration.nextElement();
 			entries[i].value = ht.get(entries[i].key);
 			i++;
 		}

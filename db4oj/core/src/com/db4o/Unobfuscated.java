@@ -19,6 +19,8 @@ public class Unobfuscated {
 	}
 	
 	public static byte[] generateSignature() {
+	    // TODO: We could add part of the file name to improve 
+	    //       signature security.
 	    YapWriter writer = new YapWriter(null, 300);
 	    if(! Deploy.csharp) {
 		    try {

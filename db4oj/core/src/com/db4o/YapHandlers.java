@@ -246,7 +246,7 @@ class YapHandlers {
 	final void decrypt(YapReader reader) {
 	    if(i_encrypt){
 			int encryptorOffSet = i_lastEncryptorByte;
-			byte[] bytes = reader.i_bytes;
+			byte[] bytes = reader._buffer;
 			for (int i = reader.getLength() - 1; i >= 0; i--) {
 				bytes[i] += i_encryptor[encryptorOffSet];
 				if (encryptorOffSet == 0) {
@@ -260,7 +260,7 @@ class YapHandlers {
 	
     final void encrypt(YapReader reader) {
         if(i_encrypt){
-	        byte[] bytes = reader.i_bytes;
+	        byte[] bytes = reader._buffer;
 	        int encryptorOffSet = i_lastEncryptorByte;
 	        for (int i = reader.getLength() - 1; i >= 0; i--) {
 	            bytes[i] -= i_encryptor[encryptorOffSet];

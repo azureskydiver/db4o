@@ -50,17 +50,13 @@ class YapObjectCarrier extends YapMemoryFile {
 	    // do nothing
 	}
 	
-    protected int blockSize(){
-        return 1;
-    }
-	
     boolean canUpdate(){
         return false;
     }
     
 	void configureNewFile() {
-		  // do nothing
-		}
+	    i_writeAt = HEADER_LENGTH;
+	}
 		
     public boolean close() {
         
@@ -114,6 +110,10 @@ class YapObjectCarrier extends YapMemoryFile {
 	
 	void message(String msg){
 		// do nothing
+	}
+	
+	boolean needsLockFileThread() {
+	    return false;
 	}
 	
 	void raiseVersion(long a_minimumVersion){

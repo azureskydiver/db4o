@@ -17,10 +17,10 @@ class YapFieldUUID extends YapFieldVirtual {
     
     void addFieldIndex(YapWriter a_writer, boolean a_new) {
 
-        int offset = a_writer.i_offset;
+        int offset = a_writer._offset;
         int id = a_writer.readInt();
         long uuid = YLong.readLong(a_writer);
-        a_writer.i_offset = offset;
+        a_writer._offset = offset;
         
         YapFile yf = (YapFile)a_writer.getStream();
         

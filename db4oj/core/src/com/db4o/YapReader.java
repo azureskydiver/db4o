@@ -8,36 +8,36 @@ package com.db4o;
 public class YapReader {
 	
 	// for coding convenience, we allow objects to grab into the buffer
-	byte[] i_bytes;
-	int i_offset;
+	byte[] _buffer;
+	int _offset;
 
 	
 	YapReader(){
 	}
 	
 	YapReader(int a_length){
-		i_bytes = new byte[a_length];
+		_buffer = new byte[a_length];
 	}
 	
     void append(byte a_byte) {
-        i_bytes[i_offset++] = a_byte;
+        _buffer[_offset++] = a_byte;
     }
 
     void append(byte[] a_bytes) {
-        System.arraycopy(a_bytes, 0, i_bytes, i_offset, a_bytes.length);
-        i_offset += a_bytes.length;
+        System.arraycopy(a_bytes, 0, _buffer, _offset, a_bytes.length);
+        _offset += a_bytes.length;
     }
     
 	final boolean containsTheSame(YapReader other) {
 	    if(other != null) {
-	        byte[] otherBytes = other.i_bytes;
-	        if(i_bytes == null) {
+	        byte[] otherBytes = other._buffer;
+	        if(_buffer == null) {
 	            return otherBytes == null;
 	        }
-	        if(otherBytes != null && i_bytes.length == otherBytes.length) {
-	            int len = i_bytes.length;
+	        if(otherBytes != null && _buffer.length == otherBytes.length) {
+	            int len = _buffer.length;
 	            for (int i = 0; i < len; i++) {
-	                if(i_bytes[i] != otherBytes[i]) {
+	                if(_buffer[i] != otherBytes[i]) {
 	                    return false;
 	                }
 	            }
@@ -48,11 +48,11 @@ public class YapReader {
 	}
 	
 	int getLength() {
-		return i_bytes.length;
+		return _buffer.length;
 	}
 	
     void incrementOffset(int a_by) {
-        i_offset += a_by;
+        _offset += a_by;
     }
     
     /**
@@ -60,8 +60,8 @@ public class YapReader {
      * @param a_stream
      * @param a_address
      */
-    void read(YapStream a_stream, int a_address){
-        a_stream.readBytes(i_bytes, a_address, getLength());
+    void read(YapStream a_stream, int a_address, int addressOffset){
+        a_stream.readBytes(_buffer, a_address, addressOffset, getLength());
     }
 	
 	void readBegin(byte a_identifier) {
@@ -87,13 +87,13 @@ public class YapReader {
     }
 	
 	byte readByte() {
-		return i_bytes[i_offset++];
+		return _buffer[_offset++];
 	}
 	
 	byte[] readBytes(int a_length){
 	    byte[] bytes = new byte[a_length];
-	    System.arraycopy(i_bytes, i_offset, bytes, 0, a_length);
-	    i_offset += a_length;
+	    System.arraycopy(_buffer, _offset, bytes, 0, a_length);
+	    _offset += a_length;
 	    return bytes;
 	}
     
@@ -102,7 +102,7 @@ public class YapReader {
 	}
 	
 	void readEncrypt(YapStream a_stream, int a_address) {
-		a_stream.readBytes(i_bytes, a_address, getLength());
+		a_stream.readBytes(_buffer, a_address, getLength());
 		a_stream.i_handlers.decrypt(this);
 	}
 
@@ -119,16 +119,16 @@ public class YapReader {
             return YInt.readInt(this);
         } else {
             if (YapConst.INTEGER_BYTES == 4) {
-                int o = (i_offset += 4) - 1;
-                return (i_bytes[o] & 255) | (i_bytes[--o] & 255)
-                    << 8 | (i_bytes[--o] & 255)
-                    << 16 | i_bytes[--o]
+                int o = (_offset += 4) - 1;
+                return (_buffer[o] & 255) | (_buffer[--o] & 255)
+                    << 8 | (_buffer[--o] & 255)
+                    << 16 | _buffer[--o]
                     << 24;
             } else {
             	int ret = 0;
-                int ii = i_offset + YapConst.INTEGER_BYTES;
-                while (i_offset < ii) {
-                    ret = (ret << 8) + (i_bytes[i_offset++] & 0xff);
+                int ii = _offset + YapConst.INTEGER_BYTES;
+                while (_offset < ii) {
+                    ret = (ret << 8) + (_buffer[_offset++] & 0xff);
                 }
 				return ret;
             }
@@ -137,7 +137,7 @@ public class YapReader {
     }
 
     void replaceWith(byte[] a_bytes) {
-        System.arraycopy(a_bytes, 0, i_bytes, 0, getLength());
+        System.arraycopy(a_bytes, 0, _buffer, 0, getLength());
     }
     
     String toString(Transaction a_trans) {
@@ -179,16 +179,16 @@ public class YapReader {
             YInt.writeInt(a_int, this);
         } else {
             if (YapConst.INTEGER_BYTES == 4) {
-                int o = i_offset + 4;
-                i_offset = o;
-                byte[] b = i_bytes;
+                int o = _offset + 4;
+                _offset = o;
+                byte[] b = _buffer;
                 b[--o] = (byte)a_int;
                 b[--o] = (byte) (a_int >>= 8);
                 b[--o] = (byte) (a_int >>= 8);
                 b[--o] = (byte) (a_int >>= 8);
             } else {
                 for (int ii = YapConst.WRITE_LOOP; ii >= 0; ii -= 8) {
-                    i_bytes[i_offset++] = (byte) (a_int >> ii);
+                    _buffer[_offset++] = (byte) (a_int >> ii);
                 }
             }
         }

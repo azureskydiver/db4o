@@ -39,7 +39,7 @@ public final class Messages
 			            
 		        i_messages = new String[] {
 						"", // unused
-						"", // unused 
+						"blocksize should be between 1 and 127", // unused 
 						"% close request",
 						"% closed",
 						"Exception opening %",

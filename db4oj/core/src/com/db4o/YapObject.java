@@ -105,6 +105,9 @@ final class YapObject extends YapMeta implements ObjectInfo{
 
 			i_yapClass.dispatchEvent(stream, obj, EventDispatcher.NEW);
 			
+			// TODO: Weak reference creation not necessary for
+			//       primitive objects, since reference to YapObject
+			//       should get lost immediately
 			i_object = stream.i_references.createYapRef(this, obj);
 			
 			setStateClean();
@@ -720,17 +723,41 @@ final class YapObject extends YapMeta implements ObjectInfo{
 	}
 	
 	public String toString(){
-	    Object obj = getObject();
-	    if(obj == null){
-	        return "YapObject for [null]";
-	    }
-	    String objToString = "";
 	    try{
-	        objToString = obj.toString();
+		    int id = getID();
+		    String str = "YapObject\nID=" + id;
+		    if(i_yapClass != null){
+		        YapStream stream = i_yapClass.getStream();
+		        if(stream != null && id > 0){
+		            YapWriter writer = stream.readWriterByID(stream.getTransaction(), id);
+		            if(writer != null){
+		                str += "\nAddress=" + writer.getAddress();
+		            }
+		            YapClass yc = readYapClass(writer);
+		            if(yc != i_yapClass){
+		                str += "\nYapClass corruption";
+		            }else{
+		                str += yc.toString(writer, this, 0, 5);
+		            }
+		        }
+		    }
+		    Object obj = getObject();
+		    if(obj == null){
+		        str += "\nfor [null]";
+		    }else{
+		        String objToString ="";
+			    try{
+			        objToString = obj.toString();
+			    }catch(Exception e){
+			    }
+			    Class clazz = obj.getClass();
+			    str += "\n" + clazz.getName() + "\n" + objToString;
+		    }
+		    return str;
 	    }catch(Exception e){
+	        e.printStackTrace();
 	    }
-	    Class clazz = obj.getClass();
-	    return "YapObject for " + clazz.getName() + "\n" + objToString;
+	    return "Exception in YapObject analyzer";
 	}
 
 }

@@ -65,8 +65,15 @@ public interface Configuration {
     public void automaticShutDown(boolean flag);
     
     /**
-     * TODO: doc
-     * @param bytes
+     * sets the storage data blocksize for new ObjectContainers. 
+     * <br><br>The standard setting is 1 allowing for a maximum
+     * database file size of 2GB. This value can be increased
+     * to allow larger database files, although some space will
+     * be lost to padding because the size of some stored objects
+     * will not be an exact multiple of the block size. A 
+     * recommended setting for large database files is 8, since
+     * internal pointers have this length.
+     * @param bytes the size in bytes from 1 to 127
      */
     public void blockSize(int bytes);
 

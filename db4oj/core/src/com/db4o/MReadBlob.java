@@ -17,13 +17,7 @@ class MReadBlob extends MsgBlob {
                 i_length = message.getPayLoad().readInt();
                 i_blob.getStatusFrom(this);
                 i_blob.setStatus(Status.PROCESSING);
-                FileOutputStream outBlob = this.i_blob.getClientOutputStream();
-                while (i_currentByte < i_length) {
-                    outBlob.write(sock.read());
-                    i_currentByte++;
-                }
-                outBlob.flush();
-                outBlob.close();
+                copy(sock,this.i_blob.getClientOutputStream(),i_length,true);
                 message = Msg.readMessage(getTransaction(), sock);
                 if (message.equals(Msg.OK)) {
                     this.i_blob.setStatus(Status.COMPLETED);
@@ -47,15 +41,8 @@ class MReadBlob extends MsgBlob {
                 int length = (int) file.length();
                 Msg.LENGTH.getWriterForInt(getTransaction(), length).write(stream, sock);
                 FileInputStream fin = new FileInputStream(file);
-
-                int bytes = 0;
-                while (bytes < length) {
-                    // TODO: handle termination
-					sock.write(fin.read());
-                    bytes++;
-                }
-                fin.close();
-				sock.flush();
+                copy(fin,sock,false);
+                sock.flush();
                 Msg.OK.write(stream, sock);
             }
         } catch (Exception e) {

@@ -43,7 +43,7 @@ final class MReadMultipleObjects extends MsgD {
 				multibytes.writeInt(0);
 			}else{
 				multibytes.writeInt(ret[i].payLoad.getLength());
-				multibytes.payLoad.append(ret[i].payLoad.i_bytes);
+				multibytes.payLoad.append(ret[i].payLoad._buffer);
 			}
 		}
 		multibytes.write(stream, sock);

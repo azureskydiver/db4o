@@ -16,7 +16,7 @@ final class MReadBytes extends MsgD {
 		MsgD message =
 			this.getWriterForLength(bytes.getTransaction(), bytes.getLength() + YapConst.YAPINT_LENGTH);
 		message.payLoad.writeInt(bytes.getAddress());
-		message.payLoad.append(bytes.i_bytes);
+		message.payLoad.append(bytes._buffer);
 		return message;
 	}
 	
@@ -28,7 +28,7 @@ final class MReadBytes extends MsgD {
 			YapWriter bytes =
 				new YapWriter(this.getTransaction(), address, length);
 			try {
-				stream.readBytes(bytes.i_bytes, address, length);
+				stream.readBytes(bytes._buffer, address, length);
 				getWriter(bytes).write(stream, sock);
 			} catch (Exception e) {
 				// TODO: not nicely handled on the client side yet

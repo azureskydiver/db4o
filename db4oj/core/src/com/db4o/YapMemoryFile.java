@@ -58,9 +58,9 @@ class YapMemoryFile extends YapFile {
         return true;
     }
 
-    void copy(int a_oldAddress, int a_newAddress, int a_length) {
-        byte[] bytes = memoryFileBytes(a_newAddress + a_length);
-        System.arraycopy(bytes, a_oldAddress, bytes, a_newAddress, a_length);
+    void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
+        byte[] bytes = memoryFileBytes(newAddress + newAddressOffset + length);
+        System.arraycopy(bytes, oldAddress + oldAddressOffset, bytes, newAddress + newAddressOffset, length);
     }
 
     void emergencyClose() {
@@ -68,7 +68,7 @@ class YapMemoryFile extends YapFile {
         i_closed = true;
     }
 
-    int fileLength() {
+    long fileLength() {
         return i_length;
     }
 
@@ -80,7 +80,7 @@ class YapMemoryFile extends YapFile {
         return false;
     }
 
-    boolean hasLockFileThread() {
+    boolean needsLockFileThread() {
         return false;
     }
 
@@ -104,6 +104,10 @@ class YapMemoryFile extends YapFile {
             Db4o.throwRuntimeException(13, e);
         }
     }
+    
+    void readBytes(byte[] bytes, int address, int addressOffset, int length){
+        readBytes(bytes, address + addressOffset, length);
+    }
 
     void syncFiles() {
     }
@@ -113,9 +117,9 @@ class YapMemoryFile extends YapFile {
     }
 
     void writeBytes(YapWriter a_bytes) {
-        int address = a_bytes.getAddress();
+        int address = a_bytes.getAddress() + a_bytes.addressOffset();
         int length = a_bytes.getLength(); 
-        System.arraycopy(a_bytes.i_bytes, 0, memoryFileBytes(address + length), address, length);
+        System.arraycopy(a_bytes._buffer, 0, memoryFileBytes(address + length), address, length);
     }
 
     private byte[] memoryFileBytes(int a_lastByte) {

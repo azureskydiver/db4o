@@ -47,11 +47,11 @@ abstract class YapTypeAbstract extends YapJavaClass implements YapType{
 	}
 
 	public void write(Object a_object, YapWriter a_bytes) {
-		int offset = a_bytes.i_offset;
+		int offset = a_bytes._offset;
 		if(a_object != null){
-			write(a_object, a_bytes.i_bytes, a_bytes.i_offset);
+			write(a_object, a_bytes._buffer, a_bytes._offset);
 		}
-		a_bytes.i_offset = offset + linkLength();
+		a_bytes._offset = offset + linkLength();
 	}
 
 	public int getID() {
@@ -63,9 +63,9 @@ abstract class YapTypeAbstract extends YapJavaClass implements YapType{
 	}
 
 	Object read1(YapReader a_bytes) throws CorruptionException {
-		int offset = a_bytes.i_offset;
-		Object ret = read(a_bytes.i_bytes, a_bytes.i_offset);
-		a_bytes.i_offset = offset + linkLength();
+		int offset = a_bytes._offset;
+		Object ret = read(a_bytes._buffer, a_bytes._offset);
+		a_bytes._offset = offset + linkLength();
 		return ret;
 	}
 

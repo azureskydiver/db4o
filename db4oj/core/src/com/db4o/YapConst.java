@@ -7,7 +7,9 @@ import com.db4o.ext.*;
 final class YapConst
 {
     static final Object initMe = init();
-    
+
+	static final byte   YAPFILEVERSION		= 4;
+
 	static final byte	YAPBEGIN			= (byte)'{';
 	static final byte	YAPFILE				= (byte)'Y';
 	static final byte	YAPID				= (byte)'#';
@@ -30,15 +32,6 @@ final class YapConst
 	static final byte	YAPFLOAT			= (byte)'f';
 	static final byte	YAPEND				= (byte)'}';
 	static final byte	YAPNULL				= (byte)'0';
-	
-	static int[] system = new int[]{106,97,118,97,46,108,97,110,
-		103,46,83,121,115,116,101,109};
-	static int[] currentTimeMillis = new int[]{99, 117, 114, 114,
-		101,110,116,84,105,109,101,77,105,108,108,105,115};
-	static int[] dateTime = new int[]{83, 121, 115, 116, 101, 109, 46, 68, 97, 116, 101, 84, 105, 109, 101};
-	static int[] now = new int[]{78, 111, 119};
-	static int[] ticks = new int[] {84, 105, 99, 107, 115};
-	static int[] exit = new int[]{101, 120, 105, 116};
 	
 	static final int	IDENTIFIER_LENGTH	= (Deploy.debug && Deploy.identifiers)?1:0;
 	static final int	BRACKETS_BYTES		= (Deploy.debug && Deploy.brackets)?1:0;

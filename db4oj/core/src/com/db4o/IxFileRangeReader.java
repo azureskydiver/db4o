@@ -7,173 +7,174 @@ package com.db4o;
  */
 class IxFileRangeReader implements Readable {
 
-    private int               i_address;
-    private int               i_baseAddress;
+    private int               _baseAddress;
+    private int               _baseAddressOffset;
+    private int               _addressOffset;
 
-    IxFileRange               i_fileRange;
-    private final YapDataType i_handler;
-    private QCandidates       i_candidates;
+    IxFileRange               _fileRange;
+    private final YapDataType _handler;
+    private QCandidates       _candidates;
 
-    private int               i_lower;
-    private int               i_upper;
-    private int               i_cursor;
+    private int               _lower;
+    private int               _upper;
+    private int               _cursor;
 
-    private final YapReader   i_reader;
-    private final int         i_slotLength;
-    
-    private final int         i_linkLegth;
+    private final YapReader   _reader;
+    private final int         _slotLength;
 
-    IxFileRangeReader(YapDataType a_handler) {
-        i_handler = a_handler;
-        i_linkLegth = a_handler.linkLength();
-        i_slotLength = i_linkLegth + YapConst.YAPINT_LENGTH;
-        i_reader = new YapReader(i_slotLength);
+    private final int         _linkLegth;
+
+    IxFileRangeReader(YapDataType handler) {
+        _handler = handler;
+        _linkLegth = handler.linkLength();
+        _slotLength = _linkLegth + YapConst.YAPINT_LENGTH;
+        _reader = new YapReader(_slotLength);
     }
 
-    Tree add(IxFileRange a_fr, final Tree a_new) {
-        setFileRange(a_fr);
-        YapFile yf = a_fr.stream();
-        Transaction trans = a_fr.trans();
+    Tree add(IxFileRange fileRange, final Tree newTree) {
+        setFileRange(fileRange);
+        YapFile yf = fileRange.stream();
+        Transaction trans = fileRange.trans();
         while (true) {
-            i_reader.read(yf, i_address);
-            i_reader.i_offset = 0;
-            int cmp = i_handler.compareTo(i_handler.indexObject(trans,
-                i_handler.readIndexEntry(i_reader)));
-
+            _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
+            _reader._offset = 0;
+            int cmp = _handler.compareTo(_handler.indexObject(trans, _handler
+                .readIndexEntry(_reader)));
             if (cmp == 0) {
-                int parentID = i_reader.readInt();
-                cmp = parentID - ((IxPatch) a_new).i_parentID;
+                int parentID = _reader.readInt();
+                cmp = parentID - ((IxPatch) newTree).i_parentID;
             }
             if (cmp > 0) {
-                i_upper = i_cursor - 1;
-                if (i_upper < i_lower) {
-                    i_upper = i_lower;
+                _upper = _cursor - 1;
+                if (_upper < _lower) {
+                    _upper = _lower;
                 }
             } else if (cmp < 0) {
-                i_lower = i_cursor + 1;
-                if (i_lower > i_upper) {
-                    i_lower = i_upper;
+                _lower = _cursor + 1;
+                if (_lower > _upper) {
+                    _lower = _upper;
                 }
             } else {
-
-                if (a_new instanceof IxRemove) {
-                    IxRemove ir = (IxRemove) a_new;
-                    if (i_cursor == 0) {
-                        a_new.i_preceding = a_fr.i_preceding;
-                        if (a_fr.i_entries == 1) {
-                            a_new.i_subsequent = a_fr.i_subsequent;
-                            return a_new.balanceCheckNulls();
+                if (newTree instanceof IxRemove) {
+                    IxRemove ir = (IxRemove) newTree;
+                    if (_cursor == 0) {
+                        newTree.i_preceding = fileRange.i_preceding;
+                        if (fileRange._entries == 1) {
+                            newTree.i_subsequent = fileRange.i_subsequent;
+                            return newTree.balanceCheckNulls();
                         }
-                        a_fr.i_entries--;
-                        a_fr.i_address += i_slotLength;
-                        a_fr.i_preceding = null;
-                        a_new.i_subsequent = a_fr;
-                    } else if (i_cursor + 1 == a_fr.i_entries) {
-                        a_new.i_preceding = a_fr;
-                        a_new.i_subsequent = a_fr.i_subsequent;
-                        a_fr.i_subsequent = null;
-                        a_fr.i_entries--;
+                        fileRange._entries--;
+                        fileRange.incrementAddress(_slotLength);
+                        fileRange.i_preceding = null;
+                        newTree.i_subsequent = fileRange;
+                    } else if (_cursor + 1 == fileRange._entries) {
+                        newTree.i_preceding = fileRange;
+                        newTree.i_subsequent = fileRange.i_subsequent;
+                        fileRange.i_subsequent = null;
+                        fileRange._entries--;
                     } else {
-                        return insert(a_new, i_cursor, 0);
+                        return insert(newTree, _cursor, 0);
                     }
-                    a_fr.calculateSize();
-                    return a_new.balanceCheckNulls();
+                    fileRange.calculateSize();
+                    return newTree.balanceCheckNulls();
                 } else {
-                    if (i_cursor == 0) {
-                        a_new.i_subsequent = a_fr;
-                        return a_new.rotateLeft();
-                    } else if (i_cursor == a_fr.i_entries) {
-                        a_new.i_preceding = a_fr;
-                        return a_new.rotateRight();
+                    if (_cursor == 0) {
+                        newTree.i_subsequent = fileRange;
+                        return newTree.rotateLeft();
+                    } else if (_cursor == fileRange._entries) {
+                        newTree.i_preceding = fileRange;
+                        return newTree.rotateRight();
                     }
-                    return insert(a_new, i_cursor, cmp);
+                    return insert(newTree, _cursor, cmp);
                 }
             }
             if (!adjustCursor()) {
-                if (i_cursor == 0 && cmp > 0) {
-                    return a_fr.add(a_new, 1);
+                if (_cursor == 0 && cmp > 0) {
+                    return fileRange.add(newTree, 1);
                 }
-                if (i_cursor == a_fr.i_entries - 1 && cmp < 0) {
-                    return a_fr.add(a_new, -1);
+                if (_cursor == fileRange._entries - 1 && cmp < 0) {
+                    return fileRange.add(newTree, -1);
                 }
-                return insert(a_new, i_cursor, cmp);
+                return insert(newTree, _cursor, cmp);
             }
         }
     }
 
-    public Tree addToCandidatesTree(QCandidates a_candidates, Tree a_tree,
+    public Tree addToCandidatesTree(QCandidates candidates, Tree a_tree,
         IxFileRange a_range, int[] a_LowerAndUpperMatch) {
 
-        i_candidates = a_candidates;
+        _candidates = candidates;
 
         if (a_LowerAndUpperMatch == null) {
-            a_LowerAndUpperMatch = new int[] { 0, a_range.i_entries - 1};
+            a_LowerAndUpperMatch = new int[] { 0, a_range._entries - 1};
         }
 
-        YapFile yf = i_fileRange.stream();
+        YapFile yf = _fileRange.stream();
 
-        int baseAddress = a_range.i_address;
+        int baseAddress = a_range._address;
+        int baseAddressOffset = a_range._addressOffset;
 
         final boolean sorted = false;
 
         if (sorted) {
-            
+
             // The sorted implementation was identified as a bottleneck.
             // Keep it, in case a sorted QCandidate tree turns out to be necessary.
 
-            int offset = i_handler.linkLength();
+            int offset = _handler.linkLength();
             for (int i = a_LowerAndUpperMatch[0]; i <= a_LowerAndUpperMatch[1]; i++) {
-                int address = baseAddress + (i * i_slotLength);
-                i_reader.read(yf, address);
-                i_reader.i_offset = offset;
-                QCandidate candidate = new QCandidate(a_candidates, i_reader
+                _reader.read(yf, baseAddress, baseAddressOffset
+                    + (i * _slotLength));
+                _reader._offset = offset;
+                QCandidate candidate = new QCandidate(candidates, _reader
                     .readInt(), true);
                 a_tree = Tree.add(a_tree, candidate);
             }
 
         } else {
             int count = a_LowerAndUpperMatch[1] - a_LowerAndUpperMatch[0] + 1;
-            if(count > 0) {
-	            YapReader reader = new YapReader(count * i_slotLength);
-	            reader.read(yf, baseAddress + a_LowerAndUpperMatch[0] * i_slotLength);
-	            Tree tree = new TreeReader(reader, this, false).read(count);
-	            if(tree != null) {
-	                a_tree = Tree.add(a_tree, tree);
-	            }
+            if (count > 0) {
+                YapReader reader = new YapReader(count * _slotLength);
+                reader.read(yf, baseAddress, baseAddressOffset
+                    + (a_LowerAndUpperMatch[0] * _slotLength));
+                Tree tree = new TreeReader(reader, this, false).read(count);
+                if (tree != null) {
+                    a_tree = Tree.add(a_tree, tree);
+                }
             }
         }
-        
+
         return a_tree;
     }
 
     private boolean adjustCursor() {
-        if(i_upper < i_lower) {
+        if (_upper < _lower) {
             return false;
         }
-        int oldCursor = i_cursor;
-        i_cursor = i_lower + ((i_upper - i_lower) / 2);
-        if (i_cursor == oldCursor && i_cursor == i_lower && i_lower < i_upper) {
-            i_cursor++;
+        int oldCursor = _cursor;
+        _cursor = _lower + ((_upper - _lower) / 2);
+        if (_cursor == oldCursor && _cursor == _lower && _lower < _upper) {
+            _cursor++;
         }
-        i_address = i_baseAddress + (i_cursor * i_slotLength);
-        return i_cursor != oldCursor;
+        _addressOffset = _cursor * _slotLength;
+        return _cursor != oldCursor;
     }
 
-    int compare(IxFileRange a_fr, Tree a_to) {
-        setFileRange(a_fr);
-        YapFile yf = a_fr.stream();
-        Transaction trans = a_fr.trans();
+    int compare(IxFileRange fileRange, Tree treeTo) {
+        setFileRange(fileRange);
+        YapFile yf = fileRange.stream();
+        Transaction trans = fileRange.trans();
         while (true) {
-            i_reader.read(yf, i_address);
-            i_reader.i_offset = 0;
-            
-            int cmp = i_handler.compareTo(i_handler.indexObject(trans,
-                i_handler.readIndexEntry(i_reader)));
-            
+            _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
+            _reader._offset = 0;
+
+            int cmp = _handler.compareTo(_handler.indexObject(trans, _handler
+                .readIndexEntry(_reader)));
+
             if (cmp > 0) {
-                i_upper = i_cursor - 1;
+                _upper = _cursor - 1;
             } else if (cmp < 0) {
-                i_lower = i_cursor + 1;
+                _lower = _cursor + 1;
             } else {
                 return 0;
             }
@@ -181,79 +182,87 @@ class IxFileRangeReader implements Readable {
 
                 // TODO: What happens, if we have an inside hit here?
 
-                return i_cursor == 0 ? 1 : -1;
+                return _cursor == 0 ? 1 : -1;
             }
         }
     }
 
     private Tree insert(Tree a_new, int a_cursor, int a_cmp) {
         int incStartNewAt = a_cmp <= 0 ? 1 : 0;
-        int newBaseAddress = i_baseAddress
-            + ((a_cursor + incStartNewAt) * i_slotLength);
-        int newEntries = i_fileRange.i_entries - a_cursor - incStartNewAt;
-        i_fileRange.i_entries = a_cmp < 0 ? a_cursor + 1 : a_cursor;
+        int newAddressOffset = (a_cursor + incStartNewAt) * _slotLength;
+        int newEntries = _fileRange._entries - a_cursor - incStartNewAt;
+        if(Deploy.debug){
+	        if(newEntries == 0){
+	            // A bug in P1Object made this happen.
+	            // It looke like it occurs if (a_cmp == 0)
+	            // We may have to deal with this again, if we get similar
+	            // entries on the same object (indexing arrays), 
+	            // so (a_cmp == 0)
+	            throw new RuntimeException("No zero new entries permitted here.");
+	        }
+        }
         
-        IxFileRange ifr = new IxFileRange(i_fileRange.i_fieldTransaction,
-            newBaseAddress, newEntries);
-        
-        ifr.i_subsequent = i_fileRange.i_subsequent;
-        i_fileRange.i_subsequent = null;
-        a_new.i_preceding = i_fileRange.balanceCheckNulls();
+        _fileRange._entries = a_cmp < 0 ? a_cursor + 1 : a_cursor;
+        IxFileRange ifr = new IxFileRange(_fileRange.i_fieldTransaction,
+            _baseAddress, _baseAddressOffset + newAddressOffset, newEntries);
+        ifr.i_subsequent = _fileRange.i_subsequent;
+        _fileRange.i_subsequent = null;
+        a_new.i_preceding = _fileRange.balanceCheckNulls();
         a_new.i_subsequent = ifr.balanceCheckNulls();
         return a_new.balance();
     }
 
     int[] lowerAndUpperMatches() {
-        int[] matches = new int[] { i_lower, i_upper};
-        if(i_lower > i_upper) {
+        int[] matches = new int[] { _lower, _upper};
+        if (_lower > _upper) {
             return matches;
         }
-        YapFile yf = i_fileRange.stream();
-        Transaction trans = i_fileRange.trans();
-        int tempCursor = i_cursor;
-        i_upper = i_cursor;
+        YapFile yf = _fileRange.stream();
+        Transaction trans = _fileRange.trans();
+        int tempCursor = _cursor;
+        _upper = _cursor;
         adjustCursor();
         while (true) {
-            i_reader.read(yf, i_address);
-            i_reader.i_offset = 0;
-            int cmp = i_handler.compareTo(i_handler.indexObject(trans,
-                i_handler.readIndexEntry(i_reader)));
+            _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
+            _reader._offset = 0;
+            int cmp = _handler.compareTo(_handler.indexObject(trans, _handler
+                .readIndexEntry(_reader)));
             if (cmp == 0) {
-                i_upper = i_cursor;
+                _upper = _cursor;
             } else {
-                i_lower = i_cursor + 1;
-                if (i_lower > i_upper) {
-                    matches[0] = i_upper;
+                _lower = _cursor + 1;
+                if (_lower > _upper) {
+                    matches[0] = _upper;
                     break;
                 }
             }
             if (!adjustCursor()) {
-                matches[0] = i_upper;
+                matches[0] = _upper;
                 break;
             }
         }
-        i_upper = matches[1];
-        i_lower = tempCursor;
-        if(i_lower > i_upper) {
-            i_lower = i_upper;
+        _upper = matches[1];
+        _lower = tempCursor;
+        if (_lower > _upper) {
+            _lower = _upper;
         }
         adjustCursor();
         while (true) {
-            i_reader.read(yf, i_address);
-            i_reader.i_offset = 0;
-            int cmp = i_handler.compareTo(i_handler.indexObject(trans,
-                i_handler.readIndexEntry(i_reader)));
+            _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
+            _reader._offset = 0;
+            int cmp = _handler.compareTo(_handler.indexObject(trans, _handler
+                .readIndexEntry(_reader)));
             if (cmp == 0) {
-                i_lower = i_cursor;
+                _lower = _cursor;
             } else {
-                i_upper = i_cursor - 1;
-                if (i_upper < i_lower) {
-                    matches[1] = i_lower;
+                _upper = _cursor - 1;
+                if (_upper < _lower) {
+                    matches[1] = _lower;
                     break;
                 }
             }
             if (!adjustCursor()) {
-                matches[1] = i_lower;
+                matches[1] = _lower;
                 break;
             }
         }
@@ -261,19 +270,20 @@ class IxFileRangeReader implements Readable {
     }
 
     private void setFileRange(IxFileRange a_fr) {
-        i_fileRange = a_fr;
-        i_lower = 0;
-        i_upper = a_fr.i_entries - 1;
-        i_baseAddress = a_fr.i_address;
+        _fileRange = a_fr;
+        _lower = 0;
+        _upper = a_fr._entries - 1;
+        _baseAddress = a_fr._address;
+        _baseAddressOffset = a_fr._addressOffset;
         adjustCursor();
     }
 
     public Object read(YapReader a_reader) {
-        a_reader.incrementOffset(i_linkLegth);
-        return new QCandidate(i_candidates, a_reader.readInt(), true);
+        a_reader.incrementOffset(_linkLegth);
+        return new QCandidate(_candidates, a_reader.readInt(), true);
     }
 
     public int byteCount() {
-        return i_slotLength;
+        return _slotLength;
     }
 }

@@ -70,6 +70,10 @@ class YapSocket {
 	    i_out.write(bytes);
 	}
 
+    public void write(byte[] bytes,int off,int len) throws IOException {
+        i_out.write(bytes,off,len);
+    }
+
     public void write(int i) throws IOException {
         i_out.write(i);
     }

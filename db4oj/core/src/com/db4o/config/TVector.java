@@ -10,10 +10,10 @@ public class TVector implements ObjectTranslator
 	public Object onStore(ObjectContainer con, Object object){
 		Vector vt = (Vector)object;
 		Object[] elements = new Object[vt.size()];
-		Enumeration enum = vt.elements();
+		Enumeration enumeration = vt.elements();
 		int i = 0;
-		while(enum.hasMoreElements()){
-			elements[i++] = enum.nextElement();
+		while(enumeration.hasMoreElements()){
+			elements[i++] = enumeration.nextElement();
 		}
 		return elements;
 	}

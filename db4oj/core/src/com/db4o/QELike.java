@@ -10,7 +10,7 @@ public class QELike extends QEAbstract
 		    if(a_value instanceof YapReader) {
 		        a_value = ((YapReader)a_value).toString(a_constraint.i_trans);
 		    }
-			return a_value.toString().indexOf(a_constraint.i_object.toString()) == 0;
+			return a_value.toString().toLowerCase().indexOf(a_constraint.i_object.toString().toLowerCase()) >= 0;
 		}
 		return a_constraint.i_object.equals(null);
 	}

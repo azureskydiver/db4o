@@ -18,12 +18,8 @@ class MWriteBlob extends MsgBlob {
                 i_blob.getStatusFrom(this);
                 i_blob.setStatus(Status.PROCESSING);
                 FileInputStream inBlob = this.i_blob.getClientInputStream();
-                while (i_currentByte < i_length) {
-                    sock.write(inBlob.read());
-                    i_currentByte++;
-                }
+                copy(inBlob,sock,true);
                 sock.flush();
-                inBlob.close();
                 YapStream stream = getStream();
                 message = Msg.readMessage(getTransaction(), sock);
                 if (message.equals(Msg.OK)) {
@@ -53,15 +49,7 @@ class MWriteBlob extends MsgBlob {
                 File file = blobImpl.serverFile(null, true);
                 Msg.OK.write(stream, sock);
                 FileOutputStream fout = new FileOutputStream(file);
-                int bytes = 0;
-                int length = blobImpl.getLength();
-                while (bytes < length) {
-                    // TODO: handle termination
-                    fout.write(sock.read());
-                    bytes++;
-                }
-                fout.flush();
-                fout.close();
+                copy(sock,fout,blobImpl.getLength(),false);
                 Msg.OK.write(stream, sock);
             }
         } catch (Exception e) {

@@ -480,10 +480,11 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     boolean findOffset(YapReader a_bytes, YapField a_field) {
+        // TODO: rename to "moveTo"
         if (a_bytes == null) {
             return false;
         }
-        a_bytes.i_offset = 0;
+        a_bytes._offset = 0;
         if (Deploy.debug) {
             a_bytes.readBegin(0, YapConst.YAPOBJECT);
         }
@@ -842,7 +843,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 
         if (create) {
             if (i_config != null && i_config.instantiates()) {
-                int bytesOffset = a_bytes.i_offset;
+                int bytesOffset = a_bytes._offset;
                 a_bytes.incrementOffset(YapConst.YAPINT_LENGTH);
                 // Field length is always 1
                 try {
@@ -851,7 +852,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                     Db4o.logErr(stream.i_config, 6, getJavaClass().getName(), e);
                     return null;
                 }
-                a_bytes.i_offset = bytesOffset;
+                a_bytes._offset = bytesOffset;
             } else {
                 if (i_constructor == null) {
                     return null;
@@ -920,7 +921,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         YapStream stream = a_bytes.getStream();
 
         if (i_config != null && i_config.instantiates()) {
-            int bytesOffset = a_bytes.i_offset;
+            int bytesOffset = a_bytes._offset;
             a_bytes.incrementOffset(YapConst.YAPINT_LENGTH);
             // Field length is always 1
             try {
@@ -929,7 +930,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                 Db4o.logErr(stream.i_config, 6, getJavaClass().getName(), e);
                 return null;
             }
-            a_bytes.i_offset = bytesOffset;
+            a_bytes._offset = bytesOffset;
         } else {
             if (i_constructor == null) {
                 return null;
@@ -1199,12 +1200,12 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     public void readCandidates(final YapReader a_bytes, final QCandidates a_candidates) {
         int id = 0;
 
-        int offset = a_bytes.i_offset;
+        int offset = a_bytes._offset;
         try {
             id = a_bytes.readInt();
         } catch (Exception e) {
         }
-        a_bytes.i_offset = offset;
+        a_bytes._offset = offset;
 
         if (id != 0) {
             final Transaction trans = a_candidates.i_trans;
@@ -1288,8 +1289,8 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             len = len * a_trans.i_stream.i_stringIo.bytesPerChar();
 
             i_nameBytes = new byte[len];
-            System.arraycopy(a_reader.i_bytes, a_reader.i_offset, i_nameBytes, 0, len);
-
+            System.arraycopy(a_reader._buffer, a_reader._offset, i_nameBytes, 0, len);
+            
             if(Deploy.csharp){
                 i_nameBytes  = Platform.updateClassName(i_nameBytes);
             }
@@ -1755,6 +1756,17 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         return false;
     }
 
+    public String toString(YapWriter writer, YapObject yapObject, int depth, int maxDepth) throws CorruptionException {
+        int length = readFieldLength(writer);
+        String str = "";
+        for (int i = 0; i < length; i++) {
+            str += i_fields[i].toString(writer, yapObject, depth + 1, maxDepth);
+        }
+        if (i_ancestor != null) {
+            str+= i_ancestor.toString(writer, yapObject, depth, maxDepth);
+        }
+        return str;
+    }
 
     
 

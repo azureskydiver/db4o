@@ -45,7 +45,7 @@ final class YShort extends YapJavaClass
 			a_bytes.readBegin(YapConst.YAPSHORT);
 		}
 		for (int i = 0; i < YapConst.SHORT_BYTES; i++){
-			ret = (ret << 8) + (a_bytes.i_bytes[a_bytes.i_offset++] & 0xff);
+			ret = (ret << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
 		}
 		if (Deploy.debug){
 			a_bytes.readEnd();
@@ -66,7 +66,7 @@ final class YShort extends YapJavaClass
 			a_bytes.writeBegin(YapConst.YAPSHORT);
 		}
 		for (int i = 0; i < YapConst.SHORT_BYTES; i++){
-			a_bytes.i_bytes[a_bytes.i_offset++] = (byte) (a_short >> ((YapConst.SHORT_BYTES - 1 - i) * 8));
+			a_bytes._buffer[a_bytes._offset++] = (byte) (a_short >> ((YapConst.SHORT_BYTES - 1 - i) * 8));
 		}
 		if(Deploy.debug){
 			a_bytes.writeEnd();

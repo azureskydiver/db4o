@@ -11,22 +11,38 @@ import com.db4o.ext.*;
  * The configuration block also contains the timer lock and
  * a pointer to the running transaction.
  */
-final class YapConfig implements Runnable
+final class YapConfigBlock implements Runnable
 {
-	private final Object		i_timeWriterLock = new Object();
-	private final YapFile		i_stream;
-	private int					i_address;
-	private Transaction			i_transactionToCommit;
-	int                 		i_bootRecordID;
-	int							i_blockSize = 1;
+    
+    // ConfigBlock Format
+    
+    // int    length of the config block
+    // long   last access time for timer lock
+    // long   last access time for timer lock (duplicate for atomicity)
+    // byte   unicode or not
+    // int    transaction-in-process address
+    // int    transaction-in-process address (duplicate for atomicity)
+    // int    id of PBootRecord
+    // int    unused (and lost)
+    
+    
+    
+    private final Object		_timeWriterLock = new Object();
+	private final YapFile		_stream;
+	int							_address;
+	private Transaction			_transactionToCommit;
+	int                 		_bootRecordID;
 	
 	private static final int	POINTER_ADDRESS = 2;
 	private static final int	MINIMUM_LENGTH = 
 		YapConst.YAPINT_LENGTH    			// own length
 		+ (YapConst.YAPLONG_LENGTH * 2)	 	// candidate ID and last access time
 		+ 1;  						// Unicode byte
+	
+	static final int			OPEN_TIME_OFFSET		= YapConst.YAPINT_LENGTH;
+	static final int            ACCESS_TIME_OFFSET      = OPEN_TIME_OFFSET + YapConst.YAPLONG_LENGTH;
 		
-	private static final int	TRANSACTION_OFFSET = MINIMUM_LENGTH;
+	static final int			TRANSACTION_OFFSET = MINIMUM_LENGTH;
 	private static final int	BOOTRECORD_OFFSET = TRANSACTION_OFFSET + YapConst.YAPINT_LENGTH * 2;  
 	private static final int	BLOCKLENGTH_OFFSET = BOOTRECORD_OFFSET + YapConst.YAPINT_LENGTH;  
 	
@@ -34,66 +50,69 @@ final class YapConfig implements Runnable
 	private static final int	LENGTH = 
 		MINIMUM_LENGTH 
 		+ (YapConst.YAPINT_LENGTH * 4);		// (two transaction pointers, PDB ID, block size 
-	
 		
-		
-	private final long			i_opentime; // written as pure long 8 bytes
-	byte						i_encoding;
+	private final long			_opentime; // written as pure long 8 bytes
+	byte						_encoding;
 	
-	YapConfig(YapFile a_stream){
-		i_stream = a_stream;
-		i_opentime = processID();
+	YapConfigBlock(YapFile stream){
+		_stream = stream;
+		_opentime = processID();
 		if(lockFile()){
 			writeHeaderLock();
 		}
 	}
 	
-	private int candidateAddress(){
-		return i_address + YapConst.YAPINT_LENGTH;
+    YapConfigBlock(YapFile file, byte encoding) {
+        this(file);
+        _encoding = encoding;
+    }
+	
+	private YapWriter openTimeIO(){
+	    YapWriter writer = _stream.getWriter(_stream.getTransaction(), _address, YapConst.YAPLONG_LENGTH);
+	    writer.moveForward(OPEN_TIME_OFFSET);
+	    if (Deploy.debug) {
+	        writer.setID(YapConst.IGNORE_ID);
+	    }
+		return writer;
 	}
 	
-	private YapWriter candidateLockIO(){
-		return i_stream.getWriter(i_stream.getTransaction(), candidateAddress(), YapConst.YAPLONG_LENGTH);
-	}
-	
-	private void candidateLockOverwritten(){
+	private void openTimeOverWritten(){
 		if(lockFile()){
-			YapWriter bytes = candidateLockIO();
+			YapWriter bytes = openTimeIO();
 			bytes.read();
-			if(YLong.readLong(bytes) != i_opentime){
+			if(YLong.readLong(bytes) != _opentime){
 				Db4o.throwRuntimeException(22);
 			}
-			writeCandidateLock();
+			writeOpenTime();
 		}
 	}
 
 	
-	int getAddress(){
-		return i_address;
-	}
-	
 	Transaction getTransactionToCommit(){
-		return i_transactionToCommit;
+		return _transactionToCommit;
 	}
 	
 	void go(){
-		i_stream.createStringIO(i_encoding);
-		i_stream.setTransactionPointerAddress(transactionAddress());
+		_stream.createStringIO(_encoding);
 		if(lockFile()){
-			i_stream.setTimerAddress(timerAddress());
 			try{
 				writeAccessTime();
 			}catch(Exception e){
 			}
 			// One last check before we start off.
 			syncFiles();
-			candidateLockOverwritten();
+			openTimeOverWritten();
 			new Thread(this).start();
 		}
 	}
 	
 	private YapWriter headerLockIO(){
-		return i_stream.getWriter(i_stream.getTransaction(), 2 + YapConst.YAPINT_LENGTH, YapConst.YAPINT_LENGTH);
+	    YapWriter writer = _stream.getWriter(_stream.getTransaction(), 0, YapConst.YAPINT_LENGTH);
+	    writer.moveForward(2 + YapConst.YAPINT_LENGTH);
+	    if (Deploy.debug) {
+	        writer.setID(YapConst.IGNORE_ID);
+	    }
+		return writer;
 	}
 	
 	private void headerLockOverwritten() {
@@ -105,7 +124,7 @@ final class YapConfig implements Runnable
 			// the original file format only leaves us room
 			// for an int.
 			// TODO: Fix in file format rewrite
-			if(YInt.readInt(bytes) != ((int)i_opentime) ){
+			if(YInt.readInt(bytes) != ((int)_opentime) ){
 				throw new DatabaseFileLockedException();
 			}
 			writeHeaderLock();
@@ -116,7 +135,7 @@ final class YapConfig implements Runnable
 		if(! Debug.lockFile){
 			return false;
 		}
-		return i_stream.hasLockFileThread();
+		return _stream.needsLockFileThread();
 	}
 	
 	static long processID(){
@@ -150,8 +169,8 @@ final class YapConfig implements Runnable
 	 * returns true if Unicode check is necessary
 	 */
 	boolean read(YapWriter reader) {
-		i_address = reader.readInt(); 
-		if(i_address == 2){
+		_address = reader.readInt(); 
+		if(_address == 2){
 			return true;
 		}
 		read();
@@ -159,10 +178,10 @@ final class YapConfig implements Runnable
 	}
 	
 	void read() {
-		writeCandidateLock();
-		YapWriter reader = i_stream.getWriter(i_stream.getSystemTransaction(), i_address, LENGTH);
+		writeOpenTime();
+		YapWriter reader = _stream.getWriter(_stream.getSystemTransaction(), _address, LENGTH);
 		try{
-			i_stream.readBytes(reader.i_bytes, i_address, LENGTH);
+			_stream.readBytes(reader._buffer, _address, LENGTH);
 		}catch(Exception e){
 			// TODO: Exception handling
 		}
@@ -170,29 +189,31 @@ final class YapConfig implements Runnable
 		if(oldLength > LENGTH  || oldLength < MINIMUM_LENGTH){
 			Db4o.throwRuntimeException(17);
 		}
-		long candidateID = YLong.readLong(reader);
+		long lastOpenTime = YLong.readLong(reader);
 		long lastAccessTime = YLong.readLong(reader);
-		i_encoding = reader.readByte();
+		_encoding = reader.readByte();
 		
 		if(oldLength > TRANSACTION_OFFSET){
 			int transactionID1 = YInt.readInt(reader);
 			int transactionID2 = YInt.readInt(reader);
 			if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){
-				i_transactionToCommit = new Transaction(i_stream, null);
-				i_transactionToCommit.setAddress(transactionID1);
+				_transactionToCommit = new Transaction(_stream, null);
+				_transactionToCommit.setAddress(transactionID1);
 			}
 		}
 		
 		if(oldLength > BOOTRECORD_OFFSET) {
-		    i_bootRecordID = YInt.readInt(reader);
+		    _bootRecordID = YInt.readInt(reader);
 		}
 		
 		if(oldLength > BLOCKLENGTH_OFFSET) {
-		    i_blockSize = YInt.readInt(reader);
+		    // this one is dead.
+		    // Blocksize is in the very first bytes
+		    YInt.readInt(reader);
 		}
 		
 		if(lockFile() && ( lastAccessTime != 0)){
-			i_stream.logMsg(28, null);
+			_stream.logMsg(28, null);
 			long waitTime = YapConst.LOCK_TIME_INTERVAL * 10;
 			long currentTime = System.currentTimeMillis();
 
@@ -204,9 +225,11 @@ final class YapConfig implements Runnable
 					}catch(Exception ie){
 				}
 			}
-			reader = i_stream.getWriter(i_stream.getSystemTransaction(), timerAddress(), YapConst.LONG_BYTES);
+			reader = _stream.getWriter(_stream.getSystemTransaction(), _address, YapConst.YAPLONG_LENGTH * 2);
+			reader.moveForward(OPEN_TIME_OFFSET);
 			reader.read();
-			long currentAccessTime = YLong.readLong(reader.i_bytes);
+			long currentOpenTime = YLong.readLong(reader);
+			long currentAccessTime = YLong.readLong(reader);
 			if((currentAccessTime > lastAccessTime) ){
 				throw new DatabaseFileLockedException();
 			}
@@ -219,7 +242,7 @@ final class YapConfig implements Runnable
 			}catch(Exception ie){
 			}
 			syncFiles();
-			candidateLockOverwritten();
+			openTimeOverWritten();
 		}
 		if(oldLength < LENGTH){
 			write();
@@ -240,62 +263,51 @@ final class YapConfig implements Runnable
 		}
 	}
 	
-	void setEncoding(byte encoding){
-		i_encoding = encoding;
-	}
-	
 	void syncFiles(){
-		i_stream.syncFiles();
-	}
-	
-	private int timerAddress(){
-		return i_address + YapConst.YAPINT_LENGTH + YapConst.YAPLONG_LENGTH;
-	}
-	
-	private int transactionAddress(){
-		return i_address + TRANSACTION_OFFSET;
+		_stream.syncFiles();
 	}
 	
 	void write() {
 		headerLockOverwritten();
-		i_address = i_stream.getSlot(LENGTH);
-		YapWriter writer = i_stream.getWriter(i_stream.i_trans, i_address,LENGTH);
+		_address = _stream.getSlot(LENGTH);
+		YapWriter writer = _stream.getWriter(_stream.i_trans, _address,LENGTH);
 		YInt.writeInt(LENGTH, writer);
-		YLong.writeLong(i_opentime, writer);
-		YLong.writeLong(i_opentime, writer);
-		writer.append(i_encoding);
+		YLong.writeLong(_opentime, writer);
+		YLong.writeLong(_opentime, writer);
+		writer.append(_encoding);
 		YInt.writeInt(0, writer);
 		YInt.writeInt(0, writer);
-		YInt.writeInt(i_bootRecordID, writer);
-		YInt.writeInt(i_blockSize, writer);
+		YInt.writeInt(_bootRecordID, writer);
+		YInt.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
 		writer.write();
 		writePointer();
 	}
 	
 	boolean writeAccessTime() throws IOException{
-		return i_stream.writeAccessTime();
+		return _stream.writeAccessTime();
 	}
 	
-	private void writeCandidateLock(){
+	private void writeOpenTime(){
 		if(lockFile()){
-			YapWriter bytes = candidateLockIO();
-			YLong.writeLong(i_opentime, bytes);
-			bytes.write();
+			YapWriter writer = openTimeIO();
+			YLong.writeLong(_opentime, writer);
+			writer.write();
 		}
 	}
 	
 	private void writeHeaderLock(){
 		if(lockFile()){
-			YapWriter bytes = headerLockIO();
-			YInt.writeInt(((int)i_opentime), bytes);
-			bytes.write();
+			YapWriter writer = headerLockIO();
+			YInt.writeInt(((int)_opentime), writer);
+			writer.write();
 		}
 	}
 	
 	private void writePointer() {
 		headerLockOverwritten();
-		YapWriter writer = i_stream.getWriter(i_stream.i_trans, 2, YapConst.YAPID_LENGTH);
-		YInt.writeInt(i_address, writer);
+		YapWriter writer = _stream.getWriter(_stream.i_trans, 0, YapConst.YAPID_LENGTH);
+		writer.moveForward(2);
+		YInt.writeInt(_address, writer);
 		if(Deploy.debug && Deploy.overwrite){
 			writer.setID(YapConst.IGNORE_ID);
 		}

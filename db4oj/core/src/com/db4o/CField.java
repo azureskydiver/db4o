@@ -52,6 +52,9 @@ class CField implements IField {
         try {
             field.set(onObject, attribute);
         } catch (Exception e) {
+            if(Debug.atHome){
+                e.printStackTrace();
+            }
         }
     }
 }

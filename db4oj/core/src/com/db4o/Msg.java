@@ -181,7 +181,7 @@ class Msg implements Cloneable{
 					if (Debug.messages) {
 						System.out.println(this +" sent by " + stream);
 					}
-					sock.write(getPayLoad().i_bytes);
+					sock.write(getPayLoad()._buffer);
 					sock.flush();
 				} catch (IOException e) {
 					// TODO: handle softly in YapClient, maybe

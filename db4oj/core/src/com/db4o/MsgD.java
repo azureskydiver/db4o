@@ -22,7 +22,7 @@ class MsgD extends Msg{
 	void fakePayLoad(Transaction a_trans) {
 		if (Debug.fakeServer) {
 			payLoad.removeFirstBytes(YapConst.YAPINT_LENGTH * 2);
-			payLoad.i_offset = 0;
+			payLoad._offset = 0;
 			payLoad.setTransaction(a_trans);
 		}
 	}
@@ -113,7 +113,7 @@ class MsgD extends Msg{
 
 	MsgD getWriter(YapWriter bytes) {
 		MsgD message = getWriterForLength(bytes.getTransaction(), bytes.getLength());
-		message.payLoad.append(bytes.i_bytes);
+		message.payLoad.append(bytes._buffer);
 		return message;
 	}
 	

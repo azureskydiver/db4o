@@ -256,7 +256,7 @@ public class Db4o {
     }
 
     static final void throwRuntimeException (int code, String msg, Throwable cause) {
-		logErr(i_config, code,msg, null);
+		logErr(i_config, code,msg, cause);
         throw new RuntimeException(Messages.get(code, msg));
     }
     

@@ -366,7 +366,7 @@ class YapArray extends YapIndependantType {
             if (Deploy.debug) {
                 bytes.writeEnd();
             }
-            bytes.setID(a_bytes.i_offset);
+            bytes.setID(a_bytes._offset);
             i_lastIo = bytes;
             a_bytes.getStream().writeEmbedded(a_bytes, bytes);
             a_bytes.incrementOffset(YapConst.YAPID_LENGTH);

@@ -65,7 +65,7 @@ class IxPath implements Cloneable, Visitor4 {
         }
         if (i_lowerAndUpperMatch != null) {
             int[] lowerAndUpperMatch = new int[] { i_lowerAndUpperMatch[1] + 1,
-                ((IxFileRange) i_tree).i_entries - 1};
+                ((IxFileRange) i_tree)._entries - 1};
             i_candidatesTree = i_tree.addToCandidatesTree(i_candidatesTree,
                 i_candidates, lowerAndUpperMatch);
         } else {
@@ -159,7 +159,7 @@ class IxPath implements Cloneable, Visitor4 {
             }
         }
         if (i_lowerAndUpperMatch != null) {
-            subsequent += ((IxFileRange) i_tree).i_entries
+            subsequent += ((IxFileRange) i_tree)._entries
                 - i_lowerAndUpperMatch[1] - 1;
         } else {
             if (i_comparisonResult > 0 && !(i_tree instanceof IxRemove)) {

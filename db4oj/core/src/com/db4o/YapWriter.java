@@ -10,6 +10,7 @@ import java.io.*;
 public final class YapWriter extends YapReader {
 
     private int i_address;
+    private int _addressOffset;
 
     private int i_cascadeDelete; 
 
@@ -29,7 +30,7 @@ public final class YapWriter extends YapReader {
     YapWriter(Transaction a_trans, int a_initialBufferSize) {
         i_trans = a_trans;
         i_length = a_initialBufferSize;
-        i_bytes = new byte[i_length];
+        _buffer = new byte[i_length];
     }
 
     YapWriter(Transaction a_trans, int a_address, int a_initialBufferSize) {
@@ -45,9 +46,9 @@ public final class YapWriter extends YapReader {
         previousRead[parentID].addEmbedded(this);
         i_address = parent.readInt();
         i_trans = parent.getTransaction();
-        i_bytes = new byte[i_length];
-        System.arraycopy(parent.i_bytes, parent.i_offset, i_bytes, 0, i_length);
-        parent.i_offset += i_length;
+        _buffer = new byte[i_length];
+        System.arraycopy(parent._buffer, parent._offset, _buffer, 0, i_length);
+        parent._offset += i_length;
         if (previousCount < previousRead.length) {
             new YapWriter(parent, previousRead, previousCount);
         }
@@ -76,7 +77,7 @@ public final class YapWriter extends YapReader {
         a_bytes.writeInt(i_length);
         a_bytes.writeInt(i_id);
         a_bytes.writeInt(i_address);
-        a_bytes.append(i_bytes);
+        a_bytes.append(_buffer);
         final int[] newID = { a_id };
         final int myID = a_id;
         forEachEmbedded(new VisitorYapBytes() {
@@ -94,7 +95,7 @@ public final class YapWriter extends YapReader {
 
     void debugCheckBytes() {
         if (Deploy.debug) {
-            if (i_offset != i_length) {
+            if (_offset != i_length) {
                 // Db4o.log("!!! YapBytes.debugCheckBytes not all bytes used");
                 // This is normal for writing The FreeSlotArray, becauce one
                 // slot is possibly reserved by it's own pointer.
@@ -136,6 +137,9 @@ public final class YapWriter extends YapReader {
         return i_address;
     }
     
+    int addressOffset(){
+        return _addressOffset;
+    }
 
     int getID() {
         return i_id;
@@ -162,21 +166,21 @@ public final class YapWriter extends YapReader {
     }
     
     byte[] getWrittenBytes(){
-        byte[] bytes = new byte[i_offset];
-        System.arraycopy(i_bytes, 0, bytes, 0, i_offset);
+        byte[] bytes = new byte[_offset];
+        System.arraycopy(_buffer, 0, bytes, 0, _offset);
         return bytes;
     }
 
 
     void read() {
-        i_trans.i_stream.readBytes(i_bytes, i_address, i_length);
+        i_trans.i_stream.readBytes(_buffer, i_address,_addressOffset, i_length);
     }
 
     final void read(YapSocket sock) throws IOException {
         int offset = 0;
         int length = i_length;
         while (length > 0) {
-            int read = sock.read(i_bytes, offset, length);
+            int read = sock.read(_buffer, offset, length);
             offset += read;
             length -= read;
         }
@@ -202,23 +206,23 @@ public final class YapWriter extends YapReader {
             return null;
         }
         YapWriter yb = new YapWriter(i_trans, length);
-        System.arraycopy(i_bytes, i_offset, yb.i_bytes, 0, length);
-        i_offset += length;
+        System.arraycopy(_buffer, _offset, yb._buffer, 0, length);
+        _offset += length;
         return yb;
     }
 
     void removeFirstBytes(int aLength) {
         i_length -= aLength;
         byte[] temp = new byte[i_length];
-        System.arraycopy(i_bytes, aLength, temp, 0, i_length);
-        i_bytes = temp;
-        i_offset -= aLength;
-        if (i_offset < 0) {
-            i_offset = 0;
+        System.arraycopy(_buffer, aLength, temp, 0, i_length);
+        _buffer = temp;
+        _offset -= aLength;
+        if (_offset < 0) {
+            _offset = 0;
         }
     }
 
-    void setAddress(int a_address) {
+    void address(int a_address) {
         i_address = a_address;
     }
 
@@ -244,21 +248,21 @@ public final class YapWriter extends YapReader {
 
     void trim4(int a_offset, int a_length) {
         byte[] temp = new byte[a_length];
-        System.arraycopy(i_bytes, a_offset, temp, 0, a_length);
-        i_bytes = temp;
+        System.arraycopy(_buffer, a_offset, temp, 0, a_length);
+        _buffer = temp;
         i_length = a_length;
     }
 
     void useSlot(int a_adress) {
         i_address = a_adress;
-        i_offset = 0;
+        _offset = 0;
     }
 
     void useSlot(int a_adress, int a_length) {
         i_address = a_adress;
-        i_offset = 0;
-        if (a_length > i_bytes.length) {
-            i_bytes = new byte[a_length];
+        _offset = 0;
+        if (a_length > _buffer.length) {
+            _buffer = new byte[a_length];
         }
         i_length = a_length;
     }
@@ -314,15 +318,26 @@ public final class YapWriter extends YapReader {
     final void writeQueryResult(QResult a_qr) {
         int size = a_qr.size();
         writeInt(size);
-        i_offset += (size - 1) * YapConst.YAPID_LENGTH;
+        _offset += (size - 1) * YapConst.YAPID_LENGTH;
         int dec = YapConst.YAPID_LENGTH * 2;
         for (int i = 0; i < size; i++) {
             writeInt(a_qr.nextInt());
-            i_offset -= dec;
+            _offset -= dec;
         }
     }
 
     void writeShortString(String a_string) {
         i_trans.i_stream.i_handlers.i_stringHandler.writeShort(a_string, this);
     }
+
+    public void moveForward(int length) {
+        _addressOffset += length;
+    }
+    
+    public void writeForward() {
+        write();
+        _addressOffset += i_length;
+        _offset = 0;
+    }
+
 }

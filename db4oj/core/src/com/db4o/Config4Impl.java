@@ -17,7 +17,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
 
     int              i_activationDepth                  = 5;
     boolean          i_automaticShutDown                = true;
-    int				 i_blockSize						= 1;  // TODO: set this to 8, when implementation is done
+    byte			 i_blockSize						= 1;  // TODO: set this to 8, when implementation is done
     String           i_blobPath;
     boolean          i_callbacks                        = true;
     boolean          i_classActivationDepthConfigurable = true;
@@ -65,11 +65,15 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     }
     
     public void blockSize(int bytes){
-        if (i_stream == null) {
-            i_blockSize = bytes;
-        }else{
-            Db4o.throwRuntimeException(46);   // see readable message for code in Messages.java
-        }
+       if (bytes < 1 || bytes > 127) {
+           Db4o.throwRuntimeException(2);
+       }
+       
+       if (i_stream != null) {
+           Db4o.throwRuntimeException(46);   // see readable message for code in Messages.java
+       }
+       
+       i_blockSize = (byte)bytes;
     }
 
     public void callbacks(boolean turnOn) {

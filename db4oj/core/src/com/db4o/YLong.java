@@ -37,31 +37,6 @@ class YLong extends YapJavaClass
 		return YapConst.YAPLONG_LENGTH;
 	}
 	
-	static void expirationCheck6(YapStream a_stream){
-//	    if(Tuning.licenseChecks){
-//			if(Lic.expires  && Db4o.reflector().methodCallsSupported()){
-//				try{
-//					if(
-//					((Long)Config4Abstract.invoke(
-//						YapString.fromIntArray(YapConst.system),
-//						YapString.fromIntArray(YapConst.currentTimeMillis),
-//						null,
-//						null,
-//						null)).longValue() > Lic.expirationDate){
-//						Config4Abstract.invoke(
-//						YapString.fromIntArray(YapConst.system),
-//						YapString.fromIntArray(YapConst.exit),
-//						new Class[] {int.class},
-//						new Object[] {new Integer(0)},
-//						null);
-//						a_stream.i_classCollection = null;
-//					}
-//				}catch(Exception e){
-//				}
-//			}
-//	    }
-	}
-	
 	Object primitiveNull(){
 		return i_primitive;
 	}
@@ -84,13 +59,13 @@ class YLong extends YapJavaClass
 				l_return = new Long(new YapStringIO().read(a_bytes, YapConst.LONG_BYTES).trim()).longValue(); 
 			}else{
 				for (int i = 0; i < YapConst.LONG_BYTES; i++){
-					l_return = (l_return << 8) + (a_bytes.i_bytes[a_bytes.i_offset++] & 0xff);
+					l_return = (l_return << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
 				}
 			}
 			a_bytes.readEnd();
 		}else{
 			for (int i = 0; i < YapConst.LONG_BYTES; i++){
-				l_return = (l_return << 8) + (a_bytes.i_bytes[a_bytes.i_offset++] & 0xff);
+				l_return = (l_return << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
 			}
 		}
 		return l_return;
@@ -113,17 +88,16 @@ class YLong extends YapJavaClass
 			}
 			else{
 				for (int i = 0; i < YapConst.LONG_BYTES; i++){
-					a_bytes.i_bytes[a_bytes.i_offset++] = (byte) (a_long >> ((YapConst.LONG_BYTES - 1 - i) * 8));
+					a_bytes._buffer[a_bytes._offset++] = (byte) (a_long >> ((YapConst.LONG_BYTES - 1 - i) * 8));
 				}
 			}
 			a_bytes.writeEnd();
 		}else{
 			for (int i = 0; i < YapConst.LONG_BYTES; i++){
-				a_bytes.i_bytes[a_bytes.i_offset++] = (byte) (a_long >> ((YapConst.LONG_BYTES - 1 - i) * 8));
+				a_bytes._buffer[a_bytes._offset++] = (byte) (a_long >> ((YapConst.LONG_BYTES - 1 - i) * 8));
 			}
 		}
 	}	
-
 	
 	static final void writeLong(long a_long, byte[] bytes){
 		for (int i = 0; i < YapConst.LONG_BYTES; i++){
@@ -131,10 +105,26 @@ class YLong extends YapJavaClass
 		}
 	}	
 	
-	static final long readLong(byte[] bytes){
+	static final long readLong(YapWriter writer){
+	    
+        if (Deploy.debug) {
+			long ret = 0;
+            writer.readBegin(YapConst.YAPLONG);
+            if (Deploy.debugLong) {
+                ret = new Long(new YapStringIO().read(writer, YapConst.LONG_BYTES).trim())
+                        .longValue();
+            } else {
+                for (int i = 0; i < YapConst.LONG_BYTES; i++) {
+                    ret = (ret << 8) + (writer._buffer[i] & 0xff);
+                }
+                writer._offset += YapConst.LONG_BYTES;
+            }
+            writer.readEnd();
+			return ret;
+        }
 		long l_return = 0;
 		for (int i = 0; i < YapConst.LONG_BYTES; i++){
-			l_return = (l_return << 8) + (bytes[i] & 0xff);
+			l_return = (l_return << 8) + (writer._buffer[writer._offset++ ] & 0xff);
 		}
 		return l_return;
 	}

@@ -10,12 +10,31 @@ import com.db4o.types.*;
 abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     TransientClass {
 
-    // the length of the header at the begin of the file
-    // the file version  currently the file header is "{Y" and 
-    // 4 bytes of the version number as db4o integer format
-    static final int        LENGTH                = 2
-                                                      + (YapConst.YAPINT_LENGTH * 2)
-                                                      + (YapConst.YAPID_LENGTH * 2);
+    static final int        HEADER_LENGTH         = 2 + (YapConst.YAPINT_LENGTH * 4);
+
+    // The header is:
+
+    // Old format
+    // -------------------------
+    // {
+    // Y
+    // [Rest]
+
+    
+    // New format
+    // -------------------------
+    // (byte)4
+    // block size in bytes 1 to 127
+    // [Rest]
+    
+
+    // Rest (only ints)
+    // -------------------
+    // address of the extended configuration block, see YapConfigBlock
+    // headerLock
+    // YapClassCollection ID
+    // FreeBySize ID
+    
 
     private boolean         i_amDuringFatalExit   = false;
 
@@ -272,6 +291,9 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     public void commit() {
         synchronized (i_lock) {
+            if(DTrace.enabled){
+                DTrace.COMMIT.log();
+            }
             commit1();
         }
     }
@@ -694,7 +716,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     	return i_handlers;
     }
 
-    boolean hasLockFileThread() {
+    boolean needsLockFileThread() {
         if (!Platform.hasLockFileThread()) {
             return false;
         }
@@ -812,7 +834,6 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
      */
     void initialize2b() {
         i_classCollection = new YapClassCollection(i_systemTrans);
-        YLong.expirationCheck6(this);
         i_references.startTimer();
     }
 
@@ -1066,13 +1087,15 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     abstract void readBytes(byte[] a_bytes, int a_address, int a_length);
 
+    abstract void readBytes(byte[] bytes, int address, int addressOffset, int length);
+
     final YapReader readObjectReaderByAddress(int a_address, int a_length) {
         if (a_address > 0) {
 
             // TODO: possibly load from cache here
 
             YapReader reader = new YapReader(a_length);
-            readBytes(reader.i_bytes, a_address, a_length);
+            readBytes(reader._buffer, a_address, a_length);
             i_handlers.decrypt(reader);
             return reader;
         }
@@ -1354,6 +1377,10 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             checkNeededUpdates();
             int id = yapObject.getID();
             if(canUpdate() && a_checkJustSet){
+                // FIXME: Adding simple types here is not necessary
+                //        since IDs are not used anyway. Check for
+                //        yapObject.i_yapClass instanceof YapClassPrimitive
+                //        or create method yapObject#isPrimitive if not exist
 	            if(i_justSet == null){
 	                i_justSet = new TreeInt(id);
 	            }else{
@@ -1510,7 +1537,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     Object unmarshall(YapWriter yapBytes) {
-        return unmarshall(yapBytes.i_bytes, yapBytes.getID());
+        return unmarshall(yapBytes._buffer, yapBytes.getID());
     }
 
     Object unmarshall(byte[] bytes, int id) {
@@ -1537,6 +1564,13 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     abstract void writeUpdate(YapClass a_yapClass, YapWriter a_bytes);
 
     final void yapObjectGCd(YapObject yo) {
+        
+        // TODO: rename to removeReference 
+        
+        if(DTrace.enabled){
+            DTrace.REFERENCE_REMOVED.log(yo.getID());
+        }
+
         hcTreeRemove(yo);
         idTreeRemove(yo.getID());
 
@@ -1546,16 +1580,5 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         Platform.killYapRef(yo.i_object);
     }
 
-
-    //    public String toString(){
-    ////        StoredClass sc = storedClass(ObjectSimplePublic.class);
-    ////        if(sc != null){
-    ////            StoredField sf = sc.storedField("name", null);
-    ////            if(sf!= null){
-    ////                return sf.toString();
-    ////            }
-    ////        }
-    //        return "YapStream";
-    //    }
 
 }

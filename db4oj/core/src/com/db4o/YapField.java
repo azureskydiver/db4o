@@ -273,7 +273,7 @@ class YapField implements StoredField {
     void delete(YapWriter a_bytes) {
         if (alive()) {
             if (i_index != null) {
-                int offset = a_bytes.i_offset;
+                int offset = a_bytes._offset;
                 Object obj = null;
                 try {
                     obj = i_handler.read(a_bytes);
@@ -284,7 +284,7 @@ class YapField implements StoredField {
                     .getTransaction());
                 ift.add(new IxRemove(ift, a_bytes.getID(), i_handler
                     .indexEntry(obj)));
-                a_bytes.i_offset = offset;
+                a_bytes._offset = offset;
             }
             if ((i_config != null && i_config.i_cascadeOnDelete == 1)
                 || Platform.isSecondClass(i_handler.getJavaClass())) {
@@ -396,6 +396,9 @@ class YapField implements StoredField {
                 }
                 return obj;
             } catch (Throwable t) {
+                if(Debug.atHome){
+                    t.printStackTrace();
+                }
             }
             // this is typically the case, if a field is removed from an
             // object.
@@ -475,6 +478,9 @@ class YapField implements StoredField {
             try {
                 i_javaField.set(a_onObject, toSet);
             } catch (Throwable t) {
+                if(Debug.atHome){
+                    t.printStackTrace();
+                }
             }
         }
     }
@@ -712,5 +718,19 @@ class YapField implements StoredField {
         return sb.toString();
     }
 
+    public String toString(YapWriter writer, YapObject yapObject, int depth, int maxDepth) throws CorruptionException {
+        String str = "\n Field " + i_name;
+        if (! alive()) {
+            writer.incrementOffset(linkLength());
+        }else{
+            Object obj = read(writer);
+            if(obj == null){
+                str += "\n [null]";
+            }else{
+                str+="\n  " + obj.toString();
+            }
+        }
+        return str;
+    }
 
 }

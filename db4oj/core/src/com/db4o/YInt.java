@@ -47,7 +47,7 @@ class YInt extends YapJavaClass {
                         .intValue();
             } else {
                 for (int i = 0; i < YapConst.INTEGER_BYTES; i++) {
-                    ret = (ret << 8) + (a_bytes.i_bytes[a_bytes.i_offset++] & 0xff);
+                    ret = (ret << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
                 }
             }
             a_bytes.readEnd();
@@ -75,7 +75,7 @@ class YInt extends YapJavaClass {
                     l_s.substring(l_s.length() - YapConst.INTEGER_BYTES));
             } else {
                 for (int i = YapConst.WRITE_LOOP; i >= 0; i -= 8) {
-                    a_bytes.i_bytes[a_bytes.i_offset++] = (byte) (a_int >> i);
+                    a_bytes._buffer[a_bytes._offset++] = (byte) (a_int >> i);
                 }
             }
             a_bytes.writeEnd();

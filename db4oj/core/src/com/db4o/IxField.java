@@ -22,11 +22,7 @@ class IxField {
         i_metaIndex = a_metaIndex;
         i_field = a_field;
         i_globalIndex = new IxFieldTransaction(a_systemTrans, this);
-        if (i_metaIndex.indexEntries > 0) {
-            IxFileRange newFileRange = new IxFileRange(i_globalIndex,
-                    i_metaIndex.indexAddress, i_metaIndex.indexEntries);
-            i_globalIndex.setRoot(newFileRange);
-        }
+        createGlobalFileRange();
     }
 
     IxFieldTransaction dirtyFieldTransaction(Transaction a_trans) {
@@ -121,12 +117,7 @@ class IxField {
                     }
                 });
             }
-            IxFileRange newFileRange = null;
-            if (i_metaIndex.indexEntries > 0) {
-                newFileRange = new IxFileRange(i_globalIndex,
-                        i_metaIndex.indexAddress, i_metaIndex.indexEntries);
-            }
-            i_globalIndex.setRoot(newFileRange);
+            IxFileRange newFileRange = createGlobalFileRange();
 
             Iterator4 i = i_transactionIndices.iterator();
             while (i.hasNext()) {
@@ -163,6 +154,16 @@ class IxField {
                 ((IxFieldTransaction) i.next()).merge(a_ft);
             }
         }
+    }
+
+    private IxFileRange createGlobalFileRange() {
+        IxFileRange fr = null;
+        if (i_metaIndex.indexEntries > 0) {
+            fr = new IxFileRange(i_globalIndex,
+                    i_metaIndex.indexAddress, 0, i_metaIndex.indexEntries);
+        }
+        i_globalIndex.setRoot(fr);
+        return fr;
     }
 
     void rollback(IxFieldTransaction a_ft) {

@@ -311,7 +311,7 @@ class YapClient extends YapStream implements ExtClient {
         return i_socket;
     }
 
-    boolean hasLockFileThread() {
+    boolean needsLockFileThread() {
         return false;
     }
 
@@ -441,11 +441,15 @@ class YapClient extends YapStream implements ExtClient {
     void raiseVersion(long a_minimumVersion){
         writeMsg(Msg.RAISE_VERSION.getWriterForLong(i_trans, a_minimumVersion));
     }
+    
+    void readBytes(byte[] bytes, int address, int addressOffset, int length){
+        YapConst.virtualException();
+    }
 
     void readBytes(byte[] a_bytes, int a_address, int a_length) {
         writeMsg(Msg.READ_BYTES.getWriterFor2Ints(i_trans, a_address, a_length));
         YapWriter reader = expectedByteResponse(Msg.READ_BYTES);
-        System.arraycopy(reader.i_bytes, 0, a_bytes, 0, a_length);
+        System.arraycopy(reader._buffer, 0, a_bytes, 0, a_length);
     }
     
     protected boolean rename1(Config4Impl config) {

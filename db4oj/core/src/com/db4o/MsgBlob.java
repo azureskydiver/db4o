@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import java.io.*;
 import com.db4o.ext.*;
 
 abstract class MsgBlob extends MsgD {
@@ -30,4 +31,34 @@ abstract class MsgBlob extends MsgD {
         return blobImpl;
     }
 
+    protected void copy(YapSocket sock,OutputStream rawout,int length,boolean update) throws IOException {
+        BufferedOutputStream out = new BufferedOutputStream(rawout);
+        byte[] buffer=new byte[BlobImpl.COPYBUFFER_LENGTH];
+        int totalread=0;
+        while(totalread<length) {
+            int stilltoread=length-totalread;
+            int readsize=(stilltoread<buffer.length ? stilltoread : buffer.length);
+            int curread=sock.read(buffer,0,readsize);
+            out.write(buffer,0,curread);
+            totalread+=curread;
+            if(update) {
+                i_currentByte+=curread;
+            }
+        }
+        out.flush();
+        out.close();
+    }
+
+    protected void copy(InputStream rawin,YapSocket sock,boolean update) throws IOException {
+        BufferedInputStream in = new BufferedInputStream(rawin);
+        byte[] buffer=new byte[BlobImpl.COPYBUFFER_LENGTH];
+        int bytesread=-1;
+        while((bytesread=rawin.read(buffer))>=0) {
+            sock.write(buffer,0,bytesread);
+            if(update) {
+                i_currentByte+=bytesread;
+            }
+        }
+        in.close();
+    }
 }

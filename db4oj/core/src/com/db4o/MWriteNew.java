@@ -11,7 +11,7 @@ final class MWriteNew extends MsgObject {
             YapClass yc = stream.getYapClass(yapClassId);
             payLoad.writeEmbedded();
             stream.prefetchedIDConsumed(payLoad.getID());
-            payLoad.setAddress(stream.getSlot(payLoad.getLength()));
+            payLoad.address(stream.getSlot(payLoad.getLength()));
             yc.addFieldIndices(payLoad, true);
             stream.writeNew(yc, payLoad);
             getTransaction().writePointer(

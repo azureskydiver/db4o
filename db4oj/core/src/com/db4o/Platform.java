@@ -67,7 +67,7 @@ public final class Platform {
         }
         return setAccessibleCheck == USE;
     }
-
+    
     static final boolean classIsAvailable(String className) {
         try {
             return Db4o.reflector().forName(className) != null;

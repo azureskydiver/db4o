@@ -23,11 +23,9 @@ class IxAdd extends IxPatch {
     }
 
     void write(YapDataType a_handler, YapWriter a_writer) {
-        a_writer.i_offset = 0;
         a_handler.writeIndexEntry(a_writer, i_value);
         a_writer.writeInt(i_parentID);
-        a_writer.write();
-        a_writer.setAddress(a_writer.getAddress() + a_writer.getLength());
+        a_writer.writeForward();
     }
     
     void beginMerge(){
