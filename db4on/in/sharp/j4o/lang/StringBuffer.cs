@@ -12,6 +12,10 @@ namespace j4o.lang {
         public StringBuffer() {
             stringBuilder = new StringBuilder();
         }
+        
+        public StringBuffer(string str) {
+        	stringBuilder = new StringBuilder(str);
+        }
 
         public StringBuffer append(char c) {
             stringBuilder.Append(c);

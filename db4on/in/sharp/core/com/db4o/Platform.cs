@@ -45,6 +45,10 @@ namespace com.db4o {
             }
             return null;
         }
+        
+        static internal JDK jdk() {
+	        return null;
+        } 
 
         static internal void addShutDownHook(Object stream, Object streamLock) {
             lock(typeof(Platform)) {
@@ -55,8 +59,15 @@ namespace com.db4o {
                 shutDownStreams.Add(stream);
             }
         }
-
-      
+        
+        static internal byte[] serialize(Object obj) {
+        	throw new System.NotSupportedException();
+        }
+        
+        static internal Object deserialize(byte[] bytes) {
+        	throw new System.NotSupportedException();
+        }
+              
         static internal bool canSetAccessible() {
             return true;
         }
