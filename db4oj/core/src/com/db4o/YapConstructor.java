@@ -7,8 +7,8 @@ import com.db4o.reflect.jdk.CClass;
 import com.db4o.reflect.jdk.CReflect;
 
 final class YapConstructor {
-    private final Class i_javaClass;
-    private IClass i_reflectorClass;
+	
+    private final IClass i_reflectorClass;
 
     private final EventDispatcher i_eventDispatcher;
 
@@ -18,22 +18,16 @@ final class YapConstructor {
 
     YapConstructor(
         YapStream a_stream,
-        Class a_class, 
+        IClass a_class, 
         IConstructor a_constructor,
         Object[] a_params,
         boolean a_checkDispatcher,
         boolean a_dontCallConstructors) {
         
-        i_javaClass = a_class;
+    	i_reflectorClass = a_class;
         i_constructor = a_constructor;
         i_params = a_params;
         i_dontCallConstructors = a_dontCallConstructors;
-        
-    	IReflect reflector = Db4o.reflector();
-    	if(a_stream != null){
-    		reflector = a_stream.i_config.reflector();
-    	}
-    	i_reflectorClass = reflector.forClass(a_class);
 	        
         i_eventDispatcher = a_checkDispatcher ? EventDispatcher.forClass(a_stream, i_reflectorClass) : null;
     }
@@ -46,11 +40,12 @@ final class YapConstructor {
     }
 
     String getName() {
-        return i_javaClass.getName();
+        return i_reflectorClass.getName();
     }
 
+    // FIXME: REFLECTOR all callers should call reflectorClass
     Class javaClass() {
-        return i_javaClass;
+        return i_reflectorClass.getJavaClass();
     }
 
     Object newInstance() throws Exception {

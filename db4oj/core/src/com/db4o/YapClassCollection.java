@@ -290,7 +290,8 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
     YapClass readYapClass(YapClass yapClass, Class a_class) {
         i_yapClassCreationDepth++;
         if (yapClass != null  && yapClass.stateUnread()) {
-            yapClass.createConfigAndConstructor(i_yapClassByBytes, i_stream, a_class);
+        	// FIXME: REFLECTOR should work with IClass
+            yapClass.createConfigAndConstructor(i_yapClassByBytes, i_stream, i_stream.i_config.reflector().forClass( a_class));
             Class javaClass = yapClass.getJavaClass();
             if(javaClass != null){
                 i_yapClassByClass.put(javaClass, yapClass);

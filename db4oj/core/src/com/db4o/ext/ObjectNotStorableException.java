@@ -3,6 +3,7 @@
 package com.db4o.ext;
 
 import com.db4o.*;
+import com.db4o.reflect.*;
 
 
 /**
@@ -12,7 +13,7 @@ import com.db4o.*;
  */
 public class ObjectNotStorableException extends RuntimeException{
 	
-	public ObjectNotStorableException(Class a_class){
+	public ObjectNotStorableException(IClass a_class){
 	    super(Messages.get(a_class.isPrimitive() ? 59: 45, a_class.getName()));
 	}
 }

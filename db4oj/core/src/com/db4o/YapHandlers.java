@@ -160,7 +160,7 @@ class YapHandlers {
 
     final YapConstructor createConstructorStatic(final YapStream a_stream,
         final YapClass a_yapClass,
-        final Class a_class
+        final IClass a_class
          ) {
         
         final IReflect reflector = a_stream.i_config.reflector();
@@ -184,7 +184,7 @@ class YapHandlers {
         if(! Deploy.csharp){
 	        if(! Platform.callConstructor()){
 	            if(! a_yapClass.callConstructor(a_stream)){
-		            Constructor constructor = Platform.jdk().serializableConstructor(a_class);
+		            Constructor constructor = Platform.jdk().serializableConstructor(a_class.getJavaClass());
 		            if(constructor != null){
 		                try{
 		                    Object o = constructor.newInstance(null);

@@ -40,6 +40,10 @@ public class CReflect implements IReflect{
 	}
 	
 	public IClass forClass(Class clazz){
+		
+		if(clazz == null){
+			return null;
+		}
 		IClass iClass = (IClass)_byClass.get(clazz);
 		if(iClass != null){
 			return iClass;

@@ -77,6 +77,9 @@ public class Hashtable4 implements Cloneable, DeepClone {
     }
     
     public Object get(Object a_objectKey) {
+    	if(a_objectKey == null){
+    		return null;
+    	}
         int a_key = a_objectKey.hashCode();
         HashtableObjectEntry ihe = (HashtableObjectEntry)i_table[a_key & i_mask];
         while (ihe != null) {
