@@ -6,21 +6,20 @@ package com.db4o;
 final class YDouble extends YLong
 {
     private static final Double i_primitive = new Double(0);
-    private static final Class i_class = i_primitive.getClass();
     
     public YDouble(YapStream stream) {
         super(stream);
     }
     
+	protected Object defaultValue(){
+		return i_primitive;
+	}
+	
 	public int getID(){
 		return 5;
 	}
 	
-	public Class getJavaClass(){
-		return i_class;
-	}
-	
-	public Class getPrimitiveJavaClass(){
+	protected Class primitiveJavaClass(){
 		return double.class;
 	}
 	

@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.reflect.*;
 
+
 /**
  * Common base class for YapString and YapArray:
  * There is one indirection in the database file to this.
@@ -31,7 +32,7 @@ abstract class YapIndependantType implements YapDataType
 		}
 	}
 	
-	public final Class getPrimitiveJavaClass(){
+	public final IClass primitiveClassReflector(){
 		return null;
 	}
 	

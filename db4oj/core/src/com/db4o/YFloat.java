@@ -6,21 +6,20 @@ package com.db4o;
 final class YFloat extends YInt {
     
     private static final Float i_primitive = new Float(0);
-    private static final Class i_class = i_primitive.getClass();
     
     public YFloat(YapStream stream) {
         super(stream);
     }
     
+	protected Object defaultValue(){
+		return i_primitive;
+	}
+	
 	public int getID() {
 		return 3;
 	}
 
-	public Class getJavaClass() {
-		return i_class;
-	}
-
-	public Class getPrimitiveJavaClass() {
+	protected Class primitiveJavaClass() {
 		return float.class;
 	}
 

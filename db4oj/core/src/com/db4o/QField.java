@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.reflect.*;
+
 /**
  * @exclude
  */
@@ -31,19 +33,20 @@ public class QField implements Visitor4{
 	}
 	
 	boolean canHold(Object a_object){
-	    Class clazz = null;
+	    IClass claxx = null;
+	    IReflect reflector = i_trans.reflector();
 	    if(a_object != null){
-	        if(a_object instanceof Class){
-	            clazz = (Class)a_object;
+	        if(a_object instanceof IClass){
+	            claxx = (IClass)a_object;
 	        }else{
-	            clazz = a_object.getClass();
+	            claxx = reflector.forObject(a_object);
 	        }
 	    }else{
 			if(Deploy.csharp){
 				return true;
 			}
 	    }
-		return i_yapField == null || i_yapField.canHold(clazz);
+		return i_yapField == null || i_yapField.canHold(claxx);
 	}
 	
 	YapClass getYapClass(){

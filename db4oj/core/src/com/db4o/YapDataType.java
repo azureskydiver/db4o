@@ -9,10 +9,12 @@ interface YapDataType extends YapComparable
 {
 	
 	void appendEmbedded3(YapWriter a_bytes);
-	
-	boolean canHold(Class a_class);
+		
+	boolean canHold(IClass claxx);
 	
 	void cascadeActivation(Transaction a_trans, Object a_object, int a_depth, boolean a_activate);
+	
+	IClass classReflector();
 	
 	// special construct for deriving from simple types
 	void copyValue(Object a_from, Object a_to);
@@ -20,10 +22,6 @@ interface YapDataType extends YapComparable
 	void deleteEmbedded(YapWriter a_bytes);
 	
 	int getID();
-	
-	Class getPrimitiveJavaClass();
-	
-	IClass classReflector();
 	
 	boolean equals(YapDataType a_dataType); // needed for YapField.equals
 	
@@ -34,6 +32,8 @@ interface YapDataType extends YapComparable
 	int linkLength();
 	
 	void prepareLastIoComparison(Transaction a_trans, Object obj);
+	
+	IClass primitiveClassReflector();
 	
 	Object read(YapWriter writer) throws CorruptionException;
 	

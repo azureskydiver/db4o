@@ -5,6 +5,7 @@ package com.db4o;
 import java.io.*;
 
 import com.db4o.ext.*;
+import com.db4o.reflect.*;
 
 abstract class YapFile extends YapStream {
 
@@ -198,9 +199,9 @@ abstract class YapFile extends YapStream {
         while (i.hasNext()) {
             YapClass yapClass = i.nextClass();
             if (yapClass.getName() != null) {
-                Class jc = yapClass.getJavaClass();
-                if (jc == null
-                    || !(YapConst.CLASS_INTERNAL.isAssignableFrom(jc))) {
+                IClass claxx = yapClass.classReflector();
+                if (claxx == null
+                    || !( i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))) {
                     Tree tree = yapClass.getIndex(ta);
                     if (tree != null) {
                         tree.traverse(new Visitor4() {

@@ -39,10 +39,10 @@ class YapClassPrimitive extends YapClass{
         // do nothing
     }
 
-    public boolean canHold(Class a_class) {
+    public boolean canHold(IClass claxx) {
         // Do we need this at all???
         // Check if this method is ever called
-        return i_handler.canHold(a_class);
+        return i_handler.canHold(claxx);
     }
     
     public IClass classReflector(){

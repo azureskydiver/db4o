@@ -58,12 +58,18 @@ public class CReflect implements IReflect{
 		return addClass(clazz.getName(), clazz);
 	}
 	
-	public IClass forName(String className) throws ClassNotFoundException{
+	public IClass forName(String className) {
 		IClass iClass = (IClass)_byName.get(className);
 		if(iClass != null){
 			return iClass;
 		}
-		Class clazz = _classLoader.loadClass(className);
+		Class clazz;
+		try {
+			clazz = _classLoader.loadClass(className);
+		}
+		catch(ClassNotFoundException exc) {
+			clazz=null;
+		}
 		if(clazz == null){
 			return null;
 		}
@@ -76,7 +82,7 @@ public class CReflect implements IReflect{
 		}
 		return forClass(a_object.getClass());
 	}
-
+	
 	public boolean isCollection(IClass candidate) {
 		Iterator4 it = _collectionClasses.iterator();
 		while(it.hasNext()){

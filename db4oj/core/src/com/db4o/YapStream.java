@@ -197,7 +197,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             if (oldObject != null) {
                 YapObject yo = getYapObject(intID);
                 if (yo != null) {
-                    if (obj.getClass() == yo.getJavaClass()) {
+                    if (ta.reflector().forObject(obj) == yo.getYapClass().classReflector()) {
                         bind2(yo, obj);
                     } else {
                         throw new RuntimeException(Messages.get(57));

@@ -9,7 +9,6 @@ final class YByte extends YapJavaClass
     static final int LENGTH = 1 + YapConst.ADDED_LENGTH;
 	
 	private static final Byte i_primitive = new Byte((byte)0);
-	private static final Class i_class = i_primitive.getClass();
 	
     public YByte(YapStream stream) {
         super(stream);
@@ -19,12 +18,8 @@ final class YByte extends YapJavaClass
 		return 6;
 	}
 	
-	public Class getJavaClass(){
-		return i_class;
-	}
-	
-	public Class getPrimitiveJavaClass(){
-		return byte.class;
+	protected Object defaultValue(){
+		return i_primitive;
 	}
 	
 	boolean isNoConstraint(Object obj, boolean isPrimitive){
@@ -35,6 +30,10 @@ final class YByte extends YapJavaClass
 		return LENGTH;
 	}
 
+	protected Class primitiveJavaClass(){
+		return byte.class;
+	}
+	
 	Object primitiveNull(){
 		return i_primitive;
 	}

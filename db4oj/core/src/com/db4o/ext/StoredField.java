@@ -2,6 +2,8 @@
 
 package com.db4o.ext;
 
+import com.db4o.reflect.*;
+
 
 /**
  * the internal representation of a field on a stored class.
@@ -29,7 +31,7 @@ public interface StoredField {
 	 * <br><br>For array fields this method will return the type of the array.
 	 * Use {link #isArray()} to detect arrays.  
 	 */
-	public Object getStoredType();
+	public IClass getStoredType();
 	
 	
 	/**

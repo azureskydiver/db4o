@@ -8,26 +8,25 @@ final class YShort extends YapJavaClass
     static final int LENGTH = YapConst.SHORT_BYTES + YapConst.ADDED_LENGTH;
 	
 	private static final Short i_primitive = new Short((short)0);
-	private static final Class i_class = i_primitive.getClass();
 	
     public YShort(YapStream stream) {
         super(stream);
     }
     
+	protected Object defaultValue(){
+		return i_primitive;
+	}
+	
 	public int getID(){
 		return 8;
 	}
 	
-	public Class getJavaClass(){
-		return i_class;
-	}
-	
-	public Class getPrimitiveJavaClass(){
-		return short.class;
-	}
-	
 	public int linkLength(){
 		return LENGTH;
+	}
+	
+	protected Class primitiveJavaClass(){
+		return short.class;
 	}
 	
 	Object primitiveNull(){

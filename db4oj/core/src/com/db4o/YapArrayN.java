@@ -76,8 +76,7 @@ final class YapArrayN extends YapArray {
 		IClass[] clazz = new IClass[1];
 		int[] dim = readDimensions(a_trans, a_bytes, clazz);
         if (i_isPrimitive) {
-        	
-        	obj[0] = a_trans.reflector().array().newInstance(a_trans.reflector().forClass(i_handler.getPrimitiveJavaClass()), dim);
+        	obj[0] = a_trans.reflector().array().newInstance(i_handler.primitiveClassReflector(), dim);
         } else {
         	if (clazz[0] != null) {
 				obj[0] = a_trans.reflector().array().newInstance(clazz[0], dim);

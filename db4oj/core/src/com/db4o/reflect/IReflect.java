@@ -33,9 +33,10 @@ public interface IReflect {
 	
 	
 	/**
-	 * returns an IClass class reflector for a class name.
+	 * returns an IClass class reflector for a class name or null
+	 * if no such class is found
 	 */
-	public IClass forName(String className) throws ClassNotFoundException;
+	public IClass forName(String className);
 	
 	/**
 	 * returns an IClass for a Class
@@ -44,13 +45,12 @@ public interface IReflect {
 	
 	
 	/**
-	 * returns an IClass for an object
+	 * returns an IClass for an object or null if the passed object is null.
 	 */
 	public IClass forObject(Object a_object);
 	
 	
 	public boolean isCollection(IClass claxx);
-	
 	
 	public void registerCollection(Class clazz);
 	

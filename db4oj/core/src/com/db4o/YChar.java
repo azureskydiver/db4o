@@ -8,26 +8,25 @@ final class YChar extends YapJavaClass {
     static final int LENGTH = YapConst.CHAR_BYTES + YapConst.ADDED_LENGTH;
 	
 	private static final Character i_primitive = new Character((char)0);
-	private static final Class i_class = i_primitive.getClass();
 	
     public YChar(YapStream stream) {
         super(stream);
     }
     
+	protected Object defaultValue(){
+		return i_primitive;
+	}
+	
 	public int getID() {
 		return 7;
 	}
 
-	public Class getJavaClass() {
-		return i_class;
-	}
-
-	public Class getPrimitiveJavaClass() {
-		return char.class;
-	}
-
 	public int linkLength() {
 		return LENGTH;
+	}
+
+	protected Class primitiveJavaClass() {
+		return char.class;
 	}
 
 	Object primitiveNull() {

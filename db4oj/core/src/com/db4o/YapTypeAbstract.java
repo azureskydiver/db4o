@@ -9,17 +9,9 @@ abstract class YapTypeAbstract extends YapJavaClass implements YapType{
         super(stream);
     }
 
-    private Class i_cachedClass;
-	
 	private int i_linkLength;
 	
 	private Object i_compareTo;
-	
-	public Class getJavaClass(){
-		return i_cachedClass;
-	}
-	
-	public abstract Object defaultValue();
 	
 	public abstract int typeID();
 	
@@ -31,12 +23,10 @@ abstract class YapTypeAbstract extends YapJavaClass implements YapType{
 	
 	public abstract boolean isEqual(Object compare, Object with);
 
-	
 	void initialize(){
-		i_cachedClass = primitiveNull().getClass();
 		byte[] bytes = new byte[65];
 		for (int i = 0; i < bytes.length; i++) {
-			bytes[i] = 55;
+			bytes[i] = 55;  // TODO: Why 55? This is a '7'. Remove.
         }
         write(primitiveNull(), bytes, 0);
 		for (int i = 0; i < bytes.length; i++) {
@@ -83,14 +73,14 @@ abstract class YapTypeAbstract extends YapJavaClass implements YapType{
 	}
 
 	boolean isGreater1(Object obj) {
-		if(i_cachedClass.isInstance(obj) && ! isEqual(i_compareTo, obj)){
+		if(classReflector().isInstance(obj) && ! isEqual(i_compareTo, obj)){
 			return compare(i_compareTo, obj) > 0;
 		}
 		return false;
 	}
 
 	boolean isSmaller1(Object obj) {
-		if(i_cachedClass.isInstance(obj)  && ! isEqual(i_compareTo, obj)){
+		if(classReflector().isInstance(obj)  && ! isEqual(i_compareTo, obj)){
 			return compare(i_compareTo, obj) < 0;
 		}
 		return false;
