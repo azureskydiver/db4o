@@ -97,7 +97,17 @@ public class JdkArray implements ReflectArray {
     }
 
     public void set(Object onArray, int index, Object element) {
-        Array.set(onArray, index, element);
+        if(element == null){
+            try{
+                Array.set(onArray, index, element);
+            }catch(Exception e){
+                // This can happen on primitive arrays
+                // and we are fine with ignoring it.
+            }
+            
+        }else{
+            Array.set(onArray, index, element);
+        }
     }
     
     public int shape(
