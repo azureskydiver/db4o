@@ -282,16 +282,6 @@ class YapHandlers {
         }
     }
     
-    Db4oDatabase ensureDb4oDatabase(Transaction a_trans, Db4oDatabase a_db){
-        YapStream stream = a_trans.i_stream;
-        Object obj = stream.db4oTypeStored(a_trans,a_db);
-        if (obj != null) {
-            return (Db4oDatabase)obj;
-        } 
-        stream.set3(a_trans,a_db, 2, false);
-        return a_db;
-    }
-    
     final YapDataType getHandler(int a_index) {
         return i_handlers[a_index - 1];
     }

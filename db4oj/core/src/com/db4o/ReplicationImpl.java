@@ -21,9 +21,7 @@ class ReplicationImpl implements ReplicationProcess {
 
     final ReplicationConflictHandler      _conflictHandler;
 
-    final ReplicationRecord i_record;
-
-    final Db4oDatabase      _databaseAinB;
+    final ReplicationRecord _record;
 
     private Object    _objectA;
     private Object    _objectB;
@@ -52,47 +50,34 @@ class ReplicationImpl implements ReplicationProcess {
         
         _conflictHandler = conflictHandler;
 
-        _databaseAinB = _peerB.i_handlers
-            .ensureDb4oDatabase(_transB, _peerA.identity());
-        ObjectSet objectSet = queryForReplicationRecord();
-        if (objectSet.hasNext()) {
-            i_record = (ReplicationRecord) objectSet.next();
-        } else {
-            i_record = new ReplicationRecord();
-            i_record.i_source = _databaseAinB;
-            i_record.i_target = _peerB.identity();
-        }
+        _record = ReplicationRecord.beginReplication(_transA, _transB);
     }
 
     public void commit() {
         _peerA.commit();
         _peerB.commit();
 
-        long i_sourceVersion = _peerA.currentVersion() - 1;
-        long i_destinationVersion = _peerB.currentVersion() - 1;
+        long versionA = _peerA.currentVersion() - 1;
+        long versionB = _peerB.currentVersion() - 1;
 
-        i_record.i_version = i_destinationVersion;
+        _record._version = versionB;
 
-        if (i_sourceVersion > i_destinationVersion) {
-            i_record.i_version = i_sourceVersion;
-            _peerB.raiseVersion(i_record.i_version);
-        } else if (i_destinationVersion > i_sourceVersion) {
-            _peerA.raiseVersion(i_record.i_version);
-            _peerA.commit();
+        if (versionA > versionB) {
+            _record._version = versionA;
+            _peerB.raiseVersion(_record._version);
+        } else if (versionB > versionA) {
+            _peerA.raiseVersion(_record._version);
         }
-        _peerB.showInternalClasses(true);
-        _peerB.set(i_record);
-        _peerB.commit();
-        _peerB.showInternalClasses(false);
+        
+        _record.store(_peerA);
+        _record.store(_peerB);
 
         endReplication();
     }
 
     public void rollback() {
-        if (_peerB != null) {
-            _peerB.rollback();
-        }
         _peerA.rollback();
+        _peerB.rollback();
         endReplication();
     }
 
@@ -103,16 +88,6 @@ class ReplicationImpl implements ReplicationProcess {
         _peerB.i_handlers.i_replication = null;
     }
 
-    private ObjectSet queryForReplicationRecord() {
-        _peerB.showInternalClasses(true);
-        Query q = _peerB.querySharpenBug();
-        q.constrain(YapConst.CLASS_REPLICATIONRECORD);
-        q.descend("i_source").constrain(_databaseAinB).identity();
-        q.descend("i_target").constrain(_peerB.identity()).identity();
-        ObjectSet objectSet = q.execute();
-        _peerB.showInternalClasses(false);
-        return objectSet;
-    }
 
     boolean toDestination(Object a_sourceObject) {
         synchronized(_peerA.i_lock){
@@ -128,14 +103,14 @@ class ReplicationImpl implements ReplicationProcess {
 	                    _objectB = arr[0];
 	                    VirtualAttributes vad = yob
 	                        .virtualAttributes(_transB);
-	                    if (vas.i_version <= i_record.i_version
-	                        && vad.i_version <= i_record.i_version) {
+	                    if (vas.i_version <= _record._version
+	                        && vad.i_version <= _record._version) {
 	                        _peerB.bind2(yob, _objectA);
 	                        return true;
 	                    }
 	                    
-	                    if (vas.i_version > i_record.i_version
-	                        && vad.i_version > i_record.i_version) {
+	                    if (vas.i_version > _record._version
+	                        && vad.i_version > _record._version) {
 	                        
 	                        i_direction = IGNORE;
 	                        
@@ -157,7 +132,7 @@ class ReplicationImpl implements ReplicationProcess {
 	                        
 	                    }else{
 	                        i_direction = TO_B;
-	                        if(vad.i_version > i_record.i_version){
+	                        if(vad.i_version > _record._version){
 	                            i_direction = TO_A;
 	                        }
 	                    }
@@ -196,7 +171,7 @@ class ReplicationImpl implements ReplicationProcess {
     }
     
 	private long lastSynchronization() {
-		return i_record.i_version;
+		return _record._version;
 	}
 
 	public void replicate(Object obj) {

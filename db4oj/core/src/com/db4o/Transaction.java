@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.ext.*;
 import com.db4o.reflect.Reflector;
 
 /**
@@ -264,6 +265,21 @@ public class Transaction {
         YapClass yapClass = i_stream.getYapClass(a_yapClassID);
         if (TreeInt.find(yapClass.getIndexRoot(), a_id) == null) {
             addToClassIndex(a_yapClassID, a_id);
+        }
+    }
+    
+    
+    // This method should really by in Db4oDatabase but we don't want to
+    // expose the package methods used 
+    void ensureDb4oDatabase(Db4oDatabase a_db){
+        Db4oDatabase stored = (Db4oDatabase)i_stream.db4oTypeStored(this,a_db);
+        if (stored == null) {
+            i_stream.set3(this,a_db, 2, false);
+            return;
+        }
+        if(stored != a_db){
+            int id = stored.getID(i_stream);
+            i_stream.bind(a_db, id);
         }
     }
 
