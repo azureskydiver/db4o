@@ -258,8 +258,7 @@ class YapField implements StoredField {
         	return;
         }
         try {
-            Class enumClazz=Db4o.classForName("java.lang.Enum");
-            boolean isEnumClass = enumClazz!=null && (enumClazz.isAssignableFrom(a_onObject.getClass()));
+            boolean isEnumClass = YapConst.CLASS_ENUM !=null && (YapConst.CLASS_ENUM.isAssignableFrom(a_onObject.getClass()));
 			if (i_isPrimitive && !i_isArray) {
                 // FIXME: quickhack to avoid resetting fields of enums on defragment - needed? AllTests runs without this.
                 if(!isEnumClass) {
