@@ -11,7 +11,7 @@ class YapIndexes {
     final YapFieldUUID i_fieldUUID;
     
     YapIndexes(YapStream stream){
-        i_fieldVersion = new YapFieldVersion();
+        i_fieldVersion = new YapFieldVersion(stream);
         i_fieldUUID = new YapFieldUUID(stream);
     }
 }

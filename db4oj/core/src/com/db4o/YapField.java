@@ -367,7 +367,7 @@ class YapField implements StoredField {
 
     YapClass getFieldYapClass(YapStream a_stream) {
         // alive needs to be checked by all callers: Done
-        return i_handler.getYapClass(a_stream);
+		return i_handler.getYapClass(a_stream);
     }
     
     IxField getIndex(Transaction a_trans){
@@ -596,8 +596,11 @@ class YapField implements StoredField {
     }
 
     QField qField(Transaction a_trans) {
-        return new QField(a_trans, i_name, this, i_yapClass.getID(),
-            i_arrayPosition);
+        int yapClassID = 0;
+        if(i_yapClass != null){
+            yapClassID = i_yapClass.getID();
+        }
+        return new QField(a_trans, i_name, this, yapClassID, i_arrayPosition);
     }
 
     Object read(YapWriter a_bytes) throws CorruptionException {
@@ -743,7 +746,12 @@ class YapField implements StoredField {
         if (! alive()) {
             writer.incrementOffset(linkLength());
         }else{
-            Object obj = read(writer);
+            Object obj = null;
+            try{
+                obj = read(writer);
+            }catch(Exception e){
+                // can happen
+            }
             if(obj == null){
                 str += "\n [null]";
             }else{
