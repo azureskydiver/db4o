@@ -20,10 +20,29 @@ public interface ReflectArray {
         int a_flatElement);
 	
 	public Object get(Object onArray, int index);
-    
+	
+	/**
+	 * Get an object at a particular index from an array
+	 * 
+	 * @param field A ReflectField pointing to the array inside receiver
+	 * @param receiver The object containing a field which is an array (pointed to by field)
+	 * @param index The array index to fetch
+	 * @return The object at receiver{field}[index]
+	 */
+	public Object get(ReflectField field, Object receiver, int index);
+	
     public ReflectClass getComponentType(ReflectClass a_class);
 	
 	public int getLength(Object array);
+	
+	/**
+	 * Get the length of an array stored in an object's field
+	 * 
+	 * @param field A ReflectField pointing to the array inside receiver
+	 * @param receiver The object containing a field which is an array (pointed to by field)
+	 * @return receiver{field}.length
+	 */
+	public int getLength(ReflectField field, Object receiver);
     
     public boolean isNDimensional(ReflectClass a_class);
 	
