@@ -1,6 +1,8 @@
 package com.db4o.devtools.ant;
 
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FileHead extends File {
     
@@ -15,7 +17,7 @@ public class FileHead extends File {
         FileHeadAntTask task = new FileHeadAntTask();
         task.setPath(args[0]);
         task.setHeader(args[1]);
-        task.setBefore(args[2]);
+        task.setBeforePattern(args[2]);
         task.setFileExt(args[3]);
         new FileHead(args[0], task).run();
     }
@@ -38,41 +40,43 @@ public class FileHead extends File {
         }
     }
 
-	private void processFile() throws FileNotFoundException, IOException {
-		String path = getAbsolutePath();
-		final int bufferSize = 64000;
-		RandomAccessFile rafIn = new RandomAccessFile(path, "r");
-		RandomAccessFile rafOut = new RandomAccessFile(path + "g", "rw");
-		rafOut.write(task.header);
-		int filepos = 0;
-		int beforePos = 0;
-		while (beforePos < task.before.length) {
-		    byte b = (byte) rafIn.read();
-		    filepos++;
-		    if (b == task.before[beforePos]) {
-		        beforePos++;
-		    } else {
-		        beforePos = 0;
-		    }
+	private void processFile() throws IOException {
+		String contents = read();
+		Matcher matcher = task.before.matcher(contents);
+		if (matcher.find()) {
+			writeWithHeader(contents.substring(matcher.start()));
 		}
-		filepos -= beforePos;
-		rafIn.seek(filepos);
-		long len = rafIn.length() - filepos;
-		byte[] bytes = new byte[bufferSize];
-		while (len > 0) {
-		    len -= bufferSize;
-		    if (len < 0) {
-		        bytes = new byte[(int) (len + bufferSize)];
-		    }
-		    rafIn.read(bytes);
-		    rafOut.write(bytes);
-		}
-		rafIn.close();
-		rafOut.close();
-		new File(path).delete();
-		new File(path + "g").renameTo(new File(path));
 	}
-
+	
+	private void writeWithHeader(String contents) throws IOException {
+		FileOutputStream fos = new FileOutputStream(this);
+		try {
+			OutputStreamWriter writer = new OutputStreamWriter(fos);
+			writer.write(task.header);
+			writer.write(contents);
+			writer.flush();
+		} finally {
+			fos.flush();
+			fos.close();
+		}
+	}
+	
+	private String read() throws IOException {
+		FileInputStream fis = new FileInputStream(this);
+		try {			
+			int read;
+			StringBuilder builder = new StringBuilder();
+			char[] buffer = new char[32*1024];
+			InputStreamReader reader = new InputStreamReader(fis);
+			while ((read = reader.read(buffer)) > 0) {
+				builder.append(buffer, 0, read);
+			}
+			return builder.toString();
+		} finally {
+			fis.close();
+		}
+	}
+	
 	private void processDirectory() throws Exception {
 		String[] files = list();
 		if (files != null) {

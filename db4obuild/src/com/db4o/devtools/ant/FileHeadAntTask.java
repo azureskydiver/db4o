@@ -1,13 +1,15 @@
 
 package com.db4o.devtools.ant;
 
+import java.util.regex.Pattern;
+
 import org.apache.tools.ant.*;
 
 public class FileHeadAntTask extends Task {
     
     String path;
-    byte[] header;
-    byte[] before;
+    String header;
+    Pattern before;
     String fileExt;
     
     public void setPath(String path) {
@@ -15,11 +17,11 @@ public class FileHeadAntTask extends Task {
     }
     
     public void setHeader(String header) {
-        this.header = header.getBytes();
+        this.header = header;
     }
     
-    public void setBefore(String before) {
-        this.before = before.getBytes();
+    public void setBeforePattern(String before) {
+        this.before = Pattern.compile(before);
     }
     
     public void setFileExt(String fileExt) {
@@ -27,6 +29,8 @@ public class FileHeadAntTask extends Task {
     }
     
     public void execute() throws BuildException {
+		log("Looking for *." + fileExt + " files in " + path);
+		
         FileHead fh = new FileHead(path, this);
         try {
             fh.run();
@@ -34,5 +38,7 @@ public class FileHeadAntTask extends Task {
             e.printStackTrace();
             throw new BuildException(e.getMessage());
         }
+		
+		log("done.");
     }
 }
