@@ -98,7 +98,7 @@ class IxField {
             final int lengthPerEntry = handler.linkLength()
                     + YapConst.YAPINT_LENGTH;
 
-            i_metaIndex.indexEntries = root == null ? 0 : root.i_size;
+            i_metaIndex.indexEntries = root == null ? 0 : root.size();
             i_metaIndex.indexLength = i_metaIndex.indexEntries * lengthPerEntry;
             i_metaIndex.indexAddress = ((YapFile) trans.i_stream)
                     .getSlot(i_metaIndex.indexLength);
