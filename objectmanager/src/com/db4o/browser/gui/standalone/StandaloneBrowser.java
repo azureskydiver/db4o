@@ -17,7 +17,6 @@
 package com.db4o.browser.gui.standalone;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 
 import org.eclipse.swt.*;
@@ -113,12 +112,7 @@ public class StandaloneBrowser implements IControlFactory {
                 DirectoryDialog dialog = new DirectoryDialog(shell, SWT.OPEN);
                 String file = dialog.open();
                 if (file != null) {
-					try {
-						URL url=new File(file).toURL();
-						controller.addToClasspath(url);
-					} catch (MalformedURLException exc) {
-						exc.printStackTrace();
-					}
+					controller.addToClasspath(new File(file));
                 }
             }
         });
