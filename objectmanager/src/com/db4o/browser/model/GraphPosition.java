@@ -93,5 +93,36 @@ public class GraphPosition {
         GraphPathNode current = (GraphPathNode) path.getLast();
         return current.children[current.selectedChild+1];
     }
+    
+    /* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+        if (!(obj instanceof GraphPosition)) {
+            return false;
+        }
+        
+        // We consider the other object to be equal if it followed the same
+        // path to get to its current object.
+        GraphPosition other = (GraphPosition) obj;
+        
+        if (other.path.size() != path.size()) {
+            return false;
+        }
+
+        Iterator iOther = other.path.iterator();
+        Iterator iSelf = path.iterator();
+        
+        while (iSelf.hasNext()) {
+            GraphPathNode nOther = (GraphPathNode) iOther.next();
+            GraphPathNode nSelf = (GraphPathNode) iSelf.next();
+            
+            if (nOther.selectedChild != nSelf.selectedChild) {
+                return false;
+            }
+        }
+        
+        return true;
+	}
 }
 
