@@ -6,6 +6,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 
 /**
  * @exclude
@@ -1428,7 +1429,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         }
     }
     
-	Reflector reflector() {
+	GenericReflector reflector() {
 		return i_stream.reflector();
 	}
     

@@ -141,8 +141,13 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         return config;
     }
 
-    public Object deepClone(Object param) throws CloneNotSupportedException {
-        Config4Impl ret = (Config4Impl) this.clone();
+    public Object deepClone(Object param) {
+        Config4Impl ret = null;
+        try {
+            ret = (Config4Impl) this.clone();
+        } catch (CloneNotSupportedException e) {
+            // wont happen
+        }
         ret.i_stream = (YapStream) param;
         if (i_exceptionalClasses != null) {
             ret.i_exceptionalClasses = (Hashtable4) i_exceptionalClasses

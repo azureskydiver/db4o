@@ -30,8 +30,13 @@ public class Hashtable4 implements Cloneable, DeepClone {
         return (int)(a_size/FILL);
     }
     
-    public Object deepClone(Object obj) throws CloneNotSupportedException {
-        Hashtable4 ret = (Hashtable4)clone();
+    public Object deepClone(Object obj) {
+        Hashtable4 ret = null;
+        try {
+            ret = (Hashtable4)clone();
+        } catch (CloneNotSupportedException e) {
+            // wont happen
+        }
         ret.i_table = new HashtableIntEntry[i_tableSize];
         for (int i = 0; i < i_tableSize; i++) {
             if(i_table[i] != null){

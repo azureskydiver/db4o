@@ -2,6 +2,7 @@
 
 package com.db4o.reflect.generic;
 
+import com.db4o.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectConstructor;
@@ -11,7 +12,7 @@ import com.db4o.reflect.ReflectMethod;
 /**
  * @exclude
  */
-public class GenericClass implements ReflectClass {
+public class GenericClass implements ReflectClass, DeepClone {
 
     private static final GenericField[] NO_FIELDS = new GenericField[0];
     
@@ -32,6 +33,22 @@ public class GenericClass implements ReflectClass {
         _superclass = superclass;
     }
 
+    public Object deepClone(Object obj) {
+        GenericReflector reflector = (GenericReflector)obj;
+        ReflectClass superClass = null;
+        if(_superclass != null){
+            _superclass = reflector.forName(_superclass.getName());
+        }
+        GenericClass ret = new GenericClass(reflector, _delegate, _name, superClass);
+        ret._isSecondClass = _isSecondClass;
+        GenericField[] fields = new GenericField[_fields.length];
+        for (int i = 0; i < fields.length; i++) {
+            fields[i] = (GenericField)_fields[i].deepClone(reflector);
+        }
+        ret.initFields(fields);
+        return ret;
+    }
+    
     public ReflectClass getComponentType() {   //FIXME Find out how this must work.
         if(_delegate != null){
             return _delegate.getComponentType();

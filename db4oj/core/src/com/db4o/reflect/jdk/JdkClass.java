@@ -55,6 +55,10 @@ public class JdkClass implements ReflectClass{
 		}
 		return reflectors;
 	}
+    
+    public ReflectClass getDelegate(){
+        return this;
+    }
 	
 	public ReflectMethod getMethod(String methodName, ReflectClass[] paramClasses){
 		try {

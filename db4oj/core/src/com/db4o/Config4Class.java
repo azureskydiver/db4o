@@ -86,8 +86,13 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
         return (Config4Field) i_exceptionalFields.get(fieldName);
     }
 
-    public Object deepClone(Object param) throws CloneNotSupportedException {
-        Config4Class ret = (Config4Class) clone();
+    public Object deepClone(Object param){
+        Config4Class ret = null;
+        try {
+            ret = (Config4Class) clone();
+        } catch (CloneNotSupportedException e) {
+            // won't happen
+        }
         ret.i_config = (Config4Impl) param;
         if (i_exceptionalFields != null) {
             ret.i_exceptionalFields = (Hashtable4) i_exceptionalFields

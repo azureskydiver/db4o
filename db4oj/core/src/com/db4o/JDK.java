@@ -6,6 +6,7 @@ import java.io.*;
 import java.lang.reflect.*;
 
 import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 import com.db4o.types.*;
 
 /**
@@ -73,7 +74,7 @@ public class JDK {
 	void pollReferenceQueue(YapStream a_stream, Object a_referenceQueue) {
 	}
 	
-	public void registerCollections(Reflector reflector) {
+	public void registerCollections(GenericReflector reflector) {
 		
 	}
 	
