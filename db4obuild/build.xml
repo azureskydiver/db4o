@@ -343,6 +343,7 @@
 		<delete dir="${dir.n.tutorial.bin}" />
 		<mkdir dir="${dir.n.tutorial.bin}" />
 		<copy todir="${dir.n.tutorial.bin}" file="${file.dll.net}" />
+		<copy todir="${dir.n.tutorial.browser.bin}" file="${file.dll.net}" />
 		<csc targetType="library" destFile="${dir.n.tutorial.bin}/db4o-samples.dll">
 			<src dir="${dir.n.tutorial.src}">
 				<include name="**/*.cs" />
@@ -357,6 +358,9 @@
 			</fileset>
 			<fileset dir="${dir.n.tutorial}">
 				<include name="src/**/*.cs" />
+			</fileset>
+			<fileset dir="${dir.n.tutorial.browser}">
+				<include name="bin/**/**" />
 			</fileset>
 		</copy>
 		<filehead path="${dir.dist.net.build.src}" before="using" fileext="cs" header="${content.gplheader}" />
