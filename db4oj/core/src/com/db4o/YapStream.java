@@ -1206,8 +1206,8 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return renamedOne;
     }
 
-    public ReplicationProcess replicationBegin(ObjectContainer a_destination) {
-        return new ReplicationImpl(this, a_destination);
+    public ReplicationProcess replicationBegin(ObjectContainer peerB, ReplicationConflictHandler conflictHandler) {
+        return new ReplicationImpl(this, peerB,conflictHandler);
     }
 
     void reserve(int byteCount) {

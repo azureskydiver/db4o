@@ -9,168 +9,169 @@ import com.db4o.replication.*;
 /**
  * 
  */
-class ReplicationImpl implements ReplicationProcess, ReplicationConflict {
+class ReplicationImpl implements ReplicationProcess {
 
-    final YapStream   i_source;
-    final Transaction i_sourceTrans;
+    final YapStream   _peerA;
+    final Transaction _transA;
 
-    YapStream         i_destination;
-    Transaction       i_destinationTrans;
+    final YapStream         _peerB;
+    final Transaction       _transB;
 
-    Db4oCallback      i_conflictHandler;
+    final ReplicationConflictHandler      _conflictHandler;
 
-    ReplicationRecord i_record;
+    final ReplicationRecord i_record;
 
-    Db4oDatabase      i_sourceDatabaseInDestination;
+    final Db4oDatabase      _databaseAinB;
 
-    private Object    i_destinationObject;
-    private Object    i_sourceObject;
+    private Object    _objectA;
+    private Object    _objectB;
     
-    private YapObject i_sourceYapObject;
+    private YapObject _yapObjectA;
     
     private int i_direction; 
     
     private static final int IGNORE = 0;
-    private static final int TO_DESTINATION = -1;
-    private static final int TO_SOURCE = 1;
+    private static final int TO_B = -1;
+    private static final int TO_A = 1;
 
 
-    ReplicationImpl(YapStream a_source, ObjectContainer a_destination) {
-        i_source = a_source;
-        i_sourceTrans = a_source.checkTransaction(null);
+    ReplicationImpl(YapStream peerA, ObjectContainer peerB, ReplicationConflictHandler conflictHandler) {
+        _peerA = peerA;
+        _transA = peerA.checkTransaction(null);
+        
+        _peerB = (YapStream) peerB;
+        _transB = _peerB.checkTransaction(null);
 
-        if (a_destination != null) {
+        _peerA.i_handlers.i_replication = this;
+        _peerA.i_migrateFrom = _peerB;
 
-            i_destination = (YapStream) a_destination;
-            i_destinationTrans = i_destination.checkTransaction(null);
+        _peerB.i_handlers.i_replication = this;
+        _peerB.i_migrateFrom = _peerA;
+        
+        _conflictHandler = conflictHandler;
 
-            i_source.i_handlers.i_replication = this;
-            i_source.i_migrateFrom = i_destination;
-
-            i_destination.i_handlers.i_replication = this;
-            i_destination.i_migrateFrom = i_source;
-
-            i_sourceDatabaseInDestination = i_destination.i_handlers
-                .ensureDb4oDatabase(i_destinationTrans, i_source.identity());
-            ObjectSet objectSet = queryForReplicationRecord();
-            if (objectSet.hasNext()) {
-                i_record = (ReplicationRecord) objectSet.next();
-            } else {
-                i_record = new ReplicationRecord();
-                i_record.i_source = i_sourceDatabaseInDestination;
-                i_record.i_target = i_destination.identity();
-            }
+        _databaseAinB = _peerB.i_handlers
+            .ensureDb4oDatabase(_transB, _peerA.identity());
+        ObjectSet objectSet = queryForReplicationRecord();
+        if (objectSet.hasNext()) {
+            i_record = (ReplicationRecord) objectSet.next();
+        } else {
+            i_record = new ReplicationRecord();
+            i_record.i_source = _databaseAinB;
+            i_record.i_target = _peerB.identity();
         }
     }
 
     public void commit() {
-        i_source.commit();
-        i_destination.commit();
+        _peerA.commit();
+        _peerB.commit();
 
-        long i_sourceVersion = i_source.currentVersion() - 1;
-        long i_destinationVersion = i_destination.currentVersion() - 1;
+        long i_sourceVersion = _peerA.currentVersion() - 1;
+        long i_destinationVersion = _peerB.currentVersion() - 1;
 
         i_record.i_version = i_destinationVersion;
 
         if (i_sourceVersion > i_destinationVersion) {
             i_record.i_version = i_sourceVersion;
-            i_destination.raiseVersion(i_record.i_version);
+            _peerB.raiseVersion(i_record.i_version);
         } else if (i_destinationVersion > i_sourceVersion) {
-            i_source.raiseVersion(i_record.i_version);
-            i_source.commit();
+            _peerA.raiseVersion(i_record.i_version);
+            _peerA.commit();
         }
-        i_destination.showInternalClasses(true);
-        i_destination.set(i_record);
-        i_destination.commit();
-        i_destination.showInternalClasses(false);
+        _peerB.showInternalClasses(true);
+        _peerB.set(i_record);
+        _peerB.commit();
+        _peerB.showInternalClasses(false);
 
         endReplication();
     }
 
     public void rollback() {
-        if (i_destination != null) {
-            i_destination.rollback();
+        if (_peerB != null) {
+            _peerB.rollback();
         }
-        i_source.rollback();
+        _peerA.rollback();
         endReplication();
     }
 
     private void endReplication() {
-        i_source.i_migrateFrom = null;
-        i_source.i_handlers.i_replication = null;
-        i_destination.i_migrateFrom = null;
-        i_destination.i_handlers.i_replication = null;
+        _peerA.i_migrateFrom = null;
+        _peerA.i_handlers.i_replication = null;
+        _peerB.i_migrateFrom = null;
+        _peerB.i_handlers.i_replication = null;
     }
 
     private ObjectSet queryForReplicationRecord() {
-        i_destination.showInternalClasses(true);
-        Query q = i_destination.querySharpenBug();
+        _peerB.showInternalClasses(true);
+        Query q = _peerB.querySharpenBug();
         q.constrain(YapConst.CLASS_REPLICATIONRECORD);
-        q.descend("i_source").constrain(i_sourceDatabaseInDestination).identity();
-        q.descend("i_target").constrain(i_destination.identity()).identity();
+        q.descend("i_source").constrain(_databaseAinB).identity();
+        q.descend("i_target").constrain(_peerB.identity()).identity();
         ObjectSet objectSet = q.execute();
-        i_destination.showInternalClasses(false);
+        _peerB.showInternalClasses(false);
         return objectSet;
     }
 
-    public void setConflictHandler(Db4oCallback callback) {
-        i_conflictHandler = callback;
-    }
-
     boolean toDestination(Object a_sourceObject) {
-        synchronized(i_source.i_lock){
-            i_sourceObject = a_sourceObject;
-	        i_sourceYapObject = i_source.getYapObject(a_sourceObject);
-	        if (i_sourceYapObject != null) {
-	            VirtualAttributes vas = i_sourceYapObject.virtualAttributes(i_sourceTrans);
+        synchronized(_peerA.i_lock){
+            _objectA = a_sourceObject;
+	        _yapObjectA = _peerA.getYapObject(a_sourceObject);
+	        if (_yapObjectA != null) {
+	            VirtualAttributes vas = _yapObjectA.virtualAttributes(_transA);
 	            if (vas != null) {
 	                
-	                Object[] arr = i_destinationTrans.objectAndYapObjectBySignature(vas.i_uuid, vas.i_database.i_signature); 
+	                Object[] arr = _transB.objectAndYapObjectBySignature(vas.i_uuid, vas.i_database.i_signature); 
 	                if (arr[0] != null) {
-	                    YapObject yod = (YapObject) arr[1];
-	                    i_destinationObject = arr[0];
-	                    VirtualAttributes vad = yod
-	                        .virtualAttributes(i_destinationTrans);
+	                    YapObject yob = (YapObject) arr[1];
+	                    _objectB = arr[0];
+	                    VirtualAttributes vad = yob
+	                        .virtualAttributes(_transB);
 	                    if (vas.i_version <= i_record.i_version
 	                        && vad.i_version <= i_record.i_version) {
-	                        i_destination.bind2(yod, i_sourceObject);
+	                        _peerB.bind2(yob, _objectA);
 	                        return true;
 	                    }
 	                    
 	                    if (vas.i_version > i_record.i_version
 	                        && vad.i_version > i_record.i_version) {
 	                        
-	                        if(i_conflictHandler == null){
-	                            i_destination.bind2(yod, i_sourceObject);
-	                            return true;
+	                        i_direction = IGNORE;
+	                        
+	                        Object prevailing = _conflictHandler.resolveConflict(this, _objectA, _objectB);
+	                        
+	                        if(prevailing == _objectA){
+	                        	i_direction = TO_B; 
 	                        }
 	                        
-	                        i_direction = IGNORE;
-	                        i_conflictHandler.callback(this);
+	                        if(prevailing == _objectB){
+	                        	i_direction = TO_A; 
+	                        }
+	                        
 	                        
 	                        if(i_direction == IGNORE){
-	                            i_destination.bind2(yod, i_sourceObject);
+	                            _peerB.bind2(yob, _objectA);
 	                            return true;
 	                        }
+	                        
 	                    }else{
-	                        i_direction = TO_DESTINATION;
+	                        i_direction = TO_B;
 	                        if(vad.i_version > i_record.i_version){
-	                            i_direction = TO_SOURCE;
+	                            i_direction = TO_A;
 	                        }
 	                    }
 	                    
-	                    if(i_direction == TO_SOURCE){
-	                        if(! yod.isActive()){
-	                            yod.activate(i_destinationTrans, i_destinationObject, 1, false);
+	                    if(i_direction == TO_A){
+	                        if(! yob.isActive()){
+	                            yob.activate(_transB, _objectB, 1, false);
 	                        }
-	                        i_source.bind2(i_sourceYapObject, i_destinationObject);
-	                        i_source.setNoReplication(i_sourceTrans, i_destinationObject, 1, true);
+	                        _peerA.bind2(_yapObjectA, _objectB);
+	                        _peerA.setNoReplication(_transA, _objectB, 1, true);
 	                    }else{
-	                        if( ! i_sourceYapObject.isActive()){
-	                            i_sourceYapObject.activate(i_sourceTrans, i_sourceObject, 1, false);
+	                        if( ! _yapObjectA.isActive()){
+	                            _yapObjectA.activate(_transA, _objectA, 1, false);
 	                        }
-		                    i_destination.bind2(yod, i_sourceObject);
-		                    i_destination.setNoReplication(i_destinationTrans, i_sourceObject, 1, true);
+		                    _peerB.bind2(yob, _objectA);
+		                    _peerB.setNoReplication(_transB, _objectA, 1, true);
 	                    }
 	                    
 	                    return true;
@@ -182,8 +183,8 @@ class ReplicationImpl implements ReplicationProcess, ReplicationConflict {
     }
     
     void destinationOnNew(YapObject a_yod){
-        if(i_sourceYapObject != null){
-            VirtualAttributes vas = i_sourceYapObject.virtualAttributes(i_sourceTrans);
+        if(_yapObjectA != null){
+            VirtualAttributes vas = _yapObjectA.virtualAttributes(_transA);
             a_yod.i_virtualAttributes = new VirtualAttributes();
             VirtualAttributes vad = a_yod.i_virtualAttributes;
             vad.i_uuid = vas.i_uuid;
@@ -192,44 +193,13 @@ class ReplicationImpl implements ReplicationProcess, ReplicationConflict {
         }
     }
     
-	public long lastSynchronization() {
+	private long lastSynchronization() {
 		return i_record.i_version;
 	}
 
-
-    /* Db4oReplicationConflict interface */
-    /* --------------------------------- */
-
-    public ObjectContainer destination() {
-        return i_destination;
-    }
-
-    public Object destinationObject() {
-        return i_destinationObject;
-    }
-
-    public ObjectContainer source() {
-        return i_source;
-    }
-
-    public Object sourceObject() {
-        return i_sourceObject;
-    }
-
-    public void useSource() {
-        i_direction = TO_DESTINATION;
-    }
-
-    public void useDestination() {
-        i_direction = TO_SOURCE;
-    }
-
-	/* (non-Javadoc)
-	 * @see com.db4o.replication.ReplicationProcess#replicate(java.lang.Object)
-	 */
 	public void replicate(Object obj) {
 		
-		// TODO Auto-generated method stub
+	   // FIXME: _peerB.set(obj);
 	}
 
 	/* (non-Javadoc)
@@ -247,6 +217,30 @@ class ReplicationImpl implements ReplicationProcess, ReplicationConflict {
 		// TODO Auto-generated method stub
 		
 	}
+
+	/* (non-Javadoc)
+	 * @see com.db4o.replication.ReplicationProcess#constrainModified(com.db4o.query.Query)
+	 */
+	public void whereModified(Query query) {
+		query.descend(VirtualField.VERSION).constrain(lastSynchronization()).greater();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.db4o.replication.ReplicationProcess#force(java.lang.Object)
+	 */
+	public void force(Object obj) throws RuntimeException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public ObjectContainer peerA() {
+		return _peerA;
+	}
+
+	public ObjectContainer peerB() {
+		return _peerB;
+	}
+
     
 
 }

@@ -4,6 +4,7 @@ package com.db4o.replication;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.query.*;
 
 
 /**
@@ -32,9 +33,20 @@ public interface ReplicationProcess {
      * to allow future incremental replication.
      */
     public void commit();
+	
+	/**
+	 * returns the "peerA" ObjectContainer involved in this ReplicationProcess. 
+	 */
+	public ObjectContainer peerA();
+	
+	
+	/**
+	 * returns the "peerB" ObjectContainer involved in this ReplicationProcess. 
+	 */
+	public ObjectContainer peerB();
+	
     
-    
-    /**
+	/**
      * replicates an object.
      * <br><br>By default the version number of the object is checked in
      * both ObjectContainers involved in the replication process. If the
@@ -50,20 +62,6 @@ public interface ReplicationProcess {
     public void rollback();
     
     /**
-     * registers a callback handler to be notified on replication
-     * conflicts.
-     * <br><br>Conflicts occur, if an object has been modified in 
-     * both the origin and destination ObjectContainer since the
-     * last time replication was run between the two ObjectContainers.<br><br>
-     * Upon a conflict the {@link Db4oCallback#callback(Object)} method will
-     * be called in the conflict handler and a {@link ReplicationConflict}
-     * object will be passed as a parameter.  
-     * @param conflictHandler the object to be called upon conflicts.
-     */
-    public void setConflictHandler(Db4oCallback conflictHandler);
-    
-    
-    /**
      * modifies the replication policy, what to do on a call to {@link #replicate(Object)}. 
      * <br><br>If no direction is set, the replication process will be bidirectional by
      * default.
@@ -71,15 +69,14 @@ public interface ReplicationProcess {
      * @param replicateTo the ObjectContainer to replicate to 
      */
     public void setDirection(ObjectContainer relicateFrom, ObjectContainer replicateTo);
-    
-    
+
     /**
-     * returns the transaction serial number ("version") when the last
-     * replication between the two ObjectContainers involved in the
-     * replication process took place.
-     * @return the transaction serial number 
-     */
-    public long lastSynchronization();
-    
+	 * adds a constraint to the passed Query to query only for objects that
+	 * were modified since the last replication process between the two
+	 * ObjectContainers involved in this replication process.
+	 * @param query the Query to be constrained 
+	 */
+	public void whereModified(Query query);
+	
 
 }
