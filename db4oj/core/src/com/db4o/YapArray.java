@@ -280,17 +280,7 @@ class YapArray extends YapIndependantType {
                 YapClass yc = a_trans.i_stream.getYapClass(- elements);
                 if (yc != null) {
                     if(primitive){
-                    	
-                    	// FIXME: REFLECTOR The following would always return null
-                    	// TODO: write a test case with a primitive typed array in an object variable
-                    	
-                    	// Old: yc.getPrimitiveJavaClass() would always return null
-                        // clazz[0] = a_trans.reflector().forClass(yc.getPrimitiveJavaClass());
-                    	
-                    	// New: In order for the following to work, YapClassPrimitive#primitiveClassReflector()
-                    	// would have to be implemented to delegate to i_handler
-                    	// clazz[0] = yc.primitiveClassReflector();
-                        
+                    	clazz[0] = yc.primitiveClassReflector();
                     }else{
                         clazz[0] = yc.classReflector();
                     }
@@ -350,10 +340,12 @@ class YapArray extends YapIndependantType {
                 // Discovered on adding the primitives
                 yapClassID = - YapConst.IGNORE_ID;
                 
+            } else{
                 if(primitive){
-                    yapClassID += YapConst.PRIMITIVE;
+                    yapClassID -= YapConst.PRIMITIVE;
                 }
             }
+
             a_bytes.writeInt(- yapClassID);
         }
     }

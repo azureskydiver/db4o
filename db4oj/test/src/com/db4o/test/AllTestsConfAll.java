@@ -100,6 +100,7 @@ public class AllTestsConfAll extends TestSuite{
 	    	SetDeactivated.class,
 	    	SetSemaphore.class,
 	    	SharedObjectContainer.class,
+            SimpleTypeArrayInUntypedVariable.class,
 			SmallerOrEqual.class,
 	    	Soda.class,
 	    	SodaEvaluation.class,

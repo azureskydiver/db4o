@@ -176,6 +176,10 @@ class YapClassPrimitive extends YapClass{
         i_handler.prepareComparison(a_constraint);
         return i_handler;
     }
+    
+    public final IClass primitiveClassReflector(){
+        return i_handler.primitiveClassReflector();
+    }
 
     public YapDataType readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
         if (isArray()) {
