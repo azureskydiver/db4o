@@ -56,29 +56,6 @@
 
 	<target name="init" description="Basic initialization">
 		<tstamp />
-		<delete failonerror="false" includeemptydirs="true" description="Removing build folders">
-			<fileset dir="${dir.dist.net.compile}">
-				<include name="**/*" />
-			</fileset>
-			<fileset dir="${dir.dist.mono.compile}">
-				<include name="**/*" />
-			</fileset>
-			<fileset dir="${dir.sharpen}">
-				<include name="**/*" />
-			</fileset>
-			<fileset dir="${dir.dist.java}">
-				<include name="**/*" />
-			</fileset>
-			<fileset dir="${dir.dist.java}">
-				<include name="**/*" />
-			</fileset>
-			<fileset dir="${dir.dist.net}">
-				<include name="**/*" />
-			</fileset>
-			<fileset dir="${dir.dist.mono}">
-				<include name="**/*" />
-			</fileset>
-		</delete>
 		<mkdir dir="${dir.dist}" />
 		<mkdir dir="${dir.dist.jars}" />
 		<mkdir dir="${dir.sharpen}" />
@@ -102,28 +79,24 @@
 	</target>
 
 	<target name="clean" description="Delete all generated files">
-		<delete failonerror="false" includeemptydirs="true" description="Removing build folders">
-			<fileset dir="${dir.dist.net.compile}">
-				<include name="**/*" />
-			</fileset>
+		<delete failonerror="false" includeemptydirs="true" description="Removing all generated files">
 			<fileset dir="${dir.sharpen}">
 				<include name="**/*" />
 			</fileset>
-		</delete>
-		<delete failonerror="false" description="Removing all generated files">
 			<fileset dir="${dir.dist}">
 				<include name="**/*" />
 			</fileset>
 			<fileset dir="${dir.j.tutorial.out.java}">
 				<include name="**/*" />
 			</fileset>
-		</delete>
-		<delete failonerror="false" description="Removing all generated files" includeemptydirs="true">
-			<fileset dir="${dir.n.core.src}">
-				<include name="**/*.cs" />
-			</fileset>
 			<fileset dir="${dir.j.tutorial.out.net}">
 				<include name="**/*" />
+			</fileset>
+			<fileset dir="${dir.j.tutorial.out.mono}">
+				<include name="**/*" />
+			</fileset>
+			<fileset dir="${dir.n.core.src}">
+				<include name="**/*.cs" />
 			</fileset>
 		</delete>
 	</target>
@@ -197,7 +170,6 @@
 			</fileset>
 		</copy>
 	</target>
-	
 	
 	<target name="compiledllnet" depends="init, copycompact, sharpen">
 		
@@ -406,13 +378,16 @@
 		<ant antfile="build-net-installer.xml" />
 	</target>
 	
-	<target name="zipmono" depends="init, compiledllmono, javadoc" description="Zip Mono distribution">
+	<target name="zipmonox" depends="init, compiledllmono, javadoc" description="Zip Mono distribution" />
+
+	
+	<target name="zipmono" description="Zip Mono distribution">
 		<mkdir dir="${dir.dist.mono.src.core}" />
 		<copy todir="${dir.dist.mono.src.core}">
 			<fileset dir="${dir.n.core}">
 				<include name="**/*.cs" />
-				<include name="*.*" />
-				<exclude name=".*" />
+				<exclude name="**/compact/**"/>
+				<exclude name="**/net/**"/>
 			</fileset>
 		</copy>
 		<versioninfo path="${dir.dist.mono.src.core}/src/mono" mono="true" keyfile="" version="${db4o.version.full}" />
@@ -420,23 +395,19 @@
 		<copy todir="${dir.dist.mono.src.tools}">
 			<fileset dir="${dir.n.tools}">
 				<include name="**/*.cs" />
-				<include name="*.*" />
-				<exclude name=".*" />
 			</fileset>
 		</copy>
 		<mkdir dir="${dir.dist.mono.src.test}" />
 		<copy todir="${dir.dist.mono.src.test}">
 			<fileset dir="${dir.n.test}">
 				<include name="**/*.cs" />
-				<include name="**/*.resx" />
-				<include name="*.*" />
-				<exclude name=".*" />
+				<exclude name="**/CsImage.cs" />
 			</fileset>
 		</copy>
 		<delete dir="${dir.n.tutorial.bin}" />
 		<mkdir dir="${dir.n.tutorial.bin}" />
-		<copy todir="${dir.n.tutorial.bin}" file="${file.dll.net}" />
-		<copy todir="${dir.n.tutorial.browser.bin}" file="${file.dll.net}" />
+		<copy todir="${dir.n.tutorial.bin}" file="${file.dll.mono}" />
+		<copy todir="${dir.n.tutorial.browser.bin}" file="${file.dll.mono}" />
 		<csc targetType="library" destFile="${dir.n.tutorial.bin}/db4o-samples.dll">
 			<src dir="${dir.n.tutorial.src}">
 				<include name="**/*.cs" />
@@ -445,6 +416,7 @@
 				<include name="db4o.dll" />
 			</reference>
 		</csc>
+		<mkdir dir="${dir.dist.mono.build.tutorial}" />
 		<copy todir="${dir.dist.mono.build.tutorial}">
 			<fileset dir="${dir.j.tutorial.out.mono}">
 				<include name="**/**" />
@@ -523,6 +495,7 @@
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="true" />
 			<variable name="net" boolean="false" />
+			<variable name="mono" boolean="false" />
 			<ignoreinputfolder name="net" />
 		</doctor>
 		<copy todir="${dir.j.tutorial.out.java}/docs" overwrite="true">
@@ -550,6 +523,25 @@
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="false" />
 			<variable name="net" boolean="true" />
+			<variable name="mono" boolean="false" />
+			<ignoreinputfolder name="java" />
+		</doctor>
+		<doctor 
+			name="f1" 
+			home="${dir.j.tutorial}" 
+			interactive="true" 
+			workspace="${dir.workspace}" 
+			inputsource="${dir.n.tutorial.src}/" 
+			sourceextension="cs" 
+			outputfile="${db4o.file}tutorial" 
+			outputpath="${dir.j.tutorial.out.mono}" 
+			pdfbasefont="${font.pdf.base}" 
+			archive="${filename.doctor.applets.jar}, ${filename.java1.4.jar}, ${filename.tutorial.jar}" 
+			outlineimage="db4objects1.jpg" 
+			linkhome="http://www.db4o.com">
+			<variable name="java" boolean="false" />
+			<variable name="net" boolean="false" />
+			<variable name="mono" boolean="true" />
 			<ignoreinputfolder name="java" />
 		</doctor>
 		<ant dir="${dir.n.tutorial.browser}" />
@@ -558,8 +550,10 @@
 	<target name="buildjava" depends="doctor, zipjava" description="Full java build" />
 
 	<target name="buildnet" depends="doctor, zipnet" description="Full NET build" />
+	
+	<target name="buildmono" depends="doctor, zipmono" description="Full Mono build" />
 
-	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build" />
+	<target name="buildall" depends="clean, buildjava, buildnet, buildmono" description="Full clean build" />
 	
 	<target name="serversidecopy">
 		<copy todir="${dir.server.downloads}" overwrite="true">
