@@ -12,7 +12,7 @@ final class YapFieldTranslator extends YapField
 	    super(a_yapClass, a_translator);
 		i_translator = a_translator;
 		YapStream stream = a_yapClass.getStream();
-		configure(stream.i_config.reflector().forClass(a_translator.storedClass()));
+		configure(stream.reflector().forClass(a_translator.storedClass()));
 	}
 
 	void deactivate(Transaction a_trans, Object a_onObject, int a_depth){

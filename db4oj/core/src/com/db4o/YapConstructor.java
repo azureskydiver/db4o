@@ -3,8 +3,6 @@
 package com.db4o;
 
 import com.db4o.reflect.*;
-import com.db4o.reflect.jdk.CClass;
-import com.db4o.reflect.jdk.CReflect;
 
 final class YapConstructor {
 	

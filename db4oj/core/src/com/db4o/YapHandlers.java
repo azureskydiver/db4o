@@ -85,7 +85,7 @@ class YapHandlers {
     	_masterStream = a_stream;
     	a_stream.i_handlers = this;
     	
-    	initClassReflectors(a_stream.i_config.reflector());
+    	initClassReflectors(a_stream.reflector());
         
         i_indexes = new YapIndexes(a_stream);
         
@@ -160,7 +160,7 @@ class YapHandlers {
     }
 
 	int arrayType(Object a_object) {
-    	IClass claxx = _masterStream.i_config.reflector().forObject(a_object);
+    	IClass claxx = _masterStream.reflector().forObject(a_object);
         if (claxx.isArray()) {
             if (Array4.isNDimensional(claxx)) {
                 return YapConst.TYPE_NARRAY;
@@ -176,7 +176,7 @@ class YapHandlers {
         final IClass a_class
          ) {
         
-        final IReflect reflector = a_stream.i_config.reflector();
+        final IReflect reflector = a_stream.reflector();
         IClass classReflector;
         
         
@@ -438,7 +438,7 @@ class YapHandlers {
     	if(a_object != null){
     		
     		Class clazz = a_object.getClass();
-    		IClass claxx = _masterStream.i_config.reflector().forClass(clazz);
+    		IClass claxx = _masterStream.reflector().forClass(clazz);
     		if(i_classByClass.get(claxx) != null){
     			return true;
     		}

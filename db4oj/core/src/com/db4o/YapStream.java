@@ -5,8 +5,7 @@ package com.db4o;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
-import com.db4o.reflect.IClass;
-import com.db4o.reflect.jdk.CClass;
+import com.db4o.reflect.*;
 import com.db4o.types.*;
 
 abstract class YapStream implements ObjectContainer, ExtObjectContainer,
@@ -693,7 +692,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
     
     final YapClass getYapClass(Class a_class, boolean a_create) {
-    	return getYapClass(i_config.reflector().forClass(a_class), a_create);
+    	return getYapClass(reflector().forClass(a_class), a_create);
     }
 
     final YapClass getYapClass(IClass a_class, boolean a_create) {
@@ -1138,6 +1137,10 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         i_classCollection.setID(this, ccID);
         i_classCollection.read(i_systemTrans);
     }
+    
+    IReflect reflector(){
+        return i_config.reflector();
+    }
 
     public void refresh(Object a_refresh, int a_depth) {
         synchronized (i_lock) {
@@ -1333,7 +1336,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             YapObject yapObject = i_hcTree.hc_find(a_object);
             if (yapObject == null) {
             	
-                IClass claxx = i_config.reflector().forObject(a_object);
+                IClass claxx = reflector().forObject(a_object);
                 yc = getYapClass(claxx, false);
                 if (yc == null) {
                     yc = getYapClass(claxx, true);

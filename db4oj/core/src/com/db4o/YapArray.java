@@ -297,7 +297,7 @@ class YapArray extends YapIndependantType {
     
     static Object[] toArray(YapStream a_stream, Object a_object) {
         if (a_object != null) {
-        	IClass claxx = a_stream.i_config.reflector().forObject(a_object);
+        	IClass claxx = a_stream.reflector().forObject(a_object);
             if (claxx.isArray()) {
                 YapArray ya;
                 if(Array4.isNDimensional(claxx)){
