@@ -17,7 +17,7 @@ namespace com.db4o.reflect.net
 
 		public virtual com.db4o.reflect.ReflectClass[] getParameterTypes()
 		{
-			return com.db4o.reflect.jdk.JdkReflector.toMeta(reflector, constructor.getParameterTypes
+			return com.db4o.reflect.net.NetReflector.toMeta(reflector, constructor.getParameterTypes
 				());
 		}
 
