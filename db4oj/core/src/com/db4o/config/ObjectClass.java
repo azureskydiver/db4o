@@ -185,7 +185,6 @@ public interface ObjectClass {
 	 * renames a stored class.
 	 * <br><br>Use this method to refactor classes.
      * <br><br><b>Examples: ../com/db4o/samples/rename.</b><br><br>
-     * <i>This feature is not available in db4o community edition.</i><br><br>
      * @param newName the new fully qualified classname.
      */
     public void rename (String newName);
