@@ -19,6 +19,7 @@
 					<menuItem x:id="Open" text="&amp;Open..."/>
 					<menuItem x:id="Query" text="&amp;Query..."/>
 					<menuItem x:id="Preferences" text="&amp;Preferences..."/>
+					<menuItem x:id="AddToClasspath" text="&amp;Add to classpath..."/>
 					<menuItem x:style="SEPARATOR"/>
 					<menuItem x:id="NewWindow" text="&amp;New Window"/>
 					<menuItem x:style="SEPARATOR"/>

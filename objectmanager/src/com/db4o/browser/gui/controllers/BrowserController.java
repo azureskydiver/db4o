@@ -3,11 +3,11 @@
  */
 package com.db4o.browser.gui.controllers;
 
-import com.db4o.browser.gui.controllers.tree.TreeController;
-import com.db4o.browser.gui.views.DbBrowserPane;
-import com.db4o.browser.model.BrowserCore;
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
+import java.net.*;
+
+import com.db4o.browser.gui.controllers.tree.*;
+import com.db4o.browser.gui.views.*;
+import com.db4o.browser.model.*;
 
 /**
  * BrowserController.  The root MVC Controller for a browser window.
@@ -73,4 +73,7 @@ public class BrowserController implements IBrowserController {
 		return selectionChangedController;
 	}
 
+	public void addToClasspath(URL url) {
+		ClassLoaderExtender.addToClassPath(new URL[]{url});
+	}
 }
