@@ -489,6 +489,7 @@
 			<fileset dir="${dir.sharpen}/db4ojcsharp/src">
 				<include name="**/*.cs" />
 				<exclude name="com/db4o/eclipse/**/*.*" />
+				<exclude name="com/db4o/reflect/jdk/**/*.*" />
 				<exclude name="com/db4o/Lock4.cs" />
 				<exclude name="com/db4o/JDK_1*.cs" />
 				<exclude name="com/db4o/JDK_5.cs" />
