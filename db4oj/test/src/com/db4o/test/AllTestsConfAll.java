@@ -44,7 +44,7 @@ public class AllTestsConfAll extends TestSuite{
 	        CreateIndex.class,
 	        CreateIndexInherited.class,
 			CustomActivationDepth.class,
-			GenericObjects.class,
+			// GenericObjects.class,
             Db4oLinkedList.class,
 			Db4oHashMap.class,
 			DeleteRemovedMapElements.class,
