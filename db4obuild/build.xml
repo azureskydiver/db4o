@@ -376,7 +376,7 @@
 			<fileset dir="${dir.n.core}">
 				<include name="**/*.cs" />
 				<exclude name="**/compact/**"/>
-				<exclude name="**/net/**"/>
+				<exclude name="**/src/net/**"/>
 			</fileset>
 		</copy>
 		<versioninfo path="${dir.dist.mono.src.core}/src/mono" mono="true" keyfile="" version="${db4o.version.full}" />
