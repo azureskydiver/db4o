@@ -6,6 +6,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
+import com.db4o.replication.*;
 import com.db4o.types.*;
 
 abstract class YapStream implements ObjectContainer, ExtObjectContainer,
@@ -1205,7 +1206,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return renamedOne;
     }
 
-    public Db4oReplication replicateTo(ObjectContainer a_destination) {
+    public ReplicationProcess replicationBegin(ObjectContainer a_destination) {
         return new ReplicationImpl(this, a_destination);
     }
 
@@ -1551,6 +1552,12 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     abstract YapWriter updateObject(Transaction a_trans, YapMeta a_object);
+    
+    public long version(){
+    	synchronized(i_lock){
+    		return currentVersion();
+    	}
+    }
 
     abstract void write(boolean shuttingDown);
 

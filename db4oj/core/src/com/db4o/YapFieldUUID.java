@@ -11,7 +11,7 @@ class YapFieldUUID extends YapFieldVirtual {
 
     YapFieldUUID(YapStream stream) {
         super();
-        i_name = PREFIX + "uuid";
+        i_name = YapConst.VIRTUAL_FIELD_PREFIX + "uuid";
         i_handler = new YLong(stream);
     }
     

@@ -8,6 +8,7 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
+import com.db4o.replication.*;
 
 /**
  * 
@@ -52,7 +53,7 @@ public class ReplicationFeatures {
     private void replicate(Object obj){
         ExtObjectContainer master = Test.objectContainer();
         ExtObjectContainer slave = Db4o.openFile(file()).ext();
-        Db4oReplication replication = master.ext().replicateTo(slave);
+        ReplicationProcess replication = master.ext().replicationBegin(slave);
         replication.setConflictHandler(new Db4oCallback() {
             public void callback(Object obj) {
                 
@@ -67,14 +68,34 @@ public class ReplicationFeatures {
     private void replicateAll(){
         ExtObjectContainer master = Test.objectContainer();
         ExtObjectContainer slave = Db4o.openFile(file()).ext();
-        Db4oReplication replication = master.ext().replicateTo(slave);
+        ReplicationProcess replication = master.ext().replicationBegin(slave);
+        
+//        replication.setDirection(master, slave); //Default is bidirectional.
+        
         replication.setConflictHandler(new Db4oCallback() {
             public void callback(Object obj) {
                 
 
             }
         });
+        
+//        Query q = replication.queryModifiedObjects(master /*So you dont have to reproduce the query interface*/);
+//        
+//        q.constrain(Person.class);
+//        
+//        
+//        q.descend(VirtualField.VERSION).constrain(replication.lastSynchronization()).greater();
+        
+        
+        
+        
         ObjectSet objectSet = master.get(null);
+        
+        
+        // have a constraint on VersionNumber
+        
+        
+        
         while(objectSet.hasNext()){
             Object masterObject = objectSet.next();
             ObjectInfo masterInfo = master.getObjectInfo(masterObject);
@@ -83,6 +104,13 @@ public class ReplicationFeatures {
                 if(uuid != null){
                     Object masterDuplicate = master.getByUUID(uuid);
                     Test.ensure(masterObject == masterDuplicate);
+                    replication.replicate(masterObject); //Conflict manager in actrion.
+                    replication.checkConflict(masterObject); // 
+                   
+                    // check version numbers and decide upon direction,
+                    // depending which one changed after last synchronisation
+                    
+                    
                     slave.set(masterObject);
                 }
             }

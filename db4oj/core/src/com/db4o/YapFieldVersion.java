@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.ext.*;
+
 /**
  * 
  */
@@ -9,7 +11,7 @@ class YapFieldVersion extends YapFieldVirtual {
 
     YapFieldVersion() {
         super();
-        i_name = PREFIX + "version";
+        i_name = VirtualField.VERSION;
     }
     
     void addFieldIndex(YapWriter a_writer, boolean a_new) {

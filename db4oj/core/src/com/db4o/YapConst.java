@@ -4,7 +4,10 @@ package com.db4o;
 
 import com.db4o.ext.*;
 
-final class YapConst
+/**
+ * @exclude 
+ */
+public final class YapConst
 {
     static final Object initMe = init();
 
@@ -201,5 +204,8 @@ final class YapConst
         CLASS_STATICFIELD,
         CLASS_STATICCLASS
     };
+	
+    public static final String VIRTUAL_FIELD_PREFIX = "v4o";
+
 
 }
