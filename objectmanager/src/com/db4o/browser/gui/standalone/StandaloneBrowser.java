@@ -64,11 +64,12 @@ public class StandaloneBrowser implements IControlFactory {
 	 * Build the application menu bar
 	 */
 	private void buildMenuBar(final Shell shell) {
-        Map contents = XSWT.createl(shell, "menu.xswt", getClass());
-        MenuItem open = (MenuItem) contents.get("Open");
-        MenuItem search = (MenuItem) contents.get("Search");
-        MenuItem newWindow = (MenuItem) contents.get("NewWindow");
-        MenuItem exit = (MenuItem) contents.get("Exit");
+        Map choices = XSWT.createl(shell, "menu.xswt", getClass());
+		
+        MenuItem open = (MenuItem) choices.get("Open");
+        MenuItem search = (MenuItem) choices.get("Search");
+        MenuItem newWindow = (MenuItem) choices.get("NewWindow");
+        MenuItem close = (MenuItem) choices.get("Close");
         
         open.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
@@ -88,7 +89,7 @@ public class StandaloneBrowser implements IControlFactory {
 			}
         });
         
-        exit.addSelectionListener(new SelectionAdapter() {
+        close.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 shell.close();
             }
