@@ -339,7 +339,7 @@
 		<zip destfile="${file.dist.net}">
 			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
 		</zip>
-		<ant antfile="build-installer.xml" />
+		<ant antfile="build-net-installer.xml" />
 	</target>
 	
 	<target name="sharpen" depends="compilecorenet" description="create .NET sources">
