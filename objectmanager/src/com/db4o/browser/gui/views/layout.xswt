@@ -21,7 +21,7 @@
 		            	<text x:style="BORDER" x:id="Search">
 				            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
 		            	</text>
-		            	<button x:id="SearchButton" text="&amp;Go"/>
+		            	<button x:id="SearchButton" text="&amp;X"/>
 		            	<label text="|"/>
 		            	<button x:id="QueryButton" text="&amp;Query..."/>
             		</x:children>
@@ -53,7 +53,7 @@
 						            	<button text="&amp;History..."/>
 						            	
 								    	<!-- The Path label -->
-								    	<label x:id="PathLabel" x:style="RIGHT" text="/">
+								    	<label x:id="PathLabel" x:style="RIGHT">
 								            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
 								    	</label>
 		    	
