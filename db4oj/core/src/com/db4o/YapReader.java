@@ -82,7 +82,7 @@ public class YapReader {
 		}
 	}
 
-    void readBegin(int a_id, byte a_identifier) {
+    public void readBegin(int a_id, byte a_identifier) {
         if (Deploy.debug) {
             readBegin(a_identifier);
         }

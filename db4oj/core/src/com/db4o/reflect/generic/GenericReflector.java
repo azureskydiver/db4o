@@ -148,6 +148,11 @@ public class GenericReflector implements Reflector, DeepClone {
 		int classcollid = headerreader.readInt();
 		YapWriter classcollreader = _stream.readWriterByID(_trans, classcollid);
 		// FIXME: read debug ClassCollection header
+        
+        if (Deploy.debug) {
+            classcollreader.readBegin(classcollid, YapConst.YAPCLASSCOLLECTION);
+        }
+        
 		int numclasses = classcollreader.readInt();
 		int[] classIDs = new int[numclasses];
 		
@@ -162,16 +167,20 @@ public class GenericReflector implements Reflector, DeepClone {
 	}
 	
 	private GenericClass ensureClassAvailability (int id) {
-        
+
         if(id == 0){
             return null;
         }
-        
-		GenericClass ret = (GenericClass)_classByID.get(id);
+		
+        GenericClass ret = (GenericClass)_classByID.get(id);
 		if(ret != null){
 			return ret;
 		}
+        
 		YapWriter classreader=_stream.readWriterByID(_trans,id);
+        if (Deploy.debug) {
+            classreader.readBegin(id, YapConst.YAPCLASS);
+        }
 		int namelength= classreader.readInt();
 		String classname= _stream.stringIO().read(classreader,namelength);
 		
@@ -181,25 +190,27 @@ public class GenericReflector implements Reflector, DeepClone {
 			return ret;
 		}
 		
-		
 		classreader.incrementOffset(YapConst.YAPINT_LENGTH); // skip empty unused int slot
+        
 		int ancestorid=classreader.readInt();
 		
 		ReflectClass nativeClass = _delegate.forName(classname);
-		
 		ret = new GenericClass(this, nativeClass,classname, ensureClassAvailability(ancestorid));
 		
-		_classByID.put(id, ret);
+		// step 1 only add to _classByID, keep the class out of _classByName and _classes
+        _classByID.put(id, ret);
 		
 		return ret;
 	}
 	
-	public void ensureClassRead(int id) {
+	private void ensureClassRead(int id) {
 
 		GenericClass ret = (GenericClass)_classByID.get(id);
 		
 		YapWriter classreader=_stream.readWriterByID(_trans,id);
-		classreader.read();
+        if (Deploy.debug) {
+            classreader.readBegin(id, YapConst.YAPCLASS);
+        }
 		int namelength= classreader.readInt();
 		String classname= _stream.stringIO().read(classreader,namelength);
 		
@@ -208,7 +219,8 @@ public class GenericReflector implements Reflector, DeepClone {
 			return;
 		}
 		
-		_classByName.put(classname, ret);
+        // step 2 add the class to _classByName and _classes to denote reading is completed
+        _classByName.put(classname, ret);
 		_classes.add(ret);
 		
 		
