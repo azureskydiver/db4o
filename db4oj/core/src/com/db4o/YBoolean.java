@@ -13,7 +13,6 @@ final class YBoolean extends YapJavaClass
 	private static final byte NULL = (byte) 'N';
 	
 	private static final Boolean i_primitive = new Boolean(false);
-	private static final Class i_class = i_primitive.getClass();
 	
     public YBoolean(YapStream stream) {
         super(stream);
@@ -23,16 +22,16 @@ final class YBoolean extends YapJavaClass
 		return 4;
 	}
 	
-	public Class getJavaClass(){
-		return i_class;
-	}
-	
-	public Class getPrimitiveJavaClass(){
-		return boolean.class;
+	protected Object defaultValue(){
+		return i_primitive;
 	}
 	
 	public int linkLength(){
 		return LENGTH;
+	}
+	
+	protected Class primitiveJavaClass(){
+		return boolean.class;
 	}
 	
 	Object primitiveNull(){

@@ -30,8 +30,8 @@ class YapArray extends YapIndependantType {
         a_bytes.incrementOffset(linkLength());
     }
 
-    public boolean canHold(Class a_class) {
-        return i_handler.canHold(a_class);
+    public boolean canHold(IClass claxx) {
+        return i_handler.canHold(claxx);
     }
 
     public final void cascadeActivation(
@@ -235,7 +235,7 @@ class YapArray extends YapIndependantType {
 		IClass[] clazz = new IClass[1];
 		a_elements[0] = readElementsAndClass(a_trans, a_reader, clazz);
 		if (i_isPrimitive) {
-			return Array4.reflector(a_trans.i_stream).newInstance(a_trans.reflector().forClass(i_handler.getPrimitiveJavaClass()), a_elements[0]);
+			return Array4.reflector(a_trans.i_stream).newInstance(i_handler.primitiveClassReflector(), a_elements[0]);
 		} else {
 			if (clazz[0] != null) {
 				return Array4.reflector(a_trans.i_stream).newInstance(clazz[0], a_elements[0]);	
@@ -280,7 +280,17 @@ class YapArray extends YapIndependantType {
                 YapClass yc = a_trans.i_stream.getYapClass(- elements);
                 if (yc != null) {
                     if(primitive){
-                        clazz[0] = a_trans.reflector().forClass(yc.getPrimitiveJavaClass());
+                    	
+                    	// FIXME: REFLECTOR The following would always return null
+                    	// TODO: write a test case with a primitive typed array in an object variable
+                    	
+                    	// Old: yc.getPrimitiveJavaClass() would always return null
+                        // clazz[0] = a_trans.reflector().forClass(yc.getPrimitiveJavaClass());
+                    	
+                    	// New: In order for the following to work, YapClassPrimitive#primitiveClassReflector()
+                    	// would have to be implemented to delegate to i_handler
+                    	// clazz[0] = yc.primitiveClassReflector();
+                        
                     }else{
                         clazz[0] = yc.classReflector();
                     }
@@ -319,7 +329,6 @@ class YapArray extends YapIndependantType {
             
             IClass claxx = Array4.getComponentType(reflector.forObject(a_object));
             
-            // 2.5
             boolean primitive = false;
             if(! Deploy.csharp){
                 if(claxx.isPrimitive()){
@@ -328,8 +337,7 @@ class YapArray extends YapIndependantType {
             }
             YapStream stream = a_bytes.getStream();
             if(primitive){
-                YapJavaClass yjc = (YapJavaClass)stream.i_handlers.handlerForClass(stream,claxx);
-                claxx = reflector.forClass(yjc.getJavaClass());
+                claxx = stream.i_handlers.handlerForClass(stream,claxx).classReflector();
             }
             YapClass yc = stream.getYapClass(claxx, true);
             if (yc != null) {

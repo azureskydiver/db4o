@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.query.*;
+import com.db4o.reflect.*;
 
 /**
  * QQuery is the users hook on our graph.
@@ -64,13 +65,24 @@ public class QQuery implements Query {
 	 */
     public Constraint constrain(Object example) {
         synchronized (streamLock()) {
-            Class clazz = null;
+            IClass claxx = null;
             example = Platform.getClassForType(example);
-            if (YapConst.CLASS_CLASS.isInstance(example)) {
-                clazz = (Class)example;
+            
+            IReflect reflector = i_trans.reflector(); 
+            
+            if(example instanceof IClass){
+            	claxx = (IClass)example;
+            }else{
+            	if(example instanceof Class){
+            		claxx = reflector.forClass((Class)example);
+            	}
+            }
+             
+            if (claxx != null) {
+                
                 Collection4 col = new Collection4();
-                if (clazz.isInterface()) {
-                    Collection4 classes = i_trans.i_stream.i_classCollection.forInterface(clazz);
+                if (claxx.isInterface()) {
+                    Collection4 classes = i_trans.i_stream.i_classCollection.forInterface(claxx);
                     if (classes.size() == 0) {
                         return null;
                     }
@@ -78,13 +90,13 @@ public class QQuery implements Query {
                     Constraint constr = null;
                     while (i.hasNext()) {
                         YapClass yapClass = (YapClass)i.next();
-                        Class yapClassClass = yapClass.getJavaClass();
-                        if(yapClassClass != null){
-                            if(! yapClassClass.isInterface()){
+                        IClass yapClassClaxx = yapClass.classReflector();
+                        if(yapClassClaxx != null){
+                            if(! yapClassClaxx.isInterface()){
                                 if(constr == null){
-                                    constr = constrain(yapClassClass);
+                                    constr = constrain(yapClassClaxx);
                                 }else{
-                                    constr = constr.or(constrain(yapClass.getJavaClass()));
+                                    constr = constr.or(constrain(yapClass.classReflector()));
                                 }
                             }
                         }
@@ -98,7 +110,7 @@ public class QQuery implements Query {
                     QCon existingConstraint = (QConObject)constraintsIterator.next();
                     boolean[] removeExisting = { false };
                     QCon newConstraint =
-                        existingConstraint.shareParentForClass(clazz, removeExisting);
+                        existingConstraint.shareParentForClass(claxx, removeExisting);
                     if (newConstraint != null) {
                         addConstraint(newConstraint);
                         col.add(newConstraint);
@@ -108,7 +120,7 @@ public class QQuery implements Query {
                     }
                 }
                 if (col.size() == 0) {
-                    QConClass qcc = new QConClass(i_trans, null, null, clazz);
+                    QConClass qcc = new QConClass(i_trans, null, null, claxx);
                     addConstraint(qcc);
                     return qcc;
                 }
@@ -203,7 +215,7 @@ public class QQuery implements Query {
                                 i_trans,
                                 null,
                                 yf.qField(i_trans),
-                                parentYc.getJavaClass());
+                                parentYc.classReflector());
                         addConstraint(qcc);
                     }
 

@@ -151,12 +151,12 @@ class YapField implements StoredField {
         }
     }
 
-    boolean canHold(Class a_class) {
+    boolean canHold(IClass claxx) {
         // alive() is checked in QField caller
-        if (a_class == null) {
+        if (claxx == null) {
             return !i_isPrimitive;
         }
-        return i_handler.canHold(a_class);
+        return i_handler.canHold(claxx);
     }
 
     public boolean canLoadByIndex(QConObject a_qco, QE a_evaluator) {
@@ -427,14 +427,13 @@ class YapField implements StoredField {
         return i_yapClass;
     }
 
-    public Object getStoredType() {
+    public IClass getStoredType() {
         if (!Deploy.csharp) {
             if (i_isPrimitive) {
-                return Platform.getTypeForClass(i_handler
-                    .getPrimitiveJavaClass());
+                return i_handler.primitiveClassReflector();
             }
         }
-        return Platform.getTypeForClass(i_handler.classReflector().getJavaClass());
+        return i_handler.classReflector();
     }
     
     public YapStream getStream(){

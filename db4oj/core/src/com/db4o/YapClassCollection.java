@@ -111,12 +111,12 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         return false;
     }
 
-    Collection4 forInterface(Class clazz) {
+    Collection4 forInterface(IClass claxx) {
         Collection4 col = new Collection4();
         YapClassCollectionIterator i = iterator();
         while (i.hasNext()) {
             YapClass yc = i.nextClass();
-            if (clazz.isAssignableFrom(yc.getJavaClass())) {
+            if (claxx.isAssignableFrom(yc.classReflector())) {
                 boolean found = false;
                 Iterator4 j = col.iterator();
                 while (j.hasNext()) {
@@ -349,7 +349,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         while (i.hasNext()) {
             YapClass yc = (YapClass)i.next();
             readYapClass(yc, null);
-            if(yc.getJavaClass() == null){
+            if(yc.classReflector() == null){
                 yc.forceRead();
             }
             classes.add(yc);

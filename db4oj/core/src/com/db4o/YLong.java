@@ -7,21 +7,20 @@ class YLong extends YapJavaClass
 {
 
     private static final Long i_primitive = new Long(0);
-    private static final Class i_class = i_primitive.getClass();
 
     public YLong(YapStream stream) {
         super(stream);
     }
     
+	protected Object defaultValue(){
+		return i_primitive;
+	}
+	
 	public int getID(){
 		return 2;
 	}
 	
-	public Class getJavaClass(){
-		return i_class;
-	}
-	
-	public Class getPrimitiveJavaClass(){
+	protected Class primitiveJavaClass(){
 		return long.class;
 	}
 	

@@ -3,37 +3,39 @@
 package com.db4o;
 
 import com.db4o.query.*;
+import com.db4o.reflect.*;
 
 /**
  * @exclude
  */
 public class QConClass extends QConObject{
 	
-	private Class i_class;
+	private transient IClass _claxx;
+	private String _className;
 	private boolean i_equal;
 	
 	public QConClass(){
 		// C/S
 	}
 	
-	QConClass(Transaction a_trans, QCon a_parent, QField a_field, Class a_class){
+	QConClass(Transaction a_trans, QCon a_parent, QField a_field, IClass claxx){
 		super(a_trans, a_parent, a_field, null);
-		if(a_class != null){
-			i_yapClass = a_trans.i_stream.getYapClass(a_class, true);
-			if(a_class == YapConst.CLASS_OBJECT){
+		if(claxx != null){
+			i_yapClass = a_trans.i_stream.getYapClass(claxx, true);
+			if(claxx == a_trans.i_stream.i_handlers.ICLASS_OBJECT){
 				i_yapClass = (YapClass)((YapClassPrimitive)i_yapClass).i_handler;
 			}
 		}
-		i_class = a_class;
+		_claxx = claxx;
 	}
 	
 	boolean evaluate(QCandidate a_candidate){
 		boolean res = true;
-		Class clazz = a_candidate.getJavaClass();
-		if(clazz == null){
+		IClass claxx = a_candidate.classReflector();
+		if(claxx == null){
 			res = false;
 		}else{
-			res = i_equal ? i_class == clazz : i_class.isAssignableFrom(clazz);
+			res = i_equal ? _claxx == claxx : _claxx.isAssignableFrom(claxx);
 		}
 		return i_evaluator.not(res);
 	}
@@ -68,16 +70,34 @@ public class QConClass extends QConObject{
 		return false;
 	}
 	
+    void marshall() {
+        super.marshall();
+        if(_claxx!=null) {
+        	_className = _claxx.getName();
+        }
+    }
+	
 	public String toString(){
 		if(Deploy.debugQueries){
 			String str = "QConClass ";
-			if(i_class != null){
-				str += i_class.toString() + " ";
+			if(_claxx != null){
+				str += _claxx.toString() + " ";
 			}
 			return str + super.toString();
 		}
 		return super.toString();
 	}
+	
+    void unmarshall(Transaction a_trans) {
+        if (i_trans == null) {
+            super.unmarshall(a_trans);
+            if(_className!=null) {
+            	_claxx = a_trans.reflector().forName(_className);
+            }
+        }
+    }
+
+
 
 	
 

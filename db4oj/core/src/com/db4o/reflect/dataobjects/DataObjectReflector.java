@@ -30,7 +30,7 @@ public class DataObjectReflector implements IReflect {
         return _delegate.forClass(clazz);
     }
 
-    public IClass forName(String className) throws ClassNotFoundException {
+    public IClass forName(String className) {
         IClass dataClass = (IClass)_dataClassByName.get(className);
         return dataClass != null ? dataClass : _delegate.forName(className);
     }

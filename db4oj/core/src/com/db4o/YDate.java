@@ -7,9 +7,9 @@ import java.util.*;
 
 final class YDate extends YLong
 {
+	
+	private static final Date PROTO = new Date(0);
     
-    private static final Class i_class = new Date(0).getClass();
-
     public YDate(YapStream stream) {
         super(stream);
     }
@@ -21,15 +21,15 @@ final class YDate extends YLong
 		}
 	}
 	
+	protected Object defaultValue(){
+		return PROTO;
+	}
+	
 	public int getID(){
 		return 10;
 	}
 	
-	public Class getJavaClass(){
-		return i_class;
-	}
-	
-	public Class getPrimitiveJavaClass(){
+	protected Class primitiveJavaClass(){
 		return null;
 	}
 	

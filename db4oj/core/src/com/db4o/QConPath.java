@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.reflect.*;
+
 /** 
  * non-constraint, only necessary to attach children.
  * Added upon call to Query#descendant, if there is no
@@ -27,7 +29,7 @@ public class QConPath extends QConClass {
 	}
 
 	boolean evaluate(QCandidate a_candidate) {
-		if (a_candidate.getJavaClass() == null) {
+		if (a_candidate.classReflector() == null) {
 			visitOnNull(a_candidate.getRoot());
 		}
 		return true;
@@ -41,7 +43,7 @@ public class QConPath extends QConClass {
 		return i_subConstraints == null;
 	}
 
-	QConClass shareParentForClass(Class a_class, boolean[] removeExisting) {
+	QConClass shareParentForClass(IClass a_class, boolean[] removeExisting) {
 		if (i_parent != null) {
 			if (i_field.canHold(a_class)) {
 				QConClass newConstraint = new QConClass(i_trans, i_parent, i_field, a_class);
@@ -58,8 +60,8 @@ public class QConPath extends QConClass {
 			if (i_field.canHold(a_object)) {
 				QConObject newConstraint =
 					new QConObject(i_trans, i_parent, i_field, a_object);
-				Class clazz = a_object == null ? null : a_object.getClass();
-                morph(removeExisting, newConstraint, clazz);
+				IClass claxx = i_trans.reflector().forObject(a_object);
+                morph(removeExisting, newConstraint, claxx);
 				return newConstraint;
 			}
 		}
@@ -70,10 +72,10 @@ public class QConPath extends QConClass {
 	// so the parents are reachable.
 	// If we find a "real" constraint, we throw the QPath
 	// out and replace it with the other constraint. 
-    private void morph(boolean[] removeExisting, QConObject newConstraint, Class clazz) {
+    private void morph(boolean[] removeExisting, QConObject newConstraint, IClass claxx) {
         boolean mayMorph = true;
-        if (clazz != null) {
-        	YapClass yc = i_trans.i_stream.getYapClass(clazz, true);
+        if (claxx != null) {
+        	YapClass yc = i_trans.i_stream.getYapClass(claxx, true);
         	if (yc != null && i_subConstraints != null) {
         		Iterator4 i = new Iterator4(i_subConstraints);
         		while (i.hasNext()) {

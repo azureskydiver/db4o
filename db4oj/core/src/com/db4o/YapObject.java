@@ -143,10 +143,6 @@ final class YapObject extends YapMeta implements ObjectInfo{
 		return YapConst.YAPOBJECT;
 	}
 
-	Class getJavaClass() {
-		return i_yapClass.getJavaClass();
-	}
-
 	public Object getObject() {
 		if (Platform.hasWeakReferences()) {
 			return Platform.getYapRefObject(i_object);

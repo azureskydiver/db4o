@@ -272,7 +272,7 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
     				if (yc instanceof YapClassAny) {
     					yc = candidate.readYapClass();
     				}
-    				if (!yc.canHold(a_candidates.i_yapClass.getJavaClass())) {
+    				if (!yc.canHold(a_candidates.i_yapClass.classReflector())) {
     					return false;
     				}
     			}
@@ -330,13 +330,13 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
         }
 
     }
-
-    Class getJavaClass() {
+    
+    IClass classReflector(){
         readYapClass();
         if (i_yapClass == null) {
             return null;
         }
-        return i_yapClass.getJavaClass();
+        return i_yapClass.classReflector();
     }
 
     /** **<Candidate interface code>*** */

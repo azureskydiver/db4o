@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.query.*;
+import com.db4o.reflect.*;
 
 /**
  * Base class for all constraints. 
@@ -554,7 +555,7 @@ public abstract class QCon implements Constraint, Visitor4 {
         return null;
     }
 
-    QConClass shareParentForClass(Class a_class, boolean[] removeExisting) {
+    QConClass shareParentForClass(IClass a_class, boolean[] removeExisting) {
         // virtual
         return null;
     }

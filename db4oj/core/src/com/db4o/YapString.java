@@ -25,8 +25,8 @@ final class YapString extends YapIndependantType {
         }
     }
 
-    public boolean canHold(Class a_class) {
-        return a_class == i_class;
+    public boolean canHold(IClass claxx) {
+        return claxx == classReflector();
     }
 
     public void cascadeActivation(

@@ -9,6 +9,7 @@ abstract class YapJavaClass implements YapDataType {
     
     final YapStream _stream;
     private IClass _classReflector;
+    private IClass _primitiveClassReflector;
     
     public YapJavaClass(YapStream stream) {
         _stream = stream;
@@ -20,8 +21,8 @@ abstract class YapJavaClass implements YapDataType {
         a_bytes.incrementOffset(linkLength());
     }
 
-    public boolean canHold(Class a_class) {
-        return getJavaClass() == a_class;
+    public boolean canHold(IClass claxx) {
+        return claxx == classReflector();
     }
 
     public void cascadeActivation(Transaction a_trans, Object a_object,
@@ -33,6 +34,8 @@ abstract class YapJavaClass implements YapDataType {
         // do nothing
     }
 
+    protected abstract Object defaultValue();
+
     public void deleteEmbedded(YapWriter a_bytes) {
         a_bytes.incrementOffset(linkLength());
     }
@@ -41,30 +44,6 @@ abstract class YapJavaClass implements YapDataType {
         return (this == a_dataType);
     }
     
-    public Class getJavaClass() {
-        if (Deploy.csharp) {
-            return primitiveNull().getClass();
-        } else {
-            if (Deploy.debug) {
-                System.out
-                    .println("YapJavaClass.getJavaClass should never be called.");
-            }
-            return null;
-        }
-    }
-
-    public Class getPrimitiveJavaClass() {
-        if (Deploy.csharp) {
-            return getJavaClass();
-        } else {
-            if (Deploy.debug) {
-                System.out
-                    .println("YapJavaClass.getPrimitiveJavaClass should never be called.");
-            }
-            return null;
-        }
-    }
-
     public int getType() {
         return YapConst.TYPE_SIMPLE;
     }
@@ -85,6 +64,8 @@ abstract class YapJavaClass implements YapDataType {
         prepareComparison(obj);
     }
 
+    protected abstract Class primitiveJavaClass();
+    
     abstract Object primitiveNull();
 
     public YapDataType readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
@@ -119,12 +100,23 @@ abstract class YapJavaClass implements YapDataType {
         return read(a_writer);
     }
     
-    // FIXME: REFLECTOR This may be very slow and frequently used. Consider caching.
     public IClass classReflector(){
         if(_classReflector == null){
-            _classReflector = _stream.i_config.reflector().forClass(getJavaClass()); 
+            _classReflector = _stream.i_config.reflector().forClass(defaultValue().getClass());
+            Class clazz = primitiveJavaClass();
+            if(clazz != null){
+            	_primitiveClassReflector = _stream.i_config.reflector().forClass(clazz);
+            }
         }
     	return _classReflector;  
+    }
+    
+    /** 
+     * 
+     * classReflector() has to be called first, before this returns a value
+     */
+    public IClass primitiveClassReflector(){
+    	return _primitiveClassReflector;  
     }
 
     public boolean supportsIndex() {

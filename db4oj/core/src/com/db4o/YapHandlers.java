@@ -127,8 +127,8 @@ class YapHandlers {
             i_yapClasses[i].i_id = i + 1; // note that we avoid 0 here
             i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
             if (!Deploy.csharp) {
-                if (i_handlers[i].getPrimitiveJavaClass() != null) {
-                	cacheClass(i_handlers[i].getPrimitiveJavaClass(), i_yapClasses[i]);
+                if (i_handlers[i].primitiveClassReflector() != null) {
+                	i_classByClass.put(i_handlers[i].primitiveClassReflector(), i_yapClasses[i]);
                 }
             }
         }
@@ -142,8 +142,8 @@ class YapHandlers {
             }
             i_classByClass.put(i_platformTypes[i].classReflector(), i_yapClasses[idx]);
             if (!Deploy.csharp) {
-                if (i_platformTypes[i].getPrimitiveJavaClass() != null) {
-                	cacheClass(i_platformTypes[i].getPrimitiveJavaClass(), i_yapClasses[idx]);
+                if (i_platformTypes[i].primitiveClassReflector() != null) {
+                	i_classByClass.put(i_platformTypes[i].primitiveClassReflector(), i_yapClasses[idx]);
                 }
             }
         }
@@ -171,12 +171,6 @@ class YapHandlers {
         return 0;
     }
 
-	// FIXME: REFLECTOR remove this, it's just needed to keep runnable
-	private void cacheClass(Class javaClass, YapClass yapClass) {
-		IClass claxx = _masterStream.i_config.reflector().forClass(javaClass);
-		i_classByClass.put(claxx, yapClass);
-	}
-
     final YapConstructor createConstructorStatic(final YapStream a_stream,
         final YapClass a_yapClass,
         final IClass a_class
@@ -185,11 +179,9 @@ class YapHandlers {
         final IReflect reflector = a_stream.i_config.reflector();
         IClass classReflector;
         
-        try {
-            classReflector = reflector.forName(a_class.getName());
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
+        
+        classReflector = reflector.forName(a_class.getName());
+            
         if (classReflector == null) {
             if (a_stream.i_config.i_exceptionsOnNotStorable) {
                 throw new ObjectNotStorableException(a_class);
@@ -264,8 +256,7 @@ class YapHandlers {
 	                                Object[] parms = new Object[pTypes.length];
 	                                for (int j = 0; j < parms.length; j++) {
 	                                    for (int k = 0; k < PRIMITIVECOUNT; k++) {
-	                                        if (pTypes[j] == reflector.forClass(i_handlers[k]
-	                                            .getPrimitiveJavaClass())) {
+	                                        if (pTypes[j] == i_handlers[k].primitiveClassReflector()) {
 	                                            parms[j] = ((YapJavaClass) i_handlers[k])
 	                                                .primitiveNull();
 	                                            break;

@@ -197,15 +197,15 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         a_bytes.incrementOffset(linkLength());
     }
 
-    public boolean canHold(Class a_class) {
-        if (a_class == null) {
+    public boolean canHold(IClass claxx) {
+        if (claxx == null) {
             return true;
         }
         if (i_constructor != null) {
         	if(reflector().isCollection(classReflector())){
                 return true;
             }
-            return i_constructor.javaClass().isAssignableFrom(a_class);
+            return classReflector().isAssignableFrom(claxx);
         }
         return false;
     }
@@ -695,15 +695,6 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
     
 
-    // FIXME: REFLECTOR all callers should call reflectorClass
-    public Class getJavaClass() {
-    	
-        if (i_constructor == null) {
-            return null;
-        }
-        return classReflector().getJavaClass();
-    }
-
     YapClass[] getMembersDependancies() {
         if (i_addMembersDependancies == null) {
             return new YapClass[0];
@@ -720,10 +711,6 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     
     public StoredClass getParentStoredClass(){
         return getAncestor();
-    }
-
-    public Class getPrimitiveJavaClass() {
-        return null;
     }
 
     public StoredField[] getStoredFields(){
@@ -1115,6 +1102,10 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         }
         return len;
     }
+    
+	public final IClass primitiveClassReflector(){
+		return null;
+	}
 
     void purge() {
         if (i_index != null) {

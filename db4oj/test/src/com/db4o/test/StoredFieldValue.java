@@ -28,16 +28,16 @@ public class StoredFieldValue {
             StoredField f = sf[i];
             if(f.getName().equals("foo")){
                 Test.ensure(f.get(this).equals("foo"));
-                Test.ensure(f.getStoredType() == String.class);
+                Test.ensure(f.getStoredType().getName().equals(String.class.getName()));
                 cases[0] = true;
             }
             if(f.getName().equals("bar")){
                 Test.ensure(f.get(this).equals(new Integer(10)));
-                Test.ensure(f.getStoredType() == int.class);
+                Test.ensure(f.getStoredType().getName().equals(int.class.getName()));
                 cases[1] = true;
             }
             if(f.getName().equals("atoms")){
-                Test.ensure(f.getStoredType() == Atom.class);
+                Test.ensure(f.getStoredType().getName().equals(Atom.class.getName()));
                 Test.ensure(f.isArray());
                 Atom[] at = (Atom[])f.get(this);
                 Test.ensure(at[0].name.equals("one"));

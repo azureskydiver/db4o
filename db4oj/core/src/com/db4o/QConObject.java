@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.query.*;
+import com.db4o.reflect.*;
 
 /**
  * Object constraint
@@ -303,7 +304,7 @@ public class QConObject extends QCon {
         return null;
     }
 
-    QConClass shareParentForClass(Class a_class, boolean[] removeExisting) {
+    QConClass shareParentForClass(IClass a_class, boolean[] removeExisting) {
         if (i_parent != null) {
             if (i_field.canHold(a_class)) {
                 QConClass newConstraint = new QConClass(i_trans, i_parent,

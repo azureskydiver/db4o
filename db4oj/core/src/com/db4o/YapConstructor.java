@@ -43,11 +43,6 @@ final class YapConstructor {
         return i_reflectorClass.getName();
     }
 
-    // FIXME: REFLECTOR all callers should call reflectorClass
-    Class javaClass() {
-        return i_reflectorClass.getJavaClass();
-    }
-
     Object newInstance() throws Exception {
         if (i_constructor == null) {
             return i_reflectorClass.newInstance();
