@@ -93,4 +93,37 @@ public class Db4oDatabase implements Db4oType{
         return "Db4oDatabase: " + i_signature;
     }
     
+    public boolean isOlderThan(Db4oDatabase peer){
+        
+        if(i_uuid != peer.i_uuid){
+            return i_uuid < peer.i_uuid;
+        }
+        
+        // the above logic has failed, both are the same
+        // age but we still want to distinguish in some 
+        // way, to have an order in the ReplicationRecord
+        
+        // The following is arbitrary, it only needs to
+        // be repeatable.
+        
+        // Let's distinguish by signature length 
+        
+        if(i_signature.length != peer.i_signature.length ){
+            return i_signature.length < peer.i_signature.length;
+        }
+        
+        for (int i = 0; i < i_signature.length; i++) {
+            if(i_signature[i] != peer.i_signature[i]){
+                return i_signature[i] < peer.i_signature[i];
+            }
+        }
+        
+        // This should never happen.
+        
+        // FIXME: Add a message and move to Messages.
+        // 
+        throw new RuntimeException();
+    }
+    
+    
 }
