@@ -56,8 +56,8 @@ class YapArray extends YapIndependantType {
         Transaction trans = a_bytes.getTransaction();
         YapReader bytes = a_bytes.readEmbeddedObject(trans);
         if (bytes != null) {
-            int elementCount = elementCount(trans, bytes);
-            for (int i = 0; i < elementCount; i++) {
+            int count = elementCount(trans, bytes);
+            for (int i = 0; i < count; i++) {
                 tree = (TreeInt)Tree.add(tree, new TreeInt(bytes.readInt()));
             }
         }
@@ -256,8 +256,8 @@ class YapArray extends YapIndependantType {
 		    if(Deploy.debug){
 		        bytes.readBegin(identifier());
 		    }
-            int elementCount = elementCount(a_candidates.i_trans, bytes);
-            for (int i = 0; i < elementCount; i++) {
+            int count = elementCount(a_candidates.i_trans, bytes);
+            for (int i = 0; i < count; i++) {
                 a_candidates.addByIdentity(new QCandidate(a_candidates, bytes.readInt(), true));
             }
         }
