@@ -2,19 +2,20 @@
 
 package com.db4o.test;
 
+import com.db4o.test.jdk5.*;
+
 public class AllTestsConfSingle implements TestSuite{
     
-    static TestSuite[] TEST_SUITES = new TestSuite[]{
-        
-        new AllTestsConfSingle()
+    static TestSuite[] TEST_SUITES = new TestSuite[]{        
+        new AllTestsConfSingle(),
+        new Jdk5Tests()
     };
 
     
     public Class[] tests(){
         return new Class[] {
         
-        // Jdk5Tests.class,
-        Rename.class
+        // Rename.class
         
         // SimplestPossible.class,
         
@@ -42,7 +43,7 @@ public class AllTestsConfSingle implements TestSuite{
     /**
       * run the tests in client/server mode 
       */
-    public boolean CLIENT_SERVER = false;
+    public boolean CLIENT_SERVER = true;
 
     /**
      * run the test against a memory file instead of disc file
