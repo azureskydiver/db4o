@@ -1,8 +1,0 @@
-Tasks:
-
-   * Implement Eclipse RCP front-end.  See DesignIdeas
-      * Figure out how to hook/process selection service events
-   * Hook up db4o back-end
-
----------
-Back to HomePage

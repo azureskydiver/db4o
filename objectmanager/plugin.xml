@@ -20,6 +20,9 @@
       <library name="lib/xswt.jar">
          <export name="*"/>
       </library>
+      <library name="lib/jakarta-oro-2.0.7.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
    <requires>
