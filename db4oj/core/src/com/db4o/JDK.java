@@ -77,6 +77,10 @@ public class JDK {
 	void pollReferenceQueue(YapStream a_stream, Object a_referenceQueue) {
 	}
 	
+	public void registerCollections(IReflect reflector) {
+		
+	}
+	
 	void removeShutdownHook(Thread a_thread){
 		
 	}
@@ -94,5 +98,6 @@ public class JDK {
 	
 	synchronized void unlock(RandomAccessFile file) {
 	}
+
 
 }

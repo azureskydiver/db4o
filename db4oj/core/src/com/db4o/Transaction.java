@@ -222,7 +222,7 @@ class Transaction {
     
     private void deleteCollectionMembers(YapObject a_yo, Object a_object, int a_cascade){
         if(a_object != null){
-            if(Platform.isCollection(a_object.getClass())){
+            if(reflector().isCollection(reflector().forObject(a_object))){
                 writeUpdateDeleteMembers(a_yo.getID(), a_yo.getYapClass(), i_stream.i_handlers.arrayType(a_object), a_cascade);
             }
         }

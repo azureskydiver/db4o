@@ -320,7 +320,7 @@ public final class Platform {
         return false;
     }
 
-    static final boolean isCollection(Class a_class) {
+    static final boolean aisCollection(Class a_class) {
         return JavaOnly.isCollection(a_class);
     }
 
@@ -495,6 +495,23 @@ public final class Platform {
         String property = System.getProperty(propertyName);
         return (property != null) && (property.indexOf(propertyValue) == 0);
     }
+    
+	public static void registerCollections(IReflect reflector) {
+		if(!Deploy.csharp){
+		
+			reflector.registerCollection(P1Collection.class);
+			
+			if(! hasCollections()){
+				reflector.registerCollection(java.util.Vector.class);
+				reflector.registerCollection(java.util.Hashtable.class);
+		        return; 
+			}
+			
+			jdk().registerCollections(reflector);
+	        	
+		}
+	}
+
 
     static final void removeShutDownHook(Object a_stream, Object a_lock) {
         synchronized (a_lock) {
@@ -580,6 +597,7 @@ public final class Platform {
     }
 
 	private static final Class[] SIMPLE_CLASSES = JavaOnly.SIMPLE_CLASSES;
+
 
 
 	
