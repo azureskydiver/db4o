@@ -33,12 +33,12 @@ public class NavigationController implements IBrowserController {
 	public NavigationController(ISelectionSource leftButton, ISelectionSource rightButton) {
 		leftButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				undo();
+				safeRun(undo);
 			}
 		});
 		rightButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				redo();
+				safeRun(redo);
 			}
 		});
 		resetUndoRedoStack();
@@ -91,36 +91,51 @@ public class NavigationController implements IBrowserController {
 		--stackPosition;
 		--stackMax;
 	}
-	
-	/**
-	 * @param element
-	 */
-	private void add(GraphPosition element) {
-		scrollStack();
-		++stackPosition;
-		if (stackPosition > stackMax) {
-			stackMax = stackPosition;
-		}
-		undoRedoStack[stackPosition] = element;
-	}
-	
-	private void undo() {
-		if (stackPosition > 0) {
-			--stackPosition;
-			model.setSelectedPath(undoRedoStack[stackPosition]);
+
+	// Prevent recursive callbacks...
+	private int navigating = 0;
+	private void safeRun(Runnable r) {
+		if (navigating > 0)
+			return;
+		++navigating;
+		try {
+			r.run();
+		} finally {
+			--navigating;
 		}
 	}
 	
-	private void redo() {
-		if (stackPosition < stackMax) {
+	private Runnable add = new Runnable() {
+		public void run() {
+			GraphPosition element = model.getPath();
+			scrollStack();
 			++stackPosition;
-			model.setSelectedPath(undoRedoStack[stackPosition]);
+			stackMax = stackPosition;		// Discard the redo stack
+			undoRedoStack[stackPosition] = element;
 		}
-	}
+	};
+	
+	private Runnable undo = new Runnable() {
+		public void run() {
+			if (stackPosition > 0) {
+				--stackPosition;
+				model.setSelectedPath(undoRedoStack[stackPosition]);
+			}
+		}
+	};
+	
+	private Runnable redo = new Runnable() {
+		public void run() {
+			if (stackPosition < stackMax) {
+				++stackPosition;
+				model.setSelectedPath(undoRedoStack[stackPosition]);
+			}
+		}
+	};
 
 	private IGraphIteratorSelectionListener selectionChangedListener = new IGraphIteratorSelectionListener() {
 		public void selectionChanged() {
-			add(model.getPath());
+			safeRun(add);
 		}
 	};
 }
