@@ -131,7 +131,9 @@ class Msg implements Cloneable{
 	static final Msg readMessage(Transaction a_trans, YapSocket sock) {
 		YapWriter reader = new YapWriter(a_trans, YapConst.MESSAGE_LENGTH);
 		try {
-			reader.read(sock);
+			if(!reader.read(sock)) {
+				return null;
+			}
 			Msg message = i_messages[reader.readInt()].readPayLoad(a_trans, sock, reader);
 			if (Debug.messages) {
 				System.out.println(message + " arrived at " + a_trans.i_stream);
