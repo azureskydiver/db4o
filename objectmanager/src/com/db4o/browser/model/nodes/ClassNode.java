@@ -55,7 +55,8 @@ public class ClassNode implements IModelNode {
         int i=0;
         while (objects.hasNext()) {
             Object object = objects.next();
-            result[i] = new InstanceNode(object, _database);
+//            result[i] = new InstanceNode(object, _database);
+            result[i] = new StoredInstanceNode(object, _contents, _database);
             ++i;
         }
         return result;

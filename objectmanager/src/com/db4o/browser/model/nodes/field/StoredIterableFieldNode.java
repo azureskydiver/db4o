@@ -16,7 +16,6 @@
  */
 package com.db4o.browser.model.nodes.field;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -24,6 +23,7 @@ import java.util.LinkedList;
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.InstanceNode;
+import com.db4o.ext.StoredField;
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
@@ -38,25 +38,25 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  * 
  * @author djo
  */
-public class IterableFieldNode extends FieldNode {
+public class StoredIterableFieldNode extends StoredFieldNode {
 
     /**
-     * @param instance
+     * @param _instance
      * @param database TODO
      * @param fieldType
      * @return
      */
-    public static IModelNode tryToCreate(Field field, Object instance, Database database) {
-        IterableFieldNode result;
+    public static IModelNode tryToCreate(StoredField field, Object _instance, Database database) {
+        StoredIterableFieldNode result;
         
-        Class fieldType = FieldNode.field(field, instance).getClass();
+        Class fieldType = field.get(_instance).getClass();
         Method method = null;
         try {
             method = fieldType.getMethod("iterator", new Class[] {});
         } catch (Exception e) { return null; };
         
         try {
-            result = new IterableFieldNode(field, instance, method, database);
+            result = new StoredIterableFieldNode(field, _instance, method, database);
             result.iterator();
         } catch (IllegalStateException e) {
             Logger.log().error(e, "Unable to invoke 'iterator()'");
@@ -66,6 +66,7 @@ public class IterableFieldNode extends FieldNode {
     }
 
 	private Method _iteratorMethod;
+	private Object _fieldValue;
 
 	private Iterator iterator() {
         try {
@@ -76,14 +77,14 @@ public class IterableFieldNode extends FieldNode {
         }
     }
     
-    /**
+	/**
 	 * @param field TODO
 	 * @param field
 	 * @param instance TODO
 	 * @param database TODO
 	 * @param iterator
 	 */
-	public IterableFieldNode(Field field, Object instance, Method iteratorMethod, Database database) {
+	public StoredIterableFieldNode(StoredField field, Object instance, Method iteratorMethod, Database database) {
         super(field, instance, database);
         _iteratorMethod = iteratorMethod;
 	}
@@ -118,7 +119,7 @@ public class IterableFieldNode extends FieldNode {
 	 * @see com.db4o.browser.gui.ITreeNode#getText()
 	 */
 	public String getText() {
-		return _field.getName() + ": " + _field.getType();
+		return _field.getName() + ": " + value.getClass().getName();
 	}
 
 }

@@ -20,6 +20,7 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.browser.prefs.activation.ActivationPreferences;
+import com.db4o.ext.ExtObjectSet;
 import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
 import com.swtworkbench.community.xswt.metalogger.Logger;
@@ -79,21 +80,51 @@ public class Db4oDatabase implements Database {
         return new DatabaseGraphIterator(this, new StoredClass[] {result});
     }
     
-    public ObjectSet instances(String clazz) {
-        Query q = container.query();
-//        IClass toReturn = null;
+    public ObjectSet instances(String clazzname) {
+		StoredClass clazz=container.ext().storedClass(clazzname);
+		final long[] ids=clazz.getIDs();
+		return new ObjectSet() {
+			private int idx=0;
+			public ExtObjectSet ext() {
+				throw new UnsupportedOperationException("TODO: Implement me");
+			}
+
+			public boolean hasNext() {
+				return idx<ids.length;
+			}
+
+			public Object next() {
+				if(!hasNext()) {
+					return null;
+				}
+				Object next=container.ext().getByID(ids[idx]);
+				idx++;
+				return next;
+			}
+
+			public void reset() {
+				idx=0;
+			}
+
+			public int size() {
+				return ids.length;
+			}
+			
+		};
+//        Query q = container.query();
+////        IClass toReturn = null;
+////        try {
+////            toReturn = CReflect.getDefault().forName(clazz);
+////        }
+//        Class toReturn = null;
 //        try {
-//            toReturn = CReflect.getDefault().forName(clazz);
+//            toReturn = Class.forName(clazz);
 //        }
-        Class toReturn = null;
-        try {
-            toReturn = Class.forName(clazz);
-        }
-        catch (Exception e) {
-            Logger.log().error(e, "Unable to Class.forName()");
-            throw new RuntimeException();
-        }
-        return container.get(toReturn);
+//        catch (Exception e) {
+//            Logger.log().error(e, "Unable to Class.forName()");
+//            throw new RuntimeException();
+//        }
+//        return container.get(toReturn);
     }
 	
 	/* (non-Javadoc)

@@ -16,13 +16,11 @@
  */
 package com.db4o.browser.model.nodes.field;
 
-import java.lang.reflect.Field;
-
 import com.db4o.browser.model.Database;
-import com.db4o.browser.model.nodes.*;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.InstanceNode;
-import com.swtworkbench.community.xswt.metalogger.Logger;
+import com.db4o.browser.model.nodes.NullNode;
+import com.db4o.ext.StoredField;
 
 
 /**
@@ -31,25 +29,25 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  * 
  * @author djo
  */
-public class FieldNode implements IModelNode {
+public class StoredFieldNode implements IModelNode {
 
-    protected Field _field;
+    protected StoredField _field;
 	protected Object value = null;
     protected Object _instance;
 	protected IModelNode delegate;
 	protected Database _database;
-    
+
 	/**
 	 * @param field
 	 * @param database TODO
 	 * @param _instance
 	 */
-	public FieldNode(Field field, Object instance, Database database) {
+	public StoredFieldNode(StoredField field, Object instance, Database database) {
 		_field = field;
         _instance = instance;
 		_database = database;
 
-		value = field(field, instance);
+		value = _field.get(_instance);
 
 		if(value==null) {
 			delegate=NullNode.INSTANCE;
@@ -100,24 +98,12 @@ public class FieldNode implements IModelNode {
 		if(obj==null||getClass()!=obj.getClass()) {
 			return false;
 		}
-		FieldNode node=(FieldNode)obj;
+		StoredFieldNode node=(StoredFieldNode)obj;
 		return _instance.equals(node._instance)&&_field.equals(node._field);
 	}
 	
 	public int hashCode() {
 		return _instance.hashCode()*29+_field.hashCode();
-	}
-
-	protected static Object field(Field field, Object instance) {
-	    try {
-	        if (!field.isAccessible()) 
-	            field.setAccessible(true);
-	        
-			return field.get(instance);
-		} catch (Exception e) {
-	        Logger.log().error(e, "Unable to get the field contents");
-	        throw new IllegalStateException();
-		}
 	}
 
 }

@@ -24,6 +24,7 @@ import java.util.List;
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.field.FieldNodeFactory;
 import com.db4o.ext.StoredClass;
+import com.db4o.ext.StoredField;
 
 
 /**
@@ -31,7 +32,9 @@ import com.db4o.ext.StoredClass;
  * 
  * @author djo
  */
-public class InstanceNode implements IModelNode {
+public class StoredInstanceNode implements IModelNode {
+	private StoredClass _clazz;
+	// TODO: refactor to use id and instantiate on demand
     private Object _instance;
 	private Database _database;
 
@@ -39,8 +42,9 @@ public class InstanceNode implements IModelNode {
 	 * @param database TODO
 	 * @param object
 	 */
-	public InstanceNode(Object instance, Database database) {
+	public StoredInstanceNode(Object instance, StoredClass clazz,Database database) {
 		_instance = instance;
+		_clazz=clazz;
 		_database = database;
 		database.activate(instance);
 	}
@@ -49,18 +53,12 @@ public class InstanceNode implements IModelNode {
 	 * @see com.db4o.browser.gui.ITreeNode#children()
 	 */
 	public IModelNode[] children() {
-		List results=new ArrayList();
-		Class curclazz=_instance.getClass();
-		while(curclazz!=null) {
-			Field[] fields = curclazz.getDeclaredFields();
-			for (int i = 0; i < fields.length; i++) {
-				if(!Modifier.isTransient(fields[i].getModifiers())) {
-					results.add(FieldNodeFactory.construct(fields[i], _instance, _database));
-				}
-			}
-			curclazz=curclazz.getSuperclass();
+		StoredField[] fields=_clazz.getStoredFields();
+		IModelNode[] children=new IModelNode[fields.length];
+		for (int idx = 0; idx < fields.length; idx++) {
+			children[idx]=FieldNodeFactory.construct(fields[idx],_instance,_database);
 		}
-		return (IModelNode[])results.toArray(new IModelNode[results.size()]);
+		return children;
 	}
     
 	/* (non-Javadoc)
@@ -104,7 +102,7 @@ public class InstanceNode implements IModelNode {
 		if(obj==null||getClass()!=obj.getClass()) {
 			return false;
 		}
-		return _instance.equals(((InstanceNode)obj)._instance);
+		return _instance.equals(((StoredInstanceNode)obj)._instance);
 	}
 	
 	public int hashCode() {
