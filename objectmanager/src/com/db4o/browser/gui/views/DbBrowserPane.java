@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -67,11 +65,7 @@ public class DbBrowserPane extends Composite {
      * @param _model
      */
     public void setInput(Model _model) {
-        // Dispose any existing items
-        TreeItem[] items = getObjectTree().getItems();
-        for (int i = 0; i < items.length; i++) {
-			items[i].dispose();
-		}
+    	disposeTreeItems();
         closeModel();
         
         // Now load the new items
@@ -84,23 +78,13 @@ public class DbBrowserPane extends Composite {
 		 * @see com.db4o.browser.gui.standalone.IModelListener#fileChanged()
 		 */
 		public void fileChanged() {
-            // Dispose any existing items
-            TreeItem[] items = getObjectTree().getItems();
-            for (int i = 0; i < items.length; i++) {
-                items[i].dispose();
-            }
-            populateTree(model.selectedClasses());
+            refreshTree();
 		}
         /* (non-Javadoc)
          * @see com.db4o.browser.gui.standalone.IModelListener#selectionChanged()
          */
         public void selectionChanged() {
-            // Dispose any existing items
-            TreeItem[] items = getObjectTree().getItems();
-            for (int i = 0; i < items.length; i++) {
-                items[i].dispose();
-            }
-            populateTree(model.selectedClasses());
+            refreshTree();
             
         }
     };
@@ -170,7 +154,12 @@ public class DbBrowserPane extends Composite {
     // Browser pane controller methods here
     // ---------------------------------------------------------------
 
-    public void populateTree(StoredClass[] contents) {
+	private void refreshTree() {
+		disposeTreeItems();
+		populateTree(model.selectedClasses());
+	}    
+
+    private void populateTree(StoredClass[] contents) {
         Tree theTree = getObjectTree();
         
         for (int i=0; i < contents.length; ++i) {
@@ -178,6 +167,14 @@ public class DbBrowserPane extends Composite {
             initTreeItem(new TreeItem(theTree, SWT.NULL), node);
         }
     }
+    
+	private void disposeTreeItems() {
+		// Dispose any existing items
+		TreeItem[] items = getObjectTree().getItems();
+		for (int i = 0; i < items.length; i++) {
+		    items[i].dispose();
+		}
+	}
     
     private Listener expandListener = new Listener() {
         public void handleEvent (final Event event) {
@@ -243,5 +240,4 @@ public class DbBrowserPane extends Composite {
             l.focusChanged(e);
         }
     }
-    
 }
