@@ -389,6 +389,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         if (clazz == null) {
             return null;
         }
+        clazz = Platform.getClassForType(clazz);
         if (clazz instanceof String) {
             return (String) clazz;
         }

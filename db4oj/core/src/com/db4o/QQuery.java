@@ -65,6 +65,7 @@ public class QQuery implements Query {
     public Constraint constrain(Object example) {
         synchronized (streamLock()) {
             Class clazz = null;
+            example = Platform.getClassForType(example);
             if (YapConst.CLASS_CLASS.isInstance(example)) {
                 clazz = (Class)example;
                 Collection4 col = new Collection4();

@@ -178,6 +178,10 @@ public final class Platform {
         return new SimpleDateFormat(fmt).format(date);
     }
 
+    public static Object getClassForType(Object obj) {
+        return obj;
+    }
+
     static final void getDefaultConfiguration(Config4Impl config) {
     	
         if (!Deploy.csharp) {
@@ -231,6 +235,10 @@ public final class Platform {
 				translateCollection(config, "Vector", "TVector", false);
             }
         }
+    }
+    
+    public static Object getTypeForClass(Object obj){
+        return obj;
     }
 
     static final Object getYapRefObject(Object a_object) {
