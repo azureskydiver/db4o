@@ -7,7 +7,7 @@ import com.db4o.query.*;
 import com.db4o.test.*;
 
 public class Jdk5EnumTest {
-	private final static int NUMRUNS=100;
+	private final static int NUMRUNS=10;
     
     public void testSingleStoreRetrieve() {     	
         ObjectContainer db = reopen();
@@ -85,7 +85,7 @@ public class Jdk5EnumTest {
     
     public void testEnumsInCollections() {
     	// set to false to make the test pass
-    	final boolean withLinkedList=false;
+    	final boolean withDb4oCollections=true;
 
     	ObjectContainer db=reopen();
 
@@ -95,12 +95,13 @@ public class Jdk5EnumTest {
     		public Set<Jdk5Enum> set; 
     		public Map<Jdk5Enum,String> keymap; 
     		public Map<String,Jdk5Enum> valmap; 
+    		public Map<Jdk5Enum,String> db4okeymap; 
+    		public Map<String,Jdk5Enum> db4ovalmap; 
     		public Jdk5Enum[] array; 
     	}
 
     	CollectionHolder holder=new CollectionHolder();
     	holder.list=new ArrayList<Jdk5Enum>(NUMRUNS);
-    	holder.db4olist=db.ext().collections().newLinkedList();
     	Comparator<Jdk5Enum> comp=new Comparator<Jdk5Enum>() {
 			public int compare(Jdk5Enum e1, Jdk5Enum e2) {
 				return e1.name().compareTo(e2.name());
@@ -110,10 +111,13 @@ public class Jdk5EnumTest {
     	holder.keymap=new HashMap<Jdk5Enum,String>(NUMRUNS);
     	holder.valmap=new HashMap<String,Jdk5Enum>(NUMRUNS);
     	holder.array=new Jdk5Enum[NUMRUNS];
+    	holder.db4olist=db.ext().collections().newLinkedList();
+    	holder.db4okeymap=db.ext().collections().newHashMap(2);
+    	holder.db4ovalmap=db.ext().collections().newHashMap(2);
     	for(int i=0;i<NUMRUNS;i++) {
     		Jdk5Enum curenum=nthEnum(i);
 			holder.list.add(curenum);
-    		if(withLinkedList) {
+    		if(withDb4oCollections) {
         		holder.db4olist.add(curenum);
     		}
     		holder.array[i]=curenum;
@@ -123,8 +127,13 @@ public class Jdk5EnumTest {
 		holder.keymap.put(Jdk5Enum.A,Jdk5Enum.A.name());
 		holder.keymap.put(Jdk5Enum.B,Jdk5Enum.B.name());
 		holder.valmap.put(Jdk5Enum.A.name(),Jdk5Enum.A);
-		holder.valmap.put(Jdk5Enum.B.name(),Jdk5Enum.B);
-    	
+		holder.valmap.put(Jdk5Enum.B.name(),Jdk5Enum.B);	
+		if(withDb4oCollections) {
+			holder.db4okeymap.put(Jdk5Enum.A,Jdk5Enum.A.name());
+			holder.db4okeymap.put(Jdk5Enum.B,Jdk5Enum.B.name());
+			holder.db4ovalmap.put(Jdk5Enum.A.name(),Jdk5Enum.A);
+			holder.db4ovalmap.put(Jdk5Enum.B.name(),Jdk5Enum.B);
+		}
     	db.set(holder);
     	
     	db=reopen();
@@ -133,13 +142,15 @@ public class Jdk5EnumTest {
     	holder=(CollectionHolder)result.next();
 
     	Test.ensure(holder.list.size()==NUMRUNS);
-    	if(withLinkedList) {
-    		Test.ensure(holder.db4olist.size()==NUMRUNS);
-    	}
     	Test.ensure(holder.set.size()==2);
     	Test.ensure(holder.keymap.size()==2);
     	Test.ensure(holder.valmap.size()==2);
     	Test.ensure(holder.array.length==NUMRUNS);
+    	if(withDb4oCollections) {
+    		Test.ensure(holder.db4olist.size()==NUMRUNS);
+        	Test.ensure(holder.db4okeymap.size()==2);
+        	Test.ensure(holder.db4ovalmap.size()==2);
+    	}
     	ensureEnumInstancesInDB(db);
     	
     	Test.deleteAllInstances(CollectionHolder.class);
