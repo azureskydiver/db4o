@@ -72,7 +72,7 @@ public class STStringU implements STClass1 {
 		q = st.query();
 		c = q.constrain(new STStringU("od"));
 		q.descend("str").constraints().like();
-		st.expectNone(q);
+		st.expectOne(q,store()[3]);
 	}
 
 	public void testNotLike() {

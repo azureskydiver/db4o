@@ -24,10 +24,11 @@ public class AllTests extends AllTestsConfAll implements Runnable {
         Configuration conf = Db4o.configure();
 
         conf.messageLevel(-1);
+        
 //        conf.generateUUIDs(Integer.MAX_VALUE);
 //        conf.generateVersionNumbers(Integer.MAX_VALUE);
         
-//
+//		  conf.blockSize(8);
 //        conf.automaticShutDown(false);
 //        conf.lockDatabaseFile(false);
 //        conf.singleThreadedClient(true);
