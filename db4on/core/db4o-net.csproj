@@ -1990,14 +1990,17 @@
                 />
                 <File
                     RelPath = "src\net\AssemblyInfo.cs"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "src\net\Compat.cs"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "src\net\Lock4.cs"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
             </Include>
