@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="com.db4o.browser"
+   name="Browser Plug-in"
+   version="1.0.0"
+   provider-name="DB4O"
+   class="com.db4o.browser.BrowserPlugin">
+
+   <runtime>
+      <library name="browser.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="com.swtworkbench.bus"/>
+      <import plugin="com.swtworkbench.community.xswt"/>
+      <import plugin="com.swtworkbench.ed"/>
+      <import plugin="com.swtworkbench.ed.doc"/>
+      <import plugin="com.swtworkbench.rcplite"/>
+      <import plugin="com.swtworkbench.swtutils"/>
+      <import plugin="org.apache.jakarta.oro"/>
+      <import plugin="util.concurrent"/>
+      <import plugin="db4oj"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.kxml"/>
+   </requires>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="db4o"
+            id="db4obrowser">
+      </category>
+      <view
+            name="db4o Database Browser"
+            icon="icons/sample.gif"
+            category="db4obrowser"
+            class="com.db4o.browser.views.DbBrowser"
+            id="com.db4o.browser.views.DbBrowser">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="db4o"
+            id="db4oquery">
+      </category>
+      <view
+            name="db4o Query Editor"
+            icon="icons/sample.gif"
+            category="db4obrowser"
+            class="com.db4o.browser.views.DbQuery"
+            id="com.db4o.browser.views.DbQuery">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               relationship="stack"
+               id="com.db4o.browser.views.DbBrowser">
+         </view>
+      </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.eclipse.ui.resourcePerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.ResourceNavigator"
+               relationship="stack"
+               id="com.db4o.browser.views.DbQuery">
+         </view>
+      </perspectiveExtension>
+   </extension>
+
+</plugin>
