@@ -3,9 +3,7 @@
  */
 package com.db4o.browser.gui.controllers;
 
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.viewers.LabelProvider;
 
 import com.db4o.browser.model.GraphPosition;
 
@@ -14,14 +12,7 @@ import com.db4o.browser.model.GraphPosition;
  *
  * @author djo
  */
-public class TreeLabelProvider implements ILabelProvider {
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-	 */
-	public Image getImage(Object element) {
-		return null;
-	}
+public class TreeLabelProvider extends LabelProvider {
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
@@ -30,33 +21,5 @@ public class TreeLabelProvider implements ILabelProvider {
         GraphPosition pos = (GraphPosition) element;
 		return pos.getCurrent().getText();
 	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
-	 */
-	public boolean isLabelProperty(Object element, String property) {
-		return true;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-	 */
-	public void removeListener(ILabelProviderListener listener) {
-
-	}
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     */
-    public void addListener(ILabelProviderListener listener) {
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-     */
-    public void dispose() {
-
-    }
 
 }
