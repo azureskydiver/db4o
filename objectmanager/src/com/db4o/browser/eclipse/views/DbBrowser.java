@@ -86,19 +86,18 @@ public class DbBrowser extends ViewPart implements ISelectionProvider, ISelectio
 	 * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-        System.out.println("Got selection: " + selection.getClass().getName());
         if (selection instanceof IStructuredSelection) {
             IStructuredSelection _selection = (IStructuredSelection) selection;
-            System.out.println("size=" + _selection.size());
             if (_selection.size() == 1) {
                 Object selected = _selection.getFirstElement();
-                System.out.println("selectedClass=" + selected.getClass().getName());
                 if (selected instanceof IFile) {
                     IFile file = (IFile) selected;
                     if (file.getFileExtension().equals("yap")) {
                         String selectedFileName = file.getRawLocation().toString();
                         if (!currentFile.equals(selectedFileName)) {
-                        	ui.setInput(new Model(selectedFileName));
+                            if (model != null) model.close();
+                            model = new Model(selectedFileName);
+                        	ui.setInput(model);
                             currentFile = selectedFileName;
                         }
                     }
@@ -107,6 +106,19 @@ public class DbBrowser extends ViewPart implements ISelectionProvider, ISelectio
         }
 	}
     
+    private Model model = null;
+    
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.IWorkbenchPart#dispose()
+     */
+    public void dispose() {
+        if (model != null) {
+            model.close();
+        }
+    }
+    
+
     // Now the normal Viewer stuff... ------------------------------------
     
 	/**

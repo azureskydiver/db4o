@@ -42,7 +42,7 @@
             			</composite>
             			<tabItem text="&amp;Tree" control="ListComposite"/>
             			
-            			<!-- Detail -->
+            			<!-- Detail -
         				<composite x:id="DetailComposite">
             				<layout x:class="gridLayout" numColumns="2" makeColumnsEqualWidth="false"/>
             				<x:children>
@@ -56,7 +56,7 @@
             				</x:children>
             			</composite>
             			<tabItem text="&amp;Detail" control="DetailComposite"/>
-
+						-->
             		</x:children>
             	</tabFolder>
 
