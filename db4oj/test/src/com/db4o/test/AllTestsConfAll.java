@@ -3,7 +3,9 @@
 package com.db4o.test;
 
 public class AllTestsConfAll extends TestSuite{
-    
+
+	static protected final String TEST_CONFIGURATION = "AllTestsConfAll";
+	
     static TestSuite[] TEST_SUITES = new TestSuite[]{
         
         // remove the com.db4o.test.jdk5 package 
@@ -86,8 +88,8 @@ public class AllTestsConfAll extends TestSuite{
 	        Refresh.class,
             RefreshList.class,
 	        Rename.class,
-	        // ReplicationFeatures.class,
-	        SameSizeOnReopen.class,
+  	         //ReplicationFeatures.class,
+			SameSizeOnReopen.class,
 	        SelectDistinct.class,
 	        SerializableTranslator.class,
 			ServerRevokeAccess.class,
@@ -183,6 +185,5 @@ public class AllTestsConfAll extends TestSuite{
      * path to blobs held externally
      */
 	public static String BLOB_PATH = "test/TEMP/db4oTestBlobs";
-	
 
 }
