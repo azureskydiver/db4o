@@ -1,15 +1,13 @@
 /*
  * Copyright (C) 2005 db4objects Inc.  http://www.db4o.com
  */
-package com.db4o.browser.gui.controllers.detail;
+package com.db4o.browser.gui.controllers;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 
-import com.db4o.browser.gui.controllers.BrowserController;
-import com.db4o.browser.gui.controllers.IBrowserController;
 import com.db4o.browser.gui.controllers.detail.generator.LayoutGenerator;
 import com.db4o.browser.gui.controllers.detail.generator.StringInputStreamFactory;
 import com.db4o.browser.gui.views.DbBrowserPane;

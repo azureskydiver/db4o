@@ -78,8 +78,12 @@
 						    	
 						    	<label x:style="SEPARATOR|VERTICAL"/>
 						    	
-						    	<label x:id="LeftButton" text=" < "/>
-						    	<label x:id="RightButton" text=" > "/>
+						    	<toolBar>
+						    		<x:children>
+							    		<toolItem x:id="LeftButton" image="com.db4o.browser.gui.views.DbBrowserPane left.gif"/>
+							    		<toolItem x:id="RightButton" image="com.db4o.browser.gui.views.DbBrowserPane right.gif"/>
+							    	</x:children>
+						    	</toolBar>
 				            </x:children>
     					</composite>
 
