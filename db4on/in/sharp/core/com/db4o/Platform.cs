@@ -47,7 +47,7 @@ namespace com.db4o {
         }
         
         static internal JDK jdk() {
-        	throw new NotImplementedException();
+        	throw new System.NotSupportedException();
         } 
 
         static internal void addShutDownHook(Object stream, Object streamLock) {
