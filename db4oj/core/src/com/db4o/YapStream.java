@@ -5,7 +5,6 @@ package com.db4o;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
-import com.db4o.test.jdk5.*;
 import com.db4o.types.*;
 
 abstract class YapStream implements ObjectContainer, ExtObjectContainer,
@@ -188,7 +187,6 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         if(DTrace.enabled){
             DTrace.BIND.log(id, " ihc " + System.identityHashCode(obj));
         }
-        
         
         ta = checkTransaction(ta);
         int intID = (int) id;
@@ -1323,21 +1321,8 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         i_stillToSet = postponedStillToSet;
     }
 
-    final int set3(Transaction a_trans, final Object param, int a_updateDepth, boolean a_checkJustSet) {
-        final Object a_object = param;
-        
-        if(a_object == null || a_object instanceof TransientClass){
-            return 0;
-        }
-
-            
-            
-            if(a_object instanceof Jdk5Enum){
-                int xxx = 1;
-            }
-            System.out.println(a_object.getClass() + " in set3");
-            System.out.println(param.getClass() + " in set3");
-            
+    final int set3(Transaction a_trans, Object a_object, int a_updateDepth, boolean a_checkJustSet) {
+        if (a_object != null & !(a_object instanceof TransientClass)) {
             if (a_object instanceof Db4oTypeImpl) {
                 ((Db4oTypeImpl) a_object).storedTo(a_trans);
             }
@@ -1364,12 +1349,6 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             }
             boolean dontDelete = true;
             if (yapObject == null) {
-                if(a_object instanceof Jdk5Enum){
-                    System.out.println("Storing a new Jdk5Enum local ref");
-                }
-                if(param instanceof Jdk5Enum){
-                    System.out.println("Storing a new Jdk5Enum param");
-                }
                 if (!yc.dispatchEvent(this, a_object, EventDispatcher.CAN_NEW)) {
                     return 0;
                 }
@@ -1422,7 +1401,8 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                 a_trans.dontDelete(id, false);
             }
             return id;
-        
+        }
+        return 0;
     }
 
     abstract void setDirty(UseSystemTransaction a_object);
