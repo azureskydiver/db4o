@@ -330,13 +330,7 @@ class YapArray extends YapIndependantType {
             }
             YapStream stream = a_bytes.getStream();
             if(primitive){
-            	
-            	if(claxx.getName().equals("byte")){
-            		int xxx = 1;
-            	}
-            	
-            	Object obj = stream.i_handlers.handlerForClass(stream,claxx);
-                YapJavaClass yjc = (YapJavaClass)obj;
+                YapJavaClass yjc = (YapJavaClass)stream.i_handlers.handlerForClass(stream,claxx);
                 claxx = reflector.forClass(yjc.getJavaClass());
             }
             YapClass yc = stream.getYapClass(claxx, true);
