@@ -6,9 +6,67 @@ TODO:
 
 - Write detail pane.
 
-- Follow up with Karen Bennett of Red Hat (maybe at EclipseCon) regarding getting db4o into Red Hat.
-
 - Follow up using the bottom-up strategy getting db4o into Red Hat.
+
+
+*** Follow up with Karen Bennett of Red Hat regarding getting db4o into Red Hat and getting
+    GCJ support into Eclipse.
+
+*** Extending VEP article
+
+*** Get XSWT approved for inclusion in VE under the CPL
+
+*** Work with Sybase, BEA, and Actuate on DB API (after browser spike)
+
+*** Start to work on getting new data binding code into Eclipse/JFace
+
+*** VE code jamming session if community wants it.
+
+*** Follow up about getting into OSCon (*done*)
+
+*** XSWT interview (*done*)
+
+
+After first browser spike done; look at BIRT API; make suggestions for oo improvements.
+
+---------------------
+
+Standardization discussion:
+
+here is the result of our discussion yesterday as I
+remember it:
+
+
+(1) How will our standard look like?
+
+- We don't want to go JDO.
+- S.O.D.A. is not intuitive enough.
+- Even if we follow the new "Java method safe query"
+approach, we will need to build some kind of tree.
+- Let's use a new API and make it look as much like
+SQL as we can.
+
+
+(2) Our browser
+
+The majority of the work for our browser will be to
+get the GUI right. This is largely independant of
+the way our querying API will look. We can port this
+S.O.D.A. to our new dialect in no time (2 days).
+
+
+(3) How do we fit in with other standards?
+
+We don't.
+EJB 3.0 is too slow.
+JDO 2.0 is too ugly.
+
+
+(4) Eclipse vs. JCP standardisation bodies.
+
+Eclipse is faster. You just go and do it. 
+That's what we will do. 
+
 
 
 ---------------------
