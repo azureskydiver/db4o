@@ -122,7 +122,7 @@ public class Collection4 implements DeepClone {
      * equals() comparison
      * returns the removed object or null, if none found
      */
-    Object remove(Object a_object) {
+    public Object remove(Object a_object) {
         List4 previous = null;
         List4 current = i_first;
         while (current != null) {
