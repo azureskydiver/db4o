@@ -28,7 +28,9 @@ public class HtmlWriter extends AbstractWriter {
     
     private Stack            embedInto;
     
-    private byte[]           currentHeader;
+    private byte[]           preHeader;
+    private byte[]           preDiv;
+    private byte[]           preTable;
     private int              outLineNumber;
 
     static final byte[]      HTML_BR          = "<br>\r\n".getBytes();
@@ -63,13 +65,11 @@ public class HtmlWriter extends AbstractWriter {
             if(new File(inputPath("interactive")).exists()){
                 templateHtmlFileName = "interactive";    
             }
-	        byte[] tempheader=read(inputPath(templateHtmlFileName), "<body".getBytes());
-	        byte[] divcode="<div id=\"pagecontainer\"><table><tr><td width=\"5\">&nbsp;</td><td>".toString().getBytes();
-	        currentHeader=new byte[tempheader.length+divcode.length];
-	        System.arraycopy(tempheader,0,currentHeader,0,tempheader.length);
-	        System.arraycopy(divcode,0,currentHeader,tempheader.length,divcode.length);
+            preDiv="<div id=\"pagecontainer\">".getBytes();
+            preTable="<table><tr><td width=\"5\">&nbsp;</td><td>".getBytes();
+	        preHeader=read(inputPath(templateHtmlFileName), "<body".getBytes());
         }else{
-            currentHeader=read(inputPath("docs"), "<body".getBytes());
+            preHeader=read(inputPath("docs"), "<body".getBytes());
         }
         String outlinePath = outputPath("outline");
         new File(outlinePath).delete();
@@ -122,7 +122,10 @@ public class HtmlWriter extends AbstractWriter {
         new File(path).delete();
         embedInto.push(new HtmlWriterStackEntry(current, outlineLevel));
         current = new RandomAccessFile(path, "rw");
-        writeToFile(currentHeader, 0, currentHeader.length - 1);
+        writeToFile(preHeader, 0, preHeader.length - 1);
+        writeToFile(preDiv, 0, preDiv.length - 1);
+        writeToFile(preTable, 0, preTable.length - 1);
+        
     }
     
     public void end() {
@@ -165,7 +168,17 @@ public class HtmlWriter extends AbstractWriter {
         String path = outputPath(source.title) ;
         new File(path).delete();
         current = new RandomAccessFile(path, "rw");
-        writeToFile(currentHeader, 0, currentHeader.length - 1);
+        writeToFile(preHeader, 0, preHeader.length - 1);
+        writeToFile(preDiv, 0, preDiv.length - 1);
+        if(firstPage) {
+            if(new File(inputPath("frontpage")).exists()){
+                byte[] preFirstBody = readBody(inputPath("frontpage"));
+                if(preFirstBody != null){
+                    writeToFile(preFirstBody, 0, preFirstBody.length - 1);
+                }
+            }
+        }
+        writeToFile(preTable, 0, preTable.length - 1);
     }
 
     private void endCurrent() throws Exception {
@@ -216,8 +229,36 @@ public class HtmlWriter extends AbstractWriter {
             }
         }
         return null;
-
     }
+    
+    private byte[] readBody(String path) throws Exception {
+        RandomAccessFile raf = new RandomAccessFile(path, "r");
+        byte[] buffer = new byte[(int) raf.length()];
+        raf.read(buffer);
+        raf.close();
+        int begin = find(buffer, "<body>".getBytes());
+        int end = find(buffer, "</body>".getBytes());
+        int len = end - begin - 6;
+        byte[] temp = new byte[len];
+        System.arraycopy(buffer, begin + 6, temp, 0, len);
+        return temp;
+    }
+    
+    private int find(byte[] buffer, byte[] what){
+        int pos = 0;
+        for(int i = 0; i < buffer.length ; i ++){
+            if(buffer[i] == what[pos]){
+                if(pos == what.length - 1){
+                    return i - pos;
+                }
+                pos ++;
+            }else{
+                pos = 0;
+            }
+        }
+        return 0;
+    }
+
 
     public void write(Anchor command) throws Exception {
         write("<a name=\"");
@@ -470,12 +511,14 @@ public class HtmlWriter extends AbstractWriter {
     }
 
     protected void writeToFile(byte[] bytes, int start, int end) {
-        int len = end - start + 1;
-        if (len > 0) {
-            try {
-                current.write(bytes, start, len);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        if(bytes != null){
+            int len = end - start + 1;
+            if (len > 0) {
+                try {
+                    current.write(bytes, start, len);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
