@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import com.db4o.browser.gui.standalone.IModelListener;
 import com.db4o.browser.gui.standalone.Model;
 import com.db4o.browser.gui.tree.ClassNode;
 import com.db4o.browser.gui.tree.ITreeNode;
@@ -53,11 +54,6 @@ public class DbBrowserPane extends Composite {
         parent.setLayout(new FillLayout());
         setLayout(new FillLayout());
         contents = XSWT.createl(this, "layout.xswt", getClass());
-        addDisposeListener(new DisposeListener() {
-            public void widgetDisposed(DisposeEvent e) {
-                closeModel();
-            }
-        });
         getObjectTree().addListener(SWT.Expand, expandListener);
         getObjectTree().addFocusListener(focusListener);
 	}
@@ -80,8 +76,34 @@ public class DbBrowserPane extends Composite {
         
         // Now load the new items
         model = _model;
-        populateTree(model.storedClasses());
+        model.addModelChangeListener(modelListener);
     }
+    
+    private IModelListener modelListener = new IModelListener() {
+        /* (non-Javadoc)
+		 * @see com.db4o.browser.gui.standalone.IModelListener#fileChanged()
+		 */
+		public void fileChanged() {
+            // Dispose any existing items
+            TreeItem[] items = getObjectTree().getItems();
+            for (int i = 0; i < items.length; i++) {
+                items[i].dispose();
+            }
+            populateTree(model.selectedClasses());
+		}
+        /* (non-Javadoc)
+         * @see com.db4o.browser.gui.standalone.IModelListener#selectionChanged()
+         */
+        public void selectionChanged() {
+            // Dispose any existing items
+            TreeItem[] items = getObjectTree().getItems();
+            for (int i = 0; i < items.length; i++) {
+                items[i].dispose();
+            }
+            populateTree(model.selectedClasses());
+            
+        }
+    };
     
 
     /**
@@ -89,6 +111,7 @@ public class DbBrowserPane extends Composite {
      */
     private void closeModel() {
         if (model != null) {
+            model.removeModelChangeListener(modelListener);
             model.close();
             model = null;
         }

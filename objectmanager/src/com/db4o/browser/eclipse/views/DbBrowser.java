@@ -1,9 +1,10 @@
 package com.db4o.browser.eclipse.views;
 
 
-import java.io.File;
-
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.internal.compiler.env.ISourceType;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -80,8 +81,6 @@ public class DbBrowser extends ViewPart implements ISelectionProvider, ISelectio
 
     // Be an ISelectionListener ----------------------------------------------------------
     
-    private String currentFile = "";
-
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	 */
@@ -90,24 +89,46 @@ public class DbBrowser extends ViewPart implements ISelectionProvider, ISelectio
             IStructuredSelection _selection = (IStructuredSelection) selection;
             if (_selection.size() == 1) {
                 Object selected = _selection.getFirstElement();
-                if (selected instanceof IFile) {
+                System.out.println(selected.getClass().getName());
+                if (selected instanceof ICompilationUnit) {
+                    ICompilationUnit cu = (ICompilationUnit) selected;
+                    selectType(cu.findPrimaryType().getFullyQualifiedName());
+                }
+                else if (selected instanceof ISourceType) 
+                {
+                    // Get fully qualified name from the ISourceType,
+                    // call selectType() on results...
+//                   ISourceType sourceType = (ISourceType) selected;
+//                   sourceType.get
+                } else if (selected instanceof IFile) {
                     IFile file = (IFile) selected;
                     if (file.getFileExtension().equals("yap")) {
                         String selectedFileName = file.getRawLocation().toString();
-                        if (!currentFile.equals(selectedFileName)) {
-                            if (model != null) model.close();
-                            model = new Model(selectedFileName);
-                        	ui.setInput(model);
-                            currentFile = selectedFileName;
-                        }
+                        openFile(selectedFileName);
                     }
                 }
             }
         }
 	}
     
-    private Model model = null;
+    /**
+	 * @param fullyQualifiedName
+	 */
+	private void selectType(String fullyQualifiedName) {
+		if (model == null)
+            return;
+        model.selectType(fullyQualifiedName);
+	}
+
+	private Model model = null;
     
+    private void openFile(String selectedFileName) {
+        if (model == null) {
+            model = new Model();
+            ui.setInput(model);
+        }
+        model.open(selectedFileName);
+    }
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.IWorkbenchPart#dispose()
