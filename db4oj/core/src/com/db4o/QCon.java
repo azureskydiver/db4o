@@ -188,6 +188,9 @@ public abstract class QCon implements Constraint, Visitor4 {
     }
 
     void doNotInclude(QCandidate a_root) {
+        if(DTrace.enabled){
+            DTrace.DONOTINCLUDE.log(i_id);
+        }
         if (Deploy.debugQueries) {
             System.out.println("QCon.doNotInclude " + i_id /*+ " " + getYapClass()*/
             );
@@ -215,6 +218,9 @@ public abstract class QCon implements Constraint, Visitor4 {
     }
 
     void evaluateCollectChildren() {
+        if(DTrace.enabled){
+            DTrace.COLLECT_CHILDREN.log(i_id);
+        }
         Iterator4 i = i_childrenCandidates.iterator();
         while (i.hasNext()) {
             ((QCandidates) i.next()).collect(i_candidates);

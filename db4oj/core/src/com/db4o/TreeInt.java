@@ -70,7 +70,7 @@ public class TreeInt extends Tree implements ReadWriteable{
 	}
 	
 	QCandidate toQCandidate(QCandidates candidates){
-		QCandidate qc = new QCandidate(candidates, i_key, true);
+		QCandidate qc = new QCandidate(candidates, null, i_key, true);
 		qc.i_preceding = toQCandidate((TreeInt)i_preceding, candidates); 
 		qc.i_subsequent = toQCandidate((TreeInt)i_subsequent, candidates);
 		qc.i_size = i_size; 

@@ -21,7 +21,8 @@ public class DTrace {
             
             // addRange(5130);
             
-            addRange(55);
+            // addRange(5948);
+            addRange(6991);
             
             // addRangeWithLength(1000000, 10000000);
             
@@ -30,14 +31,20 @@ public class DTrace {
             // addRange(17920);
             
             BIND = new DTrace(true, true, "bind", true);
+            CANDIDATE_READ = new DTrace(true, true, "candidate read", true);
             CLOSE = new DTrace(true, true, "close", true);
+            COLLECT_CHILDREN = new DTrace(true, true, "collect children", true);
             COMMIT = new DTrace(true, false, "commit", true);
             CONTINUESET = new DTrace(true, true, "continueset", true);
+            CREATE_CANDIDATE = new DTrace(true, true, "create candidate", true);
+            DONOTINCLUDE = new DTrace(true, true, "donotinclude", true);
+            EVALUATE_SELF = new DTrace(true, true, "evaluate self", true);
             FREE = new DTrace(true, true, "free", true);
             FREE_ON_COMMIT = new DTrace(true, true, "trans freeOnCommit", true);
             FREE_ON_ROLLBACK = new DTrace(true, true, "trans freeOnRollback", true);
             GET_SLOT = new DTrace(true, true, "getSlot", true);
             NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
+            READ_ARRAY_WRAPPER = new DTrace(true, true, "read array wrapper", true);
             READ_ID = new DTrace(true, true, "read ID", true);
             READ_SLOT = new DTrace(true, true, "read slot", true);
             REFERENCE_REMOVED = new DTrace(true, true, "reference removed", true);
@@ -51,7 +58,8 @@ public class DTrace {
             WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true, "trans writeUpdateDeleteMembers", true);
             
             // turnAllOffExceptFor(new DTrace[] {FREE, FREE_ON_COMMIT});
-            turnAllOffExceptFor(new DTrace[] {YAPCLASS_BY_ID});
+            // turnAllOffExceptFor(new DTrace[] {CANDIDATE_READ, CREATE_CANDIDATE, DONOTINCLUDE, EVALUATE_SELF});
+            turnAllOffExceptFor(new DTrace[] {COLLECT_CHILDREN, READ_ARRAY_WRAPPER});
          
         }
         return null;
@@ -59,10 +67,10 @@ public class DTrace {
     
     private DTrace(boolean enabled_, boolean break_, String tag_, boolean log_){
         if(enabled){
-	        _enabled = enabled_;
-	        _break = break_;
-	        _tag = tag_;
-	        _log = log_;
+            _enabled = enabled_;
+            _break = break_;
+            _tag = tag_;
+            _log = log_;
             if(all == null){
                 all = new DTrace[100];
             }
@@ -80,14 +88,20 @@ public class DTrace {
     private static int rangeCount;
     
     public static DTrace BIND;
+    public static DTrace CANDIDATE_READ;
     public static DTrace CLOSE;
+    public static DTrace COLLECT_CHILDREN;
     public static DTrace COMMIT;
     public static DTrace CONTINUESET;
+    public static DTrace CREATE_CANDIDATE;
+    public static DTrace DONOTINCLUDE;
+    public static DTrace EVALUATE_SELF;
     public static DTrace FREE;
     public static DTrace FREE_ON_COMMIT;
     public static DTrace FREE_ON_ROLLBACK;
     public static DTrace GET_SLOT;
     public static DTrace NEW_INSTANCE;
+    public static DTrace READ_ARRAY_WRAPPER;
     public static DTrace READ_ID;
     public static DTrace READ_SLOT;
     public static DTrace REFERENCE_REMOVED;
@@ -145,30 +159,30 @@ public class DTrace {
     
     public void logEnd(long start, long end, String info){
         if(enabled){
-	        if(! _enabled){
-	            return;
-	        }
-	        boolean inRange = false;
-	        for (int i = 0; i < rangeCount; i++) {
-	            if(start >= rangeStart[i] && start <= rangeEnd[i]){
-	                inRange = true;
-	                break;
-	            }
+            if(! _enabled){
+                return;
+            }
+            boolean inRange = false;
+            for (int i = 0; i < rangeCount; i++) {
+                if(start >= rangeStart[i] && start <= rangeEnd[i]){
+                    inRange = true;
+                    break;
+                }
                 if(end != 0 && (end >= rangeStart[i] && end <= rangeEnd[i])){
                     inRange = true;
                     break;
                 }
-	        }
-	        if(inRange || (start == -1 )){
-	            if(_log){
-	                StringBuffer sb = new StringBuffer(":");
-	                if(start != 0){
-	                    sb.append(formatInt(start));
-	                    sb.append(":");
-	                }
-	                if(end != 0  && start != end){
-		                sb.append(formatInt(end));
-	                }else{
+            }
+            if(inRange || (start == -1 )){
+                if(_log){
+                    StringBuffer sb = new StringBuffer(":");
+                    if(start != 0){
+                        sb.append(formatInt(start));
+                        sb.append(":");
+                    }
+                    if(end != 0  && start != end){
+                        sb.append(formatInt(end));
+                    }else{
                         sb.append(formatInt(0));
                     }
                     sb.append(":");
@@ -177,13 +191,13 @@ public class DTrace {
                         sb.append(":");
                     }
                     sb.append(" ");
-	                sb.append(_tag);
-	                System.out.println(sb);
-	            }
-		        if(_break){
-		            breakPoint();
-		        }
-	        }
+                    sb.append(_tag);
+                    System.out.println(sb);
+                }
+                if(_break){
+                    breakPoint();
+                }
+            }
         }
     }
     
@@ -201,13 +215,13 @@ public class DTrace {
     
     public static void addRangeWithEnd(long start, long end){
         if(enabled){
-	        if(rangeStart == null){
-	            rangeStart = new long[100];
-	            rangeEnd = new long[100];
-	        }
-	        rangeStart[rangeCount] = start;
-	        rangeEnd[rangeCount] = end;
-	        rangeCount++;
+            if(rangeStart == null){
+                rangeStart = new long[100];
+                rangeEnd = new long[100];
+            }
+            rangeStart[rangeCount] = start;
+            rangeEnd[rangeCount] = end;
+            rangeCount++;
         }
     }
     
