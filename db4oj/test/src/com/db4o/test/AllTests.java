@@ -218,22 +218,45 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     
     public AllTests(String[] testcasenames) {
         // no unneccessary visible methods in Test class.
-        this.testcases=TESTS;
+        
         if(testcasenames!=null&&testcasenames.length>0) {
-            testcases=new Class[testcasenames.length];
-            for (int testidx = 0; testidx < testcasenames.length; testidx++) {
-                try {
-                    testcases[testidx]=Class.forName(testcasenames[testidx]);
-                } catch (ClassNotFoundException e) {
-                    System.err.println("Test case class not found: "+testcasenames[testidx]);
-                    e.printStackTrace();
-                    System.exit(0);
-                }
-            }
+            testCasesFromArgs(testcasenames);
+        } else{
+            testCasesFromTestSuites();
         }
+        
         Test.currentRunner = this;
     }
+
+    private void testCasesFromTestSuites() {
+        int len = 0;
+        for (int i = 0; i < TEST_SUITES.length; i++) {
+            len += TEST_SUITES[i].tests().length;
+        }
+        this.testcases=new Class[len];
+        int pos = 0;
+        for (int i = 0; i < TEST_SUITES.length; i++) {
+            Class[] temp = TEST_SUITES[i].tests();
+            System.arraycopy(temp,0, testcases, pos, temp.length);
+            pos += temp.length;
+        }
+    }
+
+    private void testCasesFromArgs(String[] testcasenames) {
+        testcases=new Class[testcasenames.length];
+        for (int testidx = 0; testidx < testcasenames.length; testidx++) {
+            try {
+                testcases[testidx]=Class.forName(testcasenames[testidx]);
+            } catch (ClassNotFoundException e) {
+                System.err.println("Test case class not found: "+testcasenames[testidx]);
+                e.printStackTrace();
+                System.exit(0);
+            }
+        }
+    }
     
-    private Class[] testcases;
+    
+    
+   private Class[] testcases;
 
 }

@@ -1610,13 +1610,6 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     void storeStaticFieldValues(Transaction trans, boolean force) {
         if (!bitIsTrue(YapConst.STATIC_FIELDS_STORED) || force) {
             bitTrue(YapConst.STATIC_FIELDS_STORED);
-            
-//            boolean s1 = (i_config != null && i_config.i_persistStaticFieldValues);
-//            boolean s2 = Platform.storeStaticFieldValues(getJavaClass());
-//            if(s2){
-//                int xxx = 1;
-//            }
-            
             boolean store = 
                 (i_config != null && i_config.i_persistStaticFieldValues)
             || Platform.storeStaticFieldValues(getJavaClass()); 

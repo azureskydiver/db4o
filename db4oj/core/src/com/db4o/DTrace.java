@@ -19,13 +19,19 @@ public class DTrace {
             
             // address: 244346, 44
             
-            addRange(25876597);
-            addRange(19818619);
-            addRangeWithLength(25876597, 44);
+            // addRange(5130);
+            
+            addRange(4817);
+            addRangeWithLength(1, 3000);
+            
+            // addRangeWithLength(1000000, 10000000);
+            
+            // addRangeWithLength(25876597, 44);
             // addRange(7274611);
             // addRange(17920);
             
             COMMIT = new DTrace(true, false, "commit", true);
+            CONTINUESET = new DTrace(true, true, "continueset", true);
             FREE = new DTrace(true, true, "free", true);
             FREE_ON_COMMIT = new DTrace(true, true, "trans freeOnCommit", true);
             FREE_ON_ROLLBACK = new DTrace(true, true, "trans freeOnRollback", true);
@@ -33,10 +39,16 @@ public class DTrace {
             READ_ID = new DTrace(true, true, "read ID", true);
             READ_SLOT = new DTrace(true, true, "read slot", true);
             REFERENCE_REMOVED = new DTrace(true, true, "reference removed", true);
+            REGULAR_SEEK = new DTrace(true, true, "regular seek", true);
             REMOVE_FROM_CLASS_INDEX = new DTrace(true, true, "trans removeFromClassIndexTree", true);
+            TRANS_COMMIT = new DTrace(false, false, "trans commit", false);
             TRANS_DELETE = new DTrace(true, true, "trans delete", true);
             TRANS_DONT_DELETE = new DTrace(true, true, "trans dontDelete", true);
+            WRITE_BYTES = new DTrace(true, true, "writeBytes", true); 
             WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true, "trans writeUpdateDeleteMembers", true);
+            
+            // turnAllOffExceptFor(new DTrace[] {REFERENCE_REMOVED});
+            turnAllOffExceptFor(new DTrace[] {FREE, FREE_ON_COMMIT});
          
         }
         return null;
@@ -48,6 +60,10 @@ public class DTrace {
 	        _break = break_;
 	        _tag = tag_;
 	        _log = log_;
+            if(all == null){
+                all = new DTrace[100];
+            }
+            all[current++] = this;
         }
     }
     
@@ -56,11 +72,12 @@ public class DTrace {
     private boolean _log;
     private String _tag;
     
-    private static int[] rangeStart;
-    private static int [] rangeEnd;
+    private static long[] rangeStart;
+    private static long [] rangeEnd;
     private static int rangeCount;
     
     public static DTrace COMMIT;
+    public static DTrace CONTINUESET;
     public static DTrace FREE;
     public static DTrace FREE_ON_COMMIT;
     public static DTrace FREE_ON_ROLLBACK;
@@ -68,12 +85,18 @@ public class DTrace {
     public static DTrace READ_ID;
     public static DTrace READ_SLOT;
     public static DTrace REFERENCE_REMOVED;
+    public static DTrace REGULAR_SEEK;
     public static DTrace REMOVE_FROM_CLASS_INDEX;
+    public static DTrace TRANS_COMMIT;
     public static DTrace TRANS_DONT_DELETE;
     public static DTrace TRANS_DELETE;
+    public static DTrace WRITE_BYTES;
     public static DTrace WRITE_UPDATE_DELETE_MEMBERS;
     
     private static final Object forInit = init();
+    
+    private static DTrace all[];
+    private static int current;
     
     public void log(){
         if(enabled){
@@ -81,19 +104,29 @@ public class DTrace {
         }
     }
     
-    public void log(int p){
+    public void log(long p){
         if(enabled){
             logLength(p, 1);
         }
     }
     
-    public void logLength(int start, int length){
+    public void logInfo(String info){
+        if(enabled){
+            logEnd(0,0, info );
+        }
+    }
+    
+    public void logLength(long start, long length){
         if(enabled){
             logEnd(start, start + length - 1);
         }
     }
     
-    public void logEnd(int start, int end){
+    public void logEnd(long start, long end){
+        logEnd(start, end, null);
+    }
+    
+    public void logEnd(long start, long end, String info){
         if(enabled){
 	        if(! _enabled){
 	            return;
@@ -120,6 +153,10 @@ public class DTrace {
 		                sb.append(formatInt(end));
 		                sb.append(":");
 	                }
+                    if(info != null){
+                        sb.append(" " + info + " ");
+                        sb.append(":");
+                    }
                     sb.append(" ");
 	                sb.append(_tag);
 	                System.out.println(sb);
@@ -131,23 +168,23 @@ public class DTrace {
         }
     }
     
-    public static void addRange(int pos){
+    public static void addRange(long pos){
         if(enabled){
             addRangeWithEnd(pos, pos);
         }
     }
     
-    public static void addRangeWithLength(int start, int length){
+    public static void addRangeWithLength(long start, long length){
         if(enabled){
-            addRangeWithEnd(start, start + length - 1);
+            addRangeWithEnd(start, start + length - (long)1);
         }
     }
     
-    public static void addRangeWithEnd(int start, int end){
+    public static void addRangeWithEnd(long start, long end){
         if(enabled){
 	        if(rangeStart == null){
-	            rangeStart = new int[100];
-	            rangeEnd = new int[100];
+	            rangeStart = new long[100];
+	            rangeEnd = new long[100];
 	        }
 	        rangeStart[rangeCount] = start;
 	        rangeEnd[rangeCount] = end;
@@ -155,12 +192,34 @@ public class DTrace {
         }
     }
     
-    private String formatInt(int i){
+    private String formatInt(long i){
         if(enabled){
             String str = "            " + i + " "; 
             return str.substring(str.length() - 12);
         }
         return null;
+    }
+    
+    private static void turnAllOffExceptFor(DTrace[] these){
+        if(enabled){
+            for (int i = 0; i < all.length; i++) {
+                if(all[i] == null){
+                    break;
+                }
+                boolean turnOff = true;
+                for (int j = 0; j < these.length; j++) {
+                    if(all[i] == these[j]){
+                        turnOff = false;
+                        break;
+                    }
+                }
+                if(turnOff){
+                    all[i]._break = false;
+                    all[i]._enabled = false;
+                    all[i]._log = false;
+                }
+            }
+        }
     }
     
 }

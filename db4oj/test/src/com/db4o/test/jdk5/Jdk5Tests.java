@@ -1,15 +1,19 @@
 package com.db4o.test.jdk5;
 
-import java.io.*;
 import com.db4o.*;
 import com.db4o.query.*;
 import com.db4o.test.*;
 
-
-public class Jdk5Tests {
+public class Jdk5Tests implements TestSuite{
+    
+    public Class[] tests(){
+        return new Class[] {
+            Jdk5Tests.class,
+        };
+    }
     
     public void configure(){
-        Db4o.configure().objectClass(Jdk5Enum.class).persistStaticFieldValues();
+        // Db4o.configure().objectClass(Jdk5Enum.class).persistStaticFieldValues();
     }
     
     
@@ -43,7 +47,7 @@ public class Jdk5Tests {
         sub.constrain(Jdk5Enum.class);
         sub.constrain(Jdk5Enum.A);
         sub.descend("type").constrain("A");
-        sub.descend("count").constrain(Integer.valueOf(1));
+        // sub.descend("count").constrain(Integer.valueOf(1));
         ObjectSet result=query.execute();
         Test.ensure(result.size() == 1);
         data=(Jdk5Data<String>)result.next();

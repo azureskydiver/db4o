@@ -62,6 +62,10 @@ class YapBlockAwareFile {
     }
 
     public void regularSeek(long pos) throws IOException {
+        
+        if(DTrace.enabled){
+            DTrace.REGULAR_SEEK.log(pos);
+        }
 
         /** 
          * Workaround for the Symbian JDK that does not allow you to seek

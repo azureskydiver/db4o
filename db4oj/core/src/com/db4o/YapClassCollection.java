@@ -54,30 +54,35 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
 	 * parent, we have a circular dependancy problem. This method takes care.
 	 */
     private void classAddMembers(YapClass yapClass) {
-        if (i_addingMembersTo == null) {
-            YapClass ancestor = yapClass.getAncestor();
-            if (ancestor != null) {
-                classAddMembers(ancestor);
-            }
-            i_addingMembersTo = yapClass;
-            yapClass.addMembers(i_stream);
-            i_addingMembersTo = null;
-            YapClass[] dependancies = yapClass.getMembersDependancies();
-            for (int i = 0; i < dependancies.length; i++) {
-                classAddMembers(dependancies[i]);
-            }
-            yapClass.write(i_stream, i_stream.getSystemTransaction());
-
-            // the dependancies need a rewrite
-            // since our own ID only is available after
-            // write
-
-            for (int i = 0; i < dependancies.length; i++) {
-                dependancies[i].setStateDirty();
-                dependancies[i].write(i_stream, i_stream.getSystemTransaction());
-            }
-        } else {
+        
+        if (i_addingMembersTo != null) {
             i_addingMembersTo.addMembersAddDependancy(yapClass);
+            return;
+        }
+
+        YapClass ancestor = yapClass.getAncestor();
+        if (ancestor != null) {
+            classAddMembers(ancestor);
+        }
+        i_addingMembersTo = yapClass;
+        yapClass.addMembers(i_stream);
+        
+        yapClass.storeStaticFieldValues(i_systemTrans, true);
+        
+        i_addingMembersTo = null;
+        YapClass[] dependancies = yapClass.getMembersDependancies();
+        for (int i = 0; i < dependancies.length; i++) {
+            classAddMembers(dependancies[i]);
+        }
+        yapClass.write(i_stream, i_stream.getSystemTransaction());
+
+        // the dependancies need a rewrite
+        // since our own ID only is available after
+        // write
+
+        for (int i = 0; i < dependancies.length; i++) {
+            dependancies[i].setStateDirty();
+            dependancies[i].write(i_stream, i_stream.getSystemTransaction());
         }
     }
     
@@ -188,7 +193,6 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         
         if(addMembers || yapClass.i_fields == null){
             classAddMembers(yapClass);
-            yapClass.storeStaticFieldValues(i_systemTrans, true);
         }
         
         i_creating.remove(a_class);
