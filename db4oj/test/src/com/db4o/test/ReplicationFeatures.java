@@ -51,72 +51,73 @@ public class ReplicationFeatures {
     }
     
     private void replicate(Object obj){
-        ExtObjectContainer master = Test.objectContainer();
-        ExtObjectContainer slave = Db4o.openFile(file()).ext();
-        ReplicationProcess replication = master.ext().replicationBegin(slave);
-        replication.setConflictHandler(new Db4oCallback() {
-            public void callback(Object obj) {
-                
-
+        ExtObjectContainer peerA = Test.objectContainer();
+        ExtObjectContainer peerB = Db4o.openFile(file()).ext();
+        ReplicationProcess replication = peerA.ext().replicationBegin(peerB, new ReplicationConflictHandler() {
+        	
+            public Object resolveConflict(ReplicationProcess process, Object a, Object b) {
+            		
+            	// the object was changed in both ObjectContainers since
+            	// the last replication
+            	
+            	return null;
+            	
             }
+            
         });
-        slave.set(obj);
+        
+        replication.replicate(obj);
         replication.commit();
-        slave.close();
+        peerB.close();
     }
     
     private void replicateAll(){
-        ExtObjectContainer master = Test.objectContainer();
-        ExtObjectContainer slave = Db4o.openFile(file()).ext();
-        ReplicationProcess replication = master.ext().replicationBegin(slave);
-        
-//        replication.setDirection(master, slave); //Default is bidirectional.
-        
-        replication.setConflictHandler(new Db4oCallback() {
-            public void callback(Object obj) {
-                
-
+        ExtObjectContainer peerA = Test.objectContainer();
+        ExtObjectContainer peerB = Db4o.openFile(file()).ext();
+        final ReplicationProcess replication = peerA.ext().replicationBegin(peerB, new ReplicationConflictHandler() {
+        	
+            public Object resolveConflict(ReplicationProcess process, Object a, Object b) {
+            		
+            	// the object was change in both ObjectContainers since
+            	// the last replication
+            	
+            	return null;
+            	
             }
+            
         });
         
-//        Query q = replication.queryModifiedObjects(master /*So you dont have to reproduce the query interface*/);
+//      replication.setDirection(master, slave); //Default is bidirectional.
+
+        
+        Query q = peerA.query();
+        replication.whereModified(q);
+        
 //        
 //        q.constrain(Person.class);
 //        
-//        
-//        q.descend(VirtualField.VERSION).constrain(replication.lastSynchronization()).greater();
         
-        
-        
-        
-        ObjectSet objectSet = master.get(null);
-        
-        
-        // have a constraint on VersionNumber
-        
-        
-        
+        ObjectSet objectSet = q.execute();
         while(objectSet.hasNext()){
             Object masterObject = objectSet.next();
-            ObjectInfo masterInfo = master.getObjectInfo(masterObject);
+            ObjectInfo masterInfo = peerA.getObjectInfo(masterObject);
             if(masterInfo != null){
                 Db4oUUID uuid = masterInfo.getUUID();
                 if(uuid != null){
-                    Object masterDuplicate = master.getByUUID(uuid);
+                    Object masterDuplicate = peerA.getByUUID(uuid);
                     Test.ensure(masterObject == masterDuplicate);
-                    replication.replicate(masterObject); //Conflict manager in actrion.
-                    replication.checkConflict(masterObject); // 
-                   
+
                     // check version numbers and decide upon direction,
                     // depending which one changed after last synchronisation
+                    replication.replicate(masterObject);
+                    replication.checkConflict(masterObject); // Another option (peek).
+                   
                     
-                    
-                    slave.set(masterObject);
                 }
             }
         }
         replication.commit();
-        slave.close();
+        peerB.close();
     }
     
     private void checkAllEqual(){

@@ -257,18 +257,24 @@ public interface ExtObjectContainer extends ObjectContainer {
     public void releaseSemaphore(String name);
     
     /**
-     * starts replication to another {@link ObjectContainer}.
+     * prepares for replication with another {@link ObjectContainer}.
      * <br><br>An {@link ObjectContainer} can only be involved in a replication 
      * process with one other {@link ObjectContainer} at the same time.<br><br>
      * The returned {@link ReplicationProcess} interface provides methods to commit
-     * and to cancel the replication process.<br><br>It also allows to register
-     * a conflicthandler, in case objects have been modified in both
-     * ObjectContainers, since the two ObjectContainers were last replicated
-     * with eachother.<br><br> 
-     * @param peer the {@link ObjectContainer} to replicate with. 
+     * and to cancel the replication process.
+     * <br><br>This ObjectContainer will be "peerA" for the
+     * returned ReplicationProcess. The other ObjectContainer will be "peerB".
+     * @param peerB the {@link ObjectContainer} to replicate with.
+     * @param conflictHandler the conflict handler for this ReplicationProcess. 
+     * Conflicts occur
+     * whenever {@link ReplicationProcess#replicate(Object)} is called with an 
+     * object that was modified in both ObjectContainers since the last 
+     * replication run between the two. Upon a conflict the 
+     * {@link ReplicationConflictHandler#resolveConflict(ReplicationProcess, Object, Object)}
+     * method will be called in the conflict handler.
      * @return the {@link ReplicationProcess} interface for this replication process.
      */
-    public ReplicationProcess replicationBegin(ObjectContainer peer);
+    public ReplicationProcess replicationBegin(ObjectContainer peerB, ReplicationConflictHandler conflictHandler);
     
     
     /**
