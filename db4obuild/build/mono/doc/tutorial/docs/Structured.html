@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="Structured"></a><br>
-<a name="outline325"></a><br><h1>4. Structured objects</h1><br>
+<a name="outline328"></a><br><h1>4. Structured objects</h1><br>
 It's time to extend our business domain with another class and&nbsp;see how db4o handles object interrelations. Let's give our pilot&nbsp;a vehicle.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -54,7 +54,7 @@ namespace com.db4o.f1.chapter2<br>
 <br>
 <br>
 <ul>
-<a name="outline326"></a><br><h2>4.1. Storing structured objects</h2><br>
+<a name="outline329"></a><br><h2>4.1. Storing structured objects</h2><br>
 To store a car with its pilot, we just call set() on our top level object,&nbsp;the car. The pilot will be stored implicitly.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -80,9 +80,9 @@ Pilot pilot2 = new Pilot("Rubens Barrichello", 99);<br>
 </code></td></tr></table>
 <br>
 <br>
-<a name="outline327"></a><br><h2>4.2. Retrieving structured objects</h2><br>
+<a name="outline330"></a><br><h2>4.2. Retrieving structured objects</h2><br>
 <ul>
-<a name="outline328"></a><br><h2>4.2.1. QBE</h2><br>
+<a name="outline331"></a><br><h2>4.2.1. QBE</h2><br>
 To retrieve all cars, we simply provide a 'blank' prototype.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -128,7 +128,7 @@ BMW[Rubens Barrichello/99]<br>
 <br>
 What about retrieving a pilot by car? We simply don't need that -&nbsp;if we already know the car, we can simply ask it for its pilot&nbsp;directly.<br>
 <br>
-<a name="outline329"></a><br><h2>4.2.2. Query API</h2><br>
+<a name="outline332"></a><br><h2>4.2.2. Query API</h2><br>
 To query for a car given its pilot's name we have to descend one&nbsp;level deeper in our query.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -180,7 +180,7 @@ Michael Schumacher/100<br>
 <img border="0" src="querygraph/3.gif" /><br>
 <br>
 </ul>
-<a name="outline330"></a><br><h2>4.3. Updating structured objects</h2><br>
+<a name="outline333"></a><br><h2>4.3. Updating structured objects</h2><br>
 To update structured objects in db4o, we simply call set() on them again.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -238,7 +238,7 @@ Ferrari[Somebody else/2]<br>
 Looks like we're in trouble. What's happening here and what can we&nbsp;do to fix it?<br>
 <br>
 <ul>
-<a name="outline331"></a><br><h2>4.3.1. Update depth</h2><br>
+<a name="outline334"></a><br><h2>4.3.1. Update depth</h2><br>
 Imagine a complex object with many members that have many members themselves.&nbsp;When updating this object, db4o would have to update all its children,&nbsp;grandchildren, etc. This poses a severe performance penalty and will&nbsp;not be necessary in most cases - sometimes, however, it will.<br>
 <br>
 To be able to handle this dilemma as flexible as possible, db4o introduces&nbsp;the concept of update depth to control how deep an object's member tree will&nbsp;be traversed on update. The default update depth for all objects is 1, meaning&nbsp;that only primitive and String members will be updated, but changes in object&nbsp;members will not be reflected.<br>
@@ -280,7 +280,7 @@ Note that container configuration must be set before the container is opened.<br
 We'll cover update depth as well as other issues with complex object graphs&nbsp;and the respective db4o configuration options in more detail in a later&nbsp;chapter.<br>
 <br>
 </ul>
-<a name="outline332"></a><br><h2>4.4. Deleting structured objects</h2><br>
+<a name="outline335"></a><br><h2>4.4. Deleting structured objects</h2><br>
 As we have already seen, we call delete() on objects to get rid of them.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -312,7 +312,7 @@ Rubens Barrichello/99<br>
 Ok, this is no real surprise - we don't expect a pilot to vanish when his&nbsp;car is disposed of in real life, too. But what if we want an object's children&nbsp;to be thrown away on deletion, too?<br>
 <br>
 <ul>
-<a name="outline333"></a><br><h2>4.4.1. Recursive deletion</h2><br>
+<a name="outline336"></a><br><h2>4.4.1. Recursive deletion</h2><br>
 You may already suspect that the problem of recursive deletion (and&nbsp;perhaps its solution, too) is quite similar to our little update problem, and you're&nbsp;right. Let's configure db4o to delete a car's pilot, too, when the car is deleted.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -348,7 +348,7 @@ Pilot proto = new Pilot(null, 0);<br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>0<br>
 </td></table></table><br>
 <br>
-<a name="outline334"></a><br><h2>4.4.2. Recursive deletion revisited</h2><br>
+<a name="outline337"></a><br><h2>4.4.2. Recursive deletion revisited</h2><br>
 But wait - what happens if the children of a removed object are still referenced by&nbsp;other objects?<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -399,10 +399,10 @@ ObjectSet cars=db.get(new Car(null));<br>
 <br>
 <br>
 </ul>
-<a name="outline335"></a><br><h2>4.5. Conclusion</h2><br>
+<a name="outline338"></a><br><h2>4.5. Conclusion</h2><br>
 So much for object associations: We can hook into a root object and&nbsp;climb down its reference graph to specify queries. But what about&nbsp;multi-valued objects like arrays and collections? We will cover this in&nbsp;the <a href="Collections.html#Collections">next chapter</a>&nbsp;.<br>
 <br>
-<a name="outline336"></a><br><h2>4.6. Full source</h2><br>
+<a name="outline339"></a><br><h2>4.6. Full source</h2><br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code><br>
 namespace com.db4o.f1.chapter2<br>

@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="Inheritance"></a><br>
-<a name="outline346"></a><br><h1>6. Inheritance</h1><br>
+<a name="outline349"></a><br><h1>6. Inheritance</h1><br>
 So far we have always been working with the concrete (i.e. most&nbsp;specific type of an object. What about subclassing and interfaces?<br>
 <br>
 To explore this, we will differentiate between different kinds of&nbsp;sensors.<br>
@@ -213,7 +213,7 @@ namespace com.db4o.f1.chapter4<br>
 <br>
 <br>
 <ul>
-<a name="outline347"></a><br><h2>6.1. Storing</h2><br>
+<a name="outline350"></a><br><h2>6.1. Storing</h2><br>
 Our setup code has not changed at all, just the internal workings of a snapshot.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -238,7 +238,7 @@ Pilot pilot2 = new Pilot("Rubens Barrichello", 99);<br>
 </code></td></tr></table>
 <br>
 <br>
-<a name="outline348"></a><br><h2>6.2. Retrieving</h2><br>
+<a name="outline351"></a><br><h2>6.2. Retrieving</h2><br>
 db4o will provide us with all objects of the given type. To collect&nbsp;all instances of a given class, no matter whether they are subclass&nbsp;members or direct instances, we just provide a corresponding prototype.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -249,10 +249,10 @@ SensorReadout proto = new TemperatureSensorReadout(DateTime.MinValue, null, null
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>4<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : water temp : 0.2<br>
 </td></table></table><br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -263,12 +263,12 @@ SensorReadout proto = new SensorReadout(DateTime.MinValue, null, null);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>6<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil pressure : 1.5<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil pressure : 0.6<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : water temp : 0.2<br>
 </td></table></table><br>
 <br>
 This is one more situation where QBE might not be applicable: What if&nbsp;the given type is an interface or an abstract class? Well, there's a little&nbsp;DWIM trick to the rescue: Class objects receive special handling with QBE.<br>
@@ -280,12 +280,12 @@ ObjectSet result = db.get(typeof(SensorReadout));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>6<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil pressure : 1.5<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil pressure : 0.6<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : water temp : 0.2<br>
 </td></table></table><br>
 <br>
 And of course there's our query API to the rescue.<br>
@@ -299,12 +299,12 @@ Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>6<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil pressure : 1.5<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil pressure : 0.6<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : water temp : 0.2<br>
 </td></table></table><br>
 <br>
 This procedure applies to all first class objects. We can simply query for all&nbsp;objects present in the database, for example.<br>
@@ -316,22 +316,22 @@ ObjectSet result = db.get(new object());<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>13<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6<br>
-BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
-Db4oDatabase: [B@10d3025<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil pressure : 1.5<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil pressure : 0.6<br>
+BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : water temp : 0.2<br>
+Db4oDatabase: [B@19bd819<br>
 []<br>
-[BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0, BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2, BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6, BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004, BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8, BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5]<br>
+[BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil temp : 0.0, BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : water temp : 0.2, BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil pressure : 0.6, BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil temp : 0.30000000000000004, BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : water temp : 0.8, BMW[Rubens Barrichello/99]/6 : Wed Feb 23 00:24:11 CET 2005 : oil pressure : 1.5]<br>
 BMW[Rubens Barrichello/99]/6<br>
 Ferrari[Michael Schumacher/100]/0<br>
 Rubens Barrichello/99<br>
 Michael Schumacher/100<br>
 </td></table></table><br>
 <br>
-<a name="outline349"></a><br><h2>6.3. Updating and deleting</h2><br>
+<a name="outline352"></a><br><h2>6.3. Updating and deleting</h2><br>
 is just the same for all objects, no matter where they are situated&nbsp;in the inheritance tree.<br>
 <br>
 Just like we retrieved all objects from the database above, we can&nbsp;delete all stored objects to prepare for the next chapter.<br>
@@ -347,10 +347,10 @@ ObjectSet result=db.get(new object());<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/></td></table></table><br>
 <br>
-<a name="outline350"></a><br><h2>6.4. Conclusion</h2><br>
+<a name="outline353"></a><br><h2>6.4. Conclusion</h2><br>
 Now we have covered all basic OO features and the way they are handled by&nbsp;db4o. We will complete the first part of our db4o walkthrough in the&nbsp;<a href="Deep.html#Deep">next chapter </a>&nbsp;&nbsp;by looking at deep object graphs, including recursive structures.<br>
 <br>
-<a name="outline351"></a><br><h2>6.5. Full source</h2><br>
+<a name="outline354"></a><br><h2>6.5. Full source</h2><br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code><br>
 namespace com.db4o.f1.chapter4<br>
