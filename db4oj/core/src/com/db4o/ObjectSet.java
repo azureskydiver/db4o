@@ -18,8 +18,7 @@ import com.db4o.ext.*;
  * <a href="ObjectContainer.html"><code>
  * ObjectContainer</code></a> needs to remain opened during the
  * use of an <code>ObjectSet</code> to allow lazy instantiation.
- * @see <a href="ext\ExtObjectSet.html"><code>ExtObjectSet</code></a> for
- * extended functionality.
+ * @see ExtObjectSet for extended functionality.
  */
 public interface ObjectSet {
 	

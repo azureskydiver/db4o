@@ -11,8 +11,7 @@ import com.db4o.query.*;
  * <br><br>The <code>ObjectContainer</code> interface provides methods
  * to store, retrieve and delete objects and to commit and rollback
  * transactions.
- * @see <a href="ext/ExtObjectContainer.html">ExtObjectContainer</a> for
- * extended functionality.
+ * @see ExtObjectContainer for extended functionality.
  */
 public interface ObjectContainer {
 	
@@ -38,12 +37,10 @@ public interface ObjectContainer {
      * A successful <code>activate()</code> triggers the callback method
      * <a href="ext/ObjectCallbacks.html#objectOnActivate(com.db4o.ObjectContainer)">
      * <code>objectOnActivate</code></a> which can be used for cascaded activation.<br><br>
-	 * @see <a href="config/Configuration.html#activationDepth(int)">
-	 * Why activation?</a>
-	 * @see <br><a href="ext/ObjectCallbacks.html">Using callbacks</a>
+	 * @see com.db4o.config.Configuration#activationDepth Why activation?
+	 * @see ObjectCallbacks Using callbacks
      * @param Object the object to be activated.
-	 * @param depth the member 
-	 * <a href="config/Configuration.html#activationDepth(int)">depth</a>
+	 * @param depth the member {@link com.db4o.config.Configuration#activationDepth depth}
 	 *  to which activate is to cascade.
      */
     public void activate (Object obj, int depth);
@@ -79,12 +76,10 @@ public interface ObjectContainer {
      * Be aware that calling this method with a depth parameter greater than 
      * 1 sets members on member objects to null. This may have side effects 
      * in other places of the application.<br><br>
-	 * @see <a href="ext/ObjectCallbacks.html">Using callbacks</a>
-  	 * @see <a href="config/Configuration.html#activationDepth(int)">
-	 * Why activation?</a>
+	 * @see ObjectCallbacks Using callbacks
+  	 * @see com.db4o.config.Configuration#activationDepth Why activation?
      * @param obj the object to be deactivated.
-	 * @param depth the member 
-	 * <a href="config/Configuration.html#activationDepth(int)">depth</a> 
+	 * @param depth the member {@link com.db4o.config.Configuration#activationDepth depth} 
 	 * to which deactivate is to cascade.
 	*/
     public void deactivate (Object obj, int depth);

@@ -8,7 +8,7 @@ import java.util.*;
  *  db4o Map implementation for database-aware maps.
  * <br><br>
  * A <code>Db4oMap</code> supplies the methods specified in java.util.Map.<br><br>
- * All access to the map is controlled by the {@link ObjectContainer} to help the
+ * All access to the map is controlled by the {@link com.db4o.ObjectContainer ObjectContainer} to help the
  * programmer produce expected results with as little work as possible:<br>  
  * - newly added objects are automatically persisted.<br>
  * - map elements are automatically activated when they are needed. The activation

@@ -20,7 +20,7 @@ import com.db4o.reflect.*;
  * <a href="#configure()"><code>configure()</code></a> method.
  * <br><br>On running the <code>Db4o</code> class it prints the current
  * version to System.out.
- * @see <a href="ext/ExtDb4o.html">ExtDb4o</a> for extended functionality.
+ * @see ExtDb4o for extended functionality.
  */
 public class Db4o {
 	static final Config4Impl i_config = new Config4Impl();
@@ -76,10 +76,7 @@ public class Db4o {
 	 * The <a href="config/Configuration.html"><code>Configuration</code></a>
 	 * can be overriden in each
 	 * <a href="ObjectContainer.html#configure()"><code>ObjectContainer</code></a>.<br><br>
-	 * @return <a href="config/Configuration.html"><code>Configuration</code></a>
-	 *  the global Configuration context
-     * @see <a href="ObjectContainer.html#configure()">
-     * <code>ObjectContainer#configure()</code></a>
+	 * @return the global ${@link Configuration configuration} context
      */
 	public static Configuration configure(){
 		return i_config;
@@ -144,8 +141,7 @@ public class Db4o {
      * @param user the user name
      * @param password the user password
 	 * @return an open <a href="ObjectContainer.html"><code>ObjectContainer</code></a>
-     * @see <a href="ObjectServer.html#grantAccess(java.lang.String, java.lang.String)">
-     * <code>ObjectServer#grantAccess()</code></a>
+     * @see ObjectServer#grantAccess
 	 */
 	public static ObjectContainer openClient(String hostName, int port, String user, String password)
 		throws IOException {
@@ -167,12 +163,9 @@ public class Db4o {
      * <br><br>
      * @param databaseFileName the full path to the database file
 	 * @return an open <a href="ObjectContainer.html"><code>ObjectContainer</code></a>
-     * @see <a href="config/Configuration.html#readOnly(boolean)">
-     * <code>Configuration#readOnly()</code></a>
-     * @see <a href="config/Configuration.html#encrypt(boolean)">
-     * <code>Configuration#encrypt()</code></a>
-     * @see <a href="config/Configuration.html#password(java.lang.String)">
-     * <code>Configuration#password()</code></a>
+     * @see Configuration#readOnly
+     * @see Configuration#encrypt
+     * @see Configuration#password
 	 */
 	public static final ObjectContainer openFile(String databaseFileName) throws DatabaseFileLockedException {
 		synchronized(Db4o.lock){
@@ -223,12 +216,9 @@ public class Db4o {
      * because it will only be used with {@link ObjectServer#openClient()}
 	 * @return an <a href="ObjectServer.html"><code>ObjectServer</code></a> listening
 	 * on the specified port.
-     * @see <a href="config/Configuration.html#readOnly(boolean)">
-     * <code>Configuration#readOnly()</code></a>
-     * @see <a href="config/Configuration.html#encrypt(boolean)">
-     * <code>Configuration#encrypt()</code></a>
-     * @see <a href="config/Configuration.html#password(java.lang.String)">
-     * <code>Configuration#password()</code></a>
+     * @see Configuration#readOnly
+     * @see Configuration#encrypt
+     * @see Configuration#password
 	 */
 	public static final ObjectServer openServer(String databaseFileName, int port) throws DatabaseFileLockedException {
 		synchronized(Db4o.lock){
