@@ -1,14 +1,17 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.reflect.jdk;
 
 import java.lang.reflect.*;
+
+import com.db4o.DTrace;
+import com.db4o.Platform;
 import com.db4o.reflect.*;
 
 /**
  * Reflection implementation for Constructor to map to JDK reflection.
  */
-class CConstructor implements IConstructor{
+public class CConstructor implements IConstructor{
 	
 	private final Constructor constructor;
 	

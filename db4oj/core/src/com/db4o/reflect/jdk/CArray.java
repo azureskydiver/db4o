@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.reflect.jdk;
 
 import java.lang.reflect.*;
 import com.db4o.reflect.*;
@@ -8,7 +8,7 @@ import com.db4o.reflect.*;
 /**
  * Reflection implementation for Array to map to JDK reflection.
  */
-class CArray implements IArray {
+public class CArray implements IArray {
 
     public Object get(Object onArray, int index) {
         return Array.get(onArray, index);

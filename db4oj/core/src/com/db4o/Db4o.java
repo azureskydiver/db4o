@@ -41,7 +41,16 @@ public class Db4o {
 		System.out.println(version());
 	}
 	
-	static Class classForName(String name) throws ClassNotFoundException{
+    /**
+     * (non-API) Method classForName.  Return a Class object corresponding
+     * to the class name passed using db4objects' internal reflection 
+     * mechanism.
+     * 
+     * @param name The class name
+     * @return The Class object
+     * @throws ClassNotFoundException
+     */
+	public static Class classForName(String name) throws ClassNotFoundException{
 		return classForName(null, name);
 	}
 	

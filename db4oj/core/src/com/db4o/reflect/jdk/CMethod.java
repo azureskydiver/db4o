@@ -1,12 +1,12 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.reflect.jdk;
 
 import java.lang.reflect.*;
 
 import com.db4o.reflect.*;
 
-class CMethod implements IMethod{
+public class CMethod implements IMethod{
 	
 	private final Method method;
 	

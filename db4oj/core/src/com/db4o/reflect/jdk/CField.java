@@ -1,14 +1,17 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.reflect.jdk;
 
-import java.lang.reflect.*;
-import com.db4o.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
+import com.db4o.Platform;
+import com.db4o.reflect.IField;
 
 /**
  * Reflection implementation for Field to map to JDK reflection.
  */
-class CField implements IField {
+public class CField implements IField {
 
     private final Field field;
 
@@ -52,9 +55,10 @@ class CField implements IField {
         try {
             field.set(onObject, attribute);
         } catch (Exception e) {
-            if(Debug.atHome){
-                e.printStackTrace();
-            }
+            // FIXME: This doesn't work when in its own package...
+//            if(Debug.atHome){
+//                e.printStackTrace();
+//            }
         }
     }
 }

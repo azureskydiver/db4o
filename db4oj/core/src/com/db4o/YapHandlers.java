@@ -6,6 +6,7 @@ import java.lang.reflect.*;
 
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.jdk.CConstructor;
 import com.db4o.types.*;
 
 /**
