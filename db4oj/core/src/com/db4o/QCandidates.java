@@ -2,7 +2,11 @@
 
 package com.db4o;
 
-/** Candidates during query evaluation. QCandidate objects are stored in i_root */
+/**
+ * Holds the tree of QCandidate objects and the list of QContraints during query evaluation.
+ * The query work (adding and removing nodes) happens here.
+ * Candidates during query evaluation. QCandidate objects are stored in i_root
+ */
 public final class QCandidates implements Visitor4 {
 
     // Transaction necessary as reference to stream
@@ -30,22 +34,26 @@ public final class QCandidates implements Visitor4 {
     private int i_orderID;
 
     QCandidates(Transaction a_trans, YapClass a_yapClass, QField a_field) {
-        i_trans = a_trans;
-        i_yapClass = a_yapClass;
-        i_field = a_field;
-        if (a_field != null
-            && a_field.i_yapField != null
-            && a_field.i_yapField.getHandler() instanceof YapClass) {
-            YapClass yc = (YapClass) a_field.i_yapField.getHandler();
-            if (i_yapClass == null) {
-                i_yapClass = yc;
-            } else {
-                yc = i_yapClass.getHigherOrCommonHierarchy(yc);
-                if (yc != null) {
-                    i_yapClass = yc;
-                }
-            }
-        }
+    	i_trans = a_trans;
+    	i_yapClass = a_yapClass;
+    	i_field = a_field;
+   
+    	if (a_field == null
+    			|| a_field.i_yapField == null
+				|| !(a_field.i_yapField.getHandler() instanceof YapClass)
+    	) {
+    		return;
+    	}
+
+    	YapClass yc = (YapClass) a_field.i_yapField.getHandler();
+    	if (i_yapClass == null) {
+    		i_yapClass = yc;
+    	} else {
+    		yc = i_yapClass.getHigherOrCommonHierarchy(yc);
+    		if (yc != null) {
+    			i_yapClass = yc;
+    		}
+    	}
     }
 
     QCandidate addByIdentity(QCandidate candidate) {
@@ -74,59 +82,60 @@ public final class QCandidates implements Visitor4 {
     }
 
     void applyOrdering(Tree a_ordered, int a_orderID) {
-        if (a_ordered != null && i_root != null) {
-            if (a_orderID > 0) {
-                a_orderID = -a_orderID;
-            }
-            final boolean major = (a_orderID - i_orderID) < 0;
-            if (major) {
-                i_orderID = a_orderID;
-            }
-
-            final int[] placement = { 0 };
-            // Step 1: Clear possible old ordering criteria
-            //         and store old order.
-            i_root.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    ((QCandidate) a_object).hintOrder(0, major);
-                    ((QCandidate) a_object).hintOrder(placement[0]++, !major);
-                }
-            });
-
-            // Step 2: Set new ordering criteria
-            placement[0] = 1;
-            a_ordered.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    QOrder qo = (QOrder) a_object;
-                    QCandidate candidate = qo.i_candidate.getRoot();
-                    candidate.hintOrder(placement[0]++, major);
-                }
-            });
-
-            // Step 3: We need to put them all into a collection,
-            //         so we can safely remove the old tree joins
-            final Collection4 col = new Collection4();
-            i_root.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    QCandidate candidate = (QCandidate) a_object;
-                    col.add(candidate);
-
-                }
-            });
-
-            // Step 4: Add them to our tree again.
-            final Tree[] newTree = { null };
-            Iterator4 i = col.iterator();
-            while(i.hasNext()){
-				QCandidate candidate = (QCandidate) i.next();
-				candidate.i_preceding = null;
-				candidate.i_subsequent = null;
-				candidate.i_size = 1;
-				newTree[0] = Tree.add(newTree[0], candidate);
-            }
-
-            i_root = newTree[0];
-        }
+    	if (a_ordered == null || i_root == null) {
+    		return;
+    	}
+    	if (a_orderID > 0) {
+    		a_orderID = -a_orderID;
+    	}
+    	final boolean major = (a_orderID - i_orderID) < 0;
+    	if (major) {
+    		i_orderID = a_orderID;
+    	}
+    	
+    	final int[] placement = { 0 };
+    	// Step 1: Clear possible old ordering criteria
+    	//         and store old order.
+    	i_root.traverse(new Visitor4() {
+    		public void visit(Object a_object) {
+    			((QCandidate) a_object).hintOrder(0, major);
+    			((QCandidate) a_object).hintOrder(placement[0]++, !major);
+    		}
+    	});
+    	
+    	// Step 2: Set new ordering criteria
+    	placement[0] = 1;
+    	a_ordered.traverse(new Visitor4() {
+    		public void visit(Object a_object) {
+    			QOrder qo = (QOrder) a_object;
+    			QCandidate candidate = qo.i_candidate.getRoot();
+    			candidate.hintOrder(placement[0]++, major);
+    		}
+    	});
+    	
+    	// Step 3: We need to put them all into a collection,
+    	//         so we can safely remove the old tree joins
+    	final Collection4 col = new Collection4();
+    	i_root.traverse(new Visitor4() {
+    		public void visit(Object a_object) {
+    			QCandidate candidate = (QCandidate) a_object;
+    			col.add(candidate);
+    			
+    		}
+    	});
+    	
+    	// Step 4: Add them to our tree again.
+    	final Tree[] newTree = { null };
+    	Iterator4 i = col.iterator();
+    	while(i.hasNext()){
+    		QCandidate candidate = (QCandidate) i.next();
+    		candidate.i_preceding = null;
+    		candidate.i_subsequent = null;
+    		candidate.i_size = 1;
+    		newTree[0] = Tree.add(newTree[0], candidate);
+    	}
+    	
+    	i_root = newTree[0];
     }
 
     void collect(final QCandidates a_candidates) {
@@ -167,37 +176,38 @@ public final class QCandidates implements Visitor4 {
 
     void evaluate() {
     	
-    	if(i_constraints != null){
-    		
-    		Iterator4 i = new Iterator4(i_constraints);
-    		while(i.hasNext()){
-				((QCon)i.next()).evaluateSelf();
-    		}
-    		
-			i = new Iterator4(i_constraints);
-			while(i.hasNext()){
-				((QCon)i.next()).evaluateSimpleChildren();
-			}
-			
-			i = new Iterator4(i_constraints);
-			while(i.hasNext()){
-				((QCon)i.next()).evaluateEvaluations();
-			}
-			
-			i = new Iterator4(i_constraints);
-			while(i.hasNext()){
-				((QCon)i.next()).evaluateCreateChildrenCandidates();
-			}
-			
-			i = new Iterator4(i_constraints);
-			while(i.hasNext()){
-				((QCon)i.next()).evaluateCollectChildren();
-			}
-			
-			i = new Iterator4(i_constraints);
-			while(i.hasNext()){
-				((QCon)i.next()).evaluateChildren();
-			}
+    	if (i_constraints == null) {
+    		return;
+    	}
+    	
+    	Iterator4 i = new Iterator4(i_constraints);
+    	while(i.hasNext()){
+    		((QCon)i.next()).evaluateSelf();
+    	}
+    	
+    	i = new Iterator4(i_constraints);
+    	while(i.hasNext()){
+    		((QCon)i.next()).evaluateSimpleChildren();
+    	}
+    	
+    	i = new Iterator4(i_constraints);
+    	while(i.hasNext()){
+    		((QCon)i.next()).evaluateEvaluations();
+    	}
+    	
+    	i = new Iterator4(i_constraints);
+    	while(i.hasNext()){
+    		((QCon)i.next()).evaluateCreateChildrenCandidates();
+    	}
+    	
+    	i = new Iterator4(i_constraints);
+    	while(i.hasNext()){
+    		((QCon)i.next()).evaluateCollectChildren();
+    	}
+    	
+    	i = new Iterator4(i_constraints);
+    	while(i.hasNext()){
+    		((QCon)i.next()).evaluateChildren();
     	}
     }
 
@@ -227,33 +237,34 @@ public final class QCandidates implements Visitor4 {
     }
 
     void loadFromClassIndex() {
-        if (isEmpty()) {
-            final QCandidates finalThis = this;
-            if (i_yapClass.getIndex() != null) {
-                final Tree[] newRoot =
-                    {
-                    	TreeInt.toQCandidate(i_yapClass.getIndexRoot(), this)
-                    };
-                i_trans.traverseAddedClassIDs(i_yapClass.getID(), new Visitor4() {
-                    public void visit(Object obj) {
-                        newRoot[0] =
-                            Tree.add(
-                                newRoot[0],
-                                new QCandidate(finalThis, ((TreeInt) obj).i_key, true));
-                    }
-                });
-                
-                // QCandidate has it's own compare routine, so we can't 
-                // use a TreeInt for the removeLike call
-                i_trans.traverseRemovedClassIDs(i_yapClass.getID(), new Visitor4() {
-                    public void visit(Object obj) {
-                    	newRoot[0] = Tree.removeLike(newRoot[0], new QCandidate(finalThis, ((TreeInt) obj).i_key, true));
-                    }
-                });
-                
-                i_root = newRoot[0];
-            }
-        }
+    	if (!isEmpty()) {
+    		return;
+    	}
+    	final QCandidates finalThis = this;
+    	if (i_yapClass.getIndex() != null) {
+    		final Tree[] newRoot =
+    		{
+    				TreeInt.toQCandidate(i_yapClass.getIndexRoot(), this)
+    		};
+    		i_trans.traverseAddedClassIDs(i_yapClass.getID(), new Visitor4() {
+    			public void visit(Object obj) {
+    				newRoot[0] =
+    					Tree.add(
+    							newRoot[0],
+								new QCandidate(finalThis, ((TreeInt) obj).i_key, true));
+    			}
+    		});
+    		
+    		// QCandidate has it's own compare routine, so we can't 
+    		// use a TreeInt for the removeLike call
+    		i_trans.traverseRemovedClassIDs(i_yapClass.getID(), new Visitor4() {
+    			public void visit(Object obj) {
+    				newRoot[0] = Tree.removeLike(newRoot[0], new QCandidate(finalThis, ((TreeInt) obj).i_key, true));
+    			}
+    		});
+    		
+    		i_root = newRoot[0];
+    	}
     }
 
     void setCurrentConstraint(QCon a_constraint) {
@@ -294,19 +305,20 @@ public final class QCandidates implements Visitor4 {
     }
 
     public void visit(Object a_tree) {
-        final QCandidate parent = (QCandidate) a_tree;
-        if (!parent.createChild(this)) {
-
-            // No object found.
-            // All children constraints are necessarily false.
-            // Check immediately.
-            if(i_constraints != null){
-            	Iterator4 i = new Iterator4(i_constraints);
-            	while(i.hasNext()){
-					((QCon)i.next()).visitOnNull(parent.getRoot());
-            	}
-            	
-            }
-        }
+    	final QCandidate parent = (QCandidate) a_tree;
+    	if (parent.createChild(this)) {
+    		return;
+    	}
+    	
+    	// No object found.
+    	// All children constraints are necessarily false.
+    	// Check immediately.
+    	if(i_constraints != null){
+    		Iterator4 i = new Iterator4(i_constraints);
+    		while(i.hasNext()){
+    			((QCon)i.next()).visitOnNull(parent.getRoot());
+    		}
+    		
+    	}
     }
 }

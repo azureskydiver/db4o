@@ -2,7 +2,8 @@
 
 package com.db4o;
 
-/** QE stands for QueryEvaluator */
+/**  Query Evaluator - Represents such things as >, >=, <, <=, EQUAL, LIKE, etc.
+ */
 public class QE
 {
     
