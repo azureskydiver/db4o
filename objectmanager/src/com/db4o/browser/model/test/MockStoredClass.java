@@ -32,6 +32,7 @@ public class MockStoredClass implements StoredClass {
 			for (int idx = 0; idx < curfields.length; idx++) {
 				fields.add(new MockStoredField(curfields[idx]));
 			}
+			curclazz=curclazz.getSuperclass();
 		}
 		return (StoredField[])fields.toArray(new StoredField[fields.size()]);
 	}

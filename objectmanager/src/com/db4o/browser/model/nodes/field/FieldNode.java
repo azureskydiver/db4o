@@ -89,4 +89,19 @@ public class FieldNode implements IModelNode {
 		return value.toString();
 	}
 
+	public boolean equals(Object obj) {
+		if(obj==this) {
+			return true;
+		}
+		if(obj==null||getClass()!=obj.getClass()) {
+			return false;
+		}
+		FieldNode node=(FieldNode)obj;
+		return _instance.equals(node._instance)&&_field.equals(node._field);
+	}
+	
+	public int hashCode() {
+		return _instance.hashCode()*29+_field.hashCode();
+	}
+
 }
