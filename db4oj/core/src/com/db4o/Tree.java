@@ -5,8 +5,8 @@ package com.db4o;
 /**
  * @exclude
  */
-public abstract class Tree implements Cloneable, Readable
-{
+public abstract class Tree implements Cloneable, Readable{
+    
 	Tree i_preceding;
 	int i_size = 1;
 	Tree i_subsequent;
@@ -54,21 +54,21 @@ public abstract class Tree implements Cloneable, Readable
 	}
 	
 	final Tree balance(){
-		int cmp = i_subsequent.i_size - i_preceding.i_size;
+		int cmp = i_subsequent.nodes() - i_preceding.nodes(); 
 		if(cmp < -2){
 			return rotateRight();
 		}else if(cmp > 2){
 			return rotateLeft();
 		}else{
-		    i_size = i_preceding.i_size + i_subsequent.i_size + ownSize();
+            setSizeOwnPrecedingSubsequent();
 		    return this;
 		}
 	}
 	
-	final Tree balanceCheckNulls(){
+	Tree balanceCheckNulls(){
 	    if(i_subsequent == null){
 	        if(i_preceding == null){
-	            i_size = ownSize();
+                setSizeOwn();
 	            return this;
 	        }
 	        return rotateRight();
@@ -103,15 +103,15 @@ public abstract class Tree implements Cloneable, Readable
 	void calculateSize(){
 		if(i_preceding == null){
 			if (i_subsequent == null){
-				i_size = ownSize();
+				setSizeOwn();
 			}else{
-				i_size = i_subsequent.i_size + ownSize();
+                setSizeOwnSubsequent();
 			}
 		}else{
 			if(i_subsequent == null){
-				i_size = i_preceding.i_size + ownSize();
+                setSizeOwnPreceding();
 			}else{
-				i_size = i_preceding.i_size + i_subsequent.i_size + ownSize();
+                setSizeOwnPrecedingSubsequent();
 			}
 		}
 	}
@@ -130,6 +130,7 @@ public abstract class Tree implements Cloneable, Readable
 		}
 		Tree newNode = a_tree.deepClone(a_param);
 		newNode.i_size = a_tree.i_size;
+        newNode.nodes( a_tree.nodes());
 		newNode.i_preceding = Tree.deepClone(a_tree.i_preceding, a_param); 
 		newNode.i_subsequent = Tree.deepClone(a_tree.i_subsequent, a_param); 
 		return newNode;
@@ -227,6 +228,17 @@ public abstract class Tree implements Cloneable, Readable
 		i_size = 0;
 	}
 	
+    /**
+     * @return the number of nodes in this tree for balancing
+     */
+    int nodes(){
+        return i_size;
+    }
+    
+    void nodes(int count){
+        // do nothing, virtual
+    }
+    
 	int ownLength(){
 		throw YapConst.virtualException();
 	}
@@ -259,7 +271,7 @@ public abstract class Tree implements Cloneable, Readable
 	void removeChildren(){
 		i_preceding = null;
 		i_subsequent = null;
-		i_size = ownSize();
+		setSizeOwn();
 	}
 	
 	static Tree removeLike(Tree from, Tree a_find){
@@ -305,16 +317,16 @@ public abstract class Tree implements Cloneable, Readable
 		calculateSize();
 		return this;
 	}
-	
+    
 	final Tree rotateLeft(){
 		Tree tree = i_subsequent;
 		i_subsequent = tree.i_preceding;
 		calculateSize();
 		tree.i_preceding = this;
 		if(tree.i_subsequent == null){
-			tree.i_size = i_size + tree.ownSize();
+            tree.setSizeOwnPlus(this);
 		}else{
-			tree.i_size = i_size + tree.i_subsequent.i_size + tree.ownSize();
+            tree.setSizeOwnPlus(this, tree.i_subsequent);
 		}
 		return tree;
 	}
@@ -325,9 +337,9 @@ public abstract class Tree implements Cloneable, Readable
 		calculateSize();
 		tree.i_subsequent = this;
 		if(tree.i_preceding == null){
-			tree.i_size = i_size + tree.ownSize();
+            tree.setSizeOwnPlus(this);
 		}else{
-			tree.i_size = i_size + tree.i_preceding.i_size + tree.ownSize();
+            tree.setSizeOwnPlus(this, tree.i_preceding);
 		}
 		return tree;
 	}
@@ -339,6 +351,30 @@ public abstract class Tree implements Cloneable, Readable
 		}
 		return this;
 	}
+    
+    void setSizeOwn(){
+        i_size = ownSize();
+    }
+    
+    void setSizeOwnPrecedingSubsequent(){
+        i_size = ownSize() + i_preceding.i_size + i_subsequent.i_size;
+    }
+    
+    void setSizeOwnPreceding(){
+        i_size = ownSize() + i_preceding.i_size;
+    }
+    
+    void setSizeOwnSubsequent(){
+        i_size = ownSize() + i_subsequent.i_size;
+    }
+    
+    void setSizeOwnPlus(Tree tree){
+        i_size = ownSize() + tree.i_size;
+    }
+    
+    void setSizeOwnPlus(Tree tree1, Tree tree2){
+        i_size = ownSize() + tree1.i_size + tree2.i_size;
+    }
 	
 	static int size(Tree a_tree){
 		if(a_tree == null){
@@ -347,10 +383,13 @@ public abstract class Tree implements Cloneable, Readable
 		return a_tree.size();
 	}
 	
+    /**
+     * @return the number of objects represented.
+     */
 	public int size(){
 		return i_size;
 	}
-	
+    
 	public final void traverse(final Visitor4 a_visitor){
 		if(i_preceding != null){
 			i_preceding.traverse(a_visitor);

@@ -211,7 +211,7 @@ abstract class YapFile extends YapStream {
                                 TreeInt newNode = new TreeInt(id);
                                 duplicates[0] = Tree
                                     .add(duplicates[0], newNode);
-                                if (newNode.i_size != 0) {
+                                if (newNode.size() != 0) {
                                     a_res.add(id);
                                 }
                             }

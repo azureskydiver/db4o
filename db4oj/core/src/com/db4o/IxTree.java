@@ -8,6 +8,8 @@ abstract class IxTree extends Tree{
     
     int i_version;
     
+    int _nodes = 1;
+    
     IxTree(IxFieldTransaction a_ft){
         i_fieldTransaction = a_ft;
         i_version = a_ft.i_version;
@@ -32,6 +34,12 @@ abstract class IxTree extends Tree{
     
     abstract Tree addToCandidatesTree(Tree a_tree, QCandidates a_candidates, int[] a_lowerAndUpperMatch);
     
+    void beginMerge(){
+        i_preceding = null;
+        i_subsequent = null;
+        setSizeOwn();
+    }
+    
     Tree deepClone(Object a_param){
         try {
             IxTree tree = (IxTree)this.clone();
@@ -47,8 +55,50 @@ abstract class IxTree extends Tree{
         return i_fieldTransaction.i_index.i_field.getHandler();
     }
     
+    final int nodes(){
+        return _nodes;
+    }
+    
+    final void nodes(int count){
+       _nodes = count;
+    }
+    
+    void setSizeOwn(){
+        super.setSizeOwn();
+        _nodes = 1;
+    }
+    
+    void setSizeOwnPrecedingSubsequent(){
+        super.setSizeOwnPrecedingSubsequent();
+        _nodes = 1 + i_preceding.nodes() + i_subsequent.nodes();
+    }
+    
+    void setSizeOwnPreceding(){
+        super.setSizeOwnPreceding();
+        _nodes = 1 + i_preceding.nodes();
+    }
+    
+    void setSizeOwnSubsequent(){
+        super.setSizeOwnSubsequent();
+        _nodes = 1 + i_subsequent.nodes();
+    }
+    
+    final void setSizeOwnPlus(Tree tree){
+        super.setSizeOwnPlus(tree);
+        _nodes = 1 + tree.nodes();
+    }
+    
+    final void setSizeOwnPlus(Tree tree1, Tree tree2){
+        super.setSizeOwnPlus(tree1, tree2);
+        _nodes = 1 + tree1.nodes() + tree2.nodes();
+    }
+    
     int slotLength(){
         return handler().linkLength() + YapConst.YAPINT_LENGTH;
+    }
+    
+    final YapFile stream(){
+        return trans().i_file;
     }
     
     final Transaction trans(){
@@ -57,13 +107,5 @@ abstract class IxTree extends Tree{
     
     abstract void write(YapDataType a_handler, YapWriter a_writer);
     
-    final YapFile stream(){
-        return trans().i_file;
-    }
-    
-    void beginMerge(){
-        i_preceding = null;
-        i_subsequent = null;
-        i_size = ownSize();
-    }
+
 }
