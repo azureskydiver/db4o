@@ -400,7 +400,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
 
     ReflectClass reflectorFor(Object clazz) {
         
-        clazz = Platform.getTypeForClass(clazz);
+        clazz = Platform.getClassForType(clazz);
         
         if(clazz instanceof ReflectClass){
             return (ReflectClass)clazz;
