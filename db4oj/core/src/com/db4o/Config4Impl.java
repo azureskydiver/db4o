@@ -265,7 +265,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
 
 	Reflector reflector() {
 		if(_reflect== null){
-			_reflect = new JdkReflector(i_classLoader); 
+			_reflect = Platform.createReflector(this); 
 		}
 		return _reflect;
 	}
