@@ -10,10 +10,10 @@ import com.db4o.types.*;
 
 /**
  * extended functionality for the
- * <a href="../ObjectContainer.html"><code>ObjectContainer</code></a> interface.
- * <br><br>Every db4o <a href="../ObjectContainer.html"><code>ObjectContainer</code></a>
+ * {@link com.db4o.ObjectContainer ObjectContainer} interface.
+ * <br><br>Every db4o {@link com.db4o.ObjectContainer ObjectContainer}
  * always is an <code>ExtObjectContainer</code> so a cast is possible.<br><br>
- * <a href="../ObjectContainer.html#ext()"><code>ObjectContainer.ext()</code></a>
+ * {@link com.db4o.ObjectContainer#ext ObjectContainer.ext()}
  * is a convenient method to perform the cast.<br><br>
  * The ObjectContainer functionality is split to two interfaces to allow newcomers to
  * focus on the essential methods.
@@ -39,11 +39,11 @@ public interface ExtObjectContainer extends ObjectContainer {
      * reference with the object parameter. The method may be used to replace
      * objects or to reassociate an object with it's stored instance
      * after closing and opening a database file. A subsequent call to 
-     * <a href="../ObjectContainer.html#set(java.lang.Object)"><code>set(Object)</code></a> is
+     * {@link com.db4o.ObjectContainer#set set(Object)} is
      * necessary to update the stored object.<br><br>
      * <b>Requirements:</b><br>- The ID needs to be a valid internal object ID, 
      * previously retrieved with 
-     * <a href="#getID(java.lang.Object)"><code>getID(Object)</code></a>.<br>
+     * {@link #getID getID(Object)}.<br>
      * - The object parameter needs to be of the same class as the stored object.<br><br>
      * @see #getID(java.lang.Object)
      * @param obj the object that is to be bound
@@ -64,14 +64,14 @@ public interface ExtObjectContainer extends ObjectContainer {
      * returns the Configuration context for this ObjectContainer.
      * <br><br>
      * Upon opening an ObjectContainer with any of the factory methods in the
-     * <a href="../Db4o.html"><code>Db4o class</code></a>, the global 
-     * <a href="../config/Configuration.html"><code>Configuration</code></a> context
+     * {@link com.db4o.Db4o Db4o class}, the global 
+     * {@link com.db4o.config.Configuration Configuration} context
      * is copied into the ObjectContainer. The 
-     * <a href="../config/Configuration.html"><code>Configuration</code></a>
+     * {@link com.db4o.config.Configuration Configuration}
      * can be modified individually for
      * each ObjectContainer without any effects on the global settings.<br><br>
-     * @return <a href="../config/Configuration.html"><code>Configuration</code></a>
-     *  the Configuration context for this ObjectContainer
+     * @return {@link com.db4o.config.Configuration Configuration} the Configuration
+     * context for this ObjectContainer
      * @see Db4o#configure
      */
     public Configuration configure();
@@ -79,8 +79,7 @@ public interface ExtObjectContainer extends ObjectContainer {
     /**
      * returns the stored object for an internal ID.
      * <br><br>This is the fastest method for direct access to objects. Internal
-     * IDs can be obtained with 
-     * <a href="#getID(java.lang.Object)"><code>getID(Object)</code></a>.
+     * IDs can be obtained with {@link #getID getID(Object)}.
      * Objects will not be activated by this method. They will be returned in the 
      * activation state they are currently in, in the local cache.<br><br>
      * @param ID the internal ID
@@ -110,7 +109,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * guaranteed to be unique within one <code>ObjectContainer</code>. 
      * An object carries the same ID in every db4o session. Internal IDs can 
      * be used to look up objects with the very fast 
-     * <a href="#getByID(long)"><code>getByID</code></a> method.<br><br>
+     * {@link #getByID getByID} method.<br><br>
      * Internal IDs will change when a database is defragmented. Use 
      * {@link #getObjectInfo(Object)}, {@link ObjectInfo#getUUID()} and
      * {@link #getByUUID(Db4oUUID)} for long-term external references to
@@ -274,7 +273,7 @@ public interface ExtObjectContainer extends ObjectContainer {
     /**
      * deep update interface to store or update objects.
      * <br><br>In addition to the normal storage interface, 
-     * <a href="../ObjectContainer.html#set(java.lang.Object)"><code>ObjectContainer#set(Object)</code></a>,
+     * {@link com.db4o.ObjectContainer#set ObjectContainer#set(Object)},
      * this method allows a manual specification of the depth, the passed object is to be updated.<br><br>
      * @param obj the object to be stored or updated.
      * @param depth the depth to which the object is to be updated
