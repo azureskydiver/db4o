@@ -14,6 +14,7 @@ public class AllTestsConfAll {
 	    	Backup.class,
 	    	BindFileSize.class,
 	    	Callbacks.class,
+	    	CallConstructors.class,
 	    	CascadedDeleteUpdate.class,
 			CascadeDeleteArray.class,
 			CascadeDeleteFalse.class,

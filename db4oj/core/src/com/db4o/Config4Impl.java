@@ -20,6 +20,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     byte			 i_blockSize						= 1;  // TODO: set this to 8, when implementation is done
     String           i_blobPath;
     boolean          i_callbacks                        = true;
+    int			 	 i_callConstructors;
     boolean          i_classActivationDepthConfigurable = true;
     ClassLoader      i_classLoader;
     boolean          i_detectSchemaChanges              = true;
@@ -78,6 +79,10 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
 
     public void callbacks(boolean turnOn) {
         i_callbacks = turnOn;
+    }
+    
+    public void callConstructors(boolean flag){
+        i_callConstructors = flag ? YapConst.YES : YapConst.NO;
     }
 
     public void classActivationDepthConfigurable(boolean turnOn) {

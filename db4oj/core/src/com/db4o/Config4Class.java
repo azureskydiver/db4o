@@ -7,6 +7,8 @@ import com.db4o.config.*;
 class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     DeepClone {
 
+    int			 	 i_callConstructor;
+    
     Config4Impl        i_config;
 
     private Hashtable4 i_exceptionalFields;
@@ -59,6 +61,10 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
         }
         return a_depth;
     }
+    
+    public void callConstructor(boolean flag){
+        i_callConstructor = flag ? YapConst.YES : YapConst.NO;
+    }
 
     String className() {
         return getName();
@@ -86,11 +92,11 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     }
     
     public void generateUUIDs(boolean setting) {
-        i_generateUUIDs = setting ? 1 : -1;
+        i_generateUUIDs = setting ? YapConst.YES : YapConst.NO;
     }
 
     public void generateVersionNumbers(boolean setting) {
-        i_generateVersionNumbers = setting ? 1 : -1;
+        i_generateVersionNumbers = setting ? YapConst.YES : YapConst.NO;
     }
 
     public ObjectTranslator getTranslator() {
@@ -140,8 +146,11 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
         i_minimumActivationDepth = depth;
     }
     
-    public boolean noConstructorNeeded() {
-        return i_translator == null;
+    public int callConstructor() {
+        if(i_translator != null){
+            return YapConst.YES;
+        }
+        return i_callConstructor;
     }
     
     public ObjectField objectField(String fieldName) {

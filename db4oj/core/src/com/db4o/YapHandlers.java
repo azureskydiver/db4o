@@ -170,8 +170,8 @@ class YapHandlers {
         }
         
         if(! Deploy.csharp){
-	        if(Platform.noConstructorNeeded()){
-	            if(a_yapClass.noConstructorNeeded()){
+	        if(! Platform.callConstructor()){
+	            if(! a_yapClass.callConstructor(a_stream)){
 		            Constructor constructor = Platform.jdk().serializableConstructor(a_class);
 		            if(constructor != null){
 		                try{

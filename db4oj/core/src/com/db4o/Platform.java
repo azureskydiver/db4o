@@ -22,16 +22,11 @@ public final class Platform {
 
     static private int setAccessibleCheck;
     static private int shutDownHookCheck;
-    static int noConstructorCheck;
+    static int callConstructorCheck;
     static ShutDownRunnable shutDownRunnable;
 
     static Thread shutDownThread;
     
-    // int values for features availability checks
-    static private final int UNCHECKED = 0;
-    static final int DONT_USE = -1;
-    static private final int USE = 1;
-
     static final String ACCESSIBLEOBJECT = "java.lang.reflect.AccessibleObject";
     static final String REFLECTIONFACTORY = "sun.reflect.ReflectionFactory";
     static final String GETCONSTRUCTOR = "newConstructorForSerialization";
@@ -58,21 +53,21 @@ public final class Platform {
         if (Deploy.csharp) {
             return true;
         }
-        if (setAccessibleCheck == UNCHECKED) {
+        if (setAccessibleCheck == YapConst.UNCHECKED) {
             if (Deploy.csharp) {
-                setAccessibleCheck = DONT_USE;
+                setAccessibleCheck = YapConst.NO;
             } else {
                 if (jdk().ver() >= 2) {
-                    setAccessibleCheck = USE;
+                    setAccessibleCheck = YapConst.YES;
                 } else {
-                    setAccessibleCheck = DONT_USE;
+                    setAccessibleCheck = YapConst.NO;
                     if (Db4o.i_config.i_messageLevel >= 0) {
                         Db4o.logErr(Db4o.i_config, 47, null, null);
                     }
                 }
             }
         }
-        return setAccessibleCheck == USE;
+        return setAccessibleCheck == YapConst.YES;
     }
     
     static final boolean classIsAvailable(String className) {
@@ -240,16 +235,16 @@ public final class Platform {
     }
 
     static final synchronized boolean hasCollections() {
-        if (collectionCheck == UNCHECKED) {
+        if (collectionCheck == YapConst.UNCHECKED) {
             if (!Deploy.csharp) {
                 if (classIsAvailable(UTIL + "Collection")) {
-                    collectionCheck = USE;
+                    collectionCheck = YapConst.YES;
                     return true;
                 }
             }
-            collectionCheck = DONT_USE;
+            collectionCheck = YapConst.NO;
         }
-        return collectionCheck == USE;
+        return collectionCheck == YapConst.YES;
     }
 
     static final boolean hasLockFileThread() {
@@ -260,49 +255,49 @@ public final class Platform {
         if (!Debug.nio) {
             return false;
         }
-        if (nioCheck == UNCHECKED) {
+        if (nioCheck == YapConst.UNCHECKED) {
             if ((jdk().ver() >= 4)
                 && (!noNIO())) {
-                nioCheck = USE;
+                nioCheck = YapConst.YES;
                 return true;
             }
-            nioCheck = DONT_USE;
+            nioCheck = YapConst.NO;
         }
-        return nioCheck == USE;
+        return nioCheck == YapConst.YES;
 
     }
 
     static final boolean hasShutDownHook() {
-        if (shutDownHookCheck == UNCHECKED) {
+        if (shutDownHookCheck == YapConst.UNCHECKED) {
             if (!Deploy.csharp) {
                 if (jdk().ver() >= 3){
-                    shutDownHookCheck = USE;
+                    shutDownHookCheck = YapConst.YES;
                     return true;
                 } else {
                     JavaOnly.runFinalizersOnExit();
                 }
             }
-            shutDownHookCheck = DONT_USE;
+            shutDownHookCheck = YapConst.NO;
         }
-        return shutDownHookCheck == USE;
+        return shutDownHookCheck == YapConst.YES;
     }
 
     static final boolean hasWeakReferences() {
         if (!Debug.weakReferences) {
             return false;
         }
-        if (weakReferenceCheck == UNCHECKED) {
+        if (weakReferenceCheck == YapConst.UNCHECKED) {
             if (!Deploy.csharp) {
                 if (classIsAvailable(ACCESSIBLEOBJECT)
                     && classIsAvailable("java.lang.ref.ReferenceQueue")
                     && jdk().ver() >= 2) {
-                    weakReferenceCheck = USE;
+                    weakReferenceCheck = YapConst.YES;
                     return true;
                 }
             }
-            weakReferenceCheck = DONT_USE;
+            weakReferenceCheck = YapConst.NO;
         }
-        return weakReferenceCheck == USE;
+        return weakReferenceCheck == YapConst.YES;
     }
     
     static final boolean ignoreAsConstraint(Object obj){
@@ -395,8 +390,8 @@ public final class Platform {
         }
     }
     
-    static boolean noConstructorNeeded() {
-        if (noConstructorCheck == UNCHECKED) {
+    static boolean callConstructor() {
+        if (callConstructorCheck == YapConst.UNCHECKED) {
             
             if(methodIsAvailable(
                 REFLECTIONFACTORY,
@@ -404,12 +399,12 @@ public final class Platform {
                 new Class[]{Class.class, Constructor.class}
                 )){
                 
-                noConstructorCheck = USE;
-                return true;
+                callConstructorCheck = YapConst.NO;
+                return false;
             }
-            noConstructorCheck = DONT_USE;
+            callConstructorCheck = YapConst.YES;
         }
-        return noConstructorCheck == USE;
+        return callConstructorCheck == YapConst.YES;
     }
 
     private static final boolean noNIO() {
@@ -474,10 +469,10 @@ public final class Platform {
 
     public static final void setAccessible(Object a_accessible) {
         if (!Deploy.csharp) {
-            if (setAccessibleCheck == UNCHECKED) {
+            if (setAccessibleCheck == YapConst.UNCHECKED) {
                 canSetAccessible();
             }
-            if (setAccessibleCheck == USE) {
+            if (setAccessibleCheck == YapConst.YES) {
                 jdk().setAccessible(a_accessible);
             }
         }

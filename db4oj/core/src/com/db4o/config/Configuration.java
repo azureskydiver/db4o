@@ -87,6 +87,25 @@ public interface Configuration {
      * @see <a href="../ObjectCallbacks.html"><code>ObjectCallbacks</code></a>
      */
     public void callbacks(boolean flag);
+    
+    /**
+     * advises db4o to try instantiating objects with/without calling
+     * constructors.
+     * <br><br>
+     * Not all JDKs / .NET-environments support this feature. db4o will
+     * attempt, to follow the setting as good as the enviroment supports.
+     * In doing so, it may call implementation-specific features like
+     * sun.reflect.ReflectionFactory#newConstructorForSerialization on the
+     * Sun Java 1.4.x/5 VM (not available on other VMs) and 
+     * FormatterServices.GetUninitializedObject() on
+     * the .NET framework (not available on CompactFramework).
+     * This setting may also be overridden for individual classes in
+     * {@link ObjectClass#callConstructor(boolean)}.<br><br>
+     * @param flag - specify true, to request calling constructors, specify
+     * false to request <b>not</b> calling constructors.
+     * @see <a href="ObjectClass.html#callConstructor(boolean)">
+     */
+    public void callConstructors(boolean flag);
 
     /**
      * turns 
