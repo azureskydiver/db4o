@@ -6,7 +6,7 @@ package com.db4o.binding.verifiers.reusable;
 import com.db4o.binding.verifier.IVerifier;
 
 /**
- * ReadOnlyVerifier.
+ * ReadOnlyVerifier.  The verifier that is used for read-only fields.
  *
  * @author djo
  */
