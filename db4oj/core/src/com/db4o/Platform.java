@@ -362,7 +362,7 @@ public final class Platform {
         }
     }
 
-    static final void lock(RandomAccessFile file) {
+    public static final void lock(RandomAccessFile file) {
         if (hasNio()) {
             jdk().lock(file);
         }
@@ -512,7 +512,7 @@ public final class Platform {
         return new YapTypeAbstract[0];
     }
 
-    static final void unlock(RandomAccessFile file) {
+    public static final void unlock(RandomAccessFile file) {
         if (hasNio()) {
             jdk().unlock(file);
         }

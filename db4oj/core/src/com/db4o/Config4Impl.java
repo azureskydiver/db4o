@@ -2,12 +2,14 @@
 
 package com.db4o;
 
+import java.io.*;
+
 import com.db4o.config.*;
+import com.db4o.io.*;
+import com.db4o.io.jdkdefault.*;
 import com.db4o.messaging.*;
 import com.db4o.reflect.*;
-import com.db4o.reflect.jdk.CReflect;
-
-import java.io.*;
+import com.db4o.reflect.jdk.*;
 
 /**
  * Configuration template for creating new db4o files
@@ -53,7 +55,9 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     int              i_updateDepth;
     int              i_weakReferenceCollectionInterval  = 1000;
     boolean          i_weakReferences                   = true;
-
+    private ObjectFileFactory i_fileFactory      = 
+    	new RandomAccessObjectFileFactory();
+    	
     int activationDepth() {
         return i_activationDepth;
     }
@@ -391,4 +395,12 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         }
         return cls.getName();
     }
+    
+    public ObjectFileFactory fileFactory() {
+    	return i_fileFactory;
+    }
+    
+    public void fileFactory(ObjectFileFactory fileFactory) {
+    	i_fileFactory=fileFactory;
+    }    
 }
