@@ -13,6 +13,7 @@ namespace com.db4o {
     /// If you don't want a field to be stored by db4o,
     /// simply mark it with this attribute.
     /// </remarks>
+    /// <exclude />
     public class Transient : Attribute {
         public Transient() {
         }
