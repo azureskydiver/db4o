@@ -2,9 +2,8 @@
 
 package com.db4o.replication;
 
-import com.db4o.*;
-import com.db4o.ext.*;
-import com.db4o.query.*;
+import com.db4o.ObjectContainer;
+import com.db4o.query.Query;
 
 
 /**

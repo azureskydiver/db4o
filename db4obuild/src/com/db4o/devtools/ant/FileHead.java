@@ -1,8 +1,12 @@
 package com.db4o.devtools.ant;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class FileHead extends File {
     

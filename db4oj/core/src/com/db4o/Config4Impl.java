@@ -2,13 +2,18 @@
 
 package com.db4o;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 
-import com.db4o.config.*;
-import com.db4o.io.*;
-import com.db4o.messaging.*;
-import com.db4o.reflect.*;
-import com.db4o.reflect.jdk.*;
+import com.db4o.config.Configuration;
+import com.db4o.config.ObjectClass;
+import com.db4o.io.IoAdapter;
+import com.db4o.io.RandomAccessFileAdapter;
+import com.db4o.messaging.MessageRecipient;
+import com.db4o.messaging.MessageSender;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.Reflector;
 
 /**
  * Configuration template for creating new db4o files
