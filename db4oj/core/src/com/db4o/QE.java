@@ -1,0 +1,54 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+
+package com.db4o;
+
+/** QE stands for QueryEvaluator */
+public class QE
+{
+    
+	static final QE DEFAULT = new QE();
+	
+	QE add(QE evaluator){
+		return evaluator;
+	}
+	
+	boolean identity(){
+		return false;
+	}
+	
+	boolean evaluate(QConObject a_constraint, QCandidate a_candidate, Object a_value){
+		if(a_value == null){
+			return a_constraint.getComparator(a_candidate) instanceof Null;
+		}
+		return a_constraint.getComparator(a_candidate).isEqual(a_value);
+	}
+	
+	public boolean equals(Object obj){
+		return obj.getClass() == this.getClass();
+	}
+	
+	// overridden in QENot 
+	boolean not(boolean res){
+		return res;
+	}
+	
+	/**
+	 * Specifies which part of the index to take.
+	 * Array elements:
+	 * [0] - smaller
+	 * [1] - equal
+	 * [2] - greater
+	 * [3] - nulls
+	 * 
+	 * 
+	 * @param bits
+	 */
+	void indexBitMap(boolean[] bits){
+	    bits[1] = true;
+	}
+	
+	boolean supportsIndex(){
+	    return true;
+	}
+	
+}

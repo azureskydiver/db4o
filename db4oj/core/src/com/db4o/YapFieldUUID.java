@@ -1,0 +1,103 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+
+package com.db4o;
+
+import com.db4o.ext.*;
+
+/**
+ * 
+ */
+class YapFieldUUID extends YapFieldVirtual {
+
+    YapFieldUUID() {
+        super();
+        i_name = PREFIX + "uuid";
+        i_handler = new YLong();
+    }
+    
+    void addFieldIndex(YapWriter a_writer, boolean a_new) {
+
+        int offset = a_writer.i_offset;
+        int id = a_writer.readInt();
+        long uuid = YLong.readLong(a_writer);
+        a_writer.i_offset = offset;
+        
+        YapFile yf = (YapFile)a_writer.getStream();
+        
+        if(id == 0){
+            a_writer.writeInt(yf.identity().getID(yf));
+        }else{
+            a_writer.incrementOffset(YapConst.YAPINT_LENGTH);
+        }
+        
+        if(uuid == 0){
+            uuid = yf.i_bootRecord.newUUID();
+        }
+        YLong.writeLong(uuid, a_writer);
+        
+        if(a_new){
+            addIndexEntry(new Long(uuid), a_writer);
+        }
+    }
+    
+    IxField getIndex(Transaction a_trans){
+        YapFile stream = (YapFile)a_trans.i_stream;
+        if(i_index == null){
+            PBootRecord bootRecord = stream.i_bootRecord;
+            i_index = new IxField(stream.getSystemTransaction(), this, bootRecord.getUUIDMetaIndex());
+        }
+        return i_index;
+    }
+    
+    void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
+        int dbID = a_bytes.readInt();
+        Db4oDatabase db = (Db4oDatabase)a_trans.i_stream.getByID2(a_trans, dbID);
+        if(db != null && db.i_signature == null){
+            a_trans.i_stream.activate2(a_trans, db, 2);
+        }
+        a_yapObject.i_virtualAttributes.i_database = db; 
+        a_yapObject.i_virtualAttributes.i_uuid = YLong.readLong(a_bytes);
+    }
+
+    public int linkLength() {
+        return YapConst.YAPLONG_LENGTH + YapConst.YAPID_LENGTH;
+    }
+    
+    void marshall1(YapObject a_yapObject, YapWriter a_bytes, boolean a_migrating, boolean a_new) {
+        YapStream stream = a_bytes.getStream();
+        boolean indexEntry = a_new && stream.maintainsIndices();
+        int dbID = 0;
+        if(! a_migrating){
+	        if (a_yapObject.i_virtualAttributes.i_database == null) {
+	            a_yapObject.i_virtualAttributes.i_database = stream.identity();
+	            if (stream instanceof YapFile
+	                && ((YapFile) stream).i_bootRecord != null) {
+	                PBootRecord bootRecord = ((YapFile) stream).i_bootRecord;
+	                a_yapObject.i_virtualAttributes.i_uuid = bootRecord.newUUID();
+	                indexEntry = true;
+	            }
+	        }
+	        Db4oDatabase db = a_yapObject.i_virtualAttributes.i_database;
+	        if(db != null) {
+	            dbID = db.getID(stream);
+	        }
+        }else{
+            Db4oDatabase db = null;
+            if(a_yapObject.i_virtualAttributes != null && a_yapObject.i_virtualAttributes.i_database != null){
+                db = a_yapObject.i_virtualAttributes.i_database;
+                dbID = db.getID(stream);
+            }
+        }
+        a_bytes.writeInt(dbID);
+        if(a_yapObject.i_virtualAttributes != null){
+	        YLong.writeLong(a_yapObject.i_virtualAttributes.i_uuid, a_bytes);
+	        if(indexEntry){
+	            addIndexEntry(new Long(a_yapObject.i_virtualAttributes.i_uuid), a_bytes);
+	        }
+        }else{
+            YLong.writeLong(0, a_bytes);
+        }
+    }
+
+
+}

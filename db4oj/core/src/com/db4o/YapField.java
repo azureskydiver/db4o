@@ -1,0 +1,716 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+
+package com.db4o;
+
+import com.db4o.config.*;
+import com.db4o.ext.*;
+import com.db4o.reflect.*;
+
+class YapField implements StoredField {
+
+    private YapClass         i_yapClass;
+
+    //  position in YapClass i_fields
+    private int              i_arrayPosition;
+
+    protected String         i_name;
+
+    private boolean          i_isArray;
+
+    private boolean          i_isNArray;
+
+    private boolean          i_isPrimitive;
+
+    private IField           i_javaField;
+
+    protected YapDataType    i_handler;
+
+    private int              i_handlerID;
+
+    private int              i_state;
+
+    private static final int NOT_LOADED  = 0;
+
+    private static final int UNAVAILABLE = -1;
+
+    private static final int AVAILABLE   = 1;
+
+    protected IxField        i_index;
+
+    private Config4Field     i_config;
+
+    private Db4oTypeImpl     i_db4oType;
+
+    static final YapField[]  EMPTY_ARRAY = new YapField[0];
+
+    YapField(YapClass a_yapClass) {
+        i_yapClass = a_yapClass;
+    }
+
+    YapField(YapClass a_yapClass, ObjectTranslator a_translator) {
+        // for YapFieldTranslator only
+        i_yapClass = a_yapClass;
+        init(a_yapClass, a_translator.getClass().getName(), 0);
+        i_state = AVAILABLE;
+        i_handler = a_yapClass.getStream().i_handlers.handlerForClass(
+            a_yapClass.getStream(), a_translator.storedClass());
+    }
+
+    YapField(YapClass a_yapClass, IField a_field, YapDataType a_handler) {
+        init(a_yapClass, a_field.getName(), 0);
+        i_javaField = a_field;
+        i_javaField.setAccessible();
+        i_handler = a_handler;
+        configure(a_field.getType());
+        checkDb4oType();
+        i_state = AVAILABLE;
+    }
+
+    void addFieldIndex(YapWriter a_writer, boolean a_new) {
+        if (i_index == null) {
+            a_writer.incrementOffset(linkLength());
+        } else {
+            try {
+                addIndexEntry(i_handler.readIndexObject(a_writer), a_writer);
+            } catch (CorruptionException e) {
+            }
+        }
+    }
+
+    protected void addIndexEntry(Object a_object, YapWriter a_bytes) {
+        addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), a_object);
+    }
+
+    void addIndexEntry(Transaction a_trans, int a_id, Object a_object) {
+        i_handler.prepareLastIoComparison(a_trans, a_object);
+        IxFieldTransaction ift = getIndex(a_trans).dirtyFieldTransaction(a_trans);
+        ift.add(new IxAdd(ift, a_id, i_handler.indexEntry(a_object)));
+    }
+
+    public boolean alive() {
+        if (i_state == AVAILABLE) {
+            return true;
+        }
+        if (i_state == NOT_LOADED) {
+
+            if (i_handler == null) {
+
+                // this may happen if the local YapClassCollection has not
+                // been updated from the server and presumably in some
+                // refactoring cases. The origin is not verified but we
+                // saw a database that had 0 in some wrapper IDs.
+
+                // We try to heal the problem by re-reading the class.
+
+                // This could be inherently dangerous, if the class type of
+                // a field was modified.
+
+                // TODO: add class refactoring features
+
+                i_handler = loadJavaField1();
+                if (i_handler != null) {
+                    if (i_handlerID == 0) {
+                        i_handlerID = i_handler.getID();
+                    } else {
+                        if (i_handler.getID() != i_handlerID) {
+                            i_handler = null;
+                        }
+                    }
+                }
+            }
+
+            loadJavaField();
+
+            if (i_handler != null) {
+
+                // TODO: This part is not quite correct.
+                // We are using the old array information read from file to
+                // wrap.
+
+                // If a refactoring changes an array to a different variable,
+                // we are in trouble here.
+
+                i_handler = wrapHandlerToArrays(i_handler);
+
+                i_state = AVAILABLE;
+                checkDb4oType();
+            } else {
+                i_state = UNAVAILABLE;
+            }
+        }
+        return i_state == AVAILABLE;
+
+    }
+
+    public void appendEmbedded2(YapWriter a_bytes) {
+        if (alive()) {
+            i_handler.appendEmbedded3(a_bytes);
+        } else {
+            a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
+        }
+    }
+
+    boolean canHold(Class a_class) {
+        // alive() is checked in QField caller
+        if (a_class == null) {
+            return !i_isPrimitive;
+        }
+        return i_handler.canHold(a_class);
+    }
+
+    public boolean canLoadByIndex(QConObject a_qco, QE a_evaluator) {
+        if (i_handler instanceof YapClass) {
+            if (a_evaluator instanceof QEIdentity) {
+                YapClass yc = (YapClass) i_handler;
+                yc.i_lastID = a_qco.getObjectID();
+                return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    void cascadeActivation(Transaction a_trans, Object a_object, int a_depth,
+        boolean a_activate) {
+        if (alive()) {
+            try {
+                Object cascadeTo = getOrCreate(a_trans, a_object);
+                if (cascadeTo != null && i_handler != null) {
+                    i_handler.cascadeActivation(a_trans, cascadeTo, a_depth,
+                        a_activate);
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    private void checkDb4oType() {
+        if (i_javaField != null) {
+            if (YapConst.CLASS_DB4OTYPE.isAssignableFrom(i_javaField.getType())) {
+                i_db4oType = YapHandlers.getDb4oType(i_javaField.getType());
+            }
+        }
+    }
+
+    void collectConstraints(Transaction a_trans, QConObject a_parent,
+        Object a_template, Visitor4 a_visitor) {
+        Object obj = getOn(a_trans, a_template);
+        if (obj != null) {
+            Collection4 objs = Platform.flattenCollection(obj);
+            Iterator4 j = objs.iterator();
+            while (j.hasNext()) {
+                obj = j.next();
+                if (obj != null) {
+                    if (i_isPrimitive) {
+                        if (i_handler instanceof YapJavaClass) {
+                            if (obj.equals(((YapJavaClass) i_handler)
+                                .primitiveNull())) {
+                                return;
+                            }
+                        }
+                    }
+                    if(Deploy.csharp){
+                        if(Platform.ignoreAsConstraint(obj)){
+                            return;
+                        }
+                    }
+                    if (!a_parent.hasObjectInParentPath(obj)) {
+                        a_visitor.visit(new QConObject(a_trans, a_parent,
+                            qField(a_trans), obj));
+                    }
+                }
+            }
+        }
+    }
+
+    TreeInt collectIDs(TreeInt tree, YapWriter a_bytes) {
+        if (alive()) {
+            if (i_handler instanceof YapClass) {
+                tree = (TreeInt) Tree.add(tree, new TreeInt(a_bytes.readInt()));
+            } else if (i_handler instanceof YapArray) {
+                tree = ((YapArray) i_handler).collectIDs(tree, a_bytes);
+            }
+        }
+        return tree;
+
+    }
+
+    void configure(Class a_class) {
+        i_isPrimitive = a_class.isPrimitive();
+        i_isArray = a_class.isArray();
+        if (i_isArray) {
+            i_isNArray = Array4.isNDimensional(a_class);
+            a_class = Array4.getComponentType(a_class);
+            if (Deploy.csharp) {
+            } else {
+                i_isPrimitive = a_class.isPrimitive();
+            }
+            if (i_isNArray) {
+                i_handler = new YapArrayN(i_handler, i_isPrimitive);
+            } else {
+                i_handler = new YapArray(i_handler, i_isPrimitive);
+            }
+        }
+    }
+
+    void deactivate(Transaction a_trans, Object a_onObject, int a_depth) {
+        if (alive()) {
+            try {
+                if (i_isPrimitive && !i_isArray) {
+                    i_javaField.set(a_onObject, ((YapJavaClass) i_handler)
+                        .primitiveNull());
+                } else {
+                    if (a_depth > 0) {
+                        cascadeActivation(a_trans, a_onObject, a_depth, false);
+                    }
+                    i_javaField.set(a_onObject, null);
+                }
+            } catch (Throwable t) {
+            }
+        }
+    }
+
+    void delete(YapWriter a_bytes) {
+        if (alive()) {
+            if (i_index != null) {
+                int offset = a_bytes.i_offset;
+                Object obj = null;
+                try {
+                    obj = i_handler.read(a_bytes);
+                } catch (CorruptionException e) {
+                }
+                i_handler.prepareComparison(obj);
+                IxFieldTransaction ift = i_index.dirtyFieldTransaction(a_bytes
+                    .getTransaction());
+                ift.add(new IxRemove(ift, a_bytes.getID(), i_handler
+                    .indexEntry(obj)));
+                a_bytes.i_offset = offset;
+            }
+            if ((i_config != null && i_config.i_cascadeOnDelete == 1)
+                || Platform.isSecondClass(i_handler.getJavaClass())) {
+                int preserveCascade = a_bytes.cascadeDeletes();
+                a_bytes.setCascadeDeletes(1);
+                i_handler.deleteEmbedded(a_bytes);
+                a_bytes.setCascadeDeletes(preserveCascade);
+            }else if(i_config != null && i_config.i_cascadeOnDelete == -1){
+                int preserveCascade = a_bytes.cascadeDeletes();
+                a_bytes.setCascadeDeletes(0);
+                i_handler.deleteEmbedded(a_bytes);
+                a_bytes.setCascadeDeletes(preserveCascade);
+            } else {
+                i_handler.deleteEmbedded(a_bytes);
+            }
+        }
+    }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof YapField) {
+            YapField yapField = (YapField) obj;
+            yapField.alive();
+            alive();
+            return yapField.i_isPrimitive == i_isPrimitive
+                && yapField.i_handler.equals(i_handler)
+                && yapField.i_name.equals(i_name);
+        }
+        return false;
+    }
+
+    public Object get(Object a_onObject) {
+        if (i_yapClass != null) {
+            YapStream stream = i_yapClass.getStream();
+            if (stream != null) {
+                synchronized (stream.i_lock) {
+                    stream.checkClosed();
+                    YapObject yo = stream.getYapObject(a_onObject);
+                    if (yo != null) {
+                        int id = yo.getID();
+                        if (id > 0) {
+                            YapWriter writer = stream.readWriterByID(stream
+                                .getTransaction(), id);
+                            if (writer != null) {
+                                if (i_yapClass.findOffset(writer, this)) {
+                                    try {
+                                        return read(writer);
+                                    } catch (CorruptionException e) {
+                                        if (Debug.atHome) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public String getName() {
+        return i_name;
+    }
+
+    YapClass getFieldYapClass(YapStream a_stream) {
+        // alive needs to be checked by all callers: Done
+        return i_handler.getYapClass(a_stream);
+    }
+    
+    IxField getIndex(Transaction a_trans){
+        return i_index;
+    }
+
+    Tree getIndexRoot(Transaction a_trans) {
+        return getIndex(a_trans).getFieldTransaction(a_trans).getRoot();
+    }
+
+    YapDataType getHandler() {
+        // alive needs to be checked by all callers: Done
+        return i_handler;
+    }
+
+    Object getOn(Transaction a_trans, Object a_OnObject) {
+        if (alive()) {
+            try {
+                return i_javaField.get(a_OnObject);
+            } catch (Throwable t) {
+            }
+            // this is typically the case, if a field is removed from an
+            // object.
+        }
+        return null;
+    }
+
+    /**
+     * dirty hack for com.db4o.types some of them need to be set automatically
+     * TODO: Derive from YapField for Db4oTypes
+     */
+    Object getOrCreate(Transaction a_trans, Object a_OnObject) {
+        if (alive()) {
+            try {
+                Object obj = i_javaField.get(a_OnObject);
+                if (i_db4oType != null) {
+                    if (obj == null) {
+                        obj = i_db4oType.createDefault(a_trans);
+                        i_javaField.set(a_OnObject, obj);
+                    }
+                }
+                return obj;
+            } catch (Throwable t) {
+            }
+            // this is typically the case, if a field is removed from an
+            // object.
+        }
+        return null;
+    }
+
+    YapClass getParentYapClass() {
+        // alive needs to be checked by all callers: Done
+        return i_yapClass;
+    }
+
+    public Object getStoredType() {
+        if (!Deploy.csharp) {
+            if (i_isPrimitive) {
+                return Platform.getTypeForClass(i_handler
+                    .getPrimitiveJavaClass());
+            }
+        }
+        return Platform.getTypeForClass(i_handler.getJavaClass());
+    }
+
+    boolean hasIndex() {
+        // alive needs to be checked by all callers: Done
+        return i_index != null;
+    }
+
+    void incrementOffset(YapReader a_bytes) {
+        if (alive()) {
+            a_bytes.incrementOffset(i_handler.linkLength());
+        }
+    }
+
+    void init(YapClass a_yapClass, String a_name, int syntheticforJad) {
+        i_yapClass = a_yapClass;
+        i_name = a_name;
+        if (a_yapClass.i_config != null) {
+            i_config = a_yapClass.i_config.configField(a_name);
+            if (Debug.configureAllFields) {
+                if (i_config == null) {
+                    i_config = (Config4Field) a_yapClass.i_config
+                        .objectField(i_name);
+                }
+            }
+            if (Debug.indexAllFields) {
+                i_config.i_indexed = 1;
+            }
+        }
+    }
+
+    void initConfigOnUp(Transaction trans) {
+        if (i_config != null) {
+            i_config.initOnUp(trans, this);
+        }
+    }
+
+    void initIndex(Transaction systemTrans, MetaIndex metaIndex) {
+        if (supportsIndex()) {
+            i_index = new IxField(systemTrans, this, metaIndex);
+        }
+    }
+
+    void instantiate(YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
+        throws CorruptionException {
+        if (alive()) {
+            Object toSet = null;
+            try {
+                toSet = read(a_bytes);
+            } catch (Exception e) {
+                throw new CorruptionException();
+            }
+            if (i_db4oType != null) {
+                if (toSet != null) {
+                    ((Db4oTypeImpl) toSet).setTrans(a_bytes.getTransaction());
+                }
+            }
+            try {
+                i_javaField.set(a_onObject, toSet);
+            } catch (Throwable t) {
+            }
+        }
+    }
+
+    public boolean isArray() {
+        return i_isArray;
+    }
+
+    public int linkLength() {
+        alive();
+        if (i_handler == null) {
+            // must be a YapClass
+            return YapConst.YAPID_LENGTH;
+        }
+        return i_handler.linkLength();
+    }
+
+    void loadHandler(YapStream a_stream) {
+        if (i_handlerID < 1) {
+            i_handler = null;
+        } else if (i_handlerID <= YapHandlers.maxTypeID()) {
+            i_handler = a_stream.i_handlers.getHandler(i_handlerID);
+        } else {
+            i_handler = a_stream.getYapClass(i_handlerID);
+        }
+    }
+
+    private void loadJavaField() {
+        YapDataType handler = loadJavaField1();
+        if (handler == null || (!handler.equals(i_handler))) {
+            i_javaField = null;
+            i_state = UNAVAILABLE;
+        }
+    }
+
+    private YapDataType loadJavaField1() {
+        try {
+            i_javaField = i_yapClass.getReflectorClass().getDeclaredField(
+                i_name);
+            if (i_javaField == null) {
+                return null;
+            }
+            YapStream stream = i_yapClass.getStream();
+            i_javaField.setAccessible();
+            stream.showInternalClasses(true);
+            YapDataType handler = stream.i_handlers.handlerForClass(stream,
+                i_javaField.getType());
+            stream.showInternalClasses(false);
+            return handler;
+        } catch (Exception e) {
+            if (Debug.atHome) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes,
+        Config4Class a_config, boolean a_new) {
+        // alive needs to be checked by all callers: Done
+
+        if (a_object != null
+            && ((a_config != null && (a_config.i_cascadeOnUpdate == 1)) || (i_config != null && (i_config.i_cascadeOnUpdate == 1)))) {
+            int min = 1;
+            if (Platform.isCollection(a_object.getClass())) {
+                min = Platform.collectionUpdateDepth(a_object.getClass());
+            }
+            int updateDepth = a_bytes.getUpdateDepth();
+            if (updateDepth < min) {
+                a_bytes.setUpdateDepth(min);
+            }
+            i_handler.writeNew(a_object, a_bytes);
+            a_bytes.setUpdateDepth(updateDepth);
+        } else {
+            i_handler.writeNew(a_object, a_bytes);
+        }
+        if (i_index != null) {
+            addIndexEntry(a_object, a_bytes);
+        }
+    }
+
+    int ownLength(YapStream a_stream) {
+        return a_stream.i_stringIo.shortLength(i_name) + 1
+            + YapConst.YAPID_LENGTH;
+    }
+
+    YapComparable prepareComparison(Object obj) {
+        if (alive()) {
+            i_handler.prepareComparison(obj);
+            return i_handler;
+        }
+        return null;
+    }
+
+    QField qField(Transaction a_trans) {
+        return new QField(a_trans, i_name, this, i_yapClass.getID(),
+            i_arrayPosition);
+    }
+
+    Object read(YapWriter a_bytes) throws CorruptionException {
+        if (!alive()) {
+            return null;
+        }
+        return i_handler.read(a_bytes);
+    }
+
+    Object readQuery(Transaction a_trans, YapReader a_reader)
+        throws CorruptionException {
+        return i_handler.readQuery(a_trans, a_reader, false);
+    }
+
+    YapField readThis(YapStream a_stream, YapReader a_reader) {
+        try {
+            i_name = a_stream.i_handlers.i_stringHandler.readShort(a_reader);
+        } catch (CorruptionException ce) {
+            i_handler = null;
+            return this;
+        }
+        if (i_name.indexOf(YapFieldVirtual.PREFIX) == 0) {
+            YapFieldVirtual[] virtuals = a_stream.i_handlers.i_virtualFields;
+            for (int i = 0; i < virtuals.length; i++) {
+                if (i_name.equals(virtuals[i].i_name)) {
+                    return virtuals[i];
+                }
+            }
+        }
+        init(i_yapClass, i_name, 0);
+        i_handlerID = a_reader.readInt();
+        YapBit yb = new YapBit(a_reader.readByte());
+        i_isPrimitive = yb.get();
+        i_isArray = yb.get();
+        i_isNArray = yb.get();
+        return this;
+    }
+    
+    public void readVirtualAttribute(Transaction a_trans, YapReader a_reader, YapObject a_yapObject) {
+        a_reader.incrementOffset(i_handler.linkLength());
+    }
+
+    void refresh() {
+        YapDataType handler = loadJavaField1();
+        if (handler != null) {
+            handler = wrapHandlerToArrays(handler);
+            if (handler.equals(i_handler)) {
+                return;
+            }
+        }
+        i_javaField = null;
+        i_state = UNAVAILABLE;
+    }
+
+    public void rename(String newName) {
+        YapStream stream = i_yapClass.getStream();
+        if (! stream.isClient()) {
+            i_name = newName;
+            i_yapClass.setStateDirty();
+            i_yapClass.write(stream, stream.getSystemTransaction());
+        } else {
+            Db4o.throwRuntimeException(58);
+        }
+    }
+
+    void setArrayPosition(int a_index) {
+        i_arrayPosition = a_index;
+    }
+
+    void setName(String a_name) {
+        i_name = a_name;
+    }
+
+    boolean supportsIndex() {
+        return alive() && i_handler.supportsIndex();
+    }
+
+    private final YapDataType wrapHandlerToArrays(YapDataType a_handler) {
+        if (i_isNArray) {
+            a_handler = new YapArrayN(a_handler, i_isPrimitive);
+        } else {
+            if (i_isArray) {
+                a_handler = new YapArray(a_handler, i_isPrimitive);
+            }
+        }
+        return a_handler;
+    }
+
+    void writeThis(YapWriter a_writer, YapClass a_onClass) {
+        alive();
+        a_writer.writeShortString(i_name);
+        if (i_handler instanceof YapClass) {
+            if (i_handler.getID() == 0) {
+                a_writer.getStream().needsUpdate(a_onClass);
+            }
+        }
+        int wrapperID = 0;
+        try {
+            // The wrapper can be null and it can fail to
+            // deliver the ID.
+
+            // In this case the field is dead.
+
+            wrapperID = i_handler.getID();
+        } catch (Exception e) {
+            if (Debug.atHome) {
+                e.printStackTrace();
+            }
+        }
+        if (wrapperID == 0) {
+            wrapperID = i_handlerID;
+        }
+        a_writer.writeInt(wrapperID);
+        YapBit yb = new YapBit(0);
+        yb.set(i_handler instanceof YapArrayN); // keep the order
+        yb.set(i_handler instanceof YapArray);
+        yb.set(i_isPrimitive);
+        a_writer.append(yb.getByte());
+    }
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        if (Debug.toStrings) {
+            sb.append("YapField ");
+            sb.append(i_name);
+            sb.append("\n");
+            if (i_index != null) {
+                sb.append(i_index.toString());
+            }
+
+        } else {
+            if (i_yapClass != null) {
+                sb.append(i_yapClass.getName());
+                sb.append(".");
+                sb.append(getName());
+            }
+        }
+        return sb.toString();
+    }
+
+
+}
