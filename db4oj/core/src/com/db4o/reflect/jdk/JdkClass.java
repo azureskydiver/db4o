@@ -6,6 +6,7 @@ import java.lang.reflect.*;
 
 import com.db4o.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 
 /**
  * Reflection implementation for Class to map to JDK reflection.
@@ -81,6 +82,13 @@ public class JdkClass implements ReflectClass{
 	}
 
 	public boolean isAssignableFrom(ReflectClass type) {
+        if(type instanceof GenericClass){
+            GenericClass claxx = (GenericClass)type;
+            ReflectClass clazz = claxx.getDelegate();
+            if(clazz instanceof JdkClass){
+                type = clazz;
+            }
+        }
 		if(!(type instanceof JdkClass)) {
 			return false;
 		}
