@@ -315,7 +315,11 @@ public class Doctor extends Task {
         }
         variablesByName.put(name.toLowerCase(), value);
     }
-    
+
+    public void setVariable(String name, boolean value){
+		setVariable(name,Boolean.valueOf(value));
+    }
+
     public boolean variableIsTrue(String variableName) {
         if(variablesByName != null){
             Object obj = variablesByName.get(variableName.toLowerCase());
