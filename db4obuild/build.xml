@@ -216,9 +216,10 @@
 
 	<target name="javadoc" depends="init" description="Build public javadocs">
 		<javadoc classpath="" access="public" windowtitle="db4o - database for objects - documentation" header="db4o ${db4o.version.dotted}" destdir="${dir.dist.doc.api}">
-			<fileset dir="${dir.j.core.src}">
-				<includesfile name="${javadoc.packagelist}" />
-				<excludesfile name="${javadoc.publicexclude}" />
+			<fileset dir="${dir.j.core.src}" includes="com/db4o/**/*.java">
+				<not>
+					<contains text="* @exclude" />
+				</not>
 			</fileset>
 			<group title="Core Engine" packages="com.db4o" />
 			<group title="Query Functionality" packages="com.db4o.query" />
