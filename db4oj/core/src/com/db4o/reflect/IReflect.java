@@ -10,8 +10,7 @@ package com.db4o.reflect;
  * See the code in com.db4o.samples.reflect for a reference implementation
  * that uses java.lang.reflect.*.
  * <br><br>
- * Use <a href="../config/Configuration.html#reflectWith(com.db4o.reflect.IReflect)">
- * <code>Db4o.configure().reflectWith(IReflect reflector)</code></a>
+ * Use {@link com.db4o.config.Configuration#reflectWith Db4o.configure().reflectWith(IReflect reflector)}
  * to register the use of your implementation before opening database
  * files.
  */

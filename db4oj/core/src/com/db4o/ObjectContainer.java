@@ -28,15 +28,12 @@ public interface ObjectContainer {
      * </code> has no effect.<br><br>
      * The activation depth of individual classes can be overruled
      * with the methods
-     * <a href="config/ObjectClass.html#maximumActivationDepth(int)">
-     * <code>maximumActivationDepth()</code></a> and
-     * <a href="config/ObjectClass.html#minimumActivationDepth(int)">
-     * <code>minimumActivationDepth()</code></a> in the
-     * <a href="config/ObjectClass.html">
-     * <code>ObjectClass</code></a> interface.<br><br>
+     * {@link com.db4o.config.ObjectClass#maximumActivationDepth maximumActivationDepth()} and
+     * {@link com.db4o.config.ObjectClass#minimumActivationDepth minimumActivationDepth()} in the
+     * {@link com.db4o.config.ObjectClass ObjectClass interface}.<br><br>
      * A successful <code>activate()</code> triggers the callback method
-     * <a href="ext/ObjectCallbacks.html#objectOnActivate(com.db4o.ObjectContainer)">
-     * <code>objectOnActivate</code></a> which can be used for cascaded activation.<br><br>
+     * {@link com.db4o.ext.ObjectCallbacks#objectOnActivate objectOnActivate}
+     * which can be used for cascaded activation.<br><br>
 	 * @see com.db4o.config.Configuration#activationDepth Why activation?
 	 * @see ObjectCallbacks Using callbacks
      * @param obj the object to be activated.
@@ -48,7 +45,7 @@ public interface ObjectContainer {
     /**
      * closes the <code>ObjectContainer</code>.
      * <br><br>A call to <code>close()</code> automatically performs a 
-     * <a href=#commit()><code>commit()</code></a>.
+     * {@link #commit commit()}.
      * <br><br>Note that every session opened with Db4o.openFile() requires one
      * close()call, even if the same filename was used multiple times.<br><br>
      * Use <code>while(!close()){}</code> to kill all sessions using this container.<br><br>
@@ -71,8 +68,8 @@ public interface ObjectContainer {
      * The method has no effect, if the passed object is not stored in the
      * <code>ObjectContainer</code>.<br><br>
      * <code>deactivate()</code> triggers the callback method
-     * <a href="ext/ObjectCallbacks.html#objectOnDeactivate(com.db4o.ObjectContainer)">
-     * <code>objectOnDeactivate</code></a>.<br><br>
+     * {@link com.db4o.ext.ObjectCallbacks#objectOnDeactivate objectOnDeactivate}.
+     * <br><br>
      * Be aware that calling this method with a depth parameter greater than 
      * 1 sets members on member objects to null. This may have side effects 
      * in other places of the application.<br><br>
@@ -91,18 +88,16 @@ public interface ObjectContainer {
      * and array member types are destroyed.
      * <br><br>Object members of the passed object remain untouched, unless
      * cascaded deletes are  
-     * <a href="config/ObjectClass.html#cascadeOnDelete(boolean)">
-     * configured for the class</a>
-     * or for <a href="config/ObjectField.html#cascadeOnDelete(boolean)">
-     * one of the member fields</a>.
+     * {@link com.db4o.config.ObjectClass#cascadeOnDelete configured for the class}
+     * or for {@link com.db4o.config.ObjectField#cascadeOnDelete one of the member fields}.
      * <br><br>The method has no effect, if
      * the passed object is not stored in the <code>ObjectContainer</code>.
      * <br><br>A subsequent call to
      * <code>set()</code> with the same object newly stores the object
      * to the <code>ObjectContainer</code>.<br><br>
      * <code>delete()</code> triggers the callback method
-     * <a href="ext/ObjectCallbacks.html#objectOnDelete(com.db4o.ObjectContainer)">
-     * <code>objectOnDelete</code></a> which can be also used for cascaded deletes.<br><br>
+     * {@link com.db4o.ext.ObjectCallbacks#objectOnDelete objectOnDelete}
+     * which can be also used for cascaded deletes.<br><br>
 	 * @see com.db4o.config.ObjectClass#cascadeOnDelete
 	 * @see com.db4o.config.ObjectField#cascadeOnDelete
 	 * @see ObjectCallbacks Using callbacks
@@ -125,7 +120,7 @@ public interface ObjectContainer {
     /**
      * Query-By-Example interface to retrieve objects.
      * <br><br><code>get()</code> creates an
-     * <a href="ObjectSet.html"><code>ObjectSet</code></a> containing
+     * {@link ObjectSet ObjectSet} containing
      * all objects in the <code>ObjectContainer</code> that match the passed
      * template object.<br><br>
 	 * Calling <code>get(NULL)</code> returns all objects stored in the
@@ -137,37 +132,33 @@ public interface ObjectContainer {
      * <br><br>Arrays and all supported <code>Collection</code> classes are
      * evaluated for containment. Differences in <code>length/size()</code> are
      * ignored.
-     * <br><br>Consult the documentation of the
-     * <a href="config\package-summary.html">Configuration package</a> to
+     * <br><br>Consult the documentation of the Configuration package to
      * configure class-specific behaviour.<br><br><br>
      * <b>Returned Objects</b><br>
      * The objects returned in the
-     * <a href="ObjectSet.html"><code>ObjectSet</code></a> are instantiated
+     * {@link ObjectSet ObjectSet} are instantiated
      * and activated to the preconfigured depth of 5. The
-	 * <a href="config/Configuration.html#activationDepth(int)">activation depth</a>
-	 *  may be configured
-     * <a href="config/Configuration.html#activationDepth(int)">globally</a> or
-     * <a href="config\ObjectClass.html">individually for classes</a>.
+	 * {@link com.db4o.config.Configuration#activationDepth activation depth}
+	 * may be configured {@link com.db4o.config.Configuration#activationDepth globally} or
+     * {@link com.db4o.config.ObjectClass individually for classes}.
 	 * <br><br>
      * db4o keeps track of all instantiatied objects. Queries will return
      * references to these objects instead of instantiating them a second time.
      * <br><br>
      * Objects newly activated by <code>get()</code> can respond to the callback
-     * method <a href="ext/ObjectCallbacks.html#objectOnActivate(com.db4o.ObjectContainer)">
-     * <code>objectOnActivate</code></a>.<br><br>
+     * method {@link com.db4o.ext.ObjectCallbacks#objectOnActivate objectOnActivate}.
+     * <br><br>
      * @param template object to be used as an example to find all matching objects.<br><br>
-     * @return <a href="ObjectSet.html"><code>ObjectSet</code></a>
-	 * containing all found objects.<br><br>
+     * @return {@link ObjectSet ObjectSet} containing all found objects.<br><br>
 	 * @see com.db4o.config.Configuration#activationDepth Why activation?
 	 * @see ObjectCallbacks Using callbacks
 	 */
     public ObjectSet get (Object template);
     
     /**
-     * factory method to create a new <a href="query/Query.html">
-     * <code>Query</code></a> object.
+     * factory method to create a new {@link Query Query} object.
      * <br><br>
-     * Use <a href="#get(java.lang.Object)"><code>get(Object template)</code></a> for
+     * Use {@link #get get(Object template)} for
      * simple Query-By-Example.
      * <br><br>
      * @return a new Query object
@@ -178,11 +169,8 @@ public interface ObjectContainer {
     /**
      * rolls back the running transaction.
      * <br><br>Modified application objects im memory are not restored.
-     * Use combined calls to 
-     * <a href="#deactivate(java.lang.Object, int)"><code>deactivate()</code></a>
-     * and
-     * <a href="#activate(java.lang.Object, int)"><code>activate()</code></a>
-     * to reload an objects member values.
+     * Use combined calls to {@link #deactivate deactivate()}
+     * and {@link #activate activate()} to reload an objects member values.
      */
     public void rollback();
     
@@ -199,22 +187,18 @@ public interface ObjectContainer {
      * - object members that are already stored will <b>not</b> be updated
      * themselves.<br>Every object member needs to be updated individually with a
 	 * call to <code>set()</code> unless a deep
-	 * <a href="config/Configuration.html#updateDepth(int)">global</a> or 
-     * <a href="config/ObjectClass.html#updateDepth(int)">class-specific</a>
+	 * {@link com.db4o.config.Configuration#updateDepth global} or 
+     * {@link com.db4o.config.ObjectClass#updateDepth class-specific}
      * update depth was configured or cascaded updates were 
-     * <a href="config/ObjectClass.html#cascadeOnUpdate(boolean)">
-     * defined in the class</a>
-     * or in <a href="config/ObjectField.html#cascadeOnUpdate(boolean)">
-     * one of the member fields</a>.
+     * {@link com.db4o.config.ObjectClass#cascadeOnUpdate defined in the class}
+     * or in {@link com.db4o.config.ObjectField#cascadeOnUpdate one of the member fields}.
      * <br><br><b>Examples: ../com/db4o/samples/update.</b><br><br>
      * Depending if the passed object is newly stored or updated, the
      * callback method
-     * <a href="ext/ObjectCallbacks.html#objectOnNew(com.db4o.ObjectContainer)">
-     * <code>objectOnNew</code></a> or
-     * <a href="ext/ObjectCallbacks.html#objectOnUpdate(com.db4o.ObjectContainer)">
-     * <code>objectOnUpdate</code></a> is triggered.
-     * <a href="ext/ObjectCallbacks.html#objectOnUpdate(com.db4o.ObjectContainer)">
-     * <code>objectOnUpdate</code></a> might also be used for cascaded updates.<br><br>
+     * {@link com.db4o.ext.ObjectCallbacks#objectOnNew objectOnNew} or
+     * {@link com.db4o.ext.ObjectCallbacks#objectOnUpdate objectOnUpdate} is triggered.
+     * {@link com.db4o.ext.ObjectCallbacks#objectOnUpdate objectOnUpdate}
+     * might also be used for cascaded updates.<br><br>
      * @param obj the object to be stored or updated.
 	 * @see ExtObjectContainer#set(java.lang.Object, int) ExtObjectContainer#set(object, depth)
 	 * @see com.db4o.config.Configuration#updateDepth
