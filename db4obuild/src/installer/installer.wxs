@@ -417,6 +417,7 @@
 		
 		<Icon Id="exe.ico" src="$(env.resources.dir)/exe.ico" />
 		<Icon Id="sln.ico" src="$(env.resources.dir)/sln.ico" />
+		<Icon Id="chm.ico" src="$(env.resources.dir)/chm.ico" />
 		
 	</Product>
 	
