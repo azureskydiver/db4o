@@ -31,8 +31,7 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
     private IField fieldReflector() {
         if (i_fieldReflector == null) {
             try {
-                IClass classReflector = Db4o.reflector().forName(className());
-                i_fieldReflector = classReflector.getDeclaredField(getName());
+                i_fieldReflector = i_class.classReflector().getDeclaredField(getName());
                 i_fieldReflector.setAccessible();
             } catch (Exception e) {
             }

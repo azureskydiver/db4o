@@ -799,28 +799,18 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         // variables that are not needed there to a delegate
 
         i_justDeactivated = new Tree[1];
-        i_handlers = new YapHandlers(this);
-        setStringIo(new YapStringIOUnicode());
     }
 
     void initialize1() {
-        // ExpirationCheck 3
-//        if (Tuning.licenseChecks) {
-//            if (Lic.expires) {
-//                if (new Date().getTime() > Lic.expirationDate) {
-//                    throw new ExpirationException();
-//                }
-//            } else {
-//                Db4o.licenseCheck1();
-//            }
-//        }
 
         try {
             i_config = (Config4Impl) ((DeepClone) Db4o.configure())
                 .deepClone(this);
-            createStringIO(i_config.i_encoding);
-        } catch (Exception e) {
+        } catch (CloneNotSupportedException e) {
         }
+        i_handlers = new YapHandlers(this);
+        createStringIO(i_config.i_encoding);
+        
         if (i_references != null) {
             gc();
             i_references.stopTimer();

@@ -112,16 +112,16 @@ public class CClass implements IClass{
 		return "CClass: " + clazz.getName();
 	}
 	
-	// FIXME: REFLECTOR remove this, it's just needed to keep runnable
-    //                  but it will make things real slow	                
-	public int hashCode() {
-		return clazz.getName().hashCode();
-	}
-	
-	// FIXME: REFLECTOR remove this, it's just needed to keep runnable
-    //                  but it will make things real slow	                
-	public boolean equals(Object obj) {
-		return clazz.getName().equals(((CClass)obj).clazz.getName());
-	}
+//	// FIXME: REFLECTOR remove this, it's just needed to keep runnable
+//    //                  but it will make things real slow	                
+//	public int hashCode() {
+//		return clazz.getName().hashCode();
+//	}
+//	
+//	// FIXME: REFLECTOR remove this, it's just needed to keep runnable
+//    //                  but it will make things real slow	                
+//	public boolean equals(Object obj) {
+//		return clazz.getName().equals(((CClass)obj).clazz.getName());
+//	}
 
 }

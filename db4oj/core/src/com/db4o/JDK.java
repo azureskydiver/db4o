@@ -61,6 +61,17 @@ public class JDK {
 	
 	synchronized void lock(RandomAccessFile file) {
 	}
+	
+    /**
+     * use for system classes only, since not ClassLoader
+     * or Reflector-aware
+     */
+	boolean methodIsAvailable(
+            String className,
+            String methodName,
+            Class[] params) {
+    	return false;
+    }
 
 	void pollReferenceQueue(YapStream a_stream, Object a_referenceQueue) {
 	}

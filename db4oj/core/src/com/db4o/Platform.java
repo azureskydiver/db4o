@@ -75,9 +75,13 @@ public final class Platform {
         return setAccessibleCheck == YapConst.YES;
     }
     
+    /**
+     * use for system classes only, since not ClassLoader
+     * or Reflector-aware
+     */
     static final boolean classIsAvailable(String className) {
         try {
-            return Db4o.reflector().forName(className) != null;
+            return Class.forName(className) != null;
         } catch (Throwable t) {
             return false;
         }
@@ -336,10 +340,42 @@ public final class Platform {
     
     public static JDK jdk() {
         if (jdkWrapper == null) {
-            jdkWrapper = JavaOnly.jdk();
+            createJdk();
         }
         return jdkWrapper;
     }
+    
+    private static void createJdk() {
+    	
+        if (classIsAvailable("java.lang.reflect.Method")){
+            jdkWrapper = (JDK)createInstance("com.db4o.JDKReflect");
+        }
+
+        if (classIsAvailable(Platform.ACCESSIBLEOBJECT)){
+        	jdkWrapper = createJDKWrapper("1_2");
+        }
+        
+        if (methodIsAvailable("java.lang.Runtime","addShutdownHook",
+                new Class[] { Thread.class })){
+        	jdkWrapper = createJDKWrapper("1_3");
+        }
+
+        if(classIsAvailable("java.nio.channels.FileLock")){
+        	jdkWrapper = createJDKWrapper("1_4");
+        }
+        
+        if(classIsAvailable("java.lang.Enum")){
+        	jdkWrapper = createJDKWrapper("5");
+        }
+        
+    }
+    
+    private static JDK createJDKWrapper(String name){
+        return (JDK)createInstance("com.db4o.JDK_" + name);
+    }
+    
+
+
 
     static final Object createInstance(String name) {
         try {
@@ -398,21 +434,17 @@ public final class Platform {
         // do nothing
     }
 
+    /**
+     * use for system classes only, since not ClassLoader
+     * or Reflector-aware
+     */
     static final boolean methodIsAvailable(
         String className,
         String methodName,
         Class[] params) {
-        try {
-        	IReflect reflector = Db4o.reflector();
-            IClass classReflector = reflector.forName(className);
-            //FIXME: REFLECTOR This is ugly because it binds to a hard reflector
-            if (classReflector.getMethod(methodName, CReflect.toMeta((CReflect)reflector, params)) != null) {
-                return true;
-            }
-            return false;
-        } catch (Throwable t) {
-            return false;
-        }
+    	
+    	return jdk().methodIsAvailable(className, methodName, params);
+    	
     }
     
     static boolean callConstructor() {
