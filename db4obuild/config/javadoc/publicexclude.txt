@@ -1,6 +1,7 @@
 com/db4o/BlobImpl.java
 com/db4o/Collection4.java
 com/db4o/DTrace.java
+com/db4o/Hashtable4.java
 com/db4o/Iterator4.java
 com/db4o/JDK.java
 com/db4o/License.java
