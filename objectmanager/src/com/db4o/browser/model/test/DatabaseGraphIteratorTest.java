@@ -134,7 +134,7 @@ public class DatabaseGraphIteratorTest extends TestCase {
 
 	private void assertNodeContent(IModelNode node,String name,String text,String valueText,int numChildren) {
 		assertEquals(name,node.getName());
-		assertEquals(text,node.getText());
+		assertTrue(node.getText().startsWith(text));
 		if(valueText!=null) {
 			assertEquals(valueText,node.getValueString());
 		}

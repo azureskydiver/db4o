@@ -51,9 +51,6 @@ public class DatabaseGraphIterator implements IGraphIterator {
 	 */
 	public GraphPosition getPath() {
 		GraphPosition result = new GraphPosition(path);
-		if(getCurrentIndex()>=currentFamily.length-1) {
-			throw new RuntimeException();
-		}
         result.push(currentFamily, getCurrentIndex());
         return result;
 	}

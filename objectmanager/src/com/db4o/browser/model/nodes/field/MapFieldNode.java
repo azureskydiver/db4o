@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
+import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.InstanceNode;
 import com.swtworkbench.community.xswt.metalogger.Logger;
@@ -34,11 +35,12 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
 public class MapFieldNode extends FieldNode {
 
     /**
-     * @param fieldType
      * @param _instance
+     * @param database TODO
+     * @param fieldType
      * @return
      */
-    public static IModelNode tryToCreate(Field field, Object _instance) {
+    public static IModelNode tryToCreate(Field field, Object _instance, Database database) {
         MapFieldNode result;
         
         Class fieldType = field.getType();
@@ -48,7 +50,7 @@ public class MapFieldNode extends FieldNode {
         } catch (Exception e) { return null; };
         
         try {
-            result = new MapFieldNode(field, _instance, m);
+            result = new MapFieldNode(field, _instance, m, database);
             result.iterator();
         } catch (IllegalStateException e) {
             Logger.log().error(e, "Unable to invoke 'iterator()'");
@@ -83,8 +85,8 @@ public class MapFieldNode extends FieldNode {
     }
     
 
-	public MapFieldNode(Field field, Object instance, Method keySetMethod) {
-        super(field, instance);
+	public MapFieldNode(Field field, Object instance, Method keySetMethod, Database database) {
+        super(field, instance, database);
         _keySetMethod = keySetMethod;
 	}
     
@@ -96,7 +98,7 @@ public class MapFieldNode extends FieldNode {
         LinkedList results = new LinkedList();
         Iterator i = iterator();
         while (i.hasNext()) {
-            results.addLast(new InstanceNode(i.next()));
+            results.addLast(new InstanceNode(i.next(), _database));
         }
         IModelNode[] finalResults = new IModelNode[results.size()];
         int elementNum=0;
