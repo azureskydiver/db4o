@@ -29,7 +29,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
 import com.db4o.Db4o;
-import com.db4o.Platform;
 import com.db4o.browser.gui.controllers.BrowserController;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;

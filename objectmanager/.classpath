@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="/home/djo/eclipse/3.1m5/eclipse/plugins/org.eclipse.swt.gtk_3.1.0/ws/gtk/swt-cairo.jar"/>
 	<classpathentry kind="lib" path="/home/djo/eclipse/3.1m5/eclipse/plugins/org.eclipse.swt.gtk_3.1.0/ws/gtk/swt-mozilla.jar"/>
 	<classpathentry kind="lib" path="/home/djo/eclipse/3.1m5/eclipse/plugins/org.eclipse.swt.gtk_3.1.0/ws/gtk/swt-pi.jar"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

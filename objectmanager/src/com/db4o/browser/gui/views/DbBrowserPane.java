@@ -5,12 +5,12 @@ package com.db4o.browser.gui.views;
 
 import java.util.Map;
 
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
 
 import com.swtworkbench.community.xswt.XSWT;
 
@@ -60,30 +60,21 @@ public class DbBrowserPane extends Composite {
     }
     
     /**
-     * Returns the "Go" button next to the search text box
+     * Returns the button next to the search text box
      * 
-     * @return the search button
+     * @return the clear search button
      */
     public Button getSearchButton() {
-        return (Button) contents.get("SearchButton");
+        return (Button) contents.get("ClearSearchButton");
     }
     
     /**
      * Method getObjectTree.  Returns the object tree.
      * 
-     * @return TreeViewer the object tree.
+     * @return Tree the object tree.
      */
-    public TreeViewer getObjectTree() {
-        return (TreeViewer) contents.get("ObjectTree");
-    }
-    
-    /**
-     * Method getHyperlinkArea. Returns the hyperlink area.
-     * 
-     * @return Composite the hyperlink area Composite
-     */
-    public Composite getHyperlinkArea() {
-        return (Composite) contents.get("HyperlinkArea");
+    public Tree getObjectTree() {
+        return (Tree) contents.get("ObjectTree");
     }
     
     /**
@@ -101,8 +92,8 @@ public class DbBrowserPane extends Composite {
 	 * 
 	 * @return Button the "back" navigation button
 	 */
-	public Button getLeftButton() {
-		return (Button) contents.get("LeftButton");
+	public Label getLeftButton() {
+		return (Label) contents.get("LeftButton");
 	}
 	
 	/**
@@ -110,17 +101,8 @@ public class DbBrowserPane extends Composite {
 	 * 
 	 * @return Button the "forward" navigation button
 	 */
-	public Button getRightButton() {
-		return (Button) contents.get("RightButton");
-	}
-	
-	/**
-	 * Method getHistoryButton.  Returns the navigation history button.
-	 * 
-	 * @return Button the "history" navigation button
-	 */
-	public Button getHistoryButton() {
-		return (Button) contents.get("HistoryButton");
+	public Label getRightButton() {
+		return (Label) contents.get("RightButton");
 	}
 
 }

@@ -19,20 +19,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
  */
 public class SelectionService implements ISelectionProvider, ISelectionChangedListener {
 	
-	private static SelectionService selectionService = null;
-	
-	/**
-	 * Method getDefault.  Return the SelectionService singleton.
-	 * 
-	 * @return SelectionService the SelectionService singleton.
-	 */
-	public static SelectionService getDefault() {
-		if (selectionService == null) {
-			selectionService = new SelectionService();
-		}
-		return selectionService;
-	}
-	
 	private ISelection selection;
 	private LinkedList selectionChangedListeners = new LinkedList();
 	

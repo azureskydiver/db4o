@@ -17,7 +17,7 @@ public interface IGraphIterator extends ListIterator {
      * 
      * Returns the path traversed to get to the current object.
      * 
-	 * @return LinkedList the path to the current object. 
+	 * @return GraphPosition the path to the current object. 
 	 */
 	public GraphPosition getPath();
     
@@ -90,7 +90,7 @@ public interface IGraphIterator extends ListIterator {
     public void reset();
     
     /**
-     * Method numChildren.  Returns the number of current hcild elements.
+     * Method numChildren.  Returns the number of current child elements.
      * @return
      */
     public int numChildren();

@@ -72,7 +72,7 @@ public class YAPEditor extends EditorPart {
         fileName = ((IFileEditorInput) input).getFile().getRawLocation().toOSString();
         setSite(site);
         setInput(input);
-        setTitle(input.getName());
+        setPartName(input.getName());
     }
 
     /**
