@@ -57,4 +57,19 @@ public interface ISelectionSource {
 	 * @see #addSelectionListener
 	 */
 	public void removeSelectionListener (SelectionListener listener);
+	
+	/**
+	 * Enables the receiver if the argument is <code>true</code>,
+	 * and disables it otherwise. A disabled control is typically
+	 * not selectable from the user interface and draws with an
+	 * inactive or "grayed" look.
+	 *
+	 * @param enabled the new enabled state
+	 *
+	 * @exception SWTException <ul>
+	 *    <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
+	 *    <li>ERROR_THREAD_INVALID_ACCESS - if not called from the thread that created the receiver</li>
+	 * </ul>
+	 */
+	public void setEnabled (boolean enabled);
 }

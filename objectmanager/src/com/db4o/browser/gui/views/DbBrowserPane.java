@@ -39,8 +39,8 @@ public class DbBrowserPane extends Composite {
         setLayout(new FillLayout());
 		Rectangle displayBounds = parent.getDisplay().getBounds();
 		if (displayBounds.width > 480 && displayBounds.height > 480)
-	        contents = XSWT.createl(this, "layout.xswt", getClass());
-//			contents = XSWT.createl(this, "layout-desktop.xswt", getClass());
+//	        contents = XSWT.createl(this, "layout.xswt", getClass());
+			contents = XSWT.createl(this, "layout-desktop.xswt", getClass());
 		else
 			contents = XSWT.createl(this, "layout.xswt", getClass());
 	}
