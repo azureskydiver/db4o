@@ -1,0 +1,81 @@
+<Project name="db4o40ntutorial" standardNamespace="db4o40ntutorial" description="" newfilesearch="OnLoad" enableviewstate="True" version="1.1" projecttype="C#">
+  <Contents>
+    <File name=".\com\db4o\f1\ExampleRunner.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\ExampleRunner.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\Util.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\Util.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter1\FirstStepsExample.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter1\FirstStepsExample.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter1\Pilot.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter1\Pilot.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter1\QueryExample.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter1\QueryExample.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter2\Car.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter2\Pilot.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter2\StructuredExample.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter3\Car.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter3\CollectionsExample.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter3\Pilot.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter3\SensorReadout.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\Car.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\Pilot.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\SensorReadout.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\TemperatureSensorReadout.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\Car.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\Pilot.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\SensorReadout.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\TemperatureSensorReadout.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter2\Car.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter2\Pilot.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter2\StructuredExample.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter3\Car.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter3\CollectionsExample.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter3\Pilot.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter3\SensorReadout.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\Car.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\InheritanceExample.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\OxygenSensorReadout.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\Pilot.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\PressureSensorReadout.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\SensorReadout.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\Car.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\OxygenSensorReadout.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\Pilot.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\SensorReadout.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\TemperatureSensorReadout.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\.cvsignore" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\db4o40ntutorial.prjx~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\InheritanceExample.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\PressureSensorReadout.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter4\TemperatureSensorReadout.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\DeepExample.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\DeepExample.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\PressureSensorReadout.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\PressureSensorReadout.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\ClientServerExample.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\ClientServerExample.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\TransactionExample.cs" subtype="Code" buildaction="Compile" dependson="" data="" />
+    <File name=".\com\db4o\f1\chapter5\TransactionExample.cs~" subtype="Code" buildaction="Exclude" dependson="" data="" />
+  </Contents>
+  <References>
+    <Reference type="Assembly" refto="..\..\db4odevtools\dist\net\dll\db4o-4.0-net1.dll" localcopy="True" />
+  </References>
+  <DeploymentInformation target="" script="" strategy="File" />
+  <Configuration runwithwarnings="True" name="Debug">
+    <CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="Standard" warninglevel="4" nowarn="" includedebuginformation="True" optimize="False" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" target="Library" definesymbols="" generatexmldocumentation="False" win32Icon="" noconfig="False" nostdlib="False" />
+    <Execution commandlineparameters="" consolepause="True" />
+    <Output directory="..\bin" assembly="db4o-4.0-samples" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+  </Configuration>
+  <Configurations active="Debug">
+    <Configuration runwithwarnings="True" name="Debug">
+      <CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="Standard" warninglevel="4" nowarn="" includedebuginformation="True" optimize="False" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" target="Library" definesymbols="" generatexmldocumentation="False" win32Icon="" noconfig="False" nostdlib="False" />
+      <Execution commandlineparameters="" consolepause="True" />
+      <Output directory="..\bin" assembly="db4o-4.0-samples" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+    </Configuration>
+    <Configuration runwithwarnings="True" name="Release">
+      <CodeGeneration runtime="MsNet" compiler="Csc" compilerversion="Standard" warninglevel="4" nowarn="" includedebuginformation="False" optimize="True" unsafecodeallowed="False" generateoverflowchecks="False" mainclass="" target="Library" definesymbols="" generatexmldocumentation="False" win32Icon="" noconfig="False" nostdlib="False" />
+      <Execution commandlineparameters="" consolepause="True" />
+      <Output directory="..\bin" assembly="db4o-4.0-samples" executeScript="" executeBeforeBuild="" executeAfterBuild="" executeBeforeBuildArguments="" executeAfterBuildArguments="" />
+    </Configuration>
+  </Configurations>
+</Project>

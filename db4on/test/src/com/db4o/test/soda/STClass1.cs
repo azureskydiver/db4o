@@ -1,0 +1,12 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+
+using System;
+using j4o.lang;
+namespace com.db4o.test.soda {
+
+   /**
+    * marks test case as JDK1 compatible 
+    */
+   public interface STClass1 : STClass {
+   }
+}

@@ -1,0 +1,16 @@
+<Combine fileversion="1.0" name="db4o40ntutorial" description="">
+  <StartMode startupentry="db4o40ntutorial" single="True">
+    <Execute entry="db4o40ntutorial" type="None" />
+  </StartMode>
+  <Entries>
+    <Entry filename=".\.\db4o40ntutorial.prjx" />
+  </Entries>
+  <Configurations active="Debug">
+    <Configuration name="Release">
+      <Entry name="db4o40ntutorial" configurationname="Debug" build="False" />
+    </Configuration>
+    <Configuration name="Debug">
+      <Entry name="db4o40ntutorial" configurationname="Debug" build="False" />
+    </Configuration>
+  </Configurations>
+</Combine>

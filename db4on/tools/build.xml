@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<project name="db4o40ntools" default="build">
+
+	<property name="db4o.dll" location="../db4odevtools/dist/net/dll/db4o-4.0-net1.dll" />
+	
+	<property name="build.dir" location="bin" />
+	
+	<target name="build" depends="init">
+		<csc targetType="library" destFile="${build.dir}/db4o-4.0-net1-tools.dll">		
+			<src dir="src">
+				<include name="**/*.cs" />
+			</src>
+			
+			<reference dir="${build.dir}">			
+				<include name="db4o-4.0-net1.dll" />
+			</reference>
+		</csc>
+	</target>
+	
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<copy todir="${build.dir}" file="${db4o.dll}" />
+	</target>
+	
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+
+</project>

@@ -1,0 +1,20 @@
+<Combine fileversion="1.0" name="db4obrowser" description="">
+  <StartMode startupentry="db4obrowser" single="True">
+    <Execute entry="db4obrowser" type="None" />
+    <Execute entry="db4o40ntutorial" type="None" />
+  </StartMode>
+  <Entries>
+    <Entry filename=".\.\db4obrowser.prjx" />
+    <Entry filename="..\..\db4o40ntutorial\src\db4o40ntutorial.prjx" />
+  </Entries>
+  <Configurations active="Debug">
+    <Configuration name="Release">
+      <Entry name="db4obrowser" configurationname="Debug" build="False" />
+      <Entry name="db4o40ntutorial" configurationname="Debug" build="False" />
+    </Configuration>
+    <Configuration name="Debug">
+      <Entry name="db4obrowser" configurationname="Debug" build="False" />
+      <Entry name="db4o40ntutorial" configurationname="Debug" build="False" />
+    </Configuration>
+  </Configurations>
+</Combine>
