@@ -25,8 +25,8 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-import com.db4o.browser.gui.standalone.Model;
 import com.db4o.browser.gui.views.DbBrowserPane;
+import com.db4o.browser.model.Database;
 
 /**
  * Class YAPEditor.
@@ -61,7 +61,7 @@ public class YAPEditor extends EditorPart {
     // The real stuff goes here...---------------------------------------
 
     private String fileName;
-	private Model model;
+	private Database model;
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
@@ -81,8 +81,8 @@ public class YAPEditor extends EditorPart {
      */
     public void createPartControl(Composite parent) {
         ui = new DbBrowserPane(parent, SWT.NULL);
-        model = new Model();
-        ui.setInput(model);
+        model = new Database();
+//        ui.setInput(model);
         model.open(fileName);
     }
     

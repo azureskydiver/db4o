@@ -22,11 +22,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
+import com.db4o.browser.gui.controllers.BrowserController;
 import com.db4o.browser.gui.views.DbBrowserPane;
+import com.db4o.browser.model.BrowserCore;
 import com.swtworkbench.community.xswt.XSWT;
 
 /**
@@ -34,38 +38,54 @@ import com.swtworkbench.community.xswt.XSWT;
  * 
  * @author djo
  */
-public class StandaloneBrowser extends Snippet {
+public class StandaloneBrowser implements IControlFactory {
+    
+    public static final String appName = "explorer4objects";
+    
+    private Shell shell;
+    private DbBrowserPane ui;
+    private BrowserController controller;
     
     /* (non-Javadoc)
-	 * @see com.swtworkbench.swtutils.framework.SWTSnippet#setupUI(org.eclipse.swt.widgets.Shell)
+	 * @see com.db4o.browser.gui.standalone.IControlFactory#createContents(org.eclipse.swt.widgets.Composite)
 	 */
-	protected void constructUI(Shell parent) {
-		parent.setLayout(new FillLayout());
-        ui = new DbBrowserPane(parent, SWT.NULL);
+	public void createContents(Composite parent) {
+        shell = (Shell) parent;
+        shell.setLayout(new FillLayout());
+        shell.setText(appName);
         
-        buildMenuBar();
+        ui = new DbBrowserPane(shell, SWT.NULL);
+        buildMenuBar((Shell)parent);
+        
+        controller = new BrowserController(ui);
 	}
-    
-    private DbBrowserPane ui;
     
 	/**
 	 * Build the application menu bar
 	 */
-	private void buildMenuBar() {
+	private void buildMenuBar(final Shell shell) {
         Map contents = XSWT.createl(shell, "menu.xswt", getClass());
-        MenuItem open = (MenuItem) contents.get("open");
-        MenuItem exit = (MenuItem) contents.get("exit");
+        MenuItem open = (MenuItem) contents.get("Open");
+        MenuItem search = (MenuItem) contents.get("Search");
+        MenuItem newWindow = (MenuItem) contents.get("NewWindow");
+        MenuItem exit = (MenuItem) contents.get("Exit");
         
         open.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(shell, SWT.OPEN);
                 String file = dialog.open();
                 if (file != null) {
-                    Model model = new Model();
-                    ui.setInput(model);
-                    model.open(file);
+                    controller.open(file);
                 }
             }
+        });
+        
+        newWindow.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+                Shell shell = SWTProgram.newShell(Display.getCurrent());
+                new StandaloneBrowser().createContents(shell);
+                shell.open();
+			}
         });
         
         exit.addSelectionListener(new SelectionAdapter() {
@@ -76,6 +96,9 @@ public class StandaloneBrowser extends Snippet {
 	}
 
 	public static void main(String[] args) {
-        new StandaloneBrowser();
+        SWTProgram.registerCloseListener(BrowserCore.getDefault());
+        SWTProgram.runWithLog(new StandaloneBrowser());
 	}
 }
+
+
