@@ -32,52 +32,58 @@ public class FileHead extends File {
 
     public void run() throws Exception {
         if (isDirectory()) {
-            String[] files = list();
-            if (files != null) {
-                for (int i = 0; i < files.length; i++) {
-                    FileHead child = new FileHead(getAbsolutePath(),
-                        files[i], task);
-                    if (child.isDirectory() || task.fileExt == null
-                        || files[i].endsWith(task.fileExt)) {
-                        child.run();
-                    }
-                }
-            }
+            processDirectory();
         } else {
-            String path = getAbsolutePath();
-            final int bufferSize = 64000;
-            RandomAccessFile rafIn = new RandomAccessFile(path, "r");
-            RandomAccessFile rafOut = new RandomAccessFile(path + "g", "rw");
-            rafOut.write(task.header);
-            int filepos = 0;
-            int beforePos = 0;
-            while (beforePos < task.before.length) {
-                byte b = (byte) rafIn.read();
-                filepos++;
-                if (b == task.before[beforePos]) {
-                    beforePos++;
-                } else {
-                    beforePos = 0;
-                }
-            }
-            filepos -= beforePos;
-            rafIn.seek(filepos);
-
-            long len = rafIn.length() - filepos;
-            byte[] bytes = new byte[bufferSize];
-            while (len > 0) {
-                len -= bufferSize;
-                if (len < 0) {
-                    bytes = new byte[(int) (len + bufferSize)];
-                }
-                rafIn.read(bytes);
-                rafOut.write(bytes);
-            }
-
-            rafIn.close();
-            rafOut.close();
-            new File(path).delete();
-            new File(path + "g").renameTo(new File(path));
+            processFile();
         }
     }
+
+	private void processFile() throws FileNotFoundException, IOException {
+		String path = getAbsolutePath();
+		final int bufferSize = 64000;
+		RandomAccessFile rafIn = new RandomAccessFile(path, "r");
+		RandomAccessFile rafOut = new RandomAccessFile(path + "g", "rw");
+		rafOut.write(task.header);
+		int filepos = 0;
+		int beforePos = 0;
+		while (beforePos < task.before.length) {
+		    byte b = (byte) rafIn.read();
+		    filepos++;
+		    if (b == task.before[beforePos]) {
+		        beforePos++;
+		    } else {
+		        beforePos = 0;
+		    }
+		}
+		filepos -= beforePos;
+		rafIn.seek(filepos);
+		long len = rafIn.length() - filepos;
+		byte[] bytes = new byte[bufferSize];
+		while (len > 0) {
+		    len -= bufferSize;
+		    if (len < 0) {
+		        bytes = new byte[(int) (len + bufferSize)];
+		    }
+		    rafIn.read(bytes);
+		    rafOut.write(bytes);
+		}
+		rafIn.close();
+		rafOut.close();
+		new File(path).delete();
+		new File(path + "g").renameTo(new File(path));
+	}
+
+	private void processDirectory() throws Exception {
+		String[] files = list();
+		if (files != null) {
+		    for (int i = 0; i < files.length; i++) {
+		        FileHead child = new FileHead(getAbsolutePath(),
+		            files[i], task);
+		        if (child.isDirectory() || task.fileExt == null
+		            || files[i].endsWith(task.fileExt)) {
+		            child.run();
+		        }
+		    }
+		}
+	}
 }
