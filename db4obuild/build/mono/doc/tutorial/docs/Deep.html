@@ -230,21 +230,21 @@ ObjectSet result = db.get(typeof(SensorReadout));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Console.WriteLine(result.next());<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 </code></td></tr></table>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 4.2<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 2.6<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 1.2000000000000002<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 3.3<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 2.0<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.9<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 2.4<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 1.4000000000000001<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.6000000000000001<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 1.5<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 0.6<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.2<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.30000000000000004<br>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 4.2<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 2.6<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 1.2000000000000002<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 3.3<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 2.0<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.9<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 2.4<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 1.4000000000000001<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.6000000000000001<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
 </td></table></table><br>
 <br>
 All these readouts belong to one linked list, so we should be able to access&nbsp;them all by just traversing our list structure.<br>
@@ -261,21 +261,21 @@ ObjectSet result = db.get(new Car(null));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;readout = readout.Next;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 </code></td></tr></table>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.2<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 0.6<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 1.5<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.6000000000000001<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 1.4000000000000001<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 2.4<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.9<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 2.0<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 3.3<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 1.2000000000000002<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 2.6<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 4.2<br>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.6000000000000001<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 1.4000000000000001<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 2.4<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.9<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 2.0<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 3.3<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 1.2000000000000002<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 2.6<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 4.2<br>
 </td></table></table><br>
 <br>
 Ouch! What's happening here?<br>
@@ -305,21 +305,21 @@ ObjectSet result = db.get(new Car(null));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;readout = readout.Next;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 </code></td></tr></table>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.2<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 0.6<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 1.5<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.6000000000000001<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 1.4000000000000001<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 2.4<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.9<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 2.0<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 3.3<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 1.2000000000000002<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 2.6<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 4.2<br>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.6000000000000001<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 1.4000000000000001<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 2.4<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.9<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 2.0<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 3.3<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 1.2000000000000002<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 2.6<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 4.2<br>
 </td></table></table><br>
 <br>
 Note that 'cut' references may also influence the behavior of your&nbsp;objects: In this case the length of the list is calculated dynamically,&nbsp;and therefor constrained by activation depth.<br>
@@ -346,21 +346,21 @@ ObjectSet result = db.get(new Car(null));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;readout = readout.Next;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 </code></td></tr></table>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.2<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 0.6<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 1.5<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.6000000000000001<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 1.4000000000000001<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 2.4<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.9<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 2.0<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 3.3<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 1.2000000000000002<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : water temp : 2.6<br>
-BMW[Rubens Barrichello/99]/15 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 4.2<br>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.6000000000000001<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 1.4000000000000001<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 2.4<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.9<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 2.0<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 3.3<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 1.2000000000000002<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : water temp : 2.6<br>
+BMW[Rubens Barrichello/99]/15 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 4.2<br>
 </td></table></table><br>
 <br>
 You have to be very careful, though. Activation issues are tricky. Db4o&nbsp;provides a wide range of configuration features to control activation&nbsp;depth at a very fine-grained level. You'll find those triggers in&nbsp;com.db4o.config.Configuration and the associated ObjectClass and&nbsp;ObjectField classes.<br>
