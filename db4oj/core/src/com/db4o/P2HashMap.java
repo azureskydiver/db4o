@@ -7,9 +7,9 @@ import java.util.*;
 import com.db4o.types.*;
 
 /**
- *  
+ * @exclude  
  */
-class P2HashMap extends P1Collection implements Db4oMap, TransactionListener {
+public class P2HashMap extends P1Collection implements Db4oMap, TransactionListener {
 
     private static final float FILL = 0.6F;
 

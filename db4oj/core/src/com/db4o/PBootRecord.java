@@ -12,7 +12,7 @@ import com.db4o.ext.*;
  * 
  * @exclude
  */
-class PBootRecord extends P1Object implements Db4oTypeImpl{
+public class PBootRecord extends P1Object implements Db4oTypeImpl{
 
     transient YapFile         i_stream;
     public Db4oDatabase       i_db;

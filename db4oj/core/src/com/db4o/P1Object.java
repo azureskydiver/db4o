@@ -4,8 +4,9 @@ package com.db4o;
 
 /**
  * base class for all database aware objects
+ * @exclude
  */
-class P1Object implements Db4oTypeImpl{
+public class P1Object implements Db4oTypeImpl{
     
     private transient Transaction i_trans;
     private transient YapObject i_yapObject;
@@ -112,6 +113,7 @@ class P1Object implements Db4oTypeImpl{
     
     public Object storedTo(Transaction a_trans){
         i_trans = a_trans;
+        
         return this;
     }
     
