@@ -328,8 +328,7 @@ public final class Platform {
         return JavaOnly.isCollectionTranslator(a_config); 
     }
     
-    // FIXME: REFLECTOR This should only be in the special .NET reflector 
-    public static final boolean isValueType(Class a_class){
+    public static final boolean isValueType(ReflectClass claxx){
     	return false;
     }
     

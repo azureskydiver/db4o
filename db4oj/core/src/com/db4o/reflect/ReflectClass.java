@@ -34,8 +34,6 @@ public interface ReflectClass {
 	public boolean isInterface();
 	
 	public boolean isPrimitive();
-	
-    public boolean isValueType();
     
 	public Object newInstance();
     

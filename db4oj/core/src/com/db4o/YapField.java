@@ -297,7 +297,7 @@ class YapField implements StoredField {
             
             boolean dotnetValueType = false;
             if(Deploy.csharp){
-            	dotnetValueType = i_handler.classReflector().isValueType();	
+            	dotnetValueType = Platform.isValueType(i_handler.classReflector());	
             }
             
             

@@ -91,10 +91,6 @@ public class GenericClass implements ReflectClass {
         return false;
     }
     
-    public boolean isValueType(){
-        return false;
-    }
-
     public Object newInstance() {
         return new GenericObject(this);
     }
