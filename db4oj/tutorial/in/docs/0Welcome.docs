@@ -25,7 +25,7 @@ structure:
 This tutorial comes in multiple versions. Make sure ._
 that you use the right one for the right purpose.
 
-.? net .b db4o-4.0/doc/tutorial/db4o-4.0-browser.exe .. 
+.? net .b db4o-4.0/doc/tutorial/db4o-tutorial.exe .. 
 This is the interactive tutorial application for .NET. Examples can be ._
 run "live" against a db4o database from within the application. 
 ..?
