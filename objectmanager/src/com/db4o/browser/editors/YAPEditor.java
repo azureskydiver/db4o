@@ -16,17 +16,14 @@
  */
 package com.db4o.browser.editors;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.EditorPart;
+import org.eclipse.core.runtime.*;
+import org.eclipse.swt.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
+import org.eclipse.ui.part.*;
 
-import com.db4o.browser.gui.views.DbBrowserPane;
-import com.db4o.browser.model.Database;
+import com.db4o.browser.gui.views.*;
+import com.db4o.browser.model.*;
 
 /**
  * Class YAPEditor.
@@ -81,7 +78,7 @@ public class YAPEditor extends EditorPart {
      */
     public void createPartControl(Composite parent) {
         ui = new DbBrowserPane(parent, SWT.NULL);
-        model = new Database();
+        model = new Db4oDatabase();
 //        ui.setInput(model);
         model.open(fileName);
     }

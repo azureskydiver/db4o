@@ -34,7 +34,7 @@ public class BrowserCore implements ICloseListener {
     private Database getDatabase(String databasePath) {
         Database requested = (Database) dbMap.get(databasePath);
         if (requested == null) {
-            requested = new Database();
+            requested = new Db4oDatabase();
             requested.open(databasePath);
             dbMap.put(databasePath, requested);
             databases.addLast(requested);
