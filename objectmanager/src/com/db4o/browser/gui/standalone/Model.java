@@ -21,6 +21,8 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
+import com.db4o.reflect.IClass;
+import com.db4o.reflect.jdk.CReflect;
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
@@ -41,9 +43,13 @@ public class Model {
     
     public static ObjectSet instances(String clazz) {
         Query q = container.query();
+//        IClass toReturn = null;
+//        try {
+//            toReturn = CReflect.getDefault().forName(clazz);
+//        }
         Class toReturn = null;
         try {
-        	toReturn = Class.forName(clazz);
+            toReturn = Class.forName(clazz);
         }
         catch (Exception e) {
             Logger.log().error(e, "Unable to Class.forName()");

@@ -3,5 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/kxml-plugin.jar"/>
+	<classpathentry kind="lib" path="lib/xmlpull_1_1_3_1.jar"/>
+	<classpathentry kind="lib" path="lib/xswt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
