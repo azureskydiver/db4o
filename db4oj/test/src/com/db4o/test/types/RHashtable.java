@@ -28,11 +28,11 @@ public class RHashtable implements RTestable{
 	public void compare(ObjectContainer con, Object obj, int ver){
 		Hashtable ht = (Hashtable)obj;
 		TEntry[] entries = new TEntry[ht.size()];
-		Enumeration enum = ht.keys();
+		Enumeration enu = ht.keys();
 		int i = 0;
-		while(enum.hasMoreElements()){
+		while(enu.hasMoreElements()){
 			entries[i] = new TEntry();
-			entries[i].key = enum.nextElement();
+			entries[i].key = enu.nextElement();
 			i++;
 		}
 		for(i = 0; i < entries.length; i ++){

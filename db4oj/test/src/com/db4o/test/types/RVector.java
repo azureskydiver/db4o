@@ -26,11 +26,11 @@ public class RVector implements RTestable{
 	public void compare(ObjectContainer con, Object obj, int ver){
 		Vector vt = (Vector)obj;
 		TEntry[] entries = new TEntry[vt.size()];
-		Enumeration enum = vt.elements();
+		Enumeration enu = vt.elements();
 		int i = 0;
-		while(enum.hasMoreElements()){
+		while(enu.hasMoreElements()){
 			entries[i] = new TEntry();
-			entries[i].key = enum.nextElement();
+			entries[i].key = enu.nextElement();
 			i++;
 		}
 		new TEntry().compare(entries, ver, true);
