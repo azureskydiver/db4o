@@ -230,7 +230,7 @@
 		<property name="ndoc.home" location="lib/ndoc" />
 					
 		<mkdir dir="${dir.dist.ndoc}" />
-					
+		
 		<exec executable="${ndoc.home}/bin/net/1.1/NDocConsole.exe">
 			<arg value="${file.dll.net}" />
 			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
@@ -243,11 +243,45 @@
             <arg value="-AssemblyVersionInfo=AssemblyVersion" />
 			<arg value="-CopyrightText=Copyright (C) 2004 - 2005  db4objects Inc." />
             <arg value="-CopyrightHref=http://www.db4o.com/" />
+			<arg value="-IncludeFavorites=True" />			
+		</exec>
+	</target>
+		
+	<target name="vsdoc" depends="ndoc" description="Build VS.NET 2003 integrated docs">
+		<exec executable="${ndoc.home}/bin/net/1.1/NDocConsole.exe">
+			<arg value="${file.dll.net}" />
+			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
+			<arg value="-documenter=VS.NET 2003" />
+			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
+			<arg value="-BuildSeparateIndexFile=false" />
+			<arg value="-CollectionNamespace=com.db4o" />
+			<arg value="-CreateFullTextIndex=true" />
+			<arg value="-GenerateCollectionFiles=true" />
+			<arg value="-HtmlHelpName=db4o" />
+			<arg value="-IncludeDefaultStopWordList=true" />
+			<arg value="-LinkToSdkDocVersion=1.1" />
+			<arg value="-PlugInNamespace=ms.vscc" />
+			<arg value="-RegisterTitleWithNamespace=true" />
+			<arg value="-Title=db4o" />
+			<arg value="-SkipNamespacesWithoutSummaries=True" />
+			<arg value="-SdkLinksOnWeb=False" />
+            <arg value="-AssemblyVersionInfo=AssemblyVersion" />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2005  db4objects Inc." />
+            <arg value="-CopyrightHref=http://www.db4o.com/" />
 			<arg value="-IncludeFavorites=True" />
 			<!--
             <property name="Preliminary" value="True" />
             <property name="CleanIntermediates" value="True" />
             -->
+		</exec>
+	</target>
+	
+	<target name="install-vsdoc" depends="vsdoc" description="Register the VS.NET 2003 integrated docs">
+		<property name="h2reg.exe" location="lib/h2reg/h2reg.exe" />
+		<property name="h2reg.cmdfile" location="${dir.dist.ndoc}/db4oCollection.h2reg.ini" />
+		<exec executable="${h2reg.exe}">
+			<arg value="-r" />
+			<arg value="CmdFile=${h2reg.cmdfile}" />
 		</exec>
 	</target>
 
