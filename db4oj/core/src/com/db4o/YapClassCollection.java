@@ -146,7 +146,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
     YapClass getYapClass(ReflectClass a_class, boolean a_create) {
         YapClass yapClass = (YapClass)i_yapClassByClass.get(a_class);
         if (yapClass == null) {
-            byte[] bytes = i_stream.i_stringIo.write(a_class.getName());
+            byte[] bytes = i_stream.stringIO().write(a_class.getName());
             yapClass = (YapClass)i_yapClassByBytes.remove(bytes);
             readYapClass(yapClass, a_class);
         }
@@ -206,7 +206,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
     }
 
     YapClass getYapClass(String a_name) {
-        byte[] bytes = i_stream.i_stringIo.write(a_name);
+        byte[] bytes = i_stream.stringIO().write(a_name);
         YapClass yapClass = (YapClass)i_yapClassByBytes.remove(bytes);
         readYapClass(yapClass, null);
         if (yapClass == null) {

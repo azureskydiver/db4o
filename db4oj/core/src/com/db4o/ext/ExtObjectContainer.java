@@ -8,6 +8,8 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.config.Configuration;
+import com.db4o.internal.io.*;
+import com.db4o.reflect.*;
 import com.db4o.reflect.Reflector;
 import com.db4o.replication.ReplicationConflictHandler;
 import com.db4o.replication.ReplicationProcess;
@@ -170,6 +172,14 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @return <code>true</code> if the passed object is stored.
      */
     public boolean isStored(Object obj);
+    
+    /**
+     * returns all class representations that are known to this
+     * ObjectContainer because they have been used or stored.
+     * @return all class representations that are known to this
+     * ObjectContainer because they have been used or stored. 
+     */
+    public ReflectClass[] knownClasses();
 
     /**
      * returns the main synchronisation lock.
@@ -368,7 +378,4 @@ public interface ExtObjectContainer extends ObjectContainer {
      */
     public long version();
 	
-	LeanStoredClass[] leanStoredClasses();
-	LeanStoredClass leanStoredClassByName(String name);
-	LeanStoredClass leanStoredClassByID(int id);
 }

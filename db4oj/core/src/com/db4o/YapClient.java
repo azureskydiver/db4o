@@ -7,7 +7,10 @@ import java.io.*;
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
 
-class YapClient extends YapStream implements ExtClient {
+/**
+ * @exclude
+ */
+public class YapClient extends YapStream implements ExtClient {
     final Object blobLock = new Object();
 
     private YapClientBlobThread blobThread;
@@ -455,7 +458,7 @@ class YapClient extends YapStream implements ExtClient {
         return false;
     }
 
-    final YapWriter readWriterByID(Transaction a_ta, int a_id) {
+    public final YapWriter readWriterByID(Transaction a_ta, int a_id) {
         try {
             writeMsg(Msg.READ_OBJECT.getWriterForInt(a_ta, a_id));
             YapWriter bytes = ((MsgObject)expectedResponse(Msg.OBJECT_TO_CLIENT)).unmarshall();

@@ -1,13 +1,14 @@
 package com.db4o.reflect.db;
 
 import com.db4o.ext.*;
+import com.db4o.internal.io.*;
 import com.db4o.reflect.*;
 
 public class DBField implements ReflectField {
 	private DBClass type;
-	private LeanStoredField field;
+	private FieldReader field;
 
-	public DBField(DBClass type,LeanStoredField field) {
+	public DBField(DBClass type,FieldReader field) {
 		this.type=type;
 		this.field=field;
 	}

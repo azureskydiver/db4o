@@ -2,6 +2,7 @@ package com.db4o.reflect.db;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.internal.io.*;
 import com.db4o.reflect.*;
 
 public class DBReflector implements Reflector {
@@ -42,7 +43,7 @@ public class DBReflector implements Reflector {
 	}
 
 	private ReflectClass createClass(String name) {
-		LeanStoredClass storedClass=db.ext().leanStoredClassByName(name);
+		ClassReader storedClass=db.ext().leanStoredClassByName(name);
 		return (storedClass==null ? null : new DBClass(this, db.ext(),storedClass));
 	}
 	

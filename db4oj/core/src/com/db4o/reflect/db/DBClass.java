@@ -1,15 +1,16 @@
 package com.db4o.reflect.db;
 
 import com.db4o.ext.*;
+import com.db4o.internal.io.*;
 import com.db4o.reflect.*;
 
 public class DBClass implements ReflectClass {
     
     private final Reflector _reflector;
 	private final ExtObjectContainer _db;
-	private final LeanStoredClass _storedClass;
+	private final ClassReader _storedClass;
 	
-	public DBClass(Reflector reflector, ExtObjectContainer db,LeanStoredClass storedClass) {
+	public DBClass(Reflector reflector, ExtObjectContainer db,ClassReader storedClass) {
         _reflector = reflector;
 		_db=db;
 		_storedClass=storedClass;
@@ -24,7 +25,7 @@ public class DBClass implements ReflectClass {
 	}
 
 	public ReflectField[] getDeclaredFields() {
-		LeanStoredField[] fields=_storedClass.storedFields();
+		FieldReader[] fields=_storedClass.storedFields();
 		DBField[] reflectFields=new DBField[fields.length];
 		for (int idx = 0; idx < fields.length; idx++) {
 			DBClass type=new DBClass(reflector(),_db,_db.leanStoredClassByID(fields[idx].typeID()));
@@ -34,7 +35,7 @@ public class DBClass implements ReflectClass {
 	}
 
 	public ReflectField getDeclaredField(String name) {
-		LeanStoredField[] fields=_storedClass.storedFields();
+		FieldReader[] fields=_storedClass.storedFields();
 		for (int idx = 0; idx < fields.length; idx++) {
 			if(fields[idx].name().equals(name)) {
 				DBClass type=new DBClass(reflector(),_db,_db.leanStoredClassByID(fields[idx].typeID()));

@@ -7,7 +7,10 @@ import java.io.*;
 import com.db4o.ext.*;
 import com.db4o.io.*;
 
-class YapRandomAccessFile extends YapFile {
+/**
+ * @exclude
+ */
+public class YapRandomAccessFile extends YapFile {
 
     private Session            i_session;
 

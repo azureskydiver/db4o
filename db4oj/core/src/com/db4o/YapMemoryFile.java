@@ -6,7 +6,10 @@ import java.io.*;
 
 import com.db4o.ext.*;
 
-class YapMemoryFile extends YapFile {
+/**
+ * @exclude
+ */
+public class YapMemoryFile extends YapFile {
     
     private boolean i_closed = false;
     final MemoryFile i_memoryFile;

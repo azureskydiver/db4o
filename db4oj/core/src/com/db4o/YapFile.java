@@ -7,7 +7,10 @@ import java.io.*;
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
 
-abstract class YapFile extends YapStream {
+/**
+ * @exclude
+ */
+public abstract class YapFile extends YapStream {
 
     YapConfigBlock    			i_configBlock;
     PBootRecord                 i_bootRecord;
@@ -346,7 +349,7 @@ abstract class YapFile extends YapStream {
         }
     }
 
-    YapWriter readWriterByID(Transaction a_ta, int a_id) {
+    public YapWriter readWriterByID(Transaction a_ta, int a_id) {
         // TODO:
         // load from cache here
         

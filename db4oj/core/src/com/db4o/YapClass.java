@@ -1147,7 +1147,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 
     int ownLength() {
         int len =
-            i_stream.i_stringIo.shortLength(getName())
+            i_stream.stringIO().shortLength(getName())
                 + YapConst.OBJECT_LENGTH
                 + (YapConst.YAPINT_LENGTH * 2)
                 + (YapConst.YAPID_LENGTH * 2);
@@ -1363,7 +1363,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             }
             int len = a_reader.readInt();
 
-            len = len * a_trans.i_stream.i_stringIo.bytesPerChar();
+            len = len * a_trans.i_stream.stringIO().bytesPerChar();
 
             i_nameBytes = new byte[len];
             System.arraycopy(a_reader._buffer, a_reader._offset, i_nameBytes, 0, len);
@@ -1448,7 +1448,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         ReflectClass a_class) {
         if (a_class == null) {
             if (i_nameBytes != null) {
-                i_name = a_stream.i_stringIo.read(i_nameBytes);
+                i_name = a_stream.stringIO().read(i_nameBytes);
             }
         } else {
             i_name = a_class.getName();

@@ -53,7 +53,7 @@ public class YapReader {
 		return _buffer.length;
 	}
 	
-    void incrementOffset(int a_by) {
+    public void incrementOffset(int a_by) {
         _offset += a_by;
     }
     
@@ -88,7 +88,7 @@ public class YapReader {
         }
     }
 	
-	byte readByte() {
+	public byte readByte() {
 		return _buffer[_offset++];
 	}
 	
@@ -116,7 +116,7 @@ public class YapReader {
         }
     }
 
-    final int readInt() {
+    public final int readInt() {
         if (Deploy.debug) {
             return YInt.readInt(this);
         } else {

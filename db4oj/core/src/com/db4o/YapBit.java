@@ -2,11 +2,14 @@
 
 package com.db4o;
 
-final class YapBit
-{
+/**
+ * @exclude
+ */
+public final class YapBit{
+	
 	private int i_value;
 	
-	YapBit(int a_value){
+	public YapBit(int a_value){
 		i_value = a_value;
 	}
 	
@@ -17,7 +20,7 @@ final class YapBit
 		}
 	}
 	
-	boolean get(){
+	public boolean get(){
 		double cmp = (double)i_value / 2;
 		i_value = i_value / 2;
 		return (cmp != i_value);

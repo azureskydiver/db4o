@@ -583,7 +583,7 @@ class YapField implements StoredField {
     }
 
     int ownLength(YapStream a_stream) {
-        return a_stream.i_stringIo.shortLength(i_name) + 1
+        return a_stream.stringIO().shortLength(i_name) + 1
             + YapConst.YAPID_LENGTH;
     }
 

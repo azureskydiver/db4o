@@ -11,10 +11,11 @@ import com.db4o.reflect.*;
  */
 final class YapString extends YapIndependantType {
     
-    private YapStringIO i_stringIo; 
+    public YapStringIO i_stringIo; 
     
-    public YapString(YapStream stream) {
+    public YapString(YapStream stream, YapStringIO stringIO) {
         super(stream);
+        i_stringIo = stringIO;
     }
     
     public void appendEmbedded3(YapWriter a_bytes) {
@@ -140,9 +141,6 @@ final class YapString extends YapIndependantType {
     final String readShort(YapReader a_bytes) throws CorruptionException {
         int length = a_bytes.readInt();
         if (length > YapConst.MAXIMUM_BLOCK_SIZE) {
-            if (Debug.atHome) {
-                throw new CorruptionException();
-            }
             throw new CorruptionException();
         }
         if (length > 0) {

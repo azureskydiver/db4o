@@ -1,12 +1,14 @@
-package com.db4o.ext;
+/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
 
-public class LeanStoredClass {
+package com.db4o.internal.io;
+
+public class ClassReader {
 	private int id;
 	private String name;
 	private int parentID;
-	private LeanStoredField[] fields;
+	private FieldReader[] fields;
 	
-	public LeanStoredClass(int id,String name, int parentID, LeanStoredField[] fields) {
+	public ClassReader(int id,String name, int parentID, FieldReader[] fields) {
 		this.id=id;
 		this.name = name;
 		this.parentID = parentID;
@@ -25,11 +27,11 @@ public class LeanStoredClass {
 		return parentID;
 	}
 
-	public LeanStoredField[] storedFields() {
+	public FieldReader[] storedFields() {
 		return fields;
 	}
 
-	public LeanStoredField storedField(String name, Object type) {
+	public FieldReader storedField(String name, Object type) {
 		for (int idx = 0; idx < fields.length; idx++) {
 			if(name.equals(fields[idx].name())) {
 				return fields[idx];
@@ -45,7 +47,7 @@ public class LeanStoredClass {
 		if(obj==null||getClass()!=obj.getClass()) {
 			return false;
 		}
-		LeanStoredClass other=(LeanStoredClass)obj;
+		ClassReader other=(ClassReader)obj;
 		return id==other.id;
 	}
 	
