@@ -18,8 +18,6 @@ public class CustomClassLoaderTest {
 
             Thread.currentThread().setContextClassLoader(loader);
 
-            // Unsing equals() as a convenient method to call into a
-            // different ClassLoader space 
             loader.loadClass("com.db4o.test.CustomClassLoaderHelper").newInstance();
         
     }

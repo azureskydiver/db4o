@@ -709,7 +709,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         }
         
         //FIXME: REFLECTOR Big hack to get a runnable version.
-        Class clazz = ((CClass)a_class).getJavaClass(); 
+        Class clazz = a_class.getJavaClass(); 
         
         return i_classCollection.getYapClass(clazz, a_create);
     }
