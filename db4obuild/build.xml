@@ -9,7 +9,7 @@
 	file.compiler.jdk1.3=<JDK1.3 compatible javac>
 	file.rt.jar=<JDK1.3 compatible runtime jar>
 	font.pdf.base=<true type font>
-	dir.dll.wince=<path to .NET CE dll, leave empty if not available
+	dir.dll.wince=<path to .NET CE dll, leave empty if not available>
 -->
 	<property file="machine.properties" />
 	<property file="ant.properties" />
@@ -133,6 +133,14 @@
 		<jar destfile="${file.java1.1.jar}">
 			<fileset dir="${dir.dist.classes.java1.1}" excludes="**/JDK_*.class" />
 		</jar>
+	</target>
+
+	<target name="compilebuild" depends="init" description="Compile Db4o build sources">
+		<mkdir dir="${dir.build.bin}" />
+		<depend srcdir="${dir.build.src}" destdir="${dir.build.bin}" closure="yes" />
+		<javac srcdir="${dir.build.src}" destdir="${dir.build.bin}" debug="off" target="1.3" source="1.3">
+			<classpath path="${path.classpath.full}" />
+		</javac>
 	</target>
 
 	<target name="compilecorenet" depends="init, cleannet">
@@ -355,7 +363,7 @@
 		<ant antfile="build-net-installer.xml" />
 	</target>
 	
-	<target name="sharpen" depends="compilecorenet" description="create .NET sources">
+	<target name="sharpen" depends="compilecorenet,compilebuild" description="create .NET sources">
 		<jar destfile="${file.sharp.jar}">
 			<fileset dir="${dir.dist.classes.sharp}" excludes="**/JDK_*.class" />
 		</jar>
