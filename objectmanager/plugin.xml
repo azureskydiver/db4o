@@ -39,8 +39,8 @@
             name="db4o Database Browser"
             icon="icons/sample.gif"
             category="db4obrowser"
-            class="com.db4o.browser.views.DbBrowser"
-            id="com.db4o.browser.views.DbBrowser">
+            class="com.db4o.browser.eclipse.views.DbBrowser"
+            id="com.db4o.browser.eclipse.views.DbBrowser">
       </view>
    </extension>
    <extension
@@ -53,8 +53,8 @@
             name="db4o Query Editor"
             icon="icons/sample.gif"
             category="db4obrowser"
-            class="com.db4o.browser.views.DbQuery"
-            id="com.db4o.browser.views.DbQuery">
+            class="com.db4o.browser.eclipse.views.DbQuery"
+            id="com.db4o.browser.eclipse.views.DbQuery">
       </view>
    </extension>
    <extension
@@ -65,7 +65,7 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.TaskList"
                relationship="stack"
-               id="com.db4o.browser.views.DbBrowser">
+               id="com.db4o.browser.eclipse.views.DbBrowser">
          </view>
       </perspectiveExtension>
       <perspectiveExtension
@@ -74,7 +74,7 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.ResourceNavigator"
                relationship="stack"
-               id="com.db4o.browser.views.DbQuery">
+               id="com.db4o.browser.eclipse.views.DbQuery">
          </view>
       </perspectiveExtension>
    </extension>
