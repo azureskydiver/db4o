@@ -1,8 +1,14 @@
 TODO:
 
-- Implement forward/back buttons
+- Generic reflector
+- Activation depth scalability
+- Make sure browsing scales to large numbers of nodes
+- Substring search: just search displayed strings; else do a query by form QBE
 - Begin query UI / querying functionality
     * Allow display of query results
+    
+ - Unit testing verify that the iterator is always restored after it is used
+    * template generator
 
 - Customize display of nodes
 
