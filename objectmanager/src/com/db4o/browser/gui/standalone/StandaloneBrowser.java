@@ -16,26 +16,23 @@
  */
 package com.db4o.browser.gui.standalone;
 
-import java.util.Map;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
 
-import com.db4o.Db4o;
-import com.db4o.browser.gui.controllers.BrowserController;
-import com.db4o.browser.gui.views.DbBrowserPane;
-import com.db4o.browser.model.BrowserCore;
-import com.db4o.browser.preferences.PreferenceUI;
-import com.db4o.reflect.generic.GenericReflector;
-import com.db4o.reflect.jdk.JdkReflector;
-import com.swtworkbench.community.xswt.XSWT;
+import com.db4o.*;
+import com.db4o.browser.gui.controllers.*;
+import com.db4o.browser.gui.views.*;
+import com.db4o.browser.model.*;
+import com.db4o.browser.preferences.*;
+import com.db4o.reflect.generic.*;
+import com.db4o.reflect.jdk.*;
+import com.swtworkbench.community.xswt.*;
 
 /**
  * Class StandaloneBrowser.
@@ -79,6 +76,7 @@ public class StandaloneBrowser implements IControlFactory {
         MenuItem newWindow = (MenuItem) choices.get("NewWindow");
         MenuItem close = (MenuItem) choices.get("Close");
 		MenuItem preferences = (MenuItem) choices.get("Preferences");
+		MenuItem addtoclasspath = (MenuItem) choices.get("AddToClasspath");
         
         open.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
@@ -107,6 +105,21 @@ public class StandaloneBrowser implements IControlFactory {
         close.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 shell.close();
+            }
+        });
+
+        addtoclasspath.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                DirectoryDialog dialog = new DirectoryDialog(shell, SWT.OPEN);
+                String file = dialog.open();
+                if (file != null) {
+					try {
+						URL url=new File(file).toURL();
+						controller.addToClasspath(url);
+					} catch (MalformedURLException exc) {
+						exc.printStackTrace();
+					}
+                }
             }
         });
 	}
