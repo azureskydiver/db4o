@@ -20,13 +20,11 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.Table;
 
-import com.yetac.doctor.applet.ExampleRunner;
 import com.yetac.doctor.cmd.*;
 import com.yetac.doctor.workers.*;
 
 public class PDFWriter extends AbstractWriter {
-    private ExampleRunner runner;
-
+    
     private PdfWriter writer;
     private Document  document;
 
@@ -53,15 +51,8 @@ public class PDFWriter extends AbstractWriter {
         writer.setViewerPreferences(PdfWriter.PageModeUseOutlines);
         
         outlineNodes = new PdfOutline[10];
-
-        File yapFile=File.createTempFile("formula1",".yap");
         
-        try{
-            runner=new ExampleRunner(getClass().getClassLoader(),yapFile);
-        }catch(Exception e){
-            System.err.println("*** Example runner could not be installed. Continuing without. Reason:");
-            e.printStackTrace();
-        }
+        installRunner();
 
         document.addAuthor(files.task.author());
         document.addCreationDate();
