@@ -53,17 +53,47 @@ public class DbBrowserPane extends Composite {
         parent.setLayout(new FillLayout());
         setLayout(new FillLayout());
         contents = XSWT.createl(this, "layout.xswt", getClass());
-        model = Model.open();
-        populateTree(model.storedClasses());
         addDisposeListener(new DisposeListener() {
             public void widgetDisposed(DisposeEvent e) {
-                model.close();
+                closeModel();
             }
         });
         getObjectTree().addListener(SWT.Expand, expandListener);
         getObjectTree().addFocusListener(focusListener);
 	}
     
+    /**
+     * Set the input to a new Model object.
+     * <p>
+     * This method automatically closes any existing open model in this
+     * browser pane.
+     * 
+     * @param _model
+     */
+    public void setInput(Model _model) {
+        // Dispose any existing items
+        TreeItem[] items = getObjectTree().getItems();
+        for (int i = 0; i < items.length; i++) {
+			items[i].dispose();
+		}
+        closeModel();
+        
+        // Now load the new items
+        model = _model;
+        populateTree(model.storedClasses());
+    }
+    
+
+    /**
+     * If a model is open, close it
+     */
+    private void closeModel() {
+        if (model != null) {
+            model.close();
+            model = null;
+        }
+    }
+
     private Model model = null;
     
     private Map contents = null;
