@@ -1340,10 +1340,10 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                     // The following may return a yapObject if the object is held
                     // in a static variable somewhere that gets stored on creation
                     // of the YapClass.
-
-                    yapObject = i_hcTree.hc_find(a_object);
-
                 }
+
+                yapObject = i_hcTree.hc_find(a_object);
+                
             } else {
                 yc = yapObject.getYapClass();
             }
