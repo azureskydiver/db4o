@@ -8,6 +8,7 @@ using System.Threading;
 
 namespace com.db4o {
 
+	/// <exclude />
     public class Compat {
 
         public static void addShutDownHook(EventHandler handler) {

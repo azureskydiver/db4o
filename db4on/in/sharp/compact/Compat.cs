@@ -14,6 +14,7 @@ namespace System.Runtime.CompilerServices {
 namespace com.db4o 
 {
 
+	/// <exclude />
 	public class Compat
 	{
 
