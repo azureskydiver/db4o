@@ -94,13 +94,13 @@ public class GenericReflector implements Reflector, DeepClone {
     }
 
     public ReflectClass forObject(Object obj) {
+        if (obj instanceof GenericObject){
+            return ((GenericObject)obj).genericClass();
+        }
         ReflectClass clazz = _delegate.forObject(obj);
         if(clazz != null){
             ensureDelegate(clazz);
             return clazz;
-        }
-    	if (obj instanceof GenericObject){
-            return ((GenericObject)obj).genericClass();
         }
         return null;
     }
