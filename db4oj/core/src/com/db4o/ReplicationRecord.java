@@ -31,7 +31,8 @@ public class ReplicationRecord implements Internal{
     
     public void store(YapStream stream){
         stream.showInternalClasses(true);
-        stream.set(this);
+        Transaction ta = stream.checkTransaction(null);
+        stream.setNoReplication(ta, this, 1, false);
         stream.commit();
         stream.showInternalClasses(false);
     }
@@ -74,8 +75,10 @@ public class ReplicationRecord implements Internal{
         }
         
         if(rrA != rrB){
+            peerB.showInternalClasses(true);
             int id = peerB.getID1(transB, rrB);
             peerB.bind1(transB, rrA, id);
+            peerB.showInternalClasses(false);
         }
         
         return rrA;

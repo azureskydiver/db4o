@@ -760,7 +760,7 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 		    }
 		    return str;
 	    }catch(Exception e){
-	        e.printStackTrace();
+	        // e.printStackTrace();
 	    }
 	    return "Exception in YapObject analyzer";
 	}

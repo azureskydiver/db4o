@@ -9,9 +9,10 @@ import com.db4o.ext.*;
  */
 class YapFieldVersion extends YapFieldVirtual {
 
-    YapFieldVersion() {
+    YapFieldVersion(YapStream stream) {
         super();
         i_name = VirtualField.VERSION;
+        i_handler = new YLong(stream);
     }
     
     void addFieldIndex(YapWriter a_writer, boolean a_new) {
