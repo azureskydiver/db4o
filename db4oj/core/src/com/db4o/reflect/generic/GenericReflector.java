@@ -157,12 +157,16 @@ public class GenericReflector implements Reflector, DeepClone {
 		}
 
 		for (int classidx = 0; classidx < numclasses; classidx++) {
-			classIDs[classidx] = classcollreader.readInt(); 
 			ensureClassRead(classIDs[classidx]);
 		}
 	}
 	
 	private GenericClass ensureClassAvailability (int id) {
+        
+        if(id == 0){
+            return null;
+        }
+        
 		GenericClass ret = (GenericClass)_classByID.get(id);
 		if(ret != null){
 			return ret;

@@ -166,5 +166,9 @@ public class GenericClass implements ReflectClass {
 
         // ignore, we always create a generic object
     }
+    
+    public String toString(){
+        return "GenericClass " + _name; 
+    }
 
 }
