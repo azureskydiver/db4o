@@ -43,7 +43,7 @@
 			</src>
 		</csc>
 		
-		<exec executable="bin/WixBuilder.exe" failonerror="true">
+		<exec executable="${dir.build.bin}/WixBuilder.exe" failonerror="true">
 			<arg file="${dir.dist.net.build}" />
 			<arg file="bin/extra-parameters.xml" />
 			<arg file="bin/files.wxs" />
