@@ -10,16 +10,30 @@
 			<menu x:style="BAR" x:id="menuBar">
 				<x:children>
 					<menuItem text="&amp;File" x:style="CASCADE" menu="fileMenu"/>
+					<menuItem text="&amp;Help" x:style="CASCADE" menu="helpMenu"/>
 				</x:children>
 			</menu>
 			
 			<menu x:style="DROP_DOWN" x:id="fileMenu">
 				<x:children>
-					<menuItem x:id="open" text="Open"/>
+					<menuItem x:id="Open" text="&amp;Open..."/>
+					<menuItem x:id="Query" text="&amp;Query..."/>
+					<menuItem x:id="Properties" text="&amp;Properties..."/>
 					<menuItem x:style="SEPARATOR"/>
-					<menuItem x:id="exit" text="Exit"/>
+					<menuItem x:id="NewWindow" text="&amp;New Window"/>
+					<menuItem x:style="SEPARATOR"/>
+					<menuItem x:id="Exit" text="&amp;Exit"/>
 				</x:children>
 			</menu>
+			
+			<menu x:style="DROP_DOWN" x:id="helpMenu">
+				<x:children>
+					<menuItem x:id="HelpContents" text="Help &amp;Contents..."/>
+					<menuItem x:style="SEPARATOR"/>
+					<menuItem x:id="HelpAbout" text="&amp;About..."/>
+				</x:children>
+			</menu>
+			
     	</x:children>
     </getShell>
 </xswt>

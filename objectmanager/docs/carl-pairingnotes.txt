@@ -1,3 +1,52 @@
+TODO:
+
+- Cleanup current design: fix problems detailed below.
+
+- Rewrite tree code using clear MVC design using JFace.
+
+- Write detail pane.
+
+- Follow up with Karen Bennett of Red Hat (maybe at EclipseCon) regarding getting db4o into Red Hat.
+
+- Follow up using the bottom-up strategy getting db4o into Red Hat.
+
+
+---------------------
+
+
+Problems with current design:
+
+- The Model strictly represents an open database file.  It does not represent search results.
+
+- Opening a new database file results in closing and opening the Model object.  It should
+  rather tell the Model to open a new database file and then the Model should trigger a refresh
+  to all listening views.
+  
+- The current View object mix in Controller functionality.  Controllers should be separate objects.
+
+- There should be separate Controller objects for each part of the window:
+    * Tree
+    * Path string
+    * Hyperlink area
+    * Object field pane
+    
+- The Model object currently just wraps an ObjectContainer and adds convenience methods.
+
+- The FieldNode hierarchy represents the Model, but also embeds navigation into it!!!
+
+- Navigating/Visiting aspects of the Model should be separated out of the Model graph using the Visitor
+  pattern.  The Visitor should be a hierarchy/graph Visitor, and should embed a stack, the 
+  visual representation of which will be the path string in the detail pane.
+  
+- This stack will be how we traverse up the tree control from its root to keep its focus
+  synchronized with the detail pane.
+  
+- This Visitor becomes like the INavigator framework in Essential Data.
+
+- This is how we provide an ED-like provider framework for JFace TreeViewers.
+
+
+----------------------
 
 Be able to see how many subobjects per node
 Break down lists into 1..50, 51-100, etc...
@@ -28,7 +77,7 @@ Filter from search box; limit search depth (add UI for this)
 - Hide these classes option (for hiding system classes)
 
 
-Put SWT applicatin launching instructions in /dev
+*DONE* Put SWT application launching instructions in /dev
 
 
 April: version 1.0

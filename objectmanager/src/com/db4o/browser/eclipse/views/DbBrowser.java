@@ -17,8 +17,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 
-import com.db4o.browser.gui.standalone.Model;
 import com.db4o.browser.gui.views.DbBrowserPane;
+import com.db4o.browser.model.Database;
 
 
 public class DbBrowser extends ViewPart implements ISelectionProvider, ISelectionListener {
@@ -116,15 +116,15 @@ public class DbBrowser extends ViewPart implements ISelectionProvider, ISelectio
 	private void selectType(String fullyQualifiedName) {
 		if (model == null)
             return;
-        model.selectType(fullyQualifiedName);
+//        model.selectType(fullyQualifiedName);
 	}
 
-	private Model model = null;
+	private Database model = null;
     
     private void openFile(String selectedFileName) {
         if (model == null) {
-            model = new Model();
-            ui.setInput(model);
+            model = new Database();
+//            ui.setInput(model);
         }
         model.open(selectedFileName);
     }

@@ -5,6 +5,7 @@
         <package name="org.eclipse.swt.widgets"/>
         <package name="org.eclipse.swt.layout"/>
         <package name="org.eclipse.swt.custom"/>
+        <package name="org.eclipse.jface.viewers"/>
     </import>
     <x:children>
 		<composite>
@@ -13,7 +14,7 @@
 		    <x:children>
             	<!-- The search box -->
             	<composite>
-            		<layout x:class="gridLayout" numColumns="3" marginHeight="0"/>
+            		<layout x:class="gridLayout" numColumns="5" marginHeight="0"/>
 		            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
             		<x:children>
             			<label text="Search: "/>
@@ -21,23 +22,20 @@
 				            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
 		            	</text>
 		            	<button x:id="SearchButton" text="&amp;Go"/>
+		            	<label text="|"/>
+		            	<button x:id="QueryButton" text="&amp;Query..."/>
             		</x:children>
             	</composite>
 
-		    	<!-- The Path label -->
-		    	<label x:id="Path" x:style="RIGHT" text="/">
-		            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
-		    	</label>
-		    	
             	<!-- The List/Detail tabbed notebook -->
             	<tabFolder>
 		            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
             		<x:children>
-						<!-- List -->
+						<!-- Tree -->
             			<composite x:id="ListComposite">
             				<layout x:class="fillLayout"/>
 				            <x:children>
-								<tree x:id="ObjectTree" x:style="BORDER"/>
+								<treeViewer x:id="ObjectTree" x:style="BORDER"/>
 				            </x:children>
             			</composite>
             			<tabItem text="&amp;Tree" control="ListComposite"/>
@@ -46,11 +44,27 @@
         				<composite x:id="DetailComposite">
             				<layout x:class="gridLayout" numColumns="2" makeColumnsEqualWidth="false"/>
             				<x:children>
-            					<composite x:style="BORDER">
+            					<composite>
+						            <layoutData x:class="gridData" horizontalSpan="2" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"/>
+						            <layout x:class="gridLayout" numColumns="4"/>
+						            <x:children>
+						            	<button text="&lt;"/>
+						            	<button text="&gt;"/>
+						            	<button text="&amp;History..."/>
+						            	
+								    	<!-- The Path label -->
+								    	<label x:id="PathLabel" x:style="RIGHT" text="/">
+								            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
+								    	</label>
+		    	
+						            </x:children>
+            					</composite>
+            				
+            					<composite x:style="BORDER" x:id="HyperlinkArea">
 						            <layoutData x:class="gridData" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
             					</composite>
             					
-            					<composite x:style="BORDER">
+            					<composite x:style="BORDER" x:id="FieldArea">
 						            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
             					</composite>
             				</x:children>
