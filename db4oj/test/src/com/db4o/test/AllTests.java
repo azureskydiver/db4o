@@ -1,0 +1,239 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+
+package com.db4o.test;
+
+import java.lang.reflect.*;
+
+import com.db4o.*;
+import com.db4o.config.*;
+
+/**
+ * This is the main db4o regression test. 
+ * 
+ * The parameters of the testing environment and all registered test
+ * cases can be found in AllTestsConfAll.java.
+ * 
+ * Derive this class from AllTestsConfSingle if you only want to run
+ * single test cases and enter the test case that you want to run in
+ * the AllTestsConfSingle#TESTS[] array.
+ */
+public class AllTests extends AllTestsConfAll implements Runnable {
+
+    public static void main(String[] args) {
+        Configuration conf = Db4o.configure();
+
+        conf.messageLevel(-1);
+        conf.lockDatabaseFile(false);
+        
+//        conf.generateUUIDs(Integer.MAX_VALUE);
+//        conf.generateVersionNumbers(Integer.MAX_VALUE);
+        
+//        conf.blockSize(8);
+//        conf.automaticShutDown(false);
+//        conf.lockDatabaseFile(false);
+//        conf.singleThreadedClient(true);
+//        conf.automaticShutDown(false);
+//        conf.lockDatabaseFile(false);
+//        conf.weakReferences(false);
+//        conf.callbacks(false);
+//        conf.detectSchemaChanges(false);
+//        conf.testConstructors(false);
+//        conf.discardFreeSpace(Integer.MAX_VALUE);
+//        conf.password("hudhoododod");
+//        conf.encrypt(true);
+//        conf.singleThreadedClient(true);
+//
+        new AllTests(args).run();
+    }
+
+    public void run() {
+
+        logConfiguration();
+
+        Test.beginTesting();
+
+        long time = System.currentTimeMillis();
+
+        if (DELETE_FILE) {
+            Test.delete();
+        }
+
+        configure();
+
+        for (Test.run = 1; Test.run <= RUNS; Test.run++) {
+            System.out.println("\ncom.db4o.test.AllTests run " + Test.run
+                + " from " + RUNS + "\n");
+            if (SOLO) {
+                Test.runServer = false;
+                Test.clientServer = false;
+                runTests();
+            }
+            if (CLIENT_SERVER) {
+                Test.runServer = !REMOTE_SERVER;
+                Test.clientServer = true;
+                runTests();
+            }
+            Test.end();
+        }
+        time = System.currentTimeMillis() - time;
+        System.out.println("\n\nAllTests completed.\nAssertions: "
+            + Test.assertionCount + "\nTime: " + time + "ms");
+        if (Test.errorCount == 0) {
+            System.out.println("No errors detected.\n");
+        } else {
+            System.out
+                .println("" + Test.errorCount + " ERRORS DETECTED !!!.\n");
+        }
+
+    }
+
+    protected void configure() {
+        for (int i = 0; i < testcases.length; i++) {
+            Object toTest = newInstance(testcases[i]);
+            runMethod(toTest, "configure");
+        }
+    }
+
+    private void runTests() {
+        String cs = Test.clientServer ? "C/S" : "SOLO";
+        for (int i = 0; i < testcases.length; i++) {
+            System.out.println(cs + " testing " + testcases[i].getName());
+            Object toTest = newInstance(testcases[i]);
+            Test.open();
+            if (!runStoreOne(toTest)) {
+                runMethod(toTest, "store");
+            }
+            Test.commit();
+            Test.close();
+            // connection needs some commit time
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e1) {
+            }
+            Test.open();
+            toTest = newInstance(testcases[i]);
+            runTestOne(toTest);
+            toTest = newInstance(testcases[i]);
+            Method[] methods = testcases[i].getDeclaredMethods();
+            for (int j = 0; j < methods.length; j++) {
+                Method method = methods[j];
+                String methodName = method.getName();
+                if (!methodName.equals("testOne")) {
+                    if (method.getName().indexOf("test") == 0) {
+                        try {
+                            method.invoke(toTest, null);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            Test.close();
+        }
+    }
+
+    private Object newInstance(Class clazz) {
+        try {
+            return clazz.newInstance();
+        } catch (InstantiationException e) {
+        } catch (IllegalAccessException e) {
+        }
+        System.out.println("Instantiation failed. Class:" + clazz.getName());
+        return null;
+    }
+
+    private void runMethod(Object onObject, String methodName) {
+        try {
+            Method method = onObject.getClass().getDeclaredMethod(methodName,
+                null);
+            if (method != null) {
+                try {
+                    method.invoke(onObject, null);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    private boolean runStoreOne(Object onObject) {
+        try {
+            Method method = onObject.getClass().getDeclaredMethod("storeOne",
+                null);
+            if (method != null) {
+                try {
+                    Test.deleteAllInstances(onObject);
+                    method.invoke(onObject, null);
+                    Test.store(onObject);
+                    return true;
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    private boolean runTestOne(Object onObject) {
+        try {
+            Method method = onObject.getClass().getDeclaredMethod("testOne",
+                null);
+            if (method != null) {
+                try {
+                    onObject = Test.getOne(onObject);
+                    method.invoke(onObject, null);
+                    return true;
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    protected void logConfiguration() {
+        System.out.println("Running " + getClass().getName() + " against\n"
+            + Db4o.version() + "\n");
+        System.out.println("Using " + getClass().getSuperclass().getName()
+            + ".\n");
+        System.out.println("SERVER_HOSTNAME: " + SERVER_HOSTNAME);
+        System.out.println("SERVER_PORT: " + SERVER_PORT);
+        System.out.println("FILE_SERVER: " + FILE_SERVER);
+        if(MEMORY_FILE) {
+            System.out.println("MEMORY_FILE !!!");
+        }else {
+            System.out.println("FILE_SOLO: " + FILE_SOLO);
+        }
+        System.out.println("DELETE_FILE: " + DELETE_FILE);
+        System.out.println("BLOB_PATH: " + BLOB_PATH + "\n");
+
+    }
+
+    public AllTests() {
+        this(null);
+    }
+    
+    public AllTests(String[] testcasenames) {
+        // no unneccessary visible methods in Test class.
+        this.testcases=TESTS;
+        if(testcasenames!=null&&testcasenames.length>0) {
+            testcases=new Class[testcasenames.length];
+            for (int testidx = 0; testidx < testcasenames.length; testidx++) {
+                try {
+                    testcases[testidx]=Class.forName(testcasenames[testidx]);
+                } catch (ClassNotFoundException e) {
+                    System.err.println("Test case class not found: "+testcasenames[testidx]);
+                    e.printStackTrace();
+                    System.exit(0);
+                }
+            }
+        }
+        Test.currentRunner = this;
+    }
+    
+    private Class[] testcases;
+
+}
