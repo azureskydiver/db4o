@@ -12,6 +12,10 @@ import java.lang.reflect.*;
  * 
  */
 class JDKReflect extends JDK {
+    
+    Class constructorClass(){
+        return Constructor.class;
+    }
 	
     /**
      * use for system classes only, since not ClassLoader

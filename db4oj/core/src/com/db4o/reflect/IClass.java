@@ -9,7 +9,7 @@ package com.db4o.reflect;
  */
 public interface IClass {
 	
-	public IClass getComponentType();
+    public IClass getComponentType();
 	
 	public IConstructor[] getDeclaredConstructors();
 	
@@ -35,13 +35,20 @@ public interface IClass {
 	
 	public boolean isPrimitive();
 	
+    public boolean isValueType();
+    
 	public Object newInstance();
-
-    //FIXME: REFLECTOR Big hack to get a runnable version.
-    public Class getJavaClass();
+    
+    /**
+     * instructs to install or deinstall a special constructor for the 
+     * respective platform that avoids calling the constructor for the
+     * respective class 
+     * @param flag true to try to install a special constructor, false if
+     * such a constructor is to be removed if present
+     * @return true if the special constructor is in place after the call
+     */
+    public boolean skipConstructor(boolean flag);
     
     public void useConstructor(IConstructor constructor, Object[] params);
-
 	
 }
-

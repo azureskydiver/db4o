@@ -4,6 +4,7 @@ package com.db4o;
 
 import java.util.*;
 
+import com.db4o.reflect.*;
 import com.db4o.types.*;
 
 /**
@@ -475,8 +476,15 @@ public class P2LinkedList extends P1Collection implements Db4oList {
             checkActive();
             int size = size();
             if (a.length < size) {
-                a = (Object[]) java.lang.reflect.Array.newInstance(a.getClass()
-                        .getComponentType(), size);
+                Transaction trans = getTrans();
+                if(trans == null){
+                    Db4o.throwRuntimeException(29);
+                }
+                IReflect reflector = trans.reflector();
+                a =
+                    (Object[])reflector.array().newInstance(
+                        reflector.forObject(a).getComponentType(),
+                        size);
             }
             int i = 0;
             P2ListElementIterator j = iterator4();

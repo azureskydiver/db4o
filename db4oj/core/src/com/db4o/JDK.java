@@ -20,6 +20,10 @@ public class JDK {
 	Db4oCollections collections(YapStream a_stream){
 	    return null;
 	}
+    
+    Class constructorClass(){
+        return null;
+    }
 	
 	Object createReferenceQueue() {
 		return null;
@@ -77,7 +81,7 @@ public class JDK {
 		
 	}
 	
-	Constructor serializableConstructor(Class clazz){
+	public Constructor serializableConstructor(Class clazz){
 	    return null;
 	}
 

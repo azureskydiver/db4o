@@ -377,7 +377,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             return false;
         }
         
-        if(a_stream.i_handlers.createConstructor(a_stream,this, a_class)){
+        if(a_stream.i_handlers.createConstructor(a_class, ! callConstructor())){
             return true;
         }
         
@@ -1112,17 +1112,17 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         return length;
     }
     
-    final boolean callConstructor(YapStream a_stream) {
-        i_dontCallConstructors = ! callConstructor1(a_stream);
+    final boolean callConstructor() {
+        i_dontCallConstructors = ! callConstructor1();
         return ! i_dontCallConstructors;
     }
     
-    private final boolean callConstructor1(YapStream a_stream) {
+    private final boolean callConstructor1() {
         int res = callConstructorSpecialized();
         if(res != YapConst.DEFAULT){
             return res == YapConst.YES;
         }
-        return (a_stream.i_config.i_callConstructors == YapConst.YES);
+        return (i_stream.i_config.i_callConstructors == YapConst.YES);
     }
     
     private final int callConstructorSpecialized(){
@@ -1184,7 +1184,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                 return stream.peekPersisted1(trans, id, depth);
             }
             
-            if (Platform.isValueType(classReflector().getJavaClass())) {
+            if (classReflector().isValueType()) {
 
                 // for C# value types only:
                 // they need to be instantiated fully before setting them

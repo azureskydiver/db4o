@@ -2,8 +2,6 @@
 
 package com.db4o;
 
-import java.lang.reflect.*;
-
 import com.db4o.ext.*;
 
 /**

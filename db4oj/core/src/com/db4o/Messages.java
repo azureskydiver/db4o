@@ -42,7 +42,7 @@ public final class Messages
 			            
 		        i_messages = new String[] {
 						"", // unused
-						"blocksize should be between 1 and 127", // unused 
+						"blocksize should be between 1 and 127", 
 						"% close request",
 						"% closed",
 						"Exception opening %",
@@ -70,7 +70,7 @@ public final class Messages
 						"</db4o stacktrace>",
 						"Creation of lock file failed: %",
 						"Previous session was not shut down correctly",
-						"This feature is not available in this version.",
+						"This method call is only possible on stored objects",
 						"Could not open port: %", // 30
 						"Server listening on port: %",
 						"Client % connected.",
@@ -93,12 +93,10 @@ public final class Messages
 						"",  // replacement for expiration message below
 						// "This trial version will expire on " +  Platform.format(new Date(Lic.expirationDate), false) + ".",
 						"% closed by ShutdownHook.", // 50
-						"This database file has already been used with a different trial version.\n"
-						+ " Please use an unrestricted version for productive use.\n"
-						+ " Unrestricted versions are available for members of the db4o developer network.\n\n", // 51
+						"", // free: reuse
 						"", // empty: No memory security message
-						"Call Db4o.licensedTo(key) to initialize this licensed db4o database engine.",
-						"This is a db4o trial version. Licensed versions can be obtained from www.db4o.com.", 
+						"",  // free: reuse
+						"",  // free: reuse 
 						"Thread interrupted.", // 55
 						"Password can not be null.",
 						"Classes does not match.", 

@@ -4,6 +4,7 @@ package com.db4o.reflect.jdk;
 
 import java.lang.reflect.*;
 
+import com.db4o.*;
 import com.db4o.reflect.*;
 
 /**
@@ -20,7 +21,7 @@ public class CClass implements IClass{
 		this.reflector = reflector;
 		this.clazz = clazz;
 	}
-	
+    
 	public IClass getComponentType() {
 		return reflector.forClass(clazz.getComponentType());
 	}
@@ -97,6 +98,10 @@ public class CClass implements IClass{
 	public boolean isPrimitive() {
 		return clazz.isPrimitive();
 	}
+    
+    public boolean isValueType(){
+        return Platform.isValueType(clazz);
+    }
 	
 	public Object newInstance(){
 		try {
@@ -109,10 +114,29 @@ public class CClass implements IClass{
 		return null;
 	}
 	
-	public Class getJavaClass(){
+	Class getJavaClass(){
 		return clazz;
 	}
 	
+    public boolean skipConstructor(boolean flag){
+        if(flag){
+            Constructor constructor = Platform.jdk().serializableConstructor(clazz);
+            if(constructor != null){
+                try{
+                    Object o = constructor.newInstance(null);
+                    if(o != null){
+                        useConstructor(new CConstructor(reflector, constructor), null);
+                        return true;
+                    }
+                }catch(Exception e){
+                    
+                }
+            }
+        }
+        useConstructor(null, null);
+        return false;
+    }
+    
 	public String toString(){
 		return "CClass: " + clazz.getName();
 	}
@@ -120,8 +144,6 @@ public class CClass implements IClass{
     public void useConstructor(IConstructor constructor, Object[] params){
         this.constructor = constructor;
         constructorParams = params;
-        
     }
-
 
 }

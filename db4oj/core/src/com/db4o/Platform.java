@@ -3,7 +3,6 @@
 package com.db4o;
 
 import java.io.*;
-import java.lang.reflect.*;
 import java.text.*;
 import java.util.*;
 
@@ -324,15 +323,8 @@ public final class Platform {
         return JavaOnly.isCollectionTranslator(a_config); 
     }
     
-    // FIXME: REFLECTOR Check on .NET, if we want to work with 
-    //                  IClass in this method.
-    static final boolean isSecondClass(Class a_class){
-    	return false;
-    }
-    
-    // FIXME: REFLECTOR Check on .NET, if we want to work with 
-    //                  IClass in this method.
-    static final boolean isValueType(Class a_class){
+    // FIXME: REFLECTOR This should only be in the special .NET reflector 
+    public static final boolean isValueType(Class a_class){
     	return false;
     }
     
@@ -439,7 +431,7 @@ public final class Platform {
             if(jdk().methodIsAvailable(
                 REFLECTIONFACTORY,
                 GETCONSTRUCTOR,
-                new Class[]{Class.class, Constructor.class}
+                new Class[]{Class.class, jdk().constructorClass()}
                 )){
                 
                 callConstructorCheck = YapConst.NO;

@@ -2,6 +2,7 @@
 
 package com.db4o.reflect.dataobjects;
 
+import com.db4o.*;
 import com.db4o.reflect.*;
 
 public class DataClass implements IClass {
@@ -16,7 +17,7 @@ public class DataClass implements IClass {
         _name = name;
         _superclass = superclass;
     }
-
+    
 	public void initFields(DataField[] fields) {
 		_fields = fields;
 		for (int i = 0; i < _fields.length; i++) {
@@ -89,20 +90,21 @@ public class DataClass implements IClass {
     public boolean isPrimitive() {
         return false;
     }
+    
+    public boolean isValueType(){
+        return false;
+    }
 
     public Object newInstance() {
         return new DataObject(this);
     }
 
-
-    //FIXME: REFLECTOR Big hack to get a runnable version.
-    public Class getJavaClass() {
-        return null;
+    public boolean skipConstructor(boolean flag){
+        return false;
     }
-    
+
     public void useConstructor(IConstructor constructor, Object[] params){
         // ignore, we always create a generic object
     }
-
 
 }
