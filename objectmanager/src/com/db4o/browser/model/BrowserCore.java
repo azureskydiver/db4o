@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.db4o.browser.gui.standalone.ICloseListener;
-import com.db4o.browser.preferences.PreferencesCore;
+import com.db4o.browser.prefs.PreferencesCore;
 
 /**
  * BrowserCore.  The root of the model hierarchy in the browser.
@@ -21,7 +21,7 @@ public class BrowserCore implements ICloseListener {
 	public static BrowserCore getDefault() {
         if (model == null) {
             model = new BrowserCore();
-			PreferencesCore.getDefault().registerPreferencesPages();
+			PreferencesCore.initialize();
         }
         return model;
     }

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2005 db4objects Inc.  http://www.db4o.com
  */
-package com.db4o.browser.preferences;
+package com.db4o.browser.prefs;
 
 import java.util.Iterator;
 import java.util.LinkedList;
