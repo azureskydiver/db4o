@@ -59,12 +59,31 @@ class YapHandlers {
     boolean                 i_encrypt;
     byte[]                  i_encryptor;
     int                     i_lastEncryptorByte;
-
+    
+    IClass ICLASS_CLASS;
+    IClass ICLASS_COMPARE;
+    IClass ICLASS_DB4ODATABASE;
+    IClass ICLASS_DB4OTYPE;
+    IClass ICLASS_DB4OTYPEIMPL;
+    IClass ICLASS_ENUM;
+	IClass ICLASS_INTERNAL;
+    IClass ICLASS_METACLASS;
+    IClass ICLASS_METAFIELD;
+	IClass ICLASS_METAINDEX;
+    IClass ICLASS_OBJECT;
+    IClass ICLASS_OBJECTCONTAINER;
+    IClass ICLASS_PBOOTRECORD;
+    IClass ICLASS_REPLICATIONRECORD;
+	IClass ICLASS_STATICFIELD;
+	IClass ICLASS_STATICCLASS;
+    IClass ICLASS_TRANSIENTCLASS;
     
 
     YapHandlers(YapStream a_stream) {
     	
     	_masterStream = a_stream;
+    	
+    	initClassReflectors(a_stream.i_config.reflector());
         
         i_indexes = new YapIndexes();
         
@@ -351,6 +370,29 @@ class YapHandlers {
             return ((YapClassPrimitive) yc).i_handler;
         }
         return a_stream.getYapClass(a_class, true);
+    }
+    
+    private void initClassReflectors(IReflect reflector){
+	    ICLASS_CLASS = reflector.forClass(YapConst.CLASS_CLASS);
+		ICLASS_COMPARE = reflector.forClass(YapConst.CLASS_COMPARE);
+		ICLASS_DB4ODATABASE = reflector.forClass(YapConst.CLASS_DB4ODATABASE);
+		ICLASS_DB4OTYPE = reflector.forClass(YapConst.CLASS_DB4OTYPE);
+		ICLASS_DB4OTYPEIMPL = reflector.forClass(YapConst.CLASS_DB4OTYPEIMPL);
+		ICLASS_ENUM = reflector.forClass(YapConst.CLASS_ENUM);
+		ICLASS_INTERNAL = reflector.forClass(YapConst.CLASS_INTERNAL);
+		ICLASS_METACLASS = reflector.forClass(YapConst.CLASS_METACLASS);
+		ICLASS_METAFIELD = reflector.forClass(YapConst.CLASS_METAFIELD);
+		ICLASS_METAINDEX = reflector.forClass(YapConst.CLASS_METAINDEX);
+		ICLASS_OBJECT = reflector.forClass(YapConst.CLASS_OBJECT);
+		ICLASS_OBJECTCONTAINER = reflector
+				.forClass(YapConst.CLASS_OBJECTCONTAINER);
+		ICLASS_PBOOTRECORD = reflector.forClass(YapConst.CLASS_PBOOTRECORD);
+		ICLASS_REPLICATIONRECORD = reflector
+				.forClass(YapConst.CLASS_REPLICATIONRECORD);
+		ICLASS_STATICFIELD = reflector.forClass(YapConst.CLASS_STATICFIELD);
+		ICLASS_STATICCLASS = reflector.forClass(YapConst.CLASS_STATICCLASS);
+		ICLASS_TRANSIENTCLASS = reflector
+				.forClass(YapConst.CLASS_TRANSIENTCLASS);
     }
     
     void initEncryption(Config4Impl a_config){

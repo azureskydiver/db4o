@@ -187,7 +187,7 @@ class YapField implements StoredField {
 
     private void checkDb4oType() {
         if (i_javaField != null) {
-            if (YapConst.ICLASS_DB4OTYPE.isAssignableFrom(i_javaField.getType())) {
+            if (getStream().i_handlers.ICLASS_DB4OTYPE.isAssignableFrom(i_javaField.getType())) {
                 i_db4oType = YapHandlers.getDb4oType(i_javaField.getType());
             }
         }
