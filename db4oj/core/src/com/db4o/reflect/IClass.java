@@ -40,7 +40,7 @@ public interface IClass {
 	public Object newInstance();
     
     /**
-     * instructs to install or deinstall a special constructor for the 
+     * instructs to install or uninstall a special constructor for the 
      * respective platform that avoids calling the constructor for the
      * respective class 
      * @param flag true to try to install a special constructor, false if
