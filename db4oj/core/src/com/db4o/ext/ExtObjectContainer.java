@@ -2,12 +2,16 @@
 
 package com.db4o.ext;
 
-import java.io.*;
+import java.io.IOException;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.replication.*;
-import com.db4o.types.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectServer;
+import com.db4o.config.Configuration;
+import com.db4o.reflect.Reflector;
+import com.db4o.replication.ReplicationConflictHandler;
+import com.db4o.replication.ReplicationProcess;
+import com.db4o.types.Db4oCollections;
 
 /**
  * extended functionality for the
@@ -238,6 +242,13 @@ public interface ExtObjectContainer extends ObjectContainer {
      */
     public void purge(Object obj);
     
+	/**
+	 * Return the reflector currently being used by db4objects.
+	 * 
+	 * @return the current Reflector.
+	 */
+	public Reflector reflector();
+	
     /**
      * refreshs all members on a stored object to the specified depth.
      * <br><br>If a member object is not activated, it will be activated by this method.
