@@ -31,7 +31,8 @@ public final class Platform {
     static final String REFLECTIONFACTORY = "sun.reflect.ReflectionFactory";
     static final String GETCONSTRUCTOR = "newConstructorForSerialization";
     static final String UTIL = "java.util.";
-    static final String DB4O_CONFIG = "com.db4o.config."; 
+    static final String DB4O_CONFIG = "com.db4o.config.";
+    static final String ENUM = "java.lang.Enum"; 
     
     
     // static private int cCreateNewFile;
@@ -477,6 +478,10 @@ public final class Platform {
             }
         }
     }
+    
+    public static boolean storeStaticFieldValues(Class clazz) {
+        return jdk().storeStaticFieldValues(clazz);
+    }
 
     private static final void translate(Config4Impl config, ObjectClass oc, String to) {
         ((Config4Class)oc).translateOnDemand(DB4O_CONFIG + to);
@@ -519,6 +524,7 @@ public final class Platform {
     }
 
 	private static final Class[] SIMPLE_CLASSES = JavaOnly.SIMPLE_CLASSES;
+
 
 	
 }

@@ -5,7 +5,7 @@ import static java.lang.Math.*;
 import java.util.*;
 
 // JDK1.5: annotations
-@Db4oObjectClass(
+@Jdk5Annotation(
 		cascadeOnActivate=true,
 		cascadeOnUpdate=true,
 		maximumActivationDepth=3)
@@ -29,9 +29,7 @@ public class Jdk5Data<Item> {
         // JDK1.5: enhanced for with array
         for(int i : is) {
             // JDK1.5: boxing
-            
-            //FIXME: uncommented for Eclipse version
-            // list.add(i);
+            list.add(i);
         }
     }
     
@@ -39,12 +37,9 @@ public class Jdk5Data<Item> {
         int max=Integer.MIN_VALUE;
         // JDK1.5: enhanced for with collection / unboxing
         
-        //FIXME: uncommented for Eclipse version
-
-//        for(int i : list) {
-//            max=max(i,max);
-//        }
-        
+        for(int i : list) {
+            max=max(i,max);
+        }
         
         return max;
     }
