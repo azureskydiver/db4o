@@ -3,12 +3,12 @@
  */
 package com.db4o.browser.gui.controllers;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-
 import com.db4o.browser.gui.controllers.detail.DetailController;
+import com.db4o.browser.gui.controllers.tree.SelectionChangedController;
 import com.db4o.browser.gui.controllers.tree.TreeController;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;
+import com.db4o.browser.model.GraphPosition;
 import com.db4o.browser.model.IGraphIterator;
 
 /**
@@ -20,7 +20,6 @@ public class BrowserController implements IBrowserController {
     
     private DbBrowserPane ui;
     private String currentFile = null;
-	private SelectionService selectionService = new SelectionService();
 	private TreeController treeController;
 	private DetailController detailController;
 	private SelectionChangedController selectionChangedController;
@@ -33,23 +32,12 @@ public class BrowserController implements IBrowserController {
 	 */
 	public BrowserController(DbBrowserPane ui) {
         this.ui = ui;
-		
-		// Manage the selection
-		selectionChangedController = new SelectionChangedController();
-		selectionService.addSelectionChangedListener(selectionChangedController);
 
 		// Initialize the ObjectTree's controllers
+		selectionChangedController = new SelectionChangedController();
+		
 		treeController = new TreeController(this, ui.getObjectTree());
 		detailController = new DetailController(this, ui);
-	}
-
-	/**
-	 * Return the window's selection service.
-	 * 
-	 * @return The window's selection service
-	 */
-	public SelectionService getSelectionService() {
-		return selectionService;
 	}
 
 	/**
@@ -60,19 +48,24 @@ public class BrowserController implements IBrowserController {
 	public void open(String file) {
         currentFile = file;
 		IGraphIterator i = BrowserCore.getDefault().iterator(file);
-		setInput(i);
+		setInput(i, null);
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.controllers.IBrowserController#open(com.db4o.browser.model.IGraphIterator)
 	 */
-	public void setInput(IGraphIterator input) {
+	public void setInput(IGraphIterator input, GraphPosition selection) {
 		// Set the tree's input
-		treeController.setInput(input);
-		detailController.setInput(input);
+		treeController.setInput(input, selection);
+		detailController.setInput(input, selection);
 	}
 
-	public ISelectionChangedListener getSelectionChangedController() {
+	/**
+	 * Returns the SelectionChangedController for this window.
+	 * 
+	 * @return SelectionChangedController the current SelectionChangedController
+	 */
+	public SelectionChangedController getSelectionChangedController() {
 		return selectionChangedController;
 	}
 

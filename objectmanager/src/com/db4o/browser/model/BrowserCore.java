@@ -64,7 +64,7 @@ public class BrowserCore implements ICloseListener {
             return null;
         }
         Database current = (Database) databases.getLast();
-        return current.storedClasses();
+        return current.graphIterator();
     }
     
     /**
@@ -76,7 +76,7 @@ public class BrowserCore implements ICloseListener {
      */
     public IGraphIterator iterator(String databasePath) {
         Database requested = getDatabase(databasePath);
-        return requested.storedClasses();
+        return requested.graphIterator();
     }
     
     /**
@@ -90,7 +90,7 @@ public class BrowserCore implements ICloseListener {
      */
     public IGraphIterator iterator(String databasePath, String selectedClass) {
         Database requested = getDatabase(databasePath);
-        return requested.storedClass(selectedClass);
+        return requested.graphIterator(selectedClass);
     }
 
 }

@@ -12,6 +12,7 @@ import com.db4o.browser.gui.controllers.IBrowserController;
 import com.db4o.browser.gui.controllers.detail.generator.LayoutGenerator;
 import com.db4o.browser.gui.controllers.detail.generator.StringInputStreamFactory;
 import com.db4o.browser.gui.views.DbBrowserPane;
+import com.db4o.browser.model.GraphPosition;
 import com.db4o.browser.model.IGraphIterator;
 import com.swtworkbench.community.xswt.XSWT;
 import com.swtworkbench.community.xswt.XSWTException;
@@ -34,6 +35,8 @@ public class DetailController implements IBrowserController {
 	public DetailController(BrowserController parent, DbBrowserPane ui) {
 		this.parent = parent;
 		this.ui = ui;
+		
+		parent.getSelectionChangedController().setDetailController(this);
 	}
 
 	private static final String containerDetailTemplate = LayoutGenerator.resourceFile("containerDetailTemplate.xswt");
@@ -42,8 +45,19 @@ public class DetailController implements IBrowserController {
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInput(com.db4o.browser.model.IGraphIterator)
 	 */
-	public void setInput(IGraphIterator input) {
-		buildUI(LayoutGenerator.layoutString(input, objectDetailTemplate), ui.getFieldArea());
+	public void setInput(IGraphIterator input, GraphPosition selection) {
+		if (selection != null) {
+			input.setPath(selection);
+			if (input.nextHasChildren()) {
+				input.selectNextChild();
+				buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
+				input.selectParent();
+			} else {
+				buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
+			}
+		} else {
+			buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
+		}
 	}
 
 	/**

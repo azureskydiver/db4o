@@ -100,7 +100,7 @@ public class IterableFieldNode extends FieldNode {
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.ITreeNode#mayHaveChildren()
 	 */
-	public boolean mayHaveChildren() {
+	public boolean hasChildren() {
 		return iterator().hasNext();
 	}
 

@@ -60,14 +60,14 @@ public class Database {
     }
 
 
-    private ObjectContainer container = null;
+    ObjectContainer container = null;
     
 
-    public DatabaseGraphIterator storedClasses() {
+    public DatabaseGraphIterator graphIterator() {
     	return new DatabaseGraphIterator(this, container.ext().storedClasses());
     }
     
-    public DatabaseGraphIterator storedClass(String name) {
+    public DatabaseGraphIterator graphIterator(String name) {
         StoredClass result = container.ext().storedClass(name);
         return new DatabaseGraphIterator(this, new StoredClass[] {result});
     }

@@ -88,7 +88,7 @@ public class MapFieldNode extends FieldNode {
         _keySetMethod = keySetMethod;
 	}
     
-	public boolean mayHaveChildren() {
+	public boolean hasChildren() {
 		return iterator().hasNext();
 	}
 

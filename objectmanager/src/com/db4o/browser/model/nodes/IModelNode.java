@@ -23,7 +23,10 @@ package com.db4o.browser.model.nodes;
  * @author djo
  */
 public interface IModelNode {
-	public boolean mayHaveChildren();
+	/**
+	 * @return if this node has children
+	 */
+	public boolean hasChildren();
 
 	/**
 	 * @return an array of child nodes (no generics now please)

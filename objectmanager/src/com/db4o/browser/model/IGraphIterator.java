@@ -6,13 +6,15 @@ package com.db4o.browser.model;
 import java.util.ListIterator;
 
 
+
 /**
  * IGraphIterator.  A Visitor object that can traverse an object graph.
  *
  * @author djo
  */
 public interface IGraphIterator extends ListIterator {
-	/**
+	
+    /**
      * Method getPath.
      * 
      * Returns the path traversed to get to the current object.
@@ -33,6 +35,14 @@ public interface IGraphIterator extends ListIterator {
 	 * @param path The GraphPosition to use when setting the current position.
 	 */
     public void setPath(GraphPosition path);
+	
+	/**
+	 * Method setSelectedPath.  Calls setPath(path), then notifies all 
+	 * selection listeners that the selected path has changed.
+	 * 
+	 * @param path The GraphPosition to use when setting the current position.
+	 */
+	public void setSelectedPath(GraphPosition path);
     
     /**
      * Method hasParent.  Indicates if the current element has a parent.
@@ -45,7 +55,7 @@ public interface IGraphIterator extends ListIterator {
     public boolean hasParent();
     
     /**
-     * Method nextMayHaveChildren.  Indicates if the next element could have
+     * Method nextHasChildren.  Indicates if the next element could have
      * children.
      * 
      * Returns true if the next element could have at least one child.
@@ -53,7 +63,7 @@ public interface IGraphIterator extends ListIterator {
      * @return true if there is a next element and the next element could have 
      * at least one child; false otherwise.
      */
-    public boolean nextMayHaveChildren();
+    public boolean nextHasChildren();
     
     /**
      * Method previousMayHaveChildren.  Indicates if the previous element could have
@@ -64,7 +74,7 @@ public interface IGraphIterator extends ListIterator {
      * @return true if there is a and the previous element could have at least 
      * one child; false otherwise.
      */
-    public boolean previousMayHaveChildren();
+    public boolean previousHasChildren();
     
     /**
      * Method selectParent().  Traverses up the object graph to the parent
@@ -94,4 +104,22 @@ public interface IGraphIterator extends ListIterator {
      * @return
      */
     public int numChildren();
+
+	/**
+	 * Method addSelectionChangedListener.  Adds a selection changed listener
+	 * to the collection of listeners that will be notified when the 
+	 * IGraphController's selection changes.
+	 * 
+	 * @param selectionListener The selectionListener to add.
+	 */
+	public void addSelectionChangedListener(IGraphIteratorSelectionListener selectionListener);
+
+	/**
+	 * Method removeSelectionChangedListener.  Removes the specified selection
+	 * changed listener from the collection of listeners that will be notified
+	 * when the IGraphController's selection changes.
+	 * 
+	 * @param selectionListener The selectionListener to remove.
+	 */
+	public void removeSelectionChangedListener(IGraphIteratorSelectionListener selectionListener);
 }

@@ -71,7 +71,7 @@ public class TreeContentProvider implements ITreeContentProvider {
     public boolean hasChildren(Object element) {
         GraphPosition position = (GraphPosition) element;
         IModelNode node = position.getCurrent();
-        return node.mayHaveChildren();
+        return node.hasChildren();
     }
 
 	/* (non-Javadoc)

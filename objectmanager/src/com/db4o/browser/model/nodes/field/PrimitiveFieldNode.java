@@ -39,7 +39,7 @@ public class PrimitiveFieldNode extends FieldNode {
     /* (non-Javadoc)
 	 * @see com.db4o.browser.gui.FieldNode#mayHaveChildren()
 	 */
-	public boolean mayHaveChildren() {
+	public boolean hasChildren() {
 		return false;
 	}
 }
