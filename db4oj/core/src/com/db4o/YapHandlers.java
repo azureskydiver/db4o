@@ -208,6 +208,10 @@ class YapHandlers {
             return new YapConstructor(a_stream, a_class, null, null, true, false);
         }
         
+        //TODO: Refactor: Move all of the following logic to IClass and use IClass to create instances,
+        // rather than an IConstructor object. IConstructor interface can be deleted.
+        // IReflect.constructorCallsSupported() method can be deleted too.
+        // YapConstructor class can be deleted and IClass can be used instead.
         if (reflector.constructorCallsSupported()) {
             try {
                 
