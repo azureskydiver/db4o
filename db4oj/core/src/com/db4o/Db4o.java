@@ -40,33 +40,6 @@ public class Db4o {
 	public static void main(String args[]){
 		System.out.println(version());
 	}
-	
-    /**
-     * (non-API) Method classForName.  Return a Class object corresponding
-     * to the class name passed using db4objects' internal reflection 
-     * mechanism.
-     * 
-     * @param name The class name
-     * @return The Class object
-     * @throws ClassNotFoundException
-     */
-	public static Class classForName(String name) throws ClassNotFoundException{
-		return classForName(null, name);
-	}
-	
-	static Class classForName(YapStream a_stream, String name) throws ClassNotFoundException{
-	    try{
-	        Config4Impl config = a_stream == null ? i_config : a_stream.i_config;
-	        if(config.i_classLoader != null){
-	            return config.i_classLoader.loadClass(name);
-	        }else{
-	            return Class.forName(name);
-	        }
-	    }catch(Throwable t){
-	        return null;
-	    }
-	}
-	
 
     /**
 	 * returns the global db4o
