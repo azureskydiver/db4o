@@ -9,6 +9,7 @@ import com.db4o.io.*;
 import com.db4o.messaging.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.jdk.*;
+import com.db4o.util.io.*;
 
 /**
  * Configuration template for creating new db4o files
@@ -54,7 +55,10 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     int              i_updateDepth;
     int              i_weakReferenceCollectionInterval  = 1000;
     boolean          i_weakReferences                   = true;
-    IoAdapter        i_ioAdapter = new RandomAccessFileAdapter();
+    IoAdapter        i_ioAdapter 
+    	// NOTE: activate this config to trigger the defragment failure
+    	//= new NIOFileAdapter(512,3);
+    	= new RandomAccessFileAdapter();
     
     int activationDepth() {
         return i_activationDepth;
