@@ -6,6 +6,14 @@ import com.db4o.Db4o;
 import com.db4o.reflect.*;
 
 public class CReflect implements IReflect{
+    
+    private static CReflect reflect = null;
+    
+    public static CReflect getDefault() {
+        if (reflect == null)
+            reflect = new CReflect();
+        return reflect;
+    }
 	
 	private final IArray i_array;
 	
