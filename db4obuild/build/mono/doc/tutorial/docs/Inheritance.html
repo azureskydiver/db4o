@@ -249,10 +249,10 @@ SensorReadout proto = new TemperatureSensorReadout(DateTime.MinValue, null, null
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>4<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.2<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
 </td></table></table><br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -263,12 +263,12 @@ SensorReadout proto = new SensorReadout(DateTime.MinValue, null, null);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>6<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 1.5<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 0.6<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.2<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
 </td></table></table><br>
 <br>
 This is one more situation where QBE might not be applicable: What if&nbsp;the given type is an interface or an abstract class? Well, there's a little&nbsp;DWIM trick to the rescue: Class objects receive special handling with QBE.<br>
@@ -280,12 +280,12 @@ ObjectSet result = db.get(typeof(SensorReadout));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>6<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 1.5<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 0.6<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.2<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
 </td></table></table><br>
 <br>
 And of course there's our query API to the rescue.<br>
@@ -299,12 +299,12 @@ Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>6<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 1.5<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 0.6<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.2<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
 </td></table></table><br>
 <br>
 This procedure applies to all first class objects. We can simply query for all&nbsp;objects present in the database, for example.<br>
@@ -316,15 +316,15 @@ ObjectSet result = db.get(new object());<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>13<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.0<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 1.5<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.8<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.30000000000000004<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 0.6<br>
-BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.2<br>
-Db4oDatabase: [B@d4040b<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6<br>
+BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2<br>
+Db4oDatabase: [B@10d3025<br>
 []<br>
-[BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.0, BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.2, BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 0.6, BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil temp : 0.30000000000000004, BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : water temp : 0.8, BMW[Rubens Barrichello/99]/6 : Fri Feb 18 23:50:50 CET 2005 : oil pressure : 1.5]<br>
+[BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.0, BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.2, BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 0.6, BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil temp : 0.30000000000000004, BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : water temp : 0.8, BMW[Rubens Barrichello/99]/6 : Tue Feb 22 00:57:45 CET 2005 : oil pressure : 1.5]<br>
 BMW[Rubens Barrichello/99]/6<br>
 Ferrari[Michael Schumacher/100]/0<br>
 Rubens Barrichello/99<br>
