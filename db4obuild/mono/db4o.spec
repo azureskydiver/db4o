@@ -31,5 +31,6 @@ make buildtest
 make install
 
 %files
+%defattr(-,root,root)
 %doc doc/*
 /usr/lib/db4o/*
