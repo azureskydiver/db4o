@@ -17,10 +17,6 @@ public class JDK {
 		return null;
 	}
 	
-	int collectionUpdateDepth(Class a_class){
-		return 0; 
-	}
-	
 	Db4oCollections collections(YapStream a_stream){
 	    return null;
 	}
@@ -48,10 +44,6 @@ public class JDK {
 		return null;
 	}
 
-	boolean isCollection(Class a_class) {
-		return false;
-	}
-	
 	public int ver(){
 	    return 1;
 	}

@@ -57,7 +57,7 @@ final class YapConstructor {
 
     }
 
-    IClass reflectorClass() {
+    IClass classReflector() {
         return i_reflectorClass;
     }
 }

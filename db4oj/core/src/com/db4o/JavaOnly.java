@@ -8,25 +8,6 @@ import com.db4o.config.*;
 
 class JavaOnly {
     
-    static final int collectionUpdateDepth(Class a_class) {
-        if (Platform.hasCollections()) {
-            return Platform.jdk().collectionUpdateDepth(a_class);
-        }
-        return Hashtable.class.isAssignableFrom(a_class) ? 3 : 2;
-    }
-    
-    static final boolean isCollection(Class a_class) {
-        if(P1Collection.class.isAssignableFrom(a_class)){
-            return true;
-        }
-        if (Platform.hasCollections()) {
-            return Platform.jdk().isCollection(a_class);
-        }
-        return java.util.Vector.class.isAssignableFrom(a_class)
-            || java.util.Hashtable.class.isAssignableFrom(a_class);
-        // TODO: Need to implement Vector in forEachCollectionElement first
-    }
-    
     static final boolean isCollectionTranslator(Config4Class a_config) {
         if (a_config != null) {
             ObjectTranslator ot = a_config.getTranslator();

@@ -54,5 +54,9 @@ public interface IReflect {
 	
 	public void registerCollection(Class clazz);
 	
+	public void registerCollectionUpdateDepth(Class clazz, int depth);
+	
+	public int collectionUpdateDepth(IClass claxx);
+	
 	
 }

@@ -91,10 +91,6 @@ public final class Platform {
         return jdk().collections((YapStream)a_object);
     }
 
-    static final int collectionUpdateDepth(Class a_class) {
-        return JavaOnly.collectionUpdateDepth(a_class);
-    }
-    
     static final Object createReferenceQueue() {
         return jdk().createReferenceQueue();
     }
@@ -320,10 +316,6 @@ public final class Platform {
         return false;
     }
 
-    static final boolean aisCollection(Class a_class) {
-        return JavaOnly.isCollection(a_class);
-    }
-
     static final boolean isCollectionTranslator(Config4Class a_config) {
         return JavaOnly.isCollectionTranslator(a_config); 
     }
@@ -497,6 +489,7 @@ public final class Platform {
     }
     
 	public static void registerCollections(IReflect reflector) {
+		
 		if(!Deploy.csharp){
 		
 			reflector.registerCollection(P1Collection.class);
@@ -504,6 +497,7 @@ public final class Platform {
 			if(! hasCollections()){
 				reflector.registerCollection(java.util.Vector.class);
 				reflector.registerCollection(java.util.Hashtable.class);
+				reflector.registerCollectionUpdateDepth(java.util.Hashtable.class, 3);
 		        return; 
 			}
 			

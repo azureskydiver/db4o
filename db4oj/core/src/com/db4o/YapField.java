@@ -541,12 +541,12 @@ class YapField implements StoredField {
 
     private YapDataType loadJavaField1() {
         try {
-            i_javaField = i_yapClass.getReflectorClass().getDeclaredField(
+        	YapStream stream = i_yapClass.getStream();
+            i_javaField = i_yapClass.classReflector(stream).getDeclaredField(
                 i_name);
             if (i_javaField == null) {
                 return null;
             }
-            YapStream stream = i_yapClass.getStream();
             i_javaField.setAccessible();
             stream.showInternalClasses(true);
             YapDataType handler = stream.i_handlers.handlerForClass(stream,
@@ -569,7 +569,8 @@ class YapField implements StoredField {
             && ((a_config != null && (a_config.i_cascadeOnUpdate == 1)) || (i_config != null && (i_config.i_cascadeOnUpdate == 1)))) {
             int min = 1;
             if (i_yapClass.isCollection(a_object)) {
-                min = Platform.collectionUpdateDepth(a_object.getClass());
+            	IReflect reflector = i_yapClass.reflector();
+                min = reflector.collectionUpdateDepth(reflector.forObject(a_object));
             }
             int updateDepth = a_bytes.getUpdateDepth();
             if (updateDepth < min) {

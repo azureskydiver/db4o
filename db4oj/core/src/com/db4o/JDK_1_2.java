@@ -22,10 +22,6 @@ class JDK_1_2 extends JDKReflect {
 	    obj = new TTreeSet();
 	}
 
-    int collectionUpdateDepth(Class a_class) {
-        return java.util.Map.class.isAssignableFrom(a_class) ? 3 : 2;
-    }
-    
     Db4oCollections collections(YapStream a_stream){
         return new P2Collections(a_stream);
     }
@@ -43,7 +39,8 @@ class JDK_1_2 extends JDKReflect {
     }
 
     void flattenCollection2(final YapStream a_stream, Object a_object, final com.db4o.Collection4 col) {
-        if (isCollection(a_object.getClass())) {
+    	IReflect reflector = a_stream.i_config.reflector();
+        if (reflector.isCollection(reflector.forObject(a_object))) {
             forEachCollectionElement(a_object, new Visitor4() {
                 public void visit(Object obj) {
                     Platform.flattenCollection1(a_stream, obj, col);
@@ -79,11 +76,6 @@ class JDK_1_2 extends JDKReflect {
         return 2;
     }
     
-    boolean isCollection(Class a_class) {
-        return java.util.Collection.class.isAssignableFrom(a_class)
-            || java.util.Map.class.isAssignableFrom(a_class);
-    }
-    
 	void killYapRef(Object obj){
 		if(obj instanceof YapRef){
 			((YapRef)obj).i_yapObject = null;
@@ -105,6 +97,7 @@ class JDK_1_2 extends JDKReflect {
 	public void registerCollections(IReflect reflector) {
 		reflector.registerCollection(java.util.Collection.class);
 		reflector.registerCollection(java.util.Map.class);
+		reflector.registerCollectionUpdateDepth(java.util.Map.class, 3);
 	}
 
     void setAccessible(Object a_accessible) {
