@@ -2,6 +2,7 @@
 
 using System;
 using com.db4o.ext;
+using com.db4o.reflect.net;
 
 namespace com.db4o.test
 {
@@ -30,16 +31,16 @@ namespace com.db4o.test
             StoredField f = sf[i];
             if(f.getName().Equals("foo")){
                 Test.ensure(f.get(this).Equals("foo"));
-                Test.ensure(f.getStoredType() == typeof(String));
+                Test.ensure(((NetClass)f.getStoredType()).getNetType()  == typeof(String));
                 cases[0] = true;
             }
             if(f.getName().Equals("bar")){
                 Test.ensure(f.get(this).Equals(10));
-                Test.ensure(f.getStoredType() == typeof(int));
+                Test.ensure(((NetClass)f.getStoredType()).getNetType()  == typeof(int));
                 cases[1] = true;
             }
             if(f.getName().Equals("atoms")){
-                Test.ensure(f.getStoredType() == typeof(Atom));
+                Test.ensure(((NetClass)f.getStoredType()).getNetType()  == typeof(Atom));
                 Test.ensure(f.isArray());
                 Atom[] at = (Atom[])f.get(this);
                 Test.ensure(at[0].name.Equals("one"));

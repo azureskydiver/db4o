@@ -148,7 +148,7 @@ namespace com.db4o.reflect.net
 			return clazz;
 		}
 
-        internal virtual System.Type getNetType() {
+        public virtual System.Type getNetType() {
             return _type;
         }
 
