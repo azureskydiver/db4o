@@ -141,6 +141,9 @@
 		<javac srcdir="${dir.build.src}" destdir="${dir.build.bin}" debug="off" target="1.3" source="1.3">
 			<classpath path="${path.classpath.full}" />
 		</javac>
+		<copy todir="${dir.build.bin}">
+			<fileset dir="${dir.build.src}" includes="**/*.properties"/>
+		</copy>
 	</target>
 
 	<target name="compilecorenet" depends="init, cleannet">
