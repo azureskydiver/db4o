@@ -5,9 +5,18 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * Class Snippet.  The SWT developers prefer to use snippets to quickly 
+ * illustrate SWT coding ideas.
+ * <p>
+ * This class formalizes the concept of a SWT Snippet and encapsulates all
+ * the plumbing code you have to write by default.
+ *
+ * @author djo
+ */
 public abstract class Snippet {
     /**
-     * Construct and run an Snippet.
+     * Construct and run a Snippet.
      * <p>
      * This constructor does everything needed to actually construct and run
      * a SWT Snippet application.
