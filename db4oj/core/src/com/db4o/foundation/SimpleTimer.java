@@ -2,14 +2,14 @@
 
 package com.db4o.foundation;
 
+/**
+ * @exclude
+ */
 public class SimpleTimer implements Runnable {
 	
 	private final Runnable _runnable;
 	private final int _interval;
 	
-	// need public for C# compilation
-	// Carl, why does C# need public here?
-    // Klaus, I think the old converter needed it, we can remove that after we run Rodrigo's. 
 	public volatile boolean stopped = false;
 	
 	public SimpleTimer(Runnable runnable, int interval, String name){
@@ -18,8 +18,7 @@ public class SimpleTimer implements Runnable {
 		Thread thread = new Thread(this);
 		thread.setName(name);
 		thread.start();
-		//Carl, shouldn't we set this as a daemon:  thread.setDaemon(true);  ?
-        // Klaus, in principle yes, but don't forget to implement setDaemon() for .NET. 
+        // TODO: thread.setDaemon(true) but follow up on .NET 
 	}
 	
 	public void stop(){

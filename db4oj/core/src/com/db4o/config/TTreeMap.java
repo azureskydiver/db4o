@@ -5,6 +5,9 @@ package com.db4o.config;
 import com.db4o.ObjectContainer;
 import java.util.*;
 
+/**
+ * @exclude
+ */
 public class TTreeMap implements ObjectConstructor
 {
 	public Object onStore(ObjectContainer con, Object object){

@@ -4,6 +4,9 @@ package com.db4o.reflect.generic;
 
 import com.db4o.reflect.*;
 
+/**
+ * @exclude
+ */
 public class GenericField implements ReflectField {
 
     private final String _name;

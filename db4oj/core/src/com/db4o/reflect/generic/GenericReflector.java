@@ -5,6 +5,9 @@ package com.db4o.reflect.generic;
 import com.db4o.*;
 import com.db4o.reflect.*;
 
+/**
+ * @exclude
+ */
 public class GenericReflector implements Reflector {
 
     private final Reflector _delegate;
