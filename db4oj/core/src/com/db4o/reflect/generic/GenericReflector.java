@@ -3,7 +3,6 @@
 package com.db4o.reflect.generic;
 
 import com.db4o.*;
-import com.db4o.internal.io.*;
 import com.db4o.reflect.*;
 
 /**
