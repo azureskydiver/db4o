@@ -1,13 +1,13 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{20D4826A-C6FA-45DB-90F4-C717570B9F32}") = "db4o-4.0-compact1-test", "db4o-4.0-compact1-test.csdproj", "{3D12D013-86A3-4BA0-8462-0825EC066863}"
+Project("{20D4826A-C6FA-45DB-90F4-C717570B9F32}") = "db4o-compact-test", "db4o-compact-test.csdproj", "{3D12D013-86A3-4BA0-8462-0825EC066863}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{20D4826A-C6FA-45DB-90F4-C717570B9F32}") = "db4o-4.0-compact1", "..\db4o40ncore\db4o-4.0-compact1.csdproj", "{B653ADB1-F959-49E0-81CF-AD37D69CB011}"
+Project("{20D4826A-C6FA-45DB-90F4-C717570B9F32}") = "db4o-compact", "..\core\db4o-compact.csdproj", "{B653ADB1-F959-49E0-81CF-AD37D69CB011}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{20D4826A-C6FA-45DB-90F4-C717570B9F32}") = "db4o-4.0-compact1-tools", "..\db4o40ntools\db4o-4.0-compact1-tools.csdproj", "{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}"
+Project("{20D4826A-C6FA-45DB-90F4-C717570B9F32}") = "db4o-compact-tools", "..\tools\db4o-compact-tools.csdproj", "{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

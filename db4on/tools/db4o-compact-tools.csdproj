@@ -1,31 +1,27 @@
 <VisualStudioProject>
-    <CSHARP
+    <ECSHARP
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
-        SchemaVersion = "2.0"
-        ProjectGuid = "{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}"
+        SchemaVersion = "1.0"
+        ProjectGuid = "{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}"
     >
         <Build>
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "db4o-4.0-net1-tools"
+                AssemblyName = "db4o-compact-tools"
                 AssemblyOriginatorKeyFile = ""
-                DefaultClientScript = "JScript"
-                DefaultHTMLPageLayout = "Grid"
-                DefaultTargetSchema = "IE50"
                 DelaySign = "false"
                 OutputType = "Library"
-                PreBuildEvent = ""
-                PostBuildEvent = ""
+                OutputFileFolder = "\Program Files\db4o-4.0-compact1-tools"
                 RootNamespace = "com.db4o.tools"
-                RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
+                <Platform Name = "Pocket PC" />
                 <Config
-                    Name = "Debug"
+                    Name = "Debug|Pocket PC"
                     AllowUnsafeBlocks = "false"
-                    BaseAddress = "285212672"
+                    BaseAddress = "0"
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "DEBUG;TRACE"
@@ -33,19 +29,17 @@
                     DebugSymbols = "true"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
-                    NoStdLib = "false"
-                    NoWarn = ""
                     Optimize = "false"
                     OutputPath = "bin\Debug\"
                     RegisterForComInterop = "false"
                     RemoveIntegerChecks = "false"
                     TreatWarningsAsErrors = "false"
-                    WarningLevel = "0"
+                    WarningLevel = "4"
                 />
                 <Config
-                    Name = "Release"
+                    Name = "Release|Pocket PC"
                     AllowUnsafeBlocks = "false"
-                    BaseAddress = "285212672"
+                    BaseAddress = "0"
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
                     DefineConstants = "TRACE"
@@ -53,8 +47,6 @@
                     DebugSymbols = "false"
                     FileAlignment = "4096"
                     IncrementalBuild = "false"
-                    NoStdLib = "false"
-                    NoWarn = ""
                     Optimize = "true"
                     OutputPath = "bin\Release\"
                     RegisterForComInterop = "false"
@@ -65,24 +57,64 @@
             </Settings>
             <References>
                 <Reference
+                    Platform = "Pocket PC"
+                    Name = "MSCorLib"
+                    AssemblyName = "mscorlib"
+                    Private = "False"
+                />
+                <Reference
+                    Platform = "Pocket PC"
                     Name = "System"
                     AssemblyName = "System"
-                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                    Private = "False"
                 />
                 <Reference
-                    Name = "System.Data"
-                    AssemblyName = "System.Data"
-                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
-                />
-                <Reference
+                    Platform = "Pocket PC"
                     Name = "System.XML"
                     AssemblyName = "System.Xml"
-                    HintPath = "..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                    Private = "False"
                 />
                 <Reference
-                    Name = "db4o-4.0-net1"
-                    Project = "{7A07E089-078C-433A-BD15-60763FE3B8F2}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                    Platform = "Pocket PC"
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    Private = "False"
+                />
+                <Reference
+                    Platform = "Pocket PC"
+                    Name = "db4o-compact"
+                    Project = "{B653ADB1-F959-49E0-81CF-AD37D69CB011}"
+                    Package = "{20D4826A-C6FA-45DB-90F4-C717570B9F32}"
+                />
+                <Reference
+                    Platform = "Pocket PC-Designer"
+                    Name = "System.CF.Design"
+                    AssemblyName = "System.CF.Design"
+                    Private = "False"
+                />
+                <Reference
+                    Platform = "Pocket PC-Designer"
+                    Name = "System.CF.Design.UI"
+                    AssemblyName = "System.CF.Design.UI"
+                    Private = "False"
+                />
+                <Reference
+                    Platform = "Pocket PC-Designer"
+                    Name = "System.CF.Windows.Forms"
+                    AssemblyName = "System.CF.Windows.Forms"
+                    Private = "False"
+                />
+                <Reference
+                    Platform = "Pocket PC-Designer"
+                    Name = "System.CF.Drawing"
+                    AssemblyName = "System.CF.Drawing"
+                    Private = "False"
+                />
+                <Reference
+                    Platform = "Pocket PC-Designer"
+                    Name = "System"
+                    AssemblyName = "System"
+                    Private = "False"
                 />
             </References>
         </Build>
@@ -120,6 +152,6 @@
                 />
             </Include>
         </Files>
-    </CSHARP>
+    </ECSHARP>
 </VisualStudioProject>
 

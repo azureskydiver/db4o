@@ -1,9 +1,9 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-4.0-net1-tools", "db4o-4.0-net1-tools.csproj", "{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-net-tools", "db4o-net-tools.csproj", "{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-4.0-net1", "..\db4o40ncore\db4o-4.0-net1.csproj", "{7A07E089-078C-433A-BD15-60763FE3B8F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-net", "..\core\db4o-net.csproj", "{7A07E089-078C-433A-BD15-60763FE3B8F2}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -18,6 +18,7 @@ Global
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release.ActiveCfg = Release|.NET
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release.Build.0 = Release|.NET
 		{7A07E089-078C-433A-BD15-60763FE3B8F2}.Debug.ActiveCfg = Debug|.NET
+		{7A07E089-078C-433A-BD15-60763FE3B8F2}.Debug.Build.0 = Debug|.NET
 		{7A07E089-078C-433A-BD15-60763FE3B8F2}.Release.ActiveCfg = Release|.NET
 		{7A07E089-078C-433A-BD15-60763FE3B8F2}.Release.Build.0 = Release|.NET
 	EndGlobalSection

@@ -9,7 +9,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "db4o-4.0-net1-test"
+                AssemblyName = "db4o-net-test"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -90,12 +90,12 @@
                     HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "db4o-4.0-net1"
+                    Name = "db4o-net"
                     Project = "{7A07E089-078C-433A-BD15-60763FE3B8F2}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "db4o-4.0-net1-tools"
+                    Name = "db4o-net-tools"
                     Project = "{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
@@ -105,6 +105,7 @@
             <Include>
                 <File
                     RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File

@@ -9,7 +9,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "db4o-4.0-compact1-test"
+                AssemblyName = "db4o-compact-test"
                 AssemblyOriginatorKeyFile = ""
                 DelaySign = "false"
                 OutputType = "WinExe"
@@ -94,13 +94,13 @@
                 />
                 <Reference
                     Platform = "Pocket PC"
-                    Name = "db4o-4.0-compact1"
+                    Name = "db4o-compact"
                     Project = "{B653ADB1-F959-49E0-81CF-AD37D69CB011}"
                     Package = "{20D4826A-C6FA-45DB-90F4-C717570B9F32}"
                 />
                 <Reference
                     Platform = "Pocket PC"
-                    Name = "db4o-4.0-compact1-tools"
+                    Name = "db4o-compact-tools"
                     Project = "{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}"
                     Package = "{20D4826A-C6FA-45DB-90F4-C717570B9F32}"
                 />
