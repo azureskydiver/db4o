@@ -16,6 +16,7 @@
 
 	<filter token="rpmtopdir" value="${dir.mono.rpmbuild}"/>
 	<filter token="db4oversion" value="${db4o.version.dotted}"/>
+	<filter token="db4obuild" value="${db4o.version.build.plain}"/>
 	
 	<target name="init">
 		<tstamp />
@@ -80,11 +81,10 @@
 		<exec executable="rpm" inputstring="${gpg.pass}">
 			<arg line="--addsign ${dir.mono.rpmbuild}/RPMS/noarch/${db4o.name.short}-1.noarch.rpm" />
 		</exec>		
-		<mkdir dir="${dir.build.transfer.mono}/out" />
-		<copy todir="${dir.build.transfer.mono}/out">
-			<fileset dir="${dir.mono.rpmbuild}/RPMS/noarch" />
-			<fileset dir="${dir.mono.rpmbuild}/SRPMS" />
-			<fileset dir="${dir.mono.rpmbuild}/SOURCES" />
-		</copy>
+		<delete dir="${dir.build.transfer.mono}/dist" />
+		<mkdir dir="${dir.build.transfer.mono}/dist" />
+		<copy file="${dir.mono.rpmbuild}/RPMS/noarch/${db4o.name.short}-${db4o.version.build.plain}.noarch.rpm" tofile="${dir.build.transfer.mono}/dist/${db4o.name.short}.noarch.rpm" />
+		<copy file="${dir.mono.rpmbuild}/SRPMS/${db4o.name.short}-${db4o.version.build.plain}.src.rpm" tofile="${dir.build.transfer.mono}/dist/${db4o.name.short}.src.rpm" />
+		<copy file="${dir.mono.rpmbuild}/SOURCES/${db4o.name.full}.tar.gz" todir="${dir.build.transfer.mono}/dist" />
 	</target>
 </project>
