@@ -14,45 +14,52 @@
  * along with com.swtworkbench.ed; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.db4o.browser.gui.standalone;
+package com.db4o.browser.gui;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.db4o.ObjectSet;
+import com.db4o.browser.gui.standalone.Model;
 import com.db4o.ext.StoredClass;
-import com.db4o.query.Query;
 
 /**
- * Class Model.
+ * Class ClassNode.
  * 
  * @author djo
  */
-public class Model {
-	private static ObjectContainer container = null;
-    
-    public static void open() {
-        container=Db4o.openFile("formula1.yap");
+public class ClassNode implements ITreeNode {
+
+	private final StoredClass _contents;
+
+	/**
+	 * @param class1
+	 */
+	public ClassNode(StoredClass contents) {
+		_contents = contents;
+    }
+
+    public boolean mayHaveChildren() {
+        return true;
     }
     
-    public static StoredClass[] storedClasses() {
-       	return container.ext().storedClasses();
-    }
-    
-    public static ObjectSet instances(String clazz) {
-        Query q = container.query();
-        Class toReturn = null;
-        try {
-        	toReturn = Class.forName(clazz);
+    /**
+     * @return a list of nodes (no generics now please)
+     */
+    public List children() {
+        LinkedList result = new LinkedList();
+        ObjectSet objects = Model.instances(_contents.getName());
+        while (objects.hasNext()) {
+            Object object = objects.next();
+            result.add(new InstanceNode(object));
         }
-        catch (Exception e) {
-            throw new RuntimeException();
-            // FIXME: Log this later...
-        }
-        return container.get(toReturn);
+        return result;
     }
-    
-    public static void close() {
-        container.close();
-    }
-    
+
+	/**
+	 * @return
+	 */
+	public String getText() {
+		return _contents.getName();
+	}
 }
