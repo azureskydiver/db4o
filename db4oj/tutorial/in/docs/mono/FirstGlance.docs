@@ -4,34 +4,24 @@ let's get you familiar with some basics.
 
 .1 The db4o engine... ..
 The db4o object database engine consists of one single DLL. ._
-This is all that you need to program against. The versions ._
-supplied with the distribution can be found in /db4o-4.0/dll/.	
-
-.b /db4o-4.0/dll/net/db4o.dll ..
-is the standard db4o engine for the .NET framework.
-
-.b /db4o-4.0/dll/compact/db4o.dll ..
-is built for the .NET CompactFramework.
+This is all that you need to program against. The version ._
+supplied with the distribution can be found in /usr/lib/db4o/.	
 
 .1 Installation ..
 To use db4o in a development project, you only need to add one ._
 of the above db4o.dll files to your project references.
 
-Here is how to do this with Visual Studio .NET:
-- copy db4o.dll to your VS.NET project folder
-- Right-click on "References" in the Solution Explorer
-- choose "Add Reference"
-- select "Browse"
-- find the db4o.*dll in your project folder
+Here is how to do this if you are using MonoDevelop:
+- Right-click on "References" in the Solution Tab
+- choose "Edit References"
+- select the ".NET Assembly" tab and then "Browse"
+- select /usr/lib/db4o/db4o.dll
 - click "Open"
 - click "OK"
-We recommend "Copy Local" to be set to [True] in the properties ._
-of the reference.
-
 
 .1 API ..
-The API documentation for db4o is supplied as JavaDocs in 
-../db4o-4.0/doc/api/index.html. While you read through this ._
+The API documentation for db4o is supplied as a set of HTML pages in 
+/usr/share/doc/packages/db4o/api/index.html. While you read through this ._
 tutorial, it may be helpful to look into the API documentation occasionaly. ._
 For the start, the namespaces com.db4o and com.db4o.query are ._
 all that you need to worry about.
