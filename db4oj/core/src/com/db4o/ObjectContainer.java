@@ -82,7 +82,7 @@ public interface ObjectContainer {
 	 * @see <a href="ext/ObjectCallbacks.html">Using callbacks</a>
   	 * @see <a href="config/Configuration.html#activationDepth(int)">
 	 * Why activation?</a>
-     * @param Object the object to be deactivated.
+     * @param obj the object to be deactivated.
 	 * @param depth the member 
 	 * <a href="config/Configuration.html#activationDepth(int)">depth</a> 
 	 * to which deactivate is to cascade.
