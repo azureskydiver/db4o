@@ -179,8 +179,7 @@ public abstract class AbstractWriter extends Configuration implements
         int brackets=0;
         StringBuffer methodsrc=new StringBuffer();
         if(full) {
-            methodsrc.append(startstr);
-            methodsrc.append('{');
+            methodsrc.append(src.substring(startidx,idx));
         }
         while(brackets>-1&&idx<src.length()) {
             char curchar=src.charAt(idx);
