@@ -47,7 +47,7 @@ public interface Blob extends Db4oType {
      * running operation.<br><br> the five STATUS constants defined in this interface or a double
      * between 0 and 1 that signifies the completion of the currently running operation.<br><br>
      * @return status - the current status
-     * @see <a href="#STATUS_AVAILABLE">STATUS constants</a>
+     * @see com.db4o.ext.Status STATUS constants
      */
     public double getStatus();
 

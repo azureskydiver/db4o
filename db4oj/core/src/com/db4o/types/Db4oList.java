@@ -8,7 +8,7 @@ import java.util.*;
  *  db4o List implementation for database-aware lists.
  * <br><br>
  * A <code>Db4oList</code> supplies the methods specified in java.util.List.<br><br>
- * All access to the list is controlled by the {@link ObjectContainer} to help the
+ * All access to the list is controlled by the {@link com.db4o.ObjectContainer ObjectContainer} to help the
  * programmer produce expected results with as little work as possible:<br>  
  * - newly added objects are automatically persisted.<br>
  * - list elements are automatically activated when they are needed. The activation
