@@ -41,11 +41,11 @@ class JDK_1_2 extends JDKReflect {
         return Thread.currentThread().getContextClassLoader();
     }
 
-    void flattenCollection2(Object a_object, final com.db4o.Collection4 col) {
+    void flattenCollection2(final YapStream a_stream, Object a_object, final com.db4o.Collection4 col) {
         if (isCollection(a_object.getClass())) {
             forEachCollectionElement(a_object, new Visitor4() {
                 public void visit(Object obj) {
-                    Platform.flattenCollection1(obj, col);
+                    Platform.flattenCollection1(a_stream, obj, col);
                 }
             });
         } else {

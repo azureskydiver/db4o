@@ -52,9 +52,9 @@ class YapField implements StoredField {
         i_yapClass = a_yapClass;
         init(a_yapClass, a_translator.getClass().getName(), 0);
         i_state = AVAILABLE;
-        YapStream stream =a_yapClass.getStream(); 
+        YapStream stream =getStream(); 
         i_handler = stream.i_handlers.handlerForClass(
-            stream, stream.i_config.i_reflect.forClass(a_translator.storedClass()));
+            stream, stream.i_config.reflector().forClass(a_translator.storedClass()));
     }
 
     YapField(YapClass a_yapClass, IField a_field, YapDataType a_handler) {
@@ -62,7 +62,7 @@ class YapField implements StoredField {
         i_javaField = a_field;
         i_javaField.setAccessible();
         i_handler = a_handler;
-        configure(a_field.getType());
+        configure( a_field.getType());
         checkDb4oType();
         i_state = AVAILABLE;
     }
@@ -128,10 +128,10 @@ class YapField implements StoredField {
                 // We are using the old array information read from file to
                 // wrap.
 
-                // If a refactoring changes an array to a different variable,
+                // If a schema evolution changes an array to a different variable,
                 // we are in trouble here.
 
-                i_handler = wrapHandlerToArrays(i_handler);
+                i_handler = wrapHandlerToArrays(getStream(), i_handler);
 
                 i_state = AVAILABLE;
                 checkDb4oType();
@@ -197,7 +197,7 @@ class YapField implements StoredField {
         Object a_template, Visitor4 a_visitor) {
         Object obj = getOn(a_trans, a_template);
         if (obj != null) {
-            Collection4 objs = Platform.flattenCollection(obj);
+            Collection4 objs = Platform.flattenCollection(a_trans.i_stream, obj);
             Iterator4 j = objs.iterator();
             while (j.hasNext()) {
                 obj = j.next();
@@ -247,9 +247,9 @@ class YapField implements StoredField {
                 i_isPrimitive = a_class.isPrimitive();
             }
             if (i_isNArray) {
-                i_handler = new YapArrayN(i_handler, i_isPrimitive);
+                i_handler = new YapArrayN(getStream(), i_handler, i_isPrimitive);
             } else {
-                i_handler = new YapArray(i_handler, i_isPrimitive);
+                i_handler = new YapArray(getStream(), i_handler, i_isPrimitive);
             }
         }
     }
@@ -428,6 +428,13 @@ class YapField implements StoredField {
             }
         }
         return Platform.getTypeForClass(i_handler.getJavaClass());
+    }
+    
+    public YapStream getStream(){
+    	if(i_yapClass == null){
+    		return null;
+    	}
+    	return i_yapClass.getStream();
     }
 
     boolean hasIndex() {
@@ -632,7 +639,7 @@ class YapField implements StoredField {
     void refresh() {
         YapDataType handler = loadJavaField1();
         if (handler != null) {
-            handler = wrapHandlerToArrays(handler);
+            handler = wrapHandlerToArrays(getStream(), handler);
             if (handler.equals(i_handler)) {
                 return;
             }
@@ -664,12 +671,12 @@ class YapField implements StoredField {
         return alive() && i_handler.supportsIndex();
     }
 
-    private final YapDataType wrapHandlerToArrays(YapDataType a_handler) {
+    private final YapDataType wrapHandlerToArrays(YapStream a_stream, YapDataType a_handler) {
         if (i_isNArray) {
-            a_handler = new YapArrayN(a_handler, i_isPrimitive);
+            a_handler = new YapArrayN(a_stream, a_handler, i_isPrimitive);
         } else {
             if (i_isArray) {
-                a_handler = new YapArray(a_handler, i_isPrimitive);
+                a_handler = new YapArray(a_stream, a_handler, i_isPrimitive);
             }
         }
         return a_handler;

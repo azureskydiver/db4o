@@ -1206,7 +1206,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         if (isArray()) {
             if (Platform.isCollectionTranslator(this.i_config)) {
                 a_bytes[0].incrementOffset(YapConst.YAPINT_LENGTH);
-                return new YapArray(null, false);
+                return new YapArray(i_stream, null, false);
             }
             incrementFieldsOffset1(a_bytes[0]);
             if (i_ancestor != null) {

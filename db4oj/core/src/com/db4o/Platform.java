@@ -133,13 +133,13 @@ public final class Platform {
     }
     */
 
-    static final Collection4 flattenCollection(Object obj) {
+    static final Collection4 flattenCollection(YapStream stream, Object obj) {
         Collection4 col = new Collection4();
-        flattenCollection1(obj, col);
+        flattenCollection1(stream, obj, col);
         return col;
     }
 
-    static final void flattenCollection1(Object obj, Collection4 col) {
+    static final void flattenCollection1(YapStream stream, Object obj, Collection4 col) {
         if (obj == null) {
             col.add(null);
         } else {
@@ -147,16 +147,16 @@ public final class Platform {
             if (clazz.isArray()) {
                 Object[] objects;
                 if (clazz.getComponentType().isArray()) {
-                    objects = new YapArrayN(null, false).allElements(obj);
+                    objects = new YapArrayN(stream, null, false).allElements(obj);
                 } else {
-                    objects = new YapArray(null, false).allElements(obj);
+                    objects = new YapArray(stream, null, false).allElements(obj);
                 }
                 for (int i = 0; i < objects.length; i++) {
-                    flattenCollection1(objects[i], col);
+                    flattenCollection1(stream, objects[i], col);
                 }
             } else {
                 if (hasCollections()) {
-                    Platform.flattenCollection2(obj, col);
+                    Platform.flattenCollection2(stream, obj, col);
                 } else {
                     // TODO: You are missing Vector and Hashtable on JDK 1.1.x here
                     col.add(obj);
@@ -165,8 +165,8 @@ public final class Platform {
         }
     }
 
-    static final void flattenCollection2(Object a_object, final com.db4o.Collection4 col) {
-        jdk().flattenCollection2(a_object, col);
+    static final void flattenCollection2(YapStream a_stream, Object a_object, final com.db4o.Collection4 col) {
+        jdk().flattenCollection2(a_stream, a_object, col);
     }
 
     static final void forEachCollectionElement(Object a_object, Visitor4 a_visitor) {

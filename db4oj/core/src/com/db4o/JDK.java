@@ -32,7 +32,7 @@ public class JDK {
 		return null;
 	}
 
-	void flattenCollection2(Object a_object, final com.db4o.Collection4 col) {
+	void flattenCollection2(final YapStream a_stream, Object a_object, final com.db4o.Collection4 col) {
 		
 	}
 

@@ -40,11 +40,6 @@ public interface IClass {
 	
 	public Object newInstance();
 
-
-
-
-
-	
 	
 }
 

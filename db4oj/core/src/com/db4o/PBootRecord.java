@@ -50,7 +50,7 @@ class PBootRecord extends P1Object implements Db4oTypeImpl{
                     Object obj = field.get(a_config);
                     if (obj != null) {
                         YapClass yc = i_stream.i_handlers.getYapClassStatic(
-                        		a_config.i_reflect.forObject(obj)
+                        		a_config.reflector().forObject(obj)
                             );
                         if (yc instanceof YapClassPrimitive) {
                             YapJavaClass yjc = (YapJavaClass) ((YapClassPrimitive) yc).i_handler;

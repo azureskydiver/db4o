@@ -16,14 +16,11 @@ public class CReflect implements IReflect{
 	private final Hashtable _byClass;
 	private final Hashtable _byName;
 	
-//	public CReflect(ClassLoader classLoader){
-	public CReflect(){
-		// FIXME: REFLECTOR pass ClassLoader
-		_classLoader = this.getClass().getClassLoader();
-		if(_classLoader == null){
+	public CReflect(ClassLoader classLoader){
+		if(classLoader == null){
 			throw new NullPointerException();
 		}
-		//_classLoader = classLoader;
+		_classLoader = classLoader;
 		i_array = new CArray();
 		_byClass = new Hashtable();
 		_byName = new Hashtable();

@@ -466,7 +466,7 @@ class Transaction {
     }
     
     IReflect reflector(){
-    	return i_stream.i_config.i_reflect;
+    	return i_stream.i_config.reflector();
     }
 
     void removeFromClassIndex(int a_yapClassID, int a_id) {

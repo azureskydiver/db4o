@@ -129,19 +129,19 @@ class YapHandlers {
             }
         }
 
-        i_anyArray = new YapClassPrimitive(null, new YapArray(
+        i_anyArray = new YapClassPrimitive(null, new YapArray(_masterStream,
             i_handlers[YAPANY], false));
         i_anyArray.i_id = ANYARRAYID;
         i_yapClasses[ANYARRAYID - 1] = i_anyArray;
 
-        i_anyArrayN = new YapClassPrimitive(null, new YapArrayN(
+        i_anyArrayN = new YapClassPrimitive(null, new YapArrayN(_masterStream,
             i_handlers[YAPANY], false));
         i_anyArrayN.i_id = ANYARRAYNID;
         i_yapClasses[ANYARRAYNID - 1] = i_anyArrayN;
     }
 
 	int arrayType(Object a_object) {
-    	IClass claxx = _masterStream.i_config.i_reflect.forObject(a_object);
+    	IClass claxx = _masterStream.i_config.reflector().forObject(a_object);
         if (claxx.isArray()) {
             if (Array4.isNDimensional(claxx)) {
                 return YapConst.TYPE_NARRAY;
@@ -154,7 +154,7 @@ class YapHandlers {
 
 	// FIXME: REFLECTOR remove this, it's just needed to keep runnable
 	private void cacheClass(Class javaClass, YapClass yapClass) {
-		IClass claxx = _masterStream.i_config.i_reflect.forClass(javaClass);
+		IClass claxx = _masterStream.i_config.reflector().forClass(javaClass);
 		i_classByClass.put(claxx, yapClass);
 	}
 
@@ -163,7 +163,7 @@ class YapHandlers {
         final Class a_class
          ) {
         
-        final IReflect reflector = a_stream.i_config.i_reflect;
+        final IReflect reflector = a_stream.i_config.reflector();
         IClass classReflector;
         
         try {
@@ -398,7 +398,7 @@ class YapHandlers {
     	if(a_object != null){
     		
     		Class clazz = a_object.getClass();
-    		IClass claxx = _masterStream.i_config.i_reflect.forClass(clazz);
+    		IClass claxx = _masterStream.i_config.reflector().forClass(clazz);
     		if(i_classByClass.get(claxx) != null){
     			return true;
     		}
