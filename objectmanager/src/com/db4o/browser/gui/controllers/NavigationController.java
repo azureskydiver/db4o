@@ -24,6 +24,9 @@ public class NavigationController implements IBrowserController {
 	private GraphPosition[] undoRedoStack = new GraphPosition[STACK_LIMIT];
 	private int stackPosition;
 	private int stackMax;
+
+	private ISelectionSource leftButton;
+	private ISelectionSource rightButton;
 	
 	/**
 	 * Construct a NavigationController on a specific UI element
@@ -31,6 +34,8 @@ public class NavigationController implements IBrowserController {
 	 * @param ui The DbBrowserPane to which to attach.
 	 */
 	public NavigationController(ISelectionSource leftButton, ISelectionSource rightButton) {
+		this.leftButton = leftButton;
+		this.rightButton = rightButton;
 		leftButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				safeRun(undo);
@@ -42,8 +47,25 @@ public class NavigationController implements IBrowserController {
 			}
 		});
 		resetUndoRedoStack();
+		enableButtons();
 	}
 	
+	/**
+	 * Enable or disable the left and right buttons based on the undo/redo state
+	 */
+	private void enableButtons() {
+		if (stackPosition > 0) {
+			leftButton.setEnabled(true);
+		} else {
+			leftButton.setEnabled(false);
+		}
+		if (stackPosition < stackMax) {
+			rightButton.setEnabled(true);
+		} else {
+			rightButton.setEnabled(false);
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInput(com.db4o.browser.model.IGraphIterator, com.db4o.browser.model.GraphPosition)
 	 */
@@ -112,15 +134,17 @@ public class NavigationController implements IBrowserController {
 			++stackPosition;
 			stackMax = stackPosition;		// Discard the redo stack
 			undoRedoStack[stackPosition] = element;
+			enableButtons();
 		}
 	};
 	
 	private Runnable undo = new Runnable() {
 		public void run() {
-			if (stackPosition > 0) {
+			if (stackPosition >= 0) {
 				--stackPosition;
 				model.setSelectedPath(undoRedoStack[stackPosition]);
 			}
+			enableButtons();
 		}
 	};
 	
@@ -130,6 +154,7 @@ public class NavigationController implements IBrowserController {
 				++stackPosition;
 				model.setSelectedPath(undoRedoStack[stackPosition]);
 			}
+			enableButtons();
 		}
 	};
 
