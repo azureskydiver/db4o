@@ -422,10 +422,11 @@ class YapField implements StoredField {
     public Object getStoredType() {
         if (!Deploy.csharp) {
             if (i_isPrimitive) {
-                return i_handler.getPrimitiveJavaClass();
+                return Platform.getTypeForClass(i_handler
+                    .getPrimitiveJavaClass());
             }
         }
-        return i_handler.getJavaClass();
+        return Platform.getTypeForClass(i_handler.getJavaClass());
     }
 
     boolean hasIndex() {
