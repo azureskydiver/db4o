@@ -14,7 +14,7 @@
  * along with com.swtworkbench.ed; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.db4o.browser.gui;
+package com.db4o.browser.gui.tree;
 
 import java.util.LinkedList;
 import java.util.List;
