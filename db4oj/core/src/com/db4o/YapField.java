@@ -240,8 +240,9 @@ class YapField implements StoredField {
         i_isPrimitive = a_class.isPrimitive();
         i_isArray = a_class.isArray();
         if (i_isArray) {
-            i_isNArray = Array4.isNDimensional(a_class);
-            a_class = Array4.getComponentType(a_class);
+            ReflectArray reflectArray = getStream().reflector().array();
+            i_isNArray = reflectArray.isNDimensional(a_class);
+            a_class = reflectArray.getComponentType(a_class);
             if (Deploy.csharp) {
             } else {
                 i_isPrimitive = a_class.isPrimitive();

@@ -9,7 +9,7 @@ public class JdkReflector implements Reflector{
     
 	private final ClassLoader _classLoader;
 
-	private final ReflectArray i_array;
+	private final ReflectArray _array;
 	
 	private final Hashtable4 _byClass;
 	private final Hashtable4 _byName;
@@ -24,7 +24,7 @@ public class JdkReflector implements Reflector{
 			throw new NullPointerException();
 		}
 		_classLoader = classLoader;
-		i_array = new JdkArray();
+		_array = new JdkArray(this);
 		_byClass = new Hashtable4(1);
 		_byName = new Hashtable4(1);
 		_collectionClasses = new Collection4();
@@ -32,7 +32,7 @@ public class JdkReflector implements Reflector{
 	}
 	
 	public ReflectArray array(){
-		return i_array;
+		return _array;
 	}
 	
 	private ReflectClass addClass(String className, Class clazz) {

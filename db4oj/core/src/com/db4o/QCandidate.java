@@ -423,7 +423,7 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
             if (yc != null) {
                 if (i_member != null && i_member.getClass().isArray()) {
                     YapDataType ydt = (YapDataType)yc.prepareComparison(a_constraint);
-                    if (Array4.isNDimensional(memberClass())) {
+                    if (a_stream.reflector().array().isNDimensional(memberClass())) {
                         YapArrayN yan = new YapArrayN(a_stream, ydt, false);
                         return yan;
                     } else {

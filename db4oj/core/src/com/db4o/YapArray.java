@@ -2,26 +2,27 @@
 
 package com.db4o;
 
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.Reflector;
+import com.db4o.reflect.*;
 
 class YapArray extends YapIndependantType {
 	
 	final YapStream _stream;
     final YapDataType i_handler;
     final boolean i_isPrimitive;
+    final ReflectArray _reflectArray;
 
     YapArray(YapStream stream, YapDataType a_handler, boolean a_isPrimitive) {
         super(stream);
     	_stream = stream;
         i_handler = a_handler;
         i_isPrimitive = a_isPrimitive;
+        _reflectArray = stream.reflector().array();
     }
 
     Object[] allElements(Object a_object) {
-        Object[] all = new Object[Array4.reflector(_stream).getLength(a_object)];
+        Object[] all = new Object[_reflectArray.getLength(a_object)];
         for (int i = all.length - 1; i >= 0; i--) {
-            all[i] = Array4.reflector(_stream).get(a_object, i);
+            all[i] = _reflectArray.get(a_object, i);
         }
         return all;
     }
@@ -164,7 +165,7 @@ class YapArray extends YapIndependantType {
     int objectLength(Object a_object) {
         return YapConst.OBJECT_LENGTH
             + YapConst.YAPINT_LENGTH * (Debug.arrayTypes ? 2 : 1)
-            + (Array4.reflector(_stream).getLength(a_object) * i_handler.linkLength());
+            + (_reflectArray.getLength(a_object) * i_handler.linkLength());
     }
     
 	public void prepareLastIoComparison(Transaction a_trans, Object obj) {
@@ -214,7 +215,7 @@ class YapArray extends YapIndependantType {
         Object ret = readCreate(a_trans, a_reader, elements);
 		if(ret != null){
 			for (int i = 0; i < elements[0]; i++) {
-			    Array4.reflector(a_trans.i_stream).set(ret, i, i_handler.readQuery(a_trans, a_reader, true));
+                _reflectArray.set(ret, i, i_handler.readQuery(a_trans, a_reader, true));
 			}
 		}
 		return ret;
@@ -225,7 +226,7 @@ class YapArray extends YapIndependantType {
 		Object ret = readCreate(a_bytes.getTransaction(), a_bytes, elements);
 		if(ret != null){
 	        for (int i = 0; i < elements[0]; i++) {
-				Array4.reflector(a_bytes.getStream()).set(ret, i, i_handler.read(a_bytes));
+                _reflectArray.set(ret, i, i_handler.read(a_bytes));
 	        }
 		}
         return ret;
@@ -235,10 +236,10 @@ class YapArray extends YapIndependantType {
 		ReflectClass[] clazz = new ReflectClass[1];
 		a_elements[0] = readElementsAndClass(a_trans, a_reader, clazz);
 		if (i_isPrimitive) {
-			return Array4.reflector(a_trans.i_stream).newInstance(i_handler.primitiveClassReflector(), a_elements[0]);
+			return _reflectArray.newInstance(i_handler.primitiveClassReflector(), a_elements[0]);
 		} else {
 			if (clazz[0] != null) {
-				return Array4.reflector(a_trans.i_stream).newInstance(clazz[0], a_elements[0]);	
+				return _reflectArray.newInstance(clazz[0], a_elements[0]);	
 			}
 		}
 		return null;
@@ -300,7 +301,7 @@ class YapArray extends YapIndependantType {
         	ReflectClass claxx = a_stream.reflector().forObject(a_object);
             if (claxx.isArray()) {
                 YapArray ya;
-                if(Array4.isNDimensional(claxx)){
+                if(a_stream.reflector().array().isNDimensional(claxx)){
                     ya = new YapArrayN(a_stream, null, false);
                 } else {
                     ya = new YapArray(a_stream, null, false);
@@ -317,7 +318,7 @@ class YapArray extends YapIndependantType {
             
             Reflector reflector = a_bytes.i_trans.reflector();
             
-            ReflectClass claxx = Array4.getComponentType(reflector.forObject(a_object));
+            ReflectClass claxx = _reflectArray.getComponentType(reflector.forObject(a_object));
             
             boolean primitive = false;
             if(! Deploy.csharp){
@@ -378,11 +379,11 @@ class YapArray extends YapIndependantType {
     }
 
     void writeNew1(Object a_object, YapWriter a_bytes) {
-        int elements = Array4.reflector(_stream).getLength(a_object);
+        int elements = _reflectArray.getLength(a_object);
         writeClass(a_object, a_bytes);
         a_bytes.writeInt(elements);
         for (int i = 0; i < elements; i++) {
-            i_handler.writeNew(Array4.reflector(_stream).get(a_object, i), a_bytes);
+            i_handler.writeNew(_reflectArray.get(a_object, i), a_bytes);
         }
     }
 
