@@ -1,7 +1,7 @@
 /*
  * Created on Jan 14, 2005
  */
-package com.db4o.browser.gui;
+package com.db4o.browser.gui.views;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -53,15 +53,18 @@ public class DbBrowserPane extends Composite {
         parent.setLayout(new FillLayout());
         setLayout(new FillLayout());
         contents = XSWT.createl(this, "layout.xswt", getClass());
-        Model.open();
-        populateTree(Model.storedClasses());
+        model = Model.open();
+        populateTree(model.storedClasses());
         addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				Model.close();
-			}
+            public void widgetDisposed(DisposeEvent e) {
+                model.close();
+            }
         });
+        getObjectTree().addListener(SWT.Expand, expandListener);
+        getObjectTree().addFocusListener(focusListener);
 	}
     
+    private Model model = null;
     
     private Map contents = null;
     
@@ -118,12 +121,9 @@ public class DbBrowserPane extends Composite {
         Tree theTree = getObjectTree();
         
         for (int i=0; i < contents.length; ++i) {
-            ITreeNode node = new ClassNode(contents[i]);
+            ITreeNode node = new ClassNode(contents[i], model);
             initTreeItem(new TreeItem(theTree, SWT.NULL), node);
         }
-        
-        theTree.addListener(SWT.Expand, expandListener);
-        theTree.addFocusListener(focusListener);
     }
     
     private Listener expandListener = new Listener() {
