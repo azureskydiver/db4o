@@ -84,8 +84,8 @@ public class MemoryFile {
 	 * configures the size the MemoryFile is to be enlarged by, if it grows
 	 * beyond the current size.
 	 * <br><br>Call this method before passing the MemoryFile to 
-	 * <a href="ExtDb4o.html#openMemoryFile(com.db4o.MemoryFile)">
-	 * <code>ExtDb4o#openMemoryFile(MemoryFile)</code></a>.<br><br>
+	 * {@link com.db4o.ext.ExtDb4o#openMemoryFile ExtDb4o#openMemoryFile(MemoryFile)}.
+	 * <br><br>
 	 * This parameter can be modified to tune the maximum performance of
 	 * a MemoryFile for a specific usecase. To produce the best results,
 	 * test the speed of your application with real data.<br><br>
@@ -98,8 +98,8 @@ public class MemoryFile {
 	/**
 	 * configures the initial size of the MemoryFile.
 	 * <br><br>Call this method before passing the MemoryFile to 
-	 * <a href="ExtDb4o.html#openMemoryFile(com.db4o.MemoryFile)">
-	 * <code>ExtDb4o#openMemoryFile(MemoryFile)</code></a>.<br><br>
+	 * {@link com.db4o.ext.ExtDb4o#openMemoryFile ExtDb4o#openMemoryFile(MemoryFile)}.
+	 * <br><br>
 	 * This parameter can be modified to tune the maximum performance of
 	 * a MemoryFile for a specific usecase. To produce the best results,
 	 * test speed and memory consumption of your application with

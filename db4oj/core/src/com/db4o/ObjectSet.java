@@ -9,14 +9,12 @@ import com.db4o.ext.*;
  * <br><br>The <code>ObjectSet</code> class serves as a cursor to
  * iterate through a set of objects retrieved by a 
  * call to
- * <a href="ObjectContainer.html#get(java.lang.Object)"><code>
- * ObjectContainer.get(template)</code></a>.
+ * {@link ObjectContainer#get ObjectContainer.get(template)}.
  * <br><br>An <code>ObjectSet</code> can easily be wrapped to a
  * <code>java.util.List</code> (Java)  / <code>System.Collections.IList</code>  (.NET)
  * using the source code supplied in ../com/db4o/wrap/     
  * <br><br>Note that the used
- * <a href="ObjectContainer.html"><code>
- * ObjectContainer</code></a> needs to remain opened during the
+ * {@link ObjectContainer ObjectContainer} needs to remain opened during the
  * use of an <code>ObjectSet</code> to allow lazy instantiation.
  * @see ExtObjectSet for extended functionality.
  */
@@ -47,9 +45,8 @@ public interface ObjectSet {
 	 * <br><br>
 	 * Before returning the Object, next() triggers automatic activation of the
 	 * Object with the respective
-	 * <a href="config/Configuration.html#activationDepth(int)">
-	 * global</a> or
-	 * <a href="config/ObjectClass.html#maximumActivationDepth(int)">class specific</a>
+	 * {@link com.db4o.config.Configuration#activationDepth global} or
+	 * {@link com.db4o.config.ObjectClass#maximumActivationDepth class specific}
 	 * setting.<br><br>
      * @return the next object in the <code>ObjectSet</code>.
      */

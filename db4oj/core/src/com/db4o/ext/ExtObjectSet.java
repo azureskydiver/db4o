@@ -6,10 +6,10 @@ import com.db4o.*;
 
 /**
  * extended functionality for the
- * <a href="../ObjectSet.html"><code>ObjectSet</code></a> interface.
- * <br><br>Every db4o <a href="../ObjectSet.html"><code>ObjectSet</code></a>
+ * {@link ObjectSet ObjectSet} interface.
+ * <br><br>Every db4o {@link ObjectSet ObjectSet}
  * always is an ExtObjectSet so a cast is possible.<br><br>
- * <a href="../ObjectSet.html#ext()"><code>ObjectSet.ext()</code></a>
+ * {@link ObjectSet#ext ObjectSet.ext()}
  * is a convenient method to perform the cast.<br><br>
  * The ObjectSet functionality is split to two interfaces to allow newcomers to
  * focus on the essential methods.
