@@ -107,22 +107,23 @@ final class YapConst
 	static final int MAXIMUM_ARRAY_ENTRIES = 7000000; // 7 Million 
 	static final int MAXIMUM_ARRAY_ENTRIES_PRIMITIVE = MAXIMUM_ARRAY_ENTRIES * 100; // 70 MB for byte arrays
 	
-	static Class CLASS_DB4OTYPEIMPL;
-	static Class CLASS_OBJECT;
+    static Class CLASS_CLASS;
+    static Class CLASS_COMPARE;
 	static Class CLASS_DB4ODATABASE;
+    static Class CLASS_DB4OTYPE;
+    static Class CLASS_DB4OTYPEIMPL;
+    static Class CLASS_ENUM;
 	static Class CLASS_INTERNAL;
-	static Class CLASS_TRANSIENTCLASS;
-	static Class CLASS_COMPARE;
-	static Class CLASS_DB4OTYPE;
+    static Class CLASS_METACLASS;
+    static Class CLASS_METAFIELD;
 	static Class CLASS_METAINDEX;
-	static Class CLASS_METAFIELD;
-	static Class CLASS_METACLASS;
+    static Class CLASS_OBJECT;
+    static Class CLASS_OBJECTCONTAINER;
+    static Class CLASS_PBOOTRECORD;
+    static Class CLASS_REPLICATIONRECORD;
 	static Class CLASS_STATICFIELD;
 	static Class CLASS_STATICCLASS;
-	static Class CLASS_PBOOTRECORD;
-	static Class CLASS_REPLICATIONRECORD;
-	static Class CLASS_OBJECTCONTAINER;
-	static Class CLASS_CLASS;
+    static Class CLASS_TRANSIENTCLASS;
 	
 	static final String EMBEDDED_CLIENT_USER = "embedded client";
 	
@@ -153,32 +154,36 @@ final class YapConst
 	
 	private static final Object init(){
         CLASS_OBJECT = new Object().getClass();
-        CLASS_DB4OTYPEIMPL = db4oClass("Db4oTypeImpl"); 
-        CLASS_DB4ODATABASE = new Db4oDatabase().getClass(); 
-        CLASS_INTERNAL = db4oClass("Internal");
-        CLASS_TRANSIENTCLASS = db4oClass("types.TransientClass");
+        CLASS_CLASS = CLASS_OBJECT.getClass();
         CLASS_COMPARE = db4oClass("config.Compare");
+        CLASS_DB4ODATABASE = new Db4oDatabase().getClass();
         CLASS_DB4OTYPE = db4oClass("types.Db4oType"); 
-        CLASS_METAINDEX = new MetaIndex().getClass();
-        CLASS_METAFIELD = new MetaField().getClass();
+        CLASS_DB4OTYPEIMPL = db4oClass("Db4oTypeImpl"); 
+        CLASS_ENUM = classForName("java.lang.Enum");
+        CLASS_INTERNAL = db4oClass("Internal");
         CLASS_METACLASS = new MetaClass().getClass();
-        CLASS_STATICFIELD = new StaticField().getClass();
-        CLASS_STATICCLASS = new StaticClass().getClass();
+        CLASS_METAFIELD = new MetaField().getClass();
+        CLASS_METAINDEX = new MetaIndex().getClass();
+        CLASS_OBJECTCONTAINER = db4oClass("ObjectContainer");
         CLASS_PBOOTRECORD = new PBootRecord().getClass();
         CLASS_REPLICATIONRECORD = new ReplicationRecord().getClass();
-        CLASS_OBJECTCONTAINER = db4oClass("ObjectContainer");
-        CLASS_CLASS = CLASS_OBJECT.getClass();
+        CLASS_STATICFIELD = new StaticField().getClass();
+        CLASS_STATICCLASS = new StaticClass().getClass();
+        CLASS_TRANSIENTCLASS = db4oClass("types.TransientClass");
 	    return null;
 	}
 	
 	private static final Class db4oClass(String name){
-	    try{
-	        return Class.forName("com.db4o." + name);
-	    }catch(Exception e){
-	        e.printStackTrace();
-	    }
-	    return null;
+        return classForName("com.db4o." + name);
 	}
+    
+    private static final Class classForName(String name){
+        try{
+            return Class.forName(name);
+        }catch(Exception e){
+        }
+        return null;
+    }
 	
 	// system classes that need to get loaded first
 	static final Class[] ESSENTIAL_CLASSES = {
