@@ -9,6 +9,10 @@ import com.db4o.reflect.*;
  * Undefined YapClass used for members of type Object.
  */
 final class YapClassAny extends YapClass {
+	
+	public YapClassAny(YapStream stream){
+		super(stream);
+	}
 
 	public boolean canHold(Class a_class) {
 		return true;

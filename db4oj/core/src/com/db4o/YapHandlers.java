@@ -100,7 +100,7 @@ class YapHandlers {
 
             // primitives first
 
-            i_stringHandler, new YDate(), new YapClassAny() // Index = 10, ID = 11
+            i_stringHandler, new YDate(), new YapClassAny(a_stream) // Index = 10, ID = 11
         };
 
         if (i_platformTypes.length > 0) {
@@ -123,7 +123,7 @@ class YapHandlers {
         i_yapClasses = new YapClass[i_maxTypeID + 1];
 
         for (int i = 0; i < CLASSCOUNT; i++) {
-            i_yapClasses[i] = new YapClassPrimitive(null, i_handlers[i]);
+            i_yapClasses[i] = new YapClassPrimitive(a_stream, i_handlers[i]);
             i_yapClasses[i].i_id = i + 1; // note that we avoid 0 here
             i_classByClass.put(i_handlers[i].classReflector(a_stream), i_yapClasses[i]);
             if (!Deploy.csharp) {
@@ -135,7 +135,7 @@ class YapHandlers {
         for (int i = 0; i < i_platformTypes.length; i++) {
             int idx = i_platformTypes[i].getID() - 1;
             i_handlers[idx] = i_platformTypes[i];
-            i_yapClasses[idx] = new YapClassPrimitive(null, i_platformTypes[i]);
+            i_yapClasses[idx] = new YapClassPrimitive(a_stream, i_platformTypes[i]);
             i_yapClasses[idx].i_id = idx + 1;
             if (i_yapClasses[idx].i_id > i_maxTypeID) {
                 i_maxTypeID = idx;
@@ -148,12 +148,12 @@ class YapHandlers {
             }
         }
 
-        i_anyArray = new YapClassPrimitive(null, new YapArray(_masterStream,
+        i_anyArray = new YapClassPrimitive(a_stream, new YapArray(_masterStream,
             i_handlers[YAPANY], false));
         i_anyArray.i_id = ANYARRAYID;
         i_yapClasses[ANYARRAYID - 1] = i_anyArray;
 
-        i_anyArrayN = new YapClassPrimitive(null, new YapArrayN(_masterStream,
+        i_anyArrayN = new YapClassPrimitive(a_stream, new YapArrayN(_masterStream,
             i_handlers[YAPANY], false));
         i_anyArrayN.i_id = ANYARRAYNID;
         i_yapClasses[ANYARRAYNID - 1] = i_anyArrayN;

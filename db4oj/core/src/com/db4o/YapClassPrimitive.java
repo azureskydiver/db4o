@@ -10,6 +10,7 @@ class YapClassPrimitive extends YapClass{
     final YapDataType i_handler;
 
     YapClassPrimitive(YapStream a_stream, YapDataType a_handler) {
+    	super(a_stream);
         i_fields = YapField.EMPTY_ARRAY;
         i_handler = a_handler;
         i_objectLength = memberLength();

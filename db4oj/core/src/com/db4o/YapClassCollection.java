@@ -162,7 +162,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
             return yapClass;
         }
         
-        yapClass = new YapClass();
+        yapClass = new YapClass(i_stream);
         
         i_creating.put(a_class, yapClass);
         
@@ -279,7 +279,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
 
         // Step 1 add all classes
         for (int i = classCount; i > 0; i--) {
-            YapClass yapClass = new YapClass();
+            YapClass yapClass = new YapClass(i_stream);
             int id = a_reader.readInt();
             yapClass.setID(i_stream, id);
             i_classes.add(yapClass);
