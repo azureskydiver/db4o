@@ -4,8 +4,9 @@ package com.db4o;
 
 /**
  * element of linked lists 
+ * @exclude 
  */
-class P1ListElement extends P1Object{
+public class P1ListElement extends P1Object{
     
     public P1ListElement i_next;
     public Object i_object;

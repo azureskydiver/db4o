@@ -6,8 +6,9 @@ import com.db4o.types.*;
 
 /**
  * base class for database aware collections
+ * @exclude 
  */
-abstract class P1Collection extends P1Object implements Db4oCollection, Db4oTypeImpl{
+public abstract class P1Collection extends P1Object implements Db4oCollection{
     
     // This is an off-by-one variable. 
     // 0 means default, use standard activation depth

@@ -3,9 +3,9 @@
 package com.db4o;
 
 /**
- * 
+ * @exclude 
  */
-class P1HashElement extends P1ListElement {
+public class P1HashElement extends P1ListElement {
     
     public Object i_key;
     public int i_hashCode;

@@ -8,8 +8,9 @@ import com.db4o.types.*;
 
 /**
  * database aware linked list implementation
+ * @exclude 
  */
-class P2LinkedList extends P1Collection implements Db4oList {
+public class P2LinkedList extends P1Collection implements Db4oList {
 
     public P1ListElement i_first;
     public P1ListElement i_last;
