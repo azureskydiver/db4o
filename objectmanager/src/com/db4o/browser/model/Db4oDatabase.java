@@ -19,6 +19,7 @@ package com.db4o.browser.model;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.browser.preferences.PreferencesCore;
 import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
 import com.swtworkbench.community.xswt.metalogger.Logger;
@@ -34,13 +35,11 @@ public class Db4oDatabase implements Database {
     
     private String currentPath="";
     
-    /**
-     * Method open.  Open a YAP file.
-     * 
-     * @param path The os-dependent path and file name for the YAP file.
+    /* (non-Javadoc)
+     * @see com.db4o.browser.model.Database#open(java.lang.String)
      */
     public void open(String path) {
-		Db4o.configure().activationDepth(5);
+		Db4o.configure().activationDepth(PreferencesCore.getDefault().getInitialActivationDepth());
         if (!path.equals(currentPath)) {
             close();
             container = Db4o.openFile(path);
@@ -50,8 +49,8 @@ public class Db4oDatabase implements Database {
         }
     }
     
-    /**
-     * Method close.  Close the current YAP file if one is open.
+    /* (non-Javadoc)
+     * @see com.db4o.browser.model.Database#close()
      */
     public void close() {
         if (container != null)
@@ -59,6 +58,13 @@ public class Db4oDatabase implements Database {
         container = null;
 		currentPath="";
     }
+	
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.Database#setInitialActivationDepth(int)
+	 */
+	public void setInitialActivationDepth(int initialActivationDepth) {
+		Db4o.configure().activationDepth(initialActivationDepth);
+	}
 
 
     ObjectContainer container = null;
@@ -100,8 +106,8 @@ public class Db4oDatabase implements Database {
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.model.Database#activate(java.lang.Object, int)
 	 */
-	public void activate(Object object,int depth) {
-		container.activate(object, depth);
+	public void activate(Object object) {
+		container.activate(object, PreferencesCore.getDefault().getSubsequentActivationDepth());
 	}
     
 }

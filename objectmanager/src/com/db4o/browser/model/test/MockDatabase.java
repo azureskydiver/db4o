@@ -25,6 +25,10 @@ public class MockDatabase extends Assert implements Database {
 		opened=false;
 	}
 
+	public void setInitialActivationDepth(int initialActivationDepth) {
+		// Nothing else needed here...
+	}
+	
 	public DatabaseGraphIterator graphIterator() {
 		StoredClass[] stored = (StoredClass[])storedClasses.values().toArray(new StoredClass[storedClasses.size()]);
 		return new DatabaseGraphIterator(this,stored);
@@ -54,7 +58,7 @@ public class MockDatabase extends Assert implements Database {
 	}
 	
 	
-	public void activate(Object object,int depth) {
+	public void activate(Object object) {
 		// Nothing to do here; everything is always active in the mock database
 	}
 }

@@ -26,5 +26,7 @@ public interface Database {
 	
 	public abstract long getId(Object object);
 	
-	public abstract void activate(Object object, int depth);
+	public abstract void activate(Object object);
+
+	public abstract void setInitialActivationDepth(int initialActivationDepth);
 }
