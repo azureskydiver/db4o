@@ -19,7 +19,7 @@ package com.db4o.browser.model.nodes.field;
 import java.lang.reflect.Field;
 
 import com.db4o.browser.model.nodes.IModelNode;
-import com.swtworkbench.community.xswt.metalogger.Logger;
+import com.db4o.browser.model.nodes.InstanceNode;
 
 
 /**
@@ -32,6 +32,7 @@ public class FieldNode implements IModelNode {
 
     protected Field _field;
     protected Object _instance;
+	protected InstanceNode delegate;
     
 	/**
 	 * @param field
@@ -40,35 +41,52 @@ public class FieldNode implements IModelNode {
 	public FieldNode(Field field, Object instance) {
 		_field = field;
         _instance = instance;
+
+		if (!_field.isAccessible()) {
+            _field.setAccessible(true);
+        }
+		Object value = null;
+		try {
+			value = _field.get(_instance);
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to get field value", e);
+		}
+		delegate = new InstanceNode(value);
 	}
 
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.ITreeNode#mayHaveChildren()
 	 */
 	public boolean mayHaveChildren() {
-		return true;
+		return delegate.mayHaveChildren();
 	}
 
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.ITreeNode#children()
 	 */
 	public IModelNode[] children() {
-		return new IModelNode[0];
+		return delegate.children();
 	}
 
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.ITreeNode#getText()
 	 */
 	public String getText() {
-        if (!_field.isAccessible()) {
-            _field.setAccessible(true);
-        }
-		try {
-			return _field.getName() + ": " + _field.get(_instance);
-		} catch (Exception e) {
-            Logger.log().error(e, "Unable to get the field value");
-		}
-        return _field.getName() + ": (unable to get value)";
+		return _field.getName() + ": " + delegate.getText();
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.nodes.IModelNode#getName()
+	 */
+	public String getName() {
+		return _field.getName();
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.nodes.IModelNode#getValueString()
+	 */
+	public String getValueString() {
+		return _instance.toString();
 	}
 
 }

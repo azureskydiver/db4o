@@ -38,13 +38,13 @@
 								<tree x:id="ObjectTree"/>
 				            </x:children>
             			</composite>
-            			<cTabItem x:id="ListCompositeItem" text="&amp;Graph Browser" control="ListComposite"/>
+            			<cTabItem x:id="ListCompositeItem" text="&amp;Graph" control="ListComposite"/>
             			
             			<!-- Detail -->
         				<composite x:id="FieldArea" background="White">
         					<layout x:class="fillLayout"/>
         				</composite>
-            			<cTabItem text="&amp;Object Browser" control="FieldArea"/>
+            			<cTabItem text="&amp;Object" control="FieldArea"/>
             			
             			<!-- Rodrigo's object navigator idea -
             			<composite x:id="Navigator">

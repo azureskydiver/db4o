@@ -55,12 +55,26 @@ public class InstanceNode implements IModelNode {
 	public String getText() {
 		return _instance.toString();
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.nodes.IModelNode#getValueString()
+	 */
+	public String getValueString() {
+		return _instance.toString();
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.nodes.IModelNode#getName()
+	 */
+	public String getName() {
+		// This is only called if this is a top-level query result or an item in a container
+		return "";
+	}
     
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.ITreeNode#mayHaveChildren()
 	 */
 	public boolean mayHaveChildren() {
-        // FIXME: Maybe we need to do reflection here and return an accurate result...
-		return true;
+		return _instance.getClass().getDeclaredFields().length > 0;
 	}
 }
