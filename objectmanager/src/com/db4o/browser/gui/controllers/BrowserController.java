@@ -3,8 +3,6 @@
  */
 package com.db4o.browser.gui.controllers;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
 import com.db4o.browser.gui.views.DbBrowserPane;
