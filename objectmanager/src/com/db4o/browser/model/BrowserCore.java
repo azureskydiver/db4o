@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.db4o.browser.gui.standalone.ICloseListener;
+import com.db4o.browser.preferences.PreferenceUI;
 
 /**
  * BrowserCore.  The root of the model hierarchy in the browser.
@@ -20,11 +21,16 @@ public class BrowserCore implements ICloseListener {
 	public static BrowserCore getDefault() {
         if (model == null) {
             model = new BrowserCore();
+			registerPreferencePages();
         }
         return model;
     }
     
-    private LinkedList databases = new LinkedList();
+    private static void registerPreferencePages() {
+		PreferenceUI.registerPreferencePage("Activation", "Object Activation", null, "com.db4o.browser.preferences.ActivationPreferencePage");
+	}
+
+	private LinkedList databases = new LinkedList();
     private HashMap dbMap = new HashMap();  // Maps path/filename to database
     
     /**
