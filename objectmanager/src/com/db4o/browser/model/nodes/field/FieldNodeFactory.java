@@ -97,6 +97,10 @@ public class FieldNodeFactory {
         if (field.getStoredType().isPrimitive()) {
             return new StoredPrimitiveFieldNode(field, instance, database);
         }
+		
+		if (field.isArray()) {
+			return new StoredArrayFieldNode(field, instance, database);
+		}
         
         result = StoredIterableFieldNode.tryToCreate(field, instance, database);
         if (result != null) return result;

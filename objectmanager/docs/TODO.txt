@@ -1,6 +1,10 @@
 TODO:
 
 - Generic reflector
+   * StoredIterableFieldNode - Needs to use Platform.isCollection
+   * Need to write StoredMapFieldNode
+   * Make sure there are no java.lang.reflect calls where there shouldn't be
+
 - Test with J9 VM **????**
 
 - Make sure browsing scales to large numbers of nodes
