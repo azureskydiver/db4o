@@ -2,12 +2,9 @@ package com.db4o.reflect.dataobjects;
 
 import com.db4o.reflect.*;
 
-class DataObjectClass implements IClass {
+public class DataObjectClass implements IClass {
 
-    private final Class _class;
-
-    DataObjectClass(Class clazz) {
-        _class = clazz;
+    DataObjectClass(String className) {
     }
 
     public IClass getComponentType() {
@@ -21,8 +18,7 @@ class DataObjectClass implements IClass {
     }
 
     public IField[] getDeclaredFields() {
-        // TODO Auto-generated method stub
-        return null;
+        return new IField[] {};
     }
 
     public IField getDeclaredField(String name) {
@@ -83,7 +79,7 @@ class DataObjectClass implements IClass {
 
     //FIXME: REFLECTOR Big hack to get a runnable version.
     public Class getJavaClass() {
-        return _class;
+        return null;
     }
 
 }

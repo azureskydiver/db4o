@@ -16,13 +16,13 @@ public class DataObjectReflector implements IReflect {
     }
 
     public IClass forName(String className) throws ClassNotFoundException {
-        return null;
+        return new DataObjectClass(className);
     }
 
     public IClass forClass(Class clazz) {
         IClass result = (IClass)_iClassByNativeClass.get(clazz);
         if (result == null) {
-            result = new DataObjectClass(clazz);
+            //result = new DataObjectClass(clazz);
             _iClassByNativeClass.put(clazz, result);
         }
         return result;
