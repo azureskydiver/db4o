@@ -22,7 +22,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     protected String i_name;
     protected int i_objectLength;
 
-    private YapStream i_stream;
+    protected final YapStream i_stream;
 
     byte[] i_nameBytes;
     private YapReader i_reader;
@@ -32,6 +32,10 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     // for indexing purposes.
     // TODO: check race conditions, upon multiple calls against the same class
     int i_lastID;
+    
+    YapClass(YapStream stream){
+    	i_stream = stream;
+    }
     
     void activateFields(Transaction a_trans, Object a_object, int a_depth) {
         if(dispatchEvent(a_trans.i_stream, a_object, EventDispatcher.CAN_ACTIVATE)){
@@ -66,7 +70,6 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
     
     void addMembers(YapStream a_stream) {
-        i_stream = a_stream;
         bitTrue(YapConst.CHECKED_CHANGES);
         if (i_config != null) {
             ObjectTranslator ot = i_config.getTranslator();
@@ -406,13 +409,9 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 	        Config4Class config = configOrAncestorConfig();
 	        if (config != null && (config.i_cascadeOnDelete == 1)) {
 	            int preserveCascade = a_bytes.cascadeDeletes();
-	            // XXXXX
-	            if (Platform.isCollection(getJavaClass())) {
-	            // if (Platform.isCollection(classReflector(i_stream).getJavaClass())) {
+	            if (Platform.isCollection(classReflector(i_stream).getJavaClass())) {
 	                int newCascade =
-	                // XXXXX
-	                    preserveCascade + Platform.collectionUpdateDepth(getJavaClass()) - 3;
-	                    // preserveCascade + Platform.collectionUpdateDepth(classReflector(i_stream).getJavaClass()) - 3;
+	                    preserveCascade + Platform.collectionUpdateDepth(classReflector(i_stream).getJavaClass()) - 3;
 	                if (newCascade < 1) {
 	                    newCascade = 1;
 	                }
@@ -699,10 +698,11 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 
     // FIXME: REFLECTOR all callers should call reflectorClass
     public Class getJavaClass() {
+    	
         if (i_constructor == null) {
             return null;
         }
-        return classReflector().getJavaClass();
+        return classReflector(i_stream).getJavaClass();
     }
 
     YapClass[] getMembersDependancies() {
@@ -771,9 +771,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     public boolean hasField(YapStream a_stream, String a_field) {
-    // XXXXX
-        // if (Platform.isCollection(classReflector(i_stream).getJavaClass())) {
-        if (Platform.isCollection(getJavaClass())) {
+        if (Platform.isCollection(classReflector(i_stream).getJavaClass())) {
             return true;
         }
         return getYapField(a_field) != null;
@@ -784,10 +782,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     public boolean holdsAnyClass() {
-      // XXXXX
-      // return Platform.isCollection(classReflector(i_stream).getJavaClass());
-      return Platform.isCollection(getJavaClass());
-        
+      return Platform.isCollection(classReflector(i_stream).getJavaClass());
     }
 
     void incrementFieldsOffset1(YapReader a_bytes) {
@@ -805,7 +800,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         YapStream a_stream,
         YapClass a_ancestor,
         YapConstructor a_constructor) {
-        i_stream = a_stream;
+        // i_stream = a_stream;
         i_constructor = a_constructor;
         checkDb4oType();
         if (allowsQueries()) {
@@ -1000,9 +995,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     public boolean isArray() {
-    // XXXXX
-            // return Platform.isCollection(classReflector().getJavaClass());
-        return Platform.isCollection(getJavaClass());
+        return Platform.isCollection(classReflector(i_stream).getJavaClass());
     }
 
     public boolean isDirty() {
@@ -1147,10 +1140,8 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             if (a_bytes.getUpdateDepth() == YapConst.TRANSIENT) {
                 return stream.peekPersisted1(trans, id, depth);
             }
-
-			// XXXXX
-            // if (Platform.isValueType(classReflector().getJavaClass())) {
-            if (Platform.isValueType(getJavaClass())) {
+            
+            if (Platform.isValueType(classReflector(stream).getJavaClass())) {
 
                 // for C# value types only:
                 // they need to be instantiated fully before setting them
@@ -1308,7 +1299,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     byte[] readName(Transaction a_trans) {
-        i_stream = a_trans.i_stream;
+        // i_stream = a_trans.i_stream;
         i_reader = a_trans.i_stream.readReaderByID(a_trans, getID());
         if (i_reader != null) {
             return readName1(a_trans, i_reader);
@@ -1526,7 +1517,6 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     void setID(YapStream a_stream, int a_id) {
-        i_stream = a_stream;
         super.setID(a_stream, a_id);
     }
 
