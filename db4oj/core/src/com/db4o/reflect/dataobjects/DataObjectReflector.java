@@ -35,8 +35,9 @@ public class DataObjectReflector implements IReflect {
         return dataClass != null ? dataClass : _delegate.forName(className);
     }
 
-    public IClass forObject(Object a_object) {
-        return _delegate.forObject(a_object);
+    public IClass forObject(Object object) {
+    	if (object instanceof DataObject) return ((DataObject)object).dataClass();
+        return _delegate.forObject(object);
     }
 
     public boolean isCollection(IClass claxx) {

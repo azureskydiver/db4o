@@ -20,8 +20,8 @@ public class DataObjects extends Test {
         _objectIClass = _reflector.forClass(Object.class);
 	}
 
-	public void test() throws ClassNotFoundException {
-        _reflector.registerDataClass(acmeDataClass());
+	public void test() throws ClassNotFoundException {		
+		_reflector.registerDataClass(acmeDataClass());
         _iClass = _reflector.forName("com.acme.Person");
         _assert(_iClass.getName().equals("com.acme.Person"));
         _assert(_iClass.getSuperclass() == _objectIClass);
@@ -35,23 +35,32 @@ public class DataObjects extends Test {
         _assert(!_iClass.isInstance(otherDataClass().newInstance()));
         _assert(!_iClass.isInstance("whatever")); 
         
+        _assert(_reflector.forObject(_iClass.newInstance()) == _iClass);
+        
         tstFields();
+		tstReflectionDelegation();
+		
 
 	}
 
+	private void tstReflectionDelegation() throws ClassNotFoundException {
+		Reflection test = new Reflection(new DataObjectReflector(new CReflect(Thread.currentThread().getContextClassLoader())));
+		test.tstEverything();
+	}
+
     private DataClass otherDataClass() {
-        return new DataClass("anyName", _objectIClass, new DataField[0]);
+        return new DataClass("anyName", _objectIClass);
     }
 
     private DataClass subclass() {
-        return new DataClass("anyName", _iClass, new DataField[0]);
+        return new DataClass("anyName", _iClass);
     }
 
     private void tstFields() {
         IField surname = _iClass.getDeclaredField("surname");
         IField birthdate = _iClass.getDeclaredField("birthdate");
         IField[] fields = _iClass.getDeclaredFields();
-        _assert(fields.length == 2);
+        _assert(fields.length == 3);
         _assert(fields[0] == surname);
         _assert(fields[1] == birthdate);
         
@@ -62,14 +71,16 @@ public class DataObjects extends Test {
     }
 
     private DataClass acmeDataClass() {
-        DataClass result = new DataClass("com.acme.Person", _objectIClass, fields());
+        DataClass result = new DataClass("com.acme.Person", _objectIClass);
+        result.initFields(fields(result));
         return result;
     }
 
-    private DataField[] fields() {
+    private DataField[] fields(IClass personClass) {
         return new DataField[] {
                 new DataField("surname", _reflector.forClass(String.class)),
-                new DataField("birthdate", _reflector.forClass(Date.class))
+                new DataField("birthdate", _reflector.forClass(Date.class)),
+                new DataField("bestFriend", personClass)
         };
     }
 

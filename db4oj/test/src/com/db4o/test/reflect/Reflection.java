@@ -3,6 +3,7 @@
 package com.db4o.test.reflect;
 
 import com.db4o.reflect.*;
+import com.db4o.reflect.dataobjects.DataObjectReflector;
 import com.db4o.reflect.jdk.*;
 
 /**
@@ -25,10 +26,14 @@ public class Reflection extends Test {
 	private final IClass _classReflector;
 
     public Reflection() throws ClassNotFoundException {
-        _reflector = new CReflect(Thread.currentThread().getContextClassLoader());
-        _classReflector = _reflector.forName(TestReflectClass.class.getName());
+    	this(new CReflect(Thread.currentThread().getContextClassLoader()));
 	}
 
+	public Reflection(IReflect reflector) {
+        _reflector = reflector;
+        _classReflector = _reflector.forName(TestReflectClass.class.getName());
+	}
+	
 	public void testIClass() throws ClassNotFoundException {
 		IField[] fields = _classReflector.getDeclaredFields();
 		_assert(
@@ -98,6 +103,11 @@ public class Reflection extends Test {
 		tstIArray2(new long[] {1L,2L,3L});
 	}
 	
+	public void tstEverything() throws ClassNotFoundException {
+		testIClass();
+		testIArray();		
+	}
+
 	private void tstIArray1(Object[] elements){
 		IArray array = _reflector.array();
 		IClass clazz = _reflector.forObject(elements[0]);
@@ -133,5 +143,4 @@ public class Reflection extends Test {
 			_assert(array.get(arr,i).equals(array.get(obj, i)), "Array element comparison");
 		}
 	}
-
 }

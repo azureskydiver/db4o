@@ -13,7 +13,7 @@ class DataObject {
         _fieldValues = new Object[_class.getDeclaredFields().length];
     }
 
-    DataClass getDataClass() {
+    DataClass dataClass() {
         return _class;
     }
 
