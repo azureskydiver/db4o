@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.config.*;
+import com.db4o.reflect.*;
 
 class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     DeepClone {
@@ -68,6 +69,10 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
 
     String className() {
         return getName();
+    }
+    
+    IClass classReflector() throws ClassNotFoundException {
+    	return i_config.i_reflect.forName(i_name);
     }
 
     public void compare(ObjectAttribute comparator) {

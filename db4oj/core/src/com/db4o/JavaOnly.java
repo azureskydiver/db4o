@@ -37,46 +37,6 @@ class JavaOnly {
         return false;
     }
     
-    public static JDK jdk() {
-        JDK jdkWrapper = null;
-        String jdkName = "5";
-        if(Platform.classIsAvailable("java.lang.Enum")){
-            jdkWrapper = createJDKWrapper(jdkName);
-            if(jdkWrapper != null){
-                return jdkWrapper;
-            }
-        }
-        jdkName = "1_4";
-        if(Platform.classIsAvailable("java.nio.channels.FileLock")){
-            jdkWrapper = createJDKWrapper(jdkName);
-            if(jdkWrapper != null){
-                return jdkWrapper;
-            }
-        }
-        jdkName = "1_3";
-        if (Platform.methodIsAvailable("java.lang.Runtime","addShutdownHook",
-                new Class[] { Thread.class })){
-            jdkWrapper = createJDKWrapper(jdkName);
-            if(jdkWrapper != null){
-                return jdkWrapper;
-            }
-        }
-        jdkName = "1_2";
-        if (Platform.methodIsAvailable(Platform.ACCESSIBLEOBJECT,
-                "setAccessible",
-                new Class[] { boolean.class })){
-            jdkWrapper = createJDKWrapper(jdkName);
-            if(jdkWrapper != null){
-                return jdkWrapper;
-            }
-        }
-        return new JDK();
-    }
-    
-    private static JDK createJDKWrapper(String name){
-        return (JDK)Platform.createInstance("com.db4o.JDK_" + name);
-    }
-    
     public static void link(){
         Object obj = new TClass();
         obj = new TVector();

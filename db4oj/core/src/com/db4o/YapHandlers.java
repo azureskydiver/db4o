@@ -154,7 +154,7 @@ class YapHandlers {
 
 	// FIXME: REFLECTOR remove this, it's just needed to keep runnable
 	private void cacheClass(Class javaClass, YapClass yapClass) {
-		IClass claxx = Db4o.reflector().forClass(javaClass);
+		IClass claxx = _masterStream.i_config.i_reflect.forClass(javaClass);
 		i_classByClass.put(claxx, yapClass);
 	}
 

@@ -9,20 +9,21 @@ import com.db4o.reflect.*;
 
 public class CReflect implements IReflect{
     
-    private static CReflect reflect = null;
-    
-    public static CReflect getDefault() {
-        if (reflect == null)
-            reflect = new CReflect();
-        return reflect;
-    }
-	
+	private final ClassLoader _classLoader;
+
 	private final IArray i_array;
 	
 	private final Hashtable _byClass;
 	private final Hashtable _byName;
 	
+//	public CReflect(ClassLoader classLoader){
 	public CReflect(){
+		// FIXME: REFLECTOR pass ClassLoader
+		_classLoader = this.getClass().getClassLoader();
+		if(_classLoader == null){
+			throw new NullPointerException();
+		}
+		//_classLoader = classLoader;
 		i_array = new CArray();
 		_byClass = new Hashtable();
 		_byName = new Hashtable();
@@ -56,7 +57,7 @@ public class CReflect implements IReflect{
 		if(iClass != null){
 			return iClass;
 		}
-		Class clazz = Db4o.classForName(className);
+		Class clazz = _classLoader.loadClass(className);
 		if(clazz == null){
 			return null;
 		}
