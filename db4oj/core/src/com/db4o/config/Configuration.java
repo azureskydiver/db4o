@@ -4,6 +4,7 @@ package com.db4o.config;
 
 import java.io.*;
 
+import com.db4o.io.*;
 import com.db4o.messaging.*;
 import com.db4o.reflect.*;
 
@@ -224,6 +225,17 @@ public interface Configuration {
      * @return MessageSender 
      */
     public MessageSender getMessageSender();
+    
+    /**
+     * allows to configure db4o to use a customized byte IO adapter.
+     * <br><br>Derive from the abstract class {@link IoAdapter} to
+     * write your own. Possible usecases could be improved performance
+     * with a native library, mirrored write to two files or 
+     * read-on-write fail-safety control.<br><br>Sample IoAdapters
+     * are supplied with the distribution as source code.
+     * @param adapter - the IoAdapter
+     */
+    public void io(IoAdapter adapter);
     
     /**
      * allows to mark fields as transient with custom attributes.

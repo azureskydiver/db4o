@@ -1,56 +1,59 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.io.jdkdefault;
+package com.db4o.io;
 
 import java.io.*;
 
 import com.db4o.DTrace;
 import com.db4o.Platform;
 import com.db4o.Tuning;
-import com.db4o.io.ObjectFile;
 
-public class RandomAccessObjectFile extends ObjectFile {
+public class RandomAccessFileAdapter extends IoAdapter {
 
-    private int                            _blockSize = 1;
+    private RandomAccessFile _delegate;
 
-    private final RandomAccessFile _delegate;
+    private byte[]           _seekBytes;
+    
+    public RandomAccessFileAdapter(){
+    }
 
-    private final byte[]           _seekBytes;
-
-    public RandomAccessObjectFile(String path) throws FileNotFoundException {
+    private RandomAccessFileAdapter(String path, boolean lockFile, long initialLength) throws IOException {
         _delegate = new RandomAccessFile(path, "rw");
         if (Tuning.symbianSeek) {
             _seekBytes = new byte[500];
         } else {
             _seekBytes = null;
         }
-    }
-
-    public RandomAccessObjectFile(String path, long initialLength) throws IOException {
-        this(path);
         if(initialLength>0) {
 	        _delegate.seek(initialLength - 1);
 	        _delegate.write(new byte[] {0});
         }
+        if(lockFile){
+            Platform.lock(_delegate);
+        }
     }
 
     public void close() throws IOException {
+        try {
+            Platform.unlock(_delegate);
+        } catch (Exception e) {
+        }
         _delegate.close();
     }
 
-    public long length() throws IOException {
+    public long getLength() throws IOException {
         return _delegate.length();
     }
 
-    public void lock() {
-        Platform.lock(_delegate);
+    public IoAdapter open(String path, boolean lockFile, long initialLength) throws IOException {
+        return new RandomAccessFileAdapter(path, lockFile, initialLength);
     }
 
     public int read(byte[] bytes, int length) throws IOException {
         return _delegate.read(bytes, 0, length);
     }
 
-    public void regularSeek(long pos) throws IOException {
+    public void seek(long pos) throws IOException {
 
         if(DTrace.enabled){
             DTrace.REGULAR_SEEK.log(pos);
@@ -68,7 +71,7 @@ public class RandomAccessObjectFile extends ObjectFile {
                     _delegate.write(_seekBytes, 0, len);
                 } else {
                     _delegate.write(new byte[len]);
-                    regularSeek(pos);
+                    seek(pos);
                     return;
                 }
             }
@@ -83,10 +86,6 @@ public class RandomAccessObjectFile extends ObjectFile {
         // FIXME: fix on .NET and enable here 
         
         // _delegate.getFD().sync();
-    }
-
-    public void unlock() {
-        Platform.unlock(_delegate);
     }
 
     public void write(byte[] buffer, int length) throws IOException {
