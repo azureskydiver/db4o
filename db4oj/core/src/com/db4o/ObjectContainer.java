@@ -11,7 +11,7 @@ import com.db4o.query.*;
  * <br><br>The <code>ObjectContainer</code> interface provides methods
  * to store, retrieve and delete objects and to commit and rollback
  * transactions.
- * @see ExtObjectContainer for extended functionality.
+ * @see ExtObjectContainer ExtObjectContainer for extended functionality.
  */
 public interface ObjectContainer {
 	

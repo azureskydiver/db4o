@@ -7,7 +7,7 @@ import com.db4o.ext.*;
 /**
  * the db4o server class. 
  * @see Db4o#openServer(java.lang.String, int) Db4o.openServer
- * @see ExtObjectServer for extended functionality
+ * @see ExtObjectServer ExtObjectServer for extended functionality
  */
 public interface ObjectServer {
     /**

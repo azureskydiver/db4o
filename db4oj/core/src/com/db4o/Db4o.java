@@ -20,7 +20,7 @@ import com.db4o.reflect.*;
  * <a href="#configure()"><code>configure()</code></a> method.
  * <br><br>On running the <code>Db4o</code> class it prints the current
  * version to System.out.
- * @see ExtDb4o for extended functionality.
+ * @see ExtDb4o ExtDb4o for extended functionality.
  */
 public class Db4o {
 	static final Config4Impl i_config = new Config4Impl();
@@ -76,7 +76,7 @@ public class Db4o {
 	 * The <a href="config/Configuration.html"><code>Configuration</code></a>
 	 * can be overriden in each
 	 * <a href="ObjectContainer.html#configure()"><code>ObjectContainer</code></a>.<br><br>
-	 * @return the global ${@link Configuration configuration} context
+	 * @return the global {@link Configuration configuration} context
      */
 	public static Configuration configure(){
 		return i_config;
