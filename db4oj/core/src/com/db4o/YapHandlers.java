@@ -2,12 +2,8 @@
 
 package com.db4o;
 
-import java.lang.reflect.*;
-
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
-import com.db4o.reflect.jdk.*;
-import com.db4o.reflect.jdk.CConstructor;
 import com.db4o.types.*;
 
 /**
@@ -162,13 +158,7 @@ class YapHandlers {
         return 0;
     }
 
-    final boolean createConstructor(final YapStream a_stream,
-        final YapClass a_yapClass,
-        final IClass claxx
-         ) {
-        
-        
-        final IReflect reflector = a_stream.reflector();
+    final boolean createConstructor(final IClass claxx, boolean skipConstructor){
         
         if (claxx == null) {
             return false;
@@ -180,28 +170,13 @@ class YapHandlers {
         
         if(! Deploy.csharp){
 	        if(! Platform.callConstructor()){
-                if(reflector instanceof CReflect){
-    	            if(! a_yapClass.callConstructor(a_stream)){
-    		            Constructor constructor = Platform.jdk().serializableConstructor(claxx.getJavaClass());
-    		            if(constructor != null){
-    		                try{
-    		                    Object o = constructor.newInstance(null);
-    		                    if(o != null){
-                                    claxx.useConstructor(new CConstructor(reflector, constructor), null);
-                                    return true;
-    		                    }
-    		                }catch(Exception e){
-    		                    
-    		                }
-    		            }
-    	            } else{
-                        claxx.useConstructor(null, null);
-                    }
+                if(claxx.skipConstructor(skipConstructor)){
+                    return true;
                 }
 	        }
         }
         
-        if (!a_stream.i_config.i_testConstructors) {
+        if (! _masterStream.i_config.i_testConstructors) {
             return true;
         }
         
@@ -209,7 +184,7 @@ class YapHandlers {
             return true;
         }
         
-        if (reflector.constructorCallsSupported()) {
+        if (_masterStream.reflector().constructorCallsSupported()) {
             try {
                 
                 IConstructor[] constructors = claxx.getDeclaredConstructors();
@@ -414,7 +389,7 @@ class YapHandlers {
     		if(i_classByClass.get(claxx) != null){
     			return true;
     		}
-    		return Platform.isSecondClass(a_object.getClass());
+    		return Platform.isValueType(a_object.getClass());
     	}
     	return false;
     }

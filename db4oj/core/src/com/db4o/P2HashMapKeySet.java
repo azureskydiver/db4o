@@ -4,6 +4,8 @@ package com.db4o;
 
 import java.util.*;
 
+import com.db4o.reflect.*;
+
 /**
  *  
  */
@@ -99,9 +101,14 @@ class P2HashMapKeySet implements Set {
             i_map.checkActive();
             int size = i_map.i_size;
             if (a.length < size) {
+                Transaction trans = i_map.getTrans();
+                if(trans == null){
+                    Db4o.throwRuntimeException(29);
+                }
+                IReflect reflector = trans.reflector();
                 a =
-                    (Object[])java.lang.reflect.Array.newInstance(
-                        a.getClass().getComponentType(),
+                    (Object[])reflector.array().newInstance(
+                        reflector.forObject(a).getComponentType(),
                         size);
             }
             int j = 0;

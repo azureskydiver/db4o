@@ -91,10 +91,6 @@ public class Db4o {
 			new Message(msg,code,c4i.outStream());
 		}
     }
-    
-	static final void notAvailable(){
-		throwRuntimeException(29);
-	}
 	
     /**
      * opens an {@link ObjectContainer ObjectContainer}

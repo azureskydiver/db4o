@@ -73,7 +73,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     
     public void blockSize(int bytes){
        if (bytes < 1 || bytes > 127) {
-           Db4o.throwRuntimeException(2);
+           Db4o.throwRuntimeException(1);
        }
        
        if (i_stream != null) {
