@@ -28,9 +28,13 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
+import com.db4o.Db4o;
+import com.db4o.Platform;
 import com.db4o.browser.gui.controllers.BrowserController;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;
+import com.db4o.reflect.generic.GenericReflector;
+import com.db4o.reflect.jdk.JdkReflector;
 import com.swtworkbench.community.xswt.XSWT;
 
 /**
@@ -97,6 +101,7 @@ public class StandaloneBrowser implements IControlFactory {
 	}
 
 	public static void main(String[] args) {
+		Db4o.configure().reflectWith(new GenericReflector(new JdkReflector(StandaloneBrowser.class.getClassLoader())));
         SWTProgram.registerCloseListener(BrowserCore.getDefault());
         SWTProgram.runWithLog(new StandaloneBrowser());
 	}
