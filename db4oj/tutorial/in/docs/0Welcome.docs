@@ -1,0 +1,50 @@
+.0 Welcome
+
+.b db4o is the native Java and .NET object database for embedded applications. ..
+
+This documentation and tutorial is intended to get you started ._
+with db4o and to be a reliable companion while you develop with db4o. ._ 
+
+Before you start, please make sure that you have downloaded the latest ._
+db4o distribution from the  .l http://www.db4o.com db4objects website .. .
+
+.? java
+The db4o Java distribution comes as one zip file, db4o-4.0-java.zip. When ._
+you unzip this file, you get the following directory structure:
+
+.g directoryjava.jpg ..
+
+..?
+.? net The db4o .NET distribution comes as one MSI installer file, ._
+db4o-4.0-net.msi. After you run the installer, you get the following directory ._
+structure:
+
+.g directorynet.jpg ..
+
+..?
+This tutorial comes in multiple versions. Make sure ._
+that you use the right one for the right purpose.
+
+.? net .b db4o-4.0/doc/tutorial/db4o-4.0-browser.exe .. 
+This is the interactive tutorial application for .NET. Examples can be ._
+run "live" against a db4o database from within the application. 
+..?
+.? java .b db4o-4.0/doc/tutorial/index.html .. 
+This is the interactive HTML tutorial. Examples can be run "live" ._
+against a db4o database from within the browser. ._
+In order to use the interactive functionality ._
+a Java JRE 1.3 or above needs to be installed and integrated ._
+into the browser. Java security settings have to allow applets to be ._
+run.
+
+..? ._
+.b db4o-4.0/doc/tutorial/db4o-4.0-tutorial.pdf .. 
+The PDF version of the tutorial allows best fulltext ._
+search capabilities.
+
+.b Java and .NET ..
+db4o is available for Java and for .NET. This tutorial was ._
+written for  .? java Java . ..? .? net .NET. ..? ._
+The structure of the  .? java .NET ..? .? net Java ..? ._
+distribution is slightly different, so please use the tutorial ._
+for the version that you plan to experiment with first.

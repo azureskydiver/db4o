@@ -1,0 +1,67 @@
+.0 First Glance ..
+Before diving straight into the first source code samples ._
+let's get you familiar with some basics.
+
+.1 The db4o engine... ..
+The db4o object database engine consists of one single jar file. ._
+This is all that you need to program against. The versions ._
+supplied with the distribution can be found in /db4o-4.0/lib/.	
+
+.b db4o-4.0-java1.1.jar ..
+will run with most Java JDKs that supply JDK 1.1.x functionality ._
+such as reflection and Exception handling. That includes many ._
+IBM J9 configurations, Symbian and Savaje.
+
+.b db4o-4.0-java1.4.jar ..
+is built for all Java JDKs between 1.2 and 5.0.
+
+.1 Installation ..
+If you add one of the above db4o-*.jar files to your CLASSPATH ._
+db4o is installed. ._
+In case you work with an integrated development environment like ._
+.l http://www.eclipse.org Eclipse ..  (We really recommend Eclipse, ._
+it's free.) you would copy the db4o-*.jar to a /lib/ ._
+folder under your project and add db4o to your project as ._
+a library.
+
+Here is how to add the db4o to an Eclipse project
+- create a folder named "lib" under your project directory, if it doesn't exist yet
+- copy db4o-*.jar to this folder
+- Right-click on your project in the Package Explorer and choose "refresh"
+- Right-click on your project in the Package Explorer again and choose "properties"
+- select "Java Build Path" in the treeview on the left
+- select the "Libraries" tabpage.
+- click "Add Jar"
+- the "lib" folder should appear below your project
+- choose db4o-*.jar in this folder
+- hit OK twice
+
+.1 API ..
+The API documentation for db4o is supplied as JavaDocs in 
+../db4o-4.0/doc/api/index.html. While you read through this ._
+tutorial it may be helpful to look into the API documentation occasionaly. ._
+For the start, the packages com.db4o and com.db4o.query are ._
+all that you need to worry about.
+
+Let's take a first brief look at one of the most important interfaces:
+.c com.db4o.ObjectContainer ..
+This will be your view of a db4o database:
+- An ObjectContainer can either be a database in single-user mode or ._
+a client to a db4o server.
+- Every ObjectContainer owns one transaction. All work is transactional. ._
+When you open an ObjectContainer, you are in a transaction, when you ._
+commit() or rollback(), the next transaction is started immediately.
+- Every ObjectContainer maintains it's own references to stored and ._
+instantiated objects. In doing so, it manages object identities.
+
+In case you wonder why you only see very few methods in an ObjectContainer, ._
+here is why: The db4o interface is supplied in two steps in two packages, ._
+com.db4o and  .b com.db4o.ext for the following reasons:
+- It's easier to get started, because the important methods are emphasized.
+- It will be easier for other products to copy the basic db4o interface.
+- We hint how a very-light-version of db4o should look like.
+
+Every com.db4o.ObjectContainer object also always is a ._
+com.db4o.ext.ExtObjectContainer. You can cast to ExtObjectContainer or you ._
+can call the #ext() method if you want to use advanced features.
+

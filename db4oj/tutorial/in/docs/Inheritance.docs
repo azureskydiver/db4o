@@ -1,0 +1,72 @@
+.n
+.a Inheritance ..
+.0 Inheritance ..
+
+So far we have always been working with the concrete (i.e. most ._
+specific type of an object. What about subclassing and interfaces?
+
+To explore this, we will differentiate between different kinds of ._
+sensors.
+
+.s com.db4o.f1.chapter4.SensorReadout ..
+
+.s com.db4o.f1.chapter4.TemperatureSensorReadout ..
+
+.s com.db4o.f1.chapter4.PressureSensorReadout ..
+
+Our car's snapshot mechanism is changed accordingly.
+
+.s com.db4o.f1.chapter4.Car ..
+
+.1 Storing ..
+
+Our setup code has not changed at all, just the internal workings of a snapshot.
+
+.s com.db4o.f1.chapter4.InheritanceExample#storeFirstCar -out ..
+
+.s com.db4o.f1.chapter4.InheritanceExample#storeSecondCar -out ..
+
+.1 Retrieving ..
+
+db4o will provide us with all objects of the given type. To collect ._
+all instances of a given class, no matter whether they are subclass ._
+members or direct instances, we just provide a corresponding prototype.
+
+.s com.db4o.f1.chapter4.InheritanceExample#retrieveTemperatureReadoutsQBE ..
+
+.s com.db4o.f1.chapter4.InheritanceExample#retrieveAllSensorReadoutsQBE ..
+
+This is one more situation where QBE might not be applicable: What if ._
+the given type is an interface or an abstract class? Well, there's a little ._
+DWIM trick to the rescue: Class objects receive special handling with QBE.
+
+.s com.db4o.f1.chapter4.InheritanceExample#retrieveAllSensorReadoutsQBEAlternative ..
+
+And of course there's our query API to the rescue.
+
+.s com.db4o.f1.chapter4.InheritanceExample#retrieveAllSensorReadoutsQuery ..
+
+This procedure applies to all first class objects. We can simply query for all ._
+objects present in the database, for example.
+
+.s com.db4o.f1.chapter4.InheritanceExample#retrieveAllObjects ..
+
+.1 Updating and deleting ..
+
+...is just the same for all objects, no matter where they are situated ._
+in the inheritance tree.
+
+Just like we retrieved all objects from the database above, we can ._
+delete all stored objects to prepare for the next chapter.
+
+.s com.db4o.f1.chapter4.InheritanceExample#deleteAllObjects ..
+
+.1 Conclusion ..
+
+Now we have covered all basic OO features and the way they are handled by ._
+db4o. We will complete the first part of our db4o walkthrough in the ._
+.l Deep next chapter  ..l  by looking at deep object graphs, including recursive structures.
+
+.1 Full source ..
+
+.s com.db4o.f1.chapter4.InheritanceExample ..

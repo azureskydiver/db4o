@@ -1,0 +1,91 @@
+.n
+.a ClientServer ..
+.0 Client/Server ..
+
+Now that we have seen how transactions work in db4o conceptually, we ._
+are prepared to tackle concurrently executing transactions.
+
+We start by preparing our database in the familiar way.
+
+.s com.db4o.f1.chapter5.ClientServerExample#setFirstCar -out ..
+
+.s com.db4o.f1.chapter5.ClientServerExample#setSecondCar -out ..
+
+.1 Embedded server ..
+
+From the API side, there's no real difference between transactions ._
+executing concurrently within the same VM and transactions executed ._
+against a remote server. To use concurrent transactions within ._
+a single VM, we just open a db4o server on our database file, ._
+directing it to run on port 0, thereby declaring that no networking ._
+will take place.
+
+.s com.db4o.f1.chapter5.ClientServerExample#accessLocalServer -run ..
+
+Again, we will delegate opening and closing the server to our ._
+environment to focus on client interactions.
+
+.s com.db4o.f1.chapter5.ClientServerExample#queryLocalServer ..
+
+The transaction level in db4o is  .i read committed ..  . However, each ._
+client container maintains its own weak reference cache of already known ._
+objects. To make all changes committed by other clients immediately, we ._
+have to explicitly refresh known objects from the server. We will delegate ._
+this task to a specialized version of our listResult() method.
+
+.s com.db4o.f1.Util#listRefreshedResult +{} -run ..
+
+.s com.db4o.f1.chapter5.ClientServerExample#demonstrateLocalReadCommitted ..
+
+Simple rollbacks just work as you might expect now.
+
+.s com.db4o.f1.chapter5.ClientServerExample#demonstrateLocalRollback ..
+
+.1 Networking ..
+
+From here it's only a small step towards operating db4o over a TCP/IP network. ._
+We just specify a port number greater than zero ._
+and set up one or more accounts for our client(s).
+
+.s com.db4o.f1.chapter5.ClientServerExample#accessRemoteServer -run ..
+
+The client connects providing host, port, user name and password.
+
+.s com.db4o.f1.chapter5.ClientServerExample#queryRemoteServer ..
+
+Everything else is absolutely identical to the local server examples above.
+
+.s com.db4o.f1.chapter5.ClientServerExample#demonstrateRemoteReadCommitted ..
+
+.s com.db4o.f1.chapter5.ClientServerExample#demonstrateRemoteRollback ..
+
+.1 Conclusion ..
+
+That's it, folks. No, of course it isn't. There's much more to db4o ._
+we haven't covered yet: schema evolution, custom persistence for your classes, ._
+writing your own query objects, etc.
+
+This tutorial is work in progress. We will successively add chapters and ._
+incorporate feedback from the community into the existing chapters.
+
+We hope that this tutorial has helped to get you started with db4o. How ._
+should you continue now?
+
+- .i (Interactive version only) .. While this tutorial is basically sequential in ._
+nature, try to switch back and forth between the chapters and execute the ._
+sample snippets in arbitrary order. You will be working with the same ._
+database throughout; sometimes you may just get stuck or even induce ._
+exceptions, but you can always reset the database via the console window.
+
+- The examples we've worked through are included in your db4o distribution ._
+in full source code. Feel free to experiment with it.
+
+- I you're stuck, see if the FAQ can solve your problem, browse the information ._
+on our  .l http://www.db4o.com/ web site .. , check if your problem is submitted ._
+to  .l http://www.db4odev.com/bugzilla Bugzilla ..  or join our newsgroup at ._
+.l news://news.db4odev.com/db4o.users .. .
+
+
+.1 Full source ..
+
+.s com.db4o.f1.chapter5.ClientServerExample ..
