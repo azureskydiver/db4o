@@ -28,10 +28,6 @@ abstract class Array4 {
         return dim;
     }
     
-    public static IArray reflector(YapStream a_stream){
-    	return a_stream.reflector().array();
-    }
-
     private static final Object element(YapStream a_stream, Object a_array, int a_position) {
         try {
             return reflector(a_stream).get(a_array, a_position);
@@ -75,6 +71,10 @@ abstract class Array4 {
 
     public static final boolean isNDimensional(IClass a_class) {
         return a_class.getComponentType().isArray();
+    }
+    
+    public static IArray reflector(YapStream a_stream){
+        return a_stream.reflector().array();
     }
 
 	public static final int shape(

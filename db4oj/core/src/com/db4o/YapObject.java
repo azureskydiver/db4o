@@ -5,7 +5,10 @@ package com.db4o;
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
 
-final class YapObject extends YapMeta implements ObjectInfo{
+/**
+ * @exclude
+ */
+public final class YapObject extends YapMeta implements ObjectInfo{
     
 	private YapClass i_yapClass;
 	Object i_object;

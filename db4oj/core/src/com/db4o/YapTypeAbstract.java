@@ -57,7 +57,11 @@ abstract class YapTypeAbstract extends YapJavaClass implements YapType{
 		return i_linkLength;
 	}
 
-	Object read1(YapReader a_bytes) throws CorruptionException {
+    protected Class primitiveJavaClass(){
+        return null;
+    }
+    
+    Object read1(YapReader a_bytes) throws CorruptionException {
 		int offset = a_bytes._offset;
 		Object ret = read(a_bytes._buffer, a_bytes._offset);
 		a_bytes._offset = offset + linkLength();
