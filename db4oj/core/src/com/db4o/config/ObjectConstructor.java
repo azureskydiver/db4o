@@ -12,7 +12,7 @@ import com.db4o.*;
  * <br><br>
  * Before starting a db4o session, translator classes that implement the 
  * <code>ObjectConstructor</code> or 
- * <a href="ObjectTranslator.html"><code>ObjectTranslator</code></a>
+ * {@link ObjectTranslator ObjectTranslator}
  * need to be registered.<br><br>
  * Example:<br>
  * <code>
@@ -27,8 +27,7 @@ public interface ObjectConstructor extends ObjectTranslator {
 	 * <br><br>
 	 * @param container the ObjectContainer used
 	 * @param storedObject the object stored with 
-	 * <a href="ObjectTranslator.html#onStore(com.db4o.ObjectContainer, java.lang.Object)">
-	 * <code>ObjectTranslator.html#onStore()</code></a>.
+	 * {@link ObjectTranslator#onStore ObjectTranslator.onStore}.
 	 * @return the instantiated object.
 	 */
 	public Object onInstantiate(ObjectContainer container, Object storedObject);

@@ -12,7 +12,7 @@ import com.db4o.reflect.*;
  * configuration interface for db4o.
  * <br><br>This interface contains methods to configure db4o. All methods
  * should be called <b>before</b> starting the db4o engine.
- * <br><br><a href="../Db4o.html#configure()">Db4o.configure()</a>
+ * <br><br>{@link com.db4o.Db4o#configure Db4o.configure()}
  *  returns the single global Configuration object.
  */
 public interface Configuration {
@@ -25,24 +25,21 @@ public interface Configuration {
      * needs to be limited to a certain depth. Otherwise a possible root object
      * would completely instantiate all stored objects to memory.<br><br><b>db4o uses a
      * preconfigured "activation depth" of 5.</b><br><br>If an object is returned in an
-     *  <a href="../ObjectSet.html"><code>ObjectSet</code></a> as a result of a
-     * <a href="../ObjectContainer.html#get(java.lang.Object)">
-     * query</a> <code>
+     * {@link com.db4o.ObjectSet ObjectSet} as a result of a
+     * {@link com.db4o.ObjectContainer#get query} <code>
      * object.member1.member2.member3.member4.member5</code> will be instantiated.
      * member5 will have all it's members set to null. Primitive
      * types will have the default values respectively. In db4o terminology, the
      * state of member5 is called <code>DEACTIVATED</code>. member5 can be
      * activated by calling
-     * <a href="../ObjectContainer.html#activate(java.lang.Object, int)">
-     * <code>ObjectContainer#activate(member5, depth)</code></a>.
+     * {@link com.db4o.ObjectContainer#activate ObjectContainer#activate(member5, depth)}.
      * <br><br>
      * Note that raising the global activation depth will consume more memory and
      * have negative effects on the performance of first-time retrievals. Lowering
      * the global activation depth needs more individual activation work but can
      * increase performance of queries.<br><br>
-    	 * <a href="../ObjectContainer.html#deactivate(java.lang.Object, int)">
-     * <code>ObjectContainer#deactivate(Object, depth)</code></a> can be used to 
-     * manually free memory by deactivating objects.
+     * {@link com.db4o.ObjectContainer#deactivate ObjectContainer#deactivate(Object, depth)}
+     * can be used to manually free memory by deactivating objects.
      * <br><br><b>Examples: ../com/db4o/samples/activate.</b><br><br>
      * @param depth the desired global activation depth.
      * @see ObjectClass#maximumActivationDepth configuring classes individually
@@ -109,8 +106,7 @@ public interface Configuration {
 
     /**
      * turns 
-     * <a href="ObjectClass.html#maximumActivationDepth(int)">
-     * individual class activation depth configuration</a> on 
+     * {@link ObjectClass#maximumActivationDepth individual class activation depth configuration} on 
      * and off.
      * <br><br>This feature is turned on by default.<br><br>
      * @param flag false to turn the possibility to individually configure class
@@ -168,8 +164,8 @@ public interface Configuration {
      * configures the use of encryption.
      * <br><br>This method needs to be called <b>before</b> a database file
      * is created with the first 
-     * <a href="../Db4o.html#openFile(java.lang.String)">
-     * <code>Db4o.openFile()</code></a>.<br><br>If encryption is set to true,
+     * {@link com.db4o.Db4o#openFile(java.lang.String) Db4o.openFile()}.
+     * <br><br>If encryption is set to true,
      * you need to supply a password to seed the encryption mechanism.<br><br>
      * db4o database files keep their encryption format after creation.<br><br>
      * @param flag true for turning encryption on, false for turning encryption 
@@ -190,8 +186,8 @@ public interface Configuration {
      * can not be instantiated, the object will not be stored. By default,
      * execution will continue without any message or error. This method can
      * be used to configure db4o to throw an
-     * <a href="../ext/ObjectNotStorableException.html">
-     * <code>ObjectNotStorableException</code></a> if an object can not be stored.
+     * {@link com.db4o.ext.ObjectNotStorableException ObjectNotStorableException}
+     * if an object can not be stored.
      * <br><br>
      * The default for this setting is <b>false</b>.<br><br>
      * @param flag true to throw Exceptions if objects can not be stored.
@@ -278,7 +274,7 @@ public interface Configuration {
     public void lockDatabaseFile(boolean flag);
 
     /**
-     * returns an <a href="ObjectClass.html"><code>ObjectClass</code></a> object
+     * returns an {@link ObjectClass ObjectClass} object
      * to configure the specified class.
      * <br><br>
      * There are three options how to use this method.<br>
@@ -287,7 +283,7 @@ public interface Configuration {
      * - a Class object.<br>
      * - any object to be used as a template.<br><br>
      * @param clazz class name, Class object, or example object.<br><br>
-     * @return an instance of an <a href="ObjectClass.html"><code>ObjectClass</code></a>
+     * @return an instance of an {@link ObjectClass ObjectClass}
      *  object for configuration.
      */
     public ObjectClass objectClass(Object clazz);
@@ -296,8 +292,8 @@ public interface Configuration {
      * protects the database file with a password.
      * <br><br>To set a password for a database file, this method needs to be 
      * called <b>before</b> a database file is created with the first 
-     * <a href="../Db4o.html#openFile(java.lang.String)">
-     * <code>Db4o.openFile()</code></a>.<br><br>All further attempts to open
+     * {@link com.db4o.Db4o#openFile Db4o.openFile()}.
+     * <br><br>All further attempts to open
      * the file, are required to set the same password.<br><br>The password
      * is used to seed the encryption mechanism, which makes it impossible
      * to read the database file without knowing the password.<br><br>
@@ -308,17 +304,15 @@ public interface Configuration {
     /**
      * turns readOnly mode on and off.
      * <br><br>This method configures the mode in which subsequent calls to
-     * <a href="../Db4o.html#openFile(java.lang.String)">
-     * <code>Db4o.openFile()</code></a> will open files.<br><br>Readonly
-     * mode allows to open an unlimited number of reading
+     * {@link com.db4o.Db4o#openFile Db4o.openFile()} will open files.
+     * <br><br>Readonly mode allows to open an unlimited number of reading
      * processes on one database file. It is also convenient
      * for deploying db4o database files on CD-ROM.<br><br>If mixed access
      * using many readOnly and one readWrite session is used, there is no
      * guarantee that the data in the readOnly sessions will be kept up-to-date.
      * <br><br>
      * @param flag <code>true</code> for configuring readOnly mode for subsequent
-     * calls to <a href="../Db4o.html#openFile(java.lang.String)">
-     * <code>Db4o.openFile()</code></a>.
+     * calls to {@link com.db4o.Db4o#openFile Db4o.openFile()}.
      */
     public void readOnly(boolean flag);
 
@@ -393,9 +387,8 @@ public interface Configuration {
      * assigns a <code>PrintStream</code> where db4o is to print its event messages.
      * <br><br>Messages are useful for debugging purposes and for learning
      * to understand, how db4o works. The message level can be raised with
-     * <a href="Configuration.html#messageLevel(int)">
-     * <code>Db4o.configure().messageLevel()</code></a> to produce more detailed
-     * messages.
+     * {@link Configuration#messageLevel Db4o.configure().messageLevel()}
+     * to produce more detailed messages.
      * <br><br>Use <code>setOut(System.out)</code> to print messages to the
      * console.<br><br>
      * @param outStream the new <code>PrintStream</code> for messages.
@@ -466,8 +459,7 @@ public interface Configuration {
      * configures the storage format of Strings.
      * <br><br>This method needs to be called <b>before</b> a database file
      * is created with the first 
-     * <a href="../Db4o.html#openFile(java.lang.String)">
-     * <code>Db4o.openFile()</code></a>.
+     * {@link com.db4o.Db4o#openFile Db4o.openFile()}.
      * db4o database files keep their string format after creation.<br><br>
      * Turning Unicode support off reduces the file storage space for strings 
      * by factor 2 and improves performance.<br><br>
@@ -480,12 +472,12 @@ public interface Configuration {
     /**
      * specifies the global updateDepth.
      * <br><br>see the documentation of
-     * <a href="../ObjectContainer.html#set(java.lang.Object)">
-     * ObjectContainer.set()</a> for further details.<br><br>
+     * {@link com.db4o.ObjectContainer#set ObjectContainer.set()}
+     * for further details.<br><br>
      * The value be may be overridden for individual classes.<br><br>
      * The default setting is 0: Only the object passed to
-     * <a href="../ObjectContainer.html#set(java.lang.Object)">
-     * ObjectContainer.set()</a> will be updated.<br><br>
+     * {@link com.db4o.ObjectContainer#set ObjectContainer.set()}
+     * will be updated.<br><br>
      * @param depth the depth of the desired update.
      * @see ObjectClass#updateDepth
      * @see ObjectClass#cascadeOnUpdate
