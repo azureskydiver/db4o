@@ -1,0 +1,54 @@
+
+
+Getting Started
+----------------------------------
+
+If you have installed db4o using the RPM, you will find db4o
+files in your documentation and library folders on your machine.
+
+Depending on your Linux distribution, these folders may differ.
+Let's assume SuSE for the following:
+
+For the fastest start with db4o please work through the tutorial, 
+available in different formats in the following folder:
+/usr/share/doc/packages/db4o/tutorial/
+
+The HTML tutorial will get you the best overview:
+/usr/share/doc/packages/db4o/tutorial/index.html
+
+The PDF tutorial will work best for fulltext search:
+/usr/share/doc/packages/db4o/tutorial/db4o-X.x-tutorial.pdf
+
+The db4o engine is one single .dll library for Mono. You should
+find it here:
+/usr/lib/db4o/db4o.dll
+
+In this folder you will also find the complete db4o regression
+tests. It is recommended to run them on your machine, to help
+detect possible problems with your Mono installation:
+cd /usr/lib/db4o
+mono db4o-mono-test.exe
+
+
+About this software
+----------------------------------
+
+The software contained in this distribution is the open source
+object database engine "db4o" supplied by:
+
+db4objects Inc.
+1900 South Norfolk Street
+Suite 350
+San Mateo, CA, 94403
+USA 
+
+Make sure that you have downloaded the latest version from the
+db4objects website:
+
+http://www.db4objects.com
+
+db4o may be used under the GNU General Public License, GPL.
+You should have received a copy of the GPL with the download.
+
+
+Your db4o team.
