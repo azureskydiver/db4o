@@ -78,7 +78,7 @@ public class CClass implements IClass{
 	}
 
 	public boolean isAssignableFrom(IClass type) {
-		if(type == null){
+		if(!(type instanceof CClass)) {
 			return false;
 		}
 		return clazz.isAssignableFrom(((CClass)type).getJavaClass());
