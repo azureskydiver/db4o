@@ -360,7 +360,7 @@
 				<include name="src/**/*.cs" />
 			</fileset>
 			<fileset dir="${dir.n.tutorial.browser}">
-				<include name="bin/**/**" />
+				<include name="bin/**/*.dll" />
 			</fileset>
 		</copy>
 		<filehead path="${dir.dist.net.build.src}" before="using" fileext="cs" header="${content.gplheader}" />
