@@ -8,6 +8,11 @@ class JDK_5 extends JDK_1_4 {
     private Class enumClass;
     
     boolean storeStaticFieldValues(Class clazz) {
+        
+        if(clazz == null){
+            return false;
+        }
+        
         if(enumClass == null){
             try {
                 enumClass = Class.forName(Platform.ENUM);
