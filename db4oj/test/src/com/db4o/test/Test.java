@@ -27,10 +27,6 @@ public class Test extends AllTests {
     
     public static final boolean COMPARE_INTERNAL_OK = false;
 
-    public static void main(String[] args) {
-        throw new RuntimeException("This class is not intended to be run. Run AllTests.java.");
-    }
-
     public static boolean canCheckFileSize() {
         if (currentRunner != null) {
             if(!MEMORY_FILE) {
@@ -43,14 +39,8 @@ public class Test extends AllTests {
     public static void beginTesting(){
     	File file = new File(BLOB_PATH);
     	file.mkdirs();
-    	if(! file.exists()){
-    		try{
-				Class clazz = Test.class.getSuperclass().getSuperclass();
-				System.out.println("Configured BLOB_PATH setting is not available");
-				System.out.println("and it can not be created. Check the static");				System.out.println("variable BLOB_PATH in " + clazz.getName() + ".\r\n\r\n");
-    		}catch(Exception e){
-    			
-    		}
+    	if(! file.exists()) {
+			System.out.println("Unable to create blob directory: " + BLOB_PATH);
     	}
     }
     

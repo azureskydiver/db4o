@@ -88,17 +88,17 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     }
 
     protected void configure() {
-        for (int i = 0; i < testcases.length; i++) {
-            Object toTest = newInstance(testcases[i]);
+        for (int i = 0; i < _testCases.length; i++) {
+            Object toTest = newInstance(_testCases[i]);
             runMethod(toTest, "configure");
         }
     }
 
     private void runTests() {
         String cs = Test.clientServer ? "C/S" : "SOLO";
-        for (int i = 0; i < testcases.length; i++) {
-            System.out.println(cs + " testing " + testcases[i].getName());
-            Object toTest = newInstance(testcases[i]);
+        for (int i = 0; i < _testCases.length; i++) {
+            System.out.println(cs + " testing " + _testCases[i].getName());
+            Object toTest = newInstance(_testCases[i]);
             Test.open();
             if (!runStoreOne(toTest)) {
                 runMethod(toTest, "store");
@@ -111,10 +111,10 @@ public class AllTests extends AllTestsConfAll implements Runnable {
             } catch (InterruptedException e1) {
             }
             Test.open();
-            toTest = newInstance(testcases[i]);
+            toTest = newInstance(_testCases[i]);
             runTestOne(toTest);
-            toTest = newInstance(testcases[i]);
-            Method[] methods = testcases[i].getDeclaredMethods();
+            toTest = newInstance(_testCases[i]);
+            Method[] methods = _testCases[i].getDeclaredMethods();
             for (int j = 0; j < methods.length; j++) {
                 Method method = methods[j];
                 String methodName = method.getName();
@@ -197,8 +197,8 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     protected void logConfiguration() {
         System.out.println("Running " + getClass().getName() + " against\n"
             + Db4o.version() + "\n");
-        System.out.println("Using " + getClass().getSuperclass().getName()
-            + ".\n");
+        System.out.println("Using " + TEST_CONFIGURATION
+        	+ ".\n");
         System.out.println("SERVER_HOSTNAME: " + SERVER_HOSTNAME);
         System.out.println("SERVER_PORT: " + SERVER_PORT);
         System.out.println("FILE_SERVER: " + FILE_SERVER);
@@ -225,32 +225,30 @@ public class AllTests extends AllTestsConfAll implements Runnable {
             testCasesFromTestSuites();
         }
         
+        //FIXME Shuffle _testCases so that they run in pseudo-random order. This is to verify that test cases can run in any order.
+        
         Test.currentRunner = this;
     }
 
     private void testCasesFromTestSuites() {
-        int len = 0;
-        for (int i = 0; i < TEST_SUITES.length; i++) {
-            if(TEST_SUITES[i] != null){
-                len += TEST_SUITES[i].tests().length;
-            }
-        }
-        this.testcases=new Class[len];
-        int pos = 0;
-        for (int i = 0; i < TEST_SUITES.length; i++) {
-            if(TEST_SUITES[i] != null){
-                Class[] temp = TEST_SUITES[i].tests();
-                System.arraycopy(temp,0, testcases, pos, temp.length);
-                pos += temp.length;
-            }
-        }
+    	_testCases = new Class[0];
+    	for (int i = 0; i < TEST_SUITES.length; i++) {
+    		_testCases = concat(_testCases, TEST_SUITES[i].tests());
+    	}
     }
 
-    private void testCasesFromArgs(String[] testcasenames) {
-        testcases=new Class[testcasenames.length];
+	private Class[] concat(Class[] a, Class[] b) {
+		Class[] result = new Class[a.length + b.length];
+    	System.arraycopy(a,0, result,0       , a.length);
+    	System.arraycopy(b,0, result,a.length, b.length);
+    	return result;
+	}
+
+	private void testCasesFromArgs(String[] testcasenames) {
+        _testCases=new Class[testcasenames.length];
         for (int testidx = 0; testidx < testcasenames.length; testidx++) {
             try {
-                testcases[testidx]=Class.forName(testcasenames[testidx]);
+                _testCases[testidx]=Class.forName(testcasenames[testidx]);
             } catch (ClassNotFoundException e) {
                 System.err.println("Test case class not found: "+testcasenames[testidx]);
                 e.printStackTrace();
@@ -258,9 +256,8 @@ public class AllTests extends AllTestsConfAll implements Runnable {
             }
         }
     }
-    
-    
-    
-   private Class[] testcases;
+
+	
+   private Class[] _testCases;
 
 }

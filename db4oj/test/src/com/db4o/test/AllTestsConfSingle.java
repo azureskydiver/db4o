@@ -3,7 +3,9 @@
 package com.db4o.test;
 
 public class AllTestsConfSingle extends TestSuite{
-    
+
+	static protected final String TEST_CONFIGURATION = "AllTestsConfSingle";
+	
     static TestSuite[] TEST_SUITES = new TestSuite[]{        
         new AllTestsConfSingle(),
     };
@@ -83,5 +85,5 @@ public class AllTestsConfSingle extends TestSuite{
 	 * path to blobs held externally
 	 */
     public static String BLOB_PATH = "TEMP/db4oTestBlobs";
-    
+
 }
