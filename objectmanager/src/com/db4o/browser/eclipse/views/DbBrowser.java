@@ -82,7 +82,9 @@ public class DbBrowser extends ViewPart implements ISelectionProvider, ISelectio
             IStructuredSelection _selection = (IStructuredSelection) selection;
             if (_selection.size() == 1) {
                 Object selected = _selection.getFirstElement();
-                System.out.println(selected.getClass().getName());
+                
+//                System.out.println(selected.getClass().getName());
+                
                 if (selected instanceof ICompilationUnit) {
                     ICompilationUnit cu = (ICompilationUnit) selected;
                     selectType(cu.findPrimaryType().getFullyQualifiedName());

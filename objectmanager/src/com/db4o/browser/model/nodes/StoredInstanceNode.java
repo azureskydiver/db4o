@@ -86,7 +86,7 @@ public class StoredInstanceNode implements IModelNode {
 	 * @see com.db4o.browser.gui.ITreeNode#mayHaveChildren()
 	 */
 	public boolean hasChildren() {
-		return _instance.getClass().getDeclaredFields().length > 0;
+        return _database.reflector().forObject(_instance).getDeclaredFields().length > 0;
 	}
 	
 	public boolean equals(Object obj) {
