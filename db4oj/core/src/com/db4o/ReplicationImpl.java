@@ -224,7 +224,7 @@ class ReplicationImpl implements ReplicationProcess {
 	 * @see com.db4o.replication.ReplicationProcess#constrainModified(com.db4o.query.Query)
 	 */
 	public void whereModified(Query query) {
-		query.descend(VirtualField.VERSION).constrain(lastSynchronization()).greater();
+		query.descend(VirtualField.VERSION).constrain(new Long(lastSynchronization())).greater();
 	}
 
 	/* (non-Javadoc)
