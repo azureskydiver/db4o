@@ -57,7 +57,7 @@ class JDK_1_4 extends JDK_1_3 {
         if(reflectionFactory == null){
             return false;
         }
-        factoryMethod = Reflection4.method(Platform.REFLECTIONFACTORY, "newConstructorForSerialization", new Class[]{Class.class, Constructor.class});
+        factoryMethod = Reflection4.getMethod(Platform.REFLECTIONFACTORY, "newConstructorForSerialization", new Class[]{Class.class, Constructor.class});
         if(factoryMethod == null){
             return false;
         }
