@@ -46,7 +46,7 @@ class IxFileRange extends IxTree{
     public String toString(){
 //        return "";
         YapFile yf = stream();
-        Transaction trans = trans();
+        Transaction transaction = trans();
         YapReader reader = new YapReader(slotLength());
         StringBuffer sb = new StringBuffer();
         sb.append("IxFileRange");
@@ -55,7 +55,7 @@ class IxFileRange extends IxTree{
             reader.read(yf, address, _addressOffset);
             reader._offset = 0;
             sb.append("\n  ");
-            Object obj = handler().indexObject(trans, handler().readIndexEntry(reader));
+            Object obj = handler().indexObject(transaction, handler().readIndexEntry(reader));
             int parentID = reader.readInt();
             sb.append("Parent: " + parentID);
             sb.append("\n ");

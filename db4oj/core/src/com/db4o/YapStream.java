@@ -1370,16 +1370,16 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
             } else {
                 if (canUpdate()) {
-                    int id = yapObject.getID();
+                    int oid = yapObject.getID();
                     if(a_checkJustSet && i_justSet != null){
-                        if(id > 0 && (TreeInt.find(i_justSet, yapObject.getID()) != null)){
-                            return id;
+                        if(oid > 0 && (TreeInt.find(i_justSet, yapObject.getID()) != null)){
+                            return oid;
                         }
                     }
                     boolean doUpdate = (a_updateDepth == YapConst.UNSPECIFIED) || (a_updateDepth > 0);
                     if (doUpdate) {
                         dontDelete = false;
-                        a_trans.dontDelete(id, true);
+                        a_trans.dontDelete(oid, true);
                         yapObject.writeUpdate(a_trans, a_updateDepth);
                     }
                 }

@@ -178,13 +178,13 @@ class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
                 throw new IOException(Messages.get(38));
             }
         }
-        String tryPath = path + File.separator + fileName;
+        String lastTryPath = path + File.separator + fileName;
         if (!writeToServer) {
-            if (!(new File(tryPath).exists())) {
+            if (!(new File(lastTryPath).exists())) {
                 throw new IOException(Messages.get(39));
             }
         }
-        return new File(tryPath);
+        return new File(lastTryPath);
     }
 
     private String serverPath() throws IOException {

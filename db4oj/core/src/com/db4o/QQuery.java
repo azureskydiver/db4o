@@ -91,9 +91,9 @@ public class QQuery implements Query {
                     return constr;
                 }
 
-                Iterator4 i = i_constraints.iterator();
-                while (i.hasNext()) {
-                    QCon existingConstraint = (QConObject)i.next();
+                Iterator4 constraintsIterator = i_constraints.iterator();
+                while (constraintsIterator.hasNext()) {
+                    QCon existingConstraint = (QConObject)constraintsIterator.next();
                     boolean[] removeExisting = { false };
                     QCon newConstraint =
                         existingConstraint.shareParentForClass(clazz, removeExisting);

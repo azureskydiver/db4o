@@ -239,9 +239,9 @@ abstract class YapFile extends YapStream {
     }
     
     private int blocksFor(long bytes){
-        int blockSize = blockSize();
-        int result = (int)(bytes / blockSize);
-        if (bytes % blockSize != 0) result++;
+        int blockLen = blockSize();
+        int result = (int)(bytes / blockLen);
+        if (bytes % blockLen != 0) result++;
         return result;
     }
     
@@ -423,7 +423,7 @@ abstract class YapFile extends YapStream {
         myreader.read();
 
         byte firstFileByte = myreader.readByte();
-        byte blockSize = 1;
+        byte blockLen = 1;
 
         if (firstFileByte != YapConst.YAPBEGIN) {
             
@@ -431,7 +431,7 @@ abstract class YapFile extends YapStream {
                 Db4o.throwRuntimeException(17);
             }
             
-            blockSize = myreader.readByte();
+            blockLen = myreader.readByte();
             
         }else{
 	        if (myreader.readByte() != YapConst.YAPFILE) {
@@ -439,7 +439,7 @@ abstract class YapFile extends YapStream {
 	        }
         }
         
-        blockSize(blockSize);
+        blockSize(blockLen);
         
 // Test code to force a big database file        
         
@@ -453,7 +453,7 @@ abstract class YapFile extends YapStream {
         
         i_writeAt = blocksFor(fileLength());
 
-        i_configBlock = new YapConfigBlock(this, blockSize);
+        i_configBlock = new YapConfigBlock(this, blockLen);
         i_configBlock.read(myreader);
 
         // configuration lock time skipped
@@ -694,10 +694,10 @@ abstract class YapFile extends YapStream {
             int length = Tree.byteCount(i_freeBySize);
             int[] slot = newSlot(i_systemTrans, length);
             freeBySizeID = slot[0];
-            YapWriter writer = new YapWriter(i_systemTrans, length);
-            writer.useSlot(freeBySizeID, slot[1], length);
-            Tree.write(writer, i_freeBySize);
-            writer.writeEncrypt();
+            YapWriter sdwriter = new YapWriter(i_systemTrans, length);
+            sdwriter.useSlot(freeBySizeID, slot[1], length);
+            Tree.write(sdwriter, i_freeBySize);
+            sdwriter.writeEncrypt();
             i_systemTrans.writePointer(slot[0], slot[1], length);
         }
         YapWriter writer = getWriter(i_systemTrans, 0, HEADER_LENGTH);
