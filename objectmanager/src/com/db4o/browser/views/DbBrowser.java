@@ -135,10 +135,6 @@ public class DbBrowser extends ViewPart implements ISelectionProvider {
 	 */
 	public void createPartControl(Composite parent) {
         new DbBrowserPane(parent, SWT.NULL);
-//		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-//		viewer.setContentProvider(new ViewContentProvider());
-//		viewer.setLabelProvider(new ViewLabelProvider());
-//		viewer.setInput(getViewSite());
 	}
 
 

@@ -20,6 +20,8 @@ import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.db4o.browser.gui.tree.fieldNode.FieldNodeFactory;
+
 
 /**
  * Class InstanceNode.

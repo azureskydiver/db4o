@@ -21,6 +21,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
+import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
  * Class Model.
@@ -31,7 +32,7 @@ public class Model {
 	private static ObjectContainer container = null;
     
     public static void open() {
-        container=Db4o.openFile("formula1.yap");
+        container=Db4o.openFile("c:\\workspace\\com.db4o.browser\\formula1.yap");
     }
     
     public static StoredClass[] storedClasses() {
@@ -45,8 +46,8 @@ public class Model {
         	toReturn = Class.forName(clazz);
         }
         catch (Exception e) {
+            Logger.log().error(e, "Unable to Class.forName()");
             throw new RuntimeException();
-            // FIXME: Log this later...
         }
         return container.get(toReturn);
     }

@@ -18,6 +18,8 @@ package com.db4o.browser.gui.tree;
 
 import java.lang.reflect.Field;
 
+import com.db4o.browser.gui.tree.fieldNode.FieldNode;
+
 
 /**
  * Class PrimitiveFieldNode. Represents primitive types like Integer, int,
