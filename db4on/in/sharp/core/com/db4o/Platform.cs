@@ -81,6 +81,10 @@ namespace com.db4o {
             return typeof(System.Collections.IDictionary).IsAssignableFrom(var_class.getNetType()) ? 3 : 2 ;
         }
 
+        static internal Reflector createReflector(Config4Impl config){
+            return new com.db4o.reflect.net.NetReflector();
+        }
+
         static internal Object createReferenceQueue() {
             return new YapReferenceQueue();
         }
@@ -118,20 +122,23 @@ namespace com.db4o {
             }
         }
       
-        static internal Collection4 flattenCollection(Object obj) {
+        static internal Collection4 flattenCollection(YapStream stream, Object obj) {
             Collection4 collection41 = new Collection4();
-            flattenCollection1(obj, collection41);
+            flattenCollection1(stream, obj, collection41);
             return collection41;
         }
       
-        static internal void flattenCollection1(Object obj, Collection4 collection4) {
+        static internal void flattenCollection1(YapStream stream, Object obj, Collection4 collection4) {
 
             Array arr = obj as Array;
             if(arr != null){
+                ReflectArray reflectArray = stream.reflector().array();
+
                 Object[] flat = new Object[arr.Length];
-                Array4.flatten(obj, Array4.dimensions(obj),0, flat, 0);
+
+                reflectArray.flatten(obj, reflectArray.dimensions(obj),0, flat, 0);
                 for(int i = 0; i < flat.Length; i ++){
-                    flattenCollection1(flat[i], collection4);
+                    flattenCollection1(stream, flat[i], collection4);
                 }
             }else{
 
@@ -143,12 +150,12 @@ namespace com.db4o {
                     if(enumerator is IDictionaryEnumerator){
                         IDictionaryEnumerator dictEnumerator = enumerator as IDictionaryEnumerator;
                         while (enumerator.MoveNext()) {
-                            flattenCollection1(dictEnumerator.Key, collection4);
+                            flattenCollection1(stream, dictEnumerator.Key, collection4);
                         }
                     }else{
                         while (enumerator.MoveNext()) {
                             // recursive call to flatten Collections in Collections
-                            flattenCollection1(enumerator.Current, collection4);
+                            flattenCollection1(stream, enumerator.Current, collection4);
                         }
                     }
                 }else{
@@ -356,6 +363,10 @@ namespace com.db4o {
             }
         }
 
+        public static void registerCollections(Reflector reflector) {
+            // TODO: implement
+        }
+
         static internal void removeShutDownHook(Object yapStream, Object streamLock) {
             lock (typeof(Platform)) {
                 if (shutDownStreams != null && shutDownStreams.Contains(yapStream)) {
@@ -376,7 +387,7 @@ namespace com.db4o {
             }
         }
         
-        public static bool storeStaticFieldValues(Class clazz) {
+        public static bool storeStaticFieldValues(Reflector reflector, ReflectClass clazz) {
         	return false;
     	}
         
@@ -413,15 +424,15 @@ namespace com.db4o {
             return bytes;
         }
 
-        static internal YapTypeAbstract[] types() {
+        static internal YapTypeAbstract[] types(YapStream stream) {
             return new YapTypeAbstract[]{
-                                            new YapDouble(),
-                                            new YapSByte(),
-                                            new YapDecimal(),
-                                            new YapUInt(),
-                                            new YapULong(),
-                                            new YapUShort(),
-                                            new YapDateTime(),
+                                            new YapDouble(stream),
+                                            new YapSByte(stream),
+                                            new YapDecimal(stream),
+                                            new YapUInt(stream),
+                                            new YapULong(stream),
+                                            new YapUShort(stream),
+                                            new YapDateTime(stream),
             };
         }
 

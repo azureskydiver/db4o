@@ -6,7 +6,8 @@ namespace com.db4o {
 
     internal class YapDateTime : YapTypeStruct {
 
-        public YapDateTime(){}
+        public YapDateTime(com.db4o.YapStream stream) : base(stream) {
+        }
 
         public override int compare(object o1, object o2){
             return ((DateTime)o2 > (DateTime)o1) ? 1 : -1;

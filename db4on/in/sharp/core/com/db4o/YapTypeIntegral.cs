@@ -7,6 +7,9 @@ namespace com.db4o {
 
 	abstract internal class YapTypeIntegral :YapTypeAbstract
 	{
+        public YapTypeIntegral(com.db4o.YapStream stream) : base(stream) {
+        }
+
         public override bool isEqual(Object compare, Object with){
             // sheesh, it would have been nice to call ==,
             // but it doesn't seem to work 

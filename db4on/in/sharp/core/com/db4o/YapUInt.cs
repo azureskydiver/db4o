@@ -6,6 +6,10 @@ namespace com.db4o
 {
 	internal class YapUInt : YapTypeIntegral
 	{
+
+        public YapUInt(com.db4o.YapStream stream) : base(stream) {
+        }
+
         public override int compare(Object o1, Object o2){
             return ((uint)o2 > (uint)o1) ? 1 : -1;
         }
