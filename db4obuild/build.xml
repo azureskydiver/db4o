@@ -156,7 +156,13 @@
 	<target name="compiledllnet" depends="init, copycompact, sharpen">
 		
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" />
-		<csc srcdir="${dir.n.core.src}" targettype="library" destfile="${file.dll.net}" debug="false" warnlevel="0" optimize="true">
+		<csc
+			srcdir="${dir.n.core.src}"
+			targettype="library"
+			destfile="${file.dll.net}"
+			docfile="${file.xml.net}"
+			debug="false" warnlevel="0" optimize="true">
+			
 			<include name="*.cs" />
 			<exclude name="compact/**" />
 			<exclude name="mono/**" />
@@ -168,6 +174,7 @@
 		<exec executable="csc" dir="${dir.dist.net.compile}">
 			<arg value="/optimize" />
 			<arg value="/out:${file.dll.compact}" />
+			<arg value="/doc:${file.xml.compact}" />
 			<arg value="/target:library" />
 			<arg value="/warn:1" />
 			<arg value="/noconfig" />
@@ -177,7 +184,10 @@
 			<arg value="/recurse:*.cs" />
 		</exec>
 		<copy todir="${dir.dist.dll.net}">
-			<fileset dir="${dir.dist.net.compile}" includes="*.dll" />
+			<fileset dir="${dir.dist.net.compile}">
+				<include name="*.dll" />
+				<include name="*.xml" />
+			</fileset>
 		</copy>
 	</target>
 	
