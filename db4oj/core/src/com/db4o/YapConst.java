@@ -141,6 +141,13 @@ final class YapConst
     static final int DEAD = 7;
     static final int READING = 8;
     
+    static final int UNCHECKED = 0;
+    
+    // Universal speaking variables.
+    static final int NO = -1;
+    static final int YES = 1;
+    static final int DEFAULT = 0;
+    
 	public static final YapStringIOUnicode stringIO = new YapStringIOUnicode();
 	
 	public static RuntimeException virtualException(){
@@ -192,5 +199,5 @@ final class YapConst
         CLASS_STATICFIELD,
         CLASS_STATICCLASS
     };
-	
+
 }

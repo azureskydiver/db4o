@@ -16,6 +16,25 @@ package  com.db4o.config;
  * </code>
  */
 public interface ObjectClass {
+    
+    /**
+     * advises db4o to try instantiating objects of this class with/without
+     * calling constructors.
+     * <br><br>
+     * Not all JDKs / .NET-environments support this feature. db4o will
+     * attempt, to follow the setting as good as the enviroment supports.
+     * In doing so, it may call implementation-specific features like
+     * sun.reflect.ReflectionFactory#newConstructorForSerialization on the
+     * Sun Java 1.4.x/5 VM (not available on other VMs) and 
+     * FormatterServices.GetUninitializedObject() on
+     * the .NET framework (not available on CompactFramework).<br><br>
+     * This setting may also be set globally for all classes in
+     * {@link Configuration#callConstructors(boolean)}.<br><br>
+     * @param flag - specify true, to request calling constructors, specify
+     * false to request <b>not</b> calling constructors.
+	 * @see <a href="Configuration.html#callConstructors(boolean)">
+     */
+    public void callConstructor(boolean flag);
 	
 	
 	/**

@@ -1068,14 +1068,25 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         return length;
     }
     
-    boolean noConstructorNeeded() {
-        if(i_config != null && ! i_config.noConstructorNeeded() ){
-            return false;
+    boolean callConstructor(YapStream a_stream) {
+        int res = callConstructorSpecialized();
+        if(res != YapConst.DEFAULT){
+            return res == YapConst.YES;
+        }
+        return (a_stream.i_config.i_callConstructors == YapConst.YES);
+    }
+    
+    int callConstructorSpecialized(){
+        if(i_config!= null){
+            int res = i_config.callConstructor();
+            if(res != YapConst.DEFAULT){
+                return res;
+            }
         }
         if(i_ancestor != null){
-            return i_ancestor.noConstructorNeeded();
+            return i_ancestor.callConstructorSpecialized();
         }
-        return true;
+        return YapConst.DEFAULT;
     }
 
     int objectLength() {

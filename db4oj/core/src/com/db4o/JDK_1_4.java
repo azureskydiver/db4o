@@ -41,7 +41,7 @@ class JDK_1_4 extends JDK_1_3 {
 	Constructor serializableConstructor(Class clazz){
 	    if(reflectionFactory == null){
 	        if(! initSerializableConstructor()){
-	            Platform.noConstructorCheck = Platform.DONT_USE;
+	            Platform.callConstructorCheck = YapConst.YES;
 	            return null;
 	        }
 	    }
