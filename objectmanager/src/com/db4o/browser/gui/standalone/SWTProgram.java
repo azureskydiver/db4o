@@ -72,7 +72,7 @@ public abstract class SWTProgram {
         shell.open();
         
         while (aShellIsOpen()) {
-            display.readAndDispatch();
+        	if (!display.readAndDispatch()) display.sleep();
         }
         display.dispose();
         
@@ -98,7 +98,7 @@ public abstract class SWTProgram {
         
         while (aShellIsOpen()) {
             try {
-            	display.readAndDispatch();
+            	if (!display.readAndDispatch()) display.sleep();
             } catch (Throwable t) {
                 Logger.log().error(t, "Uncaught exception in SWT event loop");
             }

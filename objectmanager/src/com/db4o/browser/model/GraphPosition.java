@@ -110,6 +110,8 @@ public class GraphPosition {
             return false;
         }
 
+		// The path to the current object is defined by the sequence of
+		// parent indices stored in the path.selectedChild lists
         Iterator iOther = other.path.iterator();
         Iterator iSelf = path.iterator();
         
@@ -123,6 +125,18 @@ public class GraphPosition {
         }
         
         return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		int code=0;
+		for (Iterator iter = path.iterator(); iter.hasNext();) {
+			GraphPathNode node = (GraphPathNode) iter.next();
+			code += node.children.length + node.selectedChild + 1;
+		}
+		return code;
 	}
 }
 

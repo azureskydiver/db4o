@@ -54,12 +54,13 @@ public class LayoutGenerator {
 	private static final Perl5Util perl = new Perl5Util();
 	
 	private static String substitute(String token, String replaceWith, String in) {
+		replaceWith = perl.substitute("s%/%\\\\/%g", replaceWith);	// Automatically quote '/' characters
 		String perlCommand = "s/" + token + "/" + replaceWith + "/g";
 		String result = perl.substitute(perlCommand, in);
 		return result;
 	}
 	
-	public static String layoutString(IGraphIterator input, String layoutTemplate) {
+	public static String fillTemplateString(IGraphIterator input, String layoutTemplate) {
 		// Break it up into header, body template, and footer
 		ArrayList parts = new ArrayList();
 		perl.split(parts, FIELDS_REGEX, layoutTemplate);

@@ -3,6 +3,11 @@
  */
 package com.db4o.browser.model;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+
+import org.eclipse.jface.viewers.StructuredSelection;
+
 import com.db4o.browser.model.nodes.ClassNode;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.ext.StoredClass;
@@ -15,14 +20,14 @@ import com.db4o.ext.StoredClass;
  */
 public class DatabaseGraphIterator implements IGraphIterator {
     
-    private Database database;
+	private Database database;
     private StoredClass[] start;
     
-    private GraphPosition path = new GraphPosition();
+    private GraphPosition path = new GraphPosition(); // The parent stack
     
-    private IModelNode[] startModel;
-    private IModelNode[] currentFamily;
-    private int currentIndex=-1;
+    private IModelNode[] startModel;	// The list of classes in database
+    private IModelNode[] currentFamily;	// The current child nodes
+    private int currentIndex=-1;		// Index == one less than i.next()
     
     /**
      * (non-API)
@@ -56,29 +61,62 @@ public class DatabaseGraphIterator implements IGraphIterator {
 	 * @see com.db4o.browser.model.IGraphIterator#setPath(com.db4o.browser.model.GraphPosition)
 	 */
 	public void setPath(GraphPosition path) {
-		this.path = path;
-        GraphPathNode currentParent = path.pop();
+		GraphPosition copy = new GraphPosition(path);	// Avoid modifying the original
+        GraphPathNode currentParent = copy.pop();
         
         this.currentFamily = currentParent.children;
         this.currentIndex = currentParent.selectedChild;
+
+		this.path = path;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.IGraphIterator#setSelectedPath(com.db4o.browser.model.GraphPosition)
+	 */
+	public void setSelectedPath(GraphPosition path) {
+		setPath(path);
+		fireSelectionChangedEvent();
+	}
+	
+	private LinkedList selectionChangedListeners = new LinkedList();
+	
+	private void fireSelectionChangedEvent() {
+		for (Iterator i = selectionChangedListeners.iterator(); i.hasNext();) {
+			IGraphIteratorSelectionListener listener = (IGraphIteratorSelectionListener) i.next();
+			listener.selectionChanged();
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.IGraphIterator#addSelectionChangedListener(com.db4o.browser.gui.controllers.tree.SelectionChangedController)
+	 */
+	public void addSelectionChangedListener(IGraphIteratorSelectionListener selectionListener) {
+		selectionChangedListeners.add(selectionListener);
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.IGraphIterator#removeSelectionChangedListener(com.db4o.browser.gui.controllers.tree.SelectionChangedController)
+	 */
+	public void removeSelectionChangedListener(IGraphIteratorSelectionListener selectionListener) {
+		selectionChangedListeners.remove(selectionListener);
 	}
     
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.model.IGraphIterator#nextMayHaveChildren()
 	 */
-	public boolean nextMayHaveChildren() {
+	public boolean nextHasChildren() {
         if (!hasNext())
             return false;
-		return currentFamily[currentIndex+1].mayHaveChildren();
+		return currentFamily[currentIndex+1].hasChildren();
 	}
     
     /* (non-Javadoc)
 	 * @see com.db4o.browser.model.IGraphIterator#previousMayHaveChildren()
 	 */
-	public boolean previousMayHaveChildren() {
+	public boolean previousHasChildren() {
         if (!hasPrevious())
             return false;
-		return currentFamily[currentIndex].mayHaveChildren();
+		return currentFamily[currentIndex].hasChildren();
 	}
     
 	/* (non-Javadoc)
@@ -208,5 +246,23 @@ public class DatabaseGraphIterator implements IGraphIterator {
 	 */
 	public void set(Object o) {
 		// Not implemented
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (!(obj instanceof DatabaseGraphIterator)) {
+			return false;
+		}
+		
+		return obj.hashCode() == hashCode();
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	public int hashCode() {
+		return path.hashCode() + currentFamily.length + currentIndex + 1;
 	}
 }

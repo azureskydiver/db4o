@@ -22,4 +22,5 @@ public class GraphPathNode {
 
     public final IModelNode[] children;
     public final int selectedChild;
+
 }

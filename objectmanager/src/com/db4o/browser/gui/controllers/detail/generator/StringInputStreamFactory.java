@@ -10,7 +10,8 @@ import java.io.PipedOutputStream;
 import java.io.PrintStream;
 
 /**
- * StringInputStream.  A class that converts a java.lang.String into a java.io.InputStream.
+ * StringInputStreamFactory.  A class that converts a java.lang.String into a 
+ * java.io.InputStream.
  *
  * @author djo
  */

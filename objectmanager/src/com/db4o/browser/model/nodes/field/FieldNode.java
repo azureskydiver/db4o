@@ -57,8 +57,8 @@ public class FieldNode implements IModelNode {
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.ITreeNode#mayHaveChildren()
 	 */
-	public boolean mayHaveChildren() {
-		return delegate.mayHaveChildren();
+	public boolean hasChildren() {
+		return delegate.hasChildren();
 	}
 
 	/* (non-Javadoc)

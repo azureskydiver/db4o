@@ -74,7 +74,7 @@ public class InstanceNode implements IModelNode {
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.ITreeNode#mayHaveChildren()
 	 */
-	public boolean mayHaveChildren() {
+	public boolean hasChildren() {
 		return _instance.getClass().getDeclaredFields().length > 0;
 	}
 }

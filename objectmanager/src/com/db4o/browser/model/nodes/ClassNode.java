@@ -42,7 +42,7 @@ public class ClassNode implements IModelNode {
     /* (non-Javadoc)
      * @see com.db4o.browser.model.nodes.IModelNode#mayHaveChildren()
      */
-    public boolean mayHaveChildren() {
+    public boolean hasChildren() {
         return true;
     }
     
