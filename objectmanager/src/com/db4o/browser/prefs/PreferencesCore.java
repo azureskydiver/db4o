@@ -20,7 +20,7 @@ import com.db4o.query.Query;
 public class PreferencesCore {
 	private static PreferencesCore prefs = null;
 
-	private static ObjectContainer db;
+	private static transient ObjectContainer db;
 
 	private static final String preferencesFile = new File(new File(System
 			.getProperty("user.home")), ".explorer4objects.yap")

@@ -69,5 +69,11 @@ public class ActivationPreferences {
 		setInitialActivationDepth(DEFAULT_INITIAL_ACTIVATION_DEPTH);
 		setSubsequentActivationDepth(DEFAULT_SUBSEQUENT_ACTIVATION_DEPTH);
 	}
+	
+	/*
+	 * FIXME: Per-class activation settings go here
+	 */
+	
+//	private HashMap classActivations = new HashMap();
 
 }
