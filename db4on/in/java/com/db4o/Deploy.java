@@ -7,14 +7,14 @@ package  com.db4o;
  * @exclude
  */
 public final class Deploy {
- 	static final boolean demohop = true;
- 	static final boolean debug = false;
- 	static final boolean overwrite = true;
- 	static final boolean brackets = true;
-	static final boolean identifiers = true;
-	static final boolean flush = true;
-	static final boolean debugLong = true;
-	static final boolean deleteFile = false;
+    
+    public static final boolean debug = false;
+    public static final boolean overwrite = true;
+    public static final boolean brackets = true;
+    public static final boolean identifiers = true;
+    public static final boolean flush = true;
+    public static final boolean debugLong = true;
+    public static final boolean deleteFile = false;
 	public static final boolean csharp = true;
-	static final boolean debugQueries = false;
+    public static final boolean debugQueries = false;
 }
