@@ -2,7 +2,7 @@ TODO:
 
 - Generic reflector
    * StoredIterableFieldNode - Needs to use Platform.isCollection
-   * Need to write StoredMapFieldNode
+   * Need to write StoredMapFieldNode **DONE**
    * Make sure there are no java.lang.reflect calls where there shouldn't be
 
 - Catch up MockDatabase to the generic reflector impl
@@ -56,6 +56,16 @@ would be nice to be able to modify data too  :-)
 
 ----
 
+YapReader / YapWriter -- Byte array encoder/decoder
+
+Like taking a void* and typecasting it to some struct.
+
+Or like taking a memory buffer and reading it into a data division
+
+YapBit -- Like a sequential file that reads a bit at a time
+
+
+----
 
 - Follow up using the bottom-up strategy getting db4o into Red Hat.
 
