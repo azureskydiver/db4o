@@ -4,6 +4,7 @@ package com.db4o;
 
 import java.lang.reflect.*;
 import com.db4o.reflect.*;
+import com.db4o.test.jdk5.*;
 
 /**
  * Reflection implementation for Constructor to map to JDK reflection.
@@ -26,7 +27,12 @@ class CConstructor implements IConstructor{
 	
 	public Object newInstance(Object[] parameters){
 		try {
-			return constructor.newInstance(parameters);
+            Object obj = constructor.newInstance(parameters);
+            if(DTrace.enabled){
+                DTrace.NEW_INSTANCE.log(System.identityHashCode(obj));
+            }
+            return obj;
+			// return constructor.newInstance(parameters);
 		} catch (Exception e) {
 			return null;
 		} 
