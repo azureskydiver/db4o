@@ -6,23 +6,21 @@ import java.util.*;
 
 import com.db4o.reflect.*;
 import com.db4o.reflect.dataobjects.*;
+import com.db4o.reflect.jdk.*;
 
-public class TestDataObjects extends Test {
+public class DataObjects extends Test {
 
 	private final DataObjectReflector _reflector;
     private final IClass _objectIClass;
 
     private IClass _iClass;
 	
-	TestDataObjects(DataObjectReflector reflector) throws ClassNotFoundException {
-        _reflector = reflector;
+	public DataObjects() throws ClassNotFoundException {
+        _reflector = new DataObjectReflector(new CReflect(Thread.currentThread().getContextClassLoader()));
         _objectIClass = _reflector.forClass(Object.class);
-        out("Data Object test started...");
-		test();
-		out("----------------------------------------------------------");
 	}
 
-	private void test() throws ClassNotFoundException {
+	public void test() throws ClassNotFoundException {
         _reflector.registerDataClass(acmeDataClass());
         _iClass = _reflector.forName("com.acme.Person");
         _assert(_iClass.getName().equals("com.acme.Person"));
@@ -37,7 +35,7 @@ public class TestDataObjects extends Test {
         _assert(!_iClass.isInstance(otherDataClass().newInstance()));
         _assert(!_iClass.isInstance("whatever")); 
         
-        testFields();
+        tstFields();
 
 	}
 
@@ -49,7 +47,7 @@ public class TestDataObjects extends Test {
         return new DataClass("anyName", _iClass, new DataField[0]);
     }
 
-    private void testFields() {
+    private void tstFields() {
         IField surname = _iClass.getDeclaredField("surname");
         IField birthdate = _iClass.getDeclaredField("birthdate");
         IField[] fields = _iClass.getDeclaredFields();
