@@ -56,6 +56,7 @@ public class Database {
         if (container != null)
             container.close();
         container = null;
+		currentPath="";
     }
 
 
