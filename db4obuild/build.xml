@@ -1,6 +1,16 @@
 <?xml version="1.0"?>
 <project name="db4obuild" default="buildall" basedir=".">
 
+<!--
+	Depends on a custom local file 'machine.properties' with
+	the following entries:
+
+	dir.workspace=<the workspace where all projects reside>
+	file.compiler.jdk1.3=<JDK1.3 compatible javac>
+	file.rt.jar=<JDK1.3 compatible runtime jar>
+	font.pdf.base=<true type font>
+	dir.dll.wince=<path to .NET CE dll, leave empty if not available
+-->
 	<property file="machine.properties" />
 	<property file="ant.properties" />
 

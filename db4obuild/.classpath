@@ -10,6 +10,5 @@
 	<classpathentry kind="lib" path="lib/sharpeneclipse/osgi.jar"/>
 	<classpathentry kind="lib" path="lib/sharpeneclipse/resources.jar"/>
 	<classpathentry kind="lib" path="lib/sharpeneclipse/runtime.jar"/>
-	<classpathentry kind="lib" path="lib/exttools.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
