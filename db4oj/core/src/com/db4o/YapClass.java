@@ -1759,7 +1759,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 
     // Comparison_______________________
 
-    private Class i_compareTo;
+    private IClass i_compareTo;
     
 	public void prepareLastIoComparison(Transaction a_trans, Object obj) {
 	    prepareComparison(obj);
@@ -1772,7 +1772,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             }else{
                 i_lastID = (int)i_stream.getID(obj);
             }
-            i_compareTo = obj.getClass();
+            i_compareTo = reflector().forObject(obj);
         } else {
             i_compareTo = null;
         }
@@ -1790,7 +1790,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         if (obj == null) {
             return i_compareTo == null;
         }
-        return i_compareTo.isAssignableFrom(obj.getClass());
+        return i_compareTo.isAssignableFrom(reflector().forObject(obj));
     }
 
     public boolean isGreater(Object obj) {

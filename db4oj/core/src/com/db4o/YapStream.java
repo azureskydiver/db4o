@@ -209,7 +209,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     final void bind2(YapObject a_yapObject, Object obj){
         int id = a_yapObject.getID();
         yapObjectGCd(a_yapObject);
-        a_yapObject = new YapObject(getYapClass(obj.getClass(), false),
+        a_yapObject = new YapObject(getYapClass(reflector().forObject(obj), false),
             id);
         a_yapObject.setObjectWeak(this, obj);
         a_yapObject.setStateDirty();
@@ -691,10 +691,9 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return i_trans;
     }
     
-    final YapClass getYapClass(Class a_class, boolean a_create) {
-    	return getYapClass(reflector().forClass(a_class), a_create);
-    }
-
+    // FIXME: REFLECTOR an IClass could also hold a reference to
+    // a YapClass so we would improve considerably on lookup
+    // performance here.
     final YapClass getYapClass(IClass a_class, boolean a_create) {
         if (a_class == null) {
             return null;
@@ -866,7 +865,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     void initializeEssentialClasses(){
         for (int i = 0; i < YapConst.ESSENTIAL_CLASSES.length; i++) {
-            getYapClass(YapConst.ESSENTIAL_CLASSES[i], true);    
+            getYapClass(reflector().forClass(YapConst.ESSENTIAL_CLASSES[i]), true);    
         }
     }
 
@@ -973,7 +972,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         MemoryFile memoryFile = new MemoryFile();
         memoryFile.setInitialSize(223);
         memoryFile.setIncrementSizeBy(300);
-        getYapClass(obj.getClass(), true);
+        getYapClass(reflector().forObject(obj), true);
         YapObjectCarrier carrier = new YapObjectCarrier(this, memoryFile);
         carrier.i_showInternalClasses = i_showInternalClasses;
         carrier.set(obj);
@@ -1482,7 +1481,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                         } else {
                             if (a_forceUnknownDeactivate) {
                                 // Special handling to deactivate Top-Level unknown objects only.
-                                YapClass yc = getYapClass(a_object.getClass(),
+                                YapClass yc = getYapClass(reflector().forObject(a_object),
                                     false);
                                 if (yc != null) {
                                     yc.deactivate(i_trans, a_object, a_depth);
@@ -1537,7 +1536,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     YapClass storedClass1(Object clazz) {
         try {
-            String className = Config4Impl.classNameFor(clazz);
+            String className = i_config.classNameFor(clazz);
             if (className != null) {
                 return getYapClass(reflector().forName(className), false);
             }

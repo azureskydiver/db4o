@@ -39,33 +39,53 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl{
     }
 
     boolean initConfig(Config4Impl a_config) {
+        
         boolean modified = false;
-        Class myClass = this.getClass();
-        Class configClass = a_config.getClass();
-        Field[] fields = myClass.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            try {
-                Field field = configClass.getField(fields[i].getName());
-                if (field != null) {
-                    Object obj = field.get(a_config);
-                    if (obj != null) {
-                        YapClass yc = i_stream.i_handlers.getYapClassStatic(
-                        		a_config.reflector().forObject(obj)
-                            );
-                        if (yc instanceof YapClassPrimitive) {
-                            YapJavaClass yjc = (YapJavaClass) ((YapClassPrimitive) yc).i_handler;
-                            if (!yjc.primitiveNull().equals(obj)) {
-                                fields[i].set(this, obj);
-                                modified = true;
-                            }
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                // e.printStackTrace();
-            }
+        
+        if(i_generateVersionNumbers != a_config.i_generateVersionNumbers){
+            i_generateVersionNumbers = a_config.i_generateVersionNumbers;
+            modified = true;
         }
+        
+        if(i_generateUUIDs != a_config.i_generateUUIDs){
+            i_generateUUIDs = a_config.i_generateUUIDs;
+            modified = true;
+        }
+        
         return modified;
+        
+        
+        // Below is a reflection-based approach to copy all fields with the same name.
+        // Let's stay in manual mode for now so db4o can run without reflection.
+        
+        
+//        Class myClass = this.getClass();
+//        Class configClass = a_config.getClass();
+//        Field[] fields = myClass.getDeclaredFields();
+//        for (int i = 0; i < fields.length; i++) {
+//            try {
+//                Field field = configClass.getField(fields[i].getName());
+//                if (field != null) {
+//                    Object obj = field.get(a_config);
+//                    if (obj != null) {
+//                        YapClass yc = i_stream.i_handlers.getYapClassStatic(
+//                        		a_config.reflector().forObject(obj)
+//                            );
+//                        if (yc instanceof YapClassPrimitive) {
+//                            YapJavaClass yjc = (YapJavaClass) ((YapClassPrimitive) yc).i_handler;
+//                            if (!yjc.primitiveNull().equals(obj)) {
+//                                fields[i].set(this, obj);
+//                                modified = true;
+//                            }
+//                        }
+//                    }
+//                }
+//            } catch (Exception e) {
+//                // e.printStackTrace();
+//            }
+//        }
+//        return modified;
+        
     }
     
     MetaIndex getUUIDMetaIndex(){

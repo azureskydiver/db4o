@@ -35,7 +35,7 @@ final class YapClassAny extends YapClass {
 		Object a_object,
 		int a_depth,
 		boolean a_activate) {
-		YapClass yc = a_trans.i_stream.getYapClass(a_object.getClass(), false);
+		YapClass yc = a_trans.i_stream.getYapClass(a_trans.reflector().forObject(a_object), false);
 		if (yc != null) {
 			yc.cascadeActivation(a_trans, a_object, a_depth, a_activate);
 		}
