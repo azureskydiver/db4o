@@ -50,6 +50,7 @@ public class GenericField implements ReflectField {
     }
 
     public void setAccessible() {
+        // do nothing
     }
 
     void setIndex(int index) {
