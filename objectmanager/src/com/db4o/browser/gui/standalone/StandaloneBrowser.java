@@ -60,7 +60,7 @@ public class StandaloneBrowser implements IControlFactory {
         controller = new BrowserController(ui);
 		
 		// FIXME: hard-coding initial open...
-		String testFile=getClass().getResource("formula1.yap").getFile();
+		String testFile=getClass().getResource("reflector.yap").getFile();
 		controller.open(testFile);
 	}
     
@@ -131,7 +131,7 @@ public class StandaloneBrowser implements IControlFactory {
 	}
 
 	public static void main(String[] args) {
-		Db4o.configure().reflectWith(new GenericReflector(new JdkReflector(StandaloneBrowser.class.getClassLoader())));
+//		Db4o.configure().reflectWith(new GenericReflector(new JdkReflector(StandaloneBrowser.class.getClassLoader())));
         SWTProgram.registerCloseListener(BrowserCore.getDefault());
         SWTProgram.runWithLog(new StandaloneBrowser());
 	}

@@ -1537,6 +1537,61 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             return i_classCollection.storedClasses();
         }
     }
+		
+	public LeanStoredClass[] leanStoredClasses() {
+		YapWriter headerreader = getWriter(i_systemTrans, 0, HEADER_LENGTH);
+		headerreader.read();
+		headerreader.incrementOffset(2 + 2 * YapConst.INTEGER_BYTES);
+		int classcollid = headerreader.readInt();
+		YapWriter classcollreader = readWriterByID(i_systemTrans, classcollid);
+		classcollreader.read();
+		int numclasses = classcollreader.readInt();
+		LeanStoredClass[] classes = new LeanStoredClass[numclasses];
+		for (int classidx = 0; classidx < numclasses; classidx++) {
+			int classid = classcollreader.readInt();
+			classes[classidx] = leanStoredClassByID(classid);
+//			System.out.println(classes[classidx]);
+		}
+		return classes;
+	}
+
+	public LeanStoredClass leanStoredClassByName(String name) {
+		LeanStoredClass[] classes=leanStoredClasses();
+		for (int idx = 0; idx < classes.length; idx++) {
+			if(name.equals(classes[idx].name())) {
+				return classes[idx];
+			}
+		}
+		return null;
+	}
+	
+	public LeanStoredClass leanStoredClassByID(int id) {
+		YapWriter classreader=readWriterByID(i_systemTrans,id);
+		classreader.read();
+		int namelength= classreader.readInt();
+		String classname=i_stringIo.read(classreader,namelength);
+		classreader.incrementOffset(YapConst.INTEGER_BYTES); // what's this?
+		int ancestorid=classreader.readInt();
+		int indexid=classreader.readInt();
+		int numfields=classreader.readInt();
+		LeanStoredField[] fields=new LeanStoredField[numfields];
+		for (int i = 0; i < numfields; i++) {
+			String fieldname=null;
+			try {
+				fieldname=i_handlers.i_stringHandler.readShort(classreader);
+			} catch (CorruptionException e) {
+				return null;
+			}
+		    int handlerid=classreader.readInt();
+		    YapBit attribs=new YapBit(classreader.readByte());
+		    boolean isprimitive=attribs.get();
+		    boolean isarray = attribs.get();
+		    boolean ismultidimensional=attribs.get();
+			fields[i]=new LeanStoredField(fieldname,handlerid,isprimitive);
+		}
+		LeanStoredClass clazz=new LeanStoredClass(id,classname,ancestorid,fields);
+		return clazz;
+	}
 
     Object unmarshall(YapWriter yapBytes) {
         return unmarshall(yapBytes._buffer, yapBytes.getID());

@@ -367,8 +367,8 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @return the current transaction serial number.
      */
     public long version();
-    
-    
-    
-
+	
+	LeanStoredClass[] leanStoredClasses();
+	LeanStoredClass leanStoredClassByName(String name);
+	LeanStoredClass leanStoredClassByID(int id);
 }
