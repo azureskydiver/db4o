@@ -446,7 +446,7 @@ public class YapClient extends YapStream implements ExtClient {
     }
     
     void readBytes(byte[] bytes, int address, int addressOffset, int length){
-        YapConst.virtualException();
+        throw YapConst.virtualException();
     }
 
     void readBytes(byte[] a_bytes, int a_address, int a_length) {
