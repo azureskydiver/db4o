@@ -619,7 +619,7 @@ class YapField implements StoredField {
             i_handler = null;
             return this;
         }
-        if (i_name.indexOf(YapFieldVirtual.PREFIX) == 0) {
+        if (i_name.indexOf(YapConst.VIRTUAL_FIELD_PREFIX) == 0) {
             YapFieldVirtual[] virtuals = a_stream.i_handlers.i_virtualFields;
             for (int i = 0; i < virtuals.length; i++) {
                 if (i_name.equals(virtuals[i].i_name)) {

@@ -7,8 +7,6 @@ package com.db4o;
  */
 abstract class YapFieldVirtual extends YapField {
 
-    static final String PREFIX = "v4o";
-
     YapFieldVirtual() {
         super(null);
     }

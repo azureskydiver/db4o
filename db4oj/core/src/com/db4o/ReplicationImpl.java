@@ -4,11 +4,12 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.query.*;
+import com.db4o.replication.*;
 
 /**
  * 
  */
-class ReplicationImpl implements Db4oReplication, Db4oReplicationConflict {
+class ReplicationImpl implements ReplicationProcess, ReplicationConflict {
 
     final YapStream   i_source;
     final Transaction i_sourceTrans;
@@ -190,6 +191,11 @@ class ReplicationImpl implements Db4oReplication, Db4oReplicationConflict {
             vad.i_database = vas.i_database;
         }
     }
+    
+	public long lastSynchronization() {
+		return i_record.i_version;
+	}
+
 
     /* Db4oReplicationConflict interface */
     /* --------------------------------- */
@@ -217,5 +223,30 @@ class ReplicationImpl implements Db4oReplication, Db4oReplicationConflict {
     public void useDestination() {
         i_direction = TO_SOURCE;
     }
+
+	/* (non-Javadoc)
+	 * @see com.db4o.replication.ReplicationProcess#replicate(java.lang.Object)
+	 */
+	public void replicate(Object obj) {
+		
+		// TODO Auto-generated method stub
+	}
+
+	/* (non-Javadoc)
+	 * @see com.db4o.replication.ReplicationProcess#setDirection(com.db4o.ObjectContainer, com.db4o.ObjectContainer)
+	 */
+	public void setDirection(ObjectContainer relicateFrom, ObjectContainer replicateTo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.db4o.replication.ReplicationProcess#checkConflict(java.lang.Object)
+	 */
+	public void checkConflict(Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
+    
 
 }

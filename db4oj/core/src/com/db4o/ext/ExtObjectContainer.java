@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.replication.*;
 import com.db4o.types.*;
 
 /**
@@ -259,15 +260,15 @@ public interface ExtObjectContainer extends ObjectContainer {
      * starts replication to another {@link ObjectContainer}.
      * <br><br>An {@link ObjectContainer} can only be involved in a replication 
      * process with one other {@link ObjectContainer} at the same time.<br><br>
-     * The returned {@link Db4oReplication} interface provides methods to commit
+     * The returned {@link ReplicationProcess} interface provides methods to commit
      * and to cancel the replication process.<br><br>It also allows to register
      * a conflicthandler, in case objects have been modified in both
      * ObjectContainers, since the two ObjectContainers were last replicated
      * with eachother.<br><br> 
-     * @param destination the {@link ObjectContainer} to replicate to. 
-     * @return the {@link Db4oReplication} interface for this replication process.
+     * @param peer the {@link ObjectContainer} to replicate with. 
+     * @return the {@link ReplicationProcess} interface for this replication process.
      */
-    public Db4oReplication replicateTo(ObjectContainer destination);
+    public ReplicationProcess replicationBegin(ObjectContainer peer);
     
     
     /**
@@ -341,6 +342,15 @@ public interface ExtObjectContainer extends ObjectContainer {
      * returns an array of all {@link StoredClass} meta information objects.
      */
     public StoredClass[] storedClasses();
+    
+    /**
+     * returns the current transaction serial number.
+     * <br><br>This serial number can be used to query for modified objects
+     * and for replication purposes.
+     * @return the current transaction serial number.
+     */
+    public long version();
+    
     
     
 

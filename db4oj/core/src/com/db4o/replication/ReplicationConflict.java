@@ -1,18 +1,20 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.ext;
+package com.db4o.replication;
 
 import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.replication.*;
 
 
 /**
  * will be passed to the {@link Db4oCallback} registered
- * in a {@link Db4oReplication} with #setConflictHandler()
+ * in a {@link ReplicationProcess} with #setConflictHandler()
  * in case an object that is replicated was changed in
  * both {@link ObjectContainer}s 
  * 
  */
-public interface Db4oReplicationConflict {
+public interface ReplicationConflict {
     
     
     /**
