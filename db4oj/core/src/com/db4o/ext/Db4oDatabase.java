@@ -48,25 +48,35 @@ public class Db4oDatabase implements Db4oType{
      * comparison by signature.
      */
     public boolean equals(Object obj) {
-        if(obj instanceof Db4oDatabase) {
-            Db4oDatabase other = (Db4oDatabase)obj;
-            if(other.i_signature.length == i_signature.length) {
-                for (int i = 0; i < i_signature.length; i++) {
-                    if(i_signature[i] != other.i_signature[i]) {
-                        return false;
-                    }
-                }
-                return true;
-            }
+    	if(obj==this) {
+    		return true;
+    	}
+    	if(obj==null||this.getClass()!=obj.getClass()) {
+    		return false;
+    	}
+        Db4oDatabase other = (Db4oDatabase)obj;
+        // FIXME: Should never happen?
+        if(other.i_signature==null||this.i_signature==null) {
+        	return false;
         }
-        return false;
+        if(other.i_signature.length != i_signature.length) {
+        	return false;
+        }
+        for (int i = 0; i < i_signature.length; i++) {
+			if (i_signature[i] != other.i_signature[i]) {
+				return false;
+			}
+		}
+		return true;
     }
     
     /**
-     * gets the db4o ID, and may cache it for performance reasons.
-     * @param a_oc the ObjectContainer
-     * @return the db4o ID for the ObjectContainer
-     */
+	 * gets the db4o ID, and may cache it for performance reasons.
+	 * 
+	 * @param a_oc
+	 *            the ObjectContainer
+	 * @return the db4o ID for the ObjectContainer
+	 */
     public int getID(ExtObjectContainer a_oc) {
         if(a_oc != i_objectContainer) {
             i_objectContainer = a_oc;

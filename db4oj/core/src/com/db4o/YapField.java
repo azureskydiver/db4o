@@ -254,19 +254,28 @@ class YapField implements StoredField {
     }
 
     void deactivate(Transaction a_trans, Object a_onObject, int a_depth) {
-        if (alive()) {
-            try {
-                if (i_isPrimitive && !i_isArray) {
+        if (!alive()) {
+        	return;
+        }
+        try {
+            Class enumClazz=Db4o.classForName("java.lang.Enum");
+            boolean isEnumClass = enumClazz!=null && (enumClazz.isAssignableFrom(a_onObject.getClass()));
+			if (i_isPrimitive && !i_isArray) {
+                // FIXME: quickhack to avoid resetting fields of enums on defragment - needed? AllTests runs without this.
+                if(!isEnumClass) {
                     i_javaField.set(a_onObject, ((YapJavaClass) i_handler)
                         .primitiveNull());
-                } else {
-                    if (a_depth > 0) {
-                        cascadeActivation(a_trans, a_onObject, a_depth, false);
-                    }
-                    i_javaField.set(a_onObject, null);
                 }
-            } catch (Throwable t) {
+                return;
+			}
+            if (a_depth > 0) {
+                cascadeActivation(a_trans, a_onObject, a_depth, false);
             }
+            // FIXME: quickhack to avoid resetting fields of enums on defragment
+            if(!isEnumClass) {
+            	i_javaField.set(a_onObject, null);
+            }
+        } catch (Throwable t) {
         }
     }
 
