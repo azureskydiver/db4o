@@ -373,14 +373,18 @@ public final class Platform {
     }
 
     public static final void lock(RandomAccessFile file) {
-        if (hasNio()) {
-            // FIXME: libgcj 3.x isn't able to properly lock the database file
-            if (System.getProperty("java.fullversion").indexOf("GNU libgcj") >= 0) {
-                System.err.println("Warning: Running in libgcj 3.x--not locking database file!");
-            } else {
-            	jdk().lock(file);
-            }
+        if (!hasNio()) {
+            return;
         }
+
+        // FIXME: libgcj 3.x isn't able to properly lock the database file
+        String fullversion = System.getProperty("java.fullversion");
+        if (fullversion != null && fullversion.indexOf("GNU libgcj") >= 0) {
+            System.err.println("Warning: Running in libgcj 3.x--not locking database file!");
+            return;
+        }
+        
+        jdk().lock(file);
     }
 
     static final double longToDouble(long a_long) {
