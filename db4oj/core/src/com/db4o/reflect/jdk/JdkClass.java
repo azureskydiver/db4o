@@ -99,10 +99,6 @@ public class JdkClass implements ReflectClass{
 		return clazz.isPrimitive();
 	}
     
-    public boolean isValueType(){
-        return Platform.isValueType(clazz);
-    }
-	
 	public Object newInstance(){
 		try {
             if(constructor == null){

@@ -1184,7 +1184,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                 return stream.peekPersisted1(trans, id, depth);
             }
             
-            if (classReflector().isValueType()) {
+            if (Platform.isValueType(classReflector())) {
 
                 // for C# value types only:
                 // they need to be instantiated fully before setting them

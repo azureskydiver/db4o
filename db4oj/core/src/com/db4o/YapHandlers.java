@@ -391,7 +391,9 @@ class YapHandlers {
     		if(i_classByClass.get(claxx) != null){
     			return true;
     		}
-    		return Platform.isValueType(a_object.getClass());
+            if(Deploy.csharp){
+                return Platform.isValueType(claxx);
+            }
     	}
     	return false;
     }
