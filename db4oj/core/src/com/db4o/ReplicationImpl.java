@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.VirtualField;
 import com.db4o.query.Query;
 import com.db4o.replication.ReplicationConflictHandler;
@@ -23,16 +22,14 @@ class ReplicationImpl implements ReplicationProcess {
 
     final ReplicationRecord _record;
 
-    private Object    _objectA;
-    private Object    _objectB;
-    
     private YapObject _yapObjectA;
     
-    private int i_direction; 
+    private int _direction;
     
     private static final int IGNORE = 0;
     private static final int TO_B = -1;
     private static final int TO_A = 1;
+    private static final int CHECK_CONFLICT = -99;
 
 
     ReplicationImpl(YapStream peerA, ObjectContainer peerB, ReplicationConflictHandler conflictHandler) {
@@ -91,64 +88,67 @@ class ReplicationImpl implements ReplicationProcess {
 
     boolean toDestination(Object a_sourceObject) {
         synchronized(_peerA.i_lock){
-            _objectA = a_sourceObject;
+            Object objectA = a_sourceObject;
 	        _yapObjectA = _peerA.getYapObject(a_sourceObject);
 	        if (_yapObjectA != null) {
-	            VirtualAttributes vas = _yapObjectA.virtualAttributes(_transA);
-	            if (vas != null) {
-	                
-	                Object[] arr = _transB.objectAndYapObjectBySignature(vas.i_uuid, vas.i_database.i_signature); 
+	            VirtualAttributes virtualAttributesA = _yapObjectA.virtualAttributes(_transA);
+	            if (virtualAttributesA != null) {
+	                Object[] arr = _transB.objectAndYapObjectBySignature(virtualAttributesA.i_uuid, virtualAttributesA.i_database.i_signature); 
 	                if (arr[0] != null) {
-	                    YapObject yob = (YapObject) arr[1];
-	                    _objectB = arr[0];
-	                    VirtualAttributes vad = yob
-	                        .virtualAttributes(_transB);
-	                    if (vas.i_version <= _record._version
+	                    YapObject yapObjectB = (YapObject) arr[1];
+	                    Object objectB = arr[0];
+	                    VirtualAttributes vad = yapObjectB.virtualAttributes(_transB);
+	                    if (virtualAttributesA.i_version <= _record._version
 	                        && vad.i_version <= _record._version) {
-	                        _peerB.bind2(yob, _objectA);
+                            
+                            if(_direction != CHECK_CONFLICT){
+                                _peerB.bind2(yapObjectB, objectA);
+                            }
+                            
 	                        return true;
 	                    }
+                        
+                        int direction = ignore();
 	                    
-	                    if (vas.i_version > _record._version
+	                    if (virtualAttributesA.i_version > _record._version
 	                        && vad.i_version > _record._version) {
 	                        
-	                        i_direction = IGNORE;
+	                        Object prevailing = _conflictHandler.resolveConflict(this, objectA, objectB);
 	                        
-	                        Object prevailing = _conflictHandler.resolveConflict(this, _objectA, _objectB);
-	                        
-	                        if(prevailing == _objectA){
-	                        	i_direction = TO_B; 
+	                        if(prevailing == objectA){
+                                direction = toB();
 	                        }
 	                        
-	                        if(prevailing == _objectB){
-	                        	i_direction = TO_A; 
+	                        if(prevailing == objectB){
+                                direction = toA();
 	                        }
 	                        
-	                        
-	                        if(i_direction == IGNORE){
-	                            _peerB.bind2(yob, _objectA);
+	                        if(direction == IGNORE){
+	                            _peerB.bind2(yapObjectB, objectA);
 	                            return true;
 	                        }
 	                        
 	                    }else{
-	                        i_direction = TO_B;
+	                        direction = toB();
 	                        if(vad.i_version > _record._version){
-	                            i_direction = TO_A;
+                                direction = toA();
 	                        }
 	                    }
 	                    
-	                    if(i_direction == TO_A){
-	                        if(! yob.isActive()){
-	                            yob.activate(_transB, _objectB, 1, false);
+	                    if(direction == TO_A){
+	                        if(! yapObjectB.isActive()){
+	                            yapObjectB.activate(_transB, objectB, 1, false);
 	                        }
-	                        _peerA.bind2(_yapObjectA, _objectB);
-	                        _peerA.setNoReplication(_transA, _objectB, 1, true);
-	                    }else{
+	                        _peerA.bind2(_yapObjectA, objectB);
+	                        _peerA.setNoReplication(_transA, objectB, 1, true);
+	                    }
+                        
+                        if(direction == TO_B){
 	                        if( ! _yapObjectA.isActive()){
-	                            _yapObjectA.activate(_transA, _objectA, 1, false);
+	                            _yapObjectA.activate(_transA, objectA, 1, false);
 	                        }
-		                    _peerB.bind2(yob, _objectA);
-		                    _peerB.setNoReplication(_transB, _objectA, 1, true);
+		                    _peerB.bind2(yapObjectB, objectA);
+		                    _peerB.setNoReplication(_transB, objectA, 1, true);
 	                    }
 	                    
 	                    return true;
@@ -157,6 +157,33 @@ class ReplicationImpl implements ReplicationProcess {
 	        }
 	        return false;
         }
+    }
+    
+    private int toA(){
+        if(_direction == CHECK_CONFLICT){
+            return CHECK_CONFLICT;
+        }
+        if(_direction != TO_B){
+            return TO_A;
+        }
+        return IGNORE;
+    }
+    
+    private int toB(){
+        if(_direction == CHECK_CONFLICT){
+            return CHECK_CONFLICT;
+        }
+        if(_direction != TO_A){
+            return TO_B;
+        }
+        return IGNORE;
+    }
+    
+    private int ignore(){
+        if(_direction == CHECK_CONFLICT){
+            return CHECK_CONFLICT;
+        }
+        return IGNORE;
     }
     
     void destinationOnNew(YapObject a_yod){
@@ -175,39 +202,27 @@ class ReplicationImpl implements ReplicationProcess {
 	}
 
 	public void replicate(Object obj) {
-		
-	   // FIXME: _peerB.set(obj);
+	   _peerB.set(obj);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.db4o.replication.ReplicationProcess#setDirection(com.db4o.ObjectContainer, com.db4o.ObjectContainer)
-	 */
-	public void setDirection(ObjectContainer relicateFrom, ObjectContainer replicateTo) {
-		// TODO Auto-generated method stub
-		
+	public void setDirection(ObjectContainer replicateFrom, ObjectContainer replicateTo) {
+        if(replicateFrom == _peerA && replicateTo == _peerB){
+            _direction = TO_B;
+        }
+        if(replicateFrom == _peerB && replicateTo == _peerA){
+            _direction = TO_A;
+        }
 	}
 
-	/* (non-Javadoc)
-	 * @see com.db4o.replication.ReplicationProcess#checkConflict(java.lang.Object)
-	 */
 	public void checkConflict(Object obj) {
-		// TODO Auto-generated method stub
-		
+		int temp = _direction;
+        _direction = CHECK_CONFLICT;
+        replicate(obj);
+        _direction = temp;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.db4o.replication.ReplicationProcess#constrainModified(com.db4o.query.Query)
-	 */
 	public void whereModified(Query query) {
 		query.descend(VirtualField.VERSION).constrain(new Long(lastSynchronization())).greater();
-	}
-
-	/* (non-Javadoc)
-	 * @see com.db4o.replication.ReplicationProcess#force(java.lang.Object)
-	 */
-	public void force(Object obj) throws RuntimeException {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public ObjectContainer peerA() {
@@ -217,7 +232,6 @@ class ReplicationImpl implements ReplicationProcess {
 	public ObjectContainer peerB() {
 		return _peerB;
 	}
-
     
 
 }
