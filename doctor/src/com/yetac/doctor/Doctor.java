@@ -59,11 +59,19 @@ public class Doctor extends Task {
     
     public static void main(String[] args){
         Doctor doctor = new Doctor();
-        doctor.setName("doc40");
-        doctor.setWorkspace("C:/_Workspace");
+        doctor.configurejtutorial();
         doctor.execute();
     }
-
+    
+    public void configurejtutorial(){
+        setName("f1");
+        setHome("C:/_db4o/HEAD/db4oj/tutorial");
+        setInteractive(true);
+        setWorkspace("C:/_db4o/HEAD");
+        setInputSource("C:/_db4o/HEAD/db4oj/tutorial/src");
+        setArchive("doctor-applets.jar, db4o-4.3-java1.4.jar, f1.jar");
+        setVariable("java", true);
+    }
     
     public void execute() throws BuildException {
         
