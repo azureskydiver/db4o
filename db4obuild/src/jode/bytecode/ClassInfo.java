@@ -63,14 +63,14 @@ public class ClassInfo extends BinaryInfo
     }
     
     public static Enumeration getClassesAndPackages(String string) {
-	final Enumeration enum = classpath.listFiles(string.replace('.', '/'));
+	final Enumeration enu = classpath.listFiles(string.replace('.', '/'));
 	return new Enumeration() {
 	    public boolean hasMoreElements() {
-		return enum.hasMoreElements();
+		return enu.hasMoreElements();
 	    }
 	    
 	    public Object nextElement() {
-		String string_0_ = (String) enum.nextElement();
+		String string_0_ = (String) enu.nextElement();
 		if (!string_0_.endsWith(".class"))
 		    return string_0_;
 		return string_0_.substring(0, string_0_.length() - 6);

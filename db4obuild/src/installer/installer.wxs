@@ -1,12 +1,12 @@
 <?xml version='1.0'?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
 
-	<Product Id='734E3BAE-5661-42D6-8BC1-7ABA7238F8C5'
+	<Product Id='734E3BAE-5661-42D6-8BC2-7ABA7238F8C5'
   		Name='db4o @db4o.version.dotted@'
 		Language='1033'
 		Version='@db4o.version.full@'
 		Manufacturer='db4objects Inc.'
-		UpgradeCode='2288E309-DAB8-46AB-90B1-5BD57B3A39F4'>
+		UpgradeCode='2288E309-DAB8-46AB-90B2-5BD57B3A39F4'>
 		
 		<Package Id='????????-????-????-????-????????????'
 			Keywords='Installer'
