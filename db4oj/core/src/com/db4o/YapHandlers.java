@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 import com.db4o.types.*;
 
 /**
@@ -72,7 +73,9 @@ class YapHandlers {
     	_masterStream = a_stream;
     	a_stream.i_handlers = this;
     	
-    	initClassReflectors(a_stream.reflector());
+    	GenericReflector reflector = a_stream.reflector();
+    	
+    	initClassReflectors(reflector);
         
         i_indexes = new YapIndexes(a_stream);
         
@@ -115,6 +118,9 @@ class YapHandlers {
             i_yapClasses[i] = new YapClassPrimitive(a_stream, i_handlers[i]);
             i_yapClasses[i].i_id = i + 1; // note that we avoid 0 here
             i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
+            if(i < YAPANY){
+            	reflector.registerPrimitiveClass(i + 1, i_handlers[i].classReflector().getName());
+            }
             if (!Deploy.csharp) {
                 if (i_handlers[i].primitiveClassReflector() != null) {
                 	i_classByClass.put(i_handlers[i].primitiveClassReflector(), i_yapClasses[i]);
@@ -122,10 +128,12 @@ class YapHandlers {
             }
         }
         for (int i = 0; i < i_platformTypes.length; i++) {
-            int idx = i_platformTypes[i].getID() - 1;
+        	int id = i_platformTypes[i].getID();
+            int idx = id - 1;
+            reflector.registerPrimitiveClass(id, i_platformTypes[i].classReflector().getName());
             i_handlers[idx] = i_platformTypes[i];
             i_yapClasses[idx] = new YapClassPrimitive(a_stream, i_platformTypes[i]);
-            i_yapClasses[idx].i_id = idx + 1;
+            i_yapClasses[idx].i_id = id;
             if (i_yapClasses[idx].i_id > i_maxTypeID) {
                 i_maxTypeID = idx;
             }
@@ -353,7 +361,7 @@ class YapHandlers {
         return null;
     }
 
-    YapClass getYapClassStatic(int a_id) {
+    public YapClass getYapClassStatic(int a_id) {
         if (a_id > 0 && a_id <= i_maxTypeID) {
             return i_yapClasses[a_id - 1];
         }

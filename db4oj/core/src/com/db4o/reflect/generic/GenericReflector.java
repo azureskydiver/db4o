@@ -46,24 +46,29 @@ public class GenericReflector implements Reflector, DeepClone {
 
     public int collectionUpdateDepth(ReflectClass claxx) {
         return _delegate.collectionUpdateDepth(claxx);
+        
+        //TODO: will need knowledge for .NET collections here
+        
     }
 
     public boolean constructorCallsSupported() {
         return false;
     }
 
-    private void ensureDelegate(ReflectClass clazz){
-        if(clazz != null){
-            ReflectClass claxx = (ReflectClass)_classByName.get(clazz.getName());
-            if(claxx == null){
-                //  We don't have to worry about the superclass, it can be null
-                //  because handling is delegated anyway
-                String name = clazz.getName();
-                claxx = new GenericClass(this,clazz, name,null);
-                _classes.add(claxx);
-                _classByName.put(name, claxx);
-            }
+    private ReflectClass ensureDelegate(ReflectClass clazz){
+        if(clazz == null){
+        	return null;
         }
+        ReflectClass claxx = (ReflectClass)_classByName.get(clazz.getName());
+        if(claxx == null){
+            //  We don't have to worry about the superclass, it can be null
+            //  because handling is delegated anyway
+            String name = clazz.getName();
+            claxx = new GenericClass(this,clazz, name,null);
+            _classes.add(claxx);
+            _classByName.put(name, claxx);
+        }
+        return claxx;
     }
     
     public ReflectClass forClass(Class clazz) {
@@ -102,6 +107,8 @@ public class GenericReflector implements Reflector, DeepClone {
 
     public boolean isCollection(ReflectClass claxx) {
         return _delegate.isCollection(claxx);
+        
+        //TODO: will need knowledge for .NET collections here
     }
 
     public void registerCollection(Class clazz) {
@@ -112,75 +119,126 @@ public class GenericReflector implements Reflector, DeepClone {
         _delegate.registerCollectionUpdateDepth(clazz, depth);
     }
 
+    /**
+     * only used for testing for now, rename
+     */
     public void registerDataClass(GenericClass dataClass) {
-        _classByName.put(dataClass.getName(), dataClass);
+    	String name = dataClass.getName();
+    	if(_classByName.get(name) == null){
+    		_classByName.put(name, dataClass);
+    		_classes.add(dataClass);
+    	}
     }
     
 	public ReflectClass[] knownClasses(){
 		readAll();
-        return null;
+		ReflectClass[] ret = new ReflectClass[_classes.size()];
+		int j = 0;
+		Iterator4 i = _classes.iterator();
+		while(i.hasNext()){
+			ret[j++] = (ReflectClass)i.next();
+		}
+        return ret;
 	}
 	
 	private void readAll(){
-		
-		
-		
-	}
-	
-	public ClassReader[] leanStoredClasses() {
 		YapWriter headerreader = _stream.getWriter(_trans, 0, YapStream.HEADER_LENGTH);
 		headerreader.read();
-		headerreader.incrementOffset(2 + 2 * YapConst.INTEGER_BYTES);
+		headerreader.incrementOffset(2 + 2 * YapConst.YAPINT_LENGTH);
 		int classcollid = headerreader.readInt();
 		YapWriter classcollreader = _stream.readWriterByID(_trans, classcollid);
-		classcollreader.read();
+		// FIXME: read debug ClassCollection header
 		int numclasses = classcollreader.readInt();
-		ClassReader[] classes = new ClassReader[numclasses];
+		int[] classIDs = new int[numclasses];
+		
 		for (int classidx = 0; classidx < numclasses; classidx++) {
-			int classid = classcollreader.readInt();
-			classes[classidx] = leanStoredClassByID(classid);
-//			System.out.println(classes[classidx]);
+			classIDs[classidx] = classcollreader.readInt(); 
+			ensureClassAvailability(classIDs[classidx]);
 		}
-		return classes;
-	}
 
-	public ClassReader leanStoredClassByName(String name) {
-		ClassReader[] classes=leanStoredClasses();
-		for (int idx = 0; idx < classes.length; idx++) {
-			if(name.equals(classes[idx].name())) {
-				return classes[idx];
-			}
+		for (int classidx = 0; classidx < numclasses; classidx++) {
+			classIDs[classidx] = classcollreader.readInt(); 
+			ensureClassRead(classIDs[classidx]);
 		}
-		return null;
 	}
 	
-	public ClassReader leanStoredClassByID(int id) {
+	private GenericClass ensureClassAvailability (int id) {
+		GenericClass ret = (GenericClass)_classByID.get(id);
+		if(ret != null){
+			return ret;
+		}
+		YapWriter classreader=_stream.readWriterByID(_trans,id);
+		int namelength= classreader.readInt();
+		String classname= _stream.stringIO().read(classreader,namelength);
+		
+		ret = (GenericClass)_classByName.get(classname);
+		if(ret != null){
+			_classByID.put(id, ret);
+			return ret;
+		}
+		
+		
+		classreader.incrementOffset(YapConst.YAPINT_LENGTH); // skip empty unused int slot
+		int ancestorid=classreader.readInt();
+		
+		ReflectClass nativeClass = _delegate.forName(classname);
+		
+		ret = new GenericClass(this, nativeClass,classname, ensureClassAvailability(ancestorid));
+		
+		_classByID.put(id, ret);
+		
+		return ret;
+	}
+	
+	public void ensureClassRead(int id) {
+
+		GenericClass ret = (GenericClass)_classByID.get(id);
+		
 		YapWriter classreader=_stream.readWriterByID(_trans,id);
 		classreader.read();
 		int namelength= classreader.readInt();
 		String classname= _stream.stringIO().read(classreader,namelength);
-		classreader.incrementOffset(YapConst.INTEGER_BYTES); // what's this?
-		int ancestorid=classreader.readInt();
-		int indexid=classreader.readInt();
+		
+		ret = (GenericClass)_classByName.get(classname);
+		if(ret != null){
+			return;
+		}
+		
+		_classByName.put(classname, ret);
+		_classes.add(ret);
+		
+		
+		//		 skip empty unused int slot, ancestor, index
+		classreader.incrementOffset(YapConst.YAPINT_LENGTH * 3);
+		
 		int numfields=classreader.readInt();
-		FieldReader[] fields=new FieldReader[numfields];
+		
+		
+		GenericField[] fields=new GenericField[numfields];
 		for (int i = 0; i < numfields; i++) {
 			String fieldname=null;
 			int fieldnamelength= classreader.readInt();
 			fieldname = _stream.stringIO().read(classreader,fieldnamelength);
+			
 		    int handlerid=classreader.readInt();
+		    ReflectClass fieldClass = (ReflectClass)_classByID.get(handlerid);
+		    
 		    YapBit attribs=new YapBit(classreader.readByte());
 		    boolean isprimitive=attribs.get();
 		    boolean isarray = attribs.get();
 		    boolean ismultidimensional=attribs.get();
-			fields[i]=new FieldReader(fieldname,handlerid,isprimitive);
+		    
+			fields[i]=new GenericField(classname,fieldClass, isprimitive, isarray, ismultidimensional );
 		}
-		ClassReader clazz=new ClassReader(id,classname,ancestorid,fields);
-		return clazz;
 	}
 
-
-
-
+	public void registerPrimitiveClass(int id, String name) {
+		if(_classByID.get(id) != null){
+			return;
+		}
+		ReflectClass clazz = _delegate.forName(name);
+		clazz = ensureDelegate(clazz);
+		_classByID.put(id, clazz);
+	}
 
 }
