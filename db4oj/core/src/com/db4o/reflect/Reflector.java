@@ -43,7 +43,6 @@ public interface Reflector {
 	 */
 	public ReflectClass forClass(Class clazz);
 	
-	
 	/**
 	 * returns an IClass for an object or null if the passed object is null.
 	 */

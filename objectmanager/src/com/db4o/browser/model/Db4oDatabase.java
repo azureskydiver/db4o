@@ -16,6 +16,13 @@
  */
 package com.db4o.browser.model;
 
+import com.db4o.*;
+import com.db4o.browser.prefs.activation.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
+import com.db4o.reflect.db.*;
+import com.db4o.reflect.jdk.*;
+import com.swtworkbench.community.xswt.metalogger.*;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
@@ -40,6 +47,9 @@ public class Db4oDatabase implements Database {
      * @see com.db4o.browser.model.Database#open(java.lang.String)
      */
     public void open(String path) {
+		DBReflector reflector=new DBReflector();
+		reflector.setDelegate(new JdkReflector(Db4o.class.getClassLoader()));
+		Db4o.configure().reflectWith(reflector);
 		Db4o.configure().activationDepth(ActivationPreferences.getDefault().getInitialActivationDepth());
         if (!path.equals(currentPath)) {
             close();
@@ -48,6 +58,7 @@ public class Db4oDatabase implements Database {
                 throw new IllegalArgumentException("Could not open: " + path);
             currentPath = path;
         }
+		reflector.setDatabase(container);
     }
     
     /* (non-Javadoc)
@@ -66,7 +77,6 @@ public class Db4oDatabase implements Database {
 	public void setInitialActivationDepth(int initialActivationDepth) {
 		Db4o.configure().activationDepth(initialActivationDepth);
 	}
-
 
     ObjectContainer container = null;
     
