@@ -4,8 +4,8 @@
 	<property file="ant.properties" />
 
 	<target name="compiledb4odev" depends="" description="Compile db4odev and Doctor sources">
-		<delete dir="${dir.doctor.bin}" includes="**/*"/>
-		<delete dir="${dir.build.bin}" includes="**/*"/>
+		<delete dir="${dir.doctor.bin}" includes="**/*" failonerror="false"/>
+		<delete dir="${dir.build.bin}" includes="**/*" failonerror="false"/>
 		<mkdir dir="${dir.doctor.bin}" />
 		<javac srcdir="${dir.doctor.src}"
 				destdir="${dir.doctor.bin}"
