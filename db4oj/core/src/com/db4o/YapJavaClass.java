@@ -8,8 +8,8 @@ import com.db4o.reflect.*;
 abstract class YapJavaClass implements YapDataType {
     
     final YapStream _stream;
-    private IClass _classReflector;
-    private IClass _primitiveClassReflector;
+    private ReflectClass _classReflector;
+    private ReflectClass _primitiveClassReflector;
     
     public YapJavaClass(YapStream stream) {
         _stream = stream;
@@ -21,7 +21,7 @@ abstract class YapJavaClass implements YapDataType {
         a_bytes.incrementOffset(linkLength());
     }
 
-    public boolean canHold(IClass claxx) {
+    public boolean canHold(ReflectClass claxx) {
         return claxx == classReflector();
     }
 
@@ -100,7 +100,7 @@ abstract class YapJavaClass implements YapDataType {
         return read(a_writer);
     }
     
-    public IClass classReflector(){
+    public ReflectClass classReflector(){
         if(_classReflector == null){
             _classReflector = _stream.reflector().forClass(defaultValue().getClass());
             Class clazz = primitiveJavaClass();
@@ -115,7 +115,7 @@ abstract class YapJavaClass implements YapDataType {
      * 
      * classReflector() has to be called first, before this returns a value
      */
-    public IClass primitiveClassReflector(){
+    public ReflectClass primitiveClassReflector(){
     	return _primitiveClassReflector;  
     }
 

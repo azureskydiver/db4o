@@ -73,7 +73,7 @@ public class JDK {
 	void pollReferenceQueue(YapStream a_stream, Object a_referenceQueue) {
 	}
 	
-	public void registerCollections(IReflect reflector) {
+	public void registerCollections(Reflector reflector) {
 		
 	}
 	
@@ -88,7 +88,7 @@ public class JDK {
 	void setAccessible(Object a_accessible) {
 	}
     
-    boolean storeStaticFieldValues(IReflect reflector, IClass clazz) {
+    boolean storeStaticFieldValues(Reflector reflector, ReflectClass clazz) {
         return false;
     }
 	

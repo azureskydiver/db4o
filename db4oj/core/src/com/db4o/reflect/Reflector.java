@@ -14,13 +14,13 @@ package com.db4o.reflect;
  * to register the use of your implementation before opening database
  * files.
  */
-public interface IReflect {
+public interface Reflector {
 	
 	
 	/**
 	 * returns an IArray object, the equivalent to java.lang.reflect.Array.
 	 */
-	public IArray array();
+	public ReflectArray array();
 	
 	/**
 	 * specifiy whether parameterized Constructors are supported.
@@ -36,27 +36,27 @@ public interface IReflect {
 	 * returns an IClass class reflector for a class name or null
 	 * if no such class is found
 	 */
-	public IClass forName(String className);
+	public ReflectClass forName(String className);
 	
 	/**
 	 * returns an IClass for a Class
 	 */
-	public IClass forClass(Class clazz);
+	public ReflectClass forClass(Class clazz);
 	
 	
 	/**
 	 * returns an IClass for an object or null if the passed object is null.
 	 */
-	public IClass forObject(Object a_object);
+	public ReflectClass forObject(Object a_object);
 	
 	
-	public boolean isCollection(IClass claxx);
+	public boolean isCollection(ReflectClass claxx);
 	
 	public void registerCollection(Class clazz);
 	
 	public void registerCollectionUpdateDepth(Class clazz, int depth);
 	
-	public int collectionUpdateDepth(IClass claxx);
+	public int collectionUpdateDepth(ReflectClass claxx);
 	
 	
 }

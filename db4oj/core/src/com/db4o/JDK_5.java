@@ -7,9 +7,9 @@ import com.db4o.reflect.*;
 
 class JDK_5 extends JDK_1_4 {
     
-    private IClass enumClass;
+    private ReflectClass enumClass;
     
-    boolean storeStaticFieldValues(IReflect reflector, IClass claxx) {
+    boolean storeStaticFieldValues(Reflector reflector, ReflectClass claxx) {
         
         if(claxx == null){
             return false;

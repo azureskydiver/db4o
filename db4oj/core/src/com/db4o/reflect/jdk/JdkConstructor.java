@@ -11,18 +11,18 @@ import com.db4o.reflect.*;
 /**
  * Reflection implementation for Constructor to map to JDK reflection.
  */
-public class CConstructor implements IConstructor{
+public class JdkConstructor implements ReflectConstructor{
 	
-	private final IReflect reflector;
+	private final Reflector reflector;
 	private final Constructor constructor;
 	
-	public CConstructor(IReflect reflector, Constructor constructor){
+	public JdkConstructor(Reflector reflector, Constructor constructor){
 		this.reflector = reflector;
 		this.constructor = constructor;
 	}
 	
-	public IClass[] getParameterTypes(){
-		return CReflect.toMeta(reflector, constructor.getParameterTypes());
+	public ReflectClass[] getParameterTypes(){
+		return JdkReflector.toMeta(reflector, constructor.getParameterTypes());
 	}
 	
 	public void setAccessible(){

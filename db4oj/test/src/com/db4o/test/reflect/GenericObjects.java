@@ -5,18 +5,18 @@ package com.db4o.test.reflect;
 import java.util.*;
 
 import com.db4o.reflect.*;
-import com.db4o.reflect.dataobjects.*;
+import com.db4o.reflect.generic.*;
 import com.db4o.reflect.jdk.*;
 
-public class DataObjects extends Test {
+public class GenericObjects extends Test {
 
-	private final DataObjectReflector _reflector;
-    private final IClass _objectIClass;
+	private final GenericReflector _reflector;
+    private final ReflectClass _objectIClass;
 
-    private IClass _iClass;
+    private ReflectClass _iClass;
 	
-	public DataObjects() throws ClassNotFoundException {
-        _reflector = new DataObjectReflector(new CReflect(Thread.currentThread().getContextClassLoader()));
+	public GenericObjects() throws ClassNotFoundException {
+        _reflector = new GenericReflector(new JdkReflector(Thread.currentThread().getContextClassLoader()));
         _objectIClass = _reflector.forClass(Object.class);
 	}
 
@@ -44,22 +44,22 @@ public class DataObjects extends Test {
 	}
 
 	private void tstReflectionDelegation() throws ClassNotFoundException {
-		Reflection test = new Reflection(new DataObjectReflector(new CReflect(Thread.currentThread().getContextClassLoader())));
+		Reflection test = new Reflection(new GenericReflector(new JdkReflector(Thread.currentThread().getContextClassLoader())));
 		test.tstEverything();
 	}
 
-    private DataClass otherDataClass() {
-        return new DataClass("anyName", _objectIClass);
+    private GenericClass otherDataClass() {
+        return new GenericClass("anyName", _objectIClass);
     }
 
-    private DataClass subclass() {
-        return new DataClass("anyName", _iClass);
+    private GenericClass subclass() {
+        return new GenericClass("anyName", _iClass);
     }
 
     private void tstFields() {
-        IField surname = _iClass.getDeclaredField("surname");
-        IField birthdate = _iClass.getDeclaredField("birthdate");
-        IField[] fields = _iClass.getDeclaredFields();
+        ReflectField surname = _iClass.getDeclaredField("surname");
+        ReflectField birthdate = _iClass.getDeclaredField("birthdate");
+        ReflectField[] fields = _iClass.getDeclaredFields();
         _assert(fields.length == 3);
         _assert(fields[0] == surname);
         _assert(fields[1] == birthdate);
@@ -70,17 +70,17 @@ public class DataObjects extends Test {
         _assert(surname.get(person).equals("Cleese"));
     }
 
-    private DataClass acmeDataClass() {
-        DataClass result = new DataClass("com.acme.Person", _objectIClass);
+    private GenericClass acmeDataClass() {
+        GenericClass result = new GenericClass("com.acme.Person", _objectIClass);
         result.initFields(fields(result));
         return result;
     }
 
-    private DataField[] fields(IClass personClass) {
-        return new DataField[] {
-                new DataField("surname", _reflector.forClass(String.class)),
-                new DataField("birthdate", _reflector.forClass(Date.class)),
-                new DataField("bestFriend", personClass)
+    private GenericField[] fields(ReflectClass personClass) {
+        return new GenericField[] {
+                new GenericField("surname", _reflector.forClass(String.class)),
+                new GenericField("birthdate", _reflector.forClass(Date.class)),
+                new GenericField("bestFriend", personClass)
         };
     }
 

@@ -555,7 +555,7 @@ public abstract class QCon implements Constraint, Visitor4 {
         return null;
     }
 
-    QConClass shareParentForClass(IClass a_class, boolean[] removeExisting) {
+    QConClass shareParentForClass(ReflectClass a_class, boolean[] removeExisting) {
         // virtual
         return null;
     }

@@ -2,8 +2,8 @@
 
 package com.db4o;
 
-import com.db4o.reflect.IClass;
-import com.db4o.reflect.IReflect;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.Reflector;
 
 class YapArray extends YapIndependantType {
 	
@@ -30,7 +30,7 @@ class YapArray extends YapIndependantType {
         a_bytes.incrementOffset(linkLength());
     }
 
-    public boolean canHold(IClass claxx) {
+    public boolean canHold(ReflectClass claxx) {
         return i_handler.canHold(claxx);
     }
 
@@ -57,7 +57,7 @@ class YapArray extends YapIndependantType {
         }
     }
     
-    public IClass classReflector(){
+    public ReflectClass classReflector(){
     	return i_handler.classReflector();
     }
 
@@ -232,7 +232,7 @@ class YapArray extends YapIndependantType {
     }
 
 	private Object readCreate(Transaction a_trans, YapReader a_reader, int[] a_elements) {
-		IClass[] clazz = new IClass[1];
+		ReflectClass[] clazz = new ReflectClass[1];
 		a_elements[0] = readElementsAndClass(a_trans, a_reader, clazz);
 		if (i_isPrimitive) {
 			return Array4.reflector(a_trans.i_stream).newInstance(i_handler.primitiveClassReflector(), a_elements[0]);
@@ -261,7 +261,7 @@ class YapArray extends YapIndependantType {
         }
     }
     
-    int readElementsAndClass(Transaction a_trans, YapReader a_bytes, IClass[] clazz){
+    int readElementsAndClass(Transaction a_trans, YapReader a_bytes, ReflectClass[] clazz){
         int elements = a_bytes.readInt();
         clazz[0] = i_handler.classReflector();
         if (Debug.arrayTypes && elements < 0) {
@@ -297,7 +297,7 @@ class YapArray extends YapIndependantType {
     
     static Object[] toArray(YapStream a_stream, Object a_object) {
         if (a_object != null) {
-        	IClass claxx = a_stream.reflector().forObject(a_object);
+        	ReflectClass claxx = a_stream.reflector().forObject(a_object);
             if (claxx.isArray()) {
                 YapArray ya;
                 if(Array4.isNDimensional(claxx)){
@@ -315,9 +315,9 @@ class YapArray extends YapIndependantType {
         if (Debug.arrayTypes) {
             int yapClassID = 0;
             
-            IReflect reflector = a_bytes.i_trans.reflector();
+            Reflector reflector = a_bytes.i_trans.reflector();
             
-            IClass claxx = Array4.getComponentType(reflector.forObject(a_object));
+            ReflectClass claxx = Array4.getComponentType(reflector.forObject(a_object));
             
             boolean primitive = false;
             if(! Deploy.csharp){

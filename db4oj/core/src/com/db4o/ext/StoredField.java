@@ -31,7 +31,7 @@ public interface StoredField {
 	 * <br><br>For array fields this method will return the type of the array.
 	 * Use {link #isArray()} to detect arrays.  
 	 */
-	public IClass getStoredType();
+	public ReflectClass getStoredType();
 	
 	
 	/**

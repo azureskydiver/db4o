@@ -335,7 +335,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     abstract long currentVersion();
     
-    boolean createYapClass(YapClass a_yapClass, IClass a_class, YapClass a_superYapClass) {
+    boolean createYapClass(YapClass a_yapClass, ReflectClass a_class, YapClass a_superYapClass) {
         return a_yapClass.init(this, a_superYapClass, a_class, false);
     }
 
@@ -677,7 +677,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     // FIXME: REFLECTOR an IClass could also hold a reference to
     // a YapClass so we would improve considerably on lookup
     // performance here.
-    final YapClass getYapClass(IClass a_class, boolean a_create) {
+    final YapClass getYapClass(ReflectClass a_class, boolean a_create) {
         if (a_class == null) {
             return null;
         }
@@ -1120,7 +1120,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         i_classCollection.read(i_systemTrans);
     }
     
-    IReflect reflector(){
+    Reflector reflector(){
         return i_config.reflector();
     }
 
@@ -1318,7 +1318,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             YapObject yapObject = i_hcTree.hc_find(a_object);
             if (yapObject == null) {
             	
-                IClass claxx = reflector().forObject(a_object);
+                ReflectClass claxx = reflector().forObject(a_object);
                 yc = getYapClass(claxx, false);
                 if (yc == null) {
                     yc = getYapClass(claxx, true);
@@ -1521,7 +1521,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     YapClass storedClass1(Object clazz) {
         try {
             
-            IClass claxx = i_config.reflectorFor(clazz);
+            ReflectClass claxx = i_config.reflectorFor(clazz);
             if (claxx != null) {
                 return getYapClass(claxx, false);
             }

@@ -42,7 +42,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     PrintStream      i_outStream;
     String           i_password;
     boolean          i_readonly;
-    private IReflect _reflect;
+    private Reflector _reflect;
     Collection4      i_rename;
     int              i_reservedStorageSpace;
     boolean          i_singleThreadedClient;
@@ -233,7 +233,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
 
     public ObjectClass objectClass(Object clazz) {
         
-        IClass claxx = reflectorFor(clazz);
+        ReflectClass claxx = reflectorFor(clazz);
         
         if (claxx == null) {
             return null;
@@ -263,14 +263,14 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         i_readonly = flag;
     }
 
-	IReflect reflector() {
+	Reflector reflector() {
 		if(_reflect== null){
-			_reflect = new CReflect(i_classLoader); 
+			_reflect = new JdkReflector(i_classLoader); 
 		}
 		return _reflect;
 	}
 
-	public void reflectWith(IReflect reflect) {
+	public void reflectWith(Reflector reflect) {
 		
         if(i_stream != null){
         	Db4o.throwRuntimeException(46);   // see readable message for code in Messages.java
@@ -398,12 +398,12 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         i_weakReferences = flag;
     }
 
-    IClass reflectorFor(Object clazz) {
+    ReflectClass reflectorFor(Object clazz) {
         
         clazz = Platform.getTypeForClass(clazz);
         
-        if(clazz instanceof IClass){
-            return (IClass)clazz;
+        if(clazz instanceof ReflectClass){
+            return (ReflectClass)clazz;
         }
         
         if(clazz instanceof Class){

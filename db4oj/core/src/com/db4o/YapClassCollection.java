@@ -87,9 +87,9 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         }
     }
     
-    final boolean createYapClass(YapClass a_yapClass, IClass a_class) {
+    final boolean createYapClass(YapClass a_yapClass, ReflectClass a_class) {
         i_yapClassCreationDepth++;
-        IClass superClass = a_class.getSuperclass();
+        ReflectClass superClass = a_class.getSuperclass();
         YapClass superYapClass = null;
         if (superClass != null && superClass != i_stream.i_handlers.ICLASS_OBJECT) {
             superYapClass = getYapClass(superClass, true);
@@ -111,7 +111,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         return false;
     }
 
-    Collection4 forInterface(IClass claxx) {
+    Collection4 forInterface(ReflectClass claxx) {
         Collection4 col = new Collection4();
         YapClassCollectionIterator i = iterator();
         while (i.hasNext()) {
@@ -143,7 +143,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         return YapConst.YAPCLASSCOLLECTION;
     }
 
-    YapClass getYapClass(IClass a_class, boolean a_create) {
+    YapClass getYapClass(ReflectClass a_class, boolean a_create) {
         YapClass yapClass = (YapClass)i_yapClassByClass.get(a_class);
         if (yapClass == null) {
             byte[] bytes = i_stream.i_stringIo.write(a_class.getName());
@@ -287,11 +287,11 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         }
     }
 
-    YapClass readYapClass(YapClass yapClass, IClass a_class) {
+    YapClass readYapClass(YapClass yapClass, ReflectClass a_class) {
         i_yapClassCreationDepth++;
         if (yapClass != null  && yapClass.stateUnread()) {
             yapClass.createConfigAndConstructor(i_yapClassByBytes, i_stream, a_class);
-            IClass claxx = yapClass.classReflector();
+            ReflectClass claxx = yapClass.classReflector();
             if(claxx != null){
                 i_yapClassByClass.put(claxx, yapClass);
                 yapClass.readThis();

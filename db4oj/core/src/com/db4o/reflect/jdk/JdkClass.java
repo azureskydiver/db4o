@@ -10,55 +10,55 @@ import com.db4o.reflect.*;
 /**
  * Reflection implementation for Class to map to JDK reflection.
  */
-public class CClass implements IClass{
+public class JdkClass implements ReflectClass{
 	
-	private final IReflect reflector;
+	private final Reflector reflector;
 	private final Class clazz;
-    private IConstructor constructor;
+    private ReflectConstructor constructor;
     private Object[] constructorParams;
 	
-	public CClass(IReflect reflector, Class clazz) {
+	public JdkClass(Reflector reflector, Class clazz) {
 		this.reflector = reflector;
 		this.clazz = clazz;
 	}
     
-	public IClass getComponentType() {
+	public ReflectClass getComponentType() {
 		return reflector.forClass(clazz.getComponentType());
 	}
 
-	public IConstructor[] getDeclaredConstructors(){
+	public ReflectConstructor[] getDeclaredConstructors(){
 		Constructor[] constructors = clazz.getDeclaredConstructors();
-		IConstructor[] reflectors = new IConstructor[constructors.length];
+		ReflectConstructor[] reflectors = new ReflectConstructor[constructors.length];
 		for (int i = 0; i < constructors.length; i++) {
-			reflectors[i] = new CConstructor(reflector, constructors[i]);
+			reflectors[i] = new JdkConstructor(reflector, constructors[i]);
 		}
 		return reflectors;
 	}
 	
-	public IField getDeclaredField(String name){
+	public ReflectField getDeclaredField(String name){
 		try {
-			return new CField(reflector, clazz.getDeclaredField(name));
+			return new JdkField(reflector, clazz.getDeclaredField(name));
 		} catch (Exception e) {
 			return null;
 		}
 	}
 	
-	public IField[] getDeclaredFields(){
+	public ReflectField[] getDeclaredFields(){
 		Field[] fields = clazz.getDeclaredFields();
-		IField[] reflectors = new IField[fields.length];
+		ReflectField[] reflectors = new ReflectField[fields.length];
 		for (int i = 0; i < reflectors.length; i++) {
-			reflectors[i] = new CField(reflector, fields[i]);
+			reflectors[i] = new JdkField(reflector, fields[i]);
 		}
 		return reflectors;
 	}
 	
-	public IMethod getMethod(String methodName, IClass[] paramClasses){
+	public ReflectMethod getMethod(String methodName, ReflectClass[] paramClasses){
 		try {
-			Method method = clazz.getMethod(methodName, CReflect.toNative(paramClasses));
+			Method method = clazz.getMethod(methodName, JdkReflector.toNative(paramClasses));
 			if(method == null){
 				return null;
 			}
-			return new CMethod(method);
+			return new JdkMethod(method);
 		} catch (Exception e) {
 			return null;
 		}
@@ -68,7 +68,7 @@ public class CClass implements IClass{
 		return clazz.getName();
 	}
 	
-	public IClass getSuperclass() {
+	public ReflectClass getSuperclass() {
 		return reflector.forClass(clazz.getSuperclass());
 	}
 	
@@ -80,11 +80,11 @@ public class CClass implements IClass{
 		return clazz.isArray();
 	}
 
-	public boolean isAssignableFrom(IClass type) {
-		if(!(type instanceof CClass)) {
+	public boolean isAssignableFrom(ReflectClass type) {
+		if(!(type instanceof JdkClass)) {
 			return false;
 		}
-		return clazz.isAssignableFrom(((CClass)type).getJavaClass());
+		return clazz.isAssignableFrom(((JdkClass)type).getJavaClass());
 	}
 	
 	public boolean isInstance(Object obj) {
@@ -125,7 +125,7 @@ public class CClass implements IClass{
                 try{
                     Object o = constructor.newInstance(null);
                     if(o != null){
-                        useConstructor(new CConstructor(reflector, constructor), null);
+                        useConstructor(new JdkConstructor(reflector, constructor), null);
                         return true;
                     }
                 }catch(Exception e){
@@ -141,7 +141,7 @@ public class CClass implements IClass{
 		return "CClass: " + clazz.getName();
 	}
     
-    public void useConstructor(IConstructor constructor, Object[] params){
+    public void useConstructor(ReflectConstructor constructor, Object[] params){
         this.constructor = constructor;
         constructorParams = params;
     }

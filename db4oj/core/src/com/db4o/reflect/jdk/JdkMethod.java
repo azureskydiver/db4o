@@ -6,11 +6,11 @@ import java.lang.reflect.*;
 
 import com.db4o.reflect.*;
 
-public class CMethod implements IMethod{
+public class JdkMethod implements ReflectMethod{
 	
 	private final Method method;
 	
-	public CMethod(Method method){
+	public JdkMethod(Method method){
 		this.method = method;
 	}
 	

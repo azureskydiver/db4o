@@ -304,7 +304,7 @@ public class QConObject extends QCon {
         return null;
     }
 
-    QConClass shareParentForClass(IClass a_class, boolean[] removeExisting) {
+    QConClass shareParentForClass(ReflectClass a_class, boolean[] removeExisting) {
         if (i_parent != null) {
             if (i_field.canHold(a_class)) {
                 QConClass newConstraint = new QConClass(i_trans, i_parent,

@@ -43,7 +43,7 @@ public class QConPath extends QConClass {
 		return i_subConstraints == null;
 	}
 
-	QConClass shareParentForClass(IClass a_class, boolean[] removeExisting) {
+	QConClass shareParentForClass(ReflectClass a_class, boolean[] removeExisting) {
 		if (i_parent != null) {
 			if (i_field.canHold(a_class)) {
 				QConClass newConstraint = new QConClass(i_trans, i_parent, i_field, a_class);
@@ -60,7 +60,7 @@ public class QConPath extends QConClass {
 			if (i_field.canHold(a_object)) {
 				QConObject newConstraint =
 					new QConObject(i_trans, i_parent, i_field, a_object);
-				IClass claxx = i_trans.reflector().forObject(a_object);
+				ReflectClass claxx = i_trans.reflector().forObject(a_object);
                 morph(removeExisting, newConstraint, claxx);
 				return newConstraint;
 			}
@@ -72,7 +72,7 @@ public class QConPath extends QConClass {
 	// so the parents are reachable.
 	// If we find a "real" constraint, we throw the QPath
 	// out and replace it with the other constraint. 
-    private void morph(boolean[] removeExisting, QConObject newConstraint, IClass claxx) {
+    private void morph(boolean[] removeExisting, QConObject newConstraint, ReflectClass claxx) {
         boolean mayMorph = true;
         if (claxx != null) {
         	YapClass yc = i_trans.i_stream.getYapClass(claxx, true);

@@ -28,7 +28,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 
     private Db4oTypeImpl i_db4oType;
     
-    private IClass _reflector;
+    private ReflectClass _reflector;
     private boolean _isEnum;
     boolean i_dontCallConstructors;
     
@@ -39,7 +39,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     // TODO: check race conditions, upon multiple calls against the same class
     int i_lastID;
     
-    YapClass(YapStream stream, IClass reflector){
+    YapClass(YapStream stream, ReflectClass reflector){
     	i_stream = stream;
         _reflector = reflector;
     }
@@ -115,7 +115,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                     dirty = true;
                 }
             }
-            IField[] fields = classReflector().getDeclaredFields();
+            ReflectField[] fields = classReflector().getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
                 if (storeField(fields[i])) {
                     wrapper = a_stream.i_handlers.handlerForClass(a_stream, fields[i].getType());
@@ -204,7 +204,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         a_bytes.incrementOffset(linkLength());
     }
 
-    public boolean canHold(IClass claxx) {
+    public boolean canHold(ReflectClass claxx) {
         if (claxx == null) {
             return true;
         }
@@ -336,7 +336,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 
     private boolean createConstructor(YapStream a_stream, String a_name) {
         
-        IClass claxx;
+        ReflectClass claxx;
         try {
         	claxx = a_stream.reflector().forName(a_name);
         } catch (Throwable t) {
@@ -346,7 +346,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         return createConstructor(a_stream,claxx , a_name, true);
     }
 
-    private boolean createConstructor(YapStream a_stream, IClass a_class, String a_name, boolean errMessages) {
+    private boolean createConstructor(YapStream a_stream, ReflectClass a_class, String a_name, boolean errMessages) {
         
         _reflector = a_class;
         
@@ -738,7 +738,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         return null;
     }
     
-    public IClass classReflector(){
+    public ReflectClass classReflector(){
         return _reflector;
     }
     
@@ -826,7 +826,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     boolean init(
         YapStream a_stream,
         YapClass a_ancestor,
-        IClass claxx,
+        ReflectClass claxx,
         boolean errMessages
         ) {
         
@@ -1159,7 +1159,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         return len;
     }
     
-	public IClass primitiveClassReflector(){
+	public ReflectClass primitiveClassReflector(){
 		return null;
 	}
 
@@ -1420,7 +1420,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         }
     }
     
-	IReflect reflector() {
+	Reflector reflector() {
 		return i_stream.reflector();
 	}
     
@@ -1440,7 +1440,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     void createConfigAndConstructor(
         Hashtable4 a_byteHashTable,
         YapStream a_stream,
-        IClass a_class) {
+        ReflectClass a_class) {
         if (a_class == null) {
             if (i_nameBytes != null) {
                 i_name = a_stream.i_stringIo.read(i_nameBytes);
@@ -1511,7 +1511,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     private void checkDb4oType() {
-        IClass claxx = classReflector();
+        ReflectClass claxx = classReflector();
         if (claxx != null && i_stream.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
             try {
                 i_db4oType = (Db4oTypeImpl)claxx.newInstance();
@@ -1612,7 +1612,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             && bitIsFalse(YapConst.READING);
     }
 
-    boolean storeField(IField a_field) {
+    boolean storeField(ReflectField a_field) {
         if (a_field.isStatic()) {
             return false;
         }
@@ -1671,7 +1671,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                     stream.activate1(trans, sc, 4);
                     oldFields = sc.fields;
                 }
-                IField[] fields = classReflector().getDeclaredFields();
+                ReflectField[] fields = classReflector().getDeclaredFields();
 
                 Collection4 newFields = new Collection4();
 
@@ -1796,7 +1796,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 
     // Comparison_______________________
 
-    private IClass i_compareTo;
+    private ReflectClass i_compareTo;
     
 	public void prepareLastIoComparison(Transaction a_trans, Object obj) {
 	    prepareComparison(obj);

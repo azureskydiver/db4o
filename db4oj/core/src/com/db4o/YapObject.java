@@ -755,7 +755,7 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 			        objToString = obj.toString();
 			    }catch(Exception e){
 			    }
-			    IClass claxx = getYapClass().reflector().forObject(obj);
+			    ReflectClass claxx = getYapClass().reflector().forObject(obj);
 			    str += "\n" + claxx.getName() + "\n" + objToString;
 		    }
 		    return str;

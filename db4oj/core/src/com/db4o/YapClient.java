@@ -163,7 +163,7 @@ class YapClient extends YapStream implements ExtClient {
         i_trans = new TransactionClient(this, i_systemTrans);
     }
 
-    boolean createYapClass(YapClass a_yapClass, IClass a_class, YapClass a_superYapClass) {
+    boolean createYapClass(YapClass a_yapClass, ReflectClass a_class, YapClass a_superYapClass) {
         writeMsg(Msg.CREATE_CLASS.getWriterForString(i_systemTrans, a_class.getName()));
         MsgObject message = (MsgObject)expectedResponse(Msg.OBJECT_TO_CLIENT);
         YapWriter bytes = message.unmarshall();
@@ -295,7 +295,7 @@ class YapClient extends YapStream implements ExtClient {
         MsgD message = (MsgD) expectedResponse(Msg.CLASS_NAME_FOR_ID);
         String className = message.readString();
         if(className != null && className.length() > 0){
-            IClass claxx = reflector().forName(className);
+            ReflectClass claxx = reflector().forName(className);
             if(claxx != null){
                 return getYapClass(claxx, true);
             }

@@ -5,15 +5,15 @@ package com.db4o.reflect;
 /** 
  * representation for java.lang.reflect.Field.
  * <br><br>See the respective documentation in the JDK API.
- * @see IReflect
+ * @see Reflector
  */
-public interface IField {
+public interface ReflectField {
 	
 	public Object get(Object onObject);
 	
 	public String getName();
 	
-	public IClass getType();
+	public ReflectClass getType();
 	
 	public boolean isPublic();
 	

@@ -24,7 +24,7 @@ final class YapString extends YapIndependantType {
         }
     }
 
-    public boolean canHold(IClass claxx) {
+    public boolean canHold(ReflectClass claxx) {
         return claxx == classReflector();
     }
 
@@ -45,7 +45,7 @@ final class YapString extends YapIndependantType {
         return str2;
     }
     
-    public IClass classReflector(){
+    public ReflectClass classReflector(){
     	return _stream.i_handlers.ICLASS_STRING;
     }
 

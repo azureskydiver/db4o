@@ -7,7 +7,7 @@ import com.db4o.reflect.*;
 
 class Config4Field extends Config4Abstract implements ObjectField, Cloneable, DeepClone {
     Config4Class i_class;
-    IField i_fieldReflector;
+    ReflectField i_fieldReflector;
     boolean i_queryEvaluation = true;
     int i_indexed = 0;
     MetaField i_metaField;
@@ -28,7 +28,7 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
         return ret;
     }
 
-    private IField fieldReflector() {
+    private ReflectField fieldReflector() {
         if (i_fieldReflector == null) {
             try {
                 i_fieldReflector = i_class.classReflector().getDeclaredField(getName());
