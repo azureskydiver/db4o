@@ -492,6 +492,7 @@
 			<variable name="net" boolean="false" />
 			<variable name="mono" boolean="false" />
 			<ignoreinputfolder name="net" />
+			<ignoreinputfolder name="mono" />
 		</doctor>
 		<copy todir="${dir.j.tutorial.out.java}/docs" overwrite="true">
 			<fileset dir="${dir.dist.doctor}">
@@ -520,6 +521,7 @@
 			<variable name="net" boolean="true" />
 			<variable name="mono" boolean="false" />
 			<ignoreinputfolder name="java" />
+			<ignoreinputfolder name="mono" />
 		</doctor>
 		<doctor 
 			name="f1" 
@@ -538,6 +540,7 @@
 			<variable name="net" boolean="false" />
 			<variable name="mono" boolean="true" />
 			<ignoreinputfolder name="java" />
+			<ignoreinputfolder name="net" />
 		</doctor>
 		<ant dir="${dir.n.tutorial.browser}" />
 	</target>
