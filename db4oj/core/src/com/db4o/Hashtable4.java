@@ -3,9 +3,9 @@
 package com.db4o;
 
 /**
- * 
+ * @exclude 
  */
-class Hashtable4 implements Cloneable, DeepClone {
+public class Hashtable4 implements Cloneable, DeepClone {
     
     private static final float FILL = 0.5F;
 
@@ -15,7 +15,7 @@ class Hashtable4 implements Cloneable, DeepClone {
     private int i_size;
     private HashtableIntEntry[] i_table;
     
-    Hashtable4(int a_size){
+    public Hashtable4(int a_size){
         a_size = newSize(a_size);  // legacy for .NET conversion
         i_tableSize = 1;
         while (i_tableSize < a_size){

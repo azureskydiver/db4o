@@ -2,9 +2,7 @@
 
 package com.db4o.reflect.jdk;
 
-import java.util.Hashtable;
-
-import com.db4o.Db4o;
+import com.db4o.*;
 import com.db4o.reflect.*;
 
 public class CReflect implements IReflect{
@@ -13,8 +11,8 @@ public class CReflect implements IReflect{
 
 	private final IArray i_array;
 	
-	private final Hashtable _byClass;
-	private final Hashtable _byName;
+	private final Hashtable4 _byClass;
+	private final Hashtable4 _byName;
 	
 	public CReflect(ClassLoader classLoader){
 		if(classLoader == null){
@@ -22,8 +20,8 @@ public class CReflect implements IReflect{
 		}
 		_classLoader = classLoader;
 		i_array = new CArray();
-		_byClass = new Hashtable();
-		_byName = new Hashtable();
+		_byClass = new Hashtable4(1);
+		_byName = new Hashtable4(1);
 	}
 	
 	public IArray array(){
