@@ -5,7 +5,7 @@
 Summary: A native OODBMS for Java/.NET/Mono - Mono version
 Name: db4o
 Version: @db4oversion@
-Release: 1
+Release: @db4obuild@
 Copyright: GPL
 Group: Development
 Source: http://www.db4o.com/community/db4o-@db4oversion@-mono.tar.gz
