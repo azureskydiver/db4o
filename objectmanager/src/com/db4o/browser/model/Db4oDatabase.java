@@ -19,7 +19,7 @@ package com.db4o.browser.model;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.browser.preferences.PreferencesCore;
+import com.db4o.browser.prefs.PreferencesCore;
 import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
 import com.swtworkbench.community.xswt.metalogger.Logger;

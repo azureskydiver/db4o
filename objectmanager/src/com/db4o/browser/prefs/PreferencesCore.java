@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2005 db4objects Inc.  http://www.db4o.com
  */
-package com.db4o.browser.preferences;
+package com.db4o.browser.prefs;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +11,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.browser.model.BrowserCore;
 import com.db4o.browser.model.Database;
+import com.db4o.browser.prefs.activation.ActivationPreferencePage;
 import com.db4o.query.Query;
 
 public class PreferencesCore {
@@ -21,6 +22,18 @@ public class PreferencesCore {
 	private static final String preferencesFile = 
 			new File(new File(System.getProperty("user.home")), ".explorer4objects.yap").getAbsolutePath();
 	
+	/**
+	 * Called by BrowserCore during initialization
+	 */
+	public static void initialize() {
+		// Register the preference pages in the UI
+		getDefault().registerPreferencesPages();
+	}
+
+	/**
+	 * Singleton implementation
+	 * @return the PreferenceCore singleton
+	 */
 	public static PreferencesCore getDefault() {
 		if (prefs == null) {
 			loadOrCreatePreferences();
@@ -28,22 +41,37 @@ public class PreferencesCore {
 		return prefs;
 	}
 
+	/**
+	 * Some preference object has been changed; commit changes to the database
+	 */
 	public static void commit() {
 		db.set(prefs);
 		db.commit();
 	}
 	
+	/**
+	 * A preference object may have been changed; roll back the change to 
+	 * the persistent state
+	 */
 	public static void rollback() {
 		db.ext().refresh(prefs, Integer.MAX_VALUE);
 	}
 	
+	/**
+	 * Close the preference store
+	 */
 	public static void close() {
 		db.close();
 		db=null;
 		prefs=null;
 	}
 	
+	/*
+	 * Load or create the persisted preferences object
+	 */
 	private static void loadOrCreatePreferences() {
+		Db4o.configure().activationDepth(Integer.MAX_VALUE);
+
 		db=Db4o.openFile(preferencesFile);
 		Query query=db.query();
 		query.constrain(PreferencesCore.class);
@@ -58,8 +86,14 @@ public class PreferencesCore {
 		if(result.size()>1) {
 			rebuildCorruptDatabase(result.size());
 		}
+		
+		Db4o.configure().activationDepth(prefs.getInitialActivationDepth());
 	}
 
+	/*
+	 * If we detected a corrupt preferences database, back it up and rebuild
+	 * a new copy.
+	 */
 	private static void rebuildCorruptDatabase(int resultsize) {
 		System.err.println(resultsize+" instances of PreferencesCore found in the database.");
 		String backupFile = preferencesFile+".bkp";
@@ -79,9 +113,16 @@ public class PreferencesCore {
 
 	// --------------------------------------------------
 	
-	public void registerPreferencesPages() {
-		PreferenceUI.registerPreferencePage("Activation", "Object Activation", null, "com.db4o.browser.preferences.ActivationPreferencePage");
+	/**
+	 * Register all preference pages in the application here
+	 */
+	private void registerPreferencesPages() {
+		PreferenceUI.registerPreferencePage("Activation", "Object Activation", null, ActivationPreferencePage.class.getName());
 	}
+	
+	/*
+	 * FIXME: The preference page storage should be factored out of this class
+	 */
 	
 	// Constants for default preference values...
 	public static final int DEFAULT_INITIAL_ACTIVATION_DEPTH = 5;

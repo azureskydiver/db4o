@@ -28,7 +28,7 @@ import com.db4o.*;
 import com.db4o.browser.gui.controllers.*;
 import com.db4o.browser.gui.views.*;
 import com.db4o.browser.model.*;
-import com.db4o.browser.preferences.*;
+import com.db4o.browser.prefs.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.reflect.jdk.*;
 import com.swtworkbench.community.xswt.*;

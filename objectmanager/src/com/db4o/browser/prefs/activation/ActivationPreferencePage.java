@@ -1,12 +1,14 @@
 /*
  * Copyright (C) 2005 db4objects Inc.  http://www.db4o.com
  */
-package com.db4o.browser.preferences;
+package com.db4o.browser.prefs.activation;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+
+import com.db4o.browser.prefs.PreferencesCore;
 
 /**
  * ActivationPreferencePage.
