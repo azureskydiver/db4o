@@ -46,7 +46,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     // Collection of all classes
     // if (i_classCollection == null) the engine is down.
-    YapClassCollection      i_classCollection;
+    public YapClassCollection      i_classCollection;
 
     // the Configuration context for this ObjectContainer
     Config4Impl             i_config;
@@ -926,7 +926,10 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
     
     public ReflectClass[] knownClasses(){
-    	return reflector().knownClasses();
+        synchronized(i_lock){
+            checkClosed();
+            return reflector().knownClasses();
+        }
     }
     
 

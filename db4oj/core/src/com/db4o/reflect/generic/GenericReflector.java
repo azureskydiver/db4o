@@ -39,15 +39,23 @@ public class GenericReflector implements Reflector, DeepClone {
         GenericReflector myClone = new GenericReflector(null, (Reflector)_delegate.deepClone(this));
         myClone._collectionClasses = (Collection4)_collectionClasses.deepClone(myClone);
         myClone._collectionUpdateDepths = (Collection4)_collectionUpdateDepths.deepClone(myClone);
-
+        
+        
+        // Interesting, adding the following messes things up.
+        // Keep the code, since it may make sense to carry the
+        // global reflectors into a running db4o session.
+        
+        
 //        Iterator4 i = _classes.iterator();
 //        while(i.hasNext()){
 //            GenericClass clazz = (GenericClass)i.next();
-//            
+//            clazz = (GenericClass)clazz.deepClone(myClone);
+//            myClone._classByName.put(clazz.getName(), clazz);
+//            myClone._classes.add(clazz);
 //        }
+        
 		return myClone;
 	}
-    
 
 	public boolean hasTransaction(){
 		return _trans != null;
@@ -200,13 +208,10 @@ public class GenericReflector implements Reflector, DeepClone {
 	}
 	
 	private void readAll(){
-		YapWriter headerreader = _stream.getWriter(_trans, 0, YapStream.HEADER_LENGTH);
-		headerreader.read();
-		headerreader.incrementOffset(2 + 2 * YapConst.YAPINT_LENGTH);
-		int classcollid = headerreader.readInt();
-		YapWriter classcollreader = _stream.readWriterByID(_trans, classcollid);
+		int classCollectionID = _stream.i_classCollection.getID();
+		YapWriter classcollreader = _stream.readWriterByID(_trans, classCollectionID);
         if (Deploy.debug) {
-            classcollreader.readBegin(classcollid, YapConst.YAPCLASSCOLLECTION);
+            classcollreader.readBegin(classCollectionID, YapConst.YAPCLASSCOLLECTION);
         }
         
 		int numclasses = classcollreader.readInt();
