@@ -10,13 +10,13 @@ import com.db4o.reflect.jdk.*;
 
 public class GenericObjects extends Test {
 
-	private final GenericReflector _reflector;
+	private GenericReflector _reflector;
     private final ReflectClass _objectIClass;
 
     private ReflectClass _iClass;
 	
 	public GenericObjects() throws ClassNotFoundException {
-        _reflector = new GenericReflector(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+        _reflector = new GenericReflector(null, new JdkReflector(Thread.currentThread().getContextClassLoader()));
         _objectIClass = _reflector.forClass(Object.class);
 	}
 
@@ -44,16 +44,16 @@ public class GenericObjects extends Test {
 	}
 
 	private void tstReflectionDelegation() throws ClassNotFoundException {
-		Reflection test = new Reflection(new GenericReflector(new JdkReflector(Thread.currentThread().getContextClassLoader())));
+		Reflection test = new Reflection(new GenericReflector(null, new JdkReflector(Thread.currentThread().getContextClassLoader())));
 		test.tstEverything();
 	}
 
     private GenericClass otherDataClass() {
-        return new GenericClass(_reflector, "anyName", _objectIClass);
+        return new GenericClass(_reflector, null, "anyName", _objectIClass);
     }
 
     private GenericClass subclass() {
-        return new GenericClass(_reflector, "anyName", _iClass);
+        return new GenericClass(_reflector, null, "anyName", _iClass);
     }
 
     private void tstFields() {
@@ -71,16 +71,16 @@ public class GenericObjects extends Test {
     }
 
     private GenericClass acmeDataClass() {
-        GenericClass result = new GenericClass(_reflector, "com.acme.Person", _objectIClass);
+        GenericClass result = new GenericClass(_reflector, null, "com.acme.Person", _objectIClass);
         result.initFields(fields(result));
         return result;
     }
 
     private GenericField[] fields(ReflectClass personClass) {
         return new GenericField[] {
-                new GenericField("surname", _reflector.forClass(String.class)),
-                new GenericField("birthdate", _reflector.forClass(Date.class)),
-                new GenericField("bestFriend", personClass)
+                new GenericField("surname", _reflector.forClass(String.class), false, false, false),
+                new GenericField("birthdate", _reflector.forClass(Date.class), false, false, false),
+                new GenericField("bestFriend", personClass, false, false, false)
         };
     }
 
