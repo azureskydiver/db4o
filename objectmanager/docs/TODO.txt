@@ -12,7 +12,7 @@ TODO:
 *** Follow up with Karen Bennett of Red Hat regarding getting db4o into Red Hat and getting
     GCJ support into Eclipse.
 
-*** Extending VEP article
+Extending VEP article
 
 *** Get XSWT approved for inclusion in VE under the CPL
 
@@ -24,7 +24,7 @@ TODO:
 
 *** Follow up about getting into OSCon (*done*)
 
-*** XSWT interview (*done*)
+*** XSWT interview--promoting db4objects too (*done*)
 
 
 After first browser spike done; look at BIRT API; make suggestions for oo improvements.
