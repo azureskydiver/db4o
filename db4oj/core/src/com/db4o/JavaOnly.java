@@ -39,31 +39,42 @@ class JavaOnly {
     
     public static JDK jdk() {
         JDK jdkWrapper = null;
-        String jdkName = "com.db4o.JDK_1_4";
-        if(Platform.classIsAvailable("java.nio.channels.FileLock")){
-            jdkWrapper = (JDK)Platform.createInstance(jdkName);
+        String jdkName = "5";
+        if(Platform.classIsAvailable("java.lang.Enum")){
+            jdkWrapper = createJDKWrapper(jdkName);
             if(jdkWrapper != null){
                 return jdkWrapper;
             }
         }
-        jdkName = "com.db4o.JDK_1_3";
+        jdkName = "1_4";
+        if(Platform.classIsAvailable("java.nio.channels.FileLock")){
+            jdkWrapper = createJDKWrapper(jdkName);
+            if(jdkWrapper != null){
+                return jdkWrapper;
+            }
+        }
+        jdkName = "1_3";
         if (Platform.methodIsAvailable("java.lang.Runtime","addShutdownHook",
                 new Class[] { Thread.class })){
-            jdkWrapper = (JDK)Platform.createInstance(jdkName);
+            jdkWrapper = createJDKWrapper(jdkName);
             if(jdkWrapper != null){
                 return jdkWrapper;
             }
         }
-        jdkName = "com.db4o.JDK_1_2";
+        jdkName = "1_2";
         if (Platform.methodIsAvailable(Platform.ACCESSIBLEOBJECT,
                 "setAccessible",
                 new Class[] { boolean.class })){
-            jdkWrapper = (JDK)Platform.createInstance(jdkName);
+            jdkWrapper = createJDKWrapper(jdkName);
             if(jdkWrapper != null){
                 return jdkWrapper;
             }
         }
         return new JDK();
+    }
+    
+    private static JDK createJDKWrapper(String name){
+        return (JDK)Platform.createInstance("com.db4o.JDK_" + name);
     }
     
     public static void link(){

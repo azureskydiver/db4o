@@ -25,4 +25,8 @@ public enum Jdk5Enum {
     public void incCount() {
     	count++;
     }
+    
+    public void reset(){
+        count = 0;
+    }
  }

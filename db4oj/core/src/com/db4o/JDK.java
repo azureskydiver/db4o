@@ -72,6 +72,10 @@ public class JDK {
 
 	void setAccessible(Object a_accessible) {
 	}
+    
+    boolean storeStaticFieldValues(Class clazz) {
+        return false;
+    }
 	
 	synchronized void unlock(RandomAccessFile file) {
 	}

@@ -107,9 +107,6 @@ final class YapConst
 	static final int MAXIMUM_ARRAY_ENTRIES = 7000000; // 7 Million 
 	static final int MAXIMUM_ARRAY_ENTRIES_PRIMITIVE = MAXIMUM_ARRAY_ENTRIES * 100; // 70 MB for byte arrays
 	
-	// hidden and unused license key to identify possible hacks
-	// static final String lic = Lic.lic;
-	
 	static Class CLASS_DB4OTYPEIMPL;
 	static Class CLASS_OBJECT;
 	static Class CLASS_DB4ODATABASE;

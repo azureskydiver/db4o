@@ -1610,7 +1610,18 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     void storeStaticFieldValues(Transaction trans, boolean force) {
         if (!bitIsTrue(YapConst.STATIC_FIELDS_STORED) || force) {
             bitTrue(YapConst.STATIC_FIELDS_STORED);
-            if (i_config != null && i_config.i_persistStaticFieldValues) {
+            
+//            boolean s1 = (i_config != null && i_config.i_persistStaticFieldValues);
+//            boolean s2 = Platform.storeStaticFieldValues(getJavaClass());
+//            if(s2){
+//                int xxx = 1;
+//            }
+            
+            boolean store = 
+                (i_config != null && i_config.i_persistStaticFieldValues)
+            || Platform.storeStaticFieldValues(getJavaClass()); 
+            
+            if (store) {
                 YapStream stream = trans.i_stream;
                 stream.showInternalClasses(true);
                 Query q = stream.querySharpenBug(trans);
@@ -1644,8 +1655,17 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                                         long id = stream.getID1(trans, oldFields[j].value);
                                         if (id > 0) {
                                             if (oldFields[j].value != value) {
+                                                
+                                                // This is the clue:
+                                                // Bind the current static member to it's old database identity,
+                                                // so constants and enums will work with '=='
                                                 stream.bind1(trans, value, id);
+                                                
+                                                // This may produce unwanted side effects if the static field object
+                                                // was modified in the current session. TODO:Add documentation case.
+                                                
                                                 stream.refresh(value, Integer.MAX_VALUE);
+                                                
                                                 oldFields[j].value = value;
                                             }
                                             handled = true;
