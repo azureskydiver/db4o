@@ -32,12 +32,12 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  * 
  * @author djo
  */
-public class MapFieldNode extends StoredFieldNode {
+public class MapFieldNode extends FieldNode {
 
     public static IModelNode tryToCreate(ReflectField field, Object instance, Database database) {
         MapFieldNode result;
         
-        Object fieldContents = StoredFieldNode.field(field, instance);
+        Object fieldContents = FieldNode.field(field, instance);
         
         // See if we can get ReflectMethods corresponding to keySet() and get()
         ReflectClass fieldType = database.reflector().forObject(fieldContents);

@@ -79,12 +79,12 @@ public class FieldNodeFactory {
         
         ReflectClass fieldType = field.getType();
         if (fieldType.isPrimitive()) {// || typeIn(fieldType, boxedPrimitiveTypes)) {
-            return new StoredPrimitiveFieldNode(field, instance, database);
+            return new PrimitiveFieldNode(field, instance, database);
         }
         
         if (fieldType.isArray()) {
             // FIXME: StoredArrayFieldNode needs implemented
-            return new StoredArrayFieldNode(field, instance, database);
+            return new ArrayFieldNode(field, instance, database);
         }
         
         // If keySet() and get() are present, use them
@@ -92,11 +92,11 @@ public class FieldNodeFactory {
         if (result != null) return result;
         
         // Otherwise treat all iterable things as lists
-        result = StoredIterableFieldNode.tryToCreate(field, instance, database);
+        result = IterableFieldNode.tryToCreate(field, instance, database);
         if (result != null) return result;
         
         // Otherwise it must be a plain old object
-		return new StoredFieldNode(field, instance, database);
+		return new FieldNode(field, instance, database);
 	}
 
 }

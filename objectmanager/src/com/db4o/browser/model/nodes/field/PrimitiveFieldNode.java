@@ -28,14 +28,14 @@ import com.db4o.reflect.ReflectField;
  * 
  * @author djo
  */
-public class StoredPrimitiveFieldNode extends StoredFieldNode {
+public class PrimitiveFieldNode extends FieldNode {
 
 	/**
 	 * @param field
 	 * @param instance
 	 * @param database TODO
 	 */
-	public StoredPrimitiveFieldNode(ReflectField field, Object instance, Database database) {
+	public PrimitiveFieldNode(ReflectField field, Object instance, Database database) {
 		super(field, instance, database);
 	}
     

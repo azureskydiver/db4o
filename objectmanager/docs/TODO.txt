@@ -6,7 +6,7 @@ TODO:
    * Make sure there are no java.lang.reflect calls where there shouldn't be
 
 - Catch up MockDatabase to the generic reflector impl
-- StoredArrayFieldNode needs implemented
+- StoredArrayFieldNode needs implemented **DONE**
 
 - Test with J9 VM **????**
 

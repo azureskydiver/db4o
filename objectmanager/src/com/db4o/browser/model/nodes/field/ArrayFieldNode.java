@@ -13,15 +13,15 @@ import com.db4o.reflect.ReflectField;
  *
  * @author djo
  */
-public class StoredArrayFieldNode extends StoredFieldNode implements IModelNode {
+public class ArrayFieldNode extends FieldNode implements IModelNode {
     
     private Object array;
     private int length;
     private ReflectArray arrayReflector;
 
-	public StoredArrayFieldNode(ReflectField field, Object instance, Database database) {
+	public ArrayFieldNode(ReflectField field, Object instance, Database database) {
 		super(field, instance, database);
-        array = StoredFieldNode.field(_field, _instance);
+        array = FieldNode.field(_field, _instance);
         arrayReflector = _database.reflector().array();
         length = arrayReflector.getLength(array);
 	}
@@ -35,7 +35,7 @@ public class StoredArrayFieldNode extends StoredFieldNode implements IModelNode 
         
         for (int i=0; i < length; ++i) {
             Object item = arrayReflector.get(array, i);
-            result[i] = new StoredArrayItemNode(i, item, _database);
+            result[i] = new ArrayItemNode(i, item, _database);
         }
         
         return result;

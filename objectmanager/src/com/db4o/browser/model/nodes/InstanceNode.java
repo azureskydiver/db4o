@@ -14,13 +14,10 @@
  * along with com.swtworkbench.ed; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.db4o.browser.model.nodes.field;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.db4o.browser.model.nodes;
 
 import com.db4o.browser.model.Database;
-import com.db4o.browser.model.nodes.IModelNode;
+import com.db4o.browser.model.nodes.field.FieldNodeFactory;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 
@@ -30,15 +27,18 @@ import com.db4o.reflect.ReflectField;
  * 
  * @author djo
  */
-public class StoredArrayItemNode implements IModelNode {
-    
-	private int _key;
+public class InstanceNode implements IModelNode {
+	private ReflectClass _clazz;
     private Object _instance;
 	private Database _database;
 
-	public StoredArrayItemNode(int key, Object instance, Database database) {
-		_key = key;
+	/**
+	 * @param database TODO
+	 * @param object
+	 */
+	public InstanceNode(Object instance, ReflectClass clazz, Database database) {
 		_instance = instance;
+		_clazz=clazz;
 		_database = database;
 		database.activate(instance);
 	}
@@ -47,18 +47,12 @@ public class StoredArrayItemNode implements IModelNode {
 	 * @see com.db4o.browser.gui.ITreeNode#children()
 	 */
 	public IModelNode[] children() {
-		List results=new ArrayList();
-		ReflectClass curclazz= _database.reflector().forObject(_instance);
-		while(curclazz!=null) {
-			ReflectField[] fields = curclazz.getDeclaredFields();
-			for (int i = 0; i < fields.length; i++) {
-				if(!fields[i].isTransient()) {
-					results.add(FieldNodeFactory.construct(fields[i], _instance, _database));
-				}
-			}
-			curclazz=curclazz.getSuperclass();
+        ReflectField[] fields = _clazz.getDeclaredFields();
+		IModelNode[] children=new IModelNode[fields.length];
+		for (int idx = 0; idx < fields.length; idx++) {
+			children[idx]=FieldNodeFactory.construct(fields[idx],_instance,_database);
 		}
-		return (IModelNode[])results.toArray(new IModelNode[results.size()]);
+		return children;
 	}
     
 	/* (non-Javadoc)
@@ -67,9 +61,9 @@ public class StoredArrayItemNode implements IModelNode {
 	public String getText() {
 		long id = _database.getId(_instance);
 		if (id > 0) {
-			return getName() + _instance.toString() + " (" + _database.getId(_instance) + ")";
+			return _instance.toString() + " (" + _database.getId(_instance) + ")";
 		} else {
-			return getName() +_instance.toString();
+			return _instance.toString();
 		}
 	}
 	
@@ -77,19 +71,15 @@ public class StoredArrayItemNode implements IModelNode {
 	 * @see com.db4o.browser.model.nodes.IModelNode#getValueString()
 	 */
 	public String getValueString() {
-		long id = _database.getId(_instance);
-		if (id > 0) {
-			return getName() + _instance.toString() + " (" + _database.getId(_instance) + ")";
-		} else {
-			return getName() + _instance.toString();
-		}
+		return _instance.toString();
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.model.nodes.IModelNode#getName()
 	 */
 	public String getName() {
-		return "[" + _key + "] = ";
+		// This is only called if this is a top-level query result or an item in a container
+		return "";
 	}
     
 	/* (non-Javadoc)
@@ -106,7 +96,7 @@ public class StoredArrayItemNode implements IModelNode {
 		if(obj==null||getClass()!=obj.getClass()) {
 			return false;
 		}
-		return _instance.equals(((StoredArrayItemNode)obj)._instance);
+		return _instance.equals(((InstanceNode)obj)._instance);
 	}
 	
 	public int hashCode() {
