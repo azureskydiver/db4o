@@ -41,10 +41,14 @@
             			<cTabItem x:id="ListCompositeItem" text="&amp;Graph" control="ListComposite"/>
             			
             			<!-- Detail -->
-        				<composite x:id="FieldArea" background="White">
-        					<layout x:class="fillLayout"/>
-        				</composite>
-            			<cTabItem text="&amp;Object" control="FieldArea"/>
+        				<scrolledComposite x:style="H_SCROLL|V_SCROLL" x:id="FieldAreaContainer" content="FieldArea" background="White">
+        					<x:children>
+        						<composite x:id="FieldArea" background="White">
+        							<layout x:class="fillLayout"/>
+        						</composite>
+        					</x:children>
+        				</scrolledComposite>
+            			<cTabItem text="&amp;Object" control="FieldAreaContainer"/>
             			
             			<!-- Rodrigo's object navigator idea -
             			<composite x:id="Navigator">

@@ -61,6 +61,10 @@ public class StandaloneBrowser implements IControlFactory {
         buildMenuBar((Shell)parent);
         
         controller = new BrowserController(ui);
+		
+		// FIXME: hard-coding initial open...
+		String testFile=getClass().getResource("formula1.yap").getFile();
+		controller.open(testFile);
 	}
     
 	/**

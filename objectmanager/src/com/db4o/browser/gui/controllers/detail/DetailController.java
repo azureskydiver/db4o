@@ -3,6 +3,8 @@
  */
 package com.db4o.browser.gui.controllers.detail;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
 import com.db4o.browser.gui.controllers.BrowserController;
@@ -53,13 +55,15 @@ public class DetailController implements IBrowserController {
 		}
 	}
 	
-	/**
-	 */
+
 	private void buildUI(String layout, Composite parent) {
 		disposeChildren(parent);
 		try {
 			XSWT.create(parent, StringInputStreamFactory.construct(layout));
-			parent.layout(true);
+			// We have to manually compute and set the size because we're inside
+			// a ScrolledComposite here...
+			Point preferredSize = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+			parent.setSize(preferredSize);
 		} catch (XSWTException e) {
 			throw new RuntimeException("Unable to create field area layout", e);
 		}
