@@ -3,11 +3,12 @@
 package com.db4o.test.soda;
 
 import com.db4o.*;
-import com.db4o.query.*;
+import com.db4o.foundation.Cool;
+import com.db4o.query.Query;
 import com.db4o.test.soda.classes.simple.*;
 import com.db4o.test.soda.collections.*;
-import com.db4o.test.soda.engines.db4o.*;
-import com.db4o.test.soda.wrapper.untyped.*;
+import com.db4o.test.soda.engines.db4o.STDb4o;
+import com.db4o.test.soda.wrapper.untyped.STBooleanWU;
 
 public class SodaTestThreadedRegression extends SodaTest implements Runnable{
 	
@@ -49,10 +50,7 @@ public class SodaTestThreadedRegression extends SodaTest implements Runnable{
 		// We don't want to run out of main to allow sequential
 		// execution of Ant tasks.
 		do{
-			try{
-				Thread.sleep(300);
-			}catch(Exception e){
-			}
+			Cool.sleepIgnoringInterruption(300);
 		}while(runningThreads > 0);
 	}
 	

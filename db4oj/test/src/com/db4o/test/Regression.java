@@ -6,7 +6,8 @@ import java.lang.reflect.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.ext.*;
+import com.db4o.ext.StoredClass;
+import com.db4o.foundation.Cool;
 import com.db4o.test.types.*;
 
 /**
@@ -92,10 +93,7 @@ public class Regression {
 				// We don't want to run out of main to allow sequential
 				// execution of Ant tasks.
 				do {
-					try {
-						Thread.sleep(300);
-					} catch (Exception e) {
-					}
+				    Cool.sleepIgnoringInterruption(300);
 				} while (threadsSharp);
 
 			} catch (Exception e) {

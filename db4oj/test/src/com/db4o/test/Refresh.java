@@ -3,8 +3,9 @@
 package com.db4o.test;
 
 import com.db4o.*;
-import com.db4o.ext.*;
-import com.db4o.query.*;
+import com.db4o.ext.ExtObjectContainer;
+import com.db4o.foundation.Cool;
+import com.db4o.query.Query;
 
 public class Refresh extends AllTests {
 
@@ -94,11 +95,7 @@ public class Refresh extends AllTests {
     
     private void commitAndWait(ObjectContainer oc){
         oc.commit();
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e1) {
-            e1.printStackTrace();
-        }
+        Cool.sleepWithoutInterruption(100);
     }
 
     private Refresh getRoot(ObjectContainer oc) {

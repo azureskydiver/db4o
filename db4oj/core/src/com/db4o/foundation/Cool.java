@@ -5,11 +5,21 @@ package com.db4o.foundation;
  */
 public class Cool {
 
-	public static void sleepWithoutInterruption(long millis) {
+	public static void sleepIgnoringInterruption(long millis) {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException ignored) {
    		}
 	}
+
+    public static void sleepWithoutInterruption(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			throw new IllegalStateException();
+		}
+        
+    }
 
 }

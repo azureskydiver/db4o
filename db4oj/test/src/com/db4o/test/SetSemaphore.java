@@ -2,7 +2,8 @@
 
 package com.db4o.test;
 
-import com.db4o.ext.*;
+import com.db4o.ext.ExtObjectContainer;
+import com.db4o.foundation.Cool;
 
 public class SetSemaphore {
 
@@ -31,21 +32,13 @@ public class SetSemaphore {
             new GetAndRelease(client4);
             new GetAndRelease(client5);
 
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Cool.sleepWithoutInterruption(1000);
             Test.ensure(client1.setSemaphore("hi", 0));
             client1.close();
             
             new GetAndRelease(client3);
             new GetAndRelease(client2);
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Cool.sleepWithoutInterruption(1000);
             
             client2.close(); 
             client3.close(); // the last one opened remains
@@ -70,11 +63,8 @@ public class SetSemaphore {
             Test.ensure(client.setSemaphore("hi", 50000));
             time = System.currentTimeMillis() - time;
             // System.out.println("Time to get semaphore: " + time);
-            try {
-                Thread.sleep(50);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Cool.sleepWithoutInterruption(50);
+
             // System.out.println("About to release semaphore.");
             client.releaseSemaphore("hi");
         }

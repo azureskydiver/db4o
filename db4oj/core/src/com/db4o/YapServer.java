@@ -77,7 +77,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable {
             // Take it easy. 
             // Test cases hit close while communication
             // is still in progress.
-        	Cool.sleepWithoutInterruption(100);
+        	Cool.sleepIgnoringInterruption(100);
             try {
             	if(i_serverSocket != null){
 					i_serverSocket.close();

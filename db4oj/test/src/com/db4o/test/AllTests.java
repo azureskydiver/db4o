@@ -2,10 +2,11 @@
 
 package com.db4o.test;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
-import com.db4o.*;
-import com.db4o.config.*;
+import com.db4o.Db4o;
+import com.db4o.config.Configuration;
+import com.db4o.foundation.Cool;
 
 /**
  * This is the main db4o regression test. 
@@ -105,11 +106,10 @@ public class AllTests extends AllTestsConfAll implements Runnable {
             }
             Test.commit();
             Test.close();
+            
             // connection needs some commit time
-            try {
-                Thread.sleep(100);  //Tests ran OK for me without this line. This defensive measure is taken in several other places. Do we still need it here? Klaus.
-            } catch (InterruptedException e1) {
-            }
+            Cool.sleepIgnoringInterruption(100);  //Tests ran OK for me without this line. This defensive measure is taken in several other places. Do we still need it here? Klaus.
+
             Test.open();
             toTest = newInstance(_testCases[i]);
             runTestOne(toTest);
