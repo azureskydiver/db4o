@@ -22,7 +22,7 @@ public class VersionInfoAntTask extends Task {
     private String[] distributionNames = {
         ".NET",
         ".NET CompactFramework",
-        "mono"
+        "Mono"
     };
     
     public void setPath(String path) {
