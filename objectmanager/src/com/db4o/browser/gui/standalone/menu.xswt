@@ -19,7 +19,7 @@
 					<menuItem x:id="Open" text="&amp;Open..."/>
 					<menuItem x:id="Query" text="&amp;Query..."/>
 					<menuItem x:id="Preferences" text="&amp;Preferences..."/>
-					<menuItem x:id="AddToClasspath" text="&amp;Add to classpath..."/>
+					<menuItem x:id="ExtendClasspath" text="&amp;Extend classpath..." x:style="CASCADE"  menu="classpathMenu"/>
 					<menuItem x:style="SEPARATOR"/>
 					<menuItem x:id="NewWindow" text="&amp;New Window"/>
 					<menuItem x:style="SEPARATOR"/>
@@ -35,6 +35,12 @@
 				</x:children>
 			</menu>
 			
+				<menu x:style="DROP_DOWN" x:id="classpathMenu">
+					<x:children>
+						<menuItem x:id="AddDirToClasspath" text="&amp;Add directory to path..."/>
+						<menuItem x:id="AddFileToClasspath" text="&amp;Add file to path..."/>
+					</x:children>
+				</menu>
     	</x:children>
     </getShell>
 </xswt>
