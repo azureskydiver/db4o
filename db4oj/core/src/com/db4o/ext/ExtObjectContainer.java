@@ -8,7 +8,6 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.config.Configuration;
-import com.db4o.internal.io.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.Reflector;
 import com.db4o.replication.ReplicationConflictHandler;
