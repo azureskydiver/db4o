@@ -378,10 +378,7 @@
 		<ant antfile="build-net-installer.xml" />
 	</target>
 	
-	<target name="zipmonox" depends="init, compiledllmono, javadoc" description="Zip Mono distribution" />
-
-	
-	<target name="zipmono" description="Zip Mono distribution">
+	<target name="zipmono" depends="init, compiledllmono, javadoc" description="Zip Mono distribution">
 		<mkdir dir="${dir.dist.mono.src.core}" />
 		<copy todir="${dir.dist.mono.src.core}">
 			<fileset dir="${dir.n.core}">
@@ -435,9 +432,6 @@
 			<fileset dir="${dir.j}" includes="GPL.txt" />
 			<fileset dir="${dir.config}" includes="README.txt" />
 		</copy>
-		<zip destfile="${file.dist.mono}">
-			<fileset dir="${dir.dist.mono}" includes="${folder.build}/**" />
-		</zip>
 	</target>
 	
 	<target name="sharpen" depends="compilecorenet,compilebuild" description="create .NET sources">
