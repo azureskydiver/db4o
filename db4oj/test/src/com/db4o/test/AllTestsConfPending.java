@@ -2,7 +2,6 @@
 
 package com.db4o.test;
 
-import com.db4o.test.pending.*;
 
 public class AllTestsConfPending {
 

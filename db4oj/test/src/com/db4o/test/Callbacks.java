@@ -119,7 +119,7 @@ public class Callbacks
 	    oc.delete(this);
 	    oc.commit();
 	    
-	    Cool.sleepWithoutInterruption(100);
+	    Cool.sleepIgnoringInterruption(100);
 
 	    ensure(CAN_DELETE);
 	    ensure(DELETE);

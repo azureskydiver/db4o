@@ -31,14 +31,14 @@ public class SetSemaphore {
             new GetAndRelease(client1);
             new GetAndRelease(client4);
             new GetAndRelease(client5);
-
-            Cool.sleepWithoutInterruption(1000);
+            
+            Cool.sleepIgnoringInterruption(1000);
             Test.ensure(client1.setSemaphore("hi", 0));
             client1.close();
             
             new GetAndRelease(client3);
             new GetAndRelease(client2);
-            Cool.sleepWithoutInterruption(1000);
+            Cool.sleepIgnoringInterruption(1000);
             
             client2.close(); 
             client3.close(); // the last one opened remains
@@ -63,7 +63,7 @@ public class SetSemaphore {
             Test.ensure(client.setSemaphore("hi", 50000));
             time = System.currentTimeMillis() - time;
             // System.out.println("Time to get semaphore: " + time);
-            Cool.sleepWithoutInterruption(50);
+            Cool.sleepIgnoringInterruption(50);
 
             // System.out.println("About to release semaphore.");
             client.releaseSemaphore("hi");
