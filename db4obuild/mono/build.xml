@@ -81,6 +81,9 @@
 		<exec executable="rpm" inputstring="${gpg.pass}">
 			<arg line="--addsign ${dir.mono.rpmbuild}/RPMS/noarch/${db4o.name.short}-${db4o.version.build.plain}.noarch.rpm" />
 		</exec>		
+		<exec executable="rpm" inputstring="${gpg.pass}">
+			<arg line="--addsign ${dir.mono.rpmbuild}/SRPMS/${db4o.name.short}-${db4o.version.build.plain}.src.rpm" />
+		</exec>		
 		<delete dir="${dir.build.transfer.mono}/dist" />
 		<mkdir dir="${dir.build.transfer.mono}/dist" />
 		<copy file="${dir.mono.rpmbuild}/RPMS/noarch/${db4o.name.short}-${db4o.version.build.plain}.noarch.rpm" tofile="${dir.build.transfer.mono}/dist/${db4o.name.full}.noarch.rpm" />
