@@ -5,12 +5,22 @@ package com.db4o.browser.gui;
 
 import java.util.Map;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 
+import com.db4o.ObjectSet;
+import com.db4o.browser.gui.standalone.Model;
+import com.db4o.ext.StoredClass;
 import com.swtworkbench.community.xswt.XSWT;
 
 /**
@@ -36,7 +46,15 @@ public class DbBrowserPane extends Composite {
         parent.setLayout(new FillLayout());
         setLayout(new FillLayout());
         contents = XSWT.createl(this, "layout.xswt", getClass());
+        Model.open();
+        populateTree(Model.storedClasses());
+        addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				Model.close();
+			}
+        });
 	}
+    
     
     private Map contents = null;
     
@@ -72,8 +90,17 @@ public class DbBrowserPane extends Composite {
      * 
      * @return the hyperlink/tree area composite
      */
-    public Composite getHyperlinkArea() {
-        return (Composite) contents.get("HyperlinkArea");
+//    public Composite getHyperlinkArea() {
+//        return (Composite) contents.get("HyperlinkArea");
+//    }
+    
+    /**
+     * Returns the object tree
+     * 
+     * @return the object tree
+     */
+    public Tree getObjectTree() {
+        return (Tree) contents.get("ObjectTree");
     }
     
     /**
@@ -94,4 +121,40 @@ public class DbBrowserPane extends Composite {
         return (Composite) contents.get("DetailComposite");
     }
     
+    // ---------------------------------------------------------------
+    // Browser pane controller methods here
+    // ---------------------------------------------------------------
+
+    public void populateTree(StoredClass[] contents) {
+        Tree theTree = getObjectTree();
+        
+        for (int i=0; i < contents.length; ++i) {
+            TreeItem item = new TreeItem(theTree, SWT.NULL);
+            item.setData(contents[i]);
+            item.setText(contents[i].getName());
+            new TreeItem(item, SWT.NULL); //Placeholder
+        }
+        theTree.addListener (SWT.Expand, new Listener () {
+            public void handleEvent (final Event event) {
+                final TreeItem clazz = (TreeItem) event.item;
+                TreeItem [] instances = clazz.getItems ();
+                for (int i= 0; i<instances.length; i++) {
+                    if (instances [i].getData () != null) return;
+                    instances [i].dispose ();
+                }
+                StoredClass storedClass = (StoredClass) clazz.getData ();
+                ObjectSet objects = Model.instances(storedClass.getName());
+                if (!objects.hasNext()) return;
+                while (objects.hasNext()) {
+                    Object object = objects.next();
+                    TreeItem item = new TreeItem(clazz, SWT.NULL);
+                    item.setText(object.toString());
+                    item.setData(object);
+//                    if (object.isContainer()) {
+//                        new TreeItem (item, 0);
+//                    }
+                }
+            }
+        }); 
+     }
 }
