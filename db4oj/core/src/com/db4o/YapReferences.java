@@ -30,14 +30,14 @@ class YapReferences implements Runnable {
         return Platform.createYapRef(_queue, a_yo, obj);
     }
 
-    public void run() {
-        
-        // Need to check for _weak again here, because this method is also directly
-        // called from YapStream.gc()
-        
+    void pollReferenceQueue() {
         if (_weak) { 
             Platform.pollReferenceQueue(_stream, _queue);
         }
+    }
+
+    public void run() {
+        pollReferenceQueue();
     }
 
     void startTimer() {

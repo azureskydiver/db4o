@@ -512,7 +512,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     void gc() {
-        i_references.run();
+        i_references.pollReferenceQueue();
     }
 
     public ObjectSet get(Object template) {
