@@ -2,9 +2,11 @@
 
 package com.db4o;
 
-import com.db4o.ext.*;
-import com.db4o.query.*;
-import com.db4o.replication.*;
+import com.db4o.ext.Db4oDatabase;
+import com.db4o.ext.VirtualField;
+import com.db4o.query.Query;
+import com.db4o.replication.ReplicationConflictHandler;
+import com.db4o.replication.ReplicationProcess;
 
 /**
  * 
