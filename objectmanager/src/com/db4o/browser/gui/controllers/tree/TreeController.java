@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Tree;
 
 import com.db4o.browser.gui.controllers.BrowserController;
 import com.db4o.browser.gui.controllers.IBrowserController;
+import com.db4o.browser.gui.controllers.SelectionChangedController;
 import com.db4o.browser.model.GraphPosition;
 import com.db4o.browser.model.IGraphIterator;
 

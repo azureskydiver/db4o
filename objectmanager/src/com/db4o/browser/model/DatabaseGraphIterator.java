@@ -67,7 +67,7 @@ public class DatabaseGraphIterator implements IGraphIterator {
         this.currentFamily = currentParent.children;
         this.currentIndex = currentParent.selectedChild;
 
-		this.path = path;
+		this.path = copy;
 	}
 	
 	/* (non-Javadoc)

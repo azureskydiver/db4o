@@ -1,15 +1,45 @@
 TODO:
 
-- Hook up detail pane to the database results
-    * Generate detail view (needs to be in a ScrolledComposite)
-    * Bind data values to detail view objects
-    * Generate hyperlinks
-
-- Allow display of query results
+- Bug: Selecting leaf node wierdness in detail pane
+- Implement forward/back buttons
+- Begin query UI / querying functionality
+    * Allow display of query results
 
 - Customize display of nodes
 
+- After initial release: fix tree/detail to implement IMaster/IDetail; submit
+  changes to JFace
+
 ----
+
+User feedback:
+
+Please show for every class:
+-- All members of the class (preferably with an expanding branch for 
+members defined in any base class(es).
+-- The names of the members as well as the defined type of the field
+-- The Value of each field and the type of the stored value (this is 
+importaint)
+-- For fields containing objects, an easy way to double-click or navigate 
+to the object. It would be cool to show the db4o object ID for reference.
+-- For objects containing an array/collection, a way to see all 
+objects/values stored in the array, by index.
+-- Please pay special attention to things like the Db4o LinkedList and 
+HashMap classes!
+
+
+
+It should be possible to browse a db4o-Database WITHOUT having the original
+class-definitions (no dll, no source available)
+
+I once got an old .yap file from a client and i didn't have the old
+class-definitions. It was a very hard job to browse and repair some simple
+data.
+
+would be nice to be able to modify data too  :-) 
+
+----
+
 
 - Follow up using the bottom-up strategy getting db4o into Red Hat.
 

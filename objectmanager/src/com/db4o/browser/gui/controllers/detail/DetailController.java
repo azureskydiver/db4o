@@ -5,6 +5,7 @@ package com.db4o.browser.gui.controllers.detail;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 
 import com.db4o.browser.gui.controllers.BrowserController;
@@ -52,11 +53,13 @@ public class DetailController implements IBrowserController {
 				input.selectNextChild();
 				buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
 				input.selectParent();
+				input.previous();
 			} else {
 				buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
 			}
 		} else {
-			buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
+			// Do nothing
+//			buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
 		}
 	}
 
@@ -77,7 +80,8 @@ public class DetailController implements IBrowserController {
 			// We have to manually compute and set the size because we're inside
 			// a ScrolledComposite here...
 			Point preferredSize = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-			parent.setSize(preferredSize);
+			parent.setBounds(new Rectangle(0, 0, preferredSize.x, preferredSize.y));
+			parent.layout(true);
 		} catch (XSWTException e) {
 			throw new RuntimeException("Unable to create field area layout", e);
 		}

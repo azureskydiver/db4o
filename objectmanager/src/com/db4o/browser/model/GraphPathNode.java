@@ -12,6 +12,8 @@ import com.db4o.browser.model.nodes.IModelNode;
  */
 public class GraphPathNode {
 	/**
+	 * Non-API
+	 * 
 	 * @param children
 	 * @param selectedChild
 	 */
@@ -20,7 +22,14 @@ public class GraphPathNode {
 		this.selectedChild = selectedChild;
 	}
 
+	/**
+	 * Non-API
+	 */
     public final IModelNode[] children;
+	
+	/**
+	 * Non-API
+	 */
     public final int selectedChild;
 
 }
