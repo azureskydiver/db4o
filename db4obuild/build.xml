@@ -211,12 +211,12 @@
 	<target name="compiletestsjava" depends="compilecorejava" description="Compile Db4o test sources">
 		<mkdir dir="${dir.dist.classes.test}" />
 		<depend srcdir="${dir.j.test.src}" destdir="${dir.dist.classes.test}" closure="yes" />
-		<javac destdir="${dir.dist.classes.test}" debug="on" target="1.3" source="1.3">
+		<javac destdir="${dir.dist.classes.test}" debug="on" target="1.5" source="1.5">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java1.4}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
-			<src path="${dir.j.test.src}" />
+			<src path="${dir.j.test.src}"/>
 			<src path="${dir.j.tools.src}" />
 		</javac>
 	</target>
