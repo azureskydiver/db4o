@@ -1,72 +1,87 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using com.db4o.config;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal sealed class YapFieldTranslator : com.db4o.YapField
+	{
+		private readonly com.db4o.config.ObjectTranslator i_translator;
 
-   internal class YapFieldTranslator : YapField {
-      private ObjectTranslator i_translator;
-      
-      internal YapFieldTranslator(YapClass yapclass, ObjectTranslator objecttranslator) : base(yapclass, objecttranslator) {
-         i_translator = objecttranslator;
-         this.configure(objecttranslator.storedClass());
-      }
-      
-      internal override void deactivate(Transaction transaction, Object obj, int i) {
-         if (i > 0) this.cascadeActivation(transaction, obj, i, false);
-         setOn(transaction.i_stream, obj, null);
-      }
-      
-      internal override Object getOn(Transaction transaction, Object obj) {
-         try {
-            {
-               return i_translator.onStore(transaction.i_stream, obj);
-            }
-         }  catch (Exception throwable) {
-            {
-               return null;
-            }
-         }
-      }
-      
-      internal override Object getOrCreate(Transaction transaction, Object obj) {
-         return getOn(transaction, obj);
-      }
-      
-      internal override void instantiate(YapObject yapobject, Object obj, YapWriter yapwriter) {
-         Object obj_0_1 = this.read(yapwriter);
-         yapwriter.getStream().activate2(yapwriter.getTransaction(), obj_0_1, yapwriter.getInstantiationDepth());
-         setOn(yapwriter.getStream(), obj, obj_0_1);
-      }
-      
-      internal override void refresh() {
-      }
-      
-      private void setOn(YapStream yapstream, Object obj, Object obj_1_) {
-         try {
-            {
-               i_translator.onActivate(yapstream, obj, obj_1_);
-            }
-         }  catch (Exception throwable) {
-            {
-            }
-         }
-      }
-   }
+		internal YapFieldTranslator(com.db4o.YapClass a_yapClass, com.db4o.config.ObjectTranslator
+			 a_translator) : base(a_yapClass, a_translator)
+		{
+			i_translator = a_translator;
+			com.db4o.YapStream stream = a_yapClass.getStream();
+			configure(stream.reflector().forClass(a_translator.storedClass()));
+		}
+
+		internal override void deactivate(com.db4o.Transaction a_trans, object a_onObject
+			, int a_depth)
+		{
+			if (a_depth > 0)
+			{
+				cascadeActivation(a_trans, a_onObject, a_depth, false);
+			}
+			setOn(a_trans.i_stream, a_onObject, null);
+		}
+
+		internal override object getOn(com.db4o.Transaction a_trans, object a_OnObject)
+		{
+			try
+			{
+				return i_translator.onStore(a_trans.i_stream, a_OnObject);
+			}
+			catch (System.Exception t)
+			{
+				return null;
+			}
+		}
+
+		internal override object getOrCreate(com.db4o.Transaction a_trans, object a_OnObject
+			)
+		{
+			return getOn(a_trans, a_OnObject);
+		}
+
+		internal override void instantiate(com.db4o.YapObject a_yapObject, object a_onObject
+			, com.db4o.YapWriter a_bytes)
+		{
+			object toSet = read(a_bytes);
+			a_bytes.getStream().activate2(a_bytes.getTransaction(), toSet, a_bytes.getInstantiationDepth
+				());
+			setOn(a_bytes.getStream(), a_onObject, toSet);
+		}
+
+		internal override void refresh()
+		{
+		}
+
+		private void setOn(com.db4o.YapStream a_stream, object a_onObject, object toSet)
+		{
+			try
+			{
+				i_translator.onActivate(a_stream, a_onObject, toSet);
+			}
+			catch (System.Exception t)
+			{
+			}
+		}
+	}
 }

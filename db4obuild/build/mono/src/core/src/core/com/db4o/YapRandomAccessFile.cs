@@ -1,305 +1,409 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using j4o.io;
-using com.db4o.ext;
-using com.db4o.io;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal class YapRandomAccessFile : com.db4o.YapFile
+	{
+		private com.db4o.Session i_session;
 
-   internal class YapRandomAccessFile : YapFile {
-      private Session i_session;
-      private IoAdapter i_file;
-      private IoAdapter i_timerFile;
-      private volatile IoAdapter i_backupFile;
-      private byte[] i_timerBytes = new byte[8];
-      private Object i_fileLock;
-      
-      internal YapRandomAccessFile(Session session) : base((YapStream)null) {
-         lock (i_lock) {
-            i_fileLock = new Object();
-            i_session = session;
-            try {
-               {
-                  open();
-               }
-            }  catch (DatabaseFileLockedException databasefilelockedexception) {
-               {
-                  this.stopSession();
-                  throw databasefilelockedexception;
-               }
-            }
-            this.initialize3();
-         }
-      }
-      
-      public override void backup(String xstring) {
-         lock (i_lock) {
-            this.checkClosed();
-            if (i_backupFile != null) Db4o.throwRuntimeException(61);
-            try {
-               {
-                  i_backupFile = i_config.i_ioAdapter.open(xstring, true, i_file.getLength());
-               }
-            }  catch (Exception exception) {
-               {
-                  i_backupFile = null;
-                  Db4o.throwRuntimeException(12, xstring);
-               }
-            }
-         }
-         long l1 = 0L;
-         int i1 = 8192;
-         byte[] xis1 = new byte[i1];
-         do {
-            lock (i_lock) {
-               i_file.seek(l1);
-               int i_0_1 = i_file.read(xis1);
-               i_backupFile.seek(l1);
-               i_backupFile.write(xis1, i_0_1);
-               l1 += (long)i_0_1;
-               j4o.lang.JavaSystem.notify(i_lock);
-            }
-         }          while (l1 < i_file.getLength());
-         lock (i_lock) {
-            i_backupFile.close();
-            i_backupFile = null;
-         }
-      }
-      
-      internal override void blockSize(int i) {
-         i_file.blockSize(i);
-         if (i_timerFile != null) i_timerFile.blockSize(i);
-      }
-      
-      internal override byte blockSize() {
-         return (byte)i_file.blockSize();
-      }
-      
-      internal override bool close2() {
-         bool xbool1 = true;
-         lock (Db4o.Lock) {
-            xbool1 = i_session.closeInstance();
-            if (xbool1) {
-               this.freePrefetchedPointers();
-               try {
-                  {
-                     i_entryCounter++;
-                     this.write(true);
-                  }
-               }  catch (Exception throwable) {
-                  {
-                     this.fatalException(throwable);
-                  }
-               }
-               base.close2();
-               i_entryCounter--;
-               Db4o.sessionStopped(i_session);
-               lock (i_fileLock) {
-                  try {
-                     {
-                        i_file.close();
-                        i_file = null;
-                        if (this.needsLockFileThread()) {
-                           YapWriter yapwriter1 = new YapWriter(i_systemTrans, 8);
-                           YLong.writeLong(0L, yapwriter1);
-                           i_timerFile.blockSeek(i_configBlock._address, 12);
-                           i_timerFile.write(yapwriter1._buffer);
-                           i_timerFile.close();
-                        }
-                     }
-                  }  catch (Exception exception) {
-                     {
-                        i_file = null;
-                        Db4o.throwRuntimeException(11, exception);
-                     }
-                  }
-                  i_file = null;
-               }
-            }
-         }
-         return xbool1;
-      }
-      
-      internal override void copy(int i, int i_1_, int i_2_, int i_3_, int i_4_) {
-         try {
-            {
-               if (i_backupFile == null) i_file.blockCopy(i, i_1_, i_2_, i_3_, i_4_); else {
-                  byte[] xis1 = new byte[i_4_];
-                  i_file.blockSeek(i, i_1_);
-                  i_file.read(xis1);
-                  i_file.blockSeek(i_2_, i_3_);
-                  i_file.write(xis1);
-                  if (i_backupFile != null) {
-                     i_backupFile.blockSeek(i_2_, i_3_);
-                     i_backupFile.write(xis1);
-                  }
-               }
-            }
-         }  catch (Exception exception) {
-            {
-               Db4o.throwRuntimeException(16, exception);
-            }
-         }
-      }
-      
-      private void checkXBytes(int i, int i_5_, int i_6_) {
-      }
-      
-      internal override void emergencyClose() {
-         base.emergencyClose();
-         try {
-            {
-               i_file.close();
-            }
-         }  catch (Exception exception) {
-            {
-            }
-         }
-         try {
-            {
-               Db4o.sessionStopped(i_session);
-            }
-         }  catch (Exception exception) {
-            {
-            }
-         }
-         i_file = null;
-      }
-      
-      internal override long fileLength() {
-         try {
-            {
-               return i_file.getLength();
-            }
-         }  catch (Exception exception) {
-            {
-               throw new RuntimeException();
-            }
-         }
-      }
-      
-      internal override String fileName() {
-         return i_session.fileName();
-      }
-      
-      private void open() {
-         bool xbool1 = false;
-         try {
-            {
-               if (j4o.lang.JavaSystem.getLengthOf(fileName()) > 0) {
-                  File file1 = new File(fileName());
-                  if (!file1.exists() || j4o.lang.JavaSystem.getLengthOf(file1) == 0L) {
-                     xbool1 = true;
-                     this.logMsg(14, fileName());
-                  }
-                  try {
-                     {
-                        bool bool_7_1 = i_config.i_lockFile && !i_config.i_readonly;
-                        i_file = i_config.i_ioAdapter.open(fileName(), bool_7_1, 0L);
-                        if (this.needsLockFileThread()) i_timerFile = i_config.i_ioAdapter.open(fileName(), false, 0L);
-                     }
-                  }  catch (DatabaseFileLockedException databasefilelockedexception) {
-                     {
-                        throw databasefilelockedexception;
-                     }
-                  } catch (Exception exception) {
-                     {
-                        Db4o.throwRuntimeException(12, fileName(), exception);
-                     }
-                  }
-                  if (xbool1) {
-                     if (i_config.i_reservedStorageSpace > 0) reserve(i_config.i_reservedStorageSpace);
-                     this.configureNewFile();
-                     this.write(false);
-                     this.writeHeader(false);
-                  } else this.readThis();
-               } else Db4o.throwRuntimeException(21);
-            }
-         }  catch (Exception exception) {
-            {
-               if (i_references != null) i_references.stopTimer();
-               throw exception;
-            }
-         }
-      }
-      
-      internal override void readBytes(byte[] xis, int i, int i_8_) {
-         readBytes(xis, i, 0, i_8_);
-      }
-      
-      internal override void readBytes(byte[] xis, int i, int i_9_, int i_10_) {
-         try {
-            {
-               i_file.blockSeek(i, i_9_);
-               i_file.read(xis, i_10_);
-            }
-         }  catch (Exception exception) {
-            {
-               Db4o.throwRuntimeException(13, exception);
-            }
-         }
-      }
-      
-      internal override void reserve(int i) {
-         lock (i_lock) {
-            int i_11_1 = this.getSlot(i);
-            YapWriter yapwriter1 = new YapWriter(i_systemTrans, i_11_1, i);
-            writeBytes(yapwriter1);
-            this.free(i_11_1, i);
-         }
-      }
-      
-      internal override void syncFiles() {
-      }
-      
-      internal override bool writeAccessTime() {
-         if (!this.needsLockFileThread()) return true;
-         lock (i_fileLock) {
-            if (i_file == null) return false;
-            long l1 = j4o.lang.JavaSystem.currentTimeMillis();
-            YLong.writeLong(l1, i_timerBytes);
-            i_timerFile.blockSeek(i_configBlock._address, 12);
-            i_timerFile.write(i_timerBytes);
-         }
-         return true;
-      }
-      
-      internal override void writeBytes(YapWriter yapwriter) {
-         if (!i_config.i_readonly) {
-            try {
-               {
-                  i_file.blockSeek(yapwriter.getAddress(), yapwriter.addressOffset());
-                  i_file.write(yapwriter._buffer, yapwriter.getLength());
-                  if (i_backupFile != null) {
-                     i_backupFile.blockSeek(yapwriter.getAddress(), yapwriter.addressOffset());
-                     i_backupFile.write(yapwriter._buffer, yapwriter.getLength());
-                  }
-               }
-            }  catch (Exception exception) {
-               {
-                  Db4o.throwRuntimeException(16, exception);
-               }
-            }
-         }
-      }
-      
-      internal override void writeXBytes(int i, int i_12_) {
-      }
-   }
+		private com.db4o.io.IoAdapter i_file;
+
+		private com.db4o.io.IoAdapter i_timerFile;
+
+		private com.db4o.io.IoAdapter i_backupFile;
+
+		private byte[] i_timerBytes = new byte[com.db4o.YapConst.LONG_BYTES];
+
+		private object i_fileLock;
+
+		internal YapRandomAccessFile(com.db4o.Session a_session) : base(null)
+		{
+			lock (i_lock)
+			{
+				i_fileLock = new object();
+				i_session = a_session;
+				try
+				{
+					open();
+				}
+				catch (com.db4o.ext.DatabaseFileLockedException e)
+				{
+					stopSession();
+					throw e;
+				}
+				initialize3();
+			}
+		}
+
+		public override void backup(string path)
+		{
+			lock (i_lock)
+			{
+				checkClosed();
+				if (i_backupFile != null)
+				{
+					com.db4o.Db4o.throwRuntimeException(61);
+				}
+				try
+				{
+					i_backupFile = i_config.i_ioAdapter.open(path, true, i_file.getLength());
+				}
+				catch (System.Exception e)
+				{
+					i_backupFile = null;
+					com.db4o.Db4o.throwRuntimeException(12, path);
+				}
+			}
+			long pos = 0;
+			int bufferlength = 8192;
+			byte[] buffer = new byte[bufferlength];
+			do
+			{
+				lock (i_lock)
+				{
+					i_file.seek(pos);
+					int read = i_file.read(buffer);
+					i_backupFile.seek(pos);
+					i_backupFile.write(buffer, read);
+					pos += read;
+					j4o.lang.JavaSystem.notify(i_lock);
+				}
+			}
+			while (pos < i_file.getLength());
+			lock (i_lock)
+			{
+				i_backupFile.close();
+				i_backupFile = null;
+			}
+		}
+
+		internal override void blockSize(int blockSize)
+		{
+			i_file.blockSize(blockSize);
+			if (i_timerFile != null)
+			{
+				i_timerFile.blockSize(blockSize);
+			}
+		}
+
+		internal override byte blockSize()
+		{
+			return (byte)i_file.blockSize();
+		}
+
+		internal override bool close2()
+		{
+			bool stopSession = true;
+			lock (com.db4o.Db4o.Lock)
+			{
+				stopSession = i_session.closeInstance();
+				if (stopSession)
+				{
+					freePrefetchedPointers();
+					try
+					{
+						i_entryCounter++;
+						write(true);
+					}
+					catch (System.Exception t)
+					{
+						fatalException(t);
+					}
+					base.close2();
+					i_entryCounter--;
+					com.db4o.Db4o.sessionStopped(i_session);
+					lock (i_fileLock)
+					{
+						try
+						{
+							i_file.close();
+							i_file = null;
+							if (needsLockFileThread() && com.db4o.Debug.lockFile)
+							{
+								com.db4o.YapWriter lockBytes = new com.db4o.YapWriter(i_systemTrans, com.db4o.YapConst
+									.YAPLONG_LENGTH);
+								com.db4o.YLong.writeLong(0, lockBytes);
+								i_timerFile.blockSeek(i_configBlock._address, com.db4o.YapConfigBlock.ACCESS_TIME_OFFSET
+									);
+								i_timerFile.write(lockBytes._buffer);
+								i_timerFile.close();
+							}
+						}
+						catch (System.Exception e)
+						{
+							i_file = null;
+							com.db4o.Db4o.throwRuntimeException(11, e);
+						}
+						i_file = null;
+					}
+				}
+			}
+			return stopSession;
+		}
+
+		internal override void copy(int oldAddress, int oldAddressOffset, int newAddress, 
+			int newAddressOffset, int length)
+		{
+			if (com.db4o.Deploy.debug && com.db4o.Deploy.overwrite)
+			{
+				checkXBytes(newAddress, newAddressOffset, length);
+			}
+			try
+			{
+				if (i_backupFile == null)
+				{
+					i_file.blockCopy(oldAddress, oldAddressOffset, newAddress, newAddressOffset, length
+						);
+					return;
+				}
+				byte[] copyBytes = new byte[length];
+				i_file.blockSeek(oldAddress, oldAddressOffset);
+				i_file.read(copyBytes);
+				i_file.blockSeek(newAddress, newAddressOffset);
+				i_file.write(copyBytes);
+				if (i_backupFile != null)
+				{
+					i_backupFile.blockSeek(newAddress, newAddressOffset);
+					i_backupFile.write(copyBytes);
+				}
+			}
+			catch (System.Exception e)
+			{
+				com.db4o.Db4o.throwRuntimeException(16, e);
+			}
+		}
+
+		private void checkXBytes(int a_newAddress, int newAddressOffset, int a_length)
+		{
+			if (com.db4o.Deploy.debug && com.db4o.Deploy.overwrite)
+			{
+				try
+				{
+					byte[] checkXBytes = new byte[a_length];
+					i_file.blockSeek(a_newAddress, newAddressOffset);
+					i_file.read(checkXBytes);
+					for (int i = 0; i < checkXBytes.Length; i++)
+					{
+						if (checkXBytes[i] != com.db4o.YapConst.XBYTE)
+						{
+							string msg = "XByte corruption adress:" + a_newAddress + " length:" + a_length;
+							throw new j4o.lang.RuntimeException(msg);
+						}
+					}
+				}
+				catch (System.Exception e)
+				{
+					j4o.lang.JavaSystem.printStackTrace(e);
+				}
+			}
+		}
+
+		internal override void emergencyClose()
+		{
+			base.emergencyClose();
+			try
+			{
+				i_file.close();
+			}
+			catch (System.Exception e)
+			{
+			}
+			try
+			{
+				com.db4o.Db4o.sessionStopped(i_session);
+			}
+			catch (System.Exception e)
+			{
+			}
+			i_file = null;
+		}
+
+		internal override long fileLength()
+		{
+			try
+			{
+				return i_file.getLength();
+			}
+			catch (System.Exception e)
+			{
+				throw new j4o.lang.RuntimeException();
+			}
+		}
+
+		internal override string fileName()
+		{
+			return i_session.fileName();
+		}
+
+		private void open()
+		{
+			bool isNew = false;
+			try
+			{
+				if (j4o.lang.JavaSystem.getLengthOf(fileName()) > 0)
+				{
+					j4o.io.File existingFile = new j4o.io.File(fileName());
+					if (!existingFile.exists() || existingFile.length() == 0)
+					{
+						isNew = true;
+						logMsg(14, fileName());
+					}
+					try
+					{
+						bool lockFile = com.db4o.Debug.lockFile && i_config.i_lockFile && (!i_config.i_readonly
+							);
+						i_file = i_config.i_ioAdapter.open(fileName(), lockFile, 0);
+						if (needsLockFileThread() && com.db4o.Debug.lockFile)
+						{
+							i_timerFile = i_config.i_ioAdapter.open(fileName(), false, 0);
+						}
+					}
+					catch (com.db4o.ext.DatabaseFileLockedException de)
+					{
+						throw de;
+					}
+					catch (System.Exception e)
+					{
+						com.db4o.Db4o.throwRuntimeException(12, fileName(), e);
+					}
+					if (isNew)
+					{
+						if (i_config.i_reservedStorageSpace > 0)
+						{
+							reserve(i_config.i_reservedStorageSpace);
+						}
+						configureNewFile();
+						write(false);
+						writeHeader(false);
+					}
+					else
+					{
+						readThis();
+					}
+				}
+				else
+				{
+					com.db4o.Db4o.throwRuntimeException(21);
+				}
+			}
+			catch (System.Exception exc)
+			{
+				if (i_references != null)
+				{
+					i_references.stopTimer();
+				}
+				throw exc;
+			}
+		}
+
+		internal override void readBytes(byte[] bytes, int address, int length)
+		{
+			readBytes(bytes, address, 0, length);
+		}
+
+		internal override void readBytes(byte[] bytes, int address, int addressOffset, int
+			 length)
+		{
+			try
+			{
+				i_file.blockSeek(address, addressOffset);
+				i_file.read(bytes, length);
+			}
+			catch (System.Exception e)
+			{
+				com.db4o.Db4o.throwRuntimeException(13, e);
+			}
+		}
+
+		internal override void reserve(int byteCount)
+		{
+			lock (i_lock)
+			{
+				int address = getSlot(byteCount);
+				com.db4o.YapWriter yb = new com.db4o.YapWriter(i_systemTrans, address, byteCount);
+				writeBytes(yb);
+				free(address, byteCount);
+			}
+		}
+
+		internal override void syncFiles()
+		{
+		}
+
+		internal override bool writeAccessTime()
+		{
+			if (!needsLockFileThread())
+			{
+				return true;
+			}
+			lock (i_fileLock)
+			{
+				if (i_file == null)
+				{
+					return false;
+				}
+				long lockTime = j4o.lang.JavaSystem.currentTimeMillis();
+				com.db4o.YLong.writeLong(lockTime, i_timerBytes);
+				i_timerFile.blockSeek(i_configBlock._address, com.db4o.YapConfigBlock.ACCESS_TIME_OFFSET
+					);
+				i_timerFile.write(i_timerBytes);
+			}
+			return true;
+		}
+
+		internal override void writeBytes(com.db4o.YapWriter a_bytes)
+		{
+			if (i_config.i_readonly)
+			{
+				return;
+			}
+			if (com.db4o.Deploy.debug && !com.db4o.Deploy.flush)
+			{
+				return;
+			}
+			try
+			{
+				if (com.db4o.Deploy.debug && com.db4o.Deploy.overwrite)
+				{
+					if (a_bytes.getID() != com.db4o.YapConst.IGNORE_ID)
+					{
+						checkXBytes(a_bytes.getAddress(), a_bytes.addressOffset(), a_bytes.getLength());
+					}
+				}
+				i_file.blockSeek(a_bytes.getAddress(), a_bytes.addressOffset());
+				i_file.write(a_bytes._buffer, a_bytes.getLength());
+				if (i_backupFile != null)
+				{
+					i_backupFile.blockSeek(a_bytes.getAddress(), a_bytes.addressOffset());
+					i_backupFile.write(a_bytes._buffer, a_bytes.getLength());
+				}
+			}
+			catch (System.Exception e)
+			{
+				com.db4o.Db4o.throwRuntimeException(16, e);
+			}
+		}
+
+		internal override void writeXBytes(int a_address, int a_length)
+		{
+		}
+	}
 }

@@ -1,279 +1,565 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using com.db4o.query;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <summary>QQuery is the users hook on our graph.</summary>
+	/// <remarks>
+	/// QQuery is the users hook on our graph.
+	/// A QQuery is defined by it's constraints.
+	/// </remarks>
+	/// <exclude></exclude>
+	public class QQuery : com.db4o.query.Query
+	{
+		[com.db4o.Transient]
+		private static readonly com.db4o.IDGenerator i_orderingGenerator = new com.db4o.IDGenerator
+			();
 
-   public class QQuery : Query {
-      [Transient] private static IDGenerator i_orderingGenerator = new IDGenerator();
-      [Transient] internal Transaction i_trans;
-      private Collection4 i_constraints;
-      private QQuery i_parent;
-      private String i_field;
-      
-      public QQuery() : base() {
-         i_constraints = new Collection4();
-      }
-      
-      internal QQuery(Transaction transaction, QQuery qquery_0_, String xstring) : base() {
-         i_constraints = new Collection4();
-         i_trans = transaction;
-         i_parent = qquery_0_;
-         i_field = xstring;
-      }
-      
-      internal void addConstraint(QCon qcon) {
-         i_constraints.add(qcon);
-      }
-      
-      private void addConstraint(Collection4 collection4, Object obj) {
-         bool xbool1 = false;
-         Iterator4 iterator41 = i_constraints.iterator();
-         while (iterator41.hasNext()) {
-            QCon qcon1 = (QCon)iterator41.next();
-            bool[] bools1 = {
-               false            };
-            QCon qcon_1_1 = qcon1.shareParent(obj, bools1);
-            if (qcon_1_1 != null) {
-               addConstraint(qcon_1_1);
-               collection4.add(qcon_1_1);
-               if (bools1[0]) removeConstraint(qcon1);
-               xbool1 = true;
-            }
-         }
-         if (!xbool1) {
-            QConObject qconobject1 = new QConObject(i_trans, null, null, obj);
-            addConstraint(qconobject1);
-            collection4.add(qconobject1);
-         }
-      }
-      
-      public Constraint constrain(Object obj) {
-         lock (streamLock()) {
-            Object obj_2_1 = null;
-            obj = Platform.getClassForType(obj);
-            if (YapConst.CLASS_CLASS.isInstance(obj)) {
-               Class var_class1 = (Class)obj;
-               Collection4 collection42 = new Collection4();
-               if (var_class1.isInterface()) {
-                  Collection4 collection4_3_1 = i_trans.i_stream.i_classCollection.forInterface(var_class1);
-                  if (collection4_3_1.size() == 0) return null;
-                  Iterator4 iterator42 = collection4_3_1.iterator();
-                  Constraint constraint1 = null;
-                  while (iterator42.hasNext()) {
-                     YapClass yapclass1 = (YapClass)iterator42.next();
-                     Class var_class_4_1 = yapclass1.getJavaClass();
-                     if (var_class_4_1 != null && !var_class_4_1.isInterface()) {
-                        if (constraint1 == null) constraint1 = constrain(var_class_4_1); else constraint1 = constraint1.or(constrain(yapclass1.getJavaClass()));
-                     }
-                  }
-                  return constraint1;
-               }
-               Iterator4 iterator41 = i_constraints.iterator();
-               while (iterator41.hasNext()) {
-                  QConObject qconobject1 = (QConObject)iterator41.next();
-                  bool[] bools1 = {
-                     false                  };
-                  QConClass qconclass1 = qconobject1.shareParentForClass(var_class1, bools1);
-                  if (qconclass1 != null) {
-                     addConstraint(qconclass1);
-                     collection42.add(qconclass1);
-                     if (bools1[0]) removeConstraint(qconobject1);
-                  }
-               }
-               if (collection42.size() == 0) {
-                  QConClass qconclass1 = new QConClass(i_trans, null, null, var_class1);
-                  addConstraint(qconclass1);
-                  return qconclass1;
-               }
-               if (collection42.size() == 1) return (Constraint)collection42.iterator().next();
-               Constraint[] constraints1 = new Constraint[collection42.size()];
-               collection42.toArray(constraints1);
-               return new QConstraints(i_trans, constraints1);
-            }
-            QEvaluation qevaluation1 = Platform.evaluationCreate(i_trans, obj);
-            if (qevaluation1 != null) {
-               Iterator4 iterator41 = i_constraints.iterator();
-               while (iterator41.hasNext()) ((QCon)iterator41.next()).addConstraint(qevaluation1);
-               return null;
-            }
-            Collection4 collection41 = new Collection4();
-            addConstraint(collection41, obj);
-            return toConstraint(collection41);
-         }
-      }
-      
-      public Constraints constraints() {
-         lock (streamLock()) {
-            Constraint[] constraints1 = new Constraint[i_constraints.size()];
-            i_constraints.toArray(constraints1);
-            return new QConstraints(i_trans, constraints1);
-         }
-      }
-      
-      public Query descend(String xstring) {
-         lock (streamLock()) {
-            QQuery qquery_5_1 = new QQuery(i_trans, this, xstring);
-            int[] xis1 = {
-               1            };
-            if (!descend1(qquery_5_1, xstring, xis1) && xis1[0] == 1) {
-               xis1[0] = 2;
-               if (!descend1(qquery_5_1, xstring, xis1)) return null;
-            }
-            return qquery_5_1;
-         }
-      }
-      
-      private bool descend1(QQuery qquery_6_, String xstring, int[] xis) {
-         bool[] bools1 = {
-            false         };
-         if (xis[0] == 2 || i_constraints.size() == 0) {
-            xis[0] = 0;
-            bool[] bools_7_1 = {
-               false            };
-            i_trans.i_stream.i_classCollection.yapFields(xstring, new QQuery__1(this, bools_7_1));
-         }
-         Iterator4 iterator41 = i_constraints.iterator();
-         while (iterator41.hasNext()) {
-            if (((QCon)iterator41.next()).attach(qquery_6_, xstring)) bools1[0] = true;
-         }
-         return bools1[0];
-      }
-      
-      public ObjectSet execute() {
-         lock (streamLock()) {
-            QResult qresult1 = new QResult(i_trans);
-            execute1(qresult1);
-            return qresult1;
-         }
-      }
-      
-      internal void execute1(QResult qresult) {
-         if (i_trans.i_stream.isClient()) {
-            marshall();
-            ((YapClient)i_trans.i_stream).queryExecute(this, qresult);
-         } else execute2(qresult);
-      }
-      
-      internal void execute2(QResult qresult) {
-         bool xbool1 = false;
-         bool bool_8_1 = true;
-         List4 list41 = null;
-         Iterator4 iterator41 = i_constraints.iterator();
-         while (iterator41.hasNext()) {
-            QCon qcon1 = (QCon)iterator41.next();
-            QCon qcon_9_1 = qcon1;
-            bool bool_10_1 = false;
-            qcon1 = qcon1.getRoot();
-            if (qcon1 != qcon_9_1) {
-               xbool1 = true;
-               bool_8_1 = false;
-            }
-            YapClass yapclass1 = qcon1.getYapClass();
-            if (yapclass1 != null) {
-               if (list41 != null) {
-                  Iterator4 iterator4_11_1 = new Iterator4(list41);
-                  while (iterator4_11_1.hasNext()) {
-                     QCandidates qcandidates1 = (QCandidates)iterator4_11_1.next();
-                     if (qcandidates1.tryAddConstraint(qcon1)) {
-                        bool_10_1 = true;
-                        break;
-                     }
-                  }
-               }
-               if (!bool_10_1) {
-                  QCandidates qcandidates1 = new QCandidates(i_trans, qcon1.getYapClass(), null);
-                  qcandidates1.addConstraint(qcon1);
-                  list41 = new List4(list41, qcandidates1);
-               }
-            }
-         }
-         if (list41 != null) {
-            iterator41 = new Iterator4(list41);
-            while (iterator41.hasNext()) ((QCandidates)iterator41.next()).execute();
-            if (list41.i_next != null) xbool1 = true;
-            if (xbool1) qresult.checkDuplicates();
-            iterator41 = new Iterator4(list41);
-            while (iterator41.hasNext()) {
-               QCandidates qcandidates1 = (QCandidates)iterator41.next();
-               if (bool_8_1) qcandidates1.traverse(qresult); else {
-                  QQuery qquery_12_1 = this;
-                  Collection4 collection41 = new Collection4();
-                  for (; qquery_12_1.i_parent != null; qquery_12_1 = qquery_12_1.i_parent) collection41.add(qquery_12_1.i_field);
-                  qcandidates1.traverse(new QQuery__2(this, collection41, qresult));
-               }
-            }
-         }
-         qresult.reset();
-      }
-      
-      internal Transaction getTransaction() {
-         return i_trans;
-      }
-      
-      public Query orderAscending() {
-         lock (streamLock()) {
-            setOrdering(i_orderingGenerator.next());
-            return this;
-         }
-      }
-      
-      public Query orderDescending() {
-         lock (streamLock()) {
-            setOrdering(-i_orderingGenerator.next());
-            return this;
-         }
-      }
-      
-      private void setOrdering(int i) {
-         Iterator4 iterator41 = i_constraints.iterator();
-         while (iterator41.hasNext()) ((QCon)iterator41.next()).setOrdering(i);
-      }
-      
-      internal void marshall() {
-         Iterator4 iterator41 = i_constraints.iterator();
-         while (iterator41.hasNext()) ((QCon)iterator41.next()).getRoot().marshall();
-      }
-      
-      internal void removeConstraint(QCon qcon) {
-         i_constraints.remove(qcon);
-      }
-      
-      internal void unmarshall(Transaction transaction) {
-         i_trans = transaction;
-         Iterator4 iterator41 = i_constraints.iterator();
-         while (iterator41.hasNext()) ((QCon)iterator41.next()).unmarshall(transaction);
-      }
-      
-      internal Constraint toConstraint(Collection4 collection4) {
-         Iterator4 iterator41 = collection4.iterator();
-         if (collection4.size() == 1) return (Constraint)iterator41.next();
-         if (collection4.size() > 0) {
-            Constraint[] constraints1 = new Constraint[collection4.size()];
-            collection4.toArray(constraints1);
-            return new QConstraints(i_trans, constraints1);
-         }
-         return null;
-      }
-      
-      protected Object streamLock() {
-         return i_trans.i_stream.i_lock;
-      }
-   }
+		[com.db4o.Transient]
+		internal com.db4o.Transaction i_trans;
+
+		private com.db4o.Collection4 i_constraints = new com.db4o.Collection4();
+
+		private com.db4o.QQuery i_parent;
+
+		private string i_field;
+
+		public QQuery()
+		{
+		}
+
+		internal QQuery(com.db4o.Transaction a_trans, com.db4o.QQuery a_parent, string a_field
+			)
+		{
+			i_trans = a_trans;
+			i_parent = a_parent;
+			i_field = a_field;
+		}
+
+		internal virtual void addConstraint(com.db4o.QCon a_constraint)
+		{
+			i_constraints.add(a_constraint);
+		}
+
+		private void addConstraint(com.db4o.Collection4 col, object obj)
+		{
+			bool found = false;
+			com.db4o.Iterator4 j = i_constraints.iterator();
+			while (j.hasNext())
+			{
+				com.db4o.QCon existingConstraint = (com.db4o.QCon)j.next();
+				bool[] removeExisting = { false };
+				com.db4o.QCon newConstraint = existingConstraint.shareParent(obj, removeExisting);
+				if (newConstraint != null)
+				{
+					addConstraint(newConstraint);
+					col.add(newConstraint);
+					if (removeExisting[0])
+					{
+						removeConstraint(existingConstraint);
+					}
+					found = true;
+				}
+			}
+			if (!found)
+			{
+				com.db4o.QConObject newConstraint = new com.db4o.QConObject(i_trans, null, null, 
+					obj);
+				addConstraint(newConstraint);
+				col.add(newConstraint);
+			}
+		}
+
+		/// <summary>Search for slot that corresponds to class.</summary>
+		/// <remarks>
+		/// Search for slot that corresponds to class. <br />If not found add it.
+		/// <br />Constrain it. <br />
+		/// </remarks>
+		public virtual com.db4o.query.Constraint constrain(object example)
+		{
+			lock (streamLock())
+			{
+				com.db4o.reflect.ReflectClass claxx = null;
+				example = com.db4o.Platform.getClassForType(example);
+				com.db4o.reflect.Reflector reflector = i_trans.reflector();
+				if (example is com.db4o.reflect.ReflectClass)
+				{
+					claxx = (com.db4o.reflect.ReflectClass)example;
+				}
+				else
+				{
+					if (example is j4o.lang.Class)
+					{
+						claxx = reflector.forClass((j4o.lang.Class)example);
+					}
+				}
+				if (claxx != null)
+				{
+					com.db4o.Collection4 col = new com.db4o.Collection4();
+					if (claxx.isInterface())
+					{
+						com.db4o.Collection4 classes = i_trans.i_stream.i_classCollection.forInterface(claxx
+							);
+						if (classes.size() == 0)
+						{
+							return null;
+						}
+						com.db4o.Iterator4 i = classes.iterator();
+						com.db4o.query.Constraint constr = null;
+						while (i.hasNext())
+						{
+							com.db4o.YapClass yapClass = (com.db4o.YapClass)i.next();
+							com.db4o.reflect.ReflectClass yapClassClaxx = yapClass.classReflector();
+							if (yapClassClaxx != null)
+							{
+								if (!yapClassClaxx.isInterface())
+								{
+									if (constr == null)
+									{
+										constr = constrain(yapClassClaxx);
+									}
+									else
+									{
+										constr = constr.or(constrain(yapClass.classReflector()));
+									}
+								}
+							}
+						}
+						return constr;
+					}
+					com.db4o.Iterator4 constraintsIterator = i_constraints.iterator();
+					while (constraintsIterator.hasNext())
+					{
+						com.db4o.QCon existingConstraint = (com.db4o.QConObject)constraintsIterator.next(
+							);
+						bool[] removeExisting = { false };
+						com.db4o.QCon newConstraint = existingConstraint.shareParentForClass(claxx, removeExisting
+							);
+						if (newConstraint != null)
+						{
+							addConstraint(newConstraint);
+							col.add(newConstraint);
+							if (removeExisting[0])
+							{
+								removeConstraint(existingConstraint);
+							}
+						}
+					}
+					if (col.size() == 0)
+					{
+						com.db4o.QConClass qcc = new com.db4o.QConClass(i_trans, null, null, claxx);
+						addConstraint(qcc);
+						return qcc;
+					}
+					if (col.size() == 1)
+					{
+						return (com.db4o.query.Constraint)col.iterator().next();
+					}
+					com.db4o.query.Constraint[] constraintArray = new com.db4o.query.Constraint[col.size
+						()];
+					col.toArray(constraintArray);
+					return new com.db4o.QConstraints(i_trans, constraintArray);
+				}
+				com.db4o.QEvaluation eval = com.db4o.Platform.evaluationCreate(i_trans, example);
+				if (eval != null)
+				{
+					com.db4o.Iterator4 i = i_constraints.iterator();
+					while (i.hasNext())
+					{
+						((com.db4o.QCon)i.next()).addConstraint(eval);
+					}
+					return null;
+				}
+				com.db4o.Collection4 constraints = new com.db4o.Collection4();
+				addConstraint(constraints, example);
+				return toConstraint(constraints);
+			}
+		}
+
+		public virtual com.db4o.query.Constraints constraints()
+		{
+			lock (streamLock())
+			{
+				com.db4o.query.Constraint[] constraints = new com.db4o.query.Constraint[i_constraints
+					.size()];
+				i_constraints.toArray(constraints);
+				return new com.db4o.QConstraints(i_trans, constraints);
+			}
+		}
+
+		public virtual com.db4o.query.Query descend(string a_field)
+		{
+			lock (streamLock())
+			{
+				com.db4o.QQuery query = new com.db4o.QQuery(i_trans, this, a_field);
+				int[] run = { 1 };
+				if (!descend1(query, a_field, run))
+				{
+					if (run[0] == 1)
+					{
+						run[0] = 2;
+						if (!descend1(query, a_field, run))
+						{
+							return null;
+						}
+					}
+				}
+				return query;
+			}
+		}
+
+		private bool descend1(com.db4o.QQuery query, string a_field, int[] run)
+		{
+			bool[] foundClass = { false };
+			if (run[0] == 2 || i_constraints.size() == 0)
+			{
+				run[0] = 0;
+				bool[] anyClassCollected = { false };
+				i_trans.i_stream.i_classCollection.yapFields(a_field, new _AnonymousInnerClass192
+					(this, anyClassCollected));
+			}
+			com.db4o.Iterator4 i = i_constraints.iterator();
+			while (i.hasNext())
+			{
+				if (((com.db4o.QCon)i.next()).attach(query, a_field))
+				{
+					foundClass[0] = true;
+				}
+			}
+			return foundClass[0];
+		}
+
+		private sealed class _AnonymousInnerClass192 : com.db4o.Visitor4
+		{
+			public _AnonymousInnerClass192(QQuery _enclosing, bool[] anyClassCollected)
+			{
+				this._enclosing = _enclosing;
+				this.anyClassCollected = anyClassCollected;
+			}
+
+			public void visit(object obj)
+			{
+				object[] pair = ((object[])obj);
+				com.db4o.YapClass parentYc = (com.db4o.YapClass)pair[0];
+				com.db4o.YapField yf = (com.db4o.YapField)pair[1];
+				com.db4o.YapClass childYc = yf.getFieldYapClass(this._enclosing.i_trans.i_stream);
+				bool take = true;
+				if (childYc is com.db4o.YapClassAny)
+				{
+					if (anyClassCollected[0])
+					{
+						take = false;
+					}
+					else
+					{
+						anyClassCollected[0] = true;
+					}
+				}
+				if (take)
+				{
+					com.db4o.QConClass qcc = new com.db4o.QConClass(this._enclosing.i_trans, null, yf
+						.qField(this._enclosing.i_trans), parentYc.classReflector());
+					this._enclosing.addConstraint(qcc);
+				}
+			}
+
+			private readonly QQuery _enclosing;
+
+			private readonly bool[] anyClassCollected;
+		}
+
+		public virtual com.db4o.ObjectSet execute()
+		{
+			lock (streamLock())
+			{
+				com.db4o.QResult result = new com.db4o.QResult(i_trans);
+				execute1(result);
+				return result;
+			}
+		}
+
+		internal virtual void execute1(com.db4o.QResult result)
+		{
+			if (i_trans.i_stream.isClient())
+			{
+				marshall();
+				((com.db4o.YapClient)i_trans.i_stream).queryExecute(this, result);
+			}
+			else
+			{
+				execute2(result);
+			}
+		}
+
+		internal virtual void execute2(com.db4o.QResult result)
+		{
+			bool checkDuplicates = false;
+			bool topLevel = true;
+			com.db4o.List4 candidateCollection = null;
+			com.db4o.Iterator4 i = i_constraints.iterator();
+			while (i.hasNext())
+			{
+				com.db4o.QCon qcon = (com.db4o.QCon)i.next();
+				com.db4o.QCon old = qcon;
+				bool found = false;
+				qcon = qcon.getRoot();
+				if (qcon != old)
+				{
+					checkDuplicates = true;
+					topLevel = false;
+				}
+				com.db4o.YapClass yc = qcon.getYapClass();
+				if (yc != null)
+				{
+					if (candidateCollection != null)
+					{
+						com.db4o.Iterator4 j = new com.db4o.Iterator4(candidateCollection);
+						while (j.hasNext())
+						{
+							com.db4o.QCandidates candidates = (com.db4o.QCandidates)j.next();
+							if (candidates.tryAddConstraint(qcon))
+							{
+								found = true;
+								break;
+							}
+						}
+					}
+					if (!found)
+					{
+						com.db4o.QCandidates candidates = new com.db4o.QCandidates(i_trans, qcon.getYapClass
+							(), null);
+						candidates.addConstraint(qcon);
+						candidateCollection = new com.db4o.List4(candidateCollection, candidates);
+					}
+				}
+			}
+			if (candidateCollection != null)
+			{
+				i = new com.db4o.Iterator4(candidateCollection);
+				while (i.hasNext())
+				{
+					((com.db4o.QCandidates)i.next()).execute();
+				}
+				if (candidateCollection.i_next != null)
+				{
+					checkDuplicates = true;
+				}
+				if (checkDuplicates)
+				{
+					result.checkDuplicates();
+				}
+				i = new com.db4o.Iterator4(candidateCollection);
+				while (i.hasNext())
+				{
+					com.db4o.QCandidates candidates = (com.db4o.QCandidates)i.next();
+					if (topLevel)
+					{
+						candidates.traverse(result);
+					}
+					else
+					{
+						com.db4o.QQuery q = this;
+						com.db4o.Collection4 fieldPath = new com.db4o.Collection4();
+						while (q.i_parent != null)
+						{
+							fieldPath.add(q.i_field);
+							q = q.i_parent;
+						}
+						candidates.traverse(new _AnonymousInnerClass322(this, fieldPath, result));
+					}
+				}
+			}
+			result.reset();
+		}
+
+		private sealed class _AnonymousInnerClass322 : com.db4o.Visitor4
+		{
+			public _AnonymousInnerClass322(QQuery _enclosing, com.db4o.Collection4 fieldPath, 
+				com.db4o.QResult result)
+			{
+				this._enclosing = _enclosing;
+				this.fieldPath = fieldPath;
+				this.result = result;
+			}
+
+			public void visit(object a_object)
+			{
+				com.db4o.QCandidate candidate = (com.db4o.QCandidate)a_object;
+				if (candidate.include())
+				{
+					com.db4o.TreeInt ids = new com.db4o.TreeInt(candidate.i_key);
+					com.db4o.TreeInt[] idsNew = new com.db4o.TreeInt[1];
+					com.db4o.Iterator4 itPath = fieldPath.iterator();
+					while (itPath.hasNext())
+					{
+						idsNew[0] = null;
+						string fieldName = (string)(itPath.next());
+						if (ids != null)
+						{
+							ids.traverse(new _AnonymousInnerClass333(this, idsNew, fieldName));
+						}
+						ids = idsNew[0];
+					}
+					if (ids != null)
+					{
+						ids.traverse(new _AnonymousInnerClass357(this, result));
+					}
+				}
+			}
+
+			private sealed class _AnonymousInnerClass333 : com.db4o.Visitor4
+			{
+				public _AnonymousInnerClass333(_AnonymousInnerClass322 _enclosing, com.db4o.TreeInt[]
+					 idsNew, string fieldName)
+				{
+					this._enclosing = _enclosing;
+					this.idsNew = idsNew;
+					this.fieldName = fieldName;
+				}
+
+				public void visit(object treeInt)
+				{
+					int id = ((com.db4o.TreeInt)treeInt).i_key;
+					com.db4o.YapWriter reader = this._enclosing._enclosing.i_trans.i_stream.readWriterByID
+						(this._enclosing._enclosing.i_trans, id);
+					if (reader != null)
+					{
+						com.db4o.YapClass yc = this._enclosing._enclosing.i_trans.i_stream.getYapClass(reader
+							.readInt());
+						idsNew[0] = yc.collectFieldIDs(idsNew[0], reader, fieldName);
+					}
+				}
+
+				private readonly _AnonymousInnerClass322 _enclosing;
+
+				private readonly com.db4o.TreeInt[] idsNew;
+
+				private readonly string fieldName;
+			}
+
+			private sealed class _AnonymousInnerClass357 : com.db4o.Visitor4
+			{
+				public _AnonymousInnerClass357(_AnonymousInnerClass322 _enclosing, com.db4o.QResult
+					 result)
+				{
+					this._enclosing = _enclosing;
+					this.result = result;
+				}
+
+				public void visit(object treeInt)
+				{
+					result.addKeyCheckDuplicates(((com.db4o.TreeInt)treeInt).i_key);
+				}
+
+				private readonly _AnonymousInnerClass322 _enclosing;
+
+				private readonly com.db4o.QResult result;
+			}
+
+			private readonly QQuery _enclosing;
+
+			private readonly com.db4o.Collection4 fieldPath;
+
+			private readonly com.db4o.QResult result;
+		}
+
+		internal virtual com.db4o.Transaction getTransaction()
+		{
+			return i_trans;
+		}
+
+		public virtual com.db4o.query.Query orderAscending()
+		{
+			lock (streamLock())
+			{
+				setOrdering(i_orderingGenerator.next());
+				return this;
+			}
+		}
+
+		public virtual com.db4o.query.Query orderDescending()
+		{
+			lock (streamLock())
+			{
+				setOrdering(-i_orderingGenerator.next());
+				return this;
+			}
+		}
+
+		private void setOrdering(int ordering)
+		{
+			com.db4o.Iterator4 i = i_constraints.iterator();
+			while (i.hasNext())
+			{
+				((com.db4o.QCon)i.next()).setOrdering(ordering);
+			}
+		}
+
+		internal virtual void marshall()
+		{
+			com.db4o.Iterator4 i = i_constraints.iterator();
+			while (i.hasNext())
+			{
+				((com.db4o.QCon)i.next()).getRoot().marshall();
+			}
+		}
+
+		internal virtual void removeConstraint(com.db4o.QCon a_constraint)
+		{
+			i_constraints.remove(a_constraint);
+		}
+
+		internal virtual void unmarshall(com.db4o.Transaction a_trans)
+		{
+			i_trans = a_trans;
+			com.db4o.Iterator4 i = i_constraints.iterator();
+			while (i.hasNext())
+			{
+				((com.db4o.QCon)i.next()).unmarshall(a_trans);
+			}
+		}
+
+		internal virtual com.db4o.query.Constraint toConstraint(com.db4o.Collection4 constraints
+			)
+		{
+			com.db4o.Iterator4 i = constraints.iterator();
+			if (constraints.size() == 1)
+			{
+				return (com.db4o.query.Constraint)i.next();
+			}
+			else
+			{
+				if (constraints.size() > 0)
+				{
+					com.db4o.query.Constraint[] constraintArray = new com.db4o.query.Constraint[constraints
+						.size()];
+					constraints.toArray(constraintArray);
+					return new com.db4o.QConstraints(i_trans, constraintArray);
+				}
+			}
+			return null;
+		}
+
+		protected virtual object streamLock()
+		{
+			return i_trans.i_stream.i_lock;
+		}
+	}
 }

@@ -1,162 +1,196 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using j4o.io;
-using com.db4o.ext;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal class YapMemoryFile : com.db4o.YapFile
+	{
+		private bool i_closed = false;
 
-   internal class YapMemoryFile : YapFile {
-      private bool i_closed = false;
-      internal MemoryFile i_memoryFile;
-      private int i_length = 0;
-      
-      internal YapMemoryFile(YapStream yapstream, MemoryFile memoryfile) : base(yapstream) {
-         i_memoryFile = memoryfile;
-         try {
-            {
-               open();
-            }
-         }  catch (Exception exception) {
-            {
-               Db4o.throwRuntimeException(22, exception);
-            }
-         }
-         this.initialize3();
-      }
-      
-      internal YapMemoryFile(MemoryFile memoryfile) : this(null, memoryfile) {
-      }
-      
-      public override void backup(String xstring) {
-         Db4o.throwRuntimeException(60);
-      }
-      
-      internal void checkDemoHop() {
-      }
-      
-      internal override bool close2() {
-         try {
-            {
-               i_entryCounter++;
-               this.write(true);
-            }
-         }  catch (Exception throwable) {
-            {
-               this.fatalException(throwable);
-            }
-         }
-         base.close2();
-         i_entryCounter--;
-         if (!i_closed) {
-            byte[] xis1 = new byte[i_length];
-            j4o.lang.JavaSystem.arraycopy(i_memoryFile.getBytes(), 0, xis1, 0, i_length);
-            i_memoryFile.setBytes(xis1);
-         }
-         i_closed = true;
-         return true;
-      }
-      
-      internal override void copy(int i, int i_0_, int i_1_, int i_2_, int i_3_) {
-         byte[] xis1 = memoryFileBytes(i_1_ + i_2_ + i_3_);
-         j4o.lang.JavaSystem.arraycopy(xis1, i + i_0_, xis1, i_1_ + i_2_, i_3_);
-      }
-      
-      internal override void emergencyClose() {
-         base.emergencyClose();
-         i_closed = true;
-      }
-      
-      internal override long fileLength() {
-         return (long)i_length;
-      }
-      
-      internal override String fileName() {
-         return "Memory File";
-      }
-      
-      internal override bool hasShutDownHook() {
-         return false;
-      }
-      
-      internal override bool needsLockFileThread() {
-         return false;
-      }
-      
-      private void open() {
-         byte[] xis1 = i_memoryFile.getBytes();
-         if (xis1 == null || xis1.Length == 0) {
-            i_memoryFile.setBytes(new byte[i_memoryFile.getInitialSize()]);
-            this.configureNewFile();
-            this.write(false);
-            this.writeHeader(false);
-         } else {
-            i_length = xis1.Length;
-            this.readThis();
-         }
-      }
-      
-      internal override void readBytes(byte[] xis, int i, int i_4_) {
-         try {
-            {
-               j4o.lang.JavaSystem.arraycopy(i_memoryFile.getBytes(), i, xis, 0, i_4_);
-            }
-         }  catch (Exception exception) {
-            {
-               Db4o.throwRuntimeException(13, exception);
-            }
-         }
-      }
-      
-      internal override void readBytes(byte[] xis, int i, int i_5_, int i_6_) {
-         readBytes(xis, i + i_5_, i_6_);
-      }
-      
-      internal override void syncFiles() {
-      }
-      
-      internal override bool writeAccessTime() {
-         return true;
-      }
-      
-      internal override void writeBytes(YapWriter yapwriter) {
-         int i1 = yapwriter.getAddress() + yapwriter.addressOffset();
-         int i_7_1 = yapwriter.getLength();
-         j4o.lang.JavaSystem.arraycopy(yapwriter._buffer, 0, memoryFileBytes(i1 + i_7_1), i1, i_7_1);
-      }
-      
-      private byte[] memoryFileBytes(int i) {
-         byte[] xis1 = i_memoryFile.getBytes();
-         if (i > i_length) {
-            if (i > xis1.Length) {
-               int i_8_1 = i - xis1.Length;
-               if (i_8_1 < i_memoryFile.getIncrementSizeBy()) i_8_1 = i_memoryFile.getIncrementSizeBy();
-               byte[] is_9_1 = new byte[xis1.Length + i_8_1];
-               j4o.lang.JavaSystem.arraycopy(xis1, 0, is_9_1, 0, xis1.Length);
-               i_memoryFile.setBytes(is_9_1);
-               xis1 = is_9_1;
-            }
-            i_length = i;
-         }
-         return xis1;
-      }
-      
-      internal override void writeXBytes(int i, int i_10_) {
-      }
-   }
+		internal readonly com.db4o.ext.MemoryFile i_memoryFile;
+
+		private int i_length = 0;
+
+		protected YapMemoryFile(com.db4o.YapStream a_parent, com.db4o.ext.MemoryFile memoryFile
+			) : base(a_parent)
+		{
+			this.i_memoryFile = memoryFile;
+			try
+			{
+				open();
+			}
+			catch (System.Exception e)
+			{
+				com.db4o.Db4o.throwRuntimeException(22, e);
+			}
+			initialize3();
+		}
+
+		internal YapMemoryFile(com.db4o.ext.MemoryFile memoryFile) : this(null, memoryFile
+			)
+		{
+		}
+
+		public override void backup(string path)
+		{
+			com.db4o.Db4o.throwRuntimeException(60);
+		}
+
+		internal virtual void checkDemoHop()
+		{
+		}
+
+		internal override bool close2()
+		{
+			try
+			{
+				i_entryCounter++;
+				write(true);
+			}
+			catch (System.Exception t)
+			{
+				fatalException(t);
+			}
+			base.close2();
+			i_entryCounter--;
+			if (i_closed == false)
+			{
+				byte[] temp = new byte[i_length];
+				j4o.lang.JavaSystem.arraycopy(i_memoryFile.getBytes(), 0, temp, 0, i_length);
+				i_memoryFile.setBytes(temp);
+			}
+			i_closed = true;
+			return true;
+		}
+
+		internal override void copy(int oldAddress, int oldAddressOffset, int newAddress, 
+			int newAddressOffset, int length)
+		{
+			byte[] bytes = memoryFileBytes(newAddress + newAddressOffset + length);
+			j4o.lang.JavaSystem.arraycopy(bytes, oldAddress + oldAddressOffset, bytes, newAddress
+				 + newAddressOffset, length);
+		}
+
+		internal override void emergencyClose()
+		{
+			base.emergencyClose();
+			i_closed = true;
+		}
+
+		internal override long fileLength()
+		{
+			return i_length;
+		}
+
+		internal override string fileName()
+		{
+			return "Memory File";
+		}
+
+		internal override bool hasShutDownHook()
+		{
+			return false;
+		}
+
+		internal override bool needsLockFileThread()
+		{
+			return false;
+		}
+
+		private void open()
+		{
+			byte[] bytes = i_memoryFile.getBytes();
+			if (bytes == null || bytes.Length == 0)
+			{
+				i_memoryFile.setBytes(new byte[i_memoryFile.getInitialSize()]);
+				configureNewFile();
+				write(false);
+				writeHeader(false);
+			}
+			else
+			{
+				i_length = bytes.Length;
+				readThis();
+			}
+		}
+
+		internal override void readBytes(byte[] a_bytes, int a_address, int a_length)
+		{
+			try
+			{
+				j4o.lang.JavaSystem.arraycopy(i_memoryFile.getBytes(), a_address, a_bytes, 0, a_length
+					);
+			}
+			catch (System.Exception e)
+			{
+				com.db4o.Db4o.throwRuntimeException(13, e);
+			}
+		}
+
+		internal override void readBytes(byte[] bytes, int address, int addressOffset, int
+			 length)
+		{
+			readBytes(bytes, address + addressOffset, length);
+		}
+
+		internal override void syncFiles()
+		{
+		}
+
+		internal override bool writeAccessTime()
+		{
+			return true;
+		}
+
+		internal override void writeBytes(com.db4o.YapWriter a_bytes)
+		{
+			int address = a_bytes.getAddress() + a_bytes.addressOffset();
+			int length = a_bytes.getLength();
+			j4o.lang.JavaSystem.arraycopy(a_bytes._buffer, 0, memoryFileBytes(address + length
+				), address, length);
+		}
+
+		private byte[] memoryFileBytes(int a_lastByte)
+		{
+			byte[] bytes = i_memoryFile.getBytes();
+			if (a_lastByte > i_length)
+			{
+				if (a_lastByte > bytes.Length)
+				{
+					int increase = a_lastByte - bytes.Length;
+					if (increase < i_memoryFile.getIncrementSizeBy())
+					{
+						increase = i_memoryFile.getIncrementSizeBy();
+					}
+					byte[] temp = new byte[bytes.Length + increase];
+					j4o.lang.JavaSystem.arraycopy(bytes, 0, temp, 0, bytes.Length);
+					i_memoryFile.setBytes(temp);
+					bytes = temp;
+				}
+				i_length = a_lastByte;
+			}
+			return bytes;
+		}
+
+		internal override void writeXBytes(int a_address, int a_length)
+		{
+		}
+	}
 }

@@ -1,68 +1,112 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using com.db4o;
-using com.db4o.types;
-namespace com.db4o.ext {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o.ext
+{
+	/// <summary>Class to identify a database by it's signature.</summary>
+	/// <remarks>
+	/// Class to identify a database by it's signature.
+	/// <br /><br />db4o UUID handling uses a reference to the Db4oDatabase object, that
+	/// represents the database an object was created on.
+	/// </remarks>
+	public class Db4oDatabase : com.db4o.types.Db4oType
+	{
+		/// <summary>Field is public for implementation reasons, DO NOT TOUCH!</summary>
+		public byte[] i_signature;
 
-   public class Db4oDatabase : Db4oType {
-      
-      public Db4oDatabase() : base() {
-      }
-      public byte[] i_signature;
-      public long i_uuid;
-      [Transient] private ExtObjectContainer i_objectContainer;
-      [Transient] private int i_id;
-      
-      public static Db4oDatabase generate() {
-         Db4oDatabase db4odatabase1 = new Db4oDatabase();
-         db4odatabase1.i_signature = Unobfuscated.generateSignature();
-         db4odatabase1.i_uuid = j4o.lang.JavaSystem.currentTimeMillis();
-         return db4odatabase1;
-      }
-      
-      public override bool Equals(Object obj) {
-         if (obj == this) return true;
-         if (obj == null || j4o.lang.Class.getClassForObject(this) != j4o.lang.Class.getClassForObject(obj)) return false;
-         Db4oDatabase db4odatabase_0_1 = (Db4oDatabase)obj;
-         if (db4odatabase_0_1.i_signature == null || i_signature == null) return false;
-         if (db4odatabase_0_1.i_signature.Length != i_signature.Length) return false;
-         for (int i1 = 0; i1 < i_signature.Length; i1++) {
-            if (i_signature[i1] != db4odatabase_0_1.i_signature[i1]) return false;
-         }
-         return true;
-      }
-      
-      public int getID(ExtObjectContainer extobjectcontainer) {
-         if (extobjectcontainer != i_objectContainer) {
-            i_objectContainer = extobjectcontainer;
-            i_id = (int)extobjectcontainer.getID(this);
-            if (i_id == 0) {
-               extobjectcontainer.set(this);
-               i_id = (int)extobjectcontainer.getID(this);
-            }
-         }
-         return i_id;
-      }
-      
-      public override String ToString() {
-         return "Db4oDatabase: " + i_signature;
-      }
-   }
+		/// <summary>Field is public for implementation reasons, DO NOT TOUCH!</summary>
+		public long i_uuid;
+
+		/// <summary>cached ObjectContainer for getting the own ID.</summary>
+		/// <remarks>cached ObjectContainer for getting the own ID.</remarks>
+		[com.db4o.Transient]
+		private com.db4o.ext.ExtObjectContainer i_objectContainer;
+
+		/// <summary>cached ID, only valid in combination with i_objectContainer</summary>
+		[com.db4o.Transient]
+		private int i_id;
+
+		/// <summary>generates a new Db4oDatabase object with a unique signature.</summary>
+		/// <remarks>generates a new Db4oDatabase object with a unique signature.</remarks>
+		public static com.db4o.ext.Db4oDatabase generate()
+		{
+			com.db4o.ext.Db4oDatabase db = new com.db4o.ext.Db4oDatabase();
+			db.i_signature = com.db4o.Unobfuscated.generateSignature();
+			db.i_uuid = j4o.lang.JavaSystem.currentTimeMillis();
+			return db;
+		}
+
+		/// <summary>comparison by signature.</summary>
+		/// <remarks>comparison by signature.</remarks>
+		public override bool Equals(object obj)
+		{
+			if (obj == this)
+			{
+				return true;
+			}
+			if (obj == null || j4o.lang.Class.getClassForObject(this) != j4o.lang.Class.getClassForObject
+				(obj))
+			{
+				return false;
+			}
+			com.db4o.ext.Db4oDatabase other = (com.db4o.ext.Db4oDatabase)obj;
+			if (other.i_signature == null || this.i_signature == null)
+			{
+				return false;
+			}
+			if (other.i_signature.Length != i_signature.Length)
+			{
+				return false;
+			}
+			for (int i = 0; i < i_signature.Length; i++)
+			{
+				if (i_signature[i] != other.i_signature[i])
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+
+		/// <summary>gets the db4o ID, and may cache it for performance reasons.</summary>
+		/// <remarks>gets the db4o ID, and may cache it for performance reasons.</remarks>
+		/// <param name="a_oc">the ObjectContainer</param>
+		/// <returns>the db4o ID for the ObjectContainer</returns>
+		public virtual int getID(com.db4o.ext.ExtObjectContainer a_oc)
+		{
+			if (a_oc != i_objectContainer)
+			{
+				i_objectContainer = a_oc;
+				i_id = (int)a_oc.getID(this);
+				if (i_id == 0)
+				{
+					a_oc.set(this);
+					i_id = (int)a_oc.getID(this);
+				}
+			}
+			return i_id;
+		}
+
+		public override string ToString()
+		{
+			return "Db4oDatabase: " + i_signature;
+		}
+	}
 }

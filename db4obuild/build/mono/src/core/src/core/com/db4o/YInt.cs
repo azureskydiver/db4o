@@ -1,105 +1,111 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal class YInt : com.db4o.YapJavaClass
+	{
+		private static readonly int i_primitive = System.Convert.ToInt32(0);
 
-   internal class YInt : YapJavaClass {
-      
-      internal YInt() : base() {
-      }
-      private static Int32 i_primitive = System.Convert.ToInt32(0);
-      private static Class i_class = j4o.lang.Class.getClassForObject(i_primitive);
-      private int i_compareTo;
-      
-      public override int getID() {
-         return 1;
-      }
-      
-      public override Class getJavaClass() {
-         return i_class;
-      }
-      
-      public override Class getPrimitiveJavaClass() {
-         return Class.getClassForType(typeof(Int32));
-      }
-      
-      public override int linkLength() {
-         return 4;
-      }
-      
-      internal override Object primitiveNull() {
-         return i_primitive;
-      }
-      
-      internal override Object read1(YapReader yapreader) {
-         int i1 = readInt(yapreader);
-         return System.Convert.ToInt32(i1);
-      }
-      
-      static internal int readInt(YapReader yapreader) {
-         return yapreader.readInt();
-      }
-      
-      public override void write(Object obj, YapWriter yapwriter) {
-         writeInt(System.Convert.ToInt32((Int32)obj), yapwriter);
-      }
-      
-      static internal void writeInt(int i, YapReader yapreader) {
-         yapreader.writeInt(i);
-      }
-      
-      private int val(Object obj) {
-         return System.Convert.ToInt32((Int32)obj);
-      }
-      
-      internal override void prepareComparison1(Object obj) {
-         i_compareTo = val(obj);
-      }
-      
-      internal override bool isEqual1(Object obj) {
-         return obj is Int32 && val(obj) == i_compareTo;
-      }
-      
-      internal override bool isGreater1(Object obj) {
-         return obj is Int32 && val(obj) > i_compareTo;
-      }
-      
-      internal override bool isSmaller1(Object obj) {
-         return obj is Int32 && val(obj) < i_compareTo;
-      }
-      
-      private static Object prop(Object obj, String xstring) {
-         try {
-            {
-               Class[] var_classes1 = {
-                  Class.forName("System.Object"),
-Class.forName("System.String")               };
-               Object[] objs1 = {
-                  obj,
-xstring               };
-               return Reflection4.invoke("s4o.Dynamic", "GetProperty", var_classes1, objs1, null);
-            }
-         }  catch (Exception exception) {
-            {
-               return null;
-            }
-         }
-      }
-   }
+		public YInt(com.db4o.YapStream stream) : base(stream)
+		{
+		}
+
+		public override object defaultValue()
+		{
+			return i_primitive;
+		}
+
+		public override int getID()
+		{
+			return 1;
+		}
+
+		protected override j4o.lang.Class primitiveJavaClass()
+		{
+			return j4o.lang.Class.getClassForType(typeof(int));
+		}
+
+		public override int linkLength()
+		{
+			return com.db4o.YapConst.YAPINT_LENGTH;
+		}
+
+		internal override object primitiveNull()
+		{
+			return i_primitive;
+		}
+
+		internal override object read1(com.db4o.YapReader a_bytes)
+		{
+			int ret = readInt(a_bytes);
+			return System.Convert.ToInt32(ret);
+		}
+
+		internal static int readInt(com.db4o.YapReader a_bytes)
+		{
+			return a_bytes.readInt();
+		}
+
+		public override void write(object a_object, com.db4o.YapWriter a_bytes)
+		{
+			if (!com.db4o.Deploy.csharp && a_object == null)
+			{
+				writeInt(int.MaxValue, a_bytes);
+			}
+			else
+			{
+				writeInt(((int)a_object), a_bytes);
+			}
+		}
+
+		internal static void writeInt(int a_int, com.db4o.YapReader a_bytes)
+		{
+			a_bytes.writeInt(a_int);
+		}
+
+		private int i_compareTo;
+
+		private int val(object obj)
+		{
+			return ((int)obj);
+		}
+
+		internal override void prepareComparison1(object obj)
+		{
+			i_compareTo = val(obj);
+		}
+
+		internal override bool isEqual1(object obj)
+		{
+			return obj is int && val(obj) == i_compareTo;
+		}
+
+		internal override bool isGreater1(object obj)
+		{
+			return obj is int && val(obj) > i_compareTo;
+		}
+
+		internal override bool isSmaller1(object obj)
+		{
+			return obj is int && val(obj) < i_compareTo;
+		}
+	}
 }

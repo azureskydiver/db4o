@@ -1,184 +1,294 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using j4o.io;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <summary>Messages for Client/Server Communication</summary>
+	internal class Msg : j4o.lang.Cloneable
+	{
+		internal static int idGenererator = 1;
 
-   internal class Msg : Cloneable {
-      static internal int idGenererator = 1;
-      internal int i_msgID;
-      internal String i_name;
-      internal Transaction i_trans;
-      private static Msg[] i_messages = new Msg[60];
-      public static MsgD CLASS_NAME_FOR_ID = new MClassNameForID();
-      public static Msg CLOSE = new Msg("CLOSE");
-      public static Msg COMMIT = new MCommit();
-      public static MsgD CREATE_CLASS = new MCreateClass();
-      public static Msg CURRENT_VERSION = new Msg("VERSION");
-      public static MsgD DELETE = new MDelete();
-      public static Msg ERROR = new Msg("ERROR");
-      public static Msg FAILED = new Msg("FAILED");
-      public static Msg GET_ALL = new MGetAll();
-      public static MsgD GET_CLASSES = new MGetClasses();
-      public static MsgD GET_INTERNAL_IDS = new MGetInternalIDs();
-      public static Msg GET_THREAD_ID = new Msg("GET_THREAD_ID");
-      public static MsgD ID_LIST = new MsgD("ID_LIST");
-      public static Msg IDENTITY = new Msg("IDENTITY");
-      public static MsgD LENGTH = new MsgD("LENGTH");
-      public static MsgD LOGIN = new MsgD("LOGIN");
-      public static Msg NULL = new Msg("NULL");
-      public static MsgD OBJECT_BY_UUID = new MObjectByUuid();
-      public static MsgObject OBJECT_TO_CLIENT = new MsgObject();
-      public static Msg OK = new Msg("OK");
-      public static Msg PING = new Msg("PING");
-      public static Msg PREFETCH_IDS = new MPrefetchIDs();
-      public static MsgObject QUERY_EXECUTE = new MQueryExecute();
-      public static MsgD RAISE_VERSION = new MsgD("RAISE_VERSION");
-      public static MsgBlob READ_BLOB = new MReadBlob();
-      public static MsgD READ_BYTES = new MReadBytes();
-      public static MsgD READ_MULTIPLE_OBJECTS = new MReadMultipleObjects();
-      public static MsgD READ_OBJECT = new MReadObject();
-      public static MsgD RELEASE_SEMAPHORE = new MReleaseSemaphore();
-      public static Msg ROLLBACK = new MRollback();
-      public static MsgD SET_SEMAPHORE = new MSetSemaphore();
-      public static Msg SUCCESS = new Msg("SUCCESS");
-      public static MsgD SWITCH_TO_FILE = new MsgD("SWITCH_F");
-      public static Msg SWITCH_TO_MAIN_FILE = new Msg("SWITCH_M");
-      public static Msg TA_BEGIN_END_SET = new MTaBeginEndSet();
-      public static MsgD TA_DELETE = new MTaDelete();
-      public static MsgD TA_DONT_DELETE = new MTaDontDelete();
-      public static MsgD TA_IS_DELETED = new MTaIsDeleted();
-      public static MsgD USER_MESSAGE = new MUserMessage();
-      public static MsgD USE_TRANSACTION = new MUseTransaction();
-      public static MsgBlob WRITE_BLOB = new MWriteBlob();
-      public static MWriteNew WRITE_NEW = new MWriteNew();
-      public static MsgObject WRITE_UPDATE = new MWriteUpdate();
-      public static MsgD WRITE_UPDATE_DELETE_MEMBERS = new MWriteUpdateDeleteMembers();
-      
-      internal Msg() : base() {
-         i_msgID = idGenererator++;
-         i_messages[i_msgID] = this;
-      }
-      
-      internal Msg(String xstring) : this() {
-         i_name = xstring;
-      }
-      
-      internal Msg clone(Transaction transaction) {
-         try {
-            {
-               Msg msg_0_1 = (Msg)j4o.lang.JavaSystem.clone(this);
-               msg_0_1.i_trans = transaction;
-               return msg_0_1;
-            }
-         }  catch (CloneNotSupportedException clonenotsupportedexception) {
-            {
-               return null;
-            }
-         }
-      }
-      
-      public override bool Equals(Object obj) {
-         if (this == obj) return true;
-         if (obj == null || j4o.lang.Class.getClassForObject(obj) != j4o.lang.Class.getClassForObject(this)) return false;
-         return i_msgID == ((Msg)obj).i_msgID;
-      }
-      
-      internal virtual void fakePayLoad(Transaction transaction) {
-         i_trans = transaction;
-      }
-      
-      internal virtual YapWriter getByteLoad() {
-         return null;
-      }
-      
-      internal String getName() {
-         if (i_name == null) return j4o.lang.Class.getClassForObject(this).getName();
-         return i_name;
-      }
-      
-      internal Transaction getTransaction() {
-         return i_trans;
-      }
-      
-      internal YapStream getStream() {
-         return getTransaction().i_stream;
-      }
-      
-      internal virtual bool processMessageAtServer(YapSocket yapsocket) {
-         return false;
-      }
-      
-      static internal Msg readMessage(Transaction transaction, YapSocket yapsocket) {
-         YapWriter yapwriter1 = new YapWriter(transaction, 9);
-         try {
-            {
-               yapwriter1.read(yapsocket);
-               Msg msg1 = i_messages[yapwriter1.readInt()].readPayLoad(transaction, yapsocket, yapwriter1);
-               return msg1;
-            }
-         }  catch (Exception exception) {
-            {
-               return null;
-            }
-         }
-      }
-      
-      internal virtual Msg readPayLoad(Transaction transaction, YapSocket yapsocket, YapWriter yapwriter) {
-         if (yapwriter.readByte() == 115 && transaction.i_parentTransaction != null) transaction = transaction.i_parentTransaction;
-         return clone(transaction);
-      }
-      
-      internal void setTransaction(Transaction transaction) {
-         i_trans = transaction;
-      }
-      
-      public override String ToString() {
-         return getName();
-      }
-      
-      internal void write(YapStream yapstream, YapSocket yapsocket) {
-         lock (yapsocket) {
-            try {
-               {
-                  yapsocket.write(getPayLoad()._buffer);
-                  yapsocket.flush();
-               }
-            }  catch (IOException ioexception) {
-               {
-               }
-            }
-         }
-      }
-      
-      internal virtual YapWriter getPayLoad() {
-         YapWriter yapwriter1 = new YapWriter(getTransaction(), 9);
-         yapwriter1.writeInt(i_msgID);
-         return yapwriter1;
-      }
-      
-      internal void writeQueryResult(Transaction transaction, QResult qresult, YapSocket yapsocket) {
-         int i1 = qresult.size();
-         MsgD msgd1 = ID_LIST.getWriterForLength(transaction, 4 * (i1 + 1));
-         YapWriter yapwriter1 = msgd1.getPayLoad();
-         yapwriter1.writeQueryResult(qresult);
-         msgd1.write(transaction.i_stream, yapsocket);
-      }
-   }
+		internal int i_msgID;
+
+		internal string i_name;
+
+		internal com.db4o.Transaction i_trans;
+
+		private static com.db4o.Msg[] i_messages = new com.db4o.Msg[60];
+
+		public static readonly com.db4o.MsgD CLASS_NAME_FOR_ID = new com.db4o.MClassNameForID
+			();
+
+		public static readonly com.db4o.Msg CLOSE = new com.db4o.Msg("CLOSE");
+
+		public static readonly com.db4o.Msg COMMIT = new com.db4o.MCommit();
+
+		public static readonly com.db4o.MsgD CREATE_CLASS = new com.db4o.MCreateClass();
+
+		public static readonly com.db4o.Msg CURRENT_VERSION = new com.db4o.Msg("VERSION");
+
+		public static readonly com.db4o.MsgD DELETE = new com.db4o.MDelete();
+
+		public static readonly com.db4o.Msg ERROR = new com.db4o.Msg("ERROR");
+
+		public static readonly com.db4o.Msg FAILED = new com.db4o.Msg("FAILED");
+
+		public static readonly com.db4o.Msg GET_ALL = new com.db4o.MGetAll();
+
+		public static readonly com.db4o.MsgD GET_CLASSES = new com.db4o.MGetClasses();
+
+		public static readonly com.db4o.MsgD GET_INTERNAL_IDS = new com.db4o.MGetInternalIDs
+			();
+
+		public static readonly com.db4o.Msg GET_THREAD_ID = new com.db4o.Msg("GET_THREAD_ID"
+			);
+
+		public static readonly com.db4o.MsgD ID_LIST = new com.db4o.MsgD("ID_LIST");
+
+		public static readonly com.db4o.Msg IDENTITY = new com.db4o.Msg("IDENTITY");
+
+		public static readonly com.db4o.MsgD LENGTH = new com.db4o.MsgD("LENGTH");
+
+		public static readonly com.db4o.MsgD LOGIN = new com.db4o.MsgD("LOGIN");
+
+		public static readonly com.db4o.Msg NULL = new com.db4o.Msg("NULL");
+
+		public static readonly com.db4o.MsgD OBJECT_BY_UUID = new com.db4o.MObjectByUuid(
+			);
+
+		public static readonly com.db4o.MsgObject OBJECT_TO_CLIENT = new com.db4o.MsgObject
+			();
+
+		public static readonly com.db4o.Msg OK = new com.db4o.Msg("OK");
+
+		public static readonly com.db4o.Msg PING = new com.db4o.Msg("PING");
+
+		public static readonly com.db4o.Msg PREFETCH_IDS = new com.db4o.MPrefetchIDs();
+
+		public static readonly com.db4o.MsgObject QUERY_EXECUTE = new com.db4o.MQueryExecute
+			();
+
+		public static readonly com.db4o.MsgD RAISE_VERSION = new com.db4o.MsgD("RAISE_VERSION"
+			);
+
+		public static readonly com.db4o.MsgBlob READ_BLOB = new com.db4o.MReadBlob();
+
+		public static readonly com.db4o.MsgD READ_BYTES = new com.db4o.MReadBytes();
+
+		public static readonly com.db4o.MsgD READ_MULTIPLE_OBJECTS = new com.db4o.MReadMultipleObjects
+			();
+
+		public static readonly com.db4o.MsgD READ_OBJECT = new com.db4o.MReadObject();
+
+		public static readonly com.db4o.MsgD RELEASE_SEMAPHORE = new com.db4o.MReleaseSemaphore
+			();
+
+		public static readonly com.db4o.Msg ROLLBACK = new com.db4o.MRollback();
+
+		public static readonly com.db4o.MsgD SET_SEMAPHORE = new com.db4o.MSetSemaphore();
+
+		public static readonly com.db4o.Msg SUCCESS = new com.db4o.Msg("SUCCESS");
+
+		public static readonly com.db4o.MsgD SWITCH_TO_FILE = new com.db4o.MsgD("SWITCH_F"
+			);
+
+		public static readonly com.db4o.Msg SWITCH_TO_MAIN_FILE = new com.db4o.Msg("SWITCH_M"
+			);
+
+		public static readonly com.db4o.Msg TA_BEGIN_END_SET = new com.db4o.MTaBeginEndSet
+			();
+
+		public static readonly com.db4o.MsgD TA_DELETE = new com.db4o.MTaDelete();
+
+		public static readonly com.db4o.MsgD TA_DONT_DELETE = new com.db4o.MTaDontDelete(
+			);
+
+		public static readonly com.db4o.MsgD TA_IS_DELETED = new com.db4o.MTaIsDeleted();
+
+		public static readonly com.db4o.MsgD USER_MESSAGE = new com.db4o.MUserMessage();
+
+		public static readonly com.db4o.MsgD USE_TRANSACTION = new com.db4o.MUseTransaction
+			();
+
+		public static readonly com.db4o.MsgBlob WRITE_BLOB = new com.db4o.MWriteBlob();
+
+		public static readonly com.db4o.MWriteNew WRITE_NEW = new com.db4o.MWriteNew();
+
+		public static readonly com.db4o.MsgObject WRITE_UPDATE = new com.db4o.MWriteUpdate
+			();
+
+		public static readonly com.db4o.MsgD WRITE_UPDATE_DELETE_MEMBERS = new com.db4o.MWriteUpdateDeleteMembers
+			();
+
+		internal Msg()
+		{
+			i_msgID = idGenererator++;
+			i_messages[i_msgID] = this;
+		}
+
+		internal Msg(string aName) : this()
+		{
+			i_name = aName;
+		}
+
+		internal com.db4o.Msg clone(com.db4o.Transaction a_trans)
+		{
+			try
+			{
+				com.db4o.Msg msg = (com.db4o.Msg)j4o.lang.JavaSystem.clone(this);
+				msg.i_trans = a_trans;
+				return msg;
+			}
+			catch (j4o.lang.CloneNotSupportedException e)
+			{
+				return null;
+			}
+		}
+
+		public sealed override bool Equals(object obj)
+		{
+			if (this == obj)
+			{
+				return true;
+			}
+			if (obj == null || j4o.lang.Class.getClassForObject(obj) != j4o.lang.Class.getClassForObject
+				(this))
+			{
+				return false;
+			}
+			return i_msgID == ((com.db4o.Msg)obj).i_msgID;
+		}
+
+		internal virtual void fakePayLoad(com.db4o.Transaction a_trans)
+		{
+			i_trans = a_trans;
+		}
+
+		/// <summary>
+		/// dummy method to allow clean override handling
+		/// without casting
+		/// </summary>
+		internal virtual com.db4o.YapWriter getByteLoad()
+		{
+			return null;
+		}
+
+		internal string getName()
+		{
+			if (i_name == null)
+			{
+				return j4o.lang.Class.getClassForObject(this).getName();
+			}
+			return i_name;
+		}
+
+		internal virtual com.db4o.Transaction getTransaction()
+		{
+			return i_trans;
+		}
+
+		internal virtual com.db4o.YapStream getStream()
+		{
+			return getTransaction().i_stream;
+		}
+
+		/// <summary>server side execution</summary>
+		internal virtual bool processMessageAtServer(com.db4o.YapSocket socket)
+		{
+			return false;
+		}
+
+		internal static com.db4o.Msg readMessage(com.db4o.Transaction a_trans, com.db4o.YapSocket
+			 sock)
+		{
+			com.db4o.YapWriter reader = new com.db4o.YapWriter(a_trans, com.db4o.YapConst.MESSAGE_LENGTH
+				);
+			try
+			{
+				if (!reader.read(sock))
+				{
+					return null;
+				}
+				com.db4o.Msg message = i_messages[reader.readInt()].readPayLoad(a_trans, sock, reader
+					);
+				return message;
+			}
+			catch (System.Exception e)
+			{
+			}
+			return null;
+		}
+
+		internal virtual com.db4o.Msg readPayLoad(com.db4o.Transaction a_trans, com.db4o.YapSocket
+			 sock, com.db4o.YapWriter reader)
+		{
+			if (reader.readByte() == com.db4o.YapConst.SYSTEM_TRANS && a_trans.i_parentTransaction
+				 != null)
+			{
+				a_trans = a_trans.i_parentTransaction;
+			}
+			return clone(a_trans);
+		}
+
+		internal void setTransaction(com.db4o.Transaction aTrans)
+		{
+			i_trans = aTrans;
+		}
+
+		public sealed override string ToString()
+		{
+			return getName();
+		}
+
+		internal void write(com.db4o.YapStream stream, com.db4o.YapSocket sock)
+		{
+			lock (sock)
+			{
+				try
+				{
+					sock.write(getPayLoad()._buffer);
+					sock.flush();
+				}
+				catch (j4o.io.IOException e)
+				{
+				}
+			}
+		}
+
+		internal virtual com.db4o.YapWriter getPayLoad()
+		{
+			com.db4o.YapWriter writer = new com.db4o.YapWriter(getTransaction(), com.db4o.YapConst
+				.MESSAGE_LENGTH);
+			writer.writeInt(i_msgID);
+			return writer;
+		}
+
+		internal void writeQueryResult(com.db4o.Transaction a_trans, com.db4o.QResult qr, 
+			com.db4o.YapSocket sock)
+		{
+			int size = qr.size();
+			com.db4o.MsgD message = ID_LIST.getWriterForLength(a_trans, com.db4o.YapConst.YAPID_LENGTH
+				 * (size + 1));
+			com.db4o.YapWriter writer = message.getPayLoad();
+			writer.writeQueryResult(qr);
+			message.write(a_trans.i_stream, sock);
+		}
+	}
 }

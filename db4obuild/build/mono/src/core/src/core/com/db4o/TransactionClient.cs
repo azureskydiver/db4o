@@ -1,89 +1,148 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal sealed class TransactionClient : com.db4o.Transaction
+	{
+		private readonly com.db4o.YapClient i_client;
 
-   internal class TransactionClient : Transaction {
-      private YapClient i_client;
-      private Tree i_yapObjectsToGc;
-      
-      internal TransactionClient(YapClient yapclient, Transaction transaction) : base((YapStream)yapclient, transaction) {
-         i_client = yapclient;
-      }
-      
-      internal override void beginEndSet() {
-         if (i_delete != null) i_delete.traverse(new TransactionClient__1(this));
-         i_delete = null;
-         i_writtenUpdateDeletedMembers = null;
-         i_client.writeMsg(Msg.TA_BEGIN_END_SET);
-      }
-      
-      internal override void commit() {
-         this.commitTransactionListeners();
-         if (i_yapObjectsToGc != null) i_yapObjectsToGc.traverse(new TransactionClient__2(this));
-         i_yapObjectsToGc = null;
-         i_client.writeMsg(Msg.COMMIT);
-      }
-      
-      internal override void delete(YapObject yapobject, Object obj, int i, bool xbool) {
-         base.delete(yapobject, obj, i, false);
-         i_client.writeMsg(Msg.TA_DELETE.getWriterFor2Ints(this, yapobject.getID(), i));
-      }
-      
-      internal override void dontDelete(int i, bool xbool) {
-         base.dontDelete(i, false);
-         i_client.writeMsg(Msg.TA_DONT_DELETE.getWriterForInt(this, i));
-      }
-      
-      internal override bool isDeleted(int i) {
-         i_client.writeMsg(Msg.TA_IS_DELETED.getWriterForInt(this, i));
-         int i_0_1 = i_client.expectedByteResponse(Msg.TA_IS_DELETED).readInt();
-         return i_0_1 == 1;
-      }
-      
-      internal override Object[] objectAndYapObjectBySignature(long l, byte[] xis) {
-         int i1 = 12 + xis.Length;
-         MsgD msgd1 = Msg.OBJECT_BY_UUID.getWriterForLength(this, i1);
-         msgd1.writeLong(l);
-         msgd1.writeBytes(xis);
-         i_client.writeMsg(msgd1);
-         msgd1 = (MsgD)i_client.expectedResponse(Msg.OBJECT_BY_UUID);
-         int i_1_1 = msgd1.readInt();
-         if (i_1_1 > 0) return i_stream.getObjectAndYapObjectByID(this, i_1_1);
-         return new Object[2];
-      }
-      
-      public override void rollback() {
-         i_yapObjectsToGc = null;
-         this.rollBackTransactionListeners();
-      }
-      
-      internal override void writeUpdateDeleteMembers(int i, YapClass yapclass, int i_2_, int i_3_) {
-         i_client.writeMsg(Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterFor4Ints(this, i, yapclass.getID(), i_2_, i_3_));
-      }
-      
-      static internal Tree access__002(TransactionClient transactionclient, Tree tree) {
-         return transactionclient.i_yapObjectsToGc = tree;
-      }
-      
-      static internal Tree access__000(TransactionClient transactionclient) {
-         return transactionclient.i_yapObjectsToGc;
-      }
-   }
+		private com.db4o.Tree i_yapObjectsToGc;
+
+		internal TransactionClient(com.db4o.YapClient a_stream, com.db4o.Transaction a_parent
+			) : base(a_stream, a_parent)
+		{
+			i_client = a_stream;
+		}
+
+		internal override void beginEndSet()
+		{
+			if (i_delete != null)
+			{
+				i_delete.traverse(new _AnonymousInnerClass18(this));
+			}
+			i_delete = null;
+			i_writtenUpdateDeletedMembers = null;
+			i_client.writeMsg(com.db4o.Msg.TA_BEGIN_END_SET);
+		}
+
+		private sealed class _AnonymousInnerClass18 : com.db4o.Visitor4
+		{
+			public _AnonymousInnerClass18(TransactionClient _enclosing)
+			{
+				this._enclosing = _enclosing;
+			}
+
+			public void visit(object a_object)
+			{
+				com.db4o.TreeIntObject tio = (com.db4o.TreeIntObject)a_object;
+				if (tio.i_object != null)
+				{
+					object[] arr = (object[])tio.i_object;
+					com.db4o.YapObject yo = (com.db4o.YapObject)arr[0];
+					this._enclosing.i_yapObjectsToGc = com.db4o.Tree.add(this._enclosing.i_yapObjectsToGc
+						, new com.db4o.TreeIntObject(yo.getID(), yo));
+				}
+			}
+
+			private readonly TransactionClient _enclosing;
+		}
+
+		internal override void commit()
+		{
+			commitTransactionListeners();
+			if (i_yapObjectsToGc != null)
+			{
+				i_yapObjectsToGc.traverse(new _AnonymousInnerClass37(this));
+			}
+			i_yapObjectsToGc = null;
+			i_client.writeMsg(com.db4o.Msg.COMMIT);
+		}
+
+		private sealed class _AnonymousInnerClass37 : com.db4o.Visitor4
+		{
+			public _AnonymousInnerClass37(TransactionClient _enclosing)
+			{
+				this._enclosing = _enclosing;
+			}
+
+			public void visit(object a_object)
+			{
+				com.db4o.YapObject yo = (com.db4o.YapObject)((com.db4o.TreeIntObject)a_object).i_object;
+				this._enclosing.i_stream.yapObjectGCd(yo);
+			}
+
+			private readonly TransactionClient _enclosing;
+		}
+
+		internal override void delete(com.db4o.YapObject a_yo, object a_object, int a_cascade
+			, bool a_deleteMembers)
+		{
+			base.delete(a_yo, a_object, a_cascade, false);
+			i_client.writeMsg(com.db4o.Msg.TA_DELETE.getWriterFor2Ints(this, a_yo.getID(), a_cascade
+				));
+		}
+
+		internal override void dontDelete(int a_id, bool a_deleteMembers)
+		{
+			base.dontDelete(a_id, false);
+			i_client.writeMsg(com.db4o.Msg.TA_DONT_DELETE.getWriterForInt(this, a_id));
+		}
+
+		internal override bool isDeleted(int a_id)
+		{
+			i_client.writeMsg(com.db4o.Msg.TA_IS_DELETED.getWriterForInt(this, a_id));
+			int res = i_client.expectedByteResponse(com.db4o.Msg.TA_IS_DELETED).readInt();
+			return res == 1;
+		}
+
+		internal override object[] objectAndYapObjectBySignature(long a_uuid, byte[] a_signature
+			)
+		{
+			int messageLength = com.db4o.YapConst.YAPLONG_LENGTH + com.db4o.YapConst.YAPINT_LENGTH
+				 + a_signature.Length;
+			com.db4o.MsgD message = com.db4o.Msg.OBJECT_BY_UUID.getWriterForLength(this, messageLength
+				);
+			message.writeLong(a_uuid);
+			message.writeBytes(a_signature);
+			i_client.writeMsg(message);
+			message = (com.db4o.MsgD)i_client.expectedResponse(com.db4o.Msg.OBJECT_BY_UUID);
+			int id = message.readInt();
+			if (id > 0)
+			{
+				return i_stream.getObjectAndYapObjectByID(this, id);
+			}
+			return new object[2];
+		}
+
+		public override void rollback()
+		{
+			i_yapObjectsToGc = null;
+			rollBackTransactionListeners();
+		}
+
+		internal override void writeUpdateDeleteMembers(int a_id, com.db4o.YapClass a_yc, 
+			int a_type, int a_cascade)
+		{
+			i_client.writeMsg(com.db4o.Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterFor4Ints(this
+				, a_id, a_yc.getID(), a_type, a_cascade));
+		}
+	}
 }

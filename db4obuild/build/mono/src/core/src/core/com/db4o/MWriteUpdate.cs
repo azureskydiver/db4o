@@ -1,40 +1,40 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
-
-   internal class MWriteUpdate : MsgObject {
-      
-      internal MWriteUpdate() : base() {
-      }
-      
-      internal override bool processMessageAtServer(YapSocket yapsocket) {
-         int i1 = payLoad.readInt();
-         YapFile yapfile1 = (YapFile)this.getStream();
-         this.unmarshall(4);
-         lock (yapfile1.i_lock) {
-            YapClass yapclass1 = yapfile1.getYapClass(i1);
-            payLoad.writeEmbedded();
-            yapclass1.addFieldIndices(payLoad, false);
-            yapfile1.writeUpdate(yapclass1, payLoad);
-         }
-         return true;
-      }
-   }
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal sealed class MWriteUpdate : com.db4o.MsgObject
+	{
+		internal sealed override bool processMessageAtServer(com.db4o.YapSocket sock)
+		{
+			int yapClassId = payLoad.readInt();
+			com.db4o.YapFile stream = (com.db4o.YapFile)getStream();
+			unmarshall(com.db4o.YapConst.YAPINT_LENGTH);
+			lock (stream.i_lock)
+			{
+				com.db4o.YapClass yc = stream.getYapClass(yapClassId);
+				payLoad.writeEmbedded();
+				yc.addFieldIndices(payLoad, false);
+				stream.writeUpdate(yc, payLoad);
+			}
+			return true;
+		}
+	}
 }

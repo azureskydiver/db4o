@@ -1,318 +1,521 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using j4o.io;
-using com.db4o.config;
-using com.db4o.io;
-using com.db4o.messaging;
-using com.db4o.reflect;
-using com.db4o.reflect.jdk;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <summary>Configuration template for creating new db4o files</summary>
+	internal sealed class Config4Impl : com.db4o.config.Configuration, j4o.lang.Cloneable
+		, com.db4o.DeepClone, com.db4o.messaging.MessageSender
+	{
+		internal int i_activationDepth = 5;
 
-   internal class Config4Impl : Configuration, Cloneable, DeepClone, MessageSender {
-      
-      internal Config4Impl() : base() {
-      }
-      internal int i_activationDepth = 5;
-      internal bool i_automaticShutDown = true;
-      internal byte i_blockSize = 1;
-      internal String i_blobPath;
-      internal bool i_callbacks = true;
-      internal int i_callConstructors;
-      internal bool i_classActivationDepthConfigurable = true;
-      internal ClassLoader i_classLoader;
-      internal bool i_detectSchemaChanges = true;
-      internal bool i_disableCommitRecovery;
-      internal int i_discardFreeSpace;
-      internal byte i_encoding = 2;
-      internal bool i_encrypt;
-      internal Hashtable4 i_exceptionalClasses = new Hashtable4(16);
-      internal bool i_exceptionsOnNotStorable;
-      public int i_generateUUIDs;
-      public int i_generateVersionNumbers;
-      internal bool i_isServer = false;
-      internal bool i_lockFile = true;
-      internal int i_messageLevel = 0;
-      internal MessageRecipient i_messageRecipient;
-      internal MessageSender i_messageSender;
-      internal PrintStream i_outStream;
-      internal String i_password;
-      internal bool i_readonly;
-      internal IReflect i_reflect = new CReflect();
-      internal Collection4 i_rename;
-      internal int i_reservedStorageSpace;
-      internal bool i_singleThreadedClient;
-      internal YapStream i_stream;
-      internal bool i_testConstructors = true;
-      internal int i_timeoutClientSocket = 300000;
-      internal int i_timeoutPingClients = 180000;
-      internal int i_timeoutServerSocket = 5000;
-      internal int i_updateDepth;
-      internal int i_weakReferenceCollectionInterval = 1000;
-      internal bool i_weakReferences = true;
-      internal IoAdapter i_ioAdapter = new RandomAccessFileAdapter();
-      static internal Class class__com__db4o__MetaClass;
-      static internal Class class__com__db4o__MetaField;
-      static internal Class class__com__db4o__MetaIndex;
-      static internal Class class__com__db4o__P1HashElement;
-      static internal Class class__com__db4o__P1ListElement;
-      static internal Class class__com__db4o__P1Object;
-      static internal Class class__com__db4o__P1Collection;
-      static internal Class class__com__db4o__StaticClass;
-      static internal Class class__com__db4o__StaticField;
-      
-      internal int activationDepth() {
-         return i_activationDepth;
-      }
-      
-      public void activationDepth(int i) {
-         i_activationDepth = i;
-      }
-      
-      public void automaticShutDown(bool xbool) {
-         i_automaticShutDown = xbool;
-      }
-      
-      public void blockSize(int i) {
-         if (i < 1 || i > 127) Db4o.throwRuntimeException(2);
-         if (i_stream != null) Db4o.throwRuntimeException(46);
-         i_blockSize = (byte)i;
-      }
-      
-      public void callbacks(bool xbool) {
-         i_callbacks = xbool;
-      }
-      
-      public void callConstructors(bool xbool) {
-         i_callConstructors = xbool ? 1 : -1;
-      }
-      
-      public void classActivationDepthConfigurable(bool xbool) {
-         i_classActivationDepthConfigurable = xbool;
-      }
-      
-      internal Config4Class configClass(String xstring) {
-         Config4Class config4class1 = (Config4Class)i_exceptionalClasses.get(xstring);
-         return config4class1;
-      }
-      
-      public Object deepClone(Object obj) {
-         Config4Impl config4impl_0_1 = (Config4Impl)j4o.lang.JavaSystem.clone(this);
-         config4impl_0_1.i_stream = (YapStream)obj;
-         if (i_exceptionalClasses != null) config4impl_0_1.i_exceptionalClasses = (Hashtable4)i_exceptionalClasses.deepClone(config4impl_0_1);
-         if (i_rename != null) config4impl_0_1.i_rename = (Collection4)i_rename.deepClone(config4impl_0_1);
-         return config4impl_0_1;
-      }
-      
-      public void detectSchemaChanges(bool xbool) {
-         i_detectSchemaChanges = xbool;
-      }
-      
-      public void disableCommitRecovery() {
-         i_disableCommitRecovery = true;
-      }
-      
-      public void discardFreeSpace(int i) {
-         i_discardFreeSpace = i;
-      }
-      
-      public void encrypt(bool xbool) {
-         globalSettingOnly();
-         i_encrypt = xbool;
-      }
-      
-      internal void ensureDirExists(String xstring) {
-         File file1 = new File(xstring);
-         if (!file1.exists()) file1.mkdirs();
-         if (!file1.exists() || !file1.isDirectory()) throw new IOException(Messages.get(37, xstring));
-      }
-      
-      internal PrintStream errStream() {
-         return i_outStream == null ? j4o.lang.JavaSystem.err : i_outStream;
-      }
-      
-      public void exceptionsOnNotStorable(bool xbool) {
-         i_exceptionsOnNotStorable = xbool;
-      }
-      
-      public void generateUUIDs(int i) {
-         i_generateUUIDs = i;
-         storeStreamBootRecord();
-      }
-      
-      private void storeStreamBootRecord() {
-         if (i_stream is YapFile) {
-            YapFile yapfile1 = (YapFile)i_stream;
-            yapfile1.i_bootRecord.initConfig(this);
-            yapfile1.setInternal(yapfile1.i_systemTrans, yapfile1.i_bootRecord, false);
-            yapfile1.i_systemTrans.commit();
-         }
-      }
-      
-      public void generateVersionNumbers(int i) {
-         i_generateVersionNumbers = i;
-         storeStreamBootRecord();
-      }
-      
-      public MessageSender getMessageSender() {
-         return this;
-      }
-      
-      private void globalSettingOnly() {
-         if (i_stream != null) {
-            j4o.lang.JavaSystem.printStackTrace(new Exception());
-            Db4o.throwRuntimeException(46);
-         }
-      }
-      
-      public void io(IoAdapter ioadapter) {
-         globalSettingOnly();
-         i_ioAdapter = ioadapter;
-      }
-      
-      public void lockDatabaseFile(bool xbool) {
-         i_lockFile = xbool;
-      }
-      
-      public void markTransient(String xstring) {
-         Platform.markTransient(xstring);
-      }
-      
-      public void messageLevel(int i) {
-         i_messageLevel = i;
-         if (i_outStream == null) setOut(j4o.lang.JavaSystem._out);
-      }
-      
-      public ObjectClass objectClass(Object obj) {
-         String xstring1 = classNameFor(obj);
-         if (xstring1 == null) return null;
-         Config4Class config4class1 = (Config4Class)i_exceptionalClasses.get(xstring1);
-         if (config4class1 == null) {
-            config4class1 = new Config4Class(this, xstring1);
-            i_exceptionalClasses.put(xstring1, config4class1);
-         }
-         return config4class1;
-      }
-      
-      internal PrintStream outStream() {
-         return i_outStream == null ? j4o.lang.JavaSystem._out : i_outStream;
-      }
-      
-      public void password(String xstring) {
-         globalSettingOnly();
-         i_password = xstring;
-      }
-      
-      public void readOnly(bool xbool) {
-         globalSettingOnly();
-         i_readonly = xbool;
-      }
-      
-      public IReflect reflector() {
-         return i_reflect;
-      }
-      
-      public void reflectWith(IReflect ireflect) {
-         if (ireflect == null) throw new ArgumentNullException();
-         i_reflect = ireflect;
-      }
-      
-      public void refreshClasses() {
-         if (i_stream == null) Db4o.forEachSession(new Config4Impl__1(this)); else i_stream.refreshClasses();
-      }
-      
-      internal void rename(Rename rename) {
-         if (i_rename == null) i_rename = new Collection4();
-         i_rename.add(rename);
-      }
-      
-      public void reserveStorageSpace(long l) {
-         i_reservedStorageSpace = (int)l;
-         if (i_reservedStorageSpace < 0) i_reservedStorageSpace = 0;
-         if (i_stream != null) i_stream.reserve(i_reservedStorageSpace);
-      }
-      
-      public void send(Object obj) {
-         if (i_stream == null) Db4o.forEachSession(new Config4Impl__2(this)); else i_stream.send(obj);
-      }
-      
-      public void setBlobPath(String xstring) {
-         ensureDirExists(xstring);
-         i_blobPath = xstring;
-      }
-      
-      public void setClassLoader(ClassLoader classloader) {
-         i_classLoader = classloader;
-      }
-      
-      public void setMessageRecipient(MessageRecipient messagerecipient) {
-         i_messageRecipient = messagerecipient;
-      }
-      
-      public void setOut(PrintStream printstream) {
-         i_outStream = printstream;
-         if (i_stream != null) i_stream.logMsg(19, Db4o.version()); else Db4o.logMsg(Db4o.i_config, 19, Db4o.version());
-      }
-      
-      public void singleThreadedClient(bool xbool) {
-         i_singleThreadedClient = xbool;
-      }
-      
-      public void testConstructors(bool xbool) {
-         i_testConstructors = xbool;
-      }
-      
-      public void timeoutClientSocket(int i) {
-         i_timeoutClientSocket = i;
-      }
-      
-      public void timeoutPingClients(int i) {
-         i_timeoutPingClients = i;
-      }
-      
-      public void timeoutServerSocket(int i) {
-         i_timeoutServerSocket = i;
-      }
-      
-      public void unicode(bool xbool) {
-         if (xbool) i_encoding = (byte)2; else i_encoding = (byte)1;
-      }
-      
-      public void updateDepth(int i) {
-         i_updateDepth = i;
-      }
-      
-      public void weakReferenceCollectionInterval(int i) {
-         i_weakReferenceCollectionInterval = i;
-      }
-      
-      public void weakReferences(bool xbool) {
-         i_weakReferences = xbool;
-      }
-      
-      static internal String classNameFor(Object obj) {
-         if (obj == null) return null;
-         obj = Platform.getClassForType(obj);
-         if (obj is String) return (String)obj;
-         Class var_class1;
-         if (obj is Class) var_class1 = (Class)obj; else var_class1 = j4o.lang.Class.getClassForObject(obj);
-         return var_class1.getName();
-      }
-   }
+		internal bool i_automaticShutDown = true;
+
+		internal byte i_blockSize = 1;
+
+		internal string i_blobPath;
+
+		internal bool i_callbacks = true;
+
+		internal int i_callConstructors;
+
+		internal bool i_classActivationDepthConfigurable = true;
+
+		internal j4o.lang.ClassLoader i_classLoader;
+
+		internal bool i_detectSchemaChanges = true;
+
+		internal bool i_disableCommitRecovery;
+
+		internal int i_discardFreeSpace;
+
+		internal byte i_encoding = com.db4o.YapConst.UNICODE;
+
+		internal bool i_encrypt;
+
+		internal com.db4o.Hashtable4 i_exceptionalClasses = new com.db4o.Hashtable4(16);
+
+		internal bool i_exceptionsOnNotStorable;
+
+		public int i_generateUUIDs;
+
+		public int i_generateVersionNumbers;
+
+		internal bool i_isServer = false;
+
+		internal bool i_lockFile = true;
+
+		internal int i_messageLevel = com.db4o.YapConst.NONE;
+
+		internal com.db4o.messaging.MessageRecipient i_messageRecipient;
+
+		internal com.db4o.messaging.MessageSender i_messageSender;
+
+		internal j4o.io.PrintStream i_outStream;
+
+		internal string i_password;
+
+		internal bool i_readonly;
+
+		private com.db4o.reflect.Reflector _reflect;
+
+		internal com.db4o.Collection4 i_rename;
+
+		internal int i_reservedStorageSpace;
+
+		internal bool i_singleThreadedClient;
+
+		internal com.db4o.YapStream i_stream;
+
+		internal bool i_testConstructors = true;
+
+		internal int i_timeoutClientSocket = com.db4o.YapConst.CLIENT_SOCKET_TIMEOUT;
+
+		internal int i_timeoutPingClients = com.db4o.YapConst.CONNECTION_TIMEOUT;
+
+		internal int i_timeoutServerSocket = com.db4o.YapConst.SERVER_SOCKET_TIMEOUT;
+
+		internal int i_updateDepth;
+
+		internal int i_weakReferenceCollectionInterval = 1000;
+
+		internal bool i_weakReferences = true;
+
+		internal com.db4o.io.IoAdapter i_ioAdapter = new com.db4o.io.RandomAccessFileAdapter
+			();
+
+		internal int activationDepth()
+		{
+			return i_activationDepth;
+		}
+
+		public void activationDepth(int depth)
+		{
+			i_activationDepth = depth;
+		}
+
+		public void automaticShutDown(bool flag)
+		{
+			i_automaticShutDown = flag;
+		}
+
+		public void blockSize(int bytes)
+		{
+			if (bytes < 1 || bytes > 127)
+			{
+				com.db4o.Db4o.throwRuntimeException(1);
+			}
+			if (i_stream != null)
+			{
+				com.db4o.Db4o.throwRuntimeException(46);
+			}
+			i_blockSize = (byte)bytes;
+		}
+
+		public void callbacks(bool turnOn)
+		{
+			i_callbacks = turnOn;
+		}
+
+		public void callConstructors(bool flag)
+		{
+			i_callConstructors = flag ? com.db4o.YapConst.YES : com.db4o.YapConst.NO;
+		}
+
+		public void classActivationDepthConfigurable(bool turnOn)
+		{
+			i_classActivationDepthConfigurable = turnOn;
+		}
+
+		internal com.db4o.Config4Class configClass(string className)
+		{
+			com.db4o.Config4Class config = (com.db4o.Config4Class)i_exceptionalClasses.get(className
+				);
+			return config;
+		}
+
+		public object deepClone(object param)
+		{
+			com.db4o.Config4Impl ret = (com.db4o.Config4Impl)j4o.lang.JavaSystem.clone(this);
+			ret.i_stream = (com.db4o.YapStream)param;
+			if (i_exceptionalClasses != null)
+			{
+				ret.i_exceptionalClasses = (com.db4o.Hashtable4)i_exceptionalClasses.deepClone(ret
+					);
+			}
+			if (i_rename != null)
+			{
+				ret.i_rename = (com.db4o.Collection4)i_rename.deepClone(ret);
+			}
+			return ret;
+		}
+
+		public void detectSchemaChanges(bool flag)
+		{
+			i_detectSchemaChanges = flag;
+		}
+
+		public void disableCommitRecovery()
+		{
+			i_disableCommitRecovery = true;
+		}
+
+		public void discardFreeSpace(int bytes)
+		{
+			i_discardFreeSpace = bytes;
+		}
+
+		public void encrypt(bool flag)
+		{
+			globalSettingOnly();
+			i_encrypt = flag;
+		}
+
+		internal void ensureDirExists(string path)
+		{
+			j4o.io.File file = new j4o.io.File(path);
+			if (!file.exists())
+			{
+				file.mkdirs();
+			}
+			if (file.exists() && file.isDirectory())
+			{
+			}
+			else
+			{
+				throw new j4o.io.IOException(com.db4o.Messages.get(37, path));
+			}
+		}
+
+		internal j4o.io.PrintStream errStream()
+		{
+			return i_outStream == null ? j4o.lang.JavaSystem.err : i_outStream;
+		}
+
+		public void exceptionsOnNotStorable(bool flag)
+		{
+			i_exceptionsOnNotStorable = flag;
+		}
+
+		public void generateUUIDs(int setting)
+		{
+			i_generateUUIDs = setting;
+			storeStreamBootRecord();
+		}
+
+		private void storeStreamBootRecord()
+		{
+			if (i_stream is com.db4o.YapFile)
+			{
+				com.db4o.YapFile yapFile = (com.db4o.YapFile)i_stream;
+				yapFile.i_bootRecord.initConfig(this);
+				yapFile.setInternal(yapFile.i_systemTrans, yapFile.i_bootRecord, false);
+				yapFile.i_systemTrans.commit();
+			}
+		}
+
+		public void generateVersionNumbers(int setting)
+		{
+			i_generateVersionNumbers = setting;
+			storeStreamBootRecord();
+		}
+
+		public com.db4o.messaging.MessageSender getMessageSender()
+		{
+			return this;
+		}
+
+		private void globalSettingOnly()
+		{
+			if (i_stream != null)
+			{
+				j4o.lang.JavaSystem.printStackTrace(new System.Exception());
+				com.db4o.Db4o.throwRuntimeException(46);
+			}
+		}
+
+		public void io(com.db4o.io.IoAdapter adapter)
+		{
+			globalSettingOnly();
+			i_ioAdapter = adapter;
+		}
+
+		public void lockDatabaseFile(bool flag)
+		{
+			i_lockFile = flag;
+		}
+
+		public void markTransient(string marker)
+		{
+			com.db4o.Platform.markTransient(marker);
+		}
+
+		public void messageLevel(int level)
+		{
+			i_messageLevel = level;
+			if (i_outStream == null)
+			{
+				setOut(j4o.lang.JavaSystem._out);
+			}
+		}
+
+		public com.db4o.config.ObjectClass objectClass(object clazz)
+		{
+			com.db4o.reflect.ReflectClass claxx = reflectorFor(clazz);
+			if (claxx == null)
+			{
+				return null;
+			}
+			string className = claxx.getName();
+			com.db4o.Config4Class c4c = (com.db4o.Config4Class)i_exceptionalClasses.get(className
+				);
+			if (c4c == null)
+			{
+				c4c = new com.db4o.Config4Class(this, className);
+				i_exceptionalClasses.put(className, c4c);
+			}
+			return c4c;
+		}
+
+		internal j4o.io.PrintStream outStream()
+		{
+			return i_outStream == null ? j4o.lang.JavaSystem._out : i_outStream;
+		}
+
+		public void password(string pw)
+		{
+			globalSettingOnly();
+			i_password = pw;
+		}
+
+		public void readOnly(bool flag)
+		{
+			globalSettingOnly();
+			i_readonly = flag;
+		}
+
+		internal com.db4o.reflect.Reflector reflector()
+		{
+			if (_reflect == null)
+			{
+				_reflect = com.db4o.Platform.createReflector(this);
+			}
+			return _reflect;
+		}
+
+		public void reflectWith(com.db4o.reflect.Reflector reflect)
+		{
+			if (i_stream != null)
+			{
+				com.db4o.Db4o.throwRuntimeException(46);
+			}
+			if (reflect == null)
+			{
+				throw new System.ArgumentNullException();
+			}
+			_reflect = reflect;
+		}
+
+		public void refreshClasses()
+		{
+			if (i_stream == null)
+			{
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass287(this));
+			}
+			else
+			{
+				i_stream.refreshClasses();
+			}
+		}
+
+		private sealed class _AnonymousInnerClass287 : com.db4o.Visitor4
+		{
+			public _AnonymousInnerClass287(Config4Impl _enclosing)
+			{
+				this._enclosing = _enclosing;
+			}
+
+			public void visit(object obj)
+			{
+				com.db4o.YapStream ys = ((com.db4o.Session)obj).i_stream;
+				if (!ys.isClosed())
+				{
+					ys.refreshClasses();
+				}
+			}
+
+			private readonly Config4Impl _enclosing;
+		}
+
+		internal void rename(com.db4o.Rename a_rename)
+		{
+			if (i_rename == null)
+			{
+				i_rename = new com.db4o.Collection4();
+			}
+			i_rename.add(a_rename);
+		}
+
+		public void reserveStorageSpace(long byteCount)
+		{
+			i_reservedStorageSpace = (int)byteCount;
+			if (i_reservedStorageSpace < 0)
+			{
+				i_reservedStorageSpace = 0;
+			}
+			if (i_stream != null)
+			{
+				i_stream.reserve(i_reservedStorageSpace);
+			}
+		}
+
+		/// <summary>The ConfigImpl also is our messageSender</summary>
+		public void send(object obj)
+		{
+			if (i_stream == null)
+			{
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass323(this));
+			}
+			else
+			{
+				i_stream.send(obj);
+			}
+		}
+
+		private sealed class _AnonymousInnerClass323 : com.db4o.Visitor4
+		{
+			public _AnonymousInnerClass323(Config4Impl _enclosing)
+			{
+				this._enclosing = _enclosing;
+			}
+
+			public void visit(object session)
+			{
+				com.db4o.YapStream ys = ((com.db4o.Session)session).i_stream;
+				if (!ys.isClosed())
+				{
+					ys.send(session);
+				}
+			}
+
+			private readonly Config4Impl _enclosing;
+		}
+
+		public void setBlobPath(string path)
+		{
+			ensureDirExists(path);
+			i_blobPath = path;
+		}
+
+		public void setClassLoader(j4o.lang.ClassLoader classLoader)
+		{
+			i_classLoader = classLoader;
+		}
+
+		public void setMessageRecipient(com.db4o.messaging.MessageRecipient messageRecipient
+			)
+		{
+			i_messageRecipient = messageRecipient;
+		}
+
+		public void setOut(j4o.io.PrintStream outStream)
+		{
+			i_outStream = outStream;
+			if (i_stream != null)
+			{
+				i_stream.logMsg(19, com.db4o.Db4o.version());
+			}
+			else
+			{
+				com.db4o.Db4o.logMsg(com.db4o.Db4o.i_config, 19, com.db4o.Db4o.version());
+			}
+		}
+
+		public void singleThreadedClient(bool flag)
+		{
+			i_singleThreadedClient = flag;
+		}
+
+		public void testConstructors(bool flag)
+		{
+			i_testConstructors = flag;
+		}
+
+		public void timeoutClientSocket(int milliseconds)
+		{
+			i_timeoutClientSocket = milliseconds;
+		}
+
+		public void timeoutPingClients(int milliseconds)
+		{
+			i_timeoutPingClients = milliseconds;
+		}
+
+		public void timeoutServerSocket(int milliseconds)
+		{
+			i_timeoutServerSocket = milliseconds;
+		}
+
+		public void unicode(bool unicodeOn)
+		{
+			if (unicodeOn)
+			{
+				i_encoding = com.db4o.YapConst.UNICODE;
+			}
+			else
+			{
+				i_encoding = com.db4o.YapConst.ISO8859;
+			}
+		}
+
+		public void updateDepth(int depth)
+		{
+			i_updateDepth = depth;
+		}
+
+		public void weakReferenceCollectionInterval(int milliseconds)
+		{
+			i_weakReferenceCollectionInterval = milliseconds;
+		}
+
+		public void weakReferences(bool flag)
+		{
+			i_weakReferences = flag;
+		}
+
+		internal com.db4o.reflect.ReflectClass reflectorFor(object clazz)
+		{
+			clazz = com.db4o.Platform.getClassForType(clazz);
+			if (clazz is com.db4o.reflect.ReflectClass)
+			{
+				return (com.db4o.reflect.ReflectClass)clazz;
+			}
+			if (clazz is j4o.lang.Class)
+			{
+				return reflector().forClass((j4o.lang.Class)clazz);
+			}
+			if (clazz is string)
+			{
+				return reflector().forName((string)clazz);
+			}
+			return reflector().forObject(clazz);
+		}
+	}
 }

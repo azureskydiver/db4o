@@ -1,136 +1,251 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal class IxField
+	{
+		internal const int MAX_LEAVES = 3;
 
-   internal class IxField {
-      static internal int MAX_LEAVES = 3;
-      private static int i_version;
-      internal YapField i_field;
-      internal MetaIndex i_metaIndex;
-      internal IxFieldTransaction i_globalIndex;
-      internal Collection4 i_transactionIndices;
-      internal IxFileRangeReader i_fileRangeReader;
-      
-      internal IxField(Transaction transaction, YapField yapfield, MetaIndex metaindex) : base() {
-         i_metaIndex = metaindex;
-         i_field = yapfield;
-         i_globalIndex = new IxFieldTransaction(transaction, this);
-         createGlobalFileRange();
-      }
-      
-      internal IxFieldTransaction dirtyFieldTransaction(Transaction transaction) {
-         IxFieldTransaction ixfieldtransaction1 = new IxFieldTransaction(transaction, this);
-         if (i_transactionIndices == null) i_transactionIndices = new Collection4(); else {
-            IxFieldTransaction ixfieldtransaction_0_1 = (IxFieldTransaction)i_transactionIndices.get(ixfieldtransaction1);
-            if (ixfieldtransaction_0_1 != null) return ixfieldtransaction_0_1;
-         }
-         transaction.addDirtyFieldIndex(ixfieldtransaction1);
-         ixfieldtransaction1.setRoot(Tree.deepClone(i_globalIndex.getRoot(), ixfieldtransaction1));
-         ixfieldtransaction1.i_version = ++i_version;
-         i_transactionIndices.add(ixfieldtransaction1);
-         return ixfieldtransaction1;
-      }
-      
-      internal IxFieldTransaction getFieldTransaction(Transaction transaction) {
-         if (i_transactionIndices != null) {
-            IxFieldTransaction ixfieldtransaction1 = new IxFieldTransaction(transaction, this);
-            ixfieldtransaction1 = (IxFieldTransaction)i_transactionIndices.get(ixfieldtransaction1);
-            if (ixfieldtransaction1 != null) return ixfieldtransaction1;
-         }
-         return i_globalIndex;
-      }
-      
-      internal void commit(IxFieldTransaction ixfieldtransaction) {
-         i_transactionIndices.remove(ixfieldtransaction);
-         i_globalIndex.merge(ixfieldtransaction);
-         int i1 = i_globalIndex.countLeaves();
-         bool xbool1 = true;
-         if (xbool1) {
-            Transaction transaction1 = i_globalIndex.i_trans;
-            int[] xis1 = {
-               i_metaIndex.indexAddress,
-i_metaIndex.indexLength,
-i_metaIndex.patchAddress,
-i_metaIndex.patchLength            };
-            Tree tree1 = i_globalIndex.getRoot();
-            YapDataType yapdatatype1 = i_field.getHandler();
-            int i_1_1 = yapdatatype1.linkLength() + 4;
-            i_metaIndex.indexEntries = tree1 == null ? 0 : tree1.i_size;
-            i_metaIndex.indexLength = i_metaIndex.indexEntries * i_1_1;
-            i_metaIndex.indexAddress = ((YapFile)transaction1.i_stream).getSlot(i_metaIndex.indexLength);
-            i_metaIndex.patchEntries = 0;
-            i_metaIndex.patchAddress = 0;
-            i_metaIndex.patchLength = 0;
-            transaction1.i_stream.setInternal(transaction1, i_metaIndex, 1, false);
-            YapWriter yapwriter1 = new YapWriter(transaction1, i_metaIndex.indexAddress, i_1_1);
-            if (tree1 != null) tree1.traverse(new IxField__1(this, yapdatatype1, yapwriter1));
-            IxFileRange ixfilerange1 = createGlobalFileRange();
-            Iterator4 iterator41 = i_transactionIndices.iterator();
-            while (iterator41.hasNext()) {
-               IxFieldTransaction ixfieldtransaction_2_1 = (IxFieldTransaction)iterator41.next();
-               Tree tree_3_1 = ixfilerange1;
-               if (tree_3_1 != null) tree_3_1 = tree_3_1.deepClone(ixfieldtransaction_2_1);
-               Tree[] trees1 = {
-                  tree_3_1               };
-               ixfieldtransaction_2_1.getRoot().traverseFromLeaves(new IxField__2(this, ixfieldtransaction_2_1, trees1));
-               ixfieldtransaction_2_1.setRoot(trees1[0]);
-            }
-            if (xis1[0] > 0) transaction1.i_file.free(xis1[0], xis1[1]);
-            if (xis1[2] > 0) transaction1.i_file.free(xis1[2], xis1[3]);
-         } else {
-            Iterator4 iterator41 = i_transactionIndices.iterator();
-            while (iterator41.hasNext()) ((IxFieldTransaction)iterator41.next()).merge(ixfieldtransaction);
-         }
-      }
-      
-      private IxFileRange createGlobalFileRange() {
-         IxFileRange ixfilerange1 = null;
-         if (i_metaIndex.indexEntries > 0) ixfilerange1 = new IxFileRange(i_globalIndex, i_metaIndex.indexAddress, 0, i_metaIndex.indexEntries);
-         i_globalIndex.setRoot(ixfilerange1);
-         return ixfilerange1;
-      }
-      
-      internal void rollback(IxFieldTransaction ixfieldtransaction) {
-         i_transactionIndices.remove(ixfieldtransaction);
-      }
-      
-      internal IxFileRangeReader fileRangeReader() {
-         if (i_fileRangeReader == null) i_fileRangeReader = new IxFileRangeReader(i_field.getHandler());
-         return i_fileRangeReader;
-      }
-      
-      public override String ToString() {
-         StringBuffer stringbuffer1 = new StringBuffer();
-         stringbuffer1.append("IxField  " + j4o.lang.JavaSystem.identityHashCode(this));
-         if (i_globalIndex != null) {
-            stringbuffer1.append("\n  Global \n   ");
-            stringbuffer1.append(i_globalIndex.ToString());
-         } else stringbuffer1.append("\n  no global index \n   ");
-         if (i_transactionIndices != null) {
-            Iterator4 iterator41 = i_transactionIndices.iterator();
-            while (iterator41.hasNext()) {
-               stringbuffer1.append("\n");
-               stringbuffer1.append(iterator41.next().ToString());
-            }
-         }
-         return stringbuffer1.ToString();
-      }
-   }
+		private static int i_version;
+
+		internal readonly com.db4o.YapField i_field;
+
+		internal readonly com.db4o.MetaIndex i_metaIndex;
+
+		internal com.db4o.IxFieldTransaction i_globalIndex;
+
+		internal com.db4o.Collection4 i_transactionIndices;
+
+		internal com.db4o.IxFileRangeReader i_fileRangeReader;
+
+		internal IxField(com.db4o.Transaction a_systemTrans, com.db4o.YapField a_field, com.db4o.MetaIndex
+			 a_metaIndex)
+		{
+			i_metaIndex = a_metaIndex;
+			i_field = a_field;
+			i_globalIndex = new com.db4o.IxFieldTransaction(a_systemTrans, this);
+			createGlobalFileRange();
+		}
+
+		internal virtual com.db4o.IxFieldTransaction dirtyFieldTransaction(com.db4o.Transaction
+			 a_trans)
+		{
+			com.db4o.IxFieldTransaction ift = new com.db4o.IxFieldTransaction(a_trans, this);
+			if (i_transactionIndices == null)
+			{
+				i_transactionIndices = new com.db4o.Collection4();
+			}
+			else
+			{
+				com.db4o.IxFieldTransaction iftExisting = (com.db4o.IxFieldTransaction)i_transactionIndices
+					.get(ift);
+				if (iftExisting != null)
+				{
+					return iftExisting;
+				}
+			}
+			a_trans.addDirtyFieldIndex(ift);
+			ift.setRoot(com.db4o.Tree.deepClone(i_globalIndex.getRoot(), ift));
+			ift.i_version = ++i_version;
+			i_transactionIndices.add(ift);
+			return ift;
+		}
+
+		internal virtual com.db4o.IxFieldTransaction getFieldTransaction(com.db4o.Transaction
+			 a_trans)
+		{
+			if (i_transactionIndices != null)
+			{
+				com.db4o.IxFieldTransaction ift = new com.db4o.IxFieldTransaction(a_trans, this);
+				ift = (com.db4o.IxFieldTransaction)i_transactionIndices.get(ift);
+				if (ift != null)
+				{
+					return ift;
+				}
+			}
+			return i_globalIndex;
+		}
+
+		internal virtual void commit(com.db4o.IxFieldTransaction a_ft)
+		{
+			i_transactionIndices.remove(a_ft);
+			i_globalIndex.merge(a_ft);
+			int leaves = i_globalIndex.countLeaves();
+			bool createNewFileRange = true;
+			if (createNewFileRange)
+			{
+				com.db4o.Transaction trans = i_globalIndex.i_trans;
+				int[] free = new int[] { i_metaIndex.indexAddress, i_metaIndex.indexLength, i_metaIndex
+					.patchAddress, i_metaIndex.patchLength };
+				com.db4o.Tree root = i_globalIndex.getRoot();
+				com.db4o.YapDataType handler = i_field.getHandler();
+				int lengthPerEntry = handler.linkLength() + com.db4o.YapConst.YAPINT_LENGTH;
+				i_metaIndex.indexEntries = root == null ? 0 : root.i_size;
+				i_metaIndex.indexLength = i_metaIndex.indexEntries * lengthPerEntry;
+				i_metaIndex.indexAddress = ((com.db4o.YapFile)trans.i_stream).getSlot(i_metaIndex
+					.indexLength);
+				i_metaIndex.patchEntries = 0;
+				i_metaIndex.patchAddress = 0;
+				i_metaIndex.patchLength = 0;
+				trans.i_stream.setInternal(trans, i_metaIndex, 1, false);
+				com.db4o.YapWriter writer = new com.db4o.YapWriter(trans, i_metaIndex.indexAddress
+					, lengthPerEntry);
+				if (root != null)
+				{
+					root.traverse(new _AnonymousInnerClass113(this, handler, writer));
+				}
+				com.db4o.IxFileRange newFileRange = createGlobalFileRange();
+				com.db4o.Iterator4 i = i_transactionIndices.iterator();
+				while (i.hasNext())
+				{
+					com.db4o.IxFieldTransaction ft = (com.db4o.IxFieldTransaction)i.next();
+					com.db4o.Tree clonedTree = newFileRange;
+					if (clonedTree != null)
+					{
+						clonedTree = clonedTree.deepClone(ft);
+					}
+					com.db4o.Tree[] tree = { clonedTree };
+					ft.getRoot().traverseFromLeaves((new _AnonymousInnerClass130(this, ft, tree)));
+					ft.setRoot(tree[0]);
+				}
+				if (free[0] > 0)
+				{
+					trans.i_file.free(free[0], free[1]);
+				}
+				if (free[2] > 0)
+				{
+					trans.i_file.free(free[2], free[3]);
+				}
+			}
+			else
+			{
+				com.db4o.Iterator4 i = i_transactionIndices.iterator();
+				while (i.hasNext())
+				{
+					((com.db4o.IxFieldTransaction)i.next()).merge(a_ft);
+				}
+			}
+		}
+
+		private sealed class _AnonymousInnerClass113 : com.db4o.Visitor4
+		{
+			public _AnonymousInnerClass113(IxField _enclosing, com.db4o.YapDataType handler, 
+				com.db4o.YapWriter writer)
+			{
+				this._enclosing = _enclosing;
+				this.handler = handler;
+				this.writer = writer;
+			}
+
+			public void visit(object a_object)
+			{
+				((com.db4o.IxTree)a_object).write(handler, writer);
+			}
+
+			private readonly IxField _enclosing;
+
+			private readonly com.db4o.YapDataType handler;
+
+			private readonly com.db4o.YapWriter writer;
+		}
+
+		private sealed class _AnonymousInnerClass130 : com.db4o.Visitor4
+		{
+			public _AnonymousInnerClass130(IxField _enclosing, com.db4o.IxFieldTransaction ft
+				, com.db4o.Tree[] tree)
+			{
+				this._enclosing = _enclosing;
+				this.ft = ft;
+				this.tree = tree;
+			}
+
+			public void visit(object a_object)
+			{
+				com.db4o.IxTree ixTree = (com.db4o.IxTree)a_object;
+				if (ixTree.i_version == ft.i_version)
+				{
+					if (!(ixTree is com.db4o.IxFileRange))
+					{
+						ixTree.beginMerge();
+						tree[0] = tree[0].add(ixTree);
+					}
+				}
+			}
+
+			private readonly IxField _enclosing;
+
+			private readonly com.db4o.IxFieldTransaction ft;
+
+			private readonly com.db4o.Tree[] tree;
+		}
+
+		private com.db4o.IxFileRange createGlobalFileRange()
+		{
+			com.db4o.IxFileRange fr = null;
+			if (i_metaIndex.indexEntries > 0)
+			{
+				fr = new com.db4o.IxFileRange(i_globalIndex, i_metaIndex.indexAddress, 0, i_metaIndex
+					.indexEntries);
+			}
+			i_globalIndex.setRoot(fr);
+			return fr;
+		}
+
+		internal virtual void rollback(com.db4o.IxFieldTransaction a_ft)
+		{
+			i_transactionIndices.remove(a_ft);
+		}
+
+		internal virtual com.db4o.IxFileRangeReader fileRangeReader()
+		{
+			if (i_fileRangeReader == null)
+			{
+				i_fileRangeReader = new com.db4o.IxFileRangeReader(i_field.getHandler());
+			}
+			return i_fileRangeReader;
+		}
+
+		public override string ToString()
+		{
+			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
+			sb.append("IxField  " + j4o.lang.JavaSystem.identityHashCode(this));
+			if (i_globalIndex != null)
+			{
+				sb.append("\n  Global \n   ");
+				sb.append(i_globalIndex.ToString());
+			}
+			else
+			{
+				sb.append("\n  no global index \n   ");
+			}
+			if (i_transactionIndices != null)
+			{
+				com.db4o.Iterator4 i = i_transactionIndices.iterator();
+				while (i.hasNext())
+				{
+					sb.append("\n");
+					sb.append(i.next().ToString());
+				}
+			}
+			return sb.ToString();
+		}
+	}
 }

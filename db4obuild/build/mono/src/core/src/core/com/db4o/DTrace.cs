@@ -1,102 +1,151 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <exclude></exclude>
+	public class DTrace
+	{
+		public const bool enabled = false;
 
-   public class DTrace {
-      public static bool enabled = false;
-      private bool _enabled;
-      private bool _break;
-      private bool _log;
-      private String _tag;
-      private static long[] rangeStart;
-      private static long[] rangeEnd;
-      private static int rangeCount;
-      public static DTrace BIND;
-      public static DTrace CLOSE;
-      public static DTrace COMMIT;
-      public static DTrace CONTINUESET;
-      public static DTrace FREE;
-      public static DTrace FREE_ON_COMMIT;
-      public static DTrace FREE_ON_ROLLBACK;
-      public static DTrace GET_SLOT;
-      public static DTrace NEW_INSTANCE;
-      public static DTrace READ_ID;
-      public static DTrace READ_SLOT;
-      public static DTrace REFERENCE_REMOVED;
-      public static DTrace REGULAR_SEEK;
-      public static DTrace REMOVE_FROM_CLASS_INDEX;
-      public static DTrace TRANS_COMMIT;
-      public static DTrace TRANS_DONT_DELETE;
-      public static DTrace TRANS_DELETE;
-      public static DTrace WRITE_BYTES;
-      public static DTrace WRITE_UPDATE_DELETE_MEMBERS;
-      private static Object forInit = init();
-      private static DTrace[] all;
-      private static int current;
-      
-      private static void breakPoint() {
-         bool xbool1 = true;
-      }
-      
-      private static Object init() {
-         return null;
-      }
-      
-      internal DTrace(bool xbool, bool bool_0_, String xstring, bool bool_1_) : base() {
-      }
-      
-      public void log() {
-      }
-      
-      public void log(long l) {
-      }
-      
-      public void logInfo(String xstring) {
-      }
-      
-      public void log(long l, String xstring) {
-      }
-      
-      public void logLength(long l, long l_2_) {
-      }
-      
-      public void logEnd(long l, long l_3_) {
-      }
-      
-      public void logEnd(long l, long l_4_, String xstring) {
-      }
-      
-      public static void addRange(long l) {
-      }
-      
-      public static void addRangeWithLength(long l, long l_5_) {
-      }
-      
-      public static void addRangeWithEnd(long l, long l_6_) {
-      }
-      
-      private String formatInt(long l) {
-         return null;
-      }
-      
-      private static void turnAllOffExceptFor(DTrace[] dtraces) {
-      }
-   }
+		private static void breakPoint()
+		{
+			int placeBreakPointHere = 1;
+		}
+
+		private static object init()
+		{
+			return null;
+		}
+
+		private DTrace(bool enabled_, bool break_, string tag_, bool log_)
+		{
+		}
+
+		private bool _enabled;
+
+		private bool _break;
+
+		private bool _log;
+
+		private string _tag;
+
+		private static long[] rangeStart;
+
+		private static long[] rangeEnd;
+
+		private static int rangeCount;
+
+		public static com.db4o.DTrace BIND;
+
+		public static com.db4o.DTrace CLOSE;
+
+		public static com.db4o.DTrace COMMIT;
+
+		public static com.db4o.DTrace CONTINUESET;
+
+		public static com.db4o.DTrace FREE;
+
+		public static com.db4o.DTrace FREE_ON_COMMIT;
+
+		public static com.db4o.DTrace FREE_ON_ROLLBACK;
+
+		public static com.db4o.DTrace GET_SLOT;
+
+		public static com.db4o.DTrace NEW_INSTANCE;
+
+		public static com.db4o.DTrace READ_ID;
+
+		public static com.db4o.DTrace READ_SLOT;
+
+		public static com.db4o.DTrace REFERENCE_REMOVED;
+
+		public static com.db4o.DTrace REGULAR_SEEK;
+
+		public static com.db4o.DTrace REMOVE_FROM_CLASS_INDEX;
+
+		public static com.db4o.DTrace TRANS_COMMIT;
+
+		public static com.db4o.DTrace TRANS_DONT_DELETE;
+
+		public static com.db4o.DTrace TRANS_DELETE;
+
+		public static com.db4o.DTrace YAPCLASS_BY_ID;
+
+		public static com.db4o.DTrace WRITE_BYTES;
+
+		public static com.db4o.DTrace WRITE_UPDATE_DELETE_MEMBERS;
+
+		private static readonly object forInit = init();
+
+		private static com.db4o.DTrace all;
+
+		private static int current;
+
+		public virtual void log()
+		{
+		}
+
+		public virtual void log(long p)
+		{
+		}
+
+		public virtual void logInfo(string info)
+		{
+		}
+
+		public virtual void log(long p, string info)
+		{
+		}
+
+		public virtual void logLength(long start, long length)
+		{
+		}
+
+		public virtual void logEnd(long start, long end)
+		{
+		}
+
+		public virtual void logEnd(long start, long end, string info)
+		{
+		}
+
+		public static void addRange(long pos)
+		{
+		}
+
+		public static void addRangeWithLength(long start, long length)
+		{
+		}
+
+		public static void addRangeWithEnd(long start, long end)
+		{
+		}
+
+		private string formatInt(long i)
+		{
+			return null;
+		}
+
+		private static void turnAllOffExceptFor(com.db4o.DTrace[] these)
+		{
+		}
+	}
 }

@@ -1,72 +1,77 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal interface YapDataType : com.db4o.YapComparable
+	{
+		void appendEmbedded3(com.db4o.YapWriter a_bytes);
 
-   internal interface YapDataType : YapComparable {
-      
-      void appendEmbedded3(YapWriter yapwriter);
-      
-      bool canHold(Class var_class);
-      
-      void cascadeActivation(Transaction transaction, Object obj, int i, bool xbool);
-      
-      void copyValue(Object obj, Object obj_0_);
-      
-      void deleteEmbedded(YapWriter yapwriter);
-      
-      int getID();
-      
-      Class getJavaClass();
-      
-      Class getPrimitiveJavaClass();
-      
-      bool Equals(YapDataType yapdatatype_1_);
-      
-      Object indexEntry(Object obj);
-      
-      Object indexObject(Transaction transaction, Object obj);
-      
-      int linkLength();
-      
-      void prepareLastIoComparison(Transaction transaction, Object obj);
-      
-      Object read(YapWriter yapwriter);
-      
-      Object readIndexObject(YapWriter yapwriter);
-      
-      Object readQuery(Transaction transaction, YapReader yapreader, bool xbool);
-      
-      bool supportsIndex();
-      
-      void writeNew(Object obj, YapWriter yapwriter);
-      
-      int getType();
-      
-      YapClass getYapClass(YapStream yapstream);
-      
-      void readCandidates(YapReader yapreader, QCandidates qcandidates);
-      
-      Object readIndexEntry(YapReader yapreader);
-      
-      YapDataType readArrayWrapper(Transaction transaction, YapReader[] yapreaders);
-      
-      void writeIndexEntry(YapWriter yapwriter, Object obj);
-   }
+		bool canHold(com.db4o.reflect.ReflectClass claxx);
+
+		void cascadeActivation(com.db4o.Transaction a_trans, object a_object, int a_depth
+			, bool a_activate);
+
+		com.db4o.reflect.ReflectClass classReflector();
+
+		void copyValue(object a_from, object a_to);
+
+		void deleteEmbedded(com.db4o.YapWriter a_bytes);
+
+		int getID();
+
+		bool equals(com.db4o.YapDataType a_dataType);
+
+		object indexEntry(object a_object);
+
+		object indexObject(com.db4o.Transaction a_trans, object a_object);
+
+		int linkLength();
+
+		void prepareLastIoComparison(com.db4o.Transaction a_trans, object obj);
+
+		com.db4o.reflect.ReflectClass primitiveClassReflector();
+
+		object read(com.db4o.YapWriter writer);
+
+		object readIndexObject(com.db4o.YapWriter writer);
+
+		object readQuery(com.db4o.Transaction trans, com.db4o.YapReader reader, bool toArray
+			);
+
+		bool supportsIndex();
+
+		void writeNew(object a_object, com.db4o.YapWriter a_bytes);
+
+		int getType();
+
+		com.db4o.YapClass getYapClass(com.db4o.YapStream a_stream);
+
+		void readCandidates(com.db4o.YapReader a_bytes, com.db4o.QCandidates a_candidates
+			);
+
+		object readIndexEntry(com.db4o.YapReader a_reader);
+
+		com.db4o.YapDataType readArrayWrapper(com.db4o.Transaction a_trans, com.db4o.YapReader[]
+			 a_bytes);
+
+		void writeIndexEntry(com.db4o.YapWriter a_writer, object a_object);
+	}
 }

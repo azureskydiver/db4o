@@ -1,167 +1,316 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using j4o.io;
-using com.db4o.config;
-using com.db4o.ext;
-using com.db4o.reflect;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <summary>factory class with static methods to configure and start the engine.</summary>
+	/// <remarks>
+	/// factory class with static methods to configure and start the engine.
+	/// <br /><br />This class serves as a factory class, to open
+	/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
+	/// instances on database files.<br /><br />
+	/// The global db4o
+	/// <see cref="com.db4o.config.Configuration">Configuration</see>
+	/// object for the running Java session is available through the
+	/// <see cref="com.db4o.Db4o.configure">configure</see>
+	/// method.
+	/// <br /><br />On running the <code>Db4o</code> class it prints the current
+	/// version to System.out.
+	/// </remarks>
+	/// <seealso cref="com.db4o.ext.ExtDb4o">ExtDb4o for extended functionality.</seealso>
+	public class Db4o
+	{
+		internal static readonly com.db4o.Config4Impl i_config = new com.db4o.Config4Impl
+			();
 
-   public class Db4o {
-      
-      public Db4o() : base() {
-      }
-      static internal Config4Impl i_config = new Config4Impl();
-      private static Sessions i_sessions = new Sessions();
-      static internal Object Lock = initialize();
-      static internal String licTo = "";
-      private static bool expirationMessagePrinted;
-      
-      private static Object initialize() {
-         Platform.getDefaultConfiguration(i_config);
-         return new Object();
-      }
-      
-      public static void Main(String[] strings) {
-         j4o.lang.JavaSystem._out.println(version());
-      }
-      
-      public static Class classForName(String xstring) {
-         return classForName(null, xstring);
-      }
-      
-      static internal Class classForName(YapStream yapstream, String xstring) {
-         try {
-            {
-               Config4Impl config4impl1 = yapstream == null ? i_config : yapstream.i_config;
-               if (config4impl1.i_classLoader != null) return config4impl1.i_classLoader.loadClass(xstring);
-               return Class.forName(xstring);
-            }
-         }  catch (Exception throwable) {
-            {
-               return null;
-            }
-         }
-      }
-      
-      public static Configuration configure() {
-         return i_config;
-      }
-      
-      public static void licensedTo(String xstring) {
-      }
-      
-      static internal void logErr(Configuration configuration, int i, String xstring, Exception throwable) {
-         if (configuration == null) configuration = i_config;
-         PrintStream printstream1 = ((Config4Impl)configuration).errStream();
-         new Message(xstring, i, printstream1);
-         if (throwable != null) {
-            new Message(null, 25, printstream1);
-            j4o.lang.JavaSystem.printStackTrace(throwable, printstream1);
-            new Message(null, 26, printstream1, false);
-         }
-      }
-      
-      static internal void logMsg(Configuration configuration, int i, String xstring) {
-         Config4Impl config4impl1 = (Config4Impl)configuration;
-         if (config4impl1 == null) config4impl1 = i_config;
-         if (config4impl1.i_messageLevel > 0) new Message(xstring, i, config4impl1.outStream());
-      }
-      
-      static internal void notAvailable() {
-         throwRuntimeException(29);
-      }
-      
-      public static ObjectContainer openClient(String xstring, int i, String string_0_, String string_1_) {
-         lock (Lock) {
-            return new YapClient(new YapSocket(xstring, i), string_0_, string_1_, true);
-         }
-      }
-      
-      public static ObjectContainer openFile(String xstring) {
-         lock (Lock) {
-            return i_sessions.open(xstring);
-         }
-      }
-      
-      protected static ObjectContainer openMemoryFile1(MemoryFile memoryfile) {
-         lock (Lock) {
-            if (memoryfile == null) memoryfile = new MemoryFile();
-            Object obj1 = null;
-            YapMemoryFile yapmemoryfile1;
-            try {
-               {
-                  yapmemoryfile1 = new YapMemoryFile(memoryfile);
-               }
-            }  catch (Exception throwable) {
-               {
-                  logErr(i_config, 4, "Memory File", throwable);
-                  return null;
-               }
-            }
-            if (yapmemoryfile1 != null) {
-               Platform.postOpen(yapmemoryfile1);
-               logMsg(i_config, 5, "Memory File");
-            }
-            return yapmemoryfile1;
-         }
-      }
-      
-      public static ObjectServer openServer(String xstring, int i) {
-         lock (Lock) {
-            ObjectContainer objectcontainer1 = openFile(xstring);
-            if (objectcontainer1 != null) return new YapServer((YapFile)objectcontainer1, i);
-            return null;
-         }
-      }
-      
-      static internal IReflect reflector() {
-         return i_config.reflector();
-      }
-      
-      static internal void forEachSession(Visitor4 visitor4) {
-         i_sessions.forEach(visitor4);
-      }
-      
-      static internal void sessionStopped(Session session) {
-         i_sessions.remove(session);
-      }
-      
-      static internal void throwRuntimeException(int i) {
-         throwRuntimeException(i, null, null);
-      }
-      
-      static internal void throwRuntimeException(int i, Exception throwable) {
-         throwRuntimeException(i, null, throwable);
-      }
-      
-      static internal void throwRuntimeException(int i, String xstring) {
-         throwRuntimeException(i, xstring, null);
-      }
-      
-      static internal void throwRuntimeException(int i, String xstring, Exception throwable) {
-         logErr(i_config, i, xstring, throwable);
-         throw new RuntimeException(Messages.get(i, xstring));
-      }
-      
-      public static String version() {
-         return "db4o " + Db4oVersion.name;
-      }
-   }
+		private static com.db4o.Sessions i_sessions = new com.db4o.Sessions();
+
+		internal static readonly object Lock = initialize();
+
+		internal static string licTo = "";
+
+		private static bool expirationMessagePrinted;
+
+		private static object initialize()
+		{
+			com.db4o.Platform.getDefaultConfiguration(i_config);
+			return new object();
+		}
+
+		/// <summary>prints the version name of this version to <code>System.out</code>.</summary>
+		/// <remarks>prints the version name of this version to <code>System.out</code>.</remarks>
+		public static void Main(string args)
+		{
+			j4o.lang.JavaSystem._out.println(version());
+		}
+
+		/// <summary>
+		/// returns the global db4o
+		/// <see cref="com.db4o.config.Configuration">Configuration</see>
+		/// context
+		/// for the running JVM session.
+		/// <br /><br />
+		/// The
+		/// <see cref="com.db4o.config.Configuration">Configuration</see>
+		/// can be overriden in each
+		/// <see cref="com.db4o.ext.ExtObjectContainer.configure">ObjectContainer</see>
+		/// .<br /><br />
+		/// </summary>
+		/// <returns>
+		/// the global
+		/// <see cref="com.db4o.config.Configuration">configuration</see>
+		/// context
+		/// </returns>
+		public static com.db4o.config.Configuration configure()
+		{
+			return i_config;
+		}
+
+		/// <summary>enters the licensing information into licensed versions.</summary>
+		/// <remarks>enters the licensing information into licensed versions.</remarks>
+		public static void licensedTo(string emailAddress)
+		{
+		}
+
+		internal static void logErr(com.db4o.config.Configuration config, int code, string
+			 msg, System.Exception t)
+		{
+			if (config == null)
+			{
+				config = i_config;
+			}
+			j4o.io.PrintStream ps = ((com.db4o.Config4Impl)config).errStream();
+			new com.db4o.Message(msg, code, ps);
+			if (t != null)
+			{
+				new com.db4o.Message(null, 25, ps);
+				j4o.lang.JavaSystem.printStackTrace(t, ps);
+				new com.db4o.Message(null, 26, ps, false);
+			}
+		}
+
+		internal static void logMsg(com.db4o.config.Configuration config, int code, string
+			 msg)
+		{
+			com.db4o.Config4Impl c4i = (com.db4o.Config4Impl)config;
+			if (c4i == null)
+			{
+				c4i = i_config;
+			}
+			if (c4i.i_messageLevel > com.db4o.YapConst.NONE)
+			{
+				new com.db4o.Message(msg, code, c4i.outStream());
+			}
+		}
+
+		/// <summary>
+		/// opens an
+		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
+		/// client and connects it to the specified named server and port.
+		/// <br /><br />
+		/// The server needs to
+		/// <see cref="com.db4o.ObjectServer.grantAccess">allow access</see>
+		/// for the specified user and password.
+		/// <br /><br />
+		/// A client
+		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
+		/// can be cast to
+		/// <see cref="com.db4o.ext.ExtClient">ExtClient</see>
+		/// to use extended
+		/// <see cref="com.db4o.ext.ExtObjectContainer">ExtObjectContainer</see>
+		/// 
+		/// and
+		/// <see cref="com.db4o.ext.ExtClient">ExtClient</see>
+		/// methods.
+		/// <br /><br />
+		/// </summary>
+		/// <param name="hostName">the host name</param>
+		/// <param name="port">the port the server is using</param>
+		/// <param name="user">the user name</param>
+		/// <param name="password">the user password</param>
+		/// <returns>
+		/// an open
+		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
+		/// </returns>
+		/// <seealso cref="com.db4o.ObjectServer.grantAccess">com.db4o.ObjectServer.grantAccess
+		/// 	</seealso>
+		public static com.db4o.ObjectContainer openClient(string hostName, int port, string
+			 user, string password)
+		{
+			lock (com.db4o.Db4o.Lock)
+			{
+				return new com.db4o.YapClient(new com.db4o.YapSocket(hostName, port), user, password
+					, true);
+			}
+		}
+
+		/// <summary>
+		/// opens an
+		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
+		/// on the specified database file for local use.
+		/// <br /><br />Subsidiary calls with the same database file name will return the same
+		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
+		/// object.<br /><br />
+		/// Every call to <code>openFile()</code> requires a corresponding
+		/// <see cref="com.db4o.ObjectContainer.close">ObjectContainer.close</see>
+		/// .<br /><br />
+		/// Database files can only be accessed for readwrite access from one process
+		/// (one Java VM) at one time. All versions except for db4o mobile edition use an
+		/// internal mechanism to lock the database file for other processes.
+		/// <br /><br />
+		/// </summary>
+		/// <param name="databaseFileName">the full path to the database file</param>
+		/// <returns>
+		/// an open
+		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
+		/// </returns>
+		/// <seealso cref="com.db4o.config.Configuration.readOnly">com.db4o.config.Configuration.readOnly
+		/// 	</seealso>
+		/// <seealso cref="com.db4o.config.Configuration.encrypt">com.db4o.config.Configuration.encrypt
+		/// 	</seealso>
+		/// <seealso cref="com.db4o.config.Configuration.password">com.db4o.config.Configuration.password
+		/// 	</seealso>
+		public static com.db4o.ObjectContainer openFile(string databaseFileName)
+		{
+			lock (com.db4o.Db4o.Lock)
+			{
+				return i_sessions.open(databaseFileName);
+			}
+		}
+
+		protected static com.db4o.ObjectContainer openMemoryFile1(com.db4o.ext.MemoryFile
+			 memoryFile)
+		{
+			lock (com.db4o.Db4o.Lock)
+			{
+				if (memoryFile == null)
+				{
+					memoryFile = new com.db4o.ext.MemoryFile();
+				}
+				com.db4o.ObjectContainer oc = null;
+				try
+				{
+					oc = new com.db4o.YapMemoryFile(memoryFile);
+				}
+				catch (System.Exception t)
+				{
+					logErr(i_config, 4, "Memory File", t);
+					return null;
+				}
+				if (oc != null)
+				{
+					com.db4o.Platform.postOpen(oc);
+					logMsg(i_config, 5, "Memory File");
+				}
+				return oc;
+			}
+		}
+
+		/// <summary>
+		/// opens an
+		/// <see cref="com.db4o.ObjectServer">ObjectServer</see>
+		/// on the specified database file and port.
+		/// <br /><br />
+		/// If the server does not need to listen on a port because it will only be used
+		/// in embedded mode with
+		/// <see cref="com.db4o.ObjectServer.openClient">com.db4o.ObjectServer.openClient</see>
+		/// , specify '0' as the
+		/// port number.
+		/// </summary>
+		/// <param name="databaseFileName">the full path to the database file</param>
+		/// <param name="port">
+		/// the port to be used, or 0, if the server should not open a port,
+		/// because it will only be used with
+		/// <see cref="com.db4o.ObjectServer.openClient">com.db4o.ObjectServer.openClient</see>
+		/// </param>
+		/// <returns>
+		/// an
+		/// <see cref="com.db4o.ObjectServer">ObjectServer</see>
+		/// listening
+		/// on the specified port.
+		/// </returns>
+		/// <seealso cref="com.db4o.config.Configuration.readOnly">com.db4o.config.Configuration.readOnly
+		/// 	</seealso>
+		/// <seealso cref="com.db4o.config.Configuration.encrypt">com.db4o.config.Configuration.encrypt
+		/// 	</seealso>
+		/// <seealso cref="com.db4o.config.Configuration.password">com.db4o.config.Configuration.password
+		/// 	</seealso>
+		public static com.db4o.ObjectServer openServer(string databaseFileName, int port)
+		{
+			lock (com.db4o.Db4o.Lock)
+			{
+				com.db4o.ObjectContainer oc = openFile(databaseFileName);
+				if (oc != null)
+				{
+					return new com.db4o.YapServer((com.db4o.YapFile)oc, port);
+				}
+				return null;
+			}
+		}
+
+		internal static com.db4o.reflect.Reflector reflector()
+		{
+			return i_config.reflector();
+		}
+
+		internal static void forEachSession(com.db4o.Visitor4 visitor)
+		{
+			i_sessions.forEach(visitor);
+		}
+
+		internal static void sessionStopped(com.db4o.Session a_session)
+		{
+			i_sessions.remove(a_session);
+		}
+
+		internal static void throwRuntimeException(int code)
+		{
+			throwRuntimeException(code, null, null);
+		}
+
+		internal static void throwRuntimeException(int code, System.Exception cause)
+		{
+			throwRuntimeException(code, null, cause);
+		}
+
+		internal static void throwRuntimeException(int code, string msg)
+		{
+			throwRuntimeException(code, msg, null);
+		}
+
+		internal static void throwRuntimeException(int code, string msg, System.Exception
+			 cause)
+		{
+			logErr(i_config, code, msg, cause);
+			throw new j4o.lang.RuntimeException(com.db4o.Messages.get(code, msg));
+		}
+
+		/// <summary>returns the version name of the used db4o version.</summary>
+		/// <remarks>
+		/// returns the version name of the used db4o version.
+		/// <br /><br />
+		/// </remarks>
+		/// <returns>version information as a <code>String</code>.</returns>
+		public static string version()
+		{
+			return "db4o " + com.db4o.Db4oVersion.name;
+		}
+	}
 }

@@ -1,92 +1,102 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using com.db4o.ext;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal class Sessions : com.db4o.Collection4
+	{
+		internal virtual void forEach(com.db4o.Visitor4 visitor)
+		{
+			lock (com.db4o.Db4o.Lock)
+			{
+				com.db4o.Iterator4 i = iterator();
+				while (i.hasNext())
+				{
+					visitor.visit(i.next());
+				}
+			}
+		}
 
-   internal class Sessions : Collection4 {
-      
-      internal Sessions() : base() {
-      }
-      
-      internal void forEach(Visitor4 visitor4) {
-         lock (Db4o.Lock) {
-            Iterator4 iterator41 = this.iterator();
-            while (iterator41.hasNext()) visitor4.visit(iterator41.next());
-         }
-      }
-      
-      internal ObjectContainer open(String xstring) {
-         lock (Db4o.Lock) {
-            YapRandomAccessFile yaprandomaccessfile1 = null;
-            Session session1 = new Session(xstring);
-            Session.checkHackedVersion();
-            Session session_0_1 = (Session)this.get(session1);
-            if (session_0_1 != null) {
-               YapStream yapstream1 = session_0_1.subSequentOpen();
-               if (yapstream1 == null) remove(session_0_1);
-               return yapstream1;
-            }
-            try {
-               {
-                  yaprandomaccessfile1 = new YapRandomAccessFile(session1);
-               }
-            }  catch (ExpirationException expirationexception) {
-               {
-                  throw expirationexception;
-               }
-            } catch (LongJumpOutException longjumpoutexception) {
-               {
-                  throw longjumpoutexception;
-               }
-            } catch (DatabaseFileLockedException databasefilelockedexception) {
-               {
-                  throw databasefilelockedexception;
-               }
-            } catch (ObjectNotStorableException objectnotstorableexception) {
-               {
-                  throw objectnotstorableexception;
-               }
-            } catch (UserException userexception) {
-               {
-                  Db4o.throwRuntimeException(userexception.errCode, userexception.errMsg);
-               }
-            } catch (Exception throwable) {
-               {
-                  Db4o.logErr(Db4o.i_config, 4, xstring, throwable);
-                  return null;
-               }
-            }
-            if (yaprandomaccessfile1 != null) {
-               session1.i_stream = yaprandomaccessfile1;
-               this.add(session1);
-               Platform.postOpen(yaprandomaccessfile1);
-               Db4o.logMsg(Db4o.i_config, 5, xstring);
-            }
-            return yaprandomaccessfile1;
-         }
-      }
-      
-      internal override Object remove(Object obj) {
-         lock (Db4o.Lock) {
-            return base.remove(obj);
-         }
-      }
-   }
+		internal virtual com.db4o.ObjectContainer open(string databaseFileName)
+		{
+			lock (com.db4o.Db4o.Lock)
+			{
+				com.db4o.ObjectContainer oc = null;
+				com.db4o.Session newSession = new com.db4o.Session(databaseFileName);
+				com.db4o.Session.checkHackedVersion();
+				com.db4o.Session oldSession = (com.db4o.Session)get(newSession);
+				if (oldSession != null)
+				{
+					oc = oldSession.subSequentOpen();
+					if (oc == null)
+					{
+						remove(oldSession);
+					}
+					return oc;
+				}
+				try
+				{
+					oc = new com.db4o.YapRandomAccessFile(newSession);
+				}
+				catch (com.db4o.ExpirationException e)
+				{
+					throw e;
+				}
+				catch (com.db4o.LongJumpOutException e)
+				{
+					throw e;
+				}
+				catch (com.db4o.ext.DatabaseFileLockedException e)
+				{
+					throw e;
+				}
+				catch (com.db4o.ext.ObjectNotStorableException e)
+				{
+					throw e;
+				}
+				catch (com.db4o.UserException eu)
+				{
+					com.db4o.Db4o.throwRuntimeException(eu.errCode, eu.errMsg);
+				}
+				catch (System.Exception t)
+				{
+					com.db4o.Db4o.logErr(com.db4o.Db4o.i_config, 4, databaseFileName, t);
+					return null;
+				}
+				if (oc != null)
+				{
+					newSession.i_stream = (com.db4o.YapStream)oc;
+					add(newSession);
+					com.db4o.Platform.postOpen(oc);
+					com.db4o.Db4o.logMsg(com.db4o.Db4o.i_config, 5, databaseFileName);
+				}
+				return oc;
+			}
+		}
+
+		internal override object remove(object obj)
+		{
+			lock (com.db4o.Db4o.Lock)
+			{
+				return base.remove(obj);
+			}
+		}
+	}
 }

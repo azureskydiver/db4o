@@ -1,81 +1,101 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <summary>A range of index entries in the database file.</summary>
+	/// <remarks>A range of index entries in the database file.</remarks>
+	internal class IxFileRange : com.db4o.IxTree
+	{
+		internal readonly int _address;
 
-   internal class IxFileRange : IxTree {
-      internal int _address;
-      internal int _addressOffset;
-      internal int _entries;
-      
-      public IxFileRange(IxFieldTransaction ixfieldtransaction, int i, int i_0_, int i_1_) : base(ixfieldtransaction) {
-         _address = i;
-         _addressOffset = i_0_;
-         _entries = i_1_;
-         i_size = i_1_;
-      }
-      
-      public override Tree add(Tree tree) {
-         return i_fieldTransaction.i_index.fileRangeReader().add(this, tree);
-      }
-      
-      internal override int compare(Tree tree) {
-         return i_fieldTransaction.i_index.fileRangeReader().compare(this, tree);
-      }
-      
-      internal override int ownSize() {
-         return _entries;
-      }
-      
-      internal override void write(YapDataType yapdatatype, YapWriter yapwriter) {
-         YapFile yapfile1 = (YapFile)yapwriter.getStream();
-         int i1 = _entries * this.slotLength();
-         yapfile1.copy(_address, _addressOffset, yapwriter.getAddress(), yapwriter.addressOffset(), i1);
-         yapwriter.moveForward(i1);
-      }
-      
-      internal override Tree addToCandidatesTree(Tree tree, QCandidates qcandidates, int[] xis) {
-         return i_fieldTransaction.i_index.fileRangeReader().addToCandidatesTree(qcandidates, tree, this, xis);
-      }
-      
-      public override String ToString() {
-         YapFile yapfile1 = this.stream();
-         Transaction transaction1 = this.trans();
-         YapReader yapreader1 = new YapReader(this.slotLength());
-         StringBuffer stringbuffer1 = new StringBuffer();
-         stringbuffer1.append("IxFileRange");
-         for (int i1 = 0; i1 < _entries; i1++) {
-            int i_2_1 = _address + i1 * this.slotLength();
-            yapreader1.read(yapfile1, i_2_1, _addressOffset);
-            yapreader1._offset = 0;
-            stringbuffer1.append("\n  ");
-            Object obj1 = this.handler().indexObject(transaction1, this.handler().readIndexEntry(yapreader1));
-            int i_3_1 = yapreader1.readInt();
-            stringbuffer1.append("Parent: " + i_3_1);
-            stringbuffer1.append("\n ");
-            stringbuffer1.append(obj1);
-         }
-         return stringbuffer1.ToString();
-      }
-      
-      public void incrementAddress(int i) {
-         _addressOffset += i;
-      }
-   }
+		internal int _addressOffset;
+
+		internal int _entries;
+
+		public IxFileRange(com.db4o.IxFieldTransaction a_ft, int a_address, int addressOffset
+			, int a_entries) : base(a_ft)
+		{
+			_address = a_address;
+			_addressOffset = addressOffset;
+			_entries = a_entries;
+			i_size = a_entries;
+		}
+
+		public override com.db4o.Tree add(com.db4o.Tree a_new)
+		{
+			return i_fieldTransaction.i_index.fileRangeReader().add(this, a_new);
+		}
+
+		internal override int compare(com.db4o.Tree a_to)
+		{
+			return i_fieldTransaction.i_index.fileRangeReader().compare(this, a_to);
+		}
+
+		internal override int ownSize()
+		{
+			return _entries;
+		}
+
+		internal override void write(com.db4o.YapDataType a_handler, com.db4o.YapWriter a_writer
+			)
+		{
+			com.db4o.YapFile yf = (com.db4o.YapFile)a_writer.getStream();
+			int length = _entries * slotLength();
+			yf.copy(_address, _addressOffset, a_writer.getAddress(), a_writer.addressOffset()
+				, length);
+			a_writer.moveForward(length);
+		}
+
+		internal override com.db4o.Tree addToCandidatesTree(com.db4o.Tree a_tree, com.db4o.QCandidates
+			 a_candidates, int[] a_lowerAndUpperMatch)
+		{
+			return i_fieldTransaction.i_index.fileRangeReader().addToCandidatesTree(a_candidates
+				, a_tree, this, a_lowerAndUpperMatch);
+		}
+
+		public override string ToString()
+		{
+			com.db4o.YapFile yf = stream();
+			com.db4o.Transaction transaction = trans();
+			com.db4o.YapReader reader = new com.db4o.YapReader(slotLength());
+			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
+			sb.append("IxFileRange");
+			for (int i = 0; i < _entries; i++)
+			{
+				int address = _address + (i * slotLength());
+				reader.read(yf, address, _addressOffset);
+				reader._offset = 0;
+				sb.append("\n  ");
+				object obj = handler().indexObject(transaction, handler().readIndexEntry(reader));
+				int parentID = reader.readInt();
+				sb.append("Parent: " + parentID);
+				sb.append("\n ");
+				sb.append(obj);
+			}
+			return sb.ToString();
+		}
+
+		public virtual void incrementAddress(int length)
+		{
+			_addressOffset += length;
+		}
+	}
 }

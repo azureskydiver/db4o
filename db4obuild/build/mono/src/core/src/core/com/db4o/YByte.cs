@@ -1,86 +1,110 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal sealed class YByte : com.db4o.YapJavaClass
+	{
+		internal const int LENGTH = 1 + com.db4o.YapConst.ADDED_LENGTH;
 
-   internal class YByte : YapJavaClass {
-      
-      internal YByte() : base() {
-      }
-      static internal int LENGTH = 1;
-      private static Byte i_primitive = System.Convert.ToByte((byte)0);
-      private static Class i_class = j4o.lang.Class.getClassForObject(i_primitive);
-      private byte i_compareTo;
-      
-      public override int getID() {
-         return 6;
-      }
-      
-      public override Class getJavaClass() {
-         return i_class;
-      }
-      
-      public override Class getPrimitiveJavaClass() {
-         return Class.getClassForType(typeof(Byte));
-      }
-      
-      internal bool isNoConstraint(Object obj, bool xbool) {
-         return obj.Equals(primitiveNull());
-      }
-      
-      public override int linkLength() {
-         return 1;
-      }
-      
-      internal override Object primitiveNull() {
-         return i_primitive;
-      }
-      
-      internal override Object read1(YapReader yapreader) {
-         byte i1 = yapreader.readByte();
-         return System.Convert.ToByte(i1);
-      }
-      
-      public override void write(Object obj, YapWriter yapwriter) {
-         byte i1;
-         if (obj == null) i1 = (byte)0; else i1 = System.Convert.ToByte((Byte)obj);
-         yapwriter.append(i1);
-      }
-      
-      private byte val(Object obj) {
-         return System.Convert.ToByte((Byte)obj);
-      }
-      
-      internal override void prepareComparison1(Object obj) {
-         i_compareTo = val(obj);
-      }
-      
-      internal override bool isEqual1(Object obj) {
-         return obj is Byte && val(obj) == i_compareTo;
-      }
-      
-      internal override bool isGreater1(Object obj) {
-         return obj is Byte && val(obj) > i_compareTo;
-      }
-      
-      internal override bool isSmaller1(Object obj) {
-         return obj is Byte && val(obj) < i_compareTo;
-      }
-   }
+		private static readonly byte i_primitive = System.Convert.ToByte((byte)0);
+
+		public YByte(com.db4o.YapStream stream) : base(stream)
+		{
+		}
+
+		public override int getID()
+		{
+			return 6;
+		}
+
+		public override object defaultValue()
+		{
+			return i_primitive;
+		}
+
+		internal bool isNoConstraint(object obj, bool isPrimitive)
+		{
+			return obj.Equals(primitiveNull());
+		}
+
+		public override int linkLength()
+		{
+			return LENGTH;
+		}
+
+		protected override j4o.lang.Class primitiveJavaClass()
+		{
+			return j4o.lang.Class.getClassForType(typeof(byte));
+		}
+
+		internal override object primitiveNull()
+		{
+			return i_primitive;
+		}
+
+		internal override object read1(com.db4o.YapReader a_bytes)
+		{
+			byte ret = a_bytes.readByte();
+			return System.Convert.ToByte(ret);
+		}
+
+		public override void write(object a_object, com.db4o.YapWriter a_bytes)
+		{
+			byte set;
+			if (a_object == null)
+			{
+				set = (byte)0;
+			}
+			else
+			{
+				set = ((byte)a_object);
+			}
+			a_bytes.append(set);
+		}
+
+		private byte i_compareTo;
+
+		private byte val(object obj)
+		{
+			return ((byte)obj);
+		}
+
+		internal override void prepareComparison1(object obj)
+		{
+			i_compareTo = val(obj);
+		}
+
+		internal override bool isEqual1(object obj)
+		{
+			return obj is byte && val(obj) == i_compareTo;
+		}
+
+		internal override bool isGreater1(object obj)
+		{
+			return obj is byte && val(obj) > i_compareTo;
+		}
+
+		internal override bool isSmaller1(object obj)
+		{
+			return obj is byte && val(obj) < i_compareTo;
+		}
+	}
 }

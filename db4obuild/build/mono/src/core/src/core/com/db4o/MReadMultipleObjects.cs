@@ -1,72 +1,78 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
-
-   internal class MReadMultipleObjects : MsgD {
-      
-      internal MReadMultipleObjects() : base() {
-      }
-      
-      internal override bool processMessageAtServer(YapSocket yapsocket) {
-         int i1 = this.readInt();
-         MsgD[] msgds1 = new MsgD[i1];
-         int i_0_1 = (1 + i1) * 4;
-         YapStream yapstream1 = this.getStream();
-         Object obj1 = null;
-         lock (yapstream1.i_lock) {
-            for (int i_1_1 = 0; i_1_1 < i1; i_1_1++) {
-               int i_2_1 = payLoad.readInt();
-               YapWriter yapwriter1;
-               try {
-                  {
-                     yapwriter1 = yapstream1.readWriterByID(this.getTransaction(), i_2_1);
-                  }
-               }  catch (Exception exception) {
-                  {
-                     yapwriter1 = null;
-                  }
-               }
-               if (yapwriter1 != null) {
-                  try {
-                     {
-                        YapClassAny.appendEmbedded(yapwriter1);
-                     }
-                  }  catch (Exception exception) {
-                     {
-                     }
-                  }
-                  msgds1[i_1_1] = Msg.OBJECT_TO_CLIENT.getWriter(yapwriter1);
-                  i_0_1 += msgds1[i_1_1].payLoad.getLength();
-               }
-            }
-         }
-         MsgD msgd1 = Msg.READ_MULTIPLE_OBJECTS.getWriterForLength(this.getTransaction(), i_0_1);
-         msgd1.writeInt(i1);
-         for (int i_3_1 = 0; i_3_1 < i1; i_3_1++) {
-            if (msgds1[i_3_1] == null) msgd1.writeInt(0); else {
-               msgd1.writeInt(msgds1[i_3_1].payLoad.getLength());
-               msgd1.payLoad.append(msgds1[i_3_1].payLoad._buffer);
-            }
-         }
-         msgd1.write(yapstream1, yapsocket);
-         return true;
-      }
-   }
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal sealed class MReadMultipleObjects : com.db4o.MsgD
+	{
+		internal sealed override bool processMessageAtServer(com.db4o.YapSocket sock)
+		{
+			int size = readInt();
+			com.db4o.MsgD[] ret = new com.db4o.MsgD[size];
+			int length = (1 + size) * com.db4o.YapConst.YAPINT_LENGTH;
+			com.db4o.YapStream stream = getStream();
+			com.db4o.YapWriter bytes = null;
+			lock (stream.i_lock)
+			{
+				for (int i = 0; i < size; i++)
+				{
+					int id = this.payLoad.readInt();
+					try
+					{
+						bytes = stream.readWriterByID(getTransaction(), id);
+					}
+					catch (System.Exception e)
+					{
+						bytes = null;
+					}
+					if (bytes != null)
+					{
+						try
+						{
+							com.db4o.YapClassAny.appendEmbedded(bytes);
+						}
+						catch (System.Exception e)
+						{
+						}
+						ret[i] = com.db4o.Msg.OBJECT_TO_CLIENT.getWriter(bytes);
+						length += ret[i].payLoad.getLength();
+					}
+				}
+			}
+			com.db4o.MsgD multibytes = com.db4o.Msg.READ_MULTIPLE_OBJECTS.getWriterForLength(
+				getTransaction(), length);
+			multibytes.writeInt(size);
+			for (int i = 0; i < size; i++)
+			{
+				if (ret[i] == null)
+				{
+					multibytes.writeInt(0);
+				}
+				else
+				{
+					multibytes.writeInt(ret[i].payLoad.getLength());
+					multibytes.payLoad.append(ret[i].payLoad._buffer);
+				}
+			}
+			multibytes.write(stream, sock);
+			return true;
+		}
+	}
 }

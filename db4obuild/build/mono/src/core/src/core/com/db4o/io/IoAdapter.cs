@@ -1,83 +1,93 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using j4o.io;
-namespace com.db4o.io {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o.io
+{
+	public abstract class IoAdapter
+	{
+		private int _blockSize;
 
-   public abstract class IoAdapter {
-      
-      public IoAdapter() : base() {
-      }
-      private int _blockSize;
-      
-      protected long regularAddress(int i, int i_0_) {
-         return (long)i * (long)_blockSize + (long)i_0_;
-      }
-      
-      public void blockCopy(int i, int i_1_, int i_2_, int i_3_, int i_4_) {
-         copy(regularAddress(i, i_1_), regularAddress(i_2_, i_3_), i_4_);
-      }
-      
-      public void blockSeek(int i) {
-         blockSeek(i, 0);
-      }
-      
-      public void blockSeek(int i, int i_5_) {
-         seek(regularAddress(i, i_5_));
-      }
-      
-      public void blockSize(int i) {
-         _blockSize = i;
-      }
-      
-      public abstract void close();
-      
-      public void copy(long l, long l_6_, int i) {
-         byte[] xis1 = new byte[i];
-         seek(l);
-         read(xis1);
-         seek(l_6_);
-         write(xis1);
-      }
-      
-      public abstract long getLength();
-      
-      public abstract IoAdapter open(String xstring, bool xbool, long l);
-      
-      public int read(byte[] xis) {
-         return read(xis, xis.Length);
-      }
-      
-      public abstract int read(byte[] xis, int i);
-      
-      public abstract void seek(long l);
-      
-      public abstract void sync();
-      
-      public void write(byte[] xis) {
-         write(xis, xis.Length);
-      }
-      
-      public abstract void write(byte[] xis, int i);
-      
-      public int blockSize() {
-         return _blockSize;
-      }
-   }
+		protected long regularAddress(int blockAddress, int blockAddressOffset)
+		{
+			return (long)blockAddress * _blockSize + blockAddressOffset;
+		}
+
+		public virtual void blockCopy(int oldAddress, int oldAddressOffset, int newAddress
+			, int newAddressOffset, int length)
+		{
+			copy(regularAddress(oldAddress, oldAddressOffset), regularAddress(newAddress, newAddressOffset
+				), length);
+		}
+
+		public virtual void blockSeek(int address)
+		{
+			blockSeek(address, 0);
+		}
+
+		public virtual void blockSeek(int address, int offset)
+		{
+			seek(regularAddress(address, offset));
+		}
+
+		public virtual void blockSize(int blockSize)
+		{
+			_blockSize = blockSize;
+		}
+
+		public abstract void close();
+
+		public virtual void copy(long oldAddress, long newAddress, int length)
+		{
+			byte[] copyBytes = new byte[length];
+			seek(oldAddress);
+			read(copyBytes);
+			seek(newAddress);
+			write(copyBytes);
+		}
+
+		public abstract long getLength();
+
+		public abstract com.db4o.io.IoAdapter open(string path, bool lockFile, long initialLength
+			);
+
+		public virtual int read(byte[] buffer)
+		{
+			return read(buffer, buffer.Length);
+		}
+
+		public abstract int read(byte[] bytes, int length);
+
+		public abstract void seek(long pos);
+
+		public abstract void sync();
+
+		public virtual void write(byte[] bytes)
+		{
+			write(bytes, bytes.Length);
+		}
+
+		public abstract void write(byte[] buffer, int length);
+
+		public virtual int blockSize()
+		{
+			return _blockSize;
+		}
+	}
 }

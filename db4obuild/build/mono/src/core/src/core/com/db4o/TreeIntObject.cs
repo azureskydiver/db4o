@@ -1,53 +1,90 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <exclude></exclude>
+	internal class TreeIntObject : com.db4o.TreeInt
+	{
+		internal object i_object;
 
-   internal class TreeIntObject : TreeInt {
-      internal Object i_object;
-      
-      internal TreeIntObject(int i) : base(i) {
-      }
-      
-      internal TreeIntObject(int i, Object obj) : base(i) {
-         i_object = obj;
-      }
-      
-      public override Object read(YapReader yapreader) {
-         int i1 = yapreader.readInt();
-         Object obj1 = null;
-         if (i_object is Tree) obj1 = new TreeReader(yapreader, (Tree)i_object).read(); else obj1 = ((Readable)i_object).read(yapreader);
-         return new TreeIntObject(i1, obj1);
-      }
-      
-      public override void write(YapWriter yapwriter) {
-         yapwriter.writeInt(i_key);
-         if (i_object == null) yapwriter.writeInt(0); else if (i_object is Tree) Tree.write(yapwriter, (Tree)i_object); else ((ReadWriteable)i_object).write(yapwriter);
-      }
-      
-      internal override int ownLength() {
-         if (i_object == null) return 8;
-         return 4 + ((Readable)i_object).byteCount();
-      }
-      
-      internal override bool variableLength() {
-         return true;
-      }
-   }
+		internal TreeIntObject(int a_key) : base(a_key)
+		{
+		}
+
+		internal TreeIntObject(int a_key, object a_object) : base(a_key)
+		{
+			i_object = a_object;
+		}
+
+		public override object read(com.db4o.YapReader a_bytes)
+		{
+			int key = a_bytes.readInt();
+			object obj = null;
+			if (i_object is com.db4o.Tree)
+			{
+				obj = new com.db4o.TreeReader(a_bytes, (com.db4o.Tree)i_object).read();
+			}
+			else
+			{
+				obj = ((com.db4o.Readable)i_object).read(a_bytes);
+			}
+			return new com.db4o.TreeIntObject(key, obj);
+		}
+
+		public override void write(com.db4o.YapWriter a_writer)
+		{
+			a_writer.writeInt(i_key);
+			if (i_object == null)
+			{
+				a_writer.writeInt(0);
+			}
+			else
+			{
+				if (i_object is com.db4o.Tree)
+				{
+					com.db4o.Tree.write(a_writer, (com.db4o.Tree)i_object);
+				}
+				else
+				{
+					((com.db4o.ReadWriteable)i_object).write(a_writer);
+				}
+			}
+		}
+
+		internal override int ownLength()
+		{
+			if (i_object == null)
+			{
+				return com.db4o.YapConst.YAPINT_LENGTH * 2;
+			}
+			else
+			{
+				return com.db4o.YapConst.YAPINT_LENGTH + ((com.db4o.Readable)i_object).byteCount(
+					);
+			}
+		}
+
+		internal override bool variableLength()
+		{
+			return true;
+		}
+	}
 }

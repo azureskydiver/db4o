@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="First"></a><br>
-<a name="outline316"></a><br><h1>2. First Steps</h1><br>
+<a name="outline313"></a><br><h1>2. First Steps</h1><br>
 Let us get started as simple as possible. We are going to learn how to store,&nbsp;retrieve, update and delete instances of a single class that only contains&nbsp;primitive and String members. In our example this will be a Formula One (F1) pilot&nbsp;whose attributes are his name and the F1 points he has already gained this&nbsp;season.<br>
 <br>
 First we create a native class such as:<br>
@@ -57,7 +57,7 @@ namespace com.db4o.f1.chapter1<br>
 Note that this class does not contain any db4o related code.<br>
 <br>
 <ul>
-<a name="outline317"></a><br><h2>2.1. Storing objects</h2><br>
+<a name="outline314"></a><br><h2>2.1. Storing objects</h2><br>
 To access a db4o database file or create a new one, call Db4o.openFile(),&nbsp;providing the path to your file as the parameter, to obtain an ObjectContainer&nbsp;instance. ObjectContainer will be your primary interface to db4o. Closing the&nbsp;container will release all resources associated with it.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -101,12 +101,13 @@ Pilot pilot2 = new Pilot("Rubens Barrichello", 99);<br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>Stored Rubens Barrichello/99<br>
 </td></table></table><br>
 <br>
-<a name="outline318"></a><br><h2>2.2. Retrieving objects</h2><br>
+<a name="outline315"></a><br><h2>2.2. Retrieving objects</h2><br>
 To query the database for our pilot, we shall use<em>&nbsp;Query by Example</em>&nbsp;(QBE) for now. This means we will create a prototypical object for db4o&nbsp;to use as an example. db4o will retrieve all objects of the given type that contain&nbsp;the same (non-default) field values as the candidate. The result will be handed&nbsp;as an ObjectSet instance. We will use a convenience method 'listResult',&nbsp;inherited by all our main example classes, to display a result's content and reset it for further use:<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code><br>
-public static void listResult{<br>
+public static void listResult(ObjectSet result)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Console.WriteLine(result.size());<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (result.hasNext())<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>
@@ -160,7 +161,7 @@ Michael Schumacher/100<br>
 <br>
 Of course there's much more to db4o queries. We'll come to that in a moment.<br>
 <br>
-<a name="outline319"></a><br><h2>2.3. Updating objects</h2><br>
+<a name="outline316"></a><br><h2>2.3. Updating objects</h2><br>
 To update an object already stored in db4o, just call set() again after modifying&nbsp;it.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -183,7 +184,7 @@ Note that it is necessary that db4o already 'knows' this pilot, else it will&nbs
 <br>
 To make sure you've updated the pilot, please return to any of the retrieval&nbsp;examples above and run them again.<br>
 <br>
-<a name="outline320"></a><br><h2>2.4. Deleting objects</h2><br>
+<a name="outline317"></a><br><h2>2.4. Deleting objects</h2><br>
 Objects are removed from the database using the delete() method.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -219,10 +220,10 @@ Please check the deletion with the retrieval examples above.<br>
 <br>
 Again, the object to be deleted has to be known to db4o. It is not sufficient&nbsp;to provide a prototype object with the same field values.<br>
 <br>
-<a name="outline321"></a><br><h2>2.5. Conclusion</h2><br>
+<a name="outline318"></a><br><h2>2.5. Conclusion</h2><br>
 That was easy, wasn't it? We have stored, retrieved, updated and&nbsp;deleted objects with a few lines of code. But what about complex&nbsp;queries? Let's have a look at the restrictions of QBE and alternative&nbsp;approaches in the <a href="Query.html#Query">next chapter</a>&nbsp;.<br>
 <br>
-<a name="outline322"></a><br><h2>2.6. Full source</h2><br>
+<a name="outline319"></a><br><h2>2.6. Full source</h2><br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code><br>
 namespace com.db4o.f1.chapter1<br>

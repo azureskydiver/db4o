@@ -1,48 +1,70 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal class YapFieldVersion : com.db4o.YapFieldVirtual
+	{
+		internal YapFieldVersion() : base()
+		{
+			i_name = PREFIX + "version";
+		}
 
-   internal class YapFieldVersion : YapFieldVirtual {
-      
-      internal YapFieldVersion() : base() {
-         i_name = "v4oversion";
-      }
-      
-      internal override void addFieldIndex(YapWriter yapwriter, bool xbool) {
-         YLong.writeLong(((YapFile)yapwriter.getStream()).i_bootRecord.version(), yapwriter);
-      }
-      
-      internal override void instantiate1(Transaction transaction, YapObject yapobject, YapReader yapreader) {
-         yapobject.i_virtualAttributes.i_version = YLong.readLong(yapreader);
-      }
-      
-      internal override void marshall1(YapObject yapobject, YapWriter yapwriter, bool xbool, bool bool_0_) {
-         if (!xbool) {
-            YapStream yapstream1 = yapwriter.getStream().i_parent;
-            if (yapstream1 is YapFile && ((YapFile)yapstream1).i_bootRecord != null) yapobject.i_virtualAttributes.i_version = ((YapFile)yapstream1).i_bootRecord.version();
-         }
-         if (yapobject.i_virtualAttributes == null) YLong.writeLong(0L, yapwriter); else YLong.writeLong(yapobject.i_virtualAttributes.i_version, yapwriter);
-      }
-      
-      public override int linkLength() {
-         return 8;
-      }
-   }
+		internal override void addFieldIndex(com.db4o.YapWriter a_writer, bool a_new)
+		{
+			com.db4o.YLong.writeLong(((com.db4o.YapFile)a_writer.getStream()).i_bootRecord.version
+				(), a_writer);
+		}
+
+		internal override void instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject
+			 a_yapObject, com.db4o.YapReader a_bytes)
+		{
+			a_yapObject.i_virtualAttributes.i_version = com.db4o.YLong.readLong(a_bytes);
+		}
+
+		internal override void marshall1(com.db4o.YapObject a_yapObject, com.db4o.YapWriter
+			 a_bytes, bool a_migrating, bool a_new)
+		{
+			if (!a_migrating)
+			{
+				com.db4o.YapStream stream = a_bytes.getStream().i_parent;
+				if (stream is com.db4o.YapFile && ((com.db4o.YapFile)stream).i_bootRecord != null
+					)
+				{
+					a_yapObject.i_virtualAttributes.i_version = ((com.db4o.YapFile)stream).i_bootRecord
+						.version();
+				}
+			}
+			if (a_yapObject.i_virtualAttributes == null)
+			{
+				com.db4o.YLong.writeLong(0, a_bytes);
+			}
+			else
+			{
+				com.db4o.YLong.writeLong(a_yapObject.i_virtualAttributes.i_version, a_bytes);
+			}
+		}
+
+		public override int linkLength()
+		{
+			return com.db4o.YapConst.YAPLONG_LENGTH;
+		}
+	}
 }
