@@ -19,7 +19,7 @@ package com.db4o.browser.model.nodes.field;
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.NullNode;
-import com.db4o.browser.model.nodes.StoredInstanceNode;
+import com.db4o.browser.model.nodes.InstanceNode;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.swtworkbench.community.xswt.metalogger.Logger;
@@ -31,7 +31,7 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  * 
  * @author djo
  */
-public class StoredFieldNode implements IModelNode {
+public class FieldNode implements IModelNode {
 
     protected ReflectField _field;
 	protected Object value = null;
@@ -44,7 +44,7 @@ public class StoredFieldNode implements IModelNode {
 	 * @param database TODO
 	 * @param _instance
 	 */
-	public StoredFieldNode(ReflectField field, Object instance, Database database) {
+	public FieldNode(ReflectField field, Object instance, Database database) {
 		_field = field;
         _instance = instance;
 		_database = database;
@@ -56,7 +56,7 @@ public class StoredFieldNode implements IModelNode {
 			return;
 		}
         ReflectClass clazz = database.reflector().forObject(value);
-		delegate = new StoredInstanceNode(value, clazz, database);
+		delegate = new InstanceNode(value, clazz, database);
 	}
 
 	/* (non-Javadoc)
@@ -101,7 +101,7 @@ public class StoredFieldNode implements IModelNode {
 		if(obj==null||getClass()!=obj.getClass()) {
 			return false;
 		}
-		StoredFieldNode node=(StoredFieldNode)obj;
+		FieldNode node=(FieldNode)obj;
 		return _instance.equals(node._instance) && _field.equals(node._field);
 	}
 	

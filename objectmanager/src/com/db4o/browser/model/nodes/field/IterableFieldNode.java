@@ -21,7 +21,7 @@ import java.util.LinkedList;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
-import com.db4o.browser.model.nodes.StoredInstanceNode;
+import com.db4o.browser.model.nodes.InstanceNode;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.ReflectMethod;
@@ -39,10 +39,10 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  * 
  * @author djo
  */
-public class StoredIterableFieldNode extends StoredFieldNode {
+public class IterableFieldNode extends FieldNode {
 
     public static IModelNode tryToCreate(ReflectField field, Object _instance, Database database) {
-        StoredIterableFieldNode result;
+        IterableFieldNode result;
         
         ReflectClass fieldType = database.reflector().forObject(field.get(_instance));
         ReflectMethod method = null;
@@ -51,7 +51,7 @@ public class StoredIterableFieldNode extends StoredFieldNode {
         } catch (Exception e) { return null; };
         
         try {
-            result = new StoredIterableFieldNode(field, _instance, method, database);
+            result = new IterableFieldNode(field, _instance, method, database);
             result.iterator();
         } catch (IllegalStateException e) {
             Logger.log().error(e, "Unable to invoke 'iterator()'");
@@ -72,7 +72,7 @@ public class StoredIterableFieldNode extends StoredFieldNode {
         }
     }
     
-	public StoredIterableFieldNode(ReflectField field, Object instance, ReflectMethod iteratorMethod, Database database) {
+	public IterableFieldNode(ReflectField field, Object instance, ReflectMethod iteratorMethod, Database database) {
         super(field, instance, database);
         _iteratorMethod = iteratorMethod;
 	}
@@ -93,7 +93,7 @@ public class StoredIterableFieldNode extends StoredFieldNode {
         while (i.hasNext()) {
             Object instance = i.next();
             ReflectClass clazz = _database.reflector().forObject(instance);
-            results.addLast(new StoredInstanceNode(instance, clazz, _database));
+            results.addLast(new InstanceNode(instance, clazz, _database));
         }
         IModelNode[] finalResults = new IModelNode[results.size()];
         int elementNum=0;
