@@ -591,16 +591,4 @@
 	</target>
 
 	<target name="serverside" depends="buildall, serversidecopy" />
-
-	<target name="sharpeneclipse" depends="init" description="Sharpen Eclipse spike">
-		<java classname="sharpen.eclipse.ASTTestMain">
-			<classpath>
-				<dirset dir="${dir.build.bin}" />
-				<fileset dir="${dir.lib.sharpeneclipse}">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-			<arg value="./src/sharpen/eclipse/ASTTestMain.java" />
-		</java>
-	</target>
 </project>

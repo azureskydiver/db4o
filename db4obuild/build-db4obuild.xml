@@ -1,4 +1,4 @@
-<project name="compileall" default="compileall" basedir=".">
+<project name="compilebuild" default="compileall" basedir=".">
 	<property file="machine.properties" />
 	<property file="ant.properties" />
 	
@@ -9,9 +9,6 @@
 			<classpath>
 				<dirset dir="${dir.build.bin}"/>
 				<fileset dir="${dir.build.lib}">
-					<include name="*.jar" />
-				</fileset>
-				<fileset dir="${dir.lib.sharpeneclipse}">
 					<include name="*.jar" />
 				</fileset>
 			</classpath>
