@@ -61,7 +61,7 @@ public class FieldNodeFactory {
      * itself with the factory rather than hard-coding all of these tests.
 	 * @param field
 	 * @param instance
-	 * @param database TODO
+	 * @param database 
      * 
 	 * @return
 	 */
