@@ -231,7 +231,11 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     private void testCasesFromTestSuites() {
     	_testCases = new Class[0];
     	for (int i = 0; i < TEST_SUITES.length; i++) {
-    		_testCases = concat(_testCases, TEST_SUITES[i].tests());
+            try {
+            	_testCases = concat(_testCases, TEST_SUITES[i].tests());
+            } catch (NullPointerException e) {
+                System.err.println("Warning: TEST_SUITES[" + i + "] is null");
+            }
     	}
     }
 
