@@ -2,11 +2,12 @@
 
 	<property file="machine.properties" />
 	<property file="ant.properties" />
-	
+
 	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
 		<classpath>
-			<pathelement location="${dir.bin.doctor}" />
-			<pathelement location="${dir.doctor}/lib/iText.jar" />
+			<pathelement location="${dir.doctor.bin}" />
+			<pathelement location="${dir.doctor.lib}/iText.jar" />
+			<pathelement location="${dir.j.bin}" />
 			<path path="${path.classpath.full}" />
 		</classpath>
 	</taskdef>
