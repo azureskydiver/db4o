@@ -52,4 +52,9 @@ public class MockDatabase extends Assert implements Database {
 	public long getId(Object object) {
 		return System.identityHashCode(object);
 	}
+	
+	
+	public void activate(Object object,int depth) {
+		// Nothing to do here; everything is always active in the mock database
+	}
 }

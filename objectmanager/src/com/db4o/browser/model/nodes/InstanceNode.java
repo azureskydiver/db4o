@@ -42,6 +42,7 @@ public class InstanceNode implements IModelNode {
 	public InstanceNode(Object instance, Database database) {
 		_instance = instance;
 		_database = database;
+		database.activate(instance, 5);
 	}
     
 	/* (non-Javadoc)

@@ -32,6 +32,7 @@ import com.db4o.Db4o;
 import com.db4o.browser.gui.controllers.BrowserController;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;
+import com.db4o.browser.preferences.PreferenceUI;
 import com.db4o.reflect.generic.GenericReflector;
 import com.db4o.reflect.jdk.JdkReflector;
 import com.swtworkbench.community.xswt.XSWT;
@@ -77,6 +78,7 @@ public class StandaloneBrowser implements IControlFactory {
         MenuItem search = (MenuItem) choices.get("Search");
         MenuItem newWindow = (MenuItem) choices.get("NewWindow");
         MenuItem close = (MenuItem) choices.get("Close");
+		MenuItem preferences = (MenuItem) choices.get("Preferences");
         
         open.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
@@ -95,6 +97,12 @@ public class StandaloneBrowser implements IControlFactory {
                 shell.open();
 			}
         });
+		
+		preferences.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				PreferenceUI.getDefault().showPreferencesDialog(shell);
+			}
+		});
         
         close.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
