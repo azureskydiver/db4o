@@ -22,6 +22,7 @@ namespace com.db4o.f1.chapter2
                 retrieveCarByPilotQBE(db);
                 retrieveCarByPilotNameQuery(db);
                 retrieveCarByPilotProtoQuery(db);
+            	retrievePilotByCarModelQuery(db);
                 updateCar(db);
                 updatePilotSingleSession(db);
                 updatePilotSeparateSessionsPart1(db);
@@ -106,6 +107,16 @@ namespace com.db4o.f1.chapter2
             query.descend("_pilot").constrain(proto);
             ObjectSet result = query.execute();
             listResult(result);
+        }
+        
+        public static void retrievePilotByCarModelQuery(ObjectContainer db) 
+        {
+	        Query carquery=db.query();
+	        carquery.constrain(typeof(Car));
+	        carquery.descend("_model").constrain("Ferrari");
+	        Query pilotquery=carquery.descend("_pilot");
+	        ObjectSet result=pilotquery.execute();
+	        listResult(result);
         }
         
         public static void updateCar(ObjectContainer db)
