@@ -2,7 +2,11 @@
 
 package com.db4o;
 
-class IxField {
+/**
+ * 
+ * @exclude
+ */
+public class IxField {
 
     static final int   MAX_LEAVES = 3;
 

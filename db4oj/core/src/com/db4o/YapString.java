@@ -8,8 +8,10 @@ import com.db4o.reflect.*;
 /**
  * YapString
  * Legacy rename for C# obfuscator production trouble
+ * 
+ * @exclude
  */
-final class YapString extends YapIndependantType {
+public final class YapString extends YapIndependantType {
     
     public YapStringIO i_stringIo; 
     

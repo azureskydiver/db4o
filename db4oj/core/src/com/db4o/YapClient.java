@@ -17,7 +17,7 @@ public class YapClient extends YapStream implements ExtClient {
 
     private YapSocket i_socket;
     Queue4 messageQueue = new Queue4();
-    public final Lock4 messageQueueLock = new Lock4();
+    final Lock4 messageQueueLock = new Lock4();
 
     private String password; // null denotes password not necessary
 

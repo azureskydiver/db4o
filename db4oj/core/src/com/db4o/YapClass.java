@@ -7,7 +7,10 @@ import com.db4o.ext.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
-class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTransaction {
+/**
+ * @exclude
+ */
+public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTransaction {
 
     // to resolve addMember dependancies
     // contains YapClass only

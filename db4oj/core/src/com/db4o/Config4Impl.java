@@ -18,8 +18,10 @@ import com.db4o.reflect.generic.*;
 
 /**
  * Configuration template for creating new db4o files
+ * 
+ * @exclude
  */
-final class Config4Impl
+public final class Config4Impl
 
 implements Configuration, Cloneable, DeepClone, MessageSender {
 

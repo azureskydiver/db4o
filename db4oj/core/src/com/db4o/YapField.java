@@ -6,7 +6,10 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
 
-class YapField implements StoredField {
+/**
+ * @exclude
+ */
+public class YapField implements StoredField {
 
     private YapClass         i_yapClass;
 

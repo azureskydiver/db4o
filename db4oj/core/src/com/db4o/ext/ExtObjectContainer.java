@@ -10,6 +10,7 @@ import com.db4o.ObjectServer;
 import com.db4o.config.Configuration;
 import com.db4o.reflect.*;
 import com.db4o.reflect.Reflector;
+import com.db4o.reflect.generic.*;
 import com.db4o.replication.ReplicationConflictHandler;
 import com.db4o.replication.ReplicationProcess;
 import com.db4o.types.Db4oCollections;
@@ -256,7 +257,7 @@ public interface ExtObjectContainer extends ObjectContainer {
 	 * 
 	 * @return the current Reflector.
 	 */
-	public Reflector reflector();
+	public GenericReflector reflector();
 	
     /**
      * refreshs all members on a stored object to the specified depth.
