@@ -21,8 +21,4 @@ public class Util {
             System.out.println(obj);
         }
     }
-    
-    public static void deleteAll(ObjectContainer db) {
-        db.delete(Object.class);
-    }
 }
