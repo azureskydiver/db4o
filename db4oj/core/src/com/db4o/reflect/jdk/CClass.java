@@ -19,6 +19,10 @@ public class CClass implements IClass{
 		this.clazz = clazz;
 	}
 	
+	public IClass getComponentType() {
+		return reflector.forClass(clazz.getComponentType());
+	}
+
 	public IConstructor[] getDeclaredConstructors(){
 		Constructor[] constructors = clazz.getDeclaredConstructors();
 		IConstructor[] reflectors = new IConstructor[constructors.length];
@@ -30,7 +34,7 @@ public class CClass implements IClass{
 	
 	public IField getDeclaredField(String name){
 		try {
-			return new CField(clazz.getDeclaredField(name));
+			return new CField(reflector, clazz.getDeclaredField(name));
 		} catch (Exception e) {
 			return null;
 		}
@@ -40,7 +44,7 @@ public class CClass implements IClass{
 		Field[] fields = clazz.getDeclaredFields();
 		IField[] reflectors = new IField[fields.length];
 		for (int i = 0; i < reflectors.length; i++) {
-			reflectors[i] = new CField(fields[i]);
+			reflectors[i] = new CField(reflector, fields[i]);
 		}
 		return reflectors;
 	}
@@ -57,12 +61,39 @@ public class CClass implements IClass{
 		}
 	}
 	
+	public String getName(){
+		return clazz.getName();
+	}
+	
+	public IClass getSuperclass() {
+		return reflector.forClass(clazz.getSuperclass());
+	}
+	
 	public boolean isAbstract(){
 		return Modifier.isAbstract(clazz.getModifiers());
 	}
 	
+	public boolean isArray() {
+		return clazz.isArray();
+	}
+
+	public boolean isAssignableFrom(IClass type) {
+		if(type == null){
+			return false;
+		}
+		return clazz.isAssignableFrom(((CClass)type).getJavaClass());
+	}
+	
+	public boolean isInstance(Object obj) {
+		return clazz.isInstance(obj);
+	}
+	
 	public boolean isInterface(){
 		return clazz.isInterface();
+	}
+	
+	public boolean isPrimitive() {
+		return clazz.isPrimitive();
 	}
 	
 	public Object newInstance(){
@@ -73,8 +104,24 @@ public class CClass implements IClass{
 		return null;
 	}
 	
-	Class getJavaClass(){
+	public Class getJavaClass(){
 		return clazz;
 	}
 	
+	public String toString(){
+		return "CClass: " + clazz.getName();
+	}
+	
+	// FIXME: REFLECTOR remove this, it's just needed to keep runnable
+    //                  but it will make things real slow	                
+	public int hashCode() {
+		return clazz.getName().hashCode();
+	}
+	
+	// FIXME: REFLECTOR remove this, it's just needed to keep runnable
+    //                  but it will make things real slow	                
+	public boolean equals(Object obj) {
+		return clazz.getName().equals(((CClass)obj).clazz.getName());
+	}
+
 }

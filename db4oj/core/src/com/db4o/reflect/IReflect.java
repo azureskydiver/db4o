@@ -42,8 +42,14 @@ public interface IReflect {
 	
 	
 	/**
+	 * returns an IClass for an object
+	 */
+	public IClass forObject(Object a_object);
+	
+	/**
 	 * specify whether method calls are supported.
 	 */
 	public boolean methodCallsSupported();
+
 	
 }

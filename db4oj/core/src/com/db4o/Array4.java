@@ -62,14 +62,14 @@ abstract class Array4 {
         return a_flatElement;
     }
 
-	public static final Class getComponentType(Class a_class) {
+	public static final IClass getComponentType(IClass a_class) {
         while (a_class.isArray()) {
             a_class = a_class.getComponentType();
         }
         return a_class;
     }
 
-    public static final boolean isNDimensional(Class a_class) {
+    public static final boolean isNDimensional(IClass a_class) {
         return a_class.getComponentType().isArray();
     }
 

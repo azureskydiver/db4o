@@ -13,7 +13,7 @@ public interface IField {
 	
 	public String getName();
 	
-	public Class getType();
+	public IClass getType();
 	
 	public boolean isPublic();
 	

@@ -366,7 +366,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 
     void delete1(YapWriter a_bytes, Object a_object) {
         removeFromIndex(a_bytes.getTransaction(), a_bytes.getID());
-        deleteMembers(a_bytes, YapHandlers.arrayType(a_object));
+        deleteMembers(a_bytes, a_bytes.getTransaction().i_stream.i_handlers.arrayType(a_object));
     }
 
     public void deleteEmbedded(YapWriter a_bytes) {

@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.reflect.IClass;
+import com.db4o.reflect.IReflect;
 
 class YapArray extends YapIndependantType {
 	
@@ -133,13 +134,6 @@ class YapArray extends YapIndependantType {
         }
         return false;
     }
-
-    public static Class getComponentType(Class clazz){
-		if(clazz.isArray()){
-			return getComponentType(clazz.getComponentType());
-		}
-		return clazz;
-	}
 
     public final int getID() {
         return i_handler.getID();
@@ -303,9 +297,12 @@ class YapArray extends YapIndependantType {
     
     static Object[] toArray(Object a_object) {
         if (a_object != null) {
-            if (a_object.getClass().isArray()) {
+        	//FIXME: REFLECTOR need to use ObjectContainer reflector
+        	IReflect reflector = Db4o.reflector();
+        	IClass claxx = reflector.forObject(a_object);
+            if (claxx.isArray()) {
                 YapArray ya;
-                if(Array4.isNDimensional(a_object.getClass())){
+                if(Array4.isNDimensional(claxx)){
                     ya = new YapArrayN(null, false);
                 } else {
                     ya = new YapArray(null, false);
@@ -319,20 +316,30 @@ class YapArray extends YapIndependantType {
     void writeClass(Object a_object, YapWriter a_bytes){
         if (Debug.arrayTypes) {
             int yapClassID = 0;
-            Class clazz = getComponentType(a_object.getClass());
+            
+            IReflect reflector = a_bytes.i_trans.reflector();
+            
+            IClass claxx = Array4.getComponentType(reflector.forObject(a_object));
+            
             // 2.5
             boolean primitive = false;
             if(! Deploy.csharp){
-                if(clazz.isPrimitive()){
+                if(claxx.isPrimitive()){
                     primitive = true;
                 }
             }
             YapStream stream = a_bytes.getStream();
             if(primitive){
-                YapJavaClass yjc = (YapJavaClass)stream.i_handlers.handlerForClass(stream,clazz);
-                clazz = yjc.getJavaClass();
+            	
+            	if(claxx.getName().equals("byte")){
+            		int xxx = 1;
+            	}
+            	
+            	Object obj = stream.i_handlers.handlerForClass(stream,claxx);
+                YapJavaClass yjc = (YapJavaClass)obj;
+                claxx = reflector.forClass(yjc.getJavaClass());
             }
-            YapClass yc = stream.getYapClass(clazz, true);
+            YapClass yc = stream.getYapClass(claxx, true);
             if (yc != null) {
                 yapClassID = yc.getID();
             }

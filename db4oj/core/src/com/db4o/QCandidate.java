@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.query.*;
+import com.db4o.reflect.IClass;
 
 /**
  * Represents an actual object in the database. Forms a tree structure,
@@ -400,12 +401,17 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
         i_size = 0;
         i_root = (QCandidate)a_tree;
     }
+    
+    private IClass memberClass(){
+    	return getTransaction().reflector().forObject(i_member);
+    }
 
     YapComparable prepareComparison(YapStream a_stream, Object a_constraint) {
         if (i_yapField != null) {
             return i_yapField.prepareComparison(a_constraint);
         }
         if (i_yapClass == null) {
+        	
             YapClass yc = null;
             if (i_bytes != null) {
                 yc = a_stream.getYapClass(a_constraint.getClass(), true);
@@ -417,7 +423,7 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
             if (yc != null) {
                 if (i_member != null && i_member.getClass().isArray()) {
                     YapDataType ydt = (YapDataType)yc.prepareComparison(a_constraint);
-                    if (Array4.isNDimensional(i_member.getClass())) {
+                    if (Array4.isNDimensional(memberClass())) {
                         YapArrayN yan = new YapArrayN(ydt, false);
                         return yan;
                     } else {

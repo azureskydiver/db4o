@@ -62,6 +62,13 @@ public class CReflect implements IReflect{
 		}
 		return addClass(className, clazz);
 	}
+	
+	public IClass forObject(Object a_object) {
+		if(a_object == null){
+			return null;
+		}
+		return forClass(a_object.getClass());
+	}
 
 	public boolean methodCallsSupported(){
 		return true;
@@ -92,6 +99,7 @@ public class CReflect implements IReflect{
         }
 		return claxx;
 	}
+
 	
 	
 }

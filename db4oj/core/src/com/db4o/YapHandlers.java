@@ -13,8 +13,11 @@ import com.db4o.types.*;
  *  
  */
 class YapHandlers {
+	
+	private final YapStream _masterStream;  // this is master YapStream and not valid
+	                                   // for YapObjectCarrier
 
-    private static Db4oTypeImpl[]   i_db4oTypes     = { new BlobImpl()};
+    private static final Db4oTypeImpl[]   i_db4oTypes     = { new BlobImpl()};
 
     static final int                ANYARRAYID      = 12;
     static final int                ANYARRAYNID     = 13;
@@ -60,6 +63,8 @@ class YapHandlers {
     
 
     YapHandlers(YapStream a_stream) {
+    	
+    	_masterStream = a_stream;
         
         i_indexes = new YapIndexes();
         
@@ -99,11 +104,10 @@ class YapHandlers {
         for (int i = 0; i < CLASSCOUNT; i++) {
             i_yapClasses[i] = new YapClassPrimitive(null, i_handlers[i]);
             i_yapClasses[i].i_id = i + 1; // note that we avoid 0 here
-            i_classByClass.put(i_handlers[i].getJavaClass(), i_yapClasses[i]);
+            cacheClass(i_handlers[i].getJavaClass(), i_yapClasses[i]);
             if (!Deploy.csharp) {
                 if (i_handlers[i].getPrimitiveJavaClass() != null) {
-                    i_classByClass.put(i_handlers[i].getPrimitiveJavaClass(),
-                        i_yapClasses[i]);
+                	cacheClass(i_handlers[i].getPrimitiveJavaClass(), i_yapClasses[i]);
                 }
             }
         }
@@ -136,9 +140,10 @@ class YapHandlers {
         i_yapClasses[ANYARRAYNID - 1] = i_anyArrayN;
     }
 
-    static int arrayType(Object a_object) {
-        if (a_object.getClass().isArray()) {
-            if (Array4.isNDimensional(a_object.getClass())) {
+	int arrayType(Object a_object) {
+    	IClass claxx = _masterStream.i_config.i_reflect.forObject(a_object);
+        if (claxx.isArray()) {
+            if (Array4.isNDimensional(claxx)) {
                 return YapConst.TYPE_NARRAY;
             } else {
                 return YapConst.TYPE_ARRAY;
@@ -146,6 +151,12 @@ class YapHandlers {
         }
         return 0;
     }
+
+	// FIXME: REFLECTOR remove this, it's just needed to keep runnable
+	private void cacheClass(Class javaClass, YapClass yapClass) {
+		IClass claxx = Db4o.reflector().forClass(javaClass);
+		i_classByClass.put(claxx, yapClass);
+	}
 
     final YapConstructor createConstructorStatic(final YapStream a_stream,
         final YapClass a_yapClass,
@@ -314,7 +325,7 @@ class YapHandlers {
         return i_handlers[a_index - 1];
     }
 
-    final YapDataType handlerForClass(Class a_class, Class[] a_Supported) {
+    final YapDataType handlerForClass(IClass a_class, IClass[] a_Supported) {
         for (int i = 0; i < a_Supported.length; i++) {
             if (a_Supported[i] == a_class) {
                 return i_handlers[i];
@@ -327,7 +338,7 @@ class YapHandlers {
      * Can't return ANY class for interfaces, since that would kill the
      * translators built into the architecture.
      */
-    final YapDataType handlerForClass(YapStream a_stream, Class a_class) {
+    final YapDataType handlerForClass(YapStream a_stream, IClass a_class) {
         if (a_class.isArray()) {
             return handlerForClass(a_stream, a_class.getComponentType());
         }
@@ -354,7 +365,7 @@ class YapHandlers {
         }
     }
     
-    static Db4oTypeImpl getDb4oType(Class clazz) {
+    static Db4oTypeImpl getDb4oType(IClass clazz) {
         for (int i = 0; i < i_db4oTypes.length; i++) {
             if (clazz.isInstance(i_db4oTypes[i])) {
                 return i_db4oTypes[i];
@@ -370,7 +381,7 @@ class YapHandlers {
         return null;
     }
 
-    YapClass getYapClassStatic(Class a_class) {
+    YapClass getYapClassStatic(IClass a_class) {
         if (a_class == null) {
             return null;
         }
