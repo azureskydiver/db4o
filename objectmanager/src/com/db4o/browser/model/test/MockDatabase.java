@@ -1,12 +1,15 @@
 package com.db4o.browser.model.test;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import junit.framework.*;
+import junit.framework.Assert;
 
-import com.db4o.*;
-import com.db4o.browser.model.*;
-import com.db4o.ext.*;
+import com.db4o.ObjectSet;
+import com.db4o.browser.model.Database;
+import com.db4o.browser.model.DatabaseGraphIterator;
+import com.db4o.ext.StoredClass;
+import com.db4o.reflect.ReflectClass;
 
 public class MockDatabase extends Assert implements Database {
 	private boolean opened=false;
@@ -40,7 +43,7 @@ public class MockDatabase extends Assert implements Database {
 		return new DatabaseGraphIterator(this,stored);
 	}
 
-	public ObjectSet instances(String clazz) {
+	public ObjectSet instances(ReflectClass clazz) {
 		return new MockObjectSet((Object[])instances.get(clazz));
 	}
 	

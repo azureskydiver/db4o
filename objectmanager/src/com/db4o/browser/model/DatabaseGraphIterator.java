@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 import com.db4o.browser.model.nodes.ClassNode;
 import com.db4o.browser.model.nodes.IModelNode;
-import com.db4o.ext.StoredClass;
+import com.db4o.reflect.ReflectClass;
 
 /**
  * DatabaseGraphIterator.  A visitor that can traverse the contents of an 
@@ -19,7 +19,7 @@ import com.db4o.ext.StoredClass;
 public class DatabaseGraphIterator implements IGraphIterator {
     
 	private Database database;
-    private StoredClass[] start;
+    private ReflectClass[] start;
     
     private GraphPosition path = new GraphPosition(); // The parent stack
     
@@ -35,7 +35,7 @@ public class DatabaseGraphIterator implements IGraphIterator {
      * @param database The Database to traverse
      * @param classes The StoredClasses to consider as the root
      */
-    public DatabaseGraphIterator(Database database, StoredClass[] classes) {
+    public DatabaseGraphIterator(Database database, ReflectClass[] classes) {
         this.database = database;
         this.start = classes;
         

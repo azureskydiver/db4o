@@ -16,12 +16,12 @@
  */
 package com.db4o.browser.model.nodes.field;
 
-import java.lang.reflect.Field;
 import java.util.Date;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
-import com.db4o.ext.StoredField;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
 
 
 /**
@@ -66,7 +66,7 @@ public class FieldNodeFactory {
      * 
 	 * @return
 	 */
-	public static IModelNode construct(Field field, Object instance, Database database) {
+	public static IModelNode construct(ReflectField field, Object instance, Database database) {
         /*
          * There are 4 use-cases here:
          * 
@@ -76,42 +76,26 @@ public class FieldNodeFactory {
          * 3) A field is an object, in which case it may have fields
          */
         IModelNode result;
-        Class fieldType = field.getType();
         
-        if (fieldType.isPrimitive() || typeIn(fieldType, boxedPrimitiveTypes)) {
-            return new PrimitiveFieldNode(field, instance, database);
+        ReflectClass fieldType = field.getType();
+        if (fieldType.isPrimitive()) {// || typeIn(fieldType, boxedPrimitiveTypes)) {
+            return new StoredPrimitiveFieldNode(field, instance, database);
         }
         
-        result = IterableFieldNode.tryToCreate(field, instance, database);
-        if (result != null) return result;
+        if (fieldType.isArray()) {
+            // FIXME: StoredArrayFieldNode needs implemented
+            return new StoredArrayFieldNode(field, instance, database);
+        }
         
+        // If keySet() and get() are present, use them
         result = MapFieldNode.tryToCreate(field, instance, database);
         if (result != null) return result;
         
-		return new FieldNode(field, instance, database);
-	}
-
-	public static IModelNode construct(StoredField field, Object instance, Database database) {
-        IModelNode result;
-        
-        if (field.getStoredType().isPrimitive()) {
-            return new StoredPrimitiveFieldNode(field, instance, database);
-        }
-		
-		if (field.isArray()) {
-			return new StoredArrayFieldNode(field, instance, database);
-		}
-        
+        // Otherwise treat all iterable things as lists
         result = StoredIterableFieldNode.tryToCreate(field, instance, database);
         if (result != null) return result;
         
-		/*
-		 * FIXME: We currently do not have a way to see if something is a Map, only
-		 * Platform.isCollection()
-		 */
-//        result = StoredMapFieldNode.tryToCreate(field, instance, database);
-//        if (result != null) return result;
-        
+        // Otherwise it must be a plain old object
 		return new StoredFieldNode(field, instance, database);
 	}
 

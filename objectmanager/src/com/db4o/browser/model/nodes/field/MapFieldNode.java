@@ -16,14 +16,15 @@
  */
 package com.db4o.browser.model.nodes.field;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
+import com.db4o.reflect.ReflectMethod;
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
@@ -31,24 +32,24 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  * 
  * @author djo
  */
-public class MapFieldNode extends FieldNode {
+public class MapFieldNode extends StoredFieldNode {
 
-    /**
-     * @param instance
-     * @param database TODO
-     * @param fieldType
-     * @return
-     */
-    public static IModelNode tryToCreate(Field field, Object instance, Database database) {
+    public static IModelNode tryToCreate(ReflectField field, Object instance, Database database) {
         MapFieldNode result;
         
-        Class fieldType = FieldNode.field(field, instance).getClass();
-        Method keySet = null;
-		Method get = null;
-        try {
-            keySet = fieldType.getMethod("keySet", new Class[] {});
-			get = fieldType.getMethod("get", new Class[] {Object.class});
-        } catch (Exception e) { return null; };
+        Object fieldContents = StoredFieldNode.field(field, instance);
+        
+        // See if we can get ReflectMethods corresponding to keySet() and get()
+        ReflectClass fieldType = database.reflector().forObject(fieldContents);
+        ReflectMethod keySet = null;
+		ReflectMethod get = null;
+        ReflectClass object = database.reflector().forName("java.lang.Object");
+        keySet = fieldType.getMethod("keySet", new ReflectClass[] {});
+        get = fieldType.getMethod("get", new ReflectClass[] {object});
+        
+        if (keySet == null || get == null) {
+            return null;
+        }
         
         try {
             result = new MapFieldNode(field, instance, keySet, get, database);
@@ -60,8 +61,8 @@ public class MapFieldNode extends FieldNode {
         return result;
     }
 
-	private Method _keySetMethod;
-	private Method _getMethod;
+	private ReflectMethod _keySetMethod;
+	private ReflectMethod _getMethod;
 
 	private Iterator iterator() {
         Set set;
@@ -85,7 +86,7 @@ public class MapFieldNode extends FieldNode {
 		return result;
 	}
 
-    public MapFieldNode(Field field, Object instance, Method keySetMethod, Method getMethod, Database database) {
+    public MapFieldNode(ReflectField field, Object instance, ReflectMethod keySetMethod, ReflectMethod getMethod, Database database) {
         super(field, instance, database);
         _keySetMethod = keySetMethod;
 		_getMethod = getMethod;

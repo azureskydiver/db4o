@@ -16,15 +16,10 @@
  */
 package com.db4o.browser.model.nodes;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.field.FieldNodeFactory;
-import com.db4o.ext.StoredClass;
-import com.db4o.ext.StoredField;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
 
 
 /**
@@ -33,8 +28,7 @@ import com.db4o.ext.StoredField;
  * @author djo
  */
 public class StoredInstanceNode implements IModelNode {
-	private StoredClass _clazz;
-	// TODO: refactor to use id and instantiate on demand
+	private ReflectClass _clazz;
     private Object _instance;
 	private Database _database;
 
@@ -42,7 +36,7 @@ public class StoredInstanceNode implements IModelNode {
 	 * @param database TODO
 	 * @param object
 	 */
-	public StoredInstanceNode(Object instance, StoredClass clazz,Database database) {
+	public StoredInstanceNode(Object instance, ReflectClass clazz, Database database) {
 		_instance = instance;
 		_clazz=clazz;
 		_database = database;
@@ -53,7 +47,7 @@ public class StoredInstanceNode implements IModelNode {
 	 * @see com.db4o.browser.gui.ITreeNode#children()
 	 */
 	public IModelNode[] children() {
-		StoredField[] fields=_clazz.getStoredFields();
+        ReflectField[] fields = _clazz.getDeclaredFields();
 		IModelNode[] children=new IModelNode[fields.length];
 		for (int idx = 0; idx < fields.length; idx++) {
 			children[idx]=FieldNodeFactory.construct(fields[idx],_instance,_database);

@@ -29,6 +29,8 @@ import com.db4o.ext.StoredClass;
 /**
  * Class InstanceNode.
  * 
+ * FIXME: This class is obsolete
+ * 
  * @author djo
  */
 public class InstanceNode implements IModelNode {
@@ -55,7 +57,7 @@ public class InstanceNode implements IModelNode {
 			Field[] fields = curclazz.getDeclaredFields();
 			for (int i = 0; i < fields.length; i++) {
 				if(!Modifier.isTransient(fields[i].getModifiers())) {
-					results.add(FieldNodeFactory.construct(fields[i], _instance, _database));
+//					results.add(FieldNodeFactory.construct(fields[i], _instance, _database));
 				}
 			}
 			curclazz=curclazz.getSuperclass();

@@ -16,14 +16,15 @@
  */
 package com.db4o.browser.model.nodes.field;
 
-import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.InstanceNode;
-import com.db4o.ext.StoredField;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
+import com.db4o.reflect.ReflectMethod;
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
@@ -40,19 +41,13 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  */
 public class StoredIterableFieldNode extends StoredFieldNode {
 
-    /**
-     * @param _instance
-     * @param database TODO
-     * @param fieldType
-     * @return
-     */
-    public static IModelNode tryToCreate(StoredField field, Object _instance, Database database) {
+    public static IModelNode tryToCreate(ReflectField field, Object _instance, Database database) {
         StoredIterableFieldNode result;
         
-        Class fieldType = field.get(_instance).getClass();
-        Method method = null;
+        ReflectClass fieldType = database.reflector().forObject(field.get(_instance));
+        ReflectMethod method = null;
         try {
-            method = fieldType.getMethod("iterator", new Class[] {});
+            method = fieldType.getMethod("iterator", new ReflectClass[] {});
         } catch (Exception e) { return null; };
         
         try {
@@ -65,7 +60,7 @@ public class StoredIterableFieldNode extends StoredFieldNode {
         return result;
     }
 
-	private Method _iteratorMethod;
+	private ReflectMethod _iteratorMethod;
 	private Object _fieldValue;
 
 	private Iterator iterator() {
@@ -77,14 +72,7 @@ public class StoredIterableFieldNode extends StoredFieldNode {
         }
     }
     
-	/**
-	 * @param field TODO
-	 * @param field
-	 * @param instance TODO
-	 * @param database TODO
-	 * @param iterator
-	 */
-	public StoredIterableFieldNode(StoredField field, Object instance, Method iteratorMethod, Database database) {
+	public StoredIterableFieldNode(ReflectField field, Object instance, ReflectMethod iteratorMethod, Database database) {
         super(field, instance, database);
         _iteratorMethod = iteratorMethod;
 	}

@@ -5,7 +5,7 @@ package com.db4o.browser.model.nodes.field;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
-import com.db4o.ext.StoredField;
+import com.db4o.reflect.ReflectField;
 
 /**
  * StoredArrayFieldNode.
@@ -19,7 +19,7 @@ public class StoredArrayFieldNode extends StoredFieldNode implements IModelNode 
 	 * @param instance
 	 * @param database
 	 */
-	public StoredArrayFieldNode(StoredField field, Object instance, Database database) {
+	public StoredArrayFieldNode(ReflectField field, Object instance, Database database) {
 		super(field, instance, database);
 	}
 

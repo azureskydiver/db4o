@@ -5,6 +5,9 @@ TODO:
    * Need to write StoredMapFieldNode
    * Make sure there are no java.lang.reflect calls where there shouldn't be
 
+- Catch up MockDatabase to the generic reflector impl
+- StoredArrayFieldNode needs implemented
+
 - Test with J9 VM **????**
 
 - Make sure browsing scales to large numbers of nodes
