@@ -73,6 +73,7 @@ final class YapConst
 	static final int IGNORE_ID = -99999;
 	
 	// This is a hard coded 2 Gig-Limit for YapClass-IDs.
+    // TODO: get rid of magic numbers like this one
 	static final int PRIMITIVE = -2000000000;
 	
 	// optimized type information

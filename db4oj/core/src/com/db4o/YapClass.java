@@ -1103,7 +1103,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         return len;
     }
     
-	public final IClass primitiveClassReflector(){
+	public IClass primitiveClassReflector(){
 		return null;
 	}
 
