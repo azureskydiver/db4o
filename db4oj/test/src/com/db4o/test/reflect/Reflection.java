@@ -6,6 +6,7 @@ import com.db4o.reflect.ReflectArray;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
+import com.db4o.reflect.generic.*;
 import com.db4o.reflect.jdk.JdkReflector;
 
 /**
@@ -28,7 +29,7 @@ public class Reflection extends Test {
 	private final ReflectClass _classReflector;
 
     public Reflection() throws ClassNotFoundException {
-    	this(new JdkReflector(Thread.currentThread().getContextClassLoader()));
+        this(new GenericReflector(null, new JdkReflector(Thread.currentThread().getContextClassLoader())));
 	}
 
 	public Reflection(Reflector reflector) {
