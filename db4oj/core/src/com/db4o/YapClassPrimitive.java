@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 class YapClassPrimitive extends YapClass{
     
     final YapDataType i_handler;

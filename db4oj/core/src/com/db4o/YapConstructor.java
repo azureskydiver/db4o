@@ -18,7 +18,7 @@ final class YapConstructor {
 
     YapConstructor(
         YapStream a_stream,
-        Class a_class,
+        Class a_class, //FIXME: REFLECTOR should be IClass, xxxcr last task
         IConstructor a_constructor,
         Object[] a_params,
         boolean a_checkDispatcher,
@@ -28,16 +28,14 @@ final class YapConstructor {
         i_constructor = a_constructor;
         i_params = a_params;
         i_dontCallConstructors = a_dontCallConstructors;
-	        try {
-	            if (a_stream == null || a_stream.i_config.i_reflect instanceof CReflect) {
-	                i_reflectorClass = new CClass(a_class);
-	            } else {
-	                i_reflectorClass = a_stream.i_config.i_reflect.forName(a_class.getName());
-	            }
-	        } catch (ClassNotFoundException e) {
-	        }
+        
+    	IReflect reflector = Db4o.reflector();
+    	if(a_stream != null){
+    		reflector = a_stream.i_config.i_reflect;
+    	}
+    	i_reflectorClass = reflector.forClass(a_class);
 	        
-	        i_eventDispatcher = a_checkDispatcher ? EventDispatcher.forClass(a_stream, i_reflectorClass) : null;
+        i_eventDispatcher = a_checkDispatcher ? EventDispatcher.forClass(a_stream, i_reflectorClass) : null;
     }
 
     boolean dispatch(YapStream a_stream, Object obj, int eventID) {

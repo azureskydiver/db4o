@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 final class YShort extends YapJavaClass
 {
 	static final int LENGTH = YapConst.SHORT_BYTES + YapConst.ADDED_LENGTH;

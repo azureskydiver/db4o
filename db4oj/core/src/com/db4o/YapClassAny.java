@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 /**
  * Undefined YapClass used for members of type Object.
  */

@@ -73,6 +73,7 @@ abstract class Array4 {
         return a_class.getComponentType().isArray();
     }
 
+    //FIXME: This will not allow using per-ObjectContainer reflectors 
     public static final IArray reflector() {
         if (i_reflector == null) {
             i_reflector = ((Config4Impl) Db4o.configure()).reflector().array();

@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 abstract class YapTypeAbstract extends YapJavaClass implements YapType{
 	
 	private Class i_cachedClass;

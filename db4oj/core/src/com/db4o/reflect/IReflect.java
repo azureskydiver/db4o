@@ -35,6 +35,11 @@ public interface IReflect {
 	 */
 	public IClass forName(String className) throws ClassNotFoundException;
 	
+	/**
+	 * returns an IClass for a Class
+	 */
+	public IClass forClass(Class clazz);
+	
 	
 	/**
 	 * specify whether method calls are supported.

@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 final class YBoolean extends YapJavaClass
 {
 	static final int LENGTH = 1 + YapConst.ADDED_LENGTH;

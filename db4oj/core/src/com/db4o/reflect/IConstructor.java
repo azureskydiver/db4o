@@ -11,7 +11,7 @@ public interface IConstructor {
 	
 	public void setAccessible();
 	
-	public Class[] getParameterTypes();
+	public IClass[] getParameterTypes();
 	
 	public Object newInstance(Object[] parameters);
 	

@@ -13,9 +13,9 @@ public interface IArray {
 	
 	public int getLength(Object array);
 	
-	public Object newInstance(Class componentType, int length);
+	public Object newInstance(IClass componentType, int length);
 	
-	public Object newInstance(Class componentType, int[] dimensions);
+	public Object newInstance(IClass componentType, int[] dimensions);
 	
 	public void set(Object onArray, int index, Object element);
 	

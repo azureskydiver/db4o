@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+
 final class YChar extends YapJavaClass {
 	static final int LENGTH = YapConst.CHAR_BYTES + YapConst.ADDED_LENGTH;
 	
