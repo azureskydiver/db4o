@@ -89,13 +89,9 @@ public class ReplicationFeatures {
         
 //      replication.setDirection(master, slave); //Default is bidirectional.
 
-        
         Query q = peerA.query();
+        q.constrain(ReplicationFeatures.class);
         replication.whereModified(q);
-        
-//        
-//        q.constrain(Person.class);
-//        
         
         ObjectSet objectSet = q.execute();
         while(objectSet.hasNext()){
@@ -158,6 +154,8 @@ public class ReplicationFeatures {
     private void ensureDb4oDatabaseSingle(){
         Hashtable ht = new Hashtable();
         Object val = new Object();
+        YapStream yapStream = ((YapStream)Test.objectContainer());
+        yapStream.showInternalClasses(true);
         Query q = Test.query();
         q.constrain(Db4oDatabase.class);
         ObjectSet objectSet = q.execute();
@@ -166,6 +164,7 @@ public class ReplicationFeatures {
             Test.ensure(ht.get(d4b.i_signature) == null);
             ht.put(d4b.i_signature, val);
         }
+        yapStream.showInternalClasses(false);
     }
     
     private String file(){
