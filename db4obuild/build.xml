@@ -354,22 +354,6 @@
 		</copy>
 	
 		<filehead path="${dir.dist.net.build.src}" beforePattern="using|namespace" fileext="cs" header="${content.gplheader}" />
-		
-		<updatecsharpproject projectFile="${dir.dist.net.build.src}/core/db4o-net.csproj">
-			<sources dir="${dir.dist.net.build.src}/core">
-				<include name="**/*.cs" />
-				<exclude name="src/mono/**" />
-				<exclude name="src/compact/**" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectFile="${dir.dist.net.build.src}/core/db4o-compact.csdproj">
-			<sources dir="${dir.dist.net.build.src}/core">
-				<include name="**/*.cs" />
-				<exclude name="src/mono/**" />
-				<exclude name="src/net/**" />
-			</sources>
-		</updatecsharpproject>
 	
 		<copy todir="${dir.dist.net.build}">
 			<fileset dir="${dir.dist}" includes="dll/**/**" />
@@ -523,6 +507,23 @@
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
+		
+		<updatecsharpproject projectFile="${dir.n.core}/db4o-net.csproj">
+			<sources dir="${dir.n.core}">
+				<include name="**/*.cs" />
+				<exclude name="src/mono/**" />
+				<exclude name="src/compact/**" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectFile="${dir.n.core}/db4o-compact.csdproj">
+			<sources dir="${dir.n.core}">
+				<include name="**/*.cs" />
+				<exclude name="src/mono/**" />
+				<exclude name="src/net/**" />
+			</sources>
+		</updatecsharpproject>
+
 	</target>
 	
 	<target name="doctor" depends="init, compilecorejava, compiledllnet, compilejtutorial, compilentutorial" description="Run all doctor tasks">
