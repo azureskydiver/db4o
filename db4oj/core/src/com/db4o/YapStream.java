@@ -1333,11 +1333,10 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             YapObject yapObject = i_hcTree.hc_find(a_object);
             if (yapObject == null) {
             	
-            	// FIXME: REFLECTOR need to get IClass here
-                Class clazz = a_object.getClass();
-                yc = getYapClass(clazz, false);
+                IClass claxx = i_config.reflector().forObject(a_object);
+                yc = getYapClass(claxx, false);
                 if (yc == null) {
-                    yc = getYapClass(clazz, true);
+                    yc = getYapClass(claxx, true);
                     if (yc == null) {
                         return 0;
                     }

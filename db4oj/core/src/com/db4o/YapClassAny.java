@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.reflect.*;
+
 
 /**
  * Undefined YapClass used for members of type Object.
@@ -52,6 +54,14 @@ final class YapClassAny extends YapClass {
 	public Class getJavaClass() {
 		return YapConst.CLASS_OBJECT;
 	}
+	
+    public IClass classReflector(YapStream stream){
+    	return stream.i_handlers.ICLASS_OBJECT;
+    }
+    
+    public IClass classReflector(){
+    	throw YapConst.virtualException();
+    }
 
 	public boolean hasField(YapStream a_stream, String a_path) {
 		return a_stream.i_classCollection.fieldExists(a_path);

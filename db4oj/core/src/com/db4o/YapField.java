@@ -295,8 +295,15 @@ class YapField implements StoredField {
                     .indexEntry(obj)));
                 a_bytes._offset = offset;
             }
+            
+            boolean dotnetSecondClass = false;
+            if(Deploy.csharp){
+            	dotnetSecondClass = Platform.isSecondClass(i_handler.classReflector(getStream()).getJavaClass());	
+            }
+            
+            
             if ((i_config != null && i_config.i_cascadeOnDelete == 1)
-                || Platform.isSecondClass(i_handler.getJavaClass())) {
+                || dotnetSecondClass) {
                 int preserveCascade = a_bytes.cascadeDeletes();
                 a_bytes.setCascadeDeletes(1);
                 i_handler.deleteEmbedded(a_bytes);
@@ -427,7 +434,7 @@ class YapField implements StoredField {
                     .getPrimitiveJavaClass());
             }
         }
-        return Platform.getTypeForClass(i_handler.getJavaClass());
+        return Platform.getTypeForClass(i_handler.classReflector(getStream()).getJavaClass());
     }
     
     public YapStream getStream(){
