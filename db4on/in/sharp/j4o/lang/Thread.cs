@@ -5,6 +5,8 @@ using System;
 namespace j4o.lang {
 
     public class Thread : Runnable {
+    
+    	public const int MIN_PRIORITY = 0;
 
         private Runnable target;
 
