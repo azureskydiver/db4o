@@ -11,7 +11,7 @@ import com.db4o.types.*;
  * <br><br>db4o UUID handling uses a reference to the Db4oDatabase object, that
  * represents the database an object was created on.  
  */
-public class Db4oDatabase implements Db4oType{
+public class Db4oDatabase implements Db4oType, Internal{
 
     /**
      * Field is public for implementation reasons, DO NOT TOUCH!
@@ -79,12 +79,15 @@ public class Db4oDatabase implements Db4oType{
 	 */
     public int getID(ExtObjectContainer a_oc) {
         if(a_oc != i_objectContainer) {
+            YapStream yapStream = (YapStream)a_oc;
+            yapStream.showInternalClasses(true);
             i_objectContainer = a_oc;
             i_id = (int)a_oc.getID(this);
             if(i_id == 0){
                 a_oc.set(this);
                 i_id = (int)a_oc.getID(this);
             }
+            yapStream.showInternalClasses(false);
         }
         return i_id;
     }

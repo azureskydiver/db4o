@@ -51,12 +51,15 @@ class YapFieldUUID extends YapFieldVirtual {
     
     void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
         int dbID = a_bytes.readInt();
-        Db4oDatabase db = (Db4oDatabase)a_trans.i_stream.getByID2(a_trans, dbID);
+        YapStream stream = a_trans.i_stream;
+        stream.showInternalClasses(true);
+        Db4oDatabase db = (Db4oDatabase)stream.getByID2(a_trans, dbID);
         if(db != null && db.i_signature == null){
-            a_trans.i_stream.activate2(a_trans, db, 2);
+            stream.activate2(a_trans, db, 2);
         }
         a_yapObject.i_virtualAttributes.i_database = db; 
         a_yapObject.i_virtualAttributes.i_uuid = YLong.readLong(a_bytes);
+        stream.showInternalClasses(false);
     }
 
     public int linkLength() {

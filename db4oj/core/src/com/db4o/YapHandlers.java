@@ -2,15 +2,14 @@
 
 package com.db4o;
 
-import com.db4o.ext.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.types.*;
 
 /**
- *  
+ * @exclude
  */
-class YapHandlers {
+public class YapHandlers {
 	
 	private final YapStream _masterStream;  // this is master YapStream and not valid
 	                                   // for YapObjectCarrier
@@ -30,7 +29,7 @@ class YapHandlers {
 
     private YapDataType[]           i_handlers;
 
-    static private int              i_maxTypeID     = ANYARRAYNID + 1;
+    private int                     i_maxTypeID     = ANYARRAYNID + 1;
 
     private YapTypeAbstract[]       i_platformTypes;
     static private final int        PRIMITIVECOUNT  = 8;
@@ -60,7 +59,7 @@ class YapHandlers {
     ReflectClass ICLASS_DB4OTYPE;
     ReflectClass ICLASS_DB4OTYPEIMPL;
     ReflectClass ICLASS_ENUM;
-	ReflectClass ICLASS_INTERNAL;
+	public ReflectClass ICLASS_INTERNAL;
     ReflectClass ICLASS_OBJECT;
     ReflectClass ICLASS_OBJECTCONTAINER;
     ReflectClass ICLASS_PBOOTRECORD;
@@ -394,7 +393,7 @@ class YapHandlers {
     	return false;
     }
 
-    static int maxTypeID() {
+    public int maxTypeID() {
         return i_maxTypeID;
     }
 }

@@ -4,7 +4,6 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.ext.*;
-import com.db4o.internal.io.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -351,6 +350,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             if (getYapObject(a_object) != null) {
                 return a_object;
             }
+            showInternalClasses(true);
             Query q = querySharpenBug();
             q.constrain(database.getClass());
             q.descend("i_uuid").constrain(new Long(database.i_uuid));
@@ -359,9 +359,11 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                 Db4oDatabase storedDatabase = (Db4oDatabase) objectSet.next();
                 activate1(null, storedDatabase, 4);
                 if (storedDatabase.equals(a_object)) {
+                    showInternalClasses(false);
                     return storedDatabase;
                 }
             }
+            showInternalClasses(false);
         }
         return null;
     }
@@ -1415,7 +1417,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
      * not visible to queries, unless this flag is set to true.
      * The caller should reset the flag after the call.
      */
-    synchronized void showInternalClasses(boolean show) {
+    public synchronized void showInternalClasses(boolean show) {
         if (show) {
             i_showInternalClasses++;
         } else {

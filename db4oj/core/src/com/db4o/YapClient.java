@@ -324,8 +324,10 @@ public class YapClient extends YapStream implements ExtClient {
 	    if(i_db == null) {
 	        writeMsg(Msg.IDENTITY);
 	        YapWriter reader = expectedByteResponse(Msg.ID_LIST);
+            showInternalClasses(true);
 	        i_db = (Db4oDatabase)getByID(reader.readInt());
 	        activate1(i_systemTrans, i_db, 3);
+            showInternalClasses(false);
 	    }
 	    return i_db;
 	}
