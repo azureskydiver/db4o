@@ -99,26 +99,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\CArray.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\CClass.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\CConstructor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\CField.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\core\com\db4o\ClassIndex$1.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -145,11 +125,6 @@
                 />
                 <File
                     RelPath = "src\core\com\db4o\Closure4.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\CMethod.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -194,11 +169,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\CReflect.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\core\com\db4o\Db4o.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -225,6 +195,11 @@
                 />
                 <File
                     RelPath = "src\core\com\db4o\Deploy.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\DTrace.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -959,11 +934,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\core\com\db4o\Timer4.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\core\com\db4o\Transaction$1.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -1135,11 +1105,6 @@
                 />
                 <File
                     RelPath = "src\core\com\db4o\YapBit.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "src\core\com\db4o\YapBlockAwareFile.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -1699,6 +1664,26 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\core\com\db4o\foundation\Cool.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\foundation\SimpleTimer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\io\IoAdapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\io\RandomAccessFileAdapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\core\com\db4o\messaging\MessageRecipient.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -1765,6 +1750,36 @@
                 />
                 <File
                     RelPath = "src\core\com\db4o\reflect\IReflect.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\reflect\jdk\CArray.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\reflect\jdk\CClass.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\reflect\jdk\CConstructor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\reflect\jdk\CField.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\reflect\jdk\CMethod.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\core\com\db4o\reflect\jdk\CReflect.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -1969,18 +1984,20 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\net\AssemblyInfo.cs"
+                    RelPath = "src\j4o\util\Random.cs"
                     SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\net\AssemblyInfo.cs"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "src\net\Compat.cs"
-                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "src\net\Lock4.cs"
-                    SubType = "Code"
                     BuildAction = "Compile"
                 />
             </Include>
