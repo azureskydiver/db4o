@@ -2,6 +2,7 @@
 
 package com.db4o.reflect.generic;
 
+import com.db4o.reflect.*;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectConstructor;
 import com.db4o.reflect.ReflectField;
@@ -14,11 +15,13 @@ public class GenericClass implements ReflectClass {
 
     private static final GenericField[] NO_FIELDS = new GenericField[0];
     
+    private final Reflector _reflector;
 	private final String _name;
     private final ReflectClass _superclass;
     private GenericField[] _fields = NO_FIELDS;
 
-    public GenericClass(String name, ReflectClass superclass) {
+    public GenericClass(Reflector reflector, String name, ReflectClass superclass) {
+        _reflector = reflector;
         _name = name;
         _superclass = superclass;
     }
@@ -100,6 +103,10 @@ public class GenericClass implements ReflectClass {
         return new GenericObject(this);
     }
 
+    public Reflector reflector() {
+        return _reflector;
+    }
+    
     public boolean skipConstructor(boolean flag){
         return false;
     }
