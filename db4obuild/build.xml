@@ -526,7 +526,8 @@
 		<doctor 
 			name="f1" 
 			home="${dir.j.tutorial}" 
-			interactive="true" 
+			interactive="false" 
+			showcodeexecutionresults="true"
 			workspace="${dir.workspace}" 
 			inputsource="${dir.n.tutorial.src}/" 
 			sourceextension="cs" 
