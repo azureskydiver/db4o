@@ -56,6 +56,10 @@ namespace com.db4o {
             Monitor.PulseAll(obj);
         }
 
+        public static com.db4o.reflect.ReflectConstructor serializationConstructor(Type type){
+            return new com.db4o.reflect.net.SerializationConstructor(type);
+        }
+
         public static string stackTrace() {
             return new StackTrace().ToString();
         }

@@ -170,12 +170,10 @@ class YapHandlers {
             return true;
         }
         
-        if(! Deploy.csharp){
-	        if(! Platform.callConstructor()){
-                if(claxx.skipConstructor(skipConstructor)){
-                    return true;
-                }
-	        }
+        if(! Platform.callConstructor()){
+            if(claxx.skipConstructor(skipConstructor)){
+                return true;
+            }
         }
         
         if (! _masterStream.i_config.i_testConstructors) {

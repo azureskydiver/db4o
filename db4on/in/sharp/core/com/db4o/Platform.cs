@@ -218,6 +218,9 @@ namespace com.db4o {
             }
 
             translate(config, Class.getClassForType(typeof(Class)).getName(), new TClass());
+
+            translate(config, Class.getClassForType(typeof(System.Delegate)).getName(), new TNull());
+
             
             translate(config, new ArrayList(), new TList());
             translate(config, new Hashtable(), new TDictionary());
@@ -321,7 +324,7 @@ namespace com.db4o {
         }
         
         static internal bool callConstructor() {
-        	return true;
+        	return false;
     	}
       
         static internal void pollReferenceQueue(Object stream, Object referenceQueue) {
