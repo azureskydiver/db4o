@@ -462,7 +462,7 @@
 		<filehead path="${dir.n.core.src}" before="using" fileext="cs" header="${content.copyrightheader}" />
 	</target>
 
-	<target name="doctor" description="Run all doctor tasks">
+	<target name="doctor" depends="init, compilecorejava, compiledllnet, compilejtutorial" description="Run all doctor tasks">
 		<jar destfile="${file.doctor.applets.jar}">
 			<fileset dir="${dir.doctor.bin}" includes="**/com/yetac/doctor/applet/*.class" />
 		</jar>
