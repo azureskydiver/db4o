@@ -13,8 +13,9 @@
 		</classpath>
 	</taskdef>
 
-	<taskdef name="filehead" classname="com.db4o.devtools.ant.FileHeadAntTask" classpath="${dir.build.lib}/exttools.jar">
+	<taskdef name="filehead" classname="com.db4o.devtools.ant.FileHeadAntTask">
 		<classpath>
+			<pathelement location="${dir.build.lib}/exttools.jar" />
 			<pathelement location="${dir.build.bin}" />
 			<path path="${path.classpath.full}" />
 		</classpath>
@@ -22,6 +23,7 @@
 	
 	<taskdef name="sharpen" classname="sharpen.SharpenAntTask" classpath="${dir.build.lib}/exttools.jar">
 		<classpath>
+			<pathelement location="${dir.build.lib}/exttools.jar" />
 			<pathelement location="${dir.build.bin}" />
 			<path path="${path.classpath.full}" />
 		</classpath>
@@ -30,6 +32,7 @@
 
 	<taskdef name="versioninfo" classname="com.db4o.devtools.ant.VersionInfoAntTask" classpath="${dir.build.lib}/exttools.jar">
 		<classpath>
+			<pathelement location="${dir.build.lib}/exttools.jar" />
 			<pathelement location="${dir.build.bin}" />
 			<path path="${path.classpath.full}" />
 		</classpath>
