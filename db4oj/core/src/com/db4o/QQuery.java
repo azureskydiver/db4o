@@ -73,11 +73,20 @@ public class QQuery implements Query {
                         return null;
                     }
                     Iterator4 i = classes.iterator();
-                    YapClass yapClass = (YapClass)i.next();
-                    Constraint constr = constrain(yapClass.getJavaClass());
+                    Constraint constr = null;
                     while (i.hasNext()) {
-                        yapClass = (YapClass)i.next();
-                        constr = constr.or(constrain(yapClass.getJavaClass()));
+                        YapClass yapClass = (YapClass)i.next();
+                        Class yapClassClass = yapClass.getJavaClass();
+                        if(yapClassClass != null){
+                            if(! yapClassClass.isInterface()){
+                                if(constr == null){
+                                    constr = constrain(yapClassClass);
+                                }else{
+                                    constr = constr.or(constrain(yapClass.getJavaClass()));
+                                }
+                            }
+                        }
+                        
                     }
                     return constr;
                 }
