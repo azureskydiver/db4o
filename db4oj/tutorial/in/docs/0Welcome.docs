@@ -25,7 +25,7 @@ execution capabilities.
 The PDF version of the tutorial allows best fulltext ._
 search capabilities. 
 
-.b Java .NET and Mono ..
+.b Java, .NET and Mono ..
 db4o is available for Java, for .NET and for Mono. This tutorial was ._
 written for Mono. The structure of the other distributions may be ._
 considerably different, so please use the tutorial for the version that ._
@@ -51,7 +51,7 @@ run.
 The PDF version of the tutorial allows best fulltext ._
 search capabilities. 
 
-.b Java .NET and Mono ..
+.b Java, .NET and Mono ..
 db4o is available for Java, for .NET and for Mono. This tutorial was ._
 written for Java. The structure of the other distributions may be ._
 considerably different, so please use the tutorial for the version that ._
@@ -74,8 +74,8 @@ be run "live" against a db4o database from within the application.
 The PDF version of the tutorial allows best fulltext ._
 search capabilities.
 
-.b Java .NET and Mono ..
+.b Java, .NET and Mono ..
 db4o is available for Java, for .NET and for Mono. This tutorial was ._
-written for Java. The structure of the other distributions may be ._
+written for .NET. The structure of the other distributions may be ._
 considerably different, so please use the tutorial for the version that ._
 you plan to experiment with first. ..?
