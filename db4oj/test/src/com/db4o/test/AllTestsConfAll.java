@@ -2,6 +2,8 @@
 
 package com.db4o.test;
 
+import com.db4o.test.reflect.*;
+
 public class AllTestsConfAll extends TestSuite{
 
 	static protected final String TEST_CONFIGURATION = "AllTestsConfAll";
@@ -42,7 +44,8 @@ public class AllTestsConfAll extends TestSuite{
 	        CreateIndex.class,
 	        CreateIndexInherited.class,
 			CustomActivationDepth.class,
-			Db4oLinkedList.class,
+			DataObjects.class,
+            Db4oLinkedList.class,
 			Db4oHashMap.class,
 			DeleteRemovedMapElements.class,
 			DeepSet.class,
@@ -85,6 +88,7 @@ public class AllTestsConfAll extends TestSuite{
 			QueryDeleted.class,
             QueryForList.class,
 	        QueryNonExistant.class,
+            Reflection.class,
 	        Refresh.class,
             RefreshList.class,
 	        Rename.class,

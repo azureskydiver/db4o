@@ -3,7 +3,6 @@
 package com.db4o.test.reflect;
 
 import com.db4o.reflect.*;
-import com.db4o.reflect.dataobjects.*;
 import com.db4o.reflect.jdk.*;
 
 /**
@@ -20,39 +19,17 @@ import com.db4o.reflect.jdk.*;
  * the command line by specifying the classname of your own class that
  * implements IReflect. Alternatively you can call the test(IReflect) method.
  */
-public class TestReflect extends Test {
+public class Reflection extends Test {
 
 	private final IReflect _reflector;
-	private IClass _classReflector;
+	private final IClass _classReflector;
 
-	public static void main(String[] ignored) throws ClassNotFoundException {
-        out("Reflection test started...");
-        
-		IReflect reflector1 = new CReflect(Thread.currentThread().getContextClassLoader());
-        new TestReflect(reflector1);
-
-        DataObjectReflector reflector2 = new DataObjectReflector(reflector1);
-        new TestReflect(reflector2);
-        new TestDataObjects(reflector2);
-        
-        out("No errors found. :(  Can you think of no more tests?");
-	}
-
-	TestReflect(IReflect reflector) throws ClassNotFoundException {
-        _reflector = reflector;
-		out("Testing " + _reflector.getClass().getName());
-		testIReflect();
-		out("----------------------------------------------------------");
-	}
-
-	private void testIReflect() throws ClassNotFoundException {
-		testIClass();
-        testIArray();
-	}
-
-	private void testIClass() throws ClassNotFoundException {
+    public Reflection() throws ClassNotFoundException {
+        _reflector = new CReflect(Thread.currentThread().getContextClassLoader());
         _classReflector = _reflector.forName(TestReflectClass.class.getName());
+	}
 
+	public void testIClass() throws ClassNotFoundException {
 		IField[] fields = _classReflector.getDeclaredFields();
 		_assert(
 			fields.length == TestReflectClass.FIELD_COUNT, "getDeclaredFields method failed.");
@@ -65,7 +42,7 @@ public class TestReflect extends Test {
 				"getDeclaredField('" + fieldName + "') is valid");
 		}
 
-		testIField();
+		tstIField();
 
 		IClass abstractReflector =
 			_reflector.forName(TestReflectAbstractClass.class.getName());
@@ -78,12 +55,12 @@ public class TestReflect extends Test {
 
 	}
 
-	private void testIField() {
-		testIField1("myString", "HiBabe", String.class);
-		testIField1("myInt", new Integer(10), int.class);
-		testIField1("myTyped", new TestReflectClass(), TestReflectClass.class);
-		testIField1("myUntyped", "Foooo", Object.class);
-		testIField1("myUntyped", new TestReflectClass(), Object.class);
+	private void tstIField() {
+		tstIField1("myString", "HiBabe", String.class);
+		tstIField1("myInt", new Integer(10), int.class);
+		tstIField1("myTyped", new TestReflectClass(), TestReflectClass.class);
+		tstIField1("myUntyped", "Foooo", Object.class);
+		tstIField1("myUntyped", new TestReflectClass(), Object.class);
 		_assert(
 			_classReflector.getDeclaredField("myStatic").isStatic(),
 			"IField.isStatic()");
@@ -92,7 +69,7 @@ public class TestReflect extends Test {
 			"IField.isTransient()");
 	}
 
-	private void testIField1(String fieldName, Object obj, Class clazz) {
+	private void tstIField1(String fieldName, Object obj, Class clazz) {
         IClass claxx = _reflector.forClass(clazz);
 		String fieldMessage =
 			TestReflectClass.class.getName() + ":" + fieldName;
@@ -113,15 +90,15 @@ public class TestReflect extends Test {
 		_assert(fieldReflector.getType().equals(claxx), "IField.getType()");
 	}
 
-	private void testIArray() {
-		testIArray1(new Object[] {"", "hi", "Cool"});
-		testIArray1(new Object[] {new Object(), new TestReflectClass(), "Woooa", new Integer(3)});
-		testIArray1(new Object[] {new TestReflectClass(),new TestReflectClass()});
-		testIArray2(new int[] {1,2,3});
-		testIArray2(new long[] {1L,2L,3L});
+	public void testIArray() {
+		tstIArray1(new Object[] {"", "hi", "Cool"});
+		tstIArray1(new Object[] {new Object(), new TestReflectClass(), "Woooa", new Integer(3)});
+		tstIArray1(new Object[] {new TestReflectClass(),new TestReflectClass()});
+		tstIArray2(new int[] {1,2,3});
+		tstIArray2(new long[] {1L,2L,3L});
 	}
 	
-	private void testIArray1(Object[] elements){
+	private void tstIArray1(Object[] elements){
 		IArray array = _reflector.array();
 		IClass clazz = _reflector.forObject(elements[0]);
 		Object obj = array.newInstance(clazz,0);
@@ -138,7 +115,7 @@ public class TestReflect extends Test {
 		}
 	}
 	
-	private void testIArray2(Object arr){
+	private void tstIArray2(Object arr){
 		IArray array = _reflector.array();
 		Object element = array.get(arr, 0);
 		IClass clazz = _reflector.forObject(element);

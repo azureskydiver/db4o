@@ -14,8 +14,4 @@ public class Test {
         }
     }
 
-    static protected void out(String msg) {
-    	System.out.println(msg);
-    }
-
 }
