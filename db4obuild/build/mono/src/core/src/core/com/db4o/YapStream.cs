@@ -1,1237 +1,1822 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using j4o.io;
-using com.db4o.config;
-using com.db4o.ext;
-using com.db4o.query;
-using com.db4o.types;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal abstract class YapStream : com.db4o.ObjectContainer, com.db4o.ext.ExtObjectContainer
+		, com.db4o.types.TransientClass
+	{
+		internal const int HEADER_LENGTH = 2 + (com.db4o.YapConst.YAPINT_LENGTH * 4);
 
-   abstract internal class YapStream : ObjectContainer, ExtObjectContainer, TransientClass {
-      static internal int HEADER_LENGTH = 18;
-      private bool i_amDuringFatalExit = false;
-      internal YapClassCollection i_classCollection;
-      internal Config4Impl i_config;
-      internal int i_entryCounter = -100;
-      internal Tree i_freeOnCommit;
-      private YapObject i_hcTree;
-      private YapObject i_idTree;
-      private Tree[] i_justActivated;
-      private Tree[] i_justDeactivated;
-      private Tree i_justPeeked;
-      private Tree i_justSet;
-      internal Object i_lock = new Object();
-      private List4 i_needsUpdate;
-      internal YapStream i_parent;
-      internal bool i_refreshInsteadOfActivate;
-      internal int i_showInternalClasses = 0;
-      internal long i_startTime;
-      private List4 i_stillToActivate;
-      private List4 i_stillToDeactivate;
-      private List4 i_stillToSet;
-      internal YapStringIO i_stringIo;
-      internal Transaction i_systemTrans;
-      internal Transaction i_trans;
-      private bool i_instantiating;
-      internal YapHandlers i_handlers;
-      internal YapStream i_migrateFrom;
-      internal YapReferences i_references;
-      
-      internal YapStream(YapStream yapstream_0_) : base() {
-         i_parent = yapstream_0_ == null ? this : yapstream_0_;
-         initialize0();
-         createTransaction();
-         initialize1();
-      }
-      
-      public void activate(Object obj, int i) {
-         lock (i_lock) {
-            activate1(null, obj, i);
-         }
-      }
-      
-      internal void activate1(Transaction transaction, Object obj) {
-         activate1(transaction, obj, i_config.i_activationDepth);
-      }
-      
-      internal void activate1(Transaction transaction, Object obj, int i) {
-         transaction = checkTransaction(transaction);
-         beginEndActivation();
-         activate2(transaction, obj, i);
-         beginEndActivation();
-      }
-      
-      internal void beginEndActivation() {
-         i_justActivated[0] = null;
-      }
-      
-      internal void beginEndSet(Transaction transaction) {
-         i_justSet = null;
-         if (transaction != null) transaction.beginEndSet();
-      }
-      
-      internal void activate2(Transaction transaction, Object obj, int i) {
-         try {
-            {
-               i_entryCounter++;
-               stillToActivate(obj, i);
-               activate3CheckStill(transaction);
-            }
-         }  catch (Exception throwable) {
-            {
-               fatalException(throwable);
-            }
-         }
-         i_entryCounter--;
-      }
-      
-      internal void activate3CheckStill(Transaction transaction) {
-         while (i_stillToActivate != null) {
-            Iterator4 iterator41 = new Iterator4(i_stillToActivate);
-            i_stillToActivate = null;
-            while (iterator41.hasNext()) {
-               YapObject yapobject1 = (YapObject)iterator41.next();
-               int i1 = System.Convert.ToInt32((Int32)iterator41.next());
-               Object obj1 = yapobject1.getObject();
-               if (obj1 == null) yapObjectGCd(yapobject1); else yapobject1.activate1(transaction, obj1, i1, i_refreshInsteadOfActivate);
-            }
-         }
-      }
-      
-      public void bind(Object obj, long l) {
-         lock (i_lock) {
-            bind1(null, obj, l);
-         }
-      }
-      
-      internal void bind1(Transaction transaction, Object obj, long l) {
-         transaction = checkTransaction(transaction);
-         int i1 = (int)l;
-         if (obj != null) {
-            Object obj_1_1 = getByID(l);
-            if (obj_1_1 != null) {
-               YapObject yapobject1 = getYapObject(i1);
-               if (yapobject1 != null) {
-                  if (j4o.lang.Class.getClassForObject(obj) == yapobject1.getJavaClass()) bind2(yapobject1, obj); else throw new RuntimeException(Messages.get(57));
-               }
-            }
-         }
-      }
-      
-      internal void bind2(YapObject yapobject, Object obj) {
-         int i1 = yapobject.getID();
-         yapObjectGCd(yapobject);
-         yapobject = new YapObject(getYapClass(j4o.lang.Class.getClassForObject(obj), false), i1);
-         yapobject.setObjectWeak(this, obj);
-         yapobject.setStateDirty();
-         idTreeAdd(yapobject);
-         hcTreeAdd(yapobject);
-      }
-      
-      internal virtual bool canUpdate() {
-         return true;
-      }
-      
-      internal void checkClosed() {
-         if (i_classCollection == null) Db4o.throwRuntimeException(20, this.ToString());
-      }
-      
-      internal void checkNeededUpdates() {
-         if (i_needsUpdate != null) {
-            Iterator4 iterator41 = new Iterator4(i_needsUpdate);
-            while (iterator41.hasNext()) {
-               YapClass yapclass1 = (YapClass)iterator41.next();
-               yapclass1.setStateDirty();
-               yapclass1.write(this, i_systemTrans);
-            }
-            i_needsUpdate = null;
-         }
-      }
-      
-      internal Transaction checkTransaction(Transaction transaction) {
-         checkClosed();
-         if (transaction != null) return transaction;
-         return getTransaction();
-      }
-      
-      public virtual bool close() {
-         lock (Db4o.Lock) {
-            lock (i_lock) {
-               bool xbool1 = close1();
-               return xbool1;
-            }
-         }
-      }
-      
-      internal bool close1() {
-         if (i_classCollection == null) return true;
-         Platform.preClose(this);
-         checkNeededUpdates();
-         if (stateMessages()) logMsg(2, this.ToString());
-         bool xbool1 = close2();
-         return xbool1;
-      }
-      
-      internal virtual bool close2() {
-         if (hasShutDownHook()) Platform.removeShutDownHook(this, i_lock);
-         i_classCollection = null;
-         i_references.stopTimer();
-         i_hcTree = null;
-         i_idTree = null;
-         i_systemTrans = null;
-         i_trans = null;
-         if (stateMessages()) logMsg(3, this.ToString());
-         return true;
-      }
-      
-      public Db4oCollections collections() {
-         lock (i_lock) {
-            if (i_handlers.i_collections == null) i_handlers.i_collections = Platform.collections(this);
-            return i_handlers.i_collections;
-         }
-      }
-      
-      public void commit() {
-         lock (i_lock) {
-            commit1();
-         }
-      }
-      
-      abstract internal void commit1();
-      
-      public Configuration configure() {
-         return i_config;
-      }
-      
-      abstract internal ClassIndex createClassIndex(YapClass yapclass);
-      
-      abstract internal QResult createQResult(Transaction transaction);
-      
-      internal void createStringIO(byte i) {
-         switch (i) {
-         case 1: 
-            setStringIo(new YapStringIO());
-            break;
-         
-         case 2: 
-            setStringIo(new YapStringIOUnicode());
-            break;
-         
-         }
-      }
-      
-      internal virtual void createTransaction() {
-         i_systemTrans = new Transaction(this, null);
-         i_trans = new Transaction(this, i_systemTrans);
-      }
-      
-      abstract internal long currentVersion();
-      
-      internal virtual bool createYapClass(YapClass yapclass, Class var_class, YapClass yapclass_2_) {
-         if (YapConst.CLASS_TRANSIENTCLASS.isAssignableFrom(var_class)) return false;
-         Config4Class config4class1 = i_config.configClass(var_class.getName());
-         yapclass.i_config = config4class1;
-         yapclass.i_ancestor = yapclass_2_;
-         Object obj1 = null;
-         YapConstructor yapconstructor1;
-         if (config4class1 != null && config4class1.instantiates()) yapconstructor1 = new YapConstructor(this, var_class, null, null, true, false); else {
-            yapconstructor1 = i_handlers.createConstructorStatic(this, yapclass, var_class);
-            if (yapconstructor1 == null) return false;
-         }
-         yapclass.init(this, yapclass_2_, yapconstructor1);
-         return true;
-      }
-      
-      internal Object db4oTypeStored(Transaction transaction, Object obj) {
-         if (obj is Db4oDatabase) {
-            Db4oDatabase db4odatabase1 = (Db4oDatabase)obj;
-            if (getYapObject(obj) != null) return obj;
-            Query query1 = querySharpenBug();
-            query1.constrain(j4o.lang.Class.getClassForObject(db4odatabase1));
-            query1.descend("i_uuid").constrain(System.Convert.ToInt64(db4odatabase1.i_uuid));
-            ObjectSet objectset1 = query1.execute();
-            while (objectset1.hasNext()) {
-               Db4oDatabase db4odatabase_3_1 = (Db4oDatabase)objectset1.next();
-               activate1(null, db4odatabase_3_1, 4);
-               if (db4odatabase_3_1.Equals(obj)) return db4odatabase_3_1;
-            }
-         }
-         return null;
-      }
-      
-      public void deactivate(Object obj, int i) {
-         lock (i_lock) {
-            deactivate1(obj, i);
-         }
-      }
-      
-      internal void deactivate1(Object obj, int i) {
-         checkClosed();
-         try {
-            {
-               i_entryCounter++;
-               i_justDeactivated[0] = null;
-               deactivate2(obj, i);
-               i_justDeactivated[0] = null;
-            }
-         }  catch (Exception throwable) {
-            {
-               fatalException(throwable);
-            }
-         }
-         i_entryCounter--;
-      }
-      
-      private void deactivate2(Object obj, int i) {
-         stillToDeactivate(obj, i, true);
-         while (i_stillToDeactivate != null) {
-            Iterator4 iterator41 = new Iterator4(i_stillToDeactivate);
-            i_stillToDeactivate = null;
-            while (iterator41.hasNext()) ((YapObject)iterator41.next()).deactivate(i_trans, System.Convert.ToInt32((Int32)iterator41.next()));
-         }
-      }
-      
-      public void delete(Object obj) {
-         lock (i_lock) {
-            Transaction transaction1 = delete1(null, obj);
-            transaction1.beginEndSet();
-         }
-      }
-      
-      internal Transaction delete1(Transaction transaction, Object obj) {
-         transaction = checkTransaction(transaction);
-         if (obj != null) {
-            try {
-               {
-                  delete2(transaction, obj);
-               }
-            }  catch (Exception throwable) {
-               {
-                  fatalException(throwable);
-               }
-            }
-            i_entryCounter--;
-         }
-         return transaction;
-      }
-      
-      private void delete2(Transaction transaction, Object obj) {
-         i_entryCounter++;
-         YapObject yapobject1 = getYapObject(obj);
-         if (yapobject1 != null) {
-            int i1 = yapobject1.getID();
-            delete3(transaction, yapobject1, obj, 0);
-         }
-      }
-      
-      internal void delete3(Transaction transaction, YapObject yapobject, Object obj, int i) {
-         if (obj is SecondClass) delete4(transaction, yapobject, obj, i); else transaction.delete(yapobject, obj, i, true);
-      }
-      
-      internal void delete4(Transaction transaction, YapObject yapobject, Object obj, int i) {
-         bool xbool1 = false;
-         if (yapobject.beginProcessing()) {
-            YapClass yapclass1 = yapobject.getYapClass();
-            Object obj_4_1 = yapobject.getObject();
-            if (yapclass1.dispatchEvent(this, obj_4_1, 0) && delete5(transaction, yapobject, i)) {
-               yapclass1.dispatchEvent(this, obj_4_1, 1);
-               if (i_config.i_messageLevel > 1) message("" + yapobject.getID() + " delete " + yapobject.getYapClass().getName());
-            }
-            yapobject.endProcessing();
-         }
-      }
-      
-      abstract internal bool delete5(Transaction transaction, YapObject yapobject, int i);
-      
-      internal virtual bool detectSchemaChanges() {
-         return i_config.i_detectSchemaChanges;
-      }
-      
-      public virtual bool dispatchsEvents() {
-         return true;
-      }
-      
-      internal virtual void emergencyClose() {
-         i_classCollection = null;
-         i_references.stopTimer();
-      }
-      
-      public ExtObjectContainer ext() {
-         return this;
-      }
-      
-      internal void failedToShutDown() {
-         lock (Db4o.Lock) {
-            if (i_classCollection != null) {
-               if (i_entryCounter == 0) {
-                  Db4o.logErr(i_config, 50, this.ToString(), null);
-                  while (!close()) {
-                  }
-               } else {
-                  emergencyClose();
-                  if (i_entryCounter > 0) Db4o.logErr(i_config, 24, null, null);
-               }
-            }
-         }
-      }
-      
-      internal void fatalException(Exception throwable) {
-         if (!i_amDuringFatalExit) {
-            i_amDuringFatalExit = true;
-            i_classCollection = null;
-            emergencyClose();
-            Db4o.logErr(i_config, 18, null, throwable);
-         }
-         throw new RuntimeException(Messages.get(44));
-      }
-      
-      protected void finalize() {
-         if (i_config == null || i_config.i_automaticShutDown) failedToShutDown();
-      }
-      
-      internal void gc() {
-         i_references.run();
-      }
-      
-      public ObjectSet get(Object obj) {
-         lock (i_lock) {
-            return get1(null, obj);
-         }
-      }
-      
-      internal ObjectSet get1(Transaction transaction, Object obj) {
-         transaction = checkTransaction(transaction);
-         QResult qresult1 = createQResult(transaction);
-         try {
-            {
-               get2(transaction, obj, qresult1);
-            }
-         }  catch (Exception throwable) {
-            {
-               fatalException(throwable);
-            }
-         }
-         i_entryCounter--;
-         qresult1.reset();
-         return qresult1;
-      }
-      
-      private void get2(Transaction transaction, Object obj, QResult qresult) {
-         i_entryCounter++;
-         if (obj == null || j4o.lang.Class.getClassForObject(obj) == YapConst.CLASS_OBJECT) getAll(transaction, qresult); else {
-            Query query1 = querySharpenBug(transaction);
-            query1.constrain(obj);
-            ((QQuery)query1).execute1(qresult);
-         }
-      }
-      
-      abstract internal void getAll(Transaction transaction, QResult qresult);
-      
-      public Object getByID(long l) {
-         lock (i_lock) {
-            return getByID1(null, l);
-         }
-      }
-      
-      internal Object getByID1(Transaction transaction, long l) {
-         transaction = checkTransaction(transaction);
-         try {
-            {
-               return getByID2(transaction, (int)l);
-            }
-         }  catch (Exception exception) {
-            {
-               return null;
-            }
-         }
-      }
-      
-      internal Object getByID2(Transaction transaction, int i) {
-         if (i > 0) {
-            YapObject yapobject1 = getYapObject(i);
-            if (yapobject1 != null) {
-               Object obj1 = yapobject1.getObject();
-               if (obj1 != null) return obj1;
-               yapObjectGCd(yapobject1);
-            }
-            try {
-               {
-                  return new YapObject(i).read(transaction, null, null, 0, 1);
-               }
-            }  catch (Exception throwable) {
-               {
-               }
-            }
-         }
-         return null;
-      }
-      
-      public Object getByUUID(Db4oUUID db4ouuid) {
-         lock (i_lock) {
-            Transaction transaction1 = checkTransaction(null);
-            Object[] objs1 = transaction1.objectAndYapObjectBySignature(db4ouuid.getLongPart(), db4ouuid.getSignaturePart());
-            return objs1[0];
-         }
-      }
-      
-      public long getID(Object obj) {
-         lock (i_lock) {
-            return (long)getID1(null, obj);
-         }
-      }
-      
-      internal int getID1(Transaction transaction, Object obj) {
-         checkClosed();
-         YapObject yapobject1 = i_hcTree.hc_find(obj);
-         if (yapobject1 != null) return yapobject1.getID();
-         return 0;
-      }
-      
-      public ObjectInfo getObjectInfo(Object obj) {
-         lock (i_lock) {
-            return getYapObject(obj);
-         }
-      }
-      
-      internal Object[] getObjectAndYapObjectByID(Transaction transaction, int i) {
-         Object[] objs1 = new Object[2];
-         if (i > 0) {
-            YapObject yapobject1 = getYapObject(i);
-            if (yapobject1 != null) {
-               Object obj1 = yapobject1.getObject();
-               if (obj1 != null) {
-                  objs1[0] = obj1;
-                  objs1[1] = yapobject1;
-                  return objs1;
-               }
-               yapObjectGCd(yapobject1);
-            }
-            try {
-               {
-                  yapobject1 = new YapObject(i);
-                  objs1[0] = yapobject1.read(transaction, null, null, 0, 1);
-                  objs1[1] = yapobject1;
-               }
-            }  catch (Exception throwable) {
-               {
-               }
-            }
-         }
-         return objs1;
-      }
-      
-      internal YapWriter getWriter(Transaction transaction, int i) {
-         return new YapWriter(transaction, i);
-      }
-      
-      internal YapWriter getWriter(Transaction transaction, int i, int i_5_) {
-         if (Debug.exceedsMaximumBlockSize(i_5_)) return null;
-         return new YapWriter(transaction, i, i_5_);
-      }
-      
-      internal Transaction getSystemTransaction() {
-         return i_systemTrans;
-      }
-      
-      internal Transaction getTransaction() {
-         return i_trans;
-      }
-      
-      internal YapClass getYapClass(Class var_class, bool xbool) {
-         if (var_class == null) return null;
-         if (!showInternalClasses() && YapConst.CLASS_INTERNAL.isAssignableFrom(var_class)) return null;
-         YapClass yapclass1 = i_handlers.getYapClassStatic(var_class);
-         if (yapclass1 != null) return yapclass1;
-         return i_classCollection.getYapClass(var_class, xbool);
-      }
-      
-      internal virtual YapClass getYapClass(int i) {
-         if (i == 0) return null;
-         YapClass yapclass1 = i_handlers.getYapClassStatic(i);
-         if (yapclass1 != null) return yapclass1;
-         return i_classCollection.getYapClass(i);
-      }
-      
-      internal YapObject getYapObject(int i) {
-         return i_idTree.id_find(i);
-      }
-      
-      internal YapObject getYapObject(Object obj) {
-         return i_hcTree.hc_find(obj);
-      }
-      
-      public YapHandlers handlers() {
-         return i_handlers;
-      }
-      
-      internal virtual bool needsLockFileThread() {
-         if (!Platform.hasLockFileThread()) return false;
-         if (Platform.hasNio()) return false;
-         if (i_config.i_readonly) return false;
-         return i_config.i_lockFile;
-      }
-      
-      internal virtual bool hasShutDownHook() {
-         return i_config.i_automaticShutDown;
-      }
-      
-      internal void hcTreeAdd(YapObject yapobject) {
-         i_hcTree = i_hcTree.hc_add(yapobject);
-      }
-      
-      internal void hcTreeRemove(YapObject yapobject) {
-         i_hcTree = i_hcTree.hc_remove(yapobject);
-      }
-      
-      internal void idTreeAdd(YapObject yapobject) {
-         i_idTree = i_idTree.id_add(yapobject);
-      }
-      
-      internal void idTreeRemove(int i) {
-         i_idTree = i_idTree.id_remove(i);
-      }
-      
-      internal void initialize0() {
-         initialize0b();
-         i_stillToSet = null;
-         i_justActivated = new Tree[1];
-      }
-      
-      internal virtual void initialize0b() {
-         i_justDeactivated = new Tree[1];
-         i_handlers = new YapHandlers(this);
-         setStringIo(new YapStringIOUnicode());
-      }
-      
-      internal virtual void initialize1() {
-         try {
-            {
-               i_config = (Config4Impl)((DeepClone)Db4o.configure()).deepClone(this);
-               createStringIO(i_config.i_encoding);
-            }
-         }  catch (Exception exception) {
-            {
-            }
-         }
-         if (i_references != null) {
-            gc();
-            i_references.stopTimer();
-         }
-         i_references = new YapReferences(this);
-         if (hasShutDownHook()) Platform.addShutDownHook(this, i_lock);
-         i_handlers.initEncryption(i_config);
-         initialize2();
-         i_stillToSet = null;
-      }
-      
-      internal virtual void initialize2() {
-         i_idTree = new YapObject(0);
-         i_idTree.setObject(new Object());
-         i_hcTree = i_idTree;
-         initialize2b();
-      }
-      
-      internal virtual void initialize2b() {
-         i_classCollection = new YapClassCollection(i_systemTrans);
-         i_references.startTimer();
-      }
-      
-      internal void initialize3() {
-         i_showInternalClasses = 100000;
-         initialize4NObjectCarrier();
-         i_showInternalClasses = 0;
-         i_entryCounter = 0;
-      }
-      
-      internal virtual void initialize4NObjectCarrier() {
-         initializeEssentialClasses();
-         rename(i_config);
-         i_classCollection.initOnUp(i_systemTrans);
-         if (i_config.i_detectSchemaChanges) i_systemTrans.commit();
-      }
-      
-      internal virtual void initializeEssentialClasses() {
-         for (int i1 = 0; i1 < YapConst.ESSENTIAL_CLASSES.Length; i1++) getYapClass(YapConst.ESSENTIAL_CLASSES[i1], true);
-      }
-      
-      internal void instantiating(bool xbool) {
-         i_instantiating = xbool;
-      }
-      
-      public bool isActive(Object obj) {
-         lock (i_lock) {
-            return isActive1(obj);
-         }
-      }
-      
-      internal bool isActive1(Object obj) {
-         checkClosed();
-         if (obj != null) {
-            YapObject yapobject1 = getYapObject(obj);
-            if (yapobject1 != null) return yapobject1.isActive();
-         }
-         return false;
-      }
-      
-      public bool isCached(long l) {
-         lock (i_lock) {
-            if (l > 0L) {
-               YapObject yapobject1 = getYapObject((int)l);
-               if (yapobject1 != null) {
-                  Object obj1 = yapobject1.getObject();
-                  if (obj1 != null) return true;
-               }
-            }
-            return false;
-         }
-      }
-      
-      internal virtual bool isClient() {
-         return false;
-      }
-      
-      public bool isClosed() {
-         lock (i_lock) {
-            return i_classCollection == null;
-         }
-      }
-      
-      internal bool isInstantiating() {
-         return i_instantiating;
-      }
-      
-      internal virtual bool isServer() {
-         return false;
-      }
-      
-      public bool isStored(Object obj) {
-         lock (i_lock) {
-            return isStored1(obj);
-         }
-      }
-      
-      internal bool isStored1(Object obj) {
-         Transaction transaction1 = checkTransaction(null);
-         if (obj == null) return false;
-         YapObject yapobject1 = getYapObject(obj);
-         if (yapobject1 == null) return false;
-         return !transaction1.isDeleted(yapobject1.getID());
-      }
-      
-      public Object Lock() {
-         return i_lock;
-      }
-      
-      internal void logMsg(int i, String xstring) {
-         Db4o.logMsg(i_config, i, xstring);
-      }
-      
-      internal virtual bool maintainsIndices() {
-         return true;
-      }
-      
-      internal YapWriter marshall(Transaction transaction, Object obj) {
-         int[] xis1 = {
-            0         };
-         byte[] is_6_1 = marshall(obj, xis1);
-         YapWriter yapwriter1 = new YapWriter(transaction, is_6_1.Length);
-         yapwriter1.append(is_6_1);
-         yapwriter1.useSlot(xis1[0], 0, is_6_1.Length);
-         return yapwriter1;
-      }
-      
-      internal byte[] marshall(Object obj, int[] xis) {
-         MemoryFile memoryfile1 = new MemoryFile();
-         memoryfile1.setInitialSize(223);
-         memoryfile1.setIncrementSizeBy(300);
-         getYapClass(j4o.lang.Class.getClassForObject(obj), true);
-         YapObjectCarrier yapobjectcarrier1 = new YapObjectCarrier(this, memoryfile1);
-         yapobjectcarrier1.i_showInternalClasses = i_showInternalClasses;
-         yapobjectcarrier1.set(obj);
-         xis[0] = (int)yapobjectcarrier1.getID(obj);
-         yapobjectcarrier1.close();
-         return memoryfile1.getBytes();
-      }
-      
-      internal virtual void message(String xstring) {
-         new Message(this, xstring);
-      }
-      
-      public void migrateFrom(ObjectContainer objectcontainer) {
-         i_migrateFrom = (YapStream)objectcontainer;
-      }
-      
-      internal void needsUpdate(YapClass yapclass) {
-         i_needsUpdate = new List4(i_needsUpdate, yapclass);
-      }
-      
-      abstract internal YapWriter newObject(Transaction transaction, YapMeta yapmeta);
-      
-      abstract internal int newUserObject();
-      
-      public Object peekPersisted(Object obj, int i, bool xbool) {
-         lock (i_lock) {
-            checkClosed();
-            i_entryCounter++;
-            i_justPeeked = null;
-            Transaction transaction1 = xbool ? i_systemTrans : checkTransaction(null);
-            Object obj_7_1 = null;
-            YapObject yapobject1 = getYapObject(obj);
-            if (yapobject1 != null) obj_7_1 = peekPersisted1(transaction1, yapobject1.getID(), i);
-            i_justPeeked = null;
-            i_entryCounter--;
-            return obj_7_1;
-         }
-      }
-      
-      internal Object peekPersisted1(Transaction transaction, int i, int i_8_) {
-         TreeInt treeint1 = new TreeInt(i);
-         TreeIntObject treeintobject1 = (TreeIntObject)Tree.find(i_justPeeked, treeint1);
-         if (treeintobject1 == null) return new YapObject(i).read(transaction, null, null, i_8_, -1);
-         return treeintobject1.i_object;
-      }
-      
-      internal void peeked(int i, Object obj) {
-         i_justPeeked = Tree.add(i_justPeeked, new TreeIntObject(i, obj));
-      }
-      
-      public void purge() {
-         lock (i_lock) {
-            purge1();
-         }
-      }
-      
-      public void purge(Object obj) {
-         lock (i_lock) {
-            purge1(obj);
-         }
-      }
-      
-      internal void purge1() {
-         checkClosed();
-         j4o.lang.JavaSystem.gc();
-         j4o.lang.JavaSystem.runFinalization();
-         j4o.lang.JavaSystem.gc();
-         gc();
-         i_classCollection.purge();
-      }
-      
-      internal void purge1(Object obj) {
-         if (obj != null && i_hcTree != null) {
-            Object obj_9_1 = null;
-            YapObject yapobject1;
-            if (obj is YapObject) yapobject1 = (YapObject)obj; else yapobject1 = i_hcTree.hc_find(obj);
-            if (yapobject1 != null) yapObjectGCd(yapobject1);
-         }
-      }
-      
-      public Query query() {
-         lock (i_lock) {
-            return query(null);
-         }
-      }
-      
-      internal Query query(Transaction transaction) {
-         i_entryCounter++;
-         QQuery qquery1 = new QQuery(checkTransaction(transaction), null, null);
-         i_entryCounter--;
-         return qquery1;
-      }
-      
-      internal Query querySharpenBug() {
-         return query();
-      }
-      
-      internal Query querySharpenBug(Transaction transaction) {
-         return query(transaction);
-      }
-      
-      abstract internal void raiseVersion(long l);
-      
-      abstract internal void readBytes(byte[] xis, int i, int i_10_);
-      
-      abstract internal void readBytes(byte[] xis, int i, int i_11_, int i_12_);
-      
-      internal YapReader readObjectReaderByAddress(int i, int i_13_) {
-         if (i > 0) {
-            YapReader yapreader1 = new YapReader(i_13_);
-            readBytes(yapreader1._buffer, i, i_13_);
-            i_handlers.decrypt(yapreader1);
-            return yapreader1;
-         }
-         return null;
-      }
-      
-      internal YapWriter readObjectWriterByAddress(Transaction transaction, int i, int i_14_) {
-         if (i > 0) {
-            YapWriter yapwriter1 = getWriter(transaction, i, i_14_);
-            yapwriter1.readEncrypt(this, i);
-            return yapwriter1;
-         }
-         return null;
-      }
-      
-      abstract internal YapWriter readWriterByID(Transaction transaction, int i);
-      
-      abstract internal YapReader readReaderByID(Transaction transaction, int i);
-      
-      private void reboot() {
-         commit();
-         int i1 = i_classCollection.getID();
-         i_references.stopTimer();
-         initialize2();
-         i_classCollection.setID(this, i1);
-         i_classCollection.read(i_systemTrans);
-      }
-      
-      public void refresh(Object obj, int i) {
-         lock (i_lock) {
-            i_refreshInsteadOfActivate = true;
-            activate1(null, obj, i);
-            i_refreshInsteadOfActivate = false;
-         }
-      }
-      
-      internal void refreshClasses() {
-         lock (i_lock) {
-            i_classCollection.refreshClasses();
-         }
-      }
-      
-      public abstract void releaseSemaphore(String xstring);
-      
-      abstract internal void releaseSemaphores(Transaction transaction);
-      
-      internal void rename(Config4Impl config4impl) {
-         bool xbool1 = false;
-         if (config4impl.i_rename != null) xbool1 = rename1(config4impl);
-         i_classCollection.checkChanges();
-         if (xbool1) reboot();
-         i_entryCounter--;
-      }
-      
-      protected virtual bool rename1(Config4Impl config4impl) {
-         bool xbool1 = false;
-         try {
-            {
-               Iterator4 iterator41 = config4impl.i_rename.iterator();
-               while (iterator41.hasNext()) {
-                  Rename rename1 = (Rename)iterator41.next();
-                  if (get(rename1).size() == 0) {
-                     bool bool_15_1 = false;
-                     bool bool_16_1 = j4o.lang.JavaSystem.getLengthOf(rename1.rClass) > 0;
-                     YapClass yapclass1 = i_classCollection.getYapClass(bool_16_1 ? rename1.rClass : rename1.rFrom);
-                     if (yapclass1 != null) {
-                        if (bool_16_1) bool_15_1 = yapclass1.renameField(rename1.rFrom, rename1.rTo); else {
-                           YapClass yapclass_17_1 = i_classCollection.getYapClass(rename1.rTo);
-                           if (yapclass_17_1 == null) {
-                              yapclass1.setName(rename1.rTo);
-                              bool_15_1 = true;
-                           } else logMsg(9, "class " + rename1.rTo);
-                        }
-                     }
-                     if (bool_15_1) {
-                        xbool1 = true;
-                        setDirty(yapclass1);
-                        logMsg(8, rename1.rFrom + " to " + rename1.rTo);
-                        ObjectSet objectset1 = get(new Rename(rename1.rClass, null, rename1.rFrom));
-                        while (objectset1.hasNext()) delete(objectset1.next());
-                        set(rename1);
-                     }
-                  }
-               }
-            }
-         }  catch (Exception throwable) {
-            {
-               Db4o.logErr(i_config, 10, null, throwable);
-            }
-         }
-         return xbool1;
-      }
-      
-      public Db4oReplication replicateTo(ObjectContainer objectcontainer) {
-         return new ReplicationImpl(this, objectcontainer);
-      }
-      
-      internal virtual void reserve(int i) {
-      }
-      
-      public void rollback() {
-         lock (i_lock) {
-            rollback1();
-         }
-      }
-      
-      abstract internal void rollback1();
-      
-      public virtual void send(Object obj) {
-      }
-      
-      public void set(Object obj) {
-         lock (i_lock) {
-            setExternal(null, obj, -2147483548);
-         }
-      }
-      
-      public void set(Object obj, int i) {
-         lock (i_lock) {
-            setExternal(null, obj, i);
-         }
-      }
-      
-      internal void setExternal(Transaction transaction, Object obj, int i) {
-         beginEndSet(transaction);
-         transaction = setInternal(transaction, obj, i, true);
-         beginEndSet(transaction);
-      }
-      
-      internal Transaction setInternal(Transaction transaction, Object obj, bool xbool) {
-         return setInternal(transaction, obj, -2147483548, xbool);
-      }
-      
-      internal Transaction setInternal(Transaction transaction, Object obj, int i, bool xbool) {
-         transaction = checkTransaction(transaction);
-         if (i_migrateFrom != null && i_handlers.i_replication != null && i_handlers.i_replication.toDestination(obj)) return transaction;
-         return setNoReplication(transaction, obj, i, xbool);
-      }
-      
-      internal Transaction setNoReplication(Transaction transaction, Object obj, int i, bool xbool) {
-         if (obj is Db4oType && db4oTypeStored(transaction, obj) != null) return transaction;
-         try {
-            {
-               set2(transaction, obj, i, xbool);
-            }
-         }  catch (ObjectNotStorableException objectnotstorableexception) {
-            {
-               throw objectnotstorableexception;
-            }
-         } catch (Exception throwable) {
-            {
-               fatalException(throwable);
-            }
-         }
-         i_entryCounter--;
-         return transaction;
-      }
-      
-      private void set2(Transaction transaction, Object obj, int i, bool xbool) {
-         i_entryCounter++;
-         set3(transaction, obj, i, xbool);
-         checkStillToSet();
-      }
-      
-      internal void checkStillToSet() {
-         List4 list41 = null;
-         while (i_stillToSet != null) {
-            Iterator4 iterator41 = new Iterator4(i_stillToSet);
-            i_stillToSet = null;
-            while (iterator41.hasNext()) {
-               Int32 integer1 = (Int32)iterator41.next();
-               YapObject yapobject1 = (YapObject)iterator41.next();
-               Transaction transaction1 = (Transaction)iterator41.next();
-               if (!yapobject1.continueSet(transaction1, System.Convert.ToInt32(integer1))) {
-                  list41 = new List4(list41, transaction1);
-                  list41 = new List4(list41, yapobject1);
-                  list41 = new List4(list41, integer1);
-               }
-            }
-         }
-         i_stillToSet = list41;
-      }
-      
-      internal int set3(Transaction transaction, Object obj, int i, bool xbool) {
-         if (obj != null & !(obj is TransientClass)) {
-            if (obj is Db4oTypeImpl) ((Db4oTypeImpl)obj).storedTo(transaction);
-            Object obj_18_1 = null;
-            YapObject yapobject1 = i_hcTree.hc_find(obj);
-            YapClass yapclass1;
-            if (yapobject1 == null) {
-               Class var_class1 = j4o.lang.Class.getClassForObject(obj);
-               yapclass1 = getYapClass(var_class1, false);
-               if (yapclass1 == null) {
-                  yapclass1 = getYapClass(var_class1, true);
-                  if (yapclass1 == null) return 0;
-               }
-               yapobject1 = i_hcTree.hc_find(obj);
-            } else yapclass1 = yapobject1.getYapClass();
-            bool bool_19_1 = true;
-            if (yapobject1 == null) {
-               if (!yapclass1.dispatchEvent(this, obj, 8)) return 0;
-               yapobject1 = new YapObject(0);
-               if (i_migrateFrom != null && i_handlers.i_replication != null) i_handlers.i_replication.destinationOnNew(yapobject1);
-               if (yapobject1.store(transaction, yapclass1, obj, i)) {
-                  idTreeAdd(yapobject1);
-                  hcTreeAdd(yapobject1);
-                  if (obj is Db4oTypeImpl) ((Db4oTypeImpl)obj).setTrans(transaction);
-                  if (i_config.i_messageLevel > 1) message("" + yapobject1.getID() + " new " + yapobject1.getYapClass().getName());
-                  stillToSet(transaction, yapobject1, i);
-               }
-            } else if (canUpdate()) {
-               int i_20_1 = yapobject1.getID();
-               if (xbool && i_justSet != null && i_20_1 > 0 && TreeInt.find(i_justSet, yapobject1.getID()) != null) return i_20_1;
-               bool bool_21_1 = i == -2147483548 || i > 0;
-               if (bool_21_1) {
-                  bool_19_1 = false;
-                  transaction.dontDelete(i_20_1, true);
-                  yapobject1.writeUpdate(transaction, i);
-               }
-            }
-            checkNeededUpdates();
-            int i_22_1 = yapobject1.getID();
-            if (canUpdate() && xbool) {
-               if (i_justSet == null) i_justSet = new TreeInt(i_22_1); else i_justSet = i_justSet.add(new TreeInt(i_22_1));
-            }
-            if (bool_19_1) transaction.dontDelete(i_22_1, false);
-            return i_22_1;
-         }
-         return 0;
-      }
-      
-      abstract internal void setDirty(UseSystemTransaction usesystemtransaction);
-      
-      public abstract bool setSemaphore(String xstring, int i);
-      
-      internal void setStringIo(YapStringIO yapstringio) {
-         i_stringIo = yapstringio;
-         i_handlers.i_stringHandler.setStringIo(yapstringio);
-      }
-      
-      internal bool showInternalClasses() {
-         return isServer() || i_showInternalClasses > 0;
-      }
-      
-      internal void showInternalClasses(bool xbool) {
-         if (xbool) i_showInternalClasses++; else i_showInternalClasses--;
-         if (i_showInternalClasses < 0) i_showInternalClasses = 0;
-      }
-      
-      internal virtual bool stateMessages() {
-         return true;
-      }
-      
-      internal List4 stillTo1(List4 list4, Tree[] trees, Object obj, int i, bool xbool) {
-         if (obj != null && i > 0) {
-            YapObject yapobject1 = i_hcTree.hc_find(obj);
-            if (yapobject1 != null) {
-               int i_23_1 = yapobject1.getID();
-               if (trees[0] != null) {
-                  if (((TreeInt)trees[0]).find(i_23_1) != null) return list4;
-                  trees[0] = trees[0].add(new TreeInt(i_23_1));
-               } else trees[0] = new TreeInt(i_23_1);
-               return new List4(new List4(list4, System.Convert.ToInt32(i)), yapobject1);
-            }
-            if (j4o.lang.Class.getClassForObject(obj).isArray()) {
-               Object[] objs1 = YapArray.toArray(obj);
-               for (int i_24_1 = 0; i_24_1 < objs1.Length; i_24_1++) list4 = stillTo1(list4, trees, objs1[i_24_1], i, xbool);
-            } else if (obj is Entry) {
-               list4 = stillTo1(list4, trees, ((Entry)obj).key, i, false);
-               list4 = stillTo1(list4, trees, ((Entry)obj).value, i, false);
-            } else if (xbool) {
-               YapClass yapclass1 = getYapClass(j4o.lang.Class.getClassForObject(obj), false);
-               if (yapclass1 != null) yapclass1.deactivate(i_trans, obj, i);
-            }
-         }
-         return list4;
-      }
-      
-      internal void stillToActivate(Object obj, int i) {
-         i_stillToActivate = stillTo1(i_stillToActivate, i_justActivated, obj, i, false);
-      }
-      
-      internal void stillToDeactivate(Object obj, int i, bool xbool) {
-         i_stillToDeactivate = stillTo1(i_stillToDeactivate, i_justDeactivated, obj, i, xbool);
-      }
-      
-      internal void stillToSet(Transaction transaction, YapObject yapobject, int i) {
-         i_stillToSet = new List4(i_stillToSet, transaction);
-         i_stillToSet = new List4(i_stillToSet, yapobject);
-         i_stillToSet = new List4(i_stillToSet, System.Convert.ToInt32(i));
-      }
-      
-      internal void stopSession() {
-         i_classCollection = null;
-      }
-      
-      public StoredClass storedClass(Object obj) {
-         lock (i_lock) {
-            checkClosed();
-            return storedClass1(obj);
-         }
-      }
-      
-      internal YapClass storedClass1(Object obj) {
-         try {
-            {
-               String xstring1 = Config4Impl.classNameFor(obj);
-               if (xstring1 != null) return getYapClass(Db4o.classForName(this, xstring1), false);
-            }
-         }  catch (Exception exception) {
-            {
-            }
-         }
-         return null;
-      }
-      
-      public StoredClass[] storedClasses() {
-         lock (i_lock) {
-            checkClosed();
-            return i_classCollection.storedClasses();
-         }
-      }
-      
-      internal Object unmarshall(YapWriter yapwriter) {
-         return unmarshall(yapwriter._buffer, yapwriter.getID());
-      }
-      
-      internal Object unmarshall(byte[] xis, int i) {
-         MemoryFile memoryfile1 = new MemoryFile(xis);
-         YapObjectCarrier yapobjectcarrier1 = new YapObjectCarrier(this, memoryfile1);
-         Object obj1 = yapobjectcarrier1.getByID((long)i);
-         yapobjectcarrier1.activate(obj1, 2147483647);
-         yapobjectcarrier1.close();
-         return obj1;
-      }
-      
-      abstract internal YapWriter updateObject(Transaction transaction, YapMeta yapmeta);
-      
-      abstract internal void write(bool xbool);
-      
-      abstract internal void writeDirty();
-      
-      abstract internal void writeEmbedded(YapWriter yapwriter, YapWriter yapwriter_25_);
-      
-      abstract internal void writeNew(YapClass yapclass, YapWriter yapwriter);
-      
-      abstract internal void writeTransactionPointer(int i);
-      
-      abstract internal void writeUpdate(YapClass yapclass, YapWriter yapwriter);
-      
-      internal void yapObjectGCd(YapObject yapobject) {
-         hcTreeRemove(yapobject);
-         idTreeRemove(yapobject.getID());
-         yapobject.setID(this, -1);
-         Platform.killYapRef(yapobject.i_object);
-      }
-      
-      public abstract Db4oDatabase identity();
-      
-      public abstract void backup(String xstring);
-   }
+		private bool i_amDuringFatalExit = false;
+
+		internal com.db4o.YapClassCollection i_classCollection;
+
+		internal com.db4o.Config4Impl i_config;
+
+		internal int i_entryCounter = -100;
+
+		internal com.db4o.Tree i_freeOnCommit;
+
+		private com.db4o.YapObject i_hcTree;
+
+		private com.db4o.YapObject i_idTree;
+
+		private com.db4o.Tree[] i_justActivated;
+
+		private com.db4o.Tree[] i_justDeactivated;
+
+		private com.db4o.Tree i_justPeeked;
+
+		private com.db4o.Tree i_justSet;
+
+		internal readonly object i_lock = new object();
+
+		private com.db4o.List4 i_needsUpdate;
+
+		internal readonly com.db4o.YapStream i_parent;
+
+		internal bool i_refreshInsteadOfActivate;
+
+		internal int i_showInternalClasses = 0;
+
+		internal long i_startTime;
+
+		private com.db4o.List4 i_stillToActivate;
+
+		private com.db4o.List4 i_stillToDeactivate;
+
+		private com.db4o.List4 i_stillToSet;
+
+		internal com.db4o.YapStringIO i_stringIo;
+
+		internal com.db4o.Transaction i_systemTrans;
+
+		internal com.db4o.Transaction i_trans;
+
+		private bool i_instantiating;
+
+		internal com.db4o.YapHandlers i_handlers;
+
+		internal com.db4o.YapStream i_migrateFrom;
+
+		internal com.db4o.YapReferences i_references;
+
+		internal YapStream(com.db4o.YapStream a_parent)
+		{
+			i_parent = a_parent == null ? this : a_parent;
+			initialize0();
+			createTransaction();
+			initialize1();
+		}
+
+		public virtual void activate(object a_activate, int a_depth)
+		{
+			lock (i_lock)
+			{
+				activate1(null, a_activate, a_depth);
+			}
+		}
+
+		internal void activate1(com.db4o.Transaction ta, object a_activate)
+		{
+			activate1(ta, a_activate, i_config.i_activationDepth);
+		}
+
+		internal void activate1(com.db4o.Transaction ta, object a_activate, int a_depth)
+		{
+			ta = checkTransaction(ta);
+			beginEndActivation();
+			activate2(ta, a_activate, a_depth);
+			beginEndActivation();
+		}
+
+		internal void beginEndActivation()
+		{
+			i_justActivated[0] = null;
+		}
+
+		internal void beginEndSet(com.db4o.Transaction ta)
+		{
+			i_justSet = null;
+			if (ta != null)
+			{
+				ta.beginEndSet();
+			}
+		}
+
+		/// <summary>internal call interface, does not reset i_justActivated</summary>
+		internal void activate2(com.db4o.Transaction ta, object a_activate, int a_depth)
+		{
+			try
+			{
+				i_entryCounter++;
+				stillToActivate(a_activate, a_depth);
+				activate3CheckStill(ta);
+			}
+			catch (System.Exception t)
+			{
+				fatalException(t);
+			}
+			i_entryCounter--;
+		}
+
+		internal void activate3CheckStill(com.db4o.Transaction ta)
+		{
+			while (i_stillToActivate != null)
+			{
+				com.db4o.Iterator4 i = new com.db4o.Iterator4(i_stillToActivate);
+				i_stillToActivate = null;
+				while (i.hasNext())
+				{
+					com.db4o.YapObject yo = (com.db4o.YapObject)i.next();
+					int depth = ((int)i.next());
+					object obj = yo.getObject();
+					if (obj == null)
+					{
+						yapObjectGCd(yo);
+					}
+					else
+					{
+						yo.activate1(ta, obj, depth, i_refreshInsteadOfActivate);
+					}
+				}
+			}
+		}
+
+		public virtual void bind(object obj, long id)
+		{
+			lock (i_lock)
+			{
+				bind1(null, obj, id);
+			}
+		}
+
+		/// <summary>TODO: This is not transactional yet.</summary>
+		/// <remarks>TODO: This is not transactional yet.</remarks>
+		internal void bind1(com.db4o.Transaction ta, object obj, long id)
+		{
+			ta = checkTransaction(ta);
+			int intID = (int)id;
+			if (obj != null)
+			{
+				object oldObject = getByID(id);
+				if (oldObject != null)
+				{
+					com.db4o.YapObject yo = getYapObject(intID);
+					if (yo != null)
+					{
+						if (ta.reflector().forObject(obj) == yo.getYapClass().classReflector())
+						{
+							bind2(yo, obj);
+						}
+						else
+						{
+							throw new j4o.lang.RuntimeException(com.db4o.Messages.get(57));
+						}
+					}
+				}
+			}
+		}
+
+		internal void bind2(com.db4o.YapObject a_yapObject, object obj)
+		{
+			int id = a_yapObject.getID();
+			yapObjectGCd(a_yapObject);
+			a_yapObject = new com.db4o.YapObject(getYapClass(reflector().forObject(obj), false
+				), id);
+			a_yapObject.setObjectWeak(this, obj);
+			a_yapObject.setStateDirty();
+			idTreeAdd(a_yapObject);
+			hcTreeAdd(a_yapObject);
+		}
+
+		internal virtual bool canUpdate()
+		{
+			return true;
+		}
+
+		internal void checkClosed()
+		{
+			if (i_classCollection == null)
+			{
+				com.db4o.Db4o.throwRuntimeException(20, ToString());
+			}
+		}
+
+		internal void checkNeededUpdates()
+		{
+			if (i_needsUpdate != null)
+			{
+				com.db4o.Iterator4 i = new com.db4o.Iterator4(i_needsUpdate);
+				while (i.hasNext())
+				{
+					com.db4o.YapClass yapClass = (com.db4o.YapClass)i.next();
+					yapClass.setStateDirty();
+					yapClass.write(this, i_systemTrans);
+				}
+				i_needsUpdate = null;
+			}
+		}
+
+		internal com.db4o.Transaction checkTransaction(com.db4o.Transaction ta)
+		{
+			checkClosed();
+			if (ta != null)
+			{
+				return ta;
+			}
+			return getTransaction();
+		}
+
+		public virtual bool close()
+		{
+			lock (com.db4o.Db4o.Lock)
+			{
+				lock (i_lock)
+				{
+					bool ret = close1();
+					return ret;
+				}
+			}
+		}
+
+		internal bool close1()
+		{
+			if (i_classCollection == null)
+			{
+				return true;
+			}
+			com.db4o.Platform.preClose(this);
+			checkNeededUpdates();
+			if (stateMessages())
+			{
+				logMsg(2, ToString());
+			}
+			bool closeResult = close2();
+			return closeResult;
+		}
+
+		internal virtual bool close2()
+		{
+			if (hasShutDownHook())
+			{
+				com.db4o.Platform.removeShutDownHook(this, i_lock);
+			}
+			i_classCollection = null;
+			i_references.stopTimer();
+			i_hcTree = null;
+			i_idTree = null;
+			i_systemTrans = null;
+			i_trans = null;
+			if (stateMessages())
+			{
+				logMsg(3, ToString());
+			}
+			return true;
+		}
+
+		public virtual com.db4o.types.Db4oCollections collections()
+		{
+			lock (i_lock)
+			{
+				if (i_handlers.i_collections == null)
+				{
+					i_handlers.i_collections = com.db4o.Platform.collections(this);
+				}
+				return i_handlers.i_collections;
+			}
+		}
+
+		public virtual void commit()
+		{
+			lock (i_lock)
+			{
+				commit1();
+			}
+		}
+
+		internal abstract void commit1();
+
+		public virtual com.db4o.config.Configuration configure()
+		{
+			return i_config;
+		}
+
+		internal abstract com.db4o.ClassIndex createClassIndex(com.db4o.YapClass a_yapClass
+			);
+
+		internal abstract com.db4o.QResult createQResult(com.db4o.Transaction a_ta);
+
+		internal virtual void createStringIO(byte encoding)
+		{
+			switch (encoding)
+			{
+				case com.db4o.YapConst.ISO8859:
+				{
+					setStringIo(new com.db4o.YapStringIO());
+					break;
+				}
+
+				case com.db4o.YapConst.UNICODE:
+				{
+					setStringIo(new com.db4o.YapStringIOUnicode());
+					break;
+				}
+			}
+		}
+
+		internal virtual void createTransaction()
+		{
+			i_systemTrans = new com.db4o.Transaction(this, null);
+			i_trans = new com.db4o.Transaction(this, i_systemTrans);
+		}
+
+		internal abstract long currentVersion();
+
+		internal virtual bool createYapClass(com.db4o.YapClass a_yapClass, com.db4o.reflect.ReflectClass
+			 a_class, com.db4o.YapClass a_superYapClass)
+		{
+			return a_yapClass.init(this, a_superYapClass, a_class, false);
+		}
+
+		/// <summary>allows special handling for all Db4oType objects.</summary>
+		/// <remarks>
+		/// allows special handling for all Db4oType objects.
+		/// Redirected here from #set() so only instanceof check is necessary
+		/// in the #set() method.
+		/// </remarks>
+		/// <returns>true if handled here and #set() should not continue processing</returns>
+		internal virtual object db4oTypeStored(com.db4o.Transaction a_trans, object a_object
+			)
+		{
+			if (a_object is com.db4o.ext.Db4oDatabase)
+			{
+				com.db4o.ext.Db4oDatabase database = (com.db4o.ext.Db4oDatabase)a_object;
+				if (getYapObject(a_object) != null)
+				{
+					return a_object;
+				}
+				com.db4o.query.Query q = querySharpenBug();
+				q.constrain(j4o.lang.Class.getClassForObject(database));
+				q.descend("i_uuid").constrain(System.Convert.ToInt64(database.i_uuid));
+				com.db4o.ObjectSet objectSet = q.execute();
+				while (objectSet.hasNext())
+				{
+					com.db4o.ext.Db4oDatabase storedDatabase = (com.db4o.ext.Db4oDatabase)objectSet.next
+						();
+					activate1(null, storedDatabase, 4);
+					if (storedDatabase.Equals(a_object))
+					{
+						return storedDatabase;
+					}
+				}
+			}
+			return null;
+		}
+
+		public virtual void deactivate(object a_deactivate, int a_depth)
+		{
+			lock (i_lock)
+			{
+				deactivate1(a_deactivate, a_depth);
+			}
+		}
+
+		internal void deactivate1(object a_deactivate, int a_depth)
+		{
+			checkClosed();
+			try
+			{
+				i_entryCounter++;
+				i_justDeactivated[0] = null;
+				deactivate2(a_deactivate, a_depth);
+				i_justDeactivated[0] = null;
+			}
+			catch (System.Exception t)
+			{
+				fatalException(t);
+			}
+			i_entryCounter--;
+		}
+
+		private void deactivate2(object a_activate, int a_depth)
+		{
+			stillToDeactivate(a_activate, a_depth, true);
+			while (i_stillToDeactivate != null)
+			{
+				com.db4o.Iterator4 i = new com.db4o.Iterator4(i_stillToDeactivate);
+				i_stillToDeactivate = null;
+				while (i.hasNext())
+				{
+					((com.db4o.YapObject)i.next()).deactivate(i_trans, ((int)i.next()));
+				}
+			}
+		}
+
+		public virtual void delete(object a_object)
+		{
+			lock (i_lock)
+			{
+				com.db4o.Transaction ta = delete1(null, a_object);
+				ta.beginEndSet();
+			}
+		}
+
+		internal com.db4o.Transaction delete1(com.db4o.Transaction ta, object a_object)
+		{
+			ta = checkTransaction(ta);
+			if (a_object != null)
+			{
+				try
+				{
+					delete2(ta, a_object);
+				}
+				catch (System.Exception t)
+				{
+					fatalException(t);
+				}
+				i_entryCounter--;
+			}
+			return ta;
+		}
+
+		private void delete2(com.db4o.Transaction ta, object a_object)
+		{
+			i_entryCounter++;
+			com.db4o.YapObject yo = getYapObject(a_object);
+			if (yo != null)
+			{
+				int id = yo.getID();
+				delete3(ta, yo, a_object, 0);
+			}
+		}
+
+		internal void delete3(com.db4o.Transaction ta, com.db4o.YapObject yo, object a_object
+			, int a_cascade)
+		{
+			if (a_object is com.db4o.types.SecondClass)
+			{
+				delete4(ta, yo, a_object, a_cascade);
+			}
+			else
+			{
+				ta.delete(yo, a_object, a_cascade, true);
+			}
+		}
+
+		internal void delete4(com.db4o.Transaction ta, com.db4o.YapObject yo, object a_object
+			, int a_cascade)
+		{
+			bool success = false;
+			if (yo.beginProcessing())
+			{
+				com.db4o.YapClass yc = yo.getYapClass();
+				object obj = yo.getObject();
+				if (yc.dispatchEvent(this, obj, com.db4o.EventDispatcher.CAN_DELETE))
+				{
+					if (delete5(ta, yo, a_cascade))
+					{
+						yc.dispatchEvent(this, obj, com.db4o.EventDispatcher.DELETE);
+						if (i_config.i_messageLevel > com.db4o.YapConst.STATE)
+						{
+							message("" + yo.getID() + " delete " + yo.getYapClass().getName());
+						}
+					}
+				}
+				yo.endProcessing();
+			}
+		}
+
+		internal abstract bool delete5(com.db4o.Transaction ta, com.db4o.YapObject yapObject
+			, int a_cascade);
+
+		internal virtual bool detectSchemaChanges()
+		{
+			return i_config.i_detectSchemaChanges;
+		}
+
+		public virtual bool dispatchsEvents()
+		{
+			return true;
+		}
+
+		internal virtual void emergencyClose()
+		{
+			i_classCollection = null;
+			i_references.stopTimer();
+		}
+
+		public virtual com.db4o.ext.ExtObjectContainer ext()
+		{
+			return this;
+		}
+
+		internal virtual void failedToShutDown()
+		{
+			lock (com.db4o.Db4o.Lock)
+			{
+				if (i_classCollection != null)
+				{
+					if (i_entryCounter == 0)
+					{
+						com.db4o.Db4o.logErr(i_config, 50, ToString(), null);
+						while (!close())
+						{
+						}
+					}
+					else
+					{
+						emergencyClose();
+						if (i_entryCounter > 0)
+						{
+							com.db4o.Db4o.logErr(i_config, 24, null, null);
+						}
+					}
+				}
+			}
+		}
+
+		internal virtual void fatalException(System.Exception t)
+		{
+			if (!i_amDuringFatalExit)
+			{
+				i_amDuringFatalExit = true;
+				i_classCollection = null;
+				emergencyClose();
+				com.db4o.Db4o.logErr(i_config, 18, null, t);
+			}
+			throw new j4o.lang.RuntimeException(com.db4o.Messages.get(44));
+		}
+
+		~YapStream()
+		{
+			if (i_config == null || i_config.i_automaticShutDown)
+			{
+				failedToShutDown();
+			}
+		}
+
+		internal virtual void gc()
+		{
+			i_references.pollReferenceQueue();
+		}
+
+		public virtual com.db4o.ObjectSet get(object template)
+		{
+			lock (i_lock)
+			{
+				return get1(null, template);
+			}
+		}
+
+		internal virtual com.db4o.ObjectSet get1(com.db4o.Transaction ta, object template
+			)
+		{
+			ta = checkTransaction(ta);
+			com.db4o.QResult res = createQResult(ta);
+			try
+			{
+				get2(ta, template, res);
+			}
+			catch (System.Exception t)
+			{
+				fatalException(t);
+			}
+			i_entryCounter--;
+			res.reset();
+			return res;
+		}
+
+		private void get2(com.db4o.Transaction ta, object template, com.db4o.QResult res)
+		{
+			i_entryCounter++;
+			if (template == null || j4o.lang.Class.getClassForObject(template) == com.db4o.YapConst
+				.CLASS_OBJECT)
+			{
+				getAll(ta, res);
+			}
+			else
+			{
+				com.db4o.query.Query q = querySharpenBug(ta);
+				q.constrain(template);
+				((com.db4o.QQuery)q).execute1(res);
+			}
+		}
+
+		internal abstract void getAll(com.db4o.Transaction ta, com.db4o.QResult a_res);
+
+		public virtual object getByID(long id)
+		{
+			lock (i_lock)
+			{
+				return getByID1(null, id);
+			}
+		}
+
+		internal object getByID1(com.db4o.Transaction ta, long id)
+		{
+			ta = checkTransaction(ta);
+			try
+			{
+				return getByID2(ta, (int)id);
+			}
+			catch (System.Exception e)
+			{
+				return null;
+			}
+		}
+
+		internal object getByID2(com.db4o.Transaction ta, int a_id)
+		{
+			if (a_id > 0)
+			{
+				com.db4o.YapObject yo = getYapObject(a_id);
+				if (yo != null)
+				{
+					object candidate = yo.getObject();
+					if (candidate != null)
+					{
+						return candidate;
+					}
+					yapObjectGCd(yo);
+				}
+				try
+				{
+					return new com.db4o.YapObject(a_id).read(ta, null, null, 0, com.db4o.YapConst.ADD_TO_ID_TREE
+						);
+				}
+				catch (System.Exception t)
+				{
+				}
+			}
+			return null;
+		}
+
+		public object getByUUID(com.db4o.ext.Db4oUUID uuid)
+		{
+			lock (i_lock)
+			{
+				com.db4o.Transaction ta = checkTransaction(null);
+				object[] arr = ta.objectAndYapObjectBySignature(uuid.getLongPart(), uuid.getSignaturePart
+					());
+				return arr[0];
+			}
+		}
+
+		public virtual long getID(object a_object)
+		{
+			lock (i_lock)
+			{
+				return getID1(null, a_object);
+			}
+		}
+
+		internal int getID1(com.db4o.Transaction ta, object a_object)
+		{
+			checkClosed();
+			com.db4o.YapObject yo = i_hcTree.hc_find(a_object);
+			if (yo != null)
+			{
+				return yo.getID();
+			}
+			return 0;
+		}
+
+		public virtual com.db4o.ext.ObjectInfo getObjectInfo(object obj)
+		{
+			lock (i_lock)
+			{
+				return getYapObject(obj);
+			}
+		}
+
+		internal object[] getObjectAndYapObjectByID(com.db4o.Transaction ta, int a_id)
+		{
+			object[] arr = new object[2];
+			if (a_id > 0)
+			{
+				com.db4o.YapObject yo = getYapObject(a_id);
+				if (yo != null)
+				{
+					object candidate = yo.getObject();
+					if (candidate != null)
+					{
+						arr[0] = candidate;
+						arr[1] = yo;
+						return arr;
+					}
+					yapObjectGCd(yo);
+				}
+				try
+				{
+					yo = new com.db4o.YapObject(a_id);
+					arr[0] = yo.read(ta, null, null, 0, com.db4o.YapConst.ADD_TO_ID_TREE);
+					arr[1] = yo;
+				}
+				catch (System.Exception t)
+				{
+				}
+			}
+			return arr;
+		}
+
+		internal com.db4o.YapWriter getWriter(com.db4o.Transaction a_trans, int a_length)
+		{
+			return new com.db4o.YapWriter(a_trans, a_length);
+		}
+
+		internal com.db4o.YapWriter getWriter(com.db4o.Transaction a_trans, int a_address
+			, int a_length)
+		{
+			if (com.db4o.Debug.exceedsMaximumBlockSize(a_length))
+			{
+				return null;
+			}
+			return new com.db4o.YapWriter(a_trans, a_address, a_length);
+		}
+
+		internal virtual com.db4o.Transaction getSystemTransaction()
+		{
+			return i_systemTrans;
+		}
+
+		internal virtual com.db4o.Transaction getTransaction()
+		{
+			return i_trans;
+		}
+
+		internal com.db4o.YapClass getYapClass(com.db4o.reflect.ReflectClass a_class, bool
+			 a_create)
+		{
+			if (a_class == null)
+			{
+				return null;
+			}
+			if ((!showInternalClasses()) && i_handlers.ICLASS_INTERNAL.isAssignableFrom(a_class
+				))
+			{
+				return null;
+			}
+			com.db4o.YapClass yc = i_handlers.getYapClassStatic(a_class);
+			if (yc != null)
+			{
+				return yc;
+			}
+			return i_classCollection.getYapClass(a_class, a_create);
+		}
+
+		internal virtual com.db4o.YapClass getYapClass(int a_id)
+		{
+			if (a_id == 0)
+			{
+				return null;
+			}
+			com.db4o.YapClass yc = i_handlers.getYapClassStatic(a_id);
+			if (yc != null)
+			{
+				return yc;
+			}
+			return i_classCollection.getYapClass(a_id);
+		}
+
+		internal com.db4o.YapObject getYapObject(int a_id)
+		{
+			return i_idTree.id_find(a_id);
+		}
+
+		internal com.db4o.YapObject getYapObject(object a_object)
+		{
+			return i_hcTree.hc_find(a_object);
+		}
+
+		public virtual com.db4o.YapHandlers handlers()
+		{
+			return i_handlers;
+		}
+
+		internal virtual bool needsLockFileThread()
+		{
+			if (!com.db4o.Platform.hasLockFileThread())
+			{
+				return false;
+			}
+			if (com.db4o.Platform.hasNio())
+			{
+				return false;
+			}
+			if (i_config.i_readonly)
+			{
+				return false;
+			}
+			return i_config.i_lockFile;
+		}
+
+		internal virtual bool hasShutDownHook()
+		{
+			return i_config.i_automaticShutDown;
+		}
+
+		internal void hcTreeAdd(com.db4o.YapObject a_yo)
+		{
+			i_hcTree = i_hcTree.hc_add(a_yo);
+		}
+
+		internal void hcTreeRemove(com.db4o.YapObject a_yo)
+		{
+			i_hcTree = i_hcTree.hc_remove(a_yo);
+		}
+
+		internal void idTreeAdd(com.db4o.YapObject a_yo)
+		{
+			i_idTree = i_idTree.id_add(a_yo);
+		}
+
+		internal void idTreeRemove(int a_id)
+		{
+			i_idTree = i_idTree.id_remove(a_id);
+		}
+
+		internal virtual void initialize0()
+		{
+			initialize0b();
+			i_stillToSet = null;
+			i_justActivated = new com.db4o.Tree[1];
+		}
+
+		internal virtual void initialize0b()
+		{
+			i_justDeactivated = new com.db4o.Tree[1];
+		}
+
+		internal virtual void initialize1()
+		{
+			try
+			{
+				i_config = (com.db4o.Config4Impl)((com.db4o.DeepClone)com.db4o.Db4o.configure()).
+					deepClone(this);
+			}
+			catch (j4o.lang.CloneNotSupportedException e)
+			{
+			}
+			i_handlers = new com.db4o.YapHandlers(this);
+			createStringIO(i_config.i_encoding);
+			if (i_references != null)
+			{
+				gc();
+				i_references.stopTimer();
+			}
+			i_references = new com.db4o.YapReferences(this);
+			if (hasShutDownHook())
+			{
+				com.db4o.Platform.addShutDownHook(this, i_lock);
+			}
+			i_handlers.initEncryption(i_config);
+			initialize2();
+			i_stillToSet = null;
+		}
+
+		/// <summary>before file is open</summary>
+		internal virtual void initialize2()
+		{
+			i_idTree = new com.db4o.YapObject(0);
+			i_idTree.setObject(new object());
+			i_hcTree = i_idTree;
+			initialize2b();
+		}
+
+		/// <summary>overridden in YapObjectCarrier</summary>
+		internal virtual void initialize2b()
+		{
+			i_classCollection = new com.db4o.YapClassCollection(i_systemTrans);
+			i_references.startTimer();
+		}
+
+		internal virtual void initialize3()
+		{
+			i_showInternalClasses = 100000;
+			initialize4NObjectCarrier();
+			i_showInternalClasses = 0;
+			i_entryCounter = 0;
+		}
+
+		internal virtual void initialize4NObjectCarrier()
+		{
+			initializeEssentialClasses();
+			rename(i_config);
+			i_classCollection.initOnUp(i_systemTrans);
+			if (i_config.i_detectSchemaChanges)
+			{
+				i_systemTrans.commit();
+			}
+		}
+
+		internal virtual void initializeEssentialClasses()
+		{
+			for (int i = 0; i < com.db4o.YapConst.ESSENTIAL_CLASSES.Length; i++)
+			{
+				getYapClass(reflector().forClass(com.db4o.YapConst.ESSENTIAL_CLASSES[i]), true);
+			}
+		}
+
+		internal void instantiating(bool flag)
+		{
+			i_instantiating = flag;
+		}
+
+		public virtual bool isActive(object obj)
+		{
+			lock (i_lock)
+			{
+				return isActive1(obj);
+			}
+		}
+
+		internal bool isActive1(object obj)
+		{
+			checkClosed();
+			if (obj != null)
+			{
+				com.db4o.YapObject yo = getYapObject(obj);
+				if (yo != null)
+				{
+					return yo.isActive();
+				}
+			}
+			return false;
+		}
+
+		public virtual bool isCached(long a_id)
+		{
+			lock (i_lock)
+			{
+				if (a_id > 0)
+				{
+					com.db4o.YapObject yo = getYapObject((int)a_id);
+					if (yo != null)
+					{
+						object candidate = yo.getObject();
+						if (candidate != null)
+						{
+							return true;
+						}
+					}
+				}
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// overridden in YapClient
+		/// This method will make it easier to refactor than
+		/// an "instanceof YapClient" check.
+		/// </summary>
+		/// <remarks>
+		/// overridden in YapClient
+		/// This method will make it easier to refactor than
+		/// an "instanceof YapClient" check.
+		/// </remarks>
+		internal virtual bool isClient()
+		{
+			return false;
+		}
+
+		public virtual bool isClosed()
+		{
+			lock (i_lock)
+			{
+				return i_classCollection == null;
+			}
+		}
+
+		internal bool isInstantiating()
+		{
+			return i_instantiating;
+		}
+
+		internal virtual bool isServer()
+		{
+			return false;
+		}
+
+		public virtual bool isStored(object obj)
+		{
+			lock (i_lock)
+			{
+				return isStored1(obj);
+			}
+		}
+
+		internal bool isStored1(object obj)
+		{
+			com.db4o.Transaction ta = checkTransaction(null);
+			if (obj == null)
+			{
+				return false;
+			}
+			com.db4o.YapObject yo = getYapObject(obj);
+			if (yo == null)
+			{
+				return false;
+			}
+			return !ta.isDeleted(yo.getID());
+		}
+
+		public virtual object Lock()
+		{
+			return i_lock;
+		}
+
+		internal void logMsg(int code, string msg)
+		{
+			com.db4o.Db4o.logMsg(i_config, code, msg);
+		}
+
+		internal virtual bool maintainsIndices()
+		{
+			return true;
+		}
+
+		internal virtual com.db4o.YapWriter marshall(com.db4o.Transaction ta, object obj)
+		{
+			int[] id = { 0 };
+			byte[] bytes = marshall(obj, id);
+			com.db4o.YapWriter yapBytes = new com.db4o.YapWriter(ta, bytes.Length);
+			yapBytes.append(bytes);
+			yapBytes.useSlot(id[0], 0, bytes.Length);
+			return yapBytes;
+		}
+
+		internal virtual byte[] marshall(object obj, int[] id)
+		{
+			com.db4o.ext.MemoryFile memoryFile = new com.db4o.ext.MemoryFile();
+			memoryFile.setInitialSize(223);
+			memoryFile.setIncrementSizeBy(300);
+			getYapClass(reflector().forObject(obj), true);
+			com.db4o.YapObjectCarrier carrier = new com.db4o.YapObjectCarrier(this, memoryFile
+				);
+			carrier.i_showInternalClasses = i_showInternalClasses;
+			carrier.set(obj);
+			id[0] = (int)carrier.getID(obj);
+			carrier.close();
+			return memoryFile.getBytes();
+		}
+
+		internal virtual void message(string msg)
+		{
+			new com.db4o.Message(this, msg);
+		}
+
+		public virtual void migrateFrom(com.db4o.ObjectContainer objectContainer)
+		{
+			i_migrateFrom = (com.db4o.YapStream)objectContainer;
+		}
+
+		internal void needsUpdate(com.db4o.YapClass a_yapClass)
+		{
+			i_needsUpdate = new com.db4o.List4(i_needsUpdate, a_yapClass);
+		}
+
+		internal abstract com.db4o.YapWriter newObject(com.db4o.Transaction a_trans, com.db4o.YapMeta
+			 a_object);
+
+		internal abstract int newUserObject();
+
+		public virtual object peekPersisted(object a_object, int a_depth, bool a_committed
+			)
+		{
+			lock (i_lock)
+			{
+				checkClosed();
+				i_entryCounter++;
+				i_justPeeked = null;
+				com.db4o.Transaction ta = a_committed ? i_systemTrans : checkTransaction(null);
+				object cloned = null;
+				com.db4o.YapObject yo = getYapObject(a_object);
+				if (yo != null)
+				{
+					cloned = peekPersisted1(ta, yo.getID(), a_depth);
+				}
+				i_justPeeked = null;
+				i_entryCounter--;
+				return cloned;
+			}
+		}
+
+		internal virtual object peekPersisted1(com.db4o.Transaction a_ta, int a_id, int a_depth
+			)
+		{
+			com.db4o.TreeInt ti = new com.db4o.TreeInt(a_id);
+			com.db4o.TreeIntObject tio = (com.db4o.TreeIntObject)com.db4o.Tree.find(i_justPeeked
+				, ti);
+			if (tio == null)
+			{
+				return new com.db4o.YapObject(a_id).read(a_ta, null, null, a_depth, com.db4o.YapConst
+					.TRANSIENT);
+			}
+			else
+			{
+				return tio.i_object;
+			}
+		}
+
+		internal virtual void peeked(int a_id, object a_object)
+		{
+			i_justPeeked = com.db4o.Tree.add(i_justPeeked, new com.db4o.TreeIntObject(a_id, a_object
+				));
+		}
+
+		public virtual void purge()
+		{
+			lock (i_lock)
+			{
+				purge1();
+			}
+		}
+
+		public virtual void purge(object obj)
+		{
+			lock (i_lock)
+			{
+				purge1(obj);
+			}
+		}
+
+		internal void purge1()
+		{
+			checkClosed();
+			j4o.lang.JavaSystem.gc();
+			j4o.lang.JavaSystem.runFinalization();
+			j4o.lang.JavaSystem.gc();
+			gc();
+			i_classCollection.purge();
+		}
+
+		internal void purge1(object obj)
+		{
+			if (obj != null)
+			{
+				if (i_hcTree != null)
+				{
+					com.db4o.YapObject yo = null;
+					if (obj is com.db4o.YapObject)
+					{
+						yo = (com.db4o.YapObject)obj;
+					}
+					else
+					{
+						yo = i_hcTree.hc_find(obj);
+					}
+					if (yo != null)
+					{
+						yapObjectGCd(yo);
+					}
+				}
+			}
+		}
+
+		public virtual com.db4o.query.Query query()
+		{
+			lock (i_lock)
+			{
+				return query(null);
+			}
+		}
+
+		internal com.db4o.query.Query query(com.db4o.Transaction ta)
+		{
+			i_entryCounter++;
+			com.db4o.query.Query q = new com.db4o.QQuery(checkTransaction(ta), null, null);
+			i_entryCounter--;
+			return q;
+		}
+
+		internal virtual com.db4o.query.Query querySharpenBug()
+		{
+			return query();
+		}
+
+		internal virtual com.db4o.query.Query querySharpenBug(com.db4o.Transaction ta)
+		{
+			return query(ta);
+		}
+
+		internal abstract void raiseVersion(long a_minimumVersion);
+
+		internal abstract void readBytes(byte[] a_bytes, int a_address, int a_length);
+
+		internal abstract void readBytes(byte[] bytes, int address, int addressOffset, int
+			 length);
+
+		internal com.db4o.YapReader readObjectReaderByAddress(int a_address, int a_length
+			)
+		{
+			if (a_address > 0)
+			{
+				com.db4o.YapReader reader = new com.db4o.YapReader(a_length);
+				readBytes(reader._buffer, a_address, a_length);
+				i_handlers.decrypt(reader);
+				return reader;
+			}
+			return null;
+		}
+
+		internal com.db4o.YapWriter readObjectWriterByAddress(com.db4o.Transaction a_trans
+			, int a_address, int a_length)
+		{
+			if (a_address > 0)
+			{
+				com.db4o.YapWriter reader = getWriter(a_trans, a_address, a_length);
+				reader.readEncrypt(this, a_address);
+				return reader;
+			}
+			return null;
+		}
+
+		internal abstract com.db4o.YapWriter readWriterByID(com.db4o.Transaction a_ta, int
+			 a_id);
+
+		internal abstract com.db4o.YapReader readReaderByID(com.db4o.Transaction a_ta, int
+			 a_id);
+
+		private void reboot()
+		{
+			commit();
+			int ccID = i_classCollection.getID();
+			i_references.stopTimer();
+			initialize2();
+			i_classCollection.setID(this, ccID);
+			i_classCollection.read(i_systemTrans);
+		}
+
+		internal virtual com.db4o.reflect.Reflector reflector()
+		{
+			return i_config.reflector();
+		}
+
+		public virtual void refresh(object a_refresh, int a_depth)
+		{
+			lock (i_lock)
+			{
+				i_refreshInsteadOfActivate = true;
+				activate1(null, a_refresh, a_depth);
+				i_refreshInsteadOfActivate = false;
+			}
+		}
+
+		internal void refreshClasses()
+		{
+			lock (i_lock)
+			{
+				i_classCollection.refreshClasses();
+			}
+		}
+
+		public abstract void releaseSemaphore(string name);
+
+		internal abstract void releaseSemaphores(com.db4o.Transaction ta);
+
+		internal virtual void rename(com.db4o.Config4Impl config)
+		{
+			bool renamedOne = false;
+			if (config.i_rename != null)
+			{
+				renamedOne = rename1(config);
+			}
+			i_classCollection.checkChanges();
+			if (renamedOne)
+			{
+				reboot();
+			}
+			i_entryCounter--;
+		}
+
+		protected virtual bool rename1(com.db4o.Config4Impl config)
+		{
+			bool renamedOne = false;
+			try
+			{
+				com.db4o.Iterator4 i = config.i_rename.iterator();
+				while (i.hasNext())
+				{
+					com.db4o.Rename ren = (com.db4o.Rename)i.next();
+					if (get(ren).size() == 0)
+					{
+						bool renamed = false;
+						bool isField = j4o.lang.JavaSystem.getLengthOf(ren.rClass) > 0;
+						com.db4o.YapClass yapClass = i_classCollection.getYapClass(isField ? ren.rClass : 
+							ren.rFrom);
+						if (yapClass != null)
+						{
+							if (isField)
+							{
+								renamed = yapClass.renameField(ren.rFrom, ren.rTo);
+							}
+							else
+							{
+								com.db4o.YapClass existing = i_classCollection.getYapClass(ren.rTo);
+								if (existing == null)
+								{
+									yapClass.setName(ren.rTo);
+									renamed = true;
+								}
+								else
+								{
+									logMsg(9, "class " + ren.rTo);
+								}
+							}
+						}
+						if (renamed)
+						{
+							renamedOne = true;
+							setDirty(yapClass);
+							logMsg(8, ren.rFrom + " to " + ren.rTo);
+							com.db4o.ObjectSet backren = get(new com.db4o.Rename(ren.rClass, null, ren.rFrom)
+								);
+							while (backren.hasNext())
+							{
+								delete(backren.next());
+							}
+							set(ren);
+						}
+					}
+				}
+			}
+			catch (System.Exception t)
+			{
+				com.db4o.Db4o.logErr(i_config, 10, null, t);
+			}
+			return renamedOne;
+		}
+
+		public virtual com.db4o.ext.Db4oReplication replicateTo(com.db4o.ObjectContainer 
+			a_destination)
+		{
+			return new com.db4o.ReplicationImpl(this, a_destination);
+		}
+
+		internal virtual void reserve(int byteCount)
+		{
+		}
+
+		public virtual void rollback()
+		{
+			lock (i_lock)
+			{
+				rollback1();
+			}
+		}
+
+		internal abstract void rollback1();
+
+		public virtual void send(object obj)
+		{
+		}
+
+		public virtual void set(object a_object)
+		{
+			lock (i_lock)
+			{
+				setExternal(null, a_object, com.db4o.YapConst.UNSPECIFIED);
+			}
+		}
+
+		public virtual void set(object a_object, int a_depth)
+		{
+			lock (i_lock)
+			{
+				setExternal(null, a_object, a_depth);
+			}
+		}
+
+		internal void setExternal(com.db4o.Transaction ta, object a_object, int a_depth)
+		{
+			beginEndSet(ta);
+			ta = setInternal(ta, a_object, a_depth, true);
+			beginEndSet(ta);
+		}
+
+		internal com.db4o.Transaction setInternal(com.db4o.Transaction ta, object a_object
+			, bool a_checkJustSet)
+		{
+			return setInternal(ta, a_object, com.db4o.YapConst.UNSPECIFIED, a_checkJustSet);
+		}
+
+		internal com.db4o.Transaction setInternal(com.db4o.Transaction ta, object a_object
+			, int a_depth, bool a_checkJustSet)
+		{
+			ta = checkTransaction(ta);
+			if (i_migrateFrom != null && i_handlers.i_replication != null)
+			{
+				if (i_handlers.i_replication.toDestination(a_object))
+				{
+					return ta;
+				}
+			}
+			return setNoReplication(ta, a_object, a_depth, a_checkJustSet);
+		}
+
+		internal com.db4o.Transaction setNoReplication(com.db4o.Transaction ta, object a_object
+			, int a_depth, bool a_checkJustSet)
+		{
+			if (a_object is com.db4o.types.Db4oType)
+			{
+				if (db4oTypeStored(ta, a_object) != null)
+				{
+					return ta;
+				}
+			}
+			try
+			{
+				set2(ta, a_object, a_depth, a_checkJustSet);
+			}
+			catch (com.db4o.ext.ObjectNotStorableException e)
+			{
+				throw e;
+			}
+			catch (System.Exception t)
+			{
+				fatalException(t);
+			}
+			i_entryCounter--;
+			return ta;
+		}
+
+		private void set2(com.db4o.Transaction a_trans, object a_object, int depth, bool 
+			a_checkJustSet)
+		{
+			i_entryCounter++;
+			set3(a_trans, a_object, depth, a_checkJustSet);
+			checkStillToSet();
+		}
+
+		internal virtual void checkStillToSet()
+		{
+			com.db4o.List4 postponedStillToSet = null;
+			while (i_stillToSet != null)
+			{
+				com.db4o.Iterator4 i = new com.db4o.Iterator4(i_stillToSet);
+				i_stillToSet = null;
+				while (i.hasNext())
+				{
+					int updateDepth = (int)i.next();
+					com.db4o.YapObject yo = (com.db4o.YapObject)i.next();
+					com.db4o.Transaction trans = (com.db4o.Transaction)i.next();
+					if (!yo.continueSet(trans, updateDepth))
+					{
+						postponedStillToSet = new com.db4o.List4(postponedStillToSet, trans);
+						postponedStillToSet = new com.db4o.List4(postponedStillToSet, yo);
+						postponedStillToSet = new com.db4o.List4(postponedStillToSet, updateDepth);
+					}
+				}
+			}
+			i_stillToSet = postponedStillToSet;
+		}
+
+		internal int set3(com.db4o.Transaction a_trans, object a_object, int a_updateDepth
+			, bool a_checkJustSet)
+		{
+			if (a_object != null & !(a_object is com.db4o.types.TransientClass))
+			{
+				if (a_object is com.db4o.Db4oTypeImpl)
+				{
+					((com.db4o.Db4oTypeImpl)a_object).storedTo(a_trans);
+				}
+				com.db4o.YapClass yc = null;
+				com.db4o.YapObject yapObject = i_hcTree.hc_find(a_object);
+				if (yapObject == null)
+				{
+					com.db4o.reflect.ReflectClass claxx = reflector().forObject(a_object);
+					yc = getYapClass(claxx, false);
+					if (yc == null)
+					{
+						yc = getYapClass(claxx, true);
+						if (yc == null)
+						{
+							return 0;
+						}
+					}
+					yapObject = i_hcTree.hc_find(a_object);
+				}
+				else
+				{
+					yc = yapObject.getYapClass();
+				}
+				bool dontDelete = true;
+				if (yapObject == null)
+				{
+					if (!yc.dispatchEvent(this, a_object, com.db4o.EventDispatcher.CAN_NEW))
+					{
+						return 0;
+					}
+					yapObject = new com.db4o.YapObject(0);
+					if (i_migrateFrom != null && i_handlers.i_replication != null)
+					{
+						i_handlers.i_replication.destinationOnNew(yapObject);
+					}
+					if (yapObject.store(a_trans, yc, a_object, a_updateDepth))
+					{
+						idTreeAdd(yapObject);
+						hcTreeAdd(yapObject);
+						if (a_object is com.db4o.Db4oTypeImpl)
+						{
+							((com.db4o.Db4oTypeImpl)a_object).setTrans(a_trans);
+						}
+						if (i_config.i_messageLevel > com.db4o.YapConst.STATE)
+						{
+							message("" + yapObject.getID() + " new " + yapObject.getYapClass().getName());
+						}
+						stillToSet(a_trans, yapObject, a_updateDepth);
+					}
+				}
+				else
+				{
+					if (canUpdate())
+					{
+						int oid = yapObject.getID();
+						if (a_checkJustSet && i_justSet != null)
+						{
+							if (oid > 0 && (com.db4o.TreeInt.find(i_justSet, yapObject.getID()) != null))
+							{
+								return oid;
+							}
+						}
+						bool doUpdate = (a_updateDepth == com.db4o.YapConst.UNSPECIFIED) || (a_updateDepth
+							 > 0);
+						if (doUpdate)
+						{
+							dontDelete = false;
+							a_trans.dontDelete(oid, true);
+							yapObject.writeUpdate(a_trans, a_updateDepth);
+						}
+					}
+				}
+				checkNeededUpdates();
+				int id = yapObject.getID();
+				if (canUpdate() && a_checkJustSet)
+				{
+					if (!yapObject.getYapClass().isPrimitive())
+					{
+						if (i_justSet == null)
+						{
+							i_justSet = new com.db4o.TreeInt(id);
+						}
+						else
+						{
+							i_justSet = i_justSet.add(new com.db4o.TreeInt(id));
+						}
+					}
+				}
+				if (dontDelete)
+				{
+					a_trans.dontDelete(id, false);
+				}
+				return id;
+			}
+			return 0;
+		}
+
+		internal abstract void setDirty(com.db4o.UseSystemTransaction a_object);
+
+		public abstract bool setSemaphore(string name, int timeout);
+
+		internal virtual void setStringIo(com.db4o.YapStringIO a_io)
+		{
+			i_stringIo = a_io;
+			i_handlers.i_stringHandler.setStringIo(a_io);
+		}
+
+		internal virtual bool showInternalClasses()
+		{
+			return isServer() || i_showInternalClasses > 0;
+		}
+
+		/// <summary>
+		/// Objects implementing the "Internal" marker interface are
+		/// not visible to queries, unless this flag is set to true.
+		/// </summary>
+		/// <remarks>
+		/// Objects implementing the "Internal" marker interface are
+		/// not visible to queries, unless this flag is set to true.
+		/// The caller should reset the flag after the call.
+		/// </remarks>
+		internal virtual void showInternalClasses(bool show)
+		{
+			lock (this)
+			{
+				if (show)
+				{
+					i_showInternalClasses++;
+				}
+				else
+				{
+					i_showInternalClasses--;
+				}
+				if (i_showInternalClasses < 0)
+				{
+					i_showInternalClasses = 0;
+				}
+			}
+		}
+
+		internal virtual bool stateMessages()
+		{
+			return true;
+		}
+
+		/// <summary>
+		/// returns true in case an unknown single object is passed
+		/// This allows deactivating objects before queries are called.
+		/// </summary>
+		/// <remarks>
+		/// returns true in case an unknown single object is passed
+		/// This allows deactivating objects before queries are called.
+		/// </remarks>
+		internal virtual com.db4o.List4 stillTo1(com.db4o.List4 a_still, com.db4o.Tree[] 
+			a_just, object a_object, int a_depth, bool a_forceUnknownDeactivate)
+		{
+			if (a_object != null)
+			{
+				if (a_depth > 0)
+				{
+					com.db4o.YapObject yapObject = i_hcTree.hc_find(a_object);
+					if (yapObject != null)
+					{
+						int id = yapObject.getID();
+						if (a_just[0] != null)
+						{
+							if (((com.db4o.TreeInt)a_just[0]).find(id) != null)
+							{
+								return a_still;
+							}
+							a_just[0] = a_just[0].add(new com.db4o.TreeInt(id));
+						}
+						else
+						{
+							a_just[0] = new com.db4o.TreeInt(id);
+						}
+						return new com.db4o.List4(new com.db4o.List4(a_still, System.Convert.ToInt32(a_depth
+							)), yapObject);
+					}
+					else
+					{
+						if (j4o.lang.Class.getClassForObject(a_object).isArray())
+						{
+							object[] arr = com.db4o.YapArray.toArray(this, a_object);
+							for (int i = 0; i < arr.Length; i++)
+							{
+								a_still = stillTo1(a_still, a_just, arr[i], a_depth, a_forceUnknownDeactivate);
+							}
+						}
+						else
+						{
+							if (a_object is com.db4o.config.Entry)
+							{
+								a_still = stillTo1(a_still, a_just, ((com.db4o.config.Entry)a_object).key, a_depth
+									, false);
+								a_still = stillTo1(a_still, a_just, ((com.db4o.config.Entry)a_object).value, a_depth
+									, false);
+							}
+							else
+							{
+								if (a_forceUnknownDeactivate)
+								{
+									com.db4o.YapClass yc = getYapClass(reflector().forObject(a_object), false);
+									if (yc != null)
+									{
+										yc.deactivate(i_trans, a_object, a_depth);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			return a_still;
+		}
+
+		internal virtual void stillToActivate(object a_object, int a_depth)
+		{
+			i_stillToActivate = stillTo1(i_stillToActivate, i_justActivated, a_object, a_depth
+				, false);
+		}
+
+		internal virtual void stillToDeactivate(object a_object, int a_depth, bool a_forceUnknownDeactivate
+			)
+		{
+			i_stillToDeactivate = stillTo1(i_stillToDeactivate, i_justDeactivated, a_object, 
+				a_depth, a_forceUnknownDeactivate);
+		}
+
+		internal virtual void stillToSet(com.db4o.Transaction a_trans, com.db4o.YapObject
+			 a_yapObject, int a_updateDepth)
+		{
+			i_stillToSet = new com.db4o.List4(i_stillToSet, a_trans);
+			i_stillToSet = new com.db4o.List4(i_stillToSet, a_yapObject);
+			i_stillToSet = new com.db4o.List4(i_stillToSet, System.Convert.ToInt32(a_updateDepth
+				));
+		}
+
+		internal virtual void stopSession()
+		{
+			i_classCollection = null;
+		}
+
+		public virtual com.db4o.ext.StoredClass storedClass(object clazz)
+		{
+			lock (i_lock)
+			{
+				checkClosed();
+				return storedClass1(clazz);
+			}
+		}
+
+		internal virtual com.db4o.YapClass storedClass1(object clazz)
+		{
+			try
+			{
+				com.db4o.reflect.ReflectClass claxx = i_config.reflectorFor(clazz);
+				if (claxx != null)
+				{
+					return getYapClass(claxx, false);
+				}
+			}
+			catch (System.Exception e)
+			{
+			}
+			return null;
+		}
+
+		public virtual com.db4o.ext.StoredClass[] storedClasses()
+		{
+			lock (i_lock)
+			{
+				checkClosed();
+				return i_classCollection.storedClasses();
+			}
+		}
+
+		internal virtual object unmarshall(com.db4o.YapWriter yapBytes)
+		{
+			return unmarshall(yapBytes._buffer, yapBytes.getID());
+		}
+
+		internal virtual object unmarshall(byte[] bytes, int id)
+		{
+			com.db4o.ext.MemoryFile memoryFile = new com.db4o.ext.MemoryFile(bytes);
+			com.db4o.YapObjectCarrier carrier = new com.db4o.YapObjectCarrier(this, memoryFile
+				);
+			object obj = carrier.getByID(id);
+			carrier.activate(obj, int.MaxValue);
+			carrier.close();
+			return obj;
+		}
+
+		internal abstract com.db4o.YapWriter updateObject(com.db4o.Transaction a_trans, com.db4o.YapMeta
+			 a_object);
+
+		internal abstract void write(bool shuttingDown);
+
+		internal abstract void writeDirty();
+
+		internal abstract void writeEmbedded(com.db4o.YapWriter a_parent, com.db4o.YapWriter
+			 a_child);
+
+		internal abstract void writeNew(com.db4o.YapClass a_yapClass, com.db4o.YapWriter 
+			aWriter);
+
+		internal abstract void writeTransactionPointer(int a_address);
+
+		internal abstract void writeUpdate(com.db4o.YapClass a_yapClass, com.db4o.YapWriter
+			 a_bytes);
+
+		internal void yapObjectGCd(com.db4o.YapObject yo)
+		{
+			hcTreeRemove(yo);
+			idTreeRemove(yo.getID());
+			yo.setID(this, -1);
+			com.db4o.Platform.killYapRef(yo.i_object);
+		}
+
+		public abstract void backup(string arg1);
+
+		public abstract com.db4o.ext.Db4oDatabase identity();
+	}
 }

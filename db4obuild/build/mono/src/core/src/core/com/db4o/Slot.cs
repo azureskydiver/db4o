@@ -1,47 +1,55 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal sealed class Slot : com.db4o.ReadWriteable
+	{
+		internal int i_address;
 
-   internal class Slot : ReadWriteable {
-      internal int i_address;
-      internal int i_length;
-      internal int i_references;
-      
-      internal Slot(int i, int i_0_) : base() {
-         i_address = i;
-         i_length = i_0_;
-      }
-      
-      public int byteCount() {
-         return 8;
-      }
-      
-      public void write(YapWriter yapwriter) {
-         yapwriter.writeInt(i_address);
-         yapwriter.writeInt(i_length);
-      }
-      
-      public Object read(YapReader yapreader) {
-         int i1 = yapreader.readInt();
-         int i_1_1 = yapreader.readInt();
-         return new Slot(i1, i_1_1);
-      }
-   }
+		internal int i_length;
+
+		internal int i_references;
+
+		internal Slot(int address, int length)
+		{
+			i_address = address;
+			i_length = length;
+		}
+
+		public int byteCount()
+		{
+			return com.db4o.YapConst.YAPINT_LENGTH * 2;
+		}
+
+		public void write(com.db4o.YapWriter a_bytes)
+		{
+			a_bytes.writeInt(i_address);
+			a_bytes.writeInt(i_length);
+		}
+
+		public object read(com.db4o.YapReader a_bytes)
+		{
+			int address = a_bytes.readInt();
+			int length = a_bytes.readInt();
+			return new com.db4o.Slot(address, length);
+		}
+	}
 }

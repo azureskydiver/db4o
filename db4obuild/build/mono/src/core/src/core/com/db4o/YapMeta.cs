@@ -1,160 +1,214 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <exclude></exclude>
+	public abstract class YapMeta
+	{
+		internal int i_id = 0;
 
-   abstract internal class YapMeta {
-      
-      internal YapMeta() : base() {
-      }
-      internal int i_id = 0;
-      protected int i_state = 2;
-      
-      internal bool beginProcessing() {
-         if (bitIsTrue(2)) return false;
-         bitTrue(2);
-         return true;
-      }
-      
-      internal void bitFalse(int i) {
-         i_state &= 1 << i ^ -1;
-      }
-      
-      internal bool bitIsFalse(int i) {
-         return (i_state | 1 << i) != i_state;
-      }
-      
-      internal bool bitIsTrue(int i) {
-         return (i_state | 1 << i) == i_state;
-      }
-      
-      internal void bitTrue(int i) {
-         i_state |= 1 << i;
-      }
-      
-      internal virtual void cacheDirty(Collection4 collection4) {
-         if (!bitIsTrue(3)) {
-            bitTrue(3);
-            collection4.add(this);
-         }
-      }
-      
-      internal void endProcessing() {
-         bitFalse(2);
-      }
-      
-      public virtual int getID() {
-         return i_id;
-      }
-      
-      abstract internal byte getIdentifier();
-      
-      public bool isActive() {
-         return bitIsTrue(1);
-      }
-      
-      public virtual bool isDirty() {
-         return bitIsTrue(1) && !bitIsTrue(0);
-      }
-      
-      public int linkLength() {
-         return 4;
-      }
-      
-      internal void notCachedDirty() {
-         bitFalse(3);
-      }
-      
-      abstract internal int ownLength();
-      
-      internal virtual void read(Transaction transaction) {
-         try {
-            {
-               if (beginProcessing()) {
-                  YapReader yapreader1 = transaction.i_stream.readReaderByID(transaction, getID());
-                  if (yapreader1 != null) {
-                     readThis(transaction, yapreader1);
-                     setStateOnRead(yapreader1);
-                  }
-                  endProcessing();
-               }
-            }
-         }  catch (LongJumpOutException longjumpoutexception) {
-            {
-               throw longjumpoutexception;
-            }
-         } catch (Exception throwable) {
-            {
-            }
-         }
-      }
-      
-      abstract internal void readThis(Transaction transaction, YapReader yapreader);
-      
-      internal virtual void setID(YapStream yapstream, int i) {
-         i_id = i;
-      }
-      
-      internal void setStateClean() {
-         bitTrue(1);
-         bitTrue(0);
-      }
-      
-      internal void setStateDeactivated() {
-         bitFalse(1);
-      }
-      
-      internal void setStateDirty() {
-         bitTrue(1);
-         bitFalse(0);
-      }
-      
-      internal void setStateOnRead(YapReader yapreader) {
-         if (bitIsTrue(3)) setStateDirty(); else setStateClean();
-      }
-      
-      internal YapWriter write(YapStream yapstream, Transaction transaction) {
-         if (writeObjectBegin()) {
-            YapWriter yapwriter1 = getID() == 0 ? yapstream.newObject(transaction, this) : yapstream.updateObject(transaction, this);
-            writeThis(yapwriter1);
-            ((YapFile)yapstream).writeObject(this, yapwriter1);
-            if (isActive()) setStateClean();
-            endProcessing();
-            return yapwriter1;
-         }
-         return null;
-      }
-      
-      internal virtual bool writeObjectBegin() {
-         if (isDirty()) return beginProcessing();
-         return false;
-      }
-      
-      internal virtual void writeOwnID(YapWriter yapwriter) {
-         write(yapwriter.getStream(), yapwriter.getTransaction());
-         yapwriter.writeInt(getID());
-      }
-      
-      abstract internal void writeThis(YapWriter yapwriter);
-      
-      static internal void writeIDOf(YapMeta yapmeta, YapWriter yapwriter) {
-         if (yapmeta != null) yapmeta.writeOwnID(yapwriter); else yapwriter.writeInt(0);
-      }
-   }
+		protected int i_state = 2;
+
+		internal bool beginProcessing()
+		{
+			if (bitIsTrue(com.db4o.YapConst.PROCESSING))
+			{
+				return false;
+			}
+			bitTrue(com.db4o.YapConst.PROCESSING);
+			return true;
+		}
+
+		internal void bitFalse(int bitPos)
+		{
+			i_state &= ~(1 << bitPos);
+		}
+
+		internal bool bitIsFalse(int bitPos)
+		{
+			return (i_state | (1 << bitPos)) != i_state;
+		}
+
+		internal bool bitIsTrue(int bitPos)
+		{
+			return (i_state | (1 << bitPos)) == i_state;
+		}
+
+		internal void bitTrue(int bitPos)
+		{
+			i_state |= (1 << bitPos);
+		}
+
+		internal virtual void cacheDirty(com.db4o.Collection4 col)
+		{
+			if (!bitIsTrue(com.db4o.YapConst.CACHED_DIRTY))
+			{
+				bitTrue(com.db4o.YapConst.CACHED_DIRTY);
+				col.add(this);
+			}
+		}
+
+		internal virtual void endProcessing()
+		{
+			bitFalse(com.db4o.YapConst.PROCESSING);
+		}
+
+		public virtual int getID()
+		{
+			return i_id;
+		}
+
+		internal abstract byte getIdentifier();
+
+		public bool isActive()
+		{
+			return bitIsTrue(com.db4o.YapConst.ACTIVE);
+		}
+
+		public virtual bool isDirty()
+		{
+			return bitIsTrue(com.db4o.YapConst.ACTIVE) && (!bitIsTrue(com.db4o.YapConst.CLEAN
+				));
+		}
+
+		public virtual int linkLength()
+		{
+			return com.db4o.YapConst.YAPID_LENGTH;
+		}
+
+		internal void notCachedDirty()
+		{
+			bitFalse(com.db4o.YapConst.CACHED_DIRTY);
+		}
+
+		internal abstract int ownLength();
+
+		internal virtual void read(com.db4o.Transaction a_trans)
+		{
+			try
+			{
+				if (beginProcessing())
+				{
+					com.db4o.YapReader reader = a_trans.i_stream.readReaderByID(a_trans, getID());
+					if (reader != null)
+					{
+						readThis(a_trans, reader);
+						setStateOnRead(reader);
+					}
+					endProcessing();
+				}
+			}
+			catch (com.db4o.LongJumpOutException ljoe)
+			{
+				throw ljoe;
+			}
+			catch (System.Exception t)
+			{
+			}
+		}
+
+		internal abstract void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader 
+			a_reader);
+
+		internal virtual void setID(com.db4o.YapStream a_stream, int a_id)
+		{
+			i_id = a_id;
+		}
+
+		internal void setStateClean()
+		{
+			bitTrue(com.db4o.YapConst.ACTIVE);
+			bitTrue(com.db4o.YapConst.CLEAN);
+		}
+
+		internal void setStateDeactivated()
+		{
+			bitFalse(com.db4o.YapConst.ACTIVE);
+		}
+
+		internal virtual void setStateDirty()
+		{
+			bitTrue(com.db4o.YapConst.ACTIVE);
+			bitFalse(com.db4o.YapConst.CLEAN);
+		}
+
+		internal virtual void setStateOnRead(com.db4o.YapReader reader)
+		{
+			if (bitIsTrue(com.db4o.YapConst.CACHED_DIRTY))
+			{
+				setStateDirty();
+			}
+			else
+			{
+				setStateClean();
+			}
+		}
+
+		internal virtual com.db4o.YapWriter write(com.db4o.YapStream a_stream, com.db4o.Transaction
+			 a_trans)
+		{
+			if (writeObjectBegin())
+			{
+				com.db4o.YapWriter writer = (getID() == 0) ? a_stream.newObject(a_trans, this) : 
+					a_stream.updateObject(a_trans, this);
+				writeThis(writer);
+				((com.db4o.YapFile)a_stream).writeObject(this, writer);
+				if (isActive())
+				{
+					setStateClean();
+				}
+				endProcessing();
+				return writer;
+			}
+			return null;
+		}
+
+		internal virtual bool writeObjectBegin()
+		{
+			if (isDirty())
+			{
+				return beginProcessing();
+			}
+			return false;
+		}
+
+		internal virtual void writeOwnID(com.db4o.YapWriter a_writer)
+		{
+			write(a_writer.getStream(), a_writer.getTransaction());
+			a_writer.writeInt(getID());
+		}
+
+		internal abstract void writeThis(com.db4o.YapWriter a_writer);
+
+		internal static void writeIDOf(com.db4o.YapMeta a_object, com.db4o.YapWriter a_writer
+			)
+		{
+			if (a_object != null)
+			{
+				a_object.writeOwnID(a_writer);
+			}
+			else
+			{
+				a_writer.writeInt(0);
+			}
+		}
+	}
 }

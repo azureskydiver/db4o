@@ -1,117 +1,146 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <summary>Undefined YapClass used for members of type Object.</summary>
+	/// <remarks>Undefined YapClass used for members of type Object.</remarks>
+	internal sealed class YapClassAny : com.db4o.YapClass
+	{
+		public YapClassAny(com.db4o.YapStream stream) : base(stream, stream.i_handlers.ICLASS_OBJECT
+			)
+		{
+		}
 
-   internal class YapClassAny : YapClass {
-      
-      internal YapClassAny() : base() {
-      }
-      
-      public override bool canHold(Class var_class) {
-         return true;
-      }
-      
-      public static void appendEmbedded(YapWriter yapwriter) {
-         YapClass yapclass1 = readYapClass(yapwriter);
-         if (yapclass1 != null) yapclass1.appendEmbedded1(yapwriter);
-      }
-      
-      public override void cascadeActivation(Transaction transaction, Object obj, int i, bool xbool) {
-         YapClass yapclass1 = transaction.i_stream.getYapClass(j4o.lang.Class.getClassForObject(obj), false);
-         if (yapclass1 != null) yapclass1.cascadeActivation(transaction, obj, i, xbool);
-      }
-      
-      public override void deleteEmbedded(YapWriter yapwriter) {
-         int i1 = yapwriter.readInt();
-         if (i1 > 0) {
-            YapWriter yapwriter_0_1 = yapwriter.getStream().readWriterByID(yapwriter.getTransaction(), i1);
-            if (yapwriter_0_1 != null) {
-               yapwriter_0_1.setCascadeDeletes(yapwriter.cascadeDeletes());
-               YapClass yapclass1 = readYapClass(yapwriter_0_1);
-               if (yapclass1 != null) yapclass1.deleteEmbedded1(yapwriter_0_1, i1);
-            }
-         }
-      }
-      
-      public override int getID() {
-         return 11;
-      }
-      
-      public override Class getJavaClass() {
-         return YapConst.CLASS_OBJECT;
-      }
-      
-      public override bool hasField(YapStream yapstream, String xstring) {
-         return yapstream.i_classCollection.fieldExists(xstring);
-      }
-      
-      internal override bool hasIndex() {
-         return false;
-      }
-      
-      public override bool holdsAnyClass() {
-         return true;
-      }
-      
-      internal override bool isStrongTyped() {
-         return false;
-      }
-      
-      public override YapDataType readArrayWrapper(Transaction transaction, YapReader[] yapreaders) {
-         int i1 = 0;
-         int i_1_1 = yapreaders[0]._offset;
-         try {
-            {
-               i1 = yapreaders[0].readInt();
-            }
-         }  catch (Exception exception) {
-            {
-            }
-         }
-         yapreaders[0]._offset = i_1_1;
-         if (i1 != 0) {
-            YapWriter yapwriter1 = transaction.i_stream.readWriterByID(transaction, i1);
-            if (yapwriter1 != null) {
-               YapClass yapclass1 = readYapClass(yapwriter1);
-               try {
-                  {
-                     if (yapclass1 != null) {
-                        yapreaders[0] = yapwriter1;
-                        return yapclass1.readArrayWrapper1(yapreaders);
-                     }
-                  }
-               }  catch (Exception exception) {
-                  {
-                  }
-               }
-            }
-         }
-         return null;
-      }
-      
-      static internal YapClass readYapClass(YapWriter yapwriter) {
-         return yapwriter.getStream().getYapClass(yapwriter.readInt());
-      }
-      
-      public override bool supportsIndex() {
-         return false;
-      }
-   }
+		public override bool canHold(com.db4o.reflect.ReflectClass claxx)
+		{
+			return true;
+		}
+
+		public static void appendEmbedded(com.db4o.YapWriter a_bytes)
+		{
+			com.db4o.YapClass yc = readYapClass(a_bytes);
+			if (yc != null)
+			{
+				yc.appendEmbedded1(a_bytes);
+			}
+		}
+
+		public override void cascadeActivation(com.db4o.Transaction a_trans, object a_object
+			, int a_depth, bool a_activate)
+		{
+			com.db4o.YapClass yc = a_trans.i_stream.getYapClass(a_trans.reflector().forObject
+				(a_object), false);
+			if (yc != null)
+			{
+				yc.cascadeActivation(a_trans, a_object, a_depth, a_activate);
+			}
+		}
+
+		public override void deleteEmbedded(com.db4o.YapWriter a_bytes)
+		{
+			int objectID = a_bytes.readInt();
+			if (objectID > 0)
+			{
+				com.db4o.YapWriter reader = a_bytes.getStream().readWriterByID(a_bytes.getTransaction
+					(), objectID);
+				if (reader != null)
+				{
+					reader.setCascadeDeletes(a_bytes.cascadeDeletes());
+					com.db4o.YapClass yapClass = readYapClass(reader);
+					if (yapClass != null)
+					{
+						yapClass.deleteEmbedded1(reader, objectID);
+					}
+				}
+			}
+		}
+
+		public override int getID()
+		{
+			return 11;
+		}
+
+		public override bool hasField(com.db4o.YapStream a_stream, string a_path)
+		{
+			return a_stream.i_classCollection.fieldExists(a_path);
+		}
+
+		internal override bool hasIndex()
+		{
+			return false;
+		}
+
+		public override bool holdsAnyClass()
+		{
+			return true;
+		}
+
+		internal override bool isStrongTyped()
+		{
+			return false;
+		}
+
+		public override com.db4o.YapDataType readArrayWrapper(com.db4o.Transaction a_trans
+			, com.db4o.YapReader[] a_bytes)
+		{
+			int id = 0;
+			int offset = a_bytes[0]._offset;
+			try
+			{
+				id = a_bytes[0].readInt();
+			}
+			catch (System.Exception e)
+			{
+			}
+			a_bytes[0]._offset = offset;
+			if (id != 0)
+			{
+				com.db4o.YapWriter reader = a_trans.i_stream.readWriterByID(a_trans, id);
+				if (reader != null)
+				{
+					com.db4o.YapClass yc = readYapClass(reader);
+					try
+					{
+						if (yc != null)
+						{
+							a_bytes[0] = reader;
+							return yc.readArrayWrapper1(a_bytes);
+						}
+					}
+					catch (System.Exception e)
+					{
+					}
+				}
+			}
+			return null;
+		}
+
+		internal static com.db4o.YapClass readYapClass(com.db4o.YapWriter a_reader)
+		{
+			return a_reader.getStream().getYapClass(a_reader.readInt());
+		}
+
+		public override bool supportsIndex()
+		{
+			return false;
+		}
+	}
 }

@@ -1,174 +1,271 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using com.db4o.ext;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal sealed class YapConst
+	{
+		internal static readonly object initMe = init();
 
-   internal class YapConst {
-      
-      internal YapConst() : base() {
-      }
-      static internal Object initMe = init();
-      static internal byte YAPFILEVERSION = 4;
-      static internal byte YAPBEGIN = 123;
-      static internal byte YAPFILE = 89;
-      static internal byte YAPID = 35;
-      static internal byte YAPPOINTER = 62;
-      static internal byte YAPCLASSCOLLECTION = 65;
-      static internal byte YAPCLASS = 67;
-      static internal byte YAPFIELD = 70;
-      static internal byte YAPOBJECT = 79;
-      static internal byte YAPARRAY = 78;
-      static internal byte YAPARRAYN = 90;
-      static internal byte YAPINDEX = 88;
-      static internal byte YAPSTRING = 83;
-      static internal byte YAPLONG = 108;
-      static internal byte YAPINTEGER = 105;
-      static internal byte YAPBOOLEAN = 61;
-      static internal byte YAPDOUBLE = 100;
-      static internal byte YAPBYTE = 98;
-      static internal byte YAPSHORT = 115;
-      static internal byte YAPCHAR = 99;
-      static internal byte YAPFLOAT = 102;
-      static internal byte YAPEND = 125;
-      static internal byte YAPNULL = 48;
-      static internal int IDENTIFIER_LENGTH = 0;
-      static internal int BRACKETS_BYTES = 0;
-      static internal int BRACKETS_LENGTH = 0;
-      static internal int LEADING_LENGTH = 0;
-      static internal int ADDED_LENGTH = 0;
-      static internal int SHORT_BYTES = 2;
-      static internal int INTEGER_BYTES = 4;
-      static internal int LONG_BYTES = 8;
-      static internal int CHAR_BYTES = 2;
-      static internal int UNSPECIFIED = -2147483548;
-      static internal int YAPINT_LENGTH = 4;
-      static internal int YAPID_LENGTH = 4;
-      static internal int YAPLONG_LENGTH = 8;
-      static internal int WRITE_LOOP = 24;
-      static internal int OBJECT_LENGTH = 0;
-      static internal int POINTER_LENGTH = 8;
-      static internal int MESSAGE_LENGTH = 9;
-      static internal byte SYSTEM_TRANS = 115;
-      static internal byte USER_TRANS = 117;
-      static internal byte XBYTE = 88;
-      static internal int IGNORE_ID = -99999;
-      static internal int PRIMITIVE = -2000000000;
-      static internal int TYPE_SIMPLE = 1;
-      static internal int TYPE_CLASS = 2;
-      static internal int TYPE_ARRAY = 3;
-      static internal int TYPE_NARRAY = 4;
-      static internal int NONE = 0;
-      static internal int STATE = 1;
-      static internal int ACTIVATION = 2;
-      static internal int TRANSIENT = -1;
-      static internal int ADD_MEMBERS_TO_ID_TREE_ONLY = 0;
-      static internal int ADD_TO_ID_TREE = 1;
-      static internal byte ISO8859 = 1;
-      static internal byte UNICODE = 2;
-      static internal int LOCK_TIME_INTERVAL = 1000;
-      static internal int SERVER_SOCKET_TIMEOUT = 5000;
-      static internal int CLIENT_SOCKET_TIMEOUT = 300000;
-      static internal int CONNECTION_TIMEOUT = 180000;
-      static internal int PREFETCH_ID_COUNT = 10;
-      static internal int PREFETCH_OBJECT_COUNT = 10;
-      static internal int MAXIMUM_BLOCK_SIZE = 70000000;
-      static internal int MAXIMUM_ARRAY_ENTRIES = 7000000;
-      static internal int MAXIMUM_ARRAY_ENTRIES_PRIMITIVE = 700000000;
-      static internal Class CLASS_CLASS;
-      static internal Class CLASS_COMPARE;
-      static internal Class CLASS_DB4ODATABASE;
-      static internal Class CLASS_DB4OTYPE;
-      static internal Class CLASS_DB4OTYPEIMPL;
-      static internal Class CLASS_ENUM;
-      static internal Class CLASS_INTERNAL;
-      static internal Class CLASS_METACLASS;
-      static internal Class CLASS_METAFIELD;
-      static internal Class CLASS_METAINDEX;
-      static internal Class CLASS_OBJECT;
-      static internal Class CLASS_OBJECTCONTAINER;
-      static internal Class CLASS_PBOOTRECORD;
-      static internal Class CLASS_REPLICATIONRECORD;
-      static internal Class CLASS_STATICFIELD;
-      static internal Class CLASS_STATICCLASS;
-      static internal Class CLASS_TRANSIENTCLASS;
-      static internal String EMBEDDED_CLIENT_USER = "embedded client";
-      static internal int CLEAN = 0;
-      static internal int ACTIVE = 1;
-      static internal int PROCESSING = 2;
-      static internal int CACHED_DIRTY = 3;
-      static internal int CONTINUE = 4;
-      static internal int STATIC_FIELDS_STORED = 5;
-      static internal int CHECKED_CHANGES = 6;
-      static internal int DEAD = 7;
-      static internal int READING = 8;
-      static internal int UNCHECKED = 0;
-      static internal int NO = -1;
-      static internal int YES = 1;
-      static internal int DEFAULT = 0;
-      public static YapStringIOUnicode stringIO = new YapStringIOUnicode();
-      static internal Class[] ESSENTIAL_CLASSES = {
-         CLASS_METAINDEX,
-CLASS_METAFIELD,
-CLASS_METACLASS,
-CLASS_STATICFIELD,
-CLASS_STATICCLASS      };
-      
-      public static RuntimeException virtualException() {
-         return new RuntimeException();
-      }
-      
-      private static Object init() {
-         CLASS_OBJECT = j4o.lang.Class.getClassForObject(new Object());
-         CLASS_CLASS = j4o.lang.Class.getClassForObject(CLASS_OBJECT);
-         CLASS_COMPARE = db4oClass("config.Compare");
-         CLASS_DB4ODATABASE = j4o.lang.Class.getClassForObject(new Db4oDatabase());
-         CLASS_DB4OTYPE = db4oClass("types.Db4oType");
-         CLASS_DB4OTYPEIMPL = db4oClass("Db4oTypeImpl");
-         CLASS_ENUM = classForName("java.lang.Enum");
-         CLASS_INTERNAL = db4oClass("Internal");
-         CLASS_METACLASS = j4o.lang.Class.getClassForObject(new MetaClass());
-         CLASS_METAFIELD = j4o.lang.Class.getClassForObject(new MetaField());
-         CLASS_METAINDEX = j4o.lang.Class.getClassForObject(new MetaIndex());
-         CLASS_OBJECTCONTAINER = db4oClass("ObjectContainer");
-         CLASS_PBOOTRECORD = j4o.lang.Class.getClassForObject(new PBootRecord());
-         CLASS_REPLICATIONRECORD = j4o.lang.Class.getClassForObject(new ReplicationRecord());
-         CLASS_STATICFIELD = j4o.lang.Class.getClassForObject(new StaticField());
-         CLASS_STATICCLASS = j4o.lang.Class.getClassForObject(new StaticClass());
-         CLASS_TRANSIENTCLASS = db4oClass("types.TransientClass");
-         return null;
-      }
-      
-      private static Class db4oClass(String xstring) {
-         return classForName("com.db4o." + xstring);
-      }
-      
-      private static Class classForName(String xstring) {
-         try {
-            {
-               return Class.forName(xstring);
-            }
-         }  catch (Exception exception) {
-            {
-               return null;
-            }
-         }
-      }
-   }
+		internal const byte YAPFILEVERSION = 4;
+
+		internal const byte YAPBEGIN = (byte)'{';
+
+		internal const byte YAPFILE = (byte)'Y';
+
+		internal const byte YAPID = (byte)'#';
+
+		internal const byte YAPPOINTER = (byte)'>';
+
+		internal const byte YAPCLASSCOLLECTION = (byte)'A';
+
+		internal const byte YAPCLASS = (byte)'C';
+
+		internal const byte YAPFIELD = (byte)'F';
+
+		internal const byte YAPOBJECT = (byte)'O';
+
+		internal const byte YAPARRAY = (byte)'N';
+
+		internal const byte YAPARRAYN = (byte)'Z';
+
+		internal const byte YAPINDEX = (byte)'X';
+
+		internal const byte YAPSTRING = (byte)'S';
+
+		internal const byte YAPLONG = (byte)'l';
+
+		internal const byte YAPINTEGER = (byte)'i';
+
+		internal const byte YAPBOOLEAN = (byte)'=';
+
+		internal const byte YAPDOUBLE = (byte)'d';
+
+		internal const byte YAPBYTE = (byte)'b';
+
+		internal const byte YAPSHORT = (byte)'s';
+
+		internal const byte YAPCHAR = (byte)'c';
+
+		internal const byte YAPFLOAT = (byte)'f';
+
+		internal const byte YAPEND = (byte)'}';
+
+		internal const byte YAPNULL = (byte)'0';
+
+		internal const int IDENTIFIER_LENGTH = (com.db4o.Deploy.debug && com.db4o.Deploy.
+			identifiers) ? 1 : 0;
+
+		internal const int BRACKETS_BYTES = (com.db4o.Deploy.debug && com.db4o.Deploy.brackets
+			) ? 1 : 0;
+
+		internal const int BRACKETS_LENGTH = BRACKETS_BYTES * 2;
+
+		internal const int LEADING_LENGTH = IDENTIFIER_LENGTH + BRACKETS_BYTES;
+
+		internal const int ADDED_LENGTH = IDENTIFIER_LENGTH + BRACKETS_LENGTH;
+
+		internal const int SHORT_BYTES = 2;
+
+		internal const int INTEGER_BYTES = (com.db4o.Deploy.debug && com.db4o.Deploy.debugLong
+			) ? 11 : 4;
+
+		internal const int LONG_BYTES = (com.db4o.Deploy.debug && com.db4o.Deploy.debugLong
+			) ? 20 : 8;
+
+		internal const int CHAR_BYTES = 2;
+
+		internal const int UNSPECIFIED = int.MinValue + 100;
+
+		internal const int YAPINT_LENGTH = INTEGER_BYTES + ADDED_LENGTH;
+
+		internal const int YAPID_LENGTH = YAPINT_LENGTH;
+
+		internal const int YAPLONG_LENGTH = LONG_BYTES + ADDED_LENGTH;
+
+		internal const int WRITE_LOOP = (INTEGER_BYTES - 1) * 8;
+
+		internal const int OBJECT_LENGTH = ADDED_LENGTH;
+
+		internal const int POINTER_LENGTH = (YAPINT_LENGTH * 2) + ADDED_LENGTH;
+
+		internal const int MESSAGE_LENGTH = YAPINT_LENGTH * 2 + 1;
+
+		internal const byte SYSTEM_TRANS = (byte)'s';
+
+		internal const byte USER_TRANS = (byte)'u';
+
+		internal const byte XBYTE = (byte)'X';
+
+		internal const int IGNORE_ID = -99999;
+
+		internal const int PRIMITIVE = -2000000000;
+
+		internal const int TYPE_SIMPLE = 1;
+
+		internal const int TYPE_CLASS = 2;
+
+		internal const int TYPE_ARRAY = 3;
+
+		internal const int TYPE_NARRAY = 4;
+
+		internal const int NONE = 0;
+
+		internal const int STATE = 1;
+
+		internal const int ACTIVATION = 2;
+
+		internal const int TRANSIENT = -1;
+
+		internal const int ADD_MEMBERS_TO_ID_TREE_ONLY = 0;
+
+		internal const int ADD_TO_ID_TREE = 1;
+
+		internal const byte ISO8859 = (byte)1;
+
+		internal const byte UNICODE = (byte)2;
+
+		internal const int LOCK_TIME_INTERVAL = 1000;
+
+		internal const int SERVER_SOCKET_TIMEOUT = com.db4o.Debug.longTimeOuts ? 1000000 : 
+			5000;
+
+		internal const int CLIENT_SOCKET_TIMEOUT = 300000;
+
+		internal const int CONNECTION_TIMEOUT = com.db4o.Debug.longTimeOuts ? 1000000 : 180000;
+
+		internal const int PREFETCH_ID_COUNT = 10;
+
+		internal const int PREFETCH_OBJECT_COUNT = 10;
+
+		internal const int MAXIMUM_BLOCK_SIZE = 70000000;
+
+		internal const int MAXIMUM_ARRAY_ENTRIES = 7000000;
+
+		internal const int MAXIMUM_ARRAY_ENTRIES_PRIMITIVE = MAXIMUM_ARRAY_ENTRIES * 100;
+
+		internal static j4o.lang.Class CLASS_COMPARE;
+
+		internal static j4o.lang.Class CLASS_DB4OTYPE;
+
+		internal static j4o.lang.Class CLASS_DB4OTYPEIMPL;
+
+		internal static j4o.lang.Class CLASS_ENUM;
+
+		internal static j4o.lang.Class CLASS_INTERNAL;
+
+		internal static j4o.lang.Class CLASS_METACLASS;
+
+		internal static j4o.lang.Class CLASS_METAFIELD;
+
+		internal static j4o.lang.Class CLASS_METAINDEX;
+
+		internal static j4o.lang.Class CLASS_OBJECT;
+
+		internal static j4o.lang.Class CLASS_OBJECTCONTAINER;
+
+		internal static j4o.lang.Class CLASS_PBOOTRECORD;
+
+		internal static j4o.lang.Class CLASS_REPLICATIONRECORD;
+
+		internal static j4o.lang.Class CLASS_STATICFIELD;
+
+		internal static j4o.lang.Class CLASS_STATICCLASS;
+
+		internal static j4o.lang.Class CLASS_TRANSIENTCLASS;
+
+		internal static readonly string EMBEDDED_CLIENT_USER = "embedded client";
+
+		internal const int CLEAN = 0;
+
+		internal const int ACTIVE = 1;
+
+		internal const int PROCESSING = 2;
+
+		internal const int CACHED_DIRTY = 3;
+
+		internal const int CONTINUE = 4;
+
+		internal const int STATIC_FIELDS_STORED = 5;
+
+		internal const int CHECKED_CHANGES = 6;
+
+		internal const int DEAD = 7;
+
+		internal const int READING = 8;
+
+		internal const int UNCHECKED = 0;
+
+		internal const int NO = -1;
+
+		internal const int YES = 1;
+
+		internal const int DEFAULT = 0;
+
+		public static readonly com.db4o.YapStringIOUnicode stringIO = new com.db4o.YapStringIOUnicode
+			();
+
+		public static j4o.lang.RuntimeException virtualException()
+		{
+			return new j4o.lang.RuntimeException();
+		}
+
+		private static object init()
+		{
+			CLASS_OBJECT = j4o.lang.Class.getClassForObject(new object());
+			CLASS_COMPARE = db4oClass("config.Compare");
+			CLASS_DB4OTYPE = db4oClass("types.Db4oType");
+			CLASS_DB4OTYPEIMPL = db4oClass("Db4oTypeImpl");
+			CLASS_ENUM = classForName("java.lang.Enum");
+			CLASS_INTERNAL = db4oClass("Internal");
+			CLASS_METACLASS = j4o.lang.Class.getClassForObject(new com.db4o.MetaClass());
+			CLASS_METAFIELD = j4o.lang.Class.getClassForObject(new com.db4o.MetaField());
+			CLASS_METAINDEX = j4o.lang.Class.getClassForObject(new com.db4o.MetaIndex());
+			CLASS_OBJECTCONTAINER = db4oClass("ObjectContainer");
+			CLASS_PBOOTRECORD = j4o.lang.Class.getClassForObject(new com.db4o.PBootRecord());
+			CLASS_REPLICATIONRECORD = j4o.lang.Class.getClassForObject(new com.db4o.ReplicationRecord
+				());
+			CLASS_STATICFIELD = j4o.lang.Class.getClassForObject(new com.db4o.StaticField());
+			CLASS_STATICCLASS = j4o.lang.Class.getClassForObject(new com.db4o.StaticClass());
+			CLASS_TRANSIENTCLASS = db4oClass("types.TransientClass");
+			return null;
+		}
+
+		private static j4o.lang.Class db4oClass(string name)
+		{
+			return classForName("com.db4o." + name);
+		}
+
+		private static j4o.lang.Class classForName(string name)
+		{
+			try
+			{
+				return j4o.lang.Class.forName(name);
+			}
+			catch (System.Exception e)
+			{
+			}
+			return null;
+		}
+
+		internal static readonly j4o.lang.Class[] ESSENTIAL_CLASSES = { CLASS_METAINDEX, 
+			CLASS_METAFIELD, CLASS_METACLASS, CLASS_STATICFIELD, CLASS_STATICCLASS };
+	}
 }

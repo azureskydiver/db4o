@@ -1,193 +1,321 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <exclude></exclude>
+	public class Hashtable4 : j4o.lang.Cloneable, com.db4o.DeepClone
+	{
+		private const float FILL = 0.5F;
 
-   internal class Hashtable4 : Cloneable, DeepClone {
-      private static float FILL = 0.5F;
-      private int i_tableSize;
-      private int i_mask;
-      private int i_maximumSize;
-      private int i_size;
-      private HashtableIntEntry[] i_table;
-      
-      internal Hashtable4(int i) : base() {
-         i = newSize(i);
-         for (i_tableSize = 1; i_tableSize < i; i_tableSize = i_tableSize << 1) {
-         }
-         i_mask = i_tableSize - 1;
-         i_maximumSize = (int)((float)i_tableSize * 0.5F);
-         i_table = new HashtableIntEntry[i_tableSize];
-      }
-      
-      private int newSize(int i) {
-         return (int)((float)i / 0.5F);
-      }
-      
-      public Object deepClone(Object obj) {
-         Hashtable4 hashtable4_0_1 = (Hashtable4)j4o.lang.JavaSystem.clone(this);
-         hashtable4_0_1.i_table = new HashtableIntEntry[i_tableSize];
-         for (int i1 = 0; i1 < i_tableSize; i1++) {
-            if (i_table[i1] != null) hashtable4_0_1.i_table[i1] = (HashtableIntEntry)i_table[i1].deepClone(obj);
-         }
-         return hashtable4_0_1;
-      }
-      
-      public void forEachKey(Visitor4 visitor4) {
-         for (int i1 = 0; i1 < i_table.Length; i1++) {
-            for (HashtableIntEntry hashtableintentry1 = i_table[i1]; hashtableintentry1 != null; hashtableintentry1 = hashtableintentry1.i_next) {
-               if (hashtableintentry1 is HashtableObjectEntry) visitor4.visit(((HashtableObjectEntry)hashtableintentry1).i_objectKey); else visitor4.visit(System.Convert.ToInt32(hashtableintentry1.i_key));
-            }
-         }
-      }
-      
-      public void forEachValue(Visitor4 visitor4) {
-         for (int i1 = 0; i1 < i_table.Length; i1++) {
-            for (HashtableIntEntry hashtableintentry1 = i_table[i1]; hashtableintentry1 != null; hashtableintentry1 = hashtableintentry1.i_next) visitor4.visit(hashtableintentry1.i_object);
-         }
-      }
-      
-      public Object get(int i) {
-         for (HashtableIntEntry hashtableintentry1 = i_table[i & i_mask]; hashtableintentry1 != null; hashtableintentry1 = hashtableintentry1.i_next) {
-            if (hashtableintentry1.i_key == i) return hashtableintentry1.i_object;
-         }
-         return null;
-      }
-      
-      public Object get(Object obj) {
-         int i1 = obj.GetHashCode();
-         for (HashtableObjectEntry hashtableobjectentry1 = (HashtableObjectEntry)i_table[i1 & i_mask]; hashtableobjectentry1 != null; hashtableobjectentry1 = (HashtableObjectEntry)hashtableobjectentry1.i_next) {
-            if (hashtableobjectentry1.i_key == i1 && hashtableobjectentry1.i_objectKey.Equals(obj)) return hashtableobjectentry1.i_object;
-         }
-         return null;
-      }
-      
-      public Object get(byte[] xis) {
-         int i1 = hash(xis);
-         for (HashtableObjectEntry hashtableobjectentry1 = (HashtableObjectEntry)i_table[i1 & i_mask]; hashtableobjectentry1 != null; hashtableobjectentry1 = (HashtableObjectEntry)hashtableobjectentry1.i_next) {
-            if (hashtableobjectentry1.i_key == i1) {
-               byte[] is_1_1 = (byte[])hashtableobjectentry1.i_objectKey;
-               if (is_1_1.Length == xis.Length) {
-                  bool xbool1 = true;
-                  for (int i_2_1 = 0; i_2_1 < is_1_1.Length; i_2_1++) {
-                     if (is_1_1[i_2_1] != xis[i_2_1]) xbool1 = false;
-                  }
-                  if (xbool1) return hashtableobjectentry1.i_object;
-               }
-            }
-         }
-         return null;
-      }
-      
-      private int hash(byte[] xis) {
-         int i1 = 0;
-         for (int i_3_1 = 0; i_3_1 < xis.Length; i_3_1++) i1 = i1 * 31 + xis[i_3_1];
-         return i1;
-      }
-      
-      private void increaseSize() {
-         i_tableSize = i_tableSize << 1;
-         i_maximumSize = i_maximumSize << 1;
-         i_mask = i_tableSize - 1;
-         HashtableIntEntry[] hashtableintentrys1 = i_table;
-         i_table = new HashtableIntEntry[i_tableSize];
-         for (int i1 = 0; i1 < hashtableintentrys1.Length; i1++) reposition(hashtableintentrys1[i1]);
-      }
-      
-      public void put(int i, Object obj) {
-         put1(new HashtableIntEntry(i, obj));
-      }
-      
-      public void put(Object obj, Object obj_4_) {
-         put1(new HashtableObjectEntry(obj, obj_4_));
-      }
-      
-      public void put(byte[] xis, Object obj) {
-         int i1 = hash(xis);
-         put1(new HashtableObjectEntry(i1, xis, obj));
-      }
-      
-      private void put1(HashtableIntEntry hashtableintentry) {
-         i_size++;
-         if (i_size > i_maximumSize) increaseSize();
-         int i1 = hashtableintentry.i_key & i_mask;
-         hashtableintentry.i_next = i_table[i1];
-         i_table[i1] = hashtableintentry;
-      }
-      
-      public void remove(int i) {
-         HashtableIntEntry hashtableintentry1 = i_table[i & i_mask];
-         HashtableIntEntry hashtableintentry_5_1 = null;
-         for (; hashtableintentry1 != null; hashtableintentry1 = hashtableintentry1.i_next) {
-            if (hashtableintentry1.i_key == i) {
-               if (hashtableintentry_5_1 != null) hashtableintentry_5_1.i_next = hashtableintentry1.i_next; else i_table[i & i_mask] = hashtableintentry1.i_next;
-               i_size--;
-               break;
-            }
-            hashtableintentry_5_1 = hashtableintentry1;
-         }
-      }
-      
-      public void remove(Object obj) {
-         int i1 = obj.GetHashCode();
-         HashtableObjectEntry hashtableobjectentry1 = (HashtableObjectEntry)i_table[i1 & i_mask];
-         HashtableObjectEntry hashtableobjectentry_6_1 = null;
-         for (; hashtableobjectentry1 != null; hashtableobjectentry1 = (HashtableObjectEntry)hashtableobjectentry1.i_next) {
-            if (hashtableobjectentry1.i_key == i1 && hashtableobjectentry1.i_objectKey.Equals(obj)) {
-               if (hashtableobjectentry_6_1 != null) hashtableobjectentry_6_1.i_next = hashtableobjectentry1.i_next; else i_table[i1 & i_mask] = hashtableobjectentry1.i_next;
-               i_size--;
-               break;
-            }
-            hashtableobjectentry_6_1 = hashtableobjectentry1;
-         }
-      }
-      
-      public Object remove(byte[] xis) {
-         int i1 = hash(xis);
-         HashtableObjectEntry hashtableobjectentry1 = (HashtableObjectEntry)i_table[i1 & i_mask];
-         HashtableObjectEntry hashtableobjectentry_7_1 = null;
-         for (; hashtableobjectentry1 != null; hashtableobjectentry1 = (HashtableObjectEntry)hashtableobjectentry1.i_next) {
-            if (hashtableobjectentry1.i_key == i1) {
-               byte[] is_8_1 = (byte[])hashtableobjectentry1.i_objectKey;
-               if (is_8_1.Length == xis.Length) {
-                  bool xbool1 = true;
-                  for (int i_9_1 = 0; i_9_1 < is_8_1.Length; i_9_1++) {
-                     if (is_8_1[i_9_1] != xis[i_9_1]) xbool1 = false;
-                  }
-                  if (xbool1) {
-                     if (hashtableobjectentry_7_1 != null) hashtableobjectentry_7_1.i_next = hashtableobjectentry1.i_next; else i_table[i1 & i_mask] = hashtableobjectentry1.i_next;
-                     i_size--;
-                     return hashtableobjectentry1.i_object;
-                  }
-               }
-            }
-            hashtableobjectentry_7_1 = hashtableobjectentry1;
-         }
-         return null;
-      }
-      
-      private void reposition(HashtableIntEntry hashtableintentry) {
-         if (hashtableintentry != null) {
-            reposition(hashtableintentry.i_next);
-            hashtableintentry.i_next = i_table[hashtableintentry.i_key & i_mask];
-            i_table[hashtableintentry.i_key & i_mask] = hashtableintentry;
-         }
-      }
-   }
+		private int i_tableSize;
+
+		private int i_mask;
+
+		private int i_maximumSize;
+
+		private int i_size;
+
+		private com.db4o.HashtableIntEntry[] i_table;
+
+		public Hashtable4(int a_size)
+		{
+			a_size = newSize(a_size);
+			i_tableSize = 1;
+			while (i_tableSize < a_size)
+			{
+				i_tableSize = i_tableSize << 1;
+			}
+			i_mask = i_tableSize - 1;
+			i_maximumSize = (int)(i_tableSize * FILL);
+			i_table = new com.db4o.HashtableIntEntry[i_tableSize];
+		}
+
+		private int newSize(int a_size)
+		{
+			return (int)(a_size / FILL);
+		}
+
+		public virtual object deepClone(object obj)
+		{
+			com.db4o.Hashtable4 ret = (com.db4o.Hashtable4)j4o.lang.JavaSystem.clone(this);
+			ret.i_table = new com.db4o.HashtableIntEntry[i_tableSize];
+			for (int i = 0; i < i_tableSize; i++)
+			{
+				if (i_table[i] != null)
+				{
+					ret.i_table[i] = (com.db4o.HashtableIntEntry)i_table[i].deepClone(obj);
+				}
+			}
+			return ret;
+		}
+
+		public virtual void forEachKey(com.db4o.Visitor4 visitor)
+		{
+			for (int i = 0; i < i_table.Length; i++)
+			{
+				com.db4o.HashtableIntEntry hie = i_table[i];
+				while (hie != null)
+				{
+					if (hie is com.db4o.HashtableObjectEntry)
+					{
+						visitor.visit(((com.db4o.HashtableObjectEntry)hie).i_objectKey);
+					}
+					else
+					{
+						visitor.visit(System.Convert.ToInt32(hie.i_key));
+					}
+					hie = hie.i_next;
+				}
+			}
+		}
+
+		public virtual void forEachValue(com.db4o.Visitor4 visitor)
+		{
+			for (int i = 0; i < i_table.Length; i++)
+			{
+				com.db4o.HashtableIntEntry hie = i_table[i];
+				while (hie != null)
+				{
+					visitor.visit(hie.i_object);
+					hie = hie.i_next;
+				}
+			}
+		}
+
+		public virtual object get(int a_key)
+		{
+			com.db4o.HashtableIntEntry ihe = i_table[a_key & i_mask];
+			while (ihe != null)
+			{
+				if (ihe.i_key == a_key)
+				{
+					return ihe.i_object;
+				}
+				ihe = ihe.i_next;
+			}
+			return null;
+		}
+
+		public virtual object get(object a_objectKey)
+		{
+			if (a_objectKey == null)
+			{
+				return null;
+			}
+			int a_key = a_objectKey.GetHashCode();
+			com.db4o.HashtableObjectEntry ihe = (com.db4o.HashtableObjectEntry)i_table[a_key 
+				& i_mask];
+			while (ihe != null)
+			{
+				if (ihe.i_key == a_key && ihe.i_objectKey.Equals(a_objectKey))
+				{
+					return ihe.i_object;
+				}
+				ihe = (com.db4o.HashtableObjectEntry)ihe.i_next;
+			}
+			return null;
+		}
+
+		public virtual object get(byte[] a_bytes)
+		{
+			int a_key = hash(a_bytes);
+			com.db4o.HashtableObjectEntry ihe = (com.db4o.HashtableObjectEntry)i_table[a_key 
+				& i_mask];
+			while (ihe != null)
+			{
+				if (ihe.i_key == a_key)
+				{
+					byte[] bytes = (byte[])ihe.i_objectKey;
+					if (bytes.Length == a_bytes.Length)
+					{
+						bool isEqual = true;
+						for (int i = 0; i < bytes.Length; i++)
+						{
+							if (bytes[i] != a_bytes[i])
+							{
+								isEqual = false;
+							}
+						}
+						if (isEqual)
+						{
+							return ihe.i_object;
+						}
+					}
+				}
+				ihe = (com.db4o.HashtableObjectEntry)ihe.i_next;
+			}
+			return null;
+		}
+
+		private int hash(byte[] bytes)
+		{
+			int ret = 0;
+			for (int i = 0; i < bytes.Length; i++)
+			{
+				ret = ret * 31 + bytes[i];
+			}
+			return ret;
+		}
+
+		private void increaseSize()
+		{
+			i_tableSize = i_tableSize << 1;
+			i_maximumSize = i_maximumSize << 1;
+			i_mask = i_tableSize - 1;
+			com.db4o.HashtableIntEntry[] temp = i_table;
+			i_table = new com.db4o.HashtableIntEntry[i_tableSize];
+			for (int i = 0; i < temp.Length; i++)
+			{
+				reposition(temp[i]);
+			}
+		}
+
+		public virtual void put(int a_key, object a_object)
+		{
+			put1(new com.db4o.HashtableIntEntry(a_key, a_object));
+		}
+
+		public virtual void put(object a_key, object a_object)
+		{
+			put1(new com.db4o.HashtableObjectEntry(a_key, a_object));
+		}
+
+		public virtual void put(byte[] a_bytes, object a_object)
+		{
+			int a_key = hash(a_bytes);
+			put1(new com.db4o.HashtableObjectEntry(a_key, a_bytes, a_object));
+		}
+
+		private void put1(com.db4o.HashtableIntEntry a_entry)
+		{
+			i_size++;
+			if (i_size > i_maximumSize)
+			{
+				increaseSize();
+			}
+			int index = a_entry.i_key & i_mask;
+			a_entry.i_next = i_table[index];
+			i_table[index] = a_entry;
+		}
+
+		public virtual void remove(int a_key)
+		{
+			com.db4o.HashtableIntEntry ihe = i_table[a_key & i_mask];
+			com.db4o.HashtableIntEntry last = null;
+			while (ihe != null)
+			{
+				if (ihe.i_key == a_key)
+				{
+					if (last != null)
+					{
+						last.i_next = ihe.i_next;
+					}
+					else
+					{
+						i_table[a_key & i_mask] = ihe.i_next;
+					}
+					i_size--;
+					return;
+				}
+				last = ihe;
+				ihe = ihe.i_next;
+			}
+		}
+
+		public virtual void remove(object a_objectKey)
+		{
+			int a_key = a_objectKey.GetHashCode();
+			com.db4o.HashtableObjectEntry ihe = (com.db4o.HashtableObjectEntry)i_table[a_key 
+				& i_mask];
+			com.db4o.HashtableIntEntry last = null;
+			while (ihe != null)
+			{
+				if (ihe.i_key == a_key && ihe.i_objectKey.Equals(a_objectKey))
+				{
+					if (last != null)
+					{
+						last.i_next = ihe.i_next;
+					}
+					else
+					{
+						i_table[a_key & i_mask] = ihe.i_next;
+					}
+					i_size--;
+					return;
+				}
+				last = ihe;
+				ihe = (com.db4o.HashtableObjectEntry)ihe.i_next;
+			}
+		}
+
+		public virtual object remove(byte[] a_bytes)
+		{
+			int a_key = hash(a_bytes);
+			com.db4o.HashtableObjectEntry ihe = (com.db4o.HashtableObjectEntry)i_table[a_key 
+				& i_mask];
+			com.db4o.HashtableObjectEntry last = null;
+			while (ihe != null)
+			{
+				if (ihe.i_key == a_key)
+				{
+					byte[] bytes = (byte[])ihe.i_objectKey;
+					if (bytes.Length == a_bytes.Length)
+					{
+						bool isEqual = true;
+						for (int i = 0; i < bytes.Length; i++)
+						{
+							if (bytes[i] != a_bytes[i])
+							{
+								isEqual = false;
+							}
+						}
+						if (isEqual)
+						{
+							if (last != null)
+							{
+								last.i_next = ihe.i_next;
+							}
+							else
+							{
+								i_table[a_key & i_mask] = ihe.i_next;
+							}
+							i_size--;
+							return ihe.i_object;
+						}
+					}
+				}
+				last = ihe;
+				ihe = (com.db4o.HashtableObjectEntry)ihe.i_next;
+			}
+			return null;
+		}
+
+		private void reposition(com.db4o.HashtableIntEntry a_entry)
+		{
+			if (a_entry != null)
+			{
+				reposition(a_entry.i_next);
+				a_entry.i_next = i_table[a_entry.i_key & i_mask];
+				i_table[a_entry.i_key & i_mask] = a_entry;
+			}
+		}
+	}
 }

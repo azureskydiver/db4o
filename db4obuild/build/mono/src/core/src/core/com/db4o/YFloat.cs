@@ -1,75 +1,96 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal sealed class YFloat : com.db4o.YInt
+	{
+		private static readonly float i_primitive = System.Convert.ToSingle(0);
 
-   internal class YFloat : YInt {
-      
-      internal YFloat() : base() {
-      }
-      private static Single i_primitive = System.Convert.ToSingle(0.0F);
-      private static Class i_class = j4o.lang.Class.getClassForObject(i_primitive);
-      private float i_compareTo;
-      
-      public override int getID() {
-         return 3;
-      }
-      
-      public override Class getJavaClass() {
-         return i_class;
-      }
-      
-      public override Class getPrimitiveJavaClass() {
-         return Class.getClassForType(typeof(Single));
-      }
-      
-      internal override Object primitiveNull() {
-         return i_primitive;
-      }
-      
-      internal override Object read1(YapReader yapreader) {
-         int i1 = YInt.readInt(yapreader);
-         return System.Convert.ToSingle(j4o.lang.JavaSystem.intBitsToFloat(i1));
-      }
-      
-      public override void write(Object obj, YapWriter yapwriter) {
-         YInt.writeInt(j4o.lang.JavaSystem.floatToIntBits(System.Convert.ToSingle((Single)obj)), yapwriter);
-      }
-      
-      private float valu(Object obj) {
-         return System.Convert.ToSingle((Single)obj);
-      }
-      
-      internal override void prepareComparison1(Object obj) {
-         i_compareTo = valu(obj);
-      }
-      
-      internal override bool isEqual1(Object obj) {
-         return obj is Single && valu(obj) == i_compareTo;
-      }
-      
-      internal override bool isGreater1(Object obj) {
-         return obj is Single && valu(obj) > i_compareTo;
-      }
-      
-      internal override bool isSmaller1(Object obj) {
-         return obj is Single && valu(obj) < i_compareTo;
-      }
-   }
+		public YFloat(com.db4o.YapStream stream) : base(stream)
+		{
+		}
+
+		public override object defaultValue()
+		{
+			return i_primitive;
+		}
+
+		public override int getID()
+		{
+			return 3;
+		}
+
+		protected override j4o.lang.Class primitiveJavaClass()
+		{
+			return j4o.lang.Class.getClassForType(typeof(float));
+		}
+
+		internal override object primitiveNull()
+		{
+			return i_primitive;
+		}
+
+		internal override object read1(com.db4o.YapReader a_bytes)
+		{
+			int ret = readInt(a_bytes);
+			return System.Convert.ToSingle(j4o.lang.JavaSystem.intBitsToFloat(ret));
+		}
+
+		public override void write(object a_object, com.db4o.YapWriter a_bytes)
+		{
+			if (!com.db4o.Deploy.csharp && a_object == null)
+			{
+				writeInt(int.MaxValue, a_bytes);
+			}
+			else
+			{
+				writeInt(j4o.lang.JavaSystem.floatToIntBits(((float)a_object)), a_bytes);
+			}
+		}
+
+		private float i_compareTo;
+
+		private float valu(object obj)
+		{
+			return ((float)obj);
+		}
+
+		internal override void prepareComparison1(object obj)
+		{
+			i_compareTo = valu(obj);
+		}
+
+		internal override bool isEqual1(object obj)
+		{
+			return obj is float && valu(obj) == i_compareTo;
+		}
+
+		internal override bool isGreater1(object obj)
+		{
+			return obj is float && valu(obj) > i_compareTo;
+		}
+
+		internal override bool isSmaller1(object obj)
+		{
+			return obj is float && valu(obj) < i_compareTo;
+		}
+	}
 }

@@ -1,298 +1,581 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <exclude></exclude>
+	public abstract class Tree : j4o.lang.Cloneable, com.db4o.Readable
+	{
+		internal com.db4o.Tree i_preceding;
 
-   public abstract class Tree : Cloneable, Readable {
-      
-      public Tree() : base() {
-      }
-      internal Tree i_preceding;
-      internal int i_size = 1;
-      internal Tree i_subsequent;
-      
-      static internal Tree add(Tree tree, Tree tree_0_) {
-         if (tree == null) return tree_0_;
-         return tree.add(tree_0_);
-      }
-      
-      public virtual Tree add(Tree tree_1_) {
-         return add(tree_1_, compare(tree_1_));
-      }
-      
-      internal virtual Tree add(Tree tree_2_, int i) {
-         if (i < 0) {
-            if (i_subsequent == null) {
-               i_subsequent = tree_2_;
-               i_size++;
-            } else {
-               i_subsequent = i_subsequent.add(tree_2_);
-               if (i_preceding == null) return rotateLeft();
-               return balance();
-            }
-         } else if (i > 0 || tree_2_.duplicates()) {
-            if (i_preceding == null) {
-               i_preceding = tree_2_;
-               i_size++;
-            } else {
-               i_preceding = i_preceding.add(tree_2_);
-               if (i_subsequent == null) return rotateRight();
-               return balance();
-            }
-         } else tree_2_.isDuplicateOf(this);
-         return this;
-      }
-      
-      internal Tree balance() {
-         int i1 = i_subsequent.i_size - i_preceding.i_size;
-         if (i1 < -2) return rotateRight();
-         if (i1 > 2) return rotateLeft();
-         i_size = i_preceding.i_size + i_subsequent.i_size + ownSize();
-         return this;
-      }
-      
-      internal Tree balanceCheckNulls() {
-         if (i_subsequent == null) {
-            if (i_preceding == null) {
-               i_size = ownSize();
-               return this;
-            }
-            return rotateRight();
-         }
-         if (i_preceding == null) return rotateLeft();
-         return balance();
-      }
-      
-      public static int byteCount(Tree tree) {
-         if (tree == null) return 4;
-         return tree.byteCount();
-      }
-      
-      public int byteCount() {
-         if (variableLength()) {
-            int[] xis1 = {
-               4            };
-            traverse(new Tree__1(this, xis1));
-            return xis1[0];
-         }
-         return 4 + size() * ownLength();
-      }
-      
-      internal void calculateSize() {
-         if (i_preceding == null) {
-            if (i_subsequent == null) i_size = ownSize(); else i_size = i_subsequent.i_size + ownSize();
-         } else if (i_subsequent == null) i_size = i_preceding.i_size + ownSize(); else i_size = i_preceding.i_size + i_subsequent.i_size + ownSize();
-      }
-      
-      abstract internal int compare(Tree tree_3_);
-      
-      static internal Tree deepClone(Tree tree, Object obj) {
-         if (tree == null) return null;
-         Tree tree_4_1 = tree.deepClone(obj);
-         tree_4_1.i_size = tree.i_size;
-         tree_4_1.i_preceding = deepClone(tree.i_preceding, obj);
-         tree_4_1.i_subsequent = deepClone(tree.i_subsequent, obj);
-         return tree_4_1;
-      }
-      
-      internal virtual Tree deepClone(Object obj) {
-         try {
-            {
-               return (Tree)j4o.lang.JavaSystem.clone(this);
-            }
-         }  catch (CloneNotSupportedException clonenotsupportedexception) {
-            {
-               return null;
-            }
-         }
-      }
-      
-      internal virtual bool duplicates() {
-         return true;
-      }
-      
-      internal Tree filter(VisitorBoolean visitorboolean) {
-         if (i_preceding != null) i_preceding = i_preceding.filter(visitorboolean);
-         if (i_subsequent != null) i_subsequent = i_subsequent.filter(visitorboolean);
-         if (!visitorboolean.isVisit(this)) return remove();
-         return this;
-      }
-      
-      static internal Tree find(Tree tree, Tree tree_5_) {
-         if (tree == null) return null;
-         return tree.find(tree_5_);
-      }
-      
-      public Tree find(Tree tree_6_) {
-         int i1 = compare(tree_6_);
-         if (i1 < 0) {
-            if (i_subsequent != null) return i_subsequent.find(tree_6_);
-         } else if (i1 > 0) {
-            if (i_preceding != null) return i_preceding.find(tree_6_);
-         } else return this;
-         return null;
-      }
-      
-      static internal Tree findGreaterOrEqual(Tree tree, Tree tree_7_) {
-         if (tree == null) return null;
-         int i1 = tree.compare(tree_7_);
-         if (i1 == 0) return tree;
-         if (i1 > 0) {
-            Tree tree_8_1 = findGreaterOrEqual(tree.i_preceding, tree_7_);
-            if (tree_8_1 != null) return tree_8_1;
-            return tree;
-         }
-         return findGreaterOrEqual(tree.i_subsequent, tree_7_);
-      }
-      
-      static internal Tree findSmaller(Tree tree, Tree tree_9_) {
-         if (tree == null) return null;
-         int i1 = tree.compare(tree_9_);
-         if (i1 < 0) {
-            Tree tree_10_1 = findSmaller(tree.i_subsequent, tree_9_);
-            if (tree_10_1 != null) return tree_10_1;
-            return tree;
-         }
-         return findSmaller(tree.i_preceding, tree_9_);
-      }
-      
-      internal virtual void isDuplicateOf(Tree tree_11_) {
-         i_size = 0;
-      }
-      
-      internal virtual int ownLength() {
-         throw YapConst.virtualException();
-      }
-      
-      internal virtual int ownSize() {
-         return 1;
-      }
-      
-      static internal Tree read(Tree tree, YapReader yapreader) {
-         throw YapConst.virtualException();
-      }
-      
-      public virtual Object read(YapReader yapreader) {
-         throw YapConst.virtualException();
-      }
-      
-      internal Tree remove() {
-         if (i_subsequent != null && i_preceding != null) {
-            i_subsequent = i_subsequent.rotateSmallestUp();
-            i_subsequent.i_preceding = i_preceding;
-            i_subsequent.calculateSize();
-            return i_subsequent;
-         }
-         if (i_subsequent != null) return i_subsequent;
-         return i_preceding;
-      }
-      
-      internal void removeChildren() {
-         i_preceding = null;
-         i_subsequent = null;
-         i_size = ownSize();
-      }
-      
-      static internal Tree removeLike(Tree tree, Tree tree_12_) {
-         if (tree == null) return null;
-         return tree.removeLike(tree_12_);
-      }
-      
-      public Tree removeLike(Tree tree_13_) {
-         int i1 = compare(tree_13_);
-         if (i1 == 0) return remove();
-         if (i1 > 0) {
-            if (i_preceding != null) i_preceding = i_preceding.removeLike(tree_13_);
-         } else if (i_subsequent != null) i_subsequent = i_subsequent.removeLike(tree_13_);
-         calculateSize();
-         return this;
-      }
-      
-      internal Tree removeNode(Tree tree_14_) {
-         if (this == tree_14_) return remove();
-         int i1 = compare(tree_14_);
-         if (i1 >= 0 && i_preceding != null) i_preceding = i_preceding.removeNode(tree_14_);
-         if (i1 <= 0 && i_subsequent != null) i_subsequent = i_subsequent.removeNode(tree_14_);
-         calculateSize();
-         return this;
-      }
-      
-      internal Tree rotateLeft() {
-         Tree tree_15_1 = i_subsequent;
-         i_subsequent = tree_15_1.i_preceding;
-         calculateSize();
-         tree_15_1.i_preceding = this;
-         if (tree_15_1.i_subsequent == null) tree_15_1.i_size = i_size + tree_15_1.ownSize(); else tree_15_1.i_size = i_size + tree_15_1.i_subsequent.i_size + tree_15_1.ownSize();
-         return tree_15_1;
-      }
-      
-      internal Tree rotateRight() {
-         Tree tree_16_1 = i_preceding;
-         i_preceding = tree_16_1.i_subsequent;
-         calculateSize();
-         tree_16_1.i_subsequent = this;
-         if (tree_16_1.i_preceding == null) tree_16_1.i_size = i_size + tree_16_1.ownSize(); else tree_16_1.i_size = i_size + tree_16_1.i_preceding.i_size + tree_16_1.ownSize();
-         return tree_16_1;
-      }
-      
-      private Tree rotateSmallestUp() {
-         if (i_preceding != null) {
-            i_preceding = i_preceding.rotateSmallestUp();
-            return rotateRight();
-         }
-         return this;
-      }
-      
-      static internal int size(Tree tree) {
-         if (tree == null) return 0;
-         return tree.size();
-      }
-      
-      public int size() {
-         return i_size;
-      }
-      
-      public void traverse(Visitor4 visitor4) {
-         if (i_preceding != null) i_preceding.traverse(visitor4);
-         visitor4.visit(this);
-         if (i_subsequent != null) i_subsequent.traverse(visitor4);
-      }
-      
-      internal void traverseFromLeaves(Visitor4 visitor4) {
-         if (i_preceding != null) i_preceding.traverseFromLeaves(visitor4);
-         if (i_subsequent != null) i_subsequent.traverseFromLeaves(visitor4);
-         visitor4.visit(this);
-      }
-      
-      internal virtual bool variableLength() {
-         throw YapConst.virtualException();
-      }
-      
-      static internal void write(YapWriter yapwriter, Tree tree) {
-         if (tree == null) yapwriter.writeInt(0); else {
-            yapwriter.writeInt(tree.size());
-            tree.traverse(new Tree__2(yapwriter));
-         }
-      }
-      
-      public virtual void write(YapWriter yapwriter) {
-         throw YapConst.virtualException();
-      }
-   }
+		internal int i_size = 1;
+
+		internal com.db4o.Tree i_subsequent;
+
+		internal static com.db4o.Tree add(com.db4o.Tree a_old, com.db4o.Tree a_new)
+		{
+			if (a_old == null)
+			{
+				return a_new;
+			}
+			return a_old.add(a_new);
+		}
+
+		public virtual com.db4o.Tree add(com.db4o.Tree a_new)
+		{
+			return add(a_new, compare(a_new));
+		}
+
+		internal virtual com.db4o.Tree add(com.db4o.Tree a_new, int a_cmp)
+		{
+			if (a_cmp < 0)
+			{
+				if (i_subsequent == null)
+				{
+					i_subsequent = a_new;
+					i_size++;
+				}
+				else
+				{
+					i_subsequent = i_subsequent.add(a_new);
+					if (i_preceding == null)
+					{
+						return rotateLeft();
+					}
+					else
+					{
+						return balance();
+					}
+				}
+			}
+			else
+			{
+				if (a_cmp > 0 || a_new.duplicates())
+				{
+					if (i_preceding == null)
+					{
+						i_preceding = a_new;
+						i_size++;
+					}
+					else
+					{
+						i_preceding = i_preceding.add(a_new);
+						if (i_subsequent == null)
+						{
+							return rotateRight();
+						}
+						else
+						{
+							return balance();
+						}
+					}
+				}
+				else
+				{
+					a_new.isDuplicateOf(this);
+				}
+			}
+			return this;
+		}
+
+		internal com.db4o.Tree balance()
+		{
+			int cmp = i_subsequent.i_size - i_preceding.i_size;
+			if (cmp < -2)
+			{
+				return rotateRight();
+			}
+			else
+			{
+				if (cmp > 2)
+				{
+					return rotateLeft();
+				}
+				else
+				{
+					i_size = i_preceding.i_size + i_subsequent.i_size + ownSize();
+					return this;
+				}
+			}
+		}
+
+		internal com.db4o.Tree balanceCheckNulls()
+		{
+			if (i_subsequent == null)
+			{
+				if (i_preceding == null)
+				{
+					i_size = ownSize();
+					return this;
+				}
+				return rotateRight();
+			}
+			else
+			{
+				if (i_preceding == null)
+				{
+					return rotateLeft();
+				}
+			}
+			return balance();
+		}
+
+		public static int byteCount(com.db4o.Tree a_tree)
+		{
+			if (a_tree == null)
+			{
+				return com.db4o.YapConst.YAPINT_LENGTH;
+			}
+			return a_tree.byteCount();
+		}
+
+		public int byteCount()
+		{
+			if (variableLength())
+			{
+				int[] length = new int[] { com.db4o.YapConst.YAPINT_LENGTH };
+				traverse(new _AnonymousInnerClass91(this, length));
+				return length[0];
+			}
+			else
+			{
+				return com.db4o.YapConst.YAPINT_LENGTH + (size() * ownLength());
+			}
+		}
+
+		private sealed class _AnonymousInnerClass91 : com.db4o.Visitor4
+		{
+			public _AnonymousInnerClass91(Tree _enclosing, int[] length)
+			{
+				this._enclosing = _enclosing;
+				this.length = length;
+			}
+
+			public void visit(object obj)
+			{
+				length[0] += ((com.db4o.Tree)obj).ownLength();
+			}
+
+			private readonly Tree _enclosing;
+
+			private readonly int[] length;
+		}
+
+		internal virtual void calculateSize()
+		{
+			if (i_preceding == null)
+			{
+				if (i_subsequent == null)
+				{
+					i_size = ownSize();
+				}
+				else
+				{
+					i_size = i_subsequent.i_size + ownSize();
+				}
+			}
+			else
+			{
+				if (i_subsequent == null)
+				{
+					i_size = i_preceding.i_size + ownSize();
+				}
+				else
+				{
+					i_size = i_preceding.i_size + i_subsequent.i_size + ownSize();
+				}
+			}
+		}
+
+		/// <summary>
+		/// returns 0, if keys are equal
+		/// returns negative if compared key (a_to) is smaller
+		/// returns positive if compared key (a_to) is greater
+		/// </summary>
+		internal abstract int compare(com.db4o.Tree a_to);
+
+		internal static com.db4o.Tree deepClone(com.db4o.Tree a_tree, object a_param)
+		{
+			if (a_tree == null)
+			{
+				return null;
+			}
+			com.db4o.Tree newNode = a_tree.deepClone(a_param);
+			newNode.i_size = a_tree.i_size;
+			newNode.i_preceding = com.db4o.Tree.deepClone(a_tree.i_preceding, a_param);
+			newNode.i_subsequent = com.db4o.Tree.deepClone(a_tree.i_subsequent, a_param);
+			return newNode;
+		}
+
+		internal virtual com.db4o.Tree deepClone(object a_param)
+		{
+			try
+			{
+				return (com.db4o.Tree)j4o.lang.JavaSystem.clone(this);
+			}
+			catch (j4o.lang.CloneNotSupportedException e)
+			{
+			}
+			return null;
+		}
+
+		internal virtual bool duplicates()
+		{
+			return true;
+		}
+
+		internal com.db4o.Tree filter(com.db4o.VisitorBoolean a_filter)
+		{
+			if (i_preceding != null)
+			{
+				i_preceding = i_preceding.filter(a_filter);
+			}
+			if (i_subsequent != null)
+			{
+				i_subsequent = i_subsequent.filter(a_filter);
+			}
+			if (!a_filter.isVisit(this))
+			{
+				return remove();
+			}
+			return this;
+		}
+
+		internal static com.db4o.Tree find(com.db4o.Tree a_in, com.db4o.Tree a_tree)
+		{
+			if (a_in == null)
+			{
+				return null;
+			}
+			return a_in.find(a_tree);
+		}
+
+		public com.db4o.Tree find(com.db4o.Tree a_tree)
+		{
+			int cmp = compare(a_tree);
+			if (cmp < 0)
+			{
+				if (i_subsequent != null)
+				{
+					return i_subsequent.find(a_tree);
+				}
+			}
+			else
+			{
+				if (cmp > 0)
+				{
+					if (i_preceding != null)
+					{
+						return i_preceding.find(a_tree);
+					}
+				}
+				else
+				{
+					return this;
+				}
+			}
+			return null;
+		}
+
+		internal static com.db4o.Tree findGreaterOrEqual(com.db4o.Tree a_in, com.db4o.Tree
+			 a_finder)
+		{
+			if (a_in == null)
+			{
+				return null;
+			}
+			int cmp = a_in.compare(a_finder);
+			if (cmp == 0)
+			{
+				return a_in;
+			}
+			else
+			{
+				if (cmp > 0)
+				{
+					com.db4o.Tree node = findGreaterOrEqual(a_in.i_preceding, a_finder);
+					if (node != null)
+					{
+						return node;
+					}
+					return a_in;
+				}
+				else
+				{
+					return findGreaterOrEqual(a_in.i_subsequent, a_finder);
+				}
+			}
+		}
+
+		internal static com.db4o.Tree findSmaller(com.db4o.Tree a_in, com.db4o.Tree a_node
+			)
+		{
+			if (a_in == null)
+			{
+				return null;
+			}
+			int cmp = a_in.compare(a_node);
+			if (cmp < 0)
+			{
+				com.db4o.Tree node = findSmaller(a_in.i_subsequent, a_node);
+				if (node != null)
+				{
+					return node;
+				}
+				return a_in;
+			}
+			else
+			{
+				return findSmaller(a_in.i_preceding, a_node);
+			}
+		}
+
+		internal virtual void isDuplicateOf(com.db4o.Tree a_tree)
+		{
+			i_size = 0;
+		}
+
+		internal virtual int ownLength()
+		{
+			throw com.db4o.YapConst.virtualException();
+		}
+
+		internal virtual int ownSize()
+		{
+			return 1;
+		}
+
+		internal static com.db4o.Tree read(com.db4o.Tree a_tree, com.db4o.YapReader a_bytes
+			)
+		{
+			throw com.db4o.YapConst.virtualException();
+		}
+
+		public virtual object read(com.db4o.YapReader a_bytes)
+		{
+			throw com.db4o.YapConst.virtualException();
+		}
+
+		internal virtual com.db4o.Tree remove()
+		{
+			if (i_subsequent != null && i_preceding != null)
+			{
+				i_subsequent = i_subsequent.rotateSmallestUp();
+				i_subsequent.i_preceding = i_preceding;
+				i_subsequent.calculateSize();
+				return i_subsequent;
+			}
+			if (i_subsequent != null)
+			{
+				return i_subsequent;
+			}
+			return i_preceding;
+		}
+
+		internal virtual void removeChildren()
+		{
+			i_preceding = null;
+			i_subsequent = null;
+			i_size = ownSize();
+		}
+
+		internal static com.db4o.Tree removeLike(com.db4o.Tree from, com.db4o.Tree a_find
+			)
+		{
+			if (from == null)
+			{
+				return null;
+			}
+			return from.removeLike(a_find);
+		}
+
+		public com.db4o.Tree removeLike(com.db4o.Tree a_find)
+		{
+			int cmp = compare(a_find);
+			if (cmp == 0)
+			{
+				return remove();
+			}
+			if (cmp > 0)
+			{
+				if (i_preceding != null)
+				{
+					i_preceding = i_preceding.removeLike(a_find);
+				}
+			}
+			else
+			{
+				if (i_subsequent != null)
+				{
+					i_subsequent = i_subsequent.removeLike(a_find);
+				}
+			}
+			calculateSize();
+			return this;
+		}
+
+		internal com.db4o.Tree removeNode(com.db4o.Tree a_tree)
+		{
+			if (this == a_tree)
+			{
+				return remove();
+			}
+			int cmp = compare(a_tree);
+			if (cmp >= 0)
+			{
+				if (i_preceding != null)
+				{
+					i_preceding = i_preceding.removeNode(a_tree);
+				}
+			}
+			if (cmp <= 0)
+			{
+				if (i_subsequent != null)
+				{
+					i_subsequent = i_subsequent.removeNode(a_tree);
+				}
+			}
+			calculateSize();
+			return this;
+		}
+
+		internal com.db4o.Tree rotateLeft()
+		{
+			com.db4o.Tree tree = i_subsequent;
+			i_subsequent = tree.i_preceding;
+			calculateSize();
+			tree.i_preceding = this;
+			if (tree.i_subsequent == null)
+			{
+				tree.i_size = i_size + tree.ownSize();
+			}
+			else
+			{
+				tree.i_size = i_size + tree.i_subsequent.i_size + tree.ownSize();
+			}
+			return tree;
+		}
+
+		internal com.db4o.Tree rotateRight()
+		{
+			com.db4o.Tree tree = i_preceding;
+			i_preceding = tree.i_subsequent;
+			calculateSize();
+			tree.i_subsequent = this;
+			if (tree.i_preceding == null)
+			{
+				tree.i_size = i_size + tree.ownSize();
+			}
+			else
+			{
+				tree.i_size = i_size + tree.i_preceding.i_size + tree.ownSize();
+			}
+			return tree;
+		}
+
+		private com.db4o.Tree rotateSmallestUp()
+		{
+			if (i_preceding != null)
+			{
+				i_preceding = i_preceding.rotateSmallestUp();
+				return rotateRight();
+			}
+			return this;
+		}
+
+		internal static int size(com.db4o.Tree a_tree)
+		{
+			if (a_tree == null)
+			{
+				return 0;
+			}
+			return a_tree.size();
+		}
+
+		public virtual int size()
+		{
+			return i_size;
+		}
+
+		public void traverse(com.db4o.Visitor4 a_visitor)
+		{
+			if (i_preceding != null)
+			{
+				i_preceding.traverse(a_visitor);
+			}
+			a_visitor.visit(this);
+			if (i_subsequent != null)
+			{
+				i_subsequent.traverse(a_visitor);
+			}
+		}
+
+		internal void traverseFromLeaves(com.db4o.Visitor4 a_visitor)
+		{
+			if (i_preceding != null)
+			{
+				i_preceding.traverseFromLeaves(a_visitor);
+			}
+			if (i_subsequent != null)
+			{
+				i_subsequent.traverseFromLeaves(a_visitor);
+			}
+			a_visitor.visit(this);
+		}
+
+		internal virtual bool variableLength()
+		{
+			throw com.db4o.YapConst.virtualException();
+		}
+
+		internal static void write(com.db4o.YapWriter a_writer, com.db4o.Tree a_tree)
+		{
+			if (a_tree == null)
+			{
+				a_writer.writeInt(0);
+			}
+			else
+			{
+				a_writer.writeInt(a_tree.size());
+				a_tree.traverse(new _AnonymousInnerClass383(a_writer));
+			}
+		}
+
+		private sealed class _AnonymousInnerClass383 : com.db4o.Visitor4
+		{
+			public _AnonymousInnerClass383(com.db4o.YapWriter a_writer)
+			{
+				this.a_writer = a_writer;
+			}
+
+			public void visit(object a_object)
+			{
+				((com.db4o.Tree)a_object).write(a_writer);
+			}
+
+			private readonly com.db4o.YapWriter a_writer;
+		}
+
+		public virtual void write(com.db4o.YapWriter a_writer)
+		{
+			throw com.db4o.YapConst.virtualException();
+		}
+	}
 }

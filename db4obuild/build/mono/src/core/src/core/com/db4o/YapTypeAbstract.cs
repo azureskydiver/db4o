@@ -1,102 +1,127 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal abstract class YapTypeAbstract : com.db4o.YapJavaClass, com.db4o.YapType
+	{
+		public YapTypeAbstract(com.db4o.YapStream stream) : base(stream)
+		{
+		}
 
-   abstract internal class YapTypeAbstract : YapJavaClass, YapType {
-      
-      internal YapTypeAbstract() : base() {
-      }
-      private Class i_cachedClass;
-      private int i_linkLength;
-      private Object i_compareTo;
-      
-      public override Class getJavaClass() {
-         return i_cachedClass;
-      }
-      
-      public abstract Object defaultValue();
-      
-      public abstract int typeID();
-      
-      public abstract void write(Object obj, byte[] xis, int i);
-      
-      public abstract Object read(byte[] xis, int i);
-      
-      public abstract int compare(Object obj, Object obj_0_);
-      
-      public abstract bool isEqual(Object obj, Object obj_1_);
-      
-      internal void initialize() {
-         i_cachedClass = j4o.lang.Class.getClassForObject(primitiveNull());
-         byte[] xis1 = new byte[65];
-         for (int i1 = 0; i1 < xis1.Length; i1++) xis1[i1] = (byte)55;
-         write(primitiveNull(), xis1, 0);
-         for (int i1 = 0; i1 < xis1.Length; i1++) {
-            if (xis1[i1] == 55) {
-               i_linkLength = i1;
-               break;
-            }
-         }
-      }
-      
-      internal override Object primitiveNull() {
-         return defaultValue();
-      }
-      
-      public override void write(Object obj, YapWriter yapwriter) {
-         int i1 = yapwriter._offset;
-         if (obj != null) write(obj, yapwriter._buffer, yapwriter._offset);
-         yapwriter._offset = i1 + linkLength();
-      }
-      
-      public override int getID() {
-         return typeID();
-      }
-      
-      public override int linkLength() {
-         return i_linkLength;
-      }
-      
-      internal override Object read1(YapReader yapreader) {
-         int i1 = yapreader._offset;
-         Object obj1 = read(yapreader._buffer, yapreader._offset);
-         yapreader._offset = i1 + linkLength();
-         return obj1;
-      }
-      
-      internal override void prepareComparison1(Object obj) {
-         i_compareTo = obj;
-      }
-      
-      internal override bool isEqual1(Object obj) {
-         return isEqual(i_compareTo, obj);
-      }
-      
-      internal override bool isGreater1(Object obj) {
-         if (i_cachedClass.isInstance(obj) && !isEqual(i_compareTo, obj)) return compare(i_compareTo, obj) > 0;
-         return false;
-      }
-      
-      internal override bool isSmaller1(Object obj) {
-         if (i_cachedClass.isInstance(obj) && !isEqual(i_compareTo, obj)) return compare(i_compareTo, obj) < 0;
-         return false;
-      }
-   }
+		private int i_linkLength;
+
+		private object i_compareTo;
+
+		public abstract int typeID();
+
+		public abstract void write(object obj, byte[] bytes, int offset);
+
+		public abstract object read(byte[] bytes, int offset);
+
+		public abstract int compare(object compare, object with);
+
+		public abstract bool isEqual(object compare, object with);
+
+		internal virtual void initialize()
+		{
+			byte[] bytes = new byte[65];
+			for (int i = 0; i < bytes.Length; i++)
+			{
+				bytes[i] = 55;
+			}
+			write(primitiveNull(), bytes, 0);
+			for (int i = 0; i < bytes.Length; i++)
+			{
+				if (bytes[i] == 55)
+				{
+					i_linkLength = i;
+					break;
+				}
+			}
+		}
+
+		internal override object primitiveNull()
+		{
+			return defaultValue();
+		}
+
+		public override void write(object a_object, com.db4o.YapWriter a_bytes)
+		{
+			int offset = a_bytes._offset;
+			if (a_object != null)
+			{
+				write(a_object, a_bytes._buffer, a_bytes._offset);
+			}
+			a_bytes._offset = offset + linkLength();
+		}
+
+		public override int getID()
+		{
+			return typeID();
+		}
+
+		public override int linkLength()
+		{
+			return i_linkLength;
+		}
+
+		protected override j4o.lang.Class primitiveJavaClass()
+		{
+			return null;
+		}
+
+		internal override object read1(com.db4o.YapReader a_bytes)
+		{
+			int offset = a_bytes._offset;
+			object ret = read(a_bytes._buffer, a_bytes._offset);
+			a_bytes._offset = offset + linkLength();
+			return ret;
+		}
+
+		internal override void prepareComparison1(object obj)
+		{
+			i_compareTo = obj;
+		}
+
+		internal override bool isEqual1(object obj)
+		{
+			return isEqual(i_compareTo, obj);
+		}
+
+		internal override bool isGreater1(object obj)
+		{
+			if (classReflector().isInstance(obj) && !isEqual(i_compareTo, obj))
+			{
+				return compare(i_compareTo, obj) > 0;
+			}
+			return false;
+		}
+
+		internal override bool isSmaller1(object obj)
+		{
+			if (classReflector().isInstance(obj) && !isEqual(i_compareTo, obj))
+			{
+				return compare(i_compareTo, obj) < 0;
+			}
+			return false;
+		}
+	}
 }

@@ -1,130 +1,169 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using com.db4o.ext;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <summary>
+	/// no reading
+	/// no writing
+	/// no updates
+	/// no weak references
+	/// navigation by ID only both sides need synchronised ClassCollections and
+	/// MetaInformationCaches
+	/// </summary>
+	internal class YapObjectCarrier : com.db4o.YapMemoryFile
+	{
+		internal YapObjectCarrier(com.db4o.YapStream a_callingStream, com.db4o.ext.MemoryFile
+			 memoryFile) : base(a_callingStream, memoryFile)
+		{
+		}
 
-   internal class YapObjectCarrier : YapMemoryFile {
-      
-      internal YapObjectCarrier(YapStream yapstream, MemoryFile memoryfile) : base(yapstream, memoryfile) {
-      }
-      
-      internal override void initialize0b() {
-      }
-      
-      internal override void initialize1() {
-         i_handlers = i_parent.i_handlers;
-         i_classCollection = i_parent.i_classCollection;
-         i_config = i_parent.i_config;
-         i_stringIo = i_parent.i_stringIo;
-         i_references = new YapReferences(this);
-         this.initialize2();
-      }
-      
-      internal override void initialize2b() {
-      }
-      
-      internal override void initializeEssentialClasses() {
-      }
-      
-      internal override void initialize4NObjectCarrier() {
-      }
-      
-      internal override void initNewClassCollection() {
-      }
-      
-      internal override bool canUpdate() {
-         return false;
-      }
-      
-      internal override void configureNewFile() {
-         i_writeAt = 18;
-      }
-      
-      public override bool close() {
-         lock (i_lock) {
-            bool xbool1 = this.close1();
-            if (xbool1) i_config = null;
-            return xbool1;
-         }
-      }
-      
-      internal override void createTransaction() {
-         i_trans = new TransactionObjectCarrier(this, null);
-         i_systemTrans = i_trans;
-      }
-      
-      internal override long currentVersion() {
-         return 0L;
-      }
-      
-      public override bool dispatchsEvents() {
-         return false;
-      }
-      
-      protected void finalize() {
-      }
-      
-      internal override void free(int i, int i_0_) {
-      }
-      
-      internal override int getSlot(int i) {
-         int i_1_1 = i_writeAt;
-         i_writeAt += i;
-         return i_1_1;
-      }
-      
-      public override Db4oDatabase identity() {
-         return i_parent.identity();
-      }
-      
-      internal override bool maintainsIndices() {
-         return false;
-      }
-      
-      internal override void message(String xstring) {
-      }
-      
-      internal override bool needsLockFileThread() {
-         return false;
-      }
-      
-      internal override void raiseVersion(long l) {
-      }
-      
-      internal override void readThis() {
-      }
-      
-      internal override bool stateMessages() {
-         return false;
-      }
-      
-      internal override void write(bool xbool) {
-         this.checkNeededUpdates();
-         this.writeDirty();
-         this.getTransaction().commit();
-      }
-      
-      internal override void writeHeader(bool xbool) {
-      }
-      
-      internal override void writeBootRecord() {
-      }
-   }
+		internal override void initialize0b()
+		{
+		}
+
+		internal override void initialize1()
+		{
+			i_handlers = i_parent.i_handlers;
+			i_classCollection = i_parent.i_classCollection;
+			i_config = i_parent.i_config;
+			i_stringIo = i_parent.i_stringIo;
+			i_references = new com.db4o.YapReferences(this);
+			initialize2();
+		}
+
+		internal override void initialize2b()
+		{
+		}
+
+		internal override void initializeEssentialClasses()
+		{
+		}
+
+		internal override void initialize4NObjectCarrier()
+		{
+		}
+
+		internal override void initNewClassCollection()
+		{
+		}
+
+		internal override bool canUpdate()
+		{
+			return false;
+		}
+
+		internal override void configureNewFile()
+		{
+			i_writeAt = HEADER_LENGTH;
+		}
+
+		public override bool close()
+		{
+			lock (i_lock)
+			{
+				bool ret = close1();
+				if (ret)
+				{
+					i_config = null;
+				}
+				return ret;
+			}
+		}
+
+		internal override void createTransaction()
+		{
+			i_trans = new com.db4o.TransactionObjectCarrier(this, null);
+			i_systemTrans = i_trans;
+		}
+
+		internal override long currentVersion()
+		{
+			return 0;
+		}
+
+		public override bool dispatchsEvents()
+		{
+			return false;
+		}
+
+		~YapObjectCarrier()
+		{
+		}
+
+		internal sealed override void free(int a_address, int a_length)
+		{
+		}
+
+		internal override int getSlot(int a_length)
+		{
+			int address = i_writeAt;
+			i_writeAt += a_length;
+			return address;
+		}
+
+		public override com.db4o.ext.Db4oDatabase identity()
+		{
+			return i_parent.identity();
+		}
+
+		internal override bool maintainsIndices()
+		{
+			return false;
+		}
+
+		internal override void message(string msg)
+		{
+		}
+
+		internal override bool needsLockFileThread()
+		{
+			return false;
+		}
+
+		internal override void raiseVersion(long a_minimumVersion)
+		{
+		}
+
+		internal override void readThis()
+		{
+		}
+
+		internal override bool stateMessages()
+		{
+			return false;
+		}
+
+		internal override void write(bool shuttingDown)
+		{
+			checkNeededUpdates();
+			writeDirty();
+			getTransaction().commit();
+		}
+
+		internal sealed override void writeHeader(bool shuttingDown)
+		{
+		}
+
+		internal override void writeBootRecord()
+		{
+		}
+	}
 }

@@ -1,87 +1,126 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal abstract class YapFieldVirtual : com.db4o.YapField
+	{
+		internal static readonly string PREFIX = "v4o";
 
-   abstract internal class YapFieldVirtual : YapField {
-      static internal String PREFIX = "v4o";
-      
-      internal YapFieldVirtual() : base(null) {
-      }
-      
-      internal override void addFieldIndex(YapWriter yapwriter, bool xbool) {
-         yapwriter.incrementOffset(this.linkLength());
-      }
-      
-      internal override void delete(YapWriter yapwriter) {
-         yapwriter.incrementOffset(this.linkLength());
-      }
-      
-      internal override int ownLength(YapStream yapstream) {
-         return yapstream.i_stringIo.shortLength(i_name);
-      }
-      
-      internal void initIndex(YapStream yapstream, MetaIndex metaindex) {
-         if (i_index == null) i_index = new IxField(yapstream.getSystemTransaction(), this, metaindex);
-      }
-      
-      internal override void instantiate(YapObject yapobject, Object obj, YapWriter yapwriter) {
-         if (yapobject.i_virtualAttributes == null) yapobject.i_virtualAttributes = new VirtualAttributes();
-         instantiate1(yapwriter.getTransaction(), yapobject, yapwriter);
-      }
-      
-      abstract internal void instantiate1(Transaction transaction, YapObject yapobject, YapReader yapreader);
-      
-      internal override void loadHandler(YapStream yapstream) {
-      }
-      
-      internal override void marshall(YapObject yapobject, Object obj, YapWriter yapwriter, Config4Class config4class, bool xbool) {
-         YapStream yapstream1 = yapwriter.i_trans.i_stream;
-         bool bool_0_1 = false;
-         if (yapstream1 is YapFile) {
-            if (yapstream1.i_migrateFrom != null) {
-               bool_0_1 = true;
-               if (yapobject.i_virtualAttributes == null) {
-                  YapObject yapobject_1_1 = yapstream1.i_migrateFrom.getYapObject(yapobject.getObject());
-                  if (yapobject_1_1 != null && yapobject_1_1.i_virtualAttributes != null && yapobject_1_1.i_virtualAttributes.i_database != null) {
-                     bool_0_1 = true;
-                     yapobject.i_virtualAttributes = yapobject_1_1.i_virtualAttributes.shallowClone();
-                     yapobject.i_virtualAttributes.i_database = yapstream1.i_handlers.ensureDb4oDatabase(yapwriter.getTransaction(), yapobject_1_1.i_virtualAttributes.i_database);
-                  }
-               }
-            }
-            if (yapobject.i_virtualAttributes == null) {
-               yapobject.i_virtualAttributes = new VirtualAttributes();
-               bool_0_1 = false;
-            }
-         } else bool_0_1 = true;
-         marshall1(yapobject, yapwriter, bool_0_1, xbool);
-      }
-      
-      abstract internal void marshall1(YapObject yapobject, YapWriter yapwriter, bool xbool, bool bool_2_);
-      
-      public override void readVirtualAttribute(Transaction transaction, YapReader yapreader, YapObject yapobject) {
-         instantiate1(transaction, yapobject, yapreader);
-      }
-      
-      internal override void writeThis(YapWriter yapwriter, YapClass yapclass) {
-         yapwriter.writeShortString(i_name);
-      }
-   }
+		internal YapFieldVirtual() : base(null)
+		{
+		}
+
+		internal override void addFieldIndex(com.db4o.YapWriter a_writer, bool a_new)
+		{
+			a_writer.incrementOffset(linkLength());
+		}
+
+		internal override void delete(com.db4o.YapWriter a_bytes)
+		{
+			a_bytes.incrementOffset(linkLength());
+		}
+
+		internal override int ownLength(com.db4o.YapStream a_stream)
+		{
+			return a_stream.i_stringIo.shortLength(i_name);
+		}
+
+		internal virtual void initIndex(com.db4o.YapStream a_stream, com.db4o.MetaIndex a_metaIndex
+			)
+		{
+			if (i_index == null)
+			{
+				i_index = new com.db4o.IxField(a_stream.getSystemTransaction(), this, a_metaIndex
+					);
+			}
+		}
+
+		internal override void instantiate(com.db4o.YapObject a_yapObject, object a_onObject
+			, com.db4o.YapWriter a_bytes)
+		{
+			if (a_yapObject.i_virtualAttributes == null)
+			{
+				a_yapObject.i_virtualAttributes = new com.db4o.VirtualAttributes();
+			}
+			instantiate1(a_bytes.getTransaction(), a_yapObject, a_bytes);
+		}
+
+		internal abstract void instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject
+			 a_yapObject, com.db4o.YapReader a_bytes);
+
+		internal override void loadHandler(com.db4o.YapStream a_stream)
+		{
+		}
+
+		internal override void marshall(com.db4o.YapObject a_yapObject, object a_object, 
+			com.db4o.YapWriter a_bytes, com.db4o.Config4Class a_config, bool a_new)
+		{
+			com.db4o.YapStream stream = a_bytes.i_trans.i_stream;
+			bool migrating = false;
+			if (stream is com.db4o.YapFile)
+			{
+				if (stream.i_migrateFrom != null)
+				{
+					migrating = true;
+					if (a_yapObject.i_virtualAttributes == null)
+					{
+						com.db4o.YapObject migrateYapObject = stream.i_migrateFrom.getYapObject(a_yapObject
+							.getObject());
+						if (migrateYapObject != null && migrateYapObject.i_virtualAttributes != null && migrateYapObject
+							.i_virtualAttributes.i_database != null)
+						{
+							migrating = true;
+							a_yapObject.i_virtualAttributes = migrateYapObject.i_virtualAttributes.shallowClone
+								();
+							a_yapObject.i_virtualAttributes.i_database = stream.i_handlers.ensureDb4oDatabase
+								(a_bytes.getTransaction(), migrateYapObject.i_virtualAttributes.i_database);
+						}
+					}
+				}
+				if (a_yapObject.i_virtualAttributes == null)
+				{
+					a_yapObject.i_virtualAttributes = new com.db4o.VirtualAttributes();
+					migrating = false;
+				}
+			}
+			else
+			{
+				migrating = true;
+			}
+			marshall1(a_yapObject, a_bytes, migrating, a_new);
+		}
+
+		internal abstract void marshall1(com.db4o.YapObject a_yapObject, com.db4o.YapWriter
+			 a_bytes, bool a_migrating, bool a_new);
+
+		public override void readVirtualAttribute(com.db4o.Transaction a_trans, com.db4o.YapReader
+			 a_reader, com.db4o.YapObject a_yapObject)
+		{
+			instantiate1(a_trans, a_yapObject, a_reader);
+		}
+
+		internal override void writeThis(com.db4o.YapWriter a_writer, com.db4o.YapClass a_onClass
+			)
+		{
+			a_writer.writeShortString(i_name);
+		}
+	}
 }

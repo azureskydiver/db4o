@@ -1,51 +1,51 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
-
-   internal class MObjectByUuid : MsgD {
-      
-      internal MObjectByUuid() : base() {
-      }
-      
-      internal override bool processMessageAtServer(YapSocket yapsocket) {
-         long l1 = this.readLong();
-         byte[] xis1 = this.readBytes();
-         int i1 = 0;
-         YapStream yapstream1 = this.getStream();
-         Transaction transaction1 = this.getTransaction();
-         lock (yapstream1.i_lock) {
-            try {
-               {
-                  Object[] objs1 = transaction1.objectAndYapObjectBySignature(l1, xis1);
-                  if (objs1[1] != null) {
-                     YapObject yapobject1 = (YapObject)objs1[1];
-                     i1 = yapobject1.getID();
-                  }
-               }
-            }  catch (Exception exception) {
-               {
-               }
-            }
-         }
-         Msg.OBJECT_BY_UUID.getWriterForInt(transaction1, i1).write(yapstream1, yapsocket);
-         return true;
-      }
-   }
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal class MObjectByUuid : com.db4o.MsgD
+	{
+		internal sealed override bool processMessageAtServer(com.db4o.YapSocket sock)
+		{
+			long uuid = readLong();
+			byte[] signature = readBytes();
+			int id = 0;
+			com.db4o.YapStream stream = getStream();
+			com.db4o.Transaction trans = getTransaction();
+			lock (stream.i_lock)
+			{
+				try
+				{
+					object[] arr = trans.objectAndYapObjectBySignature(uuid, signature);
+					if (arr[1] != null)
+					{
+						com.db4o.YapObject yo = (com.db4o.YapObject)arr[1];
+						id = yo.getID();
+					}
+				}
+				catch (System.Exception e)
+				{
+				}
+			}
+			com.db4o.Msg.OBJECT_BY_UUID.getWriterForInt(trans, id).write(stream, sock);
+			return true;
+		}
+	}
 }

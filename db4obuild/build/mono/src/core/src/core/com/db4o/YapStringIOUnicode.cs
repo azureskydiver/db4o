@@ -1,76 +1,92 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal sealed class YapStringIOUnicode : com.db4o.YapStringIO
+	{
+		internal override int bytesPerChar()
+		{
+			return 2;
+		}
 
-   internal class YapStringIOUnicode : YapStringIO {
-      
-      internal YapStringIOUnicode() : base() {
-      }
-      
-      internal override int bytesPerChar() {
-         return 2;
-      }
-      
-      internal override byte encodingByte() {
-         return (byte)2;
-      }
-      
-      internal override int Length(String xstring) {
-         return j4o.lang.JavaSystem.getLengthOf(xstring) * 2 + 0 + 4;
-      }
-      
-      internal override String read(YapReader yapreader, int i) {
-         this.checkBufferLength(i);
-         for (int i_0_1 = 0; i_0_1 < i; i_0_1++) chars[i_0_1] = (char)(yapreader._buffer[yapreader._offset++] & 255 | (yapreader._buffer[yapreader._offset++] & 255) << 8);
-         return new String(chars, 0, i);
-      }
-      
-      internal override String read(byte[] xis) {
-         int i1 = xis.Length / 2;
-         this.checkBufferLength(i1);
-         int i_1_1 = 0;
-         for (int i_2_1 = 0; i_2_1 < i1; i_2_1++) chars[i_2_1] = (char)(xis[i_1_1++] & 255 | (xis[i_1_1++] & 255) << 8);
-         return new String(chars, 0, i1);
-      }
-      
-      internal override int shortLength(String xstring) {
-         return j4o.lang.JavaSystem.getLengthOf(xstring) * 2 + 4;
-      }
-      
-      internal override void write(YapReader yapreader, String xstring) {
-         int i1 = this.writetoBuffer(xstring);
-         for (int i_3_1 = 0; i_3_1 < i1; i_3_1++) {
-            yapreader._buffer[yapreader._offset++] = (byte)(chars[i_3_1] & (char)255);
-            yapreader._buffer[yapreader._offset++] = (byte)(chars[i_3_1] >> 8);
-         }
-      }
-      
-      internal override byte[] write(String xstring) {
-         int i1 = this.writetoBuffer(xstring);
-         byte[] xis1 = new byte[i1 * 2];
-         int i_4_1 = 0;
-         for (int i_5_1 = 0; i_5_1 < i1; i_5_1++) {
-            xis1[i_4_1++] = (byte)(chars[i_5_1] & (char)255);
-            xis1[i_4_1++] = (byte)(chars[i_5_1] >> 8);
-         }
-         return xis1;
-      }
-   }
+		internal override byte encodingByte()
+		{
+			return com.db4o.YapConst.UNICODE;
+		}
+
+		internal override int length(string a_string)
+		{
+			return (j4o.lang.JavaSystem.getLengthOf(a_string) * 2) + com.db4o.YapConst.OBJECT_LENGTH
+				 + com.db4o.YapConst.YAPINT_LENGTH;
+		}
+
+		internal override string read(com.db4o.YapReader bytes, int a_length)
+		{
+			checkBufferLength(a_length);
+			for (int ii = 0; ii < a_length; ii++)
+			{
+				chars[ii] = (char)((bytes._buffer[bytes._offset++] & 0xff) | ((bytes._buffer[bytes
+					._offset++] & 0xff) << 8));
+			}
+			return new string(chars, 0, a_length);
+		}
+
+		internal override string read(byte[] a_bytes)
+		{
+			int len = a_bytes.Length / 2;
+			checkBufferLength(len);
+			int j = 0;
+			for (int ii = 0; ii < len; ii++)
+			{
+				chars[ii] = (char)((a_bytes[j++] & 0xff) | ((a_bytes[j++] & 0xff) << 8));
+			}
+			return new string(chars, 0, len);
+		}
+
+		internal override int shortLength(string a_string)
+		{
+			return (j4o.lang.JavaSystem.getLengthOf(a_string) * 2) + com.db4o.YapConst.YAPINT_LENGTH;
+		}
+
+		internal override void write(com.db4o.YapReader bytes, string _string)
+		{
+			int len = writetoBuffer(_string);
+			for (int i = 0; i < len; i++)
+			{
+				bytes._buffer[bytes._offset++] = (byte)(chars[i] & 0xff);
+				bytes._buffer[bytes._offset++] = (byte)(chars[i] >> 8);
+			}
+		}
+
+		internal override byte[] write(string _string)
+		{
+			int len = writetoBuffer(_string);
+			byte[] bytes = new byte[len * 2];
+			int j = 0;
+			for (int i = 0; i < len; i++)
+			{
+				bytes[j++] = (byte)(chars[i] & 0xff);
+				bytes[j++] = (byte)(chars[i] >> 8);
+			}
+			return bytes;
+		}
+	}
 }

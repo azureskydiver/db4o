@@ -1,20 +1,23 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 using System;
 using System.Collections;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -92,8 +95,8 @@ namespace com.db4o {
             return new P2Collections(a_object);
         }
 
-        static internal int collectionUpdateDepth(Class var_class) {
-            return typeof(System.Collections.IDictionary).IsAssignableFrom(var_class.getNetType()) ? 3 : 2 ;
+        static internal Reflector createReflector(Config4Impl config){
+            return new com.db4o.reflect.net.NetReflector();
         }
 
         static internal Object createReferenceQueue() {
@@ -133,20 +136,23 @@ namespace com.db4o {
             }
         }
       
-        static internal Collection4 flattenCollection(Object obj) {
+        static internal Collection4 flattenCollection(YapStream stream, Object obj) {
             Collection4 collection41 = new Collection4();
-            flattenCollection1(obj, collection41);
+            flattenCollection1(stream, obj, collection41);
             return collection41;
         }
       
-        static internal void flattenCollection1(Object obj, Collection4 collection4) {
+        static internal void flattenCollection1(YapStream stream, Object obj, Collection4 collection4) {
 
             Array arr = obj as Array;
             if(arr != null){
+                ReflectArray reflectArray = stream.reflector().array();
+
                 Object[] flat = new Object[arr.Length];
-                Array4.flatten(obj, Array4.dimensions(obj),0, flat, 0);
+
+                reflectArray.flatten(obj, reflectArray.dimensions(obj),0, flat, 0);
                 for(int i = 0; i < flat.Length; i ++){
-                    flattenCollection1(flat[i], collection4);
+                    flattenCollection1(stream, flat[i], collection4);
                 }
             }else{
 
@@ -158,12 +164,12 @@ namespace com.db4o {
                     if(enumerator is IDictionaryEnumerator){
                         IDictionaryEnumerator dictEnumerator = enumerator as IDictionaryEnumerator;
                         while (enumerator.MoveNext()) {
-                            flattenCollection1(dictEnumerator.Key, collection4);
+                            flattenCollection1(stream, dictEnumerator.Key, collection4);
                         }
                     }else{
                         while (enumerator.MoveNext()) {
                             // recursive call to flatten Collections in Collections
-                            flattenCollection1(enumerator.Current, collection4);
+                            flattenCollection1(stream, enumerator.Current, collection4);
                         }
                     }
                 }else{
@@ -283,13 +289,6 @@ namespace com.db4o {
             return false;
         }
       
-        static internal bool isCollection(Class clazz) {
-            if(clazz.isArray()){
-                return false;
-            }
-            return typeof(ICollection).IsAssignableFrom(clazz.getNetType());
-        }
-      
         static internal bool isCollectionTranslator(Config4Class config4class) {
             if (config4class != null) {
                 ObjectTranslator ot = config4class.getTranslator();
@@ -298,10 +297,6 @@ namespace com.db4o {
                 }
             }
             return false;
-        }
-
-        static internal bool isSecondClass(Class clazz) {
-            return isValueType(clazz);
         }
 
         public static bool isSimple(Class a_class) {
@@ -313,11 +308,15 @@ namespace com.db4o {
             return false;
         }
 
-        static internal bool isValueType(Class clazz) {
-            if(clazz != null){
-                return clazz.getNetType().IsValueType;
+        static internal bool isValueType(ReflectClass claxx) {
+            if(claxx == null){
+                return false;
             }
-            return false;
+            com.db4o.reflect.net.NetClass netClass = claxx as com.db4o.reflect.net.NetClass ;
+            if(netClass == null){
+                return false;
+            }
+            return netClass.getNetType().IsValueType;
         }
 
         static internal void killYapRef(Object obj){
@@ -371,6 +370,10 @@ namespace com.db4o {
             }
         }
 
+        public static void registerCollections(Reflector reflector) {
+            // TODO: implement
+        }
+
         static internal void removeShutDownHook(Object yapStream, Object streamLock) {
             lock (typeof(Platform)) {
                 if (shutDownStreams != null && shutDownStreams.Contains(yapStream)) {
@@ -391,7 +394,7 @@ namespace com.db4o {
             }
         }
         
-        public static bool storeStaticFieldValues(Class clazz) {
+        public static bool storeStaticFieldValues(Reflector reflector, ReflectClass clazz) {
         	return false;
     	}
         
@@ -428,15 +431,15 @@ namespace com.db4o {
             return bytes;
         }
 
-        static internal YapTypeAbstract[] types() {
+        static internal YapTypeAbstract[] types(YapStream stream) {
             return new YapTypeAbstract[]{
-                                            new YapDouble(),
-                                            new YapSByte(),
-                                            new YapDecimal(),
-                                            new YapUInt(),
-                                            new YapULong(),
-                                            new YapUShort(),
-                                            new YapDateTime(),
+                                            new YapDouble(stream),
+                                            new YapSByte(stream),
+                                            new YapDecimal(stream),
+                                            new YapUInt(stream),
+                                            new YapULong(stream),
+                                            new YapUShort(stream),
+                                            new YapDateTime(stream),
             };
         }
 

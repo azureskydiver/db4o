@@ -1,92 +1,139 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using com.db4o.ext;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal class YapFieldUUID : com.db4o.YapFieldVirtual
+	{
+		internal YapFieldUUID(com.db4o.YapStream stream) : base()
+		{
+			i_name = PREFIX + "uuid";
+			i_handler = new com.db4o.YLong(stream);
+		}
 
-   internal class YapFieldUUID : YapFieldVirtual {
-      
-      internal YapFieldUUID() : base() {
-         i_name = "v4ouuid";
-         i_handler = new YLong();
-      }
-      
-      internal override void addFieldIndex(YapWriter yapwriter, bool xbool) {
-         int i1 = yapwriter._offset;
-         int i_0_1 = yapwriter.readInt();
-         long l1 = YLong.readLong(yapwriter);
-         yapwriter._offset = i1;
-         YapFile yapfile1 = (YapFile)yapwriter.getStream();
-         if (i_0_1 == 0) yapwriter.writeInt(yapfile1.identity().getID(yapfile1)); else yapwriter.incrementOffset(4);
-         if (l1 == 0L) l1 = yapfile1.i_bootRecord.newUUID();
-         YLong.writeLong(l1, yapwriter);
-         if (xbool) this.addIndexEntry(System.Convert.ToInt64(l1), yapwriter);
-      }
-      
-      internal override IxField getIndex(Transaction transaction) {
-         YapFile yapfile1 = (YapFile)transaction.i_stream;
-         if (i_index == null) {
-            PBootRecord pbootrecord1 = yapfile1.i_bootRecord;
-            i_index = new IxField(yapfile1.getSystemTransaction(), this, pbootrecord1.getUUIDMetaIndex());
-         }
-         return i_index;
-      }
-      
-      internal override void instantiate1(Transaction transaction, YapObject yapobject, YapReader yapreader) {
-         int i1 = yapreader.readInt();
-         Db4oDatabase db4odatabase1 = (Db4oDatabase)transaction.i_stream.getByID2(transaction, i1);
-         if (db4odatabase1 != null && db4odatabase1.i_signature == null) transaction.i_stream.activate2(transaction, db4odatabase1, 2);
-         yapobject.i_virtualAttributes.i_database = db4odatabase1;
-         yapobject.i_virtualAttributes.i_uuid = YLong.readLong(yapreader);
-      }
-      
-      public override int linkLength() {
-         return 12;
-      }
-      
-      internal override void marshall1(YapObject yapobject, YapWriter yapwriter, bool xbool, bool bool_1_) {
-         YapStream yapstream1 = yapwriter.getStream();
-         bool bool_2_1 = bool_1_ && yapstream1.maintainsIndices();
-         int i1 = 0;
-         if (!xbool) {
-            if (yapobject.i_virtualAttributes.i_database == null) {
-               yapobject.i_virtualAttributes.i_database = yapstream1.identity();
-               if (yapstream1 is YapFile && ((YapFile)yapstream1).i_bootRecord != null) {
-                  PBootRecord pbootrecord1 = ((YapFile)yapstream1).i_bootRecord;
-                  yapobject.i_virtualAttributes.i_uuid = pbootrecord1.newUUID();
-                  bool_2_1 = true;
-               }
-            }
-            Db4oDatabase db4odatabase1 = yapobject.i_virtualAttributes.i_database;
-            if (db4odatabase1 != null) i1 = db4odatabase1.getID(yapstream1);
-         } else {
-            Object obj1 = null;
-            if (yapobject.i_virtualAttributes != null && yapobject.i_virtualAttributes.i_database != null) {
-               Db4oDatabase db4odatabase1 = yapobject.i_virtualAttributes.i_database;
-               i1 = db4odatabase1.getID(yapstream1);
-            }
-         }
-         yapwriter.writeInt(i1);
-         if (yapobject.i_virtualAttributes != null) {
-            YLong.writeLong(yapobject.i_virtualAttributes.i_uuid, yapwriter);
-            if (bool_2_1) this.addIndexEntry(System.Convert.ToInt64(yapobject.i_virtualAttributes.i_uuid), yapwriter);
-         } else YLong.writeLong(0L, yapwriter);
-      }
-   }
+		internal override void addFieldIndex(com.db4o.YapWriter a_writer, bool a_new)
+		{
+			int offset = a_writer._offset;
+			int id = a_writer.readInt();
+			long uuid = com.db4o.YLong.readLong(a_writer);
+			a_writer._offset = offset;
+			com.db4o.YapFile yf = (com.db4o.YapFile)a_writer.getStream();
+			if (id == 0)
+			{
+				a_writer.writeInt(yf.identity().getID(yf));
+			}
+			else
+			{
+				a_writer.incrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
+			}
+			if (uuid == 0)
+			{
+				uuid = yf.i_bootRecord.newUUID();
+			}
+			com.db4o.YLong.writeLong(uuid, a_writer);
+			if (a_new)
+			{
+				addIndexEntry(System.Convert.ToInt64(uuid), a_writer);
+			}
+		}
+
+		internal override com.db4o.IxField getIndex(com.db4o.Transaction a_trans)
+		{
+			com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.i_stream;
+			if (i_index == null)
+			{
+				com.db4o.PBootRecord bootRecord = stream.i_bootRecord;
+				i_index = new com.db4o.IxField(stream.getSystemTransaction(), this, bootRecord.getUUIDMetaIndex
+					());
+			}
+			return i_index;
+		}
+
+		internal override void instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject
+			 a_yapObject, com.db4o.YapReader a_bytes)
+		{
+			int dbID = a_bytes.readInt();
+			com.db4o.ext.Db4oDatabase db = (com.db4o.ext.Db4oDatabase)a_trans.i_stream.getByID2
+				(a_trans, dbID);
+			if (db != null && db.i_signature == null)
+			{
+				a_trans.i_stream.activate2(a_trans, db, 2);
+			}
+			a_yapObject.i_virtualAttributes.i_database = db;
+			a_yapObject.i_virtualAttributes.i_uuid = com.db4o.YLong.readLong(a_bytes);
+		}
+
+		public override int linkLength()
+		{
+			return com.db4o.YapConst.YAPLONG_LENGTH + com.db4o.YapConst.YAPID_LENGTH;
+		}
+
+		internal override void marshall1(com.db4o.YapObject a_yapObject, com.db4o.YapWriter
+			 a_bytes, bool a_migrating, bool a_new)
+		{
+			com.db4o.YapStream stream = a_bytes.getStream();
+			bool indexEntry = a_new && stream.maintainsIndices();
+			int dbID = 0;
+			if (!a_migrating)
+			{
+				if (a_yapObject.i_virtualAttributes.i_database == null)
+				{
+					a_yapObject.i_virtualAttributes.i_database = stream.identity();
+					if (stream is com.db4o.YapFile && ((com.db4o.YapFile)stream).i_bootRecord != null
+						)
+					{
+						com.db4o.PBootRecord bootRecord = ((com.db4o.YapFile)stream).i_bootRecord;
+						a_yapObject.i_virtualAttributes.i_uuid = bootRecord.newUUID();
+						indexEntry = true;
+					}
+				}
+				com.db4o.ext.Db4oDatabase db = a_yapObject.i_virtualAttributes.i_database;
+				if (db != null)
+				{
+					dbID = db.getID(stream);
+				}
+			}
+			else
+			{
+				com.db4o.ext.Db4oDatabase db = null;
+				if (a_yapObject.i_virtualAttributes != null && a_yapObject.i_virtualAttributes.i_database
+					 != null)
+				{
+					db = a_yapObject.i_virtualAttributes.i_database;
+					dbID = db.getID(stream);
+				}
+			}
+			a_bytes.writeInt(dbID);
+			if (a_yapObject.i_virtualAttributes != null)
+			{
+				com.db4o.YLong.writeLong(a_yapObject.i_virtualAttributes.i_uuid, a_bytes);
+				if (indexEntry)
+				{
+					addIndexEntry(System.Convert.ToInt64(a_yapObject.i_virtualAttributes.i_uuid), a_bytes
+						);
+				}
+			}
+			else
+			{
+				com.db4o.YLong.writeLong(0, a_bytes);
+			}
+		}
+	}
 }

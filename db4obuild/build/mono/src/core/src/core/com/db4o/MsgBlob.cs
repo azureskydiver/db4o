@@ -1,77 +1,94 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using j4o.io;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	internal abstract class MsgBlob : com.db4o.MsgD
+	{
+		internal com.db4o.BlobImpl i_blob;
 
-   abstract internal class MsgBlob : MsgD {
-      
-      internal MsgBlob() : base() {
-      }
-      internal BlobImpl i_blob;
-      internal int i_currentByte;
-      internal int i_length;
-      
-      internal double getStatus() {
-         if (i_length != 0) return (double)i_currentByte / (double)i_length;
-         return -99.0;
-      }
-      
-      abstract internal void processClient(YapSocket yapsocket);
-      
-      internal BlobImpl serverGetBlobImpl() {
-         Object obj1 = null;
-         int i1 = payLoad.readInt();
-         YapStream yapstream1 = this.getStream();
-         BlobImpl blobimpl1;
-         lock (yapstream1.i_lock) {
-            blobimpl1 = (BlobImpl)yapstream1.getByID1(this.getTransaction(), (long)i1);
-            yapstream1.activate1(this.getTransaction(), blobimpl1, 3);
-         }
-         return blobimpl1;
-      }
-      
-      protected void copy(YapSocket yapsocket, OutputStream outputstream, int i, bool xbool) {
-         BufferedOutputStream bufferedoutputstream1 = new BufferedOutputStream(outputstream);
-         byte[] xis1 = new byte[4096];
-         int i_0_1 = 0;
-         while (i_0_1 < i) {
-            int i_1_1 = i - i_0_1;
-            int i_2_1 = i_1_1 < xis1.Length ? i_1_1 : xis1.Length;
-            int i_3_1 = yapsocket.read(xis1, 0, i_2_1);
-            bufferedoutputstream1.write(xis1, 0, i_3_1);
-            i_0_1 += i_3_1;
-            if (xbool) i_currentByte += i_3_1;
-         }
-         bufferedoutputstream1.flush();
-         bufferedoutputstream1.close();
-      }
-      
-      protected void copy(InputStream inputstream, YapSocket yapsocket, bool xbool) {
-         BufferedInputStream bufferedinputstream1 = new BufferedInputStream(inputstream);
-         byte[] xis1 = new byte[4096];
-         int i1 = -1;
-         while ((i1 = inputstream.read(xis1)) >= 0) {
-            yapsocket.write(xis1, 0, i1);
-            if (xbool) i_currentByte += i1;
-         }
-         bufferedinputstream1.close();
-      }
-   }
+		internal int i_currentByte;
+
+		internal int i_length;
+
+		internal virtual double getStatus()
+		{
+			if (i_length != 0)
+			{
+				return (double)i_currentByte / (double)i_length;
+			}
+			return com.db4o.ext.Status.ERROR;
+		}
+
+		internal abstract void processClient(com.db4o.YapSocket sock);
+
+		internal virtual com.db4o.BlobImpl serverGetBlobImpl()
+		{
+			com.db4o.BlobImpl blobImpl = null;
+			int id = payLoad.readInt();
+			com.db4o.YapStream stream = getStream();
+			lock (stream.i_lock)
+			{
+				blobImpl = (com.db4o.BlobImpl)stream.getByID1(getTransaction(), id);
+				stream.activate1(getTransaction(), blobImpl, 3);
+			}
+			return blobImpl;
+		}
+
+		protected virtual void copy(com.db4o.YapSocket sock, j4o.io.OutputStream rawout, 
+			int length, bool update)
+		{
+			j4o.io.BufferedOutputStream _out = new j4o.io.BufferedOutputStream(rawout);
+			byte[] buffer = new byte[com.db4o.BlobImpl.COPYBUFFER_LENGTH];
+			int totalread = 0;
+			while (totalread < length)
+			{
+				int stilltoread = length - totalread;
+				int readsize = (stilltoread < buffer.Length ? stilltoread : buffer.Length);
+				int curread = sock.read(buffer, 0, readsize);
+				_out.write(buffer, 0, curread);
+				totalread += curread;
+				if (update)
+				{
+					i_currentByte += curread;
+				}
+			}
+			_out.flush();
+			_out.close();
+		}
+
+		protected virtual void copy(j4o.io.InputStream rawin, com.db4o.YapSocket sock, bool
+			 update)
+		{
+			j4o.io.BufferedInputStream _in = new j4o.io.BufferedInputStream(rawin);
+			byte[] buffer = new byte[com.db4o.BlobImpl.COPYBUFFER_LENGTH];
+			int bytesread = -1;
+			while ((bytesread = rawin.read(buffer)) >= 0)
+			{
+				sock.write(buffer, 0, bytesread);
+				if (update)
+				{
+					i_currentByte += bytesread;
+				}
+			}
+			_in.close();
+		}
+	}
 }

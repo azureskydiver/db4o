@@ -1,506 +1,926 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+This file is part of the db4o open source object database.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
 
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
 
-using System;
-using j4o.lang;
-using com.db4o.ext;
-namespace com.db4o {
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+namespace com.db4o
+{
+	/// <exclude></exclude>
+	public sealed class YapObject : com.db4o.YapMeta, com.db4o.ext.ObjectInfo
+	{
+		private com.db4o.YapClass i_yapClass;
 
-   internal class YapObject : YapMeta, ObjectInfo {
-      private YapClass i_yapClass;
-      internal Object i_object;
-      internal VirtualAttributes i_virtualAttributes;
-      private YapObject id_preceding;
-      private YapObject id_subsequent;
-      private int id_size;
-      private YapObject hc_preceding;
-      private YapObject hc_subsequent;
-      private int hc_size;
-      private int hc_code;
-      
-      internal YapObject(int i) : base() {
-         i_id = i;
-      }
-      
-      internal YapObject(YapClass yapclass, int i) : base() {
-         i_yapClass = yapclass;
-         i_id = i;
-      }
-      
-      internal void activate(Transaction transaction, Object obj, int i, bool xbool) {
-         activate1(transaction, obj, i, xbool);
-         transaction.i_stream.activate3CheckStill(transaction);
-      }
-      
-      internal void activate1(Transaction transaction, Object obj, int i, bool xbool) {
-         if (obj is Db4oTypeImpl) i = ((Db4oTypeImpl)obj).adjustReadDepth(i);
-         if (i > 0) {
-            YapStream yapstream1 = transaction.i_stream;
-            if (xbool) {
-               if (yapstream1.i_config.i_messageLevel > 2) yapstream1.message("" + this.getID() + " refresh " + i_yapClass.getName());
-            } else {
-               if (this.isActive() && obj != null) {
-                  if (i > 1) {
-                     if (i_yapClass.i_config != null) i = i_yapClass.i_config.adjustActivationDepth(i);
-                     i_yapClass.activateFields(transaction, obj, i - 1);
-                  }
-                  return;
-               }
-               if (yapstream1.i_config.i_messageLevel > 2) yapstream1.message("" + this.getID() + " activate " + i_yapClass.getName());
-            }
-            read(transaction, null, obj, i, 0);
-         }
-      }
-      
-      internal void addToIDTree(YapStream yapstream) {
-         if (!(i_yapClass is YapClassPrimitive)) yapstream.idTreeAdd(this);
-      }
-      
-      internal bool continueSet(Transaction transaction, int i) {
-         if (this.bitIsTrue(4)) {
-            if (!i_yapClass.stateOKAndAncestors()) return false;
-            YapStream yapstream1 = transaction.i_stream;
-            this.bitFalse(4);
-            Object obj1 = getObject();
-            int i_0_1 = this.getID();
-            int i_1_1 = ownLength();
-            int i_2_1 = -1;
-            if (!yapstream1.isClient()) i_2_1 = ((YapFile)yapstream1).getSlot(i_1_1);
-            transaction.setPointer(i_0_1, i_2_1, i_1_1);
-            YapWriter yapwriter1 = new YapWriter(transaction, i_1_1);
-            yapwriter1.useSlot(i_0_1, i_2_1, i_1_1);
-            yapwriter1.setUpdateDepth(i);
-            yapwriter1.writeInt(i_yapClass.getID());
-            i_yapClass.marshallNew(this, yapwriter1, obj1);
-            yapstream1.writeNew(i_yapClass, yapwriter1);
-            i_yapClass.dispatchEvent(yapstream1, obj1, 4);
-            i_object = yapstream1.i_references.createYapRef(this, obj1);
-            this.setStateClean();
-            this.endProcessing();
-         }
-         return true;
-      }
-      
-      internal void deactivate(Transaction transaction, int i) {
-         if (i > 0) {
-            Object obj1 = getObject();
-            if (obj1 != null) {
-               if (obj1 is Db4oTypeImpl) ((Db4oTypeImpl)obj1).preDeactivate();
-               YapStream yapstream1 = transaction.i_stream;
-               if (yapstream1.i_config.i_messageLevel > 2) yapstream1.message("" + this.getID() + " deactivate " + i_yapClass.getName());
-               this.setStateDeactivated();
-               i_yapClass.deactivate(transaction, obj1, i);
-            }
-         }
-      }
-      
-      internal override byte getIdentifier() {
-         return (byte)79;
-      }
-      
-      internal Class getJavaClass() {
-         return i_yapClass.getJavaClass();
-      }
-      
-      public Object getObject() {
-         if (Platform.hasWeakReferences()) return Platform.getYapRefObject(i_object);
-         return i_object;
-      }
-      
-      private Transaction getTrans() {
-         if (i_yapClass != null) {
-            YapStream yapstream1 = i_yapClass.getStream();
-            if (yapstream1 != null) return yapstream1.getTransaction();
-         }
-         return null;
-      }
-      
-      public Db4oUUID getUUID() {
-         VirtualAttributes virtualattributes1 = virtualAttributes(getTrans());
-         if (virtualattributes1 != null && virtualattributes1.i_database != null) return new Db4oUUID(virtualattributes1.i_uuid, virtualattributes1.i_database.i_signature);
-         return null;
-      }
-      
-      internal YapClass getYapClass() {
-         return i_yapClass;
-      }
-      
-      internal override int ownLength() {
-         return i_yapClass.objectLength();
-      }
-      
-      internal Object read(Transaction transaction, YapWriter yapwriter, Object obj, int i, int i_3_) {
-         if (this.beginProcessing()) {
-            YapStream yapstream1 = transaction.i_stream;
-            if (yapwriter == null) yapwriter = yapstream1.readWriterByID(transaction, this.getID());
-            if (yapwriter != null) {
-               i_yapClass = readYapClass(yapwriter);
-               if (i_yapClass == null) return null;
-               yapwriter.setInstantiationDepth(i);
-               yapwriter.setUpdateDepth(i_3_);
-               if (i_3_ == -1) obj = i_yapClass.instantiateTransient(this, obj, yapwriter); else obj = i_yapClass.instantiate(this, obj, yapwriter, i_3_ == 1);
-            }
-            this.endProcessing();
-         }
-         return obj;
-      }
-      
-      internal Object readPrefetch(YapStream yapstream, Transaction transaction, YapWriter yapwriter) {
-         Object obj1 = null;
-         if (this.beginProcessing()) {
-            i_yapClass = readYapClass(yapwriter);
-            if (i_yapClass == null) return null;
-            yapwriter.setInstantiationDepth(i_yapClass.configOrAncestorConfig() == null ? 1 : 0);
-            obj1 = i_yapClass.instantiate(this, getObject(), yapwriter, true);
-            this.endProcessing();
-         }
-         return obj1;
-      }
-      
-      internal override void readThis(Transaction transaction, YapReader yapreader) {
-      }
-      
-      private YapClass readYapClass(YapWriter yapwriter) {
-         return yapwriter.getStream().getYapClass(yapwriter.readInt());
-      }
-      
-      internal override void setID(YapStream yapstream, int i) {
-         i_id = i;
-      }
-      
-      internal void setObjectWeak(YapStream yapstream, Object obj) {
-         if (yapstream.i_references._weak) {
-            if (i_object != null) Platform.killYapRef(i_object);
-            i_object = Platform.createYapRef(yapstream.i_references._queue, this, obj);
-         } else i_object = obj;
-      }
-      
-      internal void setObject(Object obj) {
-         i_object = obj;
-      }
-      
-      internal void setStateOnRead(YapWriter yapwriter) {
-      }
-      
-      internal bool store(Transaction transaction, YapClass yapclass, Object obj, int i) {
-         i_object = obj;
-         this.writeObjectBegin();
-         YapStream yapstream1 = transaction.i_stream;
-         i_yapClass = yapclass;
-         if (i_yapClass.getID() != 11) {
-            setID(yapstream1, yapstream1.newUserObject());
-            this.beginProcessing();
-            this.bitTrue(4);
-            if (!(i_yapClass is YapClassPrimitive)) return true;
-            continueSet(transaction, i);
-         }
-         return false;
-      }
-      
-      internal VirtualAttributes virtualAttributes(Transaction transaction) {
-         if (i_virtualAttributes == null && i_yapClass.hasVirtualAttributes() && transaction != null) {
-            i_virtualAttributes = new VirtualAttributes();
-            i_yapClass.readVirtualAttributes(transaction, this);
-         }
-         return i_virtualAttributes;
-      }
-      
-      internal override void writeThis(YapWriter yapwriter) {
-      }
-      
-      internal void writeUpdate(Transaction transaction, int i) {
-         continueSet(transaction, i);
-         if (this.beginProcessing()) {
-            Object obj1 = getObject();
-            if (i_yapClass.dispatchEvent(transaction.i_stream, obj1, 9)) {
-               if (!this.isActive() || obj1 == null) this.endProcessing(); else {
-                  if (transaction.i_stream.i_config.i_messageLevel > 1) transaction.i_stream.message("" + this.getID() + " update " + i_yapClass.getName());
-                  this.setStateClean();
-                  transaction.writeUpdateDeleteMembers(this.getID(), i_yapClass, YapHandlers.arrayType(obj1), 0);
-                  i_yapClass.marshallUpdate(transaction, this.getID(), i, this, obj1);
-               }
-            } else this.endProcessing();
-         }
-      }
-      
-      internal YapObject hc_add(YapObject yapobject_4_) {
-         Object obj1 = yapobject_4_.getObject();
-         if (obj1 != null) {
-            yapobject_4_.hc_preceding = null;
-            yapobject_4_.hc_subsequent = null;
-            yapobject_4_.hc_size = 1;
-            yapobject_4_.hc_code = hc_getCode(obj1);
-            return hc_add1(yapobject_4_);
-         }
-         return this;
-      }
-      
-      private YapObject hc_add1(YapObject yapobject_5_) {
-         int i1 = hc_compare(yapobject_5_);
-         if (i1 < 0) {
-            if (hc_preceding == null) {
-               hc_preceding = yapobject_5_;
-               hc_size++;
-            } else {
-               hc_preceding = hc_preceding.hc_add1(yapobject_5_);
-               if (hc_subsequent == null) return hc_rotateRight();
-               return hc_balance();
-            }
-         } else if (hc_subsequent == null) {
-            hc_subsequent = yapobject_5_;
-            hc_size++;
-         } else {
-            hc_subsequent = hc_subsequent.hc_add1(yapobject_5_);
-            if (hc_preceding == null) return hc_rotateLeft();
-            return hc_balance();
-         }
-         return this;
-      }
-      
-      private YapObject hc_balance() {
-         int i1 = hc_subsequent.hc_size - hc_preceding.hc_size;
-         if (i1 < -2) return hc_rotateRight();
-         if (i1 > 2) return hc_rotateLeft();
-         hc_size = hc_preceding.hc_size + hc_subsequent.hc_size + 1;
-         return this;
-      }
-      
-      private void hc_calculateSize() {
-         if (hc_preceding == null) {
-            if (hc_subsequent == null) hc_size = 1; else hc_size = hc_subsequent.hc_size + 1;
-         } else if (hc_subsequent == null) hc_size = hc_preceding.hc_size + 1; else hc_size = hc_preceding.hc_size + hc_subsequent.hc_size + 1;
-      }
-      
-      private int hc_compare(YapObject yapobject_6_) {
-         int i1 = yapobject_6_.hc_code - hc_code;
-         if (i1 == 0) i1 = yapobject_6_.i_id - i_id;
-         return i1;
-      }
-      
-      internal YapObject hc_find(Object obj) {
-         return hc_find(hc_getCode(obj), obj);
-      }
-      
-      private YapObject hc_find(int i, Object obj) {
-         int i_7_1 = i - hc_code;
-         if (i_7_1 < 0) {
-            if (hc_preceding != null) return hc_preceding.hc_find(i, obj);
-         } else if (i_7_1 > 0) {
-            if (hc_subsequent != null) return hc_subsequent.hc_find(i, obj);
-         } else {
-            if (obj == getObject()) return this;
-            if (hc_preceding != null) {
-               YapObject yapobject_8_1 = hc_preceding.hc_find(i, obj);
-               if (yapobject_8_1 != null) return yapobject_8_1;
-            }
-            if (hc_subsequent != null) return hc_subsequent.hc_find(i, obj);
-         }
-         return null;
-      }
-      
-      private int hc_getCode(Object obj) {
-         int i1 = j4o.lang.JavaSystem.identityHashCode(obj);
-         if (i1 < 0) i1 ^= -1;
-         return i1;
-      }
-      
-      private YapObject hc_rotateLeft() {
-         YapObject yapobject_9_1 = hc_subsequent;
-         hc_subsequent = yapobject_9_1.hc_preceding;
-         hc_calculateSize();
-         yapobject_9_1.hc_preceding = this;
-         if (yapobject_9_1.hc_subsequent == null) yapobject_9_1.hc_size = 1 + hc_size; else yapobject_9_1.hc_size = 1 + hc_size + yapobject_9_1.hc_subsequent.hc_size;
-         return yapobject_9_1;
-      }
-      
-      private YapObject hc_rotateRight() {
-         YapObject yapobject_10_1 = hc_preceding;
-         hc_preceding = yapobject_10_1.hc_subsequent;
-         hc_calculateSize();
-         yapobject_10_1.hc_subsequent = this;
-         if (yapobject_10_1.hc_preceding == null) yapobject_10_1.hc_size = 1 + hc_size; else yapobject_10_1.hc_size = 1 + hc_size + yapobject_10_1.hc_preceding.hc_size;
-         return yapobject_10_1;
-      }
-      
-      private YapObject hc_rotateSmallestUp() {
-         if (hc_preceding != null) {
-            hc_preceding = hc_preceding.hc_rotateSmallestUp();
-            return hc_rotateRight();
-         }
-         return this;
-      }
-      
-      internal YapObject hc_remove(YapObject yapobject_11_) {
-         if (this == yapobject_11_) return hc_remove();
-         int i1 = hc_compare(yapobject_11_);
-         if (i1 <= 0 && hc_preceding != null) hc_preceding = hc_preceding.hc_remove(yapobject_11_);
-         if (i1 >= 0 && hc_subsequent != null) hc_subsequent = hc_subsequent.hc_remove(yapobject_11_);
-         hc_calculateSize();
-         return this;
-      }
-      
-      private YapObject hc_remove() {
-         if (hc_subsequent != null && hc_preceding != null) {
-            hc_subsequent = hc_subsequent.hc_rotateSmallestUp();
-            hc_subsequent.hc_preceding = hc_preceding;
-            hc_subsequent.hc_calculateSize();
-            return hc_subsequent;
-         }
-         if (hc_subsequent != null) return hc_subsequent;
-         return hc_preceding;
-      }
-      
-      internal YapObject id_add(YapObject yapobject_12_) {
-         yapobject_12_.id_preceding = null;
-         yapobject_12_.id_subsequent = null;
-         yapobject_12_.id_size = 1;
-         return id_add1(yapobject_12_);
-      }
-      
-      private YapObject id_add1(YapObject yapobject_13_) {
-         int i1 = yapobject_13_.i_id - i_id;
-         if (i1 < 0) {
-            if (id_preceding == null) {
-               id_preceding = yapobject_13_;
-               id_size++;
-            } else {
-               id_preceding = id_preceding.id_add1(yapobject_13_);
-               if (id_subsequent == null) return id_rotateRight();
-               return id_balance();
-            }
-         } else if (id_subsequent == null) {
-            id_subsequent = yapobject_13_;
-            id_size++;
-         } else {
-            id_subsequent = id_subsequent.id_add1(yapobject_13_);
-            if (id_preceding == null) return id_rotateLeft();
-            return id_balance();
-         }
-         return this;
-      }
-      
-      private YapObject id_balance() {
-         int i1 = id_subsequent.id_size - id_preceding.id_size;
-         if (i1 < -2) return id_rotateRight();
-         if (i1 > 2) return id_rotateLeft();
-         id_size = id_preceding.id_size + id_subsequent.id_size + 1;
-         return this;
-      }
-      
-      private void id_calculateSize() {
-         if (id_preceding == null) {
-            if (id_subsequent == null) id_size = 1; else id_size = id_subsequent.id_size + 1;
-         } else if (id_subsequent == null) id_size = id_preceding.id_size + 1; else id_size = id_preceding.id_size + id_subsequent.id_size + 1;
-      }
-      
-      internal YapObject id_find(int i) {
-         int i_14_1 = i - i_id;
-         if (i_14_1 > 0) {
-            if (id_subsequent != null) return id_subsequent.id_find(i);
-         } else if (i_14_1 < 0) {
-            if (id_preceding != null) return id_preceding.id_find(i);
-         } else return this;
-         return null;
-      }
-      
-      private YapObject id_rotateLeft() {
-         YapObject yapobject_15_1 = id_subsequent;
-         id_subsequent = yapobject_15_1.id_preceding;
-         id_calculateSize();
-         yapobject_15_1.id_preceding = this;
-         if (yapobject_15_1.id_subsequent == null) yapobject_15_1.id_size = id_size + 1; else yapobject_15_1.id_size = id_size + 1 + yapobject_15_1.id_subsequent.id_size;
-         return yapobject_15_1;
-      }
-      
-      private YapObject id_rotateRight() {
-         YapObject yapobject_16_1 = id_preceding;
-         id_preceding = yapobject_16_1.id_subsequent;
-         id_calculateSize();
-         yapobject_16_1.id_subsequent = this;
-         if (yapobject_16_1.id_preceding == null) yapobject_16_1.id_size = id_size + 1; else yapobject_16_1.id_size = id_size + 1 + yapobject_16_1.id_preceding.id_size;
-         return yapobject_16_1;
-      }
-      
-      private YapObject id_rotateSmallestUp() {
-         if (id_preceding != null) {
-            id_preceding = id_preceding.id_rotateSmallestUp();
-            return id_rotateRight();
-         }
-         return this;
-      }
-      
-      internal YapObject id_remove(int i) {
-         int i_17_1 = i - i_id;
-         if (i_17_1 < 0) {
-            if (id_preceding != null) id_preceding = id_preceding.id_remove(i);
-         } else if (i_17_1 > 0) {
-            if (id_subsequent != null) id_subsequent = id_subsequent.id_remove(i);
-         } else return id_remove();
-         id_calculateSize();
-         return this;
-      }
-      
-      private YapObject id_remove() {
-         if (id_subsequent != null && id_preceding != null) {
-            id_subsequent = id_subsequent.id_rotateSmallestUp();
-            id_subsequent.id_preceding = id_preceding;
-            id_subsequent.id_calculateSize();
-            return id_subsequent;
-         }
-         if (id_subsequent != null) return id_subsequent;
-         return id_preceding;
-      }
-      
-      public override String ToString() {
-         try {
-            {
-               int i1 = this.getID();
-               String xstring1 = "YapObject\nID=" + i1;
-               if (i_yapClass != null) {
-                  YapStream yapstream1 = i_yapClass.getStream();
-                  if (yapstream1 != null && i1 > 0) {
-                     YapWriter yapwriter1 = yapstream1.readWriterByID(yapstream1.getTransaction(), i1);
-                     if (yapwriter1 != null) xstring1 += "\nAddress=" + yapwriter1.getAddress();
-                     YapClass yapclass1 = readYapClass(yapwriter1);
-                     if (yapclass1 != i_yapClass) xstring1 += "\nYapClass corruption"; else xstring1 += yapclass1.ToString(yapwriter1, this, 0, 5);
-                  }
-               }
-               Object obj1 = getObject();
-               if (obj1 == null) xstring1 += "\nfor [null]"; else {
-                  String string_18_1 = "";
-                  try {
-                     {
-                        string_18_1 = obj1.ToString();
-                     }
-                  }  catch (Exception exception) {
-                     {
-                     }
-                  }
-                  Class var_class1 = j4o.lang.Class.getClassForObject(obj1);
-                  xstring1 += "\n" + var_class1.getName() + "\n" + (String)string_18_1;
-               }
-               return xstring1;
-            }
-         }  catch (Exception exception) {
-            {
-               j4o.lang.JavaSystem.printStackTrace(exception);
-               return "Exception in YapObject analyzer";
-            }
-         }
-      }
-   }
+		internal object i_object;
+
+		internal com.db4o.VirtualAttributes i_virtualAttributes;
+
+		private com.db4o.YapObject id_preceding;
+
+		private com.db4o.YapObject id_subsequent;
+
+		private int id_size;
+
+		private com.db4o.YapObject hc_preceding;
+
+		private com.db4o.YapObject hc_subsequent;
+
+		private int hc_size;
+
+		private int hc_code;
+
+		internal YapObject(int a_id)
+		{
+			i_id = a_id;
+		}
+
+		internal YapObject(com.db4o.YapClass a_yapClass, int a_id)
+		{
+			i_yapClass = a_yapClass;
+			i_id = a_id;
+		}
+
+		internal void activate(com.db4o.Transaction ta, object a_object, int a_depth, bool
+			 a_refresh)
+		{
+			activate1(ta, a_object, a_depth, a_refresh);
+			ta.i_stream.activate3CheckStill(ta);
+		}
+
+		internal void activate1(com.db4o.Transaction ta, object a_object, int a_depth, bool
+			 a_refresh)
+		{
+			if (a_object is com.db4o.Db4oTypeImpl)
+			{
+				a_depth = ((com.db4o.Db4oTypeImpl)a_object).adjustReadDepth(a_depth);
+			}
+			if (a_depth > 0)
+			{
+				com.db4o.YapStream stream = ta.i_stream;
+				if (a_refresh)
+				{
+					if (stream.i_config.i_messageLevel > com.db4o.YapConst.ACTIVATION)
+					{
+						stream.message("" + getID() + " refresh " + i_yapClass.getName());
+					}
+				}
+				else
+				{
+					if (isActive())
+					{
+						if (a_object != null)
+						{
+							if (a_depth > 1)
+							{
+								if (i_yapClass.i_config != null)
+								{
+									a_depth = i_yapClass.i_config.adjustActivationDepth(a_depth);
+								}
+								i_yapClass.activateFields(ta, a_object, a_depth - 1);
+							}
+							return;
+						}
+					}
+					if (stream.i_config.i_messageLevel > com.db4o.YapConst.ACTIVATION)
+					{
+						stream.message("" + getID() + " activate " + i_yapClass.getName());
+					}
+				}
+				read(ta, null, a_object, a_depth, com.db4o.YapConst.ADD_MEMBERS_TO_ID_TREE_ONLY);
+			}
+		}
+
+		internal void addToIDTree(com.db4o.YapStream a_stream)
+		{
+			if (!(i_yapClass is com.db4o.YapClassPrimitive))
+			{
+				a_stream.idTreeAdd(this);
+			}
+		}
+
+		/// <summary>return false if class not completely initialized, otherwise true *</summary>
+		internal bool continueSet(com.db4o.Transaction a_trans, int a_updateDepth)
+		{
+			if (bitIsTrue(com.db4o.YapConst.CONTINUE))
+			{
+				if (!i_yapClass.stateOKAndAncestors())
+				{
+					return false;
+				}
+				com.db4o.YapStream stream = a_trans.i_stream;
+				bitFalse(com.db4o.YapConst.CONTINUE);
+				object obj = getObject();
+				int id = getID();
+				int length = ownLength();
+				int address = -1;
+				if (!stream.isClient())
+				{
+					address = ((com.db4o.YapFile)stream).getSlot(length);
+				}
+				a_trans.setPointer(id, address, length);
+				com.db4o.YapWriter writer = new com.db4o.YapWriter(a_trans, length);
+				writer.useSlot(id, address, length);
+				writer.setUpdateDepth(a_updateDepth);
+				writer.writeInt(i_yapClass.getID());
+				i_yapClass.marshallNew(this, writer, obj);
+				stream.writeNew(i_yapClass, writer);
+				i_yapClass.dispatchEvent(stream, obj, com.db4o.EventDispatcher.NEW);
+				i_object = stream.i_references.createYapRef(this, obj);
+				setStateClean();
+				endProcessing();
+			}
+			return true;
+		}
+
+		internal void deactivate(com.db4o.Transaction a_trans, int a_depth)
+		{
+			if (a_depth > 0)
+			{
+				object obj = getObject();
+				if (obj != null)
+				{
+					if (obj is com.db4o.Db4oTypeImpl)
+					{
+						((com.db4o.Db4oTypeImpl)obj).preDeactivate();
+					}
+					com.db4o.YapStream stream = a_trans.i_stream;
+					if (stream.i_config.i_messageLevel > com.db4o.YapConst.ACTIVATION)
+					{
+						stream.message("" + getID() + " deactivate " + i_yapClass.getName());
+					}
+					setStateDeactivated();
+					i_yapClass.deactivate(a_trans, obj, a_depth);
+				}
+			}
+		}
+
+		internal override byte getIdentifier()
+		{
+			return com.db4o.YapConst.YAPOBJECT;
+		}
+
+		public object getObject()
+		{
+			if (com.db4o.Platform.hasWeakReferences())
+			{
+				return com.db4o.Platform.getYapRefObject(i_object);
+			}
+			return i_object;
+		}
+
+		private com.db4o.Transaction getTrans()
+		{
+			if (i_yapClass != null)
+			{
+				com.db4o.YapStream stream = i_yapClass.getStream();
+				if (stream != null)
+				{
+					return stream.getTransaction();
+				}
+			}
+			return null;
+		}
+
+		public com.db4o.ext.Db4oUUID getUUID()
+		{
+			com.db4o.VirtualAttributes va = virtualAttributes(getTrans());
+			if (va != null && va.i_database != null)
+			{
+				return new com.db4o.ext.Db4oUUID(va.i_uuid, va.i_database.i_signature);
+			}
+			return null;
+		}
+
+		internal com.db4o.YapClass getYapClass()
+		{
+			return i_yapClass;
+		}
+
+		internal override int ownLength()
+		{
+			return i_yapClass.objectLength();
+		}
+
+		internal object read(com.db4o.Transaction ta, com.db4o.YapWriter a_reader, object
+			 a_object, int a_instantiationDepth, int addToIDTree)
+		{
+			if (beginProcessing())
+			{
+				com.db4o.YapStream stream = ta.i_stream;
+				if (a_reader == null)
+				{
+					a_reader = stream.readWriterByID(ta, getID());
+				}
+				if (a_reader != null)
+				{
+					i_yapClass = readYapClass(a_reader);
+					if (i_yapClass == null)
+					{
+						return null;
+					}
+					a_reader.setInstantiationDepth(a_instantiationDepth);
+					a_reader.setUpdateDepth(addToIDTree);
+					if (addToIDTree == com.db4o.YapConst.TRANSIENT)
+					{
+						a_object = i_yapClass.instantiateTransient(this, a_object, a_reader);
+					}
+					else
+					{
+						a_object = i_yapClass.instantiate(this, a_object, a_reader, addToIDTree == com.db4o.YapConst
+							.ADD_TO_ID_TREE);
+					}
+				}
+				endProcessing();
+			}
+			return a_object;
+		}
+
+		internal object readPrefetch(com.db4o.YapStream a_stream, com.db4o.Transaction ta
+			, com.db4o.YapWriter a_reader)
+		{
+			object readObject = null;
+			if (beginProcessing())
+			{
+				i_yapClass = readYapClass(a_reader);
+				if (i_yapClass == null)
+				{
+					return null;
+				}
+				a_reader.setInstantiationDepth(i_yapClass.configOrAncestorConfig() == null ? 1 : 
+					0);
+				readObject = i_yapClass.instantiate(this, getObject(), a_reader, true);
+				endProcessing();
+			}
+			return readObject;
+		}
+
+		internal sealed override void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader
+			 a_bytes)
+		{
+		}
+
+		private com.db4o.YapClass readYapClass(com.db4o.YapWriter a_reader)
+		{
+			return a_reader.getStream().getYapClass(a_reader.readInt());
+		}
+
+		internal override void setID(com.db4o.YapStream a_stream, int a_id)
+		{
+			i_id = a_id;
+		}
+
+		internal void setObjectWeak(com.db4o.YapStream a_stream, object a_object)
+		{
+			if (a_stream.i_references._weak)
+			{
+				if (i_object != null)
+				{
+					com.db4o.Platform.killYapRef(i_object);
+				}
+				i_object = com.db4o.Platform.createYapRef(a_stream.i_references._queue, this, a_object
+					);
+			}
+			else
+			{
+				i_object = a_object;
+			}
+		}
+
+		internal void setObject(object a_object)
+		{
+			i_object = a_object;
+		}
+
+		internal void setStateOnRead(com.db4o.YapWriter reader)
+		{
+		}
+
+		/// <summary>
+		/// return true for complex objects to instruct YapStream to add to lookup trees
+		/// and to perform delayed storage through call to continueset further up the stack.
+		/// </summary>
+		/// <remarks>
+		/// return true for complex objects to instruct YapStream to add to lookup trees
+		/// and to perform delayed storage through call to continueset further up the stack.
+		/// </remarks>
+		internal bool store(com.db4o.Transaction a_trans, com.db4o.YapClass a_yapClass, object
+			 a_object, int a_updateDepth)
+		{
+			i_object = a_object;
+			writeObjectBegin();
+			com.db4o.YapStream stream = a_trans.i_stream;
+			i_yapClass = a_yapClass;
+			if (i_yapClass.getID() != com.db4o.YapHandlers.YAPANYID)
+			{
+				setID(stream, stream.newUserObject());
+				beginProcessing();
+				bitTrue(com.db4o.YapConst.CONTINUE);
+				if (!(i_yapClass is com.db4o.YapClassPrimitive))
+				{
+					return true;
+				}
+				else
+				{
+					continueSet(a_trans, a_updateDepth);
+				}
+			}
+			return false;
+		}
+
+		internal com.db4o.VirtualAttributes virtualAttributes(com.db4o.Transaction a_trans
+			)
+		{
+			if (i_virtualAttributes == null && i_yapClass.hasVirtualAttributes())
+			{
+				if (a_trans != null)
+				{
+					i_virtualAttributes = new com.db4o.VirtualAttributes();
+					i_yapClass.readVirtualAttributes(a_trans, this);
+				}
+			}
+			return i_virtualAttributes;
+		}
+
+		internal override void writeThis(com.db4o.YapWriter a_writer)
+		{
+		}
+
+		internal void writeUpdate(com.db4o.Transaction a_trans, int a_updatedepth)
+		{
+			continueSet(a_trans, a_updatedepth);
+			if (beginProcessing())
+			{
+				object obj = getObject();
+				if (i_yapClass.dispatchEvent(a_trans.i_stream, obj, com.db4o.EventDispatcher.CAN_UPDATE
+					))
+				{
+					if ((!isActive()) || obj == null)
+					{
+						endProcessing();
+						return;
+					}
+					if (a_trans.i_stream.i_config.i_messageLevel > com.db4o.YapConst.STATE)
+					{
+						a_trans.i_stream.message("" + getID() + " update " + i_yapClass.getName());
+					}
+					setStateClean();
+					a_trans.writeUpdateDeleteMembers(getID(), i_yapClass, a_trans.i_stream.i_handlers
+						.arrayType(obj), 0);
+					i_yapClass.marshallUpdate(a_trans, getID(), a_updatedepth, this, obj);
+				}
+				else
+				{
+					endProcessing();
+				}
+			}
+		}
+
+		/// <summary>HCTREE ****</summary>
+		internal com.db4o.YapObject hc_add(com.db4o.YapObject a_add)
+		{
+			object obj = a_add.getObject();
+			if (obj != null)
+			{
+				a_add.hc_preceding = null;
+				a_add.hc_subsequent = null;
+				a_add.hc_size = 1;
+				a_add.hc_code = hc_getCode(obj);
+				return hc_add1(a_add);
+			}
+			else
+			{
+				return this;
+			}
+		}
+
+		private com.db4o.YapObject hc_add1(com.db4o.YapObject a_new)
+		{
+			int cmp = hc_compare(a_new);
+			if (cmp < 0)
+			{
+				if (hc_preceding == null)
+				{
+					hc_preceding = a_new;
+					hc_size++;
+				}
+				else
+				{
+					hc_preceding = hc_preceding.hc_add1(a_new);
+					if (hc_subsequent == null)
+					{
+						return hc_rotateRight();
+					}
+					else
+					{
+						return hc_balance();
+					}
+				}
+			}
+			else
+			{
+				if (hc_subsequent == null)
+				{
+					hc_subsequent = a_new;
+					hc_size++;
+				}
+				else
+				{
+					hc_subsequent = hc_subsequent.hc_add1(a_new);
+					if (hc_preceding == null)
+					{
+						return hc_rotateLeft();
+					}
+					else
+					{
+						return hc_balance();
+					}
+				}
+			}
+			return this;
+		}
+
+		private com.db4o.YapObject hc_balance()
+		{
+			int cmp = hc_subsequent.hc_size - hc_preceding.hc_size;
+			if (cmp < -2)
+			{
+				return hc_rotateRight();
+			}
+			else
+			{
+				if (cmp > 2)
+				{
+					return hc_rotateLeft();
+				}
+				else
+				{
+					hc_size = hc_preceding.hc_size + hc_subsequent.hc_size + 1;
+					return this;
+				}
+			}
+		}
+
+		private void hc_calculateSize()
+		{
+			if (hc_preceding == null)
+			{
+				if (hc_subsequent == null)
+				{
+					hc_size = 1;
+				}
+				else
+				{
+					hc_size = hc_subsequent.hc_size + 1;
+				}
+			}
+			else
+			{
+				if (hc_subsequent == null)
+				{
+					hc_size = hc_preceding.hc_size + 1;
+				}
+				else
+				{
+					hc_size = hc_preceding.hc_size + hc_subsequent.hc_size + 1;
+				}
+			}
+		}
+
+		private int hc_compare(com.db4o.YapObject a_to)
+		{
+			int cmp = a_to.hc_code - hc_code;
+			if (cmp == 0)
+			{
+				cmp = a_to.i_id - i_id;
+			}
+			return cmp;
+		}
+
+		internal com.db4o.YapObject hc_find(object obj)
+		{
+			return hc_find(hc_getCode(obj), obj);
+		}
+
+		private com.db4o.YapObject hc_find(int a_id, object obj)
+		{
+			int cmp = a_id - hc_code;
+			if (cmp < 0)
+			{
+				if (hc_preceding != null)
+				{
+					return hc_preceding.hc_find(a_id, obj);
+				}
+			}
+			else
+			{
+				if (cmp > 0)
+				{
+					if (hc_subsequent != null)
+					{
+						return hc_subsequent.hc_find(a_id, obj);
+					}
+				}
+				else
+				{
+					if (obj == getObject())
+					{
+						return this;
+					}
+					if (hc_preceding != null)
+					{
+						com.db4o.YapObject inPreceding = hc_preceding.hc_find(a_id, obj);
+						if (inPreceding != null)
+						{
+							return inPreceding;
+						}
+					}
+					if (hc_subsequent != null)
+					{
+						return hc_subsequent.hc_find(a_id, obj);
+					}
+				}
+			}
+			return null;
+		}
+
+		private int hc_getCode(object obj)
+		{
+			int hcode = j4o.lang.JavaSystem.identityHashCode(obj);
+			if (hcode < 0)
+			{
+				hcode = ~hcode;
+			}
+			return hcode;
+		}
+
+		private com.db4o.YapObject hc_rotateLeft()
+		{
+			com.db4o.YapObject tree = hc_subsequent;
+			hc_subsequent = tree.hc_preceding;
+			hc_calculateSize();
+			tree.hc_preceding = this;
+			if (tree.hc_subsequent == null)
+			{
+				tree.hc_size = 1 + hc_size;
+			}
+			else
+			{
+				tree.hc_size = 1 + hc_size + tree.hc_subsequent.hc_size;
+			}
+			return tree;
+		}
+
+		private com.db4o.YapObject hc_rotateRight()
+		{
+			com.db4o.YapObject tree = hc_preceding;
+			hc_preceding = tree.hc_subsequent;
+			hc_calculateSize();
+			tree.hc_subsequent = this;
+			if (tree.hc_preceding == null)
+			{
+				tree.hc_size = 1 + hc_size;
+			}
+			else
+			{
+				tree.hc_size = 1 + hc_size + tree.hc_preceding.hc_size;
+			}
+			return tree;
+		}
+
+		private com.db4o.YapObject hc_rotateSmallestUp()
+		{
+			if (hc_preceding != null)
+			{
+				hc_preceding = hc_preceding.hc_rotateSmallestUp();
+				return hc_rotateRight();
+			}
+			return this;
+		}
+
+		internal com.db4o.YapObject hc_remove(com.db4o.YapObject a_find)
+		{
+			if (this == a_find)
+			{
+				return hc_remove();
+			}
+			int cmp = hc_compare(a_find);
+			if (cmp <= 0)
+			{
+				if (hc_preceding != null)
+				{
+					hc_preceding = hc_preceding.hc_remove(a_find);
+				}
+			}
+			if (cmp >= 0)
+			{
+				if (hc_subsequent != null)
+				{
+					hc_subsequent = hc_subsequent.hc_remove(a_find);
+				}
+			}
+			hc_calculateSize();
+			return this;
+		}
+
+		private com.db4o.YapObject hc_remove()
+		{
+			if (hc_subsequent != null && hc_preceding != null)
+			{
+				hc_subsequent = hc_subsequent.hc_rotateSmallestUp();
+				hc_subsequent.hc_preceding = hc_preceding;
+				hc_subsequent.hc_calculateSize();
+				return hc_subsequent;
+			}
+			if (hc_subsequent != null)
+			{
+				return hc_subsequent;
+			}
+			return hc_preceding;
+		}
+
+		/// <summary>IDTREE ****</summary>
+		internal com.db4o.YapObject id_add(com.db4o.YapObject a_add)
+		{
+			a_add.id_preceding = null;
+			a_add.id_subsequent = null;
+			a_add.id_size = 1;
+			return id_add1(a_add);
+		}
+
+		private com.db4o.YapObject id_add1(com.db4o.YapObject a_new)
+		{
+			int cmp = a_new.i_id - i_id;
+			if (cmp < 0)
+			{
+				if (id_preceding == null)
+				{
+					id_preceding = a_new;
+					id_size++;
+				}
+				else
+				{
+					id_preceding = id_preceding.id_add1(a_new);
+					if (id_subsequent == null)
+					{
+						return id_rotateRight();
+					}
+					else
+					{
+						return id_balance();
+					}
+				}
+			}
+			else
+			{
+				if (id_subsequent == null)
+				{
+					id_subsequent = a_new;
+					id_size++;
+				}
+				else
+				{
+					id_subsequent = id_subsequent.id_add1(a_new);
+					if (id_preceding == null)
+					{
+						return id_rotateLeft();
+					}
+					else
+					{
+						return id_balance();
+					}
+				}
+			}
+			return this;
+		}
+
+		private com.db4o.YapObject id_balance()
+		{
+			int cmp = id_subsequent.id_size - id_preceding.id_size;
+			if (cmp < -2)
+			{
+				return id_rotateRight();
+			}
+			else
+			{
+				if (cmp > 2)
+				{
+					return id_rotateLeft();
+				}
+				else
+				{
+					id_size = id_preceding.id_size + id_subsequent.id_size + 1;
+					return this;
+				}
+			}
+		}
+
+		private void id_calculateSize()
+		{
+			if (id_preceding == null)
+			{
+				if (id_subsequent == null)
+				{
+					id_size = 1;
+				}
+				else
+				{
+					id_size = id_subsequent.id_size + 1;
+				}
+			}
+			else
+			{
+				if (id_subsequent == null)
+				{
+					id_size = id_preceding.id_size + 1;
+				}
+				else
+				{
+					id_size = id_preceding.id_size + id_subsequent.id_size + 1;
+				}
+			}
+		}
+
+		internal com.db4o.YapObject id_find(int a_id)
+		{
+			int cmp = a_id - i_id;
+			if (cmp > 0)
+			{
+				if (id_subsequent != null)
+				{
+					return id_subsequent.id_find(a_id);
+				}
+			}
+			else
+			{
+				if (cmp < 0)
+				{
+					if (id_preceding != null)
+					{
+						return id_preceding.id_find(a_id);
+					}
+				}
+				else
+				{
+					return this;
+				}
+			}
+			return null;
+		}
+
+		private com.db4o.YapObject id_rotateLeft()
+		{
+			com.db4o.YapObject tree = id_subsequent;
+			id_subsequent = tree.id_preceding;
+			id_calculateSize();
+			tree.id_preceding = this;
+			if (tree.id_subsequent == null)
+			{
+				tree.id_size = id_size + 1;
+			}
+			else
+			{
+				tree.id_size = id_size + 1 + tree.id_subsequent.id_size;
+			}
+			return tree;
+		}
+
+		private com.db4o.YapObject id_rotateRight()
+		{
+			com.db4o.YapObject tree = id_preceding;
+			id_preceding = tree.id_subsequent;
+			id_calculateSize();
+			tree.id_subsequent = this;
+			if (tree.id_preceding == null)
+			{
+				tree.id_size = id_size + 1;
+			}
+			else
+			{
+				tree.id_size = id_size + 1 + tree.id_preceding.id_size;
+			}
+			return tree;
+		}
+
+		private com.db4o.YapObject id_rotateSmallestUp()
+		{
+			if (id_preceding != null)
+			{
+				id_preceding = id_preceding.id_rotateSmallestUp();
+				return id_rotateRight();
+			}
+			return this;
+		}
+
+		internal com.db4o.YapObject id_remove(int a_id)
+		{
+			int cmp = a_id - i_id;
+			if (cmp < 0)
+			{
+				if (id_preceding != null)
+				{
+					id_preceding = id_preceding.id_remove(a_id);
+				}
+			}
+			else
+			{
+				if (cmp > 0)
+				{
+					if (id_subsequent != null)
+					{
+						id_subsequent = id_subsequent.id_remove(a_id);
+					}
+				}
+				else
+				{
+					return id_remove();
+				}
+			}
+			id_calculateSize();
+			return this;
+		}
+
+		private com.db4o.YapObject id_remove()
+		{
+			if (id_subsequent != null && id_preceding != null)
+			{
+				id_subsequent = id_subsequent.id_rotateSmallestUp();
+				id_subsequent.id_preceding = id_preceding;
+				id_subsequent.id_calculateSize();
+				return id_subsequent;
+			}
+			if (id_subsequent != null)
+			{
+				return id_subsequent;
+			}
+			return id_preceding;
+		}
+
+		public override string ToString()
+		{
+			try
+			{
+				int id = getID();
+				string str = "YapObject\nID=" + id;
+				if (i_yapClass != null)
+				{
+					com.db4o.YapStream stream = i_yapClass.getStream();
+					if (stream != null && id > 0)
+					{
+						com.db4o.YapWriter writer = stream.readWriterByID(stream.getTransaction(), id);
+						if (writer != null)
+						{
+							str += "\nAddress=" + writer.getAddress();
+						}
+						com.db4o.YapClass yc = readYapClass(writer);
+						if (yc != i_yapClass)
+						{
+							str += "\nYapClass corruption";
+						}
+						else
+						{
+							str += yc.toString(writer, this, 0, 5);
+						}
+					}
+				}
+				object obj = getObject();
+				if (obj == null)
+				{
+					str += "\nfor [null]";
+				}
+				else
+				{
+					string objToString = "";
+					try
+					{
+						objToString = obj.ToString();
+					}
+					catch (System.Exception e)
+					{
+					}
+					com.db4o.reflect.ReflectClass claxx = getYapClass().reflector().forObject(obj);
+					str += "\n" + claxx.getName() + "\n" + objToString;
+				}
+				return str;
+			}
+			catch (System.Exception e)
+			{
+				j4o.lang.JavaSystem.printStackTrace(e);
+			}
+			return "Exception in YapObject analyzer";
+		}
+	}
 }
