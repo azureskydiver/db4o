@@ -81,6 +81,7 @@ public class AllTestsConfAll extends TestSuite{
             
 			PrimitivesInCollection.class,
 			QueryDeleted.class,
+            QueryForList.class,
 	        QueryNonExistant.class,
 	        Refresh.class,
 	        Rename.class,
