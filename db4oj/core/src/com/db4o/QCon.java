@@ -4,8 +4,11 @@ package com.db4o;
 
 import com.db4o.query.*;
 
-/** QC stands for QueryConstraint */
+/** Base class for all constraints.
+ */
 public abstract class QCon implements Constraint, Visitor4 {
+	
+	//Used for query debug only.
     static final IDGenerator idGenerator = new IDGenerator();
 
     // our candidate object tree
@@ -84,62 +87,64 @@ public abstract class QCon implements Constraint, Visitor4 {
     }
 
     boolean attach(final QQuery query, final String a_field) {
-
-        final QCon qcon = this;
-
-        YapClass yc = getYapClass();
-        final boolean[] foundField = { false };
-        forEachChildField(a_field, new Visitor4() {
-            public void visit(Object obj) {
-                foundField[0] = true;
-                query.addConstraint((QCon) obj);
-            }
-        });
-        if (!foundField[0]) {
-
-            QField qf = null;
-
-            if (yc == null || yc.holdsAnyClass()) {
-
-                final int[] count = { 0 };
-                final YapField[] yfs = { null };
-
-                i_trans.i_stream.i_classCollection.yapFields(a_field, new Visitor4() {
-                    public void visit(Object obj) {
-                        yfs[0] = (YapField) ((Object[]) obj)[1];
-                        count[0]++;
-                    }
-                });
-
-                if (count[0] == 0) {
-                    return false;
-                }
-
-                if (count[0] == 1) {
-                    qf = yfs[0].qField(i_trans);
-                } else {
-                    qf = new QField(i_trans, a_field, null, 0, 0);
-                }
-
-            } else {
-
-                if (yc != null) {
-                    YapField yf = yc.getYapField(a_field);
-                    if (yf != null) {
-                        qf = yf.qField(i_trans);
-
-                    }
-                }
-                if (qf == null) {
-                    qf = new QField(i_trans, a_field, null, 0, 0);
-                }
-            }
-
-            QConPath qcp = new QConPath(i_trans, qcon, qf);
-            query.addConstraint(qcp);
-            qcon.addConstraint(qcp);
-        }
-        return true;
+    	
+    	final QCon qcon = this;
+    	
+    	YapClass yc = getYapClass();
+    	final boolean[] foundField = { false };
+    	forEachChildField(a_field, new Visitor4() {
+    		public void visit(Object obj) {
+    			foundField[0] = true;
+    			query.addConstraint((QCon) obj);
+    		}
+    	});
+    	
+    	if (foundField[0]) {
+    		return true;
+    	}
+    	
+    	QField qf = null;
+    	
+    	if (yc == null || yc.holdsAnyClass()) {
+    		
+    		final int[] count = { 0 };
+    		final YapField[] yfs = { null };
+    		
+    		i_trans.i_stream.i_classCollection.yapFields(a_field, new Visitor4() {
+    			public void visit(Object obj) {
+    				yfs[0] = (YapField) ((Object[]) obj)[1];
+    				count[0]++;
+    			}
+    		});
+    		
+    		if (count[0] == 0) {
+    			return false;
+    		}
+    		
+    		if (count[0] == 1) {
+    			qf = yfs[0].qField(i_trans);
+    		} else {
+    			qf = new QField(i_trans, a_field, null, 0, 0);
+    		}
+    		
+    	} else {
+    		
+    		if (yc != null) {
+    			YapField yf = yc.getYapField(a_field);
+    			if (yf != null) {
+    				qf = yf.qField(i_trans);
+    				
+    			}
+    		}
+    		if (qf == null) {
+    			qf = new QField(i_trans, a_field, null, 0, 0);
+    		}
+    	}
+    	
+    	QConPath qcp = new QConPath(i_trans, qcon, qf);
+    	query.addConstraint(qcp);
+    	qcon.addConstraint(qcp);
+    	return true;
     }
 
     int candidateCountByIndex(){
@@ -240,21 +245,23 @@ public abstract class QCon implements Constraint, Visitor4 {
     }
 
     void evaluateSimpleChildren() {
-
-        // TODO: sort the constraints for YapFields first,
-        // so we stay with the same YapField
-        
-		if(i_subConstraints != null){
-			Iterator4 i = new Iterator4(i_subConstraints);
-			while(i.hasNext()){
-				QCon qcon = (QCon)i.next();
-				i_candidates.setCurrentConstraint(qcon);
-				qcon.setCandidates(i_candidates);
-				qcon.evaluateSimpleExec(i_candidates);
-				qcon.applyOrdering();
-			}
-			i_candidates.setCurrentConstraint(null);
-		}
+    	
+    	// TODO: sort the constraints for YapFields first,
+    	// so we stay with the same YapField
+    	
+    	if(i_subConstraints == null) {
+    		return;
+    	}
+    	
+    	Iterator4 i = new Iterator4(i_subConstraints);
+    	while(i.hasNext()){
+    		QCon qcon = (QCon)i.next();
+    		i_candidates.setCurrentConstraint(qcon);
+    		qcon.setCandidates(i_candidates);
+    		qcon.evaluateSimpleExec(i_candidates);
+    		qcon.applyOrdering();
+    	}
+    	i_candidates.setCurrentConstraint(null);
     }
 
     void evaluateSimpleExec(QCandidates a_candidates) {
@@ -280,15 +287,16 @@ public abstract class QCon implements Constraint, Visitor4 {
     }
 
     void forEachChildField(final String name, final Visitor4 visitor) {
-    	if(i_subConstraints != null){
-    		Iterator4 i = new Iterator4(i_subConstraints);
-    		while(i.hasNext()){
-    			Object obj = i.next();
-				if (obj instanceof QConObject) {
-					if (((QConObject) obj).i_field.i_name.equals(name)) {
-						visitor.visit(obj);
-					}
-				}
+    	if(i_subConstraints == null){
+    		return;
+    	}
+    	Iterator4 i = new Iterator4(i_subConstraints);
+    	while(i.hasNext()){
+    		Object obj = i.next();
+    		if (obj instanceof QConObject) {
+    			if (((QConObject) obj).i_field.i_name.equals(name)) {
+    				visitor.visit(obj);
+    			}
     		}
     	}
     }
@@ -502,16 +510,17 @@ public abstract class QCon implements Constraint, Visitor4 {
     }
 
     void removeChildrenJoins() {
-        if (i_joins != null) {
-            Iterator4 i = i_joins.iterator();
-            while(i.hasNext()){
-				QConJoin qcj = (QConJoin) i.next();
-				if (qcj.removeForParent(this)) {
-					i_joins.remove(qcj);
-				}
-            }
-            checkLastJoinRemoved();
+        if (i_joins == null) {
+        	return;
         }
+        Iterator4 i = i_joins.iterator();
+        while(i.hasNext()){
+        	QConJoin qcj = (QConJoin) i.next();
+        	if (qcj.removeForParent(this)) {
+        		i_joins.remove(qcj);
+        	}
+        }
+        checkLastJoinRemoved();
     }
 
     void removeJoin(QConJoin a_join) {
@@ -560,24 +569,25 @@ public abstract class QCon implements Constraint, Visitor4 {
     }
 
     void unmarshall(final Transaction a_trans) {
-        if (i_trans == null) {
-            i_trans = a_trans;
-            if (i_parent != null) {
-                i_parent.unmarshall(a_trans);
-            }
-            if (i_joins != null) {
-                Iterator4 i = i_joins.iterator();
-                while (i.hasNext()) {
-                    ((QCon) i.next()).unmarshall(a_trans);
-                }
-            }
-			if(i_subConstraints != null){
-				Iterator4 i = new Iterator4(i_subConstraints);
-				while(i.hasNext()){
-					((QCon)i.next()).unmarshall(a_trans);
-				}
-			}
-        }
+    	if (i_trans != null) {
+    		return;
+    	}
+    	i_trans = a_trans;
+    	if (i_parent != null) {
+    		i_parent.unmarshall(a_trans);
+    	}
+    	if (i_joins != null) {
+    		Iterator4 i = i_joins.iterator();
+    		while (i.hasNext()) {
+    			((QCon) i.next()).unmarshall(a_trans);
+    		}
+    	}
+    	if(i_subConstraints != null){
+    		Iterator4 i = new Iterator4(i_subConstraints);
+    		while(i.hasNext()){
+    			((QCon)i.next()).unmarshall(a_trans);
+    		}
+    	}
     }
 
     public void visit(Object obj) {
