@@ -29,18 +29,25 @@ public class TreeSelectionChangedController implements
 		try {
 			++treeSelectionChanging;
 			
-			TreeViewer source = (TreeViewer) event.getSource();
-			IGraphIterator model = (IGraphIterator) source.getInput();
 			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-			GraphPosition node = (GraphPosition) selection.getFirstElement();
-			model.setSelectedPath(node);
+			
+			if (!selection.isEmpty()) {
+				GraphPosition node = (GraphPosition) selection.getFirstElement();
+	
+				TreeViewer source = (TreeViewer) event.getSource();
+				IGraphIterator model = (IGraphIterator) source.getInput();
+				model.setSelectedPath(node);
+			}
 		} finally {
 			--treeSelectionChanging;
 		}
 	}
 	
 	/**
-	 * @return
+	 * Indicates to clients if the tree's selection is in the process of
+	 * changing.
+	 * 
+	 * @return true if the tree's selection is changing; false otherwise.
 	 */
 	public boolean isTreeSelectionChanging() {
 		return treeSelectionChanging > 0;

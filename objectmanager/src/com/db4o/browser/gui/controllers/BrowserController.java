@@ -4,7 +4,6 @@
 package com.db4o.browser.gui.controllers;
 
 import com.db4o.browser.gui.controllers.detail.DetailController;
-import com.db4o.browser.gui.controllers.tree.SelectionChangedController;
 import com.db4o.browser.gui.controllers.tree.TreeController;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;

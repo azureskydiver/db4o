@@ -3,11 +3,9 @@
  */
 package com.db4o.browser.gui.controllers.detail.generator;
 
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * StringInputStreamFactory.  A class that converts a java.lang.String into a 
@@ -17,29 +15,11 @@ import java.io.PrintStream;
  */
 public class StringInputStreamFactory {
 	public static InputStream construct(final String rawMaterial) {
-		InputStream result;
-		final PrintStream output;
-		
-		// Make a stream for writing output
-		PipedOutputStream intermediate;
-
-		intermediate = new PipedOutputStream();
-		output = new PrintStream(intermediate);
 		try {
-			result = new PipedInputStream(intermediate);
-		} catch (IOException e) {
-			throw new RuntimeException("Unable to open stream", e);
+			return new ByteArrayInputStream(rawMaterial.getBytes("utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("utf-8 should always be available",e);
 		}
-		
-		Thread printer = new Thread() {
-			public void run() {
-				output.print(rawMaterial);
-				output.close();
-			}
-		};
-		printer.start();
-		
-		return result;
 	}
 
 }
