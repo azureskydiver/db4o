@@ -40,6 +40,15 @@ public class ActivationPreferencePage extends PreferencePage {
 		prefs.setInitialActivationDepth(panel.getInitialActivationDepth().getSelection());
 		prefs.setSubsequentActivationDepth(panel.getSubsequentActivationDepth().getSelection());
 		
+		PreferencesCore.commit();
+		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.IPreferencePage#performCancel()
+	 */
+	public boolean performCancel() {
+		PreferencesCore.rollback();
 		return true;
 	}
 	
@@ -55,5 +64,6 @@ public class ActivationPreferencePage extends PreferencePage {
 		prefs.setSubsequentActivationDepth(PreferencesCore.DEFAULT_SUBSEQUENT_ACTIVATION_DEPTH);
 		panel.getSubsequentActivationDepth().setSelection(prefs.getSubsequentActivationDepth());
 	}
+	
 
 }
