@@ -99,7 +99,11 @@ public class JdkClass implements ReflectClass{
 		return _clazz.isPrimitive();
 	}
     
-	public Object newInstance(){
+    public boolean isSecondClass() {
+        return isPrimitive();
+    }
+    
+    public Object newInstance(){
 		try {
             if(_constructor == null){
                 return _clazz.newInstance();

@@ -22,6 +22,7 @@ public class GenericClass implements ReflectClass {
     private final ReflectClass _superclass;
     
     private int _id;
+    private boolean _isSecondClass;
     
     private GenericField[] _fields = NO_FIELDS;
 
@@ -145,6 +146,13 @@ public class GenericClass implements ReflectClass {
         return false;
     }
     
+    public boolean isSecondClass() {
+        if(isPrimitive()){
+            return true;
+        }
+        return _isSecondClass;
+    }
+    
     public Object newInstance() {
         if(_delegate != null){
             return _delegate.newInstance();
@@ -161,6 +169,10 @@ public class GenericClass implements ReflectClass {
     
     void setId(int id){
         _id = id;
+    }
+    
+    void setSecondClass(){
+        _isSecondClass = true;
     }
     
     public boolean skipConstructor(boolean flag){

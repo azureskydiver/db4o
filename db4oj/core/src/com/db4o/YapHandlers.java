@@ -114,11 +114,12 @@ public class YapHandlers {
         i_yapClasses = new YapClass[i_maxTypeID + 1];
 
         for (int i = 0; i < CLASSCOUNT; i++) {
+            int id = i + 1; // note that we avoid 0 here
             i_yapClasses[i] = new YapClassPrimitive(a_stream, i_handlers[i]);
-            i_yapClasses[i].i_id = i + 1; // note that we avoid 0 here
+            i_yapClasses[i].i_id = id; 
             i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
             if(i < YAPANY){
-            	reflector.registerPrimitiveClass(i + 1, i_handlers[i].classReflector().getName());
+            	reflector.registerPrimitiveClass(id, i_handlers[i].classReflector().getName());
             }
             if (!Deploy.csharp) {
                 if (i_handlers[i].primitiveClassReflector() != null) {

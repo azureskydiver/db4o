@@ -266,11 +266,14 @@ public class GenericReflector implements Reflector, DeepClone {
     }
 
 	public void registerPrimitiveClass(int id, String name) {
-		if(_classByID.get(id) != null){
+        GenericClass existing = (GenericClass)_classByID.get(id);
+		if( existing != null){
+            existing.setSecondClass();
 			return;
 		}
 		ReflectClass clazz = _delegate.forName(name);
         GenericClass claxx = ensureDelegate(clazz);
+        claxx.setSecondClass();
         referenceById(claxx, id);
 	}
 
