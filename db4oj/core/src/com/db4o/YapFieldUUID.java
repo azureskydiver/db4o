@@ -9,10 +9,10 @@ import com.db4o.ext.*;
  */
 class YapFieldUUID extends YapFieldVirtual {
 
-    YapFieldUUID() {
+    YapFieldUUID(YapStream stream) {
         super();
         i_name = PREFIX + "uuid";
-        i_handler = new YLong();
+        i_handler = new YLong(stream);
     }
     
     void addFieldIndex(YapWriter a_writer, boolean a_new) {

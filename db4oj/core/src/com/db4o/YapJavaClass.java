@@ -6,6 +6,12 @@ import com.db4o.reflect.*;
 
 
 abstract class YapJavaClass implements YapDataType {
+    
+    final YapStream _stream;
+    
+    public YapJavaClass(YapStream stream) {
+        _stream = stream;
+    }
 
     private boolean i_compareToIsNull;
 

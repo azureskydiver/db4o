@@ -7,6 +7,10 @@ class YInt extends YapJavaClass {
     
     private static final Integer i_primitive = new Integer(0);
     private static final Class i_class = i_primitive.getClass();
+    
+    public YInt(YapStream stream) {
+        super(stream);
+    }
 
     public int getID() {
         return 1;

@@ -5,11 +5,15 @@ package com.db4o;
 
 final class YShort extends YapJavaClass
 {
-	static final int LENGTH = YapConst.SHORT_BYTES + YapConst.ADDED_LENGTH;
+    static final int LENGTH = YapConst.SHORT_BYTES + YapConst.ADDED_LENGTH;
 	
 	private static final Short i_primitive = new Short((short)0);
 	private static final Class i_class = i_primitive.getClass();
 	
+    public YShort(YapStream stream) {
+        super(stream);
+    }
+    
 	public int getID(){
 		return 8;
 	}

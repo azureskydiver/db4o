@@ -6,6 +6,12 @@ package com.db4o;
  * 
  */
 class YapIndexes {
-    final YapFieldVersion i_fieldVersion = new YapFieldVersion();
-    final YapFieldUUID i_fieldUUID = new YapFieldUUID();
+    
+    final YapFieldVersion i_fieldVersion;
+    final YapFieldUUID i_fieldUUID;
+    
+    YapIndexes(YapStream stream){
+        i_fieldVersion = new YapFieldVersion();
+        i_fieldUUID = new YapFieldUUID(stream);
+    }
 }
