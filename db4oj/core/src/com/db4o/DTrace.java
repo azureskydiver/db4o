@@ -8,7 +8,7 @@ package com.db4o;
  */
 public class DTrace {
     
-    public static final boolean enabled = true;
+    public static final boolean enabled = false;
     
     private static void breakPoint(){
         int placeBreakPointHere = 1;
