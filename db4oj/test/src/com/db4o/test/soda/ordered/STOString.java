@@ -25,7 +25,7 @@ public class STOString implements STClass {
             new STOString("bbb"),
             new STOString("dod"),
             new STOString("aaa"),
-            new STOString("Bbb"),
+            new STOString("Xbb"),
             new STOString("bbq")};
     }
 
@@ -52,7 +52,7 @@ public class STOString implements STClass {
         qStr.constrain("b").like();
         qStr.orderAscending();
         Object[] r = store();
-        st.expectOrdered(q, new Object[] { r[1], r[2], r[6] });
+        st.expectOrdered(q, new Object[] { r[5], r[1], r[2], r[6] });
     }
 
     public void testDescendingContains() {

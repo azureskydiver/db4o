@@ -22,6 +22,7 @@ public class TreeSetCustomComparable implements Comparable{
     }
     
     public void store(){
+        Test.deleteAllInstances(TreeMap.class);
         Map map=new TreeMap();
         map.put(new TreeSetCustomComparable(),new TreeSet());
         Test.objectContainer().set(map);
@@ -31,7 +32,13 @@ public class TreeSetCustomComparable implements Comparable{
         TreeMap map=new TreeMap();
         ObjectSet result=Test.objectContainer().get(map);
         while(result.hasNext()) {
-          System.err.println(result.next());
+            TreeMap tm = (TreeMap)result.next();
+            Test.ensure(tm.size() == 1);
+            Iterator i = tm.keySet().iterator();
+            Test.ensure(i.hasNext());
+            TreeSetCustomComparable tscc = (TreeSetCustomComparable)i.next();
+            TreeSet ts = (TreeSet)tm.get(tscc);
+            Test.ensure(ts != null);
         }
     }
 }

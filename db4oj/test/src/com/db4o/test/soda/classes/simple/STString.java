@@ -79,7 +79,8 @@ public class STString implements STClass1, STInterface {
 		q = st.query();
 		c = q.constrain(new STString("od"));
 		q.descend("str").constraints().like();
-		st.expectNone(q);
+        
+		st.expectOne(q,store()[3]);
 	}
 
 	public void testNotLike() {

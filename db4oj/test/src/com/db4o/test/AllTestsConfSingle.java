@@ -17,7 +17,11 @@ public class AllTestsConfSingle {
        
 //        CollectionActivation.class,
         // CollectionActivation.class,
-        MultipleEvaluationGetObjectCalls.class
+        
+        TreeSetCustomComparable.class
+        
+        
+        // MultipleEvaluationGetObjectCalls.class
         
         // SimplestPossible.class,
         
@@ -43,7 +47,7 @@ public class AllTestsConfSingle {
     /**
       * run the tests stand-alone 
       */
-    public boolean SOLO = false;
+    public boolean SOLO = true;
     
     /**
       * run the tests in client/server mode 
