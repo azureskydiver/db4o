@@ -91,6 +91,15 @@ namespace com.db4o.reflect.net
 
 		public virtual bool isCollection(com.db4o.reflect.ReflectClass candidate)
 		{
+            if(candidate.isArray()){
+                return false;
+            }
+            if ( typeof(System.Collections.ICollection).IsAssignableFrom(
+                ((com.db4o.reflect.net.NetClass)candidate).getNetType())){
+                return true;
+            }
+
+
 			com.db4o.Iterator4 it = _collectionClasses.iterator();
 			while (it.hasNext())
 			{
@@ -158,6 +167,11 @@ namespace com.db4o.reflect.net
 
 		public virtual int collectionUpdateDepth(com.db4o.reflect.ReflectClass candidate)
 		{
+            if(typeof(System.Collections.IDictionary).
+                IsAssignableFrom(((com.db4o.reflect.net.NetClass)candidate).getNetType())){
+                return 3;
+            };
+
 			com.db4o.Iterator4 i = _collectionUpdateDepths.iterator();
 			while (i.hasNext())
 			{
