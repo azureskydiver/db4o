@@ -34,15 +34,15 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
 public class MapFieldNode extends FieldNode {
 
     /**
-     * @param _instance
+     * @param instance
      * @param database TODO
      * @param fieldType
      * @return
      */
-    public static IModelNode tryToCreate(Field field, Object _instance, Database database) {
+    public static IModelNode tryToCreate(Field field, Object instance, Database database) {
         MapFieldNode result;
         
-        Class fieldType = field.getType();
+        Class fieldType = FieldNode.field(field, instance).getClass();
         Method keySet = null;
 		Method get = null;
         try {
@@ -51,7 +51,7 @@ public class MapFieldNode extends FieldNode {
         } catch (Exception e) { return null; };
         
         try {
-            result = new MapFieldNode(field, _instance, keySet, get, database);
+            result = new MapFieldNode(field, instance, keySet, get, database);
             result.iterator();
         } catch (IllegalStateException e) {
             Logger.log().error(e, "Unable to invoke 'iterator()'");
@@ -66,7 +66,7 @@ public class MapFieldNode extends FieldNode {
 	private Iterator iterator() {
         Set set;
         try {
-            set = (Set) _keySetMethod.invoke(field(), new Object[] {});
+            set = (Set) _keySetMethod.invoke(value, new Object[] {});
         } catch (Exception e) {
             Logger.log().error(e, "Unable to invoke 'keySet'");
             throw new IllegalStateException();
@@ -77,7 +77,7 @@ public class MapFieldNode extends FieldNode {
 	private Object get(Object key) {
 		Object result;
 		try {
-			result = _getMethod.invoke(field(), new Object[] {key});
+			result = _getMethod.invoke(value, new Object[] {key});
 		} catch (Exception e) {
 			Logger.log().error(e, "Unable ot invoke 'get'");
 			throw new IllegalStateException();
@@ -85,20 +85,7 @@ public class MapFieldNode extends FieldNode {
 		return result;
 	}
 
-    private Object field() {
-        try {
-            if (!_field.isAccessible()) 
-                _field.setAccessible(true);
-            
-			return _field.get(_instance);
-		} catch (Exception e) {
-            Logger.log().error(e, "Unable to get the field contents");
-            throw new IllegalStateException();
-		}
-    }
-    
-
-	public MapFieldNode(Field field, Object instance, Method keySetMethod, Method getMethod, Database database) {
+    public MapFieldNode(Field field, Object instance, Method keySetMethod, Method getMethod, Database database) {
         super(field, instance, database);
         _keySetMethod = keySetMethod;
 		_getMethod = getMethod;

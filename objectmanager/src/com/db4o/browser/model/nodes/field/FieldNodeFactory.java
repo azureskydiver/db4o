@@ -21,6 +21,7 @@ import java.util.Date;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
+import com.db4o.ext.StoredField;
 
 
 /**
@@ -88,6 +89,26 @@ public class FieldNodeFactory {
         if (result != null) return result;
         
 		return new FieldNode(field, instance, database);
+	}
+
+	public static IModelNode construct(StoredField field, Object instance, Database database) {
+        IModelNode result;
+        
+        if (field.getStoredType().isPrimitive()) {
+            return new StoredPrimitiveFieldNode(field, instance, database);
+        }
+        
+        result = StoredIterableFieldNode.tryToCreate(field, instance, database);
+        if (result != null) return result;
+        
+		/*
+		 * FIXME: We currently do not have a way to see if something is a Map, only
+		 * Platform.isCollection()
+		 */
+//        result = StoredMapFieldNode.tryToCreate(field, instance, database);
+//        if (result != null) return result;
+        
+		return new StoredFieldNode(field, instance, database);
 	}
 
 }
