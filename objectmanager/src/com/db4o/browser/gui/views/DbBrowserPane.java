@@ -95,6 +95,33 @@ public class DbBrowserPane extends Composite {
     public Composite getFieldArea() {
         return (Composite) contents.get("FieldArea");
     }
+	
+	/**
+	 * Method GetLeftButton.  Returns the "back" button.
+	 * 
+	 * @return Button the "back" navigation button
+	 */
+	public Button getLeftButton() {
+		return (Button) contents.get("LeftButton");
+	}
+	
+	/**
+	 * Method GetRightButton.  Returns the "forward" button.
+	 * 
+	 * @return Button the "forward" navigation button
+	 */
+	public Button getRightButton() {
+		return (Button) contents.get("RightButton");
+	}
+	
+	/**
+	 * Method getHistoryButton.  Returns the navigation history button.
+	 * 
+	 * @return Button the "history" navigation button
+	 */
+	public Button getHistoryButton() {
+		return (Button) contents.get("HistoryButton");
+	}
 
 }
 
