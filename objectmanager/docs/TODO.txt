@@ -1,0 +1,159 @@
+TODO:
+
+- Cleanup current design: fix problems detailed below.
+
+- Rewrite tree code using clear MVC design using JFace.
+
+- Write detail pane.
+
+- Follow up using the bottom-up strategy getting db4o into Red Hat.
+
+- Follow up with Karen Bennett of Red Hat regarding getting db4o into Red Hat and getting
+    GCJ support into Eclipse.
+
+- Extending VEP article
+
+*** Work with Sybase, BEA, and Actuate on DB API (after browser spike)
+
+*** Follow up about getting into OSCon (*done*)
+
+After first browser spike done; look at BIRT API; make suggestions for oo improvements.
+
+---------------------
+
+Standardization discussion:
+
+here is the result of our discussion yesterday as I
+remember it:
+
+
+(1) How will our standard look like?
+
+- We don't want to go JDO.
+- S.O.D.A. is not intuitive enough.
+- Even if we follow the new "Java method safe query"
+approach, we will need to build some kind of tree.
+- Let's use a new API and make it look as much like
+SQL as we can.
+
+
+(2) Our browser
+
+The majority of the work for our browser will be to
+get the GUI right. This is largely independant of
+the way our querying API will look. We can port this
+S.O.D.A. to our new dialect in no time (2 days).
+
+
+(3) How do we fit in with other standards?
+
+We don't.
+EJB 3.0 is too slow.
+JDO 2.0 is too ugly.
+
+
+(4) Eclipse vs. JCP standardisation bodies.
+
+Eclipse is faster. You just go and do it. 
+That's what we will do. 
+
+
+
+---------------------
+
+
+Problems with current design:
+
+- The Model strictly represents an open database file.  It does not represent search results.
+
+- Opening a new database file results in closing and opening the Model object.  It should
+  rather tell the Model to open a new database file and then the Model should trigger a refresh
+  to all listening views.
+  
+- The current View object mix in Controller functionality.  Controllers should be separate objects.
+
+- There should be separate Controller objects for each part of the window:
+    * Tree
+    * Path string
+    * Hyperlink area
+    * Object field pane
+    
+- The Model object currently just wraps an ObjectContainer and adds convenience methods.
+
+- The FieldNode hierarchy represents the Model, but also embeds navigation into it!!!
+
+- Navigating/Visiting aspects of the Model should be separated out of the Model graph using the Iterator
+  pattern.  The Iterator should be a hierarchy/graph Iterator, and should embed a stack, the 
+  visual representation of which will be the path string in the detail pane.
+  
+- This stack will be how we traverse up the tree control from its root to keep its focus
+  synchronized with the detail pane.
+  
+- This Visitor becomes like the INavigator framework in Essential Data.
+
+- This is how we provide an ED-like provider framework for JFace TreeViewers.
+
+
+----------------------
+
+Be able to see how many subobjects per node
+Break down lists into 1..50, 51-100, etc...
+Click on a Java class in package explorer, see instances
+
+
+Display properties:
+  Be able to configure the following on a global or a package basis:
+    (select packages by substring or regex)
+
+Display nodes: in addition to toString():
+getDeclaredType(), getConcreteType(), getImplementedType(), 
+call a specific method, use a special field;
+
+*.*      [declared] [concrete] [method:(name)] [field:(name)]
+*.db4o   [concrete] [method:(name)] [field:(name)]
+         [declared] [concrete] [method:(name)] [field:(name)]
+         [declared] [concrete] [method:(name)] [field:(name)]
+         [declared] [concrete] [method:(name)] [field:(name)]
+
+
+Filter from search box; limit search depth (add UI for this)
+ - Incremental search
+ - Regular expression
+
+
+- Hide package names option
+- Hide these classes option (for hiding system classes)
+
+
+*DONE* Put SWT application launching instructions in /dev
+
+
+April: version 1.0
+October timeframe: mature browser
+
+
+
+Carl's notes:
+
+  Popup Nodes, if there are too many. Display first 50 and use node to expand
+  Would like to see the number items per class
+  Double-clicking on a node: Browse from here.
+  History for objects
+  Update the browse view from selecting class in Java perspective
+  Declared type and implemented type
+  Hide package names
+
+  [declared type] [concrete type] [method:toString] [method:(name)] [field:(name)]
+
+
+Use-cases:
+
+1) Run on mobile devices
+
+2) Debug use-cases:
+
+2.1) Navigate
+2.2) Query
+2.3) Visualize object graphs  (Java Spider)
+
+
