@@ -34,6 +34,8 @@ public class Model {
      */
     public Model(String path) {
         container = Db4o.openFile(path);
+        if (container == null)
+            throw new IllegalArgumentException("Could not open: " + path);
     }
 
 	private ObjectContainer container = null;
