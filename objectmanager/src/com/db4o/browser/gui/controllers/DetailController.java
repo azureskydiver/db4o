@@ -51,7 +51,6 @@ public class DetailController implements IBrowserController {
 				input.selectNextChild();
 				buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
 				input.selectParent();
-				input.previous();
 			} else {
 				buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
 			}

@@ -6,8 +6,6 @@ package com.db4o.browser.model;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.eclipse.jface.viewers.StructuredSelection;
-
 import com.db4o.browser.model.nodes.ClassNode;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.ext.StoredClass;
@@ -53,7 +51,10 @@ public class DatabaseGraphIterator implements IGraphIterator {
 	 */
 	public GraphPosition getPath() {
 		GraphPosition result = new GraphPosition(path);
-        result.push(currentFamily, currentIndex);
+		if(getCurrentIndex()>=currentFamily.length-1) {
+			throw new RuntimeException();
+		}
+        result.push(currentFamily, getCurrentIndex());
         return result;
 	}
 
@@ -65,11 +66,19 @@ public class DatabaseGraphIterator implements IGraphIterator {
         GraphPathNode currentParent = copy.pop();
         
         this.currentFamily = currentParent.children;
-        this.currentIndex = currentParent.selectedChild;
+        this.setCurrentIndex(currentParent.selectedChild);
 
 		this.path = copy;
 	}
 	
+	/**
+	 * (Non-API) For unit testing purposes only!
+	 */
+	public IModelNode[] getCurrentFamily() {
+		return currentFamily;
+	}
+	
+
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.model.IGraphIterator#setSelectedPath(com.db4o.browser.model.GraphPosition)
 	 */
@@ -107,7 +116,7 @@ public class DatabaseGraphIterator implements IGraphIterator {
 	public boolean nextHasChildren() {
         if (!hasNext())
             return false;
-		return currentFamily[currentIndex+1].hasChildren();
+		return currentFamily[getCurrentIndex()+1].hasChildren();
 	}
     
     /* (non-Javadoc)
@@ -116,7 +125,7 @@ public class DatabaseGraphIterator implements IGraphIterator {
 	public boolean previousHasChildren() {
         if (!hasPrevious())
             return false;
-		return currentFamily[currentIndex].hasChildren();
+		return currentFamily[getCurrentIndex()].hasChildren();
 	}
     
 	/* (non-Javadoc)
@@ -133,7 +142,7 @@ public class DatabaseGraphIterator implements IGraphIterator {
         path = new GraphPosition();
         
         currentFamily = startModel;
-        currentIndex=-1;
+        setCurrentIndex(-1);
 	}
     
 	/* (non-Javadoc)
@@ -142,12 +151,13 @@ public class DatabaseGraphIterator implements IGraphIterator {
 	public void selectNextChild() {
         if (hasNext()) {
         	IModelNode child = (IModelNode) next();
-            path.push(currentFamily, currentIndex);
+			previous();
+            path.push(currentFamily, getCurrentIndex());
             currentFamily = child.children();
         } else {
             throw new IllegalArgumentException("There is no next child to select");
         }
-        currentIndex=-1;
+        setCurrentIndex(-1);
 	}
     
     /* (non-Javadoc)
@@ -156,7 +166,7 @@ public class DatabaseGraphIterator implements IGraphIterator {
 	public void selectPreviousChild() {
         if (hasPrevious()) {
             IModelNode child = (IModelNode) previous();
-            path.push(currentFamily, currentIndex);
+            path.push(currentFamily, getCurrentIndex());
             currentFamily = child.children();
         } else {
             throw new IllegalArgumentException("There is no previous child to select");
@@ -172,7 +182,7 @@ public class DatabaseGraphIterator implements IGraphIterator {
         }
 		GraphPathNode parentNode = path.pop();
         currentFamily = parentNode.children;
-        currentIndex = parentNode.selectedChild;
+        setCurrentIndex(parentNode.selectedChild);
 	}
     
 	/* (non-Javadoc)
@@ -193,37 +203,37 @@ public class DatabaseGraphIterator implements IGraphIterator {
 	 * @see java.util.Iterator#hasNext()
 	 */
 	public boolean hasNext() {
-		return currentIndex < currentFamily.length-1;
+		return getCurrentIndex() < currentFamily.length-1;
 	}
     
 	/* (non-Javadoc)
 	 * @see java.util.ListIterator#hasPrevious()
 	 */
 	public boolean hasPrevious() {
-		return currentIndex >= 0;
+		return getCurrentIndex() >= 0;
 	}
     
 	/* (non-Javadoc)
 	 * @see java.util.Iterator#next()
 	 */
 	public Object next() {
-        ++currentIndex;
-		return currentFamily[currentIndex];
+        setCurrentIndex(getCurrentIndex() + 1);
+		return currentFamily[getCurrentIndex()];
 	}
     
 	/* (non-Javadoc)
 	 * @see java.util.ListIterator#nextIndex()
 	 */
 	public int nextIndex() {
-		return currentIndex+1;
+		return getCurrentIndex()+1;
 	}
     
 	/* (non-Javadoc)
 	 * @see java.util.ListIterator#previous()
 	 */
 	public Object previous() {
-        Object result = currentFamily[currentIndex];
-        --currentIndex;
+        Object result = currentFamily[getCurrentIndex()];
+        setCurrentIndex(getCurrentIndex() - 1);
 		return result;
 	}
     
@@ -231,9 +241,17 @@ public class DatabaseGraphIterator implements IGraphIterator {
 	 * @see java.util.ListIterator#previousIndex()
 	 */
 	public int previousIndex() {
-		return currentIndex;
+		return getCurrentIndex();
 	}
     
+	private void setCurrentIndex(int currentIndex) {
+		this.currentIndex = currentIndex;
+	}
+
+	private int getCurrentIndex() {
+		return currentIndex;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.util.Iterator#remove()
 	 */
@@ -263,6 +281,6 @@ public class DatabaseGraphIterator implements IGraphIterator {
 	 * @see java.lang.Object#hashCode()
 	 */
 	public int hashCode() {
-		return path.hashCode() + currentFamily.length + currentIndex + 1;
+		return path.hashCode() + currentFamily.length + getCurrentIndex() + 1;
 	}
 }

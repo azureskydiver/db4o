@@ -17,6 +17,7 @@
 package com.db4o.browser.model.nodes;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,9 @@ public class InstanceNode implements IModelNode {
 		while(curclazz!=null) {
 			Field[] fields = curclazz.getDeclaredFields();
 			for (int i = 0; i < fields.length; i++) {
-				results.add(FieldNodeFactory.construct(fields[i], _instance));
+				if(!Modifier.isTransient(fields[i].getModifiers())) {
+					results.add(FieldNodeFactory.construct(fields[i], _instance));
+				}
 			}
 			curclazz=curclazz.getSuperclass();
 		}

@@ -1,12 +1,11 @@
 /*
  * Copyright (C) 2005 db4objects Inc.  http://www.db4o.com
  */
-package com.db4o.browser;
+package com.db4o.binding;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
 
 /**
  * DuckType. Implements Duck Typing for Java.  ("If it walks like a duck, 
@@ -33,17 +32,8 @@ public class DuckType implements InvocationHandler {
 	protected Object object;
 	protected Class objectClass;
 	
-	private HashMap methodCache = new HashMap();
-	
 	protected Method getMethodByName(Class clazz, String methodName, Class[] args) throws NoSuchMethodException {
-		Method method = (Method) methodCache.get(methodName);
-		if (method != null) {
-			return method;
-		}
-		
-		method = clazz.getMethod(methodName, args);
-		methodCache.put(methodName, method);
-		return method;
+		return clazz.getMethod(methodName, args);
 	}
 	
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

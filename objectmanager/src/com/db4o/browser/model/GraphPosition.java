@@ -48,6 +48,15 @@ public class GraphPosition {
 	public ListIterator iterator() {
         return path.listIterator();
     }
+	
+	/**
+	 * (non-API) Method size.  Used for unit testing only.
+	 *  
+	 * @return Return the number of stored GraphPathNodes.
+	 */
+	public int size() {
+		return path.size();
+	}
     
     /**
      * Method hasParent. Indicates if the current path has parent nodes stored.
@@ -142,6 +151,20 @@ public class GraphPosition {
 			code += node.children.length + node.selectedChild + 1;
 		}
 		return code;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		StringBuffer result = new StringBuffer();
+		for (Iterator i = path.iterator(); i.hasNext();) {
+			GraphPathNode node = (GraphPathNode) i.next();
+			if (result.length() > 0)
+				result.append("-->");
+			result.append(node.children[node.selectedChild+1].getText());
+		}
+		return result.toString();
 	}
 }
 

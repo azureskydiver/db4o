@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 
-import com.db4o.browser.DuckType;
+import com.db4o.binding.DuckType;
 import com.swtworkbench.community.xswt.XSWT;
 
 /**
@@ -49,12 +49,19 @@ public class DbBrowserPane extends Composite {
     private Map contents = null;
     
     /**
-     * Returns the Path Label.  On desktop platforms this can be null.
+     * Returns an ITextProperty object representing the Path Label.  If a 
+     * control named "PathLabel" is present, this is returned, albeit
+     * DuckTyped to an ITextProperty.  Otherwise, the Shell is returned,
+     * DuckTyped to an ITextProperty.
      * 
-     * @return the Path label from the layout or null if there is none.
+     * @return an ITextProperty object where the path label may be set.
      */
-    public Label getPathLabel() {
-        return (Label) contents.get("PathLabel");
+    public ITextProperty getPathLabel() {
+		Object pathLabel = contents.get("PathLabel");
+		if (pathLabel != null) {
+			return (ITextProperty) DuckType.implement(ITextProperty.class, pathLabel);
+		}
+		return (ITextProperty) DuckType.implement(ITextProperty.class, getShell());
     }
     
     /**

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import org.apache.oro.text.perl.Perl5Util;
 
+import com.db4o.browser.model.GraphPosition;
 import com.db4o.browser.model.IGraphIterator;
 import com.db4o.browser.model.nodes.IModelNode;
 
@@ -61,47 +62,53 @@ public class LayoutGenerator {
 	}
 	
 	public static String fillTemplateString(IGraphIterator input, String layoutTemplate) {
-		// Break it up into header, body template, and footer
-		ArrayList parts = new ArrayList();
-		perl.split(parts, FIELDS_REGEX, layoutTemplate);
+		GraphPosition initialState = input.getPath();
 		
-		// If the template is invalid, return an Invalid Template part
-		if (parts.size() != 3) {
-			layoutTemplate = errorTemplate;
-			return layoutTemplate;
-		} else {
-			// Build the real layout
-			String header = (String) parts.get(0);
-			String row = (String) parts.get(1);
-			String footer = (String) parts.get(2);
+		try {
+			// Break it up into header, body template, and footer
+			ArrayList parts = new ArrayList();
+			perl.split(parts, FIELDS_REGEX, layoutTemplate);
 			
-			// Go to the beginning
-			while (input.hasPrevious()) input.previous();
-			
-			// Build the layout: start with the header
-			StringBuffer contents = new StringBuffer(header);
-			
-			// Each object gets a copy of the "row" fragment
-			int i=0;
-			while (input.hasNext()) {
-				++i;
-				IModelNode node = (IModelNode) input.next();
+			// If the template is invalid, return an Invalid Template part
+			if (parts.size() != 3) {
+				layoutTemplate = errorTemplate;
+				return layoutTemplate;
+			} else {
+				// Build the real layout
+				String header = (String) parts.get(0);
+				String row = (String) parts.get(1);
+				String footer = (String) parts.get(2);
 				
-				// Substitute for all tokens
-				String currentRow = row;
-				currentRow = substitute(FIELD_NO_TOKEN, Integer.toString(i), currentRow);
-				String fieldName = node.getName();
-				if (!fieldName.equals(""))
-					fieldName += ": ";
-				currentRow = substitute(FIELD_NAME_TOKEN, fieldName, currentRow);
-				currentRow = substitute(FIELD_VALUE_TOKEN, node.getValueString(), currentRow);
+				// Go to the beginning
+				while (input.hasPrevious()) input.previous();
 				
-				contents.append(currentRow);
+				// Build the layout: start with the header
+				StringBuffer contents = new StringBuffer(header);
+				
+				// Each object gets a copy of the "row" fragment
+				int i=0;
+				while (input.hasNext()) {
+					++i;
+					IModelNode node = (IModelNode) input.next();
+					
+					// Substitute for all tokens
+					String currentRow = row;
+					currentRow = substitute(FIELD_NO_TOKEN, Integer.toString(i), currentRow);
+					String fieldName = node.getName();
+					if (!fieldName.equals(""))
+						fieldName += ": ";
+					currentRow = substitute(FIELD_NAME_TOKEN, fieldName, currentRow);
+					currentRow = substitute(FIELD_VALUE_TOKEN, node.getValueString(), currentRow);
+					
+					contents.append(currentRow);
+				}
+				
+				// Add the footer and return the result
+				contents.append(footer);
+				return contents.toString();
 			}
-			
-			// Add the footer and return the result
-			contents.append(footer);
-			return contents.toString();
+		} finally {
+			input.setPath(initialState);
 		}
 	}
 }

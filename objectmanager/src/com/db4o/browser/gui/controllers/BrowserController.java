@@ -22,6 +22,7 @@ public class BrowserController implements IBrowserController {
 	private DetailController detailController;
 	private SelectionChangedController selectionChangedController;
 	private NavigationController navigationController;
+	private PathLabelController pathController;
 
 	/**
      * Constructor BrowserController.  Create a BrowserController for a
@@ -38,6 +39,7 @@ public class BrowserController implements IBrowserController {
 		treeController = new TreeController(this, ui.getObjectTree());
 		detailController = new DetailController(this, ui);
 		navigationController = new NavigationController(ui.getLeftButton(), ui.getRightButton());
+		pathController = new PathLabelController(ui.getPathLabel());
 	}
 
 	/**
@@ -59,6 +61,7 @@ public class BrowserController implements IBrowserController {
 		treeController.setInput(input, selection);
 		detailController.setInput(input, selection);
 		navigationController.setInput(input, selection);
+		pathController.setInput(input, selection);
 	}
 
 	/**
