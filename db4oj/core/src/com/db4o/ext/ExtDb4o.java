@@ -18,7 +18,7 @@ public final class ExtDb4o extends Db4o {
      * @param memoryFile a <a href="MemoryFile.html"><code>MemoryFile</code></a> 
      * to store the raw byte data.
 	 * @return an open <a href="../ObjectContainer.html"><code>ObjectContainer</code></a>
-     * @see <a href="MemoryFile.html"><code>MemoryFile</code></a>
+     * @see MemoryFile
 	 */
 	public static final ObjectContainer openMemoryFile(MemoryFile memoryFile) {
 		return openMemoryFile1(memoryFile);

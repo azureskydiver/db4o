@@ -45,8 +45,7 @@ public interface Configuration {
      * manually free memory by deactivating objects.
      * <br><br><b>Examples: ../com/db4o/samples/activate.</b><br><br>
      * @param depth the desired global activation depth.
-     * @see <a href="ObjectClass.html#maximumActivationDepth(int)">
-     * configuring classes individually</a>
+     * @see ObjectClass#maximumActivationDepth configuring classes individually
      */
     public void activationDepth(int depth);
     
@@ -85,7 +84,7 @@ public interface Configuration {
      * prevent db4o from looking for callback methods in persistent classes. This will
      * increase the performance on system startup.<br><br>
      * @param flag false to turn callback methods off
-     * @see <a href="../ObjectCallbacks.html"><code>ObjectCallbacks</code></a>
+     * @see com.db4o.ext.ObjectCallbacks Using callbacks
      */
     public void callbacks(boolean flag);
     
@@ -104,7 +103,7 @@ public interface Configuration {
      * {@link ObjectClass#callConstructor(boolean)}.<br><br>
      * @param flag - specify true, to request calling constructors, specify
      * false to request <b>not</b> calling constructors.
-     * @see <a href="ObjectClass.html#callConstructor(boolean)">
+     * @see ObjectClass#callConstructor
      */
     public void callConstructors(boolean flag);
 
@@ -116,8 +115,7 @@ public interface Configuration {
      * <br><br>This feature is turned on by default.<br><br>
      * @param flag false to turn the possibility to individually configure class
      * activation depths off
-     * @see <a href="Configuration.html#activationDepth(int)">
-     * Why activation?</a>
+     * @see Configuration#activationDepth Why activation?
      */
     public void classActivationDepthConfigurable(boolean flag);
 
@@ -176,7 +174,7 @@ public interface Configuration {
      * db4o database files keep their encryption format after creation.<br><br>
      * @param flag true for turning encryption on, false for turning encryption 
      * off.
-     * @see <a href="#password(java.lang.String)"><code>password()</code>
+     * @see #password
      */
     public void encrypt(boolean flag);
     
@@ -256,8 +254,7 @@ public interface Configuration {
      * Level 2 - messages for new, update and delete<br>
      * Level 3 - messages for activate and deactivate<br><br>
      * @param level integer from 0 to 3
-     * @see <a href="../Db4o.html#setOut(java.io.PrintStream)"><code>
-     * Db4o.setOut(PrintStream)</code>
+     * @see #setOut
      */
     public void messageLevel(int level);
 
@@ -304,7 +301,7 @@ public interface Configuration {
      * the file, are required to set the same password.<br><br>The password
      * is used to seed the encryption mechanism, which makes it impossible
      * to read the database file without knowing the password.<br><br>
-     * @param String the password to be used.
+     * @param pass the password to be used.
      */
     public void password(String pass);
 
@@ -345,7 +342,7 @@ public interface Configuration {
      * the classes in all db4o sessions in the running VM. Calling this method
      * in an ObjectContainer Configuration context, only the classes of the
      * respective ObjectContainer will be refreshed.<br><br>
-     * @see <a href"#setClassLoader(java.lang.ClassLoader)">setClassLoader</a>
+     * @see #setClassLoader
      */
     public void refreshClasses();
     
@@ -366,7 +363,7 @@ public interface Configuration {
      * allocation of storage space to be slightly greater than the anticipated
      * database file size.
      * <br><br> Default configuration: 0<br><br> 
-     * @param count the number of bytes to reserve
+     * @param byteCount the number of bytes to reserve
      */
     public void reserveStorageSpace(long byteCount);
 
@@ -381,14 +378,14 @@ public interface Configuration {
     /**
      * configures db4o to use a custom ClassLoader.
      * <br><br>
-     * @param ClassLoader the ClassLoader to be used
+     * @param classLoader the ClassLoader to be used
      */
     public void setClassLoader(ClassLoader classLoader);
 
     /**
      * sets the MessageRecipient to receive Client Server messages.
      * <br><br>
-     * @param MessageRecipient the MessageRecipient to be used
+     * @param messageRecipient the MessageRecipient to be used
      */
     public void setMessageRecipient(MessageRecipient messageRecipient);
 
@@ -460,7 +457,7 @@ public interface Configuration {
 	 * clients, since they can't respond instantaneously.
 	 * <br><br>Default value: 180000ms (3 minutes)<br><br>
 	 * @param milliseconds time in milliseconds
-	 * @see {@link #singleThreadedClient(boolean)} 
+	 * @see #singleThreadedClient 
 	 */
 	public void timeoutPingClients(int milliseconds);
     
@@ -490,11 +487,9 @@ public interface Configuration {
      * <a href="../ObjectContainer.html#set(java.lang.Object)">
      * ObjectContainer.set()</a> will be updated.<br><br>
      * @param depth the depth of the desired update.
-     * @see <a href="ObjectClass.html#updateDepth(int)">
-     * <code>ObjectClass#updateDepth()</code></a>
-     * @see <a href="ObjectClass.html#cascadeOnUpdate(boolean)">
-     * <code>ObjectClass#cascadeOnUpdate()</code></a>
-     * @see <br><a href="../ext/ObjectCallbacks.html">Using callbacks</a>
+     * @see ObjectClass#updateDepth
+     * @see ObjectClass#cascadeOnUpdate
+     * @see com.db4o.ext.ObjectCallbacks Using callbacks
      */
     public void updateDepth(int depth);
 

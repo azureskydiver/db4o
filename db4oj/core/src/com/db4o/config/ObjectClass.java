@@ -32,7 +32,7 @@ public interface ObjectClass {
      * {@link Configuration#callConstructors(boolean)}.<br><br>
      * @param flag - specify true, to request calling constructors, specify
      * false to request <b>not</b> calling constructors.
-	 * @see <a href="Configuration.html#callConstructors(boolean)">
+	 * @see Configuration#callConstructors
      */
     public void callConstructor(boolean flag);
 	
@@ -45,13 +45,10 @@ public interface ObjectClass {
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * @param flag whether activation is to be cascaded to member objects.
-	 * @see <a href="ObjectField.html#cascadeOnActivate(boolean)">
-	 * <code>ObjectField#cascadeOnActivate()</code></a>
-	 * @see <a href="../ObjectContainer.html#activate(java.lang.Object, int)">
-	 * <code>ObjectContainer#activate()</code></a>
-	 * @see <br><a href="../ext/ObjectCallbacks.html">Using callbacks</a>
-	 * @see <a href="Configuration.html#activationDepth(int)">
-	 * Why activation?</a>
+	 * @see ObjectField#cascadeOnActivate
+	 * @see com.db4o.ObjectContainer#activate
+	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
+	 * @see Configuration#activationDepth Why activation?
 	 */
 	public void cascadeOnActivate(boolean flag);
 
@@ -85,11 +82,9 @@ public interface ObjectClass {
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * @param flag whether deletes are to be cascaded to member objects.
-	 * @see <a href="ObjectField.html#cascadeOnDelete(boolean)">
-	 * <code>ObjectField#cascadeOnDelete()</code></a>
-	 * @see <a href="../ObjectContainer.html#delete(java.lang.Object)">
-	 * <code>ObjectContainer#delete()</code></a>
-	 * @see <br><a href="../ext/ObjectCallbacks.html">Using callbacks</a>
+	 * @see ObjectField#cascadeOnDelete
+	 * @see com.db4o.ObjectContainer#delete
+	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
 	 */
 	public void cascadeOnDelete(boolean flag);
 	
@@ -105,11 +100,9 @@ public interface ObjectClass {
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * @param flag whether updates are to be cascaded to member objects.
-	 * @see <a href="ObjectField.html#cascadeOnUpdate(boolean)">
-	 * <code>ObjectField#cascadeOnUpdate()</code></a>
-	 * @see <a href="../ObjectContainer.html#set(java.lang.Object)">
-	 * <code>ObjectContainer#set()</code></a>
-	 * @see <br><a href="../ext/ObjectCallbacks.html">Using callbacks</a>
+	 * @see ObjectField#cascadeOnUpdate
+	 * @see com.db4o.ObjectContainer#set
+	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
 	 */
 	public void cascadeOnUpdate(boolean flag);
 	
@@ -149,10 +142,8 @@ public interface ObjectClass {
 	 * <a href="Configuration.html#activationDepth(int)">
 	 * global setting</a>.<br><br>
      * @param depth the desired maximum activation depth
-	 * @see <a href="Configuration.html#activationDepth(int)">
-	 * Why activation?</a>
-	 * @see <a href="ObjectClass.html#cascadeOnActivate(boolean)">
-	 * <code>ObjectClass#cascadeOnActivate()</code></a>
+	 * @see Configuration#activationDepth Why activation?
+	 * @see ObjectClass#cascadeOnActivate
      */
     public void maximumActivationDepth (int depth);
 
@@ -164,10 +155,8 @@ public interface ObjectClass {
 	 * <a href="Configuration.html#activationDepth(int)">
 	 * global setting</a>.<br><br>
      * @param depth the desired minimum activation depth
-	 * @see <a href="Configuration.html#activationDepth(int)">
-	 * Why activation?</a>
-	 * @see <a href="ObjectClass.html#cascadeOnActivate(boolean)">
-	 * <code>ObjectClass#cascadeOnActivate()</code></a>
+	 * @see Configuration#activationDepth Why activation?
+	 * @see ObjectClass#cascadeOnActivate
      */
     public void minimumActivationDepth (int depth);
 
@@ -227,8 +216,8 @@ public interface ObjectClass {
      * @param translator this may be an
      * <a href="ObjectTranslator.html"><code>ObjectTranslator</code></a>
      *  or an <a href="ObjectConstructor.html"><code>ObjectConstructor</code></a>
-	 * @see <a href="ObjectTranslator.html">ObjectTranslator</a>
-	 * @see <a href="ObjectConstructor.html">ObjectConstructor</a>
+	 * @see ObjectTranslator
+	 * @see ObjectConstructor
      */
     public void translate (ObjectTranslator translator);
 
@@ -243,13 +232,10 @@ public interface ObjectClass {
 	 * <a href="../ObjectContainer.html#set(java.lang.Object)">
 	 * ObjectContainer.set()</a> will be updated.<br><br>
      * @param depth the depth of the desired update for this class.
-	 * @see <a href="Configuration.html#updateDepth(int)">
-	 * <code>Configuration#updateDepth()</code></a>
-	 * @see <a href="ObjectClass.html#cascadeOnUpdate(boolean)">
-	 * <code>ObjectClass#cascadeOnUpdate()</code></a>
-	 * @see <a href="ObjectField.html#cascadeOnUpdate(boolean)">
-	 * <code>ObjectField#cascadeOnUpdate()</code></a>
-	 * @see <br><a href="../ext/ObjectCallbacks.html">Using callbacks</a>
+	 * @see Configuration#updateDepth
+	 * @see ObjectClass#cascadeOnUpdate
+	 * @see ObjectField#cascadeOnUpdate
+	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
      */
     public void updateDepth (int depth);
 }

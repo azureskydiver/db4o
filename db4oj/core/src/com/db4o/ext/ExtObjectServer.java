@@ -39,8 +39,7 @@ public interface ExtObjectServer extends ObjectServer{
 	 * can be modified individually for
 	 * each ObjectServer without any effects on the global settings.<br><br>
 	 * @return the Configuration context for this ObjectServer
-     * @see <a href="../Db4o.html#configure()">
-     * <code>Db4o#configure()</code></a>
+     * @see com.db4o.Db4o#configure
      */
 	public Configuration configure();
 	

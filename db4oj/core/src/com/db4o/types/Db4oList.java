@@ -24,7 +24,7 @@ import java.util.*;
  * }<br><br>
  * MyClass myObject = new MyClass();<br> 
  * myObject.myList = objectContainer.ext().collections().newLinkedList();
- * @see <a href="../ext/ExtObjectContainer.html#collections()">ExtObjectContainer#collections()</a>
+ * @see com.db4o.ext.ExtObjectContainer#collections
  */
 public interface Db4oList extends Db4oCollection, List {
 

@@ -57,7 +57,7 @@ public interface Blob extends Db4oType {
      * In Client/Server mode db4o will open an additional socket and
      * process writing data in an additional thread.
      * <br><br>
-     * @param File the file the blob is to be read from.
+     * @param file the file the blob is to be read from.
      * @throws IOException in case of errors
      */
     public void readFrom(File file) throws IOException;
@@ -67,7 +67,7 @@ public interface Blob extends Db4oType {
      * <br><br>
      * db4o will use the local file system in Client/Server mode also. 
      * <br><br>
-     * @param File the file the blob is to be read from.
+     * @param file the file the blob is to be read from.
      * @throws IOException in case of errors
      */
     public void readLocal(File file) throws IOException;
@@ -79,7 +79,7 @@ public interface Blob extends Db4oType {
      * <br><br>
      * @throws IOException in case of errors and in case no blob
      * data was stored
-     * @param File the file the blob is to be written to.
+     * @param file the file the blob is to be written to.
      */
     public void writeLocal(File file) throws IOException;
 
@@ -91,7 +91,7 @@ public interface Blob extends Db4oType {
      * <br><br>
      * @throws IOException in case of errors and in case no blob
      * data was stored
-     * @param File the file the blob is to be written to.
+     * @param file the file the blob is to be written to.
      */
     public void writeTo(File file) throws IOException;
 

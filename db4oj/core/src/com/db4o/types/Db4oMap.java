@@ -24,7 +24,7 @@ import java.util.*;
  * }<br><br>
  * MyClass myObject = new MyClass();<br> 
  * myObject.myMap = objectContainer.ext().collections().newHashMap();
- * @see <a href="../ext/ExtObjectContainer.html#collections()">ExtObjectContainer#collections()</a>
+ * @see com.db4o.ext.ExtObjectContainer#collections
  */
 public interface Db4oMap extends Db4oCollection, Map {
 

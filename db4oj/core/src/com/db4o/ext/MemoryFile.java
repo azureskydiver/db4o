@@ -10,8 +10,7 @@ package com.db4o.ext;
  * into OutOfMemory problems or complete loss of all data, in case of hardware
  * or JVM failures.
  * <br><br>
- * @see <a href="ExtDb4o.html#openMemoryFile(com.db4o.MemoryFile)">
- * <code>ExtDb4o#openMemoryFile()</code></a>
+ * @see ExtDb4o#openMemoryFile
  */
 public class MemoryFile {
 
@@ -23,8 +22,7 @@ public class MemoryFile {
 
 	/**
 	 * constructs a new MemoryFile without any data.
-	 * @see <a href="ExtDb4o.html#openMemoryFile(com.db4o.MemoryFile)"> 
-	 * <code>ExtDb4o#openMemoryFile()</code></a>
+	 * @see ExtDb4o#openMemoryFile
 	 */
 	public MemoryFile() {
 	}
@@ -33,8 +31,7 @@ public class MemoryFile {
 	 * constructs a MemoryFile to use the byte data from a previous
 	 * MemoryFile.
 	 * @param bytes the raw byte data.
-	 * @see <a href="ExtDb4o.html#openMemoryFile(com.db4o.MemoryFile)">
-	 * <code>ExtDb4o#openMemoryFile()</code></a>
+	 * @see ExtDb4o#openMemoryFile
 	 */
 	public MemoryFile(byte[] bytes) {
 		i_bytes = bytes;

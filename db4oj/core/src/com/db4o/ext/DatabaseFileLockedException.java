@@ -5,8 +5,7 @@ package com.db4o.ext;
 /**
  * this Exception is thrown during any of the db4o open calls
  * if the database file is locked by another process.
- * @see <a href="../Db4o.html#openFile(java.lang.String)">
- * <code>Db4o.openFile()</code></a>.
+ * @see com.db4o.Db4o#openFile
  */
 public class DatabaseFileLockedException extends RuntimeException{
 }

@@ -26,7 +26,7 @@ public interface Evaluation extends java.io.Serializable {
 	
 	/**
 	 * callback method during {@link Query#execute() query execution}.
-	 * @param Candidate reference to the candidate persistent object.
+	 * @param candidate reference to the candidate persistent object.
 	 */
 	public void evaluate(Candidate candidate);
 	
