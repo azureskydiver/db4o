@@ -26,8 +26,9 @@ public class ActivationPreferencePage extends PreferencePage {
 		panel = new ActivationPreferencePagePanel(parent, SWT.NULL);
 		PreferencesCore prefs = PreferencesCore.getDefault();
 		
-		panel.getInitialActivationDepth().setSelection(prefs.getInitialActivationDepth());
-		panel.getSubsequentActivationDepth().setSelection(prefs.getSubsequentActivationDepth());
+		ActivationPreferences actPrefs = ActivationPreferences.getDefault();
+		panel.getInitialActivationDepth().setSelection(actPrefs.getInitialActivationDepth());
+		panel.getSubsequentActivationDepth().setSelection(actPrefs.getSubsequentActivationDepth());
 		
 		return panel;
 	}
@@ -39,8 +40,9 @@ public class ActivationPreferencePage extends PreferencePage {
 		PreferencesCore prefs = PreferencesCore.getDefault();
 		
 		// Global activation depth handling...
-		prefs.setInitialActivationDepth(panel.getInitialActivationDepth().getSelection());
-		prefs.setSubsequentActivationDepth(panel.getSubsequentActivationDepth().getSelection());
+		ActivationPreferences actPrefs = ActivationPreferences.getDefault();
+		actPrefs.setInitialActivationDepth(panel.getInitialActivationDepth().getSelection());
+		actPrefs.setSubsequentActivationDepth(panel.getSubsequentActivationDepth().getSelection());
 		
 		PreferencesCore.commit();
 		return true;
@@ -60,11 +62,11 @@ public class ActivationPreferencePage extends PreferencePage {
 	protected void performDefaults() {
 		PreferencesCore prefs = PreferencesCore.getDefault();
 		
-		prefs.setInitialActivationDepth(PreferencesCore.DEFAULT_INITIAL_ACTIVATION_DEPTH);
-		panel.getInitialActivationDepth().setSelection(prefs.getInitialActivationDepth());
-		
-		prefs.setSubsequentActivationDepth(PreferencesCore.DEFAULT_SUBSEQUENT_ACTIVATION_DEPTH);
-		panel.getSubsequentActivationDepth().setSelection(prefs.getSubsequentActivationDepth());
+		ActivationPreferences actPrefs = ActivationPreferences.getDefault();
+		actPrefs.resetDefaultValues();
+
+		panel.getInitialActivationDepth().setSelection(actPrefs.getInitialActivationDepth());
+		panel.getSubsequentActivationDepth().setSelection(actPrefs.getSubsequentActivationDepth());
 	}
 	
 
