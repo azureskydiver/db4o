@@ -41,6 +41,15 @@ public class Collection4 implements DeepClone {
             }
         }
     }
+    
+    public final void addAll(Collection4 other){
+        if(other != null){
+            Iterator4 i = other.iterator();
+            while(i.hasNext()){
+                add(i.next());
+            }
+        }
+    }
 
     final void clear() {
         i_first = null;

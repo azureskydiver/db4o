@@ -2,6 +2,8 @@
 
 package com.db4o.reflect;
 
+import com.db4o.*;
+
 /**
  * root of the reflection implementation API.
  * <br><br>The open reflection interface is supplied to allow to implement
@@ -14,13 +16,15 @@ package com.db4o.reflect;
  * to register the use of your implementation before opening database
  * files.
  */
-public interface Reflector {
+public interface Reflector extends DeepClone{
 	
 	
 	/**
 	 * returns an IArray object, the equivalent to java.lang.reflect.Array.
 	 */
 	public ReflectArray array();
+	
+    public int collectionUpdateDepth(ReflectClass claxx);
 	
 	/**
 	 * specifiy whether parameterized Constructors are supported.
@@ -30,6 +34,10 @@ public interface Reflector {
 	 */
 	public boolean constructorCallsSupported();
 	
+	/**
+	 * returns an IClass for a Class
+	 */
+	public ReflectClass forClass(Class clazz);
 	
 	
 	/**
@@ -37,11 +45,6 @@ public interface Reflector {
 	 * if no such class is found
 	 */
 	public ReflectClass forName(String className);
-	
-	/**
-	 * returns an IClass for a Class
-	 */
-	public ReflectClass forClass(Class clazz);
 	
 	/**
 	 * returns an IClass for an object or null if the passed object is null.
@@ -54,8 +57,8 @@ public interface Reflector {
 	public void registerCollection(Class clazz);
 	
 	public void registerCollectionUpdateDepth(Class clazz, int depth);
-	
-	public int collectionUpdateDepth(ReflectClass claxx);
+    
+    public void setParent(Reflector reflector);
 	
 	
 }

@@ -8,15 +8,13 @@ import com.db4o.reflect.*;
 public class JdkReflector implements Reflector{
     
 	private final ClassLoader _classLoader;
+    
+    private Reflector _parent;
 
-	private final ReflectArray _array;
+	private ReflectArray _array;
 	
-	private final Hashtable4 _byClass;
-	private final Hashtable4 _byName;
-	
-	private final Collection4 _collectionClasses;
-	
-	private final Collection4 _collectionUpdateDepths;
+	private final Collection4 _collectionClasses = new Collection4();
+	private final Collection4 _collectionUpdateDepths = new Collection4();
 	
 	
 	public JdkReflector(ClassLoader classLoader){
@@ -24,63 +22,48 @@ public class JdkReflector implements Reflector{
 			throw new NullPointerException();
 		}
 		_classLoader = classLoader;
-		_array = new JdkArray(this);
-		_byClass = new Hashtable4(1);
-		_byName = new Hashtable4(1);
-		_collectionClasses = new Collection4();
-		_collectionUpdateDepths = new Collection4();
 	}
 	
 	public ReflectArray array(){
+        if(_array == null){
+            _array = new JdkArray(_parent);
+        }
 		return _array;
 	}
 	
 	private ReflectClass addClass(String className, Class clazz) {
-		JdkClass cClass = new JdkClass(this, clazz);
-		_byClass.put(clazz, cClass);
-		_byName.put(className, cClass);
-		return cClass;
+        return new JdkClass(_parent, clazz);
 	}
 	
 	public boolean constructorCallsSupported(){
 		return true;
 	}
+    
+    public Object deepClone(Object obj) throws CloneNotSupportedException {
+        JdkReflector myClone = new JdkReflector(_classLoader);
+        myClone._collectionClasses.addAll(_collectionClasses);
+        myClone._collectionUpdateDepths.addAll(_collectionUpdateDepths);
+        return myClone;
+    }
 	
 	public ReflectClass forClass(Class clazz){
-		
-		if(clazz == null){
-			return null;
-		}
-		ReflectClass iClass = (ReflectClass)_byClass.get(clazz);
-		if(iClass != null){
-			return iClass;
-		}
-		return addClass(clazz.getName(), clazz);
+        return new JdkClass(_parent, clazz);
 	}
 	
 	public ReflectClass forName(String className) {
-		ReflectClass iClass = (ReflectClass)_byName.get(className);
-		if(iClass != null){
-			return iClass;
-		}
-		Class clazz;
 		try {
-			clazz = _classLoader.loadClass(className);
+            return new JdkClass(_parent, _classLoader.loadClass(className));
 		}
 		catch(ClassNotFoundException exc) {
-			clazz=null;
 		}
-		if(clazz == null){
-			return null;
-		}
-		return addClass(className, clazz);
+		return null;
 	}
 	
 	public ReflectClass forObject(Object a_object) {
 		if(a_object == null){
 			return null;
 		}
-		return forClass(a_object.getClass());
+		return _parent.forClass(a_object.getClass());
 	}
 	
 	public boolean isCollection(ReflectClass candidate) {
@@ -145,4 +128,10 @@ public class JdkReflector implements Reflector{
 		}
 		return 2;
 	}
+    
+    public void setParent(Reflector reflector) {
+        _parent = reflector;
+    }
+
+
 }

@@ -19,6 +19,9 @@ public class JdkClass implements ReflectClass{
     private Object[] _constructorParams;
 	
 	public JdkClass(Reflector reflector, Class clazz) {
+        if(reflector == null){
+            throw new NullPointerException();
+        }
 		_reflector = reflector;
 		_clazz = clazz;
 	}

@@ -11,6 +11,7 @@ import com.db4o.reflect.*;
 public class GenericReflector implements Reflector, DeepClone {
 
     private Reflector _delegate;
+    private GenericArray _array;
     
     private final Hashtable4 _classByName = new Hashtable4(1);
     private final Collection4 _classes = new Collection4();
@@ -19,13 +20,22 @@ public class GenericReflector implements Reflector, DeepClone {
 	private Transaction _trans;
 	private YapStream _stream;
 	
-	public GenericReflector(Transaction trans, Reflector reflector){
+	public GenericReflector(Transaction trans, Reflector delegateReflector){
 		setTransaction(trans);
-		_delegate = reflector;
+		_delegate = delegateReflector;
+        if(_delegate != null){
+            _delegate.setParent(this);
+        }
 	}
 	
 	public Object deepClone(Object obj) throws CloneNotSupportedException {
-		return new GenericReflector(null, _delegate);
+        GenericReflector myClone = new GenericReflector(null, (Reflector)_delegate.deepClone(this));
+        Iterator4 i = _classes.iterator();
+        while(i.hasNext()){
+            GenericClass clazz = (GenericClass)i.next();
+            
+        }
+		return myClone;
 	}
 
 	public boolean hasTransaction(){
@@ -40,18 +50,20 @@ public class GenericReflector implements Reflector, DeepClone {
 	}
 
     public ReflectArray array() {
-        return _delegate.array();
+        if(_array == null){
+            _array = new GenericArray(this);
+        }
+        return _array;
     }
 
     public int collectionUpdateDepth(ReflectClass claxx) {
         return _delegate.collectionUpdateDepth(claxx);
         
         //TODO: will need knowledge for .NET collections here
-        
     }
 
     public boolean constructorCallsSupported() {
-        return false;
+        return _delegate.constructorCallsSupported();
     }
 
     GenericClass ensureDelegate(ReflectClass clazz){
@@ -71,7 +83,14 @@ public class GenericReflector implements Reflector, DeepClone {
     }
     
     public ReflectClass forClass(Class clazz) {
-        ReflectClass claxx = _delegate.forClass(clazz);
+        if(clazz == null){
+            return null;
+        }
+        ReflectClass claxx = forName(clazz.getName());
+        if(claxx != null){
+            return claxx;
+        }
+        claxx = _delegate.forClass(clazz);
         return ensureDelegate(claxx);
     }
     
@@ -99,6 +118,10 @@ public class GenericReflector implements Reflector, DeepClone {
             return ensureDelegate(clazz);
         }
         return null;
+    }
+    
+    public Reflector getDelegate(){
+        return _delegate;
     }
 
     public boolean isCollection(ReflectClass claxx) {
@@ -273,5 +296,9 @@ public class GenericReflector implements Reflector, DeepClone {
         claxx.setSecondClass();
         referenceById(claxx, id);
 	}
+
+    public void setParent(Reflector reflector) {
+        // do nothing, the generic reflector does not have a parant
+    }
 
 }
