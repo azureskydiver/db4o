@@ -32,4 +32,20 @@ public class DataObjectReflector implements IReflect {
         return null;
     }
 
+	/* (non-Javadoc)
+	 * @see com.db4o.reflect.IReflect#isCollection(com.db4o.reflect.IClass)
+	 */
+	public boolean isCollection(IClass claxx) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.db4o.reflect.IReflect#registerCollection(java.lang.Class)
+	 */
+	public void registerCollection(Class clazz) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

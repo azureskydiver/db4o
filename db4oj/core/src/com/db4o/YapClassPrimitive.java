@@ -49,10 +49,6 @@ class YapClassPrimitive extends YapClass{
     	return i_handler.classReflector(stream);
     }
     
-    public IClass classReflector(){
-    	throw YapConst.virtualException();
-    }
-
     void deleteEmbedded1(YapWriter a_bytes, int a_id) {
         
         if(i_handler instanceof YapArray){

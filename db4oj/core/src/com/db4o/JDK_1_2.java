@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.config.*;
+import com.db4o.reflect.*;
 import com.db4o.types.*;
 
 class JDK_1_2 extends JDKReflect {
@@ -77,7 +78,7 @@ class JDK_1_2 extends JDKReflect {
     public int ver(){
         return 2;
     }
-
+    
     boolean isCollection(Class a_class) {
         return java.util.Collection.class.isAssignableFrom(a_class)
             || java.util.Map.class.isAssignableFrom(a_class);
@@ -88,10 +89,6 @@ class JDK_1_2 extends JDKReflect {
 			((YapRef)obj).i_yapObject = null;
 		}
 	}
-
-    void setAccessible(Object a_accessible) {
-        ((java.lang.reflect.AccessibleObject) a_accessible).setAccessible(true);
-    }
 
     void pollReferenceQueue(YapStream a_stream, Object a_referenceQueue) {
         if (a_referenceQueue != null) {
@@ -104,5 +101,16 @@ class JDK_1_2 extends JDKReflect {
             }
         }
     }
+    
+	public void registerCollections(IReflect reflector) {
+		reflector.registerCollection(java.util.Collection.class);
+		reflector.registerCollection(java.util.Map.class);
+	}
+
+    void setAccessible(Object a_accessible) {
+        ((java.lang.reflect.AccessibleObject) a_accessible).setAccessible(true);
+    }
+
+
 
 }

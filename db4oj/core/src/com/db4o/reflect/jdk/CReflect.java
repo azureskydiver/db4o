@@ -14,6 +14,8 @@ public class CReflect implements IReflect{
 	private final Hashtable4 _byClass;
 	private final Hashtable4 _byName;
 	
+	private final Collection4 _collectionClasses;
+	
 	public CReflect(ClassLoader classLoader){
 		if(classLoader == null){
 			throw new NullPointerException();
@@ -22,6 +24,7 @@ public class CReflect implements IReflect{
 		i_array = new CArray();
 		_byClass = new Hashtable4(1);
 		_byName = new Hashtable4(1);
+		_collectionClasses = new Collection4();
 	}
 	
 	public IArray array(){
@@ -70,10 +73,26 @@ public class CReflect implements IReflect{
 		return forClass(a_object.getClass());
 	}
 
+	public boolean isCollection(IClass candidate) {
+		Iterator4 it = _collectionClasses.iterator();
+		while(it.hasNext()){
+			IClass claxx = (IClass)it.next();
+			if(claxx.isAssignableFrom(candidate)){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public boolean methodCallsSupported(){
 		return true;
 	}
 	
+	public void registerCollection(Class clazz) {
+		IClass claxx = forClass(clazz);
+		_collectionClasses.add(claxx);
+	}
+
 	static Class[] toNative(IClass[] claxx){
         Class[] clazz = null;
         if(claxx != null){
@@ -99,7 +118,4 @@ public class CReflect implements IReflect{
         }
 		return claxx;
 	}
-
-	
-	
 }

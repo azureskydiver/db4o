@@ -568,7 +568,7 @@ class YapField implements StoredField {
         if (a_object != null
             && ((a_config != null && (a_config.i_cascadeOnUpdate == 1)) || (i_config != null && (i_config.i_cascadeOnUpdate == 1)))) {
             int min = 1;
-            if (Platform.isCollection(a_object.getClass())) {
+            if (i_yapClass.isCollection(a_object)) {
                 min = Platform.collectionUpdateDepth(a_object.getClass());
             }
             int updateDepth = a_bytes.getUpdateDepth();

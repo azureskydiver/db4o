@@ -394,6 +394,8 @@ class YapHandlers {
 		ICLASS_STRING = reflector.forClass(String.class);
 		ICLASS_TRANSIENTCLASS = reflector
 				.forClass(YapConst.CLASS_TRANSIENTCLASS);
+		
+		Platform.registerCollections(reflector);
     }
     
     void initEncryption(Config4Impl a_config){

@@ -202,7 +202,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             return true;
         }
         if (i_constructor != null) {
-            if (Platform.isCollection(i_constructor.javaClass())) {
+        	if(reflector().isCollection(i_constructor.reflectorClass())){
                 return true;
             }
             return i_constructor.javaClass().isAssignableFrom(a_class);
@@ -392,7 +392,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 
             int cascade = a_bytes.cascadeDeletes() - 1;
             if (obj != null) {
-                if (Platform.isCollection(obj.getClass())) {
+                if (isCollection(obj)) {
                     cascade += Platform.collectionUpdateDepth(obj.getClass()) - 1;
                 }
             }
@@ -409,7 +409,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 	        Config4Class config = configOrAncestorConfig();
 	        if (config != null && (config.i_cascadeOnDelete == 1)) {
 	            int preserveCascade = a_bytes.cascadeDeletes();
-	            if (Platform.isCollection(classReflector(i_stream).getJavaClass())) {
+	            if (reflector().isCollection(classReflector(i_stream))) {
 	                int newCascade =
 	                    preserveCascade + Platform.collectionUpdateDepth(classReflector(i_stream).getJavaClass()) - 3;
 	                if (newCascade < 1) {
@@ -686,15 +686,12 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
     
     public IClass classReflector(YapStream stream){
-    	return classReflector();
-    }
-    
-    public IClass classReflector(){
         if (i_constructor == null) {
             return null;
         }
         return i_constructor.reflectorClass();
     }
+    
 
     // FIXME: REFLECTOR all callers should call reflectorClass
     public Class getJavaClass() {
@@ -771,7 +768,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     public boolean hasField(YapStream a_stream, String a_field) {
-        if (Platform.isCollection(classReflector(i_stream).getJavaClass())) {
+    	if(reflector().isCollection(classReflector(a_stream))){
             return true;
         }
         return getYapField(a_field) != null;
@@ -782,7 +779,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     public boolean holdsAnyClass() {
-      return Platform.isCollection(classReflector(i_stream).getJavaClass());
+      return reflector().isCollection(classReflector(i_stream));
     }
 
     void incrementFieldsOffset1(YapReader a_bytes) {
@@ -857,7 +854,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                 try {
                     a_object = i_config.instantiate(stream, i_fields[0].read(a_bytes));
                 } catch (Exception e) {
-                    Db4o.logErr(stream.i_config, 6, classReflector().getName(), e);
+                    Db4o.logErr(stream.i_config, 6, classReflector(stream).getName(), e);
                     return null;
                 }
                 a_bytes._offset = bytesOffset;
@@ -870,7 +867,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                 try {
                     a_object = i_constructor.newInstance();
                 } catch (NoSuchMethodError e) {
-                    stream.logMsg(7, classReflector().getName());
+                    stream.logMsg(7, classReflector(stream).getName());
                     stream.instantiating(false);
                     return null;
                 } catch (Exception e) {
@@ -935,7 +932,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             try {
                 a_object = i_config.instantiate(stream, i_fields[0].read(a_bytes));
             } catch (Exception e) {
-                Db4o.logErr(stream.i_config, 6, classReflector().getName(), e);
+                Db4o.logErr(stream.i_config, 6, classReflector(stream).getName(), e);
                 return null;
             }
             a_bytes._offset = bytesOffset;
@@ -947,7 +944,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             try {
                 a_object = i_constructor.newInstance();
             } catch (NoSuchMethodError e) {
-                stream.logMsg(7, classReflector().getName());
+                stream.logMsg(7, classReflector(stream).getName());
                 stream.instantiating(false);
                 return null;
             } catch (Exception e) {
@@ -995,8 +992,12 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     public boolean isArray() {
-        return Platform.isCollection(classReflector(i_stream).getJavaClass());
+        return reflector().isCollection(classReflector(i_stream)); 
     }
+    
+	boolean isCollection(Object obj) {
+		return reflector().isCollection(reflector().forObject(obj));
+	}
 
     public boolean isDirty() {
         if (!stateOK()) {
@@ -1377,6 +1378,10 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         }
     }
     
+	IReflect reflector() {
+		return i_stream.i_config.reflector();
+	}
+    
     public void rename(String newName){
         if (!i_stream.isClient()) {
             int tempState = i_state;
@@ -1432,7 +1437,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 		        // The logic further down checks the ancestor YapClass, whether
 	            // or not it is allowed, not to call constructors. The ancestor
 	            // YapClass may possibly have not been loaded yet.
-		        createConstructor(i_stream, classReflector(), i_name);
+		        createConstructor(i_stream, classReflector(i_stream), i_name);
 	        }
 	        
 	        checkDb4oType();
@@ -1464,7 +1469,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     private void checkDb4oType() {
-        IClass claxx = classReflector();
+        IClass claxx = classReflector(i_stream);
         if (claxx != null && i_stream.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
             try {
                 i_db4oType = (Db4oTypeImpl)claxx.newInstance();
@@ -1621,7 +1626,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             bitTrue(YapConst.STATIC_FIELDS_STORED);
             boolean store = 
                 (i_config != null && i_config.i_persistStaticFieldValues)
-            || Platform.storeStaticFieldValues(trans.reflector(), classReflector()); 
+            || Platform.storeStaticFieldValues(trans.reflector(), classReflector(trans.i_stream)); 
             
             if (store) {
                 YapStream stream = trans.i_stream;

@@ -30,6 +30,8 @@ public interface IReflect {
 	 */
 	public boolean constructorCallsSupported();
 	
+	
+	
 	/**
 	 * returns an IClass class reflector for a class name.
 	 */
@@ -45,6 +47,12 @@ public interface IReflect {
 	 * returns an IClass for an object
 	 */
 	public IClass forObject(Object a_object);
+	
+	
+	public boolean isCollection(IClass claxx);
+	
+	
+	public void registerCollection(Class clazz);
 	
 	
 }
