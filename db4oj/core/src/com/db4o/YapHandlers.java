@@ -31,7 +31,7 @@ class YapHandlers {
 
     static private int              i_maxTypeID     = ANYARRAYNID + 1;
 
-    private final YapTypeAbstract[] i_platformTypes = Platform.types();
+    private YapTypeAbstract[]       i_platformTypes;
     static private final int        PRIMITIVECOUNT  = 8;
 
     YapClass[]                      i_yapClasses;
@@ -89,6 +89,8 @@ class YapHandlers {
 
             i_stringHandler, new YDate(a_stream), new YapClassAny(a_stream) // Index = 10, ID = 11
         };
+        
+        i_platformTypes = Platform.types(a_stream);
 
         if (i_platformTypes.length > 0) {
             for (int i = 0; i < i_platformTypes.length; i++) {
