@@ -6,7 +6,6 @@ package com.db4o.browser.gui.controllers;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import com.db4o.browser.gui.controllers.detail.DetailController;
 import com.db4o.browser.gui.controllers.tree.TreeSelectionChangedController;
 import com.db4o.browser.model.GraphPosition;
 import com.db4o.browser.model.IGraphIterator;

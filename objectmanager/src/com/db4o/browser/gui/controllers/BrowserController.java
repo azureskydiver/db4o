@@ -3,7 +3,6 @@
  */
 package com.db4o.browser.gui.controllers;
 
-import com.db4o.browser.gui.controllers.detail.DetailController;
 import com.db4o.browser.gui.controllers.tree.TreeController;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;
@@ -22,6 +21,7 @@ public class BrowserController implements IBrowserController {
 	private TreeController treeController;
 	private DetailController detailController;
 	private SelectionChangedController selectionChangedController;
+	private NavigationController navigationController;
 
 	/**
      * Constructor BrowserController.  Create a BrowserController for a
@@ -37,6 +37,7 @@ public class BrowserController implements IBrowserController {
 		
 		treeController = new TreeController(this, ui.getObjectTree());
 		detailController = new DetailController(this, ui);
+		navigationController = new NavigationController(ui.getLeftButton(), ui.getRightButton());
 	}
 
 	/**
@@ -54,9 +55,10 @@ public class BrowserController implements IBrowserController {
 	 * @see com.db4o.browser.gui.controllers.IBrowserController#open(com.db4o.browser.model.IGraphIterator)
 	 */
 	public void setInput(IGraphIterator input, GraphPosition selection) {
-		// Set the tree's input
+		// Set the various sub-controllers' inputs
 		treeController.setInput(input, selection);
 		detailController.setInput(input, selection);
+		navigationController.setInput(input, selection);
 	}
 
 	/**

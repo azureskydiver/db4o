@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 
+import com.db4o.browser.DuckType;
 import com.swtworkbench.community.xswt.XSWT;
 
 /**
@@ -39,7 +40,8 @@ public class DbBrowserPane extends Composite {
         setLayout(new FillLayout());
 		Rectangle displayBounds = parent.getDisplay().getBounds();
 		if (displayBounds.width > 480 && displayBounds.height > 480)
-	        contents = XSWT.createl(this, "layout-desktop.xswt", getClass());
+//	        contents = XSWT.createl(this, "layout.xswt", getClass());
+			contents = XSWT.createl(this, "layout-desktop.xswt", getClass());
 		else
 			contents = XSWT.createl(this, "layout.xswt", getClass());
 	}
@@ -97,8 +99,8 @@ public class DbBrowserPane extends Composite {
 	 * 
 	 * @return Button the "back" navigation button
 	 */
-	public Label getLeftButton() {
-		return (Label) contents.get("LeftButton");
+	public ISelectionSource getLeftButton() {
+		return (ISelectionSource) DuckType.implement(ISelectionSource.class, contents.get("LeftButton"));
 	}
 	
 	/**
@@ -106,8 +108,8 @@ public class DbBrowserPane extends Composite {
 	 * 
 	 * @return Button the "forward" navigation button
 	 */
-	public Label getRightButton() {
-		return (Label) contents.get("RightButton");
+	public ISelectionSource getRightButton() {
+		return (ISelectionSource) DuckType.implement(ISelectionSource.class, contents.get("RightButton"));
 	}
 
 }

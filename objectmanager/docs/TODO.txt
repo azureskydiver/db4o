@@ -1,6 +1,5 @@
 TODO:
 
-- Bug: Selecting leaf node wierdness in detail pane
 - Implement forward/back buttons
 - Begin query UI / querying functionality
     * Allow display of query results
