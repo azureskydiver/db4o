@@ -1,12 +1,10 @@
 TODO:
 
 - Generic reflector
-- Activation depth scalability **DONE**
-- Disable forward/back buttons at appropriate times **DONE**
 - Test with J9 VM **????**
 
 - Make sure browsing scales to large numbers of nodes
-- Maps don't display correctly
+- Maps don't display correctly **DONE**
 - Beautify UI; add icons in appropriate places
 - Substring search: just search displayed strings; else do a query by form QBE
 - Begin query UI / querying functionality

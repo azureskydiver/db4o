@@ -22,7 +22,7 @@ public class PreferencesCore {
 
 	private static transient ObjectContainer db;
 
-	private static final String preferencesFile = new File(new File(System
+	private static transient final String preferencesFile = new File(new File(System
 			.getProperty("user.home")), ".explorer4objects.yap")
 			.getAbsolutePath();
 
@@ -66,7 +66,8 @@ public class PreferencesCore {
 	 * Close the preference store
 	 */
 	public static void close() {
-		db.close();
+		if (db != null)
+			db.close();
 		db = null;
 		prefs = null;
 	}

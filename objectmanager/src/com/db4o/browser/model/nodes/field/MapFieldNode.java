@@ -24,7 +24,6 @@ import java.util.Set;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
-import com.db4o.browser.model.nodes.InstanceNode;
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
@@ -44,13 +43,15 @@ public class MapFieldNode extends FieldNode {
         MapFieldNode result;
         
         Class fieldType = field.getType();
-        Method m = null;
+        Method keySet = null;
+		Method get = null;
         try {
-            m = fieldType.getMethod("keySet", new Class[] {});
+            keySet = fieldType.getMethod("keySet", new Class[] {});
+			get = fieldType.getMethod("get", new Class[] {Object.class});
         } catch (Exception e) { return null; };
         
         try {
-            result = new MapFieldNode(field, _instance, m, database);
+            result = new MapFieldNode(field, _instance, keySet, get, database);
             result.iterator();
         } catch (IllegalStateException e) {
             Logger.log().error(e, "Unable to invoke 'iterator()'");
@@ -60,6 +61,7 @@ public class MapFieldNode extends FieldNode {
     }
 
 	private Method _keySetMethod;
+	private Method _getMethod;
 
 	private Iterator iterator() {
         Set set;
@@ -71,7 +73,18 @@ public class MapFieldNode extends FieldNode {
         }
         return set.iterator();
     }
-    
+	
+	private Object get(Object key) {
+		Object result;
+		try {
+			result = _getMethod.invoke(field(), new Object[] {key});
+		} catch (Exception e) {
+			Logger.log().error(e, "Unable ot invoke 'get'");
+			throw new IllegalStateException();
+		}
+		return result;
+	}
+
     private Object field() {
         try {
             if (!_field.isAccessible()) 
@@ -85,20 +98,22 @@ public class MapFieldNode extends FieldNode {
     }
     
 
-	public MapFieldNode(Field field, Object instance, Method keySetMethod, Database database) {
+	public MapFieldNode(Field field, Object instance, Method keySetMethod, Method getMethod, Database database) {
         super(field, instance, database);
         _keySetMethod = keySetMethod;
+		_getMethod = getMethod;
 	}
     
 	public boolean hasChildren() {
 		return iterator().hasNext();
 	}
-
+	
 	public IModelNode[] children() {
         LinkedList results = new LinkedList();
         Iterator i = iterator();
         while (i.hasNext()) {
-            results.addLast(new InstanceNode(i.next(), _database));
+			Object key = i.next();
+			results.addLast(new MapItemNode(key, get(key), _database));
         }
         IModelNode[] finalResults = new IModelNode[results.size()];
         int elementNum=0;
