@@ -3,10 +3,7 @@
 package com.db4o;
 
 
-/**
- * 
- */
-public class JDK_5 extends JDK_1_4 {
+class JDK_5 extends JDK_1_4 {
     
     private Class enumClass;
     
