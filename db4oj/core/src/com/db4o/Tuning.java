@@ -5,9 +5,9 @@ package com.db4o;
 /**
  * Tuning switches for customized versions. 
  */
-class Tuning {
+public class Tuning {
     
-    static final boolean symbianSeek = false;
+    public static final boolean symbianSeek = false;
     static final boolean fieldIndices = true;
     static final boolean licenseChecks = false;
     static final boolean readableMessages = true;

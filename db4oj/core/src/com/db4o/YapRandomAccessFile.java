@@ -5,14 +5,15 @@ package com.db4o;
 import java.io.*;
 
 import com.db4o.ext.*;
+import com.db4o.io.*;
 
 class YapRandomAccessFile extends YapFile {
 
     private Session                   i_session;
 
-    private YapBlockAwareFile          i_file;
-    private YapBlockAwareFile          i_timerFile;  //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
-    private volatile YapBlockAwareFile i_backupFile;
+    private ObjectFile          i_file;
+    private ObjectFile          i_timerFile;  //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
+    private volatile ObjectFile i_backupFile;
     private byte[]                    i_timerBytes = new byte[YapConst.LONG_BYTES];
     
     private Object                    i_fileLock;
@@ -45,7 +46,7 @@ class YapRandomAccessFile extends YapFile {
                 Db4o.throwRuntimeException(61);
             }
             try {
-                i_backupFile = new YapBlockAwareFile(path, i_file.getLength());
+                i_backupFile = i_config.fileFactory().getFile(path, i_file.length());
             } catch (Exception e) {
                 i_backupFile = null;
                 Db4o.throwRuntimeException(12, path);
@@ -63,7 +64,7 @@ class YapRandomAccessFile extends YapFile {
                 pos += read;
                 i_lock.notify();
             }
-        } while (pos < i_file.getLength());
+        } while (pos < i_file.length());
         synchronized (i_lock) {
             i_backupFile.close();
             i_backupFile = null;
@@ -78,7 +79,7 @@ class YapRandomAccessFile extends YapFile {
     }
     
     byte blockSize(){
-        return (byte)i_file._blockSize;
+        return (byte)i_file.blockSize();
     }
 
     boolean close2() {
@@ -188,7 +189,7 @@ class YapRandomAccessFile extends YapFile {
 
     long fileLength() {
         try {
-            return i_file.getLength();
+            return i_file.length();
         } catch (Exception e) {
             throw new RuntimeException();
         }
@@ -217,14 +218,14 @@ class YapRandomAccessFile extends YapFile {
 	                logMsg(14, fileName());
 	            }
 	            try {
-	                i_file = new YapBlockAwareFile(fileName());
+	                i_file = i_config.fileFactory().getFile(fileName());
 	                if (Debug.lockFile) {
 	                    if (i_config.i_lockFile && (!i_config.i_readonly)) {
 	                        i_file.lock();
 	                    }
 	                }
 	                if (needsLockFileThread() && Debug.lockFile) {
-	                    i_timerFile = new YapBlockAwareFile(fileName());
+	                    i_timerFile = i_config.fileFactory().getFile(fileName());
 	                }
 	            } catch (DatabaseFileLockedException de) {
 	                throw de;

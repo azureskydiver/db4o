@@ -1,18 +1,23 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.io.jdkdefault;
 
 import java.io.*;
 
-class YapBlockAwareFile {
+import com.db4o.DTrace;
+import com.db4o.Platform;
+import com.db4o.Tuning;
+import com.db4o.io.ObjectFile;
 
-    int                            _blockSize = 1;
+public class RandomAccessObjectFile extends ObjectFile {
+
+    private int                            _blockSize = 1;
 
     private final RandomAccessFile _delegate;
 
     private final byte[]           _seekBytes;
 
-    public YapBlockAwareFile(String path) throws FileNotFoundException {
+    public RandomAccessObjectFile(String path) throws FileNotFoundException {
         _delegate = new RandomAccessFile(path, "rw");
         if (Tuning.symbianSeek) {
             _seekBytes = new byte[500];
@@ -21,31 +26,19 @@ class YapBlockAwareFile {
         }
     }
 
-    public YapBlockAwareFile(String path, long initialLength) throws IOException {
+    public RandomAccessObjectFile(String path, long initialLength) throws IOException {
         this(path);
-        _delegate.seek(initialLength - 1);
-        _delegate.write(new byte[] {0});
-    }
-
-    public void blockSeek(int address) throws IOException {
-        regularSeek((long) address * (long) _blockSize);
-    }
-
-    public void blockSeek(int address, int newAddressOffset) throws IOException {
-        regularSeek((long) address * (long) _blockSize + (long) newAddressOffset);
-    }
-
-    public void blockSize(int blockSize) {
-        _blockSize = blockSize;
+        if(initialLength>0) {
+	        _delegate.seek(initialLength - 1);
+	        _delegate.write(new byte[] {0});
+        }
     }
 
     public void close() throws IOException {
         _delegate.close();
     }
 
-    // TODO: the method name should be "length" after the
-    // converter does not redirect all length calls to JavaSystem
-    public long getLength() throws IOException {
+    public long length() throws IOException {
         return _delegate.length();
     }
 
@@ -53,16 +46,12 @@ class YapBlockAwareFile {
         Platform.lock(_delegate);
     }
 
-    public int read(byte[] buffer) throws IOException {
-        return _delegate.read(buffer, 0, buffer.length);
-    }
-
     public int read(byte[] bytes, int length) throws IOException {
         return _delegate.read(bytes, 0, length);
     }
 
     public void regularSeek(long pos) throws IOException {
-        
+
         if(DTrace.enabled){
             DTrace.REGULAR_SEEK.log(pos);
         }
@@ -100,12 +89,7 @@ class YapBlockAwareFile {
         Platform.unlock(_delegate);
     }
 
-    public void write(byte[] bytes) throws IOException {
-        _delegate.write(bytes);
-    }
-
     public void write(byte[] buffer, int length) throws IOException {
         _delegate.write(buffer, 0, length);
     }
-
 }
