@@ -280,7 +280,14 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
 			if(_configuredReflector == null){
 				_configuredReflector = Platform.createReflector(this);	
 			}
-			_reflector = new GenericReflector(null, _configuredReflector);
+            Reflector specificReflector = null;
+            try {
+                specificReflector = (Reflector)_configuredReflector.deepClone(this);
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+            _reflector = new GenericReflector(null, specificReflector);
+            specificReflector.setParent(_reflector);
 		}
 		if(! _reflector.hasTransaction() && i_stream != null){
 			_reflector.setTransaction(i_stream.i_systemTrans);
