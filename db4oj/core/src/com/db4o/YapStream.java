@@ -1539,7 +1539,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         try {
             String className = Config4Impl.classNameFor(clazz);
             if (className != null) {
-                return getYapClass(Db4o.classForName(this, className), false);
+                return getYapClass(reflector().forName(className), false);
             }
         } catch (Exception e) {
         }

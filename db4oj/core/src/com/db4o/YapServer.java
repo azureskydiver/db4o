@@ -30,12 +30,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable {
         // make sure all configured YapClasses are up in the repository
         config.i_exceptionalClasses.forEachValue(new Visitor4() {
             public void visit(Object a_object) {
-                Config4Class c4c = (Config4Class)a_object;
-                try {
-                    a_yapFile.getYapClass(Db4o.classForName(a_yapFile, c4c.getName()), true);
-                } catch (Exception e) {
-                    
-                }
+                a_yapFile.getYapClass(a_yapFile.reflector().forName(((Config4Class)a_object).getName()), true);
             }
         });
         

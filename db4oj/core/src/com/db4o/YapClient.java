@@ -295,14 +295,11 @@ class YapClient extends YapStream implements ExtClient {
         MsgD message = (MsgD) expectedResponse(Msg.CLASS_NAME_FOR_ID);
         String className = message.readString();
         if(className != null && className.length() > 0){
-            try {
-                Class clazz = Db4o.classForName(className);
-                if(clazz != null){
-                    return getYapClass(clazz, true);
-                }
-            } catch (ClassNotFoundException e) {
-                // TODO inform client class not present
+            IClass claxx = reflector().forName(className);
+            if(claxx != null){
+                return getYapClass(claxx, true);
             }
+            // TODO inform client class not present
         }
         return null;
     }
