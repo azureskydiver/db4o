@@ -108,7 +108,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                     dirty = true;
                 }
             }
-            IField[] fields = classReflector(a_stream).getDeclaredFields();
+            IField[] fields = classReflector().getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
                 if (storeField(fields[i])) {
                     wrapper = a_stream.i_handlers.handlerForClass(a_stream, fields[i].getType());
@@ -202,7 +202,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             return true;
         }
         if (i_constructor != null) {
-        	if(reflector().isCollection(classReflector(i_stream))){
+        	if(reflector().isCollection(classReflector())){
                 return true;
             }
             return i_constructor.javaClass().isAssignableFrom(a_class);
@@ -257,7 +257,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             depth = checkUpdateDepthUnspecified(a_bytes.getStream());
         }
         if (config != null && (config.i_cascadeOnDelete == 1 || config.i_cascadeOnUpdate == 1)) {
-            int depthBorder = reflector().collectionUpdateDepth(classReflector(a_bytes.getStream()));
+            int depthBorder = reflector().collectionUpdateDepth(classReflector());
             if (depth < depthBorder) {
                 depth = depthBorder;
             }
@@ -411,9 +411,9 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 	        Config4Class config = configOrAncestorConfig();
 	        if (config != null && (config.i_cascadeOnDelete == 1)) {
 	            int preserveCascade = a_bytes.cascadeDeletes();
-	            if (reflector().isCollection(classReflector(i_stream))) {
+	            if (reflector().isCollection(classReflector())) {
 	                int newCascade =
-	                    preserveCascade + reflector().collectionUpdateDepth(classReflector(i_stream)) - 3;
+	                    preserveCascade + reflector().collectionUpdateDepth(classReflector()) - 3;
 	                if (newCascade < 1) {
 	                    newCascade = 1;
 	                }
@@ -687,7 +687,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         return null;
     }
     
-    public IClass classReflector(YapStream stream){
+    public IClass classReflector(){
         if (i_constructor == null) {
             return null;
         }
@@ -701,7 +701,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         if (i_constructor == null) {
             return null;
         }
-        return classReflector(i_stream).getJavaClass();
+        return classReflector().getJavaClass();
     }
 
     YapClass[] getMembersDependancies() {
@@ -763,7 +763,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     public boolean hasField(YapStream a_stream, String a_field) {
-    	if(reflector().isCollection(classReflector(a_stream))){
+    	if(reflector().isCollection(classReflector())){
             return true;
         }
         return getYapField(a_field) != null;
@@ -774,7 +774,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     public boolean holdsAnyClass() {
-      return reflector().isCollection(classReflector(i_stream));
+      return reflector().isCollection(classReflector());
     }
 
     void incrementFieldsOffset1(YapReader a_bytes) {
@@ -849,7 +849,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                 try {
                     a_object = i_config.instantiate(stream, i_fields[0].read(a_bytes));
                 } catch (Exception e) {
-                    Db4o.logErr(stream.i_config, 6, classReflector(stream).getName(), e);
+                    Db4o.logErr(stream.i_config, 6, classReflector().getName(), e);
                     return null;
                 }
                 a_bytes._offset = bytesOffset;
@@ -862,7 +862,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                 try {
                     a_object = i_constructor.newInstance();
                 } catch (NoSuchMethodError e) {
-                    stream.logMsg(7, classReflector(stream).getName());
+                    stream.logMsg(7, classReflector().getName());
                     stream.instantiating(false);
                     return null;
                 } catch (Exception e) {
@@ -927,7 +927,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             try {
                 a_object = i_config.instantiate(stream, i_fields[0].read(a_bytes));
             } catch (Exception e) {
-                Db4o.logErr(stream.i_config, 6, classReflector(stream).getName(), e);
+                Db4o.logErr(stream.i_config, 6, classReflector().getName(), e);
                 return null;
             }
             a_bytes._offset = bytesOffset;
@@ -939,7 +939,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             try {
                 a_object = i_constructor.newInstance();
             } catch (NoSuchMethodError e) {
-                stream.logMsg(7, classReflector(stream).getName());
+                stream.logMsg(7, classReflector().getName());
                 stream.instantiating(false);
                 return null;
             } catch (Exception e) {
@@ -987,7 +987,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     public boolean isArray() {
-        return reflector().isCollection(classReflector(i_stream)); 
+        return reflector().isCollection(classReflector()); 
     }
     
 	boolean isCollection(Object obj) {
@@ -1137,7 +1137,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                 return stream.peekPersisted1(trans, id, depth);
             }
             
-            if (Platform.isValueType(classReflector(stream).getJavaClass())) {
+            if (Platform.isValueType(classReflector().getJavaClass())) {
 
                 // for C# value types only:
                 // they need to be instantiated fully before setting them
@@ -1432,7 +1432,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 		        // The logic further down checks the ancestor YapClass, whether
 	            // or not it is allowed, not to call constructors. The ancestor
 	            // YapClass may possibly have not been loaded yet.
-		        createConstructor(i_stream, classReflector(i_stream), i_name);
+		        createConstructor(i_stream, classReflector(), i_name);
 	        }
 	        
 	        checkDb4oType();
@@ -1464,7 +1464,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     private void checkDb4oType() {
-        IClass claxx = classReflector(i_stream);
+        IClass claxx = classReflector();
         if (claxx != null && i_stream.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
             try {
                 i_db4oType = (Db4oTypeImpl)claxx.newInstance();
@@ -1621,7 +1621,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             bitTrue(YapConst.STATIC_FIELDS_STORED);
             boolean store = 
                 (i_config != null && i_config.i_persistStaticFieldValues)
-            || Platform.storeStaticFieldValues(trans.reflector(), classReflector(trans.i_stream)); 
+            || Platform.storeStaticFieldValues(trans.reflector(), classReflector()); 
             
             if (store) {
                 YapStream stream = trans.i_stream;
@@ -1638,7 +1638,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                     stream.activate1(trans, sc, 4);
                     oldFields = sc.fields;
                 }
-                IField[] fields = classReflector(stream).getDeclaredFields();
+                IField[] fields = classReflector().getDeclaredFields();
 
                 Collection4 newFields = new Collection4();
 

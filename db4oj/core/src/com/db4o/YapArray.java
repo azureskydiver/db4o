@@ -12,6 +12,7 @@ class YapArray extends YapIndependantType {
     final boolean i_isPrimitive;
 
     YapArray(YapStream stream, YapDataType a_handler, boolean a_isPrimitive) {
+        super(stream);
     	_stream = stream;
         i_handler = a_handler;
         i_isPrimitive = a_isPrimitive;
@@ -56,8 +57,8 @@ class YapArray extends YapIndependantType {
         }
     }
     
-    public IClass classReflector(YapStream stream){
-    	return i_handler.classReflector(stream);
+    public IClass classReflector(){
+    	return i_handler.classReflector();
     }
 
     TreeInt collectIDs(TreeInt tree, YapWriter a_bytes){
@@ -262,7 +263,7 @@ class YapArray extends YapIndependantType {
     
     int readElementsAndClass(Transaction a_trans, YapReader a_bytes, IClass[] clazz){
         int elements = a_bytes.readInt();
-        clazz[0] = i_handler.classReflector(a_trans.i_stream);
+        clazz[0] = i_handler.classReflector();
         if (Debug.arrayTypes && elements < 0) {
             
             // TODO: This one is a terrible low-frequency blunder !!!
@@ -281,7 +282,7 @@ class YapArray extends YapIndependantType {
                     if(primitive){
                         clazz[0] = a_trans.reflector().forClass(yc.getPrimitiveJavaClass());
                     }else{
-                        clazz[0] = yc.classReflector(a_trans.i_stream);
+                        clazz[0] = yc.classReflector();
                     }
                 }
             }

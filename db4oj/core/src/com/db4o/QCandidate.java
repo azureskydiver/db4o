@@ -504,7 +504,7 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
                 YapStream stream = getStream();
                 i_yapClass = stream.getYapClass(i_bytes.readInt());
                 if(i_yapClass != null){
-	                if (  stream.i_handlers.ICLASS_COMPARE.isAssignableFrom(i_yapClass.classReflector(stream))){
+	                if (  stream.i_handlers.ICLASS_COMPARE.isAssignableFrom(i_yapClass.classReflector())){
 	                    readThis(false);
 	                }
                 }
