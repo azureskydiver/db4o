@@ -24,10 +24,11 @@
 
    <requires>
       <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="db4oj"/>
       <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.ide"/>
    </requires>
 
    <extension
@@ -78,6 +79,17 @@
                id="com.db4o.browser.eclipse.views.DbQuery">
          </view>
       </perspectiveExtension>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Yet-another-protocol Editor"
+            extensions="yap"
+            icon="icons/sample.gif"
+            class="com.db4o.browser.editors.YAPEditor"
+            id="com.db4o.browser.editors.YAPEditor">
+      </editor>
    </extension>
 
 </plugin>
