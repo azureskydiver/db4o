@@ -2,6 +2,7 @@
 
 package com.yetac.doctor.writers;
 
+import java.io.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -37,13 +38,18 @@ public class HtmlWriter extends AbstractWriter {
     private byte[]           conversionBuffer = new byte[1000];
     private int              bufferPos;
     private boolean          ignoreCRforOutline;
-    private boolean executableInCurrent;
+    private boolean          executableInCurrent;
 
     public void start(Files _files) throws Exception {
         super.start(_files);
         embedInto = new Stack();
         executableInCurrent=false;
-        files.task.setVariable("html", new Boolean(true));        
+        files.task.setVariable("html", new Boolean(true));
+        
+        if(! files.task.isInteractive() && files.task.doShowCodeExecutionResults()){
+            installRunner();
+        }
+        
         files.copyFile(inputPath("docs", "css"), outputPath("docs", "css"));
         try {
             files.copyFile(inputPath("docs_ie", "css"), outputPath("docs_ie", "css"));
@@ -53,7 +59,11 @@ public class HtmlWriter extends AbstractWriter {
         files.copyFile(inputPath("outline", "css"), outputPath("outline", "css"));
         files.copyAllFiles(files.task.inputImages(),files.task.getOutputPath()+"/docs");
         if(files.task.isInteractive()){
-	        byte[] tempheader=read(inputPath("docs"), "<body".getBytes());
+            String templateHtmlFileName = "docs";
+            if(new File(inputPath("interactive")).exists()){
+                templateHtmlFileName = "interactive";    
+            }
+	        byte[] tempheader=read(inputPath(templateHtmlFileName), "<body".getBytes());
 	        byte[] divcode="<div id=\"pagecontainer\"><table><tr><td width=\"5\">&nbsp;</td><td>".toString().getBytes();
 	        currentHeader=new byte[tempheader.length+divcode.length];
 	        System.arraycopy(tempheader,0,currentHeader,0,tempheader.length);
@@ -238,7 +248,7 @@ public class HtmlWriter extends AbstractWriter {
     }
 
     private void writeOutputBlock(byte[] text) {
-        write("<table width=\"100%\" border=\"0\"><tr><td class=\"co\">");
+        write("<table width=\"100%\" cellpadding=\"3\" cellspacing=\"0\" border=\"0\"><tr><td class=\"co\">");
         write("<b>OUTPUT:</b><br/>");
         write(text);
         write("</td></table></table>");
@@ -356,24 +366,45 @@ public class HtmlWriter extends AbstractWriter {
         codestr=codestr.replaceAll("&","&amp;");
         codestr=codestr.replaceAll("<","&lt;");
         write(codestr);
-        writeToFile("<br>\r\n</code>");
-        writeToFile("</td><td class=\"lg\" align=\"left\" valign=\"bottom\" width=43>");
-        if(command!=null&&command.getMethodName()!=null&&command.getParamValue(Source.CMD_RUN)) {
-        	if(files.task.variableIsTrue("net")){
-        		write("<input type='button' class='button' value='Run' ");
-        		write("onclick='window.external.RunExample(\"" + command.getClassName() + "\", \"" + command.getMethodName() + "\")' />");
-
-        	} else {
-	            executableInCurrent=true;
-	    		write("<applet code=\"com.yetac.doctor.applet.DoctorRunExampleApplet\" archive=\"");
-	    		write(files.task.getArchive());
-	    		write("\" width=\"40\" height=\"30\">");
-	    		write("<param name=\"exampleclass\" value=\""+command.getClassName()+"\"/>");
-	    		write("<param name=\"examplemethod\" value=\""+command.getMethodName()+"\"/>");
-	    		write("</applet>");
-        	}
+        writeToFile("<br>\r\n</code></td>");
+        if(files.task.isInteractive()){
+            if(command!=null&&command.getMethodName()!=null&&command.getParamValue(Source.CMD_RUN)) {
+                writeToFile("<td class=\"lg\" align=\"left\" valign=\"bottom\" width=43>");
+            	if(files.task.variableIsTrue("net")){
+            		write("<input type='button' class='button' value='Run' ");
+            		write("onclick='window.external.RunExample(\"" + command.getClassName() + "\", \"" + command.getMethodName() + "\")' />");
+    
+            	} else {
+    	            executableInCurrent=true;
+    	    		write("<applet code=\"com.yetac.doctor.applet.DoctorRunExampleApplet\" archive=\"");
+    	    		write(files.task.getArchive());
+    	    		write("\" width=\"40\" height=\"30\">");
+    	    		write("<param name=\"exampleclass\" value=\""+command.getClassName()+"\"/>");
+    	    		write("<param name=\"examplemethod\" value=\""+command.getMethodName()+"\"/>");
+    	    		write("</applet>");
+            	}
+                writeToFile("</td>");
+            }
+            writeToFile("</tr></table>\r\n");
+        }else{
+            writeToFile("</tr></table>\r\n");
+            if(command!= null && files.task.doShowCodeExecutionResults()){
+                String methodname=command.getMethodName();
+                if(methodname!=null&&command.getParamValue(Source.CMD_RUN)) {
+                    try {
+                        ByteArrayOutputStream out=new ByteArrayOutputStream();
+                        runner.runExample(command.getClassName(),command.getMethodName(),out);
+                        out.close();
+                        if(command.getParamValue(Source.CMD_OUTPUT)) {
+                            writeOutputBlock(out.toByteArray());
+                        }
+                    }
+                    catch(Exception exc) {
+                        exc.printStackTrace();
+                    }
+                }
+            }
         }
-        writeToFile("</tr></table>\r\n");
     }
         
     public void write(Source command) throws Exception {

@@ -40,6 +40,8 @@ public class Doctor extends Task {
     private String outlineImage;
     private String linkHome;
     
+    private boolean showCodeExecutionResults;
+    
     public void setWorkspace(String workspace) {
         if(!workspace.endsWith("/")) {
             workspace+="/";
@@ -348,7 +350,13 @@ public class Doctor extends Task {
         return linkHome;
     }
     
+    public void setShowCodeExecutionResults(boolean flag){
+        showCodeExecutionResults = flag;
+    }
     
+    public boolean doShowCodeExecutionResults(){
+        return showCodeExecutionResults;
+    }
     
     public IgnoreInputFolder createIgnoreInputFolder(){
         if(ignoreInputFolders == null){

@@ -2,14 +2,19 @@
 
 package com.yetac.doctor.writers;
 
+import java.io.*;
 import java.io.UnsupportedEncodingException;
 
 import com.yetac.doctor.*;
+import com.yetac.doctor.applet.*;
 import com.yetac.doctor.cmd.*;
 import com.yetac.doctor.workers.*;
 
 public abstract class AbstractWriter extends Configuration implements
     DocsWriter {
+    
+    protected ExampleRunner runner;
+
 
     protected Files   files;
     protected int     outlineLevel;
@@ -39,6 +44,18 @@ public abstract class AbstractWriter extends Configuration implements
 
     protected String inputPath(String name, String extension) {
         return files.task.inputHTML() + "/" + name + "." + extension;
+    }
+    
+    protected void installRunner() throws Exception{
+        
+        File yapFile=File.createTempFile("formula1",".yap");
+        
+        try{
+            runner=new ExampleRunner(getClass().getClassLoader(),yapFile);
+        }catch(Exception e){
+            System.err.println("*** Example runner could not be installed. Continuing without. Reason:");
+            e.printStackTrace();
+        }
     }
 
     protected String outputPath(String name) {
