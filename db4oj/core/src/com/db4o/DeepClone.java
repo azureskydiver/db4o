@@ -7,6 +7,6 @@ public interface DeepClone {
 
 	/** The parameter allows passing one new object so parent
 	  * references can be corrected on children.*/
-	Object deepClone(Object obj) throws CloneNotSupportedException;
+    Object deepClone(Object obj) ;
 
 }

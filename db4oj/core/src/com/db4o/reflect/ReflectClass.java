@@ -16,6 +16,8 @@ public interface ReflectClass {
 	public ReflectField[] getDeclaredFields();
 	
 	public ReflectField getDeclaredField(String name);
+    
+    public ReflectClass getDelegate();
 	
 	public ReflectMethod getMethod(String methodName, ReflectClass[] paramClasses);
 	

@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 import com.db4o.types.*;
 
 class JDK_1_2 extends JDKReflect {
@@ -94,7 +95,7 @@ class JDK_1_2 extends JDKReflect {
         }
     }
     
-	public void registerCollections(Reflector reflector) {
+	public void registerCollections(GenericReflector reflector) {
 		reflector.registerCollection(java.util.Collection.class);
 		reflector.registerCollection(java.util.Map.class);
 		reflector.registerCollectionUpdateDepth(java.util.Map.class, 3);

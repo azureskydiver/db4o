@@ -21,6 +21,9 @@ public class GenericReflector implements Reflector, DeepClone {
     private final Collection4 _classes = new Collection4();
     private final Hashtable4 _classByID = new Hashtable4(1);
     
+    private Collection4 _collectionClasses = new Collection4();
+    private Collection4 _collectionUpdateDepths = new Collection4();
+    
 	private Transaction _trans;
 	private YapStream _stream;
 	
@@ -32,8 +35,11 @@ public class GenericReflector implements Reflector, DeepClone {
         }
 	}
 	
-	public Object deepClone(Object obj) throws CloneNotSupportedException {
+	public Object deepClone(Object obj)  {
         GenericReflector myClone = new GenericReflector(null, (Reflector)_delegate.deepClone(this));
+        myClone._collectionClasses = (Collection4)_collectionClasses.deepClone(myClone);
+        myClone._collectionUpdateDepths = (Collection4)_collectionUpdateDepths.deepClone(myClone);
+
 //        Iterator4 i = _classes.iterator();
 //        while(i.hasNext()){
 //            GenericClass clazz = (GenericClass)i.next();
@@ -41,6 +47,7 @@ public class GenericReflector implements Reflector, DeepClone {
 //        }
 		return myClone;
 	}
+    
 
 	public boolean hasTransaction(){
 		return _trans != null;
@@ -60,8 +67,16 @@ public class GenericReflector implements Reflector, DeepClone {
         return _array;
     }
 
-    public int collectionUpdateDepth(ReflectClass claxx) {
-        return _delegate.collectionUpdateDepth(claxx);
+    public int collectionUpdateDepth(ReflectClass candidate) {
+        Iterator4 i = _collectionUpdateDepths.iterator();
+        while(i.hasNext()){
+            Object[] entry = (Object[])i.next();
+            ReflectClass claxx = (ReflectClass) entry[0];
+            if(claxx.isAssignableFrom(candidate)){
+                return ((Integer)entry[1]).intValue();
+            }
+        }
+        return 2;
         
         //TODO: will need knowledge for .NET collections here
     }
@@ -128,19 +143,28 @@ public class GenericReflector implements Reflector, DeepClone {
         return _delegate;
     }
 
-    public boolean isCollection(ReflectClass claxx) {
-        return _delegate.isCollection(claxx);
+    public boolean isCollection(ReflectClass candidate) {
+        candidate = candidate.getDelegate(); 
+        Iterator4 i = _collectionClasses.iterator();
+        while(i.hasNext()){
+            ReflectClass claxx = ((ReflectClass)i.next()).getDelegate();
+            if(claxx.isAssignableFrom(candidate)){
+                return true;
+            }
+        }
+        return false;
         
         //TODO: will need knowledge for .NET collections here
         // possibility: call registercollection with strings
     }
 
     public void registerCollection(Class clazz) {
-        _delegate.registerCollection(clazz);
+        _collectionClasses.add(forClass(clazz));
     }
 
     public void registerCollectionUpdateDepth(Class clazz, int depth) {
-        _delegate.registerCollectionUpdateDepth(clazz, depth);
+        Object[] entry = new Object[]{forClass(clazz), new Integer(depth) };
+        _collectionUpdateDepths.add(entry);
     }
     
     public void register(GenericClass clazz) {

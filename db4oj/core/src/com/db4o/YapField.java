@@ -5,6 +5,7 @@ package com.db4o;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 
 /**
  * @exclude
@@ -568,7 +569,7 @@ public class YapField implements StoredField {
             && ((a_config != null && (a_config.i_cascadeOnUpdate == 1)) || (i_config != null && (i_config.i_cascadeOnUpdate == 1)))) {
             int min = 1;
             if (i_yapClass.isCollection(a_object)) {
-            	Reflector reflector = i_yapClass.reflector();
+            	GenericReflector reflector = i_yapClass.reflector();
                 min = reflector.collectionUpdateDepth(reflector.forObject(a_object));
             }
             int updateDepth = a_bytes.getUpdateDepth();

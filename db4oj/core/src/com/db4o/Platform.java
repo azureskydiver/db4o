@@ -9,6 +9,7 @@ import java.util.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 import com.db4o.reflect.jdk.*;
 import com.db4o.types.*;
 
@@ -478,7 +479,7 @@ public final class Platform {
         return (property != null) && (property.indexOf(propertyValue) == 0);
     }
     
-	public static void registerCollections(Reflector reflector) {
+	public static void registerCollections(GenericReflector reflector) {
 		
 		if(!Deploy.csharp){
 		
@@ -492,7 +493,7 @@ public final class Platform {
 			}
 			
 			jdk().registerCollections(reflector);
-	        	
+            
 		}
 	}
 

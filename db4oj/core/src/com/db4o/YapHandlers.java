@@ -318,7 +318,7 @@ public class YapHandlers {
         return a_stream.getYapClass(a_class, true);
     }
     
-    private void initClassReflectors(Reflector reflector){
+    private void initClassReflectors(GenericReflector reflector){
 		ICLASS_COMPARE = reflector.forClass(YapConst.CLASS_COMPARE);
 		ICLASS_DB4OTYPE = reflector.forClass(YapConst.CLASS_DB4OTYPE);
 		ICLASS_DB4OTYPEIMPL = reflector.forClass(YapConst.CLASS_DB4OTYPEIMPL);

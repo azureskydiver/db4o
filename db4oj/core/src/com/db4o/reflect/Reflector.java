@@ -24,8 +24,6 @@ public interface Reflector extends DeepClone{
 	 */
 	public ReflectArray array();
 	
-    public int collectionUpdateDepth(ReflectClass claxx);
-	
 	/**
 	 * specifiy whether parameterized Constructors are supported.
 	 * <br><br>The support of Constructors is optional. If Constructors
@@ -39,7 +37,6 @@ public interface Reflector extends DeepClone{
 	 */
 	public ReflectClass forClass(Class clazz);
 	
-	
 	/**
 	 * returns an IClass class reflector for a class name or null
 	 * if no such class is found
@@ -51,14 +48,8 @@ public interface Reflector extends DeepClone{
 	 */
 	public ReflectClass forObject(Object a_object);
 	
-	
 	public boolean isCollection(ReflectClass claxx);
-	
-	public void registerCollection(Class clazz);
-	
-	public void registerCollectionUpdateDepth(Class clazz, int depth);
     
     public void setParent(Reflector reflector);
-	
 	
 }

@@ -22,8 +22,13 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
         return i_class.getName();
     }
 
-    public Object deepClone(Object param) throws CloneNotSupportedException {
-        Config4Field ret = (Config4Field) clone();
+    public Object deepClone(Object param) {
+        Config4Field ret = null;
+        try {
+            ret = (Config4Field) clone();
+        } catch (CloneNotSupportedException e) {
+            // won't happen
+        }
         ret.i_class = (Config4Class) param;
         return ret;
     }

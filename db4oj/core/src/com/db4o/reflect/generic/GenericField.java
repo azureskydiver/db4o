@@ -2,12 +2,13 @@
 
 package com.db4o.reflect.generic;
 
+import com.db4o.*;
 import com.db4o.reflect.*;
 
 /**
  * @exclude
  */
-public class GenericField implements ReflectField {
+public class GenericField implements ReflectField, DeepClone{
 
     private final String _name;
     private final ReflectClass _type;
@@ -23,6 +24,15 @@ public class GenericField implements ReflectField {
         _primitive = primitive;
         _array = array;
         _nDimensionalArray = nDimensionalArray;
+    }
+
+    public Object deepClone(Object obj) {
+        Reflector reflector = (Reflector)obj;
+        ReflectClass newReflectClass = null;
+        if(_type != null){
+            newReflectClass = reflector.forName(_type.getName());
+        }
+        return new GenericField(_name, newReflectClass, _primitive, _array, _nDimensionalArray);
     }
 
     public Object get(Object onObject) {

@@ -91,7 +91,7 @@ public class Collection4 implements DeepClone {
         return null;
     }
 
-    public Object deepClone(Object param) throws CloneNotSupportedException {
+    public Object deepClone(Object param){
         Collection4 col = new Collection4();
         Object element = null;
         Iterator4 i = this.iterator();

@@ -786,11 +786,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     void initialize1() {
 
-        try {
-            i_config = (Config4Impl) ((DeepClone) Db4o.configure())
-                .deepClone(this);
-        } catch (CloneNotSupportedException e) {
-        }
+        i_config = (Config4Impl) ((DeepClone) Db4o.configure()).deepClone(this);
         i_handlers = new YapHandlers(this, i_config.i_encoding);
         
         if (i_references != null) {
