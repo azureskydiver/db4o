@@ -1256,6 +1256,11 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     }
 
     public YapDataType readArrayWrapper1(YapReader[] a_bytes) {
+        if(DTrace.enabled){
+            if(a_bytes[0] instanceof YapWriter){
+                DTrace.READ_ARRAY_WRAPPER.log(((YapWriter)a_bytes[0]).getID());
+            }
+        }
         if (isArray()) {
             if (Platform.isCollectionTranslator(this.i_config)) {
                 a_bytes[0].incrementOffset(YapConst.YAPINT_LENGTH);
@@ -1296,7 +1301,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                         if (elemid == 0) {
                             elemid = idgen[0]--;
                         }
-                        a_candidates.addByIdentity(new QCandidate(a_candidates, elem, elemid));
+                        a_candidates.addByIdentity(new QCandidate(a_candidates, elem, elemid, true));
                     }
                 });
             }

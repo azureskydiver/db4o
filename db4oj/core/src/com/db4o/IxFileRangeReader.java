@@ -126,7 +126,7 @@ class IxFileRangeReader implements Readable {
                 _reader.read(yf, baseAddress, baseAddressOffset
                     + (i * _slotLength));
                 _reader._offset = offset;
-                QCandidate candidate = new QCandidate(candidates, _reader
+                QCandidate candidate = new QCandidate(candidates, null, _reader
                     .readInt(), true);
                 a_tree = Tree.add(a_tree, candidate);
             }
@@ -280,7 +280,7 @@ class IxFileRangeReader implements Readable {
 
     public Object read(YapReader a_reader) {
         a_reader.incrementOffset(_linkLegth);
-        return new QCandidate(_candidates, a_reader.readInt(), true);
+        return new QCandidate(_candidates,null,  a_reader.readInt(), true);
     }
 
     public int byteCount() {

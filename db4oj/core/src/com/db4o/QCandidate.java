@@ -52,18 +52,15 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
         // dummy constructor to get "this" out of declaration for C#
     }
 
-    QCandidate(QCandidates candidates, int id, boolean include) {
+    QCandidate(QCandidates candidates, Object obj, int id, boolean include) {
         super(id);
-        i_candidates = candidates;
-        i_order = this;
-        i_include = include;
-    }
-
-    QCandidate(QCandidates candidates, Object obj, int id) {
-        super(id);
+        if(DTrace.enabled){
+            DTrace.CREATE_CANDIDATE.log(id);
+        }
         i_candidates = candidates;
         i_order = this;
         i_member = obj;
+        i_include = include;
     }
 
     void addDependant(QCandidate a_candidate) {
@@ -444,6 +441,9 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
         if (i_include) {
             if (i_bytes == null) {
                 if (i_key > 0) {
+                    if(DTrace.enabled){
+                        DTrace.CANDIDATE_READ.log(i_key);
+                    }
                     i_bytes = getStream().readReaderByID(getTransaction(), i_key);
                     if (i_bytes == null) {
                         i_include = false;
@@ -469,7 +469,7 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
             i_bytes._offset = offset;
 
             if (id != 0) {
-                QCandidate candidate = new QCandidate(candidateCollection, id, true);
+                QCandidate candidate = new QCandidate(candidateCollection, null, id, true);
                 candidate.i_root = getRoot();
                 return candidate;
             }

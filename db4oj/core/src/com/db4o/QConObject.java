@@ -168,6 +168,9 @@ public class QConObject extends QCon {
     }
 
     void evaluateSelf() {
+        if(DTrace.enabled){
+            DTrace.EVALUATE_SELF.log(i_id);
+        }
         if (i_yapClass != null) {
             if (!(i_yapClass instanceof YapClassPrimitive)) {
                 if (!i_evaluator.identity()) {
@@ -238,7 +241,7 @@ public class QConObject extends QCon {
         if (i_evaluator.identity()) {
             int id = getObjectID();
             if (id != 0) {
-                i_candidates.addByIdentity(new QCandidate(i_candidates, id,
+                i_candidates.addByIdentity(new QCandidate(i_candidates, null, id,
                     !(i_evaluator instanceof QENot)));
             }
         }

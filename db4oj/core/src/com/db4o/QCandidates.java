@@ -253,7 +253,7 @@ public final class QCandidates implements Visitor4 {
     				newRoot[0] =
     					Tree.add(
     							newRoot[0],
-								new QCandidate(finalThis, ((TreeInt) obj).i_key, true));
+								new QCandidate(finalThis, null, ((TreeInt) obj).i_key, true));
     			}
     		});
     		
@@ -261,7 +261,7 @@ public final class QCandidates implements Visitor4 {
     		// use a TreeInt for the removeLike call
     		i_trans.traverseRemovedClassIDs(i_yapClass.getID(), new Visitor4() {
     			public void visit(Object obj) {
-    				newRoot[0] = Tree.removeLike(newRoot[0], new QCandidate(finalThis, ((TreeInt) obj).i_key, true));
+    				newRoot[0] = Tree.removeLike(newRoot[0], new QCandidate(finalThis, null, ((TreeInt) obj).i_key, true));
     			}
     		});
     		

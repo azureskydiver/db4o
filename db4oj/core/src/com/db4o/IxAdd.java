@@ -14,7 +14,7 @@ class IxAdd extends IxPatch {
     }
     
     Tree addToCandidatesTree(Tree a_tree, QCandidates a_candidates, int[] a_lowerAndUpperMatch) {
-        QCandidate candidate = new QCandidate(a_candidates, i_parentID, true);
+        QCandidate candidate = new QCandidate(a_candidates, null, i_parentID, true);
         if (a_tree == null) {
             return candidate;
         }

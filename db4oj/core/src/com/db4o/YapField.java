@@ -448,9 +448,7 @@ class YapField implements StoredField {
     }
 
     void incrementOffset(YapReader a_bytes) {
-        if (alive()) {
-            a_bytes.incrementOffset(i_handler.linkLength());
-        }
+        a_bytes.incrementOffset(linkLength());
     }
 
     void init(YapClass a_yapClass, String a_name, int syntheticforJad) {

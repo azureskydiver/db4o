@@ -257,7 +257,7 @@ class YapArray extends YapIndependantType {
 		    }
             int count = elementCount(a_candidates.i_trans, bytes);
             for (int i = 0; i < count; i++) {
-                a_candidates.addByIdentity(new QCandidate(a_candidates, bytes.readInt(), true));
+                a_candidates.addByIdentity(new QCandidate(a_candidates, null, bytes.readInt(), true));
             }
         }
     }

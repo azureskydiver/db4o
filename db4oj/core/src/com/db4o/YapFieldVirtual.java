@@ -17,6 +17,10 @@ abstract class YapFieldVirtual extends YapField {
         a_writer.incrementOffset(linkLength());
     }
     
+    public boolean alive() {
+        return true;
+    }
+    
     void delete(YapWriter a_bytes) {
         a_bytes.incrementOffset(linkLength());
     }
