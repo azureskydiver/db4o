@@ -337,6 +337,7 @@ namespace com.db4o {
             ObjectSet objectSet = q.execute();
             while(objectSet.hasNext()){
                 AssemblyNameHint anh = (AssemblyNameHint)objectSet.next();
+                objectContainer.activate(anh, 2);
                 AssemblyNameHint existing = (AssemblyNameHint)Class.assemblies[anh.shortName];
                 if(existing != null){
                     objectContainer.ext().bind(existing, objectContainer.ext().getID(anh));
