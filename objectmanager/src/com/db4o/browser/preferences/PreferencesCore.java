@@ -3,19 +3,82 @@
  */
 package com.db4o.browser.preferences;
 
+import java.io.File;
+import java.io.IOException;
+
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
 import com.db4o.browser.model.BrowserCore;
 import com.db4o.browser.model.Database;
+import com.db4o.query.Query;
 
 public class PreferencesCore {
 	private static PreferencesCore prefs = null;
+	private static ObjectContainer db;
+
+	
+	private static final String preferencesFile = 
+			new File(new File(System.getProperty("user.home")), ".explorer4objects.yap").getAbsolutePath();
 	
 	public static PreferencesCore getDefault() {
 		if (prefs == null) {
-			prefs = new PreferencesCore();
+			loadOrCreatePreferences();
 		}
 		return prefs;
 	}
 
+	public static void commit() {
+		db.set(prefs);
+		db.commit();
+	}
+	
+	public static void rollback() {
+		db.ext().refresh(prefs, Integer.MAX_VALUE);
+	}
+	
+	public static void close() {
+		db.close();
+		db=null;
+		prefs=null;
+	}
+	
+	private static void loadOrCreatePreferences() {
+		db=Db4o.openFile(preferencesFile);
+		Query query=db.query();
+		query.constrain(PreferencesCore.class);
+		ObjectSet result=query.execute();
+
+		if(result.hasNext()) {
+			prefs=(PreferencesCore)result.next();
+		} else {
+			prefs = new PreferencesCore();
+		}
+		
+		if(result.size()>1) {
+			rebuildCorruptDatabase(result.size());
+		}
+	}
+
+	private static void rebuildCorruptDatabase(int resultsize) {
+		System.err.println(resultsize+" instances of PreferencesCore found in the database.");
+		String backupFile = preferencesFile+".bkp";
+		System.err.println("Backing up database to "+backupFile);
+		try {
+			db.ext().backup(backupFile);
+		} catch (IOException e) {
+			System.err.println("Couldn't create backup file.");
+			e.printStackTrace();
+		}
+		db.close();
+		new File(preferencesFile).delete();
+		db=Db4o.openFile(preferencesFile);
+		db.set(prefs);
+		db.commit();
+	}
+
+	// --------------------------------------------------
+	
 	public void registerPreferencesPages() {
 		PreferenceUI.registerPreferencePage("Activation", "Object Activation", null, "com.db4o.browser.preferences.ActivationPreferencePage");
 	}
@@ -61,7 +124,7 @@ public class PreferencesCore {
 	public void setSubsequentActivationDepth(int subsequentActivationDepth) {
 		this.subsequentActivationDepth = subsequentActivationDepth;
 	}
-	
+
 	
 	
 }

@@ -60,6 +60,7 @@ public class BrowserCore implements ICloseListener {
 		for (Iterator i = databases.iterator(); i.hasNext();) {
 			Database database = (Database) i.next();
 			database.close();
+			PreferencesCore.close();
 		}
 	}
     

@@ -71,7 +71,7 @@ public class ClassLoaderExtender {
 	 */
   public static void addToClassPath (URL[] urls) {
     boolean extended = false;
-    ClassLoader loader = ClassLoaderExtender.class.getClassLoader ();
+    ClassLoader loader = ClassLoaderExtender.class.getClassLoader();
     Class loaderClazz = loader.getClass();
     Class urlLoaderClazz = getSuperClass (loaderClazz, "URLClassLoader"); 
     if ( urlLoaderClazz != null ) {

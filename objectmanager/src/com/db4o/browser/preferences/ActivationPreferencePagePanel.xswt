@@ -50,16 +50,18 @@
 						</text>
 						<button x:id="BrowseClasses" text="Browse..."/>
 		            	<label text="Activation Depth:"/>
-						<spinner x:id="ClassActivationDepth" x:style="BORDER">
-				            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"/>
-						</spinner>
-						<button x:id="AddButton" text="Add">
+						<spinner x:id="ClassActivationDepth" x:style="BORDER"/>
+						<button x:id="AddButton" text="Add" enabled="false">
 				            <layoutData x:class="gridData" horizontalAlignment="GridData.FILL"/>
 						</button>
+						<label x:style="SEPARATOR|HORIZONTAL">
+							<layoutData x:class="gridData" horizontalSpan="2" horizontalAlignment="GridData.FILL"/>
+						</label>
+						<label/>
 						<list x:id="ClassList" x:style="BORDER">
 				            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL" horizontalSpan="2"/>
 						</list>
-						<button x:id="RemoveButton" text="Remove">
+						<button x:id="RemoveButton" text="Remove" enabled="false">
 				            <layoutData x:class="gridData" verticalAlignment="GridData.BEGINNING" horizontalAlignment="GridData.FILL"/>
 						</button>
 		            </x:children>
