@@ -20,7 +20,8 @@ import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.InstanceNode;
 import com.db4o.browser.model.nodes.NullNode;
-import com.db4o.ext.StoredField;
+import com.db4o.reflect.ReflectField;
+import com.swtworkbench.community.xswt.metalogger.Logger;
 
 
 /**
@@ -31,7 +32,7 @@ import com.db4o.ext.StoredField;
  */
 public class StoredFieldNode implements IModelNode {
 
-    protected StoredField _field;
+    protected ReflectField _field;
 	protected Object value = null;
     protected Object _instance;
 	protected IModelNode delegate;
@@ -42,7 +43,7 @@ public class StoredFieldNode implements IModelNode {
 	 * @param database TODO
 	 * @param _instance
 	 */
-	public StoredFieldNode(StoredField field, Object instance, Database database) {
+	public StoredFieldNode(ReflectField field, Object instance, Database database) {
 		_field = field;
         _instance = instance;
 		_database = database;
@@ -99,11 +100,21 @@ public class StoredFieldNode implements IModelNode {
 			return false;
 		}
 		StoredFieldNode node=(StoredFieldNode)obj;
-		return _instance.equals(node._instance)&&_field.equals(node._field);
+		return _instance.equals(node._instance) && _field.equals(node._field);
 	}
 	
 	public int hashCode() {
 		return _instance.hashCode()*29+_field.hashCode();
 	}
+
+    protected static Object field(ReflectField field, Object instance) {
+        try {
+            field.setAccessible();
+            return field.get(instance);
+        } catch (Exception e) {
+            Logger.log().error(e, "Unable to get the field contents");
+            throw new IllegalStateException();
+        }
+    }
 
 }

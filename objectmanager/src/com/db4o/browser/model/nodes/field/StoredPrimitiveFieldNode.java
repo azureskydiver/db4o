@@ -18,7 +18,7 @@ package com.db4o.browser.model.nodes.field;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
-import com.db4o.ext.StoredField;
+import com.db4o.reflect.ReflectField;
 
 
 
@@ -35,7 +35,7 @@ public class StoredPrimitiveFieldNode extends StoredFieldNode {
 	 * @param instance
 	 * @param database TODO
 	 */
-	public StoredPrimitiveFieldNode(StoredField field, Object instance, Database database) {
+	public StoredPrimitiveFieldNode(ReflectField field, Object instance, Database database) {
 		super(field, instance, database);
 	}
     

@@ -18,7 +18,7 @@ package com.db4o.browser.model.nodes;
 
 import com.db4o.ObjectSet;
 import com.db4o.browser.model.Database;
-import com.db4o.ext.StoredClass;
+import com.db4o.reflect.ReflectClass;
 
 /**
  * Class ClassNode.
@@ -27,15 +27,15 @@ import com.db4o.ext.StoredClass;
  */
 public class ClassNode implements IModelNode {
 
-	private final StoredClass _contents;
+	private final ReflectClass _class;
     private final Database _database;
 
 	/**
 	 * @param contents
 	 * @param database
 	 */
-	public ClassNode(StoredClass contents, Database database) {
-		_contents = contents;
+	public ClassNode(ReflectClass contents, Database database) {
+		_class = contents;
         _database = database;
     }
 
@@ -50,13 +50,12 @@ public class ClassNode implements IModelNode {
      * @see com.db4o.browser.model.nodes.IModelNode#children()
      */
     public IModelNode[] children() {
-        ObjectSet objects = _database.instances(_contents.getName());
+        ObjectSet objects = _database.instances(_class);
         IModelNode[] result = new IModelNode[objects.size()];
         int i=0;
         while (objects.hasNext()) {
             Object object = objects.next();
-//            result[i] = new InstanceNode(object, _database);
-            result[i] = new StoredInstanceNode(object, _contents, _database);
+            result[i] = new StoredInstanceNode(object, _class, _database);
             ++i;
         }
         return result;
@@ -80,6 +79,6 @@ public class ClassNode implements IModelNode {
 	 * @see com.db4o.browser.model.nodes.IModelNode#getText()
 	 */
 	public String getText() {
-		return _contents.getName();
+		return _class.getName();
 	}
 }

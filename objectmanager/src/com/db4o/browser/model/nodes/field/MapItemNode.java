@@ -16,14 +16,13 @@
  */
 package com.db4o.browser.model.nodes.field;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
-import com.db4o.browser.model.nodes.field.FieldNodeFactory;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
 
 
 /**
@@ -53,11 +52,11 @@ public class MapItemNode implements IModelNode {
 	 */
 	public IModelNode[] children() {
 		List results=new ArrayList();
-		Class curclazz=_instance.getClass();
+		ReflectClass curclazz= _database.reflector().forObject(_instance);
 		while(curclazz!=null) {
-			Field[] fields = curclazz.getDeclaredFields();
+			ReflectField[] fields = curclazz.getDeclaredFields();
 			for (int i = 0; i < fields.length; i++) {
-				if(!Modifier.isTransient(fields[i].getModifiers())) {
+				if(!fields[i].isTransient()) {
 					results.add(FieldNodeFactory.construct(fields[i], _instance, _database));
 				}
 			}

@@ -16,21 +16,13 @@
  */
 package com.db4o.browser.model;
 
-import com.db4o.*;
-import com.db4o.browser.prefs.activation.*;
-import com.db4o.ext.*;
-import com.db4o.query.*;
-import com.db4o.reflect.db.*;
-import com.db4o.reflect.jdk.*;
-import com.swtworkbench.community.xswt.metalogger.*;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.browser.prefs.activation.ActivationPreferences;
-import com.db4o.ext.ExtObjectSet;
-import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
-import com.swtworkbench.community.xswt.metalogger.Logger;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.Reflector;
 
 /**
  * Class Database.  A wrapper for a db4o database that adds convenience
@@ -47,9 +39,6 @@ public class Db4oDatabase implements Database {
      * @see com.db4o.browser.model.Database#open(java.lang.String)
      */
     public void open(String path) {
-		DBReflector reflector=new DBReflector();
-		reflector.setDelegate(new JdkReflector(Db4o.class.getClassLoader()));
-		Db4o.configure().reflectWith(reflector);
 		Db4o.configure().activationDepth(ActivationPreferences.getDefault().getInitialActivationDepth());
         if (!path.equals(currentPath)) {
             close();
@@ -58,7 +47,6 @@ public class Db4oDatabase implements Database {
                 throw new IllegalArgumentException("Could not open: " + path);
             currentPath = path;
         }
-		reflector.setDatabase(container);
     }
     
     /* (non-Javadoc)
@@ -82,59 +70,18 @@ public class Db4oDatabase implements Database {
     
 
     public DatabaseGraphIterator graphIterator() {
-    	return new DatabaseGraphIterator(this, container.ext().storedClasses());
+        return new DatabaseGraphIterator(this, container.ext().knownClasses());
     }
     
     public DatabaseGraphIterator graphIterator(String name) {
-        StoredClass result = container.ext().storedClass(name);
-        return new DatabaseGraphIterator(this, new StoredClass[] {result});
+        ReflectClass result = container.ext().reflector().forName(name);
+        return new DatabaseGraphIterator(this, new ReflectClass[] {result});
     }
     
-    public ObjectSet instances(String clazzname) {
-		StoredClass clazz=container.ext().storedClass(clazzname);
-		final long[] ids=clazz.getIDs();
-		return new ObjectSet() {
-			private int idx=0;
-			public ExtObjectSet ext() {
-				throw new UnsupportedOperationException("TODO: Implement me");
-			}
-
-			public boolean hasNext() {
-				return idx<ids.length;
-			}
-
-			public Object next() {
-				if(!hasNext()) {
-					return null;
-				}
-				Object next=container.ext().getByID(ids[idx]);
-				idx++;
-				return next;
-			}
-
-			public void reset() {
-				idx=0;
-			}
-
-			public int size() {
-				return ids.length;
-			}
-			
-		};
-//        Query q = container.query();
-////        IClass toReturn = null;
-////        try {
-////            toReturn = CReflect.getDefault().forName(clazz);
-////        }
-//        Class toReturn = null;
-//        try {
-//            toReturn = Class.forName(clazz);
-//        }
-//        catch (Exception e) {
-//            Logger.log().error(e, "Unable to Class.forName()");
-//            throw new RuntimeException();
-//        }
-//        return container.get(toReturn);
+    public ObjectSet instances(ReflectClass clazz) {
+        Query q = container.query();
+        q.constrain(clazz);
+        return q.execute();
     }
 	
 	/* (non-Javadoc)
@@ -150,5 +97,9 @@ public class Db4oDatabase implements Database {
 	public void activate(Object object) {
 		container.activate(object, ActivationPreferences.getDefault().getSubsequentActivationDepth());
 	}
+    
+    public Reflector reflector() {
+        return container.ext().reflector();
+    }
     
 }

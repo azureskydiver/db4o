@@ -1,6 +1,8 @@
 package com.db4o.browser.model;
 
-import com.db4o.*;
+import com.db4o.ObjectSet;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.Reflector;
 
 
 
@@ -22,11 +24,13 @@ public interface Database {
 
 	public abstract DatabaseGraphIterator graphIterator(String name);
 
-	public abstract ObjectSet instances(String clazz);
+	public abstract ObjectSet instances(ReflectClass clazz);
 	
 	public abstract long getId(Object object);
 	
 	public abstract void activate(Object object);
 
 	public abstract void setInitialActivationDepth(int initialActivationDepth);
+
+    public abstract Reflector reflector();
 }
