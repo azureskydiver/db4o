@@ -24,9 +24,7 @@ structure:
 ..?
 .? mono The db4o Mono distribution come as either a binary or source RPM package, ._
 respectively db4o-4.3-1.noarch.rpm and db4o-4.3-1.src.rpm. After you install the binary ._
-RPM package you get the following directory structure: 
-
-.g directorymonobin.jpg ..
+RPM package you should find the db4o.dll assembly in /usr/lib/db4o.
 
 ..?
 This tutorial comes in multiple versions. Make sure ._
