@@ -33,7 +33,7 @@ public class DataField implements IField {
         return true;
     }
 
-    public boolean isStatic() {
+    public boolean isStatic() { //FIXME Consider static fields.
         return false;
     }
 
