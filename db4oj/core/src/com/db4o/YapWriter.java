@@ -178,17 +178,18 @@ public final class YapWriter extends YapReader {
         i_trans.i_stream.readBytes(_buffer, i_address,_addressOffset, i_length);
     }
 
-    final void read(YapSocket sock) throws IOException {
+    final boolean read(YapSocket sock) throws IOException {
         int offset = 0;
         int length = i_length;
         while (length > 0) {
             int read = sock.read(_buffer, offset, length);
 			if(read<0) {
-				break;
+				return false;
 			}
             offset += read;
             length -= read;
         }
+		return true;
     }
 
     final YapWriter readEmbeddedObject() {
