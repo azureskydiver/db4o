@@ -225,8 +225,6 @@ public class AllTests extends AllTestsConfAll implements Runnable {
             testCasesFromTestSuites();
         }
         
-        //FIXME Shuffle _testCases so that they run in pseudo-random order. This is to verify that test cases can run in any order.
-        
         Test.currentRunner = this;
     }
 

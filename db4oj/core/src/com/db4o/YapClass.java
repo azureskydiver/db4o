@@ -1574,7 +1574,6 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
     
     public StoredField storedField(String a_name, Object a_type) {
         synchronized(i_stream.i_lock){
-    		a_type = Platform.getClassForType(a_type);
     		if(a_type instanceof String){
     		     try {
                     a_type = Db4o.classForName((String)a_type);
