@@ -2,7 +2,8 @@
 
 package com.db4o.test;
 
-import com.db4o.*;
+import com.db4o.ObjectContainer;
+import com.db4o.foundation.Cool;
 
 public class Callbacks 
 {
@@ -117,11 +118,9 @@ public class Callbacks
 	    noneCalled();
 	    oc.delete(this);
 	    oc.commit();
-	    try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+	    
+	    Cool.sleepWithoutInterruption(100);
+
 	    ensure(CAN_DELETE);
 	    ensure(DELETE);
 	    

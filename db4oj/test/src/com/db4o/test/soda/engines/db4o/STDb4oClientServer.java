@@ -2,12 +2,12 @@
 
 package com.db4o.test.soda.engines.db4o;
 
-import java.io.*;
-
-import com.db4o.query.*;
-import com.db4o.test.soda.*;
+import java.io.File;
 
 import com.db4o.*;
+import com.db4o.foundation.Cool;
+import com.db4o.query.Query;
+import com.db4o.test.soda.STEngine;
 
 public class STDb4oClientServer implements STEngine {
 
@@ -52,12 +52,8 @@ public class STDb4oClientServer implements STEngine {
 		if (IN_PROCESS_SERVER) {
 			server = Db4o.openServer(FILE, PORT);
 			server.grantAccess(USER, PASS);
-			try {
-				// wait for the server to be online
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			// wait for the server to be online
+			Cool.sleepWithoutInterruption(3000);
 		}
 		try {
 			con = Db4o.openClient(HOST, PORT, USER, PASS);

@@ -6,7 +6,8 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.query.*;
+import com.db4o.foundation.Cool;
+import com.db4o.query.Query;
 import com.db4o.tools.*;
 
 public class Test extends AllTests {
@@ -104,10 +105,7 @@ public class Test extends AllTests {
             while (!oc.close());
         }
         if (objectServer != null) {
-            try {
-            	Thread.sleep(1000);
-            } catch (Exception e) {
-            }
+            Cool.sleepIgnoringInterruption(1000);
             objectServer.close();
             objectServer = null;
         }
@@ -225,10 +223,7 @@ public class Test extends AllTests {
 
     public static ObjectContainer reOpen() {
         close();
-        try {
-        	Thread.sleep(100);
-        } catch (Exception e) {
-        }
+        Cool.sleepIgnoringInterruption(100);
         return open();
     }
     
@@ -237,10 +232,7 @@ public class Test extends AllTests {
 			close();
 			objectServer.close();
 			objectServer = null;
-			try {
-				Thread.sleep(100);
-			} catch (Exception e) {
-			}
+			Cool.sleepIgnoringInterruption(100);
 			return open();
 		}else{
 			return reOpen();

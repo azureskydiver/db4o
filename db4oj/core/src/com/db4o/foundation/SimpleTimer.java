@@ -26,7 +26,7 @@ public class SimpleTimer implements Runnable {
 	
 	public void run() {
 		while(! stopped){
-			Cool.sleepWithoutInterruption(_interval);
+			Cool.sleepIgnoringInterruption(_interval);
             if(! stopped){
 				_runnable.run();
             }

@@ -221,7 +221,7 @@ final class YapConfigBlock implements Runnable
 			// If someone changes the system clock here,
 			// he is out of luck.
 			while(System.currentTimeMillis() < currentTime + waitTime){
-				Cool.sleepWithoutInterruption(waitTime);
+				Cool.sleepIgnoringInterruption(waitTime);
 			}
 			reader = _stream.getWriter(_stream.getSystemTransaction(), _address, YapConst.YAPLONG_LENGTH * 2);
 			reader.moveForward(OPEN_TIME_OFFSET);
@@ -235,7 +235,7 @@ final class YapConfigBlock implements Runnable
 		if(lockFile()){
 			// We give the other process a chance to 
 			// write its lock.
-			Cool.sleepWithoutInterruption(100);
+			Cool.sleepIgnoringInterruption(100);
 			syncFiles();
 			openTimeOverWritten();
 		}
@@ -251,9 +251,9 @@ final class YapConfigBlock implements Runnable
 			t.setName("db4o file lock");
 			try{
 				while(writeAccessTime()){
-					Thread.sleep(YapConst.LOCK_TIME_INTERVAL);
+				    Cool.sleepIgnoringInterruption(YapConst.LOCK_TIME_INTERVAL);
 				}
-			}catch(Exception e){
+			}catch(IOException e){
 			}
 		}
 	}
