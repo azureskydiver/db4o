@@ -30,19 +30,10 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  */
 public class Model {
     /**
-     * Open a model object and return it.
-     * 
-     * @return
-     */
-    public static Model open() {
-        return new Model(Db4o.openFile("c:\\workspace\\com.db4o.browser\\formula1.yap"));
-    }
-    
-    /**
      * @param container
      */
-    public Model(ObjectContainer _container) {
-        container = _container;
+    public Model(String path) {
+        container = Db4o.openFile(path);
     }
 
 	private ObjectContainer container = null;
