@@ -199,7 +199,7 @@ abstract class YapFile extends YapStream {
         while (i.hasNext()) {
             YapClass yapClass = i.nextClass();
             if (yapClass.getName() != null) {
-                IClass claxx = yapClass.classReflector();
+                ReflectClass claxx = yapClass.classReflector();
                 if (claxx == null
                     || !( i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))) {
                     Tree tree = yapClass.getIndex(ta);

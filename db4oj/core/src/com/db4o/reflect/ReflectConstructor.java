@@ -5,13 +5,13 @@ package com.db4o.reflect;
 /** 
  * representation for java.lang.reflect.Constructor.
  * <br><br>See the respective documentation in the JDK API.
- * @see IReflect
+ * @see Reflector
  */
-public interface IConstructor {
+public interface ReflectConstructor {
 	
 	public void setAccessible();
 	
-	public IClass[] getParameterTypes();
+	public ReflectClass[] getParameterTypes();
 	
 	public Object newInstance(Object[] parameters);
 	

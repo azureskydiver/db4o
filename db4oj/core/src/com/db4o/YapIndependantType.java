@@ -32,7 +32,7 @@ abstract class YapIndependantType implements YapDataType
 		}
 	}
 	
-	public final IClass primitiveClassReflector(){
+	public final ReflectClass primitiveClassReflector(){
 		return null;
 	}
 	

@@ -137,7 +137,7 @@ public final class Platform {
         if (obj == null) {
             col.add(null);
         } else {
-            IClass claxx = stream.reflector().forObject(obj);
+            ReflectClass claxx = stream.reflector().forObject(obj);
             if (claxx.isArray()) {
                 Object[] objects;
                 if (claxx.getComponentType().isArray()) {
@@ -474,7 +474,7 @@ public final class Platform {
         return (property != null) && (property.indexOf(propertyValue) == 0);
     }
     
-	public static void registerCollections(IReflect reflector) {
+	public static void registerCollections(Reflector reflector) {
 		
 		if(!Deploy.csharp){
 		
@@ -532,7 +532,7 @@ public final class Platform {
         }
     }
     
-    public static boolean storeStaticFieldValues(IReflect reflector, IClass claxx) {
+    public static boolean storeStaticFieldValues(Reflector reflector, ReflectClass claxx) {
         return jdk().storeStaticFieldValues(reflector, claxx);
     }
 

@@ -33,11 +33,11 @@ public class QField implements Visitor4{
 	}
 	
 	boolean canHold(Object a_object){
-	    IClass claxx = null;
-	    IReflect reflector = i_trans.reflector();
+	    ReflectClass claxx = null;
+	    Reflector reflector = i_trans.reflector();
 	    if(a_object != null){
-	        if(a_object instanceof IClass){
-	            claxx = (IClass)a_object;
+	        if(a_object instanceof ReflectClass){
+	            claxx = (ReflectClass)a_object;
 	        }else{
 	            claxx = reflector.forObject(a_object);
 	        }

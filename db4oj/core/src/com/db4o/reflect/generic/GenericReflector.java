@@ -1,24 +1,24 @@
 /* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.reflect.dataobjects;
+package com.db4o.reflect.generic;
 
 import com.db4o.*;
 import com.db4o.reflect.*;
 
-public class DataObjectReflector implements IReflect {
+public class GenericReflector implements Reflector {
 
-    private final IReflect _delegate;
+    private final Reflector _delegate;
     private final Hashtable4 _dataClassByName = new Hashtable4(1);
 
-    public DataObjectReflector(IReflect reflector) {
+    public GenericReflector(Reflector reflector) {
         _delegate = reflector;
     }
 
-    public IArray array() {
+    public ReflectArray array() {
         return _delegate.array();
     }
 
-    public int collectionUpdateDepth(IClass claxx) {
+    public int collectionUpdateDepth(ReflectClass claxx) {
         return _delegate.collectionUpdateDepth(claxx);
     }
 
@@ -26,21 +26,21 @@ public class DataObjectReflector implements IReflect {
         return false;
     }
 
-    public IClass forClass(Class clazz) {
+    public ReflectClass forClass(Class clazz) {
         return _delegate.forClass(clazz);
     }
 
-    public IClass forName(String className) {
-        IClass dataClass = (IClass)_dataClassByName.get(className);
+    public ReflectClass forName(String className) {
+        ReflectClass dataClass = (ReflectClass)_dataClassByName.get(className);
         return dataClass != null ? dataClass : _delegate.forName(className);
     }
 
-    public IClass forObject(Object object) {
-    	if (object instanceof DataObject) return ((DataObject)object).dataClass();
+    public ReflectClass forObject(Object object) {
+    	if (object instanceof GenericObject) return ((GenericObject)object).dataClass();
         return _delegate.forObject(object);
     }
 
-    public boolean isCollection(IClass claxx) {
+    public boolean isCollection(ReflectClass claxx) {
         return _delegate.isCollection(claxx);
     }
 
@@ -52,7 +52,7 @@ public class DataObjectReflector implements IReflect {
         _delegate.registerCollectionUpdateDepth(clazz, depth);
     }
 
-    public void registerDataClass(DataClass dataClass) {
+    public void registerDataClass(GenericClass dataClass) {
         _dataClassByName.put(dataClass.getName(), dataClass);
     }
 

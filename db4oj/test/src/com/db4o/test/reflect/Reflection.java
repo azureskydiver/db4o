@@ -3,7 +3,7 @@
 package com.db4o.test.reflect;
 
 import com.db4o.reflect.*;
-import com.db4o.reflect.dataobjects.DataObjectReflector;
+import com.db4o.reflect.generic.*;
 import com.db4o.reflect.jdk.*;
 
 /**
@@ -22,26 +22,26 @@ import com.db4o.reflect.jdk.*;
  */
 public class Reflection extends Test {
 
-	private final IReflect _reflector;
-	private final IClass _classReflector;
+	private final Reflector _reflector;
+	private final ReflectClass _classReflector;
 
     public Reflection() throws ClassNotFoundException {
-    	this(new CReflect(Thread.currentThread().getContextClassLoader()));
+    	this(new JdkReflector(Thread.currentThread().getContextClassLoader()));
 	}
 
-	public Reflection(IReflect reflector) {
+	public Reflection(Reflector reflector) {
         _reflector = reflector;
         _classReflector = _reflector.forName(TestReflectClass.class.getName());
 	}
 	
 	public void testIClass() throws ClassNotFoundException {
-		IField[] fields = _classReflector.getDeclaredFields();
+		ReflectField[] fields = _classReflector.getDeclaredFields();
 		_assert(
 			fields.length == TestReflectClass.FIELD_COUNT, "getDeclaredFields method failed.");
 		for (int i = 0; i < fields.length; i++) {
 			_assert(fields != null, "getDeclaredFields[" + i + "] is valid");
 			String fieldName = fields[i].getName();
-			IField fieldReflector = _classReflector.getDeclaredField(fieldName);
+			ReflectField fieldReflector = _classReflector.getDeclaredField(fieldName);
 			_assert(
 				fieldReflector != null,
 				"getDeclaredField('" + fieldName + "') is valid");
@@ -49,10 +49,10 @@ public class Reflection extends Test {
 
 		tstIField();
 
-		IClass abstractReflector =
+		ReflectClass abstractReflector =
 			_reflector.forName(TestReflectAbstractClass.class.getName());
 		_assert(abstractReflector.isAbstract(), "isAbstract");
-		IClass interfaceReflector =
+		ReflectClass interfaceReflector =
 			_reflector.forName(TestReflectInterface.class.getName());
 		_assert(interfaceReflector.isInterface(), "isInterface");
 		Object instance = _classReflector.newInstance();
@@ -75,11 +75,11 @@ public class Reflection extends Test {
 	}
 
 	private void tstIField1(String fieldName, Object obj, Class clazz) {
-        IClass claxx = _reflector.forClass(clazz);
+        ReflectClass claxx = _reflector.forClass(clazz);
 		String fieldMessage =
 			TestReflectClass.class.getName() + ":" + fieldName;
 		TestReflectClass onObject = new TestReflectClass();
-		IField fieldReflector = _classReflector.getDeclaredField(fieldName);
+		ReflectField fieldReflector = _classReflector.getDeclaredField(fieldName);
 		fieldReflector.set(onObject, obj);
 		Object got = fieldReflector.get(onObject);
 		_assert(got != null, fieldMessage + " IField.get returns NULL");
@@ -109,8 +109,8 @@ public class Reflection extends Test {
 	}
 
 	private void tstIArray1(Object[] elements){
-		IArray array = _reflector.array();
-		IClass clazz = _reflector.forObject(elements[0]);
+		ReflectArray array = _reflector.array();
+		ReflectClass clazz = _reflector.forObject(elements[0]);
 		Object obj = array.newInstance(clazz,0);
 		_assert(obj != null, "Creation of zero length array");
 		_assert(array.getLength(obj) == 0, "Zero length array length");
@@ -126,9 +126,9 @@ public class Reflection extends Test {
 	}
 	
 	private void tstIArray2(Object arr){
-		IArray array = _reflector.array();
+		ReflectArray array = _reflector.array();
 		Object element = array.get(arr, 0);
-		IClass clazz = _reflector.forObject(element);
+		ReflectClass clazz = _reflector.forObject(element);
 		Object obj = array.newInstance(clazz,0);
 		_assert(obj != null, "Creation of zero length array");
 		_assert(array.getLength(obj) == 0, "Zero length array length");

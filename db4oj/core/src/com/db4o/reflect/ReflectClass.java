@@ -5,29 +5,29 @@ package com.db4o.reflect;
 /** 
  * representation for java.lang.Class.
  * <br><br>See the respective documentation in the JDK API.
- * @see IReflect
+ * @see Reflector
  */
-public interface IClass {
+public interface ReflectClass {
 	
-    public IClass getComponentType();
+    public ReflectClass getComponentType();
 	
-	public IConstructor[] getDeclaredConstructors();
+	public ReflectConstructor[] getDeclaredConstructors();
 	
-	public IField[] getDeclaredFields();
+	public ReflectField[] getDeclaredFields();
 	
-	public IField getDeclaredField(String name);
+	public ReflectField getDeclaredField(String name);
 	
-	public IMethod getMethod(String methodName, IClass[] paramClasses);
+	public ReflectMethod getMethod(String methodName, ReflectClass[] paramClasses);
 	
 	public String getName();
 	
-	public IClass getSuperclass();
+	public ReflectClass getSuperclass();
 	
 	public boolean isAbstract();
 	
 	public boolean isArray();
 	
-	public boolean isAssignableFrom(IClass type);
+	public boolean isAssignableFrom(ReflectClass type);
 	
 	public boolean isInstance(Object obj);
 	
@@ -49,6 +49,6 @@ public interface IClass {
      */
     public boolean skipConstructor(boolean flag);
     
-    public void useConstructor(IConstructor constructor, Object[] params);
+    public void useConstructor(ReflectConstructor constructor, Object[] params);
 	
 }

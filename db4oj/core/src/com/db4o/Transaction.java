@@ -2,7 +2,7 @@
 
 package com.db4o;
 
-import com.db4o.reflect.IReflect;
+import com.db4o.reflect.Reflector;
 
 /**
  * @exclude
@@ -475,7 +475,7 @@ public class Transaction {
         return ret;
     }
     
-    IReflect reflector(){
+    Reflector reflector(){
     	return i_stream.reflector();
     }
 

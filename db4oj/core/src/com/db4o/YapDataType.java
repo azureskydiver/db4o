@@ -10,11 +10,11 @@ interface YapDataType extends YapComparable
 	
 	void appendEmbedded3(YapWriter a_bytes);
 		
-	boolean canHold(IClass claxx);
+	boolean canHold(ReflectClass claxx);
 	
 	void cascadeActivation(Transaction a_trans, Object a_object, int a_depth, boolean a_activate);
 	
-	IClass classReflector();
+	ReflectClass classReflector();
 	
 	// special construct for deriving from simple types
 	void copyValue(Object a_from, Object a_to);
@@ -33,7 +33,7 @@ interface YapDataType extends YapComparable
 	
 	void prepareLastIoComparison(Transaction a_trans, Object obj);
 	
-	IClass primitiveClassReflector();
+	ReflectClass primitiveClassReflector();
 	
 	Object read(YapWriter writer) throws CorruptionException;
 	

@@ -65,13 +65,13 @@ public class QQuery implements Query {
 	 */
     public Constraint constrain(Object example) {
         synchronized (streamLock()) {
-            IClass claxx = null;
+            ReflectClass claxx = null;
             example = Platform.getClassForType(example);
             
-            IReflect reflector = i_trans.reflector(); 
+            Reflector reflector = i_trans.reflector(); 
             
-            if(example instanceof IClass){
-            	claxx = (IClass)example;
+            if(example instanceof ReflectClass){
+            	claxx = (ReflectClass)example;
             }else{
             	if(example instanceof Class){
             		claxx = reflector.forClass((Class)example);
@@ -90,7 +90,7 @@ public class QQuery implements Query {
                     Constraint constr = null;
                     while (i.hasNext()) {
                         YapClass yapClass = (YapClass)i.next();
-                        IClass yapClassClaxx = yapClass.classReflector();
+                        ReflectClass yapClassClaxx = yapClass.classReflector();
                         if(yapClassClaxx != null){
                             if(! yapClassClaxx.isInterface()){
                                 if(constr == null){

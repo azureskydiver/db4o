@@ -14,7 +14,7 @@ final class YapClassAny extends YapClass {
 		super(stream, stream.i_handlers.ICLASS_OBJECT);
 	}
 
-	public boolean canHold(IClass claxx) {
+	public boolean canHold(ReflectClass claxx) {
 		return true;
 	}
 

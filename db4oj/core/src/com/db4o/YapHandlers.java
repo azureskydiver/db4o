@@ -55,17 +55,17 @@ class YapHandlers {
     byte[]                  i_encryptor;
     int                     i_lastEncryptorByte;
     
-    IClass ICLASS_COMPARE;
-    IClass ICLASS_DB4OTYPE;
-    IClass ICLASS_DB4OTYPEIMPL;
-    IClass ICLASS_ENUM;
-	IClass ICLASS_INTERNAL;
-    IClass ICLASS_OBJECT;
-    IClass ICLASS_OBJECTCONTAINER;
-    IClass ICLASS_PBOOTRECORD;
-	IClass ICLASS_STATICCLASS;
-	IClass ICLASS_STRING;
-    IClass ICLASS_TRANSIENTCLASS;
+    ReflectClass ICLASS_COMPARE;
+    ReflectClass ICLASS_DB4OTYPE;
+    ReflectClass ICLASS_DB4OTYPEIMPL;
+    ReflectClass ICLASS_ENUM;
+	ReflectClass ICLASS_INTERNAL;
+    ReflectClass ICLASS_OBJECT;
+    ReflectClass ICLASS_OBJECTCONTAINER;
+    ReflectClass ICLASS_PBOOTRECORD;
+	ReflectClass ICLASS_STATICCLASS;
+	ReflectClass ICLASS_STRING;
+    ReflectClass ICLASS_TRANSIENTCLASS;
 
     YapHandlers(final YapStream a_stream) {
     	
@@ -147,7 +147,7 @@ class YapHandlers {
     }
 
 	int arrayType(Object a_object) {
-    	IClass claxx = _masterStream.reflector().forObject(a_object);
+    	ReflectClass claxx = _masterStream.reflector().forObject(a_object);
         if (claxx.isArray()) {
             if (Array4.isNDimensional(claxx)) {
                 return YapConst.TYPE_NARRAY;
@@ -158,7 +158,7 @@ class YapHandlers {
         return 0;
     }
 
-    final boolean createConstructor(final IClass claxx, boolean skipConstructor){
+    final boolean createConstructor(final ReflectClass claxx, boolean skipConstructor){
         
         if (claxx == null) {
             return false;
@@ -187,7 +187,7 @@ class YapHandlers {
         if (_masterStream.reflector().constructorCallsSupported()) {
             try {
                 
-                IConstructor[] constructors = claxx.getDeclaredConstructors();
+                ReflectConstructor[] constructors = claxx.getDeclaredConstructors();
                 
                 Tree sortedConstructors = null;
                 
@@ -210,9 +210,9 @@ class YapHandlers {
                     sortedConstructors.traverse(new Visitor4() {
                         public void visit(Object a_object) {
                             if(! foundConstructor[0]) {
-	                            IConstructor constructor = (IConstructor)((TreeIntObject)a_object).i_object;
+	                            ReflectConstructor constructor = (ReflectConstructor)((TreeIntObject)a_object).i_object;
 	                            try {
-	                                IClass[] pTypes = constructor.getParameterTypes();
+	                                ReflectClass[] pTypes = constructor.getParameterTypes();
 	                                Object[] parms = new Object[pTypes.length];
 	                                for (int j = 0; j < parms.length; j++) {
 	                                    for (int k = 0; k < PRIMITIVECOUNT; k++) {
@@ -296,7 +296,7 @@ class YapHandlers {
         return i_handlers[a_index - 1];
     }
 
-    final YapDataType handlerForClass(IClass a_class, IClass[] a_Supported) {
+    final YapDataType handlerForClass(ReflectClass a_class, ReflectClass[] a_Supported) {
         for (int i = 0; i < a_Supported.length; i++) {
             if (a_Supported[i] == a_class) {
                 return i_handlers[i];
@@ -309,7 +309,7 @@ class YapHandlers {
      * Can't return ANY class for interfaces, since that would kill the
      * translators built into the architecture.
      */
-    final YapDataType handlerForClass(YapStream a_stream, IClass a_class) {
+    final YapDataType handlerForClass(YapStream a_stream, ReflectClass a_class) {
         if (a_class.isArray()) {
             return handlerForClass(a_stream, a_class.getComponentType());
         }
@@ -320,7 +320,7 @@ class YapHandlers {
         return a_stream.getYapClass(a_class, true);
     }
     
-    private void initClassReflectors(IReflect reflector){
+    private void initClassReflectors(Reflector reflector){
 		ICLASS_COMPARE = reflector.forClass(YapConst.CLASS_COMPARE);
 		ICLASS_DB4OTYPE = reflector.forClass(YapConst.CLASS_DB4OTYPE);
 		ICLASS_DB4OTYPEIMPL = reflector.forClass(YapConst.CLASS_DB4OTYPEIMPL);
@@ -354,7 +354,7 @@ class YapHandlers {
         }
     }
     
-    static Db4oTypeImpl getDb4oType(IClass clazz) {
+    static Db4oTypeImpl getDb4oType(ReflectClass clazz) {
         for (int i = 0; i < i_db4oTypes.length; i++) {
             if (clazz.isInstance(i_db4oTypes[i])) {
                 return i_db4oTypes[i];
@@ -370,7 +370,7 @@ class YapHandlers {
         return null;
     }
 
-    YapClass getYapClassStatic(IClass a_class) {
+    YapClass getYapClassStatic(ReflectClass a_class) {
         if (a_class == null) {
             return null;
         }
@@ -385,7 +385,7 @@ class YapHandlers {
     
     public final boolean isSecondClass(Object a_object){
     	if(a_object != null){
-    		IClass claxx = _masterStream.reflector().forObject(a_object);
+    		ReflectClass claxx = _masterStream.reflector().forObject(a_object);
     		if(i_classByClass.get(claxx) != null){
     			return true;
     		}

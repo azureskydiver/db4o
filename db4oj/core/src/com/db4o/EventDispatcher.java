@@ -32,9 +32,9 @@ final class EventDispatcher
 	static final int CAN_UPDATE = 9;
 	static final int COUNT = 10;
 	
-	private final IMethod[] methods;
+	private final ReflectMethod[] methods;
 	
-	private EventDispatcher(IMethod[] methods){
+	private EventDispatcher(ReflectMethod[] methods){
 		this.methods = methods;
 	}
 	
@@ -52,7 +52,7 @@ final class EventDispatcher
 		return true;
 	}
 	
-	static EventDispatcher forClass(YapStream a_stream, IClass classReflector){
+	static EventDispatcher forClass(YapStream a_stream, ReflectClass classReflector){
         
         if(a_stream == null || classReflector == null){
             return null;
@@ -66,8 +66,8 @@ final class EventDispatcher
 	        count = SERVER_COUNT;
 	    }
 	    if(count > 0){
-			IClass[] parameterClasses = {a_stream.i_handlers.ICLASS_OBJECTCONTAINER};
-			IMethod[] methods = new IMethod[COUNT];
+			ReflectClass[] parameterClasses = {a_stream.i_handlers.ICLASS_OBJECTCONTAINER};
+			ReflectMethod[] methods = new ReflectMethod[COUNT];
 			for (int i = COUNT -1; i >=0; i--){
 				try{
 					methods[i] = classReflector.getMethod(events[i], parameterClasses);

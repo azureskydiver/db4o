@@ -480,7 +480,7 @@ public class P2LinkedList extends P1Collection implements Db4oList {
                 if(trans == null){
                     Db4o.throwRuntimeException(29);
                 }
-                IReflect reflector = trans.reflector();
+                Reflector reflector = trans.reflector();
                 a =
                     (Object[])reflector.array().newInstance(
                         reflector.forObject(a).getComponentType(),

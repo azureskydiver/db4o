@@ -71,7 +71,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
         return getName();
     }
     
-    IClass classReflector() throws ClassNotFoundException {
+    ReflectClass classReflector() throws ClassNotFoundException {
     	return i_config.reflector().forName(i_name);
     }
 

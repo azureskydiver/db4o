@@ -2,7 +2,7 @@
 
 package com.db4o;
 
-import com.db4o.reflect.IClass;
+import com.db4o.reflect.ReflectClass;
 
 /**
  * n-dimensional array
@@ -23,7 +23,7 @@ final class YapArrayN extends YapArray {
     }
 
     final int elementCount(Transaction a_trans, YapReader a_bytes) {
-        return elementCount(readDimensions(a_trans, a_bytes, new IClass[1]));
+        return elementCount(readDimensions(a_trans, a_bytes, new ReflectClass[1]));
     }
 
     private final int elementCount(int[] a_dim) {
@@ -73,7 +73,7 @@ final class YapArrayN extends YapArray {
 	}
 
     private int[] read1Create(Transaction a_trans, YapReader a_bytes, Object[] obj) {
-		IClass[] clazz = new IClass[1];
+		ReflectClass[] clazz = new ReflectClass[1];
 		int[] dim = readDimensions(a_trans, a_bytes, clazz);
         if (i_isPrimitive) {
         	obj[0] = a_trans.reflector().array().newInstance(i_handler.primitiveClassReflector(), dim);
@@ -85,7 +85,7 @@ final class YapArrayN extends YapArray {
         return dim;
     }
 
-    private final int[] readDimensions(Transaction a_trans, YapReader a_bytes, IClass[] clazz) {
+    private final int[] readDimensions(Transaction a_trans, YapReader a_bytes, ReflectClass[] clazz) {
         int[] dim = new int[readElementsAndClass(a_trans, a_bytes, clazz)];
         for (int i = 0; i < dim.length; i++) {
             dim[i] = a_bytes.readInt();

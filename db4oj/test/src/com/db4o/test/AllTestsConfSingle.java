@@ -14,7 +14,7 @@ public class AllTestsConfSingle extends TestSuite{
     public Class[] tests(){
         return new Class[] {
         
-        RefreshList.class
+            CallConstructors.class
         
     	};
     }

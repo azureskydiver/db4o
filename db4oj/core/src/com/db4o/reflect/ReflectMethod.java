@@ -5,9 +5,9 @@ package com.db4o.reflect;
 /** 
  * representation for java.lang.reflect.Method.
  * <br><br>See the respective documentation in the JDK API.
- * @see IReflect
+ * @see Reflector
  */
-public interface IMethod {
+public interface ReflectMethod {
 	
 	public Object invoke(Object onObject, Object[] parameters);
 	

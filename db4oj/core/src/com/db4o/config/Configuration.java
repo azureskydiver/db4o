@@ -325,7 +325,7 @@ public interface Configuration {
      * package. This method can be used to install a custom reflection
      * implementation.
      */
-    public void reflectWith(IReflect reflector);
+    public void reflectWith(Reflector reflector);
 
     /**
      * forces analysation of all Classes during a running session.

@@ -1,43 +1,43 @@
 /* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.reflect.dataobjects;
+package com.db4o.reflect.generic;
 
 import com.db4o.*;
 import com.db4o.reflect.*;
 
-public class DataClass implements IClass {
+public class GenericClass implements ReflectClass {
 
-    private static final DataField[] NO_FIELDS = new DataField[0];
+    private static final GenericField[] NO_FIELDS = new GenericField[0];
     
 	private final String _name;
-    private final IClass _superclass;
-    private DataField[] _fields = NO_FIELDS;
+    private final ReflectClass _superclass;
+    private GenericField[] _fields = NO_FIELDS;
 
-    public DataClass(String name, IClass superclass) {
+    public GenericClass(String name, ReflectClass superclass) {
         _name = name;
         _superclass = superclass;
     }
     
-	public void initFields(DataField[] fields) {
+	public void initFields(GenericField[] fields) {
 		_fields = fields;
 		for (int i = 0; i < _fields.length; i++) {
 		    _fields[i].setIndex(i);
 		}
 	}
 
-    public IClass getComponentType() {   //FIXME Find out how this must work.
+    public ReflectClass getComponentType() {   //FIXME Find out how this must work.
         return null;
     }
 
-    public IConstructor[] getDeclaredConstructors() {
+    public ReflectConstructor[] getDeclaredConstructors() {
         return null;
     }
 
-    public IField[] getDeclaredFields() {
+    public ReflectField[] getDeclaredFields() {
         return _fields;
     }
 
-    public IField getDeclaredField(String name) {
+    public ReflectField getDeclaredField(String name) {
         for (int i = 0; i < _fields.length; i++) {
             if (_fields[i].getName().equals(name)) {
                 return _fields[i];
@@ -46,7 +46,7 @@ public class DataClass implements IClass {
         return null;
     }
 
-    public IMethod getMethod(String methodName, IClass[] paramClasses) {
+    public ReflectMethod getMethod(String methodName, ReflectClass[] paramClasses) {
         return null;
     }
 
@@ -54,7 +54,7 @@ public class DataClass implements IClass {
         return _name;
     }
 
-    public IClass getSuperclass() {
+    public ReflectClass getSuperclass() {
         return _superclass;
     }
 
@@ -66,21 +66,21 @@ public class DataClass implements IClass {
         return false;
     }
 
-    public boolean isAssignableFrom(IClass subclassCandidate) {
+    public boolean isAssignableFrom(ReflectClass subclassCandidate) {
         if (subclassCandidate == this) {
         	return true;
         }
-        if (!(subclassCandidate instanceof DataClass)) {
+        if (!(subclassCandidate instanceof GenericClass)) {
         	return false;
         }
         return isAssignableFrom(subclassCandidate.getSuperclass());
     }
 
     public boolean isInstance(Object candidate) {
-        if (!(candidate instanceof DataObject)) {
+        if (!(candidate instanceof GenericObject)) {
         	return false;
         }
-        return isAssignableFrom(((DataObject)candidate).dataClass());
+        return isAssignableFrom(((GenericObject)candidate).dataClass());
     }
 
     public boolean isInterface() {
@@ -96,14 +96,14 @@ public class DataClass implements IClass {
     }
 
     public Object newInstance() {
-        return new DataObject(this);
+        return new GenericObject(this);
     }
 
     public boolean skipConstructor(boolean flag){
         return false;
     }
 
-    public void useConstructor(IConstructor constructor, Object[] params){
+    public void useConstructor(ReflectConstructor constructor, Object[] params){
         // ignore, we always create a generic object
     }
 

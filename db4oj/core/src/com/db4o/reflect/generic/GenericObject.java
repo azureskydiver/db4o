@@ -1,19 +1,19 @@
 /* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.reflect.dataobjects;
+package com.db4o.reflect.generic;
 
 
-class DataObject {
+class GenericObject {
 
-    private final DataClass _class;
+    private final GenericClass _class;
     final Object[] _fieldValues;
     
-    DataObject(DataClass dataClass) {
+    GenericObject(GenericClass dataClass) {
         _class = dataClass;
         _fieldValues = new Object[_class.getDeclaredFields().length];
     }
 
-    DataClass dataClass() {
+    GenericClass dataClass() {
         return _class;
     }
 

@@ -11,7 +11,7 @@ abstract class Array4 {
 
     public static int[] dimensions(YapStream a_stream, Object a_object) {
         int count = 0;
-        IClass claxx = a_stream.reflector().forObject(a_object);
+        ReflectClass claxx = a_stream.reflector().forObject(a_object);
         while (claxx.isArray()) {
             count++;
             claxx = claxx.getComponentType();
@@ -62,18 +62,18 @@ abstract class Array4 {
         return a_flatElement;
     }
 
-	public static final IClass getComponentType(IClass a_class) {
+	public static final ReflectClass getComponentType(ReflectClass a_class) {
         while (a_class.isArray()) {
             a_class = a_class.getComponentType();
         }
         return a_class;
     }
 
-    public static final boolean isNDimensional(IClass a_class) {
+    public static final boolean isNDimensional(ReflectClass a_class) {
         return a_class.getComponentType().isArray();
     }
     
-    public static IArray reflector(YapStream a_stream){
+    public static ReflectArray reflector(YapStream a_stream){
         return a_stream.reflector().array();
     }
 

@@ -4,7 +4,7 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.query.*;
-import com.db4o.reflect.IClass;
+import com.db4o.reflect.ReflectClass;
 
 /**
  * Represents an actual object in the database. Forms a tree structure,
@@ -331,7 +331,7 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
 
     }
     
-    IClass classReflector(){
+    ReflectClass classReflector(){
         readYapClass();
         if (i_yapClass == null) {
             return null;
@@ -402,7 +402,7 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
         i_root = (QCandidate)a_tree;
     }
     
-    private IClass memberClass(){
+    private ReflectClass memberClass(){
     	return getTransaction().reflector().forObject(i_member);
     }
 

@@ -105,7 +105,7 @@ class P2HashMapKeySet implements Set {
                 if(trans == null){
                     Db4o.throwRuntimeException(29);
                 }
-                IReflect reflector = trans.reflector();
+                Reflector reflector = trans.reflector();
                 a =
                     (Object[])reflector.array().newInstance(
                         reflector.forObject(a).getComponentType(),

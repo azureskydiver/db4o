@@ -39,13 +39,13 @@ class YapClassPrimitive extends YapClass{
         // do nothing
     }
 
-    public boolean canHold(IClass claxx) {
+    public boolean canHold(ReflectClass claxx) {
         // Do we need this at all???
         // Check if this method is ever called
         return i_handler.canHold(claxx);
     }
     
-    public IClass classReflector(){
+    public ReflectClass classReflector(){
     	return i_handler.classReflector();
     }
     
@@ -181,7 +181,7 @@ class YapClassPrimitive extends YapClass{
         return i_handler;
     }
     
-    public final IClass primitiveClassReflector(){
+    public final ReflectClass primitiveClassReflector(){
         return i_handler.primitiveClassReflector();
     }
 

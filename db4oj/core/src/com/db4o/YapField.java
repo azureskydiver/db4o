@@ -21,7 +21,7 @@ class YapField implements StoredField {
 
     private boolean          i_isPrimitive;
 
-    private IField           i_javaField;
+    private ReflectField           i_javaField;
 
     protected YapDataType    i_handler;
 
@@ -57,7 +57,7 @@ class YapField implements StoredField {
             stream, stream.reflector().forClass(a_translator.storedClass()));
     }
 
-    YapField(YapClass a_yapClass, IField a_field, YapDataType a_handler) {
+    YapField(YapClass a_yapClass, ReflectField a_field, YapDataType a_handler) {
         init(a_yapClass, a_field.getName(), 0);
         i_javaField = a_field;
         i_javaField.setAccessible();
@@ -151,7 +151,7 @@ class YapField implements StoredField {
         }
     }
 
-    boolean canHold(IClass claxx) {
+    boolean canHold(ReflectClass claxx) {
         // alive() is checked in QField caller
         if (claxx == null) {
             return !i_isPrimitive;
@@ -236,7 +236,7 @@ class YapField implements StoredField {
 
     }
 
-    void configure(IClass a_class) {
+    void configure(ReflectClass a_class) {
         i_isPrimitive = a_class.isPrimitive();
         i_isArray = a_class.isArray();
         if (i_isArray) {
@@ -425,7 +425,7 @@ class YapField implements StoredField {
         return i_yapClass;
     }
 
-    public IClass getStoredType() {
+    public ReflectClass getStoredType() {
         if (!Deploy.csharp) {
             if (i_isPrimitive) {
                 return i_handler.primitiveClassReflector();
@@ -566,7 +566,7 @@ class YapField implements StoredField {
             && ((a_config != null && (a_config.i_cascadeOnUpdate == 1)) || (i_config != null && (i_config.i_cascadeOnUpdate == 1)))) {
             int min = 1;
             if (i_yapClass.isCollection(a_object)) {
-            	IReflect reflector = i_yapClass.reflector();
+            	Reflector reflector = i_yapClass.reflector();
                 min = reflector.collectionUpdateDepth(reflector.forObject(a_object));
             }
             int updateDepth = a_bytes.getUpdateDepth();

@@ -10,7 +10,7 @@ import com.db4o.reflect.*;
  */
 public class QConClass extends QConObject{
 	
-	private transient IClass _claxx;
+	private transient ReflectClass _claxx;
 	private String _className;
 	private boolean i_equal;
 	
@@ -18,7 +18,7 @@ public class QConClass extends QConObject{
 		// C/S
 	}
 	
-	QConClass(Transaction a_trans, QCon a_parent, QField a_field, IClass claxx){
+	QConClass(Transaction a_trans, QCon a_parent, QField a_field, ReflectClass claxx){
 		super(a_trans, a_parent, a_field, null);
 		if(claxx != null){
 			i_yapClass = a_trans.i_stream.getYapClass(claxx, true);
@@ -31,7 +31,7 @@ public class QConClass extends QConObject{
 	
 	boolean evaluate(QCandidate a_candidate){
 		boolean res = true;
-		IClass claxx = a_candidate.classReflector();
+		ReflectClass claxx = a_candidate.classReflector();
 		if(claxx == null){
 			res = false;
 		}else{

@@ -198,7 +198,7 @@ public class Db4o {
 		}
 	}
 	
-	static IReflect reflector(){
+	static Reflector reflector(){
 		return i_config.reflector();
 	}
 	
