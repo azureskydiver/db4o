@@ -86,7 +86,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             }
         }
 
-        if (i_stream.detectSchemaChanges()) {
+        if (a_stream.detectSchemaChanges()) {
             Iterator4 m;
             boolean found;
             boolean dirty = isDirty();
@@ -98,20 +98,20 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             members.addAll(i_fields);
             if(generateVersionNumbers()) {
                 if(! hasVersionField()) {
-                    members.add(i_stream.i_handlers.i_indexes.i_fieldVersion);
+                    members.add(a_stream.i_handlers.i_indexes.i_fieldVersion);
                     dirty = true;
                 }
             }
             if(generateUUIDs()) {
                 if(! hasUUIDField()) {
-                    members.add(i_stream.i_handlers.i_indexes.i_fieldUUID);
+                    members.add(a_stream.i_handlers.i_indexes.i_fieldUUID);
                     dirty = true;
                 }
             }
-            IField[] fields = i_constructor.reflectorClass().getDeclaredFields();
+            IField[] fields = classReflector(a_stream).getDeclaredFields();
             for (int i = 0; i < fields.length; i++) {
                 if (storeField(fields[i])) {
-                    wrapper = i_stream.i_handlers.handlerForClass(i_stream, fields[i].getType());
+                    wrapper = a_stream.i_handlers.handlerForClass(a_stream, fields[i].getType());
                     if (wrapper == null) {
                         continue;
                     }
@@ -202,7 +202,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             return true;
         }
         if (i_constructor != null) {
-        	if(reflector().isCollection(i_constructor.reflectorClass())){
+        	if(reflector().isCollection(classReflector(i_stream))){
                 return true;
             }
             return i_constructor.javaClass().isAssignableFrom(a_class);
@@ -257,7 +257,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             depth = checkUpdateDepthUnspecified(a_bytes.getStream());
         }
         if (config != null && (config.i_cascadeOnDelete == 1 || config.i_cascadeOnUpdate == 1)) {
-            int depthBorder = Platform.collectionUpdateDepth(i_constructor.javaClass());
+            int depthBorder = reflector().collectionUpdateDepth(classReflector(a_bytes.getStream()));
             if (depth < depthBorder) {
                 depth = depthBorder;
             }
@@ -386,18 +386,20 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 
     void deleteEmbedded1(YapWriter a_bytes, int a_id) {
         if (a_bytes.cascadeDeletes() > 0) {
+        	
+        	YapStream stream = a_bytes.getStream();
             
             // short-term reference to prevent WeakReference-gc to hit
-            Object obj = a_bytes.getStream().getByID2(a_bytes.getTransaction(), a_id);
+            Object obj = stream.getByID2(a_bytes.getTransaction(), a_id);
 
             int cascade = a_bytes.cascadeDeletes() - 1;
             if (obj != null) {
                 if (isCollection(obj)) {
-                    cascade += Platform.collectionUpdateDepth(obj.getClass()) - 1;
+                    cascade += reflector().collectionUpdateDepth(reflector().forObject(obj)) - 1;
                 }
             }
 
-            YapObject yo = a_bytes.getStream().getYapObject(a_id);
+            YapObject yo = stream.getYapObject(a_id);
             if (yo != null) {
                 a_bytes.getStream().delete3(a_bytes.getTransaction(), yo, obj,cascade);
             }
@@ -411,7 +413,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 	            int preserveCascade = a_bytes.cascadeDeletes();
 	            if (reflector().isCollection(classReflector(i_stream))) {
 	                int newCascade =
-	                    preserveCascade + Platform.collectionUpdateDepth(classReflector(i_stream).getJavaClass()) - 3;
+	                    preserveCascade + reflector().collectionUpdateDepth(classReflector(i_stream)) - 3;
 	                if (newCascade < 1) {
 	                    newCascade = 1;
 	                }
@@ -689,7 +691,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         if (i_constructor == null) {
             return null;
         }
-        return i_constructor.reflectorClass();
+        return i_constructor.classReflector();
     }
     
 
@@ -724,13 +726,6 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         return null;
     }
 
-    public IClass getReflectorClass() {
-        if (i_constructor == null) {
-            return null;
-        }
-        return i_constructor.reflectorClass();
-    }
-    
     public StoredField[] getStoredFields(){
         synchronized(i_stream.i_lock){
 	        if(i_fields == null){
@@ -1643,7 +1638,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
                     stream.activate1(trans, sc, 4);
                     oldFields = sc.fields;
                 }
-                IField[] fields = i_constructor.reflectorClass().getDeclaredFields();
+                IField[] fields = classReflector(stream).getDeclaredFields();
 
                 Collection4 newFields = new Collection4();
 

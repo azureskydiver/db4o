@@ -48,4 +48,20 @@ public class DataObjectReflector implements IReflect {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.db4o.reflect.IReflect#registerCollectionUpdateDepth(java.lang.Class, int)
+	 */
+	public void registerCollectionUpdateDepth(Class clazz, int depth) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.db4o.reflect.IReflect#collectionUpdateDepth(com.db4o.reflect.IClass)
+	 */
+	public int collectionUpdateDepth(IClass claxx) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

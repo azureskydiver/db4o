@@ -16,6 +16,9 @@ public class CReflect implements IReflect{
 	
 	private final Collection4 _collectionClasses;
 	
+	private final Collection4 _collectionUpdateDepths;
+	
+	
 	public CReflect(ClassLoader classLoader){
 		if(classLoader == null){
 			throw new NullPointerException();
@@ -25,6 +28,7 @@ public class CReflect implements IReflect{
 		_byClass = new Hashtable4(1);
 		_byName = new Hashtable4(1);
 		_collectionClasses = new Collection4();
+		_collectionUpdateDepths = new Collection4();
 	}
 	
 	public IArray array(){
@@ -92,6 +96,11 @@ public class CReflect implements IReflect{
 		IClass claxx = forClass(clazz);
 		_collectionClasses.add(claxx);
 	}
+	
+	public void registerCollectionUpdateDepth(Class clazz, int depth) {
+		Object[] entry = new Object[]{forClass(clazz), new Integer(depth) };
+		_collectionUpdateDepths.add(entry);
+	}
 
 	static Class[] toNative(IClass[] claxx){
         Class[] clazz = null;
@@ -117,5 +126,17 @@ public class CReflect implements IReflect{
 			}
         }
 		return claxx;
+	}
+
+	public int collectionUpdateDepth(IClass candidate) {
+		Iterator4 i = _collectionUpdateDepths.iterator();
+		while(i.hasNext()){
+			Object[] entry = (Object[])i.next();
+			IClass claxx = (IClass) entry[0];
+			if(claxx.isAssignableFrom(candidate)){
+				return ((Integer)entry[1]).intValue();
+			}
+		}
+		return 2;
 	}
 }
