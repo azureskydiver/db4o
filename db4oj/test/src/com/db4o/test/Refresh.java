@@ -95,7 +95,7 @@ public class Refresh extends AllTests {
     
     private void commitAndWait(ObjectContainer oc){
         oc.commit();
-        Cool.sleepWithoutInterruption(100);
+        Cool.sleepIgnoringInterruption(100);
     }
 
     private Refresh getRoot(ObjectContainer oc) {

@@ -12,14 +12,4 @@ public class Cool {
    		}
 	}
 
-    public static void sleepWithoutInterruption(long millis) {
-		try {
-			Thread.sleep(millis);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			throw new IllegalStateException();
-		}
-        
-    }
-
 }
