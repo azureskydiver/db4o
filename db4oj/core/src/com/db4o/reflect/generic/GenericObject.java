@@ -2,7 +2,9 @@
 
 package com.db4o.reflect.generic;
 
-
+/**
+ * @exclude
+ */
 class GenericObject {
 
     private final GenericClass _class;

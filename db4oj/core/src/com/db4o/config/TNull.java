@@ -4,6 +4,9 @@ package com.db4o.config;
 
 import com.db4o.*;
 
+/**
+ * @exclude
+ */
 public class TNull implements ObjectTranslator
 {
 	public Object onStore(ObjectContainer con, Object object){

@@ -5,6 +5,9 @@ package com.db4o.config;
 import com.db4o.ObjectContainer;
 import java.io.*;
 
+/**
+ * @exclude
+ */
 public class TSerializable implements ObjectConstructor
 {
 	public Object onStore(ObjectContainer con, Object object){

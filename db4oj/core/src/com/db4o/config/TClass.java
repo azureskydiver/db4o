@@ -4,6 +4,9 @@ package com.db4o.config;
 
 import com.db4o.ObjectContainer;
 
+/**
+ * @exclude
+ */
 public class TClass implements ObjectConstructor
 {
 	public Object onStore(ObjectContainer con, Object object){
