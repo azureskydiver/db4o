@@ -561,7 +561,7 @@ public final class Platform {
         translate(config, UTIL + className, "TNull");
     }
 
-    static final YapTypeAbstract[] types() {
+    static final YapTypeAbstract[] types(YapStream stream) {
         return new YapTypeAbstract[0];
     }
 
