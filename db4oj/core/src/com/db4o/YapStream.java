@@ -336,24 +336,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     abstract long currentVersion();
     
     boolean createYapClass(YapClass a_yapClass, IClass a_class, YapClass a_superYapClass) {
-        if (i_handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class)) {
-            return false;
-        }
-        Config4Class config = i_config.configClass(a_class.getName());
-        a_yapClass.i_config = config;
-        a_yapClass.i_ancestor = a_superYapClass;
-        YapConstructor constr = null;
-        
-        if (config != null && config.instantiates()) {
-            constr = new YapConstructor(this, a_class, null, null, true, false);
-        } else {
-            constr = i_handlers.createConstructorStatic(this, a_yapClass, a_class);
-            if (constr == null) {
-                return false;
-            }
-        }
-        a_yapClass.init(this, a_superYapClass, constr);
-        return true;
+        return a_yapClass.init(this, a_superYapClass, a_class, false);
     }
 
 
@@ -1393,17 +1376,18 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             checkNeededUpdates();
             int id = yapObject.getID();
             if(canUpdate() && a_checkJustSet){
-                // FIXME: Adding simple types here is not necessary
-                //        since IDs are not used anyway. Check for
-                //        yapObject.i_yapClass instanceof YapClassPrimitive
-                //        or create method yapObject#isPrimitive if not exist
-	            if(i_justSet == null){
-	                i_justSet = new TreeInt(id);
-	            }else{
-	                i_justSet = i_justSet.add(new TreeInt(id));
-	            }
+                if(! yapObject.getYapClass().isPrimitive()){
+    	            if(i_justSet == null){
+    	                i_justSet = new TreeInt(id);
+    	            }else{
+    	                i_justSet = i_justSet.add(new TreeInt(id));
+    	            }
+                }
             }
             if(dontDelete){
+                
+                // TODO: do we want primitive types added here?
+                
                 a_trans.dontDelete(id, false);
             }
             return id;
@@ -1536,9 +1520,10 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     YapClass storedClass1(Object clazz) {
         try {
-            String className = i_config.classNameFor(clazz);
-            if (className != null) {
-                return getYapClass(reflector().forName(className), false);
+            
+            IClass claxx = i_config.reflectorFor(clazz);
+            if (claxx != null) {
+                return getYapClass(claxx, false);
             }
         } catch (Exception e) {
         }

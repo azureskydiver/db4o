@@ -192,7 +192,21 @@ public final class Platform {
         	hasNio();
         	hasCollections();
         	hasShutDownHook();
-
+            
+            if(config.i_classLoader == null){
+                // If we're in an Eclipse classloader, use that.  Otherwise,
+                // use the context class loader.
+                String classloaderName = Db4o.class.getClassLoader().getClass().getName();
+                
+                ClassLoader cl = jdk().getContextClassLoader();
+                
+                if (cl == null || classloaderName.indexOf("eclipse") >= 0) {
+                    cl = Db4o.class.getClassLoader();
+                }
+                
+                config.setClassLoader(cl);
+            }
+            
             config.objectClass("java.lang.StringBuffer").compare(new ObjectAttribute() {
                 public Object attribute(Object original) {
                     if (original instanceof StringBuffer) {
@@ -201,6 +215,7 @@ public final class Platform {
                     return original;
                 }
             });
+            
             translate(config, config.objectClass("java.lang.Class"), "TClass");
             translateCollection(config, "Hashtable", "THashtable", true);
             if (jdk().ver() >= 2) {
@@ -220,16 +235,6 @@ public final class Platform {
 					translateUtilNull(config, "WeakHashMap");
 					translate(config, UTIL + "TreeMap", "TTreeMap");
 				} catch (Exception e) {
-				}
-				if(config.i_classLoader == null){
-                    // If we're in an Eclipse classloader, use that.  Otherwise,
-                    // use the context class loader.
-                    String classloaderName = Db4o.class.getClassLoader().getClass().getName();
-                    if (classloaderName.indexOf("eclipse") >= 0) {
-                        config.setClassLoader(Db4o.class.getClassLoader());
-                    } else {
-                        config.setClassLoader(jdk().getContextClassLoader());
-                    }
 				}
             } else {
 				translateCollection(config, "Vector", "TVector", false);
@@ -325,6 +330,8 @@ public final class Platform {
     	return false;
     }
     
+    // FIXME: REFLECTOR Check on .NET, if we want to work with 
+    //                  IClass in this method.
     static final boolean isValueType(Class a_class){
     	return false;
     }
@@ -346,7 +353,7 @@ public final class Platform {
         	jdkWrapper = createJDKWrapper("1_2");
         }
         
-        if (methodIsAvailable("java.lang.Runtime","addShutdownHook",
+        if (jdk().methodIsAvailable("java.lang.Runtime","addShutdownHook",
                 new Class[] { Thread.class })){
         	jdkWrapper = createJDKWrapper("1_3");
         }
@@ -365,7 +372,10 @@ public final class Platform {
         return (JDK)createInstance("com.db4o.JDK_" + name);
     }
     
-
+    /**
+     * use for system classes only, since not ClassLoader
+     * or Reflector-aware
+     */
     private static final Object createInstance(String name) {
         try {
             Class clazz = Class.forName(name);
@@ -423,23 +433,10 @@ public final class Platform {
         // do nothing
     }
 
-    /**
-     * use for system classes only, since not ClassLoader
-     * or Reflector-aware
-     */
-    static final boolean methodIsAvailable(
-        String className,
-        String methodName,
-        Class[] params) {
-    	
-    	return jdk().methodIsAvailable(className, methodName, params);
-    	
-    }
-    
     static boolean callConstructor() {
         if (callConstructorCheck == YapConst.UNCHECKED) {
             
-            if(methodIsAvailable(
+            if(jdk().methodIsAvailable(
                 REFLECTIONFACTORY,
                 GETCONSTRUCTOR,
                 new Class[]{Class.class, Constructor.class}

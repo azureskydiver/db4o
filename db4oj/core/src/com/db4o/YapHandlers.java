@@ -6,6 +6,7 @@ import java.lang.reflect.*;
 
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.jdk.*;
 import com.db4o.reflect.jdk.CConstructor;
 import com.db4o.types.*;
 
@@ -58,25 +59,17 @@ class YapHandlers {
     byte[]                  i_encryptor;
     int                     i_lastEncryptorByte;
     
-    IClass ICLASS_CLASS;
     IClass ICLASS_COMPARE;
-    IClass ICLASS_DB4ODATABASE;
     IClass ICLASS_DB4OTYPE;
     IClass ICLASS_DB4OTYPEIMPL;
     IClass ICLASS_ENUM;
 	IClass ICLASS_INTERNAL;
-    IClass ICLASS_METACLASS;
-    IClass ICLASS_METAFIELD;
-	IClass ICLASS_METAINDEX;
     IClass ICLASS_OBJECT;
     IClass ICLASS_OBJECTCONTAINER;
     IClass ICLASS_PBOOTRECORD;
-    IClass ICLASS_REPLICATIONRECORD;
-	IClass ICLASS_STATICFIELD;
 	IClass ICLASS_STATICCLASS;
 	IClass ICLASS_STRING;
     IClass ICLASS_TRANSIENTCLASS;
-    
 
     YapHandlers(final YapStream a_stream) {
     	
@@ -169,63 +162,57 @@ class YapHandlers {
         return 0;
     }
 
-    final YapConstructor createConstructorStatic(final YapStream a_stream,
+    final boolean createConstructor(final YapStream a_stream,
         final YapClass a_yapClass,
-        final IClass a_class
+        final IClass claxx
          ) {
         
+        
         final IReflect reflector = a_stream.reflector();
-        IClass classReflector;
         
-        
-        classReflector = reflector.forName(a_class.getName());
-            
-        if (classReflector == null) {
-            if (a_stream.i_config.i_exceptionsOnNotStorable) {
-                throw new ObjectNotStorableException(a_class);
-            }
-            return null;
+        if (claxx == null) {
+            return false;
         }
-        if (classReflector.isAbstract() || classReflector.isInterface()) {
-            return new YapConstructor(a_stream, a_class, null, null, false, false);
+        
+        if (claxx.isAbstract() || claxx.isInterface()) {
+            return true;
         }
         
         if(! Deploy.csharp){
 	        if(! Platform.callConstructor()){
-	            if(! a_yapClass.callConstructor(a_stream)){
-		            Constructor constructor = Platform.jdk().serializableConstructor(a_class.getJavaClass());
-		            if(constructor != null){
-		                try{
-		                    Object o = constructor.newInstance(null);
-		                    if(o != null){
-		                        return new YapConstructor(a_stream, a_class, new CConstructor(reflector, constructor), null, true, true);
-		                    }
-		                }catch(Exception e){
-		                    
-		                }
-		            }
-	            }
+                if(reflector instanceof CReflect){
+    	            if(! a_yapClass.callConstructor(a_stream)){
+    		            Constructor constructor = Platform.jdk().serializableConstructor(claxx.getJavaClass());
+    		            if(constructor != null){
+    		                try{
+    		                    Object o = constructor.newInstance(null);
+    		                    if(o != null){
+                                    claxx.useConstructor(new CConstructor(reflector, constructor), null);
+                                    return true;
+    		                    }
+    		                }catch(Exception e){
+    		                    
+    		                }
+    		            }
+    	            } else{
+                        claxx.useConstructor(null, null);
+                    }
+                }
 	        }
         }
         
-        if (a_stream.i_config.i_testConstructors) {
-            Object o = classReflector.newInstance();
-            if (o != null) {
-                return new YapConstructor(a_stream, a_class, null, null, true, false);
-            }
-        } else {
-            return new YapConstructor(a_stream, a_class, null, null, true, false);
+        if (!a_stream.i_config.i_testConstructors) {
+            return true;
         }
         
-        //TODO: Refactor: Move all of the following logic to IClass and use IClass to create instances,
-        // rather than an IConstructor object. IConstructor interface can be deleted.
-        // IReflect.constructorCallsSupported() method can be deleted too.
-        // YapConstructor class can be deleted and IClass can be used instead.
+        if (claxx.newInstance() != null) {
+            return true;
+        }
+        
         if (reflector.constructorCallsSupported()) {
             try {
                 
-                IConstructor[] constructors = classReflector
-                    .getDeclaredConstructors();
+                IConstructor[] constructors = claxx.getDeclaredConstructors();
                 
                 Tree sortedConstructors = null;
                 
@@ -243,11 +230,11 @@ class YapHandlers {
                 }
                 
                 // call zero-arg constructors first
-                final YapConstructor[] foundConstructor=new YapConstructor[1];
+                final boolean[] foundConstructor={false};
                 if(sortedConstructors != null){
                     sortedConstructors.traverse(new Visitor4() {
                         public void visit(Object a_object) {
-                            if(foundConstructor[0]==null) {
+                            if(! foundConstructor[0]) {
 	                            IConstructor constructor = (IConstructor)((TreeIntObject)a_object).i_object;
 	                            try {
 	                                IClass[] pTypes = constructor.getParameterTypes();
@@ -263,8 +250,8 @@ class YapHandlers {
 	                                }
 	                                Object res = constructor.newInstance(parms);
 	                                if (res != null) {
-	                                    foundConstructor[0] = new YapConstructor(a_stream, a_class,
-	                                  constructor, parms, true, false);
+	                                    foundConstructor[0] = true;
+                                        claxx.useConstructor(constructor, parms);
 	                                }
 	                            } catch (Throwable t) {
 	                                if(Debug.atHome){
@@ -276,8 +263,8 @@ class YapHandlers {
                     });
                     
                 }
-                if(foundConstructor[0] != null){
-                    return foundConstructor[0];
+                if(foundConstructor[0]){
+                    return true;
                 }
                 
             } catch (Throwable t1) {
@@ -287,10 +274,7 @@ class YapHandlers {
 
             }
         }
-        if (a_stream.i_config.i_exceptionsOnNotStorable) {
-            throw new ObjectNotStorableException(a_class);
-        }
-        return null;
+        return false;
     }
     
 	final void decrypt(YapReader reader) {
@@ -362,23 +346,15 @@ class YapHandlers {
     }
     
     private void initClassReflectors(IReflect reflector){
-	    ICLASS_CLASS = reflector.forClass(YapConst.CLASS_CLASS);
 		ICLASS_COMPARE = reflector.forClass(YapConst.CLASS_COMPARE);
-		ICLASS_DB4ODATABASE = reflector.forClass(YapConst.CLASS_DB4ODATABASE);
 		ICLASS_DB4OTYPE = reflector.forClass(YapConst.CLASS_DB4OTYPE);
 		ICLASS_DB4OTYPEIMPL = reflector.forClass(YapConst.CLASS_DB4OTYPEIMPL);
 		ICLASS_ENUM = reflector.forClass(YapConst.CLASS_ENUM);
 		ICLASS_INTERNAL = reflector.forClass(YapConst.CLASS_INTERNAL);
-		ICLASS_METACLASS = reflector.forClass(YapConst.CLASS_METACLASS);
-		ICLASS_METAFIELD = reflector.forClass(YapConst.CLASS_METAFIELD);
-		ICLASS_METAINDEX = reflector.forClass(YapConst.CLASS_METAINDEX);
 		ICLASS_OBJECT = reflector.forClass(YapConst.CLASS_OBJECT);
 		ICLASS_OBJECTCONTAINER = reflector
 				.forClass(YapConst.CLASS_OBJECTCONTAINER);
 		ICLASS_PBOOTRECORD = reflector.forClass(YapConst.CLASS_PBOOTRECORD);
-		ICLASS_REPLICATIONRECORD = reflector
-				.forClass(YapConst.CLASS_REPLICATIONRECORD);
-		ICLASS_STATICFIELD = reflector.forClass(YapConst.CLASS_STATICFIELD);
 		ICLASS_STATICCLASS = reflector.forClass(YapConst.CLASS_STATICCLASS);
 		ICLASS_STRING = reflector.forClass(String.class);
 		ICLASS_TRANSIENTCLASS = reflector

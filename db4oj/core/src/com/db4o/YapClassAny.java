@@ -10,13 +10,8 @@ import com.db4o.reflect.*;
  */
 final class YapClassAny extends YapClass {
     
-    // FIXME: REFLECTOR As soon as we also have a class reflector in YapClass
-    //                  we will not need this one anymore.
-    private final IClass _classReflector;
-	
 	public YapClassAny(YapStream stream){
-		super(stream);
-        _classReflector = stream.i_handlers.ICLASS_OBJECT; 
+		super(stream, stream.i_handlers.ICLASS_OBJECT);
 	}
 
 	public boolean canHold(IClass claxx) {
@@ -59,10 +54,6 @@ final class YapClassAny extends YapClass {
 	public int getID() {
 		return 11;
 	}
-
-    public IClass classReflector(){
-        return _classReflector;
-    }
 
 	public boolean hasField(YapStream a_stream, String a_path) {
 		return a_stream.i_classCollection.fieldExists(a_path);

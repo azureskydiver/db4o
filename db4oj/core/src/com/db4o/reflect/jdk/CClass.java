@@ -13,6 +13,8 @@ public class CClass implements IClass{
 	
 	private final IReflect reflector;
 	private final Class clazz;
+    private IConstructor constructor;
+    private Object[] constructorParams;
 	
 	public CClass(IReflect reflector, Class clazz) {
 		this.reflector = reflector;
@@ -98,7 +100,10 @@ public class CClass implements IClass{
 	
 	public Object newInstance(){
 		try {
-			return clazz.newInstance();
+            if(constructor == null){
+                return clazz.newInstance();
+            }
+            return constructor.newInstance(constructorParams);
 		} catch (Throwable t) {
 		} 
 		return null;
@@ -111,5 +116,12 @@ public class CClass implements IClass{
 	public String toString(){
 		return "CClass: " + clazz.getName();
 	}
+    
+    public void useConstructor(IConstructor constructor, Object[] params){
+        this.constructor = constructor;
+        constructorParams = params;
+        
+    }
+
 
 }

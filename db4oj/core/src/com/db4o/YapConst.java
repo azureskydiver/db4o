@@ -108,12 +108,7 @@ final class YapConst
 	static final int MAXIMUM_ARRAY_ENTRIES = 7000000; // 7 Million 
 	static final int MAXIMUM_ARRAY_ENTRIES_PRIMITIVE = MAXIMUM_ARRAY_ENTRIES * 100; // 70 MB for byte arrays
 	
-	
-    //FIXME: REFLECTOR Remove unneccessary CLASS and ICLASS
-	
-	static Class CLASS_CLASS;
     static Class CLASS_COMPARE;
-	static Class CLASS_DB4ODATABASE;
     static Class CLASS_DB4OTYPE;
     static Class CLASS_DB4OTYPEIMPL;
     static Class CLASS_ENUM;
@@ -124,7 +119,7 @@ final class YapConst
     static Class CLASS_OBJECT;
     static Class CLASS_OBJECTCONTAINER;
     static Class CLASS_PBOOTRECORD;
-    static Class CLASS_REPLICATIONRECORD;
+    static Class CLASS_REPLICATIONRECORD; 
 	static Class CLASS_STATICFIELD;
 	static Class CLASS_STATICCLASS;
     static Class CLASS_TRANSIENTCLASS;
@@ -158,9 +153,7 @@ final class YapConst
 	
 	private static final Object init(){
         CLASS_OBJECT = new Object().getClass();
-        CLASS_CLASS = CLASS_OBJECT.getClass();
         CLASS_COMPARE = db4oClass("config.Compare");
-        CLASS_DB4ODATABASE = new Db4oDatabase().getClass();
         CLASS_DB4OTYPE = db4oClass("types.Db4oType"); 
         CLASS_DB4OTYPEIMPL = db4oClass("Db4oTypeImpl"); 
         CLASS_ENUM = classForName("java.lang.Enum");

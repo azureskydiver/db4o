@@ -17,8 +17,8 @@ class JDK_1_4 extends JDK_1_3 {
 	private Method factoryMethod;
 	
 	synchronized void lock(RandomAccessFile file) {
-		Object channel = Reflection4.invoke(file, "getChannel", null, null);
-		Object fl = Reflection4.invoke(channel, "tryLock", null, null); 
+		Object channel = invoke(file, "getChannel", null, null);
+		Object fl = invoke(channel, "tryLock", null, null); 
 		if(fl == null){
 			throw new DatabaseFileLockedException();
 		}
@@ -32,7 +32,7 @@ class JDK_1_4 extends JDK_1_3 {
 		if(fileLocks != null){
 			Object fl = fileLocks.get(file);
 			if(fl != null){
-			    Reflection4.invoke(fl, "release", null, null); 
+			    invoke(fl, "release", null, null); 
 				fileLocks.remove(file);
 			}
 		}
@@ -53,11 +53,11 @@ class JDK_1_4 extends JDK_1_3 {
 	}
 	
 	boolean initSerializableConstructor(){
-        reflectionFactory = Reflection4.invoke(Platform.REFLECTIONFACTORY, "getReflectionFactory", null,null, null);
+        reflectionFactory = invoke(Platform.REFLECTIONFACTORY, "getReflectionFactory", null,null, null);
         if(reflectionFactory == null){
             return false;
         }
-        factoryMethod = Reflection4.getMethod(Platform.REFLECTIONFACTORY, "newConstructorForSerialization", new Class[]{Class.class, Constructor.class});
+        factoryMethod = getMethod(Platform.REFLECTIONFACTORY, "newConstructorForSerialization", new Class[]{Class.class, Constructor.class});
         if(factoryMethod == null){
             return false;
         }

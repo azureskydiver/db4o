@@ -10,7 +10,7 @@ class YapClassPrimitive extends YapClass{
     final YapDataType i_handler;
 
     YapClassPrimitive(YapStream a_stream, YapDataType a_handler) {
-    	super(a_stream);
+    	super(a_stream, a_handler.classReflector());
         i_fields = YapField.EMPTY_ARRAY;
         i_handler = a_handler;
         i_objectLength = memberLength();
@@ -154,6 +154,10 @@ class YapClassPrimitive extends YapClass{
 
     public boolean isArray() {
         return i_id == YapHandlers.ANYARRAYID || i_id == YapHandlers.ANYARRAYNID;
+    }
+    
+    boolean isPrimitive(){
+        return true;
     }
     
 	boolean isStrongTyped(){

@@ -99,5 +99,10 @@ public class DataClass implements IClass {
     public Class getJavaClass() {
         return null;
     }
+    
+    public void useConstructor(IConstructor constructor, Object[] params){
+        // ignore, we always create a generic object
+    }
+
 
 }
