@@ -13,7 +13,13 @@ namespace com.db4o.test
 
         static string PATH = "./test/db4oVersions/";
 
-        static string[] VERSIONS = {"db4o_3.0.3", "db4o_4.0.005"};
+        static string[] VERSIONS = {
+            "db4o_3.0.3", 
+            "db4o_4.0.005",
+            "db4o_4.0.009",
+            "db4o_4.1.001",
+            "db4o_4.1.002"
+                                   };
 
         IList list;
         IDictionary map;
@@ -41,10 +47,13 @@ namespace com.db4o.test
 
             String shortName = GetType().FullName;
 
-            String fullyQualifiedTypeName = GetType().AssemblyQualifiedName;
-            int pos = fullyQualifiedTypeName.IndexOf(",");
-            pos = fullyQualifiedTypeName.IndexOf(",",pos +1);
-            fullyQualifiedTypeName = fullyQualifiedTypeName.Substring(0, pos);
+            String fullAssemblyName = GetType().Assembly.GetName().ToString();
+            String shortAssemblyName = fullAssemblyName;
+            int pos = fullAssemblyName.IndexOf(",");
+            if(pos > 0) {
+                shortAssemblyName = fullAssemblyName.Substring(0, pos);
+            }
+            String fullyQualifiedTypeName  = GetType().FullName + ", " + shortAssemblyName;
 
             if(Test.isClientServer()){
                 return;

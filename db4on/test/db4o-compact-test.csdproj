@@ -589,6 +589,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4o\test\UpdatingDb4oVersions.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4o\test\VMTermination.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

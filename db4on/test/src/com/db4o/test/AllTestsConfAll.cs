@@ -16,8 +16,8 @@ namespace com.db4o.test {
             typeof(BindFileSize),
             typeof(Book),
             typeof(Callbacks),
-			typeof(CascadeDeleteArray),
-			typeof(CascadeOnActivate),
+            typeof(CascadeDeleteArray),
+            typeof(CascadeOnActivate),
             typeof(CascadeOnDelete),
             typeof(CascadeOnUpdate),
             typeof(CascadeToArray),
@@ -30,8 +30,8 @@ namespace com.db4o.test {
             typeof(CollectionActivation),
             typeof(Cs),
             typeof(CsArrays),
-			typeof(CsCascadeDeleteToStructs),
-			typeof(CsCollections),
+            typeof(CsCascadeDeleteToStructs),
+            typeof(CsCollections),
             typeof(CsCollections),
             typeof(CsCustomTransientAttribute),
             typeof(CsEvaluationDelegate),
@@ -56,7 +56,7 @@ namespace com.db4o.test {
             typeof(OrClassConstraintInList),
             typeof(PersistStaticFieldValues),
             typeof(PrimitiveArrayFileSize),
-			typeof(PrimitivesInCollection),
+            typeof(PrimitivesInCollection),
             typeof(QueryDeleted),
             typeof(QueryNonExistant),
             typeof(Refresh),
@@ -77,6 +77,7 @@ namespace com.db4o.test {
             typeof(TwoClients),
             typeof(TypedArrayInObject),
             typeof(TypedDerivedArray),
+            typeof(UpdatingDb4oVersions)
         };
        
         /**

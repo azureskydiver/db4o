@@ -67,10 +67,12 @@ r1[0]         });
          qStr1.orderAscending();
          Object[] r1 = store();
          st.expectOrdered(q1, new Object[]{
-            r1[1],
+            r1[5],
+r1[1],
 r1[2],
 r1[6]         });
       }
+
       
       public void testDescendingContains() {
          Query q1 = st.query();

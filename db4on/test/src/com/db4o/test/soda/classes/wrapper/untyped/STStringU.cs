@@ -75,7 +75,7 @@ namespace com.db4o.test.soda.classes.wrapper.untyped {
             q1 = st.query();
             c1 = q1.constrain(new STStringU("od"));
             q1.descend("str").constraints().like();
-            st.expectNone(q1);
+            st.expectOne(q1, new STStringU("dod"));
         }
       
         public void testNotLike() {

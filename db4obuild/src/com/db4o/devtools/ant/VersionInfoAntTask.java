@@ -70,7 +70,7 @@ public class VersionInfoAntTask extends Task {
 	        file.delete();
 	        FileOutputStream fos = new FileOutputStream(file);
 	        PrintWriter pr = new PrintWriter(fos);
-	        pr.println("/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */");
+	        pr.println("/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */");
 	        pr.println();
 	        if(java){
 	            pr.println("package com.db4o;");
@@ -86,7 +86,7 @@ public class VersionInfoAntTask extends Task {
 		        pr.println("[assembly: AssemblyConfiguration(\"" + distributionNames[distribution] + "\")]");
 		        pr.println("[assembly: AssemblyCompany(\"db4objects Inc., San Mateo, CA, USA\")]");
 		        pr.println("[assembly: AssemblyProduct(\"db4o - database for objects\")]");
-		        pr.println("[assembly: AssemblyCopyright(\"db4o 2004\")]");
+		        pr.println("[assembly: AssemblyCopyright(\"db4o 2005\")]");
 		        pr.println("[assembly: AssemblyTrademark(\"\")]");
 		        pr.println("[assembly: AssemblyCulture(\"\")]	");
 		        pr.println("[assembly: AssemblyVersion(\"" + version +  "\")]");
