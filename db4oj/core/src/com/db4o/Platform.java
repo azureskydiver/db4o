@@ -219,7 +219,14 @@ public final class Platform {
 				} catch (Exception e) {
 				}
 				if(config.i_classLoader == null){
-				    config.setClassLoader(jdk().getContextClassLoader());
+                    // If we're in an Eclipse classloader, use that.  Otherwise,
+                    // use the context class loader.
+                    String classloaderName = Db4o.class.getClassLoader().getClass().getName();
+                    if (classloaderName.indexOf("eclipse") >= 0) {
+                        config.setClassLoader(Db4o.class.getClassLoader());
+                    } else {
+                        config.setClassLoader(jdk().getContextClassLoader());
+                    }
 				}
             } else {
 				translateCollection(config, "Vector", "TVector", false);
