@@ -19,7 +19,7 @@ package com.db4o.browser.model;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.browser.prefs.PreferencesCore;
+import com.db4o.browser.prefs.activation.ActivationPreferences;
 import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
 import com.swtworkbench.community.xswt.metalogger.Logger;
@@ -39,7 +39,7 @@ public class Db4oDatabase implements Database {
      * @see com.db4o.browser.model.Database#open(java.lang.String)
      */
     public void open(String path) {
-		Db4o.configure().activationDepth(PreferencesCore.getDefault().getInitialActivationDepth());
+		Db4o.configure().activationDepth(ActivationPreferences.getDefault().getInitialActivationDepth());
         if (!path.equals(currentPath)) {
             close();
             container = Db4o.openFile(path);
@@ -107,7 +107,7 @@ public class Db4oDatabase implements Database {
 	 * @see com.db4o.browser.model.Database#activate(java.lang.Object, int)
 	 */
 	public void activate(Object object) {
-		container.activate(object, PreferencesCore.getDefault().getSubsequentActivationDepth());
+		container.activate(object, ActivationPreferences.getDefault().getSubsequentActivationDepth());
 	}
     
 }
