@@ -7,6 +7,7 @@ using com.db4o;
 
 namespace com.db4o.config {
 
+	/// <exclude />
     public class TList : ObjectTranslator {
 
         public void onActivate(ObjectContainer objectContainer, object obj, object members){
