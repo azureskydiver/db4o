@@ -43,7 +43,7 @@ public class InstanceNode implements ITreeNode {
         LinkedList results = new LinkedList();
         Field[] fields = _instance.getClass().getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
-			results.add(new FieldNode(fields[i], _instance));
+            results.add(FieldNodeFactory.construct(fields[i], _instance));
 		}
 		return results;
 	}

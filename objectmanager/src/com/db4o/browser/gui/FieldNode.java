@@ -43,15 +43,7 @@ public class FieldNode implements ITreeNode {
 	 * @see com.db4o.browser.gui.ITreeNode#mayHaveChildren()
 	 */
 	public boolean mayHaveChildren() {
-        /*
-         * There are 4 use-cases here:
-         * 
-         * 0) The field is a primitive type: no children
-         * 1) A field is an object, in which case it may have fields
-         * 2) A field is a List: can use iterator()
-         * 3) A field is a Map: need to use keySet().iterator()
-         */
-		return false;
+		return true;
 	}
 
 	/* (non-Javadoc)
