@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace com.db4o {
 
-	/// <exlude />
+	/// <exclude />
     public class Compat {
 
         public static void addShutDownHook(EventHandler handler) {
@@ -58,6 +58,10 @@ namespace com.db4o {
 
         public static void notifyAll(object obj){
             Monitor.PulseAll(obj);
+        }
+
+        public static com.db4o.reflect.ReflectConstructor serializationConstructor(Type type){
+            return new com.db4o.reflect.net.SerializationConstructor(type);
         }
 
         public static string stackTrace() {

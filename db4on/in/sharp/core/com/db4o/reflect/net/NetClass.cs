@@ -1,7 +1,7 @@
 namespace com.db4o.reflect.net
 {
-	/// <summary>Reflection implementation for Class to map to JDK reflection.</summary>
-	/// <remarks>Reflection implementation for Class to map to JDK reflection.</remarks>
+	/// <summary>Reflection implementation for Class to map to .NET reflection.</summary>
+	/// <remarks>Reflection implementation for Class to map to .NET reflection.</remarks>
 	public class NetClass : com.db4o.reflect.ReflectClass
 	{
 		private readonly com.db4o.reflect.Reflector reflector;
@@ -92,8 +92,7 @@ namespace com.db4o.reflect.net
 			return reflector.forClass(clazz.getSuperclass());
 		}
 
-		public virtual bool isAbstract()
-		{
+		public virtual bool isAbstract(){
 			return j4o.lang.reflect.Modifier.isAbstract(clazz.getModifiers());
 		}
 
@@ -152,12 +151,11 @@ namespace com.db4o.reflect.net
             return _type;
         }
 
-        public virtual bool skipConstructor(bool flag)
-		{
-			if (flag)
-			{
-				j4o.lang.reflect.Constructor constructor = com.db4o.Platform.jdk().serializableConstructor
-					(clazz);
+        public virtual bool skipConstructor(bool flag){
+			if (flag){
+
+                ReflectConstructor constructor = Compat.serializationConstructor(getNetType());
+
 				if (constructor != null)
 				{
 					try
@@ -165,8 +163,7 @@ namespace com.db4o.reflect.net
 						object o = constructor.newInstance(null);
 						if (o != null)
 						{
-							useConstructor(new com.db4o.reflect.net.NetConstructor(reflector, constructor), null
-								);
+							useConstructor(constructor, null);
 							return true;
 						}
 					}

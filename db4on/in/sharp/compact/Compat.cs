@@ -61,6 +61,10 @@ namespace com.db4o
         public static void notifyAll(object obj){
         }
 
+        public static com.db4o.reflect.ReflectConstructor serializationConstructor(Type type){
+            return null;
+        }
+
         public static string stackTrace(){
             return "";
         }
