@@ -43,8 +43,7 @@ public class LayoutGenerator {
 		return result.toString();
 	}
 	
-	private static final String INVALID = "invalidTemplate.xswt";
-	private static final String errorTemplate = resourceFile(INVALID);
+	private static final String errorTemplate = resourceFile("invalidTemplate.xswt");
 	
 	private static final String FIELDS_TOKEN = "%%fields";
 	private static final String FIELDS_REGEX = "/" + FIELDS_TOKEN + "/";
@@ -54,10 +53,10 @@ public class LayoutGenerator {
 	
 	private static final Perl5Util perl = new Perl5Util();
 	
-	private static String substitute(String token, String value, String in) {
-		String perlCommand = "s/" + token + "/" + value + "/g";
-		value = perl.substitute(perlCommand, in);
-		return value;
+	private static String substitute(String token, String replaceWith, String in) {
+		String perlCommand = "s/" + token + "/" + replaceWith + "/g";
+		String result = perl.substitute(perlCommand, in);
+		return result;
 	}
 	
 	public static String layoutString(IGraphIterator input, String layoutTemplate) {
@@ -68,7 +67,6 @@ public class LayoutGenerator {
 		// If the template is invalid, return an Invalid Template part
 		if (parts.size() != 3) {
 			layoutTemplate = errorTemplate;
-			perl.substitute("s/%%stacktrace/Malformed layout template: missing " + FIELDS_TOKEN + " token/", layoutTemplate);
 			return layoutTemplate;
 		} else {
 			// Build the real layout
