@@ -6,8 +6,21 @@ package com.db4o.test;
 /**
  * 
  */
-public interface TestSuite {
+public abstract class TestSuite {
     
-    public Class[] tests();
+    public abstract Class[] tests();
+    
+    public static TestSuite suite(String name){
+        try{
+            Class clazz = Class.forName(name);
+            if(clazz != null){
+                TestSuite ts = (TestSuite)clazz.newInstance();
+                return ts;
+            }
+        }catch(Exception e){
+            
+        }
+        return null;
+    }
 
 }
