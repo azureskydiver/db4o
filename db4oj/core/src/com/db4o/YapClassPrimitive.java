@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.reflect.*;
+
 
 class YapClassPrimitive extends YapClass{
     
@@ -40,6 +42,14 @@ class YapClassPrimitive extends YapClass{
         // Do we need this at all???
         // Check if this method is ever called
         return i_handler.canHold(a_class);
+    }
+    
+    public IClass classReflector(YapStream stream){
+    	return i_handler.classReflector(stream);
+    }
+    
+    public IClass classReflector(){
+    	throw YapConst.virtualException();
     }
 
     void deleteEmbedded1(YapWriter a_bytes, int a_id) {
@@ -106,10 +116,6 @@ class YapClassPrimitive extends YapClass{
     
 	final ClassIndex getIndex() {
 		return null;
-	}
-	
-	public Class getJavaClass() {
-	    return i_handler.getJavaClass();
 	}
 	
 	boolean hasIndex() {

@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.reflect.*;
+
 
 interface YapDataType extends YapComparable
 {
@@ -19,10 +21,9 @@ interface YapDataType extends YapComparable
 	
 	int getID();
 	
-    // FIXME: REFLECTOR need to work with IClass here
-	Class getJavaClass();
-	
 	Class getPrimitiveJavaClass();
+	
+	IClass classReflector(YapStream stream);
 	
 	boolean equals(YapDataType a_dataType); // needed for YapField.equals
 	

@@ -689,7 +689,11 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         return null;
     }
     
-    public IClass reflectorClass(){
+    public IClass classReflector(YapStream stream){
+    	return classReflector();
+    }
+    
+    public IClass classReflector(){
         if (i_constructor == null) {
             return null;
         }
@@ -701,7 +705,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
         if (i_constructor == null) {
             return null;
         }
-        return reflectorClass().getJavaClass();
+        return classReflector().getJavaClass();
     }
 
     YapClass[] getMembersDependancies() {
@@ -1431,7 +1435,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
 		        // The logic further down checks the ancestor YapClass, whether
 	            // or not it is allowed, not to call constructors. The ancestor
 	            // YapClass may possibly have not been loaded yet.
-		        createConstructor(i_stream, reflectorClass(), i_name);
+		        createConstructor(i_stream, classReflector(), i_name);
 	        }
 	        
 	        checkDb4oType();

@@ -2,9 +2,14 @@
 
 package com.db4o;
 
+import com.db4o.reflect.*;
+
+/**
+ * Common base class for YapString and YapArray:
+ * There is one indirection in the database file to this.
+ */
 abstract class YapIndependantType implements YapDataType
 {
-    
     YapWriter i_lastIo;
 	
 	public final void copyValue(Object a_from, Object a_to){

@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.reflect.*;
+
 
 abstract class YapJavaClass implements YapDataType {
 
@@ -108,6 +110,11 @@ abstract class YapJavaClass implements YapDataType {
     
     public Object readIndexObject(YapWriter a_writer) throws CorruptionException{
         return read(a_writer);
+    }
+    
+    // FIXME: REFLECTOR This may be very slow and frequently used. Consider caching.
+    public IClass classReflector(YapStream stream){
+    	return stream.i_config.reflector().forClass(getJavaClass());
     }
 
     public boolean supportsIndex() {

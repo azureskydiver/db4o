@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.reflect.*;
+
 
 /**
  * YapString
@@ -38,6 +40,10 @@ final class YapString extends YapIndependantType {
             str2 += str1.charAt(i);
         }
         return str2;
+    }
+    
+    public IClass classReflector(YapStream stream){
+    	return stream.i_handlers.ICLASS_STRING;
     }
 
     public boolean equals(YapDataType a_dataType) {

@@ -76,12 +76,14 @@ class YapHandlers {
     IClass ICLASS_REPLICATIONRECORD;
 	IClass ICLASS_STATICFIELD;
 	IClass ICLASS_STATICCLASS;
+	IClass ICLASS_STRING;
     IClass ICLASS_TRANSIENTCLASS;
     
 
     YapHandlers(YapStream a_stream) {
     	
     	_masterStream = a_stream;
+    	a_stream.i_handlers = this;
     	
     	initClassReflectors(a_stream.i_config.reflector());
         
@@ -123,7 +125,7 @@ class YapHandlers {
         for (int i = 0; i < CLASSCOUNT; i++) {
             i_yapClasses[i] = new YapClassPrimitive(null, i_handlers[i]);
             i_yapClasses[i].i_id = i + 1; // note that we avoid 0 here
-            cacheClass(i_handlers[i].getJavaClass(), i_yapClasses[i]);
+            i_classByClass.put(i_handlers[i].classReflector(a_stream), i_yapClasses[i]);
             if (!Deploy.csharp) {
                 if (i_handlers[i].getPrimitiveJavaClass() != null) {
                 	cacheClass(i_handlers[i].getPrimitiveJavaClass(), i_yapClasses[i]);
@@ -138,12 +140,10 @@ class YapHandlers {
             if (i_yapClasses[idx].i_id > i_maxTypeID) {
                 i_maxTypeID = idx;
             }
-            i_classByClass.put(i_platformTypes[i].getJavaClass(),
-                i_yapClasses[idx]);
+            i_classByClass.put(i_platformTypes[i].classReflector(a_stream), i_yapClasses[idx]);
             if (!Deploy.csharp) {
                 if (i_platformTypes[i].getPrimitiveJavaClass() != null) {
-                    i_classByClass.put(i_platformTypes[i]
-                        .getPrimitiveJavaClass(), i_yapClasses[idx]);
+                	cacheClass(i_platformTypes[i].getPrimitiveJavaClass(), i_yapClasses[idx]);
                 }
             }
         }
@@ -391,6 +391,7 @@ class YapHandlers {
 				.forClass(YapConst.CLASS_REPLICATIONRECORD);
 		ICLASS_STATICFIELD = reflector.forClass(YapConst.CLASS_STATICFIELD);
 		ICLASS_STATICCLASS = reflector.forClass(YapConst.CLASS_STATICCLASS);
+		ICLASS_STRING = reflector.forClass(String.class);
 		ICLASS_TRANSIENTCLASS = reflector
 				.forClass(YapConst.CLASS_TRANSIENTCLASS);
     }
