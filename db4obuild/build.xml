@@ -223,6 +223,33 @@
 	<target name="compilentutorial" depends="compiledllnet">
 		<ant dir="${dir.n.tutorial.browser}" />
 	</target>
+	
+	<target name="ndoc" depends="compiledllnet" description="Build public .net docs">
+		<property name="db4o-namespace-summaries.xml" location="config/db4o-namespace-summaries.xml" />
+		<property name="dir.dist.ndoc" location="${dir.dist}/ndoc" />
+		<property name="ndoc.home" location="lib/ndoc" />
+					
+		<mkdir dir="${dir.dist.ndoc}" />
+					
+		<exec executable="${ndoc.home}/bin/net/1.1/NDocConsole.exe">
+			<arg value="${file.dll.net}" />
+			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
+			<arg value="-documenter=MSDN 2003" />
+			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
+			<arg value="-HtmlHelpName=db4o" />
+			<arg value="-Title=db4o" />
+			<arg value="-SkipNamespacesWithoutSummaries=True" />
+			<arg value="-SdkLinksOnWeb=False" />
+            <arg value="-AssemblyVersionInfo=AssemblyVersion" />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2005  db4objects Inc." />
+            <arg value="-CopyrightHref=http://www.db4o.com/" />
+			<arg value="-IncludeFavorites=True" />
+			<!--
+            <property name="Preliminary" value="True" />
+            <property name="CleanIntermediates" value="True" />
+            -->
+		</exec>
+	</target>
 
 	<target name="javadoc" depends="init" description="Build public javadocs">
 		<javadoc classpath="" access="public" windowtitle="db4o - database for objects - documentation" header="db4o ${db4o.version.dotted}" destdir="${dir.dist.doc.api}">
@@ -310,7 +337,7 @@
 		</zip>
 	</target>
 
-	<target name="zipnet" depends="init, compiledllnet, compilentutorial" description="Zip .NET distribution">
+	<target name="zipnet" depends="init, ndoc, compiledllnet, compilentutorial" description="Zip .NET distribution">
 		<mkdir dir="${dir.dist.net.src.core}" />
 		<copy todir="${dir.dist.net.src.core}">
 			<fileset dir="${dir.n.core}">
@@ -372,7 +399,7 @@
 		</copy>
 		<mkdir dir="${dir.dist.net.build}/doc/api" />
 		<copy todir="${dir.dist.net.build}/doc/api">
-			<fileset dir="${dir.config}" includes="db4o.chm" />
+			<fileset dir="${dir.dist}/ndoc" includes="db4o.chm" />
 		</copy>
 		<zip destfile="${file.dist.net}">
 			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
