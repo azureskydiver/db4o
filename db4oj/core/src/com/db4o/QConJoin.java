@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public class QConJoin extends QCon {
 
 	boolean i_and;

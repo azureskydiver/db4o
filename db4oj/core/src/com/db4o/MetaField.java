@@ -5,6 +5,8 @@ package com.db4o;
 /**
  * Field MetaData to be stored to the database file.
  * Don't obfuscate.
+ * 
+ * @exclude
  */
 public class MetaField implements Internal{
 	

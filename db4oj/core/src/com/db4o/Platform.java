@@ -12,6 +12,9 @@ import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.types.*;
 
+/**
+ * @exclude
+ */
 public final class Platform {
     
 

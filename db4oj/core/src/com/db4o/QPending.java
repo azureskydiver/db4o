@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 class QPending extends Tree{
 	
 	final QConJoin			i_join;

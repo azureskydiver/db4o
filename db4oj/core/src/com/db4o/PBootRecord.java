@@ -9,6 +9,8 @@ import com.db4o.ext.*;
 /**
  * database boot record. Responsible for ID generation, version generation and
  * holding a reference to the Db4oDatabase object of the ObjectContainer
+ * 
+ * @exclude
  */
 class PBootRecord extends P1Object implements Db4oTypeImpl{
 

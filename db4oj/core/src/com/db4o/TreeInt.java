@@ -4,6 +4,8 @@ package com.db4o;
 
 /**
  * Base class for balanced trees.
+ * 
+ * @exclude
  */
 public class TreeInt extends Tree implements ReadWriteable{
 	

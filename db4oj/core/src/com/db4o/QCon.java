@@ -4,7 +4,10 @@ package com.db4o;
 
 import com.db4o.query.*;
 
-/** Base class for all constraints.
+/**
+ * Base class for all constraints. 
+ * 
+ * @exclude
  */
 public abstract class QCon implements Constraint, Visitor4 {
 	

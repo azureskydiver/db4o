@@ -16,6 +16,7 @@ com/db4o/SerializedRoot.java
 com/db4o/StaticClass.java
 com/db4o/StaticField.java
 com/db4o/Tree*.java
+com/db4o/Tunning.java
 com/db4o/Unobfuscated.java
 com/db4o/User.java
 com/db4o/Visitor4.java

@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public abstract class Tree implements Cloneable, Readable
 {
 	Tree i_preceding;

@@ -4,6 +4,8 @@ package com.db4o;
 
 /**
  * public for .NET conversion reasons.
+ * 
+ * @exclude
  */
 public class YapReader {
 	

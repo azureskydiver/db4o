@@ -6,6 +6,8 @@ package com.db4o;
  * Holds the tree of QCandidate objects and the list of QContraints during query evaluation.
  * The query work (adding and removing nodes) happens here.
  * Candidates during query evaluation. QCandidate objects are stored in i_root
+ * 
+ * @exclude
  */
 public final class QCandidates implements Visitor4 {
 

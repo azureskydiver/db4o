@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public class QENot extends QE{
 	
 	QE i_evaluator;

@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public class StaticClass implements Internal{
     public String name;
     public StaticField[] fields;

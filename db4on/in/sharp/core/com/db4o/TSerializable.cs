@@ -15,10 +15,11 @@ namespace com.db4o
     /// translator for types that are marked with the Serializable attribute.
     /// The Serializable translator is provided to allow persisting objects that
     /// do not supply a convenient constructor. The use of this translator is
-    /// recommende only if:<br>
-    /// - the persistent type will never be refactored<br>
-    /// - querying for type members is not necessary<br>
+    /// recommended only if:<br />
+    /// - the persistent type will never be refactored<br />
+    /// - querying for type members is not necessary<br />
     /// </summary>
+    /// <exclude />
     public class TSerializable : ObjectConstructor {
 
         public Object onStore(ObjectContainer objectContainer, Object obj){

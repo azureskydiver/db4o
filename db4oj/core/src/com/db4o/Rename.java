@@ -5,6 +5,8 @@ package com.db4o;
 /**
  * Renaming actions are stored to the database file to make 
  * sure that they are only performed once.
+ * 
+ * @exclude
  */
 public final class Rename implements Internal
 {

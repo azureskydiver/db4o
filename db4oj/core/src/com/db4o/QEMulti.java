@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public class QEMulti extends QE{
 	
 	Collection4 i_evaluators = new Collection4();

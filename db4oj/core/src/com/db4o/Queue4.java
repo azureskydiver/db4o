@@ -5,6 +5,8 @@ package com.db4o;
 /**
  * Using the CollectionElement the other way around:
  * CollectionElement.i_next points to the previous element
+ * 
+ * @exclude
  */
 class Queue4 {
 	private List4 i_first;

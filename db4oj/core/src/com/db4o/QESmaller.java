@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 public class QESmaller extends QEAbstract
 {
 	boolean evaluate(QConObject a_constraint, QCandidate a_candidate, Object a_value){

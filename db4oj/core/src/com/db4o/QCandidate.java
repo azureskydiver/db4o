@@ -8,7 +8,9 @@ import com.db4o.query.*;
 /**
  * Represents an actual object in the database. Forms a tree structure,
  * indexed by id. Can have dependents that are doNotInclude'd in the
- * query result when this is doNotInclude'd. 
+ * query result when this is doNotInclude'd.
+ * 
+ * @exclude
  */
 class QCandidate extends TreeInt implements Candidate, Orderable {
 

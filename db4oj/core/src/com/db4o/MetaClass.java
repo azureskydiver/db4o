@@ -5,6 +5,8 @@ package com.db4o;
 /**
  * Class metadata to be stored to the database file
  * Don't obfuscate.
+ * 
+ * @exclude
  */
 public class MetaClass implements Internal{
 	

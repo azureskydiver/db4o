@@ -4,6 +4,9 @@ package com.db4o;
 
 import com.db4o.query.*;
 
+/**
+ * @exclude
+ */
 public class QConClass extends QConObject{
 	
 	private Class i_class;

@@ -4,6 +4,9 @@ package com.db4o;
 
 import com.db4o.ext.*;
 
+/**
+ * @exclude
+ */
 class QResult extends IntArrayList implements ObjectSet, ExtObjectSet, Visitor4 {
 	Tree i_candidates;
 	boolean i_checkDuplicates;

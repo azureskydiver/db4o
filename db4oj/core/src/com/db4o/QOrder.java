@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+/**
+ * @exclude
+ */
 class QOrder extends Tree{
 	
 	final QConObject i_constraint;

@@ -4,6 +4,8 @@ package com.db4o;
 
 /**
  * Fast linked list for all usecases.
+ * 
+ * @exclude
  */
 public class Collection4 implements DeepClone {
 
