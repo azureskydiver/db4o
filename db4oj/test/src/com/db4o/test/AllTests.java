@@ -20,15 +20,14 @@ import com.db4o.config.*;
 public class AllTests extends AllTestsConfAll implements Runnable {
 
     public static void main(String[] args) {
+        
         Configuration conf = Db4o.configure();
 
         conf.messageLevel(-1);
-        conf.lockDatabaseFile(false);
-        
 //        conf.generateUUIDs(Integer.MAX_VALUE);
 //        conf.generateVersionNumbers(Integer.MAX_VALUE);
         
-//        conf.blockSize(8);
+//
 //        conf.automaticShutDown(false);
 //        conf.lockDatabaseFile(false);
 //        conf.singleThreadedClient(true);
