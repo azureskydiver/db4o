@@ -1,19 +1,4 @@
-/* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public
-License along with this program; if not, write to the Free
-Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA  02111-1307, USA. */
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using com.db4o;
@@ -46,13 +31,15 @@ namespace com.db4o.test {
                 client1.set(a_1_2);
                 client1.set(a_1_3);
                 ensureAtomCount(client2,null, 0);
-                client1.commit();
+				
+				commitSync(client1, client2);
+				
                 ensureAtomCount(client2,null, 3);
                 Atom a_2_1 = (Atom)client2.get(new Atom("One")).next();
                 a_1_1.child = new Atom("OneChild");
                 client1.set(a_1_1);
                 ensureAtomCount(client2,null, 3);
-                client1.commit();
+                commitSync(client1, client2);
                 ensureAtomCount(client2,null, 4);
                 client2.deactivate(a_2_1, int.MaxValue);
                 client2.activate(a_2_1, int.MaxValue);
@@ -67,7 +54,7 @@ namespace com.db4o.test {
             
                 ensureAtomCount(client1, "Zulu", 0);
             
-                client2.commit();
+                commitSync(client2, client1);
             
                 ensureAtomCount(client1, "Zulu", 1);
 
@@ -93,11 +80,8 @@ namespace com.db4o.test {
                 Test.ensure(a_2_1.child.name.Equals("OneChild"));
                 ensureAtomCount(client2, "Bozo", 0);
             
-                client1.setSemaphore("sem", 0);
-                client1.commit();
-                client1.releaseSemaphore("sem");
-            
-                client2.setSemaphore("sem", 5000);
+				commitSync(client1, client2);
+				
                 client2.refresh(a_2_1, int.MaxValue);
                 Test.ensure(a_2_1.name.Equals("Bozo"));
                 Test.ensure(a_2_1.child.name.Equals("BozoChild"));
@@ -105,9 +89,17 @@ namespace com.db4o.test {
                 ensureAtomCount(client2, "Cue", 1);
                 ensureAtomCount(client2, "BozoChild", 1);
             
-                client2.close();        
+                client2.close();
             }
         }
+
+		private void commitSync(ExtObjectContainer client1, ExtObjectContainer client2) {
+			client1.setSemaphore("sem", 0);
+			client1.commit();
+			client1.releaseSemaphore("sem");
+			Test.ensure(client2.setSemaphore("sem", 5000));
+			client2.releaseSemaphore("sem");
+		}
 	
         private void ensureAtomCount(ObjectContainer con, String name, int count){
 		

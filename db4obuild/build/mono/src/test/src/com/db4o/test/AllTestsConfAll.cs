@@ -79,7 +79,7 @@ namespace com.db4o.test {
             typeof(PrimitivesInCollection),
             typeof(QueryDeleted),
             typeof(QueryNonExistant),
-            //typeof(Refresh),
+            typeof(Refresh),
             typeof(Rename),
             typeof(SelectDistinct),
             typeof(ServerRevokeAccess),
@@ -94,7 +94,7 @@ namespace com.db4o.test {
             typeof(StringInLists),
             typeof(SwitchingFilesFromClient),
             typeof(TestHashTable),
-            //typeof(TwoClients),
+            typeof(TwoClients),
             typeof(TypedArrayInObject),
             typeof(TypedDerivedArray),
             typeof(UpdatingDb4oVersions)
@@ -113,7 +113,7 @@ namespace com.db4o.test {
         /**
           * run the tests stand-alone 
           */
-        internal bool SOLO = true;
+        internal bool SOLO = false;
       
         /**
           * run the tests in client/server mode 

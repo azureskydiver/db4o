@@ -67,7 +67,7 @@ namespace com.db4o.test {
                 oc2.refresh(r12, int.MaxValue);
                 Test.ensure(r12.child.name.Equals("o2"));
 
-                oc1.commit();
+                Test.commitSync(oc1, oc2);
 
                 oc2.refresh(r12, int.MaxValue);
                 Test.ensure(r12.child.name.Equals("n2"));
@@ -76,14 +76,14 @@ namespace com.db4o.test {
 
                 r11.child.child.child = null;
                 oc1.set(r11.child.child);
-                oc1.commit();
+                Test.commitSync(oc1, oc2);
 
                 oc2.refresh(r12, int.MaxValue);
                 Test.ensure(r12.child.child.child == null);
 
                 r11.child.child = new Refresh("nn2", null);
                 oc1.set(r11.child);
-                oc1.commit();
+                Test.commitSync(oc1, oc2);
 
                 oc2.refresh(r12, int.MaxValue);
                 Test.ensure(r12.child.child != r32);

@@ -31,13 +31,15 @@ namespace com.db4o.test {
                 client1.set(a_1_2);
                 client1.set(a_1_3);
                 ensureAtomCount(client2,null, 0);
-                client1.commit();
+				
+				Test.commitSync(client1, client2);
+				
                 ensureAtomCount(client2,null, 3);
                 Atom a_2_1 = (Atom)client2.get(new Atom("One")).next();
                 a_1_1.child = new Atom("OneChild");
                 client1.set(a_1_1);
                 ensureAtomCount(client2,null, 3);
-                client1.commit();
+                Test.commitSync(client1, client2);
                 ensureAtomCount(client2,null, 4);
                 client2.deactivate(a_2_1, int.MaxValue);
                 client2.activate(a_2_1, int.MaxValue);
@@ -52,7 +54,7 @@ namespace com.db4o.test {
             
                 ensureAtomCount(client1, "Zulu", 0);
             
-                client2.commit();
+                Test.commitSync(client2, client1);
             
                 ensureAtomCount(client1, "Zulu", 1);
 
@@ -78,11 +80,8 @@ namespace com.db4o.test {
                 Test.ensure(a_2_1.child.name.Equals("OneChild"));
                 ensureAtomCount(client2, "Bozo", 0);
             
-                client1.setSemaphore("sem", 0);
-                client1.commit();
-                client1.releaseSemaphore("sem");
-            
-                client2.setSemaphore("sem", 5000);
+				Test.commitSync(client1, client2);
+				
                 client2.refresh(a_2_1, int.MaxValue);
                 Test.ensure(a_2_1.name.Equals("Bozo"));
                 Test.ensure(a_2_1.child.name.Equals("BozoChild"));
@@ -90,25 +89,21 @@ namespace com.db4o.test {
                 ensureAtomCount(client2, "Cue", 1);
                 ensureAtomCount(client2, "BozoChild", 1);
             
-                client2.close();        
+                client2.close();
             }
         }
 	
         private void ensureAtomCount(ObjectContainer con, String name, int count){
 		
-            // try five times
-            // commit timing might cause delay to see result
-            for (int i = 0; i < 5; i++) {
-                Query q = con.query();
-                q.constrain(typeof(Atom));
-                if(name != null){
-                    q.descend("name").constrain(name);
-                }
-                if(q.execute().size() == count){
-                    Test.assertionCount ++;
-                    return;
-                }
-            }
+			Query q = con.query();
+			q.constrain(typeof(Atom));
+			if(name != null){
+				q.descend("name").constrain(name);
+			}
+			if(q.execute().size() == count){
+				Test.assertionCount ++;
+				return;
+			}
             Test.error();
         }
     }
