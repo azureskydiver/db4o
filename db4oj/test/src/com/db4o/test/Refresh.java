@@ -4,7 +4,6 @@ package com.db4o.test;
 
 import com.db4o.*;
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.foundation.Cool;
 import com.db4o.query.Query;
 
 public class Refresh extends AllTests {
@@ -66,7 +65,7 @@ public class Refresh extends AllTests {
             oc2.refresh(r12, Integer.MAX_VALUE);
             Test.ensure(r12.child.name.equals("o2"));
 
-            commitAndWait(oc1);
+            Test.commitSync(oc1,oc2);
 
             oc2.refresh(r12, Integer.MAX_VALUE);
             Test.ensure(r12.child.name.equals("n2"));
@@ -75,14 +74,14 @@ public class Refresh extends AllTests {
 
             r11.child.child.child = null;
             oc1.set(r11.child.child);
-            commitAndWait(oc1);
+            Test.commitSync(oc1,oc2);
 
             oc2.refresh(r12, Integer.MAX_VALUE);
             Test.ensure(r12.child.child.child == null);
 
             r11.child.child = new Refresh("nn2", null);
             oc1.set(r11.child);
-            commitAndWait(oc1);
+            Test.commitSync(oc1,oc2);
 
             oc2.refresh(r12, Integer.MAX_VALUE);
             Test.ensure(r12.child.child != r32);
@@ -93,9 +92,7 @@ public class Refresh extends AllTests {
 
     }
     
-    private void commitAndWait(ObjectContainer oc){
-        oc.commit();
-        Cool.sleepIgnoringInterruption(100);
+    private void commitAndWait(ObjectContainer client1, ObjectContainer client2){
     }
 
     private Refresh getRoot(ObjectContainer oc) {

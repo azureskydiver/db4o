@@ -58,6 +58,15 @@ namespace com.db4o.test {
         public static void commit() {
             oc.commit();
         }
+		
+		public static void commitSync(ExtObjectContainer client1, ExtObjectContainer client2) {
+			client1.setSemaphore("sem", 0);
+			client1.commit();
+			client1.releaseSemaphore("sem");
+			Test.ensure(client2.setSemaphore("sem", 5000));
+			client2.releaseSemaphore("sem");
+		}
+		
 
         public static ObjectServer currentServer(){
             if(clientServer && runServer){

@@ -31,13 +31,13 @@ public class TwoClients extends AllTestsConfAll{
             client1.set(a_1_2);
             client1.set(a_1_3);
             ensureAtomCount(client2,null, 0);
-            client1.commit();
+            Test.commitSync(client1, client2);
             ensureAtomCount(client2,null, 3);
             Atom a_2_1 = (Atom)client2.get(new Atom("One")).next();
             a_1_1.child = new Atom("OneChild");
             client1.set(a_1_1);
             ensureAtomCount(client2,null, 3);
-            client1.commit();
+            Test.commitSync(client1, client2);
             ensureAtomCount(client2,null, 4);
             client2.deactivate(a_2_1, Integer.MAX_VALUE);
             client2.activate(a_2_1, Integer.MAX_VALUE);
@@ -52,7 +52,7 @@ public class TwoClients extends AllTestsConfAll{
             
             ensureAtomCount(client1, "Zulu", 0);
             
-            client2.commit();
+            Test.commitSync(client2, client1);
             
             ensureAtomCount(client1, "Zulu", 1);
 
@@ -78,11 +78,8 @@ public class TwoClients extends AllTestsConfAll{
             Test.ensure(a_2_1.child.name.equals("OneChild"));
             ensureAtomCount(client2, "Bozo", 0);
             
-            client1.setSemaphore("sem", 0);
-            client1.commit();
-            client1.releaseSemaphore("sem");
-            
-            client2.setSemaphore("sem", 5000);
+            Test.commitSync(client1, client2);
+			
             client2.refresh(a_2_1, Integer.MAX_VALUE);
             Test.ensure(a_2_1.name.equals("Bozo"));
             Test.ensure(a_2_1.child.name.equals("BozoChild"));
@@ -93,7 +90,7 @@ public class TwoClients extends AllTestsConfAll{
             client2.close();
 		}
 	}
-	
+
 	private void ensureAtomCount(ObjectContainer con, String name, int count){
 		
 		// try five times

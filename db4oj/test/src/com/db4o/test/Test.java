@@ -256,4 +256,12 @@ public class Test extends AllTests {
         Statistics.main(new String[] { FILE_SOLO });
     }
 
+	public static void commitSync(ExtObjectContainer client1, ExtObjectContainer client2) {
+		client1.setSemaphore("sem", 0);
+		client1.commit();
+		client1.releaseSemaphore("sem");
+		ensure(client2.setSemaphore("sem", 5000));
+		client2.releaseSemaphore("sem");
+	}
+
 }

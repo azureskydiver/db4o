@@ -3,5 +3,5 @@
 package com.db4o;
 
 class Db4oVersion {
-    static String name="4.4.900";
+    static String name="4.4.001";
 }
