@@ -23,7 +23,7 @@ public class DataObjectReflector implements IReflect {
     }
 
     public boolean constructorCallsSupported() {
-        return _delegate.constructorCallsSupported();
+        return false;
     }
 
     public IClass forClass(Class clazz) {
