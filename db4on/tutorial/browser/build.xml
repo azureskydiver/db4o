@@ -4,7 +4,7 @@
 	<property file="../../../db4obuild/machine.properties" />
 	<property file="../../../db4obuild/ant.properties" />
 	
-	<property name="dir.build" location="bin" />
+	<property name="dir.browser.build" location="${dir.n.tutorial.browser}/bin" />
 	<property name="dir.out" location="${dir.j.tutorial.out.net}" />	
 	
 	
@@ -18,7 +18,7 @@
 	
 	<target name="update-doc" depends="build">
 		<copy todir="${dir.out}">
-			<fileset dir="${dir.build}">
+			<fileset dir="${dir.browser.build}">
 				<include name="bin/*.dll" />
 				<include name="${exe.name}" />
 				<include name="${exe.name}.config" />
@@ -29,7 +29,7 @@
 	<target name="build" depends="init">
 		
 		<csc targetType="winexe"
-			destFile="${dir.build}/${exe.name}"
+			destFile="${dir.browser.build}/${exe.name}"
 			win32icon="src/resources/db4o.ico">			
 			
 			<resource
@@ -42,7 +42,7 @@
 				<include name="**/*.cs" />
 			</src>
 			
-			<reference dir="${dir.build}/bin">
+			<reference dir="${dir.browser.build}">
 				<include name="db4o-samples.dll" />
 				<include name="WeifenLuo.WinFormsUI.dll" />
 				<include name="AxSHDocVw.dll" />
@@ -51,14 +51,14 @@
 			</reference>			
 		</csc>
 		
-		<copy tofile="${dir.build}/${exe.name}.config" file="src/app.config" />
+		<copy tofile="${dir.browser.build}/${exe.name}.config" file="src/app.config" />
 	</target>
 
 	<target name="init" depends="build-tutorial">
-		<mkdir dir="${dir.build}/bin" />
-		<copy todir="${dir.build}/bin" file="${db4o.dll}" />
-		<copy todir="${dir.build}/bin" file="${dir.n.tutorial}/bin/db4o-samples.dll" />
-		<copy todir="${dir.build}/bin">
+		<mkdir dir="${dir.browser.build}" />
+		<copy todir="${dir.browser.build}" file="${db4o.dll}" />
+		<copy todir="${dir.browser.build}" file="${dir.n.tutorial}/bin/db4o-samples.dll" />
+		<copy todir="${dir.browser.build}">
 			<fileset dir="lib">
 				<include name="*.dll" />
 			</fileset>
@@ -70,7 +70,7 @@
 	</target>
 	
 	<target name="clean">
-		<delete dir="${dir.build}" />
+		<delete dir="${dir.browser.build}" />
 		<ant dir="${dir.n.tutorial}" target="clean" />
 	</target>
 
