@@ -110,6 +110,15 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
                 i_translator = (ObjectTranslator) i_config.reflector().forName(
                     i_translatorName).newInstance();
             } catch (Throwable t) {
+                if(! Deploy.csharp){
+                    try{
+                        i_translator = (ObjectTranslator) Class.forName(i_translatorName).newInstance();
+                        if(i_translator != null){
+                            return i_translator;
+                        }
+                    }catch(Throwable th){
+                    }
+                }
                 Db4o.logErr(i_config, 48, i_translatorName, null);
                 i_translatorName = null;
             }
