@@ -1121,7 +1121,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         i_classCollection.read(i_systemTrans);
     }
     
-    Reflector reflector(){
+    public Reflector reflector(){
         return i_config.reflector();
     }
 
