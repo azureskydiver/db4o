@@ -15,9 +15,9 @@ public final class ExtDb4o extends Db4o {
 	 * to other media or other databases.<br><br>Be aware of the danger of running
 	 * into OutOfMemory problems or complete loss of all data, in case of hardware
 	 * or JVM failures.<br><br>
-     * @param memoryFile a <a href="MemoryFile.html"><code>MemoryFile</code></a> 
+     * @param memoryFile a {@link MemoryFile MemoryFile} 
      * to store the raw byte data.
-	 * @return an open <a href="../ObjectContainer.html"><code>ObjectContainer</code></a>
+	 * @return an open {@link com.db4o.ObjectContainer ObjectContainer}
      * @see MemoryFile
 	 */
 	public static final ObjectContainer openMemoryFile(MemoryFile memoryFile) {

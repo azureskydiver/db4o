@@ -24,7 +24,7 @@ public interface ObjectTranslator {
      * @param container the ObjectContainer used
      * @param applicationObject the Object to be translated
      * @return return the object to store.<br>It needs to be of the class
-	 * <a href="#storedClass()"><code>storedClass()</code></a>.
+	 * {@link #storedClass storedClass()}.
      */
     public Object onStore(ObjectContainer container, Object applicationObject);
 
@@ -39,8 +39,7 @@ public interface ObjectTranslator {
     /**
 	 * return the Class you are converting to.
      * @return the Class of the object you are returning with the method
-	 * <a href="#onStore(com.db4o.ObjectContainer, java.lang.Object)">
-	 * <code>onStore()</code></a>
+	 * {@link #onStore onStore()}
 	 */
 	 public Class storedClass ();
 }

@@ -4,11 +4,10 @@ package com.db4o.ext;
 
 /**
  * extended client functionality for the
- * <a href="ExtObjectContainer.html"><code>ExtObjectContainer</code></a> interface.
+ * {@link ExtObjectContainer ExtObjectContainer} interface.
  * <br><br>Both 
- * <a href="../Db4o.html#openClient(java.net.InetAddress, int, java.lang.String, java.lang.String)">
- * <code>Db4o.openClient()</code></a> methods always return an <code>ExtClient</code>
- * object so a cast is possible.<br><br>
+ * {@link com.db4o.Db4o#openClient Db4o.openClient()} methods always
+ * return an <code>ExtClient</code> object so a cast is possible.<br><br>
  * The ObjectContainer functionality is split into multiple interfaces to allow newcomers to
  * focus on the essential methods.
  */
