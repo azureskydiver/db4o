@@ -2,8 +2,8 @@ TODO:
 
 - Generic reflector
 - Activation depth scalability
-- Disable forward/back buttons at appropriate times
-- Test with J9 VM
+- Disable forward/back buttons at appropriate times **DONE**
+- Test with J9 VM **????**
 
 - Make sure browsing scales to large numbers of nodes
 - Substring search: just search displayed strings; else do a query by form QBE

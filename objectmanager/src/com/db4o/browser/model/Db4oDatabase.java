@@ -40,6 +40,7 @@ public class Db4oDatabase implements Database {
      * @param path The os-dependent path and file name for the YAP file.
      */
     public void open(String path) {
+		Db4o.configure().activationDepth(5);
         if (!path.equals(currentPath)) {
             close();
             container = Db4o.openFile(path);
@@ -94,6 +95,13 @@ public class Db4oDatabase implements Database {
 	 */
 	public long getId(Object object) {
 		return container.ext().getID(object);
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.Database#activate(java.lang.Object, int)
+	 */
+	public void activate(Object object,int depth) {
+		container.activate(object, depth);
 	}
     
 }

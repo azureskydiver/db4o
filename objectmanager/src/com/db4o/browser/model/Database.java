@@ -25,4 +25,6 @@ public interface Database {
 	public abstract ObjectSet instances(String clazz);
 	
 	public abstract long getId(Object object);
+	
+	public abstract void activate(Object object, int depth);
 }
