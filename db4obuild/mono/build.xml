@@ -45,8 +45,8 @@
 		<copy todir="${dir.mono.zip}/${db4o.name.short}" filtering="true">
 			<fileset dir="${dir.build.transfer.mono}">
 				<include name="src/core/src/**/*.cs" />
-				<exclude name="src/core/src/**/compact/**" />
-				<exclude name="src/core/src/**/net/**" />
+				<exclude name="src/core/src/compact/**" />
+				<exclude name="src/core/src/net/**" />
 				<include name="src/tools/src/**/*.cs"/>
 				<include name="src/test/src/**/*.cs"/>
 				<exclude name="src/test/src/**/compact/**" />
