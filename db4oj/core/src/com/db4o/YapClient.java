@@ -5,6 +5,7 @@ package com.db4o;
 import java.io.*;
 
 import com.db4o.ext.*;
+import com.db4o.reflect.*;
 
 class YapClient extends YapStream implements ExtClient {
     final Object blobLock = new Object();
@@ -162,7 +163,7 @@ class YapClient extends YapStream implements ExtClient {
         i_trans = new TransactionClient(this, i_systemTrans);
     }
 
-    boolean createYapClass(YapClass a_yapClass, Class a_class, YapClass a_superYapClass) {
+    boolean createYapClass(YapClass a_yapClass, IClass a_class, YapClass a_superYapClass) {
         writeMsg(Msg.CREATE_CLASS.getWriterForString(i_systemTrans, a_class.getName()));
         MsgObject message = (MsgObject)expectedResponse(Msg.OBJECT_TO_CLIENT);
         YapWriter bytes = message.unmarshall();

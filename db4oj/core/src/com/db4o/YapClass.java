@@ -321,7 +321,7 @@ class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTra
             i_constructor = new YapConstructor(a_stream, a_class, null, null, true, false);
         }else{
             if(a_class != null){
-                if(YapConst.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class)){
+                if(a_stream.i_handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class)){
                     a_class = null;
                 }
             }

@@ -336,8 +336,8 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     abstract long currentVersion();
     
-    boolean createYapClass(YapClass a_yapClass, Class a_class, YapClass a_superYapClass) {
-        if (YapConst.CLASS_TRANSIENTCLASS.isAssignableFrom(a_class)) {
+    boolean createYapClass(YapClass a_yapClass, IClass a_class, YapClass a_superYapClass) {
+        if (i_handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class)) {
             return false;
         }
         Config4Class config = i_config.configClass(a_class.getName());
@@ -345,13 +345,10 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         a_yapClass.i_ancestor = a_superYapClass;
         YapConstructor constr = null;
         
-    	// FIXME: REFLECTOR should work with IClass
-        IClass claxx = i_config.reflector().forClass( a_class);
-        
         if (config != null && config.instantiates()) {
-            constr = new YapConstructor(this, claxx, null, null, true, false);
+            constr = new YapConstructor(this, a_class, null, null, true, false);
         } else {
-            constr = i_handlers.createConstructorStatic(this, a_yapClass, claxx);
+            constr = i_handlers.createConstructorStatic(this, a_yapClass, a_class);
             if (constr == null) {
                 return false;
             }
@@ -704,7 +701,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             return null;
         }
         if ((!showInternalClasses())
-            && YapConst.ICLASS_INTERNAL.isAssignableFrom(a_class)) {
+            && i_handlers.ICLASS_INTERNAL.isAssignableFrom(a_class)) {
             return null;
         }
         YapClass yc = i_handlers.getYapClassStatic(a_class);
@@ -712,10 +709,7 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             return yc;
         }
         
-        //FIXME: REFLECTOR Big hack to get a runnable version.
-        Class clazz = a_class.getJavaClass(); 
-        
-        return i_classCollection.getYapClass(clazz, a_create);
+        return i_classCollection.getYapClass(a_class, a_create);
     }
 
     YapClass getYapClass(int a_id) {
@@ -1331,12 +1325,15 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     final int set3(Transaction a_trans, Object a_object, int a_updateDepth, boolean a_checkJustSet) {
         if (a_object != null & !(a_object instanceof TransientClass)) {
+        	
             if (a_object instanceof Db4oTypeImpl) {
                 ((Db4oTypeImpl) a_object).storedTo(a_trans);
             }
             YapClass yc = null;
             YapObject yapObject = i_hcTree.hc_find(a_object);
             if (yapObject == null) {
+            	
+            	// FIXME: REFLECTOR need to get IClass here
                 Class clazz = a_object.getClass();
                 yc = getYapClass(clazz, false);
                 if (yc == null) {

@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.reflect.*;
 
 final class YapClassCollection extends YapMeta implements UseSystemTransaction {
 
@@ -34,7 +35,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         if(yapClass.stateUnread()){
             i_yapClassByBytes.put(yapClass.i_nameBytes, yapClass);
         }else{
-            i_yapClassByClass.put(yapClass.getJavaClass(), yapClass);
+            i_yapClassByClass.put(yapClass.reflectorClass(), yapClass);
         }
         if (yapClass.getID() == 0) {
             yapClass.write(i_stream, i_systemTrans);
@@ -86,11 +87,11 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         }
     }
     
-    final boolean createYapClass(YapClass a_yapClass, Class a_class) {
+    final boolean createYapClass(YapClass a_yapClass, IClass a_class) {
         i_yapClassCreationDepth++;
-        Class superClass = a_class.getSuperclass();
+        IClass superClass = a_class.getSuperclass();
         YapClass superYapClass = null;
-        if (superClass != null && superClass != YapConst.CLASS_OBJECT) {
+        if (superClass != null && superClass != i_stream.i_handlers.ICLASS_OBJECT) {
             superYapClass = getYapClass(superClass, true);
         }
         boolean ret = i_stream.createYapClass(a_yapClass, a_class, superYapClass);
@@ -142,7 +143,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         return YapConst.YAPCLASSCOLLECTION;
     }
 
-    YapClass getYapClass(Class a_class, boolean a_create) {
+    YapClass getYapClass(IClass a_class, boolean a_create) {
         YapClass yapClass = (YapClass)i_yapClassByClass.get(a_class);
         if (yapClass == null) {
             byte[] bytes = i_stream.i_stringIo.write(a_class.getName());
@@ -287,14 +288,14 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
         }
     }
 
-    YapClass readYapClass(YapClass yapClass, Class a_class) {
+    YapClass readYapClass(YapClass yapClass, IClass a_class) {
         i_yapClassCreationDepth++;
         if (yapClass != null  && yapClass.stateUnread()) {
         	// FIXME: REFLECTOR should work with IClass
-            yapClass.createConfigAndConstructor(i_yapClassByBytes, i_stream, i_stream.i_config.reflector().forClass( a_class));
-            Class javaClass = yapClass.getJavaClass();
-            if(javaClass != null){
-                i_yapClassByClass.put(javaClass, yapClass);
+            yapClass.createConfigAndConstructor(i_yapClassByBytes, i_stream, a_class);
+            IClass claxx = yapClass.reflectorClass();
+            if(claxx != null){
+                i_yapClassByClass.put(claxx, yapClass);
                 yapClass.readThis();
                 yapClass.checkChanges();
                 i_initYapClassesOnUp.add(yapClass);
@@ -318,7 +319,7 @@ final class YapClassCollection extends YapMeta implements UseSystemTransaction {
                 if(yc.stateUnread()){
                     i_yapClassByBytes.put(yc.readName(i_systemTrans), yc);
                 }else{
-                    i_yapClassByClass.put(yc.getJavaClass(), yc);
+                    i_yapClassByClass.put(yc.reflectorClass(), yc);
                 }
             }
         }
