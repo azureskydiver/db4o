@@ -2,11 +2,11 @@
 
 package com.db4o;
 
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.config.Configuration;
-import com.db4o.ext.ExtObjectServer;
-import com.db4o.foundation.Cool;
+import com.db4o.config.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 class YapServer implements ObjectServer, ExtObjectServer, Runnable {
     private String i_name;
@@ -49,7 +49,11 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable {
             } catch (IOException e) {
                 Db4o.throwRuntimeException(30, "" + a_port);
             }
-            new Thread(this).start(); //Carl, shouldn't this be a daemon?
+            
+            new Thread(this).start(); 
+            // TODO: Carl, shouldn't this be a daemon?
+            // Not sure Klaus, let's discuss. 
+            
             synchronized (this) {
                 try {
                     wait(1000);
