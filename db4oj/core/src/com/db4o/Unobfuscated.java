@@ -2,16 +2,14 @@
 
 package com.db4o;
 
-import java.util.*;
-
-import com.db4o.config.*;
+import com.db4o.config.Configuration;
 
 /**
  * 
  */
 public class Unobfuscated {
     
-    static Random random;
+    static java.util.Random random;
     
 	static boolean createDb4oList(Object a_stream){
 	    ((YapStream)a_stream).checkClosed();
@@ -50,7 +48,7 @@ public class Unobfuscated {
 	        return System.currentTimeMillis();
 	    }else {
 	        if(random == null){
-	            random = new Random();
+	            random = new java.util.Random();
 	        }
 	        return random.nextLong();
 	    }
