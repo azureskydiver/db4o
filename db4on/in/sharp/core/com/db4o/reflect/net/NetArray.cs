@@ -1,6 +1,7 @@
 namespace com.db4o.reflect.net
 {
-	/// <remarks>Reflection implementation for Array to map to JDK reflection.</remarks>
+
+	/// <remarks>Reflection implementation for Array to map to .NET reflection.</remarks>
 	public class NetArray : com.db4o.reflect.ReflectArray
 	{
 		private readonly com.db4o.reflect.Reflector _reflector;
@@ -76,26 +77,24 @@ namespace com.db4o.reflect.net
 
 		public virtual bool isNDimensional(com.db4o.reflect.ReflectClass a_class)
 		{
-            return Compat.getArrayRank(((NetClass)a_class).getJavaClass().getNetType()) > 1;
+            return Compat.getArrayRank(((NetClass)a_class).getNetType()) > 1;
 		}
 
 		public virtual object newInstance(com.db4o.reflect.ReflectClass componentType, int
 			 length)
 		{
-			return j4o.lang.reflect.JavaArray.newInstance(((com.db4o.reflect.jdk.JdkClass)componentType
-				).getJavaClass(), length);
+            return System.Array.CreateInstance(((NetClass)componentType).getNetType(), length);
 		}
 
 		public virtual object newInstance(com.db4o.reflect.ReflectClass componentType, int[]
 			 dimensions)
 		{
-			return j4o.lang.reflect.JavaArray.newInstance(((com.db4o.reflect.jdk.JdkClass)componentType
-				).getJavaClass(), dimensions);
+            return System.Array.CreateInstance(((NetClass)componentType).getNetType(), dimensions);
 		}
 
 		public virtual void set(object onArray, int index, object element)
 		{
-			j4o.lang.reflect.JavaArray.set(onArray, index, element);
+            ((System.Array)onArray).SetValue(element, index);
 		}
 
         public virtual int shape(

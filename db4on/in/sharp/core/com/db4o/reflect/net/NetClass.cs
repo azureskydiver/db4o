@@ -8,6 +8,8 @@ namespace com.db4o.reflect.net
 
 		private readonly j4o.lang.Class clazz;
 
+        private readonly System.Type _type;
+
 		private com.db4o.reflect.ReflectConstructor constructor;
 
 		private object[] constructorParams;
@@ -16,6 +18,7 @@ namespace com.db4o.reflect.net
 		{
 			this.reflector = reflector;
 			this.clazz = clazz;
+            _type = clazz.getNetType();
 		}
 
 		public virtual com.db4o.reflect.ReflectClass getComponentType()
@@ -30,7 +33,7 @@ namespace com.db4o.reflect.net
 				[constructors.Length];
 			for (int i = 0; i < constructors.Length; i++)
 			{
-				reflectors[i] = new com.db4o.reflect.jdk.JdkConstructor(reflector, constructors[i
+				reflectors[i] = new com.db4o.reflect.net.NetConstructor(reflector, constructors[i
 					]);
 			}
 			return reflectors;
@@ -40,7 +43,7 @@ namespace com.db4o.reflect.net
 		{
 			try
 			{
-				return new com.db4o.reflect.jdk.JdkField(reflector, clazz.getDeclaredField(name));
+				return new com.db4o.reflect.net.NetField(reflector, clazz.getDeclaredField(name));
 			}
 			catch (System.Exception e)
 			{
@@ -55,7 +58,7 @@ namespace com.db4o.reflect.net
 				.Length];
 			for (int i = 0; i < reflectors.Length; i++)
 			{
-				reflectors[i] = new com.db4o.reflect.jdk.JdkField(reflector, fields[i]);
+				reflectors[i] = new com.db4o.reflect.net.NetField(reflector, fields[i]);
 			}
 			return reflectors;
 		}
@@ -65,13 +68,13 @@ namespace com.db4o.reflect.net
 		{
 			try
 			{
-				j4o.lang.reflect.Method method = clazz.getMethod(methodName, com.db4o.reflect.jdk.JdkReflector
+				j4o.lang.reflect.Method method = clazz.getMethod(methodName, com.db4o.reflect.net.NetReflector
 					.toNative(paramClasses));
 				if (method == null)
 				{
 					return null;
 				}
-				return new com.db4o.reflect.jdk.JdkMethod(method);
+				return new com.db4o.reflect.net.NetMethod(method);
 			}
 			catch (System.Exception e)
 			{
@@ -101,11 +104,11 @@ namespace com.db4o.reflect.net
 
 		public virtual bool isAssignableFrom(com.db4o.reflect.ReflectClass type)
 		{
-			if (!(type is com.db4o.reflect.jdk.JdkClass))
+			if (!(type is com.db4o.reflect.net.NetClass))
 			{
 				return false;
 			}
-			return clazz.isAssignableFrom(((com.db4o.reflect.jdk.JdkClass)type).getJavaClass(
+			return clazz.isAssignableFrom(((com.db4o.reflect.net.NetClass)type).getJavaClass(
 				));
 		}
 
@@ -150,7 +153,11 @@ namespace com.db4o.reflect.net
 			return clazz;
 		}
 
-		public virtual bool skipConstructor(bool flag)
+        internal virtual System.Type getNetType() {
+            return _type;
+        }
+
+        public virtual bool skipConstructor(bool flag)
 		{
 			if (flag)
 			{
@@ -163,7 +170,7 @@ namespace com.db4o.reflect.net
 						object o = constructor.newInstance(null);
 						if (o != null)
 						{
-							useConstructor(new com.db4o.reflect.jdk.JdkConstructor(reflector, constructor), null
+							useConstructor(new com.db4o.reflect.net.NetConstructor(reflector, constructor), null
 								);
 							return true;
 						}
