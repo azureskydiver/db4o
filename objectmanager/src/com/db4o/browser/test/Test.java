@@ -1,7 +1,7 @@
 /*
  * Created on Jan 24, 2005
  */
-package com.db4o.browser.Test;
+package com.db4o.browser.test;
 
 import java.util.List;
 
