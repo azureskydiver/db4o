@@ -61,7 +61,9 @@ public class StandaloneBrowser extends Snippet {
                 FileDialog dialog = new FileDialog(shell, SWT.OPEN);
                 String file = dialog.open();
                 if (file != null) {
-                    ui.setInput(new Model(file));
+                    Model model = new Model();
+                    ui.setInput(model);
+                    model.open(file);
                 }
             }
         });

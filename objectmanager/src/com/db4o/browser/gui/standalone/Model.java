@@ -16,6 +16,9 @@
  */
 package com.db4o.browser.gui.standalone;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
@@ -29,19 +32,63 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  * @author djo
  */
 public class Model {
-    /**
-     * @param container
-     */
-    public Model(String path) {
-        container = Db4o.openFile(path);
-        if (container == null)
-            throw new IllegalArgumentException("Could not open: " + path);
+    
+    private LinkedList listeners = new LinkedList();
+    public void addModelChangeListener(IModelListener l) {
+        listeners.add(l);
     }
+    
+    public void removeModelChangeListener(IModelListener l) {
+        listeners.remove(l);
+    }
+    
+    private void fireFileChangedEvent() {
+        for (Iterator i = listeners.iterator(); i.hasNext();) {
+			IModelListener l = (IModelListener) i.next();
+			l.fileChanged();
+		}
+    }
+    
+    private void fireSelectionChangedEvent() {
+        for (Iterator i = listeners.iterator(); i.hasNext();) {
+            IModelListener l = (IModelListener) i.next();
+            l.selectionChanged();
+        }
+    }
+    
+    private String currentPath="";
+    
+    public void open(String path) {
+        if (!path.equals(currentPath)) {
+            close();
+            container = Db4o.openFile(path);
+            if (container == null)
+                throw new IllegalArgumentException("Could not open: " + path);
+            currentPath = path;
+            fireFileChangedEvent();
+        }
+    }
+    
+    private String selection = "";
 
+    /**
+     * @param fullyQualifiedName
+     */
+    public void selectType(String fullyQualifiedName) {
+        selection = fullyQualifiedName;
+        fireSelectionChangedEvent();
+    }
+    
 	private ObjectContainer container = null;
     
-    public StoredClass[] storedClasses() {
-       	return container.ext().storedClasses();
+
+    public StoredClass[] selectedClasses() {
+        if (selection.equals(""))
+        	return container.ext().storedClasses();
+        else {
+            StoredClass result = container.ext().storedClass(selection);
+            return new StoredClass[] {result};
+        }
     }
     
     public ObjectSet instances(String clazz) {
@@ -66,5 +113,5 @@ public class Model {
             container.close();
         container = null;
     }
-    
+
 }
