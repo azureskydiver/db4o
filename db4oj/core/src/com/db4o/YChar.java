@@ -4,12 +4,16 @@ package com.db4o;
 
 
 final class YChar extends YapJavaClass {
-	static final int LENGTH = YapConst.CHAR_BYTES + YapConst.ADDED_LENGTH;
+
+    static final int LENGTH = YapConst.CHAR_BYTES + YapConst.ADDED_LENGTH;
 	
 	private static final Character i_primitive = new Character((char)0);
 	private static final Class i_class = i_primitive.getClass();
 	
-
+    public YChar(YapStream stream) {
+        super(stream);
+    }
+    
 	public int getID() {
 		return 7;
 	}

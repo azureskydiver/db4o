@@ -80,27 +80,27 @@ class YapHandlers {
     IClass ICLASS_TRANSIENTCLASS;
     
 
-    YapHandlers(YapStream a_stream) {
+    YapHandlers(final YapStream a_stream) {
     	
     	_masterStream = a_stream;
     	a_stream.i_handlers = this;
     	
     	initClassReflectors(a_stream.i_config.reflector());
         
-        i_indexes = new YapIndexes();
+        i_indexes = new YapIndexes(a_stream);
         
         i_virtualFields[0] = i_indexes.i_fieldVersion;
         i_virtualFields[1] = i_indexes.i_fieldUUID;
 
         i_stringHandler = new YapString();
 
-        i_handlers = new YapDataType[] { new YInt(), new YLong(), new YFloat(),
-            new YBoolean(), new YDouble(), new YByte(), new YChar(),
-            new YShort(),
+        i_handlers = new YapDataType[] { new YInt(a_stream), new YLong(a_stream), new YFloat(a_stream),
+            new YBoolean(a_stream), new YDouble(a_stream), new YByte(a_stream), new YChar(a_stream),
+            new YShort(a_stream),
 
             // primitives first
 
-            i_stringHandler, new YDate(), new YapClassAny(a_stream) // Index = 10, ID = 11
+            i_stringHandler, new YDate(a_stream), new YapClassAny(a_stream) // Index = 10, ID = 11
         };
 
         if (i_platformTypes.length > 0) {

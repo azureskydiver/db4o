@@ -5,11 +5,16 @@ package com.db4o;
 
 final class YByte extends YapJavaClass
 {
-	static final int LENGTH = 1 + YapConst.ADDED_LENGTH;
+
+    static final int LENGTH = 1 + YapConst.ADDED_LENGTH;
 	
 	private static final Byte i_primitive = new Byte((byte)0);
 	private static final Class i_class = i_primitive.getClass();
 	
+    public YByte(YapStream stream) {
+        super(stream);
+    }
+    
 	public int getID(){
 		return 6;
 	}

@@ -5,7 +5,8 @@ package com.db4o;
 
 final class YBoolean extends YapJavaClass
 {
-	static final int LENGTH = 1 + YapConst.ADDED_LENGTH;
+
+    static final int LENGTH = 1 + YapConst.ADDED_LENGTH;
 	
 	private static final byte TRUE = (byte) 'T';
 	private static final byte FALSE = (byte) 'F';
@@ -14,6 +15,10 @@ final class YBoolean extends YapJavaClass
 	private static final Boolean i_primitive = new Boolean(false);
 	private static final Class i_class = i_primitive.getClass();
 	
+    public YBoolean(YapStream stream) {
+        super(stream);
+    }
+    
 	public int getID(){
 		return 4;
 	}

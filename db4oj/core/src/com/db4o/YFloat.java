@@ -8,6 +8,10 @@ final class YFloat extends YInt {
     private static final Float i_primitive = new Float(0);
     private static final Class i_class = i_primitive.getClass();
     
+    public YFloat(YapStream stream) {
+        super(stream);
+    }
+    
 	public int getID() {
 		return 3;
 	}

@@ -10,6 +10,10 @@ final class YDate extends YLong
     
     private static final Class i_class = new Date(0).getClass();
 
+    public YDate(YapStream stream) {
+        super(stream);
+    }
+    
 	public void copyValue(Object a_from, Object a_to){
 		try{
 			((Date)a_to).setTime(((Date)a_from).getTime());

@@ -5,23 +5,14 @@ package com.db4o;
 
 class YLong extends YapJavaClass
 {
-    
+
     private static final Long i_primitive = new Long(0);
     private static final Class i_class = i_primitive.getClass();
+
+    public YLong(YapStream stream) {
+        super(stream);
+    }
     
-    
-	static long decipher(String str){
-		String str1 = "";
-		for (int i = 0; i < str.length(); i+=2) {
-			char[] chars = new char[2];
-			chars[0] = str.charAt(i);
-			chars[1] = str.charAt(i + 1);
-			String str2 = new String(chars);
-			str1 += (char)new Integer(str2).intValue();
-		}
-		return new Long(str1).longValue();
-	}
-	
 	public int getID(){
 		return 2;
 	}
