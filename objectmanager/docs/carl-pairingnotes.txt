@@ -34,8 +34,8 @@ Problems with current design:
 
 - The FieldNode hierarchy represents the Model, but also embeds navigation into it!!!
 
-- Navigating/Visiting aspects of the Model should be separated out of the Model graph using the Visitor
-  pattern.  The Visitor should be a hierarchy/graph Visitor, and should embed a stack, the 
+- Navigating/Visiting aspects of the Model should be separated out of the Model graph using the Iterator
+  pattern.  The Iterator should be a hierarchy/graph Iterator, and should embed a stack, the 
   visual representation of which will be the path string in the detail pane.
   
 - This stack will be how we traverse up the tree control from its root to keep its focus
