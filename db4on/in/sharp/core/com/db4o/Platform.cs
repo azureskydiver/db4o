@@ -77,10 +77,6 @@ namespace com.db4o {
             return new P2Collections(a_object);
         }
 
-        static internal int collectionUpdateDepth(Class var_class) {
-            return typeof(System.Collections.IDictionary).IsAssignableFrom(var_class.getNetType()) ? 3 : 2 ;
-        }
-
         static internal Reflector createReflector(Config4Impl config){
             return new com.db4o.reflect.net.NetReflector();
         }
@@ -275,13 +271,6 @@ namespace com.db4o {
             return false;
         }
       
-        static internal bool isCollection(Class clazz) {
-            if(clazz.isArray()){
-                return false;
-            }
-            return typeof(ICollection).IsAssignableFrom(clazz.getNetType());
-        }
-      
         static internal bool isCollectionTranslator(Config4Class config4class) {
             if (config4class != null) {
                 ObjectTranslator ot = config4class.getTranslator();
@@ -290,10 +279,6 @@ namespace com.db4o {
                 }
             }
             return false;
-        }
-
-        static internal bool isSecondClass(Class clazz) {
-            return isValueType(clazz);
         }
 
         public static bool isSimple(Class a_class) {
@@ -305,11 +290,15 @@ namespace com.db4o {
             return false;
         }
 
-        static internal bool isValueType(Class clazz) {
-            if(clazz != null){
-                return clazz.getNetType().IsValueType;
+        static internal bool isValueType(ReflectClass claxx) {
+            if(claxx == null){
+                return false;
             }
-            return false;
+            com.db4o.reflect.net.NetClass netClass = claxx as com.db4o.reflect.net.NetClass ;
+            if(netClass == null){
+                return false;
+            }
+            return netClass.getNetType().IsValueType;
         }
 
         static internal void killYapRef(Object obj){

@@ -127,11 +127,6 @@ namespace com.db4o.reflect.net
 			return clazz.isPrimitive();
 		}
 
-		public virtual bool isValueType()
-		{
-			return com.db4o.Platform.isValueType(clazz);
-		}
-
 		public virtual object newInstance()
 		{
 			try
