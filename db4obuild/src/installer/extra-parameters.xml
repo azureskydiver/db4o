@@ -6,6 +6,11 @@
 			<Name>db4o tutorial</Name>
 		</WixShortcut>
 		
+		<WixShortcut>
+			<Path>doc/api/db4o.chm</Path>
+			<Name>db4o API</Name>
+		</WixShortcut>
+		
 		<!--		
 		<WixShortcut>
 			<Path>src/core/db4o-net.sln</Path>
