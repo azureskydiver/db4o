@@ -21,19 +21,18 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Shell;
 
 import com.db4o.browser.gui.DbBrowserPane;
-import com.swtworkbench.swtutils.framework.SWTApplication;
 
 /**
  * Class StandaloneBrowser.
  * 
  * @author djo
  */
-public class StandaloneBrowser extends SWTApplication {
+public class StandaloneBrowser extends Snippet {
     
     /* (non-Javadoc)
 	 * @see com.swtworkbench.swtutils.framework.SWTSnippet#setupUI(org.eclipse.swt.widgets.Shell)
 	 */
-	protected void setupUI(Shell parent) {
+	protected void constructUI(Shell parent) {
 		parent.setLayout(new FillLayout());
         new DbBrowserPane(parent, SWT.NULL);
 	}

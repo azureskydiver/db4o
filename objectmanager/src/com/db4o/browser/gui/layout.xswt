@@ -9,16 +9,10 @@
     <x:children>
 		<composite>
 		    <layoutData x:class="gridData" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
-		    <layout x:class="gridLayout" numColumns="2" makeColumnsEqualWidth="true"/>
+		    <layout x:class="gridLayout"/>
 		    <x:children>
-		    
-		    	<!-- The Path label -->
-		    	<label x:id="Path" text="/">
-		            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
-		    	</label>
-		    
             	<!-- The search box -->
-            	<composite>
+<!--            	<composite>
             		<layout x:class="gridLayout" numColumns="3" marginHeight="0"/>
 		            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
             		<x:children>
@@ -28,42 +22,44 @@
 		            	</text>
 		            	<button x:id="SearchButton" text="&amp;Go"/>
             		</x:children>
-            	</composite>
+            	</composite>-->
 
-		    	<!-- ResultSet browser -->
-		        <sashForm x:id="SashForm">
-		            <layoutData x:class="gridData" horizontalSpan="2" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
-		            <layout x:class="gridLayout" numColumns="2"/>
-		            <x:children>
-		            
-		            	<!-- The hyperlink/tree view area -->
-		                <composite>
-				            <layoutData x:class="gridData" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
-				            <layout x:class="fillLayout"/>
+		    	<!-- The Path label -->
+		    	<label x:id="Path" x:style="RIGHT" text="/">
+		            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
+		    	</label>
+		    	
+            	<!-- The List/Detail tabbed notebook -->
+            	<tabFolder>
+		            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
+            		<x:children>
+						<!-- List -->
+            			<composite x:id="ListComposite">
+            				<layout x:class="fillLayout"/>
 				            <x:children>
-<!--				            	<composite x:id="HyperlinkArea" x:style="BORDER"/>-->
 								<tree x:id="ObjectTree" x:style="BORDER"/>
 				            </x:children>
-		                </composite>
-		
-		            	<!-- The List/Detail tabbed notebook -->
-		            	<tabFolder>
-				            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
-		            		<x:children>
-		            			<composite x:id="ListComposite">
-		            				<layout x:class="fillLayout"/>
-		            			</composite>
-		            			<tabItem text="&amp;List" control="ListComposite"/>
-		            			
-	            				<composite x:id="DetailComposite">
-		            				<layout x:class="fillLayout"/>
-		            			</composite>
-		            			<tabItem text="&amp;Detail" control="DetailComposite"/>
-		            		</x:children>
-		            	</tabFolder>
-	 	               
-	 	           </x:children>
-	 	       </sashForm>
+            			</composite>
+            			<tabItem text="&amp;Tree" control="ListComposite"/>
+            			
+            			<!-- Detail -->
+        				<composite x:id="DetailComposite">
+            				<layout x:class="gridLayout" numColumns="2" makeColumnsEqualWidth="false"/>
+            				<x:children>
+            					<composite x:style="BORDER">
+						            <layoutData x:class="gridData" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
+            					</composite>
+            					
+            					<composite x:style="BORDER">
+						            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
+            					</composite>
+            				</x:children>
+            			</composite>
+            			<tabItem text="&amp;Detail" control="DetailComposite"/>
+
+            		</x:children>
+            	</tabFolder>
+
 			</x:children>
 	 	</composite>
 	 	   
