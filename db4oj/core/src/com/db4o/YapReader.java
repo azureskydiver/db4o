@@ -177,6 +177,8 @@ public class YapReader {
     }
     
     final void writeInt(int a_int) {
+		// FIXME: variable ii declared outside the loop to circumvent mono bug 
+		int ii = YapConst.WRITE_LOOP;
         if (Deploy.debug) {
             YInt.writeInt(a_int, this);
         } else {
@@ -189,7 +191,7 @@ public class YapReader {
                 b[--o] = (byte) (a_int >>= 8);
                 b[--o] = (byte) (a_int >>= 8);
             } else {
-                for (int ii = YapConst.WRITE_LOOP; ii >= 0; ii -= 8) {
+                for (; ii >= 0; ii -= 8) {
                     _buffer[_offset++] = (byte) (a_int >> ii);
                 }
             }
