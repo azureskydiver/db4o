@@ -9,6 +9,7 @@ import java.util.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.jdk.*;
 import com.db4o.types.*;
 
 /**
@@ -87,6 +88,10 @@ public final class Platform {
     
     static Db4oCollections collections(Object a_object){
         return jdk().collections((YapStream)a_object);
+    }
+    
+    static final Reflector createReflector(Config4Impl config){
+        return new JdkReflector(config.i_classLoader);
     }
 
     static final Object createReferenceQueue() {
