@@ -15,18 +15,18 @@ public class GenericClass implements ReflectClass {
 
     private static final GenericField[] NO_FIELDS = new GenericField[0];
     
-    private final Reflector _reflector;
-    final ReflectClass _delegate;
+    private final GenericReflector _reflector;
+    private final ReflectClass _delegate;
     
     private final String _name;
-    private final ReflectClass _superclass;
+    private ReflectClass _superclass;
     
     private int _id;
     private boolean _isSecondClass;
     
     private GenericField[] _fields = NO_FIELDS;
 
-    public GenericClass(Reflector reflector, ReflectClass delegateClass, String name, ReflectClass superclass) {
+    public GenericClass(GenericReflector reflector, ReflectClass delegateClass, String name, ReflectClass superclass) {
         _reflector = reflector;
         _delegate = delegateClass;
         _name = name;
@@ -66,6 +66,10 @@ public class GenericClass implements ReflectClass {
         return _fields;
     }
     
+    public ReflectClass getDelegate(){
+        return _delegate;
+    }
+    
     public int getID(){
         return _id;
     }
@@ -82,8 +86,15 @@ public class GenericClass implements ReflectClass {
     }
 
     public ReflectClass getSuperclass() {
-        if(_delegate != null){
-            return _delegate.getSuperclass();
+        if(_superclass != null){
+            return _superclass;
+        }
+        if(_delegate == null){
+            return null;
+        }
+        ReflectClass delegateSuperclass = _delegate.getSuperclass();
+        if(delegateSuperclass != null){
+            _superclass = _reflector.ensureDelegate(delegateSuperclass);
         }
         return _superclass;
     }

@@ -54,7 +54,7 @@ public class GenericReflector implements Reflector, DeepClone {
         return false;
     }
 
-    private GenericClass ensureDelegate(ReflectClass clazz){
+    GenericClass ensureDelegate(ReflectClass clazz){
         if(clazz == null){
         	return null;
         }
@@ -72,8 +72,7 @@ public class GenericReflector implements Reflector, DeepClone {
     
     public ReflectClass forClass(Class clazz) {
         ReflectClass claxx = _delegate.forClass(clazz);
-        ensureDelegate(claxx);
-        return claxx;
+        return ensureDelegate(claxx);
     }
     
 
@@ -84,8 +83,7 @@ public class GenericReflector implements Reflector, DeepClone {
         }
         clazz = _delegate.forName(className);
         if(clazz != null){
-            ensureDelegate(clazz);
-            return clazz;
+            return ensureDelegate(clazz);
         }
         // TODO: do we always want to create a generic class here anyway
         // maybe with no fields for a start?
@@ -98,8 +96,7 @@ public class GenericReflector implements Reflector, DeepClone {
         }
         ReflectClass clazz = _delegate.forObject(obj);
         if(clazz != null){
-            ensureDelegate(clazz);
-            return clazz;
+            return ensureDelegate(clazz);
         }
         return null;
     }
@@ -137,7 +134,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		Iterator4 i = _classes.iterator();
 		while(i.hasNext()){
             GenericClass clazz = (GenericClass)i.next();
-            if(! _stream.i_handlers.ICLASS_INTERNAL.isAssignableFrom(clazz._delegate)){
+            if(! _stream.i_handlers.ICLASS_INTERNAL.isAssignableFrom(clazz.getDelegate())){
                 if(! clazz.isPrimitive()){
                     if(clazz.getID() > _stream.i_handlers.maxTypeID()){
                         classes.add(clazz);
