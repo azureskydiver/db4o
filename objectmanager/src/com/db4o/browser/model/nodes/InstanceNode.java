@@ -37,6 +37,9 @@ public class InstanceNode implements IModelNode {
 	 * @param object
 	 */
 	public InstanceNode(Object instance, ReflectClass clazz, Database database) {
+        if (instance == null || clazz == null || database == null) {
+            throw new IllegalArgumentException("InstanceNode: Null constructor argument");
+        }
 		_instance = instance;
 		_clazz=clazz;
 		_database = database;
