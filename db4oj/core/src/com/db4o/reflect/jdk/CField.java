@@ -6,16 +6,20 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import com.db4o.Platform;
+import com.db4o.reflect.IClass;
 import com.db4o.reflect.IField;
+import com.db4o.reflect.IReflect;
 
 /**
  * Reflection implementation for Field to map to JDK reflection.
  */
 public class CField implements IField {
 
-    private final Field field;
+    private final IReflect reflector;
+	private final Field field;
 
-    public CField(Field field) {
+    public CField(IReflect reflector, Field field) {
+    	this.reflector = reflector;
         this.field = field;
     }
 
@@ -23,8 +27,8 @@ public class CField implements IField {
         return field.getName();
     }
 
-    public Class getType() {
-        return field.getType();
+    public IClass getType() {
+        return reflector.forClass(field.getType());
     }
 
     public boolean isPublic() {

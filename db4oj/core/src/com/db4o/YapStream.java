@@ -5,6 +5,8 @@ package com.db4o;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
+import com.db4o.reflect.IClass;
+import com.db4o.reflect.jdk.CClass;
 import com.db4o.types.*;
 
 abstract class YapStream implements ObjectContainer, ExtObjectContainer,
@@ -688,20 +690,28 @@ abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     Transaction getTransaction() {
         return i_trans;
     }
-
+    
     final YapClass getYapClass(Class a_class, boolean a_create) {
+    	return getYapClass(i_config.i_reflect.forClass(a_class), a_create);
+    }
+
+    final YapClass getYapClass(IClass a_class, boolean a_create) {
         if (a_class == null) {
             return null;
         }
         if ((!showInternalClasses())
-            && YapConst.CLASS_INTERNAL.isAssignableFrom(a_class)) {
+            && YapConst.ICLASS_INTERNAL.isAssignableFrom(a_class)) {
             return null;
         }
         YapClass yc = i_handlers.getYapClassStatic(a_class);
         if (yc != null) {
             return yc;
         }
-        return i_classCollection.getYapClass(a_class, a_create);
+        
+        //FIXME: REFLECTOR Big hack to get a runnable version.
+        Class clazz = ((CClass)a_class).getJavaClass(); 
+        
+        return i_classCollection.getYapClass(clazz, a_create);
     }
 
     YapClass getYapClass(int a_id) {

@@ -386,7 +386,7 @@ final class YapObject extends YapMeta implements ObjectInfo{
 	
 				setStateClean();
 	
-				a_trans.writeUpdateDeleteMembers(getID(), i_yapClass, YapHandlers.arrayType(obj), 0);
+				a_trans.writeUpdateDeleteMembers(getID(), i_yapClass, a_trans.i_stream.i_handlers.arrayType(obj), 0);
 	
 				i_yapClass.marshallUpdate(a_trans, getID(), a_updatedepth, this, obj);
 		    } else{

@@ -28,10 +28,6 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
         return ret;
     }
 
-    Class invocationClass() throws Exception {
-        return fieldReflector().getType();
-    }
-
     private IField fieldReflector() {
         if (i_fieldReflector == null) {
             try {

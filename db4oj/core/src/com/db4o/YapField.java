@@ -52,8 +52,9 @@ class YapField implements StoredField {
         i_yapClass = a_yapClass;
         init(a_yapClass, a_translator.getClass().getName(), 0);
         i_state = AVAILABLE;
-        i_handler = a_yapClass.getStream().i_handlers.handlerForClass(
-            a_yapClass.getStream(), a_translator.storedClass());
+        YapStream stream =a_yapClass.getStream(); 
+        i_handler = stream.i_handlers.handlerForClass(
+            stream, stream.i_config.i_reflect.forClass(a_translator.storedClass()));
     }
 
     YapField(YapClass a_yapClass, IField a_field, YapDataType a_handler) {
@@ -186,7 +187,7 @@ class YapField implements StoredField {
 
     private void checkDb4oType() {
         if (i_javaField != null) {
-            if (YapConst.CLASS_DB4OTYPE.isAssignableFrom(i_javaField.getType())) {
+            if (YapConst.ICLASS_DB4OTYPE.isAssignableFrom(i_javaField.getType())) {
                 i_db4oType = YapHandlers.getDb4oType(i_javaField.getType());
             }
         }
@@ -235,7 +236,7 @@ class YapField implements StoredField {
 
     }
 
-    void configure(Class a_class) {
+    void configure(IClass a_class) {
         i_isPrimitive = a_class.isPrimitive();
         i_isArray = a_class.isArray();
         if (i_isArray) {

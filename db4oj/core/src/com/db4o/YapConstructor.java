@@ -18,7 +18,7 @@ final class YapConstructor {
 
     YapConstructor(
         YapStream a_stream,
-        Class a_class, //FIXME: REFLECTOR should be IClass, xxxcr last task
+        Class a_class, 
         IConstructor a_constructor,
         Object[] a_params,
         boolean a_checkDispatcher,
