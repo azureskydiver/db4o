@@ -311,6 +311,10 @@ namespace com.db4o {
         static internal void markTransient(String marker){
             Field.markTransient(marker);
         }
+        
+        static internal bool callConstructor() {
+        	return true;
+    	}
       
         static internal void pollReferenceQueue(Object stream, Object referenceQueue) {
             ((YapReferenceQueue)referenceQueue).poll((ExtObjectContainer)stream);
@@ -358,6 +362,11 @@ namespace com.db4o {
                 }
             }
         }
+        
+        public static bool storeStaticFieldValues(Class clazz) {
+        	return false;
+    	}
+        
 
         private static void translate(Config4Impl config, object obj, ObjectTranslator translator) {
             try {
