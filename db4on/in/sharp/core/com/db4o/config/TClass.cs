@@ -6,6 +6,7 @@ using com.db4o;
 
 namespace com.db4o.config {
 
+	/// <exclude />
     public class TClass : ObjectConstructor {
       
         public void onActivate(ObjectContainer objectContainer, object obj, object members) {
