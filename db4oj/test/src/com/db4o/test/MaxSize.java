@@ -14,7 +14,7 @@ public class MaxSize {
 
     public String           index;
 
-    public static final int SIZE = 500000;
+    public static final int SIZE = 1000000;
     public static final int QUERIES = 1000;
     public static final String FILE = "maxSize.yap"; 
     
