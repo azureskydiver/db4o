@@ -107,7 +107,7 @@ public class AllTests extends AllTestsConfAll implements Runnable {
             Test.close();
             // connection needs some commit time
             try {
-                Thread.sleep(100);
+                Thread.sleep(100);  //Tests ran OK for me without this line. This defensive measure is taken in several other places. Do we still need it here? Klaus.
             } catch (InterruptedException e1) {
             }
             Test.open();

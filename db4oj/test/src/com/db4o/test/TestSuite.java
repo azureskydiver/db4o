@@ -10,7 +10,7 @@ public abstract class TestSuite {
     
     public abstract Class[] tests();
     
-    public static TestSuite suite(String name){
+    protected TestSuite suite(String name){
         try{
             Class clazz = Class.forName(name);
             if(clazz != null){

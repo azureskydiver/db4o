@@ -5,6 +5,7 @@ package com.db4o;
 import java.io.*;
 
 import com.db4o.ext.*;
+import com.db4o.foundation.Cool;
 
 /**
  * configuration and agent to write the configuration block
@@ -102,7 +103,7 @@ final class YapConfigBlock implements Runnable
 			// One last check before we start off.
 			syncFiles();
 			openTimeOverWritten();
-			new Thread(this).start();
+			new Thread(this).start(); //Carl, shouldn't this be a daemon?
 		}
 	}
 	
@@ -220,10 +221,7 @@ final class YapConfigBlock implements Runnable
 			// If someone changes the system clock here,
 			// he is out of luck.
 			while(System.currentTimeMillis() < currentTime + waitTime){
-				try{
-					Thread.sleep(waitTime);
-					}catch(Exception ie){
-				}
+				Cool.sleepWithoutInterruption(waitTime);
 			}
 			reader = _stream.getWriter(_stream.getSystemTransaction(), _address, YapConst.YAPLONG_LENGTH * 2);
 			reader.moveForward(OPEN_TIME_OFFSET);
@@ -235,12 +233,9 @@ final class YapConfigBlock implements Runnable
 			}
 		}
 		if(lockFile()){
-			try{
-				Thread.sleep(100);
-				// We give the other process a chance to 
-				// write its lock.
-			}catch(Exception ie){
-			}
+			// We give the other process a chance to 
+			// write its lock.
+			Cool.sleepWithoutInterruption(100);
 			syncFiles();
 			openTimeOverWritten();
 		}
