@@ -17,7 +17,7 @@ import com.db4o.config.*;
  * single test cases and enter the test case that you want to run in
  * the AllTestsConfSingle#TESTS[] array.
  */
-public class AllTests extends AllTestsConfSingle implements Runnable {
+public class AllTests extends AllTestsConfAll implements Runnable {
 
     public static void main(String[] args) {
         
