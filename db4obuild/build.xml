@@ -284,6 +284,15 @@
 			<arg value="CmdFile=${h2reg.cmdfile}" />
 		</exec>
 	</target>
+	
+	<target name="uninstall-vsdoc" depends="vsdoc" description="Unregister the VS.NET 2003 integrated docs">
+		<property name="h2reg.exe" location="lib/h2reg/h2reg.exe" />
+		<property name="h2reg.cmdfile" location="${dir.dist.ndoc}/db4oCollection.h2reg.ini" />
+		<exec executable="${h2reg.exe}">
+			<arg value="-u" />
+			<arg value="CmdFile=${h2reg.cmdfile}" />
+		</exec>
+	</target>
 
 	<target name="javadoc" depends="init" description="Build public javadocs">
 		<javadoc classpath="" access="public" windowtitle="db4o - database for objects - documentation" header="db4o ${db4o.version.dotted}" destdir="${dir.dist.doc.api}">
@@ -431,13 +440,26 @@
 			<fileset dir="${dir.j}" includes="GPL.txt" />
 			<fileset dir="${dir.config}" includes="README.txt" />
 		</copy>
+		
 		<mkdir dir="${dir.dist.net.build}/doc/api" />
+		
 		<copy todir="${dir.dist.net.build}/doc/api">
-			<fileset dir="${dir.dist}/ndoc" includes="db4o.chm" />
+			<fileset dir="${dir.dist}/ndoc">
+				<include name="db4o.chm" />
+				<include name="db4o.HxS" />
+				<include name="db4oCollection.*" />
+				<include name="db4oCollection.h2reg.ini" />
+			</fileset>
+			<fileset dir="lib/h2reg">
+				<include name="*.exe" />
+				<include name="*.ini" />
+			</fileset>
 		</copy>
+		
 		<zip destfile="${file.dist.net}">
 			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
 		</zip>
+		
 		<ant antfile="build-net-installer.xml" />
 	</target>
 	

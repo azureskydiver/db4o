@@ -39,6 +39,16 @@
 				Execute="firstSequence"
 				Return="asyncNoWait" />
 				
+		<CustomAction Id="RegisterHelp"
+				FileKey="doc.api.H2Reg.exe"
+				ExeCommand="-q -r CmdFile=[#doc.api.db4oCollection.h2reg.ini]"
+				Return="asyncNoWait" />
+				
+		<CustomAction Id="UnregisterHelp"
+				FileKey="doc.api.H2Reg.exe"
+				ExeCommand="-q -u CmdFile=[#doc.api.db4oCollection.h2reg.ini]"
+				Return="asyncNoWait" />
+				
 		
 		<Property Id="INSTALLDIR">c:\db4o-@db4o.version.dotted@</Property>
 		
@@ -82,6 +92,8 @@
 			<FindRelatedProducts />
 			<Custom Action="InitializeTargetDir" Before="CostInitialize" />			
 			<RemoveExistingProducts Before='InstallInitialize' />
+			<Custom Action="RegisterHelp" After="InstallFinalize">NOT Installed</Custom>
+			<Custom Action="UnregisterHelp" Before="RemoveFiles">Installed</Custom>
 		</InstallExecuteSequence>
 		
 		<AdminExecuteSequence>
