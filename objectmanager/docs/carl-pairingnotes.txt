@@ -1,0 +1,62 @@
+
+Be able to see how many subobjects per node
+Break down lists into 1..50, 51-100, etc...
+Click on a Java class in package explorer, see instances
+
+
+Display properties:
+  Be able to configure the following on a global or a package basis:
+    (select packages by substring or regex)
+
+Display nodes: in addition to toString():
+getDeclaredType(), getConcreteType(), getImplementedType(), 
+call a specific method, use a special field;
+
+*.*      [declared] [concrete] [method:(name)] [field:(name)]
+*.db4o   [concrete] [method:(name)] [field:(name)]
+         [declared] [concrete] [method:(name)] [field:(name)]
+         [declared] [concrete] [method:(name)] [field:(name)]
+         [declared] [concrete] [method:(name)] [field:(name)]
+
+
+Filter from search box; limit search depth (add UI for this)
+ - Incremental search
+ - Regular expression
+
+
+- Hide package names option
+- Hide these classes option (for hiding system classes)
+
+
+Put SWT applicatin launching instructions in /dev
+
+
+April: version 1.0
+October timeframe: mature browser
+
+
+
+Carl's notes:
+
+  Popup Nodes, if there are too many. Display first 50 and use node to expand
+  Would like to see the number items per class
+  Double-clicking on a node: Browse from here.
+  History for objects
+  Update the browse view from selecting class in Java perspective
+  Declared type and implemented type
+  Hide package names
+
+  [declared type] [concrete type] [method:toString] [method:(name)] [field:(name)]
+
+
+Use-cases:
+
+1) Run on mobile devices
+
+2) Debug use-cases:
+
+2.1) Navigate
+2.2) Query
+2.3) Visualize object graphs  (Java Spider)
+
+
