@@ -145,7 +145,8 @@ namespace com.db4o.test {
         /**
          * path to blobs held externally
          */
-        public static String BLOB_PATH = "C:\\TEMP\\db4oTestBlobs";
+        public static String BLOB_PATH = "test/TEMP/db4oTestBlobs";
+        
 
     }
 }
