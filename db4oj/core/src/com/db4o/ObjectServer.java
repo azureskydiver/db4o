@@ -6,10 +6,8 @@ import com.db4o.ext.*;
 
 /**
  * the db4o server class. 
- * @see <a href="Db4o.html#openServer(java.lang.String, int)">
- * <code>Db4o.openServer()</code></a>
- * @see <a href="ext/ExtObjectServer.html">ExtObjectServer</a> for
- * extended functionality.
+ * @see Db4o#openServer(java.lang.String, int) Db4o.openServer
+ * @see ExtObjectServer for extended functionality
  */
 public interface ObjectServer {
     /**

@@ -19,10 +19,8 @@ public interface ExtObjectSet extends ObjectSet {
 	/**
 	 * returns an array of internal IDs that correspond to the contained objects.
 	 * <br><br>
-	 * @see <a href="ExtObjectContainer.html#getID(java.lang.Object)">
-	 * <code>ExtObjectContainer.getID()</code></a>
-	 * @see <a href="ExtObjectContainer.html#getByID(long)">
-	 * <code>ExtObjectContainer.getByID()</code></a>
+	 * @see ExtObjectContainer#getID
+	 * @see ExtObjectContainer#getByID
 	 */
 	public long[] getIDs();
 	

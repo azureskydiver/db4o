@@ -67,7 +67,7 @@ public interface Query {
 	 * they contain a field with the specified field name. The
 	 * descendant Query node will be created from all possible candidate
 	 * classes.
-     * @param field path to the descendant.
+     * @param fieldName path to the descendant.
      * @return descendant {@link Query} node
      */
     public Query descend (String fieldName);

@@ -39,7 +39,7 @@ public interface ObjectContainer {
      * <code>objectOnActivate</code></a> which can be used for cascaded activation.<br><br>
 	 * @see com.db4o.config.Configuration#activationDepth Why activation?
 	 * @see ObjectCallbacks Using callbacks
-     * @param Object the object to be activated.
+     * @param obj the object to be activated.
 	 * @param depth the member {@link com.db4o.config.Configuration#activationDepth depth}
 	 *  to which activate is to cascade.
      */
@@ -103,12 +103,10 @@ public interface ObjectContainer {
      * <code>delete()</code> triggers the callback method
      * <a href="ext/ObjectCallbacks.html#objectOnDelete(com.db4o.ObjectContainer)">
      * <code>objectOnDelete</code></a> which can be also used for cascaded deletes.<br><br>
-	 * @see <a href="config/ObjectClass.html#cascadeOnDelete(boolean)">
-	 * <code>ObjectClass#cascadeOnDelete</code></a>
-	 * @see <a href="config/ObjectField.html#cascadeOnDelete(boolean)">
-	 * <code>ObjectField#cascadeOnDelete</code></a>
-	 * @see <a href="ext/ObjectCallbacks.html">Using callbacks</a>
-     * @param object the object to be deleted from the
+	 * @see com.db4o.config.ObjectClass#cascadeOnDelete
+	 * @see com.db4o.config.ObjectField#cascadeOnDelete
+	 * @see ObjectCallbacks Using callbacks
+     * @param obj the object to be deleted from the
      * <code>ObjectContainer</code>.<br>
      */
     public void delete (Object obj);
@@ -160,9 +158,8 @@ public interface ObjectContainer {
      * @param template object to be used as an example to find all matching objects.<br><br>
      * @return <a href="ObjectSet.html"><code>ObjectSet</code></a>
 	 * containing all found objects.<br><br>
-	 * @see <a href="config/Configuration.html#activationDepth(int)">
-	 * Why activation?</a>
-	 * @see <br><a href="ext/ObjectCallbacks.html">Using callbacks</a>
+	 * @see com.db4o.config.Configuration#activationDepth Why activation?
+	 * @see ObjectCallbacks Using callbacks
 	 */
     public ObjectSet get (Object template);
     
@@ -219,17 +216,12 @@ public interface ObjectContainer {
      * <a href="ext/ObjectCallbacks.html#objectOnUpdate(com.db4o.ObjectContainer)">
      * <code>objectOnUpdate</code></a> might also be used for cascaded updates.<br><br>
      * @param obj the object to be stored or updated.
-	 * @see <a href="ext/ExtObjectContainer.html#set(java.lang.Object, int)">
-	 * <code>ExtObjectContainer#set(object, depth)</code></a>
-	 * @see <a href="config/Configuration.html#updateDepth(int)">
-	 * <code>Configuration#updateDepth()</code></a>
-	 * @see <a href="config/ObjectClass.html#updateDepth(int)">
-	 * <code>ObjectClass#updateDepth()</code></a>
-	 * @see <a href="config/ObjectClass.html#cascadeOnUpdate(boolean)">
-	 * <code>ObjectClass#cascadeOnUpdate()</code></a>
-	 * @see <a href="config/ObjectField.html#cascadeOnUpdate(boolean)">
-	 * <code>ObjectField#cascadeOnUpdate()</code></a>
-	 * @see <br><a href="ext/ObjectCallbacks.html">Using callbacks</a>
+	 * @see ExtObjectContainer#set(java.lang.Object, int) ExtObjectContainer#set(object, depth)
+	 * @see com.db4o.config.Configuration#updateDepth
+	 * @see com.db4o.config.ObjectClass#updateDepth
+	 * @see com.db4o.config.ObjectClass#cascadeOnUpdate
+	 * @see com.db4o.config.ObjectField#cascadeOnUpdate
+	 * @see ObjectCallbacks Using callbacks
      */
     public void set (Object obj);
     

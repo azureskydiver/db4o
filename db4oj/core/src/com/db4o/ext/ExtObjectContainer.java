@@ -45,8 +45,8 @@ public interface ExtObjectContainer extends ObjectContainer {
      * previously retrieved with 
      * <a href="#getID(java.lang.Object)"><code>getID(Object)</code></a>.<br>
      * - The object parameter needs to be of the same class as the stored object.<br><br>
-     * @see <a href="#getID(java.lang.Object)"><code>getID(Object)</code></a>
-     * @param object the object that is to be bound
+     * @see #getID(java.lang.Object)
+     * @param obj the object that is to be bound
      * @param id the internal id the object is to be bound to
      */
     public void bind(Object obj, long id);
@@ -72,8 +72,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * each ObjectContainer without any effects on the global settings.<br><br>
      * @return <a href="../config/Configuration.html"><code>Configuration</code></a>
      *  the Configuration context for this ObjectContainer
-     * @see <a href="../Db4o.html#configure()">
-     * <code>Db4o#configure()</code></a>
+     * @see Db4o#configure
      */
     public Configuration configure();
 
@@ -87,8 +86,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @param ID the internal ID
      * @return the object associated with the passed ID or <code>null</code>, 
      * if no object is associated with this ID in this <code>ObjectContainer</code>.
-     * @see <a href="../config/Configuration.html#activationDepth(int)">
-     * Why activation?</a>
+     * @see com.db4o.config.Configuration#activationDepth Why activation?
      */
     public Object getByID(long ID);
     
@@ -102,8 +100,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * activation state they are currently in, in the local cache.<br><br>
      * @param uuid the UUID
      * @return the object for the UUID
-     * @see <a href="../config/Configuration.html#activationDepth(int)">
-     * Why activation?</a>
+     * @see com.db4o.config.Configuration#activationDepth Why activation?
      */
     public Object getByUUID(Db4oUUID uuid);
 
@@ -118,7 +115,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * {@link #getObjectInfo(Object)}, {@link ObjectInfo#getUUID()} and
      * {@link #getByUUID(Db4oUUID)} for long-term external references to
      * objects.<br><br>  
-     * @param object any object
+     * @param obj any object
      * @return the associated internal ID or <code>0</code>, if the passed
      * object is not stored in this <code>ObjectContainer</code>.
      */
@@ -143,7 +140,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * tests if an object is activated.
      * <br><br><code>isActive</code> returns <code>false</code> if an object is not
      * stored within the <code>ObjectContainer</code>.<br><br>
-     * @param object to be tested<br><br>
+     * @param obj to be tested<br><br>
      * @return <code>true</code> if the passed object is active.
      */
     public boolean isActive(Object obj);
@@ -165,7 +162,7 @@ public interface ExtObjectContainer extends ObjectContainer {
     /**
      * tests if an object is stored in this <code>ObjectContainer</code>.
      * <br><br>
-     * @param object to be tested<br><br>
+     * @param obj to be tested<br><br>
      * @return <code>true</code> if the passed object is stored.
      */
     public boolean isStored(Object obj);
@@ -188,7 +185,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * desirable to preserve virtual object attributes such as the object version number
      * or the UUID. Use this method to signal to an ObjectContainer that it should read
      * existing version numbers and UUIDs from another ObjectContainer. This method should
-     * also be used during the {@link Defragment} operation. It is included in the default
+     * also be used during the {@link com.db4o.tools.Defragment Defragment} operation. It is included in the default
      * implementation supplied in Defragment.java/Defragment.cs.<br><br>
      * @param objectContainer the {@link ObjectContainer} objects are to be migrated
      * from or <code>null</code> to denote that migration is completed.
@@ -237,7 +234,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * used to create multiple copies of  objects.<br><br> <code>purge(Object)</code> has
      * no influence on the persistence state of objects. "Purged" objects can be
      * reretrieved with queries.<br><br>
-     * @param Object the object to be removed from the reference mechanism.
+     * @param obj the object to be removed from the reference mechanism.
      */
     public void purge(Object obj);
     
@@ -246,7 +243,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * <br><br>If a member object is not activated, it will be activated by this method.
      * <br><br>The isolation used is READ COMMITTED. This method will read all objects
      * and values that have been committed by other transactions.<br><br>
-     * @param Object the object to be refreshed.
+     * @param obj the object to be refreshed.
 	 * @param depth the member {@link Configuration#activationDepth(int) depth}
 	 *  to which refresh is to cascade.
      */
@@ -281,7 +278,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * this method allows a manual specification of the depth, the passed object is to be updated.<br><br>
      * @param obj the object to be stored or updated.
      * @param depth the depth to which the object is to be updated
-     * @see <br><a href="../ObjectContainer.html#set(java.lang.Object)"><code>ObjectContainer#set(Object)</code></a>
+     * @see com.db4o.ObjectContainer#set
      */
     public void set (Object obj, int depth);
     

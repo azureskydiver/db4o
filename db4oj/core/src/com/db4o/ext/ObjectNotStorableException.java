@@ -8,8 +8,7 @@ import com.db4o.*;
 /**
  * this Exception is thrown, if objects can not be stored and if
  * db4o is configured to throw Exceptions on storage failures.
- * @see <a href="../config/Configuration.html#exceptionsOnNotStorable(boolean)">
- * <code>Configuration#exceptionsOnNotStorable()</code></a>.
+ * @see com.db4o.config.Configuration#exceptionsOnNotStorable
  */
 public class ObjectNotStorableException extends RuntimeException{
 	

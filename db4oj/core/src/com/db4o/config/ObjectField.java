@@ -27,13 +27,10 @@ public interface ObjectField {
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * @param flag whether activation is to be cascaded to the member object.
-	 * @see <a href="Configuration.html#activationDepth(int)">
-	 * Why activation?</a>
-	 * @see <a href="ObjectClass.html#cascadeOnActivate(boolean)">
-	 * <code>ObjectClass#cascadeOnActivate()</code></a>
-	 * @see <a href="../ObjectContainer.html#activate(java.lang.Object, int)">
-	 * <code>ObjectContainer#activate()</code></a>
-	 * @see <br><a href="../ext/ObjectCallbacks.html">Using callbacks</a>
+	 * @see Configuration#activationDepth Why activation?
+	 * @see ObjectClass#cascadeOnActivate
+	 * @see com.db4o.ObjectContainer#activate
+	 * @see com.db4o.ext.ObjectCallbacks Using callbacks</a>
 	 */
 	public void cascadeOnActivate(boolean flag);
 	
@@ -58,11 +55,9 @@ public interface ObjectField {
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * @param flag whether deletes are to be cascaded to the member object.
-	 * @see <a href="ObjectClass.html#cascadeOnDelete(boolean)">
-	 * <code>ObjectClass#cascadeOnDelete()</code></a>
-	 * @see <a href="../ObjectContainer.html#delete(java.lang.Object)">
-	 * <code>ObjectContainer#delete()</code></a>
-	 * @see <br><a href="../ext/ObjectCallbacks.html">Using callbacks</a>
+	 * @see ObjectClass#cascadeOnDelete
+	 * @see com.db4o.ObjectContainer#delete
+	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
 	 */
 	public void cascadeOnDelete(boolean flag);
 	
@@ -78,13 +73,10 @@ public interface ObjectField {
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * @param flag whether updates are to be cascaded to the member object.
-	 * @see <a href="../ObjectContainer.html#set(java.lang.Object)">
-	 * <code>ObjectContainer#set()</code></a>
-	 * @see <a href="ObjectClass.html#cascadeOnUpdate(boolean)">
-	 * <code>ObjectClass#cascadeOnUpdate()</code></a>
-	 * @see <a href="ObjectClass.html#updateDepth(int)">
-	 * <code>ObjectClass#updateDepth()</code></a>
-	 * @see <br><a href="../ext/ObjectCallbacks.html">Using callbacks</a>
+	 * @see com.db4o.ObjectContainer#set
+	 * @see ObjectClass#cascadeOnUpdate
+	 * @see ObjectClass#updateDepth
+	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
 	 */
 	public void cascadeOnUpdate(boolean flag);
 	

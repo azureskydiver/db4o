@@ -7,7 +7,7 @@ package com.db4o.ext;
  * a unique universal identify for an object.
  * <br><br>The db4o UUID consists of two parts:<br>
  * - an indexed long for fast access,<br>
- * - the signature of the {@link ObjectContainer} the object
+ * - the signature of the {@link com.db4o.ObjectContainer ObjectContainer} the object
  * was created with.
  * <br><br>Db4oUUIDs are valid representations of objects
  * over multiple ObjectContainers 
@@ -44,7 +44,7 @@ public class Db4oUUID {
      * <br><br>
      * <br><br>To uniquely identify an object universally, db4o
      * uses an indexed long and a reference to the {@link Db4oDatabase}
-     * singleton object of the {@link ObjectContainer} it was created on.
+     * singleton object of the {@link com.db4o.ObjectContainer ObjectContainer} it was created on.
      * This method returns the signature of the Db4oDatabase object of
      * the ObjectContainer: the signature of the origin ObjectContainer. 
      * @return the signature of the Db4oDatabase for this UUID.

@@ -5,7 +5,7 @@ package com.db4o.reflect;
 /** 
  * representation for java.lang.reflect.Field.
  * <br><br>See the respective documentation in the JDK API.
- * @see <a href="IReflect.html"><code>IReflect</code></a>
+ * @see IReflect
  */
 public interface IField {
 	
