@@ -1,56 +1,63 @@
-<project name="doc40" default="doctordoc40" basedir=".">
+<project name="db4otutorial" default="doctortutorial" basedir=".">
 
 	<property file="machine.properties" />
 	<property file="ant.properties" />
 	
 	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
 		<classpath>
-			<pathelement location="${dir.bin.doctor}" />
-			<pathelement location="${dir.doctor}/lib/iText.jar" />
-			<pathelement location="${dir.bin.jtutorial}"/>
-			<pathelement location="${dir.bin.jcore}"/>
+			<pathelement location="${dir.doctor.bin}" />
+			<pathelement location="${dir.doctor.lib}/iText.jar" />
+			<pathelement location="${dir.j.bin}" />
 			<path path="${path.classpath.full}" />
 		</classpath>
 	</taskdef>
-
-	<target name="doctordoc40" description="Run doctor on doc40 while editing">
-		<doctor name="doc40" 
-				interactive="true" 
-				workspace="${dir.workspace}" 
-				inputsource="${dir.src.jtutorial}/" 
-				sourceextension="java" 
-				outputfile="${db4o.file}tutorial"
-				outputpath="${dir.f1.out.java}" 
-				pdfbasefont="${font.pdf.base}"
-				archive="${filename.jar.doctor.applets}, ${filename.jar.java1.4}, ${filename.jar.tutorial}"
-			   	outlineimage="db4objects1.jpg"
-			   	linkhome="http://www.db4o.com"
-			>
-				<variable name="java" boolean="true"/>
-				<variable name="net" boolean="false"/>
-				<ignoreinputfolder name="net"/>
-			</doctor>
-		<copy todir="${dir.f1.out.java}/docs" overwrite="true">
+	
+	<target name="doctortutorial" description="Run doctor on the tutorial while editing">
+		<doctor 
+			name="f1" 
+			home="${dir.j.tutorial}" 
+			interactive="true" 
+			workspace="${dir.workspace}" 
+			inputsource="${dir.j.tutorial.src}/" 
+			sourceextension="java" 
+			outputfile="${db4o.file}tutorial" 
+			outputpath="${dir.j.tutorial.out.java}" 
+			pdfbasefont="${font.pdf.base}" 
+			archive="${filename.doctor.applets.jar}, ${filename.java1.4.jar}, ${filename.tutorial.jar}" 
+			outlineimage="db4objects1.jpg" 
+			linkhome="http://www.db4o.com">
+			<variable name="java" boolean="true" />
+			<variable name="net" boolean="false" />
+			<ignoreinputfolder name="net" />
+		</doctor>
+		<copy todir="${dir.j.tutorial.out.java}/docs" overwrite="true">
 			<fileset dir="${dir.dist.doctor}">
 				<include name="*.jar" />
 			</fileset>
+			<fileset dir="${dir.dist.jars}">
+				<include name="${filename.java1.4.jar}" />
+			</fileset>
 		</copy>
-		<doctor name="doc40" 
+		<signjar jar="${dir.j.tutorial.out.java}/docs/${filename.java1.4.jar}" alias="db4objects" keypass="kistoa" storepass="kistoa">
+		</signjar>
+		<doctor 
+			name="f1" 
+			home="${dir.j.tutorial}" 
 			interactive="true" 
 			workspace="${dir.workspace}" 
-			inputsource="${dir.src.ntutorial}/" 
+			inputsource="${dir.n.tutorial.src}/" 
 			sourceextension="cs" 
-			outputpath="${dir.f1.out.net}" 
-			pdfbasefont="${font.pdf.base}"
-			archive="${filename.jar.doctor.applets}, ${filename.jar.java1.4}, ${filename.jar.tutorial}"
-		    outlineimage="db4objects1.jpg"
-		    linkhome="http://www.db4o.com"
-		>
-			<variable name="java" boolean="false"/>
-			<variable name="net" boolean="true"/>
-			<ignoreinputfolder name="java"/>
+			outputfile="${db4o.file}tutorial" 
+			outputpath="${dir.j.tutorial.out.net}" 
+			pdfbasefont="${font.pdf.base}" 
+			archive="${filename.doctor.applets.jar}, ${filename.java1.4.jar}, ${filename.tutorial.jar}" 
+			outlineimage="db4objects1.jpg" 
+			linkhome="http://www.db4o.com">
+			<variable name="java" boolean="false" />
+			<variable name="net" boolean="true" />
+			<ignoreinputfolder name="java" />
 		</doctor>
-		<exec executable="cmd" dir="${dir.f1.out.java}">
+		<exec executable="cmd" dir="${dir.j.tutorial.out.java}">
 			<arg value="/k start index.html"/>
 		</exec>
 	</target>

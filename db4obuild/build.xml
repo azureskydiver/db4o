@@ -5,15 +5,23 @@
 	Depends on a custom local file 'machine.properties' with
 	the following entries:
 
-	dir.workspace=<the workspace where all projects reside>
+	dir.workspace=<the workspace folder where all projects reside>
 	file.compiler.jdk1.3=<JDK1.3 compatible javac>
 	file.rt.jar=<JDK1.3 compatible runtime jar>
 	font.pdf.base=<true type font>
 	dir.dll.wince=<path to .NET CE dll, leave empty if not available>
+	
+	An example:
+	dir.workspace=C:/_db4o/production
+	file.compiler.jdk1.3=C:/jdk1.3.1/bin/javac.exe
+	file.rt.jar=C:/j2sdk1.4.2_02/jre/lib/rt.jar
+	font.pdf.base=C:/WINDOWS/Fonts/VERDANA.TTF
+	dir.dll.wince=C:/Program Files/Microsoft Visual Studio .NET 2003/CompactFrameworkSDK/v1.0.5000/Windows CE/
+	
 -->
 	<property file="machine.properties" />
 	<property file="ant.properties" />
-
+	
 	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
 		<classpath>
 			<pathelement location="${dir.doctor.bin}" />
@@ -186,7 +194,7 @@
 		<copy file="${file.keypair}" todir="${dir.dist.net.compile}" />
 		<exec executable="csc" dir="${dir.dist.net.compile}">
 			<arg value="/optimize" />
-			<arg value="/out:${file.name.compact1}" />
+			<arg value="/out:${file.dll.compact}" />
 			<arg value="/target:library" />
 			<arg value="/warn:1" />
 			<arg value="/noconfig" />
@@ -354,7 +362,7 @@
 		<filehead path="${dir.dist.net.build.src}" before="using" fileext="cs" header="${content.gplheader}" />
 		<copy todir="${dir.dist.net.build}">
 			<fileset dir="${dir.dist}" includes="doc/**" />
-			<fileset dir="${dir.dist.net}" includes="dll/**" />
+			<fileset dir="${dir.dist}" includes="dll/**/**" />
 			<fileset dir="${dir.j}" includes="GPL.txt" />
 			<fileset dir="${dir.config}" includes="README.txt" />
 		</copy>
