@@ -30,7 +30,9 @@ public class MockStoredClass implements StoredClass {
 		while(curclazz!=null) {
 			Field[] curfields=curclazz.getDeclaredFields();
 			for (int idx = 0; idx < curfields.length; idx++) {
-				fields.add(new MockStoredField(curfields[idx]));
+				if(!Modifier.isTransient(curfields[idx].getModifiers())) {
+					fields.add(new MockStoredField(curfields[idx]));
+				}
 			}
 			curclazz=curclazz.getSuperclass();
 		}

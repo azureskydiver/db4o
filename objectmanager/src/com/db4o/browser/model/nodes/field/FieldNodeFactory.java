@@ -17,6 +17,7 @@
 package com.db4o.browser.model.nodes.field;
 
 import java.lang.reflect.Field;
+import java.util.Date;
 
 import com.db4o.browser.model.nodes.IModelNode;
 
@@ -35,7 +36,8 @@ public class FieldNodeFactory {
             Long.class,
             Boolean.class,
             Character.class,
-            String.class
+            String.class,
+            Date.class
     };
 
     /**

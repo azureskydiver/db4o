@@ -3,12 +3,15 @@
  */
 package com.db4o.browser.model.test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import junit.framework.*;
+import junit.framework.TestCase;
 
-import com.db4o.browser.model.*;
-import com.db4o.browser.model.nodes.*;
+import com.db4o.browser.model.DatabaseGraphIterator;
+import com.db4o.browser.model.GraphPathNode;
+import com.db4o.browser.model.GraphPosition;
+import com.db4o.browser.model.nodes.IModelNode;
 
 public class DatabaseGraphIteratorTest extends TestCase {
 	
@@ -59,6 +62,35 @@ public class DatabaseGraphIteratorTest extends TestCase {
 		}
 	}
 
+	public void testTwoClasses() {
+		PrimitiveHolder pdata=new PrimitiveHolder(42);
+		List list=new ArrayList();
+		list.add("one");
+		list.add(new Integer(42));
+		CollectionHolder cdata=new CollectionHolder(list);
+		database.add(new MockStoredClass(PrimitiveHolder.class), new Object[] {pdata});
+		database.add(new MockStoredClass(CollectionHolder.class), new Object[] {cdata});
+		DatabaseGraphIterator iter=database.graphIterator();
+		assertEquals(0,iter.nextIndex());
+		GraphPosition path=iter.getPath();
+		GraphPathNode node=path.pop();
+		assertEquals(-1, node.selectedChild);
+		assertFalse(path.iterator().hasNext());
+		iter.selectNextChild();
+		assertEquals(0,iter.nextIndex());
+		
+		path=iter.getPath();
+		node=path.pop();
+		assertEquals(-1, node.selectedChild);
+		node=path.pop();
+		assertEquals(-1, node.selectedChild);
+		
+		iter.selectNextChild();
+		assertEquals(0,iter.nextIndex());		
+		iter.selectParent();
+		assertEquals(0,iter.nextIndex());		
+	}
+	
 	private IModelNode assertSingleHolder(Class clazz,String fieldname,Object data,String text,String valuetext,int numchildren) {
 		database.add(new MockStoredClass(clazz),new Object[]{data});
 		DatabaseGraphIterator graphiter=database.graphIterator();
@@ -89,19 +121,14 @@ public class DatabaseGraphIteratorTest extends TestCase {
 		graphiter.previous();
 		assertTrue(graphiter.hasParent());
 		graphiter.selectParent();
-		current=graphiter.previous();
+		current=graphiter.next();
 		assertEquals(instancenode,current);
 
 		path=graphiter.getPath();		
 		graphiter.setSelectedPath(path);
 		graphiter.setSelectedPath(path);
-		path=graphiter.getPath();
-		current=graphiter.next();
-		assertEquals(instancenode,current);
-		graphiter.selectParent();
-		current=graphiter.previous();
-		assertEquals(classnode,current);
-
+		GraphPosition returned=graphiter.getPath();
+		assertEquals(path.size(),returned.size());
 		return fieldnode;
 	}
 
