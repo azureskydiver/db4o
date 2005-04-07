@@ -35,7 +35,7 @@ namespace com.db4o.reflect.net
 			if (a_object == null){
 				return null;
 			}
-			return _parent.forClass(j4o.lang.Class.getClassForObject(a_object));
+			return forClass(j4o.lang.Class.getClassForObject(a_object));
 		}
 
 		public virtual bool isCollection(com.db4o.reflect.ReflectClass candidate){
