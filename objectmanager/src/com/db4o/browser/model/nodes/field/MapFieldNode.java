@@ -33,8 +33,34 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  * @author djo
  */
 public class MapFieldNode extends FieldNode {
+	
+	private static class GetStrategy{
+		
+		GetStrategy(String keySetMethod, String getMethod) {
+			this.keySetMethod = keySetMethod;
+			this.getMethod = getMethod;
+		}
+		
+		final String keySetMethod;
+		final String getMethod;
+	}
+	
+	private static final GetStrategy[] STRATEGIES = new GetStrategy[] {
+		new GetStrategy("keySet", "get"),
+		// FIXME: find out for .NET   new GetStrategy("keySet", "get"),
+	};
+	
+	public static IModelNode tryToCreate(ReflectField field, Object instance, Database database) {
+		for (int i = 0; i < STRATEGIES.length; i++) {
+			IModelNode node = tryToCreate(STRATEGIES[i], field, instance, database);
+			if(node != null) {
+				return node;
+			}
+		}
+		return null;
+	}
 
-    public static IModelNode tryToCreate(ReflectField field, Object instance, Database database) {
+    public static IModelNode tryToCreate(GetStrategy strategy, ReflectField field, Object instance, Database database) {
         MapFieldNode result;
         
         Object fieldContents = FieldNode.field(field, instance);
@@ -44,8 +70,8 @@ public class MapFieldNode extends FieldNode {
         ReflectMethod keySet = null;
 		ReflectMethod get = null;
         ReflectClass object = database.reflector().forName("java.lang.Object");
-        keySet = fieldType.getMethod("keySet", new ReflectClass[] {});
-        get = fieldType.getMethod("get", new ReflectClass[] {object});
+        keySet = fieldType.getMethod(strategy.keySetMethod, new ReflectClass[] {});
+        get = fieldType.getMethod(strategy.getMethod, new ReflectClass[] {object});
         
         if (keySet == null || get == null) {
             return null;
