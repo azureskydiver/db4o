@@ -78,6 +78,13 @@ namespace com.db4o {
             return new P2Collections(a_object);
         }
 
+        public static Object[] collectionToArray(YapStream stream, Object obj){
+            Collection4 col = flattenCollection(stream, obj);
+            Object[] ret = new Object[col.size()];
+            col.toArray(ret);
+            return ret;
+        }
+
         static internal Reflector createReflector(Config4Impl config){
             return new com.db4o.reflect.net.NetReflector();
         }

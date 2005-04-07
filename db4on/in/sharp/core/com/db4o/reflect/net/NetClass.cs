@@ -103,6 +103,10 @@ namespace com.db4o.reflect.net
 			return _clazz.isInterface();
 		}
 
+        public virtual bool isCollection() {
+            return _reflector.isCollection(this);
+        }
+
 		public virtual bool isPrimitive(){
 			return _clazz.isPrimitive();
 		}
@@ -159,6 +163,11 @@ namespace com.db4o.reflect.net
 			useConstructor(null, null);
 			return false;
 		}
+
+        public virtual object[] toArray(object obj) {
+            // handled in GenericClass
+            return null;
+        }
 
 		public override string ToString(){
 			return "CClass: " + _clazz.getName();
