@@ -18,5 +18,12 @@ class GenericObject {
     GenericClass genericClass() {
         return _class;
     }
+    
+    public String toString(){
+        if(_class == null){
+            return super.toString();    
+        }
+        return "(G) " + _class.getName();
+    }
 
 }
