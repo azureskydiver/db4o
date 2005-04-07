@@ -132,6 +132,13 @@ public final class Platform {
     	return file.createNewFile();
     }
     */
+	
+	public static Object[] collectionToArray(YapStream stream, Object obj){
+		Collection4 col = flattenCollection(stream, obj);
+		Object[] ret = new Object[col.size()];
+		col.toArray(ret);
+		return ret;
+	}
 
     static final Collection4 flattenCollection(YapStream stream, Object obj) {
         Collection4 col = new Collection4();

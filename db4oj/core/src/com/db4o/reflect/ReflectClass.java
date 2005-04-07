@@ -31,6 +31,8 @@ public interface ReflectClass {
 	
 	public boolean isAssignableFrom(ReflectClass type);
 	
+	public boolean isCollection();
+	
 	public boolean isInstance(Object obj);
 	
 	public boolean isInterface();
@@ -52,6 +54,8 @@ public interface ReflectClass {
      * @return true if the special constructor is in place after the call
      */
     public boolean skipConstructor(boolean flag);
+	
+	public Object[] toArray(Object obj);
     
     public void useConstructor(ReflectConstructor constructor, Object[] params);
 	

@@ -94,6 +94,10 @@ public class JdkClass implements ReflectClass{
 		return _clazz.isAssignableFrom(((JdkClass)type).getJavaClass());
 	}
 	
+	public boolean isCollection() {
+		return _reflector.isCollection(this);
+	}
+	
 	public boolean isInstance(Object obj) {
 		return _clazz.isInstance(obj);
 	}
@@ -147,6 +151,10 @@ public class JdkClass implements ReflectClass{
         useConstructor(null, null);
         return false;
     }
+	
+	public Object[] toArray(Object obj){
+		return null;
+	}
     
     public void useConstructor(ReflectConstructor constructor, Object[] params){
         this._constructor = constructor;
