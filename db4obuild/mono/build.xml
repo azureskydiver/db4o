@@ -43,16 +43,19 @@
 		<filter token="gpguser" value="${gpg.user}"/>
 
 		<copy todir="${dir.mono.zip}/${db4o.name.short}" filtering="true">
-			<fileset dir="${dir.build.transfer.mono}">
-				<include name="src/core/src/**/*.cs" />
-				<exclude name="src/core/src/compact/**" />
-				<exclude name="src/core/src/net/**" />
+			<fileset dir="${dir.build.transfer.mono}">				
 				<include name="src/tools/src/**/*.cs"/>
 				<include name="src/test/src/**/*.cs"/>
 				<exclude name="src/test/src/**/compact/**" />
 				<include name="doc/**" />
 				<include name="Makefile" />
 				<include name="db4o.spec" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.mono.zip}/${db4o.name.short}/src/core" filtering="true" overwrite="true">
+			<fileset dir="${dir.n.core}">
+				<include name="src/**/*.cs" />
+				<exclude name="src/compact/**" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.mono.zip}/${db4o.name.short}" filtering="true">
