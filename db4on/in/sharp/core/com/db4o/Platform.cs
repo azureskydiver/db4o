@@ -12,6 +12,7 @@ using com.db4o.config;
 using com.db4o.ext;
 using com.db4o.query;
 using com.db4o.reflect;
+using com.db4o.reflect.generic;
 using com.db4o.types;
 
 namespace com.db4o {
@@ -355,8 +356,13 @@ namespace com.db4o {
             }
         }
 
-        public static void registerCollections(Reflector reflector) {
-            // TODO: implement
+        public static void registerCollections(GenericReflector reflector) {
+
+            reflector.registerCollectionUpdateDepth(
+                Class.getClassForType(typeof(System.Collections.IDictionary)) , 
+                3);
+
+            
         }
 
         static internal void removeShutDownHook(Object yapStream, Object streamLock) {
