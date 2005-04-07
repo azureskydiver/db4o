@@ -51,6 +51,10 @@ namespace com.db4o.reflect.net
 			return reflectors;
 		}
 
+        public virtual com.db4o.reflect.ReflectClass getDelegate(){
+            return this;
+        }
+
 		public virtual com.db4o.reflect.ReflectMethod getMethod(
             string methodName, 
             com.db4o.reflect.ReflectClass[] paramClasses){
