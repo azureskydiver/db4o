@@ -49,7 +49,7 @@ public class FieldNode implements IModelNode {
         _instance = instance;
 		_database = database;
 
-		value = _field.get(_instance);
+		value = FieldNode.field(field, instance);
 
 		if(value==null) {
 			delegate=NullNode.INSTANCE;

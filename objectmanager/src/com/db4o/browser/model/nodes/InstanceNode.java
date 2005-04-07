@@ -16,10 +16,11 @@
  */
 package com.db4o.browser.model.nodes;
 
-import com.db4o.browser.model.Database;
-import com.db4o.browser.model.nodes.field.FieldNodeFactory;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
+import java.util.*;
+
+import com.db4o.browser.model.*;
+import com.db4o.browser.model.nodes.field.*;
+import com.db4o.reflect.*;
 
 
 /**
@@ -49,16 +50,34 @@ public class InstanceNode implements IModelNode {
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.ITreeNode#children()
 	 */
-	public IModelNode[] children() {
-        ReflectField[] fields = _clazz.getDeclaredFields();
-		IModelNode[] children=new IModelNode[fields.length];
-		for (int idx = 0; idx < fields.length; idx++) {
-			children[idx]=FieldNodeFactory.construct(fields[idx],_instance,_database);
+//	public IModelNode[] children() {
+//        ReflectField[] fields = _clazz.getDeclaredFields();
+//		IModelNode[] children=new IModelNode[fields.length];
+//		for (int idx = 0; idx < fields.length; idx++) {
+//			children[idx]=FieldNodeFactory.construct(fields[idx],_instance,_database);
+//		}
+//		return children;
+//	}
+	
+    public IModelNode[] children() {
+		List results = new ArrayList();
+		ReflectClass curclazz = _clazz;
+		while (curclazz != null) {
+			ReflectField[] fields = curclazz.getDeclaredFields();
+			for (int i = 0; i < fields.length; i++) {
+				if (!fields[i].isTransient()) {
+					results.add(FieldNodeFactory.construct(fields[i], _instance, _database));
+				}
+			}
+			curclazz = curclazz.getSuperclass();
 		}
-		return children;
+		return (IModelNode[]) results.toArray(new IModelNode[results.size()]);
 	}
+
     
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.db4o.browser.gui.ITreeNode#getText()
 	 */
 	public String getText() {

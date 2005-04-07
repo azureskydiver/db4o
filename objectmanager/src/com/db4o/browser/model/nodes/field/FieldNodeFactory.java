@@ -19,6 +19,7 @@ package com.db4o.browser.model.nodes.field;
 import java.util.Date;
 
 import com.db4o.browser.model.Database;
+import com.db4o.browser.model.nodes.*;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
@@ -78,12 +79,18 @@ public class FieldNodeFactory {
         IModelNode result;
         
         ReflectClass fieldType = field.getType();
-        if (fieldType.isPrimitive()) {// || typeIn(fieldType, boxedPrimitiveTypes)) {
+		Object value = FieldNode.field(field, instance);
+		fieldType = database.reflector().forObject(value);
+		
+		if (value == null) {
+			return new FieldNode(field, instance, database);
+		}
+		
+        if (fieldType.isSecondClass()) {// || typeIn(fieldType, boxedPrimitiveTypes)) {
             return new PrimitiveFieldNode(field, instance, database);
         }
         
         if (fieldType.isArray()) {
-            // FIXME: StoredArrayFieldNode needs implemented
             return new ArrayFieldNode(field, instance, database);
         }
         
@@ -92,9 +99,10 @@ public class FieldNodeFactory {
         if (result != null) return result;
         
         // Otherwise treat all iterable things as lists
-        result = IterableFieldNode.tryToCreate(field, instance, database);
-        if (result != null) return result;
-        
+		if (fieldType.isCollection()) {
+			return new CollectionFieldNode(field, instance, database);
+		}
+
         // Otherwise it must be a plain old object
 		return new FieldNode(field, instance, database);
 	}

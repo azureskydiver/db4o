@@ -16,6 +16,7 @@
  */
 package com.db4o.browser.model;
 
+import com.db4o.*;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
@@ -101,5 +102,5 @@ public class Db4oDatabase implements Database {
     public Reflector reflector() {
         return container.ext().reflector();
     }
-    
+	
 }
