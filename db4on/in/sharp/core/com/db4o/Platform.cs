@@ -300,6 +300,7 @@ namespace com.db4o {
             if(claxx == null){
                 return false;
             }
+            claxx = claxx.getDelegate();
             com.db4o.reflect.net.NetClass netClass = claxx as com.db4o.reflect.net.NetClass ;
             if(netClass == null){
                 return false;
