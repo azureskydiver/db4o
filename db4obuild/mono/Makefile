@@ -25,6 +25,7 @@ MAIN_TEST=com.db4o.test.AllTests
 DLL_CORE_DIST=$(DIR_HOME)/dll/net/db4o.dll
 DLL_CORE=$(DIR_BIN)/db4o.dll
 DLL_TOOLS=$(DIR_BIN)/db4o-mono-tool.dll
+DEBUGGER_FILES=$(DIR_BIN)/*.mdb
 EXE_TEST_FILE=db4o-mono-test.exe
 EXE_TEST_PATH=$(DIR_BIN)/$(EXE_TEST_FILE)
 
@@ -44,7 +45,7 @@ buildtools: buildcore
 
 buildcore: init
 	#cp dll/db4o.dll $(DLL_CORE)
-	find $(DIR_SRC_CORE) -name "*.cs"|grep -v -E "src/compact/|src/net/"|xargs $(MCS) $(MCS_OPTS) -target:library -out:$(DLL_CORE)
+	find $(DIR_SRC_CORE) -name "*.cs"|grep -v -E "src/compact/|src/mono/"|xargs $(MCS) $(MCS_OPTS) -target:library -out:$(DLL_CORE)
 
 init:
 ifndef RPM_BUILD_ROOT
@@ -59,6 +60,7 @@ install:
 	echo ">>> *** " $(RPM_BUILD_ROOT)
 	mkdir -p $(DIR_INSTALL_BIN)
 	cp $(DLL_CORE) $(DIR_INSTALL_BIN)
+	cp $(DEBUGGER_FILES) $(DIR_INSTALL_BIN)
 	cp $(DLL_TOOLS) $(DIR_INSTALL_BIN)
 	cp $(EXE_TEST_PATH) $(DIR_INSTALL_BIN)
 ifndef RPM_DOC_DIR
