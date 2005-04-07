@@ -30,6 +30,14 @@ namespace com.db4o {
         private static byte[][] oldAssemblies;
 
         private static Object initMe = init();
+		
+		public static object[] collectionToArray(YapStream stream, object obj)
+		{
+			Collection4 col = flattenCollection(stream, obj);
+			object[] ret = new object[col.size()];
+			col.toArray(ret);
+			return ret;
+		}
 
         private static Object init(){
             oldAssemblyNames = new String[] {"db4o", "db4o-4.0-net1", "db4o-4.0-compact1"};
@@ -50,7 +58,7 @@ namespace com.db4o {
         
         static internal JDK jdk() {
         	throw new System.NotSupportedException();
-        } 
+        }
 
         static internal void addShutDownHook(Object stream, Object streamLock) {
             lock(typeof(Platform)) {
@@ -78,13 +86,6 @@ namespace com.db4o {
             return new P2Collections(a_object);
         }
 
-        public static Object[] collectionToArray(YapStream stream, Object obj){
-            Collection4 col = flattenCollection(stream, obj);
-            Object[] ret = new Object[col.size()];
-            col.toArray(ret);
-            return ret;
-        }
-
         static internal Reflector createReflector(Config4Impl config){
             return new com.db4o.reflect.net.NetReflector();
         }
@@ -102,14 +103,8 @@ namespace com.db4o {
         }
 
         static internal QEvaluation evaluationCreate(Transaction a_trans, Object example){
-            Evaluation eval = example as Evaluation;
-            if(eval != null){
-                return new QEvaluation(a_trans, example, false);
-            }else{
-                EvaluationDelegate ed = example as EvaluationDelegate;
-                if(ed != null){
-                    return new QEvaluation(a_trans,ed, true);
-                }
+            if (example is Evaluation || example is EvaluationDelegate) {
+				return new QEvaluation(a_trans, example);
             }
             return null;
         }
@@ -117,7 +112,7 @@ namespace com.db4o {
         static internal void evaluationEvaluate(Object a_evaluation, Candidate a_candidate){
             Evaluation eval = a_evaluation as Evaluation;
             if(eval != null){
-                ((Evaluation)a_evaluation).evaluate(a_candidate);
+                eval.evaluate(a_candidate);
             }else{
                 EvaluationDelegate ed = a_evaluation as EvaluationDelegate;
                 if(ed != null){
@@ -305,8 +300,6 @@ namespace com.db4o {
             if(claxx == null){
                 return false;
             }
-            claxx = claxx.getDelegate();
-
             com.db4o.reflect.net.NetClass netClass = claxx as com.db4o.reflect.net.NetClass ;
             if(netClass == null){
                 return false;
@@ -368,7 +361,7 @@ namespace com.db4o {
         public static void registerCollections(GenericReflector reflector) {
 
             reflector.registerCollectionUpdateDepth(
-                Class.getClassForType(typeof(System.Collections.IDictionary)) , 
+                Class.getClassForType(typeof(System.Collections.IDictionary)) ,
                 3);
 
             
@@ -429,6 +422,12 @@ namespace com.db4o {
                 }
             }
             return bytes;
+        }
+        
+        static internal object wrapEvaluation(object evaluation) {
+        	return (evaluation is EvaluationDelegate)
+	        	? new EvaluationDelegateWrapper((EvaluationDelegate)evaluation)
+	        	: evaluation;
         }
 
         static internal YapTypeAbstract[] types(YapStream stream) {
