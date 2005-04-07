@@ -1,9 +1,18 @@
 TODO:
 
+- Release engineering
+   * Don't support PDAs for the initial release
+
+- Testing
+   * Generic reflector; run with .net
+   * Arrays
+   * Test with no classes
+
 - Generic reflector
    * StoredIterableFieldNode - Needs to use Platform.isCollection
    * Need to write StoredMapFieldNode **DONE**
    * Make sure there are no java.lang.reflect calls where there shouldn't be
+   * Test with no classes available
 
 - Catch up MockDatabase to the generic reflector impl
 - StoredArrayFieldNode needs implemented **DONE**
@@ -12,7 +21,7 @@ TODO:
 
 - Make sure browsing scales to large numbers of nodes
 - Maps don't display correctly **DONE**
-- Arrays don't display correctly
+- Arrays don't display correctly **written, needs testing**
 - Beautify UI; add icons in appropriate places
 - Substring search: just search displayed strings; else do a query by form QBE
 - Begin query UI / querying functionality
