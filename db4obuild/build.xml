@@ -73,7 +73,6 @@
 		<versioninfo path="${dir.j.core.src}/com/db4o" java="true" version="${db4o.version.full}" />
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" />
 		<versioninfo path="${dir.n.core.src}/compact" compact="true" keyfile="" version="${db4o.version.full}" />
-		<versioninfo path="${dir.n.core.src}/mono" mono="true" keyfile="" version="${db4o.version.full}" />
 	</target>
 
 	<target name="clean" description="Delete all generated files">
@@ -147,7 +146,6 @@
 			<fileset dir="${dir.n.core.src}">
 				<include name="**/*.cs" />
 				<exclude name="net/**" />
-				<exclude name="mono/**" />
 				<exclude name="**/TSerializable.cs" />
 			</fileset>
 		</copy>
@@ -161,11 +159,10 @@
 			targettype="library"
 			destfile="${file.dll.net}"
 			docfile="${file.xml.net}"
-			debug="false" warnlevel="0" optimize="true">
+			debug="${compiledll.debug}" warnlevel="0" optimize="true">
 			
 			<include name="*.cs" />
 			<exclude name="compact/**" />
-			<exclude name="mono/**" />
 		</csc>
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" />
 		
@@ -191,14 +188,47 @@
 		</copy>
 	</target>
 	
+	<target name="compiletestsmono" depends="compiledllmono">
+		<csc srcdir="${dir.n.tools}/src"
+			targettype="library"
+			destfile="${dir.dist.dll.mono}/db4o-net-tools.dll"
+			debug="true">
+			
+			<reference dir="${dir.dist.dll.mono}">
+				<include name="db4o.dll" />
+			</reference>
+		</csc>
+		
+		<csc srcdir="${dir.n.test}/src"
+			targettype="exe"
+			destfile="${dir.dist.dll.mono}/db4o-net-test.exe"
+			debug="true"
+			mainclass="com.db4o.test.AllTests"
+			extraoptions="-r:System.Drawing">
+			
+			<exclude name="compact/**" />
+			
+			<reference dir="${dir.dist.dll.mono}">
+				<include name="db4o.dll" />
+				<include name="db4o-net-tools.dll" />
+			</reference>
+		</csc>
+	</target>
+	
+	<target name="runtestsmono" depends="compiletestsmono">
+		<exec executable="mono" dir="${dir.dist.dll.mono}">
+			<arg value="--debug" />
+			<arg file="${dir.dist.dll.mono}/db4o-net-test.exe" />
+		</exec>
+	</target>
+	
 	<target name="compiledllmono" depends="init, copycompact, sharpen">
-		<versioninfo path="${dir.n.core.src}/mono" mono="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" />
-		<csc srcdir="${dir.n.core.src}" targettype="library" destfile="${file.dll.mono}" debug="false" warnlevel="0" optimize="true">
+		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" />
+		<csc srcdir="${dir.n.core.src}" targettype="library" destfile="${file.dll.mono}" docfile="${file.xml.mono}" debug="${compiledll.debug}" warnlevel="0" optimize="true">
 			<include name="*.cs" />
 			<exclude name="compact/**" />
-			<exclude name="net/**" />
 		</csc>
-		<versioninfo path="${dir.n.core.src}/mono" net="true" keyfile="" version="${db4o.version.full}" />
+		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" />
 	</target>
 
 	<target name="compiletestsjava" depends="compilecorejava" description="Compile Db4o test sources">
@@ -229,6 +259,7 @@
 		<property name="dir.dist.ndoc" location="${dir.dist}/ndoc" />
 		<property name="ndoc.home" location="lib/ndoc" />
 					
+		<delete dir="${dir.dist.ndoc}" />
 		<mkdir dir="${dir.dist.ndoc}" />
 		
 		<exec executable="${ndoc.home}/bin/net/1.1/NDocConsole.exe">
