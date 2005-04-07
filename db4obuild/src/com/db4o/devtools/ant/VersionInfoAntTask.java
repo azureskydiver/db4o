@@ -12,17 +12,13 @@ public class VersionInfoAntTask extends Task {
     
     static final int NET = 0;
     static final int COMPACT = 1;
-    static final int MONO = 2;
-    static final int JAVA = 3;
+    static final int JAVA = 2;
     
     private int distribution = NET;
-    
-    private boolean java = false;
-    
+	
     private String[] distributionNames = {
         ".NET",
-        ".NET CompactFramework",
-        "Mono"
+        ".NET CompactFramework"
     };
     
     public void setPath(String path) {
@@ -36,13 +32,7 @@ public class VersionInfoAntTask extends Task {
     public void setKeyfile(String keyfile){
         this.keyfile = keyfile;
     }
-    
-    public void setMono(boolean mono) {
-        if(mono){
-            distribution = MONO;
-        }
-    }
-    
+	
     public void setNet(boolean net) {
         if(net){
             distribution = NET;
@@ -52,9 +42,12 @@ public class VersionInfoAntTask extends Task {
     public void setJava(boolean java){
         if(java){
             distribution = JAVA;
-            this.java = true;
         }
     }
+	
+	public boolean getJava() {
+		return JAVA == distribution;
+	}
     
     public void setCompact(boolean compact) {
         if(compact){
@@ -63,7 +56,7 @@ public class VersionInfoAntTask extends Task {
     }
     
     public void execute() throws BuildException {
-        String fileName = java ? "Db4oVersion.java": "AssemblyInfo.cs";
+        String fileName = getJava() ? "Db4oVersion.java": "AssemblyInfo.cs";
         try{
 	        File dir = new File(path);
 	        File file = new File(dir, fileName);
@@ -72,7 +65,7 @@ public class VersionInfoAntTask extends Task {
 	        PrintWriter pr = new PrintWriter(fos);
 	        pr.println("/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */");
 	        pr.println();
-	        if(java){
+	        if(getJava()){
 	            pr.println("package com.db4o;");
 	            pr.println();
 	            pr.println("class Db4oVersion {");
