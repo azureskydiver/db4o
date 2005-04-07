@@ -117,7 +117,7 @@ public final class Platform {
 
     static final QEvaluation evaluationCreate(Transaction a_trans, Object example){
         if(example instanceof Evaluation){
-            return new QEvaluation(a_trans, example, false);
+            return new QEvaluation(a_trans, example);
         }
         return null;
     }
@@ -590,7 +590,7 @@ public final class Platform {
 
 	private static final Class[] SIMPLE_CLASSES = JavaOnly.SIMPLE_CLASSES;
 
-
-
-	
+	public static Object wrapEvaluation(Object evaluation) {
+		throw new UnsupportedOperationException();
+	}	
 }
