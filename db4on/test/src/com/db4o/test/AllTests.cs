@@ -16,17 +16,17 @@ using com.db4o.test.soda;
 namespace com.db4o.test {
 
     /// <summary>
-    /// 
-    /// This is the main db4o regression test. 
-    /// 
+    ///
+    /// This is the main db4o regression test.
+    ///
     /// The parameters of the testing environment and all registered test
     /// cases can be found in AllTestsConfAll.cs.
-    /// 
+    ///
     /// Derive this class from AllTestsConfSingle if you only want to run
     /// single test cases and enter the test case that you want to run in
     /// the AllTestsConfSingle#TESTS[] array.
     /// </summary>
-    /// 
+    ///
     public class AllTests : AllTestsConfAll, Runnable  {
 
         public static void Main(String[] args) {
@@ -124,9 +124,9 @@ namespace com.db4o.test {
                     String methodName = method1.getName();
                     if (!methodName.Equals("testOne")) {
                         if (method1.getName().IndexOf("test") == 0) {
-                            try { 
+                            try {
                                 method1.invoke(toTest1, null);
-                            }  catch (Exception e) { 
+                            }  catch (Exception e) {
                                 j4o.lang.JavaSystem.printStackTrace(e);
                                                      
                             }
@@ -145,19 +145,19 @@ namespace com.db4o.test {
                   }
             }  catch (Exception e) { {
                                      }
-            } 
+            }
             Console.WriteLine("Instantiation failed. Class:" + clazz.getName());
             return null;
         }
       
         private void runMethod(Object onObject, String methodName) {
-            try { 
+            try {
                 Method method1 = j4o.lang.Class.getClassForObject(onObject).getDeclaredMethod(methodName, null);
                 if (method1 != null) {
                     method1.invoke(onObject, null);
                 }
                   
-            }  catch (Exception e) { 
+            }  catch (Exception e) {
                 Console.WriteLine(e);
             }
         }

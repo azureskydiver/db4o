@@ -16,6 +16,7 @@ namespace com.db4o.test {
       internal UpdateDepth child;
       internal UpdateDepth[] childArray;
       
+		
       public static void Main(String[] args) {
          Configuration conf1 = Db4o.configure();
          conf1.objectClass("com.db4o.test.UpdateDepth").updateDepth(1);

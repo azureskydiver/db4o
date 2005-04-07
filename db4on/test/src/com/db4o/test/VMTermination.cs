@@ -18,31 +18,31 @@ namespace com.db4o.test {
       public static void Main(String[] args) {
          int step1 = 0;
          switch (step1) {
-         case 0: 
+         case 0:
             Test.statistics();
             break;
          
-         case 1: 
+         case 1:
             killSingleUser();
             break;
          
-         case 2: 
+         case 2:
             testSingleUser();
             break;
          
-         case 3: 
+         case 3:
             killServer1();
             break;
          
-         case 4: 
+         case 4:
             testServer1();
             break;
          
-         case 5: 
+         case 5:
             killServer2();
             break;
          
-         case 6: 
+         case 6:
             testServer2();
             break;
          
