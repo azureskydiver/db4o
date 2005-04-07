@@ -56,6 +56,10 @@ public class GenericReflector implements Reflector, DeepClone {
         
 		return myClone;
 	}
+	
+	YapStream getStream(){
+		return _stream;
+	}
 
 	public boolean hasTransaction(){
 		return _trans != null;
@@ -193,7 +197,9 @@ public class GenericReflector implements Reflector, DeepClone {
             GenericClass clazz = (GenericClass)i.next();
             if(! _stream.i_handlers.ICLASS_INTERNAL.isAssignableFrom(clazz)){
                 if(! clazz.isSecondClass()){
-                	classes.add(clazz);
+					if(! clazz.isArray()){
+						classes.add(clazz);
+					}
                 }
             }
 		}

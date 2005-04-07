@@ -163,6 +163,10 @@ public class GenericClass implements ReflectClass, DeepClone {
         return isAssignableFrom(subclassCandidate.getSuperclass());
     }
 
+	public boolean isCollection() {
+		return _reflector.isCollection(this);
+	}
+	
     public boolean isInstance(Object candidate) {
         if(_delegate != null){
             return _delegate.isInstance(candidate);
@@ -218,6 +222,13 @@ public class GenericClass implements ReflectClass, DeepClone {
         }
         return false;
     }
+	
+	public Object[] toArray(Object obj){
+		if(! isCollection()){
+			return new Object[]{obj};
+		}
+		return Platform.collectionToArray(_reflector.getStream(), obj);
+	}
     
     public String toString(){
         return "GenericClass " + _name; 
@@ -230,5 +241,6 @@ public class GenericClass implements ReflectClass, DeepClone {
 
         // ignore, we always create a generic object
     }
+
 
 }
