@@ -170,5 +170,51 @@ public class ReplicationFeatures {
     private String file(){
         return Test.isClientServer() ? FILESERVER : FILESOLO;
     }
+    
+    
+    private void replicationSnippet(){
+        
+// open any two ObjectContainers, local or Client/Server
+ExtObjectContainer peerA = Test.objectContainer();
+ExtObjectContainer peerB = Db4o.openFile(file()).ext();
+
+// create a replication process with a ConflictHandler
+final ReplicationProcess replication = 
+    peerA.ext().replicationBegin(peerB, new ReplicationConflictHandler() {
+    
+    public Object resolveConflict(ReplicationProcess process, Object a, Object b) {
+        // the object was changed in both ObjectContainers since the
+        // last time the two ObjectContainers were replicated.
+
+        // return a or b to indicate which version you want to keep or
+        // null to replicate nothing
+        return null;
+    }
+});
+
+//      You could set this replication process to one-directional, 
+//      It is bidirectional by default.        
+//      replication.setDirection(peerA, peerB);
+
+Query query = peerA.query();
+
+// You can do any query that you like here
+query.constrain(ReplicationFeatures.class);
+
+// This method adds a special constraint to query only for
+// objects modified since the last replication between the 
+// two ObjectContainers.
+replication.whereModified(query);
+
+ObjectSet objectSet = query.execute();
+while(objectSet.hasNext()){
+    // checks version numbers and decides upon direction,
+    // depending which one changed after last synchronisation
+    replication.replicate(objectSet.next());
+}
+replication.commit();
+peerB.close();
+    }
+
 
 }

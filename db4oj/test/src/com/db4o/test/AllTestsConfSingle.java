@@ -2,6 +2,9 @@
 
 package com.db4o.test;
 
+import com.db4o.reflect.generic.*;
+import com.db4o.test.reflect.*;
+
 public class AllTestsConfSingle extends TestSuite{
 
 	static protected final String TEST_CONFIGURATION = "AllTestsConfSingle";
@@ -13,8 +16,19 @@ public class AllTestsConfSingle extends TestSuite{
     
     public Class[] tests(){
         return new Class[] {
+            
+//            QueryForList.class
+            
+//            SimplestPossible.class,
+//            KnownClasses.class
+            
+            GenericFeatures.class
         
-            CallConstructors.class
+            // ReplicationFeatures.class,
+            
+            // Soda.class
+           
+            // CallConstructors.class
         
     	};
     }
@@ -37,7 +51,7 @@ public class AllTestsConfSingle extends TestSuite{
     /**
       * run the tests in client/server mode 
       */
-    public boolean CLIENT_SERVER = true;
+    public boolean CLIENT_SERVER = false;
 
     /**
      * run the test against a memory file instead of disc file
