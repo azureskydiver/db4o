@@ -1,3 +1,22 @@
+ClassNode -->>
+   SubsetInstanceNode
+
+FieldNode -->>
+   SubsetFieldNode
+
+100 elements per subset
+10000 elements before # of subset nodes becomes excessive
+
+Given: array of n elements
+
+if (ids.length < 100)
+   return
+   
+if (ids.length < 1000)
+
+
+
+
 TODO:
 
 - Remaining features
