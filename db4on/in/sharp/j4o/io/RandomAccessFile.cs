@@ -39,6 +39,10 @@ namespace j4o.io {
         public void sync() {
             fileStream.Flush();
         }
+        
+        public RandomAccessFile getFD() {
+        	return this;
+        }
 
         public void write(byte[] bytes) {
             this.write(bytes, 0, bytes.Length);

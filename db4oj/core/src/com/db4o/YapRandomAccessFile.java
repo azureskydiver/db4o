@@ -282,14 +282,12 @@ public class YapRandomAccessFile extends YapFile {
     }
 
     void syncFiles() {
-        if (!Deploy.csharp) {
-            try {
-                i_file.sync();
-                if (needsLockFileThread() && Debug.lockFile) {
-                    i_timerFile.sync();
-                }
-            } catch (Exception e) {
+        try {
+            i_file.sync();
+            if (needsLockFileThread() && Debug.lockFile) {
+                i_timerFile.sync();
             }
+        } catch (Exception e) {
         }
     }
 
