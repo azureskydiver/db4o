@@ -66,7 +66,8 @@ public class InstanceNode implements IModelNode {
 			ReflectField[] fields = curclazz.getDeclaredFields();
 			for (int i = 0; i < fields.length; i++) {
 				if (!fields[i].isTransient()) {
-					results.add(FieldNodeFactory.construct(fields[i], _instance, _database));
+                    Object field = FieldNode.field(fields[i], _instance);
+                    results.add(FieldNodeFactory.construct(fields[i].getName(), field, _database));
 				}
 			}
 			curclazz = curclazz.getSuperclass();
@@ -83,7 +84,7 @@ public class InstanceNode implements IModelNode {
 	public String getText() {
 		long id = _database.getId(_instance);
 		if (id > 0) {
-			return _instance.toString() + " (" + _database.getId(_instance) + ")";
+			return _instance.toString() + " (id=" + _database.getId(_instance) + ")";
 		} else {
 			return _instance.toString();
 		}

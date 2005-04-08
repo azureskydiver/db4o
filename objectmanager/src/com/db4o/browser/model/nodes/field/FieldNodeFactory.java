@@ -19,10 +19,8 @@ package com.db4o.browser.model.nodes.field;
 import java.util.Date;
 
 import com.db4o.browser.model.Database;
-import com.db4o.browser.model.nodes.*;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
 
 
 /**
@@ -61,13 +59,13 @@ public class FieldNodeFactory {
 	/**
      * Construct a FieldNode.  FIXME: Eventually, each class should register
      * itself with the factory rather than hard-coding all of these tests.
-	 * @param field
+     * 
+	 * @param fieldName
 	 * @param instance
 	 * @param database 
-     * 
 	 * @return
 	 */
-	public static IModelNode construct(ReflectField field, Object instance, Database database) {
+	public static IModelNode construct(String fieldName, Object instance, Database database) {
         /*
          * There are 4 use-cases here:
          * 
@@ -78,33 +76,31 @@ public class FieldNodeFactory {
          */
         IModelNode result;
         
-        ReflectClass fieldType = field.getType();
-		Object value = FieldNode.field(field, instance);
-		fieldType = database.reflector().forObject(value);
+		ReflectClass fieldType = database.reflector().forObject(instance);
 		
-		if (value == null) {
-			return new FieldNode(field, instance, database);
+		if (instance == null) {
+			return new FieldNode(fieldName, instance, database);
 		}
 		
-        if (fieldType.isSecondClass()) {// || typeIn(fieldType, boxedPrimitiveTypes)) {
-            return new PrimitiveFieldNode(field, instance, database);
+        if (fieldType.isSecondClass()) {
+            return new PrimitiveFieldNode(fieldName, instance, database);
         }
         
         if (fieldType.isArray()) {
-            return new ArrayFieldNode(field, instance, database);
+            return new ArrayFieldNode(fieldName, instance, database);
         }
         
         // If keySet() and get() are present, use them
-        result = MapFieldNode.tryToCreate(field, instance, database);
+        result = MapFieldNode.tryToCreate(fieldName, instance, database);
         if (result != null) return result;
         
-        // Otherwise treat all iterable things as lists
+        // Otherwise treat all collection-like things as lists
 		if (fieldType.isCollection()) {
-			return new CollectionFieldNode(field, instance, database);
+			return new CollectionFieldNode(fieldName, instance, database);
 		}
 
         // Otherwise it must be a plain old object
-		return new FieldNode(field, instance, database);
+		return new FieldNode(fieldName, instance, database);
 	}
 
 }

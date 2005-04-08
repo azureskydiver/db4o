@@ -33,23 +33,15 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
  */
 public class FieldNode implements IModelNode {
 
-    protected ReflectField _field;
-	protected Object value = null;
-    protected Object _instance;
-	protected IModelNode delegate;
+    protected String _fieldName;
+	protected Object value;
 	protected Database _database;
+    protected IModelNode delegate = null;
 
-	/**
-	 * @param field
-	 * @param database TODO
-	 * @param _instance
-	 */
-	public FieldNode(ReflectField field, Object instance, Database database) {
-		_field = field;
-        _instance = instance;
+	public FieldNode(String fieldName, Object instance, Database database) {
+        _fieldName = fieldName;
+        value = instance;
 		_database = database;
-
-		value = FieldNode.field(field, instance);
 
 		if(value==null) {
 			delegate=NullNode.INSTANCE;
@@ -77,14 +69,14 @@ public class FieldNode implements IModelNode {
 	 * @see com.db4o.browser.gui.ITreeNode#getText()
 	 */
 	public String getText() {
-		return _field.getName() + ": " + delegate.getText();
+		return _fieldName + ": " + delegate.getText();
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.model.nodes.IModelNode#getName()
 	 */
 	public String getName() {
-		return _field.getName();
+		return _fieldName;
 	}
 	
 	/* (non-Javadoc)
@@ -102,14 +94,14 @@ public class FieldNode implements IModelNode {
 			return false;
 		}
 		FieldNode node=(FieldNode)obj;
-		return _instance.equals(node._instance) && _field.equals(node._field);
+		return value.equals(node.value);
 	}
 	
 	public int hashCode() {
-		return _instance.hashCode()*29+_field.hashCode();
+		return value.hashCode();
 	}
 
-    protected static Object field(ReflectField field, Object instance) {
+    public static Object field(ReflectField field, Object instance) {
         try {
             field.setAccessible();
             return field.get(instance);
