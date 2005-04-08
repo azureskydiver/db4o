@@ -61,7 +61,9 @@ public class GenericField implements ReflectField, DeepClone{
     }
 
     public void set(Object onObject, Object value) {
-        if (!_type.isInstance(value)) throw new RuntimeException(); //TODO Consider: is this checking really necessary?
+		// FIXME: Consider enabling type checking.
+		// The following will fail with arrays.
+        // if (!_type.isInstance(value)) throw new RuntimeException(); //TODO Consider: is this checking really necessary?
         ((GenericObject)onObject)._fieldValues[_index] = value;
     }
 

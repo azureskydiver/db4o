@@ -28,30 +28,23 @@ public class GenericArray implements ReflectArray{
     }
 
     public ReflectClass getComponentType(ReflectClass a_class) {
-        return _delegate.getComponentType(delegateClass(a_class));
+        return _delegate.getComponentType(a_class.getDelegate());
     }
 
     public int getLength(Object array) {
         return _delegate.getLength(array);
     }
     
-    private ReflectClass delegateClass(ReflectClass a_class){
-        if(a_class instanceof GenericClass){
-        	return ((GenericClass)a_class).getDelegate();
-        }
-        return a_class;
-    }
-
     public boolean isNDimensional(ReflectClass a_class) {
-        return _delegate.isNDimensional(delegateClass(a_class));
+        return _delegate.isNDimensional(a_class.getDelegate());
     }
 
     public Object newInstance(ReflectClass componentType, int length) {
-        return _delegate.newInstance(delegateClass(componentType), length);
+        return _delegate.newInstance(componentType.getDelegate(), length);
     }
 
     public Object newInstance(ReflectClass componentType, int[] dimensions) {
-        return _delegate.newInstance(delegateClass(componentType), dimensions);
+        return _delegate.newInstance(componentType.getDelegate(), dimensions);
     }
 
     public void set(Object onArray, int index, Object element) {
