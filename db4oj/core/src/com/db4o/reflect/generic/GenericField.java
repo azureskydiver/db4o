@@ -11,7 +11,7 @@ import com.db4o.reflect.*;
 public class GenericField implements ReflectField, DeepClone{
 
     private final String _name;
-    private final ReflectClass _type;
+    private final GenericClass _type;
     private final boolean _primitive;
     private final boolean _array;
     private final boolean _nDimensionalArray;
@@ -20,7 +20,7 @@ public class GenericField implements ReflectField, DeepClone{
 
     public GenericField(String name, ReflectClass clazz, boolean primitive, boolean array, boolean nDimensionalArray) {
         _name = name;
-        _type = clazz;
+        _type = (GenericClass)clazz;
         _primitive = primitive;
         _array = array;
         _nDimensionalArray = nDimensionalArray;
@@ -37,7 +37,7 @@ public class GenericField implements ReflectField, DeepClone{
 
     public Object get(Object onObject) {
         //TODO Consider: Do we need to check that onObject is an instance of the DataClass this field is a member of? 
-        return ((GenericObject)onObject)._fieldValues[_index];
+        return ((GenericObject)onObject)._values[_index];
     }
     
     public String getName() {
@@ -45,6 +45,9 @@ public class GenericField implements ReflectField, DeepClone{
     }
 
     public ReflectClass getType() {
+        if(_array){
+            return _type.arrayClass();
+        }
         return _type;
     }
 
@@ -64,7 +67,7 @@ public class GenericField implements ReflectField, DeepClone{
 		// FIXME: Consider enabling type checking.
 		// The following will fail with arrays.
         // if (!_type.isInstance(value)) throw new RuntimeException(); //TODO Consider: is this checking really necessary?
-        ((GenericObject)onObject)._fieldValues[_index] = value;
+        ((GenericObject)onObject)._values[_index] = value;
     }
 
     public void setAccessible() {

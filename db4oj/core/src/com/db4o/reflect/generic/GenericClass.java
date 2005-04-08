@@ -22,6 +22,8 @@ public class GenericClass implements ReflectClass, DeepClone {
     private final String _name;
     private ReflectClass _superclass;
     
+    private GenericClass _array;
+    
     private boolean _isSecondClass;
     
     private GenericField[] _fields = NO_FIELDS;
@@ -31,6 +33,15 @@ public class GenericClass implements ReflectClass, DeepClone {
         _delegate = delegateClass;
         _name = name;
         _superclass = superclass;
+    }
+    
+    public GenericClass arrayClass(){
+        if(_array != null){
+            return _array;
+        }
+        _array = new GenericArrayClass(_reflector, this, _name, _superclass);
+        _array._isSecondClass = _isSecondClass;
+        return _array;
     }
 
     public Object deepClone(Object obj) {
@@ -49,11 +60,11 @@ public class GenericClass implements ReflectClass, DeepClone {
         return ret;
     }
     
-    public ReflectClass getComponentType() {   //FIXME Find out how this must work.
+    public ReflectClass getComponentType() {
         if(_delegate != null){
             return _delegate.getComponentType();
         }
-        return this;
+        return null;
     }
 
     public ReflectConstructor[] getDeclaredConstructors() {
@@ -134,7 +145,7 @@ public class GenericClass implements ReflectClass, DeepClone {
         return false;
     }
 
-    public boolean isArray() {  //FIXME Find out how this must work.
+    public boolean isArray() {
         if(_delegate != null){
             return _delegate.isArray();
         }
@@ -174,7 +185,7 @@ public class GenericClass implements ReflectClass, DeepClone {
         if (!(candidate instanceof GenericObject)) {
         	return false;
         }
-        return isAssignableFrom(((GenericObject)candidate).genericClass());
+        return isAssignableFrom(((GenericObject)candidate)._class);
     }
 
     public boolean isInterface() {
