@@ -16,7 +16,11 @@
  */
 package com.db4o.browser.model;
 
-import com.db4o.*;
+import java.text.Collator;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedList;
+
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
@@ -71,7 +75,31 @@ public class Db4oDatabase implements Database {
     
 
     public DatabaseGraphIterator graphIterator() {
-        return new DatabaseGraphIterator(this, container.ext().knownClasses());
+        // Get the known classes
+        ReflectClass[] knownClasses = container.ext().knownClasses();
+        
+        // Sort them
+        Arrays.sort(knownClasses, new Comparator() {
+            private Collator comparator = Collator.getInstance();
+            public int compare(Object arg0, Object arg1) {
+                ReflectClass class0 = (ReflectClass) arg0;
+                ReflectClass class1 = (ReflectClass) arg1;
+                
+                return comparator.compare(class0.getName(), class1.getName());
+            }
+        });
+        
+        // Filter them
+        LinkedList filteredList = new LinkedList();
+        for (int i = 0; i < knownClasses.length; i++) {
+            if (!knownClasses[i].isArray()) {
+                filteredList.add(knownClasses[i]);
+            }
+        }
+        
+        // Return the iterator
+        return new DatabaseGraphIterator(this, (ReflectClass[])
+                filteredList.toArray(new ReflectClass[filteredList.size()]));
     }
     
     public DatabaseGraphIterator graphIterator(String name) {

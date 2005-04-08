@@ -34,10 +34,8 @@ import com.db4o.reflect.*;
  */
 public class CollectionFieldNode extends FieldNode {
 
-	private Object _fieldValue;
-
-	public CollectionFieldNode(ReflectField field, Object instance, Database database) {
-        super(field, instance, database);
+	public CollectionFieldNode(String fieldName, Object instance, Database database) {
+        super(fieldName, instance, database);
 	}
     
 	/* (non-Javadoc)
@@ -67,7 +65,7 @@ public class CollectionFieldNode extends FieldNode {
 	 * @see com.db4o.browser.gui.ITreeNode#getText()
 	 */
     public String getText() {
-        return _field.getName() + ": " + _database.reflector().forObject(value).getName();
+        return _fieldName + ": " + _database.reflector().forObject(value).getName();
     }
 
 }

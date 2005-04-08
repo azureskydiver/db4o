@@ -1,13 +1,17 @@
 TODO:
 
 - Remaining features
-   * Sort classes by name in tree view.
-   * ArrayItemNode is not aware of simple types.
-   * Remove array types from initial view.
+   * Sort classes by name in tree view. **DONE**
+   * ArrayItemNode is not aware of simple types. **DONE**
+   * Remove array types from initial view. **DONE**
+   * Search result scalability.
    * Beautify UI; add icons in appropriate places
    * Substring search: just search displayed strings; else do a query by form QBE
    * Begin query UI / querying functionality
       - Allow display of query results
+   * Click right side to navigate
+      - (Hyperlink objects if object.hasChildren()?)
+   * If right side is displaying a collection, display in a table
 
 - Release engineering
    * Don't support PDAs for the initial release

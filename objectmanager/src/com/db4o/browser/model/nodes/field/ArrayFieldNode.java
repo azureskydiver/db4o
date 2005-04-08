@@ -6,7 +6,6 @@ package com.db4o.browser.model.nodes.field;
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.reflect.ReflectArray;
-import com.db4o.reflect.ReflectField;
 
 /**
  * StoredArrayFieldNode.
@@ -15,15 +14,14 @@ import com.db4o.reflect.ReflectField;
  */
 public class ArrayFieldNode extends FieldNode implements IModelNode {
     
-    private Object array;
     private int length;
     private ReflectArray arrayReflector;
 
-	public ArrayFieldNode(ReflectField field, Object instance, Database database) {
-		super(field, instance, database);
-        array = FieldNode.field(_field, _instance);
+	public ArrayFieldNode(String fieldName, Object instance, Database database) {
+		super(fieldName, instance, database);
+
         arrayReflector = _database.reflector().array();
-        length = arrayReflector.getLength(array);
+        length = arrayReflector.getLength(value);
 	}
 
 	/* (non-Javadoc)
@@ -34,8 +32,8 @@ public class ArrayFieldNode extends FieldNode implements IModelNode {
         IModelNode[] result = new IModelNode[length];
         
         for (int i=0; i < length; ++i) {
-            Object item = arrayReflector.get(array, i);
-            result[i] = new ArrayItemNode(i, item, _database);
+            Object item = arrayReflector.get(value, i);
+            result[i] = FieldNodeFactory.construct("["+ i + "] ", item, _database);
         }
         
         return result;
@@ -49,7 +47,7 @@ public class ArrayFieldNode extends FieldNode implements IModelNode {
 	}
 	
 	public String getText() {
-        return _field.getName() + ": " + _database.reflector().forObject(value).getName();
+        return _fieldName + " " + _database.reflector().forObject(value).getName();
 	}
 
 }

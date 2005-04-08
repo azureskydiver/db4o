@@ -23,7 +23,6 @@ import java.util.Set;
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.ReflectMethod;
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
@@ -50,9 +49,9 @@ public class MapFieldNode extends FieldNode {
 		// FIXME: find out for .NET   new GetStrategy("keySet", "get"),
 	};
 	
-	public static IModelNode tryToCreate(ReflectField field, Object instance, Database database) {
+	public static IModelNode tryToCreate(String fieldName, Object instance, Database database) {
 		for (int i = 0; i < STRATEGIES.length; i++) {
-			IModelNode node = tryToCreate(STRATEGIES[i], field, instance, database);
+			IModelNode node = tryToCreate(STRATEGIES[i], fieldName, instance, database);
 			if(node != null) {
 				return node;
 			}
@@ -60,10 +59,8 @@ public class MapFieldNode extends FieldNode {
 		return null;
 	}
 
-    public static IModelNode tryToCreate(GetStrategy strategy, ReflectField field, Object instance, Database database) {
+    public static IModelNode tryToCreate(GetStrategy strategy, String fieldName, Object fieldContents, Database database) {
         MapFieldNode result;
-        
-        Object fieldContents = FieldNode.field(field, instance);
         
         // See if we can get ReflectMethods corresponding to keySet() and get()
         ReflectClass fieldType = database.reflector().forObject(fieldContents);
@@ -78,7 +75,7 @@ public class MapFieldNode extends FieldNode {
         }
         
         try {
-            result = new MapFieldNode(field, instance, keySet, get, database);
+            result = new MapFieldNode(fieldName, fieldContents, keySet, get, database);
             result.iterator();
         } catch (IllegalStateException e) {
             Logger.log().error(e, "Unable to invoke 'iterator()'");
@@ -112,8 +109,9 @@ public class MapFieldNode extends FieldNode {
 		return result;
 	}
 
-    public MapFieldNode(ReflectField field, Object instance, ReflectMethod keySetMethod, ReflectMethod getMethod, Database database) {
-        super(field, instance, database);
+    public MapFieldNode(String fieldName, Object instance, ReflectMethod keySetMethod, ReflectMethod getMethod, Database database) {
+        super(fieldName, instance, database);
+        
         _keySetMethod = keySetMethod;
 		_getMethod = getMethod;
 	}
@@ -127,7 +125,7 @@ public class MapFieldNode extends FieldNode {
         Iterator i = iterator();
         while (i.hasNext()) {
 			Object key = i.next();
-			results.addLast(new MapItemNode(key, get(key), _database));
+            results.addLast(FieldNodeFactory.construct(key.toString(), get(key), _database));
         }
         IModelNode[] finalResults = new IModelNode[results.size()];
         int elementNum=0;
@@ -140,7 +138,7 @@ public class MapFieldNode extends FieldNode {
 	}
 
 	public String getText() {
-        return _field.getName() + ": " + _database.reflector().forObject(value).getName();
+        return _fieldName + ": " + _database.reflector().forObject(value).getName();
 	}
 
 }
