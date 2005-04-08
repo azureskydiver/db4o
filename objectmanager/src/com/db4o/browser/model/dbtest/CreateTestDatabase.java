@@ -20,7 +20,7 @@ public class CreateTestDatabase {
     };
     
     private Pilot[] pilots = {
-            new Pilot("Vannevur Bush", 20),
+            new Pilot("Vanneveur Bush", 20),
             new Pilot("Ted Nelson", 5),
             new Pilot("Lee Nackman", 15),
             new Pilot("Tim Berners-Lee", 500)
