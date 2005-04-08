@@ -422,7 +422,6 @@
 		</copy>
 		<versioninfo path="${dir.dist.net.src.core}/src/net" net="true" keyfile="" version="${db4o.version.full}" />
 		<versioninfo path="${dir.dist.net.src.core}/src/compact" compact="true" keyfile="" version="${db4o.version.full}" />
-		<versioninfo path="${dir.dist.net.src.core}/src/mono" mono="true" keyfile="" version="${db4o.version.full}" />
 		<mkdir dir="${dir.dist.net.src.tools}" />
 		<copy todir="${dir.dist.net.src.tools}">
 			<fileset dir="${dir.n.tools}">
@@ -500,10 +499,9 @@
 			<fileset dir="${dir.n.core}">
 				<include name="**/*.cs" />
 				<exclude name="**/compact/**"/>
-				<exclude name="**/src/net/**"/>
 			</fileset>
 		</copy>
-		<versioninfo path="${dir.dist.mono.src.core}/src/mono" mono="true" keyfile="" version="${db4o.version.full}" />
+		<versioninfo path="${dir.dist.mono.src.core}/src/net" net="true" keyfile="" version="${db4o.version.full}" />
 		<mkdir dir="${dir.dist.mono.src.tools}" />
 		<copy todir="${dir.dist.mono.src.tools}">
 			<fileset dir="${dir.n.tools}">
@@ -636,7 +634,6 @@
 		<updatecsharpproject projectFile="${dir.n.core}/db4o-net.csproj">
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
-				<exclude name="src/mono/**" />
 				<exclude name="src/compact/**" />
 			</sources>
 		</updatecsharpproject>
@@ -644,7 +641,6 @@
 		<updatecsharpproject projectFile="${dir.n.core}/db4o-compact.csdproj">
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
-				<exclude name="src/mono/**" />
 				<exclude name="src/net/**" />
 			</sources>
 		</updatecsharpproject>
