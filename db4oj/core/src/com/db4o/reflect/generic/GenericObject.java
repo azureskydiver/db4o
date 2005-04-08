@@ -7,18 +7,18 @@ package com.db4o.reflect.generic;
  */
 class GenericObject {
 
-    private final GenericClass _class;
-    final Object[] _fieldValues;
+    final GenericClass _class;
+    final Object[] _values;
     
-    GenericObject(GenericClass dataClass) {
-        _class = dataClass;
-        _fieldValues = new Object[_class.getDeclaredFields().length];
+    GenericObject(GenericClass clazz, int length) {
+        _class = clazz;
+        _values = new Object[length];
+    }
+    
+    GenericObject(GenericClass clazz) {
+        this(clazz, clazz.getDeclaredFields().length);
     }
 
-    GenericClass genericClass() {
-        return _class;
-    }
-    
     public String toString(){
         if(_class == null){
             return super.toString();    

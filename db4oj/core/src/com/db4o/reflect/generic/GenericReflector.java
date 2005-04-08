@@ -11,7 +11,7 @@ import com.db4o.reflect.*;
 public class GenericReflector implements Reflector, DeepClone {
 
     private Reflector _delegate;
-    private GenericArray _array;
+    private GenericArrayReflector _array;
     
     // TODO: _classByName is our fastest access to the classes
     //      consider to improve access speed by special 
@@ -74,7 +74,7 @@ public class GenericReflector implements Reflector, DeepClone {
 
     public ReflectArray array() {
         if(_array == null){
-            _array = new GenericArray(this);
+            _array = new GenericArrayReflector(this);
         }
         return _array;
     }
@@ -142,7 +142,7 @@ public class GenericReflector implements Reflector, DeepClone {
 
     public ReflectClass forObject(Object obj) {
         if (obj instanceof GenericObject){
-            return ((GenericObject)obj).genericClass();
+            return ((GenericObject)obj)._class;
         }
         ReflectClass clazz = _delegate.forObject(obj);
         if(clazz != null){
@@ -306,7 +306,7 @@ public class GenericReflector implements Reflector, DeepClone {
 			fieldname = _stream.stringIO().read(classreader,fieldnamelength);
 			
 		    int handlerid=classreader.readInt();
-		    ReflectClass fieldClass = (ReflectClass)_classByID.get(handlerid);
+		    GenericClass fieldClass = (GenericClass)_classByID.get(handlerid);
 		    
 		    YapBit attribs=new YapBit(classreader.readByte());
 		    boolean isprimitive=attribs.get();
