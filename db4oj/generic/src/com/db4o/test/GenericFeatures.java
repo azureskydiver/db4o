@@ -6,10 +6,12 @@ package com.db4o.test;
 public class GenericFeatures {
     
     String hi;
-    
     String[] names;
-    
-    
+	
+	SomeUnavailableClass willTooBeAvailable;
+	
+	SomeUnavailableClass[] willTooBeAvailables;
+
     
     public void storeOne(){
         hi = "Hi Carl, Dave, Klaus, Patrick and Rodrigo";
@@ -20,6 +22,13 @@ public class GenericFeatures {
             "Dave",
             "Carl"
         };
+		
+		willTooBeAvailable = new SomeUnavailableClass("willToo");
+		
+		willTooBeAvailables = new SomeUnavailableClass[] {
+				new SomeUnavailableClass("willTooOne"),
+				new SomeUnavailableClass("willTooTwo")
+		};
     }
     
    
