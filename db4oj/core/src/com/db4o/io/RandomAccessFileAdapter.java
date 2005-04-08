@@ -82,10 +82,7 @@ public class RandomAccessFileAdapter extends IoAdapter {
     }
 
     public void sync() throws IOException {
-        
-        // FIXME: fix on .NET and enable here 
-        
-        // _delegate.getFD().sync();
+        _delegate.getFD().sync();
     }
 
     public void write(byte[] buffer, int length) throws IOException {
