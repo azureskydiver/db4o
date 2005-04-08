@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<project name="db4oj" default="formula1" basedir=".">
+	<target name="formula1" description="copies the xt_solo file to the browser sources">
+		<copy overwrite="true" file="xt_solo.yap" tofile="../com.db4o.browser/bin/com/db4o/browser/gui/standalone/formula1.yap" />
+		<copy overwrite="true" file="xt_solo.yap" tofile="../com.db4o.browser/src/com/db4o/browser/gui/standalone/formula1.yap" />
+	</target>
+</project>
