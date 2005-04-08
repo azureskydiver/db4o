@@ -10,7 +10,7 @@ namespace j4o.io {
 
         private String path;
 
-        public static String separator = "\\";
+        public static char separator = Path.DirectorySeparatorChar;
 
         public File(String path) {
             this.path = path;

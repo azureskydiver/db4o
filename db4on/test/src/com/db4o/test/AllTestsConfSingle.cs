@@ -1,6 +1,7 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
+using System.IO;
 using j4o.lang;
 using com.db4o.test.cs;
 
@@ -12,7 +13,7 @@ namespace com.db4o.test {
          * new testcases here
          */
         internal Type[] TESTS = new Type[]{
-            typeof(CsEvaluationDelegate),
+            typeof(ExternalBlobs),
          };
        
         /**
@@ -75,7 +76,7 @@ namespace com.db4o.test {
         /**
          * path to blobs held externally
          */
-        public static String BLOB_PATH = "C:\\TEMP\\db4oTestBlobs";
+        public static String BLOB_PATH = Path.Combine(Path.GetTempPath(), "BLOBS");
 
     }
 }
