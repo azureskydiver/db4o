@@ -153,7 +153,7 @@ class YapClassPrimitive extends YapClass{
     }
 
     public boolean isArray() {
-        return i_id == YapHandlers.ANYARRAYID || i_id == YapHandlers.ANYARRAYNID;
+        return i_id == YapHandlers.ANY_ARRAY_ID || i_id == YapHandlers.ANY_ARRAY_N_ID;
     }
     
     boolean isPrimitive(){

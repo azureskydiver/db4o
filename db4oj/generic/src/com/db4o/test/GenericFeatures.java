@@ -2,7 +2,6 @@
 
 package com.db4o.test;
 
-
 public class GenericFeatures {
     
     String hi;
@@ -11,6 +10,11 @@ public class GenericFeatures {
 	SomeUnavailableClass willTooBeAvailable;
 	
 	SomeUnavailableClass[] willTooBeAvailables;
+    
+    Object someObject;
+    Object[] someObjectArray;
+    
+    Object someMessInAnObject;
 
     
     public void storeOne(){
@@ -29,8 +33,21 @@ public class GenericFeatures {
 				new SomeUnavailableClass("willTooOne"),
 				new SomeUnavailableClass("willTooTwo")
 		};
+        
+        someObject = new SomeUnavailableClass("forSomeObject");
+        someObjectArray = new Object[] {
+            new SomeUnavailableClass("in someObjectArray"),
+            "Jadow"
+        };
+        
+        someMessInAnObject = new Object[] {
+            new SomeUnavailableClass("in some mess"),
+            "Jadowrow",
+            new Integer(42)
+        };
+        
+        
     }
     
-   
 
 }

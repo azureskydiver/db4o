@@ -301,7 +301,7 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 
 		i_yapClass = a_yapClass;
 
-		if (i_yapClass.getID() != YapHandlers.YAPANYID) {
+		if (i_yapClass.getID() != YapHandlers.ANY_ID) {
 			// Storing naked objects does not make sense
 		    
 		    setID(stream, stream.newUserObject());

@@ -16,8 +16,8 @@ public class YapHandlers {
 
     private static final Db4oTypeImpl[]   i_db4oTypes     = { new BlobImpl()};
 
-    static final int                ANYARRAYID      = 12;
-    static final int                ANYARRAYNID     = 13;
+    public static final int         ANY_ARRAY_ID      = 12;
+    public static final int         ANY_ARRAY_N_ID     = 13;
 
     // Array Indices in i_YapContainers
     private static final int        CLASSCOUNT      = 11;
@@ -29,7 +29,7 @@ public class YapHandlers {
 
     private YapDataType[]           i_handlers;
 
-    private int                     i_maxTypeID     = ANYARRAYNID + 1;
+    private int                     i_maxTypeID     = ANY_ARRAY_N_ID + 1;
 
     private YapTypeAbstract[]       i_platformTypes;
     static private final int        PRIMITIVECOUNT  = 8;
@@ -37,8 +37,8 @@ public class YapHandlers {
     YapClass[]                      i_yapClasses;
 
     // need to keep getID Functions in Sync with ArrayIndex
-    static final int                YAPANY          = 10;
-    static final int                YAPANYID        = 11;
+    private static final int        ANY_INDEX          = 10;
+    public static final int         ANY_ID        = 11;
     
     final YapFieldVirtual[]         i_virtualFields = new YapFieldVirtual[2]; 
 
@@ -118,7 +118,7 @@ public class YapHandlers {
             i_yapClasses[i] = new YapClassPrimitive(a_stream, i_handlers[i]);
             i_yapClasses[i].i_id = id; 
             i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
-            if(i < YAPANY){
+            if(i < ANY_INDEX){
             	reflector.registerPrimitiveClass(id, i_handlers[i].classReflector().getName());
             }
             if (!Deploy.csharp) {
@@ -146,14 +146,14 @@ public class YapHandlers {
         }
 
         i_anyArray = new YapClassPrimitive(a_stream, new YapArray(_masterStream,
-            i_handlers[YAPANY], false));
-        i_anyArray.i_id = ANYARRAYID;
-        i_yapClasses[ANYARRAYID - 1] = i_anyArray;
+            i_handlers[ANY_INDEX], false));
+        i_anyArray.i_id = ANY_ARRAY_ID;
+        i_yapClasses[ANY_ARRAY_ID - 1] = i_anyArray;
 
         i_anyArrayN = new YapClassPrimitive(a_stream, new YapArrayN(_masterStream,
-            i_handlers[YAPANY], false));
-        i_anyArrayN.i_id = ANYARRAYNID;
-        i_yapClasses[ANYARRAYNID - 1] = i_anyArrayN;
+            i_handlers[ANY_INDEX], false));
+        i_anyArrayN.i_id = ANY_ARRAY_N_ID;
+        i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
     }
 
 	int arrayType(Object a_object) {
