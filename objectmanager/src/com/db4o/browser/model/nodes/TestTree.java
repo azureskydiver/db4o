@@ -3,20 +3,11 @@
  */
 package com.db4o.browser.model.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
 
 public class TestTree {
     
@@ -27,58 +18,27 @@ public class TestTree {
     private Node _root;
     
     public TestTree() {
-        contents = new Integer[123456];
+        contents = new Integer[1234567];
         _root=new Node(contents,0,contents.length);
         for (int i = 0; i < contents.length; i++) {
             contents[i] = new Integer(i);
         }
-        
-        treeSpec = computeTreeSpec(contents.length, 100);
     }
 
-    public int[][] computeTreeSpec(int numItems, int threshold) {
-        List structure=new ArrayList();
-        int curnum=numItems;
-        int[] lastlevel = null;
-        
-        while(curnum>threshold) {
-            int numbuckets=(int)Math.round((float)curnum/threshold+0.5);
-            int minbucketsize=curnum/numbuckets;
-            int numexceeding=curnum%numbuckets;
-            int[] curlevel=new int[numbuckets];
-            int startidx=0;
-            for (int bucketidx = 0; bucketidx < curlevel.length; bucketidx++) {
-                int curfillsize=minbucketsize;
-                if(bucketidx < numexceeding) {
-                    curfillsize++;
-                }
-                if (lastlevel == null) {
-                    curlevel[bucketidx] = curfillsize;
-                } else {
-                    for(int lastidx=startidx;lastidx<startidx+curfillsize;lastidx++) {
-                        curlevel[bucketidx]+=lastlevel[lastidx];
-                    }
-                    startidx+=curfillsize;
-                }
-            }
-            structure.add(curlevel);
-            lastlevel = curlevel;
-            curnum=numbuckets;
-        }
-        return (int[][])structure.toArray(new int[structure.size()][]);    
-    }
-    
     private class Node {
         private final static int THRESHOLD=100;
         
-        private Integer[] _contents;
+        private Object[] _contents;
         private int _start;
         private int _end;
         
-        public Node(Integer[] contents, int start, int end) {
+        public Node(Object[] contents, int start, int end) {
             _contents = contents;
             _start = start;
             _end = end;
+			if(_start>=_end) {
+				System.err.println("ouch!");
+			}
         }
         
         public String toString() {
@@ -91,37 +51,55 @@ public class TestTree {
                 System.arraycopy(_contents, _start, children, 0, size());
                 return children;
             }
-
-            int curnum=size();
-            while(curnum>THRESHOLD) {
-                int numbuckets=(int)Math.round((float)curnum/THRESHOLD+0.5);
-                int minbucketsize=curnum/numbuckets;
-                int numexceeding=curnum%numbuckets;
-                stack.add(new BucketSpec(numbuckets,minbucketsize,numexceeding));
-                System.err.println(curnum+"/"+numbuckets+"/"+minbucketsize+"/"+numexceeding);
-                curnum=numbuckets;
-            }
-            Node[] children=new Node[curnum];
-            int curstartidx=0;
-            for(int bucketidx=0;bucketidx<curnum;bucketidx++) {
-                int currange=0;
-                for(int stackidx=stack.size()-1;stackidx>00;stackidx++) {
-                    
-                }
-                int cursize=minbucketsize;
-                if(bucketidx<numexceeding) {
-                    cursize++;
-                }
-                children[bucketidx]=new Node(_contents,curstartidx,curstartidx+cursize);
-                curstartidx+=cursize;
-            }
-            return children;
+			int[][] fullspec=computeTreeSpec(size(),THRESHOLD);
+			int[] spec=fullspec[fullspec.length-1];
+			Object[] children=new Object[spec.length];
+			for (int childidx = 0; childidx < children.length; childidx++) {
+				int end=(childidx<children.length-1 ? _start+spec[childidx+1] : _end);
+				children[childidx]=new Node(_contents,_start+spec[childidx],end);
+			}
+			return children;
         }
 
         private int size() {
             return _end-_start;
         }
-    }
+
+	    private int[][] computeTreeSpec(int numItems, int threshold) {
+			// tree depth is log(numItems) to the base of threshold
+			int numlevels=(int)(Math.log(numItems)/Math.log(threshold));
+			// store bucket start indices (not lengths) per level
+	        int[][] structure=new int[numlevels][];
+	        int curnum=numItems;
+	        
+			int levelidx=0;
+	        while(curnum>threshold) {
+	            int numbuckets=curnum/threshold+1;
+	            int minbucketsize=curnum/numbuckets;
+	            int numexceeding=curnum%numbuckets;
+	            int[] curlevel=new int[numbuckets];
+	            int startidx=0;
+				curlevel[0]=0;
+	            for (int bucketidx = 1; bucketidx < curlevel.length; bucketidx++) {
+	                int curfillsize=minbucketsize;
+	                if(bucketidx <= numexceeding) {
+	                    curfillsize++;
+	                }
+					startidx+=curfillsize;
+	                if (levelidx>0) {
+						curlevel[bucketidx]=structure[levelidx-1][startidx];
+	                }
+	                else {
+						curlevel[bucketidx] = startidx;
+	                }
+	            }
+	            structure[levelidx]=curlevel;
+	            curnum=numbuckets;
+				levelidx++;
+	        }
+	        return structure;    
+	    }
+	}
 
     private IContentProvider contentProvider = new ITreeContentProvider() {
 
@@ -199,8 +177,9 @@ public class TestTree {
     
     public static void main(String[] args) {
         TestTree test = new TestTree();
-        int[][] results = test.computeTreeSpec(29, 3);
-        System.out.println("Hello");
+		test.run();
+//        int[][] results = test.computeTreeSpec(29, 3);
+//        System.out.println("Hello");
     }
 
 }
