@@ -3,6 +3,8 @@
  */
 package com.db4o.browser.model.nodes;
 
+import java.util.*;
+
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.*;
@@ -11,22 +13,22 @@ import org.eclipse.swt.widgets.*;
 
 public class TestTree {
     
-    private Integer[] contents;
-    
+    private Integer[] _contents;
     private static int[][] treeSpec;
-
     private Node _root;
+	private int _threshold;
     
-    public TestTree() {
-        contents = new Integer[1234567];
-        _root=new Node(contents,0,contents.length);
-        for (int i = 0; i < contents.length; i++) {
-            contents[i] = new Integer(i);
+    public TestTree(int numitems,int threshold) {
+        _contents = new Integer[numitems];
+		this._threshold=threshold;
+        _root=new Node(_contents,0,_contents.length);
+        for (int i = 0; i < _contents.length; i++) {
+            _contents[i] = new Integer(i);
         }
     }
 
-    private class Node {
-        private final static int THRESHOLD=100;
+    private static class Node {
+        private final static int THRESHOLD=3;
         
         private Object[] _contents;
         private int _start;
@@ -65,16 +67,14 @@ public class TestTree {
             return _end-_start;
         }
 
-	    private int[][] computeTreeSpec(int numItems, int threshold) {
-			// tree depth is log(numItems) to the base of threshold
-			int numlevels=(int)(Math.log(numItems)/Math.log(threshold));
-			// store bucket start indices (not lengths) per level
-	        int[][] structure=new int[numlevels][];
+		// TODO: move me somewhere i can be cached or get rid of the history array
+	    public static int[][] computeTreeSpec(int numItems, int threshold) {
+	        java.util.List structure=new ArrayList();
 	        int curnum=numItems;
 	        
-			int levelidx=0;
+			int[] lastlevel=null;
 	        while(curnum>threshold) {
-	            int numbuckets=curnum/threshold+1;
+	            int numbuckets=(int)Math.ceil((float)curnum/threshold);
 	            int minbucketsize=curnum/numbuckets;
 	            int numexceeding=curnum%numbuckets;
 	            int[] curlevel=new int[numbuckets];
@@ -86,18 +86,18 @@ public class TestTree {
 	                    curfillsize++;
 	                }
 					startidx+=curfillsize;
-	                if (levelidx>0) {
-						curlevel[bucketidx]=structure[levelidx-1][startidx];
+	                if (!structure.isEmpty()) {
+						curlevel[bucketidx]=lastlevel[startidx];
 	                }
 	                else {
 						curlevel[bucketidx] = startidx;
 	                }
 	            }
-	            structure[levelidx]=curlevel;
+	            structure.add(curlevel);
+				lastlevel=curlevel;
 	            curnum=numbuckets;
-				levelidx++;
 	        }
-	        return structure;    
+	        return (int[][])structure.toArray(new int[structure.size()][]);    
 	    }
 	}
 
@@ -165,7 +165,7 @@ public class TestTree {
         TreeViewer tree = new TreeViewer(shell, SWT.NULL);
         tree.setContentProvider(contentProvider);
         tree.setLabelProvider(labelProvider);
-        tree.setInput(new Node(contents, 0, contents.length));
+        tree.setInput(new Node(_contents, 0, _contents.length));
 
         shell.open();
         
@@ -176,10 +176,10 @@ public class TestTree {
     }
     
     public static void main(String[] args) {
-        TestTree test = new TestTree();
+        TestTree test = new TestTree(29,3);
 		test.run();
-//        int[][] results = test.computeTreeSpec(29, 3);
-//        System.out.println("Hello");
+//		int[][] spec=Node.computeTreeSpec(18,3);
+//		System.out.println(spec);
     }
 
 }
