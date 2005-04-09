@@ -304,9 +304,22 @@ public class GenericReflector implements Reflector, DeepClone {
 			String fieldname=null;
 			int fieldnamelength= classreader.readInt();
 			fieldname = _stream.stringIO().read(classreader,fieldnamelength);
+            
+            GenericClass fieldClass = null;
 			
 		    int handlerid=classreader.readInt();
-		    GenericClass fieldClass = (GenericClass)_classByID.get(handlerid);
+            
+            // need to take care of special handlers here
+            switch (handlerid){
+                case YapHandlers.ANY_ID:
+                    fieldClass = (GenericClass)forClass(Object.class);
+                    break;
+                case YapHandlers.ANY_ARRAY_ID:
+                    fieldClass = ((GenericClass)forClass(Object.class)).arrayClass();
+                    break;
+                default:
+                    fieldClass = (GenericClass)_classByID.get(handlerid);        
+            }
 		    
 		    YapBit attribs=new YapBit(classreader.readByte());
 		    boolean isprimitive=attribs.get();
