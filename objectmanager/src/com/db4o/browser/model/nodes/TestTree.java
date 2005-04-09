@@ -15,29 +15,27 @@ public class TestTree {
     
     private Integer[] _contents;
     private static int[][] treeSpec;
-    private Node _root;
 	private int _threshold;
     
     public TestTree(int numitems,int threshold) {
         _contents = new Integer[numitems];
-		this._threshold=threshold;
-        _root=new Node(_contents,0,_contents.length);
+		_threshold=threshold;
         for (int i = 0; i < _contents.length; i++) {
             _contents[i] = new Integer(i);
         }
     }
 
     private static class Node {
-        private final static int THRESHOLD=3;
-        
         private Object[] _contents;
         private int _start;
         private int _end;
+		private int _threshold;
         
-        public Node(Object[] contents, int start, int end) {
+        public Node(Object[] contents, int start, int end, int threshold) {
             _contents = contents;
             _start = start;
             _end = end;
+			_threshold=threshold;
 			if(_start>=_end) {
 				System.err.println("ouch!");
 			}
@@ -48,17 +46,17 @@ public class TestTree {
         }
         
         public Object[] getChildren() {
-            if(size()<=THRESHOLD) {
+            if(size()<=_threshold) {
                 Object[] children=new Object[size()];
                 System.arraycopy(_contents, _start, children, 0, size());
                 return children;
             }
-			int[][] fullspec=computeTreeSpec(size(),THRESHOLD);
+			int[][] fullspec=computeTreeSpec(size(),_threshold);
 			int[] spec=fullspec[fullspec.length-1];
 			Object[] children=new Object[spec.length];
 			for (int childidx = 0; childidx < children.length; childidx++) {
 				int end=(childidx<children.length-1 ? _start+spec[childidx+1] : _end);
-				children[childidx]=new Node(_contents,_start+spec[childidx],end);
+				children[childidx]=new Node(_contents,_start+spec[childidx],end,_threshold);
 			}
 			return children;
         }
@@ -112,7 +110,7 @@ public class TestTree {
         // Get the top level
         public Object[] getElements(Object inputElement) {
 //            return _root.getChildren();
-            return new Object[] {_root};
+            return new Object[] {new Node(_contents,0,_contents.length,_threshold)};
         }
 
         // Get subsequent levels
@@ -165,7 +163,8 @@ public class TestTree {
         TreeViewer tree = new TreeViewer(shell, SWT.NULL);
         tree.setContentProvider(contentProvider);
         tree.setLabelProvider(labelProvider);
-        tree.setInput(new Node(_contents, 0, _contents.length));
+//        tree.setInput(new Node(_contents,0,_contents.length,_threshold));
+		tree.setInput(new Object());
 
         shell.open();
         
@@ -178,7 +177,7 @@ public class TestTree {
     public static void main(String[] args) {
         TestTree test = new TestTree(29,3);
 		test.run();
-//		int[][] spec=Node.computeTreeSpec(18,3);
+//		int[][] spec=Node.computeTreeSpec(29,3);
 //		System.out.println(spec);
     }
 
