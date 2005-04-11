@@ -202,7 +202,8 @@ class ReplicationImpl implements ReplicationProcess {
 	}
 
 	public void replicate(Object obj) {
-	   _peerB.set(obj);
+       //This can be _peerA or _peerB, it doesn't matter. When there is an active replication process, the set() implementation will know internally (which is a bit weird) to apply it to the correct peer, according to replication direction configurations.
+	   _peerB.set(obj);  //TODO Try running all tests with _peerA here to see if it really doesn't matter.
 	}
 
 	public void setDirection(ObjectContainer replicateFrom, ObjectContainer replicateTo) {
