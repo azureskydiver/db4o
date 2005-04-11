@@ -63,19 +63,20 @@ public class ClassNode implements IModelNode {
 		System.err.println("Starting");
 		long start=System.currentTimeMillis();
 		// This is our bottleneck - should at least be cached.
-        ObjectSet instances = _database.instances(_class);
-		System.err.println("Querying: "+(System.currentTimeMillis()-start));
-		start=System.currentTimeMillis();
-		long[] ids = instances.ext().getIDs();
+//        ObjectSet instances = _database.instances(_class);
+//		System.err.println("Querying: "+(System.currentTimeMillis()-start));
+//		start=System.currentTimeMillis();
+//		long[] ids = instances.ext().getIDs();
+		long[] ids=_database.instanceIds(_class);
 		System.err.println("Getting IDs: "+(System.currentTimeMillis()-start));
 		start=System.currentTimeMillis();
-		if(instances.size()<=THRESHOLD) {
-	        IModelNode[] result = new IModelNode[instances.size()];
+		if(ids.length<=THRESHOLD) {
+	        IModelNode[] result = new IModelNode[ids.length];
 	        int i=0;
-	        while (instances.hasNext()) {
-	            Object object = instances.next();
-	            ReflectClass clazz = _database.reflector().forObject(object);
-	            result[i] = new InstanceNode(object, clazz, _database);
+			for (int resultidx = 0; resultidx < result.length; resultidx++) {
+	            Object object = _database.byId(ids[resultidx]);
+//	            ReflectClass clazz = _database.reflector().forObject(object);
+	            result[i] = new InstanceNode(object, _class, _database);
 	            ++i;
 	        }
 			System.err.println("Creating instances: "+(System.currentTimeMillis()-start));
@@ -87,7 +88,7 @@ public class ClassNode implements IModelNode {
 		int[] levelSpec=treeSpec[treeSpec.length-1];
 		IModelNode[] children=new IModelNode[levelSpec.length];
 		for (int childidx = 0; childidx < children.length; childidx++) {
-			int end=(childidx<children.length-1 ? levelSpec[childidx+1] : instances.size());
+			int end=(childidx<children.length-1 ? levelSpec[childidx+1] : ids.length);
 			children[childidx]=new GroupInstanceNode(_database,_class,ids,treeSpec,treeSpec.length-1,childidx);
 		}
 		System.err.println("Creating children: "+(System.currentTimeMillis()-start));

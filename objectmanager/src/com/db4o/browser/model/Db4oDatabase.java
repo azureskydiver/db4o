@@ -25,6 +25,7 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.browser.prefs.activation.ActivationPreferences;
+import com.db4o.ext.*;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
@@ -112,6 +113,14 @@ public class Db4oDatabase implements Database {
         q.constrain(clazz);
         return q.execute();
     }
+	
+	public long[] instanceIds(ReflectClass clazz) {
+		StoredClass stored=container.ext().storedClass(clazz.getName());
+		if(stored!=null) {
+			return stored.getIDs();
+		}
+		return instances(clazz).ext().getIDs();
+	}
 	
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.model.Database#getId(java.lang.Object)
