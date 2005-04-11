@@ -28,7 +28,8 @@ public interface Database {
 	
 	public abstract long getId(Object object);
 	Object byId(long id);
-	
+	long[] instanceIds(ReflectClass clazz);
+
 	public abstract void activate(Object object);
 
 	public abstract void setInitialActivationDepth(int initialActivationDepth);
