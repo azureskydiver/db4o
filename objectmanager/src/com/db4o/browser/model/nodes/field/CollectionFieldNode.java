@@ -18,6 +18,7 @@ package com.db4o.browser.model.nodes.field;
 
 import com.db4o.browser.model.*;
 import com.db4o.browser.model.nodes.*;
+import com.db4o.browser.model.nodes.partition.PartitionFieldNodeFactory;
 import com.db4o.reflect.*;
 
 /**
@@ -58,7 +59,7 @@ public class CollectionFieldNode extends FieldNode {
 			ReflectClass itemClass = _database.reflector().forObject(contents[i]);
 			results[i] = new InstanceNode(contents[i], itemClass, _database);
 		}
-		return results;
+        return PartitionFieldNodeFactory.create(results);
 	}
 
 	/* (non-Javadoc)

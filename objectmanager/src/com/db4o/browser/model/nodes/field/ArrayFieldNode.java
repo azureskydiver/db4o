@@ -5,6 +5,7 @@ package com.db4o.browser.model.nodes.field;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
+import com.db4o.browser.model.nodes.partition.PartitionFieldNodeFactory;
 import com.db4o.reflect.ReflectArray;
 
 /**
@@ -36,7 +37,7 @@ public class ArrayFieldNode extends FieldNode implements IModelNode {
             result[i] = FieldNodeFactory.construct("["+ i + "] ", item, _database);
         }
         
-        return result;
+        return PartitionFieldNodeFactory.create(result);
 	}
 
 	/* (non-Javadoc)

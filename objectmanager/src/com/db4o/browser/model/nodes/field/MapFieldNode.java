@@ -22,6 +22,7 @@ import java.util.Set;
 
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
+import com.db4o.browser.model.nodes.partition.PartitionFieldNodeFactory;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectMethod;
 import com.swtworkbench.community.xswt.metalogger.Logger;
@@ -134,7 +135,7 @@ public class MapFieldNode extends FieldNode {
             finalResults[elementNum] = element;
             ++elementNum;
         }
-        return finalResults;
+        return PartitionFieldNodeFactory.create(finalResults);
 	}
 
 	public String getText() {

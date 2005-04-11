@@ -1,8 +1,8 @@
 ClassNode -->>
-   SubsetInstanceNode
+   PartitionInstanceNode
 
 FieldNode -->>
-   SubsetFieldNode
+   PartitionFieldNode
 
 100 elements per subset
 10000 elements before # of subset nodes becomes excessive
@@ -24,12 +24,12 @@ TODO:
    * ArrayItemNode is not aware of simple types. **DONE**
    * Remove array types from initial view. **DONE**
    * Search result scalability.
-   * Beautify UI; add icons in appropriate places
    * Substring search: just search displayed strings; else do a query by form QBE
    * Begin query UI / querying functionality
       - Allow display of query results
    * Click right side to navigate
       - (Hyperlink objects if object.hasChildren()?)
+   * Beautify UI; add icons in appropriate places
    * If right side is displaying a collection, display in a table
 
 - Release engineering

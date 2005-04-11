@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2005 db4objects Inc.  http://www.db4o.com
  */
-package com.db4o.browser.model.nodes;
+package com.db4o.browser.model.nodes.partition;
 
 import java.util.*;
 
