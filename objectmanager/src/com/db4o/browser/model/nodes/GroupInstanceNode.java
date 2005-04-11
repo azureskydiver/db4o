@@ -33,7 +33,7 @@ public class GroupInstanceNode implements IModelNode {
 	        IModelNode[] children=new IModelNode[end-start];
 			for (int childidx = 0; childidx < children.length; childidx++) {
 				Object instance=_database.byId(_ids[start+childidx]);
-				children[childidx]=new InstanceNode(instance,_clazz,_database);
+				children[childidx]=new InstanceNode(instance,_database);
 			}
             return children;
         }

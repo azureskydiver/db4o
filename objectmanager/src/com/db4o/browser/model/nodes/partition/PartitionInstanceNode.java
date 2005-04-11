@@ -6,16 +6,16 @@ package com.db4o.browser.model.nodes.partition;
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 
-public class PartitionFieldNode implements IModelNode {
+public class PartitionInstanceNode implements IModelNode {
 
     private Database _database;
-    private IModelNode[] _sourceNodes;
+    private long[] _sourceIds;
     private int _startIdx;
     private int _endIdx;
 
-    public PartitionFieldNode(Database database, IModelNode[] sourceNodes, int startIdx, int endIdx) {
+    public PartitionInstanceNode(Database database, long[] sourceIds, int startIdx, int endIdx) {
         _database=database;
-        _sourceNodes=sourceNodes;
+        _sourceIds=sourceIds;
         _startIdx=startIdx;
         _endIdx=endIdx;
     }
@@ -25,7 +25,7 @@ public class PartitionFieldNode implements IModelNode {
     }
 
     public IModelNode[] children() {
-        return PartitionFieldNodeFactory.create(_sourceNodes, _startIdx, _endIdx, _database);
+        return PartitionFieldNodeFactory.create(_sourceIds, _startIdx, _endIdx, _database);
     }
 
     public String getText() {

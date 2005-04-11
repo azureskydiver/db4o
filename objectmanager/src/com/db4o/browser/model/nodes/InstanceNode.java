@@ -29,36 +29,24 @@ import com.db4o.reflect.*;
  * @author djo
  */
 public class InstanceNode implements IModelNode {
-	private ReflectClass _clazz;
-    private Object _instance;
+	private ReflectClass _clazz=null;
+    private Object _instance=null;
 	private Database _database;
 
-	/**
-	 * @param database TODO
-	 * @param object
-	 */
-	public InstanceNode(Object instance, ReflectClass clazz, Database database) {
-        if (instance == null || clazz == null || database == null) {
+	public InstanceNode(Object instance, Database database) {
+        if (instance == null || database == null) {
             throw new IllegalArgumentException("InstanceNode: Null constructor argument");
         }
 		_instance = instance;
-		_clazz=clazz;
+		_clazz=database.reflector().forObject(instance);
 		_database = database;
 		database.activate(instance);
 	}
     
-	/* (non-Javadoc)
-	 * @see com.db4o.browser.gui.ITreeNode#children()
-	 */
-//	public IModelNode[] children() {
-//        ReflectField[] fields = _clazz.getDeclaredFields();
-//		IModelNode[] children=new IModelNode[fields.length];
-//		for (int idx = 0; idx < fields.length; idx++) {
-//			children[idx]=FieldNodeFactory.construct(fields[idx],_instance,_database);
-//		}
-//		return children;
-//	}
-	
+    public InstanceNode(long id, Database database) {
+        this(database.byId(id),database);
+    }
+
     public IModelNode[] children() {
 		List results = new ArrayList();
 		ReflectClass curclazz = _clazz;
