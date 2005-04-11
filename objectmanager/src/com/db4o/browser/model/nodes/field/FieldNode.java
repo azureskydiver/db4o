@@ -48,7 +48,7 @@ public class FieldNode implements IModelNode {
 			return;
 		}
         ReflectClass clazz = database.reflector().forObject(value);
-		delegate = new InstanceNode(value, clazz, database);
+		delegate = new InstanceNode(value, database);
 	}
 
 	/* (non-Javadoc)

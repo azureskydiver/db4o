@@ -31,7 +31,7 @@ public class ClassNode implements IModelNode {
 	private final ReflectClass _class;
     private final Database _database;
 	private static final int THRESHOLD = 100;
-	private int[][] treeSpec;
+    private long[] _ids;
 
 	/**
 	 * @param contents
@@ -58,50 +58,9 @@ public class ClassNode implements IModelNode {
      * @see com.db4o.browser.model.nodes.IModelNode#children()
      */
     public IModelNode[] children() {
-        ObjectSet objects = _database.instances(_class);
-        IModelNode[] result = new IModelNode[objects.size()];
-        int i=0;
-        while (objects.hasNext()) {
-            Object object = objects.next();
-            ReflectClass clazz = _database.reflector().forObject(object);
-            result[i] = new InstanceNode(object, clazz, _database);
-            ++i;
-        }
-        return PartitionFieldNodeFactory.create(result);
-
-//		System.err.println("Starting");
-//		long start=System.currentTimeMillis();
-		// This is our bottleneck - should at least be cached.
-//        ObjectSet instances = _database.instances(_class);
-//		System.err.println("Querying: "+(System.currentTimeMillis()-start));
-//		start=System.currentTimeMillis();
-//		long[] ids = instances.ext().getIDs();
-//		long[] ids=_database.instanceIds(_class);
-//		System.err.println("Getting IDs: "+(System.currentTimeMillis()-start));
-//		start=System.currentTimeMillis();
-//		if(ids.length<=THRESHOLD) {
-//	        IModelNode[] result = new IModelNode[ids.length];
-//	        int i=0;
-//			for (int resultidx = 0; resultidx < result.length; resultidx++) {
-//	            Object object = _database.byId(ids[resultidx]);
-////	            ReflectClass clazz = _database.reflector().forObject(object);
-//	            result[i] = new InstanceNode(object, _class, _database);
-//	            ++i;
-//	        }
-//			System.err.println("Creating instances: "+(System.currentTimeMillis()-start));
-//	        return result;
-//		}
-//		int[][] treeSpec=computeTreeSpec(ids.length,THRESHOLD);
-//		System.err.println("Building spec: "+(System.currentTimeMillis()-start));
-//		start=System.currentTimeMillis();
-//		int[] levelSpec=treeSpec[treeSpec.length-1];
-//		IModelNode[] children=new IModelNode[levelSpec.length];
-//		for (int childidx = 0; childidx < children.length; childidx++) {
-//			int end=(childidx<children.length-1 ? levelSpec[childidx+1] : ids.length);
-//			children[childidx]=new GroupInstanceNode(_database,_class,ids,treeSpec,treeSpec.length-1,childidx);
-//		}
-//		System.err.println("Creating children: "+(System.currentTimeMillis()-start));
-//		return children;
+        if (_ids == null)
+            _ids=_database.instanceIds(_class);
+        return PartitionFieldNodeFactory.create(_ids,0,_ids.length,_database);
     }
 	
 	/* (non-Javadoc)

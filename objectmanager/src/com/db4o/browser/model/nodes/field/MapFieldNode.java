@@ -135,7 +135,7 @@ public class MapFieldNode extends FieldNode {
             finalResults[elementNum] = element;
             ++elementNum;
         }
-        return PartitionFieldNodeFactory.create(finalResults);
+        return PartitionFieldNodeFactory.create(finalResults,0,finalResults.length,_database);
 	}
 
 	public String getText() {

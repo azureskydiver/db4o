@@ -37,7 +37,7 @@ public class ArrayFieldNode extends FieldNode implements IModelNode {
             result[i] = FieldNodeFactory.construct("["+ i + "] ", item, _database);
         }
         
-        return PartitionFieldNodeFactory.create(result);
+        return PartitionFieldNodeFactory.create(result,0,result.length,_database);
 	}
 
 	/* (non-Javadoc)
