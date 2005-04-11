@@ -27,50 +27,64 @@ public class TestTree {
 
     private static class Node {
         private Object[] _contents;
-        private int _start;
-        private int _end;
+		private int[][] _treeSpec;
+		private int _level;
+		private int _idx;
 		private int _threshold;
+		private int _start;
+		private int _end;
         
-        public Node(Object[] contents, int start, int end, int threshold) {
+        public Node(Object[] contents, int[][] treeSpec,int level, int idx,int threshold) {
             _contents = contents;
-            _start = start;
-            _end = end;
+            _treeSpec = treeSpec;
+            _level = level;
+			_idx=idx;
 			_threshold=threshold;
-			if(_start>=_end) {
-				System.err.println("ouch!");
-			}
         }
         
         public String toString() {
-            return "["+_start+","+(_end-1)+"]";
+            return "["+_level+","+_idx+"]";
         }
         
         public Object[] getChildren() {
-            if(size()<=_threshold) {
-                Object[] children=new Object[size()];
-                System.arraycopy(_contents, _start, children, 0, size());
+			int[] spec=_treeSpec[_level];			
+			int startidx=spec[_idx];
+            if(_level==0) {
+				int endidx=(_idx<spec.length-1 ? spec[_idx+1] : _contents.length);
+				int length=endidx-startidx;
+                Object[] children=new Object[length];
+                System.arraycopy(_contents, startidx, children, 0, length);
                 return children;
             }
-			int[][] fullspec=computeTreeSpec(size(),_threshold);
-			int[] spec=fullspec[fullspec.length-1];
-			Object[] children=new Object[spec.length];
+			int endidx=(_idx<spec.length-1 ? spec[_idx+1] : _treeSpec[_level-1].length);
+			int length=endidx-startidx;
+			Object[] children=new Object[length];
 			for (int childidx = 0; childidx < children.length; childidx++) {
-				int end=(childidx<children.length-1 ? _start+spec[childidx+1] : _end);
-				children[childidx]=new Node(_contents,_start+spec[childidx],end,_threshold);
+				children[childidx]=new Node(_contents,_treeSpec,_level-1,startidx+childidx,_threshold);
 			}
 			return children;
         }
 
-        private int size() {
-            return _end-_start;
+	}
+
+    private IContentProvider contentProvider = new ITreeContentProvider() {
+
+        public void dispose() {
         }
 
-		// TODO: move me somewhere i can be cached or get rid of the history array
-	    public static int[][] computeTreeSpec(int numItems, int threshold) {
+        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        }
+
+        // Get the top level
+        public Object[] getElements(Object inputElement) {
+			int[][] treeSpec=computeTreeSpec(_contents.length,_threshold);
+            return new Object[]{new Node(_contents,treeSpec,treeSpec.length-1,0,_threshold)};
+        }
+
+	    public int[][] computeTreeSpec(int numItems, int threshold) {
 	        java.util.List structure=new ArrayList();
 	        int curnum=numItems;
 	        
-			int[] lastlevel=null;
 	        while(curnum>threshold) {
 	            int numbuckets=(int)Math.ceil((float)curnum/threshold);
 	            int minbucketsize=curnum/numbuckets;
@@ -84,36 +98,16 @@ public class TestTree {
 	                    curfillsize++;
 	                }
 					startidx+=curfillsize;
-	                if (!structure.isEmpty()) {
-						curlevel[bucketidx]=lastlevel[startidx];
-	                }
-	                else {
-						curlevel[bucketidx] = startidx;
-	                }
+					curlevel[bucketidx] = startidx;
 	            }
 	            structure.add(curlevel);
-				lastlevel=curlevel;
 	            curnum=numbuckets;
 	        }
+			structure.add(new int[]{0});
 	        return (int[][])structure.toArray(new int[structure.size()][]);    
 	    }
-	}
 
-    private IContentProvider contentProvider = new ITreeContentProvider() {
-
-        public void dispose() {
-        }
-
-        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        }
-
-        // Get the top level
-        public Object[] getElements(Object inputElement) {
-//            return _root.getChildren();
-            return new Object[] {new Node(_contents,0,_contents.length,_threshold)};
-        }
-
-        // Get subsequent levels
+		// Get subsequent levels
         public Object[] getChildren(Object parentElement) {
             return ((Node)parentElement).getChildren();
         }

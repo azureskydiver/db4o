@@ -120,6 +120,10 @@ public class Db4oDatabase implements Database {
 		return container.ext().getID(object);
 	}
 	
+	public Object byId(long id) {
+		return container.ext().getByID(id);
+	}
+	
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.model.Database#activate(java.lang.Object, int)
 	 */

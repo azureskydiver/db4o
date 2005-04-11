@@ -27,6 +27,7 @@ public interface Database {
 	public abstract ObjectSet instances(ReflectClass clazz);
 	
 	public abstract long getId(Object object);
+	Object byId(long id);
 	
 	public abstract void activate(Object object);
 
