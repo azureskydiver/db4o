@@ -263,7 +263,9 @@ public class QQuery implements Query {
 			return null;
 		}
 					
+		long start=System.currentTimeMillis();
 		ClassIndex classIndex = clazz.getIndex();
+		System.err.println("Index: "+(System.currentTimeMillis()-start));
 		if(classIndex == null) {
 			return null;
 		}
@@ -280,19 +282,65 @@ public class QQuery implements Query {
 
 		final QResult resLocal = new QResult(i_trans);
 		
+		start=System.currentTimeMillis();
 		Tree tree = classIndex.cloneForYapClass(i_trans, clazz.getID());
+		System.err.println("Clone: "+(System.currentTimeMillis()-start));
+		start=System.currentTimeMillis();
 		
 		if(tree == null) {
 			return resLocal;
 		}
 		
+//		start=System.currentTimeMillis();
+//		tree.traverse(new Visitor4() {
+//			public void visit(Object a_object) {
+//				resLocal.add(((TreeInt)a_object).i_key);
+//			}
+//		});
+//		System.err.println("Traverse: "+(System.currentTimeMillis()-start));
+//		resLocal.reset();
+//		return resLocal;
+		start=System.currentTimeMillis();
+		final long[] ids=new long[tree.size()];
+		final int[] idx={0};
 		tree.traverse(new Visitor4() {
 			public void visit(Object a_object) {
-				resLocal.add(((TreeInt)a_object).i_key);
+				ids[idx[0]++]=((TreeInt)a_object).i_key;
 			}
 		});
-		resLocal.reset();
-		return resLocal;
+		System.err.println("Traverse: "+(System.currentTimeMillis()-start));
+		return new ExtObjectSet() {
+			private int idx=0;
+			private ExtObjectContainer database=i_trans.i_stream;
+			
+			public ExtObjectSet ext() {
+				return this;
+			}
+
+			public boolean hasNext() {
+				return idx<ids.length;
+			}
+
+			public Object next() {
+				Object result=database.getByID(ids[idx]);
+				database.activate(result,5); // FIXME: what depth?
+				idx++;
+				return result;
+			}
+
+			public void reset() {
+				idx=0;
+			}
+
+			public int size() {
+				return ids.length;
+			}
+
+			public long[] getIDs() {
+				return ids;
+			}
+		};
+
 	}
 
     void execute1(final QResult result) {
