@@ -6,15 +6,19 @@ package com.db4o.browser.gui.controllers;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.HashMap;
 
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.List;
 
 import com.db4o.browser.gui.controllers.tree.TreeController;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;
 import com.db4o.browser.model.GraphPosition;
 import com.db4o.browser.model.IGraphIterator;
+import com.db4o.browser.model.nodes.ClassNode;
+import com.db4o.reflect.ReflectClass;
 
 /**
  * BrowserController.  The root MVC Controller for a browser window.
@@ -23,8 +27,8 @@ import com.db4o.browser.model.IGraphIterator;
  */
 public class BrowserController implements IBrowserController {
     
-    private DbBrowserPane ui;
-    private QueryController queryController;
+    protected DbBrowserPane ui;
+    protected QueryController queryController;
 
     private String currentFile = null;
 	private TreeController treeController;
@@ -50,14 +54,21 @@ public class BrowserController implements IBrowserController {
 		detailController = new DetailController(this, ui);
 		navigationController = new NavigationController(ui.getLeftButton(), ui.getRightButton());
 		pathController = new PathLabelController(ui.getPathLabel());
-        ui.getQueryButton().addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                queryController.open();
-            }
-        });
+        addQueryButtonHandler();
 	}
 
-	/**
+	protected void addQueryButtonHandler() {
+        ui.getQueryButton().addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                ReflectClass toOpen = chooseClass();
+                if (toOpen != null) {
+                    queryController.open(toOpen);
+                }
+            }
+        });
+    }
+
+    /**
      * Method open.  Open a database file.
      * 
 	 * @param file The platform-specific path/file name.
@@ -67,6 +78,36 @@ public class BrowserController implements IBrowserController {
 		IGraphIterator i = BrowserCore.getDefault().iterator(file);
 		setInput(i, null);
 	}
+    
+    /**
+     * Displays a class selection dialog box and allows the user to select a
+     * class.
+     * 
+     * @return The class the user chose or null if the user did not choosse one.
+     */
+    public ReflectClass chooseClass() {
+        final IGraphIterator iterator = BrowserCore.getDefault().iterator(currentFile);
+        ListSelector dialog = new ListSelector(ui.getShell());
+        final HashMap choices = new HashMap();
+        dialog.setListPopulator(new IListPopulator() {
+            public void populate(List list) {
+                int position=0;
+                while (iterator.hasNext()) {
+                    ClassNode node = (ClassNode) iterator.next();
+                    ReflectClass clazz = node.getReflectClass();
+                    list.add(clazz.getName());
+                    choices.put(new Integer(position), clazz);
+                    ++position;
+                }
+            }
+        });
+        dialog.open();
+        if (dialog.getSelection() >= 0) {
+            return (ReflectClass) choices.get(new Integer(dialog.getSelection()));
+        } else {
+            return null;
+        }
+    }
 	
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.controllers.IBrowserController#open(com.db4o.browser.model.IGraphIterator)

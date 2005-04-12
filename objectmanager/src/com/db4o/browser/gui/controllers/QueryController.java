@@ -7,8 +7,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 
+import com.db4o.browser.gui.controllers.query.QueryTabController;
 import com.db4o.browser.gui.views.QueryBrowserPane;
-import com.db4o.browser.model.BrowserCore;
 import com.db4o.reflect.ReflectClass;
 
 public class QueryController {
@@ -27,11 +27,6 @@ public class QueryController {
     public void open(ReflectClass clazz) {
         openQueryTab(clazz);
     }
-    
-    public void open() {
-        // Open class selection dialog
-        System.out.println("Query.");
-    }
 
     private void openQueryTab(ReflectClass clazz) {
         QueryBrowserPane ui = new QueryBrowserPane(folder, SWT.NULL);
@@ -41,7 +36,15 @@ public class QueryController {
         folder.setSelection(queryTab);
         
         QueryTabController controller = new QueryTabController(this, folder, ui, clazz);
-        controller.setInput(BrowserCore.getDefault().iterator(browserController.getCurrentFile(), clazz.getName()), null);
+        controller.setInput(clazz);
     }
+
+    /**
+     * @return Returns the browserController.
+     */
+    public BrowserController getBrowserController() {
+        return browserController;
+    }
+    
 
 }
