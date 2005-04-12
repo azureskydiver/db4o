@@ -247,52 +247,52 @@ public class QQuery implements Query {
     }
 
 	private ObjectSet classOnlyQuery() {
-		if(i_constraints.size()==1) {
-			Constraint constr=(Constraint)i_constraints.iterator().next(); 
-			if(constr.getClass()==QConClass.class) {
-				QConClass clazzconstr=(QConClass)constr;
-				YapClass clazz=clazzconstr.i_yapClass;
-				if(clazz==null) {
-					return null; // FIXME: Try ID, etc.?
-				}
-				if(clazzconstr.i_subConstraints==null&&!clazz.isArray()) {
-//					System.err.println("CLASS ONLY: "+this+"/"+clazzconstr.i_yapClass);
-					final long[] ids=clazz.getIDs();
-					return new ExtObjectSet() {
-						private int idx=0;
-						private ExtObjectContainer database=i_trans.i_stream;
-						
-						public ExtObjectSet ext() {
-							return this;
-						}
-
-						public boolean hasNext() {
-							return idx<ids.length;
-						}
-
-						public Object next() {
-							Object result=database.getByID(ids[idx]);
-							database.activate(result,5); // FIXME: what depth?
-							idx++;
-							return result;
-						}
-
-						public void reset() {
-							idx=0;
-						}
-
-						public int size() {
-							return ids.length;
-						}
-
-						public long[] getIDs() {
-							return ids;
-						}
-					};
-				}
-			}
+		if(i_constraints.size()!=1) {
+			return null;
 		}
-		return null;
+		Constraint constr=(Constraint)i_constraints.iterator().next(); 
+		if(constr.getClass()!=QConClass.class) {
+			return null;
+		}
+		QConClass clazzconstr=(QConClass)constr;
+		YapClass clazz=clazzconstr.i_yapClass;
+		if(clazz==null) {
+			return null;
+		}
+		if(clazzconstr.i_subConstraints!=null || clazz.isArray()) {
+			return null;
+		}
+					
+		ClassIndex classIndex = clazz.getIndex();
+		if(classIndex == null) {
+			return null;
+		}
+					
+		if (i_trans.i_stream.isClient()) {
+			long[] ids = classIndex.getInternalIDs(i_trans, clazz.getID());
+			QResultClient resClient = new QResultClient(i_trans);
+			for (int i = 0; i < ids.length; i++) {
+				resClient.add((int)ids[i]);
+			}
+			resClient.reset();
+			return resClient;
+		}
+
+		final QResult resLocal = new QResult(i_trans);
+		
+		Tree tree = classIndex.cloneForYapClass(i_trans, clazz.getID());
+		
+		if(tree == null) {
+			return resLocal;
+		}
+		
+		tree.traverse(new Visitor4() {
+			public void visit(Object a_object) {
+				resLocal.add(((TreeInt)a_object).i_key);
+			}
+		});
+		resLocal.reset();
+		return resLocal;
 	}
 
     void execute1(final QResult result) {
@@ -300,11 +300,11 @@ public class QQuery implements Query {
             marshall();
             ((YapClient)i_trans.i_stream).queryExecute(this, result);
         } else {
-            execute2(result);
+            executeLocal(result);
         }
     }
 
-    void execute2(final QResult result) {
+    void executeLocal(final QResult result) {
         boolean checkDuplicates = false;
         boolean topLevel = true;
         List4 candidateCollection = null;
