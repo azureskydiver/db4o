@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.ext.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -235,11 +236,64 @@ public class QQuery implements Query {
 
     public ObjectSet execute() {
         synchronized (streamLock()) {
-            QResult result = new QResult(i_trans);
-            execute1(result);
+			ObjectSet result = classOnlyQuery();
+			if(result!=null) {
+				return result;
+			}
+	        result = new QResult(i_trans);
+	        execute1((QResult)result);
             return result;
         }
     }
+
+	private ObjectSet classOnlyQuery() {
+		if(i_constraints.size()==1) {
+			Constraint constr=(Constraint)i_constraints.iterator().next(); 
+			if(constr.getClass()==QConClass.class) {
+				QConClass clazzconstr=(QConClass)constr;
+				YapClass clazz=clazzconstr.i_yapClass;
+				if(clazz==null) {
+					return null; // FIXME: Try ID, etc.?
+				}
+				if(clazzconstr.i_subConstraints==null&&!clazz.isArray()) {
+//					System.err.println("CLASS ONLY: "+this+"/"+clazzconstr.i_yapClass);
+					final long[] ids=clazz.getIDs();
+					return new ExtObjectSet() {
+						private int idx=0;
+						private ExtObjectContainer database=i_trans.i_stream;
+						
+						public ExtObjectSet ext() {
+							return this;
+						}
+
+						public boolean hasNext() {
+							return idx<ids.length;
+						}
+
+						public Object next() {
+							Object result=database.getByID(ids[idx]);
+							database.activate(result,5); // FIXME: what depth?
+							idx++;
+							return result;
+						}
+
+						public void reset() {
+							idx=0;
+						}
+
+						public int size() {
+							return ids.length;
+						}
+
+						public long[] getIDs() {
+							return ids;
+						}
+					};
+				}
+			}
+		}
+		return null;
+	}
 
     void execute1(final QResult result) {
         if (i_trans.i_stream.isClient()) {
