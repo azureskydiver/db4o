@@ -16,22 +16,31 @@
  */
 package com.db4o.browser.gui.standalone;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Map;
 
-import org.eclipse.swt.*;
-import org.eclipse.swt.events.*;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 
-import com.db4o.*;
-import com.db4o.browser.gui.controllers.*;
-import com.db4o.browser.gui.views.*;
-import com.db4o.browser.model.*;
-import com.db4o.browser.prefs.*;
-import com.db4o.reflect.generic.*;
-import com.db4o.reflect.jdk.*;
-import com.swtworkbench.community.xswt.*;
+import com.db4o.browser.gui.controllers.BrowserController;
+import com.db4o.browser.gui.controllers.QueryController;
+import com.db4o.browser.gui.views.DbBrowserPane;
+import com.db4o.browser.model.BrowserCore;
+import com.db4o.browser.prefs.PreferenceUI;
+import com.swtworkbench.community.xswt.XSWT;
 
 /**
  * Class StandaloneBrowser.
@@ -40,29 +49,74 @@ import com.swtworkbench.community.xswt.*;
  */
 public class StandaloneBrowser implements IControlFactory {
     
-    public static final String appName = "explorer4objects";
+    public static final String appName = "Object Manager";
     
     private Shell shell;
+    private CTabFolder folder;
+    private CTabItem mainTab;
+    
     private DbBrowserPane ui;
-    private BrowserController controller;
+    private BrowserController browserController;
+    private QueryController queryController;
+
+    private Color title_background;
+    private Color title_background_gradient;
+    private Color title_foreground;
+    private Color title_inactive_background;
+    private Color title_inactive_background_gradient;
+    private Color title_inactive_foreground;
     
     /* (non-Javadoc)
 	 * @see com.db4o.browser.gui.standalone.IControlFactory#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createContents(Composite parent) {
+        title_background = Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_BACKGROUND);
+        title_background_gradient = Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT);
+        title_foreground = Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_FOREGROUND);
+        title_inactive_background = Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
+        title_inactive_background_gradient = Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT);
+        title_inactive_foreground = Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND);
+                
         shell = (Shell) parent;
         shell.setLayout(new FillLayout());
         shell.setText(appName);
+        buildMenuBar(shell);
         
-        ui = new DbBrowserPane(shell, SWT.NULL);
-        buildMenuBar((Shell)parent);
+        folder = new CTabFolder(shell, SWT.NULL);
+        folder.setBorderVisible(true);
+        folder.setSelectionBackground(new Color[] {title_background, title_background_gradient}, new int[] { 75 }, true);
+        folder.setSelectionForeground(title_foreground);
         
-        controller = new BrowserController(ui);
+        shell.addShellListener(new ShellAdapter() {
+            public void shellActivated(ShellEvent e) {
+                folder.setSelectionBackground(new Color[] {title_background, title_background_gradient}, new int[] { 75 }, true);
+                folder.setSelectionForeground(title_foreground);
+            }
+
+            public void shellDeactivated(ShellEvent e) {
+                folder.setSelectionBackground(new Color[] {title_inactive_background, title_inactive_background_gradient}, new int[] { 75 }, true);
+                folder.setSelectionForeground(title_inactive_foreground);
+            }
+        });
+        
+        ui = new DbBrowserPane(folder, SWT.NULL);
+        mainTab = new CTabItem(folder, SWT.NULL);
+        mainTab.setControl(ui);
+        
+        queryController = new QueryController(folder);
+        browserController = new BrowserController(ui, queryController);
+        queryController.setBrowserController(browserController);
 		
 		// FIXME: hard-coding initial open...
 		String testFile=getClass().getResource("formula1.yap").getFile();
-		controller.open(testFile);
+		browserController.open(testFile);
+        setTabText(testFile);
 	}
+    
+    private void setTabText(String fileName) {
+        File tabFile = new File(fileName);
+        mainTab.setText(tabFile.getName());
+    }
     
 	/**
 	 * Build the application menu bar
@@ -71,6 +125,7 @@ public class StandaloneBrowser implements IControlFactory {
         Map choices = XSWT.createl(shell, "menu.xswt", getClass());
 		
         MenuItem open = (MenuItem) choices.get("Open");
+        MenuItem query = (MenuItem) choices.get("Query");
         MenuItem search = (MenuItem) choices.get("Search");
         MenuItem newWindow = (MenuItem) choices.get("NewWindow");
         MenuItem close = (MenuItem) choices.get("Close");
@@ -83,9 +138,16 @@ public class StandaloneBrowser implements IControlFactory {
                 FileDialog dialog = new FileDialog(shell, SWT.OPEN);
 				dialog.setFilterExtensions(new String[]{"*.yap"});
                 String file = dialog.open();
+                setTabText(file);
                 if (file != null) {
-                    controller.open(file);
+                    browserController.open(file);
                 }
+            }
+        });
+        
+        query.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                queryController.open();
             }
         });
         
@@ -114,7 +176,7 @@ public class StandaloneBrowser implements IControlFactory {
                 DirectoryDialog dialog = new DirectoryDialog(shell, SWT.OPEN);
                 String file = dialog.open();
                 if (file != null) {
-					controller.addToClasspath(new File(file));
+					browserController.addToClasspath(new File(file));
                 }
             }
         });
@@ -124,7 +186,7 @@ public class StandaloneBrowser implements IControlFactory {
 				dialog.setFilterExtensions(new String[]{"*.jar","*.zip"});
                 String file = dialog.open();
                 if (file != null) {
-					controller.addToClasspath(new File(file));
+					browserController.addToClasspath(new File(file));
                 }
             }
         });

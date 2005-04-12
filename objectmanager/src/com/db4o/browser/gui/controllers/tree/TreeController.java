@@ -4,6 +4,8 @@
 package com.db4o.browser.gui.controllers.tree;
 
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Tree;
 
 import com.db4o.browser.gui.controllers.BrowserController;
@@ -11,6 +13,8 @@ import com.db4o.browser.gui.controllers.IBrowserController;
 import com.db4o.browser.gui.controllers.SelectionChangedController;
 import com.db4o.browser.model.GraphPosition;
 import com.db4o.browser.model.IGraphIterator;
+import com.db4o.browser.model.nodes.ClassNode;
+import com.db4o.browser.model.nodes.IModelNode;
 
 /**
  * TreeController.
@@ -18,11 +22,11 @@ import com.db4o.browser.model.IGraphIterator;
  * @author djo
  */
 public class TreeController implements IBrowserController {
-	private BrowserController parent;
-	private TreeViewer viewer;
-	private SelectionChangedController selectionListener;
+	private final BrowserController parent;
+	private final TreeViewer viewer;
+	private final SelectionChangedController selectionListener;
 	
-	public TreeController(BrowserController parent, Tree tree) {
+	public TreeController(final BrowserController parent, Tree tree) {
 		this.parent = parent;
 		this.viewer = new TreeViewer(tree);
 		
@@ -30,6 +34,20 @@ public class TreeController implements IBrowserController {
         viewer.setLabelProvider(new TreeLabelProvider());
 		final TreeSelectionChangedController treeSelectionChangedController = new TreeSelectionChangedController();
 		viewer.addSelectionChangedListener(treeSelectionChangedController);
+        
+        viewer.getTree().addMouseListener(new MouseAdapter() {
+            public void mouseDoubleClick(MouseEvent e) {
+                IGraphIterator input = (IGraphIterator) viewer.getInput();
+                if (input.hasNext()) {
+                    IModelNode selection = (IModelNode) input.next();
+                    input.previous();
+                    if (selection instanceof ClassNode) {
+                        ClassNode node = (ClassNode) selection;
+                        parent.getQueryController().open(node.getReflectClass());
+                    }
+                }
+            }
+        });
 
 		selectionListener = parent.getSelectionChangedController();
 		selectionListener.setTreeViewer(viewer);

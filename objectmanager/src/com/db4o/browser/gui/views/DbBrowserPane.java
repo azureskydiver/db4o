@@ -37,15 +37,21 @@ public class DbBrowserPane extends Composite {
 		super(parent, style);
         parent.setLayout(new FillLayout());
         setLayout(new FillLayout());
-		Rectangle displayBounds = parent.getDisplay().getBounds();
-		if (displayBounds.width > 480 && displayBounds.height > 480)
-//	        contents = XSWT.createl(this, "layout.xswt", getClass());
-			contents = XSWT.createl(this, "layout-desktop.xswt", getClass());
-		else
-			contents = XSWT.createl(this, "layout.xswt", getClass());
+        contents = createContents();
 	}
     
-    private Map contents = null;
+    protected Map createContents() {
+        Map contents;
+        Rectangle displayBounds = getDisplay().getBounds();
+        if (displayBounds.width > 480 && displayBounds.height > 480) {
+            contents = XSWT.createl(this, "layout-desktop.xswt", getClass());
+        } else {
+            contents = XSWT.createl(this, "layout.xswt", getClass());
+        }
+        return contents;
+    }
+
+    protected Map contents = null;
     
     /**
      * Returns an ITextProperty object representing the Path Label.  If a 
@@ -117,6 +123,15 @@ public class DbBrowserPane extends Composite {
 	public ISelectionSource getRightButton() {
 		return (ISelectionSource) DuckType.implement(ISelectionSource.class, contents.get("RightButton"));
 	}
+    
+    /**
+     * Method getQueryButton.  Returns the query button.
+     * 
+     * @return Button the Query... button
+     */
+    public Button getQueryButton() {
+        return (Button) contents.get("QueryButton");
+    }
 
 }
 
