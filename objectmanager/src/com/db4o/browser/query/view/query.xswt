@@ -35,12 +35,12 @@
             		<x:children>
         				<scrolledComposite x:style="H_SCROLL|V_SCROLL" content="QueryArea" background="White">
         					<x:children>
-        						<composite x:id="QueryArea" background="White">
-        							<layout x:class="fillLayout"/>
-        						</composite>
+        						<canvas x:id="QueryArea" background="White">
+        						</canvas>
         					</x:children>
         				</scrolledComposite>
-		            	<!-- Query pane prototype -
+		            	
+		            	<!-- UI Prototype code -
 		            	<composite background="White">
 		            		<layout x:class="gridLayout" numColumns="7"/>
 		            		<x:children>

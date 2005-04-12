@@ -1,7 +1,17 @@
-- Query in separate tab
-- Choose class dialog
-- Create query controller object
+- Query in separate tab **DONE**
+- Choose class dialog **DONE**
+- Create query controller object **DONE**
 
+- Be able to display query results
+  - Generate a query model from a ReflectClass **DONE**
+  - Get the initial query from the model **DONE**
+  - Run the query **DONE**
+  - Create an IGraphIterator for the ObjectSet **DONE**
+
+- Populate the model from the ReflectClass graph
+- Generate a query view for the model
+- Write a controller between the query model and query view
+- Generate/run a SODA query from the query model when the Run button is clicked
 
 
 - Indented text controls.

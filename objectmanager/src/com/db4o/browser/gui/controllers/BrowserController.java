@@ -28,7 +28,7 @@ import com.db4o.reflect.ReflectClass;
 public class BrowserController implements IBrowserController {
     
     protected DbBrowserPane ui;
-    protected QueryController queryController;
+    protected QueryController queryController;  // Used for running queries
 
     private String currentFile = null;
 	private TreeController treeController;

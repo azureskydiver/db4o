@@ -9,7 +9,9 @@ import com.db4o.ObjectSet;
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.DatabaseGraphIterator;
 import com.db4o.ext.StoredClass;
+import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.Reflector;
 
 public class MockDatabase extends Assert implements Database {
 	private boolean opened=false;
@@ -64,4 +66,24 @@ public class MockDatabase extends Assert implements Database {
 	public void activate(Object object) {
 		// Nothing to do here; everything is always active in the mock database
 	}
+
+    public Object byId(long id) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public long[] instanceIds(ReflectClass clazz) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Reflector reflector() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Query query() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
