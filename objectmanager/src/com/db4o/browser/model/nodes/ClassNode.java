@@ -16,7 +16,6 @@
  */
 package com.db4o.browser.model.nodes;
 
-import com.db4o.ObjectSet;
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.partition.PartitionFieldNodeFactory;
 import com.db4o.reflect.ReflectClass;
@@ -83,6 +82,10 @@ public class ClassNode implements IModelNode {
 	public String getText() {
 		return _class.getName();
 	}
+
+    public ReflectClass getReflectClass() {
+        return _class;
+    }
 
 	/**
 	 * Computes tree level start indices per level (into level below or

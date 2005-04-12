@@ -3,13 +3,18 @@
  */
 package com.db4o.browser.gui.controllers;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.net.*;
+import java.io.File;
+import java.lang.reflect.Method;
+import java.net.URL;
 
-import com.db4o.browser.gui.controllers.tree.*;
-import com.db4o.browser.gui.views.*;
-import com.db4o.browser.model.*;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+
+import com.db4o.browser.gui.controllers.tree.TreeController;
+import com.db4o.browser.gui.views.DbBrowserPane;
+import com.db4o.browser.model.BrowserCore;
+import com.db4o.browser.model.GraphPosition;
+import com.db4o.browser.model.IGraphIterator;
 
 /**
  * BrowserController.  The root MVC Controller for a browser window.
@@ -19,6 +24,8 @@ import com.db4o.browser.model.*;
 public class BrowserController implements IBrowserController {
     
     private DbBrowserPane ui;
+    private QueryController queryController;
+
     private String currentFile = null;
 	private TreeController treeController;
 	private DetailController detailController;
@@ -29,11 +36,12 @@ public class BrowserController implements IBrowserController {
 	/**
      * Constructor BrowserController.  Create a BrowserController for a
      * particular user interface.
-     * 
 	 * @param ui The DbBrowserPane to use as for the user interface
+	 * @param queryController The QueryController used for opening queries
 	 */
-	public BrowserController(DbBrowserPane ui) {
+	public BrowserController(DbBrowserPane ui, final QueryController queryController) {
         this.ui = ui;
+        this.queryController = queryController;
 
 		// Initialize the ObjectTree's controllers
 		selectionChangedController = new SelectionChangedController();
@@ -42,6 +50,11 @@ public class BrowserController implements IBrowserController {
 		detailController = new DetailController(this, ui);
 		navigationController = new NavigationController(ui.getLeftButton(), ui.getRightButton());
 		pathController = new PathLabelController(ui.getPathLabel());
+        ui.getQueryButton().addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                queryController.open();
+            }
+        });
 	}
 
 	/**
@@ -93,4 +106,20 @@ public class BrowserController implements IBrowserController {
 			e.printStackTrace();
 		}
 	}
+
+    /**
+     * @return Returns the queryController.
+     */
+    public QueryController getQueryController() {
+        return queryController;
+    }
+
+    /**
+     * @return Returns the currentFile.
+     */
+    public String getCurrentFile() {
+        return currentFile;
+    }
+    
+    
 }
