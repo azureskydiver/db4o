@@ -12,7 +12,7 @@ final class MQueryExecute extends MsgObject {
 		query.unmarshall(getTransaction());
 		synchronized (stream.i_lock) {
 			try {
-				query.execute2(qr);
+				query.executeLocal(qr);
 			} catch (Exception e) {
 				// 
 				qr = new QResult(getTransaction());

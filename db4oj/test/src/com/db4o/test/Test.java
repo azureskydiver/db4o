@@ -121,12 +121,23 @@ public class Test extends AllTests {
     }
 
     public static void ensureOccurrences(Object obj, int count) {
-        ensure(occurrences(obj) == count);
+		int occ = occurrences(obj);
+		if(occ != count) {
+			error("Expected count: " + count + " Count was:" + occ);
+		}
     }
+	
+	public static void error(String msg) {
+        errorCount++;
+		if(msg != null) {
+			new Exception(msg).printStackTrace();
+		}else {
+			new Exception().printStackTrace();
+		}
+	}
 
     public static void error() {
-        errorCount++;
-        new Exception().printStackTrace();
+		error(null);
     }
 
     public static int fileLength() {
