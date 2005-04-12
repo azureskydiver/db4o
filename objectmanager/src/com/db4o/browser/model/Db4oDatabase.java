@@ -143,5 +143,9 @@ public class Db4oDatabase implements Database {
     public Reflector reflector() {
         return container.ext().reflector();
     }
+    
+    public Query query() {
+        return container.query();
+    }
 	
 }

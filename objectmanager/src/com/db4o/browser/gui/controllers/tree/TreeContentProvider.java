@@ -78,6 +78,16 @@ public class TreeContentProvider implements ITreeContentProvider {
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
 	 */
 	public Object[] getChildren(Object parentElement) {
+        /*
+         * FEATURE IN JFACE: Sometimes TreeViewer mistakenly calls 
+         * getChildren() on the input element rather than calling
+         * getElements() on said input element.  The workaround is
+         * to detect the type of the input element and call
+         * getElements() ourselves.
+         */
+        if (parentElement instanceof IGraphIterator) {
+            return getElements(parentElement);
+        }
         i.setPath((GraphPosition) parentElement);
         i.selectNextChild();
 		return children(i);
