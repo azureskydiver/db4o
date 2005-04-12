@@ -19,8 +19,24 @@ abstract class YapFieldVirtual extends YapField {
         return true;
     }
     
+    void collectConstraints(Transaction a_trans, QConObject a_parent,
+        Object a_template, Visitor4 a_visitor) {
+        
+        // QBE constraint collection call
+        // There isn't anything useful to do here, since virtual fields
+        // are not on the actual object.
+        
+    }
+
+    
     void delete(YapWriter a_bytes) {
         a_bytes.incrementOffset(linkLength());
+    }
+    
+    public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
+        // This is the first part of marshalling
+        // Virtual fields do it all in #marshall() so it's fine to return null here
+        return null;
     }
 
     int ownLength(YapStream a_stream) {

@@ -1259,7 +1259,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         // i_handlers.i_replicateFrom may be set in YapObjectCarrier for parent YapStream 
         if(i_migrateFrom != null  && i_handlers.i_replication != null){
             
-            if(i_handlers.i_replication.toDestination(a_object)){
+            if(i_handlers.i_replication.process(a_object)){
                 return ta;
             }
         }
