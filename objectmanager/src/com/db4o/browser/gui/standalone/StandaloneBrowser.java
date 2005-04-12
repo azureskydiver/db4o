@@ -40,6 +40,7 @@ import com.db4o.browser.gui.controllers.QueryController;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;
 import com.db4o.browser.prefs.PreferenceUI;
+import com.db4o.reflect.ReflectClass;
 import com.swtworkbench.community.xswt.XSWT;
 
 /**
@@ -147,7 +148,10 @@ public class StandaloneBrowser implements IControlFactory {
         
         query.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                queryController.open();
+                ReflectClass toOpen = browserController.chooseClass();
+                if (toOpen != null) {
+                    queryController.open(toOpen);
+                }
             }
         });
         
