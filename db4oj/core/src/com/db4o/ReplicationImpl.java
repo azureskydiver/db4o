@@ -86,20 +86,19 @@ class ReplicationImpl implements ReplicationProcess {
     }
 
 
-    boolean toDestination(Object a_sourceObject) {
+    boolean process(Object objectA) {
         synchronized(_peerA.i_lock){
-            Object objectA = a_sourceObject;
-	        _yapObjectA = _peerA.getYapObject(a_sourceObject);
+	        _yapObjectA = _peerA.getYapObject(objectA);
 	        if (_yapObjectA != null) {
-	            VirtualAttributes virtualAttributesA = _yapObjectA.virtualAttributes(_transA);
-	            if (virtualAttributesA != null) {
-	                Object[] arr = _transB.objectAndYapObjectBySignature(virtualAttributesA.i_uuid, virtualAttributesA.i_database.i_signature); 
+	            VirtualAttributes attA = _yapObjectA.virtualAttributes(_transA);
+	            if (attA != null) {
+	                Object[] arr = _transB.objectAndYapObjectBySignature(attA.i_uuid, attA.i_database.i_signature); 
 	                if (arr[0] != null) {
 	                    YapObject yapObjectB = (YapObject) arr[1];
 	                    Object objectB = arr[0];
-	                    VirtualAttributes vad = yapObjectB.virtualAttributes(_transB);
-	                    if (virtualAttributesA.i_version <= _record._version
-	                        && vad.i_version <= _record._version) {
+	                    VirtualAttributes attB = yapObjectB.virtualAttributes(_transB);
+	                    if (attA.i_version <= _record._version
+	                        && attB.i_version <= _record._version) {
                             
                             if(_direction != CHECK_CONFLICT){
                                 _peerB.bind2(yapObjectB, objectA);
@@ -110,8 +109,8 @@ class ReplicationImpl implements ReplicationProcess {
                         
                         int direction = ignore();
 	                    
-	                    if (virtualAttributesA.i_version > _record._version
-	                        && vad.i_version > _record._version) {
+	                    if (attA.i_version > _record._version
+	                        && attB.i_version > _record._version) {
 	                        
 	                        Object prevailing = _conflictHandler.resolveConflict(this, objectA, objectB);
 	                        
@@ -130,7 +129,7 @@ class ReplicationImpl implements ReplicationProcess {
 	                        
 	                    }else{
 	                        direction = toB();
-	                        if(vad.i_version > _record._version){
+	                        if(attB.i_version > _record._version){
                                 direction = toA();
 	                        }
 	                    }
@@ -202,8 +201,24 @@ class ReplicationImpl implements ReplicationProcess {
 	}
 
 	public void replicate(Object obj) {
-       //This can be _peerA or _peerB, it doesn't matter. When there is an active replication process, the set() implementation will know internally (which is a bit weird) to apply it to the correct peer, according to replication direction configurations.
-	   _peerB.set(obj);  //TODO Try running all tests with _peerA here to see if it really doesn't matter.
+
+        // When there is an active replication process, the set() method
+        // will call back to the #process() method in this class.
+        
+        // This detour is necessary, since #set() has to handle all cases
+        // anyway, for members of the replicated object, especially the
+        // prevention of endless loops in case of circular references.
+        
+        
+        YapStream stream = _peerB;
+        
+        if(_peerB.isStored(obj)){
+            if(! _peerA.isStored(obj)){
+                stream = _peerA;
+            }
+        }
+        
+	   stream.set(obj);  
 	}
 
 	public void setDirection(ObjectContainer replicateFrom, ObjectContainer replicateTo) {
