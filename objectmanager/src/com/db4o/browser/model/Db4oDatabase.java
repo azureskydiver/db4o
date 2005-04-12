@@ -115,10 +115,10 @@ public class Db4oDatabase implements Database {
     }
 	
 	public long[] instanceIds(ReflectClass clazz) {
-		StoredClass stored=container.ext().storedClass(clazz.getName());
-		if(stored!=null) {
-            return stored.getIDs();
-		}
+//		StoredClass stored=container.ext().storedClass(clazz.getName());
+//		if(stored!=null) {
+//            return stored.getIDs();
+//		}
 		return instances(clazz).ext().getIDs();
 	}
 	
