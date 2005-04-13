@@ -14,7 +14,13 @@ class IxFileRangeReader implements Readable {
     IxFileRange               _fileRange;
     private final YapDataType _handler;
     private QCandidates       _candidates;
-
+    
+    // TODO: IxFileRangeReader should not store result internally
+    // Instead send it back to the caller in a small object and
+    // pass it again in case of later use.
+    // After this change IxField#fileRangeReader can create a new
+    // one every time and we do not have to worry about cleaning
+    // up _candidates variable after use.
     private int               _lower;
     private int               _upper;
     private int               _cursor;
@@ -148,6 +154,8 @@ class IxFileRangeReader implements Readable {
         // on to the the complete content of the query, possibly 
         // even with all the instantiated objects. We have to set it
         // to null after using it.
+        
+        // See TODO: in the variable declaration for a better solution.
         _candidates = null;
 
         return a_tree;
