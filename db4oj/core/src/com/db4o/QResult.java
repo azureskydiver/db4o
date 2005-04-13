@@ -16,6 +16,11 @@ class QResult extends IntArrayList implements ObjectSet, ExtObjectSet, Visitor4 
 	QResult(Transaction a_trans) {
 		i_trans = a_trans;
 	}
+    
+    QResult(Transaction trans, int initialSize){
+        super(initialSize);
+        i_trans = trans;
+    }
 
 	final Object activate(Object obj){
 		YapStream stream = i_trans.i_stream;
