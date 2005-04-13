@@ -174,6 +174,15 @@ public final class YapObject extends YapMeta implements ObjectInfo{
         }
         return null;
     }
+	
+    public long getVersion(){
+        VirtualAttributes va = virtualAttributes(getTrans());
+        if(va == null) {
+			return 0;
+        }
+		return va.i_version;
+    }
+
 
 	YapClass getYapClass() {
 		return i_yapClass;

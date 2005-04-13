@@ -20,9 +20,23 @@ public interface ObjectInfo {
     
     /**
      * returns a UUID representation of the referenced object.
+	 * UUID generation has to be turned on, in order to be able
+	 * to use this feature:
+	 * {@link com.db4o.config.Configuration#generateUUIDs(int)}
      * @return the UUID of the referenced object.
      */
     public Db4oUUID getUUID();
+	
+	/**
+	 * returns the transaction serial number ("version") the 
+	 * referenced object was stored with last.
+	 * Version number generation has to be turned on, in order to
+	 * be able to use this feature: 
+	 * {@link com.db4o.config.Configuration#generateVersionNumbers(int)}
+	 * @return the version number.
+	 */
+	public long getVersion();
+	
     
     
     
