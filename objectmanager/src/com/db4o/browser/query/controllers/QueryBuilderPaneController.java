@@ -61,6 +61,8 @@ public class QueryBuilderPaneController {
             
             if (fieldType.isSecondClass()) {
                 editor.addPrimitiveTypeRow(field.field.getName());
+                // TODO: Add data binding controllers here for relational operator/value...
+                
             } else if (!fieldType.isCollection() && !fieldType.isArray()) {  // We don't handle collections yet
                 IConstraintRow row = editor.addObjectReferenceRow(field.field.getName());
                 row.setValue(fieldType.getName() + " >>>");
