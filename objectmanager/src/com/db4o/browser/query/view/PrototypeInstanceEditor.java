@@ -36,7 +36,7 @@ This Composite implements the following layout:
         <combo visible="false"/>
         <label text=">>>>>>>>>"/>
         
-        <!-- Collection reference -->
+        <!-- Collection reference (not implemented yet) -->
         <label text="history"/>
         <combo visible="false"/>
         <button text="Select type..."/>
