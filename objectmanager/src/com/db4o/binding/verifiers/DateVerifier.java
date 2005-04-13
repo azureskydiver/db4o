@@ -16,7 +16,7 @@ public class DateVerifier extends DateConversionSupport implements IVerifier {
 	}
 
 	public String getHint() {
-		Date sampleDate=new Date(0);
+		Date sampleDate=new Date();
 		StringBuffer samples=new StringBuffer();
 		for(int formatterIdx=0;formatterIdx<numFormatters();formatterIdx++) {
 			if(formatterIdx>0) {

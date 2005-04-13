@@ -36,21 +36,31 @@ public abstract class DateConversionSupport {
 	 * @return The parsed date, or null, if no available formatter could interpret the input string
 	 */
 	protected Date parse(String str) {
-		Date parsed=null;
 		for (int formatterIdx = 0; formatterIdx < formatters.length; formatterIdx++) {
+			Date parsed=parse(str,formatterIdx);
+			if(parsed!=null) {
+				return parsed;
+			}
+		}
+		return null;
+	}
+
+	protected Date parse(String str,int formatterIdx) {
+		if(formatterIdx<numFormatters()-1) {
 			try {
-				parsed=formatters[formatterIdx].parse(str);
-				break;
+				return formatters[formatterIdx].parse(str);
 			} catch (ParseException exc) {
 			}
 		}
-		try {
-			long millisecs=Long.parseLong(str);
-			parsed=new Date(millisecs);
+		else {
+			try {
+				long millisecs=Long.parseLong(str);
+				return new Date(millisecs);
+			}
+			catch(NumberFormatException exc) {
+			}
 		}
-		catch(NumberFormatException exc) {
-		}
-		return parsed;
+		return null;
 	}
 	
 	/**
@@ -60,9 +70,6 @@ public abstract class DateConversionSupport {
 		return format(date,DEFAULT_FORMATTER_INDEX);
 	}
 
-	/**
-	 * Formats the given date with the specified formatter according to the default locale.
-	 */
 	protected String format(Date date,int formatterIdx) {
 		if(formatterIdx<numFormatters()-1) {
 			return formatters[formatterIdx].format(date);
