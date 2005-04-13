@@ -15,7 +15,7 @@ import com.db4o.browser.model.Db4oDatabase;
 import com.db4o.browser.query.model.FieldConstraint;
 import com.db4o.browser.query.model.QueryBuilderModel;
 import com.db4o.browser.query.model.QueryPrototypeInstance;
-import com.db4o.browser.query.model.RelationOperator;
+import com.db4o.browser.query.model.RelationalOperator;
 import com.db4o.reflect.ReflectClass;
 
 public class QueryBuilderModelTest extends TestCase {
@@ -82,7 +82,7 @@ public class QueryBuilderModelTest extends TestCase {
         assertEquals(2,fieldNames.length);
         FieldConstraint constraint=proto.getConstraint("id");
         assertEquals(constraint.field.getName(),"id");
-        assertEquals(RelationOperator.EQUALS,constraint.relation);
+        assertEquals(RelationalOperator.EQUALS,constraint.relation);
         assertNull(constraint.value);
     }
 
@@ -96,7 +96,7 @@ public class QueryBuilderModelTest extends TestCase {
         assertEquals("A",data.name);
         
         constraint.value=new Integer(3);
-        constraint.relation=RelationOperator.SMALLER;
+        constraint.relation=RelationalOperator.SMALLER;
         result=model.getQuery().execute();
         assertEquals(2,result.size());
     }
@@ -104,7 +104,7 @@ public class QueryBuilderModelTest extends TestCase {
     public void testCombinedConstraints() {
         FieldConstraint nameConstraint=proto.getConstraint("name");
         nameConstraint.value="A";
-        nameConstraint.relation=RelationOperator.GREATER;
+        nameConstraint.relation=RelationalOperator.GREATER;
         ObjectSet result=model.getQuery().execute();
         assertEquals(5,result.size());
         FieldConstraint idConstraint=proto.getConstraint("id");
@@ -121,7 +121,7 @@ public class QueryBuilderModelTest extends TestCase {
         
         FieldConstraint nameConstraint = proto.getConstraint("data").valueProto().getConstraint("name");
         nameConstraint.value = "y";
-        nameConstraint.relation = RelationOperator.GREATER;
+        nameConstraint.relation = RelationalOperator.GREATER;
         ObjectSet result = model.getQuery().execute();
         assertEquals(1, result.size());
         Container resultObj = (Container) result.next();

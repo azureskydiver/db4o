@@ -11,12 +11,12 @@ import com.db4o.reflect.ReflectField;
 public class FieldConstraint {
     
     public final ReflectField field;
-    public RelationOperator relation;
+    public RelationalOperator relation;
     public Object value;
     
     public FieldConstraint(ReflectField field, QueryBuilderModel model) {
         this.field = field;
-        this.relation = RelationOperator.EQUALS;
+        this.relation = RelationalOperator.EQUALS;
         final ReflectClass fieldType = field.getType();
         if (fieldType.isSecondClass()) {
             this.value = null;

@@ -28,15 +28,22 @@ public class QueryPrototypeInstance {
         while (curClazz != null) {
             ReflectField[] curFields = curClazz.getDeclaredFields();
             for (int i = 0; i < curFields.length; i++) {
-                if (!curFields[i].isTransient()) {
-                    fields.put(curFields[i].getName(), new FieldConstraint(curFields[i], model));
+                ReflectClass fieldClass = curFields[i].getType();
+                
+                if (curFields[i].isTransient() || fieldClass.isCollection() || fieldClass.isArray()) {
+                    continue;
                 }
+                
+                fields.put(curFields[i].getName(), new FieldConstraint(curFields[i], model));
             }
             curClazz = curClazz.getSuperclass();
         }
     }
 
     public void addUserConstraints(Query query) {
+        if (query == null || clazz == null) {
+            return;
+        }
         query.constrain(clazz);
         for (Iterator fieldIter = fields.values().iterator(); fieldIter.hasNext();) {
             FieldConstraint constraint = (FieldConstraint) fieldIter.next();
@@ -52,5 +59,9 @@ public class QueryPrototypeInstance {
     
     public FieldConstraint getConstraint(String fieldName) {
         return (FieldConstraint) fields.get(fieldName);
+    }
+
+    public ReflectClass getType() {
+        return clazz;
     }
 }

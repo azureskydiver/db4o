@@ -3,9 +3,11 @@
  */
 package com.db4o.browser.model.nodes.partition;
 
+import com.db4o.ObjectSet;
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.InstanceNode;
+import com.db4o.browser.model.nodes.field.FieldNodeFactory;
 
 public class PartitionFieldNodeFactory {
     public static final int THRESHOLD=75;
@@ -53,4 +55,23 @@ public class PartitionFieldNodeFactory {
         }
         return result;
     }
+    
+    public static IModelNode[] create(ObjectSet source, long[] sourceIds,int startIdx,int endIdx,Database database) {
+        if (sourceIds == null) {
+            sourceIds = source.ext().getIDs();
+        }
+        int length = endIdx-startIdx;
+        boolean overflow = length>THRESHOLD;
+        int numInstances=(overflow ? THRESHOLD : length);
+        int resultLength=(overflow ? THRESHOLD+1 : length);
+        IModelNode[] result=new IModelNode[resultLength];
+        for(int resultidx=0;resultidx<numInstances;resultidx++) {
+            result[resultidx]= FieldNodeFactory.construct("[" + (startIdx+resultidx) + "]", database.byId(sourceIds[startIdx+resultidx]), database);
+        }
+        if(overflow) {
+            result[result.length-1]=new PartitionObjectSetNode(source,database,sourceIds,startIdx+numInstances, endIdx);
+        }
+        return result;
+    }
+    
 }

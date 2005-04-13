@@ -85,6 +85,7 @@ public class StandaloneBrowser implements IControlFactory {
         
         folder = new CTabFolder(shell, SWT.NULL);
         folder.setBorderVisible(true);
+        folder.setSimple(false);
         folder.setSelectionBackground(new Color[] {title_background, title_background_gradient}, new int[] { 75 }, true);
         folder.setSelectionForeground(title_foreground);
         
