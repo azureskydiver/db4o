@@ -46,13 +46,6 @@ public class ReplicationFeatures {
         Test.commit();
         replicateAll();
 
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
         checkOne("rf2");
         replicateAll();
         checkAllEqual();
@@ -69,6 +62,10 @@ public class ReplicationFeatures {
             Test.ensure(clientObjectContainer.identity().equals(serverObjectContainer.identity()));
         }
     }
+	
+	private void printVersion() {
+		System.out.println("Version: " + Test.objectContainer().getObjectInfo(this).getVersion());
+	}
 
     private void replicateAll() {
         ExtObjectContainer peerA = Test.objectContainer();
@@ -97,7 +94,8 @@ public class ReplicationFeatures {
         ObjectSet objectSet = q.execute();
         while (objectSet.hasNext()) {
             Object masterObject = objectSet.next();
-            Db4oUUID uuid = peerA.getObjectInfo(masterObject).getUUID();
+			
+			((ReplicationFeatures)masterObject).printVersion();
 
             // check version numbers and decide upon direction,
             // depending which one changed after last synchronisation

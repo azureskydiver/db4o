@@ -115,6 +115,7 @@ class ReplicationImpl implements ReplicationProcess {
 				}
 				
 				_sourceReference = referenceB;
+				
 				attB = referenceB.virtualAttributes(_transB);
 				
 				Object[] arr = _transA.objectAndYapObjectBySignature(attB.i_uuid,
@@ -147,6 +148,10 @@ class ReplicationImpl implements ReplicationProcess {
 				
 				attB = referenceB.virtualAttributes(_transB);
 			}
+			
+			
+			_peerA.refresh(objectA, 1);
+			_peerB.refresh(objectB, 1);
 			
 			
 			if (attA.i_version <= _record._version
