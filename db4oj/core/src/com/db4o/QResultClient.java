@@ -14,6 +14,11 @@ class QResultClient extends QResult {
 	QResultClient(Transaction a_ta) {
 		super(a_ta);
 	}
+    
+    QResultClient(Transaction a_ta, int initialSize) {
+        super(a_ta, initialSize);
+    }
+
 	
 	public boolean hasNext() {
 		synchronized (streamLock()) {
