@@ -238,6 +238,7 @@ public class QQuery implements Query {
         synchronized (streamLock()) {
 			ObjectSet result = classOnlyQuery();
 			if(result!=null) {
+                result.reset();
 				return result;
 			}
 	        result = new QResult(i_trans);
@@ -247,6 +248,7 @@ public class QQuery implements Query {
     }
 
 	private ObjectSet classOnlyQuery() {
+        
 		if(i_constraints.size()!=1) {
 			return null;
 		}
@@ -275,7 +277,6 @@ public class QQuery implements Query {
 			for (int i = 0; i < ids.length; i++) {
 				resClient.add((int)ids[i]);
 			}
-			resClient.reset();
 			return resClient;
 		}
 		
@@ -292,7 +293,6 @@ public class QQuery implements Query {
 				resLocal.add(((TreeInt)a_object).i_key);
 			}
 		});
-		resLocal.reset();
 		return resLocal;
 
 	}
