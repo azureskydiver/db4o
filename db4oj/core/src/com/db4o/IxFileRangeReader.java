@@ -143,6 +143,12 @@ class IxFileRangeReader implements Readable {
                 }
             }
         }
+        
+        // _candidates is a potential memory leak, since it can hold
+        // on to the the complete content of the query, possibly 
+        // even with all the instantiated objects. We have to set it
+        // to null after using it.
+        _candidates = null;
 
         return a_tree;
     }
