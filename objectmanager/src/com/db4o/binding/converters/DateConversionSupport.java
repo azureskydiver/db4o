@@ -5,10 +5,10 @@ import java.util.*;
 
 /**
  * Base support for date/string conversion handling according to the
- * default locale.
+ * default locale or in plain long milliseconds.
  * 
- * NOTE: parse(format(date)) will usually *not* be equal to date, since the
- * string representation doesn't cover the sub-second range.
+ * NOTE: parse(format(date)) will generally *not* be equal to date, since the
+ * string representation may not cover the sub-second range.
  */
 public abstract class DateConversionSupport {
 	public final static int DATE_FORMAT=DateFormat.SHORT;
@@ -17,9 +17,11 @@ public abstract class DateConversionSupport {
 
 	/**
 	 * Alternative formatters for date, time and date/time.
+	 * Raw milliseconds are covered as a special case.
 	 */
 	// TODO: These could be shared, but would have to be synchronized.
 	private DateFormat[] formatters={
+			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS Z"),
 			DateFormat.getDateTimeInstance(DATE_FORMAT,TIME_FORMAT),
 			DateFormat.getDateInstance(DATE_FORMAT),
 			DateFormat.getTimeInstance(TIME_FORMAT)
@@ -27,7 +29,8 @@ public abstract class DateConversionSupport {
 	
 	/**
 	 * Tries all available formatters to parse the given string according to the
-	 * default locale and returns the result of the first successful run.
+	 * default locale or as a raw millisecond value and returns the result of the
+	 * first successful run.
 	 * 
 	 * @param str A string specifying a date according to the default locale
 	 * @return The parsed date, or null, if no available formatter could interpret the input string
@@ -38,8 +41,14 @@ public abstract class DateConversionSupport {
 			try {
 				parsed=formatters[formatterIdx].parse(str);
 				break;
-			} catch (ParseException e) {
+			} catch (ParseException exc) {
 			}
+		}
+		try {
+			long millisecs=Long.parseLong(str);
+			parsed=new Date(millisecs);
+		}
+		catch(NumberFormatException exc) {
 		}
 		return parsed;
 	}
@@ -52,13 +61,16 @@ public abstract class DateConversionSupport {
 	}
 
 	/**
-	 * Formats the given date with the given formatter according to the default locale.
+	 * Formats the given date with the specified formatter according to the default locale.
 	 */
 	protected String format(Date date,int formatterIdx) {
-		return formatters[formatterIdx].format(date);
+		if(formatterIdx<numFormatters()-1) {
+			return formatters[formatterIdx].format(date);
+		}
+		return String.valueOf(date.getTime());
 	}
 
 	protected int numFormatters() {
-		return formatters.length;
+		return formatters.length+1;
 	}
 }
