@@ -12,18 +12,10 @@ import com.db4o.test.*;
 
 public class ReplicationFeaturesMain {
 
-    private static final String FILE_A = "replicationTestA.yap";
     private static final String FILE_B = "replicationTestB.yap";
     private static ExtObjectContainer _a;
     private static ExtObjectContainer _b;
 
-    public static void main(String[] ignored) {
-        init();
-
-        test();
-        
-        exit();
-    }
     
     private static void exit() {
         _a.close();
@@ -33,21 +25,36 @@ public class ReplicationFeaturesMain {
         System.exit(0);
     }
 
-    public static void init(){
-        new File(FILE_A).delete();
+    public void configure(){
         new File(FILE_B).delete();
         Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
         Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
-        _a = Db4o.openFile(FILE_A).ext();
         _b = Db4o.openFile(FILE_B).ext();
     }
-    
-    public static void test() {
+	
+	private void setUpObjectContainers() {
+		_a = Test.objectContainer();
+		_b = Db4o.openFile(FILE_B).ext();
+	}
+	
+	public void store() {
+		setUpObjectContainers();
+		
         _a.set(new Replicated("a1"));
         _a.commit();
 
         _b.set(new Replicated("b1"));
         _b.commit();
+		
+		
+		_b.close();
+	}
+    
+    public void test() {
+		setUpObjectContainers();
+		
+		
+		
 
         replicateInBothDirections();
 
@@ -60,6 +67,8 @@ public class ReplicationFeaturesMain {
 //      TODO: cascading
 //      TODO: replication.checkConflict(obj); //(peek)
 
+		
+		_b.close();
     }
 
     private static void replicateInBothDirections(){
@@ -91,7 +100,9 @@ public class ReplicationFeaturesMain {
     private static void checkAllEqual(ExtObjectContainer con1, ExtObjectContainer con2){
         DeepCompare comparator = new DeepCompare();
         
-        ObjectSet all = con1.get(null);
+		Query q = con1.query();
+		q.constrain(Replicated.class);
+        ObjectSet all = q.execute();
         while(all.hasNext()){
             Object obj1 = all.next();
             con1.activate(obj1, Integer.MAX_VALUE);

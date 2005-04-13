@@ -1,6 +1,6 @@
 /* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.test;
+package com.db4o.test.replication;
 
 import java.io.*;
 import java.util.*;
@@ -9,6 +9,7 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
 import com.db4o.replication.*;
+import com.db4o.test.*;
 
 public class ReplicationFeatures {
 

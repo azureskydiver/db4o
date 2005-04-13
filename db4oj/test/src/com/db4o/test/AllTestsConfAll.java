@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.test.reflect.*;
+import com.db4o.test.replication.*;
 
 public class AllTestsConfAll extends TestSuite{
 
@@ -14,7 +15,8 @@ public class AllTestsConfAll extends TestSuite{
         // to run on JDKs prior to 1.5
         
         suite("com.db4o.test.jdk5.Jdk5Tests"),
-        this
+        this,
+        new ReplicationTests()
         
     };
     
