@@ -15,7 +15,11 @@ class IntArrayList {
     private int i_count;
     
     IntArrayList(){
-        i_content = new int[INC];
+        this(INC);
+    }
+    
+    IntArrayList(int initialSize){
+        i_content = new int[initialSize];
     }
     
     void add(int a_value){

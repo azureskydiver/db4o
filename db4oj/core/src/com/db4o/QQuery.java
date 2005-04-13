@@ -279,8 +279,6 @@ public class QQuery implements Query {
 			resClient.reset();
 			return resClient;
 		}
-
-		final QResult resLocal = new QResult(i_trans);
 		
 		start=System.currentTimeMillis();
 		Tree tree = classIndex.cloneForYapClass(i_trans, clazz.getID());
@@ -288,18 +286,25 @@ public class QQuery implements Query {
 		start=System.currentTimeMillis();
 		
 		if(tree == null) {
-			return resLocal;
+			return new QResult(i_trans);  // empty result
 		}
+        
+        final QResult resLocal = new QResult(i_trans, tree.size());
+        
+        boolean useQResult = true;
+        
+        if(useQResult){
 		
-//		start=System.currentTimeMillis();
-//		tree.traverse(new Visitor4() {
-//			public void visit(Object a_object) {
-//				resLocal.add(((TreeInt)a_object).i_key);
-//			}
-//		});
-//		System.err.println("Traverse: "+(System.currentTimeMillis()-start));
-//		resLocal.reset();
-//		return resLocal;
+    		start=System.currentTimeMillis();
+    		tree.traverse(new Visitor4() {
+    			public void visit(Object a_object) {
+    				resLocal.add(((TreeInt)a_object).i_key);
+    			}
+    		});
+    		System.err.println("Traverse: "+(System.currentTimeMillis()-start));
+    		resLocal.reset();
+    		return resLocal;
+        }
 		start=System.currentTimeMillis();
 		final long[] ids=new long[tree.size()];
 		final int[] idx={0};
