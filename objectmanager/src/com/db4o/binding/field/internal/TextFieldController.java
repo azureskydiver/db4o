@@ -7,7 +7,7 @@ package com.db4o.binding.field.internal;
 import com.db4o.binding.CannotSaveException;
 import com.db4o.binding.field.IFieldController;
 import com.db4o.binding.reflect.IProperty;
-import com.db4o.binding.reflect.ReflectedMethod;
+import com.db4o.reflect.ext.ReflectedMethod;
 
 /**
  * TextFieldController. An IFieldController that can bind any object with a

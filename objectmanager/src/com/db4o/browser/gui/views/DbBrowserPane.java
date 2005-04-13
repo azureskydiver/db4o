@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 
-import com.db4o.binding.DuckType;
+import com.db4o.reflect.ext.DuckType;
 import com.swtworkbench.community.xswt.XSWT;
 
 /**
