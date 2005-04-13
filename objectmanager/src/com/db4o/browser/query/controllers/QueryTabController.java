@@ -32,7 +32,7 @@ public class QueryTabController extends BrowserController {
     private Database database; 
     
     private QueryBuilderModel queryModel;
-    private QueryBuilderController queryController;
+    private QueryBuilderPaneController queryController;
     
     private ReflectClass input;
 
@@ -60,7 +60,7 @@ public class QueryTabController extends BrowserController {
         this.input = input;
         
         queryModel = new QueryBuilderModel(input, database);
-        queryController = new QueryBuilderController(queryModel, (QueryBrowserPane)ui);
+        queryController = new QueryBuilderPaneController(queryModel, (QueryBrowserPane)ui);
         
         runQuery();
     }

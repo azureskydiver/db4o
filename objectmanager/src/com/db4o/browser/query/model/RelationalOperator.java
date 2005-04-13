@@ -5,8 +5,8 @@ package com.db4o.browser.query.model;
 
 import com.db4o.query.Constraint;
 
-public interface RelationOperator {
-    public static abstract class RelationOperatorImpl implements RelationOperator {
+public interface RelationalOperator {
+    public static abstract class RelationOperatorImpl implements RelationalOperator {
         private String name;
 
         private RelationOperatorImpl(String name) {
@@ -18,36 +18,36 @@ public interface RelationOperator {
         }
     }
     
-    public final static RelationOperator EQUALS=new RelationOperatorImpl("=") {
+    public final static RelationalOperator EQUALS=new RelationOperatorImpl("=") {
         public void apply(Constraint constraint) {
         }        
     };
 
-    public final static RelationOperator IDENTITY=new RelationOperatorImpl("ID") {
+    public final static RelationalOperator IDENTITY=new RelationOperatorImpl("ID") {
         public void apply(Constraint constraint) {
             constraint.identity();
         }        
     };
 
-    public final static RelationOperator SMALLER=new RelationOperatorImpl("<") {
+    public final static RelationalOperator SMALLER=new RelationOperatorImpl("<") {
         public void apply(Constraint constraint) {
             constraint.smaller();
         }        
     };
 
-    public final static RelationOperator GREATER=new RelationOperatorImpl(">") {
+    public final static RelationalOperator GREATER=new RelationOperatorImpl(">") {
         public void apply(Constraint constraint) {
             constraint.greater();
         }        
     };
 
-    public final static RelationOperator LIKE=new RelationOperatorImpl("~") {
+    public final static RelationalOperator LIKE=new RelationOperatorImpl("~") {
         public void apply(Constraint constraint) {
             constraint.like();
         }        
     };
     
-    public static RelationOperator[] OPERATORS= {
+    public static RelationalOperator[] OPERATORS= {
         EQUALS,IDENTITY,GREATER,SMALLER,LIKE
     };
     String name();

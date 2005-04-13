@@ -5,8 +5,7 @@ package com.db4o.browser.model;
 
 
 import com.db4o.ObjectSet;
-import com.db4o.browser.model.nodes.IModelNode;
-import com.db4o.browser.model.nodes.InstanceNode;
+import com.db4o.browser.model.nodes.partition.PartitionFieldNodeFactory;
 
 /**
  * ObjectSetGraphIterator.  A visitor that can traverse the contents of an 
@@ -26,11 +25,7 @@ public class ObjectSetGraphIterator extends AbstractGraphIterator {
      */
     public ObjectSetGraphIterator(Database database, ObjectSet queryResult) {
         this.database = database;
-        
-        startModel = new IModelNode[queryResult.size()];
-        for (int i = 0; i < queryResult.size(); i++) {
-			startModel[i] = new InstanceNode(queryResult.next(), database);
-		}
+        startModel = PartitionFieldNodeFactory.create(queryResult, null, 0, queryResult.size(), database);
         reset();
     }
 }
