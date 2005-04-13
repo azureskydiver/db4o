@@ -59,6 +59,8 @@ class ReplicationImpl implements ReplicationProcess {
 		_peerA.commit();
 		_peerB.commit();
 
+        endReplication();
+
 		long versionA = _peerA.currentVersion() - 1;
 		long versionB = _peerB.currentVersion() - 1;
 
@@ -73,8 +75,6 @@ class ReplicationImpl implements ReplicationProcess {
 
 		_record.store(_peerA);
 		_record.store(_peerB);
-
-		endReplication();
 	}
 
 	public void rollback() {
@@ -94,9 +94,12 @@ class ReplicationImpl implements ReplicationProcess {
 	 * called by YapStream.set()
 	 * @return true if 
 	 */
-	boolean tryToHandle(Object obj) {
-		synchronized (_peerA.i_lock) {
-			
+	boolean tryToHandle(YapStream caller, Object obj) {
+        
+        YapStream other = (caller == _peerA) ? _peerB : _peerA;
+        
+		synchronized (other.i_lock) {
+            
 			Object objectA = obj;
 			Object objectB = obj;
 			
