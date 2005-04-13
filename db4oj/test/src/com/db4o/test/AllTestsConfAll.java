@@ -72,6 +72,7 @@ public class AllTestsConfAll extends TestSuite{
 			MassUpdates.class,
 			Messaging.class,
 			MultipleEvaluationGetObjectCalls.class,
+            NeverAnObjectStored.class,
 			NoInstanceStored.class,
 	        NoInternalClasses.class,
 	        NullWrapperQueries.class,
