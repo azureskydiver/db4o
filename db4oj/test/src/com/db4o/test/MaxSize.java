@@ -14,9 +14,10 @@ public class MaxSize {
 
     public String           index;
 
-    public static final int SIZE = 1000000;
-    public static final int QUERIES = 1000;
-    public static final String FILE = "maxSize.yap"; 
+    private static final int SIZE = 1000000;
+    private static final int COMMIT_INTERVAL = 10000;
+    private static final int QUERIES = 1000;
+    private static final String FILE = "maxSize.yap"; 
     
     public static void main(String[] args) {
         
@@ -42,7 +43,7 @@ public class MaxSize {
         long elapsed;
         for (int i = 1; i <= SIZE; i++) {
             objectContainer.set(new MaxSize("" + i));
-            if (((double) i / (double) 10000) == i / 10000) {
+            if (((double) i / (double) COMMIT_INTERVAL) == i / COMMIT_INTERVAL) {
                 objectContainer.commit();
                 objectContainer.ext().purge();
                 elapsed = System.currentTimeMillis() - start; 
@@ -50,6 +51,8 @@ public class MaxSize {
             }
         }
         objectContainer.close();
+        elapsed = System.currentTimeMillis() - start;
+        System.out.println("\nTime to store " + SIZE + " objects:\n" + elapsed + "ms");
     }
     
     public static void query() {
