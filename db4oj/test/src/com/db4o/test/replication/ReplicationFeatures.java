@@ -111,7 +111,9 @@ public class ReplicationFeatures {
         DeepCompare comparator = new DeepCompare();
         ExtObjectContainer master = Test.objectContainer();
         ExtObjectContainer slave = Db4o.openFile(file()).ext();
-        ObjectSet objectSet = master.get(null);
+        Query q = master.query();
+        q.constrain(ReplicationFeatures.class);
+        ObjectSet objectSet = q.execute();
         while (objectSet.hasNext()) {
             Object masterObject = objectSet.next();
 

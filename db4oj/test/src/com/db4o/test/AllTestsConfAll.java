@@ -16,7 +16,7 @@ public class AllTestsConfAll extends TestSuite{
         
         suite("com.db4o.test.jdk5.Jdk5Tests"),
         this,
-        new ReplicationTests()
+        new ReplicationTestSuite()
         
     };
     
