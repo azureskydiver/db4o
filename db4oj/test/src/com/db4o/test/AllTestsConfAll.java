@@ -170,11 +170,6 @@ public class AllTestsConfAll extends TestSuite{
     public static String FILE_SOLO = "xt_solo.yap";
     
     /**
-     * the database file to be used for replication testing
-     */
-    public static String FILE_REPLICA = "xt_replica.yap";
-    
-    /**
      * the server host name.
      */
     public static String SERVER_HOSTNAME = "localhost";
