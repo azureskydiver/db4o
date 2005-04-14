@@ -86,7 +86,8 @@ public class Test extends AllTests {
     public static void delete() {
         new File(FILE_SOLO).delete();
         new File(FILE_SERVER).delete();
-        new File(FILE_REPLICA).delete();
+        new File(replicatedFileName(false)).delete();
+        new File(replicatedFileName(true)).delete();
     }
 
     public static void delete(Object obj) {
@@ -258,9 +259,17 @@ public class Test extends AllTests {
     
     public static ExtObjectContainer replica(){
         if(_replica == null){
-            _replica = Db4o.openFile(FILE_REPLICA).ext();
+            _replica = Db4o.openFile(replicatedFileName(isClientServer())).ext();
         }
         return _replica;
+    }
+    
+    private static String replicatedFileName(boolean clientServer){
+        if(clientServer){
+            return "replicated_" + FILE_SERVER;
+        }
+        return "replicated_" + FILE_SOLO;
+        
     }
 
     public static void rollBack() {
