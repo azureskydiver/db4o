@@ -33,7 +33,7 @@ abstract class YapFieldVirtual extends YapField {
         a_bytes.incrementOffset(linkLength());
     }
     
-    public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
+    Object getOrCreate(Transaction a_trans, Object a_OnObject) {
         // This is the first part of marshalling
         // Virtual fields do it all in #marshall() so it's fine to return null here
         return null;
