@@ -38,6 +38,13 @@ class ReplicationImpl implements ReplicationProcess {
 
 	ReplicationImpl(YapStream peerA, ObjectContainer peerB,
 			ReplicationConflictHandler conflictHandler) {
+        
+        if(conflictHandler == null){
+            // We don't allow starting replication without a 
+            // conflict handler, so we don't get late failures.
+            throw new NullPointerException();
+        }
+        
 		_peerA = peerA;
 		_transA = peerA.checkTransaction(null);
 
