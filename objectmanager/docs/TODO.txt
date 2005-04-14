@@ -1,3 +1,22 @@
+- Field binding tasks:
+  - Implement IObject for FieldConstraint objects
+  - Implement IProperty and IPropertyFactory for FieldConstraint properties
+    - Probably just hard code a TextProperty and ChoiceProperty implementation
+  - Implement TextFieldController to manage Text, Combo (and CCombo) objects
+      (Use existing verifier and converter frameworks)
+  - Figure out how to edit date/time data types
+  - Implement verifiers and converters for any remaining data types
+  - Use FieldControllerFactory inside QueryBuilderPaneController to bind fields
+
+ClassNode should not always create InstanceNode subnodes.  **DONE**
+Map and collection instances need IDs displayed. **DONE**
+
+- Write a controller between the query model and query view
+  - Generate a query view for the model **DONE**
+  - Bind the fields in the query view to the fields in the query model (see above)
+  - TextFieldControl: Do something useful with the error messages returned by the verifier.
+
+
 - Query in separate tab **DONE**
 - Choose class dialog **DONE**
 - Create query controller object **DONE**
@@ -9,9 +28,6 @@
   - Create an IGraphIterator for the ObjectSet **DONE**
 
 - Populate the model from the ReflectClass graph **DONE**
-- Write a controller between the query model and query view
-  - Generate a query view for the model **DONE**
-  - Bind the fields in the query view to the fields in the query model
    
 - Generate/run a SODA query from the query model when the Run button is clicked **DONE**
 
@@ -69,7 +85,7 @@ TODO:
    * ArrayItemNode is not aware of simple types. **DONE**
    * Remove array types from initial view. **DONE**
    * Search result scalability. **DONE**
-   * Substring search: just search displayed strings; else do a query by form QBE
+   * Substring search: just search displayed strings
    * Begin query UI / querying functionality
       - Allow display of query results
    * Click right side to navigate

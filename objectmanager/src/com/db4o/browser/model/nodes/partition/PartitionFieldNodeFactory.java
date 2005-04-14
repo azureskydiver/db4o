@@ -6,7 +6,6 @@ package com.db4o.browser.model.nodes.partition;
 import com.db4o.ObjectSet;
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
-import com.db4o.browser.model.nodes.InstanceNode;
 import com.db4o.browser.model.nodes.field.FieldNodeFactory;
 
 public class PartitionFieldNodeFactory {
@@ -48,7 +47,7 @@ public class PartitionFieldNodeFactory {
         int resultLength=(overflow ? THRESHOLD+1 : length);
         IModelNode[] result=new IModelNode[resultLength];
         for(int resultidx=0;resultidx<numInstances;resultidx++) {
-            result[resultidx]=new InstanceNode(sourceIds[startIdx+resultidx], database);
+            result[resultidx] = FieldNodeFactory.construct("", database.byId(sourceIds[startIdx+resultidx]), database);//new InstanceNode(sourceIds[startIdx+resultidx], database);
         }
         if(overflow) {
             result[result.length-1]=new PartitionInstanceNode(database,sourceIds,startIdx+numInstances,endIdx);
@@ -66,7 +65,7 @@ public class PartitionFieldNodeFactory {
         int resultLength=(overflow ? THRESHOLD+1 : length);
         IModelNode[] result=new IModelNode[resultLength];
         for(int resultidx=0;resultidx<numInstances;resultidx++) {
-            result[resultidx]= FieldNodeFactory.construct("[" + (startIdx+resultidx) + "]", database.byId(sourceIds[startIdx+resultidx]), database);
+            result[resultidx] = FieldNodeFactory.construct("", database.byId(sourceIds[startIdx+resultidx]), database);
         }
         if(overflow) {
             result[result.length-1]=new PartitionObjectSetNode(source,database,sourceIds,startIdx+numInstances, endIdx);

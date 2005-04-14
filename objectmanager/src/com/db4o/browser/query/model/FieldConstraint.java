@@ -43,6 +43,5 @@ public class FieldConstraint {
     public QueryPrototypeInstance valueProto() {
         return (QueryPrototypeInstance) value;
     }
-
 }
 

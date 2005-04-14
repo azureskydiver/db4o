@@ -40,4 +40,9 @@ public class QueryBuilderModel {
     public void addTypeToQuery(ReflectClass fieldType) {
         queryTypes.add(fieldType);
     }
+
+    public Database getDatabase() {
+        return database;
+    }
+    
 }

@@ -19,7 +19,6 @@ package com.db4o.browser.model.nodes.field;
 import com.db4o.browser.model.Database;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.NullNode;
-import com.db4o.browser.model.nodes.InstanceNode;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.swtworkbench.community.xswt.metalogger.Logger;
@@ -69,7 +68,7 @@ public class FieldNode implements IModelNode {
 	 * @see com.db4o.browser.gui.ITreeNode#getText()
 	 */
 	public String getText() {
-		return _fieldName + ": " + delegate.getText();
+		return _fieldName.equals("") ? delegate.getText() : _fieldName + ": " + delegate.getText();
 	}
 	
 	/* (non-Javadoc)

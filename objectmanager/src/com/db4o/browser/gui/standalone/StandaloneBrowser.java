@@ -27,7 +27,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
@@ -66,6 +67,8 @@ public class StandaloneBrowser implements IControlFactory {
     private Color title_inactive_background;
     private Color title_inactive_background_gradient;
     private Color title_inactive_foreground;
+
+    public static final String STATUS_BAR = "StatusBar";
     
     /* (non-Javadoc)
 	 * @see com.db4o.browser.gui.standalone.IControlFactory#createContents(org.eclipse.swt.widgets.Composite)
@@ -79,15 +82,20 @@ public class StandaloneBrowser implements IControlFactory {
         title_inactive_foreground = Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND);
                 
         shell = (Shell) parent;
-        shell.setLayout(new FillLayout());
+        shell.setLayout(new GridLayout());
         shell.setText(appName);
         buildMenuBar(shell);
         
         folder = new CTabFolder(shell, SWT.NULL);
+        folder.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
         folder.setBorderVisible(true);
         folder.setSimple(false);
         folder.setSelectionBackground(new Color[] {title_background, title_background_gradient}, new int[] { 75 }, true);
         folder.setSelectionForeground(title_foreground);
+        
+        StatusBar statusBar = new StatusBar(shell, SWT.NULL);
+        statusBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
+        shell.setData(STATUS_BAR, statusBar);
         
         shell.addShellListener(new ShellAdapter() {
             public void shellActivated(ShellEvent e) {

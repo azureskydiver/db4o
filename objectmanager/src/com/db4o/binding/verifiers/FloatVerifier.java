@@ -39,7 +39,7 @@ public class FloatVerifier implements IVerifier {
 	 * @see org.eclipse.jface.binding.verifier.IVerifier#getHint()
 	 */
 	public String getHint() {
-		return "Please enter a number between " + Float.MIN_VALUE + " and " + Float.MAX_VALUE + ".";
+		return "Please enter a number like 1.234, " + Float.MIN_VALUE + ", or " + Float.MAX_VALUE + ".";
 	}
 
 }

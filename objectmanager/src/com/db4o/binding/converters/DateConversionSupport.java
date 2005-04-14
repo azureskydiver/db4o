@@ -13,8 +13,7 @@ import java.util.*;
  */
 public abstract class DateConversionSupport {
 	public final static int DATE_FORMAT=DateFormat.SHORT;
-	public final static int TIME_FORMAT=DateFormat.MEDIUM;
-	public final static int DEFAULT_FORMATTER_INDEX=0;
+	public final static int DEFAULT_FORMATTER_INDEX=1;
 
 	private final static int NUM_VIRTUAL_FORMATTERS=1;
 	
@@ -25,10 +24,12 @@ public abstract class DateConversionSupport {
 	// TODO: These could be shared, but would have to be synchronized.
 	private DateFormat[] formatters={
 			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS Z"),
-			DateFormat.getDateTimeInstance(DATE_FORMAT,TIME_FORMAT),
+            new SimpleDateFormat("HH:mm:ss.SSS"),
+			DateFormat.getDateTimeInstance(DATE_FORMAT,DateFormat.SHORT),
 			DateFormat.getDateInstance(DATE_FORMAT),
-			DateFormat.getTimeInstance(TIME_FORMAT),
-			new SimpleDateFormat("HH:mm:ss.SSS")
+			DateFormat.getTimeInstance(DateFormat.SHORT),
+            DateFormat.getDateTimeInstance(DATE_FORMAT,DateFormat.MEDIUM),
+            DateFormat.getTimeInstance(DateFormat.MEDIUM)
 	};
 	
 	/**
@@ -50,7 +51,7 @@ public abstract class DateConversionSupport {
 	}
 
 	protected Date parse(String str,int formatterIdx) {
-		if(formatterIdx<numFormatters()-1) {
+		if(formatterIdx>0) {
 			try {
 				return formatters[formatterIdx].parse(str);
 			} catch (ParseException exc) {
@@ -75,7 +76,7 @@ public abstract class DateConversionSupport {
 	}
 
 	protected String format(Date date,int formatterIdx) {
-		if(formatterIdx<numFormatters()-1) {
+		if(formatterIdx>0) {
 			return formatters[formatterIdx].format(date);
 		}
 		return String.valueOf(date.getTime());

@@ -139,7 +139,8 @@ public class MapFieldNode extends FieldNode {
 	}
 
 	public String getText() {
-        return _fieldName + ": " + _database.reflector().forObject(value).getName();
+        final String className = _database.reflector().forObject(value).getName() + " (id=" + _database.getId(value) + ")";
+        return _fieldName.equals("") ? className : _fieldName + ": " + className;
 	}
 
 }

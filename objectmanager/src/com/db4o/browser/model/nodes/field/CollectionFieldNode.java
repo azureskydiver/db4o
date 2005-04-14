@@ -57,7 +57,7 @@ public class CollectionFieldNode extends FieldNode {
 		
 		for (int i = 0; i < results.length; i++) {
 			ReflectClass itemClass = _database.reflector().forObject(contents[i]);
-			results[i] = new InstanceNode(contents[i], _database);
+            results[i] = FieldNodeFactory.construct("", contents[i], _database);
 		}
         return PartitionFieldNodeFactory.create(results,0,results.length,_database);
 	}
@@ -66,7 +66,8 @@ public class CollectionFieldNode extends FieldNode {
 	 * @see com.db4o.browser.gui.ITreeNode#getText()
 	 */
     public String getText() {
-        return _fieldName + ": " + _database.reflector().forObject(value).getName();
+        final String className = _database.reflector().forObject(value).getName() + " (id=" + _database.getId(value) + ")";
+        return _fieldName.equals("") ? className : _fieldName + ": " + className;
     }
 
 }

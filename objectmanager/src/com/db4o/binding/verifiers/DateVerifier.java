@@ -18,17 +18,14 @@ public class DateVerifier extends DateConversionSupport implements IVerifier {
 	public String getHint() {
 		Date sampleDate=new Date();
 		StringBuffer samples=new StringBuffer();
-		for(int formatterIdx=0;formatterIdx<numFormatters();formatterIdx++) {
-			if(formatterIdx>0) {
-				samples.append(", ");
-			}
-			if(formatterIdx==numFormatters()-1) {
-				samples.append("or ");
-			}
+		for(int formatterIdx=1;formatterIdx<numFormatters()-2;formatterIdx++) {
 			samples.append('\'');
 			samples.append(format(sampleDate,formatterIdx));
-			samples.append('\'');
+			samples.append("', ");
 		}
-		return "Please provide a full date spec, such as "+samples+".";
+        samples.append('\'');
+        samples.append(format(sampleDate,0));
+        samples.append('\'');
+		return "Examples: "+samples+",...";
 	}
 }
