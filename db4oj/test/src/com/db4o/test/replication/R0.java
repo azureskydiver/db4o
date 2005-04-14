@@ -5,7 +5,9 @@ package com.db4o.test.replication;
 
 public class R0 {
     
-    String name; 
+    String name;
+    
+    R0 r0;
     R1 r1;
     
 

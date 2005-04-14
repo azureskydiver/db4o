@@ -14,6 +14,10 @@ public class R0to4Runner {
     private ExtObjectContainer _peerA;
     private ExtObjectContainer _peerB;
     
+    private static ReplicationConflictHandler _ignoreConflictHandler;
+    
+    private static final int LINKERS = 4;
+    
     
     public void configure(){
         uUIDsOn(R0.class);
@@ -21,6 +25,15 @@ public class R0to4Runner {
         uUIDsOn(R2.class);
         uUIDsOn(R3.class);
         uUIDsOn(R4.class);
+        
+        _ignoreConflictHandler = new ReplicationConflictHandler() {
+            public Object resolveConflict(
+                ReplicationProcess replicationProcess, 
+                Object a, 
+                Object b) {
+                return null;
+            }
+        }; 
     }
     
     private void uUIDsOn(Class clazz){
@@ -28,81 +41,88 @@ public class R0to4Runner {
         Db4o.configure().objectClass(clazz).generateVersionNumbers(true);
     }
     
-    
-    
     public void store(){
-        ExtObjectContainer oc = Test.objectContainer();
+        _peerA = Test.objectContainer();
+        
         R0Linker lCircles = new R0Linker();
         lCircles.setNames("circles");
         lCircles.linkCircles();
-        lCircles.store(oc);
+        lCircles.store(_peerA);
+        
+        R0Linker lList = new R0Linker();
+        lList.setNames("list");
+        lList.linkList();
+        lList.store(_peerA);
+        
+        R0Linker lThis = new R0Linker();
+        lThis.setNames("this");
+        lThis.linkThis();
+        lThis.store(_peerA);
+        
+        R0Linker lBack = new R0Linker();
+        lBack.setNames("back");
+        lBack.linkBack();
+        lBack.store(_peerA);
+        
     }
     
     public void test(){
         _peerA = Test.objectContainer();
         _peerB = Test.replica();
-
-        ensureCount(_peerA, 1);
         
-        ReplicationProcess replication = 
-            _peerA.replicationBegin(_peerB, new ReplicationConflictHandler() {
+        ensureCount(_peerA, LINKERS);
         
-            public Object resolveConflict(
-                ReplicationProcess replicationProcess, 
-                Object a, 
-                Object b) {
-                
-                return null;
-            }
+        copyAllToB();
+        ensureNoneModified();
         
-        });
+        modifyR4(_peerA);
         
-        Query q = _peerA.query();
-        q.constrain(R0.class);
-        // replication.whereModified(q);
         
+        
+    }
+    
+    private void modifyR4(ObjectContainer oc){
+        Query q = oc.query();
+        q.constrain(R4.class);
         ObjectSet objectSet = q.execute();
         while(objectSet.hasNext()){
-            replication.replicate(objectSet.next());
+            R4 r4 = (R4)objectSet.next();
+            r4.name = r4.name + "_";
+            oc.set(r4);
         }
-        
-        replication.commit();
-        ensureCount(_peerA,1);
-        ensureCount(_peerB,1);
-        
-        
-        replication = 
-            _peerA.replicationBegin(_peerB, new ReplicationConflictHandler() {
-        
-            public Object resolveConflict(
-                ReplicationProcess replicationProcess, 
-                Object a, 
-                Object b) {
-                
-                return null;
-            }
-        
-        });
-        
-        q = _peerA.query();
+    }
+    
+    
+    private void copyAllToB(){
+        Test.ensure(replicateAll(false) == LINKERS * 5);
+    }
+    
+    private void ensureNoneModified(){
+        Test.ensure(replicateAll() == 0);
+    }
+    
+    
+    private int replicateAll(){
+        return replicateAll(true);
+    }
+    
+    private int replicateAll(boolean modifiedOnly){
+        ReplicationProcess replication = _peerA.replicationBegin(_peerB, _ignoreConflictHandler); 
+        Query q = _peerA.query();
         q.constrain(R0.class);
-        // replication.whereModified(q);
-        
-        objectSet = q.execute();
+        if(modifiedOnly){
+            replication.whereModified(q);
+        }
+        ObjectSet objectSet = q.execute();
+        int replicated = 0;
         while(objectSet.hasNext()){
             replication.replicate(objectSet.next());
+            replicated ++;
         }
-        
         replication.commit();
-        ensureCount(_peerA,1);
-        ensureCount(_peerB,1);
-        
-        
-        
-        
-        
-        
-        
+        ensureCount(_peerA,LINKERS);
+        ensureCount(_peerB,LINKERS);
+        return replicated;
     }
     
     private void ensureCount(ObjectContainer oc, int linkers){
