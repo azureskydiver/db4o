@@ -31,6 +31,12 @@ Map and collection instances need IDs displayed. **DONE**
    
 - Generate/run a SODA query from the query model when the Run button is clicked **DONE**
 
+BUGS:
+-----
+
+- Selecting an item from the query result and then posing a query
+  with an empty result triggers a stack exception from GraphPosition
+
 
 - Indented text controls.
 - (+) button on top or empty text control on the bottom
