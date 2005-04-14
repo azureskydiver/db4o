@@ -40,11 +40,13 @@ public class DetailController implements IBrowserController {
 
 	private static final String containerDetailTemplate = LayoutGenerator.resourceFile("containerDetailTemplate.xswt");
 	private static final String objectDetailTemplate = LayoutGenerator.resourceFile("objectDetailTemplate.xswt");
+    private IGraphIterator input = null;
 
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInput(com.db4o.browser.model.IGraphIterator)
 	 */
 	public void setInput(IGraphIterator input, GraphPosition selection) {
+        this.input = input;
 		if (selection != null) {
 			input.setPath(selection);
 			if (input.nextHasChildren()) {
@@ -55,8 +57,7 @@ public class DetailController implements IBrowserController {
 				buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
 			}
 		} else {
-			// Do nothing
-//			buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
+            buildUI(null, ui.getFieldArea());
 		}
 	}
 
@@ -72,16 +73,27 @@ public class DetailController implements IBrowserController {
 
 	private void buildUI(String layout, Composite parent) {
 		disposeChildren(parent);
-		try {
-			XSWT.create(parent, StringInputStreamFactory.construct(layout));
-			// We have to manually compute and set the size because we're inside
-			// a ScrolledComposite here...
-			Point preferredSize = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
-			parent.setBounds(new Rectangle(0, 0, preferredSize.x, preferredSize.y));
-			parent.layout(true);
-		} catch (XSWTException e) {
-			throw new RuntimeException("Unable to create field area layout", e);
-		}
+        if (layout != null) {
+    		try {
+    			XSWT.create(parent, StringInputStreamFactory.construct(layout));
+    			// We have to manually compute and set the size because we're inside
+    			// a ScrolledComposite here...
+    			Point preferredSize = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+    			parent.setBounds(new Rectangle(0, 0, preferredSize.x, preferredSize.y));
+    			parent.layout(true);
+    		} catch (XSWTException e) {
+    			throw new RuntimeException("Unable to create field area layout", e);
+    		}
+        } else {
+            Point preferredSize = parent.computeSize(SWT.DEFAULT, SWT.DEFAULT, true);
+            parent.setBounds(new Rectangle(0, 0, preferredSize.x, preferredSize.y));
+            parent.layout(true);
+        }
 	}
+
+    public void deselectAll() {
+        if (input != null)
+            setInput(input, null);
+    }
 
 }

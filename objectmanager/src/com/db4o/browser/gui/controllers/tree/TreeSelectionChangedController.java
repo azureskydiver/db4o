@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 
 import com.db4o.browser.model.GraphPosition;
 import com.db4o.browser.model.IGraphIterator;
+import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
  * TreeSelectionChangedController.  When the tree's selection changes, updates
@@ -38,8 +39,9 @@ public class TreeSelectionChangedController implements
 				IGraphIterator model = (IGraphIterator) source.getInput();
 				model.setSelectedPath(node);
 			}
-		} finally {
+		} catch (Throwable t) {
 			--treeSelectionChanging;
+            Logger.log().error(t, "Exception handling tree selection change");
 		}
 	}
 	

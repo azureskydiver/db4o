@@ -1,20 +1,10 @@
-- Field binding tasks:
-  - Implement IObject for FieldConstraint objects
-  - Implement IProperty and IPropertyFactory for FieldConstraint properties
-    - Probably just hard code a TextProperty and ChoiceProperty implementation
-  - Implement TextFieldController to manage Text, Combo (and CCombo) objects
-      (Use existing verifier and converter frameworks)
-  - Figure out how to edit date/time data types
-  - Implement verifiers and converters for any remaining data types
-  - Use FieldControllerFactory inside QueryBuilderPaneController to bind fields
-
 ClassNode should not always create InstanceNode subnodes.  **DONE**
 Map and collection instances need IDs displayed. **DONE**
 
 - Write a controller between the query model and query view
   - Generate a query view for the model **DONE**
-  - Bind the fields in the query view to the fields in the query model (see above)
-  - TextFieldControl: Do something useful with the error messages returned by the verifier.
+  - Bind the fields in the query view to the fields in the query model (see above) **DONE**
+  - TextFieldControl: Do something useful with the error messages returned by the verifier. **DONE**
 
 
 - Query in separate tab **DONE**
@@ -26,17 +16,20 @@ Map and collection instances need IDs displayed. **DONE**
   - Get the initial query from the model **DONE**
   - Run the query **DONE**
   - Create an IGraphIterator for the ObjectSet **DONE**
+  - Dynamically expand contained classes
 
 - Populate the model from the ReflectClass graph **DONE**
    
 - Generate/run a SODA query from the query model when the Run button is clicked **DONE**
+
+- Add try/catch around all TreeViewer strategy object methods / log exceptions **DONE**
 
 BUGS:
 -----
 
 - Ensure that strings are fully parsed on date conversion **DONE**
 - Selecting an item from the query result and then posing a query
-  with an empty result triggers a stack exception from GraphPosition
+  with an empty result triggers a stack exception from GraphPosition **DONE**
 - Add converter declarations for primitive wrapper classes
 - 'mirror' field entries on some databases: problem with browser,
   reflector or the databases itself?

@@ -36,6 +36,8 @@ public class CreateTestDatabase {
             {3, 4, 5, 6, 7}
     };
     
+    private Integer solution=new Integer(42);
+    
     private Pilot[] pilots = {
             new Pilot("Vanneveur Bush", 20),
             new Pilot("Ted Nelson", 5),

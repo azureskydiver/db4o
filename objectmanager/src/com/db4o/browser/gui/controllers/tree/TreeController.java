@@ -3,6 +3,7 @@
  */
 package com.db4o.browser.gui.controllers.tree;
 
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -65,4 +66,8 @@ public class TreeController implements IBrowserController {
 		viewer.setInput(input);
 		input.addSelectionChangedListener(selectionListener);
 	}
+
+    public void deselectAll() {
+        viewer.setSelection(StructuredSelection.EMPTY);
+    }
 }
