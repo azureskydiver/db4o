@@ -44,6 +44,21 @@ class R0Linker {
         r3.r4 = r4;
     }
     
+    void linkThis(){
+        r0.r0 = r0;
+        r1.r1 = r1;
+        r2.r2 = r2;
+        r3.r3 = r3;
+        r4.r4 = r4;
+    }
+    
+    void linkBack(){
+        r1.r0 = r0;
+        r2.r1 = r1;
+        r3.r2 = r2;
+        r4.r3 = r3;
+    }
+    
     public void store(ObjectContainer oc){
         oc.set(r4);
         oc.set(r3);
