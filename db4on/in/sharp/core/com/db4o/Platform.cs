@@ -426,9 +426,7 @@ namespace com.db4o {
         }
         
         static internal object wrapEvaluation(object evaluation) {
-        	return (evaluation is EvaluationDelegate)
-	        	? new EvaluationDelegateWrapper((EvaluationDelegate)evaluation)
-	        	: evaluation;
+        	return Compat.wrapEvaluation(evaluation);
         }
 
         static internal YapTypeAbstract[] types(YapStream stream) {

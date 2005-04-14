@@ -75,5 +75,12 @@ namespace com.db4o {
         public static void wait(object obj, long timeout) {
             Monitor.Wait(obj, (int)timeout);
         }
+        
+        static internal object wrapEvaluation(object evaluation) {
+        	return (evaluation is com.db4o.query.EvaluationDelegate)
+	        	? new EvaluationDelegateWrapper((com.db4o.query.EvaluationDelegate)evaluation)
+	        	: evaluation;
+        }
+        
     }
 }

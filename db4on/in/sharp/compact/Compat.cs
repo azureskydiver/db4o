@@ -78,5 +78,11 @@ namespace com.db4o
 
         public static void wait(object obj, long timeout) {
         }
+        
+        static internal object wrapEvaluation(object evaluation) {
+        	// FIXME: How to better support EvaluationDelegate on the CompactFramework?
+        	return evaluation;
+        }
+        
 	}
 }

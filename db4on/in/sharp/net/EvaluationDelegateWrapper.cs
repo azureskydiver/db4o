@@ -5,7 +5,7 @@ using System.Reflection;
 using com.db4o;
 using com.db4o.query;
 
-namespace com.db4o.query
+namespace com.db4o
 {
 	internal class EvaluationDelegateWrapper : Evaluation
 	{
