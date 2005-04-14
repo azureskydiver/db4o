@@ -119,7 +119,7 @@ public interface ObjectClass {
      * 
      * @param setting 
      */
-    // public void generateUUIDs(boolean setting);
+    public void generateUUIDs(boolean setting);
 
     
     /**
@@ -127,7 +127,7 @@ public interface ObjectClass {
      * 
      * @param setting
      */
-    // public void generateVersionNumbers(boolean setting);
+    public void generateVersionNumbers(boolean setting);
     
 
     /**
