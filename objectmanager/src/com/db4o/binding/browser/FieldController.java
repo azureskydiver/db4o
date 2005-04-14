@@ -52,33 +52,35 @@ public abstract class FieldController implements IFieldController {
         
         associate(c(Character.TYPE), c(String.class), new ConvertCharacter2String());
         associate(c(String.class), c(Character.TYPE), new ConvertString2Character());
+        associate(c(Character.class), c(String.class), new ConvertCharacter2String());
+        associate(c(String.class), c(Character.class), new ConvertString2Character());
         
         associate(c(Date.class), c(String.class), new ConvertDate2String());
         associate(c(String.class), c(Date.class), new ConvertString2Date());
 
         associate(c(Boolean.TYPE), c(String.class), new ConvertBoolean2String());
-        associate(c("boolean"), c(String.class), new ConvertBoolean2String());
+        associate(c(Boolean.class), c(String.class), new ConvertBoolean2String());
         associate(c(String.class), c(Boolean.TYPE), new ConvertString2Boolean());
-        associate(c(String.class), c("boolean"), new ConvertString2Boolean());
+        associate(c(String.class), c(Boolean.class), new ConvertString2Boolean());
         
-        associate(c("int"), c(String.class), new ConvertInteger2String());
+        associate(c(Integer.class), c(String.class), new ConvertInteger2String());
         associate(c(Integer.TYPE), c(String.class), new ConvertInteger2String());
         associate(c(String.class), c(Integer.TYPE), new ConvertString2Integer());
-        associate(c(String.class), c("int"), new ConvertString2Integer());
+        associate(c(String.class), c(Integer.class), new ConvertString2Integer());
         
-        associate(c("long"), c(String.class), new ConvertLong2String());
+        associate(c(Long.class), c(String.class), new ConvertLong2String());
         associate(c(Long.TYPE), c(String.class), new ConvertLong2String());
-        associate(c(String.class), c("long"), new ConvertString2Long());
+        associate(c(String.class), c(Long.class), new ConvertString2Long());
         associate(c(String.class), c(Long.TYPE), new ConvertString2Long());
         
-        associate(c("float"), c(String.class), new ConvertFloat2String());
+        associate(c(Float.class), c(String.class), new ConvertFloat2String());
         associate(c(Float.TYPE), c(String.class), new ConvertFloat2String());
-        associate(c(String.class), c("float"), new ConvertString2Float());
+        associate(c(String.class), c(Float.class), new ConvertString2Float());
         associate(c(String.class), c(Float.TYPE), new ConvertString2Float());
         
-        associate(c("double"), c(String.class), new ConvertDouble2String());
+        associate(c(Double.class), c(String.class), new ConvertDouble2String());
         associate(c(Double.TYPE), c(String.class), new ConvertDouble2String());
-        associate(c(String.class), c("double"), new ConvertString2Double());
+        associate(c(String.class), c(Double.class), new ConvertString2Double());
         associate(c(String.class), c(Double.TYPE), new ConvertString2Double());
 
         verifiers = new HashMap();
@@ -88,6 +90,10 @@ public abstract class FieldController implements IFieldController {
         associate(c(Long.TYPE), new LongVerifier());
         associate(c(Float.TYPE), new FloatVerifier());
         associate(c(Double.TYPE), new DoubleVerifier());
+        associate(c(Integer.class), new IntVerifier());
+        associate(c(Long.class), new LongVerifier());
+        associate(c(Float.class), new FloatVerifier());
+        associate(c(Double.class), new DoubleVerifier());
         associate(c(Date.class), new DateVerifier());
         
         // Regex-implemented verifiers here...
