@@ -48,6 +48,7 @@ public class QueryTabController extends BrowserController {
             public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
                 try {
                     queryController.save();
+                    databaseBrowserController.deselectAll();
                     runQuery();
                 } catch (CannotSaveException e1) {
                     // We couldn't save, so do nothing.  The user has already

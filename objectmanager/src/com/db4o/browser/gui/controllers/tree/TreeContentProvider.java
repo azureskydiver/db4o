@@ -52,8 +52,11 @@ public class TreeContentProvider implements ITreeContentProvider {
      */
     public Object getParent(Object element) {
         GraphPosition result = new GraphPosition((GraphPosition) element);
-        result.pop();
-        return result;
+        if (result.hasParent()) {
+            result.pop();
+            return result;
+        }
+        return null;
     }
 
     /* (non-Javadoc)

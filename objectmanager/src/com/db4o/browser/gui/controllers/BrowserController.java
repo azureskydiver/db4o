@@ -161,6 +161,14 @@ public class BrowserController implements IBrowserController {
     public String getCurrentFile() {
         return currentFile;
     }
+
+    /**
+     * Remove any selection from the tree
+     */
+    public void deselectAll() {
+        treeController.deselectAll();
+        detailController.deselectAll();
+    }
     
     
 }

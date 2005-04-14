@@ -52,6 +52,7 @@ import com.swtworkbench.community.xswt.XSWT;
 public class StandaloneBrowser implements IControlFactory {
     
     public static final String appName = "Object Manager";
+    public static final String LOGFILE = "objectmanager.log";
     
     private Shell shell;
     private CTabFolder folder;
