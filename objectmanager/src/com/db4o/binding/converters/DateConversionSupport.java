@@ -52,10 +52,12 @@ public abstract class DateConversionSupport {
 
 	protected Date parse(String str,int formatterIdx) {
 		if(formatterIdx>0) {
-			try {
-				return formatters[formatterIdx].parse(str);
-			} catch (ParseException exc) {
-			}
+				ParsePosition pos=new ParsePosition(0);
+				Date date=formatters[formatterIdx].parse(str,pos);
+				if(pos.getErrorIndex()!=-1||pos.getIndex()!=str.length()) {
+					return null;
+				}
+				return date;
 		}
 		else {
 			try {
