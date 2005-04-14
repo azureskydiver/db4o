@@ -15,6 +15,7 @@ public class Test extends AllTests {
     
     private static ObjectServer objectServer;
     private static ExtObjectContainer oc;
+    private static ExtObjectContainer _replica;
 
     static AllTests currentRunner;
     static boolean clientServer = true;
@@ -61,6 +62,10 @@ public class Test extends AllTests {
             memoryFileContent = memoryFile.getBytes();
         }
         oc = null;
+        if(_replica != null){
+            while(!_replica.close());
+            _replica = null;
+        }
     }
 
     public static void commit() {
@@ -248,6 +253,13 @@ public class Test extends AllTests {
 		}else{
 			return reOpen();
 		}
+    }
+    
+    public static ExtObjectContainer replica(){
+        if(_replica == null){
+            _replica = Db4o.openFile(FILE_REPLICA).ext();
+        }
+        return _replica;
     }
 
     public static void rollBack() {

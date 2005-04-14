@@ -4,13 +4,15 @@ package com.db4o.test;
 
 import com.db4o.reflect.generic.*;
 import com.db4o.test.reflect.*;
+import com.db4o.test.replication.*;
 
 public class AllTestsConfSingle extends TestSuite{
 
 	static protected final String TEST_CONFIGURATION = "AllTestsConfSingle";
 	
-    static TestSuite[] TEST_SUITES = new TestSuite[]{        
-        new AllTestsConfSingle(),
+    static TestSuite[] TEST_SUITES = new TestSuite[]{
+        new ReplicationTestSuite(),
+        // new AllTestsConfSingle(),
     };
 
     
@@ -22,9 +24,8 @@ public class AllTestsConfSingle extends TestSuite{
 //            SimplestPossible.class,
 //            KnownClasses.class
             
-            GenericFeatures.class
         
-            // ReplicationFeatures.class,
+            ReplicationFeatures.class,
             
             // Soda.class
            
@@ -51,7 +52,7 @@ public class AllTestsConfSingle extends TestSuite{
     /**
       * run the tests in client/server mode 
       */
-    public boolean CLIENT_SERVER = false;
+    public boolean CLIENT_SERVER = true;
 
     /**
      * run the test against a memory file instead of disc file
@@ -74,6 +75,12 @@ public class AllTestsConfSingle extends TestSuite{
      * the database file to be used stand-alone.
      */
     public static String FILE_SOLO = "xt_solo.yap";
+    
+    
+    /**
+     * the database file to be used for replication testing
+     */
+    public static String FILE_REPLICA = "xt_replica.yap";
     
     /**
      * the server host name.
