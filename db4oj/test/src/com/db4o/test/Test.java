@@ -86,6 +86,7 @@ public class Test extends AllTests {
     public static void delete() {
         new File(FILE_SOLO).delete();
         new File(FILE_SERVER).delete();
+        new File(FILE_REPLICA).delete();
     }
 
     public static void delete(Object obj) {
