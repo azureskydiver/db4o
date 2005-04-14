@@ -253,5 +253,18 @@ public class GenericClass implements ReflectClass, DeepClone {
         // ignore, we always create a generic object
     }
 
+    public boolean equals(Object other) {
+        if(this==other) {
+            return true;
+        }
+        if(other==null||getClass()!=other.getClass()) {
+            return false;
+        }
+        GenericClass genericClass=(GenericClass)other;
+        return _name.equals(genericClass._name);
+    }
 
+    public int hashCode() {
+        return _name.hashCode();
+    }
 }

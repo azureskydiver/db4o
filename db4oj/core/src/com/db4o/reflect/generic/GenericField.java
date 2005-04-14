@@ -78,4 +78,19 @@ public class GenericField implements ReflectField, DeepClone{
         _index = index;
     }
 
+
+    public boolean equals(Object other) {
+        if(this==other) {
+            return true;
+        }
+        if(other==null||getClass()!=other.getClass()) {
+            return false;
+        }
+        GenericField genericField=(GenericField)other;
+        return _name.equals(genericField._name)&&_type.equals(genericField._type);
+    }
+
+    public int hashCode() {
+        return _name.hashCode()*29+_type.hashCode();
+    }
 }
