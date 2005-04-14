@@ -20,6 +20,9 @@ public class R0to4Runner {
     
     
     public void configure(){
+        
+        Db4o.configure().objectClass(R0.class).objectField("name").indexed(true);
+        
         uUIDsOn(R0.class);
         uUIDsOn(R1.class);
         uUIDsOn(R2.class);
@@ -68,18 +71,45 @@ public class R0to4Runner {
     
     public void test(){
         _peerA = Test.objectContainer();
-        _peerB = Test.replica();
+        openReplica();
         
         ensureCount(_peerA, LINKERS);
         
         copyAllToB();
-        ensureNoneModified();
+        replicateNoneModified();
         
         modifyR4(_peerA);
-        
-        
+        openReplica();
+        ensureR4Different();
         
     }
+    
+    private void openReplica(){
+        _peerB = Test.replica();
+    }
+    
+    private void ensureR4Different(){
+        compareR4(_peerB, _peerA, false);
+    }
+    
+    private void compareR4(ObjectContainer ocA, ObjectContainer ocB, boolean same){
+        Query q = ocA.query();
+        q.constrain(R4.class);
+        ObjectSet objectSet = q.execute();
+        while(objectSet.hasNext()){
+            R4 r4 = (R4)objectSet.next();
+            Query qb = ocB.query();
+            qb.constrain(R4.class);
+            qb.descend("name").constrain(r4.name);
+            int expectedSize = same ? 1 : 0;
+            int foundSize = qb.execute().size(); 
+            Test.ensure(foundSize == expectedSize);
+            if(foundSize != expectedSize){
+                System.out.println(foundSize);
+            }
+        }
+    }
+    
     
     private void modifyR4(ObjectContainer oc){
         Query q = oc.query();
@@ -90,6 +120,7 @@ public class R0to4Runner {
             r4.name = r4.name + "_";
             oc.set(r4);
         }
+        oc.commit();
     }
     
     
@@ -97,7 +128,7 @@ public class R0to4Runner {
         Test.ensure(replicateAll(false) == LINKERS * 5);
     }
     
-    private void ensureNoneModified(){
+    private void replicateNoneModified(){
         Test.ensure(replicateAll() == 0);
     }
     

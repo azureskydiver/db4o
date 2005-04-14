@@ -258,9 +258,10 @@ public class Test extends AllTests {
     }
     
     public static ExtObjectContainer replica(){
-        if(_replica == null){
-            _replica = Db4o.openFile(replicatedFileName(isClientServer())).ext();
+        if(_replica != null){
+            while(!_replica.close());
         }
+        _replica = Db4o.openFile(replicatedFileName(isClientServer())).ext();
         return _replica;
     }
     
