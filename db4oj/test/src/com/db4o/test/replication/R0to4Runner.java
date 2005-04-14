@@ -5,10 +5,30 @@ package com.db4o.test.replication;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
+import com.db4o.replication.*;
 import com.db4o.test.*;
 
 
 public class R0to4Runner {
+    
+    private ExtObjectContainer _peerA;
+    private ExtObjectContainer _peerB;
+    
+    
+    public void configure(){
+        uUIDsOn(R0.class);
+        uUIDsOn(R1.class);
+        uUIDsOn(R2.class);
+        uUIDsOn(R3.class);
+        uUIDsOn(R4.class);
+    }
+    
+    private void uUIDsOn(Class clazz){
+        Db4o.configure().objectClass(clazz).generateUUIDs(true);
+        Db4o.configure().objectClass(clazz).generateVersionNumbers(true);
+    }
+    
+    
     
     public void store(){
         ExtObjectContainer oc = Test.objectContainer();
@@ -19,8 +39,70 @@ public class R0to4Runner {
     }
     
     public void test(){
-        ExtObjectContainer oc = Test.objectContainer();
-        ensureCount(oc, 1);
+        _peerA = Test.objectContainer();
+        _peerB = Test.replica();
+
+        ensureCount(_peerA, 1);
+        
+        ReplicationProcess replication = 
+            _peerA.replicationBegin(_peerB, new ReplicationConflictHandler() {
+        
+            public Object resolveConflict(
+                ReplicationProcess replicationProcess, 
+                Object a, 
+                Object b) {
+                
+                return null;
+            }
+        
+        });
+        
+        Query q = _peerA.query();
+        q.constrain(R0.class);
+        // replication.whereModified(q);
+        
+        ObjectSet objectSet = q.execute();
+        while(objectSet.hasNext()){
+            replication.replicate(objectSet.next());
+        }
+        
+        replication.commit();
+        ensureCount(_peerA,1);
+        ensureCount(_peerB,1);
+        
+        
+        replication = 
+            _peerA.replicationBegin(_peerB, new ReplicationConflictHandler() {
+        
+            public Object resolveConflict(
+                ReplicationProcess replicationProcess, 
+                Object a, 
+                Object b) {
+                
+                return null;
+            }
+        
+        });
+        
+        q = _peerA.query();
+        q.constrain(R0.class);
+        // replication.whereModified(q);
+        
+        objectSet = q.execute();
+        while(objectSet.hasNext()){
+            replication.replicate(objectSet.next());
+        }
+        
+        replication.commit();
+        ensureCount(_peerA,1);
+        ensureCount(_peerB,1);
+        
+        
+        
+        
+        
+        
+        
     }
     
     private void ensureCount(ObjectContainer oc, int linkers){
