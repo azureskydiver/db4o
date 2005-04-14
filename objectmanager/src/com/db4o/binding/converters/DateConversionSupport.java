@@ -8,13 +8,16 @@ import java.util.*;
  * default locale or in plain long milliseconds.
  * 
  * NOTE: parse(format(date)) will generally *not* be equal to date, since the
- * string representation may not cover the sub-second range.
+ * string representation may not cover the sub-second range, time-only string
+ * representations will be counted from the beginning of the era, etc.
  */
 public abstract class DateConversionSupport {
 	public final static int DATE_FORMAT=DateFormat.SHORT;
 	public final static int TIME_FORMAT=DateFormat.MEDIUM;
-	public final int DEFAULT_FORMATTER_INDEX=0;
+	public final static int DEFAULT_FORMATTER_INDEX=0;
 
+	private final static int NUM_VIRTUAL_FORMATTERS=1;
+	
 	/**
 	 * Alternative formatters for date, time and date/time.
 	 * Raw milliseconds are covered as a special case.
@@ -24,7 +27,8 @@ public abstract class DateConversionSupport {
 			new SimpleDateFormat("dd.MM.yyyy HH:mm:ss.SSS Z"),
 			DateFormat.getDateTimeInstance(DATE_FORMAT,TIME_FORMAT),
 			DateFormat.getDateInstance(DATE_FORMAT),
-			DateFormat.getTimeInstance(TIME_FORMAT)
+			DateFormat.getTimeInstance(TIME_FORMAT),
+			new SimpleDateFormat("HH:mm:ss.SSS")
 	};
 	
 	/**
@@ -32,7 +36,7 @@ public abstract class DateConversionSupport {
 	 * default locale or as a raw millisecond value and returns the result of the
 	 * first successful run.
 	 * 
-	 * @param str A string specifying a date according to the default locale
+	 * @param str A string specifying a date according to the default locale or in raw milliseconds
 	 * @return The parsed date, or null, if no available formatter could interpret the input string
 	 */
 	protected Date parse(String str) {
@@ -78,6 +82,6 @@ public abstract class DateConversionSupport {
 	}
 
 	protected int numFormatters() {
-		return formatters.length+1;
+		return formatters.length+NUM_VIRTUAL_FORMATTERS;
 	}
 }
