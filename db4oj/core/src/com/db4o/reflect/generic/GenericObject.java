@@ -5,7 +5,7 @@ package com.db4o.reflect.generic;
 /**
  * @exclude
  */
-class GenericObject {
+public class GenericObject {
 
     final GenericClass _class;
     final Object[] _values;
