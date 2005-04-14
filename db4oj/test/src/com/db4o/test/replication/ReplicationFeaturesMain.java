@@ -29,7 +29,6 @@ public class ReplicationFeaturesMain {
         new File(FILE_B).delete();
         Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
         Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
-        _b = Db4o.openFile(FILE_B).ext();
     }
 	
 	private void setUpObjectContainers() {
