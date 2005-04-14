@@ -1,11 +1,33 @@
+BUGS:
+-----
+
+- Ensure that strings are fully parsed on date conversion **DONE**
+- Selecting an item from the query result and then posing a query
+  with an empty result triggers a stack exception from GraphPosition **DONE**
+- Add converter declarations for primitive wrapper classes
+- 'mirror' field entries on some databases: problem with browser,
+  reflector or the databases itself?
+
+Remaining Features:
+-------------------
+   * Substring search: just search displayed strings
+   * Click right side to navigate
+      - (Hyperlink objects if object.hasChildren()?)
+   * Beautify UI; add icons in appropriate places
+   * If right side is displaying a collection, display in a table
+   * Evaluate .NET runtime platforms (IKVM) => Rodrigo
+   Alternative for first relase: Smallest possible Sun JRE distribution
+   * Collections under .NET 
+   * Write a file logger that logs to a log file in the user's home directory
+
+- Release engineering
+   * Don't support PDAs for the initial release
+   * 3 Packages, downloadable separately 
+
+
+
 ClassNode should not always create InstanceNode subnodes.  **DONE**
 Map and collection instances need IDs displayed. **DONE**
-
-- Write a controller between the query model and query view
-  - Generate a query view for the model **DONE**
-  - Bind the fields in the query view to the fields in the query model (see above) **DONE**
-  - TextFieldControl: Do something useful with the error messages returned by the verifier. **DONE**
-
 
 - Query in separate tab **DONE**
 - Choose class dialog **DONE**
@@ -24,93 +46,18 @@ Map and collection instances need IDs displayed. **DONE**
 
 - Add try/catch around all TreeViewer strategy object methods / log exceptions **DONE**
 
-BUGS:
------
-
-- Ensure that strings are fully parsed on date conversion **DONE**
-- Selecting an item from the query result and then posing a query
-  with an empty result triggers a stack exception from GraphPosition **DONE**
-- Add converter declarations for primitive wrapper classes
-- 'mirror' field entries on some databases: problem with browser,
-  reflector or the databases itself?
-
-----
-
-- Indented text controls.
-- (+) button on top or empty text control on the bottom
-- some way to distinguish between: class, field, value
-- Modifier for evaluation mode behind the constraint text control:
-equal, smaller, greater
-- To AND and OR constraints, select two constraints and click AND button
-In order to do that we need some kind of selector in front of each line.
-
-| less-than V | 50
-
-  ----------------------------------------------------------
-Class:        Car
-Field:          pilot
-Field:            name
-      Carl R
-      Dave Orme
-      [         ]
-  pilot
-  
-  Car
-     model : [       ]
-     pilot : [       ]
-        name:  [       ] [+]
-        points: [       ]
-     history: [ com.db4o.Car  ]
-     
-     
-  
-  ----------------------------------------------------------
-  
-  list: display class names, field names, result instances
-  
-  
-  ----------------------------------------------------------
-  
-  
-
-- Class  Text control, while user types  "om.db4", display all candidate 
-class names in list, auto-completion 
-  - Fieldnames for the members
-    - Value (empty for complex
-       - Fieldname for member.member
-       
-
-
-
-TODO:
-
-- Remaining features
    * Sort classes by name in tree view. **DONE**
    * ArrayItemNode is not aware of simple types. **DONE**
    * Remove array types from initial view. **DONE**
    * Search result scalability. **DONE**
-   * Substring search: just search displayed strings
-   * Begin query UI / querying functionality
-      - Allow display of query results
-   * Click right side to navigate
-      - (Hyperlink objects if object.hasChildren()?)
-   * Beautify UI; add icons in appropriate places
-   * If right side is displaying a collection, display in a table
-   * Evaluate .NET runtime platforms (IKVM) => Rodrigo
-   Alternative for first relase: Smallest possible Sun JRE distribution
-   * Collections under .NET 
-
-- Release engineering
-   * Don't support PDAs for the initial release
-   * 3 Packages, downloadable separately 
+   * Begin query UI / querying functionality **DONE**
 
 - Testing
    * Generic reflector; run with .net (DONE)
    * Arrays (DONE, n-dimensional fail)
    * Test with no classes (DONE)
 
-- Make right side clickable
-- Make sure browsing scales to large numbers of nodes
+- Make sure browsing scales to large numbers of nodes **DONE**
 
 - Generic reflector
    * StoredIterableFieldNode - Needs to use Platform.isCollection **DONE**
