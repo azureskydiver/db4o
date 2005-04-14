@@ -23,7 +23,7 @@ public class PreferencesCore {
 	private static transient ObjectContainer db;
 
 	private static transient final String preferencesFile = new File(new File(System
-			.getProperty("user.home")), ".explorer4objects.yap")
+			.getProperty("user.home")), ".objectmanager.yap")
 			.getAbsolutePath();
 
 	/**

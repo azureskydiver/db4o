@@ -39,7 +39,7 @@ public class DoubleVerifier implements IVerifier {
 	 * @see org.eclipse.jface.binding.verifier.IVerifier#getHint()
 	 */
 	public String getHint() {
-		return "Please enter a number between " + Double.MIN_VALUE + " and " + Double.MAX_VALUE + ".";
+		return "Please enter a number like 1.234, " + Double.MIN_VALUE + ", or " + Double.MAX_VALUE + ".";
 	}
 
 }

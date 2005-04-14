@@ -5,10 +5,9 @@ package com.db4o.browser.query.view;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-
-import com.db4o.browser.query.model.RelationalOperator;
 
 public class ObjectReferenceRow implements IConstraintRow {
     
@@ -28,10 +27,6 @@ public class ObjectReferenceRow implements IConstraintRow {
         this.fieldName.setText(fieldName);
     }
 
-    public RelationalOperator getRelationalOperator() {
-        return null;
-    }
-
     public void setValue(String value) {
         type.setText(value);
     }
@@ -45,6 +40,10 @@ public class ObjectReferenceRow implements IConstraintRow {
     }
 
     public Text getValueEditor() {
+        return null;
+    }
+
+    public Combo getRelationEditor() {
         return null;
     }
 

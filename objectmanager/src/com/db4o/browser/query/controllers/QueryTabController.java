@@ -7,6 +7,7 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.SelectionAdapter;
 
 import com.db4o.ObjectSet;
+import com.db4o.binding.CannotSaveException;
 import com.db4o.browser.gui.controllers.BrowserController;
 import com.db4o.browser.gui.controllers.QueryController;
 import com.db4o.browser.model.BrowserCore;
@@ -45,7 +46,13 @@ public class QueryTabController extends BrowserController {
     protected void addQueryButtonHandler() {
         ui.getQueryButton().addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-                runQuery();
+                try {
+                    queryController.save();
+                    runQuery();
+                } catch (CannotSaveException e1) {
+                    // We couldn't save, so do nothing.  The user has already
+                    // been informed of the problem.
+                }
             }
         });
     }

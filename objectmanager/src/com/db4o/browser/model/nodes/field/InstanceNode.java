@@ -14,21 +14,23 @@
  * along with com.swtworkbench.ed; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.db4o.browser.model.nodes;
+package com.db4o.browser.model.nodes.field;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.db4o.browser.model.*;
-import com.db4o.browser.model.nodes.field.*;
-import com.db4o.reflect.*;
+import com.db4o.browser.model.Database;
+import com.db4o.browser.model.nodes.IModelNode;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
 
 
-/**
+/** (non-api)
  * Class InstanceNode.
  * 
  * @author djo
  */
-public class InstanceNode implements IModelNode {
+class InstanceNode implements IModelNode {
 	private ReflectClass _clazz=null;
     private Object _instance=null;
 	private Database _database;
