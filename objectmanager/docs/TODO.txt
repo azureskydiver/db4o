@@ -8,7 +8,7 @@ BUGS:
 Remaining Features:
 -------------------
    * Write a file logger that logs to a log file in the user's home directory **DONE**
-   * Write About dialog
+   * Write About dialog **DONE**
    * Beautify UI; add icons in appropriate places
       - On buttons: forward*, back*, Query*, Search*
       - On tabs: database* versus query*

@@ -7,9 +7,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Text;
 
 import com.db4o.binding.CannotSaveException;
 import com.db4o.binding.browser.FieldConstraintRelationalOperatorFieldController;
@@ -38,6 +42,10 @@ public class QueryBuilderPaneController {
         
         QueryPrototypeInstance root = queryModel.getRootInstance();
         buildEditor(root);
+        layout(queryView);
+    }
+
+    private void layout(QueryBrowserPane queryView) {
         final Canvas queryArea = queryView.getQueryArea();
         GridLayout layout = new GridLayout(numEditors, false);
         layout.horizontalSpacing = SPACING;
@@ -60,7 +68,7 @@ public class QueryBuilderPaneController {
         ++numEditors;
         
         PrototypeInstanceEditor editor = new PrototypeInstanceEditor(queryView.getQueryArea(), SWT.NULL);
-        editor.setTypeName(root.getType().getName());
+        editor.setTypeName(root.getType().getName()); // FIXME: Make this reflect the parent field name
         
         String[] fieldNames = root.getFieldNames();
         for (int i = 0; i < fieldNames.length; i++) {
@@ -70,21 +78,47 @@ public class QueryBuilderPaneController {
             
             if (fieldType.isSecondClass()) {
                 IConstraintRow row = editor.addPrimitiveTypeRow(field.field.getName());
-                // TODO: Add data binding controllers here for relational operator/value...
+                // Relational operator...
                 IFieldController controller;
                 controller = new FieldConstraintRelationalOperatorFieldController(row.getRelationEditor(), field);
                 controllers.add(controller);
                 
                 // Value...
-                controller = new FieldConstraintValueFieldController(row.getValueEditor(), field, queryModel.getDatabase());
+                controller = new FieldConstraintValueFieldController((Text)row.getValueEditor(), field, queryModel.getDatabase());
                 controllers.add(controller);
-
             } else {
                 IConstraintRow row = editor.addObjectReferenceRow(field.field.getName());
                 row.setValue(fieldType.getName() + " >>>");
-                buildEditor(field.valueProto());
+                Button expandEditor = (Button) row.getValueEditor();
+                expandEditor.addSelectionListener(new ExpandEditor(field, editor, row));
+//                buildEditor(field.valueProto());
             }
         }
+    }
+    
+    private class ExpandEditor implements SelectionListener {
+
+        private FieldConstraint field;
+        private PrototypeInstanceEditor editor;
+        private IConstraintRow row;
+
+        public ExpandEditor(FieldConstraint field, PrototypeInstanceEditor editor, IConstraintRow row) {
+            this.field = field;
+            this.editor = editor;
+            this.row = row;
+        }
+
+        public void widgetSelected(SelectionEvent e) {
+            field.expand();
+            buildEditor(field.valueProto());
+            row.getValueEditor().setEnabled(false);
+            layout(queryView);
+        }
+
+        public void widgetDefaultSelected(SelectionEvent e) {
+            widgetSelected(e);
+        }
+        
     }
     
     public void save() throws CannotSaveException {

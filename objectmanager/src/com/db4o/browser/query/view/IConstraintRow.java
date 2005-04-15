@@ -4,7 +4,7 @@
 package com.db4o.browser.query.view;
 
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Control;
 
 public interface IConstraintRow {
     public void setFieldName(String fieldName);
@@ -21,7 +21,7 @@ public interface IConstraintRow {
      * 
      * @return The ValueEditor text object if isValueEditable() else returns null
      */
-    public Text getValueEditor();
+    public Control getValueEditor();
 
     public Combo getRelationEditor();
 }
