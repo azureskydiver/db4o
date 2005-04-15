@@ -30,6 +30,7 @@ public class AllTestsConfAll extends TestSuite{
 	    	CallConstructors.class,
 	    	CascadedDeleteUpdate.class,
 			CascadeDeleteArray.class,
+            CascadeDeleteDeleted.class,
 			CascadeDeleteFalse.class,
 	    	CascadeOnActivate.class,
 	        CascadeOnDelete.class,
