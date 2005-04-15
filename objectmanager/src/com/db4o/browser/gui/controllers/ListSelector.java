@@ -7,6 +7,8 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
@@ -23,7 +25,12 @@ public class ListSelector extends Dialog {
 
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
-        list = new List(container, SWT.BORDER);
+        Composite dialogArea = new Composite(container, SWT.NULL);
+        dialogArea.setLayout(new GridLayout());
+        list = new List(dialogArea, SWT.BORDER | SWT.V_SCROLL);
+        GridData gd = new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL);
+        gd.heightHint = 500;
+        list.setLayoutData(gd);
         listPopulator.populate(list);
         list.addMouseListener(new MouseAdapter() {
             public void mouseDoubleClick(MouseEvent e) {
