@@ -1,9 +1,8 @@
 BUGS:
 -----
 
-- Add converter declarations for primitive wrapper classes **DONE**
-- 'mirror' field entries on some databases: problem with browser,
-  reflector or the databases itself?
+- needs to be able to cope with refactored classes:
+  instances may have multiple fields of the same name
 
 Remaining Features:
 -------------------
@@ -30,6 +29,7 @@ Remaining Features:
 
 Fixed bugs:
 -----------
+- Add converter declarations for primitive wrapper classes **DONE**
 - Ensure that strings are fully parsed on date conversion **DONE**
 - Selecting an item from the query result and then posing a query
   with an empty result triggers a stack exception from GraphPosition **DONE**
