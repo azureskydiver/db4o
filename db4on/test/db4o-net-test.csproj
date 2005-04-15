@@ -15,7 +15,7 @@
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "WinExe"
+                OutputType = "Exe"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
                 RootNamespace = "com.db4o.test"
@@ -600,6 +600,11 @@
                 />
                 <File
                     RelPath = "src\com\db4o\test\cs\CsDate.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4o\test\cs\CsEnum.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
