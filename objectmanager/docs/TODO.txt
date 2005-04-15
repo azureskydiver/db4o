@@ -7,7 +7,7 @@ BUGS:
 
 Remaining Features:
 -------------------
-   * Substring search: just search displayed strings
+   * Substring search: just search displayed strings **DONE**
    * REGRESSION: History buttons don't work any more!?!
    * Write a file logger that logs to a log file in the user's home directory
    * ListChooserDialog: Include search capability
