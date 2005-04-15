@@ -86,7 +86,7 @@ public final class Messages
 						"Failed to connect to server.",
 						"No blob data stored.",
 						"Uncaught Exception. db4o engine closed.",
-						"Add a public zero-parameter constructor to class %.", // 45
+						"Add a constructor that won't throw exceptions, configure constructor calls, or provide a translator to class %.", // 45
 						"This method can only be called before opening the database file.",
 						"AccessibleObject#setAccessible() is not available. Private fields can not be stored.",
 						"ObjectTranslator could not be installed: %.",
