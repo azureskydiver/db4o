@@ -6,6 +6,7 @@ package com.db4o.browser.query.view;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
@@ -42,7 +43,7 @@ public class PrimitiveConstraintRow implements IConstraintRow {
         return true;
     }
 
-    public Text getValueEditor() {
+    public Control getValueEditor() {
         return fieldValue;
     }
 

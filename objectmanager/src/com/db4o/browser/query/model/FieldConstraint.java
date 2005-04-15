@@ -12,20 +12,22 @@ public class FieldConstraint {
     
     public final ReflectField field;
     public RelationalOperator relation;
-    public Object value;
+    public Object value = null;
+    private QueryBuilderModel model;
     
     public FieldConstraint(ReflectField field, QueryBuilderModel model) {
         this.field = field;
+        this.model = model;
         this.relation = RelationalOperator.EQUALS;
         final ReflectClass fieldType = field.getType();
-        if (fieldType.isSecondClass()) {
-            this.value = null;
-        } else {
-            if (!model.typeInQuery(fieldType)) {
-                model.addTypeToQuery(fieldType);
-                this.value = new QueryPrototypeInstance(fieldType, model);
-            }
-        }
+    }
+    
+    public void expand() {
+        expand(model, field.getType());
+    }
+
+    private void expand(QueryBuilderModel model, final ReflectClass fieldType) {
+        this.value = new QueryPrototypeInstance(fieldType, model);
     }
 
     public void apply(Query query) {

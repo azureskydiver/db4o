@@ -5,19 +5,20 @@ package com.db4o.browser.query.view;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 
 public class ObjectReferenceRow implements IConstraintRow {
     
     private Label fieldName;
-    private Label type;
+    private Button type;
 
     public ObjectReferenceRow(PrototypeInstanceEditor editor) {
         fieldName = new Label(editor, SWT.NULL);
         
-        type = new Label(editor, SWT.NULL);
+        type = new Button(editor, SWT.NULL);
         GridData gd = new GridData();
         gd.horizontalSpan = 2;
         type.setLayoutData(gd);
@@ -39,8 +40,8 @@ public class ObjectReferenceRow implements IConstraintRow {
         return false;
     }
 
-    public Text getValueEditor() {
-        return null;
+    public Control getValueEditor() {
+        return type;
     }
 
     public Combo getRelationEditor() {

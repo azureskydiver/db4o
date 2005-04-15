@@ -3,8 +3,6 @@
  */
 package com.db4o.browser.query.model;
 
-import java.util.HashSet;
-
 import com.db4o.browser.model.Database;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
@@ -17,7 +15,6 @@ public class QueryBuilderModel {
 
     public QueryBuilderModel(ReflectClass input, Database database) {
         this.database = database;
-        addTypeToQuery(input);
         rootInstance = new QueryPrototypeInstance(input, this);
     }
 
@@ -31,16 +28,6 @@ public class QueryBuilderModel {
         return rootInstance;
     }
     
-    private HashSet queryTypes = new HashSet();
-
-    public boolean typeInQuery(ReflectClass fieldType) {
-        return queryTypes.contains(fieldType);
-    }
-
-    public void addTypeToQuery(ReflectClass fieldType) {
-        queryTypes.add(fieldType);
-    }
-
     public Database getDatabase() {
         return database;
     }
