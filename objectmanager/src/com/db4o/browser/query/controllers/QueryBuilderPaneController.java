@@ -41,7 +41,7 @@ public class QueryBuilderPaneController {
         this.queryView = queryView;
         
         QueryPrototypeInstance root = queryModel.getRootInstance();
-        buildEditor(root);
+        buildEditor(root, null);
         layout(queryView);
     }
 
@@ -60,7 +60,7 @@ public class QueryBuilderPaneController {
     
     private LinkedList controllers = new LinkedList();
 
-    private void buildEditor(QueryPrototypeInstance root) {
+    private void buildEditor(QueryPrototypeInstance root, String fieldName) {
         if (root == null || root.getType() == null) {
             return;
         }
@@ -68,7 +68,13 @@ public class QueryBuilderPaneController {
         ++numEditors;
         
         PrototypeInstanceEditor editor = new PrototypeInstanceEditor(queryView.getQueryArea(), SWT.NULL);
-        editor.setTypeName(root.getType().getName()); // FIXME: Make this reflect the parent field name
+        
+        String className = root.getType().getName();
+        int lastDotIndex = className.lastIndexOf('.');
+        if (lastDotIndex > 0) {
+            className = className.substring(lastDotIndex+1);
+        }
+        editor.setTypeName(fieldName == null ? className : fieldName + " : " + className);
         
         String[] fieldNames = root.getFieldNames();
         for (int i = 0; i < fieldNames.length; i++) {
@@ -110,7 +116,7 @@ public class QueryBuilderPaneController {
 
         public void widgetSelected(SelectionEvent e) {
             field.expand();
-            buildEditor(field.valueProto());
+            buildEditor(field.valueProto(), field.field.getName());
             row.getValueEditor().setEnabled(false);
             layout(queryView);
         }
