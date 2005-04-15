@@ -37,6 +37,7 @@ public class BrowserController implements IBrowserController {
 	private SelectionChangedController selectionChangedController;
 	private NavigationController navigationController;
 	private PathLabelController pathController;
+    private SearchController searchController;
 
 	/**
      * Constructor BrowserController.  Create a BrowserController for a
@@ -54,6 +55,7 @@ public class BrowserController implements IBrowserController {
 		treeController = new TreeController(this, ui.getObjectTree());
 		detailController = new DetailController(this, ui);
 		navigationController = new NavigationController(ui.getLeftButton(), ui.getRightButton());
+        searchController = new SearchController(this, ui, navigationController);
 		pathController = new PathLabelController(ui.getPathLabel());
         addQueryButtonHandler();
 	}
@@ -170,6 +172,7 @@ public class BrowserController implements IBrowserController {
     public void deselectAll() {
         treeController.deselectAll();
         detailController.deselectAll();
+        navigationController.resetUndoRedoStack();
     }
     
     

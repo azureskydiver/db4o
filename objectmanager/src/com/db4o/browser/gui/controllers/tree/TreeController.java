@@ -69,5 +69,6 @@ public class TreeController implements IBrowserController {
 
     public void deselectAll() {
         viewer.setSelection(StructuredSelection.EMPTY);
+        viewer.collapseAll();
     }
 }
