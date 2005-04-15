@@ -7,10 +7,10 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.List;
 
 import com.db4o.browser.gui.controllers.tree.TreeController;
 import com.db4o.browser.gui.views.DbBrowserPane;

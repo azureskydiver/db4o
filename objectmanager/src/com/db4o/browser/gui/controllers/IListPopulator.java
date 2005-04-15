@@ -3,7 +3,8 @@
  */
 package com.db4o.browser.gui.controllers;
 
-import org.eclipse.swt.widgets.List;
+import java.util.List;
+
 
 public interface IListPopulator {
 
