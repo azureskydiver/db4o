@@ -40,9 +40,10 @@ public class TreeSelectionChangedController implements
 				model.setSelectedPath(node);
 			}
 		} catch (Throwable t) {
-			--treeSelectionChanging;
             Logger.log().error(t, "Exception handling tree selection change");
-		}
+		} finally {
+            --treeSelectionChanging;
+        }
 	}
 	
 	/**

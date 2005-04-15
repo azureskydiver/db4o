@@ -17,6 +17,7 @@
 package com.db4o.browser.gui.standalone;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
@@ -43,6 +44,10 @@ import com.db4o.browser.model.BrowserCore;
 import com.db4o.browser.prefs.PreferenceUI;
 import com.db4o.reflect.ReflectClass;
 import com.swtworkbench.community.xswt.XSWT;
+import com.swtworkbench.community.xswt.metalogger.FileLogger;
+import com.swtworkbench.community.xswt.metalogger.Logger;
+import com.swtworkbench.community.xswt.metalogger.StdLogger;
+import com.swtworkbench.community.xswt.metalogger.TeeLogger;
 
 /**
  * Class StandaloneBrowser.
@@ -52,7 +57,8 @@ import com.swtworkbench.community.xswt.XSWT;
 public class StandaloneBrowser implements IControlFactory {
     
     public static final String appName = "Object Manager";
-    public static final String LOGFILE = "objectmanager.log";
+    public static final String LOGFILE = ".objectmanager.log";
+    private static final String LOGCONFIG = ".objectmanager.logconfig";
     
     private Shell shell;
     private CTabFolder folder;
@@ -209,10 +215,17 @@ public class StandaloneBrowser implements IControlFactory {
 	}
 
 	public static void main(String[] args) {
-//		Db4o.configure().reflectWith(new GenericReflector(new JdkReflector(StandaloneBrowser.class.getClassLoader())));
+        Logger.setLogger(new TeeLogger(new StdLogger(), new FileLogger(getLogPath(LOGFILE), getLogPath(LOGCONFIG))));
+        Logger.log().setDebug(SWTProgram.class, true);
+        Logger.log().debug(SWTProgram.class, new Date().toString() + ": Application startup");
         SWTProgram.registerCloseListener(BrowserCore.getDefault());
         SWTProgram.runWithLog(new StandaloneBrowser());
+        Logger.log().debug(SWTProgram.class, new Date().toString() + ": Application shutdown");
 	}
+
+    private static String getLogPath(String fileName) {
+        return new File(new File(System.getProperty("user.home", ".")),fileName).getAbsolutePath();
+    }
 }
 
 
