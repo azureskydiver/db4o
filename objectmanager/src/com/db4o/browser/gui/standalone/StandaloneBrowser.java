@@ -151,6 +151,7 @@ public class StandaloneBrowser implements IControlFactory {
 		MenuItem preferences = (MenuItem) choices.get("Preferences");
 		MenuItem adddirtoclasspath = (MenuItem) choices.get("AddDirToClasspath");
 		MenuItem addfiletoclasspath = (MenuItem) choices.get("AddFileToClasspath");
+        MenuItem helpAbout = (MenuItem)choices.get("HelpAbout");
         
         open.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
@@ -212,7 +213,13 @@ public class StandaloneBrowser implements IControlFactory {
                 }
             }
         });
-	}
+
+        helpAbout.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                new AboutBox(shell).open();
+            }
+        });
+    }
 
 	public static void main(String[] args) {
         Logger.setLogger(new TeeLogger(new StdLogger(), new FileLogger(getLogPath(LOGFILE), getLogPath(LOGCONFIG))));
