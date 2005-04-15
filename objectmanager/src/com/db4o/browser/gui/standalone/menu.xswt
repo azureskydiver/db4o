@@ -35,9 +35,9 @@
 			</menu>
 
 			<menu x:style="DROP_DOWN" x:id="helpMenu">
-				<x:children>
+				<x:children><!-- No online help yet... :-(
 					<menuItem x:id="HelpContents" text="Help &amp;Contents..."/>
-					<menuItem x:style="SEPARATOR"/>
+					<menuItem x:style="SEPARATOR"/>-->
 					<menuItem x:id="HelpAbout" text="&amp;About..."/>
 				</x:children>
 			</menu>
