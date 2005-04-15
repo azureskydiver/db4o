@@ -3,6 +3,8 @@
  */
 package com.db4o.browser.gui.controllers;
 
+import java.io.File;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -30,15 +32,34 @@ public class QueryController {
         this.browserController = browserController;
     }
     
-    public void open(ReflectClass clazz) {
+    public void open(ReflectClass clazz, String fileName) {
         QueryBrowserPane ui = new QueryBrowserPane(folder, SWT.NULL);
         CTabItem queryTab = new CTabItem(folder, SWT.CLOSE);
         queryTab.setControl(ui);
-        queryTab.setText(clazz.getName());
+        queryTab.setText(unqualifyFile(fileName) + "::" + unqualifyClass(clazz.getName()));
         folder.setSelection(queryTab);
         
         QueryTabController controller = new QueryTabController(this, folder, ui, clazz);
         controller.setInput(clazz);
+    }
+
+    private String unqualifyFile(String fileName) {
+        File file = new File(fileName);
+        fileName = file.getName();
+        final int lastDot = fileName.lastIndexOf('.');
+        if (lastDot >= 1) {
+            fileName = fileName.substring(0, lastDot);
+        }
+        return fileName;
+    }
+
+    private String unqualifyClass(String name) {
+        name = name.substring(name.lastIndexOf('.')+1);
+        int commaPos = name.indexOf(',');
+        if (commaPos >= 0) {
+            name = name.substring(0, commaPos);
+        }
+        return name;
     }
 
     /**

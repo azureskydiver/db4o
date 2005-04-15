@@ -19,6 +19,7 @@ import com.db4o.browser.model.GraphPosition;
 import com.db4o.browser.model.IGraphIterator;
 import com.db4o.browser.model.nodes.ClassNode;
 import com.db4o.reflect.ReflectClass;
+import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
  * BrowserController.  The root MVC Controller for a browser window.
@@ -62,7 +63,7 @@ public class BrowserController implements IBrowserController {
             public void widgetSelected(SelectionEvent e) {
                 ReflectClass toOpen = chooseClass();
                 if (toOpen != null) {
-                    queryController.open(toOpen);
+                    queryController.open(toOpen, currentFile);
                 }
             }
         });
@@ -88,6 +89,7 @@ public class BrowserController implements IBrowserController {
     public ReflectClass chooseClass() {
         final IGraphIterator iterator = BrowserCore.getDefault().iterator(currentFile);
         ListSelector dialog = new ListSelector(ui.getShell());
+        dialog.setText("Query a type");
         final HashMap choices = new HashMap();
         dialog.setListPopulator(new IListPopulator() {
             public void populate(List list) {
@@ -142,7 +144,7 @@ public class BrowserController implements IBrowserController {
 				}
 				loader=loader.getParent();
 			}
-			System.err.println("Could not find a URLClassLoader.");
+            Logger.log().error(new RuntimeException(), "Could not find a URLClassLoader.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

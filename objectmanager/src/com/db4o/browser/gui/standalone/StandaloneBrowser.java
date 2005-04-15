@@ -70,6 +70,7 @@ public class StandaloneBrowser implements IControlFactory {
     private Color title_inactive_foreground;
 
     public static final String STATUS_BAR = "StatusBar";
+    protected String fileName;
     
     /* (non-Javadoc)
 	 * @see com.db4o.browser.gui.standalone.IControlFactory#createContents(org.eclipse.swt.widgets.Composite)
@@ -125,6 +126,7 @@ public class StandaloneBrowser implements IControlFactory {
 	}
     
     private void setTabText(String fileName) {
+        this.fileName = fileName;
         File tabFile = new File(fileName);
         mainTab.setText(tabFile.getName());
     }
@@ -149,8 +151,8 @@ public class StandaloneBrowser implements IControlFactory {
                 FileDialog dialog = new FileDialog(shell, SWT.OPEN);
 				dialog.setFilterExtensions(new String[]{"*.yap"});
                 String file = dialog.open();
-                setTabText(file);
                 if (file != null) {
+                    setTabText(file);
                     browserController.open(file);
                 }
             }
@@ -160,7 +162,7 @@ public class StandaloneBrowser implements IControlFactory {
             public void widgetSelected(SelectionEvent e) {
                 ReflectClass toOpen = browserController.chooseClass();
                 if (toOpen != null) {
-                    queryController.open(toOpen);
+                    queryController.open(toOpen, fileName);
                 }
             }
         });

@@ -83,7 +83,6 @@ public class FieldNodeFactory {
 		}
 		
         if (fieldType.isSecondClass()) {
-            System.err.println(fieldType.getName());
             return new PrimitiveFieldNode(fieldName, instance, database);
         }
         

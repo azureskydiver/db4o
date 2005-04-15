@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ListSelector extends Dialog {
 
+    private String text="";
     private List list;
     private IListPopulator listPopulator;
 
@@ -38,6 +39,11 @@ public class ListSelector extends Dialog {
             }
         });
         return container;
+    }
+    
+    protected void configureShell(Shell newShell) {
+        super.configureShell(newShell);
+        newShell.setText(text);
     }
     
     protected void okPressed() {
@@ -68,6 +74,24 @@ public class ListSelector extends Dialog {
     public void setListPopulator(IListPopulator listPopulator) {
         this.listPopulator = listPopulator;
     }
+
+    /**
+     * @return Returns the text.
+     */
+    public String getText() {
+        return text;
+    }
     
+
+    /**
+     * @param text The text to set.
+     */
+    public void setText(String text) {
+        this.text = text;
+        Shell current = getShell();
+        if (current != null && !current.isDisposed()) {
+            current.setText(text);
+        }
+    }
     
 }
