@@ -84,6 +84,7 @@ public class DbBrowserPane extends Composite {
      * @return the clear search button
      */
     public Button getSearchButton() {
+        Button button;
         return (Button) contents.get("ClearSearchButton");
     }
     

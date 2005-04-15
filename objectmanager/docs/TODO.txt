@@ -10,15 +10,15 @@ Remaining Features:
    * Substring search: just search displayed strings **DONE**
    * REGRESSION: History buttons don't work any more!?!
    * Write a file logger that logs to a log file in the user's home directory
-   * ListChooserDialog: Include search capability
+   * ListChooserDialog: Include search capability **DONE**
       - If a class is selected in tree view, select it in list by default
    * Don't automatically expand classes in QBE pane; include button on fields
    * Write About dialog
    * Beautify UI; add icons in appropriate places
-      - On buttons: forward, back, Query, clear query, run query
-      - On tabs: database versus query
-      - On QBE: Class icon; field icons
-      - In tree: Icon for each node type
+      - On buttons: forward*, back*, Query*, Search*
+      - On tabs: database* versus query*
+      - On QBE: Class*; field*
+      - In tree: Icon for each node type*
    * Click right side to navigate
       - (Hyperlink objects if object.hasChildren()?)
    * If right side is displaying a collection, display in a table
