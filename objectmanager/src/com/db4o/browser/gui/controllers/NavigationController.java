@@ -82,12 +82,13 @@ public class NavigationController implements IBrowserController {
 	/**
 	 * Set the UndoRedoStack to be empty;
 	 */
-	private void resetUndoRedoStack() {
+	public void resetUndoRedoStack() {
 		stackPosition=-1;
 		stackMax=-1;
 		for (int i = 0; i < undoRedoStack.length; i++) {
 			undoRedoStack[i] = null;		// Encourage the GC...
 		}
+        enableButtons();
 	}
 	
 	/**
@@ -163,4 +164,5 @@ public class NavigationController implements IBrowserController {
 			safeRun(add);
 		}
 	};
+
 }
