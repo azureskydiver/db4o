@@ -17,16 +17,16 @@
             		<layout x:class="gridLayout" numColumns="7" marginHeight="0"/>
 		            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
             		<x:children>
-		            	<button x:id="QueryButton" text="&amp;Run Query"/>
+		            	<button x:id="QueryButton" toolTipText="Run Query" image="com.db4o.browser.gui.views.DbBrowserPane icons/etool16/run_exc.gif"/>
 		            	<label text="|"/>
-				    	<button x:id="LeftButton" text=" < "/>
-				    	<button x:id="RightButton" text=" > "/>
+				    	<button x:id="LeftButton" toolTipText="Go back" image="com.db4o.browser.gui.views.DbBrowserPane icons/etool16/backward_nav.gif"/>
+				    	<button x:id="RightButton" toolTipText="Go forward" image="com.db4o.browser.gui.views.DbBrowserPane icons/etool16/forward_nav.gif"/>
 
             			<label text="Search: "/>
 		            	<text x:style="BORDER" x:id="Search">
 				            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
 		            	</text>
-		            	<button x:id="ClearSearchButton" text="&amp;X"/>
+		            	<button x:id="ClearSearchButton" toolTipText="Search within displayed results" image="com.db4o.browser.gui.views.DbBrowserPane icons/etool16/search.gif"/>
             		</x:children>
             	</composite>
 
