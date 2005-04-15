@@ -8,14 +8,27 @@ BUGS:
 Remaining Features:
 -------------------
    * Substring search: just search displayed strings
+   * Remove package names from tabs **DONE**
+   * Add database file name to tab text **DONE**
+   * Clear history button history when query is run
+   * Write a file logger that logs to a log file in the user's home directory
+   * List in ListChooserDialog doesn't scroll **DONE**
+   * ListChooserDialog: Include search capability
+      - If a class is selected in tree view, select it in list by default
+   * Don't automatically expand classes in QBE pane; include button on fields
+   * Write About dialog
+   * Beautify UI; add icons in appropriate places
+      - On buttons: forward, back, Query, clear query, run query
+      - On tabs: database versus query
+      - On QBE: Class icon; field icons
+      - In tree: Icon for each node type
    * Click right side to navigate
       - (Hyperlink objects if object.hasChildren()?)
-   * Beautify UI; add icons in appropriate places
    * If right side is displaying a collection, display in a table
+   
    * Evaluate .NET runtime platforms (IKVM) => Rodrigo
    Alternative for first relase: Smallest possible Sun JRE distribution
    * Collections under .NET 
-   * Write a file logger that logs to a log file in the user's home directory
 
 - Release engineering
    * Don't support PDAs for the initial release

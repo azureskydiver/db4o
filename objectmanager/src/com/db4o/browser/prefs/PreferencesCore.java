@@ -16,6 +16,7 @@ import com.db4o.browser.prefs.activation.ActivationPreferencePage;
 import com.db4o.browser.prefs.activation.ActivationPreferences;
 import com.db4o.config.ObjectClass;
 import com.db4o.query.Query;
+import com.swtworkbench.community.xswt.metalogger.Logger;
 
 public class PreferencesCore {
 	private static PreferencesCore prefs = null;
@@ -105,14 +106,14 @@ public class PreferencesCore {
 	 * new copy.
 	 */
 	private static void rebuildCorruptDatabase(int resultsize) {
-		System.err.println(resultsize
+		Logger.log().message(resultsize
 				+ " instances of PreferencesCore found in the database.");
 		String backupFile = preferencesFile + ".bkp";
-		System.err.println("Backing up database to " + backupFile);
+        Logger.log().message("Backing up database to " + backupFile);
 		try {
 			db.ext().backup(backupFile);
 		} catch (IOException e) {
-			System.err.println("Couldn't create backup file.");
+            Logger.log().message("Couldn't create backup file.");
 			e.printStackTrace();
 		}
 		db.close();
