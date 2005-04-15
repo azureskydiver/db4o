@@ -8,11 +8,8 @@ BUGS:
 Remaining Features:
 -------------------
    * Substring search: just search displayed strings
-   * Remove package names from tabs **DONE**
-   * Add database file name to tab text **DONE**
-   * Clear history button history when query is run
+   * REGRESSION: History buttons don't work any more!?!
    * Write a file logger that logs to a log file in the user's home directory
-   * List in ListChooserDialog doesn't scroll **DONE**
    * ListChooserDialog: Include search capability
       - If a class is selected in tree view, select it in list by default
    * Don't automatically expand classes in QBE pane; include button on fields
@@ -42,8 +39,12 @@ Fixed bugs:
   with an empty result triggers a stack exception from GraphPosition **DONE**
 
 
-ClassNode should not always create InstanceNode subnodes.  **DONE**
-Map and collection instances need IDs displayed. **DONE**
+   * Remove package names from tabs **DONE**
+   * Add database file name to tab text **DONE**
+   * Clear history button history when query is run **DONE**
+   * List in ListChooserDialog doesn't scroll **DONE**
+   * ClassNode should not always create InstanceNode subnodes.  **DONE**
+   * Map and collection instances need IDs displayed. **DONE**
 
 - Query in separate tab **DONE**
 - Choose class dialog **DONE**
