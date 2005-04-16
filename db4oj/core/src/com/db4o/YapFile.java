@@ -52,8 +52,8 @@ public abstract class YapFile extends YapStream {
 
     final void commit1() {
         checkClosed();
+        i_entryCounter++;
         try {
-            i_entryCounter++;
             write(false);
         } catch (Throwable t) {
             fatalException(t);

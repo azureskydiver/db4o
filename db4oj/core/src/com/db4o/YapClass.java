@@ -1769,7 +1769,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
             i_lastID = 0;
         } else {
             i_lastID =
-                a_bytes.getStream().set3(
+                a_bytes.getStream().setInternal(
                     a_bytes.getTransaction(),
                     a_object,
                     a_bytes.getUpdateDepth(), true);

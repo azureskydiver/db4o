@@ -80,8 +80,8 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
 	                if (i_indexed == 1) {
 	                    if (i_metaField.index == null) {
 	                        i_metaField.index = new MetaIndex();
-	                        stream.set3(systemTrans, i_metaField.index, YapConst.UNSPECIFIED, false);
-	                        stream.set3(systemTrans, i_metaField, YapConst.UNSPECIFIED, false);
+	                        stream.setInternal(systemTrans, i_metaField.index, YapConst.UNSPECIFIED, false);
+	                        stream.setInternal(systemTrans, i_metaField, YapConst.UNSPECIFIED, false);
 	                        yapField.initIndex(systemTrans, i_metaField.index);
 	                        indexInitCalled = true;
 	        				if (stream.i_config.i_messageLevel > YapConst.NONE) {
