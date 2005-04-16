@@ -91,12 +91,11 @@ public class YapRandomAccessFile extends YapFile {
             stopSession = i_session.closeInstance();
             if (stopSession) {
                 freePrefetchedPointers();
+                i_entryCounter++;
                 if (Deploy.debug) {
-                    i_entryCounter++;
                     write(true);
                 } else {
                     try {
-                        i_entryCounter++;
                         write(true);
                     } catch (Throwable t) {
                         fatalException(t);

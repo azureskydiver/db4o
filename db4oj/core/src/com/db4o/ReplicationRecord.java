@@ -32,7 +32,7 @@ public class ReplicationRecord implements Internal{
     public void store(YapStream stream){
         stream.showInternalClasses(true);
         Transaction ta = stream.checkTransaction(null);
-        stream.setNoReplication(ta, this, 1, false);
+        stream.setAfterReplication(ta, this, 1, false);
         stream.commit();
         stream.showInternalClasses(false);
     }

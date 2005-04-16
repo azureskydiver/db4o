@@ -54,7 +54,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     // Increments and decrements for outside calls into YapStream
     // A value > 0 signals that the engine crashed with an uncaught exception.
     // and prevents the finalizer.
-    int                     i_entryCounter        = -100; // negative during startup
+    protected int           i_entryCounter;
     Tree                    i_freeOnCommit;
 
     // Tree of all YapObject references, sorted by IdentityHashCode
@@ -150,8 +150,8 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
      * internal call interface, does not reset i_justActivated
      */
     final void activate2(Transaction ta, Object a_activate, int a_depth) {
+        i_entryCounter++;
         try {
-            i_entryCounter++;
             stillToActivate(a_activate, a_depth);
             activate3CheckStill(ta);
         } catch (Throwable t) {
@@ -342,13 +342,13 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
      * allows special handling for all Db4oType objects.
      * Redirected here from #set() so only instanceof check is necessary
      * in the #set() method. 
-     * @return true if handled here and #set() should not continue processing
+     * @return object if handled here and #set() should not continue processing
      */
-    Object db4oTypeStored(Transaction a_trans, Object a_object) {
+    Db4oType db4oTypeStored(Transaction a_trans, Object a_object) {
         if (a_object instanceof Db4oDatabase) {
             Db4oDatabase database = (Db4oDatabase) a_object;
             if (getYapObject(a_object) != null) {
-                return a_object;
+                return database;
             }
             showInternalClasses(true);
             Query q = querySharpenBug();
@@ -376,8 +376,8 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     final void deactivate1(Object a_deactivate, int a_depth) {
         checkClosed();
+        i_entryCounter++;
         try {
-            i_entryCounter++;
             i_justDeactivated[0] = null;
             deactivate2(a_deactivate, a_depth);
             i_justDeactivated[0] = null;
@@ -409,6 +409,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     final Transaction delete1(Transaction ta, Object a_object) {
         ta = checkTransaction(ta);
         if (a_object != null) {
+            i_entryCounter++;
             if (Deploy.debug) {
                 delete2(ta, a_object);
             } else {
@@ -424,7 +425,6 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     private final void delete2(Transaction ta, Object a_object) {
-        i_entryCounter++;
         YapObject yo = getYapObject(a_object);
         if (yo != null) {
             int id = yo.getID();
@@ -525,6 +525,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     ObjectSet get1(Transaction ta, Object template) {
         ta = checkTransaction(ta);
         QResult res = createQResult(ta);
+        i_entryCounter++;
         if (Deploy.debug) {
             get2(ta, template, res);
         } else {
@@ -540,7 +541,6 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     private final void get2(Transaction ta, Object template, QResult res) {
-        i_entryCounter++;
         if (template == null || template.getClass() == YapConst.CLASS_OBJECT) {
             getAll(ta, res);
         } else {
@@ -830,7 +830,6 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         i_showInternalClasses = 100000;
         initialize4NObjectCarrier();
         i_showInternalClasses = 0;
-        i_entryCounter = 0;
     }
     
     void initialize4NObjectCarrier() {
@@ -1155,7 +1154,6 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         if (renamedOne) {
             reboot();
         }
-        i_entryCounter--; // denotes
     }
 
     protected boolean rename1(Config4Impl config) {
@@ -1212,6 +1210,21 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     public ReplicationProcess replicationBegin(ObjectContainer peerB, ReplicationConflictHandler conflictHandler) {
         return new ReplicationImpl(this, peerB,conflictHandler);
     }
+    
+    final int replicationHandles(Object obj){
+        
+        // The double check on i_migrateFrom is necessary:
+        // i_handlers.i_replicateFrom may be set in YapObjectCarrier for parent YapStream 
+        if(i_migrateFrom == null  || i_handlers.i_replication == null){
+            return 0;
+        }
+        
+        if(obj instanceof Internal){
+            return 0;
+        }
+        
+        return i_handlers.i_replication.tryToHandle(this, obj);        
+    }
 
     void reserve(int byteCount) {
         // virtual: do nothing
@@ -1243,56 +1256,68 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
     
     final void setExternal(Transaction ta, Object a_object, int a_depth) {
+        ta = checkTransaction(ta);
         beginEndSet(ta);
-        ta = setInternal(ta, a_object, a_depth, true);
+        setInternal(ta, a_object, a_depth, true);
         beginEndSet(ta);
     }
     
-    final Transaction setInternal(Transaction ta, Object a_object, boolean a_checkJustSet) {
+    final int setInternal(Transaction ta, Object a_object, boolean a_checkJustSet) {
        return setInternal(ta, a_object, YapConst.UNSPECIFIED, a_checkJustSet);
     }
     
-    final Transaction setInternal(Transaction ta, Object a_object, int a_depth,  boolean a_checkJustSet) {
+    final int setInternal(Transaction ta, Object a_object, int a_depth,  boolean a_checkJustSet) {
         ta = checkTransaction(ta);
-        
-        // The double check on i_migrateFrom is necessary:
-        // i_handlers.i_replicateFrom may be set in YapObjectCarrier for parent YapStream 
-        if(i_migrateFrom != null  && i_handlers.i_replication != null){
-            
-            if(! (a_object instanceof Internal)){
-                if(i_handlers.i_replication.tryToHandle(this, a_object)){
-                    return ta;
-                }
-            }
+        int id = replicationHandles(a_object); 
+        if (id != 0){
+            return id;
         }
-        return setNoReplication(ta, a_object, a_depth, a_checkJustSet);
+        return setAfterReplication(ta, a_object, a_depth, a_checkJustSet);
     }
     
-    final Transaction setNoReplication(Transaction ta, Object a_object, int a_depth,  boolean a_checkJustSet) {
-        if (a_object instanceof Db4oType) {
-            if (db4oTypeStored(ta, a_object) != null) {
-                return ta;
+    final int setAfterReplication(Transaction ta, Object obj, int depth,  boolean checkJust) {
+        
+        if (obj instanceof Db4oType) {
+            Db4oType db4oType = db4oTypeStored(ta, obj);
+            if (db4oType != null) {
+                return (int)getID1(ta, db4oType);
             }
         }
+        
+        int id;
+        
+        i_entryCounter++;
+        
         if (Deploy.debug) {
-            set2(ta, a_object, a_depth, a_checkJustSet);
+            id = set2(ta, obj, depth, checkJust);
         } else {
             try {
-                set2(ta, a_object, a_depth, a_checkJustSet);
+                id = set2(ta, obj, depth, checkJust);
             } catch (ObjectNotStorableException e) {
+                i_entryCounter--;
                 throw e;
             } catch (Throwable t) {
+                id = 0;
                 fatalException(t);
             }
         }
+        
         i_entryCounter--;
-        return ta;
+        
+        return id;
     }
 
-    private final void set2(Transaction a_trans, Object a_object, int depth, boolean a_checkJustSet) {
-        i_entryCounter++;
-        set3(a_trans, a_object, depth, a_checkJustSet);
-        checkStillToSet();
+    private final int set2(Transaction ta, Object obj, int depth, boolean checkJust) {
+        int id = set3(ta, obj, depth, checkJust);
+        
+        // The entry counter helps us to know how far we are
+        // away from a top level call.  
+        if(i_entryCounter < YapConst.MAX_STACK_DEPTH){
+            checkStillToSet();    
+        }
+        
+        return id;
+        
     }
 
     void checkStillToSet() {

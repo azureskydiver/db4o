@@ -39,12 +39,11 @@ public class YapMemoryFile extends YapFile {
     }
 
     boolean close2() {
+        i_entryCounter++;
         if (Deploy.debug) {
-            i_entryCounter++;
             write(true);
         } else {
             try {
-                i_entryCounter++;
                 write(true);
             } catch (Throwable t) {
                 fatalException(t);

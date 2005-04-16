@@ -139,7 +139,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
                     new MetaClass(i_name)).next();
                 if (i_metaClass == null) {
                     i_metaClass = new MetaClass(i_name);
-                    stream.set3(systemTrans, i_metaClass, Integer.MAX_VALUE, false);
+                    stream.setInternal(systemTrans, i_metaClass, Integer.MAX_VALUE, false);
                 } else {
                     stream.activate1(systemTrans, i_metaClass,
                         Integer.MAX_VALUE);
