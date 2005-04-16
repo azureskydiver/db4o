@@ -69,13 +69,15 @@ public class QueryBuilderPaneController {
         
         PrototypeInstanceEditor editor = new PrototypeInstanceEditor(queryView.getQueryArea(), SWT.NULL);
         
+        // compute a nice title for the editor
         String className = root.getType().getName();
         int lastDotIndex = className.lastIndexOf('.');
         if (lastDotIndex > 0) {
             className = className.substring(lastDotIndex+1);
         }
         editor.setTypeName(fieldName == null ? className : fieldName + " : " + className);
-        
+
+        // Now expand the fields
         String[] fieldNames = root.getFieldNames();
         for (int i = 0; i < fieldNames.length; i++) {
             FieldConstraint field = root.getConstraint(fieldNames[i]);
