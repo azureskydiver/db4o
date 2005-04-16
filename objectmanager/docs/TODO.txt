@@ -9,11 +9,12 @@ Remaining Features:
    * Write a file logger that logs to a log file in the user's home directory **DONE**
    * Write About dialog **DONE**
    * Beautify UI; add icons in appropriate places
-      - On buttons: forward*, back*, Query*, Search*
-      - On tabs: database* versus query*
+      - On buttons: forward*, back*, Query*, Search*  **DONE**
+      - On tabs: database* versus query*  **DONE**
       - On QBE: Class*; field*
       - In tree: Icon for each node type*
-   * Don't automatically expand classes in QBE pane; include button on fields
+   * Don't automatically expand classes in QBE pane; include button on fields **DONE**
+   * Implement tree layout algorithm for expanded classes **POSTPONED**
    * Click right side to navigate
       - (Hyperlink objects if object.hasChildren()?)
    * If right side is displaying a collection, display in a table
@@ -26,6 +27,14 @@ Remaining Features:
    * Don't support PDAs for the initial release
    * 3 Packages, downloadable separately 
 
+Postponed Features:
+-------------------
+- Figure out what class is selected in tree when File|Query... or query button pressed.
+   Highlight that class by default in query dialog.
+- Catch up MockDatabase to the generic reflector impl
+- Customize display of nodes
+- After initial release: fix tree/detail to implement IMaster/IDetail; submit
+  changes to JFace
 
 Fixed bugs:
 -----------
@@ -82,22 +91,18 @@ Fixed bugs:
    * Make sure there are no java.lang.reflect calls where there shouldn't be **DONE, I think**
    * Test with no classes available
 
-- Catch up MockDatabase to the generic reflector impl
 - StoredArrayFieldNode needs implemented **DONE**
 
 - Test with J9 VM **????**
 
 
 - Maps don't display correctly **DONE**
-- Arrays don't display correctly **written, needs testing**
+- Arrays don't display correctly **DONE**
     
  - Unit testing verify that the iterator is always restored after it is used
     * template generator
 
 
-- Customize display of nodes
-- After initial release: fix tree/detail to implement IMaster/IDetail; submit
-  changes to JFace
 
 ----
 

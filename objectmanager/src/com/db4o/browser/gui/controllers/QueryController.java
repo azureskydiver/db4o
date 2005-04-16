@@ -8,7 +8,10 @@ import java.io.File;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
+import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.query.controllers.QueryTabController;
 import com.db4o.browser.query.view.QueryBrowserPane;
 import com.db4o.reflect.ReflectClass;
@@ -36,6 +39,8 @@ public class QueryController {
         QueryBrowserPane ui = new QueryBrowserPane(folder, SWT.NULL);
         CTabItem queryTab = new CTabItem(folder, SWT.CLOSE);
         queryTab.setControl(ui);
+        queryTab.setImage(new Image(Display.getCurrent(),
+                DbBrowserPane.class.getResourceAsStream("icons/etool16/query.gif")));
         queryTab.setText(unqualifyFile(fileName) + "::" + unqualifyClass(clazz.getName()));
         folder.setSelection(queryTab);
         

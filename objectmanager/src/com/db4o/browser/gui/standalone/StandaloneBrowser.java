@@ -28,6 +28,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -119,6 +120,8 @@ public class StandaloneBrowser implements IControlFactory {
         
         ui = new DbBrowserPane(folder, SWT.NULL);
         mainTab = new CTabItem(folder, SWT.NULL);
+        mainTab.setImage(new Image(Display.getCurrent(),
+                DbBrowserPane.class.getResourceAsStream("icons/etool16/database2.gif")));
         mainTab.setControl(ui);
         
         queryController = new QueryController(folder);
@@ -126,9 +129,9 @@ public class StandaloneBrowser implements IControlFactory {
         queryController.setBrowserController(browserController);
 		
 		// FIXME: hard-coding initial open...
-		String testFile=getClass().getResource("formula1.yap").getFile();
-		browserController.open(testFile);
-        setTabText(testFile);
+//		String testFile=getClass().getResource("formula1.yap").getFile();
+//		browserController.open(testFile);
+//        setTabText(testFile);
 	}
     
     private void setTabText(String fileName) {
