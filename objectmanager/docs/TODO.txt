@@ -3,6 +3,8 @@ BUGS:
 
 - needs to be able to cope with refactored classes:
   instances may have multiple fields of the same name
+- The toolbar leaks SWT Image resources
+- XSWT.parse disposes all resources in an application in its dispose listener!
 
 Remaining Features:
 -------------------

@@ -24,4 +24,6 @@ public interface IConstraintRow {
     public Control getValueEditor();
 
     public Combo getRelationEditor();
+
+    public void setPublic(boolean isPublic);
 }

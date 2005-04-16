@@ -4,19 +4,24 @@
 package com.db4o.browser.query.view;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Display;
+
+import com.db4o.browser.gui.standalone.ImageMgr;
+import com.db4o.browser.gui.views.DbBrowserPane;
 
 public class ObjectReferenceRow implements IConstraintRow {
     
-    private Label fieldName;
+    private CLabel fieldName;
     private Button type;
 
     public ObjectReferenceRow(PrototypeInstanceEditor editor) {
-        fieldName = new Label(editor, SWT.NULL);
+        fieldName = new CLabel(editor, SWT.NULL);
         
         type = new Button(editor, SWT.NULL);
         GridData gd = new GridData();
@@ -46,6 +51,16 @@ public class ObjectReferenceRow implements IConstraintRow {
 
     public Combo getRelationEditor() {
         return null;
+    }
+
+    public void setPublic(boolean isPublic) {
+        if (isPublic) {
+            new ImageMgr(fieldName, new Image(Display.getCurrent(),
+                    DbBrowserPane.class.getResourceAsStream("icons/etool16/public_co.gif")));
+        } else {
+            new ImageMgr(fieldName, new Image(Display.getCurrent(),
+                    DbBrowserPane.class.getResourceAsStream("icons/etool16/private_co.gif")));
+        }
     }
 
 }
