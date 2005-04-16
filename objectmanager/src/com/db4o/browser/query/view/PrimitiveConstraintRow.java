@@ -4,20 +4,25 @@
 package com.db4o.browser.query.view;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
+
+import com.db4o.browser.gui.standalone.ImageMgr;
+import com.db4o.browser.gui.views.DbBrowserPane;
 
 public class PrimitiveConstraintRow implements IConstraintRow {
 
-    private Label fieldName;
+    private CLabel fieldName;
     private Combo relationalOperatorChoices;
     private Text fieldValue;
     
     public PrimitiveConstraintRow(PrototypeInstanceEditor editor) {
-        fieldName = new Label(editor, SWT.NULL);
+        fieldName = new CLabel(editor, SWT.NULL);
         
         relationalOperatorChoices = new Combo(editor, SWT.READ_ONLY);
 
@@ -51,4 +56,13 @@ public class PrimitiveConstraintRow implements IConstraintRow {
         return relationalOperatorChoices;
     }
 
+    public void setPublic(boolean isPublic) {
+        if (isPublic) {
+            new ImageMgr(fieldName, new Image(Display.getCurrent(),
+                    DbBrowserPane.class.getResourceAsStream("icons/etool16/public_co.gif")));
+        } else {
+            new ImageMgr(fieldName, new Image(Display.getCurrent(),
+                    DbBrowserPane.class.getResourceAsStream("icons/etool16/private_co.gif")));
+        }
+    }
 }

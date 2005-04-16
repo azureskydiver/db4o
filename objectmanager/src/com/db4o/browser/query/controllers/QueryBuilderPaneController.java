@@ -75,7 +75,7 @@ public class QueryBuilderPaneController {
         if (lastDotIndex > 0) {
             className = className.substring(lastDotIndex+1);
         }
-        editor.setTypeName(fieldName == null ? className : fieldName + " : " + className);
+        editor.setTypeName(fieldName == null ? className : fieldName + " : " + className, root.getType().isInterface());
 
         // Now expand the fields
         String[] fieldNames = root.getFieldNames();
@@ -85,7 +85,8 @@ public class QueryBuilderPaneController {
             final ReflectClass fieldType = field.field.getType();
             
             if (fieldType.isSecondClass()) {
-                IConstraintRow row = editor.addPrimitiveTypeRow(field.field.getName());
+                IConstraintRow row = editor.addPrimitiveTypeRow(field.field.getName(), 
+                        field.field.isPublic());
                 // Relational operator...
                 IFieldController controller;
                 controller = new FieldConstraintRelationalOperatorFieldController(row.getRelationEditor(), field);
@@ -95,7 +96,8 @@ public class QueryBuilderPaneController {
                 controller = new FieldConstraintValueFieldController((Text)row.getValueEditor(), field, queryModel.getDatabase());
                 controllers.add(controller);
             } else {
-                IConstraintRow row = editor.addObjectReferenceRow(field.field.getName());
+                IConstraintRow row = editor.addObjectReferenceRow(field.field.getName(), 
+                        field.field.isPublic());
                 row.setValue(fieldType.getName() + " >>>");
                 Button expandEditor = (Button) row.getValueEditor();
                 expandEditor.addSelectionListener(new ExpandEditor(field, editor, row));
