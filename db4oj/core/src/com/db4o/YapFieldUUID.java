@@ -25,7 +25,7 @@ class YapFieldUUID extends YapFieldVirtual {
         YapFile yf = (YapFile)a_writer.getStream();
         
         if(id == 0){
-            a_writer.writeInt(yf.identity().getID(yf));
+            a_writer.writeInt(yf.identity().getID(a_writer.getTransaction()));
         }else{
             a_writer.incrementOffset(YapConst.YAPINT_LENGTH);
         }
@@ -68,6 +68,7 @@ class YapFieldUUID extends YapFieldVirtual {
     
     void marshall1(YapObject a_yapObject, YapWriter a_bytes, boolean a_migrating, boolean a_new) {
         YapStream stream = a_bytes.getStream();
+        Transaction trans = a_bytes.getTransaction();
         boolean indexEntry = a_new && stream.maintainsIndices();
         int dbID = 0;
         if(! a_migrating){
@@ -82,13 +83,13 @@ class YapFieldUUID extends YapFieldVirtual {
 	        }
 	        Db4oDatabase db = a_yapObject.i_virtualAttributes.i_database;
 	        if(db != null) {
-	            dbID = db.getID(stream);
+	            dbID = db.getID(trans);
 	        }
         }else{
             Db4oDatabase db = null;
             if(a_yapObject.i_virtualAttributes != null && a_yapObject.i_virtualAttributes.i_database != null){
                 db = a_yapObject.i_virtualAttributes.i_database;
-                dbID = db.getID(stream);
+                dbID = db.getID(trans);
             }
         }
         a_bytes.writeInt(dbID);
