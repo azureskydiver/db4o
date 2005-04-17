@@ -26,7 +26,7 @@ public class Db4oDatabase implements Db4oType, Internal{
     /**
      * cached ObjectContainer for getting the own ID.
      */
-    private transient ExtObjectContainer i_objectContainer;
+    private transient YapStream i_stream;
     
     /**
      * cached ID, only valid in combination with i_objectContainer
@@ -77,17 +77,11 @@ public class Db4oDatabase implements Db4oType, Internal{
 	 *            the ObjectContainer
 	 * @return the db4o ID for the ObjectContainer
 	 */
-    public int getID(ExtObjectContainer a_oc) {
-        if(a_oc != i_objectContainer) {
-            YapStream yapStream = (YapStream)a_oc;
-            yapStream.showInternalClasses(true);
-            i_objectContainer = a_oc;
-            i_id = (int)a_oc.getID(this);
-            if(i_id == 0){
-                a_oc.set(this);
-                i_id = (int)a_oc.getID(this);
-            }
-            yapStream.showInternalClasses(false);
+    public int getID(Transaction trans) {
+        YapStream stream = trans.i_stream;
+        if(stream != i_stream) {
+            i_stream = stream;
+            i_id = trans.ensureDb4oDatabase(this);
         }
         return i_id;
     }
