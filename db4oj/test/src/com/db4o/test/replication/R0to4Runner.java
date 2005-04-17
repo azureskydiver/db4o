@@ -51,7 +51,7 @@ public class R0to4Runner {
         lCircles.setNames("circles");
         lCircles.linkCircles();
         lCircles.store(_peerA);
-        
+       
         R0Linker lList = new R0Linker();
         lList.setNames("list");
         lList.linkList();
@@ -79,8 +79,15 @@ public class R0to4Runner {
         replicateNoneModified();
         
         modifyR4(_peerA);
+        
+      openReplica();
+      ensureR4Different();
+        
         openReplica();
-        ensureR4Different();
+        replicateR4();
+        
+        openReplica();
+        ensureR4Same();
         
     }
     
@@ -90,6 +97,11 @@ public class R0to4Runner {
     
     private void ensureR4Different(){
         compareR4(_peerB, _peerA, false);
+    }
+    
+    private void ensureR4Same(){
+        compareR4(_peerB, _peerA, true);
+        compareR4(_peerA, _peerB, true);
     }
     
     private void compareR4(ObjectContainer ocA, ObjectContainer ocB, boolean same){
@@ -132,9 +144,12 @@ public class R0to4Runner {
         Test.ensure(replicateAll() == 0);
     }
     
-    
     private int replicateAll(){
         return replicateAll(true);
+    }
+    
+    private void replicateR4(){
+        Test.ensure(replicateAll(true) == LINKERS);
     }
     
     private int replicateAll(boolean modifiedOnly){
