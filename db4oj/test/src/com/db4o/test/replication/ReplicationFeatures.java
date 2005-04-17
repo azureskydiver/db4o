@@ -13,16 +13,11 @@ import com.db4o.test.*;
 
 public class ReplicationFeatures {
 
-    public static final String FILESOLO   = "reptsolo.yap";
-    public static final String FILESERVER = "reptserver.yap";
-
     public String              name;
 
     public void configure() {
         Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
         Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
-        new File(FILESOLO).delete();
-        new File(FILESERVER).delete();
     }
 
     public void storeOne() {
@@ -65,12 +60,12 @@ public class ReplicationFeatures {
     }
 	
 	private void printVersion() {
-		System.out.println("Version: " + Test.objectContainer().getObjectInfo(this).getVersion());
+		// System.out.println("Version: " + Test.objectContainer().getObjectInfo(this).getVersion());
 	}
 
     private void replicateAll() {
         ExtObjectContainer peerA = Test.objectContainer();
-        ExtObjectContainer peerB = Db4o.openFile(file()).ext();
+        ExtObjectContainer peerB = Test.replica();
         final ReplicationProcess replication =
 
         peerA.ext().replicationBegin(peerB, new ReplicationConflictHandler() {
@@ -110,7 +105,7 @@ public class ReplicationFeatures {
     private void checkAllEqual() {
         DeepCompare comparator = new DeepCompare();
         ExtObjectContainer master = Test.objectContainer();
-        ExtObjectContainer slave = Db4o.openFile(file()).ext();
+        ExtObjectContainer slave = Test.replica();
         Query q = master.query();
         q.constrain(ReplicationFeatures.class);
         ObjectSet objectSet = q.execute();
@@ -128,7 +123,7 @@ public class ReplicationFeatures {
     }
 
     private void checkOne(String name) {
-        ObjectContainer slave = Db4o.openFile(file());
+        ObjectContainer slave = Test.replica();
         Query q = slave.query();
         q.constrain(this.getClass());
         ObjectSet objectSet = q.execute();
@@ -153,15 +148,11 @@ public class ReplicationFeatures {
         yapStream.showInternalClasses(false);
     }
 
-    private String file() {
-        return Test.isClientServer() ? FILESERVER : FILESOLO;
-    }
-
     private void replicationSnippet() {
 
         // open any two ObjectContainers, local or Client/Server
         ExtObjectContainer peerA = Test.objectContainer();
-        ExtObjectContainer peerB = Db4o.openFile(file()).ext();
+        ExtObjectContainer peerB = Test.replica();
 
         // create a replication process with a ConflictHandler
         final ReplicationProcess replication = peerA.ext().replicationBegin(peerB,
