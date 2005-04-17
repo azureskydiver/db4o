@@ -139,6 +139,8 @@ public class AllTests extends AllTestsConfAll implements Runnable {
         } catch (IllegalAccessException e) {
         }
         System.out.println("Instantiation failed. Class:" + clazz.getName());
+        System.out.println("The class needs a #newInstance() constructor for the test framework.");
+        new Exception().printStackTrace();
         return null;
     }
 
