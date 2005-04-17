@@ -22,7 +22,7 @@ public class DTrace {
             // addRange(5130);
             
             // addRange(5948);
-            addRange(6991);
+            addRange(3988);
             
             // addRangeWithLength(1000000, 10000000);
             
@@ -43,6 +43,8 @@ public class DTrace {
             FREE_ON_COMMIT = new DTrace(true, true, "trans freeOnCommit", true);
             FREE_ON_ROLLBACK = new DTrace(true, true, "trans freeOnRollback", true);
             GET_SLOT = new DTrace(true, true, "getSlot", true);
+            GET_YAPOBJECT = new DTrace(true, true, "get yapObject", true);
+            ID_TREE_ADD = new DTrace(true, true, "id tree add", true);
             NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
             READ_ARRAY_WRAPPER = new DTrace(true, true, "read array wrapper", true);
             READ_ID = new DTrace(true, true, "read ID", true);
@@ -59,7 +61,7 @@ public class DTrace {
             
             // turnAllOffExceptFor(new DTrace[] {FREE, FREE_ON_COMMIT});
             // turnAllOffExceptFor(new DTrace[] {CANDIDATE_READ, CREATE_CANDIDATE, DONOTINCLUDE, EVALUATE_SELF});
-            turnAllOffExceptFor(new DTrace[] {COLLECT_CHILDREN, READ_ARRAY_WRAPPER});
+            turnAllOffExceptFor(new DTrace[] {GET_YAPOBJECT, ID_TREE_ADD});
          
         }
         return null;
@@ -100,6 +102,8 @@ public class DTrace {
     public static DTrace FREE_ON_COMMIT;
     public static DTrace FREE_ON_ROLLBACK;
     public static DTrace GET_SLOT;
+    public static DTrace GET_YAPOBJECT;
+    public static DTrace ID_TREE_ADD;
     public static DTrace NEW_INSTANCE;
     public static DTrace READ_ARRAY_WRAPPER;
     public static DTrace READ_ID;

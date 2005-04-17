@@ -709,6 +709,9 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     final YapObject getYapObject(int a_id) {
+        if(DTrace.enabled){
+            DTrace.GET_YAPOBJECT.log(a_id);
+        }
         return i_idTree.id_find(a_id);
     }
 
@@ -760,6 +763,9 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             if (yo != null) {
                 System.out.println("Duplicate alarm id_Tree:" + a_yo.getID());
             }
+        }
+        if(DTrace.enabled){
+            DTrace.ID_TREE_ADD.log(a_yo.getID());
         }
         i_idTree = i_idTree.id_add(a_yo);
     }
@@ -1223,6 +1229,14 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             return 0;
         }
         
+        YapObject reference = getYapObject(obj);
+        if(reference != null){
+            int id = reference.getID();
+            if(id > 0 && (TreeInt.find(i_justSet, id) != null)){
+                return id;
+            }
+        }
+        
         return i_handlers.i_replication.tryToHandle(this, obj);        
     }
 
@@ -1393,8 +1407,8 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             } else {
                 if (canUpdate()) {
                     int oid = yapObject.getID();
-                    if(a_checkJustSet && i_justSet != null){
-                        if(oid > 0 && (TreeInt.find(i_justSet, yapObject.getID()) != null)){
+                    if(a_checkJustSet){
+                        if(oid > 0 && (TreeInt.find(i_justSet, oid) != null)){
                             return oid;
                         }
                     }
@@ -1402,13 +1416,21 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                     if (doUpdate) {
                         dontDelete = false;
                         a_trans.dontDelete(oid, true);
+                        if(a_checkJustSet){
+                            a_checkJustSet = false;
+                            if(i_justSet == null){
+                                i_justSet = new TreeInt(oid);
+                            }else{
+                                i_justSet = i_justSet.add(new TreeInt(oid));
+                            }
+                        }
                         yapObject.writeUpdate(a_trans, a_updateDepth);
                     }
                 }
             }
             checkNeededUpdates();
             int id = yapObject.getID();
-            if(canUpdate() && a_checkJustSet){
+            if(a_checkJustSet && canUpdate()){
                 if(! yapObject.getYapClass().isPrimitive()){
     	            if(i_justSet == null){
     	                i_justSet = new TreeInt(id);
