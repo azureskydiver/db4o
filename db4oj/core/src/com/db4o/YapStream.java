@@ -1318,6 +1318,9 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         ta = checkTransaction(ta);
         int id = replicationHandles(a_object); 
         if (id != 0){
+            if(id < 0){
+                return 0;
+            }
             return id;
         }
         return setAfterReplication(ta, a_object, a_depth, a_checkJustSet);
