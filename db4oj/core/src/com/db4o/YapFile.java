@@ -350,9 +350,14 @@ public abstract class YapFile extends YapStream {
     }
 
     public YapWriter readWriterByID(Transaction a_ta, int a_id) {
-        // TODO:
-        // load from cache here
-        
+        return (YapWriter)readReaderOrWriterByID(a_ta, a_id, false);    
+    }
+
+    YapReader readReaderByID(Transaction a_ta, int a_id) {
+        return readReaderOrWriterByID(a_ta, a_id, true);
+    }
+    
+    private final YapReader readReaderOrWriterByID(Transaction a_ta, int a_id, boolean useReader) {
         if (a_id == 0) {
             return null;
         }
@@ -362,64 +367,44 @@ public abstract class YapFile extends YapStream {
         }
         
         int[] addressLength = new int[2];
+        
         try {
             a_ta.getSlotInformation(a_id, addressLength);
+            if (addressLength[0] == 0) {
+                return null;
+            }
+            
+            if(DTrace.enabled){
+                DTrace.READ_SLOT.logLength(addressLength[0], addressLength[1]);
+            }
+            
+            YapReader reader = null;
+            if(useReader){
+                reader = new YapReader(addressLength[1]);
+            }else{
+                reader = getWriter(a_ta, addressLength[0], addressLength[1]);
+                ((YapWriter)reader).setID(a_id);
+            }
+
+            reader.readEncrypt(this, addressLength[0]);
+            return reader;
+            
         } catch (Exception e) {
+            
+            // This is a tough catch-all block, but it does make sense:
+            // A call for getById() could accidentally find something
+            // that looks like a slot and try to use it.
+            
+            // TODO: For debug purposes analyse the caller stack and
+            // differentiate here in debug mode.
+
             if (Debug.atHome) {
                 System.out.println("YapFile.WriterByID failed for ID: " + a_id);
                 e.printStackTrace();
             }
-            return null;
         }
-        if (addressLength[0] == 0) {
-            return null;
-        }
+        return null;        
         
-        if(DTrace.enabled){
-            DTrace.READ_SLOT.logLength(addressLength[0], addressLength[1]);
-        }
-        
-        YapWriter reader = getWriter(a_ta, addressLength[0], addressLength[1]);
-        reader.setID(a_id);
-
-        reader.readEncrypt(this, addressLength[0]);
-        return reader;
-    }
-
-    YapReader readReaderByID(Transaction a_ta, int a_id) {
-        // TODO:
-        // load from cache here
-        
-        if (a_id == 0) {
-            return null;
-        }
-        
-        if(DTrace.enabled){
-            DTrace.READ_ID.log(a_id);
-        }
-
-        int[] addressLength = new int[2];
-        try {
-            a_ta.getSlotInformation(a_id, addressLength);
-        } catch (Exception e) {
-            if (Debug.atHome) {
-                System.out.println("YapFile.readReaderByID failed for ID: "
-                    + a_id);
-                e.printStackTrace();
-            }
-            return null;
-        }
-        if (addressLength[0] == 0) {
-            return null;
-        }
-        
-        if(DTrace.enabled){
-            DTrace.READ_SLOT.logLength(addressLength[0], addressLength[1]);
-        }
-
-        YapReader reader = new YapReader(addressLength[1]);
-        reader.readEncrypt(this, addressLength[0]);
-        return reader;
     }
 
     void readThis() {

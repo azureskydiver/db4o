@@ -98,6 +98,13 @@ public class Transaction {
                             int cascade = ((Integer)arr[1]).intValue();
                             Object obj = yo.getObject();
                             if(obj == null){
+                                
+                                // This means the object was gc'd.
+                                
+                                // Let's try to read it again, but this may fail in CS mode
+                                // if another transaction has deleted it. We are taking care
+                                // of that in #delete4().
+                                
                                 arr = finalThis.i_stream.getObjectAndYapObjectByID(finalThis, yo.getID());
                                 obj = arr[0];
                                 yo = (YapObject)arr[1];
