@@ -33,14 +33,12 @@ public class ReplicationFeaturesMain {
 	private Set _containersWithChangedObjects;
 	private Set _objectsToPrevailInConflicts;
 
-	private Set _possibleNamesInA;
-	private Set _possibleNamesInB;
 	private Set _impossibleNamesInA;
 	private Set _impossibleNamesInB;
 	
-	private static final String[] INITIAL_NAMES = new String[]{"a1", "a2", "b1", "b2"};
-	private static final String[] ALL_POSSIBLE_NAMES = new String[]{"a1", "a2", "b1", "b2", "newInA", "newInB", "a1ChangedInA", "a1ChangedInB", "b1ChangedInA", "b1ChangedInB"};
-	private static final String[] NAME_CHANGES = new String[]{"newInA", "newInB", "a1ChangedInA", "a1ChangedInB", "b1ChangedInA", "b1ChangedInB"};
+	private static final String[] ALL_POSSIBLE_NAMES = new String[]{"oldInA", "oldInB", "newInA", "newInB", "oldInAChangedInA", "oldInAChangedInB", "oldInBChangedInA", "oldInBChangedInB"};
+	private static final String[] NAME_CHANGES_IN_A = new String[]{"newInA", "oldInAChangedInA", "oldInBChangedInA"};
+	private static final String[] NAME_CHANGES_IN_B = new String[]{"newInB", "oldInAChangedInB", "oldInBChangedInB"};
 	
     
     public void configure(){
@@ -50,18 +48,29 @@ public class ReplicationFeaturesMain {
 	
     public void test() {
         
-        if (1 == 1) return;
-
-        
-        System.out.println("This strategy is too complex. I will try a different one.");
-        System.out.println("WORK IN PROGRESS BY KLAUS.");
-
-        
 		_a = Test.objectContainer();
 		_b = Test.replica();
 		deleteAll(_a);
 		deleteAll(_b);
 
+		
+		_a.set(new Replicated("Whatever"));
+		ReplicationProcess replication = _a.ext().replicationBegin(_b, new ReplicationConflictHandler() {
+            public Object resolveConflict(ReplicationProcess process, Object a, Object b) {
+            	return null;
+            }
+        });
+
+		replication.setDirection(_b, _a);
+		
+		Test.ensure(!_b.get(null).hasNext());
+		replicateQueryingFrom(replication, _a);
+		replication.commit();
+		Test.ensure(!_b.get(null).hasNext());
+		
+		System.exit(0);
+		
+		
 		tstDirection(A);
 		tstDirection(B);
 		tstDirection(BOTH);
@@ -73,7 +82,6 @@ public class ReplicationFeaturesMain {
 	private void tstDirection(Set direction) {
 		_direction = direction;
 		
-		tstQueryingFrom(NONE);
 		tstQueryingFrom(A);
 		tstQueryingFrom(B);
 		tstQueryingFrom(BOTH);
@@ -114,62 +122,99 @@ public class ReplicationFeaturesMain {
 
 	private void doIt() {
 
-        initState();
-        initNameExpectations();
-        
-        if (_direction.contains("A")) {
-            addNames(_possibleNamesInA, NAME_CHANGES);
-        } else {
-            addNames(_impossibleNamesInA, NAME_CHANGES);
-        }
+		System.err.println("------------------------------------------");
 
-        if (_direction.contains("B")) {
-            addNames(_possibleNamesInB, NAME_CHANGES);
-        } else {
-            addNames(_impossibleNamesInB, NAME_CHANGES);
-        }
-
+		initState();
+		System.err.println("--------------");
+		
+        setNameExpectations();
         
-        if (!_containersWithNewObjects.contains("A")) {
+		ReplicationProcess replication = _a.ext().replicationBegin(_b, new ReplicationConflictHandler() {
+            public Object resolveConflict(ReplicationProcess process, Object a, Object b) {
+            	return null;
+            }
+        });
+
+		if (_direction.size() == 1) {
+			if (_direction.contains("A")) {System.err.println("Setting direction TO A.");replication.setDirection(_b, _a);}
+			if (_direction.contains("B")) {System.err.println("Setting direction TO B.");replication.setDirection(_a, _b);}
+		}
+
+		
+        if (_containersToQueryFrom.contains("A")) {
+			replicateQueryingFrom(replication, _a);
+        }
+        if (_containersToQueryFrom.contains("B")) {
+			replicateQueryingFrom(replication, _b);
+        }
+		
+		replication.commit();
+		
+		checkNames(_a, _impossibleNamesInA);
+		checkNames(_b, _impossibleNamesInB);
+	}
+
+	private void setNameExpectations() {
+		_impossibleNamesInA = new HashSet();
+		_impossibleNamesInB = new HashSet();
+		
+		
+		if (!_direction.contains("A")) {
+            addNames(_impossibleNamesInA, NAME_CHANGES_IN_B);
+        }
+		if (!_direction.contains("B")) {
+            addNames(_impossibleNamesInB, NAME_CHANGES_IN_A);
+        }
+		
+		
+		if (!_containersToQueryFrom.contains("A")) {
+			_impossibleNamesInB.add("newInA");
+			_impossibleNamesInB.add("oldInAChangedInA");
+			_impossibleNamesInB.add("oldInBChangedInA");
+		}
+		if (!_containersToQueryFrom.contains("B")) {
+			_impossibleNamesInA.add("newInB");
+			_impossibleNamesInA.add("oldInAChangedInB");
+			_impossibleNamesInA.add("oldInBChangedInB");
+		}
+		
+		
+		if (_containersWithNewObjects.contains("A")) {
+			_a.set(new Replicated("newInA"));
+		} else {
             _impossibleNamesInA.add("newInA");
             _impossibleNamesInB.add("newInA");
         }
-
-        if (!_containersWithNewObjects.contains("B")) {
+		if (_containersWithNewObjects.contains("B")) {
+			_b.set(new Replicated("newInB"));
+		} else {
             _impossibleNamesInA.add("newInB");
             _impossibleNamesInB.add("newInB");
         }
-
-        
-        if (_containersWithChangedObjects.contains("A")) {
-            changeObject(_a, "a1", "a1ChangedInA");
-            changeObject(_a, "b1", "b1ChangedInA");
-            _impossibleNamesInA.add("a1");
-            _impossibleNamesInA.add("b1");
+		
+		
+		if (_containersWithChangedObjects.contains("A")) {
+            changeObject(_a, "oldInA", "oldInAChangedInA");
+            changeObject(_a, "oldInB", "oldInBChangedInA");
+            _impossibleNamesInA.add("oldInA");
+            _impossibleNamesInA.add("oldInB");
         } else {
-            _impossibleNamesInA.add("a1ChangedInA");
-            _impossibleNamesInA.add("b1ChangedInA");
-            _impossibleNamesInB.add("a1ChangedInA");
-            _impossibleNamesInB.add("b1ChangedInA");
+            _impossibleNamesInA.add("oldInAChangedInA");
+            _impossibleNamesInA.add("oldInBChangedInA");
+            _impossibleNamesInB.add("oldInAChangedInA");
+            _impossibleNamesInB.add("oldInBChangedInA");
         }
-
-        if (_containersWithChangedObjects.contains("B")) {
-            changeObject(_b, "a1", "a1ChangedInB");
-            changeObject(_b, "b1", "b1ChangedInB");
-            _impossibleNamesInB.add("a1");
-            _impossibleNamesInB.add("b1");
+		if (_containersWithChangedObjects.contains("B")) {
+            changeObject(_b, "oldInA", "oldInAChangedInB");
+            changeObject(_b, "oldInB", "oldInBChangedInB");
+            _impossibleNamesInB.add("oldInA");
+            _impossibleNamesInB.add("oldInB");
         } else {
-            _impossibleNamesInA.add("a1ChangedInB");
-            _impossibleNamesInA.add("b1ChangedInB");
-            _impossibleNamesInB.add("a1ChangedInB");
-            _impossibleNamesInB.add("b1ChangedInB");
+            _impossibleNamesInA.add("oldInAChangedInB");
+            _impossibleNamesInA.add("oldInBChangedInB");
+            _impossibleNamesInB.add("oldInAChangedInB");
+            _impossibleNamesInB.add("oldInBChangedInB");
         }
-        
-        
-        _possibleNamesInA.removeAll(_impossibleNamesInA);
-        _possibleNamesInB.removeAll(_impossibleNamesInB);
-		checkNames(_a, _possibleNamesInA);
-		checkNames(_b, _possibleNamesInB);
 	}
 
     private void changeObject(ObjectContainer container, String name, String newName) {
@@ -178,33 +223,23 @@ public class ReplicationFeaturesMain {
         container.set(obj);
     }
 
-    private void initNameExpectations() {
-		_possibleNamesInA = new HashSet();
-        addNames(_possibleNamesInA, INITIAL_NAMES);
-        
-		_possibleNamesInB = new HashSet();
-        addNames(_possibleNamesInB, INITIAL_NAMES);
-        
-		_impossibleNamesInA = new HashSet();
-		_impossibleNamesInB = new HashSet();
-	}
-
-	private void addNames(Set names, String[] newNames) {
+    private void addNames(Set names, String[] newNames) {
 		for (int i = 0; i < newNames.length; i++) {
 			names.add(newNames[i]);
 		}
 	}
 
 
-	private void checkNames(ObjectContainer container, Set expectedNames) {
+	private void checkNames(ObjectContainer container, Set impossibleNames) {
 	    for (int i = 0; i < ALL_POSSIBLE_NAMES.length; i++) {
             String name = ALL_POSSIBLE_NAMES[i];
-            check(container, name, expectedNames.contains(name));
+            check(container, name, !impossibleNames.contains(name));
         }
 	}
 
+	private static int counter;
 	private void check(ObjectContainer container, String name, boolean isExpected) {
-        System.out.println(name + " " + isExpected);
+        System.err.println("" + ++counter + " " + name + " " + isExpected + (container == _a ? " in A" : " in B" ));
         Replicated obj = find(container, name);
         if (isExpected) {
             Test.ensure(obj != null);
@@ -224,11 +259,8 @@ public class ReplicationFeaturesMain {
     }
     
 	private void initState() {
-		_a.set(new Replicated("a1"));
-		_a.set(new Replicated("a2"));
-
-		_b.set(new Replicated("b1"));
-		_b.set(new Replicated("b2"));
+		_a.set(new Replicated("oldInA"));
+		_b.set(new Replicated("oldInB"));
 		
 		_a.commit();
 		_b.commit();
@@ -239,8 +271,8 @@ public class ReplicationFeaturesMain {
             }
         });
 
-        replicateFrom(replication, _a);
-		replicateFrom(replication, _b);
+        replicateQueryingFrom(replication, _a);
+		replicateQueryingFrom(replication, _b);
 		replication.commit();
 
 		Test.ensure(objectsToReplicate(replication, _a).size() == 0);
@@ -254,10 +286,12 @@ public class ReplicationFeaturesMain {
 		}
 	}
 
-    private static void replicateFrom(ReplicationProcess replication, ObjectContainer origin) {
+    private static void replicateQueryingFrom(ReplicationProcess replication, ObjectContainer origin) {
         ObjectSet set = objectsToReplicate(replication, origin);
         while(set.hasNext()){
-            replication.replicate(set.next());
+            Object next = set.next();
+			System.err.println("Replicating: " + next);
+			replication.replicate(next);
         }
     }
 
