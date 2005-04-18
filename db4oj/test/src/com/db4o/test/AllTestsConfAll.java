@@ -2,6 +2,7 @@
 
 package com.db4o.test;
 
+import com.db4o.test.interfaces.*;
 import com.db4o.test.reflect.*;
 import com.db4o.test.replication.*;
 
@@ -16,7 +17,8 @@ public class AllTestsConfAll extends TestSuite{
         
         suite("com.db4o.test.jdk5.Jdk5Tests"),
         this,
-        new ReplicationTestSuite()
+        new ReplicationTestSuite(),
+        new InterfacesTestSuite()
         
     };
     
@@ -92,11 +94,11 @@ public class AllTestsConfAll extends TestSuite{
 			QueryDeleted.class,
             QueryForList.class,
 	        QueryNonExistant.class,
+            ReferenceThis.class,
             Reflection.class,
 	        Refresh.class,
             RefreshList.class,
 	        Rename.class,
-  	         //ReplicationFeatures.class,
 			SameSizeOnReopen.class,
 	        SelectDistinct.class,
 	        SerializableTranslator.class,
