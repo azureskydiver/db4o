@@ -24,17 +24,17 @@ public class QueryForList {
         Query q = Test.query();
         q.constrain(List.class);
         ObjectSet objectSet = q.execute();
-        boolean found = false;
+        int found = 0;
         while(objectSet.hasNext()){
-            List list = (List)objectSet.next();
+            Object obj = objectSet.next();
+            Test.ensure(obj instanceof List);
+            List list = (List)obj;
             if(list instanceof QueryForListArrayList){
-                if(list.get(0).equals("hi")){
-                    found = true; 
-                    break;
-                }
+                found++;
+                Test.ensure(list.get(0).equals("hi"));
             }
         }
-        Test.ensure(found);
+        Test.ensure(found == 1);
     }
     
     static class QueryForListArrayList extends ArrayList{
