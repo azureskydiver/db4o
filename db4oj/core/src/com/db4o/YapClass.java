@@ -1219,7 +1219,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
                         null,
                         null,
                         depth,
-                        YapConst.ADD_TO_ID_TREE);
+                        YapConst.ADD_TO_ID_TREE, false);
                 
             } else {
 

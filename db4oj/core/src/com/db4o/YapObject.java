@@ -63,7 +63,7 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 					stream.message("" + getID() + " activate " + i_yapClass.getName());
 				}
 		    }
-			read(ta, null, a_object, a_depth, YapConst.ADD_MEMBERS_TO_ID_TREE_ONLY);
+			read(ta, null, a_object, a_depth, YapConst.ADD_MEMBERS_TO_ID_TREE_ONLY, false);
 		}
 	}
 
@@ -197,7 +197,8 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 		YapWriter a_reader,
 		Object a_object,
 		int a_instantiationDepth,
-		int addToIDTree) {
+		int addToIDTree,
+        boolean checkIDTree) {
 
 		// a_instantiationDepth is a way of overriding instantiation
 		// in a positive manner
@@ -216,6 +217,18 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 				if (i_yapClass == null) {
 					return null;
 				}
+                
+                if(checkIDTree){
+                    // the typical side effect: static fields and enums
+                    YapObject classCreationSideEffect = stream.getYapObject(getID());
+                    if(classCreationSideEffect != null){
+                        Object obj = classCreationSideEffect.getObject();
+                        if(obj != null){
+                            return obj;
+                        }
+                        stream.yapObjectGCd(classCreationSideEffect);
+                    }
+                }
 
 				a_reader.setInstantiationDepth(a_instantiationDepth);
 				a_reader.setUpdateDepth(addToIDTree);
