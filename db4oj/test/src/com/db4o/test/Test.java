@@ -128,6 +128,7 @@ public class Test extends AllTests {
     }
 
     public static void ensureOccurrences(Object obj, int count) {
+        assertionCount++;
 		int occ = occurrences(obj);
 		if(occ != count) {
 			error("Expected count: " + count + " Count was:" + occ);
