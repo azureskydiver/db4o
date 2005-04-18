@@ -70,25 +70,30 @@ class ReplicationImpl implements ReplicationProcess {
 	}
 
 	public void commit() {
-		_peerA.commit();
-		_peerB.commit();
-
-        endReplication();
-
-		long versionA = _peerA.currentVersion() - 1;
-		long versionB = _peerB.currentVersion() - 1;
-
-		_record._version = versionB;
-
-		if (versionA > versionB) {
-			_record._version = versionA;
-			_peerB.raiseVersion(_record._version);
-		} else if (versionB > versionA) {
-			_peerA.raiseVersion(_record._version);
-		}
-
-		_record.store(_peerA);
-		_record.store(_peerB);
+        synchronized (_peerA.lock()) {
+            synchronized (_peerB.lock()) {
+        
+        		_peerA.commit();
+        		_peerB.commit();
+        
+                endReplication();
+        
+        		long versionA = _peerA.currentVersion() - 1;
+        		long versionB = _peerB.currentVersion() - 1;
+        
+        		_record._version = versionB;
+        
+        		if (versionA > versionB) {
+        			_record._version = versionA;
+        			_peerB.raiseVersion(_record._version);
+        		} else if (versionB > versionA) {
+        			_peerA.raiseVersion(_record._version);
+        		}
+        
+        		_record.store(_peerA);
+        		_record.store(_peerB);
+            }
+        }
 	}
 
 	void destinationOnNew(YapObject destinationReference) {
