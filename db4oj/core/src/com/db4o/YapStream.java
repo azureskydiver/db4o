@@ -582,8 +582,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                 yapObjectGCd(yo);
             }
             try {
-                return new YapObject(a_id).read(ta, null, null, 0,
-                    YapConst.ADD_TO_ID_TREE);
+                return new YapObject(a_id).read(ta, null, null, 0,YapConst.ADD_TO_ID_TREE, true);
             } catch (Throwable t) {
                 if (Debug.atHome) {
                     t.printStackTrace();
@@ -645,8 +644,16 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             }
             try {
                 yo = new YapObject(a_id);
-                arr[0] = yo.read(ta, null, null, 0, YapConst.ADD_TO_ID_TREE);
+                arr[0] = yo.read(ta, null, null, 0, YapConst.ADD_TO_ID_TREE, true);
+                
+                // check class creation side effect and simply retry recursively
+                // if it hits:
+                if(arr[0] != yo.getObject()){
+                    return getObjectAndYapObjectByID(ta, a_id);
+                }
+                
                 arr[1] = yo;
+                
             } catch (Throwable t) {
                 if (Debug.atHome) {
                     t.printStackTrace();
@@ -1013,7 +1020,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         TreeIntObject tio = (TreeIntObject) Tree.find(i_justPeeked, ti);
         if (tio == null) {
             return new YapObject(a_id).read(a_ta, null, null, a_depth,
-                YapConst.TRANSIENT);
+                YapConst.TRANSIENT, false);
 
         } else {
             return tio.i_object;
