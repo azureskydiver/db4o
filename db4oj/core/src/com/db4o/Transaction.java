@@ -183,6 +183,10 @@ public class Transaction {
                 DTrace.TRANS_COMMIT.logInfo( "server == " + i_stream.isServer() + ", systemtrans == " +  systemTrans);
             }
             
+            // Just to make sure that no pending deletes 
+            // get carried into the next transaction.
+            beginEndSet();
+            
             commitTransactionListeners();
 
             i_stream.checkNeededUpdates();
@@ -530,6 +534,9 @@ public class Transaction {
 
     public void rollback() {
         synchronized (i_stream.i_lock) {
+            
+            beginEndSet();
+            
             if (i_dirtyFieldIndexes != null) {
                 Iterator4 i = new Iterator4(i_dirtyFieldIndexes);
                 while (i.hasNext()) {
