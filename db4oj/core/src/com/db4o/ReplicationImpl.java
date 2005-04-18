@@ -216,14 +216,30 @@ class ReplicationImpl implements ReplicationProcess {
 		}
 		return IGNORE;
 	}
+    
 	
 	/**
 	 * called by YapStream.set()
-	 * @return id of reference in caller or 0 if not handled
+	 * @return id of reference in caller or 0 if not handled or -1
+     * if #set() should stop processing because of a direction 
+     * setting.
 	 */
 	int tryToHandle(YapStream caller, Object obj) {
         
-        YapStream other = (caller == _peerA) ? _peerB : _peerA;
+        int notProcessed = 0;
+        YapStream other = null;
+        
+        if(caller == _peerA){
+            other = _peerB;
+            if(_direction == TO_B){
+                notProcessed = -1;
+            }
+        }else{
+            other = _peerA;
+            if(_direction == TO_A){
+                notProcessed = -1;
+            }
+        }
         
 		synchronized (other.i_lock) {
             
@@ -238,20 +254,20 @@ class ReplicationImpl implements ReplicationProcess {
 			
 			if (referenceA == null) {
 				if(referenceB == null) {
-					return 0;
+					return notProcessed;
 				}
 				
 				_sourceReference = referenceB;
 				
 				attB = referenceB.virtualAttributes(_transB);
                 if(attB == null){
-                    return 0;
+                    return notProcessed;
                 }
 				
 				Object[] arr = _transA.objectAndYapObjectBySignature(attB.i_uuid,
 						attB.i_database.i_signature);
 				if (arr[0] == null) {
-					return 0;
+					return notProcessed;
 				}
 				
 				referenceA = (YapObject) arr[1];
@@ -263,7 +279,7 @@ class ReplicationImpl implements ReplicationProcess {
 				
 				attA = referenceA.virtualAttributes(_transA);
                 if(attA == null){
-                    return 0;
+                    return notProcessed;
                 }
                 
                 referenceB = null;
@@ -273,7 +289,7 @@ class ReplicationImpl implements ReplicationProcess {
 					Object[] arr = _transB.objectAndYapObjectBySignature(attA.i_uuid,
 							attA.i_database.i_signature);
 					if (arr[0] == null) {
-						return 0;
+						return notProcessed;
 					}
 					referenceB = (YapObject) arr[1];
 					objectB = arr[0];
@@ -285,7 +301,7 @@ class ReplicationImpl implements ReplicationProcess {
 			}
             
             if(attA == null || attB == null){
-                return 0;
+                return notProcessed;
             }
 			
 			_peerA.refresh(objectA, 1);
