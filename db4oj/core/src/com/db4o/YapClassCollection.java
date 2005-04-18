@@ -116,23 +116,24 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         YapClassCollectionIterator i = iterator();
         while (i.hasNext()) {
             YapClass yc = i.nextClass();
-            if (claxx.isAssignableFrom(yc.classReflector())) {
-                boolean found = false;
-                Iterator4 j = col.iterator();
-                while (j.hasNext()) {
-                    YapClass existing = (YapClass)j.next();
-                    YapClass higher = yc.getHigherHierarchy(existing);
-                    if (higher != null) {
-                        found = true;
-                        if (higher == yc) {
-                            col.remove(existing);
-                            col.add(yc);
-                        }
-                        break;
-                    }
-                }
-                if (!found) {
+            ReflectClass candidate = yc.classReflector();
+            if(! candidate.isInterface()){
+                if (claxx.isAssignableFrom(candidate)) {
                     col.add(yc);
+                    Iterator4 j = col.iterator();
+                    while (j.hasNext()) {
+                        YapClass existing = (YapClass)j.next();
+                        if(existing != yc){
+                            YapClass higher = yc.getHigherHierarchy(existing);
+                            if (higher != null) {
+                                if (higher == yc) {
+                                    col.remove(existing);
+                                }else{
+                                    col.remove(yc);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
