@@ -10,27 +10,86 @@ public class AllTestsConfSingle extends TestSuite{
 
 	static protected final String TEST_CONFIGURATION = "AllTestsConfSingle";
 	
-    static TestSuite[] TEST_SUITES = new TestSuite[]{
-        new ReplicationTestSuite(),
-        // new AllTestsConfSingle(),
+    TestSuite[] TEST_SUITES = new TestSuite[]{
+        
+        suite("com.db4o.test.jdk5.Jdk5Tests"),
+        this,
+        // new ReplicationTestSuite()
+        
     };
 
     
     public Class[] tests(){
         return new Class[] {
+            ArrayNOrder.class,
+            ArrayListInHashMap.class,
+            Backup.class,
+            BindFileSize.class,
+            Callbacks.class,
+            CallConstructors.class,
+            CascadedDeleteUpdate.class,
+            CascadeDeleteArray.class,
+            CascadeDeleteDeleted.class,
+            CascadeDeleteFalse.class,
+            CascadeOnActivate.class,
+            CascadeOnDelete.class,
+            CascadeOnUpdate.class,
+            CascadeToArray.class,
+            CascadeToExistingVectorMember.class,
+            CascadeToHashMap.class,
+            CascadeToHashtable.class,
+            CascadeToVector.class,
+            CaseInsensitive.class,
+            Circular1.class,
+            Circular2.class,
+            CollectionActivation.class,
+            CreateIndex.class,
+            CreateIndexInherited.class,
+            CustomActivationDepth.class,
+            GenericObjects.class,
+            Db4oLinkedList.class,
+            Db4oHashMap.class,
+            DeleteRemovedMapElements.class,
+            DeepSet.class,
+            DifferentAccessPaths.class,
+            DiscreteArrayInMap.class,
+            DualDelete.class,
+            ExtMethods.class,
+            ExtendsDate.class,
+            ExtendsHashMap.class,
+            ExternalBlobs.class,
+            FileSizeOnReopen.class,
+            FulltextIndex.class,
+            GetAll.class,
+            GreaterOrEqual.class,
+            HashMapClearUnsaved.class,
+            IndexedByIdentity.class,
+            IndexCreateDrop.class,
+            IndexedUpdatesWithNull.class,
+            IsStored.class,
+            Isolation.class,
+            KeepCollectionContent.class,
+            MassUpdates.class,
+            Messaging.class,
+            MultipleEvaluationGetObjectCalls.class,
+            NeverAnObjectStored.class,
+            NoInstanceStored.class,
+            NoInternalClasses.class,
+            NullWrapperQueries.class,
+            ObjectContainerIsTransient.class,
+            ObjectSetIDs.class,
+            OrClassConstraintInList.class,
+            ParameterizedEvaluation.class,
+            PersistStaticFieldValues.class,
             
-//            QueryForList.class
+            // disabled because it fails due to fix
+            // See comments in: YapClass.deleteEmbedded1()
             
-//            SimplestPossible.class,
-//            KnownClasses.class
+            // PrimitiveArrayFileSize.class,
             
-        
-            ReplicationFeatures.class,
-            
-            // Soda.class
-           
-            // CallConstructors.class
-        
+            PrimitivesInCollection.class,
+            QueryDeleted.class,
+            QueryForList.class,
     	};
     }
 
@@ -47,7 +106,7 @@ public class AllTestsConfSingle extends TestSuite{
     /**
       * run the tests stand-alone 
       */
-    public boolean SOLO = true;
+    public boolean SOLO = false;
     
     /**
       * run the tests in client/server mode 
