@@ -68,12 +68,11 @@ public class ReplicationFeaturesMain {
 		replication.commit();
 		Test.ensure(!_b.get(null).hasNext());
 		
-		System.exit(0);
-		
-		
+/*		
 		tstDirection(A);
 		tstDirection(B);
 		tstDirection(BOTH);
+	*/
 		
 //      TODO: replication.checkConflict(obj); //(peek)
 		
