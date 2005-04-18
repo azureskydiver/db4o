@@ -15,7 +15,7 @@ public class AllTestsConfAll extends TestSuite{
         // remove the com.db4o.test.jdk5 package 
         // to run on JDKs prior to 1.5
         
-        suite("com.db4o.test.jdk5.Jdk5Tests"),
+        suite("com.db4o.test.jdk5.Jdk5TestSuite"),
         this,
         new ReplicationTestSuite(),
         new InterfacesTestSuite()

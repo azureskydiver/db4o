@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.reflect.generic.*;
+import com.db4o.test.interfaces.*;
 import com.db4o.test.reflect.*;
 import com.db4o.test.replication.*;
 
@@ -12,7 +13,7 @@ public class AllTestsConfSingle extends TestSuite{
 	
     TestSuite[] TEST_SUITES = new TestSuite[]{
         
-        suite("com.db4o.test.jdk5.Jdk5Tests"),
+        // suite("com.db4o.test.jdk5.Jdk5TestSuite"),
         this,
         // new ReplicationTestSuite()
         
@@ -21,75 +22,7 @@ public class AllTestsConfSingle extends TestSuite{
     
     public Class[] tests(){
         return new Class[] {
-            ArrayNOrder.class,
-            ArrayListInHashMap.class,
-            Backup.class,
-            BindFileSize.class,
-            Callbacks.class,
-            CallConstructors.class,
-            CascadedDeleteUpdate.class,
-            CascadeDeleteArray.class,
-            CascadeDeleteDeleted.class,
-            CascadeDeleteFalse.class,
-            CascadeOnActivate.class,
-            CascadeOnDelete.class,
-            CascadeOnUpdate.class,
-            CascadeToArray.class,
-            CascadeToExistingVectorMember.class,
-            CascadeToHashMap.class,
-            CascadeToHashtable.class,
-            CascadeToVector.class,
-            CaseInsensitive.class,
-            Circular1.class,
-            Circular2.class,
-            CollectionActivation.class,
-            CreateIndex.class,
-            CreateIndexInherited.class,
-            CustomActivationDepth.class,
-            GenericObjects.class,
-            Db4oLinkedList.class,
-            Db4oHashMap.class,
-            DeleteRemovedMapElements.class,
-            DeepSet.class,
-            DifferentAccessPaths.class,
-            DiscreteArrayInMap.class,
-            DualDelete.class,
-            ExtMethods.class,
-            ExtendsDate.class,
-            ExtendsHashMap.class,
-            ExternalBlobs.class,
-            FileSizeOnReopen.class,
-            FulltextIndex.class,
-            GetAll.class,
-            GreaterOrEqual.class,
-            HashMapClearUnsaved.class,
-            IndexedByIdentity.class,
-            IndexCreateDrop.class,
-            IndexedUpdatesWithNull.class,
-            IsStored.class,
-            Isolation.class,
-            KeepCollectionContent.class,
-            MassUpdates.class,
-            Messaging.class,
-            MultipleEvaluationGetObjectCalls.class,
-            NeverAnObjectStored.class,
-            NoInstanceStored.class,
-            NoInternalClasses.class,
-            NullWrapperQueries.class,
-            ObjectContainerIsTransient.class,
-            ObjectSetIDs.class,
-            OrClassConstraintInList.class,
-            ParameterizedEvaluation.class,
-            PersistStaticFieldValues.class,
-            
-            // disabled because it fails due to fix
-            // See comments in: YapClass.deleteEmbedded1()
-            
-            // PrimitiveArrayFileSize.class,
-            
-            PrimitivesInCollection.class,
-            QueryDeleted.class,
-            QueryForList.class,
+            ThreeSomeParent.class
     	};
     }
 
@@ -101,12 +34,12 @@ public class AllTestsConfSingle extends TestSuite{
 	/**
 	 * delete the database files
 	 */
-	public boolean DELETE_FILE = true;
+	public boolean DELETE_FILE = false;
 
     /**
       * run the tests stand-alone 
       */
-    public boolean SOLO = false;
+    public boolean SOLO = true;
     
     /**
       * run the tests in client/server mode 
