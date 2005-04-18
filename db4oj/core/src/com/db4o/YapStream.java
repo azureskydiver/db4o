@@ -441,20 +441,22 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     final void delete4(Transaction ta, YapObject yo, Object a_object, int a_cascade) {
-        boolean success = false;
-        if (yo.beginProcessing()) {
-            YapClass yc = yo.getYapClass();
-            Object obj = yo.getObject();
-            if (yc.dispatchEvent(this, obj,
-                EventDispatcher.CAN_DELETE)) {
-                if(delete5(ta, yo, a_cascade)){
-                	yc.dispatchEvent(this, obj, EventDispatcher.DELETE);
-                    if (i_config.i_messageLevel > YapConst.STATE) {
-                        message("" + yo.getID() + " delete " + yo.getYapClass().getName());
+        // The passed YapObject can be null, when calling from Transaction.
+        if(yo != null){
+            if (yo.beginProcessing()) {
+                YapClass yc = yo.getYapClass();
+                Object obj = yo.getObject();
+                if (yc.dispatchEvent(this, obj,
+                    EventDispatcher.CAN_DELETE)) {
+                    if(delete5(ta, yo, a_cascade)){
+                    	yc.dispatchEvent(this, obj, EventDispatcher.DELETE);
+                        if (i_config.i_messageLevel > YapConst.STATE) {
+                            message("" + yo.getID() + " delete " + yo.getYapClass().getName());
+                        }
                     }
                 }
+                yo.endProcessing();
             }
-            yo.endProcessing();
         }
     }
 
