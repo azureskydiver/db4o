@@ -129,7 +129,7 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
 	                        if (mi.patchLength > 0) {
 	                            stream.free(mi.patchAddress, mi.patchLength);
 	                        }
-	                        stream.delete1(systemTrans, mi);
+	                        stream.delete1(systemTrans, mi, false);
 	                        i_metaField.index = null;
 	                        stream.setInternal(systemTrans, i_metaField, YapConst.UNSPECIFIED, false);
 	                    }

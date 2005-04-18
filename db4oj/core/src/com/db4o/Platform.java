@@ -545,7 +545,7 @@ public final class Platform {
     }
     
     public static boolean storeStaticFieldValues(Reflector reflector, ReflectClass claxx) {
-        return jdk().storeStaticFieldValues(reflector, claxx);
+        return jdk().isEnum(reflector, claxx);
     }
 
     private static final void translate(Config4Impl config, ObjectClass oc, String to) {

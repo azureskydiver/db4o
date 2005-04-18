@@ -9,7 +9,7 @@ class JDK_5 extends JDK_1_4 {
     
     private ReflectClass enumClass;
     
-    boolean storeStaticFieldValues(Reflector reflector, ReflectClass claxx) {
+    boolean isEnum(Reflector reflector, ReflectClass claxx) {
         
         if(claxx == null){
             return false;

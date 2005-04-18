@@ -456,7 +456,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
 
             YapObject yo = stream.getYapObject(a_id);
             if (yo != null) {
-                a_bytes.getStream().delete3(a_bytes.getTransaction(), yo, obj,cascade);
+                a_bytes.getStream().delete3(a_bytes.getTransaction(), yo, obj,cascade, false);
             }
         }
     }

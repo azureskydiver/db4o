@@ -109,7 +109,7 @@ public class Transaction {
                                 obj = arr[0];
                                 yo = (YapObject)arr[1];
                             }
-                            i_stream.delete4(finalThis,yo , obj, cascade);
+                            i_stream.delete4(finalThis,yo , obj, cascade, false);
                         }
                         i_delete = Tree.add(i_delete, new TreeIntObject(tio.i_key, null));
                     }
