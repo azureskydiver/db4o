@@ -189,8 +189,8 @@ public class YapClient extends YapStream implements ExtClient {
         return ((MsgD)expectedResponse(Msg.ID_LIST)).readLong();
     }
 
-    final boolean delete5(Transaction ta, YapObject yo, int a_cascade) {
-        writeMsg(Msg.DELETE.getWriterForInt(i_trans, yo.getID()));
+    final boolean delete5(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
+        writeMsg(Msg.DELETE.getWriterFor2Ints(i_trans, yo.getID(), userCall ? 1 : 0 ));
         return true;
     }
 

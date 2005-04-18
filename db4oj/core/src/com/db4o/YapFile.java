@@ -89,7 +89,7 @@ public abstract class YapFile extends YapStream {
         return new QResult(a_ta);
     }
 
-    final boolean delete5(Transaction ta, YapObject yo, int a_cascade) {
+    final boolean delete5(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
         int id = yo.getID();
         YapWriter reader = readWriterByID(ta, id);
         if (reader != null) {

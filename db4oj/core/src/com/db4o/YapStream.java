@@ -221,6 +221,16 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         idTreeAdd(a_yapObject);
         hcTreeAdd(a_yapObject);
     }
+    
+    private final boolean breakDeleteForEnum(YapObject reference, boolean userCall){
+        if(userCall){
+            return false;
+        }
+        if(reference == null){
+            return false;
+        }
+        return Platform.jdk().isEnum(reflector(), reference.getYapClass().classReflector());
+    }
 
     boolean canUpdate() {
         return true;
@@ -401,20 +411,20 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     public void delete(Object a_object) {
         synchronized (i_lock) {
-            Transaction ta = delete1(null, a_object);
+            Transaction ta = delete1(null, a_object, true);
             ta.beginEndSet();
         }
     }
 
-    final Transaction delete1(Transaction ta, Object a_object) {
+    final Transaction delete1(Transaction ta, Object a_object, boolean userCall) {
         ta = checkTransaction(ta);
         if (a_object != null) {
             i_entryCounter++;
             if (Deploy.debug) {
-                delete2(ta, a_object);
+                delete2(ta, a_object, userCall);
             } else {
                 try {
-                    delete2(ta, a_object);
+                    delete2(ta, a_object, userCall);
                 } catch (Throwable t) {
                     fatalException(t);
                 }
@@ -424,31 +434,42 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return ta;
     }
 
-    private final void delete2(Transaction ta, Object a_object) {
+    private final void delete2(Transaction ta, Object a_object, boolean userCall) {
         YapObject yo = getYapObject(a_object);
         if (yo != null) {
-            int id = yo.getID();
-            delete3(ta, yo, a_object, 0);
+            delete3(ta, yo, a_object, 0, userCall);
         }
     }
     
-    final void delete3(Transaction ta, YapObject yo, Object a_object,  int a_cascade) {
+    final void delete3(Transaction ta, YapObject yo, Object a_object,  int a_cascade, boolean userCall) {
+        
+        // This check is performed twice, here and in delete4, intentionally.
+        if(breakDeleteForEnum(yo, userCall)){
+            return;
+        }
+        
         if(a_object instanceof SecondClass){
-            delete4(ta, yo, a_object, a_cascade);
+            delete4(ta, yo, a_object, a_cascade, userCall);
         }else{
             ta.delete(yo, a_object, a_cascade, true);
         }
     }
 
-    final void delete4(Transaction ta, YapObject yo, Object a_object, int a_cascade) {
+    final void delete4(Transaction ta, YapObject yo, Object a_object, int a_cascade, boolean userCall) {
         // The passed YapObject can be null, when calling from Transaction.
         if(yo != null){
             if (yo.beginProcessing()) {
+                
+                // This check is performed twice, here and in delete3, intentionally.
+                if(breakDeleteForEnum(yo, userCall)){
+                    return;
+                }
+                
                 YapClass yc = yo.getYapClass();
                 Object obj = yo.getObject();
                 if (yc.dispatchEvent(this, obj,
                     EventDispatcher.CAN_DELETE)) {
-                    if(delete5(ta, yo, a_cascade)){
+                    if(delete5(ta, yo, a_cascade, userCall)){
                     	yc.dispatchEvent(this, obj, EventDispatcher.DELETE);
                         if (i_config.i_messageLevel > YapConst.STATE) {
                             message("" + yo.getID() + " delete " + yo.getYapClass().getName());
@@ -460,7 +481,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         }
     }
 
-    abstract boolean delete5(Transaction ta, YapObject yapObject, int a_cascade);
+    abstract boolean delete5(Transaction ta, YapObject yapObject, int a_cascade, boolean userCall);
 
     boolean detectSchemaChanges() {
         // overriden in YapClient

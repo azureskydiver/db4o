@@ -4,7 +4,8 @@ package com.db4o.test.interfaces;
 
 import com.db4o.test.*;
 
-public class InterfacesTestSuite extends TestSuite{   
+public class InterfacesTestSuite extends TestSuite{
+    
     public Class[] tests(){
         return new Class[] {
             ThreeSomeParent.class

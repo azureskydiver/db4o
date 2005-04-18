@@ -89,7 +89,7 @@ public class JDK {
 	void setAccessible(Object a_accessible) {
 	}
     
-    boolean storeStaticFieldValues(Reflector reflector, ReflectClass clazz) {
+    boolean isEnum(Reflector reflector, ReflectClass clazz) {
         return false;
     }
 	
