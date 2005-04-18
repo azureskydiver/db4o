@@ -758,14 +758,14 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     final void idTreeAdd(YapObject a_yo) {
+        if(DTrace.enabled){
+            DTrace.ID_TREE_ADD.log(a_yo.getID());
+        }
         if (Deploy.debug) {
             YapObject yo = getYapObject(a_yo.getID());
             if (yo != null) {
                 System.out.println("Duplicate alarm id_Tree:" + a_yo.getID());
             }
-        }
-        if(DTrace.enabled){
-            DTrace.ID_TREE_ADD.log(a_yo.getID());
         }
         i_idTree = i_idTree.id_add(a_yo);
     }

@@ -17,12 +17,14 @@ public class DTrace {
     private static final Object init(){
         if(enabled){
             
+            breakOnEvent(49);
+            
             // address: 244346, 44
             
             // addRange(5130);
             
             // addRange(5948);
-            addRange(3988);
+            addRange(4580);
             
             // addRangeWithLength(1000000, 10000000);
             
@@ -61,7 +63,8 @@ public class DTrace {
             
             // turnAllOffExceptFor(new DTrace[] {FREE, FREE_ON_COMMIT});
             // turnAllOffExceptFor(new DTrace[] {CANDIDATE_READ, CREATE_CANDIDATE, DONOTINCLUDE, EVALUATE_SELF});
-            turnAllOffExceptFor(new DTrace[] {GET_YAPOBJECT, ID_TREE_ADD});
+            turnAllOffExceptFor(new DTrace[] {GET_YAPOBJECT});
+            // turnAllOffExceptFor(new DTrace[] {GET_YAPOBJECT, ID_TREE_ADD});
          
         }
         return null;
@@ -85,9 +88,13 @@ public class DTrace {
     private boolean _log;
     private String _tag;
     
-    private static long[] rangeStart;
-    private static long [] rangeEnd;
-    private static int rangeCount;
+    private static long[] _rangeStart;
+    private static long [] _rangeEnd;
+    private static int _rangeCount;
+    
+    private static long _eventNr;
+    private static long[] _breakEventNrs;
+    private static int _breakEventCount;
     
     public static DTrace BIND;
     public static DTrace CANDIDATE_READ;
@@ -167,19 +174,22 @@ public class DTrace {
                 return;
             }
             boolean inRange = false;
-            for (int i = 0; i < rangeCount; i++) {
-                if(start >= rangeStart[i] && start <= rangeEnd[i]){
+            for (int i = 0; i < _rangeCount; i++) {
+                if(start >= _rangeStart[i] && start <= _rangeEnd[i]){
                     inRange = true;
                     break;
                 }
-                if(end != 0 && (end >= rangeStart[i] && end <= rangeEnd[i])){
+                if(end != 0 && (end >= _rangeStart[i] && end <= _rangeEnd[i])){
                     inRange = true;
                     break;
                 }
             }
             if(inRange || (start == -1 )){
                 if(_log){
+                    _eventNr ++;
                     StringBuffer sb = new StringBuffer(":");
+                    sb.append(formatInt(_eventNr, 6));
+                    sb.append(":");
                     if(start != 0){
                         sb.append(formatInt(start));
                         sb.append(":");
@@ -199,7 +209,16 @@ public class DTrace {
                     System.out.println(sb);
                 }
                 if(_break){
-                    breakPoint();
+                    if(_breakEventCount > 0){
+                        for (int i = 0; i < _breakEventCount; i++) {
+                            if(_breakEventNrs[i] == _eventNr){
+                                breakPoint();
+                                break;
+                            }
+                        }
+                    }else{
+                        breakPoint();
+                    }
                 }
             }
         }
@@ -219,23 +238,41 @@ public class DTrace {
     
     public static void addRangeWithEnd(long start, long end){
         if(enabled){
-            if(rangeStart == null){
-                rangeStart = new long[100];
-                rangeEnd = new long[100];
+            if(_rangeStart == null){
+                _rangeStart = new long[100];
+                _rangeEnd = new long[100];
             }
-            rangeStart[rangeCount] = start;
-            rangeEnd[rangeCount] = end;
-            rangeCount++;
+            _rangeStart[_rangeCount] = start;
+            _rangeEnd[_rangeCount] = end;
+            _rangeCount++;
         }
     }
     
-    private String formatInt(long i){
+    private static void breakOnEvent(long eventNr){
+        if(enabled){
+            if(_breakEventNrs == null){
+                _breakEventNrs = new long[100];
+            }
+            _breakEventNrs[_breakEventCount] = eventNr;
+            _breakEventCount ++;
+        }
+    }
+    
+    
+    private String formatInt(long i, int len){
         if(enabled){
             String str = "              ";
             if( i != 0){
                 str += i + " ";
             }
-            return str.substring(str.length() - 12);
+            return str.substring(str.length() - len);
+        }
+        return null;
+    }
+    
+    private String formatInt(long i){
+        if(enabled){
+            return formatInt(i, 10);
         }
         return null;
     }
