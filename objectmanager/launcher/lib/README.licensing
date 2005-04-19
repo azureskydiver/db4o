@@ -1,3 +1,7 @@
+Open-source licensing of software distributed by db4objects
+-----------------------------------------------------------
+
+
 Various jar files contained here are covered by various open-source licenses.
 For copies of the specific license files, please see the "licenses" folder.
 
@@ -22,8 +26,7 @@ jface.jar, osgi_core.jar, runtime.jar
 	- Eclipse Public License
 
 
-Apache software:
-================
+Apache software:================
 
 jakarta-oro-2.7.7.jar
 	- Apache Software License 1.1
