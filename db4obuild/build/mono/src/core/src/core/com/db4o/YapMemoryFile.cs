@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal class YapMemoryFile : com.db4o.YapFile
+	/// <exclude></exclude>
+	public class YapMemoryFile : com.db4o.YapFile
 	{
 		private bool i_closed = false;
 
@@ -59,9 +60,9 @@ namespace com.db4o
 
 		internal override bool close2()
 		{
+			i_entryCounter++;
 			try
 			{
-				i_entryCounter++;
 				write(true);
 			}
 			catch (System.Exception t)

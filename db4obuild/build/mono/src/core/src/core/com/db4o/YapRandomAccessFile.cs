@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal class YapRandomAccessFile : com.db4o.YapFile
+	/// <exclude></exclude>
+	public class YapRandomAccessFile : com.db4o.YapFile
 	{
 		private com.db4o.Session i_session;
 
@@ -28,7 +29,7 @@ namespace com.db4o
 
 		private com.db4o.io.IoAdapter i_timerFile;
 
-		private com.db4o.io.IoAdapter i_backupFile;
+		private volatile com.db4o.io.IoAdapter i_backupFile;
 
 		private byte[] i_timerBytes = new byte[com.db4o.YapConst.LONG_BYTES];
 
@@ -118,9 +119,9 @@ namespace com.db4o
 				if (stopSession)
 				{
 					freePrefetchedPointers();
+					i_entryCounter++;
 					try
 					{
-						i_entryCounter++;
 						write(true);
 					}
 					catch (System.Exception t)
@@ -346,6 +347,17 @@ namespace com.db4o
 
 		internal override void syncFiles()
 		{
+			try
+			{
+				i_file.sync();
+				if (needsLockFileThread() && com.db4o.Debug.lockFile)
+				{
+					i_timerFile.sync();
+				}
+			}
+			catch (System.Exception e)
+			{
+			}
 		}
 
 		internal override bool writeAccessTime()

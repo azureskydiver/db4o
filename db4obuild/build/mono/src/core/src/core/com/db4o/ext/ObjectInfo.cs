@@ -43,8 +43,29 @@ namespace com.db4o.ext
 		object getObject();
 
 		/// <summary>returns a UUID representation of the referenced object.</summary>
-		/// <remarks>returns a UUID representation of the referenced object.</remarks>
+		/// <remarks>
+		/// returns a UUID representation of the referenced object.
+		/// UUID generation has to be turned on, in order to be able
+		/// to use this feature:
+		/// <see cref="com.db4o.config.Configuration.generateUUIDs">com.db4o.config.Configuration.generateUUIDs
+		/// 	</see>
+		/// </remarks>
 		/// <returns>the UUID of the referenced object.</returns>
 		com.db4o.ext.Db4oUUID getUUID();
+
+		/// <summary>
+		/// returns the transaction serial number ("version") the
+		/// referenced object was stored with last.
+		/// </summary>
+		/// <remarks>
+		/// returns the transaction serial number ("version") the
+		/// referenced object was stored with last.
+		/// Version number generation has to be turned on, in order to
+		/// be able to use this feature:
+		/// <see cref="com.db4o.config.Configuration.generateVersionNumbers">com.db4o.config.Configuration.generateVersionNumbers
+		/// 	</see>
+		/// </remarks>
+		/// <returns>the version number.</returns>
+		long getVersion();
 	}
 }

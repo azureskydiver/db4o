@@ -54,20 +54,13 @@ namespace com.db4o
 			i_candidates = null;
 		}
 
-		internal QCandidate(com.db4o.QCandidates candidates, int id, bool include) : base
-			(id)
-		{
-			i_candidates = candidates;
-			i_order = this;
-			i_include = include;
-		}
-
-		internal QCandidate(com.db4o.QCandidates candidates, object obj, int id) : base(id
-			)
+		internal QCandidate(com.db4o.QCandidates candidates, object obj, int id, bool include
+			) : base(id)
 		{
 			i_candidates = candidates;
 			i_order = this;
 			i_member = obj;
+			i_include = include;
 		}
 
 		internal virtual void addDependant(com.db4o.QCandidate a_candidate)
@@ -142,14 +135,14 @@ namespace com.db4o
 									candidates.evaluate();
 									com.db4o.Tree[] pending = new com.db4o.Tree[1];
 									bool[] innerRes = { isNot };
-									candidates.traverse(new _AnonymousInnerClass149(this, innerRes, isNot, pending));
+									candidates.traverse(new _AnonymousInnerClass146(this, innerRes, isNot, pending));
 									if (isNot)
 									{
 										qcon.not();
 									}
 									if (pending[0] != null)
 									{
-										pending[0].traverse(new _AnonymousInnerClass214(this));
+										pending[0].traverse(new _AnonymousInnerClass211(this));
 									}
 									if (!innerRes[0])
 									{
@@ -200,9 +193,9 @@ namespace com.db4o
 			return true;
 		}
 
-		private sealed class _AnonymousInnerClass149 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass146 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass149(QCandidate _enclosing, bool[] innerRes, bool isNot
+			public _AnonymousInnerClass146(QCandidate _enclosing, bool[] innerRes, bool isNot
 				, com.db4o.Tree[] pending)
 			{
 				this._enclosing = _enclosing;
@@ -220,13 +213,13 @@ namespace com.db4o
 				}
 				if (cand.i_pendingJoins != null)
 				{
-					cand.i_pendingJoins.traverse(new _AnonymousInnerClass161(this, pending));
+					cand.i_pendingJoins.traverse(new _AnonymousInnerClass158(this, pending));
 				}
 			}
 
-			private sealed class _AnonymousInnerClass161 : com.db4o.Visitor4
+			private sealed class _AnonymousInnerClass158 : com.db4o.Visitor4
 			{
-				public _AnonymousInnerClass161(_AnonymousInnerClass149 _enclosing, com.db4o.Tree[]
+				public _AnonymousInnerClass158(_AnonymousInnerClass146 _enclosing, com.db4o.Tree[]
 					 pending)
 				{
 					this._enclosing = _enclosing;
@@ -252,7 +245,7 @@ namespace com.db4o
 					}
 				}
 
-				private readonly _AnonymousInnerClass149 _enclosing;
+				private readonly _AnonymousInnerClass146 _enclosing;
 
 				private readonly com.db4o.Tree[] pending;
 			}
@@ -266,9 +259,9 @@ namespace com.db4o
 			private readonly com.db4o.Tree[] pending;
 		}
 
-		private sealed class _AnonymousInnerClass214 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass211 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass214(QCandidate _enclosing)
+			public _AnonymousInnerClass211(QCandidate _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -502,8 +495,8 @@ namespace com.db4o
 				i_bytes._offset = offset;
 				if (id != 0)
 				{
-					com.db4o.QCandidate candidate = new com.db4o.QCandidate(candidateCollection, id, 
-						true);
+					com.db4o.QCandidate candidate = new com.db4o.QCandidate(candidateCollection, null
+						, id, true);
 					candidate.i_root = getRoot();
 					return candidate;
 				}

@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal class YapClass : com.db4o.YapMeta, com.db4o.YapDataType, com.db4o.ext.StoredClass
+	/// <exclude></exclude>
+	public class YapClass : com.db4o.YapMeta, com.db4o.YapDataType, com.db4o.ext.StoredClass
 		, com.db4o.UseSystemTransaction
 	{
 		private com.db4o.Collection4 i_addMembersDependancies;
@@ -558,7 +559,7 @@ namespace com.db4o
 				com.db4o.YapObject yo = stream.getYapObject(a_id);
 				if (yo != null)
 				{
-					a_bytes.getStream().delete3(a_bytes.getTransaction(), yo, obj, cascade);
+					a_bytes.getStream().delete3(a_bytes.getTransaction(), yo, obj, cascade, false);
 				}
 			}
 		}
@@ -956,13 +957,13 @@ namespace com.db4o
 		public virtual com.db4o.YapField getYapField(string name)
 		{
 			com.db4o.YapField[] yf = new com.db4o.YapField[1];
-			forEachYapField(new _AnonymousInnerClass789(this, name, yf));
+			forEachYapField(new _AnonymousInnerClass793(this, name, yf));
 			return yf[0];
 		}
 
-		private sealed class _AnonymousInnerClass789 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass793 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass789(YapClass _enclosing, string name, com.db4o.YapField[]
+			public _AnonymousInnerClass793(YapClass _enclosing, string name, com.db4o.YapField[]
 				 yf)
 			{
 				this._enclosing = _enclosing;
@@ -1395,7 +1396,7 @@ namespace com.db4o
 
 		internal override int ownLength()
 		{
-			int len = i_stream.i_stringIo.shortLength(getName()) + com.db4o.YapConst.OBJECT_LENGTH
+			int len = i_stream.stringIO().shortLength(getName()) + com.db4o.YapConst.OBJECT_LENGTH
 				 + (com.db4o.YapConst.YAPINT_LENGTH * 2) + (com.db4o.YapConst.YAPID_LENGTH * 2);
 			if (i_fields != null)
 			{
@@ -1457,7 +1458,7 @@ namespace com.db4o
 						}
 					}
 					return new com.db4o.YapObject(id).read(trans, null, null, depth, com.db4o.YapConst
-						.ADD_TO_ID_TREE);
+						.ADD_TO_ID_TREE, false);
 				}
 				else
 				{
@@ -1539,15 +1540,15 @@ namespace com.db4o
 				{
 					int[] idgen = { -2 };
 					a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
-					com.db4o.Platform.forEachCollectionElement(obj, new _AnonymousInnerClass1293(this
+					com.db4o.Platform.forEachCollectionElement(obj, new _AnonymousInnerClass1302(this
 						, trans, idgen, a_candidates));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1293 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass1302 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass1293(YapClass _enclosing, com.db4o.Transaction trans, 
+			public _AnonymousInnerClass1302(YapClass _enclosing, com.db4o.Transaction trans, 
 				int[] idgen, com.db4o.QCandidates a_candidates)
 			{
 				this._enclosing = _enclosing;
@@ -1563,7 +1564,8 @@ namespace com.db4o
 				{
 					elemid = idgen[0]--;
 				}
-				a_candidates.addByIdentity(new com.db4o.QCandidate(a_candidates, elem, elemid));
+				a_candidates.addByIdentity(new com.db4o.QCandidate(a_candidates, elem, elemid, true
+					));
 			}
 
 			private readonly YapClass _enclosing;
@@ -1617,11 +1619,10 @@ namespace com.db4o
 			try
 			{
 				int len = a_reader.readInt();
-				len = len * a_trans.i_stream.i_stringIo.bytesPerChar();
+				len = len * a_trans.i_stream.stringIO().bytesPerChar();
 				i_nameBytes = new byte[len];
 				j4o.lang.JavaSystem.arraycopy(a_reader._buffer, a_reader._offset, i_nameBytes, 0, 
 					len);
-				i_nameBytes = com.db4o.Platform.updateClassName(i_nameBytes);
 				a_reader.incrementOffset(len + com.db4o.YapConst.YAPINT_LENGTH);
 				setStateUnread();
 				bitFalse(com.db4o.YapConst.CHECKED_CHANGES);
@@ -1665,7 +1666,7 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual com.db4o.reflect.Reflector reflector()
+		internal virtual com.db4o.reflect.generic.GenericReflector reflector()
 		{
 			return i_stream.reflector();
 		}
@@ -1694,7 +1695,7 @@ namespace com.db4o
 			{
 				if (i_nameBytes != null)
 				{
-					i_name = a_stream.i_stringIo.read(i_nameBytes);
+					i_name = a_stream.stringIO().read(i_nameBytes);
 				}
 			}
 			else
@@ -2068,8 +2069,8 @@ namespace com.db4o
 			}
 			else
 			{
-				i_lastID = a_bytes.getStream().set3(a_bytes.getTransaction(), a_object, a_bytes.getUpdateDepth
-					(), true);
+				i_lastID = a_bytes.getStream().setInternal(a_bytes.getTransaction(), a_object, a_bytes
+					.getUpdateDepth(), true);
 				a_bytes.writeInt(i_lastID);
 			}
 		}

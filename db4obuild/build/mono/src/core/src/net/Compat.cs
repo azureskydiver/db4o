@@ -26,7 +26,7 @@ using System.Threading;
 
 namespace com.db4o {
 
-	/// <exlude />
+	/// <exclude />
     public class Compat {
 
         public static void addShutDownHook(EventHandler handler) {
@@ -59,11 +59,7 @@ namespace com.db4o {
         }
 
         public static void lockFileStream(FileStream fs) {
-            // Problems on earlier Mono versions.
-            // TODO: Check, if the functionality works.
-            // If yes, the normal .NET version will work on 
-            // Mono also.
-            // fs.Lock(0, 1);
+            fs.Lock(0, 1);
         }
 
         public static double longToDouble(long a_long) {
@@ -78,20 +74,31 @@ namespace com.db4o {
             Monitor.PulseAll(obj);
         }
 
-        public static string stackTrace() {
-            return new StackTrace().ToString();
+        public static com.db4o.reflect.ReflectConstructor serializationConstructor(Type type){
+            return new com.db4o.reflect.net.SerializationConstructor(type);
         }
 
-        public static string threadGetName(Thread thread) {
-            return thread.Name;
+        public static string stackTrace() {
+            return new StackTrace().ToString();
         }
 
         public static void threadSetName(Thread thread, string name) {
             thread.Name = name;
         }
 
+        public static string threadGetName(Thread thread) {
+            return thread.Name;
+        }
+
         public static void wait(object obj, long timeout) {
             Monitor.Wait(obj, (int)timeout);
         }
+        
+        static internal object wrapEvaluation(object evaluation) {
+        	return (evaluation is com.db4o.query.EvaluationDelegate)
+	        	? new EvaluationDelegateWrapper((com.db4o.query.EvaluationDelegate)evaluation)
+	        	: evaluation;
+        }
+        
     }
 }

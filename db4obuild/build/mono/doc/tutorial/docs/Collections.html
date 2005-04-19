@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="Collections"></a><br>
-<a name="outline337"></a><br><h1>5. Collections and Arrays</h1><br>
+<a name="outline339"></a><br><h1>5. Collections and Arrays</h1><br>
 We will slowly move towards real-time data processing now&nbsp;by installing sensors to our car and collecting their output.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -157,7 +157,7 @@ namespace com.db4o.f1.chapter3<br>
 We will constrain ourselves to rather static data at the moment and add&nbsp;flexibility during the next chapters.<br>
 <br>
 <ul>
-<a name="outline338"></a><br><h2>5.1. Storing</h2><br>
+<a name="outline340"></a><br><h2>5.1. Storing</h2><br>
 This should be familiar by now.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -184,9 +184,9 @@ Pilot pilot2 = new Pilot("Rubens Barrichello", 99);<br>
 </code></td></tr></table>
 <br>
 <br>
-<a name="outline339"></a><br><h2>5.2. Retrieving</h2><br>
+<a name="outline341"></a><br><h2>5.2. Retrieving</h2><br>
 <ul>
-<a name="outline340"></a><br><h2>5.2.1. QBE</h2><br>
+<a name="outline342"></a><br><h2>5.2.1. QBE</h2><br>
 First let us verify that we indeed have taken snapshots.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -197,8 +197,8 @@ SensorReadout proto = new SensorReadout(null, DateTime.MinValue, null);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>2<br>
-BMW[Rubens Barrichello/99]/2 : 1110992426052 : 0.2,0.4,0.6<br>
-BMW[Rubens Barrichello/99]/2 : 1110992426052 : 0.1,0.2,0.3<br>
+BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.1,0.2,0.3<br>
+BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.2,0.4,0.6<br>
 </td></table></table><br>
 <br>
 As a prototype for an array, we provide an array of the same type,&nbsp;containing only the values we expect the result to contain.<br>
@@ -211,7 +211,7 @@ SensorReadout proto = new SensorReadout(new double[] { 0.3, 0.1 }, DateTime.MinV
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>1<br>
-BMW[Rubens Barrichello/99]/2 : 1110992426052 : 0.1,0.2,0.3<br>
+BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.1,0.2,0.3<br>
 </td></table></table><br>
 <br>
 Note that the actual position of the given elements in the prototype&nbsp;array is irrelevant.<br>
@@ -242,7 +242,7 @@ ObjectSet result = db.get(new ArrayList());<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>2<br>
 []<br>
-[BMW[Rubens Barrichello/99]/2 : 1110992426052 : 0.1,0.2,0.3, BMW[Rubens Barrichello/99]/2 : 1110992426052 : 0.2,0.4,0.6]<br>
+[BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.1,0.2,0.3, BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.2,0.4,0.6]<br>
 </td></table></table><br>
 <br>
 This doesn't work with arrays, though.<br>
@@ -256,7 +256,7 @@ ObjectSet result = db.get(new double[] { 0.6, 0.4 });<br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>0<br>
 </td></table></table><br>
 <br>
-<a name="outline341"></a><br><h2>5.2.2. Query API</h2><br>
+<a name="outline343"></a><br><h2>5.2.2. Query API</h2><br>
 Handling of arrays and collections is analogous to the previous&nbsp;example.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -271,7 +271,7 @@ Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>1<br>
-BMW[Rubens Barrichello/99]/2 : 1110992426052 : 0.1,0.2,0.3<br>
+BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.1,0.2,0.3<br>
 </td></table></table><br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -292,7 +292,7 @@ BMW[Rubens Barrichello/99]/2<br>
 </td></table></table><br>
 <br>
 </ul>
-<a name="outline342"></a><br><h2>5.3. Updating and deleting</h2><br>
+<a name="outline344"></a><br><h2>5.3. Updating and deleting</h2><br>
 This should be familiar, we just have to remember to take care of&nbsp;the update depth.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -312,9 +312,9 @@ ObjectSet result = db.get(new Car("BMW", null));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;retrieveAllSensorReadouts(db);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>3<br>
-BMW[Rubens Barrichello/99]/3 : 1110992426224 : 0.30000000000000004,0.6000000000000001,0.8999999999999999<br>
-BMW[Rubens Barrichello/99]/3 : 1110992426052 : 0.2,0.4,0.6<br>
-BMW[Rubens Barrichello/99]/3 : 1110992426052 : 0.1,0.2,0.3<br>
+BMW[Rubens Barrichello/99]/3 : 1113872939739 : 0.1,0.2,0.3<br>
+BMW[Rubens Barrichello/99]/3 : 1113872939927 : 0.30000000000000004,0.6000000000000001,0.8999999999999999<br>
+BMW[Rubens Barrichello/99]/3 : 1113872939739 : 0.2,0.4,0.6<br>
 </td></table></table><br>
 <br>
 There's nothing special about deleting arrays and collections, too.<br>
@@ -341,8 +341,8 @@ Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 </code></td></tr></table>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>BMW[Rubens Barrichello/99]/2 : 1110992426052 : 0.2,0.4,0.6<br>
-BMW[Rubens Barrichello/99]/2 : 1110992426224 : 0.30000000000000004,0.6000000000000001,0.8999999999999999<br>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.2,0.4,0.6<br>
+BMW[Rubens Barrichello/99]/2 : 1113872939927 : 0.30000000000000004,0.6000000000000001,0.8999999999999999<br>
 </td></table></table><br>
 <br>
 (This example also shows that with db4o it is quite easy to access object&nbsp;internals we were never meant to see. Please keep this always in mind&nbsp;and be careful.)<br>
@@ -372,13 +372,13 @@ ObjectSet result = db.get(new Car(null, null));<br>
 </code></td></tr></table>
 <br>
 <br>
-<a name="outline343"></a><br><h2>5.4. db4o custom collections</h2><br>
+<a name="outline345"></a><br><h2>5.4. db4o custom collections</h2><br>
 db4o also provides customized collection implementations, tweaked for use with&nbsp;db4o. We will get to that in a later chapter when we have finished&nbsp;our first walkthrough.<br>
 <br>
-<a name="outline344"></a><br><h2>5.5. Conclusion</h2><br>
+<a name="outline346"></a><br><h2>5.5. Conclusion</h2><br>
 Ok, collections are just objects. But why did we have to specify the concrete&nbsp;ArrayList type all the way? Was that necessary? How does db4o handle inheritance?&nbsp;We will cover that in the <a href="Inheritance.html#Inheritance">next chapter</a>&nbsp;.<br>
 <br>
-<a name="outline345"></a><br><h2>5.6. Full source</h2><br>
+<a name="outline347"></a><br><h2>5.6. Full source</h2><br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code><br>
 namespace com.db4o.f1.chapter3<br>

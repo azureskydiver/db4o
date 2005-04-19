@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal sealed class YapConst
+	/// <exclude></exclude>
+	public sealed class YapConst
 	{
 		internal static readonly object initMe = init();
 
@@ -34,9 +35,9 @@ namespace com.db4o
 
 		internal const byte YAPPOINTER = (byte)'>';
 
-		internal const byte YAPCLASSCOLLECTION = (byte)'A';
+		public const byte YAPCLASSCOLLECTION = (byte)'A';
 
-		internal const byte YAPCLASS = (byte)'C';
+		public const byte YAPCLASS = (byte)'C';
 
 		internal const byte YAPFIELD = (byte)'F';
 
@@ -94,7 +95,7 @@ namespace com.db4o
 
 		internal const int UNSPECIFIED = int.MinValue + 100;
 
-		internal const int YAPINT_LENGTH = INTEGER_BYTES + ADDED_LENGTH;
+		public const int YAPINT_LENGTH = INTEGER_BYTES + ADDED_LENGTH;
 
 		internal const int YAPID_LENGTH = YAPINT_LENGTH;
 
@@ -219,7 +220,7 @@ namespace com.db4o
 
 		internal const int DEFAULT = 0;
 
-		public static readonly com.db4o.YapStringIOUnicode stringIO = new com.db4o.YapStringIOUnicode
+		internal static readonly com.db4o.YapStringIOUnicode stringIO = new com.db4o.YapStringIOUnicode
 			();
 
 		public static j4o.lang.RuntimeException virtualException()
@@ -267,5 +268,9 @@ namespace com.db4o
 
 		internal static readonly j4o.lang.Class[] ESSENTIAL_CLASSES = { CLASS_METAINDEX, 
 			CLASS_METAFIELD, CLASS_METACLASS, CLASS_STATICFIELD, CLASS_STATICCLASS };
+
+		public static readonly string VIRTUAL_FIELD_PREFIX = "v4o";
+
+		public const int MAX_STACK_DEPTH = 100;
 	}
 }

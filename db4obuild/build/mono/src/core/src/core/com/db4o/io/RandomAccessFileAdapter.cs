@@ -80,6 +80,7 @@ namespace com.db4o.io
 
 		public override void sync()
 		{
+			_delegate.getFD().sync();
 		}
 
 		public override void write(byte[] buffer, int length)

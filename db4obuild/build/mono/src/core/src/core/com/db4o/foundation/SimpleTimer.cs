@@ -27,7 +27,7 @@ namespace com.db4o.foundation
 
 		private readonly int _interval;
 
-		public bool stopped = false;
+		public volatile bool stopped = false;
 
 		public SimpleTimer(j4o.lang.Runnable runnable, int interval, string name)
 		{

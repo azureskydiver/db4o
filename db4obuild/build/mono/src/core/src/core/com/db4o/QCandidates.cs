@@ -359,8 +359,8 @@ namespace com.db4o
 
 			public void visit(object obj)
 			{
-				newRoot[0] = com.db4o.Tree.add(newRoot[0], new com.db4o.QCandidate(finalThis, ((com.db4o.TreeInt
-					)obj).i_key, true));
+				newRoot[0] = com.db4o.Tree.add(newRoot[0], new com.db4o.QCandidate(finalThis, null
+					, ((com.db4o.TreeInt)obj).i_key, true));
 			}
 
 			private readonly QCandidates _enclosing;
@@ -383,7 +383,7 @@ namespace com.db4o
 			public void visit(object obj)
 			{
 				newRoot[0] = com.db4o.Tree.removeLike(newRoot[0], new com.db4o.QCandidate(finalThis
-					, ((com.db4o.TreeInt)obj).i_key, true));
+					, null, ((com.db4o.TreeInt)obj).i_key, true));
 			}
 
 			private readonly QCandidates _enclosing;

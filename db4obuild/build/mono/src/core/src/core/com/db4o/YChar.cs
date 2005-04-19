@@ -60,6 +60,10 @@ namespace com.db4o
 			byte b1 = a_bytes.readByte();
 			byte b2 = a_bytes.readByte();
 			char ret = (char)((b1 & 0xff) | ((b2 & 0xff) << 8));
+			if (ret == char.MaxValue)
+			{
+				return null;
+			}
 			return System.Convert.ToChar(ret);
 		}
 

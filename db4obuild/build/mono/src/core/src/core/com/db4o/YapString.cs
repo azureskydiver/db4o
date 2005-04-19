@@ -24,12 +24,15 @@ namespace com.db4o
 	/// YapString
 	/// Legacy rename for C# obfuscator production trouble
 	/// </summary>
-	internal sealed class YapString : com.db4o.YapIndependantType
+	/// <exclude></exclude>
+	public sealed class YapString : com.db4o.YapIndependantType
 	{
-		private com.db4o.YapStringIO i_stringIo;
+		public com.db4o.YapStringIO i_stringIo;
 
-		public YapString(com.db4o.YapStream stream) : base(stream)
+		public YapString(com.db4o.YapStream stream, com.db4o.YapStringIO stringIO) : base
+			(stream)
 		{
+			i_stringIo = stringIO;
 		}
 
 		public override void appendEmbedded3(com.db4o.YapWriter a_bytes)

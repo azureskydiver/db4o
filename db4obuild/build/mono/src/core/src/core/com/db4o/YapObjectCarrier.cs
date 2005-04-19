@@ -28,7 +28,8 @@ namespace com.db4o
 	/// navigation by ID only both sides need synchronised ClassCollections and
 	/// MetaInformationCaches
 	/// </summary>
-	internal class YapObjectCarrier : com.db4o.YapMemoryFile
+	/// <exclude></exclude>
+	public class YapObjectCarrier : com.db4o.YapMemoryFile
 	{
 		internal YapObjectCarrier(com.db4o.YapStream a_callingStream, com.db4o.ext.MemoryFile
 			 memoryFile) : base(a_callingStream, memoryFile)
@@ -44,7 +45,6 @@ namespace com.db4o
 			i_handlers = i_parent.i_handlers;
 			i_classCollection = i_parent.i_classCollection;
 			i_config = i_parent.i_config;
-			i_stringIo = i_parent.i_stringIo;
 			i_references = new com.db4o.YapReferences(this);
 			initialize2();
 		}

@@ -183,7 +183,8 @@ namespace com.db4o
 
 		public override bool isArray()
 		{
-			return i_id == com.db4o.YapHandlers.ANYARRAYID || i_id == com.db4o.YapHandlers.ANYARRAYNID;
+			return i_id == com.db4o.YapHandlers.ANY_ARRAY_ID || i_id == com.db4o.YapHandlers.
+				ANY_ARRAY_N_ID;
 		}
 
 		internal override bool isPrimitive()

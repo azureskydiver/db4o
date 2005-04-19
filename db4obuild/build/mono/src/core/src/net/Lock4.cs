@@ -18,17 +18,24 @@ for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
-using System.Reflection;
-using System.Runtime.CompilerServices;
-[assembly: AssemblyTitle("db4o - database for objects")]
-[assembly: AssemblyDescription("db4o 4.4.001 Mono")]
-[assembly: AssemblyConfiguration("Mono")]
-[assembly: AssemblyCompany("db4objects Inc., San Mateo, CA, USA")]
-[assembly: AssemblyProduct("db4o - database for objects")]
-[assembly: AssemblyCopyright("db4o 2005")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]	
-[assembly: AssemblyVersion("4.4.001")]
-[assembly: AssemblyDelaySign(false)]
-[assembly: AssemblyKeyFile("")]
-[assembly: AssemblyKeyName("")]
+using System;
+using System.Threading;
+namespace com.db4o {
+
+    internal class Lock4 {
+    
+        public void awake() {
+            Monitor.Pulse(this);
+        }
+
+        public Object run(Closure4 closure) {
+            lock (this) {
+                return closure.run();
+            }
+        }
+    
+        public void snooze(long timeout) {
+            Monitor.Wait(this, (int)timeout);
+        }
+    }
+}

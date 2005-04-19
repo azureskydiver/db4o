@@ -29,11 +29,12 @@ namespace com.db4o
 			lock (stream.i_lock)
 			{
 				object obj = stream.getByID1(getTransaction(), bytes.readInt());
+				bool userCall = bytes.readInt() == 1;
 				if (obj != null)
 				{
 					try
 					{
-						stream.delete1(getTransaction(), obj);
+						stream.delete1(getTransaction(), obj, userCall);
 					}
 					catch (System.Exception e)
 					{

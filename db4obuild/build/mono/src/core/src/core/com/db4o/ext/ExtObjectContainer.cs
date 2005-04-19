@@ -235,6 +235,20 @@ namespace com.db4o.ext
 		/// <returns><code>true</code> if the passed object is stored.</returns>
 		bool isStored(object obj);
 
+		/// <summary>
+		/// returns all class representations that are known to this
+		/// ObjectContainer because they have been used or stored.
+		/// </summary>
+		/// <remarks>
+		/// returns all class representations that are known to this
+		/// ObjectContainer because they have been used or stored.
+		/// </remarks>
+		/// <returns>
+		/// all class representations that are known to this
+		/// ObjectContainer because they have been used or stored.
+		/// </returns>
+		com.db4o.reflect.ReflectClass[] knownClasses();
+
 		/// <summary>returns the main synchronisation lock.</summary>
 		/// <remarks>
 		/// returns the main synchronisation lock.
@@ -319,6 +333,11 @@ namespace com.db4o.ext
 		/// <param name="obj">the object to be removed from the reference mechanism.</param>
 		void purge(object obj);
 
+		/// <summary>Return the reflector currently being used by db4objects.</summary>
+		/// <remarks>Return the reflector currently being used by db4objects.</remarks>
+		/// <returns>the current Reflector.</returns>
+		com.db4o.reflect.generic.GenericReflector reflector();
+
 		/// <summary>refreshs all members on a stored object to the specified depth.</summary>
 		/// <remarks>
 		/// refreshs all members on a stored object to the specified depth.
@@ -340,7 +359,7 @@ namespace com.db4o.ext
 		void releaseSemaphore(string name);
 
 		/// <summary>
-		/// starts replication to another
+		/// prepares for replication with another
 		/// <see cref="com.db4o.ObjectContainer">com.db4o.ObjectContainer</see>
 		/// .
 		/// <br /><br />An
@@ -350,24 +369,39 @@ namespace com.db4o.ext
 		/// <see cref="com.db4o.ObjectContainer">com.db4o.ObjectContainer</see>
 		/// at the same time.<br /><br />
 		/// The returned
-		/// <see cref="com.db4o.ext.Db4oReplication">com.db4o.ext.Db4oReplication</see>
+		/// <see cref="com.db4o.replication.ReplicationProcess">com.db4o.replication.ReplicationProcess
+		/// 	</see>
 		/// interface provides methods to commit
-		/// and to cancel the replication process.<br /><br />It also allows to register
-		/// a conflicthandler, in case objects have been modified in both
-		/// ObjectContainers, since the two ObjectContainers were last replicated
-		/// with eachother.<br /><br />
+		/// and to cancel the replication process.
+		/// <br /><br />This ObjectContainer will be "peerA" for the
+		/// returned ReplicationProcess. The other ObjectContainer will be "peerB".
 		/// </summary>
-		/// <param name="destination">
+		/// <param name="peerB">
 		/// the
 		/// <see cref="com.db4o.ObjectContainer">com.db4o.ObjectContainer</see>
-		/// to replicate to.
+		/// to replicate with.
+		/// </param>
+		/// <param name="conflictHandler">
+		/// the conflict handler for this ReplicationProcess.
+		/// Conflicts occur
+		/// whenever
+		/// <see cref="com.db4o.replication.ReplicationProcess.replicate">com.db4o.replication.ReplicationProcess.replicate
+		/// 	</see>
+		/// is called with an
+		/// object that was modified in both ObjectContainers since the last
+		/// replication run between the two. Upon a conflict the
+		/// <see cref="com.db4o.replication.ReplicationConflictHandler.resolveConflict">com.db4o.replication.ReplicationConflictHandler.resolveConflict
+		/// 	</see>
+		/// method will be called in the conflict handler.
 		/// </param>
 		/// <returns>
 		/// the
-		/// <see cref="com.db4o.ext.Db4oReplication">com.db4o.ext.Db4oReplication</see>
+		/// <see cref="com.db4o.replication.ReplicationProcess">com.db4o.replication.ReplicationProcess
+		/// 	</see>
 		/// interface for this replication process.
 		/// </returns>
-		com.db4o.ext.Db4oReplication replicateTo(com.db4o.ObjectContainer destination);
+		com.db4o.replication.ReplicationProcess replicationBegin(com.db4o.ObjectContainer
+			 peerB, com.db4o.replication.ReplicationConflictHandler conflictHandler);
 
 		/// <summary>deep update interface to store or update objects.</summary>
 		/// <remarks>
@@ -466,5 +500,14 @@ namespace com.db4o.ext
 		/// meta information objects.
 		/// </summary>
 		com.db4o.ext.StoredClass[] storedClasses();
+
+		/// <summary>returns the current transaction serial number.</summary>
+		/// <remarks>
+		/// returns the current transaction serial number.
+		/// <br /><br />This serial number can be used to query for modified objects
+		/// and for replication purposes.
+		/// </remarks>
+		/// <returns>the current transaction serial number.</returns>
+		long version();
 	}
 }

@@ -34,8 +34,8 @@ namespace com.db4o
 		internal override com.db4o.Tree addToCandidatesTree(com.db4o.Tree a_tree, com.db4o.QCandidates
 			 a_candidates, int[] a_lowerAndUpperMatch)
 		{
-			com.db4o.QCandidate candidate = new com.db4o.QCandidate(a_candidates, i_parentID, 
-				true);
+			com.db4o.QCandidate candidate = new com.db4o.QCandidate(a_candidates, null, i_parentID
+				, true);
 			if (a_tree == null)
 			{
 				return candidate;

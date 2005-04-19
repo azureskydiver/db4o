@@ -35,6 +35,11 @@ namespace com.db4o
 			i_trans = a_trans;
 		}
 
+		internal QResult(com.db4o.Transaction trans, int initialSize) : base(initialSize)
+		{
+			i_trans = trans;
+		}
+
 		internal object activate(object obj)
 		{
 			com.db4o.YapStream stream = i_trans.i_stream;

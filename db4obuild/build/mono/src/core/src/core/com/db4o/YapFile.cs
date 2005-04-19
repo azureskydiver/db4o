@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal abstract class YapFile : com.db4o.YapStream
+	/// <exclude></exclude>
+	public abstract class YapFile : com.db4o.YapStream
 	{
 		internal com.db4o.YapConfigBlock i_configBlock;
 
@@ -67,9 +68,9 @@ namespace com.db4o
 		internal sealed override void commit1()
 		{
 			checkClosed();
+			i_entryCounter++;
 			try
 			{
-				i_entryCounter++;
 				write(false);
 			}
 			catch (System.Exception t)
@@ -114,7 +115,7 @@ namespace com.db4o
 		}
 
 		internal sealed override bool delete5(com.db4o.Transaction ta, com.db4o.YapObject
-			 yo, int a_cascade)
+			 yo, int a_cascade, bool userCall)
 		{
 			int id = yo.getID();
 			com.db4o.YapWriter reader = readWriterByID(ta, id);
@@ -206,14 +207,14 @@ namespace com.db4o
 		{
 			if (i_prefetchedIDs != null)
 			{
-				i_prefetchedIDs.traverse(new _AnonymousInnerClass183(this));
+				i_prefetchedIDs.traverse(new _AnonymousInnerClass186(this));
 			}
 			i_prefetchedIDs = null;
 		}
 
-		private sealed class _AnonymousInnerClass183 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass186 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass183(YapFile _enclosing)
+			public _AnonymousInnerClass186(YapFile _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -242,16 +243,16 @@ namespace com.db4o
 						com.db4o.Tree tree = yapClass.getIndex(ta);
 						if (tree != null)
 						{
-							tree.traverse(new _AnonymousInnerClass207(this, duplicates, a_res));
+							tree.traverse(new _AnonymousInnerClass210(this, duplicates, a_res));
 						}
 					}
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass207 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass210 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass207(YapFile _enclosing, com.db4o.Tree[] duplicates, com.db4o.QResult
+			public _AnonymousInnerClass210(YapFile _enclosing, com.db4o.Tree[] duplicates, com.db4o.QResult
 				 a_res)
 			{
 				this._enclosing = _enclosing;
@@ -264,7 +265,7 @@ namespace com.db4o
 				int id = ((com.db4o.TreeInt)obj).i_key;
 				com.db4o.TreeInt newNode = new com.db4o.TreeInt(id);
 				duplicates[0] = com.db4o.Tree.add(duplicates[0], newNode);
-				if (newNode.i_size != 0)
+				if (newNode.size() != 0)
 				{
 					a_res.add(id);
 				}
@@ -281,7 +282,7 @@ namespace com.db4o
 		{
 			int id = getSlot(com.db4o.YapConst.POINTER_LENGTH);
 			i_systemTrans.writePointer(id, 0, 0);
-			if (id <= com.db4o.YapHandlers.maxTypeID())
+			if (id <= i_handlers.maxTypeID())
 			{
 				return getPointerSlot();
 			}
@@ -408,35 +409,21 @@ namespace com.db4o
 			}
 		}
 
-		internal override com.db4o.YapWriter readWriterByID(com.db4o.Transaction a_ta, int
-			 a_id)
+		public override com.db4o.YapWriter readWriterByID(com.db4o.Transaction a_ta, int 
+			a_id)
 		{
-			if (a_id == 0)
-			{
-				return null;
-			}
-			int[] addressLength = new int[2];
-			try
-			{
-				a_ta.getSlotInformation(a_id, addressLength);
-			}
-			catch (System.Exception e)
-			{
-				return null;
-			}
-			if (addressLength[0] == 0)
-			{
-				return null;
-			}
-			com.db4o.YapWriter reader = getWriter(a_ta, addressLength[0], addressLength[1]);
-			reader.setID(a_id);
-			reader.readEncrypt(this, addressLength[0]);
-			return reader;
+			return (com.db4o.YapWriter)readReaderOrWriterByID(a_ta, a_id, false);
 		}
 
 		internal override com.db4o.YapReader readReaderByID(com.db4o.Transaction a_ta, int
 			 a_id)
 		{
+			return readReaderOrWriterByID(a_ta, a_id, true);
+		}
+
+		private com.db4o.YapReader readReaderOrWriterByID(com.db4o.Transaction a_ta, int 
+			a_id, bool useReader)
+		{
 			if (a_id == 0)
 			{
 				return null;
@@ -445,18 +432,27 @@ namespace com.db4o
 			try
 			{
 				a_ta.getSlotInformation(a_id, addressLength);
+				if (addressLength[0] == 0)
+				{
+					return null;
+				}
+				com.db4o.YapReader reader = null;
+				if (useReader)
+				{
+					reader = new com.db4o.YapReader(addressLength[1]);
+				}
+				else
+				{
+					reader = getWriter(a_ta, addressLength[0], addressLength[1]);
+					((com.db4o.YapWriter)reader).setID(a_id);
+				}
+				reader.readEncrypt(this, addressLength[0]);
+				return reader;
 			}
 			catch (System.Exception e)
 			{
-				return null;
 			}
-			if (addressLength[0] == 0)
-			{
-				return null;
-			}
-			com.db4o.YapReader reader = new com.db4o.YapReader(addressLength[1]);
-			reader.readEncrypt(this, addressLength[0]);
-			return reader;
+			return null;
 		}
 
 		internal virtual void readThis()
@@ -502,7 +498,7 @@ namespace com.db4o
 					com.db4o.Tree[] addressTree = new com.db4o.Tree[1];
 					if (i_freeBySize != null)
 					{
-						i_freeBySize.traverse(new _AnonymousInnerClass484(this, addressTree));
+						i_freeBySize.traverse(new _AnonymousInnerClass472(this, addressTree));
 					}
 					i_freeByAddress = addressTree[0];
 					free(freeSlotsID, com.db4o.YapConst.POINTER_LENGTH);
@@ -543,9 +539,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass484 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass472 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass484(YapFile _enclosing, com.db4o.Tree[] addressTree)
+			public _AnonymousInnerClass472(YapFile _enclosing, com.db4o.Tree[] addressTree)
 			{
 				this._enclosing = _enclosing;
 				this.addressTree = addressTree;
@@ -588,15 +584,15 @@ namespace com.db4o
 			{
 				lock (i_semaphores)
 				{
-					i_semaphores.forEachKey(new _AnonymousInnerClass543(this));
+					i_semaphores.forEachKey(new _AnonymousInnerClass531(this));
 					j4o.lang.JavaSystem.notifyAll(i_semaphores);
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass543 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass531 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass543(YapFile _enclosing)
+			public _AnonymousInnerClass531(YapFile _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

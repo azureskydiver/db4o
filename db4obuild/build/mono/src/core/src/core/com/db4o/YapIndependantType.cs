@@ -28,7 +28,8 @@ namespace com.db4o
 	/// Common base class for YapString and YapArray:
 	/// There is one indirection in the database file to this.
 	/// </remarks>
-	internal abstract class YapIndependantType : com.db4o.YapDataType
+	/// <exclude></exclude>
+	public abstract class YapIndependantType : com.db4o.YapDataType
 	{
 		internal readonly com.db4o.YapStream _stream;
 

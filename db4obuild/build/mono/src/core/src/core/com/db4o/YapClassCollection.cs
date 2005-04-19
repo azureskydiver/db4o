@@ -20,7 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal sealed class YapClassCollection : com.db4o.YapMeta, com.db4o.UseSystemTransaction
+	public sealed class YapClassCollection : com.db4o.YapMeta, com.db4o.UseSystemTransaction
 	{
 		private com.db4o.YapClass i_addingMembersTo;
 
@@ -147,28 +147,32 @@ namespace com.db4o
 			while (i.hasNext())
 			{
 				com.db4o.YapClass yc = i.nextClass();
-				if (claxx.isAssignableFrom(yc.classReflector()))
+				com.db4o.reflect.ReflectClass candidate = yc.classReflector();
+				if (!candidate.isInterface())
 				{
-					bool found = false;
-					com.db4o.Iterator4 j = col.iterator();
-					while (j.hasNext())
-					{
-						com.db4o.YapClass existing = (com.db4o.YapClass)j.next();
-						com.db4o.YapClass higher = yc.getHigherHierarchy(existing);
-						if (higher != null)
-						{
-							found = true;
-							if (higher == yc)
-							{
-								col.remove(existing);
-								col.add(yc);
-							}
-							break;
-						}
-					}
-					if (!found)
+					if (claxx.isAssignableFrom(candidate))
 					{
 						col.add(yc);
+						com.db4o.Iterator4 j = col.iterator();
+						while (j.hasNext())
+						{
+							com.db4o.YapClass existing = (com.db4o.YapClass)j.next();
+							if (existing != yc)
+							{
+								com.db4o.YapClass higher = yc.getHigherHierarchy(existing);
+								if (higher != null)
+								{
+									if (higher == yc)
+									{
+										col.remove(existing);
+									}
+									else
+									{
+										col.remove(yc);
+									}
+								}
+							}
+						}
 					}
 				}
 			}
@@ -186,7 +190,7 @@ namespace com.db4o
 			com.db4o.YapClass yapClass = (com.db4o.YapClass)i_yapClassByClass.get(a_class);
 			if (yapClass == null)
 			{
-				byte[] bytes = i_stream.i_stringIo.write(a_class.getName());
+				byte[] bytes = i_stream.stringIO().write(a_class.getName());
 				yapClass = (com.db4o.YapClass)i_yapClassByBytes.remove(bytes);
 				readYapClass(yapClass, a_class);
 			}
@@ -238,7 +242,7 @@ namespace com.db4o
 
 		internal com.db4o.YapClass getYapClass(string a_name)
 		{
-			byte[] bytes = i_stream.i_stringIo.write(a_name);
+			byte[] bytes = i_stream.stringIO().write(a_name);
 			com.db4o.YapClass yapClass = (com.db4o.YapClass)i_yapClassByBytes.remove(bytes);
 			readYapClass(yapClass, null);
 			if (yapClass == null)
@@ -450,13 +454,13 @@ namespace com.db4o
 			while (i.hasNext())
 			{
 				com.db4o.YapClass yc = i.nextClass();
-				yc.forEachYapField(new _AnonymousInnerClass381(this, a_field, a_visitor, yc));
+				yc.forEachYapField(new _AnonymousInnerClass382(this, a_field, a_visitor, yc));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass381 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass382 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass381(YapClassCollection _enclosing, string a_field, com.db4o.Visitor4
+			public _AnonymousInnerClass382(YapClassCollection _enclosing, string a_field, com.db4o.Visitor4
 				 a_visitor, com.db4o.YapClass yc)
 			{
 				this._enclosing = _enclosing;

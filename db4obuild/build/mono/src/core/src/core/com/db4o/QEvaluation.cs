@@ -30,17 +30,14 @@ namespace com.db4o
 
 		internal int i_marshalledID;
 
-		internal bool i_isDelegate;
-
 		public QEvaluation()
 		{
 		}
 
-		internal QEvaluation(com.db4o.Transaction a_trans, object a_evaluation, bool a_isDelegate
-			) : base(a_trans)
+		internal QEvaluation(com.db4o.Transaction a_trans, object a_evaluation) : base(a_trans
+			)
 		{
 			i_evaluation = a_evaluation;
-			i_isDelegate = a_isDelegate;
 		}
 
 		internal override void evaluateEvaluationsExec(com.db4o.QCandidates a_candidates, 
@@ -72,7 +69,14 @@ namespace com.db4o
 		{
 			base.marshall();
 			int[] id = { 0 };
-			i_marshalledEvaluation = i_trans.i_stream.marshall(i_evaluation, id);
+			try
+			{
+				i_marshalledEvaluation = com.db4o.Platform.serialize(i_evaluation);
+			}
+			catch (System.Exception e)
+			{
+				i_marshalledEvaluation = i_trans.i_stream.marshall(i_evaluation, id);
+			}
 			i_marshalledID = id[0];
 		}
 
@@ -81,8 +85,15 @@ namespace com.db4o
 			if (i_trans == null)
 			{
 				base.unmarshall(a_trans);
-				i_evaluation = i_trans.i_stream.unmarshall(i_marshalledEvaluation, i_marshalledID
-					);
+				if (i_marshalledID > 0)
+				{
+					i_evaluation = i_trans.i_stream.unmarshall(i_marshalledEvaluation, i_marshalledID
+						);
+				}
+				else
+				{
+					i_evaluation = com.db4o.Platform.deserialize(i_marshalledEvaluation);
+				}
 			}
 		}
 

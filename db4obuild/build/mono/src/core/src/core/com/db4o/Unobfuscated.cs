@@ -34,6 +34,13 @@ namespace com.db4o
 		public static byte[] generateSignature()
 		{
 			com.db4o.YapWriter writer = new com.db4o.YapWriter(null, 300);
+			try
+			{
+				writer.append((byte)0);
+			}
+			catch (System.Exception e)
+			{
+			}
 			com.db4o.YLong.writeLong(j4o.lang.JavaSystem.currentTimeMillis(), writer);
 			com.db4o.YLong.writeLong(randomLong(), writer);
 			com.db4o.YLong.writeLong(randomLong() + 1, writer);
@@ -53,7 +60,11 @@ namespace com.db4o
 
 		public static long randomLong()
 		{
-			return j4o.lang.JavaSystem.currentTimeMillis();
+			if (random == null)
+			{
+				random = new j4o.util.Random();
+			}
+			return ((j4o.util.Random)random).nextLong();
 		}
 
 		internal static void shutDownHookCallback(object a_stream)

@@ -34,6 +34,11 @@ namespace com.db4o
 		{
 		}
 
+		internal QResultClient(com.db4o.Transaction a_ta, int initialSize) : base(a_ta, initialSize
+			)
+		{
+		}
+
 		public override bool hasNext()
 		{
 			lock (streamLock())

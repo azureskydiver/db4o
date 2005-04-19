@@ -26,7 +26,7 @@ namespace com.db4o.ext
 	/// <br /><br />db4o UUID handling uses a reference to the Db4oDatabase object, that
 	/// represents the database an object was created on.
 	/// </remarks>
-	public class Db4oDatabase : com.db4o.types.Db4oType
+	public class Db4oDatabase : com.db4o.types.Db4oType, com.db4o.Internal
 	{
 		/// <summary>Field is public for implementation reasons, DO NOT TOUCH!</summary>
 		public byte[] i_signature;
@@ -37,7 +37,7 @@ namespace com.db4o.ext
 		/// <summary>cached ObjectContainer for getting the own ID.</summary>
 		/// <remarks>cached ObjectContainer for getting the own ID.</remarks>
 		[com.db4o.Transient]
-		private com.db4o.ext.ExtObjectContainer i_objectContainer;
+		private com.db4o.YapStream i_stream;
 
 		/// <summary>cached ID, only valid in combination with i_objectContainer</summary>
 		[com.db4o.Transient]
@@ -89,17 +89,13 @@ namespace com.db4o.ext
 		/// <remarks>gets the db4o ID, and may cache it for performance reasons.</remarks>
 		/// <param name="a_oc">the ObjectContainer</param>
 		/// <returns>the db4o ID for the ObjectContainer</returns>
-		public virtual int getID(com.db4o.ext.ExtObjectContainer a_oc)
+		public virtual int getID(com.db4o.Transaction trans)
 		{
-			if (a_oc != i_objectContainer)
+			com.db4o.YapStream stream = trans.i_stream;
+			if (stream != i_stream)
 			{
-				i_objectContainer = a_oc;
-				i_id = (int)a_oc.getID(this);
-				if (i_id == 0)
-				{
-					a_oc.set(this);
-					i_id = (int)a_oc.getID(this);
-				}
+				i_stream = stream;
+				i_id = trans.ensureDb4oDatabase(this);
 			}
 			return i_id;
 		}
@@ -107,6 +103,26 @@ namespace com.db4o.ext
 		public override string ToString()
 		{
 			return "Db4oDatabase: " + i_signature;
+		}
+
+		public virtual bool isOlderThan(com.db4o.ext.Db4oDatabase peer)
+		{
+			if (i_uuid != peer.i_uuid)
+			{
+				return i_uuid < peer.i_uuid;
+			}
+			if (i_signature.Length != peer.i_signature.Length)
+			{
+				return i_signature.Length < peer.i_signature.Length;
+			}
+			for (int i = 0; i < i_signature.Length; i++)
+			{
+				if (i_signature[i] != peer.i_signature[i])
+				{
+					return i_signature[i] < peer.i_signature[i];
+				}
+			}
+			throw new j4o.lang.RuntimeException();
 		}
 	}
 }

@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal class IxField
+	/// <exclude></exclude>
+	public class IxField
 	{
 		internal const int MAX_LEAVES = 3;
 
@@ -98,7 +99,7 @@ namespace com.db4o
 				com.db4o.Tree root = i_globalIndex.getRoot();
 				com.db4o.YapDataType handler = i_field.getHandler();
 				int lengthPerEntry = handler.linkLength() + com.db4o.YapConst.YAPINT_LENGTH;
-				i_metaIndex.indexEntries = root == null ? 0 : root.i_size;
+				i_metaIndex.indexEntries = root == null ? 0 : root.size();
 				i_metaIndex.indexLength = i_metaIndex.indexEntries * lengthPerEntry;
 				i_metaIndex.indexAddress = ((com.db4o.YapFile)trans.i_stream).getSlot(i_metaIndex
 					.indexLength);
@@ -110,7 +111,7 @@ namespace com.db4o
 					, lengthPerEntry);
 				if (root != null)
 				{
-					root.traverse(new _AnonymousInnerClass113(this, handler, writer));
+					root.traverse(new _AnonymousInnerClass117(this, handler, writer));
 				}
 				com.db4o.IxFileRange newFileRange = createGlobalFileRange();
 				com.db4o.Iterator4 i = i_transactionIndices.iterator();
@@ -123,7 +124,7 @@ namespace com.db4o
 						clonedTree = clonedTree.deepClone(ft);
 					}
 					com.db4o.Tree[] tree = { clonedTree };
-					ft.getRoot().traverseFromLeaves((new _AnonymousInnerClass130(this, ft, tree)));
+					ft.getRoot().traverseFromLeaves((new _AnonymousInnerClass134(this, ft, tree)));
 					ft.setRoot(tree[0]);
 				}
 				if (free[0] > 0)
@@ -145,9 +146,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass113 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass117 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass113(IxField _enclosing, com.db4o.YapDataType handler, 
+			public _AnonymousInnerClass117(IxField _enclosing, com.db4o.YapDataType handler, 
 				com.db4o.YapWriter writer)
 			{
 				this._enclosing = _enclosing;
@@ -167,9 +168,9 @@ namespace com.db4o
 			private readonly com.db4o.YapWriter writer;
 		}
 
-		private sealed class _AnonymousInnerClass130 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass134 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass130(IxField _enclosing, com.db4o.IxFieldTransaction ft
+			public _AnonymousInnerClass134(IxField _enclosing, com.db4o.IxFieldTransaction ft
 				, com.db4o.Tree[] tree)
 			{
 				this._enclosing = _enclosing;

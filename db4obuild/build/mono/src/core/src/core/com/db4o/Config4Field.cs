@@ -48,8 +48,14 @@ namespace com.db4o
 
 		public virtual object deepClone(object param)
 		{
-			com.db4o.Config4Field ret = (com.db4o.Config4Field)j4o.lang.JavaSystem.clone(this
-				);
+			com.db4o.Config4Field ret = null;
+			try
+			{
+				ret = (com.db4o.Config4Field)j4o.lang.JavaSystem.clone(this);
+			}
+			catch (j4o.lang.CloneNotSupportedException e)
+			{
+			}
 			ret.i_class = (com.db4o.Config4Class)param;
 			return ret;
 		}
@@ -113,8 +119,10 @@ namespace com.db4o
 						if (i_metaField.index == null)
 						{
 							i_metaField.index = new com.db4o.MetaIndex();
-							stream.set3(systemTrans, i_metaField.index, com.db4o.YapConst.UNSPECIFIED, false);
-							stream.set3(systemTrans, i_metaField, com.db4o.YapConst.UNSPECIFIED, false);
+							stream.setInternal(systemTrans, i_metaField.index, com.db4o.YapConst.UNSPECIFIED, 
+								false);
+							stream.setInternal(systemTrans, i_metaField, com.db4o.YapConst.UNSPECIFIED, false
+								);
 							yapField.initIndex(systemTrans, i_metaField.index);
 							indexInitCalled = true;
 							if (stream.i_config.i_messageLevel > com.db4o.YapConst.NONE)
@@ -173,7 +181,7 @@ namespace com.db4o
 							{
 								stream.free(mi.patchAddress, mi.patchLength);
 							}
-							stream.delete1(systemTrans, mi);
+							stream.delete1(systemTrans, mi, false);
 							i_metaField.index = null;
 							stream.setInternal(systemTrans, i_metaField, com.db4o.YapConst.UNSPECIFIED, false
 								);

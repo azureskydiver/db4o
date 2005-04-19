@@ -22,8 +22,6 @@ namespace com.db4o
 {
 	internal abstract class YapFieldVirtual : com.db4o.YapField
 	{
-		internal static readonly string PREFIX = "v4o";
-
 		internal YapFieldVirtual() : base(null)
 		{
 		}
@@ -33,14 +31,30 @@ namespace com.db4o
 			a_writer.incrementOffset(linkLength());
 		}
 
+		public override bool alive()
+		{
+			return true;
+		}
+
+		internal override void collectConstraints(com.db4o.Transaction a_trans, com.db4o.QConObject
+			 a_parent, object a_template, com.db4o.Visitor4 a_visitor)
+		{
+		}
+
 		internal override void delete(com.db4o.YapWriter a_bytes)
 		{
 			a_bytes.incrementOffset(linkLength());
 		}
 
+		internal override object getOrCreate(com.db4o.Transaction a_trans, object a_OnObject
+			)
+		{
+			return null;
+		}
+
 		internal override int ownLength(com.db4o.YapStream a_stream)
 		{
-			return a_stream.i_stringIo.shortLength(i_name);
+			return a_stream.stringIO().shortLength(i_name);
 		}
 
 		internal virtual void initIndex(com.db4o.YapStream a_stream, com.db4o.MetaIndex a_metaIndex
@@ -90,8 +104,8 @@ namespace com.db4o
 							migrating = true;
 							a_yapObject.i_virtualAttributes = migrateYapObject.i_virtualAttributes.shallowClone
 								();
-							a_yapObject.i_virtualAttributes.i_database = stream.i_handlers.ensureDb4oDatabase
-								(a_bytes.getTransaction(), migrateYapObject.i_virtualAttributes.i_database);
+							a_bytes.getTransaction().ensureDb4oDatabase(migrateYapObject.i_virtualAttributes.
+								i_database);
 						}
 					}
 				}

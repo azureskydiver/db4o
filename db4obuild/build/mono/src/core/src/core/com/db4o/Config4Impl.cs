@@ -21,7 +21,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace com.db4o
 {
 	/// <summary>Configuration template for creating new db4o files</summary>
-	internal sealed class Config4Impl : com.db4o.config.Configuration, j4o.lang.Cloneable
+	/// <exclude></exclude>
+	public sealed class Config4Impl : com.db4o.config.Configuration, j4o.lang.Cloneable
 		, com.db4o.DeepClone, com.db4o.messaging.MessageSender
 	{
 		internal int i_activationDepth = 5;
@@ -74,7 +75,9 @@ namespace com.db4o
 
 		internal bool i_readonly;
 
-		private com.db4o.reflect.Reflector _reflect;
+		private com.db4o.reflect.Reflector _configuredReflector;
+
+		private com.db4o.reflect.generic.GenericReflector _reflector;
 
 		internal com.db4o.Collection4 i_rename;
 
@@ -153,7 +156,14 @@ namespace com.db4o
 
 		public object deepClone(object param)
 		{
-			com.db4o.Config4Impl ret = (com.db4o.Config4Impl)j4o.lang.JavaSystem.clone(this);
+			com.db4o.Config4Impl ret = null;
+			try
+			{
+				ret = (com.db4o.Config4Impl)j4o.lang.JavaSystem.clone(this);
+			}
+			catch (j4o.lang.CloneNotSupportedException e)
+			{
+			}
 			ret.i_stream = (com.db4o.YapStream)param;
 			if (i_exceptionalClasses != null)
 			{
@@ -163,6 +173,11 @@ namespace com.db4o
 			if (i_rename != null)
 			{
 				ret.i_rename = (com.db4o.Collection4)i_rename.deepClone(ret);
+			}
+			if (_reflector != null)
+			{
+				ret._reflector = (com.db4o.reflect.generic.GenericReflector)_reflector.deepClone(
+					ret);
 			}
 			return ret;
 		}
@@ -311,13 +326,23 @@ namespace com.db4o
 			i_readonly = flag;
 		}
 
-		internal com.db4o.reflect.Reflector reflector()
+		internal com.db4o.reflect.generic.GenericReflector reflector()
 		{
-			if (_reflect == null)
+			if (_reflector == null)
 			{
-				_reflect = com.db4o.Platform.createReflector(this);
+				if (_configuredReflector == null)
+				{
+					_configuredReflector = com.db4o.Platform.createReflector(this);
+				}
+				_reflector = new com.db4o.reflect.generic.GenericReflector(null, _configuredReflector
+					);
+				_configuredReflector.setParent(_reflector);
 			}
-			return _reflect;
+			if (!_reflector.hasTransaction() && i_stream != null)
+			{
+				_reflector.setTransaction(i_stream.i_systemTrans);
+			}
+			return _reflector;
 		}
 
 		public void reflectWith(com.db4o.reflect.Reflector reflect)
@@ -330,14 +355,14 @@ namespace com.db4o
 			{
 				throw new System.ArgumentNullException();
 			}
-			_reflect = reflect;
+			_configuredReflector = reflect;
 		}
 
 		public void refreshClasses()
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass287(this));
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass311(this));
 			}
 			else
 			{
@@ -345,9 +370,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass287 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass311 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass287(Config4Impl _enclosing)
+			public _AnonymousInnerClass311(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -391,7 +416,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass323(this));
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass347(this));
 			}
 			else
 			{
@@ -399,9 +424,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass323 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass347 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass323(Config4Impl _enclosing)
+			public _AnonymousInnerClass347(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

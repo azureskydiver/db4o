@@ -182,6 +182,7 @@ namespace com.db4o
 					a_tree = com.db4o.Tree.add(a_tree, tree);
 				}
 			}
+			_candidates = null;
 			return a_tree;
 		}
 
@@ -335,7 +336,7 @@ namespace com.db4o
 		public virtual object read(com.db4o.YapReader a_reader)
 		{
 			a_reader.incrementOffset(_linkLegth);
-			return new com.db4o.QCandidate(_candidates, a_reader.readInt(), true);
+			return new com.db4o.QCandidate(_candidates, null, a_reader.readInt(), true);
 		}
 
 		public virtual int byteCount()

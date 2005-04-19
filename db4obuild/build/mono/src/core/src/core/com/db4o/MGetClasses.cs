@@ -39,7 +39,7 @@ namespace com.db4o
 				(), com.db4o.YapConst.YAPINT_LENGTH + 1);
 			com.db4o.YapWriter writer = message.getPayLoad();
 			writer.writeInt(stream.i_classCollection.getID());
-			writer.append(stream.i_stringIo.encodingByte());
+			writer.append(stream.stringIO().encodingByte());
 			message.write(stream, sock);
 			return true;
 		}

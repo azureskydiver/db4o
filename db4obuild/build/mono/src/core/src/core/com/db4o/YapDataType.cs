@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal interface YapDataType : com.db4o.YapComparable
+	/// <exclude></exclude>
+	public interface YapDataType : com.db4o.YapComparable
 	{
 		void appendEmbedded3(com.db4o.YapWriter a_bytes);
 
