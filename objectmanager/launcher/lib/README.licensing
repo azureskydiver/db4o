@@ -26,7 +26,8 @@ jface.jar, osgi_core.jar, runtime.jar
 	- Eclipse Public License
 
 
-Apache software:================
+Apache software:
+================
 
 jakarta-oro-2.7.7.jar
 	- Apache Software License 1.1
