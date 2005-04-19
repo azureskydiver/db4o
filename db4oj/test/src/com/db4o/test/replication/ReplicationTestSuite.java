@@ -6,9 +6,9 @@ public class ReplicationTestSuite extends TestSuite{
 
 	public Class[] tests() {
 		return new Class[] {
+			ReplicationFeaturesMain.class,
             R0to4Runner.class,
-			ReplicationFeatures.class,
-			ReplicationFeaturesMain.class
+			ReplicationFeatures.class
 		};
 	}
 	

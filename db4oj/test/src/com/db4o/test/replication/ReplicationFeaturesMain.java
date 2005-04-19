@@ -12,20 +12,13 @@ import com.db4o.test.*;
 
 public class ReplicationFeaturesMain {
 
-	private static final Set A = new HashSet(1); 
-	private static final Set B = new HashSet(1); 
-	private static final Set BOTH = new HashSet(2); 
-	private static final Set NONE = Collections.EMPTY_SET; 
+	private final Set _A = new HashSet(1); 
+	private final Set _B = new HashSet(1); 
+	private final Set _BOTH = new HashSet(2); 
+	private final Set _NONE = Collections.EMPTY_SET; 
 	
-	{
-		A.add("A");
-		B.add("B");
-		BOTH.add("A");
-		BOTH.add("B");
-	}
-	
-    private static ObjectContainer _a;
-    private static ObjectContainer _b;
+    private ObjectContainer _containerA;
+    private ObjectContainer _containerB;
 	
 	private Set _direction;
 	private Set _containersToQueryFrom;
@@ -33,12 +26,6 @@ public class ReplicationFeaturesMain {
 	private Set _containersWithChangedObjects;
 	private Set _objectsToPrevailInConflicts;
 
-	private Set _namesInA;
-	private Set _namesInB;
-	
-	private static final String[] ALL_POSSIBLE_NAMES = new String[]{"oldInA", "oldInB", "newInA", "newInB", "oldInAChangedInA", "oldInAChangedInB", "oldInBChangedInA", "oldInBChangedInB"};
-	private static final String[] NAME_CHANGES_IN_A = new String[]{"newInA", "oldInAChangedInA", "oldInBChangedInA"};
-	private static final String[] NAME_CHANGES_IN_B = new String[]{"newInB", "oldInAChangedInB", "oldInBChangedInB"};
     private int _errors;
     private String _intermittence = "Intermittence at:";
     private int _counter;
@@ -51,93 +38,113 @@ public class ReplicationFeaturesMain {
 	
     public void test() {
         
-		_a = Test.objectContainer();
-		_b = Test.replica();
+		_containerA = Test.objectContainer();
+		_containerB = Test.replica();
 
-/*
-		deleteAll(_a);
-		deleteAll(_b);
-
-		_a.set(new Replicated("Whatever"));
-		ReplicationProcess replication = _a.ext().replicationBegin(_b, new ReplicationConflictHandler() {
-            public Object resolveConflict(ReplicationProcess process, Object a, Object b) {
-            	return null;
-            }
-        });
-
-		replication.setDirection(_b, _a);
+		_A.add(_containerA);
+		_B.add(_containerB);
+		_BOTH.add(_containerA);
+		_BOTH.add(_containerB);
 		
-		Test.ensure(!_b.get(null).hasNext());
-		replicateQueryingFrom(replication, _a);
-		replication.commit();
-		Test.ensure(!_b.get(null).hasNext());
 
-*/
-	
-        /*
+		produceBug();
+
+/*        
 //	WORK IN PROGRESS:	
-		tstDirection(A);
-		tstDirection(B);
-		tstDirection(BOTH);
+		tstDirection(_A);
+		tstDirection(_B);
+		tstDirection(_BOTH);
 */
 		
 //      TODO: replication.checkConflict(obj); //(peek)
 		
     }
 
+	
+	private void produceBug() {
+		initState();
+		System.err.println("-------------initState() Done");
+		Test.ensure(find(_containerA, "oldFromA") != null);
+		Test.ensure(find(_containerB, "oldFromA") != null);
+
+        changeObject(_containerB, "oldFromA", "oldFromAChangedInB");
+		_containerB.commit();
+		Test.ensure(find(_containerB, "oldFromA") == null);
+        
+		ReplicationProcess replication = _containerA.ext().replicationBegin(_containerB, new ReplicationConflictHandler() {
+            public Object resolveConflict(ReplicationProcess process, Object a, Object b) {
+            	return null;
+            }
+        });
+		System.err.println("-------------Starting to replicate");
+		replicateQueryingFrom(replication, _containerB);
+		replication.commit();
+		System.err.println("-------------Replication Done");
+		
+		Test.ensure(find(_containerA, "oldFromA") == null);
+		Test.ensure(find(_containerA, "oldFromAChangedInB") != null);
+	}
+
+	
 	private void tstDirection(Set direction) {
 		_direction = direction;
 		
-		tstQueryingFrom(A);
-		tstQueryingFrom(B);
-		tstQueryingFrom(BOTH);
+		tstQueryingFrom(_A);
+		tstQueryingFrom(_B);
+		tstQueryingFrom(_BOTH);
 	}
 
 	private void tstQueryingFrom(Set containers) {
 		_containersToQueryFrom = containers;
 		
-		tstWithNewObjectsIn(NONE);
-		tstWithNewObjectsIn(A);
-		tstWithNewObjectsIn(B);
-		tstWithNewObjectsIn(BOTH);
+		tstWithNewObjectsIn(_NONE);
+		tstWithNewObjectsIn(_A);
+		tstWithNewObjectsIn(_B);
+		tstWithNewObjectsIn(_BOTH);
 	}
 
 	private void tstWithNewObjectsIn(Set containers) {
 		_containersWithNewObjects = containers;
 		
-		tstWithChangedObjectsIn(NONE);
-		tstWithChangedObjectsIn(A);
-		tstWithChangedObjectsIn(B);
-		tstWithChangedObjectsIn(BOTH);
+		tstWithChangedObjectsIn(_NONE);
+		tstWithChangedObjectsIn(_A);
+		tstWithChangedObjectsIn(_B);
+		tstWithChangedObjectsIn(_BOTH);
 	}
 
 	private void tstWithChangedObjectsIn(Set containers) {
 		_containersWithChangedObjects = containers;
 		
-		tstWithObjectsPrevailingConflicts(NONE);
-		tstWithObjectsPrevailingConflicts(A);
-		tstWithObjectsPrevailingConflicts(B);
+		tstWithObjectsPrevailingConflicts(_NONE);
+		tstWithObjectsPrevailingConflicts(_A);
+		tstWithObjectsPrevailingConflicts(_B);
 	}
 
 
 	private void tstWithObjectsPrevailingConflicts(Set containers) {
 		_objectsToPrevailInConflicts = containers;
 		
-        _errors = 0;
         _counter++;
         if (_counter < 0) return;
-        
+
+		_errors = 0;
         tryToDoIt();
         tryToDoIt();
-        tryToDoIt();
-        if (_errors == 3) {
-            System.out.println(_intermittence);
-            throw new RuntimeException();
+        if (_errors == 2) {
+			System.err.println("Direction: " + print(_direction));
+			System.err.println("Querying From: " + print(_containersToQueryFrom));
+			System.err.println("New Objects In: " + print(_containersWithNewObjects));
+			System.err.println("Changed Objects In: " + print(_containersWithChangedObjects));
+			//System.err.println("Prevailing Conflicts: " + print(_objectsToPrevailInConflicts));
+
+            System.err.println(_intermittence);
+
+			throw new RuntimeException();
         }
         if (_errors > 0) _intermittence += "\n\t" + _counter + " (" + _errors +" errors)";
 	}
 
-    private void tryToDoIt() {
+	private void tryToDoIt() {
         try {
             doIt();
         } catch (RuntimeException e) {
@@ -155,92 +162,91 @@ public class ReplicationFeaturesMain {
 		
         performChanges();
         
-		ReplicationProcess replication = _a.ext().replicationBegin(_b, new ReplicationConflictHandler() {
+		ReplicationProcess replication = _containerA.ext().replicationBegin(_containerB, new ReplicationConflictHandler() {
             public Object resolveConflict(ReplicationProcess process, Object a, Object b) {
             	return null;
             }
         });
 
 		if (_direction.size() == 1) {
-			if (_direction.contains("A")) {System.err.println("Setting direction TO A.");replication.setDirection(_b, _a);}
-			if (_direction.contains("B")) {System.err.println("Setting direction TO B.");replication.setDirection(_a, _b);}
+			if (_direction.contains(_containerA)) {System.err.println("Setting direction TO A.");replication.setDirection(_containerB, _containerA);}
+			if (_direction.contains(_containerB)) {System.err.println("Setting direction TO B.");replication.setDirection(_containerA, _containerB);}
 		}
 
 		
-        if (_containersToQueryFrom.contains("A")) {
-			replicateQueryingFrom(replication, _a);
+        if (_containersToQueryFrom.contains(_containerA)) {
+			replicateQueryingFrom(replication, _containerA);
         }
-        if (_containersToQueryFrom.contains("B")) {
-			replicateQueryingFrom(replication, _b);
+        if (_containersToQueryFrom.contains(_containerB)) {
+			replicateQueryingFrom(replication, _containerB);
         }
 		
 		replication.commit();
 
-		workaroundBugs(); 
-		
 		checkNames();
 	}
 
     private void checkNames() {
-        checkName(_a, "oldInA", isOldNameExpected(_a, _a));
-        
-        checkName(_a, "oldInB",
-                !_containersWithChangedObjects.contains("A")                
-        );
-
-        checkName(_a, "newInA", _containersWithNewObjects.contains("A"));
-
-        checkName(_a, "newInB", _containersWithNewObjects.contains("B"));
-
-        checkName(_a, "oldInAChangedInA", _containersWithChangedObjects.contains("A"));
-        
-        checkName(_a, "oldInAChangedInB",
-                _containersWithChangedObjects.contains("B") &&
-                _direction.contains("A") 
-        );
-        
-        checkName(_a, "oldInBChangedInA", _containersWithChangedObjects.contains("A"));
-        
-        checkName(_a, "oldInBChangedInB", _containersWithChangedObjects.contains("B"));
+		checkNames(_containerA, _containerA);
+		checkNames(_containerA, _containerB);
+		checkNames(_containerB, _containerA);
+		checkNames(_containerB, _containerB);
     }
 
-    private boolean isOldNameExpected(ObjectContainer original, ObjectContainer examined) {
-        return false;
-    }
+	private void checkNames(ObjectContainer origin, ObjectContainer inspected) {
+		checkName(inspected, "oldFrom" + letter(origin), isOldNameExpected(origin, inspected));
+		checkName(inspected, "newFrom" + letter(origin), isNewNameExpected(origin, inspected));
+		checkName(inspected, "oldFromAChangedIn" + letter(origin), isChangedNameExpected(origin, inspected));
+		checkName(inspected, "oldFromBChangedIn" + letter(origin), isChangedNameExpected(origin, inspected));
+	}
 
-    private void workaroundBugs() {
-		System.err.println("Working around bugs.");
-		if (!_direction.contains("A")) {
-			_a.delete(find(_a, "newInB"));
-			_a.commit();
-		}
-		if (!_direction.contains("B")) {
-			_b.delete(find(_b, "newInA"));
-			_b.commit();
-		}
+	private boolean isOldNameExpected(ObjectContainer origin, ObjectContainer inspected) {
+		if (_containersWithChangedObjects.contains(inspected)) return false;
+		if (!_containersWithChangedObjects.contains(other(inspected))) return true;
+		if (!_direction.contains(inspected)) return true;
+		if (!_containersToQueryFrom.contains(other(inspected))) return true;
+		return false;
+	}
+
+	private ObjectContainer other(ObjectContainer container) {
+		return container == _containerA ? _containerB  : _containerA;
+	}
+
+	private boolean isNewNameExpected(ObjectContainer origin, ObjectContainer inspected) {
+		if (_containersWithNewObjects.contains(inspected) && origin == inspected) return true;
+		return false;
+	}
+
+	private boolean isChangedNameExpected(ObjectContainer origin, ObjectContainer inspected) {
+		if (_containersWithChangedObjects.contains(inspected) && origin == inspected) return true;
+		return false;
+	}
+
+	private String letter(ObjectContainer origin) {
+		return origin == _containerA ? "A"  : "B";
 	}
 
 	private void performChanges() {
 
-		if (_containersWithNewObjects.contains("A")) {
-			_a.set(new Replicated("newInA"));
+		if (_containersWithNewObjects.contains(_containerA)) {
+			_containerA.set(new Replicated("newFromA"));
         }
-		if (_containersWithNewObjects.contains("B")) {
-			_b.set(new Replicated("newInB"));
-        }
-		
-		
-		if (_containersWithChangedObjects.contains("A")) {
-            changeObject(_a, "oldInA", "oldInAChangedInA");
-            changeObject(_a, "oldInB", "oldInBChangedInA");
-        }
-		if (_containersWithChangedObjects.contains("B")) {
-            changeObject(_b, "oldInA", "oldInAChangedInB");
-            changeObject(_b, "oldInB", "oldInBChangedInB");
+		if (_containersWithNewObjects.contains(_containerB)) {
+			_containerB.set(new Replicated("newFromB"));
         }
 		
-		_a.commit();
-		_b.commit();
+		
+		if (_containersWithChangedObjects.contains(_containerA)) {
+            changeObject(_containerA, "oldFromA", "oldFromAChangedInA");
+            changeObject(_containerA, "oldFromB", "oldFromBChangedInA");
+        }
+		if (_containersWithChangedObjects.contains(_containerB)) {
+            changeObject(_containerB, "oldFromA", "oldFromAChangedInB");
+            changeObject(_containerB, "oldFromB", "oldFromBChangedInB");
+        }
+		
+		_containerA.commit();
+		_containerB.commit();
 	}
 
     private void changeObject(ObjectContainer container, String name, String newName) {
@@ -256,7 +262,7 @@ public class ReplicationFeaturesMain {
 	}
 
 	private void checkName(ObjectContainer container, String name, boolean isExpected) {
-        System.err.println("" + _counter + " " + name + " " + isExpected + (container == _a ? " in A" : " in B" ));
+        System.err.println("" + _counter + " " + name + (isExpected ? " expected" : " not expected") + (container == _containerA ? " in A" : " in B" ));
         Replicated obj = find(container, name);
         if (isExpected) {
             ensure(obj != null);
@@ -275,36 +281,30 @@ public class ReplicationFeaturesMain {
     }
     
 	private void initState() {
-		_a.commit();
-		_b.commit();
-		deleteAll(_a);
-        _namesInA = new HashSet();
-		deleteAll(_b);
-        _namesInB = new HashSet();
+		_containerA.commit();
+		_containerB.commit();
+		deleteAll(_containerA);
+		deleteAll(_containerB);
 
-		_a.set(new Replicated("oldInA"));
-        _namesInA.add("oldInA");
-		_b.set(new Replicated("oldInB"));
-        _namesInB.add("oldInB");
+		_containerA.set(new Replicated("oldFromA"));
+		_containerB.set(new Replicated("oldFromB"));
 		
-		_a.commit();
-		_b.commit();
+		_containerA.commit();
+		_containerB.commit();
 
-		final ReplicationProcess replication = _a.ext().replicationBegin(_b, new ReplicationConflictHandler() {
+		final ReplicationProcess replication = _containerA.ext().replicationBegin(_containerB, new ReplicationConflictHandler() {
             public Object resolveConflict(ReplicationProcess process, Object a, Object b) {
             	return null;
             }
         });
 
-        replicateQueryingFrom(replication, _a);
-        _namesInB.add("oldInA");
-		replicateQueryingFrom(replication, _b);
-        _namesInA.add("oldInB");
+        replicateQueryingFrom(replication, _containerA);
+		replicateQueryingFrom(replication, _containerB);
 
         replication.commit();
 
-		ensure(objectsToReplicate(replication, _a).size() == 0);
-		ensure(objectsToReplicate(replication, _b).size() == 0);
+		ensure(objectsToReplicate(replication, _containerA).size() == 0);
+		ensure(objectsToReplicate(replication, _containerB).size() == 0);
 	}
 
 	private void deleteAll(ObjectContainer container) {
@@ -352,5 +352,14 @@ public class ReplicationFeaturesMain {
     private static void ensure(boolean condition) {
         if (!condition) throw new RuntimeException();
     }
-    
+
+    private String print(Set containerSet) {
+		if (containerSet.isEmpty()) return "NONE";
+		Iterator iter = containerSet.iterator();
+		String result = "" + letter((ObjectContainer)iter.next());
+		if (!iter.hasNext()) return result;
+		return result + ", " + letter((ObjectContainer)iter.next());
+	}
+
+	
 }
