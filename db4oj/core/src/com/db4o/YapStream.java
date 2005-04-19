@@ -223,6 +223,9 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
     
     private final boolean breakDeleteForEnum(YapObject reference, boolean userCall){
+        if(Deploy.csharp){
+            return false;
+        }
         if(userCall){
             return false;
         }
