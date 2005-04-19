@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal class YapStringIO
+	/// <exclude></exclude>
+	public class YapStringIO
 	{
 		protected char[] chars = new char[0];
 
@@ -32,6 +33,23 @@ namespace com.db4o
 		internal virtual byte encodingByte()
 		{
 			return com.db4o.YapConst.ISO8859;
+		}
+
+		internal static com.db4o.YapStringIO forEncoding(byte encodingByte)
+		{
+			switch (encodingByte)
+			{
+				case com.db4o.YapConst.ISO8859:
+				{
+					return new com.db4o.YapStringIO();
+				}
+
+				default:
+				{
+					return new com.db4o.YapStringIOUnicode();
+					break;
+				}
+			}
 		}
 
 		internal virtual int length(string a_string)
@@ -48,7 +66,7 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual string read(com.db4o.YapReader bytes, int a_length)
+		public virtual string read(com.db4o.YapReader bytes, int a_length)
 		{
 			checkBufferLength(a_length);
 			for (int ii = 0; ii < a_length; ii++)

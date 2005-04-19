@@ -21,7 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace com.db4o
 {
 	/// <summary>Deep clone</summary>
-	internal interface DeepClone
+	public interface DeepClone
 	{
 		/// <summary>
 		/// The parameter allows passing one new object so parent

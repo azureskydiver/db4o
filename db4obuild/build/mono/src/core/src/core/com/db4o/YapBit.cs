@@ -20,11 +20,12 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal sealed class YapBit
+	/// <exclude></exclude>
+	public sealed class YapBit
 	{
 		private int i_value;
 
-		internal YapBit(int a_value)
+		public YapBit(int a_value)
 		{
 			i_value = a_value;
 		}
@@ -38,7 +39,7 @@ namespace com.db4o
 			}
 		}
 
-		internal bool get()
+		public bool get()
 		{
 			double cmp = (double)i_value / 2;
 			i_value = i_value / 2;

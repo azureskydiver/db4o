@@ -18,24 +18,19 @@ for more details.
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
-using System;
-using System.Threading;
-namespace com.db4o {
+namespace com.db4o.reflect.generic
+{
+	/// <exclude></exclude>
+	public class GenericArray : com.db4o.reflect.generic.GenericObject
+	{
+		public GenericArray(com.db4o.reflect.generic.GenericClass clazz, int size) : base
+			(clazz, size)
+		{
+		}
 
-    internal class Lock4 {
-    
-        public void awake() {
-            Monitor.Pulse(this);
-        }
-
-        public Object run(Closure4 closure) {
-            lock (this) {
-                return closure.run();
-            }
-        }
-
-        public void snooze(long timeout) {
-            Monitor.Wait(this, (int)timeout);
-        }
-    }
+		internal virtual int getLength()
+		{
+			return _values.Length;
+		}
+	}
 }

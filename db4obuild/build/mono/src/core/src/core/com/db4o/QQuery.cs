@@ -232,7 +232,7 @@ namespace com.db4o
 			{
 				run[0] = 0;
 				bool[] anyClassCollected = { false };
-				i_trans.i_stream.i_classCollection.yapFields(a_field, new _AnonymousInnerClass192
+				i_trans.i_stream.i_classCollection.yapFields(a_field, new _AnonymousInnerClass193
 					(this, anyClassCollected));
 			}
 			com.db4o.Iterator4 i = i_constraints.iterator();
@@ -246,9 +246,9 @@ namespace com.db4o
 			return foundClass[0];
 		}
 
-		private sealed class _AnonymousInnerClass192 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass193 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass192(QQuery _enclosing, bool[] anyClassCollected)
+			public _AnonymousInnerClass193(QQuery _enclosing, bool[] anyClassCollected)
 			{
 				this._enclosing = _enclosing;
 				this.anyClassCollected = anyClassCollected;
@@ -289,10 +289,83 @@ namespace com.db4o
 		{
 			lock (streamLock())
 			{
-				com.db4o.QResult result = new com.db4o.QResult(i_trans);
-				execute1(result);
+				com.db4o.ObjectSet result = classOnlyQuery();
+				if (result != null)
+				{
+					result.reset();
+					return result;
+				}
+				result = new com.db4o.QResult(i_trans);
+				execute1((com.db4o.QResult)result);
 				return result;
 			}
+		}
+
+		private com.db4o.ObjectSet classOnlyQuery()
+		{
+			if (i_constraints.size() != 1)
+			{
+				return null;
+			}
+			com.db4o.query.Constraint constr = (com.db4o.query.Constraint)i_constraints.iterator
+				().next();
+			if (j4o.lang.Class.getClassForObject(constr) != j4o.lang.Class.getClassForType(typeof(
+				com.db4o.QConClass)))
+			{
+				return null;
+			}
+			com.db4o.QConClass clazzconstr = (com.db4o.QConClass)constr;
+			com.db4o.YapClass clazz = clazzconstr.i_yapClass;
+			if (clazz == null)
+			{
+				return null;
+			}
+			if (clazzconstr.i_subConstraints != null || clazz.isArray())
+			{
+				return null;
+			}
+			com.db4o.ClassIndex classIndex = clazz.getIndex();
+			if (classIndex == null)
+			{
+				return null;
+			}
+			if (i_trans.i_stream.isClient())
+			{
+				long[] ids = classIndex.getInternalIDs(i_trans, clazz.getID());
+				com.db4o.QResultClient resClient = new com.db4o.QResultClient(i_trans, ids.Length
+					);
+				for (int i = 0; i < ids.Length; i++)
+				{
+					resClient.add((int)ids[i]);
+				}
+				return resClient;
+			}
+			com.db4o.Tree tree = classIndex.cloneForYapClass(i_trans, clazz.getID());
+			if (tree == null)
+			{
+				return new com.db4o.QResult(i_trans);
+			}
+			com.db4o.QResult resLocal = new com.db4o.QResult(i_trans, tree.size());
+			tree.traverse(new _AnonymousInnerClass291(this, resLocal));
+			return resLocal;
+		}
+
+		private sealed class _AnonymousInnerClass291 : com.db4o.Visitor4
+		{
+			public _AnonymousInnerClass291(QQuery _enclosing, com.db4o.QResult resLocal)
+			{
+				this._enclosing = _enclosing;
+				this.resLocal = resLocal;
+			}
+
+			public void visit(object a_object)
+			{
+				resLocal.add(((com.db4o.TreeInt)a_object).i_key);
+			}
+
+			private readonly QQuery _enclosing;
+
+			private readonly com.db4o.QResult resLocal;
 		}
 
 		internal virtual void execute1(com.db4o.QResult result)
@@ -304,11 +377,11 @@ namespace com.db4o
 			}
 			else
 			{
-				execute2(result);
+				executeLocal(result);
 			}
 		}
 
-		internal virtual void execute2(com.db4o.QResult result)
+		internal virtual void executeLocal(com.db4o.QResult result)
 		{
 			bool checkDuplicates = false;
 			bool topLevel = true;
@@ -382,16 +455,16 @@ namespace com.db4o
 							fieldPath.add(q.i_field);
 							q = q.i_parent;
 						}
-						candidates.traverse(new _AnonymousInnerClass322(this, fieldPath, result));
+						candidates.traverse(new _AnonymousInnerClass378(this, fieldPath, result));
 					}
 				}
 			}
 			result.reset();
 		}
 
-		private sealed class _AnonymousInnerClass322 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass378 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass322(QQuery _enclosing, com.db4o.Collection4 fieldPath, 
+			public _AnonymousInnerClass378(QQuery _enclosing, com.db4o.Collection4 fieldPath, 
 				com.db4o.QResult result)
 			{
 				this._enclosing = _enclosing;
@@ -413,20 +486,20 @@ namespace com.db4o
 						string fieldName = (string)(itPath.next());
 						if (ids != null)
 						{
-							ids.traverse(new _AnonymousInnerClass333(this, idsNew, fieldName));
+							ids.traverse(new _AnonymousInnerClass389(this, idsNew, fieldName));
 						}
 						ids = idsNew[0];
 					}
 					if (ids != null)
 					{
-						ids.traverse(new _AnonymousInnerClass357(this, result));
+						ids.traverse(new _AnonymousInnerClass413(this, result));
 					}
 				}
 			}
 
-			private sealed class _AnonymousInnerClass333 : com.db4o.Visitor4
+			private sealed class _AnonymousInnerClass389 : com.db4o.Visitor4
 			{
-				public _AnonymousInnerClass333(_AnonymousInnerClass322 _enclosing, com.db4o.TreeInt[]
+				public _AnonymousInnerClass389(_AnonymousInnerClass378 _enclosing, com.db4o.TreeInt[]
 					 idsNew, string fieldName)
 				{
 					this._enclosing = _enclosing;
@@ -447,16 +520,16 @@ namespace com.db4o
 					}
 				}
 
-				private readonly _AnonymousInnerClass322 _enclosing;
+				private readonly _AnonymousInnerClass378 _enclosing;
 
 				private readonly com.db4o.TreeInt[] idsNew;
 
 				private readonly string fieldName;
 			}
 
-			private sealed class _AnonymousInnerClass357 : com.db4o.Visitor4
+			private sealed class _AnonymousInnerClass413 : com.db4o.Visitor4
 			{
-				public _AnonymousInnerClass357(_AnonymousInnerClass322 _enclosing, com.db4o.QResult
+				public _AnonymousInnerClass413(_AnonymousInnerClass378 _enclosing, com.db4o.QResult
 					 result)
 				{
 					this._enclosing = _enclosing;
@@ -468,7 +541,7 @@ namespace com.db4o
 					result.addKeyCheckDuplicates(((com.db4o.TreeInt)treeInt).i_key);
 				}
 
-				private readonly _AnonymousInnerClass322 _enclosing;
+				private readonly _AnonymousInnerClass378 _enclosing;
 
 				private readonly com.db4o.QResult result;
 			}

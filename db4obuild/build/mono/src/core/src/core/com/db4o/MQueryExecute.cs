@@ -34,7 +34,7 @@ namespace com.db4o
 			{
 				try
 				{
-					query.execute2(qr);
+					query.executeLocal(qr);
 				}
 				catch (System.Exception e)
 				{

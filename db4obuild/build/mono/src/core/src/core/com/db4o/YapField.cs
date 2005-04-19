@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal class YapField : com.db4o.ext.StoredField
+	/// <exclude></exclude>
+	public class YapField : com.db4o.ext.StoredField
 	{
 		private com.db4o.YapClass i_yapClass;
 
@@ -250,10 +251,6 @@ namespace com.db4o
 								}
 							}
 						}
-						if (com.db4o.Platform.ignoreAsConstraint(obj))
-						{
-							return;
-						}
 						if (!a_parent.hasObjectInParentPath(obj))
 						{
 							a_visitor.visit(new com.db4o.QConObject(a_trans, a_parent, qField(a_trans), obj));
@@ -293,6 +290,7 @@ namespace com.db4o
 				com.db4o.reflect.ReflectArray reflectArray = getStream().reflector().array();
 				i_isNArray = reflectArray.isNDimensional(a_class);
 				a_class = reflectArray.getComponentType(a_class);
+				i_isPrimitive = a_class.isPrimitive();
 				if (i_isNArray)
 				{
 					i_handler = new com.db4o.YapArrayN(getStream(), i_handler, i_isPrimitive);
@@ -358,7 +356,6 @@ namespace com.db4o
 					a_bytes._offset = offset;
 				}
 				bool dotnetValueType = false;
-				dotnetValueType = com.db4o.Platform.isValueType(i_handler.classReflector());
 				if ((i_config != null && i_config.i_cascadeOnDelete == 1) || dotnetValueType)
 				{
 					int preserveCascade = a_bytes.cascadeDeletes();
@@ -510,6 +507,10 @@ namespace com.db4o
 
 		public virtual com.db4o.reflect.ReflectClass getStoredType()
 		{
+			if (i_isPrimitive)
+			{
+				return i_handler.primitiveClassReflector();
+			}
 			return i_handler.classReflector();
 		}
 
@@ -529,10 +530,7 @@ namespace com.db4o
 
 		internal virtual void incrementOffset(com.db4o.YapReader a_bytes)
 		{
-			if (alive())
-			{
-				a_bytes.incrementOffset(i_handler.linkLength());
-			}
+			a_bytes.incrementOffset(linkLength());
 		}
 
 		internal virtual void init(com.db4o.YapClass a_yapClass, string a_name, int syntheticforJad
@@ -617,7 +615,7 @@ namespace com.db4o
 			}
 			else
 			{
-				if (i_handlerID <= com.db4o.YapHandlers.maxTypeID())
+				if (i_handlerID <= a_stream.i_handlers.maxTypeID())
 				{
 					i_handler = a_stream.i_handlers.getHandler(i_handlerID);
 				}
@@ -670,7 +668,7 @@ namespace com.db4o
 				int min = 1;
 				if (i_yapClass.isCollection(a_object))
 				{
-					com.db4o.reflect.Reflector reflector = i_yapClass.reflector();
+					com.db4o.reflect.generic.GenericReflector reflector = i_yapClass.reflector();
 					min = reflector.collectionUpdateDepth(reflector.forObject(a_object));
 				}
 				int updateDepth = a_bytes.getUpdateDepth();
@@ -693,7 +691,7 @@ namespace com.db4o
 
 		internal virtual int ownLength(com.db4o.YapStream a_stream)
 		{
-			return a_stream.i_stringIo.shortLength(i_name) + 1 + com.db4o.YapConst.YAPID_LENGTH;
+			return a_stream.stringIO().shortLength(i_name) + 1 + com.db4o.YapConst.YAPID_LENGTH;
 		}
 
 		internal virtual com.db4o.YapComparable prepareComparison(object obj)
@@ -708,8 +706,12 @@ namespace com.db4o
 
 		internal virtual com.db4o.QField qField(com.db4o.Transaction a_trans)
 		{
-			return new com.db4o.QField(a_trans, i_name, this, i_yapClass.getID(), i_arrayPosition
-				);
+			int yapClassID = 0;
+			if (i_yapClass != null)
+			{
+				yapClassID = i_yapClass.getID();
+			}
+			return new com.db4o.QField(a_trans, i_name, this, yapClassID, i_arrayPosition);
 		}
 
 		internal virtual object read(com.db4o.YapWriter a_bytes)
@@ -739,7 +741,7 @@ namespace com.db4o
 				i_handler = null;
 				return this;
 			}
-			if (i_name.IndexOf(com.db4o.YapFieldVirtual.PREFIX) == 0)
+			if (i_name.IndexOf(com.db4o.YapConst.VIRTUAL_FIELD_PREFIX) == 0)
 			{
 				com.db4o.YapFieldVirtual[] virtuals = a_stream.i_handlers.i_virtualFields;
 				for (int i = 0; i < virtuals.Length; i++)
@@ -881,7 +883,14 @@ namespace com.db4o
 			}
 			else
 			{
-				object obj = read(writer);
+				object obj = null;
+				try
+				{
+					obj = read(writer);
+				}
+				catch (System.Exception e)
+				{
+				}
 				if (obj == null)
 				{
 					str += "\n [null]";

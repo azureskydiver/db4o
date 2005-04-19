@@ -36,8 +36,14 @@ namespace com.db4o
 
 		public virtual object deepClone(object obj)
 		{
-			com.db4o.HashtableIntEntry hie = (com.db4o.HashtableIntEntry)j4o.lang.JavaSystem.clone
-				(this);
+			com.db4o.HashtableIntEntry hie = null;
+			try
+			{
+				hie = (com.db4o.HashtableIntEntry)j4o.lang.JavaSystem.clone(this);
+			}
+			catch (j4o.lang.CloneNotSupportedException e)
+			{
+			}
 			hie.i_object = ((com.db4o.DeepClone)i_object).deepClone(obj);
 			if (i_next != null)
 			{

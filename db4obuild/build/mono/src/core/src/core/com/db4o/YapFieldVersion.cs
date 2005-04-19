@@ -22,9 +22,10 @@ namespace com.db4o
 {
 	internal class YapFieldVersion : com.db4o.YapFieldVirtual
 	{
-		internal YapFieldVersion() : base()
+		internal YapFieldVersion(com.db4o.YapStream stream) : base()
 		{
-			i_name = PREFIX + "version";
+			i_name = com.db4o.ext.VirtualField.VERSION;
+			i_handler = new com.db4o.YLong(stream);
 		}
 
 		internal override void addFieldIndex(com.db4o.YapWriter a_writer, bool a_new)

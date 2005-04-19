@@ -55,6 +55,18 @@ namespace com.db4o
 			}
 		}
 
+		public void addAll(com.db4o.Collection4 other)
+		{
+			if (other != null)
+			{
+				com.db4o.Iterator4 i = other.iterator();
+				while (i.hasNext())
+				{
+					add(i.next());
+				}
+			}
+		}
+
 		internal void clear()
 		{
 			i_first = null;
@@ -154,7 +166,7 @@ namespace com.db4o
 		/// equals() comparison
 		/// returns the removed object or null, if none found
 		/// </summary>
-		internal virtual object remove(object a_object)
+		public virtual object remove(object a_object)
 		{
 			com.db4o.List4 previous = null;
 			com.db4o.List4 current = i_first;

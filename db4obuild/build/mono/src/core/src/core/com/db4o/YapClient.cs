@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal class YapClient : com.db4o.YapStream, com.db4o.ext.ExtClient
+	/// <exclude></exclude>
+	public class YapClient : com.db4o.YapStream, com.db4o.ext.ExtClient
 	{
 		internal readonly object blobLock = new object();
 
@@ -30,7 +31,7 @@ namespace com.db4o
 
 		internal com.db4o.Queue4 messageQueue = new com.db4o.Queue4();
 
-		public readonly com.db4o.Lock4 messageQueueLock = new com.db4o.Lock4();
+		internal readonly com.db4o.Lock4 messageQueueLock = new com.db4o.Lock4();
 
 		private string password;
 
@@ -222,9 +223,10 @@ namespace com.db4o
 		}
 
 		internal sealed override bool delete5(com.db4o.Transaction ta, com.db4o.YapObject
-			 yo, int a_cascade)
+			 yo, int a_cascade, bool userCall)
 		{
-			writeMsg(com.db4o.Msg.DELETE.getWriterForInt(i_trans, yo.getID()));
+			writeMsg(com.db4o.Msg.DELETE.getWriterFor2Ints(i_trans, yo.getID(), userCall ? 1 : 
+				0));
 			return true;
 		}
 
@@ -308,13 +310,13 @@ namespace com.db4o
 			}
 			else
 			{
-				return (com.db4o.Msg)messageQueueLock.run(new _AnonymousInnerClass260(this));
+				return (com.db4o.Msg)messageQueueLock.run(new _AnonymousInnerClass263(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass260 : com.db4o.Closure4
+		private sealed class _AnonymousInnerClass263 : com.db4o.Closure4
 		{
-			public _AnonymousInnerClass260(YapClient _enclosing)
+			public _AnonymousInnerClass263(YapClient _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -387,8 +389,10 @@ namespace com.db4o
 			{
 				writeMsg(com.db4o.Msg.IDENTITY);
 				com.db4o.YapWriter reader = expectedByteResponse(com.db4o.Msg.ID_LIST);
+				showInternalClasses(true);
 				i_db = (com.db4o.ext.Db4oDatabase)getByID(reader.readInt());
 				activate1(i_systemTrans, i_db, 3);
+				showInternalClasses(false);
 			}
 			return i_db;
 		}
@@ -537,7 +541,7 @@ namespace com.db4o
 		internal override void readBytes(byte[] bytes, int address, int addressOffset, int
 			 length)
 		{
-			com.db4o.YapConst.virtualException();
+			throw com.db4o.YapConst.virtualException();
 		}
 
 		internal override void readBytes(byte[] a_bytes, int a_address, int a_length)
@@ -553,7 +557,7 @@ namespace com.db4o
 			return false;
 		}
 
-		internal sealed override com.db4o.YapWriter readWriterByID(com.db4o.Transaction a_ta
+		public sealed override com.db4o.YapWriter readWriterByID(com.db4o.Transaction a_ta
 			, int a_id)
 		{
 			try

@@ -118,8 +118,14 @@ namespace com.db4o
 
 		public virtual object deepClone(object param)
 		{
-			com.db4o.Config4Class ret = (com.db4o.Config4Class)j4o.lang.JavaSystem.clone(this
-				);
+			com.db4o.Config4Class ret = null;
+			try
+			{
+				ret = (com.db4o.Config4Class)j4o.lang.JavaSystem.clone(this);
+			}
+			catch (j4o.lang.CloneNotSupportedException e)
+			{
+			}
 			ret.i_config = (com.db4o.Config4Impl)param;
 			if (i_exceptionalFields != null)
 			{
@@ -149,6 +155,18 @@ namespace com.db4o
 				}
 				catch (System.Exception t)
 				{
+					try
+					{
+						i_translator = (com.db4o.config.ObjectTranslator)j4o.lang.Class.forName(i_translatorName
+							).newInstance();
+						if (i_translator != null)
+						{
+							return i_translator;
+						}
+					}
+					catch (System.Exception th)
+					{
+					}
 					com.db4o.Db4o.logErr(i_config, 48, i_translatorName, null);
 					i_translatorName = null;
 				}
@@ -166,7 +184,7 @@ namespace com.db4o
 				if (i_metaClass == null)
 				{
 					i_metaClass = new com.db4o.MetaClass(i_name);
-					stream.set3(systemTrans, i_metaClass, int.MaxValue, false);
+					stream.setInternal(systemTrans, i_metaClass, int.MaxValue, false);
 				}
 				else
 				{

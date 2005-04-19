@@ -36,6 +36,8 @@ namespace com.db4o.reflect
 
 		com.db4o.reflect.ReflectField getDeclaredField(string name);
 
+		com.db4o.reflect.ReflectClass getDelegate();
+
 		com.db4o.reflect.ReflectMethod getMethod(string methodName, com.db4o.reflect.ReflectClass[]
 			 paramClasses);
 
@@ -49,13 +51,19 @@ namespace com.db4o.reflect
 
 		bool isAssignableFrom(com.db4o.reflect.ReflectClass type);
 
+		bool isCollection();
+
 		bool isInstance(object obj);
 
 		bool isInterface();
 
 		bool isPrimitive();
 
+		bool isSecondClass();
+
 		object newInstance();
+
+		com.db4o.reflect.Reflector reflector();
 
 		/// <summary>
 		/// instructs to install or uninstall a special constructor for the
@@ -68,6 +76,8 @@ namespace com.db4o.reflect
 		/// </param>
 		/// <returns>true if the special constructor is in place after the call</returns>
 		bool skipConstructor(bool flag);
+
+		object[] toArray(object obj);
 
 		void useConstructor(com.db4o.reflect.ReflectConstructor constructor, object[] _params
 			);

@@ -97,7 +97,7 @@ namespace com.db4o
 
 		internal com.db4o.Tree balance()
 		{
-			int cmp = i_subsequent.i_size - i_preceding.i_size;
+			int cmp = i_subsequent.nodes() - i_preceding.nodes();
 			if (cmp < -2)
 			{
 				return rotateRight();
@@ -110,19 +110,19 @@ namespace com.db4o
 				}
 				else
 				{
-					i_size = i_preceding.i_size + i_subsequent.i_size + ownSize();
+					setSizeOwnPrecedingSubsequent();
 					return this;
 				}
 			}
 		}
 
-		internal com.db4o.Tree balanceCheckNulls()
+		internal virtual com.db4o.Tree balanceCheckNulls()
 		{
 			if (i_subsequent == null)
 			{
 				if (i_preceding == null)
 				{
-					i_size = ownSize();
+					setSizeOwn();
 					return this;
 				}
 				return rotateRight();
@@ -184,22 +184,22 @@ namespace com.db4o
 			{
 				if (i_subsequent == null)
 				{
-					i_size = ownSize();
+					setSizeOwn();
 				}
 				else
 				{
-					i_size = i_subsequent.i_size + ownSize();
+					setSizeOwnSubsequent();
 				}
 			}
 			else
 			{
 				if (i_subsequent == null)
 				{
-					i_size = i_preceding.i_size + ownSize();
+					setSizeOwnPreceding();
 				}
 				else
 				{
-					i_size = i_preceding.i_size + i_subsequent.i_size + ownSize();
+					setSizeOwnPrecedingSubsequent();
 				}
 			}
 		}
@@ -219,6 +219,7 @@ namespace com.db4o
 			}
 			com.db4o.Tree newNode = a_tree.deepClone(a_param);
 			newNode.i_size = a_tree.i_size;
+			newNode.nodes(a_tree.nodes());
 			newNode.i_preceding = com.db4o.Tree.deepClone(a_tree.i_preceding, a_param);
 			newNode.i_subsequent = com.db4o.Tree.deepClone(a_tree.i_subsequent, a_param);
 			return newNode;
@@ -352,6 +353,16 @@ namespace com.db4o
 			i_size = 0;
 		}
 
+		/// <returns>the number of nodes in this tree for balancing</returns>
+		internal virtual int nodes()
+		{
+			return i_size;
+		}
+
+		internal virtual void nodes(int count)
+		{
+		}
+
 		internal virtual int ownLength()
 		{
 			throw com.db4o.YapConst.virtualException();
@@ -393,7 +404,7 @@ namespace com.db4o
 		{
 			i_preceding = null;
 			i_subsequent = null;
-			i_size = ownSize();
+			setSizeOwn();
 		}
 
 		internal static com.db4o.Tree removeLike(com.db4o.Tree from, com.db4o.Tree a_find
@@ -464,11 +475,11 @@ namespace com.db4o
 			tree.i_preceding = this;
 			if (tree.i_subsequent == null)
 			{
-				tree.i_size = i_size + tree.ownSize();
+				tree.setSizeOwnPlus(this);
 			}
 			else
 			{
-				tree.i_size = i_size + tree.i_subsequent.i_size + tree.ownSize();
+				tree.setSizeOwnPlus(this, tree.i_subsequent);
 			}
 			return tree;
 		}
@@ -481,11 +492,11 @@ namespace com.db4o
 			tree.i_subsequent = this;
 			if (tree.i_preceding == null)
 			{
-				tree.i_size = i_size + tree.ownSize();
+				tree.setSizeOwnPlus(this);
 			}
 			else
 			{
-				tree.i_size = i_size + tree.i_preceding.i_size + tree.ownSize();
+				tree.setSizeOwnPlus(this, tree.i_preceding);
 			}
 			return tree;
 		}
@@ -500,6 +511,36 @@ namespace com.db4o
 			return this;
 		}
 
+		internal virtual void setSizeOwn()
+		{
+			i_size = ownSize();
+		}
+
+		internal virtual void setSizeOwnPrecedingSubsequent()
+		{
+			i_size = ownSize() + i_preceding.i_size + i_subsequent.i_size;
+		}
+
+		internal virtual void setSizeOwnPreceding()
+		{
+			i_size = ownSize() + i_preceding.i_size;
+		}
+
+		internal virtual void setSizeOwnSubsequent()
+		{
+			i_size = ownSize() + i_subsequent.i_size;
+		}
+
+		internal virtual void setSizeOwnPlus(com.db4o.Tree tree)
+		{
+			i_size = ownSize() + tree.i_size;
+		}
+
+		internal virtual void setSizeOwnPlus(com.db4o.Tree tree1, com.db4o.Tree tree2)
+		{
+			i_size = ownSize() + tree1.i_size + tree2.i_size;
+		}
+
 		internal static int size(com.db4o.Tree a_tree)
 		{
 			if (a_tree == null)
@@ -509,6 +550,7 @@ namespace com.db4o
 			return a_tree.size();
 		}
 
+		/// <returns>the number of objects represented.</returns>
 		public virtual int size()
 		{
 			return i_size;
@@ -554,13 +596,13 @@ namespace com.db4o
 			else
 			{
 				a_writer.writeInt(a_tree.size());
-				a_tree.traverse(new _AnonymousInnerClass383(a_writer));
+				a_tree.traverse(new _AnonymousInnerClass422(a_writer));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass383 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass422 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass383(com.db4o.YapWriter a_writer)
+			public _AnonymousInnerClass422(com.db4o.YapWriter a_writer)
 			{
 				this.a_writer = a_writer;
 			}

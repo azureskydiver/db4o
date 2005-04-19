@@ -22,7 +22,7 @@ namespace com.db4o
 {
 	internal class ShutDownRunnable : com.db4o.Collection4, j4o.lang.Runnable
 	{
-		public bool dontRemove = false;
+		public volatile bool dontRemove = false;
 
 		public virtual void run()
 		{

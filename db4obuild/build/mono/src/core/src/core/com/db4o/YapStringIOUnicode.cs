@@ -20,7 +20,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal sealed class YapStringIOUnicode : com.db4o.YapStringIO
+	/// <exclude></exclude>
+	public sealed class YapStringIOUnicode : com.db4o.YapStringIO
 	{
 		internal override int bytesPerChar()
 		{
@@ -38,7 +39,7 @@ namespace com.db4o
 				 + com.db4o.YapConst.YAPINT_LENGTH;
 		}
 
-		internal override string read(com.db4o.YapReader bytes, int a_length)
+		public override string read(com.db4o.YapReader bytes, int a_length)
 		{
 			checkBufferLength(a_length);
 			for (int ii = 0; ii < a_length; ii++)

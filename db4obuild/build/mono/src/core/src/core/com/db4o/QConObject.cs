@@ -311,7 +311,7 @@ namespace com.db4o
 				int id = getObjectID();
 				if (id != 0)
 				{
-					i_candidates.addByIdentity(new com.db4o.QCandidate(i_candidates, id, !(i_evaluator
+					i_candidates.addByIdentity(new com.db4o.QCandidate(i_candidates, null, id, !(i_evaluator
 						 is com.db4o.QENot)));
 				}
 			}

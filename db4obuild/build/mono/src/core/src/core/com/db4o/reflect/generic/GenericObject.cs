@@ -21,21 +21,30 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace com.db4o.reflect.generic
 {
 	/// <exclude></exclude>
-	internal class GenericObject
+	public class GenericObject
 	{
-		private readonly com.db4o.reflect.generic.GenericClass _class;
+		internal readonly com.db4o.reflect.generic.GenericClass _class;
 
-		internal readonly object[] _fieldValues;
+		internal readonly object[] _values;
 
-		internal GenericObject(com.db4o.reflect.generic.GenericClass dataClass)
+		internal GenericObject(com.db4o.reflect.generic.GenericClass clazz, int length)
 		{
-			_class = dataClass;
-			_fieldValues = new object[_class.getDeclaredFields().Length];
+			_class = clazz;
+			_values = new object[length];
 		}
 
-		internal virtual com.db4o.reflect.generic.GenericClass dataClass()
+		internal GenericObject(com.db4o.reflect.generic.GenericClass clazz) : this(clazz, 
+			clazz.getDeclaredFields().Length)
 		{
-			return _class;
+		}
+
+		public override string ToString()
+		{
+			if (_class == null)
+			{
+				return base.ToString();
+			}
+			return "(G) " + _class.getName();
 		}
 	}
 }

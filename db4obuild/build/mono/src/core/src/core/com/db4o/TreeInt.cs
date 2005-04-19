@@ -106,7 +106,7 @@ namespace com.db4o
 		internal virtual com.db4o.QCandidate toQCandidate(com.db4o.QCandidates candidates
 			)
 		{
-			com.db4o.QCandidate qc = new com.db4o.QCandidate(candidates, i_key, true);
+			com.db4o.QCandidate qc = new com.db4o.QCandidate(candidates, null, i_key, true);
 			qc.i_preceding = toQCandidate((com.db4o.TreeInt)i_preceding, candidates);
 			qc.i_subsequent = toQCandidate((com.db4o.TreeInt)i_subsequent, candidates);
 			qc.i_size = i_size;

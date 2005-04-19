@@ -23,24 +23,22 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public sealed class Deploy
 	{
-		internal const bool demohop = true;
+		public const bool debug = false;
 
-		internal const bool debug = false;
+		public const bool overwrite = true;
 
-		internal const bool overwrite = true;
+		public const bool brackets = true;
 
-		internal const bool brackets = true;
+		public const bool identifiers = true;
 
-		internal const bool identifiers = true;
+		public const bool flush = true;
 
-		internal const bool flush = true;
+		public const bool debugLong = true;
 
-		internal const bool debugLong = true;
-
-		internal const bool deleteFile = false;
+		public const bool deleteFile = false;
 
 		public const bool csharp = true;
 
-		internal const bool debugQueries = false;
+		public const bool debugQueries = false;
 	}
 }

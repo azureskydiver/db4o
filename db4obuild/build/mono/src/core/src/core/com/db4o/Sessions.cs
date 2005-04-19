@@ -91,7 +91,7 @@ namespace com.db4o
 			}
 		}
 
-		internal override object remove(object obj)
+		public override object remove(object obj)
 		{
 			lock (com.db4o.Db4o.Lock)
 			{

@@ -79,7 +79,7 @@ namespace com.db4o
 			return _buffer.Length;
 		}
 
-		internal virtual void incrementOffset(int a_by)
+		public virtual void incrementOffset(int a_by)
 		{
 			_offset += a_by;
 		}
@@ -97,11 +97,11 @@ namespace com.db4o
 		{
 		}
 
-		internal virtual void readBegin(int a_id, byte a_identifier)
+		public virtual void readBegin(int a_id, byte a_identifier)
 		{
 		}
 
-		internal virtual byte readByte()
+		public virtual byte readByte()
 		{
 			return _buffer[_offset++];
 		}
@@ -136,7 +136,7 @@ namespace com.db4o
 			}
 		}
 
-		internal int readInt()
+		public int readInt()
 		{
 			if (com.db4o.YapConst.INTEGER_BYTES == 4)
 			{
@@ -195,6 +195,7 @@ namespace com.db4o
 
 		internal void writeInt(int a_int)
 		{
+			int ii = com.db4o.YapConst.WRITE_LOOP;
 			if (com.db4o.YapConst.INTEGER_BYTES == 4)
 			{
 				int o = _offset + 4;
@@ -207,7 +208,7 @@ namespace com.db4o
 			}
 			else
 			{
-				for (int ii = com.db4o.YapConst.WRITE_LOOP; ii >= 0; ii -= 8)
+				for (; ii >= 0; ii -= 8)
 				{
 					_buffer[_offset++] = (byte)(a_int >> ii);
 				}

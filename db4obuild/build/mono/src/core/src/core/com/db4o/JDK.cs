@@ -101,7 +101,8 @@ namespace com.db4o
 		{
 		}
 
-		public virtual void registerCollections(com.db4o.reflect.Reflector reflector)
+		public virtual void registerCollections(com.db4o.reflect.generic.GenericReflector
+			 reflector)
 		{
 		}
 
@@ -119,8 +120,8 @@ namespace com.db4o
 		{
 		}
 
-		internal virtual bool storeStaticFieldValues(com.db4o.reflect.Reflector reflector
-			, com.db4o.reflect.ReflectClass clazz)
+		internal virtual bool isEnum(com.db4o.reflect.Reflector reflector, com.db4o.reflect.ReflectClass
+			 clazz)
 		{
 			return false;
 		}

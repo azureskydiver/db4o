@@ -20,16 +20,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal class YapHandlers
+	/// <exclude></exclude>
+	public class YapHandlers
 	{
 		private readonly com.db4o.YapStream _masterStream;
 
 		private static readonly com.db4o.Db4oTypeImpl[] i_db4oTypes = { new com.db4o.BlobImpl
 			() };
 
-		internal const int ANYARRAYID = 12;
+		public const int ANY_ARRAY_ID = 12;
 
-		internal const int ANYARRAYNID = 13;
+		public const int ANY_ARRAY_N_ID = 13;
 
 		private const int CLASSCOUNT = 11;
 
@@ -37,11 +38,11 @@ namespace com.db4o
 
 		private com.db4o.YapClass i_anyArrayN;
 
-		internal readonly com.db4o.YapString i_stringHandler;
+		public readonly com.db4o.YapString i_stringHandler;
 
 		private com.db4o.YapDataType[] i_handlers;
 
-		private static int i_maxTypeID = ANYARRAYNID + 1;
+		private int i_maxTypeID = ANY_ARRAY_N_ID + 1;
 
 		private com.db4o.YapTypeAbstract[] i_platformTypes;
 
@@ -49,9 +50,9 @@ namespace com.db4o
 
 		internal com.db4o.YapClass[] i_yapClasses;
 
-		internal const int YAPANY = 10;
+		private const int ANY_INDEX = 10;
 
-		internal const int YAPANYID = 11;
+		public const int ANY_ID = 11;
 
 		internal readonly com.db4o.YapFieldVirtual[] i_virtualFields = new com.db4o.YapFieldVirtual
 			[2];
@@ -78,7 +79,7 @@ namespace com.db4o
 
 		internal com.db4o.reflect.ReflectClass ICLASS_ENUM;
 
-		internal com.db4o.reflect.ReflectClass ICLASS_INTERNAL;
+		public com.db4o.reflect.ReflectClass ICLASS_INTERNAL;
 
 		internal com.db4o.reflect.ReflectClass ICLASS_OBJECT;
 
@@ -92,15 +93,17 @@ namespace com.db4o
 
 		internal com.db4o.reflect.ReflectClass ICLASS_TRANSIENTCLASS;
 
-		internal YapHandlers(com.db4o.YapStream a_stream)
+		internal YapHandlers(com.db4o.YapStream a_stream, byte stringEncoding)
 		{
 			_masterStream = a_stream;
 			a_stream.i_handlers = this;
-			initClassReflectors(a_stream.reflector());
+			com.db4o.reflect.generic.GenericReflector reflector = a_stream.reflector();
+			initClassReflectors(reflector);
 			i_indexes = new com.db4o.YapIndexes(a_stream);
 			i_virtualFields[0] = i_indexes.i_fieldVersion;
 			i_virtualFields[1] = i_indexes.i_fieldUUID;
-			i_stringHandler = new com.db4o.YapString(a_stream);
+			i_stringHandler = new com.db4o.YapString(a_stream, com.db4o.YapStringIO.forEncoding
+				(stringEncoding));
 			i_handlers = new com.db4o.YapDataType[] { new com.db4o.YInt(a_stream), new com.db4o.YLong
 				(a_stream), new com.db4o.YFloat(a_stream), new com.db4o.YBoolean(a_stream), new 
 				com.db4o.YDouble(a_stream), new com.db4o.YByte(a_stream), new com.db4o.YChar(a_stream
@@ -129,30 +132,47 @@ namespace com.db4o
 			i_yapClasses = new com.db4o.YapClass[i_maxTypeID + 1];
 			for (int i = 0; i < CLASSCOUNT; i++)
 			{
+				int id = i + 1;
 				i_yapClasses[i] = new com.db4o.YapClassPrimitive(a_stream, i_handlers[i]);
-				i_yapClasses[i].i_id = i + 1;
+				i_yapClasses[i].i_id = id;
 				i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
+				if (i < ANY_INDEX)
+				{
+					reflector.registerPrimitiveClass(id, i_handlers[i].classReflector().getName());
+				}
+				if (i_handlers[i].primitiveClassReflector() != null)
+				{
+					i_classByClass.put(i_handlers[i].primitiveClassReflector(), i_yapClasses[i]);
+				}
 			}
 			for (int i = 0; i < i_platformTypes.Length; i++)
 			{
-				int idx = i_platformTypes[i].getID() - 1;
+				int id = i_platformTypes[i].getID();
+				int idx = id - 1;
+				reflector.registerPrimitiveClass(id, i_platformTypes[i].classReflector().getName(
+					));
 				i_handlers[idx] = i_platformTypes[i];
 				i_yapClasses[idx] = new com.db4o.YapClassPrimitive(a_stream, i_platformTypes[i]);
-				i_yapClasses[idx].i_id = idx + 1;
+				i_yapClasses[idx].i_id = id;
 				if (i_yapClasses[idx].i_id > i_maxTypeID)
 				{
 					i_maxTypeID = idx;
 				}
 				i_classByClass.put(i_platformTypes[i].classReflector(), i_yapClasses[idx]);
+				if (i_platformTypes[i].primitiveClassReflector() != null)
+				{
+					i_classByClass.put(i_platformTypes[i].primitiveClassReflector(), i_yapClasses[idx
+						]);
+				}
 			}
 			i_anyArray = new com.db4o.YapClassPrimitive(a_stream, new com.db4o.YapArray(_masterStream
-				, i_handlers[YAPANY], false));
-			i_anyArray.i_id = ANYARRAYID;
-			i_yapClasses[ANYARRAYID - 1] = i_anyArray;
+				, i_handlers[ANY_INDEX], false));
+			i_anyArray.i_id = ANY_ARRAY_ID;
+			i_yapClasses[ANY_ARRAY_ID - 1] = i_anyArray;
 			i_anyArrayN = new com.db4o.YapClassPrimitive(a_stream, new com.db4o.YapArrayN(_masterStream
-				, i_handlers[YAPANY], false));
-			i_anyArrayN.i_id = ANYARRAYNID;
-			i_yapClasses[ANYARRAYNID - 1] = i_anyArrayN;
+				, i_handlers[ANY_INDEX], false));
+			i_anyArrayN.i_id = ANY_ARRAY_N_ID;
+			i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
 		}
 
 		internal virtual int arrayType(object a_object)
@@ -183,6 +203,13 @@ namespace com.db4o
 			if (claxx.isAbstract() || claxx.isInterface())
 			{
 				return true;
+			}
+			if (!com.db4o.Platform.callConstructor())
+			{
+				if (claxx.skipConstructor(skipConstructor))
+				{
+					return true;
+				}
 			}
 			if (!_masterStream.i_config.i_testConstructors)
 			{
@@ -215,7 +242,7 @@ namespace com.db4o
 					bool[] foundConstructor = { false };
 					if (sortedConstructors != null)
 					{
-						sortedConstructors.traverse(new _AnonymousInnerClass212(this, foundConstructor, claxx
+						sortedConstructors.traverse(new _AnonymousInnerClass218(this, foundConstructor, claxx
 							));
 					}
 					if (foundConstructor[0])
@@ -230,9 +257,9 @@ namespace com.db4o
 			return false;
 		}
 
-		private sealed class _AnonymousInnerClass212 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass218 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass212(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
+			public _AnonymousInnerClass218(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
 				 claxx)
 			{
 				this._enclosing = _enclosing;
@@ -323,19 +350,6 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual com.db4o.ext.Db4oDatabase ensureDb4oDatabase(com.db4o.Transaction
-			 a_trans, com.db4o.ext.Db4oDatabase a_db)
-		{
-			com.db4o.YapStream stream = a_trans.i_stream;
-			object obj = stream.db4oTypeStored(a_trans, a_db);
-			if (obj != null)
-			{
-				return (com.db4o.ext.Db4oDatabase)obj;
-			}
-			stream.set3(a_trans, a_db, 2, false);
-			return a_db;
-		}
-
 		internal com.db4o.YapDataType getHandler(int a_index)
 		{
 			return i_handlers[a_index - 1];
@@ -377,7 +391,8 @@ namespace com.db4o
 			return a_stream.getYapClass(a_class, true);
 		}
 
-		private void initClassReflectors(com.db4o.reflect.Reflector reflector)
+		private void initClassReflectors(com.db4o.reflect.generic.GenericReflector reflector
+			)
 		{
 			ICLASS_COMPARE = reflector.forClass(com.db4o.YapConst.CLASS_COMPARE);
 			ICLASS_DB4OTYPE = reflector.forClass(com.db4o.YapConst.CLASS_DB4OTYPE);
@@ -431,7 +446,7 @@ namespace com.db4o
 			return null;
 		}
 
-		internal virtual com.db4o.YapClass getYapClassStatic(int a_id)
+		public virtual com.db4o.YapClass getYapClassStatic(int a_id)
 		{
 			if (a_id > 0 && a_id <= i_maxTypeID)
 			{
@@ -468,12 +483,11 @@ namespace com.db4o
 				{
 					return true;
 				}
-				return com.db4o.Platform.isValueType(claxx);
 			}
 			return false;
 		}
 
-		internal static int maxTypeID()
+		internal virtual int maxTypeID()
 		{
 			return i_maxTypeID;
 		}

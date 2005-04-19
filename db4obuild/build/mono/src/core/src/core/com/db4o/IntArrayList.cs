@@ -30,9 +30,13 @@ namespace com.db4o
 
 		private int i_count;
 
-		internal IntArrayList()
+		internal IntArrayList() : this(INC)
 		{
-			i_content = new int[INC];
+		}
+
+		internal IntArrayList(int initialSize)
+		{
+			i_content = new int[initialSize];
 		}
 
 		internal virtual void add(int a_value)

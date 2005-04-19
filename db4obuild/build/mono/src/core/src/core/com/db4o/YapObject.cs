@@ -100,7 +100,8 @@ namespace com.db4o
 						stream.message("" + getID() + " activate " + i_yapClass.getName());
 					}
 				}
-				read(ta, null, a_object, a_depth, com.db4o.YapConst.ADD_MEMBERS_TO_ID_TREE_ONLY);
+				read(ta, null, a_object, a_depth, com.db4o.YapConst.ADD_MEMBERS_TO_ID_TREE_ONLY, 
+					false);
 			}
 		}
 
@@ -205,6 +206,16 @@ namespace com.db4o
 			return null;
 		}
 
+		public long getVersion()
+		{
+			com.db4o.VirtualAttributes va = virtualAttributes(getTrans());
+			if (va == null)
+			{
+				return 0;
+			}
+			return va.i_version;
+		}
+
 		internal com.db4o.YapClass getYapClass()
 		{
 			return i_yapClass;
@@ -216,7 +227,7 @@ namespace com.db4o
 		}
 
 		internal object read(com.db4o.Transaction ta, com.db4o.YapWriter a_reader, object
-			 a_object, int a_instantiationDepth, int addToIDTree)
+			 a_object, int a_instantiationDepth, int addToIDTree, bool checkIDTree)
 		{
 			if (beginProcessing())
 			{
@@ -231,6 +242,19 @@ namespace com.db4o
 					if (i_yapClass == null)
 					{
 						return null;
+					}
+					if (checkIDTree)
+					{
+						com.db4o.YapObject classCreationSideEffect = stream.getYapObject(getID());
+						if (classCreationSideEffect != null)
+						{
+							object obj = classCreationSideEffect.getObject();
+							if (obj != null)
+							{
+								return obj;
+							}
+							stream.yapObjectGCd(classCreationSideEffect);
+						}
 					}
 					a_reader.setInstantiationDepth(a_instantiationDepth);
 					a_reader.setUpdateDepth(addToIDTree);
@@ -324,7 +348,7 @@ namespace com.db4o
 			writeObjectBegin();
 			com.db4o.YapStream stream = a_trans.i_stream;
 			i_yapClass = a_yapClass;
-			if (i_yapClass.getID() != com.db4o.YapHandlers.YAPANYID)
+			if (i_yapClass.getID() != com.db4o.YapHandlers.ANY_ID)
 			{
 				setID(stream, stream.newUserObject());
 				beginProcessing();
@@ -918,7 +942,6 @@ namespace com.db4o
 			}
 			catch (System.Exception e)
 			{
-				j4o.lang.JavaSystem.printStackTrace(e);
 			}
 			return "Exception in YapObject analyzer";
 		}

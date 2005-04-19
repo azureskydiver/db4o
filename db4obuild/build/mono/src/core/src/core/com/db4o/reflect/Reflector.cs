@@ -35,7 +35,7 @@ namespace com.db4o.reflect
 	/// to register the use of your implementation before opening database
 	/// files.
 	/// </remarks>
-	public interface Reflector
+	public interface Reflector : com.db4o.DeepClone
 	{
 		/// <summary>returns an IArray object, the equivalent to java.lang.reflect.Array.</summary>
 		/// <remarks>returns an IArray object, the equivalent to java.lang.reflect.Array.</remarks>
@@ -50,14 +50,14 @@ namespace com.db4o.reflect
 		/// </remarks>
 		bool constructorCallsSupported();
 
+		/// <summary>returns an IClass for a Class</summary>
+		com.db4o.reflect.ReflectClass forClass(j4o.lang.Class clazz);
+
 		/// <summary>
 		/// returns an IClass class reflector for a class name or null
 		/// if no such class is found
 		/// </summary>
 		com.db4o.reflect.ReflectClass forName(string className);
-
-		/// <summary>returns an IClass for a Class</summary>
-		com.db4o.reflect.ReflectClass forClass(j4o.lang.Class clazz);
 
 		/// <summary>returns an IClass for an object or null if the passed object is null.</summary>
 		/// <remarks>returns an IClass for an object or null if the passed object is null.</remarks>
@@ -65,10 +65,6 @@ namespace com.db4o.reflect
 
 		bool isCollection(com.db4o.reflect.ReflectClass claxx);
 
-		void registerCollection(j4o.lang.Class clazz);
-
-		void registerCollectionUpdateDepth(j4o.lang.Class clazz, int depth);
-
-		int collectionUpdateDepth(com.db4o.reflect.ReflectClass claxx);
+		void setParent(com.db4o.reflect.Reflector reflector);
 	}
 }

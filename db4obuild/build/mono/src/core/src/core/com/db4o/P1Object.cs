@@ -107,7 +107,7 @@ namespace com.db4o
 				}
 				if (validYapObject())
 				{
-					i_trans.i_stream.delete3(i_trans, i_yapObject, this, 0);
+					i_trans.i_stream.delete3(i_trans, i_yapObject, this, 0, false);
 				}
 			}
 		}

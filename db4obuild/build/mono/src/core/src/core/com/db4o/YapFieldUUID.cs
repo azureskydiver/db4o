@@ -24,7 +24,7 @@ namespace com.db4o
 	{
 		internal YapFieldUUID(com.db4o.YapStream stream) : base()
 		{
-			i_name = PREFIX + "uuid";
+			i_name = com.db4o.YapConst.VIRTUAL_FIELD_PREFIX + "uuid";
 			i_handler = new com.db4o.YLong(stream);
 		}
 
@@ -37,7 +37,7 @@ namespace com.db4o
 			com.db4o.YapFile yf = (com.db4o.YapFile)a_writer.getStream();
 			if (id == 0)
 			{
-				a_writer.writeInt(yf.identity().getID(yf));
+				a_writer.writeInt(yf.identity().getID(a_writer.getTransaction()));
 			}
 			else
 			{
@@ -70,14 +70,17 @@ namespace com.db4o
 			 a_yapObject, com.db4o.YapReader a_bytes)
 		{
 			int dbID = a_bytes.readInt();
-			com.db4o.ext.Db4oDatabase db = (com.db4o.ext.Db4oDatabase)a_trans.i_stream.getByID2
-				(a_trans, dbID);
+			com.db4o.YapStream stream = a_trans.i_stream;
+			stream.showInternalClasses(true);
+			com.db4o.ext.Db4oDatabase db = (com.db4o.ext.Db4oDatabase)stream.getByID2(a_trans
+				, dbID);
 			if (db != null && db.i_signature == null)
 			{
-				a_trans.i_stream.activate2(a_trans, db, 2);
+				stream.activate2(a_trans, db, 2);
 			}
 			a_yapObject.i_virtualAttributes.i_database = db;
 			a_yapObject.i_virtualAttributes.i_uuid = com.db4o.YLong.readLong(a_bytes);
+			stream.showInternalClasses(false);
 		}
 
 		public override int linkLength()
@@ -89,6 +92,7 @@ namespace com.db4o
 			 a_bytes, bool a_migrating, bool a_new)
 		{
 			com.db4o.YapStream stream = a_bytes.getStream();
+			com.db4o.Transaction trans = a_bytes.getTransaction();
 			bool indexEntry = a_new && stream.maintainsIndices();
 			int dbID = 0;
 			if (!a_migrating)
@@ -107,7 +111,7 @@ namespace com.db4o
 				com.db4o.ext.Db4oDatabase db = a_yapObject.i_virtualAttributes.i_database;
 				if (db != null)
 				{
-					dbID = db.getID(stream);
+					dbID = db.getID(trans);
 				}
 			}
 			else
@@ -117,7 +121,7 @@ namespace com.db4o
 					 != null)
 				{
 					db = a_yapObject.i_virtualAttributes.i_database;
-					dbID = db.getID(stream);
+					dbID = db.getID(trans);
 				}
 			}
 			a_bytes.writeInt(dbID);

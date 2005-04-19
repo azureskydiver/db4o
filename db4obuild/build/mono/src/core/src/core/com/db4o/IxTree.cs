@@ -26,6 +26,8 @@ namespace com.db4o
 
 		internal int i_version;
 
+		internal int _nodes = 1;
+
 		internal IxTree(com.db4o.IxFieldTransaction a_ft)
 		{
 			i_fieldTransaction = a_ft;
@@ -62,6 +64,13 @@ namespace com.db4o
 		internal abstract com.db4o.Tree addToCandidatesTree(com.db4o.Tree a_tree, com.db4o.QCandidates
 			 a_candidates, int[] a_lowerAndUpperMatch);
 
+		internal virtual void beginMerge()
+		{
+			i_preceding = null;
+			i_subsequent = null;
+			setSizeOwn();
+		}
+
 		internal override com.db4o.Tree deepClone(object a_param)
 		{
 			try
@@ -82,9 +91,61 @@ namespace com.db4o
 			return i_fieldTransaction.i_index.i_field.getHandler();
 		}
 
+		internal sealed override int nodes()
+		{
+			return _nodes;
+		}
+
+		internal sealed override void nodes(int count)
+		{
+			_nodes = count;
+		}
+
+		internal override void setSizeOwn()
+		{
+			base.setSizeOwn();
+			_nodes = 1;
+		}
+
+		internal override void setSizeOwnPrecedingSubsequent()
+		{
+			base.setSizeOwnPrecedingSubsequent();
+			_nodes = 1 + i_preceding.nodes() + i_subsequent.nodes();
+		}
+
+		internal override void setSizeOwnPreceding()
+		{
+			base.setSizeOwnPreceding();
+			_nodes = 1 + i_preceding.nodes();
+		}
+
+		internal override void setSizeOwnSubsequent()
+		{
+			base.setSizeOwnSubsequent();
+			_nodes = 1 + i_subsequent.nodes();
+		}
+
+		internal sealed override void setSizeOwnPlus(com.db4o.Tree tree)
+		{
+			base.setSizeOwnPlus(tree);
+			_nodes = 1 + tree.nodes();
+		}
+
+		internal sealed override void setSizeOwnPlus(com.db4o.Tree tree1, com.db4o.Tree tree2
+			)
+		{
+			base.setSizeOwnPlus(tree1, tree2);
+			_nodes = 1 + tree1.nodes() + tree2.nodes();
+		}
+
 		internal virtual int slotLength()
 		{
 			return handler().linkLength() + com.db4o.YapConst.YAPINT_LENGTH;
+		}
+
+		internal com.db4o.YapFile stream()
+		{
+			return trans().i_file;
 		}
 
 		internal com.db4o.Transaction trans()
@@ -94,17 +155,5 @@ namespace com.db4o
 
 		internal abstract void write(com.db4o.YapDataType a_handler, com.db4o.YapWriter a_writer
 			);
-
-		internal com.db4o.YapFile stream()
-		{
-			return trans().i_file;
-		}
-
-		internal virtual void beginMerge()
-		{
-			i_preceding = null;
-			i_subsequent = null;
-			i_size = ownSize();
-		}
 	}
 }

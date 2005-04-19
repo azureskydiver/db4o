@@ -253,7 +253,7 @@ namespace com.db4o
 			return bytes;
 		}
 
-		internal void read()
+		public void read()
 		{
 			i_trans.i_stream.readBytes(_buffer, i_address, _addressOffset, i_length);
 		}

@@ -47,19 +47,35 @@ namespace com.db4o
 
 		private string _tag;
 
-		private static long[] rangeStart;
+		private static long[] _rangeStart;
 
-		private static long[] rangeEnd;
+		private static long[] _rangeEnd;
 
-		private static int rangeCount;
+		private static int _rangeCount;
+
+		private static long _eventNr;
+
+		private static long[] _breakEventNrs;
+
+		private static int _breakEventCount;
 
 		public static com.db4o.DTrace BIND;
 
+		public static com.db4o.DTrace CANDIDATE_READ;
+
 		public static com.db4o.DTrace CLOSE;
+
+		public static com.db4o.DTrace COLLECT_CHILDREN;
 
 		public static com.db4o.DTrace COMMIT;
 
 		public static com.db4o.DTrace CONTINUESET;
+
+		public static com.db4o.DTrace CREATE_CANDIDATE;
+
+		public static com.db4o.DTrace DONOTINCLUDE;
+
+		public static com.db4o.DTrace EVALUATE_SELF;
 
 		public static com.db4o.DTrace FREE;
 
@@ -69,7 +85,13 @@ namespace com.db4o
 
 		public static com.db4o.DTrace GET_SLOT;
 
+		public static com.db4o.DTrace GET_YAPOBJECT;
+
+		public static com.db4o.DTrace ID_TREE_ADD;
+
 		public static com.db4o.DTrace NEW_INSTANCE;
+
+		public static com.db4o.DTrace READ_ARRAY_WRAPPER;
 
 		public static com.db4o.DTrace READ_ID;
 
@@ -137,6 +159,15 @@ namespace com.db4o
 
 		public static void addRangeWithEnd(long start, long end)
 		{
+		}
+
+		private static void breakOnEvent(long eventNr)
+		{
+		}
+
+		private string formatInt(long i, int len)
+		{
+			return null;
 		}
 
 		private string formatInt(long i)

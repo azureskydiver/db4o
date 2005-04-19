@@ -58,6 +58,10 @@ namespace com.db4o
 		internal override object read1(com.db4o.YapReader a_bytes)
 		{
 			short ret = readShort(a_bytes);
+			if (ret == short.MaxValue)
+			{
+				return null;
+			}
 			return System.Convert.ToInt16(ret);
 		}
 

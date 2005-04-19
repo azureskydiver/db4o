@@ -151,6 +151,16 @@ namespace com.db4o.config
 		/// <param name="attributeProvider">the attribute provider to be used</param>
 		void compare(com.db4o.config.ObjectAttribute attributeProvider);
 
+		/// <summary>generate UUIDs for stored objects of this class.</summary>
+		/// <remarks>generate UUIDs for stored objects of this class.</remarks>
+		/// <param name="setting"></param>
+		void generateUUIDs(bool setting);
+
+		/// <summary>generate version numbers for stored objects of this class.</summary>
+		/// <remarks>generate version numbers for stored objects of this class.</remarks>
+		/// <param name="setting"></param>
+		void generateVersionNumbers(bool setting);
+
 		/// <summary>sets the maximum activation depth to the desired value.</summary>
 		/// <remarks>
 		/// sets the maximum activation depth to the desired value.

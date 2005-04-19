@@ -56,6 +56,10 @@ namespace com.db4o
 		internal override object read1(com.db4o.YapReader a_bytes)
 		{
 			long ret = readLong(a_bytes);
+			if (ret == long.MaxValue)
+			{
+				return null;
+			}
 			return System.Convert.ToInt64(ret);
 		}
 

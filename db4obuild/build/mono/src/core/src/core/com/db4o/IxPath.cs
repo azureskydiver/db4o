@@ -190,7 +190,7 @@ namespace com.db4o
 			{
 				if (i_next == null || i_next.i_tree != i_tree.i_preceding)
 				{
-					preceding += i_tree.i_preceding.i_size;
+					preceding += i_tree.i_preceding.size();
 				}
 			}
 			if (i_lowerAndUpperMatch != null)
@@ -222,7 +222,7 @@ namespace com.db4o
 			{
 				if (i_next == null || i_next.i_tree != i_tree.i_subsequent)
 				{
-					subsequent += i_tree.i_subsequent.i_size;
+					subsequent += i_tree.i_subsequent.size();
 				}
 			}
 			if (i_lowerAndUpperMatch != null)

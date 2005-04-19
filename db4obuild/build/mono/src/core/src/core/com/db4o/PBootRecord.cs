@@ -26,7 +26,7 @@ namespace com.db4o
 	/// holding a reference to the Db4oDatabase object of the ObjectContainer
 	/// </remarks>
 	/// <exclude></exclude>
-	public class PBootRecord : com.db4o.P1Object, com.db4o.Db4oTypeImpl
+	public class PBootRecord : com.db4o.P1Object, com.db4o.Db4oTypeImpl, com.db4o.Internal
 	{
 		[com.db4o.Transient]
 		internal com.db4o.YapFile i_stream;
@@ -85,7 +85,9 @@ namespace com.db4o
 			{
 				i_uuidMetaIndex = new com.db4o.MetaIndex();
 				com.db4o.Transaction systemTrans = i_stream.getSystemTransaction();
+				i_stream.showInternalClasses(true);
 				i_stream.setInternal(systemTrans, this, false);
+				i_stream.showInternalClasses(false);
 				systemTrans.commit();
 			}
 			return i_uuidMetaIndex;
@@ -107,7 +109,9 @@ namespace com.db4o
 			if (i_dirty)
 			{
 				i_versionGenerator++;
+				i_stream.showInternalClasses(true);
 				base.store(a_depth);
+				i_stream.showInternalClasses(false);
 			}
 			i_dirty = false;
 		}
