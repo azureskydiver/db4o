@@ -11,7 +11,7 @@ Db4o software:
 ==============
 
 db4o-4.4-java1.4.jar
-Java classes in objectmanager.jar
+Java classes and XML files in objectmanager.jar
 	- GNU General Public License (See note)
 	
 All graphics files
