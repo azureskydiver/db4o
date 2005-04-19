@@ -14,8 +14,8 @@ public class AllTestsConfSingle extends TestSuite{
     TestSuite[] TEST_SUITES = new TestSuite[]{
         
         // suite("com.db4o.test.jdk5.Jdk5TestSuite"),
-        this,
-        // new ReplicationTestSuite()
+        // this,
+        new ReplicationTestSuite()
         
     };
 
@@ -34,7 +34,7 @@ public class AllTestsConfSingle extends TestSuite{
 	/**
 	 * delete the database files
 	 */
-	public boolean DELETE_FILE = false;
+	public boolean DELETE_FILE = true;
 
     /**
       * run the tests stand-alone 
