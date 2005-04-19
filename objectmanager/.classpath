@@ -7,7 +7,6 @@
 	<classpathentry kind="lib" path="launcher/lib/linux/swt-cairo.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/linux/swt-mozilla.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/linux/swt-pi.jar"/>
-	<classpathentry kind="lib" path="launcher/lib/db4o-4.4-java1.4.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/jakarta-oro-2.0.7.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/jface.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/kxml-plugin.jar"/>
@@ -16,5 +15,6 @@
 	<classpathentry kind="lib" path="launcher/lib/runtime.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/xmlpull_1_1_3_1.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/xswt.jar"/>
+	<classpathentry kind="lib" path="launcher/lib/db4o-4.5-java1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
