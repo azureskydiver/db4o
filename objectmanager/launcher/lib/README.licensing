@@ -41,6 +41,13 @@ xmlpull_1_1_3_1.jar
 	- KXML License
 
 
+XSWT:
+=====
+
+xswt.jar
+	- Common Public License
+
+
 
 NOTE: The GNU General Public License is widely regarded to be ambiguous.
 At db4objects, we have prepared a GPL interpretation policy to disambiguate 

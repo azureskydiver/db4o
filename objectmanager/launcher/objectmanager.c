@@ -159,6 +159,7 @@ static _TCHAR* classpath = "";
 
 
 int main(int argc, char **argv) {
-  printf("%s", findCommand("java"));
+  printf("%s\n", findCommand("java"));
+  puts(argv[0]);
 }
 
