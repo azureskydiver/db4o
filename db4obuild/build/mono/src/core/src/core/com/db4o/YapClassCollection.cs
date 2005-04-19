@@ -20,6 +20,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
+	/// <exclude></exclude>
 	public sealed class YapClassCollection : com.db4o.YapMeta, com.db4o.UseSystemTransaction
 	{
 		private com.db4o.YapClass i_addingMembersTo;
@@ -454,13 +455,13 @@ namespace com.db4o
 			while (i.hasNext())
 			{
 				com.db4o.YapClass yc = i.nextClass();
-				yc.forEachYapField(new _AnonymousInnerClass382(this, a_field, a_visitor, yc));
+				yc.forEachYapField(new _AnonymousInnerClass385(this, a_field, a_visitor, yc));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass382 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass385 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass382(YapClassCollection _enclosing, string a_field, com.db4o.Visitor4
+			public _AnonymousInnerClass385(YapClassCollection _enclosing, string a_field, com.db4o.Visitor4
 				 a_visitor, com.db4o.YapClass yc)
 			{
 				this._enclosing = _enclosing;

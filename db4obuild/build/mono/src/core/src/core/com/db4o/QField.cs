@@ -71,6 +71,10 @@ namespace com.db4o
 					claxx = reflector.forObject(a_object);
 				}
 			}
+			else
+			{
+				return true;
+			}
 			return i_yapField == null || i_yapField.canHold(claxx);
 		}
 

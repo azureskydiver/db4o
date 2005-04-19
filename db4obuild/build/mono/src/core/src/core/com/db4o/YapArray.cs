@@ -325,11 +325,6 @@ namespace com.db4o
 				if (elements != com.db4o.YapConst.IGNORE_ID)
 				{
 					bool primitive = false;
-					if (elements < com.db4o.YapConst.PRIMITIVE)
-					{
-						primitive = true;
-						elements -= com.db4o.YapConst.PRIMITIVE;
-					}
 					com.db4o.YapClass yc = a_trans.i_stream.getYapClass(-elements);
 					if (yc != null)
 					{
@@ -381,10 +376,6 @@ namespace com.db4o
 			com.db4o.reflect.ReflectClass claxx = _reflectArray.getComponentType(reflector.forObject
 				(a_object));
 			bool primitive = false;
-			if (claxx.isPrimitive())
-			{
-				primitive = true;
-			}
 			com.db4o.YapStream stream = a_bytes.getStream();
 			if (primitive)
 			{

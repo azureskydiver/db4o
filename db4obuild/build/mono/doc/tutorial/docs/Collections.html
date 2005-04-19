@@ -197,8 +197,8 @@ SensorReadout proto = new SensorReadout(null, DateTime.MinValue, null);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>2<br>
-BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.1,0.2,0.3<br>
-BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.2,0.4,0.6<br>
+BMW[Rubens Barrichello/99]/2 : 1113883515458 : 0.1,0.2,0.3<br>
+BMW[Rubens Barrichello/99]/2 : 1113883515458 : 0.2,0.4,0.6<br>
 </td></table></table><br>
 <br>
 As a prototype for an array, we provide an array of the same type,&nbsp;containing only the values we expect the result to contain.<br>
@@ -211,7 +211,7 @@ SensorReadout proto = new SensorReadout(new double[] { 0.3, 0.1 }, DateTime.MinV
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>1<br>
-BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.1,0.2,0.3<br>
+BMW[Rubens Barrichello/99]/2 : 1113883515458 : 0.1,0.2,0.3<br>
 </td></table></table><br>
 <br>
 Note that the actual position of the given elements in the prototype&nbsp;array is irrelevant.<br>
@@ -242,7 +242,7 @@ ObjectSet result = db.get(new ArrayList());<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>2<br>
 []<br>
-[BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.1,0.2,0.3, BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.2,0.4,0.6]<br>
+[BMW[Rubens Barrichello/99]/2 : 1113883515458 : 0.1,0.2,0.3, BMW[Rubens Barrichello/99]/2 : 1113883515458 : 0.2,0.4,0.6]<br>
 </td></table></table><br>
 <br>
 This doesn't work with arrays, though.<br>
@@ -271,7 +271,7 @@ Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>1<br>
-BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.1,0.2,0.3<br>
+BMW[Rubens Barrichello/99]/2 : 1113883515458 : 0.1,0.2,0.3<br>
 </td></table></table><br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -312,9 +312,9 @@ ObjectSet result = db.get(new Car("BMW", null));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;retrieveAllSensorReadouts(db);<br>
 </code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>3<br>
-BMW[Rubens Barrichello/99]/3 : 1113872939739 : 0.1,0.2,0.3<br>
-BMW[Rubens Barrichello/99]/3 : 1113872939927 : 0.30000000000000004,0.6000000000000001,0.8999999999999999<br>
-BMW[Rubens Barrichello/99]/3 : 1113872939739 : 0.2,0.4,0.6<br>
+BMW[Rubens Barrichello/99]/3 : 1113883515458 : 0.1,0.2,0.3<br>
+BMW[Rubens Barrichello/99]/3 : 1113883515723 : 0.30000000000000004,0.6000000000000001,0.8999999999999999<br>
+BMW[Rubens Barrichello/99]/3 : 1113883515458 : 0.2,0.4,0.6<br>
 </td></table></table><br>
 <br>
 There's nothing special about deleting arrays and collections, too.<br>
@@ -341,8 +341,8 @@ Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 </code></td></tr></table>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>BMW[Rubens Barrichello/99]/2 : 1113872939739 : 0.2,0.4,0.6<br>
-BMW[Rubens Barrichello/99]/2 : 1113872939927 : 0.30000000000000004,0.6000000000000001,0.8999999999999999<br>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>BMW[Rubens Barrichello/99]/2 : 1113883515458 : 0.2,0.4,0.6<br>
+BMW[Rubens Barrichello/99]/2 : 1113883515723 : 0.30000000000000004,0.6000000000000001,0.8999999999999999<br>
 </td></table></table><br>
 <br>
 (This example also shows that with db4o it is quite easy to access object&nbsp;internals we were never meant to see. Please keep this always in mind&nbsp;and be careful.)<br>

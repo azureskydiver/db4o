@@ -1623,6 +1623,7 @@ namespace com.db4o
 				i_nameBytes = new byte[len];
 				j4o.lang.JavaSystem.arraycopy(a_reader._buffer, a_reader._offset, i_nameBytes, 0, 
 					len);
+				i_nameBytes = com.db4o.Platform.updateClassName(i_nameBytes);
 				a_reader.incrementOffset(len + com.db4o.YapConst.YAPINT_LENGTH);
 				setStateUnread();
 				bitFalse(com.db4o.YapConst.CHECKED_CHANGES);

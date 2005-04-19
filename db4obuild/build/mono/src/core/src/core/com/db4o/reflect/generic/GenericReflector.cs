@@ -319,36 +319,43 @@ namespace com.db4o.reflect.generic
 				string fieldname = null;
 				int fieldnamelength = classreader.readInt();
 				fieldname = _stream.stringIO().read(classreader, fieldnamelength);
-				com.db4o.reflect.generic.GenericClass fieldClass = null;
-				int handlerid = classreader.readInt();
-				switch (handlerid)
+				if (fieldname.IndexOf(com.db4o.YapConst.VIRTUAL_FIELD_PREFIX) == 0)
 				{
-					case com.db4o.YapHandlers.ANY_ID:
-					{
-						fieldClass = (com.db4o.reflect.generic.GenericClass)forClass(j4o.lang.Class.getClassForType
-							(typeof(object)));
-						break;
-					}
-
-					case com.db4o.YapHandlers.ANY_ARRAY_ID:
-					{
-						fieldClass = ((com.db4o.reflect.generic.GenericClass)forClass(j4o.lang.Class.getClassForType
-							(typeof(object)))).arrayClass();
-						break;
-					}
-
-					default:
-					{
-						fieldClass = (com.db4o.reflect.generic.GenericClass)_classByID.get(handlerid);
-						break;
-					}
+					fields[i] = new com.db4o.reflect.generic.GenericVirtualField(fieldname);
 				}
-				com.db4o.YapBit attribs = new com.db4o.YapBit(classreader.readByte());
-				bool isprimitive = attribs.get();
-				bool isarray = attribs.get();
-				bool ismultidimensional = attribs.get();
-				fields[i] = new com.db4o.reflect.generic.GenericField(fieldname, fieldClass, isprimitive
-					, isarray, ismultidimensional);
+				else
+				{
+					com.db4o.reflect.generic.GenericClass fieldClass = null;
+					int handlerid = classreader.readInt();
+					switch (handlerid)
+					{
+						case com.db4o.YapHandlers.ANY_ID:
+						{
+							fieldClass = (com.db4o.reflect.generic.GenericClass)forClass(j4o.lang.Class.getClassForType
+								(typeof(object)));
+							break;
+						}
+
+						case com.db4o.YapHandlers.ANY_ARRAY_ID:
+						{
+							fieldClass = ((com.db4o.reflect.generic.GenericClass)forClass(j4o.lang.Class.getClassForType
+								(typeof(object)))).arrayClass();
+							break;
+						}
+
+						default:
+						{
+							fieldClass = (com.db4o.reflect.generic.GenericClass)_classByID.get(handlerid);
+							break;
+						}
+					}
+					com.db4o.YapBit attribs = new com.db4o.YapBit(classreader.readByte());
+					bool isprimitive = attribs.get();
+					bool isarray = attribs.get();
+					bool ismultidimensional = attribs.get();
+					fields[i] = new com.db4o.reflect.generic.GenericField(fieldname, fieldClass, isprimitive
+						, isarray, ismultidimensional);
+				}
 			}
 			clazz.initFields(fields);
 		}

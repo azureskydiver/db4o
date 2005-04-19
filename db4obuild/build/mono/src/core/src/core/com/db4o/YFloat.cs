@@ -51,10 +51,6 @@ namespace com.db4o
 		internal override object read1(com.db4o.YapReader a_bytes)
 		{
 			int ret = readInt(a_bytes);
-			if (ret == int.MaxValue)
-			{
-				return null;
-			}
 			return System.Convert.ToSingle(j4o.lang.JavaSystem.intBitsToFloat(ret));
 		}
 

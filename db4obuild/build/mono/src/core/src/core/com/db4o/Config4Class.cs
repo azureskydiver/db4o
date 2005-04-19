@@ -155,18 +155,6 @@ namespace com.db4o
 				}
 				catch (System.Exception t)
 				{
-					try
-					{
-						i_translator = (com.db4o.config.ObjectTranslator)j4o.lang.Class.forName(i_translatorName
-							).newInstance();
-						if (i_translator != null)
-						{
-							return i_translator;
-						}
-					}
-					catch (System.Exception th)
-					{
-					}
 					com.db4o.Db4o.logErr(i_config, 48, i_translatorName, null);
 					i_translatorName = null;
 				}
