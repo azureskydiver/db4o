@@ -5,6 +5,8 @@ BUGS:
   instances may have multiple fields of the same name
 - The toolbar leaks SWT Image resources
 - XSWT.parse disposes all resources in an application in its dispose listener!
+- Extend classpath needs to be moved to a preference page.  Right now you have to 
+   extend the classpath before you open a database file or it doesn't work.
 
 Remaining Features:
 -------------------
