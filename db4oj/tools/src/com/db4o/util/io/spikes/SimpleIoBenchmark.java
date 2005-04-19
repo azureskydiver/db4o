@@ -9,6 +9,9 @@ import com.db4o.io.IoAdapter;
 import com.db4o.util.io.NIOFileAdapter;
 import com.db4o.util.io.win32.Win32IoAdapter;
 
+/**
+ * @exclude
+ */
 public class SimpleIoBenchmark {
 	
 	private static final String DBFILENAME = "SimpleIoBenchmark.yap";

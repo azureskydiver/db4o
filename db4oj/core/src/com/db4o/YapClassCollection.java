@@ -5,6 +5,9 @@ package com.db4o;
 import com.db4o.ext.*;
 import com.db4o.reflect.*;
 
+/**
+ * @exclude
+ */
 public final class YapClassCollection extends YapMeta implements UseSystemTransaction {
 
     private YapClass i_addingMembersTo;

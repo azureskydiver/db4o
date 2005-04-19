@@ -7,7 +7,8 @@ import com.db4o.*;
  * 
  * intended for future virtual fields on classes. Currently only
  * the constant for the virtual version field is found here.  
- *  
+ *
+ *  @exclude
  */
 public class VirtualField {
 	

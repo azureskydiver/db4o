@@ -5,7 +5,10 @@ package com.db4o.reflect.generic;
 import com.db4o.reflect.*;
 
 
-public class GenericArrayClass extends GenericClass{
+/**
+ * @exclude
+ */
+public class GenericArrayClass extends GenericClass {
     
     public GenericArrayClass(GenericReflector reflector, ReflectClass delegateClass, String name, ReflectClass superclass) {
         super(reflector, delegateClass, "(GA) " + name, superclass);

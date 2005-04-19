@@ -1,10 +1,13 @@
 <namespaces>
 	<namespace name="com.db4o">Core package.</namespace>
 	<namespace name="com.db4o.config">Configuration package.</namespace>
+	<namespace name="com.db4o.io">Input/Output abstraction layer.</namespace>
 	<namespace name="com.db4o.query">Query package.</namespace>
 	<namespace name="com.db4o.ext">Advanced API package.</namespace>
 	<namespace name="com.db4o.messaging">Messaging package.</namespace>
 	<namespace name="com.db4o.reflect">Reflection support package.</namespace>
+	<namespace name="com.db4o.reflect.generic">Generic reflection support (makes it possible to query database files when the original classes are not available).</namespace>
+	<namespace name="com.db4o.replication">Replication support package</namespace>
 	<namespace name="com.db4o.tools">Tools package.</namespace>
 	<namespace name="com.db4o.types">Types package.</namespace>
 </namespaces>

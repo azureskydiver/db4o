@@ -2,7 +2,10 @@
 
 package com.db4o;
 
-/** Deep clone */
+/**
+ * Deep clone
+ * @exclude
+ **/
 public interface DeepClone {
 
 	/** The parameter allows passing one new object so parent
