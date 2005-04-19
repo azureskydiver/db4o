@@ -140,10 +140,6 @@ namespace com.db4o
 				{
 					reflector.registerPrimitiveClass(id, i_handlers[i].classReflector().getName());
 				}
-				if (i_handlers[i].primitiveClassReflector() != null)
-				{
-					i_classByClass.put(i_handlers[i].primitiveClassReflector(), i_yapClasses[i]);
-				}
 			}
 			for (int i = 0; i < i_platformTypes.Length; i++)
 			{
@@ -159,11 +155,6 @@ namespace com.db4o
 					i_maxTypeID = idx;
 				}
 				i_classByClass.put(i_platformTypes[i].classReflector(), i_yapClasses[idx]);
-				if (i_platformTypes[i].primitiveClassReflector() != null)
-				{
-					i_classByClass.put(i_platformTypes[i].primitiveClassReflector(), i_yapClasses[idx
-						]);
-				}
 			}
 			i_anyArray = new com.db4o.YapClassPrimitive(a_stream, new com.db4o.YapArray(_masterStream
 				, i_handlers[ANY_INDEX], false));
@@ -483,6 +474,7 @@ namespace com.db4o
 				{
 					return true;
 				}
+				return com.db4o.Platform.isValueType(claxx);
 			}
 			return false;
 		}

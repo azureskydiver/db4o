@@ -242,19 +242,6 @@ namespace com.db4o
 
 		public void run()
 		{
-			j4o.lang.Thread t = j4o.lang.Thread.currentThread();
-			t.setName("db4o file lock");
-			try
-			{
-				while (writeAccessTime())
-				{
-					com.db4o.foundation.Cool.sleepIgnoringInterruption(com.db4o.YapConst.LOCK_TIME_INTERVAL
-						);
-				}
-			}
-			catch (j4o.io.IOException e)
-			{
-			}
 		}
 
 		internal void syncFiles()

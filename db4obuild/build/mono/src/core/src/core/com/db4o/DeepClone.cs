@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace com.db4o
 {
 	/// <summary>Deep clone</summary>
+	/// <exclude></exclude>
 	public interface DeepClone
 	{
 		/// <summary>

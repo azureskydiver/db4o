@@ -209,6 +209,7 @@ namespace com.db4o
 
 		private bool breakDeleteForEnum(com.db4o.YapObject reference, bool userCall)
 		{
+			return false;
 			if (userCall)
 			{
 				return false;

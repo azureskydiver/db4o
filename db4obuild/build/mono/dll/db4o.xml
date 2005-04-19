@@ -993,6 +993,7 @@
             intended for future virtual fields on classes. Currently only
             the constant for the virtual version field is found here.
             </remarks>
+            <exclude></exclude>
         </member>
         <member name="F:com.db4o.ext.VirtualField.VERSION">
             <summary>
@@ -1933,6 +1934,7 @@
         </member>
         <member name="T:com.db4o.DeepClone">
             <summary>Deep clone</summary>
+            <exclude></exclude>
         </member>
         <member name="M:com.db4o.DeepClone.deepClone(System.Object)">
             <summary>
@@ -2290,8 +2292,6 @@
             <see cref="T:com.db4o.ObjectContainer">com.db4o.ObjectContainer</see>
             </returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:com.db4o.QCandidate.compare(com.db4o.Tree)" -->
-        <!-- Badly formed XML comment ignored for member "M:com.db4o.QCandidate.objectContainer" -->
         <member name="M:com.db4o.QCandidate.include(System.Boolean)">
             <summary>For external interface use only.</summary>
             <remarks>
@@ -2727,6 +2727,9 @@
         <member name="T:com.db4o.Iterator4">
             <exclude></exclude>
         </member>
+        <member name="T:com.db4o.YapClassCollection">
+            <exclude></exclude>
+        </member>
         <member name="M:com.db4o.YapClassCollection.classAddMembers(com.db4o.YapClass)">
             <summary>We always work from parent to child.</summary>
             <remarks>
@@ -3093,6 +3096,9 @@
             <br/><br/>See the respective documentation in the JDK API.
             </remarks>
             <seealso cref="T:com.db4o.reflect.Reflector">com.db4o.reflect.Reflector</seealso>
+        </member>
+        <member name="T:com.db4o.reflect.generic.GenericArrayClass">
+            <exclude></exclude>
         </member>
         <member name="T:com.db4o.reflect.generic.GenericClass">
             <exclude></exclude>
@@ -3789,6 +3795,9 @@
         <member name="T:com.db4o.YapSocketFake">
             <summary>Fakes a socket connection for an embedded client.</summary>
             <remarks>Fakes a socket connection for an embedded client.</remarks>
+        </member>
+        <member name="T:com.db4o.reflect.generic.GenericVirtualField">
+            <exclude></exclude>
         </member>
         <member name="T:com.db4o.reflect.net.SerializationConstructor">
             <summary>Constructs objects by using System.Runtime.Serialization.FormatterServices.GetUninitializedObject

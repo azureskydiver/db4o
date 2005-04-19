@@ -21,32 +21,45 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 namespace com.db4o.reflect.generic
 {
 	/// <exclude></exclude>
-	public class GenericArrayClass : com.db4o.reflect.generic.GenericClass
+	public class GenericVirtualField : com.db4o.reflect.generic.GenericField
 	{
-		public GenericArrayClass(com.db4o.reflect.generic.GenericReflector reflector, com.db4o.reflect.ReflectClass
-			 delegateClass, string name, com.db4o.reflect.ReflectClass superclass) : base(reflector
-			, delegateClass, "(GA) " + name, superclass)
+		public GenericVirtualField(string name) : base(name, null, false, false, false)
 		{
 		}
 
-		public override com.db4o.reflect.ReflectClass getComponentType()
+		public override object deepClone(object obj)
 		{
-			return getDelegate();
+			com.db4o.reflect.Reflector reflector = (com.db4o.reflect.Reflector)obj;
+			return new com.db4o.reflect.generic.GenericVirtualField(getName());
 		}
 
-		public override bool isArray()
+		public override object get(object onObject)
+		{
+			return null;
+		}
+
+		public override com.db4o.reflect.ReflectClass getType()
+		{
+			return null;
+		}
+
+		public override bool isPublic()
+		{
+			return false;
+		}
+
+		public override bool isStatic()
 		{
 			return true;
 		}
 
-		public override bool isInstance(object candidate)
+		public override bool isTransient()
 		{
-			if (!(candidate is com.db4o.reflect.generic.GenericArray))
-			{
-				return false;
-			}
-			return isAssignableFrom(((com.db4o.reflect.generic.GenericObject)candidate)._class
-				);
+			return true;
+		}
+
+		public override void set(object onObject, object value)
+		{
 		}
 	}
 }

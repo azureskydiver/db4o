@@ -25,6 +25,7 @@ namespace com.db4o.ext
 	/// intended for future virtual fields on classes. Currently only
 	/// the constant for the virtual version field is found here.
 	/// </remarks>
+	/// <exclude></exclude>
 	public class VirtualField
 	{
 		/// <summary>

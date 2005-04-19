@@ -80,7 +80,6 @@ namespace com.db4o
 			}
 		}
 
-		/// <summary><Tree Code>***</summary>
 		internal override int compare(com.db4o.Tree a_to)
 		{
 			return i_order.compareTo(((com.db4o.QCandidate)a_to).i_order);
@@ -135,14 +134,14 @@ namespace com.db4o
 									candidates.evaluate();
 									com.db4o.Tree[] pending = new com.db4o.Tree[1];
 									bool[] innerRes = { isNot };
-									candidates.traverse(new _AnonymousInnerClass146(this, innerRes, isNot, pending));
+									candidates.traverse(new _AnonymousInnerClass145(this, innerRes, isNot, pending));
 									if (isNot)
 									{
 										qcon.not();
 									}
 									if (pending[0] != null)
 									{
-										pending[0].traverse(new _AnonymousInnerClass211(this));
+										pending[0].traverse(new _AnonymousInnerClass210(this));
 									}
 									if (!innerRes[0])
 									{
@@ -193,9 +192,9 @@ namespace com.db4o
 			return true;
 		}
 
-		private sealed class _AnonymousInnerClass146 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass145 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass146(QCandidate _enclosing, bool[] innerRes, bool isNot
+			public _AnonymousInnerClass145(QCandidate _enclosing, bool[] innerRes, bool isNot
 				, com.db4o.Tree[] pending)
 			{
 				this._enclosing = _enclosing;
@@ -213,13 +212,13 @@ namespace com.db4o
 				}
 				if (cand.i_pendingJoins != null)
 				{
-					cand.i_pendingJoins.traverse(new _AnonymousInnerClass158(this, pending));
+					cand.i_pendingJoins.traverse(new _AnonymousInnerClass157(this, pending));
 				}
 			}
 
-			private sealed class _AnonymousInnerClass158 : com.db4o.Visitor4
+			private sealed class _AnonymousInnerClass157 : com.db4o.Visitor4
 			{
-				public _AnonymousInnerClass158(_AnonymousInnerClass146 _enclosing, com.db4o.Tree[]
+				public _AnonymousInnerClass157(_AnonymousInnerClass145 _enclosing, com.db4o.Tree[]
 					 pending)
 				{
 					this._enclosing = _enclosing;
@@ -245,7 +244,7 @@ namespace com.db4o
 					}
 				}
 
-				private readonly _AnonymousInnerClass146 _enclosing;
+				private readonly _AnonymousInnerClass145 _enclosing;
 
 				private readonly com.db4o.Tree[] pending;
 			}
@@ -259,9 +258,9 @@ namespace com.db4o
 			private readonly com.db4o.Tree[] pending;
 		}
 
-		private sealed class _AnonymousInnerClass211 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass210 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass211(QCandidate _enclosing)
+			public _AnonymousInnerClass210(QCandidate _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -332,7 +331,6 @@ namespace com.db4o
 			return i_yapClass.classReflector();
 		}
 
-		/// <summary><Candidate interface code>***</summary>
 		public virtual com.db4o.ObjectContainer objectContainer()
 		{
 			return getStream();
