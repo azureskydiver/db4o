@@ -305,28 +305,33 @@ public class GenericReflector implements Reflector, DeepClone {
 			int fieldnamelength= classreader.readInt();
 			fieldname = _stream.stringIO().read(classreader,fieldnamelength);
             
-            GenericClass fieldClass = null;
-			
-		    int handlerid=classreader.readInt();
-            
-            // need to take care of special handlers here
-            switch (handlerid){
-                case YapHandlers.ANY_ID:
-                    fieldClass = (GenericClass)forClass(Object.class);
-                    break;
-                case YapHandlers.ANY_ARRAY_ID:
-                    fieldClass = ((GenericClass)forClass(Object.class)).arrayClass();
-                    break;
-                default:
-                    fieldClass = (GenericClass)_classByID.get(handlerid);        
+            if (fieldname.indexOf(YapConst.VIRTUAL_FIELD_PREFIX) == 0) {
+                fields[i] = new GenericVirtualField(fieldname);
+            }else{
+                
+                GenericClass fieldClass = null;
+    			
+    		    int handlerid=classreader.readInt();
+                
+                // need to take care of special handlers here
+                switch (handlerid){
+                    case YapHandlers.ANY_ID:
+                        fieldClass = (GenericClass)forClass(Object.class);
+                        break;
+                    case YapHandlers.ANY_ARRAY_ID:
+                        fieldClass = ((GenericClass)forClass(Object.class)).arrayClass();
+                        break;
+                    default:
+                        fieldClass = (GenericClass)_classByID.get(handlerid);        
+                }
+    		    
+    		    YapBit attribs=new YapBit(classreader.readByte());
+    		    boolean isprimitive=attribs.get();
+    		    boolean isarray = attribs.get();
+    		    boolean ismultidimensional=attribs.get();
+    		    
+    			fields[i]=new GenericField(fieldname,fieldClass, isprimitive, isarray, ismultidimensional );
             }
-		    
-		    YapBit attribs=new YapBit(classreader.readByte());
-		    boolean isprimitive=attribs.get();
-		    boolean isarray = attribs.get();
-		    boolean ismultidimensional=attribs.get();
-		    
-			fields[i]=new GenericField(fieldname,fieldClass, isprimitive, isarray, ismultidimensional );
 		}
         
         clazz.initFields(fields);
