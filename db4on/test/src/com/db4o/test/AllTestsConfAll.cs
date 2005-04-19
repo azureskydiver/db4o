@@ -20,9 +20,11 @@ namespace com.db4o.test {
             typeof(CascadeDeleteArray),
             typeof(CascadeOnActivate),
             typeof(CascadeOnDelete),
+			
             typeof(CascadeOnUpdate),
             typeof(CascadeToArray),
             typeof(CascadeToArrayList),
+			
             typeof(CascadeToExistingArrayListMember),
             typeof(CascadeToHashtable),
             typeof(CaseInsensitive),
