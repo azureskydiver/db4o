@@ -1,0 +1,40 @@
+Various jar files contained here are covered by various open-source licenses.
+For copies of the specific license files, please see the "licenses" folder.
+
+The following files are licensed under the following terms:
+
+Db4o software:
+
+db4o-4.4-java1.4.jar
+objectmanager.jar
+	- GNU General Public License (See note)
+
+
+Eclipse software:
+
+All SWT files in the 'linux' and 'windows' folders
+jface.jar, osgi_core.jar, runtime.jar
+	- Eclipse Public License
+
+
+Apache software:
+
+jakarta-oro-2.7.7.jar
+	- Apache Software License 1.1
+
+
+KXML:
+
+kxml-plugin.jar
+xmlpull_1_1_3_1.jar
+	- KXML License
+
+
+
+NOTE: The GNU General Public License is widely regarded to be ambiguous.
+At db4objects, we have prepared a GPL interpretation policy to guide all 
+interpretation of the GPL as it applies to software published by 
+db4objects.  The GPL interpretation policy may be found at:
+
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation.aspx
+
