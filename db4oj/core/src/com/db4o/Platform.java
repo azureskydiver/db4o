@@ -212,9 +212,12 @@ public final class Platform {
                 
                 ClassLoader cl = jdk().getContextClassLoader();
                 
-                if (cl == null || classloaderName.indexOf("eclipse") >= 0) {
+                // FIXME: The new reflector does not like the ContextCloader at all.
+                //        Resolve hierarchies.
+                
+                // if (cl == null || classloaderName.indexOf("eclipse") >= 0) {
                     cl = Db4o.class.getClassLoader();
-                }
+                // }
                 
                 config.setClassLoader(cl);
             }
