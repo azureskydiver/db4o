@@ -1,8 +1,7 @@
 package com.db4o.util.io.spikes;
 
 /**
- * @author rodrigob
- *
+ * @exclude
  */
 public class TestDummy {
 	

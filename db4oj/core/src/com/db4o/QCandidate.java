@@ -77,11 +77,10 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
         }
     }
 
-    /**
-	 * **
-	 * <Tree Code>***
-	 */
-
+	///
+    /// <Tree Code>
+	///
+	
     int compare(Tree a_to) {
         return i_order.compareTo(((QCandidate)a_to).i_order);
     }
@@ -336,7 +335,7 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
         return i_yapClass.classReflector();
     }
 
-    /** **<Candidate interface code>*** */
+    /// ***<Candidate interface code>***
     
     public ObjectContainer objectContainer(){
         return getStream();

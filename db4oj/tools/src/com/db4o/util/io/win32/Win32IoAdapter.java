@@ -5,8 +5,7 @@ import java.io.IOException;
 import com.db4o.io.IoAdapter;
 
 /**
- * @author rodrigob
- *
+ * An IoAdapter implementation that uses JNI to talk directly with the WIN32 API.
  */
 public class Win32IoAdapter extends IoAdapter {
 	
