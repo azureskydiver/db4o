@@ -7,6 +7,7 @@ For copies of the specific license files, please see the "licenses" folder.
 
 The following files are licensed under the following terms:
 
+
 Db4o software:
 ==============
 
@@ -31,7 +32,7 @@ Apache software:
 
 jakarta-oro-2.7.7.jar
 	- Apache Software License 1.1
-
+ls
 
 KXML:
 =====
@@ -39,7 +40,6 @@ KXML:
 kxml-plugin.jar
 xmlpull_1_1_3_1.jar
 	- KXML License
-
 
 XSWT:
 =====
