@@ -5,7 +5,7 @@ package com.db4o;
 import com.db4o.reflect.*;
 
 /**
- *  @exclude
+ * @exclude
  */
 public interface YapDataType extends YapComparable
 {
