@@ -45,6 +45,7 @@ public class Db4oDatabase implements Database {
      * @see com.db4o.browser.model.Database#open(java.lang.String)
      */
     public void open(String path) {
+		Db4o.configure().readOnly(true);
 		Db4o.configure().activationDepth(ActivationPreferences.getDefault().getInitialActivationDepth());
         if (!path.equals(currentPath)) {
             close();
