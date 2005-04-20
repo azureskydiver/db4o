@@ -15,9 +15,18 @@ public class GenericFeatures {
     Object[] someObjectArray;
     
     Object someMessInAnObject;
+    
+    
+    public void store(){
+        for (int i = 0; i < 10000; i++) {
+            GenericFeatures gf = new GenericFeatures();
+            gf.setVals(i);
+            Test.objectContainer().set(gf);
+        }
+    }
 
     
-    public void storeOne(){
+    public void setVals(int ix){
         hi = "Hi Carl, Dave, Klaus, Patrick and Rodrigo";
         names = new String[]{
             "Rodrigo",
