@@ -47,16 +47,18 @@ public class ReplicationFeaturesMain {
 		_BOTH.add(_containerB);
 		
 
-		produceBug();
+		produceBug(); //TODO Delete
 
-/*        
+		/*
 //	WORK IN PROGRESS:	
 		tstDirection(_A);
 		tstDirection(_B);
 		tstDirection(_BOTH);
-*/
-		
-//      TODO: replication.checkConflict(obj); //(peek)
+		*/
+	
+//      TODO: Reopen containers after every replication (configurable).
+
+		//      TODO: replication.checkConflict(obj); //(peek)
 		
     }
 
@@ -194,13 +196,13 @@ public class ReplicationFeaturesMain {
     }
 
 	private void checkNames(ObjectContainer origin, ObjectContainer inspected) {
-		checkName(inspected, "oldFrom" + letter(origin), isOldNameExpected(origin, inspected));
+		checkName(inspected, "oldFrom" + letter(origin), isOldNameExpected(inspected));
 		checkName(inspected, "newFrom" + letter(origin), isNewNameExpected(origin, inspected));
 		checkName(inspected, "oldFromAChangedIn" + letter(origin), isChangedNameExpected(origin, inspected));
 		checkName(inspected, "oldFromBChangedIn" + letter(origin), isChangedNameExpected(origin, inspected));
 	}
 
-	private boolean isOldNameExpected(ObjectContainer origin, ObjectContainer inspected) {
+	private boolean isOldNameExpected(ObjectContainer inspected) {
 		if (_containersWithChangedObjects.contains(inspected)) return false;
 		if (!_containersWithChangedObjects.contains(other(inspected))) return true;
 		if (!_direction.contains(inspected)) return true;
@@ -213,13 +215,19 @@ public class ReplicationFeaturesMain {
 	}
 
 	private boolean isNewNameExpected(ObjectContainer origin, ObjectContainer inspected) {
-		if (_containersWithNewObjects.contains(inspected) && origin == inspected) return true;
-		return false;
+		if (!_containersWithNewObjects.contains(origin)) return false;
+		if (origin == inspected) return true;
+		if (!_containersToQueryFrom.contains(origin)) return false;
+		if (!_direction.contains(inspected)) return false;
+		return true;
 	}
 
-	private boolean isChangedNameExpected(ObjectContainer origin, ObjectContainer inspected) {
-		if (_containersWithChangedObjects.contains(inspected) && origin == inspected) return true;
-		return false;
+	private boolean isChangedNameExpected(ObjectContainer changed, ObjectContainer inspected) {
+		if (isOldNameExpected(inspected)) return false;
+		if (!_containersWithChangedObjects.contains(changed)) return false;
+		if (changed != inspected && !_direction.contains(inspected)) return false;
+		if (changed != inspected && _containersWithChangedObjects.size() == 2) return false;
+		return true;
 	}
 
 	private String letter(ObjectContainer origin) {
