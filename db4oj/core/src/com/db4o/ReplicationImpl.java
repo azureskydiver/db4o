@@ -276,13 +276,10 @@ class ReplicationImpl implements ReplicationProcess {
 				attA = referenceA.virtualAttributes(_transA);
 			}else {
 				
-				
 				attA = referenceA.virtualAttributes(_transA);
                 if(attA == null){
                     return notProcessed;
                 }
-                
-                referenceB = null;
 				
 				if(referenceB == null) {
 					_sourceReference = referenceA;
