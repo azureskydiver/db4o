@@ -110,13 +110,22 @@ namespace com.db4o.test {
         }
       
         public static bool ensure(bool condition) {
+			return ensure(string.Empty, condition);
+		}
+
+		public static bool ensure(string message, bool condition) {
             assertionCount++;
             if (!condition) {
-                error();
+                error(message);
                 return false;
             }
             return true;
         }
+
+		public static bool ensureEquals(object expected, object actual)
+		{
+			return ensure(string.Format("'{0}' != '{1}'", expected, actual), Object.Equals(expected, actual));
+		}
       
         public static void ensureOccurrences(Object obj, int count) {
             int occ = occurrences(obj);
@@ -128,8 +137,12 @@ namespace com.db4o.test {
         }
       
         public static void error() {
+			error(string.Empty);
+		}
+
+		public static void error(string message) {
             errorCount++;
-            Console.WriteLine("!!! TEST CASE FAILED !!!" + Compat.stackTrace());
+            Console.WriteLine("!!! TEST CASE FAILED !!! [" + message + "]" + Compat.stackTrace());
         }
       
         public static int fileLength() {
