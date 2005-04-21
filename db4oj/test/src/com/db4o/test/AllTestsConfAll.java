@@ -2,6 +2,7 @@
 
 package com.db4o.test;
 
+import com.db4o.test.constraints.*;
 import com.db4o.test.interfaces.*;
 import com.db4o.test.reflect.*;
 import com.db4o.test.replication.*;
@@ -17,6 +18,7 @@ public class AllTestsConfAll extends TestSuite{
         
         suite("com.db4o.test.jdk5.Jdk5TestSuite"),
         this,
+        new ConstraintsTestSuite(),
         new ReplicationTestSuite(),
         new InterfacesTestSuite()
         
