@@ -59,6 +59,12 @@ namespace com.db4o.test {
             typeof(KeepCollectionContent),
             typeof(MaxByEvaluation),
             typeof(Messaging),
+
+#if NET_2_0
+			typeof(net2.Net2SimpleGenericType),
+			typeof(net2.Net2NullableTypes),
+#endif
+
 		    typeof(NoInstanceStored),
             typeof(NoInternalClasses),
             typeof(ObjectSetIDs),
