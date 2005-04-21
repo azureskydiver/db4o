@@ -7,29 +7,27 @@ BUGS:
 - XSWT.parse disposes all resources in an application in its dispose listener!
 - Extend classpath needs to be moved to a preference page.  Right now you have to 
    extend the classpath before you open a database file or it doesn't work.
+- Reopen databases after changing classpath preference.
 
 Remaining Features:
 -------------------
-   * Write a file logger that logs to a log file in the user's home directory **DONE**
-   * Write About dialog **DONE**
    * Beautify UI; add icons in appropriate places
       - On buttons: forward*, back*, Query*, Search*  **DONE**
       - On tabs: database* versus query*  **DONE**
-      - On QBE: Class*; field*
+      - On QBE: Class*; field* **DONE**
       - In tree: Icon for each node type*
-   * Don't automatically expand classes in QBE pane; include button on fields **DONE**
    * Implement tree layout algorithm for expanded classes **POSTPONED**
+   * Implement grabbing hand scrolling mode for large queries
    * Click right side to navigate
       - (Hyperlink objects if object.hasChildren()?)
    * If right side is displaying a collection, display in a table
    
-   * Evaluate .NET runtime platforms (IKVM) => Rodrigo
-   Alternative for first relase: Smallest possible Sun JRE distribution
-   * Collections under .NET 
-
 - Release engineering
    * Don't support PDAs for the initial release
-   * 3 Packages, downloadable separately 
+   * 3 Packages, downloadable separately **DONE**
+   * Implement C-based program launcher
+   * Nullsoft installer for Windows platforms
+
 
 Postponed Features:
 -------------------
@@ -48,6 +46,9 @@ Fixed bugs:
   with an empty result triggers a stack exception from GraphPosition **DONE**
 
 
+   * Write a file logger that logs to a log file in the user's home directory **DONE**
+   * Write About dialog **DONE**
+   * Don't automatically expand classes in QBE pane; include button on fields **DONE**
    * Substring search: just search displayed strings **DONE**
    * REGRESSION: History buttons don't work any more!?! **DONE**
    * ListChooserDialog: Include search capability **DONE**
