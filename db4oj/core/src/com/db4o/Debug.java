@@ -4,12 +4,8 @@ package com.db4o;
 
 abstract class Debug {
     
-    // public static boolean breakException = false;
-
     public static final boolean atHome = false;
 
-    // public static final boolean	current = true;
-    
     public static final boolean indexAllFields = false;
     
     public static final boolean configureAllClasses = indexAllFields;
@@ -37,10 +33,6 @@ abstract class Debug {
     static Queue4 clientMessageQueue;
     static Lock4 clientMessageQueueLock;
 
-    //	public static void stop(){
-    //		System.out.println("Debug.stop");
-    //		new Exception().printStackTrace();
-    //	}
     
     public static void ensureLock(Object obj) {
         if (atHome) {
