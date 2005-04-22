@@ -96,6 +96,9 @@ public class ReplicationFeaturesMain {
         
         //Comment this line and the test passes:
         replicateQueryingFrom(replication, _containerA); //Change to _containerB and the test will still fail.
+
+        Test.ensure(find(_containerA, "oldFromAChangedInB") == null);
+        Test.ensure(find(_containerA, "oldFromAChangedInA") != null);
         
         //Comment this line and the test passes:
         replicateQueryingFrom(replication, _containerB); //Change to _containerA and the test will still fail.
