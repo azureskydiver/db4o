@@ -1,0 +1,152 @@
+.0 Tuning ..
+
+The following is an overview over possible tuning switches ._
+that can be set when working with db4o. Users that do not ._
+care about performance may like to read this chapter also ._
+because it provides a side glance at db4o features with ._
+.i Alternate Strategies ..  and some insight on how ._
+db4o works.
+
+
+.b Measure ..
+.c Db4o.configure().automaticShutDown(false); ..
+.i Advantage ..
+can prevent the creation of a shutdown thread on some platforms.
+
+.i Effect ..
+On some platforms db4o uses a ShutDownHook to cleanly close all ._
+database files upon system termination. If a system is terminated ._
+without calling ObjectContainer#close() for all open ._
+ObjectContainers, these ObjectContainers will still be usable but ._
+they will not be able to write back their freespace management ._
+system back to the database file. Accordingly database files will be ._
+observed to grow.
+
+.i Alternate Strategies ..
+Database files can be reduced to their minimal size with
+.c com.db4o.tools.Defragment ..
+(supplied as source code in /src/com/db4o/tools)
+
+
+.b Measure ..
+.c Db4o.configure().callbacks(false); ..
+.i Advantage ..
+will prevent db4o from looking for callback methods in all persistent ._
+classes on system startup.
+
+.i Effect ..
+Upon system startup, db4o will scan all persistent classes for ._
+methods with the same signature as the methods defined in ._
+com.db4o.ext.ObjectCallbacks, even if the interface is not ._ 
+implemented. db4o uses reflection to do so and on constrained ._
+environments this can consume quite a bit of time. If callback ._
+methods are not used by the application, callbacks can be turned ._
+off safely.
+
+.i Alternate Strategies ..
+Class configuration features are a good alternative to callbacks. ._
+The most recommended mechanism to cascade updates is:
+.c Db4o.configure().objectClass("yourPackage.yourClass").cascadeOnUpdate(true);
+
+
+.b Measure ..
+.c Db4o.configure().detectSchemaChanges(false); ..
+.i Advantage ..
+will prevent db4o from analysing the class structure upon opening a ._
+database file.
+
+.i Effect ..
+Upon system startup, db4o will use reflection to scan the structure ._
+of all persistent classes. This process can take some time, if a large ._
+number of classes are present in the database file. For the best ._
+possible startup performance on "warm" database files (all classes ._
+present), this feature can be turned off.
+
+.i Alternate Strategies ..
+Instead of using one database file to store a huge and complex ._
+class structure, a system may be more flexible and faster, if ._
+multiple database files are used. In a client/server setup, database ._
+files can also be switched from the client side with
+.c ((ExtClient)objectContainer).switchToFile(databaseFile); ..
+
+
+.b Measure ..
+.c Db4o.configure().discardFreeSpace(byteCount); ..
+Recommended settings for byteCount:
+- Integer.MAX_VALUE will turn freespace management off
+- Moderate range: 10 to 50
+- Default built-in setting: 0
+
+.i Advantage ..
+will reduce the RAM memory overhead and the speed loss from ._
+maintaining the freespace lists.
+
+.i Effect ..
+When objects are updated or deleted, the space previously occupied ._
+in the database file is marked as "free", so it can be reused. db4o ._
+maintains two lists in RAM, sorted by address and by size. Adjacent ._
+entries are merged. After a large number of updates or deletes have ._
+been executed, the lists can become large, causing RAM ._
+consumption and performance loss for maintenance. With this ._
+method you can specify an upper bound for the byte slot size to ._
+discard.
+
+.i Alternate Strategies ..
+Regular defragment will also keep the number of free space slots ._
+small. See:
+.c com.db4o.tools.Defragment ..
+(supplied as source code in ../src/com/db4o/tools)
+If defragment can be frequently run, it will also reclaim ._
+lost space and decrease the database file to the minimum size. ._
+Therefore #discardFreeSpace() may be a good tuning mechanism ._
+for setups with frequent defragment runs.
+
+
+.b Measure ..
+.c Db4o.configure().lockDatabaseFile(false); ..
+.i Advantage ..
+will prevent the creation of a lock file thread on Java platforms ._
+without NIO (< JDK 1.4.1).
+
+.i Effect ..
+If file locking is not available on the system, db4o will regularily ._
+write a timestamp lock information to the database file, to prevent ._
+other VM sessions from accessing the database file at the same ._
+time. Uncontrolled concurrent access would inevitably lead to ._
+corruption of the database file. If the application ensures that it can ._
+not be started multiple times against the database file, db4o file ._
+locking may not be necessary.
+
+.i Alternate Strategies ..
+Database files can safely be opened from multiple sessions in readonly
+mode. Use:
+.c Db4o.configure().readOnly(true) ..
+
+
+.b Measure ..
+.c Db4o.configure().testConstructors(false); ..
+.i Advantage ..
+will prevent db4o from creating a test instance of persistent classes ._
+upon opening a database file.
+
+.i Effect ..
+Upon system startup, db4o attempts to create a test instance of all ._
+persistent classes, to ensure that a public zero-parameter ._
+constructor is present. This process can take some time, if a large ._
+number of classes are present in the database file. For the best ._
+possible startup performance this feature can be turned off.
+
+.i Alternate Strategies ..
+In any case it's always good practice to create a zero-parameter ._
+constructor. If this is not possible because a class from a third party ._
+is used, it may be a good idea to write a translator that translates ._
+the third party class to one's own class. The dowload comes with ._
+the source code of the preconfigured translators in
+../src/com/db4o/samples/translators.
+The default configuration can be found in the above folder in the file
+Default.java/Default.cs
+Take a look at the way the built-in translators work to get an idea ._
+how to write a translator. It just requires implementing 3 (4 for ._
+ObjectConstructors) methods and configuring db4o to use a ._
+translator on startup with
+.c Db4o.configure().objectClass("yourPackage.yourClass").translate() ..
