@@ -61,7 +61,7 @@ namespace com.db4o {
         }
 
         public static string stackTrace() {
-            return new StackTrace().ToString();
+            return new StackTrace(true).ToString();
         }
 
         public static void threadSetName(Thread thread, string name) {
