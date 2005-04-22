@@ -14,15 +14,15 @@ public class AllTestsConfSingle extends TestSuite{
     TestSuite[] TEST_SUITES = new TestSuite[]{
         
         // suite("com.db4o.test.jdk5.Jdk5TestSuite"),
-        // this,
-        new ReplicationTestSuite()
+        this //,
+        //new ReplicationTestSuite()
         
     };
 
     
     public Class[] tests(){
         return new Class[] {
-            ThreeSomeParent.class
+            ByteArray.class
     	};
     }
 
