@@ -1528,6 +1528,10 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
             }
         }
     }
+    
+    public boolean readArray(YapWriter reader, Object array) {
+        return false;
+    }
 
     void readThis(Transaction a_trans, YapReader a_reader) {
         throw YapConst.virtualException();
@@ -1750,6 +1754,10 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
 
     public String toString() {
         return i_name;
+    }
+    
+    public boolean writeArray(YapWriter reader, Object array) {
+        return false;
     }
 
     boolean writeObjectBegin() {

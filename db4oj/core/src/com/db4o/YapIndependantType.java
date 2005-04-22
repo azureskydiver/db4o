@@ -34,23 +34,31 @@ public abstract class YapIndependantType implements YapDataType
 		}
 	}
 	
+    public Object indexEntry(Object a_object){
+        if(a_object == null){
+            return null;
+        }
+        return new int[] {i_lastIo.getAddress(),i_lastIo.getLength()};
+    }
+    
+    public final int linkLength(){
+        return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
+    }
+    
 	public final ReflectClass primitiveClassReflector(){
 		return null;
 	}
+    
+    public boolean readArray(YapWriter reader, Object array) {
+        return false;
+    }
 	
     public Object readIndexObject(YapWriter a_writer) throws CorruptionException{
         return read(a_writer);
     }
 	
-	public Object indexEntry(Object a_object){
-	    if(a_object == null){
-	        return null;
-	    }
-	    return new int[] {i_lastIo.getAddress(),i_lastIo.getLength()};
-	}
-	
-	public final int linkLength(){
-		return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
-	}
+    public boolean writeArray(YapWriter reader, Object array) {
+        return false;
+    }
 	
 }

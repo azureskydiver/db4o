@@ -225,13 +225,12 @@ class YapArray extends YapIndependantType {
 		int[] elements = new int[1];
 		Object ret = readCreate(a_bytes.getTransaction(), a_bytes, elements);
 		if (ret != null){
-			if (i_handler instanceof YByte) {
-				((YByte)i_handler).readArrayFast(a_bytes, (byte[])ret);
-			} else {
-				for (int i = 0; i < elements[0]; i++) {
-					_reflectArray.set(ret, i, i_handler.read(a_bytes));
-				}	
-			}
+            if(i_handler.readArray(a_bytes, ret)){
+                return ret;
+            }
+			for (int i = 0; i < elements[0]; i++) {
+				_reflectArray.set(ret, i, i_handler.read(a_bytes));
+			}	
 		}
         return ret;
     }
@@ -387,15 +386,14 @@ class YapArray extends YapIndependantType {
 		
 		int elements = _reflectArray.getLength(a_object);
         a_bytes.writeInt(elements);
-		
-		if (i_handler instanceof YByte) {
-			((YByte)i_handler).writeArrayFast((byte[])a_object, a_bytes);
-			
-		} else {
-	        for (int i = 0; i < elements; i++) {
-	            i_handler.writeNew(_reflectArray.get(a_object, i), a_bytes);
-	        }
-		}
+        
+        if(i_handler.writeArray(a_bytes, a_object)){
+            return;
+        }
+        
+        for (int i = 0; i < elements; i++) {
+            i_handler.writeNew(_reflectArray.get(a_object, i), a_bytes);
+        }
     }
 
     // Comparison_______________________

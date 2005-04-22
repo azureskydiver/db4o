@@ -67,6 +67,10 @@ abstract class YapJavaClass implements YapDataType {
     protected abstract Class primitiveJavaClass();
     
     abstract Object primitiveNull();
+    
+    public boolean readArray(YapWriter reader, Object array) {
+        return false;
+    }
 
     public YapDataType readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
         // virtual and do nothing
@@ -124,6 +128,10 @@ abstract class YapJavaClass implements YapDataType {
     }
 
     public abstract void write(Object a_object, YapWriter a_bytes);
+    
+    public boolean writeArray(YapWriter reader, Object array) {
+        return false;
+    }
 
     public void writeIndexEntry(YapWriter a_writer, Object a_object) {
         write(a_object, a_writer);

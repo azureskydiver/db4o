@@ -65,13 +65,23 @@ final class YByte extends YapJavaClass
 		}
 	}
 	
-	public void writeArrayFast(byte[] array, YapWriter writer) {
-		writer.append(array);
-	}	
-	
-	public void readArrayFast(YapWriter reader, byte[] array) {
-		reader.readBytes(array);
+	public boolean readArray(YapWriter reader, Object array) {
+        if(array instanceof byte[]){
+            reader.readBytes((byte[])array);
+            return true;
+        }
+        
+        return false;
 	}
+
+    public boolean writeArray(Object array, YapWriter writer) {
+        if(array instanceof byte[]){
+            writer.append((byte[])array);
+            return true;
+        }
+        return false;
+    }   
+    
 
 					
 	// Comparison_______________________

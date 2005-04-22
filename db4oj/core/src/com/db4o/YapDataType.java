@@ -50,6 +50,11 @@ public interface YapDataType extends YapComparable
 	public int getType ();
 	
 	YapClass getYapClass(YapStream a_stream);
+    
+    /**
+     * performance optimized read (only used for byte[] so far) 
+     */
+    boolean readArray(YapWriter reader, Object array);
 	
 	void readCandidates(YapReader a_bytes, QCandidates a_candidates);
 	
@@ -57,6 +62,11 @@ public interface YapDataType extends YapComparable
 	
 	YapDataType readArrayWrapper(Transaction a_trans, YapReader[] a_bytes);
 	
+    /**
+     * performance optimized write (only used for byte[] so far) 
+     */
+    boolean writeArray(YapWriter reader, Object array);
+    
 	void writeIndexEntry(YapWriter a_writer, Object a_object);
 
 	
