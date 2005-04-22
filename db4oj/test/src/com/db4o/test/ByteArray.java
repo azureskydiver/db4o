@@ -14,7 +14,7 @@ class ByteArrayHolder {
 
 public class ByteArray {
 	
-	static final int ITERATIONS = 20;
+	static final int ITERATIONS = 50;
 	
 	static final int INSTANCES = 2;
 	
@@ -29,6 +29,9 @@ public class ByteArray {
 	public void test() {
 		long start = System.currentTimeMillis();
 		for (int i=0; i<ITERATIONS; ++i) {
+			
+			Test.reOpen();
+			
 			Query query = Test.query();
 			query.constrain(ByteArrayHolder.class);
 			
