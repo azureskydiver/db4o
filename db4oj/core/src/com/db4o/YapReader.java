@@ -94,9 +94,14 @@ public class YapReader {
 	
 	byte[] readBytes(int a_length){
 	    byte[] bytes = new byte[a_length];
-	    System.arraycopy(_buffer, _offset, bytes, 0, a_length);
-	    _offset += a_length;
+		readBytes(bytes);
 	    return bytes;
+	}
+	
+	void readBytes(byte[] bytes) {
+		int length = bytes.length;
+	    System.arraycopy(_buffer, _offset, bytes, 0, length);
+	    _offset += length;
 	}
     
 	final YapReader readEmbeddedObject(Transaction a_trans) {
