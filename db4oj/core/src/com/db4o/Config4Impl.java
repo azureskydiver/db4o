@@ -304,6 +304,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
             throw new NullPointerException();
         }
         _configuredReflector = reflect;
+		_reflector=null;
     }
 
     public void refreshClasses() {
