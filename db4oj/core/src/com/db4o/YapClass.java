@@ -758,6 +758,11 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     }
 
     public String getName() {
+        if(i_name == null){
+            if(_reflector != null){
+                i_name = _reflector.getName();
+            }
+        }
         return i_name;
     }
     
@@ -1150,8 +1155,12 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     }
 
     int ownLength() {
+        String name = getName();
+        if(name == null){
+            name = "";
+        }
         int len =
-            i_stream.stringIO().shortLength(getName())
+            i_stream.stringIO().shortLength(name)
                 + YapConst.OBJECT_LENGTH
                 + (YapConst.YAPINT_LENGTH * 2)
                 + (YapConst.YAPID_LENGTH * 2);
