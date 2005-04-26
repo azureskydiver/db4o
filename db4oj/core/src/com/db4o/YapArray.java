@@ -387,7 +387,7 @@ class YapArray extends YapIndependantType {
 		int elements = _reflectArray.getLength(a_object);
         a_bytes.writeInt(elements);
         
-        if(i_handler.writeArray(a_bytes, a_object)){
+        if(i_handler.writeArray(a_object, a_bytes)){
             return;
         }
         

@@ -57,7 +57,7 @@ public abstract class YapIndependantType implements YapDataType
         return read(a_writer);
     }
 	
-    public boolean writeArray(YapWriter reader, Object array) {
+    public boolean writeArray(Object array, YapWriter reader) {
         return false;
     }
 	

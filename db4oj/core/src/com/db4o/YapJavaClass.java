@@ -129,7 +129,7 @@ abstract class YapJavaClass implements YapDataType {
 
     public abstract void write(Object a_object, YapWriter a_bytes);
     
-    public boolean writeArray(YapWriter reader, Object array) {
+    public boolean writeArray(Object array, YapWriter reader) {
         return false;
     }
 

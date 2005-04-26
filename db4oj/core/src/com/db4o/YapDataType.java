@@ -65,7 +65,7 @@ public interface YapDataType extends YapComparable
     /**
      * performance optimized write (only used for byte[] so far) 
      */
-    boolean writeArray(YapWriter reader, Object array);
+    boolean writeArray(Object array, YapWriter reader);
     
 	void writeIndexEntry(YapWriter a_writer, Object a_object);
 
