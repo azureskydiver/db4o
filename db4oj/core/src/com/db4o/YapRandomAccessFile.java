@@ -260,14 +260,24 @@ public class YapRandomAccessFile extends YapFile {
     }
 
     void readBytes(byte[] bytes, int address, int addressOffset, int length) {
-        try {
+        try{
             i_file.blockSeek(address, addressOffset);
             i_file.read(bytes, length);
-        } catch (Exception e) {
-            if (Debug.atHome) {
-                e.printStackTrace();
+        }catch(IOException ioex){
+            
+            // We need to catch here and throw a runtime exception
+            // so the IOException does not need to get declared in 
+            // all callers.
+            
+            // IoExceptions are quite natural to happen if someone
+            // mistakenly uses any number as an ID and db4o just
+            // interprets as an ID what it reads.
+            
+            if(Debug.atHome){
+                ioex.printStackTrace();
             }
-            Db4o.throwRuntimeException(13, e);
+            
+            throw new RuntimeException(ioex);
         }
     }
 
