@@ -65,7 +65,7 @@ final class YByte extends YapJavaClass
 		}
 	}
 	
-	public boolean readArray(YapWriter reader, Object array) {
+	public boolean readArray(Object array, YapWriter reader) {
         if(array instanceof byte[]){
             reader.readBytes((byte[])array);
             return true;

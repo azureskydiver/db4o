@@ -1544,7 +1544,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                     }
                     return new List4(new List4(a_still, new Integer(a_depth)), yapObject);
                 } else {
-                    final Class clazz = a_object.getClass();
+                    final ReflectClass clazz = reflector().forObject(a_object);
 					if (clazz.isArray()) {
 						if (!clazz.getComponentType().isPrimitive()) {
 	                        Object[] arr = YapArray.toArray(this, a_object);

@@ -54,7 +54,7 @@ public interface YapDataType extends YapComparable
     /**
      * performance optimized read (only used for byte[] so far) 
      */
-    boolean readArray(YapWriter reader, Object array);
+    boolean readArray(Object array, YapWriter reader);
 	
 	void readCandidates(YapReader a_bytes, QCandidates a_candidates);
 	
