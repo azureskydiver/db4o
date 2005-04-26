@@ -8,6 +8,8 @@ import com.db4o.query.Query;
 
 /**
  * db4o replication interface.
+ * 
+ * @see com.db4o.ext.ExtObjectContainer#replicationBegin(ObjectContainer, ReplicationConflictHandler)
  */
 public interface ReplicationProcess {
 	
