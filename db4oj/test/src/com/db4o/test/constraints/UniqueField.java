@@ -68,19 +68,26 @@ public class UniqueField {
     }
     
     private boolean checkConstraints(ObjectContainer objectContainer){
+        String semaphoreName ="Unique_User_Name";
+        if(! objectContainer.ext().setSemaphore(semaphoreName, 1000)){
+            return false;
+        }
         Query q = objectContainer.query();
         q.constrain(UniqueField.class);
         q.descend("name").constrain(name);
         ObjectSet objectSet = q.execute(); 
         int size = objectSet.size();
+        
+        boolean canStore = false;
         if(size == 0){
-            return true;
+            canStore = true;
         }
-        if(size > 1){
-            return false;
+        if(size == 1){
+            UniqueField uf = (UniqueField)objectSet.next();
+            canStore = (uf == this);
         }
-        UniqueField uf = (UniqueField)objectSet.next(); 
-        return uf == this;
+        objectContainer.ext().releaseSemaphore(semaphoreName);
+        return canStore;
     }
     
 }
