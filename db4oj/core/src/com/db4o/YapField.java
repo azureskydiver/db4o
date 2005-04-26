@@ -66,7 +66,13 @@ public class YapField implements StoredField {
         i_javaField = a_field;
         i_javaField.setAccessible();
         i_handler = a_handler;
-        configure( a_field.getType());
+        
+        // TODO: beautify !!!  possibly pull up isPrimitive to ReflectField
+        boolean isPrimitive = false;
+        if(a_field instanceof GenericField){
+            isPrimitive  = ((GenericField)a_field).isPrimitive();
+        }
+        configure( a_field.getType(), isPrimitive);
         checkDb4oType();
         i_state = AVAILABLE;
     }
@@ -240,8 +246,8 @@ public class YapField implements StoredField {
 
     }
 
-    void configure(ReflectClass a_class) {
-        i_isPrimitive = a_class.isPrimitive();
+    void configure(ReflectClass a_class, boolean isPrimitive) {
+        i_isPrimitive = isPrimitive | a_class.isPrimitive();
         i_isArray = a_class.isArray();
         if (i_isArray) {
             ReflectArray reflectArray = getStream().reflector().array();
