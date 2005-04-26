@@ -328,9 +328,9 @@ namespace com.db4o
 				i_file.blockSeek(address, addressOffset);
 				i_file.read(bytes, length);
 			}
-			catch (System.Exception e)
+			catch (j4o.io.IOException ioex)
 			{
-				com.db4o.Db4o.throwRuntimeException(13, e);
+				throw new j4o.lang.RuntimeException(ioex);
 			}
 		}
 

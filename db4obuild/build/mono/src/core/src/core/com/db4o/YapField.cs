@@ -81,7 +81,12 @@ namespace com.db4o
 			i_javaField = a_field;
 			i_javaField.setAccessible();
 			i_handler = a_handler;
-			configure(a_field.getType());
+			bool isPrimitive = false;
+			if (a_field is com.db4o.reflect.generic.GenericField)
+			{
+				isPrimitive = ((com.db4o.reflect.generic.GenericField)a_field).isPrimitive();
+			}
+			configure(a_field.getType(), isPrimitive);
 			checkDb4oType();
 			i_state = AVAILABLE;
 		}
@@ -285,9 +290,10 @@ namespace com.db4o
 			return tree;
 		}
 
-		internal virtual void configure(com.db4o.reflect.ReflectClass a_class)
+		internal virtual void configure(com.db4o.reflect.ReflectClass a_class, bool isPrimitive
+			)
 		{
-			i_isPrimitive = a_class.isPrimitive();
+			i_isPrimitive = isPrimitive | a_class.isPrimitive();
 			i_isArray = a_class.isArray();
 			if (i_isArray)
 			{

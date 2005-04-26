@@ -266,6 +266,10 @@ namespace com.db4o
 			object ret = readCreate(a_bytes.getTransaction(), a_bytes, elements);
 			if (ret != null)
 			{
+				if (i_handler.readArray(ret, a_bytes))
+				{
+					return ret;
+				}
 				for (int i = 0; i < elements[0]; i++)
 				{
 					_reflectArray.set(ret, i, i_handler.read(a_bytes));
@@ -429,9 +433,13 @@ namespace com.db4o
 
 		internal virtual void writeNew1(object a_object, com.db4o.YapWriter a_bytes)
 		{
-			int elements = _reflectArray.getLength(a_object);
 			writeClass(a_object, a_bytes);
+			int elements = _reflectArray.getLength(a_object);
 			a_bytes.writeInt(elements);
+			if (i_handler.writeArray(a_object, a_bytes))
+			{
+				return;
+			}
 			for (int i = 0; i < elements; i++)
 			{
 				i_handler.writeNew(_reflectArray.get(a_object, i), a_bytes);

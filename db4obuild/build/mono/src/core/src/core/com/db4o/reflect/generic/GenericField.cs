@@ -81,6 +81,11 @@ namespace com.db4o.reflect.generic
 			return true;
 		}
 
+		public virtual bool isPrimitive()
+		{
+			return _primitive;
+		}
+
 		public virtual bool isStatic()
 		{
 			return false;

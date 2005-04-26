@@ -1997,6 +1997,12 @@
         <member name="T:com.db4o.YapComparable">
             <exclude></exclude>
         </member>
+        <member name="M:com.db4o.YapDataType.readArray(System.Object,com.db4o.YapWriter)">
+            <summary>performance optimized read (only used for byte[] so far)</summary>
+        </member>
+        <member name="M:com.db4o.YapDataType.writeArray(System.Object,com.db4o.YapWriter)">
+            <summary>performance optimized write (only used for byte[] so far)</summary>
+        </member>
         <member name="M:com.db4o.YapJavaClass.primitiveClassReflector">
             <summary>classReflector() has to be called first, before this returns a value</summary>
         </member>
