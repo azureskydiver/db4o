@@ -1765,7 +1765,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         return i_name;
     }
     
-    public boolean writeArray(YapWriter reader, Object array) {
+    public boolean writeArray(Object array, YapWriter reader) {
         return false;
     }
 

@@ -1544,12 +1544,15 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                     }
                     return new List4(new List4(a_still, new Integer(a_depth)), yapObject);
                 } else {
-                    if (a_object.getClass().isArray()) {
-                        Object[] arr = YapArray.toArray(this, a_object);
-                        for (int i = 0; i < arr.length; i++) {
-                            a_still = stillTo1(a_still, a_just, arr[i],
-                                a_depth, a_forceUnknownDeactivate);
-                        }
+                    final Class clazz = a_object.getClass();
+					if (clazz.isArray()) {
+						if (!clazz.getComponentType().isPrimitive()) {
+	                        Object[] arr = YapArray.toArray(this, a_object);
+	                        for (int i = 0; i < arr.length; i++) {
+	                            a_still = stillTo1(a_still, a_just, arr[i],
+	                                a_depth, a_forceUnknownDeactivate);
+	                        }
+						}
                     } else {
                         if (a_object instanceof Entry) {
                             a_still = stillTo1(a_still, a_just,
