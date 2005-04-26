@@ -49,8 +49,9 @@
 				ExeCommand="-q -u CmdFile=[#doc.api.db4oCollection.h2reg.ini]"
 				Return="asyncNoWait" />
 				
-		
+		<!--
 		<Property Id="INSTALLDIR">c:\db4o-@db4o.version.dotted@</Property>
+		-->
 		
 		<!-- INSTALLATION SEQUENCE PROPERTIES -->
 		<Property Id="LAUNCHTUTORIAL">1</Property>
@@ -66,7 +67,11 @@
 		-->
 		<FragmentRef Id="DirectoriesFilesAndComponents" />
 		
-		<DirectoryRef Id="TARGETDIR">		
+		<DirectoryRef Id="TARGETDIR">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLDIR" Name="db4o-@db4o.version.dotted@">
+				</Directory>
+			</Directory>
 			<Directory Id="ProgramMenuFolder" Name=".">
 				<Directory Id="db4objectsMenuFolder" Name="db4o" LongName="db4objects">
 					<Directory Id="TargetMenuFolder" Name="db4o" LongName="db4o @db4o.version.dotted@">
