@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using System.Collections;
+using System.Reflection;
 using System.Threading;
 
 namespace System.Runtime.CompilerServices {
@@ -17,6 +18,28 @@ namespace com.db4o
 	/// <exclude />
 	public class Compat
 	{
+		static MethodInfo _hashMethod = getIdentityHashCodeMethod();
+		
+		private static MethodInfo getIdentityHashCodeMethod() {
+            Assembly assembly = typeof(object).Assembly;
+
+            // CompactFramework
+            try {
+                Type t = assembly.GetType("System.PInvoke.EE");
+                return t.GetMethod(
+                    "Object_GetHashCode",
+                    BindingFlags.Public |
+                    BindingFlags.NonPublic |
+                    BindingFlags.Static);
+            } catch(Exception e) {
+            }
+			
+			return null;
+		}
+		
+		public static int identityHashCode(object o) {
+			return (int)_hashMethod.Invoke(null, new object[] { o });
+		}
 
         public static void addShutDownHook(EventHandler handler){
         }

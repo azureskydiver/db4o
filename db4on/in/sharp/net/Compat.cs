@@ -28,6 +28,10 @@ namespace com.db4o {
             return false;
         }
 
+		public static int identityHashCode(object o) {
+			return System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(o);
+		}
+
         public static long doubleToLong(double a_double) {
             return BitConverter.DoubleToInt64Bits(a_double);
         }
@@ -84,3 +88,4 @@ namespace com.db4o {
         
     }
 }
+
