@@ -9,6 +9,74 @@ db4o works.
 
 
 .b Measure ..
+.c Db4o.configure().discardFreeSpace(byteCount); ..
+Recommended settings for byteCount:
+- Integer.MAX_VALUE will turn freespace management off
+- Moderate range: 10 to 50
+- Default built-in setting: 0
+
+.i Advantage ..
+will reduce the RAM memory overhead and the speed loss from ._
+maintaining the freespace lists.
+
+.i Effect ..
+When objects are updated or deleted, the space previously occupied ._
+in the database file is marked as "free", so it can be reused. db4o ._
+maintains two lists in RAM, sorted by address and by size. Adjacent ._
+entries are merged. After a large number of updates or deletes have ._
+been executed, the lists can become large, causing RAM ._
+consumption and performance loss for maintenance. With this ._
+method you can specify an upper bound for the byte slot size to ._
+discard.
+
+.i Alternate Strategies ..
+Regular defragment will also keep the number of free space slots ._
+small. See:
+.c com.db4o.tools.Defragment ..
+(supplied as source code in ../src/com/db4o/tools)
+If defragment can be frequently run, it will also reclaim ._
+lost space and decrease the database file to the minimum size. ._
+Therefore #discardFreeSpace() may be a good tuning mechanism ._
+for setups with frequent defragment runs.
+
+
+.b Measure ..
+.c Db4o.configure().weakReferences(false); ..
+.i Advantage ..
+will configure db4o to use hard direct references instead of weak ._
+references to control instantiated and stored objects.
+
+.i Effect ..
+A db4o database keeps a reference to all persistent objects that are ._
+currently held in RAM, whether they were stored to the database in ._
+this session or instantiated from the database in this session. ._
+This is how db4o can "know" than an object is to be updated: Any ._
+"known" object must be an update, any "unknown" object will be ._
+stored as "new". (Note that the reference system will only be in ._
+place as long as an ObjectContainer is open. Closing and reopening an ._
+ObjectContainer will clean the references system of the ObjectContainer ._
+and all objects in RAM will be treated as "new" afterwards.) In the ._
+default configuration db4o uses weak references and a dedicated thread ._
+to clean them up after objects have been garbage collected by the VM. ._
+Weak references need extra ressources and the cleanup thread will ._
+have a considerable impact on performance since it has to be synchronized ._
+with the normal operations within the ObjectContainer. Turning off weak ._
+references will improve speed. 
+The downside: To prevent memory consumption from growing consistantly, ._
+the application has to take care of removing unused objects from the db4o ._
+reference system by itself. This can be done by calling
+.c ExtObjectContainer.purge(object); ..
+
+.i Alternate Strategies ..
+.c ExtObjectContainer.purge(object); ..
+can also be called in normal weak reference operation mode to remove ._
+an object from the reference cache. This will help to keep the reference ._
+tree as small as possible. ._
+After calling #purge(object) an object will be unknown to the ._
+ObjectContainer so this feature is also suitable for batch inserts. 
+
+
+.b Measure ..
 .c Db4o.configure().automaticShutDown(false); ..
 .i Advantage ..
 can prevent the creation of a shutdown thread on some platforms.
@@ -68,38 +136,6 @@ class structure, a system may be more flexible and faster, if ._
 multiple database files are used. In a client/server setup, database ._
 files can also be switched from the client side with
 .c ((ExtClient)objectContainer).switchToFile(databaseFile); ..
-
-
-.b Measure ..
-.c Db4o.configure().discardFreeSpace(byteCount); ..
-Recommended settings for byteCount:
-- Integer.MAX_VALUE will turn freespace management off
-- Moderate range: 10 to 50
-- Default built-in setting: 0
-
-.i Advantage ..
-will reduce the RAM memory overhead and the speed loss from ._
-maintaining the freespace lists.
-
-.i Effect ..
-When objects are updated or deleted, the space previously occupied ._
-in the database file is marked as "free", so it can be reused. db4o ._
-maintains two lists in RAM, sorted by address and by size. Adjacent ._
-entries are merged. After a large number of updates or deletes have ._
-been executed, the lists can become large, causing RAM ._
-consumption and performance loss for maintenance. With this ._
-method you can specify an upper bound for the byte slot size to ._
-discard.
-
-.i Alternate Strategies ..
-Regular defragment will also keep the number of free space slots ._
-small. See:
-.c com.db4o.tools.Defragment ..
-(supplied as source code in ../src/com/db4o/tools)
-If defragment can be frequently run, it will also reclaim ._
-lost space and decrease the database file to the minimum size. ._
-Therefore #discardFreeSpace() may be a good tuning mechanism ._
-for setups with frequent defragment runs.
 
 
 .b Measure ..
