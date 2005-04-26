@@ -49,7 +49,7 @@ public abstract class YapIndependantType implements YapDataType
 		return null;
 	}
     
-    public boolean readArray(YapWriter reader, Object array) {
+    public boolean readArray(Object array, YapWriter reader) {
         return false;
     }
 	

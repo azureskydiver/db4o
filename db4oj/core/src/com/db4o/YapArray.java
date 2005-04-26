@@ -225,7 +225,7 @@ class YapArray extends YapIndependantType {
 		int[] elements = new int[1];
 		Object ret = readCreate(a_bytes.getTransaction(), a_bytes, elements);
 		if (ret != null){
-            if(i_handler.readArray(a_bytes, ret)){
+            if(i_handler.readArray(ret, a_bytes)){
                 return ret;
             }
 			for (int i = 0; i < elements[0]; i++) {

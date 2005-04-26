@@ -68,7 +68,7 @@ abstract class YapJavaClass implements YapDataType {
     
     abstract Object primitiveNull();
     
-    public boolean readArray(YapWriter reader, Object array) {
+    public boolean readArray(Object array, YapWriter reader) {
         return false;
     }
 
