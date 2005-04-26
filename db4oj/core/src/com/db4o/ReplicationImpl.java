@@ -301,9 +301,18 @@ class ReplicationImpl implements ReplicationProcess {
                 return notProcessed;
             }
 			
+			if(objectA == objectB) {
+				if(caller == _peerA && _direction == TO_B) {
+					return -1;
+				}
+				if(caller == _peerB && _direction == TO_A) {
+					return -1;
+				}
+				return idInCaller(caller, referenceA, referenceB);
+			}
+			
 			_peerA.refresh(objectA, 1);
 			_peerB.refresh(objectB, 1);
-			
 			
 			if (attA.i_version <= _record._version
 					&& attB.i_version <= _record._version) {
@@ -329,8 +338,7 @@ class ReplicationImpl implements ReplicationProcess {
 				}
 
 				if (direction == IGNORE) {
-					shareBinding(referenceA, objectA, referenceB, objectB);
-                    return idInCaller(caller, referenceA, referenceB);
+					return -1;
 				}
 
 			} else {
