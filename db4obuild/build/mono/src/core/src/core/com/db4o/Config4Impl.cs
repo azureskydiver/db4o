@@ -356,13 +356,14 @@ namespace com.db4o
 				throw new System.ArgumentNullException();
 			}
 			_configuredReflector = reflect;
+			_reflector = null;
 		}
 
 		public void refreshClasses()
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass311(this));
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass312(this));
 			}
 			else
 			{
@@ -370,9 +371,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass311 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass312 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass311(Config4Impl _enclosing)
+			public _AnonymousInnerClass312(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -416,7 +417,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass347(this));
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass348(this));
 			}
 			else
 			{
@@ -424,9 +425,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass347 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass348 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass347(Config4Impl _enclosing)
+			public _AnonymousInnerClass348(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

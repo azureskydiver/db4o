@@ -55,16 +55,6 @@ namespace com.db4o
 			}
 		}
 
-		public com.db4o.reflect.ReflectClass primitiveClassReflector()
-		{
-			return null;
-		}
-
-		public virtual object readIndexObject(com.db4o.YapWriter a_writer)
-		{
-			return read(a_writer);
-		}
-
 		public virtual object indexEntry(object a_object)
 		{
 			if (a_object == null)
@@ -77,6 +67,26 @@ namespace com.db4o
 		public int linkLength()
 		{
 			return com.db4o.YapConst.YAPINT_LENGTH + com.db4o.YapConst.YAPID_LENGTH;
+		}
+
+		public com.db4o.reflect.ReflectClass primitiveClassReflector()
+		{
+			return null;
+		}
+
+		public virtual bool readArray(object array, com.db4o.YapWriter reader)
+		{
+			return false;
+		}
+
+		public virtual object readIndexObject(com.db4o.YapWriter a_writer)
+		{
+			return read(a_writer);
+		}
+
+		public virtual bool writeArray(object array, com.db4o.YapWriter reader)
+		{
+			return false;
 		}
 
 		public abstract com.db4o.YapComparable prepareComparison(object arg1);

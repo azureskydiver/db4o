@@ -29,7 +29,7 @@ namespace com.db4o
 		{
 			i_translator = a_translator;
 			com.db4o.YapStream stream = a_yapClass.getStream();
-			configure(stream.reflector().forClass(a_translator.storedClass()));
+			configure(stream.reflector().forClass(a_translator.storedClass()), false);
 		}
 
 		internal override void deactivate(com.db4o.Transaction a_trans, object a_onObject

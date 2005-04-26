@@ -96,6 +96,11 @@ namespace com.db4o
 
 		internal abstract object primitiveNull();
 
+		public virtual bool readArray(object array, com.db4o.YapWriter reader)
+		{
+			return false;
+		}
+
 		public virtual com.db4o.YapDataType readArrayWrapper(com.db4o.Transaction a_trans
 			, com.db4o.YapReader[] a_bytes)
 		{
@@ -164,6 +169,11 @@ namespace com.db4o
 		}
 
 		public abstract void write(object a_object, com.db4o.YapWriter a_bytes);
+
+		public virtual bool writeArray(object array, com.db4o.YapWriter reader)
+		{
+			return false;
+		}
 
 		public virtual void writeIndexEntry(com.db4o.YapWriter a_writer, object a_object)
 		{

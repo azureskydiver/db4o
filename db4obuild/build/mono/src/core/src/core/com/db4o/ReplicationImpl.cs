@@ -310,7 +310,6 @@ namespace com.db4o
 					{
 						return notProcessed;
 					}
-					referenceB = null;
 					if (referenceB == null)
 					{
 						_sourceReference = referenceA;
@@ -332,6 +331,18 @@ namespace com.db4o
 				if (attA == null || attB == null)
 				{
 					return notProcessed;
+				}
+				if (objectA == objectB)
+				{
+					if (caller == _peerA && _direction == TO_B)
+					{
+						return -1;
+					}
+					if (caller == _peerB && _direction == TO_A)
+					{
+						return -1;
+					}
+					return idInCaller(caller, referenceA, referenceB);
 				}
 				_peerA.refresh(objectA, 1);
 				_peerB.refresh(objectB, 1);
@@ -357,8 +368,7 @@ namespace com.db4o
 					}
 					if (direction == IGNORE)
 					{
-						shareBinding(referenceA, objectA, referenceB, objectB);
-						return idInCaller(caller, referenceA, referenceB);
+						return -1;
 					}
 				}
 				else

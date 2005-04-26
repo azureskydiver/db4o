@@ -65,6 +65,9 @@ namespace com.db4o
 
 		com.db4o.YapClass getYapClass(com.db4o.YapStream a_stream);
 
+		/// <summary>performance optimized read (only used for byte[] so far)</summary>
+		bool readArray(object array, com.db4o.YapWriter reader);
+
 		void readCandidates(com.db4o.YapReader a_bytes, com.db4o.QCandidates a_candidates
 			);
 
@@ -72,6 +75,9 @@ namespace com.db4o
 
 		com.db4o.YapDataType readArrayWrapper(com.db4o.Transaction a_trans, com.db4o.YapReader[]
 			 a_bytes);
+
+		/// <summary>performance optimized write (only used for byte[] so far)</summary>
+		bool writeArray(object array, com.db4o.YapWriter reader);
 
 		void writeIndexEntry(com.db4o.YapWriter a_writer, object a_object);
 	}

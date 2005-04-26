@@ -40,10 +40,11 @@ namespace com.db4o
     /// <exclude />
     public class TSerializable : ObjectConstructor {
 
+		static Class _byteArrayType = Class.getClassForType(typeof(byte[]));
+
         public Object onStore(ObjectContainer objectContainer, Object obj){
             MemoryStream memoryStream = new MemoryStream();
             new BinaryFormatter().Serialize(memoryStream, obj);
-            memoryStream.Close();
             return memoryStream.GetBuffer();
         }
 
@@ -52,14 +53,13 @@ namespace com.db4o
 
         public Object onInstantiate(ObjectContainer objectContainer, Object obj){
             MemoryStream memoryStream = new MemoryStream((byte[])obj);
-            Object ret = new BinaryFormatter().Deserialize(memoryStream);
-            memoryStream.Close();
-            return ret;
+            return new BinaryFormatter().Deserialize(memoryStream);
         }
 
         public Class storedClass(){
-            return Class.getClassForType(typeof(byte[]));
+            return _byteArrayType;
         }
 
 	}
 }
+

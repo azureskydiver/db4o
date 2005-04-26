@@ -917,6 +917,13 @@ namespace com.db4o
 
 		public virtual string getName()
 		{
+			if (i_name == null)
+			{
+				if (_reflector != null)
+				{
+					i_name = _reflector.getName();
+				}
+			}
 			return i_name;
 		}
 
@@ -957,13 +964,13 @@ namespace com.db4o
 		public virtual com.db4o.YapField getYapField(string name)
 		{
 			com.db4o.YapField[] yf = new com.db4o.YapField[1];
-			forEachYapField(new _AnonymousInnerClass793(this, name, yf));
+			forEachYapField(new _AnonymousInnerClass798(this, name, yf));
 			return yf[0];
 		}
 
-		private sealed class _AnonymousInnerClass793 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass798 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass793(YapClass _enclosing, string name, com.db4o.YapField[]
+			public _AnonymousInnerClass798(YapClass _enclosing, string name, com.db4o.YapField[]
 				 yf)
 			{
 				this._enclosing = _enclosing;
@@ -1396,7 +1403,12 @@ namespace com.db4o
 
 		internal override int ownLength()
 		{
-			int len = i_stream.stringIO().shortLength(getName()) + com.db4o.YapConst.OBJECT_LENGTH
+			string name = getName();
+			if (name == null)
+			{
+				name = "";
+			}
+			int len = i_stream.stringIO().shortLength(name) + com.db4o.YapConst.OBJECT_LENGTH
 				 + (com.db4o.YapConst.YAPINT_LENGTH * 2) + (com.db4o.YapConst.YAPID_LENGTH * 2);
 			if (i_fields != null)
 			{
@@ -1540,15 +1552,15 @@ namespace com.db4o
 				{
 					int[] idgen = { -2 };
 					a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
-					com.db4o.Platform.forEachCollectionElement(obj, new _AnonymousInnerClass1302(this
+					com.db4o.Platform.forEachCollectionElement(obj, new _AnonymousInnerClass1311(this
 						, trans, idgen, a_candidates));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1302 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass1311 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass1302(YapClass _enclosing, com.db4o.Transaction trans, 
+			public _AnonymousInnerClass1311(YapClass _enclosing, com.db4o.Transaction trans, 
 				int[] idgen, com.db4o.QCandidates a_candidates)
 			{
 				this._enclosing = _enclosing;
@@ -1786,6 +1798,11 @@ namespace com.db4o
 				{
 				}
 			}
+		}
+
+		public virtual bool readArray(object array, com.db4o.YapWriter reader)
+		{
+			return false;
 		}
 
 		internal override void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader 
@@ -2045,6 +2062,11 @@ namespace com.db4o
 		public override string ToString()
 		{
 			return i_name;
+		}
+
+		public virtual bool writeArray(object array, com.db4o.YapWriter reader)
+		{
+			return false;
 		}
 
 		internal override bool writeObjectBegin()

@@ -1747,12 +1747,16 @@ namespace com.db4o
 					}
 					else
 					{
-						if (j4o.lang.Class.getClassForObject(a_object).isArray())
+						com.db4o.reflect.ReflectClass clazz = reflector().forObject(a_object);
+						if (clazz.isArray())
 						{
-							object[] arr = com.db4o.YapArray.toArray(this, a_object);
-							for (int i = 0; i < arr.Length; i++)
+							if (!clazz.getComponentType().isPrimitive())
 							{
-								a_still = stillTo1(a_still, a_just, arr[i], a_depth, a_forceUnknownDeactivate);
+								object[] arr = com.db4o.YapArray.toArray(this, a_object);
+								for (int i = 0; i < arr.Length; i++)
+								{
+									a_still = stillTo1(a_still, a_just, arr[i], a_depth, a_forceUnknownDeactivate);
+								}
 							}
 						}
 						else

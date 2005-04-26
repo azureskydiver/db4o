@@ -80,6 +80,26 @@ namespace com.db4o
 			a_bytes.append(set);
 		}
 
+		public override bool readArray(object array, com.db4o.YapWriter reader)
+		{
+			if (array is byte[])
+			{
+				reader.readBytes((byte[])array);
+				return true;
+			}
+			return false;
+		}
+
+		public override bool writeArray(object array, com.db4o.YapWriter writer)
+		{
+			if (array is byte[])
+			{
+				writer.append((byte[])array);
+				return true;
+			}
+			return false;
+		}
+
 		private byte i_compareTo;
 
 		private byte val(object obj)

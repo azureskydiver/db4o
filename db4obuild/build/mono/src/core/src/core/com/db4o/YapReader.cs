@@ -109,9 +109,15 @@ namespace com.db4o
 		internal virtual byte[] readBytes(int a_length)
 		{
 			byte[] bytes = new byte[a_length];
-			j4o.lang.JavaSystem.arraycopy(_buffer, _offset, bytes, 0, a_length);
-			_offset += a_length;
+			readBytes(bytes);
 			return bytes;
+		}
+
+		internal virtual void readBytes(byte[] bytes)
+		{
+			int length = bytes.Length;
+			j4o.lang.JavaSystem.arraycopy(_buffer, _offset, bytes, 0, length);
+			_offset += length;
 		}
 
 		internal com.db4o.YapReader readEmbeddedObject(com.db4o.Transaction a_trans)
