@@ -54,6 +54,10 @@ public class GenericField implements ReflectField, DeepClone{
     public boolean isPublic() {
         return true;
     }
+    
+    public boolean isPrimitive(){
+        return _primitive;
+    }
 
     public boolean isStatic() { //FIXME Consider static fields.
         return false;
