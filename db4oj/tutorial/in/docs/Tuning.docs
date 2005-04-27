@@ -1,3 +1,5 @@
+.n
+.a Tuning ..
 .0 Tuning ..
 
 The following is an overview over possible tuning switches ._
@@ -8,7 +10,7 @@ because it provides a side glance at db4o features with ._
 db4o works.
 
 
-.b Measure ..
+.1 Discarding Free Space ..
 .c Db4o.configure().discardFreeSpace(byteCount); ..
 Recommended settings for byteCount:
 - Integer.MAX_VALUE will turn freespace management off
@@ -40,7 +42,29 @@ Therefore #discardFreeSpace() may be a good tuning mechanism ._
 for setups with frequent defragment runs.
 
 
-.b Measure ..
+.1 Calling constructors ..
+.c Db4o.configure().weakReferences(false); ..
+.i Advantage ..
+will configure db4o to use a constructor to instantiate ._
+objects.
+
+.i Effect ..
+On VMs where this is supported (Sun Java VM > 1.4, .NET, Mono) ._
+db4o tries to create instances of objects without calling ._
+a constructor. db4o is using reflection for this feature ._
+so this may be considerably slower than using a constructor. For ._
+the best performance it is recommended to add a public zero-parameter ._
+constructor to every persistent class and to turn constructors on.
+
+.i Alternate Strategies ..
+Constructors can also be turned on for individual classes only with
+.c Db4o.configure().objectClass(Foo.class).callConstructor(true); ..
+There are some classes (e.g. java.util.Calendar) that require a constructor ._
+to be called to work. Further details can be found in the ._
+.l Constructors chapter on Constructors .. . 
+
+
+.1 Turning Off Weak References ..
 .c Db4o.configure().weakReferences(false); ..
 .i Advantage ..
 will configure db4o to use hard direct references instead of weak ._
@@ -76,7 +100,34 @@ After calling #purge(object) an object will be unknown to the ._
 ObjectContainer so this feature is also suitable for batch inserts. 
 
 
-.b Measure ..
+.1 Defragment ..
+.c new Defragment().run("db.yap", delete); ..
+.i Advantage ..
+It is recommended to run Defragment frequently to reduce the database ._
+file size and to remove unused fields and freespace slots.
+
+.i Effect ..
+db4o does not discard fields from the database file that are no longer ._
+being used. Within the database file quite a lot of space is used for ._
+transactional processing. Objects are always written to a new slot ._
+when they are modified. Deleted objects continue to occupy 8 bytes ._
+until the next Defragment run. Defragment cleans all this up by writing ._
+all objects to a completely new database file. The resulting file will ._
+be smaller and faster.
+
+.i Alternate Strategies ..
+Instead of deleting objects it can be an option to mark objects as ._
+deleted with a "deleted" boolean field and to clean them out (by not ._
+copying them to the new database file) during the Defragment run. ._
+Two advantages: (1) Deleted objects can be restored. (2) ._
+In case there are multiple references to a deleted object, none of them ._
+would point to null. To clean out objects during the Defragment run, ._
+the Defragment source code would have to be modified. ._
+com.db4o.tools.Defragment is  .b only supplied as source code ..  to ._
+encourage embedding maintenance tasks. ..
+
+
+.1 No Shutdown Thread ..
 .c Db4o.configure().automaticShutDown(false); ..
 .i Advantage ..
 can prevent the creation of a shutdown thread on some platforms.
@@ -96,7 +147,7 @@ Database files can be reduced to their minimal size with
 (supplied as source code in /src/com/db4o/tools)
 
 
-.b Measure ..
+.1 No callbacks ..
 .c Db4o.configure().callbacks(false); ..
 .i Advantage ..
 will prevent db4o from looking for callback methods in all persistent ._
@@ -117,7 +168,7 @@ The most recommended mechanism to cascade updates is:
 .c Db4o.configure().objectClass("yourPackage.yourClass").cascadeOnUpdate(true);
 
 
-.b Measure ..
+.1 No schema changes ..
 .c Db4o.configure().detectSchemaChanges(false); ..
 .i Advantage ..
 will prevent db4o from analysing the class structure upon opening a ._
@@ -128,7 +179,7 @@ Upon system startup, db4o will use reflection to scan the structure ._
 of all persistent classes. This process can take some time, if a large ._
 number of classes are present in the database file. For the best ._
 possible startup performance on "warm" database files (all classes ._
-present), this feature can be turned off.
+already analyzed in a previous startup), this feature can be turned off.
 
 .i Alternate Strategies ..
 Instead of using one database file to store a huge and complex ._
@@ -138,7 +189,7 @@ files can also be switched from the client side with
 .c ((ExtClient)objectContainer).switchToFile(databaseFile); ..
 
 
-.b Measure ..
+.1 No lock file thread ..
 .c Db4o.configure().lockDatabaseFile(false); ..
 .i Advantage ..
 will prevent the creation of a lock file thread on Java platforms ._
@@ -159,7 +210,7 @@ mode. Use:
 .c Db4o.configure().readOnly(true) ..
 
 
-.b Measure ..
+.1 No test instances ..
 .c Db4o.configure().testConstructors(false); ..
 .i Advantage ..
 will prevent db4o from creating a test instance of persistent classes ._
