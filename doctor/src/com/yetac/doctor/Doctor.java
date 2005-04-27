@@ -12,6 +12,31 @@ import com.yetac.doctor.workers.*;
 
 public class Doctor extends Task {
     
+    public static void main(String[] args){
+        Doctor doctor = new Doctor();
+        String path = doctor.configurejtutorial();
+        doctor.execute();
+        try {
+            BrowserLauncher.openURL(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public String configurejtutorial(){
+        String workspace = "C:/_db4o/HEAD";
+        String tutorial = workspace + "/db4oj/tutorial"; 
+        setName("f1");
+        setHome(tutorial);
+        setInteractive(true);
+        setWorkspace(workspace);
+        setInputSource(tutorial + "/src");
+        setArchive("doctor-applets.jar, db4o-4.5-java1.4.jar, f1.jar");
+        setVariable("java", true);
+        return tutorial + "/out/index.html";
+    }
+    
+    
     private String home;
     private String name;
     private String workspace;
@@ -42,6 +67,9 @@ public class Doctor extends Task {
     
     private boolean showCodeExecutionResults;
     
+    
+
+    
     public void setWorkspace(String workspace) {
         if(!workspace.endsWith("/")) {
             workspace+="/";
@@ -55,22 +83,6 @@ public class Doctor extends Task {
     
     public void setHome(String home){
         this.home = home;
-    }
-    
-    public static void main(String[] args){
-        Doctor doctor = new Doctor();
-        doctor.configurejtutorial();
-        doctor.execute();
-    }
-    
-    public void configurejtutorial(){
-        setName("f1");
-        setHome("C:/_db4o/HEAD/db4oj/tutorial");
-        setInteractive(true);
-        setWorkspace("C:/_db4o/HEAD");
-        setInputSource("C:/_db4o/HEAD/db4oj/tutorial/src");
-        setArchive("doctor-applets.jar, db4o-4.3-java1.4.jar, f1.jar");
-        setVariable("java", true);
     }
     
     public void execute() throws BuildException {
