@@ -1,0 +1,9 @@
+
+(J1) Opening the Compare class
+-------------------------------
+Opening the Compare class runs into a NullPointerException
+in db4o in #handlerForClass
+
+
+
+
