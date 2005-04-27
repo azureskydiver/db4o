@@ -46,15 +46,11 @@ public class ReplicationFeaturesMain {
 		_BOTH.add("B");
 		
 
-		produceBug(); //TODO Delete
-
-/*
-
 //	WORK IN PROGRESS:	
         tstDirection(_BOTH);
 	    tstDirection(_A);
 	    tstDirection(_B);
-*/
+
         
         if (_intermittentErrors.length() > 0) { 
             System.err.println("Intermittent errors found in test combinations:" + _intermittentErrors);
@@ -70,52 +66,6 @@ public class ReplicationFeaturesMain {
     }
 
 	
-	private void produceBug() {
-		initState();
-		System.err.println("-------------initState() Done");
-		Test.ensure(find(_containerA, "oldFromA") != null);
-		Test.ensure(find(_containerB, "oldFromA") != null);
-
-        //reopenContainers(); //This line does not fix the bug.
-        
-        changeObject(_containerA, "oldFromA", "oldFromAChangedInA");
-        changeObject(_containerB, "oldFromA", "oldFromAChangedInB");
-        _containerA.commit();
-        _containerB.commit();
-        Test.ensure(find(_containerA, "oldFromA") == null);
-        Test.ensure(find(_containerB, "oldFromA") == null);
-        
-		ReplicationProcess replication = _containerA.ext().replicationBegin(_containerB, new ReplicationConflictHandler() {
-            public Object resolveConflict(ReplicationProcess process, Object a, Object b) {
-            	return a;
-            }
-        });
-        replication.setDirection(_containerB, _containerA);
-
-        System.err.println("-------------Starting to replicate");
-        
-        //Comment this line and the test passes:
-        replicateQueryingFrom(replication, _containerA); //Change to _containerB and the test will still fail.
-
-        Test.ensure(find(_containerA, "oldFromAChangedInB") == null);
-        Test.ensure(find(_containerA, "oldFromAChangedInA") != null);
-        
-        //Comment this line and the test passes:
-        replicateQueryingFrom(replication, _containerB); //Change to _containerA and the test will still fail.
-        
-        //The object simply cannot be replicated twice in this situation.
-        
-		replication.commit();
-		System.err.println("-------------Replication Done");
-
-        //reopenContainers(); //This line does not fix the bug.
-        
-		Test.ensure(find(_containerA, "oldFromA") == null);
-        Test.ensure(find(_containerA, "oldFromAChangedInB") == null);
-        Test.ensure(find(_containerA, "oldFromAChangedInA") != null);
-	}
-
-	
 	private void tstDirection(Set direction) {
 		_direction = direction;
 		
@@ -126,7 +76,7 @@ public class ReplicationFeaturesMain {
 
 	private void tstQueryingFrom(Set containers) {
 		_containersToQueryFrom = containers;
-		
+
         tstWithNewObjectsIn(_BOTH);
 		tstWithNewObjectsIn(_A);
 		tstWithNewObjectsIn(_B);
@@ -135,6 +85,8 @@ public class ReplicationFeaturesMain {
 
 	private void tstWithNewObjectsIn(Set containers) {
 		_containersWithNewObjects = containers;
+		
+		System.out.print(".");
 		
         tstWithChangedObjectsIn(_BOTH);
 		tstWithChangedObjectsIn(_A);
@@ -155,8 +107,7 @@ public class ReplicationFeaturesMain {
 		_objectsToPrevailInConflicts = containers;
 		
         _testCombination++;
-        if (_testCombination == 145) return; //Skip bug. TODO: Delete line.
-        if (_testCombination < 0) return; //Use this to skip some combinations and avoid waiting. TODO: Set to zero.
+        if (_testCombination < 0) return; //Use this to skip some combinations and avoid waiting.
 
 		_errors = 0;
         while (true) {
@@ -169,7 +120,6 @@ public class ReplicationFeaturesMain {
                     printCombination();
                     throw rx;
                 }
-                continue;
             }
         }
         if (_errors > 0) _intermittentErrors += "\n\t Combination: " + _testCombination + " (" + _errors +" errors)";
@@ -184,18 +134,14 @@ public class ReplicationFeaturesMain {
     }
 
     private void doIt() {
-
-		System.err.println("------------------------------------------");
 		initState();
-		System.err.println("--------------");
-		reopenContainers();  //TODO Run without reopening containers (further down in this method too) to get intermittent errors.
+		reopenContainers();
         
         performChanges();
         
 		ReplicationProcess replication = _containerA.ext().replicationBegin(_containerB, new ReplicationConflictHandler() {
             public Object resolveConflict(ReplicationProcess process, Object a, Object b) {
                 if (_objectsToPrevailInConflicts.isEmpty()) return null;
-                System.err.println("CONFLICT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                 return _objectsToPrevailInConflicts.contains("A") ? a  : b;
             }
         });
@@ -214,7 +160,6 @@ public class ReplicationFeaturesMain {
         }
 		
 		replication.commit();
-		reopenContainers(); //TODO   //TODO Run without reopening containers (further up in this method too) to get intermittent errors.
         
 		checkNames();
 	}
@@ -316,7 +261,6 @@ public class ReplicationFeaturesMain {
     }
 
 	private void checkName(ObjectContainer container, String name, boolean isExpected) {
-        System.err.println("" + _testCombination + " " + name + (isExpected ? " expected" : " not expected") + (container == _containerA ? " in A" : " in B" ));
         Replicated obj = find(container, name);
         if (isExpected) {
             ensure(obj != null);
@@ -370,7 +314,6 @@ public class ReplicationFeaturesMain {
         ObjectSet set = objectsToReplicate(replication, origin);
         while(set.hasNext()){
             Object next = set.next();
-			System.err.println("Replicating: " + next);
 			replication.replicate(next);
         }
     }
