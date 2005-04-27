@@ -4,6 +4,8 @@
 Opening the Compare class runs into a NullPointerException
 in db4o in #handlerForClass
 
+***WORKSFORME*** djo -- April 27, 2:54 PM
+
 
 
 
