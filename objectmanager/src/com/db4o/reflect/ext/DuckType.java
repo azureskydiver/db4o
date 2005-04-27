@@ -19,6 +19,19 @@ import java.lang.reflect.Proxy;
  * @author djo
  */
 public class DuckType implements InvocationHandler {
+	/**
+     * Causes object to implement the interfaceToImplement and returns
+     * an instance of the object implementing interfaceToImplement even
+     * if interfaceToImplement was not declared in object.getClass()'s 
+     * implements declaration.<p>
+     * 
+     * This works as long as all methods declared in interfaceToImplement
+     * are present on object.
+     * 
+	 * @param interfaceToImplement The Java class of the interface to implement
+	 * @param object The object to force to implement interfaceToImplement
+	 * @return object, but now implementing interfaceToImplement
+	 */
 	public static Object implement(Class interfaceToImplement, Object object) {
 		return Proxy.newProxyInstance(interfaceToImplement.getClassLoader(), 
 				new Class[] {interfaceToImplement}, new DuckType(object));

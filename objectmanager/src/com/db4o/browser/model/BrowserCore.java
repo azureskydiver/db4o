@@ -44,6 +44,18 @@ public class BrowserCore implements ICloseListener {
         return requested;
     }
 	
+    private Database getDatabase(String host, int port, String user, String password) throws Exception {
+        String key = "db4o://" + host + ":" + port;
+        Database requested = (Database) dbMap.get(key);
+        if (requested == null) {
+            requested = new Db4oDatabase();
+            requested.open(host, port, user, password);
+            dbMap.put(key, requested);
+            databases.addLast(requested);
+        }
+        return requested;
+    }
+
 	/**
 	 * Gets an array of all open databases
 	 * 
@@ -103,6 +115,19 @@ public class BrowserCore implements ICloseListener {
     public IGraphIterator iterator(String databasePath, String selectedClass) {
         Database requested = getDatabase(databasePath);
         return requested.graphIterator(selectedClass);
+    }
+
+
+    public IGraphIterator iterator(String host, int port, String user, String password) throws Exception {
+        Database requested = getDatabase(host, port, user, password);
+        return requested.graphIterator();
+    }
+    
+    /**
+     * @return true if at least one database is open; false otherwise.
+     */
+    public boolean isOpen() {
+        return databases.size() > 0;
     }
 
 }

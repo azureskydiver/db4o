@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.Map;
 
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -40,10 +41,10 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.db4o.browser.gui.controllers.BrowserController;
 import com.db4o.browser.gui.controllers.QueryController;
+import com.db4o.browser.gui.dialogs.SelectServer;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;
 import com.db4o.browser.prefs.PreferenceUI;
-import com.db4o.reflect.ReflectClass;
 import com.swtworkbench.community.xswt.XSWT;
 import com.swtworkbench.community.xswt.metalogger.FileLogger;
 import com.swtworkbench.community.xswt.metalogger.Logger;
@@ -147,6 +148,7 @@ public class StandaloneBrowser implements IControlFactory {
         Map choices = XSWT.createl(shell, "menu.xswt", getClass());
 		
         MenuItem open = (MenuItem) choices.get("Open");
+        MenuItem openServer = (MenuItem) choices.get("OpenServer");
         MenuItem query = (MenuItem) choices.get("Query");
         MenuItem search = (MenuItem) choices.get("Search");
         MenuItem newWindow = (MenuItem) choices.get("NewWindow");
@@ -168,12 +170,24 @@ public class StandaloneBrowser implements IControlFactory {
             }
         });
         
+        openServer.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                SelectServer dialog = new SelectServer(shell);
+                if (dialog.open() == Window.OK) {
+                    String host = dialog.getHostName();
+                    int port = dialog.getPort();
+                    String user = dialog.getUser();
+                    String password = dialog.getPassword();
+                    if (browserController.open(host, port, user, password)) {
+                        setTabText(host + ":" + port);
+                    }
+                }
+            }
+        });
+        
         query.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                ReflectClass toOpen = browserController.chooseClass();
-                if (toOpen != null) {
-                    queryController.open(toOpen, fileName);
-                }
+                browserController.newQuery();
             }
         });
         

@@ -9,6 +9,7 @@ BUGS:
    extend the classpath before you open a database file or it doesn't work.
 - Reopen databases after changing classpath preference.
 
+
 Remaining Features:
 -------------------
    * Beautify UI; add icons in appropriate places
@@ -21,6 +22,8 @@ Remaining Features:
    * Click right side to navigate
       - (Hyperlink objects if object.hasChildren()?)
    * If right side is displaying a collection, display in a table
+   * Connect to a db4o server
+   * Extend classpath should be a preference page
    
 - Release engineering
    * Don't support PDAs for the initial release

@@ -15,6 +15,5 @@
 	<classpathentry kind="lib" path="launcher/lib/runtime.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/xmlpull_1_1_3_1.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/xswt.jar"/>
-	<classpathentry kind="lib" path="launcher/lib/db4o-4.5-java1.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

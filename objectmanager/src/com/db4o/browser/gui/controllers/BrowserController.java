@@ -9,10 +9,14 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.MessageBox;
 
 import com.db4o.browser.gui.controllers.tree.TreeController;
+import com.db4o.browser.gui.dialogs.IListPopulator;
+import com.db4o.browser.gui.dialogs.ListSelector;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;
 import com.db4o.browser.model.GraphPosition;
@@ -63,12 +67,23 @@ public class BrowserController implements IBrowserController {
 	protected void addQueryButtonHandler() {
         ui.getQueryButton().addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                ReflectClass toOpen = chooseClass();
-                if (toOpen != null) {
-                    queryController.open(toOpen, currentFile);
-                }
+                newQuery();
             }
         });
+    }
+    
+    public void newQuery() {
+        if (!BrowserCore.getDefault().isOpen()) {
+            MessageBox error = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
+            error.setMessage("Please open a database before querying.");
+            error.setText("Error");
+            error.open();
+            return;
+        }
+        ReflectClass toOpen = chooseClass();
+        if (toOpen != null) {
+            queryController.open(toOpen, currentFile);
+        }
     }
 
     /**
@@ -82,6 +97,22 @@ public class BrowserController implements IBrowserController {
 		setInput(i, null);
 	}
     
+    public boolean open(String host, int port, String user, String password) {
+        currentFile = host + ":" + port;
+        IGraphIterator i;
+        try {
+            i = BrowserCore.getDefault().iterator(host, port, user, password);
+        } catch (Exception e) {
+            MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
+            messageBox.setText("Error");
+            messageBox.setMessage(e.getClass().getName() + ": " + e.getMessage());
+            messageBox.open();
+            return false;
+        }
+        setInput(i, null);
+        return true;
+    }
+
     /**
      * Displays a class selection dialog box and allows the user to select a
      * class.
@@ -174,6 +205,7 @@ public class BrowserController implements IBrowserController {
         detailController.deselectAll();
         navigationController.resetUndoRedoStack();
     }
-    
+
+
     
 }

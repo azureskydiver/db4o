@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2005 db4objects Inc.  http://www.db4o.com
  */
-package com.db4o.browser.gui.controllers;
+package com.db4o.browser.gui.dialogs;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,7 +31,7 @@ public class ListSelector extends Dialog {
     private IListPopulator listPopulator;
     private LinkedList choices = new LinkedList();
 
-    protected ListSelector(Shell parentShell) {
+    public ListSelector(Shell parentShell) {
         super(parentShell);
     }
 

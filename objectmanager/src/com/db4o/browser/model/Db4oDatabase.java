@@ -56,6 +56,19 @@ public class Db4oDatabase implements Database {
         }
     }
     
+    public void open(String host,int port, String user, String password) throws Exception {
+        String path = "db4o://" + host + ":" + port;
+        Db4o.configure().readOnly(true);
+        Db4o.configure().activationDepth(ActivationPreferences.getDefault().getInitialActivationDepth());
+        if (!path.equals(currentPath)) {
+            close();
+            container = Db4o.openClient(host, port, user, password);
+            if (container == null)
+                throw new IllegalArgumentException("Could not open: " + path);
+            currentPath = path;
+        }
+    }
+    
     /* (non-Javadoc)
      * @see com.db4o.browser.model.Database#close()
      */
