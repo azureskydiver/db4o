@@ -57,10 +57,10 @@ clean:
 	rm -rf $(DIR_BIN)
 	
 install:
-	echo ">>> *** " $(RPM_BUILD_ROOT)
+	#echo ">>> *** " $(RPM_BUILD_ROOT)
 	mkdir -p $(DIR_INSTALL_BIN)
 	cp $(DLL_CORE) $(DIR_INSTALL_BIN)
-	cp $(DEBUGGER_FILES) $(DIR_INSTALL_BIN)
+	#cp $(DEBUGGER_FILES) $(DIR_INSTALL_BIN)
 	cp $(DLL_TOOLS) $(DIR_INSTALL_BIN)
 	cp $(EXE_TEST_PATH) $(DIR_INSTALL_BIN)
 ifndef RPM_DOC_DIR
