@@ -59,6 +59,48 @@ Everything else is absolutely identical to the local server examples above.
 
 .s com.db4o.f1.chapter5.ClientServerExample#demonstrateRemoteRollback ..
 
+.1 Out-of-band signalling ..
+
+Sometimes a client needs to send a special message to a server in order ._
+to tell the server to do something.  The server may need to be signalled ._
+to perform a defragment or it may need to be signalled to shut itself ._
+down gracefully.
+
+This is configured by calling setMessageRecipient(), passing the object ._
+that will process client-initiated messages.
+
+.s com.db4o.f1.chapter5.StartServer#run ..
+
+The message is received and processed by a processMessage() method:
+
+.s com.db4o.f1.chapter5.StartServer#processMessage ..
+
+Db4o allows a client to send an arbitrary signal or message to a server ._
+by sending a plain Java object to the server.  The server will receive ._
+a callback message, including the object that came from the client. ._
+The server can interpret this message however it wants.
+
+.s com.db4o.f1.chapter5.StopServer#main ..
+
+.1 Putting it all together: a simple but complete db4o server ..
+
+Let's put all of this information together now to implement a simple ._
+standalone db4o server with a special client that can tell the server ._
+to shut itself down gracefully on demand.
+
+First, both the client and the server need some shared configuration ._
+information.  We will provide this using an interface:
+
+.s com.db4o.f1.chapter4.ServerConfiguration ..
+
+Now we'll create the server:
+
+.s com.db4o.f1.chapter4.StartServer ..
+
+And last but not least, the client that stops the server.
+
+com.db4o.f1.chapter4.StopServer ..
+
 .1 Conclusion ..
 
 That's it, folks. No, of course it isn't. There's much more to db4o ._
