@@ -32,7 +32,6 @@
 					Value="[INSTALLDIR]"
 					Execute="firstSequence" />
 		
-		
 		<CustomAction Id="Launch_Tutorial"				
 				FileKey="doc.tutorial.db4o_tutorial.exe"
 				ExeCommand=""
@@ -64,10 +63,12 @@
 		<FragmentRef Id="DirectoriesFilesAndComponents" />
 		
 		<DirectoryRef Id="TARGETDIR">
-			<Directory Id="WindowsVolume">
+					
+			<Directory Id="WindowsVolume" Name="WV">
 				<Directory Id="INSTALLDIR" Name="db4o-@db4o.version.dotted@">
 				</Directory>
 			</Directory>
+				
 			<Directory Id="ProgramMenuFolder" Name=".">
 				<Directory Id="db4objectsMenuFolder" Name="db4o" LongName="db4objects">
 					<Directory Id="TargetMenuFolder" Name="db4o" LongName="db4o @db4o.version.dotted@">
@@ -238,7 +239,7 @@
 				<Control Id="BannerLine" Type="Line" X="0" Y="44" Width="374" Height="0" />
 				<Control Id="BottomLine" Type="Line" X="4" Y="234" Width="370" Height="0" />
 				<Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes">
-					<Text>The [Wizard] is ready to begin the [InstallMode] installation</Text>
+					<Text>The installer is ready to begin the [InstallMode] installation</Text>
 				</Control>
 				<Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes">
 					<Text>[TitleFont]Ready to Install</Text>
