@@ -16,6 +16,8 @@ public interface Database {
 	 */
 	public abstract void open(String path);
 
+    public abstract void open(String host, int port, String user, String password) throws Exception;
+
 	/**
 	 * Method close.  Close the current YAP file if one is open.
 	 */
@@ -40,4 +42,5 @@ public interface Database {
     public abstract Reflector reflector();
 
     public abstract Query query();
+
 }
