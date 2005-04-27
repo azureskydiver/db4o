@@ -3,5 +3,6 @@
 -----------------------
 Querying on the Cs class runs into a NullPointerException
 
-
+Notes: This is happening in the middle of the generic reflector code; I suggest
+looking there.
 
