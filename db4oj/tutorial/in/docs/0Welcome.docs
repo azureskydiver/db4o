@@ -8,6 +8,14 @@ with db4o and to be a reliable companion while you develop with db4o. ._
 Before you start, please make sure that you have downloaded the latest ._
 db4o distribution from the  .l http://www.db4o.com db4objects website .. .
 
+You are invited to join the db4o community in the public db4o newsgroup at  ._
+.l news://news.db4odev.com/db4o.users news://news.db4odev.com/db4o.users .. ._
+and to ask for help at any time. A searchable archive of previous postings ._
+is available  .l http://www.db4odev.com/newsarchive/search.cmd here ..  . ._
+You may also find the ._
+.l http://www.db4o.com/community/ontheroad/solutionlibrary/ db4o knowledgebase .. ._
+helpful for keyword searches.
+
 .? mono The db4o Mono distribution comes as either a binary or source RPM ._
 package, db4o-4.5.noarch.rpm and db4o-4.5.src.rpm respectively. After you ._
 install the noarch RPM package you should find the db4o.dll assembly in ._
