@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2005, db4objects, Inc. and others.
+ *
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Common Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/cpl-v10.html
+ * 
+ * Contributors:
+ *     db4objects       - Object Manager launcher
+ *     IBM Corporation  - findCommand function (from Eclipse's launcher)
+ *******************************************************************************/
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -19,6 +31,37 @@
 
 #define dirSeparator '/'
 #define pathSeparator ':'
+
+
+// Define classpath
+#ifdef __linux__
+
+#define CLASSPATH "lib/db4o-4.5-java1.4.jar:lib/kxml-plugin.jar:lib/osgi_core.jar:lib/xmlpull_1_1_3_1.jar:lib/jakarta-oro-2.0.7.jar:lib/runtime.jar:lib/xswt.jar:lib/jface.jar:lib/objectmanager.jar:lib/linux/swt-cairo.jar:lib/linux/swt.jar:lib/linux/swt-mozilla.jar:lib/linux/swt-pi.jar"
+#define LIBPATH   "lib/linux"
+#define VMEXE     "java"
+#define EXTENSION ""
+
+#endif
+
+#ifdef _WIN32
+
+#define CLASSPATH "lib\\osgi_core.jar;lib\\runtime.jar;lib\\objectmanager.jar;lib\\db4o-4.5-java1.4.jar;lib\\jakarta-oro-2.0.7.jar;lib\\jface.jar;lib\\kxml-plugin.jar;lib\\windows\\swt-cairo.jar;lib\\windows\\swt-mozilla.jar;lib\\windows\\swt-pi.jar;lib\\windows\\swt.jar;lib\\xmlpull_1_1_3_1.jar;lib\\xswt.jar;lib\\windows\\swt.jar"
+#define LIBPATH   "lib\\windows"
+#define EXTENSION ".exe"
+
+#ifdef _IKVM
+
+#define VMEXE     "ikvm\\bin\\ikvm"
+
+#else
+
+#define VMEXE     "java"
+
+#endif
+
+#endif
+
+
 
 #define _TCHAR char
 #define _T(s) s
@@ -86,7 +129,7 @@ _TCHAR* findCommand( _TCHAR* command )
         else
         {
             /* Get the directory PATH where executables reside. */
-            path = _tgetenv( _T("PATH") );
+            path = (_TCHAR*) _tgetenv( _T("PATH") );
             length = _tcslen( path ) + _tcslen( command ) + MAX_PATH_LENGTH;
             cmdPath = malloc( length * sizeof(_TCHAR));
 
@@ -155,11 +198,71 @@ _TCHAR* findCommand( _TCHAR* command )
 }
 
 
-static _TCHAR* classpath = "";
+void usage(char **argv) {
+  fprintf(stderr, "Either put Java on your path or include the path to it on the command line.\n\n");
+  fprintf(stderr, "Usage: %s [%cpath%cto%cjava%s]\n\n", argv[0], dirSeparator, dirSeparator, dirSeparator, EXTENSION);
+}
 
 
 int main(int argc, char **argv) {
-  printf("%s\n", findCommand("java"));
-  puts(argv[0]);
+  char* vm_path;
+  char command[1024*20];
+  
+  if (argc > 1) {
+  
+  	if (strcmp("--help", argv[1]) != 0 || strcmp("-?", argv[1]) != 0) {
+  	  usage(argv);
+  	  exit(0);
+  	}
+  
+    vm_path = findCommand(argv[1]);
+    
+    // Maybe they forgot to include the java executable
+    if (vm_path == NULL) {
+	  command[0] = 0x0;
+	  
+	  char separator[2];
+	  separator[0] = dirSeparator;
+	  separator[1] = 0x0;
+	  
+	  strncpy(command, argv[1], 1024*19);
+	  strcat(command, separator);
+	  strcat(command, VMEXE);
+	  
+	  vm_path = findCommand(command);
+	  
+	  // Maybe they just gave us $JAVA_HOME
+      if (vm_path == NULL) {
+	    command[0] = 0x0;
+	  
+	    char separator[2];
+        separator[0] = dirSeparator;
+        separator[1] = 0x0;
+	  
+	    strncpy(command, argv[1], 1024*19);
+	    strcat(command, separator);
+	    strcat(command, "bin");
+	    strcat(command, separator);
+	    strcat(command, VMEXE);
+	  
+	    vm_path = findCommand(command);
+      }
+    }
+  } else {
+    vm_path = findCommand(VMEXE);
+  }
+  
+  if (vm_path == NULL) {
+  	fprintf(stderr, "Could not find Java virtual machine: %s%s\n", VMEXE, EXTENSION);
+  	usage(argv);
+  	exit(1);
+  }
+  printf("Using JVM: %s\n", vm_path);
+  
+  sprintf(command, "%s -Djava.library.path=%s -classpath %s com.db4o.browser.gui.standalone.StandaloneBrowser",
+  	vm_path, LIBPATH, CLASSPATH);
+  free(vm_path);
+  
+  system(command);
 }
 
