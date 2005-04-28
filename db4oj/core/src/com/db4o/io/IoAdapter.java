@@ -40,7 +40,7 @@ public abstract class IoAdapter {
     
     public boolean exists(String path){
         File existingFile = new File(path);
-        return  (! existingFile.exists()) || existingFile.length() == 0;
+        return  existingFile.exists() && existingFile.length() > 0;
     }
     
 	public abstract long getLength() throws IOException;
