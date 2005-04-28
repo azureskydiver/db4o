@@ -197,32 +197,37 @@ public class PDFWriter extends AbstractWriter {
     }
 
     public void write(Source command) throws Exception {
+        // TODO: refactor common behavior to AbstractWriter
         File file = command.getFile();
-        if (file.exists()) {
-            RandomAccessFile raf = new RandomAccessFile(file, "r");
-            byte[] bytes = new byte[(int) raf.length()];
-            raf.read(bytes);
-            raf.close();
-            if(command.getMethodName()!=null) {
-                bytes=extractMethod(bytes,command.getMethodName(),command.getParamValue(Source.CMD_FULL));
-                if(bytes.length==0) {
-                	throw new RuntimeException("Method '"+command.getClassName()+"#"+command.getMethodName()+"' not found.");
-                }
+        if (!file.exists()) {
+            System.err.println("File not found: " + file.getAbsolutePath());
+            return;
+        }
+        RandomAccessFile raf = new RandomAccessFile(file, "r");
+        byte[] bytes = new byte[(int) raf.length()];
+        raf.read(bytes);
+        raf.close();
+        if (command.getMethodName() != null) {
+            bytes = extractMethod(bytes, command.getMethodName(), command
+                    .getParamValue(Source.CMD_FULL));
+            if (bytes.length == 0) {
+                throw new RuntimeException("Method '" + command.getClassName()
+                        + "#" + command.getMethodName() + "' not found.");
             }
-            writeSourceCodeBlock(bytes,command.getMethodName());
-            String methodname=command.getMethodName();
-            if(methodname!=null&&command.getParamValue(Source.CMD_RUN)) {
-                try {
-	                ByteArrayOutputStream out=new ByteArrayOutputStream();
-	                runner.runExample(command.getClassName(),command.getMethodName(),out);
-	                out.close();
-	                if(command.getParamValue(Source.CMD_OUTPUT)) {
-	                    writeOutputBlock(out.toByteArray());
-	                }
+        }
+        writeSourceCodeBlock(bytes, command.getMethodName());
+        String methodname = command.getMethodName();
+        if (methodname != null && command.getParamValue(Source.CMD_RUN)) {
+            try {
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                runner.runExample(command.getClassName(), command
+                        .getMethodName(), out);
+                out.close();
+                if (command.getParamValue(Source.CMD_OUTPUT)) {
+                    writeOutputBlock(out.toByteArray());
                 }
-                catch(Exception exc) {
-                    exc.printStackTrace();
-                }
+            } catch (Exception exc) {
+                exc.printStackTrace();
             }
         }
     }
