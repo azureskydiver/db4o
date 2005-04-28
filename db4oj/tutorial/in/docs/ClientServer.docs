@@ -69,18 +69,18 @@ down gracefully.
 This is configured by calling setMessageRecipient(), passing the object ._
 that will process client-initiated messages.
 
-.s com.db4o.f1.chapter5.StartServer#run ..
+.s com.db4o.f1.chapter5.StartServer#run -run +{} ..s
 
 The message is received and processed by a processMessage() method:
 
-.s com.db4o.f1.chapter5.StartServer#processMessage ..
+.s com.db4o.f1.chapter5.StartServer#processMessage -run +{} ..s
 
 Db4o allows a client to send an arbitrary signal or message to a server ._
 by sending a plain Java object to the server.  The server will receive ._
 a callback message, including the object that came from the client. ._
 The server can interpret this message however it wants.
 
-.s com.db4o.f1.chapter5.StopServer#main ..
+.s com.db4o.f1.chapter5.StopServer#main -run +{} ..s
 
 .1 Putting it all together: a simple but complete db4o server ..
 
@@ -91,15 +91,15 @@ to shut itself down gracefully on demand.
 First, both the client and the server need some shared configuration ._
 information.  We will provide this using an interface:
 
-.s com.db4o.f1.chapter4.ServerConfiguration ..
+.s com.db4o.f1.chapter5.ServerConfiguration ..s
 
 Now we'll create the server:
 
-.s com.db4o.f1.chapter4.StartServer ..
+.s com.db4o.f1.chapter5.StartServer ..s
 
 And last but not least, the client that stops the server.
 
-com.db4o.f1.chapter4.StopServer ..
+.s com.db4o.f1.chapter5.StopServer ..s
 
 .1 Conclusion ..
 
