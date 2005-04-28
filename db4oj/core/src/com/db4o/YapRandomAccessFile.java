@@ -217,17 +217,20 @@ public class YapRandomAccessFile extends YapFile {
         }
         try {
             if (fileName().length() > 0) {
-                File existingFile = new File(fileName());
-                if (!existingFile.exists() || existingFile.length() == 0) {
+                
+                IoAdapter ioAdapter = i_config.i_ioAdapter;
+                
+                if(! ioAdapter.exists(fileName())){
                     isNew = true;
                     logMsg(14, fileName());
                 }
+                
                 try {
                     boolean lockFile = Debug.lockFile && i_config.i_lockFile
                         && (!i_config.i_readonly);
-                    i_file = i_config.i_ioAdapter.open(fileName(), lockFile, 0);
+                    i_file = ioAdapter.open(fileName(), lockFile, 0);
                     if (needsLockFileThread() && Debug.lockFile) {
-                        i_timerFile = i_config.i_ioAdapter.open(fileName(), false, 0);
+                        i_timerFile = ioAdapter.open(fileName(), false, 0);
                     }
                 } catch (DatabaseFileLockedException de) {
                     throw de;
