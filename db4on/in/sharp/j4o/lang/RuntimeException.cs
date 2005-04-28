@@ -5,17 +5,14 @@ using System;
 namespace j4o.lang {
 
     public class RuntimeException : Exception {
-
-        private Exception _cause;
-
+    
         public RuntimeException() {
         }
 
         public RuntimeException(String message) : base(message) {
         }
 
-        public RuntimeException(Exception cause){
-            _cause = cause;
+        public RuntimeException(Exception cause) : base(cause.Message, cause) {
         }
 
         public virtual Exception fillInStackTrace() {
