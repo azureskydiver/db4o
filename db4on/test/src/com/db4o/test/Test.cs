@@ -50,9 +50,13 @@ namespace com.db4o.test {
         }
       
         public static void close() {
-            while (!oc.close()) {
-            }
-            oc = null;
+			if (null != oc) 
+			{
+				while (!oc.close()) 
+				{
+				}
+				oc = null;
+			}
         }
       
         public static void commit() {
@@ -98,10 +102,7 @@ namespace com.db4o.test {
         }
       
         public static void end() {
-            if (oc!= null) {
-                while (!oc.close()) {
-                }
-            }
+            close();
             if (objectServer != null) {
                 Thread.sleep(1000);
                 objectServer.close();

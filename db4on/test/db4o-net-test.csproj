@@ -154,6 +154,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4o\test\ByteArray.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4o\test\CallbackHelper.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -570,6 +575,11 @@
                 />
                 <File
                     RelPath = "src\com\db4o\test\cs\Cs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4o\test\cs\CsAppDomains.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
