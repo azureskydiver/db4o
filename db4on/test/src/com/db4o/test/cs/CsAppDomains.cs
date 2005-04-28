@@ -133,15 +133,25 @@ namespace com.db4o.test.cs
 			finally
 			{
 				AppDomain.Unload(domain);
+				reOpen(); // leave the Test object as we found it
 			}
 		}
 
-		public void close()
+		void close()
 		{
 			Test.close();
 			if (Test.isClientServer())
 			{
 				Test.server().close();
+			}
+		}
+
+		void reOpen()
+		{	
+			Test.reOpen();
+			if (Test.isClientServer()) 
+			{
+				Test.reOpenServer();
 			}
 		}
 		

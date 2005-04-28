@@ -50,10 +50,8 @@ namespace com.db4o.test {
         }
       
         public static void close() {
-			if (null != oc) 
-			{
-				while (!oc.close()) 
-				{
+			if (null != oc) {
+				while (!oc.close()) {
 				}
 				oc = null;
 			}
