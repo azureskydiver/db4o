@@ -3,3 +3,22 @@
 .0 Classloader issues ..
 
 (Work in progress, Patrick)
+
+.1 Classloader basics ..
+
+A typical situation would look like this:
+
+.g classloader.jpg ..
+
+.1 Configuration ..
+
+.1 Typical Environments ..
+
+In your average standalone program you'll probably never have to face these ._
+problems, but there are framework classics that'll force you to think about ._
+these issues...
+
+.2 Servlet container ..
+
+.2 Eclipse ..
+
