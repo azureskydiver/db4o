@@ -1,5 +1,6 @@
 package com.db4o.io;
 
+import java.io.*;
 import java.io.IOException;
 
 public abstract class IoAdapter {
@@ -35,6 +36,11 @@ public abstract class IoAdapter {
         read(copyBytes);
         seek(newAddress);
         write(copyBytes);
+    }
+    
+    public boolean exists(String path){
+        File existingFile = new File(path);
+        return  (! existingFile.exists()) || existingFile.length() == 0;
     }
     
 	public abstract long getLength() throws IOException;
