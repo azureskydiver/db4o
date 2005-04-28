@@ -2,13 +2,31 @@
 
 package com.yetac.doctor.writers;
 
-import java.io.*;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import com.yetac.doctor.*;
-import com.yetac.doctor.applet.*;
-import com.yetac.doctor.cmd.*;
-import com.yetac.doctor.workers.*;
+import com.yetac.doctor.Configuration;
+import com.yetac.doctor.applet.ExampleRunner;
+import com.yetac.doctor.cmd.Anchor;
+import com.yetac.doctor.cmd.Bold;
+import com.yetac.doctor.cmd.Center;
+import com.yetac.doctor.cmd.Command;
+import com.yetac.doctor.cmd.Comment;
+import com.yetac.doctor.cmd.Embed;
+import com.yetac.doctor.cmd.Graphic;
+import com.yetac.doctor.cmd.IgnoreCR;
+import com.yetac.doctor.cmd.Left;
+import com.yetac.doctor.cmd.Link;
+import com.yetac.doctor.cmd.NewPage;
+import com.yetac.doctor.cmd.Outline;
+import com.yetac.doctor.cmd.Right;
+import com.yetac.doctor.cmd.Source;
+import com.yetac.doctor.cmd.Text;
+import com.yetac.doctor.cmd.Variable;
+import com.yetac.doctor.workers.DocsFile;
+import com.yetac.doctor.workers.Files;
 
 public abstract class AbstractWriter extends Configuration implements
     DocsWriter {
@@ -170,8 +188,13 @@ public abstract class AbstractWriter extends Configuration implements
 
     protected byte[] extractMethod(byte[] orig,String methodName,boolean full) throws UnsupportedEncodingException {
         String src=new String(orig,"iso-8859-1");
-        String startstr="public static void "+methodName;
-        int startidx=src.indexOf(startstr);
+        String methodheadregexp="(public|protected|private) [^\\n]*"+methodName;
+        Pattern methodheadpattern=Pattern.compile(methodheadregexp);
+        Matcher matcher=methodheadpattern.matcher(src);
+        if(!matcher.find()) {
+            return new byte[0];
+        }
+        int startidx=matcher.start();
         if(startidx<0) {
             return new byte[0];
         }
