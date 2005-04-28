@@ -34,6 +34,7 @@ namespace com.db4o.test {
             typeof(CollectionActivation),
             typeof(Cs),
             typeof(CsArrays),
+			typeof(CsAppDomains),
             typeof(CsCascadeDeleteToStructs),
 			typeof(CsCollections),
 			typeof(CsCustomTransientAttribute),
