@@ -93,7 +93,7 @@ public final class Messages
 						"",  // replacement for expiration message below
 						// "This trial version will expire on " +  Platform.format(new Date(Lic.expirationDate), false) + ".",
 						"% closed by ShutdownHook.", // 50
-						"", // free: reuse
+						"This constraint is not persistent. It has no database identity.",
 						"", // empty: No memory security message
 						"",  // free: reuse
 						"",  // free: reuse 
