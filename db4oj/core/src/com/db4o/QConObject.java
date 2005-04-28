@@ -408,7 +408,13 @@ public class QConObject extends QCon {
     public Constraint identity() {
         synchronized (streamLock()) {
 
-            // TODO: this is may not be correct for NOT
+            int id = getObjectID();
+            if(! (id > 0)){
+                i_objectID = 0;
+                Db4o.throwRuntimeException(51);
+            }
+            
+            // TODO: this may not be correct for NOT
             // It may be necessary to add an if(i_evaluator.identity())
             removeChildrenJoins();
             i_evaluator = i_evaluator.add(new QEIdentity());
