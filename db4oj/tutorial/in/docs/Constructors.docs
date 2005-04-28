@@ -2,8 +2,6 @@
 .a Constructors ..
 .0 Constructors ..
 
-(Work in progress, Patrick)
-
 Sometimes you may find that db4o refuses to store instances of certain ._
 classes, or appears to store them, but delivers incomplete instances ._
 on queries. To understand the problem and the alternative solutions ._
@@ -29,12 +27,14 @@ What if no such constructor exists?
 
 .2 Bypassing the constructor ..
 
-Db4o can also bypass the constructors declared for this class using
-platform-specific mechanisms. However, ._
-this will break classes that rely on the constructor to be executed, for ._
-example in order to populate transient members.
+Db4o can also bypass the constructors declared for this class using ._
+platform-specific mechanisms. (For Java, this option is only available ._
+on JREs >= 1.4.) This mode allows reinstantiating objects whose class ._
+doesn't provide a suitable constructor, However, it will (silently) break ._
+classes that rely on the constructor to be executed, for example in order to ._
+populate transient members.
 
-.i This currently is the default setting. ..i
+.i If this option is available in the current runtime environment, it will be the default setting. ..i
 
 .2 Using a translator ..
 
@@ -47,7 +47,22 @@ We'll cover translators in detail in the next chapter.
 
 .1 Configuration ..
 
+The instantiation mode can be configured globally or on a per class ._
+basis.
 
+.c
+Db4o.configure().callConstructors(true);
+..c
+
+This will configure db4o to use constructors to reinstantiate any object ._
+from the database. (The default is .i false ..i).
+
+.c
+Db4o.configure().objectClass(Foo.class).callConstructor(true);
+..c
+
+This will configure db4o to use constructor calls for this class and ._
+all its subclasses.
 
 .1 Troubleshooting ..
 
