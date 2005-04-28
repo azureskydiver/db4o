@@ -1,17 +1,18 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
 
 using System;
 using System.IO;
 using System.Diagnostics;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Threading;
 
 namespace com.db4o {
 
 	/// <exclude />
     public class Compat {
-
-        public static void addShutDownHook(EventHandler handler) {
+		
+		public static void addShutDownHook(EventHandler handler) {
             AppDomain.CurrentDomain.ProcessExit += handler;
             AppDomain.CurrentDomain.DomainUnload += handler;
         }
@@ -27,11 +28,50 @@ namespace com.db4o {
         public static bool compact(){
             return false;
         }
-
-		public static int identityHashCode(object o) {
-			return System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(o);
+		
+		/// <summary>
+		/// Emits a HashCodeFunction which calls System.Object.GetHashCode
+		/// non virtually thus yielding an identity based hash code value.
+		/// </summary>
+		public static j4o.lang.IdentityHashCodeProvider.HashCodeFunction getIdentityHashCodeFunction() {
+			/*
+			 class HashCodeHelper {
+			 	public static int GetHashCode(object o) {
+			 		return o.GetHashCode(); // non virtual call
+			 	}
+			 
+			 	public static HashCodeFunction NewHashCodeFunction() {
+			 		return new HashCodeFunction(GetHashCode);
+			 	}
+			 }
+			 */
+			AssemblyName name = new AssemblyName();
+			name.Name = "db4o-runtime-helper";
+			AssemblyBuilder assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(name, AssemblyBuilderAccess.Run);
+			ModuleBuilder module = assembly.DefineDynamicModule("db4o-runtime-helpers");
+			TypeBuilder type = module.DefineType("HashCodeHelper");
+			MethodBuilder getHashCodeMethod = type.DefineMethod("GetHashCode",
+								 MethodAttributes.Public|MethodAttributes.Static,
+								 typeof(int),
+								 new Type[] { typeof(object) });
+			ILGenerator il = getHashCodeMethod.GetILGenerator();
+			il.Emit(OpCodes.Ldarg_0);
+			il.Emit(OpCodes.Call, typeof(Object).GetMethod("GetHashCode"));
+			il.Emit(OpCodes.Ret);
+			
+			MethodBuilder newHashCodeFunctionMethod = type.DefineMethod("NewHashCodeFunction",
+										MethodAttributes.Public|MethodAttributes.Static,
+										typeof(j4o.lang.IdentityHashCodeProvider.HashCodeFunction),
+										new Type[0]);
+			il = newHashCodeFunctionMethod.GetILGenerator();
+			il.Emit(OpCodes.Ldnull);
+			il.Emit(OpCodes.Ldftn, getHashCodeMethod);
+			il.Emit(OpCodes.Newobj, typeof(j4o.lang.IdentityHashCodeProvider.HashCodeFunction).GetConstructor(new Type[] { typeof(object), typeof(System.IntPtr) }));
+			il.Emit(OpCodes.Ret);
+			return (j4o.lang.IdentityHashCodeProvider.HashCodeFunction)type.CreateType().GetMethod("NewHashCodeFunction").Invoke(null, null);
 		}
-
+		
+		
         public static long doubleToLong(double a_double) {
             return BitConverter.DoubleToInt64Bits(a_double);
         }
