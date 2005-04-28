@@ -10,7 +10,7 @@ An in-depth explanation of the workings of classloaders is beyond the ._
 scope of this tutorial, of course. A good starting point might be found ._
 here:
 
-.l  http://java.sun.com/products/jndi/tutorial/beyond/misc/classloader.html ..l
+.l http://java.sun.com/products/jndi/tutorial/beyond/misc/classloader.html ..l
 
 A typical situation would look like this:
 
