@@ -25,7 +25,6 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.browser.prefs.activation.ActivationPreferences;
-import com.db4o.ext.*;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
@@ -36,36 +35,16 @@ import com.db4o.reflect.Reflector;
  * 
  * @author djo
  */
-public class Db4oDatabase implements Database {
-    
-    
+public class Db4oDatabase implements Database {    
     private String currentPath="";
     
-    /* (non-Javadoc)
-     * @see com.db4o.browser.model.Database#open(java.lang.String)
-     */
-    public void open(String path) {
-		Db4o.configure().readOnly(true);
-		Db4o.configure().activationDepth(ActivationPreferences.getDefault().getInitialActivationDepth());
-        if (!path.equals(currentPath)) {
+    public void open(Db4oConnectionSpec spec) {
+        if (!spec.path().equals(currentPath)) {
             close();
-            container = Db4o.openFile(path);
+            container = spec.connect();
             if (container == null)
-                throw new IllegalArgumentException("Could not open: " + path);
-            currentPath = path;
-        }
-    }
-    
-    public void open(String host,int port, String user, String password) throws Exception {
-        String path = "db4o://" + host + ":" + port;
-        Db4o.configure().readOnly(true);
-        Db4o.configure().activationDepth(ActivationPreferences.getDefault().getInitialActivationDepth());
-        if (!path.equals(currentPath)) {
-            close();
-            container = Db4o.openClient(host, port, user, password);
-            if (container == null)
-                throw new IllegalArgumentException("Could not open: " + path);
-            currentPath = path;
+                throw new IllegalArgumentException("Could not open: " + spec.path());
+            currentPath = spec.path();
         }
     }
     

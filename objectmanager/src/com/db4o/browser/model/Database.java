@@ -8,15 +8,8 @@ import com.db4o.reflect.Reflector;
 
 
 public interface Database {
-
-	/**
-	 * Method open.  Open a YAP file.
-	 * 
-	 * @param path The os-dependent path and file name for the YAP file.
-	 */
-	public abstract void open(String path);
-
-    public abstract void open(String host, int port, String user, String password) throws Exception;
+	
+	void open(Db4oConnectionSpec spec);
 
 	/**
 	 * Method close.  Close the current YAP file if one is open.
