@@ -57,11 +57,13 @@ public class Test extends AllTests {
     }
 
     public static void close() {
-        while (!oc.close());
-        if(memoryFile != null) {
+		if (null != oc) {
+	        while (!oc.close());
+			oc = null;
+		}
+		if(memoryFile != null) {
             memoryFileContent = memoryFile.getBytes();
         }
-        oc = null;
         if(_replica != null){
             while(!_replica.close());
             _replica = null;
