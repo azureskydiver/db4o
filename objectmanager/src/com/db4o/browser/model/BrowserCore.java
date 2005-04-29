@@ -130,4 +130,9 @@ public class BrowserCore implements ICloseListener {
         return databases.size() > 0;
     }
 
+    public void updateClasspath() {
+        // TODO Auto-generated method stub
+        
+    }
+
 }
