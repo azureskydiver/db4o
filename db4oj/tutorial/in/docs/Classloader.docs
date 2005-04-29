@@ -81,7 +81,7 @@ reference servlet container implementation, here:
 
 Eclipse uses the system classloader to retrieve its core classes. There is one ._
 dedicated classloader per plugin, and the classloader delegation tree will ._
-exactly represent the plugin dependency tree. The context classloader will ._
+resemble the plugin dependency tree. The context classloader will ._
 usually be the system classloader that knows nothing about db4o and your ._
 business classes. So the best candidate is the classloader for one of your ._
 domain classes within the plugin.
