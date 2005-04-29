@@ -6,14 +6,14 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import com.db4o.ObjectSet;
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.DatabaseGraphIterator;
 import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
 
-public class MockDatabase extends Assert implements Database {
+public class MockDatabase extends Assert implements IDatabase {
 	private boolean opened=false;
 	/** (String)name -> (StoredClass)class */
 	private Map storedClasses=new HashMap();
@@ -25,7 +25,7 @@ public class MockDatabase extends Assert implements Database {
 		opened=true;
 	}
 
-	public void close() {
+	public void closeIfOpen() {
 		assertTrue("not opened",opened);
 		opened=false;
 	}

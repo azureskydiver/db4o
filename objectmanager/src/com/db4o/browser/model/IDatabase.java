@@ -7,14 +7,16 @@ import com.db4o.reflect.Reflector;
 
 
 
-public interface Database {
+public interface IDatabase {
 	
 	void open(Db4oConnectionSpec spec);
+    
+    void reopen();
 
 	/**
 	 * Method close.  Close the current YAP file if one is open.
 	 */
-	public abstract void close();
+	public abstract void closeIfOpen();
 
 	public abstract DatabaseGraphIterator graphIterator();
 

@@ -10,7 +10,7 @@ import com.db4o.browser.model.nodes.IModelNode;
 
 public class AbstractGraphIterator implements IGraphIterator {
 
-    protected Database database;
+    protected IDatabase database;
     protected IModelNode[] startModel;
     
     private GraphPosition path = new GraphPosition();

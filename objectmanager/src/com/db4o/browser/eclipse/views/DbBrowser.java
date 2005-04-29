@@ -115,7 +115,7 @@ public class DbBrowser extends ViewPart implements ISelectionProvider, ISelectio
 //        model.selectType(fullyQualifiedName);
 	}
 
-	private Database model = null;
+	private IDatabase model = null;
     
     private void openFile(String selectedFileName) {
 		model=BrowserCore.getDefault().getDatabase(selectedFileName);
@@ -126,7 +126,7 @@ public class DbBrowser extends ViewPart implements ISelectionProvider, ISelectio
      */
     public void dispose() {
         if (model != null) {
-            model.close();
+            model.closeIfOpen();
         }
     }
     

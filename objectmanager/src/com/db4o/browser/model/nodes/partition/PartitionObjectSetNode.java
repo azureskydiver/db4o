@@ -4,18 +4,18 @@
 package com.db4o.browser.model.nodes.partition;
 
 import com.db4o.ObjectSet;
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 
 public class PartitionObjectSetNode implements IModelNode {
 
     private ObjectSet _source;
-    private Database _database;
+    private IDatabase _database;
     private long[] _sourceIds;
     private int _startIdx;
     private int _endIdx;
 
-    public PartitionObjectSetNode(ObjectSet source, Database database, long[] sourceIds, int startIdx, int endIdx) {
+    public PartitionObjectSetNode(ObjectSet source, IDatabase database, long[] sourceIds, int startIdx, int endIdx) {
         _source = source;
         _database=database;
         _sourceIds=sourceIds;

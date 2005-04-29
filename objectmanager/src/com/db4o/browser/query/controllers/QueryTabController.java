@@ -11,7 +11,7 @@ import com.db4o.binding.CannotSaveException;
 import com.db4o.browser.gui.controllers.BrowserController;
 import com.db4o.browser.gui.controllers.QueryController;
 import com.db4o.browser.model.BrowserCore;
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.ObjectSetGraphIterator;
 import com.db4o.browser.query.model.QueryBuilderModel;
 import com.db4o.browser.query.view.QueryBrowserPane;
@@ -30,7 +30,7 @@ import com.db4o.reflect.ReflectClass;
 public class QueryTabController extends BrowserController {
     
     private BrowserController databaseBrowserController;
-    private Database database; 
+    private IDatabase database; 
     
     private QueryBuilderModel queryModel;
     private QueryBuilderPaneController queryController;

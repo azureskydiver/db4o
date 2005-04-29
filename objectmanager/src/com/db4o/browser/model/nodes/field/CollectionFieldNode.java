@@ -35,7 +35,7 @@ import com.db4o.reflect.*;
  */
 public class CollectionFieldNode extends FieldNode {
 
-	public CollectionFieldNode(String fieldName, Object instance, Database database) {
+	public CollectionFieldNode(String fieldName, Object instance, IDatabase database) {
         super(fieldName, instance, database);
 	}
     

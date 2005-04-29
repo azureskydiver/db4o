@@ -16,7 +16,7 @@
  */
 package com.db4o.browser.model.nodes;
 
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.partition.PartitionFieldNodeFactory;
 import com.db4o.reflect.ReflectClass;
 
@@ -28,7 +28,7 @@ import com.db4o.reflect.ReflectClass;
 public class ClassNode implements IModelNode {
 
 	private final ReflectClass _class;
-    private final Database _database;
+    private final IDatabase _database;
 	private static final int THRESHOLD = 100;
     private long[] _ids;
 
@@ -36,12 +36,12 @@ public class ClassNode implements IModelNode {
 	 * @param contents
 	 * @param database
 	 */
-	public ClassNode(ReflectClass contents, Database database) {
+	public ClassNode(ReflectClass contents, IDatabase database) {
 		_class = contents;
         _database = database;
     }
 
-	public ClassNode(ReflectClass contents, Database database,int[][] treeSpec,int start,int end) {
+	public ClassNode(ReflectClass contents, IDatabase database,int[][] treeSpec,int start,int end) {
 		_class = contents;
         _database = database;
     }

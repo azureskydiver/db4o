@@ -16,13 +16,13 @@ import com.db4o.binding.converter.IConverter;
 import com.db4o.binding.verifier.IVerifier;
 import com.db4o.browser.gui.standalone.StandaloneBrowser;
 import com.db4o.browser.gui.standalone.StatusBar;
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.query.model.FieldConstraint;
 
 public class FieldConstraintValueFieldController extends FieldController {
     
     private FieldConstraint constraint;
-    private Database database;
+    private IDatabase database;
 
     private Text ui;
     
@@ -35,7 +35,7 @@ public class FieldConstraintValueFieldController extends FieldController {
 
     private IVerifier verifier;
 
-    public FieldConstraintValueFieldController(Text ui, FieldConstraint constraint, Database database) {
+    public FieldConstraintValueFieldController(Text ui, FieldConstraint constraint, IDatabase database) {
         super(database);
         this.ui = ui;
         this.constraint = constraint;

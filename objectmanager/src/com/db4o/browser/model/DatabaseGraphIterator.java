@@ -24,7 +24,7 @@ public class DatabaseGraphIterator extends AbstractGraphIterator {
      * @param database The Database to traverse
      * @param classes The StoredClasses to consider as the root
      */
-    public DatabaseGraphIterator(Database database, ReflectClass[] start) {
+    public DatabaseGraphIterator(IDatabase database, ReflectClass[] start) {
         this.database = database;
         
         startModel = new IModelNode[start.length];

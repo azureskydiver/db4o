@@ -19,7 +19,7 @@ package com.db4o.browser.model.nodes.field;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
@@ -33,9 +33,9 @@ import com.db4o.reflect.ReflectField;
 class InstanceNode implements IModelNode {
 	private ReflectClass _clazz=null;
     private Object _instance=null;
-	private Database _database;
+	private IDatabase _database;
 
-	public InstanceNode(Object instance, Database database) {
+	public InstanceNode(Object instance, IDatabase database) {
         if (instance == null || database == null) {
             throw new IllegalArgumentException("InstanceNode: Null constructor argument");
         }
@@ -45,7 +45,7 @@ class InstanceNode implements IModelNode {
 		database.activate(instance);
 	}
     
-    public InstanceNode(long id, Database database) {
+    public InstanceNode(long id, IDatabase database) {
         this(database.byId(id),database);
     }
 

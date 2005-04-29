@@ -3,7 +3,7 @@
  */
 package com.db4o.browser.model.nodes.field;
 
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.partition.PartitionFieldNodeFactory;
 import com.db4o.reflect.ReflectArray;
@@ -18,7 +18,7 @@ public class ArrayFieldNode extends FieldNode implements IModelNode {
     private int length;
     private ReflectArray arrayReflector;
 
-	public ArrayFieldNode(String fieldName, Object instance, Database database) {
+	public ArrayFieldNode(String fieldName, Object instance, IDatabase database) {
 		super(fieldName, instance, database);
 
         arrayReflector = _database.reflector().array();
