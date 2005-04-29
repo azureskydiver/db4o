@@ -17,7 +17,7 @@ Returning false to the #objectCanXxxx() methods will prevent ._
 the current action from being taken.
 
 In a client/server environment callback methods will be called ._
-on the client with two excpetions: 
+on the client with two exceptions: 
 objectOnDelete(), objectCanDelete()
 
 Some possible usecases for callback methods:

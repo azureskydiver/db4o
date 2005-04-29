@@ -12,8 +12,7 @@ versions previously used.
 
 However there are two recommended maintenance tasks, that can ._
 both be fully automated remotely with API calls:
-
-
+.a Defragment ..
 .1 Defragment ..
 Defragment creates a new database file and copies all objects ._
 from the current database file to the new database file. All ._
@@ -42,7 +41,3 @@ It is recommended to backup the current development state of an ._
 application (ideally source code and bytecode) along with the ._
 database files since the old code can make it easier to work ._
 with the old data.
-
-
-
-

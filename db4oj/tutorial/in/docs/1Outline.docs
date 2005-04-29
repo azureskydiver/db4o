@@ -10,11 +10,15 @@
 .e Transactions ..
 .e ClientServer ..
 .e Constructors ..
+.e Configuration ..
+.e Indexes ..
+.e IDs ..
 .e Callbacks ..
 .e Translators ..
 .e Classloader ..
 .e Encryption ..
 .e Tuning ..
 .e Maintenance ..
+.e Refactorings ..
 .e License ..
 .e Contact ..
