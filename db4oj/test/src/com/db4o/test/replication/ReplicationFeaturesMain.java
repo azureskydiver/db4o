@@ -32,8 +32,7 @@ public class ReplicationFeaturesMain {
 	
     
     public void configure(){
-        Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
-        Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+        Db4o.configure().enableReplication(Integer.MAX_VALUE);
     }
 	
     public void test() {

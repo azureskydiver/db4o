@@ -100,6 +100,11 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
         }
         return ret;
     }
+
+	public void enableReplication(boolean setting) {
+		generateUUIDs(setting);
+		generateVersionNumbers(setting);
+	}
     
     public void generateUUIDs(boolean setting) {
         i_generateUUIDs = setting ? YapConst.YES : YapConst.NO;

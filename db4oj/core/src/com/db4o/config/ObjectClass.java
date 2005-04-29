@@ -115,6 +115,16 @@ public interface ObjectClass {
 	
 	
     /**
+     * Must be called before databases are created or opened
+     * so that db4o will control versions and generate UUIDs
+     * for objects of this class, which is required for using replication.
+     * 
+     * @param setting 
+     */
+    public void enableReplication(boolean setting);
+
+	
+	/**
      * generate UUIDs for stored objects of this class.
      * 
      * @param setting 
