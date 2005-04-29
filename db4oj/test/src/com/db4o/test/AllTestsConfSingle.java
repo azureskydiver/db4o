@@ -22,7 +22,7 @@ public class AllTestsConfSingle extends TestSuite{
     
     public Class[] tests(){
         return new Class[] {
-            ByteArray.class
+            ReplicateExistingFile.class
     	};
     }
 
