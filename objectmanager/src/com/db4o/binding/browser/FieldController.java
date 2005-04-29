@@ -33,15 +33,15 @@ import com.db4o.binding.verifiers.IntVerifier;
 import com.db4o.binding.verifiers.LongVerifier;
 import com.db4o.binding.verifiers.reusable.ReadOnlyVerifier;
 import com.db4o.binding.verifiers.reusable.RegularExpressionVerifier;
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
 
 public abstract class FieldController implements IFieldController {
-    protected Database database;
+    protected IDatabase database;
     protected Reflector reflector;
 
-    public FieldController(Database database) {
+    public FieldController(IDatabase database) {
         this.database = database;
         this.reflector = database.reflector();
         

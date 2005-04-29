@@ -61,14 +61,10 @@ public class ClasspathPreferencePage extends PreferencePage {
         PreferencesCore prefs = PreferencesCore.getDefault();
 
         ClasspathPreferences classpathPrefs = ClasspathPreferences.getDefault();
+        PreferencesCore.commit();
+
         BrowserCore.getDefault().updateClasspath();
 
-        // Global activation depth handling...
-//        ActivationPreferences actPrefs = ActivationPreferences.getDefault();
-//        actPrefs.setInitialActivationDepth(panel.getInitialActivationDepth().getSelection());
-//        actPrefs.setSubsequentActivationDepth(panel.getSubsequentActivationDepth().getSelection());
-        
-        PreferencesCore.commit();
         return true;
     }
     

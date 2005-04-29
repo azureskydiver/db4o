@@ -3,9 +3,6 @@
  */
 package com.db4o.browser.gui.controllers;
 
-import java.io.File;
-import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,7 +20,6 @@ import com.db4o.browser.model.GraphPosition;
 import com.db4o.browser.model.IGraphIterator;
 import com.db4o.browser.model.nodes.ClassNode;
 import com.db4o.reflect.ReflectClass;
-import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
  * BrowserController.  The root MVC Controller for a browser window.
@@ -42,6 +38,8 @@ public class BrowserController implements IBrowserController {
 	private NavigationController navigationController;
 	private PathLabelController pathController;
     private SearchController searchController;
+    private IGraphIterator input;
+    private GraphPosition initialSelection;
 
 	/**
      * Constructor BrowserController.  Create a BrowserController for a
@@ -144,10 +142,29 @@ public class BrowserController implements IBrowserController {
         }
     }
 	
-	/* (non-Javadoc)
+	/**
+     * @return Returns the initialSelection.
+     */
+    public GraphPosition getInitialSelection() {
+        return initialSelection;
+    }
+    
+
+    /**
+     * @return Returns the input.
+     */
+    public IGraphIterator getInput() {
+        return input;
+    }
+    
+
+    /* (non-Javadoc)
 	 * @see com.db4o.browser.gui.controllers.IBrowserController#open(com.db4o.browser.model.IGraphIterator)
 	 */
 	public void setInput(IGraphIterator input, GraphPosition selection) {
+        this.input = input;
+        this.initialSelection = selection;
+        
 		// Set the various sub-controllers' inputs
 		treeController.setInput(input, selection);
 		detailController.setInput(input, selection);
@@ -163,25 +180,25 @@ public class BrowserController implements IBrowserController {
 	public SelectionChangedController getSelectionChangedController() {
 		return selectionChangedController;
 	}
-
-	public void addToClasspath(File file) {
-		try {
-			Class urlclclass=Class.forName("java.net.URLClassLoader");
-			ClassLoader loader=getClass().getClassLoader();
-			while(loader!=null) {
-				if(urlclclass.isAssignableFrom(loader.getClass())) {
-					Method addmethod=urlclclass.getDeclaredMethod("addURL",new Class[]{URL.class});
-					addmethod.setAccessible(true);
-					addmethod.invoke(loader,new Object[]{file.toURL()});
-					return;
-				}
-				loader=loader.getParent();
-			}
-            Logger.log().error(new RuntimeException(), "Could not find a URLClassLoader.");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//
+//	public void addToClasspath(File file) {
+//		try {
+//			Class urlclclass=Class.forName("java.net.URLClassLoader");
+//			ClassLoader loader=getClass().getClassLoader();
+//			while(loader!=null) {
+//				if(urlclclass.isAssignableFrom(loader.getClass())) {
+//					Method addmethod=urlclclass.getDeclaredMethod("addURL",new Class[]{URL.class});
+//					addmethod.setAccessible(true);
+//					addmethod.invoke(loader,new Object[]{file.toURL()});
+//					return;
+//				}
+//				loader=loader.getParent();
+//			}
+//            Logger.log().error(new RuntimeException(), "Could not find a URLClassLoader.");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
     /**
      * @return Returns the queryController.

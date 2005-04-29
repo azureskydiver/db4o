@@ -58,7 +58,7 @@ public class YAPEditor extends EditorPart {
     // The real stuff goes here...---------------------------------------
 
     private String fileName;
-	private Database model;
+	private IDatabase model;
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
@@ -86,7 +86,7 @@ public class YAPEditor extends EditorPart {
 	 */
 	public void dispose() {
         if (model != null) {
-            model.close();
+            model.closeIfOpen();
         }
 	}
     

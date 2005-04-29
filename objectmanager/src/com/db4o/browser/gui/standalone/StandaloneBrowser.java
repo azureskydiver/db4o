@@ -35,7 +35,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MenuItem;
@@ -47,6 +46,7 @@ import com.db4o.browser.gui.controllers.QueryController;
 import com.db4o.browser.gui.dialogs.SelectServer;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;
+import com.db4o.browser.model.IBrowserCoreListener;
 import com.db4o.browser.prefs.PreferenceUI;
 import com.swtworkbench.community.xswt.XSWT;
 import com.swtworkbench.community.xswt.metalogger.FileLogger;
@@ -131,6 +131,8 @@ public class StandaloneBrowser implements IControlFactory {
         queryController = new QueryController(folder);
         browserController = new BrowserController(ui, queryController);
         queryController.setBrowserController(browserController);
+        
+        BrowserCore.getDefault().addBrowserCoreListener(browserCoreListener);
 		
 		// FIXME: hard-coding initial open...
 //		String testFile=getClass().getResource("formula1.yap").getFile();
@@ -214,25 +216,25 @@ public class StandaloneBrowser implements IControlFactory {
             }
         });
 
-        adddirtoclasspath.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                DirectoryDialog dialog = new DirectoryDialog(shell, SWT.OPEN);
-                String file = dialog.open();
-                if (file != null) {
-					browserController.addToClasspath(new File(file));
-                }
-            }
-        });
-        addfiletoclasspath.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-				dialog.setFilterExtensions(new String[]{"*.jar","*.zip"});
-                String file = dialog.open();
-                if (file != null) {
-					browserController.addToClasspath(new File(file));
-                }
-            }
-        });
+//        adddirtoclasspath.addSelectionListener(new SelectionAdapter() {
+//            public void widgetSelected(SelectionEvent e) {
+//                DirectoryDialog dialog = new DirectoryDialog(shell, SWT.OPEN);
+//                String file = dialog.open();
+//                if (file != null) {
+//					browserController.addToClasspath(new File(file));
+//                }
+//            }
+//        });
+//        addfiletoclasspath.addSelectionListener(new SelectionAdapter() {
+//            public void widgetSelected(SelectionEvent e) {
+//                FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+//				dialog.setFilterExtensions(new String[]{"*.jar","*.zip"});
+//                String file = dialog.open();
+//                if (file != null) {
+//					browserController.addToClasspath(new File(file));
+//                }
+//            }
+//        });
 
         helpAbout.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
@@ -241,6 +243,27 @@ public class StandaloneBrowser implements IControlFactory {
         });
     }
 
+    private IBrowserCoreListener browserCoreListener = new IBrowserCoreListener() {
+        public void classpathChanged(BrowserCore browserCore) {
+            CTabItem[] openedViews = folder.getItems();
+            
+            // Close all query tabs
+            for (int view = 0; view < openedViews.length; view++) {
+                if (openedViews[view] == mainTab) {
+                    continue;
+                }
+                openedViews[view].getControl().dispose();
+                openedViews[view].dispose();
+            }
+            
+            // Refresh the browser
+            if (browserController.getInput() != null) {
+                browserController.setInput(browserController.getInput(), 
+                        browserController.getInitialSelection());
+            }
+        }
+    };
+    
 	public static void main(String[] args) throws IOException {
         PrintStreamLogger db4ologger = new PrintStreamLogger();
         Logger.setLogger(new TeeLogger(new StdLogger(), new FileLogger(getLogPath(LOGFILE), getLogPath(LOGCONFIG))));

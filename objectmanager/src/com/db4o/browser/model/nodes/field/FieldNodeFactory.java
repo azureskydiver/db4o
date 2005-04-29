@@ -18,7 +18,7 @@ package com.db4o.browser.model.nodes.field;
 
 import java.util.Date;
 
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.reflect.ReflectClass;
 
@@ -65,7 +65,7 @@ public class FieldNodeFactory {
 	 * @param database 
 	 * @return
 	 */
-	public static IModelNode construct(String fieldName, Object instance, Database database) {
+	public static IModelNode construct(String fieldName, Object instance, IDatabase database) {
         /*
          * There are 4 use-cases here:
          * 

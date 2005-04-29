@@ -3,17 +3,17 @@
  */
 package com.db4o.browser.model.nodes.partition;
 
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 
 public class PartitionInstanceNode implements IModelNode {
 
-    private Database _database;
+    private IDatabase _database;
     private long[] _sourceIds;
     private int _startIdx;
     private int _endIdx;
 
-    public PartitionInstanceNode(Database database, long[] sourceIds, int startIdx, int endIdx) {
+    public PartitionInstanceNode(IDatabase database, long[] sourceIds, int startIdx, int endIdx) {
         _database=database;
         _sourceIds=sourceIds;
         _startIdx=startIdx;

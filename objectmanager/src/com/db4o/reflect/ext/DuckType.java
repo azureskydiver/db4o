@@ -54,7 +54,7 @@ public class DuckType implements InvocationHandler {
                 candclass.getMethod(method.getName(), method.getParameterTypes());
             } catch (NoSuchMethodException e) {
                 return false;
-            }            
+            }
         }
         return true;
     }
@@ -67,12 +67,8 @@ public class DuckType implements InvocationHandler {
 	protected Object object;
 	protected Class objectClass;
 	
-	protected Method getMethodByName(Class clazz, String methodName, Class[] args) throws NoSuchMethodException {
-		return clazz.getMethod(methodName, args);
-	}
-	
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		Method realMethod = getMethodByName(objectClass, method.getName(), method.getParameterTypes());
+		Method realMethod = objectClass.getMethod(method.getName(), method.getParameterTypes());
 		return realMethod.invoke(object, args);
 	}
 }

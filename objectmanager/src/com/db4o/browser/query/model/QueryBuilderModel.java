@@ -3,17 +3,17 @@
  */
 package com.db4o.browser.query.model;
 
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 
 public class QueryBuilderModel {
 
-    private Database database;
+    private IDatabase database;
 
     private QueryPrototypeInstance rootInstance;
 
-    public QueryBuilderModel(ReflectClass input, Database database) {
+    public QueryBuilderModel(ReflectClass input, IDatabase database) {
         this.database = database;
         rootInstance = new QueryPrototypeInstance(input, this);
     }
@@ -28,7 +28,7 @@ public class QueryBuilderModel {
         return rootInstance;
     }
     
-    public Database getDatabase() {
+    public IDatabase getDatabase() {
         return database;
     }
     

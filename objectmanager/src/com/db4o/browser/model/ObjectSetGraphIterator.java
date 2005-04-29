@@ -23,7 +23,7 @@ public class ObjectSetGraphIterator extends AbstractGraphIterator {
      * @param database The Database to traverse
      * @param classes The StoredClasses to consider as the root
      */
-    public ObjectSetGraphIterator(Database database, ObjectSet queryResult) {
+    public ObjectSetGraphIterator(IDatabase database, ObjectSet queryResult) {
         this.database = database;
         startModel = PartitionFieldNodeFactory.create(queryResult, null, 0, queryResult.size(), database);
         reset();

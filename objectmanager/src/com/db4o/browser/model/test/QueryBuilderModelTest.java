@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.Db4oDatabase;
 import com.db4o.browser.query.model.FieldConstraint;
 import com.db4o.browser.query.model.QueryBuilderModel;
@@ -42,7 +42,7 @@ public class QueryBuilderModelTest extends TestCase {
     
     private final static String YAPFILENAME="querymodel.yap";
     
-    private Database database;
+    private IDatabase database;
     private ReflectClass clazz;
     private QueryBuilderModel model;
     private QueryPrototypeInstance proto;
@@ -66,7 +66,7 @@ public class QueryBuilderModelTest extends TestCase {
     }
     
     protected void tearDown() {
-        database.close();
+        database.closeIfOpen();
     }
     
     public void testClassOnly() {

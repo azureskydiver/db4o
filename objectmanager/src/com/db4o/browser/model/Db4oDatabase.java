@@ -35,27 +35,30 @@ import com.db4o.reflect.Reflector;
  * 
  * @author djo
  */
-public class Db4oDatabase implements Database {    
-    private String currentPath="";
+public class Db4oDatabase implements IDatabase {    
+    private Db4oConnectionSpec spec;
     
     public void open(Db4oConnectionSpec spec) {
-        if (!spec.path().equals(currentPath)) {
-            close();
-            container = spec.connect();
-            if (container == null)
-                throw new IllegalArgumentException("Could not open: " + spec.path());
-            currentPath = spec.path();
+        if (this.spec==null||!spec.path().equals(this.spec.path())) {
+            this.spec=spec;
+            reopen();
         }
+    }
+
+    public void reopen() {
+        closeIfOpen();
+        container = spec.connect();
+        if (container == null)
+            throw new IllegalArgumentException("Could not open: " + spec.path());
     }
     
     /* (non-Javadoc)
      * @see com.db4o.browser.model.Database#close()
      */
-    public void close() {
+    public void closeIfOpen() {
         if (container != null)
             container.close();
         container = null;
-		currentPath="";
     }
 	
 	/* (non-Javadoc)

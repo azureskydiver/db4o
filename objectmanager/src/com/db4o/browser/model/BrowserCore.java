@@ -9,8 +9,6 @@ import java.util.LinkedList;
 
 import com.db4o.browser.gui.standalone.ICloseListener;
 import com.db4o.browser.prefs.PreferencesCore;
-import com.db4o.browser.prefs.activation.*;
-import com.db4o.browser.prefs.classpath.*;
 
 /**
  * BrowserCore.  The root of the model hierarchy in the browser.
@@ -35,18 +33,19 @@ public class BrowserCore implements ICloseListener {
      * @param databasePath
      * @return the database corresponding to databasePath
      */
-    public Database getDatabase(String databasePath) {
-		Db4oConnectionSpec spec=new Db4oFileConnectionSpec(databasePath,true,ActivationPreferences.getDefault().getInitialActivationDepth(),ClasspathPreferences.getDefault().classPath());
+    public IDatabase getDatabase(String databasePath) {
+		Db4oConnectionSpec spec = new Db4oFileConnectionSpec(databasePath, true);
         return getDatabaseInternal(spec);
     }
 	
-    private Database getDatabase(String host, int port, String user, String password) throws Exception {
-		Db4oConnectionSpec spec=new Db4oSocketConnectionSpec(host,port,user,password,true,ActivationPreferences.getDefault().getInitialActivationDepth(),ClasspathPreferences.getDefault().classPath());
+    private IDatabase getDatabase(String host, int port, String user, String password) throws Exception {
+		Db4oConnectionSpec spec = new Db4oSocketConnectionSpec(host, port,
+                user, password, true);
         return getDatabaseInternal(spec);
     }
 
-	private Database getDatabaseInternal(Db4oConnectionSpec spec) {
-		Database requested = (Database) dbMap.get(spec.path());
+	private IDatabase getDatabaseInternal(Db4oConnectionSpec spec) {
+		IDatabase requested = (IDatabase) dbMap.get(spec.path());
 		if (requested == null) {
             requested = new Db4oDatabase();
             requested.open(spec);
@@ -61,8 +60,8 @@ public class BrowserCore implements ICloseListener {
 	 * 
 	 * @return Database[] all open databases
 	 */
-	public Database[] getAllDatabases() {
-		return (Database[]) dbMap.values().toArray(new Database[dbMap.size()]);
+	public IDatabase[] getAllDatabases() {
+		return (IDatabase[]) dbMap.values().toArray(new IDatabase[dbMap.size()]);
 	}
 
     /* (non-Javadoc)
@@ -70,8 +69,8 @@ public class BrowserCore implements ICloseListener {
 	 */
 	public void closing() {
 		for (Iterator i = databases.iterator(); i.hasNext();) {
-			Database database = (Database) i.next();
-			database.close();
+			IDatabase database = (IDatabase) i.next();
+			database.closeIfOpen();
 		}
 		PreferencesCore.close();
 	}
@@ -87,7 +86,7 @@ public class BrowserCore implements ICloseListener {
         if (databases.isEmpty()) {
             return null;
         }
-        Database current = (Database) databases.getLast();
+        IDatabase current = (IDatabase) databases.getLast();
         return current.graphIterator();
     }
     
@@ -99,7 +98,7 @@ public class BrowserCore implements ICloseListener {
      * @return IGraphIterator.  An Iterator on the contents of the specified database.
      */
     public IGraphIterator iterator(String databasePath) {
-        Database requested = getDatabase(databasePath);
+        IDatabase requested = getDatabase(databasePath);
         return requested.graphIterator();
     }
     
@@ -113,13 +112,13 @@ public class BrowserCore implements ICloseListener {
      * @return IGraphIterator.  An Iterator on the contents of the specified database.
      */
     public IGraphIterator iterator(String databasePath, String selectedClass) {
-        Database requested = getDatabase(databasePath);
+        IDatabase requested = getDatabase(databasePath);
         return requested.graphIterator(selectedClass);
     }
 
 
     public IGraphIterator iterator(String host, int port, String user, String password) throws Exception {
-        Database requested = getDatabase(host, port, user, password);
+        IDatabase requested = getDatabase(host, port, user, password);
         return requested.graphIterator();
     }
     
@@ -131,8 +130,28 @@ public class BrowserCore implements ICloseListener {
     }
 
     public void updateClasspath() {
-        // TODO Auto-generated method stub
-        
+        for (Iterator databaseIter = databases.iterator(); databaseIter.hasNext();) {
+            IDatabase database = (IDatabase) databaseIter.next();
+            database.reopen();
+        }
+        fireBrowserCoreEvent();
+    }
+    
+    private LinkedList coreListeners = new LinkedList();
+    
+    public void addBrowserCoreListener(IBrowserCoreListener listener) {
+        coreListeners.add(listener);
+    }
+    
+    public void removeBrowserCoreListener(IBrowserCoreListener listener) {
+        coreListeners.remove(listener);
+    }
+    
+    private void fireBrowserCoreEvent() {
+        for (Iterator listeners = coreListeners.iterator(); listeners.hasNext();) {
+            IBrowserCoreListener listener = (IBrowserCoreListener) listeners.next();
+            listener.classpathChanged(this);
+        }
     }
 
 }

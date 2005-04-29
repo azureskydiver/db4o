@@ -16,7 +16,7 @@
  */
 package com.db4o.browser.model.nodes.field;
 
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.NullNode;
 import com.db4o.reflect.ReflectClass;
@@ -34,10 +34,10 @@ public class FieldNode implements IModelNode {
 
     protected String _fieldName;
 	protected Object value;
-	protected Database _database;
+	protected IDatabase _database;
     protected IModelNode delegate = null;
 
-	public FieldNode(String fieldName, Object instance, Database database) {
+	public FieldNode(String fieldName, Object instance, IDatabase database) {
         _fieldName = fieldName;
         value = instance;
 		_database = database;

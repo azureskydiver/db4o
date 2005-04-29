@@ -4,7 +4,7 @@
 package com.db4o.browser.model.nodes.partition;
 
 import com.db4o.ObjectSet;
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.field.FieldNodeFactory;
 
@@ -25,7 +25,7 @@ public class PartitionFieldNodeFactory {
 //        }
 //    }
     
-    public static IModelNode[] create(IModelNode[] source,int startIdx,int endIdx,Database database) {
+    public static IModelNode[] create(IModelNode[] source,int startIdx,int endIdx,IDatabase database) {
         int length = endIdx-startIdx;
         boolean overflow = length>THRESHOLD;
         int numInstances=(overflow ? THRESHOLD : length);
@@ -40,7 +40,7 @@ public class PartitionFieldNodeFactory {
         return result;
     }
 
-    public static IModelNode[] create(long[] sourceIds,int startIdx,int endIdx,Database database) {
+    public static IModelNode[] create(long[] sourceIds,int startIdx,int endIdx,IDatabase database) {
         int length = endIdx-startIdx;
         boolean overflow = length>THRESHOLD;
         int numInstances=(overflow ? THRESHOLD : length);
@@ -55,7 +55,7 @@ public class PartitionFieldNodeFactory {
         return result;
     }
     
-    public static IModelNode[] create(ObjectSet source, long[] sourceIds,int startIdx,int endIdx,Database database) {
+    public static IModelNode[] create(ObjectSet source, long[] sourceIds,int startIdx,int endIdx,IDatabase database) {
         if (sourceIds == null) {
             sourceIds = source.ext().getIDs();
         }

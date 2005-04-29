@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
-import com.db4o.browser.model.Database;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.partition.PartitionFieldNodeFactory;
 import com.db4o.reflect.ReflectClass;
@@ -50,7 +50,7 @@ public class MapFieldNode extends FieldNode {
 		// FIXME: find out for .NET   new GetStrategy("keySet", "get"),
 	};
 	
-	public static IModelNode tryToCreate(String fieldName, Object instance, Database database) {
+	public static IModelNode tryToCreate(String fieldName, Object instance, IDatabase database) {
 		for (int i = 0; i < STRATEGIES.length; i++) {
 			IModelNode node = tryToCreate(STRATEGIES[i], fieldName, instance, database);
 			if(node != null) {
@@ -60,7 +60,7 @@ public class MapFieldNode extends FieldNode {
 		return null;
 	}
 
-    public static IModelNode tryToCreate(GetStrategy strategy, String fieldName, Object fieldContents, Database database) {
+    public static IModelNode tryToCreate(GetStrategy strategy, String fieldName, Object fieldContents, IDatabase database) {
         MapFieldNode result;
         
         // See if we can get ReflectMethods corresponding to keySet() and get()
@@ -110,7 +110,7 @@ public class MapFieldNode extends FieldNode {
 		return result;
 	}
 
-    public MapFieldNode(String fieldName, Object instance, ReflectMethod keySetMethod, ReflectMethod getMethod, Database database) {
+    public MapFieldNode(String fieldName, Object instance, ReflectMethod keySetMethod, ReflectMethod getMethod, IDatabase database) {
         super(fieldName, instance, database);
         
         _keySetMethod = keySetMethod;

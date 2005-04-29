@@ -173,7 +173,7 @@ public class PreferencesCore {
 				"Object Activation", null, ActivationPreferencePage.class,
 				ActivationPreferences.getDefault());
         registerPreferences(ClasspathPreferences.CLASSPATH_PREFERENCES_ID,
-                "Classpath Preferences", null, ClasspathPreferencePage.class,
+                "Classpath", null, ClasspathPreferencePage.class,
                 ClasspathPreferences.getDefault());
 	}
 

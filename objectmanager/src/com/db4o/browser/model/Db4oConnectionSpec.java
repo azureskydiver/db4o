@@ -5,29 +5,29 @@ import java.net.*;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.browser.prefs.activation.ActivationPreferences;
+import com.db4o.browser.prefs.classpath.ClasspathPreferences;
 import com.db4o.reflect.*;
 import com.db4o.reflect.jdk.*;
 import com.swtworkbench.community.xswt.metalogger.*;
 
 public abstract class Db4oConnectionSpec {
 	private boolean readOnly;
-	private int activationDepth;
-	private String[] classpath;
 	
-	protected Db4oConnectionSpec(boolean readOnly,int depth, String[] classpath) {
+	protected Db4oConnectionSpec(boolean readOnly) {
 		this.readOnly=readOnly;
-		activationDepth = depth;
-		this.classpath = classpath;
 	}
 	
 	public ObjectContainer connect() {
+        int activationDepth = ActivationPreferences.getDefault().getInitialActivationDepth();
+        String[] classpath = ClasspathPreferences.getDefault().classPath();
 		Db4o.configure().readOnly(readOnly);
 		Db4o.configure().activationDepth(activationDepth);
-		Db4o.configure().reflectWith(createReflector());
+		Db4o.configure().reflectWith(createReflector(classpath));
 		return connectInternal();
 	}
 
-	private Reflector createReflector() {
+	private Reflector createReflector(String[] classpath) {
 		List urllist=new ArrayList(classpath.length);
 		for (int idx = 0; idx < classpath.length; idx++) {
 			URL cururl=path2URL(classpath[idx]);

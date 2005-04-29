@@ -6,11 +6,14 @@ BUGS:
   
 - Query untyped variables by specifying the type
 
-- The toolbar leaks SWT Image resources
-- XSWT.parse disposes all resources in an application in its dispose listener!
+- The toolbar leaks SWT Image resources **POSTPONED**
+- XSWT.parse disposes all resources in an application in its dispose listener! **POSTPONED**
 - Extend classpath needs to be moved to a preference page.  Right now you have to 
-   extend the classpath before you open a database file or it doesn't work.
-- Reopen databases after changing classpath preference.
+   extend the classpath before you open a database file or it doesn't work. **DONE**
+- Reopen databases after changing classpath preference. **DONE**
+
+- When a database is reopened after updating classpath, the generic reflector 
+   is no longer used, causing instability
 
 
 Remaining Features:
@@ -26,7 +29,7 @@ Remaining Features:
       - (Hyperlink objects if object.hasChildren()?)
    * If right side is displaying a collection, display in a table
    * Connect to a db4o server **DONE**
-   * Extend classpath should be a preference page
+   * Extend classpath should be a preference page **DONE**
    
 - Release engineering
    * Don't support PDAs for the initial release **DONE**
