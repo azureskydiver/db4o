@@ -43,9 +43,9 @@ for setups with frequent defragment runs.
 
 
 .1 Calling constructors ..
-.c Db4o.configure().weakReferences(false); ..
+.c Db4o.configure().callConstructors(true); ..
 .i Advantage ..
-will configure db4o to use a constructor to instantiate ._
+will configure db4o to use constructors to instantiate ._
 objects.
 
 .i Effect ..
