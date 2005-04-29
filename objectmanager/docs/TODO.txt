@@ -3,6 +3,9 @@ BUGS:
 
 - needs to be able to cope with refactored classes:
   instances may have multiple fields of the same name
+  
+- Query untyped variables by specifying the type
+
 - The toolbar leaks SWT Image resources
 - XSWT.parse disposes all resources in an application in its dispose listener!
 - Extend classpath needs to be moved to a preference page.  Right now you have to 
@@ -22,14 +25,15 @@ Remaining Features:
    * Click right side to navigate
       - (Hyperlink objects if object.hasChildren()?)
    * If right side is displaying a collection, display in a table
-   * Connect to a db4o server
+   * Connect to a db4o server **DONE**
    * Extend classpath should be a preference page
    
 - Release engineering
-   * Don't support PDAs for the initial release
+   * Don't support PDAs for the initial release **DONE**
    * 3 Packages, downloadable separately **DONE**
-   * Implement C-based program launcher
-   * Nullsoft installer for Windows platforms
+   * Implement C-based program launcher **DONE**
+   * Nullsoft installer for Windows platforms  (Rodrigo)
+   * Write reproducable build script!!!!!!!!
 
 
 Postponed Features:

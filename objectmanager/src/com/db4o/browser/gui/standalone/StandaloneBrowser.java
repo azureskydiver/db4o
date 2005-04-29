@@ -17,6 +17,8 @@
 package com.db4o.browser.gui.standalone;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Date;
 import java.util.Map;
 
@@ -39,6 +41,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
+import com.db4o.Db4o;
 import com.db4o.browser.gui.controllers.BrowserController;
 import com.db4o.browser.gui.controllers.QueryController;
 import com.db4o.browser.gui.dialogs.SelectServer;
@@ -238,12 +241,17 @@ public class StandaloneBrowser implements IControlFactory {
         });
     }
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+        PrintStreamLogger db4ologger = new PrintStreamLogger();
         Logger.setLogger(new TeeLogger(new StdLogger(), new FileLogger(getLogPath(LOGFILE), getLogPath(LOGCONFIG))));
+        Db4o.configure().setOut(new PrintStream(db4ologger, true));
         Logger.log().setDebug(SWTProgram.class, true);
         Logger.log().debug(SWTProgram.class, new Date().toString() + ": Application startup");
+        
         SWTProgram.registerCloseListener(BrowserCore.getDefault());
         SWTProgram.runWithLog(new StandaloneBrowser());
+        
+        db4ologger.close();
         Logger.log().debug(SWTProgram.class, new Date().toString() + ": Application shutdown");
 	}
 

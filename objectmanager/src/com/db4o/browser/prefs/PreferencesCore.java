@@ -14,6 +14,8 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.browser.prefs.activation.ActivationPreferencePage;
 import com.db4o.browser.prefs.activation.ActivationPreferences;
+import com.db4o.browser.prefs.classpath.ClasspathPreferencePage;
+import com.db4o.browser.prefs.classpath.ClasspathPreferences;
 import com.db4o.config.ObjectClass;
 import com.db4o.query.Query;
 import com.swtworkbench.community.xswt.metalogger.Logger;
@@ -170,6 +172,9 @@ public class PreferencesCore {
 		registerPreferences(ActivationPreferences.ACTIVATION_PREFERENCES_ID,
 				"Object Activation", null, ActivationPreferencePage.class,
 				ActivationPreferences.getDefault());
+        registerPreferences(ClasspathPreferences.CLASSPATH_PREFERENCES_ID,
+                "Classpath Preferences", null, ClasspathPreferencePage.class,
+                ClasspathPreferences.getDefault());
 	}
 
 }

@@ -10,7 +10,6 @@
 	<classpathentry kind="lib" path="launcher/lib/jakarta-oro-2.0.7.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/jface.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/kxml-plugin.jar"/>
-	<classpathentry kind="lib" path="launcher/lib/objectmanager.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/osgi_core.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/runtime.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/xmlpull_1_1_3_1.jar"/>

@@ -24,7 +24,6 @@ public class ActivationPreferencePage extends PreferencePage {
 	 */
 	protected Control createContents(Composite parent) {
 		panel = new ActivationPreferencePagePanel(parent, SWT.NULL);
-		PreferencesCore prefs = PreferencesCore.getDefault();
 		
 		ActivationPreferences actPrefs = ActivationPreferences.getDefault();
 		panel.getInitialActivationDepth().setSelection(actPrefs.getInitialActivationDepth());
