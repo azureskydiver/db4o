@@ -1,0 +1,42 @@
+.n
+.a Replication ..
+.0 Replication ..
+
+db4o provides replication functionality to periodically synchronize ._
+databases that work disconnected from each other, such as remote autonomous servers ._
+or handheld devices synchronizing with central servers. It is not intended for mirroring ._
+servers on a real-time basis.
+
+In order to use it, the following method always has ._
+to be called before a database file is created or opened:
+.c Db4o.configure().enableReplication(Integer.MAX_VALUE) ..
+Use 1 instead of Integer.MAX_VALUE to configure this ._
+on a per-class basis rather than globally.
+
+Now suppose we have two databases called "handheld" and "desktop", that we want to ._
+replicate. This is how we do it:
+
+(in progress)
+
+After replication commit, all modified objects (INCLUDING THE ONES THAT WERE NOT ._
+REPLICATED) are considered to be "in sync" and will not show up in future ._
+"where modified" queries, unless they are modified again.
+
+
+Under the Hood
+
+Enabling replication will cause db4o to control version numbers(1) and generate ._
+UUIDs(2) for all new objects stored in the database. 
+
+(1) An object's version number indicates the last time an object was modified. It is the ._
+database version at the moment of the modification. The database version starts at zero ._
+and is incremented every time a transaction is commited.
+
+(2) UUIDs are object IDs that are unique across all databases created with ._
+db4o. That is achieved by having the database's creation timestamp as part ._
+of its objects' UUIDs. Manually copying db4o database files can produce duplicate ._
+UUIDs, of course.
+
+When the replication is commited, the lowest database version number among both ._
+databases is set to be equal to the highest. After replication commit, therefore, both ._
+databases have the same version number and are "in sync".
