@@ -9,6 +9,8 @@ import java.util.LinkedList;
 
 import com.db4o.browser.gui.standalone.ICloseListener;
 import com.db4o.browser.prefs.PreferencesCore;
+import com.db4o.browser.prefs.activation.*;
+import com.db4o.browser.prefs.classpath.*;
 
 /**
  * BrowserCore.  The root of the model hierarchy in the browser.
@@ -34,27 +36,25 @@ public class BrowserCore implements ICloseListener {
      * @return the database corresponding to databasePath
      */
     public Database getDatabase(String databasePath) {
-        Database requested = (Database) dbMap.get(databasePath);
-        if (requested == null) {
-            requested = new Db4oDatabase();
-            requested.open(databasePath);
-            dbMap.put(databasePath, requested);
-            databases.addLast(requested);
-        }
-        return requested;
+		Db4oConnectionSpec spec=new Db4oFileConnectionSpec(databasePath,true,ActivationPreferences.getDefault().getInitialActivationDepth(),ClasspathPreferences.getDefault().classPath());
+        return getDatabaseInternal(spec);
     }
 	
     private Database getDatabase(String host, int port, String user, String password) throws Exception {
-        String key = "db4o://" + host + ":" + port;
-        Database requested = (Database) dbMap.get(key);
-        if (requested == null) {
+		Db4oConnectionSpec spec=new Db4oSocketConnectionSpec(host,port,user,password,true,ActivationPreferences.getDefault().getInitialActivationDepth(),ClasspathPreferences.getDefault().classPath());
+        return getDatabaseInternal(spec);
+    }
+
+	private Database getDatabaseInternal(Db4oConnectionSpec spec) {
+		Database requested = (Database) dbMap.get(spec.path());
+		if (requested == null) {
             requested = new Db4oDatabase();
-            requested.open(host, port, user, password);
-            dbMap.put(key, requested);
+            requested.open(spec);
+            dbMap.put(spec.path(), requested);
             databases.addLast(requested);
         }
-        return requested;
-    }
+		return requested;
+	}
 
 	/**
 	 * Gets an array of all open databases

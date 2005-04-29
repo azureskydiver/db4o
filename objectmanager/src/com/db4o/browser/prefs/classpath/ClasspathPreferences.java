@@ -52,4 +52,8 @@ public class ClasspathPreferences {
         entries().remove(entry);
     }
 
+	public String[] classPath() {
+		return (String[])entries().toArray(new String[entries().size()]);
+	}
+
 }

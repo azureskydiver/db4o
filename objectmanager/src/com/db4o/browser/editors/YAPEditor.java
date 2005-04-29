@@ -78,9 +78,7 @@ public class YAPEditor extends EditorPart {
      */
     public void createPartControl(Composite parent) {
         ui = new DbBrowserPane(parent, SWT.NULL);
-        model = new Db4oDatabase();
-//        ui.setInput(model);
-        model.open(fileName);
+		model=BrowserCore.getDefault().getDatabase(fileName);
     }
     
     /* (non-Javadoc)

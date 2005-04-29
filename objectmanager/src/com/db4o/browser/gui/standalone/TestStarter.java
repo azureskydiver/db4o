@@ -1,5 +1,6 @@
 package com.db4o.browser.gui.standalone;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import com.db4o.reflect.jdk.JdkReflector;
 import com.db4o.test.util.ExcludingClassLoader;
 
 public class TestStarter {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		List excluded=new ArrayList();
 		for (int argidx = 0; argidx < args.length; argidx++) {
 			excluded.add(args[argidx]);

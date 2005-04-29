@@ -118,11 +118,7 @@ public class DbBrowser extends ViewPart implements ISelectionProvider, ISelectio
 	private Database model = null;
     
     private void openFile(String selectedFileName) {
-        if (model == null) {
-            model = new Db4oDatabase();
-//            ui.setInput(model);
-        }
-        model.open(selectedFileName);
+		model=BrowserCore.getDefault().getDatabase(selectedFileName);
     }
     
     /* (non-Javadoc)
