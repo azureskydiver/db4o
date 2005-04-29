@@ -25,7 +25,9 @@ public class Doctor extends Task {
     
     public String configurejtutorial(){
         setPdfBaseFont("/usr/share/fonts/msttcorefonts/verdana.ttf");
-        String workspace = "/home/djo/workspaces/workspace.new";
+        String carlsWorkSpace = "C:/_db4o/HEAD";
+        String davesWorkSpace = "/home/djo/workspaces/workspace.new";
+        String workspace = davesWorkSpace;
         String tutorial = workspace + "/db4oj/tutorial"; 
         setName("f1");
         setHome(tutorial);
