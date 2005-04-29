@@ -396,7 +396,7 @@ public class HtmlWriter extends AbstractWriter {
 
     private void writeSourceCodeBlock(byte[] code,Source command) throws UnsupportedEncodingException {
         writeToFile("<table width=\"100%\" cellpadding=\"3\" cellspacing=\"0\" border=\"0\"><tr><td class=\"lg\">\r\n");
-        writeToFile("<pre>");
+        writeToFile("<code>");
         if(command!=null&&command.getMethodName()!=null) {
             code=extractMethod(code,command.getMethodName(),command.getParamValue(Source.CMD_FULL));
             if(code.length==0) {
@@ -408,9 +408,9 @@ public class HtmlWriter extends AbstractWriter {
         codestr=codestr.replaceAll("<","&lt;");
 
         byte[] bytes = codestr.getBytes();
-        writeToFile(bytes, 0, bytes.length-1);
+        write(bytes, 0, bytes.length-1);
 
-        writeToFile("</pre></td>");
+        writeToFile("</code></td>");
         if(files.task.isInteractive()){
             if(command!=null&&command.getMethodName()!=null&&command.getParamValue(Source.CMD_RUN)) {
                 writeToFile("<td class=\"lg\" align=\"left\" valign=\"bottom\" width=43>");
