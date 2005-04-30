@@ -31,7 +31,8 @@ Some examples:
 conf.objectClass(Foo.class).objectField("bar").indexed(true);
 conf.objectClass(Foo.class).cascadeOnUpdate();
 conf.objectClass(Foo.class).cascadeOnDelete();
-conf.objectClass(typeof(System.Drawing.Image)).translate(new TSerializable());
+conf.objectClass(typeof(System.Drawing.Image))
+  .translate(new TSerializable());
 conf.generateUUIDs(Integer.MAX_VALUE);
 conf.generateVersionNumbers(Integer.MAX_VALUE);
 conf.automaticShutDown(false);
@@ -49,7 +50,7 @@ conf.password("yourEncryptionPasswordHere");
 conf.unicode(false); ..
 
 Configuration settings are  .b not ..  stored in db4o database files. ._
-Accordingly all configuration method calls have to be called ._
+Accordingly all configuration methods have to be called ._
  .b every time ..  before an ObjectContainer/ObjectServer is opened. ._
 For using db4o in client/server mode it is recommended to use the ._
 same global configuration on the server and on the client. To ._
