@@ -16,8 +16,9 @@ class Foo{
 Db4o.configure().objectClass(Foo.class).objectField("bar").indexed(true); ..
 
 If the configuration is set in this way, an index on the Foo#bar field ._
-will be created (if not present already) the first time the Foo class ._
-will be used in an ObjectContainer. 
+will be created (if not present already) the next time you open an
+ObjectContainer/ObjectServer and you use the Foo class the first time
+in your applcation.
 
 Contrary to all other  .l Configuration configuration calls ..  indexes ._
 - once created - will remain in a database even if the index configuration ._
@@ -32,3 +33,13 @@ class is used.
 db4o will tell you when it creates and drops indexes, if you choose a ._
 message level of 1 or higher:
 .c Db4o.configure().messageLevel(1); ..
+
+For creating and dropping indexes on large amounts of objects there are ._
+two possible strategies:
+(1) Import all objects with indexing off, configure the index and reopen ._
+the ObjectContainer/ObjectServer.
+(2) Import all objects with indexing turned on and commit regularly ._
+for a fixed amount of objects (~10,000).
+
+(1) will be faster.
+(2) will keep memory consumption lower.
