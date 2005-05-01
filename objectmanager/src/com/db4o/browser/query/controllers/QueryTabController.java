@@ -40,7 +40,7 @@ public class QueryTabController extends BrowserController {
     public QueryTabController(QueryController queryController, CTabFolder folder, QueryBrowserPane ui, ReflectClass clazz) {
         super(ui, queryController);
         this.databaseBrowserController = queryController.getBrowserController();
-        this.database = BrowserCore.getDefault().getDatabase(databaseBrowserController.getCurrentFile());
+        this.database = BrowserCore.getDefault().getDatabase(databaseBrowserController.getCurrentConnection());
     }
     
     protected void addQueryButtonHandler() {

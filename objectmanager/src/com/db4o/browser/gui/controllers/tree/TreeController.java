@@ -44,7 +44,7 @@ public class TreeController implements IBrowserController {
                     input.previous();
                     if (selection instanceof ClassNode) {
                         ClassNode node = (ClassNode) selection;
-                        parent.getQueryController().open(node.getReflectClass(), parent.getCurrentFile());
+                        parent.getQueryController().open(node.getReflectClass(), parent.getCurrentConnection().path());
                     }
                 }
             }

@@ -43,7 +43,7 @@ public class SelectServer extends Dialog {
     
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
-        shell.setText("Open db4o Server");
+        shell.setText("Connect to db4o Server");
     }
     
     private IntVerifier portVerifier = new IntVerifier();

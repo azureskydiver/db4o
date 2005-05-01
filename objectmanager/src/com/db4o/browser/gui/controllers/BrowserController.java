@@ -15,6 +15,7 @@ import com.db4o.browser.gui.controllers.tree.TreeController;
 import com.db4o.browser.gui.dialogs.IListPopulator;
 import com.db4o.browser.gui.dialogs.ListSelector;
 import com.db4o.browser.gui.views.DbBrowserPane;
+import com.db4o.browser.model.*;
 import com.db4o.browser.model.BrowserCore;
 import com.db4o.browser.model.GraphPosition;
 import com.db4o.browser.model.IGraphIterator;
@@ -31,7 +32,8 @@ public class BrowserController implements IBrowserController {
     protected DbBrowserPane ui;
     protected QueryController queryController;  // Used for running queries
 
-    private String currentFile = null;
+    private Db4oConnectionSpec currentConnection;
+    
 	private TreeController treeController;
 	private DetailController detailController;
 	private SelectionChangedController selectionChangedController;
@@ -80,7 +82,7 @@ public class BrowserController implements IBrowserController {
         }
         ReflectClass toOpen = chooseClass();
         if (toOpen != null) {
-            queryController.open(toOpen, currentFile);
+            queryController.open(toOpen, currentConnection.path());
         }
     }
 
@@ -89,17 +91,19 @@ public class BrowserController implements IBrowserController {
      * 
 	 * @param file The platform-specific path/file name.
 	 */
-	public void open(String file) {
-        currentFile = file;
-		IGraphIterator i = BrowserCore.getDefault().iterator(file);
-		setInput(i, null);
+	public boolean open(String file) {
+        return open(new Db4oFileConnectionSpec(file, Db4oConnectionSpec.PREFERENCE_IS_READ_ONLY)); 
 	}
     
     public boolean open(String host, int port, String user, String password) {
-        currentFile = host + ":" + port;
+        return open(new Db4oSocketConnectionSpec(host, port, user, password,Db4oConnectionSpec.PREFERENCE_IS_READ_ONLY));
+    }
+    
+    private boolean open(Db4oConnectionSpec spec){
+        currentConnection = spec;
         IGraphIterator i;
         try {
-            i = BrowserCore.getDefault().iterator(host, port, user, password);
+            i = BrowserCore.getDefault().iterator(currentConnection);
         } catch (Exception e) {
             MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
             messageBox.setText("Error");
@@ -118,7 +122,7 @@ public class BrowserController implements IBrowserController {
      * @return The class the user chose or null if the user did not choosse one.
      */
     public ReflectClass chooseClass() {
-        final IGraphIterator iterator = BrowserCore.getDefault().iterator(currentFile);
+        final IGraphIterator iterator = BrowserCore.getDefault().iterator(currentConnection);
         ListSelector dialog = new ListSelector(ui.getShell());
         dialog.setText("Query a type");
         final HashMap choices = new HashMap();
@@ -206,12 +210,9 @@ public class BrowserController implements IBrowserController {
     public QueryController getQueryController() {
         return queryController;
     }
-
-    /**
-     * @return Returns the currentFile.
-     */
-    public String getCurrentFile() {
-        return currentFile;
+    
+    public Db4oConnectionSpec getCurrentConnection() {
+        return currentConnection;
     }
 
     /**
