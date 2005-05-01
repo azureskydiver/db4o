@@ -45,6 +45,10 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         }
         i_yapClassByID.put(yapClass.getID(), yapClass);
     }
+    
+    private byte[] asBytes(String str){
+        return i_stream.stringIO().write(str);
+    }
 
     void checkChanges() {
         Iterator4 i = i_classes.iterator();
@@ -150,8 +154,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     YapClass getYapClass(ReflectClass a_class, boolean a_create) {
         YapClass yapClass = (YapClass)i_yapClassByClass.get(a_class);
         if (yapClass == null) {
-            byte[] bytes = i_stream.stringIO().write(a_class.getName());
-            yapClass = (YapClass)i_yapClassByBytes.remove(bytes);
+            yapClass = (YapClass)i_yapClassByBytes.remove(asBytes(a_class.getName()));
             readYapClass(yapClass, a_class);
         }
         
@@ -209,9 +212,8 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         return readYapClass((YapClass)i_yapClassByID.get(a_id), null);
     }
 
-    YapClass getYapClass(String a_name) {
-        byte[] bytes = i_stream.stringIO().write(a_name);
-        YapClass yapClass = (YapClass)i_yapClassByBytes.remove(bytes);
+    public YapClass getYapClass(String a_name) {
+        YapClass yapClass = (YapClass)i_yapClassByBytes.remove(asBytes(a_name));
         readYapClass(yapClass, null);
         if (yapClass == null) {
             YapClassCollectionIterator i = iterator();
@@ -224,6 +226,14 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
             return null;
         }
         return yapClass;
+    }
+    
+    public int getYapClassID(String name){
+        YapClass yc = (YapClass)i_yapClassByBytes.get(asBytes(name));
+        if(yc != null){
+            return yc.getID();
+        }
+        return 0;
     }
 
     void initOnUp(Transaction systemTrans) {

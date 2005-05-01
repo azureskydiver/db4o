@@ -135,8 +135,20 @@ public class GenericReflector implements Reflector, DeepClone {
         if(clazz != null){
             return ensureDelegate(clazz);
         }
-        // TODO: do we always want to create a generic class here anyway
+        
+        if(_stream != null && _stream.i_classCollection != null){
+            int id = _stream.i_classCollection.getYapClassID(className);
+            if(id > 0){
+                clazz = ensureClassAvailability(id);
+                ensureClassRead(id);
+                _classByName.put(className, clazz);
+                return clazz; 
+            }
+        }
+        
+        // TODO: Do we always want to create a generic class here anyway
         // maybe with no fields for a start?
+        
         return null;
     }
 
