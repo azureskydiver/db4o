@@ -34,17 +34,11 @@ public class BrowserCore implements ICloseListener {
      * @return the database corresponding to databasePath
      */
     public IDatabase getDatabase(String databasePath) {
-		Db4oConnectionSpec spec = new Db4oFileConnectionSpec(databasePath, true);
-        return getDatabaseInternal(spec);
-    }
-	
-    private IDatabase getDatabase(String host, int port, String user, String password) throws Exception {
-		Db4oConnectionSpec spec = new Db4oSocketConnectionSpec(host, port,
-                user, password, true);
-        return getDatabaseInternal(spec);
+		Db4oConnectionSpec spec = new Db4oFileConnectionSpec(databasePath, Db4oConnectionSpec.PREFERENCE_IS_READ_ONLY);
+        return getDatabase(spec);
     }
 
-	private IDatabase getDatabaseInternal(Db4oConnectionSpec spec) {
+	public IDatabase getDatabase(Db4oConnectionSpec spec) {
 		IDatabase requested = (IDatabase) dbMap.get(spec.path());
 		if (requested == null) {
             requested = new Db4oDatabase();
@@ -90,38 +84,17 @@ public class BrowserCore implements ICloseListener {
         return current.graphIterator();
     }
     
-    /**
-     * Method iterator.  Returns an IGraphIterator on the specified database
-     * file.  If the specified database file is not open, it will be opened.
-     * 
-     * @param databasePath The platform-specific path string.
-     * @return IGraphIterator.  An Iterator on the contents of the specified database.
-     */
-    public IGraphIterator iterator(String databasePath) {
-        IDatabase requested = getDatabase(databasePath);
-        return requested.graphIterator();
-    }
-    
-    /**
-     * Method iterator.  Returns an IGraphIterator on the specified class in
-     * the specified database file.  If the specified database file is not 
-     * open, it will be opened.
-     * 
-     * @param databasePath The platform-specific path string.
-     * @param selectedClass The name of the class.
-     * @return IGraphIterator.  An Iterator on the contents of the specified database.
-     */
-    public IGraphIterator iterator(String databasePath, String selectedClass) {
-        IDatabase requested = getDatabase(databasePath);
+    public IGraphIterator iterator(Db4oConnectionSpec spec, String selectedClass) {
+        IDatabase requested = getDatabase(spec);
         return requested.graphIterator(selectedClass);
     }
-
-
-    public IGraphIterator iterator(String host, int port, String user, String password) throws Exception {
-        IDatabase requested = getDatabase(host, port, user, password);
+    
+    public IGraphIterator iterator(Db4oConnectionSpec spec) {
+        IDatabase requested = getDatabase(spec);
         return requested.graphIterator();
     }
-    
+
+
     /**
      * @return true if at least one database is open; false otherwise.
      */

@@ -35,13 +35,13 @@ public class QueryController {
         this.browserController = browserController;
     }
     
-    public void open(ReflectClass clazz, String fileName) {
+    public void open(ReflectClass clazz, String connectionName) {
         QueryBrowserPane ui = new QueryBrowserPane(folder, SWT.NULL);
         CTabItem queryTab = new CTabItem(folder, SWT.CLOSE);
         queryTab.setControl(ui);
         queryTab.setImage(new Image(Display.getCurrent(),
                 DbBrowserPane.class.getResourceAsStream("icons/etool16/query.gif")));
-        queryTab.setText(unqualifyFile(fileName) + "::" + unqualifyClass(clazz.getName()));
+        queryTab.setText(unqualifyFile(connectionName) + "::" + unqualifyClass(clazz.getName()));
         folder.setSelection(queryTab);
         
         QueryTabController controller = new QueryTabController(this, folder, ui, clazz);

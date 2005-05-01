@@ -12,7 +12,7 @@ public class Db4oSocketConnectionSpec extends Db4oConnectionSpec {
 	private String user;
 	private String password;
 
-	protected Db4oSocketConnectionSpec(String host,int port,String user,String password,boolean readOnly) {
+	public Db4oSocketConnectionSpec(String host,int port,String user,String password,boolean readOnly) {
 		super(readOnly);
 		this.host=host;
 		this.port=port;
