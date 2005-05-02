@@ -22,8 +22,7 @@ After replication commit, all modified objects (INCLUDING THE ONES THAT WERE NOT
 REPLICATED) are considered to be "in sync" and will not show up in future ._
 "where modified" queries, unless they are modified again.
 
-
-Under the Hood
+.1 Under the Hood ..
 
 Enabling replication will cause db4o to control version numbers(1) and generate ._
 UUIDs(2) for all new objects stored in the database. 
@@ -40,3 +39,17 @@ UUIDs, of course.
 When the replication is commited, the lowest database version number among both ._
 databases is set to be equal to the highest. After replication commit, therefore, both ._
 databases have the same version number and are "in sync".
+
+.1 Replicating Existing Data Files ..
+
+As we learned in the last sections, Db4o.configure().enableReplication (or its objectClass based counterpart) ._
+must be called before storing any objects to a data file because db4o replication needs ._
+object versions and UUIDs to work. This implies that objects in existing data files stored without ._
+the correct settings can't be replicated.
+
+Fortunately enabling replication for existing data files is a very simple process: we just need to use the ._
+Defragment tool after enabling replication:
+
+(snipped of com.db4o.test.replication.ReplicateExistingFile here)
+
+After a successful defragmentation our data files are ready for replication.
