@@ -14,8 +14,10 @@ namespace com.db4o {
     /// simply mark it with this attribute.
     /// </remarks>
     /// <exclude />
+    [AttributeUsage(AttributeTargets.Field)]
     public class Transient : Attribute {
         public Transient() {
         }
     }
 }
+
