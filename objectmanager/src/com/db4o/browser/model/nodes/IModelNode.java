@@ -51,5 +51,11 @@ public interface IModelNode {
 	 * @return
 	 */
 	public String getValueString();
+
+    /**
+     * Return the name of the node's type
+     * @param showType If the data type of the node should be displayed
+     */
+    public void setShowType(boolean showType);
 }
 

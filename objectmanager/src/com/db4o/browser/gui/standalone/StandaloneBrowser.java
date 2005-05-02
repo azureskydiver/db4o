@@ -166,7 +166,7 @@ public class StandaloneBrowser implements IControlFactory {
         open.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-				dialog.setFilterExtensions(new String[]{"*.yap"});
+				dialog.setFilterExtensions(new String[]{"*.yap", "*"});
                 String file = dialog.open();
                 if (file != null) {
                     setTabText(file);
@@ -274,6 +274,8 @@ public class StandaloneBrowser implements IControlFactory {
         SWTProgram.registerCloseListener(BrowserCore.getDefault());
         SWTProgram.runWithLog(new StandaloneBrowser());
         
+        //TODO: Getting a multiple-close exception from db4o?
+        //      Race condition with db4o shutdown?  error came after App shutdown message.
         db4ologger.close();
         Logger.log().debug(SWTProgram.class, new Date().toString() + ": Application shutdown");
 	}

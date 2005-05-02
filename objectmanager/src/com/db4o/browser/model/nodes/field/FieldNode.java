@@ -36,11 +36,14 @@ public class FieldNode implements IModelNode {
 	protected Object value;
 	protected IDatabase _database;
     protected IModelNode delegate = null;
+    protected ReflectClass _fieldType;
+    private boolean showType;
 
-	public FieldNode(String fieldName, Object instance, IDatabase database) {
+	public FieldNode(String fieldName, ReflectClass fieldType,Object instance, IDatabase database) {
         _fieldName = fieldName;
         value = instance;
 		_database = database;
+        _fieldType=fieldType;
 
 		if(value==null) {
 			delegate=NullNode.INSTANCE;
@@ -68,14 +71,24 @@ public class FieldNode implements IModelNode {
 	 * @see com.db4o.browser.gui.ITreeNode#getText()
 	 */
 	public String getText() {
-		return _fieldName.equals("") ? delegate.getText() : _fieldName + ": " + delegate.getText();
+        String fieldDataType = "";
+        if (showType) {
+            fieldDataType = "(" + _fieldType.getName() + ") ";
+        }
+		return  fieldDataType // Show the data type
+                + (_fieldName.equals("") ? delegate.getText()             // Show the field name
+                        : _fieldName + ": " + delegate.getText());        // Show the actual value
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.model.nodes.IModelNode#getName()
 	 */
 	public String getName() {
-		return _fieldName;
+        String fieldDataType = "";
+        if (showType) {
+            fieldDataType = "(" + _fieldType.getName() + ") ";
+        }
+		return fieldDataType +_fieldName;
 	}
 	
 	/* (non-Javadoc)
@@ -108,6 +121,10 @@ public class FieldNode implements IModelNode {
             Logger.log().error(e, "Unable to get the field contents");
             throw new IllegalStateException();
         }
+    }
+
+    public void setShowType(boolean showType) {
+        this.showType = showType;
     }
 
 }

@@ -7,6 +7,7 @@ import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.partition.PartitionFieldNodeFactory;
 import com.db4o.reflect.ReflectArray;
+import com.db4o.reflect.ReflectClass;
 
 /**
  * StoredArrayFieldNode.
@@ -18,8 +19,8 @@ public class ArrayFieldNode extends FieldNode implements IModelNode {
     private int length;
     private ReflectArray arrayReflector;
 
-	public ArrayFieldNode(String fieldName, Object instance, IDatabase database) {
-		super(fieldName, instance, database);
+	public ArrayFieldNode(String fieldName, ReflectClass fieldType,Object instance, IDatabase database) {
+		super(fieldName, fieldType,instance, database);
 
         arrayReflector = _database.reflector().array();
         length = arrayReflector.getLength(value);
@@ -34,7 +35,7 @@ public class ArrayFieldNode extends FieldNode implements IModelNode {
         
         for (int i=0; i < length; ++i) {
             Object item = arrayReflector.get(value, i);
-            result[i] = FieldNodeFactory.construct("["+ i + "] ", item, _database);
+            result[i] = FieldNodeFactory.construct("["+ i + "] ", _fieldType.getComponentType(), item, _database);
         }
         
         return PartitionFieldNodeFactory.create(result,0,result.length,_database);
