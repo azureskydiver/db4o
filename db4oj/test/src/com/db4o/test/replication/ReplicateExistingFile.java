@@ -29,11 +29,9 @@ public class ReplicateExistingFile {
 		}
 	};
 	
-	public void configure() {
-		Db4o.configure().objectClass(Task.class).enableReplication(false);
-	}
-	
 	public void store() {
+		Db4o.configure().objectClass(Task.class).enableReplication(false);
+		reOpen();
 		Test.store(new Task("old task 1"));
 		Test.store(new Task("old task 2"));
 	}
@@ -93,6 +91,6 @@ public class ReplicateExistingFile {
 		if (Test.isClientServer()) {
 			Test.reOpenServer();
 		}
-		Test.reOpen();
+		Test.open();
 	}
 }
