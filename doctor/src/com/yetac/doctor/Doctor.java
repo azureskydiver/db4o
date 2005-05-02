@@ -13,6 +13,10 @@ import com.yetac.doctor.workers.*;
 public class Doctor extends Task {
     
     public static void main(String[] args){
+		if(args.length<1||args.length>2) {
+			System.out.println("Usage: Doctor <workspace path> [<pdf font path>]");
+			return;
+		}
         Doctor doctor = new Doctor();
         String path = doctor.configurejtutorial(args[0],(args.length>1 ? args[1] : null));
         doctor.execute();
