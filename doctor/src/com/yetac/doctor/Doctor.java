@@ -14,7 +14,7 @@ public class Doctor extends Task {
     
     public static void main(String[] args){
         Doctor doctor = new Doctor();
-        String path = doctor.configurejtutorial();
+        String path = doctor.configurejtutorial(args[0],(args.length>1 ? args[1] : null));
         doctor.execute();
         try {
             BrowserLauncher.openURL(path);
@@ -23,11 +23,10 @@ public class Doctor extends Task {
         }
     }
     
-    public String configurejtutorial(){
-        setPdfBaseFont("/usr/share/fonts/msttcorefonts/verdana.ttf");
-        String carlsWorkSpace = "C:/_db4o/HEAD";
-        String davesWorkSpace = "/home/djo/workspaces/workspace.new";
-        String workspace = davesWorkSpace;
+    public String configurejtutorial(String workspace,String pdffontpath){
+		if(pdffontpath!=null) {
+			setPdfBaseFont(pdffontpath);
+		}
         String tutorial = workspace + "/db4oj/tutorial"; 
         setName("f1");
         setHome(tutorial);
