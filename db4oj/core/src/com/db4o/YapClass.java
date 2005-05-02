@@ -1758,7 +1758,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     }
 
     public boolean supportsIndex() {
-        return true;
+        return false;
     }
 
     public String toString() {

@@ -197,7 +197,7 @@ class YapClassPrimitive extends YapClass{
     }
     
     public boolean supportsIndex() {
-        return false;
+        return true;
     }
 
     final boolean writeObjectBegin() {
