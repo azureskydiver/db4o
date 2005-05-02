@@ -65,7 +65,7 @@ public class FieldNodeFactory {
 	 * @param database 
 	 * @return
 	 */
-	public static IModelNode construct(String fieldName, Object instance, IDatabase database) {
+	public static IModelNode construct(String fieldName, ReflectClass fieldType,Object instance, IDatabase database) {
         /*
          * There are 4 use-cases here:
          * 
@@ -76,18 +76,18 @@ public class FieldNodeFactory {
          */
         IModelNode result;
         
-		ReflectClass fieldType = database.reflector().forObject(instance);
+		ReflectClass valueType = database.reflector().forObject(instance);
 		
 		if (instance == null) {
-			return new FieldNode(fieldName, instance, database);
+			return new FieldNode(fieldName, fieldType,instance, database);
 		}
 		
-        if (fieldType.isSecondClass()) {
-            return new PrimitiveFieldNode(fieldName, instance, database);
+        if (valueType.isSecondClass()) {
+            return new PrimitiveFieldNode(fieldName, fieldType,instance, database);
         }
         
-        if (fieldType.isArray()) {
-            return new ArrayFieldNode(fieldName, instance, database);
+        if (valueType.isArray()) {
+            return new ArrayFieldNode(fieldName, fieldType,instance, database);
         }
         
         // If keySet() and get() are present, use them
@@ -95,13 +95,20 @@ public class FieldNodeFactory {
         if (result != null) return result;
         
         // Otherwise treat all collection-like things as lists
-		if (fieldType.isCollection()) {
-			return new CollectionFieldNode(fieldName, instance, database);
+		if (valueType.isCollection()) {
+			return new CollectionFieldNode(fieldName, fieldType,instance, database);
 		}
 
         // Otherwise it must be a plain old object
-		return new FieldNode(fieldName, instance, database);
+		return new FieldNode(fieldName, fieldType,instance, database);
 	}
+    /*
+     * Reflector.Object
+     * Reflector.Integer
+     * Reflector.Float
+     * Reflector.IntTYPE
+     * ...
+     */
 
 }
 

@@ -35,8 +35,8 @@ import com.db4o.reflect.*;
  */
 public class CollectionFieldNode extends FieldNode {
 
-	public CollectionFieldNode(String fieldName, Object instance, IDatabase database) {
-        super(fieldName, instance, database);
+	public CollectionFieldNode(String fieldName, ReflectClass fieldType,Object instance, IDatabase database) {
+        super(fieldName, fieldType,instance, database);
 	}
     
 	/* (non-Javadoc)
@@ -57,7 +57,7 @@ public class CollectionFieldNode extends FieldNode {
 		
 		for (int i = 0; i < results.length; i++) {
 			ReflectClass itemClass = _database.reflector().forObject(contents[i]);
-            results[i] = FieldNodeFactory.construct("", contents[i], _database);
+            results[i] = FieldNodeFactory.construct("", _database.reflector().forName("java.lang.Object"), contents[i], _database);
 		}
         return PartitionFieldNodeFactory.create(results,0,results.length,_database);
 	}

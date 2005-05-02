@@ -76,7 +76,7 @@ public class MapFieldNode extends FieldNode {
         }
         
         try {
-            result = new MapFieldNode(fieldName, fieldContents, keySet, get, database);
+            result = new MapFieldNode(fieldName, fieldType, fieldContents, keySet, get, database);
             result.iterator();
         } catch (IllegalStateException e) {
             Logger.log().error(e, "Unable to invoke 'iterator()'");
@@ -110,8 +110,8 @@ public class MapFieldNode extends FieldNode {
 		return result;
 	}
 
-    public MapFieldNode(String fieldName, Object instance, ReflectMethod keySetMethod, ReflectMethod getMethod, IDatabase database) {
-        super(fieldName, instance, database);
+    public MapFieldNode(String fieldName, ReflectClass fieldType,Object instance, ReflectMethod keySetMethod, ReflectMethod getMethod, IDatabase database) {
+        super(fieldName, fieldType, instance, database);
         
         _keySetMethod = keySetMethod;
 		_getMethod = getMethod;
@@ -126,7 +126,7 @@ public class MapFieldNode extends FieldNode {
         Iterator i = iterator();
         while (i.hasNext()) {
 			Object key = i.next();
-            results.addLast(FieldNodeFactory.construct(key.toString(), get(key), _database));
+            results.addLast(FieldNodeFactory.construct(key.toString(), _database.reflector().forName("java.lang.Object"),get(key), _database));
         }
         IModelNode[] finalResults = new IModelNode[results.size()];
         int elementNum=0;

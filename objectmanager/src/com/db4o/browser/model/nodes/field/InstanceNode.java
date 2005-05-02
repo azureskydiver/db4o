@@ -17,6 +17,7 @@
 package com.db4o.browser.model.nodes.field;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.db4o.browser.model.IDatabase;
@@ -34,6 +35,7 @@ class InstanceNode implements IModelNode {
 	private ReflectClass _clazz=null;
     private Object _instance=null;
 	private IDatabase _database;
+    private boolean showType;
 
 	public InstanceNode(Object instance, IDatabase database) {
         if (instance == null || database == null) {
@@ -50,6 +52,8 @@ class InstanceNode implements IModelNode {
     }
 
     public IModelNode[] children() {
+        HashMap children = new HashMap();
+        
 		List results = new ArrayList();
 		ReflectClass curclazz = _clazz;
 		while (curclazz != null) {
@@ -57,7 +61,17 @@ class InstanceNode implements IModelNode {
 			for (int i = 0; i < fields.length; i++) {
 				if (!fields[i].isTransient()) {
                     Object field = FieldNode.field(fields[i], _instance);
-                    results.add(FieldNodeFactory.construct(fields[i].getName(), field, _database));
+                    IModelNode newNode = FieldNodeFactory.construct(fields[i].getName(), fields[i].getType(), field, _database);
+                    
+                    IModelNode alreadyIn = (IModelNode) children.get(newNode.getName());
+                    if (alreadyIn != null) {
+                        alreadyIn.setShowType(true);
+                        newNode.setShowType(true);
+                    } else {
+                        children.put(newNode.getName(), newNode);
+                    }
+                    
+                    results.add(newNode);
 				}
 			}
 			curclazz = curclazz.getSuperclass();
@@ -73,10 +87,14 @@ class InstanceNode implements IModelNode {
 	 */
 	public String getText() {
 		long id = _database.getId(_instance);
+        String typeName = "";
+        if (showType) {
+            typeName = "(" + _database.reflector().forObject(_instance).getName() + ") ";
+        }
 		if (id > 0) {
-			return _instance.toString() + " (id=" + _database.getId(_instance) + ")";
+			return typeName + _instance.toString() + " (id=" + _database.getId(_instance) + ")";
 		} else {
-			return _instance.toString();
+			return typeName + _instance.toString();
 		}
 	}
 	
@@ -92,7 +110,7 @@ class InstanceNode implements IModelNode {
 	 */
 	public String getName() {
 		// This is only called if this is a top-level query result or an item in a container
-		return "";
+		return showType ? "(" + _database.reflector().forObject(_instance).getName() + ")" : "";
 	}
     
 	/* (non-Javadoc)
@@ -115,4 +133,8 @@ class InstanceNode implements IModelNode {
 	public int hashCode() {
 		return _instance.hashCode();
 	}
+
+    public void setShowType(boolean showType) {
+        this.showType = showType;
+    }
 }

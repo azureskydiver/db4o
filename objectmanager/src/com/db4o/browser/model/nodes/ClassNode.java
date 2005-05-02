@@ -87,6 +87,10 @@ public class ClassNode implements IModelNode {
         return _class;
     }
 
+    public void setShowType(boolean showType) {
+        // Nothing needed here
+    }
+
 	/**
 	 * Computes tree level start indices per level (into level below or
 	 * into the id list, if leaf level).

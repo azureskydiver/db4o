@@ -40,4 +40,8 @@ public class PartitionFieldNode implements IModelNode {
         return "";
     }
 
+    public void setShowType(boolean showType) {
+        // Nothing needed here
+    }
+
 }

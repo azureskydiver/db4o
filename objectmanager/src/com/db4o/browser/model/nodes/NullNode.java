@@ -26,4 +26,8 @@ public class NullNode implements IModelNode {
 		return "null";
 	}
 
+    public void setShowType(boolean showType) {
+        // Nothing needed here
+    }
+
 }

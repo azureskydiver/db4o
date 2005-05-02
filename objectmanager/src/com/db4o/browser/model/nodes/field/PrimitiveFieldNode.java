@@ -18,6 +18,7 @@ package com.db4o.browser.model.nodes.field;
 
 import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
+import com.db4o.reflect.ReflectClass;
 
 
 
@@ -34,8 +35,8 @@ public class PrimitiveFieldNode extends FieldNode {
 	 * @param instance
 	 * @param database 
 	 */
-	public PrimitiveFieldNode(String fieldName, Object instance, IDatabase database) {
-		super(fieldName, instance, database);
+	public PrimitiveFieldNode(String fieldName, ReflectClass fieldType,Object instance, IDatabase database) {
+		super(fieldName, fieldType,instance, database);
 	}
     
     /* (non-Javadoc)

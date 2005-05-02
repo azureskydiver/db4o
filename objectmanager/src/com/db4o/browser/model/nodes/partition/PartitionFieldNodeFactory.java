@@ -47,7 +47,7 @@ public class PartitionFieldNodeFactory {
         int resultLength=(overflow ? THRESHOLD+1 : length);
         IModelNode[] result=new IModelNode[resultLength];
         for(int resultidx=0;resultidx<numInstances;resultidx++) {
-            result[resultidx] = FieldNodeFactory.construct("", database.byId(sourceIds[startIdx+resultidx]), database);//new InstanceNode(sourceIds[startIdx+resultidx], database);
+            result[resultidx] = FieldNodeFactory.construct("", database.reflector().forName("java.lang.Object"), database.byId(sourceIds[startIdx+resultidx]), database);//new InstanceNode(sourceIds[startIdx+resultidx], database);
         }
         if(overflow) {
             result[result.length-1]=new PartitionInstanceNode(database,sourceIds,startIdx+numInstances,endIdx);
@@ -65,7 +65,7 @@ public class PartitionFieldNodeFactory {
         int resultLength=(overflow ? THRESHOLD+1 : length);
         IModelNode[] result=new IModelNode[resultLength];
         for(int resultidx=0;resultidx<numInstances;resultidx++) {
-            result[resultidx] = FieldNodeFactory.construct("", database.byId(sourceIds[startIdx+resultidx]), database);
+            result[resultidx] = FieldNodeFactory.construct("", database.reflector().forName("java.lang.Object"), database.byId(sourceIds[startIdx+resultidx]), database);
         }
         if(overflow) {
             result[result.length-1]=new PartitionObjectSetNode(source,database,sourceIds,startIdx+numInstances, endIdx);
