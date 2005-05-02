@@ -9,14 +9,59 @@ servers on a real-time basis.
 
 In order to use it, the following method always has ._
 to be called before a database file is created or opened:
+
 .c Db4o.configure().enableReplication(Integer.MAX_VALUE) ..
+(See section below on how to enable replication for existing databases that did not ._
+have replication enabled before)
+
 Use 1 instead of Integer.MAX_VALUE to configure this ._
 on a per-class basis rather than globally.
 
-Now suppose we have two databases called "handheld" and "desktop", that we want to ._
+Now suppose we have opened two object containers from two different databases called "handheld" and "desktop", that we want to ._
 replicate. This is how we do it:
 
-(in progress)
+.c ReplicationProcess replication = desktop.ext().replicationBegin(handheld, new ReplicationConflictHandler() {
+    public Object resolveConflict(ReplicationProcess replicationProcess, Object a, Object b) {
+       return a;
+    }
+ });
+ replication.setDirection(desktop, handheld); ..
+The container on which replicationBegin() was called, is treated as container "A" and the ._
+other is container "B". That information is only used for conflict resolution. Both ._
+containers are treated equally in all other respects.
+
+db4o replication is bi-directional by default. The setDirection() call above is used ._
+to ensures that changes will only be replicated from the "desktop" to the "handheld". ._
+In that case, replication is said to be "directed".
+
+A conflict occurs when an object to be replicated has been modified in both containers. ._
+db4o cannot arbitrarily pick one side, so the ReplicationConflictHandler we passed in is ._
+called to resolve the conflict. If the ReplicationConflictHandler returns null, no ._
+changes are ._
+replicated. In the case of directed replication, such as our example above, a conflict ._
+also occurs when an object has been modified only in the destination container. In our ._
+example, the ReplicationConflictHandler always determines that the object from container "A" ._
+(desktop) will "win" the conflict, thus overriding any changes made in container "B" ._
+(handheld).
+
+Do all objects always get replicated? No. How do we decide which objects get replicated? ._
+Like this:
+
+.c Query q = desktop.query();
+ replication.whereModified(q);
+ ObjectSet replicationSet = q.execute();
+ while (replicationSet.hasNext()) {
+    replication.replicate(replicationSet.next());
+ }
+ replication.commit(); ..
+That's all there is to it.
+
+We are using a query that will return all objects but we could use any query we like to ._
+constrain the objects we want.
+
+Calling whereModified() will add a constraint to the query so that it only returns the ._
+objects that have actually been modified since the last replication between both the ._
+containers in question.
 
 After replication commit, all modified objects (INCLUDING THE ONES THAT WERE NOT ._
 REPLICATED) are considered to be "in sync" and will not show up in future ._
@@ -48,8 +93,9 @@ object versions and UUIDs to work. This implies that objects in existing data fi
 the correct settings can't be replicated.
 
 Fortunately enabling replication for existing data files is a very simple process: we just need to use the ._
-Defragment tool after enabling replication:
+Defragment tool in com.db4o.tools (source code only) after enabling replication:
 
-(snipped of com.db4o.test.replication.ReplicateExistingFile here)
-
+.c Db4o.configure().objectClass(Task.class).enableReplication(true);
+ new Defragment().run(currentFileName(), true); ..
+			
 After a successful defragmentation our data files are ready for replication.
