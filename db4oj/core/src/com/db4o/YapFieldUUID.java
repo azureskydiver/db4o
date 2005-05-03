@@ -71,32 +71,36 @@ class YapFieldUUID extends YapFieldVirtual {
         Transaction trans = a_bytes.getTransaction();
         boolean indexEntry = a_new && stream.maintainsIndices();
         int dbID = 0;
-        if(! a_migrating){
-	        if (a_yapObject.i_virtualAttributes.i_database == null) {
-	            a_yapObject.i_virtualAttributes.i_database = stream.identity();
+		VirtualAttributes attr = a_yapObject.i_virtualAttributes;
+		
+		boolean linkToDatabase = ! a_migrating;
+		if(attr != null && attr.i_database == null) {
+			linkToDatabase = true;
+		}
+        if(linkToDatabase){
+	        if (attr.i_database == null) {
+	            attr.i_database = stream.identity();
 	            if (stream instanceof YapFile
 	                && ((YapFile) stream).i_bootRecord != null) {
 	                PBootRecord bootRecord = ((YapFile) stream).i_bootRecord;
-	                a_yapObject.i_virtualAttributes.i_uuid = bootRecord.newUUID();
+					attr.i_uuid = bootRecord.newUUID();
 	                indexEntry = true;
 	            }
 	        }
-	        Db4oDatabase db = a_yapObject.i_virtualAttributes.i_database;
+	        Db4oDatabase db = attr.i_database;
 	        if(db != null) {
 	            dbID = db.getID(trans);
 	        }
         }else{
-            Db4oDatabase db = null;
-            if(a_yapObject.i_virtualAttributes != null && a_yapObject.i_virtualAttributes.i_database != null){
-                db = a_yapObject.i_virtualAttributes.i_database;
-                dbID = db.getID(trans);
+            if(attr != null){
+                dbID = attr.i_database.getID(trans);
             }
         }
         a_bytes.writeInt(dbID);
-        if(a_yapObject.i_virtualAttributes != null){
-	        YLong.writeLong(a_yapObject.i_virtualAttributes.i_uuid, a_bytes);
+        if(attr != null){
+	        YLong.writeLong(attr.i_uuid, a_bytes);
 	        if(indexEntry){
-	            addIndexEntry(new Long(a_yapObject.i_virtualAttributes.i_uuid), a_bytes);
+	            addIndexEntry(new Long(attr.i_uuid), a_bytes);
 	        }
         }else{
             YLong.writeLong(0, a_bytes);

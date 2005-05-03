@@ -711,6 +711,8 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     // FIXME: REFLECTOR an IClass could also hold a reference to
     // a YapClass so we would improve considerably on lookup
     // performance here.
+	// TODO: Instead of using a parameter to denote create, use
+	//       two methods with different names
     final YapClass getYapClass(ReflectClass a_class, boolean a_create) {
         if (a_class == null) {
             return null;
