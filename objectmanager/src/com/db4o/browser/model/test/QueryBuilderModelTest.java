@@ -10,13 +10,15 @@ import junit.framework.TestCase;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.Db4oDatabase;
+import com.db4o.browser.model.Db4oFileConnectionSpec;
+import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.query.model.FieldConstraint;
 import com.db4o.browser.query.model.QueryBuilderModel;
 import com.db4o.browser.query.model.QueryPrototypeInstance;
 import com.db4o.browser.query.model.RelationalOperator;
 import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
 
 public class QueryBuilderModelTest extends TestCase {
     private static class Data {
@@ -59,12 +61,22 @@ public class QueryBuilderModelTest extends TestCase {
         db.set(new Container(7, "x", "s"));
         db.close();
         database=new Db4oDatabase();
-        database.open(YAPFILENAME);
+        database.open(new Db4oFileConnectionSpec(YAPFILENAME,false));
         clazz=database.reflector().forName(Data.class.getName());
         model=new QueryBuilderModel(clazz,database);
         proto=model.getRootInstance();
     }
     
+    private ReflectField getField(String fieldName) {
+        ReflectField field=database.reflector().forName(Data.class.getName()).getDeclaredField(fieldName);
+        return field;
+    }
+
+    private ReflectField getContainerField(String fieldName) {
+        ReflectField field=database.reflector().forName(Container.class.getName()).getDeclaredField(fieldName);
+        return field;
+    }
+
     protected void tearDown() {
         database.closeIfOpen();
     }
@@ -78,16 +90,16 @@ public class QueryBuilderModelTest extends TestCase {
     }
     
     public void testRootPrototype() {
-        String[] fieldNames=proto.getFieldNames();
+        ReflectField[] fieldNames=proto.getFields();
         assertEquals(2,fieldNames.length);
-        FieldConstraint constraint=proto.getConstraint("id");
+        FieldConstraint constraint=proto.getConstraint(getField("id"));
         assertEquals(constraint.field.getName(),"id");
         assertEquals(RelationalOperator.EQUALS,constraint.relation);
         assertNull(constraint.value);
     }
 
     public void testSingleConstraint() {
-        FieldConstraint constraint=proto.getConstraint("id");
+        FieldConstraint constraint=proto.getConstraint(getField("id"));
         constraint.value=new Integer(1);
         ObjectSet result=model.getQuery().execute();
         assertEquals(1,result.size());
@@ -102,12 +114,12 @@ public class QueryBuilderModelTest extends TestCase {
     }
     
     public void testCombinedConstraints() {
-        FieldConstraint nameConstraint=proto.getConstraint("name");
+        FieldConstraint nameConstraint=proto.getConstraint(getField("name"));
         nameConstraint.value="A";
         nameConstraint.relation=RelationalOperator.GREATER;
         ObjectSet result=model.getQuery().execute();
         assertEquals(5,result.size());
-        FieldConstraint idConstraint=proto.getConstraint("id");
+        FieldConstraint idConstraint=proto.getConstraint(getField("id"));
         idConstraint.value=new Integer(2);
         result=model.getQuery().execute();
         assertEquals(1,result.size());
@@ -119,7 +131,12 @@ public class QueryBuilderModelTest extends TestCase {
         QueryBuilderModel model=new QueryBuilderModel(clazz,database);
         QueryPrototypeInstance proto=model.getRootInstance();
         
-        FieldConstraint nameConstraint = proto.getConstraint("data").valueProto().getConstraint("name");
+        final ReflectField containerField = getContainerField("data");
+        final FieldConstraint constraint = proto.getConstraint(containerField);
+        constraint.expand();
+        final QueryPrototypeInstance valueProto = constraint.valueProto();
+        final ReflectField dataField = getField("name");
+        FieldConstraint nameConstraint = valueProto.getConstraint(dataField);
         nameConstraint.value = "y";
         nameConstraint.relation = RelationalOperator.GREATER;
         ObjectSet result = model.getQuery().execute();
