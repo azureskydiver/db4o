@@ -195,65 +195,62 @@ public final class Platform {
     }
 
     static final void getDefaultConfiguration(Config4Impl config) {
-    	
-        if (!Deploy.csharp) {
-        	
-        	// Initialize all JDK stuff first, before doing ClassLoader stuff
-        	jdk();
-        	hasWeakReferences();
-        	hasNio();
-        	hasCollections();
-        	hasShutDownHook();
+		
+    	// Initialize all JDK stuff first, before doing ClassLoader stuff
+    	jdk();
+    	hasWeakReferences();
+    	hasNio();
+    	hasCollections();
+    	hasShutDownHook();
+        
+        if(config.i_classLoader == null){
+            // If we're in an Eclipse classloader, use that.  Otherwise,
+            // use the context class loader.
+            String classloaderName = Db4o.class.getClassLoader().getClass().getName();
             
-            if(config.i_classLoader == null){
-                // If we're in an Eclipse classloader, use that.  Otherwise,
-                // use the context class loader.
-                String classloaderName = Db4o.class.getClassLoader().getClass().getName();
-                
-                ClassLoader cl = jdk().getContextClassLoader();
-                
-                // FIXME: The new reflector does not like the ContextCloader at all.
-                //        Resolve hierarchies.
-                
-                // if (cl == null || classloaderName.indexOf("eclipse") >= 0) {
-                    cl = Db4o.class.getClassLoader();
-                // }
-                
-                config.setClassLoader(cl);
-            }
+            ClassLoader cl = jdk().getContextClassLoader();
             
-            config.objectClass("java.lang.StringBuffer").compare(new ObjectAttribute() {
-                public Object attribute(Object original) {
-                    if (original instanceof StringBuffer) {
-                        return ((StringBuffer) original).toString();
-                    }
-                    return original;
+            // FIXME: The new reflector does not like the ContextCloader at all.
+            //        Resolve hierarchies.
+            
+            // if (cl == null || classloaderName.indexOf("eclipse") >= 0) {
+                cl = Db4o.class.getClassLoader();
+            // }
+            
+            config.setClassLoader(cl);
+        }
+        
+        config.objectClass("java.lang.StringBuffer").compare(new ObjectAttribute() {
+            public Object attribute(Object original) {
+                if (original instanceof StringBuffer) {
+                    return ((StringBuffer) original).toString();
                 }
-            });
-            
-            translate(config, config.objectClass("java.lang.Class"), "TClass");
-            translateCollection(config, "Hashtable", "THashtable", true);
-            if (jdk().ver() >= 2) {
-				try {
-					translateCollection(config, "AbstractCollection", "TCollection", false);
-					translateUtilNull(config, "AbstractList");
-					translateUtilNull(config, "AbstractSequentialList");
-					translateUtilNull(config, "LinkedList");
-					translateUtilNull(config, "ArrayList");
-					translateUtilNull(config, "Vector");
-					translateUtilNull(config, "Stack");
-					translateUtilNull(config, "AbstractSet");
-					translateUtilNull(config, "HashSet");
-					translate(config, UTIL + "TreeSet", "TTreeSet");
-					translateCollection(config, "AbstractMap", "TMap", true);
-					translateUtilNull(config, "HashMap");
-					translateUtilNull(config, "WeakHashMap");
-					translate(config, UTIL + "TreeMap", "TTreeMap");
-				} catch (Exception e) {
-				}
-            } else {
-				translateCollection(config, "Vector", "TVector", false);
+                return original;
             }
+        });
+        
+        translate(config, config.objectClass("java.lang.Class"), "TClass");
+        translateCollection(config, "Hashtable", "THashtable", true);
+        if (jdk().ver() >= 2) {
+			try {
+				translateCollection(config, "AbstractCollection", "TCollection", false);
+				translateUtilNull(config, "AbstractList");
+				translateUtilNull(config, "AbstractSequentialList");
+				translateUtilNull(config, "LinkedList");
+				translateUtilNull(config, "ArrayList");
+				translateUtilNull(config, "Vector");
+				translateUtilNull(config, "Stack");
+				translateUtilNull(config, "AbstractSet");
+				translateUtilNull(config, "HashSet");
+				translate(config, UTIL + "TreeSet", "TTreeSet");
+				translateCollection(config, "AbstractMap", "TMap", true);
+				translateUtilNull(config, "HashMap");
+				translateUtilNull(config, "WeakHashMap");
+				translate(config, UTIL + "TreeMap", "TTreeMap");
+			} catch (Exception e) {
+			}
+        } else {
+			translateCollection(config, "Vector", "TVector", false);
         }
     }
     
