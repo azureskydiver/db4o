@@ -3,9 +3,9 @@
  */
 package com.db4o.browser.query.model;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
@@ -15,7 +15,7 @@ public class QueryPrototypeInstance {
     private final ReflectClass clazz;
     private QueryBuilderModel model;
 
-    private Map fields = new HashMap();
+    private Map fields = new TreeMap(new FieldComparator());
     
     public QueryPrototypeInstance(ReflectClass clazz, QueryBuilderModel model) {
         this.clazz = clazz;
@@ -34,7 +34,7 @@ public class QueryPrototypeInstance {
                     continue;
                 }
                 
-                fields.put(curFields[i].getName(), new FieldConstraint(curFields[i], model));
+                fields.put(curFields[i], new FieldConstraint(curFields[i], model));
             }
             curClazz = curClazz.getSuperclass();
         }
@@ -53,12 +53,12 @@ public class QueryPrototypeInstance {
         }
     }
     
-    public String[] getFieldNames() {
-        return (String[]) fields.keySet().toArray(new String[fields.size()]);
+    public ReflectField[] getFields() {
+        return (ReflectField[]) fields.keySet().toArray(new ReflectField[fields.size()]);
     }
     
-    public FieldConstraint getConstraint(String fieldName) {
-        return (FieldConstraint) fields.get(fieldName);
+    public FieldConstraint getConstraint(ReflectField field) {
+        return (FieldConstraint) fields.get(field);
     }
 
     public ReflectClass getType() {

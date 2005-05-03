@@ -3,6 +3,7 @@
  */
 package com.db4o.browser.query.controllers;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -26,6 +27,7 @@ import com.db4o.browser.query.view.IConstraintRow;
 import com.db4o.browser.query.view.PrototypeInstanceEditor;
 import com.db4o.browser.query.view.QueryBrowserPane;
 import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
 
 public class QueryBuilderPaneController {
 
@@ -59,8 +61,18 @@ public class QueryBuilderPaneController {
     }
     
     private LinkedList controllers = new LinkedList();
-
+    
     private void buildEditor(QueryPrototypeInstance root, String fieldName) {
+        class EditorRow {
+            public ReflectField field;
+            public IConstraintRow rowEditor;
+
+            public EditorRow(ReflectField field, IConstraintRow rowEditor) {
+                this.field = field;
+                this.rowEditor = rowEditor;
+            }
+        }
+
         if (root == null || root.getType() == null) {
             return;
         }
@@ -78,30 +90,43 @@ public class QueryBuilderPaneController {
         editor.setTypeName(fieldName == null ? className : fieldName + " : " + className, root.getType().isInterface());
 
         // Now expand the fields
-        String[] fieldNames = root.getFieldNames();
-        for (int i = 0; i < fieldNames.length; i++) {
-            FieldConstraint field = root.getConstraint(fieldNames[i]);
+        HashMap priorRows = new HashMap();
+        ReflectField[] fields = root.getFields();
+        
+        for (int i = 0; i < fields.length; i++) {
+            FieldConstraint field = root.getConstraint(fields[i]);
+            
+            String curFieldName = field.field.getName();
+            EditorRow priorRow = (EditorRow) priorRows.get(curFieldName);
+            if (priorRow != null) {
+                curFieldName = "(" + field.field.getType() + ") " + curFieldName;
+                String oldFieldName = "(" + priorRow.field.getType().getName() + ") " + priorRow.field.getName();
+                priorRow.rowEditor.setFieldName(oldFieldName);
+            }
             
             final ReflectClass fieldType = field.field.getType();
+            IConstraintRow newRow = null;
             
             if (fieldType.isSecondClass()) {
-                IConstraintRow row = editor.addPrimitiveTypeRow(field.field.getName(), 
-                        field.field.isPublic());
+                newRow = editor.addPrimitiveTypeRow(curFieldName, field.field.isPublic());
                 // Relational operator...
                 IFieldController controller;
-                controller = new FieldConstraintRelationalOperatorFieldController(row.getRelationEditor(), field);
+                controller = new FieldConstraintRelationalOperatorFieldController(newRow.getRelationEditor(), field);
                 controllers.add(controller);
                 
                 // Value...
-                controller = new FieldConstraintValueFieldController((Text)row.getValueEditor(), field, queryModel.getDatabase());
+                controller = new FieldConstraintValueFieldController((Text)newRow.getValueEditor(), field, queryModel.getDatabase());
                 controllers.add(controller);
             } else {
-                IConstraintRow row = editor.addObjectReferenceRow(field.field.getName(), 
-                        field.field.isPublic());
-                row.setValue(fieldType.getName() + " >>>");
-                Button expandEditor = (Button) row.getValueEditor();
-                expandEditor.addSelectionListener(new ExpandEditor(field, editor, row));
+                newRow = editor.addObjectReferenceRow(curFieldName, field.field.isPublic());
+                newRow.setValue(fieldType.getName() + " >>>");
+                Button expandEditor = (Button) newRow.getValueEditor();
+                expandEditor.addSelectionListener(new ExpandEditor(field, editor, newRow));
 //                buildEditor(field.valueProto());
+            }
+            
+            if (priorRow == null) {
+                priorRows.put(curFieldName, new EditorRow(fields[i], newRow));
             }
         }
     }
