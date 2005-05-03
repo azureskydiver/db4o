@@ -29,20 +29,24 @@ public class ReplicateExistingFile {
 		}
 	};
 	
-	public void store() {
+	public void configure() {
 		Db4o.configure().objectClass(Task.class).enableReplication(false);
-		reOpen();
+	}
+	
+	public void store() {
 		Test.store(new Task("old task 1"));
 		Test.store(new Task("old task 2"));
 	}
 
 	public void test() {
+		
 		close();
 		
 		try {
 			Db4o.configure().objectClass(Task.class).enableReplication(true);
 			new Defragment().run(currentFileName(), true);
 		} finally {
+			Db4o.configure().objectClass(Task.class).enableReplication(false);
 			reOpen();
 		}
 		
@@ -55,6 +59,8 @@ public class ReplicateExistingFile {
 		q.constrain(Task.class);
 		ObjectSet os = q.execute();
 		Test.ensure(2 == os.size());
+		
+		
 	}
 	
 	void replicate(ObjectContainer master, ObjectContainer slave) {
@@ -88,9 +94,6 @@ public class ReplicateExistingFile {
 	}
 	
 	private void reOpen() {
-		if (Test.isClientServer()) {
-			Test.reOpenServer();
-		}
-		Test.open();
+		Test.reOpenServer();
 	}
 }
