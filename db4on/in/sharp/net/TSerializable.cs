@@ -8,7 +8,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using j4o.lang;
 using com.db4o.config;
 
-namespace com.db4o
+namespace com.db4o.config
 {
 
     /// <summary>
@@ -19,7 +19,6 @@ namespace com.db4o
     /// - the persistent type will never be refactored<br />
     /// - querying for type members is not necessary<br />
     /// </summary>
-    /// <exclude />
     public class TSerializable : ObjectConstructor {
 
 		static Class _byteArrayType = Class.getClassForType(typeof(byte[]));
