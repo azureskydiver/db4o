@@ -2,6 +2,7 @@
 
 using System;
 using System.Drawing;
+using com.db4o.config;
 
 namespace com.db4o.test.cs
 {

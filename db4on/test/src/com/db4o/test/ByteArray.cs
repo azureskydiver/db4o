@@ -2,6 +2,7 @@ namespace com.db4o.test
 {
 	using System;
 	using com.db4o;
+	using com.db4o.config;
 	using com.db4o.query;
 
 	interface IByteArrayHolder
@@ -127,7 +128,7 @@ namespace com.db4o.test
 				function();
 			}
 			DateTime end = DateTime.Now;
-			Console.WriteLine(label + ": {0} iterations took {1}ms", ITERATIONS, (end-start).TotalMilliseconds);
+			System.Console.WriteLine(label + ": {0} iterations took {1}ms", ITERATIONS, (end-start).TotalMilliseconds);
 		}
 		
 		byte[] createByteArray()

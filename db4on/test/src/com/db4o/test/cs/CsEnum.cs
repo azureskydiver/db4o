@@ -75,6 +75,20 @@ namespace com.db4o.test.cs
 			ensureObjectSet(q.execute(), CsEnumState.Open, CsEnumState.Running);
 		}
 
+		public void testQBE()
+		{
+			tstQBE(3, CsEnumState.None); // None is the zero/uninitialized value
+			tstQBE(1, CsEnumState.Closed);
+			tstQBE(1, CsEnumState.Open);
+			tstQBE(1, CsEnumState.Running);
+		}
+
+		private void tstQBE(int expectedCount, CsEnumState value)
+		{
+			ObjectSet os = Test.objectContainer().get(new CsEnum(value));
+			Test.ensureEquals(expectedCount, os.size());
+		}
+
 		private void ensureObjectSet(ObjectSet os, params CsEnumState[] expected)
 		{
 			Test.ensureEquals(expected.Length, os.size());
