@@ -8,6 +8,8 @@ namespace com.db4o.config {
 
 	/// <exclude />
     public class TClass : ObjectConstructor {
+		
+		static readonly Class _stringClass = Class.getClassForType(typeof(String));
       
         public void onActivate(ObjectContainer objectContainer, object obj, object members) {
         }
@@ -25,7 +27,7 @@ namespace com.db4o.config {
         }
       
         public Class storedClass() {
-            return Class.getClassForType(typeof(String));
+            return _stringClass;
         }
     }
 }
