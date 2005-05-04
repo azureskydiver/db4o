@@ -19,6 +19,41 @@ Here is how to do this if you are using MonoDevelop:
 - click "Open"
 - click "OK"
 
+.1 Object Manager Installation
+The Object Manager is packaged separately for each supported platform.  Choose ._
+from the following links in the db4o Download Center for your platform:
+- db4o ObjectManager for Windows no Java VM
+- db4o ObjectManager for Windows IKVM (Java VM for .net included)
+- db4o ObjectManager for Linux
+
+Once you have downloaded the appropriate Object Manager build, create a folder ._
+called Object Manager in an appropriate location and unpack the downloaded ._
+zip file there.
+
+.2 Running Object Manager for Windows IKVM
+Object Manager for Windows IKVM includes the open-source IKVM Java virtual ._
+machine in the download.  Simply double-click the objectmanager.bat file ._
+to start Object Manager.
+
+.2 Running Object Manager for Windows no Java VM
+This build assumes that your computer already has a Sun Java Virtual Machine ._
+version 1.3 or later installed and that your operating system path already ._
+lists the directory containing your java.exe file.  If this is true, you ._
+can simply double-click the objectmanager.bat file to start Object Manager. ._
+Otherwise, you will need to edit objectmanager.bat and specify the full ._
+path and file name for your java.exe file on the first line.
+
+.2 Running Object Manager for Linux
+This build assumes that your computer already has a Sun Java Virtual Machine ._
+version 1.3 or later installed and that your PATH variable already lists the ._
+directory containing the java binary.  If this is not the case, you will
+need to edit the objectmanager.sh file and specify the full path and file name ._
+of the Java binary on the "export VMEXE" line".  Since the zip archive does ._
+not preserve the executable permissions for objectmanager.sh, you will need
+to `chmod +x objectmanager.sh`.  Once this is complete, running objectmanager.sh ._
+will start Object Manager.
+
+
 .1 API ..
 The API documentation for db4o is supplied as a set of HTML pages in 
 /usr/share/doc/packages/db4o/api/index.html. While you read through this ._
