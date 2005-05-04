@@ -179,6 +179,10 @@ namespace com.db4o {
         public override int adjustReadDepth(int i) {
             return 2;
         }
+        
+        public override bool canBind() {
+	        return false;
+    	}
       
         internal override void checkActive() {
             base.checkActive();
@@ -393,7 +397,9 @@ namespace com.db4o {
             if (this.getTrans() == null) {
                 this.setTrans(transaction);
                 modified();
-            } else if (transaction != this.getTrans()) return createDefault(transaction);
+            } else if (transaction != this.getTrans()){
+             	return replicate(getTrans(), transaction);
+            }
             return this;
         }
     }
