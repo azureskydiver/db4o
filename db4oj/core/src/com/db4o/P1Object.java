@@ -102,9 +102,11 @@ public class P1Object implements Db4oTypeImpl{
     }
 	
     protected Object replicate(Transaction fromTrans, Transaction toTrans) {
+        
+        YapStream fromStream = fromTrans.i_stream;
         YapStream toStream = toTrans.i_stream;
         
-        synchronized(toStream.lock()){
+        synchronized(fromStream.lock()){
 		
     		int id = toStream.replicationHandles(this);
             
@@ -119,6 +121,9 @@ public class P1Object implements Db4oTypeImpl{
     		}
             
             P1Object replica = (P1Object)createDefault(toTrans);
+            
+            
+            
 		
             return replica;
         }
