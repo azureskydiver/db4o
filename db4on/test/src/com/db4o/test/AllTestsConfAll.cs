@@ -39,6 +39,7 @@ namespace com.db4o.test {
 			typeof(CsCollections),
 			typeof(CsCustomTransientAttribute),
 			typeof(CsDate),
+		    typeof(CsDelegate),
 			typeof(CsEnum),
             typeof(CsEvaluationDelegate),
 			typeof(CsMarshalByRef),

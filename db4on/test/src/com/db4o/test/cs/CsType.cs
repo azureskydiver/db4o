@@ -4,17 +4,19 @@ namespace com.db4o.test.cs
 {
 	public class CsType
 	{
-        Type myType;
+		Type myType;
 		Type stringType;
 
-        public void storeOne() {
+		public void storeOne() 
+		{
 			myType = this.GetType();
-            stringType = typeof(String);
-        }
+			stringType = typeof(String);
+		}
 
-        public void testOne() {
+		public void testOne() 
+		{
 			Test.ensureEquals(this.GetType(), myType);
-            Test.ensureEquals(typeof(String), stringType);
-        }
+			Test.ensureEquals(typeof(String), stringType);
+		}
 	}
 }
