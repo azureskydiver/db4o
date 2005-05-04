@@ -35,6 +35,8 @@ class ReplicationImpl implements ReplicationProcess {
     private static final int TO_A = 1;
 
     private static final int CHECK_CONFLICT = -99;
+    
+    private final Hashtable4 _referenceMap;
 
 	ReplicationImpl(YapStream peerA, ObjectContainer peerB,
 			ReplicationConflictHandler conflictHandler) {
@@ -60,7 +62,22 @@ class ReplicationImpl implements ReplicationProcess {
 		_conflictHandler = conflictHandler;
 
 		_record = ReplicationRecord.beginReplication(_transA, _transB);
+        
+        _referenceMap = new Hashtable4(1);
 	}
+
+    private int bindAndSet(Transaction trans, YapStream peer, YapObject ref, Object sourceObject){
+        if(sourceObject instanceof Db4oTypeImpl){
+            Db4oTypeImpl db4oType = (Db4oTypeImpl)sourceObject;
+            if(! db4oType.canBind()){
+                Db4oTypeImpl targetObject = (Db4oTypeImpl)ref.getObject();
+                targetObject.replicateFrom(sourceObject);
+                return ref.getID();
+            }
+        }
+        peer.bind2(ref, sourceObject);
+        return peer.setAfterReplication(trans, sourceObject, 1, true);
+    }
 
 	public void checkConflict(Object obj) {
 		int temp = _direction;
@@ -141,6 +158,10 @@ class ReplicationImpl implements ReplicationProcess {
 	private long lastSynchronization() {
 		return _record._version;
 	}
+    
+    public void mapReference(Object obj, YapObject ref) {
+        _referenceMap.put(System.identityHashCode(obj), ref);
+    }
 
 	public ObjectContainer peerA() {
 		return _peerA;
@@ -149,6 +170,13 @@ class ReplicationImpl implements ReplicationProcess {
 	public ObjectContainer peerB() {
 		return _peerB;
 	}
+    
+    public YapObject referenceFor(Object obj){
+        int hcode = System.identityHashCode(obj);
+        YapObject ref = (YapObject)_referenceMap.get(hcode);
+        _referenceMap.remove(hcode);
+        return ref;
+    }
 
 	public void replicate(Object obj) {
 
@@ -382,28 +410,9 @@ class ReplicationImpl implements ReplicationProcess {
 
 	}
     
-    private int bindAndSet(Transaction trans, YapStream peer, YapObject ref, Object sourceObject){
-        if(sourceObject instanceof Db4oTypeImpl){
-            Db4oTypeImpl db4oType = (Db4oTypeImpl)sourceObject;
-            if(! db4oType.canBind()){
-                Db4oTypeImpl targetObject = (Db4oTypeImpl)ref.getObject();
-                targetObject.replicateFrom(sourceObject);
-                return ref.getID();
-            }
-        }
-        peer.bind2(ref, sourceObject);
-        return peer.setAfterReplication(trans, sourceObject, 1, true);
-    }
-
 	public void whereModified(Query query) {
 		query.descend(VirtualField.VERSION).constrain(
 				new Long(lastSynchronization())).greater();
 	}
-
-	public void map(P1Object replica, YapObject object) {
-		int hcode = System.identityHashCode(replica);
-		
-		
-	}
-
+ 
 }

@@ -122,7 +122,7 @@ public class P1Object implements Db4oTypeImpl{
             
             P1Object replica = (P1Object)createDefault(toTrans);
 			
-			fromStream.i_handlers.i_replication.map(replica, i_yapObject);
+			fromStream.i_handlers.i_replication.mapReference(replica, i_yapObject);
 			
             replica.store(0);
 			
