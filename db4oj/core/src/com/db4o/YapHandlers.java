@@ -49,6 +49,7 @@ public class YapHandlers {
     YapIndexes              		i_indexes;
     
     ReplicationImpl				    i_replication;
+    MigrationConnection             i_migration;
     
     
     boolean                 i_encrypt;

@@ -24,8 +24,6 @@ class ReplicationImpl implements ReplicationProcess {
 
     final ReplicationRecord _record;
 
-    private YapObject _sourceReference;
-
     private int _direction;
 
     private static final int IGNORE = 0;
@@ -36,8 +34,6 @@ class ReplicationImpl implements ReplicationProcess {
 
     private static final int CHECK_CONFLICT = -99;
     
-    private final Hashtable4 _referenceMap;
-
 	ReplicationImpl(YapStream peerA, ObjectContainer peerB,
 			ReplicationConflictHandler conflictHandler) {
         
@@ -53,9 +49,13 @@ class ReplicationImpl implements ReplicationProcess {
 		_peerB = (YapStream) peerB;
 		_transB = _peerB.checkTransaction(null);
 
+        MigrationConnection mgc = new MigrationConnection();
+        
+        _peerA.i_handlers.i_migration = mgc;
 		_peerA.i_handlers.i_replication = this;
 		_peerA.i_migrateFrom = _peerB;
-
+        
+        _peerB.i_handlers.i_migration = mgc;
 		_peerB.i_handlers.i_replication = this;
 		_peerB.i_migrateFrom = _peerA;
 
@@ -63,7 +63,6 @@ class ReplicationImpl implements ReplicationProcess {
 
 		_record = ReplicationRecord.beginReplication(_transA, _transB);
         
-        _referenceMap = new Hashtable4(1);
 	}
 
     private int bindAndSet(Transaction trans, YapStream peer, YapObject ref, Object sourceObject){
@@ -113,21 +112,12 @@ class ReplicationImpl implements ReplicationProcess {
         }
 	}
 
-	void destinationOnNew(YapObject destinationReference) {
-		if (_sourceReference != null) {
-			VirtualAttributes vas = _sourceReference.virtualAttributes(_transA);
-			destinationReference.i_virtualAttributes = new VirtualAttributes();
-			VirtualAttributes vad = destinationReference.i_virtualAttributes;
-			vad.i_uuid = vas.i_uuid;
-			vad.i_version = vas.i_version;
-			vad.i_database = vas.i_database;
-		}
-	}
-
 	private void endReplication() {
 		_peerA.i_migrateFrom = null;
+        _peerA.i_handlers.i_migration = null;
 		_peerA.i_handlers.i_replication = null;
 		_peerB.i_migrateFrom = null;
+        _peerB.i_handlers.i_migration = null;
 		_peerB.i_handlers.i_replication = null;
 	}
     
@@ -159,10 +149,6 @@ class ReplicationImpl implements ReplicationProcess {
 		return _record._version;
 	}
     
-    public void mapReference(Object obj, YapObject ref) {
-        _referenceMap.put(System.identityHashCode(obj), ref);
-    }
-
 	public ObjectContainer peerA() {
 		return _peerA;
 	}
@@ -171,13 +157,6 @@ class ReplicationImpl implements ReplicationProcess {
 		return _peerB;
 	}
     
-    public YapObject referenceFor(Object obj){
-        int hcode = System.identityHashCode(obj);
-        YapObject ref = (YapObject)_referenceMap.get(hcode);
-        _referenceMap.remove(hcode);
-        return ref;
-    }
-
 	public void replicate(Object obj) {
 
 		// When there is an active replication process, the set() method
@@ -214,8 +193,8 @@ class ReplicationImpl implements ReplicationProcess {
 		}
 	}
 
-	private void shareBinding(YapObject referenceA, Object objectA, YapObject referenceB, Object objectB) {
-		if(_sourceReference == null) {
+	private void shareBinding(YapObject sourceReference, YapObject referenceA, Object objectA, YapObject referenceB, Object objectB) {
+		if(sourceReference == null) {
 			return;
 		}
         if(objectA instanceof Db4oTypeImpl){
@@ -224,7 +203,7 @@ class ReplicationImpl implements ReplicationProcess {
             }
         }
         
-		if(_sourceReference == referenceA) {
+		if(sourceReference == referenceA) {
 			_peerB.bind2(referenceB, objectA);
 		}else {
 			_peerA.bind2(referenceA, objectB);
@@ -262,6 +241,7 @@ class ReplicationImpl implements ReplicationProcess {
         
         int notProcessed = 0;
         YapStream other = null;
+        YapObject sourceReference = null;
         
         if(caller == _peerA){
             other = _peerB;
@@ -291,7 +271,7 @@ class ReplicationImpl implements ReplicationProcess {
 					return notProcessed;
 				}
 				
-				_sourceReference = referenceB;
+				sourceReference = referenceB;
 				
 				attB = referenceB.virtualAttributes(_transB);
                 if(attB == null){
@@ -317,7 +297,7 @@ class ReplicationImpl implements ReplicationProcess {
 				
 				if(referenceB == null) {
                     
-					_sourceReference = referenceA;
+					sourceReference = referenceA;
                     
 					Object[] arr = _transB.objectAndYapObjectBySignature(attA.i_uuid,
 							attA.i_database.i_signature);
@@ -330,7 +310,7 @@ class ReplicationImpl implements ReplicationProcess {
 					objectB = arr[0];
                     
 				}else {
-					_sourceReference = null;
+					sourceReference = null;
 				}
 				
 				attB = referenceB.virtualAttributes(_transB);
@@ -357,7 +337,7 @@ class ReplicationImpl implements ReplicationProcess {
 					&& attB.i_version <= _record._version) {
 
 				if (_direction != CHECK_CONFLICT) {
-					shareBinding(referenceA, objectA, referenceB, objectB);
+					shareBinding(sourceReference, referenceA, objectA, referenceB, objectB);
 				}
                 return idInCaller(caller, referenceA, referenceB);
 			}

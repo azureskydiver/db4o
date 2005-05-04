@@ -136,10 +136,6 @@ public class P2LinkedList extends P1Collection implements Db4oList {
         return 1;
     }
     
-    public boolean canBind() {
-        return false;
-    }
-
     private void checkLastAndUpdate(P1ListElement a_oldLast,
             P1ListElement a_added) {
         if (i_last == a_oldLast) {
@@ -383,8 +379,20 @@ public class P2LinkedList extends P1Collection implements Db4oList {
     }
     
     public void replicateFrom(Object obj) {
-        int xxx = 1;
-
+        checkActive();
+        P2ListElementIterator i = iterator4();
+        while (i.hasNext()) {
+            P1ListElement elem = i.nextElement();
+            elem.delete(false);
+        }
+        i_first = null;
+        i_last = null;
+        P2LinkedList l4 = (P2LinkedList)obj;
+        i = l4.iterator4();
+        while (i.hasNext()) {
+            add4(i.next());
+        }
+        updateInternal();
     }
 
     public boolean retainAll(Collection c) {

@@ -27,7 +27,10 @@ abstract class YapFieldVirtual extends YapField {
         // are not on the actual object.
         
     }
-
+    
+    void deactivate(Transaction a_trans, Object a_onObject, int a_depth) {
+        // do nothing
+    }
     
     void delete(YapWriter a_bytes) {
         a_bytes.incrementOffset(linkLength());
@@ -69,14 +72,17 @@ abstract class YapFieldVirtual extends YapField {
         YapStream stream = a_bytes.i_trans.i_stream;
         boolean migrating = false;
         if (stream instanceof YapFile) {
-	        if (stream.i_migrateFrom != null) {
-	            migrating = true;
+            if (stream.i_migrateFrom != null) {
+                migrating = true;
 	            if (a_yapObject.i_virtualAttributes == null) {
                     Object obj = a_yapObject.getObject();
-                    YapObject migrateYapObject = stream.i_handlers.i_replication.referenceFor(obj);
-                    if(migrateYapObject == null){
-                        migrateYapObject = stream.i_migrateFrom.getYapObject(obj);
+                    YapObject migrateYapObject = null;
+                    if(stream.i_handlers.i_migration != null){
+                        migrateYapObject = stream.i_handlers.i_migration.referenceFor(obj);
                     }
+                     if(migrateYapObject == null){
+                         migrateYapObject = stream.i_migrateFrom.getYapObject(obj);
+                     }
                     
 	                if (migrateYapObject != null
 	                    && migrateYapObject.i_virtualAttributes != null

@@ -50,10 +50,6 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
         return 2;
     }
     
-    public boolean canBind() {
-        return false;
-    }
-
     void checkActive() {
         super.checkActive();
         if (i_table == null) {
