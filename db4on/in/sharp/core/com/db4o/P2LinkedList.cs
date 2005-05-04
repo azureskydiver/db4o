@@ -28,7 +28,7 @@ namespace com.db4o {
                 return size4() - 1;
             }
         }
-
+        
         public void Clear(){
             lock (streamLock()) {
                 checkActive();
@@ -211,6 +211,10 @@ namespace com.db4o {
             return 1;
         }
       
+        public override bool canBind() {
+	        return false;
+    	}
+      
         protected void checkLastAndUpdate(P1ListElement a_previous, P1ListElement a_added) {
             if (i_last == a_previous){
                 i_last = a_added;
@@ -339,7 +343,7 @@ namespace com.db4o {
             if (getTrans() == null){
                 setTrans(transaction);
             }else if (transaction != getTrans()){
-                return createDefault(transaction);
+                return replicate(getTrans(), transaction);
             }
             return this;
         }
