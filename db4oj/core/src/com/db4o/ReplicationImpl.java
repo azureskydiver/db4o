@@ -400,4 +400,10 @@ class ReplicationImpl implements ReplicationProcess {
 				new Long(lastSynchronization())).greater();
 	}
 
+	public void map(P1Object replica, YapObject object) {
+		int hcode = System.identityHashCode(replica);
+		
+		
+	}
+
 }

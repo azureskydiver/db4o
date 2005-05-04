@@ -121,12 +121,11 @@ public class P1Object implements Db4oTypeImpl{
     		}
             
             P1Object replica = (P1Object)createDefault(toTrans);
+			
+			fromStream.i_handlers.i_replication.map(replica, i_yapObject);
+			
             replica.store(0);
-            VirtualAttributes fromAttr = i_yapObject.virtualAttributes(fromTrans);
-            if(fromAttr != null && fromAttr.i_database != null){
-                replica.i_yapObject.i_virtualAttributes = fromAttr.shallowClone();
-                replica.store(1);
-            }
+			
             return replica;
         }
 	}
