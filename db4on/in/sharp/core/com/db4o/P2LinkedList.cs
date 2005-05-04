@@ -211,10 +211,6 @@ namespace com.db4o {
             return 1;
         }
       
-        public override bool canBind() {
-	        return false;
-    	}
-      
         protected void checkLastAndUpdate(P1ListElement a_previous, P1ListElement a_added) {
             if (i_last == a_previous){
                 i_last = a_added;
@@ -327,6 +323,23 @@ namespace com.db4o {
                 return true;
             }
             return false;
+        }
+
+        public override void replicateFrom(Object obj) {
+            checkActive();
+            P2ListElementIterator i = iterator4();
+            while (i.hasNext()) {
+                P1ListElement elem = i.nextElement();
+                elem.delete(false);
+            }
+            i_first = null;
+            i_last = null;
+            P2LinkedList l4 = (P2LinkedList)obj;
+            i = l4.iterator4();
+            while (i.hasNext()) {
+                add4(i.nextElement());
+            }
+            updateInternal();
         }
       
         protected int size4() {
