@@ -1031,6 +1031,8 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     public void migrateFrom(ObjectContainer objectContainer) {
         i_migrateFrom = (YapStream) objectContainer;
+        i_handlers.i_migration = new MigrationConnection();
+        i_migrateFrom.i_handlers.i_migration = i_handlers.i_migration; 
     }
 
     final void needsUpdate(YapClass a_yapClass) {
@@ -1200,6 +1202,17 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     public abstract void releaseSemaphore(String name);
+    
+    void rememberJustSet(int id){
+        if(DTrace.enabled){
+            DTrace.JUST_SET.log(id);
+        }
+        if(i_justSet == null){
+            i_justSet = new TreeInt(id);
+        }else{
+            i_justSet = i_justSet.add(new TreeInt(id));
+        }
+    }
 
     abstract void releaseSemaphores(Transaction ta);
 
@@ -1446,16 +1459,18 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                     return 0;
                 }
                 yapObject = new YapObject(0);
-                if(i_migrateFrom != null  && i_handlers.i_replication != null){
-                    if(! (a_object instanceof Internal)){
-                        i_handlers.i_replication.destinationOnNew(yapObject);
-                    }
-                }
                 if(yapObject.store(a_trans, yc, a_object, a_updateDepth)){
     				idTreeAdd(yapObject);
     				hcTreeAdd(yapObject);
     				if(a_object instanceof Db4oTypeImpl){
     				    ((Db4oTypeImpl)a_object).setTrans(a_trans);
+                        
+                        // FIXME: the following could speed up things
+                        
+//                        if(a_object instanceof P1Object){
+//                            ((P1Object)a_object).setYapObject(yapObject);
+//                        }
+                        
     				}
     				if (i_config.i_messageLevel > YapConst.STATE) {
     					message("" + yapObject.getID() + " new " + yapObject.getYapClass().getName());
@@ -1477,11 +1492,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                         a_trans.dontDelete(oid, true);
                         if(a_checkJustSet){
                             a_checkJustSet = false;
-                            if(i_justSet == null){
-                                i_justSet = new TreeInt(oid);
-                            }else{
-                                i_justSet = i_justSet.add(new TreeInt(oid));
-                            }
+                            rememberJustSet(oid);
                         }
                         yapObject.writeUpdate(a_trans, a_updateDepth);
                     }
@@ -1491,11 +1502,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             int id = yapObject.getID();
             if(a_checkJustSet && canUpdate()){
                 if(! yapObject.getYapClass().isPrimitive()){
-    	            if(i_justSet == null){
-    	                i_justSet = new TreeInt(id);
-    	            }else{
-    	                i_justSet = i_justSet.add(new TreeInt(id));
-    	            }
+                    rememberJustSet(id);
                 }
             }
             if(dontDelete){

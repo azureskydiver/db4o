@@ -17,7 +17,7 @@ public class DTrace {
     private static final Object init(){
         if(enabled){
             
-            breakOnEvent(20);
+            // breakOnEvent(20);
             
             // address: 244346, 44
             
@@ -26,7 +26,7 @@ public class DTrace {
             // addRange(5948);
             // addRange(4580);
             
-            addRange(4383);
+            addRange(2325);
             
             // addRangeWithLength(1, 10000000);
             
@@ -50,6 +50,7 @@ public class DTrace {
             GET_SLOT = new DTrace(true, true, "getSlot", true);
             GET_YAPOBJECT = new DTrace(true, true, "get yapObject", true);
             ID_TREE_ADD = new DTrace(true, true, "id tree add", true);
+            JUST_SET = new DTrace(true, true, "just set", true);
             NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
             READ_ARRAY_WRAPPER = new DTrace(true, true, "read array wrapper", true);
             READ_ID = new DTrace(true, true, "read ID", true);
@@ -64,7 +65,7 @@ public class DTrace {
             WRITE_BYTES = new DTrace(true, true, "writeBytes", true); 
             WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true, "trans writeUpdateDeleteMembers", true);
             
-            // turnAllOffExceptFor(new DTrace[] {FREE, FREE_ON_COMMIT});
+            // turnAllOffExceptFor(new DTrace[] {JUST_SET});
             // turnAllOffExceptFor(new DTrace[] {CANDIDATE_READ, CREATE_CANDIDATE, DONOTINCLUDE, EVALUATE_SELF});
             // turnAllOffExceptFor(new DTrace[] {DELETE});
             // turnAllOffExceptFor(new DTrace[] {GET_YAPOBJECT, ID_TREE_ADD});
@@ -115,6 +116,7 @@ public class DTrace {
     public static DTrace GET_SLOT;
     public static DTrace GET_YAPOBJECT;
     public static DTrace ID_TREE_ADD;
+    public static DTrace JUST_SET;
     public static DTrace NEW_INSTANCE;
     public static DTrace READ_ARRAY_WRAPPER;
     public static DTrace READ_ID;

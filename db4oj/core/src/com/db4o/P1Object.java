@@ -37,7 +37,7 @@ public class P1Object implements Db4oTypeImpl{
     }
     
     public boolean canBind() {
-        return true;
+        return false;
     }
     
     void checkActive(){
@@ -122,7 +122,10 @@ public class P1Object implements Db4oTypeImpl{
             
             P1Object replica = (P1Object)createDefault(toTrans);
 			
-			fromStream.i_handlers.i_replication.mapReference(replica, i_yapObject);
+            
+            if(fromStream.i_handlers.i_migration != null){
+                fromStream.i_handlers.i_migration.mapReference(replica, i_yapObject);
+            }
 			
             replica.store(0);
 			
@@ -186,6 +189,21 @@ public class P1Object implements Db4oTypeImpl{
             i_trans.i_stream.checkStillToSet();
             i_trans.i_stream.beginEndSet(i_trans);
         }
+    }
+    
+    void updateInternal(){
+        updateInternal(activationDepth());
+    }
+    
+    void updateInternal(int depth){
+        if(validYapObject()){
+            i_yapObject.writeUpdate(i_trans, depth);
+            i_trans.i_stream.rememberJustSet(i_yapObject.getID());
+            i_trans.i_stream.checkStillToSet();
+        }
+    }
+    
+    private void update(int depth, boolean internal){
     }
     
     private boolean validYapObject(){
