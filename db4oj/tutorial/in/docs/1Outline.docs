@@ -10,11 +10,11 @@
 .e Transactions ..
 .e ClientServer ..
 .e Constructors ..
+.e Translators ..
 .e Configuration ..
 .e Indexes ..
 .e IDs ..
 .e Callbacks ..
-.e Translators ..
 .e Classloader ..
 .e Encryption ..
 .e Tuning ..

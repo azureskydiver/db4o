@@ -105,13 +105,16 @@ And last but not least, the client that stops the server.
 
 That's it, folks. No, of course it isn't. There's much more to db4o ._
 we haven't covered yet: schema evolution, custom persistence for your classes, ._
-writing your own query objects, etc.
+writing your own query objects, etc. The following, more loosely coupled ._
+chapters will look into more advanced db4o features.
 
 This tutorial is work in progress. We will successively add chapters and ._
 incorporate feedback from the community into the existing chapters.
 
 We hope that this tutorial has helped to get you started with db4o. How ._
 should you continue now?
+
+- Browse the remaining chapters.
 
 - .i (Interactive version only) .. While this tutorial is basically sequential in ._
 nature, try to switch back and forth between the chapters and execute the ._
