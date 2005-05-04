@@ -49,6 +49,10 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
     public int adjustReadDepth(int a_depth) {
         return 2;
     }
+    
+    public boolean canBind() {
+        return false;
+    }
 
     void checkActive() {
         super.checkActive();

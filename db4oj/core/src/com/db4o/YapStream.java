@@ -472,6 +472,11 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                 Object obj = yo.getObject();
                 if (yc.dispatchEvent(this, obj,
                     EventDispatcher.CAN_DELETE)) {
+                    if(DTrace.enabled){
+                        DTrace.DELETE.log(yo.getID());
+                    }
+                    
+                    
                     if(delete5(ta, yo, a_cascade, userCall)){
                     	yc.dispatchEvent(this, obj, EventDispatcher.DELETE);
                         if (i_config.i_messageLevel > YapConst.STATE) {
@@ -776,6 +781,9 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     final void hcTreeAdd(YapObject a_yo) {
+        if(Debug.checkSychronization){
+            i_lock.notify();
+        }
         if (Deploy.debug) {
             Object obj = a_yo.getObject();
             if (obj != null) {
@@ -789,10 +797,16 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     final void hcTreeRemove(YapObject a_yo) {
+        if(Debug.checkSychronization){
+            i_lock.notify();
+        }
         i_hcTree = i_hcTree.hc_remove(a_yo);
     }
 
     final void idTreeAdd(YapObject a_yo) {
+        if(Debug.checkSychronization){
+            i_lock.notify();
+        }
         if(DTrace.enabled){
             DTrace.ID_TREE_ADD.log(a_yo.getID());
         }
@@ -806,6 +820,9 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     final void idTreeRemove(int a_id) {
+        if(Debug.checkSychronization){
+            i_lock.notify();
+        }
         i_idTree = i_idTree.id_remove(a_id);
     }
 

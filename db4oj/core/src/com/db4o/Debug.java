@@ -4,6 +4,8 @@ package com.db4o;
 
 abstract class Debug {
     
+    public static final boolean checkSychronization = false;
+    
     public static final boolean atHome = false;
 
     public static final boolean indexAllFields = false;

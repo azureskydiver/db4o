@@ -61,6 +61,9 @@ public class Transaction {
     }
 
     void addToClassIndex(int a_yapClassID, int a_id) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if (Deploy.debug) {
             if (a_id == 0) {
                 throw new RuntimeException();
@@ -73,6 +76,9 @@ public class Transaction {
 
     private final Tree addToClassIndexTree(Tree a_tree, int a_yapClassID,
         int a_id) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         TreeIntObject[] node = new TreeIntObject[] { new TreeIntObject(
             a_yapClassID)};
         a_tree = createClassIndexNode(a_tree, node);
@@ -81,6 +87,9 @@ public class Transaction {
     }
 
     void beginEndSet() {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if (i_delete != null) {
             final boolean[] foundOne = { false};
             final Transaction finalThis = this;
@@ -138,6 +147,9 @@ public class Transaction {
     }
 
     private final Tree createClassIndexNode(Tree a_tree, Tree[] a_node) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if (a_tree != null) {
             Tree existing = a_tree.find(a_node[0]);
             if (existing != null) {
@@ -154,6 +166,9 @@ public class Transaction {
     void close(boolean a_rollbackOnClose) {
         try {
             if (i_stream != null) {
+                if(Debug.checkSychronization){
+                    i_stream.i_lock.notify();
+                }
                 i_stream.releaseSemaphores(this);
             }
         } catch (Exception e) {
@@ -173,6 +188,9 @@ public class Transaction {
     }
 
     void commitTransactionListeners() {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if (i_transactionListeners != null) {
             Iterator4 i = new Iterator4(i_transactionListeners);
             while (i.hasNext()) {
@@ -219,6 +237,9 @@ public class Transaction {
     }
 
     void delete(YapObject a_yo, Object a_object, int a_cascade, boolean a_deleteMembers) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         int id = a_yo.getID();
         if(DTrace.enabled){
             DTrace.TRANS_DELETE.log(id);
@@ -236,6 +257,9 @@ public class Transaction {
     }
     
     private void deleteCollectionMembers(YapObject a_yo, Object a_object, int a_cascade){
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if(a_object != null){
             if(reflector().isCollection(reflector().forObject(a_object))){
                 writeUpdateDeleteMembers(a_yo.getID(), a_yo.getYapClass(), i_stream.i_handlers.arrayType(a_object), a_cascade);
@@ -244,6 +268,9 @@ public class Transaction {
     }
 
     void dontDelete(int a_id, boolean a_deleteMembers) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if(DTrace.enabled){
             DTrace.TRANS_DONT_DELETE.log(a_id);
         }
@@ -265,6 +292,10 @@ public class Transaction {
     void dontRemoveFromClassIndex(int a_yapClassID, int a_id) {
         // If objects are deleted and rewritten during a cascade
         // on delete, we dont want them to be gone.
+        
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
 
         if (Deploy.debug) {
             if (a_id == 0) {
@@ -283,6 +314,9 @@ public class Transaction {
     // This method should really by in Db4oDatabase but we don't want to
     // expose the package methods used 
     public int ensureDb4oDatabase(Db4oDatabase a_db){
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         Db4oDatabase stored = (Db4oDatabase)i_stream.db4oTypeStored(this,a_db);
         if (stored == null) {
             i_stream.showInternalClasses(true);
@@ -302,6 +336,9 @@ public class Transaction {
     }
 
     boolean isDeleted(int a_id) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         Slot slot = findSlotInHierarchy(a_id);
         if (slot != null) {
             return slot.i_address == 0;
@@ -310,6 +347,9 @@ public class Transaction {
     }
 
     private final Slot findSlot(int a_id) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         Tree tree = TreeInt.find(i_slots, a_id);
         if (tree != null) {
             return (Slot) ((TreeIntObject) tree).i_object;
@@ -318,6 +358,9 @@ public class Transaction {
     }
 
     private final Slot findSlotInHierarchy(int a_id) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         Slot slot = findSlot(a_id);
         if (slot != null) {
             return slot;
@@ -329,6 +372,9 @@ public class Transaction {
     }
 
     private final void freeOnBoth() {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         Iterator4 i = new Iterator4(i_freeOnBoth);
         while (i.hasNext()) {
             Slot slot = (Slot) i.next();
@@ -338,6 +384,9 @@ public class Transaction {
     }
 
     private final void freeOnCommit() {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         freeOnBoth();
         if (i_freeOnCommit != null) {
             Iterator4 i = new Iterator4(i_freeOnCommit);
@@ -378,6 +427,9 @@ public class Transaction {
     }
 
     void freeOnCommit(int a_id, int a_address, int a_length) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if(DTrace.enabled){
             DTrace.FREE_ON_COMMIT.log(a_id);
             DTrace.FREE_ON_COMMIT.logLength(a_address, a_length);
@@ -413,6 +465,9 @@ public class Transaction {
     }
 
     void freeOnRollback(int a_id, int a_address, int a_length) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if(DTrace.enabled){
             DTrace.FREE_ON_ROLLBACK.log(a_id);
             DTrace.FREE_ON_ROLLBACK.logLength(a_address, a_length);
@@ -428,10 +483,16 @@ public class Transaction {
     }
 
     void freePointer(int a_id) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         freeOnCommit(a_id, a_id, YapConst.POINTER_LENGTH);
     }
 
     void getSlotInformation(int a_id, int[] a_addressLength) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if (a_id != 0) {
             Slot slot = findSlot(a_id);
             if (slot != null) {
@@ -467,6 +528,9 @@ public class Transaction {
     }
     
     Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         final Object[] ret = new Object[2];
         IxTree ixTree = (IxTree) i_stream.i_handlers.i_indexes.i_fieldUUID.getIndexRoot(this);
         IxTraverser ixTraverser = new IxTraverser();
@@ -514,6 +578,9 @@ public class Transaction {
     }
 
     void removeFromClassIndex(int a_yapClassID, int a_id) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if (Deploy.debug) {
             if (a_id == 0) {
                 throw new RuntimeException();
@@ -529,6 +596,9 @@ public class Transaction {
 
     private final void removeFromClassIndexTree(Tree a_tree, int a_yapClassID,
         int a_id) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if (a_tree != null) {
             TreeIntObject node = (TreeIntObject) ((TreeInt) a_tree)
                 .find(a_yapClassID);
@@ -583,6 +653,9 @@ public class Transaction {
     }
 
     void rollBackTransactionListeners() {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if (i_transactionListeners != null) {
             Iterator4 i = new Iterator4(i_transactionListeners);
             while (i.hasNext()) {
@@ -597,6 +670,9 @@ public class Transaction {
     }
 
     void setPointer(int a_id, int a_address, int a_length) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         Slot slot = findSlot(a_id);
         if (slot != null) {
             slot.i_address = a_address;
@@ -608,14 +684,23 @@ public class Transaction {
     }
 
     void traverseAddedClassIDs(int a_yapClassID, Visitor4 visitor) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         traverseDeep(i_addToClassIndex, a_yapClassID, visitor);
     }
 
     void traverseRemovedClassIDs(int a_yapClassID, Visitor4 visitor) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         traverseDeep(i_removeFromClassIndex, a_yapClassID, visitor);
     }
 
     void traverseDeep(Tree a_tree, int a_yapClassID, Visitor4 visitor) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if (a_tree != null) {
             TreeIntObject node = (TreeIntObject) ((TreeInt) a_tree)
                 .find(a_yapClassID);
@@ -626,6 +711,9 @@ public class Transaction {
     }
 
     private void write() {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if (!(i_slots == null && i_addToClassIndex == null && i_removeFromClassIndex == null)) {
             int length = calculateLength();
             int address = ((YapFile) i_stream).getSlot(length);
@@ -644,6 +732,9 @@ public class Transaction {
 
     private void traverseYapClassEntries(final Tree a_tree,
         final boolean a_add, final Collection4 a_indices) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if (a_tree != null) {
             a_tree.traverse(new Visitor4() {
 
@@ -686,6 +777,9 @@ public class Transaction {
     }
 
     private void writeSlots() {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         final Collection4 indicesToBeWritten = new Collection4();
         traverseYapClassEntries(i_addToClassIndex, true, indicesToBeWritten);
         traverseYapClassEntries(i_removeFromClassIndex, false,
@@ -734,6 +828,9 @@ public class Transaction {
     }
 
     void writePointer(int a_id, int a_address, int a_length) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         i_pointerIo.useSlot(a_id);
         if (Deploy.debug) {
             i_pointerIo.writeBegin(YapConst.YAPPOINTER);
@@ -750,6 +847,9 @@ public class Transaction {
     }
 
     void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type, int a_cascade) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         if(Tree.find(i_writtenUpdateDeletedMembers, new TreeInt(a_id)) == null){
             if(DTrace.enabled){
                 DTrace.WRITE_UPDATE_DELETE_MEMBERS.log(a_id);
