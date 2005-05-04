@@ -72,8 +72,11 @@ abstract class YapFieldVirtual extends YapField {
 	        if (stream.i_migrateFrom != null) {
 	            migrating = true;
 	            if (a_yapObject.i_virtualAttributes == null) {
+                    
 	                YapObject migrateYapObject = stream.i_migrateFrom
 	                    .getYapObject(a_yapObject.getObject());
+                    
+                    
 	                if (migrateYapObject != null
 	                    && migrateYapObject.i_virtualAttributes != null
 	                    && migrateYapObject.i_virtualAttributes.i_database != null) {
