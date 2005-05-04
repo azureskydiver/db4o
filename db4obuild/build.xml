@@ -128,6 +128,70 @@
 		</jar>
 	</target>
 
+	<target name="compileobjectmanager" depends="compilecorejava" description="Compile object manager sources">
+		<mkdir dir="${dir.dist.classes.objectmanager}" />
+		<copy file="${file.java1.4.jar}" todir="${dir.objectmanager.lib}" />
+		<depend srcdir="${dir.objectmanager.src}" destdir="${dir.dist.classes.objectmanager}" closure="yes" />
+		<javac srcdir="${dir.objectmanager.src}" destdir="${dir.dist.classes.objectmanager}" debug="off" target="1.3" source="1.3">
+				<include name="**/*.java" />
+				<exclude name="**/*test/*" />
+				<exclude name="**/*Test.java" />
+				<exclude name="**/eclipse/**" />
+				<exclude name="**/editors/**" />
+				<exclude name="**/BrowserPlugin.java" />
+				<exclude name="**/TestStarter.java" />
+			<classpath>
+				<fileset dir="${dir.objectmanager.lib}">
+					<include name="linux/*.jar" />
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+		<delete file="${file.objectmanager.jar}" failonerror="false" quiet="true" />
+		<jar destfile="${file.objectmanager.jar}">
+			<fileset dir="${dir.dist.classes.objectmanager}" />
+			<fileset dir="${dir.objectmanager.src}">
+				<include name="**/*.xswt" />
+				<include name="**/*.gif" />
+				<include name="**/*.jpg" />
+				<include name="**/*.jpeg" />
+		    </fileset>
+		</jar>
+	</target>
+
+	<target name="zipobjectmanager" depends="compileobjectmanager">
+		<delete file="${file.objectmanager.linux.archive}" quiet="true" failonerror="false" />
+		<zip destfile="${file.objectmanager.linux.archive}" basedir="${dir.objectmanager.launcher}">
+			<include name="lib/*" />
+			<include name="lib/licenses/*" />
+			<include name="lib/linux/*" />
+		</zip>
+		<zip destfile="${file.objectmanager.linux.archive}" basedir="${dir.objectmanager.scripts}/linux" update="true">
+			<include name="*.sh" />
+		</zip>
+
+		<delete file="${file.objectmanager.windows.archive}" quiet="true" failonerror="false" />
+		<zip destfile="${file.objectmanager.windows.archive}" basedir="${dir.objectmanager.launcher}">
+			<include name="lib/*" />
+			<include name="lib/licenses/*" />
+			<include name="lib/windows/*" />
+		</zip>
+		<zip destfile="${file.objectmanager.windows.archive}" basedir="${dir.objectmanager.scripts}/win_novm" update="true">
+			<include name="*.bat" />
+		</zip>
+
+		<delete file="${file.objectmanager.win_ikvm.archive}" quiet="true" failonerror="false" />
+		<zip destfile="${file.objectmanager.win_ikvm.archive}" basedir="${dir.objectmanager.launcher}">
+			<include name="lib/*" />
+			<include name="ikvm/*" />
+			<include name="lib/licenses/*" />
+			<include name="lib/windows/*" />
+		</zip>
+		<zip destfile="${file.objectmanager.win_ikvm.archive}" basedir="${dir.objectmanager.scripts}/win_novm" update="true">
+			<include name="*.bat" />
+		</zip>
+	</target>
+	
 	<target name="compilebuild" depends="init" description="Compile Db4o build sources">
 		<mkdir dir="${dir.build.bin}" />
 		<depend srcdir="${dir.build.src}" destdir="${dir.build.bin}" closure="yes" />
