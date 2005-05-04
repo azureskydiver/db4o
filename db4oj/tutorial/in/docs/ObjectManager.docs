@@ -10,11 +10,11 @@ following features:
 - Browse objects in a database
 - Query for objects using a simple graphical query by example.
 
-.1 Object Manager Tour
+.1 Object Manager Tour ..
 
 Upon opening, the Object Manager will look like the following:
 
-.e bare_objectmanager.gif ..
+.g bare_objectmanager.gif ..
 
 At this point, you can either
 - Open a db4o database file
@@ -36,9 +36,9 @@ for the item that is currently selected in the tree.
 For example, loading the formula1 database created by chapter 4 of this ._
 tutorial produces the following:
 
-.e objectmanager_f1c4.gif ..
+.g objectmanager_f1c4.gif ..
 
-.2 Generic reflector versus the JDK reflector
+.2 Generic reflector versus the JDK reflector ..
 
 You will notice in the screen shot that all objects have (G) in front of them. ._
 This is because the Object Manager does not know the correct classpath in order ._
@@ -61,14 +61,14 @@ the db4o tutorial files and click OK.
 
 Your preferences dialog should look something like the following when you are done:
 
-.e objectmanager_preferences.gif ..
+.g objectmanager_preferences.gif ..
 
 Click OK to close the Preferences dialog box.  Now your tree will be refreshed, ._
 and you will notice that all of the (G)'s are now gone.  All of your ._
 preference settings, including your preferred classpath, are stored in a ._
-db4o database called .objectmanager.yap in your home directory.
+db4o database called ...objectmanager.yap in your home directory.
 
-.2 Querying for objects.
+.2 Querying for objects ..
 
 You may now want to query your object database for objects based on some ._
 criteria.  This will work using either the generic or the JDK reflector.
@@ -86,7 +86,7 @@ Let's query for Car objects in our formula1.yap file.  Open a query editor ._
 using your favorite of the methods listed above.  By default it will look ._
 like the following:
 
-.e objectmanager_query.gif ..
+.g objectmanager_query.gif ..
 
 You may now query for a model name, or you can descend on the "pilot" field ._
 by clicking the button next to the pilot field to expand the query editor to ._
@@ -99,7 +99,7 @@ filling appropriate values into each field.  You can change the constraint ._
 type using the combo boxes next to each field.  And you can run the query ._
 using the green "run" button at the top-left of the tool bar.
 
-.1 Known bugs and limitations
+.1 Known bugs and limitations ..
 
 The following are known bugs and limitations in Object Manager and their ._
 workarounds:
@@ -112,7 +112,7 @@ field.  The workaround is to browse a backup or defragmented databse.
 
 If something goes wrong when using Object Manager, there almost certainly will ._
 be detailed error messages in the Object Manager log file.  This file is ._
-named .objectmanager.log and is stored in your user's home directory.  ._
+named ...objectmanager.log and is stored in your user's home directory.  ._
 If you post a question on the db4o newsgroups concerning a crash or failure ._
 in Object Manager, please also attach a copy of your Object Manager log file, ._
 so that we can efficiently diagnose the problem.
