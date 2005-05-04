@@ -43,7 +43,7 @@ to specify in detail how instances of a class should be stored and ._
 reinstantiated by implementing the Translator interface and registering ._
 this implementation for the offending class.
 
-We'll cover translators in detail in the next chapter.
+We'll cover translators in detail in the  .l Translators next chapter ..l .
 
 .1 Configuration ..
 
