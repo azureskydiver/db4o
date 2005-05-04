@@ -614,6 +614,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4o\test\cs\CsDelegate.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4o\test\cs\CsEnum.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
