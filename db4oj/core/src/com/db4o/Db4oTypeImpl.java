@@ -8,10 +8,14 @@ package com.db4o;
 interface Db4oTypeImpl{
 	
 	int adjustReadDepth(int a_depth);
+    
+    boolean canBind();
 	
 	Object createDefault(Transaction a_trans);
 	
 	boolean hasClassIndex();
+    
+    void replicateFrom(Object obj);
 	
 	void setTrans(Transaction a_trans);
 	

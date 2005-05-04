@@ -190,6 +190,12 @@ class ReplicationImpl implements ReplicationProcess {
 		if(_sourceReference == null) {
 			return;
 		}
+        if(objectA instanceof Db4oTypeImpl){
+            if(! ((Db4oTypeImpl)objectA).canBind() ){
+                return;
+            }
+        }
+        
 		if(_sourceReference == referenceA) {
 			_peerB.bind2(referenceB, objectA);
 		}else {
@@ -282,14 +288,19 @@ class ReplicationImpl implements ReplicationProcess {
                 }
 				
 				if(referenceB == null) {
+                    
 					_sourceReference = referenceA;
+                    
 					Object[] arr = _transB.objectAndYapObjectBySignature(attA.i_uuid,
 							attA.i_database.i_signature);
+                    
 					if (arr[0] == null) {
 						return notProcessed;
 					}
+                    
 					referenceB = (YapObject) arr[1];
 					objectB = arr[0];
+                    
 				}else {
 					_sourceReference = null;
 				}
@@ -326,6 +337,7 @@ class ReplicationImpl implements ReplicationProcess {
 			int direction = ignoreOrCheckConflict();
 
 			if (isInConflict(attA.i_version, attB.i_version)) {
+                
 				Object prevailing = _conflictHandler.resolveConflict(this,
 						objectA, objectB);
 
@@ -349,8 +361,7 @@ class ReplicationImpl implements ReplicationProcess {
 				if (!referenceB.isActive()) {
 					referenceB.activate(_transB, objectB, 1, false);
 				}
-				_peerA.bind2(referenceA, objectB);
-                int idA = _peerA.setAfterReplication(_transA, objectB, 1, true);
+                int idA = bindAndSet(_transA, _peerA, referenceA, objectB);
                 if(caller == _peerA){
                     return idA;
                 }
@@ -360,8 +371,7 @@ class ReplicationImpl implements ReplicationProcess {
 				if (!referenceA.isActive()) {
 					referenceA.activate(_transA, objectA, 1, false);
 				}
-				_peerB.bind2(referenceB, objectA);
-				int idB = _peerB.setAfterReplication(_transB, objectA, 1, true);
+                int idB = bindAndSet(_transB, _peerB, referenceB, objectA);
                 if(caller == _peerB){
                     return idB;
                 }
@@ -371,6 +381,19 @@ class ReplicationImpl implements ReplicationProcess {
 		}
 
 	}
+    
+    private int bindAndSet(Transaction trans, YapStream peer, YapObject ref, Object sourceObject){
+        if(sourceObject instanceof Db4oTypeImpl){
+            Db4oTypeImpl db4oType = (Db4oTypeImpl)sourceObject;
+            if(! db4oType.canBind()){
+                Db4oTypeImpl targetObject = (Db4oTypeImpl)ref.getObject();
+                targetObject.replicateFrom(sourceObject);
+                return ref.getID();
+            }
+        }
+        peer.bind2(ref, sourceObject);
+        return peer.setAfterReplication(trans, sourceObject, 1, true);
+    }
 
 	public void whereModified(Query query) {
 		query.descend(VirtualField.VERSION).constrain(

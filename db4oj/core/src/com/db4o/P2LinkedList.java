@@ -135,6 +135,10 @@ public class P2LinkedList extends P1Collection implements Db4oList {
     public int adjustReadDepth(int a_depth) {
         return 1;
     }
+    
+    public boolean canBind() {
+        return false;
+    }
 
     private void checkLastAndUpdate(P1ListElement a_oldLast,
             P1ListElement a_added) {
@@ -376,6 +380,11 @@ public class P2LinkedList extends P1Collection implements Db4oList {
             }
             return modified;
         }
+    }
+    
+    public void replicateFrom(Object obj) {
+        int xxx = 1;
+
     }
 
     public boolean retainAll(Collection c) {

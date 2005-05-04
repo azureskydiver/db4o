@@ -190,11 +190,13 @@ public class Db4o {
 	 */
 	public static final ObjectServer openServer(String databaseFileName, int port) throws DatabaseFileLockedException {
 		synchronized(Db4o.lock){
-			ObjectContainer oc = openFile(databaseFileName);
-			if(oc != null){
-				return new YapServer((YapFile)oc, port);
-			}
-			return null;
+			YapFile stream = (YapFile)openFile(databaseFileName);
+            if(stream == null){
+                return null;
+            }
+            synchronized(stream.lock()){
+                return new YapServer(stream, port);
+            }
 		}
 	}
 	

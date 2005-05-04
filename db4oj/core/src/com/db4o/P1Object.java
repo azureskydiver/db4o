@@ -36,6 +36,10 @@ public class P1Object implements Db4oTypeImpl{
         return a_depth;
     }
     
+    public boolean canBind() {
+        return true;
+    }
+    
     void checkActive(){
         if(i_trans != null){
 		    if(i_yapObject == null){
@@ -98,31 +102,31 @@ public class P1Object implements Db4oTypeImpl{
     }
 	
     protected Object replicate(Transaction fromTrans, Transaction toTrans) {
+        YapStream toStream = toTrans.i_stream;
+        
+        synchronized(toStream.lock()){
 		
-		// FIXME: need special handling for replication here
+    		int id = toStream.replicationHandles(this);
+            
+            if(id == -1){
+                // no action to be taken, already handled
+                return this;
+            }
+            
+    		if(id > 0) {
+                // replication has taken care, we need that object
+    			return toStream.getByID(id);
+    		}
+            
+            P1Object replica = (P1Object)createDefault(toTrans);
 		
-		// if during replication lookup with UUID
-		
-		
-		// The following is the way to go.
-		// Replication needs special handling for P1Object in order
-		// not to run into YapStream#setAfterReplication() 
-		// It should return here and it should not call #bind()
-		
-//		YapStream toStream = toTrans.i_stream; 
-//		
-//		int id = toStream.replicationHandles(this);
-//		if(id > 0) {
-//			return toStream.getByID(id);
-//		}
-		
-		
-		P1Object replica = (P1Object)createDefault(toTrans);
-
-		// copy UUID ? 
-		
-        return replica;
+            return replica;
+        }
 	}
+    
+    public void replicateFrom(Object obj) {
+        // do nothing
+    }
 
     public void setTrans(Transaction a_trans){
         i_trans = a_trans;
@@ -140,7 +144,6 @@ public class P1Object implements Db4oTypeImpl{
     
     public Object storedTo(Transaction a_trans){
         i_trans = a_trans;
-        
         return this;
     }
     

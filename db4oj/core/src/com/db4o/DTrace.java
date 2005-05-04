@@ -17,16 +17,18 @@ public class DTrace {
     private static final Object init(){
         if(enabled){
             
-            breakOnEvent(49);
+            breakOnEvent(20);
             
             // address: 244346, 44
             
             // addRange(5130);
             
             // addRange(5948);
-            addRange(4580);
+            // addRange(4580);
             
-            // addRangeWithLength(1000000, 10000000);
+            addRange(4383);
+            
+            // addRangeWithLength(1, 10000000);
             
             // addRangeWithLength(25876597, 44);
             // addRange(7274611);
@@ -39,6 +41,7 @@ public class DTrace {
             COMMIT = new DTrace(true, false, "commit", true);
             CONTINUESET = new DTrace(true, true, "continueset", true);
             CREATE_CANDIDATE = new DTrace(true, true, "create candidate", true);
+            DELETE = new DTrace(true, true, "delete", true);
             DONOTINCLUDE = new DTrace(true, true, "donotinclude", true);
             EVALUATE_SELF = new DTrace(true, true, "evaluate self", true);
             FREE = new DTrace(true, true, "free", true);
@@ -63,7 +66,7 @@ public class DTrace {
             
             // turnAllOffExceptFor(new DTrace[] {FREE, FREE_ON_COMMIT});
             // turnAllOffExceptFor(new DTrace[] {CANDIDATE_READ, CREATE_CANDIDATE, DONOTINCLUDE, EVALUATE_SELF});
-            turnAllOffExceptFor(new DTrace[] {GET_YAPOBJECT});
+            // turnAllOffExceptFor(new DTrace[] {DELETE});
             // turnAllOffExceptFor(new DTrace[] {GET_YAPOBJECT, ID_TREE_ADD});
          
         }
@@ -103,6 +106,7 @@ public class DTrace {
     public static DTrace COMMIT;
     public static DTrace CONTINUESET;
     public static DTrace CREATE_CANDIDATE;
+    public static DTrace DELETE;
     public static DTrace DONOTINCLUDE;
     public static DTrace EVALUATE_SELF;
     public static DTrace FREE;

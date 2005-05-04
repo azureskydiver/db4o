@@ -29,6 +29,10 @@ class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         return 1;
     }
     
+    public boolean canBind() {
+        return true;
+    }
+
     private String checkExt(File file) {
         String name = file.getName();
         int pos = name.lastIndexOf(".");
@@ -228,6 +232,10 @@ class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         }
     }
     
+    public void replicateFrom(Object obj) {
+        // do nothing
+    }
+    
     public Object storedTo(Transaction a_trans){
         return this;
     }
@@ -236,4 +244,5 @@ class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         // not necessary
     }
 
+ 
 }
