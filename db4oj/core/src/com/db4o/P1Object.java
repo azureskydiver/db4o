@@ -203,12 +203,8 @@ public class P1Object implements Db4oTypeImpl{
         }
     }
     
-    private void update(int depth, boolean internal){
-    }
-    
     private boolean validYapObject(){
         return (i_trans != null) && (i_yapObject != null) && (i_yapObject.getID() > 0);
     }
-    
     
 }

@@ -56,8 +56,10 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
             i_table = new P1HashElement[i_tableSize];
             if (i_entries != null) {
                 for (int i = 0; i < i_entries.length; i++) {
-                    i_entries[i].checkActive();
-                    i_table[i_entries[i].i_position] = i_entries[i];
+                    if(i_entries[i] != null){
+                        i_entries[i].checkActive();
+                        i_table[i_entries[i].i_position] = i_entries[i];
+                    }
                 }
             }
             i_changes = 0;
@@ -315,6 +317,35 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
         }
         return null;
     }
+    
+    public void replicateFrom(Object obj) {
+        checkActive();
+        if(i_entries != null){
+            for (int i = 0; i < i_entries.length; i++) {
+                if(i_entries[i] != null){
+                    i_entries[i].delete(false);
+                }
+                i_entries[i] = null;
+            }
+        }
+        if(i_table != null){
+            for (int i = 0; i < i_table.length; i++) {
+                i_table[i] = null;
+            }
+        }
+        i_size = 0;
+        
+        P2HashMap m4 = (P2HashMap)obj;
+        m4.checkActive();
+        P2HashMapIterator i = new P2HashMapIterator(m4);
+        while (i.hasNext()) {
+            Object key = i.next();
+            put4(key, m4.get4(key));
+        }
+        
+        modified();
+    }
+
 
     private void reposition(P1HashElement a_entry) {
         if (a_entry != null) {
