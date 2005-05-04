@@ -147,12 +147,12 @@ namespace com.db4o.test.cs
 		}
 
 		void reOpen()
-		{	
-			Test.reOpen();
+		{				
 			if (Test.isClientServer()) 
 			{
 				Test.reOpenServer();
 			}
+			Test.reOpen();
 		}
 		
 		public string currentFileName()
