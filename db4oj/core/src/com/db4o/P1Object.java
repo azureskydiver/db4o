@@ -96,6 +96,33 @@ public class P1Object implements Db4oTypeImpl{
     public void preDeactivate(){
         // virtual, do nothing
     }
+	
+    protected Object replicate(Transaction fromTrans, Transaction toTrans) {
+		
+		// FIXME: need special handling for replication here
+		
+		// if during replication lookup with UUID
+		
+		
+		// The following is the way to go.
+		// Replication needs special handling for P1Object in order
+		// not to run into YapStream#setAfterReplication() 
+		// It should return here and it should not call #bind()
+		
+//		YapStream toStream = toTrans.i_stream; 
+//		
+//		int id = toStream.replicationHandles(this);
+//		if(id > 0) {
+//			return toStream.getByID(id);
+//		}
+		
+		
+		P1Object replica = (P1Object)createDefault(toTrans);
+
+		// copy UUID ? 
+		
+        return replica;
+	}
 
     public void setTrans(Transaction a_trans){
         i_trans = a_trans;

@@ -342,7 +342,7 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
             modified();
         } else {
             if (a_trans != getTrans()) {
-                return createDefault(a_trans);
+                return replicate(getTrans(), a_trans);
             }
         }
         return this;
