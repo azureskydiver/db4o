@@ -237,3 +237,16 @@ how to write a translator. It just requires implementing 3 (4 for ._
 ObjectConstructors) methods and configuring db4o to use a ._
 translator on startup with
 .c Db4o.configure().objectClass("yourPackage.yourClass").translate() ..
+
+.1 Increase max database size / block size ..
+.c Db4o.configure().blockSize(newBlockSize);
+.c Defragment.main(new String[] {"mydb.yap"});
+
+.i Effect ..
+Increasing the block size from the default of 1 to a higher value permits ._
+you to store more data in a db4o database.
+
+The block size can be between 1 (the default) and 127, which will ._
+give you a maximum of 254 GB of storage.
+
+
