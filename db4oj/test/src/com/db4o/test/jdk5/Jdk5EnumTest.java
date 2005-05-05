@@ -12,10 +12,21 @@ public class Jdk5EnumTest {
     public void testSingleStoreRetrieve() {     	
         ObjectContainer db = reopen();
         
+        // We make sure the Jdk5Enum class is already loaded, otherwise
+        // we may get the side effect that storing it will load the class
+        // and overwrite our changes exactly when we store them. 
+        db.set(Jdk5Enum.A);
+        
         Jdk5Data<String> data=new Jdk5Data<String>("Test",Jdk5Enum.A);
         Jdk5Enum.A.reset();
         Test.ensure(Jdk5Enum.A.getCount() == 0);
         Jdk5Enum.A.incCount();
+        
+        // The Jdk5Enum object may already be stored on the server, so we
+        // can't persist by reachability. We have to store the object
+        // explicitely.
+        db.set(Jdk5Enum.A);
+        
         Test.ensure(Jdk5Enum.A.getCount() == 1);
         Test.ensure(Jdk5Enum.B.getCount() == 0);
         Test.ensure(data.getType() == Jdk5Enum.A);
