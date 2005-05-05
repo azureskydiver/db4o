@@ -108,7 +108,7 @@ workarounds:
 - If a database includes fields that have been renamed, Object Manager correctly ._
 browses both the old and new versions of the fields.  However, queries on fields ._
 that have been refactored will randomly select the old or the new version of the ._
-field.  The workaround is to browse a backup or defragmented databse.
+field.  The workaround is to browse a backup or defragmented database.
 - The Generic Reflector still has trouble expanding certain types of objects.
 
 If something goes wrong when using Object Manager, there almost certainly will ._
