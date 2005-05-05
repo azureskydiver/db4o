@@ -6,8 +6,8 @@ public class ReplicationTestSuite extends TestSuite{
 
 	public Class[] tests() {
 		return new Class[] {
-// crashes            // ReplicateDb4oList.class,
-			ReplicationFeaturesMain.class,
+            ReplicateDb4oList.class,
+			// ReplicationFeaturesMain.class,
             R0to4Runner.class,
 			ReplicationFeatures.class,
 			ReplicateExistingFile.class
