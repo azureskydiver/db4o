@@ -222,7 +222,8 @@ namespace com.db4o {
 
             translate(config, Class.getClassForType(typeof(Class)).getName(), new TClass());
             translate(config, Class.getClassForType(typeof(System.Delegate)).getName(), new TNull());
-			translate(config, Class.getClassForType(typeof(System.Type)).getName(), new TType());
+            translate(config, Class.getClassForType(typeof(System.Type)).getName(), new TType());
+            translate(config, "System.RuntimeType, mscorlib", new TType());
             
             translate(config, new ArrayList(), new TList());
             translate(config, new Hashtable(), new TDictionary());
