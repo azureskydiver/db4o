@@ -54,12 +54,12 @@ ObjectContainer client = server.openClient();<br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>2<br>
 Ferrari[Michael Schumacher/100]/0<br>
 BMW[Rubens Barrichello/99]/0<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:04] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
  Connection closed by client %.<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:04] <br>
- 'C:\DOKUME~1\patrick\LOKALE~1\Temp\formula13006.yap' close request<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:04] <br>
- 'C:\DOKUME~1\patrick\LOKALE~1\Temp\formula13006.yap' closed<br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
+ 'C:\DOCUME~1\Carl\LOCALS~1\Temp\formula15339.yap' close request<br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
+ 'C:\DOCUME~1\Carl\LOCALS~1\Temp\formula15339.yap' closed<br>
 </td></table></table><br>
 <br>
 The transaction level in db4o is <em>read committed</em>&nbsp;. However, each&nbsp;client container maintains its own weak reference cache of already known&nbsp;objects. To make all changes committed by other clients immediately, we&nbsp;have to explicitly refresh known objects from the server. We will delegate&nbsp;this task to a specialized version of our listResult() method.<br>
@@ -105,14 +105,14 @@ BMW[David Coulthard/98]/0<br>
 2<br>
 Ferrari[Michael Schumacher/100]/0<br>
 BMW[David Coulthard/98]/0<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
  Connection closed by client %.<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
  Connection closed by client %.<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
- 'C:\DOKUME~1\patrick\LOKALE~1\Temp\formula13006.yap' close request<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
- 'C:\DOKUME~1\patrick\LOKALE~1\Temp\formula13006.yap' closed<br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
+ 'C:\DOCUME~1\Carl\LOCALS~1\Temp\formula15339.yap' close request<br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
+ 'C:\DOCUME~1\Carl\LOCALS~1\Temp\formula15339.yap' closed<br>
 </td></table></table><br>
 <br>
 Simple rollbacks just work as you might expect now.<br>
@@ -145,14 +145,14 @@ BMW[David Coulthard/98]/0<br>
 2<br>
 Ferrari[Michael Schumacher/100]/0<br>
 BMW[David Coulthard/98]/0<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
  Connection closed by client %.<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
  Connection closed by client %.<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
- 'C:\DOKUME~1\patrick\LOKALE~1\Temp\formula13006.yap' close request<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
- 'C:\DOKUME~1\patrick\LOKALE~1\Temp\formula13006.yap' closed<br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
+ 'C:\DOCUME~1\Carl\LOCALS~1\Temp\formula15339.yap' close request<br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
+ 'C:\DOCUME~1\Carl\LOCALS~1\Temp\formula15339.yap' closed<br>
 </td></table></table><br>
 <br>
 <a name="outline510"></a><br><h2>9.2. Networking</h2><br>
@@ -181,19 +181,19 @@ The client connects providing host, port, user name and password.<br>
 ObjectContainer client = Db4o.openClient("localhost", port, user, password);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(client.get(new Car(null)));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;client.close();</code></td></tr></table>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
  Server listening on port: '56128'<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
  Client 'user' connected.<br>
 2<br>
 Ferrari[Michael Schumacher/100]/0<br>
 BMW[David Coulthard/98]/0<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
  Connection closed by client 'user'.<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
- 'C:\DOKUME~1\patrick\LOKALE~1\Temp\formula13006.yap' close request<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
- 'C:\DOKUME~1\patrick\LOKALE~1\Temp\formula13006.yap' closed<br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
+ 'C:\DOCUME~1\Carl\LOCALS~1\Temp\formula15339.yap' close request<br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
+ 'C:\DOCUME~1\Carl\LOCALS~1\Temp\formula15339.yap' closed<br>
 </td></table></table><br>
 <br>
 Everything else is absolutely identical to the local server examples above.<br>
@@ -214,11 +214,11 @@ ObjectContainer client1 = Db4o.openClient("localhost", port, user, password);<br
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(client2.get(new Car(null)));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;client1.close();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;client2.close();</code></td></tr></table>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
  Server listening on port: '56128'<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
  Client 'user' connected.<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:44] <br>
  Client 'user' connected.<br>
 2<br>
 Ferrari[Jenson Button/97]/0<br>
@@ -232,14 +232,14 @@ BMW[David Coulthard/98]/0<br>
 2<br>
 Ferrari[Jenson Button/97]/0<br>
 BMW[David Coulthard/98]/0<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:45] <br>
  Connection closed by client 'user'.<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:45] <br>
  Connection closed by client 'user'.<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
- 'C:\DOKUME~1\patrick\LOKALE~1\Temp\formula13006.yap' close request<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:05] <br>
- 'C:\DOKUME~1\patrick\LOKALE~1\Temp\formula13006.yap' closed<br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:45] <br>
+ 'C:\DOCUME~1\Carl\LOCALS~1\Temp\formula15339.yap' close request<br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:45] <br>
+ 'C:\DOCUME~1\Carl\LOCALS~1\Temp\formula15339.yap' closed<br>
 </td></table></table><br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -258,11 +258,11 @@ ObjectContainer client1 = Db4o.openClient("localhost", port, user, password);<br
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(client2.get(new Car(null)));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;client1.close();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;client2.close();</code></td></tr></table>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:06] <br>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:45] <br>
  Server listening on port: '56128'<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:06] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:45] <br>
  Client 'user' connected.<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:06] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:45] <br>
  Client 'user' connected.<br>
 2<br>
 Ferrari[Someone else/0]/0<br>
@@ -276,14 +276,14 @@ BMW[David Coulthard/98]/0<br>
 2<br>
 Ferrari[Jenson Button/97]/0<br>
 BMW[David Coulthard/98]/0<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:06] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:45] <br>
  Connection closed by client 'user'.<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:06] <br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:45] <br>
  Connection closed by client 'user'.<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:06] <br>
- 'C:\DOKUME~1\patrick\LOKALE~1\Temp\formula13006.yap' close request<br>
-[db4o 4.5.003&nbsp;&nbsp;&nbsp;2005-05-05 21:58:06] <br>
- 'C:\DOKUME~1\patrick\LOKALE~1\Temp\formula13006.yap' closed<br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:45] <br>
+ 'C:\DOCUME~1\Carl\LOCALS~1\Temp\formula15339.yap' close request<br>
+[db4o 4.5.005&nbsp;&nbsp;&nbsp;2005-05-06 01:08:45] <br>
+ 'C:\DOCUME~1\Carl\LOCALS~1\Temp\formula15339.yap' closed<br>
 </td></table></table><br>
 <br>
 <a name="outline511"></a><br><h2>9.3. Out-of-band signalling</h2><br>

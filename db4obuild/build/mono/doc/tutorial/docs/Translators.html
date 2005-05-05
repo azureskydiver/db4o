@@ -92,12 +92,7 @@ Db4o.configure().exceptionsOnNotStorable(true);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Db4o.configure().objectClass(typeof(CultureInfo))<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.callConstructor(true);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;tryStoreAndRetrieve();</code></td></tr></table>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>ORIGINAL: 42/Test: 4<br>
-onStore for 42/Test: 4<br>
-onInstantiate for [Ljava.lang.Object;@4424f9<br>
-onActivate for 42/Test: 4 / [Ljava.lang.Object;@1899472<br>
-RETRIEVED: 42/Test: 4<br>
-</td></table></table><br>
+<br>
 <br>
 At storage time, db4o tests the only available constructor with null arguments and&nbsp;runs into a NullPointerException, so it refuses to accept our object.<br>
 <br>
@@ -113,12 +108,7 @@ Db4o.configure().objectClass(typeof(CultureInfo))<br>
 &nbsp;&nbsp;&nbsp;&nbsp;// uncomment the following line to see<br>
 &nbsp;&nbsp;&nbsp;&nbsp;// how nasty it can be<br>
 &nbsp;&nbsp;&nbsp;&nbsp;//tryStoreAndRetrieve();</code></td></tr></table>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>ORIGINAL: 42/Test: 4<br>
-onStore for 42/Test: 4<br>
-onInstantiate for [Ljava.lang.Object;@19824bc<br>
-onActivate for 42/Test: 4 / [Ljava.lang.Object;@2bb129<br>
-RETRIEVED: 42/Test: 4<br>
-</td></table></table><br>
+<br>
 <br>
 This still does not work for our case because the native pointer will definetely&nbsp;be invalid. In fact this example crashes the Common Language Runtime.<br>
 <br>
@@ -204,11 +194,13 @@ Let's try it out:<br>
 <code>[storeWithTranslator]<br>
 Db4o.configure().objectClass(typeof(CultureInfo))<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.translate(new CultureInfoTranslator());<br>
-&nbsp;&nbsp;&nbsp;&nbsp;tryStoreAndRetrieve();</code></td></tr></table>
+&nbsp;&nbsp;&nbsp;&nbsp;tryStoreAndRetrieve();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Db4o.configure().objectClass(typeof(CultureInfo))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.translate(null);</code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>ORIGINAL: 42/Test: 4<br>
 onStore for 42/Test: 4<br>
-onInstantiate for [Ljava.lang.Object;@d25db6<br>
-onActivate for 42/Test: 4 / [Ljava.lang.Object;@1d1e318<br>
+onInstantiate for [Ljava.lang.Object;@dfd045<br>
+onActivate for 42/Test: 4 / [Ljava.lang.Object;@413336<br>
 RETRIEVED: 42/Test: 4<br>
 </td></table></table><br>
 <br>
@@ -257,6 +249,8 @@ For classes that cannot cleanly be stored and retrieved with db4o's&nbsp;standar
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Db4o.configure().objectClass(typeof(CultureInfo))<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.translate(new CultureInfoTranslator());<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tryStoreAndRetrieve();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Db4o.configure().objectClass(typeof(CultureInfo))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.translate(null);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;public static void tryStoreAndRetrieve()<br>
