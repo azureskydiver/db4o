@@ -96,7 +96,7 @@
 				<include name="**/*.cs" />
 			</fileset>
 		</delete>
-		<ant dir="${dir.n.tutorial.browser}" target="clean"/>
+		<ant dir="${dir.n.tutorial}" target="clean"/>
 	</target>
 
 	<target name="filehead" depends="init" description="Add copyright header to all input sources">
@@ -223,7 +223,9 @@
 			targettype="library"
 			destfile="${file.dll.net}"
 			docfile="${file.xml.net}"
-			debug="${compiledll.debug}" warnlevel="0" optimize="true">
+			debug="${compiledll.debug}"
+			warnlevel="0"
+			optimize="true">
 			
 			<include name="*.cs" />
 			<exclude name="compact/**" />
@@ -315,7 +317,7 @@
 	</target>
 	
 	<target name="compilentutorial" depends="compiledllnet">
-		<ant dir="${dir.n.tutorial.browser}" />
+		<ant dir="${dir.n.tutorial}" />
 	</target>
 	
 	<target name="ndoc" depends="compiledllnet" description="Build public .net docs">
@@ -508,27 +510,17 @@
 				<exclude name=".*" />
 			</fileset>
 		</copy>
-		<delete dir="${dir.n.tutorial.bin}" />
-		<mkdir dir="${dir.n.tutorial.bin}" />
-		<copy todir="${dir.n.tutorial.bin}" file="${file.dll.net}" />
-		<copy todir="${dir.n.tutorial.browser.bin}" file="${file.dll.net}" />
-		<csc targetType="library" destFile="${dir.n.tutorial.bin}/db4o-samples.dll">
-			<src dir="${dir.n.tutorial.src}">
-				<include name="**/*.cs" />
-			</src>
-			<reference dir="${dir.n.tutorial.bin}">
-				<include name="db4o.dll" />
-			</reference>
-		</csc>
 		<copy todir="${dir.dist.net.build.tutorial}">
 			<fileset dir="${dir.j.tutorial.out.net}">
 				<include name="**/**" />
 			</fileset>
 			<fileset dir="${dir.n.tutorial}">
-				<include name="src/**/*.cs" />
+				<include name="**/*.cs" />
 			</fileset>
-			<fileset dir="${dir.n.tutorial.browser}">
-				<include name="bin/**/*.dll" />
+			<fileset dir="${dir.n.tutorial.bin}">
+				<include name="**/*.dll" />
+				<include name="**/*.exe" />
+				<include name="**/*.config" />
 			</fileset>
 		</copy>
 	
@@ -585,28 +577,18 @@
 				<exclude name="**/CsImage.cs" />
 			</fileset>
 		</copy>
-		<delete dir="${dir.n.tutorial.bin}" />
-		<mkdir dir="${dir.n.tutorial.bin}" />
-		<copy todir="${dir.n.tutorial.bin}" file="${file.dll.mono}" />
-		<copy todir="${dir.n.tutorial.browser.bin}" file="${file.dll.mono}" />
-		<csc targetType="library" destFile="${dir.n.tutorial.bin}/db4o-samples.dll">
-			<src dir="${dir.n.tutorial.src}">
-				<include name="**/*.cs" />
-			</src>
-			<reference dir="${dir.n.tutorial.bin}">
-				<include name="db4o.dll" />
-			</reference>
-		</csc>
 		<mkdir dir="${dir.dist.mono.build.tutorial}" />
 		<copy todir="${dir.dist.mono.build.tutorial}">
 			<fileset dir="${dir.j.tutorial.out.mono}">
 				<include name="**/**" />
 			</fileset>
 			<fileset dir="${dir.n.tutorial}">
-				<include name="src/**/*.cs" />
+				<include name="**/*.cs" />
 			</fileset>
-			<fileset dir="${dir.n.tutorial.browser}">
-				<include name="bin/**/*.dll" />
+			<fileset dir="${dir.n.tutorial.bin}">
+				<include name="**/*.dll" />
+				<include name="**/*.exe" />
+				<include name="**/*.config" />
 			</fileset>
 		</copy>
 		<filehead path="${dir.dist.mono.build.src}" beforePattern="using|namespace" fileext="cs" header="${content.gplheader}" />
