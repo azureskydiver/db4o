@@ -109,7 +109,9 @@ workarounds:
 browses both the old and new versions of the fields.  However, queries on fields ._
 that have been refactored will randomly select the old or the new version of the ._
 field.  The workaround is to browse a backup or defragmented database.
-- The Generic Reflector still has trouble expanding certain types of objects.
+- The Generic Reflector still has trouble expanding certain types of objects. ._
+Currently, we recommend running Object Manager with all classes available at ._
+all times by using the Classpath preference page to set an appropriate classpath.
 
 If something goes wrong when using Object Manager, there almost certainly will ._
 be detailed error messages in the Object Manager log file.  This file is named ._
