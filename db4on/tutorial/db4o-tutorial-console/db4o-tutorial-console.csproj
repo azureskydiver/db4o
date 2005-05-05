@@ -80,13 +80,13 @@
                     HintPath = "..\..\..\..\..\..\WINNT\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
                 <Reference
-                    Name = "db4o-tutorial-chapters"
-                    Project = "{575B2796-1C95-4910-B698-D5E5B2906FCB}"
+                    Name = "db4o-net"
+                    Project = "{7A07E089-078C-433A-BD15-60763FE3B8F2}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "db4o-net"
-                    Project = "{7A07E089-078C-433A-BD15-60763FE3B8F2}"
+                    Name = "db4o-tutorial-chapters"
+                    Project = "{575B2796-1C95-4910-B698-D5E5B2906FCB}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>

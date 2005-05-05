@@ -8,7 +8,7 @@ namespace com.db4o.f1.chapter4
     
     public class InheritanceExample : Util
     {        
-        public static void main(string[] args)
+        public static void Main(string[] args)
         {
             File.Delete(Util.YapFileName);          
             ObjectContainer db = Db4o.openFile(Util.YapFileName);
