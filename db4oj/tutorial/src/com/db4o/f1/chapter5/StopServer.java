@@ -12,30 +12,32 @@ import com.db4o.messaging.*;
  */
 public class StopServer implements ServerConfiguration {
 
-	/**
-	 * stops a db4o Server started with StartServer.	 * @throws Exception	 */
-	public static void main(String[] args){
-		
-		ObjectContainer objectContainer = null;
-		try {
-			
-			// connect to the server
-			objectContainer = Db4o.openClient(HOST, PORT, USER, PASS);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		if(objectContainer != null){
-		
-			// get the messageSender for the ObjectContainer 
-			MessageSender messageSender = objectContainer.ext().configure().getMessageSender();
-			
-			// send an instance of a StopServer object
-			messageSender.send(new StopServer());
-			
-			// close the ObjectContainer 
-			objectContainer.close();
-		}
-	}
+  /**
+   * stops a db4o Server started with StartServer.
+   * @throws Exception
+   */
+  public static void main(String[] args) {  
+    ObjectContainer objectContainer = null;
+    try {
+      
+      // connect to the server
+      objectContainer = Db4o.openClient(HOST, PORT, USER, PASS);
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+    if(objectContainer != null){
+    
+      // get the messageSender for the ObjectContainer 
+      MessageSender messageSender = objectContainer.ext()
+          .configure().getMessageSender();
+      
+      // send an instance of a StopServer object
+      messageSender.send(new StopServer());
+      
+      // close the ObjectContainer 
+      objectContainer.close();
+    }
+  }
 }

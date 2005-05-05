@@ -189,15 +189,13 @@ public abstract class AbstractWriter extends Configuration implements
     protected byte[] extractMethod(byte[] orig,String methodName,boolean full) throws UnsupportedEncodingException {
         String src=new String(orig,"iso-8859-1");
         String methodheadregexp="(public|protected|private) [^\\n]*"+methodName;
-        Pattern methodheadpattern=Pattern.compile(methodheadregexp);
+        Pattern methodheadpattern=Pattern.compile(methodheadregexp,Pattern.CASE_INSENSITIVE);
         Matcher matcher=methodheadpattern.matcher(src);
         if(!matcher.find()) {
+			System.err.println("Not found: "+methodName);
             return new byte[0];
         }
         int startidx=matcher.start();
-        if(startidx<0) {
-            return new byte[0];
-        }
         int idx=src.indexOf('{',startidx)+1;
         int brackets=0;
         StringBuffer methodsrc=new StringBuffer();

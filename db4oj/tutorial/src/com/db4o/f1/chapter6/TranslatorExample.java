@@ -11,6 +11,7 @@ public class TranslatorExample extends Util {
   }
 
   public static void tryStoreWithCallConstructors() {
+    Db4o.configure().exceptionsOnNotStorable(true);
     Db4o.configure().objectClass(NotStorable.class)
         .callConstructor(true);
     tryStoreAndRetrieve();
@@ -29,7 +30,6 @@ public class TranslatorExample extends Util {
   }
 
   public static void tryStoreAndRetrieve() {
-    Db4o.configure().exceptionsOnNotStorable(true);
     ObjectContainer db=Db4o.openFile(YAPFILENAME);
     try {
       NotStorable notStorable = new NotStorable(42,"Test");
