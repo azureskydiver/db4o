@@ -51,7 +51,7 @@ namespace com.db4o
 		internal override object read1(com.db4o.YapReader a_bytes)
 		{
 			long ret = readLong(a_bytes);
-			return System.Convert.ToDouble(com.db4o.Platform.longToDouble(ret));
+			return com.db4o.Platform.longToDouble(ret);
 		}
 
 		public override void write(object a_object, com.db4o.YapWriter a_bytes)

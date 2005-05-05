@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="Query"></a><br>
-<a name="outline326"></a><br><h1>3. Query API</h1><br>
+<a name="outline465"></a><br><h1>3. Query API</h1><br>
 We have already seen how to retrieve objects from db4o via QBE. While this approach&nbsp;is easy and intuitive, there are situations where it is not sufficient.<br>
 <br>
 - There are queries that simply cannot be expressed with QBE: Retrieve all&nbsp;pilots with more than 100 points, for example.<br>
@@ -17,36 +17,35 @@ db4o provides a dedicated query API that can be used in those cases.<br>
 We need some pilots in our database again to explore it.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-[storeFirstPilot]<br>
+<code>[storeFirstPilot]<br>
 Pilot pilot1 = new Pilot("Michael Schumacher", 100);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;db.set(pilot1);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Console.WriteLine("Stored " + pilot1);<br>
-</code></td></tr></table>
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Console.WriteLine("Stored " + pilot1);</code></td></tr></table>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>Stored Michael Schumacher/100<br>
+</td></table></table><br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-[storeSecondPilot]<br>
+<code>[storeSecondPilot]<br>
 Pilot pilot2 = new Pilot("Rubens Barrichello", 99);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;db.set(pilot2);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;Console.WriteLine("Stored " + pilot2);<br>
-</code></td></tr></table>
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Console.WriteLine("Stored " + pilot2);</code></td></tr></table>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>Stored Rubens Barrichello/99<br>
+</td></table></table><br>
 <br>
 <ul>
-<a name="outline327"></a><br><h2>3.1. Simple queries</h2><br>
+<a name="outline466"></a><br><h2>3.1. Simple queries</h2><br>
 First, let's see how our familiar QBE queries are expressed within the query&nbsp;API. This is done by retrieving a 'fresh' Query object from the ObjectContainer&nbsp;and adding Constraint instances to it. To find all Pilot instances, we constrain the&nbsp;query with the Pilot class object.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-[retrieveAllPilots]<br>
+<code>[retrieveAllPilots]<br>
 Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.constrain(typeof(Pilot));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;ObjectSet result = query.execute();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
-</code></td></tr></table>
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);</code></td></tr></table>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>2<br>
+Michael Schumacher/100<br>
+Rubens Barrichello/99<br>
+</td></table></table><br>
 <br>
 Basically, we're exchanging our 'real' prototype for a meta description of&nbsp;the objects we'd like to hunt down: a<b>&nbsp;query graph</b>&nbsp;made up of&nbsp;query nodes and constraints. A query node is a placeholder for a candidate&nbsp;object, a constraint decides whether to add or exclude candidates from the result.<br>
 <br>
@@ -59,15 +58,15 @@ We're just asking any candidate object (here: any object in the database)&nbsp;t
 To retrieve a pilot by name, we have to further constrain the candidate&nbsp;pilots by descending to their name field and constraining this with the&nbsp;respective candidate String.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-[retrievePilotByName]<br>
+<code>[retrievePilotByName]<br>
 Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.constrain(typeof(Pilot));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.descend("_name").constrain("Michael Schumacher");<br>
 &nbsp;&nbsp;&nbsp;&nbsp;ObjectSet result = query.execute();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
-</code></td></tr></table>
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);</code></td></tr></table>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>1<br>
+Michael Schumacher/100<br>
+</td></table></table><br>
 <br>
 What does 'descend' mean here? Well, just as we did in our 'real' prototypes,&nbsp;we can attach constraints to child members of our candidates.<br>
 <br>
@@ -80,37 +79,36 @@ Note that the class constraint is not required: If we left it out, we would&nbsp
 Finding a pilot by exact points is analogous, we just have to cross&nbsp;the Java primitive/object divide.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-[retrievePilotByExactPoints]<br>
+<code>[retrievePilotByExactPoints]<br>
 Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.constrain(typeof(Pilot));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.descend("_points").constrain(100);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;ObjectSet result = query.execute();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
-</code></td></tr></table>
+&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);</code></td></tr></table>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>1<br>
+Michael Schumacher/100<br>
+</td></table></table><br>
 <br>
-<br>
-<a name="outline328"></a><br><h2>3.2. Advanced queries</h2><br>
+<a name="outline467"></a><br><h2>3.2. Advanced queries</h2><br>
 Now there are occasions when we don't want to query for exact field values, but&nbsp;rather for value ranges, objects not containing given member values, etc. This functionality&nbsp;is provided by the Constraint API.<br>
 <br>
 First, let's negate a query to find all pilots who are not Michael Schumacher:<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-[retrieveByNegation]<br>
+<code>[retrieveByNegation]<br>
 Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.constrain(typeof(Pilot));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.descend("_name").constrain("Michael Schumacher").not();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;ObjectSet result = query.execute();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
-</code></td></tr></table>
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);</code></td></tr></table>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>1<br>
+Rubens Barrichello/99<br>
+</td></table></table><br>
 <br>
 Where there is negation, the other boolean operators can't be too far.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-[retrieveByConjunction]<br>
+<code>[retrieveByConjunction]<br>
 Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.constrain(typeof(Pilot));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Constraint constr = query.descend("_name")<br>
@@ -118,13 +116,12 @@ Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.descend("_points")<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.constrain(99).and(constr);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;ObjectSet result = query.execute();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
-</code></td></tr></table>
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);</code></td></tr></table>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>0<br>
+</td></table></table><br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-[retrieveByDisjunction]<br>
+<code>[retrieveByDisjunction]<br>
 Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.constrain(typeof(Pilot));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Constraint constr = query.descend("_name")<br>
@@ -132,27 +129,28 @@ Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.descend("_points")<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.constrain(99).or(constr);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;ObjectSet result = query.execute();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
-</code></td></tr></table>
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);</code></td></tr></table>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>2<br>
+Michael Schumacher/100<br>
+Rubens Barrichello/99<br>
+</td></table></table><br>
 <br>
 We can also constrain to a comparison with a given value.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-[retrieveByComparison]<br>
+<code>[retrieveByComparison]<br>
 Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.constrain(typeof(Pilot));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.descend("_points")<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.constrain(99).greater();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;ObjectSet result = query.execute();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
-</code></td></tr></table>
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);</code></td></tr></table>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>1<br>
+Michael Schumacher/100<br>
+</td></table></table><br>
 <br>
 The query API also allows to query for field default values.&nbsp;<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-[retrieveByDefaultFieldValue]<br>
+<code>[retrieveByDefaultFieldValue]<br>
 Pilot somebody = new Pilot("Somebody else", 0);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;db.set(somebody);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Query query = db.query();<br>
@@ -160,15 +158,15 @@ Pilot somebody = new Pilot("Somebody else", 0);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.descend("_points").constrain(0);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;ObjectSet result = query.execute();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;db.delete(somebody);<br>
-</code></td></tr></table>
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;db.delete(somebody);</code></td></tr></table>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>1<br>
+Somebody else/0<br>
+</td></table></table><br>
 <br>
 It is also possible to have db4o sort the results.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-[retrieveSorted]<br>
+<code>[retrieveSorted]<br>
 Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.constrain(typeof(Pilot));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.descend("_name").orderAscending();<br>
@@ -176,32 +174,34 @@ Query query = db.query();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
 &nbsp;&nbsp;&nbsp;&nbsp;query.descend("_name").orderDescending();<br>
 &nbsp;&nbsp;&nbsp;&nbsp;result = query.execute();<br>
-&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);<br>
-</code></td></tr></table>
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;listResult(result);</code></td></tr></table>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>2<br>
+Michael Schumacher/100<br>
+Rubens Barrichello/99<br>
+2<br>
+Rubens Barrichello/99<br>
+Michael Schumacher/100<br>
+</td></table></table><br>
 <br>
 All these techniques can be combined arbitrarily, of course. Please try&nbsp;it out.<br>
 <br>
 To prepare for the next chapter, let's clear the database.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-[clearDatabase]<br>
+<code>[clearDatabase]<br>
 ObjectSet result = db.get(new Pilot(null, 0));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;while (result.hasNext())<br>
 &nbsp;&nbsp;&nbsp;&nbsp;{<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;db.delete(result.next());<br>
-&nbsp;&nbsp;&nbsp;&nbsp;}<br>
-</code></td></tr></table>
+&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr></table>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/></td></table></table><br>
 <br>
-<br>
-<a name="outline329"></a><br><h2>3.3. Conclusion</h2><br>
+<a name="outline468"></a><br><h2>3.3. Conclusion</h2><br>
 Now we know how to build arbitrarily complex queries. But our domain&nbsp;model is not complex at all, consisting of one class only. Let's have&nbsp;a look at the way db4o handles object associations in the <a href="Structured.html#Structured">next chapter</a>&nbsp;.<br>
 <br>
-<a name="outline330"></a><br><h2>3.4. Full source</h2><br>
+<a name="outline469"></a><br><h2>3.4. Full source</h2><br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-namespace com.db4o.f1.chapter1<br>
+<code>namespace com.db4o.f1.chapter1<br>
 {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;using System;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;using com.db4o;<br>
@@ -351,7 +351,6 @@ namespace com.db4o.f1.chapter1<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}<br>
 }<br>
-<br>
 </code></td></tr></table>
 <br>
-<br><br><br><small>--<br>generated by </small><a href="http://www.db4objects.com/doctor/" target=_top><small>Doctor</small></a><small> courtesy of </small><a href="http://www.db4objects.com" target=_top><small>db4objecs Inc.</small></a><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></td></tr></table></div></body></html>
+<br><br><br><small>--<br>generated by </small><a href="http://www.db4objects.com/doctor/" target=_top><small>Doctor</small></a><small> courtesy of </small><a href="http://www.db4objects.com" target=_top><small>db4objects Inc.</small></a><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></td></tr></table></div></body></html>

@@ -65,6 +65,8 @@ namespace com.db4o
 
 		internal com.db4o.ReplicationImpl i_replication;
 
+		internal com.db4o.MigrationConnection i_migration;
+
 		internal bool i_encrypt;
 
 		internal byte[] i_encryptor;
@@ -233,7 +235,7 @@ namespace com.db4o
 					bool[] foundConstructor = { false };
 					if (sortedConstructors != null)
 					{
-						sortedConstructors.traverse(new _AnonymousInnerClass218(this, foundConstructor, claxx
+						sortedConstructors.traverse(new _AnonymousInnerClass219(this, foundConstructor, claxx
 							));
 					}
 					if (foundConstructor[0])
@@ -248,9 +250,9 @@ namespace com.db4o
 			return false;
 		}
 
-		private sealed class _AnonymousInnerClass218 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass219 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass218(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
+			public _AnonymousInnerClass219(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
 				 claxx)
 			{
 				this._enclosing = _enclosing;

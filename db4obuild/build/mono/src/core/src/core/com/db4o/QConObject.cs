@@ -509,6 +509,12 @@ namespace com.db4o
 		{
 			lock (streamLock())
 			{
+				int id = getObjectID();
+				if (!(id > 0))
+				{
+					i_objectID = 0;
+					com.db4o.Db4o.throwRuntimeException(51);
+				}
 				removeChildrenJoins();
 				i_evaluator = i_evaluator.add(new com.db4o.QEIdentity());
 				return this;

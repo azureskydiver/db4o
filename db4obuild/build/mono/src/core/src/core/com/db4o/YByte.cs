@@ -24,7 +24,7 @@ namespace com.db4o
 	{
 		internal const int LENGTH = 1 + com.db4o.YapConst.ADDED_LENGTH;
 
-		private static readonly byte i_primitive = System.Convert.ToByte((byte)0);
+		private static readonly byte i_primitive = (byte)0;
 
 		public YByte(com.db4o.YapStream stream) : base(stream)
 		{
@@ -63,7 +63,7 @@ namespace com.db4o
 		internal override object read1(com.db4o.YapReader a_bytes)
 		{
 			byte ret = a_bytes.readByte();
-			return System.Convert.ToByte(ret);
+			return ret;
 		}
 
 		public override void write(object a_object, com.db4o.YapWriter a_bytes)

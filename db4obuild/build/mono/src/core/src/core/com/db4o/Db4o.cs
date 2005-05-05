@@ -256,12 +256,15 @@ namespace com.db4o
 		{
 			lock (com.db4o.Db4o.Lock)
 			{
-				com.db4o.ObjectContainer oc = openFile(databaseFileName);
-				if (oc != null)
+				com.db4o.YapFile stream = (com.db4o.YapFile)openFile(databaseFileName);
+				if (stream == null)
 				{
-					return new com.db4o.YapServer((com.db4o.YapFile)oc, port);
+					return null;
 				}
-				return null;
+				lock (stream.Lock())
+				{
+					return new com.db4o.YapServer(stream, port);
+				}
 			}
 		}
 

@@ -22,6 +22,8 @@ namespace com.db4o.replication
 {
 	/// <summary>db4o replication interface.</summary>
 	/// <remarks>db4o replication interface.</remarks>
+	/// <seealso cref="com.db4o.ext.ExtObjectContainer.replicationBegin">com.db4o.ext.ExtObjectContainer.replicationBegin
+	/// 	</seealso>
 	public interface ReplicationProcess
 	{
 		/// <summary>

@@ -1252,7 +1252,7 @@ namespace com.db4o
 
 		public virtual object indexEntry(object a_object)
 		{
-			return System.Convert.ToInt32(i_lastID);
+			return i_lastID;
 		}
 
 		public virtual bool isArray()
@@ -1606,7 +1606,7 @@ namespace com.db4o
 
 		public virtual object readIndexEntry(com.db4o.YapReader a_reader)
 		{
-			return System.Convert.ToInt32(a_reader.readInt());
+			return a_reader.readInt();
 		}
 
 		public virtual object readIndexObject(com.db4o.YapWriter a_writer)
@@ -2056,7 +2056,7 @@ namespace com.db4o
 
 		public virtual bool supportsIndex()
 		{
-			return true;
+			return false;
 		}
 
 		public override string ToString()

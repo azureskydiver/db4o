@@ -3,15 +3,14 @@
 <head>
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
-<body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="outline375"></a><br><h1>11. Tuning</h1><br>
+<body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="Tuning"></a><br>
+<a name="outline550"></a><br><h1>18. Tuning</h1><br>
 The following is an overview over possible tuning switches&nbsp;that can be set when working with db4o. Users that do not&nbsp;care about performance may like to read this chapter also&nbsp;because it provides a side glance at db4o features with&nbsp;<em>Alternate Strategies</em>&nbsp;and some insight on how&nbsp;db4o works.<br>
 <br>
 <br>
-<b>Measure</b><br>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-Db4o.configure().discardFreeSpace(byteCount);<br>
-</code></td></tr></table>
+<ul>
+<a name="outline551"></a><br><h2>18.1. Discarding Free Space</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<code>Db4o.configure().discardFreeSpace(byteCount);</code></td></tr></table>
 <br>
 Recommended settings for byteCount:<br>
 - Integer.MAX_VALUE will turn freespace management off<br>
@@ -27,19 +26,31 @@ When objects are updated or deleted, the space previously occupied&nbsp;in the d
 <em>Alternate Strategies</em><br>
 Regular defragment will also keep the number of free space slots&nbsp;small. See:<br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-com.db4o.tools.Defragment<br>
-</code></td></tr></table>
+<code>com.db4o.tools.Defragment</code></td></tr></table>
 <br>
 (supplied as source code insrc/com/db4o/tools)<br>
 If defragment can be frequently run, it will also reclaim&nbsp;lost space and decrease the database file to the minimum size.&nbsp;Therefore #discardFreeSpace() may be a good tuning mechanism&nbsp;for setups with frequent defragment runs.<br>
 <br>
 <br>
-<b>Measure</b><br>
+<a name="outline552"></a><br><h2>18.2. Calling constructors</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<code>Db4o.configure().callConstructors(true);</code></td></tr></table>
+<br>
+<em>Advantage</em><br>
+will configure db4o to use constructors to instantiate&nbsp;objects.<br>
+<br>
+<em>Effect</em><br>
+On VMs where this is supported (Sun Java VM > 1.4, .NET, Mono)&nbsp;db4o tries to create instances of objects without calling&nbsp;a constructor. db4o is using reflection for this feature&nbsp;so this may be considerably slower than using a constructor. For&nbsp;the best performance it is recommended to add a public zero-parameter&nbsp;constructor to every persistent class and to turn constructors on.<br>
+<br>
+<em>Alternate Strategies</em><br>
+Constructors can also be turned on for individual classes only with<br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-Db4o.configure().weakReferences(false);<br>
-</code></td></tr></table>
+<code>Db4o.configure().objectClass(Foo.class).callConstructor(true);</code></td></tr></table>
+<br>
+There are some classes (e.g. java.util.Calendar) that require a constructor&nbsp;to be called to work. Further details can be found in the&nbsp;<a href="Constructors.html#Constructors">chapter on Constructors</a>. <br>
+<br>
+<br>
+<a name="outline553"></a><br><h2>18.3. Turning Off Weak References</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<code>Db4o.configure().weakReferences(false);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
 will configure db4o to use hard direct references instead of weak&nbsp;references to control instantiated and stored objects.<br>
@@ -48,25 +59,31 @@ will configure db4o to use hard direct references instead of weak&nbsp;reference
 A db4o database keeps a reference to all persistent objects that are&nbsp;currently held in RAM, whether they were stored to the database in&nbsp;this session or instantiated from the database in this session.&nbsp;This is how db4o can "know" than an object is to be updated: Any&nbsp;"known" object must be an update, any "unknown" object will be&nbsp;stored as "new". (Note that the reference system will only be in&nbsp;place as long as an ObjectContainer is open. Closing and reopening an&nbsp;ObjectContainer will clean the references system of the ObjectContainer&nbsp;and all objects in RAM will be treated as "new" afterwards.) In the&nbsp;default configuration db4o uses weak references and a dedicated thread&nbsp;to clean them up after objects have been garbage collected by the VM.&nbsp;Weak references need extra ressources and the cleanup thread will&nbsp;have a considerable impact on performance since it has to be synchronized&nbsp;with the normal operations within the ObjectContainer. Turning off weak&nbsp;references will improve speed. <br>
 The downside: To prevent memory consumption from growing consistantly,&nbsp;the application has to take care of removing unused objects from the db4o&nbsp;reference system by itself. This can be done by calling<br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-ExtObjectContainer.purge(object);<br>
-</code></td></tr></table>
+<code>ExtObjectContainer.purge(object);</code></td></tr></table>
 <br>
 <br>
 <em>Alternate Strategies</em><br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-ExtObjectContainer.purge(object);<br>
-</code></td></tr></table>
+<code>ExtObjectContainer.purge(object);</code></td></tr></table>
 <br>
 can also be called in normal weak reference operation mode to remove&nbsp;an object from the reference cache. This will help to keep the reference&nbsp;tree as small as possible.&nbsp;After calling #purge(object) an object will be unknown to the&nbsp;ObjectContainer so this feature is also suitable for batch inserts. <br>
 <br>
 <br>
-<b>Measure</b><br>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-Db4o.configure().automaticShutDown(false);<br>
-</code></td></tr></table>
+<a name="outline554"></a><br><h2>18.4. Defragment</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<code>new Defragment().run("db.yap", delete);</code></td></tr></table>
+<br>
+<em>Advantage</em><br>
+It is recommended to run Defragment frequently to reduce the database&nbsp;file size and to remove unused fields and freespace slots.<br>
+<br>
+<em>Effect</em><br>
+db4o does not discard fields from the database file that are no longer&nbsp;being used. Within the database file quite a lot of space is used for&nbsp;transactional processing. Objects are always written to a new slot&nbsp;when they are modified. Deleted objects continue to occupy 8 bytes&nbsp;until the next Defragment run. Defragment cleans all this up by writing&nbsp;all objects to a completely new database file. The resulting file will&nbsp;be smaller and faster.<br>
+<br>
+<em>Alternate Strategies</em><br>
+Instead of deleting objects it can be an option to mark objects as&nbsp;deleted with a "deleted" boolean field and to clean them out (by not&nbsp;copying them to the new database file) during the Defragment run.&nbsp;Two advantages: (1) Deleted objects can be restored. (2)&nbsp;In case there are multiple references to a deleted object, none of them&nbsp;would point to null. To clean out objects during the Defragment run,&nbsp;the Defragment source code would have to be modified.&nbsp;com.db4o.tools.Defragment is <b>only supplied as source code</b>&nbsp;to&nbsp;encourage embedding maintenance tasks.<br>
+<br>
+<br>
+<a name="outline555"></a><br><h2>18.5. No Shutdown Thread</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<code>Db4o.configure().automaticShutDown(false);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
 can prevent the creation of a shutdown thread on some platforms.<br>
@@ -77,18 +94,13 @@ On some platforms db4o uses a ShutDownHook to cleanly close all&nbsp;database fi
 <em>Alternate Strategies</em><br>
 Database files can be reduced to their minimal size with<br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-com.db4o.tools.Defragment<br>
-</code></td></tr></table>
+<code>com.db4o.tools.Defragment</code></td></tr></table>
 <br>
 (supplied as source code in /src/com/db4o/tools)<br>
 <br>
 <br>
-<b>Measure</b><br>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-Db4o.configure().callbacks(false);<br>
-</code></td></tr></table>
+<a name="outline556"></a><br><h2>18.6. No callbacks</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<code>Db4o.configure().callbacks(false);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
 will prevent db4o from looking for callback methods in all persistent&nbsp;classes on system startup.<br>
@@ -99,38 +111,28 @@ Upon system startup, db4o will scan all persistent classes for&nbsp;methods with
 <em>Alternate Strategies</em><br>
 Class configuration features are a good alternative to callbacks.&nbsp;The most recommended mechanism to cascade updates is:<br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-Db4o.configure().objectClass("yourPackage.yourClass").cascadeOnUpdate(true);<br>
-</code></td></tr></table>
+<code>Db4o.configure().objectClass("yourPackage.yourClass").cascadeOnUpdate(true);</code></td></tr></table>
 <br>
 <br>
 <br>
-<b>Measure</b><br>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-Db4o.configure().detectSchemaChanges(false);<br>
-</code></td></tr></table>
+<a name="outline557"></a><br><h2>18.7. No schema changes</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<code>Db4o.configure().detectSchemaChanges(false);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
 will prevent db4o from analysing the class structure upon opening a&nbsp;database file.<br>
 <br>
 <em>Effect</em><br>
-Upon system startup, db4o will use reflection to scan the structure&nbsp;of all persistent classes. This process can take some time, if a large&nbsp;number of classes are present in the database file. For the best&nbsp;possible startup performance on "warm" database files (all classes&nbsp;present), this feature can be turned off.<br>
+Upon system startup, db4o will use reflection to scan the structure&nbsp;of all persistent classes. This process can take some time, if a large&nbsp;number of classes are present in the database file. For the best&nbsp;possible startup performance on "warm" database files (all classes&nbsp;already analyzed in a previous startup), this feature can be turned off.<br>
 <br>
 <em>Alternate Strategies</em><br>
 Instead of using one database file to store a huge and complex&nbsp;class structure, a system may be more flexible and faster, if&nbsp;multiple database files are used. In a client/server setup, database&nbsp;files can also be switched from the client side with<br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-((ExtClient)objectContainer).switchToFile(databaseFile);<br>
-</code></td></tr></table>
+<code>((ExtClient)objectContainer).switchToFile(databaseFile);</code></td></tr></table>
 <br>
 <br>
 <br>
-<b>Measure</b><br>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-Db4o.configure().lockDatabaseFile(false);<br>
-</code></td></tr></table>
+<a name="outline558"></a><br><h2>18.8. No lock file thread</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<code>Db4o.configure().lockDatabaseFile(false);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
 will prevent the creation of a lock file thread on Java platforms&nbsp;without NIO (< JDK 1.4.1).<br>
@@ -142,17 +144,12 @@ If file locking is not available on the system, db4o will regularily&nbsp;write 
 Database files can safely be opened from multiple sessions in readonly<br>
 mode. Use:<br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-Db4o.configure().readOnly(true)<br>
-</code></td></tr></table>
+<code>Db4o.configure().readOnly(true)</code></td></tr></table>
 <br>
 <br>
 <br>
-<b>Measure</b><br>
-<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-Db4o.configure().testConstructors(false);<br>
-</code></td></tr></table>
+<a name="outline559"></a><br><h2>18.9. No test instances</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<code>Db4o.configure().testConstructors(false);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
 will prevent db4o from creating a test instance of persistent classes&nbsp;upon opening a database file.<br>
@@ -167,7 +164,20 @@ The default configuration can be found in the above folder in the file<br>
 Default.java/Default.cs<br>
 Take a look at the way the built-in translators work to get an idea&nbsp;how to write a translator. It just requires implementing 3 (4 for&nbsp;ObjectConstructors) methods and configuring db4o to use a&nbsp;translator on startup with<br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
-<code><br>
-Db4o.configure().objectClass("yourPackage.yourClass").translate()<br>
-</code></td></tr></table>
-<br><br><br><small>--<br>generated by </small><a href="http://www.db4objects.com/doctor/" target=_top><small>Doctor</small></a><small> courtesy of </small><a href="http://www.db4objects.com" target=_top><small>db4objecs Inc.</small></a><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></td></tr></table></div></body></html>
+<code>Db4o.configure().objectClass("yourPackage.yourClass").translate()</code></td></tr></table>
+<br>
+<br>
+<a name="outline560"></a><br><h2>18.10. Increase max database size / block size</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<code>Db4o.configure().blockSize(newBlockSize);</code></td></tr></table>
+<br>
+<table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<code>Defragment.main(new</code></td></tr></table>
+&nbsp;String[] {"mydb.yap"});<br>
+<br>
+<em>Effect</em><br>
+Increasing the block size from the default of 1 to a higher value permits&nbsp;you to store more data in a db4o database.<br>
+<br>
+The block size can be between 1 (the default) and 127, which will&nbsp;give you a maximum of 254 GB of storage.<br>
+<br>
+<br>
+<br><br><br><small>--<br>generated by </small><a href="http://www.db4objects.com/doctor/" target=_top><small>Doctor</small></a><small> courtesy of </small><a href="http://www.db4objects.com" target=_top><small>db4objects Inc.</small></a><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br></td></tr></table></div></body></html>

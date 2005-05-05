@@ -51,7 +51,7 @@ namespace com.db4o
 		internal override object read1(com.db4o.YapReader a_bytes)
 		{
 			int ret = readInt(a_bytes);
-			return System.Convert.ToSingle(j4o.lang.JavaSystem.intBitsToFloat(ret));
+			return j4o.lang.JavaSystem.intBitsToFloat(ret);
 		}
 
 		public override void write(object a_object, com.db4o.YapWriter a_bytes)

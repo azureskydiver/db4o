@@ -30,7 +30,7 @@ namespace com.db4o
 
 		private const byte NULL = (byte)'N';
 
-		private static readonly bool i_primitive = System.Convert.ToBoolean(false);
+		private static readonly bool i_primitive = false;
 
 		public YBoolean(com.db4o.YapStream stream) : base(stream)
 		{
@@ -66,11 +66,11 @@ namespace com.db4o
 			byte ret = a_bytes.readByte();
 			if (ret == TRUE)
 			{
-				return System.Convert.ToBoolean(true);
+				return true;
 			}
 			if (ret == FALSE)
 			{
-				return System.Convert.ToBoolean(false);
+				return false;
 			}
 			return null;
 		}

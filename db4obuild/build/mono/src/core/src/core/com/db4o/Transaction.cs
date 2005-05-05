@@ -102,7 +102,7 @@ namespace com.db4o
 					foundOne[0] = false;
 					com.db4o.Tree delete = i_delete;
 					i_delete = null;
-					delete.traverse(new _AnonymousInnerClass91(this, foundOne, finalThis));
+					delete.traverse(new _AnonymousInnerClass100(this, foundOne, finalThis));
 				}
 				while (foundOne[0]);
 			}
@@ -110,9 +110,9 @@ namespace com.db4o
 			i_writtenUpdateDeletedMembers = null;
 		}
 
-		private sealed class _AnonymousInnerClass91 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass100 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass91(Transaction _enclosing, bool[] foundOne, com.db4o.Transaction
+			public _AnonymousInnerClass100(Transaction _enclosing, bool[] foundOne, com.db4o.Transaction
 				 finalThis)
 			{
 				this._enclosing = _enclosing;
@@ -265,8 +265,7 @@ namespace com.db4o
 				, id);
 			if (tio == null)
 			{
-				tio = new com.db4o.TreeIntObject(id, new object[] { a_yo, System.Convert.ToInt32(
-					a_cascade) });
+				tio = new com.db4o.TreeIntObject(id, new object[] { a_yo, a_cascade });
 				i_delete = com.db4o.Tree.add(i_delete, tio);
 			}
 			else
@@ -459,7 +458,7 @@ namespace com.db4o
 					i_stream.i_freeOnCommit = com.db4o.Tree.add(i_stream.i_freeOnCommit, new com.db4o.TreeIntObject
 						(a_id, slot));
 				}
-				i_freeOnCommit = new com.db4o.List4(i_freeOnCommit, System.Convert.ToInt32(a_id));
+				i_freeOnCommit = new com.db4o.List4(i_freeOnCommit, a_id);
 			}
 		}
 
@@ -510,8 +509,7 @@ namespace com.db4o
 			com.db4o.IxTree ixTree = (com.db4o.IxTree)i_stream.i_handlers.i_indexes.i_fieldUUID
 				.getIndexRoot(this);
 			com.db4o.IxTraverser ixTraverser = new com.db4o.IxTraverser();
-			int count = ixTraverser.findBoundsExactMatch(System.Convert.ToInt64(a_uuid), ixTree
-				);
+			int count = ixTraverser.findBoundsExactMatch(a_uuid, ixTree);
 			if (count > 0)
 			{
 				com.db4o.QCandidates candidates = new com.db4o.QCandidates(this, null, null);
@@ -519,15 +517,15 @@ namespace com.db4o
 				if (tree != null)
 				{
 					com.db4o.Transaction finalThis = this;
-					tree.traverse(new _AnonymousInnerClass479(this, finalThis, a_signature, ret));
+					tree.traverse(new _AnonymousInnerClass543(this, finalThis, a_signature, ret));
 				}
 			}
 			return ret;
 		}
 
-		private sealed class _AnonymousInnerClass479 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass543 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass479(Transaction _enclosing, com.db4o.Transaction finalThis
+			public _AnonymousInnerClass543(Transaction _enclosing, com.db4o.Transaction finalThis
 				, byte[] a_signature, object[] ret)
 			{
 				this._enclosing = _enclosing;
@@ -639,7 +637,7 @@ namespace com.db4o
 				}
 				if (i_freeOnRollback != null)
 				{
-					i_freeOnRollback.traverse(new _AnonymousInnerClass569(this));
+					i_freeOnRollback.traverse(new _AnonymousInnerClass639(this));
 				}
 				freeOnBoth();
 				rollBackTransactionListeners();
@@ -647,9 +645,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass569 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass639 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass569(Transaction _enclosing)
+			public _AnonymousInnerClass639(Transaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -748,13 +746,13 @@ namespace com.db4o
 		{
 			if (a_tree != null)
 			{
-				a_tree.traverse(new _AnonymousInnerClass648(this, a_add, a_indices));
+				a_tree.traverse(new _AnonymousInnerClass739(this, a_add, a_indices));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass648 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass739 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass648(Transaction _enclosing, bool a_add, com.db4o.Collection4
+			public _AnonymousInnerClass739(Transaction _enclosing, bool a_add, com.db4o.Collection4
 				 a_indices)
 			{
 				this._enclosing = _enclosing;
@@ -772,11 +770,11 @@ namespace com.db4o
 					com.db4o.Visitor4 visitor = null;
 					if (a_add)
 					{
-						visitor = new _AnonymousInnerClass657(this, classIndex);
+						visitor = new _AnonymousInnerClass748(this, classIndex);
 					}
 					else
 					{
-						visitor = new _AnonymousInnerClass664(this, classIndex);
+						visitor = new _AnonymousInnerClass755(this, classIndex);
 					}
 					((com.db4o.Tree)node.i_object).traverse(visitor);
 					if (!a_indices.containsByIdentity(classIndex))
@@ -786,9 +784,9 @@ namespace com.db4o
 				}
 			}
 
-			private sealed class _AnonymousInnerClass657 : com.db4o.Visitor4
+			private sealed class _AnonymousInnerClass748 : com.db4o.Visitor4
 			{
-				public _AnonymousInnerClass657(_AnonymousInnerClass648 _enclosing, com.db4o.ClassIndex
+				public _AnonymousInnerClass748(_AnonymousInnerClass739 _enclosing, com.db4o.ClassIndex
 					 classIndex)
 				{
 					this._enclosing = _enclosing;
@@ -800,14 +798,14 @@ namespace com.db4o
 					classIndex.add(((com.db4o.TreeInt)a_object).i_key);
 				}
 
-				private readonly _AnonymousInnerClass648 _enclosing;
+				private readonly _AnonymousInnerClass739 _enclosing;
 
 				private readonly com.db4o.ClassIndex classIndex;
 			}
 
-			private sealed class _AnonymousInnerClass664 : com.db4o.Visitor4
+			private sealed class _AnonymousInnerClass755 : com.db4o.Visitor4
 			{
-				public _AnonymousInnerClass664(_AnonymousInnerClass648 _enclosing, com.db4o.ClassIndex
+				public _AnonymousInnerClass755(_AnonymousInnerClass739 _enclosing, com.db4o.ClassIndex
 					 classIndex)
 				{
 					this._enclosing = _enclosing;
@@ -825,7 +823,7 @@ namespace com.db4o
 					classIndex.remove(id);
 				}
 
-				private readonly _AnonymousInnerClass648 _enclosing;
+				private readonly _AnonymousInnerClass739 _enclosing;
 
 				private readonly com.db4o.ClassIndex classIndex;
 			}
@@ -851,13 +849,13 @@ namespace com.db4o
 			}
 			if (i_slots != null)
 			{
-				i_slots.traverse(new _AnonymousInnerClass700(this));
+				i_slots.traverse(new _AnonymousInnerClass794(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass700 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass794 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass700(Transaction _enclosing)
+			public _AnonymousInnerClass794(Transaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

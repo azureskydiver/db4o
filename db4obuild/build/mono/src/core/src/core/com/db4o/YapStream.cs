@@ -378,7 +378,7 @@ namespace com.db4o
 				showInternalClasses(true);
 				com.db4o.query.Query q = querySharpenBug();
 				q.constrain(j4o.lang.Class.getClassForObject(database));
-				q.descend("i_uuid").constrain(System.Convert.ToInt64(database.i_uuid));
+				q.descend("i_uuid").constrain(database.i_uuid);
 				com.db4o.ObjectSet objectSet = q.execute();
 				while (objectSet.hasNext())
 				{
@@ -1106,6 +1106,8 @@ namespace com.db4o
 		public virtual void migrateFrom(com.db4o.ObjectContainer objectContainer)
 		{
 			i_migrateFrom = (com.db4o.YapStream)objectContainer;
+			i_handlers.i_migration = new com.db4o.MigrationConnection();
+			i_migrateFrom.i_handlers.i_migration = i_handlers.i_migration;
 		}
 
 		internal void needsUpdate(com.db4o.YapClass a_yapClass)
@@ -1309,6 +1311,18 @@ namespace com.db4o
 		}
 
 		public abstract void releaseSemaphore(string name);
+
+		internal virtual void rememberJustSet(int id)
+		{
+			if (i_justSet == null)
+			{
+				i_justSet = new com.db4o.TreeInt(id);
+			}
+			else
+			{
+				i_justSet = i_justSet.add(new com.db4o.TreeInt(id));
+			}
+		}
 
 		internal abstract void releaseSemaphores(com.db4o.Transaction ta);
 
@@ -1583,13 +1597,6 @@ namespace com.db4o
 						return 0;
 					}
 					yapObject = new com.db4o.YapObject(0);
-					if (i_migrateFrom != null && i_handlers.i_replication != null)
-					{
-						if (!(a_object is com.db4o.Internal))
-						{
-							i_handlers.i_replication.destinationOnNew(yapObject);
-						}
-					}
 					if (yapObject.store(a_trans, yc, a_object, a_updateDepth))
 					{
 						idTreeAdd(yapObject);
@@ -1626,14 +1633,7 @@ namespace com.db4o
 							if (a_checkJustSet)
 							{
 								a_checkJustSet = false;
-								if (i_justSet == null)
-								{
-									i_justSet = new com.db4o.TreeInt(oid);
-								}
-								else
-								{
-									i_justSet = i_justSet.add(new com.db4o.TreeInt(oid));
-								}
+								rememberJustSet(oid);
 							}
 							yapObject.writeUpdate(a_trans, a_updateDepth);
 						}
@@ -1645,14 +1645,7 @@ namespace com.db4o
 				{
 					if (!yapObject.getYapClass().isPrimitive())
 					{
-						if (i_justSet == null)
-						{
-							i_justSet = new com.db4o.TreeInt(id);
-						}
-						else
-						{
-							i_justSet = i_justSet.add(new com.db4o.TreeInt(id));
-						}
+						rememberJustSet(id);
 					}
 				}
 				if (dontDelete)
@@ -1742,8 +1735,7 @@ namespace com.db4o
 						{
 							a_just[0] = new com.db4o.TreeInt(id);
 						}
-						return new com.db4o.List4(new com.db4o.List4(a_still, System.Convert.ToInt32(a_depth
-							)), yapObject);
+						return new com.db4o.List4(new com.db4o.List4(a_still, a_depth), yapObject);
 					}
 					else
 					{
@@ -1804,8 +1796,7 @@ namespace com.db4o
 		{
 			i_stillToSet = new com.db4o.List4(i_stillToSet, a_trans);
 			i_stillToSet = new com.db4o.List4(i_stillToSet, a_yapObject);
-			i_stillToSet = new com.db4o.List4(i_stillToSet, System.Convert.ToInt32(a_updateDepth
-				));
+			i_stillToSet = new com.db4o.List4(i_stillToSet, a_updateDepth);
 		}
 
 		internal virtual void stopSession()

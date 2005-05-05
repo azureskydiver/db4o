@@ -46,7 +46,7 @@ namespace com.db4o {
                 return size4() - 1;
             }
         }
-
+        
         public void Clear(){
             lock (streamLock()) {
                 checkActive();
@@ -342,6 +342,23 @@ namespace com.db4o {
             }
             return false;
         }
+
+        public override void replicateFrom(Object obj) {
+            checkActive();
+            P2ListElementIterator i = iterator4();
+            while (i.hasNext()) {
+                P1ListElement elem = i.nextElement();
+                elem.delete(false);
+            }
+            i_first = null;
+            i_last = null;
+            P2LinkedList l4 = (P2LinkedList)obj;
+            i = l4.iterator4();
+            while (i.hasNext()) {
+                add4(i.nextElement());
+            }
+            updateInternal();
+        }
       
         protected int size4() {
             int size = 0;
@@ -357,7 +374,7 @@ namespace com.db4o {
             if (getTrans() == null){
                 setTrans(transaction);
             }else if (transaction != getTrans()){
-                return createDefault(transaction);
+                return replicate(getTrans(), transaction);
             }
             return this;
         }

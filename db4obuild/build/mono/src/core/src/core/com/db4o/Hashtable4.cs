@@ -87,7 +87,7 @@ namespace com.db4o
 					}
 					else
 					{
-						visitor.visit(System.Convert.ToInt32(hie.i_key));
+						visitor.visit(hie.i_key);
 					}
 					hie = hie.i_next;
 				}

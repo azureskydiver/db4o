@@ -22,6 +22,8 @@ namespace com.db4o
 {
 	internal abstract class Debug
 	{
+		public const bool checkSychronization = false;
+
 		public const bool atHome = false;
 
 		public const bool indexAllFields = false;

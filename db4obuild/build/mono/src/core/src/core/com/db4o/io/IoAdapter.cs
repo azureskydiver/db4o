@@ -62,6 +62,12 @@ namespace com.db4o.io
 			write(copyBytes);
 		}
 
+		public virtual bool exists(string path)
+		{
+			j4o.io.File existingFile = new j4o.io.File(path);
+			return existingFile.exists() && existingFile.length() > 0;
+		}
+
 		public abstract long getLength();
 
 		public abstract com.db4o.io.IoAdapter open(string path, bool lockFile, long initialLength

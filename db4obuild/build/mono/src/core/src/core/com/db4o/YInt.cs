@@ -22,7 +22,7 @@ namespace com.db4o
 {
 	internal class YInt : com.db4o.YapJavaClass
 	{
-		private static readonly int i_primitive = System.Convert.ToInt32(0);
+		private static readonly int i_primitive = 0;
 
 		public YInt(com.db4o.YapStream stream) : base(stream)
 		{
@@ -56,7 +56,7 @@ namespace com.db4o
 		internal override object read1(com.db4o.YapReader a_bytes)
 		{
 			int ret = readInt(a_bytes);
-			return System.Convert.ToInt32(ret);
+			return ret;
 		}
 
 		internal static int readInt(com.db4o.YapReader a_bytes)
