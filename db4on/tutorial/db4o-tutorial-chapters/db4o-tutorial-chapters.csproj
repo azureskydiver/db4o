@@ -209,6 +209,21 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4o\f1\chapter5\ServerConfiguration.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4o\f1\chapter5\StartServer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4o\f1\chapter5\StopServer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4o\f1\chapter5\TemperatureSensorReadout.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
