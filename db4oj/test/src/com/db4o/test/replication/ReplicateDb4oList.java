@@ -27,12 +27,8 @@ public class ReplicateDb4oList {
     }
     
     public void testOne(){
+        
         replicate(false);
-        list.add(new RDLElement("afterReplication"));
-        RDLElement elem = (RDLElement)list.get(0);
-        elem.name = "replicated";
-        Test.store(elem);
-        replicate(true);
         
         ObjectContainer oc = Test.replica();
         Query q = oc.query();
@@ -40,11 +36,34 @@ public class ReplicateDb4oList {
         ObjectSet objectSet = q.execute();
         Test.ensure(objectSet.size() == 1);
         ReplicateDb4oList rdl = (ReplicateDb4oList)objectSet.next();
+        RDLElement elem = (RDLElement)rdl.list.get(0);
+        Test.ensure(elem.name.equals("store1"));
+        elem = (RDLElement)rdl.list.get(1);
+        Test.ensure(elem.name.equals("store2"));
+        
+        // Test.reOpen();
+        
+        list.add(new RDLElement("afterReplication"));
+        elem = (RDLElement)list.get(0);
+        elem.name = "replicated";
+        Test.store(elem);
+        
+        // storing this to make sure it is dirty
+        Test.store(this);
+        
+        replicate(true);
+        
+        oc = Test.replica();
+        q = oc.query();
+        q.constrain(ReplicateDb4oList.class);
+        objectSet = q.execute();
+        Test.ensure(objectSet.size() == 1);
+        rdl = (ReplicateDb4oList)objectSet.next();
         elem = (RDLElement)rdl.list.get(0);
         Test.ensure(elem.name.equals("replicated"));
         elem = (RDLElement)rdl.list.get(1);
         Test.ensure(elem.name.equals("store2"));
-        elem = (RDLElement)rdl.list.get(0);
+        elem = (RDLElement)rdl.list.get(2);
         Test.ensure(elem.name.equals("afterReplication"));
     }
     
@@ -63,7 +82,9 @@ public class ReplicateDb4oList {
         }
         ObjectSet objectSet = q.execute();
         while (objectSet.hasNext()) {
-            replication.replicate(objectSet.next());
+            ReplicateDb4oList rdl = (ReplicateDb4oList)objectSet.next(); 
+            replication.replicate(rdl);
+            // replication.replicate(rdl.list);
         }
         replication.commit();
     }
