@@ -1,29 +1,79 @@
 <?xml version="1.0"?>
-<project name="db4ontutorial" default="build">
+<project name="db4o-tutorial" default="update-doc">
 
-	<property name="db4o.dll" location="../../db4obuild/dist/dll/net/db4o.dll" />
+	<property file="../../db4obuild/machine.properties" />
+	<property file="../../db4obuild/ant.properties" />		
+
+	<property name="dir.out" location="${dir.j.tutorial.out.net}" />	
 	
-	<property name="build.dir" location="bin" />
+	<property name="db4o.dll" location="${file.dll.net}" />	
+	<property name="exe.name" value="db4o-tutorial.exe" />
+	
+	<target name="update-doc" depends="build">
+		<copy todir="${dir.out}">
+			<fileset dir="${dir.n.tutorial.bin}">
+				<include name="bin/*.dll" />
+				<include name="${exe.name}" />
+				<include name="${exe.name}.config" />
+			</fileset>
+		</copy>
+	</target>
 	
 	<target name="build" depends="init">
-		<csc targetType="library" destFile="${build.dir}/db4o-samples.dll">		
-			<src dir="src">
-				<include name="**/*.cs" />
-			</src>
+		<csc targetType="library"
+			destFile="${dir.n.tutorial.bin}/bin/db4o-tutorial-chapters.dll"
+			srcdir="db4o-tutorial-chapters/src">
 			
-			<reference dir="${build.dir}">			
+			<include name="**/*.cs" />
+			
+			<reference dir="${dir.n.tutorial.bin}/bin">			
 				<include name="db4o.dll" />
 			</reference>
 		</csc>
+		
+		<csc targetType="winexe"
+			destFile="${dir.n.tutorial.bin}/${exe.name}"
+			win32icon="db4o-tutorial/src/resources/db4o.ico"
+			srcdir="db4o-tutorial/src">			
+			
+			<include name="**/*.cs" />
+			
+			<resource
+				file="db4o-tutorial/src/db4obrowser.WebBrowserViewControl.resources" embed="true" />
+				
+			<resource
+				file="db4o-tutorial/src/db4obrowser.TutorialOutlineViewControl.resources" embed="true" />			
+			<reference dir="${dir.n.tutorial.bin}/bin">
+				<include name="db4o-tutorial-chapters.dll" />
+				<include name="WeifenLuo.WinFormsUI.dll" />
+				<include name="AxSHDocVw.dll" />
+				<include name="SHDocVw.dll" />
+				<include name="System.Windows.Forms.dll" />
+			</reference>			
+		</csc>
+		
+		<copy tofile="${dir.n.tutorial.bin}/${exe.name}.config" file="db4o-tutorial/src/app.config" />
+
 	</target>
 	
+		
+	<target name="run" depends="update-doc">
+		<exec dir="${dir.out}" executable="${dir.out}/${exe.name}">
+		</exec>
+	</target>
+
 	<target name="init">
-		<mkdir dir="${build.dir}" />
-		<copy todir="${build.dir}" file="${db4o.dll}" />
+		<mkdir dir="${dir.n.tutorial.bin}" />
+		<mkdir dir="${dir.n.tutorial.bin}/bin" />
+		<copy todir="${dir.n.tutorial.bin}/bin" file="${db4o.dll}" />
+		<copy todir="${dir.n.tutorial.bin}/bin">
+			<fileset dir="lib">
+				<include name="*.dll" />
+			</fileset>
+		</copy>
 	</target>
 	
 	<target name="clean">
-		<delete dir="${build.dir}" />
+		<delete dir="${dir.n.tutorial.bin}" />
 	</target>
-
 </project>
