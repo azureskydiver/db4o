@@ -22,13 +22,13 @@ class with different configuration settings:
 
 .2 Bypassing the constructor ..
 
-.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithoutCallConstructors -run ..
+.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithoutCallConstructors ..
 
 In this case our object seems to be nicely stored and retrieved, however, ._
 it has forgotten about its length, since db4o doesn't store transient ._
 members and the constructor code that sets it is not executed.
 
-.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithCallConstructors -run ..
+.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithCallConstructors ..
 
 At storage time, db4o tests the only available constructor with null arguments and ._
 runs into a NullPointerException, so it refuses to accept our object.
