@@ -96,6 +96,10 @@ public class QueryBuilderPaneController {
         for (int i = 0; i < fields.length; i++) {
             FieldConstraint field = root.getConstraint(fields[i]);
             
+            /*
+             * If we've seen this field name before, it's a refactored field;
+             * we must include something to distinguish it from the other version
+             */
             String curFieldName = field.field.getName();
             EditorRow priorRow = (EditorRow) priorRows.get(curFieldName);
             if (priorRow != null) {
@@ -104,6 +108,9 @@ public class QueryBuilderPaneController {
                 priorRow.rowEditor.setFieldName(oldFieldName);
             }
             
+            /*
+             * Now build the actual field editor row
+             */
             final ReflectClass fieldType = field.field.getType();
             IConstraintRow newRow = null;
             
@@ -125,6 +132,10 @@ public class QueryBuilderPaneController {
 //                buildEditor(field.valueProto());
             }
             
+            /*
+             * If we didn't find a dupe earlier, put this row in our priorRows
+             * HashMap so we can find it if a dupe turns up later.
+             */
             if (priorRow == null) {
                 priorRows.put(curFieldName, new EditorRow(fields[i], newRow));
             }

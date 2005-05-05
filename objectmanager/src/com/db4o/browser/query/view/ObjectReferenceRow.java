@@ -12,7 +12,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
-import com.db4o.browser.gui.standalone.ImageMgr;
+import com.db4o.browser.gui.resources.DisposeMgr;
 import com.db4o.browser.gui.views.DbBrowserPane;
 
 public class ObjectReferenceRow implements IConstraintRow {
@@ -55,10 +55,10 @@ public class ObjectReferenceRow implements IConstraintRow {
 
     public void setPublic(boolean isPublic) {
         if (isPublic) {
-            new ImageMgr(fieldName, new Image(Display.getCurrent(),
+            new DisposeMgr(fieldName, new Image(Display.getCurrent(),
                     DbBrowserPane.class.getResourceAsStream("icons/etool16/public_co.gif")));
         } else {
-            new ImageMgr(fieldName, new Image(Display.getCurrent(),
+            new DisposeMgr(fieldName, new Image(Display.getCurrent(),
                     DbBrowserPane.class.getResourceAsStream("icons/etool16/private_co.gif")));
         }
     }
