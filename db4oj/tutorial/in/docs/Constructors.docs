@@ -93,8 +93,8 @@ shown in the following section.
   }
 }
 ..c
+The above class is fine for use with and without callConstructors set.
 
-This class is fine for use with and without callConstructors set.
 
 .c class C2 {
   private transient String x;
@@ -110,10 +110,10 @@ This class is fine for use with and without callConstructors set.
   }
 }
 ..c
+The above C2 class needs to have callConstructors set to true. Otherwise, since ._
+transient members are not stored and the constructor code is not ._
+executed, toString() will potentially run into a NullPointerException on x.length().
 
-This class needs to have callConstructors set to true. Otherwise, since
-transient members are not stored and the constructor code is not
-executed, toString() will run into a NullPointerException on x.length().
 
 .c class C3 {
   private String s;
@@ -129,10 +129,10 @@ executed, toString() will run into a NullPointerException on x.length().
   }
 }
 ..c
-
-This class needs to have callConstructors set to false (the default),
-since the (only) constructor will throw a NullPointerException when
+The above C3 class needs to have callConstructors set to false (the default), ._
+since the (only) constructor will throw a NullPointerException when ._
 called with a null value.
+
 
 .c class C4 {
   private String s;
@@ -148,6 +148,5 @@ called with a null value.
   }
 }
 ..c
-
-This class cannot be cleanly reinstantiated by db4o: Both approaches
+This class cannot be cleanly reinstantiated by db4o: Both approaches ._
 will fail, so one has to resort to configuring a translator.
