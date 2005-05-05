@@ -5,21 +5,22 @@ import com.db4o.f1.*;
 
 public class TranslatorExample extends Util {
   public static void main(String[] args) {
-    tryStoreWithCallConstructors();
     tryStoreWithoutCallConstructors();
+    tryStoreWithCallConstructors();
     storeWithTranslator();
+  }
+
+  public static void tryStoreWithoutCallConstructors() {
+		Db4o.configure().exceptionsOnNotStorable(false);
+	    Db4o.configure().objectClass(NotStorable.class)
+	        .callConstructor(false);
+	    tryStoreAndRetrieve();
   }
 
   public static void tryStoreWithCallConstructors() {
     Db4o.configure().exceptionsOnNotStorable(true);
     Db4o.configure().objectClass(NotStorable.class)
         .callConstructor(true);
-    tryStoreAndRetrieve();
-  }
-
-  public static void tryStoreWithoutCallConstructors() {
-    Db4o.configure().objectClass(NotStorable.class)
-        .callConstructor(false);
     tryStoreAndRetrieve();
   }
 
