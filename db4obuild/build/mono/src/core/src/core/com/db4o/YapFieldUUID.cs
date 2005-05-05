@@ -50,7 +50,7 @@ namespace com.db4o
 			com.db4o.YLong.writeLong(uuid, a_writer);
 			if (a_new)
 			{
-				addIndexEntry(System.Convert.ToInt64(uuid), a_writer);
+				addIndexEntry(uuid, a_writer);
 			}
 		}
 
@@ -95,20 +95,26 @@ namespace com.db4o
 			com.db4o.Transaction trans = a_bytes.getTransaction();
 			bool indexEntry = a_new && stream.maintainsIndices();
 			int dbID = 0;
-			if (!a_migrating)
+			com.db4o.VirtualAttributes attr = a_yapObject.i_virtualAttributes;
+			bool linkToDatabase = !a_migrating;
+			if (attr != null && attr.i_database == null)
 			{
-				if (a_yapObject.i_virtualAttributes.i_database == null)
+				linkToDatabase = true;
+			}
+			if (linkToDatabase)
+			{
+				if (attr.i_database == null)
 				{
-					a_yapObject.i_virtualAttributes.i_database = stream.identity();
+					attr.i_database = stream.identity();
 					if (stream is com.db4o.YapFile && ((com.db4o.YapFile)stream).i_bootRecord != null
 						)
 					{
 						com.db4o.PBootRecord bootRecord = ((com.db4o.YapFile)stream).i_bootRecord;
-						a_yapObject.i_virtualAttributes.i_uuid = bootRecord.newUUID();
+						attr.i_uuid = bootRecord.newUUID();
 						indexEntry = true;
 					}
 				}
-				com.db4o.ext.Db4oDatabase db = a_yapObject.i_virtualAttributes.i_database;
+				com.db4o.ext.Db4oDatabase db = attr.i_database;
 				if (db != null)
 				{
 					dbID = db.getID(trans);
@@ -116,22 +122,18 @@ namespace com.db4o
 			}
 			else
 			{
-				com.db4o.ext.Db4oDatabase db = null;
-				if (a_yapObject.i_virtualAttributes != null && a_yapObject.i_virtualAttributes.i_database
-					 != null)
+				if (attr != null)
 				{
-					db = a_yapObject.i_virtualAttributes.i_database;
-					dbID = db.getID(trans);
+					dbID = attr.i_database.getID(trans);
 				}
 			}
 			a_bytes.writeInt(dbID);
-			if (a_yapObject.i_virtualAttributes != null)
+			if (attr != null)
 			{
-				com.db4o.YLong.writeLong(a_yapObject.i_virtualAttributes.i_uuid, a_bytes);
+				com.db4o.YLong.writeLong(attr.i_uuid, a_bytes);
 				if (indexEntry)
 				{
-					addIndexEntry(System.Convert.ToInt64(a_yapObject.i_virtualAttributes.i_uuid), a_bytes
-						);
+					addIndexEntry(attr.i_uuid, a_bytes);
 				}
 			}
 			else

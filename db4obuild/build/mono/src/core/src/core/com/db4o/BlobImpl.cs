@@ -59,6 +59,11 @@ namespace com.db4o
 			return 1;
 		}
 
+		public virtual bool canBind()
+		{
+			return true;
+		}
+
 		private string checkExt(j4o.io.File file)
 		{
 			string name = file.getName();
@@ -313,6 +318,10 @@ namespace com.db4o
 			{
 				writeLocal(file);
 			}
+		}
+
+		public virtual void replicateFrom(object obj)
+		{
 		}
 
 		public virtual object storedTo(com.db4o.Transaction a_trans)

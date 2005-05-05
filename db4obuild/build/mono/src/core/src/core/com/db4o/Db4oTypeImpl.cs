@@ -25,9 +25,13 @@ namespace com.db4o
 	{
 		int adjustReadDepth(int a_depth);
 
+		bool canBind();
+
 		object createDefault(com.db4o.Transaction a_trans);
 
 		bool hasClassIndex();
+
+		void replicateFrom(object obj);
 
 		void setTrans(com.db4o.Transaction a_trans);
 

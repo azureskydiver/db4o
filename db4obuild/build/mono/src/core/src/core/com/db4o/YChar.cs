@@ -24,7 +24,7 @@ namespace com.db4o
 	{
 		internal const int LENGTH = com.db4o.YapConst.CHAR_BYTES + com.db4o.YapConst.ADDED_LENGTH;
 
-		private static readonly char i_primitive = System.Convert.ToChar((char)0);
+		private static readonly char i_primitive = (char)0;
 
 		public YChar(com.db4o.YapStream stream) : base(stream)
 		{
@@ -60,7 +60,7 @@ namespace com.db4o
 			byte b1 = a_bytes.readByte();
 			byte b2 = a_bytes.readByte();
 			char ret = (char)((b1 & 0xff) | ((b2 & 0xff) << 8));
-			return System.Convert.ToChar(ret);
+			return ret;
 		}
 
 		public override void write(object a_object, com.db4o.YapWriter a_bytes)

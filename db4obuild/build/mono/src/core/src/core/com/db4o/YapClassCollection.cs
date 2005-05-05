@@ -69,6 +69,11 @@ namespace com.db4o
 			i_yapClassByID.put(yapClass.getID(), yapClass);
 		}
 
+		private byte[] asBytes(string str)
+		{
+			return i_stream.stringIO().write(str);
+		}
+
 		internal void checkChanges()
 		{
 			com.db4o.Iterator4 i = i_classes.iterator();
@@ -191,8 +196,8 @@ namespace com.db4o
 			com.db4o.YapClass yapClass = (com.db4o.YapClass)i_yapClassByClass.get(a_class);
 			if (yapClass == null)
 			{
-				byte[] bytes = i_stream.stringIO().write(a_class.getName());
-				yapClass = (com.db4o.YapClass)i_yapClassByBytes.remove(bytes);
+				yapClass = (com.db4o.YapClass)i_yapClassByBytes.remove(asBytes(a_class.getName())
+					);
 				readYapClass(yapClass, a_class);
 			}
 			if (yapClass != null || (!a_create))
@@ -241,10 +246,10 @@ namespace com.db4o
 			return readYapClass((com.db4o.YapClass)i_yapClassByID.get(a_id), null);
 		}
 
-		internal com.db4o.YapClass getYapClass(string a_name)
+		public com.db4o.YapClass getYapClass(string a_name)
 		{
-			byte[] bytes = i_stream.stringIO().write(a_name);
-			com.db4o.YapClass yapClass = (com.db4o.YapClass)i_yapClassByBytes.remove(bytes);
+			com.db4o.YapClass yapClass = (com.db4o.YapClass)i_yapClassByBytes.remove(asBytes(
+				a_name));
 			readYapClass(yapClass, null);
 			if (yapClass == null)
 			{
@@ -260,6 +265,16 @@ namespace com.db4o
 				return null;
 			}
 			return yapClass;
+		}
+
+		public int getYapClassID(string name)
+		{
+			com.db4o.YapClass yc = (com.db4o.YapClass)i_yapClassByBytes.get(asBytes(name));
+			if (yc != null)
+			{
+				return yc.getID();
+			}
+			return 0;
 		}
 
 		internal void initOnUp(com.db4o.Transaction systemTrans)
@@ -455,13 +470,13 @@ namespace com.db4o
 			while (i.hasNext())
 			{
 				com.db4o.YapClass yc = i.nextClass();
-				yc.forEachYapField(new _AnonymousInnerClass385(this, a_field, a_visitor, yc));
+				yc.forEachYapField(new _AnonymousInnerClass395(this, a_field, a_visitor, yc));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass385 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass395 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass385(YapClassCollection _enclosing, string a_field, com.db4o.Visitor4
+			public _AnonymousInnerClass395(YapClassCollection _enclosing, string a_field, com.db4o.Visitor4
 				 a_visitor, com.db4o.YapClass yc)
 			{
 				this._enclosing = _enclosing;

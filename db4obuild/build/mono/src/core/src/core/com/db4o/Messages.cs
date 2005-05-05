@@ -77,8 +77,9 @@ namespace com.db4o
 					, "Add a constructor that won't throw exceptions, configure constructor calls, or provide a translator to class %."
 					, "This method can only be called before opening the database file.", "AccessibleObject#setAccessible() is not available. Private fields can not be stored."
 					, "ObjectTranslator could not be installed: %.", "", "% closed by ShutdownHook."
-					, "", "", "", "", "Thread interrupted.", "Password can not be null.", "Classes does not match."
-					, "rename() needs to be executed on the server.", "Primitive types like % can not be stored directly. Store and retrieve them in wrapper objects."
+					, "This constraint is not persistent. It has no database identity.", "", "", "", 
+					"Thread interrupted.", "Password can not be null.", "Classes does not match.", "rename() needs to be executed on the server."
+					, "Primitive types like % can not be stored directly. Store and retrieve them in wrapper objects."
 					, "Backups can not be run from clients and memory files.", "Backup in progress."
 					, "Only use persisted first class objects as keys for IdentityHashMap." };
 			}

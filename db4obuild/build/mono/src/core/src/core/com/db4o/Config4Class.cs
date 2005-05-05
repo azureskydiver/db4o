@@ -134,6 +134,12 @@ namespace com.db4o
 			return ret;
 		}
 
+		public virtual void enableReplication(bool setting)
+		{
+			generateUUIDs(setting);
+			generateVersionNumbers(setting);
+		}
+
 		public virtual void generateUUIDs(bool setting)
 		{
 			i_generateUUIDs = setting ? com.db4o.YapConst.YES : com.db4o.YapConst.NO;

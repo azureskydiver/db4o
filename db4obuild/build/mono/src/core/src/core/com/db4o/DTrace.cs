@@ -73,6 +73,8 @@ namespace com.db4o
 
 		public static com.db4o.DTrace CREATE_CANDIDATE;
 
+		public static com.db4o.DTrace DELETE;
+
 		public static com.db4o.DTrace DONOTINCLUDE;
 
 		public static com.db4o.DTrace EVALUATE_SELF;
@@ -88,6 +90,8 @@ namespace com.db4o
 		public static com.db4o.DTrace GET_YAPOBJECT;
 
 		public static com.db4o.DTrace ID_TREE_ADD;
+
+		public static com.db4o.DTrace JUST_SET;
 
 		public static com.db4o.DTrace NEW_INSTANCE;
 

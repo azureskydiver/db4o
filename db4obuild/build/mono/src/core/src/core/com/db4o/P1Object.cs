@@ -64,6 +64,11 @@ namespace com.db4o
 			return a_depth;
 		}
 
+		public virtual bool canBind()
+		{
+			return false;
+		}
+
 		internal virtual void checkActive()
 		{
 			if (i_trans != null)
@@ -143,6 +148,36 @@ namespace com.db4o
 		{
 		}
 
+		protected virtual object replicate(com.db4o.Transaction fromTrans, com.db4o.Transaction
+			 toTrans)
+		{
+			com.db4o.YapStream fromStream = fromTrans.i_stream;
+			com.db4o.YapStream toStream = toTrans.i_stream;
+			lock (fromStream.Lock())
+			{
+				int id = toStream.replicationHandles(this);
+				if (id == -1)
+				{
+					return this;
+				}
+				if (id > 0)
+				{
+					return toStream.getByID(id);
+				}
+				com.db4o.P1Object replica = (com.db4o.P1Object)createDefault(toTrans);
+				if (fromStream.i_handlers.i_migration != null)
+				{
+					fromStream.i_handlers.i_migration.mapReference(replica, i_yapObject);
+				}
+				replica.store(0);
+				return replica;
+			}
+		}
+
+		public virtual void replicateFrom(object obj)
+		{
+		}
+
 		public virtual void setTrans(com.db4o.Transaction a_trans)
 		{
 			i_trans = a_trans;
@@ -208,6 +243,21 @@ namespace com.db4o
 				i_yapObject.writeUpdate(i_trans, depth);
 				i_trans.i_stream.checkStillToSet();
 				i_trans.i_stream.beginEndSet(i_trans);
+			}
+		}
+
+		internal virtual void updateInternal()
+		{
+			updateInternal(activationDepth());
+		}
+
+		internal virtual void updateInternal(int depth)
+		{
+			if (validYapObject())
+			{
+				i_yapObject.writeUpdate(i_trans, depth);
+				i_trans.i_stream.rememberJustSet(i_yapObject.getID());
+				i_trans.i_stream.checkStillToSet();
 			}
 		}
 

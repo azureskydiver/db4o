@@ -22,13 +22,14 @@ using System;
 using System.Reflection;
 using System.Collections;
 using j4o.lang.reflect;
+using System.Collections.Specialized;
 
 namespace j4o.lang {
 
     public class Class {
 
-        public static Hashtable assemblies = new Hashtable();
-        private static Hashtable typeToClassMap = new Hashtable();
+        public static IDictionary assemblies = new HybridDictionary();
+        private static IDictionary typeToClassMap = new HybridDictionary();
 
         private static Type[] PRIMITIVE_TYPES = {
             typeof(DateTime), typeof(Decimal)

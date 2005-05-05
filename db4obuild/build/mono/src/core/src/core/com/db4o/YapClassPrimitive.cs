@@ -242,7 +242,7 @@ namespace com.db4o
 
 		public override bool supportsIndex()
 		{
-			return false;
+			return true;
 		}
 
 		internal sealed override bool writeObjectBegin()

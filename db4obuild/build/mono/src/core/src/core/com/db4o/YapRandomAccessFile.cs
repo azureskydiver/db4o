@@ -261,8 +261,8 @@ namespace com.db4o
 			{
 				if (j4o.lang.JavaSystem.getLengthOf(fileName()) > 0)
 				{
-					j4o.io.File existingFile = new j4o.io.File(fileName());
-					if (!existingFile.exists() || existingFile.length() == 0)
+					com.db4o.io.IoAdapter ioAdapter = i_config.i_ioAdapter;
+					if (!ioAdapter.exists(fileName()))
 					{
 						isNew = true;
 						logMsg(14, fileName());
@@ -271,10 +271,10 @@ namespace com.db4o
 					{
 						bool lockFile = com.db4o.Debug.lockFile && i_config.i_lockFile && (!i_config.i_readonly
 							);
-						i_file = i_config.i_ioAdapter.open(fileName(), lockFile, 0);
+						i_file = ioAdapter.open(fileName(), lockFile, 0);
 						if (needsLockFileThread() && com.db4o.Debug.lockFile)
 						{
-							i_timerFile = i_config.i_ioAdapter.open(fileName(), false, 0);
+							i_timerFile = ioAdapter.open(fileName(), false, 0);
 						}
 					}
 					catch (com.db4o.ext.DatabaseFileLockedException de)

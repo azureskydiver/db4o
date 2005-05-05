@@ -24,7 +24,7 @@ namespace com.db4o
 	{
 		internal const int LENGTH = com.db4o.YapConst.SHORT_BYTES + com.db4o.YapConst.ADDED_LENGTH;
 
-		private static readonly short i_primitive = System.Convert.ToInt16((short)0);
+		private static readonly short i_primitive = (short)0;
 
 		public YShort(com.db4o.YapStream stream) : base(stream)
 		{
@@ -58,7 +58,7 @@ namespace com.db4o
 		internal override object read1(com.db4o.YapReader a_bytes)
 		{
 			short ret = readShort(a_bytes);
-			return System.Convert.ToInt16(ret);
+			return ret;
 		}
 
 		internal static short readShort(com.db4o.YapReader a_bytes)

@@ -266,7 +266,7 @@ namespace com.db4o
 					sock.write(getPayLoad()._buffer);
 					sock.flush();
 				}
-				catch (j4o.io.IOException e)
+				catch (System.Exception e)
 				{
 				}
 			}

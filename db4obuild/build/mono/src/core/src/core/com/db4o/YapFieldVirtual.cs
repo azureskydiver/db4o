@@ -41,6 +41,11 @@ namespace com.db4o
 		{
 		}
 
+		internal override void deactivate(com.db4o.Transaction a_trans, object a_onObject
+			, int a_depth)
+		{
+		}
+
 		internal override void delete(com.db4o.YapWriter a_bytes)
 		{
 			a_bytes.incrementOffset(linkLength());
@@ -96,8 +101,16 @@ namespace com.db4o
 					migrating = true;
 					if (a_yapObject.i_virtualAttributes == null)
 					{
-						com.db4o.YapObject migrateYapObject = stream.i_migrateFrom.getYapObject(a_yapObject
-							.getObject());
+						object obj = a_yapObject.getObject();
+						com.db4o.YapObject migrateYapObject = null;
+						if (stream.i_handlers.i_migration != null)
+						{
+							migrateYapObject = stream.i_handlers.i_migration.referenceFor(obj);
+						}
+						if (migrateYapObject == null)
+						{
+							migrateYapObject = stream.i_migrateFrom.getYapObject(obj);
+						}
 						if (migrateYapObject != null && migrateYapObject.i_virtualAttributes != null && migrateYapObject
 							.i_virtualAttributes.i_database != null)
 						{

@@ -158,6 +158,17 @@ namespace com.db4o.reflect.generic
 			{
 				return ensureDelegate(clazz);
 			}
+			if (_stream != null && _stream.i_classCollection != null)
+			{
+				int id = _stream.i_classCollection.getYapClassID(className);
+				if (id > 0)
+				{
+					clazz = ensureClassAvailability(id);
+					ensureClassRead(id);
+					_classByName.put(className, clazz);
+					return clazz;
+				}
+			}
 			return null;
 		}
 
@@ -204,7 +215,7 @@ namespace com.db4o.reflect.generic
 		public virtual void registerCollectionUpdateDepth(j4o.lang.Class clazz, int depth
 			)
 		{
-			object[] entry = new object[] { forClass(clazz), System.Convert.ToInt32(depth) };
+			object[] entry = new object[] { forClass(clazz), depth };
 			_collectionUpdateDepths.add(entry);
 		}
 

@@ -151,6 +151,19 @@ namespace com.db4o.config
 		/// <param name="attributeProvider">the attribute provider to be used</param>
 		void compare(com.db4o.config.ObjectAttribute attributeProvider);
 
+		/// <summary>
+		/// Must be called before databases are created or opened
+		/// so that db4o will control versions and generate UUIDs
+		/// for objects of this class, which is required for using replication.
+		/// </summary>
+		/// <remarks>
+		/// Must be called before databases are created or opened
+		/// so that db4o will control versions and generate UUIDs
+		/// for objects of this class, which is required for using replication.
+		/// </remarks>
+		/// <param name="setting"></param>
+		void enableReplication(bool setting);
+
 		/// <summary>generate UUIDs for stored objects of this class.</summary>
 		/// <remarks>generate UUIDs for stored objects of this class.</remarks>
 		/// <param name="setting"></param>
