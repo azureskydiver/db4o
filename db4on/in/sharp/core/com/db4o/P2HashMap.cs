@@ -193,11 +193,16 @@ namespace com.db4o {
                     }
                 }
                 i_changes = 0;
-                if ((i_size + 1) * 10 < i_tableSize) {
-                    i_tableSize = i_size + 1;
-                    increaseSize();
-                    modified();
-                }
+
+                // FIXME: reducing the table in size can be a problem during defragment in 
+                //        C/S mode on P2HashMaps that were partially stored uncommitted.
+
+//                if ((i_size + 1) * 10 < i_tableSize) {
+//                    i_tableSize = i_size + 1;
+//                    increaseSize();
+//                    modified();
+//                }
+
             }
         }
       
