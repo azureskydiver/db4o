@@ -91,9 +91,23 @@ We will delete all cars from the database again to prepare for the next chapter.
 
 .1 db4o custom collections ..
 
-db4o also provides customized collection implementations, tweaked for use with ._
-db4o. We will get to that in a later chapter when we have finished ._
-our first walkthrough.
+Normally, db4o will automatically activate objects ._
+for you when you iterate through query resuts using ObjectSet#next().  However, ._
+if you are accessing your objects using standard Java or .NET collections, you ._
+are currently required to manage object activation yourself.
+
+In order to help avoid this necessity, db4o also provides customized collection ._
+implementations, tweaked for use with ._
+db4o, that automatically manage object activation for you.  Since they implement ._
+the standard Java collection interfaces, java.util.List, for example, they ._
+require nothing different from your code that uses them.  The only change is ._
+in how you construct them.  Rather than calling a collection constructor ._
+directly, you use factory methods on ExtObjectContainer.  
+
+Assuming that you are lazily creating collection objects in your class, here 
+is one way you might code this:
+
+.s com.db4o.f1.chapter3.Db4oCollectionExample ..
 
 .1 Conclusion ..
 
