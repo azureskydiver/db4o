@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
-import com.db4o.browser.gui.standalone.ImageMgr;
+import com.db4o.browser.gui.resources.DisposeMgr;
 import com.db4o.browser.gui.views.DbBrowserPane;
 
 
@@ -87,10 +87,10 @@ public class PrototypeInstanceEditor extends Composite {
     public void setTypeName(String typeName, boolean isInterface) {
         this.typeName.setText(typeName);
         if (isInterface) {
-            new ImageMgr(this.typeImage, new Image(Display.getCurrent(),
+            new DisposeMgr(this.typeImage, new Image(Display.getCurrent(),
                     DbBrowserPane.class.getResourceAsStream("icons/obj16/int_obj.gif")));
         } else {
-            new ImageMgr(this.typeImage, new Image(Display.getCurrent(),
+            new DisposeMgr(this.typeImage, new Image(Display.getCurrent(),
                     DbBrowserPane.class.getResourceAsStream("icons/obj16/class_obj.gif")));
         }
     }

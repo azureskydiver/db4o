@@ -17,7 +17,7 @@ public class PrintStreamLogger extends OutputStream {
      * @see java.io.OutputStream#close()
      */
     public void close() throws IOException {
-        Logger.log().message(delegate.toString());
+        Logger.log().data(delegate.toString());
         delegate.close();
         delegate = null;
     }
@@ -26,7 +26,7 @@ public class PrintStreamLogger extends OutputStream {
      * @see java.io.OutputStream#flush()
      */
     public void flush() throws IOException {
-        Logger.log().message(delegate.toString());
+        Logger.log().data(delegate.toString());
         reset();
     }
     
