@@ -3,39 +3,45 @@
 .0 Replication ..
 
 db4o provides replication functionality to periodically synchronize ._
-databases that work disconnected from each other, such as remote autonomous servers ._
-or handheld devices synchronizing with central servers. It is not intended for mirroring ._
-servers on a real-time basis.
+databases that work disconnected from eachother, such as remote autonomous servers ._
+or handheld devices synchronizing with central servers. 
 
-In order to use it, the following method always has ._
+In order to use replication, the following configuration settings have ._
 to be called before a database file is created or opened:
+.c Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE); ..
+(See the  .l ReplicatingExisting section below ..  on how to enable replication for ._
+existing databases that were )
 
-.c Db4o.configure().enableReplication(Integer.MAX_VALUE) ..
-(See section below on how to enable replication for existing databases that did not ._
-have replication enabled before)
+Both settings can also be configured on a per-class basis:
+.c Db4o.configure().objectClass(Foo.class).generateUUIDs(true);
+Db4o.configure().objectClass(Foo.class).generateVersionNumbers(true); ..
 
-Use 1 instead of Integer.MAX_VALUE to configure this ._
-on a per-class basis rather than globally.
 
-Now suppose we have opened two object containers from two different databases called "handheld" and "desktop", that we want to ._
+Now suppose we have opened two ObjectContainers from two different databases called ._
+"handheld" and "desktop", that we want to ._
 replicate. This is how we do it:
 
-.c ReplicationProcess replication = desktop.ext().replicationBegin(handheld, new ReplicationConflictHandler() {
-    public Object resolveConflict(ReplicationProcess replicationProcess, Object a, Object b) {
-       return a;
-    }
- });
- replication.setDirection(desktop, handheld); ..
-The container on which replicationBegin() was called, is treated as container "A" and the ._
-other is container "B". That information is only used for conflict resolution. Both ._
-containers are treated equally in all other respects.
+.c ReplicationProcess replication = 
+  desktop.ext().replicationBegin(handheld, new ReplicationConflictHandler() {
+    public Object resolveConflict(
+      ReplicationProcess replicationProcess, 
+      Object a, 
+      Object b) {
+        return a;
+      }});
+replication.setDirection(desktop, handheld); ..
+For conflict resolution the ObjectContainer on which replicationBegin() was called, is ._
+treated as container "A", the other one is container "B". Both ._
+ObjectContainers are treated equally in all other respects.
 
 db4o replication is bi-directional by default. The setDirection() call above is used ._
-to ensures that changes will only be replicated from the "desktop" to the "handheld". ._
+to ensure that changes will only be replicated from the "desktop" to the "handheld". ._
 In that case, replication is said to be "directed".
 
-A conflict occurs when an object to be replicated has been modified in both containers. ._
-db4o cannot arbitrarily pick one side, so the ReplicationConflictHandler we passed in is ._
+A conflict occurs when an object to be replicated has been modified in both ._
+ObjectContainers. ._
+db4o cannot arbitrarily pick one side, so the ReplicationConflictHandler we passed is ._
 called to resolve the conflict. If the ReplicationConflictHandler returns null, no ._
 changes are ._
 replicated. In the case of directed replication, such as our example above, a conflict ._
@@ -69,8 +75,8 @@ REPLICATED) are considered to be "in sync" and will not show up in future ._
 
 .1 Under the Hood ..
 
-Enabling replication will cause db4o to control version numbers(1) and generate ._
-UUIDs(2) for all new objects stored in the database. 
+Let's take a look at the necessary configuration calls to tell db4o to generate ._
+version numbers and UUIDs:
 
 (1) An object's version number indicates the last time an object was modified. It is the ._
 database version at the moment of the modification. The database version starts at zero ._
@@ -81,19 +87,22 @@ db4o. That is achieved by having the database's creation timestamp as part ._
 of its objects' UUIDs. Manually copying db4o database files can produce duplicate ._
 UUIDs, of course.
 
-When the replication is commited, the lowest database version number among both ._
+When the replication process is commited, the lowest database version number among both ._
 databases is set to be equal to the highest. After replication commit, therefore, both ._
 databases have the same version number and are "in sync".
 
+.a ReplicatingExisting ..
 .1 Replicating Existing Data Files ..
 
-As we learned in the last sections, Db4o.configure().enableReplication (or its objectClass based counterpart) ._
+As we learned in the last sections, Db4o.configure().generateUUIDs() and ._
+Db4o.configure().generateVersionNumbers()  (or its objectClass counterparts) ._
 must be called before storing any objects to a data file because db4o replication needs ._
-object versions and UUIDs to work. This implies that objects in existing data files stored without ._
-the correct settings can't be replicated.
+object versions and UUIDs to work. This implies that objects in existing data files ._
+stored without the correct settings can't be replicated.
 
-Fortunately enabling replication for existing data files is a very simple process: we just need to use the ._
-Defragment tool in com.db4o.tools (source code only) after enabling replication:
+Fortunately enabling replication for existing data files is a very simple process: 
+We just need to use the Defragment tool in com.db4o.tools (source code only) after ._
+enabling replication:
 
 .c Db4o.configure().objectClass(Task.class).enableReplication(true);
  new Defragment().run(currentFileName(), true); ..
