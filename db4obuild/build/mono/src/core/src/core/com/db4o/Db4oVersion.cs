@@ -22,6 +22,6 @@ namespace com.db4o
 {
 	internal class Db4oVersion
 	{
-		internal static string name = "4.5.003";
+		internal static string name = "4.5.005";
 	}
 }
