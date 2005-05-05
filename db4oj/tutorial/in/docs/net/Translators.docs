@@ -25,7 +25,7 @@ class with different configuration settings:
 
 .2 Using the constructor ..
 
-.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithCallConstructors -run -out ..
+.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithCallConstructors ..
 
 At storage time, db4o tests the only available constructor with null arguments and ._
 runs into a NullPointerException, so it refuses to accept our object.
@@ -35,7 +35,7 @@ otherwise db4o will silently fail when trying to reinstantiate the object.)
 
 .2 Bypassing the constructor ..
 
-.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithoutCallConstructors -run -out ..
+.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithoutCallConstructors -run ..
 
 This still does not work for our case because the native pointer will definetely ._
 be invalid. In fact this example crashes the Common Language Runtime.
