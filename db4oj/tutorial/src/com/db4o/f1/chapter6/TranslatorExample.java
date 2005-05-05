@@ -28,6 +28,8 @@ public class TranslatorExample extends Util {
     Db4o.configure().objectClass(NotStorable.class)
         .translate(new NotStorableTranslator());
     tryStoreAndRetrieve();
+    Db4o.configure().objectClass(NotStorable.class)
+        .translate(null);
   }
 
   public static void tryStoreAndRetrieve() {

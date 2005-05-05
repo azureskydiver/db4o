@@ -23,9 +23,6 @@ class with different configuration settings:
 
 .s com.db4o.f1.chapter6.TranslatorExample#tryStoreAndRetrieve -run +{} ..
 
-Let's verify that both approaches to object reinstantiation will ._
-fail for this class.
-
 .2 Using the constructor ..
 
 .s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithCallConstructors ..
@@ -38,7 +35,7 @@ otherwise db4o will silently fail when trying to reinstantiate the object.)
 
 .2 Bypassing the constructor ..
 
-.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithoutCallConstructors ..
+.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithoutCallConstructors -run ..
 
 This still does not work for our case because the native pointer will definetely ._
 be invalid. In fact this example crashes the Common Language Runtime.

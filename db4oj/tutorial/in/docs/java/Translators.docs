@@ -18,20 +18,17 @@ class with different configuration settings:
 
 .s com.db4o.f1.chapter6.TranslatorExample#tryStoreAndRetrieve -run +{} ..
 
-Let's verify that both approaches to object reinstantiation will ._
-fail for this class.
-
 .2 Using the constructor ..
 
 .2 Bypassing the constructor ..
 
-.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithoutCallConstructors ..
+.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithoutCallConstructors -run ..
 
 In this case our object seems to be nicely stored and retrieved, however, ._
 it has forgotten about its length, since db4o doesn't store transient ._
 members and the constructor code that sets it is not executed.
 
-.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithCallConstructors ..
+.s com.db4o.f1.chapter6.TranslatorExample#tryStoreWithCallConstructors -run ..
 
 At storage time, db4o tests the only available constructor with null arguments and ._
 runs into a NullPointerException, so it refuses to accept our object.
