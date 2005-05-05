@@ -38,6 +38,8 @@ namespace com.db4o.f1.chapter6
             Db4o.configure().objectClass(typeof(CultureInfo))
                 .translate(new CultureInfoTranslator());
             tryStoreAndRetrieve();
+            Db4o.configure().objectClass(typeof(CultureInfo))
+                .translate(null);
         }
         
         public static void tryStoreAndRetrieve()
