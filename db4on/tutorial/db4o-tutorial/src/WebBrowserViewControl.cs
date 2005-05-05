@@ -83,8 +83,8 @@ namespace db4obrowser
 			this._toolbar.Appearance = System.Windows.Forms.ToolBarAppearance.Flat;
 			this._toolbar.AutoSize = false;
 			this._toolbar.Buttons.AddRange(new System.Windows.Forms.ToolBarButton[] {
-						this._buttonBack,
-						this._buttonForward});
+																						this._buttonBack,
+																						this._buttonForward});
 			this._toolbar.ButtonSize = new System.Drawing.Size(18, 18);
 			this._toolbar.Divider = false;
 			this._toolbar.DropDownArrows = true;
@@ -105,7 +105,6 @@ namespace db4obrowser
 			this._webBrowser.Size = new System.Drawing.Size(544, 392);
 			this._webBrowser.TabIndex = 1;
 			this._webBrowser.CommandStateChange += new AxSHDocVw.DWebBrowserEvents2_CommandStateChangeEventHandler(this._webBrowserCommandStateChange);
-			
 			// 
 			// WebBrowserViewControl
 			// 
@@ -115,6 +114,7 @@ namespace db4obrowser
 			this.Size = new System.Drawing.Size(544, 416);
 			((System.ComponentModel.ISupportInitialize)(this._webBrowser)).EndInit();
 			this.ResumeLayout(false);
+
 		}
 		#endregion
 		void _webBrowserCommandStateChange(object sender, AxSHDocVw.DWebBrowserEvents2_CommandStateChangeEvent e)
