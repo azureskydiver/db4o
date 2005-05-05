@@ -30,6 +30,7 @@ of the reference.
 
 .n
 .1 Object Manager ..
+
 .2 Installation ..
 The db4o  .l ObjectManager Object Manager .. , a GUI tool to browse and query ._
 database files, is packaged separately for each supported platform. Choose ._
@@ -43,6 +44,7 @@ called Object Manager in an appropriate location and unpack the downloaded ._
 zip file there.
 
 .2 Running ..
+
 .3 Windows IKVM ..
 Object Manager for Windows IKVM includes the open-source IKVM Java virtual ._
 machine in the download.  Simply double-click the objectmanager.bat file ._
