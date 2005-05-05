@@ -28,6 +28,7 @@ ObjectContainer#ext().collections().newLinkedList()
 ObjectContainer#ext().collections().newHashMap()
 ObjectContainer#ext().collections().newIdentityHashMap()
 
+**DONE** -->Collections.docs
 See http://www.db4odev.com/newsarchive/posting.cmd?msgid=%3Cc0q6d9%249u%241%40p15090641.pureserver.de%3E
 
 (800) Executing code remotely on the server by using
