@@ -36,23 +36,27 @@ Here is how to add the db4o to an Eclipse project
 - choose db4o-*.jar in this folder
 - hit OK twice
 
-.1 Object Manager Installation
-The Object Manager is packaged separately for each supported platform.  Choose ._
-from the following links in the db4o Download Center for your platform:
+.n
+.1 Object Manager ..
+.2 Installation ..
+The db4o  .l ObjectManager Object Manager .. , a GUI tool to browse and query ._
+database files, is packaged separately for each supported platform. Choose ._
+from the following links in the  .l http://www.db4o.com/community/ontheroad/downloadcenter/ db4o Download Center ..  for your platform:
+- db4o ObjectManager for Windows IKVM (Java VM included)
 - db4o ObjectManager for Windows no Java VM
-- db4o ObjectManager for Windows IKVM (Java VM for .net included)
 - db4o ObjectManager for Linux
 
 Once you have downloaded the appropriate Object Manager build, create a folder ._
 called Object Manager in an appropriate location and unpack the downloaded ._
 zip file there.
 
-.2 Running Object Manager for Windows IKVM
+.2 Running ..
+.3 Windows IKVM ..
 Object Manager for Windows IKVM includes the open-source IKVM Java virtual ._
 machine in the download.  Simply double-click the objectmanager.bat file ._
 to start Object Manager.
 
-.2 Running Object Manager for Windows no Java VM
+.3 Windows no Java VM ..
 This build assumes that your computer already has a Sun Java Virtual Machine ._
 version 1.3 or later installed and that your operating system path already ._
 lists the directory containing your java.exe file.  If this is true, you ._
@@ -60,7 +64,7 @@ can simply double-click the objectmanager.bat file to start Object Manager. ._
 Otherwise, you will need to edit objectmanager.bat and specify the full ._
 path and file name for your java.exe file on the first line.
 
-.2 Running Object Manager for Linux
+.3 Linux ..
 This build assumes that your computer already has a Sun Java Virtual Machine ._
 version 1.3 or later installed and that your PATH variable already lists the ._
 directory containing the java binary.  If this is not the case, you will
@@ -70,7 +74,7 @@ not preserve the executable permissions for objectmanager.sh, you will need
 to `chmod +x objectmanager.sh`.  Once this is complete, running objectmanager.sh ._
 will start Object Manager.
 
-
+.n
 .1 API ..
 The API documentation for db4o is supplied as JavaDocs in 
 ../db4o-4.0/doc/api/index.html. While you read through this ._
