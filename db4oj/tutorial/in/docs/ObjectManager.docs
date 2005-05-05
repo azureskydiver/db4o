@@ -116,5 +116,9 @@ be detailed error messages in the Object Manager log file.  This file is named .
 \.objectmanager.log and is stored in your user's home directory.  ._
 If you post a question on the db4o newsgroups concerning a crash or failure ._
 in Object Manager, please also attach a copy of your Object Manager log file, ._
-so that we can efficiently diagnose the problem.
+so that we can efficiently diagnose the problem.  This file is overwritten ._
+each time you run Object Manager, so please make a copy of it after an error ._
+occurs so that this diagnostic information is not lost.
+
+
 
