@@ -42,19 +42,19 @@ tutorial produces the following:
 
 You will notice in the screen shot that all objects have (G) in front of them. ._
 This is because the Object Manager does not know the correct classpath in order ._
-to load the actual Java classes that these object represent, so it is ._
+to load the actual Java classes that these objects represent, so it is ._
 displaying them generically (using the generic reflector).
 
 The Object Manager can display some data types more naturally if it has the ._
 class definitions available, so it provides a way to extend its classpath ._
-at runtime so that it can find the Java or .net class definitions.  This ._
+at runtime so that it can find the Java or .NET class definitions.  This ._
 is done through the preferences dialog, accessed through "File | Preferences..."
 
 Let's add the classpath of the db4o chapter 4 tutorial classes:
 - Choose "File | Preferences..."
 - Select the "Classpath" page of the preferences dialog box
 - Choose the "Add directory..."
-- Select the directory you have selected as your output directory for compiling
+- Select the directory you have selected as your output directory for compiling ._
 the db4o tutorial files and click OK.
 
 (You can add a Jar or zip file similarly.)
@@ -64,9 +64,10 @@ Your preferences dialog should look something like the following when you are do
 .g objectmanager_preferences.gif ..
 
 Click OK to close the Preferences dialog box.  Now your tree will be refreshed, ._
-and you will notice that all of the (G)'s are now gone.  All of your ._
+and you will notice that all of the (G)'s are gone.  All of your ._
 preference settings, including your preferred classpath, are stored in a ._
-db4o database called ...objectmanager.yap in your home directory.
+db4o database called ._
+\.objectmanager.yap in your home directory.
 
 .2 Querying for objects ..
 
@@ -111,8 +112,8 @@ field.  The workaround is to browse a backup or defragmented databse.
 - The Generic Reflector still has trouble expanding certain types of objects.
 
 If something goes wrong when using Object Manager, there almost certainly will ._
-be detailed error messages in the Object Manager log file.  This file is ._
-named ...objectmanager.log and is stored in your user's home directory.  ._
+be detailed error messages in the Object Manager log file.  This file is named ._
+\.objectmanager.log and is stored in your user's home directory.  ._
 If you post a question on the db4o newsgroups concerning a crash or failure ._
 in Object Manager, please also attach a copy of your Object Manager log file, ._
 so that we can efficiently diagnose the problem.
