@@ -67,8 +67,14 @@ namespace db4obrowser
 			TreeNode root = current;
 			TreeNode currentParent = null;			
 			Stack nodes = new Stack();			
+
+			string path = _main.GetTutorialFilePath("outline.html");
+			if (!File.Exists(path))
+			{
+				return;
+			}
 			
-			XmlTextReader reader = new XmlTextReader(_main.GetTutorialFilePath("outline.html"));
+			XmlTextReader reader = new XmlTextReader(path);
 			while (reader.Read())
 			{
 				string name = reader.Name;				
