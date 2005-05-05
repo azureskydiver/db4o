@@ -2,3 +2,4 @@ bin
 db4o40ntutorial.csproj.user
 db4o40ntutorial.suo
 obj
+*.user
