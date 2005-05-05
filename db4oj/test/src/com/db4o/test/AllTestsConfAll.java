@@ -76,6 +76,7 @@ public class AllTestsConfAll extends TestSuite{
 	        KeepCollectionContent.class,
 			MassUpdates.class,
 			Messaging.class,
+            MultiDelete.class,
 			MultipleEvaluationGetObjectCalls.class,
             NeverAnObjectStored.class,
 			NoInstanceStored.class,

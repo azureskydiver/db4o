@@ -7,6 +7,7 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
+import com.db4o.test.replication.*;
 import com.db4o.tools.*;
 import com.db4o.types.*;
 
@@ -67,18 +68,26 @@ public class Db4oHashMap {
         
         checkHelper(i_helper);
         runElementTest(false);
+
         
         boolean defrag = true;
         
-        
-        if(!Test.clientServer  && defrag){
-            long id = Test.objectContainer().getID(this);
-            Test.close();
-            new Defragment().run(AllTests.FILE_SOLO, true);
-            Test.open();
-            restoreMembers();
-            checkHelper(i_helper);
-            runElementTest(false);
+        if(defrag){
+            
+            Test.commit();
+            
+            close();
+            
+            try {
+                new Defragment().run(currentFileName(), true);
+            } finally {
+                
+                reOpen();
+            }
+            
+           restoreMembers();
+           checkHelper(i_helper);
+           runElementTest(false);
         }
     }
     
@@ -338,7 +347,22 @@ public class Db4oHashMap {
         }
     }
     
+    private String currentFileName() {
+        return Test.isClientServer()
+            ? Test.FILE_SERVER
+            : Test.FILE_SOLO;
+    }
     
+    private void close() {
+        Test.close();
+        if (Test.isClientServer()) {
+            Test.server().close();
+        }
+    }
+    
+    private void reOpen() {
+        Test.reOpenServer();
+    }
     
 
 }

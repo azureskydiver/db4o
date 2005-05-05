@@ -13,16 +13,21 @@ public class AllTestsConfSingle extends TestSuite{
 	
     TestSuite[] TEST_SUITES = new TestSuite[]{
         
-        // suite("com.db4o.test.jdk5.Jdk5TestSuite"),
-        this //,
-        //new ReplicationTestSuite()
-        
+        suite("com.db4o.test.jdk5.Jdk5TestSuite"),
+//        this, 
+//        new ReplicationTestSuite()
     };
 
     
     public Class[] tests(){
         return new Class[] {
-            ReplicateExistingFile.class
+            // Db4oLinkedList.class,
+            Db4oHashMap.class,
+            // ReplicateExistingFile.class
+            // ReplicateDb4oList.class
+            // SimplestPossible.class
+            // MultiDelete.class
+            // GenericFeatures.class
     	};
     }
 
@@ -39,7 +44,7 @@ public class AllTestsConfSingle extends TestSuite{
     /**
       * run the tests stand-alone 
       */
-    public boolean SOLO = true;
+    public boolean SOLO = false;
     
     /**
       * run the tests in client/server mode 
