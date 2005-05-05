@@ -174,11 +174,6 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         i_discardFreeSpace = bytes;
     }
 
-	public void enableReplication(int scope) {
-		generateUUIDs(scope);
-		generateVersionNumbers(scope);
-	}
-
     public void encrypt(boolean flag) {
         globalSettingOnly();
         i_encrypt = flag;

@@ -161,18 +161,6 @@ public interface Configuration {
     public void discardFreeSpace(int byteCount);
 
     /**
-     * Must be called before databases are created or opened
-     * so that db4o will control object versions and generate object UUIDs,
-     * which are required for using replication.
-     * 
-     * @param scope one of the following values:<br>
-     * -1 - off<br>
-     * 1 - configure classes individually<br>
-     * Integer.MAX_Value - on for all classes
-     */
-	public void enableReplication(int scope);
-	
-    /**
      * configures the use of encryption.
      * <br><br>This method needs to be called <b>before</b> a database file
      * is created with the first 
