@@ -516,6 +516,7 @@
 			</fileset>
 			<fileset dir="${dir.n.tutorial}">
 				<include name="**/*.cs" />
+				<exclude name="db4o-tutorial/**/*.*" />
 			</fileset>
 			<fileset dir="${dir.n.tutorial.bin}">
 				<include name="**/*.dll" />
@@ -584,6 +585,7 @@
 			</fileset>
 			<fileset dir="${dir.n.tutorial}">
 				<include name="**/*.cs" />
+				<exclude name="db4o-tutorial/**/*.*" />
 			</fileset>
 			<fileset dir="${dir.n.tutorial.bin}">
 				<include name="**/*.dll" />
