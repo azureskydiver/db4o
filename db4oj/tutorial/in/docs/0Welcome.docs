@@ -41,7 +41,7 @@ you plan to experiment with first. ..? .? java The db4o Java distribution comes 
 as one zip file, db4o-4.5-java.zip. When ._
 you unzip this file, you get the following directory structure:
 
-.g directoryjava.jpg ..
+.g directoryjava.gif ..
 
 
 This tutorial comes in multiple versions. Make sure ._
@@ -68,7 +68,7 @@ comes as one MSI installer file, ._
 db4o-4.5-net.msi. After you run the installer, you get the following directory ._
 structure:
 
-.g directorynet.jpg ..
+.g directorynet.gif ..
 
 
 This tutorial comes in multiple versions. Make sure ._
