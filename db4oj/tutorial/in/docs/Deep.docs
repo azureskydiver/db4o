@@ -48,6 +48,7 @@ them all by just traversing our list structure.
 
 Ouch! What's happening here?
 
+.a Activation ..
 .2 Activation depth ..
 
 Deja vu - this is just the other side of the update depth issue.

@@ -89,7 +89,7 @@ domain classes within the plugin.
 .1 Running without classes ..
 
 Recently db4o has started to learn to cope with missing class definitions. ._
-This is a by-product of the work on our object manager application. However, ._
+This is a by-product of the work on our  .l ObjectManager object manager application .. . However, ._
 this feature is still quite restricted (read-only mode, etc.), incomplete and ._
 is under heavy development. If you like to play with this feature and help ._
 us with your feedback to enhance it, you are welcome, but we strongly recommend ._
