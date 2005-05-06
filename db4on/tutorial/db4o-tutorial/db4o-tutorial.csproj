@@ -124,6 +124,7 @@
                 />
                 <File
                     RelPath = "src\AssemblyInfo.cs"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
@@ -163,7 +164,7 @@
                 />
                 <File
                     RelPath = "src\OutputView.cs"
-                    SubType = "Code"
+                    SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File
@@ -198,7 +199,7 @@
                 />
                 <File
                     RelPath = "src\WebBrowserView.cs"
-                    SubType = "Code"
+                    SubType = "Form"
                     BuildAction = "Compile"
                 />
                 <File
