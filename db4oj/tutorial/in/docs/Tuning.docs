@@ -238,15 +238,35 @@ ObjectConstructors) methods and configuring db4o to use a ._
 translator on startup with
 .c Db4o.configure().objectClass("yourPackage.yourClass").translate() ..
 
-.1 Increase max database size / block size ..
-.c Db4o.configure().blockSize(newBlockSize);
-.c Defragment.main(new String[] {"mydb.yap"});
 
-.i Effect ..
+.1 Increasing the maximum database file size ..
+.c Db4o.configure().blockSize(newBlockSize);
+Defragment.main(new String[] {"mydb.yap"}); ..
+
+.i Advantage ..
 Increasing the block size from the default of 1 to a higher value permits ._
 you to store more data in a db4o database.
 
-The block size can be between 1 (the default) and 127, which will ._
-give you a maximum of 254 GB of storage.
+.i Effect ..
+By default db4o databases can have a maximum size of 2GB. By increasing ._
+the block size that db4o should internally use, the upper limit for ._
+database files sizes can be raised to multiples of 2GB. Any value ._
+between 1 byte (2GB) to 127 bytes (254GB) can be chosen as the block ._
+size.
+
+Because of possible padding for objects that are not exact multiples in ._
+length of the block size, database files will naturally tend to be ._
+bigger if a higher value is chosen. Because of less file access cache ._
+hits a higher value will also have a negative effect on performance.
+
+A very good choice for this value is 8 bytes, because that corresponds ._
+to the slot length of the pointers (address + length) that db4o ._
+internally uses.
+
+.i Alternate Strategies ..
+It can also be very efficient to use multiple ObjectContainers instead of ._
+one big one. Objects can be freely moved, copied and  .l Replication replicated ..  between ._
+Objectcontainers.
+
 
 
