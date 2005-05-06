@@ -104,6 +104,7 @@
                 />
                 <File
                     RelPath = "src\AssemblyInfo.cs"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
             </Include>
