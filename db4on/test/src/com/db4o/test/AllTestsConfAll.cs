@@ -34,17 +34,26 @@ namespace com.db4o.test {
             typeof(CollectionActivation),
             typeof(Cs),
             typeof(CsArrays),
+#if NET
 			typeof(CsAppDomains),
+#endif
             typeof(CsCascadeDeleteToStructs),
 			typeof(CsCollections),
 			typeof(CsCustomTransientAttribute),
 			typeof(CsDate),
+#if NET
 		    typeof(CsDelegate),
 			typeof(CsEnum),
+#endif
+                                              
             typeof(CsEvaluationDelegate),
+#if NET
 			typeof(CsMarshalByRef),
+#endif
             typeof(CsStructs),
+#if NET
 		    typeof(CsType),
+#endif
             typeof(DerivedFromArrayList),
             typeof(Db4oHashMap),
             typeof(Db4oLinkedList),
@@ -56,7 +65,9 @@ namespace com.db4o.test {
             typeof(ExternalBlobs),
             typeof(ExtMethods),
 		    typeof(HashtableModifiedUpdateDepth),
+#if NET
 		    typeof(HoldsAnArrayList),
+#endif
             typeof(IndexedByIdentity),
             typeof(Isolation),
             typeof(IsStored),

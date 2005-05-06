@@ -121,9 +121,14 @@ namespace com.db4o.test {
             return true;
         }
 
-		public static bool ensureEquals(object expected, object actual)
-		{
-			return ensure(string.Format("'{0}' != '{1}'", expected, actual), Object.Equals(expected, actual));
+		public static bool ensureEquals(object expected, object actual){
+            bool eq = true;
+            if(expected == null){
+                eq = (actual == null);
+            }else{
+                eq = expected.Equals(actual);
+            }
+			return ensure(string.Format("'{0}' != '{1}'", expected, actual), eq);
 		}
       
         public static void ensureOccurrences(Object obj, int count) {
