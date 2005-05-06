@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="Replication"></a><br>
-<a name="outline564"></a><br><h1>20. Replication</h1><br>
+<a name="outline562"></a><br><h1>20. Replication</h1><br>
 db4o provides replication functionality to periodically synchronize&nbsp;databases that work disconnected from eachother, such as remote autonomous servers&nbsp;or handheld devices synchronizing with central servers. <br>
 <br>
 In order to use replication, the following configuration settings have&nbsp;to be called before a database file is created or opened:<br>
@@ -60,7 +60,7 @@ Calling whereModified() will add a constraint to the query so that it only retur
 After replication commit, all modified objects (INCLUDING THE ONES THAT WERE NOT&nbsp;REPLICATED) are considered to be "in sync" and will not show up in future&nbsp;"where modified" queries, unless they are modified again.<br>
 <br>
 <ul>
-<a name="outline565"></a><br><h2>20.1. Under the Hood</h2><br>
+<a name="outline563"></a><br><h2>20.1. Under the Hood</h2><br>
 Let's take a look at the necessary configuration calls to tell db4o to generate&nbsp;version numbers and UUIDs:<br>
 <br>
 (1) An object's version number indicates the last time an object was modified. It is the&nbsp;database version at the moment of the modification. The database version starts at zero&nbsp;and is incremented every time a transaction is commited.<br>
@@ -70,7 +70,7 @@ Let's take a look at the necessary configuration calls to tell db4o to generate&
 When the replication process is commited, the lowest database version number among both&nbsp;databases is set to be equal to the highest. After replication commit, therefore, both&nbsp;databases have the same version number and are "in sync".<br>
 <br>
 <a name="ReplicatingExisting"></a><br>
-<a name="outline566"></a><br><h2>20.2. Replicating Existing Data Files</h2><br>
+<a name="outline564"></a><br><h2>20.2. Replicating Existing Data Files</h2><br>
 As we learned in the last sections, Db4o.configure().generateUUIDs() and&nbsp;Db4o.configure().generateVersionNumbers()&nbsp;&nbsp;(or its objectClass counterparts)&nbsp;must be called before storing any objects to a data file because db4o replication needs&nbsp;object versions and UUIDs to work. This implies that objects in existing data files&nbsp;stored without the correct settings can't be replicated.<br>
 <br>
 Fortunately enabling replication for existing data files is a very simple process: <br>
