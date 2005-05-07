@@ -6,6 +6,7 @@ public class ReplicationTestSuite extends TestSuite{
 
 	public Class[] tests() {
 		return new Class[] {
+            MigrateFromNull.class,
             ReplicateDb4oList.class,
 			// ReplicationFeaturesMain.class,
             R0to4Runner.class,

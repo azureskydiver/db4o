@@ -1030,9 +1030,18 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     public void migrateFrom(ObjectContainer objectContainer) {
-        i_migrateFrom = (YapStream) objectContainer;
-        i_handlers.i_migration = new MigrationConnection();
-        i_migrateFrom.i_handlers.i_migration = i_handlers.i_migration; 
+        if(objectContainer == null){
+            YapStream migratedFrom = i_migrateFrom;
+            i_migrateFrom = null;
+            if(migratedFrom != null && migratedFrom.i_migrateFrom == this){
+                migratedFrom.migrateFrom(null);
+            }
+            i_handlers.i_migration = null;
+        }else{
+            i_migrateFrom = (YapStream) objectContainer;
+            i_handlers.i_migration = new MigrationConnection();
+            i_migrateFrom.i_handlers.i_migration = i_handlers.i_migration;
+        }
     }
 
     final void needsUpdate(YapClass a_yapClass) {
