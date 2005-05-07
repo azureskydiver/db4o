@@ -27,8 +27,20 @@ encryption mechanism can be added. All that needs ._
 to be done is to write an IoAdapter plugin for db4o file IO.
 
 This is a lot easier than it sounds. Simply:
-- take the sources of com.db4o.io.RandomAccessFileAdapter
-- modify the #read() and #write() methods to encrypt and decrypt ._
+- take the sources of com.db4o.io.RandomAccessFileAdapter as an example
+- write your own IoAdapter implementation that delegates raw file ._
+access to another adapter using the GoF decorator pattern.
+- Implement the #read() and #write() methods to encrypt and decrypt ._
 when bytes are being exchanged with the file
 - plug your adapter into db4o with the following method:
 .c Db4o.configure().io(new MyEncryptionAdapter()); ..
+
+However, you'll have to keep in mind that db4o will write partial udates. ._
+For example, it may write a full object and then only modify one field ._
+entry later one. Therefore it is not sufficient to en-/decrypt each access ._
+in isolation. You'll rather have to make up a tiling structure that defines ._
+the data chunks that have to be en-/decrypted together.
+
+Another method to inject encryption capabilities into db4o for instances ._
+of specific classes only is to implement and configure an en-/decrypting ._
+translator.
