@@ -486,7 +486,7 @@ namespace com.db4o
 			}
 			else
 			{
-				ta.delete(yo, a_object, a_cascade, true);
+				ta.delete(yo, a_cascade);
 			}
 		}
 
@@ -1105,9 +1105,22 @@ namespace com.db4o
 
 		public virtual void migrateFrom(com.db4o.ObjectContainer objectContainer)
 		{
-			i_migrateFrom = (com.db4o.YapStream)objectContainer;
-			i_handlers.i_migration = new com.db4o.MigrationConnection();
-			i_migrateFrom.i_handlers.i_migration = i_handlers.i_migration;
+			if (objectContainer == null)
+			{
+				com.db4o.YapStream migratedFrom = i_migrateFrom;
+				i_migrateFrom = null;
+				if (migratedFrom != null && migratedFrom.i_migrateFrom == this)
+				{
+					migratedFrom.migrateFrom(null);
+				}
+				i_handlers.i_migration = null;
+			}
+			else
+			{
+				i_migrateFrom = (com.db4o.YapStream)objectContainer;
+				i_handlers.i_migration = new com.db4o.MigrationConnection();
+				i_migrateFrom.i_handlers.i_migration = i_handlers.i_migration;
+			}
 		}
 
 		internal void needsUpdate(com.db4o.YapClass a_yapClass)
@@ -1629,7 +1642,7 @@ namespace com.db4o
 						if (doUpdate)
 						{
 							dontDelete = false;
-							a_trans.dontDelete(oid, true);
+							a_trans.dontDelete(oid);
 							if (a_checkJustSet)
 							{
 								a_checkJustSet = false;
@@ -1650,7 +1663,7 @@ namespace com.db4o
 				}
 				if (dontDelete)
 				{
-					a_trans.dontDelete(id, false);
+					a_trans.dontDelete(id);
 				}
 				return id;
 			}

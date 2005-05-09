@@ -4,8 +4,8 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="DOTNETSpecific"></a><br>
-<a name="outline565"></a><br><h1>21. .NET Specific Notes</h1><ul>
-<a name="outline566"></a><br><h2>21.1. Enums</h2><br>
+<a name="outline562"></a><br><h1>21. .NET Specific Notes</h1><ul>
+<a name="outline563"></a><br><h2>21.1. Enums</h2><br>
 When dealing with .NET enumerated types we must face the fact&nbsp;that they are nothing more than glorified integer numbers. In other&nbsp;words, everything we know about how db4o handles integer values&nbsp;also applies to .NET enumerated types:&nbsp;it does not make sense to store, delete or retrieve enumerated values&nbsp;directly but to always use them as fields of other types.<br>
 <br>
 A very important implication of this similarity that might not be entirely&nbsp;obvious is in how db4o will handle enumerated values during a Query By Example.&nbsp;Let's consider the following (WRONG) example:<br>
@@ -75,7 +75,7 @@ or explicitly setting the value of every element:<br>
 }<br>
 </code></td></tr></table>
 <br>
-<a name="outline567"></a><br><h2>21.2. Delegates and Events</h2><br>
+<a name="outline564"></a><br><h2>21.2. Delegates and Events</h2><br>
 Db4o rules for delegate fields are very straightforward:&nbsp;<b>delegates are simply not stored.</b><br>
 <br>
 Events and delegates are generally used for binding user interface elements&nbsp;and domain models together. The Db4o team felt that not storing&nbsp;delegate fields by default was more appropriate than opening&nbsp;what could potentially be a very nasty can of worms&nbsp;(just think of a text box bound to a Customer.Changed event).<br>

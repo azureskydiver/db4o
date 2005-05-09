@@ -97,6 +97,8 @@ namespace com.db4o
 
 		public static com.db4o.DTrace READ_ARRAY_WRAPPER;
 
+		public static com.db4o.DTrace READ_BYTES;
+
 		public static com.db4o.DTrace READ_ID;
 
 		public static com.db4o.DTrace READ_SLOT;

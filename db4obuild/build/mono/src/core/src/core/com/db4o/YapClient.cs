@@ -225,8 +225,8 @@ namespace com.db4o
 		internal sealed override bool delete5(com.db4o.Transaction ta, com.db4o.YapObject
 			 yo, int a_cascade, bool userCall)
 		{
-			writeMsg(com.db4o.Msg.DELETE.getWriterFor2Ints(i_trans, yo.getID(), userCall ? 1 : 
-				0));
+			writeMsg(com.db4o.Msg.DELETE.getWriterForInts(i_trans, new int[] { yo.getID(), userCall
+				 ? 1 : 0 }));
 			return true;
 		}
 
@@ -546,7 +546,8 @@ namespace com.db4o
 
 		internal override void readBytes(byte[] a_bytes, int a_address, int a_length)
 		{
-			writeMsg(com.db4o.Msg.READ_BYTES.getWriterFor2Ints(i_trans, a_address, a_length));
+			writeMsg(com.db4o.Msg.READ_BYTES.getWriterForInts(i_trans, new int[] { a_address, 
+				a_length }));
 			com.db4o.YapWriter reader = expectedByteResponse(com.db4o.Msg.READ_BYTES);
 			j4o.lang.JavaSystem.arraycopy(reader._buffer, 0, a_bytes, 0, a_length);
 		}

@@ -29,7 +29,7 @@ namespace com.db4o
 			com.db4o.YapStream stream = trans.i_stream;
 			lock (stream.i_lock)
 			{
-				trans.dontDelete(id, true);
+				trans.dontDelete(id);
 				return true;
 			}
 		}

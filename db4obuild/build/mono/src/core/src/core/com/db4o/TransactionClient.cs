@@ -52,13 +52,11 @@ namespace com.db4o
 
 			public void visit(object a_object)
 			{
-				com.db4o.TreeIntObject tio = (com.db4o.TreeIntObject)a_object;
-				if (tio.i_object != null)
+				com.db4o.DeleteInfo info = (com.db4o.DeleteInfo)a_object;
+				if (info._delete && info._reference != null)
 				{
-					object[] arr = (object[])tio.i_object;
-					com.db4o.YapObject yo = (com.db4o.YapObject)arr[0];
 					this._enclosing.i_yapObjectsToGc = com.db4o.Tree.add(this._enclosing.i_yapObjectsToGc
-						, new com.db4o.TreeIntObject(yo.getID(), yo));
+						, new com.db4o.TreeIntObject(info.i_key, info._reference));
 				}
 			}
 
@@ -70,15 +68,15 @@ namespace com.db4o
 			commitTransactionListeners();
 			if (i_yapObjectsToGc != null)
 			{
-				i_yapObjectsToGc.traverse(new _AnonymousInnerClass37(this));
+				i_yapObjectsToGc.traverse(new _AnonymousInnerClass35(this));
 			}
 			i_yapObjectsToGc = null;
 			i_client.writeMsg(com.db4o.Msg.COMMIT);
 		}
 
-		private sealed class _AnonymousInnerClass37 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass35 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass37(TransactionClient _enclosing)
+			public _AnonymousInnerClass35(TransactionClient _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -92,17 +90,16 @@ namespace com.db4o
 			private readonly TransactionClient _enclosing;
 		}
 
-		internal override void delete(com.db4o.YapObject a_yo, object a_object, int a_cascade
-			, bool a_deleteMembers)
+		internal override void delete(com.db4o.YapObject a_yo, int a_cascade)
 		{
-			base.delete(a_yo, a_object, a_cascade, false);
-			i_client.writeMsg(com.db4o.Msg.TA_DELETE.getWriterFor2Ints(this, a_yo.getID(), a_cascade
-				));
+			base.delete(a_yo, a_cascade);
+			i_client.writeMsg(com.db4o.Msg.TA_DELETE.getWriterForInts(this, new int[] { a_yo.
+				getID(), a_cascade }));
 		}
 
-		internal override void dontDelete(int a_id, bool a_deleteMembers)
+		internal override void dontDelete(int a_id)
 		{
-			base.dontDelete(a_id, false);
+			base.dontDelete(a_id);
 			i_client.writeMsg(com.db4o.Msg.TA_DONT_DELETE.getWriterForInt(this, a_id));
 		}
 
@@ -141,8 +138,8 @@ namespace com.db4o
 		internal override void writeUpdateDeleteMembers(int a_id, com.db4o.YapClass a_yc, 
 			int a_type, int a_cascade)
 		{
-			i_client.writeMsg(com.db4o.Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterFor4Ints(this
-				, a_id, a_yc.getID(), a_type, a_cascade));
+			i_client.writeMsg(com.db4o.Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterForInts(this, 
+				new int[] { a_id, a_yc.getID(), a_type, a_cascade }));
 		}
 	}
 }

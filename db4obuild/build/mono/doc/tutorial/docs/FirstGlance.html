@@ -3,12 +3,12 @@
 <head>
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
-<body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="outline447"></a><br><h1>1. First Glance</h1>Before diving straight into the first source code samples&nbsp;let's get you familiar with some basics.<br>
+<body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="outline444"></a><br><h1>1. First Glance</h1>Before diving straight into the first source code samples&nbsp;let's get you familiar with some basics.<br>
 <br>
 <ul>
-<a name="outline448"></a><br><h2>1.1. The db4o engine...</h2>The db4o object database engine consists of one single DLL.&nbsp;This is all that you need to program against. The version&nbsp;supplied with the distribution can be found in /usr/lib/db4o/.	<br>
+<a name="outline445"></a><br><h2>1.1. The db4o engine...</h2>The db4o object database engine consists of one single DLL.&nbsp;This is all that you need to program against. The version&nbsp;supplied with the distribution can be found in /usr/lib/db4o/.	<br>
 <br>
-<a name="outline449"></a><br><h2>1.2. Installation</h2>To use db4o in a development project, you only need to add one&nbsp;of the above db4o.dll files to your project references.<br>
+<a name="outline446"></a><br><h2>1.2. Installation</h2>To use db4o in a development project, you only need to add one&nbsp;of the above db4o.dll files to your project references.<br>
 <br>
 Here is how to do this if you are using MonoDevelop:<br>
 - Right-click on "References" in the Solution Tab<br>
@@ -18,28 +18,28 @@ Here is how to do this if you are using MonoDevelop:<br>
 - click "Open"<br>
 - click "OK"<br>
 <br>
-<a name="outline450"></a><br><h2>1.3. Object Manager</h2><br>
+<a name="outline447"></a><br><h2>1.3. Object Manager</h2><br>
 <ul>
-<a name="outline451"></a><br><h2>1.3.1. Installation</h2>The db4o <a href="ObjectManager.html#ObjectManager">Object Manager</a>, a GUI tool to browse and query&nbsp;database files, is packaged separately for each supported platform. Choose&nbsp;from the following links in the <a href="http://www.db4o.com/community/ontheroad/downloadcenter/" target="_blank">db4o Download Center</a>&nbsp;for your platform:<br>
+<a name="outline448"></a><br><h2>1.3.1. Installation</h2>The db4o <a href="ObjectManager.html#ObjectManager">Object Manager</a>, a GUI tool to browse and query&nbsp;database files, is packaged separately for each supported platform. Choose&nbsp;from the following links in the <a href="http://www.db4o.com/community/ontheroad/downloadcenter/" target="_blank">db4o Download Center</a>&nbsp;for your platform:<br>
 - db4o ObjectManager for Windows IKVM (Java VM included)<br>
 - db4o ObjectManager for Windows no Java VM<br>
 - db4o ObjectManager for Linux<br>
 <br>
 Once you have downloaded the appropriate Object Manager build, create a folder&nbsp;called Object Manager in an appropriate location and unpack the downloaded&nbsp;zip file there.<br>
 <br>
-<a name="outline452"></a><br><h2>1.3.2. Running</h2><br>
+<a name="outline449"></a><br><h2>1.3.2. Running</h2><br>
 <ul>
-<a name="outline453"></a><br><h2>1.3.2.1. Windows IKVM</h2>Object Manager for Windows IKVM includes the open-source IKVM Java virtual&nbsp;machine in the download.&nbsp;&nbsp;Simply double-click the objectmanager.bat file&nbsp;to start Object Manager.<br>
+<a name="outline450"></a><br><h2>1.3.2.1. Windows IKVM</h2>Object Manager for Windows IKVM includes the open-source IKVM Java virtual&nbsp;machine in the download.&nbsp;&nbsp;Simply double-click the objectmanager.bat file&nbsp;to start Object Manager.<br>
 <br>
-<a name="outline454"></a><br><h2>1.3.2.2. Windows no Java VM</h2>This build assumes that your computer already has a Sun Java Virtual Machine&nbsp;version 1.3 or later installed and that your operating system path already&nbsp;lists the directory containing your java.exe file.&nbsp;&nbsp;If this is true, you&nbsp;can simply double-click the objectmanager.bat file to start Object Manager.&nbsp;Otherwise, you will need to edit objectmanager.bat and specify the full&nbsp;path and file name for your java.exe file on the first line.<br>
+<a name="outline451"></a><br><h2>1.3.2.2. Windows no Java VM</h2>This build assumes that your computer already has a Sun Java Virtual Machine&nbsp;version 1.3 or later installed and that your operating system path already&nbsp;lists the directory containing your java.exe file.&nbsp;&nbsp;If this is true, you&nbsp;can simply double-click the objectmanager.bat file to start Object Manager.&nbsp;Otherwise, you will need to edit objectmanager.bat and specify the full&nbsp;path and file name for your java.exe file on the first line.<br>
 <br>
-<a name="outline455"></a><br><h2>1.3.2.3. Linux</h2>This build assumes that your computer already has a Sun Java Virtual Machine&nbsp;version 1.3 or later installed and that your PATH variable already lists the&nbsp;directory containing the java binary.&nbsp;&nbsp;If this is not the case, you will<br>
+<a name="outline452"></a><br><h2>1.3.2.3. Linux</h2>This build assumes that your computer already has a Sun Java Virtual Machine&nbsp;version 1.3 or later installed and that your PATH variable already lists the&nbsp;directory containing the java binary.&nbsp;&nbsp;If this is not the case, you will<br>
 need to edit the objectmanager.sh file and specify the full path and file name&nbsp;of the Java binary on the "export VMEXE" line".&nbsp;&nbsp;Since the zip archive does&nbsp;not preserve the executable permissions for objectmanager.sh, you will need<br>
 to `chmod +x objectmanager.sh`.&nbsp;&nbsp;Once this is complete, running objectmanager.sh&nbsp;will start Object Manager.<br>
 <br>
 </ul>
 </ul>
-<a name="outline456"></a><br><h2>1.4. API</h2>The API documentation for db4o is supplied as a set of HTML pages in <br>
+<a name="outline453"></a><br><h2>1.4. API</h2>The API documentation for db4o is supplied as a set of HTML pages in <br>
 /usr/share/doc/packages/db4o/api/index.html. While you read through this&nbsp;tutorial, it may be helpful to look into the API documentation occasionaly.&nbsp;For the start, the namespaces com.db4o and com.db4o.query are&nbsp;all that you need to worry about.<br>
 <br>
 Let's take a first brief look at one of the most important interfaces:<br>
