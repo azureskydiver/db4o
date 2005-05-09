@@ -21,14 +21,17 @@ public class DTrace {
             
             // address: 244346, 44
             
-            // addRange(5130);
+            // addRange(3003);
             
             // addRange(5948);
             // addRange(4580);
             
-            addRange(2325);
+//            addRange(383512);
+//            
+//            addRangeWithEnd(3835808, 3836267);
             
-            // addRangeWithLength(1, 10000000);
+            
+            addRangeWithLength(1,10000000);
             
             // addRangeWithLength(25876597, 44);
             // addRange(7274611);
@@ -38,7 +41,7 @@ public class DTrace {
             CANDIDATE_READ = new DTrace(true, true, "candidate read", true);
             CLOSE = new DTrace(true, true, "close", true);
             COLLECT_CHILDREN = new DTrace(true, true, "collect children", true);
-            COMMIT = new DTrace(true, false, "commit", true);
+            COMMIT = new DTrace(false, false, "commit", true);
             CONTINUESET = new DTrace(true, true, "continueset", true);
             CREATE_CANDIDATE = new DTrace(true, true, "create candidate", true);
             DELETE = new DTrace(true, true, "delete", true);
@@ -53,6 +56,7 @@ public class DTrace {
             JUST_SET = new DTrace(true, true, "just set", true);
             NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
             READ_ARRAY_WRAPPER = new DTrace(true, true, "read array wrapper", true);
+            READ_BYTES = new DTrace(true, true, "readBytes", true); 
             READ_ID = new DTrace(true, true, "read ID", true);
             READ_SLOT = new DTrace(true, true, "read slot", true);
             REFERENCE_REMOVED = new DTrace(true, true, "reference removed", true);
@@ -68,7 +72,10 @@ public class DTrace {
             // turnAllOffExceptFor(new DTrace[] {JUST_SET});
             // turnAllOffExceptFor(new DTrace[] {CANDIDATE_READ, CREATE_CANDIDATE, DONOTINCLUDE, EVALUATE_SELF});
             // turnAllOffExceptFor(new DTrace[] {DELETE});
-            // turnAllOffExceptFor(new DTrace[] {GET_YAPOBJECT, ID_TREE_ADD});
+            
+            // turnAllOffExceptFor(new DTrace[] {GET_SLOT, FREE_ON_COMMIT, FREE, WRITE_BYTES});
+            
+            turnAllOffExceptFor(new DTrace[] {WRITE_UPDATE_DELETE_MEMBERS});
          
         }
         return null;
@@ -119,6 +126,7 @@ public class DTrace {
     public static DTrace JUST_SET;
     public static DTrace NEW_INSTANCE;
     public static DTrace READ_ARRAY_WRAPPER;
+    public static DTrace READ_BYTES;
     public static DTrace READ_ID;
     public static DTrace READ_SLOT;
     public static DTrace REFERENCE_REMOVED;

@@ -52,29 +52,13 @@ class MsgD extends Msg{
 		return getWriterForLength(a_trans, 0);
 	}
 
-	final MsgD getWriterFor2Ints(Transaction a_trans, int id, int anInt) {
-		MsgD message = getWriterForLength(a_trans, YapConst.YAPINT_LENGTH * 2);
-		message.writeInt(id);
-		message.writeInt(anInt);
-		return message;
-	}
-
-	final MsgD getWriterFor3Ints(Transaction a_trans, int int1, int int2, int int3) {
-		MsgD message = getWriterForLength(a_trans, YapConst.YAPINT_LENGTH * 3);
-		message.writeInt(int1);
-		message.writeInt(int2);
-		message.writeInt(int3);
-		return message;
-	}
-	
-	final MsgD getWriterFor4Ints(Transaction a_trans, int int1, int int2, int int3, int int4) {
-		MsgD message = getWriterForLength(a_trans, YapConst.YAPINT_LENGTH * 4);
-		message.writeInt(int1);
-		message.writeInt(int2);
-		message.writeInt(int3);
-		message.writeInt(int4);
-		return message;
-	}
+    final MsgD getWriterForInts(Transaction a_trans, int[] ints) {
+        MsgD message = getWriterForLength(a_trans, YapConst.YAPINT_LENGTH * ints.length);
+        for (int i = 0; i < ints.length; i++) {
+            message.writeInt(ints[i]);
+        }
+        return message;
+    }
 	
 	final MsgD getWriterForIntArray(Transaction a_trans, int[] ints, int length){
 		MsgD message = getWriterForLength(a_trans, YapConst.YAPINT_LENGTH * (length + 1));

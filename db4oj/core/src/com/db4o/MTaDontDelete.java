@@ -13,7 +13,7 @@ class MTaDontDelete extends MsgD {
 	    Transaction trans = getTransaction();
 	    YapStream stream = trans.i_stream;
 	    synchronized (stream.i_lock) {
-	        trans.dontDelete(id, true);
+	        trans.dontDelete(id);
 	        return true;
 	    }
 	}

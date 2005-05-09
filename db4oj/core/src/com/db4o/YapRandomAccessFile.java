@@ -263,6 +263,11 @@ public class YapRandomAccessFile extends YapFile {
     }
 
     void readBytes(byte[] bytes, int address, int addressOffset, int length) {
+        
+        if (DTrace.enabled) {
+            DTrace.READ_BYTES.logLength(address + addressOffset, length);
+        }
+
         try{
             i_file.blockSeek(address, addressOffset);
             i_file.read(bytes, length);
