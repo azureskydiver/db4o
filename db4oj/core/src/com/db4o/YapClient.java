@@ -190,7 +190,7 @@ public class YapClient extends YapStream implements ExtClient {
     }
 
     final boolean delete5(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
-        writeMsg(Msg.DELETE.getWriterFor2Ints(i_trans, yo.getID(), userCall ? 1 : 0 ));
+        writeMsg(Msg.DELETE.getWriterForInts(i_trans, new int[]{ yo.getID(), userCall ? 1 : 0 }));
         return true;
     }
 
@@ -450,7 +450,7 @@ public class YapClient extends YapStream implements ExtClient {
     }
 
     void readBytes(byte[] a_bytes, int a_address, int a_length) {
-        writeMsg(Msg.READ_BYTES.getWriterFor2Ints(i_trans, a_address, a_length));
+        writeMsg(Msg.READ_BYTES.getWriterForInts(i_trans, new int[] {a_address, a_length}));
         YapWriter reader = expectedByteResponse(Msg.READ_BYTES);
         System.arraycopy(reader._buffer, 0, a_bytes, 0, a_length);
     }

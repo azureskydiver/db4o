@@ -14,7 +14,7 @@ class MTaDelete extends MsgD {
 	    YapStream stream = trans.i_stream;
 	    synchronized (stream.i_lock) {
 	        Object[] arr = stream.getObjectAndYapObjectByID(trans, id);
-	        trans.delete((YapObject)arr[1], arr[0],  cascade, true);
+	        trans.delete((YapObject)arr[1], cascade);
 	        return true;
 	    }
 	}

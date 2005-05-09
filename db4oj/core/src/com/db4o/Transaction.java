@@ -99,28 +99,28 @@ public class Transaction {
                 i_delete = null;
                 delete.traverse(new Visitor4() {
                     public void visit(Object a_object) {
-                        TreeIntObject tio = (TreeIntObject)a_object;
-                        if(tio.i_object != null){
-                            Object[] arr = (Object[])tio.i_object;
+                        DeleteInfo info  = (DeleteInfo)a_object;
+                        if(info._delete){
                             foundOne[0] = true;
-                            YapObject yo = (YapObject)arr[0];
-                            int cascade = ((Integer)arr[1]).intValue();
-                            Object obj = yo.getObject();
+                            Object obj = null;
+                            if(info._reference != null){
+                                obj = info._reference.getObject();
+                            }
                             if(obj == null){
                                 
                                 // This means the object was gc'd.
                                 
                                 // Let's try to read it again, but this may fail in CS mode
                                 // if another transaction has deleted it. We are taking care
-                                // of that in #delete4().
+                                // of possible nulls in #delete4().
                                 
-                                arr = finalThis.i_stream.getObjectAndYapObjectByID(finalThis, yo.getID());
+                                Object[] arr  = finalThis.i_stream.getObjectAndYapObjectByID(finalThis, info.i_key);
                                 obj = arr[0];
-                                yo = (YapObject)arr[1];
+                                info._reference = (YapObject)arr[1]; 
                             }
-                            i_stream.delete4(finalThis,yo , obj, cascade, false);
+                            i_stream.delete4(finalThis,info._reference , obj, info._cascade, false);
                         }
-                        i_delete = Tree.add(i_delete, new TreeIntObject(tio.i_key, null));
+                        i_delete = Tree.add(i_delete, new DeleteInfo(info.i_key, null, false, info._cascade)); 
                     }
                 });
             } while (foundOne[0]);
@@ -236,7 +236,7 @@ public class Transaction {
         }
     }
 
-    void delete(YapObject a_yo, Object a_object, int a_cascade, boolean a_deleteMembers) {
+    void delete(YapObject a_yo, int a_cascade) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
@@ -244,49 +244,32 @@ public class Transaction {
         if(DTrace.enabled){
             DTrace.TRANS_DELETE.log(id);
         }
-        TreeIntObject tio = (TreeIntObject) TreeInt.find(i_delete, id);
-        if (tio == null) {
-            tio = new TreeIntObject(id, new Object[] {a_yo,
-                new Integer(a_cascade)});
-            i_delete = Tree.add(i_delete, tio);
-        }else{
-            if(a_deleteMembers){
-                deleteCollectionMembers(a_yo, a_object, a_cascade);
-            }
+        
+        DeleteInfo info = (DeleteInfo) TreeInt.find(i_delete, id);
+        if(info == null){
+            info = new DeleteInfo(id, a_yo, true, a_cascade);
+            i_delete = Tree.add(i_delete, info);
+            return;
         }
-    }
-    
-    private void deleteCollectionMembers(YapObject a_yo, Object a_object, int a_cascade){
-        if(Debug.checkSychronization){
-            i_stream.i_lock.notify();
-        }
-        if(a_object != null){
-            if(reflector().isCollection(reflector().forObject(a_object))){
-                writeUpdateDeleteMembers(a_yo.getID(), a_yo.getYapClass(), i_stream.i_handlers.arrayType(a_object), a_cascade);
-            }
+        info._reference = a_yo;
+        if(a_cascade > info._cascade){
+            info._cascade = a_cascade;
         }
     }
 
-    void dontDelete(int a_id, boolean a_deleteMembers) {
+    void dontDelete(int a_id) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
         if(DTrace.enabled){
             DTrace.TRANS_DONT_DELETE.log(a_id);
         }
-        TreeIntObject tio = (TreeIntObject) TreeInt.find(i_delete, a_id);
-        if (tio != null) {
-            if(a_deleteMembers && tio.i_object != null){
-	            Object[] arr = (Object[])tio.i_object;
-	            YapObject yo = (YapObject)arr[0];
-	            int cascade = ((Integer)arr[1]).intValue();
-	            deleteCollectionMembers(yo, yo.getObject(), cascade);
-            }
-            tio.i_object = null;
-        } else {
-            tio = new TreeIntObject(a_id, null);
-            i_delete = Tree.add(i_delete, tio);
+        DeleteInfo info = (DeleteInfo) TreeInt.find(i_delete, a_id);
+        if(info == null){
+            i_delete = Tree.add(i_delete, new DeleteInfo(a_id, null, false, 0));
+            return;
         }
+        info._delete = false;
     }
 
     void dontRemoveFromClassIndex(int a_yapClassID, int a_id) {
@@ -850,26 +833,32 @@ public class Transaction {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        if(Tree.find(i_writtenUpdateDeletedMembers, new TreeInt(a_id)) == null){
-            if(DTrace.enabled){
-                DTrace.WRITE_UPDATE_DELETE_MEMBERS.log(a_id);
+        if(Tree.find(i_writtenUpdateDeletedMembers, new TreeInt(a_id)) != null){
+            return;
+        }
+        if(DTrace.enabled){
+            DTrace.WRITE_UPDATE_DELETE_MEMBERS.log(a_id);
+        }
+        i_writtenUpdateDeletedMembers = Tree.add(i_writtenUpdateDeletedMembers, new TreeInt(a_id));
+        YapWriter objectBytes = i_stream.readWriterByID(this, a_id);
+        if(objectBytes == null){
+            if (a_yc.hasIndex()) {
+                dontRemoveFromClassIndex(a_yc.getID(), a_id);
             }
-            i_writtenUpdateDeletedMembers = Tree.add(i_writtenUpdateDeletedMembers, new TreeInt(a_id));
-            YapWriter objectBytes = i_stream.readWriterByID(this, a_id);
-            if (objectBytes != null) {
-                a_yc.readObjectHeader(objectBytes, a_id);
-            } else {
-                if (a_yc.hasIndex()) {
-                    dontRemoveFromClassIndex(a_yc.getID(), a_id);
-                }
-            }
-            if (objectBytes != null) {
-                objectBytes.setCascadeDeletes(a_cascade);
-                a_yc.deleteMembers(objectBytes, a_type);
-                freeOnCommit(a_id, objectBytes.getAddress(), objectBytes
-                    .getLength());
+            return;
+        }
+        a_yc.readObjectHeader(objectBytes, a_id);
+        
+        DeleteInfo info = (DeleteInfo)TreeInt.find(i_delete, a_id);
+        if(info != null){
+            if(info._cascade > a_cascade){
+                a_cascade = info._cascade;
             }
         }
+        
+        objectBytes.setCascadeDeletes(a_cascade);
+        a_yc.deleteMembers(objectBytes, a_type);
+        freeOnCommit(a_id, objectBytes.getAddress(), objectBytes.getLength());
     }
 
     public String toString() {

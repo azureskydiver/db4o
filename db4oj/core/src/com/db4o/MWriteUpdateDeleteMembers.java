@@ -10,7 +10,8 @@ final class MWriteUpdateDeleteMembers extends MsgD {
 			    readInt(),
 				stream.getYapClass(readInt()),
 				readInt(),
-				readInt());
+				readInt()
+                );
 		}
 		return true;
 	}

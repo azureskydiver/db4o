@@ -17,11 +17,9 @@ final class TransactionClient extends Transaction {
         if (i_delete != null) {
             i_delete.traverse(new Visitor4() {
                 public void visit(Object a_object) {
-                    TreeIntObject tio = (TreeIntObject) a_object;
-                    if (tio.i_object != null) {
-                        Object[] arr = (Object[]) tio.i_object;
-                        YapObject yo = (YapObject) arr[0];
-                        i_yapObjectsToGc = Tree.add(i_yapObjectsToGc, new TreeIntObject(yo.getID(), yo));
+                    DeleteInfo info = (DeleteInfo) a_object;
+                    if (info._delete && info._reference != null) {
+                        i_yapObjectsToGc = Tree.add(i_yapObjectsToGc, new TreeIntObject(info.i_key, info._reference));
                     }
                 }
             });
@@ -45,14 +43,13 @@ final class TransactionClient extends Transaction {
         i_client.writeMsg(Msg.COMMIT);
     }
 
-    void delete(YapObject a_yo, Object a_object, int a_cascade,
-        boolean a_deleteMembers) {
-        super.delete(a_yo, a_object, a_cascade, false);
-        i_client.writeMsg(Msg.TA_DELETE.getWriterFor2Ints(this, a_yo.getID(), a_cascade));
+    void delete(YapObject a_yo, int a_cascade) {
+        super.delete(a_yo, a_cascade);
+        i_client.writeMsg(Msg.TA_DELETE.getWriterForInts(this, new int[] {a_yo.getID(), a_cascade}));
     }
 
-    void dontDelete(int a_id, boolean a_deleteMembers) {
-        super.dontDelete(a_id, false);
+    void dontDelete(int a_id) {
+        super.dontDelete(a_id);
         i_client.writeMsg(Msg.TA_DONT_DELETE.getWriterForInt(this, a_id));
     }
 
@@ -90,7 +87,12 @@ final class TransactionClient extends Transaction {
 
     void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type,
         int a_cascade) {
-        i_client.writeMsg(Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterFor4Ints(this, a_id,
-            a_yc.getID(), a_type, a_cascade));
+        i_client.writeMsg(Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterForInts(this,
+            new int[]{
+            a_id,
+            a_yc.getID(),
+            a_type,
+            a_cascade
+        }));
     }
 }
