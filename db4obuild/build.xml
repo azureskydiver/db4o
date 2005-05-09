@@ -183,11 +183,11 @@
 		<delete file="${file.objectmanager.win_ikvm.archive}" quiet="true" failonerror="false" />
 		<zip destfile="${file.objectmanager.win_ikvm.archive}" basedir="${dir.objectmanager.launcher}">
 			<include name="lib/*" />
-			<include name="ikvm/*" />
+			<include name="ikvm/**" />
 			<include name="lib/licenses/*" />
 			<include name="lib/windows/*" />
 		</zip>
-		<zip destfile="${file.objectmanager.win_ikvm.archive}" basedir="${dir.objectmanager.scripts}/win_novm" update="true">
+		<zip destfile="${file.objectmanager.win_ikvm.archive}" basedir="${dir.objectmanager.scripts}/win_ikvm" update="true">
 			<include name="*.bat" />
 		</zip>
 	</target>
