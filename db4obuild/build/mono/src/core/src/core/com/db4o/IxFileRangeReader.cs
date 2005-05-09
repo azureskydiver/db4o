@@ -231,7 +231,7 @@ namespace com.db4o
 				}
 				if (!adjustCursor())
 				{
-					return _cursor == 0 ? 1 : -1;
+					return _cursor == 0 ? cmp : -1;
 				}
 			}
 		}

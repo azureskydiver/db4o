@@ -71,36 +71,14 @@ namespace com.db4o
 			return getWriterForLength(a_trans, 0);
 		}
 
-		internal com.db4o.MsgD getWriterFor2Ints(com.db4o.Transaction a_trans, int id, int
-			 anInt)
+		internal com.db4o.MsgD getWriterForInts(com.db4o.Transaction a_trans, int[] ints)
 		{
 			com.db4o.MsgD message = getWriterForLength(a_trans, com.db4o.YapConst.YAPINT_LENGTH
-				 * 2);
-			message.writeInt(id);
-			message.writeInt(anInt);
-			return message;
-		}
-
-		internal com.db4o.MsgD getWriterFor3Ints(com.db4o.Transaction a_trans, int int1, 
-			int int2, int int3)
-		{
-			com.db4o.MsgD message = getWriterForLength(a_trans, com.db4o.YapConst.YAPINT_LENGTH
-				 * 3);
-			message.writeInt(int1);
-			message.writeInt(int2);
-			message.writeInt(int3);
-			return message;
-		}
-
-		internal com.db4o.MsgD getWriterFor4Ints(com.db4o.Transaction a_trans, int int1, 
-			int int2, int int3, int int4)
-		{
-			com.db4o.MsgD message = getWriterForLength(a_trans, com.db4o.YapConst.YAPINT_LENGTH
-				 * 4);
-			message.writeInt(int1);
-			message.writeInt(int2);
-			message.writeInt(int3);
-			message.writeInt(int4);
+				 * ints.Length);
+			for (int i = 0; i < ints.Length; i++)
+			{
+				message.writeInt(ints[i]);
+			}
 			return message;
 		}
 

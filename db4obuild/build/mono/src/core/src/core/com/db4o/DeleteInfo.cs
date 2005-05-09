@@ -20,20 +20,20 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	internal class MTaDelete : com.db4o.MsgD
+	internal class DeleteInfo : com.db4o.TreeInt
 	{
-		internal sealed override bool processMessageAtServer(com.db4o.YapSocket _in)
+		internal bool _delete;
+
+		internal int _cascade;
+
+		internal com.db4o.YapObject _reference;
+
+		public DeleteInfo(int id, com.db4o.YapObject reference, bool delete, int cascade)
+			 : base(id)
 		{
-			int id = payLoad.readInt();
-			int cascade = payLoad.readInt();
-			com.db4o.Transaction trans = getTransaction();
-			com.db4o.YapStream stream = trans.i_stream;
-			lock (stream.i_lock)
-			{
-				object[] arr = stream.getObjectAndYapObjectByID(trans, id);
-				trans.delete((com.db4o.YapObject)arr[1], cascade);
-				return true;
-			}
+			_reference = reference;
+			_delete = delete;
+			_cascade = cascade;
 		}
 	}
 }
