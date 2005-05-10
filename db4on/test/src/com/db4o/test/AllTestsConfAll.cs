@@ -71,6 +71,9 @@ namespace com.db4o.test {
             typeof(IndexedByIdentity),
             typeof(Isolation),
             typeof(IsStored),
+			
+			typeof(j4otest.ClassTest),
+			
             typeof(KeepCollectionContent),
             typeof(MaxByEvaluation),
             typeof(Messaging),

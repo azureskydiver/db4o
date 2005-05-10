@@ -4,14 +4,17 @@ using System;
 using System.Reflection;
 using System.Collections;
 using j4o.lang.reflect;
-using System.Collections.Specialized;
 
 namespace j4o.lang {
 
     public class Class {
 
-        public static IDictionary assemblies = new HybridDictionary();
-        private static IDictionary typeToClassMap = new HybridDictionary();
+#if COMPACT_1_0
+        public static IDictionary assemblies = new Hashtable();
+#endif
+        private static IDictionary _typeToClassMap = new Hashtable();
+
+		private static IDictionary _typeNameToClassMap = new Hashtable();
 
         private static Type[] PRIMITIVE_TYPES = {
             typeof(DateTime), typeof(Decimal)
@@ -39,26 +42,55 @@ namespace j4o.lang {
         public override bool Equals(object obj) {
             Class clazz = obj as Class;
             return clazz != null && clazz.type == type;
-            return false;
         }
 
         public static Class forName(String name) {
+			Class returnValue = (Class)_typeNameToClassMap[name];
+			if (null != returnValue) {
+				return returnValue;
+			}
+
             try {
                 Type t = Type.GetType(name);
-                if(t == null) {
+                if (t == null) {
                     int pos = name.IndexOf(",");
                     if(pos > 0) {
-                        AssemblyNameHint anh = (AssemblyNameHint)assemblies[name.Substring(pos + 2)];
-                        if(anh != null) {
-                            t = Type.GetType(name.Substring(0, pos) + ", " + anh.longName);
+						string assemblyName = name.Substring(pos + 2);
+#if COMPACT_1_0
+                        AssemblyNameHint anh = (AssemblyNameHint)assemblies[assemblyName];
+                        if (anh != null && null != anh.LongName) {
+							assemblyName = anh.LongName;
                         }
+#endif
+						Assembly assembly = loadAssembly(assemblyName);
+						if (null != assembly)
+						{
+							string typeName = name.Substring(0, pos);
+							t = assembly.GetType(typeName);
+						}
                     }
                 }
-                return getClassForType(t);
+                returnValue = getClassForType(t);
+				_typeNameToClassMap[name] = returnValue;
             } catch(TypeLoadException ex) {
                 throw new ClassNotFoundException(name);
             }
+			return returnValue;
         }
+
+		private static Assembly loadAssembly(string name)
+		{
+#if COMPACT_1_0
+			return Assembly.Load(name);
+#else
+			Assembly found = Assembly.LoadWithPartialName(name);
+			if (null == found)
+			{
+				found = Assembly.Load(name);
+			}
+			return found;
+#endif
+		}
 
         public static Class getClassForObject(object obj) {
             return getClassForType(obj.GetType());
@@ -68,10 +100,10 @@ namespace j4o.lang {
             if(forType == null) {
                 return null;
             }
-            Class clazz = (Class)typeToClassMap[forType];
+            Class clazz = (Class)_typeToClassMap[forType];
             if(clazz == null) {
                 clazz = new Class(forType);
-                typeToClassMap[forType] = clazz;
+                _typeToClassMap[forType] = clazz;
             }
             return clazz;
 
@@ -164,19 +196,22 @@ namespace j4o.lang {
                     shortAssemblyName = fullAssemblyName.Substring(0, pos);
                 }
                 name = type.FullName + ", " + shortAssemblyName;
+
+#if COMPACT_1_0
                 Type testType = Type.GetType(name);
                 if(testType == null) {
                     testType = Type.GetType(type.FullName + ", " + fullAssemblyName);
                     if(testType != null) {
                         AssemblyNameHint anh = (AssemblyNameHint)assemblies[shortAssemblyName];
                         if(anh != null) {
-                            anh.longName = fullAssemblyName;
+                            anh.LongName = fullAssemblyName;
                         } else {
                             anh = new AssemblyNameHint(shortAssemblyName, fullAssemblyName);
                             assemblies[shortAssemblyName] = anh;
                         }
                     }
                 }
+#endif
             }
             return name;
         }
@@ -229,25 +264,7 @@ namespace j4o.lang {
         public Object newInstance() {
             return Activator.CreateInstance(type);
         }
-
-        public static bool operator !=(Class class1, Class class2) {
-            if((object)class1 == null) {
-                return (object)class2 != null;
-            }
-            if((object)class2 == null) {
-                return true;
-            }
-            return class1.type != class2.type;
-        }
-
-        public static bool operator ==(Class clazz1, Class clazz2) {
-            if((object)clazz1 == null) {
-                return (object)clazz2 == null;
-            }
-            if((object)clazz2 == null) {
-                return false;
-            }
-            return clazz1.type == clazz2.type;
-        }
     }
 }
+
+

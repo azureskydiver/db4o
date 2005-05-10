@@ -4,6 +4,7 @@ using System;
 
 namespace j4o.lang {
 
+#if COMPACT_1_0
     /// <summary>
     /// holds a pair of short and long assembly name to help Type.forName()<br />
     /// Instances of this class are stored to the db4o database files.
@@ -12,7 +13,7 @@ namespace j4o.lang {
     public class AssemblyNameHint {
 
         public String shortName;
-        public String longName;
+        private String longName;
 
         public AssemblyNameHint() {
         }
@@ -21,5 +22,19 @@ namespace j4o.lang {
             this.shortName = shortName;
             this.longName = longName;
         }
+
+		public string LongName	{
+			get {
+				return longName;
+			}
+			set {
+				if (null == value && null != longName) 	{
+					throw new ArgumentNullException("LongName");
+				}
+				longName = value;
+			}
+		}
     }
+#endif
 }
+
