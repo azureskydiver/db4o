@@ -336,6 +336,7 @@ namespace com.db4o {
         }
 
         static internal void postOpen(ObjectContainer objectContainer) {
+#if COMPACT_1_0
             Query q = objectContainer.query();
             q.constrain(typeof(AssemblyNameHint));
             ObjectSet objectSet = q.execute();
@@ -350,13 +351,16 @@ namespace com.db4o {
                     Class.assemblies[anh.shortName] = anh;
                 }
             }
+#endif
         }
 
         static internal void preClose(ObjectContainer objectContainer) {
+#if COMPACT_1_0
             IEnumerator i = Class.assemblies.Keys.GetEnumerator();
             while(i.MoveNext()){
                 objectContainer.set(Class.assemblies[i.Current]);
             }
+#endif
         }
 
         public static void registerCollections(GenericReflector reflector) {
@@ -453,11 +457,4 @@ namespace com.db4o {
                                                     Class.getClassForType(typeof(String)),
                                                     Class.getClassForType(typeof(j4o.util.Date))      };
     }
-
-
-
-
-
-
-    
 }
