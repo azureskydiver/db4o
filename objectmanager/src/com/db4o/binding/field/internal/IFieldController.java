@@ -1,9 +1,10 @@
 /*
  * Copyright (C) 2005 db4objects Inc.  http://www.db4o.com
  */
-package com.db4o.binding.field;
+package com.db4o.binding.field.internal;
 
 import com.db4o.binding.CannotSaveException;
+import com.db4o.binding.dataeditors.IPropertyEditor;
 
 /**
  * Interface IFieldController. An IFieldController object wraps a UI widget and
@@ -24,7 +25,7 @@ public interface IFieldController {
      * 
 	 * @param input The new input object
 	 */
-	public void setInput(Object input);
+	public void setInput(IPropertyEditor input) throws CannotSaveException;
     
     /**
      * Method getInput.
@@ -32,9 +33,9 @@ public interface IFieldController {
      * Return the current input value or null if the input is not currently
      * set to a valid value.
      * 
-     * @return Object The current user input.
+     * @return IPropertyEditor The current user input.
      */
-    public Object getInput();
+    public IPropertyEditor getInput();
     
     /**
      * Method getPropertyName.

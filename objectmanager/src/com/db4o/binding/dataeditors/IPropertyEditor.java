@@ -1,18 +1,26 @@
 /*
  * Copyright (C) 2005 db4objects Inc.  http://www.db4o.com
  */
-package com.db4o.binding.reflect;
+package com.db4o.binding.dataeditors;
 
 import com.db4o.binding.verifier.IVerifier;
 
 /**
- * IProperty.  An abstraction for a property.  Implementations may follow
+ * IPropertyEditor.  An abstraction for a property.  Implementations may follow
  * JavaBeans naming specifications, may simply treat POJO fields as properties,
  * may represent a property of a remote object, etc...
  *
  * @author djo
  */
-public interface IProperty {
+public interface IPropertyEditor {
+    
+    /**
+     * Method getName.  Return's the property's name.
+     * 
+     * @return The property's name.
+     */
+    public String getName();
+    
 	/**
      * Method get().  Return the value of the property.
      * 
@@ -26,6 +34,13 @@ public interface IProperty {
      * @param newValue The new value to set.
      */
     public void set(Object newValue);
+    
+    /**
+     * Method isReadOnly().  Returns if the property is read-only.
+     * 
+     * @return true if the property can only be read but not written.
+     */
+    public boolean isReadOnly();
     
     /**
      * Method getType().  Returns the underlying property's type.

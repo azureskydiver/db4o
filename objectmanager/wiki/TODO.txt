@@ -1,6 +1,183 @@
 BUGS:
 -----
 
+.NET:
+For system types like Guid, DateTime, Uri, The ToString value really has 
+to be shown.
+
+Why does IList and ISerializable show up in the initial list of types? They 
+show up as having no instances.
+
+When showing the values of all of the fields of an instance, if the value 
+is an object in it's own right, show the object ID of the value, and double-
+clicking it should focus on that object, or make it expandable.
+
+Some way to show the type heirachy for a class. Example is ClassB : ClassA, 
+the field inspector should show all fields defined by ClassB and ClassA with 
+an additional line to note that ClassB is ClassA. When expanding the branch 
+for ClassA (since it shows up in the inital list), also list instances of 
+ClassB as ClassB (I think this should work).
+
+Branches for class types which are marked abstract cannot be expanded.
+
+P2LinkedLists do not show all list objects. User (may) have to navigate 
+i_next members to get to all of the list elements.
+
+
+Some exceptions: Exception handling tree selection change 
+java.lang.NullPointerException 
+        at com.db4o.YapHandlers.handlerForClass(Unknown Source) 
+        at com.db4o.YapClass.addMembers(Unknown Source) at 
+        com.db4o.YapClass.checkChanges(Unknown Source) at 
+        com.db4o.YapClassCollection.readYapClass(Unknown Source) 
+        at com.db4o.YapClassCollection.getYapClass(Unknown Source) 
+        at com.db4o.YapStream.getYapClass(Unknown Source) at 
+        com.db4o.YapField.loadHandler(Unknown Source) at 
+        com.db4o.YapClass.forceRead(Unknown Source) at 
+        com.db4o.YapClass.readThis(Unknown Source) at 
+        com.db4o.YapClassCollection.readYapClass(Unknown Source) 
+        at com.db4o.YapClassCollection.getYapClass(Unknown Source) 
+        at com.db4o.YapStream.getYapClass(Unknown Source) at 
+        com.db4o.QConClass.<init>(Unknown Source) at 
+        com.db4o.QQuery.constrain(Unknown Source) at 
+        com.db4o.browser.model.Db4oDatabase.instances(Db4oDatabase.java:114) at 
+        com.db4o.browser.model.Db4oDatabase.instanceIds(Db4oDatabase.java:123) at 
+        com.db4o.browser.model.nodes.ClassNode.children(ClassNode.java:61) at 
+        com.db4o.browser.model.AbstractGraphIterator.selectNextChild(AbstractGraphIterator.java:93) at 
+        com.db4o.browser.gui.controllers.DetailController.setInput(DetailController.java:53) at 
+        com.db4o.browser.gui.controllers.SelectionChangedController.selec
+        tion 
+Changed(SelectionChangedController.java:39) 
+        at 
+        com.db4o.browser.model.AbstractGraphIterator.fireSelectionChanged
+        Even 
+t(AbstractGraphIterator.java:53) 
+        at 
+        com.db4o.browser.model.AbstractGraphIterator.setSelectedPath(Abst
+        ract 
+GraphIterator.java:45) 
+        at 
+        com.db4o.browser.gui.controllers.tree.TreeSelectionChangedControl
+        ler. 
+selectionChanged(TreeSelectionChangedController.java:40) 
+        at org.eclipse.jface.viewers.Viewer$2.run(Viewer.java:163) 
+        at 
+        org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPl
+        atfo 
+rm.java:1015) 
+        at org.eclipse.core.runtime.Platform.run(Platform.java:757) 
+        at 
+        org.eclipse.jface.viewers.Viewer.fireSelectionChanged(Viewer.java
+        :161 
+) 
+        at 
+        org.eclipse.jface.viewers.StructuredViewer.updateSelection(Struct
+        ured 
+Viewer.java:1676) 
+        at 
+        org.eclipse.jface.viewers.StructuredViewer.handleSelect(Structure
+        dVie 
+wer.java:935) 
+        at 
+        org.eclipse.jface.viewers.StructuredViewer$4.widgetSelected(Struc
+        ture 
+dViewer.java:961) 
+        at 
+        org.eclipse.jface.util.OpenStrategy.fireSelectionEvent(OpenStrate
+        gy.j 
+ava:209) 
+        at 
+        org.eclipse.jface.util.OpenStrategy.access$3(OpenStrategy.java:20
+        4) at 
+        org.eclipse.jface.util.OpenStrategy$1.handleEvent(OpenStrategy.ja
+        va:3 
+64) 
+        at 
+        org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:82)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:842) 
+        at 
+        org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:29
+        08) at 
+        org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2541
+        ) at 
+        com.db4o.browser.gui.standalone.SWTProgram.runWithLog(SWTProgram.
+        java 
+:101) 
+        at 
+        com.db4o.browser.gui.standalone.StandaloneBrowser.main(Standalone
+        Brow 
+ser.java:232) Exception handling tree selection change 
+java.lang.NullPointerException 
+        at com.db4o.YapHandlers.handlerForClass(Unknown Source) 
+        at com.db4o.YapClass.addMembers(Unknown Source) at 
+        com.db4o.YapClass.checkChanges(Unknown Source) at 
+        com.db4o.YapClassCollection.readYapClass(Unknown Source) 
+        at com.db4o.YapClassCollection.getYapClass(Unknown Source) 
+        at com.db4o.YapStream.getYapClass(Unknown Source) at 
+        com.db4o.QConClass.<init>(Unknown Source) at 
+        com.db4o.QQuery.constrain(Unknown Source) at 
+        com.db4o.browser.model.Db4oDatabase.instances(Db4oDatabase.java:1
+        14) at 
+        com.db4o.browser.model.Db4oDatabase.instanceIds(Db4oDatabase.java
+        :123 
+) 
+        at 
+        com.db4o.browser.model.nodes.ClassNode.children(ClassNode.java:61
+        ) at 
+        com.db4o.browser.model.AbstractGraphIterator.selectNextChild(Abst
+        ract 
+GraphIterator.java:93) 
+        at 
+        com.db4o.browser.gui.controllers.DetailController.setInput(Detail
+        Cont 
+roller.java:53) 
+        at 
+        com.db4o.browser.gui.controllers.SelectionChangedController.selec
+        tion 
+Changed(SelectionChangedController.java:39) 
+        at 
+        com.db4o.browser.model.AbstractGraphIterator.fireSelectionChanged
+        Even 
+t(AbstractGraphIterator.java:53) 
+        at 
+        com.db4o.browser.model.AbstractGraphIterator.setSelectedPath(Abst
+        ract 
+GraphIterator.java:45) 
+        at 
+        com.db4o.browser.gui.controllers.tree.TreeSelectionChangedControl
+        ler. 
+selectionChanged(TreeSelectionChangedController.java:40) 
+        at org.eclipse.jface.viewers.Viewer$2.run(Viewer.java:163) 
+        at 
+        org.eclipse.core.internal.runtime.InternalPlatform.run(InternalPl
+        atfo 
+rm.java:1015) 
+        at org.eclipse.core.runtime.Platform.run(Platform.java:757) 
+        at 
+        org.eclipse.jface.viewers.Viewer.fireSelectionChanged(Viewer.java
+        :161 
+) 
+        at 
+        org.eclipse.jface.viewers.StructuredViewer.updateSelection(Struct
+        ured 
+Viewer.java:1676) 
+        at 
+        org.eclipse.jface.viewers.StructuredViewer.handleSelect(Structure
+        dVie 
+wer.java:935) 
+        at 
+        org.eclipse.jface.viewers.StructuredViewer$4.widgetSelected(StructuredViewer.java:961) 
+        at org.eclipse.jface.util.OpenStrategy.fireSelectionEvent(OpenStrategy.java:209) 
+        at org.eclipse.jface.util.OpenStrategy.access$3(OpenStrategy.java:204) at 
+        org.eclipse.jface.util.OpenStrategy$1.handleEvent(OpenStrategy.java:364) at 
+        org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:82) at
+        org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:842) at 
+        org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:2908) at 
+        org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2541) at 
+        com.db4o.browser.gui.standalone.SWTProgram.runWithLog(SWTProgram.java:101) at 
+        com.db4o.browser.gui.standalone.StandaloneBrowser.main(StandaloneBrowser.java:232) 
+        
+
 - needs to be able to cope with refactored classes:
   instances may have multiple fields of the same name
   

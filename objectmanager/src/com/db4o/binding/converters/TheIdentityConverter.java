@@ -18,6 +18,9 @@ public class TheIdentityConverter implements IConverter {
 	 * @see org.eclipse.jface.binding.converter.IConverter#convert(java.lang.Object)
 	 */
 	public Object convert(Object source) {
+        if (source == null) {
+            return "";
+        }
 		return source;
 	}
 
