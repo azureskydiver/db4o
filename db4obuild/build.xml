@@ -236,6 +236,7 @@
 		<copy file="${file.keypair}" todir="${dir.dist.net.compile}" />
 		<exec executable="csc" dir="${dir.dist.net.compile}">
 			<arg value="/optimize" />
+			<arg value="/define:COMPACT_1_0" />
 			<arg value="/out:${file.dll.compact}" />
 			<arg value="/doc:${file.xml.compact}" />
 			<arg value="/target:library" />
