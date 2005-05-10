@@ -1,37 +1,17 @@
 /*
  * Copyright (C) 2005 db4objects Inc.  http://www.db4o.com
  */
-package com.db4o.binding.reflect;
+package com.db4o.binding.dataeditors.db4o;
 
 /**
- * IObject.  Encapsulates editing operations on an object.
+ * IDb4oBean. A relaxed duck interface for Db4o objects that are being edited.
+ * These methods will be called at the appropriate times in the object's 
+ * life cycle if they exist.
  *
  * @author djo
  */
-public interface IObject {
-    
-    /**
-     * Method getPropertyNames.
-     * 
-     * Returns the names of all known properies on the specified object.
-     * Implementations may choose any conventions they like for determining
-     * what a property is (all fields, JavaBean conventions, etc).
-     * 
-     * @return String[] all known property names on this object.
-     */
-    public String[] getPropertyNames();
-    
-	/**
-     * Method getProperty.
-     * 
-     * Returns an IProperty object specified by the given name.
-     * 
-	 * @param name The property name
-	 * @return an IProperty bound to the specified object
-     * @throws NoSuchMethodException if the property does not exist
-	 */
-	public IProperty getProperty(String name) throws NoSuchMethodException;
-    
+public interface IDb4oBean {
+
     /**
      * Method verifyObject.
      * 
@@ -74,4 +54,3 @@ public interface IObject {
      */
     public void delete();
 }
-

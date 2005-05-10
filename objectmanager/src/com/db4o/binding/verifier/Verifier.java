@@ -59,5 +59,6 @@ public class Verifier {
                 "/^.$|^$/", "/./", "Please type a character"));
         associate(Boolean.TYPE, new RegularExpressionVerifier(
                 "/Y|y|Ye|ye|Yes|yes|N|n|No|no/", "/Yes|yes|No|no/", "Please type \"Yes\" or \"No\""));
+        associate(String.class, new RegularExpressionVerifier("/.*/", "/.*/", ""));
     }
 }

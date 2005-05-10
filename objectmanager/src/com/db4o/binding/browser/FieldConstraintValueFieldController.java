@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.db4o.binding.CannotSaveException;
 import com.db4o.binding.converter.IConverter;
+import com.db4o.binding.dataeditors.IPropertyEditor;
 import com.db4o.binding.verifier.IVerifier;
 import com.db4o.browser.gui.standalone.StandaloneBrowser;
 import com.db4o.browser.gui.standalone.StatusBar;
@@ -55,11 +56,13 @@ public class FieldConstraintValueFieldController extends FieldController {
     }
     
     // Not used in this implementation
-    public void setInput(Object input) {
+
+    public void setInput(IPropertyEditor input) throws CannotSaveException {
+        
     }
 
-    public Object getInput() {
-        return input;
+    public IPropertyEditor getInput() {
+        return null;
     }
 
     public String getPropertyName() {

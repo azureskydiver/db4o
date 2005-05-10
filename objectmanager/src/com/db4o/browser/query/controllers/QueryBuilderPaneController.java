@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Text;
 import com.db4o.binding.CannotSaveException;
 import com.db4o.binding.browser.FieldConstraintRelationalOperatorFieldController;
 import com.db4o.binding.browser.FieldConstraintValueFieldController;
-import com.db4o.binding.field.IFieldController;
+import com.db4o.binding.field.internal.IFieldController;
 import com.db4o.browser.query.model.FieldConstraint;
 import com.db4o.browser.query.model.QueryBuilderModel;
 import com.db4o.browser.query.model.QueryPrototypeInstance;
