@@ -1,4 +1,40 @@
+
+---+++ Cross-platform bugs
+
+   * Extend classpath needs to be moved to a preference page.  Right now you have to extend the classpath before you open a database file or it doesn't work. **DONE**
+   
+   * Reopen databases after changing classpath preference. **DONE**
+
+---+++ Features
+
+   * Beautify UI; add icons in appropriate places
+      * On buttons: forward*, back*, Query*, Search*  **DONE**
+      * On tabs: database* versus query*  **DONE**
+      * On QBE: Class*; field* **DONE**
+
+   * Connect to a db4o server **DONE**
+   * Extend classpath should be a preference page **DONE**
+   * Break down lists into 1..50, 51-100, etc... **DONE**
+
+   
+---+++ User-requested features
+
+   * It should be possible to browse a db4o-Database WITHOUT having the original class-definitions (no dll, no source available) **DONE**
+
+   * Open a connection to a database server **DONE**
+
+---+++ Release Engineering
+
+   * Don't support PDAs for the initial release **DONE**
+   * 3 Packages, downloadable separately **DONE**
+   * Implement C-based program launcher **DONE**
+   * Write reproducable build script!!!!!!!! **DONE**
+   * Put SWT application launching instructions in /dev **DONE**
+
+
 <verbatim>
+
+**OLD** stuff here...
 
 Fixed bugs:
 -----------

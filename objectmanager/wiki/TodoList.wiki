@@ -107,179 +107,90 @@ java.lang.NullPointerException
    
    * XSWT.parse disposes all resources in an application in its dispose listener! **POSTPONED**
    
-   * Extend classpath needs to be moved to a preference page.  Right now you have to extend the classpath before you open a database file or it doesn't work. **DONE**
-   
-   * Reopen databases after changing classpath preference. **DONE**
-
    * When a database is reopened after updating classpath, the generic reflector is no longer used, causing instability
 
 
 ---++ Remaining Features:
 
    * Beautify UI; add icons in appropriate places
-      * On buttons: forward*, back*, Query*, Search*  **DONE**
-      * On tabs: database* versus query*  **DONE**
-      * On QBE: Class*; field* **DONE**
-      * In tree: Icon for each node type*
+      * In tree: Icon for each node type
    * Implement tree layout algorithm for expanded classes **POSTPONED**
    * Implement grabbing hand scrolling mode for large queries
    * Click right side to navigate
       * (Hyperlink objects if object.hasChildren()?)
    * If right side is displaying a collection, display in a table
-   * Connect to a db4o server **DONE**
-   * Extend classpath should be a preference page **DONE**
    
 ---++ Release engineering
 
-   * Don't support PDAs for the initial release **DONE**
-   * 3 Packages, downloadable separately **DONE**
-   * Implement C-based program launcher **DONE**
    * Nullsoft installer for Windows platforms  (Rodrigo)
-   * Write reproducable build script!!!!!!!! **DONE**
-
-<verbatim>
-Postponed Features:
--------------------
-- Figure out what class is selected in tree when File|Query... or query button pressed.
-   Highlight that class by default in query dialog.
-- Catch up MockDatabase to the generic reflector impl
-- Customize display of nodes
-- After initial release: fix tree/detail to implement IMaster/IDetail; submit
-  changes to JFace
-
- - Unit testing verify that the iterator is always restored after it is used
-    * template generator
 
 
+---++ Postponed Features
 
-----
+   * Figure out what class is selected in tree when File|Query... or query button pressed.  Highlight that class by default in query dialog.
+   
+   * Catch up MockDatabase to the generic reflector impl
 
-User feedback:
+   * Customize display of nodes (See Carl's notes below)
+   
+   * After initial release: fix tree/detail to implement IMaster/IDetail; submit changes to JFace
 
-Please show for every class:
--- All members of the class (preferably with an expanding branch for 
-members defined in any base class(es).
--- The names of the members as well as the defined type of the field
--- The Value of each field and the type of the stored value (this is 
-importaint)
--- For fields containing objects, an easy way to double-click or navigate 
-to the object. It would be cool to show the db4o object ID for reference.
--- For objects containing an array/collection, a way to see all 
-objects/values stored in the array, by index.
--- Please pay special attention to things like the Db4o LinkedList and 
-HashMap classes!
+   * Unit testing verify that the iterator is always restored after it is used
+      * template generator
 
 
+---++ User feedback
 
-It should be possible to browse a db4o-Database WITHOUT having the original
-class-definitions (no dll, no source available)
+   * Please show for every class:
 
-I once got an old .yap file from a client and i didn't have the old
-class-definitions. It was a very hard job to browse and repair some simple
-data.
+      * All members of the class (preferably with an expanding branch for members defined in any base class(es).
+      
+      * The names of the members as well as the defined type of the field
+      
+      * The Value of each field and the type of the stored value (this is importaint)
+      
+      * For fields containing objects, an easy way to double-click or navigate to the object. It would be cool to show the db4o object ID for reference.
+      
+      * For objects containing an array/collection, a way to see all objects/values stored in the array, by index.
+      
+      * Please pay special attention to things like the Db4o LinkedList and HashMap classes!
 
-would be nice to be able to modify data too  :-) 
+   * would be nice to be able to modify data too  :-) 
 
-----
-
-YapReader / YapWriter -- Byte array encoder/decoder
-
-Like taking a void* and typecasting it to some struct.
-
-Or like taking a memory buffer and reading it into a data division
-
-YapBit -- Like a sequential file that reads a bit at a time
-
-
-----
-
-- Follow up using the bottom-up strategy getting db4o into Red Hat.
-
-- Follow up with Karen Bennett of Red Hat regarding getting db4o into Red Hat and getting
-    GCJ support into Eclipse.
-
-- Extending VEP article
-
-- Work with Sybase, BEA, and Actuate on DB API (after browser spike)
-
-- Follow up about getting into OSCon (*done*)
-
-- After first browser spike done; look at BIRT API; make suggestions for oo improvements.
-
----------------------
-
-Standardization discussion:
-
-here is the result of our discussion yesterday as I
-remember it:
-
-
-(1) How will our standard look like?
-
-- We don't want to go JDO.
-- S.O.D.A. is not intuitive enough.
-- Even if we follow the new "Java method safe query"
-approach, we will need to build some kind of tree.
-- Let's use a new API and make it look as much like
-SQL as we can.
-
-
-(2) Our browser
-
-The majority of the work for our browser will be to
-get the GUI right. This is largely independant of
-the way our querying API will look. We can port this
-S.O.D.A. to our new dialect in no time (2 days).
-
-
-(3) How do we fit in with other standards?
-
-We don't.
-EJB 3.0 is too slow.
-JDO 2.0 is too ugly.
-
-
-(4) Eclipse vs. JCP standardisation bodies.
-
-Eclipse is faster. You just go and do it. 
-That's what we will do. 
 
 
 ----------------
 
-Be able to see how many subobjects per node
-Break down lists into 1..50, 51-100, etc... **DONE**
-Click on a Java class in package explorer, see instances
+---+++ Display Customization Features (Postponed to Version 1.5)
+
+   * Be able to see how many subobjects per node
+   
+   * Click on a Java class in package explorer, see instances
 
 
-Display properties:
-  Be able to configure the following on a global or a package basis:
-    (select packages by substring or regex)
+   * Display properties:
+      * Be able to configure the following on a global or a package basis: (select packages by substring or regex)
 
-Display nodes: in addition to toString():
-getDeclaredType(), getConcreteType(), getImplementedType(), 
-call a specific method, use a special field;
+      * Display nodes: in addition to toString():
+         * getDeclaredType(), getConcreteType(), getImplementedType(), 
+         * call a specific method, use a special field;
+         * *.*      [declared] [concrete] [method:(name)] [field:(name)]
+         * *.db4o   [concrete] [method:(name)] [field:(name)]
+         *          [declared] [concrete] [method:(name)] [field:(name)]
+         *          [declared] [concrete] [method:(name)] [field:(name)]
+         *          [declared] [concrete] [method:(name)] [field:(name)]
 
-*.*      [declared] [concrete] [method:(name)] [field:(name)]
-*.db4o   [concrete] [method:(name)] [field:(name)]
-         [declared] [concrete] [method:(name)] [field:(name)]
-         [declared] [concrete] [method:(name)] [field:(name)]
-         [declared] [concrete] [method:(name)] [field:(name)]
+   * Filter from search box; limit search depth (add UI for this)
+      * Incremental search **DONE**
+      * Regular expression
 
+   * Hide package names option
+   * Hide these classes option (for hiding system classes)
 
-Filter from search box; limit search depth (add UI for this)
- - Incremental search
- - Regular expression
-
-
-- Hide package names option
-- Hide these classes option (for hiding system classes)
-
-
-*DONE* Put SWT application launching instructions in /dev
-
+---+++ Schedule
 
 April: version 1.0
+
 October timeframe: mature browser
 
 
@@ -307,8 +218,6 @@ Use-cases:
 2.2) Query
 2.3) Visualize object graphs  (Java Spider)
 
-
-</verbatim>
 
 ----
 
