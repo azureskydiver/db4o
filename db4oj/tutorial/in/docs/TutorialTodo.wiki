@@ -1,0 +1,97 @@
+---++++ (100) Refactoring
+What does db4o cover automatically ?(addition and removal of fields)
+API calls: StoredClass#rename()
+Problems with changing class hierarchy. (Solution ?)
+
+---++++ (200) Semaphores
+Example: Implementing a global Singleton
+(old 3.0 sample attached, may be slightly out-of date)
+
+---++++ (300) Explaining the Reflector concept
+working against GenericReflector classes
+writing your own Reflector
+
+---++++ (400) Pluggable FileIO
+
+---++++ (450) Using the new MemoryIoAdapater
+- configure to use before opening
+- set back configuration to use RandomAccesFileAdapter
+- normal open calls
+- #put and #get in MemoryIoAdapter to get and set the byte[]
+
+---++++ (500) Running the db4o regression tests
+
+---++++ (600) Creating a db4o test case
+
+---++++ (700) Using db4o built-in lists
+ObjectContainer#ext().collections().newLinkedList()
+ObjectContainer#ext().collections().newHashMap()
+ObjectContainer#ext().collections().newIdentityHashMap()
+
+**DONE** -->Collections.docs
+See http://www.db4odev.com/newsarchive/posting.cmd?msgid=%3Cc0q6d9%249u%241%40p15090641.pureserver.de%3E
+
+---++++ (800) Executing code remotely on the server by using
+- a query on a singleton
+- Evaluation/Candidate
+- Candidate#objectContainer
+
+---++++ (900) Storing Static Field Values and usecases
+
+---++++ (1000) Explaining isolation level and ExtObjectContainer#refresh()
+
+---++++ (1100) Maximum database file size and configuring with:
+Db4o.configure().blockSize()   **DONE** --> Tuning.docs
+
+---++++ (1200) Explaining why we use an #ext() shadow interface.
+
+---++++ (1300) Dynamic activation:
+Objects are activated on ObjectSet#next()
+You can control depth by changing the ObjectContainer-global
+activation depth with objectContainer#ext().configure().activationDepth
+
+---++++ (1400) Client-Server messaging:
+objectServer.ext().configure().setMessageRecipient(
+  new MessageRecipient(){
+     void processMessage()
+  }
+)
+MessageSender sender = objectContainer.ext().configure().getMessageSender()
+The client-server example uses the above to shut down the server.
+
+---++++ (1500) Db4o.configure().messageLevel()
+could be in a document with Db4o.configure().exceptionsOnNotStorable(true)
+
+---++++ (1600) Switching database files from the client using:
+- cast client ObjectContainer to ExtClient
+- switchToFile(String filename)
+- switchToMainFile()  // back to the original file
+
+---++++ (1700) Special utility methods in ExtObjectContainer:
+- isCached()
+- peekPersisted()
+- reflector()
+
+---++++ (1900) Using the wrappers of ObjectSet to java.util.List and
+System.Collections.IList supplied as source code in com.db4o.wrap
+
+---++++ (2000) Using StoredClass and StoredField to get at meta information
+(will be deprecated soon by enhancing the generic reflector)
+
+---++++ (2100) Explaining in detail how the Db4oUUID concept works (in the
+existing IDs document)
+
+---++++ (2200) Storing external Blobs
+
+---++++ (2300) Explaining the object identity and weak reference concept:
+- db4o holds weak references to all instantiated objects
+- purge()
+- bind()
+- the reference system is closed when the ObjectContainer is closed
+
+---++++ (2400) Explaining enums:
+- stored as static fields
+- can't be deleted
+
+---++++ (2500) how JDK/.NET collections are handled with built-in translators
+that create arrays
