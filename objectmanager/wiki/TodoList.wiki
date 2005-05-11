@@ -120,6 +120,11 @@ java.lang.NullPointerException
       * (Hyperlink objects if object.hasChildren()?)
    * If right side is displaying a collection, display in a table
    
+   * Be able to edit data
+      * Change
+      * Insert
+      * Delete
+   
 ---++ Release engineering
 
    * Nullsoft installer for Windows platforms  (Rodrigo)
