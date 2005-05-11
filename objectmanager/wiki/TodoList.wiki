@@ -147,72 +147,6 @@ Postponed Features:
 - After initial release: fix tree/detail to implement IMaster/IDetail; submit
   changes to JFace
 
-Fixed bugs:
------------
-- Add converter declarations for primitive wrapper classes **DONE**
-- Ensure that strings are fully parsed on date conversion **DONE**
-- Selecting an item from the query result and then posing a query
-  with an empty result triggers a stack exception from GraphPosition **DONE**
-
-
-   * Write a file logger that logs to a log file in the user's home directory **DONE**
-   * Write About dialog **DONE**
-   * Don't automatically expand classes in QBE pane; include button on fields **DONE**
-   * Substring search: just search displayed strings **DONE**
-   * REGRESSION: History buttons don't work any more!?! **DONE**
-   * ListChooserDialog: Include search capability **DONE**
-      - If a class is selected in tree view, select it in list by default
-   * Remove package names from tabs **DONE**
-   * Add database file name to tab text **DONE**
-   * Clear history button history when query is run **DONE**
-   * List in ListChooserDialog doesn't scroll **DONE**
-   * ClassNode should not always create InstanceNode subnodes.  **DONE**
-   * Map and collection instances need IDs displayed. **DONE**
-
-- Query in separate tab **DONE**
-- Choose class dialog **DONE**
-- Create query controller object **DONE**
-
-- Be able to display query results
-  - Generate a query model from a ReflectClass **DONE**
-  - Get the initial query from the model **DONE**
-  - Run the query **DONE**
-  - Create an IGraphIterator for the ObjectSet **DONE**
-  - Dynamically expand contained classes
-
-- Populate the model from the ReflectClass graph **DONE**
-   
-- Generate/run a SODA query from the query model when the Run button is clicked **DONE**
-
-- Add try/catch around all TreeViewer strategy object methods / log exceptions **DONE**
-
-   * Sort classes by name in tree view. **DONE**
-   * ArrayItemNode is not aware of simple types. **DONE**
-   * Remove array types from initial view. **DONE**
-   * Search result scalability. **DONE**
-   * Begin query UI / querying functionality **DONE**
-
-- Testing
-   * Generic reflector; run with .net (DONE)
-   * Arrays (DONE, n-dimensional fail)
-   * Test with no classes (DONE)
-
-- Make sure browsing scales to large numbers of nodes **DONE**
-
-- Generic reflector
-   * StoredIterableFieldNode - Needs to use Platform.isCollection **DONE**
-   * Need to write StoredMapFieldNode **DONE**
-   * Make sure there are no java.lang.reflect calls where there shouldn't be **DONE, I think**
-   * Test with no classes available
-
-- StoredArrayFieldNode needs implemented **DONE**
-
-- Test with J9 VM **????**
-
-
-- Maps don't display correctly **DONE**
-- Arrays don't display correctly **DONE**
-    
  - Unit testing verify that the iterator is always restored after it is used
     * template generator
 
@@ -311,46 +245,10 @@ Eclipse is faster. You just go and do it.
 That's what we will do. 
 
 
-
----------------------
-
-
-Problems with current design:
-
-- The Model strictly represents an open database file.  It does not represent search results.
-
-- Opening a new database file results in closing and opening the Model object.  It should
-  rather tell the Model to open a new database file and then the Model should trigger a refresh
-  to all listening views.
-  
-- The current View object mix in Controller functionality.  Controllers should be separate objects.
-
-- There should be separate Controller objects for each part of the window:
-    * Tree
-    * Path string
-    * Hyperlink area
-    * Object field pane
-    
-- The Model object currently just wraps an ObjectContainer and adds convenience methods.
-
-- The FieldNode hierarchy represents the Model, but also embeds navigation into it!!!
-
-- Navigating/Visiting aspects of the Model should be separated out of the Model graph using the Iterator
-  pattern.  The Iterator should be a hierarchy/graph Iterator, and should embed a stack, the 
-  visual representation of which will be the path string in the detail pane.
-  
-- This stack will be how we traverse up the tree control from its root to keep its focus
-  synchronized with the detail pane.
-  
-- This Visitor becomes like the INavigator framework in Essential Data.
-
-- This is how we provide an ED-like provider framework for JFace TreeViewers.
-
-
-----------------------
+----------------
 
 Be able to see how many subobjects per node
-Break down lists into 1..50, 51-100, etc...
+Break down lists into 1..50, 51-100, etc... **DONE**
 Click on a Java class in package explorer, see instances
 
 
@@ -411,4 +309,11 @@ Use-cases:
 
 
 </verbatim>
+
+----
+
+Back to HomePage
+
+
+
 
