@@ -195,27 +195,35 @@ October timeframe: mature browser
 
 
 
-Carl's notes:
+---+++ Carl's notes:
 
   Popup Nodes, if there are too many. Display first 50 and use node to expand
+  
   Would like to see the number items per class
+  
   Double-clicking on a node: Browse from here.
+  
   History for objects
+  
   Update the browse view from selecting class in Java perspective
+  
   Declared type and implemented type
+  
   Hide package names
 
   [declared type] [concrete type] [method:toString] [method:(name)] [field:(name)]
 
 
-Use-cases:
+---+++ Use-cases:
 
 1) Run on mobile devices
 
 2) Debug use-cases:
 
 2.1) Navigate
+
 2.2) Query
+
 2.3) Visualize object graphs  (Java Spider)
 
 
