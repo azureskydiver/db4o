@@ -135,7 +135,7 @@ java.lang.NullPointerException
    * 3 Packages, downloadable separately **DONE**
    * Implement C-based program launcher **DONE**
    * Nullsoft installer for Windows platforms  (Rodrigo)
-   * Write reproducable build script!!!!!!!!
+   * Write reproducable build script!!!!!!!! **DONE**
 
 <verbatim>
 Postponed Features:
