@@ -6,7 +6,7 @@ using System.IO;
 using com.db4o.query;
 
 namespace com.db4o.test.cs
-{	
+{
 	public class ADTask : MarshalByRefObject
 	{
 		private String _name;
@@ -31,7 +31,7 @@ namespace com.db4o.test.cs
 		ObjectContainer _container;
 		
 		public void Open(string fname, bool clientServer)
-		{	
+		{
 			if (clientServer)
 			{
 				_server = Db4o.openServer(fname, 0);
@@ -44,7 +44,7 @@ namespace com.db4o.test.cs
 		}
 		
 		public string[] QueryTaskNames()
-		{	
+		{
 			ArrayList names = new ArrayList();
 			ObjectSet os = InternalQueryTasks();
 			while (os.hasNext())
@@ -81,7 +81,7 @@ namespace com.db4o.test.cs
 				_container = null;
 			}
 			if (null != _server)
-			{				
+			{
 				_server.close();
 				_server = null;
 			}
@@ -147,8 +147,8 @@ namespace com.db4o.test.cs
 		}
 
 		void reOpen()
-		{				
-			if (Test.isClientServer()) 
+		{
+			if (Test.isClientServer())
 			{
 				Test.reOpenServer();
 			}

@@ -27,7 +27,7 @@
         <BaseAddress>285212672</BaseAddress>
         <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
         <ConfigurationOverrideFile/>
-        <DefineConstants>TRACE;DEBUG;</DefineConstants>
+        <DefineConstants>TRACE;DEBUG;MONO;NET_2_0</DefineConstants>
         <DocumentationFile/>
         <DebugSymbols>true</DebugSymbols>
         <FileAlignment>4096</FileAlignment>
@@ -175,6 +175,7 @@
         <Compile Include="src\com\db4o\test\cs\Cs.cs">
             <SubType>Code</SubType>
         </Compile>
+        <Compile Include="src\com\db4o\test\cs\CsAppDomains.cs"/>
         <Compile Include="src\com\db4o\test\cs\CsArrays.cs">
             <SubType>Code</SubType>
         </Compile>
@@ -193,6 +194,7 @@
         <Compile Include="src\com\db4o\test\cs\CsDate.cs">
             <SubType>Code</SubType>
         </Compile>
+        <Compile Include="src\com\db4o\test\cs\CsDelegate.cs"/>
         <Compile Include="src\com\db4o\test\cs\CsEnum.cs">
             <SubType>Code</SubType>
         </Compile>
@@ -202,6 +204,7 @@
         <Compile Include="src\com\db4o\test\cs\CsImage.cs">
             <SubType>Code</SubType>
         </Compile>
+        <Compile Include="src\com\db4o\test\cs\CsMarshalByRef.cs"/>
         <Compile Include="src\com\db4o\test\cs\CsStructs.cs">
             <SubType>Code</SubType>
         </Compile>
@@ -262,6 +265,7 @@
         <Compile Include="src\com\db4o\test\IsStored.cs">
             <SubType>Code</SubType>
         </Compile>
+        <Compile Include="src\com\db4o\test\j4otest\ClassTest.cs"/>
         <Compile Include="src\com\db4o\test\KeepCollectionContent.cs">
             <SubType>Code</SubType>
         </Compile>
