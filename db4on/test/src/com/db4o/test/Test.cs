@@ -48,6 +48,15 @@ namespace com.db4o.test {
             }
             return obj.GetType();
         }
+
+        public static void closeAll()
+        {
+            Test.close();
+            if (Test.isClientServer())
+            {
+                Test.server().close();
+            }
+        }
       
         public static void close() {
 			if (null != oc) {
@@ -147,6 +156,12 @@ namespace com.db4o.test {
 		public static void error(string message) {
             errorCount++;
             Console.WriteLine("!!! TEST CASE FAILED !!! [" + message + "]" + Compat.stackTrace());
+        }
+
+        public static void error(Exception error)
+        {
+            errorCount++;
+            Console.WriteLine("!!! TEST CASE FAILED !!! [" + error.Message + "]" + error.StackTrace);
         }
       
         public static int fileLength() {
@@ -253,6 +268,15 @@ namespace com.db4o.test {
       
         public static Query query() {
             return objectContainer().query();
+        }
+
+        public static void reOpenAll()
+        {
+            if (Test.isClientServer())
+            {
+                Test.reOpenServer();
+            }
+            Test.reOpen();
         }
       
         public static ObjectContainer reOpen() {
