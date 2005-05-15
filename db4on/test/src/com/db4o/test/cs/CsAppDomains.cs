@@ -24,71 +24,39 @@ namespace com.db4o.test.cs
 			}
 		}
 	}
-	
-	public class RemoteDatabase : MarshalByRefObject, IDisposable
-	{
-		ObjectServer _server;
-		ObjectContainer _container;
-		
-		public void Open(string fname, bool clientServer)
-		{
-			if (clientServer)
-			{
-				_server = Db4o.openServer(fname, 0);
-				_container = _server.openClient();
-			}
-			else
-			{
-				_container = Db4o.openFile(fname);
-			}
-		}
-		
-		public string[] QueryTaskNames()
-		{
-			ArrayList names = new ArrayList();
-			ObjectSet os = InternalQueryTasks();
-			while (os.hasNext())
-			{
-				names.Add(((ADTask)os.next()).Name);
-			}
-			return (string[])names.ToArray(typeof(string));
-		}
 
-		public ADTask[] QueryTasks()
-		{
-			ArrayList tasks = new ArrayList();
-			ObjectSet os = InternalQueryTasks();
-			while (os.hasNext())
-			{
-				tasks.Add(os.next());
-			}
-			return (ADTask[])tasks.ToArray(typeof(ADTask));
-		}
+    class TaskDatabase : MarshalByRefDatabase
+    {
+        public string[] QueryTaskNames()
+        {
+            ArrayList names = new ArrayList();
+            ObjectSet os = InternalQueryTasks();
+            while (os.hasNext())
+            {
+                names.Add(((ADTask)os.next()).Name);
+            }
+            return (string[])names.ToArray(typeof(string));
+        }
 
-		private ObjectSet InternalQueryTasks()
-		{
-			Query query = _container.query();
-			query.constrain(typeof(ADTask));
-			query.descend("_name").orderAscending();
-			return query.execute();
-		}
-		
-		public void Dispose()
-		{
-			if (null != _container)
-			{
-				_container.close();
-				_container = null;
-			}
-			if (null != _server)
-			{
-				_server.close();
-				_server = null;
-			}
-			// MAGIC: give some time for the db4o background threads to exit
-			System.Threading.Thread.Sleep(1000);
-		}
-	}
+        public ADTask[] QueryTasks()
+        {
+            ArrayList tasks = new ArrayList();
+            ObjectSet os = InternalQueryTasks();
+            while (os.hasNext())
+            {
+                tasks.Add(os.next());
+            }
+            return (ADTask[])tasks.ToArray(typeof(ADTask));
+        }
+
+        private ObjectSet InternalQueryTasks()
+        {
+            Query query = _container.query();
+            query.constrain(typeof(ADTask));
+            query.descend("_name").orderAscending();
+            return query.execute();
+        }
+    }
 	
 	/// <summary>
 	/// Tests the interaction of db4o with multiple AppDomains
@@ -110,12 +78,12 @@ namespace com.db4o.test.cs
 		
 		public void testRemoteDomain()
 		{
-			close();
+			Test.closeAll();
 
 			AppDomain domain = AppDomain.CreateDomain("db4o-remote-domain");
 			try
 			{
-				using (RemoteDatabase db = (RemoteDatabase)domain.CreateInstanceAndUnwrap(typeof(RemoteDatabase).Assembly.GetName().ToString(), typeof(RemoteDatabase).FullName))
+				using (TaskDatabase db = (TaskDatabase)domain.CreateInstanceAndUnwrap(typeof(TaskDatabase).Assembly.GetName().ToString(), typeof(TaskDatabase).FullName))
 				{
 					db.Open(currentFileName(), Test.isClientServer());
 				
@@ -133,28 +101,10 @@ namespace com.db4o.test.cs
 			finally
 			{
 				AppDomain.Unload(domain);
-				reOpen(); // leave the Test object as we found it
+				Test.reOpenAll(); // leave the Test object as we found it
 			}
 		}
 
-		void close()
-		{
-			Test.close();
-			if (Test.isClientServer())
-			{
-				Test.server().close();
-			}
-		}
-
-		void reOpen()
-		{
-			if (Test.isClientServer())
-			{
-				Test.reOpenServer();
-			}
-			Test.reOpen();
-		}
-		
 		public string currentFileName()
 		{
 			return Path.GetFullPath(Test.isClientServer() ? Test.FILE_SERVER : Test.FILE_SOLO);

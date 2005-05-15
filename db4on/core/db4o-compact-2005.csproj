@@ -1,0 +1,1115 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProductVersion>8.0.50215</ProductVersion>
+    <ProjectGuid>{B653ADB1-F959-49E0-81CF-AD37D69CB011}</ProjectGuid>
+    <ProjectType>Local</ProjectType>
+    <SchemaVersion>2.0</SchemaVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>db4o</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+    <OutputFileFolder>\Program Files\db4o-4.0-compact1</OutputFileFolder>
+    <OutputType>Library</OutputType>
+    <RootNamespace>com.db4o</RootNamespace>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <FormFactorID>
+    </FormFactorID>
+    <OSVersion>5.01</OSVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
+    <PlatformFamilyName>PocketPC</PlatformFamilyName>
+    <DeployDirSuffix>$(AssemblyName)</DeployDirSuffix>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>0</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <FileAlignment>4096</FileAlignment>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>0</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>0</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DebugSymbols>false</DebugSymbols>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <FileAlignment>4096</FileAlignment>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib">
+      <Name>MSCorLib</Name>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Name>System</Name>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src\compact\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\compact\Compat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\compact\Lock4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\BlobImpl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ByteBuffer4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ClassIndex.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ClassIndexClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Closure4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Collection4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\Compare.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\Configuration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\Entry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\ObjectAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\ObjectClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\ObjectConstructor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\ObjectField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\ObjectTranslator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\TClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\TDictionary.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\TList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\TNull.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\TQueue.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\TStack.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\config\TType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Config4Abstract.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Config4Class.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Config4Field.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Config4Impl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\CorruptionException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Db4o.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Db4oTypeImpl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Db4oVersion.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Debug.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\DeepClone.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\DeleteInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Deploy.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\DTrace.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Dynamic.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\EmptyIterator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\EventDispatcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ExpirationException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\DatabaseFileLockedException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\Db4oCallback.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\Db4oDatabase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\Db4oUUID.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\ExtClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\ExtDb4o.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\ExtObjectContainer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\ExtObjectServer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\ExtObjectSet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\MemoryFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\ObjectCallbacks.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\ObjectInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\ObjectNotStorableException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\Status.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\StoredClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\StoredField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ext\VirtualField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\Cool.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\SimpleTimer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\FreeSlotNode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Hashtable4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\HashtableIntEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\HashtableObjectEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\IDGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\IntArrayList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Internal.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\io\IoAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\io\MemoryIoAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\io\RandomAccessFileAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Iterator4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\IxAdd.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\IxField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\IxFieldTransaction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\IxFileRange.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\IxFileRangeReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\IxPatch.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\IxPath.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\IxRemove.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\IxTraverser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\IxTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\JDK.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\JDKReflect.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\List4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\LongJumpOutException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MClassNameForID.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MCommit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MCreateClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MDelete.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Message.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Messages.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\messaging\MessageRecipient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\messaging\MessageSender.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MetaClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MetaField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MetaIndex.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MGetAll.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MGetClasses.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MGetInternalIDs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MigrationConnection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MObjectByUuid.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MPrefetchIDs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MQueryExecute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MReadBlob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MReadBytes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MReadMultipleObjects.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MReadObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MReleaseSemaphore.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MRollback.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MSetSemaphore.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Msg.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MsgBlob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MsgD.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MsgObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MTaBeginEndSet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MTaDelete.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MTaDontDelete.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MTaIsDeleted.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MUserMessage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MUseTransaction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MWriteBlob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MWriteNew.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MWriteUpdate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MWriteUpdateDeleteMembers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Null.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ObjectContainer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ObjectServer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ObjectSet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Order.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Orderable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\P1Collection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\P1HashElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\P1ListElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\P1Object.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\P2Collections.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\P2HashMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\P2HashMapIterator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\P2HashMapKeyIterator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\P2HashMapKeySet.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\P2LinkedList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\P2ListElementIterator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\PBootRecord.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Platform.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QCandidate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QCandidates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QCon.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QConClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QConJoin.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QConObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QConPath.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QConstraints.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QE.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QEAbstract.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QEContains.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QEEqual.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QEGreater.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QEIdentity.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QELike.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QEMulti.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QENot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QESmaller.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QEvaluation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QOrder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QPending.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QQuery.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\QResultClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\query\Candidate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\query\Constraint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\query\Constraints.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\query\Evaluation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\query\EvaluationDelegate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\query\Query.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Queue4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Readable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ReadWriteable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\generic\GenericArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\generic\GenericArrayClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\generic\GenericArrayReflector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\generic\GenericClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\generic\GenericField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\generic\GenericObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\generic\GenericReflector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\generic\GenericVirtualField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\net\NetArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\net\NetClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\net\NetConstructor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\net\NetField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\net\NetMethod.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\net\NetReflector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\ReflectArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\ReflectClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\ReflectConstructor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\ReflectField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\ReflectMethod.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\reflect\Reflector.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Rename.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\replication\ReplicationConflictHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\replication\ReplicationProcess.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ReplicationImpl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ReplicationRecord.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\SerializedRoot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Session.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Sessions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ShutDownRunnable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Slot.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\StaticClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\StaticField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Transaction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\TransactionClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\TransactionListener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\TransactionObjectCarrier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Transient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Tree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\TreeInt.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\TreeIntObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\TreeReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\TreeString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\TreeStringObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Tuning.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\types\Blob.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\types\Db4oCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\types\Db4oCollections.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\types\Db4oList.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\types\Db4oMap.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\types\Db4oType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\types\SecondClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\types\TransientClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Unobfuscated.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\User.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\UserException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\UseSystemTransaction.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\VirtualAttributes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\Visitor4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\VisitorBoolean.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\VisitorYapBytes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapArrayN.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapBit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapClassAny.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapClassCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapClassCollectionIterator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapClassPrimitive.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapClient.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapClientBlobThread.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapClientThread.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapComparable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapConfigBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapConst.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapDataType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapDateTime.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapDecimal.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapDouble.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapFieldNull.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapFieldTranslator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapFieldUUID.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapFieldVersion.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapFieldVirtual.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapHandlers.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapIndependantType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapIndexes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapJavaClass.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapMemoryFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapMeta.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapObject.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapObjectCarrier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapRandomAccessFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapRef.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapReferenceQueue.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapReferences.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapSByte.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapServer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapServerSocket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapServerThread.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapSocket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapSocketFake.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapString.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapStringIO.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapStringIOUnicode.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapTypeAbstract.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapTypeIntegral.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapTypeStruct.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapUInt.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapULong.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapUShort.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YapWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YBoolean.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YByte.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YChar.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YDate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YDouble.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YFloat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YInt.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YLong.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\YShort.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\BufferedInputStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\BufferedOutputStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\ConsoleWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\File.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\FileInputStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\FileOutputStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\InputStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\IOException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\OutputStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\PrintStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\RandomAccessFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\Serializable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\io\StreamAdaptor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\AssemblyNameHint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\Class.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\ClassLoader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\ClassNotFoundException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\Cloneable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\CloneNotSupportedException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\IdentityHashCodeProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\JavaSystem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\NoSuchMethodError.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\reflect\Constructor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\reflect\Field.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\reflect\JavaArray.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\reflect\Method.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\reflect\Modifier.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\Runnable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\RuntimeException.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\StringBuffer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\lang\Thread.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\util\Date.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\util\Random.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Condition="'$(TargetFrameworkVersion)' == 'v1.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.v1.targets" />
+  <Import Condition="'$(TargetFrameworkVersion)' == 'v2.0'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
