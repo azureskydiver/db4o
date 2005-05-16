@@ -59,9 +59,8 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\core\db4o-net2.csproj">
-      <Name>db4o-net2</Name>
       <Project>{7A07E089-078C-433A-BD15-60763FE3B8F2}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>db4o-net2</Name>
     </ProjectReference>
     <ProjectReference Include="..\tools\db4o-net2-tools.csproj">
       <Name>db4o-net2-tools</Name>
@@ -267,6 +266,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\com\db4o\test\j4otest\ClassTest.cs" />
+    <Compile Include="src\com\db4o\test\j4otest\TypeNameTest.cs" />
     <Compile Include="src\com\db4o\test\KeepCollectionContent.cs">
       <SubType>Code</SubType>
     </Compile>

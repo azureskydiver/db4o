@@ -40,7 +40,7 @@
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;COMPACT_1_0</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <FileAlignment>4096</FileAlignment>
@@ -1090,6 +1090,7 @@
     <Compile Include="src\j4o\lang\Thread.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\j4o\lang\TypeName.cs" />
     <Compile Include="src\j4o\util\Date.cs">
       <SubType>Code</SubType>
     </Compile>

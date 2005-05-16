@@ -19,7 +19,7 @@ namespace com.db4o.test.cs
 
         public void configure(){
             Db4o.configure().objectClass(typeof(Image)).translate(new TNull());
-            Db4o.configure().objectClass(typeof(Bitmap)).translate(new TSerializable());
+            Db4o.configure().objectClass(typeof(Bitmap)).translate(new com.db4o.config.TSerializable());
         }
 
 //        public void storeOne(){
