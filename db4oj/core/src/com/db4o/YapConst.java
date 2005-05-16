@@ -158,7 +158,7 @@ public final class YapConst
         CLASS_COMPARE = db4oClass("config.Compare");
         CLASS_DB4OTYPE = db4oClass("types.Db4oType"); 
         CLASS_DB4OTYPEIMPL = db4oClass("Db4oTypeImpl");
-		if (com.db4o.Deploy.csharp) {
+		if (! com.db4o.Deploy.csharp) {
 			CLASS_ENUM = classForName("java.lang.Enum");
 		}
         CLASS_INTERNAL = db4oClass("Internal");
