@@ -257,6 +257,12 @@ public class QConObject extends QCon {
 
     Tree loadFromIndex(QCandidates a_candidates) {
         i_loadedFromIndex = true;
+        if(i_field != null && i_field.i_yapField != null){
+            YapClass yc = i_field.i_yapField.getParentYapClass();
+            if(yc != null){
+                a_candidates.i_yapClass = yc;
+            }
+        }
         return i_indexTraverser.getMatches(a_candidates);
     }
 
