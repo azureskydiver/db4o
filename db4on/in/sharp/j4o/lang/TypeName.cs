@@ -189,7 +189,7 @@ namespace j4o.lang
 
         static readonly TypeName[] NoGenericArguments = new TypeName[0];
 
-        static readonly Regex TopLevelTypeNameRegex = new Regex(@"^(?<SimpleName>(\w|\d|\.|\+)+)((?<GenericSuffix>`(?<GenericArgCount>\d+))\[(?<GenericArgs>.+)\])?(?<ArrayQualifier>\[,*\])?(,\s+(?<AssemblyName>.+))?$");
+        static readonly Regex TopLevelTypeNameRegex = new Regex(@"^(?<SimpleName>(\w|\d|\.|\+)+)((?<GenericSuffix>`(?<GenericArgCount>\d+))\[(?<GenericArgs>.+)\])?(?<ArrayQualifier>(\[,*\])+)?(,\s+(?<AssemblyName>.+))?$");
 
         static readonly Regex AssemblyNameSeparatorRegex = new Regex(@",\s*");
 

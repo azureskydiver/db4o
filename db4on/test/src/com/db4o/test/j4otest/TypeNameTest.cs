@@ -32,64 +32,131 @@ namespace com.db4o.test.j4otest
 
         public void testSimpleName()
         {
-            TypeName stringName = TypeName.Parse("System.String");
-            Test.ensureEquals("System.String", stringName.SimpleName);
-            Test.ensure(stringName.AssemblyName == null);
-            Test.ensureEquals(0, stringName.GenericArguments.Length);
+			try
+			{
+				TypeName stringName = TypeName.Parse("System.String");
+				Test.ensureEquals("System.String", stringName.SimpleName);
+				Test.ensure(stringName.AssemblyName == null);
+				Test.ensureEquals(0, stringName.GenericArguments.Length);
 
-            Test.ensureEquals(typeof(string), stringName.Resolve());
+				Test.ensureEquals(typeof(string), stringName.Resolve());
+			}
+			catch (Exception e)
+			{
+				Test.error(e);
+			}
         }
 
         public void testNestedType()
         {
-            TypeName typeName = TypeName.FromType(typeof(NestedType));
-            Test.ensureEquals("com.db4o.test.j4otest.TypeNameTest+NestedType", typeName.SimpleName);
-            Test.ensureEquals(typeof(NestedType), typeName.Resolve());
+			try
+			{
+				TypeName typeName = TypeName.FromType(typeof(NestedType));
+				Test.ensureEquals("com.db4o.test.j4otest.TypeNameTest+NestedType", typeName.SimpleName);
+				Test.ensureEquals(typeof(NestedType), typeName.Resolve());
+			}
+			catch (Exception e)
+			{
+				Test.error(e);
+			}
+
         }
 
-        public void testWrongVersion()
-        {
-            TypeName stringName = TypeName.Parse("System.String, mscorlib, Version=1.14.27.0");
-            Test.ensureEquals(typeof(string), stringName.Resolve());
-        }
+		public void testWrongVersion()
+		{
+			try
+			{
+				TypeName stringName = TypeName.Parse("System.String, mscorlib, Version=1.14.27.0");
+				Test.ensureEquals(typeof(string), stringName.Resolve());
+			}
+			catch (Exception e)
+			{
+				Test.error(e);
+			}
+		}
+
 
         public void testAssemblyQualifiedName()
         {
-            TypeName stringName = TypeName.FromType(typeof(string));
-            Test.ensureEquals(0, stringName.GenericArguments.Length);
-            Test.ensureEquals("System.String", stringName.SimpleName);
-            Test.ensureEquals(typeof(string).Assembly.FullName, stringName.AssemblyName.FullName);
+			try
+			{
+				TypeName stringName = TypeName.FromType(typeof(string));
+				Test.ensureEquals(0, stringName.GenericArguments.Length);
+				Test.ensureEquals("System.String", stringName.SimpleName);
+				Test.ensureEquals(typeof(string).Assembly.FullName, stringName.AssemblyName.FullName);
 
-            Test.ensureEquals(stringName, TypeName.FromType(typeof(string)));
+				Test.ensureEquals(stringName, TypeName.FromType(typeof(string)));
+			}
+			catch (Exception e)
+			{
+				Test.error(e);
+			}
+
         }
 
         public void testSimpleArray()
         {
-            TypeName arrayTypeName = TypeName.FromType(typeof(byte[]));
-            Test.ensureEquals(typeof(byte[]), arrayTypeName.Resolve());
+			try
+			{
+				TypeName arrayTypeName = TypeName.FromType(typeof(byte[]));
+				Test.ensureEquals(typeof(byte[]), arrayTypeName.Resolve());
+			}
+			catch (Exception e)
+			{
+				Test.error(e);
+			}
+
         }
+
+		public void testJaggedArray()
+		{
+			try
+			{
+				TypeName arrayTypeName = TypeName.FromType(typeof(byte[][][,]));
+				Test.ensureEquals(typeof(byte[][][,]), arrayTypeName.Resolve());
+			}
+			catch (Exception e)
+			{
+				Test.error(e);
+			}
+
+		}
 
 #if NET_2_0
         public void testGenericArrays()
         {
-            TypeName simpleGType = TypeName.Parse(typeof(SimpleGenericType<string>).AssemblyQualifiedName);
-            Test.ensureEquals(typeof(SimpleGenericType<string>), simpleGType.Resolve());
+			try
+			{
+				TypeName simpleGType = TypeName.Parse(typeof(SimpleGenericType<string>).AssemblyQualifiedName);
+				Test.ensureEquals(typeof(SimpleGenericType<string>), simpleGType.Resolve());
 
-            TypeName genericArrayType = TypeName.Parse(typeof(SimpleGenericType<int>[]).AssemblyQualifiedName);
-            Test.ensureEquals(typeof(SimpleGenericType<int>[]), genericArrayType.Resolve());
+				TypeName genericArrayType = TypeName.Parse(typeof(SimpleGenericType<int>[]).AssemblyQualifiedName);
+				Test.ensureEquals(typeof(SimpleGenericType<int>[]), genericArrayType.Resolve());
 
-            genericArrayType = TypeName.Parse(typeof(SimpleGenericType<int>[,]).AssemblyQualifiedName);
-            AssertEquals(typeof(SimpleGenericType<int>[,]), genericArrayType.Resolve());
+				genericArrayType = TypeName.Parse(typeof(SimpleGenericType<int>[,]).AssemblyQualifiedName);
+				AssertEquals(typeof(SimpleGenericType<int>[,]), genericArrayType.Resolve());
+			}
+			catch (Exception e)
+			{
+				Test.error(e);
+			}
         }
 
         public void testUnversionedGenericName()
         {
-            string simpleAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
-            Type t = typeof(GenericType<int, GenericType<int, string>>);
-            TypeName tn = TypeName.Parse(t.AssemblyQualifiedName);
-            Test.ensureEquals(
-                "com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib],[com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib],[System.String, mscorlib]], " + simpleAssemblyName +"]], " + simpleAssemblyName,
-                tn.GetUnversionedName());
+			try
+			{
+				string simpleAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+				Type t = typeof(GenericType<int, GenericType<int, string>>);
+				TypeName tn = TypeName.Parse(t.AssemblyQualifiedName);
+				Test.ensureEquals(
+					"com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib],[com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib],[System.String, mscorlib]], " + simpleAssemblyName +"]], " + simpleAssemblyName,
+					tn.GetUnversionedName());
+			}
+			catch (Exception e)
+			{
+				Test.error(e);
+			}
         }
 
         public void testGenericName()
