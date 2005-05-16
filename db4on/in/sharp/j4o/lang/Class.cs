@@ -154,7 +154,7 @@ namespace j4o.lang {
 
         public String getName() {
             if (name == null) {
-                name = TypeName.Parse(type.AssemblyQualifiedName).GetUnversionedName();
+                name = TypeName.FromType(type).GetUnversionedName();
             }
             return name;
         }
@@ -209,3 +209,4 @@ namespace j4o.lang {
         }
     }
 }
+

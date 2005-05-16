@@ -42,7 +42,7 @@ namespace com.db4o.test.j4otest
 
         public void testNestedType()
         {
-            TypeName typeName = TypeName.Parse(typeof(NestedType).AssemblyQualifiedName);
+            TypeName typeName = TypeName.FromType(typeof(NestedType));
             Test.ensureEquals("com.db4o.test.j4otest.TypeNameTest+NestedType", typeName.SimpleName);
             Test.ensureEquals(typeof(NestedType), typeName.Resolve());
         }
@@ -55,17 +55,17 @@ namespace com.db4o.test.j4otest
 
         public void testAssemblyQualifiedName()
         {
-            TypeName stringName = TypeName.Parse(typeof(string).AssemblyQualifiedName);
+            TypeName stringName = TypeName.FromType(typeof(string));
             Test.ensureEquals(0, stringName.GenericArguments.Length);
             Test.ensureEquals("System.String", stringName.SimpleName);
             Test.ensureEquals(typeof(string).Assembly.FullName, stringName.AssemblyName.FullName);
 
-            Test.ensureEquals(stringName, TypeName.Parse(typeof(string).AssemblyQualifiedName));
+            Test.ensureEquals(stringName, TypeName.FromType(typeof(string)));
         }
 
         public void testSimpleArray()
         {
-            TypeName arrayTypeName = TypeName.Parse(typeof(byte[]).AssemblyQualifiedName);
+            TypeName arrayTypeName = TypeName.FromType(typeof(byte[]));
             Test.ensureEquals(typeof(byte[]), arrayTypeName.Resolve());
         }
 
@@ -128,10 +128,7 @@ namespace com.db4o.test.j4otest
 
         static void AssertEquals(object expected, object actual)
         {
-            if (!object.Equals(expected, actual))
-            {
-                throw new ApplicationException(string.Format("'{0}' != '{1}'", expected, actual));
-            }
+			Test.ensureEquals(expected, actual);
         }
     }
 }
