@@ -82,6 +82,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         for (int i = 0; i < dependancies.length; i++) {
             classAddMembers(dependancies[i]);
         }
+        yapClass.setStateDirty();
         yapClass.write(i_stream, i_stream.getSystemTransaction());
 
         // the dependancies need a rewrite

@@ -839,6 +839,10 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         boolean errMessages
         ) {
         
+        if(DTrace.enabled){
+            DTrace.YAPCLASS_INIT.log(getID());
+        }
+        
         i_ancestor = a_ancestor;
         i_config = a_stream.i_config.configClass(claxx.getName());
         
