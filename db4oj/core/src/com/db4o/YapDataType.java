@@ -45,7 +45,7 @@ public interface YapDataType extends YapComparable
 	
 	boolean supportsIndex();
 	
-	void writeNew(Object a_object, YapWriter a_bytes);
+	int writeNew(Object a_object, YapWriter a_bytes);
 	
 	public int getType ();
 	
