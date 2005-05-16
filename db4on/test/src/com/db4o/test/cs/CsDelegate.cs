@@ -63,7 +63,7 @@ namespace com.db4o.test.cs
 
 		public void testTSerializableForDelegate()
 		{
-			Db4o.configure().objectClass(typeof(EventHandler)).translate(new TSerializable());			
+			Db4o.configure().objectClass(typeof(EventHandler)).translate(new com.db4o.config.TSerializable());			
 			try
 			{
 				Test.deleteAllInstances(typeof(CsDelegate));

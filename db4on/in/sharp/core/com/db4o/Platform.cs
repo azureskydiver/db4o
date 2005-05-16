@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using j4o.lang;
 using j4o.lang.reflect;
@@ -336,31 +335,9 @@ namespace com.db4o {
         }
 
         static internal void postOpen(ObjectContainer objectContainer) {
-#if COMPACT_1_0
-            Query q = objectContainer.query();
-            q.constrain(typeof(AssemblyNameHint));
-            ObjectSet objectSet = q.execute();
-            while(objectSet.hasNext()){
-                AssemblyNameHint anh = (AssemblyNameHint)objectSet.next();
-                objectContainer.activate(anh, 2);
-                AssemblyNameHint existing = (AssemblyNameHint)Class.assemblies[anh.shortName];
-                if(existing != null){
-                    objectContainer.ext().bind(existing, objectContainer.ext().getID(anh));
-                    objectContainer.set(existing);
-                }else{
-                    Class.assemblies[anh.shortName] = anh;
-                }
-            }
-#endif
         }
 
         static internal void preClose(ObjectContainer objectContainer) {
-#if COMPACT_1_0
-            IEnumerator i = Class.assemblies.Keys.GetEnumerator();
-            while(i.MoveNext()){
-                objectContainer.set(Class.assemblies[i.Current]);
-            }
-#endif
         }
 
         public static void registerCollections(GenericReflector reflector) {

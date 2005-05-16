@@ -9,9 +9,6 @@ namespace j4o.lang {
 
     public class Class {
 
-#if COMPACT_1_0
-        public static IDictionary assemblies = new Hashtable();
-#endif
         private static IDictionary _typeToClassMap = new Hashtable();
 
 		private static IDictionary _typeNameToClassMap = new Hashtable();
@@ -51,25 +48,7 @@ namespace j4o.lang {
 			}
 
             try {
-                Type t = Type.GetType(name);
-                if (t == null) {
-                    int pos = name.IndexOf(",");
-                    if(pos > 0) {
-						string assemblyName = name.Substring(pos + 2);
-#if COMPACT_1_0
-                        AssemblyNameHint anh = (AssemblyNameHint)assemblies[assemblyName];
-                        if (anh != null && null != anh.LongName) {
-							assemblyName = anh.LongName;
-                        }
-#endif
-						Assembly assembly = loadAssembly(assemblyName);
-						if (null != assembly)
-						{
-							string typeName = name.Substring(0, pos);
-							t = assembly.GetType(typeName);
-						}
-                    }
-                }
+                Type t = TypeName.Parse(name).Resolve();
                 returnValue = getClassForType(t);
 				_typeNameToClassMap[name] = returnValue;
             } catch(TypeLoadException ex) {
@@ -77,20 +56,6 @@ namespace j4o.lang {
             }
 			return returnValue;
         }
-
-		private static Assembly loadAssembly(string name)
-		{
-#if COMPACT_1_0
-			return Assembly.Load(name);
-#else
-			Assembly found = Assembly.LoadWithPartialName(name);
-			if (null == found)
-			{
-				found = Assembly.Load(name);
-			}
-			return found;
-#endif
-		}
 
         public static Class getClassForObject(object obj) {
             return getClassForType(obj.GetType());
@@ -188,30 +153,8 @@ namespace j4o.lang {
         }
 
         public String getName() {
-            if(name == null) {
-                String fullAssemblyName = type.Assembly.GetName().ToString();
-                String shortAssemblyName = fullAssemblyName;
-                int pos = fullAssemblyName.IndexOf(",");
-                if(pos > 0) {
-                    shortAssemblyName = fullAssemblyName.Substring(0, pos);
-                }
-                name = type.FullName + ", " + shortAssemblyName;
-
-#if COMPACT_1_0
-                Type testType = Type.GetType(name);
-                if(testType == null) {
-                    testType = Type.GetType(type.FullName + ", " + fullAssemblyName);
-                    if(testType != null) {
-                        AssemblyNameHint anh = (AssemblyNameHint)assemblies[shortAssemblyName];
-                        if(anh != null) {
-                            anh.LongName = fullAssemblyName;
-                        } else {
-                            anh = new AssemblyNameHint(shortAssemblyName, fullAssemblyName);
-                            assemblies[shortAssemblyName] = anh;
-                        }
-                    }
-                }
-#endif
+            if (name == null) {
+                name = TypeName.Parse(type.AssemblyQualifiedName).GetUnversionedName();
             }
             return name;
         }
@@ -266,5 +209,3 @@ namespace j4o.lang {
         }
     }
 }
-
-

@@ -41,7 +41,7 @@ namespace com.db4o.test {
 			typeof(CsCollections),
 			typeof(CsCustomTransientAttribute),
 			typeof(CsDate),
-#if NET || NET_2_0
+#if NET
 		    typeof(CsDelegate),
 #endif
 			typeof(CsEnum),
@@ -71,6 +71,7 @@ namespace com.db4o.test {
             typeof(IsStored),
 			
 			typeof(j4otest.ClassTest),
+            typeof(j4otest.TypeNameTest),
 			
             typeof(KeepCollectionContent),
             typeof(MaxByEvaluation),
