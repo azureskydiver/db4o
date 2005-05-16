@@ -134,6 +134,7 @@ namespace com.db4o.test.j4otest
             ensureRoundtrip(typeof(SimpleGenericType<string[,]>[][]));
             ensureRoundtrip(typeof(SimpleGenericType<string[][]>[]));
             ensureRoundtrip(typeof(SimpleGenericType<string[][]>[][]));
+            ensureRoundtrip(typeof(SimpleGenericType<SimpleGenericType<string[][]>[][,]>[][]));
         }
 
         public void testUnversionedGenericName()
