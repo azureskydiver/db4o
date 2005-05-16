@@ -170,7 +170,7 @@ public final class YapString extends YapIndependantType {
         }
     }
     
-    public void writeNew(Object a_object, YapWriter a_bytes) {
+    public int writeNew(Object a_object, YapWriter a_bytes) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();
         } else {
@@ -191,6 +191,7 @@ public final class YapString extends YapIndependantType {
             a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
             a_bytes.writeInt(length);
         }
+		return 0;
     }
 
     final void writeShort(String a_string, YapReader a_bytes) {

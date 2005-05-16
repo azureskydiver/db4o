@@ -88,14 +88,14 @@ public class YapField implements StoredField {
         }
     }
 
-    protected void addIndexEntry(Object a_object, YapWriter a_bytes) {
-        addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), a_object);
+    protected void addIndexEntry(Object member, YapWriter a_bytes) {
+        addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), member);
     }
 
-    void addIndexEntry(Transaction a_trans, int a_id, Object a_object) {
-        i_handler.prepareLastIoComparison(a_trans, a_object);
+    void addIndexEntry(Transaction a_trans, int parentID, Object member) {
+        i_handler.prepareLastIoComparison(a_trans, member);
         IxFieldTransaction ift = getIndex(a_trans).dirtyFieldTransaction(a_trans);
-        ift.add(new IxAdd(ift, a_id, i_handler.indexEntry(a_object)));
+        ift.add(new IxAdd(ift, parentID, i_handler.indexEntry(member)));
     }
 
     public boolean alive() {
@@ -570,6 +570,8 @@ public class YapField implements StoredField {
     void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes,
         Config4Class a_config, boolean a_new) {
         // alive needs to be checked by all callers: Done
+		
+		int memberId = 0;
 
         if (a_object != null
             && ((a_config != null && (a_config.i_cascadeOnUpdate == 1)) || (i_config != null && (i_config.i_cascadeOnUpdate == 1)))) {
@@ -582,10 +584,10 @@ public class YapField implements StoredField {
             if (updateDepth < min) {
                 a_bytes.setUpdateDepth(min);
             }
-            i_handler.writeNew(a_object, a_bytes);
+            memberId = i_handler.writeNew(a_object, a_bytes);
             a_bytes.setUpdateDepth(updateDepth);
         } else {
-            i_handler.writeNew(a_object, a_bytes);
+            memberId = i_handler.writeNew(a_object, a_bytes);
         }
         if (i_index != null) {
             addIndexEntry(a_object, a_bytes);

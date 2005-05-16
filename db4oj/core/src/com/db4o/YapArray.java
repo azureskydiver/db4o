@@ -359,7 +359,7 @@ class YapArray extends YapIndependantType {
         throw YapConst.virtualException();
     }
     
-    public void writeNew(Object a_object, YapWriter a_bytes) {
+    public int writeNew(Object a_object, YapWriter a_bytes) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();
         } else {
@@ -379,6 +379,7 @@ class YapArray extends YapIndependantType {
             a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
             a_bytes.writeInt(length);
         }
+		return 0;
     }
 
     void writeNew1(Object a_object, YapWriter a_bytes) {

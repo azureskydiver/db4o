@@ -137,13 +137,14 @@ abstract class YapJavaClass implements YapDataType {
         write(a_object, a_writer);
     }
 
-    public void writeNew(Object a_object, YapWriter a_bytes) {
+    public int writeNew(Object a_object, YapWriter a_bytes) {
         if (Deploy.csharp) {
             if (a_object == null) {
                 a_object = primitiveNull();
             }
         }
         write(a_object, a_bytes);
+		return 0;
     }
 
     public YapComparable prepareComparison(Object obj) {

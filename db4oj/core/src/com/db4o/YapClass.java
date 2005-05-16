@@ -1780,18 +1780,20 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         a_writer.writeInt(((Integer)a_object).intValue());
     }
 
-    public void writeNew(Object a_object, YapWriter a_bytes) {
+    public int writeNew(Object a_object, YapWriter a_bytes) {
+		int id = 0; 
         if (a_object == null) {
             a_bytes.writeInt(0);
-            i_lastID = 0;
         } else {
-            i_lastID =
+            id =
                 a_bytes.getStream().setInternal(
                     a_bytes.getTransaction(),
                     a_object,
                     a_bytes.getUpdateDepth(), true);
-            a_bytes.writeInt(i_lastID);
+            a_bytes.writeInt(id);
         }
+		i_lastID = id;
+		return id;
     }
 
     void writeThis(YapWriter a_writer) {
