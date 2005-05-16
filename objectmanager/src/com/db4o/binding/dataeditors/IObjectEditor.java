@@ -6,7 +6,7 @@ package com.db4o.binding.dataeditors;
 import org.eclipse.swt.widgets.Control;
 
 import com.db4o.binding.CannotSaveException;
-import com.db4o.binding.field.internal.IFieldController;
+import com.db4o.binding.field.IFieldController;
 
 
 /**

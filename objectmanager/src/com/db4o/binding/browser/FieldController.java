@@ -24,7 +24,7 @@ import com.db4o.binding.converters.ConvertString2Integer;
 import com.db4o.binding.converters.ConvertString2Long;
 import com.db4o.binding.converters.ConvertString2Object;
 import com.db4o.binding.converters.TheIdentityConverter;
-import com.db4o.binding.field.internal.IFieldController;
+import com.db4o.binding.field.IFieldController;
 import com.db4o.binding.verifier.IVerifier;
 import com.db4o.binding.verifiers.DateVerifier;
 import com.db4o.binding.verifiers.DoubleVerifier;

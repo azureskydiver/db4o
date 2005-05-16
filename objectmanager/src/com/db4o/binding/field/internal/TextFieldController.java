@@ -18,6 +18,7 @@ import com.db4o.binding.converter.Converter;
 import com.db4o.binding.converter.IConverter;
 import com.db4o.binding.dataeditors.IObjectEditor;
 import com.db4o.binding.dataeditors.IPropertyEditor;
+import com.db4o.binding.field.IFieldController;
 import com.db4o.binding.statusbar.StatusBar;
 import com.db4o.binding.swt.ITextField;
 import com.db4o.binding.verifier.IVerifier;
