@@ -116,7 +116,12 @@ namespace com.db4o {
         }
 
         private void printLine(string s) {
-            _console.Text += s.Replace("\n", "\r\n") + "\r\n";
+            _console.SelectionLength = 0;
+            _console.SelectionStart = _console.TextLength;
+            _console.SelectedText = s.Replace("\n", "\r\n") + "\r\n";
+            _console.ScrollToCaret();
+
+            //_console.Text += s.Replace("\n", "\r\n") + "\r\n";
             Application.DoEvents();
         }
 
