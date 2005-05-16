@@ -141,7 +141,15 @@ namespace j4o.lang
                     builder.Append(",");
                 }
                 builder.Append("[");
-                builder.Append(_genericArguments[i].Resolve().AssemblyQualifiedName);
+
+				System.Type type = _genericArguments[i].Resolve();
+#if COMPACT_1_0
+				builder.Append(type.FullName);
+				builder.Append(", ");
+				builder.Append(type.Assembly.FullName);
+#else
+                builder.Append(type.AssemblyQualifiedName);
+#endif
                 builder.Append("]");
             }
             builder.Append("]");
@@ -195,6 +203,18 @@ namespace j4o.lang
             }
             return new TypeNameParser(name).Parse();
         }
+
+		public static TypeName FromType(System.Type type)
+		{
+			if (null == type)
+			{
+				throw new ArgumentNullException("type");
+			}
+			StringBuilder builder = new StringBuilder(type.FullName);
+			builder.Append(", ");
+			builder.Append(type.Assembly.FullName);
+			return Parse(builder.ToString());
+		}
 
         class TypeNameParser
         {
@@ -347,4 +367,6 @@ namespace j4o.lang
         }
     }
 }
+
+
 

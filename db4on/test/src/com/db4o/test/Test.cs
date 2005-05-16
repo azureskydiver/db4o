@@ -159,9 +159,14 @@ namespace com.db4o.test {
         }
 
         public static void error(Exception error)
-        {
-            errorCount++;
+        {   
+#if COMPACT_1_0
+			Console.WriteLine("!!! TEST CASE FAILED !!! [" + error.Message + "]");
+#else
+			errorCount++;
             Console.WriteLine("!!! TEST CASE FAILED !!! [" + error.Message + "]" + error.StackTrace);
+
+#endif
         }
       
         public static int fileLength() {
