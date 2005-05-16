@@ -38,8 +38,7 @@ namespace com.db4o.test.j4otest
 				Test.ensureEquals("System.String", stringName.SimpleName);
 				Test.ensure(stringName.AssemblyName == null);
 				Test.ensureEquals(0, stringName.GenericArguments.Length);
-
-				Test.ensureEquals(typeof(string), stringName.Resolve());
+                Test.ensureEquals(typeof(string), stringName.Resolve());
 			}
 			catch (Exception e)
 			{
@@ -96,50 +95,45 @@ namespace com.db4o.test.j4otest
 
         public void testSimpleArray()
         {
-			try
-			{
-				TypeName arrayTypeName = TypeName.FromType(typeof(byte[]));
-				Test.ensureEquals(typeof(byte[]), arrayTypeName.Resolve());
-			}
-			catch (Exception e)
-			{
-				Test.error(e);
-			}
+            ensureRoundtrip(typeof(byte[]));
+        }
 
+        private static void ensureRoundtrip(Type type)
+        {
+            try
+            {
+                TypeName typeName = TypeName.FromType(type);
+                Test.ensureEquals(type, typeName.Resolve());
+            }
+            catch (Exception e)
+            {
+                Test.error(e);
+            }
         }
 
 		public void testJaggedArray()
 		{
-			try
-			{
-				TypeName arrayTypeName = TypeName.FromType(typeof(byte[][][,]));
-				Test.ensureEquals(typeof(byte[][][,]), arrayTypeName.Resolve());
-			}
-			catch (Exception e)
-			{
-				Test.error(e);
-			}
-
+            ensureRoundtrip(typeof(byte[][]));
+            ensureRoundtrip(typeof(byte[][][,]));
 		}
 
 #if NET_2_0
         public void testGenericArrays()
         {
-			try
-			{
-				TypeName simpleGType = TypeName.Parse(typeof(SimpleGenericType<string>).AssemblyQualifiedName);
-				Test.ensureEquals(typeof(SimpleGenericType<string>), simpleGType.Resolve());
+            ensureRoundtrip(typeof(SimpleGenericType<string>));
+			ensureRoundtrip(typeof(SimpleGenericType<int>[]));
+            ensureRoundtrip(typeof(SimpleGenericType<int>[,]));
+            ensureRoundtrip(typeof(SimpleGenericType<int>[][]));
+            ensureRoundtrip(typeof(SimpleGenericType<int>[][,,]));
+        }
 
-				TypeName genericArrayType = TypeName.Parse(typeof(SimpleGenericType<int>[]).AssemblyQualifiedName);
-				Test.ensureEquals(typeof(SimpleGenericType<int>[]), genericArrayType.Resolve());
-
-				genericArrayType = TypeName.Parse(typeof(SimpleGenericType<int>[,]).AssemblyQualifiedName);
-				AssertEquals(typeof(SimpleGenericType<int>[,]), genericArrayType.Resolve());
-			}
-			catch (Exception e)
-			{
-				Test.error(e);
-			}
+        public void testGenericOfArrays()
+        {
+            ensureRoundtrip(typeof(SimpleGenericType<string[]>));
+            ensureRoundtrip(typeof(SimpleGenericType<string[]>[]));
+            ensureRoundtrip(typeof(SimpleGenericType<string[,]>[][]));
+            ensureRoundtrip(typeof(SimpleGenericType<string[][]>[]));
+            ensureRoundtrip(typeof(SimpleGenericType<string[][]>[][]));
         }
 
         public void testUnversionedGenericName()

@@ -191,9 +191,11 @@ namespace j4o.lang
 
         static readonly Regex TopLevelTypeNameRegex = new Regex(@"^(?<SimpleName>(\w|\d|\.|\+)+)((?<GenericSuffix>`(?<GenericArgCount>\d+))\[(?<GenericArgs>.+)\])?(?<ArrayQualifier>(\[,*\])+)?(,\s+(?<AssemblyName>.+))?$");
 
+        static readonly Regex ArrayQualifierRegex = new Regex(@"(?<ArrayQualifier>(\[,*\])+)$");
+
         static readonly Regex AssemblyNameSeparatorRegex = new Regex(@",\s*");
 
-        static readonly Regex PairSeparator = new Regex(@"\s*=\s*");
+        static readonly Regex PairSeparatorRegex = new Regex(@"\s*=\s*");
 
         public static TypeName Parse(string name)
         {
@@ -244,10 +246,15 @@ namespace j4o.lang
                     string args = m.Groups["GenericArgs"].Value;
                     if (!args.EndsWith("]"))
                     {
-                        int index = args.LastIndexOf('[');
                         // fix overeager matching of [] at the end
-                        arrayQualifier = args.Substring(index) + "]";
-                        args = args.Substring(0, index - 1);
+                        Match aqm = ArrayQualifierRegex.Match(args + "]");
+                        if (!aqm.Success)
+                        {
+                            InvalidTypeName();
+                        }
+
+                        arrayQualifier = aqm.Groups["ArrayQualifier"].Value;
+                        args = args.Substring(0, aqm.Index - 1);
                     }
                     genericArguments = ParseGenericArguments(argCount, args);
                 }
@@ -267,7 +274,7 @@ namespace j4o.lang
                 for (int i=1; i<parts.Length; ++i)
                 {
                     string part = parts[i];
-                    string[] pair = PairSeparator.Split(part);
+                    string[] pair = PairSeparatorRegex.Split(part);
                     if (2 != pair.Length)
                     {
                         InvalidTypeName();
@@ -367,6 +374,7 @@ namespace j4o.lang
         }
     }
 }
+
 
 
 
