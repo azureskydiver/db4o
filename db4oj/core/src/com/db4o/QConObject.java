@@ -175,7 +175,7 @@ public class QConObject extends QCon {
             if (!(i_yapClass instanceof YapClassPrimitive)) {
                 if (!i_evaluator.identity()) {
                     if (i_yapClass == i_candidates.i_yapClass) {
-                        if (i_evaluator == QE.DEFAULT && (i_joins == null)) {
+                        if (i_evaluator.isDefault() && (i_joins == null)) {
                             return;
                         }
                     }

@@ -26,6 +26,10 @@ public class QEMulti extends QE{
 		}
 		return ret;
 	}
+    
+    boolean isDefault(){
+        return false;
+    }
 	
 	boolean evaluate(QConObject a_constraint, QCandidate a_candidate, Object a_value){
 		Iterator4 i = i_evaluators.iterator();

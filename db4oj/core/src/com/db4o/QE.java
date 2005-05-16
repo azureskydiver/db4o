@@ -15,11 +15,15 @@ public class QE
 	QE add(QE evaluator){
 		return evaluator;
 	}
-	
+    
 	boolean identity(){
 		return false;
 	}
-	
+
+    boolean isDefault(){
+        return true;
+    }
+
 	boolean evaluate(QConObject a_constraint, QCandidate a_candidate, Object a_value){
 		if(a_value == null){
 			return a_constraint.getComparator(a_candidate) instanceof Null;

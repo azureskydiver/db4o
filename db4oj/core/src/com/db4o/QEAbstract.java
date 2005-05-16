@@ -13,5 +13,10 @@ public abstract class QEAbstract extends QE{
 		qe.add(evaluator);
 		return qe;
 	}
+    
+    boolean isDefault(){
+        return false;
+    }
+
 }
 
