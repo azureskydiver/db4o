@@ -6,6 +6,7 @@ package com.db4o.binding.field.internal;
 import com.db4o.binding.CannotSaveException;
 import com.db4o.binding.dataeditors.IObjectEditor;
 import com.db4o.binding.dataeditors.IPropertyEditor;
+import com.db4o.binding.field.IFieldController;
 
 public class ComboFieldController implements IFieldController {
 
