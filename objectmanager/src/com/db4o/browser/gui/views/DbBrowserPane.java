@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -36,7 +37,7 @@ public class DbBrowserPane extends Composite {
 	public DbBrowserPane(Composite parent, int style) {
 		super(parent, style);
         parent.setLayout(new FillLayout());
-        setLayout(new FillLayout());
+        setLayout(new GridLayout());
         contents = createContents();
 	}
     

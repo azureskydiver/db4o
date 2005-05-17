@@ -95,7 +95,7 @@ public interface IObjectEditor {
     /**
      * Method commit.
      * 
-     * Commit any changes that have occurred to the specified object.
+     * Commit any changes that have occurred since the last commit()
      * 
      * @throws CannotSaveException if the data could not be saved.
      */
@@ -111,7 +111,7 @@ public interface IObjectEditor {
     /**
      * Method rollback.
      * 
-     * Roll back changes to this object (if possible/applicable).
+     * Roll back changes since the last commit() (if possible/applicable).
      */
     public void rollback();
     

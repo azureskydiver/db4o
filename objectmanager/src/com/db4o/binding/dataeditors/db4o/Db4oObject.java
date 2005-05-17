@@ -77,7 +77,7 @@ public class Db4oObject implements IObjectEditor {
      * @see com.db4o.binding.dataeditors.IObjectEditor#getProperty(java.lang.String)
      */
     public IPropertyEditor getProperty(String name) throws NoSuchMethodException {
-        return Db4oBeanProperty.construct(getInput(), name);
+        return Db4oBeanProperty.construct(getInput(), name, database);
     }
     
     private LinkedList bindings = new LinkedList();
