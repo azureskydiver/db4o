@@ -30,9 +30,9 @@ public class TestBindings implements IControlFactory {
         ITestBindings ui = (ITestBindings) XSWT.createl(parent, "TestBindings.xswt", getClass(), ITestBindings.class);
         
         ObjectEditorFactory.factory = new Db4oObjectEditorFactory(database);
-        IObjectEditor objectEditor = ObjectEditorFactory.construct(person);
-        objectEditor.bind(ui.getName(), "Name");
-        objectEditor.bind(ui.getAge(), "Age");
+        IObjectEditor personObjectEditor = ObjectEditorFactory.construct(person);
+        personObjectEditor.bind(ui.getName(), "Name");
+        personObjectEditor.bind(ui.getAge(), "Age");
     }
     
     private void close() {
