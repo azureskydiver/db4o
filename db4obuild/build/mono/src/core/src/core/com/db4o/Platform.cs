@@ -20,7 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 using System;
 using System.Collections;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using j4o.lang;
 using j4o.lang.reflect;
@@ -354,27 +353,9 @@ namespace com.db4o {
         }
 
         static internal void postOpen(ObjectContainer objectContainer) {
-            Query q = objectContainer.query();
-            q.constrain(typeof(AssemblyNameHint));
-            ObjectSet objectSet = q.execute();
-            while(objectSet.hasNext()){
-                AssemblyNameHint anh = (AssemblyNameHint)objectSet.next();
-                objectContainer.activate(anh, 2);
-                AssemblyNameHint existing = (AssemblyNameHint)Class.assemblies[anh.shortName];
-                if(existing != null){
-                    objectContainer.ext().bind(existing, objectContainer.ext().getID(anh));
-                    objectContainer.set(existing);
-                }else{
-                    Class.assemblies[anh.shortName] = anh;
-                }
-            }
         }
 
         static internal void preClose(ObjectContainer objectContainer) {
-            IEnumerator i = Class.assemblies.Keys.GetEnumerator();
-            while(i.MoveNext()){
-                objectContainer.set(Class.assemblies[i.Current]);
-            }
         }
 
         public static void registerCollections(GenericReflector reflector) {
@@ -471,11 +452,4 @@ namespace com.db4o {
                                                     Class.getClassForType(typeof(String)),
                                                     Class.getClassForType(typeof(j4o.util.Date))      };
     }
-
-
-
-
-
-
-    
 }

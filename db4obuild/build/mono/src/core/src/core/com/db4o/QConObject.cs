@@ -226,7 +226,7 @@ namespace com.db4o
 					{
 						if (i_yapClass == i_candidates.i_yapClass)
 						{
-							if (i_evaluator == com.db4o.QE.DEFAULT && (i_joins == null))
+							if (i_evaluator.isDefault() && (i_joins == null))
 							{
 								return;
 							}
@@ -331,6 +331,14 @@ namespace com.db4o
 		internal override com.db4o.Tree loadFromIndex(com.db4o.QCandidates a_candidates)
 		{
 			i_loadedFromIndex = true;
+			if (i_field != null && i_field.i_yapField != null)
+			{
+				com.db4o.YapClass yc = i_field.i_yapField.getParentYapClass();
+				if (yc != null)
+				{
+					a_candidates.i_yapClass = yc;
+				}
+			}
 			return i_indexTraverser.getMatches(a_candidates);
 		}
 

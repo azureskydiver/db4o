@@ -90,7 +90,7 @@ namespace com.db4o
 								{
 									a_depth = i_yapClass.i_config.adjustActivationDepth(a_depth);
 								}
-								i_yapClass.activateFields(ta, a_object, a_depth - 1);
+								i_yapClass.activateFields(ta, a_object, a_depth);
 							}
 							return;
 						}

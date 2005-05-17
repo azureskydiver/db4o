@@ -180,13 +180,14 @@ namespace com.db4o
 			write(a_object, a_writer);
 		}
 
-		public virtual void writeNew(object a_object, com.db4o.YapWriter a_bytes)
+		public virtual int writeNew(object a_object, com.db4o.YapWriter a_bytes)
 		{
 			if (a_object == null)
 			{
 				a_object = primitiveNull();
 			}
 			write(a_object, a_bytes);
+			return 0;
 		}
 
 		public virtual com.db4o.YapComparable prepareComparison(object obj)

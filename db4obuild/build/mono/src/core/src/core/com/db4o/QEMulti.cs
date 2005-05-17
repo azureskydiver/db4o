@@ -49,6 +49,11 @@ namespace com.db4o
 			return ret;
 		}
 
+		internal override bool isDefault()
+		{
+			return false;
+		}
+
 		internal override bool evaluate(com.db4o.QConObject a_constraint, com.db4o.QCandidate
 			 a_candidate, object a_value)
 		{

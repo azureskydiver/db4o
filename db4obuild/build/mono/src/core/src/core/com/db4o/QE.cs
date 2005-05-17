@@ -39,6 +39,11 @@ namespace com.db4o
 			return false;
 		}
 
+		internal virtual bool isDefault()
+		{
+			return true;
+		}
+
 		internal virtual bool evaluate(com.db4o.QConObject a_constraint, com.db4o.QCandidate
 			 a_candidate, object a_value)
 		{

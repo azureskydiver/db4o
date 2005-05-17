@@ -21,14 +21,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 using System.Reflection;
 using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("db4o - database for objects")]
-[assembly: AssemblyDescription("db4o 4.5.007 .NET")]
+[assembly: AssemblyDescription("db4o 4.5.100 .NET")]
 [assembly: AssemblyConfiguration(".NET")]
 [assembly: AssemblyCompany("db4objects Inc., San Mateo, CA, USA")]
 [assembly: AssemblyProduct("db4o - database for objects")]
 [assembly: AssemblyCopyright("db4o 2005")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]	
-[assembly: AssemblyVersion("4.5.007")]
+[assembly: AssemblyVersion("4.5.100")]
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("")]

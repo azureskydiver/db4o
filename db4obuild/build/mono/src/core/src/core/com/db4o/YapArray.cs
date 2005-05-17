@@ -410,7 +410,7 @@ namespace com.db4o
 			throw com.db4o.YapConst.virtualException();
 		}
 
-		public override void writeNew(object a_object, com.db4o.YapWriter a_bytes)
+		public override int writeNew(object a_object, com.db4o.YapWriter a_bytes)
 		{
 			if (a_object == null)
 			{
@@ -429,6 +429,7 @@ namespace com.db4o
 				a_bytes.incrementOffset(com.db4o.YapConst.YAPID_LENGTH);
 				a_bytes.writeInt(length);
 			}
+			return 0;
 		}
 
 		internal virtual void writeNew1(object a_object, com.db4o.YapWriter a_bytes)

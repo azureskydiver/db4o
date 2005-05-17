@@ -234,7 +234,6 @@ namespace com.db4o
 			CLASS_COMPARE = db4oClass("config.Compare");
 			CLASS_DB4OTYPE = db4oClass("types.Db4oType");
 			CLASS_DB4OTYPEIMPL = db4oClass("Db4oTypeImpl");
-			CLASS_ENUM = classForName("java.lang.Enum");
 			CLASS_INTERNAL = db4oClass("Internal");
 			CLASS_METACLASS = j4o.lang.Class.getClassForObject(new com.db4o.MetaClass());
 			CLASS_METAFIELD = j4o.lang.Class.getClassForObject(new com.db4o.MetaField());

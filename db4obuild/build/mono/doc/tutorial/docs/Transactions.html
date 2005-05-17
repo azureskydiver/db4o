@@ -4,11 +4,11 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="Transactions"></a><br>
-<a name="outline498"></a><br><h1>8. Transactions</h1><br>
+<a name="outline500"></a><br><h1>8. Transactions</h1><br>
 Probably you have already wondered how db4o handles concurrent access&nbsp;to a single database. Just as any other DBMS, db4o provides a transaction&nbsp;mechanism. Before we take a look at multiple, perhaps even remote, clients&nbsp;accessing a db4o instance in parallel, we will introduce db4o transaction&nbsp;concepts in isolation.<br>
 <br>
 <ul>
-<a name="outline499"></a><br><h2>8.1. Commit and rollback</h2><br>
+<a name="outline501"></a><br><h2>8.1. Commit and rollback</h2><br>
 You may not have noticed it, but we have already been working with&nbsp;transactions from the first chapter on. By definition, you are always&nbsp;working inside a transaction when interacting with db4o. A transaction&nbsp;is implicitly started when you open a container, and the current transaction&nbsp;is implicitly committed when you close it again. So the following code snippet&nbsp;to store a car is semantically identical to the ones we have seen before;&nbsp;it just makes the commit explicit.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -47,7 +47,7 @@ ObjectSet result = db.get(new Car(null));<br>
 BMW[Rubens Barrichello/99]/0<br>
 </td></table></table><br>
 <br>
-<a name="outline500"></a><br><h2>8.2. Refresh live objects</h2><br>
+<a name="outline502"></a><br><h2>8.2. Refresh live objects</h2><br>
 There's one problem, though: We can roll back our database, but this&nbsp;cannot automagically trigger a rollback for our live objects.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -88,10 +88,10 @@ ObjectSet result = db.get(new object());<br>
 &nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/></td></table></table><br>
 <br>
-<a name="outline501"></a><br><h2>8.3. Conclusion</h2><br>
+<a name="outline503"></a><br><h2>8.3. Conclusion</h2><br>
 We have seen how transactions work for a single client. In the&nbsp;<a href="ClientServer.html#ClientServer">next chapter</a>&nbsp;&nbsp;we will see how the transaction concept extends to multiple&nbsp;clients, whether they are located within the same VM or on a remote machine.<br>
 <br>
-<a name="outline502"></a><br><h2>8.4. Full source</h2><br>
+<a name="outline504"></a><br><h2>8.4. Full source</h2><br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>namespace com.db4o.f1.chapter5<br>
 {<br>

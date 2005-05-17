@@ -124,7 +124,7 @@ namespace com.db4o
 
 		public abstract bool supportsIndex();
 
-		public abstract void writeNew(object arg1, com.db4o.YapWriter arg2);
+		public abstract int writeNew(object arg1, com.db4o.YapWriter arg2);
 
 		public abstract int getType();
 
