@@ -2,10 +2,17 @@
 
 package com.db4o.reflect.jdk;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
-import com.db4o.*;
-import com.db4o.reflect.*;
+import com.db4o.Platform;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectConstructor;
+import com.db4o.reflect.ReflectField;
+import com.db4o.reflect.ReflectMethod;
+import com.db4o.reflect.Reflector;
 
 /**
  * Reflection implementation for Class to map to JDK reflection.
@@ -65,7 +72,7 @@ public class JdkClass implements ReflectClass{
 			if(method == null){
 				return null;
 			}
-			return new JdkMethod(method);
+			return new JdkMethod(method, reflector());
 		} catch (Exception e) {
 			return null;
 		}
@@ -159,6 +166,10 @@ public class JdkClass implements ReflectClass{
     public void useConstructor(ReflectConstructor constructor, Object[] params){
         this._constructor = constructor;
         _constructorParams = params;
+    }
+
+    public Class getJdkClass() {
+        return _clazz;
     }
 
 }

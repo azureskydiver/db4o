@@ -2,16 +2,20 @@
 
 package com.db4o.reflect.jdk;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
-import com.db4o.reflect.*;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectMethod;
+import com.db4o.reflect.Reflector;
 
 public class JdkMethod implements ReflectMethod{
 	
 	private final Method method;
+    private Reflector reflector;
 	
-	public JdkMethod(Method method){
+	public JdkMethod(Method method, Reflector reflector){
 		this.method = method;
+        this.reflector = reflector;
 	}
 	
 	public Object invoke(Object onObject, Object[] parameters){
@@ -21,4 +25,9 @@ public class JdkMethod implements ReflectMethod{
 			return null;
 		} 
 	}
+
+    public ReflectClass getReturnType() {
+        return reflector.forClass(method.getReturnType());
+    }
+    
 }

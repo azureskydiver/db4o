@@ -10,5 +10,7 @@ package com.db4o.reflect;
 public interface ReflectMethod {
 	
 	public Object invoke(Object onObject, Object[] parameters);
+    
+    public ReflectClass getReturnType();
 	
 }
