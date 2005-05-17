@@ -153,7 +153,13 @@ public class Db4oDatabase implements IDatabase {
     public IObjectEditor construct() {
         return editorFactory.construct();
     }
-    
+
+    public IObjectEditor construct(Object toEdit) {
+        IObjectEditor editor = editorFactory.construct();
+        editor.setInput(toEdit);
+        return editor;
+    }
+
 }
 
 
