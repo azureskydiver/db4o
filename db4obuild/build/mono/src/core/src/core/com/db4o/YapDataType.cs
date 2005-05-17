@@ -59,7 +59,7 @@ namespace com.db4o
 
 		bool supportsIndex();
 
-		void writeNew(object a_object, com.db4o.YapWriter a_bytes);
+		int writeNew(object a_object, com.db4o.YapWriter a_bytes);
 
 		int getType();
 

@@ -20,11 +20,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 namespace com.db4o
 {
-	/// <author>
-	/// Carl Rosenberger
-	/// To change the template for this generated type comment go to
-	/// Window>Preferences>Java>Code Generation>Code and Comments
-	/// </author>
 	internal interface Closure4
 	{
 		object run();

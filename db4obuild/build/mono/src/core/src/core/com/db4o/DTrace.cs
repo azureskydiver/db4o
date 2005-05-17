@@ -117,6 +117,8 @@ namespace com.db4o
 
 		public static com.db4o.DTrace YAPCLASS_BY_ID;
 
+		public static com.db4o.DTrace YAPCLASS_INIT;
+
 		public static com.db4o.DTrace WRITE_BYTES;
 
 		public static com.db4o.DTrace WRITE_UPDATE_DELETE_MEMBERS;

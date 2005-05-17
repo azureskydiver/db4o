@@ -1552,15 +1552,15 @@ namespace com.db4o
 				{
 					int[] idgen = { -2 };
 					a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
-					com.db4o.Platform.forEachCollectionElement(obj, new _AnonymousInnerClass1311(this
+					com.db4o.Platform.forEachCollectionElement(obj, new _AnonymousInnerClass1315(this
 						, trans, idgen, a_candidates));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1311 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass1315 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass1311(YapClass _enclosing, com.db4o.Transaction trans, 
+			public _AnonymousInnerClass1315(YapClass _enclosing, com.db4o.Transaction trans, 
 				int[] idgen, com.db4o.QCandidates a_candidates)
 			{
 				this._enclosing = _enclosing;
@@ -2083,19 +2083,21 @@ namespace com.db4o
 			a_writer.writeInt(((int)a_object));
 		}
 
-		public virtual void writeNew(object a_object, com.db4o.YapWriter a_bytes)
+		public virtual int writeNew(object a_object, com.db4o.YapWriter a_bytes)
 		{
+			int id = 0;
 			if (a_object == null)
 			{
 				a_bytes.writeInt(0);
-				i_lastID = 0;
 			}
 			else
 			{
-				i_lastID = a_bytes.getStream().setInternal(a_bytes.getTransaction(), a_object, a_bytes
-					.getUpdateDepth(), true);
-				a_bytes.writeInt(i_lastID);
+				id = a_bytes.getStream().setInternal(a_bytes.getTransaction(), a_object, a_bytes.
+					getUpdateDepth(), true);
+				a_bytes.writeInt(id);
 			}
+			i_lastID = id;
+			return id;
 		}
 
 		internal override void writeThis(com.db4o.YapWriter a_writer)

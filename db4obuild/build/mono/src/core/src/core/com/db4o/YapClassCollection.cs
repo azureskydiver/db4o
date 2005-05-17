@@ -109,6 +109,7 @@ namespace com.db4o
 			{
 				classAddMembers(dependancies[i]);
 			}
+			yapClass.setStateDirty();
 			yapClass.write(i_stream, i_stream.getSystemTransaction());
 			for (int i = 0; i < dependancies.Length; i++)
 			{
@@ -470,13 +471,13 @@ namespace com.db4o
 			while (i.hasNext())
 			{
 				com.db4o.YapClass yc = i.nextClass();
-				yc.forEachYapField(new _AnonymousInnerClass395(this, a_field, a_visitor, yc));
+				yc.forEachYapField(new _AnonymousInnerClass396(this, a_field, a_visitor, yc));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass395 : com.db4o.Visitor4
+		private sealed class _AnonymousInnerClass396 : com.db4o.Visitor4
 		{
-			public _AnonymousInnerClass395(YapClassCollection _enclosing, string a_field, com.db4o.Visitor4
+			public _AnonymousInnerClass396(YapClassCollection _enclosing, string a_field, com.db4o.Visitor4
 				 a_visitor, com.db4o.YapClass yc)
 			{
 				this._enclosing = _enclosing;

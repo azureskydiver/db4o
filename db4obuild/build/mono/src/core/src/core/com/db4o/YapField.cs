@@ -109,18 +109,18 @@ namespace com.db4o
 			}
 		}
 
-		protected virtual void addIndexEntry(object a_object, com.db4o.YapWriter a_bytes)
+		protected virtual void addIndexEntry(object member, com.db4o.YapWriter a_bytes)
 		{
-			addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), a_object);
+			addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), member);
 		}
 
-		internal virtual void addIndexEntry(com.db4o.Transaction a_trans, int a_id, object
-			 a_object)
+		internal virtual void addIndexEntry(com.db4o.Transaction a_trans, int parentID, object
+			 member)
 		{
-			i_handler.prepareLastIoComparison(a_trans, a_object);
+			i_handler.prepareLastIoComparison(a_trans, member);
 			com.db4o.IxFieldTransaction ift = getIndex(a_trans).dirtyFieldTransaction(a_trans
 				);
-			ift.add(new com.db4o.IxAdd(ift, a_id, i_handler.indexEntry(a_object)));
+			ift.add(new com.db4o.IxAdd(ift, parentID, i_handler.indexEntry(member)));
 		}
 
 		public virtual bool alive()
@@ -668,6 +668,7 @@ namespace com.db4o
 		internal virtual void marshall(com.db4o.YapObject a_yapObject, object a_object, com.db4o.YapWriter
 			 a_bytes, com.db4o.Config4Class a_config, bool a_new)
 		{
+			int memberId = 0;
 			if (a_object != null && ((a_config != null && (a_config.i_cascadeOnUpdate == 1)) 
 				|| (i_config != null && (i_config.i_cascadeOnUpdate == 1))))
 			{
@@ -682,12 +683,12 @@ namespace com.db4o
 				{
 					a_bytes.setUpdateDepth(min);
 				}
-				i_handler.writeNew(a_object, a_bytes);
+				memberId = i_handler.writeNew(a_object, a_bytes);
 				a_bytes.setUpdateDepth(updateDepth);
 			}
 			else
 			{
-				i_handler.writeNew(a_object, a_bytes);
+				memberId = i_handler.writeNew(a_object, a_bytes);
 			}
 			if (i_index != null)
 			{

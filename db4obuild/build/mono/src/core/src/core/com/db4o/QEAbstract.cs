@@ -30,5 +30,10 @@ namespace com.db4o
 			qe.add(evaluator);
 			return qe;
 		}
+
+		internal override bool isDefault()
+		{
+			return false;
+		}
 	}
 }

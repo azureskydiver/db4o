@@ -4,11 +4,11 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="Translators"></a><br>
-<a name="outline518"></a><br><h1>11. Translators</h1><br>
+<a name="outline520"></a><br><h1>11. Translators</h1><br>
 In the last chapter we have covered the alternative configurations&nbsp;db4o offers for object reinstantiation. What's left to see is how&nbsp;we can store objects of a class that can't be cleanly stored with either&nbsp;of these approaches.<br>
 <br>
 <ul>
-<a name="outline519"></a><br><h2>11.1. An example class</h2><br>
+<a name="outline521"></a><br><h2>11.1. An example class</h2><br>
 For this example we'll be using a hypothetical LocalizedItemList class&nbsp;which binds together culture information with a list of items.<br>
 <br>
 System.Globalization.CultureInfo is particularly interesting because it&nbsp;internally holds a native pointer to a system structure which in turn cannot&nbsp;be cleanly stored by db4o.<br>
@@ -85,7 +85,7 @@ We'll be using this code to store and retrieve and instance of this&nbsp;class w
 Let's verify that both approaches to object reinstantiation will&nbsp;fail for this class.<br>
 <br>
 <ul>
-<a name="outline520"></a><br><h2>11.1.1. Using the constructor</h2><br>
+<a name="outline522"></a><br><h2>11.1.1. Using the constructor</h2><br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>[tryStoreWithCallConstructors]<br>
 Db4o.configure().exceptionsOnNotStorable(true);<br>
@@ -98,7 +98,7 @@ At storage time, db4o tests the only available constructor with null arguments a
 <br>
 (Note that this test only occurs when configured with exceptionsOnNotStorable -&nbsp;otherwise db4o will silently fail when trying to reinstantiate the object.)<br>
 <br>
-<a name="outline521"></a><br><h2>11.1.2. Bypassing the constructor</h2><br>
+<a name="outline523"></a><br><h2>11.1.2. Bypassing the constructor</h2><br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>[tryStoreWithoutCallConstructors]<br>
 Db4o.configure().objectClass(typeof(CultureInfo))<br>
@@ -113,11 +113,11 @@ Db4o.configure().objectClass(typeof(CultureInfo))<br>
 This still does not work for our case because the native pointer will definetely&nbsp;be invalid. In fact this example crashes the Common Language Runtime.<br>
 <br>
 </ul>
-<a name="outline522"></a><br><h2>11.2. The Translator API</h2><br>
+<a name="outline524"></a><br><h2>11.2. The Translator API</h2><br>
 So how do we get our object into the database, now that everything seems&nbsp;to fail? Db4o provides a way to specify a custom way of storing and retrieving&nbsp;objects through the ObjectTranslator and ObjectConstructor interfaces.<br>
 <br>
 <ul>
-<a name="outline523"></a><br><h2>11.2.1. ObjectTranslator</h2><br>
+<a name="outline525"></a><br><h2>11.2.1. ObjectTranslator</h2><br>
 The ObjectTranslator API looks like this:<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -134,7 +134,7 @@ The usage is quite simple: When a translator is configured for a class,&nbsp;db4
 <br>
 On retrieval, db4o will create a blank object of the target class (using&nbsp;the configured instantiation method) and then pass it on to onActivate()&nbsp;along with the stored object to be set up accordingly.<br>
 <br>
-<a name="outline524"></a><br><h2>11.2.2. ObjectConstructor</h2><br>
+<a name="outline526"></a><br><h2>11.2.2. ObjectConstructor</h2><br>
 However, this will only work if the application object's class provides&nbsp;some way to recreate its state from the information contained&nbsp;in the stored object, which is not the case for CultureInfo.<br>
 <br>
 For these cases db4o provides an extension to the ObjectTranslator&nbsp;interface, ObjectConstructor, which declares one additional method:<br>
@@ -150,7 +150,7 @@ If db4o detects a configured translator to be an ObjectConstructor&nbsp;implemen
 Note that, while in general configured translators are applied to&nbsp;subclasses, too, ObjectConstructor application object instantiation&nbsp;will not be used for subclasses (which wouldn't make much sense,&nbsp;anyway), so ObjectConstructors have to be configured for the&nbsp;concrete classes.<br>
 <br>
 </ul>
-<a name="outline525"></a><br><h2>11.3. A translator implementation</h2><br>
+<a name="outline527"></a><br><h2>11.3. A translator implementation</h2><br>
 To translate CultureInfo instances, we will store only their name&nbsp;since this is enough to recreate them later. Note that we don't&nbsp;have to do any work in onActivate(), since&nbsp;object reinstantiation is already fully completed in onInstantiate().<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -199,15 +199,15 @@ Db4o.configure().objectClass(typeof(CultureInfo))<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.translate(null);</code></td></tr></table>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="co"><b>OUTPUT:</b><br/>ORIGINAL: 42/Test: 4<br>
 onStore for 42/Test: 4<br>
-onInstantiate for [Ljava.lang.Object;@1f0bb81<br>
-onActivate for 42/Test: 4 / [Ljava.lang.Object;@3d21f2<br>
+onInstantiate for [Ljava.lang.Object;@1a63a20<br>
+onActivate for 42/Test: 4 / [Ljava.lang.Object;@17f9803<br>
 RETRIEVED: 42/Test: 4<br>
 </td></table></table><br>
 <br>
-<a name="outline526"></a><br><h2>11.4. Conclusion</h2><br>
+<a name="outline528"></a><br><h2>11.4. Conclusion</h2><br>
 For classes that cannot cleanly be stored and retrieved with db4o's&nbsp;standard object instantiation mechanisms, db4o provides an API to&nbsp;specify custom reinstantiation strategies. These also come in two&nbsp;flavors: ObjectTranslators let you reconfigure the state of a 'blank'&nbsp;application object reinstantiated by db4o, ObjectConstructors also&nbsp;take care of instantiating the application object itself.<br>
 <br>
-<a name="outline527"></a><br><h2>11.5. Full source</h2><br>
+<a name="outline529"></a><br><h2>11.5. Full source</h2><br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>namespace com.db4o.f1.chapter6<br>
 {<br>

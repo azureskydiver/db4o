@@ -66,7 +66,7 @@ namespace com.db4o
 
 		internal override void evaluateSelf()
 		{
-			if (i_evaluator == com.db4o.QE.DEFAULT)
+			if (i_evaluator.isDefault())
 			{
 				if (i_orderID == 0 && i_joins == null)
 				{

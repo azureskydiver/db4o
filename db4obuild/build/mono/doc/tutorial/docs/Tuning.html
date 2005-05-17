@@ -4,12 +4,12 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="Tuning"></a><br>
-<a name="outline545"></a><br><h1>18. Tuning</h1><br>
+<a name="outline547"></a><br><h1>18. Tuning</h1><br>
 The following is an overview over possible tuning switches&nbsp;that can be set when working with db4o. Users that do not&nbsp;care about performance may like to read this chapter also&nbsp;because it provides a side glance at db4o features with&nbsp;<em>Alternate Strategies</em>&nbsp;and some insight on how&nbsp;db4o works.<br>
 <br>
 <br>
 <ul>
-<a name="outline546"></a><br><h2>18.1. Discarding Free Space</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<a name="outline548"></a><br><h2>18.1. Discarding Free Space</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>Db4o.configure().discardFreeSpace(byteCount);</code></td></tr></table>
 <br>
 Recommended settings for byteCount:<br>
@@ -32,7 +32,7 @@ Regular defragment will also keep the number of free space slots&nbsp;small. See
 If defragment can be frequently run, it will also reclaim&nbsp;lost space and decrease the database file to the minimum size.&nbsp;Therefore #discardFreeSpace() may be a good tuning mechanism&nbsp;for setups with frequent defragment runs.<br>
 <br>
 <br>
-<a name="outline547"></a><br><h2>18.2. Calling constructors</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<a name="outline549"></a><br><h2>18.2. Calling constructors</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>Db4o.configure().callConstructors(true);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
@@ -49,7 +49,7 @@ Constructors can also be turned on for individual classes only with<br>
 There are some classes (e.g. java.util.Calendar) that require a constructor&nbsp;to be called to work. Further details can be found in the&nbsp;<a href="Constructors.html#Constructors">chapter on Constructors</a>. <br>
 <br>
 <br>
-<a name="outline548"></a><br><h2>18.3. Turning Off Weak References</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<a name="outline550"></a><br><h2>18.3. Turning Off Weak References</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>Db4o.configure().weakReferences(false);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
@@ -69,7 +69,7 @@ The downside: To prevent memory consumption from growing consistantly,&nbsp;the 
 can also be called in normal weak reference operation mode to remove&nbsp;an object from the reference cache. This will help to keep the reference&nbsp;tree as small as possible.&nbsp;After calling #purge(object) an object will be unknown to the&nbsp;ObjectContainer so this feature is also suitable for batch inserts. <br>
 <br>
 <br>
-<a name="outline549"></a><br><h2>18.4. Defragment</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<a name="outline551"></a><br><h2>18.4. Defragment</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>new Defragment().run("db.yap", delete);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
@@ -82,7 +82,7 @@ db4o does not discard fields from the database file that are no longer&nbsp;bein
 Instead of deleting objects it can be an option to mark objects as&nbsp;deleted with a "deleted" boolean field and to clean them out (by not&nbsp;copying them to the new database file) during the Defragment run.&nbsp;Two advantages: (1) Deleted objects can be restored. (2)&nbsp;In case there are multiple references to a deleted object, none of them&nbsp;would point to null. To clean out objects during the Defragment run,&nbsp;the Defragment source code would have to be modified.&nbsp;com.db4o.tools.Defragment is <b>only supplied as source code</b>&nbsp;to&nbsp;encourage embedding maintenance tasks.<br>
 <br>
 <br>
-<a name="outline550"></a><br><h2>18.5. No Shutdown Thread</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<a name="outline552"></a><br><h2>18.5. No Shutdown Thread</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>Db4o.configure().automaticShutDown(false);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
@@ -99,7 +99,7 @@ Database files can be reduced to their minimal size with<br>
 (supplied as source code in /src/com/db4o/tools)<br>
 <br>
 <br>
-<a name="outline551"></a><br><h2>18.6. No callbacks</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<a name="outline553"></a><br><h2>18.6. No callbacks</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>Db4o.configure().callbacks(false);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
@@ -115,7 +115,7 @@ Class configuration features are a good alternative to callbacks.&nbsp;The most 
 <br>
 <br>
 <br>
-<a name="outline552"></a><br><h2>18.7. No schema changes</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<a name="outline554"></a><br><h2>18.7. No schema changes</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>Db4o.configure().detectSchemaChanges(false);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
@@ -131,7 +131,7 @@ Instead of using one database file to store a huge and complex&nbsp;class struct
 <br>
 <br>
 <br>
-<a name="outline553"></a><br><h2>18.8. No lock file thread</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<a name="outline555"></a><br><h2>18.8. No lock file thread</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>Db4o.configure().lockDatabaseFile(false);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
@@ -148,7 +148,7 @@ mode. Use:<br>
 <br>
 <br>
 <br>
-<a name="outline554"></a><br><h2>18.9. No test instances</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<a name="outline556"></a><br><h2>18.9. No test instances</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>Db4o.configure().testConstructors(false);</code></td></tr></table>
 <br>
 <em>Advantage</em><br>
@@ -168,7 +168,7 @@ Take a look at the way the built-in translators work to get an idea&nbsp;how to 
 <br>
 <br>
 <br>
-<a name="outline555"></a><br><h2>18.10. Increasing the maximum database file size</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
+<a name="outline557"></a><br><h2>18.10. Increasing the maximum database file size</h2><table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>Db4o.configure().blockSize(newBlockSize); <br>
 Defragment.main(new String[] {"mydb.yap"});</code></td></tr></table>
 <br>

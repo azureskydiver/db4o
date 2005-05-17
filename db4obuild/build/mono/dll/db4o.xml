@@ -3749,13 +3749,6 @@
             <summary>A range of index entries in the database file.</summary>
             <remarks>A range of index entries in the database file.</remarks>
         </member>
-        <member name="T:com.db4o.Closure4">
-            <author>
-            Carl Rosenberger
-            To change the template for this generated type comment go to
-            Window>Preferences>Java>Code Generation>Code and Comments
-            </author>
-        </member>
         <member name="T:com.db4o.QConPath">
             <summary>non-constraint, only necessary to attach children.</summary>
             <remarks>
@@ -4508,13 +4501,6 @@
             client class index. Largly intended to do nothing or
             redirect functionality to the server.
             </remarks>
-        </member>
-        <member name="T:j4o.lang.AssemblyNameHint">
-            <summary>
-            holds a pair of short and long assembly name to help Type.forName()<br />
-            Instances of this class are stored to the db4o database files.
-            </summary>
-            
         </member>
         <member name="T:com.db4o.replication.ReplicationConflictHandler">
             <summary>
