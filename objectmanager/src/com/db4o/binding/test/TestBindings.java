@@ -18,23 +18,18 @@ import com.swtworkbench.community.xswt.XSWT;
 public class TestBindings implements IControlFactory {
 
     private ObjectContainer database;
-    private Person person;
 
-    public TestBindings() {
-        database = Db4o.openFile("TestBindings.yap");
-        ObjectEditorFactory.factory = new Db4oObjectEditorFactory(database);
-        if (person == null) {
-            person = (Person) database.get(Person.class).next();
-            if (person == null) {
-                person = new Person();
-            }
-        }
-    }
-    
     public void createContents(Composite parent) {
+        database = Db4o.openFile("TestBindings.yap");
+        Person person = (Person) database.get(Person.class).next();
+        if (person == null) {
+            person = new Person();
+        }
+        
         parent.setLayout(new GridLayout());
         ITestBindings ui = (ITestBindings) XSWT.createl(parent, "TestBindings.xswt", getClass(), ITestBindings.class);
         
+        ObjectEditorFactory.factory = new Db4oObjectEditorFactory(database);
         IObjectEditor objectEditor = ObjectEditorFactory.construct(person);
         objectEditor.bind(ui.getName(), "Name");
         objectEditor.bind(ui.getAge(), "Age");

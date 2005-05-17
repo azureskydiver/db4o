@@ -119,11 +119,20 @@ java.lang.NullPointerException
    * Click right side to navigate
       * (Hyperlink objects if object.hasChildren()?)
    * If right side is displaying a collection, display in a table
-   
-   * Be able to edit data
-      * Change
-      * Insert
-      * Delete
+
+---+++ Data editing:
+
+   * Database needs to encapsulate an IObjectEditorFactory
+   * FieldNodes need an isEditable() method
+   * FieldNodes provide getObject() to get object to edit if isEditable() is true
+   * Need to prevent tree from changing focus during editing
+      * Create an EditorState object associated with each tab?
+      * All UI elements register themselves as listeners
+      * There is one event with two states: editing(true), editing(false)
+      * Tree does a setEnabled(!editing) when it gets an editing event
+      * Detail pane dispatches editing events
+      * Detail pane includes UI for committing changes
+
    
 ---++ Release engineering
 

@@ -24,6 +24,9 @@ import java.util.LinkedList;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.binding.dataeditors.IObjectEditor;
+import com.db4o.binding.dataeditors.IObjectEditorFactory;
+import com.db4o.binding.dataeditors.db4o.Db4oObjectEditorFactory;
 import com.db4o.browser.prefs.activation.ActivationPreferences;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
@@ -48,6 +51,7 @@ public class Db4oDatabase implements IDatabase {
     public void reopen() {
         closeIfOpen();
         container = spec.connect();
+        editorFactory = new Db4oObjectEditorFactory(container);
         if (container == null)
             throw new IllegalArgumentException("Could not open: " + spec.path());
     }
@@ -143,5 +147,14 @@ public class Db4oDatabase implements IDatabase {
     public Query query() {
         return container.query();
     }
-	
+
+    IObjectEditorFactory editorFactory;
+    
+    public IObjectEditor construct() {
+        return editorFactory.construct();
+    }
+    
 }
+
+
+

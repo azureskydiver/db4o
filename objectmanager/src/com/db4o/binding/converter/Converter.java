@@ -102,6 +102,18 @@ public class Converter {
         
         associate(Double.TYPE, String.class, new ConvertDouble2String());
         associate(String.class, Double.TYPE, new ConvertString2Double());
+        
+        associate(Integer.class, String.class, new ConvertInteger2String());
+        associate(String.class, Integer.class, new ConvertString2Integer());
+        
+        associate(Long.class, String.class, new ConvertLong2String());
+        associate(String.class, Long.class, new ConvertString2Long());
+        
+        associate(Float.class, String.class, new ConvertFloat2String());
+        associate(String.class, Float.class, new ConvertString2Float());
+        
+        associate(Double.class, String.class, new ConvertDouble2String());
+        associate(String.class, Double.class, new ConvertString2Double());
     }
 }
 
