@@ -54,7 +54,7 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 					        if (i_yapClass.i_config != null) {
 					            a_depth = i_yapClass.i_config.adjustActivationDepth(a_depth);
 					        }
-							i_yapClass.activateFields(ta, a_object, a_depth - 1);
+							i_yapClass.activateFields(ta, a_object, a_depth);
 						}
 						return;
 					}
