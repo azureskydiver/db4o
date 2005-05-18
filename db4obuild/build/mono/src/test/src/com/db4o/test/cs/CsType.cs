@@ -28,7 +28,7 @@ namespace com.db4o.test.cs
         public void configure(){
             // apparently the translator is not found
             // please check
-            Db4o.configure().objectClass(typeof(Type)).translate(new TSerializable());
+            Db4o.configure().objectClass(typeof(Type)).translate(new com.db4o.config.TSerializable());
         }
 
         public void storeOne(){
