@@ -17,12 +17,13 @@
 .e Callbacks ..
 .e Classloader ..
 .e Encryption ..
+.e RefactoringAndSchemaEvolution ..
 .e Tuning ..
 .e Maintenance ..
-.e Refactorings ..
 .e Replication ..
 .e Messaging ..
 .e DOTNETSpecific ..
 .e ObjectManager ..
+.e RegressionTests ..
 .e License ..
 .e Contact ..
