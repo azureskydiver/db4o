@@ -40,6 +40,11 @@ namespace com.db4o.reflect.net
             _type = clazz.getNetType();
 		}
 
+		public j4o.lang.Class getJdkClass() 
+		{
+			return _clazz;
+		}
+
 		public virtual com.db4o.reflect.ReflectClass getComponentType(){
 			return _reflector.forClass(_clazz.getComponentType());
 		}
@@ -84,7 +89,7 @@ namespace com.db4o.reflect.net
 				if (method == null){
 					return null;
 				}
-				return new com.db4o.reflect.net.NetMethod(method);
+				return new com.db4o.reflect.net.NetMethod(_reflector, method);
 			}
 			catch (System.Exception e){
 				return null;

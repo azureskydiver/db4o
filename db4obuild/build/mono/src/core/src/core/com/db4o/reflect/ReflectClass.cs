@@ -81,5 +81,21 @@ namespace com.db4o.reflect
 
 		void useConstructor(com.db4o.reflect.ReflectConstructor constructor, object[] _params
 			);
+
+		/// <summary>Method getJdkClass().</summary>
+		/// <remarks>
+		/// Method getJdkClass(). Converts a ReflectClass back to its corresponding
+		/// JDK Class if that class is available.  If that Class is not available,
+		/// returns java.lang.Object.class.  The JDK Class is available if:
+		/// <ol>
+		/// <li>it is on the classpath
+		/// <li>it is a primitive type
+		/// </ol>
+		/// </remarks>
+		/// <returns>
+		/// Class the underlying Class object if one is available, otherwise
+		/// returns java.lang.Object.class
+		/// </returns>
+		j4o.lang.Class getJdkClass();
 	}
 }

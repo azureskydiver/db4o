@@ -21,5 +21,10 @@ namespace j4o.lang.reflect {
         public String getName() {
             return methodInfo.Name;
         }
+
+		public j4o.lang.Class getReturnType() 
+		{
+			return j4o.lang.Class.getClassForType(methodInfo.ReturnType);
+		}
     }
 }
