@@ -323,5 +323,11 @@ namespace com.db4o.reflect.generic
 				_delegate.useConstructor(constructor, _params);
 			}
 		}
+
+		public virtual j4o.lang.Class getJdkClass()
+		{
+			return (_delegate == null) ? j4o.lang.Class.getClassForType(typeof(object)) : _delegate
+				.getJdkClass();
+		}
 	}
 }

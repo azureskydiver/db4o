@@ -29,5 +29,7 @@ namespace com.db4o.reflect
 	public interface ReflectMethod
 	{
 		object invoke(object onObject, object[] parameters);
+
+		com.db4o.reflect.ReflectClass getReturnType();
 	}
 }

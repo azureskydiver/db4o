@@ -24,9 +24,17 @@ namespace com.db4o.reflect.net
 	{
 		private readonly j4o.lang.reflect.Method method;
 
-		public NetMethod(j4o.lang.reflect.Method method)
+		private readonly com.db4o.reflect.Reflector _reflector;
+
+		public NetMethod(com.db4o.reflect.Reflector reflector, j4o.lang.reflect.Method method)
 		{
+			_reflector = reflector;
 			this.method = method;
+		}
+
+		public com.db4o.reflect.ReflectClass getReturnType() 
+		{
+			return _reflector.forClass(method.getReturnType());
 		}
 
 		public virtual object invoke(object onObject, object[] parameters)

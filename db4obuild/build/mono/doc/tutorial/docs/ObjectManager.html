@@ -4,14 +4,14 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="ObjectManager"></a><br>
-<a name="outline568"></a><br><h1>23. Object Manager</h1><br>
+<a name="outline565"></a><br><h1>22. Object Manager</h1><br>
 <ul>
-<a name="outline569"></a><br><h2>23.1. Introduction</h2>The db4o Object Manager provides a simple way to efficiently browse the objects&nbsp;that are stored in your database.&nbsp;&nbsp;Object Manager currently provides the&nbsp;following features:<br>
+<a name="outline566"></a><br><h2>22.1. Introduction</h2>The db4o Object Manager provides a simple way to efficiently browse the objects&nbsp;that are stored in your database.&nbsp;&nbsp;Object Manager currently provides the&nbsp;following features:<br>
 - Open either a local database file or a db4o database server<br>
 - Browse objects in a database<br>
 - Query for objects using a simple graphical query by example.<br>
 <br>
-<a name="outline570"></a><br><h2>23.2. Object Manager Tour</h2><br>
+<a name="outline567"></a><br><h2>22.2. Object Manager Tour</h2><br>
 Upon opening, the Object Manager will look like the following:<br>
 <br>
 <img border="0" src="bare_objectmanager.gif" /><br>
@@ -31,7 +31,7 @@ For example, loading the formula1 database created by chapter 4 of this&nbsp;tut
 <img border="0" src="objectmanager_f1c4.gif" /><br>
 <br>
 <ul>
-<a name="outline571"></a><br><h2>23.2.1. Generic reflector versus the JDK reflector</h2><br>
+<a name="outline568"></a><br><h2>22.2.1. Generic reflector versus the JDK reflector</h2><br>
 You will notice in the screen shot that all objects have (G) in front of them.&nbsp;This is because the Object Manager does not know the correct classpath in order&nbsp;to load the actual Java classes that these objects represent, so it is&nbsp;displaying them generically (using the generic reflector).<br>
 <br>
 The Object Manager can display some data types more naturally if it has the&nbsp;class definitions available, so it provides a way to extend its classpath&nbsp;at runtime so that it can find the Java or .NET class definitions.&nbsp;&nbsp;This&nbsp;is done through the preferences dialog, accessed through "File | Preferences..."<br>
@@ -50,7 +50,7 @@ Your preferences dialog should look something like the following when you are do
 <br>
 Click OK to close the Preferences dialog box.&nbsp;&nbsp;Now your tree will be refreshed,&nbsp;and you will notice that all of the (G)'s are gone.&nbsp;&nbsp;All of your&nbsp;preference settings, including your preferred classpath, are stored in a&nbsp;db4o database called&nbsp;.objectmanager.yap in your home directory.<br>
 <br>
-<a name="outline572"></a><br><h2>23.2.2. Querying for objects</h2><br>
+<a name="outline569"></a><br><h2>22.2.2. Querying for objects</h2><br>
 You may now want to query your object database for objects based on some&nbsp;criteria.&nbsp;&nbsp;This will work using either the generic or the JDK reflector.<br>
 <br>
 You can open a query editor using any of the following methods:<br>
@@ -69,7 +69,7 @@ You may now query for a model name, or you can descend on the "pilot" field&nbsp
 At this point, you can query for any combination of field values simply by&nbsp;filling appropriate values into each field.&nbsp;&nbsp;You can change the constraint&nbsp;type using the combo boxes next to each field.&nbsp;&nbsp;And you can run the query&nbsp;using the green "run" button at the top-left of the tool bar.<br>
 <br>
 </ul>
-<a name="outline573"></a><br><h2>23.3. Known bugs and limitations</h2><br>
+<a name="outline570"></a><br><h2>22.3. Known bugs and limitations</h2><br>
 The following are known bugs and limitations in Object Manager and their&nbsp;workarounds:<br>
 - Object Manager currently operates in read-only mode only.<br>
 - If a database includes fields that have been renamed, Object Manager correctly&nbsp;browses both the old and new versions of the fields.&nbsp;&nbsp;However, queries on fields&nbsp;that have been refactored will randomly select the old or the new version of the&nbsp;field.&nbsp;&nbsp;The workaround is to browse a backup or defragmented database.<br>

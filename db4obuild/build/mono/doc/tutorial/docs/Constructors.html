@@ -4,31 +4,31 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="Constructors"></a><br>
-<a name="outline512"></a><br><h1>10. Constructors</h1><br>
+<a name="outline510"></a><br><h1>10. Constructors</h1><br>
 Sometimes you may find that db4o refuses to store instances of certain&nbsp;classes, or appears to store them, but delivers incomplete instances&nbsp;on queries. To understand the problem and the alternative solutions&nbsp;at hand, we'll have to take a look at the way db4o "instantiates"&nbsp;objects when retrieving them from the database.<br>
 <br>
 <ul>
-<a name="outline513"></a><br><h2>10.1. Instantiating objects</h2><br>
+<a name="outline511"></a><br><h2>10.1. Instantiating objects</h2><br>
 Db4o currently knows three ways of creating and populating an object&nbsp;from the database. The approach to be used can be configured globally&nbsp;and on a per-class basis.<br>
 <br>
 <ul>
-<a name="outline514"></a><br><h2>10.1.1. Using a constructor</h2><br>
+<a name="outline512"></a><br><h2>10.1.1. Using a constructor</h2><br>
 The most obvious way is to call an appropriate constructor. Db4o does&nbsp;<em>not</em>&nbsp;require a public or no-args constructor. It can use any&nbsp;constructor that accepts default (null/0) values for all of its&nbsp;arguments without throwing an exception. Db4o will test all available&nbsp;constructors on the class (including private ones) until it finds&nbsp;a suitable one.<br>
 <br>
 What if no such constructor exists?<br>
 <br>
-<a name="outline515"></a><br><h2>10.1.2. Bypassing the constructor</h2><br>
+<a name="outline513"></a><br><h2>10.1.2. Bypassing the constructor</h2><br>
 Db4o can also bypass the constructors declared for this class using&nbsp;platform-specific mechanisms. (For Java, this option is only available&nbsp;on JREs >= 1.4.) This mode allows reinstantiating objects whose class&nbsp;doesn't provide a suitable constructor, However, it will (silently) break&nbsp;classes that rely on the constructor to be executed, for example in order to&nbsp;populate transient members.<br>
 <br>
 <em>If this option is available in the current runtime environment, it will be the default setting.</em><br>
 <br>
-<a name="outline516"></a><br><h2>10.1.3. Using a translator</h2><br>
+<a name="outline514"></a><br><h2>10.1.3. Using a translator</h2><br>
 If none of the two approaches above is suitable, db4o provides a way&nbsp;to specify in detail how instances of a class should be stored and&nbsp;reinstantiated by implementing the Translator interface and registering&nbsp;this implementation for the offending class.<br>
 <br>
 We'll cover translators in detail in the <a href="Translators.html#Translators">next chapter</a>&nbsp;.<br>
 <br>
 </ul>
-<a name="outline517"></a><br><h2>10.2. Configuration</h2><br>
+<a name="outline515"></a><br><h2>10.2. Configuration</h2><br>
 The instantiation mode can be configured globally or on a per class&nbsp;basis.<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -45,7 +45,7 @@ This will configure db4o to use constructors to reinstantiate any object&nbsp;fr
 <br>
 This will configure db4o to use constructor calls for this class and&nbsp;all its subclasses.<br>
 <br>
-<a name="outline518"></a><br><h2>10.3. Troubleshooting</h2><br>
+<a name="outline516"></a><br><h2>10.3. Troubleshooting</h2><br>
 At least for development code, it is always a good idea to instruct&nbsp;db4o to check for available constructors at storage time. (If you've&nbsp;configured db4o to use constructors at all.)<br>
 <br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
@@ -55,7 +55,7 @@ At least for development code, it is always a good idea to instruct&nbsp;db4o to
 <br>
 If this setting triggers exceptions in your code, or if instances of a class&nbsp;seem to lose members during storage, check the involved classes&nbsp;(especially their constructors) for problems similar to the ones&nbsp;shown in the following section.<br>
 <br>
-<a name="outline519"></a><br><h2>10.4. Examples</h2><br>
+<a name="outline517"></a><br><h2>10.4. Examples</h2><br>
 <table width="100%" cellpadding="3" cellspacing="0" border="0"><tr><td class="lg">
 <code>class C1 {<br>
 &nbsp;&nbsp;private String s;<br>

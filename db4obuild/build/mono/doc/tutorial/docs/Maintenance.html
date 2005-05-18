@@ -4,18 +4,18 @@
 <link rel="stylesheet" type="text/css" href="docs.css">
 </head>
 <body><div id="pagecontainer"><table><tr><td width="5">&nbsp;</td><td><a name="Maintenance"></a><br>
-<a name="outline558"></a><br><h1>19. Maintenance</h1><br>
+<a name="outline556"></a><br><h1>19. Maintenance</h1><br>
 db4o is designed to minimize maintenance tasks to the absolute&nbsp;minimum. The stored class schema adapts to the application&nbsp;automatically as it is being developed. db4o "understands"&nbsp;the addition and removal of fields which allows it to continue to&nbsp;work against modified classes without having to reorganize the&nbsp;database file. Internally db4o works with a superset of all class&nbsp;versions previously used.<br>
 <br>
 However there are two recommended maintenance tasks, that can&nbsp;both be fully automated remotely with API calls:<br>
 <a name="Defragment"></a><br>
 <ul>
-<a name="outline559"></a><br><h2>19.1. Defragment</h2>Defragment creates a new database file and copies all objects&nbsp;from the current database file to the new database file. All&nbsp;indexes are recreated. The resulting database file will be&nbsp;smaller and faster. <br>
+<a name="outline557"></a><br><h2>19.1. Defragment</h2>Defragment creates a new database file and copies all objects&nbsp;from the current database file to the new database file. All&nbsp;indexes are recreated. The resulting database file will be&nbsp;smaller and faster. <br>
 <br>
 com.db4o.tools.Defragment is &nbsp;<b>only supplied as source code</b>&nbsp;to encourage embedding&nbsp;custom maintenance tasks on objects.<br>
 <br>
 <br>
-<a name="outline560"></a><br><h2>19.2. Backup</h2><br>
+<a name="outline558"></a><br><h2>19.2. Backup</h2><br>
 db4o supplies hot backup functionality to backup single-user&nbsp;databases and client-server databases while they are running.<br>
 <br>
 The respective API calls for backups are:<br>
