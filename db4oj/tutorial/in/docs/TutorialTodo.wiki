@@ -79,3 +79,6 @@ that create arrays
 
 ---+++ (2600) ObjectCallbacks interface
 
+-----
+
+Back to Db4oWiki:HomePage.wiki
