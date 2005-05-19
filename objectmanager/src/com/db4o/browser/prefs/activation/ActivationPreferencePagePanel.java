@@ -5,7 +5,7 @@ package com.db4o.browser.prefs.activation;
 
 import java.util.Map;
 
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
@@ -19,7 +19,7 @@ public class ActivationPreferencePagePanel extends Composite {
 
 	public ActivationPreferencePagePanel(Composite parent, int style) {
 		super(parent, style);
-		setLayout(new FillLayout());
+		setLayout(new GridLayout());
 		contents = XSWT.createl(this, "ActivationPreferencePagePanel.xswt", getClass());
 	}
 	
