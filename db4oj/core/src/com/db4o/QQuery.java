@@ -134,7 +134,7 @@ public class QQuery implements Query {
                 return new QConstraints(i_trans, constraintArray);
             }
             
-            QEvaluation eval = Platform.evaluationCreate(i_trans, example);
+            QConEvaluation eval = Platform.evaluationCreate(i_trans, example);
 			if (eval != null) {
                 Iterator4 i = i_constraints.iterator();
                 while (i.hasNext()) {

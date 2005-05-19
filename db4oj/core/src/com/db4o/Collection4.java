@@ -168,5 +168,24 @@ public class Collection4 implements DeepClone {
             a_array[--j] = i.next();
         }
     }
+    
+    public String toString(){
+        if(Debug.toStrings){
+            if(i_size == 0){
+                return "[]";
+            }
+            StringBuffer sb = new StringBuffer();
+            sb.append("[");
+            Iterator4 i = iterator();
+            sb.append(i.next());
+            while(i.hasNext()){
+                sb.append(", ");
+                sb.append(i.next());
+            }
+            sb.append("]");
+            return sb.toString();
+        }
+        return super.toString();
+    }
 
 }

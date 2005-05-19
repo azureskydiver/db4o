@@ -30,11 +30,11 @@ class IxAdd extends IxPatch {
     
     void beginMerge(){
         super.beginMerge();
-        handler().prepareComparison( handler().indexObject(trans(), i_value));
+        handler().prepareComparison( handler().comparableObject(trans(), i_value));
     }
     
     public String toString(){
-        String str = "IxAdd "  + i_parentID + "\n " + handler().indexObject(trans(), i_value);
+        String str = "IxAdd "  + i_parentID + "\n " + handler().comparableObject(trans(), i_value);
         return str;
     }
     

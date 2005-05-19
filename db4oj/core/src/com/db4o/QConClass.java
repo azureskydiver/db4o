@@ -6,6 +6,9 @@ import com.db4o.query.*;
 import com.db4o.reflect.*;
 
 /**
+ *
+ * Class constraint on queries
+ * 
  * @exclude
  */
 public class QConClass extends QConObject{

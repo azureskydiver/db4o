@@ -5,7 +5,7 @@ package com.db4o;
 /**
  * @exclude
  */
-public class QEvaluation extends QCon {
+public class QConEvaluation extends QCon {
 
 	private transient Object i_evaluation;
 
@@ -13,11 +13,11 @@ public class QEvaluation extends QCon {
 
 	int i_marshalledID;
 
-	public QEvaluation() {
+	public QConEvaluation() {
 		// C/S only
 	}
 
-	QEvaluation(Transaction a_trans, Object a_evaluation) {
+	QConEvaluation(Transaction a_trans, Object a_evaluation) {
 		super(a_trans);
 		i_evaluation = a_evaluation;
 	}

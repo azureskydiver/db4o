@@ -53,7 +53,7 @@ public abstract class YapIndependantType implements YapDataType
         return false;
     }
 	
-    public Object readIndexObject(YapWriter a_writer) throws CorruptionException{
+    public Object readIndexValueOrID(YapWriter a_writer) throws CorruptionException{
         return read(a_writer);
     }
 	

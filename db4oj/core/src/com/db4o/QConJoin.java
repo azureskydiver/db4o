@@ -3,6 +3,9 @@
 package com.db4o;
 
 /**
+ * 
+ * Join constraint on queries
+ * 
  * @exclude
  */
 public class QConJoin extends QCon {
@@ -15,7 +18,6 @@ public class QConJoin extends QCon {
 	public QConJoin(){
 		// C/S
 	}
-	
 
 	QConJoin(Transaction a_trans, QCon a_c1, QCon a_c2, boolean a_and) {
 		super(a_trans);

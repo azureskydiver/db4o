@@ -67,7 +67,7 @@ class IxFieldTransaction implements Visitor4{
 	private void addPatchToRoot(IxPatch tree){
 	    if(tree.i_version != i_version){
 	        tree.beginMerge();
-	        tree.handler().prepareComparison(tree.handler().indexObject(i_trans, tree.i_value));
+	        tree.handler().prepareComparison(tree.handler().comparableObject(i_trans, tree.i_value));
 		    if(i_root == null){
 		        i_root = tree;
 		    } else{

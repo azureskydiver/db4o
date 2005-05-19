@@ -56,7 +56,7 @@ abstract class YapJavaClass implements YapDataType {
         return a_object;
     }
 
-    public Object indexObject(Transaction a_trans, Object a_object) {
+    public Object comparableObject(Transaction a_trans, Object a_object) {
         return a_object;
     }
 
@@ -100,7 +100,7 @@ abstract class YapJavaClass implements YapDataType {
         return null;
     }
     
-    public Object readIndexObject(YapWriter a_writer) throws CorruptionException{
+    public Object readIndexValueOrID(YapWriter a_writer) throws CorruptionException{
         return read(a_writer);
     }
     
@@ -144,7 +144,7 @@ abstract class YapJavaClass implements YapDataType {
             }
         }
         write(a_object, a_bytes);
-		return 0;
+		return -1;
     }
 
     public YapComparable prepareComparison(Object obj) {

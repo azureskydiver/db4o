@@ -36,7 +36,7 @@ class YapFieldUUID extends YapFieldVirtual {
         YLong.writeLong(uuid, a_writer);
         
         if(a_new){
-            addIndexEntry(new Long(uuid), a_writer);
+            addIndexEntry(a_writer, new Long(uuid));
         }
     }
     
@@ -100,7 +100,7 @@ class YapFieldUUID extends YapFieldVirtual {
         if(attr != null){
 	        YLong.writeLong(attr.i_uuid, a_bytes);
 	        if(indexEntry){
-	            addIndexEntry(new Long(attr.i_uuid), a_bytes);
+	            addIndexEntry(a_bytes, new Long(attr.i_uuid));
 	        }
         }else{
             YLong.writeLong(0, a_bytes);

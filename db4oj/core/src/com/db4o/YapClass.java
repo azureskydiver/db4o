@@ -828,7 +828,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         }
     }
 
-    public Object indexObject(Transaction a_trans, Object a_object) {
+    public Object comparableObject(Transaction a_trans, Object a_object) {
         return a_object;
     }
 
@@ -1253,7 +1253,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         }
         return null;
     }
-
+    
     public Object readQuery(Transaction a_trans, YapReader a_reader, boolean a_toArray) {
         try {
             return a_trans.i_stream.getByID2(a_trans, a_reader.readInt());
@@ -1359,7 +1359,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         return new Integer(a_reader.readInt());
     }
     
-    public Object readIndexObject(YapWriter a_writer) throws CorruptionException{
+    public Object readIndexValueOrID(YapWriter a_writer) throws CorruptionException{
         return readIndexEntry(a_writer);
     }
 
@@ -1762,7 +1762,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     }
 
     public boolean supportsIndex() {
-        return false;
+        return true;
     }
 
     public String toString() {

@@ -6,7 +6,7 @@ import com.db4o.query.*;
 import com.db4o.reflect.*;
 
 /**
- * Base class for all constraints. 
+ * Base class for all constraints on queries. 
  * 
  * @exclude
  */

@@ -80,7 +80,7 @@ public final class YapString extends YapIndependantType {
         return buf.toString();
     }
     
-    public Object indexObject(Transaction a_trans, Object a_object){
+    public Object comparableObject(Transaction a_trans, Object a_object){
         if(a_object != null){
 	        int[] slot = (int[]) a_object;
 	        return a_trans.i_stream.readObjectReaderByAddress(slot[0], slot[1]);
@@ -191,7 +191,7 @@ public final class YapString extends YapIndependantType {
             a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
             a_bytes.writeInt(length);
         }
-		return 0;
+		return -1;
     }
 
     final void writeShort(String a_string, YapReader a_bytes) {
