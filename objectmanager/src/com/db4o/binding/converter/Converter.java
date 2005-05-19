@@ -32,7 +32,7 @@ public class Converter {
     /*
      * Returns the set of converters to convert from a specified source class
      */
-    private static HashMap getSourceClassConverters(Class sourceClass) {
+    private static HashMap getSourceClassConverters(String sourceClass) {
         HashMap result = (HashMap) converters.get(sourceClass);
         
         if (result == null) {
@@ -50,7 +50,7 @@ public class Converter {
      * @param destClass The type to convert to
      * @param converter The IConverter
      */
-    public static void associate(Class sourceClass, Class destClass, IConverter converter) {
+    public static void associate(String sourceClass, String destClass, IConverter converter) {
         HashMap sourceClassConverters = getSourceClassConverters(sourceClass);
         sourceClassConverters.put(destClass, converter);
     }
@@ -62,19 +62,19 @@ public class Converter {
      * @param destClass
      * @return An appropriate IConverter
      */
-    public static IConverter get(Class sourceClass, Class destClass) {
+    public static IConverter get(String sourceClass, String destClass) {
         if (sourceClass.equals(destClass))
             return TheIdentityConverter.IDENTITY;
         
         HashMap sourceClassConverters = (HashMap) converters.get(sourceClass);
         
         if (sourceClassConverters == null)
-            throw new IllegalArgumentException("No converters from source class " + sourceClass.getName() + " have been registered");
+            throw new IllegalArgumentException("No converters from source class " + sourceClass + " have been registered");
         
         IConverter result = (IConverter) sourceClassConverters.get(destClass);
         
         if (result == null)
-            throw new IllegalArgumentException("No converters for pair (" + sourceClass.getName() + ", " + destClass.getName() + ") have been registered");
+            throw new IllegalArgumentException("No converters for pair (" + sourceClass + ", " + destClass + ") have been registered");
         
         return result;
     }
@@ -82,38 +82,38 @@ public class Converter {
     static {
         converters = new HashMap();
         
-        associate(Object.class, String.class, new ConvertObject2String());
-        associate(String.class, Object.class, new ConvertString2Object());
+        associate(Object.class.getName(), String.class.getName(), new ConvertObject2String());
+        associate(String.class.getName(), Object.class.getName(), new ConvertString2Object());
         
-        associate(Character.TYPE, String.class, new ConvertCharacter2String());
-        associate(String.class, Character.TYPE, new ConvertString2Character());
+        associate(Character.TYPE.getName(), String.class.getName(), new ConvertCharacter2String());
+        associate(String.class.getName(), Character.TYPE.getName(), new ConvertString2Character());
 
-        associate(Boolean.TYPE, String.class, new ConvertBoolean2String());
-        associate(String.class, Boolean.TYPE, new ConvertString2Boolean());
+        associate(Boolean.TYPE.getName(), String.class.getName(), new ConvertBoolean2String());
+        associate(String.class.getName(), Boolean.TYPE.getName(), new ConvertString2Boolean());
         
-        associate(Integer.TYPE, String.class, new ConvertInteger2String());
-        associate(String.class, Integer.TYPE, new ConvertString2Integer());
+        associate(Integer.TYPE.getName(), String.class.getName(), new ConvertInteger2String());
+        associate(String.class.getName(), Integer.TYPE.getName(), new ConvertString2Integer());
         
-        associate(Long.TYPE, String.class, new ConvertLong2String());
-        associate(String.class, Long.TYPE, new ConvertString2Long());
+        associate(Long.TYPE.getName(), String.class.getName(), new ConvertLong2String());
+        associate(String.class.getName(), Long.TYPE.getName(), new ConvertString2Long());
         
-        associate(Float.TYPE, String.class, new ConvertFloat2String());
-        associate(String.class, Float.TYPE, new ConvertString2Float());
+        associate(Float.TYPE.getName(), String.class.getName(), new ConvertFloat2String());
+        associate(String.class.getName(), Float.TYPE.getName(), new ConvertString2Float());
         
-        associate(Double.TYPE, String.class, new ConvertDouble2String());
-        associate(String.class, Double.TYPE, new ConvertString2Double());
+        associate(Double.TYPE.getName(), String.class.getName(), new ConvertDouble2String());
+        associate(String.class.getName(), Double.TYPE.getName(), new ConvertString2Double());
         
-        associate(Integer.class, String.class, new ConvertInteger2String());
-        associate(String.class, Integer.class, new ConvertString2Integer());
+        associate(Integer.class.getName(), String.class.getName(), new ConvertInteger2String());
+        associate(String.class.getName(), Integer.class.getName(), new ConvertString2Integer());
         
-        associate(Long.class, String.class, new ConvertLong2String());
-        associate(String.class, Long.class, new ConvertString2Long());
+        associate(Long.class.getName(), String.class.getName(), new ConvertLong2String());
+        associate(String.class.getName(), Long.class.getName(), new ConvertString2Long());
         
-        associate(Float.class, String.class, new ConvertFloat2String());
-        associate(String.class, Float.class, new ConvertString2Float());
+        associate(Float.class.getName(), String.class.getName(), new ConvertFloat2String());
+        associate(String.class.getName(), Float.class.getName(), new ConvertString2Float());
         
-        associate(Double.class, String.class, new ConvertDouble2String());
-        associate(String.class, Double.class, new ConvertString2Double());
+        associate(Double.class.getName(), String.class.getName(), new ConvertDouble2String());
+        associate(String.class.getName(), Double.class.getName(), new ConvertString2Double());
     }
 }
 

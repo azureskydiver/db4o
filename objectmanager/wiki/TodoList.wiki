@@ -2,6 +2,8 @@
 
 ---+++ .NET:
 
+   * I've noticed that the Object Manager has a lot of difficulty with abstract classes.
+
    * For system types like Guid, DateTime, Uri, The ToString value really has to be shown.
 
    * Why does IList and ISerializable show up in the initial list of types? They show up as having no instances.

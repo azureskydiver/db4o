@@ -26,7 +26,7 @@ public class ConvertObject2String implements IConverter {
         if (source == null) 
             return "";
         
-        IConverter converter = Converter.get(source.getClass(), String.class);
+        IConverter converter = Converter.get(source.getClass().getName(), String.class.getName());
         if (converter != null) {
             return converter.convert(source);
         }
