@@ -47,7 +47,7 @@ abstract class IxPatch extends IxTree {
 
     int compare(Tree a_to) {
         YapDataType handler = i_fieldTransaction.i_index.i_field.getHandler();
-        return handler.compareTo(handler.indexObject(trans(), i_value));
+        return handler.compareTo(handler.comparableObject(trans(), i_value));
     }
 
 }

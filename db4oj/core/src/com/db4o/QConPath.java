@@ -5,9 +5,11 @@ package com.db4o;
 import com.db4o.reflect.*;
 
 /** 
- * non-constraint, only necessary to attach children.
- * Added upon call to Query#descendant, if there is no
- * other place to hook in.
+ * Placeholder for a constraint, only necessary to attach children
+ * to the query graph.
+ * 
+ * Added upon a call to Query#descend(), if there is no
+ * other place to hook up a new constraint.
  * 
  * @exclude
  */

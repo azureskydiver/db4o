@@ -7,7 +7,7 @@ import com.db4o.query.*;
 import com.db4o.reflect.*;
 
 /**
- * Object constraint
+ * Object constraint on queries
  *
  * @exclude
  */
@@ -150,7 +150,7 @@ public class QConObject extends QCon {
             if (i_subConstraints != null) {
                 Iterator4 i = new Iterator4(i_subConstraints);
                 while (i.hasNext()) {
-                    if (i.next() instanceof QEvaluation) {
+                    if (i.next() instanceof QConEvaluation) {
                         hasEvaluation = true;
                         break;
                     }

@@ -44,7 +44,7 @@ class IxFileRangeReader implements Readable {
         while (true) {
             _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
             _reader._offset = 0;
-            int cmp = _handler.compareTo(_handler.indexObject(trans, _handler
+            int cmp = _handler.compareTo(_handler.comparableObject(trans, _handler
                 .readIndexEntry(_reader)));
             if (cmp == 0) {
                 int parentID = _reader.readInt();
@@ -182,7 +182,7 @@ class IxFileRangeReader implements Readable {
             _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
             _reader._offset = 0;
 
-            int cmp = _handler.compareTo(_handler.indexObject(trans, _handler
+            int cmp = _handler.compareTo(_handler.comparableObject(trans, _handler
                 .readIndexEntry(_reader)));
 
             if (cmp > 0) {
@@ -236,7 +236,7 @@ class IxFileRangeReader implements Readable {
         while (true) {
             _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
             _reader._offset = 0;
-            int cmp = _handler.compareTo(_handler.indexObject(trans, _handler
+            int cmp = _handler.compareTo(_handler.comparableObject(trans, _handler
                 .readIndexEntry(_reader)));
             if (cmp == 0) {
                 _upper = _cursor;
@@ -261,7 +261,7 @@ class IxFileRangeReader implements Readable {
         while (true) {
             _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
             _reader._offset = 0;
-            int cmp = _handler.compareTo(_handler.indexObject(trans, _handler
+            int cmp = _handler.compareTo(_handler.comparableObject(trans, _handler
                 .readIndexEntry(_reader)));
             if (cmp == 0) {
                 _lower = _cursor;

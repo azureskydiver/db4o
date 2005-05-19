@@ -158,7 +158,7 @@ class YapArray extends YapIndependantType {
         return YapConst.YAPARRAY;
     }
     
-    public Object indexObject(Transaction a_trans, Object a_object){
+    public Object comparableObject(Transaction a_trans, Object a_object){
         throw YapConst.virtualException();
     }
 
@@ -379,7 +379,7 @@ class YapArray extends YapIndependantType {
             a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
             a_bytes.writeInt(length);
         }
-		return 0;
+		return -1;
     }
 
     void writeNew1(Object a_object, YapWriter a_bytes) {

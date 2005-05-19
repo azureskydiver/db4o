@@ -115,9 +115,9 @@ public final class Platform {
         return Double.doubleToLongBits(a_double);
     }
 
-    static final QEvaluation evaluationCreate(Transaction a_trans, Object example){
+    static final QConEvaluation evaluationCreate(Transaction a_trans, Object example){
         if(example instanceof Evaluation){
-            return new QEvaluation(a_trans, example);
+            return new QConEvaluation(a_trans, example);
         }
         return null;
     }

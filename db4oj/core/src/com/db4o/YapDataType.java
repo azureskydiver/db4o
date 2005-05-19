@@ -29,7 +29,7 @@ public interface YapDataType extends YapComparable
 	
 	Object indexEntry(Object a_object);
 	
-	Object indexObject(Transaction a_trans, Object a_object);
+	Object comparableObject(Transaction trans, Object indexEntry);
 	
 	int linkLength();
 	
@@ -38,13 +38,16 @@ public interface YapDataType extends YapComparable
 	ReflectClass primitiveClassReflector();
 	
 	Object read(YapWriter writer) throws CorruptionException;
-	
-	Object readIndexObject(YapWriter writer) throws CorruptionException;
+    
+	Object readIndexValueOrID(YapWriter writer) throws CorruptionException;
 	
 	Object readQuery(Transaction trans, YapReader reader, boolean toArray) throws CorruptionException;
 	
 	boolean supportsIndex();
 	
+    // returns the ID for first class objects,
+    // 0 for null in first class object fields
+    // -1 for primitives
 	int writeNew(Object a_object, YapWriter a_bytes);
 	
 	public int getType ();

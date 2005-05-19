@@ -96,13 +96,13 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
                                     YapClass yapClassObject = YapClassAny.readYapClass(writer);
                                     if(yapClassObject != null){
 	                                    if(yapClassObject.findOffset(writer, yapField)){
-	    	                                try {
-	    	                                    obj = yapField.read(writer);
-	    	                                } catch (CorruptionException e) {
-	    	                                    if(Deploy.debug || Debug.atHome){
-	    	                                        e.printStackTrace();
-	    	                                    }
-	    	                                }
+                                            try {
+                                                obj = yapField.i_handler.readIndexValueOrID(writer);
+                                            } catch (CorruptionException e) {
+                                                if(Deploy.debug || Debug.atHome){
+                                                    e.printStackTrace();
+                                                }
+                                            }
 	                                    }
                                     }
                                     yapField.addIndexEntry(systemTrans, (int)ids[i], obj);

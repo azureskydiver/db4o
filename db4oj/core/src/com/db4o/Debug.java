@@ -13,7 +13,7 @@ abstract class Debug {
     public static final boolean configureAllClasses = indexAllFields;
     public static final boolean configureAllFields = indexAllFields;
     
-    public static final boolean toStrings = false;
+    public static final boolean toStrings = atHome;
 
     public static final boolean weakReferences = true;
 

@@ -21,6 +21,12 @@ class IxTraverser{
     private IxPath i_smallTail;
     Tree i_tree;
 
+    // Bitmap that denotes, which elements to take, consisting of four booleans:
+    // [0] take smaller
+    // [1] take equal
+    // [2] take greater
+    // [3] take nulls 
+    
     boolean[] i_take;
 
     private void add(IxPath a_previousPath, IxPath a_great, IxPath a_small) {

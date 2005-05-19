@@ -5,6 +5,11 @@ package com.db4o;
 import com.db4o.query.*;
 
 /**
+ * 
+ * Array of constraints for queries.
+ * 
+ * Necessary to be returned to Query#constraints()
+ * 
  * @exclude
  */
 public class QConstraints extends QCon implements Constraints {

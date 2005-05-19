@@ -55,7 +55,7 @@ class IxFileRange extends IxTree{
             reader.read(yf, address, _addressOffset);
             reader._offset = 0;
             sb.append("\n  ");
-            Object obj = handler().indexObject(transaction, handler().readIndexEntry(reader));
+            Object obj = handler().comparableObject(transaction, handler().readIndexEntry(reader));
             int parentID = reader.readInt();
             sb.append("Parent: " + parentID);
             sb.append("\n ");

@@ -82,20 +82,20 @@ public class YapField implements StoredField {
             a_writer.incrementOffset(linkLength());
         } else {
             try {
-                addIndexEntry(i_handler.readIndexObject(a_writer), a_writer);
+                addIndexEntry(a_writer, i_handler.readIndexValueOrID(a_writer));
             } catch (CorruptionException e) {
             }
         }
     }
 
-    protected void addIndexEntry(Object member, YapWriter a_bytes) {
-        addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), member);
+    protected void addIndexEntry(YapWriter a_bytes, Object valueOrID) {
+        addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), valueOrID);
     }
 
-    void addIndexEntry(Transaction a_trans, int parentID, Object member) {
-        i_handler.prepareLastIoComparison(a_trans, member);
+    void addIndexEntry(Transaction a_trans, int parentID, Object valueOrID) {
+        i_handler.prepareLastIoComparison(a_trans, valueOrID);
         IxFieldTransaction ift = getIndex(a_trans).dirtyFieldTransaction(a_trans);
-        ift.add(new IxAdd(ift, parentID, i_handler.indexEntry(member)));
+        ift.add(new IxAdd(ift, parentID, i_handler.indexEntry(valueOrID)));
     }
 
     public boolean alive() {
@@ -294,8 +294,11 @@ public class YapField implements StoredField {
                 int offset = a_bytes._offset;
                 Object obj = null;
                 try {
-                    obj = i_handler.read(a_bytes);
+                    obj = i_handler.readIndexValueOrID(a_bytes);
                 } catch (CorruptionException e) {
+                    if(Debug.atHome){
+                        e.printStackTrace();
+                    }
                 }
                 i_handler.prepareComparison(obj);
                 IxFieldTransaction ift = i_index.dirtyFieldTransaction(a_bytes
@@ -590,7 +593,13 @@ public class YapField implements StoredField {
             memberId = i_handler.writeNew(a_object, a_bytes);
         }
         if (i_index != null) {
-            addIndexEntry(a_object, a_bytes);
+            if(memberId == -1){
+                // primitive
+                addIndexEntry(a_bytes, a_object);
+            }else{
+                // first class object
+                addIndexEntry(a_bytes, new Integer(memberId));
+            }
         }
     }
 
