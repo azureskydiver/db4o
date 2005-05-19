@@ -258,8 +258,8 @@ public class StandaloneBrowser implements IControlFactory {
             
             // Refresh the browser
             if (browserController.getInput() != null) {
-                browserController.setInput(browserController.getInput(), 
-                        browserController.getInitialSelection());
+                browserController.reopen();//setInput(browserController.getInput(), 
+                        //browserController.getInitialSelection());
             }
         }
     };
