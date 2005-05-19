@@ -140,8 +140,8 @@ public class TextFieldController implements IFieldController {
         
         this.property = input;
         
-        object2String = Converter.get(property.getType(), String.class);
-        string2Object = Converter.get(String.class, property.getType());
+        object2String = Converter.get(property.getType(), String.class.getName());
+        string2Object = Converter.get(String.class.getName(), property.getType());
         
         readOnly = property.isReadOnly();
         if (readOnly) {

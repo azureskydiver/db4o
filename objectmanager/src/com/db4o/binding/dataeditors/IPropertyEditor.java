@@ -43,11 +43,11 @@ public interface IPropertyEditor {
     public boolean isReadOnly();
     
     /**
-     * Method getType().  Returns the underlying property's type.
+     * Method getType().  Returns the underlying property's type name.
      * 
-     * @return Class The property's type.
+     * @return String The property's type.
      */
-    public Class getType();
+    public String getType();
     
     /**
      * Method getVerifier().  Returns the property's verifier or the

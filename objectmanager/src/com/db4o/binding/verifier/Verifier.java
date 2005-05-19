@@ -5,7 +5,6 @@ package com.db4o.binding.verifier;
 
 import java.util.HashMap;
 
-
 import com.db4o.binding.verifiers.DoubleVerifier;
 import com.db4o.binding.verifiers.FloatVerifier;
 import com.db4o.binding.verifiers.IntVerifier;
@@ -27,7 +26,7 @@ public class Verifier {
      * @param klass
      * @param verifier
      */
-    public static void associate(Class klass, IVerifier verifier) {
+    public static void associate(String klass, IVerifier verifier) {
         verifiers.put(klass, verifier);
     }
     
@@ -37,7 +36,7 @@ public class Verifier {
      * @param klass The Class to verify
      * @return An appropriate IVerifier
      */
-    public static IVerifier get(Class klass) {
+    public static IVerifier get(String klass) {
         IVerifier result = (IVerifier) verifiers.get(klass);
         if (result == null) {
             return ReadOnlyVerifier.getDefault();
@@ -49,16 +48,25 @@ public class Verifier {
         verifiers = new HashMap();
         
         // Standalone verifiers here...
-        associate(Integer.TYPE, new IntVerifier());
-        associate(Long.TYPE, new LongVerifier());
-        associate(Float.TYPE, new FloatVerifier());
-        associate(Double.TYPE, new DoubleVerifier());
+        associate(Integer.TYPE.getName(), new IntVerifier());
+        associate(Long.TYPE.getName(), new LongVerifier());
+        associate(Float.TYPE.getName(), new FloatVerifier());
+        associate(Double.TYPE.getName(), new DoubleVerifier());
+        
+        associate(Integer.class.getName(), new IntVerifier());
+        associate(Long.class.getName(), new LongVerifier());
+        associate(Float.class.getName(), new FloatVerifier());
+        associate(Double.class.getName(), new DoubleVerifier());
         
         // Regex-implemented verifiers here...
-        associate(Character.TYPE, new RegularExpressionVerifier(
+        associate(Character.TYPE.getName(), new RegularExpressionVerifier(
                 "/^.$|^$/", "/./", "Please type a character"));
-        associate(Boolean.TYPE, new RegularExpressionVerifier(
+        associate(Boolean.TYPE.getName(), new RegularExpressionVerifier(
                 "/Y|y|Ye|ye|Yes|yes|N|n|No|no/", "/Yes|yes|No|no/", "Please type \"Yes\" or \"No\""));
-        associate(String.class, new RegularExpressionVerifier("/.*/", "/.*/", ""));
+        associate(Character.class.getName(), new RegularExpressionVerifier(
+                "/^.$|^$/", "/./", "Please type a character"));
+        associate(Boolean.class.getName(), new RegularExpressionVerifier(
+                "/Y|y|Ye|ye|Yes|yes|N|n|No|no/", "/Yes|yes|No|no/", "Please type \"Yes\" or \"No\""));
+        associate(String.class.getName(), new RegularExpressionVerifier("/.*/", "/.*/", ""));
     }
 }

@@ -100,7 +100,7 @@ public class Db4oBeanProperty implements InvocationHandler {
         } else if ("get".equals(method.getName())) {
             return get();
         } else if ("getType".equals(method.getName())) {
-            return propertyType.getJdkClass();
+            return propertyType.getName();
         } else if ("getInput".equals(method.getName())) {
             return receiver;
         } else if ("setInput".equals(method.getName())) {
