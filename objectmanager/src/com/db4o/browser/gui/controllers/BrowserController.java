@@ -101,6 +101,14 @@ public class BrowserController implements IBrowserController {
     
     private boolean open(Db4oConnectionSpec spec){
         currentConnection = spec;
+        return internalSetInput();
+    }
+
+    public void reopen() {
+        internalSetInput();
+    }
+
+    private boolean internalSetInput() {
         IGraphIterator i;
         try {
             i = BrowserCore.getDefault().iterator(currentConnection);
