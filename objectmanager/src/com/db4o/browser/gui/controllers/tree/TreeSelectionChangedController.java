@@ -38,7 +38,6 @@ public class TreeSelectionChangedController implements
 				TreeViewer source = (TreeViewer) event.getSource();
 				IGraphIterator model = (IGraphIterator) source.getInput();
 				model.setSelectedPath(node);
-                source.getTree().setEnabled(false);
 			}
 		} catch (Throwable t) {
             Logger.log().error(t, "Exception handling tree selection change");
