@@ -253,7 +253,4 @@ public class GenericClass implements ReflectClass, DeepClone {
         // ignore, we always create a generic object
     }
 
-    public Class getJdkClass() {
-        return (_delegate == null) ? Object.class : _delegate.getJdkClass();
-    }
 }
