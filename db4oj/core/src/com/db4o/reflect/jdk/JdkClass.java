@@ -168,8 +168,4 @@ public class JdkClass implements ReflectClass{
         _constructorParams = params;
     }
 
-    public Class getJdkClass() {
-        return _clazz;
-    }
-
 }

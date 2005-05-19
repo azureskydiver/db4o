@@ -20,11 +20,6 @@ namespace com.db4o.reflect.net
             _type = clazz.getNetType();
 		}
 
-		public j4o.lang.Class getJdkClass() 
-		{
-			return _clazz;
-		}
-
 		public virtual com.db4o.reflect.ReflectClass getComponentType(){
 			return _reflector.forClass(_clazz.getComponentType());
 		}
