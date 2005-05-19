@@ -10,20 +10,24 @@ import com.db4o.test.*;
 /**
  * Original performance on the server:
  * Querying 10000 objects for member identity: 640ms
- * @author root_rosenberger
- *
+ * 
+ * Original performance on Carls machine with Skype on:
+ * Querying 10000 objects for member identity: 703ms
+ * 
+ * Result after enabling member indices:
+ * Querying time too small to measure. 
  */
 
-public class TuningIdentity {
+public class TuningIdentityQuery {
     
-    static final int COUNT = 2;
+    static final int COUNT = 10000;
     
     TIMember member;
     
-    public TuningIdentity(){
+    public TuningIdentityQuery(){
     }
     
-    public TuningIdentity(TIMember member){
+    public TuningIdentityQuery(TIMember member){
         this.member = member;
     }
 	
@@ -33,7 +37,7 @@ public class TuningIdentity {
     
     public void store(){
         for (int i = 0; i < COUNT; i++) {
-            Test.store(new TuningIdentity(new TIMember("" + i)));
+            Test.store(new TuningIdentityQuery(new TIMember("" + i)));
         }
     }
     
@@ -43,11 +47,18 @@ public class TuningIdentity {
 		ObjectSet objectSet = q.execute();
 		TIMember member = (TIMember) objectSet.next();
 		q = Test.query();
-		q.constrain(TuningIdentity.class);
+		q.constrain(TuningIdentityQuery.class);
 		q.descend("member").constrain(member).identity();
+        
 		long start = System.currentTimeMillis();
 		objectSet = q.execute();
+        
 		long stop = System.currentTimeMillis();
+        
+        Test.ensure(objectSet.size() == 1);
+        TuningIdentityQuery ti = (TuningIdentityQuery)objectSet.next();
+        Test.ensure(ti.member == member);
+        
 		long duration = stop - start;
 		System.out.println("Querying " + COUNT + " objects for member identity: " + duration + "ms");
     }
