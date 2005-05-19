@@ -91,7 +91,7 @@ public class SelectServer extends Dialog {
     
     protected void okPressed() {
         hostName = pane.getHostName().getText();
-        IConverter converter = Converter.get(String.class, Integer.TYPE);
+        IConverter converter = Converter.get(String.class.getName(), Integer.TYPE.getName());
         port = ((Integer)converter.convert(pane.getHostPort().getText())).intValue();
         username = pane.getUsername().getText();
         password = pane.getPassword().getText();
