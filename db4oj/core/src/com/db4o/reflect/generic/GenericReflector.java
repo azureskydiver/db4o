@@ -23,6 +23,7 @@ public class GenericReflector implements Reflector, DeepClone {
     
     private Collection4 _collectionClasses = new Collection4();
     private Collection4 _collectionUpdateDepths = new Collection4();
+	private Collection4 _pendingClasses = new Collection4();
     
 	private Transaction _trans;
 	private YapStream _stream;
@@ -139,8 +140,7 @@ public class GenericReflector implements Reflector, DeepClone {
         if(_stream != null && _stream.i_classCollection != null){
             int id = _stream.i_classCollection.getYapClassID(className);
             if(id > 0){
-                clazz = ensureClassAvailability(id);
-                ensureClassRead(id);
+                clazz = ensureClassInitialised(id);
                 _classByName.put(className, clazz);
                 return clazz; 
             }
@@ -245,6 +245,19 @@ public class GenericReflector implements Reflector, DeepClone {
 		}
 	}
 	
+	private GenericClass ensureClassInitialised (int id) {
+		GenericClass ret = ensureClassAvailability(id);
+		while(_pendingClasses.size() > 0) {
+			Collection4 pending = _pendingClasses;
+			_pendingClasses = new Collection4();
+			Iterator4 i = pending.iterator();
+			while(i.hasNext()) {
+				ensureClassRead(((Integer)i.next()).intValue());
+			}
+		}
+		return ret;
+	}
+	
 	private GenericClass ensureClassAvailability (int id) {
 
         if(id == 0){
@@ -266,6 +279,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		ret = (GenericClass)_classByName.get(classname);
 		if(ret != null){
 			_classByID.put(id, ret);
+			_pendingClasses.add(new Integer(id));
 			return ret;
 		}
 		
@@ -278,6 +292,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		
 		// step 1 only add to _classByID, keep the class out of _classByName and _classes
         _classByID.put(id, ret);
+		_pendingClasses.add(new Integer(id));
 		
 		return ret;
 	}
@@ -334,6 +349,7 @@ public class GenericReflector implements Reflector, DeepClone {
                         fieldClass = ((GenericClass)forClass(Object.class)).arrayClass();
                         break;
                     default:
+						ensureClassAvailability(handlerid);
                         fieldClass = (GenericClass)_classByID.get(handlerid);        
                 }
     		    
