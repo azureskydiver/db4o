@@ -11,6 +11,7 @@ import com.db4o.reflect.*;
 public class GenericField implements ReflectField, DeepClone{
 
     private final String _name;
+    private final GenericClass _owner;
     private final GenericClass _type;
     private final boolean _primitive;
     private final boolean _array;
@@ -18,7 +19,8 @@ public class GenericField implements ReflectField, DeepClone{
 
     private int _index = -1;
 
-    public GenericField(String name, ReflectClass clazz, boolean primitive, boolean array, boolean nDimensionalArray) {
+    public GenericField(ReflectClass owner,String name, ReflectClass clazz, boolean primitive, boolean array, boolean nDimensionalArray) {
+    	_owner=(GenericClass)owner;
         _name = name;
         _type = (GenericClass)clazz;
         _primitive = primitive;
@@ -28,16 +30,17 @@ public class GenericField implements ReflectField, DeepClone{
 
     public Object deepClone(Object obj) {
         Reflector reflector = (Reflector)obj;
+        ReflectClass newOwner=reflector.forName(_owner.getName());
         ReflectClass newReflectClass = null;
         if(_type != null){
             newReflectClass = reflector.forName(_type.getName());
         }
-        return new GenericField(_name, newReflectClass, _primitive, _array, _nDimensionalArray);
+        return new GenericField(newOwner,_name, newReflectClass, _primitive, _array, _nDimensionalArray);
     }
 
     public Object get(Object onObject) {
         //TODO Consider: Do we need to check that onObject is an instance of the DataClass this field is a member of? 
-        return ((GenericObject)onObject)._values[_index];
+        return ((GenericObject)onObject).get(_owner,_index);
     }
     
     public String getName() {
@@ -71,7 +74,7 @@ public class GenericField implements ReflectField, DeepClone{
 		// FIXME: Consider enabling type checking.
 		// The following will fail with arrays.
         // if (!_type.isInstance(value)) throw new RuntimeException(); //TODO Consider: is this checking really necessary?
-        ((GenericObject)onObject)._values[_index] = value;
+        ((GenericObject)onObject).set(_owner,_index,value);
     }
 
     public void setAccessible() {
