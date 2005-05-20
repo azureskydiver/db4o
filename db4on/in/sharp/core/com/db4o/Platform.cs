@@ -101,9 +101,9 @@ namespace com.db4o {
             return Compat.doubleToLong(a_double);
         }
 
-        static internal QEvaluation evaluationCreate(Transaction a_trans, Object example){
+        static internal QConEvaluation evaluationCreate(Transaction a_trans, Object example){
             if (example is Evaluation || example is EvaluationDelegate) {
-				return new QEvaluation(a_trans, example);
+				return new QConEvaluation(a_trans, example);
             }
             return null;
         }
