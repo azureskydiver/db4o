@@ -1,8 +1,4 @@
 
----++++ (200) Semaphores
-Example: Implementing a global Singleton
-(old 3.0 sample attached, may be slightly out-of date)
-
 ---++++ (300) Explaining the Reflector concept
 working against GenericReflector classes
 writing your own Reflector
