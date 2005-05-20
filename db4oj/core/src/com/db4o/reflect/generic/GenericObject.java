@@ -20,12 +20,12 @@ public class GenericObject {
         _values=createValueMap(clazz);
     }
     
-    void set(GenericClass owner,int index,Object value) {
+    public void set(GenericClass owner,int index,Object value) {
     	Object[] values=(Object[])_values.get(owner);
     	values[index]=value;
     }
 
-    Object get(GenericClass owner,int index) {
+    public Object get(GenericClass owner,int index) {
     	Object[] values=(Object[])_values.get(owner);
     	return values[index];
     }
