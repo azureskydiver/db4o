@@ -21,6 +21,7 @@
 .e Tuning ..
 .e Maintenance ..
 .e Replication ..
+.e Semaphores ..
 .e Messaging ..
 .e DOTNETSpecific ..
 .e ObjectManager ..
