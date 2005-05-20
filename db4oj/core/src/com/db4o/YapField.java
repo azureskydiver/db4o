@@ -25,9 +25,9 @@ public class YapField implements StoredField {
 
     private boolean          i_isPrimitive;
 
-    private ReflectField           i_javaField;
+    private ReflectField     i_javaField;
 
-    protected YapDataType    i_handler;
+    YapDataType              i_handler;
 
     private int              i_handlerID;
 
