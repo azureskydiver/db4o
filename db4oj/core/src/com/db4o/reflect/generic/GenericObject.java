@@ -4,6 +4,7 @@ package com.db4o.reflect.generic;
 
 import java.util.*;
 
+import com.db4o.*;
 import com.db4o.reflect.*;
 
 /**
@@ -12,7 +13,7 @@ import com.db4o.reflect.*;
 public class GenericObject {
 
     final GenericClass _class;
-    private final Map _values;
+    private final Hashtable4 _values;
     
     GenericObject(GenericClass clazz) {
         _class = clazz;
@@ -29,8 +30,8 @@ public class GenericObject {
     	return values[index];
     }
 
-	private Map createValueMap(GenericClass clazz) {
-		Map values=new HashMap();
+	private Hashtable4 createValueMap(GenericClass clazz) {
+		Hashtable4 values=new Hashtable4(1);
     	ReflectClass curclazz=clazz;
     	while(curclazz!=null) {
     		Object[] curvalues=new Object[curclazz.getDeclaredFields().length];
