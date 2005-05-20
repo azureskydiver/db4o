@@ -9,6 +9,7 @@ import com.db4o.reflect.generic.*;
 import com.db4o.reflect.jdk.*;
 import com.db4o.test.util.*;
 
+// TODO: Works for solo mode only currently
 public class GRHierarchy {
 	public static abstract class A {
 		private int id;
