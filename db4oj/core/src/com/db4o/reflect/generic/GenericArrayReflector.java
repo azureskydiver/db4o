@@ -27,7 +27,7 @@ public class GenericArrayReflector implements ReflectArray{
 
     public Object get(Object onArray, int index) {
         if(onArray instanceof GenericArray){
-            return ((GenericObject)onArray)._values[index];
+            return ((GenericArray)onArray)._data[index];
         }
         return _delegate.get(onArray, index);
     }
@@ -69,7 +69,7 @@ public class GenericArrayReflector implements ReflectArray{
 
     public void set(Object onArray, int index, Object element) {
         if(onArray instanceof GenericArray){
-            ((GenericArray)onArray)._values[index] = element;
+            ((GenericArray)onArray)._data[index] = element;
             return;
         }
         _delegate.set(onArray, index, element);

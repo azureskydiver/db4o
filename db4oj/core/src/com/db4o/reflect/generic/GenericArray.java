@@ -5,15 +5,16 @@ package com.db4o.reflect.generic;
 /**
  * @exclude
  */
-public class GenericArray extends GenericObject{
-    
+public class GenericArray {
+	GenericClass _clazz;
+	Object[] _data;
+	
     public GenericArray(GenericClass clazz, int size){
-        super(clazz, size);
+    	_clazz=clazz;
+    	_data=new Object[size];
     }
     
     int getLength(){
-        return _values.length;
+        return _data.length;
     }
-    
-
 }

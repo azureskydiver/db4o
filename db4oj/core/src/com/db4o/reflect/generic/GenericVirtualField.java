@@ -10,7 +10,7 @@ import com.db4o.reflect.*;
 public class GenericVirtualField extends GenericField{
 
     public GenericVirtualField(String name) {
-        super(name, null, false, false, false);
+        super(null, name, null, false, false, false);
     }
     
     public Object deepClone(Object obj) {

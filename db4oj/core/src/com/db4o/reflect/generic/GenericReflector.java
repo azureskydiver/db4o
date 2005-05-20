@@ -358,7 +358,7 @@ public class GenericReflector implements Reflector, DeepClone {
     		    boolean isarray = attribs.get();
     		    boolean ismultidimensional=attribs.get();
     		    
-    			fields[i]=new GenericField(fieldname,fieldClass, isprimitive, isarray, ismultidimensional );
+    			fields[i]=new GenericField(clazz,fieldname,fieldClass, isprimitive, isarray, ismultidimensional );
             }
 		}
         
