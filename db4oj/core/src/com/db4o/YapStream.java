@@ -527,16 +527,26 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         }
     }
 
-    void fatalException(Throwable t) {
+    void fatalException(int msgID) {
+		fatalException(null,msgID);
+    }
+
+	void fatalException(Throwable t) {
+		fatalException(t,Messages.FATAL_MSG_ID);
+    }
+
+    void fatalException(Throwable t, int msgID) {
         if (!i_amDuringFatalExit) {
             i_amDuringFatalExit = true;
             i_classCollection = null;
             emergencyClose();
-            Db4o.logErr(i_config, 18, null, t);
+			
+            Db4o.logErr(i_config, (msgID==Messages.FATAL_MSG_ID ? 18 : msgID), null, t);
         }
-        throw new RuntimeException(Messages.get(44));
+        throw new RuntimeException(Messages.get(msgID));
     }
 
+	
     protected void finalize() {
         if (i_config == null || i_config.i_automaticShutDown) {
             failedToShutDown();

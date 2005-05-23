@@ -59,6 +59,7 @@ public class AllTestsConfAll extends TestSuite{
 	        DifferentAccessPaths.class,
 	        DiscreteArrayInMap.class,
 	        DualDelete.class,
+	        EncryptionWrongPassword.class,
 			ExtMethods.class,
 			ExtendsDate.class,
 			ExtendsHashMap.class,
