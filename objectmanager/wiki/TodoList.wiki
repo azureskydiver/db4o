@@ -5,6 +5,10 @@
 
 ----+++ Cross-platform
 
+   * New OM build this week
+
+   * Open password-protected file; be able to supply custom encryption class
+
    * Some way to show the type heirachy for a class. Example is ClassB : ClassA, the field inspector should show all fields defined by ClassB and ClassA with an additional line to note that ClassB is ClassA. When expanding the branch for ClassA (since it shows up in the inital list), also list instances of ClassB as ClassB (I think this should work).
 
    * needs to be able to cope with refactored classes:
