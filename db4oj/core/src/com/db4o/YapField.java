@@ -157,7 +157,7 @@ public class YapField implements StoredField {
         if (alive()) {
             i_handler.appendEmbedded3(a_bytes);
         } else {
-            a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
+            a_bytes.incrementOffset(linkLength());
         }
     }
 
