@@ -844,7 +844,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         }
         
         i_ancestor = a_ancestor;
-        i_config = a_stream.i_config.configClass(claxx.getName());
+        setConfig(a_stream.i_config.configClass(claxx.getName()));
         
         if(! createConstructor(a_stream, claxx, claxx.getName(), false)){
             return false;
@@ -1125,6 +1125,17 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         return length;
     }
     
+    private String nameToWrite(){
+        String name = i_name;
+        if(i_config != null && i_config._writeAs != null){
+            return i_config._writeAs;
+        }
+        if(i_name == null){
+            return "";
+        }
+        return i_name;
+    }
+    
     final boolean callConstructor() {
         i_dontCallConstructors = ! callConstructor1();
         return ! i_dontCallConstructors;
@@ -1159,12 +1170,8 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     }
 
     int ownLength() {
-        String name = getName();
-        if(name == null){
-            name = "";
-        }
         int len =
-            i_stream.stringIO().shortLength(name)
+            i_stream.stringIO().shortLength(nameToWrite())
                 + YapConst.OBJECT_LENGTH
                 + (YapConst.YAPINT_LENGTH * 2)
                 + (YapConst.YAPID_LENGTH * 2);
@@ -1364,7 +1371,6 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     }
 
     byte[] readName(Transaction a_trans) {
-        // i_stream = a_trans.i_stream;
         i_reader = a_trans.i_stream.readReaderByID(a_trans, getID());
         if (i_reader != null) {
             return readName1(a_trans, i_reader);
@@ -1470,7 +1476,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         } else {
             i_name = a_class.getName();
         }
-        i_config = i_stream.i_config.configClass(i_name);
+        setConfig(i_stream.i_config.configClass(i_name));
         if (a_class == null) {
             createConstructor(a_stream, i_name);
         } else {
@@ -1587,6 +1593,15 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
             }
         }
         return renamed;
+    }
+    
+    void setConfig(Config4Class config){
+        // The configuration can be set by a ObjectClass#readAs setting
+        // from YapClassCollection, right after reading the meta information
+        // for the first time. In that case we never change the setting
+        if(i_config == null){
+            i_config = config;
+        }
     }
 
     void setID(YapStream a_stream, int a_id) {
@@ -1801,7 +1816,8 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     }
 
     void writeThis(YapWriter a_writer) {
-        a_writer.writeShortString(i_name);
+        
+        a_writer.writeShortString(nameToWrite());
 
         // TODO:
         // this is a free pointer that is not needed

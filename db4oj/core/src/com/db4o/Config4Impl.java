@@ -49,6 +49,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     MessageSender    i_messageSender;
     PrintStream      i_outStream;
     String           i_password;
+    Hashtable4       _readAs                            = new Hashtable4(16);
     boolean          i_readonly;
     private Reflector _configuredReflector;
     private GenericReflector _reflector;
@@ -253,10 +254,12 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         ReflectClass claxx = reflectorFor(clazz);
         
         if (claxx == null) {
-            return null;
+            if(! (clazz instanceof String)){
+                return null;
+            }
         }
         
-        String className = claxx.getName(); 
+        String className = (claxx == null) ?  (String)clazz  : claxx.getName(); 
         
         Config4Class c4c = (Config4Class) i_exceptionalClasses.get(className);
         if (c4c == null) {
