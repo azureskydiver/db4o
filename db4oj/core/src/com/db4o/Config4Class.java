@@ -8,7 +8,7 @@ import com.db4o.reflect.*;
 class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     DeepClone {
 
-    int			 	 i_callConstructor;
+    int			 	   i_callConstructor;
     
     Config4Impl        i_config;
 
@@ -17,6 +17,12 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     int                i_generateUUIDs;
     
     int                i_generateVersionNumbers;
+    
+    /**
+     * We are running into cyclic dependancies on reading the PBootRecord
+     * object, if we maintain MetaClass information there 
+     */
+    boolean            _maintainMetaClass = true;
 
     int                i_maximumActivationDepth;
 
@@ -35,6 +41,8 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     String             i_translatorName;
     
     int                i_updateDepth;
+    
+    String             _writeAs;
 
     Config4Class(Config4Impl a_configuration, String a_name) {
         i_config = a_configuration;
@@ -140,14 +148,16 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
         if (Tuning.fieldIndices) {
             YapStream stream = systemTrans.i_stream;
             if (stream.maintainsIndices()) {
-                i_metaClass = (MetaClass) stream.get1(systemTrans,
-                    new MetaClass(i_name)).next();
-                if (i_metaClass == null) {
-                    i_metaClass = new MetaClass(i_name);
-                    stream.setInternal(systemTrans, i_metaClass, Integer.MAX_VALUE, false);
-                } else {
-                    stream.activate1(systemTrans, i_metaClass,
-                        Integer.MAX_VALUE);
+                if(_maintainMetaClass){
+                    i_metaClass = (MetaClass) stream.get1(systemTrans,
+                        new MetaClass(i_name)).next();
+                    if (i_metaClass == null) {
+                        i_metaClass = new MetaClass(i_name);
+                        stream.setInternal(systemTrans, i_metaClass, Integer.MAX_VALUE, false);
+                    } else {
+                        stream.activate1(systemTrans, i_metaClass,
+                            Integer.MAX_VALUE);
+                    }
                 }
             }
         }
@@ -203,6 +213,15 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
         }
         return true;
     }
+    
+   public void readAs(Object clazz) {
+       ReflectClass claxx = i_config.reflectorFor(clazz);
+       if (claxx == null) {
+           return;
+       }
+       _writeAs = i_name;
+       i_config._readAs.put(_writeAs, claxx.getName());
+   }
 
     public void rename(String newName) {
         i_config.rename(new Rename("", i_name, newName));

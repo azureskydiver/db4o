@@ -300,6 +300,28 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
             i_yapClassByID.put(id, yapClass);
             i_yapClassByBytes.put(yapClass.readName(a_trans), yapClass);
         }
+        
+        final Hashtable4 readAs = i_stream.i_config._readAs; 
+        
+        readAs.forEachKey(new Visitor4() {
+            public void visit(Object a_object) {
+                String dbName = (String)a_object;
+                byte[] dbbytes = asBytes(dbName);
+                String useName = (String)readAs.get(dbName);
+                byte[] useBytes = asBytes(useName);
+                if(i_yapClassByBytes.get(useBytes) == null){
+                    YapClass yc = (YapClass)i_yapClassByBytes.get(dbbytes);
+                    if(yc != null){
+                        yc.i_nameBytes = useBytes;
+                        yc.setConfig(i_stream.i_config.configClass(dbName));
+                        i_yapClassByBytes.put(dbbytes, null);
+                        i_yapClassByBytes.put(useBytes, yc);
+                    }else{
+                        int xxx = 1;
+                    }
+                }
+            }
+        });
     }
 
     YapClass readYapClass(YapClass yapClass, ReflectClass a_class) {

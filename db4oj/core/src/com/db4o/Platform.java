@@ -35,7 +35,9 @@ public final class Platform {
     static final String REFLECTIONFACTORY = "sun.reflect.ReflectionFactory";
     static final String GETCONSTRUCTOR = "newConstructorForSerialization";
     static final String UTIL = "java.util.";
-    static final String DB4O_CONFIG = "com.db4o.config.";
+    static final String DB4O_PACKAGE = "com.db4o.";
+    static final String DB4O_CONFIG = DB4O_PACKAGE + "config.";
+    static final String DB4O_ASSEMBLY = ", db4o";
     static final String ENUM = "java.lang.Enum"; 
     
     
@@ -252,6 +254,14 @@ public final class Platform {
         } else {
 			translateCollection(config, "Vector", "TVector", false);
         }
+        netReadAsJava(config, "ext.Db4oDatabase");
+        netReadAsJava(config, "MetaClass");
+        netReadAsJava(config, "MetaField");
+        netReadAsJava(config, "MetaIndex");
+        netReadAsJava(config, "P1Object");
+        netReadAsJava(config, "PBootRecord");
+        netReadAsJava(config, "StaticClass");
+        netReadAsJava(config, "StaticField");
     }
     
     public static Object getTypeForClass(Object obj){
@@ -452,6 +462,12 @@ public final class Platform {
             callConstructorCheck = YapConst.YES;
         }
         return callConstructorCheck == YapConst.YES;
+    }
+    
+    private static final void netReadAsJava(Config4Impl config, String className){
+        Config4Class classConfig = (Config4Class)config.objectClass(DB4O_PACKAGE + className + DB4O_ASSEMBLY);
+        classConfig._maintainMetaClass = false;
+        classConfig.readAs(DB4O_PACKAGE + className);
     }
 
     private static final boolean noNIO() {
