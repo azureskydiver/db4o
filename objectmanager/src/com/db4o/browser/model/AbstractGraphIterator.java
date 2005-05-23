@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 import com.db4o.browser.model.nodes.IModelNode;
 
-public class AbstractGraphIterator implements IGraphIterator {
+public abstract class AbstractGraphIterator implements IGraphIterator {
 
     protected IDatabase database;
     protected IModelNode[] startModel;
