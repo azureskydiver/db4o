@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.db4o.Db4o;
 import com.db4o.browser.gui.controllers.BrowserController;
 import com.db4o.browser.gui.controllers.QueryController;
+import com.db4o.browser.gui.dialogs.OpenScrambledFile;
 import com.db4o.browser.gui.dialogs.SelectServer;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;
@@ -153,6 +154,7 @@ public class StandaloneBrowser implements IControlFactory {
         Map choices = XSWT.createl(shell, "menu.xswt", getClass());
 		
         MenuItem open = (MenuItem) choices.get("Open");
+        MenuItem openScrambledFile = (MenuItem) choices.get("OpenScrambledFile");
         MenuItem openServer = (MenuItem) choices.get("OpenServer");
         MenuItem query = (MenuItem) choices.get("Query");
         MenuItem search = (MenuItem) choices.get("Search");
@@ -166,11 +168,33 @@ public class StandaloneBrowser implements IControlFactory {
         open.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-				dialog.setFilterExtensions(new String[]{"*.yap", "*"});
+                dialog.setFilterExtensions(new String[]{"*.yap", "*"});
                 String file = dialog.open();
                 if (file != null) {
                     setTabText(file);
                     browserController.open(file);
+                }
+            }
+        });
+        
+        openScrambledFile.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                OpenScrambledFile dialog = new OpenScrambledFile(shell);
+                if (dialog.open() == Window.OK) {
+                    String file = dialog.getFileName();
+                    String password = dialog.getPassword();
+
+                    try {
+                        Db4o.configure().encrypt(true);
+                        Db4o.configure().password(password);
+                        if (browserController.open(file)) {
+                            setTabText(file);
+                        }
+                    } finally {
+                        Db4o.configure().encrypt(false);
+                        Db4o.configure().password(null);
+                    }
+                    
                 }
             }
         });
