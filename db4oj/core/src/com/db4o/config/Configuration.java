@@ -277,11 +277,10 @@ public interface Configuration {
      * returns an {@link ObjectClass ObjectClass} object
      * to configure the specified class.
      * <br><br>
-     * There are three options how to use this method.<br>
-     * Any of the following parameters are possible:<br>
-     * - a fully qualified classname.<br>
+     * The clazz parameter can be any of the following:<br>
+     * - a fully qualified classname as a String.<br>
      * - a Class object.<br>
-     * - any object to be used as a template.<br><br>
+     * - any other object to be used as a template.<br><br>
      * @param clazz class name, Class object, or example object.<br><br>
      * @return an instance of an {@link ObjectClass ObjectClass}
      *  object for configuration.
