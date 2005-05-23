@@ -28,6 +28,7 @@ import com.db4o.binding.dataeditors.IObjectEditor;
 import com.db4o.binding.dataeditors.IObjectEditorFactory;
 import com.db4o.binding.dataeditors.db4o.Db4oObjectEditorFactory;
 import com.db4o.browser.prefs.activation.ActivationPreferences;
+import com.db4o.ext.*;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
@@ -76,6 +77,13 @@ public class Db4oDatabase implements IDatabase {
     
 
     public DatabaseGraphIterator graphIterator() {
+        
+        String[] ignore = new String[]{
+            "com.db4o.P1Object",
+            "j4o.lang.AssemblyNameHint, db4o",
+            "java.lang.Object"
+        };
+        
         // Get the known classes
         ReflectClass[] knownClasses = container.ext().knownClasses();
         
@@ -93,15 +101,37 @@ public class Db4oDatabase implements IDatabase {
         // Filter them
         LinkedList filteredList = new LinkedList();
         for (int i = 0; i < knownClasses.length; i++) {
-            if (!knownClasses[i].isArray()) {
-                filteredList.add(knownClasses[i]);
+            
+            boolean take = true;
+            for (int j = 0; j < ignore.length; j++) {
+                if(knownClasses[i].getName().equals(ignore[j])){
+                    take = false;
+                    break;
+                }
             }
+            if(! take){
+                continue;
+            }
+            
+            if (knownClasses[i].isArray()) {
+                continue;
+            }
+            
+            StoredClass sc = container.ext().storedClass(knownClasses[i].getName());
+            if(sc == null){
+                continue;
+            }
+                
+            filteredList.add(knownClasses[i]);
+
         }
         
         // Return the iterator
         return new DatabaseGraphIterator(this, (ReflectClass[])
                 filteredList.toArray(new ReflectClass[filteredList.size()]));
     }
+    
+    
     
     public DatabaseGraphIterator graphIterator(String name) {
         ReflectClass result = container.ext().reflector().forName(name);
