@@ -7,6 +7,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 
 import com.db4o.browser.gui.standalone.StandaloneBrowser;
 import com.db4o.browser.model.GraphPosition;
+import com.db4o.browser.model.nodes.IModelNode;
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
@@ -22,7 +23,8 @@ public class TreeLabelProvider extends LabelProvider {
 	public String getText(Object element) {
         try {
             GraphPosition pos = (GraphPosition) element;
-    		return pos.getCurrent().getText();
+            IModelNode current = pos.getCurrent();
+    		return current == null ? "null" : current.getText();
         } catch (Throwable t) {
             Logger.log().error(t, "Exception getting tree label");
             return "Please email " + StandaloneBrowser.LOGFILE + " to support@db4o.com";
