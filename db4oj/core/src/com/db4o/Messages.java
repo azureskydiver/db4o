@@ -7,7 +7,8 @@ package com.db4o;
  */
 public final class Messages
 {
-    
+    public final static int FATAL_MSG_ID=44;
+	
     private static String[] i_messages;
 	
 	public static String get(int a_code){
@@ -96,7 +97,7 @@ public final class Messages
 						"This constraint is not persistent. It has no database identity.",
 						"", // empty: No memory security message
 						"",  // free: reuse
-						"",  // free: reuse 
+						"Database password does not match user-provided password.",
 						"Thread interrupted.", // 55
 						"Password can not be null.",
 						"Classes does not match.", 

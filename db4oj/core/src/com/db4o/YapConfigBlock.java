@@ -25,6 +25,7 @@ final class YapConfigBlock implements Runnable
     // int    transaction-in-process address (duplicate for atomicity)
     // int    id of PBootRecord
     // int    unused (and lost)
+	// 5 bytes of the encryption password
     
     
     
@@ -45,12 +46,16 @@ final class YapConfigBlock implements Runnable
 		
 	static final int			TRANSACTION_OFFSET = MINIMUM_LENGTH;
 	private static final int	BOOTRECORD_OFFSET = TRANSACTION_OFFSET + YapConst.YAPINT_LENGTH * 2;  
-	private static final int	BLOCKLENGTH_OFFSET = BOOTRECORD_OFFSET + YapConst.YAPINT_LENGTH;  
+	private static final int	INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET = BOOTRECORD_OFFSET + YapConst.YAPINT_LENGTH;
+	private static final int	ENCRYPTION_PASSWORD_LENGTH = 5;
+	private static final int PASSWORD_OFFSET=INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET+ENCRYPTION_PASSWORD_LENGTH;
+	
 	
 	// complete possible data in config block
 	private static final int	LENGTH = 
 		MINIMUM_LENGTH 
-		+ (YapConst.YAPINT_LENGTH * 4);		// (two transaction pointers, PDB ID, block size 
+		+ (YapConst.YAPINT_LENGTH * 4)		// (two transaction pointers, PDB ID, lost int
+	    + ENCRYPTION_PASSWORD_LENGTH;
 		
 	private final long			_opentime; // written as pure long 8 bytes
 	byte						_encoding;
@@ -207,10 +212,20 @@ final class YapConfigBlock implements Runnable
 		    _bootRecordID = YInt.readInt(reader);
 		}
 		
-		if(oldLength > BLOCKLENGTH_OFFSET) {
+		if(oldLength > INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET) {
 		    // this one is dead.
 		    // Blocksize is in the very first bytes
 		    YInt.readInt(reader);
+		}
+		
+		if(oldLength > PASSWORD_OFFSET) {
+			byte[] encpassword=reader.readBytes(ENCRYPTION_PASSWORD_LENGTH);
+			byte[] storedpwd=passwordToken();
+			for (int idx = 0; idx < storedpwd.length; idx++) {
+				if(storedpwd[idx]!=encpassword[idx]) {
+					_stream.fatalException(54);
+				}
+			}
 		}
 		
 		if(lockFile() && ( lastAccessTime != 0)){
@@ -274,8 +289,31 @@ final class YapConfigBlock implements Runnable
 		YInt.writeInt(0, writer);
 		YInt.writeInt(_bootRecordID, writer);
 		YInt.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
+		writer.append(passwordToken());
 		writer.write();
 		writePointer();
+	}
+
+	private byte[] passwordToken() {
+		byte[] pwdtoken=new byte[ENCRYPTION_PASSWORD_LENGTH];
+		String fullpwd=_stream.i_config.i_password;
+		if(_stream.i_config.i_encrypt && fullpwd!=null) {
+			try {
+				byte[] pwdbytes=fullpwd.getBytes("utf-8");
+				YapWriter encwriter=new YapWriter(_stream.i_trans,pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
+				encwriter.append(pwdbytes);
+				encwriter.append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
+				_stream.i_handlers.decrypt(encwriter);
+				System.arraycopy(encwriter._buffer, 0, pwdtoken, 0, ENCRYPTION_PASSWORD_LENGTH);				
+			}
+			catch(Exception exc) {
+				// should never happen
+				//if(Debug.atHome) {
+					exc.printStackTrace();
+				//}
+			}
+		}
+		return pwdtoken;
 	}
 	
 	boolean writeAccessTime() throws IOException{

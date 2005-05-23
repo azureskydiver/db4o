@@ -251,8 +251,10 @@ public class Test extends AllTests {
     public static ObjectContainer reOpenServer(){
 		if(runServer && clientServer){
 			close();
-			objectServer.close();
-			objectServer = null;
+			if(objectServer!=null) {
+				objectServer.close();
+				objectServer = null;
+			}
 			Cool.sleepIgnoringInterruption(100);
 			return open();
 		}else{
