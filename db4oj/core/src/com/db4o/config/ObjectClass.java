@@ -189,6 +189,23 @@ public interface ObjectClass {
      * files and the stored objects will occupy space in the database file.
      */
     public void persistStaticFieldValues();
+    
+    
+    /**
+     * creates a temporary mapping of a persistent class to a different class.
+     * <br><br>If meta information for this ObjectClass has been stored to
+     * the database file, it will be read from the database file as if it
+     * was representing the class specified by the clazz parameter passed to
+     * this method. 
+     * The clazz parameter can be any of the following:<br>
+     * - a fully qualified classname as a String.<br>
+     * - a Class object.<br>
+     * - any other object to be used as a template.<br><br>
+     * This method will be ignored if the database file already contains meta
+     * information for clazz.
+     * @param class name, Class object, or example object.<br><br>
+     */
+    public void readAs(Object clazz);
 
 
     /**
