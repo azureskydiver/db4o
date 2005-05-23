@@ -4,6 +4,8 @@
 package com.db4o.browser.model;
 
 
+import java.util.LinkedList;
+
 import com.db4o.browser.model.nodes.ClassNode;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.reflect.ReflectClass;
@@ -27,10 +29,12 @@ public class DatabaseGraphIterator extends AbstractGraphIterator {
     public DatabaseGraphIterator(IDatabase database, ReflectClass[] start) {
         this.database = database;
         
-        startModel = new IModelNode[start.length];
+        LinkedList results = new LinkedList();
         for (int i = 0; i < start.length; i++) {
-			startModel[i] = new ClassNode(start[i], database);
-		}
+            if (database.instanceIds(start[i]).length > 0)
+                results.add(new ClassNode(start[i], database));
+        }
+        startModel = (IModelNode[]) results.toArray(new IModelNode[results.size()]);
         reset();
     }
 }
