@@ -13,10 +13,6 @@ import com.db4o.reflect.generic.*;
  */
 public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTransaction {
 
-    // to resolve addMember dependancies
-    // contains YapClass only
-    private Collection4 i_addMembersDependancies;
-
     YapClass i_ancestor;
 
     Config4Class i_config;
@@ -166,13 +162,6 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
             }
         }
         setStateOK();
-    }
-
-    void addMembersAddDependancy(YapClass a_yapClass) {
-        if (i_addMembersDependancies == null) {
-            i_addMembersDependancies = new Collection4();
-        }
-        i_addMembersDependancies.add(a_yapClass);
     }
 
     void addToIndex(YapFile a_stream, Transaction a_trans, int a_id) {
@@ -744,17 +733,6 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     
     public ReflectClass classReflector(){
         return _reflector;
-    }
-    
-
-    YapClass[] getMembersDependancies() {
-        if (i_addMembersDependancies == null) {
-            return new YapClass[0];
-        }
-        YapClass[] ret = new YapClass[i_addMembersDependancies.size()];
-        i_addMembersDependancies.toArray(ret);
-        i_addMembersDependancies = null;
-        return ret;
     }
 
     public String getName() {

@@ -15,8 +15,8 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     private Collection4 i_classes;
     private Hashtable4 i_creating;
     
-    private final YapStream i_stream;
-    private final Transaction i_systemTrans;
+    final YapStream i_stream;
+    final Transaction i_systemTrans;
 
     private Hashtable4 i_yapClassByBytes;
     private Hashtable4 i_yapClassByClass;
@@ -24,12 +24,15 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     
     private int i_yapClassCreationDepth;
     private Queue4 i_initYapClassesOnUp;
+	
+	private final PendingClassInits _classInits; 
 
 
     YapClassCollection(Transaction a_trans) {
         i_systemTrans = a_trans;
         i_stream = a_trans.i_stream;
         i_initYapClassesOnUp = new Queue4();
+		_classInits = new PendingClassInits(this);
     }
 
     void addYapClass(YapClass yapClass) {
@@ -54,44 +57,6 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         Iterator4 i = i_classes.iterator();
         while (i.hasNext()) {
             ((YapClass)i.next()).checkChanges();
-        }
-    }
-
-    /**
-	 * We always work from parent to child. If the Child is a member on the
-	 * parent, we have a circular dependancy problem. This method takes care.
-	 */
-    private void classAddMembers(YapClass yapClass) {
-        
-        if (i_addingMembersTo != null) {
-            i_addingMembersTo.addMembersAddDependancy(yapClass);
-            return;
-        }
-
-        YapClass ancestor = yapClass.getAncestor();
-        if (ancestor != null) {
-            classAddMembers(ancestor);
-        }
-        i_addingMembersTo = yapClass;
-        yapClass.addMembers(i_stream);
-        
-        yapClass.storeStaticFieldValues(i_systemTrans, true);
-        
-        i_addingMembersTo = null;
-        YapClass[] dependancies = yapClass.getMembersDependancies();
-        for (int i = 0; i < dependancies.length; i++) {
-            classAddMembers(dependancies[i]);
-        }
-        yapClass.setStateDirty();
-        yapClass.write(i_stream, i_stream.getSystemTransaction());
-
-        // the dependancies need a rewrite
-        // since our own ID only is available after
-        // write
-
-        for (int i = 0; i < dependancies.length; i++) {
-            dependancies[i].setStateDirty();
-            dependancies[i].write(i_stream, i_stream.getSystemTransaction());
         }
     }
     
@@ -201,7 +166,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         }
         
         if(addMembers || yapClass.i_fields == null){
-            classAddMembers(yapClass);
+			_classInits.process(yapClass);
         }
         
         i_creating.remove(a_class);
