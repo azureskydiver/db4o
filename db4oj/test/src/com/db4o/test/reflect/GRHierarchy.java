@@ -48,6 +48,9 @@ public class GRHierarchy {
 	public void store() {
 		A a = new A1(42, Character.valueOf('x'));
 		B b = new B1("test", a);
+		Db4o.configure().reflectWith(new JdkReflector(getClass().getClassLoader()));
+		com.db4o.test.Test.reOpenServer();
+		com.db4o.test.Test.reOpen();
 		com.db4o.test.Test.store(b);
 	}
 
@@ -59,6 +62,7 @@ public class GRHierarchy {
 		excluded.add(B1.class.getName());
 		ExcludingClassLoader loader=new ExcludingClassLoader(getClass().getClassLoader(),excluded);
 		Db4o.configure().reflectWith(new JdkReflector(loader));
+		com.db4o.test.Test.reOpenServer();
 		com.db4o.test.Test.reOpen();
 		GenericReflector reflector = com.db4o.test.Test.objectContainer().ext().reflector();
 		ReflectClass proto=reflector.forName(B.class.getName());
@@ -94,5 +98,7 @@ public class GRHierarchy {
 		com.db4o.test.Test.ensure(superfields[0].getType().equals(fieldtype));
 		Object superfieldvalue=superfields[0].get(obj);
 		com.db4o.test.Test.ensure(superfieldvalue.equals("test"));		
+		
+		Db4o.configure().reflectWith(new JdkReflector(getClass().getClassLoader()));
 	}
 }
