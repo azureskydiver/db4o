@@ -321,14 +321,34 @@
 		<ant dir="${dir.n.tutorial}" />
 	</target>
 	
-	<target name="ndoc" depends="compiledllnet" description="Build public .net docs">
+	<target name="preparendoc">
 		<property name="db4o-namespace-summaries.xml" location="config/db4o-namespace-summaries.xml" />
 		<property name="dir.dist.ndoc" location="${dir.dist}/ndoc" />
 		<property name="ndoc.home" location="lib/ndoc" />
-					
+				
 		<delete dir="${dir.dist.ndoc}" />
 		<mkdir dir="${dir.dist.ndoc}" />
-		
+	</target>
+	
+	<target name="ndocmono" depends="compiledllmono, preparendoc" description="Builds public .net docs for the mono platform">
+		<exec executable="mono" failonerror="true">
+			<arg file="${ndoc.home}/bin/mono/1.0/NDocConsole.exe" />
+			<arg value="${file.dll.mono}" />
+			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
+			<arg value="-documenter=MSDN" />
+			<arg value="-OutputTarget=Web" />
+			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
+			<arg value="-Title=db4o" />
+			<arg value="-SkipNamespacesWithoutSummaries=True" />
+			<arg value="-SdkLinksOnWeb=False" />
+            <arg value="-AssemblyVersionInfo=AssemblyVersion" />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2005  db4objects Inc." />
+            <arg value="-CopyrightHref=http://www.db4o.com/" />
+			<arg value="-CleanIntermediates=True" />
+		</exec>
+	</target>
+	
+	<target name="ndoc" depends="compiledllnet, preparendoc" description="Build public .net docs">		
 		<exec executable="${ndoc.home}/bin/net/1.1/NDocConsole.exe">
 			<arg value="${file.dll.net}" />
 			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
@@ -556,11 +576,12 @@
 		<ant antfile="build-net-installer.xml" />
 	</target>
 	
-	<target name="zipmono" depends="init, compiledllmono, javadoc" description="Zip Mono distribution">
+	<target name="zipmono" depends="init, compiledllmono, ndocmono" description="Zip Mono distribution">
 		<mkdir dir="${dir.dist.mono.src.core}" />
 		<copy todir="${dir.dist.mono.src.core}">
 			<fileset dir="${dir.n.core}">
 				<include name="**/*.cs" />
+				<include name="**/*.csproj" />
 				<exclude name="**/compact/**"/>
 			</fileset>
 		</copy>
@@ -569,6 +590,7 @@
 		<copy todir="${dir.dist.mono.src.tools}">
 			<fileset dir="${dir.n.tools}">
 				<include name="**/*.cs" />
+				<include name="**/*.csproj" />
 			</fileset>
 		</copy>
 		<mkdir dir="${dir.dist.mono.src.test}" />
@@ -577,29 +599,25 @@
 				<include name="**/*.cs" />
 				<exclude name="**/compact/**"/>
 				<exclude name="**/CsImage.cs" />
+				<include name="**/*.csproj" />
 			</fileset>
 		</copy>
 		<mkdir dir="${dir.dist.mono.build.tutorial}" />
 		<copy todir="${dir.dist.mono.build.tutorial}">
-			<fileset dir="${dir.j.tutorial.out.mono}">
-				<include name="**/**" />
-			</fileset>
 			<fileset dir="${dir.n.tutorial}">
 				<include name="**/*.cs" />
 				<exclude name="db4o-tutorial/**/*.*" />
 			</fileset>
-			<fileset dir="${dir.n.tutorial.bin}">
-				<include name="**/*.dll" />
-				<include name="**/*.exe" />
-				<include name="**/*.config" />
-			</fileset>
 		</copy>
 		<filehead path="${dir.dist.mono.build.src}" beforePattern="using|namespace" fileext="cs" header="${content.gplheader}" />
 		<copy todir="${dir.dist.mono.build}">
-			<fileset dir="${dir.dist}" includes="doc/**" />
 			<fileset dir="${dir.dist.mono}" includes="dll/**/**" />
 			<fileset dir="${dir.j}" includes="GPL.txt" />
 			<fileset dir="${dir.config}" includes="README.txt" />
+		</copy>
+		<mkdir dir="${dir.dist.mono}/doc/api" />
+		<copy todir="${dir.dist.mono}/doc/api">
+			<fileset dir="${dir.dist.ndoc}" includes="**/**" />
 		</copy>
 	</target>
 	
@@ -701,7 +719,7 @@
 
 	</target>
 	
-	<target name="doctor" depends="init, compilecorejava, compiledllnet, compilejtutorial, compilentutorial" description="Run all doctor tasks">
+	<target name="doctor" depends="init, compilecorejava, compilejtutorial" description="Run all doctor tasks">
 		<jar destfile="${file.doctor.applets.jar}">
 			<fileset dir="${dir.doctor.bin}" includes="**/com/yetac/doctor/applet/*.class" />
 		</jar>
@@ -784,27 +802,11 @@
 		</doctor>
 	</target>
 
-	<target name="copymono">
-		<delete dir="${dir.build.transfer.mono}">
-			<exclude name="src/test/**" />
-		</delete>
-		<mkdir dir="${dir.build.transfer.mono}" />
-		<copy todir="${dir.build.transfer.mono}" >
-			<fileset dir="${dir.dist.mono}">
-				<exclude name="doc/api/**"/>
-				<exclude name="src/test/**"/>
-			</fileset>
-		</copy>
-		<copy todir="${dir.build.transfer.mono}/doc/api" >
-			<fileset dir="${dir.config}/ndoc" />
-		</copy>
-	</target>
-	
 	<target name="buildjava" depends="doctor, zipjava" description="Full java build" />
 
 	<target name="buildnet" depends="doctor, zipnet" description="Full NET build" />
 	
-	<target name="buildmono" depends="doctor, zipmono, copymono" description="Full Mono build" />
+	<target name="buildmono" depends="doctor, zipmono" description="Full Mono build" />
 
 	<target name="buildall" depends="clean, buildjava, buildnet, buildmono" description="Full clean build" />
 	
