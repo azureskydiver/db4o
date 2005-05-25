@@ -129,6 +129,24 @@ public class Test extends AllTests {
         return true;
     }
 
+    public static boolean ensureEquals(Object exp,Object actual) {
+        assertionCount++;
+        if (!exp.equals(actual)) {
+            error("Expected "+exp+" but was "+actual);
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean ensureEquals(int exp,int actual) {
+        assertionCount++;
+        if (exp!=actual) {
+            error("Expected "+exp+" but was "+actual);
+            return false;
+        }
+        return true;
+    }
+
     public static void ensureOccurrences(Object obj, int count) {
         assertionCount++;
 		int occ = occurrences(obj);
