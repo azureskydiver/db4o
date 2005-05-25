@@ -47,7 +47,10 @@ namespace com.db4o.test {
 			typeof(CsEnum),
                                               
             typeof(CsEvaluationDelegate),
+            
+#if !MONO
 			typeof(CsMarshalByRef),
+#endif
             typeof(CsStructs),
 
 		    typeof(CsType),
@@ -63,7 +66,7 @@ namespace com.db4o.test {
             typeof(ExternalBlobs),
             typeof(ExtMethods),
 		    typeof(HashtableModifiedUpdateDepth),
-#if NET || NET_2_0
+#if NET || NET_2_0 || MONO
 		    typeof(HoldsAnArrayList),
 #endif
             typeof(IndexedByIdentity),
