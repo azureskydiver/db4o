@@ -114,7 +114,10 @@ namespace com.db4o.test.j4otest
 		public void testJaggedArray()
 		{
             ensureRoundtrip(typeof(byte[][]));
+            
+#if !MONO
             ensureRoundtrip(typeof(byte[][][,]));
+#endif
 		}
 
 #if NET_2_0
