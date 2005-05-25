@@ -18,7 +18,7 @@
 				<x:children>
 					<menuItem x:id="Open" text="&amp;Open..."/>
 					<menuItem x:id="OpenScrambledFile" text="Open Scrambled File..."/>
-					<menuItem x:id="OpenServer" text="Connect to &amp;server..."/>
+					<menuItem x:id="OpenServer" text="Connect to &amp;Server..."/>
 					<menuItem x:style="SEPARATOR"/>
 					<menuItem x:id="Query" text="&amp;Query..."/>
 					<menuItem x:id="Preferences" text="&amp;Preferences..."/>

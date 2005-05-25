@@ -103,6 +103,9 @@ public class Converter {
         associate(Double.TYPE.getName(), String.class.getName(), new ConvertDouble2String());
         associate(String.class.getName(), Double.TYPE.getName(), new ConvertString2Double());
         
+        associate(Boolean.class.getName(), String.class.getName(), new ConvertBoolean2String());
+        associate(String.class.getName(), Boolean.class.getName(), new ConvertString2Boolean());
+        
         associate(Integer.class.getName(), String.class.getName(), new ConvertInteger2String());
         associate(String.class.getName(), Integer.class.getName(), new ConvertString2Integer());
         

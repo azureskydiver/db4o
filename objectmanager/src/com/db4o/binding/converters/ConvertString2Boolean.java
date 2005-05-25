@@ -17,9 +17,9 @@ public class ConvertString2Boolean implements IConverter {
 	 */
 	public Object convert(Object source) {
         String s = (String) source;
-        if (s.equals("Yes") || s.equals("yes") || s.equals("true"))
+        if (s.equals("Yes") || s.equals("yes") || s.equals("true") || s.equals("True"))
             return Boolean.TRUE;
-        if (s.equals("No") || s.equals("no") || s.equals("false"))
+        if (s.equals("No") || s.equals("no") || s.equals("false") || s.equals("False"))
             return Boolean.FALSE;
         
 		throw new IllegalArgumentException(s + " is not a legal boolean value");
