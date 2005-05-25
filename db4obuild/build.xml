@@ -808,7 +808,7 @@
 	
 	<target name="buildmono" depends="doctor, zipmono" description="Full Mono build" />
 
-	<target name="buildall" depends="clean, buildjava, buildnet, buildmono" description="Full clean build" />
+	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build" />
 	
 	<target name="serversidecopy">
 		<copy todir="${dir.server.downloads}" overwrite="true">
