@@ -69,35 +69,35 @@ public class GRHierarchy {
 		Query query=com.db4o.test.Test.query();
 		query.constrain(proto);
 		ObjectSet result=query.execute();
-		com.db4o.test.Test.ensure(result.size()==1);
+		com.db4o.test.Test.ensureEquals(1,result.size());
 		Object obj=result.next();
 		com.db4o.test.Test.ensure(obj instanceof GenericObject);
 		
 		ReflectClass clazz=reflector.forObject(obj);
 		com.db4o.test.Test.ensure(clazz instanceof GenericClass);
-		com.db4o.test.Test.ensure(clazz.getName().equals(B1.class.getName()));
+		com.db4o.test.Test.ensureEquals(B1.class.getName(),clazz.getName());
 		ReflectClass superclazz=clazz.getSuperclass();
 		com.db4o.test.Test.ensure(superclazz instanceof GenericClass);
-		com.db4o.test.Test.ensure(superclazz.getName().equals(B.class.getName()));
+		com.db4o.test.Test.ensureEquals(B.class.getName(),superclazz.getName());
 		
 		ReflectField[] subfields=clazz.getDeclaredFields();
-		com.db4o.test.Test.ensure(subfields.length==1);
-		com.db4o.test.Test.ensure(subfields[0].getName().equals("a"));
+		com.db4o.test.Test.ensureEquals(1,subfields.length);
+		com.db4o.test.Test.ensureEquals("a",subfields[0].getName());
 		ReflectClass fieldtype=reflector.forName(A.class.getName());
-		com.db4o.test.Test.ensure(subfields[0].getType().equals(fieldtype));
+		com.db4o.test.Test.ensureEquals(fieldtype,subfields[0].getType());
 		Object subfieldvalue=subfields[0].get(obj);
 		com.db4o.test.Test.ensure(subfieldvalue instanceof GenericObject);		
 		ReflectClass concretetype=reflector.forObject(subfieldvalue);
 		com.db4o.test.Test.ensure(concretetype instanceof GenericClass);		
-		com.db4o.test.Test.ensure(concretetype.getName().equals(A1.class.getName()));				
+		com.db4o.test.Test.ensureEquals(A1.class.getName(),concretetype.getName());				
 		
 		ReflectField[] superfields=superclazz.getDeclaredFields();
-		com.db4o.test.Test.ensure(superfields.length==1);
-		com.db4o.test.Test.ensure(superfields[0].getName().equals("name"));
+		com.db4o.test.Test.ensureEquals(1,superfields.length);
+		com.db4o.test.Test.ensureEquals("name",superfields[0].getName());
 		fieldtype=reflector.forName(String.class.getName());
-		com.db4o.test.Test.ensure(superfields[0].getType().equals(fieldtype));
+		com.db4o.test.Test.ensureEquals(fieldtype,superfields[0].getType());
 		Object superfieldvalue=superfields[0].get(obj);
-		com.db4o.test.Test.ensure(superfieldvalue.equals("test"));		
+		com.db4o.test.Test.ensureEquals("test",superfieldvalue);		
 		
 		Db4o.configure().reflectWith(new JdkReflector(getClass().getClassLoader()));
 	}
