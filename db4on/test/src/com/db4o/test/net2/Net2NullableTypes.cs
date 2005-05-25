@@ -1,13 +1,13 @@
-#if NET_2_0
-using System;
-using System.Collections.Generic;
-using System.Text;
-using com.db4o;
-using com.db4o.test;
-using com.db4o.query;
-
 namespace com.db4o.test.net2
 {
+#if NET_2_0
+	using System;
+	using System.Collections.Generic;
+	using System.Text;
+	using com.db4o;
+	using com.db4o.test;
+	using com.db4o.query;
+
 	class NullableContainer
 	{
 		public int? intValue;
@@ -85,5 +85,5 @@ namespace com.db4o.test.net2
 		}
 
 	}
-}
 #endif
+}
