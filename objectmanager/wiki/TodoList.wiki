@@ -46,6 +46,7 @@
       * Tree does a setEnabled(!editing) when it gets an editing event
       * Detail pane dispatches editing events
       * Detail pane includes UI for committing changes
+   * Need a status bar for displaying status bar messages
 
    
 ---++ Release engineering
