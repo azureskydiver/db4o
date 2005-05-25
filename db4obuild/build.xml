@@ -259,7 +259,8 @@
 		<csc srcdir="${dir.n.tools}/src"
 			targettype="library"
 			destfile="${dir.dist.dll.mono}/db4o-net-tools.dll"
-			debug="true">
+			debug="true"
+			definitions="MONO">
 			
 			<reference dir="${dir.dist.dll.mono}">
 				<include name="db4o.dll" />
@@ -271,7 +272,8 @@
 			destfile="${dir.dist.dll.mono}/db4o-net-test.exe"
 			debug="true"
 			mainclass="com.db4o.test.AllTests"
-			extraoptions="-r:System.Drawing">
+			extraoptions="-r:System.Drawing"
+			definitions="MONO">
 			
 			<exclude name="compact/**" />
 			
@@ -291,7 +293,14 @@
 	
 	<target name="compiledllmono" depends="init, copycompact, sharpen">
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" />
-		<csc srcdir="${dir.n.core.src}" targettype="library" destfile="${file.dll.mono}" docfile="${file.xml.mono}" debug="${compiledll.debug}" warnlevel="0" optimize="true">
+		<csc srcdir="${dir.n.core.src}"
+			targettype="library"
+			destfile="${file.dll.mono}"
+			docfile="${file.xml.mono}"
+			debug="${compiledll.debug}"
+			warnlevel="0"
+			optimize="true"
+			definitions="MONO">
 			<include name="*.cs" />
 			<exclude name="compact/**" />
 		</csc>
