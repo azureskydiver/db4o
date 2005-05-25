@@ -1,14 +1,14 @@
-#if NET_2_0
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using System.CodeDom;
-using System.CodeDom.Compiler;
-
 namespace com.db4o.test.net2
 {
+#if NET_2_0
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Reflection;
+	using System.Text;
+	using System.CodeDom;
+	using System.CodeDom.Compiler;
+
     class Net2AssemblyVersionChange
     {
         static readonly string DataFile = Path.Combine(Path.GetTempPath(), "test.yap");
@@ -229,5 +229,5 @@ public class Test
             return builder.ToString();
         }
     }
-}
 #endif
+}
