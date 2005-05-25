@@ -102,7 +102,13 @@ public abstract class FieldController implements IFieldController {
         associate(c(Character.TYPE), new RegularExpressionVerifier(
                 "/^.$|^$/", "/./", "Please type a character"));
         associate(c(Boolean.TYPE), new RegularExpressionVerifier(
-                "/Y|y|Ye|ye|Yes|yes|N|n|No|no/", "/Yes|yes|No|no/", "Please type \"Yes\" or \"No\""));
+                "/^$|Y$|^y$|^Ye$|^ye$|^Yes$|^yes$|^T$|^t$|^Tr$|^tr$|^Tru$|^tru$|^True$|^true$|^N$|^n$|^No$|^no$|^F$|^f$|^Fa$|^fa$|^Fal$|^fal$|^Fals$|^fals$|^False$|^false$/", 
+                "/Yes$|^yes$|^No$|^no$|^True$|^true$|^False$|^false/", 
+                "Please type \"Yes\", \"No\", \"True\", or \"False\""));
+        associate(c(Boolean.class), new RegularExpressionVerifier(
+                "/^$|^Y$|^y$|^Ye$|^ye$|^Yes$|^yes$|^T$|^t$|^Tr$|^tr$|^Tru$|^tru$|^True$|^true$|^N$|^n$|^No$|^no$|^F$|^f$|^Fa$|^fa$|^Fal$|^fal$|^Fals$|^fals$|^False$|^false$/", 
+                "/^Yes$|^yes$|^No$|^no$|^True$|^true$|^False$|^false$/", 
+                "Please type \"Yes\", \"No\", \"True\", or \"False\""));
     }
     
     protected ReflectClass c(String name) {

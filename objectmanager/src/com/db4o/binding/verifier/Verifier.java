@@ -61,12 +61,16 @@ public class Verifier {
         // Regex-implemented verifiers here...
         associate(Character.TYPE.getName(), new RegularExpressionVerifier(
                 "/^.$|^$/", "/./", "Please type a character"));
-        associate(Boolean.TYPE.getName(), new RegularExpressionVerifier(
-                "/Y|y|Ye|ye|Yes|yes|N|n|No|no/", "/Yes|yes|No|no/", "Please type \"Yes\" or \"No\""));
         associate(Character.class.getName(), new RegularExpressionVerifier(
                 "/^.$|^$/", "/./", "Please type a character"));
+        associate(Boolean.TYPE.getName(), new RegularExpressionVerifier(
+                "/^$|Y$|^y$|^Ye$|^ye$|^Yes$|^yes$|^T$|^t$|^Tr$|^tr$|^Tru$|^tru$|^True$|^true$|^N$|^n$|^No$|^no$|^F$|^f$|^Fa$|^fa$|^Fal$|^fal$|^Fals$|^fals$|^False$|^false$/", 
+                "/Yes$|^yes$|^No$|^no$|^True$|^true$|^False$|^false/", 
+                "Please type \"Yes\", \"No\", \"True\", or \"False\""));
         associate(Boolean.class.getName(), new RegularExpressionVerifier(
-                "/Y|y|Ye|ye|Yes|yes|N|n|No|no/", "/Yes|yes|No|no/", "Please type \"Yes\" or \"No\""));
+                "/^$|Y$|^y$|^Ye$|^ye$|^Yes$|^yes$|^T$|^t$|^Tr$|^tr$|^Tru$|^tru$|^True$|^true$|^N$|^n$|^No$|^no$|^F$|^f$|^Fa$|^fa$|^Fal$|^fal$|^Fals$|^fals$|^False$|^false$/", 
+                "/Yes$|^yes$|^No$|^no$|^True$|^true$|^False$|^false/", 
+                "Please type \"Yes\", \"No\", \"True\", or \"False\""));
         associate(String.class.getName(), new RegularExpressionVerifier("/.*/", "/.*/", ""));
     }
 }
