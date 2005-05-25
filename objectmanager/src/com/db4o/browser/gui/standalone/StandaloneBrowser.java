@@ -139,9 +139,10 @@ public class StandaloneBrowser implements IControlFactory {
 //      String testFile=getClass().getResource("formula1.yap").getFile();
 //      browserController.open(testFile);
 //        setTabText(testFile);
-        String testFile = getClass().getResource("blah.yap").getFile();
-        browserController.open(testFile);
-        setTabText(testFile);
+
+//        String testFile = getClass().getResource("blah.yap").getFile();
+//        browserController.open(testFile);
+//        setTabText(testFile);
 	}
     
     private void setTabText(String fileName) {
