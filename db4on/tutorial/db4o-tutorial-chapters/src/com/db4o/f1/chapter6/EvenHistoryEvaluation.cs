@@ -5,7 +5,7 @@ namespace com.db4o.f1.chapter6 {
 	public class EvenHistoryEvaluation : Evaluation {
 	  public void evaluate(Candidate candidate) {
 	    Car car=(Car)candidate.getObject();
-	    candidate.include(car.getHistory().Length%2==0);
+	    candidate.include(car.GetHistory().Length%2==0);
 	  }
 	}
 }
