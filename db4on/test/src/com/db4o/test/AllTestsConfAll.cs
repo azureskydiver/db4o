@@ -36,6 +36,7 @@ namespace com.db4o.test {
             typeof(CsArrays),
 #if NET || NET_2_0
 			typeof(CsAppDomains),
+			typeof(CsAssemblyVersionChange),
 #endif
             typeof(CsCascadeDeleteToStructs),
 			typeof(CsCollections),
@@ -84,7 +85,6 @@ namespace com.db4o.test {
 			typeof(net2.Net2SimpleGenericType),
 			typeof(net2.Net2NullableTypes),
 			typeof(net2.Net2GenericContainers),
-            typeof(net2.Net2AssemblyVersionChange),
 #endif
 
 		    typeof(NoInstanceStored),
