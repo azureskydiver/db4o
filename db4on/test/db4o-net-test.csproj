@@ -589,6 +589,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4o\test\cs\CsAssemblyVersionChange.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4o\test\cs\CsAutoResetEvent.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -663,6 +668,7 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
+                <Folder RelPath = "src\com\db4o\test\net2\" />
                 <File
                     RelPath = "src\com\db4o\test\soda\SodaTest.cs"
                     SubType = "Code"
