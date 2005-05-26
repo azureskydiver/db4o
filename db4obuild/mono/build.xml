@@ -27,6 +27,7 @@
 	</target>
 
 	<target name="prepareRPM">
+		
 		<delete dir="${dir.mono.rpmbuild}" />
 		<delete dir="${dir.mono.zip}" />
 		
@@ -42,9 +43,12 @@
 		<input message="Please enter user ID for GPG" addproperty="gpg.user" />
 		<filter token="gpguser" value="${gpg.user}"/>
 
-		<copy todir="${dir.mono.zip}/${db4o.name.short}" filtering="true">
+		<copy todir="${dir.mono.zip}/${db4o.name.short}">
 			<fileset dir="${dir.dist.mono}">				
-				<include name="**/**" />
+				<include name="dll/**" />
+				<include name="doc/**/**" />
+				<include name="src/**/**" />
+				<include name="*.txt" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.mono.zip}/${db4o.name.short}" filtering="true">
