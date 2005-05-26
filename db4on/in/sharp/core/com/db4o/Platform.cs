@@ -223,10 +223,11 @@ namespace com.db4o {
             translate(config, Class.getClassForType(typeof(System.Delegate)).getName(), new TNull());
             translate(config, Class.getClassForType(typeof(System.Type)).getName(), new TType());
             
-            // TODO: add platform detection code here and just add
-            // the necessary translator
-            translate(config, "System.RuntimeType, mscorlib", new TType());
-            translate(config, "System.MonoType, mscorlib", new TType());
+			if (isMono()) {
+				translate(config, "System.MonoType, mscorlib", new TType());
+			} else {
+				translate(config, "System.RuntimeType, mscorlib", new TType());
+			}
             
             translate(config, new ArrayList(), new TList());
             translate(config, new Hashtable(), new TDictionary());
@@ -237,6 +238,10 @@ namespace com.db4o {
                 translate(config, "System.Collections.SortedList, mscorlib", new TDictionary());
             }
         }
+
+		static internal bool isMono() {
+			return null != Type.GetType("System.MonoType, mscorlib");
+		}
 
         public static Object getTypeForClass(Object obj){
             Class clazz = obj as Class;
@@ -439,3 +444,4 @@ namespace com.db4o {
                                                     Class.getClassForType(typeof(j4o.util.Date))      };
     }
 }
+
