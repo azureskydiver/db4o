@@ -39,15 +39,6 @@ public final class YapString extends YapIndependantType {
         // default: do nothing
     }
 
-    static String cipher(long l) {
-        String str1 = Long.toString(l);
-        String str2 = "";
-        for (int i = 0; i < str1.length(); i++) {
-            str2 += str1.charAt(i);
-        }
-        return str2;
-    }
-    
     public ReflectClass classReflector(){
     	return _stream.i_handlers.ICLASS_STRING;
     }
@@ -68,34 +59,12 @@ public final class YapString extends YapIndependantType {
         return a_stream.i_handlers.i_yapClasses[getID() - 1];
     }
 
-    static String invert(String str) {
-        StringBuffer buf = new StringBuffer();
-        try{
-	        for (int i = str.length() - 1; i >= 0; i--) {
-	            buf.append(str.charAt(i));
-	        }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return buf.toString();
-    }
-    
     public Object comparableObject(Transaction a_trans, Object a_object){
         if(a_object != null){
 	        int[] slot = (int[]) a_object;
 	        return a_trans.i_stream.readObjectReaderByAddress(slot[0], slot[1]);
         }
         return null;
-    }
-
-    static String licenseEncrypt(String str) {
-        str = str.toLowerCase();
-        String ret = "";
-        for (int i = 0; i < str.length(); i++) {
-            char ch = (char) (str.charAt(i) + ((char) i) + 1);
-            ret += ch;
-        }
-        return ret;
     }
 
     public Object read(YapWriter a_bytes) throws CorruptionException {
@@ -201,18 +170,6 @@ public final class YapString extends YapIndependantType {
             a_bytes.writeInt(a_string.length());
             i_stringIo.write(a_bytes, a_string);
         }
-    }
-
-    static String fromIntArray(int[] ints) {
-        StringBuffer buf = new StringBuffer();
-        try{
-	        for (int i = 0; i < ints.length; i++) {
-	            buf.append((char) ints[i]);
-	        }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return buf.toString();
     }
 
     public int getType() {
