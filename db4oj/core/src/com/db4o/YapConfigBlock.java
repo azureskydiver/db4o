@@ -299,7 +299,7 @@ final class YapConfigBlock implements Runnable
 		String fullpwd=_stream.i_config.i_password;
 		if(_stream.i_config.i_encrypt && fullpwd!=null) {
 			try {
-				byte[] pwdbytes=fullpwd.getBytes("utf-8");
+                byte[] pwdbytes=new YapStringIO().write(fullpwd);
 				YapWriter encwriter=new YapWriter(_stream.i_trans,pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
 				encwriter.append(pwdbytes);
 				encwriter.append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
