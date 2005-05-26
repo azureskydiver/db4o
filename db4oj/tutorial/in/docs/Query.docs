@@ -92,7 +92,10 @@ It is also possible to have db4o sort the results.
 .s com.db4o.f1.chapter1.QueryExample#retrieveSorted ..
 
 All these techniques can be combined arbitrarily, of course. Please try ._
-it out.
+it out. There still may be cases left where the predefined query API ._
+constraints may not be sufficient - don't worry, you can always define ._
+your own by providing Evaluation implementations which will be covered ._
+in a  .l Evaluations later chapter .. .
 
 To prepare for the next chapter, let's clear the database.
 
