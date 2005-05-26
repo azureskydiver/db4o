@@ -57,5 +57,15 @@ public interface IModelNode {
      * @param showType If the data type of the node should be displayed
      */
     public void setShowType(boolean showType);
+    
+    /**
+     * @return true if this node is editable
+     */
+    public boolean isEditable();
+
+    /**
+     * @return the object to edit if isEditable() is true; false otherwise.
+     */
+    public Object getEditValue();
 }
 

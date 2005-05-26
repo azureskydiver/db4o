@@ -30,4 +30,12 @@ public class NullNode implements IModelNode {
         // Nothing needed here
     }
 
+    public boolean isEditable() {
+        return false;
+    }
+
+    public Object getEditValue() {
+        return null;
+    }
+
 }

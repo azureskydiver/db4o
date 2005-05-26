@@ -91,6 +91,14 @@ public class ClassNode implements IModelNode {
         // Nothing needed here
     }
 
+    public boolean isEditable() {
+        return false;
+    }
+
+    public Object getEditValue() {
+        return null;
+    }
+
 	/**
 	 * Computes tree level start indices per level (into level below or
 	 * into the id list, if leaf level).

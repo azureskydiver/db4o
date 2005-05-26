@@ -46,7 +46,7 @@ public class LayoutGenerator {
 	
 	private static final String errorTemplate = resourceFile("invalidTemplate.xswt");
 	
-	private static final String FIELDS_TOKEN = "%%fields";
+    private static final String FIELDS_TOKEN = "%%fields";
 	private static final String FIELDS_REGEX = "/" + FIELDS_TOKEN + "/";
 	private static final String FIELD_NO_TOKEN = "%fieldNumber";
 	private static final String FIELD_NAME_TOKEN = "%fieldName";
@@ -70,14 +70,15 @@ public class LayoutGenerator {
 			perl.split(parts, FIELDS_REGEX, layoutTemplate);
 			
 			// If the template is invalid, return an Invalid Template part
-			if (parts.size() != 3) {
+			if (parts.size() != 4) {
 				layoutTemplate = errorTemplate;
 				return layoutTemplate;
 			} else {
 				// Build the real layout
 				String header = (String) parts.get(0);
-				String row = (String) parts.get(1);
-				String footer = (String) parts.get(2);
+                String row_readonly = (String) parts.get(1);
+                String row_editable = (String) parts.get(2);
+				String footer = (String) parts.get(3);
 				
 				// Go to the beginning
 				while (input.hasPrevious()) input.previous();
@@ -91,14 +92,27 @@ public class LayoutGenerator {
 					++i;
 					IModelNode node = (IModelNode) input.next();
 					
-					// Substitute for all tokens
-					String currentRow = row;
-					currentRow = substitute(FIELD_NO_TOKEN, Integer.toString(i), currentRow);
-					String fieldName = node.getName();
-					if (!fieldName.equals(""))
-						fieldName += ": ";
-					currentRow = substitute(FIELD_NAME_TOKEN, fieldName, currentRow);
-					currentRow = substitute(FIELD_VALUE_TOKEN, node.getValueString(), currentRow);
+                    String currentRow;
+//                    if (node.isEditable()) {
+                    if (false) {
+                        // Substitute for all tokens from the editor row template
+                        currentRow = row_editable;
+                        currentRow = substitute(FIELD_NO_TOKEN, Integer.toString(i), currentRow);
+                        String fieldName = node.getName();
+                        if (!fieldName.equals(""))
+                            fieldName += ": ";
+                        currentRow = substitute(FIELD_NAME_TOKEN, fieldName, currentRow);
+                        currentRow = substitute(FIELD_VALUE_TOKEN, node.getValueString(), currentRow);
+                    } else {
+    					// Substitute for all tokens from the read-only template
+    					currentRow = row_readonly;
+    					currentRow = substitute(FIELD_NO_TOKEN, Integer.toString(i), currentRow);
+    					String fieldName = node.getName();
+    					if (!fieldName.equals(""))
+    						fieldName += ": ";
+    					currentRow = substitute(FIELD_NAME_TOKEN, fieldName, currentRow);
+    					currentRow = substitute(FIELD_VALUE_TOKEN, node.getValueString(), currentRow);
+                    }
 					
 					contents.append(currentRow);
 				}
