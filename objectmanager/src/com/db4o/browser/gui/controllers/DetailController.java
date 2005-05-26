@@ -38,7 +38,6 @@ public class DetailController implements IBrowserController {
 		parent.getSelectionChangedController().setDetailController(this);
 	}
 
-	private static final String containerDetailTemplate = LayoutGenerator.resourceFile("containerDetailTemplate.xswt");
 	private static final String objectDetailTemplate = LayoutGenerator.resourceFile("objectDetailTemplate.xswt");
     private IGraphIterator input = null;
 
@@ -49,6 +48,8 @@ public class DetailController implements IBrowserController {
         this.input = input;
 		if (selection != null) {
 			input.setPath(selection);
+            
+            // Create the editor layout
 			if (input.nextHasChildren()) {
 				input.selectNextChild();
 				buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
@@ -56,6 +57,7 @@ public class DetailController implements IBrowserController {
 			} else {
 				buildUI(LayoutGenerator.fillTemplateString(input, objectDetailTemplate), ui.getFieldArea());
 			}
+            
 		} else {
             buildUI(null, ui.getFieldArea());
 		}

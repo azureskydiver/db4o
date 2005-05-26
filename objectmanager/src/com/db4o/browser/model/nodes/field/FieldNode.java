@@ -16,6 +16,8 @@
  */
 package com.db4o.browser.model.nodes.field;
 
+import com.db4o.binding.converter.Converter;
+import com.db4o.binding.converter.IConverter;
 import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.NullNode;
@@ -125,6 +127,20 @@ public class FieldNode implements IModelNode {
 
     public void setShowType(boolean showType) {
         this.showType = showType;
+    }
+
+    public boolean isEditable() {
+        try {
+            IConverter converter = Converter.get(_database.reflector().forObject(value).getName(),
+                    _database.reflector().forClass(String.class).getName());
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public Object getEditValue() {
+        return value;
     }
 
 }

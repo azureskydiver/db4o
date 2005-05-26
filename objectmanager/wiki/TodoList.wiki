@@ -36,14 +36,15 @@
 
 ---+++ Data editing:
 
-   * Database needs to encapsulate an IObjectEditorFactory
-   * FieldNodes need an isEditable() method
-   * FieldNodes provide getObject() to get object to edit if isEditable() is true
+   * Database needs to encapsulate an IObjectEditorFactory  **DONE**
+   * FieldNodes need an isEditable() method **DONE**
+   * FieldNodes provide getObject() to get object to edit if isEditable() is true **DONE**
    * Need to prevent tree from changing focus during editing
       * Create an EditorState object associated with each tab?
       * All UI elements register themselves as listeners
       * There is one event with two states: editing(true), editing(false)
       * Tree does a setEnabled(!editing) when it gets an editing event
+      * Tree does a refresh() when it gets editing(false)
       * Detail pane dispatches editing events
       * Detail pane includes UI for committing changes
    * Need a status bar for displaying status bar messages

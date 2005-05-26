@@ -137,4 +137,12 @@ class InstanceNode implements IModelNode {
     public void setShowType(boolean showType) {
         this.showType = showType;
     }
+
+    public boolean isEditable() {
+        return false;
+    }
+
+    public Object getEditValue() {
+        return null;
+    }
 }
