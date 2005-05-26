@@ -618,6 +618,11 @@
 				<exclude name="db4o-tutorial/**/*.*" />
 			</fileset>
 		</copy>
+		<copy todir="${dir.dist.mono.build.tutorial}">
+			<fileset dir="${dir.j.tutorial.out.mono}">
+				<include name="**/**" />
+			</fileset>
+		</copy>
 		<filehead path="${dir.dist.mono.build.src}" beforePattern="using|namespace" fileext="cs" header="${content.gplheader}" />
 		<copy todir="${dir.dist.mono.build}">
 			<fileset dir="${dir.dist.mono}" includes="dll/**/**" />
