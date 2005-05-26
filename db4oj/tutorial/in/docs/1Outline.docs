@@ -25,6 +25,7 @@
 .e Semaphores ..
 .e Messaging ..
 .e DOTNETSpecific ..
+.e DataBinding
 .e ObjectManager ..
 .e RegressionTests ..
 .e License ..
