@@ -19,6 +19,10 @@ public class PartitionFieldNode implements IModelNode {
         _startIdx=startIdx;
         _endIdx=endIdx;
     }
+    
+    public IDatabase getDatabase() {
+        return _database;
+    }
 
     public boolean hasChildren() {
         return true;

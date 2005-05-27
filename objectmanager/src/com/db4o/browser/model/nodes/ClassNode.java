@@ -45,6 +45,10 @@ public class ClassNode implements IModelNode {
 		_class = contents;
         _database = database;
     }
+    
+    public IDatabase getDatabase() {
+        return _database;
+    }
 
     /* (non-Javadoc)
      * @see com.db4o.browser.model.nodes.IModelNode#mayHaveChildren()

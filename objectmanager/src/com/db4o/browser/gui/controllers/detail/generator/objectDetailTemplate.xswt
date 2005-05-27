@@ -6,7 +6,7 @@
         <package name="org.eclipse.swt.layout"/>
     </import>
     <x:children>
-        <composite background="White">
+        <composite x:id="DetailViewHolder" background="White">
             <layout x:class="gridLayout" numColumns="2"/>
             <x:children>
             	%%fields

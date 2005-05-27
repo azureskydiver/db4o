@@ -48,12 +48,16 @@ public class FieldNode implements IModelNode {
         _fieldType=fieldType;
 
 		if(value==null) {
-			delegate=NullNode.INSTANCE;
+			delegate=new NullNode(database);
 			return;
 		}
         ReflectClass clazz = database.reflector().forObject(value);
 		delegate = new InstanceNode(value, database);
 	}
+    
+    public IDatabase getDatabase() {
+        return _database;
+    }
 
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.ITreeNode#mayHaveChildren()

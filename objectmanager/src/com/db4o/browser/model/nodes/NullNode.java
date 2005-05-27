@@ -1,10 +1,17 @@
 package com.db4o.browser.model.nodes;
 
+import com.db4o.browser.model.IDatabase;
+
 public class NullNode implements IModelNode {
-	public final static NullNode INSTANCE=new NullNode();
-	
-	private NullNode() {
+	private IDatabase database;
+
+    public NullNode(IDatabase database) {
+        this.database = database;
 	}
+    
+    public IDatabase getDatabase() {
+        return database;
+    }
 	
 	public boolean hasChildren() {
 		return false;
@@ -31,11 +38,11 @@ public class NullNode implements IModelNode {
     }
 
     public boolean isEditable() {
-        return false;
+        return true;
     }
 
     public Object getEditValue() {
-        return null;
+        return "";
     }
 
 }

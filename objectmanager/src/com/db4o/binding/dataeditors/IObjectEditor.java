@@ -37,6 +37,14 @@ public interface IObjectEditor {
      */
     public Object getInput();
     
+    /**
+     * Method removeListeners.
+     * 
+     * Tells the IObjectEditor to remove any listeners it has registered on 
+     * UI objects.
+     */
+    public void removeListeners();
+    
 	/**
      * Method getProperty.
      * 

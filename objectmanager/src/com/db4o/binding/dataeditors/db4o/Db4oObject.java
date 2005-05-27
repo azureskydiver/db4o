@@ -10,6 +10,7 @@ import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Shell;
 
 import com.db4o.ObjectContainer;
 import com.db4o.binding.CannotSaveException;
@@ -24,6 +25,8 @@ public class Db4oObject implements IObjectEditor {
 
     private Object input = null;
     private IDb4oBean inputBean = null;
+    
+    private Shell shell=null;
 
     private static final int DEFAULT_REFRESH_DEPTH = 5;
     private int refreshDepth = DEFAULT_REFRESH_DEPTH;
@@ -33,6 +36,15 @@ public class Db4oObject implements IObjectEditor {
      */
     public Db4oObject(ObjectContainer database) {
         this.database = database;
+    }
+    
+    /* (non-Javadoc)
+     * @see com.db4o.binding.dataeditors.IObjectEditor#removeListeners()
+     */
+    public void removeListeners() {
+        if (shell != null) {
+            shell.removeShellListener(shellListener);
+        }
     }
 
     /* (non-Javadoc)
@@ -116,7 +128,8 @@ public class Db4oObject implements IObjectEditor {
                 }
             };
         }
-        control.getShell().addShellListener(shellListener);
+        shell = control.getShell();
+        shell.addShellListener(shellListener);
     }
     
     private ShellListener shellListener;

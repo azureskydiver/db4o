@@ -50,6 +50,10 @@ class InstanceNode implements IModelNode {
     public InstanceNode(long id, IDatabase database) {
         this(database.byId(id),database);
     }
+    
+    public IDatabase getDatabase() {
+        return _database;
+    }
 
     public IModelNode[] children() {
         HashMap children = new HashMap();
