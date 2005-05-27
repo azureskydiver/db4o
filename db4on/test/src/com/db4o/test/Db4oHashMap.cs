@@ -77,13 +77,13 @@ namespace com.db4o.test {
                 String str2 = (String)i1.Current;
                 itCount1++;
                 atom1 = (Atom)i_map[str2];
-                Test.ensure(atom1.name.Equals(str2));
+                Test.ensure(atom1.name == str2);
                 otherMap1[str2] = atom1;
             }
             Test.ensure(itCount1 == DEFAULT.Length);
             Test.ensure(i_map.Count == DEFAULT.Length);
             Test.objectContainer().deactivate(i_map, Int32.MaxValue);
-            Test.ensure(((Atom)i_map["great"]).name.Equals("great"));
+            Test.ensure(((Atom)i_map["great"]).name == "great");
             Test.objectContainer().deactivate(i_map, Int32.MaxValue);
             if (onOriginal) {
                 Query q1 = Test.query();
@@ -125,7 +125,7 @@ namespace com.db4o.test {
             Test.ensure(atom1.name.Equals("yup"));
             Atom removed1 = (Atom)i_map["great"];
             i_map.Remove("great");
-            Test.ensure(removed1.name.Equals("great"));
+            Test.ensure(removed1.name == "great");
             Test.objectContainer().deactivate(i_map, Int32.MaxValue);
             Test.ensure(i_map.Count == 3);
             IEnumerator en = otherMap1.Keys.GetEnumerator();
@@ -219,7 +219,7 @@ namespace com.db4o.test {
         private void tDefaultValues() {
             for (int i1 = 0; i1 < DEFAULT.Length; i1++) {
                 Atom atom1 = (Atom)i_map[DEFAULT[i1]];
-                Test.ensure(atom1.name.Equals(DEFAULT[i1]));
+                Test.ensure(atom1.name == DEFAULT[i1]);
             }
         }
       
@@ -255,7 +255,7 @@ namespace com.db4o.test {
             long start1 = j4o.lang.JavaSystem.currentTimeMillis();
             Atom atom1 = (Atom)i_map[MORE + (COUNT - 1)];
             long stop1 = j4o.lang.JavaSystem.currentTimeMillis();
-            Test.ensure(atom1.name.Equals(MORE + (COUNT - 1)));
+            Test.ensure(atom1.name == MORE + (COUNT - 1));
         }
       
         internal void checkHelper(Db4oHashMapHelper helper) {
