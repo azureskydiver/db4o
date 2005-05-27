@@ -16,11 +16,9 @@ import com.db4o.browser.gui.dialogs.IListPopulator;
 import com.db4o.browser.gui.dialogs.ListSelector;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.*;
-import com.db4o.browser.model.BrowserCore;
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
 import com.db4o.browser.model.nodes.ClassNode;
 import com.db4o.reflect.ReflectClass;
+import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
  * BrowserController.  The root MVC Controller for a browser window.
@@ -110,15 +108,16 @@ public class BrowserController implements IBrowserController {
 
     private boolean internalSetInput() {
         IGraphIterator i;
-        try {
-            i = BrowserCore.getDefault().iterator(currentConnection);
-        } catch (Exception e) {
-            MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
-            messageBox.setText("Error");
-            messageBox.setMessage(e.getClass().getName() + ": " + e.getMessage());
-            messageBox.open();
-            return false;
-        }
+        i = BrowserCore.getDefault().iterator(currentConnection);
+//        try {
+//        } catch (Exception e) {
+//            Logger.log().error(e, "Unexpected exception opening connection");
+//            MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
+//            messageBox.setText("Error");
+//            messageBox.setMessage(e.getClass().getName() + ": " + e.getMessage());
+//            messageBox.open();
+//            return false;
+//        }
         setInput(i, null);
         return true;
     }

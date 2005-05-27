@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import com.db4o.Db4o;
@@ -191,8 +192,15 @@ public class StandaloneBrowser implements IControlFactory {
                     try {
                         Db4o.configure().encrypt(true);
                         Db4o.configure().password(password);
-                        if (browserController.open(file)) {
-                            setTabText(file);
+                        try {
+                            if (browserController.open(file)) {
+                                setTabText(file);
+                            }
+                        } catch (Throwable ex) {
+                            MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
+                            messageBox.setText("Error");
+                            messageBox.setMessage(ex.getMessage() + "\n\nPossibly incorrect password?");
+                            messageBox.open();
                         }
                     } finally {
                         Db4o.configure().encrypt(false);

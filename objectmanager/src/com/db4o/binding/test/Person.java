@@ -8,45 +8,7 @@ import com.db4o.binding.verifiers.reusable.RegularExpressionVerifier;
 
 public class Person {
     String name;
-    
-    public Person(String name, int age) {
-        this.name = name;
-        this.age = age;
-    }
-
-    public Person() {
-    }
-
-    /**
-     * @return Returns the name.
-     */
-    public String getName() {
-        return name;
-    }
-    
-    /**
-     * @param name The name to set.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    
     int age;
-
-    /**
-     * @return Returns the age.
-     */
-    public int getAge() {
-        return age;
-    }
-    
-    /**
-     * @param age The age to set.
-     */
-    public void setAge(int age) {
-        this.age = age;
-    }
     
     public IVerifier getAgeVerifier() {
         return new RegularExpressionVerifier("/^[0-9]*$/", "/^[0-9]{1,3}$/", 

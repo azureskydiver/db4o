@@ -16,6 +16,8 @@
  */
 package com.db4o.browser.model.nodes;
 
+import com.db4o.browser.model.IDatabase;
+
 
 /**
  * Class ITreeNode. An interface for tree nodes in the containership tree.
@@ -23,6 +25,12 @@ package com.db4o.browser.model.nodes;
  * @author djo
  */
 public interface IModelNode {
+    
+    /**
+     * @return the database implementation
+     */
+    public IDatabase getDatabase();
+    
 	/**
 	 * @return if this node has children
 	 */

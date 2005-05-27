@@ -62,19 +62,32 @@ public class Db4oBeanProperty implements InvocationHandler {
         } else {
             field = receiverClass.getDeclaredField(propertyName);
             if (field == null) {
-                throw new NoSuchMethodException("That property does not exist.");
+                field = receiverClass.getDeclaredField(lowerCaseFirstLetter(propertyName));
+                if (field == null) {
+                    throw new NoSuchMethodException("That property does not exist.");
+                }
             }
+            field.setAccessible();
+            propertyType = field.getType();
         }
         
         setter = receiverClass.getMethod(
                 realMethodName("set"), new ReflectClass[] {propertyType});
     }
 
+    private String lowerCaseFirstLetter(String name) {
+        String result = name.substring(0, 1).toLowerCase() + name.substring(1);
+        return result;
+    }
+
     private Object get() {
         if (getter != null) {
             return getter.invoke(receiver, new Object[] {});
         }
-        return field.get(receiver);
+        if (field != null)
+            return field.get(receiver);
+        else
+            return null;
     }
     
     private void set(Object[] args) {
@@ -106,7 +119,7 @@ public class Db4oBeanProperty implements InvocationHandler {
         } else if ("setInput".equals(method.getName())) {
             this.receiver = args[0];
         } else if ("isReadOnly".equals(method.getName())) {
-            return new Boolean(setter == null);
+            return new Boolean(setter == null && field == null);
         } else if ("getName".equals(method.getName())) {
             return propertyName;
         } 
