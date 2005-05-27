@@ -56,7 +56,7 @@ To test it, let's add two cars with history sizes of one, respectively two:
 
 and run our evaluation against them:
 
-.s com.db4o.f1.chapter6.EvaluationExample#storeCars ..
+.s com.db4o.f1.chapter6.EvaluationExample#queryWithEvaluation ..
 
 .1 Drawbacks ..
 
