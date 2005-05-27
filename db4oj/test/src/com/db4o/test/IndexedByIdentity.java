@@ -27,11 +27,16 @@ public class IndexedByIdentity {
     }
     
     public void test(){
+        readAndUpdate("ibi");
+        readAndUpdate("updated");
         
+    }
+    
+    private void readAndUpdate(String atomName){
         for (int i = 0; i < COUNT; i++) {
             Query q = Test.query();
             q.constrain(Atom.class);
-            q.descend("name").constrain("ibi" + i);
+            q.descend("name").constrain(atomName + i);
             ObjectSet objectSet = q.execute();
             Atom child = (Atom)objectSet.next();
             // child.name = "rünzelbrünft";
@@ -42,7 +47,14 @@ public class IndexedByIdentity {
             Test.ensure(objectSet.size() == 1);
             IndexedByIdentity ibi = (IndexedByIdentity)objectSet.next();
             Test.ensure(ibi.atom == child);
+            ibi.atom = new Atom("updated" + i);
+            Test.store(ibi);
         }
+        
+        
     }
+    
+    
+    
     
 }
