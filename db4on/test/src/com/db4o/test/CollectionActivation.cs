@@ -29,8 +29,7 @@ namespace com.db4o.test
             CollectionActivationElement cae = (CollectionActivationElement)objectContainer.getByID(id);
             Test.ensure(cae.name == null);
             cae = (CollectionActivationElement)myList[0];
-            Test.ensure(cae.name != null);
-            Test.ensure(cae.name == "test");
+            Test.ensure(cae.name.Equals("test"));
         }
     }
 
