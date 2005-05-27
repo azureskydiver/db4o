@@ -477,6 +477,7 @@
     <Compile Include="src\core\com\db4o\PBootRecord.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\PendingClassInits.cs" />
     <Compile Include="src\core\com\db4o\Platform.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -492,6 +493,7 @@
     <Compile Include="src\core\com\db4o\QConClass.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\QConEvaluation.cs" />
     <Compile Include="src\core\com\db4o\QConJoin.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -532,9 +534,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\QESmaller.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\QEvaluation.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\QField.cs">
