@@ -19,13 +19,12 @@ public class Doctor extends Task {
 //    	    	"/usr/X11R6/lib/X11/fonts/truetype/verdana.ttf"
 //    	} ;
 
-    	
 		if(args.length<1||args.length>2) {
 			System.out.println("Usage: Doctor <workspace path> [<pdf font path>]");
 			return;
 		}
         Doctor doctor = new Doctor();
-        String path = doctor.configurejtutorial(args[0],(args.length>1 ? args[1] : null));
+        String path = doctor.configureJavaTutorial(args[0],(args.length>1 ? args[1] : null));
         doctor.execute();
         try {
             BrowserLauncher.openURL(path);
@@ -34,7 +33,7 @@ public class Doctor extends Task {
         }
     }
     
-    public String configurejtutorial(String workspace,String pdffontpath){
+    public String configureJavaTutorial(String workspace,String pdffontpath){
 		if(pdffontpath!=null) {
 			setPdfBaseFont(pdffontpath);
 		}
@@ -56,8 +55,8 @@ public class Doctor extends Task {
         String tutorial = workspace + "/db4oj/tutorial"; 
         setName("f1");
         setHome(tutorial);
-        // setInteractive(false);
-        // setShowCodeExecutionResults(true);
+        setInteractive(false);
+        setShowCodeExecutionResults(true);
         setWorkspace(workspace);
         setInputSource(workspace + "/db4on/tutorial/db4o-tutorial-chapters/src");
         setSourceExtension("cs");
