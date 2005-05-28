@@ -13,6 +13,13 @@ import com.yetac.doctor.workers.*;
 public class Doctor extends Task {
     
     public static void main(String[] args){
+    	
+//    	args = new String[] {
+//    	    	"/db4o/HEAD",
+//    	    	"/usr/X11R6/lib/X11/fonts/truetype/verdana.ttf"
+//    	} ;
+
+    	
 		if(args.length<1||args.length>2) {
 			System.out.println("Usage: Doctor <workspace path> [<pdf font path>]");
 			return;
@@ -41,6 +48,30 @@ public class Doctor extends Task {
         setVariable("java", true);
         return tutorial + "/out/index.html";
     }
+    
+    public String configureMonoTutorial(String workspace,String pdffontpath){
+		if(pdffontpath!=null) {
+			setPdfBaseFont(pdffontpath);
+		}
+        String tutorial = workspace + "/db4oj/tutorial"; 
+        setName("f1");
+        setHome(tutorial);
+        // setInteractive(false);
+        // setShowCodeExecutionResults(true);
+        setWorkspace(workspace);
+        setInputSource(workspace + "/db4on/tutorial/db4o-tutorial-chapters/src");
+        setSourceExtension("cs");
+        setArchive("doctor-applets.jar, db4o-4.5-java1.4.jar, f1.jar");
+        setVariable("java", false);
+        setVariable("net", false);
+        setVariable("mono", true);
+        IgnoreInputFolder iif = createIgnoreInputFolder();
+        iif.setName("java");
+        iif = createIgnoreInputFolder();
+        iif.setName("net");
+        return tutorial + "/out/index.html";
+    }
+
     
     
     private String home;
