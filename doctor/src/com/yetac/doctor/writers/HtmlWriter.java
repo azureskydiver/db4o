@@ -123,8 +123,12 @@ public class HtmlWriter extends AbstractWriter {
         embedInto.push(new HtmlWriterStackEntry(current, outlineLevel));
         current = new RandomAccessFile(path, "rw");
         writeToFile(preHeader, 0, preHeader.length - 1);
-        writeToFile(preDiv, 0, preDiv.length - 1);
-        writeToFile(preTable, 0, preTable.length - 1);
+        if(preDiv != null){
+            writeToFile(preDiv, 0, preDiv.length - 1);
+        }
+        if(preTable != null){
+            writeToFile(preTable, 0, preTable.length - 1);
+        }
         
     }
     
@@ -169,7 +173,9 @@ public class HtmlWriter extends AbstractWriter {
         new File(path).delete();
         current = new RandomAccessFile(path, "rw");
         writeToFile(preHeader, 0, preHeader.length - 1);
-        writeToFile(preDiv, 0, preDiv.length - 1);
+        if(preDiv != null){
+            writeToFile(preDiv, 0, preDiv.length - 1);
+        }
         if(firstPage) {
             if(new File(inputPath("frontpage")).exists()){
                 byte[] preFirstBody = readBody(inputPath("frontpage"));
@@ -178,7 +184,9 @@ public class HtmlWriter extends AbstractWriter {
                 }
             }
         }
-        writeToFile(preTable, 0, preTable.length - 1);
+        if(preTable != null){
+            writeToFile(preTable, 0, preTable.length - 1);
+        }
     }
 
     private void endCurrent() throws Exception {
