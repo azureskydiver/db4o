@@ -8,7 +8,7 @@ import com.yetac.doctor.*;
 import com.yetac.doctor.cmd.*;
 import com.yetac.doctor.writers.*;
 
-public class DocsFile extends Configuration{
+public class DocsFile extends Configuration implements Comparable {
     
     public Files files;
     public byte[] bytes;
@@ -49,6 +49,11 @@ public class DocsFile extends Configuration{
 	        command.source = this;
         }
     }
+    
+    public int compareTo(Object o) {
+        DocsFile other = (DocsFile)o;
+        return name.compareTo(((DocsFile)o).name);
+   }
     
     public void resolve() throws Exception {
         for (int i = commandCount - 1; i >= 0; i--) {
@@ -119,7 +124,6 @@ public class DocsFile extends Configuration{
     public String toString(){
         return name;
     }
-    
     
     
 }
