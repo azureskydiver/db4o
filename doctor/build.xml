@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<project name="rundoctor" default="run" basedir=".">
+	
+	<property name="workspace" value="C:/_db4o/HEAD" />
+	
+	<target name="run" description="runs doctor locally and passes the workspace path">
+		<java classname="com.yetac.doctor.Doctor">
+			<classpath>
+				<path path="bin" />
+				<path path="${workspace}/db4oj/bin" />
+				<path path="lib/ant.jar" />
+				<path path="lib/iText.jar" />
+				<path path="lib/junit.jar" />
+			</classpath>
+			<arg value="${workspace}"/>
+		</java>
+	</target>
+</project>
