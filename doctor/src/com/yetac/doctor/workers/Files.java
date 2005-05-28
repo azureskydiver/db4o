@@ -3,6 +3,7 @@
 package com.yetac.doctor.workers;
 
 import java.io.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 import com.yetac.doctor.*;
@@ -10,14 +11,14 @@ import com.yetac.doctor.*;
 public class Files extends Configuration {
 
     public Map   filesByName;
-    private List sourceFiles;
+    private Set sourceFiles;
     public Map   anchors;
     public Doctor task;
 
     public void findFiles(Doctor task) throws IOException {
         this.task = task;
         filesByName = new Hashtable();
-        sourceFiles = new ArrayList();
+        sourceFiles = new TreeSet();
         findFiles(task, task.inputDocs());
     }
 
