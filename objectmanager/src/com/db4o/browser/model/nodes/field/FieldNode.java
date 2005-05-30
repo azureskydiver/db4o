@@ -134,10 +134,13 @@ public class FieldNode implements IModelNode {
     }
 
     public boolean isEditable() {
+        if (value == null) {
+            return false;
+        }
         try {
             IConverter converter = Converter.get(_database.reflector().forObject(value).getName(),
                     _database.reflector().forClass(String.class).getName());
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             return false;
         }
         return true;
