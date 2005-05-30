@@ -11,7 +11,7 @@ to be called before a database file is created or opened:
 .c Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
 Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE); ..
 (See the  .l ReplicatingExisting section below ..  on how to enable replication for ._
-existing databases that were )
+existing databases)
 
 Both settings can also be configured on a per-class basis:
 .c Db4o.configure().objectClass(Foo.class).generateUUIDs(true);
