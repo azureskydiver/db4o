@@ -49,9 +49,13 @@ public class CheckboxButtonFieldController implements IFieldController {
         
     }
 
-    public Object getInput() {
+    public IPropertyEditor getInput() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public void setInput(IPropertyEditor input) throws CannotSaveException {
+        // TODO Auto-generated method stub
     }
 
 }
