@@ -94,7 +94,6 @@ public class OpenScrambledFile extends Dialog {
     
     
     protected SelectionListener browseForFile = new SelectionAdapter() {
-        @Override
         public void widgetSelected(SelectionEvent e) {
             FileDialog dialog = new FileDialog(pane.getBrowseButton().getShell(), SWT.OPEN);
             dialog.setFilterExtensions(new String[]{"*.yap", "*"});

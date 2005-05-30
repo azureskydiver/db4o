@@ -52,7 +52,6 @@ public class ArrayFieldNode extends FieldNode implements IModelNode {
         return _fieldName + " " + _database.reflector().forObject(value).getName();
 	}
     
-    @Override
     public boolean isEditable() {
         return false;
     }

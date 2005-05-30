@@ -70,7 +70,6 @@ public class CollectionFieldNode extends FieldNode {
         return _fieldName.equals("") ? className : _fieldName + ": " + className;
     }
 
-    @Override
     public boolean isEditable() {
         return false;
     }

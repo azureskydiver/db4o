@@ -49,7 +49,11 @@ public class ComboFieldController implements IFieldController {
         
     }
 
-    public Object getInput() {
+    public void setInput(IPropertyEditor input) throws CannotSaveException {
+        // TODO Auto-generated method stub
+    }
+
+    public IPropertyEditor getInput() {
         // TODO Auto-generated method stub
         return null;
     }
