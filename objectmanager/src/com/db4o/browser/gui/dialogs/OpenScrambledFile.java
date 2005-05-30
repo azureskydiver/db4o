@@ -48,7 +48,7 @@ public class OpenScrambledFile extends Dialog {
     
     protected void configureShell(Shell shell) {
         super.configureShell(shell);
-        shell.setText("Open scrambled file");
+        shell.setText("Open \"encrypted\" file");
     }
     
     private IVerifier fileNameVerifier = new IVerifier() {
