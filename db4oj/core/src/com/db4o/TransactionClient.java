@@ -48,9 +48,9 @@ final class TransactionClient extends Transaction {
         i_client.writeMsg(Msg.TA_DELETE.getWriterForInts(this, new int[] {a_yo.getID(), a_cascade}));
     }
 
-    void dontDelete(int a_id) {
-        super.dontDelete(a_id);
-        i_client.writeMsg(Msg.TA_DONT_DELETE.getWriterForInt(this, a_id));
+    void dontDelete(int classID, int a_id) {
+        super.dontDelete(classID, a_id);
+        i_client.writeMsg(Msg.TA_DONT_DELETE.getWriterForInts(this, new int[]{classID, a_id}));
     }
 
     boolean isDeleted(int a_id) {

@@ -9,11 +9,12 @@ package com.db4o;
 class MTaDontDelete extends MsgD {
     
 	final boolean processMessageAtServer(YapSocket in) {
+        int classID = payLoad.readInt();
 	    int id = payLoad.readInt();
 	    Transaction trans = getTransaction();
 	    YapStream stream = trans.i_stream;
 	    synchronized (stream.i_lock) {
-	        trans.dontDelete(id);
+	        trans.dontDelete(classID, id);
 	        return true;
 	    }
 	}
