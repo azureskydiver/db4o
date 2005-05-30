@@ -64,6 +64,9 @@ public class Transaction {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
+        if(DTrace.enabled){
+            DTrace.ADD_TO_CLASS_INDEX.log(a_id);
+        }
         if (Deploy.debug) {
             if (a_id == 0) {
                 throw new RuntimeException();
@@ -257,7 +260,7 @@ public class Transaction {
         }
     }
 
-    void dontDelete(int a_id) {
+    void dontDelete(int classID, int a_id) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
@@ -267,11 +270,21 @@ public class Transaction {
         DeleteInfo info = (DeleteInfo) TreeInt.find(i_delete, a_id);
         if(info == null){
             i_delete = Tree.add(i_delete, new DeleteInfo(a_id, null, false, 0));
+        }else{
+            info._delete = false;
+        }
+        YapClass yc = i_stream.getYapClass(classID);
+        dontDeleteAllAncestors(yc, a_id);
+    }
+    
+    void dontDeleteAllAncestors(YapClass yapClass, int objectID){
+        if(yapClass == null){
             return;
         }
-        info._delete = false;
+        removeFromClassIndexTree(i_removeFromClassIndex, yapClass.getID(), objectID);
+        dontDeleteAllAncestors(yapClass.i_ancestor, objectID);
     }
-
+    
     void dontRemoveFromClassIndex(int a_yapClassID, int a_id) {
         // If objects are deleted and rewritten during a cascade
         // on delete, we dont want them to be gone.

@@ -17,13 +17,13 @@ public class DTrace {
     private static final Object init(){
         if(enabled){
             
-            // breakOnEvent(20);
+            // breakOnEvent(11);
             
             // address: 244346, 44
             
-            addRange(15603); // investmentbalance class id
+            // addRange(15603); // investmentbalance class id
             
-            addRange(15572);
+            addRange(27267);
             
             // addRange(15611); // investmentbalance class
             
@@ -42,6 +42,7 @@ public class DTrace {
             // addRange(7274611);
             // addRange(17920);
             
+            ADD_TO_CLASS_INDEX = new DTrace(true, true, "add to class index tree", true);
             BIND = new DTrace(true, true, "bind", true);
             CANDIDATE_READ = new DTrace(true, true, "candidate read", true);
             CLOSE = new DTrace(true, true, "close", true);
@@ -58,6 +59,7 @@ public class DTrace {
             GET_SLOT = new DTrace(true, true, "getSlot", true);
             GET_YAPOBJECT = new DTrace(true, true, "get yapObject", true);
             ID_TREE_ADD = new DTrace(true, true, "id tree add", true);
+            ID_TREE_REMOVE = new DTrace(true, true, "id tree remove", true);
             JUST_SET = new DTrace(true, true, "just set", true);
             NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
             READ_ARRAY_WRAPPER = new DTrace(true, true, "read array wrapper", true);
@@ -81,8 +83,8 @@ public class DTrace {
             
             // turnAllOffExceptFor(new DTrace[] {GET_SLOT, FREE_ON_COMMIT, FREE, WRITE_BYTES});
             
-            // turnAllOffExceptFor(new DTrace[] {YAPCLASS_INIT});
-            turnAllOffExceptFor(new DTrace[] {WRITE_BYTES, YAPCLASS_INIT});
+            turnAllOffExceptFor(new DTrace[] {ADD_TO_CLASS_INDEX, ID_TREE_REMOVE, REMOVE_FROM_CLASS_INDEX, TRANS_DELETE, TRANS_DONT_DELETE});
+            // turnAllOffExceptFor(new DTrace[] {WRITE_BYTES, YAPCLASS_INIT});
          
         }
         return null;
@@ -114,6 +116,7 @@ public class DTrace {
     private static long[] _breakEventNrs;
     private static int _breakEventCount;
     
+    public static DTrace ADD_TO_CLASS_INDEX;
     public static DTrace BIND;
     public static DTrace CANDIDATE_READ;
     public static DTrace CLOSE;
@@ -130,6 +133,7 @@ public class DTrace {
     public static DTrace GET_SLOT;
     public static DTrace GET_YAPOBJECT;
     public static DTrace ID_TREE_ADD;
+    public static DTrace ID_TREE_REMOVE;
     public static DTrace JUST_SET;
     public static DTrace NEW_INSTANCE;
     public static DTrace READ_ARRAY_WRAPPER;

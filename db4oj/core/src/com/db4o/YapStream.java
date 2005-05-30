@@ -833,6 +833,9 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         if(Debug.checkSychronization){
             i_lock.notify();
         }
+        if(DTrace.enabled){
+            DTrace.ID_TREE_REMOVE.log(a_id);
+        }
         i_idTree = i_idTree.id_remove(a_id);
     }
 
@@ -1508,7 +1511,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                     boolean doUpdate = (a_updateDepth == YapConst.UNSPECIFIED) || (a_updateDepth > 0);
                     if (doUpdate) {
                         dontDelete = false;
-                        a_trans.dontDelete(oid);
+                        a_trans.dontDelete(yapObject.getYapClass().getID(), oid);
                         if(a_checkJustSet){
                             a_checkJustSet = false;
                             rememberJustSet(oid);
@@ -1528,7 +1531,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                 
                 // TODO: do we want primitive types added here?
                 
-                a_trans.dontDelete(id);
+                a_trans.dontDelete(yapObject.getYapClass().getID(), id);
             }
             return id;
         }
