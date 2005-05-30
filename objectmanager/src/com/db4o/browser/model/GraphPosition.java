@@ -157,14 +157,16 @@ public class GraphPosition {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
-		StringBuffer result = new StringBuffer();
-		for (Iterator i = path.iterator(); i.hasNext();) {
-			GraphPathNode node = (GraphPathNode) i.next();
-			if (result.length() > 0)
-				result.append("-->");
-			result.append(node.children[node.selectedChild+1].getText());
-		}
-		return result.toString();
+        // FIXME: HACK: Got rid of IndexOutOfBoundsExceptiobn
+        return "Object Manager";
+//		StringBuffer result = new StringBuffer();
+//		for (Iterator i = path.iterator(); i.hasNext();) {
+//			GraphPathNode node = (GraphPathNode) i.next();
+//			if (result.length() > 0)
+//				result.append("-->");
+//			result.append(node.children[node.selectedChild+1].getText());
+//		}
+//		return result.toString();
 	}
 }
 
