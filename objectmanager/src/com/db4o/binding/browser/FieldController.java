@@ -15,6 +15,7 @@ import com.db4o.binding.converters.ConvertFloat2String;
 import com.db4o.binding.converters.ConvertInteger2String;
 import com.db4o.binding.converters.ConvertLong2String;
 import com.db4o.binding.converters.ConvertObject2String;
+import com.db4o.binding.converters.ConvertShort2String;
 import com.db4o.binding.converters.ConvertString2Boolean;
 import com.db4o.binding.converters.ConvertString2Character;
 import com.db4o.binding.converters.ConvertString2Date;
@@ -23,6 +24,7 @@ import com.db4o.binding.converters.ConvertString2Float;
 import com.db4o.binding.converters.ConvertString2Integer;
 import com.db4o.binding.converters.ConvertString2Long;
 import com.db4o.binding.converters.ConvertString2Object;
+import com.db4o.binding.converters.ConvertString2Short;
 import com.db4o.binding.converters.TheIdentityConverter;
 import com.db4o.binding.field.IFieldController;
 import com.db4o.binding.verifier.IVerifier;
@@ -31,6 +33,7 @@ import com.db4o.binding.verifiers.DoubleVerifier;
 import com.db4o.binding.verifiers.FloatVerifier;
 import com.db4o.binding.verifiers.IntVerifier;
 import com.db4o.binding.verifiers.LongVerifier;
+import com.db4o.binding.verifiers.ShortVerifier;
 import com.db4o.binding.verifiers.reusable.ReadOnlyVerifier;
 import com.db4o.binding.verifiers.reusable.RegularExpressionVerifier;
 import com.db4o.browser.model.IDatabase;
@@ -68,6 +71,11 @@ public abstract class FieldController implements IFieldController {
         associate(c(String.class), c(Integer.TYPE), new ConvertString2Integer());
         associate(c(String.class), c(Integer.class), new ConvertString2Integer());
         
+        associate(c(Short.class), c(String.class), new ConvertShort2String());
+        associate(c(Short.TYPE), c(String.class), new ConvertShort2String());
+        associate(c(String.class), c(Short.TYPE), new ConvertString2Short());
+        associate(c(String.class), c(Short.class), new ConvertString2Short());
+        
         associate(c(Long.class), c(String.class), new ConvertLong2String());
         associate(c(Long.TYPE), c(String.class), new ConvertLong2String());
         associate(c(String.class), c(Long.class), new ConvertString2Long());
@@ -87,10 +95,12 @@ public abstract class FieldController implements IFieldController {
         
         // Standalone verifiers here...
         associate(c(Integer.TYPE), new IntVerifier());
+        associate(c(Short.TYPE), new ShortVerifier());
         associate(c(Long.TYPE), new LongVerifier());
         associate(c(Float.TYPE), new FloatVerifier());
         associate(c(Double.TYPE), new DoubleVerifier());
         associate(c(Integer.class), new IntVerifier());
+        associate(c(Short.class), new ShortVerifier());
         associate(c(Long.class), new LongVerifier());
         associate(c(Float.class), new FloatVerifier());
         associate(c(Double.class), new DoubleVerifier());

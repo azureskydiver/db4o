@@ -12,6 +12,7 @@ import com.db4o.binding.converters.ConvertFloat2String;
 import com.db4o.binding.converters.ConvertInteger2String;
 import com.db4o.binding.converters.ConvertLong2String;
 import com.db4o.binding.converters.ConvertObject2String;
+import com.db4o.binding.converters.ConvertShort2String;
 import com.db4o.binding.converters.ConvertString2Boolean;
 import com.db4o.binding.converters.ConvertString2Character;
 import com.db4o.binding.converters.ConvertString2Double;
@@ -19,6 +20,7 @@ import com.db4o.binding.converters.ConvertString2Float;
 import com.db4o.binding.converters.ConvertString2Integer;
 import com.db4o.binding.converters.ConvertString2Long;
 import com.db4o.binding.converters.ConvertString2Object;
+import com.db4o.binding.converters.ConvertString2Short;
 import com.db4o.binding.converters.TheIdentityConverter;
 
 /**
@@ -94,6 +96,9 @@ public class Converter {
         associate(Integer.TYPE.getName(), String.class.getName(), new ConvertInteger2String());
         associate(String.class.getName(), Integer.TYPE.getName(), new ConvertString2Integer());
         
+        associate(Short.TYPE.getName(), String.class.getName(), new ConvertShort2String());
+        associate(String.class.getName(), Short.TYPE.getName(), new ConvertString2Short());
+        
         associate(Long.TYPE.getName(), String.class.getName(), new ConvertLong2String());
         associate(String.class.getName(), Long.TYPE.getName(), new ConvertString2Long());
         
@@ -108,6 +113,9 @@ public class Converter {
         
         associate(Integer.class.getName(), String.class.getName(), new ConvertInteger2String());
         associate(String.class.getName(), Integer.class.getName(), new ConvertString2Integer());
+        
+        associate(Short.class.getName(), String.class.getName(), new ConvertShort2String());
+        associate(String.class.getName(), Short.class.getName(), new ConvertString2Short());
         
         associate(Long.class.getName(), String.class.getName(), new ConvertLong2String());
         associate(String.class.getName(), Long.class.getName(), new ConvertString2Long());

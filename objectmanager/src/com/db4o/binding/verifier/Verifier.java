@@ -9,6 +9,7 @@ import com.db4o.binding.verifiers.DoubleVerifier;
 import com.db4o.binding.verifiers.FloatVerifier;
 import com.db4o.binding.verifiers.IntVerifier;
 import com.db4o.binding.verifiers.LongVerifier;
+import com.db4o.binding.verifiers.ShortVerifier;
 import com.db4o.binding.verifiers.reusable.ReadOnlyVerifier;
 import com.db4o.binding.verifiers.reusable.RegularExpressionVerifier;
 
@@ -49,11 +50,13 @@ public class Verifier {
         
         // Standalone verifiers here...
         associate(Integer.TYPE.getName(), new IntVerifier());
+        associate(Short.TYPE.getName(), new ShortVerifier());
         associate(Long.TYPE.getName(), new LongVerifier());
         associate(Float.TYPE.getName(), new FloatVerifier());
         associate(Double.TYPE.getName(), new DoubleVerifier());
         
         associate(Integer.class.getName(), new IntVerifier());
+        associate(Short.class.getName(), new ShortVerifier());
         associate(Long.class.getName(), new LongVerifier());
         associate(Float.class.getName(), new FloatVerifier());
         associate(Double.class.getName(), new DoubleVerifier());
