@@ -7,6 +7,7 @@ import java.text.*;
 import java.util.*;
 
 import com.db4o.config.*;
+import com.db4o.handlers.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -595,7 +596,14 @@ public final class Platform {
     }
 
     static final YapTypeAbstract[] types(YapStream stream) {
-        return new YapTypeAbstract[0];
+        return new YapTypeAbstract[] {
+        		new NetDateTime(stream),
+        		new NetDecimal(stream),
+        		new NetSByte(stream),
+        		new NetUInt(stream),
+        		new NetULong(stream),
+        		new NetUShort(stream)
+        };
     }
 
     public static final void unlock(RandomAccessFile file) {

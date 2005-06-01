@@ -11,18 +11,18 @@ import com.db4o.reflect.jdk.*;
 public class GenericObjects extends Test {
 
 	private GenericReflector _reflector;
-    private final ReflectClass _objectIClass;
+    private final GenericClass _objectIClass;
 
-    private ReflectClass _iClass;
+    private GenericClass _iClass;
 	
 	public GenericObjects() throws ClassNotFoundException {
         _reflector = new GenericReflector(null, new JdkReflector(Thread.currentThread().getContextClassLoader()));
-        _objectIClass = _reflector.forClass(Object.class);
+        _objectIClass = (GenericClass)_reflector.forClass(Object.class);
 	}
 
 	public void test() throws ClassNotFoundException {		
 		_reflector.register(acmeDataClass());
-        _iClass = _reflector.forName("com.acme.Person");
+        _iClass = (GenericClass)_reflector.forName("com.acme.Person");
         _assert(_iClass.getName().equals("com.acme.Person"));
         _assert(_iClass.getSuperclass() == _objectIClass);
         
@@ -78,9 +78,9 @@ public class GenericObjects extends Test {
 
     private GenericField[] fields(ReflectClass personClass) {
         return new GenericField[] {
-                new GenericField(personClass,"surname", _reflector.forClass(String.class), false, false, false),
-                new GenericField(personClass,"birthdate", _reflector.forClass(Date.class), false, false, false),
-                new GenericField(personClass,"bestFriend", personClass, false, false, false)
+                new GenericField("surname", _reflector.forClass(String.class), false, false, false),
+                new GenericField("birthdate", _reflector.forClass(Date.class), false, false, false),
+                new GenericField("bestFriend", personClass, false, false, false)
         };
     }
 

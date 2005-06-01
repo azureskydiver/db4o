@@ -137,17 +137,18 @@ public class GenericReflector implements Reflector, DeepClone {
             return ensureDelegate(clazz);
         }
         
-        if(_stream != null && _stream.i_classCollection != null){
-            int id = _stream.i_classCollection.getYapClassID(className);
-            if(id > 0){
-                clazz = ensureClassInitialised(id);
+        if(_stream == null) {
+        	return null;
+        }
+        
+        if(_stream.i_classCollection != null){
+            int classID = _stream.i_classCollection.getYapClassID(className);
+            if(classID > 0){
+                clazz = ensureClassInitialised(classID);
                 _classByName.put(className, clazz);
                 return clazz; 
             }
         }
-        
-        // TODO: Do we always want to create a generic class here anyway
-        // maybe with no fields for a start?
         
         return null;
     }
@@ -286,9 +287,11 @@ public class GenericReflector implements Reflector, DeepClone {
 		classreader.incrementOffset(YapConst.YAPINT_LENGTH); // skip empty unused int slot
         
 		int ancestorid=classreader.readInt();
+		int fieldCount=classreader.readInt();
 		
 		ReflectClass nativeClass = _delegate.forName(classname);
 		ret = new GenericClass(this, nativeClass,classname, ensureClassAvailability(ancestorid));
+		ret.setDeclaredFieldCount(fieldCount);
 		
 		// step 1 only add to _classByID, keep the class out of _classByName and _classes
         _classByID.put(id, ret);
@@ -358,24 +361,35 @@ public class GenericReflector implements Reflector, DeepClone {
     		    boolean isarray = attribs.get();
     		    boolean ismultidimensional=attribs.get();
     		    
-    			fields[i]=new GenericField(clazz,fieldname,fieldClass, isprimitive, isarray, ismultidimensional );
+    			fields[i]=new GenericField(fieldname,fieldClass, isprimitive, isarray, ismultidimensional );
             }
 		}
-        
+		
         clazz.initFields(fields);
 	}
     
 
-	public void registerPrimitiveClass(int id, String name) {
+	public void registerPrimitiveClass(int id, String name, GenericConverter converter) {
         GenericClass existing = (GenericClass)_classByID.get(id);
 		if( existing != null){
             existing.setSecondClass();
 			return;
 		}
 		ReflectClass clazz = _delegate.forName(name);
-        GenericClass claxx = ensureDelegate(clazz);
-        claxx.setSecondClass();
-        _classByID.put(id, claxx);
+		
+		GenericClass claxx = null;
+		if(clazz != null) {
+	        claxx = ensureDelegate(clazz);
+		}else {
+	        claxx = new GenericClass(this, null, name, null);
+	        _classByName.put(name, claxx);
+		    claxx.initFields(new GenericField[] {new GenericField(null, null, true, false, false)});
+		    claxx.setConverter(converter);
+	        _classes.add(claxx);
+		}
+	    claxx.setSecondClass();
+	    claxx.setPrimitive();
+	    _classByID.put(id, claxx);
 	}
 
     public void setParent(Reflector reflector) {

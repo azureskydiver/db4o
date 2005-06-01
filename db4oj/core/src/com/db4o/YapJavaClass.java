@@ -7,8 +7,10 @@ import com.db4o.reflect.*;
 
 abstract class YapJavaClass implements YapDataType {
     
-    final YapStream _stream;
-    private ReflectClass _classReflector;
+    protected final YapStream _stream;
+    
+    protected ReflectClass _classReflector;
+    
     private ReflectClass _primitiveClassReflector;
     
     public YapJavaClass(YapStream stream) {
@@ -105,12 +107,14 @@ abstract class YapJavaClass implements YapDataType {
     }
     
     public ReflectClass classReflector(){
-        if(_classReflector == null){
-            _classReflector = _stream.reflector().forClass(defaultValue().getClass());
-            Class clazz = primitiveJavaClass();
-            if(clazz != null){
-            	_primitiveClassReflector = _stream.reflector().forClass(clazz);
-            }
+    	
+        if(_classReflector != null){
+        	return _classReflector;
+        }
+        _classReflector = _stream.reflector().forClass(defaultValue().getClass());
+        Class clazz = primitiveJavaClass();
+        if(clazz != null){
+        	_primitiveClassReflector = _stream.reflector().forClass(clazz);
         }
     	return _classReflector;  
     }

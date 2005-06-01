@@ -20,15 +20,22 @@ public class GenericClass implements ReflectClass, DeepClone {
     private final ReflectClass _delegate;
     
     private final String _name;
-    private ReflectClass _superclass;
+    private GenericClass _superclass;
     
     private GenericClass _array;
     
     private boolean _isSecondClass;
+    private boolean _isPrimitive;
+    
+    private GenericConverter _converter;
     
     private GenericField[] _fields = NO_FIELDS;
+    
+    private int _declaredFieldCount = -1;
+    private int _fieldCount = -1;
+    
 
-    public GenericClass(GenericReflector reflector, ReflectClass delegateClass, String name, ReflectClass superclass) {
+    public GenericClass(GenericReflector reflector, ReflectClass delegateClass, String name, GenericClass superclass) {
         _reflector = reflector;
         _delegate = delegateClass;
         _name = name;
@@ -46,9 +53,9 @@ public class GenericClass implements ReflectClass, DeepClone {
 
     public Object deepClone(Object obj) {
         GenericReflector reflector = (GenericReflector)obj;
-        ReflectClass superClass = null;
+        GenericClass superClass = null;
         if(_superclass != null){
-            _superclass = reflector.forName(_superclass.getName());
+            _superclass = (GenericClass)reflector.forName(_superclass.getName());
         }
         GenericClass ret = new GenericClass(reflector, _delegate, _name, superClass);
         ret._isSecondClass = _isSecondClass;
@@ -104,6 +111,21 @@ public class GenericClass implements ReflectClass, DeepClone {
         return this;
     }
     
+    int getFieldCount() {
+    	if(_fieldCount != -1) {
+    		return _fieldCount;
+    	}
+    	_fieldCount = 0;
+    	if(_superclass != null) {
+    		_fieldCount = _superclass.getFieldCount();
+    	}
+    	if(_declaredFieldCount == -1) {
+    		_declaredFieldCount = getDeclaredFields().length; 
+    	}
+    	_fieldCount += _declaredFieldCount;
+    	return _fieldCount;
+    }
+    
     public ReflectMethod getMethod(String methodName, ReflectClass[] paramClasses) {
         if(_delegate != null){
             return _delegate.getMethod(methodName, paramClasses);
@@ -130,9 +152,13 @@ public class GenericClass implements ReflectClass, DeepClone {
     }
     
 	public void initFields(GenericField[] fields) {
+		int startIndex = 0;
+		if(_superclass != null) {
+			startIndex = _superclass.getFieldCount();
+		}
 		_fields = fields;
 		for (int i = 0; i < _fields.length; i++) {
-		    _fields[i].setIndex(i);
+		    _fields[i].setIndex(startIndex + i);
 		}
 	}
 
@@ -199,7 +225,7 @@ public class GenericClass implements ReflectClass, DeepClone {
         if(_delegate != null){
             return _delegate.isPrimitive();
         }
-        return false;
+        return _isPrimitive;
     }
     
     public boolean isSecondClass() {
@@ -223,6 +249,18 @@ public class GenericClass implements ReflectClass, DeepClone {
         return _reflector;
     }
     
+    void setConverter (GenericConverter converter) {
+    	_converter = converter;
+    }
+    
+    void setDeclaredFieldCount(int count) {
+    	_declaredFieldCount = count;
+    }
+    
+    void setPrimitive() {
+    	_isPrimitive = true;
+    }
+
     void setSecondClass(){
         _isSecondClass = true;
     }
@@ -243,6 +281,13 @@ public class GenericClass implements ReflectClass, DeepClone {
     
     public String toString(){
         return "GenericClass " + _name; 
+    }
+    
+    public String toString(GenericObject obj) {
+    	if(_converter == null) {
+    		return "(G) " + getName();
+    	}
+    	return _converter.toString(obj);
     }
 
     public void useConstructor(ReflectConstructor constructor, Object[] params){

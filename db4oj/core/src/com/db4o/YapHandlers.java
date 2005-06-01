@@ -9,7 +9,7 @@ import com.db4o.types.*;
 /**
  * @exclude
  */
-public class YapHandlers {
+public final class YapHandlers {
 	
 	private final YapStream _masterStream;  // this is master YapStream and not valid
 	                                   // for YapObjectCarrier
@@ -120,7 +120,7 @@ public class YapHandlers {
             i_yapClasses[i].i_id = id; 
             i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
             if(i < ANY_INDEX){
-            	reflector.registerPrimitiveClass(id, i_handlers[i].classReflector().getName());
+            	reflector.registerPrimitiveClass(id, i_handlers[i].classReflector().getName(), null);
             }
             if (!Deploy.csharp) {
                 if (i_handlers[i].primitiveClassReflector() != null) {
@@ -131,7 +131,8 @@ public class YapHandlers {
         for (int i = 0; i < i_platformTypes.length; i++) {
         	int id = i_platformTypes[i].getID();
             int idx = id - 1;
-            reflector.registerPrimitiveClass(id, i_platformTypes[i].classReflector().getName());
+            GenericConverter converter = (i_platformTypes[i] instanceof GenericConverter) ? (GenericConverter)i_platformTypes[i] : null;  
+            reflector.registerPrimitiveClass(id, i_platformTypes[i].getName(), converter);
             i_handlers[idx] = i_platformTypes[i];
             i_yapClasses[idx] = new YapClassPrimitive(a_stream, i_platformTypes[i]);
             i_yapClasses[idx].i_id = id;
@@ -168,8 +169,8 @@ public class YapHandlers {
         }
         return 0;
     }
-
-    final boolean createConstructor(final ReflectClass claxx, boolean skipConstructor){
+	
+    boolean createConstructor(final ReflectClass claxx, boolean skipConstructor){
         
         if (claxx == null) {
             return false;
@@ -382,7 +383,7 @@ public class YapHandlers {
         return (YapClass) i_classByClass.get(a_class);
     }
     
-    public final boolean isSecondClass(Object a_object){
+    public boolean isSecondClass(Object a_object){
     	if(a_object != null){
     		ReflectClass claxx = _masterStream.reflector().forObject(a_object);
     		if(i_classByClass.get(claxx) != null){
