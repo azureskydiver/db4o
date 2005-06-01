@@ -10,7 +10,7 @@ import com.db4o.reflect.*;
  */
 public class GenericArrayClass extends GenericClass {
     
-    public GenericArrayClass(GenericReflector reflector, ReflectClass delegateClass, String name, ReflectClass superclass) {
+    public GenericArrayClass(GenericReflector reflector, ReflectClass delegateClass, String name, GenericClass superclass) {
         super(reflector, delegateClass, "(GA) " + name, superclass);
     }
     

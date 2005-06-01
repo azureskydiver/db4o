@@ -13,38 +13,33 @@ import com.db4o.reflect.*;
 public class GenericObject {
 
     final GenericClass _class;
-    private final Hashtable4 _values;
     
-    GenericObject(GenericClass clazz) {
+    private Object[] _values;
+    
+    public GenericObject(GenericClass clazz) {
         _class = clazz;
-        _values=createValueMap(clazz);
     }
     
-    public void set(GenericClass owner,int index,Object value) {
-    	Object[] values=(Object[])_values.get(owner);
-    	values[index]=value;
-    }
-
-    public Object get(GenericClass owner,int index) {
-    	Object[] values=(Object[])_values.get(owner);
-    	return values[index];
-    }
-
-	private Hashtable4 createValueMap(GenericClass clazz) {
-		Hashtable4 values=new Hashtable4(1);
-    	ReflectClass curclazz=clazz;
-    	while(curclazz!=null) {
-    		Object[] curvalues=new Object[curclazz.getDeclaredFields().length];
-    		values.put(curclazz,curvalues);
-    		curclazz=curclazz.getSuperclass();
+    private void ensureValuesInitialized() {
+    	if(_values == null) {
+    		_values = new Object[_class.getFieldCount()];
     	}
-    	return values;
-	}
+    }
+    
+    public void set(int index,Object value) {
+    	ensureValuesInitialized();
+    	_values[index]=value;
+    }
+
+    public Object get(int index) {
+    	ensureValuesInitialized();
+    	return _values[index];
+    }
 
     public String toString(){
         if(_class == null){
             return super.toString();    
         }
-        return "(G) " + _class.getName();
+        return _class.toString(this);
     }
 }

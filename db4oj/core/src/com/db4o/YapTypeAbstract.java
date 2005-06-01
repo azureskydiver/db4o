@@ -2,8 +2,10 @@
 
 package com.db4o;
 
-
-abstract class YapTypeAbstract extends YapJavaClass implements YapType{
+/**
+ * @exclude
+ */
+public abstract class YapTypeAbstract extends YapJavaClass implements YapType{
     
 	public YapTypeAbstract(YapStream stream) {
         super(stream);
@@ -51,6 +53,13 @@ abstract class YapTypeAbstract extends YapJavaClass implements YapType{
 
 	public int getID() {
 		return typeID();
+	}
+	
+	// This method is needed for RawByteHandler only during initalisation 
+	// and overloaded there. No abstract declaration here, so we don't
+	// have to implement the methods on .NET.
+	public String getName() {
+		return null;
 	}
 
 	public int linkLength() {
