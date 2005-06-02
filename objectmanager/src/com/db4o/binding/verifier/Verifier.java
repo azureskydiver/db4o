@@ -5,6 +5,7 @@ package com.db4o.binding.verifier;
 
 import java.util.HashMap;
 
+import com.db4o.binding.verifiers.ByteVerifier;
 import com.db4o.binding.verifiers.DoubleVerifier;
 import com.db4o.binding.verifiers.FloatVerifier;
 import com.db4o.binding.verifiers.IntVerifier;
@@ -50,12 +51,14 @@ public class Verifier {
         
         // Standalone verifiers here...
         associate(Integer.TYPE.getName(), new IntVerifier());
+        associate(Byte.TYPE.getName(), new ByteVerifier());
         associate(Short.TYPE.getName(), new ShortVerifier());
         associate(Long.TYPE.getName(), new LongVerifier());
         associate(Float.TYPE.getName(), new FloatVerifier());
         associate(Double.TYPE.getName(), new DoubleVerifier());
         
         associate(Integer.class.getName(), new IntVerifier());
+        associate(Byte.class.getName(), new ByteVerifier());
         associate(Short.class.getName(), new ShortVerifier());
         associate(Long.class.getName(), new LongVerifier());
         associate(Float.class.getName(), new FloatVerifier());
