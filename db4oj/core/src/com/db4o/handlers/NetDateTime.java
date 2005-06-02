@@ -2,7 +2,6 @@
 
 package com.db4o.handlers;
 
-import java.text.*;
 import java.util.*;
 
 import com.db4o.*;
