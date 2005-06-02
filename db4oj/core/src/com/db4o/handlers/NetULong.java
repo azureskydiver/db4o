@@ -2,26 +2,27 @@
 
 package com.db4o.handlers;
 
+import java.math.*;
+
 import com.db4o.*;
 
 /**
  * @exclude
  */
 public class NetULong extends NetSimpleTypeHandler{
+	private final static BigInteger FACTOR=new BigInteger("100",16);
 
+	
 	public NetULong(YapStream stream) {
 		super(stream, 23, 8);
 	}
 	
 	public String toString(byte[] bytes) {
-	    long  l = 0;
+		BigInteger val=BigInteger.ZERO;
 		for (int i = 0; i < 8; i++){
-			l = (l << 8) + (bytes[i] & 0xff);
+			val=val.multiply(FACTOR);
+			val=val.add(new BigInteger(String.valueOf(bytes[i] & 0xff),10));
 		}
-		if(l >= 0) {
-			return "" + l ;
-		}
-		return ".NET System.UInt64 overflow";
+		return val.toString(10);
 	}
-	
 }
