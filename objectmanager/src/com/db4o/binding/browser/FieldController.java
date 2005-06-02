@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import com.db4o.binding.converter.IConverter;
 import com.db4o.binding.converters.ConvertBoolean2String;
+import com.db4o.binding.converters.ConvertByte2String;
 import com.db4o.binding.converters.ConvertCharacter2String;
 import com.db4o.binding.converters.ConvertDate2String;
 import com.db4o.binding.converters.ConvertDouble2String;
@@ -17,6 +18,7 @@ import com.db4o.binding.converters.ConvertLong2String;
 import com.db4o.binding.converters.ConvertObject2String;
 import com.db4o.binding.converters.ConvertShort2String;
 import com.db4o.binding.converters.ConvertString2Boolean;
+import com.db4o.binding.converters.ConvertString2Byte;
 import com.db4o.binding.converters.ConvertString2Character;
 import com.db4o.binding.converters.ConvertString2Date;
 import com.db4o.binding.converters.ConvertString2Double;
@@ -26,8 +28,10 @@ import com.db4o.binding.converters.ConvertString2Long;
 import com.db4o.binding.converters.ConvertString2Object;
 import com.db4o.binding.converters.ConvertString2Short;
 import com.db4o.binding.converters.TheIdentityConverter;
+import com.db4o.binding.converters.TheNullConverter;
 import com.db4o.binding.field.IFieldController;
 import com.db4o.binding.verifier.IVerifier;
+import com.db4o.binding.verifiers.ByteVerifier;
 import com.db4o.binding.verifiers.DateVerifier;
 import com.db4o.binding.verifiers.DoubleVerifier;
 import com.db4o.binding.verifiers.FloatVerifier;
@@ -39,6 +43,7 @@ import com.db4o.binding.verifiers.reusable.RegularExpressionVerifier;
 import com.db4o.browser.model.IDatabase;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
+import com.swtworkbench.community.xswt.metalogger.Logger;
 
 public abstract class FieldController implements IFieldController {
     protected IDatabase database;
@@ -71,6 +76,11 @@ public abstract class FieldController implements IFieldController {
         associate(c(String.class), c(Integer.TYPE), new ConvertString2Integer());
         associate(c(String.class), c(Integer.class), new ConvertString2Integer());
         
+        associate(c(Byte.class), c(String.class), new ConvertByte2String());
+        associate(c(Byte.TYPE), c(String.class), new ConvertByte2String());
+        associate(c(String.class), c(Byte.TYPE), new ConvertString2Byte());
+        associate(c(String.class), c(Byte.class), new ConvertString2Byte());
+        
         associate(c(Short.class), c(String.class), new ConvertShort2String());
         associate(c(Short.TYPE), c(String.class), new ConvertShort2String());
         associate(c(String.class), c(Short.TYPE), new ConvertString2Short());
@@ -95,11 +105,13 @@ public abstract class FieldController implements IFieldController {
         
         // Standalone verifiers here...
         associate(c(Integer.TYPE), new IntVerifier());
+        associate(c(Byte.TYPE), new ByteVerifier());
         associate(c(Short.TYPE), new ShortVerifier());
         associate(c(Long.TYPE), new LongVerifier());
         associate(c(Float.TYPE), new FloatVerifier());
         associate(c(Double.TYPE), new DoubleVerifier());
         associate(c(Integer.class), new IntVerifier());
+        associate(c(Byte.class), new ByteVerifier());
         associate(c(Short.class), new ShortVerifier());
         associate(c(Long.class), new LongVerifier());
         associate(c(Float.class), new FloatVerifier());
@@ -170,13 +182,17 @@ public abstract class FieldController implements IFieldController {
         
         HashMap sourceClassConverters = (HashMap) converters.get(sourceClass);
         
-        if (sourceClassConverters == null)
-            throw new IllegalArgumentException("No converters from source class " + sourceClass + " have been registered");
+        if (sourceClassConverters == null) {
+            Logger.log().message("No converters for pair (" + sourceClass + ", " + destClass + ") have been registered");
+            return TheNullConverter.NULL;
+        }
         
         IConverter result = (IConverter) sourceClassConverters.get(destClass);
         
-        if (result == null)
-            throw new IllegalArgumentException("No converters for pair (" + sourceClass + ", " + destClass + ") have been registered");
+        if (result == null) {
+            Logger.log().message("No converters for pair (" + sourceClass + ", " + destClass + ") have been registered");
+            return TheNullConverter.NULL;
+        }
         
         return result;
     }

@@ -6,6 +6,7 @@ package com.db4o.binding.converter;
 import java.util.HashMap;
 
 import com.db4o.binding.converters.ConvertBoolean2String;
+import com.db4o.binding.converters.ConvertByte2String;
 import com.db4o.binding.converters.ConvertCharacter2String;
 import com.db4o.binding.converters.ConvertDouble2String;
 import com.db4o.binding.converters.ConvertFloat2String;
@@ -14,6 +15,7 @@ import com.db4o.binding.converters.ConvertLong2String;
 import com.db4o.binding.converters.ConvertObject2String;
 import com.db4o.binding.converters.ConvertShort2String;
 import com.db4o.binding.converters.ConvertString2Boolean;
+import com.db4o.binding.converters.ConvertString2Byte;
 import com.db4o.binding.converters.ConvertString2Character;
 import com.db4o.binding.converters.ConvertString2Double;
 import com.db4o.binding.converters.ConvertString2Float;
@@ -22,6 +24,8 @@ import com.db4o.binding.converters.ConvertString2Long;
 import com.db4o.binding.converters.ConvertString2Object;
 import com.db4o.binding.converters.ConvertString2Short;
 import com.db4o.binding.converters.TheIdentityConverter;
+import com.db4o.binding.converters.TheNullConverter;
+import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
  * Converter.  The base converter from which all converters can be found.
@@ -70,13 +74,17 @@ public class Converter {
         
         HashMap sourceClassConverters = (HashMap) converters.get(sourceClass);
         
-        if (sourceClassConverters == null)
-            throw new IllegalArgumentException("No converters from source class " + sourceClass + " have been registered");
+        if (sourceClassConverters == null) {
+            Logger.log().message("No converters for pair (" + sourceClass + ", " + destClass + ") have been registered");
+            return TheNullConverter.NULL;
+        }
         
         IConverter result = (IConverter) sourceClassConverters.get(destClass);
         
-        if (result == null)
-            throw new IllegalArgumentException("No converters for pair (" + sourceClass + ", " + destClass + ") have been registered");
+        if (result == null) {
+            Logger.log().message("No converters for pair (" + sourceClass + ", " + destClass + ") have been registered");
+            return TheNullConverter.NULL;
+        }
         
         return result;
     }
@@ -96,6 +104,9 @@ public class Converter {
         associate(Integer.TYPE.getName(), String.class.getName(), new ConvertInteger2String());
         associate(String.class.getName(), Integer.TYPE.getName(), new ConvertString2Integer());
         
+        associate(Byte.TYPE.getName(), String.class.getName(), new ConvertByte2String());
+        associate(String.class.getName(), Byte.TYPE.getName(), new ConvertString2Byte());
+        
         associate(Short.TYPE.getName(), String.class.getName(), new ConvertShort2String());
         associate(String.class.getName(), Short.TYPE.getName(), new ConvertString2Short());
         
@@ -113,6 +124,9 @@ public class Converter {
         
         associate(Integer.class.getName(), String.class.getName(), new ConvertInteger2String());
         associate(String.class.getName(), Integer.class.getName(), new ConvertString2Integer());
+        
+        associate(Byte.class.getName(), String.class.getName(), new ConvertByte2String());
+        associate(String.class.getName(), Byte.class.getName(), new ConvertString2Byte());
         
         associate(Short.class.getName(), String.class.getName(), new ConvertShort2String());
         associate(String.class.getName(), Short.class.getName(), new ConvertString2Short());
