@@ -4,8 +4,10 @@ package com.db4o;
 
 import com.db4o.reflect.*;
 
-
-abstract class YapJavaClass implements YapDataType {
+/**
+ * @exclude
+ */
+public abstract class YapJavaClass implements YapDataType {
     
     protected final YapStream _stream;
     

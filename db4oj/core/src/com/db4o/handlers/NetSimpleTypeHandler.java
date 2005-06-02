@@ -91,8 +91,8 @@ public abstract class NetSimpleTypeHandler extends YapTypeAbstract implements Ge
         return byteWith.length - byteCompare.length;
 	}
 
-	public boolean isEqual(Object compare, Object with) {
-		return compare(compare, with) == 0;
+	public boolean isEqual(Object cmp, Object with) {
+		return compare(cmp, with) == 0;
 	}
 	
 	public String toString(GenericObject obj) {
