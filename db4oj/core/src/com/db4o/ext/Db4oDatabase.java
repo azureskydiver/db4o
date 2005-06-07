@@ -91,6 +91,9 @@ public class Db4oDatabase implements Db4oType, Internal{
     }
     
     public boolean isOlderThan(Db4oDatabase peer){
+		
+		if(peer == this) 
+			throw new IllegalArgumentException(); 
         
         if(i_uuid != peer.i_uuid){
             return i_uuid < peer.i_uuid;
