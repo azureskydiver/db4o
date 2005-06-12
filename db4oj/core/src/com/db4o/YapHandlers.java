@@ -89,7 +89,6 @@ public final class YapHandlers {
             new YShort(a_stream),
 
             // primitives first
-
             i_stringHandler, new YDate(a_stream), new YapClassAny(a_stream) // Index = 10, ID = 11
         };
         
