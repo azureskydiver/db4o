@@ -204,20 +204,8 @@
 			<fileset dir="${dir.build.src}" includes="**/*.properties"/>
 		</copy>
 	</target>
-
-	<target name="copycompact" depends="init, sharpen">
-		<mkdir dir="${dir.dist.dll.compact}" />
-		<mkdir dir="${dir.dist.net.compile}" />
-		<copy todir="${dir.dist.net.compile}" overwrite="true">
-			<fileset dir="${dir.n.core.src}">
-				<include name="**/*.cs" />
-				<exclude name="net/**" />
-				<exclude name="**/TSerializable.cs" />
-			</fileset>
-		</copy>
-	</target>
 	
-	<target name="compiledllnet" depends="init, copycompact, sharpen">
+	<target name="compiledllnet" depends="init, sharpen">
 		
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" />
 		<csc
@@ -227,16 +215,27 @@
 			docfile="${file.xml.net}"
 			debug="${compiledll.debug}"
 			warnlevel="0"
-			optimize="true">
+			optimize="true"
+			failonerror="true">
 			
 			<include name="*.cs" />
 			<exclude name="compact/**" />
 		</csc>
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" />
-		
+
+		<delete dir="${dir.dist.net.compile}" />
+		<copy todir="${dir.dist.net.compile}">
+			<fileset dir="${dir.n.core.src}">
+				<include name="**/*.cs" />
+				<exclude name="net/*.*" />
+			</fileset>
+		</copy>
+			
 		<versioninfo path="${dir.dist.net.compile}/compact" compact="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" />
 		<copy file="${file.keypair}" todir="${dir.dist.net.compile}" />
-		<exec executable="csc" dir="${dir.dist.net.compile}">
+		
+		<mkdir dir="${dir.dist.dll.compact}" />
+		<exec executable="csc" dir="${dir.dist.net.compile}" failonerror="true">
 			<arg value="/optimize" />
 			<arg value="/define:COMPACT_1_0" />
 			<arg value="/out:${file.dll.compact}" />
@@ -293,7 +292,7 @@
 		</exec>
 	</target>
 	
-	<target name="compiledllmono" depends="init, copycompact, sharpen">
+	<target name="compiledllmono" depends="init, sharpen">
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" />
 		<csc srcdir="${dir.n.core.src}"
 			targettype="library"
@@ -698,6 +697,7 @@
 		<copy todir="${dir.n.core.src}/core">
 			<fileset dir="${dir.sharpen}/db4ojcsharp/src">
 				<include name="**/*.cs" />
+				<exclude name="com/db4o/handlers/*.*" />
 				<exclude name="com/db4o/eclipse/**/*.*" />
 				<exclude name="com/db4o/reflect/jdk/**/*.*" />
 				<exclude name="com/db4o/Lock4.cs" />
