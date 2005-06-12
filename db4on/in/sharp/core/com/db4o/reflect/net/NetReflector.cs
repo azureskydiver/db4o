@@ -28,7 +28,10 @@ namespace com.db4o.reflect.net
 		}
 
         public virtual com.db4o.reflect.ReflectClass forName(string className){
-            return new com.db4o.reflect.net.NetClass(_parent, j4o.lang.Class.forName(className));
+			j4o.lang.Class clazz = j4o.lang.Class.forName(className);
+            return clazz == null
+				? null
+				: new com.db4o.reflect.net.NetClass(_parent, clazz);
         }
 
 		public virtual com.db4o.reflect.ReflectClass forObject(object a_object){
