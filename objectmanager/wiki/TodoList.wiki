@@ -1,3 +1,11 @@
+---++ Priorities
+   * Initial Native Query API / implementation
+   * .NET first!
+      * Finish .net editing
+      * Run under IKVM / natively load .NET classes
+   * Export to XML function
+   * Contribute c.d.binding to JFace (2 week budget)
+
 ---++ Bugs:
 
    * Moved to Bugzilla: http://www.db4odev.com/bugzilla
