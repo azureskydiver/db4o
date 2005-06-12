@@ -71,6 +71,9 @@ existing IDs document)
 ---++++ (2500) how JDK/.NET collections are handled with built-in translators
 that create arrays
 
+---++++ (2600) Schema Evolution
+Document the complex case
+
 
 -----
 

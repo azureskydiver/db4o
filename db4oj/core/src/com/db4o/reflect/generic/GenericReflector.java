@@ -379,10 +379,6 @@ public class GenericReflector implements Reflector, DeepClone {
 			}
 			return;
 		}
-		
-		if (null == converter) {
-			return;
-		}
 		ReflectClass clazz = _delegate.forName(name);
 		
 		GenericClass claxx = null;
