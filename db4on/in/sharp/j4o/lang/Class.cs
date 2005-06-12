@@ -42,6 +42,9 @@ namespace j4o.lang {
         }
 
         public static Class forName(String name) {
+			if (null == name) {
+				throw new ArgumentNullException("name");
+			}
 			Class returnValue = (Class)_typeNameToClassMap[name];
 			if (null != returnValue) {
 				return returnValue;
