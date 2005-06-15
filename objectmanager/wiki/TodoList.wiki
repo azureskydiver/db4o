@@ -6,6 +6,7 @@
       * Run under IKVM / natively load .NET classes
    * Export to XML function
    * Contribute c.d.binding to JFace (2 week budget)
+   * Finish editing (2 week budget)
 
 ---++ Bugs:
 
