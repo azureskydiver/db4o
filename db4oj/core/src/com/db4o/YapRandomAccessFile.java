@@ -238,10 +238,10 @@ public class YapRandomAccessFile extends YapFile {
                     Db4o.throwRuntimeException(12, fileName(), e);
                 }
                 if (isNew) {
+                    configureNewFile();
                     if (i_config.i_reservedStorageSpace > 0) {
                         reserve(i_config.i_reservedStorageSpace);
                     }
-                    configureNewFile();
                     write(false);
                     writeHeader(false);
                 } else {
