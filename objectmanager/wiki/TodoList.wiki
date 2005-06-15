@@ -1,4 +1,5 @@
 ---++ Priorities
+   * New OM build this week
    * Initial Native Query API / implementation
    * .NET first!
       * Finish .net editing
@@ -12,8 +13,6 @@
 
 
 ----+++ Cross-platform
-
-   * New OM build this week
 
    * Open password-protected file; be able to supply custom encryption class **DONE**
 
