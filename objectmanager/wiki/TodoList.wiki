@@ -1,5 +1,6 @@
 ---++ Priorities
    * New OM build this week
+   * XSWT FormLayout doc
    * Initial Native Query API / implementation
    * .NET first!
       * Finish .net editing
@@ -7,7 +8,8 @@
    * Export to XML function
    * Contribute c.d.binding to JFace (2 week budget)
    * Finish editing (2 week budget)
-
+   * Switch to Eclipse RCP implementation; include MacOS build (1 week budget)
+   
 ---++ Bugs:
 
    * Moved to Bugzilla: http://www.db4odev.com/bugzilla
