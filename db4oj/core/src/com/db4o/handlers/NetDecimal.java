@@ -9,45 +9,32 @@ import com.db4o.*;
 /**
  * @exclude
  */
+/**
+ * .NET decimal layout is (bytewise)
+ * |M3|M2|M1|M0|M7|M6|M5|M4|M11|M10|M9|M8|S[7]|E[4-0]|X|X|
+ * (M=mantissa, E=exponent(negative powers of 10), S=sign, X=unused/unknown)
+ */
 public class NetDecimal extends NetSimpleTypeHandler{
-	private final static BigInteger FACTOR=new BigInteger("100",16);
+	private final static BigInteger BYTESHIFT_FACTOR=new BigInteger("100",16);
 
 	public NetDecimal(YapStream stream) {
 		super(stream, 21, 16);
 	}
 	
 	public String toString(byte[] bytes) {
-		//return "no converter for System.Decimal, mscorlib";
-		//return bitString(bytes);
-		return convert(bytes);
-	}
-	
-	private String bitString(byte[] bytes) {
-		StringBuffer str=new StringBuffer();
-		for(int i=0;i<bytes.length;i++) {
-			for(int j=7;j>=0;j--) {
-				int curbit=(bytes[i]>>j)&0x1;
-				str.append(String.valueOf(curbit));
-			}
-		}
-		System.err.println(str);
-		return str.toString();
-	}
-	
-	private String convert(byte[] bytes) {
 		BigInteger mantissa=BigInteger.ZERO;
 		for(int blockoffset=8;blockoffset>=0;blockoffset-=4) {
 			for(int byteidx=0;byteidx<4;byteidx++) {
-				mantissa=mantissa.multiply(FACTOR);
+				mantissa=mantissa.multiply(BYTESHIFT_FACTOR);
 				int idx=blockoffset+byteidx;
 				mantissa=mantissa.add(new BigInteger(String.valueOf(bytes[idx]&0xff),10));
 			}
 		}
 		int exponent=bytes[13]&0x1f;
-		int sign=bytes[12];
+		boolean negative=bytes[12]!=0;
 		BigDecimal factor=BigDecimal.ONE.divide(BigDecimal.TEN.pow(exponent));
 		BigDecimal val=new BigDecimal(mantissa).multiply(factor);
-		if(sign!=0) {
+		if(negative) {
 			val=val.negate();
 		}
 		return val.toString();
