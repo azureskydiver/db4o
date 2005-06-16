@@ -1726,9 +1726,18 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
                                         }
                                     }
                                     if (!handled) {
-                                        oldFields[j].value = value;
-                                        if (!stream.isClient()) {
-                                            stream.setInternal(trans, oldFields[j], true);
+                                        if(value == null){
+                                            try{
+                                                fields[i].set(null, oldFields[j].value);
+                                            }catch(Exception ex){
+                                                // fail silently
+                                            }
+                                            
+                                        }else{
+                                            oldFields[j].value = value;
+                                            if (!stream.isClient()) {
+                                                stream.setInternal(trans, oldFields[j], true);
+                                            }
                                         }
                                     }
                                     newFields.add(oldFields[j]);
