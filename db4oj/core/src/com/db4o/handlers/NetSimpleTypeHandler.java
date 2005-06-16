@@ -17,9 +17,7 @@ public abstract class NetSimpleTypeHandler extends YapTypeAbstract implements Ge
 	
 	public NetSimpleTypeHandler(YapStream stream, int typeID, int byteCount) {
         super(stream);
-        String className = this.getClass().getName();
-        int pos = className.indexOf(".Net") + 4;
-        _name = "System." + className.substring(pos) + ", mscorlib";
+        _name = dotNetClassName();
         _typeID = typeID;
         _byteCount = byteCount;
     }

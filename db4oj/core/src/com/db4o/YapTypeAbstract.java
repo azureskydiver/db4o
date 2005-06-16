@@ -15,13 +15,16 @@ public abstract class YapTypeAbstract extends YapJavaClass implements YapType{
 	
 	private Object i_compareTo;
 	
-	public abstract int typeID();
-	
-	public abstract void write(Object obj, byte[] bytes, int offset);
-	
-	public abstract Object read(byte[] bytes, int offset);
-	
 	public abstract int compare(Object compare, Object with);
+    
+    public String dotNetClassName(){
+        String className = this.getClass().getName();
+        int pos = className.indexOf(".Net") ;
+        if(pos >=0){
+            return "System." + className.substring(pos + 4) + ", mscorlib";    
+        }
+        return defaultValue().getClass().getName();
+    }
 	
 	public abstract boolean isEqual(Object compare, Object with);
 
@@ -39,27 +42,15 @@ public abstract class YapTypeAbstract extends YapJavaClass implements YapType{
 		}
 	}
 	
-	Object primitiveNull() {
-		return defaultValue();
-	}
-
-	public void write(Object a_object, YapWriter a_bytes) {
-		int offset = a_bytes._offset;
-		if(a_object != null){
-			write(a_object, a_bytes._buffer, a_bytes._offset);
-		}
-		a_bytes._offset = offset + linkLength();
-	}
-
 	public int getID() {
 		return typeID();
 	}
 	
-	// This method is needed for RawByteHandler only during initalisation 
-	// and overloaded there. No abstract declaration here, so we don't
-	// have to implement the methods on .NET.
+	// This method is needed for NetSimpleTypeHandler only during
+    // initalisation and overloaded there. No abstract declaration 
+    // here, so we don't have to implement the methods on .NET.
 	public String getName() {
-		return null;
+		return dotNetClassName();
 	}
 
 	public int linkLength() {
@@ -70,12 +61,30 @@ public abstract class YapTypeAbstract extends YapJavaClass implements YapType{
         return null;
     }
     
+    Object primitiveNull() {
+        return defaultValue();
+    }
+
+    public abstract Object read(byte[] bytes, int offset);
+    
     Object read1(YapReader a_bytes) throws CorruptionException {
 		int offset = a_bytes._offset;
 		Object ret = read(a_bytes._buffer, a_bytes._offset);
 		a_bytes._offset = offset + linkLength();
 		return ret;
 	}
+    
+    public abstract int typeID();
+    
+    public abstract void write(Object obj, byte[] bytes, int offset);
+
+    public void write(Object a_object, YapWriter a_bytes) {
+        int offset = a_bytes._offset;
+        if(a_object != null){
+            write(a_object, a_bytes._buffer, a_bytes._offset);
+        }
+        a_bytes._offset = offset + linkLength();
+    }
 
 	void prepareComparison1(Object obj) {
 		i_compareTo = obj;
