@@ -43,25 +43,30 @@ class ReplicationImpl implements ReplicationProcess {
             throw new NullPointerException();
         }
         
-		_peerA = peerA;
-		_transA = peerA.checkTransaction(null);
+        synchronized (peerA.ext().lock()) {
+			synchronized (peerB.ext().lock()) {
 
-		_peerB = (YapStream) peerB;
-		_transB = _peerB.checkTransaction(null);
+				_peerA = peerA;
+				_transA = peerA.checkTransaction(null);
 
-        MigrationConnection mgc = new MigrationConnection();
-        
-        _peerA.i_handlers.i_migration = mgc;
-		_peerA.i_handlers.i_replication = this;
-		_peerA.i_migrateFrom = _peerB;
-        
-        _peerB.i_handlers.i_migration = mgc;
-		_peerB.i_handlers.i_replication = this;
-		_peerB.i_migrateFrom = _peerA;
+				_peerB = (YapStream) peerB;
+				_transB = _peerB.checkTransaction(null);
 
-		_conflictHandler = conflictHandler;
+				MigrationConnection mgc = new MigrationConnection();
 
-		_record = ReplicationRecord.beginReplication(_transA, _transB);
+				_peerA.i_handlers.i_migration = mgc;
+				_peerA.i_handlers.i_replication = this;
+				_peerA.i_migrateFrom = _peerB;
+
+				_peerB.i_handlers.i_migration = mgc;
+				_peerB.i_handlers.i_replication = this;
+				_peerB.i_migrateFrom = _peerA;
+
+				_conflictHandler = conflictHandler;
+
+				_record = ReplicationRecord.beginReplication(_transA, _transB);
+			}
+		}
         
 	}
 
