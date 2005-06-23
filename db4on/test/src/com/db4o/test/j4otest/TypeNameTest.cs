@@ -46,6 +46,14 @@ namespace com.db4o.test.j4otest
 			}
         }
 
+		public void testVoidPointer()
+        {
+			TypeName voidPointer = TypeName.Parse("System.Void*");
+			Test.ensureEquals("System.Void", voidPointer.SimpleName);
+			Test.ensure(!voidPointer.HasGenericArguments);
+			Test.ensureEquals(Type.GetType("System.Void*", true), voidPointer.Resolve());
+        }
+
         public void testNestedType()
         {
 			try
