@@ -256,6 +256,40 @@
 		</copy>
 	</target>
 	
+	<target name="runtestsnet" depends="compiletestsnet">
+		<exec executable="${dir.dist.dll.net}/db4o-net-test.exe" dir="${dir.dist.dll.net}">
+		</exec>
+	</target>
+	
+	<target name="compiletestsnet" depends="compiledllnet">
+		<csc srcdir="${dir.n.tools}/src"
+			targettype="library"
+			destfile="${dir.dist.dll.net}/db4o-net-tools.dll"
+			debug="true"
+			definitions="">
+			
+			<reference dir="${dir.dist.dll.net}">
+				<include name="db4o.dll" />
+			</reference>
+		</csc>
+		
+		<csc srcdir="${dir.n.test}/src"
+			targettype="exe"
+			destfile="${dir.dist.dll.net}/db4o-net-test.exe"
+			debug="true"
+			mainclass="com.db4o.test.AllTests"
+			definitions="">
+			
+			<exclude name="compact/**" />
+			
+			<reference dir="${dir.dist.dll.net}">
+				<include name="db4o.dll" />
+				<include name="db4o-net-tools.dll" />
+				<include name="System.Drawing.dll" />
+			</reference>
+		</csc>
+	</target>
+	
 	<target name="compiletestsmono" depends="compiledllmono">
 		<csc srcdir="${dir.n.tools}/src"
 			targettype="library"
