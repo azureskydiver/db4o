@@ -9,14 +9,14 @@ namespace j4o.lang
     public class TypeName
     {
         string _simpleName;
-        string _arrayQualifier;
+        string _qualifier; // array or pointer qualifier
         AssemblyName _assembly;
         TypeName[] _genericArguments;
 
-        private TypeName(string simpleName, string arrayQualifier, AssemblyName assemblyName, TypeName[] genericArguments)
+        private TypeName(string simpleName, string qualifier, AssemblyName assemblyName, TypeName[] genericArguments)
         {
             _simpleName = simpleName;
-            _arrayQualifier = arrayQualifier;
+        	_qualifier = qualifier;
             _assembly = assemblyName;
             _genericArguments = genericArguments;
         }
@@ -78,7 +78,7 @@ namespace j4o.lang
                 }
                 builder.Append("]");
             }
-            builder.Append(_arrayQualifier);
+            builder.Append(_qualifier);
             if (null != _assembly)
             {
                 builder.Append(", ");
@@ -129,7 +129,7 @@ namespace j4o.lang
         {
             if (!HasGenericArguments)
             {
-                return _simpleName + _arrayQualifier;
+                return _simpleName + _qualifier;
             }
 
             StringBuilder builder = new StringBuilder(_simpleName);
@@ -153,7 +153,7 @@ namespace j4o.lang
                 builder.Append("]");
             }
             builder.Append("]");
-            builder.Append(_arrayQualifier);
+            builder.Append(_qualifier);
             return builder.ToString();
         }
 
@@ -189,7 +189,7 @@ namespace j4o.lang
 
         static readonly TypeName[] NoGenericArguments = new TypeName[0];
 
-        static readonly Regex TopLevelTypeNameRegex = new Regex(@"^(?<SimpleName>(\w|\d|\.|\+)+)((?<GenericSuffix>`(?<GenericArgCount>\d+))\[(?<GenericArgs>.+)\])?(?<ArrayQualifier>(\[,*\])+)?(,\s+(?<AssemblyName>.+))?$");
+        static readonly Regex TopLevelTypeNameRegex = new Regex(@"^(?<SimpleName>(\w|\d|\.|\+)+)((?<GenericSuffix>`(?<GenericArgCount>\d+))\[(?<GenericArgs>.+)\])?(?<PointerQualifier>(\*)+)?(?<ArrayQualifier>(\[,*\])+)?(,\s+(?<AssemblyName>.+))?$");
 
         static readonly Regex ArrayQualifierRegex = new Regex(@"(?<ArrayQualifier>(\[,*\])+)$");
 
@@ -263,7 +263,9 @@ namespace j4o.lang
                 {
                     assemblyName = ParseAssemblyName(m.Groups["AssemblyName"].Value);
                 }
-                return new TypeName(simpleName, arrayQualifier, assemblyName, genericArguments);
+
+				string qualifier = m.Groups["PointerQualifier"].Value + arrayQualifier;
+                return new TypeName(simpleName, qualifier, assemblyName, genericArguments);
             }
 
             private AssemblyName ParseAssemblyName(string s)
@@ -374,6 +376,7 @@ namespace j4o.lang
         }
     }
 }
+
 
 
 
