@@ -6,8 +6,8 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import com.db4o.ObjectSet;
-import com.db4o.browser.model.IDatabase;
-import com.db4o.browser.model.DatabaseGraphIterator;
+import com.db4o.binding.dataeditors.*;
+import com.db4o.browser.model.*;
 import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
@@ -36,13 +36,15 @@ public class MockDatabase extends Assert implements IDatabase {
 	
 	public DatabaseGraphIterator graphIterator() {
 		StoredClass[] stored = (StoredClass[])storedClasses.values().toArray(new StoredClass[storedClasses.size()]);
-		return new DatabaseGraphIterator(this,stored);
+		// return new DatabaseGraphIterator(this,stored);
+        throw new RuntimeException("FIXME");
 	}
 
 	public DatabaseGraphIterator graphIterator(String name) {
 		StoredClass storedclass=(StoredClass)storedClasses.get(name);
 		StoredClass[] stored=(storedclass==null ? new StoredClass[0] : new StoredClass[]{storedclass});
-		return new DatabaseGraphIterator(this,stored);
+		// return new DatabaseGraphIterator(this,stored);
+        throw new RuntimeException("FIXME");
 	}
 
 	public ObjectSet instances(ReflectClass clazz) {
@@ -83,6 +85,26 @@ public class MockDatabase extends Assert implements IDatabase {
     }
 
     public Query query() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void open(Db4oConnectionSpec spec) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void reopen() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public IObjectEditor construct() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public IObjectEditor construct(Object toEdit) {
         // TODO Auto-generated method stub
         return null;
     }
