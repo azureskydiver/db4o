@@ -101,6 +101,62 @@ public interface IObjectEditor {
     public boolean verifyAndSaveObject();
     
     /**
+     * Method addObjectListener.
+     * 
+     * Adds an IObjectListener to the set of listeners that will be notified
+     * when the state of the edited object changes.
+     * 
+     * @param listener The IObjectListener to add.
+     */
+    public void addObjectListener(IObjectListener listener);
+    
+    /**
+     * Method removeObjectListener.
+     * 
+     * Removes an IObjectListener from the set of listeners that will be notified
+     * when the state of the edited object changes.
+     * 
+     * @param listener The IObjectListener to remove.
+     */
+    public void removeObjectListener(IObjectListener listener);
+    
+    /**
+     * Method isDirty.
+     * 
+     * Returns if any of the objects' fields have been edited (are dirty)
+     * but haven't been saved back to the object.
+     * 
+     * @return true if fields have been edited but not saved, false otherwise.
+     */
+    public boolean isDirty();
+    
+    /**
+     * Method isSaved.
+     * 
+     * Returns if all changed fields have been saved back to the object.  If
+     * the underlying persistent store implements transactional semantics,
+     * returns if the object itself has been saved to the underlying persistent
+     * store.
+     *  
+     * @return true if all dirty fields have been saved back to the object, false otherwise.
+     */
+    public boolean isSaved();
+    
+    
+    /**
+     * Method isCommitted.
+     * 
+     * Returns if all pending transactions have been committed to the persistent
+     * store.  If the underlying persistent store does not implement transactional
+     * semantics, this method is equivalent to calling isSaved.
+     * 
+     * @return true if the persistent store's state reflects the in-memory 
+     * object's state (disregarding the possible need for a multiuser refresh);
+     * returns false otherwise.
+     */
+    public boolean isCommitted();
+    
+    /**
      * Method commit.
      * 
      * Commit any changes that have occurred since the last commit()

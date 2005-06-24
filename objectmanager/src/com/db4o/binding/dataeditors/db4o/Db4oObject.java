@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.db4o.ObjectContainer;
 import com.db4o.binding.CannotSaveException;
 import com.db4o.binding.dataeditors.IObjectEditor;
+import com.db4o.binding.dataeditors.IObjectListener;
 import com.db4o.binding.dataeditors.IPropertyEditor;
 import com.db4o.binding.field.FieldController;
 import com.db4o.binding.field.IFieldController;
@@ -223,6 +224,31 @@ public class Db4oObject implements IObjectEditor {
      */
     public void setRefreshDepth(int refreshDepth) {
         this.refreshDepth = refreshDepth;
+    }
+
+    public void addObjectListener(IObjectListener listener) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void removeObjectListener(IObjectListener listener) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public boolean isDirty() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public boolean isSaved() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public boolean isCommitted() {
+        // TODO Auto-generated method stub
+        return false;
     }
     
 
