@@ -5,6 +5,8 @@ package com.db4o.browser.gui.controllers.tree;
 
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Tree;
@@ -36,7 +38,7 @@ public class TreeController implements IBrowserController {
 		final TreeSelectionChangedController treeSelectionChangedController = new TreeSelectionChangedController();
 		viewer.addSelectionChangedListener(treeSelectionChangedController);
         
-        viewer.getTree().addMouseListener(new MouseAdapter() {
+        tree.addMouseListener(new MouseAdapter() {
             public void mouseDoubleClick(MouseEvent e) {
                 IGraphIterator input = (IGraphIterator) viewer.getInput();
                 if (input.hasNext()) {
@@ -47,6 +49,18 @@ public class TreeController implements IBrowserController {
                         parent.getQueryController().open(node.getReflectClass(), parent.getCurrentConnection().path());
                     }
                 }
+            }
+        });
+        
+        tree.addKeyListener(new KeyListener() {
+            public void keyPressed(KeyEvent e) {
+                if (e.character=='*')
+                    e.doit = false;
+            }
+
+            public void keyReleased(KeyEvent e) {
+                if (e.character=='*')
+                    e.doit = false;
             }
         });
 
