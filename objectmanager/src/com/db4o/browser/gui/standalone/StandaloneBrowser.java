@@ -63,7 +63,8 @@ import com.swtworkbench.community.xswt.metalogger.TeeLogger;
  */
 public class StandaloneBrowser implements IControlFactory {
     
-    public static final String appName = "Object Manager";
+    public static final String APPNAME = "Object Manager";
+    public static final String VERSION = "1.1.300";
     public static final String LOGFILE = ".objectmanager.log";
     private static final String LOGCONFIG = ".objectmanager.logconfig";
     
@@ -98,7 +99,7 @@ public class StandaloneBrowser implements IControlFactory {
                 
         shell = (Shell) parent;
         shell.setLayout(new GridLayout());
-        shell.setText(appName);
+        shell.setText(APPNAME);
         buildMenuBar(shell);
         
         folder = new CTabFolder(shell, SWT.NULL);
@@ -305,7 +306,9 @@ public class StandaloneBrowser implements IControlFactory {
         Logger.setLogger(new TeeLogger(new StdLogger(), new FileLogger(getLogPath(LOGFILE), getLogPath(LOGCONFIG))));
         Db4o.configure().setOut(new PrintStream(db4ologger, true));
         Logger.log().setDebug(SWTProgram.class, true);
-        Logger.log().debug(SWTProgram.class, new Date().toString() + ": Application startup");
+        String startupDate = new Date().toString();
+        Logger.log().debug(SWTProgram.class, startupDate + ": " + APPNAME + " " + VERSION + " startup");
+        Logger.log().debug(SWTProgram.class, APPNAME + ": Initializing " + Db4o.version() + " library");
         
         SWTProgram.registerCloseListener(BrowserCore.getDefault());
         SWTProgram.runWithLog(new StandaloneBrowser());
