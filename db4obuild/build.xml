@@ -676,6 +676,7 @@
 		
 		<mkdir dir="${javatocsharp.core.dir}/bin" />
 		
+		<echo>${eclipse.home}/plugins</echo>
 		<javac debug="true" source="1.5" destdir="${javatocsharp.core.dir}/bin" srcdir="${javatocsharp.core.dir}/src">
 			<classpath>
 				<fileset dir="${eclipse.home}/plugins">
@@ -685,7 +686,9 @@
 					<include name="org.eclipse.jdt.core_*/jdtcore.jar" />
 					<!-- redundant entries: in newer eclipse installs those reside in jars -->
 					<include name="org.eclipse.osgi_*.jar" />
+					<include name="org.eclipse.core.resources_*.jar" />
 					<include name="org.eclipse.core.runtime_*.jar" />
+					<include name="org.eclipse.jdt.core_*.jar" />
 				</fileset>
 			</classpath>
 		</javac>
