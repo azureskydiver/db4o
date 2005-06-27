@@ -13,7 +13,7 @@ import com.yetac.doctor.workers.*;
 public class Doctor extends Task {
     
 	public Doctor() {
-		System.err.append("*** CREATED DOCTOR TASK");
+		System.err.println("*** CREATED DOCTOR TASK");
 	}
 	
     public static void main(String[] args){
