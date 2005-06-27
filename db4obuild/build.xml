@@ -481,7 +481,7 @@
 	</target>
 
 	<target name="runtestsjava" depends="compiletestsjava" description="Run db4o AllTests">
-		<java classname="com.db4o.test.AllTests">
+		<java classname="com.db4o.test.AllTests" failonerror="true">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java1.4}" />
 				<dirset dir="${dir.dist.classes.test}" />

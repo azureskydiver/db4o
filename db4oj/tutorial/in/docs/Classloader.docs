@@ -25,7 +25,9 @@ scope of this tutorial, of course. Starting points might be found ._
 here:
 
 .l http://www.javaworld.com/javaworld/javaqa/2003-06/01-qa-0606-load.html ..l
+
 .l http://java.sun.com/developer/technicalArticles/Networking/classloaders/ ..l
+
 .l http://java.sun.com/products/jndi/tutorial/beyond/misc/classloader.html ..l
 
 .1 Configuration ..
