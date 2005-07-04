@@ -593,20 +593,32 @@ public abstract class QCon implements Constraint, Visitor4 {
     		return;
     	}
     	i_trans = a_trans;
-    	if (i_parent != null) {
+    	unmarshallParent(a_trans);
+    	unmarshallJoins(a_trans);
+        unmarshallChildren(a_trans);
+    }
+
+	private void unmarshallParent(final Transaction a_trans) {
+		if (i_parent != null) {
     		i_parent.unmarshall(a_trans);
     	}
-    	if (hasJoins()) {
+	}
+
+	private void unmarshallChildren(final Transaction a_trans) {
+		Iterator4 i = iterateChildren();
+        while(i.hasNext()){
+            ((QCon)i.next()).unmarshall(a_trans);
+        }
+	}
+
+	private void unmarshallJoins(final Transaction a_trans) {
+		if (hasJoins()) {
     		Iterator4 i = iterateJoins();
     		while (i.hasNext()) {
     			((QCon) i.next()).unmarshall(a_trans);
     		}
     	}
-        Iterator4 i = iterateChildren();
-        while(i.hasNext()){
-            ((QCon)i.next()).unmarshall(a_trans);
-        }
-    }
+	}
 
     public void visit(Object obj) {
         QCandidate qc = (QCandidate) obj;
