@@ -144,39 +144,12 @@ public class Defragment {
 
 		// get all stored classes
 		StoredClass[] classes = origin.ext().storedClasses();
+		removeUnavailableSecondAndAbstractClasses(classes);
+		removeSubclasses(classes);		
+		migrateClasses(origin, destination, classes);
+	}
 
-		// remove classes that are currently not available,
-		// abstract classes and all second class objects
-		for (int i = 0; i < classes.length; i++) {
-			try {
-				Class javaClass = Class.forName(classes[i].getName());
-				if (javaClass == null || SecondClass.class.isAssignableFrom(javaClass)
-					|| Modifier.isAbstract(javaClass.getModifiers())) {
-					classes[i] = null;
-				}
-
-			} catch (Throwable t) {
-				classes[i] = null;
-			}
-		}
-
-		// rule out inheritance dependancies
-		for (int i = 0; i < classes.length; i++) {
-			if (classes[i] != null) {
-				Class javaClass = Class.forName(classes[i].getName());
-				for (int j = 0; j < classes.length; j++) {
-					if (classes[j] != null && classes[i] != classes[j]) {
-						Class superClass = Class.forName(classes[j].getName());
-						if (superClass.isAssignableFrom(javaClass)) {
-							classes[i] = null;
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		// migrate objects
+	private void migrateClasses(ObjectContainer origin, ObjectContainer destination, StoredClass[] classes) {
 		for (int i = 0; i < classes.length; i++) {
 
 			if (classes[i] != null) {
@@ -199,6 +172,41 @@ public class Defragment {
 					origin.deactivate(obj, 1);
 					destination.deactivate(obj, 1);
 				}
+			}
+		}
+	}
+
+	private void removeSubclasses(StoredClass[] classes) throws ClassNotFoundException {
+		// rule out inheritance dependancies
+		for (int i = 0; i < classes.length; i++) {
+			if (classes[i] != null) {
+				Class javaClass = Class.forName(classes[i].getName());
+				for (int j = 0; j < classes.length; j++) {
+					if (classes[j] != null && classes[i] != classes[j]) {
+						Class superClass = Class.forName(classes[j].getName());
+						if (superClass.isAssignableFrom(javaClass)) {
+							classes[i] = null;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void removeUnavailableSecondAndAbstractClasses(StoredClass[] classes) {
+		// remove classes that are currently not available,
+		// abstract classes and all second class objects
+		for (int i = 0; i < classes.length; i++) {
+			try {
+				Class javaClass = Class.forName(classes[i].getName());
+				if (javaClass == null
+					|| SecondClass.class.isAssignableFrom(javaClass)
+					|| Modifier.isAbstract(javaClass.getModifiers())) {
+					classes[i] = null;
+				}
+			} catch (Throwable t) {
+				classes[i] = null;
 			}
 		}
 	}
