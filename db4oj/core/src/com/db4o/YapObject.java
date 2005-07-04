@@ -323,34 +323,36 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 
 		i_yapClass = a_yapClass;
 
-		if (i_yapClass.getID() != YapHandlers.ANY_ID) {
+		if (i_yapClass.getID() == YapHandlers.ANY_ID) {
 			// Storing naked objects does not make sense
+			// TODO: why?
+			throw new ObjectNotStorableException(i_yapClass.classReflector());
+		}
 		    
-		    setID(stream, stream.newUserObject());
+	    setID(stream, stream.newUserObject());
 
-		    // will be ended in continueset()
-			beginProcessing();
-			
-			bitTrue(YapConst.CONTINUE);
+	    // will be ended in continueset()
+		beginProcessing();
+		
+		bitTrue(YapConst.CONTINUE);
 
-			// We may still consider to have Arrays as full objects.
-			// It would need special handling, to remove them from
-			// hc_tree in the transaction, so currently it's ugly.
-			
-			// Removing SecondClass objects from the reference tree
-			// causes problems in C/S cascaded delete.
+		// We may still consider to have Arrays as full objects.
+		// It would need special handling, to remove them from
+		// hc_tree in the transaction, so currently it's ugly.
+		
+		// Removing SecondClass objects from the reference tree
+		// causes problems in C/S cascaded delete.
 
-			if (/*!(a_object instanceof SecondClass)  && */
-				!(i_yapClass instanceof YapClassPrimitive) /*|| clazz.isArray()*/
-				) {
-			    
-				return true;
-			} else {
-			    
-				// Primitive Objects will not be stored
-				// in the identity map.
-				continueSet(a_trans, a_updateDepth);
-			}
+		if (/*!(a_object instanceof SecondClass)  && */
+			!(i_yapClass instanceof YapClassPrimitive) /*|| clazz.isArray()*/
+			) {
+		    
+			return true;
+		} else {
+		    
+			// Primitive Objects will not be stored
+			// in the identity map.
+			continueSet(a_trans, a_updateDepth);
 		}
 		return false;
 	}
