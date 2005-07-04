@@ -8,18 +8,20 @@ package com.db4o;
  */
 final class ClassIndexClient extends ClassIndex {
 
-	private final YapClass i_yapClass;
-
 	ClassIndexClient(YapClass aYapClass) {
-		i_yapClass = aYapClass;
+		super(aYapClass);
 	}
 
 	void add(int a_id){
 		throw YapConst.virtualException();
 	}
+    
+    void ensureActive(){
+        // do nothing
+    }
 	
 	long[] getInternalIDs(Transaction trans, int yapClassID){
-		YapClient stream = (YapClient) i_yapClass.getStream();
+		YapClient stream = (YapClient)trans.i_stream;
 		stream.writeMsg(Msg.GET_INTERNAL_IDS.getWriterForInt(trans, yapClassID));
 		YapWriter reader = stream.expectedByteResponse(Msg.ID_LIST);
 		int size = reader.readInt();

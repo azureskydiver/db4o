@@ -10,8 +10,6 @@ class IxPath implements Cloneable, Visitor4 {
 
     private QCandidates i_candidates;
 
-    private Tree        i_candidatesTree;
-
     int                 i_comparisonResult;
 
     int[]               i_lowerAndUpperMatch;
@@ -21,6 +19,8 @@ class IxPath implements Cloneable, Visitor4 {
 
     IxTraverser         i_traverser;
     IxTree              i_tree;
+    
+    Visitor4            _visitor;
 
     IxPath(IxTraverser a_traverser, IxPath a_next, IxTree a_tree,
         int a_comparisonResult) {
@@ -33,10 +33,15 @@ class IxPath implements Cloneable, Visitor4 {
                 .fileRangeReader().lowerAndUpperMatches();
         }
     }
+    
+    void add(Visitor4 visitor) {
+        if (i_comparisonResult == 0 && i_traverser.i_take[1]) {
+            i_tree.visit(visitor, i_lowerAndUpperMatch);
+        }
+    }
 
-    Tree addPrecedingToCandidatesTree(Tree a_tree, QCandidates a_candidates) {
-        i_candidatesTree = a_tree;
-        i_candidates = a_candidates;
+    void addPrecedingToCandidatesTree(Visitor4 visitor) {
+        _visitor = visitor;
         if (i_tree.i_preceding != null) {
             if (i_next == null || i_next.i_tree != i_tree.i_preceding) {
                 i_tree.i_preceding.traverse(this);
@@ -45,19 +50,16 @@ class IxPath implements Cloneable, Visitor4 {
         if (i_lowerAndUpperMatch != null) {
             int[] lowerAndUpperMatch = new int[] { i_upperNull,
                 i_lowerAndUpperMatch[0] - 1};
-            i_candidatesTree = i_tree.addToCandidatesTree(i_candidatesTree,
-                i_candidates, lowerAndUpperMatch);
+            i_tree.visit(visitor, lowerAndUpperMatch);
         } else {
             if (i_comparisonResult < 0) {
                 visit(i_tree);
             }
         }
-        return i_candidatesTree;
     }
 
-    Tree addSubsequentToCandidatesTree(Tree a_tree, QCandidates a_candidates) {
-        i_candidatesTree = a_tree;
-        i_candidates = a_candidates;
+    void addSubsequentToCandidatesTree(Visitor4 visitor) {
+        _visitor = visitor;
         if (i_tree.i_subsequent != null) {
             if (i_next == null || i_next.i_tree != i_tree.i_subsequent) {
                 i_tree.i_subsequent.traverse(this);
@@ -66,22 +68,12 @@ class IxPath implements Cloneable, Visitor4 {
         if (i_lowerAndUpperMatch != null) {
             int[] lowerAndUpperMatch = new int[] { i_lowerAndUpperMatch[1] + 1,
                 ((IxFileRange) i_tree)._entries - 1};
-            i_candidatesTree = i_tree.addToCandidatesTree(i_candidatesTree,
-                i_candidates, lowerAndUpperMatch);
+            i_tree.visit(visitor, lowerAndUpperMatch);
         } else {
             if (i_comparisonResult > 0) {
                 visit(i_tree);
             }
         }
-        return i_candidatesTree;
-    }
-
-    Tree addToCandidatesTree(Tree a_tree, QCandidates a_candidates) {
-        if (i_comparisonResult == 0 && i_traverser.i_take[1]) {
-            a_tree = i_tree.addToCandidatesTree(a_tree, a_candidates,
-                i_lowerAndUpperMatch);
-        }
-        return a_tree;
     }
 
     IxPath append(IxPath a_head, IxPath a_tail) {
@@ -183,8 +175,10 @@ class IxPath implements Cloneable, Visitor4 {
     }
 
     public void visit(Object a_object) {
-        i_candidatesTree = ((IxTree) a_object).addToCandidatesTree(
-            i_candidatesTree, i_candidates, null);
+        ((IxTree) a_object).visit(_visitor, null);
     }
+    
+
+
 
 }

@@ -24,7 +24,7 @@ public final class List4
 	 */
 	public List4(){}
 
-	List4(List4 a_next, Object a_object){
+	public List4(List4 a_next, Object a_object){
 		i_next = a_next;
 		i_object = a_object;
 	}

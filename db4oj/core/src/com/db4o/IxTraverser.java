@@ -1,16 +1,14 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2005  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o;
 
 /**
- * Index traverser
+ * @exclude
  */
-class IxTraverser{
+public class IxTraverser{
 
     private IxPath i_appendHead;
     private IxPath i_appendTail;
-
-    QCandidates i_candidates;
 
     private IxPath i_greatHead;
     private IxPath i_greatTail;
@@ -19,78 +17,79 @@ class IxTraverser{
 
     private IxPath i_smallHead;
     private IxPath i_smallTail;
-    Tree i_tree;
 
     // Bitmap that denotes, which elements to take, consisting of four booleans:
     // [0] take smaller
     // [1] take equal
     // [2] take greater
     // [3] take nulls 
-    
     boolean[] i_take;
+    
+    Tree i_tree;
 
-    private void add(IxPath a_previousPath, IxPath a_great, IxPath a_small) {
-        addPathTree(a_previousPath);
+    private void add(Visitor4 visitor, IxPath a_previousPath, IxPath a_great, IxPath a_small) {
+        addPathTree(visitor, a_previousPath);
         if (a_great != null && a_small != null && a_great.carriesTheSame(a_small)) {
-            add(a_great, a_great.i_next, a_small.i_next);
+            add(visitor, a_great, a_great.i_next, a_small.i_next);
             return;
         }
-        addGreater(a_small);
-        addSmaller(a_great);
-    }
-
-    private void addGreater(IxPath a_path) {
-        if (a_path != null) {
-            if (a_path.i_next == null) {
-                addSubsequent(a_path);
-            } else {
-                if (a_path.i_next.i_tree == a_path.i_tree.i_preceding) {
-                    addSubsequent(a_path);
-                } else {
-                    addPathTree(a_path);
-                }
-                addGreater(a_path.i_next);
-            }
-        }
-    }
-
-    private void addPathTree(IxPath a_path) {
-        if (a_path != null) {
-            i_tree = a_path.addToCandidatesTree(i_tree, i_candidates);
-        }
+        addGreater(visitor, a_small);
+        addSmaller(visitor, a_great);
     }
     
-    private void addAll(Tree a_tree){
+
+    private void addAll(Visitor4 visitor, Tree a_tree){
         if(a_tree != null){
-            i_tree = ((IxTree)a_tree).addToCandidatesTree(i_tree, i_candidates, null);
-            addAll(a_tree.i_preceding);
-            addAll(a_tree.i_subsequent);
+            ((IxTree)a_tree).visit(visitor, null);
+            addAll(visitor, a_tree.i_preceding);
+            addAll(visitor, a_tree.i_subsequent);
         }
     }
 
-    private void addPreceding(IxPath a_path) {
-        addPathTree(a_path);
-        addAll(a_path.i_tree.i_preceding);
-    }
-
-    private void addSmaller(IxPath a_path) {
+    private void addGreater(Visitor4 visitor, IxPath a_path) {
         if (a_path != null) {
             if (a_path.i_next == null) {
-                addPreceding(a_path);
+                addSubsequent(visitor, a_path);
             } else {
-                if (a_path.i_next.i_tree == a_path.i_tree.i_subsequent) {
-                    addPreceding(a_path);
+                if (a_path.i_next.i_tree == a_path.i_tree.i_preceding) {
+                    addSubsequent(visitor, a_path);
                 } else {
-                    addPathTree(a_path);
+                    addPathTree(visitor, a_path);
                 }
-                addSmaller(a_path.i_next);
+                addGreater(visitor, a_path.i_next);
             }
         }
     }
 
-    private void addSubsequent(IxPath a_path) {
-        addPathTree(a_path);
-        addAll(a_path.i_tree.i_subsequent);
+    private void addPathTree(Visitor4 visitor, IxPath a_path) {
+        if (a_path != null) {
+            a_path.add(visitor);
+        }
+    }
+
+    private void addPreceding(Visitor4 visitor, IxPath a_path) {
+        addPathTree(visitor, a_path);
+        addAll(visitor, a_path.i_tree.i_preceding);
+    }
+
+    private void addSmaller(Visitor4 visitor, IxPath a_path) {
+        if (a_path != null) {
+            if (a_path.i_next == null) {
+                addPreceding(visitor, a_path);
+            } else {
+                if (a_path.i_next.i_tree == a_path.i_tree.i_subsequent) {
+                    addPreceding(visitor, a_path);
+                } else {
+                    addPathTree(visitor, a_path);
+                }
+                addSmaller(visitor, a_path.i_next);
+            }
+        }
+    }
+
+    private void addSubsequent(Visitor4 visitor, IxPath a_path) {
+        addPathTree(visitor, a_path);
+        addAll(visitor, a_path.i_tree.i_subsequent);
     }
 
     private int countGreater(IxPath a_path, int a_sum) {
@@ -105,11 +104,11 @@ class IxTraverser{
             return countGreater(a_path.i_next, a_sum);
         }
     }
-
+    
     private int countPreceding(IxPath a_path) {
         return Tree.size(a_path.i_tree.i_preceding) + a_path.countMatching();
     }
-
+    
     private int countSmaller(IxPath a_path, int a_sum) {
         if (a_path.i_next == null) {
             return a_sum + countPreceding(a_path);
@@ -172,20 +171,6 @@ class IxTraverser{
             findBoth();
         }
     }
-    
-    int findBoundsQuery(QConObject a_qcon, IxTree a_tree) {
-        if (!a_qcon.i_evaluator.supportsIndex()) {
-            return -1;
-        }
-        i_take = new boolean[] { false, false, false, false};
-        a_qcon.i_evaluator.indexBitMap(i_take);
-        return findBounds1(a_qcon.i_object, a_tree);
-    }
-    
-    int findBoundsExactMatch(Object a_constraint, IxTree a_tree){
-        i_take = new boolean[] { false, true, false, false};
-        return findBounds1(a_constraint, a_tree);
-    }
 
     private int findBounds1(Object a_constraint, IxTree a_tree) {
 
@@ -229,7 +214,23 @@ class IxTraverser{
         }
         return 0;
     }
+    
+    
 
+    int findBoundsExactMatch(Object a_constraint, IxTree a_tree){
+        i_take = new boolean[] { false, true, false, false};
+        return findBounds1(a_constraint, a_tree);
+    }
+    
+    public int findBoundsQuery(QCon a_qcon, Object constraint) {
+        if (!a_qcon.i_evaluator.supportsIndex()) {
+            return -1;
+        }
+        i_take = new boolean[] { false, false, false, false};
+        a_qcon.i_evaluator.indexBitMap(i_take);
+        return findBounds1(constraint, a_qcon.indexRoot());
+    }
+    
     private void findGreatestEqual(IxTree a_tree) {
         int res = a_tree.compare(null);
         i_greatTail = i_greatTail.append(a_tree, res);
@@ -245,7 +246,7 @@ class IxTraverser{
             }
         }
     }
-
+    
     private void findGreatestEqualFromEqual(IxTree a_tree) {
         if (a_tree != null) {
             int res = a_tree.compare(null);
@@ -261,7 +262,7 @@ class IxTraverser{
             }
         }
     }
-
+    
     private void findSmallestEqual(IxTree a_tree) {
         int res = a_tree.compare(null);
         i_smallTail = i_smallTail.append(a_tree, res);
@@ -277,7 +278,7 @@ class IxTraverser{
             }
         }
     }
-
+    
     private void findSmallestEqualFromEqual(IxTree a_tree) {
         if (a_tree != null) {
             int res = a_tree.compare(null);
@@ -293,35 +294,34 @@ class IxTraverser{
             }
         }
     }
-
-    Tree getMatches(QCandidates a_candidates) {
-        i_candidates = a_candidates;
+    
+    private void resetDelayedAppend() {
+        i_appendHead = null;
+        i_appendTail = null;
+    }
+    
+    public void visitAll(Visitor4 visitor) {
         i_tree = null;
         if (i_take[1]) {
             if (i_greatHead != null) {
-                add(i_greatHead, i_greatHead.i_next, i_smallHead.i_next);
+                add(visitor, i_greatHead, i_greatHead.i_next, i_smallHead.i_next);
             }
         }
         if (i_take[0]) {
             IxPath head = i_smallHead;
             while (head != null) {
-                i_tree = head.addPrecedingToCandidatesTree(i_tree, a_candidates);
+                head.addPrecedingToCandidatesTree(visitor);
                 head = head.i_next;
             }
         }
         if (i_take[2]) {
             IxPath head = i_greatHead;
             while (head != null) {
-                i_tree = head.addSubsequentToCandidatesTree(i_tree, a_candidates);
+                head.addSubsequentToCandidatesTree(visitor);
                 head = head.i_next;
             }
         }
-        return i_tree;
     }
 
-    private void resetDelayedAppend() {
-        i_appendHead = null;
-        i_appendTail = null;
-    }
 
 }

@@ -86,50 +86,32 @@ public class QConObject extends QCon {
             }
         }
     }
-
-    int candidateCountByIndex() {
-        int count = -1; // indicates no index
-        if (i_joins == null) {
-            if (i_subConstraints != null) {
-                Iterator4 i = new Iterator4(i_subConstraints);
-                while (i.hasNext()) {
-                    QCon qCon = (QCon) i.next();
-                    int newCount = qCon.candidateCountByIndex(1);
-                    if (newCount >= 0) {
-                        if (count == -1 || newCount < count) {
-                            i_indexConstraint = qCon;
-                            count = newCount;
-                        }
-                    }
-                }
-            }
-        }
-        return count;
+    
+    public boolean canBeIndexLeaf(){
+        return i_yapClass != null && i_yapClass.isPrimitive();
     }
-
-    int candidateCountByIndex(int depth) {
-        int count = -1; // indicates no index
-        if (depth == 1) {
-
-            // TODO: try to resolve joins also
-
-            if (i_joins == null && i_field != null
-                && i_field.i_yapField != null && i_field.i_yapField.hasIndex()
-                && i_field.i_yapField.canLoadByIndex(this, i_evaluator)) {
-
-                i_indexTraverser = new IxTraverser();
-                count = i_indexTraverser.findBoundsQuery(this,
-                    (IxTree) i_field.i_yapField.getIndexRoot(i_trans));
-            }
-
-            // TODO: may load from deeper indexes also
-
+    
+    public boolean canLoadByIndex(){
+        if(i_field == null){
+            return false;
         }
-        return count;
+        if(i_field.i_yapField == null){
+            return false;
+        }
+        if(! i_field.i_yapField.hasIndex()){
+            return false;
+        }
+        
+        // FIXME: As soon as join index evaluation works, remove
+        if(hasJoins()){
+            return false;
+        }
+        
+        return i_field.i_yapField.canLoadByIndex(this, i_evaluator);
     }
 
     void createCandidates(Collection4 a_candidateCollection) {
-        if (i_loadedFromIndex && i_subConstraints == null) {
+        if (i_loadedFromIndex && ! hasChildren()) {
             return;
         }
         super.createCandidates(a_candidateCollection);
@@ -147,21 +129,18 @@ public class QConObject extends QCon {
         boolean rereadObject) {
         if (i_field.isSimple()) {
             boolean hasEvaluation = false;
-            if (i_subConstraints != null) {
-                Iterator4 i = new Iterator4(i_subConstraints);
-                while (i.hasNext()) {
-                    if (i.next() instanceof QConEvaluation) {
-                        hasEvaluation = true;
-                        break;
-                    }
+            Iterator4 i = iterateChildren();
+            while (i.hasNext()) {
+                if (i.next() instanceof QConEvaluation) {
+                    hasEvaluation = true;
+                    break;
                 }
             }
             if (hasEvaluation) {
                 a_candidates.traverse(i_field);
-                Iterator4 i = new Iterator4(i_subConstraints);
-                while (i.hasNext()) {
-                    ((QCon) i.next()).evaluateEvaluationsExec(a_candidates,
-                        false);
+                Iterator4 j = iterateChildren();
+                while (j.hasNext()) {
+                    ((QCon) j.next()).evaluateEvaluationsExec(a_candidates,false);
                 }
             }
         }
@@ -175,7 +154,7 @@ public class QConObject extends QCon {
             if (!(i_yapClass instanceof YapClassPrimitive)) {
                 if (!i_evaluator.identity()) {
                     if (i_yapClass == i_candidates.i_yapClass) {
-                        if (i_evaluator.isDefault() && (i_joins == null)) {
+                        if (i_evaluator.isDefault() && (! hasJoins())) {
                             return;
                         }
                     }
@@ -203,6 +182,10 @@ public class QConObject extends QCon {
                 a_candidates.filter(this);
             }
         }
+    }
+    
+    public int findBoundsQuery(IxTraverser traverser){
+        return traverser.findBoundsQuery(this, i_object);
     }
 
     YapComparable getComparator(QCandidate a_candidate) {
@@ -237,33 +220,24 @@ public class QConObject extends QCon {
         return super.hasObjectInParentPath(obj);
     }
 
-    public void identityEvaluation() {
+    public int identityID() {
         if (i_evaluator.identity()) {
             int id = getObjectID();
             if (id != 0) {
-                i_candidates.addByIdentity(new QCandidate(i_candidates, null, id,
-                    !(i_evaluator instanceof QENot)));
+                if( !(i_evaluator instanceof QENot) ){
+                    return id;
+                }
             }
         }
+        return 0;
+    }
+    
+    public IxTree indexRoot(){
+        return (IxTree) i_field.i_yapField.getIndexRoot(i_trans);
     }
 
     boolean isNullConstraint() {
         return i_object == null;
-    }
-
-    Tree loadFromBestChildIndex(QCandidates a_candidates) {
-        return i_indexConstraint.loadFromIndex(a_candidates);
-    }
-
-    Tree loadFromIndex(QCandidates a_candidates) {
-        i_loadedFromIndex = true;
-        if(i_field != null && i_field.i_yapField != null){
-            YapClass yc = i_field.i_yapField.getParentYapClass();
-            if(yc != null){
-                a_candidates.i_yapClass = yc;
-            }
-        }
-        return i_indexTraverser.getMatches(a_candidates);
     }
 
     void log(String indent) {
@@ -301,7 +275,7 @@ public class QConObject extends QCon {
 
     void removeChildrenJoins() {
         super.removeChildrenJoins();
-        i_subConstraints = null;
+        _children = null;
     }
 
     QCon shareParent(Object a_object, boolean[] removeExisting) {

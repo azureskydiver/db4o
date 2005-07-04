@@ -6,11 +6,18 @@ package com.db4o;
  * representation to collect and hold all IDs of one class
  */
  class ClassIndex extends YapMeta implements ReadWriteable, UseSystemTransaction {
-	
+     
+     
+    private final YapClass _yapClass;
+     
 	/**
 	 * contains TreeInt with object IDs 
 	 */
-	Tree i_root;
+	private Tree i_root;
+    
+    ClassIndex(YapClass yapClass){
+        _yapClass = yapClass;
+    }
 	
 	void add(int a_id){
 		i_root = Tree.add(i_root, new TreeInt(a_id));
@@ -39,6 +46,13 @@ package com.db4o;
         return tree[0];
     }
     
+    void ensureActive(){
+        if (!isActive()) {
+            setStateDirty();
+            read(getStream().getSystemTransaction());
+        }
+    }
+    
     final byte getIdentifier() {
         return YapConst.YAPINDEX;
     }
@@ -57,6 +71,15 @@ package com.db4o;
             }
         });
         return ids;
+    }
+    
+    TreeInt getRoot(){
+        ensureActive();
+        return (TreeInt)i_root;
+    }
+    
+    YapStream getStream(){
+        return _yapClass.getStream();
     }
 
     final int ownLength() {

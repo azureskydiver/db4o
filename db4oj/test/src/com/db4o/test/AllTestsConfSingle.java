@@ -13,8 +13,8 @@ public class AllTestsConfSingle extends TestSuite{
 	
     TestSuite[] TEST_SUITES = new TestSuite[]{
         
-        suite("com.db4o.test.jdk5.Jdk5TestSuite"),
-//        this, 
+//        suite("com.db4o.test.jdk5.Jdk5TestSuite"),
+        this, 
 //        new ReplicationTestSuite()
     };
 
@@ -22,7 +22,23 @@ public class AllTestsConfSingle extends TestSuite{
     public Class[] tests(){
         return new Class[] {
             // Db4oLinkedList.class,
-            Db4oHashMap.class,
+            
+            // DeleteDeep.class
+            
+            // IndexedByIdentity.class
+            
+            IndexedByIdentity.class,
+            IndexCreateDrop.class,
+            IndexedUpdatesWithNull.class,
+            
+            // Db4oLinkedList.class
+            
+            // MultiLevelIndex.class
+            
+            // Soda.class
+            
+            // IndexCreateDrop.class,
+            
             // ReplicateExistingFile.class
             // ReplicateDb4oList.class
             // SimplestPossible.class
@@ -44,12 +60,12 @@ public class AllTestsConfSingle extends TestSuite{
     /**
       * run the tests stand-alone 
       */
-    public boolean SOLO = false;
+    public boolean SOLO = true;
     
     /**
       * run the tests in client/server mode 
       */
-    public boolean CLIENT_SERVER = true;
+    public boolean CLIENT_SERVER = false;
 
     /**
      * run the test against a memory file instead of disc file

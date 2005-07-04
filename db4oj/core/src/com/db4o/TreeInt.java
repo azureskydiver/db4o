@@ -9,7 +9,7 @@ package com.db4o;
  */
 public class TreeInt extends Tree implements ReadWriteable{
 	
-	int i_key;
+	public int i_key;
 	
 	public TreeInt(int a_key){
 		this.i_key = a_key;
@@ -77,7 +77,7 @@ public class TreeInt extends Tree implements ReadWriteable{
 		return qc; 
 	}
 	
-	static QCandidate toQCandidate(TreeInt tree, QCandidates candidates){
+	public static QCandidate toQCandidate(TreeInt tree, QCandidates candidates){
 		if(tree == null){
 			return null;
 		}

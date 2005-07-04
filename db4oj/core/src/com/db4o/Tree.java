@@ -11,7 +11,7 @@ public abstract class Tree implements Cloneable, Readable{
 	int i_size = 1;
 	Tree i_subsequent;
 	
-	static final Tree add(Tree a_old, Tree a_new){
+	public static final Tree add(Tree a_old, Tree a_new){
 		if(a_old == null){
 			return a_new;
 		}
@@ -223,7 +223,14 @@ public abstract class Tree implements Cloneable, Readable{
 			return findSmaller(a_in.i_preceding, a_node);
 		}
 	}
-	
+    
+    public final Tree first(){
+        if(i_preceding == null){
+            return this;
+        }
+        return i_preceding.first();
+    }
+    
 	void isDuplicateOf(Tree a_tree){
 		i_size = 0;
 	}
@@ -273,6 +280,15 @@ public abstract class Tree implements Cloneable, Readable{
 		i_subsequent = null;
 		setSizeOwn();
 	}
+    
+    public Tree removeFirst(){
+        if(i_preceding == null){
+            return i_subsequent;
+        }
+        i_preceding = i_preceding.removeFirst();
+        calculateSize();
+        return this;
+    }
 	
 	static Tree removeLike(Tree from, Tree a_find){
 		if(from == null){
@@ -430,6 +446,7 @@ public abstract class Tree implements Cloneable, Readable{
 	public void write(YapWriter a_writer){
 		throw YapConst.virtualException();
 	}
+
 	
 // Keep the debug methods to debug the depth	
 	

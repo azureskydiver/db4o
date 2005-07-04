@@ -53,8 +53,8 @@ public class QConJoin extends QCon {
 					? ((a_pending.i_result + a_secondResult) > 0)
 					: (a_pending.i_result + a_secondResult) > -4);
 					
-		if (i_joins != null) {
-			Iterator4 i = i_joins.iterator();
+		if (hasJoins()) {
+			Iterator4 i = iterateJoins();
 			while (i.hasNext()) {
 				QConJoin qcj = (QConJoin) i.next();
 				if (Deploy.debugQueries) {

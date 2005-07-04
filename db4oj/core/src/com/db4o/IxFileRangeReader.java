@@ -5,15 +5,17 @@ package com.db4o;
 /**
  *  
  */
-class IxFileRangeReader implements Readable {
+class IxFileRangeReader {
 
     private int               _baseAddress;
     private int               _baseAddressOffset;
     private int               _addressOffset;
 
-    IxFileRange               _fileRange;
     private final YapDataType _handler;
-    private QCandidates       _candidates;
+    
+    // FIXME: _fileRange should not be stored here
+    private IxFileRange       _fileRange;
+
     
     // TODO: IxFileRangeReader should not store result internally
     // Instead send it back to the caller in a small object and
@@ -79,7 +81,7 @@ class IxFileRangeReader implements Readable {
                         fileRange.i_subsequent = null;
                         fileRange._entries--;
                     } else {
-                        return insert(newTree, _cursor, 0);
+                        return insert(fileRange, newTree, _cursor, 0);
                     }
                     fileRange.calculateSize();
                     return newTree.balanceCheckNulls();
@@ -91,7 +93,7 @@ class IxFileRangeReader implements Readable {
                         newTree.i_preceding = fileRange;
                         return newTree.rotateRight();
                     }
-                    return insert(newTree, _cursor, cmp);
+                    return insert(fileRange, newTree, _cursor, cmp);
                 }
             }
             if (!adjustCursor()) {
@@ -101,64 +103,26 @@ class IxFileRangeReader implements Readable {
                 if (_cursor == fileRange._entries - 1 && cmp < 0) {
                     return fileRange.add(newTree, -1);
                 }
-                return insert(newTree, _cursor, cmp);
+                return insert(fileRange, newTree, _cursor, cmp);
             }
         }
     }
-
-    public Tree addToCandidatesTree(QCandidates candidates, Tree a_tree,
-        IxFileRange a_range, int[] a_LowerAndUpperMatch) {
-
-        _candidates = candidates;
-
-        if (a_LowerAndUpperMatch == null) {
-            a_LowerAndUpperMatch = new int[] { 0, a_range._entries - 1};
+    
+    public void visit(Visitor4 visitor, IxFileRange fileRange, int[] lowerAndUpperMatch) {
+        if (lowerAndUpperMatch == null) {
+            lowerAndUpperMatch = new int[] { 0, fileRange._entries - 1};
         }
+        int count = lowerAndUpperMatch[1] - lowerAndUpperMatch[0] + 1;
+        if (count > 0) {
+            YapReader reader = new YapReader(count * _slotLength);
+            reader.read(fileRange.stream(), fileRange._address, fileRange._addressOffset
+                + (lowerAndUpperMatch[0] * _slotLength));
 
-        YapFile yf = _fileRange.stream();
-
-        int baseAddress = a_range._address;
-        int baseAddressOffset = a_range._addressOffset;
-
-        final boolean sorted = false;
-
-        if (sorted) {
-
-            // The sorted implementation was identified as a bottleneck.
-            // Keep it, in case a sorted QCandidate tree turns out to be necessary.
-
-            int offset = _handler.linkLength();
-            for (int i = a_LowerAndUpperMatch[0]; i <= a_LowerAndUpperMatch[1]; i++) {
-                _reader.read(yf, baseAddress, baseAddressOffset
-                    + (i * _slotLength));
-                _reader._offset = offset;
-                QCandidate candidate = new QCandidate(candidates, null, _reader
-                    .readInt(), true);
-                a_tree = Tree.add(a_tree, candidate);
-            }
-
-        } else {
-            int count = a_LowerAndUpperMatch[1] - a_LowerAndUpperMatch[0] + 1;
-            if (count > 0) {
-                YapReader reader = new YapReader(count * _slotLength);
-                reader.read(yf, baseAddress, baseAddressOffset
-                    + (a_LowerAndUpperMatch[0] * _slotLength));
-                Tree tree = new TreeReader(reader, this, false).read(count);
-                if (tree != null) {
-                    a_tree = Tree.add(a_tree, tree);
-                }
+            for (int i = lowerAndUpperMatch[0]; i <= lowerAndUpperMatch[1]; i++) {
+                reader.incrementOffset(_linkLegth);
+                visitor.visit(new Integer(reader.readInt()));
             }
         }
-        
-        // _candidates is a potential memory leak, since it can hold
-        // on to the the complete content of the query, possibly 
-        // even with all the instantiated objects. We have to set it
-        // to null after using it.
-        
-        // See TODO: in the variable declaration for a better solution.
-        _candidates = null;
-
-        return a_tree;
     }
 
     private boolean adjustCursor() {
@@ -198,10 +162,10 @@ class IxFileRangeReader implements Readable {
         }
     }
 
-    private Tree insert(Tree a_new, int a_cursor, int a_cmp) {
+    private Tree insert(IxFileRange fileRange, Tree a_new, int a_cursor, int a_cmp) {
         int incStartNewAt = a_cmp <= 0 ? 1 : 0;
         int newAddressOffset = (a_cursor + incStartNewAt) * _slotLength;
-        int newEntries = _fileRange._entries - a_cursor - incStartNewAt;
+        int newEntries = fileRange._entries - a_cursor - incStartNewAt;
         if(Deploy.debug){
 	        if(newEntries == 0){
 	            // A bug in P1Object made this happen.
@@ -213,12 +177,12 @@ class IxFileRangeReader implements Readable {
 	        }
         }
         
-        _fileRange._entries = a_cmp < 0 ? a_cursor + 1 : a_cursor;
-        IxFileRange ifr = new IxFileRange(_fileRange.i_fieldTransaction,
+        fileRange._entries = a_cmp < 0 ? a_cursor + 1 : a_cursor;
+        IxFileRange ifr = new IxFileRange(fileRange.i_fieldTransaction,
             _baseAddress, _baseAddressOffset + newAddressOffset, newEntries);
-        ifr.i_subsequent = _fileRange.i_subsequent;
-        _fileRange.i_subsequent = null;
-        a_new.i_preceding = _fileRange.balanceCheckNulls();
+        ifr.i_subsequent = fileRange.i_subsequent;
+        fileRange.i_subsequent = null;
+        a_new.i_preceding = fileRange.balanceCheckNulls();
         a_new.i_subsequent = ifr.balanceCheckNulls();
         return a_new.balance();
     }
@@ -287,11 +251,6 @@ class IxFileRangeReader implements Readable {
         _baseAddress = a_fr._address;
         _baseAddressOffset = a_fr._addressOffset;
         adjustCursor();
-    }
-
-    public Object read(YapReader a_reader) {
-        a_reader.incrementOffset(_linkLegth);
-        return new QCandidate(_candidates,null,  a_reader.readInt(), true);
     }
 
     public int byteCount() {
