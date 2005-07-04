@@ -7,9 +7,11 @@ package  com.db4o;
  */
 public class Iterator4
 {
+    public static final Iterator4 EMPTY = new EmptyIterator();
+    
 	private List4 i_next;
 
-	Iterator4(List4 a_first){
+	public Iterator4(List4 a_first){
 		i_next = a_first;
 	}
 

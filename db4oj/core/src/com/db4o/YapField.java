@@ -171,12 +171,14 @@ public class YapField implements StoredField {
 
     public boolean canLoadByIndex(QConObject a_qco, QE a_evaluator) {
         if (i_handler instanceof YapClass) {
-            if (a_evaluator instanceof QEIdentity) {
-                YapClass yc = (YapClass) i_handler;
-                yc.i_lastID = a_qco.getObjectID();
-                return true;
+            YapClass yc = (YapClass) i_handler;
+            if(yc.isArray()){
+                return false;
             }
-            return false;
+            if (a_evaluator instanceof QEIdentity) {
+                
+                yc.i_lastID = a_qco.getObjectID();
+            }
         }
         return true;
     }

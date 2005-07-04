@@ -704,10 +704,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
 
     ClassIndex getIndex() {
         if (stateOK() && i_index != null) {
-            if (!i_index.isActive()) {
-                i_index.setStateDirty();
-                i_index.read(i_stream.getSystemTransaction());
-            }
+            i_index.ensureActive();
             return i_index;
         }
         return null;
@@ -726,7 +723,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     final TreeInt getIndexRoot() {
         if (hasIndex()) {
             ClassIndex ci = getIndex();
-            return (TreeInt)ci.i_root;
+            return (TreeInt)ci.getRoot();
         }
         return null;
     }

@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.ix.*;
+
 /**
  * Holds the tree of QCandidate objects and the list of QContraints during query evaluation.
  * The query work (adding and removing nodes) happens here.
@@ -18,7 +20,7 @@ public final class QCandidates implements Visitor4 {
     private Tree i_root;
 
     // collection of all constraints
-    List4 i_constraints;
+    private List4 i_constraints;
 
     // possible class information
     YapClass i_yapClass;
@@ -141,36 +143,25 @@ public final class QCandidates implements Visitor4 {
     }
 
     void collect(final QCandidates a_candidates) {
-    	if(i_constraints != null){
-    		Iterator4 i = new Iterator4(i_constraints);
-    		while(i.hasNext()){
-    			QCon qCon = (QCon)i.next();
-				setCurrentConstraint(qCon);
-				qCon.collect(a_candidates);
-    		}
-    	}
+		Iterator4 i = iterateConstraints();
+		while(i.hasNext()){
+			QCon qCon = (QCon)i.next();
+			setCurrentConstraint(qCon);
+			qCon.collect(a_candidates);
+		}
 		setCurrentConstraint(null);
     }
 
     void execute() {
-        QCon bestIndex = null;
+        boolean fromClassIndex = true;
         if(i_constraints != null){
-            int bestIndexHit = Integer.MAX_VALUE;
-			Iterator4 i = new Iterator4(i_constraints);
-			while(i.hasNext()){
-				QCon qCon = (QCon)i.next();
-				qCon.setCandidates(this);
-				qCon.identityEvaluation();
-				int indexHit = qCon.candidateCountByIndex();
-				if(indexHit >= 0 && indexHit < bestIndexHit){
-				    bestIndex = qCon;
-				}
-			}
-			if(bestIndex != null){
-			    i_root = bestIndex.loadFromBestChildIndex(this);
-			}
+            QxProcessor processor = new QxProcessor();
+            if(processor.run(this)){
+                i_root = processor.toQCandidates(this);
+                fromClassIndex = false;
+            }
         }
-        if(bestIndex == null){
+        if(fromClassIndex){
             loadFromClassIndex();
         }
         evaluate();
@@ -182,32 +173,32 @@ public final class QCandidates implements Visitor4 {
     		return;
     	}
     	
-    	Iterator4 i = new Iterator4(i_constraints);
+    	Iterator4 i = iterateConstraints();
     	while(i.hasNext()){
     		((QCon)i.next()).evaluateSelf();
     	}
     	
-    	i = new Iterator4(i_constraints);
+    	i = iterateConstraints();
     	while(i.hasNext()){
     		((QCon)i.next()).evaluateSimpleChildren();
     	}
     	
-    	i = new Iterator4(i_constraints);
+    	i = iterateConstraints();
     	while(i.hasNext()){
     		((QCon)i.next()).evaluateEvaluations();
     	}
     	
-    	i = new Iterator4(i_constraints);
+    	i = iterateConstraints();
     	while(i.hasNext()){
     		((QCon)i.next()).evaluateCreateChildrenCandidates();
     	}
     	
-    	i = new Iterator4(i_constraints);
+    	i = iterateConstraints();
     	while(i.hasNext()){
     		((QCon)i.next()).evaluateCollectChildren();
     	}
     	
-    	i = new Iterator4(i_constraints);
+    	i = iterateConstraints();
     	while(i.hasNext()){
     		((QCon)i.next()).evaluateChildren();
     	}
@@ -236,6 +227,13 @@ public final class QCandidates implements Visitor4 {
         }
 
         return i_root != null;
+    }
+    
+    public Iterator4 iterateConstraints(){
+        if(i_constraints == null){
+            return Iterator4.EMPTY;
+        }
+        return new Iterator4(i_constraints);
     }
 
     void loadFromClassIndex() {
@@ -315,12 +313,10 @@ public final class QCandidates implements Visitor4 {
     	// No object found.
     	// All children constraints are necessarily false.
     	// Check immediately.
-    	if(i_constraints != null){
-    		Iterator4 i = new Iterator4(i_constraints);
-    		while(i.hasNext()){
-    			((QCon)i.next()).visitOnNull(parent.getRoot());
-    		}
+		Iterator4 i = iterateConstraints();
+		while(i.hasNext()){
+			((QCon)i.next()).visitOnNull(parent.getRoot());
+		}
     		
-    	}
     }
 }

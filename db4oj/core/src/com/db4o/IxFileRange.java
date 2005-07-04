@@ -22,26 +22,18 @@ class IxFileRange extends IxTree{
     public Tree add(final Tree a_new){
         return i_fieldTransaction.i_index.fileRangeReader().add(this, a_new);
     }
-    
 
     int compare(Tree a_to) {
         return i_fieldTransaction.i_index.fileRangeReader().compare(this, a_to);
     }
     
+    public void incrementAddress(int length) {
+        _addressOffset += length;
+    }
+    
 	int ownSize(){
 	    return _entries;
 	}
-
-    void write(YapDataType a_handler, YapWriter a_writer) {
-        YapFile yf = (YapFile)a_writer.getStream();
-        int length = _entries * slotLength();
-        yf.copy(_address, _addressOffset, a_writer.getAddress(), a_writer.addressOffset(), length);
-        a_writer.moveForward(length);
-    }
-
-    Tree addToCandidatesTree(Tree a_tree, QCandidates a_candidates, int[] a_lowerAndUpperMatch) {
-        return i_fieldTransaction.i_index.fileRangeReader().addToCandidatesTree(a_candidates, a_tree, this, a_lowerAndUpperMatch);
-    }
     
     public String toString(){
 //        return "";
@@ -64,7 +56,14 @@ class IxFileRange extends IxTree{
         return sb.toString();
     }
 
-    public void incrementAddress(int length) {
-        _addressOffset += length;
+    public void visit(Visitor4 visitor, int[] lowerAndUpperMatch){
+        i_fieldTransaction.i_index.fileRangeReader().visit(visitor, this, lowerAndUpperMatch);
+    }
+
+    void write(YapDataType a_handler, YapWriter a_writer) {
+        YapFile yf = (YapFile)a_writer.getStream();
+        int length = _entries * slotLength();
+        yf.copy(_address, _addressOffset, a_writer.getAddress(), a_writer.addressOffset(), length);
+        a_writer.moveForward(length);
     }
 }

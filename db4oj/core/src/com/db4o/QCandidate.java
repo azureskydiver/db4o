@@ -13,7 +13,7 @@ import com.db4o.reflect.ReflectClass;
  * 
  * @exclude
  */
-class QCandidate extends TreeInt implements Candidate, Orderable {
+public class QCandidate extends TreeInt implements Candidate, Orderable {
 
     // db4o ID is stored in i_key;
     
@@ -114,129 +114,128 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
     				// underlying structure again. The structure could b
     				// kept fairly easy. TODO: Optimize!
     				
-    				if (a_candidates.i_constraints != null) {
-    					Iterator4 i = new Iterator4(a_candidates.i_constraints);
-    					while (i.hasNext()) {
-    						
-    						QCon qcon = (QCon)i.next();
-    						QField qf = qcon.getField();
-    						if (qf == null || qf.i_name.equals(i_yapField.getName())) {
-    							
-    							QCon tempParent = qcon.i_parent;
-    							qcon.setParent(null);
-    							
-    							final QCandidates candidates =
-    								new QCandidates(a_candidates.i_trans, null, qf);
-    							candidates.addConstraint(qcon);
-    							
-    							qcon.setCandidates(candidates);
-    							arrayWrapper.readCandidates(arrayBytes[0], candidates);
-    							arrayBytes[0]._offset = offset;
-    							
-    							final boolean isNot = qcon.isNot();
-    							if (isNot) {
-    								qcon.removeNot();
-    							}
-    							
-    							candidates.evaluate();
-    							
-    							final Tree[] pending = new Tree[1];
-    							final boolean[] innerRes = { isNot };
-    							candidates.traverse(new Visitor4() {
-    								public void visit(Object obj) {
-    									
-    									QCandidate cand = (QCandidate)obj;
-    									
-    									if (cand.include()) {
-    										innerRes[0] = !isNot;
-    									}
-    									
-    									// Collect all pending subresults.
-    									
-    									if(cand.i_pendingJoins != null){
-    										cand.i_pendingJoins.traverse(new Visitor4() {
-    											public void visit(Object a_object) {
-    												QPending newPending = (QPending)a_object;
-    												
-    												// We need to change
-    												// the
-    												// constraint here, so
-    												// our
-    												// pending collector
-    												// uses
-    												// the right
-    												// comparator.
-    												newPending.changeConstraint();
-    												QPending oldPending =
-    													(QPending)Tree.find(
-    															pending[0],
-																newPending);
-    												if (oldPending != null) {
-    													
-    													// We only keep one
-    													// pending result
-    													// for
-    													// all array
-    													// elements.
-    													// and memorize,
-    													// whether we had a
-    													// true or a false
-    													// result.
-    													// or both.
-    													
-    													if (oldPending.i_result
-    															!= newPending.i_result) {
-    														oldPending.i_result = QPending.BOTH;
-    													}
-    													
-    												} else {
-    													pending[0] =
-    														Tree.add(pending[0], newPending);
-    												}
-    											}
-    										});
-    									}
-    								}
-    							});
-    							
-    							if (isNot) {
-    								qcon.not();
-    							}
-    							
-    							// In case we had pending subresults, we
-    							// need to communicate
-    							// them up to our root.
-    							if (pending[0] != null) {
-    								pending[0].traverse(new Visitor4() {
-    									public void visit(Object a_object) {
-    										getRoot().evaluate((QPending)a_object);
-    									}
-    								});
-    							}
-    							
-    							if (!innerRes[0]) {
-    								
-    								if (Deploy.debugQueries) {
-    									System.out.println( 
-    											"  Array evaluation false. Constraint:"
-    											+ qcon.i_id);
-    								}
-    								
-    								// Again this could be double triggering.
-    								// 
-    								// We want to clean up the "No route"
-    								// at some stage.
-    								
-    								qcon.visit(getRoot(), qcon.i_evaluator.not(false));
-    								
-    								outerRes = false;
-    							}
-    							
-    							qcon.setParent(tempParent);
-    							
-    						}
-    					}
-    				}
+    				Iterator4 i = a_candidates.iterateConstraints();
+					while (i.hasNext()) {
+						
+						QCon qcon = (QCon)i.next();
+						QField qf = qcon.getField();
+						if (qf == null || qf.i_name.equals(i_yapField.getName())) {
+							
+							QCon tempParent = qcon.i_parent;
+							qcon.setParent(null);
+							
+							final QCandidates candidates =
+								new QCandidates(a_candidates.i_trans, null, qf);
+							candidates.addConstraint(qcon);
+							
+							qcon.setCandidates(candidates);
+							arrayWrapper.readCandidates(arrayBytes[0], candidates);
+							arrayBytes[0]._offset = offset;
+							
+							final boolean isNot = qcon.isNot();
+							if (isNot) {
+								qcon.removeNot();
+							}
+							
+							candidates.evaluate();
+							
+							final Tree[] pending = new Tree[1];
+							final boolean[] innerRes = { isNot };
+							candidates.traverse(new Visitor4() {
+								public void visit(Object obj) {
+									
+									QCandidate cand = (QCandidate)obj;
+									
+									if (cand.include()) {
+										innerRes[0] = !isNot;
+									}
+									
+									// Collect all pending subresults.
+									
+									if(cand.i_pendingJoins != null){
+										cand.i_pendingJoins.traverse(new Visitor4() {
+											public void visit(Object a_object) {
+												QPending newPending = (QPending)a_object;
+												
+												// We need to change
+												// the
+												// constraint here, so
+												// our
+												// pending collector
+												// uses
+												// the right
+												// comparator.
+												newPending.changeConstraint();
+												QPending oldPending =
+													(QPending)Tree.find(
+															pending[0],
+															newPending);
+												if (oldPending != null) {
+													
+													// We only keep one
+													// pending result
+													// for
+													// all array
+													// elements.
+													// and memorize,
+													// whether we had a
+													// true or a false
+													// result.
+													// or both.
+													
+													if (oldPending.i_result
+															!= newPending.i_result) {
+														oldPending.i_result = QPending.BOTH;
+													}
+													
+												} else {
+													pending[0] =
+														Tree.add(pending[0], newPending);
+												}
+											}
+										});
+									}
+								}
+							});
+							
+							if (isNot) {
+								qcon.not();
+							}
+							
+							// In case we had pending subresults, we
+							// need to communicate
+							// them up to our root.
+							if (pending[0] != null) {
+								pending[0].traverse(new Visitor4() {
+									public void visit(Object a_object) {
+										getRoot().evaluate((QPending)a_object);
+									}
+								});
+							}
+							
+							if (!innerRes[0]) {
+								
+								if (Deploy.debugQueries) {
+									System.out.println( 
+											"  Array evaluation false. Constraint:"
+											+ qcon.i_id);
+								}
+								
+								// Again this could be double triggering.
+								// 
+								// We want to clean up the "No route"
+								// at some stage.
+								
+								qcon.visit(getRoot(), qcon.i_evaluator.not(false));
+								
+								outerRes = false;
+							}
+							
+							qcon.setParent(tempParent);
+							
+						}
+					}
+    				
     				
     				return outerRes;
     			}
@@ -295,6 +294,9 @@ class QCandidate extends TreeInt implements Candidate, Orderable {
     }
 
     boolean evaluate(final QConObject a_constraint, final QE a_evaluator) {
+        if(a_evaluator.identity()){
+            return a_evaluator.evaluate(a_constraint, this, null);
+        }
         if (i_member == null) {
             i_member = value();
         }

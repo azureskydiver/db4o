@@ -81,8 +81,8 @@ public abstract class YapFile extends YapStream {
         i_classCollection.initTables(1);
     }
 
-    final ClassIndex createClassIndex(YapClass a_yapClass) {
-        return new ClassIndex();
+    final ClassIndex createClassIndex(YapClass yapClass) {
+        return new ClassIndex(yapClass);
     }
 
     final QResult createQResult(Transaction a_ta) {

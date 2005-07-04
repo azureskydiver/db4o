@@ -532,39 +532,34 @@ public class Transaction {
         IxTraverser ixTraverser = new IxTraverser();
         int count = ixTraverser.findBoundsExactMatch(new Long(a_uuid), ixTree);
         if (count > 0) {
-            QCandidates candidates = new QCandidates(this, null, null);
-            Tree tree = ixTraverser.getMatches(candidates);
-            if (tree != null) {
-                final Transaction finalThis = this;
-                tree.traverse(new Visitor4() {
-
-                    public void visit(Object a_object) {
-                        QCandidate candidate = (QCandidate) a_object;
-                        Object[] arr = finalThis.i_stream.getObjectAndYapObjectByID(
-                            finalThis, candidate.i_key);
-                        if (arr[1] != null) {
-                            YapObject yod = (YapObject) arr[1];
-                            VirtualAttributes vad = yod.virtualAttributes(finalThis);
-                            byte[] cmp = vad.i_database.i_signature;
-                            boolean same = true;
-                            if (a_signature.length == cmp.length) {
-                                for (int i = 0; i < a_signature.length; i++) {
-                                    if (a_signature[i] != cmp[i]) {
-                                        same = false;
-                                        break;
-                                    }
+            final Transaction finalThis = this;
+            ixTraverser.visitAll(new Visitor4() {
+                public void visit(Object a_object) {
+                    Object[] arr = finalThis.i_stream.getObjectAndYapObjectByID(
+                        finalThis, ((Integer)a_object).intValue());
+                    if (arr[1] != null) {
+                        YapObject yod = (YapObject) arr[1];
+                        VirtualAttributes vad = yod.virtualAttributes(finalThis);
+                        byte[] cmp = vad.i_database.i_signature;
+                        boolean same = true;
+                        if (a_signature.length == cmp.length) {
+                            for (int i = 0; i < a_signature.length; i++) {
+                                if (a_signature[i] != cmp[i]) {
+                                    same = false;
+                                    break;
                                 }
-                            } else {
-                                same = false;
                             }
-                            if (same) {
-                                ret[0] = arr[0];
-                                ret[1] = arr[1];
-                            }
+                        } else {
+                            same = false;
+                        }
+                        if (same) {
+                            ret[0] = arr[0];
+                            ret[1] = arr[1];
                         }
                     }
-                });
-            }
+                }
+            });
+            
         }
         return ret;
     }
@@ -742,7 +737,6 @@ public class Transaction {
                         Visitor4 visitor = null;
                         if (a_add) {
                             visitor = new Visitor4() {
-
                                 public void visit(Object a_object) {
                                     classIndex.add(((TreeInt) a_object).i_key);
                                 }

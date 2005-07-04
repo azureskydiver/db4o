@@ -2,7 +2,10 @@
 
 package com.db4o;
 
-abstract class IxTree extends Tree{
+/**
+ * @exclude
+ */
+public abstract class IxTree extends Tree{
     
     IxFieldTransaction i_fieldTransaction;
     
@@ -31,8 +34,6 @@ abstract class IxTree extends Tree{
         }
         return balanceCheckNulls();
     }
-    
-    abstract Tree addToCandidatesTree(Tree a_tree, QCandidates a_candidates, int[] a_lowerAndUpperMatch);
     
     void beginMerge(){
         i_preceding = null;
@@ -104,6 +105,8 @@ abstract class IxTree extends Tree{
     final Transaction trans(){
         return i_fieldTransaction.i_trans;
     }
+    
+    public abstract void visit(Visitor4 visitor, int[] a_lowerAndUpperMatch);
     
     abstract void write(YapDataType a_handler, YapWriter a_writer);
     

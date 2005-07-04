@@ -15,9 +15,6 @@ public class Collection4 implements DeepClone {
     /** number of elements collected */
     private int i_size;
 
-    /** performance trick only: no object creation */
-    private static final EmptyIterator emptyIterator = new EmptyIterator();
-
     public final void add(Object a_object) {
         i_first = new List4(i_first, a_object);
         i_size++;
@@ -121,7 +118,7 @@ public class Collection4 implements DeepClone {
 
     public final Iterator4 iterator() {
         if (i_first == null) {
-            return emptyIterator;
+            return Iterator4.EMPTY;
         }
         return new Iterator4(i_first);
     }

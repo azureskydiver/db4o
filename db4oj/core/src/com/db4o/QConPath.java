@@ -26,10 +26,6 @@ public class QConPath extends QConClass {
 		}
 	}
 	
-	int candidateCountByIndex(int depth) {
-	    return -1;
-	}
-
 	boolean evaluate(QCandidate a_candidate) {
 		if (a_candidate.classReflector() == null) {
 			visitOnNull(a_candidate.getRoot());
@@ -42,7 +38,7 @@ public class QConPath extends QConClass {
 	}
 
 	boolean isNullConstraint() {
-		return i_subConstraints == null;
+		return ! hasChildren();
 	}
 
 	QConClass shareParentForClass(ReflectClass a_class, boolean[] removeExisting) {
@@ -78,8 +74,8 @@ public class QConPath extends QConClass {
         boolean mayMorph = true;
         if (claxx != null) {
         	YapClass yc = i_trans.i_stream.getYapClass(claxx, true);
-        	if (yc != null && i_subConstraints != null) {
-        		Iterator4 i = new Iterator4(i_subConstraints);
+        	if (yc != null) {
+        		Iterator4 i = iterateChildren();
         		while (i.hasNext()) {
         			QField qf = ((QCon) i.next()).getField();
         			if (!yc.hasField(i_trans.i_stream, qf.i_name)) {
@@ -93,16 +89,14 @@ public class QConPath extends QConClass {
         // }
         
         if (mayMorph) {
-        	if(i_subConstraints != null){
-        		Iterator4 i = new Iterator4(i_subConstraints);
-        		while (i.hasNext()) {
-        			newConstraint.addConstraint((QCon) i.next());
-        		}
-        	}
-        	if(i_joins != null){
-        		Iterator4 i = i_joins.iterator();
-        		while (i.hasNext()) {
-        			QConJoin qcj = (QConJoin)i.next();
+    		Iterator4 j = iterateChildren();
+    		while (j.hasNext()) {
+    			newConstraint.addConstraint((QCon) j.next());
+    		}
+        	if(hasJoins()){
+        		Iterator4 k = iterateJoins();
+        		while (k.hasNext()) {
+        			QConJoin qcj = (QConJoin)k.next();
         			qcj.exchangeConstraint(this, newConstraint);
         			newConstraint.addJoin(qcj);
         		}

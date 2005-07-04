@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-import com.db4o.ext.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -18,7 +17,7 @@ public class QQuery implements Query {
     private static final transient IDGenerator i_orderingGenerator = new IDGenerator();
 
     transient Transaction i_trans;
-    private Collection4 i_constraints = new Collection4();
+    private final Collection4 i_constraints = new Collection4();
 
     private QQuery i_parent;
     private String i_field;
@@ -39,7 +38,7 @@ public class QQuery implements Query {
 
     private void addConstraint(Collection4 col, Object obj) {
         boolean found = false;
-        Iterator4 j = i_constraints.iterator();
+        Iterator4 j = iterateConstraints();
         while (j.hasNext()) {
             QCon existingConstraint = (QCon)j.next();
             boolean[] removeExisting = { false };
@@ -106,7 +105,7 @@ public class QQuery implements Query {
                     return constr;
                 }
 
-                Iterator4 constraintsIterator = i_constraints.iterator();
+                Iterator4 constraintsIterator = iterateConstraints();
                 while (constraintsIterator.hasNext()) {
                     QCon existingConstraint = (QConObject)constraintsIterator.next();
                     boolean[] removeExisting = { false };
@@ -136,7 +135,7 @@ public class QQuery implements Query {
             
             QConEvaluation eval = Platform.evaluationCreate(i_trans, example);
 			if (eval != null) {
-                Iterator4 i = i_constraints.iterator();
+                Iterator4 i = iterateConstraints();
                 while (i.hasNext()) {
                     ((QCon)i.next()).addConstraint(eval);
                 }
@@ -225,7 +224,7 @@ public class QQuery implements Query {
             });
 
         }
-        Iterator4 i = i_constraints.iterator();
+        Iterator4 i = iterateConstraints();
         while (i.hasNext()) {
             if (((QCon)i.next()).attach(query, a_field)) {
                 foundClass[0] = true;
@@ -252,7 +251,7 @@ public class QQuery implements Query {
 		if(i_constraints.size()!=1) {
 			return null;
 		}
-		Constraint constr=(Constraint)i_constraints.iterator().next(); 
+		Constraint constr=(Constraint)iterateConstraints().next(); 
 		if(constr.getClass()!=QConClass.class) {
 			return null;
 		}
@@ -261,10 +260,9 @@ public class QQuery implements Query {
 		if(clazz==null) {
 			return null;
 		}
-		if(clazzconstr.i_subConstraints!=null || clazz.isArray()) {
+		if(clazzconstr.hasChildren() || clazz.isArray()) {
 			return null;
 		}
-					
 		
 		ClassIndex classIndex = clazz.getIndex();
 		if(classIndex == null) {
@@ -310,7 +308,7 @@ public class QQuery implements Query {
         boolean checkDuplicates = false;
         boolean topLevel = true;
         List4 candidateCollection = null;
-        Iterator4 i = i_constraints.iterator();
+        Iterator4 i = iterateConstraints();
         while (i.hasNext()) {
             QCon qcon = (QCon)i.next();
             QCon old = qcon;
@@ -341,7 +339,7 @@ public class QQuery implements Query {
         }
 
         if (Deploy.debugQueries) {
-            i = i_constraints.iterator();
+            i = iterateConstraints();
             while (i.hasNext()) {
                 ((QCon)i.next()).log("");
             }
@@ -429,6 +427,10 @@ public class QQuery implements Query {
     Transaction getTransaction() {
         return i_trans;
     }
+    
+    Iterator4 iterateConstraints(){
+        return i_constraints.iterator();
+    }
 
     public Query orderAscending() {
         synchronized (streamLock()) {
@@ -445,14 +447,14 @@ public class QQuery implements Query {
     }
 
     private void setOrdering(final int ordering) {
-        Iterator4 i = i_constraints.iterator();
+        Iterator4 i = iterateConstraints();
         while (i.hasNext()) {
             ((QCon)i.next()).setOrdering(ordering);
         }
     }
 
     void marshall() {
-        Iterator4 i = i_constraints.iterator();
+        Iterator4 i = iterateConstraints();
         while (i.hasNext()) {
             ((QCon)i.next()).getRoot().marshall();
         }
@@ -464,7 +466,7 @@ public class QQuery implements Query {
 
     void unmarshall(final Transaction a_trans) {
         i_trans = a_trans;
-        Iterator4 i = i_constraints.iterator();
+        Iterator4 i = iterateConstraints();
         while (i.hasNext()) {
             ((QCon)i.next()).unmarshall(a_trans);
         }
