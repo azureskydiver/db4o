@@ -27,9 +27,10 @@ public class AllTestsConfSingle extends TestSuite{
             
             // IndexedByIdentity.class
             
-            IndexedByIdentity.class,
-            IndexCreateDrop.class,
-            IndexedUpdatesWithNull.class,
+        	StoreObject.class,
+            // IndexedByIdentity.class,
+            // IndexCreateDrop.class,
+            // IndexedUpdatesWithNull.class,
             
             // Db4oLinkedList.class
             
