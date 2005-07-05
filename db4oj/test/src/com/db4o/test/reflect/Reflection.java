@@ -2,12 +2,9 @@
 
 package com.db4o.test.reflect;
 
-import com.db4o.reflect.ReflectArray;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.Reflector;
+import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-import com.db4o.reflect.jdk.JdkReflector;
+import com.db4o.reflect.jdk.*;
 
 /**
  * test for custom reflection implementations.

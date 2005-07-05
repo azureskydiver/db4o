@@ -2,6 +2,7 @@ package com.db4o.test.jdk5;
 
 // JDK1.5: static import
 import static java.lang.Math.*;
+
 import java.util.*;
 
 // JDK1.5: annotations

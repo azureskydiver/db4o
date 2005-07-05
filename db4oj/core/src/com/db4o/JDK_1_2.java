@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.config.*;
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.types.*;
@@ -39,7 +40,7 @@ class JDK_1_2 extends JDKReflect {
         return Thread.currentThread().getContextClassLoader();
     }
 
-    void flattenCollection2(final YapStream a_stream, Object a_object, final com.db4o.Collection4 col) {
+    void flattenCollection2(final YapStream a_stream, Object a_object, final com.db4o.foundation.Collection4 col) {
     	Reflector reflector = a_stream.reflector();
         if (reflector.isCollection(reflector.forObject(a_object))) {
             forEachCollectionElement(a_object, new Visitor4() {

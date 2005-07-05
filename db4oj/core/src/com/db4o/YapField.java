@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 
@@ -746,7 +747,7 @@ public class YapField implements StoredField {
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        if (Debug.toStrings) {
+        if (Debug.prettyToStrings) {
             sb.append("YapField ");
             sb.append(i_name);
             sb.append("\n");

@@ -2,10 +2,6 @@
 
 package com.db4o.test;
 
-import com.db4o.reflect.generic.*;
-import com.db4o.test.interfaces.*;
-import com.db4o.test.reflect.*;
-import com.db4o.test.replication.*;
 
 public class AllTestsConfSingle extends TestSuite{
 

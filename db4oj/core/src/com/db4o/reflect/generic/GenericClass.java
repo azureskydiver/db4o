@@ -3,11 +3,8 @@
 package com.db4o.reflect.generic;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectConstructor;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.ReflectMethod;
 
 /**
  * @exclude

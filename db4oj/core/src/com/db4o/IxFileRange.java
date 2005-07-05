@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 /**
  * A range of index entries in the database file. 
  */

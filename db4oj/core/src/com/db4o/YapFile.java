@@ -5,6 +5,7 @@ package com.db4o;
 import java.io.*;
 
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 /**
@@ -611,7 +612,7 @@ public abstract class YapFile extends YapStream {
     abstract void syncFiles();
 
     public String toString() {
-        if (Debug.toStrings) {
+        if (Debug.prettyToStrings) {
             return super.toString();
         }
         return fileName();

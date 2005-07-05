@@ -4,9 +4,7 @@ package com.db4o.io;
 
 import java.io.*;
 
-import com.db4o.DTrace;
-import com.db4o.Platform;
-import com.db4o.Tuning;
+import com.db4o.*;
 
 public class RandomAccessFileAdapter extends IoAdapter {
 

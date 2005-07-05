@@ -2,7 +2,9 @@
 
 package com.db4o;
 
-abstract class Debug {
+import com.db4o.foundation.*;
+
+abstract class Debug extends Debug4 {
     
     public static final boolean checkSychronization = false;
     
@@ -13,8 +15,6 @@ abstract class Debug {
     public static final boolean configureAllClasses = indexAllFields;
     public static final boolean configureAllFields = indexAllFields;
     
-    public static final boolean toStrings = atHome;
-
     public static final boolean weakReferences = true;
 
     public static final boolean arrayTypes = true;

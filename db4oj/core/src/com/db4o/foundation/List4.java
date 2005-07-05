@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.foundation;
 
 /**
  * elements in linked list Collection4
@@ -9,24 +9,25 @@ package com.db4o;
  */
 public final class List4
 {
+	// TODO: encapsulate field access
 	/**
 	 * next element in list
 	 */
-	List4 i_next;
+	public List4 _next;
 	
 	/**
 	 * carried object
 	 */
-	Object i_object;  
+	public Object _element;  
 	
 	/**
 	 * db4o constructor to be able to store objects of this class
 	 */
-	public List4(){}
+	public List4() {}
 
-	public List4(List4 a_next, Object a_object){
-		i_next = a_next;
-		i_object = a_object;
+	public List4(List4 next, Object element) {
+		_next = next;
+		_element = element;
 	}
 	
 

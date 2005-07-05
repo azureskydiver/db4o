@@ -2,6 +2,7 @@
 package com.db4o.ix;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 
 /**
  * @exclude

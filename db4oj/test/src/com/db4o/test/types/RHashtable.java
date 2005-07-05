@@ -2,11 +2,11 @@
 
 package com.db4o.test.types;
 
-import com.db4o.*;
-import com.db4o.test.*;
+import java.util.*;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
+import com.db4o.*;
+import com.db4o.foundation.*;
+import com.db4o.test.*;
 
 
 public class RHashtable implements RTestable{

@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 class YapClientBlobThread extends Thread{
 	private YapClient			stream;
 	private Queue4 				queue = new Queue4();

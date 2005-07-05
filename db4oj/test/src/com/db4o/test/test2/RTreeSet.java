@@ -2,9 +2,9 @@
 
 package com.db4o.test.test2;
 
-import com.db4o.test.types.*;
-
 import java.util.*;
+
+import com.db4o.test.types.*;
 
 public class RTreeSet extends RCollection{
 	TEntry entry(){

@@ -7,7 +7,6 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
-import com.db4o.test.replication.*;
 import com.db4o.tools.*;
 import com.db4o.types.*;
 

@@ -2,9 +2,9 @@
 
 package com.db4o.test.lib;
 
+import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
-import java.io.*;
 
 import com.db4o.*;
 import com.db4o.test.soda.*;

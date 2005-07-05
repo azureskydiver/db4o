@@ -2,13 +2,10 @@
 
 package com.db4o.reflect.jdk;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 
-import com.db4o.Platform;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.Reflector;
+import com.db4o.*;
+import com.db4o.reflect.*;
 
 /**
  * Reflection implementation for Field to map to JDK reflection.

@@ -7,7 +7,7 @@ import java.util.*;
 import com.db4o.reflect.*;
 
 /**
- *  
+ * @persistent
  */
 class P2HashMapKeySet implements Set {
 

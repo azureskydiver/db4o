@@ -1,5 +1,7 @@
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 class PendingClassInits {
 	
 	private final YapClassCollection _classColl;

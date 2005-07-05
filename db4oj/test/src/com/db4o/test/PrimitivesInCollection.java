@@ -2,7 +2,7 @@
 
 package com.db4o.test;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * 

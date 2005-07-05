@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import java.util.*;
+
 import com.db4o.ext.*;
 
 public class TestListInMap {

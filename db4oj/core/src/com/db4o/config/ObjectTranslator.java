@@ -2,7 +2,7 @@
 
 package  com.db4o.config;
 
-import  com.db4o.*;
+import com.db4o.*;
 
 /**
  * translator interface to translate objects on storage and activation.

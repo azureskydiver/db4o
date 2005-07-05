@@ -3,12 +3,12 @@
 package com.db4o.test.soda;
 
 import com.db4o.*;
-import com.db4o.foundation.Cool;
-import com.db4o.query.Query;
+import com.db4o.foundation.*;
+import com.db4o.query.*;
 import com.db4o.test.soda.classes.simple.*;
 import com.db4o.test.soda.collections.*;
-import com.db4o.test.soda.engines.db4o.STDb4o;
-import com.db4o.test.soda.wrapper.untyped.STBooleanWU;
+import com.db4o.test.soda.engines.db4o.*;
+import com.db4o.test.soda.wrapper.untyped.*;
 
 public class SodaTestThreadedRegression extends SodaTest implements Runnable{
 	

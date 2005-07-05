@@ -5,6 +5,7 @@ package com.db4o;
 /**
  * element of linked lists 
  * @exclude 
+ * @persistent
  */
 public class P1ListElement extends P1Object{
     

@@ -9,7 +9,9 @@ import com.db4o.types.*;
 /**
  * Class to identify a database by it's signature.
  * <br><br>db4o UUID handling uses a reference to the Db4oDatabase object, that
- * represents the database an object was created on.  
+ * represents the database an object was created on.
+ * 
+ * @persistent
  */
 public class Db4oDatabase implements Db4oType, Internal{
 

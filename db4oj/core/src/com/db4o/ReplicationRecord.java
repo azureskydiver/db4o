@@ -10,6 +10,7 @@ import com.db4o.query.*;
  * two Objectcontainers.
  * 
  * @exclude
+ * @persistent
  */
 public class ReplicationRecord implements Internal{
    

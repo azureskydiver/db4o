@@ -5,7 +5,7 @@ package com.db4o;
 import java.util.*;
 
 /**
- *  
+ * @persistent 
  */
 class P2HashMapIterator implements Iterator {
 

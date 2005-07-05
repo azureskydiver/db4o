@@ -2,6 +2,7 @@
 
 using System;
 using System.Diagnostics;
+using com.db4o.foundation;
 using j4o.lang;
 using j4o.lang.reflect;
 using com.db4o;

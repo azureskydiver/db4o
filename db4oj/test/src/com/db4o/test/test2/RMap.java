@@ -2,12 +2,12 @@
 
 package com.db4o.test.test2;
 
+import java.util.*;
+
+import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.test.*;
 import com.db4o.test.types.*;
-import com.db4o.*;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import java.util.*;
 
 
 public abstract class RMap implements RTestable{

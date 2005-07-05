@@ -5,7 +5,7 @@ package com.db4o;
 import java.io.*;
 
 import com.db4o.ext.*;
-import com.db4o.foundation.Cool;
+import com.db4o.foundation.*;
 
 /**
  * configuration and agent to write the configuration block

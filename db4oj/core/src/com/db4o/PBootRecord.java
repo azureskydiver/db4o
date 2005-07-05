@@ -9,6 +9,7 @@ import com.db4o.ext.*;
  * holding a reference to the Db4oDatabase object of the ObjectContainer
  * 
  * @exclude
+ * @persistent
  */
 public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal{
 

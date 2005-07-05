@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 /**
  * Index root holder for a field and a transaction. 
  */

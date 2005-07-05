@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.config.*;
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 class Config4Field extends Config4Abstract implements ObjectField, Cloneable, DeepClone {

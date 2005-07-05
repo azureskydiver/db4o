@@ -4,10 +4,9 @@ package com.db4o.test.soda.engines.db4o;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.query.*;
 import com.db4o.test.soda.*;
-
-import com.db4o.*;
 
 public class STDb4o implements STEngine {
 	

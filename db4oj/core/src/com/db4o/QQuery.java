@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -353,7 +354,7 @@ public class QQuery implements Query {
                 ((QCandidates)i.next()).execute();
             }
 
-            if (candidateCollection.i_next != null) {
+            if (candidateCollection._next != null) {
                 checkDuplicates = true;
             }
 

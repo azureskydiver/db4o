@@ -7,6 +7,7 @@ package com.db4o;
  * Don't obfuscate.
  * 
  * @exclude
+ * @persistent
  */
 public class MetaClass implements Internal{
 	

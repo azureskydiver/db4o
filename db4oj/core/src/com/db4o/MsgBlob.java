@@ -3,6 +3,7 @@
 package com.db4o;
 
 import java.io.*;
+
 import com.db4o.ext.*;
 
 abstract class MsgBlob extends MsgD {

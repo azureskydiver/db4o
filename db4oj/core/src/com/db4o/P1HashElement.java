@@ -4,6 +4,7 @@ package com.db4o;
 
 /**
  * @exclude 
+ * @persistent
  */
 public class P1HashElement extends P1ListElement {
     

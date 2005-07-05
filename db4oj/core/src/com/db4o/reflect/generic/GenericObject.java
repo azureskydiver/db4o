@@ -2,10 +2,6 @@
 
 package com.db4o.reflect.generic;
 
-import java.util.*;
-
-import com.db4o.*;
-import com.db4o.reflect.*;
 
 /**
  * @exclude

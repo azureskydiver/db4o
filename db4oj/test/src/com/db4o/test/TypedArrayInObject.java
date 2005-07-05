@@ -2,7 +2,7 @@
 
 package com.db4o.test;
 
-import com.db4o.*;
+import com.db4o.foundation.*;
 
 public class TypedArrayInObject {
 	
