@@ -56,6 +56,14 @@ public abstract class IxTree extends Tree{
         return i_fieldTransaction.i_index.i_field.getHandler();
     }
     
+    /**
+     * Overridden in IxFileRange
+     * Only call directly after compare() 
+     */
+    int[] lowerAndUpperMatch(){
+        return null;
+    }
+    
     final int nodes(){
         return _nodes;
     }

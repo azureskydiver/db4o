@@ -24,13 +24,13 @@ public class AllTestsConfSingle extends TestSuite{
             // Db4oLinkedList.class,
             
             // DeleteDeep.class
+           
+            CreateIndex.class,
             
-            // IndexedByIdentity.class
-            
-        	StoreObject.class,
-            // IndexedByIdentity.class,
-            // IndexCreateDrop.class,
-            // IndexedUpdatesWithNull.class,
+        	// StoreObject.class,
+//            IndexedByIdentity.class,
+//            IndexCreateDrop.class,
+//            IndexedUpdatesWithNull.class,
             
             // Db4oLinkedList.class
             

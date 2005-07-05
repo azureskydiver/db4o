@@ -23,15 +23,12 @@ class IxPath implements Cloneable, Visitor4 {
     Visitor4            _visitor;
 
     IxPath(IxTraverser a_traverser, IxPath a_next, IxTree a_tree,
-        int a_comparisonResult) {
+        int a_comparisonResult, int[] lowerAndUpperMatch) {
         i_traverser = a_traverser;
         i_next = a_next;
         i_tree = a_tree;
         i_comparisonResult = a_comparisonResult;
-        if (a_tree instanceof IxFileRange) {
-            i_lowerAndUpperMatch = a_tree.i_fieldTransaction.i_index
-                .fileRangeReader().lowerAndUpperMatches();
-        }
+        i_lowerAndUpperMatch = lowerAndUpperMatch;
     }
     
     void add(Visitor4 visitor) {
@@ -84,8 +81,8 @@ class IxPath implements Cloneable, Visitor4 {
         return a_tail;
     }
 
-    IxPath append(IxTree a_tree, int a_comparisonResult) {
-        i_next = new IxPath(i_traverser, null, a_tree, a_comparisonResult);
+    IxPath append(IxTree a_tree, int a_comparisonResult, int[] lowerAndUpperMatch) {
+        i_next = new IxPath(i_traverser, null, a_tree, a_comparisonResult, lowerAndUpperMatch);
         i_next.i_tree = a_tree;
         return i_next;
     }
@@ -96,10 +93,13 @@ class IxPath implements Cloneable, Visitor4 {
 
     private void checkUpperNull() {
         if (i_upperNull == -1) {
+            i_upperNull = 0;
             i_traverser.i_handler.prepareComparison(null);
-            i_tree.compare(null);
-            int[] nullMatches = i_tree.i_fieldTransaction.i_index
-                .fileRangeReader().lowerAndUpperMatches();
+            int res = i_tree.compare(null);
+            if(res != 0){
+                return;
+            }
+            int[] nullMatches = i_tree.lowerAndUpperMatch();  
             if (nullMatches[0] == 0) {
                 i_upperNull = nullMatches[1] + 1;
             } else {

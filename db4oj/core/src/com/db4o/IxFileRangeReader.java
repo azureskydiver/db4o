@@ -12,25 +12,16 @@ class IxFileRangeReader {
     private int               _addressOffset;
 
     private final YapDataType _handler;
-    
-    // FIXME: _fileRange should not be stored here
-    private IxFileRange       _fileRange;
 
-    
-    // TODO: IxFileRangeReader should not store result internally
-    // Instead send it back to the caller in a small object and
-    // pass it again in case of later use.
-    // After this change IxField#fileRangeReader can create a new
-    // one every time and we do not have to worry about cleaning
-    // up _candidates variable after use.
     private int               _lower;
     private int               _upper;
     private int               _cursor;
 
     private final YapReader   _reader;
-    private final int         _slotLength;
 
-    private final int         _linkLegth;
+    final int                 _slotLength;
+
+    final int                 _linkLegth;
 
     IxFileRangeReader(YapDataType handler) {
         _handler = handler;
@@ -46,8 +37,9 @@ class IxFileRangeReader {
         while (true) {
             _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
             _reader._offset = 0;
-            int cmp = _handler.compareTo(_handler.comparableObject(trans, _handler
-                .readIndexEntry(_reader)));
+
+            int cmp = compare(trans);
+
             if (cmp == 0) {
                 int parentID = _reader.readInt();
                 cmp = parentID - ((IxPatch) newTree).i_parentID;
@@ -107,23 +99,6 @@ class IxFileRangeReader {
             }
         }
     }
-    
-    public void visit(Visitor4 visitor, IxFileRange fileRange, int[] lowerAndUpperMatch) {
-        if (lowerAndUpperMatch == null) {
-            lowerAndUpperMatch = new int[] { 0, fileRange._entries - 1};
-        }
-        int count = lowerAndUpperMatch[1] - lowerAndUpperMatch[0] + 1;
-        if (count > 0) {
-            YapReader reader = new YapReader(count * _slotLength);
-            reader.read(fileRange.stream(), fileRange._address, fileRange._addressOffset
-                + (lowerAndUpperMatch[0] * _slotLength));
-
-            for (int i = lowerAndUpperMatch[0]; i <= lowerAndUpperMatch[1]; i++) {
-                reader.incrementOffset(_linkLegth);
-                visitor.visit(new Integer(reader.readInt()));
-            }
-        }
-    }
 
     private boolean adjustCursor() {
         if (_upper < _lower) {
@@ -138,70 +113,48 @@ class IxFileRangeReader {
         return _cursor != oldCursor;
     }
 
-    int compare(IxFileRange fileRange, Tree treeTo) {
+    int compare(IxFileRange fileRange, int[] matches) {
+
         setFileRange(fileRange);
         YapFile yf = fileRange.stream();
         Transaction trans = fileRange.trans();
+
+        int res = 0;
+
         while (true) {
             _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
             _reader._offset = 0;
 
-            int cmp = _handler.compareTo(_handler.comparableObject(trans, _handler
-                .readIndexEntry(_reader)));
+            int cmp = compare(trans);
 
             if (cmp > 0) {
                 _upper = _cursor - 1;
             } else if (cmp < 0) {
                 _lower = _cursor + 1;
             } else {
-                return 0;
+                res = 0;
+                break;
             }
             if (!adjustCursor()) {
-                return _cursor == 0 ? cmp : -1;
+                res = _cursor == 0 ? cmp : -1;
+                break;
             }
         }
-    }
 
-    private Tree insert(IxFileRange fileRange, Tree a_new, int a_cursor, int a_cmp) {
-        int incStartNewAt = a_cmp <= 0 ? 1 : 0;
-        int newAddressOffset = (a_cursor + incStartNewAt) * _slotLength;
-        int newEntries = fileRange._entries - a_cursor - incStartNewAt;
-        if(Deploy.debug){
-	        if(newEntries == 0){
-	            // A bug in P1Object made this happen.
-	            // It looke like it occurs if (a_cmp == 0)
-	            // We may have to deal with this again, if we get similar
-	            // entries on the same object (indexing arrays), 
-	            // so (a_cmp == 0)
-	            throw new RuntimeException("No zero new entries permitted here.");
-	        }
-        }
-        
-        fileRange._entries = a_cmp < 0 ? a_cursor + 1 : a_cursor;
-        IxFileRange ifr = new IxFileRange(fileRange.i_fieldTransaction,
-            _baseAddress, _baseAddressOffset + newAddressOffset, newEntries);
-        ifr.i_subsequent = fileRange.i_subsequent;
-        fileRange.i_subsequent = null;
-        a_new.i_preceding = fileRange.balanceCheckNulls();
-        a_new.i_subsequent = ifr.balanceCheckNulls();
-        return a_new.balance();
-    }
+        matches[0] = _lower;
+        matches[1] = _upper;
 
-    int[] lowerAndUpperMatches() {
-        int[] matches = new int[] { _lower, _upper};
         if (_lower > _upper) {
-            return matches;
+            return res;
         }
-        YapFile yf = _fileRange.stream();
-        Transaction trans = _fileRange.trans();
+
         int tempCursor = _cursor;
         _upper = _cursor;
         adjustCursor();
         while (true) {
             _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
             _reader._offset = 0;
-            int cmp = _handler.compareTo(_handler.comparableObject(trans, _handler
-                .readIndexEntry(_reader)));
+            int cmp = compare(trans);
             if (cmp == 0) {
                 _upper = _cursor;
             } else {
@@ -225,8 +178,7 @@ class IxFileRangeReader {
         while (true) {
             _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
             _reader._offset = 0;
-            int cmp = _handler.compareTo(_handler.comparableObject(trans, _handler
-                .readIndexEntry(_reader)));
+            int cmp = compare(trans);
             if (cmp == 0) {
                 _lower = _cursor;
             } else {
@@ -241,19 +193,44 @@ class IxFileRangeReader {
                 break;
             }
         }
-        return matches;
+        return res;
+    }
+
+    private final int compare(Transaction trans) {
+        return _handler.compareTo(_handler
+            .comparableObject(trans, _handler.readIndexEntry(_reader)));
+    }
+
+    private Tree insert(IxFileRange fileRange, Tree a_new, int a_cursor, int a_cmp) {
+        int incStartNewAt = a_cmp <= 0 ? 1 : 0;
+        int newAddressOffset = (a_cursor + incStartNewAt) * _slotLength;
+        int newEntries = fileRange._entries - a_cursor - incStartNewAt;
+        if (Deploy.debug) {
+            if (newEntries == 0) {
+                // A bug in P1Object made this happen.
+                // It looke like it occurs if (a_cmp == 0)
+                // We may have to deal with this again, if we get similar
+                // entries on the same object (indexing arrays), 
+                // so (a_cmp == 0)
+                throw new RuntimeException("No zero new entries permitted here.");
+            }
+        }
+
+        fileRange._entries = a_cmp < 0 ? a_cursor + 1 : a_cursor;
+        IxFileRange ifr = new IxFileRange(fileRange.i_fieldTransaction, _baseAddress,
+            _baseAddressOffset + newAddressOffset, newEntries);
+        ifr.i_subsequent = fileRange.i_subsequent;
+        fileRange.i_subsequent = null;
+        a_new.i_preceding = fileRange.balanceCheckNulls();
+        a_new.i_subsequent = ifr.balanceCheckNulls();
+        return a_new.balance();
     }
 
     private void setFileRange(IxFileRange a_fr) {
-        _fileRange = a_fr;
         _lower = 0;
         _upper = a_fr._entries - 1;
         _baseAddress = a_fr._address;
         _baseAddressOffset = a_fr._addressOffset;
         adjustCursor();
-    }
-
-    public int byteCount() {
-        return _slotLength;
     }
 }
