@@ -142,12 +142,12 @@ public class IxTraverser{
         return Tree.size(a_path.i_tree.i_subsequent) + a_path.countMatching();
     }
 
-    private void delayedAppend(IxTree a_tree, int a_comparisonResult) {
+    private void delayedAppend(IxTree a_tree, int a_comparisonResult, int[] lowerAndUpperMatch) {
         if (i_appendHead == null) {
-            i_appendHead = new IxPath(this, null, a_tree, a_comparisonResult);
+            i_appendHead = new IxPath(this, null, a_tree, a_comparisonResult, lowerAndUpperMatch);
             i_appendTail = i_appendHead;
         } else {
-            i_appendTail = i_appendTail.append(a_tree, a_comparisonResult);
+            i_appendTail = i_appendTail.append(a_tree, a_comparisonResult, lowerAndUpperMatch);
         }
     }
 
@@ -166,8 +166,9 @@ public class IxTraverser{
     private void findBoth1(IxTree a_tree) {
         if (a_tree != null) {
             int res = a_tree.compare(null);
-            i_greatTail = i_greatTail.append(a_tree, res);
-            i_smallTail = i_smallTail.append(a_tree, res);
+            int[] lowerAndUpperMatch = a_tree.lowerAndUpperMatch();
+            i_greatTail = i_greatTail.append(a_tree, res, lowerAndUpperMatch);
+            i_smallTail = i_smallTail.append(a_tree, res, lowerAndUpperMatch);
             findBoth();
         }
     }
@@ -182,8 +183,8 @@ public class IxTraverser{
             // TODO: Only use small or big path where necessary.
 
             int res = a_tree.compare(null);
-
-            i_greatHead = new IxPath(this, null, a_tree, res);
+            
+            i_greatHead = new IxPath(this, null, a_tree, res, a_tree.lowerAndUpperMatch());
             i_greatTail = i_greatHead;
             
             i_smallHead = i_greatHead.shallowClone();
@@ -233,7 +234,7 @@ public class IxTraverser{
     
     private void findGreatestEqual(IxTree a_tree) {
         int res = a_tree.compare(null);
-        i_greatTail = i_greatTail.append(a_tree, res);
+        i_greatTail = i_greatTail.append(a_tree, res, a_tree.lowerAndUpperMatch());
         if (res == 0) {
             findGreatestEqualFromEqual(a_tree);
         } else if (res < 0) {
@@ -250,7 +251,7 @@ public class IxTraverser{
     private void findGreatestEqualFromEqual(IxTree a_tree) {
         if (a_tree != null) {
             int res = a_tree.compare(null);
-            delayedAppend(a_tree, res);
+            delayedAppend(a_tree, res, a_tree.lowerAndUpperMatch());
             if (res == 0) {
                 i_greatTail = i_greatTail.append(i_appendHead, i_appendTail);
                 resetDelayedAppend();
@@ -265,7 +266,7 @@ public class IxTraverser{
     
     private void findSmallestEqual(IxTree a_tree) {
         int res = a_tree.compare(null);
-        i_smallTail = i_smallTail.append(a_tree, res);
+        i_smallTail = i_smallTail.append(a_tree, res, a_tree.lowerAndUpperMatch());
         if (res == 0) {
             findSmallestEqualFromEqual(a_tree);
         } else if (res < 0) {
@@ -282,7 +283,7 @@ public class IxTraverser{
     private void findSmallestEqualFromEqual(IxTree a_tree) {
         if (a_tree != null) {
             int res = a_tree.compare(null);
-            delayedAppend(a_tree, res);
+            delayedAppend(a_tree, res, a_tree.lowerAndUpperMatch());
             if (res == 0) {
                 i_smallTail = i_smallTail.append(i_appendHead, i_appendTail);
                 resetDelayedAppend();

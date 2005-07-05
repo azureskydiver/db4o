@@ -120,7 +120,7 @@ public class AllTestsConfAll extends TestSuite{
 	    	SodaNoDuplicates.class,
 	    	StoredClassInformation.class,
 	    	StoredFieldValue.class,
-	    	StoreObject.class,
+	    	// StoreObject.class,
 	    	StringCaseInsensitive.class,
 	    	StringInLists.class,
 			SwitchingFilesFromClient.class,

@@ -110,44 +110,44 @@ public class CreateIndex {
         q = Test.query();
         q.constrain(CreateIndex.class);
         q.descend("i_int").constrain(new Integer(4)).smaller();
-        tExpectInts(q, new int[] { 1, 2, 3, 3 }, zeroSize);
+        tExpectInts(q, new int[] { 1, 2, 3, 3 }, expectedZeroSize);
 
         q = Test.query();
         q.constrain(CreateIndex.class);
         q.descend("i_int").constrain(new Integer(4)).smaller().equal();
-        tExpectInts(q, new int[] { 1, 2, 3, 3 }, zeroSize);
+        tExpectInts(q, new int[] { 1, 2, 3, 3 }, expectedZeroSize);
 
         q = Test.query();
         q.constrain(CreateIndex.class);
         q.descend("i_int").constrain(new Integer(3)).smaller();
-        tExpectInts(q, new int[] { 1, 2 }, zeroSize);
+        tExpectInts(q, new int[] { 1, 2 }, expectedZeroSize);
 
         q = Test.query();
         q.constrain(CreateIndex.class);
         q.descend("i_int").constrain(new Integer(3)).smaller().equal();
-        tExpectInts(q, new int[] { 1, 2, 3, 3 }, zeroSize);
+        tExpectInts(q, new int[] { 1, 2, 3, 3 }, expectedZeroSize);
 
         q = Test.query();
         q.constrain(CreateIndex.class);
         q.descend("i_int").constrain(new Integer(2)).smaller().equal();
-        tExpectInts(q, new int[] { 1, 2 }, zeroSize);
+        tExpectInts(q, new int[] { 1, 2 }, expectedZeroSize);
         q = Test.query();
 
         q = Test.query();
         q.constrain(CreateIndex.class);
         q.descend("i_int").constrain(new Integer(2)).smaller();
-        tExpectInts(q, new int[] { 1 }, zeroSize);
+        tExpectInts(q, new int[] { 1 }, expectedZeroSize);
 
         q = Test.query();
         q.constrain(CreateIndex.class);
         q.descend("i_int").constrain(new Integer(1)).smaller().equal();
-        tExpectInts(q, new int[] { 1 }, zeroSize);
+        tExpectInts(q, new int[] { 1 }, expectedZeroSize);
 
         q = Test.query();
         q.constrain(CreateIndex.class);
         q.descend("i_int").constrain(new Integer(1)).smaller();
         tExpectInts(q, new int[] {
-        }, zeroSize);
+        }, expectedZeroSize);
 
     }
 
