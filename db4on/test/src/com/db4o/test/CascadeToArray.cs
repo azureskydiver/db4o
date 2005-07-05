@@ -1,6 +1,7 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
+using com.db4o.foundation;
 
 namespace com.db4o.test {
     public class CascadeToArray {

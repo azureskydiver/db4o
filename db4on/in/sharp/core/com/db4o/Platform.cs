@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections;
-using System.IO;
+using com.db4o.foundation;
 using j4o.lang;
 using j4o.lang.reflect;
 using j4o.io;
@@ -27,8 +27,6 @@ namespace com.db4o {
         private static ArrayList shutDownStreams;
 
         private static byte[][] oldAssemblies;
-
-        private static Object initMe = init();
 		
 		public static object[] collectionToArray(YapStream stream, object obj)
 		{
@@ -38,7 +36,7 @@ namespace com.db4o {
 			return ret;
 		}
 
-        private static Object init(){
+        static Platform() {
             oldAssemblyNames = new String[] {"db4o", "db4o-4.0-net1", "db4o-4.0-compact1"};
             String fullAssemblyName = typeof(Platform).Assembly.GetName().ToString();
             String shortAssemblyName = fullAssemblyName;
@@ -52,7 +50,6 @@ namespace com.db4o {
             for(int i = 0; i < oldAssemblyNames.Length; i++){
                 oldAssemblies[i] = stringIO.write(oldAssemblyNames[i]);
             }
-            return null;
         }
         
         static internal JDK jdk() {
@@ -387,6 +384,7 @@ namespace com.db4o {
             try {
                 config.objectClass(obj).translate(translator);
             } catch (Exception ex) {
+				// TODO: why the object is being logged instead of the error?
                 Unobfuscated.logErr(config, 48, obj.ToString(), null);
             }
         }

@@ -2,8 +2,7 @@
 
 using System;
 using System.Collections;
-using j4o.lang;
-using j4o.util;
+using com.db4o.foundation;
 using com.db4o;
 namespace com.db4o.test {
 

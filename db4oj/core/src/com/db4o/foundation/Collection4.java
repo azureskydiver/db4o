@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.foundation;
 
 /**
  * Fast linked list for all usecases.
@@ -9,15 +9,17 @@ package com.db4o;
  */
 public class Collection4 implements DeepClone {
 
+	// TODO: encapsulate field access
+	
     /** first element of the linked list */
-    List4 i_first;
+    public List4 _first;
 
     /** number of elements collected */
-    private int i_size;
+    private int _size;
 
-    public final void add(Object a_object) {
-        i_first = new List4(i_first, a_object);
-        i_size++;
+    public final void add(Object element) {
+        _first = new List4(_first, element);
+        _size++;
     }
 
 	// Not used
@@ -29,11 +31,11 @@ public class Collection4 implements DeepClone {
     //		}
     //	}
 
-    final void addAll(Object[] a_objects) {
-        if (a_objects != null) {
-            for (int i = 0; i < a_objects.length; i++) {
-                if (a_objects[i] != null) {
-                    add(a_objects[i]);
+    public final void addAll(Object[] elements) {
+        if (elements != null) {
+            for (int i = 0; i < elements.length; i++) {
+                if (elements[i] != null) {
+                    add(elements[i]);
                 }
             }
         }
@@ -48,26 +50,26 @@ public class Collection4 implements DeepClone {
         }
     }
 
-    final void clear() {
-        i_first = null;
-        i_size = 0;
+    public final void clear() {
+        _first = null;
+        _size = 0;
     }
 
-    public final boolean contains(Object a_obj) {
-        return get(a_obj) != null;
+    public final boolean contains(Object element) {
+        return get(element) != null;
     }
 
     /**
      * tests if the object is in the Collection.
      * == comparison.
      */
-    public final boolean containsByIdentity(Object a_obj) {
-        List4 current = i_first;
+    public final boolean containsByIdentity(Object element) {
+        List4 current = _first;
         while (current != null) {
-            if (current.i_object != null && current.i_object == a_obj) {
+            if (current._element != null && current._element == element) {
                 return true;
             }
-            current = current.i_next;
+            current = current._next;
         }
         return false;
     }
@@ -76,26 +78,25 @@ public class Collection4 implements DeepClone {
      * returns the first object found in the Collections
      * that equals() the passed object
      */
-    final Object get(Object a_obj) {
-        Object current;
+    public final Object get(Object element) {
         Iterator4 i = iterator();
         while (i.hasNext()) {
-            current = i.next();
-            if (current.equals(a_obj)) {
+        	Object current = i.next();
+            if (current.equals(element)) {
                 return current;
             }
         }
         return null;
     }
 
-    public Object deepClone(Object param){
+    public Object deepClone(Object newParent) {
         Collection4 col = new Collection4();
         Object element = null;
         Iterator4 i = this.iterator();
         while (i.hasNext()) {
             element = i.next();
             if (element instanceof DeepClone) {
-                col.add(((DeepClone) element).deepClone(param));
+                col.add(((DeepClone) element).deepClone(newParent));
             } else {
                 col.add(element);
             }
@@ -107,7 +108,7 @@ public class Collection4 implements DeepClone {
      * makes sure the passed object is in the Collection.
      * equals() comparison.
      */
-    final Object ensure(Object a_obj) {
+    public final Object ensure(Object a_obj) {
         Object obj = get(a_obj);
         if (obj != null) {
             return obj;
@@ -117,10 +118,10 @@ public class Collection4 implements DeepClone {
     }
 
     public final Iterator4 iterator() {
-        if (i_first == null) {
+        if (_first == null) {
             return Iterator4.EMPTY;
         }
-        return new Iterator4(i_first);
+        return new Iterator4(_first);
     }
 
     /**
@@ -130,25 +131,25 @@ public class Collection4 implements DeepClone {
      */
     public Object remove(Object a_object) {
         List4 previous = null;
-        List4 current = i_first;
+        List4 current = _first;
         while (current != null) {
-            if (current.i_object.equals(a_object)) {
-                i_size--;
+            if (current._element.equals(a_object)) {
+                _size--;
                 if (previous == null) {
-                    i_first = current.i_next;
+                    _first = current._next;
                 } else {
-                    previous.i_next = current.i_next;
+                    previous._next = current._next;
                 }
-                return current.i_object;
+                return current._element;
             }
             previous = current;
-            current = current.i_next;
+            current = current._next;
         }
         return null;
     }
 
     public final int size() {
-        return i_size;
+        return _size;
     }
 
     /**
@@ -156,8 +157,8 @@ public class Collection4 implements DeepClone {
      * In contrast to the JDK behaviour, the passed array has
      * to be initialized to the right length. 
      */
-    final void toArray(Object[] a_array) {
-        int j = i_size;
+    public final void toArray(Object[] a_array) {
+        int j = _size;
         Iterator4 i = iterator();
 
         // backwards, since our linked list is the wrong way arround
@@ -166,9 +167,9 @@ public class Collection4 implements DeepClone {
         }
     }
     
-    public String toString(){
-        if(Debug.toStrings){
-            if(i_size == 0){
+    public String toString() {
+        if(Debug4.prettyToStrings){
+            if(_size == 0){
                 return "[]";
             }
             StringBuffer sb = new StringBuffer();

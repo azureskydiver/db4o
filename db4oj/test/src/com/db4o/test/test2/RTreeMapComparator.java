@@ -3,9 +3,10 @@
 package com.db4o.test.test2;
 
 import java.util.*;
+
+import com.db4o.*;
 import com.db4o.test.*;
 import com.db4o.test.types.*;
-import com.db4o.*;
 
 public class RTreeMapComparator extends RMap{
 

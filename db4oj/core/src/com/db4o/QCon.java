@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -279,15 +280,15 @@ public abstract class QCon implements Constraint, Visitor4 {
         List4 previous = null;
         List4 current = _children;
         while (current != null) {
-            if (current.i_object == a_exchange) {
+            if (current._element == a_exchange) {
                 if (previous == null) {
-                    _children = current.i_next;
+                    _children = current._next;
                 } else {
-                    previous.i_next = current.i_next;
+                    previous._next = current._next;
                 }
             }
             previous = current;
-            current = current.i_next;
+            current = current._next;
         }
         
         _children = new List4(_children, a_with);

@@ -7,6 +7,7 @@ package com.db4o;
  * sure that they are only performed once.
  * 
  * @exclude
+ * @persistent
  */
 public final class Rename implements Internal
 {

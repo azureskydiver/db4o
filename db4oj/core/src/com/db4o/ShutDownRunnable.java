@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 class ShutDownRunnable extends Collection4 implements Runnable {
 	
 	public volatile boolean dontRemove = false;

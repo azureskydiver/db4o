@@ -3,8 +3,9 @@
 package com.db4o;
 
 import com.db4o.config.*;
+import com.db4o.foundation.*;
 import com.db4o.query.*;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.*;
 
 /**
  * Represents an actual object in the database. Forms a tree structure,

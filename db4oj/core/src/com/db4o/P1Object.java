@@ -5,6 +5,7 @@ package com.db4o;
 /**
  * base class for all database aware objects
  * @exclude
+ * @persistent
  */
 public class P1Object implements Db4oTypeImpl{
     

@@ -5,6 +5,7 @@ using System.Collections;
 using j4o.lang;
 using j4o.util;
 using com.db4o.types;
+using com.db4o.foundation;
 
 namespace com.db4o {
 

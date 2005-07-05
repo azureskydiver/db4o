@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 class YapClientThread extends Thread{
 	
 	private Thread streamThread;

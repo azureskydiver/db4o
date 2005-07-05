@@ -2,10 +2,10 @@
 
 package com.db4o.test.types;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.test.*;
-
-import java.util.*;
 
 public class RVector implements RTestable{
 

@@ -3,8 +3,8 @@
 package com.db4o.test;
 
 import com.db4o.*;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
 public class Refresh extends AllTests {
 

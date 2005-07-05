@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 /**
  * Index Path to represent a list of traversed index tree entries,
  * used by IxTraverser

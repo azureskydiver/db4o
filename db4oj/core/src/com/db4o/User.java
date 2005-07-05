@@ -4,6 +4,7 @@ package com.db4o;
 
 /**
  * @exclude
+ * @persistent
  */
 public class User implements Internal{
 	public String name;

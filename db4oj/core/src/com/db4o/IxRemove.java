@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 /**
  * A node to represent an entry removed from an Index
  */

@@ -2,7 +2,7 @@
 
 package com.db4o;
 
-import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.*;
 
 /**
  * n-dimensional array

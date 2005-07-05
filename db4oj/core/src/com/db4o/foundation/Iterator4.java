@@ -1,6 +1,7 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package  com.db4o;
+package  com.db4o.foundation;
+
 
 /**
  * @exclude
@@ -9,19 +10,19 @@ public class Iterator4
 {
     public static final Iterator4 EMPTY = new EmptyIterator();
     
-	private List4 i_next;
+	private List4 _next;
 
-	public Iterator4(List4 a_first){
-		i_next = a_first;
+	public Iterator4(List4 first){
+		_next = first;
 	}
 
 	public boolean hasNext(){
-		return i_next != null;
+		return _next != null;
 	}
 
 	public Object next(){
-		Object obj = i_next.i_object;
-		i_next = i_next.i_next;
+		Object obj = _next._element;
+		_next = _next._next;
 		return obj;
 	}
 }

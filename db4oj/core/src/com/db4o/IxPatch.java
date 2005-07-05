@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 /**
  * Node for index tree, can be addition or removal node
  */

@@ -2,11 +2,11 @@
 
 package com.db4o.test;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
-import com.db4o.Db4o;
-import com.db4o.config.Configuration;
-import com.db4o.foundation.Cool;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.foundation.*;
 
 /**
  * This is the main db4o regression test. 

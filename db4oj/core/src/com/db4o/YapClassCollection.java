@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 /**
@@ -236,7 +237,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     }
     
     YapClassCollectionIterator iterator(){
-        return new YapClassCollectionIterator(this, i_classes.i_first);
+        return new YapClassCollectionIterator(this, i_classes._first);
     }
 
     int ownLength() {

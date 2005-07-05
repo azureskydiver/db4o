@@ -3,6 +3,7 @@
 package com.db4o.test.test2;
 
 import java.util.*;
+
 import com.db4o.test.types.*;
 
 public class RTreeMap extends RMap{

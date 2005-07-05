@@ -1,7 +1,6 @@
 package com.db4o.io;
 
 import java.io.*;
-import java.io.IOException;
 
 public abstract class IoAdapter {
     

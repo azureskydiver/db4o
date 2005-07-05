@@ -1,10 +1,10 @@
 package com.db4o.test;
 
-import java.io.Serializable;
+import java.io.*;
 
-import com.db4o.ObjectSet;
-import com.db4o.config.TSerializable;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.query.*;
 
 interface IByteArrayHolder {
 	byte[] getBytes();

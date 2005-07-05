@@ -2,12 +2,12 @@
 
 package com.db4o.test.soda.engines.db4o;
 
-import java.io.File;
+import java.io.*;
 
 import com.db4o.*;
-import com.db4o.foundation.Cool;
-import com.db4o.query.Query;
-import com.db4o.test.soda.STEngine;
+import com.db4o.foundation.*;
+import com.db4o.query.*;
+import com.db4o.test.soda.*;
 
 public class STDb4oClientServer implements STEngine {
 

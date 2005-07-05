@@ -5,6 +5,7 @@ package com.db4o.test.soda;
 import java.lang.reflect.*;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.query.*;
 import com.db4o.test.lib.*;
 import com.db4o.test.soda.arrays.object.*;

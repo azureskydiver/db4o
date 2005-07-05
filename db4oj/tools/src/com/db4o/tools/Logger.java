@@ -2,11 +2,12 @@
 
 package com.db4o.tools;
 
-import com.db4o.*;
-import com.db4o.ext.*;
-
 import java.io.*;
 import java.lang.reflect.*;
+
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 /**
  * Logger class to log and analyse objects in RAM.

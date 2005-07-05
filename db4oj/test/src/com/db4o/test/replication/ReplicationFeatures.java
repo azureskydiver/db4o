@@ -2,7 +2,6 @@
 
 package com.db4o.test.replication;
 
-import java.io.*;
 import java.util.*;
 
 import com.db4o.*;

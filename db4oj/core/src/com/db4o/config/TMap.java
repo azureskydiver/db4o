@@ -2,8 +2,9 @@
 
 package com.db4o.config;
 
-import com.db4o.ObjectContainer;
 import java.util.*;
+
+import com.db4o.*;
 
 /**
  * @exclude

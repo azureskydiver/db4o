@@ -1,13 +1,10 @@
 package com.db4o.test.replication;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.query.Query;
-import com.db4o.replication.ReplicationConflictHandler;
-import com.db4o.replication.ReplicationProcess;
-import com.db4o.test.Test;
-import com.db4o.tools.Defragment;
+import com.db4o.*;
+import com.db4o.query.*;
+import com.db4o.replication.*;
+import com.db4o.test.*;
+import com.db4o.tools.*;
 
 class Task {
 	private String _name;

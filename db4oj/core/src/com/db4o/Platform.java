@@ -7,6 +7,7 @@ import java.text.*;
 import java.util.*;
 
 import com.db4o.config.*;
+import com.db4o.foundation.*;
 import com.db4o.handlers.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
@@ -175,7 +176,7 @@ public final class Platform {
         }
     }
 
-    static final void flattenCollection2(YapStream a_stream, Object a_object, final com.db4o.Collection4 col) {
+    static final void flattenCollection2(YapStream a_stream, Object a_object, final com.db4o.foundation.Collection4 col) {
         jdk().flattenCollection2(a_stream, a_object, col);
     }
 

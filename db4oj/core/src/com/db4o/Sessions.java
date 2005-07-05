@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 class Sessions extends Collection4{
 	

@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+
 final class TransactionClient extends Transaction {
 
     private final YapClient i_client;

@@ -2,6 +2,7 @@
 package com.db4o.ix;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 
 /**
  * Query Index Path
@@ -19,10 +20,10 @@ class QxPath extends TreeInt{
     private Tree _candidates; 
     
     
-    QxPath(QxProcessor processor, QxPath parent_, QCon constraint){
+    QxPath(QxProcessor processor, QxPath parent, QCon constraint){
         super(0);
         _processor = processor;
-        _parent = parent_;
+        _parent = parent;
         _constraint = constraint;
     }
     

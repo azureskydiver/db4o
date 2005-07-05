@@ -1,9 +1,7 @@
 package com.db4o.test.util;
 
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.*;
+import java.util.*;
 
 public class ExcludingClassLoader extends URLClassLoader {
 	private List excludedNames;
