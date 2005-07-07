@@ -31,8 +31,15 @@ namespace com.db4o {
         public void setSoTimeout(int timeout) {
             Socket socket = Dynamic.GetProperty(this, "Server") as Socket;
             if(socket != null){
-                socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.SendTimeout, timeout);
-                socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReceiveTimeout, timeout);
+                safeSetSocketOption(socket, SocketOptionName.SendTimeout, timeout);
+                safeSetSocketOption(socket, SocketOptionName.ReceiveTimeout, timeout);
+            }
+        }
+
+        private void safeSetSocketOption(Socket socket, SocketOptionName option, int value) {
+            try {
+                socket.SetSocketOption(SocketOptionLevel.Socket, option, value);
+            } catch (SocketException ignored) {
             }
         }
       
