@@ -15,18 +15,21 @@ public class ReplicateDb4oList {
     
     List list;
     
-    public void configure(){
+    public void configure() {
         Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
         Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
     }
     
-    public void storeOne(){
+    public void storeOne() {
+    	
         list = Test.objectContainer().collections().newLinkedList();
         list.add(new RDLElement("store1"));
         list.add(new RDLElement("store2"));
     }
     
     public void testOne(){
+
+        Test.deleteAll(Test.replica());
         
         replicate(false);
         
@@ -70,6 +73,7 @@ public class ReplicateDb4oList {
     private void replicate(boolean modifiedOnly) {
         ExtObjectContainer peerA = Test.objectContainer().ext();
         ObjectContainer peerB = Test.replica();
+        
         ReplicationProcess replication = peerA.replicationBegin(peerB, new ReplicationConflictHandler() {
             public Object resolveConflict(ReplicationProcess replicationProcess, Object a, Object b) {
                 return null;
