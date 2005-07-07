@@ -281,8 +281,8 @@ public class ReplicationFeaturesMain {
 	private void initState() {
 		_containerA.commit();
 		_containerB.commit();
-		deleteAll(_containerA);
-		deleteAll(_containerB);
+		Test.deleteAll(_containerA);
+		Test.deleteAll(_containerB);
 
 		_containerA.set(new Replicated("oldFromA"));
 		_containerB.set(new Replicated("oldFromB"));
@@ -302,15 +302,7 @@ public class ReplicationFeaturesMain {
         replication.commit();
 	}
 
-	private void deleteAll(ObjectContainer container) {
-		ObjectSet all = container.get(null);
-		while (all.hasNext()) {
-			container.delete(all.next());
-		}
-		container.commit();
-	}
-
-    private static void replicateQueryingFrom(ReplicationProcess replication, ObjectContainer origin) {
+	private static void replicateQueryingFrom(ReplicationProcess replication, ObjectContainer origin) {
         ObjectSet set = objectsToReplicate(replication, origin);
         while(set.hasNext()){
             Object next = set.next();

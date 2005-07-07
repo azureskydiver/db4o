@@ -95,21 +95,28 @@ public class Test extends AllTests {
     public static void delete(Object obj) {
         objectContainer().delete(obj);
     }
+    
+    public static void deleteAll(ObjectContainer container) {
+		deleteObjectSet(container, container.get(null));
+	}
+
+	public static void deleteObjectSet(ObjectContainer container, ObjectSet all) {
+		while (all.hasNext()) {
+			container.delete(all.next());
+		}
+	}
 
     public static void deleteAllInstances(Object obj) {
-        try {
-            Query q = oc.query();
-            q.constrain(classOf(obj));
-            ObjectSet set = q.execute();
-            while (set.hasNext()) {
-                oc.delete(set.next());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    	try {
+			Query q = oc.query();
+			q.constrain(classOf(obj));
+			deleteObjectSet(oc, q.execute());
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
     }
 
-    public static void end() {
+	public static void end() {
         if (oc != null) {
             while (!oc.close());
         }
