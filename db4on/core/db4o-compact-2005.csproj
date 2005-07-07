@@ -112,12 +112,6 @@
     <Compile Include="src\core\com\db4o\ClassIndexClient.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\Closure4.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\Collection4.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\config\Compare.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -190,9 +184,6 @@
     <Compile Include="src\core\com\db4o\Debug.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\DeepClone.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\DeleteInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -203,9 +194,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\Dynamic.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\EmptyIterator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\EventDispatcher.cs">
@@ -265,22 +253,25 @@
     <Compile Include="src\core\com\db4o\ext\VirtualField.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\foundation\Closure4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\Collection4.cs" />
     <Compile Include="src\core\com\db4o\foundation\Cool.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\foundation\Debug4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\DeepClone.cs" />
+    <Compile Include="src\core\com\db4o\foundation\EmptyIterator.cs" />
+    <Compile Include="src\core\com\db4o\foundation\Hashtable4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\HashtableIntEntry.cs" />
+    <Compile Include="src\core\com\db4o\foundation\HashtableObjectEntry.cs" />
+    <Compile Include="src\core\com\db4o\foundation\Iterator4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\List4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\Queue4.cs" />
     <Compile Include="src\core\com\db4o\foundation\SimpleTimer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\foundation\Visitor4.cs" />
     <Compile Include="src\core\com\db4o\FreeSlotNode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\Hashtable4.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\HashtableIntEntry.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\HashtableObjectEntry.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\IDGenerator.cs">
@@ -301,9 +292,8 @@
     <Compile Include="src\core\com\db4o\io\RandomAccessFileAdapter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\Iterator4.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="src\core\com\db4o\ix\QxPath.cs" />
+    <Compile Include="src\core\com\db4o\ix\QxProcessor.cs" />
     <Compile Include="src\core\com\db4o\IxAdd.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -338,9 +328,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\JDKReflect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\List4.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\LongJumpOutException.cs">
@@ -517,6 +504,7 @@
     <Compile Include="src\core\com\db4o\PBootRecord.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\PendingClassInits.cs" />
     <Compile Include="src\core\com\db4o\Platform.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -532,6 +520,7 @@
     <Compile Include="src\core\com\db4o\QConClass.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\QConEvaluation.cs" />
     <Compile Include="src\core\com\db4o\QConJoin.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -574,9 +563,6 @@
     <Compile Include="src\core\com\db4o\QESmaller.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\QEvaluation.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\QField.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -613,9 +599,6 @@
     <Compile Include="src\core\com\db4o\query\Query.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\Queue4.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\Readable.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -634,6 +617,7 @@
     <Compile Include="src\core\com\db4o\reflect\generic\GenericClass.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\reflect\generic\GenericConverter.cs" />
     <Compile Include="src\core\com\db4o\reflect\generic\GenericField.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -791,9 +775,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\VirtualAttributes.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\Visitor4.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\VisitorBoolean.cs">
