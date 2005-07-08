@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.network.*;
+
 
 /**
  * get the classname for an internal ID

@@ -1,8 +1,10 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.foundation.network;
 
 import java.io.*;
+
+import com.db4o.*;
 
 /**
  * Transport buffer for C/S mode to simulate a
@@ -104,13 +106,17 @@ class ByteBuffer4 {
     }
 
     public void write(byte[] bytes) {
-        synchronized (i_lock) {
-            makefit(bytes.length);
-            System.arraycopy(bytes, 0, i_cache, i_writeOffset, bytes.length);
-            i_writeOffset += bytes.length;
+    	write(bytes, 0, bytes.length);
+    }
+    
+	public void write(byte[] bytes, int off, int len) {
+		synchronized (i_lock) {
+            makefit(len);
+            System.arraycopy(bytes, off, i_cache, i_writeOffset, len);
+            i_writeOffset += len;
             i_lock.notify();
         }
-    }
+	}
 
     public void write(int i) {
         synchronized (i_lock) {

@@ -7,8 +7,9 @@ import java.io.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.foundation.network.*;
 
-class YapServer implements ObjectServer, ExtObjectServer, Runnable {
+class YapServer implements ObjectServer, ExtObjectServer, Runnable, YapSocketFakeServer {
     private String i_name;
 
     private YapServerSocket i_serverSocket;
@@ -146,7 +147,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable {
     public ObjectContainer openClient() {
         try {
             return new YapClient(
-                openFakeClientSocket(),
+                openClientSocket(),
                 YapConst.EMBEDDED_CLIENT_USER + (i_threadIDGen - 1),
                 "",
                 false);
@@ -156,9 +157,10 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable {
         return null;
     }
 
-    YapSocketFake openFakeClientSocket() {
-        YapSocketFake clientFake = new YapSocketFake(this);
-        YapSocketFake serverFake = new YapSocketFake(this, clientFake);
+    public YapSocketFake openClientSocket() {
+    	int timeout = ((Config4Impl)configure()).i_timeoutClientSocket;
+        YapSocketFake clientFake = new YapSocketFake(this, timeout);
+        YapSocketFake serverFake = new YapSocketFake(this, timeout, clientFake);
         try {
             YapServerThread thread =
                 new YapServerThread(this, i_yapFile, serverFake, i_threadIDGen++, true);

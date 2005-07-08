@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.network.*;
+
 final class MTaIsDeleted extends MsgD {
 	final boolean processMessageAtServer(YapSocket sock) {
 	    YapStream stream = getStream();

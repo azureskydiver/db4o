@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.foundation.network.*;
 import com.db4o.reflect.*;
 
 /**
@@ -113,7 +114,7 @@ public class Db4o {
 	public static ObjectContainer openClient(String hostName, int port, String user, String password)
 		throws IOException {
 		synchronized(Db4o.lock){
-			return new YapClient(new YapSocket(hostName, port), user, password, true);
+			return new YapClient(new YapClientSocket(hostName, port), user, password, true);
 		}
 	}
 	

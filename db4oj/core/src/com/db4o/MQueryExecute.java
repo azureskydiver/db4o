@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.network.*;
+
 final class MQueryExecute extends MsgObject {
 	boolean processMessageAtServer(YapSocket sock) {
 		Transaction trans = getTransaction();

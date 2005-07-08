@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.network.*;
+
 final class MGetAll extends Msg {
 	final boolean processMessageAtServer(YapSocket sock) {
 		QResult qr;

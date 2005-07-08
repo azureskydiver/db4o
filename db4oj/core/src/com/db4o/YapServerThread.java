@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.network.*;
+
 final class YapServerThread extends Thread {
 
     private String i_clientName;

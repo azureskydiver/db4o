@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.foundation.network.*;
 import com.db4o.reflect.*;
 
 /**
@@ -137,13 +138,9 @@ public class YapClient extends YapStream implements ExtClient {
         Msg.GET_THREAD_ID.write(this, i_socket);
         int serverThreadID = expectedByteResponse(Msg.ID_LIST).readInt();
 
-        YapSocket sock = null;
-
-        // Using instanceof to keep the YapSocket class clean for C#
-        if (i_socket instanceof YapSocketFake) {
-            sock = ((YapSocketFake)i_socket).i_server.openFakeClientSocket();
-        } else {
-            sock = new YapSocket(i_socket.getHostName(), i_socket.getPort());
+        YapSocket sock = i_socket.openParalellSocket();
+        
+        if (!(i_socket instanceof YapSocketFake)) {
             loginToServer(sock);
         }
 

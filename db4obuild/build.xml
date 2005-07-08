@@ -245,7 +245,7 @@
 			<arg value="/noconfig" />
 			<arg value="/nostdlib" />
 			<arg value="/r:${dir.dll.wince}mscorlib.dll" />
-			<arg value="/r:${dir.dll.wince}system.dll" />
+			<arg value="/r:${dir.dll.wince}System.dll" />
 			<arg value="/recurse:*.cs" />
 		</exec>
 		<copy todir="${dir.dist.dll.net}">
