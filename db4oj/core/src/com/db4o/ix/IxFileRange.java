@@ -6,9 +6,10 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
- * A range of index entries in the database file. 
+ * A range of index entries in the database file.
+ * @exclude 
  */
-class IxFileRange extends IxTree{
+public class IxFileRange extends IxTree{
     
     final int _address;
     int _addressOffset;

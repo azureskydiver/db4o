@@ -7,8 +7,9 @@ import com.db4o.foundation.*;
 
 /**
  * Node for index tree, can be addition or removal node
+ * @exclude
  */
-abstract class IxPatch extends IxTree {
+public abstract class IxPatch extends IxTree {
 
     int    i_parentID;
 
