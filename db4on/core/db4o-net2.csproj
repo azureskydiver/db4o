@@ -72,19 +72,10 @@
     <Compile Include="src\core\com\db4o\BlobImpl.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\ByteBuffer4.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\ClassIndex.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\ClassIndexClient.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\Closure4.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\Collection4.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\config\Compare.cs">
@@ -157,9 +148,6 @@
     <Compile Include="src\core\com\db4o\Debug.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\DeepClone.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\DeleteInfo.cs" />
     <Compile Include="src\core\com\db4o\Deploy.cs">
       <SubType>Code</SubType>
@@ -168,9 +156,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\Dynamic.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\EmptyIterator.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\EventDispatcher.cs">
@@ -230,22 +215,32 @@
     <Compile Include="src\core\com\db4o\ext\VirtualField.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\foundation\Closure4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\Collection4.cs" />
     <Compile Include="src\core\com\db4o\foundation\Cool.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\foundation\Debug4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\DeepClone.cs" />
+    <Compile Include="src\core\com\db4o\foundation\EmptyIterator.cs" />
+    <Compile Include="src\core\com\db4o\foundation\Hashtable4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\HashtableIntEntry.cs" />
+    <Compile Include="src\core\com\db4o\foundation\HashtableObjectEntry.cs" />
+    <Compile Include="src\core\com\db4o\foundation\Iterator4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\List4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\ByteBuffer4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\YapClientSocket.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\YapServerSocket.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\YapSocket.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\YapSocketFake.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\YapSocketFakeServer.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\YapSocketReal.cs" />
+    <Compile Include="src\core\com\db4o\foundation\Queue4.cs" />
     <Compile Include="src\core\com\db4o\foundation\SimpleTimer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\foundation\Visitor4.cs" />
     <Compile Include="src\core\com\db4o\FreeSlotNode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\Hashtable4.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\HashtableIntEntry.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\HashtableObjectEntry.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\IDGenerator.cs">
@@ -263,9 +258,8 @@
     <Compile Include="src\core\com\db4o\io\RandomAccessFileAdapter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\Iterator4.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="src\core\com\db4o\ix\QxPath.cs" />
+    <Compile Include="src\core\com\db4o\ix\QxProcessor.cs" />
     <Compile Include="src\core\com\db4o\IxAdd.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -300,9 +294,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\JDKReflect.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\List4.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\LongJumpOutException.cs">
@@ -572,9 +563,6 @@
     <Compile Include="src\core\com\db4o\query\Query.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\Queue4.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\Readable.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -593,6 +581,7 @@
     <Compile Include="src\core\com\db4o\reflect\generic\GenericClass.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\reflect\generic\GenericConverter.cs" />
     <Compile Include="src\core\com\db4o\reflect\generic\GenericField.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -752,9 +741,6 @@
     <Compile Include="src\core\com\db4o\VirtualAttributes.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\Visitor4.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\VisitorBoolean.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -881,16 +867,7 @@
     <Compile Include="src\core\com\db4o\YapServer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\YapServerSocket.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\YapServerThread.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\YapSocket.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\YapSocketFake.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\YapStream.cs">
@@ -1050,6 +1027,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\j4o\lang\TypeName.cs" />
+    <Compile Include="src\j4o\net\ServerSocket.cs" />
+    <Compile Include="src\j4o\net\Socket.cs" />
+    <Compile Include="src\j4o\net\SocketWrapper.cs" />
     <Compile Include="src\j4o\util\Date.cs">
       <SubType>Code</SubType>
     </Compile>

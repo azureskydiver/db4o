@@ -103,9 +103,6 @@
     <Compile Include="src\core\com\db4o\BlobImpl.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\ByteBuffer4.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\ClassIndex.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -266,6 +263,13 @@
     <Compile Include="src\core\com\db4o\foundation\HashtableObjectEntry.cs" />
     <Compile Include="src\core\com\db4o\foundation\Iterator4.cs" />
     <Compile Include="src\core\com\db4o\foundation\List4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\ByteBuffer4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\YapClientSocket.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\YapServerSocket.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\YapSocket.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\YapSocketFake.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\YapSocketFakeServer.cs" />
+    <Compile Include="src\core\com\db4o\foundation\network\YapSocketReal.cs" />
     <Compile Include="src\core\com\db4o\foundation\Queue4.cs" />
     <Compile Include="src\core\com\db4o\foundation\SimpleTimer.cs">
       <SubType>Code</SubType>
@@ -903,16 +907,7 @@
     <Compile Include="src\core\com\db4o\YapServer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\YapServerSocket.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\YapServerThread.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\YapSocket.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\YapSocketFake.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\YapStream.cs">
@@ -1072,6 +1067,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\j4o\lang\TypeName.cs" />
+    <Compile Include="src\j4o\net\ServerSocket.cs" />
+    <Compile Include="src\j4o\net\Socket.cs" />
+    <Compile Include="src\j4o\net\SocketWrapper.cs" />
     <Compile Include="src\j4o\util\Date.cs">
       <SubType>Code</SubType>
     </Compile>
