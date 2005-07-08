@@ -82,7 +82,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
     /// <Tree Code>
 	///
 	
-    int compare(Tree a_to) {
+    public int compare(Tree a_to) {
         return i_order.compareTo(((QCandidate)a_to).i_order);
     }
 

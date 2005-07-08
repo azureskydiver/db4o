@@ -21,7 +21,7 @@ final class FreeSlotNode extends TreeInt
 		return true;
 	}
 	
-	final int ownLength(){
+    public final int ownLength(){
 		return YapConst.YAPINT_LENGTH * 2;
 	}
 	
