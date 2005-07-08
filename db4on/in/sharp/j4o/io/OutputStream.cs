@@ -14,7 +14,11 @@ namespace j4o.io {
 			_stream.WriteByte((byte) b);
 		}
 
-        public void write(byte[] bytes, int offset, int length){
+		public void write(byte[] bytes) {
+			_stream.Write(bytes, 0, bytes.Length);
+		}
+
+        public void write(byte[] bytes, int offset, int length) {
             _stream.Write(bytes, offset, length);
         }
 

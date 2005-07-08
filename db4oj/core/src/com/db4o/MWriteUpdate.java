@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.foundation.network.*;
+
 final class MWriteUpdate extends MsgObject {
 	final boolean processMessageAtServer(YapSocket sock) {
 	    int yapClassId = payLoad.readInt();

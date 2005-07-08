@@ -5,6 +5,7 @@ package com.db4o;
 import java.io.*;
 
 import com.db4o.foundation.*;
+import com.db4o.foundation.network.*;
 
 /**
  * Messages for Client/Server Communication

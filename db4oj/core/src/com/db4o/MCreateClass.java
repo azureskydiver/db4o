@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.foundation.network.*;
 import com.db4o.reflect.*;
 
 final class MCreateClass extends MsgD {
