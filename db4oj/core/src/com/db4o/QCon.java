@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.ix.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -28,7 +29,7 @@ public abstract class QCon implements Constraint, Visitor4 {
     List4 _children;
 
     // for evaluation
-    QE i_evaluator = QE.DEFAULT;
+    public QE i_evaluator = QE.DEFAULT;
 
     // ID handling for fast find of QConstraint objects in 
     // pending OR evaluations

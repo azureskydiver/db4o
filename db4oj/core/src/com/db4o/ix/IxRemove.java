@@ -1,20 +1,22 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.ix;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
  * A node to represent an entry removed from an Index
+ * @exclude
  */
-class IxRemove extends IxPatch {
+public class IxRemove extends IxPatch {
 
-    IxRemove(IxFieldTransaction a_ft, int a_parentID, Object a_value) {
+    public IxRemove(IxFieldTransaction a_ft, int a_parentID, Object a_value) {
         super(a_ft, a_parentID, a_value);
         i_size = 0;
     }
     
-    int ownSize() {
+    public int ownSize() {
         return 0;
     }
 

@@ -11,13 +11,13 @@ public class YapReader {
 	
 	// for coding convenience, we allow objects to grab into the buffer
 	byte[] _buffer;
-	int _offset;
+	public int _offset;
 
 	
 	YapReader(){
 	}
 	
-	YapReader(int a_length){
+	public YapReader(int a_length){
 		_buffer = new byte[a_length];
 	}
 	
@@ -62,7 +62,7 @@ public class YapReader {
      * @param a_stream
      * @param a_address
      */
-    void read(YapStream a_stream, int a_address, int addressOffset){
+    public void read(YapStream a_stream, int a_address, int addressOffset){
         a_stream.readBytes(_buffer, a_address, addressOffset, getLength());
     }
 	
@@ -181,7 +181,7 @@ public class YapReader {
         }
     }
     
-    final void writeInt(int a_int) {
+    public final void writeInt(int a_int) {
 		// FIXME: variable ii declared outside the loop to circumvent mono bug 
 		int ii = YapConst.WRITE_LOOP;
         if (Deploy.debug) {

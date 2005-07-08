@@ -15,7 +15,7 @@ public class TreeInt extends Tree implements ReadWriteable{
 		this.i_key = a_key;
 	}
 
-	int compare(Tree a_to) {
+	public int compare(Tree a_to) {
 		return i_key - ((TreeInt)a_to).i_key;
 	}
 	
@@ -61,7 +61,7 @@ public class TreeInt extends Tree implements ReadWriteable{
 		a_writer.writeInt(i_key);
 	}
 
-	int ownLength(){
+    public int ownLength(){
 		return YapConst.YAPINT_LENGTH;
 	}
 	

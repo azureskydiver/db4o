@@ -1368,7 +1368,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
        return setInternal(ta, a_object, YapConst.UNSPECIFIED, a_checkJustSet);
     }
     
-    final int setInternal(Transaction ta, Object a_object, int a_depth,  boolean a_checkJustSet) {
+    public final int setInternal(Transaction ta, Object a_object, int a_depth,  boolean a_checkJustSet) {
         ta = checkTransaction(ta);
         int id = replicationHandles(a_object); 
         if (id != 0){

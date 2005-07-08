@@ -1,7 +1,8 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.ix;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
@@ -47,7 +48,7 @@ abstract class IxPatch extends IxTree {
         return add(a_new, cmp);
     }
 
-    int compare(Tree a_to) {
+    public int compare(Tree a_to) {
         YapDataType handler = i_fieldTransaction.i_index.i_field.getHandler();
         return handler.compareTo(handler.comparableObject(trans(), i_value));
     }
