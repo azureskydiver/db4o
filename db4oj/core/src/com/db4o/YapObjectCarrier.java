@@ -91,11 +91,11 @@ public class YapObjectCarrier extends YapMemoryFile {
     }
 	
 	
-	public final void free(int a_address, int a_length){
+	final void free(int a_address, int a_length){
 		// do nothing
 	}
 	
-	public int getSlot(int a_length){
+	int getSlot(int a_length){
 		int address = i_writeAt;
 		i_writeAt += a_length;
 		return address;

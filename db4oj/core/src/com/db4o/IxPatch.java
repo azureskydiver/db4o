@@ -1,15 +1,13 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.ix;
+package com.db4o;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
  * Node for index tree, can be addition or removal node
- * @exclude
  */
-public abstract class IxPatch extends IxTree {
+abstract class IxPatch extends IxTree {
 
     int    i_parentID;
 
@@ -49,7 +47,7 @@ public abstract class IxPatch extends IxTree {
         return add(a_new, cmp);
     }
 
-    public int compare(Tree a_to) {
+    int compare(Tree a_to) {
         YapDataType handler = i_fieldTransaction.i_index.i_field.getHandler();
         return handler.compareTo(handler.comparableObject(trans(), i_value));
     }

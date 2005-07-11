@@ -5,7 +5,6 @@ package com.db4o;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.ix.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 
@@ -395,7 +394,7 @@ public class YapField implements StoredField {
         return getIndex(a_trans).getFieldTransaction(a_trans).getRoot();
     }
 
-    public YapDataType getHandler() {
+    YapDataType getHandler() {
         // alive needs to be checked by all callers: Done
         return i_handler;
     }

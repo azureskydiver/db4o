@@ -5,9 +5,6 @@ package com.db4o.foundation.network;
 import java.io.*;
 import java.net.*;
 
-/**
- * @exclude
- */
 public class YapServerSocket {
 
     private ServerSocket _serverSocket;

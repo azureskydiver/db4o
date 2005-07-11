@@ -131,7 +131,7 @@ public abstract class YapFile extends YapStream {
         i_freeBySize = Tree.add(i_freeBySize, addressNode.i_peer);
     }
 
-    public void free(int a_address, int a_length) {
+    void free(int a_address, int a_length) {
         if(DTrace.enabled){
             DTrace.FREE.logLength(a_address, a_length);
         }
@@ -250,7 +250,7 @@ public abstract class YapFile extends YapStream {
         return result;
     }
     
-    public int getSlot(int a_length){
+    int getSlot(int a_length){
         int address = getSlot1(a_length);
         if(DTrace.enabled){
             DTrace.GET_SLOT.logLength(address, a_length);
@@ -607,7 +607,7 @@ public abstract class YapFile extends YapStream {
         i_isServer = flag;
     }
 
-    public abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length);
+    abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length);
 
     abstract void syncFiles();
 

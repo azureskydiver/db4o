@@ -2,9 +2,6 @@ package com.db4o.foundation.network;
 
 import java.io.*;
 
-/**
- * @exclude
- */
 public interface YapSocket {
 
 	public abstract void close() throws IOException;

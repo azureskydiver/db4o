@@ -4,7 +4,6 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.ix.*;
 import com.db4o.reflect.*;
 
 /**
@@ -14,7 +13,7 @@ public class Transaction {
 
     public final YapStream         i_stream;
 
-    public final YapFile           i_file;
+    final YapFile           i_file;
 
     final Transaction       i_parentTransaction;
 
@@ -58,7 +57,7 @@ public class Transaction {
         i_transactionListeners = new List4(i_transactionListeners, a_listener);
     }
 
-    public void addDirtyFieldIndex(IxFieldTransaction a_xft) {
+    void addDirtyFieldIndex(IxFieldTransaction a_xft) {
         i_dirtyFieldIndexes = new List4(i_dirtyFieldIndexes, a_xft);
     }
 

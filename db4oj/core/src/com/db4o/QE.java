@@ -51,11 +51,11 @@ public class QE
 	 * 
 	 * @param bits
 	 */
-	public void indexBitMap(boolean[] bits){
+	void indexBitMap(boolean[] bits){
 	    bits[1] = true;
 	}
 	
-	public boolean supportsIndex(){
+	boolean supportsIndex(){
 	    return true;
 	}
 	

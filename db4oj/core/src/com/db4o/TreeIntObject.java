@@ -41,7 +41,7 @@ class TreeIntObject extends TreeInt{
 		}
 	}
 	
-    public int ownLength(){
+	int ownLength(){
 		if(i_object == null){
 			return YapConst.YAPINT_LENGTH * 2;
 		}else{

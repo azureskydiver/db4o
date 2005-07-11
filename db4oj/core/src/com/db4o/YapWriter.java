@@ -38,7 +38,7 @@ public final class YapWriter extends YapReader {
         _buffer = new byte[i_length];
     }
 
-    public YapWriter(Transaction a_trans, int a_address, int a_initialBufferSize) {
+    YapWriter(Transaction a_trans, int a_address, int a_initialBufferSize) {
         this(a_trans, a_initialBufferSize);
         i_address = a_address;
     }
@@ -138,11 +138,11 @@ public final class YapWriter extends YapReader {
         }
     }
 
-    public int getAddress() {
+    int getAddress() {
         return i_address;
     }
     
-    public int addressOffset(){
+    int addressOffset(){
         return _addressOffset;
     }
 
@@ -158,7 +158,7 @@ public final class YapWriter extends YapReader {
         return i_length;
     }
 
-    public YapStream getStream() {
+    YapStream getStream() {
         return i_trans.i_stream;
     }
 

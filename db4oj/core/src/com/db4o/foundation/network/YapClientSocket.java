@@ -3,9 +3,6 @@ package com.db4o.foundation.network;
 import java.io.*;
 import java.net.*;
 
-/**
- * @exclude
- */
 public class YapClientSocket extends YapSocketReal {
     protected String _hostName;
     protected int _port;

@@ -6,7 +6,6 @@ import java.io.*;
 
 /**
  * Fakes a socket connection for an embedded client.
- * @exclude
  */
 public class YapSocketFake implements YapSocket {
 	

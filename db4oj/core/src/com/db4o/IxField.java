@@ -1,8 +1,7 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.ix;
+package com.db4o;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
@@ -25,14 +24,14 @@ public class IxField {
 
     IxFileRangeReader  i_fileRangeReader;
 
-    public IxField(Transaction a_systemTrans, YapField a_field, MetaIndex a_metaIndex) {
+    IxField(Transaction a_systemTrans, YapField a_field, MetaIndex a_metaIndex) {
         i_metaIndex = a_metaIndex;
         i_field = a_field;
         i_globalIndex = new IxFieldTransaction(a_systemTrans, this);
         createGlobalFileRange();
     }
 
-    public IxFieldTransaction dirtyFieldTransaction(Transaction a_trans) {
+    IxFieldTransaction dirtyFieldTransaction(Transaction a_trans) {
         IxFieldTransaction ift = new IxFieldTransaction(a_trans, this);
         if (i_transactionIndices == null) {
             i_transactionIndices = new Collection4();
@@ -50,7 +49,7 @@ public class IxField {
         return ift;
     }
 
-    public IxFieldTransaction getFieldTransaction(Transaction a_trans) {
+    IxFieldTransaction getFieldTransaction(Transaction a_trans) {
         if (i_transactionIndices != null) {
             IxFieldTransaction ift = new IxFieldTransaction(a_trans, this);
             ift = (IxFieldTransaction) i_transactionIndices.get(ift);

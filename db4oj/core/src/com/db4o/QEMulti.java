@@ -43,14 +43,14 @@ public class QEMulti extends QE{
 		return false;
 	}
 	
-	public void indexBitMap(boolean[] bits){
+	void indexBitMap(boolean[] bits){
 	    Iterator4 i = i_evaluators.iterator();
 	    while(i.hasNext()){
 	        ((QE)i.next()).indexBitMap(bits);
 	    }
 	}
 	
-	public boolean supportsIndex(){
+	boolean supportsIndex(){
 	    Iterator4 i = i_evaluators.iterator();
 	    while(i.hasNext()){
 	        if(! ((QE)i.next()).supportsIndex()){

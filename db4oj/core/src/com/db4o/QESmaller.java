@@ -14,7 +14,7 @@ public class QESmaller extends QEAbstract
 		return a_constraint.getComparator(a_candidate).isSmaller(a_value);
 	}
 	
-	public void indexBitMap(boolean[] bits){
+	void indexBitMap(boolean[] bits){
 	    bits[0] = true;
 	}
 	
