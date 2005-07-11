@@ -1,15 +1,13 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.ix;
+package com.db4o;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
- * A range of index entries in the database file.
- * @exclude 
+ * A range of index entries in the database file. 
  */
-public class IxFileRange extends IxTree{
+class IxFileRange extends IxTree{
     
     final int _address;
     int _addressOffset;
@@ -28,7 +26,7 @@ public class IxFileRange extends IxTree{
         return reader().add(this, a_new);
     }
 
-    public int compare(Tree a_to) {
+    int compare(Tree a_to) {
         _lowerAndUpperMatches = new int[2];
         return reader().compare(this, _lowerAndUpperMatches);
     }
@@ -45,7 +43,7 @@ public class IxFileRange extends IxTree{
         _addressOffset += length;
     }
     
-	public int ownSize(){
+	int ownSize(){
 	    return _entries;
 	}
     

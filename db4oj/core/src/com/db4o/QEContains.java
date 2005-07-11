@@ -18,7 +18,7 @@ public class QEContains extends QEAbstract
 		return a_constraint.i_object.equals(null);
 	}
 	
-	public boolean supportsIndex(){
+	boolean supportsIndex(){
 	    return false;
 	}
 }

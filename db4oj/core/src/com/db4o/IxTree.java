@@ -1,8 +1,7 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.ix;
+package com.db4o;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
@@ -21,7 +20,7 @@ public abstract class IxTree extends Tree{
         i_version = a_ft.i_version;
     }
     
-    public Tree add(final Tree a_new, final int a_cmp){
+    Tree add(final Tree a_new, final int a_cmp){
         if(a_cmp < 0){
             if(i_subsequent == null){
                 i_subsequent = a_new;
@@ -44,7 +43,7 @@ public abstract class IxTree extends Tree{
         setSizeOwn();
     }
     
-    public Tree deepClone(Object a_param){
+    Tree deepClone(Object a_param){
         try {
             IxTree tree = (IxTree)this.clone();
             tree.i_fieldTransaction = (IxFieldTransaction)a_param;
@@ -67,40 +66,40 @@ public abstract class IxTree extends Tree{
         return null;
     }
     
-    public final int nodes(){
+    final int nodes(){
         return _nodes;
     }
     
-    public final void nodes(int count){
+    final void nodes(int count){
        _nodes = count;
     }
     
-    public void setSizeOwn(){
+    void setSizeOwn(){
         super.setSizeOwn();
         _nodes = 1;
     }
     
-    public void setSizeOwnPrecedingSubsequent(){
+    void setSizeOwnPrecedingSubsequent(){
         super.setSizeOwnPrecedingSubsequent();
         _nodes = 1 + i_preceding.nodes() + i_subsequent.nodes();
     }
     
-    public void setSizeOwnPreceding(){
+    void setSizeOwnPreceding(){
         super.setSizeOwnPreceding();
         _nodes = 1 + i_preceding.nodes();
     }
     
-    public void setSizeOwnSubsequent(){
+    void setSizeOwnSubsequent(){
         super.setSizeOwnSubsequent();
         _nodes = 1 + i_subsequent.nodes();
     }
     
-    public final void setSizeOwnPlus(Tree tree){
+    final void setSizeOwnPlus(Tree tree){
         super.setSizeOwnPlus(tree);
         _nodes = 1 + tree.nodes();
     }
     
-    public final void setSizeOwnPlus(Tree tree1, Tree tree2){
+    final void setSizeOwnPlus(Tree tree1, Tree tree2){
         super.setSizeOwnPlus(tree1, tree2);
         _nodes = 1 + tree1.nodes() + tree2.nodes();
     }

@@ -1,16 +1,13 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.ix;
+package com.db4o;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
- * Index root holder for a field and a transaction.
- * 
- * @exclude
+ * Index root holder for a field and a transaction. 
  */
-public class IxFieldTransaction implements Visitor4{
+class IxFieldTransaction implements Visitor4{
 	
     final IxField i_index;
 	final Transaction i_trans;
@@ -26,19 +23,19 @@ public class IxFieldTransaction implements Visitor4{
 		return i_trans == ((IxFieldTransaction)obj).i_trans;
     }
 	
-	public void add(IxPatch a_patch){
+	void add(IxPatch a_patch){
 	    i_root = Tree.add(i_root, a_patch);
 	}
 	
-	public Tree getRoot(){
+	Tree getRoot(){
 	    return i_root;
 	}
 	
-	public void commit(){
+	void commit(){
 	    i_index.commit(this);
 	}
 	
-	public void rollback(){
+	void rollback(){
 	    i_index.rollback(this);
 	}
 	

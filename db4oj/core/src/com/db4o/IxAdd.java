@@ -1,19 +1,17 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.ix;
+package com.db4o;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
  * An addition to a field index.
- * @exclude
  */
-public class IxAdd extends IxPatch {
+class IxAdd extends IxPatch {
     
     boolean i_keepRemoved;
 
-    public IxAdd(IxFieldTransaction a_ft, int a_parentID, Object a_value) {
+    IxAdd(IxFieldTransaction a_ft, int a_parentID, Object a_value) {
         super(a_ft, a_parentID, a_value);
     }
     

@@ -128,7 +128,7 @@ public class YapRandomAccessFile extends YapFile {
         return stopSession;
     }
 
-    public void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
+    void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
 
         if (Deploy.debug && Deploy.overwrite) {
             checkXBytes(newAddress, newAddressOffset, length);

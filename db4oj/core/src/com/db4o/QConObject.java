@@ -4,7 +4,6 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.foundation.*;
-import com.db4o.ix.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 

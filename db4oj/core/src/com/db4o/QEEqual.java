@@ -7,7 +7,7 @@ package com.db4o;
  */
 public class QEEqual extends QEAbstract
 {
-    public void indexBitMap(boolean[] bits){
+    void indexBitMap(boolean[] bits){
         bits[1] = true;
     }
 }

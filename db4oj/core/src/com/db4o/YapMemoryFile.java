@@ -60,7 +60,7 @@ public class YapMemoryFile extends YapFile {
         return true;
     }
 
-    public void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
+    void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
         byte[] bytes = memoryFileBytes(newAddress + newAddressOffset + length);
         System.arraycopy(bytes, oldAddress + oldAddressOffset, bytes, newAddress + newAddressOffset, length);
     }
