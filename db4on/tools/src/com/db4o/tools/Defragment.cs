@@ -229,10 +229,10 @@ namespace com.db4o.tools
 		{
 			for (int j = 0; j < classes.Length; j++)
 			{
-				if (classes[j] != null && candidate != classes[j])
+				if (classes[j] != null)
 				{
 					Class superClass1 = Class.forName(classes[j].getName());
-					if (superClass1.isAssignableFrom(candidate))
+					if (candidate != superClass1 && superClass1.isAssignableFrom(candidate))
 					{
 						return true;
 					}
