@@ -48,6 +48,8 @@ namespace com.db4o.tools
     */
 	public class Defragment
 	{
+		static readonly j4o.lang.Class ObjectClass = j4o.lang.Class.getClassForType(typeof(object));
+		
 		/**
        * the main method is the only entry point
        */
@@ -249,6 +251,7 @@ namespace com.db4o.tools
 				{
 					Class javaClass = Class.forName(classes[i].getName());
 					if (javaClass == null
+						|| javaClass == ObjectClass
 						|| isSecondClass(javaClass)
 						|| Modifier.isAbstract(javaClass.getModifiers()))
 					{
