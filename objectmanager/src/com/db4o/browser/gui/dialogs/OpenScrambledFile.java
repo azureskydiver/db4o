@@ -6,6 +6,7 @@ package com.db4o.browser.gui.dialogs;
 import java.io.File;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -16,8 +17,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ve.sweet.validator.IValidator;
 
-import com.db4o.binding.verifier.IVerifier;
 import com.swtworkbench.community.xswt.XSWT;
 
 public class OpenScrambledFile extends Dialog {
@@ -43,7 +44,7 @@ public class OpenScrambledFile extends Dialog {
     
     protected void createButtonsForButtonBar(Composite arg0) {
         super.createButtonsForButtonBar(arg0);
-        getOKButton().setEnabled(false);
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
     }
     
     protected void configureShell(Shell shell) {
@@ -51,29 +52,30 @@ public class OpenScrambledFile extends Dialog {
         shell.setText("Open \"encrypted\" file");
     }
     
-    private IVerifier fileNameVerifier = new IVerifier() {
-        public boolean verifyFragment(String fragment) {
-            return true;
+    private IValidator fileNameVerifier = new IValidator() {
+        public String isValidPartialInput(String fragment) {
+            return null;
         }
 
-        public boolean verifyFullValue(String value) {
-            File file = new File(value);
+        public String isValid(Object value) {
+            File file = new File((String)value);
             if (file.isFile()) {
-                return true;
+                return null;
             }
-            return false;
+            return getHint();
         }
-
+        
         public String getHint() {
             return "Please enter a legal path and file name";
         }
+
     };
     
     private VerifyListener verifyFileName = new VerifyListener() {
         public void verifyText(VerifyEvent e) {
             String currentText = pane.getFileName().getText();
             String newValue = currentText.substring(0, e.start) + e.text + currentText.substring(e.end);
-            if (!fileNameVerifier.verifyFragment(newValue)) {
+            if (fileNameVerifier.isValidPartialInput(newValue) != null) {
                 e.doit = false;
                 verifyEverything(currentText);
             } else {
@@ -83,12 +85,13 @@ public class OpenScrambledFile extends Dialog {
     };
 
     protected void verifyEverything(String fileName) {
-        if (fileNameVerifier.verifyFullValue(fileName)) {
-            getOKButton().setEnabled(true);
+        String error = fileNameVerifier.isValid(fileName);
+        if (error == null) {
+            getButton(IDialogConstants.OK_ID).setEnabled(true);
             pane.getHelpArea().setText("");
         } else {
-            getOKButton().setEnabled(false);
-            pane.getHelpArea().setText(fileNameVerifier.getHint());
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
+            pane.getHelpArea().setText(error);
         }
     }
     

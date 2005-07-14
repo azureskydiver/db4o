@@ -6,46 +6,47 @@ package com.db4o.binding.browser;
 import java.util.Date;
 import java.util.HashMap;
 
-import com.db4o.binding.converter.IConverter;
-import com.db4o.binding.converters.ConvertBoolean2String;
-import com.db4o.binding.converters.ConvertByte2String;
-import com.db4o.binding.converters.ConvertCharacter2String;
-import com.db4o.binding.converters.ConvertDate2String;
-import com.db4o.binding.converters.ConvertDouble2String;
-import com.db4o.binding.converters.ConvertFloat2String;
-import com.db4o.binding.converters.ConvertInteger2String;
-import com.db4o.binding.converters.ConvertLong2String;
-import com.db4o.binding.converters.ConvertObject2String;
-import com.db4o.binding.converters.ConvertShort2String;
-import com.db4o.binding.converters.ConvertString2Boolean;
-import com.db4o.binding.converters.ConvertString2Byte;
-import com.db4o.binding.converters.ConvertString2Character;
-import com.db4o.binding.converters.ConvertString2Date;
-import com.db4o.binding.converters.ConvertString2Double;
-import com.db4o.binding.converters.ConvertString2Float;
-import com.db4o.binding.converters.ConvertString2Integer;
-import com.db4o.binding.converters.ConvertString2Long;
-import com.db4o.binding.converters.ConvertString2Object;
-import com.db4o.binding.converters.ConvertString2Short;
-import com.db4o.binding.converters.TheIdentityConverter;
-import com.db4o.binding.converters.TheNullConverter;
-import com.db4o.binding.field.IFieldController;
-import com.db4o.binding.verifier.IVerifier;
-import com.db4o.binding.verifiers.ByteVerifier;
-import com.db4o.binding.verifiers.DateVerifier;
-import com.db4o.binding.verifiers.DoubleVerifier;
-import com.db4o.binding.verifiers.FloatVerifier;
-import com.db4o.binding.verifiers.IntVerifier;
-import com.db4o.binding.verifiers.LongVerifier;
-import com.db4o.binding.verifiers.ShortVerifier;
-import com.db4o.binding.verifiers.reusable.ReadOnlyVerifier;
-import com.db4o.binding.verifiers.reusable.RegularExpressionVerifier;
+import org.eclipse.ve.sweet.converter.IConverter;
+import org.eclipse.ve.sweet.converters.ConvertBoolean2String;
+import org.eclipse.ve.sweet.converters.ConvertByte2String;
+import org.eclipse.ve.sweet.converters.ConvertCharacter2String;
+import org.eclipse.ve.sweet.converters.ConvertDate2String;
+import org.eclipse.ve.sweet.converters.ConvertDouble2String;
+import org.eclipse.ve.sweet.converters.ConvertFloat2String;
+import org.eclipse.ve.sweet.converters.ConvertInteger2String;
+import org.eclipse.ve.sweet.converters.ConvertLong2String;
+import org.eclipse.ve.sweet.converters.ConvertObject2String;
+import org.eclipse.ve.sweet.converters.ConvertShort2String;
+import org.eclipse.ve.sweet.converters.ConvertString2Boolean;
+import org.eclipse.ve.sweet.converters.ConvertString2Byte;
+import org.eclipse.ve.sweet.converters.ConvertString2Character;
+import org.eclipse.ve.sweet.converters.ConvertString2Date;
+import org.eclipse.ve.sweet.converters.ConvertString2Double;
+import org.eclipse.ve.sweet.converters.ConvertString2Float;
+import org.eclipse.ve.sweet.converters.ConvertString2Integer;
+import org.eclipse.ve.sweet.converters.ConvertString2Long;
+import org.eclipse.ve.sweet.converters.ConvertString2Object;
+import org.eclipse.ve.sweet.converters.ConvertString2Short;
+import org.eclipse.ve.sweet.converters.TheIdentityConverter;
+import org.eclipse.ve.sweet.converters.TheNullConverter;
+import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
+import org.eclipse.ve.sweet.metalogger.Logger;
+import org.eclipse.ve.sweet.validator.IValidator;
+import org.eclipse.ve.sweet.validators.ByteValidator;
+import org.eclipse.ve.sweet.validators.DateValidator;
+import org.eclipse.ve.sweet.validators.DoubleValidator;
+import org.eclipse.ve.sweet.validators.FloatValidator;
+import org.eclipse.ve.sweet.validators.IntValidator;
+import org.eclipse.ve.sweet.validators.LongValidator;
+import org.eclipse.ve.sweet.validators.ShortValidator;
+import org.eclipse.ve.sweet.validators.reusable.ReadOnlyValidator;
+import org.eclipse.ve.sweet.validators.reusable.RegularExpressionValidator;
+
 import com.db4o.browser.model.IDatabase;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
-import com.swtworkbench.community.xswt.metalogger.Logger;
 
-public abstract class FieldController implements IFieldController {
+public abstract class FieldController implements IFieldViewer {
     protected IDatabase database;
     protected Reflector reflector;
 
@@ -104,30 +105,30 @@ public abstract class FieldController implements IFieldController {
         verifiers = new HashMap();
         
         // Standalone verifiers here...
-        associate(c(Integer.TYPE), new IntVerifier());
-        associate(c(Byte.TYPE), new ByteVerifier());
-        associate(c(Short.TYPE), new ShortVerifier());
-        associate(c(Long.TYPE), new LongVerifier());
-        associate(c(Float.TYPE), new FloatVerifier());
-        associate(c(Double.TYPE), new DoubleVerifier());
-        associate(c(Integer.class), new IntVerifier());
-        associate(c(Byte.class), new ByteVerifier());
-        associate(c(Short.class), new ShortVerifier());
-        associate(c(Long.class), new LongVerifier());
-        associate(c(Float.class), new FloatVerifier());
-        associate(c(Double.class), new DoubleVerifier());
-        associate(c(Date.class), new DateVerifier());
+        associate(c(Integer.TYPE), new IntValidator());
+        associate(c(Byte.TYPE), new ByteValidator());
+        associate(c(Short.TYPE), new ShortValidator());
+        associate(c(Long.TYPE), new LongValidator());
+        associate(c(Float.TYPE), new FloatValidator());
+        associate(c(Double.TYPE), new DoubleValidator());
+        associate(c(Integer.class), new IntValidator());
+        associate(c(Byte.class), new ByteValidator());
+        associate(c(Short.class), new ShortValidator());
+        associate(c(Long.class), new LongValidator());
+        associate(c(Float.class), new FloatValidator());
+        associate(c(Double.class), new DoubleValidator());
+        associate(c(Date.class), new DateValidator());
         
         // Regex-implemented verifiers here...
-        associate(c(String.class), new RegularExpressionVerifier(
+        associate(c(String.class), new RegularExpressionValidator(
                 "/^.*$/", "/^.*$/", "Feel free to type anything"));
-        associate(c(Character.TYPE), new RegularExpressionVerifier(
+        associate(c(Character.TYPE), new RegularExpressionValidator(
                 "/^.$|^$/", "/./", "Please type a character"));
-        associate(c(Boolean.TYPE), new RegularExpressionVerifier(
+        associate(c(Boolean.TYPE), new RegularExpressionValidator(
                 "/^$|Y$|^y$|^Ye$|^ye$|^Yes$|^yes$|^T$|^t$|^Tr$|^tr$|^Tru$|^tru$|^True$|^true$|^N$|^n$|^No$|^no$|^F$|^f$|^Fa$|^fa$|^Fal$|^fal$|^Fals$|^fals$|^False$|^false$/", 
                 "/Yes$|^yes$|^No$|^no$|^True$|^true$|^False$|^false/", 
                 "Please type \"Yes\", \"No\", \"True\", or \"False\""));
-        associate(c(Boolean.class), new RegularExpressionVerifier(
+        associate(c(Boolean.class), new RegularExpressionValidator(
                 "/^$|^Y$|^y$|^Ye$|^ye$|^Yes$|^yes$|^T$|^t$|^Tr$|^tr$|^Tru$|^tru$|^True$|^true$|^N$|^n$|^No$|^no$|^F$|^f$|^Fa$|^fa$|^Fal$|^fal$|^Fals$|^fals$|^False$|^false$/", 
                 "/^Yes$|^yes$|^No$|^no$|^True$|^true$|^False$|^false$/", 
                 "Please type \"Yes\", \"No\", \"True\", or \"False\""));
@@ -205,7 +206,7 @@ public abstract class FieldController implements IFieldController {
      * @param klass
      * @param verifier
      */
-    protected void associate(ReflectClass klass, IVerifier verifier) {
+    protected void associate(ReflectClass klass, IValidator verifier) {
         verifiers.put(klass, verifier);
     }
     
@@ -215,10 +216,10 @@ public abstract class FieldController implements IFieldController {
      * @param klass The Class to verify
      * @return An appropriate IVerifier
      */
-    protected IVerifier get(ReflectClass klass) {
-        IVerifier result = (IVerifier) verifiers.get(klass);
+    protected IValidator get(ReflectClass klass) {
+        IValidator result = (IValidator) verifiers.get(klass);
         if (result == null) {
-            return ReadOnlyVerifier.getDefault();
+            return ReadOnlyValidator.getDefault();
         }
         return result;
     }

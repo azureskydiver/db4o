@@ -1,9 +1,10 @@
 package com.db4o.browser.model;
 
-import java.io.*;
+import java.io.IOException;
 
-import com.db4o.*;
-import com.swtworkbench.community.xswt.metalogger.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.swtworkbench.community.xswt.metalogger.Logger;
 
 public class Db4oSocketConnectionSpec extends Db4oConnectionSpec {
 

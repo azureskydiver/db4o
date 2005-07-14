@@ -35,14 +35,26 @@ public interface IGraphIterator extends ListIterator {
 	 * @param path The GraphPosition to use when setting the current position.
 	 */
     public void setPath(GraphPosition path);
+    
+    /**
+     * Method isPathSelectionChangable.  returns true if the selectedPath
+     * can be changed.  This will ask all selection listeners if the
+     * selection can be changed.  If no listener vetos the path selection,
+     * the path selection is considered to be changeable.
+     * 
+     * @return true if SelectedPath can be changed, false otherwise.
+     */
+    public boolean isPathSelectionChangable();
 	
 	/**
-	 * Method setSelectedPath.  Calls setPath(path), then notifies all 
-	 * selection listeners that the selected path has changed.
-	 * 
+	 * Method setSelectedPath.  Calls isPathSelectionChangable().  If this
+     * returns true, calls setPath(path), then notifies all selection 
+     * listeners that the selected path has changed.
+     * 
 	 * @param path The GraphPosition to use when setting the current position.
+     * @return true if setting the path was successful, false otherwise.
 	 */
-	public void setSelectedPath(GraphPosition path);
+	public boolean setSelectedPath(GraphPosition path);
     
     /**
      * Method hasParent.  Indicates if the current element has a parent.

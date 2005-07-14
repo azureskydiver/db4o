@@ -138,9 +138,9 @@ public class StandaloneBrowser implements IControlFactory {
         BrowserCore.getDefault().addBrowserCoreListener(browserCoreListener);
 		
 		// FIXME: hard-coding initial open...
-//        String testFile = getClass().getResource("formula1.yap").getFile();
-//        browserController.open(testFile);
-//        setTabText(testFile);
+        String testFile = getClass().getResource("formula1.yap").getFile();
+        browserController.open(testFile);
+        setTabText(testFile);
 
 //        String testFile = getClass().getResource("blah.yap").getFile();
 //        browserController.open(testFile);

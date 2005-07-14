@@ -5,9 +5,9 @@ package com.db4o.browser.query.controllers;
 
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.ve.sweet.CannotSaveException;
 
 import com.db4o.ObjectSet;
-import com.db4o.binding.CannotSaveException;
 import com.db4o.browser.gui.controllers.BrowserController;
 import com.db4o.browser.gui.controllers.QueryController;
 import com.db4o.browser.model.BrowserCore;

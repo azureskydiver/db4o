@@ -47,6 +47,11 @@ public class PathLabelController implements IBrowserController {
 		public void selectionChanged() {
 			pathlabel.setText(model.getPath().toString());
 		}
+
+        public boolean canSelectionChange() {
+            // The path label never vetoes a selection change...
+            return true;
+        }
 	};
 
 }

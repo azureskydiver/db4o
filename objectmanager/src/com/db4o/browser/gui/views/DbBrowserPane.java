@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ve.sweet.reflect.DuckType;
 
-import com.db4o.reflect.ext.DuckType;
 import com.swtworkbench.community.xswt.XSWT;
 
 /**

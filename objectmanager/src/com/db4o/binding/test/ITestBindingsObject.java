@@ -5,7 +5,7 @@ package com.db4o.binding.test;
 
 import org.eclipse.swt.widgets.Text;
 
-public interface ITestBindings {
+public interface ITestBindingsObject {
     Text getName();
     Text getAge();
 }

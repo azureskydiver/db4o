@@ -1,7 +1,8 @@
 package com.db4o.browser.model;
 
+import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
+
 import com.db4o.ObjectSet;
-import com.db4o.binding.dataeditors.IObjectEditor;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
@@ -39,7 +40,7 @@ public interface IDatabase {
 
     public abstract Query query();
 
-    public abstract IObjectEditor construct();
+    public abstract IObjectViewer construct();
     
-    public abstract IObjectEditor construct(Object toEdit);
+    public abstract IObjectViewer construct(Object toEdit);
 }

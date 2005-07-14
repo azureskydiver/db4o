@@ -1,15 +1,19 @@
 package com.db4o.browser.model;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.db4o.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
 import com.db4o.browser.prefs.activation.ActivationPreferences;
 import com.db4o.browser.prefs.classpath.ClasspathPreferences;
-import com.db4o.reflect.*;
-import com.db4o.reflect.jdk.*;
-import com.swtworkbench.community.xswt.metalogger.*;
+import com.db4o.reflect.Reflector;
+import com.db4o.reflect.jdk.JdkReflector;
+import com.swtworkbench.community.xswt.metalogger.Logger;
 
 public abstract class Db4oConnectionSpec {
     

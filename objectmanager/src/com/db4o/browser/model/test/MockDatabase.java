@@ -3,10 +3,11 @@ package com.db4o.browser.model.test;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.ve.sweet.objectviewer.*;
+
 import junit.framework.Assert;
 
 import com.db4o.ObjectSet;
-import com.db4o.binding.dataeditors.*;
 import com.db4o.browser.model.*;
 import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
@@ -99,12 +100,12 @@ public class MockDatabase extends Assert implements IDatabase {
         
     }
 
-    public IObjectEditor construct() {
+    public IObjectViewer construct() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public IObjectEditor construct(Object toEdit) {
+    public IObjectViewer construct(Object toEdit) {
         // TODO Auto-generated method stub
         return null;
     }

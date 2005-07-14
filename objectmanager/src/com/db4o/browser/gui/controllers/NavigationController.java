@@ -141,25 +141,33 @@ public class NavigationController implements IBrowserController {
 	
 	private Runnable undo = new Runnable() {
 		public void run() {
-			if (stackPosition >= 0) {
-				--stackPosition;
-				model.setSelectedPath(undoRedoStack[stackPosition]);
-			}
-			enableButtons();
+            if (model.isPathSelectionChangable()) {
+    			if (stackPosition >= 0) {
+    				--stackPosition;
+    				model.setSelectedPath(undoRedoStack[stackPosition]);
+    			}
+    			enableButtons();
+            }
 		}
 	};
 	
 	private Runnable redo = new Runnable() {
 		public void run() {
-			if (stackPosition < stackMax) {
-				++stackPosition;
-				model.setSelectedPath(undoRedoStack[stackPosition]);
-			}
-			enableButtons();
+            if (model.isPathSelectionChangable()) {
+    			if (stackPosition < stackMax) {
+    				++stackPosition;
+    				model.setSelectedPath(undoRedoStack[stackPosition]);
+    			}
+    			enableButtons();
+            }
 		}
 	};
 
 	private IGraphIteratorSelectionListener selectionChangedListener = new IGraphIteratorSelectionListener() {
+        public boolean canSelectionChange() {
+            // From our point of view it's always legal to change the selection...
+            return true;
+        }
 		public void selectionChanged() {
 			safeRun(add);
 		}

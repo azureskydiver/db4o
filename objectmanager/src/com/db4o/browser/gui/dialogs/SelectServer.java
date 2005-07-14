@@ -4,15 +4,16 @@
 package com.db4o.browser.gui.dialogs;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ve.sweet.converter.Converter;
+import org.eclipse.ve.sweet.converter.IConverter;
+import org.eclipse.ve.sweet.validators.IntValidator;
 
-import com.db4o.binding.converter.Converter;
-import com.db4o.binding.converter.IConverter;
-import com.db4o.binding.verifiers.IntVerifier;
 import com.swtworkbench.community.xswt.XSWT;
 
 public class SelectServer extends Dialog {
@@ -38,7 +39,7 @@ public class SelectServer extends Dialog {
     
     protected void createButtonsForButtonBar(Composite arg0) {
         super.createButtonsForButtonBar(arg0);
-        getOKButton().setEnabled(false);
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
     }
     
     protected void configureShell(Shell shell) {
@@ -46,13 +47,13 @@ public class SelectServer extends Dialog {
         shell.setText("Connect to db4o Server");
     }
     
-    private IntVerifier portVerifier = new IntVerifier();
+    private IntValidator portVerifier = new IntValidator();
     
     private VerifyListener verifyPort = new VerifyListener() {
         public void verifyText(VerifyEvent e) {
             String currentText = pane.getHostPort().getText();
             String newValue = currentText.substring(0, e.start) + e.text + currentText.substring(e.end);
-            if (!portVerifier.verifyFragment(newValue)) {
+            if (portVerifier.isValidPartialInput(newValue) != null) {
                 e.doit = false;
                 verifyEverything(currentText);
             } else {
@@ -77,10 +78,10 @@ public class SelectServer extends Dialog {
     };
     
     protected void verifyEverything(String hostPort) {
-        if (hostNameIsValid && portVerifier.verifyFullValue(hostPort)) {
-            getOKButton().setEnabled(true);
+        if (hostNameIsValid && (portVerifier.isValid(hostPort) == null)) {
+            getButton(IDialogConstants.OK_ID).setEnabled(true);
         } else {
-            getOKButton().setEnabled(false);
+            getButton(IDialogConstants.OK_ID).setEnabled(false);
         }
     }
     

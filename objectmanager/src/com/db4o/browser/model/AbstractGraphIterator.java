@@ -39,10 +39,24 @@ public abstract class AbstractGraphIterator implements IGraphIterator {
     public IModelNode[] getCurrentFamily() {
     	return currentFamily;
     }
+    
+    /* (non-Javadoc)
+     * @see com.db4o.browser.model.IGraphIterator#isPathSelectionChangable()
+     */
+    public boolean isPathSelectionChangable() {
+        return fireSelectionChangeQuery();
+    }
 
-    public void setSelectedPath(GraphPosition path) {
+    /* (non-Javadoc)
+     * @see com.db4o.browser.model.IGraphIterator#setSelectedPath(com.db4o.browser.model.GraphPosition)
+     */
+    public boolean setSelectedPath(GraphPosition path) {
+        if (!isPathSelectionChangable())
+            return false;
+        
     	setPath(path);
     	fireSelectionChangedEvent();
+        return true;
     }
 
     private LinkedList selectionChangedListeners = new LinkedList();
@@ -52,6 +66,15 @@ public abstract class AbstractGraphIterator implements IGraphIterator {
     		IGraphIteratorSelectionListener listener = (IGraphIteratorSelectionListener) i.next();
     		listener.selectionChanged();
     	}
+    }
+
+    private boolean fireSelectionChangeQuery() {
+        for (Iterator i = selectionChangedListeners.iterator(); i.hasNext();) {
+            IGraphIteratorSelectionListener listener = (IGraphIteratorSelectionListener) i.next();
+            if (!listener.canSelectionChange())
+                return false;
+        }
+        return true;
     }
 
     public void addSelectionChangedListener(IGraphIteratorSelectionListener selectionListener) {

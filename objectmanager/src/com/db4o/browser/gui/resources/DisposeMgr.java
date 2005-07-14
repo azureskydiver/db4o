@@ -7,8 +7,8 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ve.sweet.reflect.DuckType;
 
-import com.db4o.reflect.ext.DuckType;
 
 public class DisposeMgr implements DisposeListener {
 
