@@ -287,7 +287,6 @@ namespace com.db4o.test {
       
         public static ObjectContainer reOpen() {
             close();
-            Thread.sleep(100);
             return open();
         }
       
