@@ -26,6 +26,9 @@
       <library name="launcher/lib/db4o-4.5-java1.4.jar">
          <export name="*"/>
       </library>
+      <library name="launcher/lib/org.eclipse.ve.sweet_1.0.0.jar">
+         <export name="*"/>
+      </library>
    </runtime>
 
    <requires>
@@ -37,7 +40,6 @@
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ve.sweet"/>
    </requires>
 
    <extension
