@@ -112,8 +112,6 @@ namespace com.db4o.test {
                 }
                 Test.commit();
                 Test.close();
-                // connection needs some commit time
-                Thread.sleep(100);
                 Test.open();
                 toTest1 = newInstance(TESTS[i]);
                 runTestOne(toTest1);
