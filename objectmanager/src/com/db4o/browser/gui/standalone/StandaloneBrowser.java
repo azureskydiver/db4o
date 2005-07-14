@@ -40,6 +40,8 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ve.sweet.hinthandler.HintHandler;
+import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 
 import com.db4o.Db4o;
 import com.db4o.browser.gui.controllers.BrowserController;
@@ -109,9 +111,18 @@ public class StandaloneBrowser implements IControlFactory {
         folder.setSelectionBackground(new Color[] {title_background, title_background_gradient}, new int[] { 75 }, true);
         folder.setSelectionForeground(title_foreground);
         
-        StatusBar statusBar = new StatusBar(shell, SWT.NULL);
+        final StatusBar statusBar = new StatusBar(shell, SWT.NULL);
         statusBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
         shell.setData(STATUS_BAR, statusBar);
+        
+        HintHandler.setHintHandler(new IHintHandler() {
+            public void setMessage(String message) {
+                statusBar.setMessage(message);
+            }
+            public void clearMessage() {
+                statusBar.setMessage("");
+            }
+        });
         
         shell.addShellListener(new ShellAdapter() {
             public void shellActivated(ShellEvent e) {
