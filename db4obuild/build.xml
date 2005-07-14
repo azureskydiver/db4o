@@ -266,7 +266,7 @@
 			targettype="library"
 			destfile="${dir.dist.dll.net}/db4o-net-tools.dll"
 			debug="true"
-			definitions="">
+			definitions="NET">
 			
 			<reference dir="${dir.dist.dll.net}">
 				<include name="db4o.dll" />
@@ -278,7 +278,7 @@
 			destfile="${dir.dist.dll.net}/db4o-net-test.exe"
 			debug="true"
 			mainclass="com.db4o.test.AllTests"
-			definitions="">
+			definitions="NET">
 			
 			<exclude name="compact/**" />
 			
