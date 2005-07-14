@@ -184,8 +184,7 @@ public class P2LinkedList extends P1Collection implements Db4oList {
 
     public boolean containsAll(Collection c) {
         synchronized (streamLock()) {
-            checkActive();
-            boolean modified = false;
+            checkActive();            
             Iterator i = c.iterator();
             while (i.hasNext()) {
                 if (!contains4(i.next())) {
