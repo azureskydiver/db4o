@@ -269,7 +269,6 @@ public class Test extends AllTests {
 
     public static ObjectContainer reOpen() {
         close();
-        Cool.sleepIgnoringInterruption(100);
         return open();
     }
     

@@ -106,6 +106,11 @@ public class YapClient extends YapStream implements ExtClient {
 
     boolean close2() {
         try {
+            Msg.COMMIT_OK.write(this, i_socket);
+            expectedResponse(Msg.OK);
+        } catch (Exception e) {
+        }
+        try {
             Msg.CLOSE.write(this, i_socket);
         } catch (Exception e) {
         }

@@ -107,10 +107,6 @@ public class AllTests extends AllTestsConfAll implements Runnable {
             }
             Test.commit();
             Test.close();
-            
-            // connection needs some commit time
-            Cool.sleepIgnoringInterruption(100);  //Tests ran OK for me without this line. This defensive measure is taken in several other places. Do we still need it here? Klaus.
-
             Test.open();
             toTest = newInstance(_testCases[i]);
             runTestOne(toTest);
