@@ -210,7 +210,7 @@ public final class Platform {
         if(config.i_classLoader == null){
             // If we're in an Eclipse classloader, use that.  Otherwise,
             // use the context class loader.
-            String classloaderName = Db4o.class.getClassLoader().getClass().getName();
+            //String classloaderName = Db4o.class.getClassLoader().getClass().getName();
             
             ClassLoader cl = jdk().getContextClassLoader();
             
