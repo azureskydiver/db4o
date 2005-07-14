@@ -8,5 +8,6 @@
 	<classpathentry exported="true" kind="lib" path="launcher/lib/db4o-4.5-java1.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="lib" path="launcher/lib/org.eclipse.ve.sweet_1.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
