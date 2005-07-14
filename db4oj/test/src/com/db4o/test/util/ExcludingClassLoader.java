@@ -10,8 +10,8 @@ public class ExcludingClassLoader extends URLClassLoader {
 		super(new URL[]{},parent);
 		this.excludedNames=excludedNames;
 	}
-
-	protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+	
+	protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
 		if(excludedNames.contains(name)) {
 			throw new ClassNotFoundException(name);
 		}
