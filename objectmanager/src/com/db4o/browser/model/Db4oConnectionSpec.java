@@ -20,7 +20,7 @@ public abstract class Db4oConnectionSpec {
     
     // Global temporary placeholder for read only setting.
     // TODO: Move to preferences when starting to work on editing.
-    public static boolean PREFERENCE_IS_READ_ONLY = true;
+    public static boolean PREFERENCE_IS_READ_ONLY = false;
     
 	private boolean readOnly;
 	

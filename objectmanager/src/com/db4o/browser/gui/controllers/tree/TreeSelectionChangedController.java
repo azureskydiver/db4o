@@ -44,6 +44,7 @@ public class TreeSelectionChangedController implements
                 if (model.isPathSelectionChangable()) {
                     model.setSelectedPath(node);
                     lastSelection = node;
+                    source.refresh();
                 } else if (lastSelection != null) {
                     Display.getCurrent().asyncExec(new Runnable() {
                         public void run() {
