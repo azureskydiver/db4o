@@ -6,31 +6,43 @@ package com.db4o.binding.dataeditors.db4o;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.events.ShellListener;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ve.sweet.CannotSaveException;
+import org.eclipse.ve.sweet.fieldviewer.FieldViewerFactory;
+import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
+import org.eclipse.ve.sweet.hinthandler.DelegatingHintHandler;
+import org.eclipse.ve.sweet.hinthandler.IHintHandler;
+import org.eclipse.ve.sweet.objectviewer.IEditStateListener;
+import org.eclipse.ve.sweet.objectviewer.IEditedObject;
+import org.eclipse.ve.sweet.objectviewer.IInputChangeListener;
+import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
+import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
+import org.eclipse.ve.sweet.reflect.RelaxedDuckType;
 
 import com.db4o.ObjectContainer;
-import com.db4o.binding.CannotSaveException;
-import com.db4o.binding.dataeditors.IObjectEditor;
-import com.db4o.binding.dataeditors.IObjectListener;
-import com.db4o.binding.dataeditors.IPropertyEditor;
-import com.db4o.binding.field.FieldController;
-import com.db4o.binding.field.IFieldController;
-import com.db4o.reflect.ext.RelaxedDuckType;
 
-public class Db4oObject implements IObjectEditor {
+/**
+ * Db4oObject.
+ *
+ * @author djo
+ */
+public class Db4oObject implements IObjectViewer {
     private ObjectContainer database;
 
     private Object input = null;
-    private IDb4oBean inputBean = null;
+    private IEditedObject inputBean = null;
     
     private Shell shell=null;
 
     private static final int DEFAULT_REFRESH_DEPTH = 5;
     private int refreshDepth = DEFAULT_REFRESH_DEPTH;
+
+    // The IFieldEditors that are bound to this object
+    private LinkedList bindings = new LinkedList();
+
+    private LinkedList objectListeners = new LinkedList();
+
+    private DelegatingHintHandler hintHandler = new DelegatingHintHandler();
 
     /**
      * @param database
@@ -40,19 +52,10 @@ public class Db4oObject implements IObjectEditor {
     }
     
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#removeListeners()
-     */
-    public void removeListeners() {
-        if (shell != null) {
-            shell.removeShellListener(shellListener);
-        }
-    }
-
-    /* (non-Javadoc)
      * @see com.db4o.binding.dataeditors.IObjectEditor#setInput(java.lang.Object)
      */
     public boolean setInput(Object input) {
-        if (this.input != null && (!verifyAndSaveEditedFields() || !verifyAndSaveObject() || input == null)) {
+        if (this.input != null && (!validateAndSaveEditedFields() || !validateAndSaveObject() || input == null)) {
             return false;
         }
         try {
@@ -60,15 +63,22 @@ public class Db4oObject implements IObjectEditor {
         } catch (CannotSaveException e) {
             throw new RuntimeException("Should be able to save if fields and object verify", e);
         }
+        
+        if (!fireInputChangingEvent(this.input, input))
+            return false;
+        
         this.input = input;
-        inputBean = (IDb4oBean) RelaxedDuckType.implement(IDb4oBean.class, input);
+        inputBean = (IEditedObject) RelaxedDuckType.implement(IEditedObject.class, input);
         refreshFieldsFromInput();
+        
+        fireInputChangedEvent(input);
+        
         return true;
     }
 
     private void refreshFieldsFromInput() {
         for (Iterator bindingIter = bindings.iterator(); bindingIter.hasNext();) {
-            IFieldController controller = (IFieldController) bindingIter.next();
+            IFieldViewer controller = (IFieldViewer) bindingIter.next();
             try {
                 controller.setInput(getProperty(controller.getPropertyName()));
             } catch (CannotSaveException e) {
@@ -80,27 +90,23 @@ public class Db4oObject implements IObjectEditor {
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#getInput()
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#getInput()
      */
     public Object getInput() {
         return input;
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#getProperty(java.lang.String)
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#getProperty(java.lang.String)
      */
     public IPropertyEditor getProperty(String name) throws NoSuchMethodException {
         return Db4oBeanProperty.construct(getInput(), name, database);
     }
     
-    private LinkedList bindings = new LinkedList();
-
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#getWidgetBinding(org.eclipse.swt.widgets.Control, java.lang.String)
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#bind(java.lang.Object, java.lang.String)
      */
-    public IFieldController bind(Control control, String propertyName) {
-        ensureShellListener(control);
-        
+    public IFieldViewer bind(Object control, String propertyName) {
         IPropertyEditor propertyEditor;
         try {
             propertyEditor = getProperty(propertyName);
@@ -108,7 +114,7 @@ public class Db4oObject implements IObjectEditor {
             return null;
         }
         
-        IFieldController result = FieldController.construct(control, this, propertyEditor);
+        IFieldViewer result = FieldViewerFactory.construct(control, this, propertyEditor);
         
         if (result != null) {
             bindings.addLast(result);
@@ -116,33 +122,14 @@ public class Db4oObject implements IObjectEditor {
         return result;
     }
 
-    private void ensureShellListener(Control control) {
-        if (shellListener == null) {
-            shellListener = new ShellAdapter() {
-                public void shellClosed(ShellEvent e) {
-                    if (!verifyAndSaveEditedFields()) {
-                        e.doit = false;
-                    }
-                    if (!verifyAndSaveObject()) {
-                        e.doit = false;
-                    }
-                }
-            };
-        }
-        shell = control.getShell();
-        shell.addShellListener(shellListener);
-    }
-    
-    private ShellListener shellListener;
-
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#verifyEditedFields()
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#verifyAndSaveEditedFields()
      */
-    public boolean verifyAndSaveEditedFields() {
+    public boolean validateAndSaveEditedFields() {
         for (Iterator bindingsIter = bindings.iterator(); bindingsIter.hasNext();) {
-            IFieldController field = (IFieldController) bindingsIter.next();
+            IFieldViewer field = (IFieldViewer) bindingsIter.next();
             if (field.isDirty()) {
-                if (!field.verify()) {
+                if (field.validate() != null) {
                     return false;
                 }
                 try {
@@ -156,37 +143,50 @@ public class Db4oObject implements IObjectEditor {
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#verifyObject()
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#verifyAndSaveObject()
      */
-    public boolean verifyAndSaveObject() {
+    public boolean validateAndSaveObject() {
         /*
          * The return type for RelaxedDuckType is false for boolean types if
          * the method does not exist.  So we have to test explicitly here...
          */
-        if (RelaxedDuckType.includes(input, "verifyObject", new Class[] {}) && !inputBean.verifyObject()) {
+        if (RelaxedDuckType.includes(input, "verifyObject", new Class[] {}) && !inputBean.validateObject()) {
             return false;
         }
         database.set(input);
         return true;
     }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.objectviewer.IObjectViewer#setHintHandler(org.eclipse.ve.sweet.hinthandler.IHintHandler)
+     */
+    public void setHintHandler(IHintHandler hintHandler) {
+        this.hintHandler.delegate = hintHandler;
+    }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#commit()
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#commit()
      */
     public void commit() throws CannotSaveException {
         if (input == null) {
             return;
         }
-        if (!verifyAndSaveEditedFields())
+        if (!validateAndSaveEditedFields())
             throw new CannotSaveException("Unable to save edited fields");
-        if (!verifyAndSaveObject())
+        
+        // Ask the bean to verify itself for consistency
+        if (!validateAndSaveObject())
             throw new CannotSaveException("Unable to save object");
+        
+        // Let the bean itself know it is about to be saved
         inputBean.commit();
+        
+        // Actually commit the db4o transaction
         database.commit();
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#refresh()
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#refresh()
      */
     public void refresh() {
         database.ext().refresh(input, refreshDepth);
@@ -195,7 +195,7 @@ public class Db4oObject implements IObjectEditor {
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#rollback()
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#rollback()
      */
     public void rollback() {
         database.rollback();
@@ -204,7 +204,7 @@ public class Db4oObject implements IObjectEditor {
     }
 
     /* (non-Javadoc)
-     * @see com.db4o.binding.dataeditors.IObjectEditor#delete()
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#delete()
      */
     public void delete() {
         inputBean.delete();
@@ -226,30 +226,74 @@ public class Db4oObject implements IObjectEditor {
         this.refreshDepth = refreshDepth;
     }
 
-    public void addObjectListener(IObjectListener listener) {
-        // TODO Auto-generated method stub
-        
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#addObjectListener(org.eclipse.ve.sweet.dataeditors.IObjectListener)
+     */
+    public void addObjectListener(IEditStateListener listener) {
+        objectListeners.add(listener);
     }
 
-    public void removeObjectListener(IObjectListener listener) {
-        // TODO Auto-generated method stub
-        
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#removeObjectListener(org.eclipse.ve.sweet.dataeditors.IObjectListener)
+     */
+    public void removeObjectListener(IEditStateListener listener) {
+        objectListeners.remove(listener);
     }
-
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#fireObjectListenerEvent()
+     */
+    public void fireObjectListenerEvent() {
+        for (Iterator listeners = objectListeners.iterator(); listeners.hasNext();) {
+            IEditStateListener listener = (IEditStateListener) listeners.next();
+            listener.stateChanged(this);
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#isDirty()
+     */
     public boolean isDirty() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public boolean isSaved() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public boolean isCommitted() {
-        // TODO Auto-generated method stub
+        for (Iterator bindingsIter = bindings.iterator(); bindingsIter.hasNext();) {
+            IFieldViewer fieldController = (IFieldViewer) bindingsIter.next();
+            if (fieldController.isDirty()) {
+                return true;
+            }
+        }
         return false;
     }
     
+    private LinkedList inputChangeListeners = new LinkedList();
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#addInputChangeListener(org.eclipse.ve.sweet.dataeditors.IInputChangeListener)
+     */
+    public void addInputChangeListener(IInputChangeListener listener) {
+        inputChangeListeners.add(listener);
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#removeInputChangeListener(org.eclipse.ve.sweet.dataeditors.IInputChangeListener)
+     */
+    public void removeInputChangeListener(IInputChangeListener listener) {
+        inputChangeListeners.remove(listener);
+    }
+    
+    private boolean fireInputChangingEvent(Object oldInput, Object newInput) {
+        for (Iterator i = inputChangeListeners.iterator(); i.hasNext();) {
+            IInputChangeListener listener = (IInputChangeListener) i.next();
+            if (!listener.inputChanging(oldInput, newInput))
+                return false;
+        }
+        return true;
+    }
+    
+    private void fireInputChangedEvent(Object newInput) {
+        for (Iterator i = inputChangeListeners.iterator(); i.hasNext();) {
+            IInputChangeListener listener = (IInputChangeListener) i.next();
+            listener.inputChanged(newInput);
+        }
+    }
 
 }

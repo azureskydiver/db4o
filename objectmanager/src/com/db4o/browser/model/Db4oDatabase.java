@@ -21,14 +21,15 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 
+import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
+import org.eclipse.ve.sweet.objectviewer.IObjectViewerFactory;
+
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.binding.dataeditors.IObjectEditor;
-import com.db4o.binding.dataeditors.IObjectEditorFactory;
 import com.db4o.binding.dataeditors.db4o.Db4oObjectEditorFactory;
 import com.db4o.browser.prefs.activation.ActivationPreferences;
-import com.db4o.ext.*;
+import com.db4o.ext.StoredClass;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
@@ -178,14 +179,14 @@ public class Db4oDatabase implements IDatabase {
         return container.query();
     }
 
-    IObjectEditorFactory editorFactory;
+    IObjectViewerFactory editorFactory;
     
-    public IObjectEditor construct() {
+    public IObjectViewer construct() {
         return editorFactory.construct();
     }
 
-    public IObjectEditor construct(Object toEdit) {
-        IObjectEditor editor = editorFactory.construct();
+    public IObjectViewer construct(Object toEdit) {
+        IObjectViewer editor = editorFactory.construct();
         editor.setInput(toEdit);
         return editor;
     }

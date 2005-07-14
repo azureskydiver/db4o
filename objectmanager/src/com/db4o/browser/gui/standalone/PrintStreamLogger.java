@@ -9,6 +9,7 @@ import java.io.OutputStream;
 
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
+
 public class PrintStreamLogger extends OutputStream {
 
     private ByteArrayOutputStream delegate = new ByteArrayOutputStream();

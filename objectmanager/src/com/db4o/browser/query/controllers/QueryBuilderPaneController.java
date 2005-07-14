@@ -15,11 +15,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ve.sweet.CannotSaveException;
+import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 
-import com.db4o.binding.CannotSaveException;
 import com.db4o.binding.browser.FieldConstraintRelationalOperatorFieldController;
 import com.db4o.binding.browser.FieldConstraintValueFieldController;
-import com.db4o.binding.field.IFieldController;
 import com.db4o.browser.query.model.FieldConstraint;
 import com.db4o.browser.query.model.QueryBuilderModel;
 import com.db4o.browser.query.model.QueryPrototypeInstance;
@@ -117,7 +117,7 @@ public class QueryBuilderPaneController {
             if (fieldType.isSecondClass()) {
                 newRow = editor.addPrimitiveTypeRow(curFieldName, field.field.isPublic());
                 // Relational operator...
-                IFieldController controller;
+                IFieldViewer controller;
                 controller = new FieldConstraintRelationalOperatorFieldController(newRow.getRelationEditor(), field);
                 controllers.add(controller);
                 
@@ -169,7 +169,7 @@ public class QueryBuilderPaneController {
     
     public void save() throws CannotSaveException {
         for (Iterator controllerIter = controllers.iterator(); controllerIter.hasNext();) {
-            IFieldController controller = (IFieldController) controllerIter.next();
+            IFieldViewer controller = (IFieldViewer) controllerIter.next();
             controller.save();
         }
     }

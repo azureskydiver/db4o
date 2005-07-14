@@ -18,7 +18,6 @@ import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.*;
 import com.db4o.browser.model.nodes.ClassNode;
 import com.db4o.reflect.ReflectClass;
-import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
  * BrowserController.  The root MVC Controller for a browser window.

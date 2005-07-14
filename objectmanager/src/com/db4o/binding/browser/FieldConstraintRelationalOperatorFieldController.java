@@ -4,10 +4,11 @@
 package com.db4o.binding.browser;
 
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.ve.sweet.CannotSaveException;
+import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
+import org.eclipse.ve.sweet.hinthandler.IHintHandler;
+import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 
-import com.db4o.binding.CannotSaveException;
-import com.db4o.binding.dataeditors.IPropertyEditor;
-import com.db4o.binding.field.IFieldController;
 import com.db4o.browser.query.model.FieldConstraint;
 import com.db4o.browser.query.model.RelationalOperator;
 
@@ -18,7 +19,7 @@ import com.db4o.browser.query.model.RelationalOperator;
  *
  * @author djo
  */
-public class FieldConstraintRelationalOperatorFieldController implements IFieldController {
+public class FieldConstraintRelationalOperatorFieldController implements IFieldViewer {
 
     private Combo ui;
     private FieldConstraint constraint;
@@ -55,20 +56,21 @@ public class FieldConstraintRelationalOperatorFieldController implements IFieldC
         constraint.relation = RelationalOperator.OPERATORS[ui.getSelectionIndex()];
     }
 
-    public boolean verify() {
-        return true;
+    public String validate() {
+        return null;
     }
 
 
     public void setInput(IPropertyEditor input) throws CannotSaveException {
-        // TODO Auto-generated method stub
-        
+        // Not needed for this implementation
     }
 
-
     public IPropertyEditor getInput() {
-        // TODO Auto-generated method stub
         return null;
+    }
+    
+    public void setHintHandler(IHintHandler hintHandler) {
+        // Not needed for this implementation
     }
 
 }

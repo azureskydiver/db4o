@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.swtworkbench.community.xswt.metalogger.Logger;
 
+
 /**
  * A formalization of the standard SWT program.
  * 

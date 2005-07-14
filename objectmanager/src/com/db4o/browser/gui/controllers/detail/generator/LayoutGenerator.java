@@ -93,8 +93,8 @@ public class LayoutGenerator {
 					IModelNode node = (IModelNode) input.next();
 					
                     String currentRow;
-//                    if (node.isEditable()) {
-                    if (false) {
+                    if (node.isEditable()) {
+//                    if (false) {
                         // Substitute for all tokens from the editor row template
                         currentRow = row_editable;
                         currentRow = substitute(FIELD_NO_TOKEN, Integer.toString(i), currentRow);

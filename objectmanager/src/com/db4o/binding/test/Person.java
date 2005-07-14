@@ -3,15 +3,16 @@
  */
 package com.db4o.binding.test;
 
-import com.db4o.binding.verifier.IVerifier;
-import com.db4o.binding.verifiers.reusable.RegularExpressionVerifier;
+import org.eclipse.ve.sweet.validator.IValidator;
+import org.eclipse.ve.sweet.validators.reusable.RegularExpressionValidator;
+
 
 public class Person {
     String name;
     int age;
     
-    public IVerifier getAgeVerifier() {
-        return new RegularExpressionVerifier("/^[0-9]*$/", "/^[0-9]{1,3}$/", 
+    public IValidator getAgeVerifier() {
+        return new RegularExpressionValidator("^[0-9]*$", "^[0-9]{1,3}$", 
                 "Please enter an age between 0 and 999");
     }
 }

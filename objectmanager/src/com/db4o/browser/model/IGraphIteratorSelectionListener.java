@@ -11,5 +11,15 @@ package com.db4o.browser.model;
  * @author djo
  */
 public interface IGraphIteratorSelectionListener {
+    /**
+     * Query listeners to see if it is okay to change the selection right now
+     * 
+     * @return true if the selection can be changed; false otherwise.
+     */
+    boolean canSelectionChange();
+    
+	/**
+	 * Notify listeners that the current selection has changed
+	 */
 	void selectionChanged();
 }

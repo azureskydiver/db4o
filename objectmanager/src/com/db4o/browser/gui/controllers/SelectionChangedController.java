@@ -23,6 +23,16 @@ public class SelectionChangedController implements IGraphIteratorSelectionListen
 	private DetailController detailController;
 
 
+    /* (non-Javadoc)
+     * @see com.db4o.browser.model.IGraphIteratorSelectionListener#canSelectionChange()
+     */
+    public boolean canSelectionChange() {
+        if (!treeSelectionChangedController.canSelectionChange()) {
+            return false;
+        }
+        return detailController.canSelectionChange();
+    }
+
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.model.IGraphIterator.IListener#selectionChanged()
 	 */
@@ -30,9 +40,6 @@ public class SelectionChangedController implements IGraphIteratorSelectionListen
 		IGraphIterator model = (IGraphIterator) treeViewer.getInput();
 		GraphPosition selectedElement = model.getPath();
 
-		// Right now the only way to change the selection is through the 
-		// tree, but this avoids loops when we provide more than one way to
-		// change the selection.
 		if (!treeSelectionChangedController.isTreeSelectionChanging())
 			treeViewer.setSelection(new StructuredSelection(selectedElement), true);
 		
@@ -67,6 +74,5 @@ public class SelectionChangedController implements IGraphIteratorSelectionListen
 	public void setDetailController(DetailController detailController) {
 		this.detailController = detailController;
 	}
-	
 
 }

@@ -3,11 +3,12 @@
  */
 package com.db4o.binding.dataeditors.db4o;
 
-import com.db4o.ObjectContainer;
-import com.db4o.binding.dataeditors.IObjectEditor;
-import com.db4o.binding.dataeditors.IObjectEditorFactory;
+import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
+import org.eclipse.ve.sweet.objectviewer.IObjectViewerFactory;
 
-public class Db4oObjectEditorFactory implements IObjectEditorFactory {
+import com.db4o.ObjectContainer;
+
+public class Db4oObjectEditorFactory implements IObjectViewerFactory {
 
     private ObjectContainer database;
 
@@ -15,7 +16,7 @@ public class Db4oObjectEditorFactory implements IObjectEditorFactory {
         this.database = database;
     }
     
-    public IObjectEditor construct() {
+    public IObjectViewer construct() {
         return new Db4oObject(database);
     }
 

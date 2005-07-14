@@ -7,8 +7,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
+
 import com.db4o.ObjectContainer;
-import com.db4o.binding.dataeditors.IPropertyEditor;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.ReflectMethod;
@@ -60,9 +61,9 @@ public class Db4oBeanProperty implements InvocationHandler {
         if (getter != null) {
             propertyType = getter.getReturnType();
         } else {
-            field = receiverClass.getDeclaredField(propertyName);
+            field = getField(receiverClass, propertyName);
             if (field == null) {
-                field = receiverClass.getDeclaredField(lowerCaseFirstLetter(propertyName));
+                field = getField(receiverClass, lowerCaseFirstLetter(propertyName));
                 if (field == null) {
                     throw new NoSuchMethodException("That property does not exist.");
                 }
@@ -73,6 +74,17 @@ public class Db4oBeanProperty implements InvocationHandler {
         
         setter = receiverClass.getMethod(
                 realMethodName("set"), new ReflectClass[] {propertyType});
+    }
+    
+    private ReflectField getField(ReflectClass clazz, String propertyName) {
+        ReflectField result;
+        while (clazz != null) {
+            result = clazz.getDeclaredField(propertyName);
+            if (result != null)
+                return result;
+            clazz = clazz.getSuperclass();
+        }
+        return null;
     }
 
     private String lowerCaseFirstLetter(String name) {
