@@ -11,11 +11,11 @@ namespace com.db4o.test {
         public String name;
 
         public void test(){
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(typeof(NoInstanceStored));
             q.descend("name").constrain("hi");
             ObjectSet objectSet = q.execute();
-            Test.ensure(objectSet.size() == 0);
+            Tester.ensure(objectSet.size() == 0);
         }
 
         public static void Main(String[] args) {

@@ -9,7 +9,7 @@ namespace com.db4o.test.cs
 
 		public void objectOnActivate(ObjectContainer container)
 		{
-			Test.ensureEquals(null, Crash);
+			Tester.ensureEquals(null, Crash);
 			Crash += new EventHandler(Boom);
 		}
 
@@ -30,7 +30,7 @@ namespace com.db4o.test.cs
 
 		public static void Assert()
 		{
-			Test.ensureEquals("Boom!!!!", OnActivateEventStrategy.Message);
+			Tester.ensureEquals("Boom!!!!", OnActivateEventStrategy.Message);
 		}
 
 		static void Boom(object sender, EventArgs args)
@@ -52,13 +52,13 @@ namespace com.db4o.test.cs
 
         public void storeOne()
 		{
-			this.Bang += new EventHandler(theHandler);
+			this.Bang += new EventHandler(OnBang);
         }
 
         public void testOne()
 		{
 			// delegate fields are simply not stored
-			Test.ensureEquals(null, Bang);
+			Tester.ensureEquals(null, Bang);
         }
 
 		public void testTSerializableForDelegate()
@@ -66,17 +66,17 @@ namespace com.db4o.test.cs
 			Db4o.configure().objectClass(typeof(EventHandler)).translate(new com.db4o.config.TSerializable());			
 			try
 			{
-				Test.deleteAllInstances(typeof(CsDelegate));
-				Test.reOpen();
+				Tester.deleteAllInstances(typeof(CsDelegate));
+				Tester.reOpen();
 
 				CsDelegate.Message = null;
 				CsDelegate obj = new CsDelegate();
-				obj.Bang += new EventHandler(theHandler);
-				Test.store(obj);
+				obj.Bang += new EventHandler(OnBang);
+				Tester.store(obj);
 
-				obj = (CsDelegate)Test.getOne(typeof(CsDelegate));
+				obj = (CsDelegate)Tester.getOne(typeof(CsDelegate));
 				obj.RaiseBang();
-				Test.ensureEquals("Bang!!!!", CsDelegate.Message);
+				Tester.ensureEquals("Bang!!!!", CsDelegate.Message);
 			}
 			finally
 			{
@@ -87,17 +87,17 @@ namespace com.db4o.test.cs
 		/* TODO: See why this is not working
 		public void testOnActivateEventStrategy()
 		{
-			Test.deleteAllInstances(typeof(OnActivateEventStrategy));
-			Test.store(new OnActivateEventStrategy());
+			Tester.deleteAllInstances(typeof(OnActivateEventStrategy));
+			Tester.store(new OnActivateEventStrategy());
             
 			OnActivateEventStrategy.Prepare();
-			OnActivateEventStrategy obj = (OnActivateEventStrategy)Test.objectContainer().get(typeof(OnActivateEventStrategy)).next();
+			OnActivateEventStrategy obj = (OnActivateEventStrategy)Tester.objectContainer().get(typeof(OnActivateEventStrategy)).next();
 			obj.RaiseCrash();
 			OnActivateEventStrategy.Assert();
 		}
 		*/
 
-		static void theHandler(object sender, EventArgs args) 
+		static void OnBang(object sender, EventArgs args) 
 		{
 			CsDelegate.Message = "Bang!!!!";
 		}

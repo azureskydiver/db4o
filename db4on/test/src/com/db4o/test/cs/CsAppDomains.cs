@@ -69,45 +69,45 @@ namespace com.db4o.test.cs
 		public void store()
 		{
 			ADTask task = null;
-			Test.store(task = new ADTask("task 1"));
+			Tester.store(task = new ADTask("task 1"));
 			_tasks.Add(task);
 
-			Test.store(task = new ADTask("task 2"));
+			Tester.store(task = new ADTask("task 2"));
 			_tasks.Add(task);
 		}
 		
 		public void testRemoteDomain()
 		{
-			Test.closeAll();
+			Tester.closeAll();
 
 			AppDomain domain = AppDomain.CreateDomain("db4o-remote-domain");
 			try
 			{
 				using (TaskDatabase db = (TaskDatabase)domain.CreateInstanceAndUnwrap(typeof(TaskDatabase).Assembly.GetName().ToString(), typeof(TaskDatabase).FullName))
 				{
-					db.Open(currentFileName(), Test.isClientServer());
+					db.Open(currentFileName(), Tester.isClientServer());
 				
 					string[] taskNames = db.QueryTaskNames();
-					Test.ensureEquals(2, taskNames.Length);
-					Test.ensureEquals("task 1", taskNames[0]);
-					Test.ensureEquals("task 2", taskNames[1]);
+					Tester.ensureEquals(2, taskNames.Length);
+					Tester.ensureEquals("task 1", taskNames[0]);
+					Tester.ensureEquals("task 2", taskNames[1]);
 
 					ADTask[] tasks = db.QueryTasks();
-					Test.ensureEquals(2, tasks.Length);
-					Test.ensureEquals("task 1", tasks[0].Name);
-					Test.ensureEquals("task 2", tasks[1].Name);
+					Tester.ensureEquals(2, tasks.Length);
+					Tester.ensureEquals("task 1", tasks[0].Name);
+					Tester.ensureEquals("task 2", tasks[1].Name);
 				}
 			}
 			finally
 			{
 				AppDomain.Unload(domain);
-				Test.reOpenAll(); // leave the Test object as we found it
+				Tester.reOpenAll(); // leave the Tester object as we found it
 			}
 		}
 
 		public string currentFileName()
 		{
-			return Path.GetFullPath(Test.isClientServer() ? Test.FILE_SERVER : Test.FILE_SOLO);
+			return Path.GetFullPath(Tester.isClientServer() ? Tester.FILE_SERVER : Tester.FILE_SOLO);
 		}
 	}
 }

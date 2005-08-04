@@ -24,24 +24,24 @@ namespace com.db4o.test
       
 		public void store() 
 		{
-			Test.deleteAllInstances(new Atom());
-			Test.deleteAllInstances(this);
+			Tester.deleteAllInstances(new Atom());
+			Tester.deleteAllInstances(this);
 			CascadeToExistingArrayListMember cev1 = new CascadeToExistingArrayListMember();
 			cev1.vec = new ArrayList();
 			Atom atom1 = new Atom("one");
-			Test.store(atom1);
+			Tester.store(atom1);
 			cev1.vec.Add(atom1);
-			Test.store(cev1);
+			Tester.store(cev1);
 		}
       
 		public void test() 
 		{
-			Test.forEach(new CascadeToExistingArrayListMember(), new MyVisitorE1());
-			Test.reOpen();
-			Test.forEach(new CascadeToExistingArrayListMember(), new MyVisitorE2());
-			Test.forEach(new CascadeToExistingArrayListMember(), new MyVisitorE3());
-			Test.reOpen();
-			Test.forEach(new CascadeToExistingArrayListMember(), new MyVisitorE4());
+			Tester.forEach(new CascadeToExistingArrayListMember(), new MyVisitorE1());
+			Tester.reOpen();
+			Tester.forEach(new CascadeToExistingArrayListMember(), new MyVisitorE2());
+			Tester.forEach(new CascadeToExistingArrayListMember(), new MyVisitorE3());
+			Tester.reOpen();
+			Tester.forEach(new CascadeToExistingArrayListMember(), new MyVisitorE4());
 		}
 	}
 
@@ -52,9 +52,9 @@ namespace com.db4o.test
 			CascadeToExistingArrayListMember cev1 = (CascadeToExistingArrayListMember)obj;
 			Atom atom1 = (Atom)cev1.vec[0];
 			atom1.name = "two";
-			Test.store(cev1);
+			Tester.store(cev1);
 			atom1.name = "three";
-			Test.store(cev1);
+			Tester.store(cev1);
 		}
 	}
 	public class MyVisitorE2:Visitor4
@@ -63,8 +63,8 @@ namespace com.db4o.test
 		{
 			CascadeToExistingArrayListMember cev1 = (CascadeToExistingArrayListMember)obj;
 			Atom atom1 = (Atom)cev1.vec[0];
-			Test.ensure(atom1.name.Equals("three"));
-			Test.ensureOccurrences(atom1, 1);
+			Tester.ensure(atom1.name.Equals("three"));
+			Tester.ensureOccurrences(atom1, 1);
 		}
 	}
 	public class MyVisitorE3:Visitor4
@@ -74,7 +74,7 @@ namespace com.db4o.test
 			CascadeToExistingArrayListMember cev1 = (CascadeToExistingArrayListMember)obj;
 			Atom atom1 = (Atom)cev1.vec[0];
 			atom1.name = "four";
-			Test.store(cev1);
+			Tester.store(cev1);
 		}
 	}
 
@@ -84,8 +84,8 @@ namespace com.db4o.test
 		{
 			CascadeToExistingArrayListMember cev1 = (CascadeToExistingArrayListMember)obj;
 			Atom atom1 = (Atom)cev1.vec[0];
-			Test.ensure(atom1.name.Equals("four"));
-			Test.ensureOccurrences(atom1, 1);
+			Tester.ensure(atom1.name.Equals("four"));
+			Tester.ensureOccurrences(atom1, 1);
 		}
 	}
 

@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using j4o.lang;
 using j4o.util;
+using com.db4o.inside;
 using com.db4o.types;
 using com.db4o.foundation;
 
@@ -103,7 +104,7 @@ namespace com.db4o {
             if(i_type == 1) {
                 int id = (int)getIDOf(key);
                 if(id == 0) {
-                    Db4o.throwRuntimeException(62);
+                    Exceptions.throwRuntimeException(62);
                 }
                 return id;
             }
@@ -232,7 +233,7 @@ namespace com.db4o {
         }
       
         protected bool Equals(P1HashElement phe, int i, Object obj) {
-            return phe.i_hashCode == i && phe.activatedKey(i_activationDepth).Equals(obj);
+            return phe.i_hashCode == i && phe.activatedKey(elementActivationDepth()).Equals(obj);
         }
       
         public Object get(Object obj) {
@@ -247,7 +248,7 @@ namespace com.db4o {
             for (P1HashElement phe = i_table[hash & i_mask]; phe != null; phe = (P1HashElement)phe.i_next) {
                 phe.checkActive();
                 if (Equals(phe, hash, obj)){
-                    return phe.activatedObject(i_activationDepth);
+                    return phe.activatedObject(elementActivationDepth());
                 }
             }
             return null;
@@ -334,7 +335,7 @@ namespace com.db4o {
                 phe.checkActive();
                 if (Equals(phe, entry.i_hashCode, a_key)) {
                     i_size--;
-                    Object ret = phe.activatedObject(i_activationDepth);
+                    Object ret = phe.activatedObject(elementActivationDepth());
                     entry.i_next = phe.i_next;
                     this.store(entry);
                     if (last != null) {
@@ -355,12 +356,14 @@ namespace com.db4o {
             return null;
         }
       
+		/*
         public Object remove(Object obj) {
             lock (this.streamLock()) {
                 checkActive();
                 return remove4(obj);
             }
         }
+		*/
       
         internal Object remove4(Object a_key) {
             int hash = hashOf(a_key);
@@ -375,7 +378,7 @@ namespace com.db4o {
                     } else i_table[hash & i_mask] = (P1HashElement)phe.i_next;
                     modified();
                     i_size--;
-                    Object obj = phe.activatedObject(i_activationDepth);
+                    Object obj = phe.activatedObject(elementActivationDepth());
                     phe.delete(i_deleteRemoved);
                     return obj;
                 }

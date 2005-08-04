@@ -37,22 +37,22 @@ namespace com.db4o.test.cs
         }
 
         public void test(){
-            ExtObjectContainer oc = Test.objectContainer();
-            Query q = Test.query();
+            ExtObjectContainer oc = Tester.objectContainer();
+            Query q = Tester.query();
             q.constrain(this.GetType());
             Query qd = q.descend("simpleStruct");
             qd = qd.descend("foo");
             qd.constrain(100);
             ObjectSet objectSet = q.execute();
 
-            Test.ensure(objectSet.size() == 1);
+            Tester.ensure(objectSet.size() == 1);
             CsStructs csStructs = (CsStructs)objectSet.next();
 
-            Test.ensure(csStructs.guid.ToString().Equals(GUID));
-            Test.ensure(csStructs.simpleStruct.foo == 100);
-            Test.ensure(csStructs.simpleStruct.bar.Equals("hi"));
-            Test.ensure(csStructs.recursiveStruct.child.simpleStruct.foo == 22);
-            Test.ensure(csStructs.recursiveStruct.child.simpleStruct.bar.Equals("jo"));
+            Tester.ensure(csStructs.guid.ToString().Equals(GUID));
+            Tester.ensure(csStructs.simpleStruct.foo == 100);
+            Tester.ensure(csStructs.simpleStruct.bar.Equals("hi"));
+            Tester.ensure(csStructs.recursiveStruct.child.simpleStruct.foo == 22);
+            Tester.ensure(csStructs.recursiveStruct.child.simpleStruct.bar.Equals("jo"));
         }
 
 	}

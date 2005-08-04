@@ -14,28 +14,36 @@ namespace com.db4o.test
 
         public void storeOne()
         {
-            ExtObjectContainer objectContainer = Test.objectContainer();
+            ExtObjectContainer objectContainer = Tester.objectContainer();
             myList = objectContainer.collections().newLinkedList();
             CollectionActivationElement cae = new CollectionActivationElement("test");
+			cae.value = 42;
             objectContainer.set(cae);
             id = objectContainer.getID(cae);
             myList.Add(cae);
         }
 
         public void testOne()
-        {
-            ExtObjectContainer objectContainer = Test.objectContainer();
-            objectContainer.activate(this, int.MaxValue);
-            CollectionActivationElement cae = (CollectionActivationElement)objectContainer.getByID(id);
-            Test.ensure(cae.name == null);
+        {   
+			CollectionActivationElement cae = null;
+
+			ExtObjectContainer objectContainer = Tester.objectContainer();
+			objectContainer.activate(this, int.MaxValue);
+
+            cae = (CollectionActivationElement)objectContainer.getByID(id);
+            Tester.ensure("objects got by id should not be activated", cae.name == null);
+
             cae = (CollectionActivationElement)myList[0];
-            Test.ensure(cae.name.Equals("test"));
+            Tester.ensure(cae.name != null && cae.name == "test");
+			Tester.ensure(42 == cae.value);
         }
     }
 
     public class CollectionActivationElement
     {
         public String name;
+
+		public int value;
 
         public CollectionActivationElement(){}
 

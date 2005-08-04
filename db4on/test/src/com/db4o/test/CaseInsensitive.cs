@@ -19,15 +19,15 @@ namespace com.db4o.test {
         }
     
         public void store(){
-            Test.store(new CaseInsensitive("HelloWorld"));
+            Tester.store(new CaseInsensitive("HelloWorld"));
         }
     
         public void test(){
-            Test.ensure(queryingCaseInsensitiveResults("heLLOworld") == 1);
+            Tester.ensure(queryingCaseInsensitiveResults("heLLOworld") == 1);
         }
     
         private int queryingCaseInsensitiveResults(string name){
-            ObjectContainer objectContainer = Test.objectContainer();
+            ObjectContainer objectContainer = Tester.objectContainer();
             Query q = objectContainer.query();
             q.constrain(typeof(CaseInsensitive));
             q.constrain(new CaseInsensitiveEvaluation(name));

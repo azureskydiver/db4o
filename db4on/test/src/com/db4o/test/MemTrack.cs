@@ -24,8 +24,8 @@ namespace com.db4o.test {
        }
 
       public void test() {
-         Test.deleteAllInstances(new Atom());
-         Test.store(new Atom(bigString + counter++));
+         Tester.deleteAllInstances(new Atom());
+         Tester.store(new Atom(bigString + counter++));
       }
    }
 }

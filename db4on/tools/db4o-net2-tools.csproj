@@ -10,7 +10,7 @@
     </ApplicationIcon>
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
-    <AssemblyName>db4o-net2-tools</AssemblyName>
+    <AssemblyName>db4o-net-tools</AssemblyName>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
@@ -96,12 +96,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\com\db4o\tools\Statistics.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\com\db4o\wrap\ObjectSetCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\com\db4o\wrap\ObjectSetEnumerator.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

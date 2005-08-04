@@ -16,15 +16,15 @@ namespace com.db4o.test.cs {
         }
 
         public void store(){
-            Test.deleteAllInstances(this);
+            Tester.deleteAllInstances(this);
             CsCollections csc = new CsCollections();
             csc.fill();
-            Test.store(csc);
-            Test.commit();
+            Tester.store(csc);
+            Tester.commit();
         }
 
         public void test(){
-            CsCollections csc = (CsCollections)Test.getOne(this);
+            CsCollections csc = (CsCollections)Tester.getOne(this);
             csc.check();
         }
 
@@ -51,13 +51,13 @@ namespace com.db4o.test.cs {
             check(arrayList);
             check(hashTable);
 
-            Test.ensure(queue.Dequeue().Equals(1));
-            Test.ensure(queue.Dequeue().Equals("hi"));
-            Test.ensure(queue.Dequeue().Equals(new Atom("foo")));
+            Tester.ensure(queue.Dequeue().Equals(1));
+            Tester.ensure(queue.Dequeue().Equals("hi"));
+            Tester.ensure(queue.Dequeue().Equals(new Atom("foo")));
 
-            Test.ensure(stack.Pop().Equals(new Atom("foo")));
-            Test.ensure(stack.Pop().Equals("hi"));
-            Test.ensure(stack.Pop().Equals(1));
+            Tester.ensure(stack.Pop().Equals(new Atom("foo")));
+            Tester.ensure(stack.Pop().Equals("hi"));
+            Tester.ensure(stack.Pop().Equals(1));
         }
 
         private void fill(IList list){
@@ -69,10 +69,10 @@ namespace com.db4o.test.cs {
 
 
         private void check(IList list){
-            Test.ensure(list[0].Equals(1));
-            Test.ensure(list[1] == null);
-            Test.ensure(list[2].Equals(new Atom("foo")));
-            Test.ensure(list[3].Equals("foo"));
+            Tester.ensure(list[0].Equals(1));
+            Tester.ensure(list[1] == null);
+            Tester.ensure(list[2].Equals(new Atom("foo")));
+            Tester.ensure(list[3].Equals("foo"));
         }
 
         private void fill(IDictionary dict){
@@ -83,10 +83,10 @@ namespace com.db4o.test.cs {
         }
 
         private void check(IDictionary dict){
-            Test.ensure(dict[1].Equals(1));
-            Test.ensure(dict["hey"].Equals("ho"));
-            Test.ensure(dict[new Atom("foo")].Equals(new Atom("bar")));
-            Test.ensure(dict[4].Equals("Yoman"));
+            Tester.ensure(dict[1].Equals(1));
+            Tester.ensure(dict["hey"].Equals("ho"));
+            Tester.ensure(dict[new Atom("foo")].Equals(new Atom("bar")));
+            Tester.ensure(dict[4].Equals("Yoman"));
         }
 
     }

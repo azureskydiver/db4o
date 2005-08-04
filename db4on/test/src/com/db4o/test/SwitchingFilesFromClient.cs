@@ -21,21 +21,21 @@ namespace com.db4o.test {
       }
       
       internal void testOne() {
-         if (Test.isClientServer()) {
-            Test.ensure(name.Equals("helo"));
-            ExtClient client1 = (ExtClient)Test.objectContainer();
+         if (Tester.isClientServer()) {
+            Tester.ensure(name.Equals("helo"));
+            ExtClient client1 = (ExtClient)Tester.objectContainer();
             client1.switchToFile(DB_FILE);
             name = "hohoho";
             client1.set(this);
             Query q1 = client1.query();
             q1.constrain(j4o.lang.Class.getClassForObject(this));
             ObjectSet results1 = q1.execute();
-            Test.ensure(results1.size() == 1);
+            Tester.ensure(results1.size() == 1);
             SwitchingFilesFromClient sffc1 = (SwitchingFilesFromClient)results1.next();
-            Test.ensure(sffc1.name.Equals("hohoho"));
+            Tester.ensure(sffc1.name.Equals("hohoho"));
             client1.switchToMainFile();
-            sffc1 = (SwitchingFilesFromClient)Test.getOne(this);
-            Test.ensure(sffc1.name.Equals("helo"));
+            sffc1 = (SwitchingFilesFromClient)Tester.getOne(this);
+            Tester.ensure(sffc1.name.Equals("helo"));
          }
       }
    }

@@ -12,7 +12,7 @@ namespace com.db4o.test
         Hashtable ht;
     
         public void storeOne(){
-            Test.objectContainer().configure().updateDepth(int.MaxValue);
+            Tester.objectContainer().configure().updateDepth(int.MaxValue);
             ht = new Hashtable();
             C2C c2c = new C2C();
             c2c.parent = this;
@@ -21,8 +21,8 @@ namespace com.db4o.test
     
         public void testOne(){
             C2C c2c = (C2C)ht["test"];
-            Test.ensure(c2c.parent == this);
-            Test.objectContainer().configure().updateDepth(5);
+            Tester.ensure(c2c.parent == this);
+            Tester.objectContainer().configure().updateDepth(5);
         }
     
     }

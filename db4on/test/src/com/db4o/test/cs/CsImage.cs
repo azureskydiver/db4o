@@ -28,8 +28,8 @@ namespace com.db4o.test.cs
 //        }
 
         public void testOne(){
-            Test.ensure(image != null);
-            Test.ensure(bitmap != null);
+            Tester.ensure(image != null);
+            Tester.ensure(bitmap != null);
         }
 
 	}

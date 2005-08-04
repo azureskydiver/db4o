@@ -10,24 +10,24 @@ namespace com.db4o.test
 	{
 
         public void store(){
-            Test.store(new Atom());
+            Tester.store(new Atom());
 
-//            Test.store(new UnknownClass());
-//            Test.commit();
-//            Query q = Test.query();
+//            Tester.store(new UnknownClass());
+//            Tester.commit();
+//            Query q = Tester.query();
 //            q.constrain(typeof(UnknownClass));
 //            ObjectSet objectSet = q.execute();
 //            while(objectSet.hasNext()){
-//                Test.delete(objectSet.next());
+//                Tester.delete(objectSet.next());
 //            }
-//            Test.commit();
+//            Tester.commit();
 
         }
     
         public void test(){
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(typeof(UnknownClass));
-            Test.ensure(q.execute().size() == 0);
+            Tester.ensure(q.execute().size() == 0);
         }
 
     }

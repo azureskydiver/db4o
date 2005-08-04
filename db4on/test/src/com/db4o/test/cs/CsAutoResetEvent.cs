@@ -19,11 +19,11 @@ namespace com.db4o.test.cs
         }
 
         public static void Main(String[] args) {
-            new Thread(new ThreadStart(new CsAutoResetEvent(1).run)).Start();
-            new Thread(new ThreadStart(new CsAutoResetEvent(2).run)).Start();
+            new Thread(new ThreadStart(new CsAutoResetEvent(1)._run)).Start();
+            new Thread(new ThreadStart(new CsAutoResetEvent(2)._run)).Start();
         }
 
-        public void run(){
+        public void _run(){
             if(id == 1){
                 Console.WriteLine("1 arrived");
                 Thread.Sleep(500);

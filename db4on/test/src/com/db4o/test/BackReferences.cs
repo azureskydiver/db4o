@@ -43,18 +43,18 @@ namespace com.db4o.test {
             BR_Address address=new BR_Address();
             address.ID="Test1";
             person.AddAddress(address);
-            Test.store(person);
+            Tester.store(person);
         }
 
         public void test(){
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(typeof(BR_Person));
             ObjectSet objectSet = q.execute();
             while(objectSet.hasNext()){
                 BR_Person person = (BR_Person)objectSet.next();
                 BR_Address address = (BR_Address)person.addresses["Test1"];
-                Test.ensure(address.ID.Equals("Test1"));
-                Test.ensure(address.Owner == person);
+                Tester.ensure(address.ID.Equals("Test1"));
+                Tester.ensure(address.Owner == person);
             }
         }
     }

@@ -20,27 +20,27 @@ namespace com.db4o.test {
       }
       
       public void store() {
-         Test.deleteAllInstances(this);
-         Test.store(new BindFileSize(LENGTH));
+         Tester.deleteAllInstances(this);
+         Tester.store(new BindFileSize(LENGTH));
       }
       
       public void testGrowth() {
          int call1 = 0;
-         BindFileSize bfs1 = (BindFileSize)Test.getOne(this);
-         long id1 = Test.objectContainer().getID(bfs1);
+         BindFileSize bfs1 = (BindFileSize)Tester.getOne(this);
+         long id1 = Tester.objectContainer().getID(bfs1);
          for (int i1 = 0; i1 < 12; i1++) {
             bfs1 = new BindFileSize(LENGTH);
-            Test.objectContainer().bind(bfs1, id1);
-            Test.objectContainer().set(bfs1);
-            Test.commit();
+            Tester.objectContainer().bind(bfs1, id1);
+            Tester.objectContainer().set(bfs1);
+            Tester.commit();
             checkFileSize(call1++);
-            Test.reOpen();
+            Tester.reOpen();
          }
       }
       
       private void checkFileSize(int call) {
-         if (Test.canCheckFileSize()) {
-            int newFileLength1 = Test.fileLength();
+         if (Tester.canCheckFileSize()) {
+            int newFileLength1 = Tester.fileLength();
             if (call == 6) {
                jumps = 0;
                fileLength = newFileLength1;
@@ -50,7 +50,7 @@ namespace com.db4o.test {
                      fileLength = newFileLength1;
                      jumps++;
                   } else {
-                     Test.error();
+                     Tester.error();
                   }
                }
             }

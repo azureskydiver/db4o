@@ -24,13 +24,12 @@
     </FileUpgradeFlags>
     <FormFactorID>
     </FormFactorID>
-    <OSVersion>5.01</OSVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
+    <PlatformID>3C41C503-53EF-4c2a-8DD4-A8217CAD115E</PlatformID>
     <PlatformFamilyName>PocketPC</PlatformFamilyName>
     <DeployDirSuffix>$(AssemblyName)</DeployDirSuffix>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -40,7 +39,7 @@
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>TRACE;DEBUG;COMPACT_1_0</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;COMPACT_1_0</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <FileAlignment>4096</FileAlignment>
@@ -101,9 +100,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\BlobImpl.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\ByteBuffer4.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\ClassIndex.cs">
@@ -253,30 +249,78 @@
     <Compile Include="src\core\com\db4o\ext\VirtualField.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\foundation\Closure4.cs" />
-    <Compile Include="src\core\com\db4o\foundation\Collection4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\Closure4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\Collection4.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\core\com\db4o\foundation\Cool.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\foundation\Debug4.cs" />
-    <Compile Include="src\core\com\db4o\foundation\DeepClone.cs" />
-    <Compile Include="src\core\com\db4o\foundation\EmptyIterator.cs" />
-    <Compile Include="src\core\com\db4o\foundation\Hashtable4.cs" />
-    <Compile Include="src\core\com\db4o\foundation\HashtableIntEntry.cs" />
-    <Compile Include="src\core\com\db4o\foundation\HashtableObjectEntry.cs" />
-    <Compile Include="src\core\com\db4o\foundation\Iterator4.cs" />
-    <Compile Include="src\core\com\db4o\foundation\List4.cs" />
-    <Compile Include="src\core\com\db4o\foundation\Queue4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\Debug4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\DeepClone.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\EmptyIterator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\Hashtable4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\HashtableIntEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\HashtableObjectEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\Iterator4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\List4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\network\ByteBuffer4.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\network\YapClientSocket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\network\YapServerSocket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\network\YapSocket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\network\YapSocketFake.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\network\YapSocketFakeServer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\network\YapSocketReal.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\foundation\Queue4.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\core\com\db4o\foundation\SimpleTimer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\foundation\Visitor4.cs" />
+    <Compile Include="src\core\com\db4o\foundation\Visitor4.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\core\com\db4o\FreeSlotNode.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\IDGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\inside\Exceptions.cs" />
+    <Compile Include="src\core\com\db4o\inside\query\PredicateEvaluation.cs" />
+    <Compile Include="src\core\com\db4o\inside\query\PredicateQuery.cs" />
     <Compile Include="src\core\com\db4o\IntArrayList.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -292,8 +336,12 @@
     <Compile Include="src\core\com\db4o\io\RandomAccessFileAdapter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\ix\QxPath.cs" />
-    <Compile Include="src\core\com\db4o\ix\QxProcessor.cs" />
+    <Compile Include="src\core\com\db4o\ix\QxPath.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\ix\QxProcessor.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\core\com\db4o\IxAdd.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -337,6 +385,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\MCommit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\core\com\db4o\MCommitOK.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\MCreateClass.cs">
@@ -462,6 +513,7 @@
     <Compile Include="src\core\com\db4o\ObjectSet.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\ObjectSetImpl.cs" />
     <Compile Include="src\core\com\db4o\Order.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -504,7 +556,9 @@
     <Compile Include="src\core\com\db4o\PBootRecord.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\PendingClassInits.cs" />
+    <Compile Include="src\core\com\db4o\PendingClassInits.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\core\com\db4o\Platform.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -520,7 +574,9 @@
     <Compile Include="src\core\com\db4o\QConClass.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\QConEvaluation.cs" />
+    <Compile Include="src\core\com\db4o\QConEvaluation.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\core\com\db4o\QConJoin.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -596,6 +652,7 @@
     <Compile Include="src\core\com\db4o\query\EvaluationDelegate.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\query\Predicate.cs" />
     <Compile Include="src\core\com\db4o\query\Query.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -617,7 +674,9 @@
     <Compile Include="src\core\com\db4o\reflect\generic\GenericClass.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\reflect\generic\GenericConverter.cs" />
+    <Compile Include="src\core\com\db4o\reflect\generic\GenericConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\core\com\db4o\reflect\generic\GenericField.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -903,16 +962,7 @@
     <Compile Include="src\core\com\db4o\YapServer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\YapServerSocket.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\YapServerThread.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\YapSocket.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\core\com\db4o\YapSocketFake.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\core\com\db4o\YapStream.cs">
@@ -1071,13 +1121,32 @@
     <Compile Include="src\j4o\lang\Thread.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\j4o\lang\TypeName.cs" />
+    <Compile Include="src\j4o\lang\TypeName.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\net\ServerSocket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\net\Socket.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="src\j4o\net\SocketWrapper.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="src\j4o\util\Date.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\j4o\util\Random.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\j4o\CVS\Entries" />
+    <None Include="src\j4o\CVS\Repository" />
+    <None Include="src\j4o\CVS\Root" />
+    <None Include="src\j4o\io\CVS\Entries" />
+    <None Include="src\j4o\io\CVS\Repository" />
+    <None Include="src\j4o\io\CVS\Root" />
   </ItemGroup>
   <ProjectExtensions>
     <VisualStudio>

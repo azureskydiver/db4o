@@ -17,22 +17,22 @@ namespace com.db4o.test {
     
         public void store(){
             OrClassConstraintInList occ = new OrClassConstraintInList();
-            occ.list = Test.objectContainer().collections().newLinkedList();
+            occ.list = Tester.objectContainer().collections().newLinkedList();
             occ.list.Add(new Atom());
-            Test.store(occ);
+            Tester.store(occ);
             occ = new OrClassConstraintInList();
-            occ.list = Test.objectContainer().collections().newLinkedList();
+            occ.list = Tester.objectContainer().collections().newLinkedList();
             occ.cnt = 1;
-            Test.store(occ);
+            Tester.store(occ);
         }
     
         public void test(){
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(typeof(OrClassConstraintInList));
             Constraint c1 = q.descend("list").constrain(typeof(Atom));
             Constraint c2 = q.descend("cnt").constrain(1);
             c1.or(c2);
-            Test.ensure(q.execute().size() == 2);
+            Tester.ensure(q.execute().size() == 2);
         }
     }
 }

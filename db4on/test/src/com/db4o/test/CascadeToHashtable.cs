@@ -24,23 +24,23 @@ namespace com.db4o.test
       
 		public void store() 
 		{
-			Test.deleteAllInstances(this);
-			Test.deleteAllInstances(new Atom());
+			Tester.deleteAllInstances(this);
+			Tester.deleteAllInstances(new Atom());
 			CascadeToHashtable cth1 = new CascadeToHashtable();
 			cth1.ht = new System.Collections.Hashtable();
 			cth1.ht.Add("key1", new Atom("stored1"));
 			cth1.ht.Add("key2", new Atom(new Atom("storedChild1"), "stored2"));
-			Test.store(cth1);
+			Tester.store(cth1);
 		}
       
 		public void test() 
 		{
-			Test.forEach(this, new MyVisitorCTH1());
-			Test.reOpen();
-			Test.forEach(this, new MyVisitorCTH2());
-			Test.reOpen();
-			Test.deleteAllInstances(this);
-			Test.ensureOccurrences(new Atom(), 1);
+			Tester.forEach(this, new MyVisitorCTH1());
+			Tester.reOpen();
+			Tester.forEach(this, new MyVisitorCTH2());
+			Tester.reOpen();
+			Tester.deleteAllInstances(this);
+			Tester.ensureOccurrences(new Atom(), 1);
 		}
 	}
 
@@ -52,7 +52,7 @@ namespace com.db4o.test
 			cth1.ht["key1"] = new Atom("updated1");
 			Atom atom1 = (Atom)cth1.ht["key2"];
 			atom1.name = "updated2";
-			Test.store(cth1);
+			Tester.store(cth1);
 		}
 	}
 
@@ -64,9 +64,9 @@ namespace com.db4o.test
 		{
 			CascadeToHashtable cth1 = (CascadeToHashtable)obj;
 			Atom atom1 = (Atom)cth1.ht["key1"];
-			Test.ensure(atom1.name.Equals("updated1"));
+			Tester.ensure(atom1.name.Equals("updated1"));
 			atom1 = (Atom)cth1.ht["key2"];
-			Test.ensure(atom1.name.Equals("updated2"));
+			Tester.ensure(atom1.name.Equals("updated2"));
 		}
 	}
 }

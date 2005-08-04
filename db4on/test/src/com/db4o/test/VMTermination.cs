@@ -19,7 +19,7 @@ namespace com.db4o.test {
          int step1 = 0;
          switch (step1) {
          case 0:
-            Test.statistics();
+            Tester.printStatistics();
             break;
          
          case 1:
@@ -50,58 +50,58 @@ namespace com.db4o.test {
       }
       
       public static void killSingleUser() {
-         Test.runServer = false;
-         Test.clientServer = false;
-         Test.delete();
-         ObjectContainer con1 = Test.open();
+         Tester.runServer = false;
+         Tester.clientServer = false;
+         Tester.delete();
+         ObjectContainer con1 = Tester.open();
          con1.set(new VMTermination("willbethere"));
          con1.commit();
          // Environment.Exit(0);
       }
       
       public static void testSingleUser() {
-         Test.runServer = false;
-         Test.clientServer = false;
-         ObjectContainer con1 = Test.open();
-         Test.ensureOccurrences(new VMTermination(), 1);
-         Test.logAll();
-         Test.end();
+         Tester.runServer = false;
+         Tester.clientServer = false;
+         ObjectContainer con1 = Tester.open();
+         Tester.ensureOccurrences(new VMTermination(), 1);
+         Tester.logAll();
+         Tester.end();
       }
       
       public static void killServer1() {
-         Test.runServer = true;
-         Test.clientServer = true;
-         Test.delete();
-         ObjectContainer con1 = Test.open();
+         Tester.runServer = true;
+         Tester.clientServer = true;
+         Tester.delete();
+         ObjectContainer con1 = Tester.open();
          con1.set(new VMTermination("willbethere"));
          con1.commit();
          // Environment.Exit(0);
       }
       
       public static void testServer1() {
-         Test.runServer = true;
-         Test.clientServer = true;
-         ObjectContainer con1 = Test.open();
-         Test.ensureOccurrences(new VMTermination(), 1);
-         Test.logAll();
-         Test.end();
+         Tester.runServer = true;
+         Tester.clientServer = true;
+         ObjectContainer con1 = Tester.open();
+         Tester.ensureOccurrences(new VMTermination(), 1);
+         Tester.logAll();
+         Tester.end();
       }
       
       public static void killServer2() {
-         Test.runServer = true;
-         Test.clientServer = true;
-         ObjectContainer con1 = Test.open();
+         Tester.runServer = true;
+         Tester.clientServer = true;
+         ObjectContainer con1 = Tester.open();
          con1.set(new VMTermination("willbethere"));
          con1.commit();
       }
       
       public static void testServer2() {
-         Test.runServer = true;
-         Test.clientServer = true;
-         ObjectContainer con1 = Test.open();
-         Test.ensureOccurrences(new VMTermination(), 2);
-         Test.logAll();
-         Test.end();
+         Tester.runServer = true;
+         Tester.clientServer = true;
+         ObjectContainer con1 = Tester.open();
+         Tester.ensureOccurrences(new VMTermination(), 2);
+         Tester.logAll();
+         Tester.end();
       }
    }
 }

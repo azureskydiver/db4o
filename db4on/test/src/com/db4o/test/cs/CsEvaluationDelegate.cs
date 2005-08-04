@@ -14,37 +14,37 @@ namespace com.db4o.test.cs
         internal String name;
       
         public void store() {
-            Test.deleteAllInstances(this);
+            Tester.deleteAllInstances(this);
             name = "one";
-            Test.store(this);
+            Tester.store(this);
             CsEvaluationDelegate se1 = new CsEvaluationDelegate();
             se1.child = new CsEvaluationDelegate();
             se1.child.name = "three";
             se1.name = "two";
-            Test.store(se1);
+            Tester.store(se1);
         }
       
         public void testStaticMethodDelegate() {
-            runEvaluationDelegateTest(new EvaluationDelegate(evaluate));
+            runEvaluationDelegateTest(new EvaluationDelegate(_evaluate));
         }
         
         public void testInstanceMethodDelegate() {
-            runEvaluationDelegateTest(new EvaluationDelegate(new NameCondition("three").evaluate));
+            runEvaluationDelegateTest(new EvaluationDelegate(new NameCondition("three")._evaluate));
         }
         
         void runEvaluationDelegateTest(EvaluationDelegate evaluation) {
-	        Query q1 = Test.query();
+	        Query q1 = Tester.query();
             Query cq1 = q1;
             q1.constrain(j4o.lang.Class.getClassForObject(this));
             cq1 = cq1.descend("child");
             cq1.constrain(evaluation);
             ObjectSet os = q1.execute();
-            Test.ensure(os.size() == 1);
+            Tester.ensure(os.size() == 1);
             CsEvaluationDelegate se = (CsEvaluationDelegate)os.next();
-            Test.ensure(se.name.Equals("two"));
+            Tester.ensure(se.name.Equals("two"));
         }
 
-        public static void evaluate(Candidate candidate) {
+        public static void _evaluate(Candidate candidate) {
             CsEvaluationDelegate obj = ((CsEvaluationDelegate)candidate.getObject());
 			candidate.include(obj.name.Equals("three"));
         }
@@ -56,7 +56,7 @@ namespace com.db4o.test.cs
         		_name = name;
         	}
         	
-        	public void evaluate(Candidate candidate) {
+        	public void _evaluate(Candidate candidate) {
         		CsEvaluationDelegate obj = ((CsEvaluationDelegate)candidate.getObject());
 				candidate.include(obj.name.Equals(_name));
         	}

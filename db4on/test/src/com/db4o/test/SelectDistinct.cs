@@ -17,22 +17,22 @@ namespace com.db4o.test {
         }
 
         public void store() {
-            Test.store(new SelectDistinct("a"));
-            Test.store(new SelectDistinct("a"));
-            Test.store(new SelectDistinct("a"));
-            Test.store(new SelectDistinct("b"));
-            Test.store(new SelectDistinct("b"));
-            Test.store(new SelectDistinct("c"));
-            Test.store(new SelectDistinct("c"));
-            Test.store(new SelectDistinct("d"));
-            Test.store(new SelectDistinct("e"));
+            Tester.store(new SelectDistinct("a"));
+            Tester.store(new SelectDistinct("a"));
+            Tester.store(new SelectDistinct("a"));
+            Tester.store(new SelectDistinct("b"));
+            Tester.store(new SelectDistinct("b"));
+            Tester.store(new SelectDistinct("c"));
+            Tester.store(new SelectDistinct("c"));
+            Tester.store(new SelectDistinct("d"));
+            Tester.store(new SelectDistinct("e"));
         }
 
         public void test() {
             
             String[] expected = new String[]{"a", "b", "c", "d", "e"};
             
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(typeof(SelectDistinct));
             q.constrain(new DistinctEvaluation());
             
@@ -47,11 +47,11 @@ namespace com.db4o.test {
                         break;
                     }
                 }
-                Test.ensure(found);
+                Tester.ensure(found);
             }
 
             for(int i = 0; i < expected.Length; i++) {
-                Test.ensure(expected[i] == null);
+                Tester.ensure(expected[i] == null);
             }
         }
 

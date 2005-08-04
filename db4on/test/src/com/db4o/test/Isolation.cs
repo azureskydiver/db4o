@@ -11,16 +11,16 @@ namespace com.db4o.test {
       }
       
       public void store() {
-         Test.deleteAllInstances(this);
+         Tester.deleteAllInstances(this);
       }
       
       public void test() {
-         if (Test.isClientServer()) {
-            ObjectContainer oc1 = Test.currentServer().ext().objectContainer();
+         if (Tester.isClientServer()) {
+            ObjectContainer oc1 = Tester.currentServer().ext().objectContainer();
             oc1.set(new Isolation());
-            Test.ensure(Test.occurrences(this) == 0);
+            Tester.ensure(Tester.occurrences(this) == 0);
             oc1.commit();
-            Test.ensure(Test.occurrences(this) == 1);
+            Tester.ensure(Tester.occurrences(this) == 1);
          }
       }
    }

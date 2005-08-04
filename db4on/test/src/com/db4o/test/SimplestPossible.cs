@@ -15,7 +15,7 @@ namespace com.db4o.test {
       }
       
       public void testOne() {
-         Test.ensure(name.Equals("sp"));
+         Tester.ensure(name.Equals("sp"));
       }
    }
 }

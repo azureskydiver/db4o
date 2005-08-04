@@ -10,15 +10,15 @@ namespace com.db4o.test.cs
         int[,] ints;
 
         public void store(){
-            Test.deleteAllInstances(this);
+            Tester.deleteAllInstances(this);
             ints = new int[2,2];
             ints[0,0] = 10;
-            Test.store(this);
+            Tester.store(this);
         }
 
         public void test(){
-            CsArrays csa = (CsArrays)Test.getOne(this);
-            Test.ensure(csa.ints[0,0] == 10);
+            CsArrays csa = (CsArrays)Tester.getOne(this);
+            Tester.ensure(csa.ints[0,0] == 10);
         }
 	}
 }

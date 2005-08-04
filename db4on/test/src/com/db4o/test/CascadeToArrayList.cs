@@ -18,22 +18,22 @@ namespace com.db4o.test {
       }
       
       public void store() {
-         Test.deleteAllInstances(this);
-         Test.deleteAllInstances(new Atom());
+         Tester.deleteAllInstances(this);
+         Tester.deleteAllInstances(new Atom());
          CascadeToArrayList ctal = new CascadeToArrayList();
          ctal.al = new ArrayList();
          ctal.al.Add(new Atom("stored1"));
          ctal.al.Add(new Atom(new Atom("storedChild1"), "stored2"));
-         Test.store(ctal);
+         Tester.store(ctal);
       }
       
       public void test() {
-         Test.forEach(this, new VisitorCAL1());
-         Test.reOpen();
-         Test.forEach(this, new VisitorCAL2());
-         Test.reOpen();
-         Test.deleteAllInstances(this);
-         Test.ensureOccurrences(new Atom(), 1);
+         Tester.forEach(this, new VisitorCAL1());
+         Tester.reOpen();
+         Tester.forEach(this, new VisitorCAL2());
+         Tester.reOpen();
+         Tester.deleteAllInstances(this);
+         Tester.ensureOccurrences(new Atom(), 1);
       }
    }
 
@@ -49,7 +49,7 @@ namespace com.db4o.test {
                      atom1.child.name = "updated";
                   }
                }
-               Test.store(ctal);
+               Tester.store(ctal);
             }
 		}
 
@@ -62,9 +62,9 @@ namespace com.db4o.test {
                IEnumerator i1 = ctal.al.GetEnumerator();
                while (i1.MoveNext()) {
                   Atom atom1 = (Atom)i1.Current;
-                  Test.ensure(atom1.name.Equals("updated"));
+                  Tester.ensure(atom1.name.Equals("updated"));
                   if (atom1.child != null) {
-                     Test.ensure(!atom1.child.name.Equals("updated"));
+                     Tester.ensure(!atom1.child.name.Equals("updated"));
                   }
                }
             }

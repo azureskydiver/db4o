@@ -18,15 +18,15 @@ namespace com.db4o.test.cs
 
 		public void testOne()
 		{
-			Test.ensureOccurrences(myStruct,1);
+			Tester.ensureOccurrences(myStruct,1);
 			myStruct.foo = 44;
 			myStruct.bar = "cool";
-			Test.objectContainer().set(this);
-			Test.ensureOccurrences(myStruct,1);
+			Tester.objectContainer().set(this);
+			Tester.ensureOccurrences(myStruct,1);
 
-			Test.objectContainer().delete(this);
-			Test.commit();
-			Test.ensureOccurrences(myStruct,0);
+			Tester.objectContainer().delete(this);
+			Tester.commit();
+			Tester.ensureOccurrences(myStruct,0);
 		}
 
 	}

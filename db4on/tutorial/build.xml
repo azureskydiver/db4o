@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 <project name="db4o-tutorial" default="update-doc">
+	
+	<property name="dir.db4obuild" location="../../db4obuild" />
 
-	<property file="../../db4obuild/machine.properties" />
-	<property file="../../db4obuild/ant.properties" />		
+	<property file="${dir.db4obuild}/machine.properties" />
+	<property file="${dir.db4obuild}/ant.properties" />		
 
 	<property name="dir.out" location="${dir.j.tutorial.out.net}" />	
 	

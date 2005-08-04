@@ -13,14 +13,14 @@ namespace com.db4o.test {
       public String name;
       
       public void test() {
-         Test.deleteAllInstances(this);
+         Tester.deleteAllInstances(this);
          name = "hi";
-         Test.store(this);
+         Tester.store(this);
          for (int i1 = 0; i1 < COUNT; i1++) {
-            Test.store(new StoredClassInformation());
+            Tester.store(new StoredClassInformation());
          }
-         StoredClass[] storedClasses1 = Test.objectContainer().ext().storedClasses();
-         StoredClass myClass1 = Test.objectContainer().ext().storedClass(this);
+         StoredClass[] storedClasses1 = Tester.objectContainer().ext().storedClasses();
+         StoredClass myClass1 = Tester.objectContainer().ext().storedClass(this);
          bool found1 = false;
          for (int i1 = 0; i1 < storedClasses1.Length; i1++) {
             if (storedClasses1[i1].getName().Equals(myClass1.getName())) {
@@ -28,10 +28,10 @@ namespace com.db4o.test {
                break;
             }
          }
-         Test.ensure(found1);
-         long id1 = Test.objectContainer().getID(this);
+         Tester.ensure(found1);
+         long id1 = Tester.objectContainer().getID(this);
          long[] ids1 = myClass1.getIDs();
-         Test.ensure(ids1.Length == COUNT + 1);
+         Tester.ensure(ids1.Length == COUNT + 1);
          found1 = false;
          for (int i1 = 0; i1 < ids1.Length; i1++) {
             if (ids1[i1] == id1) {
@@ -39,7 +39,7 @@ namespace com.db4o.test {
                break;
             }
          }
-         Test.ensure(found1);
+         Tester.ensure(found1);
       }
    }
 }

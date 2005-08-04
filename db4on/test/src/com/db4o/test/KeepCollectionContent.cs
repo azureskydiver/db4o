@@ -12,21 +12,21 @@ namespace com.db4o.test {
       }
       
       public void store() {
-         Test.deleteAllInstances(new Atom());
-         Test.deleteAllInstances(new System.Collections.Hashtable());
-         Test.deleteAllInstances(new ArrayList());
+         Tester.deleteAllInstances(new Atom());
+         Tester.deleteAllInstances(new System.Collections.Hashtable());
+         Tester.deleteAllInstances(new ArrayList());
          System.Collections.Hashtable ht1 = new System.Collections.Hashtable();
          ht1.Add(new Atom(), new Atom());
-         Test.store(ht1);
+         Tester.store(ht1);
          ArrayList al1 = new ArrayList();
          al1.Add(new Atom());
-         Test.store(al1);
+         Tester.store(al1);
       }
       
       public void test() {
-         Test.deleteAllInstances(new System.Collections.Hashtable());
-         Test.deleteAllInstances(new ArrayList());
-         Test.ensureOccurrences(new Atom(), 3);
+         Tester.deleteAllInstances(new System.Collections.Hashtable());
+         Tester.deleteAllInstances(new ArrayList());
+         Tester.ensureOccurrences(new Atom(), 3);
       }
    }
 }

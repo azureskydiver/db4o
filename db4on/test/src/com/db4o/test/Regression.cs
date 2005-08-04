@@ -79,9 +79,9 @@ namespace com.db4o.test {
                     ObjectContainer con = open();
                     int objectCount = con.get(null).size();
                     con.close();
-                    Console.WriteLine(profileOnly ? "Profile run completed." : "Regression Test Passed. " + objectCount + " objects.");
+                    Console.WriteLine(profileOnly ? "Profile run completed." : "Regression Tester Passed. " + objectCount + " objects.");
                 } else {
-                    Console.WriteLine("!!! Regression Test Failed. !!!");
+                    Console.WriteLine("!!! Regression Tester Failed. !!!");
                 }
                 Console.WriteLine(Db4o.version());
                 Console.WriteLine(i_errors);

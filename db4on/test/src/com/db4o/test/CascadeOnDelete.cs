@@ -25,13 +25,13 @@ namespace com.db4o.test {
       }
       
       private void noAccidentalDeletes1(bool cascadeOnUpdate, bool cascadeOnDelete) {
-         ObjectContainer con = Test.objectContainer();
-         Test.deleteAllInstances(this);
-         Test.deleteAllInstances(new ObjectSimplePublic());
+         ObjectContainer con = Tester.objectContainer();
+         Tester.deleteAllInstances(this);
+         Tester.deleteAllInstances(new ObjectSimplePublic());
          ObjectClass oc1 = Db4o.configure().objectClass(this);
          oc1.cascadeOnDelete(cascadeOnDelete);
          oc1.cascadeOnUpdate(cascadeOnUpdate);
-         con = Test.reOpen();
+         con = Tester.reOpen();
          ObjectSimplePublic myOsp1 = new ObjectSimplePublic();
          myOsp1.set(1);
          CascadeOnDelete cod1 = new CascadeOnDelete();
@@ -44,9 +44,9 @@ namespace com.db4o.test {
          if (!cascadeOnDelete && !cascadeOnUpdate) {
             con.set(cod1.osp[0]);
          }
-         Test.ensureOccurrences(cod1.osp[0], 1);
+         Tester.ensureOccurrences(cod1.osp[0], 1);
          con.commit();
-         Test.ensureOccurrences(cod1.osp[0], 1);
+         Tester.ensureOccurrences(cod1.osp[0], 1);
       }
    }
 }

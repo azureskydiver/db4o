@@ -23,8 +23,8 @@ namespace com.db4o.test.cs
         }
 
         public void testOne(){
-            Test.ensure(myTransient == null);
-            Test.ensure(myPersistent.Equals("pers"));
+            Tester.ensure(myTransient == null);
+            Tester.ensure(myPersistent.Equals("pers"));
         }
 	}
 

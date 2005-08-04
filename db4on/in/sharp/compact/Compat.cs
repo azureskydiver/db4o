@@ -43,14 +43,14 @@ namespace com.db4o
 			return null;
 		}
 		
-		public static int identityHashCode(object o) 
+		private static int _identityHashCode(object o) 
 		{
 			return (int)_hashMethod.Invoke(null, new object[] { o });
 		}
 		
 		public static j4o.lang.IdentityHashCodeProvider.HashCodeFunction getIdentityHashCodeFunction() 
 		{
-			return new j4o.lang.IdentityHashCodeProvider.HashCodeFunction(identityHashCode);
+			return new j4o.lang.IdentityHashCodeProvider.HashCodeFunction(_identityHashCode);
 		}
 
 		public static void addShutDownHook(EventHandler handler)

@@ -24,25 +24,25 @@ namespace com.db4o.test {
         }
 
         public void store(){
-            Test.store(new HoldsAnArrayList());
+            Tester.store(new HoldsAnArrayList());
         }
 
         public void test(){
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(typeof(HoldsAnArrayList));
             ObjectSet objectSet = q.execute();
             while(objectSet.hasNext()){
                 HoldsAnArrayList obj = (HoldsAnArrayList)objectSet.next();
                 obj.something.Add('3');
-                Test.store(obj);
+                Tester.store(obj);
 
-                Test.reOpen();
-                q = Test.query();
+                Tester.reOpen();
+                q = Tester.query();
                 q.constrain(typeof(HoldsAnArrayList));
                 objectSet = q.execute();
                 while(objectSet.hasNext()){
                     HoldsAnArrayList haal = (HoldsAnArrayList)objectSet.next();
-                    Test.ensure(haal.something.Count > 2);
+                    Tester.ensure(haal.something.Count > 2);
                 }
 
             }

@@ -13,12 +13,12 @@ namespace com.db4o.test {
         }
 
         public void store() {
-            Test.deleteAllInstances(this);
-            Test.deleteAllInstances(new Atom());
+            Tester.deleteAllInstances(this);
+            Tester.deleteAllInstances(new Atom());
             CascadeToArray cta = new CascadeToArray();
             cta.objects = new Object[] {new Atom("stored1"), new Atom(new Atom("storedChild1"), "stored2")};
-            Test.store(cta);
-            Test.commit();
+            Tester.store(cta);
+            Tester.commit();
         }
 
         class CheckUpdate1 : Visitor4{
@@ -32,7 +32,7 @@ namespace com.db4o.test {
                         atom.child.name = "updated";
                     }
                 }
-                Test.store(cta);
+                Tester.store(cta);
             }
         }
 
@@ -41,24 +41,24 @@ namespace com.db4o.test {
                 CascadeToArray cta = (CascadeToArray) obj;
                 for (int i = 0; i < cta.objects.Length; i++) {
                     Atom atom = (Atom) cta.objects[i];
-                    Test.ensure(atom.name.Equals("updated"));
+                    Tester.ensure(atom.name.Equals("updated"));
                     if(atom.child != null){
-                        Test.ensure( ! atom.child.name.Equals("updated"));
+                        Tester.ensure( ! atom.child.name.Equals("updated"));
                     }
                 }
             }
         }
 
         public void test() {
-            Test.forEach(this, new CheckUpdate1());
-            Test.reOpen();
-            Test.forEach(this, new CheckUpdate2());
+            Tester.forEach(this, new CheckUpdate1());
+            Tester.reOpen();
+            Tester.forEach(this, new CheckUpdate2());
 		
-            // Cascade-On-Delete Test: We only want one Atom to remain.
-            Test.commit();
-            Test.reOpen();
-            Test.deleteAllInstances(this);
-            Test.ensureOccurrences(new Atom(), 1);
+            // Cascade-On-Delete Tester: We only want one Atom to remain.
+            Tester.commit();
+            Tester.reOpen();
+            Tester.deleteAllInstances(this);
+            Tester.ensureOccurrences(new Atom(), 1);
         }
     }
 }

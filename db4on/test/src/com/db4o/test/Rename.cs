@@ -12,19 +12,19 @@ namespace com.db4o.test {
       }
       
       public void test() {
-         if (Test.run == 1  && ! Test.isClientServer()) {
-            Test.deleteAllInstances(Class.getClassForType(typeof(One)));
-            Test.store(new One("wasOne"));
-            Test.ensureOccurrences(Class.getClassForType(typeof(One)), 1);
-            Test.commit();
+         if (Tester.run == 1  && ! Tester.isClientServer()) {
+            Tester.deleteAllInstances(Class.getClassForType(typeof(One)));
+            Tester.store(new One("wasOne"));
+            Tester.ensureOccurrences(Class.getClassForType(typeof(One)), 1);
+            Tester.commit();
             ObjectClass oc1 = Db4o.configure().objectClass(Class.getClassForType(typeof(One)));
             oc1.objectField("nameOne").rename("nameTwo");
             oc1.rename(Class.getClassForType(typeof(Two)).getName());
-            Test.reOpenServer();
-            Test.ensureOccurrences(Class.getClassForType(typeof(Two)), 1);
-            Test.ensureOccurrences(Class.getClassForType(typeof(One)), 0);
-            Two two1 = (Two)Test.getOne(Class.getClassForType(typeof(Two)));
-            Test.ensure(two1.nameTwo.Equals("wasOne"));
+            Tester.reOpenServer();
+            Tester.ensureOccurrences(Class.getClassForType(typeof(Two)), 1);
+            Tester.ensureOccurrences(Class.getClassForType(typeof(One)), 0);
+            Two two1 = (Two)Tester.getOne(Class.getClassForType(typeof(Two)));
+            Tester.ensure(two1.nameTwo.Equals("wasOne"));
          }
       }
       

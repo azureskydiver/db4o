@@ -19,7 +19,7 @@ namespace com.db4o.test {
       internal Object obj;
       
       public void storeOne() {
-         ExtObjectContainer oc1 = Test.objectContainer();
+         ExtObjectContainer oc1 = Tester.objectContainer();
          IDictionary map1 = oc1.collections().newHashMap(10);
          map1["one"] = "one";
          oc1.set(map1);
@@ -28,7 +28,7 @@ namespace com.db4o.test {
       
       public void testOne() {
          IDictionary map1 = (IDictionary)obj;
-         Test.ensure(map1["one"].Equals("one"));
+         Tester.ensure(map1["one"].Equals("one"));
       }
    }
 }

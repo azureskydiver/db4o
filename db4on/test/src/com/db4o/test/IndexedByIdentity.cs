@@ -25,7 +25,7 @@ namespace com.db4o.test
             {
                 IndexedByIdentity ibi = new IndexedByIdentity();
                 ibi.atom = new Atom("ibi" + i);
-                Test.store(ibi);
+                Tester.store(ibi);
             } 
         }
     
@@ -34,19 +34,19 @@ namespace com.db4o.test
         
             for (int i = 0; i < COUNT; i++) 
             {
-                Query q = Test.query();
+                Query q = Tester.query();
                 q.constrain(typeof(Atom));
                 q.descend("name").constrain("ibi" + i);
                 ObjectSet objectSet = q.execute();
                 Atom child = (Atom)objectSet.next();
                 // child.name = "rünzelbrünft";
-                q = Test.query();
+                q = Tester.query();
                 q.constrain(typeof(IndexedByIdentity));
                 q.descend("atom").constrain(child).identity();
                 objectSet = q.execute();
-                Test.ensure(objectSet.size() == 1);
+                Tester.ensure(objectSet.size() == 1);
                 IndexedByIdentity ibi = (IndexedByIdentity)objectSet.next();
-                Test.ensure(ibi.atom == child);
+                Tester.ensure(ibi.atom == child);
             }
         }
     

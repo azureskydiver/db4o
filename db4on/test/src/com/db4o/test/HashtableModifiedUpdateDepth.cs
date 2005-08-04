@@ -23,15 +23,15 @@ namespace com.db4o.test
 
         public void testOne() 
         {
-            Test.ensure(ht["hi"].Equals("five"));
+            Tester.ensure(ht["hi"].Equals("five"));
             ht["hi"] = "six";
-            Test.store(this);
-            Test.reOpen();
-            Query q = Test.query();
+            Tester.store(this);
+            Tester.reOpen();
+            Query q = Tester.query();
             q.constrain(this.GetType());
             HashtableModifiedUpdateDepth hmud = 
                 (HashtableModifiedUpdateDepth) q.execute().next();
-            Test.ensure(hmud.ht["hi"].Equals("six"));
+            Tester.ensure(hmud.ht["hi"].Equals("six"));
         }
 
 	}

@@ -20,12 +20,12 @@ namespace com.db4o.test {
       }
       
       public void store() {
-         Test.deleteAllInstances(this);
-         Test.store(new CreateIndex("a"));
-         Test.store(new CreateIndex("c"));
-         Test.store(new CreateIndex("b"));
+         Tester.deleteAllInstances(this);
+         Tester.store(new CreateIndex("a"));
+         Tester.store(new CreateIndex("c"));
+         Tester.store(new CreateIndex("b"));
          Object obj11 = Db4o.configure().objectClass(Class.getClassForType(typeof(CreateIndex)));
-         Object obj21 = Test.objectContainer().ext().configure().objectClass(Class.getClassForType(typeof(CreateIndex)));
+         Object obj21 = Tester.objectContainer().ext().configure().objectClass(Class.getClassForType(typeof(CreateIndex)));
          int xxx1 = 1;
       }
    }

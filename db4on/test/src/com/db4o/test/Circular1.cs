@@ -8,13 +8,13 @@ namespace com.db4o.test {
     public class Circular1 {
     
         public void store(){
-            Test.store(new C1C());
+            Tester.store(new C1C());
         }
     
         public void test(){
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(typeof(C1C));
-            Test.ensure(q.execute().size() > 0);
+            Tester.ensure(q.execute().size() > 0);
         }
     
     

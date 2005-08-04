@@ -31,7 +31,7 @@ namespace com.db4o {
                     throw new InvalidOperationException("Enumerator is positioned before first or after last.");
                 }
                 lock (i_next.streamLock()) {
-                    return i_next.activatedObject(i_list.i_activationDepth);
+                    return i_next.activatedObject(i_list.elementActivationDepth());
                 }
             }
         }
@@ -45,7 +45,7 @@ namespace com.db4o {
                     }
                     i_preprevious = i_previous;
                     i_previous = i_next;
-                    Object obj1 = i_next.activatedObject(i_list.i_activationDepth);
+                    Object obj1 = i_next.activatedObject(i_list.elementActivationDepth());
                     i_next = i_next.i_next;
                     checkNextActive();
                     return i_next != null;

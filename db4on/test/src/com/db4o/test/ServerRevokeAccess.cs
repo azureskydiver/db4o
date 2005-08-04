@@ -13,7 +13,7 @@ namespace com.db4o.test {
       static internal String FILE = "ServerRevokeAccessTest.yap";
       
       public void test() {
-         if (!Test.isClientServer() && Test.currentRunner.CLIENT_SERVER) {
+         if (!Tester.isClientServer() && Tester.currentRunner.CLIENT_SERVER) {
             try {
                {
                   new File(FILE).delete();
@@ -22,7 +22,7 @@ namespace com.db4o.test {
                   String password1 = "hohoho";
                   server1.grantAccess(user1, password1);
                   ObjectContainer con1 = Db4o.openClient(AllTests.SERVER_HOSTNAME, AllTests.SERVER_PORT, user1, password1);
-                  Test.ensure(con1 != null);
+                  Tester.ensure(con1 != null);
                   con1.close();
                   server1.ext().revokeAccess(user1);
                   bool exceptionThrown1 = false;
@@ -35,7 +35,7 @@ namespace com.db4o.test {
                         exceptionThrown1 = true;
                      }
                   }
-                  Test.ensure(exceptionThrown1);
+                  Tester.ensure(exceptionThrown1);
                   server1.close();
                }
             }  catch (Exception e) {

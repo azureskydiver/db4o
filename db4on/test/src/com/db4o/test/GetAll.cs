@@ -11,18 +11,18 @@ namespace com.db4o.test {
       
       public void test() {
          int size1 = allObjectCount();
-         Test.store(new GetAll());
-         Test.ensure(allObjectCount() == size1 + 1);
-         Test.rollBack();
-         Test.ensure(allObjectCount() == size1);
-         Test.store(new GetAll());
-         Test.ensure(allObjectCount() == size1 + 1);
-         Test.commit();
-         Test.ensure(allObjectCount() == size1 + 1);
+         Tester.store(new GetAll());
+         Tester.ensure(allObjectCount() == size1 + 1);
+         Tester.rollBack();
+         Tester.ensure(allObjectCount() == size1);
+         Tester.store(new GetAll());
+         Tester.ensure(allObjectCount() == size1 + 1);
+         Tester.commit();
+         Tester.ensure(allObjectCount() == size1 + 1);
       }
       
       private int allObjectCount() {
-         return Test.objectContainer().get(null).size();
+         return Tester.objectContainer().get(null).size();
       }
    }
 }

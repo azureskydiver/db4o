@@ -21,8 +21,8 @@ namespace com.db4o.test.net2
 	{
 		public void storeOne()
 		{
-			Test.store(new SimpleGenericType<string>("Will it work?"));
-			Test.store(new SimpleGenericType<int>(42));
+			Tester.store(new SimpleGenericType<string>("Will it work?"));
+			Tester.store(new SimpleGenericType<int>(42));
 		}
 
 		public void test()
@@ -33,12 +33,12 @@ namespace com.db4o.test.net2
 
 		private void tstGenericType<T>(T expectedValue)
 		{
-			Query query = Test.query();
+			Query query = Tester.query();
 			query.constrain(typeof(SimpleGenericType<T>));
 
 			ensureGenericItem<T>(expectedValue, query.execute());
 
-			query = Test.query();
+			query = Tester.query();
 			query.constrain(typeof(SimpleGenericType<T>));
 			query.descend("value").constrain(expectedValue);
 			ensureGenericItem<T>(expectedValue, query.execute());
@@ -46,10 +46,10 @@ namespace com.db4o.test.net2
 
 		private static void ensureGenericItem<T>(T expectedValue, ObjectSet os)
 		{
-			Test.ensureEquals(1, os.size());
+			Tester.ensureEquals(1, os.size());
 
 			SimpleGenericType<T> item = (SimpleGenericType<T>)os.next();
-			Test.ensureEquals(expectedValue, item.value);
+			Tester.ensureEquals(expectedValue, item.value);
 		}
 	}
 #endif

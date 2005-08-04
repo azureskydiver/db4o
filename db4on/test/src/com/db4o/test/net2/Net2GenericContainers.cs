@@ -41,59 +41,59 @@ namespace com.db4o.test.net2
 			Project p2 = new Project("enlightenment");
 			p2.tasks.Add(new Task("meditate"));
 
-			Test.store(p1);
-			Test.reOpen();
-			Test.store(p2);
+			Tester.store(p1);
+			Tester.reOpen();
+			Tester.store(p2);
 		}
 
 		public void testProjects()
 		{
-			Query query = Test.query();
+			Query query = Tester.query();
 			query.constrain(typeof(Project));
 			query.descend("name").orderAscending();
 
 			ObjectSet os = query.execute();
-			Test.ensureEquals(2, os.size());
+			Tester.ensureEquals(2, os.size());
 
 			Project p = (Project)os.next();
-			Test.ensureEquals("db4o", p.name);
-			Test.ensure(p.tasks != null);
-			Test.ensureEquals(2, p.tasks.Count);
-			Test.ensureEquals("dotnet 2 generics", p.tasks[0].name);
-			Test.ensureEquals("clean mono build", p.tasks[1].name);
+			Tester.ensureEquals("db4o", p.name);
+			Tester.ensure(p.tasks != null);
+			Tester.ensureEquals(2, p.tasks.Count);
+			Tester.ensureEquals("dotnet 2 generics", p.tasks[0].name);
+			Tester.ensureEquals("clean mono build", p.tasks[1].name);
 
 			p = (Project)os.next();
-			Test.ensureEquals("enlightenment", p.name);
-			Test.ensure(p.tasks != null);
-			Test.ensureEquals(1, p.tasks.Count);
-			Test.ensureEquals("meditate", p.tasks[0].name);
+			Tester.ensureEquals("enlightenment", p.name);
+			Tester.ensure(p.tasks != null);
+			Tester.ensureEquals(1, p.tasks.Count);
+			Tester.ensureEquals("meditate", p.tasks[0].name);
 		}
 
 		public void testTasks()
 		{
-			Query query = Test.query();
+			Query query = Tester.query();
 			query.constrain(typeof(Task));
 			query.descend("name").orderAscending();
 
 			ObjectSet os = query.execute();
-			Test.ensureEquals(3, os.size());
+			Tester.ensureEquals(3, os.size());
 			foreach (string expected in new string[] { "clean mono build", "dotnet 2 generics", "meditate" })
 			{
-				Test.ensureEquals(expected, ((Task)os.next()).name);
+				Tester.ensureEquals(expected, ((Task)os.next()).name);
 			}
 		}
 
 		public void testTaskLists()
 		{
-			Query query = Test.query();
+			Query query = Tester.query();
 			query.constrain(typeof(List<Task>));
 
-			Test.ensureEquals(2, query.execute().size());
+			Tester.ensureEquals(2, query.execute().size());
 
-			query = Test.query();
+			query = Tester.query();
 			query.constrain(typeof(List<Project>));
 
-			Test.ensureEquals(0, query.execute().size());
+			Tester.ensureEquals(0, query.execute().size());
 		}
 	}
 #endif

@@ -14,9 +14,9 @@ namespace com.db4o.test
             PrimitiveArrayFileSize pafs = new PrimitiveArrayFileSize();
             for (int i = 0; i < 12; i++) {
                 pafs.arr = new long[100];
-                Test.store(pafs);
+                Tester.store(pafs);
                 checkFileSize(call++);
-                Test.commit();
+                Tester.commit();
                 checkFileSize(call++);
             }
         }
@@ -26,9 +26,9 @@ namespace com.db4o.test
             PrimitiveArrayFileSize pafs = new PrimitiveArrayFileSize();
             for (int i = 0; i < 12; i++) {
                 pafs.arr = longWrapperArray();
-                Test.store(pafs);
+                Tester.store(pafs);
                 checkFileSize(call++);
-                Test.commit();
+                Tester.commit();
                 checkFileSize(call++);
             }
         }
@@ -40,9 +40,9 @@ namespace com.db4o.test
 //                long[] lll = new long[100];
 //                lll[0] = 99999;
 //                hm.put("test", lll);
-//                Test.store(hm);
+//                Tester.store(hm);
 //                checkFileSize(call++);
-//                Test.commit();
+//                Tester.commit();
 //                checkFileSize(call++);
 //            }
 //        }
@@ -52,9 +52,9 @@ namespace com.db4o.test
 //            int call = 0;
 //            for (int i = 0; i < 12; i++) {
 //                hm.put("test", longWrapperArray());
-//                Test.store(hm);
+//                Tester.store(hm);
 //                checkFileSize(call++);
-//                Test.commit();
+//                Tester.commit();
 //                checkFileSize(call++);
 //            }
 //        }
@@ -71,8 +71,8 @@ namespace com.db4o.test
 	
 	
         private void checkFileSize(int call){
-            if(Test.canCheckFileSize()){
-                int newFileLength = Test.fileLength();
+            if(Tester.canCheckFileSize()){
+                int newFileLength = Tester.fileLength();
 			
                 // Interesting for manual tests:
                 // Console.WriteLine(newFileLength);
@@ -90,7 +90,7 @@ namespace com.db4o.test
                             // may be necessary for commit space extension
                         }else{
                             // now we want constant behaviour
-                            Test.error();
+                            Tester.error();
                         }
                     }
                 }

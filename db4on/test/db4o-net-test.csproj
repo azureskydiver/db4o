@@ -239,11 +239,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\com\db4o\test\Compare.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\com\db4o\test\ConfMemTrack.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -389,6 +384,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4o\test\ObjectSetAsList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4o\test\ObjectSetIDs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -519,6 +519,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4o\test\StoreSimpleTypeDirectly.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4o\test\StringInLists.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -529,12 +534,17 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\com\db4o\test\Test.cs"
+                    RelPath = "src\com\db4o\test\Tester.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "src\com\db4o\test\TestHashTable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4o\test\TestUtil.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -665,6 +675,11 @@
                 />
                 <File
                     RelPath = "src\com\db4o\test\j4otest\TypeNameTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4o\test\nativequeries\Cat.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -15,15 +15,15 @@ namespace com.db4o.test {
       internal String messageString;
       
       public void test() {
-         if (Test.isClientServer()) {
-            Test.server().ext().configure().setMessageRecipient(this);
-            MessageSender sender1 = Test.objectContainer().configure().getMessageSender();
+         if (Tester.isClientServer()) {
+            Tester.server().ext().configure().setMessageRecipient(this);
+            MessageSender sender1 = Tester.objectContainer().configure().getMessageSender();
             this.messageString = MSG;
             sender1.send(this);
             Thread.sleep(100);
-            Test.ensure(lastMessage is Messaging);
+            Tester.ensure(lastMessage is Messaging);
             Messaging received1 = (Messaging)lastMessage;
-            Test.ensure(received1.messageString.Equals(MSG));
+            Tester.ensure(received1.messageString.Equals(MSG));
          }
       }
       

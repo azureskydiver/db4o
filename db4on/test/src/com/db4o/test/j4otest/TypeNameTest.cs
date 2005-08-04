@@ -35,23 +35,23 @@ namespace com.db4o.test.j4otest
 			try
 			{
 				TypeName stringName = TypeName.Parse("System.String");
-				Test.ensureEquals("System.String", stringName.SimpleName);
-				Test.ensure(stringName.AssemblyName == null);
-				Test.ensureEquals(0, stringName.GenericArguments.Length);
-                Test.ensureEquals(typeof(string), stringName.Resolve());
+				Tester.ensureEquals("System.String", stringName.SimpleName);
+				Tester.ensure(stringName.AssemblyName == null);
+				Tester.ensureEquals(0, stringName.GenericArguments.Length);
+                Tester.ensureEquals(typeof(string), stringName.Resolve());
 			}
 			catch (Exception e)
 			{
-				Test.error(e);
+				Tester.error(e);
 			}
         }
 
 		public void testVoidPointer()
         {
 			TypeName voidPointer = TypeName.Parse("System.Void*");
-			Test.ensureEquals("System.Void", voidPointer.SimpleName);
-			Test.ensure(!voidPointer.HasGenericArguments);
-			Test.ensureEquals(Type.GetType("System.Void*", true), voidPointer.Resolve());
+			Tester.ensureEquals("System.Void", voidPointer.SimpleName);
+			Tester.ensure(!voidPointer.HasGenericArguments);
+			Tester.ensureEquals(Type.GetType("System.Void*", true), voidPointer.Resolve());
         }
 
         public void testNestedType()
@@ -59,12 +59,12 @@ namespace com.db4o.test.j4otest
 			try
 			{
 				TypeName typeName = TypeName.FromType(typeof(NestedType));
-				Test.ensureEquals("com.db4o.test.j4otest.TypeNameTest+NestedType", typeName.SimpleName);
-				Test.ensureEquals(typeof(NestedType), typeName.Resolve());
+				Tester.ensureEquals("com.db4o.test.j4otest.TypeNameTest+NestedType", typeName.SimpleName);
+				Tester.ensureEquals(typeof(NestedType), typeName.Resolve());
 			}
 			catch (Exception e)
 			{
-				Test.error(e);
+				Tester.error(e);
 			}
 
         }
@@ -74,11 +74,11 @@ namespace com.db4o.test.j4otest
 			try
 			{
 				TypeName stringName = TypeName.Parse("System.String, mscorlib, Version=1.14.27.0");
-				Test.ensureEquals(typeof(string), stringName.Resolve());
+				Tester.ensureEquals(typeof(string), stringName.Resolve());
 			}
 			catch (Exception e)
 			{
-				Test.error(e);
+				Tester.error(e);
 			}
 		}
 
@@ -88,15 +88,15 @@ namespace com.db4o.test.j4otest
 			try
 			{
 				TypeName stringName = TypeName.FromType(typeof(string));
-				Test.ensureEquals(0, stringName.GenericArguments.Length);
-				Test.ensureEquals("System.String", stringName.SimpleName);
-				Test.ensureEquals(typeof(string).Assembly.FullName, stringName.AssemblyName.FullName);
+				Tester.ensureEquals(0, stringName.GenericArguments.Length);
+				Tester.ensureEquals("System.String", stringName.SimpleName);
+				Tester.ensureEquals(typeof(string).Assembly.FullName, stringName.AssemblyName.FullName);
 
-				Test.ensureEquals(stringName, TypeName.FromType(typeof(string)));
+				Tester.ensureEquals(stringName, TypeName.FromType(typeof(string)));
 			}
 			catch (Exception e)
 			{
-				Test.error(e);
+				Tester.error(e);
 			}
 
         }
@@ -111,11 +111,11 @@ namespace com.db4o.test.j4otest
             try
             {
                 TypeName typeName = TypeName.FromType(type);
-                Test.ensureEquals(type, typeName.Resolve());
+                Tester.ensureEquals(type, typeName.Resolve());
             }
             catch (Exception e)
             {
-                Test.error(e);
+                Tester.error(e);
             }
         }
 
@@ -155,13 +155,13 @@ namespace com.db4o.test.j4otest
 				string simpleAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
 				Type t = typeof(GenericType<int, GenericType<int, string>>);
 				TypeName tn = TypeName.Parse(t.AssemblyQualifiedName);
-				Test.ensureEquals(
+				Tester.ensureEquals(
 					"com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib],[com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib],[System.String, mscorlib]], " + simpleAssemblyName +"]], " + simpleAssemblyName,
 					tn.GetUnversionedName());
 			}
 			catch (Exception e)
 			{
-				Test.error(e);
+				Tester.error(e);
 			}
         }
 
@@ -194,14 +194,14 @@ namespace com.db4o.test.j4otest
             }
             catch (Exception e)
             {
-                Test.error(e);
+                Tester.error(e);
             }
         }
 #endif
 
         static void AssertEquals(object expected, object actual)
         {
-			Test.ensureEquals(expected, actual);
+			Tester.ensureEquals(expected, actual);
         }
     }
 }

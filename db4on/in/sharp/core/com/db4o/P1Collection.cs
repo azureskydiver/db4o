@@ -33,5 +33,10 @@ namespace com.db4o {
         }
 
         protected abstract IEnumerator getEnumerator1();
+
+		internal int elementActivationDepth() 
+		{
+			return i_activationDepth - 1;
+		}
     }
 }

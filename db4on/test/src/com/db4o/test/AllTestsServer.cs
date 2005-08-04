@@ -24,11 +24,11 @@ namespace com.db4o.test {
          logConfiguration();
          Console.WriteLine("Waiting for tests to be run from different machine.");
          Console.WriteLine("\n\nThe server will need to be closed with CTRL + C.\n\n");
-         Test.delete();
+         Tester.delete();
          configure();
-         Test.runServer = true;
-         Test.clientServer = true;
-         Test.open();
+         Tester.runServer = true;
+         Tester.clientServer = true;
+         Tester.open();
       }
    }
 }

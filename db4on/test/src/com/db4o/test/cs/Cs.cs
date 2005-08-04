@@ -102,13 +102,13 @@ namespace com.db4o.test.cs {
         }
 
         public void store(){
-            Test.deleteAllInstances(this);
+            Tester.deleteAllInstances(this);
             Cs cs = new Cs();
             cs.name = "AllNull";
-            Test.store(cs);
+            Tester.store(cs);
             cs = new Cs();
             cs.setValues();
-            Test.store(cs);
+            Tester.store(cs);
         }
 
         public void setValues(){
@@ -191,10 +191,10 @@ namespace com.db4o.test.cs {
         }
 
         public void test(){
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(Class.getClassForType(typeof(Cs)));
             ObjectSet os = q.execute();
-            Test.ensure(os.size() == 2);
+            Tester.ensure(os.size() == 2);
             Cs cs1 = (Cs)os.next();
             Cs cs2 = (Cs)os.next();
             if(cs1.name != null){
@@ -209,85 +209,85 @@ namespace com.db4o.test.cs {
         public void checkAllPresent(){
 
 
-            Test.ensure(! boolMin);
-            Test.ensure(boolMax);
+            Tester.ensure(! boolMin);
+            Tester.ensure(boolMax);
 
-            Test.ensure(byteMin == byte.MinValue);
-            Test.ensure(byteOne == 1);
-            Test.ensure(byteFuzzy == 123);
-            Test.ensure(byteMax == byte.MaxValue);
+            Tester.ensure(byteMin == byte.MinValue);
+            Tester.ensure(byteOne == 1);
+            Tester.ensure(byteFuzzy == 123);
+            Tester.ensure(byteMax == byte.MaxValue);
 
-            Test.ensure(sbyteMin == sbyte.MinValue);
-            Test.ensure(sbyteNegOne == -1);
-            Test.ensure(sbyteOne == 1);
-            Test.ensure(sbyteFuzzy == 123);
-            Test.ensure(sbyteMax == sbyte.MaxValue);
+            Tester.ensure(sbyteMin == sbyte.MinValue);
+            Tester.ensure(sbyteNegOne == -1);
+            Tester.ensure(sbyteOne == 1);
+            Tester.ensure(sbyteFuzzy == 123);
+            Tester.ensure(sbyteMax == sbyte.MaxValue);
 
-            Test.ensure(charMin == char.MinValue);
-            Test.ensure(charOne == 1);
-            Test.ensure(charFuzzy == (char)123);
-            Test.ensure(charMax == char.MaxValue);
+            Tester.ensure(charMin == char.MinValue);
+            Tester.ensure(charOne == 1);
+            Tester.ensure(charFuzzy == (char)123);
+            Tester.ensure(charMax == char.MaxValue);
 
-            Test.ensure(decimalMin == decimal.MinValue);
-            Test.ensure(decimalNegOne == -1);
-            Test.ensure(decimalOne == 1);
-            Test.ensure(decimalPrec == DECIMAL_PREC);
-            Test.ensure(decimalMax == decimal.MaxValue);
+            Tester.ensure(decimalMin == decimal.MinValue);
+            Tester.ensure(decimalNegOne == -1);
+            Tester.ensure(decimalOne == 1);
+            Tester.ensure(decimalPrec == DECIMAL_PREC);
+            Tester.ensure(decimalMax == decimal.MaxValue);
 
-            Test.ensure(doubleMin == double.MinValue);
-            Test.ensure(doubleNegOne == -1);
-            Test.ensure(doubleOne == 1);
-            Test.ensure(doublePrec == DOUBLE_PREC);
-            Test.ensure(doubleMax == double.MaxValue);
+            Tester.ensure(doubleMin == double.MinValue);
+            Tester.ensure(doubleNegOne == -1);
+            Tester.ensure(doubleOne == 1);
+            Tester.ensure(doublePrec == DOUBLE_PREC);
+            Tester.ensure(doubleMax == double.MaxValue);
 
-            Test.ensure(floatMin == float.MinValue);
-            Test.ensure(floatNegOne == -1);
-            Test.ensure(floatOne == 1);
-            Test.ensure(floatPrec == FLOAT_PREC);
-            Test.ensure(floatMax == float.MaxValue);
+            Tester.ensure(floatMin == float.MinValue);
+            Tester.ensure(floatNegOne == -1);
+            Tester.ensure(floatOne == 1);
+            Tester.ensure(floatPrec == FLOAT_PREC);
+            Tester.ensure(floatMax == float.MaxValue);
 
-            Test.ensure(intMin == int.MinValue);
-            Test.ensure(intNegOne == -1);
-            Test.ensure(intOne == 1);
-            Test.ensure(intFuzzy == 1234567);
-            Test.ensure(intMax == int.MaxValue);
+            Tester.ensure(intMin == int.MinValue);
+            Tester.ensure(intNegOne == -1);
+            Tester.ensure(intOne == 1);
+            Tester.ensure(intFuzzy == 1234567);
+            Tester.ensure(intMax == int.MaxValue);
 
-            Test.ensure(uintMin == uint.MinValue);
-            Test.ensure(uintOne == 1);
-            Test.ensure(uintFuzzy == 1234567);
-            Test.ensure(uintMax == uint.MaxValue);
+            Tester.ensure(uintMin == uint.MinValue);
+            Tester.ensure(uintOne == 1);
+            Tester.ensure(uintFuzzy == 1234567);
+            Tester.ensure(uintMax == uint.MaxValue);
 
-            Test.ensure(longMin == long.MinValue);
-            Test.ensure(longNegOne == -1);
-            Test.ensure(longOne == 1);
-            Test.ensure(longFuzzy == 1234567891);
-            Test.ensure(longMax == long.MaxValue);
+            Tester.ensure(longMin == long.MinValue);
+            Tester.ensure(longNegOne == -1);
+            Tester.ensure(longOne == 1);
+            Tester.ensure(longFuzzy == 1234567891);
+            Tester.ensure(longMax == long.MaxValue);
 
-            Test.ensure(ulongMin == ulong.MinValue);
-            Test.ensure(ulongOne == 1);
-            Test.ensure(ulongFuzzy == 87638635562);
-            Test.ensure(ulongMax == ulong.MaxValue);
+            Tester.ensure(ulongMin == ulong.MinValue);
+            Tester.ensure(ulongOne == 1);
+            Tester.ensure(ulongFuzzy == 87638635562);
+            Tester.ensure(ulongMax == ulong.MaxValue);
 
-            Test.ensure(shortMin == short.MinValue);
-            Test.ensure(shortNegOne == -1);
-            Test.ensure(shortOne == 1);
-            Test.ensure(shortFuzzy == 12345);
-            Test.ensure(shortMax == short.MaxValue);
+            Tester.ensure(shortMin == short.MinValue);
+            Tester.ensure(shortNegOne == -1);
+            Tester.ensure(shortOne == 1);
+            Tester.ensure(shortFuzzy == 12345);
+            Tester.ensure(shortMax == short.MaxValue);
 
-            Test.ensure(ushortMin == ushort.MinValue);
-            Test.ensure(ushortOne == 1);
-            Test.ensure(ushortFuzzy == 12345);
-            Test.ensure(ushortMax == ushort.MaxValue);
+            Tester.ensure(ushortMin == ushort.MinValue);
+            Tester.ensure(ushortOne == 1);
+            Tester.ensure(ushortFuzzy == 12345);
+            Tester.ensure(ushortMax == ushort.MaxValue);
 
-            Test.ensure(dateTimeMin == DateTime.MinValue);
-            Test.ensure(dateTimeOne == new DateTime(1));
-            Test.ensure(dateTimeFuzzy == new DateTime(2000,3,4,2,3,4,5));
-            Test.ensure(dateTimeMax == DateTime.MaxValue);
+            Tester.ensure(dateTimeMin == DateTime.MinValue);
+            Tester.ensure(dateTimeOne == new DateTime(1));
+            Tester.ensure(dateTimeFuzzy == new DateTime(2000,3,4,2,3,4,5));
+            Tester.ensure(dateTimeMax == DateTime.MaxValue);
 
         }
 
         public void checkAllNull(){
-            Test.ensure(name.Equals("AllNull"));
+            Tester.ensure(name.Equals("AllNull"));
         }
 
         private void printRange(){
