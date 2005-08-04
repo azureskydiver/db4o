@@ -17,29 +17,29 @@ namespace com.db4o.test {
       }
       
       public void store() {
-         Test.deleteAllInstances(this);
-         Test.deleteAllInstances(new Atom());
-         Test.ensureOccurrences(new Atom(),0);
+         Tester.deleteAllInstances(this);
+         Tester.deleteAllInstances(new Atom());
+         Tester.ensureOccurrences(new Atom(),0);
          DualDelete dd11 = new DualDelete();
          dd11.atom = new Atom("justone");
-         Test.store(dd11);
+         Tester.store(dd11);
          DualDelete dd21 = new DualDelete();
          dd21.atom = dd11.atom;
-         Test.store(dd21);
+         Tester.store(dd21);
       }
       
       public void test() {
-         Test.ensureOccurrences(new Atom(), 1);
-         Test.deleteAllInstances(this);
-         Test.ensureOccurrences(new Atom(), 0);
-         Test.rollBack();
-         Test.ensureOccurrences(new Atom(), 1);
-         Test.deleteAllInstances(this);
-         Test.ensureOccurrences(new Atom(), 0);
-         Test.commit();
-         Test.ensureOccurrences(new Atom(), 0);
-         Test.rollBack();
-         Test.ensureOccurrences(new Atom(), 0);
+         Tester.ensureOccurrences(new Atom(), 1);
+         Tester.deleteAllInstances(this);
+         Tester.ensureOccurrences(new Atom(), 0);
+         Tester.rollBack();
+         Tester.ensureOccurrences(new Atom(), 1);
+         Tester.deleteAllInstances(this);
+         Tester.ensureOccurrences(new Atom(), 0);
+         Tester.commit();
+         Tester.ensureOccurrences(new Atom(), 0);
+         Tester.rollBack();
+         Tester.ensureOccurrences(new Atom(), 0);
       }
    }
 }

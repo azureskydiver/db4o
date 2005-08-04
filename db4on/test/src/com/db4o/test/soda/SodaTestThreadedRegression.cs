@@ -49,7 +49,7 @@ namespace com.db4o.test.soda {
         private static void startThread(STClass[] classes) {
             for (int i1 = 0; i1 < classes.Length; i1++) {
                 if (!jdkOK(classes[i1])) {
-                    JavaSystem._out.println("Test case can\'t run on this JDK: " + j4o.lang.Class.getClassForObject(classes[i1]).getName());
+                    JavaSystem._out.println("Tester case can\'t run on this JDK: " + j4o.lang.Class.getClassForObject(classes[i1]).getName());
                     return;
                 }
             }

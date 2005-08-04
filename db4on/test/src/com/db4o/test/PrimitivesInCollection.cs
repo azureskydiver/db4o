@@ -13,15 +13,15 @@ namespace com.db4o.test
 
 		public void storeOne()
 		{
-			list = Test.objectContainer().collections().newLinkedList();
+			list = Tester.objectContainer().collections().newLinkedList();
 			list.Add(1);
 			list.Add("hi");
 		}
 
 		public void testOne()
 		{
-			Test.ensure(list.Contains(1));
-			Test.ensure(list.Contains("hi"));
+			Tester.ensure(list.Contains(1));
+			Tester.ensure(list.Contains("hi"));
 		}
 	}
 }

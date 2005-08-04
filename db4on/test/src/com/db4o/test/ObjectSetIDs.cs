@@ -14,15 +14,15 @@ namespace com.db4o.test {
       static internal int COUNT = 11;
       
       public void store() {
-         Test.deleteAllInstances(this);
+         Tester.deleteAllInstances(this);
          for (int i1 = 0; i1 < COUNT; i1++) {
-            Test.store(new ObjectSetIDs());
+            Tester.store(new ObjectSetIDs());
          }
       }
       
       public void test() {
-         ExtObjectContainer con1 = Test.objectContainer();
-         Query q1 = Test.query();
+         ExtObjectContainer con1 = Tester.objectContainer();
+         Query q1 = Tester.query();
          q1.constrain(j4o.lang.Class.getClassForObject(this));
          ObjectSet res1 = q1.execute();
          long[] ids11 = new long[res1.size()];
@@ -32,8 +32,8 @@ namespace com.db4o.test {
          }
          res1.reset();
          long[] ids21 = res1.ext().getIDs();
-         Test.ensure(ids11.Length == COUNT);
-         Test.ensure(ids21.Length == COUNT);
+         Tester.ensure(ids11.Length == COUNT);
+         Tester.ensure(ids21.Length == COUNT);
          for (int j1 = 0; j1 < ids11.Length; j1++) {
             bool found1 = false;
             for (int k1 = 0; k1 < ids21.Length; k1++) {
@@ -42,7 +42,7 @@ namespace com.db4o.test {
                   break;
                }
             }
-            Test.ensure(found1);
+            Tester.ensure(found1);
          }
       }
    }

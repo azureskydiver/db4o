@@ -63,12 +63,17 @@ namespace j4o.lang {
         }
 
         public void start() {
-            thread = new System.Threading.Thread(new System.Threading.ThreadStart(target.run));
+            thread = new System.Threading.Thread(new System.Threading.ThreadStart(_run));
             if(name != null) {
                 setName(name);
             }
             thread.Start();
         }
+		
+		// HACK: for PascalCase conversion purposes
+		private void _run() {
+			target.run();
+		}
 
     }
 }

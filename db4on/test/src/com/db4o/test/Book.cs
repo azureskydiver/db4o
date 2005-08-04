@@ -23,15 +23,15 @@ namespace com.db4o.test {
             Person dave = new Person("Dave", "FourOK");
             Person neil = new Person("Neil", "Notwanted");
             Person nat = new Person("Nat", "Neverwanted");
-            Test.store(new Book("Persistence possibilities", new Person[] { aaron, bill,chris}));
-            Test.store(new Book("Persistence using S.O.D.A.", new Person[]{aaron}));
-            Test.store(new Book("Persistence using JDO", new Person[]{bill, dave}));
-            Test.store(new Book("Don't want to find Phil", new Person[]{aaron, bill, neil}));
-            Test.store(new Book("Persistence by Jeff", new Person[]{nat}));
+            Tester.store(new Book("Persistence possibilities", new Person[] { aaron, bill,chris}));
+            Tester.store(new Book("Persistence using S.O.D.A.", new Person[]{aaron}));
+            Tester.store(new Book("Persistence using JDO", new Person[]{bill, dave}));
+            Tester.store(new Book("Don't want to find Phil", new Person[]{aaron, bill, neil}));
+            Tester.store(new Book("Persistence by Jeff", new Person[]{nat}));
         }
 
         public void test(){
-            Query qBooks = Test.query();
+            Query qBooks = Tester.query();
             qBooks.constrain(typeof(Book));
             qBooks.descend("title").constrain("Persistence").like();
             Query qAuthors = qBooks.descend("authors");
@@ -47,10 +47,10 @@ namespace com.db4o.test {
                 );
             cAaron.or(cBill);
             ObjectSet results = qAuthors.execute();
-            Test.ensure(results.size() == 4);
+            Tester.ensure(results.size() == 4);
             while(results.hasNext()){
                 Person person = (Person)results.next();
-                Test.ensure(person.lastName.EndsWith("OK"));
+                Tester.ensure(person.lastName.EndsWith("OK"));
             }
         }
 

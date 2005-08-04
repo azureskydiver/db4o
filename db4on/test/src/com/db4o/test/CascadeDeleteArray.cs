@@ -25,15 +25,15 @@ namespace com.db4o.test {
       }
       
       public void testOne() {
-         Test.ensureOccurrences(typeof(ArrayElem), 3);
-         Test.delete(this);
-         Test.ensureOccurrences(typeof(ArrayElem), 0);
-         Test.rollBack();
-         Test.ensureOccurrences(typeof(ArrayElem), 3);
-         Test.delete(this);
-         Test.ensureOccurrences(typeof(ArrayElem), 0);
-         Test.commit();
-         Test.ensureOccurrences(typeof(ArrayElem), 0);
+         Tester.ensureOccurrences(typeof(ArrayElem), 3);
+         Tester.delete(this);
+         Tester.ensureOccurrences(typeof(ArrayElem), 0);
+         Tester.rollBack();
+         Tester.ensureOccurrences(typeof(ArrayElem), 3);
+         Tester.delete(this);
+         Tester.ensureOccurrences(typeof(ArrayElem), 0);
+         Tester.commit();
+         Tester.ensureOccurrences(typeof(ArrayElem), 0);
       }
       
       public class ArrayElem {

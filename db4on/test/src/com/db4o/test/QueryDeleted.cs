@@ -18,31 +18,31 @@ namespace com.db4o.test {
         }
       
         public void store() {
-            Test.deleteAllInstances(this);
-            Test.store(new QueryDeleted("one"));
-            Test.store(new QueryDeleted("two"));
+            Tester.deleteAllInstances(this);
+            Tester.store(new QueryDeleted("one"));
+            Tester.store(new QueryDeleted("two"));
         }
       
         public void test(){
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(typeof(QueryDeleted));
             q.descend("name").constrain("one");
             QueryDeleted qd = (QueryDeleted)q.execute().next();
-            Test.delete(qd);
+            Tester.delete(qd);
             checkCount(1);
-            Test.rollBack();
+            Tester.rollBack();
             checkCount(2);
-            Test.delete(qd);
+            Tester.delete(qd);
             checkCount(1);
-            Test.commit();
+            Tester.commit();
             checkCount(1);
         }
 	
         private void checkCount(int count){
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(typeof(QueryDeleted));
             ObjectSet res = q.execute();
-            Test.ensure(res.size() == count);
+            Tester.ensure(res.size() == count);
         }
     }
 }

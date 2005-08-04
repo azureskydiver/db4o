@@ -19,12 +19,12 @@ namespace com.db4o.test {
       }
       
       public void test() {
-         ObjectContainer con1 = Test.objectContainer();
+         ObjectContainer con1 = Tester.objectContainer();
          con1.get(new QueryNonExistant(true));
-         Test.ensureOccurrences(new QueryNonExistant(), 0);
+         Tester.ensureOccurrences(new QueryNonExistant(), 0);
          Query q1 = con1.query();
          q1.constrain(new QueryNonExistant(true));
-         Test.ensure(q1.execute().size() == 0);
+         Tester.ensure(q1.execute().size() == 0);
       }
       
       public class QueryNonExistant1 {

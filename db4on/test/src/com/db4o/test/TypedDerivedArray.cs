@@ -16,17 +16,17 @@ namespace com.db4o.test
       
 		public void store() 
 		{
-			Test.deleteAllInstances(this);
+			Tester.deleteAllInstances(this);
 			TypedDerivedArray tda1 = new TypedDerivedArray();
 			Molecule[] mols1 = new Molecule[1];
 			mols1[0] = new Molecule("TypedDerivedArray");
 			tda1.atoms = mols1;
-			Test.store(tda1);
+			Tester.store(tda1);
 		}
       
 		public void test() 
 		{
-			Test.forEach(new TypedDerivedArray(), new MyVisitor());
+			Tester.forEach(new TypedDerivedArray(), new MyVisitor());
 		}
 
 		public class MyVisitor:Visitor4
@@ -34,7 +34,7 @@ namespace com.db4o.test
 			public void visit(Object obj) 
 			{
 				TypedDerivedArray tda1 = (TypedDerivedArray)obj;
-				Test.ensure(tda1.atoms is Molecule[]);
+				Tester.ensure(tda1.atoms is Molecule[]);
 			}
 		}
 

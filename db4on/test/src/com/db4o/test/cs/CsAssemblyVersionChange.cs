@@ -38,7 +38,7 @@ public class SimpleGenericType<T>
 	}
 }
 
-public class Test
+public class Tester
 {
 	public static void store(string fname)
 	{
@@ -88,22 +88,22 @@ using com.db4o;
 
 public class SimpleType
 {
-	public string value;
+	public int value;
 
-	public SimpleType(string value)
+	public SimpleType(int value)
 	{
 		this.value = value;
 	}
 }
 
-public class Test
+public class Tester
 {
 	public static void store(string fname)
 	{
 		ObjectContainer container = Db4o.openFile(fname);
 		try
 		{
-			container.set(new SimpleType(""spam""));
+			container.set(new SimpleType(42));
 		}
 		finally
 		{
@@ -129,7 +129,7 @@ public class Test
 	{
 		if (!Object.Equals(expected, actual))
 		{
-			throw new ApplicationException(string.Format(""'{0}' != '{1}'"", expected, actual));
+			throw new ApplicationException();
 		}
 	}
 }
@@ -146,11 +146,11 @@ public class Test
 			string appDomain1BasePath = Path.Combine(Path.GetTempPath(), "appdomain1");
 			string appDomain2BasePath = Path.Combine(Path.GetTempPath(), "appdomain2");
 
-			if (!Test.ensure(EmitAssembly(appDomain1BasePath, BaseCode, version1Code)))
+			if (!Tester.ensure(EmitAssembly(appDomain1BasePath, BaseCode, version1Code)))
 			{
 				return;
 			}
-			if (!Test.ensure(EmitAssembly(appDomain2BasePath, BaseCode, version2Code)))
+			if (!Tester.ensure(EmitAssembly(appDomain2BasePath, BaseCode, version2Code)))
 			{
 				return;
 			}
@@ -171,7 +171,7 @@ public class Test
 				{
 					e = ((TargetInvocationException)e).InnerException;
 				}
-				Test.error(e);
+				Tester.error(e);
 			}
 		}
 
@@ -188,7 +188,7 @@ public class Test
 			public void Execute()
 			{
 				Assembly testAssembly = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.exe"));
-				Type type = testAssembly.GetType("Test", true);
+				Type type = testAssembly.GetType("Tester", true);
 				MethodInfo method = type.GetMethod(_methodName);
 				method.Invoke(null, new object[1] { DataFile });
 			}
@@ -297,7 +297,7 @@ public class Test
 				CompilerResults results = compiler.CompileAssemblyFromFileBatch(parameters, files);
 				if (results.Errors.Count > 0)
 				{
-					Test.ensure(GetErrorString(results.Errors), false);
+					Tester.ensure(GetErrorString(results.Errors), false);
 				}
 				return 0 == results.Errors.Count;
 			}

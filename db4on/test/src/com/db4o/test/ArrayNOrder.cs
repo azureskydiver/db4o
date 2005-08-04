@@ -10,7 +10,7 @@ namespace com.db4o.test
         public Object[,] o1;
 
         public void store() {
-            Test.deleteAllInstances(this);
+            Tester.deleteAllInstances(this);
             s1 = new String[2,2,3];
             s1[0,0,0] = "000";
             s1[0,0,1] = "001";
@@ -30,31 +30,31 @@ namespace com.db4o.test
             o1[0,1] = "01";
             o1[1,0] = (float)10;
             o1[1,1] = (double)1.1;
-            Test.store(this);
+            Tester.store(this);
         }
 
         public void test() {
-            ArrayNOrder ano = (ArrayNOrder)Test.getOne(this);
+            ArrayNOrder ano = (ArrayNOrder)Tester.getOne(this);
             ano.check();
         }
     
         public void check(){
-            Test.ensure(s1[0,0,0].Equals("000"));
-            Test.ensure(s1[0,0,1].Equals("001"));
-            Test.ensure(s1[0,0,2].Equals("002"));
-            Test.ensure(s1[0,1,0].Equals("010"));
-            Test.ensure(s1[0,1,1].Equals("011"));
-            Test.ensure(s1[0,1,2].Equals("012"));
-            Test.ensure(s1[1,0,0].Equals("100"));
-            Test.ensure(s1[1,0,1].Equals("101"));
-            Test.ensure(s1[1,0,2].Equals("102"));
-            Test.ensure(s1[1,1,0].Equals("110"));
-            Test.ensure(s1[1,1,1].Equals("111"));
-            Test.ensure(s1[1,1,2].Equals("112"));
-            Test.ensure(o1[0,0].Equals(0));
-            Test.ensure(o1[0,1].Equals("01"));
-            Test.ensure(o1[1,0].Equals((float)10));
-            Test.ensure(o1[1,1].Equals((double)1.1));
+            Tester.ensure(s1[0,0,0].Equals("000"));
+            Tester.ensure(s1[0,0,1].Equals("001"));
+            Tester.ensure(s1[0,0,2].Equals("002"));
+            Tester.ensure(s1[0,1,0].Equals("010"));
+            Tester.ensure(s1[0,1,1].Equals("011"));
+            Tester.ensure(s1[0,1,2].Equals("012"));
+            Tester.ensure(s1[1,0,0].Equals("100"));
+            Tester.ensure(s1[1,0,1].Equals("101"));
+            Tester.ensure(s1[1,0,2].Equals("102"));
+            Tester.ensure(s1[1,1,0].Equals("110"));
+            Tester.ensure(s1[1,1,1].Equals("111"));
+            Tester.ensure(s1[1,1,2].Equals("112"));
+            Tester.ensure(o1[0,0].Equals(0));
+            Tester.ensure(o1[0,1].Equals("01"));
+            Tester.ensure(o1[1,0].Equals((float)10));
+            Tester.ensure(o1[1,1].Equals((double)1.1));
         }
     
     }

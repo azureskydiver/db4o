@@ -15,21 +15,21 @@ namespace com.db4o.test {
         }
 
         public void test(){
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(typeof(DerivedFromArrayList));
             ObjectSet objectSet = q.execute();
             while(objectSet.hasNext()){
                 DerivedFromArrayList dal = (DerivedFromArrayList)objectSet.next();
                 dal.Add("Three");
-                Test.store(dal);
+                Tester.store(dal);
             }
-            Test.reOpen();
-            q = Test.query();
+            Tester.reOpen();
+            q = Tester.query();
             q.constrain(typeof(DerivedFromArrayList));
             objectSet = q.execute();
             while(objectSet.hasNext()){
                 DerivedFromArrayList dal = (DerivedFromArrayList)objectSet.next();
-                Test.ensure(dal.Count > 2);
+                Tester.ensure(dal.Count > 2);
             }
         }
     }

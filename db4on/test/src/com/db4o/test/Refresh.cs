@@ -27,24 +27,24 @@ namespace com.db4o.test {
             Refresh r3 = new Refresh("o3", null);
             Refresh r2 = new Refresh("o2", r3);
             Refresh r1 = new Refresh("o1", r2);
-            Test.store(r1);
+            Tester.store(r1);
         }
 
         public void test() {
-            ExtObjectContainer oc1 = Test.objectContainer();
+            ExtObjectContainer oc1 = Tester.objectContainer();
             Refresh r11 = getRoot(oc1);
             r11.name = "cc";
             oc1.refresh(r11, 0);
-            Test.ensure(r11.name.Equals("cc"));
+            Tester.ensure(r11.name.Equals("cc"));
             oc1.refresh(r11, 1);
-            Test.ensure(r11.name.Equals("o1"));
+            Tester.ensure(r11.name.Equals("o1"));
             r11.child.name = "cc";
             oc1.refresh(r11, 1);
-            Test.ensure(r11.child.name.Equals("cc"));
+            Tester.ensure(r11.child.name.Equals("cc"));
             oc1.refresh(r11, 2);
-            Test.ensure(r11.child.name.Equals("o2"));
+            Tester.ensure(r11.child.name.Equals("o2"));
 
-            if (Test.isClientServer()) {
+            if (Tester.isClientServer()) {
                 ExtObjectContainer oc2 = null;
                 try {
                     oc2 = Db4o.openClient(AllTests.SERVER_HOSTNAME, AllTests.SERVER_PORT, AllTests.DB4O_USER,
@@ -65,29 +65,29 @@ namespace com.db4o.test {
                 oc1.set(r11);
 
                 oc2.refresh(r12, int.MaxValue);
-                Test.ensure(r12.child.name.Equals("o2"));
+                Tester.ensure(r12.child.name.Equals("o2"));
 
-                Test.commitSync(oc1, oc2);
+                Tester.commitSync(oc1, oc2);
 
                 oc2.refresh(r12, int.MaxValue);
-                Test.ensure(r12.child.name.Equals("n2"));
-                Test.ensure(r12.child.child.name.Equals("n3"));
-                Test.ensure(r12.child.child.child.name.Equals("n4"));
+                Tester.ensure(r12.child.name.Equals("n2"));
+                Tester.ensure(r12.child.child.name.Equals("n3"));
+                Tester.ensure(r12.child.child.child.name.Equals("n4"));
 
                 r11.child.child.child = null;
                 oc1.set(r11.child.child);
-                Test.commitSync(oc1, oc2);
+                Tester.commitSync(oc1, oc2);
 
                 oc2.refresh(r12, int.MaxValue);
-                Test.ensure(r12.child.child.child == null);
+                Tester.ensure(r12.child.child.child == null);
 
                 r11.child.child = new Refresh("nn2", null);
                 oc1.set(r11.child);
-                Test.commitSync(oc1, oc2);
+                Tester.commitSync(oc1, oc2);
 
                 oc2.refresh(r12, int.MaxValue);
-                Test.ensure(r12.child.child != r32);
-                Test.ensure(r12.child.child.name.Equals("nn2"));
+                Tester.ensure(r12.child.child != r32);
+                Tester.ensure(r12.child.child.name.Equals("nn2"));
 
                 oc2.close();
             }

@@ -18,8 +18,8 @@ namespace com.db4o.test.cs
 
 		public void testOne()
 		{
-			Test.ensureEquals("foo", _field);
-			Test.ensureEquals(42, _placeHolder);
+			Tester.ensureEquals("foo", _field);
+			Tester.ensureEquals(42, _placeHolder);
 		}
 	}
 }

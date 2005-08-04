@@ -10,26 +10,26 @@ namespace com.db4o.test
         String foo;
 
         public void store(){
-            Test.deleteAllInstances(this);
+            Tester.deleteAllInstances(this);
             DifferentAccessPaths dap = new DifferentAccessPaths();
             dap.foo = "hi";
-            Test.store(dap);
+            Tester.store(dap);
             dap = new DifferentAccessPaths();
             dap.foo = "hi too";
-            Test.store(dap);
+            Tester.store(dap);
         }
 
         public void test(){
             DifferentAccessPaths dap = query();
             for(int i = 0; i < 10; i ++){
-                Test.ensure(dap == query());
+                Tester.ensure(dap == query());
             }
-            Test.objectContainer().purge(dap);
-            Test.ensure(dap != query());
+            Tester.objectContainer().purge(dap);
+            Tester.ensure(dap != query());
         }
 
         private DifferentAccessPaths query(){
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(typeof(DifferentAccessPaths));
             q.descend("foo").constrain("hi");
             ObjectSet os = q.execute();

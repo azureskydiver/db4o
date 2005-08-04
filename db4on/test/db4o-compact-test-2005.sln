@@ -1,11 +1,10 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-compact-test-2005", "db4o-compact-test-2005.csproj", "{3D12D013-86A3-4BA0-8462-0825EC066863}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-compact-tools-2005", "..\tools\db4o-compact-tools-2005.csproj", "{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-compact-2005", "..\core\db4o-compact-2005.csproj", "{B653ADB1-F959-49E0-81CF-AD37D69CB011}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-compact-tools-2005", "..\tools\db4o-compact-tools-2005.csproj", "{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +18,14 @@ Global
 		{3D12D013-86A3-4BA0-8462-0825EC066863}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D12D013-86A3-4BA0-8462-0825EC066863}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3D12D013-86A3-4BA0-8462-0825EC066863}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B653ADB1-F959-49E0-81CF-AD37D69CB011}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B653ADB1-F959-49E0-81CF-AD37D69CB011}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B653ADB1-F959-49E0-81CF-AD37D69CB011}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B653ADB1-F959-49E0-81CF-AD37D69CB011}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5C01056-B6A2-466A-89A8-4D74B2EFB1D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

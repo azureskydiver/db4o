@@ -55,7 +55,7 @@ namespace j4o.lang {
                 Type t = TypeName.Parse(name).Resolve();
                 returnValue = getClassForType(t);
 				_typeNameToClassMap[name] = returnValue;
-            } catch(TypeLoadException ex) {
+            } catch(Exception ex) {
                 throw new ClassNotFoundException(name);
             }
 			return returnValue;
@@ -131,6 +131,17 @@ namespace j4o.lang {
         public Method getMethod(String name, Class[] parameterTypes) {
             return getMethod(type.GetMethod(name, getTypes(parameterTypes)));
         }
+
+		public Method[] getMethods() 
+		{
+			MethodInfo[] methods = type.GetMethods();
+			Method[] result = new Method[methods.Length];
+			for (int i=0; i<methods.Length; ++i)
+			{
+				result[i] = getMethod(methods[i]);
+			}
+			return result;
+		}
 
         private Method getMethod(MethodInfo methodInfo) {
             if(methodInfo == null) {

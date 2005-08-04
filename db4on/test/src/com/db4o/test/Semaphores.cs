@@ -12,17 +12,17 @@ namespace com.db4o.test {
       }
       
       public void test() {
-         ExtObjectContainer eoc1 = Test.objectContainer();
+         ExtObjectContainer eoc1 = Tester.objectContainer();
          eoc1.setSemaphore("SEM", 0);
-         Test.ensure(eoc1.setSemaphore("SEM", 0) == true);
-         if (Test.clientServer) {
+         Tester.ensure(eoc1.setSemaphore("SEM", 0) == true);
+         if (Tester.clientServer) {
             ExtObjectContainer client21 = null;
             try {
                {
                   client21 = Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
-                  Test.ensure(client21.setSemaphore("SEM", 0) == false);
+                  Tester.ensure(client21.setSemaphore("SEM", 0) == false);
                   eoc1.releaseSemaphore("SEM");
-                  Test.ensure(client21.setSemaphore("SEM", 0) == true);
+                  Tester.ensure(client21.setSemaphore("SEM", 0) == true);
                }
             }  catch (Exception e) {
                {

@@ -21,19 +21,19 @@ namespace com.db4o.test {
       }
       
       public void store() {
-         Test.deleteAllInstances(this);
+         Tester.deleteAllInstances(this);
          PersistStaticFieldValues psfv1 = new PersistStaticFieldValues();
          psfv1.one = ONE;
          psfv1.two = TWO;
          psfv1.three = THREE;
-         Test.store(psfv1);
+         Tester.store(psfv1);
       }
       
       public void test() {
-         PersistStaticFieldValues psfv1 = (PersistStaticFieldValues)Test.getOne(this);
-         Test.ensure(psfv1.one == ONE);
-         Test.ensure(psfv1.two == TWO);
-         Test.ensure(psfv1.three == THREE);
+         PersistStaticFieldValues psfv1 = (PersistStaticFieldValues)Tester.getOne(this);
+         Tester.ensure(psfv1.one == ONE);
+         Tester.ensure(psfv1.two == TWO);
+         Tester.ensure(psfv1.three == THREE);
       }
       
       public class PsfvHelper {

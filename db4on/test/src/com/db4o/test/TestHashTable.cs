@@ -19,36 +19,36 @@ namespace com.db4o.test {
       }
       
       public void store() {
-         Test.deleteAllInstances(this);
-         Test.deleteAllInstances(new Atom());
-         Test.deleteAllInstances(new com.db4o.config.Entry());
+         Tester.deleteAllInstances(this);
+         Tester.deleteAllInstances(new Atom());
+         Tester.deleteAllInstances(new com.db4o.config.Entry());
          TestHashTable tht1 = new TestHashTable();
          tht1.ht = new Hashtable();
          tht1.ht["t1"] = new Atom("t1");
          tht1.ht["t2"] = new Atom("t2");
-         Test.store(tht1);
+         Tester.store(tht1);
       }
       
       public void test() {
          com.db4o.config.Entry checkEntries1 = new com.db4o.config.Entry();
-         TestHashTable tht1 = (TestHashTable)Test.getOne(this);
-         Test.ensure(tht1.ht.Count == 2);
-         Test.ensure(tht1.ht["t1"].Equals(new Atom("t1")));
-         Test.ensure(tht1.ht["t2"].Equals(new Atom("t2")));
+         TestHashTable tht1 = (TestHashTable)Tester.getOne(this);
+         Tester.ensure(tht1.ht.Count == 2);
+         Tester.ensure(tht1.ht["t1"].Equals(new Atom("t1")));
+         Tester.ensure(tht1.ht["t2"].Equals(new Atom("t2")));
          tht1.ht["t2"] = new Atom("t3");
-         Test.store(tht1);
-         if (Test.COMPARE_INTERNAL_OK) {
-            Test.ensureOccurrences(checkEntries1, 2);
-            Test.commit();
-            Test.ensureOccurrences(checkEntries1, 2);
-            Test.deleteAllInstances(this);
-            Test.ensureOccurrences(checkEntries1, 0);
-            Test.rollBack();
-            Test.ensureOccurrences(checkEntries1, 2);
-            Test.deleteAllInstances(this);
-            Test.ensureOccurrences(checkEntries1, 0);
-            Test.commit();
-            Test.ensureOccurrences(checkEntries1, 0);
+         Tester.store(tht1);
+         if (Tester.COMPARE_INTERNAL_OK) {
+            Tester.ensureOccurrences(checkEntries1, 2);
+            Tester.commit();
+            Tester.ensureOccurrences(checkEntries1, 2);
+            Tester.deleteAllInstances(this);
+            Tester.ensureOccurrences(checkEntries1, 0);
+            Tester.rollBack();
+            Tester.ensureOccurrences(checkEntries1, 2);
+            Tester.deleteAllInstances(this);
+            Tester.ensureOccurrences(checkEntries1, 0);
+            Tester.commit();
+            Tester.ensureOccurrences(checkEntries1, 0);
          }
       }
    }

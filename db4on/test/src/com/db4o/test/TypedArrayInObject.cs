@@ -11,23 +11,23 @@ namespace com.db4o.test
         Object obj;
 	
         public void store(){
-            Test.deleteAllInstances(this);
+            Tester.deleteAllInstances(this);
             TypedArrayInObject taio = new TypedArrayInObject();
             Atom[] mols = new Atom[1];
             mols[0] = new Atom("TypedArrayInObject"); 
             taio.obj = mols;
-            Test.store(taio);
+            Tester.store(taio);
         }
 
         class EnsureAtom : Visitor4{
             public void visit(Object obj) {
                 TypedArrayInObject taio = (TypedArrayInObject)obj;
-                Test.ensure(taio.obj is Atom[]);
+                Tester.ensure(taio.obj is Atom[]);
             }
         }
 	
         public void test(){
-            Test.forEach(new TypedArrayInObject(), new EnsureAtom());
+            Tester.forEach(new TypedArrayInObject(), new EnsureAtom());
         }
 
 

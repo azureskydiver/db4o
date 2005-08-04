@@ -5,7 +5,7 @@ using j4o.lang;
 namespace com.db4o.test.types {
 
    /**
-    * Compare does not handle this, so we only use it for debugging individually
+    * TestUtil does not handle this, so we only use it for debugging individually
     */
    public class ArrayVariations: RTest {
       

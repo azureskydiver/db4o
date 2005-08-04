@@ -51,8 +51,9 @@ namespace com.db4o
 		
 		public void evaluate(Candidate candidate)
 		{
-			EvaluationDelegate evaluation = GetEvaluationDelegate();
-			evaluation(candidate);
+			// use starting _ for PascalCase conversion purposes
+			EvaluationDelegate _evaluation = GetEvaluationDelegate();
+			_evaluation(candidate);
 		}
 	}
 }

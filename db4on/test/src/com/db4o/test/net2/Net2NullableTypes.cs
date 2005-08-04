@@ -28,17 +28,17 @@ namespace com.db4o.test.net2
 	{
 		public void store()
 		{
-			Test.store(new NullableContainer(42));
-			Test.store(new NullableContainer(new DateTime(1983, 3, 7)));
+			Tester.store(new NullableContainer(42));
+			Tester.store(new NullableContainer(new DateTime(1983, 3, 7)));
 		}
 
 		public void testGlobalQuery()
 		{
-			Query query = Test.query();
+			Query query = Tester.query();
 			query.constrain(typeof(NullableContainer));
 
 			ObjectSet os = query.execute();
-			Test.ensureEquals(2, os.size());
+			Tester.ensureEquals(2, os.size());
 
 			bool foundInt = false;
 			bool foundDate = false;
@@ -47,41 +47,41 @@ namespace com.db4o.test.net2
 				NullableContainer item = (NullableContainer)os.next();
 				if (item.intValue.HasValue)
 				{
-					Test.ensureEquals(42, item.intValue.Value);
-					Test.ensure(!item.dateValue.HasValue);
+					Tester.ensureEquals(42, item.intValue.Value);
+					Tester.ensure(!item.dateValue.HasValue);
 					foundInt = true;
 				}
 				else
 				{
-					Test.ensureEquals(new DateTime(1983, 3, 7), item.dateValue.Value);
-					Test.ensure(!item.intValue.HasValue);
+					Tester.ensureEquals(new DateTime(1983, 3, 7), item.dateValue.Value);
+					Tester.ensure(!item.intValue.HasValue);
 					foundDate = true;
 				}
 			}
 
-			Test.ensure(foundInt);
-			Test.ensure(foundDate);
+			Tester.ensure(foundInt);
+			Tester.ensure(foundDate);
 		}
 
 		public void testDateQuery()
 		{
 			DateTime value = new DateTime(1983, 3, 7);
-			ObjectSet os = Test.objectContainer().get(new NullableContainer(value));
-			Test.ensureEquals(1, os.size());
+			ObjectSet os = Tester.objectContainer().get(new NullableContainer(value));
+			Tester.ensureEquals(1, os.size());
 
 			NullableContainer found = (NullableContainer)os.next();
-			Test.ensureEquals(value, found.dateValue.Value);
-			Test.ensure(!found.intValue.HasValue);
+			Tester.ensureEquals(value, found.dateValue.Value);
+			Tester.ensure(!found.intValue.HasValue);
 		}
 
 		public void testIntQuery()
 		{	
-			ObjectSet os = Test.objectContainer().get(new NullableContainer(42));
-			Test.ensureEquals(1, os.size());
+			ObjectSet os = Tester.objectContainer().get(new NullableContainer(42));
+			Tester.ensureEquals(1, os.size());
 
 			NullableContainer found = (NullableContainer)os.next();
-			Test.ensureEquals(42, found.intValue.Value);
-			Test.ensure(!found.dateValue.HasValue);
+			Tester.ensureEquals(42, found.intValue.Value);
+			Tester.ensure(!found.dateValue.HasValue);
 		}
 
 	}

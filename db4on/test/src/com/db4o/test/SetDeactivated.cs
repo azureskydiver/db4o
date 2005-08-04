@@ -15,19 +15,19 @@ namespace com.db4o.test {
       }
       
       public void store() {
-         Test.deleteAllInstances(this);
-         Test.store(new SetDeactivated("hi"));
-         Test.commit();
+         Tester.deleteAllInstances(this);
+         Tester.store(new SetDeactivated("hi"));
+         Tester.commit();
       }
       
       public void test() {
-         SetDeactivated sd1 = (SetDeactivated)Test.getOne(this);
-         Test.objectContainer().deactivate(sd1, 1);
-         Test.store(sd1);
-         Test.objectContainer().purge(sd1);
-         sd1 = (SetDeactivated)Test.getOne(this);
-         Test.objectContainer().activate(sd1, 1);
-         Test.ensure(sd1.foo.Equals("hi"));
+         SetDeactivated sd1 = (SetDeactivated)Tester.getOne(this);
+         Tester.objectContainer().deactivate(sd1, 1);
+         Tester.store(sd1);
+         Tester.objectContainer().purge(sd1);
+         sd1 = (SetDeactivated)Tester.getOne(this);
+         Tester.objectContainer().activate(sd1, 1);
+         Tester.ensure(sd1.foo.Equals("hi"));
       }
    }
 }

@@ -13,15 +13,15 @@ namespace com.db4o.test {
       
       public void test() {
          SodaTest st1 = new SodaTest();
-         if (Test.isClientServer()) {
+         if (Tester.isClientServer()) {
              st1.run(SodaTest.CLASSES, new STEngine[]{
                                                          new STDb4oClientServer()            }, true);
          } else {
              st1.run(SodaTest.CLASSES, new STEngine[]{
                                                          new STDb4o()            }, true);
          }
-         Test.ensure(SodaTest.failedClassesSize() == 0);
-         Test.assertionCount += SodaTest.testCaseCount();
+         Tester.ensure(SodaTest.failedClassesSize() == 0);
+         Tester.assertionCount += SodaTest.testCaseCount();
       }
    }
 }

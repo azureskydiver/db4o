@@ -63,8 +63,8 @@ namespace com.db4o.test
 			configure();
 			for (int i=0; i<INSTANCES; ++i)
 			{
-				Test.store(new ByteArrayHolder(createByteArray()));
-				Test.store(new SerializableByteArrayHolder(createByteArray()));
+				Tester.store(new ByteArrayHolder(createByteArray()));
+				Tester.store(new SerializableByteArrayHolder(createByteArray()));
 			}
 		}
 
@@ -75,57 +75,58 @@ namespace com.db4o.test
 
 		public void testEmptyFunction()
 		{
-			time("empty loop", new Function(empty));
+			time("empty loop", new Function(Empty));
 		}
 
-		void empty()
+		void Empty()
 		{
 		}
 
 		public void testSerializableByteArrayHolder()
 		{
-			time("TSerializable", new Function(querySerializableByteArrayHolder));
+			time("TSerializable", new Function(QuerySerializableByteArrayHolder));
 		}
 
-		private void querySerializableByteArrayHolder()
+		private void QuerySerializableByteArrayHolder()
 		{
 			executeQuery(typeof(SerializableByteArrayHolder));
 		}
 		
 		public void testByteArrayHolder()
 		{
-			time("raw byte array", new Function(queryByteArrayHolder));
+			time("raw byte array", new Function(QueryByteArrayHolder));
 		}
 
-		public void queryByteArrayHolder()
+		private void QueryByteArrayHolder()
 		{
 			executeQuery(typeof(ByteArrayHolder));
 		}
 
 		void executeQuery(Type type)
 		{
-			Query query = Test.query();
+			Query query = Tester.query();
 			query.constrain(type);
 			
 			ObjectSet os = query.execute();
-			Test.ensure(INSTANCES == os.size());
+			Tester.ensure(INSTANCES == os.size());
 			
 			while (os.hasNext())
 			{
-				Test.ensure(ARRAY_LENGTH == ((IByteArrayHolder)os.next()).Bytes.Length);
+				Tester.ensure(ARRAY_LENGTH == ((IByteArrayHolder)os.next()).Bytes.Length);
 			}
 		}
 
 		delegate void Function();
 
-		void time(string label, Function function)
+		// HACK: parameter changed to _f for pascalcase conversion purposes
+		void time(string label, Function _f)
 		{
 			DateTime start = DateTime.Now;
 			for (int i=0; i<ITERATIONS; ++i)
 			{
-				Test.close();
-				Test.open();
-				function();
+				Tester.close();
+				Tester.open();
+				_f();
 			}
 			DateTime end = DateTime.Now;
 			System.Console.WriteLine(label + ": {0} iterations took {1}ms", ITERATIONS, (end-start).TotalMilliseconds);

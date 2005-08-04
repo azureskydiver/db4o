@@ -41,13 +41,14 @@ namespace com.db4o.f1
         }
         
         void RunExample(string typeName, string method)
-        {           
-            MethodInfo example = Assembly.GetExecutingAssembly().GetType(typeName).GetMethod(method);
+        {
+        	Type type = Assembly.GetExecutingAssembly().GetType(typeName);
+        	MethodInfo example = type.GetMethod(method, BindingFlags.IgnoreCase|BindingFlags.Static|BindingFlags.Public);
             
             bool found = false;
-            foreach (Executor executor in _executors)
+            foreach (Executor _e in _executors)
             {
-                if (executor(example))
+                if (_e(example))
                 {
                     found = true;
                     break;

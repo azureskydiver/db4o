@@ -48,18 +48,18 @@ namespace com.db4o.test.cs
 
 		public void store()
 		{
-			Test.deleteAllInstances(this);
-			Test.store(new CsEnum(CsEnumState.Open));
-			Test.store(new CsEnum(CsEnumState.Closed));
-			Test.store(new CsEnum(CsEnumState.Running));
+			Tester.deleteAllInstances(this);
+			Tester.store(new CsEnum(CsEnumState.Open));
+			Tester.store(new CsEnum(CsEnumState.Closed));
+			Tester.store(new CsEnum(CsEnumState.Running));
 		}
 
 		public void testValueConstrain()
 		{
-			Query q = Test.query();
+			Query q = Tester.query();
 			q.constrain(typeof(CsEnum));
 			ObjectSet os = q.execute();
-			Test.ensure(os.size() == 3);
+			Tester.ensure(os.size() == 3);
 
 			tstQueryByEnum(CsEnumState.Open);
 			tstQueryByEnum(CsEnumState.Closed);
@@ -67,7 +67,7 @@ namespace com.db4o.test.cs
 
 		public void testOrConstrain()
 		{
-			Query q = Test.query();
+			Query q = Tester.query();
 			q.constrain(typeof(CsEnum));
 			q.descend("_state").constrain(CsEnumState.Open).or(
 				q.descend("_state").constrain(CsEnumState.Running));
@@ -85,13 +85,13 @@ namespace com.db4o.test.cs
 
 		private void tstQBE(int expectedCount, CsEnumState value)
 		{
-			ObjectSet os = Test.objectContainer().get(new CsEnum(value));
-			Test.ensureEquals(expectedCount, os.size());
+			ObjectSet os = Tester.objectContainer().get(new CsEnum(value));
+			Tester.ensureEquals(expectedCount, os.size());
 		}
 
 		private void ensureObjectSet(ObjectSet os, params CsEnumState[] expected)
 		{
-			Test.ensureEquals(expected.Length, os.size());
+			Tester.ensureEquals(expected.Length, os.size());
 			ArrayList l = new ArrayList();
 			while (os.hasNext())
 			{
@@ -100,20 +100,20 @@ namespace com.db4o.test.cs
 			
 			foreach (CsEnumState e in expected)
 			{	
-				Test.ensure(l.Contains(e));
+				Tester.ensure(l.Contains(e));
 				l.Remove(e);
 			}
 		}
 
 		void tstQueryByEnum(CsEnumState template)
 		{
-			Query q = Test.query();
+			Query q = Tester.query();
 			q.constrain(typeof(CsEnum));
 			q.descend("_state").constrain(template);
 
 			ObjectSet os = q.execute();
-			Test.ensure(1 == os.size());
-			Test.ensure(template == ((CsEnum)os.next()).State);
+			Tester.ensure(1 == os.size());
+			Tester.ensure(template == ((CsEnum)os.next()).State);
 		}
 	}
 }

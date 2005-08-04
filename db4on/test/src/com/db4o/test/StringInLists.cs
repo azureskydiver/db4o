@@ -27,7 +27,7 @@ namespace com.db4o.test
         public void storeOne() 
         {
 
-            ExtObjectContainer oc = Test.objectContainer();
+            ExtObjectContainer oc = Tester.objectContainer();
             Db4oCollections col = oc.collections();
 
             arrayList = new ArrayList();
@@ -71,18 +71,18 @@ namespace com.db4o.test
 
         private void checkList(IList list) 
         {
-            Test.ensure(list.Count == 3);
-            Test.ensure(list[0].Equals("One"));
-            Test.ensure(list[1].Equals("Two"));
-            Test.ensure(list[2].Equals("Three"));
+            Tester.ensure(list.Count == 3);
+            Tester.ensure(list[0].Equals("One"));
+            Tester.ensure(list[1].Equals("Two"));
+            Tester.ensure(list[2].Equals("Three"));
         }
     
         private void checkMap(IDictionary map)
         {
-            Test.ensure(map.Count == 3);
-            Test.ensure(map["One"].Equals("One"));
-            Test.ensure(map["Two"].Equals("Two"));
-            Test.ensure(map["Three"].Equals("Three"));
+            Tester.ensure(map.Count == 3);
+            Tester.ensure(map["One"].Equals("One"));
+            Tester.ensure(map["Two"].Equals("Two"));
+            Tester.ensure(map["Three"].Equals("Three"));
         }
     }
 }

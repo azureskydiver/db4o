@@ -11,11 +11,11 @@ namespace com.db4o.test {
       }
       
       public void store() {
-         Test.store(new StaticClass());
+         Tester.store(new StaticClass());
       }
       
       public void test() {
-         Test.ensureOccurrences(new StaticClass(), 0);
+         Tester.ensureOccurrences(new StaticClass(), 0);
       }
    }
 }

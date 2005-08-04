@@ -14,27 +14,27 @@ namespace com.db4o.test {
       internal String name;
       
       public void store() {
-         Test.deleteAllInstances(this);
+         Tester.deleteAllInstances(this);
          name = "one";
-         Test.store(this);
+         Tester.store(this);
          SodaEvaluation se1 = new SodaEvaluation();
          se1.child = new SodaEvaluation();
          se1.child.name = "three";
          se1.name = "two";
-         Test.store(se1);
+         Tester.store(se1);
       }
       
       public void test() {
          String nameConstraint1 = "three";
-         Query q1 = Test.query();
+         Query q1 = Tester.query();
          Query cq1 = q1;
          q1.constrain(j4o.lang.Class.getClassForObject(this));
          cq1 = cq1.descend("child");
          cq1.constrain(new MyEvaluation());
          ObjectSet os = q1.execute();
-         Test.ensure(os.size() == 1);
+         Tester.ensure(os.size() == 1);
          SodaEvaluation se = (SodaEvaluation)os.next();
-         Test.ensure(se.name.Equals("two"));
+         Tester.ensure(se.name.Equals("two"));
       }
    }
 

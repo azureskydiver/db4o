@@ -12,7 +12,7 @@ namespace com.db4o.test {
       }
       
       public void compare(ObjectContainer con, Object obj, int ver) {
-         Compare.compare(con, set(newInstance(), ver), obj, "", null);
+         TestUtil.compare(con, set(newInstance(), ver), obj, "", null);
       }
       
       public override bool Equals(Object obj) {

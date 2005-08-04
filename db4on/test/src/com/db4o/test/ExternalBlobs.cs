@@ -18,7 +18,7 @@ namespace com.db4o.test {
       
         internal void configure() {
             try {
-                Db4o.configure().setBlobPath(Test.BLOB_PATH);
+                Db4o.configure().setBlobPath(Tester.BLOB_PATH);
             }  catch (Exception e) {
                 j4o.lang.JavaSystem.printStackTrace(e);
             }
@@ -28,7 +28,7 @@ namespace com.db4o.test {
         }
       
         public void testOne() {
-            if (new File(Test.BLOB_PATH).exists()) {
+            if (new File(Tester.BLOB_PATH).exists()) {
                 try { {
                    byte[] chout1 = new byte[]{
                                                  (byte)72,
@@ -58,19 +58,19 @@ namespace com.db4o.test {
                        status1 = blob.getStatus();
                    }
                    File resultingFile1 = new File(BLOB_FILE_OUT);
-                   Test.ensure(resultingFile1.exists());
+                   Tester.ensure(resultingFile1.exists());
                    if (resultingFile1.exists()) {
                        RandomAccessFile fr1 = new RandomAccessFile(BLOB_FILE_OUT, "rw");
                        byte[] chin1 = new byte[chout1.Length];
                        fr1.read(chin1);
                        for (int i1 = 0; i1 < chin1.Length; i1++) {
-                           Test.ensure(chout1[i1] == chin1[i1]);
+                           Tester.ensure(chout1[i1] == chin1[i1]);
                        }
                        fr1.close();
                    }
                }
                 }  catch (Exception e) { {
-                   Test.ensure(false);
+                   Tester.ensure(false);
                    j4o.lang.JavaSystem.printStackTrace(e);
                }
                 }

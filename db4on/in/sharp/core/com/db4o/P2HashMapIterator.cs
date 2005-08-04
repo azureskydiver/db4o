@@ -36,7 +36,7 @@ namespace com.db4o {
                 lock (i_map.streamLock()) {
                     i_map.checkActive();
                     checkFirstMoved();
-                    Object key = i_current.activatedKey(i_map.i_activationDepth);
+                    Object key = i_current.activatedKey(i_map.elementActivationDepth());
                     return new DictionaryEntry(key,  i_map.get4(key));
                 }
             }
@@ -47,7 +47,7 @@ namespace com.db4o {
                 lock (i_map.streamLock()) {
                     i_map.checkActive();
                     checkFirstMoved();
-                    return i_current.activatedKey(i_map.i_activationDepth);
+                    return i_current.activatedKey(i_map.elementActivationDepth());
                 }
             }
         }
@@ -82,7 +82,7 @@ namespace com.db4o {
                 lock (i_map.streamLock()) {
                     i_map.checkActive();
                     checkFirstMoved();
-                    return i_map.get4(i_current.activatedKey(i_map.i_activationDepth));
+                    return i_map.get4(i_current.activatedKey(i_map.elementActivationDepth()));
                 }
             }
         }
@@ -111,7 +111,7 @@ namespace com.db4o {
         internal Object next() {
             Object ret = null;
             if (i_current != null){
-                ret = i_current.activatedKey(i_map.i_activationDepth);
+                ret = i_current.activatedKey(i_map.elementActivationDepth());
             }
             getNextCurrent();
             return ret;

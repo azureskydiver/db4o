@@ -16,14 +16,14 @@ namespace com.db4o.test {
       }
       
       public void testOne() {
-         if (!Test.isClientServer()) {
+         if (!Tester.isClientServer()) {
             for (int i1 = 0; i1 < 30; i1++) {
-               ObjectContainer con1 = Db4o.openFile(Test.FILE_SOLO);
+               ObjectContainer con1 = Db4o.openFile(Tester.FILE_SOLO);
                Object obj1 = con1.get(new SharedObjectContainer()).next();
-               Test.ensure(obj1 == this);
+               Tester.ensure(obj1 == this);
                con1.close();
             }
-            Test.ensure(!Test.objectContainer().ext().isClosed());
+            Tester.ensure(!Tester.objectContainer().ext().isClosed());
          }
       }
    }

@@ -37,7 +37,7 @@ namespace com.db4o.test {
         public void testOne()
         {
 	    
-            ObjectContainer oc = Test.objectContainer();
+            ObjectContainer oc = Tester.objectContainer();
 	    
             ensure(ACTIVATE);
             ensureNot(DEACTIVATE);
@@ -56,28 +56,28 @@ namespace com.db4o.test {
             oc.deactivate(this,3);
             ensure(CAN_DEACTIVATE);
             ensureNot(DEACTIVATE);
-            Test.ensure(name.Equals("stored"));
+            Tester.ensure(name.Equals("stored"));
             noneCalled();
 	    
             returnValue = true;
             oc.deactivate(this,3);
             ensure(CAN_DEACTIVATE);
             ensure(DEACTIVATE);
-            Test.ensure(name == null);
+            Tester.ensure(name == null);
             noneCalled();
 	    
             returnValue = false;
             oc.activate(this,3);
             ensure(CAN_ACTIVATE);
             ensureNot(ACTIVATE);
-            Test.ensure(name == null);
+            Tester.ensure(name == null);
             noneCalled();
 	    
             returnValue = true;
             oc.activate(this,3);
             ensure(CAN_ACTIVATE);
             ensure(ACTIVATE);
-            Test.ensure(name.Equals("stored"));
+            Tester.ensure(name.Equals("stored"));
             noneCalled();
 	    
             returnValue = false;
@@ -87,7 +87,7 @@ namespace com.db4o.test {
             ensureNot(UPDATE);
             returnValue = true;
             oc.ext().refresh(this, 3);
-            Test.ensure(name.Equals("stored"));
+            Tester.ensure(name.Equals("stored"));
             noneCalled();
 	    
             returnValue = true;
@@ -96,10 +96,10 @@ namespace com.db4o.test {
             ensure(CAN_UPDATE);
             ensure(UPDATE);
             oc.ext().refresh(this, 3);
-            Test.ensure(name.Equals("modified"));
+            Tester.ensure(name.Equals("modified"));
             noneCalled();
 	    
-            // Test endless loops
+            // Tester endless loops
             helper = new CallbackHelper();
             helper.name = "helper";
             helper.parent = this;
@@ -195,12 +195,12 @@ namespace com.db4o.test {
 	
         private void ensure(int eventPos)
         {
-            Test.ensure(called[eventPos]);
+            Tester.ensure(called[eventPos]);
         }
 	
         private void ensureNot(int eventPos)
         {
-            Test.ensure(! called[eventPos]);
+            Tester.ensure(! called[eventPos]);
         }
 
 	

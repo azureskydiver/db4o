@@ -18,19 +18,19 @@ namespace com.db4o.test
             {
                 MaxByEvaluation mbe = new MaxByEvaluation();
                 mbe.val = i;
-                Test.store(mbe);
+                Tester.store(mbe);
             }
         }
 
         public void test()
         {
-            Query q = Test.query();
+            Query q = Tester.query();
             q.constrain(typeof(MaxByEvaluation));
             q.descend("val").constrain(new EvalCallbackForMax());
             ObjectSet objectSet = q.execute();
-            Test.ensure(objectSet.size() == 1);
+            Tester.ensure(objectSet.size() == 1);
             MaxByEvaluation mbe = (MaxByEvaluation)objectSet.next();
-            Test.ensure(mbe.val == MAX);
+            Tester.ensure(mbe.val == MAX);
         }
     }
 

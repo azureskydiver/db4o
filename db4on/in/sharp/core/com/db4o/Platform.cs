@@ -60,7 +60,7 @@ namespace com.db4o {
             lock(typeof(Platform)) {
                 if (shutDownStreams == null) {
                     shutDownStreams = new ArrayList();
-                    Compat.addShutDownHook(new EventHandler(shutDown));
+                    Compat.addShutDownHook(new EventHandler(OnShutDown));
                 }
                 shutDownStreams.Add(stream);
             }
@@ -110,9 +110,10 @@ namespace com.db4o {
             if(eval != null){
                 eval.evaluate(a_candidate);
             }else{
-                EvaluationDelegate ed = a_evaluation as EvaluationDelegate;
-                if(ed != null){
-                    ed(a_candidate);
+				// use starting _ for PascalCase conversion purposes
+                EvaluationDelegate _ed = a_evaluation as EvaluationDelegate;
+                if (_ed != null){
+                    _ed(a_candidate);
                 }
             }
         }
@@ -367,7 +368,7 @@ namespace com.db4o {
             // do nothing
         }
       
-        static internal void shutDown(object sender, EventArgs args) {
+        static private void OnShutDown(object sender, EventArgs args) {
             lock (typeof(Platform)) {
                 foreach (object stream in shutDownStreams) {
                     Unobfuscated.shutDownHookCallback(stream);

@@ -6,8 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-net2", "..\core\db4o-n
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-net2-tools", "..\tools\db4o-net2-tools.csproj", "{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "spikes", "..\..\..\..\Documents and Settings\rodrigob\meus documentos\visual studio 2005\Projects\spikes\spikes.csproj", "{5C90EE7A-5C58-415C-B24F-AE37EE588994}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,10 +24,6 @@ Global
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C90EE7A-5C58-415C-B24F-AE37EE588994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C90EE7A-5C58-415C-B24F-AE37EE588994}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C90EE7A-5C58-415C-B24F-AE37EE588994}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C90EE7A-5C58-415C-B24F-AE37EE588994}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

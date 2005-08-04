@@ -26,7 +26,7 @@ namespace com.db4o.test
         string name;
 
         public void store(){
-            if(Test.isClientServer()){
+            if(Tester.isClientServer()){
                 return;
             }
             string file = PATH + fileName();
@@ -55,7 +55,7 @@ namespace com.db4o.test
             }
             String fullyQualifiedTypeName  = GetType().FullName + ", " + shortAssemblyName;
 
-            if(Test.isClientServer()){
+            if(Tester.isClientServer()){
                 return;
             }
             for(int i = 0; i < VERSIONS.Length; i ++){
@@ -79,12 +79,12 @@ namespace com.db4o.test
                     Query q = objectContainer.query();
                     q.constrain(typeof(UpdatingDb4oVersions));
                     ObjectSet objectSet = q.execute();
-                    Test.ensure(objectSet.size() == 1);
+                    Tester.ensure(objectSet.size() == 1);
                     UpdatingDb4oVersions udv = (UpdatingDb4oVersions)objectSet.next();
-                    Test.ensure(udv.name.Equals("check"));
-                    Test.ensure(udv.list.Count == 1);
-                    Test.ensure(udv.list[0].Equals("check"));
-                    Test.ensure(udv.map["check"].Equals("check"));
+                    Tester.ensure(udv.name.Equals("check"));
+                    Tester.ensure(udv.list.Count == 1);
+                    Tester.ensure(udv.list[0].Equals("check"));
+                    Tester.ensure(udv.map["check"].Equals("check"));
                     objectContainer.close();
                 }else{
                     Console.WriteLine("Version upgrade check failed. File not found:");

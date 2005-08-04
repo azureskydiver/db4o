@@ -15,8 +15,8 @@ namespace com.db4o.test.cs
 
 		public void testOne() 
 		{
-			Test.ensureEquals(this.GetType(), myType);
-			Test.ensureEquals(typeof(String), stringType);
+			Tester.ensureEquals(this.GetType(), myType);
+			Tester.ensureEquals(typeof(String), stringType);
 		}
 	}
 }

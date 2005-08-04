@@ -53,7 +53,7 @@ namespace com.db4o {
                 P2ListElementIterator i = iterator4();
                 while (i.hasNext()) {
                     P1ListElement ple = i.nextElement();
-                    arr.SetValue(ple.activatedObject(i_activationDepth), pos++);
+                    arr.SetValue(ple.activatedObject(elementActivationDepth()), pos++);
                 }
             }
         }
@@ -146,7 +146,7 @@ namespace com.db4o {
                     checkActive();
                     P1ListElement ple = iterator4().move(index);
                     if (ple != null){
-                        return ple.activatedObject(i_activationDepth);
+                        return ple.activatedObject(elementActivationDepth());
                     }
                     return null;
                 }
@@ -309,7 +309,7 @@ namespace com.db4o {
                     previous.update();
                 }
                 checkRemoved(previous, elem);
-                ret = elem.activatedObject(i_activationDepth);
+                ret = elem.activatedObject(elementActivationDepth());
                 elem.delete(i_deleteRemoved);
                 return ret;
             }
@@ -360,6 +360,5 @@ namespace com.db4o {
             }
             return this;
         }
-      
     }
 }
