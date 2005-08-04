@@ -134,18 +134,6 @@ public class STShort implements STClass1{
 		}
 	}
 	
-	public void testEvaluation(){
-		Query q = st.query();
-		q.constrain(new STShort((short)0));
-		q.constrain(new Evaluation() {
-			public void evaluate(Candidate candidate) {
-				STShort sts = (STShort)candidate.getObject();
-				candidate.include((sts.i_short + 2) > 100);
-			}
-		});
-		Object[] r = store();
-		st.expect(q, new Object[] {r[2], r[3]});
-	}
 	
 }
 

@@ -7,9 +7,9 @@ import com.db4o.query.*;
 
 public class MultiLevelIndex {
     
-    MultiLevelIndex _child;
-    int _i;
-    int _level;
+    public MultiLevelIndex _child;
+    public int _i;
+    public int _level;
     
     public void configure(){
         Db4o.configure().objectClass(this).objectField("_child").indexed(true);

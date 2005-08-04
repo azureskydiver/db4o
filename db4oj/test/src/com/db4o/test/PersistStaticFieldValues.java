@@ -6,9 +6,9 @@ import com.db4o.*;
 
 public class PersistStaticFieldValues {
     
-    static final PsfvHelper ONE = new PsfvHelper();
-    static final PsfvHelper TWO = new PsfvHelper();
-    static final PsfvHelper THREE = new PsfvHelper();
+    public static final PsfvHelper ONE = new PsfvHelper();
+    public static final PsfvHelper TWO = new PsfvHelper();
+    public static final PsfvHelper THREE = new PsfvHelper();
     
     public PsfvHelper one;
     public PsfvHelper two;

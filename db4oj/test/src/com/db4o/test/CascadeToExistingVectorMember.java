@@ -22,7 +22,7 @@ public class CascadeToExistingVectorMember {
 		cev.vec = new Vector();
 		Atom atom = new Atom("one");
 		Test.store(atom);
-		cev.vec.add(atom);
+		cev.vec.addElement(atom);
 		Test.store(cev);
 	}
 	
@@ -30,7 +30,7 @@ public class CascadeToExistingVectorMember {
 		Test.forEach(new CascadeToExistingVectorMember(), new Visitor4() {
             public void visit(Object obj) {
             	CascadeToExistingVectorMember cev = (CascadeToExistingVectorMember)obj;
-            	Atom atom = (Atom)cev.vec.get(0);
+            	Atom atom = (Atom)cev.vec.elementAt(0);
             	atom.name = "two";
             	Test.store(cev);
             	atom.name = "three";
@@ -43,7 +43,7 @@ public class CascadeToExistingVectorMember {
         Test.forEach(new CascadeToExistingVectorMember(), new Visitor4() {
             public void visit(Object obj) {
             	CascadeToExistingVectorMember cev = (CascadeToExistingVectorMember)obj;
-            	Atom atom = (Atom)cev.vec.get(0);
+            	Atom atom = (Atom)cev.vec.elementAt(0);
             	Test.ensure(atom.name.equals("three"));
             	Test.ensureOccurrences(atom, 1);
             }
@@ -52,7 +52,7 @@ public class CascadeToExistingVectorMember {
         Test.forEach(new CascadeToExistingVectorMember(), new Visitor4() {
             public void visit(Object obj) {
             	CascadeToExistingVectorMember cev = (CascadeToExistingVectorMember)obj;
-            	Atom atom = (Atom)cev.vec.get(0);
+            	Atom atom = (Atom)cev.vec.elementAt(0);
             	atom.name = "four";
             	Test.store(cev);
             }
@@ -64,7 +64,7 @@ public class CascadeToExistingVectorMember {
         Test.forEach(new CascadeToExistingVectorMember(), new Visitor4() {
             public void visit(Object obj) {
             	CascadeToExistingVectorMember cev = (CascadeToExistingVectorMember)obj;
-            	Atom atom = (Atom)cev.vec.get(0);
+            	Atom atom = (Atom)cev.vec.elementAt(0);
             	Test.ensure(atom.name.equals("four"));
             	Test.ensureOccurrences(atom, 1);
             }

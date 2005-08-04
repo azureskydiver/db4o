@@ -14,9 +14,14 @@
 		    <x:children>
             	<!-- The search box -->
             	<composite>
-            		<layout x:class="gridLayout" numColumns="7" marginHeight="0"/>
+            		<layout x:class="gridLayout" numColumns="10" marginHeight="0"/>
 		            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
             		<x:children>
+				    	<button x:id="CancelButton" enabled="false" toolTipText="Cancel" image="com.db4o.browser.gui.views.DbBrowserPane cancel.gif"/>
+				    	<button x:id="SaveButton" enabled="false" toolTipText="Save" image="com.db4o.browser.gui.views.DbBrowserPane save.gif"/>
+
+		            	<label text="|"/>
+
 				    	<button x:id="LeftButton" toolTipText="Go back" image="com.db4o.browser.gui.views.DbBrowserPane icons/etool16/backward_nav.gif"/>
 				    	<button x:id="RightButton" toolTipText="Go forward" image="com.db4o.browser.gui.views.DbBrowserPane icons/etool16/forward_nav.gif"/>
 
@@ -44,6 +49,7 @@
             			
             			<!-- Detail -->
         				<scrolledComposite x:style="H_SCROLL|V_SCROLL" x:id="FieldAreaContainer" content="FieldArea" background="White">
+						    <layoutData x:class="gridData" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
         					<x:children>
         						<composite x:id="FieldArea" background="White">
         							<layout x:class="fillLayout"/>

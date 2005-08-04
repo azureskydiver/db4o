@@ -17,13 +17,13 @@ import com.db4o.browser.model.IGraphIterator;
 
 public class SearchController implements IBrowserController {
 
-    private BrowserController parent;
+    private BrowserTabController parent;
     private DbBrowserPane ui;
     private Tree tree;
     private Button searchButton;
     private Text searchText;
 
-    public SearchController(BrowserController parent, DbBrowserPane ui, NavigationController navigationController) {
+    public SearchController(BrowserTabController parent, DbBrowserPane ui, NavigationController navigationController) {
         this.parent = parent;
         this.ui = ui;
         this.tree = ui.getObjectTree();

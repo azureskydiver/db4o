@@ -6,7 +6,7 @@ import com.db4o.*;
 
 public class CascadeDeleteArray {
 	
-	ArrayElem[] elements;
+	public ArrayElem[] elements;
 	
 	public void configure(){
 		Db4o.configure().objectClass(this).cascadeOnDelete(true);

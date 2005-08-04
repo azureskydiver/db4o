@@ -5,9 +5,9 @@ package com.db4o.test;
 
 public class ReadAsRead {
     
-    String name;
+    public String name;
     
-    int igo;
+    public int igo;
     
     
 

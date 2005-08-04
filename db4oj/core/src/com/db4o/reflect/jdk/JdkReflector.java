@@ -11,9 +11,6 @@ public class JdkReflector implements Reflector{
     private ReflectArray _array;
     
 	public JdkReflector(ClassLoader classLoader){
-		if(classLoader == null){
-			throw new NullPointerException();
-		}
 		_classLoader = classLoader;
 	}
 	
@@ -38,9 +35,13 @@ public class JdkReflector implements Reflector{
 	
 	public ReflectClass forName(String className) {
 		try {
-            return new JdkClass(_parent, _classLoader.loadClass(className));
+            Class clazz = _classLoader == null ? Class.forName(className) : _classLoader.loadClass(className);
+            if(clazz == null){
+                return null;
+            }
+            return new JdkClass(_parent, clazz);
 		}
-		catch(ClassNotFoundException exc) {
+		catch(Exception exc) {
 		}
 		return null;
 	}

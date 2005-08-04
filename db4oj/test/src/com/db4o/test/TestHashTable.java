@@ -8,7 +8,7 @@ import com.db4o.*;
 
 public class TestHashTable {
 	
-	Hashtable ht;
+	public Hashtable ht;
 	
 	public void configure(){
 		Db4o.configure().objectClass(this).cascadeOnUpdate(true);

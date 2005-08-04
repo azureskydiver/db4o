@@ -9,7 +9,7 @@ import com.db4o.foundation.*;
 
 public class CascadeToVector {
 
-	Vector vec;
+	public Vector vec;
 
 	public void configure() {
 		Db4o.configure().objectClass(this).cascadeOnUpdate(true);
@@ -21,8 +21,8 @@ public class CascadeToVector {
 		Test.deleteAllInstances(new Atom());
 		CascadeToVector ctv = new CascadeToVector();
 		ctv.vec = new Vector();
-		ctv.vec.add(new Atom("stored1"));
-		ctv.vec.add(new Atom(new Atom("storedChild1"), "stored2"));
+		ctv.vec.addElement(new Atom("stored1"));
+		ctv.vec.addElement(new Atom(new Atom("storedChild1"), "stored2"));
 		Test.store(ctv);
 	}
 
@@ -31,9 +31,9 @@ public class CascadeToVector {
 		Test.forEach(this, new Visitor4() {
 			public void visit(Object obj) {
 				CascadeToVector ctv = (CascadeToVector) obj;
-				Iterator i = ctv.vec.iterator();
-				while(i.hasNext()){
-					Atom atom = (Atom) i.next();
+                Enumeration i = ctv.vec.elements();
+				while(i.hasMoreElements()){
+					Atom atom = (Atom) i.nextElement();
 					atom.name = "updated";
 					if(atom.child != null){
 						// This one should NOT cascade
@@ -48,9 +48,9 @@ public class CascadeToVector {
 		Test.forEach(this, new Visitor4() {
 			public void visit(Object obj) {
 				CascadeToVector ctv = (CascadeToVector) obj;
-				Iterator i = ctv.vec.iterator();
-				while(i.hasNext()){
-					Atom atom = (Atom) i.next();
+                Enumeration i = ctv.vec.elements();
+                while(i.hasMoreElements()){
+                    Atom atom = (Atom) i.nextElement();
 					Test.ensure(atom.name.equals("updated"));
 					if(atom.child != null){
 						Test.ensure( ! atom.child.name.equals("updated"));

@@ -11,9 +11,9 @@ import com.db4o.query.*;
  */
 public class CascadeDeleteFalse {
     
-    CascadeDeleteFalseHelper h1;
-    CascadeDeleteFalseHelper h2;
-    CascadeDeleteFalseHelper h3;
+    public CascadeDeleteFalseHelper h1;
+    public CascadeDeleteFalseHelper h2;
+    public CascadeDeleteFalseHelper h3;
     
     
     public void configure(){

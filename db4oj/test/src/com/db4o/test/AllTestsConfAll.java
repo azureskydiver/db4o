@@ -2,36 +2,30 @@
 
 package com.db4o.test;
 
+import com.db4o.*;
 import com.db4o.test.constraints.*;
 import com.db4o.test.interfaces.*;
-import com.db4o.test.reflect.*;
-import com.db4o.test.replication.*;
+import com.db4o.test.nativequery.*;
 
 public class AllTestsConfAll extends TestSuite{
 
 	static protected final String TEST_CONFIGURATION = "AllTestsConfAll";
 	
-    protected TestSuite[] TEST_SUITES = new TestSuite[]{
-        
-        // remove the com.db4o.test.jdk5 package 
-        // to run on JDKs prior to 1.5
-        
-        suite("com.db4o.test.jdk5.Jdk5TestSuite"),
-        this,
-        new ConstraintsTestSuite(),
-        new ReplicationTestSuite(),
-        new InterfacesTestSuite()
-        
-    };
+    protected void addTestSuites(TestSuite suites) {
+        suites.add(this);
+        suites.add(new ConstraintsTestSuite());
+        suites.add(new InterfacesTestSuite());
+        if(Db4oVersion.MAJOR >= 5){
+            suites.add(new NativeQueryTestSuite());
+        }
+	}
     
     public Class[] tests(){
         return new Class[] {
 	    	ArrayNOrder.class,
-	    	ArrayListInHashMap.class,
 	    	Backup.class,
 	    	BindFileSize.class,
 	    	Callbacks.class,
-	    	CallConstructors.class,
 	    	CascadedDeleteUpdate.class,
 			CascadeDeleteArray.class,
             CascadeDeleteDeleted.class,
@@ -41,53 +35,38 @@ public class AllTestsConfAll extends TestSuite{
 	        CascadeOnUpdate.class,
 	        CascadeToArray.class,
 	        CascadeToExistingVectorMember.class,
-	        CascadeToHashMap.class,
 	        CascadeToHashtable.class,
 	        CascadeToVector.class,
 	        CaseInsensitive.class,
 	        Circular1.class,
 	        Circular2.class,
-	        CollectionActivation.class,
 	        CreateIndex.class,
 	        CreateIndexInherited.class,
 			CustomActivationDepth.class,
-			GenericObjects.class,
-            Db4oLinkedList.class,
-			Db4oHashMap.class,
             DeleteDeep.class,
-			DeleteRemovedMapElements.class,
 			DeepSet.class,
 	        DifferentAccessPaths.class,
-	        DiscreteArrayInMap.class,
 	        DualDelete.class,
 	        EncryptionWrongPassword.class,
 			ExtMethods.class,
 			ExtendsDate.class,
-			ExtendsHashMap.class,
-			ExternalBlobs.class,
 			FileSizeOnReopen.class,
-			FulltextIndex.class,
 	        GetAll.class,
 			GreaterOrEqual.class,
-			HashMapClearUnsaved.class,
 			IndexedByIdentity.class,
 			IndexCreateDrop.class,
 			IndexedUpdatesWithNull.class,
 	        IsStored.class,
 	        Isolation.class,
-	        KeepCollectionContent.class,
-			MassUpdates.class,
 			Messaging.class,
             MultiDelete.class,
             MultiLevelIndex.class,
-			MultipleEvaluationGetObjectCalls.class,
             NeverAnObjectStored.class,
 			NoInstanceStored.class,
 	        NoInternalClasses.class,
 	        NullWrapperQueries.class,
 	        ObjectContainerIsTransient.class,
 			ObjectSetIDs.class,
-			OrClassConstraintInList.class,
 			ParameterizedEvaluation.class,
 	        PersistStaticFieldValues.class,
             
@@ -96,18 +75,13 @@ public class AllTestsConfAll extends TestSuite{
             
 	        // PrimitiveArrayFileSize.class,
             
-			PrimitivesInCollection.class,
 			QueryDeleted.class,
-            QueryForList.class,
 	        QueryNonExistant.class,
             ReadAs.class,
             ReferenceThis.class,
-            Reflection.class,
 	        Refresh.class,
-            RefreshList.class,
 	        Rename.class,
 			SameSizeOnReopen.class,
-	        SelectDistinct.class,
 	        SerializableTranslator.class,
 			ServerRevokeAccess.class,
 	    	SetDeactivated.class,
@@ -116,24 +90,15 @@ public class AllTestsConfAll extends TestSuite{
             SimpleTypeArrayInUntypedVariable.class,
 			SmallerOrEqual.class,
 	    	Soda.class,
-	    	SodaEvaluation.class,
 	    	SodaNoDuplicates.class,
 	    	StoredClassInformation.class,
 	    	StoredFieldValue.class,
 	    	// StoreObject.class,
-	    	StringCaseInsensitive.class,
-	    	StringInLists.class,
 			SwitchingFilesFromClient.class,
 	        TestHashTable.class,
-	        TestHashMap.class,
-	        TestStringBuffer.class,
-	        TestTreeMap.class,
-			TransientClone.class,
-			TreeSetCustomComparable.class,
 	        // TwoClients.class,
 	        TypedArrayInObject.class,
 	        TypedDerivedArray.class,
-	        UpdatingDb4oVersions.class
         };
     }
     

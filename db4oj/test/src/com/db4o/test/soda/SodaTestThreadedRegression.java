@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.query.*;
 import com.db4o.test.soda.classes.simple.*;
-import com.db4o.test.soda.collections.*;
 import com.db4o.test.soda.engines.db4o.*;
 import com.db4o.test.soda.wrapper.untyped.*;
 
@@ -26,8 +25,6 @@ public class SodaTestThreadedRegression extends SodaTest implements Runnable{
 	
 	public static void main(String[] args) {
 		
-		cascadeOnDelete(new STArrayListT());
-		cascadeOnDelete(new STOwnCollectionW());
 		
 		begin();
 		
@@ -39,13 +36,10 @@ public class SodaTestThreadedRegression extends SodaTest implements Runnable{
 		engine.reset();
 		engine.open();
 		
-		startThread(new STClass[] {new STString()});
 		startThread(new STClass[] {new STInteger()});
 		startThread(new STClass[] {new STByte()});
 		startThread(new STClass[] {new STShort()});
 		startThread(new STClass[] {new STBooleanWU()});
-		startThread(new STClass[] {new STOwnCollectionW()});
-		startThread(new STClass[] {new STArrayListT()});
 		
 		// We don't want to run out of main to allow sequential
 		// execution of Ant tasks.

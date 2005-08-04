@@ -10,7 +10,7 @@ final class MGetAll extends Msg {
 		YapStream stream = getStream();
 		synchronized (stream.i_lock) {
 			try {
-				qr = (QResult) stream.get1(getTransaction(), null);
+				qr = stream.get1(getTransaction(), null)._delegate;
 			} catch (Exception e) {
 				qr = new QResult(getTransaction());
 			}

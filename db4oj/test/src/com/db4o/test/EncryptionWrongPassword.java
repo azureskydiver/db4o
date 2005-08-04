@@ -7,7 +7,7 @@ import com.db4o.query.*;
 
 public class EncryptionWrongPassword {
 	
-	String name;
+	public String name;
 	
 	public void storeOne() {
 		name = "hi";

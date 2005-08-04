@@ -135,18 +135,5 @@ public class STByte implements STClass1{
 		}
 	}
 	
-	public void testEvaluation(){
-		Query q = st.query();
-		q.constrain(new STByte((byte)0));
-		q.constrain(new Evaluation() {
-			public void evaluate(Candidate candidate) {
-				STByte sts = (STByte)candidate.getObject();
-				candidate.include((sts.i_byte + 2) > 100);
-			}
-		});
-		Object[] r = store();
-		st.expect(q, new Object[] {r[2], r[3]});
-	}
-	
 }
 

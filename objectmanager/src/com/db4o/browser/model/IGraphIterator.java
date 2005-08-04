@@ -112,7 +112,7 @@ public interface IGraphIterator extends ListIterator {
     public void reset();
     
     /**
-     * Method numChildren.  Returns the number of current child elements.
+     * Method numChildren.  Returns the number of next child elements.
      * @return
      */
     public int numChildren();

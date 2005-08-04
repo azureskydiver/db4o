@@ -3,10 +3,10 @@
 package com.db4o.test;
 
 import java.lang.reflect.*;
+import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.foundation.*;
 
 /**
  * This is the main db4o regression test. 
@@ -21,7 +21,11 @@ import com.db4o.foundation.*;
 public class AllTests extends AllTestsConfAll implements Runnable {
 
     public static void main(String[] args) {
-        
+        new AllTests(args).run();
+    }
+    
+    public AllTests(String[] testcasenames) {
+    	
         Configuration conf = Db4o.configure();
         conf.messageLevel(-1);
         
@@ -45,8 +49,17 @@ public class AllTests extends AllTestsConfAll implements Runnable {
 //        conf.encrypt(true);
 //        conf.singleThreadedClient(true);
 //
-        new AllTests(args).run();
+
+    	
+        if(testcasenames!=null&&testcasenames.length>0) {
+            testCasesFromArgs(testcasenames);
+        } else{
+            testCasesFromTestSuites();
+        }
+        
+        Test.currentRunner = this;
     }
+
 
     public void run() {
 
@@ -192,6 +205,28 @@ public class AllTests extends AllTestsConfAll implements Runnable {
         }
         return false;
     }
+    
+    public static void run(Class clazz){
+        AllTests allTests = new AllTests();
+        allTests._testCases=new Class[]{clazz};
+        allTests.run();
+    }
+    
+    public static void runSolo(Class clazz){
+        AllTests allTests = new AllTests();
+        allTests._testCases=new Class[]{clazz};
+        allTests.SOLO = true;
+        allTests.CLIENT_SERVER = false;
+        allTests.run();
+    }
+    
+    public static void runClientServer(Class clazz){
+        AllTests allTests = new AllTests();
+        allTests._testCases=new Class[]{clazz};
+        allTests.SOLO = false;
+        allTests.CLIENT_SERVER = true;
+        allTests.run();
+    }
 
     protected void logConfiguration() {
         System.out.println("Running " + getClass().getName() + " against\n"
@@ -215,29 +250,20 @@ public class AllTests extends AllTestsConfAll implements Runnable {
         this(null);
     }
     
-    public AllTests(String[] testcasenames) {
-        // no unneccessary visible methods in Test class.
-        
-        if(testcasenames!=null&&testcasenames.length>0) {
-            testCasesFromArgs(testcasenames);
-        } else{
-            testCasesFromTestSuites();
-        }
-        
-        Test.currentRunner = this;
-    }
-
     private void testCasesFromTestSuites() {
     	_testCases = new Class[0];
-    	for (int i = 0; i < TEST_SUITES.length; i++) {
-            try {
-            	_testCases = concat(_testCases, TEST_SUITES[i].tests());
-            } catch (NullPointerException e) {
-                System.err.println("Warning: TEST_SUITES[" + i + "] is null");
-            }
+        
+        _testSuites = new Vector();
+    	
+    	addTestSuites(this);
+    	
+    	Enumeration e = _testSuites.elements();
+    	while (e.hasMoreElements()) {
+    		TestSuite suite = (TestSuite)e.nextElement();
+            _testCases = concat(_testCases, suite.tests());
     	}
     }
-
+    
 	private Class[] concat(Class[] a, Class[] b) {
 		Class[] result = new Class[a.length + b.length];
     	System.arraycopy(a,0, result,0       , a.length);

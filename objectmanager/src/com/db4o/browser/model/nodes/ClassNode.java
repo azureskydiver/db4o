@@ -16,6 +16,8 @@
  */
 package com.db4o.browser.model.nodes;
 
+import java.io.PrintStream;
+
 import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.partition.PartitionFieldNodeFactory;
 import com.db4o.reflect.ReflectClass;
@@ -102,6 +104,31 @@ public class ClassNode implements IModelNode {
     public Object getEditValue() {
         return null;
     }
+
+	/* (non-Javadoc)
+	 * @see com.db4o.browser.model.nodes.IModelNode#getId()
+	 */
+	public long getId() {
+		return -1;
+	}
+
+	// ClassNodes should be invisible in the XML output...
+	
+	public void printXmlReferenceNode(PrintStream out) {
+	}
+
+	public void printXmlStart(PrintStream out) {
+	}
+
+	public void printXmlEnd(PrintStream out) {
+	}
+
+	public void printXmlValueNode(PrintStream out) {
+	}
+	
+	public boolean shouldIndent() {
+		return false;
+	}
 
 	/**
 	 * Computes tree level start indices per level (into level below or

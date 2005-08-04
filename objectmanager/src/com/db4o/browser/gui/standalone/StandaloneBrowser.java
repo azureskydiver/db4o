@@ -44,7 +44,7 @@ import org.eclipse.ve.sweet.hinthandler.HintHandler;
 import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 
 import com.db4o.Db4o;
-import com.db4o.browser.gui.controllers.BrowserController;
+import com.db4o.browser.gui.controllers.BrowserTabController;
 import com.db4o.browser.gui.controllers.QueryController;
 import com.db4o.browser.gui.dialogs.OpenScrambledFile;
 import com.db4o.browser.gui.dialogs.SelectServer;
@@ -65,8 +65,8 @@ import com.swtworkbench.community.xswt.metalogger.TeeLogger;
  */
 public class StandaloneBrowser implements IControlFactory {
     
-    public static final String APPNAME = "Object Manager";
-    public static final String VERSION = "1.1.300";
+    public static final String APPNAME = "db4o Object Manager";
+    public static final String VERSION = "1.2.100";
     public static final String LOGFILE = ".objectmanager.log";
     private static final String LOGCONFIG = ".objectmanager.logconfig";
     
@@ -75,7 +75,7 @@ public class StandaloneBrowser implements IControlFactory {
     private CTabItem mainTab;
     
     private DbBrowserPane ui;
-    private BrowserController browserController;
+    private BrowserTabController browserController;
     private QueryController queryController;
 
     private Color title_background;
@@ -102,6 +102,8 @@ public class StandaloneBrowser implements IControlFactory {
         shell = (Shell) parent;
         shell.setLayout(new GridLayout());
         shell.setText(APPNAME);
+        shell.setImage(new Image(Display.getCurrent(),
+                DbBrowserPane.class.getResourceAsStream("icons/etool16/database2.gif")));
         buildMenuBar(shell);
         
         folder = new CTabFolder(shell, SWT.NULL);
@@ -134,6 +136,17 @@ public class StandaloneBrowser implements IControlFactory {
                 folder.setSelectionBackground(new Color[] {title_inactive_background, title_inactive_background_gradient}, new int[] { 75 }, true);
                 folder.setSelectionForeground(title_inactive_foreground);
             }
+            
+            public void shellClosed(ShellEvent e) {
+            	if (!browserController.canClose()) {
+            		e.doit = false;
+            		return;
+            	}
+            	if (!queryController.canClose()) {
+            		e.doit = false;
+            		return;
+            	}
+            }
         });
         
         ui = new DbBrowserPane(folder, SWT.NULL);
@@ -143,15 +156,15 @@ public class StandaloneBrowser implements IControlFactory {
         mainTab.setControl(ui);
         
         queryController = new QueryController(folder);
-        browserController = new BrowserController(ui, queryController);
+        browserController = new BrowserTabController(ui, queryController);
         queryController.setBrowserController(browserController);
         
         BrowserCore.getDefault().addBrowserCoreListener(browserCoreListener);
 		
 		// FIXME: hard-coding initial open...
-        String testFile = getClass().getResource("formula1.yap").getFile();
-        browserController.open(testFile);
-        setTabText(testFile);
+//        String testFile = getClass().getResource("formula1.yap").getFile();
+//        browserController.open(testFile);
+//        setTabText(testFile);
 
 //        String testFile = getClass().getResource("blah.yap").getFile();
 //        browserController.open(testFile);
@@ -173,13 +186,11 @@ public class StandaloneBrowser implements IControlFactory {
         MenuItem open = (MenuItem) choices.get("Open");
         MenuItem openScrambledFile = (MenuItem) choices.get("OpenScrambledFile");
         MenuItem openServer = (MenuItem) choices.get("OpenServer");
+        final MenuItem xmlExport = (MenuItem) choices.get("XMLExport");
         MenuItem query = (MenuItem) choices.get("Query");
-        MenuItem search = (MenuItem) choices.get("Search");
         MenuItem newWindow = (MenuItem) choices.get("NewWindow");
         MenuItem close = (MenuItem) choices.get("Close");
 		MenuItem preferences = (MenuItem) choices.get("Preferences");
-		MenuItem adddirtoclasspath = (MenuItem) choices.get("AddDirToClasspath");
-		MenuItem addfiletoclasspath = (MenuItem) choices.get("AddFileToClasspath");
         MenuItem helpAbout = (MenuItem)choices.get("HelpAbout");
         
         open.addSelectionListener(new SelectionAdapter() {
@@ -190,6 +201,7 @@ public class StandaloneBrowser implements IControlFactory {
                 if (file != null) {
                     setTabText(file);
                     browserController.open(file);
+                    xmlExport.setEnabled(true);
                 }
             }
         });
@@ -207,6 +219,7 @@ public class StandaloneBrowser implements IControlFactory {
                         try {
                             if (browserController.open(file)) {
                                 setTabText(file);
+                                xmlExport.setEnabled(true);
                             }
                         } catch (Throwable ex) {
                             MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
@@ -234,8 +247,20 @@ public class StandaloneBrowser implements IControlFactory {
                     if (browserController.open(host, port, user, password)) {
                         setTabText(host + ":" + port);
                     }
+                    xmlExport.setEnabled(true);
                 }
             }
+        });
+        
+        xmlExport.addSelectionListener(new SelectionAdapter() {
+        	public void widgetSelected(SelectionEvent e) {
+                FileDialog dialog = new FileDialog(shell, SWT.SAVE);
+                dialog.setFilterExtensions(new String[]{"*.xml", "*"});
+                String file = dialog.open();
+                if (file != null) {
+                	browserController.xmlExport(file);
+                }
+        	}
         });
         
         query.addSelectionListener(new SelectionAdapter() {

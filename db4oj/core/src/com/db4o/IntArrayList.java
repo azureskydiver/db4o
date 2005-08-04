@@ -3,32 +3,41 @@
 package com.db4o;
 
 /**
- * 
+ * @exclude
  */
-class IntArrayList {
+public class IntArrayList {
     
     static final int INC = 20;
     
-    private int[] i_content;
+    protected int[] i_content;
     
     private int i_current;
     private int i_count;
     
-    IntArrayList(){
+    public IntArrayList(){
         this(INC);
     }
     
-    IntArrayList(int initialSize){
+    public IntArrayList(int initialSize){
         i_content = new int[initialSize];
     }
     
-    void add(int a_value){
+    public void add(int a_value){
         if(i_count >= i_content.length){
             int[] temp = new int[i_content.length + INC];
             System.arraycopy(i_content, 0, temp, 0, i_content.length);
             i_content = temp;
         }
         i_content[i_count++] = a_value;
+    }
+    
+    public int indexOf(int a_value) {
+        for (int i = 0; i < i_count; i++) {
+            if (i_content[i] == a_value){
+                return i;
+            }
+        }
+        return -1;
     }
     
     public int size(){

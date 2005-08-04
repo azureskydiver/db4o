@@ -1,12 +1,13 @@
 #!/bin/sh
+OMVERSION=1.5
 cd objectmanager-builds
 mkdir tmp
 cd tmp
-unzip ../objectmanager_linux.zip
+unzip ../objectmanager-$OMVERSION-linux.zip
 chmod a+x *.sh
-rm -f ../objectmanager_linux.tar.gz
-rm -f ../objectmanager_linux.zip
-tar -czvf ../objectmanager_linux.tar.gz *
+rm -f ../objectmanager-$OMVERSION-linux.tar.gz
+rm -f ../objectmanager-$OMVERSION-linux.zip
+tar -czvf ../objectmanager-$OMVERSION-linux.tar.gz *
 cd ..
 rm -rf ./tmp
 cd ..

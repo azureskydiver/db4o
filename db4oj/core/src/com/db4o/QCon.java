@@ -22,31 +22,31 @@ public abstract class QCon implements Constraint, Visitor4 {
     // collection of QCandidates to collect children elements and to
     // execute children. For convenience we hold them in the constraint,
     // so we can do collection and execution in two steps
-    Collection4 i_childrenCandidates;
+    public Collection4 i_childrenCandidates;
 
     // all subconstraints
-    List4 _children;
+    public List4 _children;
 
     // for evaluation
-    QE i_evaluator = QE.DEFAULT;
+    public QE i_evaluator = QE.DEFAULT;
 
     // ID handling for fast find of QConstraint objects in 
     // pending OR evaluations
-    int i_id;
+    public int i_id;
 
     // ANDs and ORs on this constraint
-    private Collection4 i_joins;
+    public Collection4 i_joins;
 
     // positive indicates ascending, negative indicates descending
     // value indicates ID supplied by ID generator.
     // lower IDs are applied first
-    int i_orderID = 0;
+    public int i_orderID = 0;
 
     // the parent of this constraint or null, if this is a root
-    QCon i_parent;
+    public QCon i_parent;
 
     // prevents circular calls on removal
-    private boolean i_removed = false;
+    public  boolean i_removed = false;
 
     // our transaction to get a stream object anywhere
     transient Transaction i_trans;

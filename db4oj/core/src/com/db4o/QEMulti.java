@@ -9,7 +9,7 @@ import com.db4o.foundation.*;
  */
 public class QEMulti extends QE{
 	
-	Collection4 i_evaluators = new Collection4();
+	public Collection4 i_evaluators = new Collection4();
 	
 	QE add(QE evaluator){
 		i_evaluators.ensure(evaluator);

@@ -13,6 +13,13 @@ public class CreateIndexInherited {
 
     public int i_int;
     
+    public CreateIndexInherited(){
+    }
+    
+    public CreateIndexInherited(int a_int){
+        i_int = a_int;
+    }
+    
     public void store() {
         Test.deleteAllInstances(this);
 
@@ -208,7 +215,7 @@ public class CreateIndexInherited {
         }
 
         public CreateIndexFor(int a_int) {
-            i_int = a_int;
+            super(a_int);
         }
 
     }

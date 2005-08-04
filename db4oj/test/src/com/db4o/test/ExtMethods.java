@@ -65,10 +65,6 @@ public class ExtMethods {
 		Test.ensure(! eoc.isActive(null));
 		Test.ensure(! eoc.isCached(0));
 		
-		
-		
-		
-		
 	}
 
 }

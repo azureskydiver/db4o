@@ -13,17 +13,17 @@ import com.db4o.query.*;
  */
 public class NullWrapperQueries {
     
-    Boolean m1;
+    public Boolean m1;
 //    Byte m2;   Byte will not work, since we always use 0 for null.
-    Boolean m2;
-    Character m3;
-    Date m4;
-    Double m5;
-    Float m6;
-    Integer m7;
-    Long m8;
-    Short m9;
-    String m10;
+    public Boolean m2;
+    public Character m3;
+    public Date m4;
+    public Double m5;
+    public Float m6;
+    public Integer m7;
+    public Long m8;
+    public Short m9;
+    public String m10;
     
     public void configure(){
         for (int i = 1; i < 11; i++) {

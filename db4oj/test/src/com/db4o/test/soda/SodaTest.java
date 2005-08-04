@@ -14,10 +14,7 @@ import com.db4o.test.soda.arrays.untyped.*;
 import com.db4o.test.soda.classes.simple.*;
 import com.db4o.test.soda.classes.typedhierarchy.*;
 import com.db4o.test.soda.classes.untypedhierarchy.*;
-import com.db4o.test.soda.collections.*;
-import com.db4o.test.soda.deepOR.*;
 import com.db4o.test.soda.engines.db4o.*;
-import com.db4o.test.soda.experiments.*;
 import com.db4o.test.soda.joins.typed.*;
 import com.db4o.test.soda.joins.untyped.*;
 import com.db4o.test.soda.ordered.*;
@@ -34,8 +31,6 @@ public class SodaTest {
 
     public static final STClass[] CLASSES =
         new STClass[] {
-            new STArrayListT(),
-            new STArrayListU(),
             new STArrMixed(),
             new STArrStringO(),
             new STArrStringON(),
@@ -58,7 +53,6 @@ public class SodaTest {
             new STByte(),
             new STByteWT(),
             new STByteWU(),
-            new STCaseInsensitive(),
             new STChar(),
             new STCharWT(),
             new STCharWU(),
@@ -71,53 +65,26 @@ public class SodaTest {
             new STFloat(),
             new STFloatWT(),
             new STFloatWU(),
-            new STHashSetT(),
-            new STHashSetU(),
-            new STHashtableD(),
-            new STHashtableED(),
-            new STHashtableET(),
-            new STHashtableEU(),
-            new STHashtableT(),
-            new STHashtableU(),
-            new STIdentityEvaluation(),
             new STInteger(),
             new STIntegerWT(),
             new STIntegerWU(),
-            new STLinkedListT(),
-            new STLinkedListU(),
             new STLong(),
             new STLongWT(),
             new STLongWU(),
-            new STNullOnPath(),
-			new STOrContains(), 
             new STOrT(),
             new STOrU(),
             new STOString(),
             new STOInteger(),
             new STOIntegerWT(),
-            new STOwnCollectionT(),
-            new STOwnCollectionW(),
             new STRTH1(),
             new STSDFT1(),
             new STShort(),
             new STShortWT(),
             new STShortWU(),
-            new STString(),
             new STStringU(),
             new STRUH1(),
             new STTH1(),
-            new STTreeSetT(),
-            new STTreeSetU(),
             new STUH1(),
-            new STVectorD(),
-            new STVectorED(),
-            new STVectorT(),
-            new STVectorU(),
-            new STVectorET(),
-            new STVectorEU(),
-
-        // Take a look at this one!!!
-        	new STMagic(),
        };
 
 		protected static final boolean quiet = false;

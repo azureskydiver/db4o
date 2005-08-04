@@ -8,7 +8,7 @@ import com.db4o.foundation.*;
 
 public class CascadeToArray {
 
-	Object[] objects;
+	public Object[] objects;
 
 	public void configure() {
 		Db4o.configure().objectClass(this).cascadeOnUpdate(true);

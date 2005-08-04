@@ -5,7 +5,7 @@ package com.db4o.test;
 
 public class ReferenceThis {
     
-    ReferenceThis self;
+    public ReferenceThis self;
     
     public void storeOne(){
         self = this;

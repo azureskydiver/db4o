@@ -71,7 +71,7 @@ public final class Platform {
                 } else {
                     setAccessibleCheck = YapConst.NO;
                     if (Db4o.i_config.i_messageLevel >= 0) {
-                        Db4o.logErr(Db4o.i_config, 47, null, null);
+                        Messages.logErr(Db4o.i_config, 47, null, null);
                     }
                 }
             }
@@ -166,24 +166,26 @@ public final class Platform {
                     flattenCollection1(stream, objects[i], col);
                 }
             } else {
-                if (hasCollections()) {
-                    Platform.flattenCollection2(stream, obj, col);
-                } else {
-                    // TODO: You are missing Vector and Hashtable on JDK 1.1.x here
-                    col.add(obj);
-                }
+                flattenCollection2(stream, obj, col);
             }
         }
     }
 
-    static final void flattenCollection2(YapStream a_stream, Object a_object, final com.db4o.foundation.Collection4 col) {
-        jdk().flattenCollection2(a_stream, a_object, col);
+    static final void flattenCollection2(final YapStream a_stream, Object a_object, final com.db4o.foundation.Collection4 col) {
+        Reflector reflector = a_stream.reflector();
+        if (reflector.isCollection(reflector.forObject(a_object))) {
+            forEachCollectionElement(a_object, new Visitor4() {
+                public void visit(Object obj) {
+                    flattenCollection1(a_stream, obj, col);
+                }
+            });
+        } else {
+            col.add(a_object);
+        }
     }
 
     static final void forEachCollectionElement(Object a_object, Visitor4 a_visitor) {
-        if (hasCollections()) {
-            jdk().forEachCollectionElement(a_object, a_visitor);
-        }
+        jdk().forEachCollectionElement(a_object, a_visitor);
     }
 
     static final String format(Date date, boolean showTime) {
@@ -350,7 +352,7 @@ public final class Platform {
     }
 
     static final boolean isCollectionTranslator(Config4Class a_config) {
-        return JavaOnly.isCollectionTranslator(a_config); 
+        return jdk().isCollectionTranslator(a_config); 
     }
     
     public static final boolean isValueType(ReflectClass claxx){
@@ -390,7 +392,11 @@ public final class Platform {
     }
     
     private static JDK createJDKWrapper(String name){
-        return (JDK)createInstance("com.db4o.JDK_" + name);
+        JDK newWrapper = (JDK)createInstance("com.db4o.JDK_" + name);
+        if(newWrapper != null){
+            return newWrapper;
+        }
+        return jdkWrapper;
     }
     
     /**
@@ -473,6 +479,9 @@ public final class Platform {
     
     private static final void netReadAsJava(Config4Impl config, String className){
         Config4Class classConfig = (Config4Class)config.objectClass(DB4O_PACKAGE + className + DB4O_ASSEMBLY);
+        if(classConfig == null){
+            return;
+        }
         classConfig._maintainMetaClass = false;
         classConfig.readAs(DB4O_PACKAGE + className);
     }
@@ -510,20 +519,9 @@ public final class Platform {
     }
     
 	public static void registerCollections(GenericReflector reflector) {
-		
 		if(!Deploy.csharp){
-		
 			reflector.registerCollection(P1Collection.class);
-			
-			if(! hasCollections()){
-				reflector.registerCollection(java.util.Vector.class);
-				reflector.registerCollection(java.util.Hashtable.class);
-				reflector.registerCollectionUpdateDepth(java.util.Hashtable.class, 3);
-		        return; 
-			}
-			
 			jdk().registerCollections(reflector);
-            
 		}
 	}
 
@@ -619,8 +617,8 @@ public final class Platform {
     }
 
 	private static final Class[] SIMPLE_CLASSES = JavaOnly.SIMPLE_CLASSES;
-
+    
 	public static Object wrapEvaluation(Object evaluation) {
-		throw new UnsupportedOperationException();
+		throw YapConst.virtualException();
 	}	
 }

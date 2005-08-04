@@ -16,6 +16,8 @@
  */
 package com.db4o.browser.model.nodes.field;
 
+import java.io.PrintStream;
+
 import com.db4o.browser.model.*;
 import com.db4o.browser.model.nodes.*;
 import com.db4o.browser.model.nodes.partition.PartitionFieldNodeFactory;
@@ -73,5 +75,15 @@ public class CollectionFieldNode extends FieldNode {
     public boolean isEditable() {
         return false;
     }
+
+
+	public void printXmlValueNode(PrintStream out) {
+		out.print("<" + getNodeName() + " id=\"" + getId() + "\">");
+		out.print("</" + getNodeName() + ">");
+	}
+
+	public boolean shouldIndent() {
+		return true;
+	}
     
 }

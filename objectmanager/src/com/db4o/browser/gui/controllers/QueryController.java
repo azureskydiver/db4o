@@ -4,9 +4,13 @@
 package com.db4o.browser.gui.controllers;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabFolder2Adapter;
+import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -25,13 +29,25 @@ import com.db4o.reflect.ReflectClass;
 public class QueryController {
 
     private CTabFolder folder;
-    private BrowserController browserController;
+    private BrowserTabController browserController;
+    protected HashMap queryTabControllerRegistry = new HashMap();
 
     public QueryController(CTabFolder folder) {
         this.folder = folder;
+
+        folder.addCTabFolder2Listener(new CTabFolder2Adapter() {
+        	public void close(CTabFolderEvent event) {
+        		QueryTabController controller = (QueryTabController) queryTabControllerRegistry.get(event.item);
+        		if (!controller.canClose()) {
+        			event.doit = false;
+        			return;
+        		}
+        		queryTabControllerRegistry.remove(event.item);
+        	}
+        });
     }
     
-    public void setBrowserController(BrowserController browserController) {
+    public void setBrowserController(BrowserTabController browserController) {
         this.browserController = browserController;
     }
     
@@ -46,6 +62,7 @@ public class QueryController {
         
         QueryTabController controller = new QueryTabController(this, folder, ui, clazz);
         controller.setInput(clazz);
+        queryTabControllerRegistry.put(queryTab, controller);
     }
 
     private String unqualifyFile(String fileName) {
@@ -67,10 +84,20 @@ public class QueryController {
         return name;
     }
 
+    public boolean canClose() {
+    	for (Iterator queryControllerIter = queryTabControllerRegistry.keySet().iterator(); queryControllerIter.hasNext();) {
+			QueryTabController controller = (QueryTabController) queryTabControllerRegistry.get(queryControllerIter.next());
+			if (!controller.canClose()) {
+				return false;
+			}
+		}
+    	return true;
+    }
+
     /**
      * @return Returns the browserController.
      */
-    public BrowserController getBrowserController() {
+    public BrowserTabController getBrowserController() {
         return browserController;
     }
     

@@ -4,7 +4,7 @@ package com.db4o.test;
 
 public class SetDeactivated {
 	
-	String foo;
+	public String foo;
 	
 	public SetDeactivated(){
 	}

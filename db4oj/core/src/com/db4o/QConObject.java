@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -15,22 +16,22 @@ import com.db4o.reflect.*;
 public class QConObject extends QCon {
 
     // the constraining object
-    Object                        i_object;
+    public Object                        i_object;
 
     // cache for the db4o object ID
-    int                           i_objectID;
+    public int                           i_objectID;
 
     // the YapClass
     transient YapClass            i_yapClass;
 
     // needed for marshalling the request
-    int                           i_yapClassID;
+    public int                           i_yapClassID;
 
-    QField                        i_field;
+    public QField                        i_field;
 
     transient YapComparable       i_comparator;
 
-    ObjectAttribute               i_attributeProvider;
+    public ObjectAttribute               i_attributeProvider;
 
     private transient boolean     i_selfComparison = false;
 
@@ -392,7 +393,7 @@ public class QConObject extends QCon {
             int id = getObjectID();
             if(! (id > 0)){
                 i_objectID = 0;
-                Db4o.throwRuntimeException(51);
+                Exceptions.throwRuntimeException(51);
             }
             
             // TODO: this may not be correct for NOT

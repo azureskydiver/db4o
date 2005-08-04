@@ -13,7 +13,7 @@ import com.db4o.types.*;
  * 
  * @exclude
  */
-class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
+public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
 
     final static int COPYBUFFER_LENGTH=4096;
     

@@ -2,16 +2,16 @@
 
 package com.db4o;
 
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 /**
  * @exclude
  */
-class QResult extends IntArrayList implements ObjectSet, ExtObjectSet, Visitor4 {
+class QResult extends IntArrayList implements Visitor4 {
+    
 	Tree i_candidates;
 	boolean i_checkDuplicates;
-	// Iterator4 i_iterator;
+    
 	final Transaction i_trans;
 
 	QResult(Transaction a_trans) {
@@ -30,13 +30,24 @@ class QResult extends IntArrayList implements ObjectSet, ExtObjectSet, Visitor4 
 		stream.beginEndActivation();
 		return obj;
 	}
+    
+    public Object get(int index) {
+        synchronized (streamLock()) {
+            if (index < 0 || index >= size()) {
+                throw new IndexOutOfBoundsException("Index " + index + " not within bounds.");
+            }
+            int id = i_content[index];
+            YapStream stream = i_trans.i_stream;
+            Object obj = stream.getByID(id);
+            if(obj == null){
+                return null;
+            }
+            return activate(obj);
+        }
+    }
 
 	final void checkDuplicates(){
 		i_checkDuplicates = true;
-	}
-
-	public ExtObjectSet ext() {
-		return this;
 	}
 
 	public long[] getIDs() {
@@ -97,7 +108,7 @@ class QResult extends IntArrayList implements ObjectSet, ExtObjectSet, Visitor4 
 	    
 	}
 	
-	protected Object streamLock(){
+	Object streamLock(){
 		return i_trans.i_stream.i_lock;
 	}
 

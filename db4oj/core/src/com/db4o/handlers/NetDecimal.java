@@ -15,14 +15,20 @@ import com.db4o.*;
  * (M=mantissa, E=exponent(negative powers of 10), S=sign, X=unused/unknown)
  */
 public class NetDecimal extends NetSimpleTypeHandler{
-	private final static BigInteger BYTESHIFT_FACTOR=new BigInteger("100",16);
+	
+	private static final BigInteger BYTESHIFT_FACTOR=new BigInteger("100",16);
+	 
+	private static final BigInteger ZERO = new BigInteger("0", 16);
+    
+    private static final BigDecimal ONE = new BigDecimal("1"); 
+	private static final BigDecimal TEN = new BigDecimal("10"); 
 
 	public NetDecimal(YapStream stream) {
 		super(stream, 21, 16);
 	}
 	
 	public String toString(byte[] bytes) {
-		BigInteger mantissa=BigInteger.ZERO;
+		BigInteger mantissa=ZERO;
 		for(int blockoffset=8;blockoffset>=0;blockoffset-=4) {
 			for(int byteidx=0;byteidx<4;byteidx++) {
 				mantissa=mantissa.multiply(BYTESHIFT_FACTOR);
@@ -30,13 +36,27 @@ public class NetDecimal extends NetSimpleTypeHandler{
 				mantissa=mantissa.add(new BigInteger(String.valueOf(bytes[idx]&0xff),10));
 			}
 		}
-		int exponent=bytes[13]&0x1f;
+		
+		// The exponent is stored negative by .NET so we change it back here !!!
+		int exponent = - bytes[13]&0x1f;
+		
 		boolean negative=bytes[12]!=0;
-		BigDecimal factor=BigDecimal.ONE.divide(BigDecimal.TEN.pow(exponent));
-		BigDecimal val=new BigDecimal(mantissa).multiply(factor);
-		if(negative) {
-			val=val.negate();
+		
+		BigDecimal result=new BigDecimal(mantissa);
+		
+		if(exponent < 0) {
+			for (int i = exponent; i < 0; i++) {
+				result = result.divide(TEN, BigDecimal.ROUND_HALF_DOWN);
+			}
+		}else {
+			for (int i = 0; i < exponent; i++) {
+				result = result.multiply(TEN);
+			}
 		}
-		return val.toString();
+		
+		if(negative) {
+			result=result.negate();
+		}
+		return result.toString();
 	}
 }

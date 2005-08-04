@@ -9,9 +9,9 @@ public class Messaging implements MessageRecipient{
 	
 	static final String MSG = "hibabe";
 	
-	private Object lastMessage;
+	public Object lastMessage;
 	
-	String messageString;
+	public String messageString;
 	
 	public void test(){
 		

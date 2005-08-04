@@ -6,8 +6,8 @@ import com.db4o.foundation.*;
 
 public class TypedArrayInObject {
 	
-	Object obj;
-	Object[] obj2;
+	public Object obj;
+	public Object[] obj2;
 	
 	public void store(){
 		Test.deleteAllInstances(this);

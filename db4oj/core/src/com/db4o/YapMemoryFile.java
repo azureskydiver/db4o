@@ -5,6 +5,7 @@ package com.db4o;
 import java.io.*;
 
 import com.db4o.ext.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -21,7 +22,7 @@ public class YapMemoryFile extends YapFile {
         try {
             open();
         } catch (Exception e) {
-            Db4o.throwRuntimeException(22, e);
+            Exceptions.throwRuntimeException(22, e);
         }
         initialize3();
     }
@@ -31,7 +32,7 @@ public class YapMemoryFile extends YapFile {
     }
     
     public void backup(String path)throws IOException{
-        Db4o.throwRuntimeException(60);
+        Exceptions.throwRuntimeException(60);
     }
 
     void checkDemoHop() {
@@ -103,7 +104,7 @@ public class YapMemoryFile extends YapFile {
         try {
             System.arraycopy(i_memoryFile.getBytes(), a_address, a_bytes, 0, a_length);
         } catch (Exception e) {
-            Db4o.throwRuntimeException(13, e);
+            Exceptions.throwRuntimeException(13, e);
         }
     }
     

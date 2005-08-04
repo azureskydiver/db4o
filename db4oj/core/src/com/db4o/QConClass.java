@@ -14,8 +14,8 @@ import com.db4o.reflect.*;
 public class QConClass extends QConObject{
 	
 	private transient ReflectClass _claxx;
-	private String _className;
-	private boolean i_equal;
+	public String _className;
+	public boolean i_equal;
 	
 	public QConClass(){
 		// C/S

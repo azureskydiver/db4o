@@ -6,7 +6,7 @@ import com.db4o.*;
 
 public class ObjectContainerIsTransient {
     
-    String foo;
+    public String foo;
     public ObjectContainer objectContainer;
     
     public void storeOne(){

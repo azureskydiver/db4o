@@ -6,6 +6,8 @@ import org.apache.tools.ant.*;
 
 public class VersionInfoAntTask extends Task {
     
+    private int major;
+    
     private String path;
     private String version;
     private String keyfile;
@@ -23,6 +25,10 @@ public class VersionInfoAntTask extends Task {
     
     public void setPath(String path) {
         this.path = path;
+    }
+    
+    public void setMajor(int major){
+        this.major = major;
     }
     
     public void setVersion(String version){
@@ -67,9 +73,13 @@ public class VersionInfoAntTask extends Task {
 	        pr.println();
 	        if(getJava()){
 	            pr.println("package com.db4o;");
-	            pr.println();
-	            pr.println("class Db4oVersion {");
-	            pr.println("    static String name=\"" + version + "\";");
+                pr.println();
+                pr.println("/**");
+                pr.println("* @exclude");
+                pr.println("*/");
+	            pr.println("public class Db4oVersion {");
+                pr.println("    public static final String NAME = \"" + version + "\";");
+                pr.println("    public static final int MAJOR = " + major + ";");
 	            pr.println("}");
 	        }else{
 		        pr.println("using System.Reflection;");

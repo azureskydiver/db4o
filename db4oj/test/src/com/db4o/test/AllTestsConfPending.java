@@ -10,10 +10,7 @@ public class AllTestsConfPending {
      */
     public Class[] TESTS =
         new Class[] {
-        	// TimestampMember.class
-        	TreeSetCustomComparable.class,
         	StoredClassInformation.class
-        
     	};
 
     /**

@@ -75,7 +75,8 @@ public class TLogger {
 			} else {
 				Field[] fields = classes[i].getDeclaredFields();
 				for (int j = 0; j < fields.length; j++) {
-					fields[j].setAccessible(true);
+                    
+                    Platform.setAccessible(fields[j]);
 
 					String fieldName = className + "." + fields[j].getName();
 

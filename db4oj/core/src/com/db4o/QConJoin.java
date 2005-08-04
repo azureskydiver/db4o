@@ -12,9 +12,9 @@ import com.db4o.foundation.*;
  */
 public class QConJoin extends QCon {
 
-	boolean i_and;
-	QCon i_constraint1;
-	QCon i_constraint2;
+	public boolean i_and;
+	public QCon i_constraint1;
+	public QCon i_constraint2;
 	
 	
 	public QConJoin(){

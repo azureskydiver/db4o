@@ -8,7 +8,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.ve.sweet.CannotSaveException;
 
 import com.db4o.ObjectSet;
-import com.db4o.browser.gui.controllers.BrowserController;
+import com.db4o.browser.gui.controllers.BrowserTabController;
 import com.db4o.browser.gui.controllers.QueryController;
 import com.db4o.browser.model.BrowserCore;
 import com.db4o.browser.model.IDatabase;
@@ -27,20 +27,21 @@ import com.db4o.reflect.ReflectClass;
  * 
  * @author djo
  */
-public class QueryTabController extends BrowserController {
+public class QueryTabController extends BrowserTabController {
     
-    private BrowserController databaseBrowserController;
+    private BrowserTabController databaseBrowserController;
     private IDatabase database; 
     
     private QueryBuilderModel queryModel;
     private QueryBuilderPaneController queryController;
     
-    private ReflectClass input;
-
     public QueryTabController(QueryController queryController, CTabFolder folder, QueryBrowserPane ui, ReflectClass clazz) {
         super(ui, queryController);
         this.databaseBrowserController = queryController.getBrowserController();
         this.database = BrowserCore.getDefault().getDatabase(databaseBrowserController.getCurrentConnection());
+        
+        // Also enable/disable the query button based on editor state
+        getEditStateController().addControl(ui.getQueryButton(), false);
     }
     
     protected void addQueryButtonHandler() {
@@ -65,8 +66,6 @@ public class QueryTabController extends BrowserController {
     }
 
     public void setInput(ReflectClass input) {
-        this.input = input;
-        
         queryModel = new QueryBuilderModel(input, database);
         queryController = new QueryBuilderPaneController(queryModel, (QueryBrowserPane)ui);
         

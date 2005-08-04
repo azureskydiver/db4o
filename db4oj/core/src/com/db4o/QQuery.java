@@ -18,10 +18,10 @@ public class QQuery implements Query {
     private static final transient IDGenerator i_orderingGenerator = new IDGenerator();
 
     transient Transaction i_trans;
-    private final Collection4 i_constraints = new Collection4();
+    public  Collection4 i_constraints = new Collection4();
 
-    private QQuery i_parent;
-    private String i_field;
+    public QQuery i_parent;
+    public String i_field;
 
     public QQuery() {
         // C/S only
@@ -241,9 +241,9 @@ public class QQuery implements Query {
                 result.reset();
 				return result;
 			}
-	        result = new QResult(i_trans);
-	        execute1((QResult)result);
-            return result;
+	        QResult qResult = new QResult(i_trans);
+	        execute1(qResult);
+            return new ObjectSetImpl(qResult);
         }
     }
 
@@ -276,13 +276,13 @@ public class QQuery implements Query {
 			for (int i = 0; i < ids.length; i++) {
 				resClient.add((int)ids[i]);
 			}
-			return resClient;
+			return new ObjectSetImpl(resClient);
 		}
 		
 		Tree tree = classIndex.cloneForYapClass(i_trans, clazz.getID());
 		
 		if(tree == null) {
-			return new QResult(i_trans);  // empty result
+			return new ObjectSetImpl(new QResult(i_trans));  // empty result
 		}
         
         final QResult resLocal = new QResult(i_trans, tree.size());
@@ -292,7 +292,7 @@ public class QQuery implements Query {
 				resLocal.add(((TreeInt)a_object).i_key);
 			}
 		});
-		return resLocal;
+		return new ObjectSetImpl(resLocal);
 
 	}
 

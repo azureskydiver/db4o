@@ -88,8 +88,11 @@ public class Db4oBeanProperty implements InvocationHandler {
     }
 
     private String lowerCaseFirstLetter(String name) {
-        String result = name.substring(0, 1).toLowerCase() + name.substring(1);
-        return result;
+    	if (name.length() >= 1) {
+	        String result = name.substring(0, 1).toLowerCase() + name.substring(1);
+	        return result;
+    	}
+    	return name;
     }
 
     private Object get() {

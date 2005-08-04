@@ -2,7 +2,7 @@
 
 package com.db4o.test;
 
-public class Atom implements Comparable{
+public class Atom {
 	
 	public Atom child;
 	public String name;

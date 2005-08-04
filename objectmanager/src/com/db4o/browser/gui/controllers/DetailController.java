@@ -3,10 +3,12 @@
  */
 package com.db4o.browser.gui.controllers;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -18,6 +20,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ve.sweet.CannotSaveException;
+import org.eclipse.ve.sweet.controllers.RefreshService;
+import org.eclipse.ve.sweet.objectviewer.IEditStateListener;
 import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 
 import com.db4o.browser.gui.views.DbBrowserPane;
@@ -34,7 +38,7 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
 public class DetailController implements IBrowserController {
 	private DbBrowserPane ui;
     private Composite parentComposite;
-	private BrowserController parent;
+	private BrowserTabController parent;
     private IGraphIterator input = null;
     private GraphPosition selection;
 
@@ -44,20 +48,63 @@ public class DetailController implements IBrowserController {
 	 * @param parent
 	 * @param ui
 	 */
-	public DetailController(BrowserController parent, DbBrowserPane ui) {
+	public DetailController(BrowserTabController parent, DbBrowserPane ui) {
 		this.parent = parent;
 		this.ui = ui;
         parentComposite = ui.getFieldArea();
+        parentComposite.addDisposeListener(disposeListener);
+        
+        ui.getSaveButton().addSelectionListener(saveEdits);
+        ui.getCancelButton().addSelectionListener(cancelEdits);
 		
 		parent.getSelectionChangedController().setDetailController(this);
+		
+		RefreshService.getDefault().addEditStateListener(refreshListener);
 	}
+
+	private SelectionListener saveEdits = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+			try {
+				objectViewer.commit();
+			} catch (CannotSaveException e1) {
+				// The user has already been informed...
+			}
+		}
+	};
+	
+	private SelectionListener cancelEdits = new SelectionAdapter() {
+		public void widgetSelected(SelectionEvent e) {
+			objectViewer.rollback();
+		};
+	};
+
+	private IEditStateListener refreshListener = new IEditStateListener() {
+		public void stateChanged(IObjectViewer sender) {
+			refresh(sender);
+		}
+	};
+
+    protected void refresh(IObjectViewer sender) {
+		if (sender != objectViewer && !sender.isDirty()) {
+			setInput(input, selection);
+		}
+	}
+
+	private DisposeListener disposeListener = new DisposeListener() {
+		public void widgetDisposed(DisposeEvent e) {
+	        if (objectViewer != null) {
+	        	objectViewer.removeObjectListener(RefreshService.getDefault());
+		        parent.getEditStateController().removeObjectViewer(objectViewer);
+	        }
+	        RefreshService.getDefault().removeEditStateListener(refreshListener);
+	    }
+	};
 
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInput(com.db4o.browser.model.IGraphIterator)
 	 */
 	public void setInput(IGraphIterator input, GraphPosition selection) {
-        Composite parent = ui.getFieldArea();
-        disposeChildren(parent);
+        disposeChildren(parentComposite);
         
         this.input = input;
         this.selection = selection;
@@ -77,23 +124,28 @@ public class DetailController implements IBrowserController {
 		}
 	}
 
-    private static final Color WHITE = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-    private LinkedList objectViewers = new LinkedList();
+	private static final Color WHITE = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
+	private IObjectViewer objectViewer = null;
     
 	private void buildUI(IGraphIterator input) {
-        objectViewers.clear();
-        
         // Get the parent object of the fields that we are editing
         input.selectParent();
         IModelNode parent = (IModelNode) input.next();
         input.previous();
         input.selectNextChild();
+        
+        // Remove the old state
+        if (objectViewer != null) {
+        	objectViewer.removeObjectListener(RefreshService.getDefault());
+	        this.parent.getEditStateController().removeObjectViewer(objectViewer);
+        }
 
         // Create an ObjectViewer on the parent if it can be edited
-        IObjectViewer objectViewer = null; 
+        objectViewer = null; 
         if (parent.getEditValue() != null) {
             objectViewer = parent.getDatabase().construct(parent.getEditValue());
-            objectViewers.add(objectViewer);
+            this.parent.getEditStateController().addObjectViewer(objectViewer);
+            objectViewer.addObjectListener(RefreshService.getDefault());
         }
         
         // Build the layout: start with the container Composite
@@ -102,7 +154,6 @@ public class DetailController implements IBrowserController {
         detailViewHolder.setBackground(WHITE);
         
         // Build each row by iterating over the fields
-        int i=0;
         while (input.hasNext()) {
             IModelNode fieldToDisplay = (IModelNode) input.next();
             
@@ -113,16 +164,23 @@ public class DetailController implements IBrowserController {
             
             // Create an editor or a Label for the value
             if (fieldToDisplay.isEditable()) {
-                Text fieldValue = new Text(detailViewHolder, SWT.BORDER);
-                fieldValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-                fieldValue.setBackground(WHITE);
-                if (objectViewer.bind(fieldValue, fieldToDisplay.getName()) == null)
-                    Logger.log().error(new Exception(), "Unable to bind property: " + fieldToDisplay.getName());
+            	// If there's a field name, good, bind it.
+            	if (!fieldToDisplay.getName().equals("")) {
+	                Text fieldValue = new Text(detailViewHolder, SWT.BORDER);
+	                fieldValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+	                fieldValue.setBackground(WHITE);
+	                if (objectViewer.bind(fieldValue, fieldToDisplay.getName()) == null) {
+	                    Logger.log().debug(getClass(), "Unable to bind property: " + fieldToDisplay.getName());
+	                    fieldValue.dispose();
+	                    createReadonlyField(detailViewHolder, fieldToDisplay);
+	                }
+	            // If there's not a field name, we've got a collection.  Display the field read-only for now.
+	            // (The only type we could edit inside a collection is java.lang.String, which won't happen that often.)
+            	} else {
+                    createReadonlyField(detailViewHolder, fieldToDisplay);
+            	}
             } else {
-                Label fieldValue = new Label(detailViewHolder, SWT.NULL);
-                fieldValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-                fieldValue.setBackground(WHITE);
-                fieldValue.setText(fieldToDisplay.getValueString());
+                createReadonlyField(detailViewHolder, fieldToDisplay);
             }
             
         }
@@ -138,7 +196,20 @@ public class DetailController implements IBrowserController {
         parentComposite.layout(true);
     }
 
+	private void createReadonlyField(Composite detailViewHolder, IModelNode fieldToDisplay) {
+		Label fieldValue = new Label(detailViewHolder, SWT.NULL);
+		fieldValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		fieldValue.setBackground(WHITE);
+		fieldValue.setText(fieldToDisplay.getValueString());
+	}
+
     private void disposeChildren(Composite parent) {
+    	if (objectViewer != null) {
+	    	objectViewer.removeObjectListener(RefreshService.getDefault());
+	        this.parent.getEditStateController().removeObjectViewer(objectViewer);
+	        objectViewer = null;
+    	}
+        
         Control[] children = parent.getChildren();
         for (int i = 0; i < children.length; i++) {
             children[i].dispose();
@@ -151,16 +222,21 @@ public class DetailController implements IBrowserController {
     }
 
     public boolean canSelectionChange() {
-        for (Iterator objectViewersIter = objectViewers.iterator(); objectViewersIter.hasNext();) {
-            IObjectViewer viewer = (IObjectViewer) objectViewersIter.next();
-            try {
-                viewer.commit();
-            } catch (CannotSaveException e) {
-                return false;
-            }
-        }
+    	if (objectViewer == null) {
+    		return true;
+    	}
+    	
+    	try {
+    		objectViewer.commit();
+    	} catch (CannotSaveException e) {
+    		return false;
+    	}
         return true;
     }
+
+	public boolean canClose() {
+		return canSelectionChange();
+	}
 
 }
 

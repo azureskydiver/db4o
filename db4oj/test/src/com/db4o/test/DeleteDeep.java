@@ -8,9 +8,9 @@ import com.db4o.query.*;
 
 public class DeleteDeep {
     
-    String name;
+    public String name;
     
-    DeleteDeep child;
+    public DeleteDeep child;
     
     public void storeOne(){
         addNodes(10);

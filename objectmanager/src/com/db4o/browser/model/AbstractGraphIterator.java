@@ -128,6 +128,7 @@ public abstract class AbstractGraphIterator implements IGraphIterator {
         } else {
             throw new IllegalArgumentException("There is no previous child to select");
         }
+        setCurrentIndex(-1);
     }
 
     public void selectParent() {
@@ -191,7 +192,7 @@ public abstract class AbstractGraphIterator implements IGraphIterator {
     }
 
     public boolean equals(Object obj) {
-    	if (!(obj instanceof DatabaseGraphIterator)) {
+    	if (!(obj instanceof AbstractGraphIterator)) {
     		return false;
     	}
     	

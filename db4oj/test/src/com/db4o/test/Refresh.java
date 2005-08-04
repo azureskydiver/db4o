@@ -8,9 +8,9 @@ import com.db4o.query.*;
 
 public class Refresh extends AllTests {
 
-    String  name;
+    public String  name;
 
-    Refresh child;
+    public Refresh child;
 
     public Refresh() {
 

@@ -16,8 +16,9 @@
  */
 package com.db4o.browser.model.nodes.field;
 
-import org.eclipse.ve.sweet.converter.Converter;
-import org.eclipse.ve.sweet.converter.IConverter;
+import java.io.PrintStream;
+
+import org.eclipse.ve.sweet.converter.ConverterRegistry;
 
 import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
@@ -29,7 +30,17 @@ import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
  * Class FieldNode.  The patriarch of the FieldNode hierarchy.  Implements
- * common functionality.
+ * common functionality.<p>
+ * 
+ * A FieldNode is always an object reference.  If one has a child of FieldNode
+ * in the inheritence hierarchy, the child's type says what the FieldNode 
+ * represents.  Otherwise, the FieldNode is just an object reference, which
+ * can point to an instance (in which case delegate is an InstanceNode) or
+ * that can point to null (in which case delegate is the NullNode).<p>
+ * 
+ * Note that we always deal with the boxed versions of primitives, not the
+ * second-class versions, since those are the ones the reflection API gives us,
+ * regardless of the actual underlying type.
  * 
  * @author djo
  */
@@ -139,12 +150,52 @@ public class FieldNode implements IModelNode {
             return false;
         }
 
-        return Converter.canConvert(_database.reflector().forObject(value).getName(),
+        return ConverterRegistry.canConvert(_database.reflector().forObject(value).getName(),
                 _database.reflector().forClass(String.class).getName());
     }
 
     public Object getEditValue() {
         return value;
     }
+
+	public long getId() {
+		return delegate.getId();
+	}
+
+	protected String getNodeName() {
+		if (_fieldName == null || _fieldName.equals("")) {
+			return value.getClass().getName();
+		} else {
+			return _fieldName;
+		}
+	}
+
+	public void printXmlReferenceNode(PrintStream out) {
+		if (delegate instanceof NullNode) {
+			out.print("<" + getNodeName() + " reference=\"-1\"/>\n");
+		} else {
+			out.print("<" + getNodeName() + " reference=\"" + getId() + "\"/>\n");
+		}
+	}
+	
+	public void printXmlStart(PrintStream out) {
+		out.println("<" + getNodeName() + " id=\"" + getId() 
+				+ (_fieldName == null || _fieldName.equals("") ? "" : "\" className=\"" + value.getClass().getName()) 
+				+ "\">");
+	}
+
+	public void printXmlEnd(PrintStream out) {
+		out.println("</" + getNodeName() + ">");
+	}
+
+	public void printXmlValueNode(PrintStream out) {
+		out.print("<" + getNodeName() + ">");
+		delegate.printXmlValueNode(out);
+		out.print("</" + getNodeName() + ">");
+	}
+
+	public boolean shouldIndent() {
+		return true;
+	}
 
 }

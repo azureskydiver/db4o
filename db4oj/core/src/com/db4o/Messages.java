@@ -2,6 +2,10 @@
 
 package com.db4o;
 
+import java.io.*;
+
+import com.db4o.config.*;
+
 /**
  * @exclude
  */
@@ -96,7 +100,7 @@ public final class Messages
 						"% closed by ShutdownHook.", // 50
 						"This constraint is not persistent. It has no database identity.",
 						"", // empty: No memory security message
-						"",  // free: reuse
+						"Unsupported Operation",
 						"Database password does not match user-provided password.",
 						"Thread interrupted.", // 55
 						"Password can not be null.",
@@ -105,7 +109,9 @@ public final class Messages
 						"Primitive types like % can not be stored directly. Store and retrieve them in wrapper objects.",
 						"Backups can not be run from clients and memory files.", // 60
 						"Backup in progress.", 
-						"Only use persisted first class objects as keys for IdentityHashMap." // 62
+                        "Only use persisted first class objects as keys for IdentityHashMap.",
+                        "This functionality is only available from version 5.0 onwards.",
+                        "By convention a Predicate needs the following method: public boolean match(ExtentClass extent){}" // 64
 						
 									};
 		        }else{
@@ -113,6 +119,36 @@ public final class Messages
 		        }
             }
 
+    }
+
+    public static void logErr (Configuration config, int code, String msg, Throwable t) {
+    	if(config == null){
+    		config = Db4o.configure();
+    	}
+    	PrintStream ps = ((Config4Impl)config).errStream();
+    	new Message(msg, code,ps);
+    	if(t != null){
+    		new Message(null,25,ps);
+    		t.printStackTrace(ps);
+    		new Message(null,26,ps, false);
+    	}
+    }
+
+    public static void logMsg (Configuration config, int code, String msg) {
+    	if(Deploy.debug){
+    		if(code == 0){
+    			System.out.println(msg);
+    			return;
+    		}
+    	}
+    	Config4Impl c4i = (Config4Impl)config;
+    	if(c4i == null){
+    	    c4i = (Config4Impl)Db4o.configure();
+    	}
+    	
+    	if(c4i.i_messageLevel > YapConst.NONE){
+    		new Message(msg,code,c4i.outStream());
+    	}
     }
 }
 

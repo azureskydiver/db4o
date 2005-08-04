@@ -8,7 +8,7 @@ import com.db4o.query.*;
 
 public class ReadAs {
     
-    String name;
+    public String name;
     
     public void storeOne(){
         name = "zuluhu";

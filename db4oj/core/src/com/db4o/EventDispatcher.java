@@ -70,7 +70,11 @@ final class EventDispatcher
 			ReflectMethod[] methods = new ReflectMethod[COUNT];
 			for (int i = COUNT -1; i >=0; i--){
 				try{
-					methods[i] = classReflector.getMethod(events[i], parameterClasses);
+					ReflectMethod method = classReflector.getMethod(events[i], parameterClasses);
+					if (null == method) {
+						method = classReflector.getMethod(toPascalCase(events[i]), parameterClasses);
+					}
+					methods[i] = method;
 					if(dispatcher == null){
 						dispatcher = new EventDispatcher(methods);
 					}
@@ -79,5 +83,9 @@ final class EventDispatcher
 	    }
         
 		return dispatcher;
+	}
+
+	private static String toPascalCase(String name) {
+		return name.substring(0, 1).toUpperCase() + name.substring(1);
 	}
 }

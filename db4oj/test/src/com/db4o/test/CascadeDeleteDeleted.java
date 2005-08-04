@@ -9,10 +9,10 @@ import com.db4o.query.*;
 
 public class CascadeDeleteDeleted {
     
-    String name;
+    public String name;
     
-    Object untypedMember;
-    CddMember typedMember;
+    public Object untypedMember;
+    public CddMember typedMember;
     
     public CascadeDeleteDeleted(){
     }
@@ -113,7 +113,7 @@ public class CascadeDeleteDeleted {
 
     
     public static class CddMember{
-        String name;
+        public String name;
         
     }
     

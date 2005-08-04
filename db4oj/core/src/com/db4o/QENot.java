@@ -7,7 +7,11 @@ package com.db4o;
  */
 public class QENot extends QE{
 	
-	QE i_evaluator;
+	public QE i_evaluator;
+    
+    public QENot(){
+        // CS
+    }
 	
 	QENot(QE a_evaluator){
 		i_evaluator = a_evaluator;

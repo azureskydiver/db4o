@@ -7,7 +7,7 @@ package com.db4o;
  */
 public class QEIdentity extends QEEqual
 {
-	int i_objectID;
+	public int i_objectID;
 	
 	boolean identity(){
 		return true;

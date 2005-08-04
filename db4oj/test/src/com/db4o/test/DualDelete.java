@@ -6,7 +6,7 @@ import com.db4o.*;
 
 public class DualDelete {
 	
-	Atom atom;
+	public Atom atom;
 	
 	public void configure(){
 		Db4o.configure().objectClass(this).cascadeOnDelete(true);

@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Circular2 {
     
-    Hashtable ht;
+    public Hashtable ht;
     
     public void storeOne(){
         Test.objectContainer().configure().updateDepth(Integer.MAX_VALUE);

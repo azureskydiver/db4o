@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.reflect.*;
 
 /**
@@ -418,14 +419,14 @@ public abstract class YapFile extends YapStream {
         if (firstFileByte != YapConst.YAPBEGIN) {
             
             if(firstFileByte != YapConst.YAPFILEVERSION){
-                Db4o.throwRuntimeException(17);
+                Exceptions.throwRuntimeException(17);
             }
             
             blockLen = myreader.readByte();
             
         }else{
 	        if (myreader.readByte() != YapConst.YAPFILE) {
-	            Db4o.throwRuntimeException(17);
+	            Exceptions.throwRuntimeException(17);
 	        }
         }
         

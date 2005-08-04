@@ -5,6 +5,8 @@ package com.db4o;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
+import com.db4o.inside.query.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -242,7 +244,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     final void checkClosed() {
         if (i_classCollection == null) {
-            Db4o.throwRuntimeException(20, toString());
+            Exceptions.throwRuntimeException(20, toString());
         }
     }
 
@@ -514,14 +516,14 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         synchronized (Db4o.lock) {
             if (i_classCollection != null) {
                 if (i_entryCounter == 0) {
-                    Db4o.logErr(i_config, 50, toString(), null);
+                    Messages.logErr(i_config, 50, toString(), null);
                     while (!close()) {
 
                     }
                 } else {
                     emergencyClose();
                     if (i_entryCounter > 0) {
-                        Db4o.logErr(i_config, 24, null, null);
+                        Messages.logErr(i_config, 24, null, null);
                     }
                 }
             }
@@ -542,7 +544,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             i_classCollection = null;
             emergencyClose();
 			
-            Db4o.logErr(i_config, (msgID==Messages.FATAL_MSG_ID ? 18 : msgID), null, t);
+            Messages.logErr(i_config, (msgID==Messages.FATAL_MSG_ID ? 18 : msgID), null, t);
         }
         throw new RuntimeException(Messages.get(msgID));
     }
@@ -564,7 +566,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         }
     }
 
-    ObjectSet get1(Transaction ta, Object template) {
+    ObjectSetImpl get1(Transaction ta, Object template) {
         ta = checkTransaction(ta);
         QResult res = createQResult(ta);
         i_entryCounter++;
@@ -579,7 +581,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         }
         i_entryCounter--;
         res.reset();
-        return res;
+        return new ObjectSetImpl(res);
     }
 
     private final void get2(Transaction ta, Object template, QResult res) {
@@ -1009,7 +1011,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     final void logMsg(int code, String msg) {
-        Db4o.logMsg(i_config, code, msg);
+        Messages.logMsg(i_config, code, msg);
     }
 
     boolean maintainsIndices() {
@@ -1138,10 +1140,21 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             }
         }
     }
-
+    
+    public final ObjectSet query(Predicate predicate){
+        synchronized (i_lock) {
+            if(Db4oVersion.MAJOR < 5){
+                throw new RuntimeException("This feature will be available in db4o 5.0 and above.");
+                
+            }else{
+                return new PredicateQuery(this, predicate).execute();
+            }
+        }
+    }
+    
     public Query query() {
         synchronized (i_lock) {
-            return query(null);
+            return query((Transaction)null);
         }
     }
 
@@ -1296,7 +1309,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                 }
             }
         } catch (Throwable t) {
-            Db4o.logErr(i_config, 10, null, t);
+            Messages.logErr(i_config, 10, null, t);
         }
         return renamedOne;
     }
