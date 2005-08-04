@@ -8,6 +8,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
+import com.db4o.inside.*;
 
 class YapServer implements ObjectServer, ExtObjectServer, Runnable, YapSocketFakeServer {
     private String i_name;
@@ -43,7 +44,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable, YapSocketFak
                 i_serverSocket = new YapServerSocket(a_port);
                 i_serverSocket.setSoTimeout(config.i_timeoutServerSocket);
             } catch (IOException e) {
-                Db4o.throwRuntimeException(30, "" + a_port);
+                Exceptions.throwRuntimeException(30, "" + a_port);
             }
             
             new Thread(this).start(); 
@@ -67,7 +68,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable, YapSocketFak
 
     final void checkClosed() {
         if (i_yapFile == null) {
-            Db4o.throwRuntimeException(20, i_name);
+            Exceptions.throwRuntimeException(20, i_name);
         }
         i_yapFile.checkClosed();
     }

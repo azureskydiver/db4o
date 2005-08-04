@@ -3,6 +3,8 @@
  */
 package com.db4o.browser.model.nodes.field;
 
+import java.io.PrintStream;
+
 import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.browser.model.nodes.partition.PartitionFieldNodeFactory;
@@ -10,11 +12,11 @@ import com.db4o.reflect.ReflectArray;
 import com.db4o.reflect.ReflectClass;
 
 /**
- * StoredArrayFieldNode.
+ * ArrayFieldNode.
  *
  * @author djo
  */
-public class ArrayFieldNode extends FieldNode implements IModelNode {
+public class ArrayFieldNode extends FieldNode {
     
     private int length;
     private ReflectArray arrayReflector;
@@ -55,5 +57,14 @@ public class ArrayFieldNode extends FieldNode implements IModelNode {
     public boolean isEditable() {
         return false;
     }
+
+	public void printXmlValueNode(PrintStream out) {
+		out.print("<" + getNodeName() + " id=\"" + getId() + "\">");
+		out.print("</" + getNodeName() + ">");
+	}
+
+	public boolean shouldIndent() {
+		return true;
+	}
 
 }

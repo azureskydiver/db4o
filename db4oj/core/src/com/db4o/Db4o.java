@@ -62,36 +62,6 @@ public class Db4o {
 	    // functionality removed
 	}
 	
-    static void logErr (Configuration config, int code, String msg, Throwable t) {
-    	if(config == null){
-    		config = i_config;
-    	}
-		PrintStream ps = ((Config4Impl)config).errStream();
-		new Message(msg, code,ps);
-		if(t != null){
-			new Message(null,25,ps);
-			t.printStackTrace(ps);
-			new Message(null,26,ps, false);
-		}
-    }
-
-    static void logMsg (Configuration config, int code, String msg) {
-		if(Deploy.debug){
-			if(code == 0){
-				System.out.println(msg);
-				return;
-			}
-		}
-		Config4Impl c4i = (Config4Impl)config;
-		if(c4i == null){
-		    c4i = i_config;
-		}
-		
-		if(c4i.i_messageLevel > YapConst.NONE){
-			new Message(msg,code,c4i.outStream());
-		}
-    }
-	
     /**
      * opens an {@link ObjectContainer ObjectContainer}
 	 * client and connects it to the specified named server and port.
@@ -159,13 +129,13 @@ public class Db4o {
 			        oc = new YapMemoryFile(memoryFile);
 				}
 			    catch(Throwable t) {
-			        logErr(i_config, 4, "Memory File", t);
+			        Messages.logErr(i_config, 4, "Memory File", t);
 					return null;
 			    }
 			}
 			if(oc != null){
 			    Platform.postOpen(oc);
-				logMsg(i_config, 5, "Memory File");
+				Messages.logMsg(i_config, 5, "Memory File");
 			}
 			return oc;
 		}
@@ -212,30 +182,12 @@ public class Db4o {
 		i_sessions.remove(a_session);
 	}
 	
-	static final void throwRuntimeException (int code) {
-	    throwRuntimeException(code, null, null);
-	}
-	
-    static final void throwRuntimeException (int code, Throwable cause) {
-		throwRuntimeException(code, null, cause);
-    }
-    
-    static final void throwRuntimeException (int code, String msg) {
-        throwRuntimeException(code, msg, null);
-    }
-
-    static final void throwRuntimeException (int code, String msg, Throwable cause) {
-		logErr(i_config, code,msg, cause);
-        throw new RuntimeException(Messages.get(code, msg));
-    }
-    
-
-    /**
+	/**
      * returns the version name of the used db4o version.
      * <br><br>
      * @return version information as a <code>String</code>.
      */
     public static final String version () {
-    	 return "db4o " + Db4oVersion.name;
+    	 return "db4o " + Db4oVersion.NAME;
     }
 }

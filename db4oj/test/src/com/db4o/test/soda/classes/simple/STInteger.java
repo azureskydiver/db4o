@@ -132,18 +132,5 @@ public class STInteger implements STClass1{
 		}
 	}
 	
-	public void testEvaluation(){
-		Query q = st.query();
-		q.constrain(new STInteger(0));
-		q.constrain(new Evaluation() {
-			public void evaluate(Candidate candidate) {
-				STInteger sti = (STInteger)candidate.getObject();
-				candidate.include((sti.i_int + 2) > 100);
-			}
-		});
-		Object[] r = store();
-		st.expect(q, new Object[] {r[2], r[3]});
-	}
-	
 }
 

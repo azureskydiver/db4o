@@ -8,8 +8,8 @@ import com.db4o.test.*;
 
 public class UniqueField {
     
-    int id;
-    String name;
+    public int id;
+    public String name;
     
     public void store(){
         UniqueField uf = new UniqueField();

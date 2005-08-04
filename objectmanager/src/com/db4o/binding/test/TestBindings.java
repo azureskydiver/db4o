@@ -94,7 +94,6 @@ public class TestBindings implements IControlFactory {
         personObjectEditor2.bind(editor.getAge(), "Age");
         
         parent.getShell().addShellListener(new ShellAdapter() {
-            @Override
             public void shellClosed(ShellEvent e) {
                 try {
                     personObjectEditor1.commit();

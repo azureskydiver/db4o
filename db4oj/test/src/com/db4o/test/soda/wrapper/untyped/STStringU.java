@@ -141,15 +141,4 @@ public class STStringU implements STClass1 {
 		}
 	}
 
-	public void testEvaluation() {
-		Query q = st.query();
-		q.constrain(new STStringU(null));
-		q.constrain(new Evaluation() {
-			public void evaluate(Candidate candidate) {
-				STStringU sts = (STStringU) candidate.getObject();
-				candidate.include(((String)sts.str).indexOf("od") == 1);
-			}
-		});
-		st.expectOne(q, new STStringU("dod"));
-	}
 }

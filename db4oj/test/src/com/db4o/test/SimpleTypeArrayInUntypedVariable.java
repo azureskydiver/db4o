@@ -5,7 +5,7 @@ package com.db4o.test;
 
 public class SimpleTypeArrayInUntypedVariable {
     
-    Object arr;
+    public Object arr;
     
     public void storeOne(){
         arr = new int[]{1, 2, 3};

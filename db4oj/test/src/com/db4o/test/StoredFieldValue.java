@@ -7,9 +7,9 @@ import com.db4o.ext.*;
 
 public class StoredFieldValue {
     
-    String foo;
-    int bar;
-    Atom[] atoms;
+    public String foo;
+    public int bar;
+    public Atom[] atoms;
     
     public void storeOne(){
         foo = "foo";

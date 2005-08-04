@@ -12,7 +12,7 @@ public class SwitchingFilesFromClient {
 	
 	static final String DB_FILE = "switchedToTest.yap";
 	
-	String name;
+	public String name;
 	
 	void storeOne(){
 		name = "helo";

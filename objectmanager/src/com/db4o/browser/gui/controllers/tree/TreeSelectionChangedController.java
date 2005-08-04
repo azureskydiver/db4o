@@ -36,6 +36,10 @@ public class TreeSelectionChangedController implements
 			
 			IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 			
+			if (selection.getFirstElement() == null || selection.getFirstElement().equals(lastSelection)) {
+				return;
+			}
+			
 			if (!selection.isEmpty()) {
 				GraphPosition node = (GraphPosition) selection.getFirstElement();
 	
@@ -44,7 +48,8 @@ public class TreeSelectionChangedController implements
                 if (model.isPathSelectionChangable()) {
                     model.setSelectedPath(node);
                     lastSelection = node;
-                    source.refresh();
+
+                	source.refresh();
                 } else if (lastSelection != null) {
                     Display.getCurrent().asyncExec(new Runnable() {
                         public void run() {

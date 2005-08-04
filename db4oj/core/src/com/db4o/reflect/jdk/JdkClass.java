@@ -152,10 +152,6 @@ public class JdkClass implements ReflectClass{
         return false;
     }
 	
-	public Object[] toArray(Object obj){
-		return null;
-	}
-    
     public void useConstructor(ReflectConstructor constructor, Object[] params){
         this._constructor = constructor;
         _constructorParams = params;

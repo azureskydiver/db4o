@@ -16,9 +16,13 @@
  */
 package com.db4o.browser.model.nodes.field;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import org.eclipse.ve.sweet.converter.ConverterRegistry;
+import org.eclipse.ve.sweet.converter.IConverter;
 
 import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
@@ -138,15 +142,65 @@ class InstanceNode implements IModelNode {
 		return _instance.hashCode();
 	}
 
+    /* (non-Javadoc)
+     * @see com.db4o.browser.model.nodes.IModelNode#setShowType(boolean)
+     */
     public void setShowType(boolean showType) {
         this.showType = showType;
     }
 
+    /* (non-Javadoc)
+     * @see com.db4o.browser.model.nodes.IModelNode#isEditable()
+     */
     public boolean isEditable() {
         return false;
     }
 
+    /* (non-Javadoc)
+     * @see com.db4o.browser.model.nodes.IModelNode#getEditValue()
+     */
     public Object getEditValue() {
         return null;
     }
+
+    /* (non-Javadoc)
+     * @see com.db4o.browser.model.nodes.IModelNode#getId()
+     */
+    public long getId() {
+		long id = _database.getId(_instance);
+    	return id;
+    }
+
+	public void printXmlReferenceNode(PrintStream out) {
+	}
+
+	public void printXmlStart(PrintStream out) {
+		out.println("<" + _clazz.getName() + ">");
+	}
+
+	public void printXmlEnd(PrintStream out) {
+		out.println("</" + _clazz.getName() + ">");
+	}
+
+	public void printXmlValueNode(PrintStream out) {
+		out.print("<" + _clazz.getName() + ">");
+		out.print(XmlEntity.encode(convert(_instance)));
+		out.print("</" + _clazz.getName() + ">");
+	}
+	
+	private String convert(Object instance) {
+		IConverter converter = converter(instance.getClass());
+		if (converter == null) {
+			return instance.toString();
+		}
+		return (String) converter.convert(instance);
+	}
+
+	private IConverter converter(Class type) {
+		return ConverterRegistry.get(type.getName(), String.class.getName());
+	}
+
+	public boolean shouldIndent() {
+		return true;
+	}
 }

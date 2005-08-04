@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<project name="PascalCaseConverter" default="build">
+
+	<property file="machine.properties" />
+	<property file="ant.properties" />
+	
+	<property name="dir.dist.pascalcase" location="${dir.dist}/pascalcase" />
+	<property name="dir.pascalcase.src" location="${dir.dist.pascalcase}/src" />
+	<property name="dir.pascalcase.bin" location="${dir.dist.pascalcase}/bin" />
+	
+	<target name="rebuild" depends="clean, build">
+	</target>
+	
+	<target name="test" depends="build">
+		<exec executable="${dir.pascalcase.bin}/db4o-net-test.exe" dir="${dir.pascalcase.bin}">
+		</exec>
+	</target>
+		
+	<target name="build" depends="compile-converter">
+
+		<exec executable="bin/pascalcase.exe" failonerror="true">
+			<arg file="${dir.n.core.src}" />
+			<arg file="${dir.pascalcase.src}/core/src" />
+			<arg value="NET" />
+		</exec>
+		
+		<exec executable="bin/pascalcase.exe" failonerror="true">
+			<arg file="${dir.n.tools}/src" />
+			<arg file="${dir.pascalcase.src}/tools/src" />
+			<arg value="NET" />
+		</exec>
+		
+		<exec executable="bin/pascalcase.exe" failonerror="true">
+			<arg file="${dir.n.test}/src" />
+			<arg file="${dir.pascalcase.src}/test/src" />
+			<arg value="NET" />
+		</exec>
+		
+		<copy todir="${dir.pascalcase.src}">
+			<fileset dir="${dir.n}">
+				<include name="**/*.csproj" />
+				<include name="**/*.sln" />
+			</fileset>
+		</copy>
+
+		<csc
+			srcdir="${dir.pascalcase.src}/core/src"
+			targettype="library"
+			destfile="${dir.pascalcase.bin}/db4o.dll"
+			debug="true"
+			warnlevel="0"
+			optimize="true"
+			failonerror="true">
+			
+			<include name="*.cs" />
+			<exclude name="compact/**" />
+		</csc>
+		
+		<csc srcdir="${dir.pascalcase.src}/tools/src"
+			targettype="library"
+			destfile="${dir.pascalcase.bin}/db4o-net-tools.dll"
+			debug="true"
+			definitions="NET">
+			<reference dir="${dir.pascalcase.bin}">
+				<include name="db4o.dll" />
+			</reference>
+		</csc>
+			
+		<copy todir="${dir.pascalcase.src}/test/src" file="src/pascalcase/FixUp.cs" />
+		<csc srcdir="${dir.pascalcase.src}/test/src"
+			targettype="exe"
+			destfile="${dir.pascalcase.bin}/db4o-net-test.exe"
+			debug="true"
+			mainclass="com.db4o.test.AllTests"
+			definitions="NET">
+			
+			<exclude name="**/CsAssemblyVersionChange.cs" />
+			<exclude name="compact/**" />
+			
+			<reference dir="${dir.pascalcase.bin}">
+				<include name="db4o.dll" />
+				<include name="db4o-net-tools.dll" />
+				<include name="System.Drawing.dll" />
+			</reference>
+		</csc>
+	</target>
+	
+	<target name="compile-converter" depends="init">
+		<exec executable="lib/boo/booc.exe" failonerror="true">
+			<arg value="-o:bin/pascalcase.exe" />
+			<arg value="-r:bin/ICSharpCode.SharpRefactory.dll" />
+			<arg value="-r:bin/Boo.Lang.Useful.dll" />
+			<arg file="src/pascalcase/main.boo" />
+		</exec>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${dir.dist.pascalcase}" />
+		<delete dir="bin" />
+	</target>
+		
+	<target name="init">
+		<mkdir dir="bin" />
+		<mkdir dir="${dir.pascalcase.bin}" />
+		<copy todir="bin">
+			<fileset dir="lib/boo">
+				<include name="Boo.Lang.dll" />
+				<include name="Boo.Lang.Useful.dll" />
+				<include name="Boo.Lang.Parser.dll" />
+			</fileset>
+			<fileset dir="lib/SharpDevelop">
+				<include name="ICSharpCode.SharpRefactory.dll" />
+			</fileset>
+		</copy>
+	</target>
+	
+</project>

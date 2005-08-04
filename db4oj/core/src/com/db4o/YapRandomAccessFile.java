@@ -5,6 +5,7 @@ package com.db4o;
 import java.io.*;
 
 import com.db4o.ext.*;
+import com.db4o.inside.*;
 import com.db4o.io.*;
 
 /**
@@ -46,13 +47,13 @@ public class YapRandomAccessFile extends YapFile {
         synchronized (i_lock) {
             checkClosed();
             if (i_backupFile != null) {
-                Db4o.throwRuntimeException(61);
+                Exceptions.throwRuntimeException(61);
             }
             try {
                 i_backupFile = i_config.i_ioAdapter.open(path, true, i_file.getLength());
             } catch (Exception e) {
                 i_backupFile = null;
-                Db4o.throwRuntimeException(12, path);
+                Exceptions.throwRuntimeException(12, path);
             }
         }
         long pos = 0;
@@ -119,7 +120,7 @@ public class YapRandomAccessFile extends YapFile {
                         }
                     } catch (Exception e) {
                         i_file = null;
-                        Db4o.throwRuntimeException(11, e);
+                        Exceptions.throwRuntimeException(11, e);
                     }
                     i_file = null;
                 }
@@ -155,7 +156,7 @@ public class YapRandomAccessFile extends YapFile {
             }
 
         } catch (Exception e) {
-            Db4o.throwRuntimeException(16, e);
+            Exceptions.throwRuntimeException(16, e);
         }
 
     }
@@ -235,7 +236,7 @@ public class YapRandomAccessFile extends YapFile {
                 } catch (DatabaseFileLockedException de) {
                     throw de;
                 } catch (Exception e) {
-                    Db4o.throwRuntimeException(12, fileName(), e);
+                    Exceptions.throwRuntimeException(12, fileName(), e);
                 }
                 if (isNew) {
                     configureNewFile();
@@ -248,7 +249,7 @@ public class YapRandomAccessFile extends YapFile {
                     readThis();
                 }
             } else {
-                Db4o.throwRuntimeException(21);
+                Exceptions.throwRuntimeException(21);
             }
         } catch (Exception exc) {
             if (i_references != null) {
@@ -285,7 +286,7 @@ public class YapRandomAccessFile extends YapFile {
                 ioex.printStackTrace();
             }
             
-            throw new RuntimeException(ioex);
+            throw new RuntimeException();
         }
     }
 
@@ -367,7 +368,7 @@ public class YapRandomAccessFile extends YapFile {
             }
 
         } catch (Exception e) {
-            Db4o.throwRuntimeException(16, e);
+            Exceptions.throwRuntimeException(16, e);
         }
     }
 

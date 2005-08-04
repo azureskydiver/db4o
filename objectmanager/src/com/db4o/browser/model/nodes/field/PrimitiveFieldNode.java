@@ -16,6 +16,11 @@
  */
 package com.db4o.browser.model.nodes.field;
 
+import java.io.PrintStream;
+
+import org.eclipse.ve.sweet.converter.ConverterRegistry;
+import org.eclipse.ve.sweet.converter.IConverter;
+
 import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 import com.db4o.reflect.ReflectClass;
@@ -49,4 +54,32 @@ public class PrimitiveFieldNode extends FieldNode {
 	public IModelNode[] children() {
 		return new IModelNode[0];
 	}
+
+	public void printXmlReferenceNode(PrintStream out) {
+		out.println("Unexpected: Primitives should never be referenced!");
+	}
+
+	public void printXmlValueNode(PrintStream out) {
+		out.print("<" + _fieldName + ">");
+		out.print(XmlEntity.encode(convert(value)));
+		out.print("</" + _fieldName + ">");
+	}
+
+	private String convert(Object instance) {
+		IConverter converter = converter(instance.getClass());
+		if (converter == null) {
+			return instance.toString();
+		}
+		return (String) converter.convert(instance);
+	}
+
+	private IConverter converter(Class type) {
+		return ConverterRegistry.get(type.getName(), String.class.getName());
+	}
+
+	public boolean shouldIndent() {
+		return false;
+	}
 }
+
+

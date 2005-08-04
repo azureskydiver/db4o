@@ -7,7 +7,7 @@ import com.db4o.query.*;
 
 public class SodaNoDuplicates {
 	
-	Atom atom;
+	public Atom atom;
 	
 	public void store(){
 		Test.deleteAllInstances(this);

@@ -134,6 +134,20 @@ public class DbBrowserPane extends Composite {
     public Button getQueryButton() {
         return (Button) contents.get("QueryButton");
     }
+    
+    /**
+     * @return the Cancel button
+     */
+    public Button getCancelButton() {
+    	return (Button) contents.get("CancelButton");
+    }
+    
+    /**
+     * @return the Save button
+     */
+    public Button getSaveButton() {
+    	return (Button) contents.get("SaveButton");
+    }
 
 }
 

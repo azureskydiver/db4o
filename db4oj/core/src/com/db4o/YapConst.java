@@ -118,7 +118,7 @@ public final class YapConst
     static Class CLASS_METACLASS;
     static Class CLASS_METAFIELD;
 	static Class CLASS_METAINDEX;
-    static Class CLASS_OBJECT;
+    public static Class CLASS_OBJECT;
     static Class CLASS_OBJECTCONTAINER;
     static Class CLASS_PBOOTRECORD;
     static Class CLASS_REPLICATIONRECORD; 

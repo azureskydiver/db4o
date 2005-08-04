@@ -5,6 +5,7 @@ package com.db4o;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -883,7 +884,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
                 try {
                     a_object = i_config.instantiate(stream, i_fields[0].read(a_bytes));
                 } catch (Exception e) {
-                    Db4o.logErr(stream.i_config, 6, classReflector().getName(), e);
+                    Messages.logErr(stream.i_config, 6, classReflector().getName(), e);
                     return null;
                 }
                 a_bytes._offset = bytesOffset;
@@ -961,7 +962,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
             try {
                 a_object = i_config.instantiate(stream, i_fields[0].read(a_bytes));
             } catch (Exception e) {
-                Db4o.logErr(stream.i_config, 6, classReflector().getName(), e);
+                Messages.logErr(stream.i_config, 6, classReflector().getName(), e);
                 return null;
             }
             a_bytes._offset = bytesOffset;
@@ -1437,7 +1438,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
             write(i_stream, i_stream.getSystemTransaction());
             i_state = tempState;
         }else{
-            Db4o.throwRuntimeException(58);
+            Exceptions.throwRuntimeException(58);
         }
     }
 

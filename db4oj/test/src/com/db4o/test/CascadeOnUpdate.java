@@ -8,7 +8,7 @@ import com.db4o.foundation.*;
 
 public class CascadeOnUpdate {
 
-	Object child;
+	public Object child;
 
 	public void configure() {
 		Db4o.configure().objectClass(this).cascadeOnUpdate(true);

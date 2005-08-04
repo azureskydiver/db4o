@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
+import com.db4o.inside.*;
 import com.db4o.reflect.*;
 
 /**
@@ -101,7 +102,7 @@ public class YapClient extends YapStream implements ExtClient {
     }
     
     public void backup(String path)throws IOException{
-        Db4o.throwRuntimeException(60);
+        Exceptions.throwRuntimeException(60);
     }
 
     boolean close2() {
@@ -275,11 +276,11 @@ public class YapClient extends YapStream implements ExtClient {
                     }
 
                     if (readerThread.isClosed()) {
-                        Db4o.throwRuntimeException(20, name());
+                        Exceptions.throwRuntimeException(20, name());
                     }
                     messageQueueLock.snooze(i_config.i_timeoutClientSocket);
                     if (readerThread.isClosed()) {
-                        Db4o.throwRuntimeException(20, name());
+                        Exceptions.throwRuntimeException(20, name());
                     }
                     message = (Msg)messageQueue.next();
                     if (Debug.messages) {
@@ -310,10 +311,6 @@ public class YapClient extends YapStream implements ExtClient {
         return null;
     }
 
-
-    final YapSocket agetYapSocket() {
-        return i_socket;
-    }
 
     boolean needsLockFileThread() {
         return false;
@@ -497,10 +494,13 @@ public class YapClient extends YapStream implements ExtClient {
     }
 
     public void releaseSemaphore(String name) {
-        if (name == null) {
-            throw new NullPointerException();
+        synchronized (i_lock) {
+            checkClosed();
+            if (name == null) {
+                throw new NullPointerException();
+            }
+            writeMsg(Msg.RELEASE_SEMAPHORE.getWriterForString(i_trans, name));
         }
-        writeMsg(Msg.RELEASE_SEMAPHORE.getWriterForString(i_trans, name));
     }
 
     void releaseSemaphores(Transaction ta) {
@@ -533,12 +533,15 @@ public class YapClient extends YapStream implements ExtClient {
     }
 
     public boolean setSemaphore(String name, int timeout) {
-        if (name == null) {
-            throw new NullPointerException();
+        synchronized (i_lock) {
+            checkClosed();
+            if (name == null) {
+                throw new NullPointerException();
+            }
+            writeMsg(Msg.SET_SEMAPHORE.getWriterForIntString(i_trans, timeout, name));
+            Msg message = getResponse();
+            return (message.equals(Msg.SUCCESS));
         }
-        writeMsg(Msg.SET_SEMAPHORE.getWriterForIntString(i_trans, timeout, name));
-        Msg message = getResponse();
-        return (message.equals(Msg.SUCCESS));
     }
 
     public void switchToFile(String fileName) {

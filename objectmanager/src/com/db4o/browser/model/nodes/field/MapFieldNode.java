@@ -16,6 +16,7 @@
  */
 package com.db4o.browser.model.nodes.field;
 
+import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
@@ -146,4 +147,13 @@ public class MapFieldNode extends FieldNode {
     public boolean isEditable() {
         return false;
     }
+
+	public void printXmlValueNode(PrintStream out) {
+		out.print("<" + getNodeName() + " id=\"" + getId() + "\">");
+		out.print("</" + getNodeName() + ">");
+	}
+
+	public boolean shouldIndent() {
+		return true;
+	}
 }

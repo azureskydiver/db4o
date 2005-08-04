@@ -59,7 +59,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		return myClone;
 	}
 	
-	YapStream getStream(){
+	private YapStream getStream(){
 		return _stream;
 	}
 

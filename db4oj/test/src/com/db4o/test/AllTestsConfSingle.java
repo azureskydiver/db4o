@@ -2,18 +2,13 @@
 
 package com.db4o.test;
 
-
 public class AllTestsConfSingle extends TestSuite{
 
 	static protected final String TEST_CONFIGURATION = "AllTestsConfSingle";
 	
-    TestSuite[] TEST_SUITES = new TestSuite[]{
-        
-//        suite("com.db4o.test.jdk5.Jdk5TestSuite"),
-        this, 
-//        new ReplicationTestSuite()
-    };
-
+    protected void addTestSuites(TestSuite suites) {
+        suites.add(this);
+    }
     
     public Class[] tests(){
         return new Class[] {
@@ -57,12 +52,12 @@ public class AllTestsConfSingle extends TestSuite{
     /**
       * run the tests stand-alone 
       */
-    public boolean SOLO = true;
+    public boolean SOLO = false;
     
     /**
       * run the tests in client/server mode 
       */
-    public boolean CLIENT_SERVER = false;
+    public boolean CLIENT_SERVER = true;
 
     /**
      * run the test against a memory file instead of disc file

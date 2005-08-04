@@ -1,7 +1,73 @@
-<?xml version="1.0"?>
-<project name="db4oj" default="formula1" basedir=".">
-	<target name="formula1" description="copies the xt_solo file to the browser sources">
-		<copy overwrite="true" file="xt_solo.yap" tofile="../com.db4o.browser/bin/com/db4o/browser/gui/standalone/formula1.yap" />
-		<copy overwrite="true" file="xt_solo.yap" tofile="../com.db4o.browser/src/com/db4o/browser/gui/standalone/formula1.yap" />
+<project name="db4obuildcore" basedir=".">
+	<property name="dir.build" value="../db4obuild/dist/java" />
+	<property name="dir.build.src" value="${dir.build}/src" />
+	<property name="dir.build.src.core" value="${dir.build.src}/core" />
+	<property name="dir.build.src.test" value="${dir.build.src}/test" />
+	<property name="dir.build.classes" value="${dir.build}/classes" />
+	<property name="dir.build.classes.core" value="${dir.build.classes}/core" />
+	<property name="dir.build.classes.test" value="${dir.build.classes}/test" />
+	<property name="dir.build.jar" value="${dir.build}/lib" />
+	
+	<property name="dir.j.src.core" value="core/src" />
+	<property name="dir.j.src.tools" value="tools/src" />
+	<property name="dir.j.src.test" value="test/src" />
+		
+	<target name="init">
+		<tstamp />
+		<mkdir dir="${dir.build.src.core}" />
+		<mkdir dir="${dir.build.src.test}" />
+		<mkdir dir="${dir.build.classes.core}" />
+		<mkdir dir="${dir.build.classes.test}" />
+		<mkdir dir="${dir.build.jar}" />
+		<delete>
+			<fileset dir="${dir.build.src.core}">
+				<include name="**/*"/>
+			</fileset>
+			<fileset dir="${dir.build.src.test}">
+				<include name="**/*"/>
+			</fileset>
+			<fileset dir="${dir.build.classes.core}">
+				<include name="**/*"/>
+			</fileset>
+			<fileset dir="${dir.build.classes.test}">
+				<include name="**/*"/>
+			</fileset>
+			<fileset dir="${dir.build.jar}">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="prepare" depends="init">
+		<copy todir="${dir.build.src.core}">
+			<fileset dir="${dir.j.src.core}">
+				<include name="**/*.java" />
+			</fileset>
+			<fileset dir="${dir.j.src.tools}">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.build.src.test}">
+			<fileset dir="${dir.j.src.test}">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="compile" depends="prepare">
+		<javac compiler="javac1.1" srcdir="${dir.build.src.core}" destdir="${dir.build.classes.core}" debug="off" target="1.1" source="1.2" />
+		<jar destfile="${dir.build.jar}/db4o-jdk1.1.jar">
+			<fileset dir="${dir.build.classes.core}" />
+		</jar>
+	</target>
+	
+	<target name="test" depends="compile">
+		<javac compiler="javac1.1" srcdir="${dir.build.src.test}" destdir="${dir.build.classes.test}" classpath="${dir.build.jar}/db4o-jdk1.1.jar" debug="off" target="1.1" source="1.2" />
+		<java classname="com.db4o.test.AllTests" failonerror="true">
+			<classpath>
+				<pathelement path="${dir.build.jar}/db4o-jdk1.1.jar"/>
+				<pathelement path="${dir.build.classes.test}"/>
+			</classpath>
+		</java>
 	</target>
 </project>

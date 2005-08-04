@@ -10,7 +10,7 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ve.sweet.converter.Converter;
+import org.eclipse.ve.sweet.converter.ConverterRegistry;
 import org.eclipse.ve.sweet.converter.IConverter;
 import org.eclipse.ve.sweet.validators.IntValidator;
 
@@ -92,7 +92,7 @@ public class SelectServer extends Dialog {
     
     protected void okPressed() {
         hostName = pane.getHostName().getText();
-        IConverter converter = Converter.get(String.class.getName(), Integer.TYPE.getName());
+        IConverter converter = ConverterRegistry.get(String.class.getName(), Integer.TYPE.getName());
         port = ((Integer)converter.convert(pane.getHostPort().getText())).intValue();
         username = pane.getUsername().getText();
         password = pane.getPassword().getText();

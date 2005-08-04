@@ -3,6 +3,8 @@
  */
 package com.db4o.browser.model.nodes.partition;
 
+import java.io.PrintStream;
+
 import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.model.nodes.IModelNode;
 
@@ -55,5 +57,27 @@ public class PartitionFieldNode implements IModelNode {
     public Object getEditValue() {
         return null;
     }
+
+	public long getId() {
+		return -1;
+	}
+
+	// Partitions shouldn't show up in XML exports...
+	
+	public void printXmlReferenceNode(PrintStream out) {
+	}
+
+	public void printXmlStart(PrintStream out) {
+	}
+
+	public void printXmlEnd(PrintStream out) {
+	}
+
+	public void printXmlValueNode(PrintStream out) {
+	}
+
+	public boolean shouldIndent() {
+		return false;
+	}
 
 }

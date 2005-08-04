@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 class Sessions extends Collection4{
 	
@@ -57,9 +58,9 @@ class Sessions extends Collection4{
 				} catch (ObjectNotStorableException e) {
 					throw e;
 				} catch (UserException eu) {
-					Db4o.throwRuntimeException(eu.errCode, eu.errMsg);
+					Exceptions.throwRuntimeException(eu.errCode, eu.errMsg);
 				} catch (Throwable t) {
-					Db4o.logErr(Db4o.i_config, 4, databaseFileName, t);
+					Messages.logErr(Db4o.i_config, 4, databaseFileName, t);
 					return null;
 				}
 			}
@@ -67,7 +68,7 @@ class Sessions extends Collection4{
 				newSession.i_stream = (YapStream) oc;
 				add(newSession);
 				Platform.postOpen(oc);
-				Db4o.logMsg(Db4o.i_config, 5, databaseFileName);
+				Messages.logMsg(Db4o.i_config, 5, databaseFileName);
 			}
 			return oc;
 		}

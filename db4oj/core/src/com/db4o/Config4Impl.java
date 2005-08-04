@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.config.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.io.*;
 import com.db4o.messaging.*;
 import com.db4o.reflect.*;
@@ -78,11 +79,11 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     
     public void blockSize(int bytes){
        if (bytes < 1 || bytes > 127) {
-           Db4o.throwRuntimeException(1);
+           Exceptions.throwRuntimeException(1);
        }
        
        if (i_stream != null) {
-           Db4o.throwRuntimeException(46);   // see readable message for code in Messages.java
+           Exceptions.throwRuntimeException(46);   // see readable message for code in Messages.java
        }
        
        i_blockSize = (byte)bytes;
@@ -220,7 +221,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     private void globalSettingOnly() {
         if (i_stream != null) {
             new Exception().printStackTrace();
-            Db4o.throwRuntimeException(46);
+            Exceptions.throwRuntimeException(46);
         }
     }
     
@@ -295,7 +296,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
 	public void reflectWith(Reflector reflect) {
 		
         if(i_stream != null){
-        	Db4o.throwRuntimeException(46);   // see readable message for code in Messages.java
+        	Exceptions.throwRuntimeException(46);   // see readable message for code in Messages.java
         }
 		
         if (reflect == null) {
@@ -376,7 +377,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         if (i_stream != null) {
             i_stream.logMsg(19, Db4o.version());
         } else {
-            Db4o.logMsg(Db4o.i_config, 19, Db4o.version());
+            Messages.logMsg(Db4o.i_config, 19, Db4o.version());
         }
     }
 

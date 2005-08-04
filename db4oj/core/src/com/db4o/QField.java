@@ -11,10 +11,10 @@ import com.db4o.reflect.*;
 public class QField implements Visitor4{
 	
 	transient Transaction i_trans;
-	String i_name;
+	public String i_name;
 	transient YapField i_yapField;
-	int i_yapClassID;
-	int i_index;
+	public int i_yapClassID;
+	public int i_index;
 	
 	public QField(){
 		// C/S only	

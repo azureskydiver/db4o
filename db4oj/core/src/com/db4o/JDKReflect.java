@@ -4,6 +4,8 @@ package com.db4o;
 
 import java.lang.reflect.*;
 
+import com.db4o.reflect.generic.*;
+
 /**
  * 
  * package and class name are hard-referenced in JavaOnly#jdk()
@@ -74,6 +76,13 @@ class JDKReflect extends JDK {
         }
         return null;
     }
-
+    
+    public void registerCollections(GenericReflector reflector) {
+        if(! Deploy.csharp){
+            reflector.registerCollection(java.util.Vector.class);
+            reflector.registerCollection(java.util.Hashtable.class);
+            reflector.registerCollectionUpdateDepth(java.util.Hashtable.class, 3);
+        }
+    }
 
 }

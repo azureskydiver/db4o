@@ -6,16 +6,6 @@ import com.db4o.config.*;
 
 class JavaOnly {
     
-    static final boolean isCollectionTranslator(Config4Class a_config) {
-        if (a_config != null) {
-            ObjectTranslator ot = a_config.getTranslator();
-            if (ot != null) {
-                return ot instanceof TCollection || ot instanceof TMap || ot instanceof THashtable;
-            }
-        }
-        return false;
-    }
-    
     public static void link(){
         Object obj = new TClass();
         obj = new TVector();

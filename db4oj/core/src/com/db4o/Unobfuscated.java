@@ -35,7 +35,7 @@ public class Unobfuscated {
 	}
 	
 	static void logErr (Configuration config, int code, String msg, Throwable t) {
-		Db4o.logErr(config, code, msg, t);
+		Messages.logErr(config, code, msg, t);
 	}
 	
 	static void purgeUnsychronized(Object a_stream, Object a_object){

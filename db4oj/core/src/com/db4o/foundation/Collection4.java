@@ -15,7 +15,7 @@ public class Collection4 implements DeepClone {
     public List4 _first;
 
     /** number of elements collected */
-    private int _size;
+    public int _size;
 
     public final void add(Object element) {
         _first = new List4(_first, element);

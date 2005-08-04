@@ -17,6 +17,8 @@ import com.db4o.ext.*;
  * {@link ObjectContainer ObjectContainer} needs to remain opened during the
  * use of an <code>ObjectSet</code> to allow lazy instantiation.
  * @see ExtObjectSet for extended functionality.
+ * 
+ * @extends System.Collections.IList
  */
 public interface ObjectSet {
 	

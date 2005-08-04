@@ -55,8 +55,6 @@ public interface ReflectClass {
      */
     public boolean skipConstructor(boolean flag);
 	
-	public Object[] toArray(Object obj);
-    
     public void useConstructor(ReflectConstructor constructor, Object[] params);
 	
 }

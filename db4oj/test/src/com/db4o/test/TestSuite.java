@@ -2,11 +2,15 @@
 
 package com.db4o.test;
 
+import java.util.*;
+
 
 /**
  * 
  */
 public abstract class TestSuite {
+    
+    protected Vector _testSuites;
     
     public abstract Class[] tests();
     
@@ -21,6 +25,29 @@ public abstract class TestSuite {
             
         }
         return null;
+    }
+    
+    public boolean equals(Object obj){
+        if(this == obj){
+            return true;
+        }
+        if(obj == null){
+            return false;
+        }
+        if(! (obj instanceof TestSuite)) {
+            return false;
+        }
+        return obj.getClass() == this.getClass(); 
+    }
+    
+    protected void add(TestSuite suite){
+        if(_testSuites == null){
+            _testSuites = new Vector();
+        }
+        if(_testSuites.contains(suite)){
+            return;
+        }
+        _testSuites.addElement(suite);
     }
 
 }

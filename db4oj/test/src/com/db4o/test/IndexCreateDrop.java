@@ -10,9 +10,9 @@ import com.db4o.query.*;
 
 public class IndexCreateDrop {
     
-    int myInt;
-    String myString;
-    Date myDate;
+    public int myInt;
+    public String myString;
+    public Date myDate;
     
     public void store(){
         Test.deleteAllInstances(this);

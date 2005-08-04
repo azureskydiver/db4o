@@ -11,21 +11,27 @@ import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ve.sweet.CannotSaveException;
+import org.eclipse.ve.sweet.converter.ConverterRegistry;
 import org.eclipse.ve.sweet.converter.IConverter;
+import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 import org.eclipse.ve.sweet.hinthandler.DelegatingHintHandler;
 import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
 import org.eclipse.ve.sweet.validator.IValidator;
+import org.eclipse.ve.sweet.validator.ValidatorRegistry;
 
 import com.db4o.browser.gui.standalone.StandaloneBrowser;
 import com.db4o.browser.gui.standalone.StatusBar;
 import com.db4o.browser.model.IDatabase;
 import com.db4o.browser.query.model.FieldConstraint;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.Reflector;
 
-public class FieldConstraintValueFieldController extends FieldController {
+public class FieldConstraintValueFieldController implements IFieldViewer {
     
     private FieldConstraint constraint;
     private IDatabase database;
+	private Reflector reflector;
 
     private Text ui;
     
@@ -40,17 +46,22 @@ public class FieldConstraintValueFieldController extends FieldController {
     private DelegatingHintHandler hintHandler = new DelegatingHintHandler();
 
     public FieldConstraintValueFieldController(Text ui, FieldConstraint constraint, IDatabase database) {
-        super(database);
+        this.database = database;
+        this.reflector = database.reflector();
         this.ui = ui;
         this.constraint = constraint;
         this.database = database;
-        converter2String = get(constraint.field.getType(), c(String.class));
-        converter2Value = get(c(String.class), constraint.field.getType());
-        validator = get(constraint.field.getType());
+        converter2String = ConverterRegistry.get(constraint.field.getType().getName(), c(String.class).getName());
+        converter2Value = ConverterRegistry.get(c(String.class).getName(), constraint.field.getType().getName());
+        validator = ValidatorRegistry.get(constraint.field.getType().getName());
         input = constraint.value;
         initControl();
         ui.addVerifyListener(verifyListener);
         ui.addFocusListener(focusListener);
+    }
+
+    private ReflectClass c(Class clazz) {
+        return reflector.forClass(clazz);
     }
 
     private void initControl() {

@@ -138,7 +138,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
                     }catch(Throwable th){
                     }
                 }
-                Db4o.logErr(i_config, 48, i_translatorName, null);
+                Messages.logErr(i_config, 48, i_translatorName, null);
                 i_translatorName = null;
             }
         }

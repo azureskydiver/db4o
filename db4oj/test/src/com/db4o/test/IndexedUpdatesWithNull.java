@@ -10,7 +10,7 @@ import com.db4o.query.*;
  */
 public class IndexedUpdatesWithNull {
     
-    String str;
+    public String str;
     
     public IndexedUpdatesWithNull(){
     }

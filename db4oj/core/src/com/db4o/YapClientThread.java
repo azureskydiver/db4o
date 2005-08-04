@@ -37,6 +37,9 @@ class YapClientThread extends Thread{
 		while(i_socket != null){
 			try {
 				final Msg message = Msg.readMessage(i_stream.getTransaction(), i_socket);
+                if(i_stream == null){
+                    return;
+                }
 				if(Msg.PING.equals(message)){
 				    i_stream.writeMsg(Msg.OK);
 				}else if(Msg.CLOSE.equals(message)){

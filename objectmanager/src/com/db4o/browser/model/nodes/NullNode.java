@@ -1,5 +1,7 @@
 package com.db4o.browser.model.nodes;
 
+import java.io.PrintStream;
+
 import com.db4o.browser.model.IDatabase;
 
 public class NullNode implements IModelNode {
@@ -44,5 +46,27 @@ public class NullNode implements IModelNode {
     public Object getEditValue() {
         return "";
     }
+
+	public long getId() {
+		return -1;
+	}
+
+	public void printXmlReferenceNode(PrintStream out) {
+	}
+
+	public void printXmlStart(PrintStream out) {
+	}
+
+	public void printXmlEnd(PrintStream out) {
+	}
+
+	public void printXmlValueNode(PrintStream out) {
+		out.print("<null/>");
+	}
+
+	public boolean shouldIndent() {
+		return false;
+	}
+
 
 }

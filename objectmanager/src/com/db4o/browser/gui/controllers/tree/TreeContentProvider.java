@@ -9,6 +9,7 @@ import org.eclipse.jface.viewers.Viewer;
 import com.db4o.browser.model.GraphPosition;
 import com.db4o.browser.model.IGraphIterator;
 import com.db4o.browser.model.nodes.IModelNode;
+import com.swtworkbench.community.xswt.metalogger.Logger;
 
 /**
  * TreeContentProvider.  The content provider for the object browser tree view.
@@ -81,16 +82,6 @@ public class TreeContentProvider implements ITreeContentProvider {
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
 	 */
 	public Object[] getChildren(Object parentElement) {
-        /*
-         * FEATURE IN JFACE: Sometimes TreeViewer mistakenly calls 
-         * getChildren() on the input element rather than calling
-         * getElements() on said input element.  The workaround is
-         * to detect the type of the input element and call
-         * getElements() ourselves.
-         */
-        if (parentElement instanceof IGraphIterator) {
-            return getElements(parentElement);
-        }
         i.setPath((GraphPosition) parentElement);
         i.selectNextChild();
 		return children(i);

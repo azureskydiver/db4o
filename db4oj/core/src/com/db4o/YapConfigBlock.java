@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 /**
  * configuration and agent to write the configuration block
@@ -87,7 +88,7 @@ final class YapConfigBlock implements Runnable
 			YapWriter bytes = openTimeIO();
 			bytes.read();
 			if(YLong.readLong(bytes) != _opentime){
-				Db4o.throwRuntimeException(22);
+				Exceptions.throwRuntimeException(22);
 			}
 			writeOpenTime();
 		}
@@ -193,7 +194,7 @@ final class YapConfigBlock implements Runnable
 		}
 		int oldLength = reader.readInt();
 		if(oldLength > LENGTH  || oldLength < MINIMUM_LENGTH){
-			Db4o.throwRuntimeException(17);
+			Exceptions.throwRuntimeException(17);
 		}
 		long lastOpenTime = YLong.readLong(reader);
 		long lastAccessTime = YLong.readLong(reader);

@@ -1,9 +1,11 @@
 package com.db4o.browser.model.test;
 
-import com.db4o.*;
-import com.db4o.ext.*;
+import java.util.ArrayList;
 
-public class MockObjectSet implements ObjectSet {
+import com.db4o.ObjectSet;
+import com.db4o.ext.ExtObjectSet;
+
+public class MockObjectSet extends ArrayList implements ObjectSet {
 	private Object[] data;
 	private int idx;
 	
@@ -30,6 +32,11 @@ public class MockObjectSet implements ObjectSet {
 
 	public int size() {
 		return data.length;
+	}
+
+	public void remove() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

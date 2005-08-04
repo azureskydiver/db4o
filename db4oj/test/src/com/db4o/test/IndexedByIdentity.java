@@ -10,7 +10,7 @@ import com.db4o.query.*;
  */
 public class IndexedByIdentity {
     
-    Atom atom;
+    public Atom atom;
     
     static final int COUNT = 10;
     

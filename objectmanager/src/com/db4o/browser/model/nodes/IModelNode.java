@@ -16,6 +16,8 @@
  */
 package com.db4o.browser.model.nodes;
 
+import java.io.PrintStream;
+
 import com.db4o.browser.model.IDatabase;
 
 
@@ -72,8 +74,50 @@ public interface IModelNode {
     public boolean isEditable();
 
     /**
-     * @return the object to edit if isEditable() is true; false otherwise.
+     * @return the object to edit if isEditable() is true; null otherwise.
      */
     public Object getEditValue();
+    
+    /**
+     * @return the OID for this node or -1 if there is none
+     */
+    public long getId();
+
+    
+    // XML export support methods
+    
+	/**
+	 * Print a reference node for this object
+	 * 
+	 * @param out The stream on which to print the output
+	 */
+	public void printXmlReferenceNode(PrintStream out);
+
+	/**
+	 * Print an XML start tag for this node
+	 * 
+	 * @param out The stream on which to print the start tag
+	 */
+	public void printXmlStart(PrintStream out);
+
+	/**
+	 * Print an XML end tag for this node
+	 * 
+	 * @param out The stream on which to print the end tag
+	 */
+	public void printXmlEnd(PrintStream out);
+
+	/**
+	 * Print an XML line containing the value of this node
+	 * @param out
+	 */
+	public void printXmlValueNode(PrintStream out);
+
+	/**
+	 * @return true if the XML code should indent for children of this node; false otherwise
+	 */
+	public boolean shouldIndent();
+	
+	
 }
 

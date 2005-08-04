@@ -6,7 +6,7 @@ import com.db4o.foundation.*;
 
 public class TypedDerivedArray {
 	
-	Atom[] atoms;
+	public Atom[] atoms;
 	
 	public void store(){
 		Test.deleteAllInstances(this);

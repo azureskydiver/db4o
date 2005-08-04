@@ -9,7 +9,7 @@ import com.db4o.foundation.*;
 
 public class CascadeToHashtable {
 
-	Hashtable ht;
+	public Hashtable ht;
 
 	public void configure() {
 		Db4o.configure().objectClass(this).cascadeOnUpdate(true);

@@ -7,7 +7,7 @@ import com.db4o.query.*;
 
 public class DifferentAccessPaths {
 	
-	String foo;
+	public String foo;
 
 	public void store(){
 		Test.deleteAllInstances(this);

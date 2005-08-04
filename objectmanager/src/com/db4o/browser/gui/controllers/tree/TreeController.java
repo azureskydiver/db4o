@@ -10,8 +10,11 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ve.sweet.controllers.RefreshService;
+import org.eclipse.ve.sweet.objectviewer.IEditStateListener;
+import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
 
-import com.db4o.browser.gui.controllers.BrowserController;
+import com.db4o.browser.gui.controllers.BrowserTabController;
 import com.db4o.browser.gui.controllers.IBrowserController;
 import com.db4o.browser.gui.controllers.SelectionChangedController;
 import com.db4o.browser.model.GraphPosition;
@@ -25,11 +28,11 @@ import com.db4o.browser.model.nodes.IModelNode;
  * @author djo
  */
 public class TreeController implements IBrowserController {
-	private final BrowserController parent;
+	private final BrowserTabController parent;
 	private final TreeViewer viewer;
 	private final SelectionChangedController selectionListener;
 	
-	public TreeController(final BrowserController parent, Tree tree) {
+	public TreeController(final BrowserTabController parent, Tree tree) {
 		this.parent = parent;
 		this.viewer = new TreeViewer(tree);
 		
@@ -41,7 +44,10 @@ public class TreeController implements IBrowserController {
         tree.addMouseListener(new MouseAdapter() {
             public void mouseDoubleClick(MouseEvent e) {
                 IGraphIterator input = (IGraphIterator) viewer.getInput();
+                input.reset();
                 if (input.hasNext()) {
+                	GraphPosition selectedNode = (GraphPosition)((StructuredSelection)viewer.getSelection()).getFirstElement();
+                	input.setPath(selectedNode);
                     IModelNode selection = (IModelNode) input.next();
                     input.previous();
                     if (selection instanceof ClassNode) {
@@ -67,7 +73,20 @@ public class TreeController implements IBrowserController {
 		selectionListener = parent.getSelectionChangedController();
 		selectionListener.setTreeViewer(viewer);
 		selectionListener.setTreeSelectionChangedController(treeSelectionChangedController);
+		
+		RefreshService.getDefault().addEditStateListener(editStateListener);
 	}
+	
+	private IEditStateListener editStateListener = new IEditStateListener() {
+		public void stateChanged(IObjectViewer sender) {
+			if (viewer.getTree().isDisposed()) {
+				RefreshService.getDefault().removeEditStateListener(editStateListener);
+				return;
+			}
+			if (!sender.isDirty())
+				viewer.refresh();
+		}
+	};
 	
 	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.controllers.IBrowserController#setInput(com.db4o.browser.model.IGraphIterator, com.db4o.browser.model.GraphPosition)
