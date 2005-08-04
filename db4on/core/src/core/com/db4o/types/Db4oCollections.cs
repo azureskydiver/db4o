@@ -1,0 +1,82 @@
+namespace com.db4o.types
+{
+	/// <summary>factory and other methods for database-aware collections.</summary>
+	/// <remarks>factory and other methods for database-aware collections.</remarks>
+	public interface Db4oCollections
+	{
+		/// <summary>creates a new database-aware linked list.</summary>
+		/// <remarks>
+		/// creates a new database-aware linked list.
+		/// <br /><br />Usage:<br />
+		/// - declare a <code>java.util.List</code> variable in your persistent class.<br />
+		/// - fill this variable with this method.<br /><br />
+		/// <b>Example:</b><br /><br />
+		/// <code><pre>
+		/// class MyClass{
+		/// List myList;
+		/// }
+		/// MyClass myObject = new MyClass();
+		/// myObject.myList = objectContainer.ext().collections().newLinkedList();</pre></code><br /><br />
+		/// </remarks>
+		/// <returns>
+		/// 
+		/// <see cref="com.db4o.types.Db4oList">com.db4o.types.Db4oList</see>
+		/// </returns>
+		/// <seealso cref="com.db4o.types.Db4oList">com.db4o.types.Db4oList</seealso>
+		com.db4o.types.Db4oList newLinkedList();
+
+		/// <summary>creates a new database-aware HashMap.</summary>
+		/// <remarks>
+		/// creates a new database-aware HashMap.
+		/// <br /><br />
+		/// This map will call the hashCode() method on the key objects to calculate the
+		/// hash value. Since the hash value is stored to the ObjectContainer, key objects
+		/// will have to return the same hashCode() value in every VM session.
+		/// <br /><br />
+		/// Usage:<br />
+		/// - declare a <code>java.util.Map</code> variable in your persistent class.<br />
+		/// - fill the variable with this method.<br /><br />
+		/// <b>Example:</b><br /><br />
+		/// <code><pre>
+		/// class MyClass{
+		/// Map myMap;
+		/// }
+		/// MyClass myObject = new MyClass();
+		/// myObject.myMap = objectContainer.ext().collections().newHashMap(0);</pre></code><br /><br />
+		/// </remarks>
+		/// <param name="initialSize">the initial size of the HashMap</param>
+		/// <returns>
+		/// 
+		/// <see cref="com.db4o.types.Db4oMap">com.db4o.types.Db4oMap</see>
+		/// </returns>
+		/// <seealso cref="com.db4o.types.Db4oMap">com.db4o.types.Db4oMap</seealso>
+		com.db4o.types.Db4oMap newHashMap(int initialSize);
+
+		/// <summary>creates a new database-aware IdentityHashMap.</summary>
+		/// <remarks>
+		/// creates a new database-aware IdentityHashMap.
+		/// <br /><br />
+		/// Only first class objects already stored to the ObjectContainer (Objects with a db4o ID)
+		/// can be used as keys for this type of Map. The internal db4o ID will be used as
+		/// the hash value.
+		/// <br /><br />
+		/// Usage:<br />
+		/// - declare a <code>java.util.Map</code> variable in your persistent class.<br />
+		/// - fill the variable with this method.<br /><br />
+		/// <b>Example:</b><br /><br />
+		/// <code><pre>
+		/// class MyClass{
+		/// Map myMap;
+		/// }
+		/// MyClass myObject = new MyClass();
+		/// myObject.myMap = objectContainer.ext().collections().newIdentityMap(0);</pre></code><br /><br />
+		/// </remarks>
+		/// <param name="initialSize">the initial size of the HashMap</param>
+		/// <returns>
+		/// 
+		/// <see cref="com.db4o.types.Db4oMap">com.db4o.types.Db4oMap</see>
+		/// </returns>
+		/// <seealso cref="com.db4o.types.Db4oMap">com.db4o.types.Db4oMap</seealso>
+		com.db4o.types.Db4oMap newIdentityHashMap(int initialSize);
+	}
+}
