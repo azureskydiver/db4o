@@ -1,0 +1,19 @@
+namespace com.db4o
+{
+	internal class DeleteInfo : com.db4o.TreeInt
+	{
+		internal bool _delete;
+
+		internal int _cascade;
+
+		internal com.db4o.YapObject _reference;
+
+		public DeleteInfo(int id, com.db4o.YapObject reference, bool delete, int cascade)
+			 : base(id)
+		{
+			_reference = reference;
+			_delete = delete;
+			_cascade = cascade;
+		}
+	}
+}
