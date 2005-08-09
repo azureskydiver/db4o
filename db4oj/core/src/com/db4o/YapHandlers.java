@@ -310,6 +310,9 @@ public final class YapHandlers {
      * translators built into the architecture.
      */
     final YapDataType handlerForClass(YapStream a_stream, ReflectClass a_class) {
+        if(a_class == null){
+            return null;
+        }
         if (a_class.isArray()) {
             return handlerForClass(a_stream, a_class.getComponentType());
         }
