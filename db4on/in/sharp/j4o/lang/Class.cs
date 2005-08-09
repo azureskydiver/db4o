@@ -69,6 +69,10 @@ namespace j4o.lang {
             if(forType == null) {
                 return null;
             }
+            if (forType.IsPointer)
+            {
+                return null;
+            }
             Class clazz = (Class)_typeToClassMap[forType];
             if(clazz == null) {
                 clazz = new Class(forType);
