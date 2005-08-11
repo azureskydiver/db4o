@@ -80,6 +80,10 @@ public class PrimitiveFieldNode extends FieldNode {
 	public boolean shouldIndent() {
 		return false;
 	}
+	
+	public long getId() {
+		return -1;
+	}
 }
 
 
