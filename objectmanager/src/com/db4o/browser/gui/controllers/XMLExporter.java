@@ -63,6 +63,9 @@ public class XMLExporter {
 			// If this node is an object in its own right
 			IModelNode node = (IModelNode) input.next();
 			long id = node.getId();
+			if(id==0) {
+				continue;
+			}
 			if (id > 0) {
 
 				// If we have seen this object before, print a reference
@@ -82,7 +85,7 @@ public class XMLExporter {
 					visitedNodes.put(new Long(id), new Long(id));
 				}
 			}
-
+			
 			// If this node has children, print a begin tag, the children, then 
 			// an end tag.  Otherwise, just print it as a single node.
 			if (hasChildren) {
