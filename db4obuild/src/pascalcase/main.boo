@@ -51,7 +51,7 @@ def convert(fname as string):
 	
 def preprocess(fname as string, defines as (string)):
 """
-SharpRefactory.Parser does not support preprocess directives
+SharpRefactory.Parser does not support preprocessor directives
 which are used heavily in our source code.
 
 Use Boo.Lang.Useful.IO.PreProcessor for the preprocessing
