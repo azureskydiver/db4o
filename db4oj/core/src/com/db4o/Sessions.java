@@ -58,7 +58,7 @@ class Sessions extends Collection4{
 				} catch (ObjectNotStorableException e) {
 					throw e;
 				} catch (UserException eu) {
-					Exceptions.throwRuntimeException(eu.errCode, eu.errMsg);
+					Exceptions4.throwRuntimeException(eu.errCode, eu.errMsg);
 				} catch (Throwable t) {
 					Messages.logErr(Db4o.i_config, 4, databaseFileName, t);
 					return null;

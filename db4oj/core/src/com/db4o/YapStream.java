@@ -244,7 +244,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     final void checkClosed() {
         if (i_classCollection == null) {
-            Exceptions.throwRuntimeException(20, toString());
+            Exceptions4.throwRuntimeException(20, toString());
         }
     }
 

@@ -687,7 +687,7 @@ public class YapField implements StoredField {
             i_yapClass.setStateDirty();
             i_yapClass.write(stream, stream.getSystemTransaction());
         } else {
-            Exceptions.throwRuntimeException(58);
+            Exceptions4.throwRuntimeException(58);
         }
     }
 

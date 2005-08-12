@@ -1438,7 +1438,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
             write(i_stream, i_stream.getSystemTransaction());
             i_state = tempState;
         }else{
-            Exceptions.throwRuntimeException(58);
+            Exceptions4.throwRuntimeException(58);
         }
     }
 

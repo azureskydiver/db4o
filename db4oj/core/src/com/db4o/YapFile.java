@@ -419,14 +419,14 @@ public abstract class YapFile extends YapStream {
         if (firstFileByte != YapConst.YAPBEGIN) {
             
             if(firstFileByte != YapConst.YAPFILEVERSION){
-                Exceptions.throwRuntimeException(17);
+                Exceptions4.throwRuntimeException(17);
             }
             
             blockLen = myreader.readByte();
             
         }else{
 	        if (myreader.readByte() != YapConst.YAPFILE) {
-	            Exceptions.throwRuntimeException(17);
+	            Exceptions4.throwRuntimeException(17);
 	        }
         }
         

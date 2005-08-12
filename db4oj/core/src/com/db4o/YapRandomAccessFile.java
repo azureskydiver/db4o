@@ -47,13 +47,13 @@ public class YapRandomAccessFile extends YapFile {
         synchronized (i_lock) {
             checkClosed();
             if (i_backupFile != null) {
-                Exceptions.throwRuntimeException(61);
+                Exceptions4.throwRuntimeException(61);
             }
             try {
                 i_backupFile = i_config.i_ioAdapter.open(path, true, i_file.getLength());
             } catch (Exception e) {
                 i_backupFile = null;
-                Exceptions.throwRuntimeException(12, path);
+                Exceptions4.throwRuntimeException(12, path);
             }
         }
         long pos = 0;
@@ -120,7 +120,7 @@ public class YapRandomAccessFile extends YapFile {
                         }
                     } catch (Exception e) {
                         i_file = null;
-                        Exceptions.throwRuntimeException(11, e);
+                        Exceptions4.throwRuntimeException(11, e);
                     }
                     i_file = null;
                 }
@@ -156,7 +156,7 @@ public class YapRandomAccessFile extends YapFile {
             }
 
         } catch (Exception e) {
-            Exceptions.throwRuntimeException(16, e);
+            Exceptions4.throwRuntimeException(16, e);
         }
 
     }
@@ -236,7 +236,7 @@ public class YapRandomAccessFile extends YapFile {
                 } catch (DatabaseFileLockedException de) {
                     throw de;
                 } catch (Exception e) {
-                    Exceptions.throwRuntimeException(12, fileName(), e);
+                    Exceptions4.throwRuntimeException(12, fileName(), e);
                 }
                 if (isNew) {
                     configureNewFile();
@@ -249,7 +249,7 @@ public class YapRandomAccessFile extends YapFile {
                     readThis();
                 }
             } else {
-                Exceptions.throwRuntimeException(21);
+                Exceptions4.throwRuntimeException(21);
             }
         } catch (Exception exc) {
             if (i_references != null) {
@@ -368,7 +368,7 @@ public class YapRandomAccessFile extends YapFile {
             }
 
         } catch (Exception e) {
-            Exceptions.throwRuntimeException(16, e);
+            Exceptions4.throwRuntimeException(16, e);
         }
     }
 

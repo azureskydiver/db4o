@@ -79,11 +79,11 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     
     public void blockSize(int bytes){
        if (bytes < 1 || bytes > 127) {
-           Exceptions.throwRuntimeException(1);
+           Exceptions4.throwRuntimeException(1);
        }
        
        if (i_stream != null) {
-           Exceptions.throwRuntimeException(46);   // see readable message for code in Messages.java
+           Exceptions4.throwRuntimeException(46);   // see readable message for code in Messages.java
        }
        
        i_blockSize = (byte)bytes;
@@ -221,7 +221,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     private void globalSettingOnly() {
         if (i_stream != null) {
             new Exception().printStackTrace();
-            Exceptions.throwRuntimeException(46);
+            Exceptions4.throwRuntimeException(46);
         }
     }
     
@@ -296,7 +296,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
 	public void reflectWith(Reflector reflect) {
 		
         if(i_stream != null){
-        	Exceptions.throwRuntimeException(46);   // see readable message for code in Messages.java
+        	Exceptions4.throwRuntimeException(46);   // see readable message for code in Messages.java
         }
 		
         if (reflect == null) {

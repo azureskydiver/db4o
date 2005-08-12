@@ -22,7 +22,7 @@ public class YapMemoryFile extends YapFile {
         try {
             open();
         } catch (Exception e) {
-            Exceptions.throwRuntimeException(22, e);
+            Exceptions4.throwRuntimeException(22, e);
         }
         initialize3();
     }
@@ -32,7 +32,7 @@ public class YapMemoryFile extends YapFile {
     }
     
     public void backup(String path)throws IOException{
-        Exceptions.throwRuntimeException(60);
+        Exceptions4.throwRuntimeException(60);
     }
 
     void checkDemoHop() {
@@ -104,7 +104,7 @@ public class YapMemoryFile extends YapFile {
         try {
             System.arraycopy(i_memoryFile.getBytes(), a_address, a_bytes, 0, a_length);
         } catch (Exception e) {
-            Exceptions.throwRuntimeException(13, e);
+            Exceptions4.throwRuntimeException(13, e);
         }
     }
     

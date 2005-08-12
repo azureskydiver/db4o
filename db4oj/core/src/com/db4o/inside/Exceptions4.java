@@ -5,7 +5,7 @@ package com.db4o.inside;
 import com.db4o.*;
 
 
-public class Exceptions {
+public class Exceptions4 {
 
     public static final void throwRuntimeException (int code) {
         throwRuntimeException(code, null, null);

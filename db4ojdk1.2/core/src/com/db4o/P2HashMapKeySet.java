@@ -104,7 +104,7 @@ class P2HashMapKeySet implements Set {
             if (a.length < size) {
                 Transaction trans = i_map.getTrans();
                 if(trans == null){
-                    Exceptions.throwRuntimeException(29);
+                    Exceptions4.throwRuntimeException(29);
                 }
                 Reflector reflector = trans.reflector();
                 a =
