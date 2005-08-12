@@ -163,7 +163,7 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
             }
             id = (int)getIDOf(key);
             if(id == 0) {
-                Exceptions.throwRuntimeException(62);
+                Exceptions4.throwRuntimeException(62);
             }
             return id;
         }

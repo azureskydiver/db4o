@@ -115,7 +115,7 @@ public class JDK {
 	}
     
     void throwUnsupportedOperationException(){
-        Exceptions.throwRuntimeException(53);
+        Exceptions4.throwRuntimeException(53);
     }
     
     boolean isEnum(Reflector reflector, ReflectClass clazz) {

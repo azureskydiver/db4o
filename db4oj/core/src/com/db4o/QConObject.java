@@ -393,7 +393,7 @@ public class QConObject extends QCon {
             int id = getObjectID();
             if(! (id > 0)){
                 i_objectID = 0;
-                Exceptions.throwRuntimeException(51);
+                Exceptions4.throwRuntimeException(51);
             }
             
             // TODO: this may not be correct for NOT

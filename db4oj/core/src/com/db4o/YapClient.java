@@ -102,7 +102,7 @@ public class YapClient extends YapStream implements ExtClient {
     }
     
     public void backup(String path)throws IOException{
-        Exceptions.throwRuntimeException(60);
+        Exceptions4.throwRuntimeException(60);
     }
 
     boolean close2() {
@@ -276,11 +276,11 @@ public class YapClient extends YapStream implements ExtClient {
                     }
 
                     if (readerThread.isClosed()) {
-                        Exceptions.throwRuntimeException(20, name());
+                        Exceptions4.throwRuntimeException(20, name());
                     }
                     messageQueueLock.snooze(i_config.i_timeoutClientSocket);
                     if (readerThread.isClosed()) {
-                        Exceptions.throwRuntimeException(20, name());
+                        Exceptions4.throwRuntimeException(20, name());
                     }
                     message = (Msg)messageQueue.next();
                     if (Debug.messages) {

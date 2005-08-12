@@ -44,7 +44,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable, YapSocketFak
                 i_serverSocket = new YapServerSocket(a_port);
                 i_serverSocket.setSoTimeout(config.i_timeoutServerSocket);
             } catch (IOException e) {
-                Exceptions.throwRuntimeException(30, "" + a_port);
+                Exceptions4.throwRuntimeException(30, "" + a_port);
             }
             
             new Thread(this).start(); 
@@ -68,7 +68,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable, YapSocketFak
 
     final void checkClosed() {
         if (i_yapFile == null) {
-            Exceptions.throwRuntimeException(20, i_name);
+            Exceptions4.throwRuntimeException(20, i_name);
         }
         i_yapFile.checkClosed();
     }

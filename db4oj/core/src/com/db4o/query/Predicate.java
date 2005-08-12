@@ -46,7 +46,7 @@ public abstract class Predicate implements Serializable{
     public Predicate(){
         findMatchMethod();
         if(_matchMethod == null){
-            Exceptions.throwRuntimeException(64);
+            Exceptions4.throwRuntimeException(64);
         }
     }
     

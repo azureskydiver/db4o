@@ -496,7 +496,7 @@ public class P2LinkedList extends P1Collection implements Db4oList {
             if (a.length < size) {
                 Transaction trans = getTrans();
                 if(trans == null){
-                    Exceptions.throwRuntimeException(29);
+                    Exceptions4.throwRuntimeException(29);
                 }
                 Reflector reflector = trans.reflector();
                 a =
