@@ -135,7 +135,7 @@ public class JdkClass implements ReflectClass{
 	
     public boolean skipConstructor(boolean flag){
         if(flag){
-            Constructor constructor = Platform.jdk().serializableConstructor(_clazz);
+            Constructor constructor = Platform4.jdk().serializableConstructor(_clazz);
             if(constructor != null){
                 try{
                     Object o = constructor.newInstance(null);

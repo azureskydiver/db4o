@@ -38,7 +38,7 @@ public class TCompare {
             return false;
         }
 
-        if (Platform.isSimple(clazz)) {
+        if (Platform4.isSimple(clazz)) {
             return a_compare.equals(a_with);
         }
 
@@ -55,7 +55,7 @@ public class TCompare {
         Field fields[] = clazz.getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
             if (storeableField(clazz, fields[i])) {
-                Platform.setAccessible(fields[i]);
+                Platform4.setAccessible(fields[i]);
                 try {
                     path = a_path + fields[i].getName() + ":";
                     Object compare = fields[i].get(a_compare);

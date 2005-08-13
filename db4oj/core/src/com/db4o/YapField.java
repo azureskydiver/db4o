@@ -211,7 +211,7 @@ public class YapField implements StoredField {
         Object a_template, Visitor4 a_visitor) {
         Object obj = getOn(a_trans, a_template);
         if (obj != null) {
-            Collection4 objs = Platform.flattenCollection(a_trans.i_stream, obj);
+            Collection4 objs = Platform4.flattenCollection(a_trans.i_stream, obj);
             Iterator4 j = objs.iterator();
             while (j.hasNext()) {
                 obj = j.next();
@@ -225,7 +225,7 @@ public class YapField implements StoredField {
                         }
                     }
                     if(Deploy.csharp){
-                        if(Platform.ignoreAsConstraint(obj)){
+                        if(Platform4.ignoreAsConstraint(obj)){
                             return;
                         }
                     }
@@ -314,7 +314,7 @@ public class YapField implements StoredField {
             
             boolean dotnetValueType = false;
             if(Deploy.csharp){
-            	dotnetValueType = Platform.isValueType(i_handler.classReflector());	
+            	dotnetValueType = Platform4.isValueType(i_handler.classReflector());	
             }
             
             

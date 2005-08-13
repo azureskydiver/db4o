@@ -403,8 +403,8 @@ public class Regression {
 				Constructor[] constructors = a_class.getDeclaredConstructors();
 				for (int i = 0; i < constructors.length; i++) {
 					try {
-						if(Platform.canSetAccessible()){
-							Platform.setAccessible(constructors[i]);
+						if(Platform4.canSetAccessible()){
+							Platform4.setAccessible(constructors[i]);
 						}
 						
 						Class[] pTypes = constructors[i].getParameterTypes();
@@ -434,7 +434,7 @@ public class Regression {
 	}
 	
 	boolean isJDK2(){
-		return Platform.jdk().ver() >= 2;
+		return Platform4.jdk().ver() >= 2;
 	}
 
 	// The following errors are expected.

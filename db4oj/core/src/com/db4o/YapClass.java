@@ -1185,7 +1185,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
                 return stream.peekPersisted1(trans, id, depth);
             }
             
-            if (Platform.isValueType(classReflector())) {
+            if (Platform4.isValueType(classReflector())) {
 
                 // for C# value types only:
                 // they need to be instantiated fully before setting them
@@ -1263,7 +1263,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
             }
         }
         if (isArray()) {
-            if (Platform.isCollectionTranslator(this.i_config)) {
+            if (Platform4.isCollectionTranslator(this.i_config)) {
                 a_bytes[0].incrementOffset(YapConst.YAPINT_LENGTH);
                 return new YapArray(i_stream, null, false);
             }
@@ -1296,7 +1296,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
                 // numbers.
                 final int[] idgen = { -2 };
                 a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
-                Platform.forEachCollectionElement(obj, new Visitor4() {
+                Platform4.forEachCollectionElement(obj, new Visitor4() {
                     public void visit(Object elem) {
                         int elemid = (int)trans.i_stream.getID(elem);
                         if (elemid == 0) {
@@ -1369,7 +1369,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
             System.arraycopy(a_reader._buffer, a_reader._offset, i_nameBytes, 0, len);
             
             if(Deploy.csharp){
-                i_nameBytes  = Platform.updateClassName(i_nameBytes);
+                i_nameBytes  = Platform4.updateClassName(i_nameBytes);
             }
 
             // TODO:
@@ -1643,7 +1643,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
                 return false;
             }
         }
-        return Platform.canSetAccessible() || a_field.isPublic();
+        return Platform4.canSetAccessible() || a_field.isPublic();
     }
     
     public StoredField storedField(String a_name, Object a_type) {
@@ -1672,7 +1672,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
             bitTrue(YapConst.STATIC_FIELDS_STORED);
             boolean store = 
                 (i_config != null && i_config.i_persistStaticFieldValues)
-            || Platform.storeStaticFieldValues(trans.reflector(), classReflector()); 
+            || Platform4.storeStaticFieldValues(trans.reflector(), classReflector()); 
             
             if (store) {
                 YapStream stream = trans.i_stream;

@@ -41,7 +41,7 @@ public class JdkField implements ReflectField {
     }
 
     public void setAccessible() {
-        Platform.setAccessible(field);
+        Platform4.setAccessible(field);
     }
 
     public Object get(Object onObject) {

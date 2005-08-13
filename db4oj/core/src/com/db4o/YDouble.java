@@ -34,14 +34,14 @@ final class YDouble extends YLong
 				return null;
 			}
 		}
-		return new Double(Platform.longToDouble(ret));
+		return new Double(Platform4.longToDouble(ret));
 	}
 	
 	public void write(Object a_object, YapWriter a_bytes){
 		if (! Deploy.csharp && a_object == null){
 			writeLong(Long.MAX_VALUE,a_bytes);
 		} else {
-			writeLong(Platform.doubleToLong(((Double)a_object).doubleValue()), a_bytes);
+			writeLong(Platform4.doubleToLong(((Double)a_object).doubleValue()), a_bytes);
 		}
 	}
 	

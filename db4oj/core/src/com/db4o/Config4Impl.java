@@ -235,7 +235,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     }
     
     public void markTransient(String marker) {
-        Platform.markTransient(marker);
+        Platform4.markTransient(marker);
     }
 
     public void messageLevel(int level) {
@@ -282,7 +282,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
 	GenericReflector reflector() {
 		if(_reflector == null){
 			if(_configuredReflector == null){
-				_configuredReflector = Platform.createReflector(this);	
+				_configuredReflector = Platform4.createReflector(this);	
 			}
             _reflector = new GenericReflector(null, _configuredReflector);
             _configuredReflector.setParent(_reflector);
@@ -424,7 +424,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
 
     ReflectClass reflectorFor(Object clazz) {
         
-        clazz = Platform.getClassForType(clazz);
+        clazz = Platform4.getClassForType(clazz);
         
         if(clazz instanceof ReflectClass){
             return (ReflectClass)clazz;

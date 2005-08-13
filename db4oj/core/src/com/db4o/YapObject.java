@@ -148,8 +148,8 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 	}
 
 	public Object getObject() {
-		if (Platform.hasWeakReferences()) {
-			return Platform.getYapRefObject(i_object);
+		if (Platform4.hasWeakReferences()) {
+			return Platform4.getYapRefObject(i_object);
 		}
 		return i_object;
 	}
@@ -295,9 +295,9 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 	void setObjectWeak(YapStream a_stream, Object a_object) {
 		if (a_stream.i_references._weak) {
 			if(i_object != null){
-				Platform.killYapRef(i_object);
+				Platform4.killYapRef(i_object);
 			}
-			i_object = Platform.createYapRef(a_stream.i_references._queue, this, a_object);
+			i_object = Platform4.createYapRef(a_stream.i_references._queue, this, a_object);
 		} else {
 			i_object = a_object;
 		}

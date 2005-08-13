@@ -6,7 +6,7 @@ package com.db4o;
  * @exclude
  * @persistent
  */
-public class StaticField implements Internal{
+public class StaticField implements Internal4{
     public String name;
     public Object value;
     

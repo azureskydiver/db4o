@@ -9,7 +9,7 @@ package com.db4o;
  * @exclude
  * @persistent
  */
-public class MetaIndex implements Internal{
+public class MetaIndex implements Internal4{
     
     // The number of entries an the length are redundant, because the handler should
     // return a fixed length, but we absolutely want to make sure, we don't free

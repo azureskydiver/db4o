@@ -17,7 +17,7 @@ class JDK_5 extends JDK_1_4 {
         
         if(enumClass == null){
             try {
-                enumClass = reflector.forClass(Class.forName(Platform.ENUM));
+                enumClass = reflector.forClass(Class.forName(Platform4.ENUM));
             } catch (ClassNotFoundException e) {
                 return false;
             }

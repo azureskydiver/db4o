@@ -18,7 +18,7 @@ import com.db4o.types.*;
 /**
  * @exclude
  */
-public final class Platform {
+public final class Platform4 {
     
 
     static private int collectionCheck;
@@ -372,7 +372,7 @@ public final class Platform {
             jdkWrapper = (JDK)createInstance("com.db4o.JDKReflect");
         }
 
-        if (classIsAvailable(Platform.ACCESSIBLEOBJECT)){
+        if (classIsAvailable(Platform4.ACCESSIBLEOBJECT)){
         	jdkWrapper = createJDKWrapper("1_2");
         }
         

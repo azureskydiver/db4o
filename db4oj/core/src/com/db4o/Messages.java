@@ -99,7 +99,7 @@ public final class Messages
 						// "This trial version will expire on " +  Platform.format(new Date(Lic.expirationDate), false) + ".",
 						"% closed by ShutdownHook.", // 50
 						"This constraint is not persistent. It has no database identity.",
-						"", // empty: No memory security message
+						"Add at least one ObjectContainer to the Cluster", 
 						"Unsupported Operation",
 						"Database password does not match user-provided password.",
 						"Thread interrupted.", // 55

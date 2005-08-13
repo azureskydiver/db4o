@@ -55,7 +55,7 @@ public class YapClient extends YapStream implements ExtClient {
                 throw new RuntimeException("This constructor is for Debug.fakeServer use only.");
             }
             initialize3();
-            Platform.postOpen(this);
+            Platform4.postOpen(this);
         }
     }
 
@@ -97,7 +97,7 @@ public class YapClient extends YapStream implements ExtClient {
             readThis();
 
             initialize3();
-            Platform.postOpen(this);
+            Platform4.postOpen(this);
         }
     }
     

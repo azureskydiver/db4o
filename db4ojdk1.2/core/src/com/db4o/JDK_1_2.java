@@ -101,9 +101,4 @@ class JDK_1_2 extends JDKReflect {
     void setAccessible(Object a_accessible) {
         ((java.lang.reflect.AccessibleObject) a_accessible).setAccessible(true);
     }
-    
-    void throwUnsupportedOperationException(){
-        throw new UnsupportedOperationException();
-    }
-
 }

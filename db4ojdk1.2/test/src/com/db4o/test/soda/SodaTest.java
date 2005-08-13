@@ -211,7 +211,7 @@ public class SodaTest {
         }
 
         protected static boolean jdkOK(Object obj) {
-            return Platform.jdk().ver() >= 2
+            return Platform4.jdk().ver() >= 2
                 || STClass1.class.isAssignableFrom(obj.getClass());
         }
 
@@ -315,7 +315,7 @@ public class SodaTest {
                 try {
                     Field field = classes[i].getClass().getDeclaredField("st");
                     try {
-                        Platform.setAccessible(field);
+                        Platform4.setAccessible(field);
                     } catch (Throwable t) {
                         // JDK 1.x has no setAccessible
                     }
