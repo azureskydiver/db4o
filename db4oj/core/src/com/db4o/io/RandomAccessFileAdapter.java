@@ -27,13 +27,13 @@ public class RandomAccessFileAdapter extends IoAdapter {
 	        _delegate.write(new byte[] {0});
         }
         if(lockFile){
-            Platform.lock(_delegate);
+            Platform4.lock(_delegate);
         }
     }
 
     public void close() throws IOException {
         try {
-            Platform.unlock(_delegate);
+            Platform4.unlock(_delegate);
         } catch (Exception e) {
         }
         _delegate.close();

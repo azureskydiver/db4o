@@ -150,7 +150,7 @@ public class Logger
 				return;
 			}
 		}
-		if(Platform.isSimple(clazz)){
+		if(Platform4.isSimple(clazz)){
 			log(a_depth + 1,a_object.getClass().getName(), a_object.toString());
 			return;
 		}
@@ -179,7 +179,7 @@ public class Logger
 			}else{
 				Field[] fields = classes[i].getDeclaredFields();
 				for (int j = 0; j < fields.length; j++){
-					Platform.setAccessible(fields[j]);
+					Platform4.setAccessible(fields[j]);
 					String fieldName = className + "." + fields[j].getName();
 					try{
 						Object obj = fields[j].get(a_object);
@@ -212,7 +212,7 @@ public class Logger
 					log(a_depth, fieldName, "");
 					Class clazz = a_object.getClass();
 					boolean found = false;
-					if(Platform.isSimple(clazz)){
+					if(Platform4.isSimple(clazz)){
 						log(a_depth + 1,a_object.getClass().getName(), a_object.toString());
 						found = true;
 					}

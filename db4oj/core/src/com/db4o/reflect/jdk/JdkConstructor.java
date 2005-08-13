@@ -25,7 +25,7 @@ public class JdkConstructor implements ReflectConstructor{
 	}
 	
 	public void setAccessible(){
-		Platform.setAccessible(constructor);
+		Platform4.setAccessible(constructor);
 	}
 	
 	public Object newInstance(Object[] parameters){

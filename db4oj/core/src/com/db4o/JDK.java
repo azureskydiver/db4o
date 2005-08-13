@@ -8,7 +8,6 @@ import java.util.*;
 
 import com.db4o.config.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.types.*;
@@ -113,10 +112,6 @@ public class JDK {
 
 	void setAccessible(Object a_accessible) {
 	}
-    
-    void throwUnsupportedOperationException(){
-        Exceptions4.throwRuntimeException(53);
-    }
     
     boolean isEnum(Reflector reflector, ReflectClass clazz) {
         return false;

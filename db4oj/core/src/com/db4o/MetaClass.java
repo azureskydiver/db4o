@@ -9,7 +9,7 @@ package com.db4o;
  * @exclude
  * @persistent
  */
-public class MetaClass implements Internal{
+public class MetaClass implements Internal4{
 	
 	public String name;
 	public MetaField[] fields;

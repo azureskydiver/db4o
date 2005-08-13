@@ -7,5 +7,5 @@ package com.db4o;
  * 
  * @exclude
  */
-public interface Internal {
+public interface Internal4 {
 }

@@ -9,7 +9,7 @@ package com.db4o;
  * @exclude
  * @persistent
  */
-public final class Rename implements Internal
+public final class Rename implements Internal4
 {
 	public String rClass;
 	public String rFrom;

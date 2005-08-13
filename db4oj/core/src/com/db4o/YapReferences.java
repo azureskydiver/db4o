@@ -17,8 +17,8 @@ class YapReferences implements Runnable {
     YapReferences(YapStream a_stream) {
         _stream = a_stream;
         _weak = (!(a_stream instanceof YapObjectCarrier)
-            && Platform.hasWeakReferences() && a_stream.i_config.i_weakReferences);
-        _queue = _weak ? Platform.createReferenceQueue() : null;
+            && Platform4.hasWeakReferences() && a_stream.i_config.i_weakReferences);
+        _queue = _weak ? Platform4.createReferenceQueue() : null;
     }
 
     Object createYapRef(YapObject a_yo, Object obj) {
@@ -27,12 +27,12 @@ class YapReferences implements Runnable {
             return obj;
         }
         
-        return Platform.createYapRef(_queue, a_yo, obj);
+        return Platform4.createYapRef(_queue, a_yo, obj);
     }
 
     void pollReferenceQueue() {
         if (_weak) { 
-            Platform.pollReferenceQueue(_stream, _queue);
+            Platform4.pollReferenceQueue(_stream, _queue);
         }
     }
 

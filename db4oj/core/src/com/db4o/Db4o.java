@@ -30,7 +30,7 @@ public class Db4o {
 	private static boolean expirationMessagePrinted;
 
 	private static final Object initialize(){
-		Platform.getDefaultConfiguration(i_config);
+		Platform4.getDefaultConfiguration(i_config);
 		return new Object();
 	}
 
@@ -134,7 +134,7 @@ public class Db4o {
 			    }
 			}
 			if(oc != null){
-			    Platform.postOpen(oc);
+			    Platform4.postOpen(oc);
 				Messages.logMsg(i_config, 5, "Memory File");
 			}
 			return oc;

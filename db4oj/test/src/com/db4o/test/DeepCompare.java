@@ -63,7 +63,7 @@ public class DeepCompare {
         Field fields[] = clazz.getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
             if (storeableField(clazz, fields[i])) {
-                Platform.setAccessible(fields[i]);
+                Platform4.setAccessible(fields[i]);
                 try {
                     path = a_path + fields[i].getName() + ":";
                     Object compare = fields[i].get(a_compare);

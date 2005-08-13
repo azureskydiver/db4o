@@ -15,7 +15,7 @@ public class MasterMonster extends RTest
 		for(int i = 0;i < classes.length; i++){
 			try{
 				RTestable test = (RTestable)classes[i];
-				if(Platform.canSetAccessible() || !test.jdk2() ){
+				if(Platform4.canSetAccessible() || !test.jdk2() ){
 					ooo[i] = test.newInstance();
 					test.set(ooo[i], ver);
 				}

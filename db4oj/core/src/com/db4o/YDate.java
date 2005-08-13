@@ -54,7 +54,8 @@ final class YDate extends YLong
 	}
 	
 	static String now(){
-		return Platform.format(new Date(), true);	}
+		return Platform4.format(new Date(), true);
+	}
 	
 	long val(Object obj){
 		return ((Date)obj).getTime();

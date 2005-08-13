@@ -11,7 +11,7 @@ import com.db4o.ext.*;
  * @exclude
  * @persistent
  */
-public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal{
+public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
 
     transient YapFile         i_stream;
     public Db4oDatabase       i_db;

@@ -56,6 +56,6 @@ public class YapSocketReal implements YapSocket {
     }
     
 	public YapSocket openParalellSocket() throws IOException {
-		throw new IOException("operation not supported");
+		throw new IOException(); // not supported
 	}
 }

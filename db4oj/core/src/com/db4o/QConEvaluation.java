@@ -39,11 +39,11 @@ public class QConEvaluation extends QCon {
         super.marshall();
 		int[] id = {0};
 		if(Deploy.csharp){
-		    i_marshalledEvaluation = i_trans.i_stream.marshall(Platform.wrapEvaluation(i_evaluation), id);
+		    i_marshalledEvaluation = i_trans.i_stream.marshall(Platform4.wrapEvaluation(i_evaluation), id);
 		}else{
 		    try{
 		        // try serialisation. If it fails, store as db4o.
-		        i_marshalledEvaluation = Platform.serialize(i_evaluation);
+		        i_marshalledEvaluation = Platform4.serialize(i_evaluation);
 		    }catch (Exception e){
 		        i_marshalledEvaluation = i_trans.i_stream.marshall(i_evaluation, id);
 		    }
@@ -61,7 +61,7 @@ public class QConEvaluation extends QCon {
                 if(i_marshalledID > 0){
                     i_evaluation = i_trans.i_stream.unmarshall(i_marshalledEvaluation, i_marshalledID);
                 }else{
-                    i_evaluation = Platform.deserialize(i_marshalledEvaluation);
+                    i_evaluation = Platform4.deserialize(i_marshalledEvaluation);
                 }
             }
         }
@@ -70,7 +70,7 @@ public class QConEvaluation extends QCon {
 	public void visit(Object obj) {
 		QCandidate candidate = (QCandidate) obj;
 		try {
-			Platform.evaluationEvaluate(i_evaluation, candidate);
+			Platform4.evaluationEvaluate(i_evaluation, candidate);
 			if (!candidate.i_include) {
 				doNotInclude(candidate.getRoot());
 			}

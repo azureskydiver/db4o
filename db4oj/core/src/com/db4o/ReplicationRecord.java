@@ -12,7 +12,7 @@ import com.db4o.query.*;
  * @exclude
  * @persistent
  */
-public class ReplicationRecord implements Internal{
+public class ReplicationRecord implements Internal4{
    
     public Db4oDatabase _youngerPeer;
     public Db4oDatabase _olderPeer;

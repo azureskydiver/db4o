@@ -23,5 +23,13 @@ public class Exceptions4 {
     	Messages.logErr(Db4o.configure(), code,msg, cause);
         throw new RuntimeException(Messages.get(code, msg));
     }
+    
+    public static final void notSupported(){
+        if(Deploy.csharp){
+            throw new UnsupportedOperationException();
+        }else{
+            throwRuntimeException(53);
+        }
+    }
 
 }

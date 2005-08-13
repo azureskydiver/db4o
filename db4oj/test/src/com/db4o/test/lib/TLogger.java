@@ -76,7 +76,7 @@ public class TLogger {
 				Field[] fields = classes[i].getDeclaredFields();
 				for (int j = 0; j < fields.length; j++) {
                     
-                    Platform.setAccessible(fields[j]);
+                    Platform4.setAccessible(fields[j]);
 
 					String fieldName = className + "." + fields[j].getName();
 
@@ -118,7 +118,7 @@ public class TLogger {
 		if (a_object != null) {
 			log(a_depth, fieldName, "");
 			Class clazz = a_object.getClass();
-			if (Platform.isSimple(clazz)) {
+			if (Platform4.isSimple(clazz)) {
 				log(a_depth + 1, a_object.getClass().getName(), a_object.toString());
 			} else {
 				log(a_object, a_depth, a_stack);

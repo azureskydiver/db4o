@@ -235,7 +235,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         if(reference == null){
             return false;
         }
-        return Platform.jdk().isEnum(reflector(), reference.getYapClass().classReflector());
+        return Platform4.jdk().isEnum(reflector(), reference.getYapClass().classReflector());
     }
 
     boolean canUpdate() {
@@ -282,7 +282,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         if (i_classCollection == null) {
             return true;
         }
-        Platform.preClose(this);
+        Platform4.preClose(this);
         checkNeededUpdates();
         if (stateMessages()) {
             logMsg(2, toString());
@@ -293,7 +293,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     boolean close2() {
         if (hasShutDownHook()) {
-            Platform.removeShutDownHook(this, i_lock);
+            Platform4.removeShutDownHook(this, i_lock);
         }
         i_classCollection = null;
         i_references.stopTimer();
@@ -313,7 +313,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     public Db4oCollections collections() {
         synchronized (i_lock) {
             if (i_handlers.i_collections == null) {
-                i_handlers.i_collections = Platform.collections(this);
+                i_handlers.i_collections = Platform4.collections(this);
             }
             return i_handlers.i_collections;
         }
@@ -777,10 +777,10 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     boolean needsLockFileThread() {
-        if (!Platform.hasLockFileThread()) {
+        if (!Platform4.hasLockFileThread()) {
             return false;
         }
-        if (Platform.hasNio()) {
+        if (Platform4.hasNio()) {
             return false;
         }
         if (i_config.i_readonly) {
@@ -871,7 +871,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         i_references = new YapReferences(this);
 
         if (hasShutDownHook()) {
-            Platform.addShutDownHook(this, i_lock);
+            Platform4.addShutDownHook(this, i_lock);
         }
         i_handlers.initEncryption(i_config);
         initialize2();
@@ -1326,7 +1326,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             return 0;
         }
         
-        if(obj instanceof Internal){
+        if(obj instanceof Internal4){
             return 0;
         }
         
@@ -1743,7 +1743,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         // setting the ID to minus 1 ensures that the
         // gc mechanism does not kill the new YapObject
         yo.setID(this, -1);
-        Platform.killYapRef(yo.i_object);
+        Platform4.killYapRef(yo.i_object);
     }
 
 

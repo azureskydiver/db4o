@@ -67,7 +67,7 @@ public class QQuery implements Query {
     public Constraint constrain(Object example) {
         synchronized (streamLock()) {
             ReflectClass claxx = null;
-            example = Platform.getClassForType(example);
+            example = Platform4.getClassForType(example);
             
             Reflector reflector = i_trans.reflector(); 
             
@@ -134,7 +134,7 @@ public class QQuery implements Query {
                 return new QConstraints(i_trans, constraintArray);
             }
             
-            QConEvaluation eval = Platform.evaluationCreate(i_trans, example);
+            QConEvaluation eval = Platform4.evaluationCreate(i_trans, example);
 			if (eval != null) {
                 Iterator4 i = iterateConstraints();
                 while (i.hasNext()) {

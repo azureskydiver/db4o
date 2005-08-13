@@ -41,7 +41,7 @@ class JDK_1_4 extends JDK_1_3 {
 	public Constructor serializableConstructor(Class clazz){
 	    if(reflectionFactory == null){
 	        if(! initSerializableConstructor()){
-	            Platform.callConstructorCheck = YapConst.YES;
+	            Platform4.callConstructorCheck = YapConst.YES;
 	            return null;
 	        }
 	    }
@@ -53,11 +53,11 @@ class JDK_1_4 extends JDK_1_3 {
 	}
 	
 	boolean initSerializableConstructor(){
-        reflectionFactory = invoke(Platform.REFLECTIONFACTORY, "getReflectionFactory", null,null, null);
+        reflectionFactory = invoke(Platform4.REFLECTIONFACTORY, "getReflectionFactory", null,null, null);
         if(reflectionFactory == null){
             return false;
         }
-        factoryMethod = getMethod(Platform.REFLECTIONFACTORY, "newConstructorForSerialization", new Class[]{Class.class, Constructor.class});
+        factoryMethod = getMethod(Platform4.REFLECTIONFACTORY, "newConstructorForSerialization", new Class[]{Class.class, Constructor.class});
         if(factoryMethod == null){
             return false;
         }

@@ -161,7 +161,7 @@ public final class YapConst
 		if (! com.db4o.Deploy.csharp) {
 			CLASS_ENUM = classForName("java.lang.Enum");
 		}
-        CLASS_INTERNAL = db4oClass("Internal");
+        CLASS_INTERNAL = db4oClass("Internal4");
         CLASS_METACLASS = new MetaClass().getClass();
         CLASS_METAFIELD = new MetaField().getClass();
         CLASS_METAINDEX = new MetaIndex().getClass();

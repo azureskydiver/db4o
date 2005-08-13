@@ -67,7 +67,7 @@ public abstract class Predicate <ExtentType> implements Serializable{
                 if(paramTypes != null && paramTypes.length == 1){
                     _extent = paramTypes[0];
                     _matchMethod = curMethod;
-                    Platform.setAccessible(curMethod);
+                    Platform4.setAccessible(curMethod);
                     if(_extent != YapConst.CLASS_OBJECT){
                         return;
                     }

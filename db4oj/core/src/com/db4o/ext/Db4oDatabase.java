@@ -13,7 +13,7 @@ import com.db4o.types.*;
  * 
  * @persistent
  */
-public class Db4oDatabase implements Db4oType, Internal{
+public class Db4oDatabase implements Db4oType, Internal4{
 
     /**
      * Field is public for implementation reasons, DO NOT TOUCH!

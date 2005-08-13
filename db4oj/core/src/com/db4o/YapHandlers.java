@@ -93,7 +93,7 @@ public final class YapHandlers {
             i_stringHandler, new YDate(a_stream), new YapClassAny(a_stream) // Index = 10, ID = 11
         };
         
-        i_platformTypes = Platform.types(a_stream);
+        i_platformTypes = Platform4.types(a_stream);
 
         if (i_platformTypes.length > 0) {
             for (int i = 0; i < i_platformTypes.length; i++) {
@@ -180,7 +180,7 @@ public final class YapHandlers {
             return true;
         }
         
-        if(! Platform.callConstructor()){
+        if(! Platform4.callConstructor()){
             if(claxx.skipConstructor(skipConstructor)){
                 return true;
             }
@@ -338,7 +338,7 @@ public final class YapHandlers {
 		ICLASS_TRANSIENTCLASS = reflector
 				.forClass(YapConst.CLASS_TRANSIENTCLASS);
 		
-		Platform.registerCollections(reflector);
+		Platform4.registerCollections(reflector);
     }
     
     void initEncryption(Config4Impl a_config){
@@ -393,7 +393,7 @@ public final class YapHandlers {
     			return true;
     		}
             if(Deploy.csharp){
-                return Platform.isValueType(claxx);
+                return Platform4.isValueType(claxx);
             }
     	}
     	return false;

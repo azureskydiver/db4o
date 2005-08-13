@@ -83,7 +83,7 @@ public class Compare {
 		Field l_Fields[] = l_Class.getDeclaredFields();
 		for (int i = 0; i < l_Fields.length; i++) {
 			if (storeableField(l_Class, l_Fields[i])) {
-				Platform.setAccessible(l_Fields[i]);
+				Platform4.setAccessible(l_Fields[i]);
 				try {
 					path = a_path + l_Fields[i].getName() + ":";
 					Object l_Compare = l_Fields[i].get(a_Compare);
