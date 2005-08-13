@@ -18,7 +18,7 @@ namespace com.db4o {
 
 
 	/// <exclude />
-    public class Platform {
+    public class Platform4 {
 
         private static String[] oldAssemblyNames;
 
@@ -36,9 +36,9 @@ namespace com.db4o {
 			return ret;
 		}
 
-        static Platform() {
+        static Platform4() {
             oldAssemblyNames = new String[] {"db4o", "db4o-4.0-net1", "db4o-4.0-compact1"};
-            String fullAssemblyName = typeof(Platform).Assembly.GetName().ToString();
+            String fullAssemblyName = typeof(Platform4).Assembly.GetName().ToString();
             String shortAssemblyName = fullAssemblyName;
             int pos = fullAssemblyName.IndexOf(",");
             if(pos > 0) {
@@ -57,7 +57,7 @@ namespace com.db4o {
         }
 
         static internal void addShutDownHook(Object stream, Object streamLock) {
-            lock(typeof(Platform)) {
+            lock(typeof(Platform4)) {
                 if (shutDownStreams == null) {
                     shutDownStreams = new ArrayList();
                     Compat.addShutDownHook(new EventHandler(OnShutDown));
@@ -357,7 +357,7 @@ namespace com.db4o {
         }
 
         static internal void removeShutDownHook(Object yapStream, Object streamLock) {
-            lock (typeof(Platform)) {
+            lock (typeof(Platform4)) {
                 if (shutDownStreams != null && shutDownStreams.Contains(yapStream)) {
                     shutDownStreams.Remove(yapStream);
                 }
@@ -369,7 +369,7 @@ namespace com.db4o {
         }
       
         static private void OnShutDown(object sender, EventArgs args) {
-            lock (typeof(Platform)) {
+            lock (typeof(Platform4)) {
                 foreach (object stream in shutDownStreams) {
                     Unobfuscated.shutDownHookCallback(stream);
                 }

@@ -84,7 +84,7 @@ namespace com.db4o.test {
          Field[] l_Fields1 = l_Class1.getDeclaredFields();
          for (int i1 = 0; i1 < l_Fields1.Length; i1++) {
             if (storeableField(l_Class1, l_Fields1[i1])) {
-               Platform.setAccessible(l_Fields1[i1]);
+               Platform4.setAccessible(l_Fields1[i1]);
                try {
                   {
                      path1 = a_path + l_Fields1[i1].getName() + ":";

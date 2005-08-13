@@ -137,7 +137,7 @@ namespace com.db4o.tools {
                     return;
                 }
             }
-            if (Platform.isSimple(clazz1)) {
+            if (Platform4.isSimple(clazz1)) {
                 log(a_depth + 1, j4o.lang.Class.getClassForObject(a_object).getName(), a_object.ToString());
                 return;
             }
@@ -160,7 +160,7 @@ namespace com.db4o.tools {
                 } else {
                     Field[] fields1 = classes1[i1].getDeclaredFields();
                     for (int j1 = 0; j1 < fields1.Length; j1++) {
-                        Platform.setAccessible(fields1[j1]);
+                        Platform4.setAccessible(fields1[j1]);
                         String fieldName1 = className1 + "." + fields1[j1].getName();
                         try { 
                             Object obj1 = fields1[j1].get(a_object);
@@ -194,7 +194,7 @@ namespace com.db4o.tools {
                         log(a_depth, fieldName1, "");
                         Class clazz1 = j4o.lang.Class.getClassForObject(a_object);
                         bool found1 = false;
-                        if (Platform.isSimple(clazz1)) {
+                        if (Platform4.isSimple(clazz1)) {
                             log(a_depth + 1, j4o.lang.Class.getClassForObject(a_object).getName(), a_object.ToString());
                             found1 = true;
                         }

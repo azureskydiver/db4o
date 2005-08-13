@@ -105,7 +105,7 @@ namespace com.db4o.test.soda.utils {
          if (a_object != null) {
             log(a_depth, fieldName1, "");
             Class clazz1 = j4o.lang.Class.getClassForObject(a_object);
-            if (Platform.isSimple(clazz1)) {
+            if (Platform4.isSimple(clazz1)) {
                log(a_depth + 1, j4o.lang.Class.getClassForObject(a_object).getName(), a_object.ToString());
             } else {
                log(a_object, a_depth, a_list);
