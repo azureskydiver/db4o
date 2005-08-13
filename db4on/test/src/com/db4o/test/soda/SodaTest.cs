@@ -343,7 +343,7 @@ namespace com.db4o.test.soda
 					Field field1 = j4o.lang.Class.getClassForObject(classes[i1]).getDeclaredField("st");
 					try 
 					{ 
-						Platform.setAccessible(field1);
+						Platform4.setAccessible(field1);
 					}  
 					catch (Exception t) 
 					{ 

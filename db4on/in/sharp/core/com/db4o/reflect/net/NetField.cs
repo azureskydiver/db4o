@@ -41,7 +41,7 @@ namespace com.db4o.reflect.net
 
 		public virtual void setAccessible()
 		{
-			com.db4o.Platform.setAccessible(field);
+			com.db4o.Platform4.setAccessible(field);
 		}
 
 		public virtual object get(object onObject)

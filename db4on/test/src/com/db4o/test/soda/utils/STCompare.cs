@@ -86,7 +86,7 @@ namespace com.db4o.test.soda.utils {
             Field[] fields1 = clazz1.getDeclaredFields();
             for (int i1 = 0; i1 < fields1.Length; i1++) {
                 if (storeableField(clazz1, fields1[i1])) {
-                    Platform.setAccessible(fields1[i1]);
+                    Platform4.setAccessible(fields1[i1]);
                     try { {
                               path1 = a_path + fields1[i1].getName() + ":";
                               Object compare1 = fields1[i1].get(a_compare);

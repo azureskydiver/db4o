@@ -241,7 +241,7 @@ namespace com.db4o.test
 			{
 				return (int)j4o.lang.JavaSystem.getLengthOf(new File(fileName1));
 			}  
-			catch (IOException e) 
+			catch (System.IO.IOException e) 
 			{
 				j4o.lang.JavaSystem.printStackTrace(e);
 			}
