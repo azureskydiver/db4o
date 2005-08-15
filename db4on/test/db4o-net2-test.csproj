@@ -106,6 +106,7 @@
     <Compile Include="src\com\db4o\test\ArrayNOrder.cs" />
     <Compile Include="src\com\db4o\test\Atom.cs" />
     <Compile Include="src\com\db4o\test\BackReferences.cs" />
+    <Compile Include="src\com\db4o\test\BasicClusterTest.cs" />
     <Compile Include="src\com\db4o\test\BindFileSize.cs" />
     <Compile Include="src\com\db4o\test\Book.cs" />
     <Compile Include="src\com\db4o\test\ByteArray.cs" />

@@ -15,6 +15,7 @@ import com.db4o.types.*;
 
 /**
  * @exclude
+ * @partial
  */
 public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     TransientClass {
