@@ -1,8 +1,8 @@
 indexing
 	description: "My very first test of db4o with Eiffel"
 	author: "Carl Rosenberger"
-	date: "$Date: 2005/08/14 14:57:34 $"
-	revision: "$Revision: 1.1 $"
+	date: "$Date: 2005/08/15 15:51:07 $"
+	revision: "$Revision: 1.2 $"
 
 class
 	DB4O_SAMPLE_APPLICATION
@@ -99,18 +99,14 @@ feature -- Tests
 		local
 			query : QUERY_4E
 			c : CONSTRAINT
-			car_type : CAR
-			
 		do
 			io.put_string ("***** All BMW cars S.O.D.A. syntax *****")
 			io.put_new_line
-			create query.make (db)
-			create car_type.make
-			c := query.constrain(car_type)
-			c := query.descend ("eiffel_name").constrain ("BMW")
+			create query.make_extent(db, {CAR})
+			c := query.descend("eiffel_name").constrain("BMW")
 			print_car_objectset(query.execute)
 		end
-		
+	
 	print_car_objectset (objectset : OBJECT_SET) is
 		local
 			my_car: CAR

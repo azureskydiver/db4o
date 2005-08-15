@@ -1,14 +1,14 @@
 indexing
 	description: "db4o query wrapper to handle string and field name translation"
 	author: "Carl Rosenberger"
-	date: "$Date: 2005/08/15 12:00:33 $"
-	revision: "$Revision: 1.2 $"
+	date: "$Date: 2005/08/15 15:51:07 $"
+	revision: "$Revision: 1.3 $"
 
 class
 	QUERY_4E
 
 create
-	make,from_query
+	make, make_extent, make_from_query
 
 feature -- Initialization
 	
@@ -17,10 +17,18 @@ feature -- Initialization
 
 	make (oc : OBJECT_CONTAINER) is
 		do
-			from_query(oc.query)
+			make_from_query(oc.query)
 		end
-		
-	from_query (q : QUERY) is
+	
+	make_extent(oc : OBJECT_CONTAINER ; extent : SYSTEM_TYPE) is
+		local 
+			c : CONSTRAINT
+		do
+			make(oc)
+			c := constrain (extent)
+		end
+	
+	make_from_query (q : QUERY) is
 		do
 			executed := false
 			query := q
@@ -61,7 +69,7 @@ feature	-- Use
 		do
 			field_name.prepend ("$$")
 			sub_node := query.descend(field_name)
-			create sub_node_wrapper.from_query(sub_node)
+			create sub_node_wrapper.make_from_query(sub_node)
 			Result := sub_node_wrapper
 		end
 		
