@@ -9,7 +9,7 @@ import com.db4o.query.*;
 
 public class ClusterConstraint implements Constraint{
     
-    private final Cluster _cluster;
+    final Cluster _cluster;
     final Constraint[] _constraints;
     
     public ClusterConstraint(Cluster cluster, Constraint[] constraints){
@@ -37,62 +37,78 @@ public class ClusterConstraint implements Constraint{
     }
     
     private Constraint join(Constraint with, boolean isAnd){
-        ClusterConstraint other = compatible(with);
-        Constraint[] newConstraints = new Constraint[_constraints.length];
-        for (int i = 0; i < _constraints.length; i++) {
-            newConstraints[i] = isAnd ? _constraints[i].and(other._constraints[i]) : _constraints[i].or(other._constraints[i]);
+        synchronized(_cluster){
+            ClusterConstraint other = compatible(with);
+            Constraint[] newConstraints = new Constraint[_constraints.length];
+            for (int i = 0; i < _constraints.length; i++) {
+                newConstraints[i] = isAnd ? _constraints[i].and(other._constraints[i]) : _constraints[i].or(other._constraints[i]);
+            }
+            return new ClusterConstraint(_cluster, newConstraints);
         }
-        return new ClusterConstraint(_cluster, newConstraints);
     }
     
 
     public Constraint equal() {
-        for (int i = 0; i < _constraints.length; i++) {
-            _constraints[i].equal();
+        synchronized(_cluster){
+            for (int i = 0; i < _constraints.length; i++) {
+                _constraints[i].equal();
+            }
+            return this;
         }
-        return this;
     }
 
     public Constraint greater() {
-        for (int i = 0; i < _constraints.length; i++) {
-            _constraints[i].greater();
+        synchronized(_cluster){
+            for (int i = 0; i < _constraints.length; i++) {
+                _constraints[i].greater();
+            }
+            return this;
         }
-        return this;
     }
 
     public Constraint smaller() {
-        for (int i = 0; i < _constraints.length; i++) {
-            _constraints[i].smaller();
+        synchronized(_cluster){
+            for (int i = 0; i < _constraints.length; i++) {
+                _constraints[i].smaller();
+            }
+            return this;
         }
-        return this;
     }
 
     public Constraint identity() {
-        for (int i = 0; i < _constraints.length; i++) {
-            _constraints[i].identity();
+        synchronized(_cluster){
+            for (int i = 0; i < _constraints.length; i++) {
+                _constraints[i].identity();
+            }
+            return this;
         }
-        return this;
     }
 
     public Constraint like() {
-        for (int i = 0; i < _constraints.length; i++) {
-            _constraints[i].like();
+        synchronized(_cluster){
+            for (int i = 0; i < _constraints.length; i++) {
+                _constraints[i].like();
+            }
+            return this;
         }
-        return this;
     }
 
     public Constraint contains() {
-        for (int i = 0; i < _constraints.length; i++) {
-            _constraints[i].contains();
+        synchronized(_cluster){
+            for (int i = 0; i < _constraints.length; i++) {
+                _constraints[i].contains();
+            }
+            return this;
         }
-        return this;
     }
 
     public Constraint not() {
-        for (int i = 0; i < _constraints.length; i++) {
-            _constraints[i].not();
+        synchronized(_cluster){
+            for (int i = 0; i < _constraints.length; i++) {
+                _constraints[i].not();
+            }
+            return this;
         }
-        return this;
     }
 
     public Object getObject() {
