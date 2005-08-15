@@ -1,22 +1,26 @@
 using System;
 using com.db4o.ext;
 
-namespace com.db4o
+namespace com.db4o.inside.query
 {
 	/// <summary>
 	/// List based objectSet implementation
 	/// </summary>
 	/// <exclude />
-	public class ObjectSetImpl : ExtObjectSet, System.Collections.IList
+	public class ObjectSetFacade : ExtObjectSet, System.Collections.IList
 	{
-		internal readonly QResult _delegate;
-    
-		internal ObjectSetImpl(QResult qResult)
+		public readonly QueryResult _delegate;
+
+        public ObjectSetFacade(QueryResult qr)
 		{
-			_delegate = qResult;
+            _delegate = qr;
 		}
 
 		#region ObjectSet Members
+		public Object get(int index) {
+            return _delegate.get(index);
+        }
+		
 		public long[] getIDs() 
 		{
 			return _delegate.getIDs();
@@ -52,9 +56,9 @@ namespace com.db4o
 			return _delegate.streamLock();
 		}
     
-		private YapStream stream()
+		private ObjectContainer objectContainer()
 		{
-			return _delegate.i_trans.i_stream;
+			return _delegate.objectContainer();
 		}
 		#endregion
 
@@ -109,7 +113,7 @@ namespace com.db4o
 		{
 			lock (streamLock())
 			{
-				int id = (int)stream().getID(value);
+                int id = (int)objectContainer().ext().getID(value);
 				if(id <= 0)
 				{
 					return -1;
@@ -154,16 +158,13 @@ namespace com.db4o
 		{
 			lock (streamLock())
 			{
-				long[] ids = this.getIDs();
-				for (int i=0; i<ids.Length; ++i)
-				{
-					object obj = stream().getByID(ids[i]);
-					if (null != obj)
-					{
-						_delegate.activate(obj);
-					}
-					array.SetValue(obj, index+i);
-				}
+                int i = 0;
+                _delegate.reset();
+                while (_delegate.hasNext())
+                {
+                    array.SetValue(_delegate.next(), index + i);
+                    i++;
+                }
 			}
 		}
 
@@ -181,10 +182,10 @@ namespace com.db4o
 
 		class ObjectSetImplEnumerator : System.Collections.IEnumerator
 		{
-			QResult _result;
+			QueryResult _result;
 			int _next = 0;
 			
-			public ObjectSetImplEnumerator(QResult result)
+			public ObjectSetImplEnumerator(QueryResult result)
 			{
 				_result = result;
 			}

@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.query.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -241,9 +242,9 @@ public class QQuery implements Query {
                 result.reset();
 				return result;
 			}
-	        QResult qResult = new QResult(i_trans);
+	        QueryResultImpl qResult = new QueryResultImpl(i_trans);
 	        execute1(qResult);
-            return new ObjectSetImpl(qResult);
+            return new ObjectSetFacade(qResult);
         }
     }
 
@@ -276,27 +277,27 @@ public class QQuery implements Query {
 			for (int i = 0; i < ids.length; i++) {
 				resClient.add((int)ids[i]);
 			}
-			return new ObjectSetImpl(resClient);
+			return new ObjectSetFacade(resClient);
 		}
 		
 		Tree tree = classIndex.cloneForYapClass(i_trans, clazz.getID());
 		
 		if(tree == null) {
-			return new ObjectSetImpl(new QResult(i_trans));  // empty result
+			return new ObjectSetFacade(new QueryResultImpl(i_trans));  // empty result
 		}
         
-        final QResult resLocal = new QResult(i_trans, tree.size());
+        final QueryResultImpl resLocal = new QueryResultImpl(i_trans, tree.size());
         
 		tree.traverse(new Visitor4() {
 			public void visit(Object a_object) {
 				resLocal.add(((TreeInt)a_object).i_key);
 			}
 		});
-		return new ObjectSetImpl(resLocal);
+		return new ObjectSetFacade(resLocal);
 
 	}
 
-    void execute1(final QResult result) {
+    void execute1(final QueryResultImpl result) {
         if (i_trans.i_stream.isClient()) {
             marshall();
             ((YapClient)i_trans.i_stream).queryExecute(this, result);
@@ -305,7 +306,7 @@ public class QQuery implements Query {
         }
     }
 
-    void executeLocal(final QResult result) {
+    void executeLocal(final QueryResultImpl result) {
         boolean checkDuplicates = false;
         boolean topLevel = true;
         List4 candidateCollection = null;

@@ -7,6 +7,9 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.query.*;
 
+/**
+ * @exclude
+ */
 public class PredicateQuery implements Serializable{
     
     private final Predicate _predicate;

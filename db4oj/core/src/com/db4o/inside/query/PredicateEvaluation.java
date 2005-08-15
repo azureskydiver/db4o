@@ -4,6 +4,9 @@ package com.db4o.inside.query;
 
 import com.db4o.query.*;
 
+/**
+ * @exclude
+ */
 public class PredicateEvaluation implements Evaluation {
     
     public Predicate _predicate;

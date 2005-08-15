@@ -336,7 +336,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     abstract ClassIndex createClassIndex(YapClass a_yapClass);
 
-    abstract QResult createQResult(Transaction a_ta);
+    abstract QueryResultImpl createQResult(Transaction a_ta);
 
     void createStringIO(byte encoding) {
     	setStringIo(YapStringIO.forEncoding(encoding));
@@ -566,9 +566,9 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         }
     }
 
-    ObjectSetImpl get1(Transaction ta, Object template) {
+    ObjectSetFacade get1(Transaction ta, Object template) {
         ta = checkTransaction(ta);
-        QResult res = createQResult(ta);
+        QueryResultImpl res = createQResult(ta);
         i_entryCounter++;
         if (Deploy.debug) {
             get2(ta, template, res);
@@ -581,10 +581,10 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         }
         i_entryCounter--;
         res.reset();
-        return new ObjectSetImpl(res);
+        return new ObjectSetFacade(res);
     }
 
-    private final void get2(Transaction ta, Object template, QResult res) {
+    private final void get2(Transaction ta, Object template, QueryResultImpl res) {
         if (template == null || template.getClass() == YapConst.CLASS_OBJECT) {
             getAll(ta, res);
         } else {
@@ -594,7 +594,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         }
     }
 
-    abstract void getAll(Transaction ta, QResult a_res);
+    abstract void getAll(Transaction ta, QueryResultImpl a_res);
 
     public Object getByID(long id) {
         synchronized (i_lock) {

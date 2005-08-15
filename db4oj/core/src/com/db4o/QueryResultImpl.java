@@ -3,22 +3,23 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.query.*;
 
 /**
  * @exclude
  */
-class QResult extends IntArrayList implements Visitor4 {
+class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
     
 	Tree i_candidates;
 	boolean i_checkDuplicates;
     
 	final Transaction i_trans;
 
-	QResult(Transaction a_trans) {
+	QueryResultImpl(Transaction a_trans) {
 		i_trans = a_trans;
 	}
     
-    QResult(Transaction trans, int initialSize){
+    QueryResultImpl(Transaction trans, int initialSize){
         super(initialSize);
         i_trans = trans;
     }
@@ -31,10 +32,13 @@ class QResult extends IntArrayList implements Visitor4 {
 		return obj;
 	}
     
+    /* (non-Javadoc)
+     * @see com.db4o.QueryResult#get(int)
+     */
     public Object get(int index) {
         synchronized (streamLock()) {
             if (index < 0 || index >= size()) {
-                throw new IndexOutOfBoundsException("Index " + index + " not within bounds.");
+                throw new IndexOutOfBoundsException();
             }
             int id = i_content[index];
             YapStream stream = i_trans.i_stream;
@@ -50,18 +54,27 @@ class QResult extends IntArrayList implements Visitor4 {
 		i_checkDuplicates = true;
 	}
 
+	/* (non-Javadoc)
+     * @see com.db4o.QueryResult#getIDs()
+     */
 	public long[] getIDs() {
 		synchronized (streamLock()) {
 		    return asLong();
 		}
 	}
 
+	/* (non-Javadoc)
+     * @see com.db4o.QueryResult#hasNext()
+     */
 	public boolean hasNext() {
 		synchronized (streamLock()) {
 			return super.hasNext();
 		}
 	}
 
+	/* (non-Javadoc)
+     * @see com.db4o.QueryResult#next()
+     */
 	public Object next() {
 		synchronized (streamLock()) {
 			YapStream stream = i_trans.i_stream;
@@ -77,6 +90,9 @@ class QResult extends IntArrayList implements Visitor4 {
 		}
 	}
 
+	/* (non-Javadoc)
+     * @see com.db4o.QueryResult#reset()
+     */
 	public void reset() {
 		synchronized (streamLock()) {
 		    super.reset();
@@ -108,8 +124,12 @@ class QResult extends IntArrayList implements Visitor4 {
 	    
 	}
 	
-	Object streamLock(){
+	public Object streamLock(){
 		return i_trans.i_stream.i_lock;
 	}
+
+    public ObjectContainer objectContainer() {
+        return i_trans.i_stream;
+    }
 
 }

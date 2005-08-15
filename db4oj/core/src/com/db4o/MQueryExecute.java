@@ -8,7 +8,7 @@ final class MQueryExecute extends MsgObject {
 	boolean processMessageAtServer(YapSocket sock) {
 		Transaction trans = getTransaction();
 		YapStream stream = getStream();
-		QResult qr = new QResult(trans);
+		QueryResultImpl qr = new QueryResultImpl(trans);
 		this.unmarshall();
 		QQuery query = (QQuery) stream.unmarshall(payLoad);
 		query.unmarshall(getTransaction());
@@ -17,7 +17,7 @@ final class MQueryExecute extends MsgObject {
 				query.executeLocal(qr);
 			} catch (Exception e) {
 				// 
-				qr = new QResult(getTransaction());
+				qr = new QueryResultImpl(getTransaction());
 			}
 		}
 		writeQueryResult(getTransaction(), qr, sock);

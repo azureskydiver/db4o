@@ -6,13 +6,13 @@ import com.db4o.foundation.network.*;
 
 final class MGetAll extends Msg {
 	final boolean processMessageAtServer(YapSocket sock) {
-		QResult qr;
+		QueryResultImpl qr;
 		YapStream stream = getStream();
 		synchronized (stream.i_lock) {
 			try {
-				qr = stream.get1(getTransaction(), null)._delegate;
+				qr = (QueryResultImpl)stream.get1(getTransaction(), null)._delegate;
 			} catch (Exception e) {
-				qr = new QResult(getTransaction());
+				qr = new QueryResultImpl(getTransaction());
 			}
 		}
 		this.writeQueryResult(getTransaction(), qr, sock);

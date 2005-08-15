@@ -4,7 +4,9 @@ package com.db4o.inside;
 
 import com.db4o.*;
 
-
+/**
+ * @exclude
+ */
 public class Exceptions4 {
 
     public static final void throwRuntimeException (int code) {
@@ -31,5 +33,4 @@ public class Exceptions4 {
             throwRuntimeException(53);
         }
     }
-
 }

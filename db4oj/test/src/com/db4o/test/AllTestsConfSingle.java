@@ -2,6 +2,8 @@
 
 package com.db4o.test;
 
+import com.db4o.test.cluster.*;
+
 public class AllTestsConfSingle extends TestSuite{
 
 	static protected final String TEST_CONFIGURATION = "AllTestsConfSingle";
@@ -16,7 +18,7 @@ public class AllTestsConfSingle extends TestSuite{
             
             // DeleteDeep.class
             
-            QueryForUnknownField.class
+            BasicClusterTest.class
             
             // CreateIndex.class,
             
