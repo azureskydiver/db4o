@@ -14,16 +14,18 @@ public class ClusterConstraints  extends ClusterConstraint implements Constraint
     }
 
     public Constraint[] toArray() {
-        Collection4 all = new Collection4();
-        for (int i = 0; i < _constraints.length; i++) {
-            ClusterConstraint c = (ClusterConstraint)_constraints[i];
-            for (int j = 0; j < c._constraints.length; j++) {
-                all.add(c._constraints[j]);
+        synchronized(_cluster){
+            Collection4 all = new Collection4();
+            for (int i = 0; i < _constraints.length; i++) {
+                ClusterConstraint c = (ClusterConstraint)_constraints[i];
+                for (int j = 0; j < c._constraints.length; j++) {
+                    all.add(c._constraints[j]);
+                }
             }
+            Constraint[] res = new Constraint[all.size()];
+            all.toArray(res);
+            return res;
         }
-        Constraint[] res = new Constraint[all.size()];
-        all.toArray(res);
-        return res;
     }
 }
 
