@@ -1,8 +1,8 @@
 indexing
 	description: "db4o query wrapper to handle string and field name translation"
 	author: "Carl Rosenberger"
-	date: "$Date: 2005/08/14 14:57:34 $"
-	revision: "$Revision: 1.1 $"
+	date: "$Date: 2005/08/15 12:00:33 $"
+	revision: "$Revision: 1.2 $"
 
 class
 	QUERY_4E
