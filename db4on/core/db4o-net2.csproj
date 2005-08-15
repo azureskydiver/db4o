@@ -35,7 +35,7 @@
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET_2_0</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <FileAlignment>4096</FileAlignment>
@@ -84,6 +84,11 @@
     <Compile Include="src\core\com\db4o\BlobImpl.cs" />
     <Compile Include="src\core\com\db4o\ClassIndex.cs" />
     <Compile Include="src\core\com\db4o\ClassIndexClient.cs" />
+    <Compile Include="src\core\com\db4o\cluster\Cluster.cs" />
+    <Compile Include="src\core\com\db4o\cluster\inside\ClusterConstraint.cs" />
+    <Compile Include="src\core\com\db4o\cluster\inside\ClusterConstraints.cs" />
+    <Compile Include="src\core\com\db4o\cluster\inside\ClusterQuery.cs" />
+    <Compile Include="src\core\com\db4o\cluster\inside\ClusterQueryResult.cs" />
     <Compile Include="src\core\com\db4o\config\Compare.cs" />
     <Compile Include="src\core\com\db4o\config\Configuration.cs" />
     <Compile Include="src\core\com\db4o\config\Entry.cs" />
@@ -220,6 +225,7 @@
     <Compile Include="src\core\com\db4o\MWriteUpdateDeleteMembers.cs" />
     <Compile Include="src\core\com\db4o\Null.cs" />
     <Compile Include="src\core\com\db4o\ObjectContainer.cs" />
+    <Compile Include="src\core\com\db4o\ObjectContainer2_0.cs" />
     <Compile Include="src\core\com\db4o\ObjectServer.cs" />
     <Compile Include="src\core\com\db4o\ObjectSet.cs" />
     <Compile Include="src\core\com\db4o\inside\query\ObjectSetFacade.cs" />
@@ -263,7 +269,6 @@
     <Compile Include="src\core\com\db4o\QPending.cs" />
     <Compile Include="src\core\com\db4o\QQuery.cs" />
     <Compile Include="src\core\com\db4o\QResultClient.cs" />
-    <Compile Include="src\core\com\db4o\QResultImpl.cs" />
     <Compile Include="src\core\com\db4o\query\Candidate.cs" />
     <Compile Include="src\core\com\db4o\query\Constraint.cs" />
     <Compile Include="src\core\com\db4o\query\Constraints.cs" />
@@ -271,6 +276,7 @@
     <Compile Include="src\core\com\db4o\query\EvaluationDelegate.cs" />
     <Compile Include="src\core\com\db4o\query\Predicate.cs" />
     <Compile Include="src\core\com\db4o\query\Query.cs" />
+    <Compile Include="src\core\com\db4o\QueryResultImpl.cs" />
     <Compile Include="src\core\com\db4o\Readable.cs" />
     <Compile Include="src\core\com\db4o\ReadWriteable.cs" />
     <Compile Include="src\core\com\db4o\reflect\generic\GenericArray.cs" />
@@ -375,6 +381,7 @@
     <Compile Include="src\core\com\db4o\YapServer.cs" />
     <Compile Include="src\core\com\db4o\YapServerThread.cs" />
     <Compile Include="src\core\com\db4o\YapStream.cs" />
+    <Compile Include="src\core\com\db4o\YapStream2_0.cs" />
     <Compile Include="src\core\com\db4o\YapString.cs" />
     <Compile Include="src\core\com\db4o\YapStringIO.cs" />
     <Compile Include="src\core\com\db4o\YapStringIOUnicode.cs" />

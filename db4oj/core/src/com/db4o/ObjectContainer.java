@@ -12,6 +12,8 @@ import com.db4o.query.*;
  * to store, retrieve and delete objects and to commit and rollback
  * transactions.
  * @see ExtObjectContainer ExtObjectContainer for extended functionality.
+ * 
+ * @partial
  */
 public interface ObjectContainer {
 	
