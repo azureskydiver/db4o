@@ -215,7 +215,7 @@ class Msg implements Cloneable{
 		return writer;
 	}
 
-	final void writeQueryResult(Transaction a_trans, QResult qr, YapSocket sock) {
+	final void writeQueryResult(Transaction a_trans, QueryResultImpl qr, YapSocket sock) {
 		int size = qr.size();
 		MsgD message = ID_LIST.getWriterForLength(a_trans, YapConst.YAPID_LENGTH * (size + 1));
 		YapWriter writer = message.getPayLoad();

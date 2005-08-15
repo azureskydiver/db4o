@@ -1,6 +1,7 @@
 namespace com.db4o.inside
 {
-	public class Exceptions
+	/// <exclude></exclude>
+	public class Exceptions4
 	{
 		public static void throwRuntimeException(int code)
 		{
@@ -22,6 +23,11 @@ namespace com.db4o.inside
 		{
 			com.db4o.Messages.logErr(com.db4o.Db4o.configure(), code, msg, cause);
 			throw new j4o.lang.RuntimeException(com.db4o.Messages.get(code, msg));
+		}
+
+		public static void notSupported()
+		{
+			throw new System.NotSupportedException();
 		}
 	}
 }

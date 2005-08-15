@@ -1,20 +1,24 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.query;
 
 import com.db4o.ext.*;
 
 /**
  * @exclude 
  */
-public class ObjectSetImpl implements ExtObjectSet{
+public class ObjectSetFacade implements ExtObjectSet{
     
-    public final QResult _delegate;
+    public final QueryResult _delegate;
     
-    public ObjectSetImpl(QResult qResult){
-        _delegate = qResult;
+    public ObjectSetFacade(QueryResult QueryResult){
+        _delegate = QueryResult;
     }
 
+    public Object get(int index) {
+        return _delegate.get(index);
+    }
+    
     public long[] getIDs() {
         return _delegate.getIDs();
     }
@@ -38,5 +42,5 @@ public class ObjectSetImpl implements ExtObjectSet{
     public int size() {
         return _delegate.size();
     }
-    
+
 }

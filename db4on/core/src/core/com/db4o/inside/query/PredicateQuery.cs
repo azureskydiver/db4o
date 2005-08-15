@@ -1,5 +1,6 @@
 namespace com.db4o.inside.query
 {
+	/// <exclude></exclude>
 	public class PredicateQuery : j4o.io.Serializable
 	{
 		private readonly com.db4o.query.Predicate _predicate;

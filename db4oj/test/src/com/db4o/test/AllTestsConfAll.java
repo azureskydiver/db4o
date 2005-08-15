@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.*;
+import com.db4o.test.cluster.*;
 import com.db4o.test.constraints.*;
 import com.db4o.test.interfaces.*;
 import com.db4o.test.nativequery.*;
@@ -24,6 +25,7 @@ public class AllTestsConfAll extends TestSuite{
         return new Class[] {
 	    	ArrayNOrder.class,
 	    	Backup.class,
+            BasicClusterTest.class,
 	    	BindFileSize.class,
 	    	Callbacks.class,
 	    	CascadedDeleteUpdate.class,

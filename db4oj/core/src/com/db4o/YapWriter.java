@@ -324,7 +324,7 @@ public final class YapWriter extends YapReader {
     // turning writing around since our Collection world is the wrong
     // way around
     // TODO: optimize
-    final void writeQueryResult(QResult a_qr) {
+    final void writeQueryResult(QueryResultImpl a_qr) {
         int size = a_qr.size();
         writeInt(size);
         _offset += (size - 1) * YapConst.YAPID_LENGTH;

@@ -161,7 +161,7 @@ public class YapClient extends YapStream implements ExtClient {
         return sock;
     }
 
-    final QResult createQResult(Transaction a_ta) {
+    final QueryResultImpl createQResult(Transaction a_ta) {
         return new QResultClient(a_ta);
     }
 
@@ -234,7 +234,7 @@ public class YapClient extends YapStream implements ExtClient {
         throw YapConst.virtualException();
     }
 
-    void getAll(Transaction ta, QResult a_res) {
+    void getAll(Transaction ta, QueryResultImpl a_res) {
         writeMsg(Msg.GET_ALL);
         readResult(a_res);
     }
@@ -435,7 +435,7 @@ public class YapClient extends YapStream implements ExtClient {
         }
     }
 
-    final void queryExecute(QQuery a_query, QResult a_res) {
+    final void queryExecute(QQuery a_query, QueryResultImpl a_res) {
         writeMsg(Msg.QUERY_EXECUTE.getWriter(marshall(a_query.getTransaction(), a_query)));
         readResult(a_res);
         a_res.reset();
@@ -476,7 +476,7 @@ public class YapClient extends YapStream implements ExtClient {
         return readWriterByID(a_ta, a_id);
     }
 
-    private void readResult(QResult aRes) {
+    private void readResult(QueryResultImpl aRes) {
         YapWriter reader = expectedByteResponse(Msg.ID_LIST);
         int size = reader.readInt();
         for (int i = 0; i < size; i++) {

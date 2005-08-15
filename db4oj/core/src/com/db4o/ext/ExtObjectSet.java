@@ -23,6 +23,15 @@ public interface ExtObjectSet extends ObjectSet {
 	 * @see ExtObjectContainer#getByID
 	 */
 	public long[] getIDs();
+    
+    /**
+     * returns the item at position [index] in this ObjectSet.
+     * <br><br>
+     * The object will be activated.
+     * @param index the index position in this ObjectSet.  
+     * @return the activated object.
+     */
+    public Object get(int index);
 	
 	
 }

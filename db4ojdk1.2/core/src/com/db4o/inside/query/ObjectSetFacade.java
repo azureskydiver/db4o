@@ -1,22 +1,23 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.query;
 
 import java.util.*;
 
+import com.db4o.*;
 import com.db4o.ext.*;
 
 /**
  * @exclude 
  */
-public class ObjectSetImpl extends AbstractList implements ExtObjectSet{
+public class ObjectSetFacade extends AbstractList implements ExtObjectSet{
     
-    final QResult _delegate;
+    public final QueryResult _delegate;
     
-    ObjectSetImpl(QResult qResult){
+    public ObjectSetFacade(QueryResult qResult){
         _delegate = qResult;
     }
-
+    
     public long[] getIDs() {
         return _delegate.getIDs();
     }
@@ -45,8 +46,8 @@ public class ObjectSetImpl extends AbstractList implements ExtObjectSet{
         return _delegate.streamLock();
     }
     
-    private YapStream stream(){
-        return _delegate.i_trans.i_stream;
+    private ObjectContainer objectContainer(){
+        return _delegate.objectContainer();
     }
     
     public boolean contains(Object a_object) {
@@ -59,7 +60,7 @@ public class ObjectSetImpl extends AbstractList implements ExtObjectSet{
 
     public int indexOf(Object a_object) {
         synchronized(streamLock()){
-            int id = (int)stream().getID(a_object);
+            int id = (int)objectContainer().ext().getID(a_object);
             if(id <= 0){
                 return -1;
             }

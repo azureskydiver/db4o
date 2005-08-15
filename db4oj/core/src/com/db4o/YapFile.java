@@ -87,8 +87,8 @@ public abstract class YapFile extends YapStream {
         return new ClassIndex(yapClass);
     }
 
-    final QResult createQResult(Transaction a_ta) {
-        return new QResult(a_ta);
+    final QueryResultImpl createQResult(Transaction a_ta) {
+        return new QueryResultImpl(a_ta);
     }
 
     final boolean delete5(Transaction ta, YapObject yo, int a_cascade, boolean userCall) {
@@ -195,7 +195,7 @@ public abstract class YapFile extends YapStream {
         i_prefetchedIDs = null;
     }
 
-    void getAll(Transaction ta, final QResult a_res) {
+    void getAll(Transaction ta, final QueryResultImpl a_res) {
 
         // duplicates because of inheritance hierarchies
         final Tree[] duplicates = new Tree[1];

@@ -154,11 +154,12 @@
     <Compile Include="src\core\com\db4o\foundation\Visitor4.cs" />
     <Compile Include="src\core\com\db4o\FreeSlotNode.cs" />
     <Compile Include="src\core\com\db4o\IDGenerator.cs" />
-    <Compile Include="src\core\com\db4o\inside\Exceptions.cs" />
+    <Compile Include="src\core\com\db4o\inside\Exceptions4.cs" />
     <Compile Include="src\core\com\db4o\inside\query\PredicateEvaluation.cs" />
     <Compile Include="src\core\com\db4o\inside\query\PredicateQuery.cs" />
+    <Compile Include="src\core\com\db4o\inside\query\QueryResult.cs" />
     <Compile Include="src\core\com\db4o\IntArrayList.cs" />
-    <Compile Include="src\core\com\db4o\Internal.cs" />
+    <Compile Include="src\core\com\db4o\Internal4.cs" />
     <Compile Include="src\core\com\db4o\io\IoAdapter.cs" />
     <Compile Include="src\core\com\db4o\io\MemoryIoAdapter.cs" />
     <Compile Include="src\core\com\db4o\io\RandomAccessFileAdapter.cs" />
@@ -221,7 +222,7 @@
     <Compile Include="src\core\com\db4o\ObjectContainer.cs" />
     <Compile Include="src\core\com\db4o\ObjectServer.cs" />
     <Compile Include="src\core\com\db4o\ObjectSet.cs" />
-    <Compile Include="src\core\com\db4o\ObjectSetImpl.cs" />
+    <Compile Include="src\core\com\db4o\inside\query\ObjectSetFacade.cs" />
     <Compile Include="src\core\com\db4o\Order.cs" />
     <Compile Include="src\core\com\db4o\Orderable.cs" />
     <Compile Include="src\core\com\db4o\P1Collection.cs" />
@@ -237,7 +238,7 @@
     <Compile Include="src\core\com\db4o\P2ListElementIterator.cs" />
     <Compile Include="src\core\com\db4o\PBootRecord.cs" />
     <Compile Include="src\core\com\db4o\PendingClassInits.cs" />
-    <Compile Include="src\core\com\db4o\Platform.cs" />
+    <Compile Include="src\core\com\db4o\Platform4.cs" />
     <Compile Include="src\core\com\db4o\QCandidate.cs" />
     <Compile Include="src\core\com\db4o\QCandidates.cs" />
     <Compile Include="src\core\com\db4o\QCon.cs" />
@@ -261,8 +262,8 @@
     <Compile Include="src\core\com\db4o\QOrder.cs" />
     <Compile Include="src\core\com\db4o\QPending.cs" />
     <Compile Include="src\core\com\db4o\QQuery.cs" />
-    <Compile Include="src\core\com\db4o\QResult.cs" />
     <Compile Include="src\core\com\db4o\QResultClient.cs" />
+    <Compile Include="src\core\com\db4o\QResultImpl.cs" />
     <Compile Include="src\core\com\db4o\query\Candidate.cs" />
     <Compile Include="src\core\com\db4o\query\Constraint.cs" />
     <Compile Include="src\core\com\db4o\query\Constraints.cs" />
@@ -401,7 +402,6 @@
     <Compile Include="src\j4o\io\FileInputStream.cs" />
     <Compile Include="src\j4o\io\FileOutputStream.cs" />
     <Compile Include="src\j4o\io\InputStream.cs" />
-    <Compile Include="src\j4o\io\IOException.cs" />
     <Compile Include="src\j4o\io\OutputStream.cs" />
     <Compile Include="src\j4o\io\PrintStream.cs" />
     <Compile Include="src\j4o\io\RandomAccessFile.cs" />
