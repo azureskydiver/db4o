@@ -86,8 +86,10 @@ class YapFieldUUID extends YapFieldVirtual {
     	        if (attr.i_database == null) {
     	            attr.i_database = db;
     	            if (stream instanceof YapFile){
-    					attr.i_uuid = ((YapFile) stream).i_bootRecord.newUUID();
-    	                indexEntry = true;
+                        if(((YapFile) stream).i_bootRecord != null){
+        					attr.i_uuid = ((YapFile) stream).i_bootRecord.newUUID();
+        	                indexEntry = true;
+                        }
     	            }
     	        }
     	        db = attr.i_database;

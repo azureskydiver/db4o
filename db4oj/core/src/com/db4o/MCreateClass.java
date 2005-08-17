@@ -7,11 +7,10 @@ import com.db4o.reflect.*;
 
 final class MCreateClass extends MsgD {
     final boolean processMessageAtServer(YapSocket sock) {
-        ReflectClass claxx = null;
         YapStream stream = getStream();
         Transaction trans = stream.getSystemTransaction();
         YapWriter returnBytes = new YapWriter(trans, 0);
-            claxx = trans.reflector().forName(this.readString());
+        ReflectClass claxx = trans.reflector().forName(readString());
         if (claxx != null) {
             synchronized (stream.i_lock) {
                 try {

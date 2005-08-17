@@ -247,15 +247,17 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
 
     public ObjectClass objectClass(Object clazz) {
         
-        ReflectClass claxx = reflectorFor(clazz);
+        String className = null;
         
-        if (claxx == null) {
-            if(! (clazz instanceof String)){
+        if(clazz instanceof String){
+            className = (String)clazz;
+        }else{
+            ReflectClass claxx = reflectorFor(clazz);
+            if(claxx == null){
                 return null;
             }
+            className = claxx.getName();
         }
-        
-        String className = (claxx == null) ?  (String)clazz  : claxx.getName(); 
         
         Config4Class c4c = (Config4Class) i_exceptionalClasses.get(className);
         if (c4c == null) {

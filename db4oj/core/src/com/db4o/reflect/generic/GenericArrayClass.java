@@ -28,4 +28,12 @@ public class GenericArrayClass extends GenericClass {
         }
         return isAssignableFrom(((GenericObject)candidate)._class);
     }
+    
+    public boolean equals(Object obj) {
+        if( ! (obj instanceof GenericArrayClass)){
+            return false;
+        }
+        return super.equals(obj);
+    }
+    
 }

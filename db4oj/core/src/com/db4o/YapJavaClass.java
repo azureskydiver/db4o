@@ -26,7 +26,7 @@ public abstract class YapJavaClass implements YapDataType {
     }
 
     public boolean canHold(ReflectClass claxx) {
-        return claxx == classReflector();
+        return claxx.equals(classReflector());
     }
 
     public void cascadeActivation(Transaction a_trans, Object a_object,

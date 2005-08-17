@@ -65,7 +65,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         i_yapClassCreationDepth++;
         ReflectClass superClass = a_class.getSuperclass();
         YapClass superYapClass = null;
-        if (superClass != null && superClass != i_stream.i_handlers.ICLASS_OBJECT) {
+        if (superClass != null && ! superClass.equals(i_stream.i_handlers.ICLASS_OBJECT)) {
             superYapClass = getYapClass(superClass, true);
         }
         boolean ret = i_stream.createYapClass(a_yapClass, a_class, superYapClass);

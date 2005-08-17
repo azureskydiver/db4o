@@ -30,12 +30,15 @@ public class GenericClass implements ReflectClass, DeepClone {
     private int _declaredFieldCount = -1;
     private int _fieldCount = -1;
     
+    private final int _hashCode;
+    
 
     public GenericClass(GenericReflector reflector, ReflectClass delegateClass, String name, GenericClass superclass) {
         _reflector = reflector;
         _delegate = delegateClass;
         _name = name;
         _superclass = superclass;
+        _hashCode = _name.hashCode();
     }
     
     public GenericClass arrayClass(){
@@ -63,6 +66,23 @@ public class GenericClass implements ReflectClass, DeepClone {
         return ret;
     }
     
+    public boolean equals(Object obj) {
+        if(obj == null){
+            return false;
+        }
+        if(this == obj){
+            return true;
+        }
+        if(! (obj instanceof GenericClass)){
+            return false;
+        }
+        GenericClass otherGC = (GenericClass)obj;
+        if(_hashCode != otherGC.hashCode()){
+            return false;
+        }
+        return _name.equals(otherGC._name);
+    }
+    
     public ReflectClass getComponentType() {
         if(_delegate != null){
             return _delegate.getComponentType();
@@ -76,7 +96,6 @@ public class GenericClass implements ReflectClass, DeepClone {
         }
         return null;
     }
-    
     
     // TODO: consider that classes may have two fields of
     // the same name after refactoring.
@@ -147,6 +166,10 @@ public class GenericClass implements ReflectClass, DeepClone {
         return _superclass;
     }
     
+    public int hashCode() {
+        return _hashCode;
+    }
+
 	public void initFields(GenericField[] fields) {
 		int startIndex = 0;
 		if(_superclass != null) {
@@ -175,20 +198,17 @@ public class GenericClass implements ReflectClass, DeepClone {
     }
 
     public boolean isAssignableFrom(ReflectClass subclassCandidate) {
-    	
     	if(subclassCandidate == null){
     		return false;
     	}
-    	
+        if (equals(subclassCandidate)) {
+            return true;
+        }
         if(_delegate != null){
         	if( subclassCandidate instanceof GenericClass){
         		subclassCandidate = ((GenericClass)subclassCandidate).getDelegate();
         	}
             return _delegate.isAssignableFrom(subclassCandidate);
-        }
-        
-        if (subclassCandidate == this) {
-        	return true;
         }
         if (!(subclassCandidate instanceof GenericClass)) {
         	return false;
@@ -286,5 +306,5 @@ public class GenericClass implements ReflectClass, DeepClone {
 
         // ignore, we always create a generic object
     }
-
+    
 }
