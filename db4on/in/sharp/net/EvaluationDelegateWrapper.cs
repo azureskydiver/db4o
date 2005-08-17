@@ -7,46 +7,65 @@ using com.db4o.query;
 
 namespace com.db4o
 {
-	internal class EvaluationDelegateWrapper : Evaluation
-	{
-		object _target;
-		string _type;
-		string _method;
-		
-		[Transient]
-		EvaluationDelegate _evaluation;
-		
+    // TODO: Use DelegateEnvelope to build a generic delegate translator
+    internal class DelegateEnvelope
+    {
+        System.Type _delegateType;
+        object _target;
+        System.Type _type;
+        string _method;
+
+        [Transient]
+        Delegate _content;
+
+        public DelegateEnvelope()
+        {
+        }
+
+        public DelegateEnvelope(Delegate content)
+        {
+            _content = content;
+            Marshal();
+        }
+
+        protected Delegate GetContent()
+        {
+            if (null == _content)
+            {
+                _content = Unmarshal();
+            }
+            return _content;
+        }
+
+        private void Marshal()
+        {
+            _delegateType = _content.GetType();
+            _target = _content.Target;
+            _method = _content.Method.Name;
+            _type = _content.Method.DeclaringType;
+        }
+
+        private Delegate Unmarshal()
+        {
+            return (null == _target)
+                ? System.Delegate.CreateDelegate(_delegateType, _type, _method)
+                : System.Delegate.CreateDelegate(_delegateType, _target, _method);
+        }
+    }
+
+	internal class EvaluationDelegateWrapper : DelegateEnvelope, Evaluation
+	{	
 		public EvaluationDelegateWrapper()
 		{
 		}
 		
-		public EvaluationDelegateWrapper(EvaluationDelegate evaluation)
-		{
-			_target = evaluation.Target;
-			_method = evaluation.Method.Name;
-			_type = evaluation.Method.DeclaringType.AssemblyQualifiedName;
+		public EvaluationDelegateWrapper(EvaluationDelegate evaluation) : base(evaluation)
+		{	
 		}
 		
 		EvaluationDelegate GetEvaluationDelegate()
 		{
-			if (null == _evaluation)
-			{
-				_evaluation = CreateEvaluationDelegate();
-			}
-			return _evaluation;
-		}
-		
-		EvaluationDelegate CreateEvaluationDelegate()
-		{				
-			object result = (null == _target)
-				? System.Delegate.CreateDelegate(typeof(EvaluationDelegate), GetTargetType(), _method)
-				: System.Delegate.CreateDelegate(typeof(EvaluationDelegate), _target, _method);
-			return (EvaluationDelegate)result;
-		}
-		
-		private Type GetTargetType()
-		{
-			return Type.GetType(_type, true);
+            return (EvaluationDelegate)GetContent();
 		}
 		
 		public void evaluate(Candidate candidate)
