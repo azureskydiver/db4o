@@ -44,6 +44,8 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     int                i_updateDepth;
     
     String             _writeAs;
+    
+    private boolean    _processing;
 
     Config4Class(Config4Impl a_configuration, String a_name) {
         i_config = a_configuration;
@@ -99,6 +101,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
         Config4Class ret = null;
         try {
             ret = (Config4Class) clone();
+            ret._processing = false;
         } catch (CloneNotSupportedException e) {
             // won't happen
         }
@@ -145,7 +148,11 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
         return i_translator;
     }
 
-    public void initOnUp(Transaction systemTrans) {
+    public boolean initOnUp(Transaction systemTrans) {
+        if(_processing){
+            return false;
+        }
+        _processing = true;
         if (Tuning.fieldIndices) {
             YapStream stream = systemTrans.i_stream;
             if (stream.maintainsIndices()) {
@@ -162,6 +169,8 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
                 }
             }
         }
+        _processing = false;
+        return true;
     }
 
     Object instantiate(YapStream a_stream, Object a_toTranslate) {

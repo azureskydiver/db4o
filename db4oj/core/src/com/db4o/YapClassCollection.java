@@ -369,14 +369,6 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         }
     }
     
-    void yapClassRequestsInitOnUp(YapClass a_yc){
-        if(i_yapClassCreationDepth == 0){
-            a_yc.initOnUp(i_systemTrans);
-        }else{
-            i_initYapClassesOnUp.add(a_yc);
-        }
-    }
-
     void yapFields(final String a_field, final Visitor4 a_visitor) {
         YapClassCollectionIterator i = iterator();
         while (i.hasNext()) {

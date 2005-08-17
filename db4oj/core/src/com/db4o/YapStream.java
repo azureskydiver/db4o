@@ -1557,7 +1557,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         i_handlers.i_stringHandler.setStringIo(a_io);
     }
 
-    boolean showInternalClasses() {
+    final boolean showInternalClasses() {
         return isServer() || i_showInternalClasses > 0;
     }
 
@@ -1575,7 +1575,6 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         if (i_showInternalClasses < 0) {
             i_showInternalClasses = 0;
         }
-
     }
 
     boolean stateMessages() {

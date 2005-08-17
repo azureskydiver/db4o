@@ -10,7 +10,8 @@ class PendingClassInits {
 
 	private List4 _members;
 	private List4 _statics;
-	private List4 _writes;
+    private List4 _writes;
+    private List4 _inits;
 	
 	private boolean _running = false;
 	
@@ -38,7 +39,7 @@ class PendingClassInits {
 		
 		_running = true;
 		
-		checkWrites();
+		checkInits();
 		
 		_pending = new Collection4();
 		
@@ -81,9 +82,24 @@ class PendingClassInits {
 				YapClass yc = (YapClass)writes.next();
 		        yc.setStateDirty();
 		        yc.write(_classColl.i_stream, _classColl.i_systemTrans);
+                _inits = new List4(_inits, yc);
 				checkStatics();
 			}
 		}
 	}
+    
+    private void checkInits() {
+        checkWrites();
+        while(_inits != null) {
+            Iterator4 inits = new Iterator4(_inits);
+            _inits = null;
+            while(inits.hasNext()) {
+                YapClass yc = (YapClass)inits.next();
+                yc.initConfigOnUp(_classColl.i_systemTrans);
+                checkWrites();
+            }
+        }
+    }
+
 
 }
