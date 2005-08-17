@@ -839,23 +839,29 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     }
     
     void initConfigOnUp(Transaction systemTrans) {
-        if (i_config != null) {
-            systemTrans.i_stream.showInternalClasses(true);
-            i_config.initOnUp(systemTrans);
+        if (i_config == null) {
+            return;
+        }
+        if (! stateOK()) {
+            return;
+        }
+        systemTrans.i_stream.showInternalClasses(true);
+        if(i_config.initOnUp(systemTrans)){
             if (i_fields != null) {
                 for (int i = 0; i < i_fields.length; i++) {
                     i_fields[i].initConfigOnUp(systemTrans);
                 }
             }
-            systemTrans.i_stream.showInternalClasses(false);
         }
+        systemTrans.i_stream.showInternalClasses(false);
     }
 
     void initOnUp(Transaction systemTrans) {
-        if (stateOK()) {
-            initConfigOnUp(systemTrans);
-            storeStaticFieldValues(systemTrans, false);
+        if (! stateOK()) {
+            return;
         }
+        initConfigOnUp(systemTrans);
+        storeStaticFieldValues(systemTrans, false);
     }
 
     Object instantiate(YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_addToIDTree) {
@@ -1821,10 +1827,6 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
                 i_fields[i].writeThis(a_writer, this);
             }
         }
-        
-        YapClassCollection ycc = a_writer.i_trans.i_stream.i_classCollection;
-        ycc.yapClassRequestsInitOnUp(this);
-        // initOnUp(a_writer.getTransaction());
         
     }
 

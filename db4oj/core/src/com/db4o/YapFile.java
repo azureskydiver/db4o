@@ -286,6 +286,9 @@ public abstract class YapFile extends YapStream {
     }
 
     public Db4oDatabase identity() {
+        if(i_bootRecord == null){
+            return null;  // early access for internal stuff, no identity needed
+        }
         return i_bootRecord.i_db;
     }
 

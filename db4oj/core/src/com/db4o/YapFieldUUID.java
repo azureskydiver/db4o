@@ -78,19 +78,23 @@ class YapFieldUUID extends YapFieldVirtual {
 			linkToDatabase = true;
 		}
         if(linkToDatabase){
-	        if (attr.i_database == null) {
-	            attr.i_database = stream.identity();
-	            if (stream instanceof YapFile
-	                && ((YapFile) stream).i_bootRecord != null) {
-	                PBootRecord bootRecord = ((YapFile) stream).i_bootRecord;
-					attr.i_uuid = bootRecord.newUUID();
-	                indexEntry = true;
-	            }
-	        }
-	        Db4oDatabase db = attr.i_database;
-	        if(db != null) {
-	            dbID = db.getID(trans);
-	        }
+            Db4oDatabase db = stream.identity();
+            if(db == null){
+                // can happen on early classes like Metaxxx, no problem
+                attr = null;
+            }else{
+    	        if (attr.i_database == null) {
+    	            attr.i_database = db;
+    	            if (stream instanceof YapFile){
+    					attr.i_uuid = ((YapFile) stream).i_bootRecord.newUUID();
+    	                indexEntry = true;
+    	            }
+    	        }
+    	        db = attr.i_database;
+    	        if(db != null) {
+    	            dbID = db.getID(trans);
+    	        }
+            }
         }else{
             if(attr != null){
                 dbID = attr.i_database.getID(trans);

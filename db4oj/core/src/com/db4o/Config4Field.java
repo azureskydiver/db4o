@@ -27,6 +27,8 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
         Config4Field ret = null;
         try {
             ret = (Config4Field) clone();
+            ret.i_metaField = null;
+            ret.i_initialized = false;
         } catch (CloneNotSupportedException e) {
             // won't happen
         }
