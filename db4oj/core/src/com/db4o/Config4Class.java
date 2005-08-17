@@ -37,9 +37,9 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     
     boolean            i_storeTransientFields;
     
-    ObjectTranslator   i_translator;
+    ObjectTranslator   _translator;
 
-    String             i_translatorName;
+    String             _translatorName;
     
     int                i_updateDepth;
     
@@ -127,25 +127,32 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     }
 
     public ObjectTranslator getTranslator() {
-        if (i_translator == null && i_translatorName != null) {
-            try {
-                i_translator = (ObjectTranslator) i_config.reflector().forName(
-                    i_translatorName).newInstance();
-            } catch (Throwable t) {
-                if(! Deploy.csharp){
-                    try{
-                        i_translator = (ObjectTranslator) Class.forName(i_translatorName).newInstance();
-                        if(i_translator != null){
-                            return i_translator;
-                        }
-                    }catch(Throwable th){
-                    }
-                }
-                Messages.logErr(i_config, 48, i_translatorName, null);
-                i_translatorName = null;
-            }
+        if (_translator != null) {
+        	return _translator;
         }
-        return i_translator;
+        
+        if (_translatorName == null) {
+        	return null;
+        }
+        
+        try {
+            _translator = (ObjectTranslator) i_config.reflector().forName(
+                _translatorName).newInstance();
+        } catch (Throwable t) {
+            if (! Deploy.csharp){
+            	// TODO: why?
+                try{
+                    _translator = (ObjectTranslator) Class.forName(_translatorName).newInstance();
+                    if(_translator != null){
+                        return _translator;
+                    }
+                }catch(Throwable th){
+                }
+            }
+            Messages.logErr(i_config, 48, _translatorName, null);
+            _translatorName = null;
+        }
+        return _translator;
     }
 
     public boolean initOnUp(Transaction systemTrans) {
@@ -174,7 +181,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     }
 
     Object instantiate(YapStream a_stream, Object a_toTranslate) {
-        return ((ObjectConstructor) i_translator).onInstantiate(a_stream,
+        return ((ObjectConstructor) _translator).onInstantiate(a_stream,
             a_toTranslate);
     }
 
@@ -191,7 +198,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     }
     
     public int callConstructor() {
-        if(i_translator != null){
+        if(_translator != null){
             return YapConst.YES;
         }
         return i_callConstructor;
@@ -244,13 +251,13 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
 
     public void translate(ObjectTranslator translator) {
         if (translator == null) {
-            i_translatorName = null;
+            _translatorName = null;
         }
-        i_translator = translator;
+        _translator = translator;
     }
 
     void translateOnDemand(String a_translatorName) {
-        i_translatorName = a_translatorName;
+        _translatorName = a_translatorName;
     }
 
     public void updateDepth(int depth) {
