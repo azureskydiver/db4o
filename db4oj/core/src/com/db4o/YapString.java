@@ -28,7 +28,7 @@ public final class YapString extends YapIndependantType {
     }
 
     public boolean canHold(ReflectClass claxx) {
-        return claxx == classReflector();
+        return claxx.equals(classReflector());
     }
 
     public void cascadeActivation(

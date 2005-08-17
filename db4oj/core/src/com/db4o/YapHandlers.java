@@ -226,7 +226,7 @@ public final class YapHandlers {
 	                                Object[] parms = new Object[pTypes.length];
 	                                for (int j = 0; j < parms.length; j++) {
 	                                    for (int k = 0; k < PRIMITIVECOUNT; k++) {
-	                                        if (pTypes[j] == i_handlers[k].primitiveClassReflector()) {
+	                                        if (pTypes[j].equals(i_handlers[k].primitiveClassReflector())) {
 	                                            parms[j] = ((YapJavaClass) i_handlers[k])
 	                                                .primitiveNull();
 	                                            break;
@@ -298,7 +298,7 @@ public final class YapHandlers {
 
     final YapDataType handlerForClass(ReflectClass a_class, ReflectClass[] a_Supported) {
         for (int i = 0; i < a_Supported.length; i++) {
-            if (a_Supported[i] == a_class) {
+            if (a_Supported[i].equals(a_class)) {
                 return i_handlers[i];
             }
         }

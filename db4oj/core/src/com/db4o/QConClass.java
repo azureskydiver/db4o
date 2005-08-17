@@ -25,7 +25,7 @@ public class QConClass extends QConObject{
 		super(a_trans, a_parent, a_field, null);
 		if(claxx != null){
 			i_yapClass = a_trans.i_stream.getYapClass(claxx, true);
-			if(claxx == a_trans.i_stream.i_handlers.ICLASS_OBJECT){
+			if(claxx.equals(a_trans.i_stream.i_handlers.ICLASS_OBJECT)){
 				i_yapClass = (YapClass)((YapClassPrimitive)i_yapClass).i_handler;
 			}
 		}
@@ -42,7 +42,7 @@ public class QConClass extends QConObject{
 		if(claxx == null){
 			res = false;
 		}else{
-			res = i_equal ? _claxx == claxx : _claxx.isAssignableFrom(claxx);
+			res = i_equal ? _claxx.equals(claxx) : _claxx.isAssignableFrom(claxx);
 		}
 		return i_evaluator.not(res);
 	}
