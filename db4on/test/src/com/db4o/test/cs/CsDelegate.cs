@@ -14,7 +14,7 @@ namespace com.db4o.test.cs
 		}
 
 		public void RaiseCrash()
-		{
+		{   
 			if (null != Crash)
 			{
 				Crash(this, EventArgs.Empty);

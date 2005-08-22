@@ -2,6 +2,8 @@
 using System;
 using com.db4o;
 using com.db4o.query;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace com.db4o.test.nativequeries
 {
@@ -27,27 +29,13 @@ namespace com.db4o.test.nativequeries
 			Tester.store(new Cat("Zora"));
 		}
     
-		public void test()
+		public void testClassPredicate()
 		{
 			ObjectContainer objectContainer = Tester.objectContainer();
 			ObjectSet objectSet = objectContainer.query(new CatPredicate());
-			Tester.ensure(objectSet.Count == 2);
-			String[] lookingFor = new String[] {"Occam" , "Zora"};
-			bool[] found = new bool[2];
-			foreach (Cat cat in objectSet)
-			{
-				for (int i = 0; i < lookingFor.Length; i++) 
-				{
-					if(cat.name == lookingFor[i])
-					{
-						found[i] = true;
-					}
-				}
-			}
-			for (int i = 0; i < found.Length; i++) 
-			{
-				Tester.ensure(found[i]);
-			}
+            Tester.ensureEquals(2, objectSet.Count);
+            ensureContains(objectSet, "Occam");
+            ensureContains(objectSet, "Zora");
 		}
     
 		public class CatPredicate : Predicate
@@ -57,5 +45,28 @@ namespace com.db4o.test.nativequeries
 				return cat.name == "Occam"  || cat.name == "Zora"; 
 			}
 		}
+
+#if NET_2_0
+        public void testGenericPredicate()
+        {
+            ObjectContainer objectContainer = Tester.objectContainer();
+            IList<Cat> found = objectContainer.query<Cat>(delegate(Cat c)
+            {
+                return c.name == "Occam" || c.name == "Zora";
+            });
+            Tester.ensureEquals(2, found.Count);
+            ensureContains(found, "Occam");
+            ensureContains(found, "Zora");
+        }
+#endif
+
+        private void ensureContains(IEnumerable objectSet, string catName)
+        {
+            foreach (Cat cat in objectSet)
+            {
+              if (cat.name == catName) return;
+            }
+            Tester.ensure(catName + " expected!", false);
+        }
 	}
 }

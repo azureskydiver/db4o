@@ -44,7 +44,7 @@ namespace com.db4o.test {
 			typeof(CsCollections),
 			typeof(CsCustomTransientAttribute),
 			typeof(CsDate),
-#if NET
+#if NET || NET_2_0
 		    typeof(CsDelegate),
 #endif
 			typeof(CsEnum),
