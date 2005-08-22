@@ -28,17 +28,8 @@ namespace com.db4o
             com.db4o.query.Query q = query();
             q.constrain(typeof(Extent));
             q.constrain(new GenericPredicateEvaluation<Extent>(match));
-            return ToList<Extent>(q.execute());
-        }
-
-        private static IList<Extent> ToList<Extent>(ObjectSet os)
-        {
-            List<Extent> found = new List<Extent>(os.Count);
-            foreach (object element in os)
-            {
-                found.Add((Extent)element);
-            }
-            return found;
+            com.db4o.inside.query.QueryResult qr = ((QQuery)q).getQueryResult();
+            return new com.db4o.inside.query.GenericObjectSetFacade<Extent>(qr);
         }
     }
 #endif
