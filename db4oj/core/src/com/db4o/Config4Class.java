@@ -37,7 +37,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     
     boolean            i_storeTransientFields;
     
-    ObjectTranslator   _translator;
+    private ObjectTranslator   _translator;
 
     String             _translatorName;
     

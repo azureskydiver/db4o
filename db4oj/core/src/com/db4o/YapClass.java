@@ -80,19 +80,8 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     
     void addMembers(YapStream a_stream) {
         bitTrue(YapConst.CHECKED_CHANGES);
-        if (i_config != null) {
-            ObjectTranslator ot = i_config.getTranslator();
-            if (ot != null) {
-                if (!(i_fields != null
-                    && i_fields.length > 0
-                    && ot.getClass().getName().equals(i_fields[0].getName()))) {
-                    i_stream.setDirty(this);
-                }
-                i_fields = new YapField[1];
-                i_fields[0] = new YapFieldTranslator(this, ot);
-                setStateOK();
-                return;
-            }
+        if (addTranslatorField()) {
+        	return;
         }
 
         if (a_stream.detectSchemaChanges()) {
@@ -165,6 +154,37 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         }
         setStateOK();
     }
+    
+    private boolean addTranslatorField() {
+    	ObjectTranslator ot = getTranslator();
+    	if (ot == null) {
+    		return false;
+    	}
+    	
+    	if (isNewTranslator(ot)) {
+    		i_stream.setDirty(this);
+    	}
+    	
+    	i_fields = new YapField[] { new YapFieldTranslator(this, ot) };
+    	setStateOK();
+    	return true;
+    }
+    
+    private ObjectTranslator getTranslator() {
+    	return i_config == null
+    		? null
+    		: i_config.getTranslator();
+    }
+
+	private boolean isNewTranslator(ObjectTranslator ot) {
+		return !hasFields()
+		    || !ot.getClass().getName().equals(i_fields[0].getName());
+	}
+
+	private boolean hasFields() {
+		return i_fields != null
+		    && i_fields.length > 0;
+	}
 
     void addToIndex(YapFile a_stream, Transaction a_trans, int a_id) {
         if (a_stream.maintainsIndices()) {
