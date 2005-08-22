@@ -236,19 +236,23 @@ public class QQuery implements Query {
     }
 
     public ObjectSet execute() {
-        synchronized (streamLock()) {
-			ObjectSet result = classOnlyQuery();
-			if(result!=null) {
+        return new ObjectSetFacade(getQueryResult());
+    }
+    
+    public QueryResult getQueryResult() {
+    	synchronized (streamLock()) {
+			QueryResult result = classOnlyQuery();
+			if(result != null) {
                 result.reset();
 				return result;
 			}
 	        QueryResultImpl qResult = new QueryResultImpl(i_trans);
 	        execute1(qResult);
-            return new ObjectSetFacade(qResult);
+	        return qResult;
         }
     }
 
-	private ObjectSet classOnlyQuery() {
+	private QueryResult classOnlyQuery() {
         
 		if(i_constraints.size()!=1) {
 			return null;
@@ -277,13 +281,13 @@ public class QQuery implements Query {
 			for (int i = 0; i < ids.length; i++) {
 				resClient.add((int)ids[i]);
 			}
-			return new ObjectSetFacade(resClient);
+			return resClient;
 		}
 		
 		Tree tree = classIndex.cloneForYapClass(i_trans, clazz.getID());
 		
 		if(tree == null) {
-			return new ObjectSetFacade(new QueryResultImpl(i_trans));  // empty result
+			return new QueryResultImpl(i_trans);  // empty result
 		}
         
         final QueryResultImpl resLocal = new QueryResultImpl(i_trans, tree.size());
@@ -293,7 +297,7 @@ public class QQuery implements Query {
 				resLocal.add(((TreeInt)a_object).i_key);
 			}
 		});
-		return new ObjectSetFacade(resLocal);
+		return resLocal;
 
 	}
 
