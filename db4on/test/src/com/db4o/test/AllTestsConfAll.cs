@@ -13,7 +13,8 @@ namespace com.db4o.test {
          */
         internal Type[] TESTS = new Type[]{
             typeof(ArrayNOrder),	
-			typeof(BackReferences),
+            typeof(BackReferences),
+            typeof(BasicClusterTest),
             typeof(BindFileSize),
             typeof(Book),
             typeof(Callbacks),
@@ -85,7 +86,7 @@ namespace com.db4o.test {
             typeof(KeepCollectionContent),
             typeof(MaxByEvaluation),
             typeof(Messaging),
-			//typeof(nativequeries.Cat),
+			typeof(nativequeries.Cat),
 
 #if NET_2_0
 			typeof(net2.Net2SimpleGenericType),
