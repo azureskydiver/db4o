@@ -671,7 +671,7 @@
 		</zip>
 	</target>
 
-	<target name="zipnet" depends="init, compiledllnet, compilentutorial, vsdoc" description="Zip .NET distribution">
+	<target name="zipnet" depends="init, configure-net1.1, compiledllnet, compilentutorial, vsdoc" description="Zip .NET distribution">
 		<antcall target="create-zipnet">
 			<param name="dir.core" value="${dir.n.core}" />
 			<param name="dir.tools" value="${dir.n.tools}" />
@@ -680,7 +680,29 @@
 		</antcall>
 	</target>
 	
-	<target name="zipnet-pascalcase" depends="init, pascalcase, vsdoc">
+	<target name="zipnet-pascalcase" depends="init, configure-net1.1-pascalcase, do-zipnet-pascalcase">
+	</target>
+	
+	<target name="zipnet-pascalcase2" depends="init, configure-net1.1-pascalcase, do-zipnet-pascalcase">
+	</target>
+	
+	<target name="configure-net1.1">
+		<property name="csharp.defines" value="NET" />
+	</target>
+	
+	<target name="configure-net1.1-pascalcase">
+		<property name="pascalcase.converter.ant.target" value="compile-converter" />
+		<property name="pascalcase.converter.exe" location="bin/pascalcase.exe" />
+		<property name="csharp.defines" value="NET" />
+	</target>
+	
+	<target name="configure-net2.2-pascalcase">
+		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
+		<property name="pascalcase.converter.exe" location="bin/pascalcase2.exe" />
+		<property name="csharp.defines" value="NET_2_0" />
+	</target>
+		
+	<target name="do-zipnet-pascalcase" depends="pascalcase, vsdoc">
 		<antcall target="doctor">
 			<param name="dir.n.tutorial.src" value="${dir.dist.pascalcase}/tutorial/db4o-tutorial-chapters/src" />
 		</antcall>
