@@ -30,11 +30,13 @@ namespace com.db4o.test.nativequeries
     
 		public void testClassPredicate()
 		{
-			ObjectContainer objectContainer = Tester.objectContainer();
-			ObjectSet objectSet = objectContainer.query(new CatPredicate());
-            Tester.ensureEquals(2, objectSet.Count);
-            ensureContains(objectSet, "Occam");
-            ensureContains(objectSet, "Zora");
+            if(Db4oVersion.MAJOR >= 5){
+                ObjectContainer objectContainer = Tester.objectContainer();
+                ObjectSet objectSet = objectContainer.query(new CatPredicate());
+                Tester.ensureEquals(2, objectSet.Count);
+                ensureContains(objectSet, "Occam");
+                ensureContains(objectSet, "Zora");
+            }
 		}
     
 		public class CatPredicate : Predicate
@@ -48,14 +50,16 @@ namespace com.db4o.test.nativequeries
 #if NET_2_0
         public void testGenericPredicate()
         {
-            ObjectContainer objectContainer = Tester.objectContainer();
-            System.Collections.Generic.IList<Cat> found = objectContainer.query<Cat>(delegate(Cat c)
-            {
-                return c.name == "Occam" || c.name == "Zora";
-            });
-            Tester.ensureEquals(2, found.Count);
-            ensureContains(found, "Occam");
-            ensureContains(found, "Zora");
+            if(Db4oVersion.MAJOR >= 5){
+                ObjectContainer objectContainer = Tester.objectContainer();
+                System.Collections.Generic.IList<Cat> found = objectContainer.query<Cat>(delegate(Cat c)
+                {
+                    return c.name == "Occam" || c.name == "Zora";
+                });
+                Tester.ensureEquals(2, found.Count);
+                ensureContains(found, "Occam");
+                ensureContains(found, "Zora");
+            }
         }
 #endif
 
