@@ -174,5 +174,10 @@ namespace com.db4o.reflect.net
 			_constructor = constructor;
 			constructorParams = _params;
 		}
+		
+        public virtual object[] toArray(object obj) {
+            // handled in GenericClass
+            return null;
+        }
 	}
 }
