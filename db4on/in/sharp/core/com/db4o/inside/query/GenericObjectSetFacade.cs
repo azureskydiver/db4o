@@ -136,10 +136,10 @@ namespace com.db4o.inside.query
 
         class ObjectSetImplEnumerator<T> : System.Collections.IEnumerator, System.Collections.Generic.IEnumerator<T>
         {
-            IList<T> _result;
+            System.Collections.Generic.IList<T> _result;
             int _next = 0;
 
-            public ObjectSetImplEnumerator(IList<T> result)
+            public ObjectSetImplEnumerator(System.Collections.Generic.IList<T> result)
             {
                 _result = result;
             }
@@ -149,7 +149,7 @@ namespace com.db4o.inside.query
                 _next = 0;
             }
 
-            public object System.Collections.IEnumerable.Current
+            object System.Collections.IEnumerator.Current
             {
                 get
                 {
@@ -167,7 +167,7 @@ namespace com.db4o.inside.query
                 return false;
             }
             
-            T Current
+            public T Current
             {
                 get
                 {
@@ -180,7 +180,7 @@ namespace com.db4o.inside.query
             }
         }
 
-        System.Collections.IEnumerator.GetEnumerator()
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return new ObjectSetImplEnumerator<T>(this);
         }
