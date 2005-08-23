@@ -3,7 +3,6 @@ using System;
 using com.db4o;
 using com.db4o.query;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace com.db4o.test.nativequeries
 {
@@ -50,7 +49,7 @@ namespace com.db4o.test.nativequeries
         public void testGenericPredicate()
         {
             ObjectContainer objectContainer = Tester.objectContainer();
-            IList<Cat> found = objectContainer.query<Cat>(delegate(Cat c)
+            System.Collections.Generic.IList<Cat> found = objectContainer.query<Cat>(delegate(Cat c)
             {
                 return c.name == "Occam" || c.name == "Zora";
             });
