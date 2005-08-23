@@ -24,7 +24,7 @@ namespace j4o.lang {
         }
 
         public static long currentTimeMillis() {
-            return new Date(DateTime.Now).getJavaMilliseconds();
+            return new j4o.util.Date(DateTime.Now).getJavaMilliseconds();
         }
 
         public static int floatToIntBits(float value) {
@@ -68,7 +68,7 @@ namespace j4o.lang {
         }
 
         public static long getTimeForDate(DateTime dateTime) {
-            return new Date(dateTime).getJavaMilliseconds();
+            return new j4o.util.Date(dateTime).getJavaMilliseconds();
         }
 
         public static int identityHashCode(object obj) {
