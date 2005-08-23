@@ -15,25 +15,47 @@
 		<exec executable="${dir.pascalcase.bin}/db4o-net-test.exe" dir="${dir.pascalcase.bin}">
 		</exec>
 	</target>
+	
+	<target name="test2" depends="build2">
+		<exec executable="${dir.pascalcase.bin}/db4o-net-test.exe" dir="${dir.pascalcase.bin}">
+		</exec>
+	</target>
+	
+	<target name="build2" depends="compile-converter2">
+		<property name="converter.exe" location="bin/pascalcase2.exe" />
+		<property name="defines" value="NET_2_0" />
+		<antcall target="run-converter">
+		</antcall>
+	</target>
 		
 	<target name="build" depends="compile-converter">
+		
+		<property name="converter.exe" location="bin/pascalcase.exe" />
+		<property name="defines" value="NET" />
+		<antcall target="run-converter">
+		</antcall>
+	</target>
+			
+	<target name="run-converter">
+		
+		<echo>Converted files will be written to ${dir.pascalcase.src}</echo>
 
-		<exec executable="bin/pascalcase.exe" failonerror="true">
+		<exec executable="${converter.exe}" failonerror="true">
 			<arg file="${dir.n.core.src}" />
 			<arg file="${dir.pascalcase.src}/core/src" />
-			<arg value="NET" />
+			<arg value="${defines}" />
 		</exec>
 		
-		<exec executable="bin/pascalcase.exe" failonerror="true">
+		<exec executable="${converter.exe}" failonerror="true">
 			<arg file="${dir.n.tools}/src" />
 			<arg file="${dir.pascalcase.src}/tools/src" />
-			<arg value="NET" />
+			<arg value="${defines}" />
 		</exec>
 		
-		<exec executable="bin/pascalcase.exe" failonerror="true">
+		<exec executable="${converter.exe}" failonerror="true">
 			<arg file="${dir.n.test}/src" />
 			<arg file="${dir.pascalcase.src}/test/src" />
-			<arg value="NET" />
+			<arg value="${defines}" />
 		</exec>
 		
 		<copy todir="${dir.pascalcase.src}">
@@ -42,6 +64,11 @@
 				<include name="**/*.sln" />
 			</fileset>
 		</copy>
+		
+		<antcall target="compile-converted-files" />
+	</target>
+		
+	<target name="compile-converted-files">
 
 		<csc
 			srcdir="${dir.pascalcase.src}/core/src"
@@ -50,7 +77,8 @@
 			debug="true"
 			warnlevel="0"
 			optimize="true"
-			failonerror="true">
+			failonerror="true"
+			definitions="${defines}">
 			
 			<include name="*.cs" />
 			<exclude name="compact/**" />
@@ -60,7 +88,7 @@
 			targettype="library"
 			destfile="${dir.pascalcase.bin}/db4o-net-tools.dll"
 			debug="true"
-			definitions="NET">
+			definitions="${defines}">
 			<reference dir="${dir.pascalcase.bin}">
 				<include name="db4o.dll" />
 			</reference>
@@ -72,7 +100,7 @@
 			destfile="${dir.pascalcase.bin}/db4o-net-test.exe"
 			debug="true"
 			mainclass="com.db4o.test.AllTests"
-			definitions="NET">
+			definitions="${defines}">
 			
 			<exclude name="**/CsAssemblyVersionChange.cs" />
 			<exclude name="compact/**" />
@@ -81,6 +109,16 @@
 				<include name="db4o.dll" />
 				<include name="db4o-net-tools.dll" />
 				<include name="System.Drawing.dll" />
+			</reference>
+		</csc>
+	</target>
+	
+	<target name="compile-converter2" depends="init">
+		<csc srcdir="src/pascalcase2"
+			outputfile="bin/pascalcase2.exe">
+			<reference dir="bin">
+				<include name="ICSharpCode.NRefactory.dll" />
+				<include name="Boo.Lang.Useful.dll" />
 			</reference>
 		</csc>
 	</target>
@@ -110,6 +148,7 @@
 			</fileset>
 			<fileset dir="lib/SharpDevelop">
 				<include name="ICSharpCode.SharpRefactory.dll" />
+				<include name="ICSharpCode.NRefactory.dll" />
 			</fileset>
 		</copy>
 	</target>
