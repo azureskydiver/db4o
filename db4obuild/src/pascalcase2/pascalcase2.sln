@@ -1,0 +1,6 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# SharpDevelop 2.0.0.421
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pascalcase2", "pascalcase2.csproj", "{4C5619D2-CEFC-4B6F-BB5A-7C3CC5F1040D}"
+EndProject
+Global
+EndGlobal
