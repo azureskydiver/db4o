@@ -10,14 +10,14 @@ namespace com.db4o.test.soda.joins.untyped {
     public class STAndBooleanDate {
         [Transient] public static SodaTest st;
         internal bool shipped;
-        internal Date dateOrdered;
+        internal j4o.util.Date dateOrdered;
       
         public STAndBooleanDate() : base() {
         }
       
         public STAndBooleanDate(bool shipped, int year, int month, int day) : base() {
             this.shipped = shipped;
-            this.dateOrdered = new Date( new DateTime(year, month, day));
+            this.dateOrdered = new j4o.util.Date( new DateTime(year, month, day));
         }
       
         public Object[] store() {

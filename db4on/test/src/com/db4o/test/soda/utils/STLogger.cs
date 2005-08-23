@@ -65,9 +65,9 @@ namespace com.db4o.test.soda.utils {
             } else {
                className1 += classes1[i1].getName();
             }
-            if (classes1[i1] == Class.getClassForType(typeof(Date))) {
+            if (classes1[i1] == Class.getClassForType(typeof(j4o.util.Date))) {
                String fieldName1 = className1 + ".getTime";
-               Object obj1 = System.Convert.ToInt64(((Date)a_object).getTime());
+               Object obj1 = System.Convert.ToInt64(((j4o.util.Date)a_object).getTime());
                log(obj1, Class.getClassForType(typeof(Int64)), fieldName1, a_depth + 1, -1, a_list);
             } else {
                Field[] fields1 = classes1[i1].getDeclaredFields();
