@@ -2,8 +2,13 @@
 
 package com.db4o.reflect.generic;
 
-import com.db4o.foundation.*;
-import com.db4o.reflect.*;
+import com.db4o.Platform4;
+import com.db4o.foundation.DeepClone;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectConstructor;
+import com.db4o.reflect.ReflectField;
+import com.db4o.reflect.ReflectMethod;
+import com.db4o.reflect.Reflector;
 
 /**
  * @exclude
@@ -307,4 +312,11 @@ public class GenericClass implements ReflectClass, DeepClone {
         // ignore, we always create a generic object
     }
     
+	public Object[] toArray(Object obj){
+		if(! isCollection()){
+			return new Object[]{obj};
+		}
+		return Platform4.collectionToArray(_reflector.getStream(), obj);
+	}
+
 }

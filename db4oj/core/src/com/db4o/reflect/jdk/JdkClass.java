@@ -157,4 +157,7 @@ public class JdkClass implements ReflectClass{
         _constructorParams = params;
     }
 
+	public Object[] toArray(Object obj){
+		return null;
+	}
 }
