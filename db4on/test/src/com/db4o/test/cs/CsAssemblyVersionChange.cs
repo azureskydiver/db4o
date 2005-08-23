@@ -86,11 +86,11 @@ using System;
 using System.IO;
 using com.db4o;
 
-public class SimpleType
+public class ST
 {
 	public int value;
 
-	public SimpleType(int value)
+	public ST(int value)
 	{
 		this.value = value;
 	}
@@ -103,7 +103,7 @@ public class Tester
 		ObjectContainer container = Db4o.openFile(fname);
 		try
 		{
-			container.set(new SimpleType(42));
+			container.set(new ST(42));
 		}
 		finally
 		{
@@ -116,7 +116,7 @@ public class Tester
 		ObjectContainer container = Db4o.openFile(fname);
 		try
 		{
-			ObjectSet os = container.get(typeof(SimpleType));
+			ObjectSet os = container.get(typeof(ST));
 			assertEquals(1, os.size());
 		}
 		finally
@@ -289,7 +289,7 @@ public class Tester
 			using (CodeDomProvider provider = GetCSharpCodeDomProvider())
 			{
 				CompilerParameters parameters = CreateDefaultCompilerParameters();
-				parameters.IncludeDebugInformation = true;
+				parameters.IncludeDebugInformation = false;
 				parameters.OutputAssembly = assemblyFName;
 				parameters.ReferencedAssemblies.Add(typeof(Db4o).Assembly.Location);
 
