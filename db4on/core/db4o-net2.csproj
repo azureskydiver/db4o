@@ -160,6 +160,7 @@
     <Compile Include="src\core\com\db4o\FreeSlotNode.cs" />
     <Compile Include="src\core\com\db4o\IDGenerator.cs" />
     <Compile Include="src\core\com\db4o\inside\Exceptions4.cs" />
+    <Compile Include="src\core\com\db4o\inside\query\GenericObjectSetFacade.cs" />
     <Compile Include="src\core\com\db4o\inside\query\PredicateEvaluation.cs" />
     <Compile Include="src\core\com\db4o\inside\query\PredicateQuery.cs" />
     <Compile Include="src\core\com\db4o\inside\query\QueryResult.cs" />
