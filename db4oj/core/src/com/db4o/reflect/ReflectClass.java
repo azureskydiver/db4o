@@ -57,4 +57,6 @@ public interface ReflectClass {
 	
     public void useConstructor(ReflectConstructor constructor, Object[] params);
 	
+    // FIXME: remove. Reintroduced since OM depends on it - refactor OM.
+	public Object[] toArray(Object obj);
 }
