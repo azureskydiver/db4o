@@ -43,6 +43,7 @@ public class ClusterQueryImplementsList {
         tQuery(cluster, "inOne", 1);
         tQuery(cluster, "inTwo", 1);
         tQuery(cluster, "inBoth", 2);
+        tQuery(cluster, "inNone", 0);
         second.close();
     }
     
