@@ -8,6 +8,10 @@ import com.db4o.inside.*;
 import com.db4o.inside.query.*;
 import com.db4o.query.*;
 
+/**
+ * 
+ * @exclude
+ */
 public class ClusterQuery implements Query{
     
     private final Cluster _cluster;

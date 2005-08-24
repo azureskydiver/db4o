@@ -11,7 +11,7 @@ import com.db4o.inside.*;
 /**
  * Extend this class and add your #match() method to run native queries.
  * 
- * <b>! The functionality of this class is not available before db4o version 5.0.
+ * <br><br><b>! The functionality of this class is not available before db4o version 5.0.
  * It is present in 4.x builds for maintenance purposes only !</b><br><br> 
  *  
  * A class that extends Predicate is required to implement the method
