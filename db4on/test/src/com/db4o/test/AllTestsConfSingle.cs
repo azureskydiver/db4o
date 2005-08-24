@@ -13,7 +13,7 @@ namespace com.db4o.test {
          * new testcases here
          */
         internal Type[] TESTS = new Type[]{
-            typeof(CsDelegate),
+            typeof(SimplestPossible),
          };
        
         /**

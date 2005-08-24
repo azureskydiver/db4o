@@ -14,7 +14,9 @@ namespace com.db4o.test {
         internal Type[] TESTS = new Type[]{
             typeof(ArrayNOrder),	
             typeof(BackReferences),
+#if NET || NET_2_0 || MONO
             typeof(BasicClusterTest),
+#endif
             typeof(BindFileSize),
             typeof(Book),
             typeof(Callbacks),
