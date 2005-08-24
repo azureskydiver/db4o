@@ -318,15 +318,16 @@
     <Compile Include="src\core\com\db4o\IDGenerator.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\inside\Exceptions.cs" />
+    <Compile Include="src\core\com\db4o\inside\Exceptions4.cs" />
+    <Compile Include="src\core\com\db4o\inside\query\GenericObjectSetFacade.cs" />
+    <Compile Include="src\core\com\db4o\inside\query\ObjectSetFacade.cs" />
     <Compile Include="src\core\com\db4o\inside\query\PredicateEvaluation.cs" />
     <Compile Include="src\core\com\db4o\inside\query\PredicateQuery.cs" />
+    <Compile Include="src\core\com\db4o\inside\query\QueryResult.cs" />
     <Compile Include="src\core\com\db4o\IntArrayList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\Internal.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="src\core\com\db4o\Internal4.cs" />
     <Compile Include="src\core\com\db4o\io\IoAdapter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -513,7 +514,6 @@
     <Compile Include="src\core\com\db4o\ObjectSet.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\ObjectSetImpl.cs" />
     <Compile Include="src\core\com\db4o\Order.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -559,9 +559,7 @@
     <Compile Include="src\core\com\db4o\PendingClassInits.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\Platform.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="src\core\com\db4o\Platform4.cs" />
     <Compile Include="src\core\com\db4o\QCandidate.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -631,9 +629,6 @@
     <Compile Include="src\core\com\db4o\QQuery.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\core\com\db4o\QResult.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\core\com\db4o\QResultClient.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -656,6 +651,7 @@
     <Compile Include="src\core\com\db4o\query\Query.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\core\com\db4o\QueryResultImpl.cs" />
     <Compile Include="src\core\com\db4o\Readable.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1047,9 +1043,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\j4o\io\InputStream.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="src\j4o\io\IOException.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\j4o\io\OutputStream.cs">
