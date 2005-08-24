@@ -602,18 +602,25 @@
 	<target name="zipjavasrc" depends="javadoc,compilecorejava,compiletestsjava">
 		<copy todir="${dir.dist.java.src}/${name.project.j}">
 			<fileset dir="${dir.j}">
+				<include name=".project" />
+				<include name=".classpath" />
 				<include name="build.xml" />
 				<include name="**/src/**" />
+				<exclude name="tools/**" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.jdk1.2}">
 			<fileset dir="${dir.j.jdk1.2}">
+				<include name=".project" />
+				<include name=".classpath" />
 				<include name="build.xml" />
 				<include name="**/src/**" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.jdk5}">
 			<fileset dir="${dir.j.jdk5}">
+				<include name=".project" />
+				<include name=".classpath" />
 				<include name="build.xml" />
 				<include name="**/src/**" />
 			</fileset>
@@ -647,8 +654,8 @@
 	<target name="zipjava" depends="zipjavasrc, init" description="Zip Java distribution">
 		<copy todir="${dir.dist.java.src}">
 			<fileset file="${file.java.core.src.zip}" />
-			<fileset dir="${dir.j.tools.src}">
-				<include name="*.java" />
+			<fileset dir="${dir.j}">
+				<include name="tools/**/*.java" />
 			</fileset>
 		</copy>
 		<filehead path="${dir.dist.java.src}" beforePattern="package" fileext="java" header="${content.gplheader}" />
