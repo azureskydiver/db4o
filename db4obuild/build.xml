@@ -300,7 +300,8 @@
 			debug="${compiledll.debug}"
 			warnlevel="0"
 			optimize="true"
-			failonerror="true">
+			failonerror="true"
+			definitions="${csharp.defines}">
 			
 			<include name="*.cs" />
 			<exclude name="compact/**" />
@@ -498,7 +499,7 @@
 	</target>
 	
 	<target name="ndoc" depends="preparendoc" description="Build public .net docs">		
-		<exec executable="${ndoc.home}/bin/net/1.1/NDocConsole.exe">
+		<exec executable="${ndoc.home}/bin/net/${target.framework.version}/NDocConsole.exe">
 			<arg value="${file.dll.net}" />
 			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
 			<arg value="-documenter=MSDN 2003" />
@@ -515,7 +516,7 @@
 	</target>
 		
 	<target name="vsdoc" depends="ndoc" description="Build VS.NET 2003 integrated docs">
-		<exec executable="${ndoc.home}/bin/net/1.1/NDocConsole.exe">
+		<exec executable="${ndoc.home}/bin/net/${target.framework.version}/NDocConsole.exe">
 			<arg value="${file.dll.net}" />
 			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
 			<arg value="-documenter=VS.NET 2003" />
@@ -680,29 +681,30 @@
 		</antcall>
 	</target>
 	
-	<target name="zipnet-pascalcase" depends="init, configure-net1.1-pascalcase, do-zipnet-pascalcase">
+	<target name="zipnet-pascalcase" depends="init, configure-net1.1-pascalcase, pascalcase, vsdoc, do-zipnet-pascalcase">
 	</target>
 	
-	<target name="zipnet-pascalcase2" depends="init, configure-net1.1-pascalcase, do-zipnet-pascalcase">
+	<target name="zipnet-pascalcase2" depends="init, configure-net2-pascalcase, pascalcase, ndoc, do-zipnet-pascalcase">
 	</target>
 	
 	<target name="configure-net1.1">
+		<property name="target.framework.version" value="1.1" />
 		<property name="csharp.defines" value="NET" />
 	</target>
 	
-	<target name="configure-net1.1-pascalcase">
+	<target name="configure-net1.1-pascalcase" depends="configure-net1.1">
 		<property name="pascalcase.converter.ant.target" value="compile-converter" />
 		<property name="pascalcase.converter.exe" location="bin/pascalcase.exe" />
-		<property name="csharp.defines" value="NET" />
 	</target>
 	
-	<target name="configure-net2.2-pascalcase">
+	<target name="configure-net2-pascalcase">
 		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
 		<property name="pascalcase.converter.exe" location="bin/pascalcase2.exe" />
 		<property name="csharp.defines" value="NET_2_0" />
+		<property name="target.framework.version" value="2.0" />
 	</target>
 		
-	<target name="do-zipnet-pascalcase" depends="pascalcase, vsdoc">
+	<target name="do-zipnet-pascalcase">
 		<antcall target="doctor">
 			<param name="dir.n.tutorial.src" value="${dir.dist.pascalcase}/tutorial/db4o-tutorial-chapters/src" />
 		</antcall>
@@ -899,7 +901,7 @@
 			<arg value="-pascalcase" />
 		</java>
 		
-		<ant antfile="build-pascalcase.xml" target="compile-converter">
+		<ant antfile="build-pascalcase.xml" target="${pascalcase.converter.ant.target}">
 		</ant>
 		
 		<property name="dir.dist.pascalcase" location="${dir.dist}/pascalcase" />
@@ -916,7 +918,7 @@
 			compile compact framework first as some code will get
 			removed by the COMPACT_1_0 define
 		-->
-		<exec executable="bin/pascalcase.exe" failonerror="true">
+		<exec executable="${pascalcase.converter.exe}" failonerror="true">
 			<arg file="${dir.n.in.sharp}" />
 			<arg file="${target.dir}/src" />
 			<arg value="COMPACT_1_0" />
@@ -925,29 +927,29 @@
 			<param name="src.dir" value="${target.dir}/src" />
 		</antcall>
 
-		<exec executable="bin/pascalcase.exe" failonerror="true">
+		<exec executable="${pascalcase.converter.exe}" failonerror="true">
 			<arg file="${dir.n.in.sharp}" />
 			<arg file="${target.dir}/src" />
-			<arg value="NET" />
+			<arg value="${csharp.defines}" />
 		</exec>		
 		<antcall target="compilecoredll-net">
 			<param name="src.dir" value="${target.dir}/src" />
 		</antcall>
 		
-		<exec executable="bin/pascalcase.exe" failonerror="true">
+		<exec executable="${pascalcase.converter.exe}" failonerror="true">
 			<arg file="${dir.n.tools}/src" />
 			<arg file="${dir.dist.pascalcase}/tools/src" />
-			<arg value="NET" />
+			<arg value="${csharp.defines}" />
 		</exec>
 		
-		<exec executable="bin/pascalcase.exe" failonerror="true">
+		<exec executable="${pascalcase.converter.exe}" failonerror="true">
 			<arg file="${dir.n.test}/src" />
 			<arg file="${dir.dist.pascalcase}/test/src" />
-			<arg value="NET" />
+			<arg value="${csharp.defines}" />
 			<arg value="PASCALCASE" />
 		</exec>
 		
-		<exec executable="bin/pascalcase.exe" failonerror="true">
+		<exec executable="${pascalcase.converter.exe}" failonerror="true">
 			<arg file="${dir.n.tutorial}" />
 			<arg file="${dir.dist.pascalcase}/tutorial" />
 			<arg value="PASCALCASE" />
@@ -1122,6 +1124,8 @@
 	<target name="buildnet" depends="doctor, zipnet" description="Full NET build" />
 	
 	<target name="buildnet-pascalcase" depends="zipnet-pascalcase" description="Full PascalCase NET build" />
+	
+	<target name="buildnet-pascalcase2" depends="zipnet-pascalcase2" description="Full PascalCase NET 2.0 build" />
 	
 	<target name="buildmono" depends="doctor, zipmono" description="Full Mono build" />
 
