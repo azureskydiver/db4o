@@ -116,6 +116,8 @@ namespace HelloWorld
 			options.PropertyGetBraceStyle = BraceStyle.NextLine;
 			options.PropertySetBraceStyle = BraceStyle.NextLine;
 			options.IndentationChar = ' ';
+			options.IndentSize = 4;
+			options.TabSize = 4;
 			
 			CSharpOutputVisitor visitor = new CSharpOutputVisitor();
 			visitor.Options = options;
