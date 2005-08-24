@@ -9,7 +9,7 @@ import com.db4o.foundation.*;
 /**
  * prints statistics about a database file to System.out.
  * <br><br>Pass the database file path as an argument.
- * <br><br><b>This class is not part of db4o.jar!</b>
+ * <br><br><b>This class is not part of db4o.jar!</b><br>
  * It is delivered as sourcecode in the
  * path ../com/db4o/tools/<br><br>
  */

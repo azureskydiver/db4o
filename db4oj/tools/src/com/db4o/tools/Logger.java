@@ -11,7 +11,7 @@ import com.db4o.foundation.*;
 
 /**
  * Logger class to log and analyse objects in RAM.
- * <br><br><b>This class is not part of db4o.jar!</b>
+ * <br><br><b>This class is not part of db4o.jar!</b><br>
  * It is delivered as sourcecode in the
  * path ../com/db4o/tools/<br><br>
  */

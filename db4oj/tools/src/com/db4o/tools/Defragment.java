@@ -11,7 +11,7 @@ import com.db4o.types.*;
 
 /**
  * defragments a database file.
- * <br><br><b>This class is not part of db4o.jar!</b>
+ * <br><br><b>This class is not part of db4o.jar!</b><br>
  * It is delivered as sourcecode in the
  * path ../com/db4o/tools/<br><br> <b>Prerequites:</b><br> - The database file may not be
  * in use.<br> - All stored classes need to be available.<br> - If you use yor own special

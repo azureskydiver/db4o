@@ -7,7 +7,8 @@ import com.db4o.cluster.inside.*;
 import com.db4o.query.*;
 
 /**
- * allows running Queries against multiple ObjectContainers.   
+ * allows running Queries against multiple ObjectContainers.
+ * @exclude   
  */
 public class Cluster {
     

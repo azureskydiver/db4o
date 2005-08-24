@@ -6,7 +6,10 @@ import com.db4o.cluster.*;
 import com.db4o.inside.*;
 import com.db4o.query.*;
 
-
+/**
+ * 
+ * @exclude
+ */
 public class ClusterConstraint implements Constraint{
     
     final Cluster _cluster;
