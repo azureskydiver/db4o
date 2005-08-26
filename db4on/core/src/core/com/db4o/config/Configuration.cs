@@ -564,7 +564,7 @@ namespace com.db4o.config
 		/// <see cref="com.db4o.ObjectContainer.set">ObjectContainer.set()</see>
 		/// for further details.<br /><br />
 		/// The value be may be overridden for individual classes.<br /><br />
-		/// The default setting is 0: Only the object passed to
+		/// The default setting is 1: Only the object passed to
 		/// <see cref="com.db4o.ObjectContainer.set">ObjectContainer.set()</see>
 		/// will be updated.<br /><br />
 		/// </remarks>
