@@ -143,7 +143,8 @@ namespace com.db4o
 		{
 			if (!file.exists())
 			{
-				throw new j4o.io.IOException(com.db4o.Messages.get(41, file.getAbsolutePath()));
+				throw new System.IO.IOException(com.db4o.Messages.get(41, file.getAbsolutePath())
+					);
 			}
 			i_length = (int)file.length();
 			checkExt(file);
@@ -223,7 +224,7 @@ namespace com.db4o
 						if (i == 99)
 						{
 							i_status = com.db4o.ext.Status.ERROR;
-							throw new j4o.io.IOException(com.db4o.Messages.get(40));
+							throw new System.IO.IOException(com.db4o.Messages.get(40));
 						}
 					}
 					fileName = tryPath;
@@ -237,7 +238,7 @@ namespace com.db4o
 			{
 				if (fileName == null)
 				{
-					throw new j4o.io.IOException(com.db4o.Messages.get(38));
+					throw new System.IO.IOException(com.db4o.Messages.get(38));
 				}
 			}
 			string lastTryPath = path + j4o.io.File.separator + fileName;
@@ -245,7 +246,7 @@ namespace com.db4o
 			{
 				if (!(new j4o.io.File(lastTryPath).exists()))
 				{
-					throw new j4o.io.IOException(com.db4o.Messages.get(39));
+					throw new System.IO.IOException(com.db4o.Messages.get(39));
 				}
 			}
 			return new j4o.io.File(lastTryPath);
@@ -283,7 +284,7 @@ namespace com.db4o
 		{
 			if (getStatus() == com.db4o.ext.Status.UNUSED)
 			{
-				throw new j4o.io.IOException(com.db4o.Messages.get(43));
+				throw new System.IO.IOException(com.db4o.Messages.get(43));
 			}
 			if (i_stream.isClient())
 			{

@@ -1,8 +1,8 @@
 namespace com.db4o
 {
-	/// <summary>client class index.</summary>
+	/// <summary>Client class index.</summary>
 	/// <remarks>
-	/// client class index. Largly intended to do nothing or
+	/// Client class index. Largly intended to do nothing or
 	/// redirect functionality to the server.
 	/// </remarks>
 	internal sealed class ClassIndexClient : com.db4o.ClassIndex
