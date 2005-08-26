@@ -1,4 +1,5 @@
 namespace com.db4o
+
 {
 	/// <summary>representation to collect and hold all IDs of one class</summary>
 	internal class ClassIndex : com.db4o.YapMeta, com.db4o.ReadWriteable, com.db4o.UseSystemTransaction
