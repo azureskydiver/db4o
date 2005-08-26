@@ -28,6 +28,7 @@
 	
 	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
 		<classpath>
+			<pathelement location="${dir.j.core}/bin" />
 			<pathelement location="${dir.doctor.bin}" />
 			<pathelement location="${dir.doctor.lib}/iText.jar" />
 			<pathelement location="${dir.dist.classes.tutorial}" />
@@ -465,8 +466,10 @@
 
 	<target name="compilejtutorial" depends="compilecorejava" description="Compile Db4o Java tutorial sources">
 		<mkdir dir="${dir.dist.classes.tutorial}" />
+		<!--
 		<antcall target="copyjava1.2" />
 		<javac srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.tutorial}" target="1.3" source="1.3" />
+		-->
 		<javac srcdir="${dir.j.tutorial.src}" destdir="${dir.dist.classes.tutorial}" classpath="${dir.dist.classes.tutorial}" target="1.3" source="1.3" debug="on" />
 	</target>
 	
