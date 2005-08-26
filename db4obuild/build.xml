@@ -13,6 +13,7 @@
 	dir.dll.wince=<path to .NET CE dll, leave empty if not available>
 	eclipse.home=<eclipse home dir>
 
+
 	An example:
 	dir.workspace=C:/_db4o/production
 	file.compiler.jdk1.3=C:/jdk1.3.1_12/bin/javac.exe
