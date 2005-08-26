@@ -1149,6 +1149,8 @@
 
 	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build" />
 	
+	<target name="buildall2" depends="clean, buildjava, buildnet-pascalcase2" description="Full clean build (.net 2 runtime)" />
+	
 	<target name="serversidecopy">
 		<copy todir="${dir.server.downloads}" overwrite="true">
 			<fileset dir="${dir.dist}">
