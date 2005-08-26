@@ -22,6 +22,7 @@ namespace com.db4o.config {
                 }
             }
         }
+        
 
         public Object onStore(ObjectContainer objectContainer, object obj){
             IDictionary dict = (IDictionary)obj;
