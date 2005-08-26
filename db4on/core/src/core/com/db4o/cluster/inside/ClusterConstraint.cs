@@ -1,8 +1,9 @@
 namespace com.db4o.cluster.inside
 {
+	/// <exclude></exclude>
 	public class ClusterConstraint : com.db4o.query.Constraint
 	{
-		private readonly com.db4o.cluster.Cluster _cluster;
+		internal readonly com.db4o.cluster.Cluster _cluster;
 
 		internal readonly com.db4o.query.Constraint[] _constraints;
 
@@ -42,78 +43,102 @@ namespace com.db4o.cluster.inside
 		private com.db4o.query.Constraint join(com.db4o.query.Constraint with, bool isAnd
 			)
 		{
-			com.db4o.cluster.inside.ClusterConstraint other = compatible(with);
-			com.db4o.query.Constraint[] newConstraints = new com.db4o.query.Constraint[_constraints
-				.Length];
-			for (int i = 0; i < _constraints.Length; i++)
+			lock (_cluster)
 			{
-				newConstraints[i] = isAnd ? _constraints[i].and(other._constraints[i]) : _constraints
-					[i].or(other._constraints[i]);
+				com.db4o.cluster.inside.ClusterConstraint other = compatible(with);
+				com.db4o.query.Constraint[] newConstraints = new com.db4o.query.Constraint[_constraints
+					.Length];
+				for (int i = 0; i < _constraints.Length; i++)
+				{
+					newConstraints[i] = isAnd ? _constraints[i].and(other._constraints[i]) : _constraints
+						[i].or(other._constraints[i]);
+				}
+				return new com.db4o.cluster.inside.ClusterConstraint(_cluster, newConstraints);
 			}
-			return new com.db4o.cluster.inside.ClusterConstraint(_cluster, newConstraints);
 		}
 
 		public virtual com.db4o.query.Constraint equal()
 		{
-			for (int i = 0; i < _constraints.Length; i++)
+			lock (_cluster)
 			{
-				_constraints[i].equal();
+				for (int i = 0; i < _constraints.Length; i++)
+				{
+					_constraints[i].equal();
+				}
+				return this;
 			}
-			return this;
 		}
 
 		public virtual com.db4o.query.Constraint greater()
 		{
-			for (int i = 0; i < _constraints.Length; i++)
+			lock (_cluster)
 			{
-				_constraints[i].greater();
+				for (int i = 0; i < _constraints.Length; i++)
+				{
+					_constraints[i].greater();
+				}
+				return this;
 			}
-			return this;
 		}
 
 		public virtual com.db4o.query.Constraint smaller()
 		{
-			for (int i = 0; i < _constraints.Length; i++)
+			lock (_cluster)
 			{
-				_constraints[i].smaller();
+				for (int i = 0; i < _constraints.Length; i++)
+				{
+					_constraints[i].smaller();
+				}
+				return this;
 			}
-			return this;
 		}
 
 		public virtual com.db4o.query.Constraint identity()
 		{
-			for (int i = 0; i < _constraints.Length; i++)
+			lock (_cluster)
 			{
-				_constraints[i].identity();
+				for (int i = 0; i < _constraints.Length; i++)
+				{
+					_constraints[i].identity();
+				}
+				return this;
 			}
-			return this;
 		}
 
 		public virtual com.db4o.query.Constraint like()
 		{
-			for (int i = 0; i < _constraints.Length; i++)
+			lock (_cluster)
 			{
-				_constraints[i].like();
+				for (int i = 0; i < _constraints.Length; i++)
+				{
+					_constraints[i].like();
+				}
+				return this;
 			}
-			return this;
 		}
 
 		public virtual com.db4o.query.Constraint contains()
 		{
-			for (int i = 0; i < _constraints.Length; i++)
+			lock (_cluster)
 			{
-				_constraints[i].contains();
+				for (int i = 0; i < _constraints.Length; i++)
+				{
+					_constraints[i].contains();
+				}
+				return this;
 			}
-			return this;
 		}
 
 		public virtual com.db4o.query.Constraint not()
 		{
-			for (int i = 0; i < _constraints.Length; i++)
+			lock (_cluster)
 			{
-				_constraints[i].not();
+				for (int i = 0; i < _constraints.Length; i++)
+				{
+					_constraints[i].not();
+				}
+				return this;
 			}
-			return this;
 		}
 
 		public virtual object getObject()

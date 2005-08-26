@@ -31,13 +31,15 @@ namespace com.db4o
 
 		internal bool i_storeTransientFields;
 
-		internal com.db4o.config.ObjectTranslator i_translator;
+		private com.db4o.config.ObjectTranslator _translator;
 
-		internal string i_translatorName;
+		internal string _translatorName;
 
 		internal int i_updateDepth;
 
 		internal string _writeAs;
+
+		private bool _processing;
 
 		internal Config4Class(com.db4o.Config4Impl a_configuration, string a_name)
 		{
@@ -110,6 +112,7 @@ namespace com.db4o
 			try
 			{
 				ret = (com.db4o.Config4Class)j4o.lang.JavaSystem.clone(this);
+				ret._processing = false;
 			}
 			catch (j4o.lang.CloneNotSupportedException e)
 			{
@@ -141,24 +144,34 @@ namespace com.db4o
 
 		public virtual com.db4o.config.ObjectTranslator getTranslator()
 		{
-			if (i_translator == null && i_translatorName != null)
+			if (_translator != null)
 			{
-				try
-				{
-					i_translator = (com.db4o.config.ObjectTranslator)i_config.reflector().forName(i_translatorName
-						).newInstance();
-				}
-				catch (System.Exception t)
-				{
-					com.db4o.Messages.logErr(i_config, 48, i_translatorName, null);
-					i_translatorName = null;
-				}
+				return _translator;
 			}
-			return i_translator;
+			if (_translatorName == null)
+			{
+				return null;
+			}
+			try
+			{
+				_translator = (com.db4o.config.ObjectTranslator)i_config.reflector().forName(_translatorName
+					).newInstance();
+			}
+			catch (System.Exception t)
+			{
+				com.db4o.Messages.logErr(i_config, 48, _translatorName, null);
+				_translatorName = null;
+			}
+			return _translator;
 		}
 
-		public virtual void initOnUp(com.db4o.Transaction systemTrans)
+		public virtual bool initOnUp(com.db4o.Transaction systemTrans)
 		{
+			if (_processing)
+			{
+				return false;
+			}
+			_processing = true;
 			com.db4o.YapStream stream = systemTrans.i_stream;
 			if (stream.maintainsIndices())
 			{
@@ -177,13 +190,15 @@ namespace com.db4o
 					}
 				}
 			}
+			_processing = false;
+			return true;
 		}
 
 		internal virtual object instantiate(com.db4o.YapStream a_stream, object a_toTranslate
 			)
 		{
-			return ((com.db4o.config.ObjectConstructor)i_translator).onInstantiate(a_stream, 
-				a_toTranslate);
+			return ((com.db4o.config.ObjectConstructor)_translator).onInstantiate(a_stream, a_toTranslate
+				);
 		}
 
 		internal virtual bool instantiates()
@@ -203,7 +218,7 @@ namespace com.db4o
 
 		public virtual int callConstructor()
 		{
-			if (i_translator != null)
+			if (_translator != null)
 			{
 				return com.db4o.YapConst.YES;
 			}
@@ -271,14 +286,14 @@ namespace com.db4o
 		{
 			if (translator == null)
 			{
-				i_translatorName = null;
+				_translatorName = null;
 			}
-			i_translator = translator;
+			_translator = translator;
 		}
 
 		internal virtual void translateOnDemand(string a_translatorName)
 		{
-			i_translatorName = a_translatorName;
+			_translatorName = a_translatorName;
 		}
 
 		public virtual void updateDepth(int depth)
