@@ -27,10 +27,6 @@ public class Exceptions4 {
     }
     
     public static final void notSupported(){
-        if(Deploy.csharp){
-            throw new RuntimeException("Unsupported operation");
-        }else{
-            throwRuntimeException(53);
-        }
+		throwRuntimeException(53);
     }
 }
