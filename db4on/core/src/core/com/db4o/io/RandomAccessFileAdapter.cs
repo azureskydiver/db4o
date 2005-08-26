@@ -21,7 +21,7 @@ namespace com.db4o.io
 			}
 			if (lockFile)
 			{
-				com.db4o.Platform.Lock(_delegate);
+				com.db4o.Platform4.Lock(_delegate);
 			}
 		}
 
@@ -29,7 +29,7 @@ namespace com.db4o.io
 		{
 			try
 			{
-				com.db4o.Platform.unlock(_delegate);
+				com.db4o.Platform4.unlock(_delegate);
 			}
 			catch (System.Exception e)
 			{
