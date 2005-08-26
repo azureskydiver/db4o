@@ -1,0 +1,50 @@
+<!--
+	simple script for testing jdk1.1 compatibility
+	needs to be integrated in the full build and adjusted to db4obuild paths
+	currently shows severe timing problems with YapConfigBlock.run() and C/S socket IO against Sun JDK1.1.8/Win
+  -->
+<project name="db4obuildcore" basedir="." default="runtests">
+	<property name="db4o.version" value="4.6" />
+	<property name="jdk11.home" value="c:\java\jdk1.1.8" />
+	<property name="jdk12.home" value="c:\java\jdk1.2.2" />
+	
+	<property name="db4o.name" value="db4o-${db4o.version}" />
+	<property name="dir.base" value="${db4o.name}" />
+	<property name="dir.src" value="${dir.base}/src" />
+	<property name="dir.build" value="${dir.base}/build" />
+	<property name="exec.java" value="${jdk11.home}/bin/java" />
+	<property name="exec.javac" value="${jdk12.home}/bin/javac" />
+
+	<target name="unzip">
+		<delete dir="${dir.base}" />
+		<unzip src="${db4o.name}-java.zip" dest="." />
+		<unzip src="${dir.src}/${db4o.name}-src.zip" dest="${dir.src}" />
+	</target>
+
+	<target name="compile" depends="unzip">
+		<mkdir dir="${dir.build}" />
+		<javac compiler="classic" fork="yes" executable="${exec.javac}" destdir="${dir.build}" sourcepath="" debug="off">
+			<src>
+				<pathelement location="${dir.src}/db4oj/test/src" />
+				<pathelement location="${dir.src}/tools/src" />
+			</src>
+			<classpath>
+				<pathelement location="${dir.base}/lib/${db4o.name}-java1.1.jar" />
+			</classpath>
+			<compilerarg line="-target 1.1" />
+		</javac>
+	</target>
+
+	<target name="runtests" depends="compile">
+		<exec executable="${exec.java}">
+			<arg line="-version" />		
+		</exec>
+		<java fork="yes" jvm="${exec.java}" classname="com.db4o.test.AllTests">
+			<classpath>
+				<pathelement location="${dir.base}/lib/${db4o.name}-java1.1.jar" />
+				<pathelement location="${dir.build}" />
+				<pathelement location="${jdk11.home}/lib/classes.zip" />
+			</classpath>
+		</java>
+	</target>
+</project>
