@@ -474,7 +474,7 @@ public interface Configuration {
      * {@link com.db4o.ObjectContainer#set ObjectContainer.set()}
      * for further details.<br><br>
      * The value be may be overridden for individual classes.<br><br>
-     * The default setting is 0: Only the object passed to
+     * The default setting is 1: Only the object passed to
      * {@link com.db4o.ObjectContainer#set ObjectContainer.set()}
      * will be updated.<br><br>
      * @param depth the depth of the desired update.
