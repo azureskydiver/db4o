@@ -58,7 +58,7 @@ namespace com.db4o.io
 			return read(buffer, buffer.Length);
 		}
 
-		public abstract int read(byte[] bytes, int length);
+		public abstract System.Int32 read(byte[] bytes, int length);
 
 		public abstract void seek(long pos);
 
