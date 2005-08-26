@@ -1,5 +1,6 @@
 namespace com.db4o
 {
+
 	internal abstract class Debug : com.db4o.foundation.Debug4
 	{
 		public const bool checkSychronization = false;
