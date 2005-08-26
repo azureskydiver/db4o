@@ -7,6 +7,7 @@ namespace com.db4o.foundation {
 
     internal class Lock4 {
 
+
         private volatile Thread lockedByThread;
 
         private volatile Thread waitReleased;
