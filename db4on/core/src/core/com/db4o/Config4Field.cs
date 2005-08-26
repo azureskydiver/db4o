@@ -32,6 +32,8 @@ namespace com.db4o
 			try
 			{
 				ret = (com.db4o.Config4Field)j4o.lang.JavaSystem.clone(this);
+				ret.i_metaField = null;
+				ret.i_initialized = false;
 			}
 			catch (j4o.lang.CloneNotSupportedException e)
 			{

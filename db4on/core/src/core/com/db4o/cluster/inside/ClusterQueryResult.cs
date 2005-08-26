@@ -1,5 +1,6 @@
 namespace com.db4o.cluster.inside
 {
+	/// <exclude></exclude>
 	public class ClusterQueryResult : com.db4o.inside.query.QueryResult
 	{
 		private readonly com.db4o.cluster.Cluster _cluster;

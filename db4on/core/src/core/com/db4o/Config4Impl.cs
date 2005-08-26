@@ -107,11 +107,11 @@ namespace com.db4o
 		{
 			if (bytes < 1 || bytes > 127)
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(1);
+				com.db4o.inside.Exceptions4.throwRuntimeException(1);
 			}
 			if (i_stream != null)
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(46);
+				com.db4o.inside.Exceptions4.throwRuntimeException(46);
 			}
 			i_blockSize = (byte)bytes;
 		}
@@ -199,7 +199,7 @@ namespace com.db4o
 			}
 			else
 			{
-				throw new j4o.io.IOException(com.db4o.Messages.get(37, path));
+				throw new System.IO.IOException(com.db4o.Messages.get(37, path));
 			}
 		}
 
@@ -246,7 +246,7 @@ namespace com.db4o
 			if (i_stream != null)
 			{
 				j4o.lang.JavaSystem.printStackTrace(new System.Exception());
-				com.db4o.inside.Exceptions.throwRuntimeException(46);
+				com.db4o.inside.Exceptions4.throwRuntimeException(46);
 			}
 		}
 
@@ -263,7 +263,7 @@ namespace com.db4o
 
 		public void markTransient(string marker)
 		{
-			com.db4o.Platform.markTransient(marker);
+			com.db4o.Platform4.markTransient(marker);
 		}
 
 		public void messageLevel(int level)
@@ -277,15 +277,20 @@ namespace com.db4o
 
 		public com.db4o.config.ObjectClass objectClass(object clazz)
 		{
-			com.db4o.reflect.ReflectClass claxx = reflectorFor(clazz);
-			if (claxx == null)
+			string className = null;
+			if (clazz is string)
 			{
-				if (!(clazz is string))
+				className = (string)clazz;
+			}
+			else
+			{
+				com.db4o.reflect.ReflectClass claxx = reflectorFor(clazz);
+				if (claxx == null)
 				{
 					return null;
 				}
+				className = claxx.getName();
 			}
-			string className = (claxx == null) ? (string)clazz : claxx.getName();
 			com.db4o.Config4Class c4c = (com.db4o.Config4Class)i_exceptionalClasses.get(className
 				);
 			if (c4c == null)
@@ -319,7 +324,7 @@ namespace com.db4o
 			{
 				if (_configuredReflector == null)
 				{
-					_configuredReflector = com.db4o.Platform.createReflector(this);
+					_configuredReflector = com.db4o.Platform4.createReflector(this);
 				}
 				_reflector = new com.db4o.reflect.generic.GenericReflector(null, _configuredReflector
 					);
@@ -336,7 +341,7 @@ namespace com.db4o
 		{
 			if (i_stream != null)
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(46);
+				com.db4o.inside.Exceptions4.throwRuntimeException(46);
 			}
 			if (reflect == null)
 			{
@@ -350,7 +355,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass311(this));
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass313(this));
 			}
 			else
 			{
@@ -358,9 +363,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass311 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass313 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass311(Config4Impl _enclosing)
+			public _AnonymousInnerClass313(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -404,7 +409,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass347(this));
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass349(this));
 			}
 			else
 			{
@@ -412,9 +417,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass347 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass349 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass347(Config4Impl _enclosing)
+			public _AnonymousInnerClass349(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -515,7 +520,7 @@ namespace com.db4o
 
 		internal com.db4o.reflect.ReflectClass reflectorFor(object clazz)
 		{
-			clazz = com.db4o.Platform.getClassForType(clazz);
+			clazz = com.db4o.Platform4.getClassForType(clazz);
 			if (clazz is com.db4o.reflect.ReflectClass)
 			{
 				return (com.db4o.reflect.ReflectClass)clazz;
