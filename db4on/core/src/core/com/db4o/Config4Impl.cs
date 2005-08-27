@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>Configuration template for creating new db4o files</summary>

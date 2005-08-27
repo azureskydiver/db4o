@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal class Config4Field : com.db4o.Config4Abstract, com.db4o.config.ObjectField

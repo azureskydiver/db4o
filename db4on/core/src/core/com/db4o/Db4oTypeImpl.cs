@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>marker interface for special db4o datatypes</summary>
