@@ -1,3 +1,4 @@
+
 namespace com.db4o.ext
 {
 	/// <summary>Class to identify a database by it's signature.</summary>
