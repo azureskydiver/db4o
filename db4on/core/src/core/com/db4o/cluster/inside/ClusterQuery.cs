@@ -1,3 +1,4 @@
+
 namespace com.db4o.cluster.inside
 {
 	/// <exclude></exclude>

@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>factory class with static methods to configure and start the engine.</summary>
@@ -30,7 +31,7 @@ namespace com.db4o
 
 		private static object initialize()
 		{
-			com.db4o.Platform.getDefaultConfiguration(i_config);
+			com.db4o.Platform4.getDefaultConfiguration(i_config);
 			return new object();
 		}
 
@@ -165,7 +166,7 @@ namespace com.db4o
 				}
 				if (oc != null)
 				{
-					com.db4o.Platform.postOpen(oc);
+					com.db4o.Platform4.postOpen(oc);
 					com.db4o.Messages.logMsg(i_config, 5, "Memory File");
 				}
 				return oc;

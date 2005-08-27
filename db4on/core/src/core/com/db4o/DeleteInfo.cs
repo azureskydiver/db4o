@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal class DeleteInfo : com.db4o.TreeInt

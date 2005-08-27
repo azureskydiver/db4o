@@ -2,7 +2,7 @@ namespace com.db4o
 {
 	internal abstract class Config4Abstract
 	{
-		internal int i_cascadeOnActivate = 1;
+		internal int i_cascadeOnActivate = 0;
 
 		internal int i_cascadeOnDelete = 0;
 
