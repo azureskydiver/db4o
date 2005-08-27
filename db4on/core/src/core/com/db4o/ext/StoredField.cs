@@ -1,3 +1,4 @@
+
 namespace com.db4o.ext
 {
 	/// <summary>the internal representation of a field on a stored class.</summary>

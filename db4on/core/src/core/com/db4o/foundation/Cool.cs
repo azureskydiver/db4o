@@ -1,3 +1,4 @@
+
 namespace com.db4o.foundation
 {
 	/// <summary>A collection of cool static methods that should be part of the runtime environment but are not.

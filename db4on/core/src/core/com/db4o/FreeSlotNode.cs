@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal sealed class FreeSlotNode : com.db4o.TreeInt

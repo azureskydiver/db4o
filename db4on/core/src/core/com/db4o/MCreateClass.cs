@@ -5,11 +5,10 @@ namespace com.db4o
 		internal sealed override bool processMessageAtServer(com.db4o.foundation.network.YapSocket
 			 sock)
 		{
-			com.db4o.reflect.ReflectClass claxx = null;
 			com.db4o.YapStream stream = getStream();
 			com.db4o.Transaction trans = stream.getSystemTransaction();
 			com.db4o.YapWriter returnBytes = new com.db4o.YapWriter(trans, 0);
-			claxx = trans.reflector().forName(this.readString());
+			com.db4o.reflect.ReflectClass claxx = trans.reflector().forName(readString());
 			if (claxx != null)
 			{
 				lock (stream.i_lock)

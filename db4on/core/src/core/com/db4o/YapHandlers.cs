@@ -92,7 +92,7 @@ namespace com.db4o
 				com.db4o.YDouble(a_stream), new com.db4o.YByte(a_stream), new com.db4o.YChar(a_stream
 				), new com.db4o.YShort(a_stream), i_stringHandler, new com.db4o.YDate(a_stream), 
 				new com.db4o.YapClassAny(a_stream) };
-			i_platformTypes = com.db4o.Platform.types(a_stream);
+			i_platformTypes = com.db4o.Platform4.types(a_stream);
 			if (i_platformTypes.Length > 0)
 			{
 				for (int i = 0; i < i_platformTypes.Length; i++)
@@ -180,7 +180,7 @@ namespace com.db4o
 			{
 				return true;
 			}
-			if (!com.db4o.Platform.callConstructor())
+			if (!com.db4o.Platform4.callConstructor())
 			{
 				if (claxx.skipConstructor(skipConstructor))
 				{
@@ -257,7 +257,7 @@ namespace com.db4o
 						{
 							for (int k = 0; k < com.db4o.YapHandlers.PRIMITIVECOUNT; k++)
 							{
-								if (pTypes[j] == this._enclosing.i_handlers[k].primitiveClassReflector())
+								if (pTypes[j].Equals(this._enclosing.i_handlers[k].primitiveClassReflector()))
 								{
 									parms[j] = ((com.db4o.YapJavaClass)this._enclosing.i_handlers[k]).primitiveNull();
 									break;
@@ -336,7 +336,7 @@ namespace com.db4o
 		{
 			for (int i = 0; i < a_Supported.Length; i++)
 			{
-				if (a_Supported[i] == a_class)
+				if (a_Supported[i].Equals(a_class))
 				{
 					return i_handlers[i];
 				}
@@ -355,6 +355,10 @@ namespace com.db4o
 		internal com.db4o.YapDataType handlerForClass(com.db4o.YapStream a_stream, com.db4o.reflect.ReflectClass
 			 a_class)
 		{
+			if (a_class == null)
+			{
+				return null;
+			}
 			if (a_class.isArray())
 			{
 				return handlerForClass(a_stream, a_class.getComponentType());
@@ -384,7 +388,7 @@ namespace com.db4o
 				);
 			ICLASS_TRANSIENTCLASS = reflector.forClass(com.db4o.YapConst.CLASS_TRANSIENTCLASS
 				);
-			com.db4o.Platform.registerCollections(reflector);
+			com.db4o.Platform4.registerCollections(reflector);
 		}
 
 		internal void initEncryption(com.db4o.Config4Impl a_config)
@@ -459,7 +463,7 @@ namespace com.db4o
 				{
 					return true;
 				}
-				return com.db4o.Platform.isValueType(claxx);
+				return com.db4o.Platform4.isValueType(claxx);
 			}
 			return false;
 		}

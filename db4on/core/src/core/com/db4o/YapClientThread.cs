@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal class YapClientThread : j4o.lang.Thread

@@ -100,11 +100,6 @@ namespace com.db4o
 		{
 		}
 
-		internal virtual void throwUnsupportedOperationException()
-		{
-			com.db4o.inside.Exceptions.throwRuntimeException(53);
-		}
-
 		internal virtual bool isEnum(com.db4o.reflect.Reflector reflector, com.db4o.reflect.ReflectClass
 			 clazz)
 		{

@@ -1,3 +1,4 @@
+
 namespace com.db4o.messaging
 {
 	/// <summary>message recipient for client/server messaging.</summary>

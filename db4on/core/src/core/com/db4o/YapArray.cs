@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal class YapArray : com.db4o.YapIndependantType

@@ -154,21 +154,21 @@ namespace com.db4o.inside.query
 			}
 		}
 
-		public void CopyTo(Array array, int index)
-		{
-			lock (streamLock())
-			{
+        public void CopyTo(Array array, int index)
+        {
+            lock (streamLock())
+            {
                 int i = 0;
-                _delegate.reset();
-                while (_delegate.hasNext())
+                int s = _delegate.size();
+                while (i < s)
                 {
-                    array.SetValue(_delegate.next(), index + i);
+                    array.SetValue(_delegate.get(i), index + i);
                     i++;
                 }
-			}
-		}
+            }
+        }
 
-		public object SyncRoot
+        public object SyncRoot
 		{
 			get
 			{

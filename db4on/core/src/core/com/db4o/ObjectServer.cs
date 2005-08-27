@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>the db4o server class.</summary>

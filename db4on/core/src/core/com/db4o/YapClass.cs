@@ -89,21 +89,9 @@ namespace com.db4o
 		internal virtual void addMembers(com.db4o.YapStream a_stream)
 		{
 			bitTrue(com.db4o.YapConst.CHECKED_CHANGES);
-			if (i_config != null)
+			if (addTranslatorField())
 			{
-				com.db4o.config.ObjectTranslator ot = i_config.getTranslator();
-				if (ot != null)
-				{
-					if (!(i_fields != null && i_fields.Length > 0 && j4o.lang.Class.getClassForObject
-						(ot).getName().Equals(i_fields[0].getName())))
-					{
-						i_stream.setDirty(this);
-					}
-					i_fields = new com.db4o.YapField[1];
-					i_fields[0] = new com.db4o.YapFieldTranslator(this, ot);
-					setStateOK();
-					return;
-				}
+				return;
 			}
 			if (a_stream.detectSchemaChanges())
 			{
@@ -185,6 +173,38 @@ namespace com.db4o
 				}
 			}
 			setStateOK();
+		}
+
+		private bool addTranslatorField()
+		{
+			com.db4o.config.ObjectTranslator ot = getTranslator();
+			if (ot == null)
+			{
+				return false;
+			}
+			if (isNewTranslator(ot))
+			{
+				i_stream.setDirty(this);
+			}
+			i_fields = new com.db4o.YapField[] { new com.db4o.YapFieldTranslator(this, ot) };
+			setStateOK();
+			return true;
+		}
+
+		private com.db4o.config.ObjectTranslator getTranslator()
+		{
+			return i_config == null ? null : i_config.getTranslator();
+		}
+
+		private bool isNewTranslator(com.db4o.config.ObjectTranslator ot)
+		{
+			return !hasFields() || !j4o.lang.Class.getClassForObject(ot).getName().Equals(i_fields
+				[0].getName());
+		}
+
+		private bool hasFields()
+		{
+			return i_fields != null && i_fields.Length > 0;
 		}
 
 		internal virtual void addToIndex(com.db4o.YapFile a_stream, com.db4o.Transaction 
@@ -917,13 +937,13 @@ namespace com.db4o
 		public virtual com.db4o.YapField getYapField(string name)
 		{
 			com.db4o.YapField[] yf = new com.db4o.YapField[1];
-			forEachYapField(new _AnonymousInnerClass775(this, name, yf));
+			forEachYapField(new _AnonymousInnerClass795(this, name, yf));
 			return yf[0];
 		}
 
-		private sealed class _AnonymousInnerClass775 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass795 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass775(YapClass _enclosing, string name, com.db4o.YapField[]
+			public _AnonymousInnerClass795(YapClass _enclosing, string name, com.db4o.YapField[]
 				 yf)
 			{
 				this._enclosing = _enclosing;
@@ -1003,10 +1023,17 @@ namespace com.db4o
 
 		internal virtual void initConfigOnUp(com.db4o.Transaction systemTrans)
 		{
-			if (i_config != null)
+			if (i_config == null)
 			{
-				systemTrans.i_stream.showInternalClasses(true);
-				i_config.initOnUp(systemTrans);
+				return;
+			}
+			if (!stateOK())
+			{
+				return;
+			}
+			systemTrans.i_stream.showInternalClasses(true);
+			if (i_config.initOnUp(systemTrans))
+			{
 				if (i_fields != null)
 				{
 					for (int i = 0; i < i_fields.Length; i++)
@@ -1014,17 +1041,18 @@ namespace com.db4o
 						i_fields[i].initConfigOnUp(systemTrans);
 					}
 				}
-				systemTrans.i_stream.showInternalClasses(false);
 			}
+			systemTrans.i_stream.showInternalClasses(false);
 		}
 
 		internal virtual void initOnUp(com.db4o.Transaction systemTrans)
 		{
-			if (stateOK())
+			if (!stateOK())
 			{
-				initConfigOnUp(systemTrans);
-				storeStaticFieldValues(systemTrans, false);
+				return;
 			}
+			initConfigOnUp(systemTrans);
+			storeStaticFieldValues(systemTrans, false);
 		}
 
 		internal virtual object instantiate(com.db4o.YapObject a_yapObject, object a_object
@@ -1412,7 +1440,7 @@ namespace com.db4o
 				{
 					return stream.peekPersisted1(trans, id, depth);
 				}
-				if (com.db4o.Platform.isValueType(classReflector()))
+				if (com.db4o.Platform4.isValueType(classReflector()))
 				{
 					if (depth < 1)
 					{
@@ -1480,7 +1508,7 @@ namespace com.db4o
 		{
 			if (isArray())
 			{
-				if (com.db4o.Platform.isCollectionTranslator(this.i_config))
+				if (com.db4o.Platform4.isCollectionTranslator(this.i_config))
 				{
 					a_bytes[0].incrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
 					return new com.db4o.YapArray(i_stream, null, false);
@@ -1515,15 +1543,15 @@ namespace com.db4o
 				{
 					int[] idgen = { -2 };
 					a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
-					com.db4o.Platform.forEachCollectionElement(obj, new _AnonymousInnerClass1299(this
+					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1325(this
 						, trans, idgen, a_candidates));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1299 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass1325 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass1299(YapClass _enclosing, com.db4o.Transaction trans, 
+			public _AnonymousInnerClass1325(YapClass _enclosing, com.db4o.Transaction trans, 
 				int[] idgen, com.db4o.QCandidates a_candidates)
 			{
 				this._enclosing = _enclosing;
@@ -1598,7 +1626,7 @@ namespace com.db4o
 				i_nameBytes = new byte[len];
 				j4o.lang.JavaSystem.arraycopy(a_reader._buffer, a_reader._offset, i_nameBytes, 0, 
 					len);
-				i_nameBytes = com.db4o.Platform.updateClassName(i_nameBytes);
+				i_nameBytes = com.db4o.Platform4.updateClassName(i_nameBytes);
 				a_reader.incrementOffset(len + com.db4o.YapConst.YAPINT_LENGTH);
 				setStateUnread();
 				bitFalse(com.db4o.YapConst.CHECKED_CHANGES);
@@ -1660,7 +1688,7 @@ namespace com.db4o
 			}
 			else
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(58);
+				com.db4o.inside.Exceptions4.throwRuntimeException(58);
 			}
 		}
 
@@ -1909,7 +1937,7 @@ namespace com.db4o
 					return false;
 				}
 			}
-			return com.db4o.Platform.canSetAccessible() || a_field.isPublic();
+			return com.db4o.Platform4.canSetAccessible() || a_field.isPublic();
 		}
 
 		public virtual com.db4o.ext.StoredField storedField(string a_name, object a_type)
@@ -1941,7 +1969,7 @@ namespace com.db4o
 			if (!bitIsTrue(com.db4o.YapConst.STATIC_FIELDS_STORED) || force)
 			{
 				bitTrue(com.db4o.YapConst.STATIC_FIELDS_STORED);
-				bool store = (i_config != null && i_config.i_persistStaticFieldValues) || com.db4o.Platform
+				bool store = (i_config != null && i_config.i_persistStaticFieldValues) || com.db4o.Platform4
 					.storeStaticFieldValues(trans.reflector(), classReflector());
 				if (store)
 				{
@@ -2102,8 +2130,6 @@ namespace com.db4o
 					i_fields[i].writeThis(a_writer, this);
 				}
 			}
-			com.db4o.YapClassCollection ycc = a_writer.i_trans.i_stream.i_classCollection;
-			ycc.yapClassRequestsInitOnUp(this);
 		}
 
 		private com.db4o.reflect.ReflectClass i_compareTo;

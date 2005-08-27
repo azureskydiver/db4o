@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>base class for all database aware objects</summary>

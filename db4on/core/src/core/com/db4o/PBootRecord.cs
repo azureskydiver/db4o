@@ -7,7 +7,7 @@ namespace com.db4o
 	/// </remarks>
 	/// <exclude></exclude>
 	/// <persistent></persistent>
-	public class PBootRecord : com.db4o.P1Object, com.db4o.Db4oTypeImpl, com.db4o.Internal
+	public class PBootRecord : com.db4o.P1Object, com.db4o.Db4oTypeImpl, com.db4o.Internal4
 	{
 		[com.db4o.Transient]
 		internal com.db4o.YapFile i_stream;

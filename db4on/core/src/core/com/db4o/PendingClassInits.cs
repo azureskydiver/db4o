@@ -13,6 +13,8 @@ namespace com.db4o
 
 		private com.db4o.foundation.List4 _writes;
 
+		private com.db4o.foundation.List4 _inits;
+
 		private bool _running = false;
 
 		internal PendingClassInits(com.db4o.YapClassCollection classColl)
@@ -38,7 +40,7 @@ namespace com.db4o
 				return;
 			}
 			_running = true;
-			checkWrites();
+			checkInits();
 			_pending = new com.db4o.foundation.Collection4();
 			_running = false;
 		}
@@ -89,7 +91,24 @@ namespace com.db4o
 					com.db4o.YapClass yc = (com.db4o.YapClass)writes.next();
 					yc.setStateDirty();
 					yc.write(_classColl.i_stream, _classColl.i_systemTrans);
+					_inits = new com.db4o.foundation.List4(_inits, yc);
 					checkStatics();
+				}
+			}
+		}
+
+		private void checkInits()
+		{
+			checkWrites();
+			while (_inits != null)
+			{
+				com.db4o.foundation.Iterator4 inits = new com.db4o.foundation.Iterator4(_inits);
+				_inits = null;
+				while (inits.hasNext())
+				{
+					com.db4o.YapClass yc = (com.db4o.YapClass)inits.next();
+					yc.initConfigOnUp(_classColl.i_systemTrans);
+					checkWrites();
 				}
 			}
 		}

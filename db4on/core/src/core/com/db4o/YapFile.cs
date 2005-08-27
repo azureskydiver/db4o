@@ -88,10 +88,10 @@ namespace com.db4o
 			return new com.db4o.ClassIndex(yapClass);
 		}
 
-		internal sealed override com.db4o.QResult createQResult(com.db4o.Transaction a_ta
-			)
+		internal sealed override com.db4o.QueryResultImpl createQResult(com.db4o.Transaction
+			 a_ta)
 		{
-			return new com.db4o.QResult(a_ta);
+			return new com.db4o.QueryResultImpl(a_ta);
 		}
 
 		internal sealed override bool delete5(com.db4o.Transaction ta, com.db4o.YapObject
@@ -208,7 +208,8 @@ namespace com.db4o
 			private readonly YapFile _enclosing;
 		}
 
-		internal override void getAll(com.db4o.Transaction ta, com.db4o.QResult a_res)
+		internal override void getAll(com.db4o.Transaction ta, com.db4o.QueryResultImpl a_res
+			)
 		{
 			com.db4o.Tree[] duplicates = new com.db4o.Tree[1];
 			com.db4o.YapClassCollectionIterator i = i_classCollection.iterator();
@@ -232,7 +233,7 @@ namespace com.db4o
 
 		private sealed class _AnonymousInnerClass212 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass212(YapFile _enclosing, com.db4o.Tree[] duplicates, com.db4o.QResult
+			public _AnonymousInnerClass212(YapFile _enclosing, com.db4o.Tree[] duplicates, com.db4o.QueryResultImpl
 				 a_res)
 			{
 				this._enclosing = _enclosing;
@@ -255,7 +256,7 @@ namespace com.db4o
 
 			private readonly com.db4o.Tree[] duplicates;
 
-			private readonly com.db4o.QResult a_res;
+			private readonly com.db4o.QueryResultImpl a_res;
 		}
 
 		internal int getPointerSlot()
@@ -316,6 +317,10 @@ namespace com.db4o
 
 		public override com.db4o.ext.Db4oDatabase identity()
 		{
+			if (i_bootRecord == null)
+			{
+				return null;
+			}
 			return i_bootRecord.i_db;
 		}
 
@@ -445,7 +450,7 @@ namespace com.db4o
 			{
 				if (firstFileByte != com.db4o.YapConst.YAPFILEVERSION)
 				{
-					com.db4o.inside.Exceptions.throwRuntimeException(17);
+					com.db4o.inside.Exceptions4.throwRuntimeException(17);
 				}
 				blockLen = myreader.readByte();
 			}
@@ -453,7 +458,7 @@ namespace com.db4o
 			{
 				if (myreader.readByte() != com.db4o.YapConst.YAPFILE)
 				{
-					com.db4o.inside.Exceptions.throwRuntimeException(17);
+					com.db4o.inside.Exceptions4.throwRuntimeException(17);
 				}
 			}
 			blockSize(blockLen);
@@ -478,7 +483,7 @@ namespace com.db4o
 					com.db4o.Tree[] addressTree = new com.db4o.Tree[1];
 					if (i_freeBySize != null)
 					{
-						i_freeBySize.traverse(new _AnonymousInnerClass474(this, addressTree));
+						i_freeBySize.traverse(new _AnonymousInnerClass477(this, addressTree));
 					}
 					i_freeByAddress = addressTree[0];
 					free(freeSlotsID, com.db4o.YapConst.POINTER_LENGTH);
@@ -519,9 +524,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass474 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass477 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass474(YapFile _enclosing, com.db4o.Tree[] addressTree)
+			public _AnonymousInnerClass477(YapFile _enclosing, com.db4o.Tree[] addressTree)
 			{
 				this._enclosing = _enclosing;
 				this.addressTree = addressTree;
@@ -564,15 +569,15 @@ namespace com.db4o
 			{
 				lock (i_semaphores)
 				{
-					i_semaphores.forEachKey(new _AnonymousInnerClass533(this));
+					i_semaphores.forEachKey(new _AnonymousInnerClass536(this));
 					j4o.lang.JavaSystem.notifyAll(i_semaphores);
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass533 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass536 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass533(YapFile _enclosing)
+			public _AnonymousInnerClass536(YapFile _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

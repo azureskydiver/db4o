@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>Index root holder for a field and a transaction.</summary>

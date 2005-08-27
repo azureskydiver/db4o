@@ -7,7 +7,7 @@ namespace com.db4o
 	/// </remarks>
 	/// <exclude></exclude>
 	/// <persistent></persistent>
-	public class MetaField : com.db4o.Internal
+	public class MetaField : com.db4o.Internal4
 	{
 		public string name;
 

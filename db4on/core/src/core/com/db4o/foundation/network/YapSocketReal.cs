@@ -64,7 +64,7 @@ namespace com.db4o.foundation.network
 
 		public virtual com.db4o.foundation.network.YapSocket openParalellSocket()
 		{
-			throw new j4o.io.IOException("operation not supported");
+			throw new System.IO.IOException();
 		}
 	}
 }

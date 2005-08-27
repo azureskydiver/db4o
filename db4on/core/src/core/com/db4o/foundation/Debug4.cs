@@ -1,3 +1,4 @@
+
 namespace com.db4o.foundation
 {
 	public class Debug4

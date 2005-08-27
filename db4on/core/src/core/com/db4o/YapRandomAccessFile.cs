@@ -41,7 +41,7 @@ namespace com.db4o
 				checkClosed();
 				if (i_backupFile != null)
 				{
-					com.db4o.inside.Exceptions.throwRuntimeException(61);
+					com.db4o.inside.Exceptions4.throwRuntimeException(61);
 				}
 				try
 				{
@@ -50,7 +50,7 @@ namespace com.db4o
 				catch (System.Exception e)
 				{
 					i_backupFile = null;
-					com.db4o.inside.Exceptions.throwRuntimeException(12, path);
+					com.db4o.inside.Exceptions4.throwRuntimeException(12, path);
 				}
 			}
 			long pos = 0;
@@ -131,7 +131,7 @@ namespace com.db4o
 						catch (System.Exception e)
 						{
 							i_file = null;
-							com.db4o.inside.Exceptions.throwRuntimeException(11, e);
+							com.db4o.inside.Exceptions4.throwRuntimeException(11, e);
 						}
 						i_file = null;
 					}
@@ -168,7 +168,7 @@ namespace com.db4o
 			}
 			catch (System.Exception e)
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(16, e);
+				com.db4o.inside.Exceptions4.throwRuntimeException(16, e);
 			}
 		}
 
@@ -263,7 +263,7 @@ namespace com.db4o
 					}
 					catch (System.Exception e)
 					{
-						com.db4o.inside.Exceptions.throwRuntimeException(12, fileName(), e);
+						com.db4o.inside.Exceptions4.throwRuntimeException(12, fileName(), e);
 					}
 					if (isNew)
 					{
@@ -282,7 +282,7 @@ namespace com.db4o
 				}
 				else
 				{
-					com.db4o.inside.Exceptions.throwRuntimeException(21);
+					com.db4o.inside.Exceptions4.throwRuntimeException(21);
 				}
 			}
 			catch (System.Exception exc)
@@ -308,7 +308,7 @@ namespace com.db4o
 				i_file.blockSeek(address, addressOffset);
 				i_file.read(bytes, length);
 			}
-			catch (j4o.io.IOException ioex)
+			catch (System.IO.IOException ioex)
 			{
 				throw new j4o.lang.RuntimeException();
 			}
@@ -390,7 +390,7 @@ namespace com.db4o
 			}
 			catch (System.Exception e)
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(16, e);
+				com.db4o.inside.Exceptions4.throwRuntimeException(16, e);
 			}
 		}
 

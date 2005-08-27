@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>Represents an actual object in the database.</summary>

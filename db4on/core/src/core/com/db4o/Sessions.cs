@@ -53,7 +53,7 @@ namespace com.db4o
 				}
 				catch (com.db4o.UserException eu)
 				{
-					com.db4o.inside.Exceptions.throwRuntimeException(eu.errCode, eu.errMsg);
+					com.db4o.inside.Exceptions4.throwRuntimeException(eu.errCode, eu.errMsg);
 				}
 				catch (System.Exception t)
 				{
@@ -64,7 +64,7 @@ namespace com.db4o
 				{
 					newSession.i_stream = (com.db4o.YapStream)oc;
 					add(newSession);
-					com.db4o.Platform.postOpen(oc);
+					com.db4o.Platform4.postOpen(oc);
 					com.db4o.Messages.logMsg(com.db4o.Db4o.i_config, 5, databaseFileName);
 				}
 				return oc;

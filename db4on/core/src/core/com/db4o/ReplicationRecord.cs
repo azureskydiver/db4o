@@ -10,7 +10,7 @@ namespace com.db4o
 	/// </remarks>
 	/// <exclude></exclude>
 	/// <persistent></persistent>
-	public class ReplicationRecord : com.db4o.Internal
+	public class ReplicationRecord : com.db4o.Internal4
 	{
 		public com.db4o.ext.Db4oDatabase _youngerPeer;
 

@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal sealed class YapServerThread : j4o.lang.Thread

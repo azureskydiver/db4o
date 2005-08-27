@@ -1,3 +1,4 @@
+
 namespace com.db4o.query
 {
 	/// <summary>handle to a node in the query graph.</summary>

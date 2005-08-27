@@ -104,7 +104,7 @@ namespace com.db4o {
             if(i_type == 1) {
                 int id = (int)getIDOf(key);
                 if(id == 0) {
-                    Exceptions.throwRuntimeException(62);
+                    Exceptions4.throwRuntimeException(62);
                 }
                 return id;
             }

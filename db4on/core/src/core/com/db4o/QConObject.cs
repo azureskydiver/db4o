@@ -475,7 +475,7 @@ namespace com.db4o
 				if (!(id > 0))
 				{
 					i_objectID = 0;
-					com.db4o.inside.Exceptions.throwRuntimeException(51);
+					com.db4o.inside.Exceptions4.throwRuntimeException(51);
 				}
 				removeChildrenJoins();
 				i_evaluator = i_evaluator.add(new com.db4o.QEIdentity());

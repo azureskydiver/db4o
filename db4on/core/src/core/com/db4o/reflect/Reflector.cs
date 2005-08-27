@@ -1,3 +1,4 @@
+
 namespace com.db4o.reflect
 {
 	/// <summary>root of the reflection implementation API.</summary>

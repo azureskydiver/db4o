@@ -1,3 +1,4 @@
+
 namespace com.db4o.config
 {
 	/// <summary>configuration interface for db4o.</summary>

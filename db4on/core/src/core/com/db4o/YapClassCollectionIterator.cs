@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal class YapClassCollectionIterator : com.db4o.foundation.Iterator4

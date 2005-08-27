@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal abstract class YapFieldVirtual : com.db4o.YapField

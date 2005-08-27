@@ -26,7 +26,7 @@ namespace com.db4o
 
 		public override bool canHold(com.db4o.reflect.ReflectClass claxx)
 		{
-			return claxx == classReflector();
+			return claxx.Equals(classReflector());
 		}
 
 		public override void cascadeActivation(com.db4o.Transaction a_trans, object a_object

@@ -81,7 +81,7 @@ namespace com.db4o
 				bytes.read();
 				if (com.db4o.YLong.readLong(bytes) != _opentime)
 				{
-					com.db4o.inside.Exceptions.throwRuntimeException(22);
+					com.db4o.inside.Exceptions4.throwRuntimeException(22);
 				}
 				writeOpenTime();
 			}
@@ -170,7 +170,7 @@ namespace com.db4o
 			int oldLength = reader.readInt();
 			if (oldLength > LENGTH || oldLength < MINIMUM_LENGTH)
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(17);
+				com.db4o.inside.Exceptions4.throwRuntimeException(17);
 			}
 			long lastOpenTime = com.db4o.YLong.readLong(reader);
 			long lastAccessTime = com.db4o.YLong.readLong(reader);

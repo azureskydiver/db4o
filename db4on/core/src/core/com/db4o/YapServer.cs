@@ -36,9 +36,9 @@ namespace com.db4o
 					i_serverSocket = new com.db4o.foundation.network.YapServerSocket(a_port);
 					i_serverSocket.setSoTimeout(config.i_timeoutServerSocket);
 				}
-				catch (j4o.io.IOException e)
+				catch (System.IO.IOException e)
 				{
-					com.db4o.inside.Exceptions.throwRuntimeException(30, "" + a_port);
+					com.db4o.inside.Exceptions4.throwRuntimeException(30, "" + a_port);
 				}
 				new j4o.lang.Thread(this).start();
 				lock (this)
@@ -82,7 +82,7 @@ namespace com.db4o
 		{
 			if (i_yapFile == null)
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(20, i_name);
+				com.db4o.inside.Exceptions4.throwRuntimeException(20, i_name);
 			}
 			i_yapFile.checkClosed();
 		}
@@ -180,7 +180,7 @@ namespace com.db4o
 				return new com.db4o.YapClient(openClientSocket(), com.db4o.YapConst.EMBEDDED_CLIENT_USER
 					 + (i_threadIDGen - 1), "", false);
 			}
-			catch (j4o.io.IOException e)
+			catch (System.IO.IOException e)
 			{
 				j4o.lang.JavaSystem.printStackTrace(e);
 			}

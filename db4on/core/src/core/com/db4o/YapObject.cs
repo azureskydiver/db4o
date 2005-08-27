@@ -156,9 +156,9 @@ namespace com.db4o
 
 		public object getObject()
 		{
-			if (com.db4o.Platform.hasWeakReferences())
+			if (com.db4o.Platform4.hasWeakReferences())
 			{
-				return com.db4o.Platform.getYapRefObject(i_object);
+				return com.db4o.Platform4.getYapRefObject(i_object);
 			}
 			return i_object;
 		}
@@ -293,9 +293,9 @@ namespace com.db4o
 			{
 				if (i_object != null)
 				{
-					com.db4o.Platform.killYapRef(i_object);
+					com.db4o.Platform4.killYapRef(i_object);
 				}
-				i_object = com.db4o.Platform.createYapRef(a_stream.i_references._queue, this, a_object
+				i_object = com.db4o.Platform4.createYapRef(a_stream.i_references._queue, this, a_object
 					);
 			}
 			else

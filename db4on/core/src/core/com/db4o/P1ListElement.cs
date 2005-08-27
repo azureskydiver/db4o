@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>element of linked lists</summary>

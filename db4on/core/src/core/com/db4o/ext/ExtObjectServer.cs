@@ -1,3 +1,4 @@
+
 namespace com.db4o.ext
 {
 	/// <summary>extended functionality for the ObjectServer interface.</summary>

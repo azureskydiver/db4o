@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal sealed class MDelete : com.db4o.MsgD

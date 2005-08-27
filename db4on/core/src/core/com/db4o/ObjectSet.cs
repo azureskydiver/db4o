@@ -4,17 +4,17 @@ namespace com.db4o
 	/// <remarks>
 	/// query resultset.
 	/// <br /><br />The <code>ObjectSet</code> class serves as a cursor to
-	/// iterate through a set of objects retrieved by a
-	/// call to
+	/// iterate through a set of objects retrieved by a call to
 	/// <see cref="com.db4o.ObjectContainer.get">ObjectContainer.get(template)</see>
+	/// or by
+	/// execution of a
+	/// <see cref="com.db4o.query.Query">com.db4o.query.Query</see>
 	/// .
-	/// <br /><br />An <code>ObjectSet</code> can easily be wrapped to a
-	/// <code>java.util.List</code> (Java)  / <code>System.Collections.IList</code>  (.NET)
-	/// using the source code supplied in ../com/db4o/wrap/
-	/// <br /><br />Note that the used
+	/// <br /><br />Note that the
 	/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
-	/// needs to remain opened during the
-	/// use of an <code>ObjectSet</code> to allow lazy instantiation.
+	/// 
+	/// against which the query is executed needs to remain opened during
+	/// the use of an <code>ObjectSet</code> to allow lazy instantiation.
 	/// </remarks>
 	/// <seealso cref="com.db4o.ext.ExtObjectSet">for extended functionality.</seealso>
 	public interface ObjectSet : System.Collections.IList

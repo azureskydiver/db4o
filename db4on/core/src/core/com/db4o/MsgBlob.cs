@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal abstract class MsgBlob : com.db4o.MsgD

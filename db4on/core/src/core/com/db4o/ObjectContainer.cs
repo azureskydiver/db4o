@@ -9,7 +9,11 @@ namespace com.db4o
 	/// </remarks>
 	/// <seealso cref="com.db4o.ext.ExtObjectContainer">ExtObjectContainer for extended functionality.
 	/// 	</seealso>
+	#if NET_2_0
+	public partial interface ObjectContainer
+	#else
 	public interface ObjectContainer
+	#endif
 	{
 		/// <summary>activates all members on a stored object to the specified depth.</summary>
 		/// <remarks>

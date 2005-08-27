@@ -72,7 +72,7 @@ namespace com.db4o
 			i_yapClassCreationDepth++;
 			com.db4o.reflect.ReflectClass superClass = a_class.getSuperclass();
 			com.db4o.YapClass superYapClass = null;
-			if (superClass != null && superClass != i_stream.i_handlers.ICLASS_OBJECT)
+			if (superClass != null && !superClass.Equals(i_stream.i_handlers.ICLASS_OBJECT))
 			{
 				superYapClass = getYapClass(superClass, true);
 			}
@@ -442,31 +442,19 @@ namespace com.db4o
 			}
 		}
 
-		internal void yapClassRequestsInitOnUp(com.db4o.YapClass a_yc)
-		{
-			if (i_yapClassCreationDepth == 0)
-			{
-				a_yc.initOnUp(i_systemTrans);
-			}
-			else
-			{
-				i_initYapClassesOnUp.add(a_yc);
-			}
-		}
-
 		internal void yapFields(string a_field, com.db4o.foundation.Visitor4 a_visitor)
 		{
 			com.db4o.YapClassCollectionIterator i = iterator();
 			while (i.hasNext())
 			{
 				com.db4o.YapClass yc = i.nextClass();
-				yc.forEachYapField(new _AnonymousInnerClass384(this, a_field, a_visitor, yc));
+				yc.forEachYapField(new _AnonymousInnerClass376(this, a_field, a_visitor, yc));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass384 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass376 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass384(YapClassCollection _enclosing, string a_field, com.db4o.foundation.Visitor4
+			public _AnonymousInnerClass376(YapClassCollection _enclosing, string a_field, com.db4o.foundation.Visitor4
 				 a_visitor, com.db4o.YapClass yc)
 			{
 				this._enclosing = _enclosing;

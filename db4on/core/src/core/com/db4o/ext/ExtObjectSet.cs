@@ -1,3 +1,4 @@
+
 namespace com.db4o.ext
 {
 	/// <summary>
@@ -25,5 +26,15 @@ namespace com.db4o.ext
 		/// <seealso cref="com.db4o.ext.ExtObjectContainer.getByID">com.db4o.ext.ExtObjectContainer.getByID
 		/// 	</seealso>
 		long[] getIDs();
+
+		/// <summary>returns the item at position [index] in this ObjectSet.</summary>
+		/// <remarks>
+		/// returns the item at position [index] in this ObjectSet.
+		/// <br /><br />
+		/// The object will be activated.
+		/// </remarks>
+		/// <param name="index">the index position in this ObjectSet.</param>
+		/// <returns>the activated object.</returns>
+		object get(int index);
 	}
 }

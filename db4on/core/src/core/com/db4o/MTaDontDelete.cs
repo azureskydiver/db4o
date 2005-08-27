@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal class MTaDontDelete : com.db4o.MsgD

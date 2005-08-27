@@ -1,3 +1,4 @@
+
 namespace com.db4o.foundation
 {
 	internal class HashtableIntEntry : j4o.lang.Cloneable, com.db4o.foundation.DeepClone

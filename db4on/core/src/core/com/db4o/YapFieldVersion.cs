@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal class YapFieldVersion : com.db4o.YapFieldVirtual

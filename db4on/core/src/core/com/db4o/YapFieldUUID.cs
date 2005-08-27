@@ -83,21 +83,30 @@ namespace com.db4o
 			}
 			if (linkToDatabase)
 			{
-				if (attr.i_database == null)
+				com.db4o.ext.Db4oDatabase db = stream.identity();
+				if (db == null)
 				{
-					attr.i_database = stream.identity();
-					if (stream is com.db4o.YapFile && ((com.db4o.YapFile)stream).i_bootRecord != null
-						)
-					{
-						com.db4o.PBootRecord bootRecord = ((com.db4o.YapFile)stream).i_bootRecord;
-						attr.i_uuid = bootRecord.newUUID();
-						indexEntry = true;
-					}
+					attr = null;
 				}
-				com.db4o.ext.Db4oDatabase db = attr.i_database;
-				if (db != null)
+				else
 				{
-					dbID = db.getID(trans);
+					if (attr.i_database == null)
+					{
+						attr.i_database = db;
+						if (stream is com.db4o.YapFile)
+						{
+							if (((com.db4o.YapFile)stream).i_bootRecord != null)
+							{
+								attr.i_uuid = ((com.db4o.YapFile)stream).i_bootRecord.newUUID();
+								indexEntry = true;
+							}
+						}
+					}
+					db = attr.i_database;
+					if (db != null)
+					{
+						dbID = db.getID(trans);
+					}
 				}
 			}
 			else

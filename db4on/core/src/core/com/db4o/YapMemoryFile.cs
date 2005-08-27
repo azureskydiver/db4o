@@ -19,7 +19,7 @@ namespace com.db4o
 			}
 			catch (System.Exception e)
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(22, e);
+				com.db4o.inside.Exceptions4.throwRuntimeException(22, e);
 			}
 			initialize3();
 		}
@@ -31,7 +31,7 @@ namespace com.db4o
 
 		public override void backup(string path)
 		{
-			com.db4o.inside.Exceptions.throwRuntimeException(60);
+			com.db4o.inside.Exceptions4.throwRuntimeException(60);
 		}
 
 		internal virtual void checkDemoHop()
@@ -121,7 +121,7 @@ namespace com.db4o
 			}
 			catch (System.Exception e)
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(13, e);
+				com.db4o.inside.Exceptions4.throwRuntimeException(13, e);
 			}
 		}
 

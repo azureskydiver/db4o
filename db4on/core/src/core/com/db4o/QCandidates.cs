@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>Holds the tree of QCandidate objects and the list of QContraints during query evaluation.

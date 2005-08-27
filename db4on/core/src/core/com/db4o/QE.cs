@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>Query Evaluator - Represents such things as &gt;, &gt;=, &lt;, &lt;=, EQUAL, LIKE, etc.

@@ -23,7 +23,7 @@ namespace com.db4o.reflect.net
 
 		public virtual void setAccessible()
 		{
-			com.db4o.Platform.setAccessible(constructor);
+			com.db4o.Platform4.setAccessible(constructor);
 		}
 
 		public virtual object newInstance(object[] parameters)

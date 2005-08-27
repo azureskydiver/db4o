@@ -27,7 +27,7 @@ namespace com.db4o.inside
 
 		public static void notSupported()
 		{
-			throw new System.NotSupportedException();
+			throwRuntimeException(53);
 		}
 	}
 }

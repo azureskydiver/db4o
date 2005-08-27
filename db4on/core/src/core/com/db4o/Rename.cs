@@ -10,7 +10,7 @@ namespace com.db4o
 	/// </remarks>
 	/// <exclude></exclude>
 	/// <persistent></persistent>
-	public sealed class Rename : com.db4o.Internal
+	public sealed class Rename : com.db4o.Internal4
 	{
 		public string rClass;
 

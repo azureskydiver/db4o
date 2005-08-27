@@ -121,12 +121,12 @@ namespace com.db4o.foundation.network
 				}
 				catch (System.Exception e)
 				{
-					throw new j4o.io.IOException(com.db4o.Messages.get(55));
+					throw new System.IO.IOException(com.db4o.Messages.get(55));
 				}
 			}
 			if (i_closed)
 			{
-				throw new j4o.io.IOException(com.db4o.Messages.get(35));
+				throw new System.IO.IOException(com.db4o.Messages.get(35));
 			}
 		}
 
