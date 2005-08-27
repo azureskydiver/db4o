@@ -22,7 +22,7 @@ namespace com.db4o
 			if (claxx != null)
 			{
 				i_yapClass = a_trans.i_stream.getYapClass(claxx, true);
-				if (claxx == a_trans.i_stream.i_handlers.ICLASS_OBJECT)
+				if (claxx.Equals(a_trans.i_stream.i_handlers.ICLASS_OBJECT))
 				{
 					i_yapClass = (com.db4o.YapClass)((com.db4o.YapClassPrimitive)i_yapClass).i_handler;
 				}
@@ -45,7 +45,7 @@ namespace com.db4o
 			}
 			else
 			{
-				res = i_equal ? _claxx == claxx : _claxx.isAssignableFrom(claxx);
+				res = i_equal ? _claxx.Equals(claxx) : _claxx.isAssignableFrom(claxx);
 			}
 			return i_evaluator.not(res);
 		}

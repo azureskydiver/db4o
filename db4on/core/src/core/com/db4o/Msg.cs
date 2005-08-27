@@ -264,8 +264,8 @@ namespace com.db4o
 			return writer;
 		}
 
-		internal void writeQueryResult(com.db4o.Transaction a_trans, com.db4o.QResult qr, 
-			com.db4o.foundation.network.YapSocket sock)
+		internal void writeQueryResult(com.db4o.Transaction a_trans, com.db4o.QueryResultImpl
+			 qr, com.db4o.foundation.network.YapSocket sock)
 		{
 			int size = qr.size();
 			com.db4o.MsgD message = ID_LIST.getWriterForLength(a_trans, com.db4o.YapConst.YAPID_LENGTH

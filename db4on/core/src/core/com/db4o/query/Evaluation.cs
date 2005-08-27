@@ -1,3 +1,4 @@
+
 namespace com.db4o.query
 {
 	/// <summary>for implementation of callback evaluations.</summary>

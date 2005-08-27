@@ -405,7 +405,7 @@ namespace com.db4o
 			i_trans.i_stream.i_handlers.decrypt(this);
 		}
 
-		internal void writeQueryResult(com.db4o.QResult a_qr)
+		internal void writeQueryResult(com.db4o.QueryResultImpl a_qr)
 		{
 			int size = a_qr.size();
 			writeInt(size);

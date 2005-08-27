@@ -1,3 +1,4 @@
+
 namespace com.db4o.foundation
 {
 	internal sealed class EmptyIterator : com.db4o.foundation.Iterator4

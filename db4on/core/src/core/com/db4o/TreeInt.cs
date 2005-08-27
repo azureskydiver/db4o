@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>Base class for balanced trees.</summary>

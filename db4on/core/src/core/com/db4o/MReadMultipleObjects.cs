@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal sealed class MReadMultipleObjects : com.db4o.MsgD

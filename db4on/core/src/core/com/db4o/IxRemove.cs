@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>A node to represent an entry removed from an Index</summary>

@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal sealed class MTaIsDeleted : com.db4o.MsgD

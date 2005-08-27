@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>get the classname for an internal ID</summary>

@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>Node for index tree, can be addition or removal node</summary>

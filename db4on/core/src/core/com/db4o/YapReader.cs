@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>public for .NET conversion reasons.</summary>

@@ -1,3 +1,4 @@
+
 namespace com.db4o.foundation
 {
 	/// <summary>Fast linked list for all usecases.</summary>

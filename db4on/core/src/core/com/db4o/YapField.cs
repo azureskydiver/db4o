@@ -221,7 +221,7 @@ namespace com.db4o
 			object obj = getOn(a_trans, a_template);
 			if (obj != null)
 			{
-				com.db4o.foundation.Collection4 objs = com.db4o.Platform.flattenCollection(a_trans
+				com.db4o.foundation.Collection4 objs = com.db4o.Platform4.flattenCollection(a_trans
 					.i_stream, obj);
 				com.db4o.foundation.Iterator4 j = objs.iterator();
 				while (j.hasNext())
@@ -239,7 +239,7 @@ namespace com.db4o
 								}
 							}
 						}
-						if (com.db4o.Platform.ignoreAsConstraint(obj))
+						if (com.db4o.Platform4.ignoreAsConstraint(obj))
 						{
 							return;
 						}
@@ -348,7 +348,7 @@ namespace com.db4o
 					a_bytes._offset = offset;
 				}
 				bool dotnetValueType = false;
-				dotnetValueType = com.db4o.Platform.isValueType(i_handler.classReflector());
+				dotnetValueType = com.db4o.Platform4.isValueType(i_handler.classReflector());
 				if ((i_config != null && i_config.i_cascadeOnDelete == 1) || dotnetValueType)
 				{
 					int preserveCascade = a_bytes.cascadeDeletes();
@@ -790,7 +790,7 @@ namespace com.db4o
 			}
 			else
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(58);
+				com.db4o.inside.Exceptions4.throwRuntimeException(58);
 			}
 		}
 

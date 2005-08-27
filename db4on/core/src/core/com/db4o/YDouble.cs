@@ -31,7 +31,7 @@ namespace com.db4o
 		internal override object read1(com.db4o.YapReader a_bytes)
 		{
 			long ret = readLong(a_bytes);
-			return com.db4o.Platform.longToDouble(ret);
+			return com.db4o.Platform4.longToDouble(ret);
 		}
 
 		public override void write(object a_object, com.db4o.YapWriter a_bytes)
@@ -42,7 +42,7 @@ namespace com.db4o
 			}
 			else
 			{
-				writeLong(com.db4o.Platform.doubleToLong(((double)a_object)), a_bytes);
+				writeLong(com.db4o.Platform4.doubleToLong(((double)a_object)), a_bytes);
 			}
 		}
 

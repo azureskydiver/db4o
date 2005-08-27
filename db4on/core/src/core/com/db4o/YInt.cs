@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal class YInt : com.db4o.YapJavaClass

@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>An addition to a field index.</summary>

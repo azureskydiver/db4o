@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>Join constraint on queries</summary>

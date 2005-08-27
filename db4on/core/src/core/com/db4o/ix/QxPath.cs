@@ -1,3 +1,4 @@
+
 namespace com.db4o.ix
 {
 	/// <summary>Query Index Path</summary>

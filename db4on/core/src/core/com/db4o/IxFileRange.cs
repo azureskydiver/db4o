@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>A range of index entries in the database file.</summary>

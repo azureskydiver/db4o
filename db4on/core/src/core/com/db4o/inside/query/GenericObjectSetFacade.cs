@@ -113,10 +113,10 @@ namespace com.db4o.inside.query
             lock (this.SyncRoot)
             {
                 int i = 0;
-                int s = _delegate.size();
+                int s = this.Count;
                 while (i < s)
                 {
-                    array[index + i] = (T)_delegate.get(i);
+                    array[index + i] = this[i];
                     i++;
                 }
             }
@@ -136,10 +136,10 @@ namespace com.db4o.inside.query
 
         class ObjectSetImplEnumerator<T> : System.Collections.IEnumerator, System.Collections.Generic.IEnumerator<T>
         {
-            QueryResult _result;
+            System.Collections.Generic.IList<T> _result;
             int _next = 0;
 
-            public ObjectSetImplEnumerator(QueryResult result)
+            public ObjectSetImplEnumerator(System.Collections.Generic.IList<T> result)
             {
                 _result = result;
             }
@@ -149,59 +149,47 @@ namespace com.db4o.inside.query
                 _next = 0;
             }
 
-            public object Current
+            object System.Collections.IEnumerator.Current
             {
                 get
                 {
-                    return InnerCurrent;
+                     return _result[_next - 1];
                 }
             }
 
             public bool MoveNext()
             {
-                if (_next < _result.size())
+                if (_next < _result.Count)
                 {
                     ++_next;
                     return true;
                 }
                 return false;
             }
-
-            private object InnerCurrent
+            
+            public T Current
             {
                 get
                 {
-                    return _result.get(_next - 1);
+                     return _result[_next - 1];
                 }
             }
 
-            #region IEnumerator<T> Members
-            T System.Collections.Generic.IEnumerator<T>.Current
-            {
-                get
-                {
-                    return (T)InnerCurrent;
-                }
-            }
-            #endregion
-
-            #region IDisposable Members
             public void Dispose()
             {
             }
-            #endregion
         }
 
-        public System.Collections.IEnumerator GetEnumerator()
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return new ObjectSetImplEnumerator<T>(_delegate);
+            return new ObjectSetImplEnumerator<T>(this);
         }
         #endregion
 
         #region IEnumerable<T> implementation
-        System.Collections.Generic.IEnumerator<T> System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator()
         {
-            return new ObjectSetImplEnumerator<T>(_delegate);
+            return new ObjectSetImplEnumerator<T>(this);
         }
         #endregion
     }

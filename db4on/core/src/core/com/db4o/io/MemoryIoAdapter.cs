@@ -1,3 +1,4 @@
+
 namespace com.db4o.io
 {
 	/// <summary>IoAdapter for in-memory operation.</summary>

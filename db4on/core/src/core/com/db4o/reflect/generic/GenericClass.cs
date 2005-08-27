@@ -28,6 +28,8 @@ namespace com.db4o.reflect.generic
 
 		private int _fieldCount = -1;
 
+		private readonly int _hashCode;
+
 		public GenericClass(com.db4o.reflect.generic.GenericReflector reflector, com.db4o.reflect.ReflectClass
 			 delegateClass, string name, com.db4o.reflect.generic.GenericClass superclass)
 		{
@@ -35,6 +37,7 @@ namespace com.db4o.reflect.generic
 			_delegate = delegateClass;
 			_name = name;
 			_superclass = superclass;
+			_hashCode = _name.GetHashCode();
 		}
 
 		public virtual com.db4o.reflect.generic.GenericClass arrayClass()
@@ -71,6 +74,29 @@ namespace com.db4o.reflect.generic
 			}
 			ret.initFields(fields);
 			return ret;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null)
+			{
+				return false;
+			}
+			if (this == obj)
+			{
+				return true;
+			}
+			if (!(obj is com.db4o.reflect.generic.GenericClass))
+			{
+				return false;
+			}
+			com.db4o.reflect.generic.GenericClass otherGC = (com.db4o.reflect.generic.GenericClass
+				)obj;
+			if (_hashCode != otherGC.GetHashCode())
+			{
+				return false;
+			}
+			return _name.Equals(otherGC._name);
 		}
 
 		public virtual com.db4o.reflect.ReflectClass getComponentType()
@@ -177,6 +203,11 @@ namespace com.db4o.reflect.generic
 			return _superclass;
 		}
 
+		public override int GetHashCode()
+		{
+			return _hashCode;
+		}
+
 		public virtual void initFields(com.db4o.reflect.generic.GenericField[] fields)
 		{
 			int startIndex = 0;
@@ -216,6 +247,10 @@ namespace com.db4o.reflect.generic
 			{
 				return false;
 			}
+			if (Equals(subclassCandidate))
+			{
+				return true;
+			}
 			if (_delegate != null)
 			{
 				if (subclassCandidate is com.db4o.reflect.generic.GenericClass)
@@ -224,10 +259,6 @@ namespace com.db4o.reflect.generic
 						();
 				}
 				return _delegate.isAssignableFrom(subclassCandidate);
-			}
-			if (subclassCandidate == this)
-			{
-				return true;
 			}
 			if (!(subclassCandidate is com.db4o.reflect.generic.GenericClass))
 			{
@@ -330,15 +361,6 @@ namespace com.db4o.reflect.generic
 			return false;
 		}
 
-		public virtual object[] toArray(object obj)
-		{
-			if (!isCollection())
-			{
-				return new object[] { obj };
-			}
-			return com.db4o.Platform.collectionToArray(_reflector.getStream(), obj);
-		}
-
 		public override string ToString()
 		{
 			return "GenericClass " + _name;
@@ -360,6 +382,15 @@ namespace com.db4o.reflect.generic
 			{
 				_delegate.useConstructor(constructor, _params);
 			}
+		}
+
+		public virtual object[] toArray(object obj)
+		{
+			if (!isCollection())
+			{
+				return new object[] { obj };
+			}
+			return com.db4o.Platform4.collectionToArray(_reflector.getStream(), obj);
 		}
 	}
 }

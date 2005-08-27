@@ -5,17 +5,17 @@ namespace com.db4o
 		internal sealed override bool processMessageAtServer(com.db4o.foundation.network.YapSocket
 			 sock)
 		{
-			com.db4o.QResult qr;
+			com.db4o.QueryResultImpl qr;
 			com.db4o.YapStream stream = getStream();
 			lock (stream.i_lock)
 			{
 				try
 				{
-					qr = stream.get1(getTransaction(), null)._delegate;
+					qr = (com.db4o.QueryResultImpl)stream.get1(getTransaction(), null)._delegate;
 				}
 				catch (System.Exception e)
 				{
-					qr = new com.db4o.QResult(getTransaction());
+					qr = new com.db4o.QueryResultImpl(getTransaction());
 				}
 			}
 			this.writeQueryResult(getTransaction(), qr, sock);

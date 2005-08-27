@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>Tuning switches for customized versions.</summary>

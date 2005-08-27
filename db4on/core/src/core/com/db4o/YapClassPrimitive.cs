@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal class YapClassPrimitive : com.db4o.YapClass

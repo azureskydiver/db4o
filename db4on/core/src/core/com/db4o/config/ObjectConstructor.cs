@@ -1,3 +1,4 @@
+
 namespace com.db4o.config
 {
 	/// <summary>interface to allow instantiating objects by calling specific constructors.

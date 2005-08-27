@@ -7,7 +7,7 @@ namespace com.db4o
 	/// </remarks>
 	/// <exclude></exclude>
 	/// <persistent></persistent>
-	public class MetaIndex : com.db4o.Internal
+	public class MetaIndex : com.db4o.Internal4
 	{
 		public int indexAddress;
 

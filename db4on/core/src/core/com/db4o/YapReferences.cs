@@ -13,9 +13,9 @@ namespace com.db4o
 		internal YapReferences(com.db4o.YapStream a_stream)
 		{
 			_stream = a_stream;
-			_weak = (!(a_stream is com.db4o.YapObjectCarrier) && com.db4o.Platform.hasWeakReferences
+			_weak = (!(a_stream is com.db4o.YapObjectCarrier) && com.db4o.Platform4.hasWeakReferences
 				() && a_stream.i_config.i_weakReferences);
-			_queue = _weak ? com.db4o.Platform.createReferenceQueue() : null;
+			_queue = _weak ? com.db4o.Platform4.createReferenceQueue() : null;
 		}
 
 		internal virtual object createYapRef(com.db4o.YapObject a_yo, object obj)
@@ -24,14 +24,14 @@ namespace com.db4o
 			{
 				return obj;
 			}
-			return com.db4o.Platform.createYapRef(_queue, a_yo, obj);
+			return com.db4o.Platform4.createYapRef(_queue, a_yo, obj);
 		}
 
 		internal virtual void pollReferenceQueue()
 		{
 			if (_weak)
 			{
-				com.db4o.Platform.pollReferenceQueue(_stream, _queue);
+				com.db4o.Platform4.pollReferenceQueue(_stream, _queue);
 			}
 		}
 

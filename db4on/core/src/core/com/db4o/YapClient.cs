@@ -43,7 +43,7 @@ namespace com.db4o
 				throw new j4o.lang.RuntimeException("This constructor is for Debug.fakeServer use only."
 					);
 				initialize3();
-				com.db4o.Platform.postOpen(this);
+				com.db4o.Platform4.postOpen(this);
 			}
 		}
 
@@ -68,7 +68,7 @@ namespace com.db4o
 				{
 					loginToServer(socket);
 				}
-				catch (j4o.io.IOException e)
+				catch (System.IO.IOException e)
 				{
 					i_references.stopTimer();
 					throw e;
@@ -83,13 +83,13 @@ namespace com.db4o
 				logMsg(36, ToString());
 				readThis();
 				initialize3();
-				com.db4o.Platform.postOpen(this);
+				com.db4o.Platform4.postOpen(this);
 			}
 		}
 
 		public override void backup(string path)
 		{
-			com.db4o.inside.Exceptions.throwRuntimeException(60);
+			com.db4o.inside.Exceptions4.throwRuntimeException(60);
 		}
 
 		internal override bool close2()
@@ -157,7 +157,7 @@ namespace com.db4o
 				message.write(this, sock);
 				if (!(com.db4o.Msg.OK.Equals(com.db4o.Msg.readMessage(i_systemTrans, sock))))
 				{
-					throw new j4o.io.IOException(com.db4o.Messages.get(42));
+					throw new System.IO.IOException(com.db4o.Messages.get(42));
 				}
 			}
 			com.db4o.Msg.USE_TRANSACTION.getWriterForInt(i_trans, serverThreadID).write(this, 
@@ -165,8 +165,8 @@ namespace com.db4o
 			return sock;
 		}
 
-		internal sealed override com.db4o.QResult createQResult(com.db4o.Transaction a_ta
-			)
+		internal sealed override com.db4o.QueryResultImpl createQResult(com.db4o.Transaction
+			 a_ta)
 		{
 			return new com.db4o.QResultClient(a_ta);
 		}
@@ -245,7 +245,8 @@ namespace com.db4o
 			throw com.db4o.YapConst.virtualException();
 		}
 
-		internal override void getAll(com.db4o.Transaction ta, com.db4o.QResult a_res)
+		internal override void getAll(com.db4o.Transaction ta, com.db4o.QueryResultImpl a_res
+			)
 		{
 			writeMsg(com.db4o.Msg.GET_ALL);
 			readResult(a_res);
@@ -316,13 +317,13 @@ namespace com.db4o
 				}
 				if (this._enclosing.readerThread.isClosed())
 				{
-					com.db4o.inside.Exceptions.throwRuntimeException(20, this._enclosing.name());
+					com.db4o.inside.Exceptions4.throwRuntimeException(20, this._enclosing.name());
 				}
 				this._enclosing.messageQueueLock.snooze(this._enclosing.i_config.i_timeoutClientSocket
 					);
 				if (this._enclosing.readerThread.isClosed())
 				{
-					com.db4o.inside.Exceptions.throwRuntimeException(20, this._enclosing.name());
+					com.db4o.inside.Exceptions4.throwRuntimeException(20, this._enclosing.name());
 				}
 				message = (com.db4o.Msg)this._enclosing.messageQueue.next();
 				return message;
@@ -396,7 +397,7 @@ namespace com.db4o
 				message.write(this, a_socket);
 				if (!com.db4o.Msg.OK.Equals(com.db4o.Msg.readMessage(i_systemTrans, a_socket)))
 				{
-					throw new j4o.io.IOException(com.db4o.Messages.get(42));
+					throw new System.IO.IOException(com.db4o.Messages.get(42));
 				}
 			}
 		}
@@ -506,7 +507,8 @@ namespace com.db4o
 			}
 		}
 
-		internal void queryExecute(com.db4o.QQuery a_query, com.db4o.QResult a_res)
+		internal void queryExecute(com.db4o.QQuery a_query, com.db4o.QueryResultImpl a_res
+			)
 		{
 			writeMsg(com.db4o.Msg.QUERY_EXECUTE.getWriter(marshall(a_query.getTransaction(), 
 				a_query)));
@@ -562,7 +564,7 @@ namespace com.db4o
 			return readWriterByID(a_ta, a_id);
 		}
 
-		private void readResult(com.db4o.QResult aRes)
+		private void readResult(com.db4o.QueryResultImpl aRes)
 		{
 			com.db4o.YapWriter reader = expectedByteResponse(com.db4o.Msg.ID_LIST);
 			int size = reader.readInt();

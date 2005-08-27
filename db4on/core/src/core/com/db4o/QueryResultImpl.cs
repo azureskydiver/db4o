@@ -1,7 +1,8 @@
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	internal class QResult : com.db4o.IntArrayList, com.db4o.foundation.Visitor4
+	internal class QueryResultImpl : com.db4o.IntArrayList, com.db4o.foundation.Visitor4
+		, com.db4o.inside.query.QueryResult
 	{
 		internal com.db4o.Tree i_candidates;
 
@@ -9,12 +10,13 @@ namespace com.db4o
 
 		internal readonly com.db4o.Transaction i_trans;
 
-		internal QResult(com.db4o.Transaction a_trans)
+		internal QueryResultImpl(com.db4o.Transaction a_trans)
 		{
 			i_trans = a_trans;
 		}
 
-		internal QResult(com.db4o.Transaction trans, int initialSize) : base(initialSize)
+		internal QueryResultImpl(com.db4o.Transaction trans, int initialSize) : base(initialSize
+			)
 		{
 			i_trans = trans;
 		}
@@ -34,8 +36,7 @@ namespace com.db4o
 			{
 				if (index < 0 || index >= size())
 				{
-					throw new System.IndexOutOfRangeException("Index " + index + " not within bounds."
-						);
+					throw new System.IndexOutOfRangeException();
 				}
 				int id = i_content[index];
 				com.db4o.YapStream stream = i_trans.i_stream;
@@ -119,9 +120,14 @@ namespace com.db4o
 			add(a_key);
 		}
 
-		internal virtual object streamLock()
+		public virtual object streamLock()
 		{
 			return i_trans.i_stream.i_lock;
+		}
+
+		public virtual com.db4o.ObjectContainer objectContainer()
+		{
+			return i_trans.i_stream;
 		}
 	}
 }

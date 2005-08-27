@@ -1,3 +1,4 @@
+
 namespace com.db4o.io
 {
 	public class RandomAccessFileAdapter : com.db4o.io.IoAdapter

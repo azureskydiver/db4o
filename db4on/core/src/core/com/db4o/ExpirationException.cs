@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal class ExpirationException : j4o.lang.RuntimeException

@@ -1,7 +1,7 @@
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	internal class QResultClient : com.db4o.QResult
+	internal class QResultClient : com.db4o.QueryResultImpl
 	{
 		private object[] i_prefetched = new object[com.db4o.YapConst.PREFETCH_OBJECT_COUNT
 			];

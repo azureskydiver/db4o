@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	/// <summary>Undefined YapClass used for members of type Object.</summary>

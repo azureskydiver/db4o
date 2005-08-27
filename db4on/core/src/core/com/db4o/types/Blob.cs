@@ -62,7 +62,7 @@ namespace com.db4o.types
 		/// <br /><br />
 		/// </remarks>
 		/// <param name="file">the file the blob is to be read from.</param>
-		/// <exception cref="j4o.io.IOException">in case of errors</exception>
+		/// <exception cref="System.IO.IOException">in case of errors</exception>
 		void readFrom(j4o.io.File file);
 
 		/// <summary>reads a file into the db4o system and stores it as a blob.</summary>
@@ -73,7 +73,7 @@ namespace com.db4o.types
 		/// <br /><br />
 		/// </remarks>
 		/// <param name="file">the file the blob is to be read from.</param>
-		/// <exception cref="j4o.io.IOException">in case of errors</exception>
+		/// <exception cref="System.IO.IOException">in case of errors</exception>
 		void readLocal(j4o.io.File file);
 
 		/// <summary>writes stored blob data to a file.</summary>
@@ -83,7 +83,7 @@ namespace com.db4o.types
 		/// db4o will use the local file system in Client/Server mode also.
 		/// <br /><br />
 		/// </remarks>
-		/// <exception cref="j4o.io.IOException">
+		/// <exception cref="System.IO.IOException">
 		/// in case of errors and in case no blob
 		/// data was stored
 		/// </exception>
@@ -98,7 +98,7 @@ namespace com.db4o.types
 		/// process writing data in an additional thread.
 		/// <br /><br />
 		/// </remarks>
-		/// <exception cref="j4o.io.IOException">
+		/// <exception cref="System.IO.IOException">
 		/// in case of errors and in case no blob
 		/// data was stored
 		/// </exception>

@@ -28,5 +28,14 @@ namespace com.db4o.reflect.generic
 			return isAssignableFrom(((com.db4o.reflect.generic.GenericObject)candidate)._class
 				);
 		}
+
+		public override bool Equals(object obj)
+		{
+			if (!(obj is com.db4o.reflect.generic.GenericArrayClass))
+			{
+				return false;
+			}
+			return base.Equals(obj);
+		}
 	}
 }

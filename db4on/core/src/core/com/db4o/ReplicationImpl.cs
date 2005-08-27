@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal class ReplicationImpl : com.db4o.replication.ReplicationProcess

@@ -3,7 +3,7 @@ namespace com.db4o.query
 	/// <summary>Extend this class and add your #match() method to run native queries.</summary>
 	/// <remarks>
 	/// Extend this class and add your #match() method to run native queries.
-	/// <b>! The functionality of this class is not available before db4o version 5.0.
+	/// <br /><br /><b>! The functionality of this class is not available before db4o version 5.0.
 	/// It is present in 4.x builds for maintenance purposes only !</b><br /><br />
 	/// A class that extends Predicate is required to implement the method
 	/// #match() following the native query conventions:<br />
@@ -42,7 +42,7 @@ namespace com.db4o.query
 			findMatchMethod();
 			if (_matchMethod == null)
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(64);
+				com.db4o.inside.Exceptions4.throwRuntimeException(64);
 			}
 		}
 
@@ -60,15 +60,16 @@ namespace com.db4o.query
 			for (int methodIdx = 0; methodIdx < methods.Length; methodIdx++)
 			{
 				j4o.lang.reflect.Method curMethod = methods[methodIdx];
-				if (curMethod.getName().Equals("match") && curMethod.getReturnType().Equals(j4o.lang.Class.getClassForType
-					(typeof(bool))))
+				string name = curMethod.getName();
+				if ((name.Equals("match") || name.Equals("Match")) && curMethod.getReturnType().Equals
+					(j4o.lang.Class.getClassForType(typeof(bool))))
 				{
 					j4o.lang.Class[] paramTypes = curMethod.getParameterTypes();
 					if (paramTypes != null && paramTypes.Length == 1)
 					{
 						_extent = paramTypes[0];
 						_matchMethod = curMethod;
-						com.db4o.Platform.setAccessible(curMethod);
+						com.db4o.Platform4.setAccessible(curMethod);
 						return;
 					}
 				}

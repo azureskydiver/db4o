@@ -23,7 +23,7 @@ namespace com.db4o
 
 		public virtual bool canHold(com.db4o.reflect.ReflectClass claxx)
 		{
-			return claxx == classReflector();
+			return claxx.Equals(classReflector());
 		}
 
 		public virtual void cascadeActivation(com.db4o.Transaction a_trans, object a_object

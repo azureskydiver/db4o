@@ -1,8 +1,13 @@
 namespace com.db4o
 {
 	/// <exclude></exclude>
+	#if NET_2_0
+	public abstract partial class YapStream : com.db4o.ObjectContainer, com.db4o.ext.ExtObjectContainer
+		, com.db4o.types.TransientClass
+	#else
 	public abstract class YapStream : com.db4o.ObjectContainer, com.db4o.ext.ExtObjectContainer
 		, com.db4o.types.TransientClass
+	#endif
 	{
 		public const int HEADER_LENGTH = 2 + (com.db4o.YapConst.YAPINT_LENGTH * 4);
 
@@ -199,7 +204,7 @@ namespace com.db4o
 			{
 				return false;
 			}
-			return com.db4o.Platform.jdk().isEnum(reflector(), reference.getYapClass().classReflector
+			return com.db4o.Platform4.jdk().isEnum(reflector(), reference.getYapClass().classReflector
 				());
 		}
 
@@ -212,7 +217,7 @@ namespace com.db4o
 		{
 			if (i_classCollection == null)
 			{
-				com.db4o.inside.Exceptions.throwRuntimeException(20, ToString());
+				com.db4o.inside.Exceptions4.throwRuntimeException(20, ToString());
 			}
 		}
 
@@ -260,7 +265,7 @@ namespace com.db4o
 			{
 				return true;
 			}
-			com.db4o.Platform.preClose(this);
+			com.db4o.Platform4.preClose(this);
 			checkNeededUpdates();
 			if (stateMessages())
 			{
@@ -274,7 +279,7 @@ namespace com.db4o
 		{
 			if (hasShutDownHook())
 			{
-				com.db4o.Platform.removeShutDownHook(this, i_lock);
+				com.db4o.Platform4.removeShutDownHook(this, i_lock);
 			}
 			i_classCollection = null;
 			i_references.stopTimer();
@@ -295,7 +300,7 @@ namespace com.db4o
 			{
 				if (i_handlers.i_collections == null)
 				{
-					i_handlers.i_collections = com.db4o.Platform.collections(this);
+					i_handlers.i_collections = com.db4o.Platform4.collections(this);
 				}
 				return i_handlers.i_collections;
 			}
@@ -319,7 +324,8 @@ namespace com.db4o
 		internal abstract com.db4o.ClassIndex createClassIndex(com.db4o.YapClass a_yapClass
 			);
 
-		internal abstract com.db4o.QResult createQResult(com.db4o.Transaction a_ta);
+		internal abstract com.db4o.QueryResultImpl createQResult(com.db4o.Transaction a_ta
+			);
 
 		internal virtual void createStringIO(byte encoding)
 		{
@@ -595,11 +601,11 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual com.db4o.ObjectSetImpl get1(com.db4o.Transaction ta, object template
-			)
+		internal virtual com.db4o.inside.query.ObjectSetFacade get1(com.db4o.Transaction 
+			ta, object template)
 		{
 			ta = checkTransaction(ta);
-			com.db4o.QResult res = createQResult(ta);
+			com.db4o.QueryResultImpl res = createQResult(ta);
 			i_entryCounter++;
 			try
 			{
@@ -611,10 +617,11 @@ namespace com.db4o
 			}
 			i_entryCounter--;
 			res.reset();
-			return new com.db4o.ObjectSetImpl(res);
+			return new com.db4o.inside.query.ObjectSetFacade(res);
 		}
 
-		private void get2(com.db4o.Transaction ta, object template, com.db4o.QResult res)
+		private void get2(com.db4o.Transaction ta, object template, com.db4o.QueryResultImpl
+			 res)
 		{
 			if (template == null || j4o.lang.Class.getClassForObject(template) == com.db4o.YapConst
 				.CLASS_OBJECT)
@@ -629,7 +636,8 @@ namespace com.db4o
 			}
 		}
 
-		internal abstract void getAll(com.db4o.Transaction ta, com.db4o.QResult a_res);
+		internal abstract void getAll(com.db4o.Transaction ta, com.db4o.QueryResultImpl a_res
+			);
 
 		public virtual object getByID(long id)
 		{
@@ -826,11 +834,11 @@ namespace com.db4o
 
 		internal virtual bool needsLockFileThread()
 		{
-			if (!com.db4o.Platform.hasLockFileThread())
+			if (!com.db4o.Platform4.hasLockFileThread())
 			{
 				return false;
 			}
-			if (com.db4o.Platform.hasNio())
+			if (com.db4o.Platform4.hasNio())
 			{
 				return false;
 			}
@@ -891,7 +899,7 @@ namespace com.db4o
 			i_references = new com.db4o.YapReferences(this);
 			if (hasShutDownHook())
 			{
-				com.db4o.Platform.addShutDownHook(this, i_lock);
+				com.db4o.Platform4.addShutDownHook(this, i_lock);
 			}
 			i_handlers.initEncryption(i_config);
 			initialize2();
@@ -1433,7 +1441,7 @@ namespace com.db4o
 			{
 				return 0;
 			}
-			if (obj is com.db4o.Internal)
+			if (obj is com.db4o.Internal4)
 			{
 				return 0;
 			}
@@ -1684,7 +1692,7 @@ namespace com.db4o
 			i_handlers.i_stringHandler.setStringIo(a_io);
 		}
 
-		internal virtual bool showInternalClasses()
+		internal bool showInternalClasses()
 		{
 			return isServer() || i_showInternalClasses > 0;
 		}
@@ -1910,7 +1918,7 @@ namespace com.db4o
 			hcTreeRemove(yo);
 			idTreeRemove(yo.getID());
 			yo.setID(this, -1);
-			com.db4o.Platform.killYapRef(yo.i_object);
+			com.db4o.Platform4.killYapRef(yo.i_object);
 		}
 
 		public abstract void backup(string arg1);

@@ -1,3 +1,4 @@
+
 namespace com.db4o
 {
 	internal class ShutDownRunnable : com.db4o.foundation.Collection4, j4o.lang.Runnable

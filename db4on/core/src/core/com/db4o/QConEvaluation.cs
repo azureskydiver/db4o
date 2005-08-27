@@ -49,7 +49,7 @@ namespace com.db4o
 		{
 			base.marshall();
 			int[] id = { 0 };
-			i_marshalledEvaluation = i_trans.i_stream.marshall(com.db4o.Platform.wrapEvaluation
+			i_marshalledEvaluation = i_trans.i_stream.marshall(com.db4o.Platform4.wrapEvaluation
 				(i_evaluation), id);
 			i_marshalledID = id[0];
 		}
@@ -69,7 +69,7 @@ namespace com.db4o
 			com.db4o.QCandidate candidate = (com.db4o.QCandidate)obj;
 			try
 			{
-				com.db4o.Platform.evaluationEvaluate(i_evaluation, candidate);
+				com.db4o.Platform4.evaluationEvaluate(i_evaluation, candidate);
 				if (!candidate.i_include)
 				{
 					doNotInclude(candidate.getRoot());

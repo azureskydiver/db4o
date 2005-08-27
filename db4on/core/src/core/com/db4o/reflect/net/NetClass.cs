@@ -164,11 +164,6 @@ namespace com.db4o.reflect.net
 			return false;
 		}
 
-        public virtual object[] toArray(object obj) {
-            // handled in GenericClass
-            return null;
-        }
-
 		public override string ToString(){
 			return "CClass: " + _clazz.getName();
 		}
@@ -179,5 +174,10 @@ namespace com.db4o.reflect.net
 			_constructor = constructor;
 			constructorParams = _params;
 		}
+		
+        public virtual object[] toArray(object obj) {
+            // handled in GenericClass
+            return null;
+        }
 	}
 }

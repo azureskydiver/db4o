@@ -1,3 +1,4 @@
+
 namespace com.db4o.types
 {
 	/// <summary>base interface for db4o collections</summary>

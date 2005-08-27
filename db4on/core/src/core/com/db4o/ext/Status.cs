@@ -1,3 +1,4 @@
+
 namespace com.db4o.ext
 {
 	/// <summary>Static constants to describe the status of objects.</summary>

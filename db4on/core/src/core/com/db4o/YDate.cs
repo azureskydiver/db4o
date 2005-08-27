@@ -63,7 +63,7 @@ namespace com.db4o
 
 		internal static string now()
 		{
-			return com.db4o.Platform.format(new j4o.util.Date(), true);
+			return com.db4o.Platform4.format(new j4o.util.Date(), true);
 		}
 
 		internal override long val(object obj)

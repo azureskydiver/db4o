@@ -1,3 +1,4 @@
+
 namespace com.db4o.types
 {
 	/// <summary>marks objects as second class objects.</summary>

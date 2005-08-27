@@ -1,3 +1,4 @@
+
 namespace com.db4o.ext
 {
 	/// <summary>intended for future virtual fields on classes.</summary>
