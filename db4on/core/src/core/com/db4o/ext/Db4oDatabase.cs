@@ -7,7 +7,7 @@ namespace com.db4o.ext
 	/// represents the database an object was created on.
 	/// </remarks>
 	/// <persistent></persistent>
-	public class Db4oDatabase : com.db4o.types.Db4oType, com.db4o.Internal
+	public class Db4oDatabase : com.db4o.types.Db4oType, com.db4o.Internal4
 	{
 		/// <summary>Field is public for implementation reasons, DO NOT TOUCH!</summary>
 		public byte[] i_signature;
