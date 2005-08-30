@@ -1,0 +1,80 @@
+package com.db4o.devtools.ant;
+
+import java.io.File;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
+
+public abstract class CSharpProject {
+	
+	/**
+	 * Loads the current project definition based on the file extension and file format.
+	 * 
+	 * @param projectFile the project file to load
+	 * @return
+	 * @throws Exception
+	 */
+	public static CSharpProject load(File projectFile) throws Exception {
+		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(projectFile);
+		
+		if (document.getDocumentElement().getNodeName().equals("Project")) {
+			// VS 2005
+			return new CSharp2005Project(document);
+		}
+		
+		if (projectFile.getName().endsWith(".csdproj")) {
+			return new CSharp2003ProjectCF(document);
+		}
+		return new CSharp2003Project(document);
+	}
+
+	private Document _document;
+	private Element _files;
+	
+	protected CSharpProject(Document document) throws Exception {
+		_document = document;
+		_files = getFilesContainerElement();
+	}
+
+	public void addFile(String file) {
+		String relativePath = file.replace('/', '\\');
+		_files.appendChild(createFileNode(relativePath));
+	}
+
+	public void addFiles(String[] files) {
+		for (int i=0; i<files.length; ++i) {
+			String file = files[i];
+			addFile(file);
+		}
+	}
+
+	public void writeToURI(String uri) {
+		LSSerializer serializer = ((DOMImplementationLS)_document.getImplementation()).createLSSerializer();		
+		serializer.writeToURI(_document, uri);
+	}
+	
+	protected abstract Element getFilesContainerElement() throws Exception;
+
+	protected abstract Node createFileNode(String file);
+
+	protected Element selectElement(String xpath) throws XPathExpressionException {
+		return (Element)XPathFactory.newInstance().newXPath().evaluate(xpath, _document, XPathConstants.NODE);
+	}
+	
+	protected Element createElement(String tagName) {
+		return _document.createElement(tagName);
+	}
+
+	protected void invalidProjectFile() {
+		throw new RuntimeException("Invalid project file");
+	}
+
+}
