@@ -1048,7 +1048,21 @@
 			</sources>
 		</updatecsharpproject>
 		
+		<updatecsharpproject projectFile="${dir.n.core}/db4o-net2.csproj">
+			<sources dir="${dir.n.core}">
+				<include name="**/*.cs" />
+				<exclude name="src/compact/**" />
+			</sources>
+		</updatecsharpproject>
+		
 		<updatecsharpproject projectFile="${dir.n.core}/db4o-compact.csdproj">
+			<sources dir="${dir.n.core}">
+				<include name="**/*.cs" />
+				<exclude name="src/net/**" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectFile="${dir.n.core}/db4o-compact-2005.csdproj">
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
 				<exclude name="src/net/**" />
