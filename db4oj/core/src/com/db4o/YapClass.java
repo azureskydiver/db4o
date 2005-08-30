@@ -36,6 +36,8 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     
     private EventDispatcher _eventDispatcher;
     
+    private boolean _internal;
+    
 
     // for indexing purposes.
     // TODO: check race conditions, upon multiple calls against the same class
@@ -268,6 +270,22 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
                         write(i_stream, i_stream.getSystemTransaction());
                     }
                 }
+            }
+        }
+    }
+    
+    private void checkDb4oType() {
+        ReflectClass claxx = classReflector();
+        if (claxx == null){
+            return;
+        }
+        if (i_stream.i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)) {
+            _internal = true;
+        }
+        if (i_stream.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
+            try {
+                i_db4oType = (Db4oTypeImpl)claxx.newInstance();
+            } catch (Exception e) {
             }
         }
     }
@@ -585,27 +603,29 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     }
     
     private boolean generateUUIDs() {
-        if(i_stream instanceof YapFile) {
-            YapFile yf = (YapFile)i_stream;
-            int configValue = (i_config == null) ? 0 : i_config.i_generateUUIDs;
-            if(yf.i_bootRecord == null) {
-                return false;
-            }
-            return generate1(yf.i_bootRecord.i_generateUUIDs, configValue); 
+        if(! generateVirtual()){
+            return false;
         }
-        return false;
+        int configValue = (i_config == null) ? 0 : i_config.i_generateUUIDs;
+        return generate1(((YapFile)i_stream).i_bootRecord.i_generateUUIDs, configValue); 
     }
 
     private boolean generateVersionNumbers() {
-        if(i_stream instanceof YapFile) {
-            YapFile yf = (YapFile)i_stream;
-            int configValue = (i_config == null) ? 0 : i_config.i_generateVersionNumbers;
-            if(yf.i_bootRecord == null) {
-                return false;
-            }
-            return generate1(yf.i_bootRecord.i_generateVersionNumbers, configValue); 
+        if(! generateVirtual()){
+            return false;
         }
-        return false;
+        int configValue = (i_config == null) ? 0 : i_config.i_generateVersionNumbers;
+        return generate1(((YapFile)i_stream).i_bootRecord.i_generateVersionNumbers, configValue); 
+    }
+    
+    private boolean generateVirtual(){
+        if(_internal){
+            return false;
+        }
+        if( ! (i_stream instanceof YapFile) ){
+            return false;
+        }
+        return ((YapFile)i_stream).i_bootRecord != null; 
     }
     
     private boolean generate1(int bootRecordValue, int configValue) {
@@ -811,6 +831,9 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
     }
     
     boolean hasVirtualAttributes(){
+        if(_internal){
+            return false;
+        }
         return hasVersionField() || hasUUIDField(); 
     }
 
@@ -1541,16 +1564,6 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         }
     }
 
-    private void checkDb4oType() {
-        ReflectClass claxx = classReflector();
-        if (claxx != null && i_stream.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
-            try {
-                i_db4oType = (Db4oTypeImpl)claxx.newInstance();
-            } catch (Exception e) {
-            }
-        }
-    }
-    
     public boolean readArray(Object array, YapWriter reader) {
         return false;
     }
