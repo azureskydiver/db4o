@@ -358,12 +358,21 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 	}
 	
 	VirtualAttributes virtualAttributes(Transaction a_trans){
-	    if(i_virtualAttributes == null && i_yapClass.hasVirtualAttributes()){
-	        if(a_trans != null){
-		        i_virtualAttributes = new VirtualAttributes();
-		        i_yapClass.readVirtualAttributes(a_trans, this);
-	        }
-	    }
+        if(a_trans == null){
+            return i_virtualAttributes;
+        }
+	    if(i_virtualAttributes == null){ 
+            if(i_yapClass.hasVirtualAttributes()){
+                i_virtualAttributes = new VirtualAttributes();
+                i_yapClass.readVirtualAttributes(a_trans, this);
+            }
+	    }else{
+            if(i_virtualAttributes.i_database == null || i_virtualAttributes.i_uuid == 0){
+                if(i_yapClass.hasVirtualAttributes()){
+                    i_yapClass.readVirtualAttributes(a_trans, this);
+                }
+            }
+        }
 	    return i_virtualAttributes;
 	}
 
