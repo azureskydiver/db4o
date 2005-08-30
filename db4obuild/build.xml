@@ -1062,7 +1062,7 @@
 			</sources>
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectFile="${dir.n.core}/db4o-compact-2005.csdproj">
+		<updatecsharpproject projectFile="${dir.n.core}/db4o-compact-2005.csproj">
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
 				<exclude name="src/net/**" />
