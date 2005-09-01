@@ -1227,8 +1227,11 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     public void refresh(Object a_refresh, int a_depth) {
         synchronized (i_lock) {
             i_refreshInsteadOfActivate = true;
-            activate1(null, a_refresh, a_depth);
-            i_refreshInsteadOfActivate = false;
+            try {
+            	activate1(null, a_refresh, a_depth);
+            } finally {
+            	i_refreshInsteadOfActivate = false;
+            }
         }
     }
 
