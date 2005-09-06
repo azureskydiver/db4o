@@ -40,7 +40,7 @@ public abstract class TestSuite {
         return obj.getClass() == this.getClass(); 
     }
     
-    protected void add(TestSuite suite){
+    public void add(TestSuite suite){
         if(_testSuites == null){
             _testSuites = new Vector();
         }

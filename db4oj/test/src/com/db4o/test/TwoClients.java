@@ -13,17 +13,8 @@ public class TwoClients extends AllTestsConfAll{
 			Test.deleteAllInstances(new Atom());
 			Test.commit();
 
-			ExtObjectContainer client2 = null;
-			try {
-                client2 =
-                    Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
-                
-                // client2 = Test.server().openClient().ext();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return ;
-            }
             ExtObjectContainer client1 = Test.objectContainer();
+			ExtObjectContainer client2 = Test.openClient();
             Atom a_1_1 = new Atom("One");
             Atom a_1_2 = new Atom("Two");
             Atom a_1_3 = new Atom("Three");

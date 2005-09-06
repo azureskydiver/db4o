@@ -245,13 +245,7 @@ public class Test extends AllTests {
             objectServer.ext().configure().messageLevel(0);
         }
         if (clientServer) {
-            try {
-                oc = Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
-                // oc = objectServer.openClient().ext();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
+            oc = openClient();
         } else {
             if(MEMORY_FILE) {
                 memoryFile = new MemoryFile(memoryFileContent);
@@ -261,6 +255,18 @@ public class Test extends AllTests {
             }
         }
         return oc;
+    }
+    
+    public static ExtObjectContainer openClient(){
+        if (clientServer) {
+            try {
+                return Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
+                // oc = objectServer.openClient().ext();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     public static Query query() {
