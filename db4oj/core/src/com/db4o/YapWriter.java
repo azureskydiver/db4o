@@ -32,7 +32,7 @@ public final class YapWriter extends YapReader {
     // and carries instantiation information through the reading process 
     private int i_updateDepth = 1;
 
-    YapWriter(Transaction a_trans, int a_initialBufferSize) {
+    public YapWriter(Transaction a_trans, int a_initialBufferSize) {
         i_trans = a_trans;
         i_length = a_initialBufferSize;
         _buffer = new byte[i_length];
@@ -138,7 +138,7 @@ public final class YapWriter extends YapReader {
         }
     }
 
-    int getAddress() {
+    public int getAddress() {
         return i_address;
     }
     
@@ -154,7 +154,7 @@ public final class YapWriter extends YapReader {
         return i_instantionDepth;
     }
 
-    int getLength() {
+    public int getLength() {
         return i_length;
     }
 
@@ -162,7 +162,7 @@ public final class YapWriter extends YapReader {
         return i_trans.i_stream;
     }
 
-    Transaction getTransaction() {
+    public Transaction getTransaction() {
         return i_trans;
     }
 
@@ -276,7 +276,7 @@ public final class YapWriter extends YapReader {
         i_length = a_length;
     }
 
-    void useSlot(int a_id, int a_adress, int a_length) {
+    public void useSlot(int a_id, int a_adress, int a_length) {
         i_id = a_id;
         useSlot(a_adress, a_length);
     }
@@ -311,7 +311,7 @@ public final class YapWriter extends YapReader {
         writeInt(0);
     }
 
-    void writeEncrypt() {
+    public void writeEncrypt() {
         if (Deploy.debug) {
             debugCheckBytes();
         }

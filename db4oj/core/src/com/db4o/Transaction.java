@@ -818,7 +818,7 @@ public class Transaction {
         }
     }
 
-    void writePointer(int a_id, int a_address, int a_length) {
+    public void writePointer(int a_id, int a_address, int a_length) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }

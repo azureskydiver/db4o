@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.freespace.*;
 import com.db4o.reflect.*;
 
 /**
@@ -18,8 +19,8 @@ public abstract class YapFile extends YapStream {
     PBootRecord                 i_bootRecord;
 
     private Collection4         i_dirty;
-    private Tree                i_freeByAddress;
-    private Tree                i_freeBySize;
+    
+    private FreespaceManager _freespaceManager;
 
     private boolean             i_isServer = false;
 
@@ -29,13 +30,11 @@ public abstract class YapFile extends YapStream {
 
     int                         i_writeAt;
 
-    private final TreeIntObject i_finder   = new TreeIntObject(0);
-
     YapFile(YapStream a_parent) {
         super(a_parent);
     }
     
-    byte blockSize(){
+    public byte blockSize(){
         return 1;
     }
 
@@ -46,8 +45,6 @@ public abstract class YapFile extends YapStream {
     
     boolean close2() {
         boolean ret = super.close2();
-        i_freeBySize = null;
-        i_freeByAddress = null;
         i_dirty = null;
         return ret;
     }
@@ -64,6 +61,7 @@ public abstract class YapFile extends YapStream {
     }
 
     void configureNewFile() {
+        _freespaceManager = new FreespaceManager(this);
         blockSize(i_config.i_blockSize);
         i_writeAt = blocksFor(HEADER_LENGTH);
         i_configBlock = new YapConfigBlock(this, i_config.i_encoding);
@@ -125,62 +123,8 @@ public abstract class YapFile extends YapStream {
 
     abstract String fileName();
 
-    void addFreeSlotNodes(int a_address, int a_length) {
-        FreeSlotNode addressNode = new FreeSlotNode(a_address);
-        addressNode.createPeer(a_length);
-        i_freeByAddress = Tree.add(i_freeByAddress, addressNode);
-        i_freeBySize = Tree.add(i_freeBySize, addressNode.i_peer);
-    }
-
     void free(int a_address, int a_length) {
-        if(DTrace.enabled){
-            DTrace.FREE.logLength(a_address, a_length);
-        }
-        if (a_length > i_config.i_discardFreeSpace) {
-            a_length = blocksFor(a_length);
-            i_finder.i_key = a_address;
-            FreeSlotNode sizeNode;
-            FreeSlotNode addressnode = (FreeSlotNode) Tree.findSmaller(
-                i_freeByAddress, i_finder);
-            if ((addressnode != null)
-                && ((addressnode.i_key + addressnode.i_peer.i_key) == a_address)) {
-                sizeNode = addressnode.i_peer;
-                i_freeBySize = i_freeBySize.removeNode(sizeNode);
-                sizeNode.i_key += a_length;
-                FreeSlotNode secondAddressNode = (FreeSlotNode) Tree
-                    .findGreaterOrEqual(i_freeByAddress, i_finder);
-                if ((secondAddressNode != null)
-                    && (a_address + a_length == secondAddressNode.i_key)) {
-                    sizeNode.i_key += secondAddressNode.i_peer.i_key;
-                    i_freeBySize = i_freeBySize
-                        .removeNode(secondAddressNode.i_peer);
-                    i_freeByAddress = i_freeByAddress
-                        .removeNode(secondAddressNode);
-                }
-                sizeNode.removeChildren();
-                i_freeBySize = Tree.add(i_freeBySize, sizeNode);
-            } else {
-                addressnode = (FreeSlotNode) Tree.findGreaterOrEqual(
-                    i_freeByAddress, i_finder);
-                if ((addressnode != null)
-                    && (a_address + a_length == addressnode.i_key)) {
-                    sizeNode = addressnode.i_peer;
-                    i_freeByAddress = i_freeByAddress.removeNode(addressnode);
-                    i_freeBySize = i_freeBySize.removeNode(sizeNode);
-                    sizeNode.i_key += a_length;
-                    addressnode.i_key = a_address;
-                    addressnode.removeChildren();
-                    sizeNode.removeChildren();
-                    i_freeByAddress = Tree.add(i_freeByAddress, addressnode);
-                    i_freeBySize = Tree.add(i_freeBySize, sizeNode);
-                } else {
-                    addFreeSlotNodes(a_address, a_length);
-                }
-            }
-            if (Deploy.debug) {
-                writeXBytes(a_address, a_length * blockSize());
-            }
-        }
+        _freespaceManager.free(a_address, a_length);
     }
 
     final void freePrefetchedPointers() {
@@ -244,7 +188,7 @@ public abstract class YapFile extends YapStream {
         return id;
     }
     
-    private int blocksFor(long bytes){
+    public int blocksFor(long bytes){
         int blockLen = blockSize();
         int result = (int)(bytes / blockLen);
         if (bytes % blockLen != 0) result++;
@@ -252,36 +196,27 @@ public abstract class YapFile extends YapStream {
     }
     
     int getSlot(int a_length){
-        int address = getSlot1(a_length);
-        if(DTrace.enabled){
-            DTrace.GET_SLOT.logLength(address, a_length);
+        
+        if(! DTrace.enabled){
+            return getSlot1(a_length);
         }
+        
+        int address = getSlot1(a_length);
+        DTrace.GET_SLOT.logLength(address, a_length);
         return address;
     }
 
     private final int getSlot1(int bytes) {
+        int address = _freespaceManager.getSlot(bytes);
+        if(address > 0){
+            return address;
+        }
         int blocksNeeded = blocksFor(bytes);
-        i_finder.i_key = blocksNeeded;
-        i_finder.i_object = null;
-        i_freeBySize = FreeSlotNode.removeGreaterOrEqual(
-            (FreeSlotNode) i_freeBySize, i_finder);
-
-        if (i_finder.i_object == null) {
-            if (Deploy.debug && Deploy.overwrite) {
-                writeXBytes(i_writeAt, blocksNeeded * blockSize());
-            }
-            int slotAddress = i_writeAt;
-            i_writeAt += blocksNeeded;
-            return slotAddress;
+        if (Deploy.debug && Deploy.overwrite) {
+            writeXBytes(i_writeAt, blocksNeeded * blockSize());
         }
-            
-        FreeSlotNode node = (FreeSlotNode) i_finder.i_object;
-        int blocksFound = node.i_key;
-        int address = node.i_peer.i_key;
-        i_freeByAddress = i_freeByAddress.removeNode(node.i_peer);
-        if (blocksFound > blocksNeeded) {
-            addFreeSlotNodes(address + blocksNeeded, blocksFound - blocksNeeded);
-        }
+        address = i_writeAt;
+        i_writeAt += blocksNeeded;
         return address;
     }
 
@@ -296,7 +231,7 @@ public abstract class YapFile extends YapStream {
         i_dirty = new Collection4();
         super.initialize2();
     }
-
+    
     private void initBootRecord() {
         showInternalClasses(true);
         i_bootRecord = new PBootRecord();
@@ -324,7 +259,7 @@ public abstract class YapFile extends YapStream {
         return writer;
     }
 
-    final int[] newSlot(Transaction a_trans, int a_length) {
+    public final int[] newSlot(Transaction a_trans, int a_length) {
         int id = getPointerSlot();
         int address = getSlot(a_length);
         a_trans.setPointer(id, address, a_length);
@@ -336,8 +271,7 @@ public abstract class YapFile extends YapStream {
     }
 
     void prefetchedIDConsumed(int a_id) {
-        i_finder.i_key = a_id;
-        i_prefetchedIDs = i_prefetchedIDs.removeLike(i_finder);
+        i_prefetchedIDs = i_prefetchedIDs.removeLike(new TreeIntObject(a_id));
     }
 
     int prefetchID() {
@@ -458,36 +392,10 @@ public abstract class YapFile extends YapStream {
 
         int freeID = myreader.getAddress() + myreader._offset;
         int freeSlotsID = myreader.readInt();
-
-        i_freeBySize = null;
-        i_freeByAddress = null;
-
-        if (freeSlotsID > 0
-            && (i_config.i_discardFreeSpace != Integer.MAX_VALUE)) {
-            YapWriter reader = readWriterByID(i_systemTrans, freeSlotsID);
-            if (reader != null) {
-
-                FreeSlotNode.sizeLimit = i_config.i_discardFreeSpace;
-
-                i_freeBySize = new TreeReader(reader, new FreeSlotNode(0), true)
-                    .read();
-
-                final Tree[] addressTree = new Tree[1];
-                if (i_freeBySize != null) {
-                    i_freeBySize.traverse(new Visitor4() {
-
-                        public void visit(Object a_object) {
-                            FreeSlotNode node = ((FreeSlotNode) a_object).i_peer;
-                            addressTree[0] = Tree.add(addressTree[0], node);
-                        }
-                    });
-                }
-                i_freeByAddress = addressTree[0];
-
-                free(freeSlotsID, YapConst.POINTER_LENGTH);
-                free(reader.getAddress(), reader.getLength());
-            }
-        }
+        
+        _freespaceManager = new FreespaceManager(this);
+        _freespaceManager.read(freeSlotsID);
+        
         showInternalClasses(true);
         Object bootRecord = null;
         if (i_configBlock._bootRecordID > 0) {
@@ -683,17 +591,16 @@ public abstract class YapFile extends YapStream {
     }
 
     void writeHeader(boolean shuttingDown) {
+        
+        
+        
         int freeBySizeID = 0;
+        
+        
         if (shuttingDown) {
-            int length = Tree.byteCount(i_freeBySize);
-            int[] slot = newSlot(i_systemTrans, length);
-            freeBySizeID = slot[0];
-            YapWriter sdwriter = new YapWriter(i_systemTrans, length);
-            sdwriter.useSlot(freeBySizeID, slot[1], length);
-            Tree.write(sdwriter, i_freeBySize);
-            sdwriter.writeEncrypt();
-            i_systemTrans.writePointer(slot[0], slot[1], length);
+            freeBySizeID = _freespaceManager.write();
         }
+        
         YapWriter writer = getWriter(i_systemTrans, 0, HEADER_LENGTH);
         writer.append(YapConst.YAPFILEVERSION);
         writer.append(blockSize());
@@ -731,7 +638,7 @@ public abstract class YapFile extends YapStream {
     // This is a reroute of writeBytes to write the free blocks
     // unchecked.
 
-    abstract void writeXBytes(int a_address, int a_length);
+    public abstract void writeXBytes(int a_address, int a_length);
 
     YapWriter xBytes(int a_address, int a_length) {
         if (Deploy.debug) {

@@ -290,7 +290,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
         }
     }
 
-    boolean duplicates() {
+    public boolean duplicates() {
         return i_order.hasDuplicates();
     }
 

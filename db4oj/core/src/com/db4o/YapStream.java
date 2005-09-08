@@ -53,7 +53,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     public YapClassCollection      i_classCollection;
 
     // the Configuration context for this ObjectContainer
-    Config4Impl             i_config;
+    public Config4Impl             i_config;
 
     // Increments and decrements for outside calls into YapStream
     // A value > 0 signals that the engine crashed with an uncaught exception.
@@ -99,7 +99,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     // used for YapClass and YapClassCollection
     // may be parent or equal to i_trans
-    Transaction             i_systemTrans;
+    public Transaction             i_systemTrans;
 
     // used for Objects
     Transaction             i_trans;
@@ -890,13 +890,13 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         i_idTree.setObject(new Object());
         i_hcTree = i_idTree;
 
-        initialize2b();
+        initialize2NObjectCarrier();
     }
 
     /**
      * overridden in YapObjectCarrier
      */
-    void initialize2b() {
+    void initialize2NObjectCarrier() {
         i_classCollection = new YapClassCollection(i_systemTrans);
         i_references.startTimer();
     }

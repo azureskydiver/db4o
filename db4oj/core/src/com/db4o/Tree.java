@@ -9,9 +9,9 @@ import com.db4o.foundation.*;
  */
 public abstract class Tree implements Cloneable, Readable{
     
-	Tree i_preceding;
-	int i_size = 1;
-	Tree i_subsequent;
+	public Tree i_preceding;
+	public int i_size = 1;
+	public Tree i_subsequent;
 	
 	public static final Tree add(Tree a_old, Tree a_new){
 		if(a_old == null){
@@ -147,7 +147,7 @@ public abstract class Tree implements Cloneable, Readable{
         return null;
 	}
 	
-	boolean duplicates(){
+	public boolean duplicates(){
 		return true;
 	}
 	
@@ -189,7 +189,7 @@ public abstract class Tree implements Cloneable, Readable{
 		return null;
 	}
 	
-	final static Tree findGreaterOrEqual(Tree a_in, Tree a_finder){
+	public static final Tree findGreaterOrEqual(Tree a_in, Tree a_finder){
 		if(a_in == null){
 			return null;
 		}
@@ -210,7 +210,7 @@ public abstract class Tree implements Cloneable, Readable{
 	}
 	
 	
-	final static Tree findSmaller(Tree a_in, Tree a_node){
+	public final static Tree findSmaller(Tree a_in, Tree a_node){
 		if(a_in == null){
 			return null;
 		}
@@ -248,7 +248,7 @@ public abstract class Tree implements Cloneable, Readable{
         // do nothing, virtual
     }
     
-	int ownLength(){
+	public int ownLength(){
 		throw YapConst.virtualException();
 	}
 	
@@ -264,7 +264,7 @@ public abstract class Tree implements Cloneable, Readable{
 		throw YapConst.virtualException();
 	}
 
-	Tree remove(){
+	public Tree remove(){
 		if(i_subsequent != null && i_preceding != null){
 			i_subsequent = i_subsequent.rotateSmallestUp();
 			i_subsequent.i_preceding = i_preceding;
@@ -277,7 +277,7 @@ public abstract class Tree implements Cloneable, Readable{
 		return i_preceding;
 	}
 	
-	void removeChildren(){
+	public void removeChildren(){
 		i_preceding = null;
 		i_subsequent = null;
 		setSizeOwn();
@@ -317,7 +317,7 @@ public abstract class Tree implements Cloneable, Readable{
 		return this;
 	}
 	
-	final Tree removeNode(final Tree a_tree){
+	public final Tree removeNode(final Tree a_tree){
 		if (this == a_tree){
 			return remove();
 		}
@@ -432,7 +432,7 @@ public abstract class Tree implements Cloneable, Readable{
 		throw YapConst.virtualException();
 	}
 	
-	static void write(final YapWriter a_writer, Tree a_tree){
+	public static void write(final YapWriter a_writer, Tree a_tree){
 		if(a_tree == null){
 			a_writer.writeInt(0);
 		}else{

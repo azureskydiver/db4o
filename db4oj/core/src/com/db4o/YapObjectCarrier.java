@@ -35,7 +35,7 @@ public class YapObjectCarrier extends YapMemoryFile {
 		initialize2();
 	}
 	
-	void initialize2b(){
+	void initialize2NObjectCarrier(){
 		// do nothing
 	}
 	
@@ -130,7 +130,6 @@ public class YapObjectCarrier extends YapMemoryFile {
 	}
 	
 	void write(boolean shuttingDown) {
-		// System.out.println(memoryFile.getBytes().length);
 		checkNeededUpdates();
 		writeDirty();
 		getTransaction().commit();

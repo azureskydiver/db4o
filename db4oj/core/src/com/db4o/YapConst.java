@@ -57,7 +57,7 @@ public final class YapConst
 	
 	static final int	OBJECT_LENGTH		= ADDED_LENGTH;
 
-	static final int	POINTER_LENGTH		= (YAPINT_LENGTH * 2) +  ADDED_LENGTH;
+	public static final int	POINTER_LENGTH		= (YAPINT_LENGTH * 2) +  ADDED_LENGTH;
 	
 	static final int	MESSAGE_LENGTH 		= YAPINT_LENGTH * 2 + 1;
 	

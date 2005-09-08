@@ -5,7 +5,7 @@ package com.db4o;
 /**
  * @exclude
  */
-final class TreeReader  
+public final class TreeReader  
 {
 	private final Readable i_template;
 	private final YapReader i_bytes;
@@ -19,7 +19,7 @@ final class TreeReader
 		i_bytes = a_bytes;
 	}
 	
-	TreeReader(YapReader a_bytes, Readable a_template, boolean a_orderOnRead){
+	public TreeReader(YapReader a_bytes, Readable a_template, boolean a_orderOnRead){
 		this(a_bytes, a_template);
 		i_orderOnRead = a_orderOnRead;
 	}
