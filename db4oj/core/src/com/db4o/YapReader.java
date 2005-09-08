@@ -49,7 +49,7 @@ public class YapReader {
 	    return false;
 	}
 	
-	int getLength() {
+	public int getLength() {
 		return _buffer.length;
 	}
 	
@@ -181,7 +181,7 @@ public class YapReader {
         }
     }
     
-    final void writeInt(int a_int) {
+    public final void writeInt(int a_int) {
 		// FIXME: variable ii declared outside the loop to circumvent mono bug 
 		int ii = YapConst.WRITE_LOOP;
         if (Deploy.debug) {

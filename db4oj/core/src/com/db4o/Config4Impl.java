@@ -31,7 +31,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     ClassLoader      i_classLoader;
     boolean          i_detectSchemaChanges              = true;
     boolean          i_disableCommitRecovery;
-    int              i_discardFreeSpace;
+    public int       i_discardFreeSpace;
     byte             i_encoding                         = YapConst.UNICODE;
     boolean          i_encrypt;
     Hashtable4       i_exceptionalClasses               = new Hashtable4(16);

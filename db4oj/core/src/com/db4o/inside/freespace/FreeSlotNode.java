@@ -1,10 +1,15 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.freespace;
 
-final class FreeSlotNode extends TreeInt
+import com.db4o.*;
+
+/**
+ * @exclude
+ */
+public final class FreeSlotNode extends TreeInt
 {
-    static int sizeLimit;
+    public static int sizeLimit;
     
 	FreeSlotNode i_peer;
 	
@@ -17,11 +22,11 @@ final class FreeSlotNode extends TreeInt
 		i_peer.i_peer = this;
 	}
 	
-	boolean duplicates(){
+	public boolean duplicates(){
 		return true;
 	}
 	
-	final int ownLength(){
+	public final int ownLength(){
 		return YapConst.YAPINT_LENGTH * 2;
 	}
 	

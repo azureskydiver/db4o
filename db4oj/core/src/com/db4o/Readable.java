@@ -4,9 +4,9 @@ package com.db4o;
 
 
 /**
- * 
+ * @exclude
  */
-interface Readable {
+public interface Readable {
 	Object read(YapReader a_reader);
 	int byteCount();
 }

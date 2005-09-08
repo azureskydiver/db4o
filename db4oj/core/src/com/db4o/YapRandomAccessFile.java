@@ -82,7 +82,7 @@ public class YapRandomAccessFile extends YapFile {
         }
     }
 
-    byte blockSize() {
+    public byte blockSize() {
         return (byte) i_file.blockSize();
     }
 
@@ -372,7 +372,7 @@ public class YapRandomAccessFile extends YapFile {
         }
     }
 
-    void writeXBytes(int a_address, int a_length) {
+    public void writeXBytes(int a_address, int a_length) {
         if (Deploy.debug) {
             if (Deploy.flush) {
                 if (!i_config.i_readonly) {

@@ -23,7 +23,7 @@ public class TreeInt extends Tree implements ReadWriteable{
 		return new TreeInt(i_key);
 	}
 	
-	boolean duplicates(){
+	public boolean duplicates(){
 		return false;
 	}
 	
@@ -61,7 +61,7 @@ public class TreeInt extends Tree implements ReadWriteable{
 		a_writer.writeInt(i_key);
 	}
 
-	int ownLength(){
+	public int ownLength(){
 		return YapConst.YAPINT_LENGTH;
 	}
 	

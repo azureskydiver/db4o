@@ -4,11 +4,11 @@ package com.db4o;
 /**
  * @exclude
  */
-class TreeIntObject extends TreeInt{
+public class TreeIntObject extends TreeInt{
 	
-	Object i_object;
+	public Object i_object;
 	
-	TreeIntObject(int a_key){
+	public TreeIntObject(int a_key){
 		super(a_key);
 	}
 	
@@ -41,7 +41,7 @@ class TreeIntObject extends TreeInt{
 		}
 	}
 	
-	int ownLength(){
+	public int ownLength(){
 		if(i_object == null){
 			return YapConst.YAPINT_LENGTH * 2;
 		}else{

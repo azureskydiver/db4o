@@ -143,7 +143,7 @@ public class YapMemoryFile extends YapFile {
         return bytes;
     }
     
-    void writeXBytes(int a_address, int a_length) {
+    public void writeXBytes(int a_address, int a_length) {
         // do nothing
     }
 
