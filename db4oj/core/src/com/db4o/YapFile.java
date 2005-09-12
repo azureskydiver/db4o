@@ -61,7 +61,7 @@ public abstract class YapFile extends YapStream {
     }
 
     void configureNewFile() {
-        _freespaceManager = new FreespaceManager(this);
+        _freespaceManager = new FreespaceManagerRam(this);
         blockSize(i_config.i_blockSize);
         i_writeAt = blocksFor(HEADER_LENGTH);
         i_configBlock = new YapConfigBlock(this, i_config.i_encoding);
@@ -393,7 +393,7 @@ public abstract class YapFile extends YapStream {
         int freeID = myreader.getAddress() + myreader._offset;
         int freeSlotsID = myreader.readInt();
         
-        _freespaceManager = new FreespaceManager(this);
+        _freespaceManager = new FreespaceManagerRam(this);
         _freespaceManager.read(freeSlotsID);
         
         showInternalClasses(true);
@@ -591,27 +591,14 @@ public abstract class YapFile extends YapStream {
     }
 
     void writeHeader(boolean shuttingDown) {
-        
-        
-        
-        int freeBySizeID = 0;
-        
-        
-        if (shuttingDown) {
-            freeBySizeID = _freespaceManager.write();
-        }
-        
+        int freespaceID = _freespaceManager.write(shuttingDown);
         YapWriter writer = getWriter(i_systemTrans, 0, HEADER_LENGTH);
         writer.append(YapConst.YAPFILEVERSION);
         writer.append(blockSize());
         writer.writeInt(i_configBlock._address);
         writer.writeInt(0);
         writer.writeInt(i_classCollection.getID());
-        if (shuttingDown) {
-            writer.writeInt(freeBySizeID);
-        } else {
-            writer.writeInt(0);
-        }
+        writer.writeInt(freespaceID);
         if (Deploy.debug && Deploy.overwrite) {
             writer.setID(YapConst.IGNORE_ID);
         }
