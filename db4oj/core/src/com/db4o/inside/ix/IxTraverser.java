@@ -1,7 +1,8 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.ix;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
@@ -15,7 +16,7 @@ public class IxTraverser{
     private IxPath i_greatHead;
     private IxPath i_greatTail;
 
-    YapDataType i_handler;
+    Indexable4 i_handler;
 
     private IxPath i_smallHead;
     private IxPath i_smallTail;
@@ -220,7 +221,7 @@ public class IxTraverser{
     
     
 
-    int findBoundsExactMatch(Object a_constraint, IxTree a_tree){
+    public int findBoundsExactMatch(Object a_constraint, IxTree a_tree){
         i_take = new boolean[] { false, true, false, false};
         return findBounds1(a_constraint, a_tree);
     }

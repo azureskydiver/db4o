@@ -1,7 +1,8 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.ix;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
@@ -26,7 +27,7 @@ class IxFileRange extends IxTree{
         return reader().add(this, a_new);
     }
 
-    int compare(Tree a_to) {
+    public int compare(Tree a_to) {
         _lowerAndUpperMatches = new int[2];
         return reader().compare(this, _lowerAndUpperMatches);
     }
@@ -43,7 +44,7 @@ class IxFileRange extends IxTree{
         _addressOffset += length;
     }
     
-	int ownSize(){
+	public int ownSize(){
 	    return _entries;
 	}
     
@@ -85,7 +86,7 @@ class IxFileRange extends IxTree{
 
     }
 
-    void write(YapDataType a_handler, YapWriter a_writer) {
+    public void write(Indexable4 a_handler, YapWriter a_writer) {
         YapFile yf = (YapFile)a_writer.getStream();
         int length = _entries * slotLength();
         yf.copy(_address, _addressOffset, a_writer.getAddress(), a_writer.addressOffset(), length);

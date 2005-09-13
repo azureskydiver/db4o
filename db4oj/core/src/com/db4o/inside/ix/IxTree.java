@@ -1,7 +1,8 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.ix;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
@@ -20,7 +21,7 @@ public abstract class IxTree extends Tree{
         i_version = a_ft.i_version;
     }
     
-    Tree add(final Tree a_new, final int a_cmp){
+    public Tree add(final Tree a_new, final int a_cmp){
         if(a_cmp < 0){
             if(i_subsequent == null){
                 i_subsequent = a_new;
@@ -43,7 +44,7 @@ public abstract class IxTree extends Tree{
         setSizeOwn();
     }
     
-    Tree deepClone(Object a_param){
+    public Tree deepClone(Object a_param){
         try {
             IxTree tree = (IxTree)this.clone();
             tree.i_fieldTransaction = (IxFieldTransaction)a_param;
@@ -54,8 +55,8 @@ public abstract class IxTree extends Tree{
         return null;
     }
     
-    final YapDataType handler(){
-        return i_fieldTransaction.i_index.i_field.getHandler();
+    final Indexable4 handler(){
+        return i_fieldTransaction.i_index._handler;
     }
     
     /**
@@ -66,40 +67,40 @@ public abstract class IxTree extends Tree{
         return null;
     }
     
-    final int nodes(){
+    public final int nodes(){
         return _nodes;
     }
     
-    final void nodes(int count){
+    public final void nodes(int count){
        _nodes = count;
     }
     
-    void setSizeOwn(){
+    public void setSizeOwn(){
         super.setSizeOwn();
         _nodes = 1;
     }
     
-    void setSizeOwnPrecedingSubsequent(){
+    public void setSizeOwnPrecedingSubsequent(){
         super.setSizeOwnPrecedingSubsequent();
         _nodes = 1 + i_preceding.nodes() + i_subsequent.nodes();
     }
     
-    void setSizeOwnPreceding(){
+    public void setSizeOwnPreceding(){
         super.setSizeOwnPreceding();
         _nodes = 1 + i_preceding.nodes();
     }
     
-    void setSizeOwnSubsequent(){
+    public void setSizeOwnSubsequent(){
         super.setSizeOwnSubsequent();
         _nodes = 1 + i_subsequent.nodes();
     }
     
-    final void setSizeOwnPlus(Tree tree){
+    public final void setSizeOwnPlus(Tree tree){
         super.setSizeOwnPlus(tree);
         _nodes = 1 + tree.nodes();
     }
     
-    final void setSizeOwnPlus(Tree tree1, Tree tree2){
+    public final void setSizeOwnPlus(Tree tree1, Tree tree2){
         super.setSizeOwnPlus(tree1, tree2);
         _nodes = 1 + tree1.nodes() + tree2.nodes();
     }
@@ -118,7 +119,7 @@ public abstract class IxTree extends Tree{
     
     public abstract void visit(Visitor4 visitor, int[] a_lowerAndUpperMatch);
     
-    abstract void write(YapDataType a_handler, YapWriter a_writer);
+    public abstract void write(Indexable4 a_handler, YapWriter a_writer);
     
 
 }

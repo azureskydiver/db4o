@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.freespace.*;
 import com.db4o.io.*;
 import com.db4o.messaging.*;
 import com.db4o.reflect.*;
@@ -36,6 +37,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     boolean          i_encrypt;
     Hashtable4       i_exceptionalClasses               = new Hashtable4(16);
     boolean          i_exceptionsOnNotStorable;
+    byte             _freespaceSystem                   = FreespaceManager.FM_RAM; 
     public int       i_generateUUIDs;
     public int       i_generateVersionNumbers;
     boolean			 i_isServer = false;

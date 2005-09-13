@@ -1,6 +1,8 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.ix;
+
+import com.db4o.*;
 
 
 /**
@@ -12,7 +14,7 @@ class IxFileRangeReader {
     private int               _baseAddressOffset;
     private int               _addressOffset;
 
-    private final YapDataType _handler;
+    private final Indexable4 _handler;
 
     private int               _lower;
     private int               _upper;
@@ -24,7 +26,7 @@ class IxFileRangeReader {
 
     final int                 _linkLegth;
 
-    IxFileRangeReader(YapDataType handler) {
+    IxFileRangeReader(Indexable4 handler) {
         _handler = handler;
         _linkLegth = handler.linkLength();
         _slotLength = _linkLegth + YapConst.YAPINT_LENGTH;

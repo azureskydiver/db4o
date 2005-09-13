@@ -82,7 +82,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
     /// <Tree Code>
 	///
 	
-    int compare(Tree a_to) {
+    public int compare(Tree a_to) {
         return i_order.compareTo(((QCandidate)a_to).i_order);
     }
 
@@ -98,11 +98,11 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
     	QCandidate candidate = null;
     	
     	if (i_yapField != null) {
-    		YapDataType handler = i_yapField.getHandler();
+    		TypeHandler4 handler = i_yapField.getHandler();
     		if (handler != null) {
     			
     			final YapReader[] arrayBytes = { i_bytes };
-    			final YapDataType arrayWrapper =
+    			final TypeHandler4 arrayWrapper =
     				handler.readArrayWrapper(getTransaction(), arrayBytes);
     			
     			if (arrayWrapper != null) {
@@ -262,7 +262,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
     	// fast early check for YapClass
     	if (a_candidates.i_yapClass != null && a_candidates.i_yapClass.isStrongTyped()) {
     		if (i_yapField != null) {
-    			YapDataType handler = i_yapField.getHandler();
+    			TypeHandler4 handler = i_yapField.getHandler();
     			if (handler != null && (handler.getType() == YapConst.TYPE_CLASS)) {
     				YapClass yc = (YapClass)handler;
     				if (yc instanceof YapClassAny) {
@@ -421,7 +421,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
             }
             if (yc != null) {
                 if (i_member != null && i_member.getClass().isArray()) {
-                    YapDataType ydt = (YapDataType)yc.prepareComparison(a_constraint);
+                    TypeHandler4 ydt = (TypeHandler4)yc.prepareComparison(a_constraint);
                     if (a_stream.reflector().array().isNDimensional(memberClass())) {
                         YapArrayN yan = new YapArrayN(a_stream, ydt, false);
                         return yan;

@@ -1,17 +1,18 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.ix;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
  * An addition to a field index.
  */
-class IxAdd extends IxPatch {
+public class IxAdd extends IxPatch {
     
     boolean i_keepRemoved;
 
-    IxAdd(IxFieldTransaction a_ft, int a_parentID, Object a_value) {
+    public IxAdd(IxFieldTransaction a_ft, int a_parentID, Object a_value) {
         super(a_ft, a_parentID, a_value);
     }
     
@@ -24,7 +25,7 @@ class IxAdd extends IxPatch {
         visitor.visit(new Integer(i_parentID));
     }
     
-    void write(YapDataType a_handler, YapWriter a_writer) {
+    public void write(Indexable4 a_handler, YapWriter a_writer) {
         a_handler.writeIndexEntry(a_writer, i_value);
         a_writer.writeInt(i_parentID);
         a_writer.writeForward();

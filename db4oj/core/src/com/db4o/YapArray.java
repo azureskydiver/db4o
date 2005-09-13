@@ -7,11 +7,11 @@ import com.db4o.reflect.*;
 class YapArray extends YapIndependantType {
 	
 	final YapStream _stream;
-    final YapDataType i_handler;
+    final TypeHandler4 i_handler;
     final boolean i_isPrimitive;
     final ReflectArray _reflectArray;
 
-    YapArray(YapStream stream, YapDataType a_handler, boolean a_isPrimitive) {
+    YapArray(YapStream stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
         super(stream);
     	_stream = stream;
         i_handler = a_handler;
@@ -133,7 +133,7 @@ class YapArray extends YapIndependantType {
         return a_bytes.readInt();
     }
 
-    public final boolean equals(YapDataType a_dataType) {
+    public final boolean equals(TypeHandler4 a_dataType) {
         if (a_dataType instanceof YapArray) {
             if (((YapArray) a_dataType).identifier() == identifier()) {
                 return (i_handler.equals(((YapArray) a_dataType).i_handler));
@@ -248,7 +248,7 @@ class YapArray extends YapIndependantType {
 		return null;
 	}
 
-    public YapDataType readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
         return this;
     }
 

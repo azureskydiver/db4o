@@ -15,7 +15,7 @@ class QOrder extends Tree{
 		i_candidate = a_candidate;
 	}
 
-	int compare(Tree a_to) {
+	public int compare(Tree a_to) {
 		if(i_constraint.i_comparator.isSmaller(i_candidate.value())){
 			return i_constraint.i_orderID;	
 		}

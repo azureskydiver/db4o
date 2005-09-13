@@ -1,7 +1,8 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.ix;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 
 /**
@@ -10,11 +11,10 @@ import com.db4o.foundation.*;
  */
 public class IxField {
 
-    static final int   MAX_LEAVES = 3;
+    final Indexable4     _handler;
 
     static private int i_version;
 
-    final YapField     i_field;
 
     final MetaIndex    i_metaIndex;
 
@@ -24,14 +24,14 @@ public class IxField {
 
     IxFileRangeReader  i_fileRangeReader;
 
-    IxField(Transaction a_systemTrans, YapField a_field, MetaIndex a_metaIndex) {
+    public IxField(Transaction a_systemTrans, Indexable4 handler, MetaIndex a_metaIndex) {
         i_metaIndex = a_metaIndex;
-        i_field = a_field;
+        _handler = handler;
         i_globalIndex = new IxFieldTransaction(a_systemTrans, this);
         createGlobalFileRange();
     }
 
-    IxFieldTransaction dirtyFieldTransaction(Transaction a_trans) {
+    public IxFieldTransaction dirtyFieldTransaction(Transaction a_trans) {
         IxFieldTransaction ift = new IxFieldTransaction(a_trans, this);
         if (i_transactionIndices == null) {
             i_transactionIndices = new Collection4();
@@ -49,7 +49,7 @@ public class IxField {
         return ift;
     }
 
-    IxFieldTransaction getFieldTransaction(Transaction a_trans) {
+    public IxFieldTransaction getFieldTransaction(Transaction a_trans) {
         if (i_transactionIndices != null) {
             IxFieldTransaction ift = new IxFieldTransaction(a_trans, this);
             ift = (IxFieldTransaction) i_transactionIndices.get(ift);
@@ -99,9 +99,8 @@ public class IxField {
                     i_metaIndex.patchLength};
 
             Tree root = i_globalIndex.getRoot();
-            final YapDataType handler = i_field.getHandler();
 
-            final int lengthPerEntry = handler.linkLength()
+            final int lengthPerEntry = _handler.linkLength()
                     + YapConst.YAPINT_LENGTH;
 
             i_metaIndex.indexEntries = root == null ? 0 : root.size();
@@ -119,7 +118,7 @@ public class IxField {
                 root.traverse(new Visitor4() {
 
                     public void visit(Object a_object) {
-                        ((IxTree) a_object).write(handler, writer);
+                        ((IxTree) a_object).write(_handler, writer);
                     }
                 });
             }
@@ -178,7 +177,7 @@ public class IxField {
 
     IxFileRangeReader fileRangeReader() {
         if (i_fileRangeReader == null) {
-            i_fileRangeReader = new IxFileRangeReader(i_field.getHandler());
+            i_fileRangeReader = new IxFileRangeReader(_handler);
         }
         return i_fileRangeReader;
     }

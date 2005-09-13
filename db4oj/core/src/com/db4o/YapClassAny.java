@@ -71,7 +71,7 @@ final class YapClassAny extends YapClass {
 		return false;
 	}
 
-	public YapDataType readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
+	public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
 
 		int id = 0;
 

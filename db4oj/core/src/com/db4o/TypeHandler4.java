@@ -2,12 +2,13 @@
 
 package com.db4o;
 
+import com.db4o.inside.ix.*;
 import com.db4o.reflect.*;
 
 /**
  * @exclude
  */
-public interface YapDataType extends YapComparable
+public interface TypeHandler4 extends Indexable4
 {
 	
 	void appendEmbedded3(YapWriter a_bytes);
@@ -25,13 +26,9 @@ public interface YapDataType extends YapComparable
 	
 	int getID();
 	
-	boolean equals(YapDataType a_dataType); // needed for YapField.equals
+	boolean equals(TypeHandler4 a_dataType); // needed for YapField.equals
 	
 	Object indexEntry(Object a_object);
-	
-	Object comparableObject(Transaction trans, Object indexEntry);
-	
-	int linkLength();
 	
 	void prepareLastIoComparison(Transaction a_trans, Object obj);
 	
@@ -61,16 +58,13 @@ public interface YapDataType extends YapComparable
 	
 	void readCandidates(YapReader a_bytes, QCandidates a_candidates);
 	
-	Object readIndexEntry(YapReader a_reader) ;
-	
-	YapDataType readArrayWrapper(Transaction a_trans, YapReader[] a_bytes);
+	TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes);
 	
     /**
      * performance optimized write (only used for byte[] so far) 
      */
     boolean writeArray(Object array, YapWriter reader);
     
-	void writeIndexEntry(YapWriter a_writer, Object a_object);
 
 	
 }

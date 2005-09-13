@@ -43,7 +43,7 @@ public final class YapString extends YapIndependantType {
     	return _stream.i_handlers.ICLASS_STRING;
     }
 
-    public boolean equals(YapDataType a_dataType) {
+    public boolean equals(TypeHandler4 a_dataType) {
         return (this == a_dataType);
     }
 
@@ -86,7 +86,7 @@ public final class YapString extends YapIndependantType {
 		return ret;
     }
     
-    public YapDataType readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
         // virtual and do nothing
         return null;
     }

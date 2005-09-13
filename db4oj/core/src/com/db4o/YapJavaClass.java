@@ -7,7 +7,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public abstract class YapJavaClass implements YapDataType {
+public abstract class YapJavaClass implements TypeHandler4 {
     
     protected final YapStream _stream;
     
@@ -44,7 +44,7 @@ public abstract class YapJavaClass implements YapDataType {
         a_bytes.incrementOffset(linkLength());
     }
 
-    public boolean equals(YapDataType a_dataType) {
+    public boolean equals(TypeHandler4 a_dataType) {
         return (this == a_dataType);
     }
     
@@ -76,7 +76,7 @@ public abstract class YapJavaClass implements YapDataType {
         return false;
     }
 
-    public YapDataType readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
         // virtual and do nothing
         return null;
     }

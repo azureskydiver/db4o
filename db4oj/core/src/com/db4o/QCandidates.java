@@ -3,7 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
-import com.db4o.ix.*;
+import com.db4o.inside.ix.*;
 
 /**
  * Holds the tree of QCandidate objects and the list of QContraints during query evaluation.

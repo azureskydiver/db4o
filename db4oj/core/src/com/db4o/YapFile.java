@@ -61,10 +61,10 @@ public abstract class YapFile extends YapStream {
     }
 
     void configureNewFile() {
-        _freespaceManager = new FreespaceManagerRam(this);
+        _freespaceManager = FreespaceManager.createNew(this, i_config._freespaceSystem);
         blockSize(i_config.i_blockSize);
         i_writeAt = blocksFor(HEADER_LENGTH);
-        i_configBlock = new YapConfigBlock(this, i_config.i_encoding);
+        i_configBlock = new YapConfigBlock(this);
         i_configBlock.write();
         i_configBlock.go();
         initNewClassCollection();
@@ -123,7 +123,7 @@ public abstract class YapFile extends YapStream {
 
     abstract String fileName();
 
-    void free(int a_address, int a_length) {
+    public void free(int a_address, int a_length) {
         _freespaceManager.free(a_address, a_length);
     }
 
@@ -195,7 +195,7 @@ public abstract class YapFile extends YapStream {
         return result;
     }
     
-    int getSlot(int a_length){
+    public int getSlot(int a_length){
         
         if(! DTrace.enabled){
             return getSlot1(a_length);
@@ -381,7 +381,7 @@ public abstract class YapFile extends YapStream {
         
         i_writeAt = blocksFor(fileLength());
 
-        i_configBlock = new YapConfigBlock(this, blockLen);
+        i_configBlock = new YapConfigBlock(this);
         i_configBlock.read(myreader);
 
         // configuration lock time skipped
@@ -393,7 +393,7 @@ public abstract class YapFile extends YapStream {
         int freeID = myreader.getAddress() + myreader._offset;
         int freeSlotsID = myreader.readInt();
         
-        _freespaceManager = new FreespaceManagerRam(this);
+        _freespaceManager = FreespaceManager.createNew(this, i_configBlock._freespaceSystem);
         _freespaceManager.read(freeSlotsID);
         
         showInternalClasses(true);
@@ -519,7 +519,7 @@ public abstract class YapFile extends YapStream {
         i_isServer = flag;
     }
 
-    abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length);
+    public abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length);
 
     abstract void syncFiles();
 

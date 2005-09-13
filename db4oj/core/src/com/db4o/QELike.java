@@ -18,7 +18,7 @@ public class QELike extends QEAbstract
 		return a_constraint.i_object.equals(null);
 	}
 	
-	boolean supportsIndex(){
+	public boolean supportsIndex(){
 	    return false;
 	}
 	

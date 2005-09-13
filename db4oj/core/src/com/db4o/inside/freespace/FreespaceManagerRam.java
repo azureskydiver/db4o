@@ -159,5 +159,10 @@ public class FreespaceManagerRam extends FreespaceManager {
     private final int blockSize(){
         return _file.blockSize();
     }
+    
+    public byte systemType() {
+        return FM_RAM;
+    }
+    
 
 }

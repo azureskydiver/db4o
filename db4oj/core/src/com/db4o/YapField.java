@@ -6,6 +6,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.ix.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 
@@ -29,7 +30,7 @@ public class YapField implements StoredField {
 
     private ReflectField     i_javaField;
 
-    YapDataType              i_handler;
+    TypeHandler4              i_handler;
 
     private int              i_handlerID;
 
@@ -63,7 +64,7 @@ public class YapField implements StoredField {
             stream, stream.reflector().forClass(a_translator.storedClass()));
     }
 
-    YapField(YapClass a_yapClass, ReflectField a_field, YapDataType a_handler) {
+    YapField(YapClass a_yapClass, ReflectField a_field, TypeHandler4 a_handler) {
         init(a_yapClass, a_field.getName(), 0);
         i_javaField = a_field;
         i_javaField.setAccessible();
@@ -395,7 +396,7 @@ public class YapField implements StoredField {
         return getIndex(a_trans).getFieldTransaction(a_trans).getRoot();
     }
 
-    YapDataType getHandler() {
+    TypeHandler4 getHandler() {
         // alive needs to be checked by all callers: Done
         return i_handler;
     }
@@ -493,7 +494,7 @@ public class YapField implements StoredField {
 
     void initIndex(Transaction systemTrans, MetaIndex metaIndex) {
         if (supportsIndex()) {
-            i_index = new IxField(systemTrans, this, metaIndex);
+            i_index = new IxField(systemTrans, getHandler(), metaIndex);
         }
     }
 
@@ -545,14 +546,14 @@ public class YapField implements StoredField {
     }
 
     private void loadJavaField() {
-        YapDataType handler = loadJavaField1();
+        TypeHandler4 handler = loadJavaField1();
         if (handler == null || (!handler.equals(i_handler))) {
             i_javaField = null;
             i_state = UNAVAILABLE;
         }
     }
 
-    private YapDataType loadJavaField1() {
+    private TypeHandler4 loadJavaField1() {
         try {
         	YapStream stream = i_yapClass.getStream();
             i_javaField = i_yapClass.classReflector().getDeclaredField(
@@ -562,7 +563,7 @@ public class YapField implements StoredField {
             }
             i_javaField.setAccessible();
             stream.showInternalClasses(true);
-            YapDataType handler = stream.i_handlers.handlerForClass(stream,
+            TypeHandler4 handler = stream.i_handlers.handlerForClass(stream,
                 i_javaField.getType());
             stream.showInternalClasses(false);
             return handler;
@@ -669,7 +670,7 @@ public class YapField implements StoredField {
     }
 
     void refresh() {
-        YapDataType handler = loadJavaField1();
+        TypeHandler4 handler = loadJavaField1();
         if (handler != null) {
             handler = wrapHandlerToArrays(getStream(), handler);
             if (handler.equals(i_handler)) {
@@ -703,7 +704,7 @@ public class YapField implements StoredField {
         return alive() && i_handler.supportsIndex();
     }
 
-    private final YapDataType wrapHandlerToArrays(YapStream a_stream, YapDataType a_handler) {
+    private final TypeHandler4 wrapHandlerToArrays(YapStream a_stream, TypeHandler4 a_handler) {
         if (i_isNArray) {
             a_handler = new YapArrayN(a_stream, a_handler, i_isPrimitive);
         } else {
