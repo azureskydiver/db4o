@@ -13,7 +13,7 @@ import com.db4o.reflect.generic.*;
 /**
  * @exclude
  */
-public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSystemTransaction {
+public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseSystemTransaction {
 
     YapClass i_ancestor;
 
@@ -91,7 +91,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
             boolean found;
             boolean dirty = isDirty();
             YapField field;
-            YapDataType wrapper;
+            TypeHandler4 wrapper;
 
             Collection4 members = new Collection4();
 
@@ -558,7 +558,7 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
 //        }
 //    }
     
-    public final boolean equals(YapDataType a_dataType) {
+    public final boolean equals(TypeHandler4 a_dataType) {
         return (this == a_dataType);
     }
 
@@ -1298,14 +1298,14 @@ public class YapClass extends YapMeta implements YapDataType, StoredClass, UseSy
         return null;
     }
 
-    public YapDataType readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
         if (isArray()) {
             return this;
         }
         return null;
     }
 
-    public YapDataType readArrayWrapper1(YapReader[] a_bytes) {
+    public TypeHandler4 readArrayWrapper1(YapReader[] a_bytes) {
         if(DTrace.enabled){
             if(a_bytes[0] instanceof YapWriter){
                 DTrace.READ_ARRAY_WRAPPER.log(((YapWriter)a_bytes[0]).getID());

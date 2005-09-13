@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.inside.ix.*;
 
 /**
  * 
@@ -44,7 +45,7 @@ class YapFieldUUID extends YapFieldVirtual {
         YapFile stream = (YapFile)a_trans.i_stream;
         if(i_index == null){
             PBootRecord bootRecord = stream.i_bootRecord;
-            i_index = new IxField(stream.getSystemTransaction(), this, bootRecord.getUUIDMetaIndex());
+            i_index = new IxField(stream.getSystemTransaction(), getHandler(), bootRecord.getUUIDMetaIndex());
         }
         return i_index;
     }

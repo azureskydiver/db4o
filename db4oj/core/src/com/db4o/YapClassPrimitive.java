@@ -8,9 +8,9 @@ import com.db4o.reflect.*;
 
 class YapClassPrimitive extends YapClass{
     
-    final YapDataType i_handler;
+    final TypeHandler4 i_handler;
 
-    YapClassPrimitive(YapStream a_stream, YapDataType a_handler) {
+    YapClassPrimitive(YapStream a_stream, TypeHandler4 a_handler) {
     	super(a_stream, a_handler.classReflector());
         i_fields = YapField.EMPTY_ARRAY;
         i_handler = a_handler;
@@ -186,7 +186,7 @@ class YapClassPrimitive extends YapClass{
         return i_handler.primitiveClassReflector();
     }
 
-    public YapDataType readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
+    public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
         if (isArray()) {
             return i_handler;
         }

@@ -28,7 +28,7 @@ public final class YapHandlers {
 
     public final YapString          i_stringHandler;
 
-    private YapDataType[]           i_handlers;
+    private TypeHandler4[]           i_handlers;
 
     private int                     i_maxTypeID     = ANY_ARRAY_N_ID + 1;
 
@@ -85,7 +85,7 @@ public final class YapHandlers {
 
         i_stringHandler = new YapString(a_stream, YapStringIO.forEncoding(stringEncoding));
 
-        i_handlers = new YapDataType[] { new YInt(a_stream), new YLong(a_stream), new YFloat(a_stream),
+        i_handlers = new TypeHandler4[] { new YInt(a_stream), new YLong(a_stream), new YFloat(a_stream),
             new YBoolean(a_stream), new YDouble(a_stream), new YByte(a_stream), new YChar(a_stream),
             new YShort(a_stream),
 
@@ -103,8 +103,8 @@ public final class YapHandlers {
                 }
             }
 
-            YapDataType[] temp = i_handlers;
-            i_handlers = new YapDataType[i_maxTypeID];
+            TypeHandler4[] temp = i_handlers;
+            i_handlers = new TypeHandler4[i_maxTypeID];
             System.arraycopy(temp, 0, i_handlers, 0, temp.length);
             for (int i = 0; i < i_platformTypes.length; i++) {
                 int idx = i_platformTypes[i].getID() - 1;
@@ -292,11 +292,11 @@ public final class YapHandlers {
         }
     }
     
-    final YapDataType getHandler(int a_index) {
+    final TypeHandler4 getHandler(int a_index) {
         return i_handlers[a_index - 1];
     }
 
-    final YapDataType handlerForClass(ReflectClass a_class, ReflectClass[] a_Supported) {
+    final TypeHandler4 handlerForClass(ReflectClass a_class, ReflectClass[] a_Supported) {
         for (int i = 0; i < a_Supported.length; i++) {
             if (a_Supported[i].equals(a_class)) {
                 return i_handlers[i];
@@ -309,7 +309,7 @@ public final class YapHandlers {
      * Can't return ANY class for interfaces, since that would kill the
      * translators built into the architecture.
      */
-    final YapDataType handlerForClass(YapStream a_stream, ReflectClass a_class) {
+    final TypeHandler4 handlerForClass(YapStream a_stream, ReflectClass a_class) {
         if(a_class == null){
             return null;
         }

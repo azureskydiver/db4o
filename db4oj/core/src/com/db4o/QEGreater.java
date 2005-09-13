@@ -14,7 +14,7 @@ public class QEGreater extends QEAbstract
 		return a_constraint.getComparator(a_candidate).isGreater(a_value);
 	}
 	
-	void indexBitMap(boolean[] bits){
+	public void indexBitMap(boolean[] bits){
 	    bits[2] = true;
 	}
 }

@@ -24,7 +24,7 @@ public abstract class Tree implements Cloneable, Readable{
 	    return add(a_new, compare(a_new));
 	}
 	
-	Tree add(final Tree a_new, final int a_cmp){
+	public Tree add(final Tree a_new, final int a_cmp){
 	    if(a_cmp < 0){
 	        if(i_subsequent == null){
 	            i_subsequent = a_new;
@@ -55,7 +55,7 @@ public abstract class Tree implements Cloneable, Readable{
 	    return this;
 	}
 	
-	final Tree balance(){
+	public final Tree balance(){
 		int cmp = i_subsequent.nodes() - i_preceding.nodes(); 
 		if(cmp < -2){
 			return rotateRight();
@@ -67,7 +67,7 @@ public abstract class Tree implements Cloneable, Readable{
 		}
 	}
 	
-	Tree balanceCheckNulls(){
+	public Tree balanceCheckNulls(){
 	    if(i_subsequent == null){
 	        if(i_preceding == null){
                 setSizeOwn();
@@ -102,7 +102,7 @@ public abstract class Tree implements Cloneable, Readable{
 	}
 
 	
-	void calculateSize(){
+	public void calculateSize(){
 		if(i_preceding == null){
 			if (i_subsequent == null){
 				setSizeOwn();
@@ -124,9 +124,9 @@ public abstract class Tree implements Cloneable, Readable{
 	 * returns negative if compared key (a_to) is smaller
 	 * returns positive if compared key (a_to) is greater
 	 */
-	abstract int compare(Tree a_to);
+	public abstract int compare(Tree a_to);
 	
-	static Tree deepClone(Tree a_tree, Object a_param){
+	public static Tree deepClone(Tree a_tree, Object a_param){
 		if(a_tree == null){
 			return null;
 		}
@@ -139,7 +139,7 @@ public abstract class Tree implements Cloneable, Readable{
 	}
 	
 	
-	Tree deepClone(Object a_param){
+	public Tree deepClone(Object a_param){
 	    try {
             return (Tree)this.clone();
         } catch (CloneNotSupportedException e) {
@@ -240,11 +240,11 @@ public abstract class Tree implements Cloneable, Readable{
     /**
      * @return the number of nodes in this tree for balancing
      */
-    int nodes(){
+    public int nodes(){
         return i_size;
     }
     
-    void nodes(int count){
+    public void nodes(int count){
         // do nothing, virtual
     }
     
@@ -252,7 +252,7 @@ public abstract class Tree implements Cloneable, Readable{
 		throw YapConst.virtualException();
 	}
 	
-	int ownSize(){
+	public int ownSize(){
 	    return 1;
 	}
 	
@@ -336,7 +336,7 @@ public abstract class Tree implements Cloneable, Readable{
 		return this;
 	}
     
-	final Tree rotateLeft(){
+	public final Tree rotateLeft(){
 		Tree tree = i_subsequent;
 		i_subsequent = tree.i_preceding;
 		calculateSize();
@@ -349,7 +349,7 @@ public abstract class Tree implements Cloneable, Readable{
 		return tree;
 	}
 
-	final Tree rotateRight(){
+	public final Tree rotateRight(){
 		Tree tree = i_preceding;
 		i_preceding = tree.i_subsequent;
 		calculateSize();
@@ -370,31 +370,31 @@ public abstract class Tree implements Cloneable, Readable{
 		return this;
 	}
     
-    void setSizeOwn(){
+    public void setSizeOwn(){
         i_size = ownSize();
     }
     
-    void setSizeOwnPrecedingSubsequent(){
+    public void setSizeOwnPrecedingSubsequent(){
         i_size = ownSize() + i_preceding.i_size + i_subsequent.i_size;
     }
     
-    void setSizeOwnPreceding(){
+    public void setSizeOwnPreceding(){
         i_size = ownSize() + i_preceding.i_size;
     }
     
-    void setSizeOwnSubsequent(){
+    public void setSizeOwnSubsequent(){
         i_size = ownSize() + i_subsequent.i_size;
     }
     
-    void setSizeOwnPlus(Tree tree){
+    public void setSizeOwnPlus(Tree tree){
         i_size = ownSize() + tree.i_size;
     }
     
-    void setSizeOwnPlus(Tree tree1, Tree tree2){
+    public void setSizeOwnPlus(Tree tree1, Tree tree2){
         i_size = ownSize() + tree1.i_size + tree2.i_size;
     }
 	
-	static int size(Tree a_tree){
+	public static int size(Tree a_tree){
 		if(a_tree == null){
 			return 0;
 		}
@@ -418,7 +418,7 @@ public abstract class Tree implements Cloneable, Readable{
 		}
 	}
 	
-	final void traverseFromLeaves(Visitor4 a_visitor){
+	public final void traverseFromLeaves(Visitor4 a_visitor){
 	    if(i_preceding != null){
 	        i_preceding.traverseFromLeaves(a_visitor);
 	    }

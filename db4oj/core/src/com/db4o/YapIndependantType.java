@@ -11,7 +11,7 @@ import com.db4o.reflect.*;
  * 
  * @exclude
  */
-public abstract class YapIndependantType implements YapDataType
+public abstract class YapIndependantType implements TypeHandler4
 {
     final YapStream _stream;
     

@@ -40,14 +40,14 @@ public class QENot extends QE{
 		return ! res;
 	}
 	
-	void indexBitMap(boolean[] bits){
+	public void indexBitMap(boolean[] bits){
 	    i_evaluator.indexBitMap(bits);
 	    for (int i = 0; i < 4; i++) {
             bits[i] = ! bits[i];
         }
 	}
 	
-	boolean supportsIndex(){
+	public boolean supportsIndex(){
 	    return i_evaluator.supportsIndex();
 	}
 }

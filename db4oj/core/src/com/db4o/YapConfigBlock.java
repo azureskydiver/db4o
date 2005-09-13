@@ -27,6 +27,7 @@ final class YapConfigBlock implements Runnable
     // int    id of PBootRecord
     // int    unused (and lost)
 	// 5 bytes of the encryption password
+    // byte   freespace system used
     
     
     
@@ -49,30 +50,30 @@ final class YapConfigBlock implements Runnable
 	private static final int	BOOTRECORD_OFFSET = TRANSACTION_OFFSET + YapConst.YAPINT_LENGTH * 2;  
 	private static final int	INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET = BOOTRECORD_OFFSET + YapConst.YAPINT_LENGTH;
 	private static final int	ENCRYPTION_PASSWORD_LENGTH = 5;
-	private static final int PASSWORD_OFFSET=INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET+ENCRYPTION_PASSWORD_LENGTH;
+    private static final int    PASSWORD_OFFSET = INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET+ENCRYPTION_PASSWORD_LENGTH;
+    private static final int    FREESPACE_SYSTEM_OFFSET = PASSWORD_OFFSET + 1; 
 	
 	
 	// complete possible data in config block
 	private static final int	LENGTH = 
 		MINIMUM_LENGTH 
 		+ (YapConst.YAPINT_LENGTH * 4)		// (two transaction pointers, PDB ID, lost int
-	    + ENCRYPTION_PASSWORD_LENGTH;
+	    + ENCRYPTION_PASSWORD_LENGTH
+        + 1;
 		
 	private final long			_opentime; // written as pure long 8 bytes
 	byte						_encoding;
+    byte                        _freespaceSystem;
 	
 	YapConfigBlock(YapFile stream){
 		_stream = stream;
+        _encoding = stream.i_config.i_encoding;
+        _freespaceSystem = stream.i_config._freespaceSystem;
 		_opentime = processID();
 		if(lockFile()){
 			writeHeaderLock();
 		}
 	}
-	
-    YapConfigBlock(YapFile file, byte encoding) {
-        this(file);
-        _encoding = encoding;
-    }
 	
 	private YapWriter openTimeIO(){
 	    YapWriter writer = _stream.getWriter(_stream.getTransaction(), _address, YapConst.YAPLONG_LENGTH);
@@ -228,6 +229,10 @@ final class YapConfigBlock implements Runnable
 				}
 			}
 		}
+        
+        if(oldLength > FREESPACE_SYSTEM_OFFSET){
+            _freespaceSystem = reader.readByte();
+        }
 		
 		if(lockFile() && ( lastAccessTime != 0)){
 			_stream.logMsg(28, null);
@@ -291,6 +296,8 @@ final class YapConfigBlock implements Runnable
 		YInt.writeInt(_bootRecordID, writer);
 		YInt.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
 		writer.append(passwordToken());
+        writer.append(_freespaceSystem);
+
 		writer.write();
 		writePointer();
 	}
