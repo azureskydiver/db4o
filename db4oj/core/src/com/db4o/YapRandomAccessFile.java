@@ -113,7 +113,7 @@ public class YapRandomAccessFile extends YapFile {
                             YapWriter lockBytes = new YapWriter(i_systemTrans,
                                 YapConst.YAPLONG_LENGTH);
                             YLong.writeLong(0, lockBytes);
-                            i_timerFile.blockSeek(i_configBlock._address,
+                            i_timerFile.blockSeek(_configBlock._address,
                                 YapConfigBlock.ACCESS_TIME_OFFSET);
                             i_timerFile.write(lockBytes._buffer);
                             i_timerFile.close();
@@ -328,11 +328,11 @@ public class YapRandomAccessFile extends YapFile {
             if (Deploy.debug) {
                 YapWriter lockBytes = new YapWriter(i_systemTrans, YapConst.YAPLONG_LENGTH);
                 YLong.writeLong(lockTime, lockBytes);
-                i_timerFile.blockSeek(i_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
+                i_timerFile.blockSeek(_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
                 i_timerFile.write(lockBytes._buffer);
             } else {
                 YLong.writeLong(lockTime, i_timerBytes);
-                i_timerFile.blockSeek(i_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
+                i_timerFile.blockSeek(_configBlock._address, YapConfigBlock.ACCESS_TIME_OFFSET);
                 i_timerFile.write(i_timerBytes);
             }
         }

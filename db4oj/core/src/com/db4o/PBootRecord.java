@@ -23,6 +23,9 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
 
     public MetaIndex          i_uuidMetaIndex;
     
+    public MetaIndex          _freespaceByAddress; 
+    public MetaIndex          _freespaceByLength; 
+    
     public PBootRecord(){
     }
 
@@ -104,11 +107,11 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         return i_uuidGenerator++;
     }
     
-    void setDirty(){
+    public void setDirty(){
         i_dirty = true;
     }
 
-    void store(int a_depth) {
+    public void store(int a_depth) {
         if (i_dirty) {
             i_versionGenerator++;
             i_stream.showInternalClasses(true);

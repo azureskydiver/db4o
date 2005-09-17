@@ -12,8 +12,9 @@ import com.db4o.inside.*;
  * configuration and agent to write the configuration block
  * The configuration block also contains the timer lock and
  * a pointer to the running transaction.
+ * @exclude
  */
-final class YapConfigBlock implements Runnable
+public final class YapConfigBlock implements Runnable
 {
     
     // ConfigBlock Format

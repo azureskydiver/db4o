@@ -4,6 +4,7 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.freespace.*;
 
 /**
  * An addition to a field index.
@@ -12,7 +13,7 @@ public class IxAdd extends IxPatch {
     
     boolean i_keepRemoved;
 
-    public IxAdd(IxFieldTransaction a_ft, int a_parentID, Object a_value) {
+    public IxAdd(IndexTransaction a_ft, int a_parentID, Object a_value) {
         super(a_ft, a_parentID, a_value);
     }
     
@@ -25,6 +26,10 @@ public class IxAdd extends IxPatch {
         visitor.visit(new Integer(i_parentID));
     }
     
+    public void freespaceVisit(FreespaceVisitor visitor, int index){
+        visitor.visit(i_parentID, ((Integer)i_value).intValue());
+    }
+    
     public void write(Indexable4 a_handler, YapWriter a_writer) {
         a_handler.writeIndexEntry(a_writer, i_value);
         a_writer.writeInt(i_parentID);
@@ -35,4 +40,5 @@ public class IxAdd extends IxPatch {
         String str = "IxAdd "  + i_parentID + "\n " + handler().comparableObject(trans(), i_value);
         return str;
     }
+
 }

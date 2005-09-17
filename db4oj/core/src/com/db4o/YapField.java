@@ -42,7 +42,7 @@ public class YapField implements StoredField {
 
     private static final int AVAILABLE   = 1;
 
-    protected IxField        i_index;
+    protected Index4        i_index;
 
     private Config4Field     i_config;
 
@@ -97,8 +97,8 @@ public class YapField implements StoredField {
 
     void addIndexEntry(Transaction a_trans, int parentID, Object valueOrID) {
         i_handler.prepareLastIoComparison(a_trans, valueOrID);
-        IxFieldTransaction ift = getIndex(a_trans).dirtyFieldTransaction(a_trans);
-        ift.add(new IxAdd(ift, parentID, i_handler.indexEntry(valueOrID)));
+        IndexTransaction ift = getIndex(a_trans).dirtyIndexTransaction(a_trans);
+        ift.add(parentID, i_handler.indexEntry(valueOrID));
     }
 
     public boolean alive() {
@@ -306,10 +306,9 @@ public class YapField implements StoredField {
                     }
                 }
                 i_handler.prepareComparison(obj);
-                IxFieldTransaction ift = i_index.dirtyFieldTransaction(a_bytes
+                IndexTransaction ift = i_index.dirtyIndexTransaction(a_bytes
                     .getTransaction());
-                ift.add(new IxRemove(ift, a_bytes.getID(), i_handler
-                    .indexEntry(obj)));
+                ift.remove(a_bytes.getID(), i_handler.indexEntry(obj));
                 a_bytes._offset = offset;
             }
             
@@ -388,12 +387,12 @@ public class YapField implements StoredField {
 		return i_handler.getYapClass(a_stream);
     }
     
-    IxField getIndex(Transaction a_trans){
+    Index4 getIndex(Transaction a_trans){
         return i_index;
     }
 
     Tree getIndexRoot(Transaction a_trans) {
-        return getIndex(a_trans).getFieldTransaction(a_trans).getRoot();
+        return getIndex(a_trans).indexTransactionFor(a_trans).getRoot();
     }
 
     TypeHandler4 getHandler() {
@@ -494,7 +493,7 @@ public class YapField implements StoredField {
 
     void initIndex(Transaction systemTrans, MetaIndex metaIndex) {
         if (supportsIndex()) {
-            i_index = new IxField(systemTrans, getHandler(), metaIndex);
+            i_index = new Index4(systemTrans, getHandler(), metaIndex);
         }
     }
 

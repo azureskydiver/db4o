@@ -104,6 +104,11 @@ public class YapClient extends YapStream implements ExtClient {
     public void backup(String path)throws IOException{
         Exceptions4.throwRuntimeException(60);
     }
+    
+    public PBootRecord bootRecord(){
+        // not available on clients
+        return null;
+    }
 
     boolean close2() {
         try {

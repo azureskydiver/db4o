@@ -32,7 +32,7 @@ class YapFieldUUID extends YapFieldVirtual {
         }
         
         if(uuid == 0){
-            uuid = yf.i_bootRecord.newUUID();
+            uuid = yf.bootRecord().newUUID();
         }
         YLong.writeLong(uuid, a_writer);
         
@@ -41,11 +41,10 @@ class YapFieldUUID extends YapFieldVirtual {
         }
     }
     
-    IxField getIndex(Transaction a_trans){
+    Index4 getIndex(Transaction a_trans){
         YapFile stream = (YapFile)a_trans.i_stream;
         if(i_index == null){
-            PBootRecord bootRecord = stream.i_bootRecord;
-            i_index = new IxField(stream.getSystemTransaction(), getHandler(), bootRecord.getUUIDMetaIndex());
+            i_index = new Index4(stream.getSystemTransaction(), getHandler(), stream.bootRecord().getUUIDMetaIndex());
         }
         return i_index;
     }
@@ -87,8 +86,9 @@ class YapFieldUUID extends YapFieldVirtual {
     	        if (attr.i_database == null) {
     	            attr.i_database = db;
     	            if (stream instanceof YapFile){
-                        if(((YapFile) stream).i_bootRecord != null){
-        					attr.i_uuid = ((YapFile) stream).i_bootRecord.newUUID();
+                        PBootRecord br = stream.bootRecord();
+                        if(br != null){
+        					attr.i_uuid = br.newUUID();
         	                indexEntry = true;
                         }
     	            }

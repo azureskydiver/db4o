@@ -4,13 +4,14 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.freespace.*;
 
 /**
  * A node to represent an entry removed from an Index
  */
 public class IxRemove extends IxPatch {
 
-    public IxRemove(IxFieldTransaction a_ft, int a_parentID, Object a_value) {
+    public IxRemove(IndexTransaction a_ft, int a_parentID, Object a_value) {
         super(a_ft, a_parentID, a_value);
         i_size = 0;
     }
@@ -22,6 +23,10 @@ public class IxRemove extends IxPatch {
     public String toString() {
         String str = "IxRemove " + i_parentID + "\n " + handler().comparableObject(trans(), i_value);
         return str;
+    }
+    
+    public void freespaceVisit(FreespaceVisitor visitor, int index){
+        // do nothing
     }
     
     public void visit(Visitor4 visitor, int[] lowerAndUpperMatch){

@@ -16,7 +16,7 @@ public abstract class IxPatch extends IxTree {
 
     Queue4 i_queue;    // queue of patch objects for the same parent
 
-    IxPatch(IxFieldTransaction a_ft, int a_parentID, Object a_value) {
+    IxPatch(IndexTransaction a_ft, int a_parentID, Object a_value) {
         super(a_ft);
         i_parentID = a_parentID;
         i_value = a_value;
@@ -52,5 +52,6 @@ public abstract class IxPatch extends IxTree {
         Indexable4 handler = i_fieldTransaction.i_index._handler;
         return handler.compareTo(handler.comparableObject(trans(), i_value));
     }
+    
 
 }

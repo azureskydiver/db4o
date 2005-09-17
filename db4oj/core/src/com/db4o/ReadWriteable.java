@@ -2,6 +2,9 @@
 
 package com.db4o;
 
-interface ReadWriteable extends Readable{
-	void write(YapWriter a_writer);
+/**
+ * @exclude
+ */
+public interface ReadWriteable extends Readable{
+	public void write(YapWriter a_writer);
 }

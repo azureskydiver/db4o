@@ -15,8 +15,9 @@ import com.db4o.reflect.*;
  */
 public abstract class YapFile extends YapStream {
 
-    YapConfigBlock    			i_configBlock;
-    PBootRecord                 i_bootRecord;
+    protected YapConfigBlock    _configBlock;
+    
+    private PBootRecord         _bootRecord;
 
     private Collection4         i_dirty;
     
@@ -43,6 +44,10 @@ public abstract class YapFile extends YapStream {
         // do nothing, overwridden in YapRandomAccessFile 
     }
     
+    public PBootRecord bootRecord(){
+        return _bootRecord;
+    }
+    
     boolean close2() {
         boolean ret = super.close2();
         i_dirty = null;
@@ -64,16 +69,17 @@ public abstract class YapFile extends YapStream {
         _freespaceManager = FreespaceManager.createNew(this, i_config._freespaceSystem);
         blockSize(i_config.i_blockSize);
         i_writeAt = blocksFor(HEADER_LENGTH);
-        i_configBlock = new YapConfigBlock(this);
-        i_configBlock.write();
-        i_configBlock.go();
+        _configBlock = new YapConfigBlock(this);
+        _configBlock.write();
+        _configBlock.go();
         initNewClassCollection();
         initializeEssentialClasses();
         initBootRecord();
+        _freespaceManager.start();
     }
 
     long currentVersion() {
-        return i_bootRecord.i_versionGenerator;
+        return _bootRecord.i_versionGenerator;
     }
 
     void initNewClassCollection() {
@@ -221,10 +227,10 @@ public abstract class YapFile extends YapStream {
     }
 
     public Db4oDatabase identity() {
-        if(i_bootRecord == null){
+        if(_bootRecord == null){
             return null;  // early access for internal stuff, no identity needed
         }
-        return i_bootRecord.i_db;
+        return _bootRecord.i_db;
     }
 
     void initialize2() {
@@ -234,12 +240,12 @@ public abstract class YapFile extends YapStream {
     
     private void initBootRecord() {
         showInternalClasses(true);
-        i_bootRecord = new PBootRecord();
-        i_bootRecord.i_stream = this;
-        i_bootRecord.init(i_config);
-        setInternal(i_systemTrans, i_bootRecord, false);
-        i_configBlock._bootRecordID = getID1(i_systemTrans, i_bootRecord);
-        i_configBlock.write();
+        _bootRecord = new PBootRecord();
+        _bootRecord.i_stream = this;
+        _bootRecord.init(i_config);
+        setInternal(i_systemTrans, _bootRecord, false);
+        _configBlock._bootRecordID = getID1(i_systemTrans, _bootRecord);
+        _configBlock.write();
         showInternalClasses(false);
     }
 
@@ -281,10 +287,10 @@ public abstract class YapFile extends YapStream {
     }
 
     void raiseVersion(long a_minimumVersion) {
-        if (i_bootRecord.i_versionGenerator < a_minimumVersion) {
-            i_bootRecord.i_versionGenerator = a_minimumVersion;
-            i_bootRecord.setDirty();
-            i_bootRecord.store(1);
+        if (_bootRecord.i_versionGenerator < a_minimumVersion) {
+            _bootRecord.i_versionGenerator = a_minimumVersion;
+            _bootRecord.setDirty();
+            _bootRecord.store(1);
         }
     }
 
@@ -381,8 +387,8 @@ public abstract class YapFile extends YapStream {
         
         i_writeAt = blocksFor(fileLength());
 
-        i_configBlock = new YapConfigBlock(this);
-        i_configBlock.read(myreader);
+        _configBlock = new YapConfigBlock(this);
+        _configBlock.read(myreader);
 
         // configuration lock time skipped
         myreader.incrementOffset(YapConst.YAPID_LENGTH);
@@ -390,32 +396,33 @@ public abstract class YapFile extends YapStream {
         i_classCollection.setID(this, myreader.readInt());
         i_classCollection.read(i_systemTrans);
 
-        int freeID = myreader.getAddress() + myreader._offset;
-        int freeSlotsID = myreader.readInt();
+        int freespaceID = myreader.readInt();
         
-        _freespaceManager = FreespaceManager.createNew(this, i_configBlock._freespaceSystem);
-        _freespaceManager.read(freeSlotsID);
+        _freespaceManager = FreespaceManager.createNew(this, _configBlock._freespaceSystem);
+        _freespaceManager.read(freespaceID);
         
         showInternalClasses(true);
         Object bootRecord = null;
-        if (i_configBlock._bootRecordID > 0) {
-            bootRecord = getByID1(i_systemTrans, i_configBlock._bootRecordID);
+        if (_configBlock._bootRecordID > 0) {
+            bootRecord = getByID1(i_systemTrans, _configBlock._bootRecordID);
         }
         if (bootRecord instanceof PBootRecord) {
-            i_bootRecord = (PBootRecord) bootRecord;
-            i_bootRecord.checkActive();
-            i_bootRecord.i_stream = this;
-            if (i_bootRecord.initConfig(i_config)) {
+            _bootRecord = (PBootRecord) bootRecord;
+            _bootRecord.checkActive();
+            _bootRecord.i_stream = this;
+            if (_bootRecord.initConfig(i_config)) {
                 i_classCollection.reReadYapClass(getYapClass(
                     i_handlers.ICLASS_PBOOTRECORD, false));
-                setInternal(i_systemTrans, i_bootRecord, false);
+                setInternal(i_systemTrans, _bootRecord, false);
             }
         } else {
             initBootRecord();
         }
+        _freespaceManager.start();
+        
         showInternalClasses(false);
         writeHeader(false);
-        Transaction trans = i_configBlock.getTransactionToCommit();
+        Transaction trans = _configBlock.getTransactionToCommit();
         if (trans != null) {
             if (!i_config.i_disableCommitRecovery) {
                 trans.writeOld();
@@ -595,7 +602,7 @@ public abstract class YapFile extends YapStream {
         YapWriter writer = getWriter(i_systemTrans, 0, HEADER_LENGTH);
         writer.append(YapConst.YAPFILEVERSION);
         writer.append(blockSize());
-        writer.writeInt(i_configBlock._address);
+        writer.writeInt(_configBlock._address);
         writer.writeInt(0);
         writer.writeInt(i_classCollection.getID());
         writer.writeInt(freespaceID);
@@ -619,7 +626,7 @@ public abstract class YapFile extends YapStream {
     }
 
     void writeBootRecord() {
-        i_bootRecord.store(1);
+        _bootRecord.store(1);
     }
 
     // This is a reroute of writeBytes to write the free blocks
@@ -641,7 +648,7 @@ public abstract class YapFile extends YapStream {
 
     final void writeTransactionPointer(int a_address) {
         YapWriter bytes = new YapWriter(i_systemTrans,
-            i_configBlock._address, YapConst.YAPINT_LENGTH * 2);
+            _configBlock._address, YapConst.YAPINT_LENGTH * 2);
         bytes.moveForward(YapConfigBlock.TRANSACTION_OFFSET);
         bytes.writeInt(a_address);
         bytes.writeInt(a_address);

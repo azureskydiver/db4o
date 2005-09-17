@@ -23,7 +23,7 @@ public class DTrace {
             
             // addRange(15603); // investmentbalance class id
             
-            addRange(27267);
+            // addRange(27267);
             
             // addRange(15611); // investmentbalance class
             
@@ -36,7 +36,7 @@ public class DTrace {
 //            addRangeWithEnd(3835808, 3836267);
             
             
-            // addRangeWithLength(0,10000000);
+            addRangeWithLength(0,10000000);
             
             // addRangeWithLength(25876597, 44);
             // addRange(7274611);
@@ -57,6 +57,7 @@ public class DTrace {
             FREE_ON_COMMIT = new DTrace(true, true, "trans freeOnCommit", true);
             FREE_ON_ROLLBACK = new DTrace(true, true, "trans freeOnRollback", true);
             GET_SLOT = new DTrace(true, true, "getSlot", true);
+            GET_FREESPACE = new DTrace(true, true, "getFreespace", true);
             GET_YAPOBJECT = new DTrace(true, true, "get yapObject", true);
             ID_TREE_ADD = new DTrace(true, true, "id tree add", true);
             ID_TREE_REMOVE = new DTrace(true, true, "id tree remove", true);
@@ -83,7 +84,7 @@ public class DTrace {
             
             // turnAllOffExceptFor(new DTrace[] {GET_SLOT, FREE_ON_COMMIT, FREE, WRITE_BYTES});
             
-            turnAllOffExceptFor(new DTrace[] {ADD_TO_CLASS_INDEX, ID_TREE_REMOVE, REMOVE_FROM_CLASS_INDEX, TRANS_DELETE, TRANS_DONT_DELETE});
+            turnAllOffExceptFor(new DTrace[] {FREE, GET_FREESPACE});
             // turnAllOffExceptFor(new DTrace[] {WRITE_BYTES, YAPCLASS_INIT});
          
         }
@@ -131,6 +132,7 @@ public class DTrace {
     public static DTrace FREE_ON_COMMIT;
     public static DTrace FREE_ON_ROLLBACK;
     public static DTrace GET_SLOT;
+    public static DTrace GET_FREESPACE;
     public static DTrace GET_YAPOBJECT;
     public static DTrace ID_TREE_ADD;
     public static DTrace ID_TREE_REMOVE;

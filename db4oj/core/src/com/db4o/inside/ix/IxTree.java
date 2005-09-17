@@ -4,19 +4,20 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.freespace.*;
 
 /**
  * @exclude
  */
 public abstract class IxTree extends Tree{
     
-    IxFieldTransaction i_fieldTransaction;
+    IndexTransaction i_fieldTransaction;
     
     int i_version;
     
     int _nodes = 1;
     
-    IxTree(IxFieldTransaction a_ft){
+    IxTree(IndexTransaction a_ft){
         i_fieldTransaction = a_ft;
         i_version = a_ft.i_version;
     }
@@ -47,7 +48,7 @@ public abstract class IxTree extends Tree{
     public Tree deepClone(Object a_param){
         try {
             IxTree tree = (IxTree)this.clone();
-            tree.i_fieldTransaction = (IxFieldTransaction)a_param;
+            tree.i_fieldTransaction = (IndexTransaction)a_param;
             return tree;
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
@@ -119,7 +120,47 @@ public abstract class IxTree extends Tree{
     
     public abstract void visit(Visitor4 visitor, int[] a_lowerAndUpperMatch);
     
+    public abstract void freespaceVisit(FreespaceVisitor visitor, int index);
+    
     public abstract void write(Indexable4 a_handler, YapWriter a_writer);
+    
+    public void visitFirst(FreespaceVisitor visitor){
+        if(i_preceding != null){
+            ((IxTree)i_preceding).visitFirst(visitor);
+            if(visitor.visited()){
+                return;
+            }
+        }
+        freespaceVisit(visitor, 0);
+        if(visitor.visited()){
+            return;
+        }
+        if(i_subsequent != null){
+            ((IxTree)i_subsequent).visitFirst(visitor);
+            if(visitor.visited()){
+                return;
+            }
+        }
+    }
+    
+    public void visitLast(FreespaceVisitor visitor){
+        if(i_subsequent != null){
+            ((IxTree)i_subsequent).visitLast(visitor);
+            if(visitor.visited()){
+                return;
+            }
+        }
+        freespaceVisit(visitor, 0);
+        if(visitor.visited()){
+            return;
+        }
+        if(i_preceding != null){
+            ((IxTree)i_preceding).visitLast(visitor);
+            if(visitor.visited()){
+                return;
+            }
+        }
+    }
     
 
 }
