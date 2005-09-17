@@ -226,6 +226,8 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         hcTreeAdd(a_yapObject);
     }
     
+    public abstract PBootRecord bootRecord();
+    
     private final boolean breakDeleteForEnum(YapObject reference, boolean userCall){
         if(Deploy.csharp){
             return false;
@@ -719,7 +721,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return new YapWriter(a_trans, a_address, a_length);
     }
 
-    Transaction getSystemTransaction() {
+    public Transaction getSystemTransaction() {
         return i_systemTrans;
     }
 

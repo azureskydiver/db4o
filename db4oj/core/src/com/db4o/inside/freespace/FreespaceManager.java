@@ -7,8 +7,18 @@ import com.db4o.*;
 
 public abstract class FreespaceManager {
     
+    final YapFile     _file;
+    
     public static final byte FM_RAM = 0;
     public static final byte FM_IX = 1;
+    
+    final int discardLimit(){
+        return _file.i_config.i_discardFreeSpace;
+    }
+    
+    final int blockSize(){
+        return _file.blockSize();
+    }
     
     public abstract void free(int a_address, int a_length);
     
@@ -20,14 +30,19 @@ public abstract class FreespaceManager {
     
     public abstract byte systemType();
     
-    public static FreespaceManager createNew(YapFile yf, byte systemTypeByte){
+    public abstract void start();
+    
+    public static FreespaceManager createNew(YapFile file, byte systemTypeByte){
         switch(systemTypeByte){
             case FM_RAM:
-                return new FreespaceManagerRam(yf);
+                return new FreespaceManagerRam(file);
             default:
-                return new FreespaceManagerIx();
-            
+                return new FreespaceManagerIx(file);
         }
+    }
+    
+    FreespaceManager(YapFile file){
+        _file = file;
     }
     
 

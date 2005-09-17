@@ -37,7 +37,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     boolean          i_encrypt;
     Hashtable4       i_exceptionalClasses               = new Hashtable4(16);
     boolean          i_exceptionsOnNotStorable;
-    byte             _freespaceSystem                   = FreespaceManager.FM_RAM; 
+    byte             _freespaceSystem                   = FreespaceManager.FM_RAM; // = FreespaceManager.FM_RAM;
     public int       i_generateUUIDs;
     public int       i_generateVersionNumbers;
     boolean			 i_isServer = false;
@@ -203,11 +203,12 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     }
     
     private void storeStreamBootRecord() {
-        if(i_stream instanceof YapFile) {
-            YapFile yapFile = (YapFile)i_stream;
-            yapFile.i_bootRecord.initConfig(this);
-            yapFile.setInternal(yapFile.i_systemTrans, yapFile.i_bootRecord, false);
-            yapFile.i_systemTrans.commit();
+        PBootRecord bootRecord = i_stream.bootRecord();
+        if(bootRecord != null) {
+            bootRecord.initConfig(this);
+            Transaction trans = i_stream.getSystemTransaction();
+            i_stream.setInternal(trans, bootRecord, false);
+            trans.commit();
         }
     }
 

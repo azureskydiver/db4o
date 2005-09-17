@@ -5,6 +5,7 @@ package com.db4o;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.ix.*;
+import com.db4o.inside.slots.*;
 import com.db4o.reflect.*;
 
 /**
@@ -58,7 +59,7 @@ public class Transaction {
         i_transactionListeners = new List4(i_transactionListeners, a_listener);
     }
 
-    public void addDirtyFieldIndex(IxFieldTransaction a_xft) {
+    public void addDirtyFieldIndex(IndexTransaction a_xft) {
         i_dirtyFieldIndexes = new List4(i_dirtyFieldIndexes, a_xft);
     }
 
@@ -227,7 +228,7 @@ public class Transaction {
             if (i_dirtyFieldIndexes != null) {
                 Iterator4 i = new Iterator4(i_dirtyFieldIndexes);
                 while (i.hasNext()) {
-                    ((IxFieldTransaction) i.next()).commit();
+                    ((IndexTransaction) i.next()).commit();
                 }
             }
             if (i_parentTransaction != null) {
@@ -337,29 +338,29 @@ public class Transaction {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        Slot slot = findSlotInHierarchy(a_id);
+        ReferencedSlot slot = findSlotInHierarchy(a_id);
         if (slot != null) {
-            return slot.i_address == 0;
+            return slot._address == 0;
         }
         return false;
     }
 
-    private final Slot findSlot(int a_id) {
+    private final ReferencedSlot findSlot(int a_id) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
         Tree tree = TreeInt.find(i_slots, a_id);
         if (tree != null) {
-            return (Slot) ((TreeIntObject) tree).i_object;
+            return (ReferencedSlot) ((TreeIntObject) tree).i_object;
         }
         return null;
     }
 
-    private final Slot findSlotInHierarchy(int a_id) {
+    private final ReferencedSlot findSlotInHierarchy(int a_id) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        Slot slot = findSlot(a_id);
+        ReferencedSlot slot = findSlot(a_id);
         if (slot != null) {
             return slot;
         }
@@ -375,8 +376,8 @@ public class Transaction {
         }
         Iterator4 i = new Iterator4(i_freeOnBoth);
         while (i.hasNext()) {
-            Slot slot = (Slot) i.next();
-            i_file.free(slot.i_address, slot.i_length);
+            ReferencedSlot slot = (ReferencedSlot) i.next();
+            i_file.free(slot._address, slot._length);
         }
         i_freeOnBoth = null;
     }
@@ -392,24 +393,24 @@ public class Transaction {
                 int id = ((Integer) i.next()).intValue();
                 Tree node = TreeInt.find(i_stream.i_freeOnCommit, id);
                 if (node != null) {
-                    Slot slot = (Slot) ((TreeIntObject) node).i_object;
-                    i_file.free(slot.i_address, slot.i_length);
+                    ReferencedSlot slot = (ReferencedSlot) ((TreeIntObject) node).i_object;
+                    i_file.free(slot._address, slot._length);
                     
                     //TODO: Instead of working with a reference counting
                     //      system it could work better to push the 
                     //      information from the system transaction to
                     //      individual transactions on commit. Consider.
                     
-                    slot.i_references--;
+                    slot._references--;
                     
                     boolean removeNode = true;
-                    if (slot.i_references > 0) {
+                    if (slot._references > 0) {
                         Tree tio = TreeInt.find(i_freeOnRollback, id);
                         if (tio != null) {
-                            Slot newSlot = (Slot) ((TreeIntObject) tio).i_object;
-                            if (slot.i_address != newSlot.i_address) {
-                                slot.i_address = newSlot.i_address;
-                                slot.i_length = newSlot.i_length;
+                            ReferencedSlot newSlot = (ReferencedSlot) ((TreeIntObject) tio).i_object;
+                            if (slot._address != newSlot._address) {
+                                slot._address = newSlot._address;
+                                slot._length = newSlot._length;
                                 removeNode = false;
                             }
                         }
@@ -443,18 +444,18 @@ public class Transaction {
         } else {
             Tree node = TreeInt.find(i_stream.i_freeOnCommit, a_id);
             if (node != null) {
-                Slot slot = (Slot) ((TreeIntObject) node).i_object;
-                slot.i_references++;
+                ReferencedSlot slot = (ReferencedSlot) ((TreeIntObject) node).i_object;
+                slot._references++;
                 if (Debug.atHome) {
-                    if (slot.i_address != a_address
-                        || slot.i_length != a_length) {
+                    if (slot._address != a_address
+                        || slot._length != a_length) {
                         System.out
                             .println("Unexpected condition in Transaction::freeOnCommit: Differing addresses.");
                     }
                 }
             } else {
-                Slot slot = new Slot(a_address, a_length);
-                slot.i_references = 1;
+                ReferencedSlot slot = new ReferencedSlot(a_address, a_length);
+                slot._references = 1;
                 i_stream.i_freeOnCommit = Tree.add(i_stream.i_freeOnCommit,
                     new TreeIntObject(a_id, slot));
             }
@@ -477,7 +478,7 @@ public class Transaction {
             }
         }
         i_freeOnRollback = Tree.add(i_freeOnRollback, new TreeIntObject(a_id,
-            new Slot(a_address, a_length)));
+            new ReferencedSlot(a_address, a_length)));
     }
 
     void freePointer(int a_id) {
@@ -492,10 +493,10 @@ public class Transaction {
             i_stream.i_lock.notify();
         }
         if (a_id != 0) {
-            Slot slot = findSlot(a_id);
+            ReferencedSlot slot = findSlot(a_id);
             if (slot != null) {
-                a_addressLength[0] = slot.i_address;
-                a_addressLength[1] = slot.i_length;
+                a_addressLength[0] = slot._address;
+                a_addressLength[1] = slot._length;
             } else {
                 if (i_parentTransaction != null) {
                     i_parentTransaction.getSlotInformation(a_id,
@@ -610,7 +611,7 @@ public class Transaction {
             if (i_dirtyFieldIndexes != null) {
                 Iterator4 i = new Iterator4(i_dirtyFieldIndexes);
                 while (i.hasNext()) {
-                    ((IxFieldTransaction) i.next()).rollback();
+                    ((IndexTransaction) i.next()).rollback();
                 }
             }
             if (i_freeOnCommit != null) {
@@ -619,9 +620,9 @@ public class Transaction {
                     Tree node = TreeInt.find(i_stream.i_freeOnCommit,
                         ((Integer) i.next()).intValue());
                     if (node != null) {
-                        Slot slot = (Slot) ((TreeIntObject) node).i_object;
-                        slot.i_references--;
-                        if (slot.i_references < 1) {
+                        ReferencedSlot slot = (ReferencedSlot) ((TreeIntObject) node).i_object;
+                        slot._references--;
+                        if (slot._references < 1) {
                             i_stream.i_freeOnCommit = i_stream.i_freeOnCommit
                                 .removeNode(node);
                         }
@@ -633,9 +634,9 @@ public class Transaction {
 
                     public void visit(Object obj) {
                         TreeIntObject node = (TreeIntObject) obj;
-                        Slot slot = (Slot) node.i_object;
+                        ReferencedSlot slot = (ReferencedSlot) node.i_object;
                         ((YapFile) i_stream)
-                            .free(slot.i_address, slot.i_length);
+                            .free(slot._address, slot._length);
                     }
                 });
             }
@@ -666,12 +667,12 @@ public class Transaction {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        Slot slot = findSlot(a_id);
+        ReferencedSlot slot = findSlot(a_id);
         if (slot != null) {
-            slot.i_address = a_address;
-            slot.i_length = a_length;
+            slot._address = a_address;
+            slot._length = a_length;
         } else {
-            i_slots = Tree.add(i_slots, new TreeIntObject(a_id, new Slot(
+            i_slots = Tree.add(i_slots, new TreeIntObject(a_id, new ReferencedSlot(
                 a_address, a_length)));
         }
     }
@@ -787,8 +788,8 @@ public class Transaction {
 
                 public void visit(Object obj) {
                     TreeIntObject node = (TreeIntObject) obj;
-                    Slot slot = (Slot) node.i_object;
-                    writePointer(node.i_key, slot.i_address, slot.i_length);
+                    ReferencedSlot slot = (ReferencedSlot) node.i_object;
+                    writePointer(node.i_key, slot._address, slot._length);
                 }
             });
         }
@@ -804,7 +805,7 @@ public class Transaction {
                 YapWriter bytes = new YapWriter(this, i_address, length);
                 bytes.read();
                 bytes.incrementOffset(YapConst.YAPINT_LENGTH);
-                i_slots = new TreeReader(bytes, new TreeIntObject(0, new Slot(
+                i_slots = new TreeReader(bytes, new TreeIntObject(0, new ReferencedSlot(
                     0, 0))).read();
                 i_addToClassIndex = new TreeReader(bytes, new TreeIntObject(0,
                     new TreeInt(0))).read();

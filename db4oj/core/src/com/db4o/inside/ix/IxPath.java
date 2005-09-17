@@ -2,16 +2,14 @@
 
 package com.db4o.inside.ix;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.freespace.*;
 
 /**
  * Index Path to represent a list of traversed index tree entries,
  * used by IxTraverser
  */
 class IxPath implements Cloneable, Visitor4 {
-
-    private QCandidates i_candidates;
 
     int                 i_comparisonResult;
 
@@ -110,6 +108,79 @@ class IxPath implements Cloneable, Visitor4 {
             }
         }
     }
+    
+    public void visitMatch(FreespaceVisitor visitor){
+        if (i_comparisonResult == 0){
+            if (i_lowerAndUpperMatch != null) {
+                int ix = i_lowerAndUpperMatch[0] - 1;
+                if(ix >= 0){
+                    i_tree.freespaceVisit(visitor, ix);
+                }
+            }else{
+                i_tree.freespaceVisit(visitor, 0);
+            }
+            if(visitor.visited()){
+                return;
+            }
+        }
+        if(i_next != null){
+            i_next.visitMatch(visitor);
+        }
+    }
+    
+    public void visitPreceding(FreespaceVisitor visitor){
+        if(i_next != null){
+            i_next.visitPreceding(visitor);
+            if(visitor.visited()){
+                return;
+            }
+        }
+        if (i_lowerAndUpperMatch != null) {
+            int ix = i_lowerAndUpperMatch[0] - 1;
+            if(ix >= 0){
+                i_tree.freespaceVisit(visitor, ix);
+            }
+        }else{
+            if (i_comparisonResult < 0) {
+                i_tree.freespaceVisit(visitor, 0);
+            }
+        }
+        if(visitor.visited()){
+            return;
+        }
+        if(i_tree.i_preceding != null){
+            if (i_next == null || i_next.i_tree != i_tree.i_preceding) {
+                ((IxTree)i_tree.i_preceding).visitLast(visitor);
+            }
+        }
+    }
+    
+    public void visitSubsequent(FreespaceVisitor visitor){
+        if(i_next != null){
+            i_next.visitSubsequent(visitor);
+            if(visitor.visited()){
+                return;
+            }
+        }
+        if (i_lowerAndUpperMatch != null) {
+            int ix = i_lowerAndUpperMatch[1] + 1;
+            if(ix <= ((IxFileRange) i_tree)._entries){
+                i_tree.freespaceVisit(visitor, ix);
+            }
+        }else{
+            if (i_comparisonResult > 0) {
+                i_tree.freespaceVisit(visitor, 0);
+            }
+        }
+        if(visitor.visited()){
+            return;
+        }
+        if(i_tree.i_subsequent != null){
+            if (i_next == null || i_next.i_tree != i_tree.i_subsequent) {
+                ((IxTree)i_tree.i_subsequent).visitFirst(visitor);
+            }
+        }
+    }
 
     int countMatching() {
         if (i_comparisonResult == 0) {
@@ -180,6 +251,7 @@ class IxPath implements Cloneable, Visitor4 {
     public void visit(Object a_object) {
         ((IxTree) a_object).visit(_visitor, null);
     }
+    
     
 
 

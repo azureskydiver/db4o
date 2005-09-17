@@ -4,6 +4,7 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.freespace.*;
 
 /**
  * A range of index entries in the database file. 
@@ -15,7 +16,7 @@ class IxFileRange extends IxTree{
     int _entries;
     private int[] _lowerAndUpperMatches;
     
-    public IxFileRange(IxFieldTransaction a_ft, int a_address, int addressOffset, int a_entries){
+    public IxFileRange(IndexTransaction a_ft, int a_address, int addressOffset, int a_entries){
         super(a_ft);
         _address = a_address;
         _addressOffset = addressOffset;
@@ -92,4 +93,35 @@ class IxFileRange extends IxTree{
         yf.copy(_address, _addressOffset, a_writer.getAddress(), a_writer.addressOffset(), length);
         a_writer.moveForward(length);
     }
+    
+    public void visitFirst(FreespaceVisitor visitor){
+        if(i_preceding != null){
+            ((IxTree)i_preceding).visitFirst(visitor);
+            if(visitor.visited()){
+                return;
+            }
+        }
+        freespaceVisit(visitor, 0);
+    }
+    
+    public void visitLast(FreespaceVisitor visitor){
+        if(i_subsequent != null){
+            ((IxTree)i_subsequent).visitLast(visitor);
+            if(visitor.visited()){
+                return;
+            }
+        }
+        int lastIndex = _entries - 1;
+        freespaceVisit(visitor, _entries - 1);
+    }
+    
+    public void freespaceVisit(FreespaceVisitor visitor, int index){
+        IxFileRangeReader frr = reader();
+        YapReader fileReader = new YapReader(frr._slotLength);
+        fileReader.read(stream(), _address, _addressOffset + (index * frr._slotLength));
+        visitor.visit(fileReader.readInt(), fileReader.readInt());
+    }
+    
+
+
 }

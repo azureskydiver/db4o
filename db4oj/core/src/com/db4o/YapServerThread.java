@@ -206,12 +206,12 @@ final class YapServerThread extends Thread {
         }
         
         if (Msg.IDENTITY.equals(message)) {
-            respondInt((int)getStream().getID(getStream().i_bootRecord.i_db));
+            respondInt((int)getStream().getID(getStream().bootRecord().i_db));
             return true;
         }
         
         if (Msg.CURRENT_VERSION.equals(message)){
-            long ver = getStream().i_bootRecord.i_versionGenerator;
+            long ver = getStream().bootRecord().i_versionGenerator;
             Msg.ID_LIST.getWriterForLong(getTransaction(), ver).write(getStream(), i_socket);
             return true;
         }

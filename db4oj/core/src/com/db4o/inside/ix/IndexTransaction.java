@@ -9,25 +9,40 @@ import com.db4o.foundation.*;
  * Index root holder for a field and a transaction.
  * @exclude 
  */
-public class IxFieldTransaction implements Visitor4{
+public class IndexTransaction implements Visitor4{
 	
-    final IxField i_index;
+    final Index4 i_index;
 	final Transaction i_trans;
 	int i_version;
 	private Tree i_root;
 	
-	IxFieldTransaction(Transaction a_trans, IxField a_index){
+	IndexTransaction(Transaction a_trans, Index4 a_index){
 	    i_trans = a_trans;
 	    i_index = a_index;
 	}
 	
 	public boolean equals(Object obj) {
-		return i_trans == ((IxFieldTransaction)obj).i_trans;
+		return i_trans == ((IndexTransaction)obj).i_trans;
     }
+    
+    /**
+     */
+    public void add(int id, Object value){
+        patch(new IxAdd(this, id, value));
+    }
+    
+    public void remove(int id, Object value){
+        patch(new IxRemove(this, id, value));
+    }
+    
+    private void patch(IxPatch patch){
+        i_root = Tree.add(i_root,patch);
+    }
+
 	
-	public void add(IxPatch a_patch){
-	    i_root = Tree.add(i_root, a_patch);
-	}
+//	public void add(IxPatch a_patch){
+//	    i_root = Tree.add(i_root, a_patch);
+//	}
 	
 	public Tree getRoot(){
 	    return i_root;
@@ -41,7 +56,7 @@ public class IxFieldTransaction implements Visitor4{
 	    i_index.rollback(this);
 	}
 	
-	void merge(IxFieldTransaction a_ft){
+	void merge(IndexTransaction a_ft){
 	    Tree otherRoot = a_ft.getRoot();
 	    if(otherRoot != null){
 	        otherRoot.traverseFromLeaves(this);

@@ -16,7 +16,7 @@ class YapFieldVersion extends YapFieldVirtual {
     }
     
     void addFieldIndex(YapWriter a_writer, boolean a_new) {
-        YLong.writeLong(((YapFile) a_writer.getStream()).i_bootRecord.version(), a_writer);
+        YLong.writeLong(a_writer.getStream().bootRecord().version(), a_writer);
     }
     
     void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
@@ -26,9 +26,9 @@ class YapFieldVersion extends YapFieldVirtual {
     void marshall1(YapObject a_yapObject, YapWriter a_bytes, boolean a_migrating, boolean a_new) {
         if (!a_migrating) {
             YapStream stream = a_bytes.getStream().i_parent;
-            if (stream instanceof YapFile
-                && ((YapFile) stream).i_bootRecord != null) {
-                a_yapObject.i_virtualAttributes.i_version = ((YapFile) stream).i_bootRecord.version();
+            PBootRecord br = stream.bootRecord();
+            if (br != null) {
+                a_yapObject.i_virtualAttributes.i_version = br.version();
             }
         }
         if(a_yapObject.i_virtualAttributes == null){

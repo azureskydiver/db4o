@@ -9,55 +9,57 @@ import com.db4o.foundation.*;
  * 
  * @exclude
  */
-public class IxField {
+public class Index4 {
 
-    final Indexable4     _handler;
+    public final Indexable4     _handler;
 
-    static private int i_version;
+    static private int _version;
 
+    private final MetaIndex    _metaIndex;
 
-    final MetaIndex    i_metaIndex;
+    private IndexTransaction _globalIndexTransaction;
 
-    IxFieldTransaction i_globalIndex;
+    private Collection4        _indexTransactions;
 
-    Collection4        i_transactionIndices;
+    private IxFileRangeReader  _fileRangeReader;
 
-    IxFileRangeReader  i_fileRangeReader;
-
-    public IxField(Transaction a_systemTrans, Indexable4 handler, MetaIndex a_metaIndex) {
-        i_metaIndex = a_metaIndex;
+    public Index4(Transaction systemTrans, Indexable4 handler, MetaIndex metaIndex) {
+        _metaIndex = metaIndex;
         _handler = handler;
-        i_globalIndex = new IxFieldTransaction(a_systemTrans, this);
+        _globalIndexTransaction = new IndexTransaction(systemTrans, this);
         createGlobalFileRange();
     }
 
-    public IxFieldTransaction dirtyFieldTransaction(Transaction a_trans) {
-        IxFieldTransaction ift = new IxFieldTransaction(a_trans, this);
-        if (i_transactionIndices == null) {
-            i_transactionIndices = new Collection4();
+    public IndexTransaction dirtyIndexTransaction(Transaction a_trans) {
+        IndexTransaction ift = new IndexTransaction(a_trans, this);
+        if (_indexTransactions == null) {
+            _indexTransactions = new Collection4();
         } else {
-            IxFieldTransaction iftExisting = (IxFieldTransaction) i_transactionIndices
-                    .get(ift);
+            IndexTransaction iftExisting = (IndexTransaction) _indexTransactions.get(ift);
             if (iftExisting != null) {
                 return iftExisting;
             }
         }
         a_trans.addDirtyFieldIndex(ift);
-        ift.setRoot(Tree.deepClone(i_globalIndex.getRoot(), ift));
-        ift.i_version = ++i_version;
-        i_transactionIndices.add(ift);
+        ift.setRoot(Tree.deepClone(_globalIndexTransaction.getRoot(), ift));
+        ift.i_version = ++_version;
+        _indexTransactions.add(ift);
         return ift;
     }
+    
+    public IndexTransaction globalIndexTransaction(){
+        return _globalIndexTransaction;
+    }
 
-    public IxFieldTransaction getFieldTransaction(Transaction a_trans) {
-        if (i_transactionIndices != null) {
-            IxFieldTransaction ift = new IxFieldTransaction(a_trans, this);
-            ift = (IxFieldTransaction) i_transactionIndices.get(ift);
+    public IndexTransaction indexTransactionFor(Transaction a_trans) {
+        if (_indexTransactions != null) {
+            IndexTransaction ift = new IndexTransaction(a_trans, this);
+            ift = (IndexTransaction) _indexTransactions.get(ift);
             if (ift != null) {
                 return ift;
             }
         }
-        return i_globalIndex;
+        return _globalIndexTransaction;
     }
     
 // Debug index tree depth    
@@ -79,12 +81,12 @@ public class IxField {
 //        System.out.println("---  IxField commit debug complete");
 //    }
 
-    void commit(IxFieldTransaction a_ft) {
-        i_transactionIndices.remove(a_ft);
+    void commit(IndexTransaction a_ft) {
+        _indexTransactions.remove(a_ft);
 
-        i_globalIndex.merge(a_ft);
+        _globalIndexTransaction.merge(a_ft);
 
-        int leaves = i_globalIndex.countLeaves();
+        int leaves = _globalIndexTransaction.countLeaves();
 
         // TODO: Use more intelligent heuristic here to
         // calculate when to flush the global index
@@ -92,28 +94,28 @@ public class IxField {
         boolean createNewFileRange = true;
 
         if (createNewFileRange) {
-            final Transaction trans = i_globalIndex.i_trans;
+            final Transaction trans = _globalIndexTransaction.i_trans;
 
-            int[] free = new int[] { i_metaIndex.indexAddress,
-                    i_metaIndex.indexLength, i_metaIndex.patchAddress,
-                    i_metaIndex.patchLength};
+            int[] free = new int[] { _metaIndex.indexAddress,
+                    _metaIndex.indexLength, _metaIndex.patchAddress,
+                    _metaIndex.patchLength};
 
-            Tree root = i_globalIndex.getRoot();
+            Tree root = _globalIndexTransaction.getRoot();
 
             final int lengthPerEntry = _handler.linkLength()
                     + YapConst.YAPINT_LENGTH;
 
-            i_metaIndex.indexEntries = root == null ? 0 : root.size();
-            i_metaIndex.indexLength = i_metaIndex.indexEntries * lengthPerEntry;
-            i_metaIndex.indexAddress = ((YapFile) trans.i_stream)
-                    .getSlot(i_metaIndex.indexLength);
-            i_metaIndex.patchEntries = 0;
-            i_metaIndex.patchAddress = 0;
-            i_metaIndex.patchLength = 0;
-            trans.i_stream.setInternal(trans, i_metaIndex, 1, false);
+            _metaIndex.indexEntries = root == null ? 0 : root.size();
+            _metaIndex.indexLength = _metaIndex.indexEntries * lengthPerEntry;
+            _metaIndex.indexAddress = ((YapFile) trans.i_stream)
+                    .getSlot(_metaIndex.indexLength);
+            _metaIndex.patchEntries = 0;
+            _metaIndex.patchAddress = 0;
+            _metaIndex.patchLength = 0;
+            trans.i_stream.setInternal(trans, _metaIndex, 1, false);
 
             final YapWriter writer = new YapWriter(trans,
-                    i_metaIndex.indexAddress, lengthPerEntry);
+                    _metaIndex.indexAddress, lengthPerEntry);
             if (root != null) {
                 root.traverse(new Visitor4() {
 
@@ -124,9 +126,9 @@ public class IxField {
             }
             IxFileRange newFileRange = createGlobalFileRange();
 
-            Iterator4 i = i_transactionIndices.iterator();
+            Iterator4 i = _indexTransactions.iterator();
             while (i.hasNext()) {
-                final IxFieldTransaction ft = (IxFieldTransaction) i.next();
+                final IndexTransaction ft = (IndexTransaction) i.next();
                 Tree clonedTree = newFileRange;
                 if (clonedTree != null) {
                     clonedTree = clonedTree.deepClone(ft);
@@ -154,45 +156,45 @@ public class IxField {
                 trans.i_file.free(free[2], free[3]);
             }
         } else {
-            Iterator4 i = i_transactionIndices.iterator();
+            Iterator4 i = _indexTransactions.iterator();
             while (i.hasNext()) {
-                ((IxFieldTransaction) i.next()).merge(a_ft);
+                ((IndexTransaction) i.next()).merge(a_ft);
             }
         }
     }
 
     private IxFileRange createGlobalFileRange() {
         IxFileRange fr = null;
-        if (i_metaIndex.indexEntries > 0) {
-            fr = new IxFileRange(i_globalIndex,
-                    i_metaIndex.indexAddress, 0, i_metaIndex.indexEntries);
+        if (_metaIndex.indexEntries > 0) {
+            fr = new IxFileRange(_globalIndexTransaction,
+                    _metaIndex.indexAddress, 0, _metaIndex.indexEntries);
         }
-        i_globalIndex.setRoot(fr);
+        _globalIndexTransaction.setRoot(fr);
         return fr;
     }
 
-    void rollback(IxFieldTransaction a_ft) {
-        i_transactionIndices.remove(a_ft);
+    void rollback(IndexTransaction a_ft) {
+        _indexTransactions.remove(a_ft);
     }
 
     IxFileRangeReader fileRangeReader() {
-        if (i_fileRangeReader == null) {
-            i_fileRangeReader = new IxFileRangeReader(_handler);
+        if (_fileRangeReader == null) {
+            _fileRangeReader = new IxFileRangeReader(_handler);
         }
-        return i_fileRangeReader;
+        return _fileRangeReader;
     }
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("IxField  " + System.identityHashCode(this));
-        if (i_globalIndex != null) {
+        if (_globalIndexTransaction != null) {
             sb.append("\n  Global \n   ");
-            sb.append(i_globalIndex.toString());
+            sb.append(_globalIndexTransaction.toString());
         } else {
             sb.append("\n  no global index \n   ");
         }
-        if (i_transactionIndices != null) {
-            Iterator4 i = i_transactionIndices.iterator();
+        if (_indexTransactions != null) {
+            Iterator4 i = _indexTransactions.iterator();
             while (i.hasNext()) {
                 sb.append("\n");
                 sb.append(i.next().toString());

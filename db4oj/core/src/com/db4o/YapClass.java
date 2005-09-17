@@ -607,7 +607,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             return false;
         }
         int configValue = (i_config == null) ? 0 : i_config.i_generateUUIDs;
-        return generate1(((YapFile)i_stream).i_bootRecord.i_generateUUIDs, configValue); 
+        return generate1(i_stream.bootRecord().i_generateUUIDs, configValue); 
     }
 
     private boolean generateVersionNumbers() {
@@ -615,7 +615,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             return false;
         }
         int configValue = (i_config == null) ? 0 : i_config.i_generateVersionNumbers;
-        return generate1(((YapFile)i_stream).i_bootRecord.i_generateVersionNumbers, configValue); 
+        return generate1(i_stream.bootRecord().i_generateVersionNumbers, configValue); 
     }
     
     private boolean generateVirtual(){
@@ -625,7 +625,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if( ! (i_stream instanceof YapFile) ){
             return false;
         }
-        return ((YapFile)i_stream).i_bootRecord != null; 
+        return i_stream.bootRecord() != null; 
     }
     
     private boolean generate1(int bootRecordValue, int configValue) {

@@ -8,8 +8,6 @@ import com.db4o.foundation.*;
 
 public class FreespaceManagerRam extends FreespaceManager {
     
-    private final YapFile     _file;
-    
     private final TreeIntObject _finder   = new TreeIntObject(0);
 
     private Tree _freeByAddress;
@@ -17,14 +15,13 @@ public class FreespaceManagerRam extends FreespaceManager {
     private Tree _freeBySize;
     
     public FreespaceManagerRam(YapFile file){
-        _file = file;
+        super(file);
     }
     
     public void free(int a_address, int a_length) {
         if(DTrace.enabled){
             DTrace.FREE.logLength(a_address, a_length);
         }
-        
         if (a_length <= discardLimit()) {
             return;
         }
@@ -74,8 +71,8 @@ public class FreespaceManagerRam extends FreespaceManager {
     }
     
     public int getSlot(int length) {
-        int blocksNeeded = _file.blocksFor(length);
-        _finder.i_key = blocksNeeded;
+        length = _file.blocksFor(length);
+        _finder.i_key = length;
         _finder.i_object = null;
         _freeBySize = FreeSlotNode.removeGreaterOrEqual((FreeSlotNode) _freeBySize, _finder);
 
@@ -87,8 +84,8 @@ public class FreespaceManagerRam extends FreespaceManager {
         int blocksFound = node.i_key;
         int address = node.i_peer.i_key;
         _freeByAddress = _freeByAddress.removeNode(node.i_peer);
-        if (blocksFound > blocksNeeded) {
-            addFreeSlotNodes(address + blocksNeeded, blocksFound - blocksNeeded);
+        if (blocksFound > length) {
+            addFreeSlotNodes(address + length, blocksFound - length);
         }
         return address;
     }
@@ -152,17 +149,12 @@ public class FreespaceManagerRam extends FreespaceManager {
         return _file.i_systemTrans;
     }
     
-    private final int discardLimit(){
-        return _file.i_config.i_discardFreeSpace;
-    }
-    
-    private final int blockSize(){
-        return _file.blockSize();
-    }
-    
     public byte systemType() {
         return FM_RAM;
     }
-    
+
+    public void start() {
+        // this is done in read(), nothing to do here
+    }
 
 }

@@ -4,6 +4,7 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.inside.freespace.*;
 
 /**
  * @exclude
@@ -28,8 +29,12 @@ public class IxTraverser{
     // [3] take nulls 
     boolean[] i_take;
     
-    Tree i_tree;
-
+    private static final int SMALLER = 0;
+    private static final int EQUAL = 1;
+    private static final int GREATER = 2;
+    private static final int NULLS = 3;
+    
+    
     private void add(Visitor4 visitor, IxPath a_previousPath, IxPath a_great, IxPath a_small) {
         addPathTree(visitor, a_previousPath);
         if (a_great != null && a_small != null && a_great.carriesTheSame(a_small)) {
@@ -176,7 +181,7 @@ public class IxTraverser{
         }
     }
 
-    private int findBounds1(Object a_constraint, IxTree a_tree) {
+    public int findBounds(Object a_constraint, IxTree a_tree) {
 
         if (a_tree != null) {
 
@@ -218,12 +223,10 @@ public class IxTraverser{
         }
         return 0;
     }
-    
-    
 
     public int findBoundsExactMatch(Object a_constraint, IxTree a_tree){
         i_take = new boolean[] { false, true, false, false};
-        return findBounds1(a_constraint, a_tree);
+        return findBounds(a_constraint, a_tree);
     }
     
     public int findBoundsQuery(QCon a_qcon, Object constraint) {
@@ -232,7 +235,7 @@ public class IxTraverser{
         }
         i_take = new boolean[] { false, false, false, false};
         a_qcon.i_evaluator.indexBitMap(i_take);
-        return findBounds1(constraint, a_qcon.indexRoot());
+        return findBounds(constraint, a_qcon.indexRoot());
     }
     
     private void findGreatestEqual(IxTree a_tree) {
@@ -305,20 +308,19 @@ public class IxTraverser{
     }
     
     public void visitAll(Visitor4 visitor) {
-        i_tree = null;
-        if (i_take[1]) {
+        if (i_take[EQUAL]) {
             if (i_greatHead != null) {
                 add(visitor, i_greatHead, i_greatHead.i_next, i_smallHead.i_next);
             }
         }
-        if (i_take[0]) {
+        if (i_take[SMALLER]) {
             IxPath head = i_smallHead;
             while (head != null) {
                 head.addPrecedingToCandidatesTree(visitor);
                 head = head.i_next;
             }
         }
-        if (i_take[2]) {
+        if (i_take[GREATER]) {
             IxPath head = i_greatHead;
             while (head != null) {
                 head.addSubsequentToCandidatesTree(visitor);
@@ -326,6 +328,24 @@ public class IxTraverser{
             }
         }
     }
-
+    
+    public void visitPreceding(FreespaceVisitor visitor){
+        if(i_smallHead != null){
+            i_smallHead.visitPreceding(visitor);    
+        }
+    }
+    
+    public void visitSubsequent(FreespaceVisitor visitor){
+        if(i_greatHead != null){
+            i_greatHead.visitSubsequent(visitor);
+        }
+    }
+    
+    public void visitMatch(FreespaceVisitor visitor){
+        if(i_smallHead != null){
+            i_smallHead.visitMatch(visitor);    
+        }
+        
+    }
 
 }

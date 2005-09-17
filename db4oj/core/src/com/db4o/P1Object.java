@@ -165,7 +165,7 @@ public class P1Object implements Db4oTypeImpl{
         return this;
     }
     
-    void store(int a_depth){
+    public void store(int a_depth){
         if(i_trans != null){
             if(i_yapObject == null){
                 i_yapObject = i_trans.i_stream.getYapObject(this);
