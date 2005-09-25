@@ -171,7 +171,7 @@ public interface ObjectContainer {
      * @param predicate
      * @return
      */
-    public ObjectSet query(Predicate predicate);
+    public <TargetType> ObjectSet<TargetType> query(Predicate<TargetType> predicate);
     
     
     /**
