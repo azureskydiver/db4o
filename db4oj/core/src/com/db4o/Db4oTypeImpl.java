@@ -5,7 +5,7 @@ package com.db4o;
 /** 
  * marker interface for special db4o datatypes
  */
-interface Db4oTypeImpl{
+interface Db4oTypeImpl extends TransactionAware {
 	
 	int adjustReadDepth(int a_depth);
     
@@ -16,8 +16,6 @@ interface Db4oTypeImpl{
 	boolean hasClassIndex();
     
     void replicateFrom(Object obj);
-	
-	void setTrans(Transaction a_trans);
 	
 	void setYapObject(YapObject a_yapObject);
 	

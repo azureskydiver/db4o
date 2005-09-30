@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import java.lang.reflect.*;
+
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -19,6 +21,16 @@ import com.db4o.types.*;
  */
 public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     TransientClass {
+
+	public static final String PROPERTY_DYNAMICNQ = "db4o.dynamicnq";
+	public final static String UNOPTIMIZED="UNOPTIMIZED";
+	public final static String PREOPTIMIZED="PREOPTIMIZED";
+	public final static String DYNOPTIMIZED="DYNOPTIMIZED";
+	
+	
+	private Object enhancer;
+	private Method optimizeMethod;
+	private List4 listeners;
 
     public static final int        HEADER_LENGTH         = 2 + (YapConst.YAPINT_LENGTH * 4);
 
@@ -120,7 +132,27 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         initialize0();
         createTransaction();
         initialize1();
+        
+		try {
+			Class enhancerClass=Class.forName("com.db4o.nativequery.optimization.db4o.Db4oOnTheFlyEnhancer");
+			enhancer=enhancerClass.newInstance();
+			optimizeMethod=enhancerClass.getMethod("optimize",new Class[]{Query.class,Predicate.class});
+		} catch (Exception exc) {
+			enhancer=null;
+		}
+		catch (NoClassDefFoundError err) {
+			enhancer=null;
+		}
+        
     }
+
+	public void addListener(Db4oQueryExecutionListener listener) {
+		listeners=new List4(listeners,listener);
+	}
+
+	public void clearListeners() {
+		listeners=null;
+	}
 
     public void activate(Object a_activate, int a_depth) {
         synchronized (i_lock) {
@@ -1147,14 +1179,44 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     public final ObjectSet query(Predicate predicate){
         synchronized (i_lock) {
             if(Db4oVersion.MAJOR < 5){
-                throw new RuntimeException("This feature will be available in db4o 5.0 and above.");
-                
-            }else{
-                return new PredicateQuery(this, predicate).execute();
+                //throw new RuntimeException("This feature will be available in db4o 5.0 and above.");
             }
+            return configureQuery(predicate).execute();
         }
     }
     
+	private Query configureQuery(Predicate predicate) {
+		Query query=query();
+		query.constrain(predicate.extentType());
+		if(predicate instanceof Db4oEnhancedFilter) {
+			((Db4oEnhancedFilter)predicate).optimizeQuery(query);
+			notifyListeners(predicate,PREOPTIMIZED);
+			return query;
+		}
+		try {
+			if(optimizeOnTheFly()&&enhancer!=null) {
+				optimizeMethod.invoke(enhancer,new Object[]{query,predicate});
+				notifyListeners(predicate,DYNOPTIMIZED);
+				return query;
+			}
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		query.constrain(new PredicateEvaluation(predicate));
+		notifyListeners(predicate,UNOPTIMIZED);
+		return query;
+	}
+
+	private void notifyListeners(Predicate predicate,String msg) {
+		for(Iterator4 iter=new Iterator4(listeners);iter.hasNext();/**/) {
+			((Db4oQueryExecutionListener)iter.next()).notifyQueryExecuted(predicate,msg);
+		}
+	}
+
+	private boolean optimizeOnTheFly() {
+		return System.getProperty(PROPERTY_DYNAMICNQ)!=null;
+	}
+
     public Query query() {
         synchronized (i_lock) {
             return query((Transaction)null);
@@ -1750,6 +1812,4 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         yo.setID(this, -1);
         Platform4.killYapRef(yo.i_object);
     }
-
-
 }

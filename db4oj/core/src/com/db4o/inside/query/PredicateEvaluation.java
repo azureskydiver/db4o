@@ -20,7 +20,7 @@ public class PredicateEvaluation implements Evaluation {
     }
 
     public void evaluate(Candidate candidate) {
-        candidate.include(_predicate.invoke(candidate.getObject()));
+        candidate.include(_predicate.appliesTo(candidate.getObject()));
     }
 
 }

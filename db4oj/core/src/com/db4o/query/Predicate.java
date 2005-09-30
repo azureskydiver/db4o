@@ -6,7 +6,6 @@ import java.io.*;
 import java.lang.reflect.*;
 
 import com.db4o.*;
-import com.db4o.inside.*;
 
 /**
  * Extend this class and add your #match() method to run native queries.
@@ -36,69 +35,42 @@ import com.db4o.inside.*;
  * since alternative method parameter classes would not be possible.
  */
 public abstract class Predicate implements Serializable{
-    
-    private transient Method _matchMethod;
-    
-    private transient Class _extent;
-    
-    private transient boolean _failed;
-    
-    public Predicate(){
-        findMatchMethod();
-        if(_matchMethod == null){
-            Exceptions4.throwRuntimeException(64);
-        }
-    }
-    
-    /**
-     * public for implementation reasons. Do not call. 
-     */
-    public final Class getExtent(){
-        return _extent;
-    }
-    
-    private void findMatchMethod() {
-        Method[] methods=getClass().getMethods();
-        for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
-            Method curMethod=methods[methodIdx];
-            // TODO: find a more manageable solution for camel vs Pascal casing
-            final String name = curMethod.getName();
-			if((name.equals("match") || name.equals("Match")) &&
-               curMethod.getReturnType().equals(Boolean.TYPE)) {
-                Class[] paramTypes = curMethod.getParameterTypes();
-                if(paramTypes != null && paramTypes.length == 1){
-                    _extent = paramTypes[0];
-                    _matchMethod = curMethod;
-                    Platform4.setAccessible(curMethod);
-                    return;
-                }
-            }
-        }
-        _failed = true;
-    
-    }
-    
-    
-    /**
-     * public for implementation reasons. Do not call. 
-     */
-    public final boolean invoke(Object obj){
-        if(_failed){
-            return false;
-        }
-        try{
-            if(_matchMethod == null){
-                findMatchMethod();
-            }
-            if(_matchMethod == null){
-                return false;
-            }
-            Object res = _matchMethod.invoke(this, new Object[]{obj});
-            return (((Boolean)res).booleanValue());
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-        return false;
-    }
-    
+	public final static String PREDICATEMETHOD_NAME="match";
+	
+	private transient Method cachedFilterMethod=null;
+	
+	private Method getFilterMethod() {
+		if(cachedFilterMethod!=null) {
+			return cachedFilterMethod;
+		}
+		Method[] methods=getClass().getMethods();
+		for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
+			Method method=methods[methodIdx];
+			if((method.getName().equals(PREDICATEMETHOD_NAME))&&method.getParameterTypes().length==1) {					
+				String targetName=method.getParameterTypes()[0].getName();
+				if(!"java.lang.Object".equals(targetName)) {
+					cachedFilterMethod=method;
+					return method;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public Class extentType() {
+		return getFilterMethod().getParameterTypes()[0];
+	}
+
+	public boolean appliesTo(Object candidate) {
+		try {
+			Method filterMethod=getFilterMethod();
+			filterMethod.setAccessible(true);
+			Object ret=filterMethod.invoke(this,new Object[]{candidate});
+			return ((Boolean)ret).booleanValue();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

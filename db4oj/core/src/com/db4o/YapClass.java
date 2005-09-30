@@ -957,8 +957,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                 stream.instantiating(false);
 
             }
+            if (a_object instanceof TransactionAware) {
+                ((TransactionAware)a_object).setTrans(a_bytes.getTransaction());
+            }
             if (a_object instanceof Db4oTypeImpl) {
-                ((Db4oTypeImpl)a_object).setTrans(a_bytes.getTransaction());
                 ((Db4oTypeImpl)a_object).setYapObject(a_yapObject);
             }
             a_yapObject.setObjectWeak(stream, a_object);
