@@ -1,0 +1,11 @@
+- Bloat tests with hard-wired flow graphs
+- much more 'unable to convert' tests
+- SODA conversion: <= to smaller().equals() instead of greater.not()?
+- How to handle virtual methods? Move optimization from load time
+  to query execution time?
+- Is there a pattern to make the visitor based code more readable
+  (and maintable) in terms of a 'grammar' or the like?
+- What (heuristic?) algorithms are there to produce a minimal normal
+  form for a boolean expression tree?
+- Implement sensible handling for locale variable passing.
+- Controlled error handling.
