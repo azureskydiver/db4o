@@ -1,4 +1,4 @@
-package com.db4o.nativequery.main.test;
+package com.db4o.test.nativequery;
 
 import java.util.*;
 
