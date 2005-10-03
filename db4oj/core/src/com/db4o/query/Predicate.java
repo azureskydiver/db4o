@@ -65,7 +65,7 @@ public abstract class Predicate implements Serializable{
 	public boolean appliesTo(Object candidate) {
 		try {
 			Method filterMethod=getFilterMethod();
-			filterMethod.setAccessible(true);
+			Platform4.setAccessible(filterMethod);
 			Object ret=filterMethod.invoke(this,new Object[]{candidate});
 			return ((Boolean)ret).booleanValue();
 		} catch (Exception e) {
