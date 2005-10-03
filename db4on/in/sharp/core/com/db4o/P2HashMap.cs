@@ -304,7 +304,7 @@ namespace com.db4o {
                     i_entries = new P1HashElement[col.size()];
                 }
                 int j = 0;
-                Iterator4 it = col.iterator();
+                Iterator4 it = col.fastIterator();
                 while (it.hasNext()){
                     i_entries[j++] = (P1HashElement)it.next();
                 }

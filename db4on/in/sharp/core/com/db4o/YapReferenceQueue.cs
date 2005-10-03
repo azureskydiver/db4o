@@ -18,7 +18,7 @@ namespace com.db4o {
         internal void poll(ExtObjectContainer objectContainer) {
             List4 remove = null;
             lock(this){
-                Iterator4 i = new Iterator4(list);
+                Iterator4 i = new Iterator4Impl(list);
                 list = null;
                 while(i.hasNext()){
                     YapRef yapRef = (YapRef)i.next();
@@ -29,7 +29,7 @@ namespace com.db4o {
                     }
                 }
             }
-            Iterator4 j = new Iterator4(remove);
+            Iterator4 j = new Iterator4Impl(remove);
             while(j.hasNext() && (!objectContainer.isClosed())){
                 objectContainer.purge(j.next());
             }
