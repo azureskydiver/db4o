@@ -2,9 +2,6 @@ package com.db4o.nativequery.expr;
 
 public interface Expression {
 	
-	public interface ExpressionVisitor {
-	}
-	
 	/**
 	 * <a href='http://c2.com/cgi/wiki?AcyclicVisitor'>Acyclic Visitor</a>
 	 * 

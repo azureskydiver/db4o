@@ -3,7 +3,6 @@ package com.db4o.nativequery.expr.cmp;
 import java.util.*;
 
 import com.db4o.nativequery.expr.cmp.ArithmeticExpression.Visitor;
-import com.db4o.nativequery.expr.cmp.ComparisonOperand.ComparisonOperandVisitor;
 
 // FIXME need to carry more info, must know about Integer.class vs. Integer.TYPE
 
