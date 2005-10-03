@@ -3,6 +3,7 @@ package com.db4o.nativequery.optimization.db4o;
 import java.lang.reflect.*;
 import java.util.*;
 
+import com.db4o.foundation.Iterator4;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.query.*;
@@ -40,7 +41,7 @@ public class SODABloatQueryBuilder {
 
 		public void visit(ComparisonExpression expression) {
 			Query subQuery=query;
-			Iterator fieldNames = expression.left().fieldNames();
+			Iterator4 fieldNames = expression.left().fieldNames();
 			while(fieldNames.hasNext()) {
 				subQuery=subQuery.descend((String)fieldNames.next());
 			}
@@ -93,7 +94,7 @@ public class SODABloatQueryBuilder {
 		private Object findValue(FieldValue spec) {
 			Object value=filter;
 			try {
-				Iterator fieldNames=spec.fieldNames();
+				Iterator4 fieldNames=spec.fieldNames();
 				while(fieldNames.hasNext()) {
 					// FIXME declared is not enough
 					Field field=value.getClass().getDeclaredField((String)fieldNames.next());
