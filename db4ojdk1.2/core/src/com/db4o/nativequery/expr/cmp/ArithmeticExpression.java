@@ -53,7 +53,7 @@ public class ArithmeticExpression implements ComparisonOperand {
 		return hc;
 	}
 
-	public void accept(ComparisonOperand.ComparisonOperandVisitor visitor) {
+	public void accept(ComparisonOperandVisitor visitor) {
 		((Visitor)visitor).visit(this);
 	}
 }
