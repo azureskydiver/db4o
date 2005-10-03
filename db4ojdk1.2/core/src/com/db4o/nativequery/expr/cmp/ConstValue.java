@@ -1,6 +1,5 @@
 package com.db4o.nativequery.expr.cmp;
 
-import com.db4o.nativequery.expr.cmp.ArithmeticExpression.Visitor;
 
 public class ConstValue implements ComparisonOperand {	
 	public interface Visitor extends ComparisonOperandVisitor {
