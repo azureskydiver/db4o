@@ -898,6 +898,13 @@
 			</fileset>
 		</copy>
 		
+		<!-- shared native query support -->
+		<copy todir="${dir.sharpen}/db4oj">
+			<fileset dir="../db4ojdk1.2">
+				<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
+			</fileset>
+		</copy>
+		
 		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
 			<fileset dir="../db4on/in/java">
 				<include name="**/*.java" />
