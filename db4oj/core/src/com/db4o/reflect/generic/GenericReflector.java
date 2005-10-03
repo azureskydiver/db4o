@@ -82,7 +82,7 @@ public class GenericReflector implements Reflector, DeepClone {
     }
 
     public int collectionUpdateDepth(ReflectClass candidate) {
-        Iterator4 i = _collectionUpdateDepths.iterator();
+        Iterator4 i = _collectionUpdateDepths.fastIterator();
         while(i.hasNext()){
             Object[] entry = (Object[])i.next();
             ReflectClass claxx = (ReflectClass) entry[0];
@@ -171,7 +171,7 @@ public class GenericReflector implements Reflector, DeepClone {
 
     public boolean isCollection(ReflectClass candidate) {
         candidate = candidate.getDelegate(); 
-        Iterator4 i = _collectionClasses.iterator();
+        Iterator4 i = _collectionClasses.fastIterator();
         while(i.hasNext()){
             ReflectClass claxx = ((ReflectClass)i.next()).getDelegate();
             if(claxx.isAssignableFrom(candidate)){
@@ -206,7 +206,7 @@ public class GenericReflector implements Reflector, DeepClone {
         
         Collection4 classes = new Collection4();
 		
-		Iterator4 i = _classes.iterator();
+		Iterator4 i = _classes.fastIterator();
 		while(i.hasNext()){
             GenericClass clazz = (GenericClass)i.next();
             if(! _stream.i_handlers.ICLASS_INTERNAL.isAssignableFrom(clazz)){
@@ -220,7 +220,7 @@ public class GenericReflector implements Reflector, DeepClone {
         
         ReflectClass[] ret = new ReflectClass[classes.size()];
         int j = 0;
-        i = classes.iterator();
+        i = classes.fastIterator();
         while(i.hasNext()){
             ret[j++] = (ReflectClass)i.next();
         }
@@ -252,7 +252,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		while(_pendingClasses.size() > 0) {
 			Collection4 pending = _pendingClasses;
 			_pendingClasses = new Collection4();
-			Iterator4 i = pending.iterator();
+			Iterator4 i = pending.fastIterator();
 			while(i.hasNext()) {
 				ensureClassRead(((Integer)i.next()).intValue());
 			}

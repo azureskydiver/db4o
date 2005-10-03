@@ -7,7 +7,7 @@ import com.db4o.foundation.*;
 /**
  * 
  */
-class YapClassCollectionIterator extends Iterator4{
+class YapClassCollectionIterator extends Iterator4Impl{
     
     private final YapClassCollection i_collection;
     

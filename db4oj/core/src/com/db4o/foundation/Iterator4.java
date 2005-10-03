@@ -1,28 +1,9 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+package com.db4o.foundation;
 
-package  com.db4o.foundation;
+public interface Iterator4 {
 
+	boolean hasNext();
 
-/**
- * @exclude
- */
-public class Iterator4
-{
-    public static final Iterator4 EMPTY = new EmptyIterator();
-    
-	private List4 _next;
+	Object next();
 
-	public Iterator4(List4 first){
-		_next = first;
-	}
-
-	public boolean hasNext(){
-		return _next != null;
-	}
-
-	public Object next(){
-		Object obj = _next._element;
-		_next = _next._next;
-		return obj;
-	}
 }

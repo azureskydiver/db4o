@@ -5,6 +5,7 @@ package com.db4o.test;
 import com.db4o.*;
 import com.db4o.test.cluster.*;
 import com.db4o.test.constraints.*;
+import com.db4o.test.foundation.Collection4TestCase;
 import com.db4o.test.interfaces.*;
 import com.db4o.test.nativequery.*;
 
@@ -42,6 +43,7 @@ public class AllTestsConfAll extends TestSuite{
 	        CaseInsensitive.class,
 	        Circular1.class,
 	        Circular2.class,
+	        Collection4TestCase.class,
 	        CreateIndex.class,
 	        CreateIndexInherited.class,
 			CustomActivationDepth.class,
