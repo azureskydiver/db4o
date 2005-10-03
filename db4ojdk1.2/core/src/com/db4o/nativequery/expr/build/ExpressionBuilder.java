@@ -1,6 +1,10 @@
 package com.db4o.nativequery.expr.build;
 
-import com.db4o.nativequery.expr.*;
+import com.db4o.nativequery.expr.AndExpression;
+import com.db4o.nativequery.expr.BoolConstExpression;
+import com.db4o.nativequery.expr.Expression;
+import com.db4o.nativequery.expr.NotExpression;
+import com.db4o.nativequery.expr.OrExpression;
 
 public class ExpressionBuilder {
 	/**

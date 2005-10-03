@@ -1,7 +1,8 @@
 package com.db4o.nativequery.expr;
 
-import com.db4o.nativequery.expr.NotExpression.Visitor;
-import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.ComparisonOperand;
+import com.db4o.nativequery.expr.cmp.ComparisonOperator;
+import com.db4o.nativequery.expr.cmp.FieldValue;
 
 public class ComparisonExpression implements Expression {
 	public interface Visitor extends ExpressionVisitor  {

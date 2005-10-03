@@ -1,8 +1,8 @@
 package com.db4o.nativequery.expr.cmp;
 
-import java.util.*;
-
-import com.db4o.nativequery.expr.cmp.ArithmeticExpression.Visitor;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 // FIXME need to carry more info, must know about Integer.class vs. Integer.TYPE
 

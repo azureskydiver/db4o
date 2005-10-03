@@ -1,6 +1,5 @@
 package com.db4o.nativequery.expr;
 
-import com.db4o.nativequery.expr.NotExpression.Visitor;
 
 public class OrExpression implements Expression {
 	public interface Visitor extends ExpressionVisitor  {
