@@ -85,7 +85,7 @@ public class SODABloatMethodBuilder {
 							methodEditor.addInstruction(Opcode.opc_invokestatic,conversions.get(curClass));
 						}
 					} catch (NoSuchFieldException exc) {
-						throw new RuntimeException(exc);
+						throw new RuntimeException(exc.getMessage());
 					}
 				}
 
@@ -155,7 +155,7 @@ public class SODABloatMethodBuilder {
 			methodEditor.addLabel(new Label(2,true));
 			return methodEditor;
 		} catch (ClassNotFoundException exc) {
-			throw new RuntimeException(exc);
+			throw new RuntimeException(exc.getMessage());
 		}
 	}
 	

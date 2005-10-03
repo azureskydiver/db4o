@@ -16,7 +16,7 @@ public class Db4oOnTheFlyEnhancer {
 			Expression expr=new NativeQueryEnhancer().analyze(loader,classEditor,Predicate.PREDICATEMETHOD_NAME);
 			new SODABloatQueryBuilder().optimizeQuery(expr,query,filter);
 		} catch (ClassNotFoundException exc) {
-			throw new RuntimeException(exc);
+			throw new RuntimeException(exc.getMessage());
 		}
 	}
 }

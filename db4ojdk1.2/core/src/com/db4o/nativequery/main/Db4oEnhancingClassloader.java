@@ -72,7 +72,7 @@ public class Db4oEnhancingClassloader extends BloatingClassLoader {
 			}
 			//System.err.println("Bypassing "+ce.name());
 		} catch (Exception exc) {
-			throw new RuntimeException(exc);
+			throw new RuntimeException(exc.getMessage());
 		}
 	}
 }
