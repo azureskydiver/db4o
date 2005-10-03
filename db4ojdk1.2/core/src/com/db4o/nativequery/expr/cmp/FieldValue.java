@@ -73,7 +73,7 @@ public class FieldValue implements ComparisonOperand {
 	}
 	
 	public String toString() {
-		StringBuilder str=new StringBuilder();
+		StringBuffer str=new StringBuffer();
 		str.append(_parentIdx);
 		for (Iterator nameIter = _fieldNames.iterator(); nameIter.hasNext();) {
 			String fieldName = (String) nameIter.next();
