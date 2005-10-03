@@ -131,20 +131,19 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         i_parent = a_parent == null ? this : a_parent;
         initialize0();
         createTransaction();
-        initialize1();
-        
+        initialize1();        
+		loadQueryOptimizer();
+    }
+
+	private void loadQueryOptimizer() {
 		try {
 			Class enhancerClass=Class.forName("com.db4o.nativequery.optimization.db4o.Db4oOnTheFlyEnhancer");
 			enhancer=enhancerClass.newInstance();
 			optimizeMethod=enhancerClass.getMethod("optimize",new Class[]{Query.class,Predicate.class});
-		} catch (Exception exc) {
+		} catch (Throwable ignored) {
 			enhancer=null;
 		}
-		catch (NoClassDefFoundError err) {
-			enhancer=null;
-		}
-        
-    }
+	}
 
 	public void addListener(Db4oQueryExecutionListener listener) {
 		listeners=new List4(listeners,listener);
@@ -1186,25 +1185,25 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
     
 	private Query configureQuery(Predicate predicate) {
-		Query query=query();
-		query.constrain(predicate.extentType());
+		Query q=query();
+		q.constrain(predicate.extentType());
 		if(predicate instanceof Db4oEnhancedFilter) {
-			((Db4oEnhancedFilter)predicate).optimizeQuery(query);
+			((Db4oEnhancedFilter)predicate).optimizeQuery(q);
 			notifyListeners(predicate,PREOPTIMIZED);
-			return query;
+			return q;
 		}
 		try {
 			if(optimizeOnTheFly()&&enhancer!=null) {
-				optimizeMethod.invoke(enhancer,new Object[]{query,predicate});
+				optimizeMethod.invoke(enhancer,new Object[]{q,predicate});
 				notifyListeners(predicate,DYNOPTIMIZED);
-				return query;
+				return q;
 			}
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
-		query.constrain(new PredicateEvaluation(predicate));
+		q.constrain(new PredicateEvaluation(predicate));
 		notifyListeners(predicate,UNOPTIMIZED);
-		return query;
+		return q;
 	}
 
 	private void notifyListeners(Predicate predicate,String msg) {
