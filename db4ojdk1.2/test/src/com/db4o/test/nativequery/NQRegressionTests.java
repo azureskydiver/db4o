@@ -273,12 +273,18 @@ public class NQRegressionTests {
 			}
 		};
 		((YapStream)db).addListener(listener);
-		System.clearProperty(YapStream.PROPERTY_DYNAMICNQ);
+		clearProperty(YapStream.PROPERTY_DYNAMICNQ);
 		Collection raw=db.query(filter);
 		System.setProperty(YapStream.PROPERTY_DYNAMICNQ,"true");
 		Collection optimized=db.query(filter);
 		Test.ensure(raw.equals(optimized));
 		Test.ensureEquals(expectedSize,raw.size());
 		((YapStream)db).clearListeners();
+	}
+
+	private void clearProperty(String property) {
+		Properties properties = System.getProperties();
+		properties.remove(property);
+		System.setProperties(properties);
 	}
 }
