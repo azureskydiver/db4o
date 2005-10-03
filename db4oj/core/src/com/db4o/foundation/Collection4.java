@@ -17,19 +17,15 @@ public class Collection4 implements DeepClone {
     /** number of elements collected */
     public int _size;
 
+    /**
+     * Adds an element to the beginning of this collection.
+     * 
+     * @param element
+     */
     public final void add(Object element) {
         _first = new List4(_first, element);
         _size++;
-    }
-
-	// Not used
-
-    //	final void addAll(Collection4 col) {
-    //		Iterator4 i = col.iterator();
-    //		while (i.hasNext()) {
-    //			add(i.next());
-    //		}
-    //	}
+    }    
 
     public final void addAll(Object[] elements) {
         if (elements != null) {
@@ -42,13 +38,16 @@ public class Collection4 implements DeepClone {
     }
     
     public final void addAll(Collection4 other){
-        if(other != null){
-            Iterator4 i = other.iterator();
-            while(i.hasNext()){
-                add(i.next());
-            }
+        if (other != null){
+            addAll(other.fastIterator());
         }
     }
+    
+	public final void addAll(Iterator4 iterator) {
+		while (iterator.hasNext()) {
+			add(iterator.next());
+		}
+	}
 
     public final void clear() {
         _first = null;
@@ -79,7 +78,7 @@ public class Collection4 implements DeepClone {
      * that equals() the passed object
      */
     public final Object get(Object element) {
-        Iterator4 i = iterator();
+        Iterator4 i = fastIterator();
         while (i.hasNext()) {
         	Object current = i.next();
             if (current.equals(element)) {
@@ -92,7 +91,7 @@ public class Collection4 implements DeepClone {
     public Object deepClone(Object newParent) {
         Collection4 col = new Collection4();
         Object element = null;
-        Iterator4 i = this.iterator();
+        Iterator4 i = this.fastIterator();
         while (i.hasNext()) {
             element = i.next();
             if (element instanceof DeepClone) {
@@ -117,12 +116,29 @@ public class Collection4 implements DeepClone {
         return a_obj;
     }
 
-    public final Iterator4 iterator() {
+    /**
+     * Iterates through the collection in
+     * reversed insertion order which happens
+     * to be the fastest.
+     * 
+     * @return
+     */
+    public final Iterator4 fastIterator() {
         if (_first == null) {
-            return Iterator4.EMPTY;
+            return Iterator4Impl.EMPTY;
         }
-        return new Iterator4(_first);
+        return new Iterator4Impl(_first);
     }
+    
+    /**
+     * Iterates through the collection in the correct
+     * order (the insertion order).
+     * 
+     * @return
+     */
+    public Iterator4 strictIterator() {
+		return new ArrayIterator4(toArray());
+	}
 
     /**
      * removes an object from the Collection
@@ -159,12 +175,18 @@ public class Collection4 implements DeepClone {
      */
     public final void toArray(Object[] a_array) {
         int j = _size;
-        Iterator4 i = iterator();
+        Iterator4 i = fastIterator();
 
-        // backwards, since our linked list is the wrong way arround
+        // backwards, since our linked list is the wrong way around
         while (i.hasNext()) {
             a_array[--j] = i.next();
         }
+    }
+    
+    public final Object[] toArray() {
+    	Object[] array = new Object[_size];
+		toArray(array);
+		return array;
     }
     
     public String toString() {
@@ -174,7 +196,7 @@ public class Collection4 implements DeepClone {
             }
             StringBuffer sb = new StringBuffer();
             sb.append("[");
-            Iterator4 i = iterator();
+            Iterator4 i = fastIterator();
             sb.append(i.next());
             while(i.hasNext()){
                 sb.append(", ");
@@ -185,5 +207,4 @@ public class Collection4 implements DeepClone {
         }
         return super.toString();
     }
-
 }

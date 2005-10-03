@@ -282,7 +282,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
     void doNotInclude() {
         i_include = false;
         if (i_dependants != null) {
-            Iterator4 i = new Iterator4(i_dependants);
+            Iterator4 i = new Iterator4Impl(i_dependants);
             i_dependants = null;
             while (i.hasNext()) {
                 ((QCandidate)i.next()).doNotInclude();

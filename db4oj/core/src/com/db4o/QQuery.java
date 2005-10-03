@@ -88,7 +88,7 @@ public class QQuery implements Query {
                     if (classes.size() == 0) {
                         return null;
                     }
-                    Iterator4 i = classes.iterator();
+                    Iterator4 i = classes.fastIterator();
                     Constraint constr = null;
                     while (i.hasNext()) {
                         YapClass yapClass = (YapClass)i.next();
@@ -128,7 +128,7 @@ public class QQuery implements Query {
                 }
 
                 if (col.size() == 1) {
-                    return (Constraint)col.iterator().next();
+                    return (Constraint)col.fastIterator().next();
                 }
                 Constraint[] constraintArray = new Constraint[col.size()];
                 col.toArray(constraintArray);
@@ -327,7 +327,7 @@ public class QQuery implements Query {
             YapClass yc = qcon.getYapClass();
             if (yc != null) {
                 if (candidateCollection != null) {
-                    Iterator4 j = new Iterator4(candidateCollection);
+                    Iterator4 j = new Iterator4Impl(candidateCollection);
                     while (j.hasNext()) {
                         QCandidates candidates = (QCandidates)j.next();
                         if (candidates.tryAddConstraint(qcon)) {
@@ -354,7 +354,7 @@ public class QQuery implements Query {
 
         if (candidateCollection != null) {
 
-            i = new Iterator4(candidateCollection);
+            i = new Iterator4Impl(candidateCollection);
             while (i.hasNext()) {
                 ((QCandidates)i.next()).execute();
             }
@@ -367,7 +367,7 @@ public class QQuery implements Query {
                 result.checkDuplicates();
             }
 
-            i = new Iterator4(candidateCollection);
+            i = new Iterator4Impl(candidateCollection);
             while (i.hasNext()) {
                 QCandidates candidates = (QCandidates)i.next();
                 if (topLevel) {
@@ -385,7 +385,7 @@ public class QQuery implements Query {
                             if (candidate.include()) {
                                 TreeInt ids = new TreeInt(candidate.i_key);
                                 final TreeInt[] idsNew = new TreeInt[1];
-                                Iterator4 itPath = fieldPath.iterator();
+                                Iterator4 itPath = fieldPath.fastIterator();
                                 while (itPath.hasNext()) {
                                     idsNew[0] = null;
                                     final String fieldName = (String) (itPath.next());
@@ -435,7 +435,7 @@ public class QQuery implements Query {
     }
     
     Iterator4 iterateConstraints(){
-        return i_constraints.iterator();
+        return i_constraints.fastIterator();
     }
 
     public Query orderAscending() {
@@ -479,7 +479,7 @@ public class QQuery implements Query {
     }
 
     Constraint toConstraint(final Collection4 constraints) {
-        Iterator4 i = constraints.iterator();
+        Iterator4 i = constraints.fastIterator();
         if (constraints.size() == 1) {
             return (Constraint)i.next();
         } else if (constraints.size() > 0) {

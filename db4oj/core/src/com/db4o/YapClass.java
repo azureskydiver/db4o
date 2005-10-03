@@ -118,7 +118,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                     field = new YapField(this, fields[i], wrapper);
 
                     found = false;
-                    m = members.iterator();
+                    m = members.fastIterator();
                     while (m.hasNext()) {
                         if (((YapField)m.next()).equals(field)) {
                             found = true;

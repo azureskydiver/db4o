@@ -131,7 +131,7 @@ public final class QCandidates implements Visitor4 {
     	
     	// Step 4: Add them to our tree again.
     	final Tree[] newTree = { null };
-    	Iterator4 i = col.iterator();
+    	Iterator4 i = col.fastIterator();
     	while(i.hasNext()){
     		QCandidate candidate = (QCandidate) i.next();
     		candidate.i_preceding = null;
@@ -232,9 +232,9 @@ public final class QCandidates implements Visitor4 {
     
     public Iterator4 iterateConstraints(){
         if(i_constraints == null){
-            return Iterator4.EMPTY;
+            return Iterator4Impl.EMPTY;
         }
-        return new Iterator4(i_constraints);
+        return new Iterator4Impl(i_constraints);
     }
 
     void loadFromClassIndex() {
