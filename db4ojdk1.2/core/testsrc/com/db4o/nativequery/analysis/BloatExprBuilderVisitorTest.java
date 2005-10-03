@@ -64,7 +64,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFieldIntEqualsComp() throws Exception {
-		assertComparison("sampleFieldIntEqualsComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleFieldIntEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleFieldIntNotEqualsComp(Data data) {
@@ -72,7 +72,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFieldIntNotEqualsComp() throws Exception {
-		assertComparison("sampleIntFieldNotEqualsComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.EQUALS,true);
+		assertComparison("sampleIntFieldNotEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.EQUALS,true);
 	}
 
 	boolean sampleIntFieldEqualsComp(Data data) {
@@ -80,7 +80,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntFieldEqualsComp() throws Exception {
-		assertComparison("sampleIntFieldEqualsComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleIntFieldEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleIntFieldNotEqualsComp(Data data) {
@@ -88,7 +88,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntFieldNotEqualsComp() throws Exception {
-		assertComparison("sampleIntFieldNotEqualsComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.EQUALS,true);
+		assertComparison("sampleIntFieldNotEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.EQUALS,true);
 	}
 
 	// object identity
@@ -108,7 +108,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFieldIntSmallerComp() throws Exception {
-		assertComparison("sampleFieldIntSmallerComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.SMALLER,false);
+		assertComparison("sampleFieldIntSmallerComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
 	boolean sampleFieldIntGreaterComp(Data data) {
@@ -116,7 +116,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFieldIntGreaterComp() throws Exception {
-		assertComparison("sampleFieldIntGreaterComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.GREATER,false);
+		assertComparison("sampleFieldIntGreaterComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,false);
 	}
 
 	boolean sampleFieldIntSmallerEqualsComp(Data data) {
@@ -124,7 +124,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFieldIntSmallerEqualsComp() throws Exception {
-		assertComparison("sampleFieldIntSmallerEqualsComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.GREATER,true);
+		assertComparison("sampleFieldIntSmallerEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,true);
 	}
 
 	boolean sampleFieldIntGreaterEqualsComp(Data data) {
@@ -132,7 +132,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFieldIntGreaterEqualsComp() throws Exception {
-		assertComparison("sampleFieldIntGreaterEqualsComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.SMALLER,true);
+		assertComparison("sampleFieldIntGreaterEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,true);
 	}
 
 	boolean sampleIntFieldSmallerComp(Data data) {
@@ -140,7 +140,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntFieldSmallerComp() throws Exception {
-		assertComparison("sampleIntFieldSmallerComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.SMALLER,true);
+		assertComparison("sampleIntFieldSmallerComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,true);
 	}
 
 	boolean sampleIntFieldGreaterComp(Data data) {
@@ -148,7 +148,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntFieldGreaterComp() throws Exception {
-		assertComparison("sampleIntFieldGreaterComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.GREATER,true);
+		assertComparison("sampleIntFieldGreaterComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,true);
 	}
 
 	boolean sampleIntFieldSmallerEqualsComp(Data data) {
@@ -156,7 +156,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntFieldSmallerEqualsComp() throws Exception {
-		assertComparison("sampleIntFieldSmallerEqualsComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.GREATER,false);
+		assertComparison("sampleIntFieldSmallerEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,false);
 	}
 
 	boolean sampleIntFieldGreaterEqualsComp(Data data) {
@@ -164,7 +164,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntFieldGreaterEqualsComp() throws Exception {
-		assertComparison("sampleIntFieldGreaterEqualsComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.SMALLER,false);
+		assertComparison("sampleIntFieldGreaterEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
 	// string equality
@@ -192,7 +192,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testGetterIntEqualsComp() throws Exception {
-		assertComparison("sampleGetterIntEqualsComp",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleGetterIntEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleGetterStringEqualsComp(Data data) {
@@ -218,7 +218,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testGetterCascadeIntFieldEqualsComp() throws Exception {
-		assertComparison("sampleGetterCascadeIntFieldEqualsComp",new String[]{DATA_FIELDNAME,INT_FIELDNAME},Integer.valueOf(INT_CMPVAL),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleGetterCascadeIntFieldEqualsComp",new String[]{DATA_FIELDNAME,INT_FIELDNAME},new Integer(INT_CMPVAL),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleCascadeStringFieldEqualsComp(Data data) {
@@ -270,7 +270,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 	
 	public void testIntEqualsNot() throws Exception {
-		assertComparison("sampleIntEqualsNot",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.EQUALS,true);
+		assertComparison("sampleIntEqualsNot",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.EQUALS,true);
 	}
 
 	boolean sampleIntNotEqualsNot(Data data) {
@@ -278,7 +278,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 	
 	public void testIntNotEqualsNot() throws Exception {
-		assertComparison("sampleIntNotEqualsNot",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleIntNotEqualsNot",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleIntGreaterNot(Data data) {
@@ -286,7 +286,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 	
 	public void testIntGreaterNot() throws Exception {
-		assertComparison("sampleIntGreaterNot",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.GREATER,true);
+		assertComparison("sampleIntGreaterNot",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,true);
 	}
 
 	boolean sampleIntSmallerEqualsNot(Data data) {
@@ -294,7 +294,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 	
 	public void testIntSmallerEqualsNot() throws Exception {
-		assertComparison("sampleIntSmallerEqualsNot",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.GREATER,false);
+		assertComparison("sampleIntSmallerEqualsNot",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,false);
 	}
 
 	boolean sampleIntNotNot(Data data) {
@@ -302,7 +302,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 	
 	public void testIntNotNot() throws Exception {
-		assertComparison("sampleIntNotNot",INT_FIELDNAME,Integer.valueOf(INT_CMPVAL),ComparisonOperator.SMALLER,false);
+		assertComparison("sampleIntNotNot",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
 	// conjunctions
@@ -313,8 +313,8 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	
 	public void testIntIntAnd() throws Exception {
 		AndExpression expr = (AndExpression) expression("sampleIntIntAnd");
-		assertComparison(expr.left(),new String[]{"id"},Integer.valueOf(42),ComparisonOperator.GREATER,false);
-		assertComparison(expr.right(),new String[]{"id"},Integer.valueOf(100),ComparisonOperator.SMALLER,false);
+		assertComparison(expr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.GREATER,false);
+		assertComparison(expr.right(),new String[]{"id"},new Integer(100),ComparisonOperator.SMALLER,false);
 	}
 
 	boolean sampleStringIntOr(Data data) {
@@ -326,7 +326,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison(expr.left(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,false);
 		AndExpression right=(AndExpression)expr.right();
 		assertComparison(right.left(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,true);
-		assertComparison(right.right(),new String[]{"id"},Integer.valueOf(42),ComparisonOperator.EQUALS,false);
+		assertComparison(right.right(),new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleIntStringNotOr(Data data) {
@@ -335,7 +335,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	public void testIntStringNotOr() throws Exception {
 		AndExpression expr = (AndExpression)expression("sampleIntStringNotOr");
-		assertComparison(expr.left(),new String[]{"id"},Integer.valueOf(42),ComparisonOperator.EQUALS,true);
+		assertComparison(expr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,true);
 		assertComparison(expr.right(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,true);
 	}
 	
@@ -346,7 +346,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 	
 	public void testSanityIntAdd() throws Exception {
-		assertComparison("sampleSanityIntAdd",INT_FIELDNAME,Integer.valueOf(2*INT_CMPVAL),ComparisonOperator.SMALLER,false);
+		assertComparison("sampleSanityIntAdd",INT_FIELDNAME,new Integer(2*INT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
 	boolean sampleSanityIntMultiply(Data data) {
@@ -354,7 +354,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 	
 	public void testSanityIntMultiply() throws Exception {
-		assertComparison("sampleSanityIntMultiply",INT_FIELDNAME,Integer.valueOf(2*INT_CMPVAL),ComparisonOperator.SMALLER,false);
+		assertComparison("sampleSanityIntMultiply",INT_FIELDNAME,new Integer(2*INT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
 	boolean sampleMemberIntMultiply(Data data) {
