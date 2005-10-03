@@ -42,20 +42,20 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	static {
 		BUILDERS=new HashMap();
-		BUILDERS.put(Integer.valueOf(IfStmt.EQ),new ComparisonBuilder(ComparisonOperator.EQUALS));
-		BUILDERS.put(Integer.valueOf(IfStmt.NE),new NegateComparisonBuilder(ComparisonOperator.EQUALS));
-		BUILDERS.put(Integer.valueOf(IfStmt.LT),new ComparisonBuilder(ComparisonOperator.SMALLER));
-		BUILDERS.put(Integer.valueOf(IfStmt.GT),new ComparisonBuilder(ComparisonOperator.GREATER));
-		BUILDERS.put(Integer.valueOf(IfStmt.LE),new NegateComparisonBuilder(ComparisonOperator.GREATER));
-		BUILDERS.put(Integer.valueOf(IfStmt.GE),new NegateComparisonBuilder(ComparisonOperator.SMALLER));
+		BUILDERS.put(new Integer(IfStmt.EQ),new ComparisonBuilder(ComparisonOperator.EQUALS));
+		BUILDERS.put(new Integer(IfStmt.NE),new NegateComparisonBuilder(ComparisonOperator.EQUALS));
+		BUILDERS.put(new Integer(IfStmt.LT),new ComparisonBuilder(ComparisonOperator.SMALLER));
+		BUILDERS.put(new Integer(IfStmt.GT),new ComparisonBuilder(ComparisonOperator.GREATER));
+		BUILDERS.put(new Integer(IfStmt.LE),new NegateComparisonBuilder(ComparisonOperator.GREATER));
+		BUILDERS.put(new Integer(IfStmt.GE),new NegateComparisonBuilder(ComparisonOperator.SMALLER));
 		
 		OP_SYMMETRY=new HashMap();
-		OP_SYMMETRY.put(Integer.valueOf(IfStmt.EQ),Integer.valueOf(IfStmt.EQ));
-		OP_SYMMETRY.put(Integer.valueOf(IfStmt.NE),Integer.valueOf(IfStmt.NE));
-		OP_SYMMETRY.put(Integer.valueOf(IfStmt.LT),Integer.valueOf(IfStmt.GE));
-		OP_SYMMETRY.put(Integer.valueOf(IfStmt.GT),Integer.valueOf(IfStmt.LE));
-		OP_SYMMETRY.put(Integer.valueOf(IfStmt.LE),Integer.valueOf(IfStmt.GT));
-		OP_SYMMETRY.put(Integer.valueOf(IfStmt.GE),Integer.valueOf(IfStmt.LT));
+		OP_SYMMETRY.put(new Integer(IfStmt.EQ),new Integer(IfStmt.EQ));
+		OP_SYMMETRY.put(new Integer(IfStmt.NE),new Integer(IfStmt.NE));
+		OP_SYMMETRY.put(new Integer(IfStmt.LT),new Integer(IfStmt.GE));
+		OP_SYMMETRY.put(new Integer(IfStmt.GT),new Integer(IfStmt.LE));
+		OP_SYMMETRY.put(new Integer(IfStmt.LE),new Integer(IfStmt.GT));
+		OP_SYMMETRY.put(new Integer(IfStmt.GE),new Integer(IfStmt.LT));
 	}
 	
 	private ClassFileLoader loader;
@@ -83,7 +83,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	private ComparisonBuilder builder(int op) {
-		return (ComparisonBuilder)BUILDERS.get(Integer.valueOf(op));
+		return (ComparisonBuilder)BUILDERS.get(new Integer(op));
 	}
 	
 	public Expression expression() {
@@ -131,7 +131,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			Object swap=left;
 			left=right;
 			right=swap;
-			op=((Integer)OP_SYMMETRY.get(Integer.valueOf(op))).intValue();
+			op=((Integer)OP_SYMMETRY.get(new Integer(op))).intValue();
 		}
 		if(!(left instanceof FieldValue)||!(right instanceof ComparisonOperand)) {
 			expression(null);
@@ -216,7 +216,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	public void visitLocalExpr(LocalExpr expr) {
 		super.visitLocalExpr(expr);
-		retval(Integer.valueOf(expr.index()));
+		retval(new Integer(expr.index()));
 	}
 	
 	public void visitBlock(Block block) {

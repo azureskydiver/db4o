@@ -75,7 +75,7 @@ public class SODABloatQueryBuilder {
 							result=left/right;
 							break;
 					}
-					value[0]=Integer.valueOf(result);
+					value[0]=new Integer(result);
 				}
 				
 			});
