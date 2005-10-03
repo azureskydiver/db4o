@@ -15,8 +15,8 @@ import com.db4o.nativequery.expr.cmp.*;
 public class BloatExprBuilderVisitor extends TreeVisitor {
 	private final static ExpressionBuilder BUILDER=new ExpressionBuilder();
 
-	private final static Map BUILDERS;
-	private final static Map OP_SYMMETRY;
+	private final static Map BUILDERS=new HashMap();
+	private final static Map OP_SYMMETRY=new HashMap();
 	
 	private static class ComparisonBuilder {
 		private ComparisonOperator op;
@@ -41,7 +41,6 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	static {
-		BUILDERS=new HashMap();
 		BUILDERS.put(new Integer(IfStmt.EQ),new ComparisonBuilder(ComparisonOperator.EQUALS));
 		BUILDERS.put(new Integer(IfStmt.NE),new NegateComparisonBuilder(ComparisonOperator.EQUALS));
 		BUILDERS.put(new Integer(IfStmt.LT),new ComparisonBuilder(ComparisonOperator.SMALLER));
@@ -49,7 +48,6 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		BUILDERS.put(new Integer(IfStmt.LE),new NegateComparisonBuilder(ComparisonOperator.GREATER));
 		BUILDERS.put(new Integer(IfStmt.GE),new NegateComparisonBuilder(ComparisonOperator.SMALLER));
 		
-		OP_SYMMETRY=new HashMap();
 		OP_SYMMETRY.put(new Integer(IfStmt.EQ),new Integer(IfStmt.EQ));
 		OP_SYMMETRY.put(new Integer(IfStmt.NE),new Integer(IfStmt.NE));
 		OP_SYMMETRY.put(new Integer(IfStmt.LT),new Integer(IfStmt.GE));
