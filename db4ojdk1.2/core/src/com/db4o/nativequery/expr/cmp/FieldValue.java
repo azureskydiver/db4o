@@ -53,10 +53,13 @@ public class FieldValue implements ComparisonOperand {
 			return false;
 		}
 		FieldValue casted = (FieldValue) other;
+		
+		// TODO: implement Collection4#equals to give by-value semantics
 		return _fieldNames.equals(casted._fieldNames)&&_parentIdx==casted._parentIdx;
 	}
 	
 	public int hashCode() {
+		// TODO: implement Collection4#hashCode to give by-value semantics
 		return _fieldNames.hashCode()*29+_parentIdx;
 	}
 	
