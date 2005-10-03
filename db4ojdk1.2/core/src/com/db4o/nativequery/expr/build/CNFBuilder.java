@@ -15,8 +15,8 @@ public class CNFBuilder {
 		return firstVisitor.expression;
 	}
 	
-	private class FirstStepVisitor implements DiscriminatingExpressionVisitor {
-		private Expression expression;
+	private static class FirstStepVisitor implements DiscriminatingExpressionVisitor {
+		Expression expression;
 		
 		public void visit(AndExpression expression) {
 			expression.left().accept(this);
