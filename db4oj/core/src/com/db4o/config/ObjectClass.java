@@ -203,7 +203,7 @@ public interface ObjectClass {
      * - any other object to be used as a template.<br><br>
      * This method will be ignored if the database file already contains meta
      * information for clazz.
-     * @param class name, Class object, or example object.<br><br>
+     * @param clazz class name, Class object, or example object.<br><br>
      */
     public void readAs(Object clazz);
 
