@@ -1,8 +1,9 @@
 package com.db4o.nativequery.expr.cmp;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import com.db4o.foundation.Collection4;
+import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.Iterator4Impl;
+import com.db4o.foundation.List4;
 
 // FIXME need to carry more info, must know about Integer.class vs. Integer.TYPE
 
@@ -14,33 +15,21 @@ public class FieldValue implements ComparisonOperand {
 	}
 
 	private int _parentIdx;
-	private List _fieldNames;
+	private Collection4 _fieldNames = new Collection4();
 
 	public FieldValue(int parentIdx,String name) {
 		this._parentIdx=parentIdx;
-		_fieldNames = new ArrayList();
 		descend(name);
 	}
-
-	public FieldValue(int parentIdx,List fieldNames) {
-		this._parentIdx=parentIdx;
-		this._fieldNames = new ArrayList(fieldNames);
-	}
-
+	
 	public FieldValue(int parentIdx,String[] fieldNames) {
 		this._parentIdx=parentIdx;
-		this._fieldNames=new ArrayList();
-		for (int fieldIdx = 0; fieldIdx < fieldNames.length; fieldIdx++) {
-			descend(fieldNames[fieldIdx]);
-		}
+		_fieldNames.addAll(fieldNames);
 	}
 
-	public FieldValue(int parentIdx,Iterator nameIter) {
+	public FieldValue(int parentIdx, Iterator4 fieldNames) {
 		this._parentIdx=parentIdx;
-		_fieldNames = new ArrayList();
-		while(nameIter.hasNext()) {
-			descend((String)nameIter.next());
-		}
+		_fieldNames.addAll(fieldNames);
 	}
 
 	public FieldValue descend(String fieldName) {
@@ -48,8 +37,8 @@ public class FieldValue implements ComparisonOperand {
 		return this;
 	}
 
-	public Iterator fieldNames() {
-		return _fieldNames.iterator();
+	public Iterator4 fieldNames() {
+		return _fieldNames.strictIterator();
 	}
 
 	public int parentIdx() {
@@ -74,7 +63,7 @@ public class FieldValue implements ComparisonOperand {
 	public String toString() {
 		StringBuffer str=new StringBuffer();
 		str.append(_parentIdx);
-		for (Iterator nameIter = _fieldNames.iterator(); nameIter.hasNext();) {
+		for (Iterator4 nameIter = fieldNames(); nameIter.hasNext();) {
 			String fieldName = (String) nameIter.next();
 			str.append('.');
 			str.append(fieldName);

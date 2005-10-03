@@ -6,6 +6,7 @@ import junit.framework.*;
 import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.file.*;
 
+import com.db4o.foundation.Iterator4;
 import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
@@ -444,7 +445,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertEquals(op, cmpExpr.op());
 		FieldValue fieldValue=(FieldValue) cmpExpr.left();
 		assertEquals(1,fieldValue.parentIdx());
-		Iterator foundNames=fieldValue.fieldNames();
+		Iterator4 foundNames=fieldValue.fieldNames();
 		int foundFieldIdx=0;
 		while(foundNames.hasNext()) {
 			assertEquals(fieldNames[foundFieldIdx], (String)foundNames.next());
