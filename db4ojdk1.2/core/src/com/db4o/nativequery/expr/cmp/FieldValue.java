@@ -15,17 +15,17 @@ public class FieldValue implements ComparisonOperand {
 	private Collection4 _fieldNames = new Collection4();
 
 	public FieldValue(int parentIdx,String name) {
-		this._parentIdx=parentIdx;
+		_parentIdx=parentIdx;
 		descend(name);
 	}
 	
 	public FieldValue(int parentIdx,String[] fieldNames) {
-		this._parentIdx=parentIdx;
+		_parentIdx=parentIdx;
 		_fieldNames.addAll(fieldNames);
 	}
 
 	public FieldValue(int parentIdx, Iterator4 fieldNames) {
-		this._parentIdx=parentIdx;
+		_parentIdx=parentIdx;
 		_fieldNames.addAll(fieldNames);
 	}
 
