@@ -902,6 +902,7 @@
 		<copy todir="${dir.sharpen}/db4oj">
 			<fileset dir="../db4ojdk1.2">
 				<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
+				<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
 			</fileset>
 		</copy>
 		

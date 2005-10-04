@@ -4,6 +4,7 @@ import junit.framework.*;
 
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.optimization.SODAQueryBuilder;
 import com.db4o.query.*;
 
 public class SODABloatQueryBuilderTest extends TestCase {
@@ -52,7 +53,7 @@ public class SODABloatQueryBuilderTest extends TestCase {
 
 		builder.replay();
 		
-		new SODABloatQueryBuilder().optimizeQuery(expr,query,null);
+		new SODAQueryBuilder().optimizeQuery(expr,query,null);
 
 		builder.verify();
 	}

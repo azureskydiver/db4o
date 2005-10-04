@@ -1,4 +1,4 @@
-package com.db4o.nativequery.optimization.db4o;
+package com.db4o.nativequery.optimization;
 
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
@@ -14,7 +14,7 @@ public class Db4oOnTheFlyEnhancer {
 		try {
 			ClassEditor classEditor=new ClassEditor(null,loader.loadClass(filter.getClass().getName()));
 			Expression expr=new NativeQueryEnhancer().analyze(loader,classEditor,Predicate.PREDICATEMETHOD_NAME);
-			new SODABloatQueryBuilder().optimizeQuery(expr,query,filter);
+			new SODAQueryBuilder().optimizeQuery(expr,query,filter);
 		} catch (ClassNotFoundException exc) {
 			throw new RuntimeException(exc.getMessage());
 		}

@@ -137,7 +137,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
 	private void loadQueryOptimizer() {
 		try {
-			Class enhancerClass=Class.forName("com.db4o.nativequery.optimization.db4o.Db4oOnTheFlyEnhancer");
+			Class enhancerClass=Class.forName("com.db4o.nativequery.optimization.Db4oOnTheFlyEnhancer");
 			enhancer=enhancerClass.newInstance();
 			optimizeMethod=enhancerClass.getMethod("optimize",new Class[]{Query.class,Predicate.class});
 		} catch (Throwable ignored) {

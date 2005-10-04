@@ -1,4 +1,4 @@
-package com.db4o.nativequery.optimization.db4o;
+package com.db4o.nativequery.optimization;
 
 import java.util.*;
 

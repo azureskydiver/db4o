@@ -9,7 +9,7 @@ import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 import EDU.purdue.cs.bloat.reflect.*;
 
-import com.db4o.nativequery.optimization.db4o.*;
+import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 
 // TODO: implement 'good guy'/'bad guy' mode switch for delegation?
