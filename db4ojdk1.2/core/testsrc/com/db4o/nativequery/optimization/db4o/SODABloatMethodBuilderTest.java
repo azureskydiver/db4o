@@ -9,6 +9,7 @@ import EDU.purdue.cs.bloat.tree.*;
 import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.optimization.SODABloatMethodBuilder;
 
 public class SODABloatMethodBuilderTest extends TestCase {
 	private final static String[] FIELDNAMES={"foo","baz"};

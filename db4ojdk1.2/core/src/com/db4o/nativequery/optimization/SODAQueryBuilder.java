@@ -1,20 +1,20 @@
-package com.db4o.nativequery.optimization.db4o;
+package com.db4o.nativequery.optimization;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
 
+import com.db4o.Platform4;
 import com.db4o.foundation.Iterator4;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.query.*;
 
-public class SODABloatQueryBuilder {		
-	private class SODABloatQueryVisitor implements DiscriminatingExpressionVisitor {
+public class SODAQueryBuilder {		
+	private static class SODAQueryVisitor implements DiscriminatingExpressionVisitor {
 		private Object _predicate;
 		private Query _query;
 		private Constraint _constraint;
 
-		private SODABloatQueryVisitor(Query query, Object predicate) {
+		SODAQueryVisitor(Query query, Object predicate) {
 			_query=query;
 			_predicate = predicate;
 		}
@@ -98,7 +98,7 @@ public class SODABloatQueryBuilder {
 				while(fieldNames.hasNext()) {
 					// FIXME declared is not enough
 					Field field=value.getClass().getDeclaredField((String)fieldNames.next());
-					field.setAccessible(true);
+					Platform4.setAccessible(field);
 					value=field.get(value);
 				}
 				return value;
@@ -116,6 +116,6 @@ public class SODABloatQueryBuilder {
 	}
 	
 	public void optimizeQuery(Expression expr, Query query, Object predicate) {
-		expr.accept(new SODABloatQueryVisitor(query, predicate));
+		expr.accept(new SODAQueryVisitor(query, predicate));
 	}	
 }

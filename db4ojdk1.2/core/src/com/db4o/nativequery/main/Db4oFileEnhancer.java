@@ -6,7 +6,7 @@ import java.net.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 
-import com.db4o.nativequery.optimization.db4o.*;
+import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 
 public class Db4oFileEnhancer {
