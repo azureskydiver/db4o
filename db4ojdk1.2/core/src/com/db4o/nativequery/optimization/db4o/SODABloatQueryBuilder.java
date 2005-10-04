@@ -10,21 +10,21 @@ import com.db4o.query.*;
 
 public class SODABloatQueryBuilder {		
 	private class SODABloatQueryVisitor implements DiscriminatingExpressionVisitor {
-		private Predicate filter;
-		private Query query;
-		private Constraint constraint;
+		private Object _predicate;
+		private Query _query;
+		private Constraint _constraint;
 
-		private SODABloatQueryVisitor(Query query,Predicate filter) {
-			this.query=query;
-			this.filter=filter;
+		private SODABloatQueryVisitor(Query query, Object predicate) {
+			_query=query;
+			_predicate = predicate;
 		}
 		
 		public void visit(AndExpression expression) {
 			expression.left().accept(this);
-			Constraint left=constraint;
+			Constraint left=_constraint;
 			expression.right().accept(this);
-			left.and(constraint);
-			constraint=left;
+			left.and(_constraint);
+			_constraint=left;
 		}
 
 		public void visit(BoolConstExpression expression) {
@@ -33,14 +33,14 @@ public class SODABloatQueryBuilder {
 
 		public void visit(OrExpression expression) {
 			expression.left().accept(this);
-			Constraint left=constraint;
+			Constraint left=_constraint;
 			expression.right().accept(this);
-			left.or(constraint);
-			constraint=left;
+			left.or(_constraint);
+			_constraint=left;
 		}
 
 		public void visit(ComparisonExpression expression) {
-			Query subQuery=query;
+			Query subQuery=_query;
 			Iterator4 fieldNames = expression.left().fieldNames();
 			while(fieldNames.hasNext()) {
 				subQuery=subQuery.descend((String)fieldNames.next());
@@ -80,19 +80,19 @@ public class SODABloatQueryBuilder {
 				}
 				
 			});
-			constraint=subQuery.constrain(value[0]);
+			_constraint=subQuery.constrain(value[0]);
 			if(!expression.op().equals(ComparisonOperator.EQUALS)) {
 				if(expression.op().equals(ComparisonOperator.GREATER)) {
-					constraint.greater();
+					_constraint.greater();
 				}
 				else {
-					constraint.smaller();
+					_constraint.smaller();
 				}
 			}
 		}
 
 		private Object findValue(FieldValue spec) {
-			Object value=filter;
+			Object value=_predicate;
 			try {
 				Iterator4 fieldNames=spec.fieldNames();
 				while(fieldNames.hasNext()) {
@@ -110,12 +110,12 @@ public class SODABloatQueryBuilder {
 
 		public void visit(NotExpression expression) {
 			expression.expr().accept(this);
-			constraint.not();
+			_constraint.not();
 		}
 
 	}
 	
-	public void optimizeQuery(Expression expr,Query query,Predicate filter) {
-		expr.accept(new SODABloatQueryVisitor(query,filter));
+	public void optimizeQuery(Expression expr, Query query, Object predicate) {
+		expr.accept(new SODABloatQueryVisitor(query, predicate));
 	}	
 }
