@@ -163,7 +163,7 @@ namespace com.db4o.test.soda
 			if (failedTestClasses.size() > 0) 
 			{
 				j4o.lang.JavaSystem.err.println("\nFailed test classes:\n");
-				Iterator4 i1 = failedTestClasses.iterator();
+				Iterator4 i1 = failedTestClasses.fastIterator();
 				while (i1.hasNext()) 
 				{
 					j4o.lang.JavaSystem.err.println(j4o.lang.Class.getClassForObject(i1.next()).getName());

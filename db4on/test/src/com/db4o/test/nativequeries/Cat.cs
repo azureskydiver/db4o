@@ -38,7 +38,7 @@ namespace com.db4o.test.nativequeries
                 ensureContains(objectSet, "Zora");
             }
 		}
-    
+		
 		public class CatPredicate : Predicate
 		{
 			public bool match(Cat cat)

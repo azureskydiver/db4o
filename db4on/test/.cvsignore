@@ -3,3 +3,6 @@ obj
 *.user
 *.suo
 _ReSharper.db4o-net-test
+_ReSharper.db4o-compact-test
+db4o-compact-test.resharperoptions
+db4o-net-test.resharperoptions
