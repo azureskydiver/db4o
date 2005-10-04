@@ -16,7 +16,7 @@ namespace com.db4o.test.types {
          if (i_compare == null) {
             i_compare = new Collection4();
          } else {
-            Iterator4 i = i_compare.iterator();
+            Iterator4 i = i_compare.fastIterator();
             while (i.hasNext()) {
                if (i.next() == a_compare) {
                   return false;
