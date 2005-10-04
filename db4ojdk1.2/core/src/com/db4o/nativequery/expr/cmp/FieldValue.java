@@ -1,9 +1,6 @@
 package com.db4o.nativequery.expr.cmp;
 
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.Iterator4;
-import com.db4o.foundation.Iterator4Impl;
-import com.db4o.foundation.List4;
+import com.db4o.foundation.*;
 
 // FIXME need to carry more info, must know about Integer.class vs. Integer.TYPE
 
@@ -55,12 +52,27 @@ public class FieldValue implements ComparisonOperand {
 		FieldValue casted = (FieldValue) other;
 		
 		// TODO: implement Collection4#equals to give by-value semantics
-		return _fieldNames.equals(casted._fieldNames)&&_parentIdx==casted._parentIdx;
+		if(_fieldNames.size()!=casted._fieldNames.size()) {
+			return false;
+		}
+		Iterator4 firstIter=_fieldNames.fastIterator();
+		Iterator4 secondIter=casted._fieldNames.fastIterator();
+		while(firstIter.hasNext()) {
+			if(!firstIter.next().equals(secondIter.next())) {
+				return false;
+			}
+		}
+		return _parentIdx==casted._parentIdx;
 	}
 	
 	public int hashCode() {
 		// TODO: implement Collection4#hashCode to give by-value semantics
-		return _fieldNames.hashCode()*29+_parentIdx;
+		int hashCode=0;
+		Iterator4 firstIter=_fieldNames.fastIterator();
+		while(firstIter.hasNext()) {
+			hashCode*=29+firstIter.next().hashCode();
+		}
+		return hashCode*29+_parentIdx;
 	}
 	
 	public String toString() {
