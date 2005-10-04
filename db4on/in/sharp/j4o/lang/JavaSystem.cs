@@ -43,6 +43,12 @@ namespace j4o.lang {
             char[] chars = str.Substring(start, end - start).ToCharArray();
             Array.Copy(chars, 0, destination, 0, chars.Length);
         }
+        
+        public static string getStringValueOf(object value) {
+        	return null == value
+        		? "null"
+        		: value.ToString();
+        }
 
         public static int getLengthOf(String str) {
             return str.Length;
