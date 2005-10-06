@@ -1,6 +1,6 @@
 package com.db4o.foundation;
 
-public class ArrayIterator4 implements Iterator4 {
+public class ArrayIterator4 implements IIterator4 {
 	
 	Object[] _elements;
 	int _next;

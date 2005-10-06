@@ -200,7 +200,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
             // TODO: Optimize!  A lightweight int array would be faster.
 
-            Iterator4 i = new Iterator4Impl(i_stillToActivate);
+            IIterator4 i = new Iterator4(i_stillToActivate);
             i_stillToActivate = null;
 
             while (i.hasNext()) {
@@ -284,7 +284,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     final void checkNeededUpdates() {
         if (i_needsUpdate != null) {
-            Iterator4 i = new Iterator4Impl(i_needsUpdate);
+            IIterator4 i = new Iterator4(i_needsUpdate);
             while (i.hasNext()) {
                 YapClass yapClass = (YapClass) i.next();
                 yapClass.setStateDirty();
@@ -440,7 +440,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     private final void deactivate2(Object a_activate, int a_depth) {
         stillToDeactivate(a_activate, a_depth, true);
         while (i_stillToDeactivate != null) {
-            Iterator4 i = new Iterator4Impl(i_stillToDeactivate);
+            IIterator4 i = new Iterator4(i_stillToDeactivate);
             i_stillToDeactivate = null;
             while (i.hasNext()) {
                 ((YapObject) i.next()).deactivate(i_trans, ((Integer) i.next())
@@ -1207,7 +1207,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 	}
 
 	private void notifyListeners(Predicate predicate,String msg) {
-		for(Iterator4 iter=new Iterator4Impl(listeners);iter.hasNext();/**/) {
+		for(IIterator4 iter=new Iterator4(listeners);iter.hasNext();/**/) {
 			((Db4oQueryExecutionListener)iter.next()).notifyQueryExecuted(predicate,msg);
 		}
 	}
@@ -1333,7 +1333,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     protected boolean rename1(Config4Impl config) {
         boolean renamedOne = false;
         try {
-            Iterator4 i = config.i_rename.fastIterator();
+            IIterator4 i = config.i_rename.iterator();
             while (i.hasNext()) {
                 Rename ren = (Rename) i.next();
                 if (get(ren).size() == 0) {
@@ -1508,7 +1508,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     void checkStillToSet() {
         List4 postponedStillToSet = null;
         while (i_stillToSet != null) {
-            Iterator4 i = new Iterator4Impl(i_stillToSet);
+            IIterator4 i = new Iterator4(i_stillToSet);
             i_stillToSet = null;
             while (i.hasNext()) {
                 Integer updateDepth = (Integer)i.next();

@@ -115,7 +115,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
     				// underlying structure again. The structure could b
     				// kept fairly easy. TODO: Optimize!
     				
-    				Iterator4 i = a_candidates.iterateConstraints();
+    				IIterator4 i = a_candidates.iterateConstraints();
 					while (i.hasNext()) {
 						
 						QCon qcon = (QCon)i.next();
@@ -282,7 +282,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
     void doNotInclude() {
         i_include = false;
         if (i_dependants != null) {
-            Iterator4 i = new Iterator4Impl(i_dependants);
+            IIterator4 i = new Iterator4(i_dependants);
             i_dependants = null;
             while (i.hasNext()) {
                 ((QCandidate)i.next()).doNotInclude();

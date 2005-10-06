@@ -7,7 +7,7 @@ import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 import EDU.purdue.cs.bloat.tree.*;
 
-import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.IIterator4;
 import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.build.*;
@@ -158,7 +158,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				FieldValue methField=(FieldValue)methodRetval;
 				if(rcvRetval instanceof FieldValue) {
 					FieldValue rcvField=(FieldValue)rcvRetval;
-					for(Iterator4 nameIter=methField.fieldNames();nameIter.hasNext();) {
+					for(IIterator4 nameIter=methField.fieldNames();nameIter.hasNext();) {
 						rcvField.descend((String)nameIter.next());
 					}
 					retval(rcvField);

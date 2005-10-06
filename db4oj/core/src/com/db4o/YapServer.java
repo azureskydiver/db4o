@@ -91,7 +91,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable, YapSocketFak
             i_serverSocket = null;
             boolean isClosed = i_yapFile == null ? true : i_yapFile.close();
             synchronized (i_threads) {
-                Iterator4 i = i_threads.fastIterator();
+                IIterator4 i = i_threads.iterator();
                 while (i.hasNext()) {
                     ((YapServerThread) i.next()).close();
                 }
@@ -111,7 +111,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable, YapSocketFak
 
     YapServerThread findThread(int a_threadID) {
         synchronized (i_threads) {
-            Iterator4 i = i_threads.fastIterator();
+            IIterator4 i = i_threads.iterator();
             while (i.hasNext()) {
                 YapServerThread serverThread = (YapServerThread) i.next();
                 if (serverThread.i_threadID == a_threadID) {

@@ -575,7 +575,7 @@ public abstract class YapFile extends YapStream {
 
     final void writeDirty() {
         YapMeta dirty;
-        Iterator4 i = i_dirty.fastIterator();
+        IIterator4 i = i_dirty.iterator();
         while (i.hasNext()) {
             dirty = (YapMeta) i.next();
             dirty.write(this, i_systemTrans);
