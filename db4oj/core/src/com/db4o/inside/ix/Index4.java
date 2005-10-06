@@ -90,10 +90,10 @@ public class Index4 {
         };
     }
     
-    private void doFree(int[] free){
-        YapFile file = file();
-        for(int i = 0; i < free.length; i += 2){
-            file.free(free[i], free[i + 1]);
+    private void doFree(int[] addressLength){
+        YapFile yf = file();
+        for(int i = 0; i < addressLength.length; i += 2){
+            yf.free(addressLength[i], addressLength[i + 1]);
         }
     }
                 
@@ -161,26 +161,25 @@ public class Index4 {
     }
     
     private void storeMetaIndex(int entries, int length, int address){
-        Transaction trans = trans();
+        Transaction transact = trans();
         _metaIndex.indexEntries = entries;
         _metaIndex.indexLength = length;
         _metaIndex.indexAddress = address;
         _metaIndex.patchEntries = 0;
         _metaIndex.patchAddress = 0;
         _metaIndex.patchLength = 0;
-        trans.i_stream.setInternal(trans, _metaIndex, 1, false);
+        transact.i_stream.setInternal(transact, _metaIndex, 1, false);
     }
     
     private void remarshallMetaIndex(int entries){
         _metaIndex.indexEntries = entries;
-        Transaction trans = trans();
-        trans.i_stream.getYapObject(_metaIndex).remarshall(trans);
+        Transaction transact = trans();
+        transact.i_stream.getYapObject(_metaIndex).remarshall(transact);
     }
     
     private IxFileRange writeToNewSlot(int slot, int length ){
-        Transaction trans = trans();
         Tree root = getRoot();
-        final YapWriter writer = new YapWriter(trans,slot, lengthPerEntry());
+        final YapWriter writer = new YapWriter(trans(),slot, lengthPerEntry());
         if (root != null) {
             root.traverse(new Visitor4() {
                 public void visit(Object a_object) {
