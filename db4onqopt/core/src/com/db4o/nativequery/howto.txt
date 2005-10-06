@@ -1,0 +1,82 @@
+ANALYSIS AT QUERY EXECUTION TIME
+
+To enable code analysis and generation of a corresponding live SODA
+query at query execution time, start your application with
+
+-Ddb4o.dynamicnq
+
+or call
+
+System.setProperty("db4o.dynamicnq","true");
+
+(Temporary measure, will go into standard db4o configuration.)
+
+INSTRUMENTING CLASS FILES
+
+File instrumentation can be done either programmatically or during an
+Ant build.
+
+To instrument all predicate classes in directory 'orig' whose package
+name starts with 'my.package' and store the modified files below
+directory 'instrumented', use code like the following:
+
+new com.db4o.Db4oFileEnhancer()
+  .enhance(
+    "orig",             // source directory
+    "instrumented",     // target directory
+    new String[]{       // optional class path
+      "lib/my.jar"
+    },
+    "my.package"        // optional package prefix
+  );
+  
+An equivalent Ant snippet might look like this:
+
+<taskdef name="db4oenhance" classname="com.db4o.Db4oFileEnhancerAntTask">
+  <classpath>
+    <path path="lib/db4o.jar" />
+  </classpath>
+</taskdef>
+
+<target name="optimize">
+  <db4oenhance 
+      srcdir="orig" 
+      targetdir="instrumented" 
+      packagefilter="my.package">
+    <classpath>
+      <path location="lib/my.jar" />
+    </classpath>
+  </db4oenhance>
+</target>
+
+All non-Predicate classes will just be copied to the target directory.
+
+INSTRUMENTING CLASSES AT LOAD TIME
+
+To instrument an existing application on startup, db4o wraps its
+execution in a custom class loader. To apply this class loader
+manually, use code like this:
+
+ClassLoader loader=new com.db4o.Db4oEnhancingClassLoader();
+Class clazz=loader.loadClass("my.StarterClass");
+Method method=clazz.getMethod("someStaticMethod",new Class[]{});
+method.invoke(null,new Object[]{});
+
+(Of course the method needn't be static and can have parameters,
+too.)
+
+To start a full application in optimized mode, you can use the
+Db4oRunner utility class. If you'd normally start your application
+like this:
+
+$> java my.StarterClass some arguments
+
+...start Db4oRunner with the fully qualified name of your main class
+as the first argument and the actual arguments appended:
+
+$> java com.db4o.Db4oRunner my.StarterClass some arguments
+
+TO BE EVALUATED
+
+- -Djava.system.class.loader=com.db4o.Db4oEnhancingClassLoader
+- Tomcat server.xml <Loader/>
