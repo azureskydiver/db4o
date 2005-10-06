@@ -80,85 +80,176 @@ public class Index4 {
 //        }
 //        System.out.println("---  IxField commit debug complete");
 //    }
+    
+    private int[] prepareFree(){
+        return new int[] {
+            _metaIndex.indexAddress,
+            _metaIndex.indexLength,
+            _metaIndex.patchAddress,
+            _metaIndex.patchLength
+        };
+    }
+    
+    private void doFree(int[] free){
+        YapFile file = file();
+        for(int i = 0; i < free.length; i += 2){
+            file.free(free[i], free[i + 1]);
+        }
+    }
+                
+    
+    /**
+     * solving a hen-egg problem: commit itself works with freespace 
+     * so we have to do this all sequentially in the right way, working
+     * with with both indexes at the same time.
+     */
+    public void commitFreeSpace(Index4 other){
+        
+        int[] myFree = prepareFree();
+        int[] otherFree = other.prepareFree();
+  
+        Tree root = getRoot();
+        
+        int entries = countEntries();
+        
+        // For the two freespace indexes themselves, we call
+        // the freespace system and we store two meta indexes. Potential effects:
+        // 4 x getSlot   -4   to   0     
+        // 4 x free      -4   to   + 4
+        // 
+        
+        // Therefore we have to raise the value by 2, to make 
+        // sure that there are enough.
+        
+        int length = (entries + 4) * lengthPerEntry();
+        
+        int mySlot = getSlot(length);
+        int otherSlot = getSlot(length);
+        
+        storeMetaIndex(entries, length, mySlot);
+        other.storeMetaIndex(entries, length, otherSlot);
+        
+        int newEntries = countEntries();
+        
+        if(entries != newEntries){
+            remarshallMetaIndex(newEntries);
+            other.remarshallMetaIndex(newEntries);
+        }
+        
+        writeToNewSlot(mySlot, length);
+        other.writeToNewSlot(otherSlot, length);
+        
+        doFree(myFree);
+        doFree(otherFree);
+        
+//        if(Deploy.debug){
+//            YapFile file = file();
+//            for(int i = 0; i < free.length; i += 2){
+//                file.writeXBytes(free[i], file.blocksFor(free[i + 1]) * file.blockSize() );
+//            }
+//        }
+        
+    }
+    
+    private int lengthPerEntry(){
+        return _handler.linkLength() + YapConst.YAPINT_LENGTH;
+    }
+    
+    private void free(){
+        file().free(_metaIndex.indexAddress, _metaIndex.indexLength);
+        file().free(_metaIndex.patchAddress, _metaIndex.indexLength);
+    }
+    
+    private void storeMetaIndex(int entries, int length, int address){
+        Transaction trans = trans();
+        _metaIndex.indexEntries = entries;
+        _metaIndex.indexLength = length;
+        _metaIndex.indexAddress = address;
+        _metaIndex.patchEntries = 0;
+        _metaIndex.patchAddress = 0;
+        _metaIndex.patchLength = 0;
+        trans.i_stream.setInternal(trans, _metaIndex, 1, false);
+    }
+    
+    private void remarshallMetaIndex(int entries){
+        _metaIndex.indexEntries = entries;
+        Transaction trans = trans();
+        trans.i_stream.getYapObject(_metaIndex).remarshall(trans);
+    }
+    
+    private IxFileRange writeToNewSlot(int slot, int length ){
+        Transaction trans = trans();
+        Tree root = getRoot();
+        final YapWriter writer = new YapWriter(trans,slot, lengthPerEntry());
+        if (root != null) {
+            root.traverse(new Visitor4() {
+                public void visit(Object a_object) {
+                    ((IxTree) a_object).write(_handler, writer); 
+                }
+            });
+        }
+        return createGlobalFileRange();
+    }
+    
 
-    void commit(IndexTransaction a_ft) {
-        _indexTransactions.remove(a_ft);
+    void commit(IndexTransaction ixTrans) {
+        
+        _indexTransactions.remove(ixTrans);
+        _globalIndexTransaction.merge(ixTrans);
 
-        _globalIndexTransaction.merge(a_ft);
-
-        int leaves = _globalIndexTransaction.countLeaves();
 
         // TODO: Use more intelligent heuristic here to
         // calculate when to flush the global index
+        
+        // int leaves = _globalIndexTransaction.countLeaves();
         // boolean createNewFileRange = leaves > MAX_LEAVES;
+        
+        
         boolean createNewFileRange = true;
 
         if (createNewFileRange) {
-            final Transaction trans = _globalIndexTransaction.i_trans;
+            
+            int entries = countEntries();
+            int length = countEntries() * lengthPerEntry();
+            int slot = getSlot(length);
+            
+            int[] free = prepareFree();
+            
+            storeMetaIndex(entries, length, slot);
+            
+            IxFileRange newFileRange = writeToNewSlot(slot, length);
 
-            int[] free = new int[] { _metaIndex.indexAddress,
-                    _metaIndex.indexLength, _metaIndex.patchAddress,
-                    _metaIndex.patchLength};
-
-            Tree root = _globalIndexTransaction.getRoot();
-
-            final int lengthPerEntry = _handler.linkLength()
-                    + YapConst.YAPINT_LENGTH;
-
-            _metaIndex.indexEntries = root == null ? 0 : root.size();
-            _metaIndex.indexLength = _metaIndex.indexEntries * lengthPerEntry;
-            _metaIndex.indexAddress = ((YapFile) trans.i_stream)
-                    .getSlot(_metaIndex.indexLength);
-            _metaIndex.patchEntries = 0;
-            _metaIndex.patchAddress = 0;
-            _metaIndex.patchLength = 0;
-            trans.i_stream.setInternal(trans, _metaIndex, 1, false);
-
-            final YapWriter writer = new YapWriter(trans,
-                    _metaIndex.indexAddress, lengthPerEntry);
-            if (root != null) {
-                root.traverse(new Visitor4() {
-
-                    public void visit(Object a_object) {
-                        ((IxTree) a_object).write(_handler, writer);
+            if(_indexTransactions != null){
+                IIterator4 i = _indexTransactions.iterator();
+                while (i.hasNext()) {
+                    final IndexTransaction ft = (IndexTransaction) i.next();
+                    Tree clonedTree = newFileRange;
+                    if (clonedTree != null) {
+                        clonedTree = clonedTree.deepClone(ft);
                     }
-                });
-            }
-            IxFileRange newFileRange = createGlobalFileRange();
-
-            IIterator4 i = _indexTransactions.iterator();
-            while (i.hasNext()) {
-                final IndexTransaction ft = (IndexTransaction) i.next();
-                Tree clonedTree = newFileRange;
-                if (clonedTree != null) {
-                    clonedTree = clonedTree.deepClone(ft);
-                }
-                final Tree[] tree = { clonedTree};
-                ft.getRoot().traverseFromLeaves((new Visitor4() {
-                    
-                    public void visit(Object a_object) {
-                        IxTree ixTree = (IxTree) a_object;
-                        if (ixTree.i_version == ft.i_version) {
-                            if (!(ixTree instanceof IxFileRange)) {
-                                ixTree.beginMerge();
-                                tree[0] = tree[0].add(ixTree);
+                    final Tree[] tree = { clonedTree};
+                    ft.getRoot().traverseFromLeaves((new Visitor4() {
+                        
+                        public void visit(Object a_object) {
+                            IxTree ixTree = (IxTree) a_object;
+                            if (ixTree.i_version == ft.i_version) {
+                                if (!(ixTree instanceof IxFileRange)) {
+                                    ixTree.beginMerge();
+                                    tree[0] = tree[0].add(ixTree);
+                                }
                             }
                         }
-                    }
-                }));
-                ft.setRoot(tree[0]);
+                    }));
+                    ft.setRoot(tree[0]);
+                }
             }
+            
+            doFree(free);
 
-            if (free[0] > 0) {
-                trans.i_file.free(free[0], free[1]);
-            }
-            if (free[2] > 0) {
-                trans.i_file.free(free[2], free[3]);
-            }
         } else {
             IIterator4 i = _indexTransactions.iterator();
             while (i.hasNext()) {
-                ((IndexTransaction) i.next()).merge(a_ft);
+                ((IndexTransaction) i.next()).merge(ixTrans);
             }
         }
     }
@@ -202,5 +293,27 @@ public class Index4 {
         }
         return sb.toString();
     }
+    
+    private Transaction trans(){
+        return _globalIndexTransaction.i_trans;
+    }
+    
+    private YapFile file(){
+        return trans().i_file;
+    }
+    
+    private int getSlot(int length){
+        return file().getSlot(length);
+    }
+    
+    private Tree getRoot(){
+        return _globalIndexTransaction.getRoot();
+    }
+    
+    private int countEntries(){
+        Tree root = getRoot();
+        return root == null ? 0 : root.size();
+    }
+    
 
 }

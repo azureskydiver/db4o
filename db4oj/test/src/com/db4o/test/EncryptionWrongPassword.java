@@ -26,6 +26,8 @@ public class EncryptionWrongPassword {
 			// OK, expected
 		}
 		Db4o.configure().encrypt(false);
+        Db4o.configure().password(null);
+        
 		Db4o.configure().setOut(null);
 		Test.reOpenServer();
 

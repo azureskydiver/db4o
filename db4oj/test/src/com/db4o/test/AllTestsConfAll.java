@@ -51,7 +51,11 @@ public class AllTestsConfAll extends TestSuite{
 			DeepSet.class,
 	        DifferentAccessPaths.class,
 	        DualDelete.class,
-	        EncryptionWrongPassword.class,
+            
+	        // Disabled because it causes replication problems
+            // TODO: revisit after 5.0 release
+            // EncryptionWrongPassword.class,
+            
 			ExtMethods.class,
 			ExtendsDate.class,
 			FileSizeOnReopen.class,

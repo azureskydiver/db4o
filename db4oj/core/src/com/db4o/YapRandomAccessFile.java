@@ -376,11 +376,16 @@ public class YapRandomAccessFile extends YapFile {
         if (Deploy.debug) {
             if (Deploy.flush) {
                 if (!i_config.i_readonly) {
-                    try {
-                        i_file.blockSeek(a_address);
-                        i_file.write(xBytes(a_address, a_length)._buffer, a_length);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if(a_address > 0 && a_length > 0){
+                        try {
+                            if(DTrace.enabled){
+                                DTrace.WRITE_XBYTES.logLength(a_address, a_length);
+                            }
+                            i_file.blockSeek(a_address);
+                            i_file.write(xBytes(a_address, a_length)._buffer, a_length);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

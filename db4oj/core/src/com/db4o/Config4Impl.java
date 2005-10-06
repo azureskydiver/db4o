@@ -203,6 +203,9 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     }
     
     private void storeStreamBootRecord() {
+        if(i_stream == null){
+            return;
+        }
         PBootRecord bootRecord = i_stream.bootRecord();
         if(bootRecord != null) {
             bootRecord.initConfig(this);

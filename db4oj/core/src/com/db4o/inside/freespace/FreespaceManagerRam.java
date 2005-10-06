@@ -18,12 +18,22 @@ public class FreespaceManagerRam extends FreespaceManager {
         super(file);
     }
     
+    public void commit(){
+        // do nothing
+    }
+    
     public void free(int a_address, int a_length) {
-        if(DTrace.enabled){
-            DTrace.FREE.logLength(a_address, a_length);
+        
+        if (a_address <= 0) {
+            return;
         }
+        
         if (a_length <= discardLimit()) {
             return;
+        }
+        
+        if(DTrace.enabled){
+            DTrace.FREE.logLength(a_address, a_length);
         }
         
         a_length = _file.blocksFor(a_length);
@@ -71,6 +81,19 @@ public class FreespaceManagerRam extends FreespaceManager {
     }
     
     public int getSlot(int length) {
+        int address = getSlot1(length);
+        
+        if(address != 0){
+            
+            if(DTrace.enabled){
+                DTrace.GET_FREESPACE.logLength(address, length);
+            }
+        }
+        return address;
+    }
+
+    
+    public int getSlot1(int length) {
         length = _file.blocksFor(length);
         _finder.i_key = length;
         _finder.i_object = null;

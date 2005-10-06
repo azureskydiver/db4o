@@ -164,7 +164,7 @@ class IxPath implements Cloneable, Visitor4 {
         }
         if (i_lowerAndUpperMatch != null) {
             int ix = i_lowerAndUpperMatch[1] + 1;
-            if(ix <= ((IxFileRange) i_tree)._entries){
+            if(ix < ((IxFileRange) i_tree)._entries){
                 i_tree.freespaceVisit(visitor, ix);
             }
         }else{

@@ -20,6 +20,8 @@ public abstract class FreespaceManager {
         return _file.blockSize();
     }
     
+    public abstract void commit();
+    
     public abstract void free(int a_address, int a_length);
     
     public abstract int getSlot(int length);

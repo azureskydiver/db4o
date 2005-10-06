@@ -3,16 +3,17 @@
 package com.db4o.inside.freespace;
 
 import com.db4o.*;
-import com.db4o.inside.ix.*;
+import com.db4o.foundation.*;
 
 
 public class FreespaceManagerIx extends FreespaceManager{
     
-    Index4 _addressIndex;
-    Index4 _lengthIndex;
+    private FreespaceIxAddress _addressIx;
+    private FreespaceIxLength _lengthIx;
     
-    IndexTransaction _addressXT;
-    IndexTransaction _lengthXT;
+    private boolean _dirty;
+    
+    private Collection4 _xBytes;
 
     FreespaceManagerIx(YapFile file){
         super(file);
@@ -20,95 +21,78 @@ public class FreespaceManagerIx extends FreespaceManager{
     
     public void free(int address, int length) {
         
-        if(DTrace.enabled){
-            DTrace.FREE.logLength(address, length);
+        if (address <= 0) {
+            return;
         }
         
         if (length <= discardLimit()) {
             return;
         }
         
+        if(DTrace.enabled){
+            DTrace.FREE.logLength(address, length);
+        }
+        
         length = _file.blocksFor(length);
         
-        IxTraverser traverser = new IxTraverser();
-        traverser.findBoundsExactMatch(new Integer(address), (IxTree)_addressXT.getRoot());
+        _addressIx.find(address);
         
-        FreespaceVisitor visitor = preceding(traverser);
-        if(visitor != null){
-            if(visitor._key + visitor._value == address){
-                removeIndexEntry(visitor._key, visitor._value);
-                address = visitor._key;
-                length += visitor._value;
+        if(_addressIx.preceding()){
+            if(_addressIx.address() + _addressIx.length() == address){
+                
+                // System.out.println("Merging preceding a: " + _addressIx.address() + " l: " + _addressIx.length() + " to " + address);
+                
+                remove(_addressIx.address(), _addressIx.length());
+                address =  _addressIx.address();
+                length += _addressIx.length();
             }
         }
         
-        visitor = subsequent(traverser);
-        if(visitor != null){
-            if(address + length == visitor._key){
-                removeIndexEntry(visitor._key, visitor._value);
-                length += visitor._value;
+        if(_addressIx.subsequent()){
+            if(address + length == _addressIx.address()){
+                
+                // System.out.println("Merging subsequent a: " + _addressIx.address() + " to a: " + address + " l: " + length);
+                
+                remove(_addressIx.address(), _addressIx.length());
+                length += _addressIx.length();
             }
         }
         
-        addIndexEntry(address, length);
+        add(address, length);
+        _dirty = true;
         
         if (Deploy.debug) {
-            _file.writeXBytes(address, length * blockSize());
+            writeXBytes(address, length);
         }
     }
     
-    private void addIndexEntry(int address, int length){
-        _addressIndex._handler.prepareComparison(new Integer(address));
-        _addressXT.add(length, new Integer(address));
-        _lengthIndex._handler.prepareComparison(new Integer(length));
-        _lengthXT.add(address, new Integer(length));
+    private void add(int address, int length){
+        
+        // System.out.println("FreeSpaceManagerIX.add " + address + " " + length);
+        
+        _addressIx.add(address, length);
+        _lengthIx.add(address, length);
     }
     
-    private void removeIndexEntry(int address, int length){
-        _addressIndex._handler.prepareComparison(new Integer(address));
-        _addressXT.remove(length, new Integer(address));
-        _lengthIndex._handler.prepareComparison(new Integer(length));
-        _lengthXT.remove(address, new Integer(length));
+    private void remove(int address, int length){
+        
+        // System.out.println("FreeSpaceManagerIX.remove " + address + " " + length);
+        
+        _addressIx.remove(address, length);
+        _lengthIx.remove(address, length);
     }
-    
-    
-    
-    private FreespaceVisitor preceding(IxTraverser traverser){
-        FreespaceVisitor visitor = new FreespaceVisitor();
-        traverser.visitPreceding(visitor);
-        if(visitor.visited()){
-            return visitor;
-        }
-        return null;
-    }
-    
-    private FreespaceVisitor subsequent(IxTraverser traverser){
-        FreespaceVisitor visitor = new FreespaceVisitor();
-        traverser.visitSubsequent(visitor);
-        if(visitor.visited()){
-            return visitor;
-        }
-        return null;
-    }
-    
-    private FreespaceVisitor match(IxTraverser traverser){
-        FreespaceVisitor visitor = new FreespaceVisitor();
-        traverser.visitMatch(visitor);
-        if(visitor.visited()){
-            return visitor;
-        }
-        return null;
-    }
-
-
     
     public int getSlot(int length) {
         if(! started()){
             return 0;
         }
         int address = getSlot1(length);
-        if(DTrace.enabled){
-            if(address != 0){
+        
+        if(address != 0){
+            
+            _dirty = true;
+            
+            if(DTrace.enabled){
                 DTrace.GET_FREESPACE.logLength(address, length);
             }
         }
@@ -123,20 +107,21 @@ public class FreespaceManagerIx extends FreespaceManager{
         
         length = _file.blocksFor(length);
         
-        IxTraverser traverser = new IxTraverser();
-        traverser.findBoundsExactMatch(new Integer(length), (IxTree)_lengthXT.getRoot());
+        _lengthIx.find(length);
         
-        FreespaceVisitor visitor = match(traverser);
-        if(visitor != null){
-            removeIndexEntry(visitor._key, visitor._value);
-            return visitor._key;
+        if(_lengthIx.match()){
+            remove(_lengthIx.address(), _lengthIx.length());
+            return _lengthIx.address();
         }
         
-        visitor = subsequent(traverser);
-        if(visitor != null){
-            removeIndexEntry(visitor._key, visitor._value);
-            return visitor._key;
+        if(_lengthIx.subsequent()){
+            int lengthRemainder = _lengthIx.length() - length;
+            int addressRemainder = _lengthIx.address() + length; 
+            remove(_lengthIx.address(), _lengthIx.length());
+            add(addressRemainder, lengthRemainder);
+            return _lengthIx.address();
         }
+        
         return 0;
     }
 
@@ -153,7 +138,7 @@ public class FreespaceManagerIx extends FreespaceManager{
     }
     
     private boolean started(){
-        return _addressIndex != null; 
+        return _addressIx != null; 
     }
     
 
@@ -168,11 +153,39 @@ public class FreespaceManagerIx extends FreespaceManager{
             bootRecord.setDirty();
             bootRecord.store(Integer.MAX_VALUE);
         }
-        Transaction trans = _file.getSystemTransaction();
-        _addressIndex = new Index4(trans,new YInt(_file), bootRecord._freespaceByAddress); 
-        _lengthIndex = new Index4(trans,new YInt(_file), bootRecord._freespaceByLength);
-        _addressXT = _addressIndex.globalIndexTransaction();
-        _lengthXT = _lengthIndex.globalIndexTransaction();
+        _addressIx = new FreespaceIxAddress(_file, bootRecord._freespaceByAddress);
+        _lengthIx = new FreespaceIxLength(_file, bootRecord._freespaceByLength);
     }
+    
+    public void commit(){
+        if(started()  && _dirty){
+            if(Deploy.debug){
+                _xBytes = new Collection4();
+            }
+            _addressIx._index.commitFreeSpace(_lengthIx._index);
+            if(Deploy.debug){
+                IIterator4 i = _xBytes.iterator();
+                while(i.hasNext()){
+                    int[] addressLength = (int[])i.next();
+                    _file.writeXBytes(addressLength[0], addressLength[1]);
+                }
+                _xBytes = null;
+            }
+        }
+    }
+    
+    private void writeXBytes(int address, int length){
+        if (Deploy.debug) {
+            length = length * blockSize();
+            if(_xBytes == null){
+                _file.writeXBytes(address, length);
+            }else{
+                _xBytes.add(new int[] {address, length});
+            }
+        }
+    }
+    
+    
+    
 
 }
