@@ -23,7 +23,7 @@ public class DTrace {
             
             // addRange(15603); // investmentbalance class id
             
-            // addRange(27267);
+            // addRange(4874);
             
             // addRange(15611); // investmentbalance class
             
@@ -36,7 +36,9 @@ public class DTrace {
 //            addRangeWithEnd(3835808, 3836267);
             
             
-            addRangeWithLength(0,10000000);
+            addRange(5329);
+            
+            // addRangeWithLength(0,10000000);
             
             // addRangeWithLength(25876597, 44);
             // addRange(7274611);
@@ -76,6 +78,7 @@ public class DTrace {
             YAPCLASS_BY_ID = new DTrace(true, true, "yapclass by id", true);
             YAPCLASS_INIT = new DTrace(true, true, "yapclass init", true);
             WRITE_BYTES = new DTrace(true, true, "writeBytes", true); 
+            WRITE_XBYTES = new DTrace(true, true, "writeXBytes", true); 
             WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true, "trans writeUpdateDeleteMembers", true);
             
             // turnAllOffExceptFor(new DTrace[] {JUST_SET});
@@ -85,6 +88,8 @@ public class DTrace {
             // turnAllOffExceptFor(new DTrace[] {GET_SLOT, FREE_ON_COMMIT, FREE, WRITE_BYTES});
             
             turnAllOffExceptFor(new DTrace[] {FREE, GET_FREESPACE});
+            
+            // turnAllOffExceptFor(new DTrace[] {FREE, GET_FREESPACE, WRITE_XBYTES});
             // turnAllOffExceptFor(new DTrace[] {WRITE_BYTES, YAPCLASS_INIT});
          
         }
@@ -150,8 +155,8 @@ public class DTrace {
     public static DTrace TRANS_DELETE;
     public static DTrace YAPCLASS_BY_ID;
     public static DTrace YAPCLASS_INIT;
-    
     public static DTrace WRITE_BYTES;
+    public static DTrace WRITE_XBYTES;
     public static DTrace WRITE_UPDATE_DELETE_MEMBERS;
     
     private static final Object forInit = init();
@@ -224,6 +229,8 @@ public class DTrace {
                     }
                     if(end != 0  && start != end){
                         sb.append(formatInt(end));
+                        sb.append(":");
+                        sb.append(formatInt(end - start));
                     }else{
                         sb.append(formatInt(0));
                     }

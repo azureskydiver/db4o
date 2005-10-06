@@ -24,9 +24,6 @@ class Sessions extends Collection4{
 			ObjectContainer oc = null;
 			Session newSession = new Session(databaseFileName);
 	
-			// ExpirationCheck 2
-			Session.checkHackedVersion();
-	
 			Session oldSession = (Session) get(newSession);
 			if (oldSession != null) {
 				oc = oldSession.subSequentOpen();

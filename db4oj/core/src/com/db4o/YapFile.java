@@ -213,15 +213,17 @@ public abstract class YapFile extends YapStream {
     }
 
     private final int getSlot1(int bytes) {
-        int address = _freespaceManager.getSlot(bytes);
-        if(address > 0){
-            return address;
+        if(_freespaceManager != null){
+            int freeAddress = _freespaceManager.getSlot(bytes);
+            if(freeAddress > 0){
+                return freeAddress;
+            }
         }
         int blocksNeeded = blocksFor(bytes);
         if (Deploy.debug && Deploy.overwrite) {
             writeXBytes(i_writeAt, blocksNeeded * blockSize());
         }
-        address = i_writeAt;
+        int address = i_writeAt;
         i_writeAt += blocksNeeded;
         return address;
     }
@@ -583,6 +585,9 @@ public abstract class YapFile extends YapStream {
         }
         i_dirty.clear();
         writeBootRecord();
+        if(_freespaceManager != null){
+            _freespaceManager.commit();
+        }
     }
 
     final void writeEmbedded(YapWriter a_parent, YapWriter a_child) {

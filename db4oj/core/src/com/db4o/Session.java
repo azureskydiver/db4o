@@ -12,18 +12,6 @@ final class Session
 		i_fileName = a_fileName;
 	}
 	
-	static void checkHackedVersion(){
-	    if(Tuning.licenseChecks){
-//			if(Lic.expires){
-//				if(System.currentTimeMillis() > Lic.expirationDate){
-//					new Message(null, 1,System.out);
-//					System.out.println("");
-//					throw new LongJumpOutException();
-//				}
-//			}
-	    }
-	}
-	
 	/**
 	 * returns true, if session is to be closed completely
 	 */

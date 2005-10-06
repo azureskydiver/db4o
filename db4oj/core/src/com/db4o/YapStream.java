@@ -802,7 +802,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return i_idTree.id_find(a_id);
     }
 
-    final YapObject getYapObject(Object a_object) {
+    public final YapObject getYapObject(Object a_object) {
         return i_hcTree.hc_find(a_object);
     }
     

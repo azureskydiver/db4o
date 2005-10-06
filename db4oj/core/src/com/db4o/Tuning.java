@@ -11,6 +11,5 @@ public class Tuning {
     
     public static final boolean symbianSeek = false;
     static final boolean fieldIndices = true;
-    static final boolean licenseChecks = false;
     static final boolean readableMessages = true;
 }
