@@ -131,7 +131,7 @@ public final class QCandidates implements Visitor4 {
     	
     	// Step 4: Add them to our tree again.
     	final Tree[] newTree = { null };
-    	Iterator4 i = col.fastIterator();
+    	IIterator4 i = col.iterator();
     	while(i.hasNext()){
     		QCandidate candidate = (QCandidate) i.next();
     		candidate.i_preceding = null;
@@ -144,7 +144,7 @@ public final class QCandidates implements Visitor4 {
     }
 
     void collect(final QCandidates a_candidates) {
-		Iterator4 i = iterateConstraints();
+		IIterator4 i = iterateConstraints();
 		while(i.hasNext()){
 			QCon qCon = (QCon)i.next();
 			setCurrentConstraint(qCon);
@@ -174,7 +174,7 @@ public final class QCandidates implements Visitor4 {
     		return;
     	}
     	
-    	Iterator4 i = iterateConstraints();
+    	IIterator4 i = iterateConstraints();
     	while(i.hasNext()){
     		((QCon)i.next()).evaluateSelf();
     	}
@@ -230,11 +230,11 @@ public final class QCandidates implements Visitor4 {
         return i_root != null;
     }
     
-    public Iterator4 iterateConstraints(){
+    public IIterator4 iterateConstraints(){
         if(i_constraints == null){
-            return Iterator4Impl.EMPTY;
+            return Iterator4.EMPTY;
         }
-        return new Iterator4Impl(i_constraints);
+        return new Iterator4(i_constraints);
     }
 
     void loadFromClassIndex() {
@@ -314,7 +314,7 @@ public final class QCandidates implements Visitor4 {
     	// No object found.
     	// All children constraints are necessarily false.
     	// Check immediately.
-		Iterator4 i = iterateConstraints();
+		IIterator4 i = iterateConstraints();
 		while(i.hasNext()){
 			((QCon)i.next()).visitOnNull(parent.getRoot());
 		}

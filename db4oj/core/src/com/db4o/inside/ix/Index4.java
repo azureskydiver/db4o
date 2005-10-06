@@ -126,7 +126,7 @@ public class Index4 {
             }
             IxFileRange newFileRange = createGlobalFileRange();
 
-            Iterator4 i = _indexTransactions.fastIterator();
+            IIterator4 i = _indexTransactions.iterator();
             while (i.hasNext()) {
                 final IndexTransaction ft = (IndexTransaction) i.next();
                 Tree clonedTree = newFileRange;
@@ -156,7 +156,7 @@ public class Index4 {
                 trans.i_file.free(free[2], free[3]);
             }
         } else {
-            Iterator4 i = _indexTransactions.fastIterator();
+            IIterator4 i = _indexTransactions.iterator();
             while (i.hasNext()) {
                 ((IndexTransaction) i.next()).merge(a_ft);
             }
@@ -194,7 +194,7 @@ public class Index4 {
             sb.append("\n  no global index \n   ");
         }
         if (_indexTransactions != null) {
-            Iterator4 i = _indexTransactions.fastIterator();
+            IIterator4 i = _indexTransactions.iterator();
             while (i.hasNext()) {
                 sb.append("\n");
                 sb.append(i.next().toString());

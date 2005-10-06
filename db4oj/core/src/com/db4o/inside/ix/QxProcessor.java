@@ -17,7 +17,7 @@ public class QxProcessor {
     }
     
     private void buildPaths(QCandidates candidates){
-        Iterator4 i = candidates.iterateConstraints();
+        IIterator4 i = candidates.iterateConstraints();
         while(i.hasNext()){
             QCon qCon = (QCon)i.next();
             qCon.setCandidates(candidates);

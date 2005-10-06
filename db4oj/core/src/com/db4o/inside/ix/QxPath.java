@@ -36,7 +36,7 @@ class QxPath extends TreeInt{
         }
 
         boolean isLeaf = true;
-        Iterator4 i = _constraint.iterateChildren();
+        IIterator4 i = _constraint.iterateChildren();
         while(i.hasNext()){
             isLeaf = false;
             QCon childConstraint = (QCon)i.next();

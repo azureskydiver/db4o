@@ -87,7 +87,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
 
         if (a_stream.detectSchemaChanges()) {
-            Iterator4 m;
+            IIterator4 m;
             boolean found;
             boolean dirty = isDirty();
             YapField field;
@@ -118,7 +118,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                     field = new YapField(this, fields[i], wrapper);
 
                     found = false;
-                    m = members.fastIterator();
+                    m = members.iterator();
                     while (m.hasNext()) {
                         if (((YapField)m.next()).equals(field)) {
                             found = true;

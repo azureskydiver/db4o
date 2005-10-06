@@ -177,7 +177,7 @@ public abstract class QCon implements Constraint, Visitor4 {
     }
 
     void createCandidates(Collection4 a_candidateCollection) {
-        Iterator4 j = a_candidateCollection.fastIterator();
+        IIterator4 j = a_candidateCollection.iterator();
         while (j.hasNext()) {
             QCandidates candidates = (QCandidates) j.next();
             if (candidates.tryAddConstraint(this)) {
@@ -214,7 +214,7 @@ public abstract class QCon implements Constraint, Visitor4 {
     }
 
     void evaluateChildren() {
-        Iterator4 i = i_childrenCandidates.fastIterator();
+        IIterator4 i = i_childrenCandidates.iterator();
         while (i.hasNext()) {
             ((QCandidates) i.next()).evaluate();
         }
@@ -224,7 +224,7 @@ public abstract class QCon implements Constraint, Visitor4 {
         if(DTrace.enabled){
             DTrace.COLLECT_CHILDREN.log(i_id);
         }
-        Iterator4 i = i_childrenCandidates.fastIterator();
+        IIterator4 i = i_childrenCandidates.iterator();
         while (i.hasNext()) {
             ((QCandidates) i.next()).collect(i_candidates);
         }
@@ -232,14 +232,14 @@ public abstract class QCon implements Constraint, Visitor4 {
 
     void evaluateCreateChildrenCandidates() {
         i_childrenCandidates = new Collection4();
-    	Iterator4 i = iterateChildren();
+    	IIterator4 i = iterateChildren();
     	while(i.hasNext()){
 			((QCon)i.next()).createCandidates(i_childrenCandidates);
     	}
     }
 
     void evaluateEvaluations() {
-        Iterator4 i = iterateChildren();
+        IIterator4 i = iterateChildren();
 		while(i.hasNext()){
 			((QCon)i.next()).evaluateEvaluationsExec(i_candidates, true);
 		}
@@ -262,7 +262,7 @@ public abstract class QCon implements Constraint, Visitor4 {
     		return;
     	}
     	
-        Iterator4 i = iterateChildren();
+        IIterator4 i = iterateChildren();
         while(i.hasNext()){
     		QCon qcon = (QCon)i.next();
     		i_candidates.setCurrentConstraint(qcon);
@@ -296,7 +296,7 @@ public abstract class QCon implements Constraint, Visitor4 {
     }
 
     void forEachChildField(final String name, final Visitor4 visitor) {
-    	Iterator4 i = iterateChildren();
+    	IIterator4 i = iterateChildren();
     	while(i.hasNext()){
     		Object obj = i.next();
     		if (obj instanceof QConObject) {
@@ -326,7 +326,7 @@ public abstract class QCon implements Constraint, Visitor4 {
         if(! hasJoins()){
             return this;
         }
-        Iterator4 i = iterateJoins();
+        IIterator4 i = iterateJoins();
         if (i_joins.size() == 1) {
             return ((QCon) i.next()).getTopLevelJoin();
         }
@@ -334,7 +334,7 @@ public abstract class QCon implements Constraint, Visitor4 {
         while (i.hasNext()) {
             col.ensure(((QCon) i.next()).getTopLevelJoin());
         }
-        i = col.fastIterator();
+        i = col.iterator();
         QCon qcon = (QCon) i.next();
         if (col.size() == 1) {
             return qcon;
@@ -391,18 +391,18 @@ public abstract class QCon implements Constraint, Visitor4 {
         return false;
     }
     
-    Iterator4 iterateJoins(){
+    IIterator4 iterateJoins(){
         if(i_joins == null){
-            return Iterator4Impl.EMPTY;
+            return Iterator4.EMPTY;
         }
-        return i_joins.fastIterator();
+        return i_joins.iterator();
     }
     
-    public Iterator4 iterateChildren(){
+    public IIterator4 iterateChildren(){
         if(_children == null){
-            return Iterator4Impl.EMPTY;
+            return Iterator4.EMPTY;
         }
-        return new Iterator4Impl(_children);
+        return new Iterator4(_children);
     }
     
     Constraint join(Constraint a_with, boolean a_and) {
@@ -432,7 +432,7 @@ public abstract class QCon implements Constraint, Visitor4 {
             }
             Constraint[] joins = new Constraint[joinHooks.size()];
             j = 0;
-            Iterator4 i = joinHooks.fastIterator();
+            IIterator4 i = joinHooks.iterator();
             while (i.hasNext()) {
                 joins[j++] = join((Constraint) i.next(), a_and);
             }
@@ -472,7 +472,7 @@ public abstract class QCon implements Constraint, Visitor4 {
             System.out.println(indent + name + " " + logObject() + "   " + i_id);
             // System.out.println(indent + "JOINS");
             if (hasJoins()) {
-                Iterator4 i = iterateJoins();
+                IIterator4 i = iterateJoins();
                 while (i.hasNext()) {
                     QCon join = (QCon) i.next();
                     // joins += join.i_id + " ";
@@ -484,7 +484,7 @@ public abstract class QCon implements Constraint, Visitor4 {
             // System.out.println(indent + "CONSTRAINTS");
             
 			if(_children != null){
-				Iterator4 i = new Iterator4Impl(_children);
+				IIterator4 i = new Iterator4(_children);
 				while(i.hasNext()){
 					((QCon)i.next()).log(childIndent);
 				}
@@ -497,7 +497,7 @@ public abstract class QCon implements Constraint, Visitor4 {
     }
 
     void marshall() {
-        Iterator4 i = iterateChildren();
+        IIterator4 i = iterateChildren();
 		while(i.hasNext()){
 			((QCon)i.next()).marshall();
 		}
@@ -535,7 +535,7 @@ public abstract class QCon implements Constraint, Visitor4 {
         if (! hasJoins()) {
         	return;
         }
-        Iterator4 i = iterateJoins();
+        IIterator4 i = iterateJoins();
         while(i.hasNext()){
         	QConJoin qcj = (QConJoin) i.next();
         	if (qcj.removeForParent(this)) {
@@ -607,7 +607,7 @@ public abstract class QCon implements Constraint, Visitor4 {
 	}
 
 	private void unmarshallChildren(final Transaction a_trans) {
-		Iterator4 i = iterateChildren();
+		IIterator4 i = iterateChildren();
         while(i.hasNext()){
             ((QCon)i.next()).unmarshall(a_trans);
         }
@@ -615,7 +615,7 @@ public abstract class QCon implements Constraint, Visitor4 {
 
 	private void unmarshallJoins(final Transaction a_trans) {
 		if (hasJoins()) {
-    		Iterator4 i = iterateJoins();
+    		IIterator4 i = iterateJoins();
     		while (i.hasNext()) {
     			((QCon) i.next()).unmarshall(a_trans);
     		}
@@ -638,7 +638,7 @@ public abstract class QCon implements Constraint, Visitor4 {
 
         if (hasJoins()) {
             // this should probably be on the Join
-            Iterator4 i = iterateJoins();
+            IIterator4 i = iterateJoins();
             while (i.hasNext()) {
                 a_root.evaluate(new QPending((QConJoin) i.next(), this, res));
             }
@@ -659,7 +659,7 @@ public abstract class QCon implements Constraint, Visitor4 {
             System.out.println("QCon.visitOnNull " + i_id);
         }
         
-		Iterator4 i = iterateChildren();
+		IIterator4 i = iterateChildren();
 		while(i.hasNext()){
 			((QCon)i.next()).visitOnNull(a_root);
 		}

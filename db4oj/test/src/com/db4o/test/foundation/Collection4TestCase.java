@@ -1,7 +1,7 @@
 package com.db4o.test.foundation;
 
 import com.db4o.foundation.Collection4;
-import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.IIterator4;
 import com.db4o.test.Test;
 
 public class Collection4TestCase {
@@ -12,7 +12,7 @@ public class Collection4TestCase {
 		String[] expected = new String[] { "1", "2", "3" };		
 		c.addAll(expected);
 		
-		Iterator4 iterator = c.fastIterator();
+		IIterator4 iterator = c.iterator();
 		Test.ensure(null != iterator);
 		
 		for (int i=expected.length-1; i>=0; --i) {
@@ -28,7 +28,7 @@ public class Collection4TestCase {
 		String[] expected = new String[] { "1", "2", "3" };		
 		c.addAll(expected);
 		
-		Iterator4 iterator = c.strictIterator();
+		IIterator4 iterator = c.strictIterator();
 		Test.ensure(null != iterator);
 		
 		for (int i=0; i<expected.length; ++i) {

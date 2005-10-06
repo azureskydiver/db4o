@@ -24,7 +24,7 @@ public class FieldValue implements ComparisonOperand {
 		_fieldNames.addAll(fieldNames);
 	}
 
-	public FieldValue(int parentIdx, Iterator4 fieldNames) {
+	public FieldValue(int parentIdx, IIterator4 fieldNames) {
 		_parentIdx=parentIdx;
 		_fieldNames.addAll(fieldNames);
 	}
@@ -34,7 +34,7 @@ public class FieldValue implements ComparisonOperand {
 		return this;
 	}
 
-	public Iterator4 fieldNames() {
+	public IIterator4 fieldNames() {
 		return _fieldNames.strictIterator();
 	}
 
@@ -55,8 +55,8 @@ public class FieldValue implements ComparisonOperand {
 		if(_fieldNames.size()!=casted._fieldNames.size()) {
 			return false;
 		}
-		Iterator4 firstIter=_fieldNames.fastIterator();
-		Iterator4 secondIter=casted._fieldNames.fastIterator();
+		IIterator4 firstIter=_fieldNames.iterator();
+		IIterator4 secondIter=casted._fieldNames.iterator();
 		while(firstIter.hasNext()) {
 			if(!firstIter.next().equals(secondIter.next())) {
 				return false;
@@ -68,7 +68,7 @@ public class FieldValue implements ComparisonOperand {
 	public int hashCode() {
 		// TODO: implement Collection4#hashCode to give by-value semantics
 		int hashCode=0;
-		Iterator4 firstIter=_fieldNames.fastIterator();
+		IIterator4 firstIter=_fieldNames.iterator();
 		while(firstIter.hasNext()) {
 			hashCode*=29+firstIter.next().hashCode();
 		}
@@ -78,7 +78,7 @@ public class FieldValue implements ComparisonOperand {
 	public String toString() {
 		StringBuffer str=new StringBuffer();
 		str.append(_parentIdx);
-		for (Iterator4 nameIter = fieldNames(); nameIter.hasNext();) {
+		for (IIterator4 nameIter = fieldNames(); nameIter.hasNext();) {
 			String fieldName = (String) nameIter.next();
 			str.append('.');
 			str.append(fieldName);
