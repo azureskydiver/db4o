@@ -198,7 +198,7 @@ public class Transaction {
             i_stream.i_lock.notify();
         }
         if (i_transactionListeners != null) {
-            IIterator4 i = new Iterator4(i_transactionListeners);
+            Iterator4 i = new Iterator4Impl(i_transactionListeners);
             while (i.hasNext()) {
                 ((TransactionListener) i.next()).preCommit();
             }
@@ -226,7 +226,7 @@ public class Transaction {
                 .getSystemTransaction());
 
             if (i_dirtyFieldIndexes != null) {
-                IIterator4 i = new Iterator4(i_dirtyFieldIndexes);
+                Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
                 while (i.hasNext()) {
                     ((IndexTransaction) i.next()).commit();
                 }
@@ -374,7 +374,7 @@ public class Transaction {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        IIterator4 i = new Iterator4(i_freeOnBoth);
+        Iterator4 i = new Iterator4Impl(i_freeOnBoth);
         while (i.hasNext()) {
             ReferencedSlot slot = (ReferencedSlot) i.next();
             i_file.free(slot._address, slot._length);
@@ -388,7 +388,7 @@ public class Transaction {
         }
         freeOnBoth();
         if (i_freeOnCommit != null) {
-            IIterator4 i = new Iterator4(i_freeOnCommit);
+            Iterator4 i = new Iterator4Impl(i_freeOnCommit);
             while (i.hasNext()) {
                 int id = ((Integer) i.next()).intValue();
                 Tree node = TreeInt.find(i_stream.i_freeOnCommit, id);
@@ -609,13 +609,13 @@ public class Transaction {
             beginEndSet();
             
             if (i_dirtyFieldIndexes != null) {
-                IIterator4 i = new Iterator4(i_dirtyFieldIndexes);
+                Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
                 while (i.hasNext()) {
                     ((IndexTransaction) i.next()).rollback();
                 }
             }
             if (i_freeOnCommit != null) {
-                IIterator4 i = new Iterator4(i_freeOnCommit);
+                Iterator4 i = new Iterator4Impl(i_freeOnCommit);
                 while (i.hasNext()) {
                     Tree node = TreeInt.find(i_stream.i_freeOnCommit,
                         ((Integer) i.next()).intValue());
@@ -651,7 +651,7 @@ public class Transaction {
             i_stream.i_lock.notify();
         }
         if (i_transactionListeners != null) {
-            IIterator4 i = new Iterator4(i_transactionListeners);
+            Iterator4 i = new Iterator4Impl(i_transactionListeners);
             while (i.hasNext()) {
                 ((TransactionListener) i.next()).postRollback();
             }
@@ -777,7 +777,7 @@ public class Transaction {
         traverseYapClassEntries(i_addToClassIndex, true, indicesToBeWritten);
         traverseYapClassEntries(i_removeFromClassIndex, false,
             indicesToBeWritten);
-        IIterator4 i = indicesToBeWritten.iterator();
+        Iterator4 i = indicesToBeWritten.iterator();
         while (i.hasNext()) {
             ClassIndex classIndex = (ClassIndex) i.next();
             classIndex.setDirty(i_stream);

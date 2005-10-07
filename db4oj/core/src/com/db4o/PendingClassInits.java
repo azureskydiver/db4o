@@ -49,7 +49,7 @@ class PendingClassInits {
 	
 	private void checkMembers() {
 		while(_members != null) {
-			IIterator4 members = new Iterator4(_members);
+			Iterator4 members = new Iterator4Impl(_members);
 			_members = null;
 			while(members.hasNext()) {
 				YapClass yc = (YapClass)members.next();
@@ -62,7 +62,7 @@ class PendingClassInits {
 	private void checkStatics() {
 		checkMembers();
 		while(_statics != null) {
-			IIterator4 statics = new Iterator4(_statics);
+			Iterator4 statics = new Iterator4Impl(_statics);
 			_statics = null;
 			while(statics.hasNext()) {
 				YapClass yc = (YapClass)statics.next();
@@ -76,7 +76,7 @@ class PendingClassInits {
 	private void checkWrites() {
 		checkStatics();
 		while(_writes != null) {
-			IIterator4 writes = new Iterator4(_writes);
+			Iterator4 writes = new Iterator4Impl(_writes);
 			_writes = null;
 			while(writes.hasNext()) {
 				YapClass yc = (YapClass)writes.next();
@@ -91,7 +91,7 @@ class PendingClassInits {
     private void checkInits() {
         checkWrites();
         while(_inits != null) {
-            IIterator4 inits = new Iterator4(_inits);
+            Iterator4 inits = new Iterator4Impl(_inits);
             _inits = null;
             while(inits.hasNext()) {
                 YapClass yc = (YapClass)inits.next();

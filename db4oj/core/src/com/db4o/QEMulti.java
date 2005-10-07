@@ -18,7 +18,7 @@ public class QEMulti extends QE{
 	
 	boolean identity(){
 		boolean ret = false;
-		IIterator4 i = i_evaluators.iterator();
+		Iterator4 i = i_evaluators.iterator();
 		while(i.hasNext()){
 			if(((QE)i.next()).identity()){
 				ret = true;
@@ -34,7 +34,7 @@ public class QEMulti extends QE{
     }
 	
 	boolean evaluate(QConObject a_constraint, QCandidate a_candidate, Object a_value){
-		IIterator4 i = i_evaluators.iterator();
+		Iterator4 i = i_evaluators.iterator();
 		while(i.hasNext()){
 			if(((QE)i.next()).evaluate(a_constraint, a_candidate, a_value)){
 				return true;
@@ -44,14 +44,14 @@ public class QEMulti extends QE{
 	}
 	
 	public void indexBitMap(boolean[] bits){
-	    IIterator4 i = i_evaluators.iterator();
+	    Iterator4 i = i_evaluators.iterator();
 	    while(i.hasNext()){
 	        ((QE)i.next()).indexBitMap(bits);
 	    }
 	}
 	
 	public boolean supportsIndex(){
-	    IIterator4 i = i_evaluators.iterator();
+	    Iterator4 i = i_evaluators.iterator();
 	    while(i.hasNext()){
 	        if(! ((QE)i.next()).supportsIndex()){
 	            return false;
