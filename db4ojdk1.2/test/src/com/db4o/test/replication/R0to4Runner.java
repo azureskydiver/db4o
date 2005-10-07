@@ -2,8 +2,11 @@
 
 package com.db4o.test.replication;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.query.*;
 import com.db4o.replication.*;
 import com.db4o.test.*;
@@ -146,6 +149,7 @@ public class R0to4Runner {
     }
 
     private int replicateAll(boolean modifiedOnly) {
+        Collection4 allR0 = new Collection4();
         ReplicationProcess replication = _peerA.replicationBegin(_peerB, _ignoreConflictHandler);
         Query q = _peerA.query();
         q.constrain(R0.class);
@@ -155,12 +159,42 @@ public class R0to4Runner {
         ObjectSet objectSet = q.execute();
         int replicated = 0;
         while (objectSet.hasNext()) {
-            replication.replicate(objectSet.next());
+            R0 r0 = (R0)objectSet.next();
+            allR0.add(r0);
+            replication.replicate(r0);
             replicated++;
         }
         replication.commit();
         ensureCount(_peerA, LINKERS);
         ensureCount(_peerB, LINKERS);
+        Iterator4 i = allR0.iterator();
+        while(i.hasNext()){
+            R0 r0 = (R0)i.next();
+            ObjectInfo infoA = _peerA.getObjectInfo(r0);
+            ObjectInfo infoB = _peerB.getObjectInfo(r0);
+            Db4oUUID uuidA = infoA.getUUID();
+            Db4oUUID uuidB = infoB.getUUID();
+            Test.ensure(uuidA.getLongPart() == uuidB.getLongPart());
+            byte[] sigA = uuidA.getSignaturePart();
+            byte[] sigB = uuidB.getSignaturePart();
+            Test.ensure(Arrays.equals(sigA, sigB));
+        }
+        
+        // reopen replication file
+        _peerB = Test.replica();
+        
+        i = allR0.iterator();
+        while(i.hasNext()){
+            R0 r0 = (R0)i.next();
+            ObjectInfo infoA = _peerA.getObjectInfo(r0);
+            ObjectInfo infoB = _peerB.getObjectInfo(r0);
+            Db4oUUID uuidA = infoA.getUUID();
+            R0 r0B = (R0) _peerB.getByUUID(uuidA);
+            Test.ensure(r0B != null);
+            _peerB.activate(r0B, 1);
+            Test.ensure(r0B.name.equals(r0.name));
+        }
+        
         return replicated;
     }
 
