@@ -40,7 +40,7 @@ public class QQuery implements Query {
 
     private void addConstraint(Collection4 col, Object obj) {
         boolean found = false;
-        IIterator4 j = iterateConstraints();
+        Iterator4 j = iterateConstraints();
         while (j.hasNext()) {
             QCon existingConstraint = (QCon)j.next();
             boolean[] removeExisting = { false };
@@ -88,7 +88,7 @@ public class QQuery implements Query {
                     if (classes.size() == 0) {
                         return null;
                     }
-                    IIterator4 i = classes.iterator();
+                    Iterator4 i = classes.iterator();
                     Constraint constr = null;
                     while (i.hasNext()) {
                         YapClass yapClass = (YapClass)i.next();
@@ -107,7 +107,7 @@ public class QQuery implements Query {
                     return constr;
                 }
 
-                IIterator4 constraintsIterator = iterateConstraints();
+                Iterator4 constraintsIterator = iterateConstraints();
                 while (constraintsIterator.hasNext()) {
                     QCon existingConstraint = (QConObject)constraintsIterator.next();
                     boolean[] removeExisting = { false };
@@ -137,7 +137,7 @@ public class QQuery implements Query {
             
             QConEvaluation eval = Platform4.evaluationCreate(i_trans, example);
 			if (eval != null) {
-                IIterator4 i = iterateConstraints();
+                Iterator4 i = iterateConstraints();
                 while (i.hasNext()) {
                     ((QCon)i.next()).addConstraint(eval);
                 }
@@ -226,7 +226,7 @@ public class QQuery implements Query {
             });
 
         }
-        IIterator4 i = iterateConstraints();
+        Iterator4 i = iterateConstraints();
         while (i.hasNext()) {
             if (((QCon)i.next()).attach(query, a_field)) {
                 foundClass[0] = true;
@@ -314,7 +314,7 @@ public class QQuery implements Query {
         boolean checkDuplicates = false;
         boolean topLevel = true;
         List4 candidateCollection = null;
-        IIterator4 i = iterateConstraints();
+        Iterator4 i = iterateConstraints();
         while (i.hasNext()) {
             QCon qcon = (QCon)i.next();
             QCon old = qcon;
@@ -327,7 +327,7 @@ public class QQuery implements Query {
             YapClass yc = qcon.getYapClass();
             if (yc != null) {
                 if (candidateCollection != null) {
-                    IIterator4 j = new Iterator4(candidateCollection);
+                    Iterator4 j = new Iterator4Impl(candidateCollection);
                     while (j.hasNext()) {
                         QCandidates candidates = (QCandidates)j.next();
                         if (candidates.tryAddConstraint(qcon)) {
@@ -354,7 +354,7 @@ public class QQuery implements Query {
 
         if (candidateCollection != null) {
 
-            i = new Iterator4(candidateCollection);
+            i = new Iterator4Impl(candidateCollection);
             while (i.hasNext()) {
                 ((QCandidates)i.next()).execute();
             }
@@ -367,7 +367,7 @@ public class QQuery implements Query {
                 result.checkDuplicates();
             }
 
-            i = new Iterator4(candidateCollection);
+            i = new Iterator4Impl(candidateCollection);
             while (i.hasNext()) {
                 QCandidates candidates = (QCandidates)i.next();
                 if (topLevel) {
@@ -385,7 +385,7 @@ public class QQuery implements Query {
                             if (candidate.include()) {
                                 TreeInt ids = new TreeInt(candidate.i_key);
                                 final TreeInt[] idsNew = new TreeInt[1];
-                                IIterator4 itPath = fieldPath.iterator();
+                                Iterator4 itPath = fieldPath.iterator();
                                 while (itPath.hasNext()) {
                                     idsNew[0] = null;
                                     final String fieldName = (String) (itPath.next());
@@ -434,7 +434,7 @@ public class QQuery implements Query {
         return i_trans;
     }
     
-    IIterator4 iterateConstraints(){
+    Iterator4 iterateConstraints(){
         return i_constraints.iterator();
     }
 
@@ -453,14 +453,14 @@ public class QQuery implements Query {
     }
 
     private void setOrdering(final int ordering) {
-        IIterator4 i = iterateConstraints();
+        Iterator4 i = iterateConstraints();
         while (i.hasNext()) {
             ((QCon)i.next()).setOrdering(ordering);
         }
     }
 
     void marshall() {
-        IIterator4 i = iterateConstraints();
+        Iterator4 i = iterateConstraints();
         while (i.hasNext()) {
             ((QCon)i.next()).getRoot().marshall();
         }
@@ -472,14 +472,14 @@ public class QQuery implements Query {
 
     void unmarshall(final Transaction a_trans) {
         i_trans = a_trans;
-        IIterator4 i = iterateConstraints();
+        Iterator4 i = iterateConstraints();
         while (i.hasNext()) {
             ((QCon)i.next()).unmarshall(a_trans);
         }
     }
 
     Constraint toConstraint(final Collection4 constraints) {
-        IIterator4 i = constraints.iterator();
+        Iterator4 i = constraints.iterator();
         if (constraints.size() == 1) {
             return (Constraint)i.next();
         } else if (constraints.size() > 0) {

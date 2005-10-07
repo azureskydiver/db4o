@@ -2,7 +2,7 @@
 
 using System;
 using com.db4o.foundation;
-using j4o.lang;
+
 namespace com.db4o.test.types {
 
    public class Stack4 {
@@ -16,7 +16,7 @@ namespace com.db4o.test.types {
          if (i_compare == null) {
             i_compare = new Collection4();
          } else {
-            Iterator4 i = i_compare.fastIterator();
+            Iterator4 i = i_compare.iterator();
             while (i.hasNext()) {
                if (i.next() == a_compare) {
                   return false;

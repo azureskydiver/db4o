@@ -55,7 +55,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     }
 
     void checkChanges() {
-        IIterator4 i = i_classes.iterator();
+        Iterator4 i = i_classes.iterator();
         while (i.hasNext()) {
             ((YapClass)i.next()).checkChanges();
         }
@@ -94,7 +94,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
             if(! candidate.isInterface()){
                 if (claxx.isAssignableFrom(candidate)) {
                     col.add(yc);
-                    IIterator4 j = col.iterator();
+                    Iterator4 j = col.iterator();
                     while (j.hasNext()) {
                         YapClass existing = (YapClass)j.next();
                         if(existing != yc){
@@ -206,7 +206,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     void initOnUp(Transaction systemTrans) {
         i_yapClassCreationDepth++;
         systemTrans.i_stream.showInternalClasses(true);
-        IIterator4 i = i_classes.iterator();
+        Iterator4 i = i_classes.iterator();
         while (i.hasNext()) {
             ((YapClass)i.next()).initOnUp(systemTrans);
         }
@@ -247,7 +247,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     }
 
     void purge() {
-        IIterator4 i = i_classes.iterator();
+        Iterator4 i = i_classes.iterator();
         while (i.hasNext()) {
             ((YapClass)i.next()).purge();
         }
@@ -311,7 +311,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         YapClassCollection rereader = new YapClassCollection(i_systemTrans);
         rereader.i_id = i_id;
         rereader.read(i_stream.getSystemTransaction());
-        IIterator4 i = rereader.i_classes.iterator();
+        Iterator4 i = rereader.i_classes.iterator();
         while (i.hasNext()) {
             YapClass yc = (YapClass)i.next();
             if (i_yapClassByID.get(yc.getID()) == null) {
@@ -347,7 +347,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     
     public StoredClass[] storedClasses() {
         Collection4 classes = new Collection4();
-        IIterator4 i = i_classes.iterator();
+        Iterator4 i = i_classes.iterator();
         while (i.hasNext()) {
             YapClass yc = (YapClass)i.next();
             readYapClass(yc, null);
@@ -363,7 +363,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
 
     void writeThis(YapWriter a_writer) {
         a_writer.writeInt(i_classes.size());
-        IIterator4 i = i_classes.iterator();
+        Iterator4 i = i_classes.iterator();
         while (i.hasNext()) {
             writeIDOf((YapClass)i.next(), a_writer);
         }

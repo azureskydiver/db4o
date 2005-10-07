@@ -3,7 +3,7 @@
 package com.db4o.foundation;
 
 
-final class EmptyIterator extends Iterator4 {
+final class EmptyIterator extends Iterator4Impl {
 
 	EmptyIterator() {
 		super(null);

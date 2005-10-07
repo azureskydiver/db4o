@@ -213,7 +213,7 @@ public class YapField implements StoredField {
         Object obj = getOn(a_trans, a_template);
         if (obj != null) {
             Collection4 objs = Platform4.flattenCollection(a_trans.i_stream, obj);
-            IIterator4 j = objs.iterator();
+            Iterator4 j = objs.iterator();
             while (j.hasNext()) {
                 obj = j.next();
                 if (obj != null) {

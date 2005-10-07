@@ -132,7 +132,7 @@ public class QConObject extends QCon {
         boolean rereadObject) {
         if (i_field.isSimple()) {
             boolean hasEvaluation = false;
-            IIterator4 i = iterateChildren();
+            Iterator4 i = iterateChildren();
             while (i.hasNext()) {
                 if (i.next() instanceof QConEvaluation) {
                     hasEvaluation = true;
@@ -141,7 +141,7 @@ public class QConObject extends QCon {
             }
             if (hasEvaluation) {
                 a_candidates.traverse(i_field);
-                IIterator4 j = iterateChildren();
+                Iterator4 j = iterateChildren();
                 while (j.hasNext()) {
                     ((QCon) j.next()).evaluateEvaluationsExec(a_candidates,false);
                 }

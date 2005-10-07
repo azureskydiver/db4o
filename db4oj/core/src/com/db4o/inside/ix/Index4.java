@@ -219,7 +219,7 @@ public class Index4 {
             IxFileRange newFileRange = writeToNewSlot(slot, length);
 
             if(_indexTransactions != null){
-                IIterator4 i = _indexTransactions.iterator();
+                Iterator4 i = _indexTransactions.iterator();
                 while (i.hasNext()) {
                     final IndexTransaction ft = (IndexTransaction) i.next();
                     Tree clonedTree = newFileRange;
@@ -246,7 +246,7 @@ public class Index4 {
             doFree(free);
 
         } else {
-            IIterator4 i = _indexTransactions.iterator();
+            Iterator4 i = _indexTransactions.iterator();
             while (i.hasNext()) {
                 ((IndexTransaction) i.next()).merge(ixTrans);
             }
@@ -284,7 +284,7 @@ public class Index4 {
             sb.append("\n  no global index \n   ");
         }
         if (_indexTransactions != null) {
-            IIterator4 i = _indexTransactions.iterator();
+            Iterator4 i = _indexTransactions.iterator();
             while (i.hasNext()) {
                 sb.append("\n");
                 sb.append(i.next().toString());

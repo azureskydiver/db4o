@@ -1,9 +1,7 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
-using System.Diagnostics;
 using com.db4o.foundation;
-using j4o.lang;
 using j4o.lang.reflect;
 using com.db4o;
 using com.db4o.query;
@@ -163,7 +161,7 @@ namespace com.db4o.test.soda
 			if (failedTestClasses.size() > 0) 
 			{
 				j4o.lang.JavaSystem.err.println("\nFailed test classes:\n");
-				Iterator4 i1 = failedTestClasses.fastIterator();
+				Iterator4 i1 = failedTestClasses.iterator();
 				while (i1.hasNext()) 
 				{
 					j4o.lang.JavaSystem.err.println(j4o.lang.Class.getClassForObject(i1.next()).getName());
@@ -345,13 +343,13 @@ namespace com.db4o.test.soda
 					{ 
 						Platform4.setAccessible(field1);
 					}  
-					catch (Exception t) 
+					catch (Exception) 
 					{ 
 					}
 					field1.set(classes[i1], this);
                       
 				}  
-				catch (Exception e) 
+				catch (Exception) 
 				{ 
 					j4o.lang.JavaSystem.err.println("Add the following line to Class " + j4o.lang.Class.getClassForObject(classes[i1]).getName());
 					j4o.lang.JavaSystem.err.println("public static transient SodaTest st;");

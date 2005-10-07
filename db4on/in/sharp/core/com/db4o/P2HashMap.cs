@@ -2,8 +2,6 @@
 
 using System;
 using System.Collections;
-using j4o.lang;
-using j4o.util;
 using com.db4o.inside;
 using com.db4o.types;
 using com.db4o.foundation;
@@ -304,7 +302,7 @@ namespace com.db4o {
                     i_entries = new P1HashElement[col.size()];
                 }
                 int j = 0;
-                Iterator4 it = col.fastIterator();
+                Iterator4 it = col.iterator();
                 while (it.hasNext()){
                     i_entries[j++] = (P1HashElement)it.next();
                 }

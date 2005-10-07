@@ -5,7 +5,7 @@ import java.util.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.reflect.*;
 
-import com.db4o.foundation.IIterator4;
+import com.db4o.foundation.Iterator4;
 import com.db4o.inside.query.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
@@ -49,7 +49,7 @@ public class SODABloatMethodBuilder {
 
 		public void visit(final ComparisonExpression expression) {
 			methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable("query",queryType,1));
-			IIterator4 fieldNames = expression.left().fieldNames();
+			Iterator4 fieldNames = expression.left().fieldNames();
 			while(fieldNames.hasNext()) {
 				methodEditor.addInstruction(Opcode.opc_ldc,(String)fieldNames.next());
 				methodEditor.addInstruction(Opcode.opc_invokeinterface,descendRef);
@@ -71,7 +71,7 @@ public class SODABloatMethodBuilder {
 				}
 
 				public void visit(FieldValue fieldValue) {
-					IIterator4 targetFieldNames =fieldValue.fieldNames();
+					Iterator4 targetFieldNames =fieldValue.fieldNames();
 					methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(0));
 					try {
 						Class curClass=predicateClass;

@@ -43,7 +43,7 @@ public class Collection4 implements DeepClone {
         }
     }
     
-	public final void addAll(IIterator4 iterator) {
+	public final void addAll(Iterator4 iterator) {
 		while (iterator.hasNext()) {
 			add(iterator.next());
 		}
@@ -78,7 +78,7 @@ public class Collection4 implements DeepClone {
      * that equals() the passed object
      */
     public final Object get(Object element) {
-        IIterator4 i = iterator();
+        Iterator4 i = iterator();
         while (i.hasNext()) {
         	Object current = i.next();
             if (current.equals(element)) {
@@ -91,7 +91,7 @@ public class Collection4 implements DeepClone {
     public Object deepClone(Object newParent) {
         Collection4 col = new Collection4();
         Object element = null;
-        IIterator4 i = this.iterator();
+        Iterator4 i = this.iterator();
         while (i.hasNext()) {
             element = i.next();
             if (element instanceof DeepClone) {
@@ -123,11 +123,10 @@ public class Collection4 implements DeepClone {
      * 
      * @return
      */
-    public final IIterator4 iterator() {
-        if (_first == null) {
-            return Iterator4.EMPTY;
-        }
-        return new Iterator4(_first);
+    public final Iterator4 iterator() {
+        return _first == null
+        	? Iterator4Impl.EMPTY
+            : new Iterator4Impl(_first);
     }
     
     /**
@@ -136,7 +135,7 @@ public class Collection4 implements DeepClone {
      * 
      * @return
      */
-    public IIterator4 strictIterator() {
+    public Iterator4 strictIterator() {
 		return new ArrayIterator4(toArray());
 	}
 
@@ -175,7 +174,7 @@ public class Collection4 implements DeepClone {
      */
     public final void toArray(Object[] a_array) {
         int j = _size;
-        IIterator4 i = iterator();
+        Iterator4 i = iterator();
 
         // backwards, since our linked list is the wrong way around
         while (i.hasNext()) {
@@ -196,7 +195,7 @@ public class Collection4 implements DeepClone {
             }
             StringBuffer sb = new StringBuffer();
             sb.append("[");
-            IIterator4 i = iterator();
+            Iterator4 i = iterator();
             sb.append(i.next());
             while(i.hasNext()){
                 sb.append(", ");

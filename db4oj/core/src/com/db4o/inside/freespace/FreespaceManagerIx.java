@@ -164,7 +164,7 @@ public class FreespaceManagerIx extends FreespaceManager{
             }
             _addressIx._index.commitFreeSpace(_lengthIx._index);
             if(Deploy.debug){
-                IIterator4 i = _xBytes.iterator();
+                Iterator4 i = _xBytes.iterator();
                 while(i.hasNext()){
                     int[] addressLength = (int[])i.next();
                     _file.writeXBytes(addressLength[0], addressLength[1]);
