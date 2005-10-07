@@ -36,6 +36,7 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
     void init(Config4Impl a_config) {
         i_db = Db4oDatabase.generate();
         i_uuidGenerator = Unobfuscated.randomLong();
+        i_uuidMetaIndex = new MetaIndex();
         initConfig(a_config);
         i_dirty = true;
     }
@@ -91,6 +92,10 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
     }
     
     MetaIndex getUUIDMetaIndex(){
+        
+        // TODO: This is legacy code for old database files.
+        // Newer versions create i_uuidMetaIndex when PBootRecord
+        // is created. Remove this code after June 2006.
         if (i_uuidMetaIndex == null) {
             i_uuidMetaIndex = new MetaIndex();
             Transaction systemTrans = i_stream.getSystemTransaction();
@@ -99,6 +104,7 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
             i_stream.showInternalClasses(false);
             systemTrans.commit();
         }
+        
         return i_uuidMetaIndex;
     }
 
