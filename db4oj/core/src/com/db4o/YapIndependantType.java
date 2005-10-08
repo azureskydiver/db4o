@@ -60,5 +60,16 @@ public abstract class YapIndependantType implements TypeHandler4
     public boolean writeArray(Object array, YapWriter reader) {
         return false;
     }
-	
+    
+    // redundant, only added to make Sun JDK 1.2's java happy :(
+    public abstract boolean isGreater(Object obj);	
+    public abstract YapComparable prepareComparison(Object obj);
+    public abstract int compareTo(Object obj);
+    public abstract boolean isEqual(Object obj);
+    public abstract boolean isSmaller(Object obj);
+    
+    public abstract Object comparableObject(Transaction trans, Object indexEntry);
+    public abstract Object readIndexEntry(YapReader a_reader);
+    public abstract void writeIndexEntry(YapWriter a_writer, Object a_object);
+
 }

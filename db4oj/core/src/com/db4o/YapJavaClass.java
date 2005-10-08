@@ -211,4 +211,6 @@ public abstract class YapJavaClass implements TypeHandler4 {
 
     abstract boolean isSmaller1(Object obj);
 
+    // redundant, only added to make Sun JDK 1.2's java happy :(
+    public abstract int linkLength();
 }
