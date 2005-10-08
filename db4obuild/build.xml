@@ -182,6 +182,28 @@
 		<jar destfile="${file.java5.jar}">
 			<fileset dir="${dir.dist.classes.java5}" />
 		</jar>
+		
+		<mkdir dir="${dir.dist.classes.nqopt}" />
+		<delete>
+			<fileset dir="${dir.dist.classes.nqopt}">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+		<javac srcdir="${dir.j.nqopt.src}" destdir="${dir.dist.classes.nqopt}" debug="off" target="1.2" source="1.2">
+			<classpath>
+				<pathelement path="${file.java1.2.jar}"/>
+				<pathelement path="${file.bloat.jar}"/>
+				<pathelement path="${file.ant.jar}"/>
+			</classpath>
+		</javac>
+		<jar destfile="${file.nqopt.jar}">
+			<fileset dir="${dir.dist.classes.nqopt}" />
+			<manifest>
+				<attribute name="Class-Path" value="${filename.bloat.jar} ${filename.ant.jar} ${filename.java1.2.jar}"/>
+			</manifest>
+		</jar>
+		<copy file="${file.bloat.jar}" todir="${dir.dist.jars}" />
+		<copy file="${file.ant.jar}" todir="${dir.dist.jars}" />
 	</target>
 
 	<target name="compileobjectmanager" depends="compilecorejava" description="Compile object manager sources">
@@ -623,6 +645,14 @@
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.jdk5}">
 			<fileset dir="${dir.j.jdk5}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="build.xml" />
+				<include name="**/src/**" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.src}/${name.project.nqopt}">
+			<fileset dir="${dir.j.nqopt}">
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="build.xml" />
