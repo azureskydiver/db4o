@@ -29,8 +29,9 @@ public class Db4oFileEnhancerAntTask extends Task {
 
 	public void execute() {
 		List paths=new ArrayList();
-		for (Iterator pathIter = paths.iterator(); pathIter.hasNext();) {
+		for (Iterator pathIter = classPath.iterator(); pathIter.hasNext();) {
 			Path path = (Path) pathIter.next();
+			System.err.println(path.size());
 			String[] curPaths=path.list();
 			for (int curPathIdx = 0; curPathIdx < curPaths.length; curPathIdx++) {
 				paths.add(curPaths[curPathIdx]);
