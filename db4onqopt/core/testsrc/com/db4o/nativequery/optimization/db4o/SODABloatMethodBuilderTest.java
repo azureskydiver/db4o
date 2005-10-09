@@ -95,6 +95,8 @@ public class SODABloatMethodBuilderTest extends TestCase {
 				Opcode.opc_new,
 				Opcode.opc_dup,
 				Opcode.opc_ldc,
+				Opcode.opc_ldc,
+				Opcode.opc_isub,
 				Opcode.opc_invokespecial,
 				Opcode.opc_invokeinterface,
 				Opcode.opc_invokeinterface
@@ -104,7 +106,7 @@ public class SODABloatMethodBuilderTest extends TestCase {
 
 	private void assertByteCodes(Expression expr,int[] expectedCode) {
 		MethodEditor methodEditor=builder.injectOptimization(expr, classEditor, getClass().getClassLoader());
-		methodEditor.print(System.out);
+		//methodEditor.print(System.out);
 		List actualCode=methodEditor.code();
 		assertEquals(expectedCode.length+5,actualCode.size());
 		assertLabel(actualCode,0);
