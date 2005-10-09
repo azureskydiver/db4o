@@ -5,7 +5,7 @@ import java.util.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.reflect.*;
 
-import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.*;
 import com.db4o.inside.query.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
@@ -62,29 +62,34 @@ public class SODABloatMethodBuilder {
 					Object value = operand.value();
 					if(value!=null) {
 						opClass=value.getClass();
+						prepareConversion(value.getClass(),!inArithmetic);
 					}
 					methodEditor.addInstruction(Opcode.opc_ldc,value);
-					if(value!=null&&conversions.containsKey(value.getClass())&&!inArithmetic) {
-						methodEditor.addInstruction(Opcode.opc_invokestatic,conversions.get(value.getClass()));
+					if(value!=null) {
+						applyConversion(value.getClass(),!inArithmetic);
 					}
 					// FIXME handle char, boolean,...
 				}
 
 				public void visit(FieldValue fieldValue) {
-					Iterator4 targetFieldNames =fieldValue.fieldNames();
 					methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(0));
 					try {
+						Iterator4 targetFieldNames =fieldValue.fieldNames();
+						Collection4 fieldRefs=new Collection4();
 						Class curClass=predicateClass;
 						while(targetFieldNames.hasNext()) {
 							String fieldName=(String)targetFieldNames.next();
 							Class fieldClass=fieldClass(curClass,fieldName);
-							methodEditor.addInstruction(Opcode.opc_getfield,createFieldReference(curClass,fieldClass,fieldName));
+							fieldRefs.add(createFieldReference(curClass,fieldClass,fieldName));
 							curClass=fieldClass;
 						}
 						opClass=curClass;
-						if(conversions.containsKey(curClass)&&!inArithmetic) {
-							methodEditor.addInstruction(Opcode.opc_invokestatic,conversions.get(curClass));
+						prepareConversion(curClass,!inArithmetic);
+						Iterator4 fieldRefIter=fieldRefs.strictIterator();
+						while(fieldRefIter.hasNext()) {
+							methodEditor.addInstruction(Opcode.opc_getfield,(MemberRef)fieldRefIter.next());
 						}
+						applyConversion(curClass,!inArithmetic);
 					} catch (NoSuchFieldException exc) {
 						throw new RuntimeException(exc.getMessage());
 					}
@@ -93,6 +98,8 @@ public class SODABloatMethodBuilder {
 				public void visit(ArithmeticExpression operand) {
 					boolean oldInArithmetic=inArithmetic;
 					inArithmetic=true;
+					// FIXME opClass not known here
+					prepareConversion(opClass,!oldInArithmetic);
 					operand.left().accept(this);
 					operand.right().accept(this);
 					switch(operand.op().id()) {
@@ -111,15 +118,25 @@ public class SODABloatMethodBuilder {
 						default:
 							throw new RuntimeException("Unknown operand: "+operand.op());
 					}
-					if(!oldInArithmetic) {
-						if(conversions.containsKey(opClass)) {
-							methodEditor.addInstruction(Opcode.opc_invokestatic,conversions.get(opClass));
-						}
-					}
+					applyConversion(opClass,!oldInArithmetic);
 					inArithmetic=oldInArithmetic;
 					// FIXME: need to map dX,fX,...
 				}
 				
+				private void prepareConversion(Class clazz,boolean canApply) {
+					if(conversions.containsKey(clazz)&&canApply) {
+						Class[] convSpec=(Class[])conversions.get(clazz);
+						methodEditor.addInstruction(Opcode.opc_new,createType(convSpec[0]));
+						methodEditor.addInstruction(Opcode.opc_dup);
+					}
+				}
+
+				private void applyConversion(Class clazz,boolean canApply) {
+					if(conversions.containsKey(clazz)&&canApply) {
+						Class[] convSpec=(Class[])conversions.get(clazz);
+						methodEditor.addInstruction(Opcode.opc_invokespecial,createMethodReference(convSpec[0],"<init>",new Class[]{convSpec[1]},Void.TYPE));
+					}
+				}
 			});
 			methodEditor.addInstruction(Opcode.opc_invokeinterface,constrainRef);
 			if(!expression.op().equals(ComparisonOperator.EQUALS)) {
@@ -161,7 +178,7 @@ public class SODABloatMethodBuilder {
 	}
 	
 	private void buildMethodReferences() {
-		queryType = Type.getType(Query.class);
+		queryType = createType(Query.class);
 		descendRef=createMethodReference(Query.class,"descend",new Class[]{String.class},Query.class);
 		constrainRef=createMethodReference(Query.class,"constrain",new Class[]{Object.class},Constraint.class);
 		greaterRef=createMethodReference(Constraint.class,"greater",new Class[]{},Constraint.class);
@@ -170,35 +187,39 @@ public class SODABloatMethodBuilder {
 		andRef=createMethodReference(Constraint.class,"and",new Class[]{Constraint.class},Constraint.class);
 		orRef=createMethodReference(Constraint.class,"or",new Class[]{Constraint.class},Constraint.class);
 		conversions=new HashMap();
-		conversions.put(Integer.class,createMethodReference(Integer.class,"valueOf",new Class[]{Integer.TYPE},Integer.class));
-		conversions.put(Long.class,createMethodReference(Long.class,"valueOf",new Class[]{Long.TYPE},Long.class));
-		conversions.put(Short.class,createMethodReference(Short.class,"valueOf",new Class[]{Short.TYPE},Short.class));
-		conversions.put(Byte.class,createMethodReference(Byte.class,"valueOf",new Class[]{Byte.TYPE},Byte.class));
-		conversions.put(Double.class,createMethodReference(Double.class,"valueOf",new Class[]{Double.TYPE},Double.class));
-		conversions.put(Float.class,createMethodReference(Float.class,"valueOf",new Class[]{Float.TYPE},Float.class));
+		conversions.put(Integer.class,new Class[]{Integer.class,Integer.TYPE});
+		conversions.put(Long.class,new Class[]{Long.class,Long.TYPE});
+		conversions.put(Short.class,new Class[]{Short.class,Short.TYPE});
+		conversions.put(Byte.class,new Class[]{Byte.class,Byte.TYPE});
+		conversions.put(Double.class,new Class[]{Double.class,Double.TYPE});
+		conversions.put(Float.class,new Class[]{Float.class,Float.TYPE});
 		// FIXME this must be handled somewhere else -  FieldValue, etc.
-		conversions.put(Integer.TYPE,createMethodReference(Integer.class,"valueOf",new Class[]{Integer.TYPE},Integer.class));
-		conversions.put(Long.TYPE,createMethodReference(Long.class,"valueOf",new Class[]{Long.TYPE},Long.class));
-		conversions.put(Short.TYPE,createMethodReference(Short.class,"valueOf",new Class[]{Short.TYPE},Short.class));
-		conversions.put(Byte.TYPE,createMethodReference(Byte.class,"valueOf",new Class[]{Byte.TYPE},Byte.class));
-		conversions.put(Double.TYPE,createMethodReference(Double.class,"valueOf",new Class[]{Double.TYPE},Double.class));
-		conversions.put(Float.TYPE,createMethodReference(Float.class,"valueOf",new Class[]{Float.TYPE},Float.class));
+		conversions.put(Integer.TYPE,conversions.get(Integer.class));
+		conversions.put(Long.TYPE,conversions.get(Long.class));
+		conversions.put(Short.TYPE,conversions.get(Short.class));
+		conversions.put(Byte.TYPE,conversions.get(Byte.class));
+		conversions.put(Double.TYPE,conversions.get(Double.class));
+		conversions.put(Float.TYPE,conversions.get(Float.class));
 	}
 	
 	private MemberRef createMethodReference(Class parent,String name,Class[] args,Class ret) {
 		Type[] argTypes=new Type[args.length];
 		for (int argIdx = 0; argIdx < args.length; argIdx++) {
-			argTypes[argIdx]=Type.getType(args[argIdx]);
+			argTypes[argIdx]=createType(args[argIdx]);
 		}
-		NameAndType nameAndType=new NameAndType(name,Type.getType(argTypes,Type.getType(ret)));
-		return new MemberRef(Type.getType(parent),nameAndType);
+		NameAndType nameAndType=new NameAndType(name,Type.getType(argTypes,createType(ret)));
+		return new MemberRef(createType(parent),nameAndType);
 	}
 
 	private MemberRef createFieldReference(Class parentClass,Class fieldClass,String name) throws NoSuchFieldException {
-		NameAndType nameAndType=new NameAndType(name,Type.getType(fieldClass));
-		return new MemberRef(Type.getType(parentClass),nameAndType);
+		NameAndType nameAndType=new NameAndType(name,createType(fieldClass));
+		return new MemberRef(createType(parentClass),nameAndType);
 	}
 
+	private Type createType(Class clazz) {
+		return Type.getType(clazz);
+	}
+	
 	private Class fieldClass(Class parent, String name) throws NoSuchFieldException {
 		return parent.getDeclaredField(name).getType();
 	}
