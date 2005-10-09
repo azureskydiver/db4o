@@ -2,8 +2,6 @@
 
 package com.db4o;
 
-import java.lang.reflect.*;
-
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -22,14 +20,14 @@ import com.db4o.types.*;
 public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     TransientClass {
 
+	private static final String OPTIMIZER_IMPL_NAME = "com.db4o.nativequery.optimization.Db4oOnTheFlyEnhancer";
 	public static final String PROPERTY_DYNAMICNQ = "db4o.dynamicnq";
 	public final static String UNOPTIMIZED="UNOPTIMIZED";
 	public final static String PREOPTIMIZED="PREOPTIMIZED";
 	public final static String DYNOPTIMIZED="DYNOPTIMIZED";
 	
 	
-	private Object enhancer;
-	private Method optimizeMethod;
+	private Db4oNQOptimizer enhancer;
 	private List4 listeners;
 
     public static final int        HEADER_LENGTH         = 2 + (YapConst.YAPINT_LENGTH * 4);
@@ -137,9 +135,8 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
 	private void loadQueryOptimizer() {
 		try {
-			Class enhancerClass=Class.forName("com.db4o.nativequery.optimization.Db4oOnTheFlyEnhancer");
-			enhancer=enhancerClass.newInstance();
-			optimizeMethod=enhancerClass.getMethod("optimize",new Class[]{Query.class,Predicate.class});
+			Class enhancerClass=Class.forName(OPTIMIZER_IMPL_NAME);
+			enhancer=(Db4oNQOptimizer)enhancerClass.newInstance();
 		} catch (Throwable ignored) {
 			enhancer=null;
 		}
@@ -1194,7 +1191,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 		}
 		try {
 			if(optimizeOnTheFly()&&enhancer!=null) {
-				optimizeMethod.invoke(enhancer,new Object[]{q,predicate});
+				enhancer.optimize(q,predicate);
 				notifyListeners(predicate,DYNOPTIMIZED);
 				return q;
 			}
