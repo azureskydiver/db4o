@@ -99,7 +99,7 @@ public class SODABloatMethodBuilder {
 					boolean oldInArithmetic=inArithmetic;
 					inArithmetic=true;
 					// FIXME opClass not known here
-					prepareConversion(opClass,!oldInArithmetic);
+					Instruction newInstr=prepareConversion(opClass,!oldInArithmetic,true);
 					operand.left().accept(this);
 					operand.right().accept(this);
 					switch(operand.op().id()) {
@@ -118,17 +118,27 @@ public class SODABloatMethodBuilder {
 						default:
 							throw new RuntimeException("Unknown operand: "+operand.op());
 					}
+					if(newInstr!=null) {
+						newInstr.setOperand(createType(opClass));
+					}
 					applyConversion(opClass,!oldInArithmetic);
 					inArithmetic=oldInArithmetic;
 					// FIXME: need to map dX,fX,...
 				}
 				
-				private void prepareConversion(Class clazz,boolean canApply) {
-					if(conversions.containsKey(clazz)&&canApply) {
+				private Instruction prepareConversion(Class clazz,boolean canApply) {
+					return prepareConversion(clazz,canApply,false);
+				}
+
+				private Instruction prepareConversion(Class clazz,boolean canApply,boolean force) {
+					if((force||conversions.containsKey(clazz))&&canApply) {
 						Class[] convSpec=(Class[])conversions.get(clazz);
-						methodEditor.addInstruction(Opcode.opc_new,createType(convSpec[0]));
+						Instruction newInstruction=new Instruction(Opcode.opc_new,(convSpec==null ? null : createType(convSpec[0])));
+						methodEditor.addInstruction(newInstruction);
 						methodEditor.addInstruction(Opcode.opc_dup);
+						return newInstruction;
 					}
+					return null;
 				}
 
 				private void applyConversion(Class clazz,boolean canApply) {
