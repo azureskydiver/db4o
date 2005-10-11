@@ -1,8 +1,10 @@
 package com.db4o.nativequery.optimization;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.reflect.*;
 
 import com.db4o.foundation.*;
@@ -11,6 +13,7 @@ import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.query.*;
 
+// TODO split into top level classes and refactor
 public class SODABloatMethodBuilder {	
 	private MethodEditor methodEditor;
 	
@@ -25,10 +28,12 @@ public class SODABloatMethodBuilder {
 	private Map conversions;
 
 	private class SODABloatMethodVisitor implements DiscriminatingExpressionVisitor {
+		private ClassLoader classLoader;
 		private Class predicateClass;
 		
-		public SODABloatMethodVisitor(Class predicateClass) {
+		public SODABloatMethodVisitor(Class predicateClass, ClassLoader classLoader) {
 			this.predicateClass=predicateClass;
+			this.classLoader=classLoader;
 		}
 		
 		public void visit(AndExpression expression) {
@@ -72,8 +77,13 @@ public class SODABloatMethodBuilder {
 				}
 
 				public void visit(FieldValue fieldValue) {
-					methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(0));
 					try {
+						Class lastFieldClass = deduceFieldClass(fieldValue);
+						boolean needConversion=lastFieldClass.isPrimitive();
+						if(needConversion) {
+							prepareConversion(lastFieldClass,!inArithmetic);
+						}
+						methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(0));
 						Iterator4 targetFieldNames =fieldValue.fieldNames();
 						Collection4 fieldRefs=new Collection4();
 						Class curClass=predicateClass;
@@ -84,21 +94,41 @@ public class SODABloatMethodBuilder {
 							curClass=fieldClass;
 						}
 						opClass=curClass;
-						prepareConversion(curClass,!inArithmetic);
 						Iterator4 fieldRefIter=fieldRefs.strictIterator();
 						while(fieldRefIter.hasNext()) {
 							methodEditor.addInstruction(Opcode.opc_getfield,(MemberRef)fieldRefIter.next());
 						}
-						applyConversion(curClass,!inArithmetic);
-					} catch (NoSuchFieldException exc) {
+						if(needConversion) {
+							applyConversion(curClass,!inArithmetic);
+						}
+					} catch (Exception exc) {
 						throw new RuntimeException(exc.getMessage());
 					}
+				}
+
+				private String getFieldName(FieldValue fieldValue) {
+					Iterator4 fieldNames=fieldValue.fieldNames();
+					String curName=null;
+					while(fieldNames.hasNext()) {
+						curName=(String)fieldNames.next();
+					}
+					return curName;
+				}
+
+				private Class deduceFieldClass(FieldValue fieldValue) throws Exception {
+					Class curClass=classLoader.loadClass(predicateClass.getName());
+					Iterator4 fieldIter=fieldValue.fieldNames();
+					while(fieldIter.hasNext()) {
+						String fieldName=(String)fieldIter.next();
+						Field curField=curClass.getDeclaredField(fieldName);
+						curClass=curField.getType();
+					}
+					return curClass;
 				}
 
 				public void visit(ArithmeticExpression operand) {
 					boolean oldInArithmetic=inArithmetic;
 					inArithmetic=true;
-					// FIXME opClass not known here
 					Instruction newInstr=prepareConversion(opClass,!oldInArithmetic,true);
 					operand.left().accept(this);
 					operand.right().accept(this);
@@ -176,7 +206,7 @@ public class SODABloatMethodBuilder {
 		methodEditor.addLabel(new Label(0,true));
 		try {
 			Class predicateClass = classLoader.loadClass(classEditor.name().replace('/','.'));
-			expr.accept(new SODABloatMethodVisitor(predicateClass));
+			expr.accept(new SODABloatMethodVisitor(predicateClass,classLoader));
 			methodEditor.addInstruction(Opcode.opc_pop);
 			methodEditor.addLabel(new Label(1,false));
 			methodEditor.addInstruction(Opcode.opc_return);
