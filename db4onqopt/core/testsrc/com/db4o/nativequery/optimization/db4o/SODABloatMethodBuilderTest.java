@@ -15,6 +15,7 @@ import com.db4o.nativequery.optimization.*;
 public class SODABloatMethodBuilderTest extends TestCase {
 	private final static String[] FIELDNAMES={"foo","baz"};
 	private final static Object CONSTVALUE=new Integer(42);
+	private final int primitive=42;
 	
 	private ClassEditor classEditor;
 	private SODABloatMethodBuilder builder;
@@ -104,9 +105,73 @@ public class SODABloatMethodBuilderTest extends TestCase {
 		assertByteCodes(expr,expected);
 	}
 
+	public void testPredicateFieldObjectAccess() {
+		FieldValue left=new FieldValue(1,FIELDNAMES);
+		FieldValue right=new FieldValue(0,"CONSTVALUE");
+		
+		Expression expr=new ComparisonExpression(left,right,ComparisonOperator.SMALLER);
+		int[] expected={
+				Opcode.opc_aload,
+				Opcode.opc_ldc,
+				Opcode.opc_invokeinterface,
+				Opcode.opc_ldc,
+				Opcode.opc_invokeinterface,
+				Opcode.opc_aload,
+				Opcode.opc_getfield,
+				Opcode.opc_invokeinterface,
+				Opcode.opc_invokeinterface
+		};
+		assertByteCodes(expr,expected);
+	}
+
+	public void testPredicateFieldPrimitiveAccess() {
+		FieldValue left=new FieldValue(1,FIELDNAMES);
+		FieldValue right=new FieldValue(0,"primitive");
+		
+		Expression expr=new ComparisonExpression(left,right,ComparisonOperator.SMALLER);
+		int[] expected={
+				Opcode.opc_aload,
+				Opcode.opc_ldc,
+				Opcode.opc_invokeinterface,
+				Opcode.opc_ldc,
+				Opcode.opc_invokeinterface,
+				Opcode.opc_new,
+				Opcode.opc_dup,				
+				Opcode.opc_aload,
+				Opcode.opc_getfield,
+				Opcode.opc_invokespecial,
+				Opcode.opc_invokeinterface,
+				Opcode.opc_invokeinterface
+		};
+		assertByteCodes(expr,expected);
+	}
+
+	public void testNegatedPredicateFieldPrimitiveAccess() {
+		FieldValue left=new FieldValue(1,FIELDNAMES);
+		FieldValue right=new FieldValue(0,"primitive");
+		
+		Expression expr=new NotExpression(new ComparisonExpression(left,right,ComparisonOperator.SMALLER));
+		int[] expected={
+				Opcode.opc_aload,
+				Opcode.opc_ldc,
+				Opcode.opc_invokeinterface,
+				Opcode.opc_ldc,
+				Opcode.opc_invokeinterface,
+				Opcode.opc_new,
+				Opcode.opc_dup,				
+				Opcode.opc_aload,
+				Opcode.opc_getfield,
+				Opcode.opc_invokespecial,
+				Opcode.opc_invokeinterface,
+				Opcode.opc_invokeinterface,
+				Opcode.opc_invokeinterface
+		};
+		assertByteCodes(expr,expected);
+	}
+
 	private void assertByteCodes(Expression expr,int[] expectedCode) {
 		MethodEditor methodEditor=builder.injectOptimization(expr, classEditor, getClass().getClassLoader());
-		//methodEditor.print(System.out);
+		methodEditor.print(System.out);
 		List actualCode=methodEditor.code();
 		assertEquals(expectedCode.length+5,actualCode.size());
 		assertLabel(actualCode,0);

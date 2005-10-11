@@ -1,9 +1,11 @@
 package com.db4o.test.nativequery;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import com.db4o.*;
 import com.db4o.inside.query.*;
+import com.db4o.nativequery.main.*;
 import com.db4o.query.*;
 import com.db4o.test.*;
 
@@ -217,6 +219,7 @@ public class NQRegressionTests {
 	}	
 
 	public void testPredicateMemberComparison() {
+		// HERE
 		assertNQResult(new Predicate() {
 			private int id=2;
 			
@@ -241,6 +244,7 @@ public class NQRegressionTests {
 	}	
 	
 	public void testArithmeticExpression() {
+		// HERE
 		assertNQResult(new Predicate() {
 			private int id=2;
 			
@@ -279,6 +283,17 @@ public class NQRegressionTests {
 		Collection optimized=db.query(filter);
 		Test.ensure(raw.equals(optimized));
 		Test.ensureEquals(expectedSize,raw.size());
+
+		try {
+			Db4oEnhancingClassloader loader=new Db4oEnhancingClassloader(getClass().getClassLoader());
+			Class parentClass=loader.loadClass(getClass().getName());
+			Class filterClass=loader.loadClass(filter.getClass().getName());
+			Constructor constr=filterClass.getDeclaredConstructor(new Class[]{parentClass});
+			System.out.println(constr);
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		
 		((YapStream)db).clearListeners();
 	}
 
