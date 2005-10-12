@@ -1,23 +1,26 @@
 package com.db4o.nativequery.analysis;
 
-import java.util.*;
-
 import junit.framework.*;
 import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.file.*;
+import EDU.purdue.cs.bloat.tree.*;
 
-import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.*;
 import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
 
 class Data {
 	int id;
+	float value;
 	String name;
 	Data next;
 	
 	public int getId() {
 		return id;
+	}
+	public float getValue() {
+		return value;
 	}
 	public String getName() {
 		return name;
@@ -32,13 +35,16 @@ class Data {
 
 public class BloatExprBuilderVisitorTest extends TestCase {	
 	private static final String INT_FIELDNAME = "id";
+	private static final String FLOAT_FIELDNAME = "value";
 	private static final String DATA_FIELDNAME="next";
 	private static final String STRING_FIELDNAME = "name";
 	private final static int INT_CMPVAL=42;
+	private final static float FLOAT_CMPVAL=12.3f;
 	private final static String STRING_CMPVAL="Test";
 	
 	private String stringMember="foo";
 	private int intMember=43;
+	private float floatMember=47.11f;
 	
 	private int intMember() {
 		return intMember;
@@ -59,6 +65,8 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	// primitive identity
+
+	// int
 	
 	boolean sampleFieldIntEqualsComp(Data data) {
 		return data.id==INT_CMPVAL;
@@ -73,7 +81,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFieldIntNotEqualsComp() throws Exception {
-		assertComparison("sampleIntFieldNotEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.EQUALS,true);
+		assertComparison("sampleFieldIntNotEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.EQUALS,true);
 	}
 
 	boolean sampleIntFieldEqualsComp(Data data) {
@@ -92,6 +100,40 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison("sampleIntFieldNotEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.EQUALS,true);
 	}
 
+	// float
+	
+	boolean sampleFieldFloatEqualsComp(Data data) {
+		return data.value>=FLOAT_CMPVAL;
+	}
+
+	public void testFieldFloatEqualsComp() throws Exception {
+		assertComparison("sampleFieldFloatEqualsComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleFieldFloatNotEqualsComp(Data data) {
+		return data.value!=FLOAT_CMPVAL;
+	}
+
+	public void testFieldFloatNotEqualsComp() throws Exception {
+		assertComparison("sampleFieldFloatNotEqualsComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.EQUALS,true);
+	}
+
+	boolean sampleFloatFieldEqualsComp(Data data) {
+		return FLOAT_CMPVAL==data.value;
+	}
+
+	public void testFloatFieldEqualsComp() throws Exception {
+		assertComparison("sampleFloatFieldEqualsComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleFloatFieldNotEqualsComp(Data data) {
+		return FLOAT_CMPVAL!=data.value;
+	}
+
+	public void testFloatFieldNotEqualsComp() throws Exception {
+		assertComparison("sampleFloatFieldNotEqualsComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.EQUALS,true);
+	}
+
 	// object identity
 
 	boolean sampleEqualsNullComp(Data data) {
@@ -103,6 +145,8 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	// primitive unequal comparison
+	
+	// int
 	
 	boolean sampleFieldIntSmallerComp(Data data) {
 		return data.id<INT_CMPVAL;
@@ -167,6 +211,15 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	public void testIntFieldGreaterEqualsComp() throws Exception {
 		assertComparison("sampleIntFieldGreaterEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
+
+	boolean sampleFieldFloatSmallerComp(Data data) {
+		return data.value<FLOAT_CMPVAL;
+	}
+
+// FIXME
+//	public void testFieldFloatSmallerComp() throws Exception {
+//		assertComparison("sampleFieldFloatSmallerComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.SMALLER,false);
+//	}
 
 	// string equality
 	
@@ -464,7 +517,8 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		ClassFileLoader loader=new ClassFileLoader();
 		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(loader);		
 		FlowGraph flowGraph=BloatUtil.flowGraph(loader,getClass().getName(),methodName);
-		//flowGraph.visit(new PrintVisitor());
+		flowGraph.visit(new PrintVisitor());
+		flowGraph.visit(new TreeStructureVisitor());
 		flowGraph.visit(visitor);
 		return visitor.expression();		
 	}

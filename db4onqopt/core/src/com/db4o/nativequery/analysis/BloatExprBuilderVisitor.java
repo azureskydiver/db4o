@@ -113,11 +113,21 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			if(stmt.comparison()!=0) {
 				expr=BUILDER.not(expr);
 			}
-			buildComparison(stmt,expr);
+			expression(buildComparison(stmt,expr));
 			return;
 		}
-		ComparisonExpression expr=(ComparisonExpression)retval;
-		buildComparison(stmt,(stmt.comparison()==0 ? BUILDER.not(expr) : expr));
+		Expression expr=(Expression)retval;
+		switch(stmt.comparison()) {
+			case IfStmt.EQ:
+				expr=BUILDER.not(expr);
+				break;
+			case IfStmt.LT:
+				// FIXME
+				break;
+			default:
+				break;
+		}
+		expression(buildComparison(stmt,expr));
 	}
 	
 	public void visitIfCmpStmt(IfCmpStmt stmt) {
@@ -135,13 +145,15 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if(!(left instanceof FieldValue)||!(right instanceof ComparisonOperand)) {
 			expression(null);
 			return;
+//			throw new RuntimeException();
 		}
 		FieldValue fieldExpr=(FieldValue)left;
 		ComparisonOperand valueExpr=(ComparisonOperand)right;
 		
-		buildComparison(stmt, builder(op).buildComparison(fieldExpr,valueExpr));
+		Expression cmp = buildComparison(stmt, builder(op).buildComparison(fieldExpr,valueExpr));
+		expression(cmp);
 	}
-	
+		
 	public void visitCallMethodExpr(CallMethodExpr expr) {	
 		if(expr.method().name().equals("equals")) {
 			processEqualsCall(expr);
@@ -233,27 +245,47 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		ComparisonOperand left=(ComparisonOperand)purgeReturnValue();
 		expr.right().visit(this);
 		ComparisonOperand right=(ComparisonOperand)purgeReturnValue();
-		ArithmeticOperator op=null;
 		switch(expr.operation()) {
 			case ArithExpr.ADD:
-				op=ArithmeticOperator.ADD;
-				break;
 			case ArithExpr.SUB:
-				op=ArithmeticOperator.SUBTRACT;
-				break;
 			case ArithExpr.MUL:
-				op=ArithmeticOperator.MULTIPLY;
-				break;
 			case ArithExpr.DIV:
-				op=ArithmeticOperator.DIVIDE;
+				retval(new ArithmeticExpression(left,right,arithmeticOperator(expr.operation())));
+				break;
+			case ArithExpr.CMP:
+			case ArithExpr.CMPG:
+			case ArithExpr.CMPL:
+				// FIXME duplication?
+				if((left instanceof ConstValue)&&(right instanceof FieldValue)) {
+					ComparisonOperand swap=left;
+					left=right;
+					right=swap;
+				}
+				if(left instanceof FieldValue) {
+					retval(BUILDER.not(new ComparisonExpression((FieldValue)left,right,ComparisonOperator.EQUALS)));
+				}
 				break;
 			default:
 				return;
 		}
-		retval(new ArithmeticExpression(left,right,op));
+	}
+
+	private ArithmeticOperator arithmeticOperator(int bloatOp) {
+		switch(bloatOp) {
+			case ArithExpr.ADD:
+				return ArithmeticOperator.ADD;
+			case ArithExpr.SUB:
+				return ArithmeticOperator.SUBTRACT;
+			case ArithExpr.MUL:
+				return ArithmeticOperator.MULTIPLY;
+			case ArithExpr.DIV:
+				return ArithmeticOperator.DIVIDE;
+			default:
+				return null;
+		}
 	}
 	
-	private void buildComparison(IfStmt stmt,Expression cmp) {
+	private Expression buildComparison(IfStmt stmt,Expression cmp) {
 		stmt.trueTarget().visit(this);
 		Object trueVal=purgeReturnValue();
 		stmt.falseTarget().visit(this);
@@ -263,7 +295,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if(trueExpr==null||falseExpr==null) {
 			throw new RuntimeException();
 		}
-		expression(BUILDER.ifThenElse(cmp,trueExpr,falseExpr));
+		return BUILDER.ifThenElse(cmp,trueExpr,falseExpr);
 	}
 	
 	private Expression asExpression(Object obj) {
