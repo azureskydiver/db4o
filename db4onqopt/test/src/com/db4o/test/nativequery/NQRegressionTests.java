@@ -14,17 +14,23 @@ public class NQRegressionTests {
 
 	private static class Data {
 		public int id;
+		public float value;
 		public String name;
 		public Data prev;
 		
-		public Data(int id, String name,Data prev) {
+		public Data(int id, float value, String name,Data prev) {
 			this.id = id;
+			this.value=value;
 			this.name = name;
 			this.prev=prev;
 		}
 
 		public int getId() {
 			return id;
+		}
+
+		public float getValue() {
+			return value;
 		}
 
 		public String getName() {
@@ -41,17 +47,17 @@ public class NQRegressionTests {
 	}
 
 	public void store() {
-		Data a=new Data(1,"Aa",null);
-		Data b=new Data(2,"Bb",a);
-		Data c=new Data(3,"Cc",b);
-		Data cc=new Data(3,"Cc",null);
+		Data a=new Data(1,1.1f,"Aa",null);
+		Data b=new Data(2,1.1f,"Bb",a);
+		Data c=new Data(3,2.2f,"Cc",b);
+		Data cc=new Data(3,3.3f,"Cc",null);
 		Test.store(a);
 		Test.store(b);
 		Test.store(c);
 		Test.store(cc);
 	}
 	
-	public void testIntFieldEquals() {
+	public void testPrimitiveFieldEquals() {
 		assertNQResult(new Predicate() {
 			public boolean match(Data candidate) {
 				return candidate.id==1;
@@ -62,6 +68,16 @@ public class NQRegressionTests {
 				return candidate.id==3;
 			}
 		},2);
+		assertNQResult(new Predicate() {
+			public boolean match(Data candidate) {
+				return candidate.value==1.1f;
+			}
+		},2);
+		assertNQResult(new Predicate() {
+			public boolean match(Data candidate) {
+				return candidate.value==3.3f;
+			}
+		},1);
 	}
 
 	public void testStringFieldEquals() {
