@@ -7,7 +7,7 @@ import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.optimization.SODAQueryBuilder;
 import com.db4o.query.*;
 
-public class SODABloatQueryBuilderTest extends TestCase {
+public class SODAQueryBuilderTest extends TestCase {
 	private QueryMockBuilder builder;
 	
 	protected void setUp() throws Exception {
@@ -15,31 +15,39 @@ public class SODABloatQueryBuilderTest extends TestCase {
 	}
 	
 	public void testSimpleEqualsComparison() {
-		assertSimpleComparison(ComparisonOperator.EQUALS,false);
+		assertSimpleComparison(ComparisonOperator.EQUALS,"bar",false);
 	}
 
 	public void testSimpleSmallerComparison() {
-		assertSimpleComparison(ComparisonOperator.SMALLER,false);
+		assertSimpleComparison(ComparisonOperator.SMALLER,"bar",false);
 	}
 
 	public void testSimpleGreaterComparison() {
-		assertSimpleComparison(ComparisonOperator.GREATER,false);
+		assertSimpleComparison(ComparisonOperator.GREATER,"bar",false);
 	}
 
 	public void testSimpleNotEqualsComparison() {
-		assertSimpleComparison(ComparisonOperator.EQUALS,true);
+		assertSimpleComparison(ComparisonOperator.EQUALS,"bar",true);
 	}
 
 	public void testSimpleSmallerNotComparison() {
-		assertSimpleComparison(ComparisonOperator.SMALLER,true);
+		assertSimpleComparison(ComparisonOperator.SMALLER,"bar",true);
 	}
 
 	public void testSimpleGreaterNotComparison() {
-		assertSimpleComparison(ComparisonOperator.GREATER,true);
+		assertSimpleComparison(ComparisonOperator.GREATER,"bar",true);
 	}
 
-	private void assertSimpleComparison(ComparisonOperator op,boolean negated) {
-		ComparisonExpression cmpExpr=simpleComparison("foo","bar",op);
+	public void testIntComparison() {
+		assertSimpleComparison(ComparisonOperator.EQUALS,new Integer(42),false);
+	}
+
+	public void testFloatComparison() {
+		assertSimpleComparison(ComparisonOperator.EQUALS,new Float(12.3f),false);
+	}
+
+	private void assertSimpleComparison(ComparisonOperator op,Object value,boolean negated) {
+		ComparisonExpression cmpExpr=simpleComparison("foo",value,op);
 		Expression expr=cmpExpr;
 		if(negated) {
 			expr=new NotExpression(expr);

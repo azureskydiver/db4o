@@ -171,7 +171,7 @@ public class SODABloatMethodBuilderTest extends TestCase {
 
 	private void assertByteCodes(Expression expr,int[] expectedCode) {
 		MethodEditor methodEditor=builder.injectOptimization(expr, classEditor, getClass().getClassLoader());
-		methodEditor.print(System.out);
+		//methodEditor.print(System.out);
 		List actualCode=methodEditor.code();
 		assertEquals(expectedCode.length+5,actualCode.size());
 		assertLabel(actualCode,0);
