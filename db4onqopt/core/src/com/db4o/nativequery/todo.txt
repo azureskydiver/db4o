@@ -1,6 +1,6 @@
 immediately:
 
-- fix mixed comparison problem: cand.floatVal<12.3d
+- fix mixed comparison problem: cand.floatVal<12.3d (cand.floatVal<1i work is ok)
   (regression testMixedFieldComparisons)
 - fix member field vs. candidate getter bug: this.foo!=data.getBar()
   (expr testFloatMemberFieldNotEqualsComp)
