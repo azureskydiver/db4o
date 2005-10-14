@@ -2,7 +2,7 @@ package com.db4o.nativequery.expr.cmp;
 
 
 public class ConstValue implements ComparisonOperand {	
-	public interface Visitor extends ComparisonOperandVisitor {
+	public static interface Visitor extends ComparisonOperandVisitor {
 
 		void visit(ConstValue operand);
 

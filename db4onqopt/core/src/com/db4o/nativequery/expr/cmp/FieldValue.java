@@ -5,7 +5,7 @@ import com.db4o.foundation.*;
 // FIXME need to carry more info, must know about Integer.class vs. Integer.TYPE
 
 public class FieldValue implements ComparisonOperand {
-	public interface Visitor extends ComparisonOperandVisitor {
+	public static interface Visitor extends ComparisonOperandVisitor {
 
 		void visit(FieldValue operand);
 

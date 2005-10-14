@@ -108,21 +108,42 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	public void visitIfZeroStmt(IfZeroStmt stmt) {
 		stmt.expr().visit(this);
 		Object retval=purgeReturnValue();
+		boolean cmpNull=false;
 		if(retval instanceof FieldValue) {
-			Expression expr=new ComparisonExpression((FieldValue)retval,new ConstValue(null),ComparisonOperator.EQUALS);
-			if(stmt.comparison()!=0) {
+			retval=new ComparisonExpression((FieldValue)retval,new ConstValue(null),ComparisonOperator.EQUALS);
+			cmpNull=true;
+		}
+		if(retval instanceof Expression) {
+			Expression expr=(Expression)retval;
+			if(stmt.comparison()==IfStmt.EQ&&!cmpNull||stmt.comparison()==IfStmt.NE&&cmpNull) {
 				expr=BUILDER.not(expr);
 			}
 			expression(buildComparison(stmt,expr));
 			return;
 		}
-		Expression expr=(Expression)retval;
+		if(!(retval instanceof ThreeWayComparison)) {
+			throw new RuntimeException("Cannot handle "+retval+" in ifzero.");
+		}
+		ThreeWayComparison cmp=(ThreeWayComparison)retval;
+		Expression expr=null;
 		switch(stmt.comparison()) {
 			case IfStmt.EQ:
-				expr=BUILDER.not(expr);
+				expr=new ComparisonExpression(cmp.left(),cmp.right(),ComparisonOperator.EQUALS);
+				break;
+			case IfStmt.NE:
+				expr=BUILDER.not(new ComparisonExpression(cmp.left(),cmp.right(),ComparisonOperator.EQUALS));
 				break;
 			case IfStmt.LT:
-				// FIXME
+				expr=new ComparisonExpression(cmp.left(),cmp.right(),ComparisonOperator.SMALLER);
+				break;
+			case IfStmt.GT:
+				expr=new ComparisonExpression(cmp.left(),cmp.right(),ComparisonOperator.GREATER);
+				break;
+			case IfStmt.LE:
+				expr=BUILDER.not(new ComparisonExpression(cmp.left(),cmp.right(),ComparisonOperator.GREATER));
+				break;
+			case IfStmt.GE:
+				expr=BUILDER.not(new ComparisonExpression(cmp.left(),cmp.right(),ComparisonOperator.SMALLER));
 				break;
 			default:
 				break;
@@ -262,7 +283,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 					right=swap;
 				}
 				if(left instanceof FieldValue) {
-					retval(BUILDER.not(new ComparisonExpression((FieldValue)left,right,ComparisonOperator.EQUALS)));
+					retval(new ThreeWayComparison((FieldValue)left,right));
 				}
 				break;
 			default:
