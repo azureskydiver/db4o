@@ -38,7 +38,9 @@ public class SimpleMain {
 				private int protoAge=203;
 				
 				public boolean match(Student candidate) {
-					return candidate.tortue!=null&&candidate.getTortue().getAge()>=protoAge/2||candidate.getName().equals(protoName)||candidate.getSize()<1;
+					return candidate.tortue!=null&&candidate.getTortue().getAge()>=protoAge/2
+							||candidate.getName().equals(protoName)
+							||candidate.getSize()<1;
 				}
 			};
 			((YapStream)db).addListener(new Db4oQueryExecutionListener() {
