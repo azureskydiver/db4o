@@ -4,7 +4,7 @@ immediately:
   (regression testMixedFieldComparisons)
 - fix member field vs. candidate getter bug: this.foo!=data.getBar()
   (expr testFloatMemberFieldNotEqualsComp)
-- much more 'unable false positive tests
+- much more false positive tests
 
 later:
 
