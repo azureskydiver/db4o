@@ -4,19 +4,25 @@ public class Student {
 	public String name;
 	public int age;
 	public Student tortue;
+	public float size;
 
-	public Student(int age, String name) {
-		this(age,name,null);
+	public Student(int age, String name, float budget) {
+		this(age,name,budget,null);
 	}
 
-	public Student(int age, String name,Student tortue) {
+	public Student(int age, String name, float size, Student tortue) {
 		this.age = age;
 		this.name = name;
 		this.tortue=tortue;
+		this.size=size;
 	}
 
 	public int getAge() {
 		return age/*-1*/; // TODO
+	}
+
+	public float getSize() {
+		return size;
 	}
 
 	public String getName() {

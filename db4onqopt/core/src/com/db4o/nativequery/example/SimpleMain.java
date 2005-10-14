@@ -20,9 +20,9 @@ public class SimpleMain {
 		classConfig.objectField("age").indexed(true);
 		ObjectContainer db=Db4o.openFile(FILENAME);
 		try {
-			Student mumon = new Student(100,"Mumon");
-			Student tortoise = new Student(101,"Tortoise",mumon);
-			Student achilles = new Student(30,"Achilles",tortoise);
+			Student mumon = new Student(100,"Mumon",1.50f);
+			Student tortoise = new Student(101,"Tortoise",0.85f,mumon);
+			Student achilles = new Student(30,"Achilles",1.80f,tortoise);
 			db.set(mumon);
 			db.set(tortoise);
 			db.set(achilles);
@@ -38,7 +38,7 @@ public class SimpleMain {
 				private int protoAge=203;
 				
 				public boolean match(Student candidate) {
-					return candidate.tortue!=null&&candidate.getTortue().getAge()>=protoAge/2||candidate.getName().equals(protoName);
+					return candidate.tortue!=null&&candidate.getTortue().getAge()>=protoAge/2||candidate.getName().equals(protoName)||candidate.getSize()<1;
 				}
 			};
 			((YapStream)db).addListener(new Db4oQueryExecutionListener() {
