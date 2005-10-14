@@ -356,14 +356,14 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison("sampleFieldFloatMemberNotEqualsComp",new String[]{FLOAT_FIELDNAME},new FieldValue(0,"floatMember"),ComparisonOperator.EQUALS,true);
 	}
 
+	boolean sampleFloatMemberFieldNotEqualsComp(Data data) {
+		return floatMember!=data.getValue();
+	}
+
+	public void testFloatMemberFieldNotEqualsComp() throws Exception {
 // FIXME
-//	boolean sampleFloatMemberFieldNotEqualsComp(Data data) {
-//		return floatMember!=data.getValue();
-//	}
-//
-//	public void testFloatMemberFieldNotEqualsComp() throws Exception {
 //		assertComparison("sampleFloatMemberFieldNotEqualsComp",new String[]{FLOAT_FIELDNAME},new FieldValue(0,"floatMember"),ComparisonOperator.EQUALS,true);
-//	}
+	}
 
 	// negations
 	

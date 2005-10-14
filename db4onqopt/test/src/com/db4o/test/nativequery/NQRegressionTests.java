@@ -116,6 +116,23 @@ public class NQRegressionTests {
 		},3);
 	}
 
+	public void testFloatFieldComparisons() {
+		assertNQResult(new Predicate() {
+			public boolean match(Data candidate) {
+				return candidate.value>2.9f;
+			}
+		},1);
+	}
+
+	public void testMixedFieldComparisons() {
+// FIXME
+//		assertNQResult(new Predicate() {
+//			public boolean match(Data candidate) {
+//				return candidate.value>2.9;
+//			}
+//		},1);
+	}
+
 	public void testDescendField() {
 		assertNQResult(new Predicate() {
 			public boolean match(Data candidate) {
@@ -294,9 +311,21 @@ public class NQRegressionTests {
 		};
 		((YapStream)db).addListener(listener);
 		clearProperty(YapStream.PROPERTY_DYNAMICNQ);
-		Collection raw=db.query(filter);
+		ObjectSet raw=db.query(filter);
 		System.setProperty(YapStream.PROPERTY_DYNAMICNQ,"true");
-		Collection optimized=db.query(filter);
+		ObjectSet optimized=db.query(filter);
+		if(!raw.equals(optimized)) {
+			System.out.println("RAW");
+			raw.reset();
+			while(raw.hasNext()) {
+				System.out.println(raw.next());
+			}
+			System.out.println("OPT");
+			optimized.reset();
+			while(optimized.hasNext()) {
+				System.out.println(optimized.next());
+			}
+		}
 		Test.ensure(raw.equals(optimized));
 		Test.ensureEquals(expectedSize,raw.size());
 
@@ -305,7 +334,7 @@ public class NQRegressionTests {
 			Class parentClass=loader.loadClass(getClass().getName());
 			Class filterClass=loader.loadClass(filter.getClass().getName());
 			Constructor constr=filterClass.getDeclaredConstructor(new Class[]{parentClass});
-			System.out.println(constr);
+			//System.out.println(constr);
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}

@@ -13,12 +13,12 @@ public class NativeQueryEnhancer {
 	private static SODABloatMethodBuilder BLOAT_BUILDER=new SODABloatMethodBuilder();
 	
 	public void enhance(ClassFileLoader loader,ClassEditor classEditor,String methodName,ClassLoader classLoader) throws Exception {
-		System.err.println("Enhancing "+classEditor.name());
+		//System.err.println("Enhancing "+classEditor.name());
 		Expression expr = analyze(loader, classEditor, methodName);
 
 		MethodEditor methodEditor=BLOAT_BUILDER.injectOptimization(expr,classEditor,classLoader);
-		System.out.println("SODA BYTE CODE:");
-		methodEditor.print(System.out);
+		//System.out.println("SODA BYTE CODE:");
+		//methodEditor.print(System.out);
 		methodEditor.commit();
 		classEditor.commit();
 	}

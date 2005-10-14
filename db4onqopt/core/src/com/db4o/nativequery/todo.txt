@@ -1,5 +1,13 @@
-- Bloat tests with hard-wired flow graphs
-- much more 'unable to convert' tests
+immediately:
+
+- fix mixed comparison problem: cand.floatVal<12.3d
+  (regression testMixedFieldComparisons)
+- fix member field vs. candidate getter bug: this.foo!=data.getBar()
+  (expr testFloatMemberFieldNotEqualsComp)
+- much more 'unable false positive tests
+
+later:
+
 - SODA conversion: <= to smaller().equals() instead of greater.not()?
 - How to handle virtual methods? Move optimization from load time
   to query execution time?
@@ -9,3 +17,5 @@
   form for a boolean expression tree?
 - Implement sensible handling for locale variable passing.
 - Controlled error handling.
+- Check POJQ, Rodrigo's paper,...
+- Bloat tests with hard-wired flow graphs?
