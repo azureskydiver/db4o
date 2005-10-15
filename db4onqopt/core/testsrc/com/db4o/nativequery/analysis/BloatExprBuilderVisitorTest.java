@@ -193,7 +193,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntFieldSmallerComp() throws Exception {
-		assertComparison("sampleIntFieldSmallerComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,true);
+		assertComparison("sampleIntFieldSmallerComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,false);
 	}
 
 	boolean sampleIntFieldGreaterComp(Data data) {
@@ -201,7 +201,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntFieldGreaterComp() throws Exception {
-		assertComparison("sampleIntFieldGreaterComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,true);
+		assertComparison("sampleIntFieldGreaterComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,false);
 	}
 
 	boolean sampleIntFieldSmallerEqualsComp(Data data) {
@@ -209,7 +209,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntFieldSmallerEqualsComp() throws Exception {
-		assertComparison("sampleIntFieldSmallerEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,false);
+		assertComparison("sampleIntFieldSmallerEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,true);
 	}
 
 	boolean sampleIntFieldGreaterEqualsComp(Data data) {
@@ -217,7 +217,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntFieldGreaterEqualsComp() throws Exception {
-		assertComparison("sampleIntFieldGreaterEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.SMALLER,false);
+		assertComparison("sampleIntFieldGreaterEqualsComp",INT_FIELDNAME,new Integer(INT_CMPVAL),ComparisonOperator.GREATER,true);
 	}
 
 	boolean sampleFieldFloatSmallerComp(Data data) {
@@ -340,6 +340,14 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison("sampleFieldIntMemberEqualsComp",new String[]{INT_FIELDNAME},new FieldValue(0,"intMember"),ComparisonOperator.EQUALS,false);
 	}
 
+	boolean sampleIntMemberFieldGreaterEqualsComp(Data data) {
+		return intMember>=data.getId();
+	}
+
+	public void testIntMemberFieldGreaterEqualsComp() throws Exception {
+		assertComparison("sampleIntMemberFieldGreaterEqualsComp",new String[]{INT_FIELDNAME},new FieldValue(0,"intMember"),ComparisonOperator.GREATER,true);
+	}
+
 	boolean sampleFieldStringMemberEqualsComp(Data data) {
 		return data.getName().equals(stringMember);
 	}
@@ -361,8 +369,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFloatMemberFieldNotEqualsComp() throws Exception {
-// FIXME
-//		assertComparison("sampleFloatMemberFieldNotEqualsComp",new String[]{FLOAT_FIELDNAME},new FieldValue(0,"floatMember"),ComparisonOperator.EQUALS,true);
+		assertComparison("sampleFloatMemberFieldNotEqualsComp",new String[]{FLOAT_FIELDNAME},new FieldValue(0,"floatMember"),ComparisonOperator.EQUALS,true);
 	}
 
 	// negations
