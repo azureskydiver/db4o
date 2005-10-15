@@ -51,10 +51,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		
 		OP_SYMMETRY.put(new Integer(IfStmt.EQ),new Integer(IfStmt.EQ));
 		OP_SYMMETRY.put(new Integer(IfStmt.NE),new Integer(IfStmt.NE));
-		OP_SYMMETRY.put(new Integer(IfStmt.LT),new Integer(IfStmt.GE));
-		OP_SYMMETRY.put(new Integer(IfStmt.GT),new Integer(IfStmt.LE));
-		OP_SYMMETRY.put(new Integer(IfStmt.LE),new Integer(IfStmt.GT));
-		OP_SYMMETRY.put(new Integer(IfStmt.GE),new Integer(IfStmt.LT));
+		OP_SYMMETRY.put(new Integer(IfStmt.LT),new Integer(IfStmt.GT));
+		OP_SYMMETRY.put(new Integer(IfStmt.GT),new Integer(IfStmt.LT));
+		OP_SYMMETRY.put(new Integer(IfStmt.LE),new Integer(IfStmt.GE));
+		OP_SYMMETRY.put(new Integer(IfStmt.GE),new Integer(IfStmt.LE));
 	}
 	
 	private ClassFileLoader loader;
@@ -157,11 +157,14 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		stmt.right().visit(this);
 		Object right=purgeReturnValue();
 		int op=stmt.comparison();
-		if((left instanceof ConstValue)&&(right instanceof FieldValue)) {
-			Object swap=left;
-			left=right;
-			right=swap;
-			op=((Integer)OP_SYMMETRY.get(new Integer(op))).intValue();
+		if((left instanceof ComparisonOperand)&&(right instanceof FieldValue)) {
+			FieldValue rightField=(FieldValue)right;
+			if(rightField.parentIdx()==1) {
+				Object swap=left;
+				left=right;
+				right=swap;
+				op=((Integer)OP_SYMMETRY.get(new Integer(op))).intValue();
+			}
 		}
 		if(!(left instanceof FieldValue)||!(right instanceof ComparisonOperand)) {
 			expression(null);
@@ -277,10 +280,13 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			case ArithExpr.CMPG:
 			case ArithExpr.CMPL:
 				// FIXME duplication?
-				if((left instanceof ConstValue)&&(right instanceof FieldValue)) {
-					ComparisonOperand swap=left;
-					left=right;
-					right=swap;
+				if((left instanceof ComparisonOperand)&&(right instanceof FieldValue)) {
+					FieldValue rightField=(FieldValue)right;
+					if(rightField.parentIdx()==1) {
+						ComparisonOperand swap=left;
+						left=right;
+						right=swap;
+					}
 				}
 				if(left instanceof FieldValue) {
 					retval(new ThreeWayComparison((FieldValue)left,right));
