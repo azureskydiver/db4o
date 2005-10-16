@@ -56,7 +56,7 @@ public class Db4oEnhancingClassloader extends BloatingClassLoader {
 	}
 
 	private boolean mustDelegate(String name) {
-		return name.startsWith("java.")||name.startsWith("javax.")||name.startsWith("sun.");
+		return name.startsWith("java.")||name.startsWith("javax.")||name.startsWith("sun.")||(name.startsWith("com.db4o.")&&!name.startsWith("com.db4o.test."));
 	}
 
 	protected void bloat(ClassEditor ce) {

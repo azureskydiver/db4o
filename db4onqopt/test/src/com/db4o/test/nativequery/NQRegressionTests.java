@@ -1,7 +1,6 @@
 package com.db4o.test.nativequery;
 
 import java.lang.reflect.*;
-import java.util.*;
 
 import com.db4o.*;
 import com.db4o.inside.query.*;
@@ -11,7 +10,6 @@ import com.db4o.test.*;
 
 
 public class NQRegressionTests {
-
 	private static class Data {
 		public int id;
 		public float value;
@@ -41,7 +39,7 @@ public class NQRegressionTests {
 			return prev;
 		}	
 	}
-	
+
 	public static void main(String[] args) {
 		Test.run(NQRegressionTests.class);
 	}
@@ -57,260 +55,281 @@ public class NQRegressionTests {
 		Test.store(cc);
 	}
 	
-	public void testPrimitiveFieldEquals() {
-		assertNQResult(new Predicate() {
+	private abstract static class ExpectingPredicate extends Predicate {
+		public abstract int expected();
+	}
+	
+	private static ExpectingPredicate[] PREDICATES={
+		// primitive equals
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.id==1;
 			}
-		},1);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.id==3;
 			}
-		},2);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.value==1.1f;
 			}
-		},2);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.value==3.3f;
 			}
-		},1);
-	}
-
-	public void testStringFieldEquals() {
-		assertNQResult(new Predicate() {
+		},
+		// string equals
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.name.equals("Aa");
 			}
-		},1);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.name.equals("Cc");
 			}
-		},2);
-	}
-
-	public void testIntFieldComparisons() {
-		assertNQResult(new Predicate() {
+		},
+		// int field comparison
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.id<2;
 			}
-		},1);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.id>2;
 			}
-		},2);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.id<=2;
 			}
-		},2);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return candidate.id>=2;
 			}
-		},3);
-	}
-
-	public void testFloatFieldComparisons() {
-		assertNQResult(new Predicate() {
+		},
+		// float field comparison
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.value>2.9f;
 			}
-		},1);
-	}
-
-	public void testMixedFieldComparisons() {
-// FIXME
-//		assertNQResult(new Predicate() {
-//			public boolean match(Data candidate) {
-//				return candidate.value>2.9;
-//			}
-//		},1);
-	}
-
-	public void testDescendField() {
-		assertNQResult(new Predicate() {
+		},
+		// descend field
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.getPrev()!=null&&candidate.getPrev().getId()>=1;
 			}
-		},2);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return (candidate.getPrev()!=null)&&("Bb".equals(candidate.getPrev().getName()));
 			}
-		},1);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 0;}
 			public boolean match(Data candidate) {
 				return candidate.getPrev()!=null&&candidate.getPrev().getName().equals("");
 			}
-		},0);
-	}
-
-	public void testGetterComparisons() {
-		assertNQResult(new Predicate() {
+		},
+		// getter comparisons
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.getId()==2;
 			}
-		},1);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.getId()<2;
 			}
-		},1);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.getId()>2;
 			}
-		},2);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.getId()<=2;
 			}
-		},2);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return candidate.getId()>=2;
 			}
-		},3);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.getName().equals("Cc");
 			}
-		},2);
-	}
-
-	public void testNegation() {
-		assertNQResult(new Predicate() {
+		},
+		// negation
+		new ExpectingPredicate() {
+			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return !(candidate.id==1);
 			}
-		},3);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return !(candidate.getId()>2);
 			}
-		},2);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return !(candidate.getName().equals("Cc"));
 			}
-		},2);
-	}
-
-	public void testConjunction() {
-		assertNQResult(new Predicate() {
+		},
+		// conjunction
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return (candidate.id>1)&&candidate.getName().equals("Cc");
 			}
-		},2);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return (candidate.id>1)&&(candidate.getId()<=2);
 			}
-		},1);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 0;}
 			public boolean match(Data candidate) {
 				return (candidate.id>1)&&(candidate.getId()<1);
 			}
-		},0);
-	}
-
-	public void testDisjunction() {
-		assertNQResult(new Predicate() {
+		},
+		// disjunction
+		new ExpectingPredicate() {
+			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return (candidate.id==1)||candidate.getName().equals("Cc");
 			}
-		},3);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 4;}
 			public boolean match(Data candidate) {
 				return (candidate.id>1)||(candidate.getId()<=2);
 			}
-		},4);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return (candidate.id<=1)||(candidate.getId()>=3);
 			}
-		},3);
-	}
-
-	public void testNestedBoolean() {
-		assertNQResult(new Predicate() {
+		},
+		// nested boolean
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return ((candidate.id>=1)||candidate.getName().equals("Cc"))&&candidate.getId()<3;
 			}
-		},2);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return ((candidate.id==2)||candidate.getId()<=1)&&!candidate.getName().equals("Bb");
 			}
-		},1);
-	}	
-
-	public void testPredicateMemberComparison() {
-		// HERE
-		assertNQResult(new Predicate() {
+		},
+		// predicate member comparison
+		new ExpectingPredicate() {
 			private int id=2;
 			
+			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return candidate.id>=id;
 			}
-		},3);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
 			private String name="Bb";
 			
+			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.getName().equals(name);
 			}
-		},1);
-		final int id=2;
-		final String name="Aa";
-		assertNQResult(new Predicate() {
-			public boolean match(Data candidate) {
-				return candidate.getName().equals(name)||candidate.getId()<=id;
-			}
-		},2);
-	}	
-	
-	public void testArithmeticExpression() {
-		// HERE
-		assertNQResult(new Predicate() {
+		},
+		// arithmetic
+		new ExpectingPredicate() {
 			private int id=2;
 			
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.id>=id+1;
 			}
-		},2);
-		assertNQResult(new Predicate() {
+		},
+		new ExpectingPredicate() {
 			private int factor=2;
 			
 			private int calc() {
 				return factor+1;
 			}
 			
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.id>=calc();
 			}
-		},2);
+		},
+	};
+		
+	public void testAll() {
+		for (int predIdx = 0; predIdx < PREDICATES.length; predIdx++) {
+			ExpectingPredicate predicate = PREDICATES[predIdx];
+			assertNQResult(predicate);
+		}
 	}
-
-	private void assertNQResult(final Predicate filter,int expectedSize) {
+	
+	private void assertNQResult(final ExpectingPredicate filter) {
 		ObjectContainer db=Test.objectContainer();
 		Db4oQueryExecutionListener listener = new Db4oQueryExecutionListener() {
-			private boolean firstRun=true;
+			private int run=0;
 			
 			public void notifyQueryExecuted(Predicate actualPredicate, String msg) {
-				Test.ensureEquals(actualPredicate,filter);
-				Test.ensureEquals((firstRun ? YapStream.UNOPTIMIZED : YapStream.DYNOPTIMIZED),msg);
-				firstRun=false;
+				if(run<2) {
+					Test.ensureEquals(actualPredicate,filter);
+				}
+				String expMsg=null;
+				switch(run) {
+					case 0:
+						expMsg=YapStream.UNOPTIMIZED;
+						break;
+					case 1:
+						expMsg=YapStream.DYNOPTIMIZED;
+						break;
+					case 2:
+						expMsg=YapStream.PREOPTIMIZED;
+						break;
+				}
+				Test.ensureEquals(expMsg,msg);
+				run++;
 			}
 		};
 		((YapStream)db).addListener(listener);
-		clearProperty(YapStream.PROPERTY_DYNAMICNQ);
+		System.clearProperty(YapStream.PROPERTY_DYNAMICNQ);
 		ObjectSet raw=db.query(filter);
 		System.setProperty(YapStream.PROPERTY_DYNAMICNQ,"true");
 		ObjectSet optimized=db.query(filter);
@@ -327,14 +346,16 @@ public class NQRegressionTests {
 			}
 		}
 		Test.ensure(raw.equals(optimized));
-		Test.ensureEquals(expectedSize,raw.size());
+		Test.ensureEquals(filter.expected(),raw.size());
 
 		try {
 			Db4oEnhancingClassloader loader=new Db4oEnhancingClassloader(getClass().getClassLoader());
-			Class parentClass=loader.loadClass(getClass().getName());
 			Class filterClass=loader.loadClass(filter.getClass().getName());
-			Constructor constr=filterClass.getDeclaredConstructor(new Class[]{parentClass});
-			//System.out.println(constr);
+			Constructor constr=filterClass.getDeclaredConstructor(new Class[]{});
+			constr.setAccessible(true);
+			Predicate predicate=(Predicate)constr.newInstance(new Object[]{});
+			ObjectSet preoptimized=db.query(predicate);
+			Test.ensureEquals(filter.expected(),preoptimized.size());
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
@@ -342,9 +363,24 @@ public class NQRegressionTests {
 		((YapStream)db).clearListeners();
 	}
 
-	private void clearProperty(String property) {
-		Properties properties = System.getProperties();
-		properties.remove(property);
-		System.setProperties(properties);
+	// TODO incorporate
+	
+	public void testMixedFieldComparisons() {
+//		 FIXME
+//				assertNQResult(new Predicate() {
+//					public boolean match(Data candidate) {
+//						return candidate.value>2.9;
+//					}
+//				},1);
 	}
+	
+	public void testPredicateMemberComparison() {
+//		final int id=2;
+//		final String name="Aa";
+//		assertNQResult(new Predicate() {
+//			public boolean match(Data candidate) {
+//				return candidate.getName().equals(name)||candidate.getId()<=id;
+//			}
+//		},2);
+	}	
 }

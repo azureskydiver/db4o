@@ -21,6 +21,13 @@ use cases. Currently optimization supports:
 Any native query that contains constructs not on this list will
 be run in unoptimized mode. This list will be constantly extended.
 
+Optimization currently will work with single return statements only.
+Further restrictions planned to be resolved in the production version
+include:
+
+- automatic primitive casting won't work (like cand.getFloatValue() < 2.0,
+  you'll have to use 2.0f).
+
 ANALYSIS AT QUERY EXECUTION TIME
 
 Note: This won't work with JDK1.1.
