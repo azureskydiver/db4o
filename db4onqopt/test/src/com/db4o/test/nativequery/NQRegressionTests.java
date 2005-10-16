@@ -356,6 +356,8 @@ public class NQRegressionTests {
 			Predicate predicate=(Predicate)constr.newInstance(new Object[]{});
 			ObjectSet preoptimized=db.query(predicate);
 			Test.ensureEquals(filter.expected(),preoptimized.size());
+			Test.ensure(raw.equals(preoptimized));
+			Test.ensure(optimized.equals(preoptimized));
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
