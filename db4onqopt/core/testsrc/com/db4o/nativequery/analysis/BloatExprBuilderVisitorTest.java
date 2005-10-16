@@ -515,8 +515,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testOtherMemberEqualsComp() throws Exception {
-		Expression expression = expression("sampleOtherMemberEqualsComp");
-		assertNull(expression);
+		assertInvalid("sampleOtherMemberEqualsComp");
 	}
 
 	boolean sampleOtherMemberSameComp(Data data) {
@@ -524,8 +523,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testOtherMemberSameComp() throws Exception {
-		Expression expression = expression("sampleOtherMemberSameComp");
-		assertNull(expression);
+		assertInvalid("sampleOtherMemberSameComp");
 	}
 
 	boolean sampleCandidateMemberArithmetic(Data data) {
@@ -533,8 +531,16 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testCandidateMemberArithmetic() throws Exception {
-		Expression expression = expression("sampleCandidateMemberArithmetic");
-		assertNull(expression);
+		assertInvalid("sampleCandidateMemberArithmetic");
+	}
+
+	boolean sampleTemporaryStorage(Data data) {
+		int val=INT_CMPVAL-1;
+		return data.id-1==val;
+	}
+
+	public void testTemporaryStorage() throws Exception {
+		assertInvalid("sampleTemporaryStorage");
 	}
 
 	// internal
@@ -576,6 +582,10 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertEquals(value,(ComparisonOperand)right);
 	}
 
+	private void assertInvalid(String methodName) throws ClassNotFoundException {
+		assertNull(expression(methodName));
+	}
+	
 	private Expression expression(String methodName) throws ClassNotFoundException {
 		ClassFileLoader loader=new ClassFileLoader();
 		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(loader);		
