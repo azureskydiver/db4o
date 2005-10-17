@@ -1,5 +1,6 @@
 immediately:
 
+- insert primitive conversions for arithmetics (i2l,...)
 - fix mixed comparison problem: cand.floatVal<12.3d (cand.floatVal<1i work is ok)
   (regression testMixedFieldComparisons)
 - fix method call problem
