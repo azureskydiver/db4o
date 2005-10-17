@@ -1,20 +1,20 @@
 package com.db4o.nativequery.expr.cmp;
 
 public class ThreeWayComparison {
-	FieldValue left;
-	ComparisonOperand right;
+	FieldValue _left;
+	ComparisonOperand _right;
 
 	public ThreeWayComparison(FieldValue left, ComparisonOperand right) {
-		this.left = left;
-		this.right = right;
+		this._left = left;
+		this._right = right;
 	}
 
 	public FieldValue left() {
-		return left;
+		return _left;
 	}
 
 	public ComparisonOperand right() {
-		return right;
+		return _right;
 	}
 	
 	
