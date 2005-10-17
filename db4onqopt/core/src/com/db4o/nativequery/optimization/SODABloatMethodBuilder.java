@@ -78,45 +78,47 @@ public class SODABloatMethodBuilder {
 
 				public void visit(FieldValue fieldValue) {
 					try {
-						Class lastFieldClass = deduceFieldClass(fieldValue);
+						Class lastFieldClass = deduceFieldClass(predicateClass,fieldValue);
 						boolean needConversion=lastFieldClass.isPrimitive();
 						if(needConversion) {
 							prepareConversion(lastFieldClass,!inArithmetic);
 						}
 						methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(0));
+
+						opClass=lastFieldClass;
+
 						Iterator4 targetFieldNames =fieldValue.fieldNames();
-						Collection4 fieldRefs=new Collection4();
 						Class curClass=predicateClass;
 						while(targetFieldNames.hasNext()) {
 							String fieldName=(String)targetFieldNames.next();
 							Class fieldClass=fieldClass(curClass,fieldName);
-							fieldRefs.add(createFieldReference(curClass,fieldClass,fieldName));
+							MemberRef fieldRef=createFieldReference(curClass,fieldClass,fieldName);
+							methodEditor.addInstruction(Opcode.opc_getfield,fieldRef);
 							curClass=fieldClass;
 						}
-						opClass=curClass;
-						Iterator4 fieldRefIter=fieldRefs.strictIterator();
-						while(fieldRefIter.hasNext()) {
-							methodEditor.addInstruction(Opcode.opc_getfield,(MemberRef)fieldRefIter.next());
-						}
+						
+						
 						if(needConversion) {
-							applyConversion(curClass,!inArithmetic);
+							applyConversion(opClass,!inArithmetic);
 						}
 					} catch (Exception exc) {
 						throw new RuntimeException(exc.getMessage());
 					}
 				}
 
-				private String getFieldName(FieldValue fieldValue) {
-					Iterator4 fieldNames=fieldValue.fieldNames();
-					String curName=null;
-					while(fieldNames.hasNext()) {
-						curName=(String)fieldNames.next();
-					}
-					return curName;
-				}
+//				private Class fieldType(FieldValue fieldValue) throws NoSuchFieldException {
+//					Iterator4 targetFieldNames2 =fieldValue.fieldNames();
+//					Class curClass2=predicateClass;
+//					while(targetFieldNames2.hasNext()) {
+//						String fieldName=(String)targetFieldNames2.next();
+//						Class fieldClass=fieldClass(curClass2,fieldName);
+//						curClass2=fieldClass;
+//					}
+//					return curClass2;
+//				}
 
-				private Class deduceFieldClass(FieldValue fieldValue) throws Exception {
-					Class curClass=classLoader.loadClass(predicateClass.getName());
+				private Class deduceFieldClass(Class root,FieldValue fieldValue) throws Exception {
+					Class curClass=classLoader.loadClass(root.getName());
 					Iterator4 fieldIter=fieldValue.fieldNames();
 					while(fieldIter.hasNext()) {
 						String fieldName=(String)fieldIter.next();
@@ -126,28 +128,109 @@ public class SODABloatMethodBuilder {
 					return curClass;
 				}
 
+				private Class arithmeticType(ComparisonOperand operand) {
+					if (operand instanceof ConstValue) {
+						return ((ConstValue) operand).value().getClass();
+					}
+					if (operand instanceof FieldValue) {
+						try {
+							return deduceFieldClass(predicateClass,(FieldValue) operand);
+						} catch (Exception e) {
+							e.printStackTrace();
+							return null;
+						}
+					}
+					if (operand instanceof ArithmeticExpression) {
+						ArithmeticExpression expr=(ArithmeticExpression)operand;
+						Class left=arithmeticType(expr.left());
+						Class right=arithmeticType(expr.right());
+						if(left==Double.class||right==Double.class) {
+							return Double.class;
+						}
+						if(left==Float.class||right==Float.class) {
+							return Float.class;
+						}
+						if(left==Long.class||right==Long.class) {
+							return Long.class;
+						}
+						return Integer.class;
+					}
+					return null;
+				}
+				
 				public void visit(ArithmeticExpression operand) {
 					boolean oldInArithmetic=inArithmetic;
 					inArithmetic=true;
 					Instruction newInstr=prepareConversion(opClass,!oldInArithmetic,true);
 					operand.left().accept(this);
 					operand.right().accept(this);
+					Class operandType=arithmeticType(operand);
+					int opcode=Integer.MIN_VALUE;
 					switch(operand.op().id()) {
 						case ArithmeticOperator.ADD_ID:
-							methodEditor.addInstruction(Opcode.opc_iadd);
+							if(operandType==Double.class) {
+								opcode=Opcode.opc_dadd;
+								break;
+							}
+							if(operandType==Float.class) {
+								opcode=Opcode.opc_fadd;
+								break;
+							}
+							if(operandType==Long.class) {
+								opcode=Opcode.opc_ladd;
+								break;
+							}
+							opcode=Opcode.opc_iadd;
 							break;
 						case ArithmeticOperator.SUBTRACT_ID:
-							methodEditor.addInstruction(Opcode.opc_isub);
+							if(operandType==Double.class) {
+								opcode=Opcode.opc_dsub;
+								break;
+							}
+							if(operandType==Float.class) {
+								opcode=Opcode.opc_fsub;
+								break;
+							}
+							if(operandType==Long.class) {
+								opcode=Opcode.opc_lsub;
+								break;
+							}
+							opcode=Opcode.opc_isub;
 							break;
 						case ArithmeticOperator.MULTIPLY_ID:
-							methodEditor.addInstruction(Opcode.opc_imul);
+							if(operandType==Double.class) {
+								opcode=Opcode.opc_dmul;
+								break;
+							}
+							if(operandType==Float.class) {
+								opcode=Opcode.opc_fmul;
+								break;
+							}
+							if(operandType==Long.class) {
+								opcode=Opcode.opc_lmul;
+								break;
+							}
+							opcode=Opcode.opc_imul;
 							break;
 						case ArithmeticOperator.DIVIDE_ID:
-							methodEditor.addInstruction(Opcode.opc_idiv);
+							if(operandType==Double.class) {
+								opcode=Opcode.opc_ddiv;
+								break;
+							}
+							if(operandType==Float.class) {
+								opcode=Opcode.opc_fdiv;
+								break;
+							}
+							if(operandType==Long.class) {
+								opcode=Opcode.opc_ldiv;
+								break;
+							}
+							opcode=Opcode.opc_idiv;
 							break;
 						default:
 							throw new RuntimeException("Unknown operand: "+operand.op());
 					}
+					methodEditor.addInstruction(opcode);
 					if(newInstr!=null) {
 						newInstr.setOperand(createType(opClass));
 					}
