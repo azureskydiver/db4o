@@ -3,7 +3,6 @@ package com.db4o.nativequery.analysis;
 import junit.framework.*;
 import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.file.*;
-import EDU.purdue.cs.bloat.tree.*;
 
 import com.db4o.foundation.*;
 import com.db4o.nativequery.bloat.*;
@@ -61,7 +60,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testNoParam() throws Exception {
-		assertNull(expression("sampleNoParam"));
+		assertInvalid("sampleNoParam");
 	}
 
 	// primitive identity
@@ -510,38 +509,47 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	
 	// not applicable
 	
-	boolean sampleOtherMemberEqualsComp(Data data) {
+	boolean sampleInvalidOtherMemberEqualsComp(Data data) {
 		return stringMember.equals(STRING_CMPVAL);
 	}
 
-	public void testOtherMemberEqualsComp() throws Exception {
-		assertInvalid("sampleOtherMemberEqualsComp");
+	public void testInvalidOtherMemberEqualsComp() throws Exception {
+		assertInvalid("sampleInvalidOtherMemberEqualsComp");
 	}
 
-	boolean sampleOtherMemberSameComp(Data data) {
+	boolean sampleInvalidOtherMemberSameComp(Data data) {
 		return stringMember==STRING_CMPVAL;
 	}
 
-	public void testOtherMemberSameComp() throws Exception {
-		assertInvalid("sampleOtherMemberSameComp");
+	public void testInvalidOtherMemberSameComp() throws Exception {
+		assertInvalid("sampleInvalidOtherMemberSameComp");
 	}
 
-	boolean sampleCandidateMemberArithmetic(Data data) {
+	boolean sampleInvalidCandidateMemberArithmetic(Data data) {
 		return data.id-1==INT_CMPVAL;
 	}
 
-	public void testCandidateMemberArithmetic() throws Exception {
-		assertInvalid("sampleCandidateMemberArithmetic");
+	public void testInvalidCandidateMemberArithmetic() throws Exception {
+		assertInvalid("sampleInvalidCandidateMemberArithmetic");
 	}
 
-	boolean sampleTemporaryStorage(Data data) {
+	boolean sampleInvalidTemporaryStorage(Data data) {
 		int val=INT_CMPVAL-1;
 		return data.id-1==val;
 	}
 
-	public void testTemporaryStorage() throws Exception {
-		assertInvalid("sampleTemporaryStorage");
+	public void testInvalidTemporaryStorage() throws Exception {
+		assertInvalid("sampleInvalidTemporaryStorage");
 	}
+
+// FIXME
+//	boolean sampleInvalidStaticMethodCall(Data data) {
+//		return data.id==Integer.parseInt(data.name);
+//	}
+//
+//	public void testInvalidStaticMethodCall() throws Exception {
+//		assertInvalid("sampleInvalidStaticMethodCall");
+//	}
 
 	// internal
 	

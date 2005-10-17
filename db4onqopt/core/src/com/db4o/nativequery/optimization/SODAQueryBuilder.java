@@ -55,28 +55,77 @@ public class SODAQueryBuilder {
 					value[0]=findValue(operand);
 				}
 
+				private Number add(Number a,Number b) {
+					if(a instanceof Double||b instanceof Double) {
+						return new Double(a.doubleValue()+b.doubleValue());
+					}
+					if(a instanceof Float||b instanceof Float) {
+						return new Float(a.floatValue()+b.floatValue());
+					}
+					if(a instanceof Long||b instanceof Long) {
+						return new Long(a.longValue()+b.longValue());
+					}
+					return new Integer(a.intValue()+b.intValue());
+				}
+
+				private Number subtract(Number a,Number b) {
+					if(a instanceof Double||b instanceof Double) {
+						return new Double(a.doubleValue()-b.doubleValue());
+					}
+					if(a instanceof Float||b instanceof Float) {
+						return new Float(a.floatValue()-b.floatValue());
+					}
+					if(a instanceof Long||b instanceof Long) {
+						return new Long(a.longValue()-b.longValue());
+					}
+					return new Integer(a.intValue()-b.intValue());
+				}
+
+				private Number multiply(Number a,Number b) {
+					if(a instanceof Double||b instanceof Double) {
+						return new Double(a.doubleValue()*b.doubleValue());
+					}
+					if(a instanceof Float||b instanceof Float) {
+						return new Float(a.floatValue()*b.floatValue());
+					}
+					if(a instanceof Long||b instanceof Long) {
+						return new Long(a.longValue()*b.longValue());
+					}
+					return new Integer(a.intValue()*b.intValue());
+				}
+
+				private Number divide(Number a,Number b) {
+					if(a instanceof Double||b instanceof Double) {
+						return new Double(a.doubleValue()/b.doubleValue());
+					}
+					if(a instanceof Float||b instanceof Float) {
+						return new Float(a.floatValue()/b.floatValue());
+					}
+					if(a instanceof Long||b instanceof Long) {
+						return new Long(a.longValue()/b.longValue());
+					}
+					return new Integer(a.intValue()/b.intValue());
+				}
+
 				public void visit(ArithmeticExpression operand) {
 					operand.left().accept(this);
-					// FIXME urgently
-					int left=((Integer)value[0]).intValue();
+					Number left=(Number)value[0];
 					operand.right().accept(this);
-					int right=((Integer)value[0]).intValue();
-					int result=0;
+					Number right=(Number)value[0];
 					switch(operand.op().id()) {
 						case ArithmeticOperator.ADD_ID: 
-							result=left+right;
+							value[0]=add(left,right);
 							break;
 						case ArithmeticOperator.SUBTRACT_ID: 
-							result=left-right;
+							value[0]=subtract(left,right);
 							break;
 						case ArithmeticOperator.MULTIPLY_ID: 
-							result=left*right;
+							value[0]=multiply(left,right);
 							break;
 						case ArithmeticOperator.DIVIDE_ID: 
-							result=left/right;
+							value[0]=divide(left,right);
 							break;
 					}
-					value[0]=new Integer(result);
 				}
 				
 			});

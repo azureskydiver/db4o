@@ -294,6 +294,18 @@ public class NQRegressionTests {
 				return candidate.id>=calc();
 			}
 		},
+		new ExpectingPredicate() {
+			private float factor=2.0f;
+			
+			private float calc() {
+				return factor*1.1f;
+			}
+			
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return candidate.getValue()==calc();
+			}
+		}
 	};
 		
 	public void testAll() {
@@ -367,16 +379,16 @@ public class NQRegressionTests {
 
 	// TODO incorporate
 	
-	public void testMixedFieldComparisons() {
+//	public void testMixedFieldComparisons() {
 //		 FIXME
 //				assertNQResult(new Predicate() {
 //					public boolean match(Data candidate) {
 //						return candidate.value>2.9;
 //					}
 //				},1);
-	}
+//	}
 	
-	public void testPredicateMemberComparison() {
+//	public void testPredicateMemberComparison() {
 //		final int id=2;
 //		final String name="Aa";
 //		assertNQResult(new Predicate() {
@@ -384,5 +396,5 @@ public class NQRegressionTests {
 //				return candidate.getName().equals(name)||candidate.getId()<=id;
 //			}
 //		},2);
-	}	
+//	}	
 }
