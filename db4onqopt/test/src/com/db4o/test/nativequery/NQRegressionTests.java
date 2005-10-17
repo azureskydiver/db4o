@@ -10,21 +10,28 @@ import com.db4o.test.*;
 
 
 public class NQRegressionTests {
-	private static class Data {
-		public int id;
-		public float value;
-		public String name;
-		public Data prev;
+	private static abstract class Base {
+		int id;
 		
-		public Data(int id, float value, String name,Data prev) {
-			this.id = id;
-			this.value=value;
-			this.name = name;
-			this.prev=prev;
+		public Base(int id) {
+			this.id=id;
 		}
 
 		public int getId() {
 			return id;
+		}
+}
+	
+	private static class Data extends Base {
+		float value;
+		String name;
+		Data prev;
+		
+		public Data(int id, float value, String name,Data prev) {
+			super(id);
+			this.value=value;
+			this.name = name;
+			this.prev=prev;
 		}
 
 		public float getValue() {
@@ -295,10 +302,10 @@ public class NQRegressionTests {
 			}
 		},
 		new ExpectingPredicate() {
-			private float factor=2.0f;
+			private float predFactor=2.0f;
 			
 			private float calc() {
-				return factor*1.1f;
+				return predFactor*1.1f;
 			}
 			
 			public int expected() { return 1;}

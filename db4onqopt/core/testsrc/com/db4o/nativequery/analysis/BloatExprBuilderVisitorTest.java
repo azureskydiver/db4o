@@ -9,15 +9,23 @@ import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
 
-class Data {
+class Base {
 	int id;
+
+	public int getId() {
+		return id;
+	}
+
+	public int getIdPlusOne() {
+		return id+1;
+	}
+}
+
+class Data extends Base {
 	float value;
 	String name;
 	Data next;
 	
-	public int getId() {
-		return id;
-	}
 	public float getValue() {
 		return value;
 	}
@@ -26,9 +34,6 @@ class Data {
 	}
 	public Data getNext() {
 		return next;
-	}
-	public int getIdPlusOne() {
-		return id+1;
 	}
 }
 
