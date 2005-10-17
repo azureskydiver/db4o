@@ -30,6 +30,7 @@ public class SODABloatMethodBuilder {
 	private class SODABloatMethodVisitor implements DiscriminatingExpressionVisitor {
 		private ClassLoader classLoader;
 		private Class predicateClass;
+		private Class candidateClass;
 		
 		public SODABloatMethodVisitor(Class predicateClass, ClassLoader classLoader) {
 			this.predicateClass=predicateClass;
@@ -78,7 +79,7 @@ public class SODABloatMethodBuilder {
 
 				public void visit(FieldValue fieldValue) {
 					try {
-						Class lastFieldClass = deduceFieldClass(predicateClass,fieldValue);
+						Class lastFieldClass = deduceFieldClass(fieldValue);
 						boolean needConversion=lastFieldClass.isPrimitive();
 						if(needConversion) {
 							prepareConversion(lastFieldClass,!inArithmetic);
@@ -117,7 +118,8 @@ public class SODABloatMethodBuilder {
 //					return curClass2;
 //				}
 
-				private Class deduceFieldClass(Class root,FieldValue fieldValue) throws Exception {
+				private Class deduceFieldClass(FieldValue fieldValue) throws Exception {
+					Class root=(fieldValue.parentIdx()==0 ? predicateClass : candidateClass);
 					Class curClass=classLoader.loadClass(root.getName());
 					Iterator4 fieldIter=fieldValue.fieldNames();
 					while(fieldIter.hasNext()) {
@@ -134,7 +136,7 @@ public class SODABloatMethodBuilder {
 					}
 					if (operand instanceof FieldValue) {
 						try {
-							return deduceFieldClass(predicateClass,(FieldValue) operand);
+							return deduceFieldClass((FieldValue) operand);
 						} catch (Exception e) {
 							e.printStackTrace();
 							return null;
