@@ -632,7 +632,7 @@
 				<include name=".classpath" />
 				<include name="build.xml" />
 				<include name="**/src/**" />
-				<exclude name="tools/**" />
+				<!-- exclude name="tools/**" / -->
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.jdk1.2}">
