@@ -348,7 +348,7 @@ public class NQRegressionTests {
 			}
 		};
 		((YapStream)db).addListener(listener);
-		System.clearProperty(YapStream.PROPERTY_DYNAMICNQ);
+		System.setProperty(YapStream.PROPERTY_DYNAMICNQ,null);
 		ObjectSet raw=db.query(filter);
 		System.setProperty(YapStream.PROPERTY_DYNAMICNQ,"true");
 		ObjectSet optimized=db.query(filter);

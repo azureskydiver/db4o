@@ -9,7 +9,7 @@ public class TreeStructureVisitor extends TreeVisitor {
 		for(int idx=0;idx<depth;idx++) {
 			System.out.print("--");
 		}
-		System.out.println(node.getClass().getSimpleName()+" : "+node);
+		System.out.println(node.getClass().getName()+" : "+node);
 		depth++;
 		super.visitNode(node);
 		depth--;
