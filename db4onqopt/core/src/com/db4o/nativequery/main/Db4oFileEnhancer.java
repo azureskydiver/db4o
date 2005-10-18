@@ -6,6 +6,7 @@ import java.net.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 
+import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 
@@ -29,11 +30,11 @@ public class Db4oFileEnhancer {
 		if(!source.isDirectory()) {
 			throw new IOException("No directory: "+sourceDir);
 		}
-		enhance(source.getCanonicalPath(),source,target,classLoader,fileLoader,packagePredicate);
+		enhance(source.getCanonicalPath(),source,target,classLoader,new BloatUtil(fileLoader),packagePredicate);
 		fileLoader.done();
 	}
 	
-	private void enhance(String prefix,File source,File target,ClassLoader classLoader,ClassFileLoader fileLoader,String packagePredicate) throws Exception {
+	private void enhance(String prefix,File source,File target,ClassLoader classLoader,BloatUtil bloatUtil,String packagePredicate) throws Exception {
 		if(source.isDirectory()) {
 			File[] subFiles=source.listFiles(new FileFilter() {
 				public boolean accept(File file) {
@@ -42,7 +43,7 @@ public class Db4oFileEnhancer {
 			});
 			target.mkdirs();
 			for (int idx = 0; idx < subFiles.length; idx++) {
-				enhance(prefix,subFiles[idx],new File(target,subFiles[idx].getName()),classLoader,fileLoader,packagePredicate);
+				enhance(prefix,subFiles[idx],new File(target,subFiles[idx].getName()),classLoader,bloatUtil,packagePredicate);
 			}
 		}
 		else {
@@ -58,8 +59,8 @@ public class Db4oFileEnhancer {
 				Class filterClass = classLoader.loadClass(Predicate.class.getName());
 				if(filterClass.isAssignableFrom(clazz)&&filterClass!=clazz) {
 					System.err.println("Processing "+className);
-					ClassEditor classEditor=new ClassEditor(null,fileLoader.loadClass(className));
-					enhancer.enhance(fileLoader,classEditor,Predicate.PREDICATEMETHOD_NAME,classLoader);
+					ClassEditor classEditor=bloatUtil.classEditor(className);
+					enhancer.enhance(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME,classLoader);
 				}
 				else {
 					copyFile(source,target);

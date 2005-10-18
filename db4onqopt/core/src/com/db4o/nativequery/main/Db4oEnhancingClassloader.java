@@ -9,6 +9,7 @@ import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 import EDU.purdue.cs.bloat.reflect.*;
 
+import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 
@@ -16,6 +17,7 @@ import com.db4o.query.*;
 public class Db4oEnhancingClassloader extends BloatingClassLoader {
 	private NativeQueryEnhancer enhancer=new NativeQueryEnhancer();
 	private Map cache=new HashMap();
+	private BloatUtil bloatUtil=new BloatUtil(new ClassFileLoader());
 	
 	public Db4oEnhancingClassloader(ClassLoader delegate) {
 		super(new URL[]{},delegate);
@@ -64,7 +66,7 @@ public class Db4oEnhancingClassloader extends BloatingClassLoader {
 			Type type=ce.superclass();
 			while(type!=null) {
 				if(type.className().equals(Predicate.class.getName().replace('.','/'))) {
-					enhancer.enhance(new ClassFileLoader(),ce,Predicate.PREDICATEMETHOD_NAME,this.getParent());
+					enhancer.enhance(bloatUtil,ce,Predicate.PREDICATEMETHOD_NAME,this.getParent());
 					return;
 				}
 				ClassInfo classInfo=getClassInfoLoader().loadClass(type.className());

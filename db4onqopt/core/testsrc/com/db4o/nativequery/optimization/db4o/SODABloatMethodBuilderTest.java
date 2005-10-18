@@ -21,7 +21,8 @@ public class SODABloatMethodBuilderTest extends TestCase {
 	private SODABloatMethodBuilder builder;
 	
 	protected void setUp() throws Exception {
-		classEditor=BloatUtil.classEditor(new ClassFileLoader(),getClass().getName());
+		BloatUtil bloatUtil=new BloatUtil(new ClassFileLoader());
+		classEditor=bloatUtil.classEditor(getClass().getName());
 		builder=new SODABloatMethodBuilder();
 	}
 	

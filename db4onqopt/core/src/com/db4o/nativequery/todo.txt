@@ -3,13 +3,13 @@ immediately:
 - insert primitive conversions for arithmetics (i2l,...)
 - fix mixed comparison problem: cand.floatVal<12.3d (cand.floatVal<1i work is ok)
   (regression testMixedFieldComparisons)
-- fix method call problem
-  (expr testInvalidStaticMethodCall)
-- fix inherited fields
+- fix method call problems
+  (stack overflow on PrintStream.newLine)
 - much more false positive tests
 
 later:
 
+- fix inherited fields
 - SODA conversion: <= to smaller().equals() instead of greater.not()?
 - How to handle virtual methods? Move optimization from load time
   to query execution time?

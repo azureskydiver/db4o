@@ -3,6 +3,7 @@ package com.db4o.nativequery.analysis;
 import junit.framework.*;
 import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.file.*;
+import EDU.purdue.cs.bloat.tree.*;
 
 import com.db4o.foundation.*;
 import com.db4o.nativequery.bloat.*;
@@ -35,6 +36,10 @@ class Data extends Base {
 	public Data getNext() {
 		return next;
 	}
+	
+	public void someMethod() {
+		System.out.println();
+	}
 }
 
 public class BloatExprBuilderVisitorTest extends TestCase {	
@@ -49,6 +54,9 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	private String stringMember="foo";
 	private int intMember=43;
 	private float floatMember=47.11f;
+
+	private ClassFileLoader loader;
+	private BloatUtil bloatUtil;
 	
 	private int intMember() {
 		return intMember;
@@ -56,6 +64,11 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	
 	private int intMemberPlusOne() {
 		return intMember+1;
+	}
+
+	protected void setUp() throws Exception {
+		loader=new ClassFileLoader();
+		bloatUtil=new BloatUtil(loader);
 	}
 	
 	// no appropriate method
@@ -547,14 +560,22 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertInvalid("sampleInvalidTemporaryStorage");
 	}
 
-// FIXME
-//	boolean sampleInvalidStaticMethodCall(Data data) {
-//		return data.id==Integer.parseInt(data.name);
-//	}
-//
-//	public void testInvalidStaticMethodCall() throws Exception {
-//		assertInvalid("sampleInvalidStaticMethodCall");
-//	}
+	boolean sampleInvalidStaticMethodCall(Data data) {
+		return data.id==Integer.parseInt(data.name);
+	}
+
+	public void testInvalidStaticMethodCall() throws Exception {
+		assertInvalid("sampleInvalidStaticMethodCall");
+	}
+
+	boolean sampleInvalidMethodCall(Data data) {
+		data.someMethod();
+		return true;
+	}
+
+	public void testInvalidMethodCall() throws Exception {
+		assertInvalid("sampleInvalidMethodCall");
+	}
 
 	// internal
 	
@@ -600,9 +621,8 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 	
 	private Expression expression(String methodName) throws ClassNotFoundException {
-		ClassFileLoader loader=new ClassFileLoader();
-		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(loader);		
-		FlowGraph flowGraph=BloatUtil.flowGraph(loader,getClass().getName(),methodName);
+		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(bloatUtil);		
+		FlowGraph flowGraph=bloatUtil.flowGraph(getClass().getName(),methodName);
 		//flowGraph.visit(new PrintVisitor());
 		//flowGraph.visit(new TreeStructureVisitor());
 		flowGraph.visit(visitor);
