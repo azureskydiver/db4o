@@ -3,6 +3,7 @@ package com.db4o.nativequery.analysis;
 import java.util.*;
 
 import EDU.purdue.cs.bloat.cfg.*;
+import EDU.purdue.cs.bloat.context.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 import EDU.purdue.cs.bloat.tree.*;
@@ -57,13 +58,15 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		OP_SYMMETRY.put(new Integer(IfStmt.GE),new Integer(IfStmt.LE));
 	}
 	
-	private ClassFileLoader loader;
 	private Expression expr;
 	private Object retval;
 	private Map seenBlocks=new HashMap();
-
-	public BloatExprBuilderVisitor(ClassFileLoader loader) {
-		this.loader=loader;
+	private BloatUtil bloatUtil;
+	// FIXME
+	private int methodCallDepth=0;
+	
+	public BloatExprBuilderVisitor(BloatUtil bloatUtil) {
+		this.bloatUtil=bloatUtil;
 	}
 	
 	private Object purgeReturnValue() {
@@ -178,16 +181,29 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		expression(cmp);
 	}
 		
+	public void visitExprStmt(ExprStmt stmt) {
+		super.visitExprStmt(stmt);
+	}
+	
+	public void visitCallStaticExpr(CallStaticExpr expr) {
+		expression(null);
+	}
+	
 	public void visitCallMethodExpr(CallMethodExpr expr) {	
 		if(expr.method().name().equals("equals")) {
 			processEqualsCall(expr);
 			return;
 		}
+		//System.err.println(expr.receiver());
+		if(methodCallDepth>0) {
+			return;
+		}
 		MemberRef methodRef=expr.method();
 		try {
 			expr.receiver().visit(this);
+			methodCallDepth++;
 			Object rcvRetval=purgeReturnValue();
-			FlowGraph flowGraph=BloatUtil.flowGraph(loader,methodRef.declaringClass().className(),methodRef.name());
+			FlowGraph flowGraph=bloatUtil.flowGraph(methodRef.declaringClass().className(),methodRef.name());
 			flowGraph.visit(this);
 			Object methodRetval=purgeReturnValue();
 			if(methodRetval instanceof FieldValue) {
@@ -206,6 +222,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			else {
 				retval(methodRetval);
 			}
+			methodCallDepth--;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}

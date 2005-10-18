@@ -12,9 +12,9 @@ import com.db4o.nativequery.expr.*;
 public class NativeQueryEnhancer {
 	private static SODABloatMethodBuilder BLOAT_BUILDER=new SODABloatMethodBuilder();
 	
-	public void enhance(ClassFileLoader loader,ClassEditor classEditor,String methodName,ClassLoader classLoader) throws Exception {
+	public void enhance(BloatUtil bloatUtil,ClassEditor classEditor,String methodName,ClassLoader classLoader) throws Exception {
 		//System.err.println("Enhancing "+classEditor.name());
-		Expression expr = analyze(loader, classEditor, methodName);
+		Expression expr = analyze(bloatUtil, classEditor, methodName);
 		if(expr==null) {
 			return;
 		}
@@ -25,10 +25,10 @@ public class NativeQueryEnhancer {
 		classEditor.commit();
 	}
 
-	public Expression analyze(ClassFileLoader loader, ClassEditor classEditor, String methodName) {
-		FlowGraph flowGraph=BloatUtil.flowGraph(classEditor,methodName);
+	public Expression analyze(BloatUtil bloatUtil, ClassEditor classEditor, String methodName) {
+		FlowGraph flowGraph=bloatUtil.flowGraph(classEditor,methodName);
 		if(flowGraph!=null) {
-			BloatExprBuilderVisitor builder = new BloatExprBuilderVisitor(loader);
+			BloatExprBuilderVisitor builder = new BloatExprBuilderVisitor(bloatUtil);
 			//System.out.println("FLOW GRAPH:");
 			//flowGraph.visit(new PrintVisitor());
 			flowGraph.visit(builder);
