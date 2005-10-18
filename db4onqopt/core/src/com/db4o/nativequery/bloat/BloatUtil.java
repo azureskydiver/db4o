@@ -22,6 +22,7 @@ public class BloatUtil {
 		return flowGraph(classEdit, methodName);
 	}
 
+	// FIXME handle overloaded
 	public FlowGraph flowGraph(ClassEditor classEdit, String methodName) {
 		MethodInfo[] methods = classEdit.methods();
 		for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
