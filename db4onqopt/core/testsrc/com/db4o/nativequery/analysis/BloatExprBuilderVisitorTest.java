@@ -37,6 +37,10 @@ class Data extends Base {
 		return next;
 	}
 	
+	public boolean hasNext() {
+		return getNext()!=null;
+	}
+	
 	public void someMethod() {
 		System.out.println();
 	}
