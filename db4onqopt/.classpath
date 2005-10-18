@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="lib" path="lib/ant.jar"/>
-	<classpathentry sourcepath="/home/patrick/lib/java/bytecode/bloat/src" kind="lib" path="lib/bloat-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/easymock.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk1.2"/>
 	<classpathentry sourcepath="/ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.1.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
@@ -9,5 +8,6 @@
 	<classpathentry kind="src" path="core/testsrc"/>
 	<classpathentry kind="src" path="test/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/1.2"/>
+	<classpathentry kind="lib" path="lib/bloat-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

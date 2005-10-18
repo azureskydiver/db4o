@@ -125,7 +125,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return;
 		}
 		if(!(retval instanceof ThreeWayComparison)) {
-			throw new RuntimeException("Cannot handle "+retval+" in ifzero.");
+			expression(null);
+			return;
 		}
 		ThreeWayComparison cmp=(ThreeWayComparison)retval;
 		Expression expr=null;
@@ -257,6 +258,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			((FieldValue)fieldObj).descend(fieldName);
 			return;
 		}
+		if(!(fieldObj instanceof Integer)) {
+			expression(null);
+			return;
+		}
 		int idx=((Integer)fieldObj).intValue();
 		retval(new FieldValue(idx,fieldName));
 	}
@@ -337,7 +342,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		Expression trueExpr=asExpression(trueVal);
 		Expression falseExpr=asExpression(falseVal);
 		if(trueExpr==null||falseExpr==null) {
-			throw new RuntimeException();
+			return null;
 		}
 		return BUILDER.ifThenElse(cmp,trueExpr,falseExpr);
 	}
