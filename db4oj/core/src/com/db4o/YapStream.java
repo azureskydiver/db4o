@@ -1210,7 +1210,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 	}
 
 	private boolean optimizeOnTheFly() {
-		return System.getProperty(PROPERTY_DYNAMICNQ)!=null;
+		return "true".equals(System.getProperty(PROPERTY_DYNAMICNQ));
 	}
 
     public Query query() {
