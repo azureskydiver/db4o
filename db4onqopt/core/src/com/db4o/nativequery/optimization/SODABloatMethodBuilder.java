@@ -44,7 +44,8 @@ public class SODABloatMethodBuilder {
 		}
 
 		public void visit(BoolConstExpression expression) {
-			throw new RuntimeException("No boolean constants expected in parsed expression tree");
+			methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable("query",queryType,1));
+			//throw new RuntimeException("No boolean constants expected in parsed expression tree");
 		}
 
 		public void visit(OrExpression expression) {

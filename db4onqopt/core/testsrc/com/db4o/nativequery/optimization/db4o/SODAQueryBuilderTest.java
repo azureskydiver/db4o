@@ -14,6 +14,13 @@ public class SODAQueryBuilderTest extends TestCase {
 		builder=new QueryMockBuilder();
 	}
 	
+	public void testTrue() {
+		Query query=builder.query();
+		builder.replay();
+		new SODAQueryBuilder().optimizeQuery(BoolConstExpression.TRUE,query,null);
+		builder.verify();
+	}
+	
 	public void testSimpleEqualsComparison() {
 		assertSimpleComparison(ComparisonOperator.EQUALS,"bar",false);
 	}

@@ -25,7 +25,15 @@ public class SODABloatMethodBuilderTest extends TestCase {
 		classEditor=bloatUtil.classEditor(getClass().getName());
 		builder=new SODABloatMethodBuilder();
 	}
-	
+
+	public void testUnconditional() {
+		Expression expr=BoolConstExpression.TRUE;
+		int[] expected={
+				Opcode.opc_aload
+		};
+		assertByteCodes(expr,expected);
+	}
+
 	public void testComparison() {
 		FieldValue left=new FieldValue(1,FIELDNAMES);
 		ConstValue right=new ConstValue(CONSTVALUE);

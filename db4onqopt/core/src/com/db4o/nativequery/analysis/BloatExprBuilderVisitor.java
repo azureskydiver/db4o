@@ -64,6 +64,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	private BloatUtil bloatUtil;
 	// FIXME
 	private int methodCallDepth=0;
+	private int retCount=0;
+	private int blockCount=0;
 	
 	public BloatExprBuilderVisitor(BloatUtil bloatUtil) {
 		this.bloatUtil=bloatUtil;
@@ -89,7 +91,15 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 	
 	public Expression expression() {
+		if(expr==null&&isSingleReturn()&&retval instanceof ConstValue) {
+			expression(asExpression(retval));
+		}
 		return (checkComparisons(expr) ? expr : null);
+	}
+
+	private boolean isSingleReturn() {
+		return retCount==1
+				&&blockCount==4; // one plus source,init,sink
 	}
 	
 	private boolean checkComparisons(Expression expr) {
@@ -280,6 +290,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if(!seenBlocks.containsKey(block)) {
 			super.visitBlock(block);
 			seenBlocks.put(block,retval);
+			blockCount++;
 		}
 		else {
 			retval(seenBlocks.get(block));
@@ -319,6 +330,11 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 	}
 
+	public void visitReturnExprStmt(ReturnExprStmt stat) {
+		stat.expr().visit(this);
+		retCount++;
+	}
+	
 	private ArithmeticOperator arithmeticOperator(int bloatOp) {
 		switch(bloatOp) {
 			case ArithExpr.ADD:
@@ -353,14 +369,15 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		if(obj instanceof ConstValue) {
 			Object val=((ConstValue)obj).value();
-			if(val instanceof Boolean) {
-				return BoolConstExpression.expr(((Boolean)val).booleanValue());
-			}
-			if(val instanceof Integer) {
-				int exprval=((Integer)val).intValue();
-				if(exprval==0||exprval==1) {
-					return BoolConstExpression.expr(exprval==1);
-				}
+			return asExpression(val);
+		}
+		if(obj instanceof Boolean) {
+			return BoolConstExpression.expr(((Boolean)obj).booleanValue());
+		}
+		if(obj instanceof Integer) {
+			int exprval=((Integer)obj).intValue();
+			if(exprval==0||exprval==1) {
+				return BoolConstExpression.expr(exprval==1);
 			}
 		}
 		return null;

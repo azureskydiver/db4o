@@ -28,7 +28,7 @@ public class SODAQueryBuilder {
 		}
 
 		public void visit(BoolConstExpression expression) {
-			throw new RuntimeException("No boolean constants expected in parsed expression tree");
+			//throw new RuntimeException("No boolean constants expected in parsed expression tree");
 		}
 
 		public void visit(OrExpression expression) {

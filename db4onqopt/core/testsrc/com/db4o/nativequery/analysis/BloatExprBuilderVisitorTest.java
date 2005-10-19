@@ -75,14 +75,22 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		bloatUtil=new BloatUtil(loader);
 	}
 	
-	// no appropriate method
-	
-	boolean sampleNoParam() {
+	// unconditional
+
+	boolean sampleTrue(Data data) {
+		return true;
+	}
+
+	public void testTrue() throws Exception {
+		assertEquals(BoolConstExpression.TRUE,expression("sampleTrue"));
+	}
+
+	boolean sampleFalse(Data data) {
 		return false;
 	}
 
-	public void testNoParam() throws Exception {
-		assertInvalid("sampleNoParam");
+	public void testFalse() throws Exception {
+		assertEquals(BoolConstExpression.FALSE,expression("sampleFalse"));
 	}
 
 	// primitive identity
@@ -627,8 +635,8 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	private Expression expression(String methodName) throws ClassNotFoundException {
 		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(bloatUtil);		
 		FlowGraph flowGraph=bloatUtil.flowGraph(getClass().getName(),methodName);
-		//flowGraph.visit(new PrintVisitor());
-		//flowGraph.visit(new TreeStructureVisitor());
+//		flowGraph.visit(new PrintVisitor());
+//		flowGraph.visit(new TreeStructureVisitor());
 		flowGraph.visit(visitor);
 		return visitor.expression();		
 	}

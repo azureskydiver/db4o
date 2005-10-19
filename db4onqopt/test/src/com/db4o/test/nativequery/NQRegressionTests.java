@@ -67,6 +67,12 @@ public class NQRegressionTests {
 	}
 	
 	private static ExpectingPredicate[] PREDICATES={
+		new ExpectingPredicate() {
+			public int expected() { return 4;}
+			public boolean match(Data candidate) {
+				return true;
+			}
+		},
 		// primitive equals
 		new ExpectingPredicate() {
 			public int expected() { return 1;}
@@ -348,7 +354,7 @@ public class NQRegressionTests {
 			}
 		};
 		((YapStream)db).addListener(listener);
-		System.setProperty(YapStream.PROPERTY_DYNAMICNQ,null);
+		System.setProperty(YapStream.PROPERTY_DYNAMICNQ,"false");
 		ObjectSet raw=db.query(filter);
 		System.setProperty(YapStream.PROPERTY_DYNAMICNQ,"true");
 		ObjectSet optimized=db.query(filter);
