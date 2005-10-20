@@ -26,11 +26,17 @@ public class ConstValue implements ComparisonOperand {
 		if (this == other) {
 			return true;
 		}
-		if (other == null || getClass() != other.getClass()) {
+		if (getClass() != other.getClass()) {
 			return false;
 		}
-		ConstValue casted = (ConstValue) other;
-		return _value.equals(casted._value);
+		Object otherValue = ((ConstValue) other)._value;
+		if (otherValue == _value) {
+			return true;
+		}
+		if (otherValue == null || _value == null) {
+			return false;
+		}
+		return _value.equals(otherValue);
 	}
 	
 	public int hashCode() {
