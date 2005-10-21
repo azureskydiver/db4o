@@ -17,7 +17,9 @@ public class DTrace {
     private static final Object init(){
         if(enabled){
             
-            // breakOnEvent(11);
+            // breakOnEvent(4);
+            // breakOnEvent(1107);
+            // breakOnEvent(259);
             
             // address: 244346, 44
             
@@ -36,9 +38,17 @@ public class DTrace {
 //            addRangeWithEnd(3835808, 3836267);
             
             
-            addRange(5329);
+            
+            // addRangeWithLength(16754, 87);
             
             // addRangeWithLength(0,10000000);
+            
+            
+            addRangeWithLength(1455,4);
+            
+            
+//            addRangeWithLength(18,47);
+//            addRangeWithLength(1455,47);
             
             // addRangeWithLength(25876597, 44);
             // addRange(7274611);
@@ -56,13 +66,16 @@ public class DTrace {
             DONOTINCLUDE = new DTrace(true, true, "donotinclude", true);
             EVALUATE_SELF = new DTrace(true, true, "evaluate self", true);
             FREE = new DTrace(true, true, "free", true);
+            FREE_RAM = new DTrace(true, true, "freeRAM", true);
             FREE_ON_COMMIT = new DTrace(true, true, "trans freeOnCommit", true);
             FREE_ON_ROLLBACK = new DTrace(true, true, "trans freeOnRollback", true);
             GET_SLOT = new DTrace(true, true, "getSlot", true);
             GET_FREESPACE = new DTrace(true, true, "getFreespace", true);
+            GET_FREESPACE_RAM = new DTrace(true, true, "getFreespaceRam", true);
             GET_YAPOBJECT = new DTrace(true, true, "get yapObject", true);
             ID_TREE_ADD = new DTrace(true, true, "id tree add", true);
             ID_TREE_REMOVE = new DTrace(true, true, "id tree remove", true);
+            IO_COPY = new DTrace(true, true, "io copy", true);
             JUST_SET = new DTrace(true, true, "just set", true);
             NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
             READ_ARRAY_WRAPPER = new DTrace(true, true, "read array wrapper", true);
@@ -87,7 +100,20 @@ public class DTrace {
             
             // turnAllOffExceptFor(new DTrace[] {GET_SLOT, FREE_ON_COMMIT, FREE, WRITE_BYTES});
             
-            turnAllOffExceptFor(new DTrace[] {FREE, GET_FREESPACE});
+            // turnAllOffExceptFor(new DTrace[] {GET_SLOT, FREE, FREE_RAM, GET_FREESPACE, GET_FREESPACE_RAM, WRITE_XBYTES, WRITE_BYTES, REGULAR_SEEK});
+            
+            // turnAllOffExceptFor(new DTrace[] {WRITE_XBYTES, WRITE_BYTES, IO_COPY, READ_BYTES});
+            
+            // turnAllOffExceptFor(new DTrace[] {FREE, GET_FREESPACE});
+            
+            turnAllOffExceptFor(new DTrace[] {FREE, FREE_RAM, GET_FREESPACE, GET_FREESPACE_RAM});
+            
+            // turnAllOffExceptFor(new DTrace[] {WRITE_BYTES});
+            
+            
+            
+            
+            // turnAllOffExceptFor(new DTrace[] {FREE, GET_FREESPACE, WRITE_XBYTES});
             
             // turnAllOffExceptFor(new DTrace[] {FREE, GET_FREESPACE, WRITE_XBYTES});
             // turnAllOffExceptFor(new DTrace[] {WRITE_BYTES, YAPCLASS_INIT});
@@ -118,7 +144,7 @@ public class DTrace {
     private static long [] _rangeEnd;
     private static int _rangeCount;
     
-    private static long _eventNr;
+    public static long _eventNr;
     private static long[] _breakEventNrs;
     private static int _breakEventCount;
     
@@ -134,13 +160,16 @@ public class DTrace {
     public static DTrace DONOTINCLUDE;
     public static DTrace EVALUATE_SELF;
     public static DTrace FREE;
+    public static DTrace FREE_RAM;
     public static DTrace FREE_ON_COMMIT;
     public static DTrace FREE_ON_ROLLBACK;
     public static DTrace GET_SLOT;
     public static DTrace GET_FREESPACE;
+    public static DTrace GET_FREESPACE_RAM;
     public static DTrace GET_YAPOBJECT;
     public static DTrace ID_TREE_ADD;
     public static DTrace ID_TREE_REMOVE;
+    public static DTrace IO_COPY;
     public static DTrace JUST_SET;
     public static DTrace NEW_INSTANCE;
     public static DTrace READ_ARRAY_WRAPPER;
@@ -230,7 +259,7 @@ public class DTrace {
                     if(end != 0  && start != end){
                         sb.append(formatInt(end));
                         sb.append(":");
-                        sb.append(formatInt(end - start));
+                        sb.append(formatInt(end - start + 1));
                     }else{
                         sb.append(formatInt(0));
                     }

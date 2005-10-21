@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.freespace.*;
 
 /**
  * configuration and agent to write the configuration block
@@ -29,8 +30,7 @@ public final class YapConfigBlock implements Runnable
     // int    unused (and lost)
 	// 5 bytes of the encryption password
     // byte   freespace system used
-    
-    
+    // int    freespace address
     
     private final Object		_timeWriterLock = new Object();
 	private final YapFile		_stream;
@@ -53,53 +53,46 @@ public final class YapConfigBlock implements Runnable
 	private static final int	ENCRYPTION_PASSWORD_LENGTH = 5;
     private static final int    PASSWORD_OFFSET = INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET+ENCRYPTION_PASSWORD_LENGTH;
     private static final int    FREESPACE_SYSTEM_OFFSET = PASSWORD_OFFSET + 1; 
+    private static final int    FREESPACE_ADDRESS_OFFSET = FREESPACE_SYSTEM_OFFSET + YapConst.YAPINT_LENGTH; 
 	
 	
 	// complete possible data in config block
 	private static final int	LENGTH = 
 		MINIMUM_LENGTH 
-		+ (YapConst.YAPINT_LENGTH * 4)		// (two transaction pointers, PDB ID, lost int
+		+ (YapConst.YAPINT_LENGTH * 5)		// (two transaction pointers, PDB ID, lost int, freespace address
 	    + ENCRYPTION_PASSWORD_LENGTH
         + 1;
 		
 	private final long			_opentime; // written as pure long 8 bytes
 	byte						_encoding;
     byte                        _freespaceSystem;
+    int                         _freespaceAddress;
 	
 	YapConfigBlock(YapFile stream){
 		_stream = stream;
         _encoding = stream.i_config.i_encoding;
-        _freespaceSystem = stream.i_config._freespaceSystem;
+        _freespaceSystem = FreespaceManager.checkType(stream.i_config._freespaceSystem);
 		_opentime = processID();
 		if(lockFile()){
 			writeHeaderLock();
 		}
 	}
 	
-	private YapWriter openTimeIO(){
-	    YapWriter writer = _stream.getWriter(_stream.getTransaction(), _address, YapConst.YAPLONG_LENGTH);
-	    writer.moveForward(OPEN_TIME_OFFSET);
-	    if (Deploy.debug) {
-	        writer.setID(YapConst.IGNORE_ID);
-	    }
-		return writer;
-	}
-	
-	private void openTimeOverWritten(){
-		if(lockFile()){
-			YapWriter bytes = openTimeIO();
-			bytes.read();
-			if(YLong.readLong(bytes) != _opentime){
-				Exceptions4.throwRuntimeException(22);
-			}
-			writeOpenTime();
-		}
-	}
-
-	
 	Transaction getTransactionToCommit(){
 		return _transactionToCommit;
 	}
+    
+    private void ensureFreespaceSlot(){
+        if(_freespaceAddress == 0){
+            newFreespaceSlot(_freespaceSystem);
+        }
+    }
+    
+    public int newFreespaceSlot(byte freespaceSystem){
+        _freespaceAddress = FreespaceManager.initSlot(_stream);
+        _freespaceSystem = freespaceSystem;
+        return _freespaceAddress;
+    }
 	
 	void go(){
 		_stream.createStringIO(_encoding);
@@ -118,7 +111,7 @@ public final class YapConfigBlock implements Runnable
 	private YapWriter headerLockIO(){
 	    YapWriter writer = _stream.getWriter(_stream.getTransaction(), 0, YapConst.YAPINT_LENGTH);
 	    writer.moveForward(2 + YapConst.YAPINT_LENGTH);
-	    if (Deploy.debug) {
+	    if (Debug.xbytes) {
 	        writer.setID(YapConst.IGNORE_ID);
 	    }
 		return writer;
@@ -146,6 +139,48 @@ public final class YapConfigBlock implements Runnable
 		}
 		return _stream.needsLockFileThread();
 	}
+    
+    private YapWriter openTimeIO(){
+        YapWriter writer = _stream.getWriter(_stream.getTransaction(), _address, YapConst.YAPLONG_LENGTH);
+        writer.moveForward(OPEN_TIME_OFFSET);
+        if (Debug.xbytes) {
+            writer.setID(YapConst.IGNORE_ID);
+        }
+        return writer;
+    }
+    
+    private void openTimeOverWritten(){
+        if(lockFile()){
+            YapWriter bytes = openTimeIO();
+            bytes.read();
+            if(YLong.readLong(bytes) != _opentime){
+                Exceptions4.throwRuntimeException(22);
+            }
+            writeOpenTime();
+        }
+    }
+    
+    private byte[] passwordToken() {
+        byte[] pwdtoken=new byte[ENCRYPTION_PASSWORD_LENGTH];
+        String fullpwd=_stream.i_config.i_password;
+        if(_stream.i_config.i_encrypt && fullpwd!=null) {
+            try {
+                byte[] pwdbytes=new YapStringIO().write(fullpwd);
+                YapWriter encwriter=new YapWriter(_stream.i_trans,pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
+                encwriter.append(pwdbytes);
+                encwriter.append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
+                _stream.i_handlers.decrypt(encwriter);
+                System.arraycopy(encwriter._buffer, 0, pwdtoken, 0, ENCRYPTION_PASSWORD_LENGTH);                
+            }
+            catch(Exception exc) {
+                // should never happen
+                //if(Debug.atHome) {
+                    exc.printStackTrace();
+                //}
+            }
+        }
+        return pwdtoken;
+    }
 	
 	static long processID(){
 		long id = System.currentTimeMillis();
@@ -173,20 +208,8 @@ public final class YapConfigBlock implements Runnable
 		return id;
 	}
 
-
-	/**
-	 * returns true if Unicode check is necessary
-	 */
-	boolean read(YapWriter reader) {
-		_address = reader.readInt(); 
-		if(_address == 2){
-			return true;
-		}
-		read();
-		return false;
-	}
-	
-	void read() {
+	void read(int address) {
+        _address = address;
 		writeOpenTime();
 		YapWriter reader = _stream.getWriter(_stream.getSystemTransaction(), _address, LENGTH);
 		try{
@@ -231,9 +254,17 @@ public final class YapConfigBlock implements Runnable
 			}
 		}
         
+        _freespaceSystem = FreespaceManager.FM_LEGACY_RAM;
+        
         if(oldLength > FREESPACE_SYSTEM_OFFSET){
             _freespaceSystem = reader.readByte();
         }
+        
+        if(oldLength > FREESPACE_ADDRESS_OFFSET){
+            _freespaceAddress = reader.readInt();
+        }
+        
+        ensureFreespaceSlot();
 		
 		if(lockFile() && ( lastAccessTime != 0)){
 			_stream.logMsg(28, null);
@@ -266,6 +297,7 @@ public final class YapConfigBlock implements Runnable
 		}
 		go();
 	}
+    
 	
 	public void run(){
 		if(! Deploy.csharp){
@@ -285,8 +317,13 @@ public final class YapConfigBlock implements Runnable
 	}
 	
 	void write() {
+        
 		headerLockOverwritten();
 		_address = _stream.getSlot(LENGTH);
+        
+        // FIXME: Config block is written twice, not necessary, looses space 
+        // System.err.println("Config block at " + _address);
+        
 		YapWriter writer = _stream.getWriter(_stream.i_trans, _address,LENGTH);
 		YInt.writeInt(LENGTH, writer);
 		YLong.writeLong(_opentime, writer);
@@ -298,31 +335,10 @@ public final class YapConfigBlock implements Runnable
 		YInt.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
 		writer.append(passwordToken());
         writer.append(_freespaceSystem);
-
+        ensureFreespaceSlot();
+        YInt.writeInt(_freespaceAddress, writer);
 		writer.write();
 		writePointer();
-	}
-
-	private byte[] passwordToken() {
-		byte[] pwdtoken=new byte[ENCRYPTION_PASSWORD_LENGTH];
-		String fullpwd=_stream.i_config.i_password;
-		if(_stream.i_config.i_encrypt && fullpwd!=null) {
-			try {
-                byte[] pwdbytes=new YapStringIO().write(fullpwd);
-				YapWriter encwriter=new YapWriter(_stream.i_trans,pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
-				encwriter.append(pwdbytes);
-				encwriter.append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
-				_stream.i_handlers.decrypt(encwriter);
-				System.arraycopy(encwriter._buffer, 0, pwdtoken, 0, ENCRYPTION_PASSWORD_LENGTH);				
-			}
-			catch(Exception exc) {
-				// should never happen
-				//if(Debug.atHome) {
-					exc.printStackTrace();
-				//}
-			}
-		}
-		return pwdtoken;
 	}
 	
 	boolean writeAccessTime() throws IOException{
@@ -350,7 +366,7 @@ public final class YapConfigBlock implements Runnable
 		YapWriter writer = _stream.getWriter(_stream.i_trans, 0, YapConst.YAPID_LENGTH);
 		writer.moveForward(2);
 		YInt.writeInt(_address, writer);
-		if(Deploy.debug && Deploy.overwrite){
+		if(Debug.xbytes && Deploy.overwrite){
 			writer.setID(YapConst.IGNORE_ID);
 		}
 		writer.write();

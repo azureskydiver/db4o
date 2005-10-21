@@ -15,7 +15,7 @@ public class Index4 {
 
     static private int _version;
 
-    private final MetaIndex    _metaIndex;
+    public final MetaIndex    _metaIndex;
 
     private IndexTransaction _globalIndexTransaction;
 
@@ -81,7 +81,7 @@ public class Index4 {
 //        System.out.println("---  IxField commit debug complete");
 //    }
     
-    private int[] prepareFree(){
+    private int[] freeForMetaIndex(){
         return new int[] {
             _metaIndex.indexAddress,
             _metaIndex.indexLength,
@@ -105,50 +105,39 @@ public class Index4 {
      */
     public void commitFreeSpace(Index4 other){
         
-        int[] myFree = prepareFree();
-        int[] otherFree = other.prepareFree();
-  
-        Tree root = getRoot();
-        
         int entries = countEntries();
         
         // For the two freespace indexes themselves, we call
         // the freespace system and we store two meta indexes. Potential effects:
-        // 4 x getSlot   -4   to   0     
+        // 2 x getSlot   -2   to   0     
         // 4 x free      -4   to   + 4
         // 
         
-        // Therefore we have to raise the value by 2, to make 
+        // Therefore we have to raise the value by 4, to make 
         // sure that there are enough.
+        
         
         int length = (entries + 4) * lengthPerEntry();
         
         int mySlot = getSlot(length);
         int otherSlot = getSlot(length);
+        doFree(freeForMetaIndex());
+        doFree(other.freeForMetaIndex());
         
-        storeMetaIndex(entries, length, mySlot);
-        other.storeMetaIndex(entries, length, otherSlot);
+        entries = writeToNewSlot(mySlot, length);
+        metaIndexSetMembers(entries, length, mySlot);
+        createGlobalFileRange();
         
-        int newEntries = countEntries();
+        int otherEntries = other.writeToNewSlot(otherSlot, length);
         
-        if(entries != newEntries){
-            remarshallMetaIndex(newEntries);
-            other.remarshallMetaIndex(newEntries);
+        if(Deploy.debug){
+            if(entries != otherEntries){
+                throw new RuntimeException("Should never happen");
+            }
         }
         
-        writeToNewSlot(mySlot, length);
-        other.writeToNewSlot(otherSlot, length);
-        
-        doFree(myFree);
-        doFree(otherFree);
-        
-//        if(Deploy.debug){
-//            YapFile file = file();
-//            for(int i = 0; i < free.length; i += 2){
-//                file.writeXBytes(free[i], file.blocksFor(free[i + 1]) * file.blockSize() );
-//            }
-//        }
-        
+        other.metaIndexSetMembers(entries, length, otherSlot);
+        other.createGlobalFileRange();
     }
     
     private int lengthPerEntry(){
@@ -160,34 +149,33 @@ public class Index4 {
         file().free(_metaIndex.patchAddress, _metaIndex.indexLength);
     }
     
-    private void storeMetaIndex(int entries, int length, int address){
+    private void metaIndexStore(int entries, int length, int address){
         Transaction transact = trans();
+        metaIndexSetMembers(entries, length, address);
+        transact.i_stream.setInternal(transact, _metaIndex, 1, false);
+    }
+    
+    private void metaIndexSetMembers(int entries, int length, int address){
         _metaIndex.indexEntries = entries;
         _metaIndex.indexLength = length;
         _metaIndex.indexAddress = address;
         _metaIndex.patchEntries = 0;
         _metaIndex.patchAddress = 0;
         _metaIndex.patchLength = 0;
-        transact.i_stream.setInternal(transact, _metaIndex, 1, false);
     }
     
-    private void remarshallMetaIndex(int entries){
-        _metaIndex.indexEntries = entries;
-        Transaction transact = trans();
-        transact.i_stream.getYapObject(_metaIndex).remarshall(transact);
-    }
-    
-    private IxFileRange writeToNewSlot(int slot, int length ){
+    private int writeToNewSlot(int slot, int length ){
         Tree root = getRoot();
         final YapWriter writer = new YapWriter(trans(),slot, lengthPerEntry());
+        final int[] entries = new int[] {0};
         if (root != null) {
             root.traverse(new Visitor4() {
                 public void visit(Object a_object) {
-                    ((IxTree) a_object).write(_handler, writer); 
+                    entries[0] += ((IxTree) a_object).write(_handler, writer); 
                 }
             });
         }
-        return createGlobalFileRange();
+        return entries[0];
     }
     
 
@@ -212,11 +200,13 @@ public class Index4 {
             int length = countEntries() * lengthPerEntry();
             int slot = getSlot(length);
             
-            int[] free = prepareFree();
+            int[] free = freeForMetaIndex();
             
-            storeMetaIndex(entries, length, slot);
+            metaIndexStore(entries, length, slot);
             
-            IxFileRange newFileRange = writeToNewSlot(slot, length);
+            writeToNewSlot(slot, length);
+            
+            IxFileRange newFileRange = createGlobalFileRange();
 
             if(_indexTransactions != null){
                 Iterator4 i = _indexTransactions.iterator();

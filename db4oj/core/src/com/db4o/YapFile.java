@@ -22,6 +22,9 @@ public abstract class YapFile extends YapStream {
     private Collection4         i_dirty;
     
     private FreespaceManager _freespaceManager;
+    
+    // can be used to check freespace system
+    private FreespaceManager _fmChecker;
 
     private boolean             i_isServer = false;
 
@@ -54,7 +57,7 @@ public abstract class YapFile extends YapStream {
         return ret;
     }
 
-    final void commit1() {
+    void commit1() {
         checkClosed();
         i_entryCounter++;
         try {
@@ -66,7 +69,13 @@ public abstract class YapFile extends YapStream {
     }
 
     void configureNewFile() {
+        
         _freespaceManager = FreespaceManager.createNew(this, i_config._freespaceSystem);
+        
+        if(Debug.freespace){
+            _fmChecker = new FreespaceManagerRam(this);
+        }
+        
         blockSize(i_config.i_blockSize);
         i_writeAt = blocksFor(HEADER_LENGTH);
         _configBlock = new YapConfigBlock(this);
@@ -75,7 +84,12 @@ public abstract class YapFile extends YapStream {
         initNewClassCollection();
         initializeEssentialClasses();
         initBootRecord();
-        _freespaceManager.start();
+        _freespaceManager.start(_configBlock._freespaceAddress);
+        
+        if(Debug.freespace){
+            _fmChecker.start(0);
+        }
+        
     }
 
     long currentVersion() {
@@ -131,6 +145,9 @@ public abstract class YapFile extends YapStream {
 
     public void free(int a_address, int a_length) {
         _freespaceManager.free(a_address, a_length);
+        if(Debug.freespace){
+            _fmChecker.free(a_address, a_length);
+        }
     }
 
     final void freePrefetchedPointers() {
@@ -144,6 +161,21 @@ public abstract class YapFile extends YapStream {
         }
         i_prefetchedIDs = null;
     }
+    
+    final void freeSpaceBeginCommit(){
+        if(_freespaceManager == null){
+            return;
+        }
+        _freespaceManager.beginCommit();
+    }
+    
+    final void freeSpaceEndCommit(){
+        if(_freespaceManager == null){
+            return;
+        }
+        _freespaceManager.endCommit();
+    }
+
 
     void getAll(Transaction ta, final QueryResultImpl a_res) {
 
@@ -213,19 +245,62 @@ public abstract class YapFile extends YapStream {
     }
 
     private final int getSlot1(int bytes) {
+        
+        if(Deploy.debug){
+            if(bytes <= 0){
+                throw new RuntimeException("Who wants invalid zero or smaller slots ?");
+            }
+        }
+        
         if(_freespaceManager != null){
+            
             int freeAddress = _freespaceManager.getSlot(bytes);
+            
+            if(Debug.freespace){
+                if(freeAddress > 0){
+                    Collection4 wrongOnes = new Collection4();
+                    int freeCheck = _fmChecker.getSlot(bytes);
+                    
+                    while(freeCheck != freeAddress  && freeCheck > 0){
+                        // System.out.println("Freecheck alternative found: "  + freeCheck);
+                        wrongOnes.add(new int[]{freeCheck,bytes});
+                        freeCheck = _fmChecker.getSlot(bytes);
+                    }
+                    Iterator4 i = wrongOnes.iterator();
+                    while(i.hasNext()){
+                        int[] adrLength = (int[])i.next();
+                        _fmChecker.free(adrLength[0], adrLength[1]);
+                    }
+                    if(freeCheck == 0){
+                        _freespaceManager.debug();
+                        _fmChecker.debug();
+                    }
+                }
+            }
+            
             if(freeAddress > 0){
                 return freeAddress;
             }
         }
+        
         int blocksNeeded = blocksFor(bytes);
-        if (Deploy.debug && Deploy.overwrite) {
+        if (Debug.xbytes && Deploy.overwrite) {
             writeXBytes(i_writeAt, blocksNeeded * blockSize());
         }
         int address = i_writeAt;
         i_writeAt += blocksNeeded;
         return address;
+    }
+    
+    void ensureLastSlotWritten(){
+        if (!Debug.xbytes){
+            if(Deploy.overwrite){
+                if(i_writeAt > blocksFor(fileLength())){
+                    YapWriter writer = getWriter(i_systemTrans, i_writeAt - 1, blockSize());
+                    writer.write();
+                }
+            }
+        }
     }
 
     public Db4oDatabase identity() {
@@ -390,7 +465,8 @@ public abstract class YapFile extends YapStream {
         i_writeAt = blocksFor(fileLength());
 
         _configBlock = new YapConfigBlock(this);
-        _configBlock.read(myreader);
+        
+        _configBlock.read(myreader.readInt());
 
         // configuration lock time skipped
         myreader.incrementOffset(YapConst.YAPID_LENGTH);
@@ -402,6 +478,11 @@ public abstract class YapFile extends YapStream {
         
         _freespaceManager = FreespaceManager.createNew(this, _configBlock._freespaceSystem);
         _freespaceManager.read(freespaceID);
+        
+        if(Debug.freespace){
+            _fmChecker = new FreespaceManagerRam(this);
+            _fmChecker.read(freespaceID);
+        }
         
         showInternalClasses(true);
         Object bootRecord = null;
@@ -420,7 +501,27 @@ public abstract class YapFile extends YapStream {
         } else {
             initBootRecord();
         }
-        _freespaceManager.start();
+        
+        _freespaceManager.start(_configBlock._freespaceAddress);
+        
+        if(Debug.freespace){
+            _fmChecker.start(0);
+        }
+        
+        if(i_config._freespaceSystem != 0  || _configBlock._freespaceSystem == FreespaceManager.FM_LEGACY_RAM){
+            if(_freespaceManager.systemType() != i_config._freespaceSystem){
+                FreespaceManager newFM = FreespaceManager.createNew(this, i_config._freespaceSystem);
+                int fmSlot = _configBlock.newFreespaceSlot(i_config._freespaceSystem);
+                newFM.start(fmSlot);
+                _freespaceManager.migrate(newFM);
+                FreespaceManager oldFM = _freespaceManager;
+                _freespaceManager = newFM;
+                oldFM.freeSelf();
+                _freespaceManager.beginCommit();
+                _freespaceManager.endCommit();
+                _configBlock.write();
+            }
+        }
         
         showInternalClasses(false);
         writeHeader(false);
@@ -585,11 +686,8 @@ public abstract class YapFile extends YapStream {
         }
         i_dirty.clear();
         writeBootRecord();
-        if(_freespaceManager != null){
-            _freespaceManager.commit();
-        }
     }
-
+    
     final void writeEmbedded(YapWriter a_parent, YapWriter a_child) {
         int length = a_child.getLength();
         int address = getSlot(length);
@@ -603,7 +701,17 @@ public abstract class YapFile extends YapStream {
     }
 
     void writeHeader(boolean shuttingDown) {
+        
         int freespaceID = _freespaceManager.write(shuttingDown);
+        
+        if(shuttingDown){
+            _freespaceManager = null;
+        }
+        
+        if(Debug.freespace){
+            freespaceID = _fmChecker.write(shuttingDown);
+        }
+        
         YapWriter writer = getWriter(i_systemTrans, 0, HEADER_LENGTH);
         writer.append(YapConst.YAPFILEVERSION);
         writer.append(blockSize());
@@ -611,10 +719,14 @@ public abstract class YapFile extends YapStream {
         writer.writeInt(0);
         writer.writeInt(i_classCollection.getID());
         writer.writeInt(freespaceID);
-        if (Deploy.debug && Deploy.overwrite) {
+        if (Debug.xbytes && Deploy.overwrite) {
             writer.setID(YapConst.IGNORE_ID);
         }
         writer.write();
+        if(shuttingDown){
+            ensureLastSlotWritten();
+        }
+
     }
 
     final void writeNew(YapClass a_yapClass, YapWriter aWriter) {
@@ -640,7 +752,7 @@ public abstract class YapFile extends YapStream {
     public abstract void writeXBytes(int a_address, int a_length);
 
     YapWriter xBytes(int a_address, int a_length) {
-        if (Deploy.debug) {
+        if (Debug.xbytes) {
             YapWriter bytes = getWriter(i_systemTrans, a_address, a_length);
             for (int i = 0; i < a_length; i++) {
                 bytes.append(YapConst.XBYTE);
@@ -657,7 +769,7 @@ public abstract class YapFile extends YapStream {
         bytes.moveForward(YapConfigBlock.TRANSACTION_OFFSET);
         bytes.writeInt(a_address);
         bytes.writeInt(a_address);
-        if (Deploy.debug && Deploy.overwrite) {
+        if (Debug.xbytes && Deploy.overwrite) {
             bytes.setID(YapConst.IGNORE_ID);
         }
         bytes.write();

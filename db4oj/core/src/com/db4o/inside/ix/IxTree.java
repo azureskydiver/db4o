@@ -120,9 +120,11 @@ public abstract class IxTree extends Tree{
     
     public abstract void visit(Visitor4 visitor, int[] a_lowerAndUpperMatch);
     
+    public abstract void visitAll(IntObjectVisitor visitor);
+    
     public abstract void freespaceVisit(FreespaceVisitor visitor, int index);
     
-    public abstract void write(Indexable4 a_handler, YapWriter a_writer);
+    public abstract int write(Indexable4 a_handler, YapWriter a_writer);
     
     public void visitFirst(FreespaceVisitor visitor){
         if(i_preceding != null){

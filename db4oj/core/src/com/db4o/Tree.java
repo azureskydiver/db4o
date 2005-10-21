@@ -408,6 +408,13 @@ public abstract class Tree implements Cloneable, Readable{
 		return i_size;
 	}
     
+    public static final void traverse(Tree tree, Visitor4 visitor){
+        if(tree == null){
+            return;
+        }
+        tree.traverse(visitor);
+    }
+    
 	public final void traverse(final Visitor4 a_visitor){
 		if(i_preceding != null){
 			i_preceding.traverse(a_visitor);

@@ -50,24 +50,20 @@ class IxFileRange extends IxTree{
 	}
     
     public String toString(){
-//        return "";
         YapFile yf = stream();
         Transaction transaction = trans();
         YapReader fileReader = new YapReader(slotLength());
-        StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer();
         sb.append("IxFileRange");
-        for (int i = 0; i < _entries; i++) {
-            int address = _address + (i * slotLength());
-            fileReader.read(yf, address, _addressOffset);
-            fileReader._offset = 0;
-            sb.append("\n  ");
-            Object obj = handler().comparableObject(transaction, handler().readIndexEntry(fileReader));
-            int parentID = fileReader.readInt();
-            sb.append("Parent: " + parentID);
-            sb.append("\n ");
-            sb.append(obj);
-        }
-        return sb.toString();
+        visitAll(new IntObjectVisitor() {
+            public void visit(int anInt, Object anObject) {
+                sb.append("\n  ");
+                sb.append("Parent: " + anInt);
+                sb.append("\n ");
+                sb.append(anObject);
+            }
+        });
+       return sb.toString();
     }
 
     public void visit(Visitor4 visitor, int[] lowerUpper){
@@ -84,14 +80,27 @@ class IxFileRange extends IxTree{
                 visitor.visit(new Integer(fileReader.readInt()));
             }
         }
-
     }
 
-    public void write(Indexable4 a_handler, YapWriter a_writer) {
+    public int write(Indexable4 a_handler, YapWriter a_writer) {
         YapFile yf = (YapFile)a_writer.getStream();
         int length = _entries * slotLength();
         yf.copy(_address, _addressOffset, a_writer.getAddress(), a_writer.addressOffset(), length);
         a_writer.moveForward(length);
+        return _entries;
+    }
+    
+    public void visitAll(IntObjectVisitor visitor) {
+        YapFile yf = stream();
+        Transaction transaction = trans();
+        YapReader fileReader = new YapReader(slotLength());
+        for (int i = 0; i < _entries; i++) {
+            int address = _address + (i * slotLength());
+            fileReader.read(yf, address, _addressOffset);
+            fileReader._offset = 0;
+            Object obj = handler().comparableObject(transaction, handler().readIndexEntry(fileReader));
+            visitor.visit(fileReader.readInt(), obj);
+        }
     }
     
     public void visitFirst(FreespaceVisitor visitor){
@@ -119,7 +128,9 @@ class IxFileRange extends IxTree{
         IxFileRangeReader frr = reader();
         YapReader fileReader = new YapReader(frr._slotLength);
         fileReader.read(stream(), _address, _addressOffset + (index * frr._slotLength));
-        visitor.visit(fileReader.readInt(), fileReader.readInt());
+        int val = fileReader.readInt();
+        int parentID = fileReader.readInt();
+        visitor.visit(parentID, val);
     }
     
 

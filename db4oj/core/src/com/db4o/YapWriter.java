@@ -99,7 +99,7 @@ public final class YapWriter extends YapReader {
     }
 
     void debugCheckBytes() {
-        if (Deploy.debug) {
+        if (Debug.xbytes) {
             if (_offset != i_length) {
                 // Db4o.log("!!! YapBytes.debugCheckBytes not all bytes used");
                 // This is normal for writing The FreeSlotArray, becauce one
@@ -239,7 +239,7 @@ public final class YapWriter extends YapReader {
         i_cascadeDelete = depth;
     }
 
-    void setID(int a_id) {
+    public void setID(int a_id) {
         i_id = a_id;
     }
 
@@ -282,7 +282,7 @@ public final class YapWriter extends YapReader {
     }
 
     void write() {
-        if (Deploy.debug) {
+        if (Debug.xbytes) {
             debugCheckBytes();
         }
         i_trans.i_file.writeBytes(this);
