@@ -16,7 +16,7 @@ public class UpdatingDb4oVersions {
     
     static final String PATH = "./test/db4oVersions/";
 
-    static final String[] VERSIONS = {"db4o_3.0.3", "db4o_4.0.004", "db4o_4.1.001", "db4o_4.6.003"};
+    static final String[] VERSIONS = {"db4o_3.0.3", "db4o_4.0.004", "db4o_4.1.001", "db4o_4.6.003","db4o_4.6.004", "db4o_5.0.007"};
 
     List list;
     Map map;
