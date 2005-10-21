@@ -5,18 +5,7 @@ package com.db4o;
 import com.db4o.foundation.Hashtable4;
 
 /**
- * Refer to Klaus's posting at development newsgroup:
- * Does it not require the hashCode to be unique for each object?
- * (System.identityHashCode does not necessarily produce unique > hashCodes).
- * <p/>
- * You are correct.
- * <p/>
- * Let's add putIdentity and getIdentity methods to Hashtable4 to fix.
- * <p/>
- * Please ignore for now. Most VMs I ever tested on produce unique values as
- * long as an object is not gc'd.
- * <p/>
- * TODO FIXME
+ * @exclude
  */
 public class MigrationConnection {
 
@@ -27,6 +16,17 @@ public class MigrationConnection {
     }
 
     public void mapReference(Object obj, YapObject ref) {
+        
+        // FIXME: Identityhashcode is not unique
+        
+        // ignored for now, since it is on most VMs.
+        
+        // This should be fixed by adding 
+        // putIdentity and getIdentity methods to Hashtable4,
+        // using the actual object as the parameter and 
+        // checking for object identity in addition to the
+        // hashcode
+        
         _referenceMap.put(System.identityHashCode(obj), ref);
     }
 
