@@ -2,6 +2,8 @@ package com.db4o.io;
 
 import java.io.*;
 
+import com.db4o.*;
+
 public abstract class IoAdapter {
     
 	private int _blockSize;
@@ -30,6 +32,11 @@ public abstract class IoAdapter {
 	public abstract void close() throws IOException;
 
     public void copy(long oldAddress, long newAddress, int length) throws IOException{
+        
+        if(DTrace.enabled){
+            DTrace.IO_COPY.logLength(newAddress, length);
+        }
+        
         byte[] copyBytes = new byte[length];
         seek(oldAddress);
         read(copyBytes);

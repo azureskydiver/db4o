@@ -18,7 +18,40 @@ public class FreespaceManagerRam extends FreespaceManager {
         super(file);
     }
     
-    public void commit(){
+    private void addFreeSlotNodes(int a_address, int a_length) {
+        FreeSlotNode addressNode = new FreeSlotNode(a_address);
+        addressNode.createPeer(a_length);
+        _freeByAddress = Tree.add(_freeByAddress, addressNode);
+        _freeBySize = Tree.add(_freeBySize, addressNode.i_peer);
+    }
+
+    public void beginCommit() {
+        // do nothing
+    }
+    
+    public void debug(){
+        if(Debug.freespace){
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("Dumping RAM based address index");
+            _freeByAddress.traverse(new Visitor4() {
+            
+                public void visit(Object a_object) {
+                    System.out.println(a_object);
+                }
+            
+            });
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("Dumping RAM based length index");
+            _freeBySize.traverse(new Visitor4() {
+                  public void visit(Object a_object) {
+                      System.out.println(a_object);
+                  }
+              });
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        }
+    }
+    
+    public void endCommit() {
         // do nothing
     }
     
@@ -33,7 +66,7 @@ public class FreespaceManagerRam extends FreespaceManager {
         }
         
         if(DTrace.enabled){
-            DTrace.FREE.logLength(a_address, a_length);
+            DTrace.FREE_RAM.logLength(a_address, a_length);
         }
         
         a_length = _file.blocksFor(a_length);
@@ -75,10 +108,18 @@ public class FreespaceManagerRam extends FreespaceManager {
                 addFreeSlotNodes(a_address, a_length);
             }
         }
-        if (Deploy.debug) {
-            _file.writeXBytes(a_address, a_length * blockSize());
+        if (Debug.xbytes) {
+            if(! Debug.freespace){
+                _file.writeXBytes(a_address, a_length * blockSize());
+            }
         }
     }
+    
+    public void freeSelf() {
+        // Do nothing.
+        // The RAM manager frees itself on reading.
+    }
+
     
     public int getSlot(int length) {
         int address = getSlot1(length);
@@ -86,12 +127,11 @@ public class FreespaceManagerRam extends FreespaceManager {
         if(address != 0){
             
             if(DTrace.enabled){
-                DTrace.GET_FREESPACE.logLength(address, length);
+                DTrace.GET_FREESPACE_RAM.logLength(address, length);
             }
         }
         return address;
     }
-
     
     public int getSlot1(int length) {
         length = _file.blocksFor(length);
@@ -112,7 +152,19 @@ public class FreespaceManagerRam extends FreespaceManager {
         }
         return address;
     }
+    
 
+    public void migrate(final FreespaceManager newFM) {
+        _freeByAddress.traverse(new Visitor4() {
+            public void visit(Object a_object) {
+                FreeSlotNode fsn = (FreeSlotNode)a_object;
+                int address = fsn.i_key;
+                int length = fsn.i_peer.i_key;
+                newFM.free(address, length);
+            }
+        });
+    }
+    
     public void read(int freeSlotsID) {
         if (freeSlotsID <= 0){
             return;
@@ -140,11 +192,25 @@ public class FreespaceManagerRam extends FreespaceManager {
             });
         }
         _freeByAddress = addressTree[0];
-
-        free(freeSlotsID, YapConst.POINTER_LENGTH);
-        free(reader.getAddress(), reader.getLength());
+        
+        if(! Debug.freespace){
+          _file.free(freeSlotsID, YapConst.POINTER_LENGTH);
+          _file.free(reader.getAddress(), reader.getLength());
+        }
     }
     
+    public void start(int slotAddress) {
+        // this is done in read(), nothing to do here
+    }
+    
+    public byte systemType() {
+        return FM_RAM;
+    }
+    
+    private final Transaction trans(){
+        return _file.i_systemTrans;
+    }
+
     public int write(boolean shuttingDown){
         if(! shuttingDown){
             return 0;
@@ -160,24 +226,6 @@ public class FreespaceManagerRam extends FreespaceManager {
         trans().writePointer(slot[0], slot[1], length);
         return freeBySizeID;
     }
-    
-    private void addFreeSlotNodes(int a_address, int a_length) {
-        FreeSlotNode addressNode = new FreeSlotNode(a_address);
-        addressNode.createPeer(a_length);
-        _freeByAddress = Tree.add(_freeByAddress, addressNode);
-        _freeBySize = Tree.add(_freeBySize, addressNode.i_peer);
-    }
-    
-    private final Transaction trans(){
-        return _file.i_systemTrans;
-    }
-    
-    public byte systemType() {
-        return FM_RAM;
-    }
 
-    public void start() {
-        // this is done in read(), nothing to do here
-    }
 
 }

@@ -4,7 +4,15 @@ package com.db4o;
 
 import com.db4o.foundation.*;
 
-abstract class Debug extends Debug4 {
+/**
+ * @exclude
+ */
+public abstract class Debug extends Debug4 {
+    
+    
+    public static final boolean xbytes = false;
+    
+    public static final boolean freespace = false;
     
     public static final boolean checkSychronization = false;
     

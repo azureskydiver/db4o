@@ -104,27 +104,34 @@ class IxPath implements Cloneable, Visitor4 {
             if (nullMatches[0] == 0) {
                 i_upperNull = nullMatches[1] + 1;
             } else {
-            	i_upperNull = 0; 
+                i_upperNull = 0; 
             }
         }
     }
     
     public void visitMatch(FreespaceVisitor visitor){
-        if (i_comparisonResult == 0){
-            if (i_lowerAndUpperMatch != null) {
-                int ix = i_lowerAndUpperMatch[0] - 1;
-                if(ix >= 0){
-                    i_tree.freespaceVisit(visitor, ix);
-                }
-            }else{
-                i_tree.freespaceVisit(visitor, 0);
-            }
-            if(visitor.visited()){
-                return;
-            }
-        }
         if(i_next != null){
             i_next.visitMatch(visitor);
+        }
+        if(visitor.visited()){
+            return;
+        }
+        if (i_comparisonResult != 0){
+            return;
+        }
+        
+        if (i_lowerAndUpperMatch == null) {
+            i_tree.freespaceVisit(visitor, 0);
+            return;
+        }
+        
+        if(i_lowerAndUpperMatch[1] < i_lowerAndUpperMatch[0]){
+            return;
+        }
+        
+        int ix = i_lowerAndUpperMatch[0]; 
+        if(ix >= 0){
+            i_tree.freespaceVisit(visitor, ix);
         }
     }
     

@@ -70,7 +70,7 @@ public final class YapConst
 	// TODO: This one is a terrible low-frequency blunder in YapArray.writeClass!!!
 	// If YapClass-ID == 99999 (not very likely) then we will get IGNORE_ID. Change
 	// to -Integer.MAX_VALUE or protect 99999 in YapFile.getPointerSlot() 
-	static final int IGNORE_ID = -99999;
+	public static final int IGNORE_ID = -99999;
 	
 	// This is a hard coded 2 Gig-Limit for YapClass-IDs.
     // TODO: get rid of magic numbers like this one

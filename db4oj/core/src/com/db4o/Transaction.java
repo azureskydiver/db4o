@@ -205,40 +205,52 @@ public class Transaction {
             i_transactionListeners = null;
         }
     }
+    
+    private void commitExceptForFreespace(){
+        
+        if(DTrace.enabled){
+            boolean systemTrans = (i_parentTransaction == null);
+            DTrace.TRANS_COMMIT.logInfo( "server == " + i_stream.isServer() + ", systemtrans == " +  systemTrans);
+        }
+        
+        // Just to make sure that no pending deletes 
+        // get carried into the next transaction.
+        beginEndSet();
+        
+        commitTransactionListeners();
+
+        i_stream.checkNeededUpdates();
+        
+        i_stream.writeDirty();
+        
+        i_stream.i_classCollection.write(i_stream, i_stream.getSystemTransaction());
+
+        if (i_dirtyFieldIndexes != null) {
+            Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
+            while (i.hasNext()) {
+                ((IndexTransaction) i.next()).commit();
+            }
+        }
+        
+        if (i_parentTransaction != null) {
+            i_parentTransaction.commitExceptForFreespace();
+        } else {
+            i_stream.writeDirty();
+        }
+        
+        write();
+        
+        freeOnCommit();
+        
+        clearAll();
+    }
+    
 
     void commit() {
         synchronized (i_stream.i_lock) {
-            
-            if(DTrace.enabled){
-                boolean systemTrans = (i_parentTransaction == null);
-                DTrace.TRANS_COMMIT.logInfo( "server == " + i_stream.isServer() + ", systemtrans == " +  systemTrans);
-            }
-            
-            // Just to make sure that no pending deletes 
-            // get carried into the next transaction.
-            beginEndSet();
-            
-            commitTransactionListeners();
-
-            i_stream.checkNeededUpdates();
-            i_stream.writeDirty();
-            i_stream.i_classCollection.write(i_stream, i_stream
-                .getSystemTransaction());
-
-            if (i_dirtyFieldIndexes != null) {
-                Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
-                while (i.hasNext()) {
-                    ((IndexTransaction) i.next()).commit();
-                }
-            }
-            if (i_parentTransaction != null) {
-                i_parentTransaction.commit();
-            } else {
-                i_stream.writeDirty();
-            }
-            write();
-            freeOnCommit();
-            clearAll();
+            i_file.freeSpaceBeginCommit();
+            commitExceptForFreespace();
+            i_file.freeSpaceEndCommit();
         }
     }
 
@@ -710,8 +722,7 @@ public class Transaction {
         }
         if (!(i_slots == null && i_addToClassIndex == null && i_removeFromClassIndex == null)) {
             int length = calculateLength();
-            int address = ((YapFile) i_stream).getSlot(length);
-            freeOnCommit(address, address, length);
+            int address = i_file.getSlot(length);
             final YapWriter bytes = new YapWriter(this, address, length);
             bytes.writeInt(length);
             Tree.write(bytes, i_slots);
@@ -721,6 +732,7 @@ public class Transaction {
             i_stream.writeTransactionPointer(address);
             writeSlots();
             i_stream.writeTransactionPointer(0);
+            i_file.free(address, length);
         }
     }
 
@@ -833,7 +845,7 @@ public class Transaction {
         if (Deploy.debug) {
             i_pointerIo.writeEnd();
         }
-        if (Deploy.debug && Deploy.overwrite) {
+        if (Debug.xbytes && Deploy.overwrite) {
             i_pointerIo.setID(YapConst.IGNORE_ID);
         }
         i_pointerIo.write();

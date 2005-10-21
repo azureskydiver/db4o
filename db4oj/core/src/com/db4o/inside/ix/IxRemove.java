@@ -33,7 +33,12 @@ public class IxRemove extends IxPatch {
         // do nothing
     }
 
-    public void write(Indexable4 a_handler, YapWriter a_writer) {
+    public int write(Indexable4 a_handler, YapWriter a_writer) {
+        // do nothing
+        return 0;
+    }
+
+    public void visitAll(IntObjectVisitor visitor) {
         // do nothing
     }
 }

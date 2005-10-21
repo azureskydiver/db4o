@@ -23,8 +23,6 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
 
     public MetaIndex          i_uuidMetaIndex;
     
-    public MetaIndex          _freespaceByAddress; 
-    public MetaIndex          _freespaceByLength; 
     
     public PBootRecord(){
     }

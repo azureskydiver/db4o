@@ -16,17 +16,17 @@ class FreespaceIxLength extends FreespaceIx{
         _indexTrans.add(address, new Integer(length));
     }
 
-    void remove(int address, int length) {
-        _index._handler.prepareComparison(new Integer(length));
-        _indexTrans.remove(address, new Integer(length));
+    int address() {
+        return _visitor._key;
     }
 
     int length() {
         return _visitor._value;
     }
 
-    int address() {
-        return _visitor._key;
+    void remove(int address, int length) {
+        _index._handler.prepareComparison(new Integer(length));
+        _indexTrans.remove(address, new Integer(length));
     }
 
 }

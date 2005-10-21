@@ -127,19 +127,24 @@ class IxFileRangeReader {
         while (true) {
             _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
             _reader._offset = 0;
-
             int cmp = compare(trans);
-
             if (cmp > 0) {
                 _upper = _cursor - 1;
             } else if (cmp < 0) {
                 _lower = _cursor + 1;
             } else {
-                res = 0;
                 break;
             }
             if (!adjustCursor()) {
-                res = _cursor == 0 ? cmp : -1;
+                if(_cursor <= 0){
+                    if( ! (cmp < 0 && fileRange._entries > 1) ){
+                        res = cmp;
+                    }
+                }else if(_cursor >= (fileRange._entries - 1 ) ){
+                    if(cmp < 0){
+                        res = cmp;
+                    }
+                }
                 break;
             }
         }

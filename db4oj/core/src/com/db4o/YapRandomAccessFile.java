@@ -128,10 +128,15 @@ public class YapRandomAccessFile extends YapFile {
         }
         return stopSession;
     }
+    
+    void commit1() {
+        ensureLastSlotWritten();
+        super.commit1();
+    }
 
     public void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
 
-        if (Deploy.debug && Deploy.overwrite) {
+        if (Debug.xbytes && Deploy.overwrite) {
             checkXBytes(newAddress, newAddressOffset, length);
         }
 
@@ -162,7 +167,7 @@ public class YapRandomAccessFile extends YapFile {
     }
 
     private void checkXBytes(int a_newAddress, int newAddressOffset, int a_length) {
-        if (Deploy.debug && Deploy.overwrite) {
+        if (Debug.xbytes && Deploy.overwrite) {
             try {
                 byte[] checkXBytes = new byte[a_length];
                 i_file.blockSeek(a_newAddress, newAddressOffset);
@@ -349,7 +354,7 @@ public class YapRandomAccessFile extends YapFile {
 
         try {
 
-            if (Deploy.debug && Deploy.overwrite) {
+            if (Debug.xbytes && Deploy.overwrite) {
                 if (a_bytes.getID() != YapConst.IGNORE_ID) {
                     checkXBytes(a_bytes.getAddress(), a_bytes.addressOffset(), a_bytes.getLength());
                 }
@@ -373,7 +378,7 @@ public class YapRandomAccessFile extends YapFile {
     }
 
     public void writeXBytes(int a_address, int a_length) {
-        if (Deploy.debug) {
+        if (Debug.xbytes) {
             if (Deploy.flush) {
                 if (!i_config.i_readonly) {
                     if(a_address > 0 && a_length > 0){
@@ -383,6 +388,7 @@ public class YapRandomAccessFile extends YapFile {
                             }
                             i_file.blockSeek(a_address);
                             i_file.write(xBytes(a_address, a_length)._buffer, a_length);
+                            
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

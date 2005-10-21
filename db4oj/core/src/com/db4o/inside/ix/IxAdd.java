@@ -30,15 +30,20 @@ public class IxAdd extends IxPatch {
         visitor.visit(i_parentID, ((Integer)i_value).intValue());
     }
     
-    public void write(Indexable4 a_handler, YapWriter a_writer) {
+    public int write(Indexable4 a_handler, YapWriter a_writer) {
         a_handler.writeIndexEntry(a_writer, i_value);
         a_writer.writeInt(i_parentID);
         a_writer.writeForward();
+        return 1;
     }
     
     public String toString(){
         String str = "IxAdd "  + i_parentID + "\n " + handler().comparableObject(trans(), i_value);
         return str;
+    }
+
+    public void visitAll(IntObjectVisitor visitor) {
+        visitor.visit(i_parentID, handler().comparableObject(trans(), i_value));
     }
 
 }
