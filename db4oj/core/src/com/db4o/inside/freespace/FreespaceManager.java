@@ -9,9 +9,9 @@ public abstract class FreespaceManager {
     
     final YapFile     _file;
 
-    public static final byte FM_IX = 1;
-    public static final byte FM_LEGACY_RAM = -1;
+    public static final byte FM_LEGACY_RAM = 1;
     public static final byte FM_RAM = 2;
+    public static final byte FM_IX = 3;
     
     private static final int INTS_IN_SLOT = 12;
     
