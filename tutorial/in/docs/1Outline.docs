@@ -21,11 +21,11 @@
 .e Encryption ..
 .e RefactoringAndSchemaEvolution ..
 .e Tuning ..
+.e NQOptimization ..
 .e Maintenance ..
 .e Replication ..
 .e Semaphores ..
 .e Messaging ..
-.? java .e NQOptimization .. ..
 .e DOTNETSpecific ..
 .e DataBinding
 .e ObjectManager ..
