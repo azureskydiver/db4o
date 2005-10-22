@@ -13,6 +13,12 @@ public class Util {
         }
     }
     
+    public static void listResult(java.util.List result){
+    	System.out.println(result.size());
+    	for(int x = 0; x < result.size(); x++)
+    		System.out.println(result[x]);
+    }
+    
     public static void listRefreshedResult(ObjectContainer container,ObjectSet result,int depth) {
         System.out.println(result.size());
         while(result.hasNext()) {
