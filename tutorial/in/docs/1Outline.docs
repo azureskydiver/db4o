@@ -25,6 +25,7 @@
 .e Replication ..
 .e Semaphores ..
 .e Messaging ..
+.? java .e NQOptimization .. ..
 .e DOTNETSpecific ..
 .e DataBinding
 .e ObjectManager ..
