@@ -11,7 +11,9 @@ public class SameSizeOnReopen {
 	
 	public void test(){
 		if(! Test.isClientServer()){
-			Db4o.configure().discardFreeSpace(1);
+            Db4o.configure().discardFreeSpace(1);
+            Test.close();
+            Test.open();
 			for (int i = 0; i < 30; i++) {
 				Test.close();
 				int fileLength = Test.fileLength();
@@ -23,10 +25,7 @@ public class SameSizeOnReopen {
 				Test.ensure(fileLength == newFileLength);
 			}
 			Db4o.configure().discardFreeSpace(0);
-
 		}
-		
-	
 	}
 
 }

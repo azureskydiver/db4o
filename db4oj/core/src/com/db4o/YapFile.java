@@ -484,24 +484,6 @@ public abstract class YapFile extends YapStream {
             _fmChecker.read(freespaceID);
         }
         
-        showInternalClasses(true);
-        Object bootRecord = null;
-        if (_configBlock._bootRecordID > 0) {
-            bootRecord = getByID1(i_systemTrans, _configBlock._bootRecordID);
-        }
-        if (bootRecord instanceof PBootRecord) {
-            _bootRecord = (PBootRecord) bootRecord;
-            _bootRecord.checkActive();
-            _bootRecord.i_stream = this;
-            if (_bootRecord.initConfig(i_config)) {
-                i_classCollection.reReadYapClass(getYapClass(
-                    i_handlers.ICLASS_PBOOTRECORD, false));
-                setInternal(i_systemTrans, _bootRecord, false);
-            }
-        } else {
-            initBootRecord();
-        }
-        
         _freespaceManager.start(_configBlock._freespaceAddress);
         
         if(Debug.freespace){
@@ -521,6 +503,24 @@ public abstract class YapFile extends YapStream {
                 _freespaceManager.endCommit();
                 _configBlock.write();
             }
+        }
+        
+        showInternalClasses(true);
+        Object bootRecord = null;
+        if (_configBlock._bootRecordID > 0) {
+            bootRecord = getByID1(i_systemTrans, _configBlock._bootRecordID);
+        }
+        if (bootRecord instanceof PBootRecord) {
+            _bootRecord = (PBootRecord) bootRecord;
+            _bootRecord.checkActive();
+            _bootRecord.i_stream = this;
+            if (_bootRecord.initConfig(i_config)) {
+                i_classCollection.reReadYapClass(getYapClass(
+                    i_handlers.ICLASS_PBOOTRECORD, false));
+                setInternal(i_systemTrans, _bootRecord, false);
+            }
+        } else {
+            initBootRecord();
         }
         
         showInternalClasses(false);
