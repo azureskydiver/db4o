@@ -18,7 +18,7 @@ public class BindFileSize {
         }  
 		this.foo = sb.toString();
 	}
-	
+    
 	public void store(){
 		Test.deleteAllInstances(this);
 		Test.store(new BindFileSize(LENGTH));
@@ -26,6 +26,8 @@ public class BindFileSize {
 	
 	public void testGrowth(){
 		int call = 0;
+        
+        Test.reOpen();
 		
 		BindFileSize bfs =  (BindFileSize)Test.getOne(this);
 		long id = Test.objectContainer().getID(bfs);

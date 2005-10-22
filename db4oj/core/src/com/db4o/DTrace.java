@@ -17,7 +17,7 @@ public class DTrace {
     private static final Object init(){
         if(enabled){
             
-            // breakOnEvent(4);
+            breakOnEvent(341);
             // breakOnEvent(1107);
             // breakOnEvent(259);
             
@@ -41,10 +41,7 @@ public class DTrace {
             
             // addRangeWithLength(16754, 87);
             
-            // addRangeWithLength(0,10000000);
-            
-            
-            addRangeWithLength(1455,4);
+            addRangeWithLength(0,10000000);
             
             
 //            addRangeWithLength(18,47);
@@ -106,7 +103,7 @@ public class DTrace {
             
             // turnAllOffExceptFor(new DTrace[] {FREE, GET_FREESPACE});
             
-            turnAllOffExceptFor(new DTrace[] {FREE, FREE_RAM, GET_FREESPACE, GET_FREESPACE_RAM});
+            turnAllOffExceptFor(new DTrace[] {FREE, GET_SLOT});
             
             // turnAllOffExceptFor(new DTrace[] {WRITE_BYTES});
             
