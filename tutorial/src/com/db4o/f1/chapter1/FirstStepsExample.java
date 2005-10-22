@@ -54,42 +54,68 @@ public class FirstStepsExample extends Util {
 
     public static void retrieveAllPilots(ObjectContainer db) {
         Pilot proto=new Pilot(null,0);
-        ObjectSet result=db.get(proto);
-        listResult(result);
-    }
-
-    public static void retrievePilotByName(ObjectContainer db) {
-        Pilot proto=new Pilot("Michael Schumacher",0);
-        ObjectSet result=db.get(proto);
+        List<Pilot> result = db.query<Pilot>(
+        	new Predicate <Pilot> {
+        		public boolean match(Pilot pilot){return true;}
+        	});
         listResult(result);
     }
     
+    public static void retrievePilotByName(ObjectContainer db) {
+        List<Pilot> result=db.query<Pilot>(
+        	new Predicate <Pilot> {
+        		public boolean match(Pilot pilot){
+        			return pilot.getName() == "Michael Schumacher";
+        		}
+        	});
+        listResult(result);
+    }
+
     public static void retrievePilotByExactPoints(ObjectContainer db) {
-        Pilot proto=new Pilot(null,100);
-        ObjectSet result=db.get(proto);
+        List<Pilot> result=db.query<Pilot>(
+            	new Predicate <Pilot> {
+            		public boolean match(Pilot pilot){
+            			return pilot.getPoints() == 100;
+            		}
+            	});
         listResult(result);
     }
 
     public static void updatePilot(ObjectContainer db) {
-        ObjectSet result=db.get(new Pilot("Michael Schumacher",0));
-        Pilot found=(Pilot)result.next();
+        List<Pilot> result=db.query<Pilot>(
+            new Predicate <Pilot> {
+            	public boolean match(Pilot pilot){
+            		return pilot.getName() == "Michael Schumacher";
+            	}
+            });
+        Pilot found=result[0];
         found.addPoints(11);
         db.set(found);
         System.out.println("Added 11 points for "+found);
-        retrieveAllPilots(db);
+        retrieveAllPilotsNQ(db);
     }
-
+    
     public static void deleteFirstPilotByName(ObjectContainer db) {
-        ObjectSet result=db.get(new Pilot("Michael Schumacher",0));
-        Pilot found=(Pilot)result.next();
+        List<Pilot> result=db.query<Pilot>(
+                new Predicate <Pilot> {
+                	public boolean match(Pilot pilot){
+                		return pilot.getName() == "Michael Schumacher";
+                	}
+                });
+        Pilot found=result[0];
         db.delete(found);
         System.out.println("Deleted "+found);
         retrieveAllPilots(db);
     }
 
     public static void deleteSecondPilotByName(ObjectContainer db) {
-        ObjectSet result=db.get(new Pilot("Rubens Barrichello",0));
-        Pilot found=(Pilot)result.next();
+        List<Pilot> result=db.query<Pilot>(
+                new Predicate <Pilot> {
+                	public boolean match(Pilot pilot){
+                		return pilot.getName() == "Rubens Barrichello";
+                	}
+                });
+        Pilot found=result[0];
         db.delete(found);
         System.out.println("Deleted "+found);
         retrieveAllPilots(db);

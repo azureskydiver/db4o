@@ -37,16 +37,15 @@ We'll need a second pilot, too.
 
 .1 Retrieving objects ..
 
-To query the database for our pilot, we shall use .i  Query by Example .. ._
-(QBE) for now. This means we will create a prototypical object for db4o ._
-to use as an example. db4o will retrieve all objects of the given type that contain ._
-the same (non-default) field values as the candidate. The result will be handed ._
-as an ObjectSet instance. We will use a convenience method 'listResult', ._
+To query the database for our pilot, we shall use .i  Native Queries .. ._
+(NQ) for now. Native Queries are based on expressions in you native programing language. ._
+This expression can be any valid code in the language that your compiler understands. The result will be handed ._
+back as a standard List. We will use a convenience method 'listResult', ._
 inherited by all our main example classes, to display a result's content and reset it for further use:
 
 .s com.db4o.f1.Util#listResult +{} -run ..
 
-To retrieve all pilots from our database, we provide an 'empty' prototype:
+To retrieve all pilots from our database, the expression must simply return true:
 
 .s com.db4o.f1.chapter1.FirstStepsExample#retrieveAllPilots ..
 
@@ -89,15 +88,12 @@ Let's delete the other one, too.
 
 Please check the deletion with the retrieval examples above.
 
-Again, the object to be deleted has to be known to db4o. It is not sufficient ._
-to provide a prototype object with the same field values.
+Again, the object to be deleted has to be known to db4o.
 
 .1 Conclusion ..
 
 That was easy, wasn't it? We have stored, retrieved, updated and ._
-deleted objects with a few lines of code. But what about complex ._
-queries? Let's have a look at the restrictions of QBE and alternative ._
-approaches in the  .l Query next chapter ..l .
+deleted objects with a few lines of code.
 
 .1 Full source ..
 
