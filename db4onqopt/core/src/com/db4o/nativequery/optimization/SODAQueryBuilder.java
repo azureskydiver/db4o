@@ -55,63 +55,63 @@ public class SODAQueryBuilder {
 					value[0]=findValue(operand);
 				}
 
-				private Number add(Number a,Number b) {
+				private Object add(Object a,Object b) {
 					if(a instanceof Double||b instanceof Double) {
-						return new Double(a.doubleValue()+b.doubleValue());
+						return new Double(((Double)a).doubleValue()+ ((Double)b).doubleValue());
 					}
 					if(a instanceof Float||b instanceof Float) {
-						return new Float(a.floatValue()+b.floatValue());
+						return new Float(((Float)a).floatValue()+ ((Float)b).floatValue());
 					}
 					if(a instanceof Long||b instanceof Long) {
-						return new Long(a.longValue()+b.longValue());
+						return new Long(((Long)a).longValue()+ ((Long)b).longValue());
 					}
-					return new Integer(a.intValue()+b.intValue());
+					return new Integer(((Integer)a).intValue()+ ((Integer)b).intValue());
 				}
 
-				private Number subtract(Number a,Number b) {
+				private Object subtract(Object a,Object b) {
 					if(a instanceof Double||b instanceof Double) {
-						return new Double(a.doubleValue()-b.doubleValue());
+                        return new Double(((Double)a).doubleValue()- ((Double)b).doubleValue());
 					}
 					if(a instanceof Float||b instanceof Float) {
-						return new Float(a.floatValue()-b.floatValue());
+                        return new Float(((Float)a).floatValue() - ((Float)b).floatValue());
 					}
 					if(a instanceof Long||b instanceof Long) {
-						return new Long(a.longValue()-b.longValue());
+                        return new Long(((Long)a).longValue() - ((Long)b).longValue());
 					}
-					return new Integer(a.intValue()-b.intValue());
+                    return new Integer(((Integer)a).intValue() - ((Integer)b).intValue());
 				}
 
-				private Number multiply(Number a,Number b) {
-					if(a instanceof Double||b instanceof Double) {
-						return new Double(a.doubleValue()*b.doubleValue());
-					}
-					if(a instanceof Float||b instanceof Float) {
-						return new Float(a.floatValue()*b.floatValue());
-					}
-					if(a instanceof Long||b instanceof Long) {
-						return new Long(a.longValue()*b.longValue());
-					}
-					return new Integer(a.intValue()*b.intValue());
+				private Object multiply(Object a,Object b) {
+                    if(a instanceof Double||b instanceof Double) {
+                        return new Double(((Double)a).doubleValue() * ((Double)b).doubleValue());
+                    }
+                    if(a instanceof Float||b instanceof Float) {
+                        return new Float(((Float)a).floatValue() * ((Float)b).floatValue());
+                    }
+                    if(a instanceof Long||b instanceof Long) {
+                        return new Long(((Long)a).longValue() * ((Long)b).longValue());
+                    }
+                    return new Integer(((Integer)a).intValue() * ((Integer)b).intValue());
 				}
 
-				private Number divide(Number a,Number b) {
-					if(a instanceof Double||b instanceof Double) {
-						return new Double(a.doubleValue()/b.doubleValue());
-					}
-					if(a instanceof Float||b instanceof Float) {
-						return new Float(a.floatValue()/b.floatValue());
-					}
-					if(a instanceof Long||b instanceof Long) {
-						return new Long(a.longValue()/b.longValue());
-					}
-					return new Integer(a.intValue()/b.intValue());
+				private Object divide(Object a,Object b) {
+                    if(a instanceof Double||b instanceof Double) {
+                        return new Double(((Double)a).doubleValue()/ ((Double)b).doubleValue());
+                    }
+                    if(a instanceof Float||b instanceof Float) {
+                        return new Float(((Float)a).floatValue() / ((Float)b).floatValue());
+                    }
+                    if(a instanceof Long||b instanceof Long) {
+                        return new Long(((Long)a).longValue() / ((Long)b).longValue());
+                    }
+                    return new Integer(((Integer)a).intValue() / ((Integer)b).intValue());
 				}
 
 				public void visit(ArithmeticExpression operand) {
 					operand.left().accept(this);
-					Number left=(Number)value[0];
+					Object left=value[0];
 					operand.right().accept(this);
-					Number right=(Number)value[0];
+					Object right=value[0];
 					switch(operand.op().id()) {
 						case ArithmeticOperator.ADD_ID: 
 							value[0]=add(left,right);
