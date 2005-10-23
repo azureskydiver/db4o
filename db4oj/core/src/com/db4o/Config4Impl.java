@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.freespace.*;
 import com.db4o.io.*;
 import com.db4o.messaging.*;
 import com.db4o.reflect.*;
@@ -19,7 +20,7 @@ import com.db4o.reflect.generic.*;
  */
 public final class Config4Impl
 
-implements Configuration, Cloneable, DeepClone, MessageSender {
+implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfiguration {
 
     int              i_activationDepth                  = 5;
     boolean          i_automaticShutDown                = true;
@@ -171,6 +172,10 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
     public void discardFreeSpace(int bytes) {
         i_discardFreeSpace = bytes;
     }
+    
+    public void discardSmallerThan(int byteCount) {
+        i_discardFreeSpace = byteCount;
+    }
 
     public void encrypt(boolean flag) {
         globalSettingOnly();
@@ -196,6 +201,10 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         i_exceptionsOnNotStorable = flag;
     }
 
+    public FreespaceConfiguration freespace() {
+        return this;
+    }
+    
     public void generateUUIDs(int setting) {
         i_generateUUIDs = setting;
         storeStreamBootRecord();
@@ -421,6 +430,14 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         i_updateDepth = depth;
     }
 
+    public void useRamSystem() {
+        _freespaceSystem = FreespaceManager.FM_RAM;
+    }
+
+    public void useIndexSystem() {
+        _freespaceSystem = FreespaceManager.FM_IX;
+    }
+    
     public void weakReferenceCollectionInterval(int milliseconds) {
         i_weakReferenceCollectionInterval = milliseconds;
     }
@@ -447,6 +464,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender {
         
         return reflector().forObject(clazz);
     }
-   
+
+
     
 }

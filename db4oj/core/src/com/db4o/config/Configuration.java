@@ -157,6 +157,7 @@ public interface Configuration {
      * <br><br>Default value:<br>
      * <code>0</code> all space is reused
      * @param byteCount Slots with this size or smaller will be lost.
+     * @deprecated please call Db4o.configure().freespace().discardSmallerThan()
      */
     public void discardFreeSpace(int byteCount);
 
@@ -193,6 +194,12 @@ public interface Configuration {
      * @param flag true to throw Exceptions if objects can not be stored.
      */
     public void exceptionsOnNotStorable(boolean flag);
+    
+    /**
+     * returns the freespace configuration interface
+     * @return the freespace configuration interface
+     */
+    public FreespaceConfiguration freespace();
     
     /**
      * configures db4o to generate UUIDs for stored objects.
