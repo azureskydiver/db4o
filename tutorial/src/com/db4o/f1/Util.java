@@ -16,7 +16,7 @@ public class Util {
     public static void listResult(java.util.List result){
     	System.out.println(result.size());
     	for(int x = 0; x < result.size(); x++)
-    		System.out.println(result[x]);
+    		System.out.println(result.get(x));
     }
     
     public static void listRefreshedResult(ObjectContainer container,ObjectSet result,int depth) {
