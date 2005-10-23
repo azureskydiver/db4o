@@ -28,6 +28,7 @@
 	
 	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
 		<classpath>
+			<pathelement location="${dir.j.jdk1.2}/bin" />
 			<pathelement location="${dir.j}/bin" />
 			<pathelement location="${dir.doctor.bin}" />
 			<pathelement location="${dir.doctor.lib}/iText.jar" />
@@ -204,6 +205,8 @@
 		</jar>
 		<copy file="${file.bloat.jar}" todir="${dir.dist.jars}" />
 		<copy file="${file.ant.jar}" todir="${dir.dist.jars}" />
+		<copy file="${file.bloat.license}" todir="${dir.dist.jars}" />
+		<copy file="${file.ant.license}" todir="${dir.dist.jars}" />
 	</target>
 
 	<target name="compileobjectmanager" depends="compilecorejava" description="Compile object manager sources">
@@ -705,7 +708,7 @@
 			<fileset dir="${dir.dist}" includes="doc/**" />
 			<fileset dir="${dir.dist.java}" includes="lib/**" />
 			<fileset dir="${dir.dist.java}" includes="src/**" />
-			<fileset dir="${dir.j}" includes="GPL.txt" />
+			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
 			<fileset dir="${dir.config}" includes="README.txt" />
 		</copy>
 		<zip destfile="${file.dist.java}">
@@ -808,7 +811,7 @@
 	
 		<copy todir="${dir.dist.net.build}">
 			<fileset dir="${dir.dist}" includes="dll/**/**" />
-			<fileset dir="${dir.j}" includes="GPL.txt" />
+			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
 			<fileset dir="${dir.config}" includes="README.txt" />
 		</copy>
 		
