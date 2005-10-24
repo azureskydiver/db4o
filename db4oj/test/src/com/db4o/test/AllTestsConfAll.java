@@ -122,7 +122,7 @@ public class AllTestsConfAll extends TestSuite{
     /**
       * run the tests stand-alone 
       */
-    public boolean SOLO = false;
+    public boolean SOLO = true;
 
     /**
       * run the tests in client/server mode 
