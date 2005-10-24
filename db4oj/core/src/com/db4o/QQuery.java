@@ -200,6 +200,10 @@ public class QQuery implements Query {
                     YapField yf = (YapField)pair[1];
                     YapClass childYc = yf.getFieldYapClass(i_trans.i_stream);
 
+                    if( parentYc.isInternal()) {
+                    	return;
+                    }
+                    
                     boolean take = true;
 
                     if (childYc instanceof YapClassAny) {

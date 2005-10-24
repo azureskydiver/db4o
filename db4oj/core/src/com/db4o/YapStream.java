@@ -21,7 +21,6 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     TransientClass {
 
 	private static final String OPTIMIZER_IMPL_NAME = "com.db4o.nativequery.optimization.Db4oOnTheFlyEnhancer";
-	public static final String PROPERTY_DYNAMICNQ = "db4o.dynamicnq";
 	public final static String UNOPTIMIZED="UNOPTIMIZED";
 	public final static String PREOPTIMIZED="PREOPTIMIZED";
 	public final static String DYNOPTIMIZED="DYNOPTIMIZED";
@@ -1190,7 +1189,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 			return q;
 		}
 		try {
-			if(optimizeOnTheFly()&&enhancer!=null) {
+			if(i_config._optimizeNQ&&enhancer!=null) {
 				enhancer.optimize(q,predicate);
 				notifyListeners(predicate,DYNOPTIMIZED);
 				return q;
@@ -1209,11 +1208,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 		}
 	}
 
-	private boolean optimizeOnTheFly() {
-		return "true".equals(System.getProperty(PROPERTY_DYNAMICNQ));
-	}
-
-    public Query query() {
+	public Query query() {
         synchronized (i_lock) {
             return query((Transaction)null);
         }

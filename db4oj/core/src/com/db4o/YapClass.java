@@ -38,6 +38,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     
     private boolean _internal;
     
+    boolean isInternal() {
+    	return _internal;
+    }
 
     // for indexing purposes.
     // TODO: check race conditions, upon multiple calls against the same class
