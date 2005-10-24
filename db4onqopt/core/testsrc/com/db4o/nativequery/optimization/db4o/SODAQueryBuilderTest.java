@@ -20,7 +20,16 @@ public class SODAQueryBuilderTest extends TestCase {
 		new SODAQueryBuilder().optimizeQuery(BoolConstExpression.TRUE,query,null);
 		builder.verify();
 	}
-	
+
+//	public void testFalse() {
+//		Query query=builder.query();
+//		Constraint constraint=builder.assertConstrain(query,null);
+//		builder.assertNegated(constraint,true);
+//		builder.replay();
+//		new SODAQueryBuilder().optimizeQuery(BoolConstExpression.FALSE,query,null);
+//		builder.verify();
+//	}
+
 	public void testSimpleEqualsComparison() {
 		assertSimpleComparison(ComparisonOperator.EQUALS,"bar",false);
 	}

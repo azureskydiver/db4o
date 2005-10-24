@@ -67,12 +67,19 @@ public class NQRegressionTests {
 	}
 	
 	private static ExpectingPredicate[] PREDICATES={
+		// unconditional
 		new ExpectingPredicate() {
 			public int expected() { return 4;}
 			public boolean match(Data candidate) {
 				return true;
 			}
 		},
+//		new ExpectingPredicate() {
+//			public int expected() { return 0;}
+//			public boolean match(Data candidate) {
+//				return false;
+//			}
+//		},
 		// primitive equals
 		new ExpectingPredicate() {
 			public int expected() { return 1;}
@@ -354,9 +361,9 @@ public class NQRegressionTests {
 			}
 		};
 		((YapStream)db).addListener(listener);
-		System.setProperty(YapStream.PROPERTY_DYNAMICNQ,"false");
+		db.ext().configure().optimizeNativeQueries(false);
 		ObjectSet raw=db.query(filter);
-		System.setProperty(YapStream.PROPERTY_DYNAMICNQ,"true");
+		db.ext().configure().optimizeNativeQueries(true);
 		ObjectSet optimized=db.query(filter);
 		if(!raw.equals(optimized)) {
 			System.out.println("RAW");
@@ -373,6 +380,7 @@ public class NQRegressionTests {
 		Test.ensure(raw.equals(optimized));
 		Test.ensureEquals(filter.expected(),raw.size());
 
+		db.ext().configure().optimizeNativeQueries(false);
 		try {
 			Db4oEnhancingClassloader loader=new Db4oEnhancingClassloader(getClass().getClassLoader());
 			Class filterClass=loader.loadClass(filter.getClass().getName());

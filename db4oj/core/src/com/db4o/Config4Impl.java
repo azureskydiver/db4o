@@ -45,6 +45,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     int              i_messageLevel                     = YapConst.NONE;
     MessageRecipient i_messageRecipient;
     MessageSender    i_messageSender;
+	boolean _optimizeNQ=true;
     PrintStream      i_outStream;
     String           i_password;
     Hashtable4       _readAs                            = new Hashtable4(16);
@@ -259,6 +260,10 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
         }
     }
 
+    public void optimizeNativeQueries(boolean optimizeNQ) {
+    	_optimizeNQ=optimizeNQ;
+    }
+    
     public ObjectClass objectClass(Object clazz) {
         
         String className = null;

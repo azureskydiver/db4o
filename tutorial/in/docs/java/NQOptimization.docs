@@ -29,15 +29,9 @@ be run in unoptimized mode. This list will be constantly extended.
 
 To enable code analysis and generation of a corresponding live SODA ._
 query at query execution time, you just have to add db4o-5.0-nqopt.jar ._
-to your class path and start your application with
+to your class path. This behavior is switched via
 
--Ddb4o.dynamicnq
-
-as a VM parameter or call
-
-System.setProperty("db4o.dynamicnq","true");
-
-from within your application.
+Db4o.configure().optimizeNativeQueries(boolean optimizeNQ);
  
 .a Instrumenting class files
 
