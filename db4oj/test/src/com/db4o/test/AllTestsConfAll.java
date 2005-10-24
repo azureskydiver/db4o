@@ -56,6 +56,7 @@ public class AllTestsConfAll extends TestSuite{
 			ExtendsDate.class,
 			FileSizeOnReopen.class,
 	        GetAll.class,
+            GetAllSoda.class,
 			GreaterOrEqual.class,
 			IndexedByIdentity.class,
 			IndexCreateDrop.class,
@@ -121,7 +122,7 @@ public class AllTestsConfAll extends TestSuite{
     /**
       * run the tests stand-alone 
       */
-    public boolean SOLO = true;
+    public boolean SOLO = false;
 
     /**
       * run the tests in client/server mode 

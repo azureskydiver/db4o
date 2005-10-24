@@ -241,6 +241,15 @@ public class QQuery implements Query {
     
     public QueryResult getQueryResult() {
     	synchronized (streamLock()) {
+            
+            YapStream stream = i_trans.i_stream;
+            
+            if(i_constraints.size() == 0){
+                QueryResultImpl res = stream.createQResult(i_trans);
+                stream.getAll(i_trans, res);
+                return res;
+            }
+            
 			QueryResult result = classOnlyQuery();
 			if(result != null) {
                 result.reset();
