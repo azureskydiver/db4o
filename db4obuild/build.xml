@@ -207,6 +207,7 @@
 		<copy file="${file.ant.jar}" todir="${dir.dist.jars}" />
 		<copy file="${file.bloat.license}" todir="${dir.dist.jars}" />
 		<copy file="${file.ant.license}" todir="${dir.dist.jars}" />
+		<copy file="${file.3rdpartylibs.java}" todir="${dir.dist.jars}" />
 	</target>
 
 	<target name="compileobjectmanager" depends="compilecorejava" description="Compile object manager sources">
