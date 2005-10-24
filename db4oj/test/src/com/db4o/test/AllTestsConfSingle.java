@@ -16,8 +16,6 @@ public class AllTestsConfSingle extends TestSuite{
             
             // DeleteDeep.class
             
-            Circular1.class,
-            Circular2.class
             
             // CreateIndex.class,
             
@@ -36,7 +34,7 @@ public class AllTestsConfSingle extends TestSuite{
             
             // ReplicateExistingFile.class
             // ReplicateDb4oList.class
-            // SimplestPossible.class
+            SimplestPossible.class
             // MultiDelete.class
             // GenericFeatures.class
     	};
@@ -60,7 +58,7 @@ public class AllTestsConfSingle extends TestSuite{
     /**
       * run the tests in client/server mode 
       */
-    public boolean CLIENT_SERVER = false;
+    public boolean CLIENT_SERVER = true;
 
     /**
      * run the test against a memory file instead of disc file
