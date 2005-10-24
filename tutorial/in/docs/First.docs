@@ -38,7 +38,7 @@ We'll need a second pilot, too.
 .1 Retrieving objects ..
 
 To query the database for our pilot, we shall use .i  Native Queries .. ._
-(NQ) for now. Native Queries are based on expressions in you native programing language. ._
+(NQ) for now. Native Queries are based on expressions in your native programing language. ._
 This expression can be any valid code in the language that your compiler understands. The result will be handed ._
 back as a standard List. We will use a convenience method 'listResult', ._
 inherited by all our main example classes, to display a result's content and reset it for further use:
