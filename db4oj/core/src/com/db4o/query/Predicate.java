@@ -9,10 +9,7 @@ import com.db4o.*;
 
 /**
  * Extend this class and add your #match() method to run native queries.
- * 
- * <br><br><b>! The functionality of this class is not available before db4o version 5.0.
- * It is present in 4.x builds for maintenance purposes only !</b><br><br> 
- *  
+ * <br><br>
  * A class that extends Predicate is required to implement the method
  * #match() following the native query conventions:<br>
  * - The name of the method is "match".<br>
@@ -26,7 +23,7 @@ import com.db4o.*;
  * Here is an example of a #match method that follows these conventions:<br> 
  * <pre><code>
  * public boolean match(Cat cat){<br>
- *     return cat.name.equals("Frizz");<br>
+ *     return cat.name.equals("Occam");<br>
  * }<br>
  * </code></pre><br><br>
  * Native queries for Java JDK5 and above define a #match method in the 
