@@ -382,6 +382,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 
     public void setClassLoader(ClassLoader classLoader) {
         i_classLoader = classLoader;
+        reflectWith(Platform4.createReflector(this));
     }
 
     public void setMessageRecipient(MessageRecipient messageRecipient) {
