@@ -32,10 +32,10 @@ public interface FreespaceConfiguration {
     
     /**
      * configures db4o to use an index-based freespace system.
-     * <br>Advantages:
+     * <br><br><b>Advantages</b><br>
      * - ACID, no freespace is lost on abnormal system termination<br>
-     * - low memory consumption
-     * <br>Disadvantages:<br>
+     * - low memory consumption<br>
+     * <br><b>Disadvantages</b><br>
      * - slower than the RAM-based system, since freespace information
      * is written during every commit<br>
      */
@@ -43,9 +43,9 @@ public interface FreespaceConfiguration {
 
     /**
      * configures db4o to use a RAM-based freespace system.
-     * <br>Advantages:
+     * <br><br><b>Advantages</b><br>
      * - best performance<br>
-     * <br>Disadvantages:<br>
+     * <br><b>Disadvantages</b><br>
      * - upon abnormal system termination all freespace is lost<br>
      * - memory consumption<br>
      */
