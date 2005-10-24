@@ -1,0 +1,20 @@
+This distribution comes with the 3rd party libraries listed below.
+These are not needed for plain db4o operation, but only for
+specific use cases involving native query optimization.
+
+bloat-1.0.jar
+http://www.cs.purdue.edu/s3/projects/bloat/
+
+Needed for bytecode analysis during native query optimization.
+Must be on the runtime classpath for optimization at load or
+query execution time, must be present during the Ant build
+for class file optimization.
+
+ant.jar
+http://ant.apache.org/
+
+Needed for the native query optimization Ant task.
+
+Please refer to the license files for these libraries as well as to
+the Licensing and Native Query Optimization chapter in the tutorial
+for further information.
