@@ -295,6 +295,18 @@ public interface Configuration {
     public ObjectClass objectClass(Object clazz);
 
     /**
+     * If set to true, db4o will try to optimize native queries
+     * dynamically at query execution time, otherwise it will
+     * run native queries in unoptimized mode as SODA evaluations.
+     * The jars needed for native query optimization have to be on
+     * the classpath at runtime for this switch to have effect. The
+     * default setting is true.
+     * @param optimizeNQ true, if db4o should try to optimize
+     * native queries at query execution time, false otherwise
+     */
+    public void optimizeNativeQueries(boolean optimizeNQ);
+    
+    /**
      * protects the database file with a password.
      * <br><br>To set a password for a database file, this method needs to be 
      * called <b>before</b> a database file is created with the first 

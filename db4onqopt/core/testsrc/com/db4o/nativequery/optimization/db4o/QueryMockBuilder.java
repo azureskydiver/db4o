@@ -46,7 +46,7 @@ public class QueryMockBuilder {
 		mocks.add(constraint);
 		return constraint;
 	}
-	
+
 	public void replay() {
 		for (Iterator iter = mocks.iterator(); iter.hasNext();) {
 			EasyMock.replay(iter.next());

@@ -26,13 +26,24 @@ public class SODABloatMethodBuilderTest extends TestCase {
 		builder=new SODABloatMethodBuilder();
 	}
 
-	public void testUnconditional() {
+	public void testUnconditionalTrue() {
 		Expression expr=BoolConstExpression.TRUE;
 		int[] expected={
 				Opcode.opc_aload
 		};
 		assertByteCodes(expr,expected);
 	}
+
+//	public void testUnconditionalFalse() {
+//		Expression expr=BoolConstExpression.FALSE;
+//		int[] expected={
+//				Opcode.opc_aload,
+//				Opcode.opc_ldc,
+//				Opcode.opc_invokeinterface,
+//				Opcode.opc_invokeinterface,
+//		};
+//		assertByteCodes(expr,expected);
+//	}
 
 	public void testComparison() {
 		FieldValue left=new FieldValue(1,FIELDNAMES);
