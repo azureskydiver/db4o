@@ -987,6 +987,7 @@
 			<arg file="${target.dir}/src" />
 			<arg value="CF_1_0" />
 		</exec>		
+		
 		<antcall target="compilecoredll-compact">
 			<param name="src.dir" value="${target.dir}/src" />
 		</antcall>
@@ -996,6 +997,11 @@
 			<arg file="${target.dir}/src" />
 			<arg value="${csharp.defines}" />
 		</exec>		
+		
+		<antcall target="copy-external-files">
+			<param name="target.dir" value="${target.dir}/src" />
+		</antcall>
+
 		<antcall target="compilecoredll-net">
 			<param name="src.dir" value="${target.dir}/src" />
 		</antcall>
@@ -1087,20 +1093,9 @@
 			</fileset>
 		</copy>
 		
-		<!-- external libraries: Mono.Cecil and Cecil.FlowAnalysis -->
-		<copy todir="${dir.n.core.src}/external" overwrite="true">
-			<fileset dir="${dir.n.in}/external/Mono.Cecil">
-				<include name="Mono.*/*.cs" />
-				<exclude name="**/AssemblyInfo.cs" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${dir.n.core.src}/external" overwrite="true">
-			<fileset dir="${dir.n.in}/external/Cecil.FlowAnalysis">
-				<include name="Cecil.FlowAnalysis/**/*.cs" />
-				<exclude name="Cecil.FlowAnalysis/AssemblyInfo.cs" />
-			</fileset>
-		</copy>
+		<antcall target="copy-external-files">
+			<param name="target.dir" value="${dir.n.core.src}" />
+		</antcall>		
 		
 		<updatecsharpproject projectFile="${dir.n.core}/db4o-net.csproj">
 			<sources dir="${dir.n.core}">
@@ -1132,6 +1127,22 @@
 			</sources>
 		</updatecsharpproject>
 
+	</target>
+	
+	<target name="copy-external-files">
+		<!-- external libraries: Mono.Cecil and Cecil.FlowAnalysis -->
+		<copy todir="${target.dir}/external" overwrite="true">
+			<fileset dir="${dir.n.in}/external/Mono.Cecil">
+				<include name="Mono.*/*.cs" />
+				<exclude name="**/AssemblyInfo.cs" />
+			</fileset>
+		</copy>		
+		<copy todir="${target.dir}/external" overwrite="true">
+			<fileset dir="${dir.n.in}/external/Cecil.FlowAnalysis">
+				<include name="Cecil.FlowAnalysis/**/*.cs" />
+				<exclude name="Cecil.FlowAnalysis/AssemblyInfo.cs" />
+			</fileset>
+		</copy>
 	</target>
 	
 	<target name="doctor" depends="init, compilecorejava, compilejtutorial" description="Run all doctor tasks">
