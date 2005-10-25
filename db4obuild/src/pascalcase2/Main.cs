@@ -105,7 +105,7 @@ namespace HelloWorld
 		
 		static string ConvertReader(System.IO.TextReader reader)
 		{
-			IParser parser = ParserFactory.CreateParser(SupportedLanguages.CSharp, reader);
+			IParser parser = ParserFactory.CreateParser(SupportedLanguage.CSharp, reader);
 			parser.Parse();
 			
 			CompilationUnit cu = parser.CompilationUnit;
