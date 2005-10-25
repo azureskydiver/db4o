@@ -46,6 +46,14 @@
 			<arg value="${defines}" />
 		</exec>
 		
+		<!-- overwrite files that should have not been converted -->
+		<copy todir="${dir.pascalcase.src}" overwrite="true">
+			<fileset dir="${dir.n}">
+				<include name="core/src/external/**/*.cs" />
+			</fileset>
+		</copy>
+
+		
 		<exec executable="${converter.exe}" failonerror="true">
 			<arg file="${dir.n.tools}/src" />
 			<arg file="${dir.pascalcase.src}/tools/src" />
