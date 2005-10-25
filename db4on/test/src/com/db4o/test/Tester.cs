@@ -122,12 +122,12 @@ namespace com.db4o.test
 		{
 			try 
 			{
-				Query q = oc.query();
+				Query q = objectContainer().query();
 				q.constrain(classOf(obj));
 				ObjectSet set1 = q.execute();
 				while (set1.hasNext()) 
 				{
-					oc.delete(set1.next());
+					objectContainer().delete(set1.next());
 				}
 			}  
 			catch (Exception e) 
@@ -217,7 +217,7 @@ namespace com.db4o.test
 
 		public static void error(Exception error)
 		{   
-#if COMPACT_1_0
+#if CF_1_0
 			Console.WriteLine("!!! TEST CASE FAILED !!! [" + error.Message + "]");
 #else
 			errorCount++;

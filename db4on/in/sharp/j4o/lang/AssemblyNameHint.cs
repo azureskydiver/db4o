@@ -4,7 +4,7 @@ using System;
 
 namespace j4o.lang {
 
-#if COMPACT_1_0
+#if CF_1_0
     /// <summary>
     /// holds a pair of short and long assembly name to help Type.forName()<br />
     /// Instances of this class are stored to the db4o database files.

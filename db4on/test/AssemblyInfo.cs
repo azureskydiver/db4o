@@ -1,7 +1,7 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
+
 [assembly: AssemblyTitle("db4o - test")]
 [assembly: AssemblyDescription("db4o test 4.3.001 .NET")]
 [assembly: AssemblyConfiguration(".NET")]
