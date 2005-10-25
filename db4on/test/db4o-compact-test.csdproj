@@ -24,7 +24,7 @@
                     BaseAddress = "0"
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
-                    DefineConstants = "DEBUG;TRACE;COMPACT_1_0"
+                    DefineConstants = "DEBUG;TRACE;CF_1_0"
                     DocumentationFile = ""
                     DebugSymbols = "true"
                     FileAlignment = "4096"

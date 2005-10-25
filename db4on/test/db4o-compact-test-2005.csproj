@@ -36,7 +36,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>DEBUG;TRACE;COMPACT_1_0</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;CF_1_0</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <DebugSymbols>true</DebugSymbols>

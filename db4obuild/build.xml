@@ -344,7 +344,8 @@
 		<copy todir="${dir.dist.net.compile}">
 			<fileset dir="${src.dir}">
 				<include name="**/*.cs" />
-				<exclude name="net/*.*" />
+				<exclude name="net/**" />
+				<exclude name="external/**" />
 			</fileset>
 		</copy>			
 		<versioninfo path="${dir.dist.net.compile}/compact" compact="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}" />
@@ -352,7 +353,7 @@
 		<mkdir dir="${dir.dist.dll.compact}" />
 		<exec executable="csc" dir="${dir.dist.net.compile}" failonerror="true">
 			<arg value="/optimize" />
-			<arg value="/define:COMPACT_1_0" />
+			<arg value="/define:CF_1_0" />
 			<arg value="/out:${file.dll.compact}" />
 			<arg value="/doc:${file.xml.compact}" />
 			<arg value="/target:library" />
@@ -979,12 +980,12 @@
 		
 		<!--
 			compile compact framework first as some code will get
-			removed by the COMPACT_1_0 define
+			removed by the CF_1_0 define
 		-->
 		<exec executable="${pascalcase.converter.exe}" failonerror="true">
 			<arg file="${dir.n.in.sharp}" />
 			<arg file="${target.dir}/src" />
-			<arg value="COMPACT_1_0" />
+			<arg value="CF_1_0" />
 		</exec>		
 		<antcall target="compilecoredll-compact">
 			<param name="src.dir" value="${target.dir}/src" />
@@ -1086,6 +1087,21 @@
 			</fileset>
 		</copy>
 		
+		<!-- external libraries: Mono.Cecil and Cecil.FlowAnalysis -->
+		<copy todir="${dir.n.core.src}/external" overwrite="true">
+			<fileset dir="${dir.n.in}/external/Mono.Cecil">
+				<include name="Mono.*/*.cs" />
+				<exclude name="**/AssemblyInfo.cs" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${dir.n.core.src}/external" overwrite="true">
+			<fileset dir="${dir.n.in}/external/Cecil.FlowAnalysis">
+				<include name="Cecil.FlowAnalysis/**/*.cs" />
+				<exclude name="Cecil.FlowAnalysis/AssemblyInfo.cs" />
+			</fileset>
+		</copy>
+		
 		<updatecsharpproject projectFile="${dir.n.core}/db4o-net.csproj">
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
@@ -1104,6 +1120,7 @@
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
 				<exclude name="src/net/**" />
+				<exclude name="src/external/**" />
 			</sources>
 		</updatecsharpproject>
 		
@@ -1111,6 +1128,7 @@
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
 				<exclude name="src/net/**" />
+				<exclude name="src/external/**" />
 			</sources>
 		</updatecsharpproject>
 

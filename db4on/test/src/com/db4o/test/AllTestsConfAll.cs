@@ -1,6 +1,7 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
+using com.db4o.test.inside.query;
 using j4o.lang;
 using com.db4o.test.cs;
 
@@ -89,6 +90,9 @@ namespace com.db4o.test {
             typeof(MaxByEvaluation),
             typeof(Messaging),
 			typeof(nativequeries.Cat),
+#if !CF_1_0 && !CF_2_0
+			typeof(nativequeries.NativeQueriesTestCase),
+#endif
 
 #if NET_2_0
 			typeof(net2.Net2SimpleGenericType),
@@ -109,6 +113,10 @@ namespace com.db4o.test {
             // typeof(PrimitiveArrayFileSize),
 
             typeof(PrimitivesInCollection),
+
+#if !CF_1_0 && !CF_2_0
+			typeof(QueryExpressionBuilderTestCase),
+#endif
             typeof(QueryDeleted),
             typeof(QueryNonExistant),
             typeof(Refresh),
