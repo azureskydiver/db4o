@@ -13,8 +13,8 @@ namespace com.db4o.f1.chapter1
     
     	public boolean match(Pilot pilot)
     	{
-        	for(int i=0;i<points.length;i++) {
-        		if(pilot.getPoints()==points[i]) {
+        	for(int i=0;i<_points.length;i++) {
+        		if(pilot.getPoints()==_points[i]) {
         			return true;
         		}
         	}
