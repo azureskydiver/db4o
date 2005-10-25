@@ -31,8 +31,10 @@ import com.db4o.*;
  * Without generics the method is not definable in the Predicate class
  * since alternative method parameter classes would not be possible.
  */
-public abstract class Predicate implements Serializable{
+public abstract class Predicate implements Serializable {
 	public final static String PREDICATEMETHOD_NAME="match";
+	
+	static final Class OBJECT_CLASS = Object.class;
 	
 	private transient Method cachedFilterMethod=null;
 	
@@ -43,16 +45,26 @@ public abstract class Predicate implements Serializable{
 		Method[] methods=getClass().getMethods();
 		for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
 			Method method=methods[methodIdx];
-			if((method.getName().equals(PREDICATEMETHOD_NAME))&&method.getParameterTypes().length==1) {					
-				String targetName=method.getParameterTypes()[0].getName();
-				if(!"java.lang.Object".equals(targetName)) {
+			if (isFilterMethod(method)) {
+				if (!OBJECT_CLASS.equals(method.getParameterTypes()[0])) {
 					cachedFilterMethod=method;
 					return method;
 				}
 			}
 		}
 
-		return null;
+		throw new IllegalArgumentException("Invalid predicate.");
+	}
+
+	private boolean isFilterMethod(Method method) {
+		if (method.getParameterTypes().length != 1) {
+			return false;
+		}
+		if (Deploy.csharp) {
+			return method.getName().equalsIgnoreCase(PREDICATEMETHOD_NAME);
+		} else {
+			return method.getName().equals(PREDICATEMETHOD_NAME);
+		}
 	}
 
 	public Class extentType() {
