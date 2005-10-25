@@ -28,22 +28,22 @@ namespace com.db4o.test.nativequeries
 			Tester.store(new Cat("Zora"));
 		}
     
-		public void testClassPredicate()
+		public void testOrPredicate()
 		{
             if(Db4oVersion.MAJOR >= 5){
                 ObjectContainer objectContainer = Tester.objectContainer();
-                ObjectSet objectSet = objectContainer.query(new CatPredicate());
+                ObjectSet objectSet = objectContainer.query(new OrPredicate());
                 Tester.ensureEquals(2, objectSet.Count);
                 ensureContains(objectSet, "Occam");
                 ensureContains(objectSet, "Zora");
             }
 		}
 		
-		public class CatPredicate : Predicate
+		public class OrPredicate : Predicate
 		{
 			public bool match(Cat cat)
 			{
-				return cat.name == "Occam"  || cat.name == "Zora"; 
+				return cat.name == "Occam" || cat.name == "Zora"; 
 			}
 		}
 

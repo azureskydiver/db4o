@@ -3,6 +3,7 @@
 using System;
 using System.IO;
 using com.db4o.test.inside.query;
+using com.db4o.test.nativequeries;
 using j4o.lang;
 using com.db4o.test.cs;
 
@@ -15,6 +16,7 @@ namespace com.db4o.test {
          */
         internal Type[] TESTS = new Type[]{
             typeof(SimplestPossible),
+			typeof(Cat),
 #if !CF_1_0 && !CF_2_0
 			typeof(QueryExpressionBuilderTestCase),
 			typeof(nativequeries.NativeQueriesTestCase)
