@@ -508,11 +508,14 @@ public interface Configuration {
     /**
      * turns weak reference management on or off.
      * <br><br>
-     * Performance may be improved by running db4o without weak
-     * reference memory management at the cost of higher
+     * Performance may be improved by running db4o without using weak
+     * references durring memory management at the cost of higher
      * memory consumption or by alternatively implementing a manual
-     * memory management using 
+     * memory management scheme using 
      * {@link com.db4o.ext.ExtObjectContainer#purge(java.lang.Object)}
+     * <br><br>Setting the value to <code>false</code> causes db4o to use hard
+     * references to objects, preventing the garbage collection process 
+     * from disposing of unused objects.
      * <br><br>The default setting is <code>true</code>.
      * <br><br>Ignored on JDKs before 1.2.
      */
