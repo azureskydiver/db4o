@@ -4,11 +4,11 @@ namespace com.db4o.f1.chapter1
 
     public class ComplexQuery : Predicate
     {
-    	public boolean match(Pilot pilot)
+    	public bool match(Pilot pilot)
     	{
 	    	return pilot.Points>99
-	        		&& pilot.Points<199
-	        	||pilot.Name=="Rubens Barrichello";
+				&& pilot.Points<199
+				|| pilot.Name=="Rubens Barrichello";
     	}
     }
 }
