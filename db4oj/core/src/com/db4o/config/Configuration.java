@@ -97,7 +97,9 @@ public interface Configuration {
      * FormatterServices.GetUninitializedObject() on
      * the .NET framework (not available on CompactFramework).
      * This setting may also be overridden for individual classes in
-     * {@link ObjectClass#callConstructor(boolean)}.<br><br>
+     * {@link ObjectClass#callConstructor(boolean)}.
+     * <br><br>The default setting depends on the features supported by your current environment.
+     * <br><br>
      * @param flag - specify true, to request calling constructors, specify
      * false to request <b>not</b> calling constructors.
      * @see ObjectClass#callConstructor
@@ -250,7 +252,8 @@ public interface Configuration {
     public void markTransient(String attributeName);
 
     /**
-     * sets the detail level of db4o messages. 
+     * sets the detail level of db4o messages. Messages will be output to the 
+     * configured output {@link java.io.PrintStream PrintStream}.
      * <br><br>
      * Level 0 - no messages<br>
      * Level 1 - open and close messages<br>
@@ -299,13 +302,19 @@ public interface Configuration {
      * dynamically at query execution time, otherwise it will
      * run native queries in unoptimized mode as SODA evaluations.
      * The jars needed for native query optimization have to be on
-     * the classpath at runtime for this switch to have effect. The
-     * default setting is true.
+     * the classpath at runtime for this switch to have effect. 
+     * <br><br>The default setting is <code>true</code>.
      * @param optimizeNQ true, if db4o should try to optimize
      * native queries at query execution time, false otherwise
      */
     public void optimizeNativeQueries(boolean optimizeNQ);
     
+    /**
+     * 
+     * @return boolean indicating whether Native Queries will be optimized
+     * dynamically.
+     * @see #optimizeNativeQueries
+     */
     public boolean optimizeNativeQueries();
     
     /**
@@ -348,7 +357,7 @@ public interface Configuration {
     public void reflectWith(Reflector reflector);
 
     /**
-     * forces analysation of all Classes during a running session.
+     * forces analysis of all Classes during a running session.
      * <br><br>
      * This method may be useful in combination with a modified ClassLoader and
      * allows exchanging classes during a running db4o session.<br><br>
@@ -404,7 +413,7 @@ public interface Configuration {
     public void setMessageRecipient(MessageRecipient messageRecipient);
 
     /**
-     * assigns a <code>PrintStream</code> where db4o is to print its event messages.
+     * Assigns a {@link java.io.PrintStream PrintStream} where db4o is to print its event messages.
      * <br><br>Messages are useful for debugging purposes and for learning
      * to understand, how db4o works. The message level can be raised with
      * {@link Configuration#messageLevel Db4o.configure().messageLevel()}
@@ -412,6 +421,7 @@ public interface Configuration {
      * <br><br>Use <code>setOut(System.out)</code> to print messages to the
      * console.<br><br>
      * @param outStream the new <code>PrintStream</code> for messages.
+     * @see #messageLevel
      */
     public void setOut(PrintStream outStream);
     
