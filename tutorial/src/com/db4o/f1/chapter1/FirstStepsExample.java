@@ -1,12 +1,12 @@
 package com.db4o.f1.chapter1;
 
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
 
-import com.db4o.*;
-import com.db4o.f1.*;
-import com.db4o.query.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.f1.Util;
 
 
 public class FirstStepsExample extends Util {    
@@ -54,68 +54,42 @@ public class FirstStepsExample extends Util {
 
     public static void retrieveAllPilots(ObjectContainer db) {
         Pilot proto=new Pilot(null,0);
-        List result = db.query(
-        	new Predicate() {
-        		public boolean match(Pilot pilot){return true;}
-        	});
-        listResult(result);
-    }
-    
-    public static void retrievePilotByName(ObjectContainer db) {
-        List result=db.query(
-        	new Predicate() {
-        		public boolean match(Pilot pilot){
-        			return pilot.getName().equals("Michael Schumacher");
-        		}
-        	});
+        ObjectSet result=db.get(proto);
         listResult(result);
     }
 
+    public static void retrievePilotByName(ObjectContainer db) {
+        Pilot proto=new Pilot("Michael Schumacher",0);
+        ObjectSet result=db.get(proto);
+        listResult(result);
+    }
+    
     public static void retrievePilotByExactPoints(ObjectContainer db) {
-        List result=db.query(
-            	new Predicate() {
-            		public boolean match(Pilot pilot){
-            			return pilot.getPoints() == 100;
-            		}
-            	});
+        Pilot proto=new Pilot(null,100);
+        ObjectSet result=db.get(proto);
         listResult(result);
     }
 
     public static void updatePilot(ObjectContainer db) {
-        List result=db.query(
-            new Predicate() {
-            	public boolean match(Pilot pilot){
-            		return pilot.getName().equals("Michael Schumacher");
-            	}
-            });
-        Pilot found=(Pilot)result.get(0);
+        ObjectSet result=db.get(new Pilot("Michael Schumacher",0));
+        Pilot found=(Pilot)result.next();
         found.addPoints(11);
         db.set(found);
         System.out.println("Added 11 points for "+found);
         retrieveAllPilots(db);
     }
-    
+
     public static void deleteFirstPilotByName(ObjectContainer db) {
-        List result=db.query(
-                new Predicate() {
-                	public boolean match(Pilot pilot){
-                		return pilot.getName().equals("Michael Schumacher");
-                	}
-                });
-        Pilot found=(Pilot)result.get(0);
+        ObjectSet result=db.get(new Pilot("Michael Schumacher",0));
+        Pilot found=(Pilot)result.next();
         db.delete(found);
         System.out.println("Deleted "+found);
         retrieveAllPilots(db);
     }
 
     public static void deleteSecondPilotByName(ObjectContainer db) {
-        List result=db.query(
-                new Predicate() {
-                	public boolean match(Pilot pilot){
-                		return pilot.getName().equals("Rubens Barrichello");
-                	}
-                });
-        Pilot found=(Pilot)result.get(0);
+        ObjectSet result=db.get(new Pilot("Rubens Barrichello",0));
+        Pilot found=(Pilot)result.next();
         db.delete(found);
         System.out.println("Deleted "+found);
         retrieveAllPilots(db);
