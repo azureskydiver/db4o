@@ -733,10 +733,11 @@
 	</target>
 	
 	<target name="configure-net1.1">
-		<property name="target.framework.version" value="1.1" />
 		<property name="csharp.defines" value="NET" />
+		<property name="target.framework.version" value="1.1" />
 		<property name="installer.package.guid" value="${installer.package.guid.net1}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net1}" />
+		<property name="installer.package.suffix" value="net" />
 	</target>
 	
 	<target name="configure-net1.1-pascalcase" depends="configure-net1.1">
@@ -745,10 +746,11 @@
 	</target>
 	
 	<target name="configure-net2-pascalcase">
+		<property name="target.framework.version" value="2.0" />
 		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
 		<property name="pascalcase.converter.exe" location="bin/pascalcase2.exe" />
 		<property name="csharp.defines" value="NET_2_0" />
-		<property name="target.framework.version" value="2.0" />
+		<property name="installer.package.suffix" value="net2" />
 		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
 	</target>
@@ -838,6 +840,7 @@
 		<ant antfile="build-net-installer.xml">
 			<property name="installer.package.guid" value="${installer.package.guid}" />
 			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
+			<property name="target.framework.version" value="${target.framework.version}" />
 		</ant>
 	</target>
 	
