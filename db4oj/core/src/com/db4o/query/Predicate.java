@@ -38,7 +38,9 @@ public abstract class Predicate implements Serializable {
 	
 	private transient Method cachedFilterMethod=null;
 	
-	private Method getFilterMethod() {
+	// IMPORTANT: must have package visibility because it is used as
+	// internal on the .net side
+	Method getFilterMethod() {
 		if(cachedFilterMethod!=null) {
 			return cachedFilterMethod;
 		}
