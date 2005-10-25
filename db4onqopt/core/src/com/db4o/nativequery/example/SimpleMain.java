@@ -43,7 +43,7 @@ public class SimpleMain {
 							||candidate.getSize()<1;
 				}
 			};
-			((YapStream)db).addListener(new Db4oQueryExecutionListener() {
+			((YapStream)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
 				public void notifyQueryExecuted(Predicate filter, String msg) {
 					System.err.println(msg);
 				}

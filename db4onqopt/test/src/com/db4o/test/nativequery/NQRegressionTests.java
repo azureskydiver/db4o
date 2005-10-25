@@ -347,20 +347,20 @@ public class NQRegressionTests {
 				String expMsg=null;
 				switch(run) {
 					case 0:
-						expMsg=YapStream.UNOPTIMIZED;
+						expMsg=NativeQueryHandler.UNOPTIMIZED;
 						break;
 					case 1:
-						expMsg=YapStream.DYNOPTIMIZED;
+						expMsg=NativeQueryHandler.DYNOPTIMIZED;
 						break;
 					case 2:
-						expMsg=YapStream.PREOPTIMIZED;
+						expMsg=NativeQueryHandler.PREOPTIMIZED;
 						break;
 				}
 				Test.ensureEquals(expMsg,msg);
 				run++;
 			}
 		};
-		((YapStream)db).addListener(listener);
+		((YapStream)db).getNativeQueryHandler().addListener(listener);
 		db.ext().configure().optimizeNativeQueries(false);
 		ObjectSet raw=db.query(filter);
 		db.ext().configure().optimizeNativeQueries(true);
@@ -395,7 +395,7 @@ public class NQRegressionTests {
 			exc.printStackTrace();
 		}
 		
-		((YapStream)db).clearListeners();
+		((YapStream)db).getNativeQueryHandler().clearListeners();
 	}
 
 	// TODO incorporate

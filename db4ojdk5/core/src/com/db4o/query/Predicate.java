@@ -51,8 +51,7 @@ public abstract class Predicate<ExtentType> implements Serializable{
 				}
 			}
 		}
-
-		return null;
+		throw new IllegalArgumentException("Invalid predicate.");
 	}
 
 	public Class<ExtentType> extentType() {

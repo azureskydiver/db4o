@@ -264,6 +264,10 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     	_optimizeNQ=optimizeNQ;
     }
     
+    public boolean optimizeNativeQueries() {
+    	return _optimizeNQ;
+    }
+    
     public ObjectClass objectClass(Object clazz) {
         
         String className = null;
