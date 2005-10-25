@@ -100,6 +100,20 @@ to implement them, please refer to these papers:
 
 .1 Conclusion ..
 
+That's all very impressive, but now there's three alternative approaches to ._
+querying with db4o. Which one to choose? Just a few hints:
+
+- Native queries are going to become the primary querying API for db4o, so they ._
+should be preferred in the long run.
+- The SODA query API should be chosen when there's an indication that it might ._
+enhance performance over native queries, or if one wants to pose ('un-object-oriented') ._
+queries that cannot be expressed with NQ, like private member access or traversing ._
+object associations in the opposite direction.
+- QBE is cute, but restricted. If you like this approach, use it as long as it suits ._
+your application's needs.
+
+Of course you can mix these strategies as needed.
+
 We have finished our walkthrough and seen the various ways db4o provides ._
 to pose queries. But our domain model is not complex at all, consisting of one class only. Let's have ._
 a look at the way db4o handles object associations in the  .l Structured next chapter ..l . For the ._
