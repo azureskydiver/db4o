@@ -49,5 +49,5 @@ Files: lib/bloat-1.0.jar, lib/bloat.license.txt
 
 Bloat is used for bytecode analysis during native queries optimization. It
 needs to be on the classpath during runtime at load time or query execution
-time for just-in-time optimization. Preoptimized class files are not dependant
+time for just-in-time optimization. Preoptimized class files are not dependent
 on BLOAT at runtime.
