@@ -15,6 +15,7 @@ namespace com.db4o.f1.chapter1
                 storePilots(db);
                 retrieveComplexSODA(db);
             	retrieveComplexNQ(db);
+            	retrieveArbitraryCodeNQ(db);
                 clearDatabase(db);
             }
             finally
