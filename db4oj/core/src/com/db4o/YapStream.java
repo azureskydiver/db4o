@@ -20,16 +20,7 @@ import com.db4o.types.*;
 public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     TransientClass {
 
-	private static final String OPTIMIZER_IMPL_NAME = "com.db4o.nativequery.optimization.Db4oOnTheFlyEnhancer";
-	public final static String UNOPTIMIZED="UNOPTIMIZED";
-	public final static String PREOPTIMIZED="PREOPTIMIZED";
-	public final static String DYNOPTIMIZED="DYNOPTIMIZED";
-	
-	
-	private Db4oNQOptimizer enhancer;
-	private List4 listeners;
-
-    public static final int        HEADER_LENGTH         = 2 + (YapConst.YAPINT_LENGTH * 4);
+	    public static final int        HEADER_LENGTH         = 2 + (YapConst.YAPINT_LENGTH * 4);
 
     // The header is:
 
@@ -124,30 +115,14 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     // weak reference management
     YapReferences           i_references;
 
+	private NativeQueryHandler _nativeQueryHandler;
+
     YapStream(YapStream a_parent) {
         i_parent = a_parent == null ? this : a_parent;
         initialize0();
         createTransaction();
-        initialize1();        
-		loadQueryOptimizer();
+        initialize1();
     }
-
-	private void loadQueryOptimizer() {
-		try {
-			Class enhancerClass=Class.forName(OPTIMIZER_IMPL_NAME);
-			enhancer=(Db4oNQOptimizer)enhancerClass.newInstance();
-		} catch (Throwable ignored) {
-			enhancer=null;
-		}
-	}
-
-	public void addListener(Db4oQueryExecutionListener listener) {
-		listeners=new List4(listeners,listener);
-	}
-
-	public void clearListeners() {
-		listeners=null;
-	}
 
     public void activate(Object a_activate, int a_depth) {
         synchronized (i_lock) {
@@ -1171,43 +1146,22 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         }
     }
     
-    public final ObjectSet query(Predicate predicate){
-        synchronized (i_lock) {
-            if(Db4oVersion.MAJOR < 5){
-                //throw new RuntimeException("This feature will be available in db4o 5.0 and above.");
-            }
-            return configureQuery(predicate).execute();
-        }
+    public final NativeQueryHandler getNativeQueryHandler() {
+    	if (null == _nativeQueryHandler) {
+    		_nativeQueryHandler = new NativeQueryHandler(this);
+    	}
+    	return _nativeQueryHandler;
     }
     
-	private Query configureQuery(Predicate predicate) {
-		Query q=query();
-		q.constrain(predicate.extentType());
-		if(predicate instanceof Db4oEnhancedFilter) {
-			((Db4oEnhancedFilter)predicate).optimizeQuery(q);
-			notifyListeners(predicate,PREOPTIMIZED);
-			return q;
-		}
-		try {
-			if(i_config._optimizeNQ&&enhancer!=null) {
-				enhancer.optimize(q,predicate);
-				notifyListeners(predicate,DYNOPTIMIZED);
-				return q;
-			}
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
-		q.constrain(new PredicateEvaluation(predicate));
-		notifyListeners(predicate,UNOPTIMIZED);
-		return q;
-	}
-
-	private void notifyListeners(Predicate predicate,String msg) {
-		for(Iterator4 iter=new Iterator4Impl(listeners);iter.hasNext();/**/) {
-			((Db4oQueryExecutionListener)iter.next()).notifyQueryExecuted(predicate,msg);
-		}
-	}
-
+    public final ObjectSet query(Predicate predicate){
+        synchronized (i_lock) {
+//            if (Db4oVersion.MAJOR < 5) {
+//                throw new RuntimeException("This feature will be available in db4o 5.0 and above.");
+//            }
+            return getNativeQueryHandler().execute(predicate);
+        }
+    }
+	
 	public Query query() {
         synchronized (i_lock) {
             return query((Transaction)null);

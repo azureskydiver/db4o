@@ -306,6 +306,8 @@ public interface Configuration {
      */
     public void optimizeNativeQueries(boolean optimizeNQ);
     
+    public boolean optimizeNativeQueries();
+    
     /**
      * protects the database file with a password.
      * <br><br>To set a password for a database file, this method needs to be 
