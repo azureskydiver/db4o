@@ -1,0 +1,64 @@
+.n
+.a NativeQueries ..
+.0 Native Queries ..
+
+Now we have seen two ways of querying a db4o database, both having their
+pros and cons. QBE is quite intuitive and easy but somewhat limited. The
+query API covers much more functionality, but it's a bit like a foreign
+dialect put on top of your programming language, that in particular isn't
+accessible to your IDE's features like type checking, autocompletion and
+refactorings.
+
+Wouldn't it be nice to be able to pose queries right in the programming
+language you're using? Enter native queries. These are actually going to
+become the main query interface for db4o. We decided to not present them
+as such in this version of the tutorial, though, since it's meant to be
+compatible with legacy Java/.NET versions where native queries are available,
+but look a bit clumsy. We'll try to provide a .NET2.0/JDK5.0 specific
+version soon where they really can shine.
+
+.1 Native Query Example ..
+
+First we need some database content to work with.
+
+.s com.db4o.f1.chapter1.NQExample#storePilots -out ..
+
+Now assume we wanted to find all pilots with a given name or a score within a
+given range. This cannot be expressed with QBE, with the query API this
+might look like this, if no builder pattern is applied:
+
+.s com.db4o.f1.chapter1.NQExample#retrieveComplexSODA ..
+
+This version probably looks a bit more familiar, furthermore it's typesafe
+and fully accessible to autocompletion, refactoring and other IDE features:
+
+.? net .s com.db4o.f1.chapter1.ComplexQuery ..s ..?
+
+.s com.db4o.f1.chapter1.NQExample#retrieveComplexNQ ..
+
+.? net With .NET 2.0, this becomes much more compact with an anonymous delegate:
+.c
+ObjectSet result=db.Query<Pilot>(delegate(Pilot pilot) {
+		return pilot.Points>99
+	    		&& pilot.Points<199
+	        ||pilot.Name=="Rubens Barrichello";
+	});
+..c ..?
+
+.? java With JDK 5 generics, we also get increased type safety. 
+.c
+        ObjectSet result=db.query(new Predicate<Pilot>() {
+        	public boolean match(Pilot pilot) {
+        		return pilot.getPoints()>99
+        			&& pilot.getPoints()<199
+        			||pilot.getName().equals("Rubens Barrichello");
+			}
+        });
+..c ..?
+
+For pre JDK4/.NET2.0 environments without generics, native queries work
+by convention: db4o expects a predicate to provide a method with the name
+'match()' and a single parameter with the type of the requested class
+extent.
+
+.1 Native Query Concepts ..
