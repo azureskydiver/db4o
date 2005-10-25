@@ -2,24 +2,29 @@
 .a NativeQueries ..
 .0 Native Queries ..
 
-Now we have seen two ways of querying a db4o database, both having their ._
-pros and cons. QBE is quite intuitive and easy but somewhat limited. The ._
-query API covers much more functionality, but it's a bit like a foreign ._
-dialect put on top of your programming language, that in particular isn't ._
-accessible to your IDE's features like type checking, autocompletion and ._
-refactorings.
+Wouldn't it be nice to pose queries in the programming ._
+language that you are using? Wouldn't it be nice if all querying code was ._
+100% typesafe, 100% compile-time checked, 100% refactorable? Wouldn't ._
+it be nice if the full power of object-orientation could be used ._
+by calling methods from within queries? Enter native queries. 
 
-Wouldn't it be nice to be able to pose queries right in the programming ._
-language you're using? Enter native queries. These are actually going to ._
-become the main query interface for db4o. We decided to not present them ._
-as such in this version of the tutorial, though, since it's meant to be ._
-compatible with legacy Java/.NET versions where native queries are available, ._
-but look a bit clumsy. We'll try to provide a .NET2.0/JDK5.0 specific ._
-version soon where they really can shine.
+Native queries are the main query interface of db4o and they are the ._
+recommended way to query databases from your application. Because native ._
+queries simply use the semantics of your programming language, they are ._
+perfectly standardized and a safe choice for the future.
+
+When this tutorial was written neither .NET 2.0 nor JDK 5 were the ._
+installed base for browsers, so we could not provide running samples ._
+with the most modern syntax yet.
+
+Native queries are available for all platforms where db4o is available, ._
+for earlier language versions they are just slightly more verbose.
+
+
 
 .1 Native Query Example ..
 
-First we need some database content to work with.
+Again we need some database content to work with.
 
 .s com.db4o.f1.chapter1.NQExample#storePilots -out ..
 
@@ -57,9 +62,9 @@ IList<Pilot> result=db.Query<Pilot>(delegate(Pilot pilot) {
 ..c ..?
 
 For pre JDK5/.NET2.0 environments without generics, native queries work ._
-by convention: db4o expects a predicate to provide a method with the name ._
-'match()' and a single parameter with the type of the requested class ._
-extent.
+by convention: db4o expects a Predicate object to provide a method with ._
+the name 'match()' and a single parameter with the type of the requested ._
+class extent.
 
 .1 Arbitrary Code ..
 
