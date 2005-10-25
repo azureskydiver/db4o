@@ -50,7 +50,7 @@ namespace com.db4o.f1.chapter1
 
         public static void retrieveArbitraryCodeNQ(ObjectContainer db)
         {
-	        ObjectSet result=db.query(new ArbitraryQuery());
+	        ObjectSet result=db.query(new ArbitraryQuery(new int[]{1,100}));
 	        listResult(result);
         }
     

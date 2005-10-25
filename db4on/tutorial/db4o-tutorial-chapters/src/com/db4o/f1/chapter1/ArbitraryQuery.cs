@@ -4,6 +4,13 @@ namespace com.db4o.f1.chapter1
 
     public class ArbitraryQuery : Predicate
     {
+    	private int[] _points;
+    	
+    	public ArbitraryQuery(int[] points)
+    	{
+    		_points=points;
+    	}
+    
     	public boolean match(Pilot pilot)
     	{
         	for(int i=0;i<points.length;i++) {
