@@ -86,6 +86,9 @@ To overcome this issue, db4o can optionally analyze the bytecode of your ._
 predicate classes and try to convert it to SODA style queries under the ._
 hood. This feature is still under development.
 
+With the current implementation, our first example will be run optimized, ._
+the second cannot be optimized, yet - we're working on it.
+
 .? java The current state of the query optimization process is detailed ._
 in a  .l NQOptimization separate chapter ..l .
 ..?
