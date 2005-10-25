@@ -508,6 +508,8 @@ public interface Configuration {
     /**
      * turns weak reference management on or off.
      * <br><br>
+     * This method must be called before opening a database.
+     * <br><br>
      * Performance may be improved by running db4o without using weak
      * references durring memory management at the cost of higher
      * memory consumption or by alternatively implementing a manual
