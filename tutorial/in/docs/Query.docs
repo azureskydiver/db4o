@@ -103,9 +103,9 @@ To prepare for the next chapter, let's clear the database.
 
 .1 Conclusion ..
 
-Now we know how to build arbitrarily complex queries. But our domain ._
-model is not complex at all, consisting of one class only. Let's have ._
-a look at the way db4o handles object associations in the  .l Structured next chapter ..l .
+Now we know how to build arbitrarily complex queries. But maybe there's ._
+even a better choice for most use cases - let's have a look at ._
+.l NativeQueries native queries .. .
 
 .1 Full source ..
 

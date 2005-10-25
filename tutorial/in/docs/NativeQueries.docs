@@ -2,19 +2,19 @@
 .a NativeQueries ..
 .0 Native Queries ..
 
-Now we have seen two ways of querying a db4o database, both having their
-pros and cons. QBE is quite intuitive and easy but somewhat limited. The
-query API covers much more functionality, but it's a bit like a foreign
-dialect put on top of your programming language, that in particular isn't
-accessible to your IDE's features like type checking, autocompletion and
+Now we have seen two ways of querying a db4o database, both having their ._
+pros and cons. QBE is quite intuitive and easy but somewhat limited. The ._
+query API covers much more functionality, but it's a bit like a foreign ._
+dialect put on top of your programming language, that in particular isn't ._
+accessible to your IDE's features like type checking, autocompletion and ._
 refactorings.
 
-Wouldn't it be nice to be able to pose queries right in the programming
-language you're using? Enter native queries. These are actually going to
-become the main query interface for db4o. We decided to not present them
-as such in this version of the tutorial, though, since it's meant to be
-compatible with legacy Java/.NET versions where native queries are available,
-but look a bit clumsy. We'll try to provide a .NET2.0/JDK5.0 specific
+Wouldn't it be nice to be able to pose queries right in the programming ._
+language you're using? Enter native queries. These are actually going to ._
+become the main query interface for db4o. We decided to not present them ._
+as such in this version of the tutorial, though, since it's meant to be ._
+compatible with legacy Java/.NET versions where native queries are available, ._
+but look a bit clumsy. We'll try to provide a .NET2.0/JDK5.0 specific ._
 version soon where they really can shine.
 
 .1 Native Query Example ..
@@ -23,13 +23,13 @@ First we need some database content to work with.
 
 .s com.db4o.f1.chapter1.NQExample#storePilots -out ..
 
-Now assume we wanted to find all pilots with a given name or a score within a
-given range. This cannot be expressed with QBE, with the query API this
+Now assume we wanted to find all pilots with a given name or a score within a ._
+given range. This cannot be expressed with QBE, with the query API this ._
 might look like this, if no builder pattern is applied:
 
 .s com.db4o.f1.chapter1.NQExample#retrieveComplexSODA ..
 
-This version probably looks a bit more familiar, furthermore it's typesafe
+This version probably looks a bit more familiar, furthermore it's typesafe ._
 and fully accessible to autocompletion, refactoring and other IDE features:
 
 .? net .s com.db4o.f1.chapter1.ComplexQuery ..s ..?
@@ -56,20 +56,20 @@ IList<Pilot> result=db.Query<Pilot>(delegate(Pilot pilot) {
         });
 ..c ..?
 
-For pre JDK5/.NET2.0 environments without generics, native queries work
-by convention: db4o expects a predicate to provide a method with the name
-'match()' and a single parameter with the type of the requested class
+For pre JDK5/.NET2.0 environments without generics, native queries work ._
+by convention: db4o expects a predicate to provide a method with the name ._
+'match()' and a single parameter with the type of the requested class ._
 extent.
 
 .1 Arbitrary Code ..
 
-Basically that's all there is to know about native queries: They are just
-plain old language constructs, applied as collection filters. In principle
-you can run almost arbitrary code as native queries, you just have to be
-very careful with side effects - especially those that might affect
+Basically that's all there is to know about native queries: They are just ._
+plain old language constructs, applied as collection filters. In principle ._
+you can run almost arbitrary code as native queries, you just have to be ._
+very careful with side effects - especially those that might affect ._
 persistent objects.
 
-Let's run an example that involves some more of the language features
+Let's run an example that involves some more of the language features ._
 available.
 
 .? net .s com.db4o.f1.chapter1.ArbitraryQuery ..s ..?
@@ -78,22 +78,38 @@ available.
 
 .1 Native Query Performance ..
 
-The new freedom we've won comes with a drawback, of course: Performance.
-Native queries require each candidate object to be instantiated, and
-they cannot take advantage of any field indices you may have created.
+The new freedom we've won comes with a drawback, of course: Performance. ._
+Native queries require each candidate object to be instantiated, and ._
+they cannot take advantage of any field indices you may have created. ._
 
-To overcome this issue, db4o can optionally analyze the bytecode of your
-predicate classes and try to convert it to SODA style queries under the
+To overcome this issue, db4o can optionally analyze the bytecode of your ._
+predicate classes and try to convert it to SODA style queries under the ._
 hood. This feature is still under development.
 
-.? java The current state of the query optimization process is detailed
+.? java The current state of the query optimization process is detailed ._
 in a  .l NQOptimization separate chapter ..l .
 ..?
 
 .1 Native Query Concepts ..
 
-If you'd like to learn more about native query concepts and our motivation
+If you'd like to learn more about native query concepts and our motivation ._
 to implement them, please refer to these papers:
 
 .l http://www.cs.utexas.edu/users/wcook/papers/SafeQuery/SafeQueryFinal.pdf Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries ..l
 .l http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper ..l
+
+.1 Conclusion ..
+
+We have finished our walkthrough and seen the various ways db4o provides ._
+to pose queries. But our domain model is not complex at all, consisting of one class only. Let's have ._
+a look at the way db4o handles object associations in the  .l Structured next chapter ..l . For the ._
+time being, turning to the SODA query API again.
+
+.1 Full source ..
+
+.s com.db4o.f1.chapter1.NQExample ..
+
+.? net
+.s com.db4o.f1.chapter1.ComplexQuery ..
+.s com.db4o.f1.chapter1.ArbitraryQuery ..
+..?

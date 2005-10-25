@@ -33,8 +33,8 @@ namespace com.db4o.f1.chapter1
         {
 	        Query query=db.query();
 	        query.constrain(typeof(Pilot));
-	        Query pointQuery=query.descend("points");
-	        query.descend("name").constrain("Rubens Barrichello")
+	        Query pointQuery=query.descend("_points");
+	        query.descend("_name").constrain("Rubens Barrichello")
 	        	.or(pointQuery.constrain(new Integer(99)).greater()
 	        	    .and(pointQuery.constrain(new Integer(199)).smaller()));
 	        ObjectSet result=query.execute();
