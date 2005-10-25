@@ -99,7 +99,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4o\f1\chapter1\ComplexQuery.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4o\f1\chapter1\FirstStepsExample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4o\f1\chapter1\NQExample.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
