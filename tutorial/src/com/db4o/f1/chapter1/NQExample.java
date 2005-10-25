@@ -1,0 +1,55 @@
+package com.db4o.f1.chapter1;
+
+import com.db4o.*;
+import com.db4o.f1.*;
+import com.db4o.query.*;
+
+public class NQExample extends Util {
+	
+    public static void main(String[] args) {
+        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        try {
+            storePilots(db);
+            retrieveComplexSODA(db);
+            retrieveComplexNQ(db);
+            clearDatabase(db);
+        }
+        finally {
+            db.close();
+        }
+    }
+
+    public static void storePilots(ObjectContainer db) {
+        db.set(new Pilot("Michael Schumacher",100));
+        db.set(new Pilot("Rubens Barrichello",99));
+    }
+
+    public static void retrieveComplexNQ(ObjectContainer db) {
+        ObjectSet result=db.query(new Predicate() {
+        	public boolean match(Pilot pilot) {
+        		return pilot.getPoints()>99
+        			&& pilot.getPoints()<199
+        			||pilot.getName().equals("Rubens Barrichello");
+			}
+        });
+        listResult(result);
+    }
+
+    public static void retrieveComplexSODA(ObjectContainer db) {
+        Query query=db.query();
+        query.constrain(Pilot.class);
+        Query pointQuery=query.descend("points");
+        query.descend("name").constrain("Rubens Barrichello")
+        	.or(pointQuery.constrain(new Integer(99)).greater()
+        	    .and(pointQuery.constrain(new Integer(199)).smaller()));
+        ObjectSet result=query.execute();
+        listResult(result);
+    }
+    
+    public static void clearDatabase(ObjectContainer db) {
+        ObjectSet result=db.get(Pilot.class);
+        while(result.hasNext()) {
+            db.delete(result.next());
+        }
+    }
+}
