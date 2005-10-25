@@ -11,14 +11,16 @@ namespace com.db4o.f1.chapter1
     		_points=points;
     	}
     
-    	public boolean match(Pilot pilot)
+    	public bool match(Pilot pilot)
     	{
-        	for(int i=0;i<_points.length;i++) {
-        		if(pilot.getPoints()==_points[i]) {
+        	for (int i=0;i<_points.Length;i++)
+        	{
+        		if (pilot.Points == _points[i])
+        		{
         			return true;
         		}
         	}
-        	return pilot.getName().StartsWith("Rubens");
+        	return pilot.Name.StartsWith("Rubens");
     	}
     }
 }
