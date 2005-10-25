@@ -46,6 +46,12 @@ namespace com.db4o.f1.chapter1
 	        ObjectSet result=db.query(new ComplexQuery());
 	        listResult(result);
         }
+
+        public static void retrieveArbitraryCodeNQ(ObjectContainer db)
+        {
+	        ObjectSet result=db.query(new ArbitraryQuery());
+	        listResult(result);
+        }
     
         public static void clearDatabase(ObjectContainer db)
         {

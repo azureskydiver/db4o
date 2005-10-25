@@ -12,6 +12,7 @@ public class NQExample extends Util {
             storePilots(db);
             retrieveComplexSODA(db);
             retrieveComplexNQ(db);
+            retrieveArbitraryCodeNQ(db);
             clearDatabase(db);
         }
         finally {
@@ -22,17 +23,6 @@ public class NQExample extends Util {
     public static void storePilots(ObjectContainer db) {
         db.set(new Pilot("Michael Schumacher",100));
         db.set(new Pilot("Rubens Barrichello",99));
-    }
-
-    public static void retrieveComplexNQ(ObjectContainer db) {
-        ObjectSet result=db.query(new Predicate() {
-        	public boolean match(Pilot pilot) {
-        		return pilot.getPoints()>99
-        			&& pilot.getPoints()<199
-        			||pilot.getName().equals("Rubens Barrichello");
-			}
-        });
-        listResult(result);
     }
 
     public static void retrieveComplexSODA(ObjectContainer db) {
@@ -46,6 +36,32 @@ public class NQExample extends Util {
         listResult(result);
     }
     
+    public static void retrieveComplexNQ(ObjectContainer db) {
+        ObjectSet result=db.query(new Predicate() {
+        	public boolean match(Pilot pilot) {
+        		return pilot.getPoints()>99
+        			&& pilot.getPoints()<199
+        			||pilot.getName().equals("Rubens Barrichello");
+			}
+        });
+        listResult(result);
+    }
+
+    public static void retrieveArbitraryCodeNQ(ObjectContainer db) {
+    	final int[] points={1,100};
+        ObjectSet result=db.query(new Predicate() {
+        	public boolean match(Pilot pilot) {
+        		for(int i=0;i<points.length;i++) {
+        			if(pilot.getPoints()==points[i]) {
+        				return true;
+        			}
+        		}
+        		return pilot.getName().startsWith("Rubens");
+			}
+        });
+        listResult(result);
+    }
+
     public static void clearDatabase(ObjectContainer db) {
         ObjectSet result=db.get(Pilot.class);
         while(result.hasNext()) {
