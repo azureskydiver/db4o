@@ -1,8 +1,9 @@
 .n
 .a Query ..
-.0 Query API ..
+.0 SODA Query API ..
 
-We have already seen how to retrieve objects from db4o via QBE. While this approach ._
+We have already seen how to retrieve objects from db4o via Query By Example. 
+While the QBE approach ._
 is easy and intuitive, there are situations where it is not sufficient.
 
 - There are queries that simply cannot be expressed with QBE: Retrieve all ._
@@ -11,7 +12,16 @@ pilots with more than 100 points, for example.
 - Default values (e.g. null) may not be accepted by the domain class constructor.
 - We may want to query for field default values.
 
-db4o provides a dedicated query API that can be used in those cases.
+For all of the above cases and more db4o provides  .l NativeQueries .. ._
+and the SODA query API.
+
+.l NativeQueries  .. are the main db4o query interface so you may ._
+consider to skip to the  .l NativeQueries next chapter ..  immediately, ._
+where they are explained.
+
+Because  .l NativeQueries ..  are wrapped to SODA under the hood and because ._
+some of the examples in the next chapter refer to SODA, the SODA query API is ._
+explained first.
 
 We need some pilots in our database again to explore it.
 
