@@ -31,7 +31,6 @@ public class TestCatConsistency {
     }
     
     
-    
     public void runTests(){
         
         expect(new Predicate(){
@@ -58,13 +57,60 @@ public class TestCatConsistency {
             }
         }, new String[]{"Achat", "Acrobat" });
         
+        
+        // The following will fail with nqopt
+        // because SODA swallows nulls
+        
+//        expect(new Predicate(){
+//            public boolean match(Cat cat){
+//                return cat._father._father._firstName.equals("Edwin")
+//                    || cat._father._firstName.equals("Edwin");
+//            }
+//        }, new String[]{"Achat", "Acrobat"});
+
+        
+        // NPE
+        
+//        expect(new Predicate(){
+//            public boolean match(Cat cat){
+//                return cat._age + 1 == 2;
+//            }
+//        }, new String[]{"Occam", "Vahiné" });
+
+        
         expect(new Predicate(){
             public boolean match(Cat cat){
-                return cat._father._father._firstName.equals("Edwin")
-                    || cat._father._firstName.equals("Edwin");
+                return cat.getFirstName().equals("Occam")
+                    && cat.getAge() == 1;
             }
-        }, new String[]{"Achat", "Acrobat", "Occam" });
+        }, new String[]{"Occam"});
+        
+        
+        // ClassCastException
+        
+//        expect(new Predicate(){
+//            public boolean match(Cat cat){
+//                return cat.getFullName().equals("Achat Leo Lenis");
+//            }
+//        }, new String[]{"Achat"});
 
+
+        // NPE
+        
+//        expect(new Predicate(){
+//            public boolean match(Cat cat){
+//                return cat.getFullName() == null;
+//            }
+//        }, new String[]{"Trulla"});
+        
+
+        // ClassCastException
+        
+//        expect(new Predicate(){
+//            public boolean match(Cat cat){
+//                return cat._firstName.startsWith("A");
+//            }
+//        }, new String[]{"Achat", "Acrobat"});
         
     }
     
@@ -112,6 +158,10 @@ public class TestCatConsistency {
         
         Test.store(achat);
         Test.store(acrobat);
+        
+        Cat trulla = new Cat();
+        trulla._firstName = "Trulla";
+        
     }
     
     private void expect(Predicate predicate, String[] names){

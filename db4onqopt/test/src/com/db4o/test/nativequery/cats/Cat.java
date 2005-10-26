@@ -19,8 +19,15 @@ public class Cat extends Animal{
         return _firstName;
     }
     
+    public int getAge(){
+        return _age;
+    }
     
-    
+    public String getFullName(){
+        return _firstName + " " + _lastName;
+        
+    }
+
     
     
 
