@@ -52,9 +52,11 @@ namespace com.db4o.inside.query
 					return q;
 				}
 			}
-			catch (System.Exception exc)
+			catch (System.Exception e)
 			{
-				j4o.lang.JavaSystem.printStackTrace(exc);
+				// XXX: need to inform the user of the exception
+				// somehow
+				//j4o.lang.JavaSystem.printStackTrace(e);
 			}
 			q.constrain(new com.db4o.inside.query.PredicateEvaluation(predicate));
 			notifyListeners(predicate, NativeQueryHandler.UNOPTIMIZED);
