@@ -756,7 +756,20 @@
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
 	</target>
 	
-	<target name="compile-legacy">
+	<target name="compile-legacy" depends="configure-net1.1">
+		<property name="legacy.dir" location="${dir.dist.net.build}/legacy" />
+		<property name="legacy.compact.dll.dir" location="${legacy.dir}/dll/compact" />
+		<property name="legacy.net.dll.dir" location="${legacy.dir}/dll/net" />
+		
+		<mkdir dir="${legacy.compact.dll.dir}" />
+		<mkdir dir="${legacy.net.dll.dir}" />
+		
+		<antcall target="compiledllnet">
+			<param name="file.dll.compact" value="${legacy.compact.dll.dir}/db4o.dll" />
+			<param name="file.xml.compact" value="${legacy.compact.dll.dir}/db4o.xml" />
+			<param name="file.dll.net" value="${legacy.net.dll.dir}/db4o.dll" />
+			<param name="file.dll.xml" value="${legacy.net.dll.dir}/db4o.xml" />
+		</antcall>
 	</target>
 		
 	<target name="do-zipnet-pascalcase">
