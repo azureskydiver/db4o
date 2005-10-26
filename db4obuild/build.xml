@@ -755,11 +755,18 @@
 		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
 	</target>
+	
+	<target name="compile-legacy">
+	</target>
 		
 	<target name="do-zipnet-pascalcase">
 		<antcall target="doctor">
 			<param name="dir.n.tutorial.src" value="${dir.dist.pascalcase}/tutorial/db4o-tutorial-chapters/src" />
 		</antcall>
+		
+		<antcall target="compile-legacy">
+		</antcall>
+		
 		<antcall target="create-zipnet">
 			<param name="dir.core" value="${dir.dist.pascalcase}/core" />
 			<param name="dir.tools" value="${dir.dist.pascalcase}/tools" />
@@ -927,38 +934,45 @@
 	</target>
 	
 	<target name="prepare-conversion-workspace" depends="init">
-		<delete dir="${dir.sharpen}" />
-		<mkdir dir="${dir.sharpen}" />
+		<delete dir="${target.dir}" />
+		<mkdir dir="${target.dir}" />
 		
-		<copy todir="${dir.sharpen}">
+		<copy todir="${target.dir}">
 			<fileset dir="..">
 				<include name="db4oj/core/src/**/*.java" />
 			</fileset>
 		</copy>
 		
 		<!-- shared native query support -->
-		<copy todir="${dir.sharpen}/db4oj">
+		<copy todir="${target.dir}/db4oj">
 			<fileset dir="../db4onqopt">
 				<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
 				<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
 			</fileset>
 		</copy>
 		
-		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
+		<copy todir="${target.dir}/db4oj/core/src" overwrite="true">
 			<fileset dir="../db4on/in/java">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
 	</target>
 	
-	<target name="pascalcase" depends="install-javatocsharp-plugin, prepare-conversion-workspace">
+	<target name="pascalcase" depends="install-javatocsharp-plugin">
+		
+		<property name="dir.sharpen.pc" location="${dir.sharpen}/pascalcase" />
+		
+		<antcall target="prepare-conversion-workspace">
+			<param name="target.dir" value="${dir.sharpen.pc}" />
+		</antcall>
+			
 		<java jvm="${file.jvm.jdk1.5}" classname="org.eclipse.core.launcher.Main" fork="yes" failonerror="true">
 			<classpath>
 				<pathelement location="${eclipse.home}/startup.jar" />
 			</classpath>
 			
 			<arg value="-data" />
-			<arg file="${dir.sharpen}" />
+			<arg file="${dir.sharpen.pc}" />
 			<arg value="-application" />
 			<arg value="javatocsharp.core.application" />
 			<arg value="db4oj/core/src" />
@@ -974,7 +988,7 @@
 		<mkdir dir="${target.dir}" />
 		
 		<antcall target="copy-sharpened-files">
-			<param name="src.dir" value="${dir.sharpen}/db4ojcsharp/src" />
+			<param name="src.dir" value="${dir.sharpen.pc}/db4ojcsharp/src" />
 			<param name="target.dir" value="${target.dir}/src/core" />
 		</antcall>
 		
@@ -1067,7 +1081,13 @@
 		</copy>
 	</target>
 	
-	<target name="sharpen" description="create .NET sources" depends="install-javatocsharp-plugin, prepare-conversion-workspace" unless="skip.conversion">
+	<target name="sharpen" description="create .NET sources" depends="install-javatocsharp-plugin" unless="skip.conversion">
+		
+		<property name="sharpen.src.dir" location="${dir.sharpen}/legacy" />
+		
+		<antcall target="prepare-conversion-workspace">
+			<param name="target.dir" value="${sharpen.src.dir}" />
+		</antcall>
 		
 		<java jvm="${file.jvm.jdk1.5}" classname="org.eclipse.core.launcher.Main" fork="yes" failonerror="true">
 			<classpath>
@@ -1075,7 +1095,7 @@
 			</classpath>
 			
 			<arg value="-data" />
-			<arg file="${dir.sharpen}" />
+			<arg file="${sharpen.src.dir}" />
 			<arg value="-application" />
 			<arg value="javatocsharp.core.application" />
 			<arg value="db4oj/core/src" />
@@ -1083,7 +1103,7 @@
 		</java>
 		
 		<antcall target="copy-sharpened-files">
-			<param name="src.dir" value="${dir.sharpen}/db4ojcsharp/src" />
+			<param name="src.dir" value="${sharpen.src.dir}/db4ojcsharp/src" />
 			<param name="target.dir" value="${dir.n.core.src}/core" />
 		</antcall>
 		
