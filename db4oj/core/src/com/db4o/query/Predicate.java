@@ -80,7 +80,13 @@ public abstract class Predicate implements Serializable {
 			Object ret=filterMethod.invoke(this,new Object[]{candidate});
 			return ((Boolean)ret).booleanValue();
 		} catch (Exception e) {
-			e.printStackTrace();
+            
+            // FIXME: Exceptions should be logged for app developers,
+            // but we can't print them out here.
+            
+			// e.printStackTrace();
+            
+            
 			return false;
 		}
 	}
