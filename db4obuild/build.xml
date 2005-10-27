@@ -23,6 +23,7 @@
 	dir.dll.wince=C:/Program Files/Microsoft Visual Studio .NET 2003/CompactFrameworkSDK/v1.0.5000/Windows CE/
 	eclipse.home=c:/Program Files/Eclipse	
 -->
+	<property environment="env" />
 	<property file="machine.properties" />
 	<property file="ant.properties" />
 	
@@ -331,7 +332,8 @@
 			warnlevel="0"
 			optimize="true"
 			failonerror="true"
-			definitions="${csharp.defines}">
+			definitions="${csharp.defines}"
+			executable="${csc.executable}">
 			
 			<include name="*.cs" />
 			<exclude name="compact/**" />
@@ -351,7 +353,7 @@
 		<versioninfo path="${dir.dist.net.compile}/compact" compact="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}" />
 		<copy file="${file.keypair}" todir="${dir.dist.net.compile}" />		
 		<mkdir dir="${dir.dist.dll.compact}" />
-		<exec executable="csc" dir="${dir.dist.net.compile}" failonerror="true">
+		<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
 			<arg value="/optimize" />
 			<arg value="/define:CF_1_0" />
 			<arg value="/out:${file.dll.compact}" />
@@ -734,22 +736,43 @@
 	</target>
 	
 	<target name="configure-net1.1">
-		<property name="csharp.defines" value="NET" />
+
 		<property name="target.framework.version" value="1.1" />
+			
+		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
+		<property name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
+		
+		<available property="csc.executable.available" file="${csc.executable}"></available>
+		<fail unless="csc.executable.available">
+		.net 1.1 c# compiler not found at '${csc.executable.path.net1}', please configure your machine.properties by setting the property 'csc.executable.path.net1' accordingly.
+		</fail>
+		
+		<property name="csharp.defines" value="NET" />
 		<property name="installer.package.guid" value="${installer.package.guid.net1}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net1}" />
 		<property name="installer.package.suffix" value="net" />
 	</target>
 	
 	<target name="configure-net1.1-pascalcase" depends="configure-net1.1">
+		<!--
 		<property name="pascalcase.converter.ant.target" value="compile-converter" />
 		<property name="pascalcase.converter.exe" location="bin/pascalcase.exe" />
+		-->
+		
+		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
+		<property name="pascalcase.converter.exe" location="bin/pascalcase2.exe" />
+
+
 	</target>
 	
 	<target name="configure-net2-pascalcase">
+		
 		<property name="target.framework.version" value="2.0" />
+		<property name="csc.executable" value="csc" />
+		
 		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
 		<property name="pascalcase.converter.exe" location="bin/pascalcase2.exe" />
+
 		<property name="csharp.defines" value="NET_2_0" />
 		<property name="installer.package.suffix" value="net2" />
 		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
