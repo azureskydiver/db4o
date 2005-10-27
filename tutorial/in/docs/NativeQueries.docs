@@ -95,7 +95,7 @@ a native query code with very little typing: You can use code ._
 templates with auto-completion.
 
 As soon as queries become more complex, the advantages ._
-of simply being able use getters, properties, navigation and ._
+of simply being able to use getters, properties, navigation and ._
 method calls in a typsafe and compile-time checked way from ._
 within a query become obvious. Let's take a look:
 
@@ -151,7 +151,7 @@ For some queries it is very difficult to analyze the flowgraph. ._
 The development of the native query optimization processor will ._
 be an ongoing process in a close dialog with the db4o community. ._
 Feel free to contribute your results and your needs by providing ._
-feedback to our .l http://forums.db4o.com/ db4o forums .. .
+feedback to our  .l http://forums.db4o.com/ db4o forums .. .
 .? java The current state of the query optimization process is detailed ._
 in a  .l NQOptimization separate chapter ..l . ..?
 With the current implementation, our first example above will run ._
