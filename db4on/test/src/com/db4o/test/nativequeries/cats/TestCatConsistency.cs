@@ -46,14 +46,14 @@ namespace com.db4o.test.nativequeries.cats
 
         public class GrandFatherName : Predicate {
             public bool match(Cat cat) {
-                return cat._father._father._firstName.Equals("Edwin");
+                return cat._father._father._firstName == "Edwin";
             }
         }
 
         public class OrFatherName : Predicate {
             public bool match(Cat cat) {
-                return cat._father._father._firstName.Equals("Edwin")
-                    || cat._father._firstName.Equals("Edwin");
+                return cat._father._father._firstName == "Edwin"
+                    || cat._father._firstName == "Edwin";
             }
         }
 
@@ -65,14 +65,14 @@ namespace com.db4o.test.nativequeries.cats
 
         public class TwoGetters : Predicate {
             public bool match(Cat cat) {
-                return cat.getFirstName().Equals("Occam")
+                return cat.getFirstName() == "Occam"
                     && cat.getAge() == 1;
             }
         }
 
         public class CalculatedGetter : Predicate {
             public bool match(Cat cat) {
-                return cat.getFullName().Equals("Achat Leo Lenis");
+                return cat.getFullName() == "Achat Leo Lenis";
             }
         }
 
@@ -109,7 +109,7 @@ namespace com.db4o.test.nativequeries.cats
             
             expect(new CalculatedGetter(), new String[]{"Achat"});
 
-            expect(new GetterNull(), new String[]{"Trulla"});
+            expect(new GetterNull(), new String[]{});
             
             expect(new StartsWith(), new String[]{"Achat", "Acrobat"});
             
