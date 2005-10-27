@@ -501,7 +501,9 @@
 	</target>
 	
 	<target name="compilentutorial" depends="compiledllnet">
-		<ant dir="${dir.n.tutorial}" />
+		<ant dir="${dir.n.tutorial}">
+			<property name="csc.executable" value="${csc.executable}" />
+		</ant>
 	</target>
 	
 	<target name="preparendoc">

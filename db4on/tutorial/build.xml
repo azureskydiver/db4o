@@ -5,6 +5,8 @@
 
 	<property file="${dir.db4obuild}/machine.properties" />
 	<property file="${dir.db4obuild}/ant.properties" />		
+	
+	<property name="csc.executable" value="csc" />
 
 	<property name="dir.out" location="${dir.j.tutorial.out.net}" />	
 	
@@ -24,7 +26,8 @@
 	<target name="build" depends="init">
 		<csc targetType="library"
 			destFile="${dir.n.tutorial.bin}/bin/db4o-tutorial-chapters.dll"
-			srcdir="db4o-tutorial-chapters/src">
+			srcdir="db4o-tutorial-chapters/src"
+			executable="${csc.executable}">
 			
 			<include name="**/*.cs" />
 			
@@ -36,7 +39,8 @@
 		<csc targetType="winexe"
 			destFile="${dir.n.tutorial.bin}/${exe.name}"
 			win32icon="db4o-tutorial/src/resources/db4o.ico"
-			srcdir="db4o-tutorial/src">			
+			srcdir="db4o-tutorial/src"
+			executable="${csc.executable}">
 			
 			<include name="**/*.cs" />
 			
