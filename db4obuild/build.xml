@@ -779,7 +779,7 @@
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
 	</target>
 	
-	<target name="compile-legacy" depends="configure-net1.1">
+	<target name="compile-legacy">
 		<property name="legacy.dir" location="${dir.dist.net.build}/legacy" />
 		<property name="legacy.compact.dll.dir" location="${legacy.dir}/dll/compact" />
 		<property name="legacy.net.dll.dir" location="${legacy.dir}/dll/net" />
@@ -787,11 +787,15 @@
 		<mkdir dir="${legacy.compact.dll.dir}" />
 		<mkdir dir="${legacy.net.dll.dir}" />
 		
+		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
+		
 		<antcall target="compiledllnet">
 			<param name="file.dll.compact" value="${legacy.compact.dll.dir}/db4o.dll" />
 			<param name="file.xml.compact" value="${legacy.compact.dll.dir}/db4o.xml" />
 			<param name="file.dll.net" value="${legacy.net.dll.dir}/db4o.dll" />
-			<param name="file.dll.xml" value="${legacy.net.dll.dir}/db4o.xml" />
+			<param name="file.xml.net" value="${legacy.net.dll.dir}/db4o.xml" />
+			<param name="csharp.defines" value="NET" />
+			<param name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
 		</antcall>
 	</target>
 		
