@@ -6,6 +6,7 @@ using com.db4o.test.inside.query;
 using com.db4o.test.nativequeries;
 using j4o.lang;
 using com.db4o.test.cs;
+using com.db4o.test.nativequeries.cats;
 
 namespace com.db4o.test {
 
@@ -16,10 +17,11 @@ namespace com.db4o.test {
          */
         internal Type[] TESTS = new Type[]{
             typeof(SimplestPossible),
-			typeof(Cat),
+			typeof(com.db4o.test.nativequeries.Cat),
+            typeof(TestCatConsistency),
 #if !CF_1_0 && !CF_2_0
 			typeof(QueryExpressionBuilderTestCase),
-			typeof(nativequeries.NativeQueriesTestCase)
+			typeof(nativequeries.NativeQueriesTestCase),
 #endif
          };
        
