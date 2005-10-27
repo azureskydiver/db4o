@@ -50,12 +50,12 @@ namespace com.db4o.test.nativequeries.cats
             }
         }
 
-//        public class OrFatherName : Predicate {
-//            public bool match(Cat cat) {
-//                return cat._father._father._firstName.Equals("Edwin")
-//                    || cat._father._firstName.Equals("Edwin");
-//            }
-//        }
+        public class OrFatherName : Predicate {
+            public bool match(Cat cat) {
+                return cat._father._father._firstName.Equals("Edwin")
+                    || cat._father._firstName.Equals("Edwin");
+            }
+        }
 
         public class AddToAge : Predicate {
             public bool match(Cat cat) {
