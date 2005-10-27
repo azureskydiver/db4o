@@ -14,116 +14,168 @@ queries simply use the semantics of your programming language, they are ._
 perfectly standardized and a safe choice for the future.
 
 When this tutorial was written neither .NET 2.0 nor JDK 5 were the ._
-installed base for browsers, so we could not provide running samples ._
-with the most modern syntax yet.
+installed base for browsers, so we could not yet provide samples for ._
+execution in the tutorial console.
 
-Native queries are available for all platforms where db4o is available, ._
-for earlier language versions they are just slightly more verbose.
+However native queries are available for all platforms where db4o is ._
+available, for earlier language versions they are just slightly more verbose.
 
+.1 Concept ..
 
+The concept of native queries is taken from the following two papers:
 
-.1 Native Query Example ..
+.l http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper ..l
+.l http://www.cs.utexas.edu/users/wcook/papers/SafeQuery/SafeQueryFinal.pdf Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries ..l
 
-Again we need some database content to work with.
+A short abstract summary of the principle:
+Native queries try to use the simplest syntax possible in the respective ._
+programming language to run one or more lines of code against all instances ._
+of a class, with hardly and restrictions on the syntax allowed in the native ._
+query expression. A boolean return value is used to specify, whether or not a ._
+specific instance is part of the resultset. The ._
+database engine will attempt to optimize the native query code, to run ._
+it against indexes and without instantiating actual objects, where this is ._
+possible.
+
+.1 Simple Example ..
+From very abstract to very concrete, let's look at how a very simple query ._
+will look like in some of the programming languages and dialects that db4o ._
+supports:
+
+.b C# .NET 2.0 ..
+.c IList <Pilot> pilots = db.Query <Pilot> (delegate(Pilot pilot) {
+    return pilot.Points == 100;
+}); ..c 
+
+.b Java JDK 5 ..
+.c List <Pilot> pilots = db.query(new Predicate<Pilot>() {
+    public boolean match(Pilot pilot) {
+        return pilot.getPoints() == 100;
+    }
+}); ..c
+
+.b Java JDK 1.2 to 1.4 ..
+.c List pilots = db.query(new Predicate() {
+    public boolean match(Pilot pilot) {
+        return pilot.getPoints() == 100;
+    }
+}); ..c
+
+.b Java JDK 1.1 ..
+.c ObjectSet pilots = db.query(new PilotHundredPoints());
+
+public static class PilotHundredPoints extends Predicate {
+    public boolean match(Pilot pilot) {
+        return pilot.getPoints() == 100;
+    }
+} ..c
+
+.b C# .NET 1.1 ..
+.c IList pilots = db.Query(new PilotHundredPoints());
+
+public class PilotHundredPoints extends Predicate {
+    public boolean Match(Pilot pilot) {
+        return pilot.Points == 100;
+    }
+} ..c
+
+A side note on the above syntax:
+Native queries for all language dialects where generics are ._
+not available work by convention. A class that extends the ._
+Predicate class is expected to have a #match() / #Match() method ._
+that has one parameter to describe the class extent and ._
+returns a boolean variable.
+
+Clearly, native queries look a lot nicer with the most modern ._
+syntax. For very simple queries against single fields you may ._
+find the  .l Query SODA Query API ..  more convenient.
+
+Don't forget the features of your IDE to produce the frame of ._
+a native query code with very little typing: You can use code ._
+templates with auto-completion.
+
+As soon as queries become more complex, the advantages ._
+of simply being able use getters, properties, navigation and ._
+method calls in a typsafe and compile-time checked way from ._
+within a query become obvious. Let's take a look:
+
+.1 Advanced Example ..
+Let's compare to a SODA query with some degree of complexity. ._
+If we add some content to the database, we can execute ._
+that one:
 
 .s com.db4o.f1.chapter1.NQExample#storePilots -out ..
 
-Now assume we wanted to find all pilots with a given name or a score within a ._
-given range. This cannot be expressed with QBE, with the query API this ._
-might look like this, if no builder pattern is applied:
+To find all pilots with a given name or a score within a ._
+given range the SODA query will look like this:
 
 .s com.db4o.f1.chapter1.NQExample#retrieveComplexSODA ..
 
-This version probably looks a bit more familiar, furthermore it's typesafe ._
-and fully accessible to autocompletion, refactoring and other IDE features:
+Here is how the same query will look like with native queries, ._
+fully accessible to autocompletion, refactoring and other IDE ._
+features, fully checked at compile time:
 
-.? net .s com.db4o.f1.chapter1.ComplexQuery ..s ..?
+.b C# .NET 2.0 ..
+.c IList <Pilot> result = db.Query<Pilot> (delegate(Pilot pilot) {
+    return pilot.Points > 99
+        && pilot.Points < 199
+        || pilot.Name == "Rubens Barrichello";
+}); ..c 
 
-.s com.db4o.f1.chapter1.NQExample#retrieveComplexNQ ..
-
-.? net With .NET 2.0, this becomes much more compact with an anonymous delegate:
-.c
-IList<Pilot> result=db.Query<Pilot>(delegate(Pilot pilot) {
-		return pilot.Points>99
-	    		&& pilot.Points<199
-	        ||pilot.Name=="Rubens Barrichello";
-	});
-..c ..?
-
-.? java With JDK 5 generics, we also get increased type safety. 
-.c
-        List<Pilot> result=db.query(new Predicate<Pilot>() {
-        	public boolean match(Pilot pilot) {
-        		return pilot.getPoints()>99
-        			&& pilot.getPoints()<199
-        			||pilot.getName().equals("Rubens Barrichello");
-			}
-        });
-..c ..?
-
-For pre JDK5/.NET2.0 environments without generics, native queries work ._
-by convention: db4o expects a Predicate object to provide a method with ._
-the name 'match()' and a single parameter with the type of the requested ._
-class extent.
+.b Java JDK 5 ..
+.c List <Pilot> result = db.query(new Predicate<Pilot>() {
+    public boolean match(Pilot pilot) {
+        return pilot.getPoints() > 99
+            && pilot.getPoints() < 199
+            || pilot.getName().equals("Rubens Barrichello");
+   }
+}); ..c
 
 .1 Arbitrary Code ..
-
-Basically that's all there is to know about native queries: They are just ._
-plain old language constructs, applied as collection filters. In principle ._
-you can run almost arbitrary code as native queries, you just have to be ._
+Basically that's all there is to know about native queries to be able ._
+to use them efficiently. In principle ._
+you can run arbitrary code as native queries, you just have to be ._
 very careful with side effects - especially those that might affect ._
 persistent objects.
 
 Let's run an example that involves some more of the language features ._
 available.
-
 .? net .s com.db4o.f1.chapter1.ArbitraryQuery ..s ..?
-
-.s com.db4o.f1.chapter1.NQExample#retrieveArbitraryCodeNQ ..
+.? java .s com.db4o.f1.chapter1.NQExample#retrieveArbitraryCodeNQ ..s ..?
 
 .1 Native Query Performance ..
-
-The new freedom we've won comes with a drawback, of course: Performance. ._
-Native queries require each candidate object to be instantiated, and ._
-they cannot take advantage of any field indices you may have created. ._
-
-To overcome this issue, db4o can optionally analyze the bytecode of your ._
-predicate classes and try to convert it to SODA style queries under the ._
-hood. This feature is still under development.
-
-With the current implementation, our first example will be run optimized, ._
-the second cannot be optimized, yet - we're working on it.
-
+If this all sounds to good to be true, we have to point out one ._
+drawback: Under the hood db4o tries to analyze native queries to ._
+convert them to SODA. This is not possible for all queries. ._
+For some queries it is very difficult to analyze the flowgraph. ._
+The development of the native query optimization processor will ._
+be an ongoing process in a close dialog with the db4o community. ._
+Feel free to contribute your results and your needs by providing ._
+feedback to our .l http://forums.db4o.com/ db4o forums .. .
 .? java The current state of the query optimization process is detailed ._
-in a  .l NQOptimization separate chapter ..l .
-..?
-
-.1 Native Query Concepts ..
-
-If you'd like to learn more about native query concepts and our motivation ._
-to implement them, please refer to these papers:
-
-.l http://www.cs.utexas.edu/users/wcook/papers/SafeQuery/SafeQueryFinal.pdf Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries ..l
-.l http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper ..l
+in a  .l NQOptimization separate chapter ..l . ..?
+With the current implementation, our first example above will run ._
+optimized, the second cannot be optimized yet - we are working on it.
 
 .1 Conclusion ..
+Now you have been provided with three alternative approaches to query ._
+db4o databases: Query-By-Example, SODA, Native Queries.	
 
-That's all very impressive, but now there's three alternative approaches to ._
-querying with db4o. Which one to choose? Just a few hints:
-
-- Native queries are going to become the primary querying API for db4o, so they ._
-should be preferred in the long run.
-- The SODA query API should be chosen when there's an indication that it might ._
-enhance performance over native queries, or if one wants to pose ('un-object-oriented') ._
-queries that cannot be expressed with NQ, like private member access or traversing ._
-object associations in the opposite direction.
-- QBE is cute, but restricted. If you like this approach, use it as long as it suits ._
-your application's needs.
+Which one is the best to use? Some hints:
+- Native queries are targetted to be the primary interface for db4o, so they ._
+should be preferred.
+- With the current state of the native query optimizer there may be queries ._
+that will execute faster in SODA style, so it can be used to tune applications. ._
+SODA can also be more convenient for constructing dynamic queries at runtime.
+- Query-By-Example is nice for simple one-liners, but restricted in ._
+functionality. If you like this approach, use it as long as it suits your ._
+application's needs.
 
 Of course you can mix these strategies as needed.
 
 We have finished our walkthrough and seen the various ways db4o provides ._
-to pose queries. But our domain model is not complex at all, consisting of one class only. Let's have ._
+to pose queries. But our domain model is not complex at all, consisting of ._
+one class only. Let's have ._
 a look at the way db4o handles object associations in the  .l Structured next chapter ..l . For the ._
 time being, turning to the SODA query API again.
 
