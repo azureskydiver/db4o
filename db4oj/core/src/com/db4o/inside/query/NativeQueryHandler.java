@@ -48,7 +48,7 @@ public class NativeQueryHandler {
 				return q;
 			}
 		} catch (Exception exc) {
-			exc.printStackTrace();
+			//exc.printStackTrace();
 		}
 		q.constrain(new PredicateEvaluation(predicate));
 		notifyListeners(predicate,NativeQueryHandler.UNOPTIMIZED);

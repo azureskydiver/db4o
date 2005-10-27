@@ -69,13 +69,12 @@ public class TestCatConsistency {
 //        }, new String[]{"Achat", "Acrobat"});
 
         
-        // NPE
-        
-//        expect(new Predicate(){
-//            public boolean match(Cat cat){
-//                return cat._age + 1 == 2;
-//            }
-//        }, new String[]{"Occam", "Vahiné" });
+        // will be run unoptimized (arithmetics on candidate member)        
+        expect(new Predicate(){
+            public boolean match(Cat cat){
+                return cat._age + 1 == 2;
+            }
+        }, new String[]{"Occam", "Vahiné" });
 
         
         expect(new Predicate(){
@@ -86,31 +85,28 @@ public class TestCatConsistency {
         }, new String[]{"Occam"});
         
         
-        // ClassCastException
-        
-//        expect(new Predicate(){
-//            public boolean match(Cat cat){
-//                return cat.getFullName().equals("Achat Leo Lenis");
-//            }
-//        }, new String[]{"Achat"});
+        // will be run unoptimized (non-getter method call: getFullName)        
+        expect(new Predicate(){
+            public boolean match(Cat cat){
+                return cat.getFullName().equals("Achat Leo Lenis");
+            }
+        }, new String[]{"Achat"});
 
 
-        // NPE
-        
-//        expect(new Predicate(){
-//            public boolean match(Cat cat){
-//                return cat.getFullName() == null;
-//            }
-//        }, new String[]{"Trulla"});
+        // will be run unoptimized (non-getter method call: getFullName)        
+        expect(new Predicate(){
+            public boolean match(Cat cat){
+                return cat.getFullName() == null;
+            }
+        }, new String[]{});
         
 
-        // ClassCastException
-        
-//        expect(new Predicate(){
-//            public boolean match(Cat cat){
-//                return cat._firstName.startsWith("A");
-//            }
-//        }, new String[]{"Achat", "Acrobat"});
+        // will be run unoptimized (non-getter method call: startsWith)        
+        expect(new Predicate(){
+            public boolean match(Cat cat){
+                return cat._firstName.startsWith("A");
+            }
+        }, new String[]{"Achat", "Acrobat"});
         
     }
     
