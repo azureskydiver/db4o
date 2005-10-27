@@ -30,7 +30,7 @@ The concept of native queries is taken from the following two papers:
 A short abstract summary of the principle:
 Native queries try to use the simplest syntax possible in the respective ._
 programming language to run one or more lines of code against all instances ._
-of a class, with hardly and restrictions on the syntax allowed in the native ._
+of a class, with hardly any restrictions on the syntax allowed in the native ._
 query expression. A boolean return value is used to specify, whether or not a ._
 specific instance is part of the resultset. The ._
 database engine will attempt to optimize the native query code, to run ._
