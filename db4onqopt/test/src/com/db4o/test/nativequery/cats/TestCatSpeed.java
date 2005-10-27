@@ -3,12 +3,10 @@
 package com.db4o.test.nativequery.cats;
 
 import java.io.*;
-import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
-import com.db4o.test.*;
 
 
 public class TestCatSpeed {
