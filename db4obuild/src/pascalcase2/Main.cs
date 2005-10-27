@@ -53,17 +53,11 @@ namespace HelloWorld
 		
 		string _srcDir;
 		string _targetDir;
-		PreProcessor _pp;
 		
 		public Program(string[] args)
 		{
 			_srcDir = args[0];
 			_targetDir = args[1];
-			_pp = new PreProcessor();
-			for (int i=2; i<args.Length; ++i)
-			{
-			     _pp.Define(args[i]);
-			}
 		}
 		
 		public void Run()
@@ -78,21 +72,8 @@ namespace HelloWorld
 				string targetFile = Path.Combine(_targetDir, fname.Substring(_srcDir.Length + 1));
 				Console.Write(".");
 				Directory.CreateDirectory(Path.GetDirectoryName(targetFile));
-				WriteFile(targetFile, ConvertFile(PreProcessFile(fname)));
+				WriteFile(targetFile, ConvertFile(fname));
 			}
-		}
-		
-		string PreProcessFile(string fname)
-		{
-			string targetFile = Path.Combine(Path.GetTempPath(), Path.GetFileName(fname));
-			using (StreamReader reader = File.OpenText(fname))
-			{
-				using (StreamWriter writer = new StreamWriter(targetFile))
-				{
-					_pp.Process(reader, writer);
-				}
-			}
-			return targetFile;
 		}
 		
 		static string ConvertFile(string fname)
