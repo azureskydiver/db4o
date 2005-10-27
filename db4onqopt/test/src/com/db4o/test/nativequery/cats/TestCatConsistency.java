@@ -98,7 +98,7 @@ public class TestCatConsistency {
             public boolean match(Cat cat){
                 return cat.getFullName() == null;
             }
-        }, new String[]{});
+        }, new String[]{"Trulla"});
         
 
         // will be run unoptimized (non-getter method call: startsWith)        
@@ -157,6 +157,7 @@ public class TestCatConsistency {
         
         Cat trulla = new Cat();
         trulla._firstName = "Trulla";
+        Test.store(trulla);
         
     }
     

@@ -24,11 +24,13 @@ public class Cat extends Animal{
     }
     
     public String getFullName(){
-        return _firstName + " " + _lastName;
+        return _lastName==null ? null : _firstName + " " + _lastName;
         
     }
 
-    
+    public Cat getFather() {
+    	return _father;
+    }
     
 
 }
