@@ -41,7 +41,15 @@ public class TestCatSpeed {
 		},
 		new Predicate() {
             public boolean match(Cat cat){
-                return cat.getFather()!=null&&cat.getFather().getAge() < 5000;
+                return cat.getFather()!=null
+                		&&cat.getFather().getAge() < 5000;
+            }
+		},
+		new Predicate() {
+            public boolean match(Cat cat){
+                return cat.getFather()!=null
+                		&&(cat.getFather().getAge() < 5000 
+                			|| cat.getFather().getFirstName().equals("SpeedyClone7500"));
             }
 		},
 	};
