@@ -64,8 +64,8 @@ will start Object Manager.
 The API documentation for db4o is supplied as a set of HTML pages in 
 /usr/share/doc/packages/db4o/api/index.html. While you read through this ._
 tutorial, it may be helpful to look into the API documentation occasionaly. ._
-For the start, the namespaces com.db4o and com.db4o.query are ._
-all that you need to worry about.
+For starters, the namespaces com.db4o and com.db4o.query are ._
+all that you need to worry about. The other namespaces are not commonly used.
 
 Let's take a first brief look at one of the most important interfaces:
 .c com.db4o.ObjectContainer ..
@@ -83,8 +83,8 @@ here is why: The db4o interface is supplied in two steps in two namespaces, ._
 com.db4o and com.db4o.ext for the following reasons:
 - It's easier to get started, because the important methods are emphasized.
 - It will be easier for other products to copy the basic db4o interface.
-- We hint how a very-light-version of db4o should look like.
+- It is an example of how a lightweight version of db4o could look.
 
-Every com.db4o.ObjectContainer object also always is a ._
-com.db4o.ext.ExtObjectContainer. You can cast to ExtObjectContainer or you ._
-can call the #ext() method if you want to use advanced features.
+Every com.db4o.ObjectContainer object is also an com.db4o.ext.ExtObjectContainer. ._
+You can cast to ExtObjectContainer or you can use the #ext() method to get to ._
+the advanced features.
