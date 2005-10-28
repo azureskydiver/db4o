@@ -1,6 +1,6 @@
 .n
 .a SODAQueryAPI ..
-.0 SODA Query API ..
+.1 SODA Query API ..
 
 We have already seen how to retrieve objects from db4o via Query By Example. 
 While the QBE approach ._
@@ -73,7 +73,7 @@ the Java primitive/object divide.
 
 .s com.db4o.f1.chapter1.QueryExample#retrievePilotByExactPoints ..
 
-.1 Advanced queries ..
+.2 Advanced queries ..
 
 Now there are occasions when we don't want to query for exact field values, but ._
 rather for value ranges, objects not containing given member values, etc. This functionality ._
@@ -111,12 +111,12 @@ To prepare for the next chapter, let's clear the database.
 
 .s com.db4o.f1.chapter1.QueryExample#clearDatabase ..
 
-.1 Conclusion ..
+.2 Conclusion ..
 
 Now we know how to build arbitrarily complex queries. But maybe there's ._
 even a better choice for most use cases - let's have a look at ._
 .l NativeQueries native queries .. .
 
-.1 Full source ..
+.2 Full source ..
 
 .s com.db4o.f1.chapter1.QueryExample ..
