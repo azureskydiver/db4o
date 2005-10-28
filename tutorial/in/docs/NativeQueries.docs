@@ -1,6 +1,6 @@
 .n
 .a NativeQueries ..
-.0 Native Queries ..
+.1 Native Queries ..
 
 Wouldn't it be nice to pose queries in the programming ._
 language that you are using? Wouldn't it be nice if all querying code was ._
@@ -20,7 +20,7 @@ execution in the tutorial console.
 However native queries are available for all platforms where db4o is ._
 available, for earlier language versions they are just slightly more verbose.
 
-.1 Concept ..
+.2 Concept ..
 
 The concept of native queries is taken from the following two papers:
 
@@ -37,7 +37,7 @@ database engine will attempt to optimize the native query code, to run ._
 it against indexes and without instantiating actual objects, where this is ._
 possible.
 
-.1 Simple Example ..
+.2 Simple Example ..
 From very abstract to very concrete, let's look at how a very simple query ._
 will look like in some of the programming languages and dialects that db4o ._
 supports:
@@ -99,7 +99,7 @@ of simply being able to use getters, properties, navigation and ._
 method calls in a typsafe and compile-time checked way from ._
 within a query become obvious. Let's take a look:
 
-.1 Advanced Example ..
+.2 Advanced Example ..
 Let's compare to a SODA query with some degree of complexity. ._
 If we add some content to the database, we can execute ._
 that one:
@@ -131,7 +131,7 @@ features, fully checked at compile time:
    }
 }); ..c
 
-.1 Arbitrary Code ..
+.2 Arbitrary Code ..
 Basically that's all there is to know about native queries to be able ._
 to use them efficiently. In principle ._
 you can run arbitrary code as native queries, you just have to be ._
@@ -143,7 +143,7 @@ available.
 .? net .s com.db4o.f1.chapter1.ArbitraryQuery ..s ..?
 .? java .s com.db4o.f1.chapter1.NQExample#retrieveArbitraryCodeNQ ..s ..?
 
-.1 Native Query Performance ..
+.2 Native Query Performance ..
 If this all sounds to good to be true, we have to point out one ._
 drawback: Under the hood db4o tries to analyze native queries to ._
 convert them to SODA. This is not possible for all queries. ._
@@ -157,7 +157,7 @@ in a  .l NQOptimization separate chapter ..l . ..?
 With the current implementation, our first example above will run ._
 optimized, the second cannot be optimized yet - we are working on it.
 
-.1 Conclusion ..
+.2 Conclusion ..
 Now you have been provided with three alternative approaches to query ._
 db4o databases: Query-By-Example, SODA, Native Queries.	
 
@@ -179,7 +179,7 @@ one class only. Let's have ._
 a look at the way db4o handles object associations in the  .l Structured next chapter ..l . For the ._
 time being, turning to the SODA query API again.
 
-.1 Full source ..
+.2 Full source ..
 
 .s com.db4o.f1.chapter1.NQExample ..
 
