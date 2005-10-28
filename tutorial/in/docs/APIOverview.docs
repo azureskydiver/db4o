@@ -1,6 +1,6 @@
 .n
 .1 API Overview ..
-Don't forget that you can use the .l #APIDocumentation API documentation .. while we go over this. ._
+Don't forget that you can use the .l APIDocumentation API documentation .. while we go over this. ._
 For starters, the packages com.db4o and com.db4o.query are ._
 all that you need to worry about. The rest are not commonly used.
 
