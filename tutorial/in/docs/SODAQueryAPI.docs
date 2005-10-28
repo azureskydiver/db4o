@@ -29,7 +29,7 @@ We need some pilots in our database again to explore it.
 
 .s com.db4o.f1.chapter1.QueryExample#storeSecondPilot ..
 
-.1 Simple queries ..
+.2 Simple queries ..
 
 First, let's see how our familiar QBE queries are expressed within the query ._
 API. This is done by retrieving a 'fresh' Query object from the ObjectContainer ._
