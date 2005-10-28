@@ -8,26 +8,29 @@ primitive and String members. In our example this will be a Formula One (F1) pil
 whose attributes are his name and the F1 points he has already gained this ._
 season.
 
-First we create a native class such as:
+First we create a class to hold our data. It looks like this:
 
 .s com.db4o.f1.chapter1.Pilot ..
 
-Note that this class does not contain any db4o related code.
+Notice that this class does not contain any db4o-related code.
 
-.1 Storing objects ..
+.1 Opening the database ..
 
 To access a db4o database file or create a new one, call Db4o.openFile(), ._
 providing the path to your file as the parameter, to obtain an ObjectContainer ._
-instance. ObjectContainer will be your primary interface to db4o. Closing the ._
-container will release all resources associated with it.
+instance. ObjectContainer represents "The Database", and will be your primary ._
+interface to db4o. Closing the container with the #.close() method will cose the ._
+database file and release all resources associated with it.
 
 .s com.db4o.f1.chapter1.FirstStepsExample#accessDb4o -run ..
 
 For the following examples we will assume that our environment takes care ._
 of opening and closing the ObjectContainer automagically. 
 
+.1 Storing objects ..
+
 To store an object, we simply call set() on our database, passing ._
-the object as a parameter.
+any object as a parameter.
 
 .s com.db4o.f1.chapter1.FirstStepsExample#storeFirstPilot ..
 
@@ -37,10 +40,10 @@ We'll need a second pilot, too.
 
 .1 Retrieving objects ..
 
-To query the database for our pilot, we shall use .i  Query by Example .. ._
+To query the database for our pilots, we shall use .i  Query by Example .. ._
 (QBE) for now. This means we will create a prototypical object for db4o ._
 to use as an example. db4o will retrieve all objects of the given type that contain ._
-the same (non-default) field values as the candidate. The result will be handed ._
+the same (non-default) field values as the candidate. The results will be returned ._
 as an ObjectSet instance. We will use a convenience method 'listResult', ._
 inherited by all our main example classes, to display a result's content and reset it for further use:
 
