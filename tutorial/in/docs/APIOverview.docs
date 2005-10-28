@@ -4,19 +4,19 @@ Don't forget that you can use the .l APIDocumentation API documentation .. while
 For starters, the packages com.db4o and com.db4o.query are ._
 all that you need to worry about. The rest are not commonly used.
 
-.2 The com.db4o .? java package .. .? net namespace .. .? mono namespace .. ..
+.2 The com.db4o  .? java package ..? .? net namespace ..? .? mono namespace ..?  ..
 
-The com.db4o .? java package .. .? net namespace .. .? mono namespace .. ._
+The com.db4o  .? java package ..?  .? net namespace ..?  .? mono namespace ..?  ._
 contains almost all of the functionality you will commonly ._
-need when using db4o. Two objects of note are .c com.db4o.Db4o .. , and the ._
-.c com.db4o.ObjectContainer .. interface.
+need when using db4o. Two objects of note are com.db4o.Db4o, and the ._
+com.db4o.ObjectContainer interface.
 
-The .c com.db4o.Db4o .. factory object is your starting point. Static methods on this object ._
+The com.db4o.Db4o factory object is your starting point. Static methods on this object ._
 allow you to open a database file, start a server, or connect to an existing server. ._
 It also lets you configure the db4o environment before opening a database.
 
 The most important interface, and the one that you will be using 99% of the time is 
-.c com.db4o.ObjectContainer .. : This is your db4o database.
+com.db4o.ObjectContainer: This is your db4o database.
 - An ObjectContainer can either be a database in single-user mode or ._
 a client connection to a db4o server.
 - Every ObjectContainer owns one transaction. All work is transactional. ._
@@ -26,30 +26,30 @@ commit() or rollback(), the next transaction is started immediately.
 instantiated objects. In doing so, it manages object identities, and ._
 is able to achieve a high level of performance.
 
-.2 The com.db4o.ext .? java package .. .? net namespace .. .? mono namespace .. ..
+.2 The com.db4o.ext  .? java package ..?  .? net namespace ..?  .? mono namespace ..?  ..
 
 In case you wonder why you only see very few methods in an ObjectContainer, ._
-here is why: The db4o interface is supplied in two steps in two .? java packages .. ._
-.? net namespaces .. .? mono namespaces .. , .c com.db4o .. and .c com.db4o.ext .. ._
+here is why: The db4o interface is supplied in two steps in two  .? java packages ..?  ._
+.? net namespaces ..?  .? mono namespaces ..? , com.db4o and com.db4o.ext ._
 for the following reasons:
 - It's easier to get started, because the important methods are emphasized.
 - It will be easier for other products to copy the basic db4o interface.
 - It is an example of how a lightweight version of db4o could look.
 
-Every .c com.db4o.ObjectContainer .. object is also an .c com.db4o.ext.ExtObjectContainer .. . ._
-You can cast it to .c ExtObjectContainer .. or you can use the .c .ext() .. method to get to ._
+Every com.db4o.ObjectContainer object is also an com.db4o.ext.ExtObjectContainer. ._
+You can cast it to ExtObjectContainer or you can use the .ext() method to get to ._
 the advanced features.
 
-.2 The com.db4o.config .? java package .. .? net namespace .. .? mono namespace .. ..
+.2 The com.db4o.config  .? java package ..  .? net namespace ..  .? mono namespace ..  ..
 
-The .c com.db4o.config .. .? java package .. .? net namespace .. .? mono namespace .. ._
+The com.db4o.config  .? java package ..?  .? net namespace ..?  .? mono namespace ..?  ._
 contains types and classes necessary to configure db4o. The objects and interfaces ._
-within are discussed in the .l Configuration Configuration .. section.
+within are discussed in the  .l Configuration Configuration ..  section.
 
-.2 The com.db4o.query .? java package .. .? net namespace .. .? mono namespace .. ..
+.2 The com.db4o.query  .? java package ..?  .? net namespace ..?  .? mono namespace ..?  ..
 
-The .c com.db4o.query .. .? java package .. .? net namespace .. .? mono namespace .. contains the objects ._
-and interfaces to support the .l SODAQueryAPI Query API .. . These API members are not ._
-the preferred method of performing db4o queries. We suggest you use ._
-.l NativeQueries Native Queries .. instead. This API is included here for backwards ._
+The com.db4o.query  .? java package ..?  .? net namespace ..?  .? mono namespace ..?  contains the objects ._
+and interfaces to support the  .l SODAQueryAPI Query API .. . These API members are not ._
+the preferred method of performing db4o queries. We suggest you use  ._
+.l NativeQueries Native Queries ..  instead. This API is included here for backwards ._
 compatibility and there is no plan to remove it at this time.
