@@ -8,10 +8,9 @@ with db4o and to be a reliable companion while you develop with db4o. ._
 Before you start, please make sure that you have downloaded the latest ._
 db4o distribution from the  .l http://www.db4o.com db4objects website .. .
 
-You are invited to join the db4o community in the public db4o forums at  ._
-. http://forums.db4o.com/ .. ._
-and to ask for help at any time. You may also find the ._
-.l http://www.db4o.com/community/ontheroad/solutionlibrary/ db4o knowledgebase .. ._
+You are invited to join the db4o community in the public ._
+.l http://forums.db4o.com/ db4o forums .. to ask for help at any time. You may also ._
+find the .l http://www.db4o.com/community/ontheroad/solutionlibrary/ db4o knowledgebase .. ._
 helpful for keyword searches.
 
 .? mono The db4o Mono distribution is available from the  .l http://www.db4o.com/community/ontheroad/downloadcenter/ db4o download center ..  in 3 versions: ._
@@ -40,15 +39,10 @@ execution capabilities.
 
 .b /usr/share/doc/packages/db4o/tutorial/db4o-5.x-tutorial.pdf .. 
 The PDF version of the tutorial allows best fulltext ._
-search capabilities. 
+search capabilities. ..?
 
-.b Java, .NET and Mono ..
-db4o is available for Java, for .NET and for Mono. This tutorial was ._
-written for Mono. The structure of the other distributions may be ._
-considerably different, so please use the tutorial for the version that ._
-you plan to experiment with first. ..? .? java The db4o Java distribution comes ._
-as one zip file, db4o-5.0-java.zip. When ._
-you unzip this file, you get the following directory structure:
+.? java The db4o Java distribution comes as one zip file, db4o-5.0-java.zip. ._
+When you unzip this file, you get the following directory structure:
 
 .g directoryjava.gif ..
 
@@ -66,14 +60,9 @@ run.
 
 .b db4o-5.0/doc/tutorial/db4o-5.0-tutorial.pdf .. 
 The PDF version of the tutorial allows best fulltext ._
-search capabilities. 
+search capabilities. ..? 
 
-.b Java, .NET and Mono ..
-db4o is available for Java, for .NET and for Mono. This tutorial was ._
-written for Java. The structure of the other distributions may be ._
-considerably different, so please use the tutorial for the version that ._
-you plan to experiment with first. ..? .? net The db4o .NET distribution ._
-comes as one MSI installer file, ._
+.? net The db4o .NET distribution comes as one MSI installer file, ._
 db4o-5.0-net.msi. After you run the installer, you get the following directory ._
 structure:
 
@@ -89,10 +78,10 @@ be run "live" against a db4o database from within the application.
 
 .b db4o-5.0/doc/tutorial/db4o-5.0-tutorial.pdf .. 
 The PDF version of the tutorial allows best fulltext ._
-search capabilities.
+search capabilities. ..?
 
 .b Java, .NET and Mono ..
 db4o is available for Java, for .NET and for Mono. This tutorial was ._
-written for .NET. The structure of the other distributions may be ._
-considerably different, so please use the tutorial for the version that ._
-you plan to experiment with first. ..?
+written for .? java Java .. .? net .NET .. .? mono Mono .. . The structure of the ._
+other distributions may be considerably different, so please use the tutorial for ._
+the version that you plan to experiment with first. 
