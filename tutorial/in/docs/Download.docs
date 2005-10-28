@@ -3,11 +3,9 @@
 
 .b Java, .NET and Mono ..
 db4o is available for Java, for .NET and for Mono. This tutorial was ._
-written for .? java Java .. .? net .NET .. .? mono Mono .. . The structure of the ._
+written for  .? java Java ..?  .? net .NET ..?  .? mono Mono ..? . The structure of the ._
 other distributions may be considerably different, so please use the tutorial for ._
 the version that you plan to experiment with first. 
-
-.1 Contents ..
 
 .e DownloadContents ..
 
@@ -16,7 +14,7 @@ the version that you plan to experiment with first.
 
 You can use the Object Manager GUI to browse and query the contents of any ._
 db4o database file. The Object Manager is downloaded seperately from each of ._
-the main distributions. Please visit the .l http://www.db4o.com/community/ontheroad/downloadcenter/ db4o Download Center .. ._
+the main distributions. Please visit the  .l http://www.db4o.com/community/ontheroad/downloadcenter/ db4o Download Center ..  ._
 and choose the installation appropriate for your system. The following distributions ._
 are currently available:
 - db4o ObjectManager for Windows IKVM (Java VM included)
