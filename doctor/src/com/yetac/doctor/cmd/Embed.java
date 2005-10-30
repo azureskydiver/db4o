@@ -21,7 +21,7 @@ public class Embed extends Command{
         }
     }
     
-    private DocsFile embeddedDocsFile(){
+    protected DocsFile embeddedDocsFile(){
         String fileName = new String(parameter) + "." + Configuration.FILE_EXTENSION;
         DocsFile docsFile = (DocsFile)source.files.filesByName.get(fileName);
         if(docsFile != null){

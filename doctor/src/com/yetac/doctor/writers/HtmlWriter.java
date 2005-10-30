@@ -23,8 +23,10 @@ import com.yetac.doctor.workers.DocsFile;
 import com.yetac.doctor.workers.Files;
 
 public class HtmlWriter extends AbstractWriter {
+    
     private RandomAccessFile outline;
     private RandomAccessFile current;
+    private DocsFile currentOutlineTarget;
     
     private Stack            embedInto;
     
@@ -120,8 +122,9 @@ public class HtmlWriter extends AbstractWriter {
     public void beginEmbedded(DocsFile source) throws Exception{
         String path = outputPath(source.title) ;
         new File(path).delete();
-        embedInto.push(new HtmlWriterStackEntry(current, outlineLevel));
+        embedInto.push(new HtmlWriterStackEntry(currentOutlineTarget, current, outlineLevel));
         current = new RandomAccessFile(path, "rw");
+        currentOutlineTarget = source;
         writeToFile(preHeader, 0, preHeader.length - 1);
         if(preDiv != null){
             writeToFile(preDiv, 0, preDiv.length - 1);
@@ -151,6 +154,7 @@ public class HtmlWriter extends AbstractWriter {
         endCurrent();
         HtmlWriterStackEntry parent = (HtmlWriterStackEntry)embedInto.pop();
         current = parent.raf;
+        currentOutlineTarget = parent.outlineTarget;
         while (outlineLevel < parent.outlineLevel) {
             writeToFile("<ul>\r\n");
             outline.writeBytes("<ul>\r\n");
@@ -172,6 +176,7 @@ public class HtmlWriter extends AbstractWriter {
         String path = outputPath(source.title) ;
         new File(path).delete();
         current = new RandomAccessFile(path, "rw");
+        currentOutlineTarget = source;
         writeToFile(preHeader, 0, preHeader.length - 1);
         if(preDiv != null){
             writeToFile(preDiv, 0, preDiv.length - 1);
@@ -208,6 +213,7 @@ public class HtmlWriter extends AbstractWriter {
             write("</body></html>");
             current.close();
             current = null;
+            currentOutlineTarget = null;
         }
     }
 
@@ -380,7 +386,7 @@ public class HtmlWriter extends AbstractWriter {
             raf.writeBytes("<");
             raf.writeBytes(hx);
             raf.writeBytes("><a href=\"");
-            raf.writeBytes(command.source.title);
+            raf.writeBytes(currentOutlineTarget.title);
             raf.writeBytes(".html#");
             raf.writeBytes(anchorName);
             raf.writeBytes("\">");
@@ -392,7 +398,7 @@ public class HtmlWriter extends AbstractWriter {
         }
         
         outline.writeBytes("<li><a href=\"");
-        outline.writeBytes(command.source.title);
+        outline.writeBytes(currentOutlineTarget.title);
         outline.writeBytes(".html#");
         outline.writeBytes(anchorName);
         outline.writeBytes("\">");

@@ -23,7 +23,8 @@ public abstract class Configuration {
 
     public static final Command[]    COMMANDS          = { new Anchor(), new Bold(),
         new Comment(), new Condition(), new Code(), new Embed(), new End(), new Graphic(), 
-        new IgnoreCR(), new Italic(), new Link(), new NewPage(), new OutputConsole(), new Source(), new Variable()    };
+        new IgnoreCR(), new Italic(), new Link(), new NewPage(), new OutputConsole(), 
+        new Quote(), new Source(), new Variable()    };
 
     static {
 
