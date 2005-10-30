@@ -4,13 +4,17 @@ package com.yetac.doctor.writers;
 
 import java.io.*;
 
+import com.yetac.doctor.workers.*;
+
 class HtmlWriterStackEntry {
     
+    DocsFile outlineTarget;
     RandomAccessFile raf;
     int outlineLevel;
     int embedOutLineLevel;
     
-    public HtmlWriterStackEntry(RandomAccessFile raf, int outlineLevel){
+    public HtmlWriterStackEntry(DocsFile outlineTarget, RandomAccessFile raf, int outlineLevel){
+        this.outlineTarget = outlineTarget;
         this.raf = raf;
         this.outlineLevel = outlineLevel;
         embedOutLineLevel = -1;

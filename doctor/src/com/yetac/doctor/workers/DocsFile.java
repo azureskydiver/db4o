@@ -77,7 +77,7 @@ public class DocsFile extends Configuration implements Comparable {
         writer.endEmbedded();
     }
     
-    private void writeCommands(DocsWriter writer) throws Exception{
+    public void writeCommands(DocsWriter writer) throws Exception{
         for (int i = 0; i < commandCount; i++) {
             if(commands[i].writeable()) {
                 commands[i].write(writer);
