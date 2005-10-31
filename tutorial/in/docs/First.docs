@@ -2,11 +2,11 @@
 .a First ..
 .0 First Steps ..
 
-Let us get started as simple as possible. We are going to learn how to store, ._
-retrieve, update and delete instances of a single class that only contains ._
-primitive and String members. In our example this will be a Formula One (F1) pilot ._
-whose attributes are his name and the F1 points he has already gained this ._
-season.
+Before we start explaining the confusing details, let's start with a few simple ._
+examples. We are going to learn how to store, retrieve, update and delete instances ._
+of a single class that only contains primitive and String members. In our example ._
+this will be a Formula One (F1) pilot whose attributes are his name and the F1 points ._
+he has already gained this season.
 
 First we create a class to hold our data. It looks like this:
 
@@ -19,13 +19,14 @@ Notice that this class does not contain any db4o-related code.
 To access a db4o database file or create a new one, call Db4o.openFile(), ._
 providing the path to your file as the parameter, to obtain an ObjectContainer ._
 instance. ObjectContainer represents "The Database", and will be your primary ._
-interface to db4o. Closing the container with the #.close() method will cose the ._
+interface to db4o. Closing the container with the #.close() method will close the ._
 database file and release all resources associated with it.
 
 .s com.db4o.f1.chapter1.FirstStepsExample#accessDb4o -run ..
 
 For the following examples we will assume that our environment takes care ._
-of opening and closing the ObjectContainer automagically. 
+of opening and closing the ObjectContainer automagically, and stores the ._
+reference in a variable named 'db'.
 
 .1 Storing objects ..
 
@@ -40,12 +41,17 @@ We'll need a second pilot, too.
 
 .1 Retrieving objects ..
 
-To query the database for our pilots, we shall use .i  Query by Example .. ._
-(QBE) for now. This means we will create a prototypical object for db4o ._
-to use as an example. db4o will retrieve all objects of the given type that contain ._
-the same (non-default) field values as the candidate. The results will be returned ._
-as an ObjectSet instance. We will use a convenience method 'listResult', ._
-inherited by all our main example classes, to display a result's content and reset it for further use:
+db4o includes a few different query systems. The one used in this brief ._
+introduction is called .i  Query by Example .. (QBE). The other query systems are ._
+.i Native Queries .. (NQ) and the .i SODA Query API .. (SODA). For now, we will ._
+introduce QBE queries, but once you are familiar with storing objects in your ._
+database, we encourage you to read the chapter on .l NativeQueries Native Queries ..
+
+When using QBE, you create a prototypical object for db4o to use as an example of what ._
+you wish to retrieve. db4o will retrieve all objects of the given type that contain the ._
+same (non-default) field values as the example. The results will be returned as an ._
+ObjectSet instance. We will use a convenience method 'listResult' to display the contents ._
+of our results:
 
 .s com.db4o.f1.Util#listResult +{} -run ..
 
@@ -53,29 +59,31 @@ To retrieve all pilots from our database, we provide an 'empty' prototype:
 
 .s com.db4o.f1.chapter1.FirstStepsExample#retrieveAllPilots ..
 
-Note that our results are not constrained to have 0 points, as 0 is the default ._
-value for int fields.
+Note that we specify 0 points, but our results were not constrained to only those Pilots ._
+with 0 points; 0 is the default value for int fields.
 
 To query for a pilot by name:
 
 .s com.db4o.f1.chapter1.FirstStepsExample#retrievePilotByName ..
 
-Let's retrieve a pilot by exact points:
+And to query for Pilots with a specific number of points:
 
 .s com.db4o.f1.chapter1.FirstStepsExample#retrievePilotByExactPoints ..
 
-Of course there's much more to db4o queries. We'll come to that in a moment.
+Of course there's much more to db4o queries. They will be covered in more depth in later chapters.
 
 .1 Updating objects ..
 
-To update an object already stored in db4o, just call set() again after modifying ._
-it.
+Updating objects is just as easy as storing them. In fact, you use the same set() method to update ._
+your objects: just call set() again after modifying any object.
 
 .s com.db4o.f1.chapter1.FirstStepsExample#updatePilot ..
 
-Note that it is necessary that db4o already 'knows' this pilot, else it will ._
-store it as a new object. 'Knowing' an object basically means having it set or ._
-retrieved during the current db4o session. We'll explain this later in more detail.
+Notice that we query for the object first. This is an importaint point. When you call set() to modify a ._
+stored object, if the object is not 'known' (having been previously stored or retrieved durring the current session), ._
+db4o will insert a new object. db4o does this because it does not automatically match up objects to be ._
+stored, with objects previously stored. It assumes you are inserting a second object which happens to have ._
+the same field values.
 
 To make sure you've updated the pilot, please return to any of the retrieval ._
 examples above and run them again.
@@ -92,7 +100,7 @@ Let's delete the other one, too.
 
 Please check the deletion with the retrieval examples above.
 
-Again, the object to be deleted has to be known to db4o. It is not sufficient ._
+As with updating objects, the object to be deleted has to be 'known' to db4o. It is not sufficient ._
 to provide a prototype object with the same field values.
 
 .1 Conclusion ..
