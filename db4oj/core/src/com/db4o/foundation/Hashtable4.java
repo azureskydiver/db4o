@@ -70,6 +70,23 @@ public class Hashtable4 implements Cloneable, DeepClone {
             }
         }
     }
+    
+    public void forEachKeyForIdentity(Visitor4 visitor, Object a_identity){
+        for (int i = 0; i < i_table.length; i++) {
+            HashtableIntEntry hie =i_table[i];
+            while(hie != null){
+                if(hie.i_object == a_identity){
+                    if(hie instanceof HashtableObjectEntry){
+                        visitor.visit( ((HashtableObjectEntry)hie).i_objectKey);
+                    }else{
+                        visitor.visit(new Integer(hie.i_key));    
+                    }
+                }
+                hie = hie.i_next;
+            }
+        }
+    }
+
 
     public Object get(int a_key) {
         HashtableIntEntry ihe = i_table[a_key & i_mask];

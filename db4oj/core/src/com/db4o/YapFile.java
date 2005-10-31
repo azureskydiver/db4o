@@ -551,12 +551,11 @@ public abstract class YapFile extends YapStream {
     void releaseSemaphores(Transaction ta) {
         if (i_semaphores != null) {
             synchronized (i_semaphores) {
-                i_semaphores.forEachKey(new Visitor4() {
-
+                i_semaphores.forEachKeyForIdentity(new Visitor4() {
                     public void visit(Object a_object) {
                         i_semaphores.remove(a_object);
                     }
-                });
+                }, ta);
                 i_semaphores.notifyAll();
             }
         }

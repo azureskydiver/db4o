@@ -376,7 +376,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
             yc.forEachYapField(new Visitor4() {
                 public void visit(Object obj) {
                     YapField yf = (YapField)obj;
-                    if (yf.alive() && a_field.equals(yf.getName())  && !yf.getParentYapClass().isInternal() ) {
+                    if (yf.alive() && a_field.equals(yf.getName())  && yf.getParentYapClass() != null && !yf.getParentYapClass().isInternal() ) {
                         a_visitor.visit(new Object[] {yc, yf});
                     }
                 }
