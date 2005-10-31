@@ -38,4 +38,4 @@ Here is how to add the db4o library to an Eclipse project
 - choose db4o-*.jar in this folder
 - hit OK twice
 
-.e APIOverview ..
+.< APIOverview ..
