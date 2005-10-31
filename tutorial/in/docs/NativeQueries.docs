@@ -3,22 +3,21 @@
 .1 Native Queries ..
 
 Wouldn't it be nice to pose queries in the programming ._
-language that you are using? Wouldn't it be nice if all querying code was ._
-100% typesafe, 100% compile-time checked, 100% refactorable? Wouldn't ._
+language that you are using? Wouldn't it be nice if all your query code was ._
+100% typesafe, 100% compile-time checked and 100% refactorable? Wouldn't ._
 it be nice if the full power of object-orientation could be used ._
-by calling methods from within queries? Enter native queries. 
+by calling methods from within queries? This is exactly what Native Queries are. 
 
-Native queries are the main query interface of db4o and they are the ._
+Native queries are the main query interface to db4o and they are the ._
 recommended way to query databases from your application. Because native ._
 queries simply use the semantics of your programming language, they are ._
 perfectly standardized and a safe choice for the future.
 
-When this tutorial was written neither .NET 2.0 nor JDK 5 were the ._
-installed base for browsers, so we could not yet provide samples for ._
-execution in the tutorial console.
-
-However native queries are available for all platforms where db4o is ._
-available, for earlier language versions they are just slightly more verbose.
+When this tutorial was written, neither .NET 2.0 nor JDK 5 were commonly ._
+installed in browsers, so we can not yet provide runnable samples for ._
+execution in the tutorial console. However, Native Queries are available ._
+for all platforms supported by db4o: for earlier language versions Native ._
+Queries are just slightly more verbose.
 
 .2 Concept ..
 
@@ -27,15 +26,14 @@ The concept of native queries is taken from the following two papers:
 .l http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper ..l
 .l http://www.cs.utexas.edu/users/wcook/papers/SafeQuery/SafeQueryFinal.pdf Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries ..l
 
-A short abstract summary of the principle:
-Native queries try to use the simplest syntax possible in the respective ._
+A short abstract summary of the idea:
+Native Queries try to use the simplest syntax possible in the respective ._
 programming language to run one or more lines of code against all instances ._
 of a class, with hardly any restrictions on the syntax allowed in the native ._
 query expression. A boolean return value is used to specify, whether or not a ._
-specific instance is part of the resultset. The ._
-database engine will attempt to optimize the native query code, to run ._
-it against indexes and without instantiating actual objects, where this is ._
-possible.
+specific instance is part of the result set. The database engine will attempt ._
+to optimize the native query code, to run it against indexes and without ._
+instantiating actual objects, where this is possible.
 
 .2 Simple Example ..
 From very abstract to very concrete, let's look at how a very simple query ._
@@ -73,11 +71,23 @@ public static class PilotHundredPoints extends Predicate {
 .b C# .NET 1.1 ..
 .c IList pilots = db.Query(new PilotHundredPoints());
 
-public class PilotHundredPoints extends Predicate {
+public class PilotHundredPoints : Predicate {
     public boolean Match(Pilot pilot) {
         return pilot.Points == 100;
     }
 } ..c
+
+.b VB .NET 1.1 ..
+.c Dim pilots As IList = db.Query(new PilotHundredPoints())
+
+Public Class PilotHundredPoints Implements Predicate
+	Public Function Match (pilot As Pilot) as Boolean
+		If pilot.Points = 100 Then 
+			Return True 
+		Else 
+			Return False
+	End Function
+End Class ..c
 
 A side note on the above syntax:
 Native queries for all language dialects where generics are ._
