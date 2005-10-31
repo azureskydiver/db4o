@@ -5,8 +5,8 @@
 db4o includes a few different query systems. In the previous chapter, ._
 you were introduced to  .i Query By Example .. (QBE). While this query ._
 method is appropriate users who are still acclimating to storing and ._
-retrieving objects, working on their object model and writing simple ._
-test cases, the  .i Native Query .. (NQ) system will be the one used most often.
+retrieving objects, learning about db4o and writing simple test cases, ._
+the  .i Native Query .. (NQ) system will be the one used most often.
 
 .< QBE ..
 
