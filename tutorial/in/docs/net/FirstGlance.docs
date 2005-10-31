@@ -34,4 +34,4 @@ Here is how to do this with Visual Studio .NET:
 - Choose "Properties"
 - Set "Copy Local" to [True] if it is not already set.
 
-.e APIOverview ..
+.< APIOverview ..
