@@ -7,7 +7,7 @@ written for  .? java Java ..?  .? net .NET ..?  .? mono Mono ..? . The structure
 other distributions may be considerably different, so please use the tutorial for ._
 the version that you plan to experiment with first. 
 
-.e DownloadContents ..
+.< DownloadContents ..
 
 .n
 .1 The db4o Object Manager ..
@@ -49,5 +49,5 @@ directory containing the java binary.  If this is not the case, you will
 need to edit the objectmanager.sh file and specify the full path and file name ._
 of the Java binary on the "export VMEXE" line".  Since the zip archive does ._
 not preserve the executable permissions for objectmanager.sh, you will need
-to `chmod +x objectmanager.sh`.  Once this is complete, running objectmanager.sh ._
+to 'chmod +x objectmanager.sh'.  Once this is complete, running objectmanager.sh ._
 will start Object Manager.
