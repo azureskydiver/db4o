@@ -4,7 +4,7 @@ Doctor supplies the following commands:
 
 .1 Commands
 \.s       \.l source source code file  \..
-\.l      link to an anchor \.l anchor_name Link Text  \..
+\.l      link to an anchor \.l url_or_anchor_name Link Text  \..
 \.a      anchor \.a anchor_name \..
 \.g       \.g graphic_file  \..
 \.?      condition  \.? condition_name condition content  \..
