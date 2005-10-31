@@ -3,18 +3,20 @@
 Doctor supplies the following commands:
 
 .1 Commands
-\.s       .l source source code file ..
-\.l        .l link ..
-\.a      anchor
-\.g       .l graphic graphic file ..
-\.?      condition
+\.s       \.l source source code file  \..
+\.l      link to an anchor \.l anchor_name Link Text  \..
+\.a      anchor \.a anchor_name \..
+\.g       \.g graphic_file  \..
+\.?      condition  \.? condition_name condition content  \..
 \./      comment (invisible in output)
 \._      ignore next carriage return
-\.e      embed other file (use this for structuring of output)
+\.e      embed other file (as link)
+\.<      include the contents of another file
 \.n      new page (ignored in HTML writer)
 \.#      variable (not implemented)
 
 \..      end command ( may refer to it's command(s) e.g.  \..c )
+\        do not escape the next character  \\..
 
 .1 Outlining
 \.0      outline level 0
@@ -26,3 +28,4 @@ Doctor supplies the following commands:
 \.b       .l bold
 \.i       .l italic
 \.o       .l output
+
