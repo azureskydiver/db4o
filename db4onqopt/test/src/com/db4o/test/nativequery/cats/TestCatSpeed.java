@@ -12,45 +12,79 @@ import com.db4o.query.*;
 public class TestCatSpeed {
     
 	private final static String FILENAME="catspeed.yap";
-    private final static int[] COUNT = {10000,100000};
+    private final static int[] COUNT = {1000};
+    // private final static int[] COUNT = {10000,100000};
 	private static final int NUMRUNS = 5;
 	
-	private final static Predicate[] PREDICATES={
-		new Predicate() {
+	private final static SodaCatPredicate[]      PREDICATES={
+		new SodaCatPredicate() {
             public boolean match(Cat cat){
-                return cat.getAge() < 5000;
+                return cat.getAge() < 800;
+            }
+            public void constrain(Query q) {
+                q.descend("_age").constrain(new Integer(800)).smaller();
             }
 		},
-		new Predicate() {
+		new SodaCatPredicate() {
             public boolean match(Cat cat){
-                return cat.getAge() > 2500 && cat.getAge() < 7500;
+                return cat.getAge() > 750 && cat.getAge() < 900;
+            }
+            public void constrain(Query q) {
+                Query qa = q.descend("_age");
+                qa.constrain(new Integer(750)).greater();
+                qa.constrain(new Integer(900)).smaller();
             }
 		},
-		new Predicate() {
+		new SodaCatPredicate() {
             public boolean match(Cat cat){
-                return cat.getFirstName().equals("SpeedyClone5000");
+                return cat.getFirstName().equals("SpeedyClone991");
             }
+            public void constrain(Query q) {
+                q.descend("_firstName").constrain("SpeedyClone991");
+            }
+
 		},
-		new Predicate() {
+		new SodaCatPredicate() {
             public boolean match(Cat cat){
-                return cat.getAge() < 2500 
-                		|| cat.getAge() > 7500
-                		||cat.getFirstName().equals("SpeedyClone5000");
+                return cat.getAge() < 750 
+                		|| cat.getAge() > 900
+                		|| cat.getFirstName().equals("SpeedyClone888");
             }
+            public void constrain(Query q) {
+                Query qa = q.descend("_age");
+                Constraint ca1 = qa.constrain(new Integer(750)).smaller();
+                Constraint ca2 = qa.constrain(new Integer(900)).greater();
+                Constraint cn = q.descend("_firstName").constrain("SpeedyClone888");
+                ca1.or(ca2).or(cn);
+            }
+
 		},
-		new Predicate() {
+		new SodaCatPredicate() {
             public boolean match(Cat cat){
                 return cat.getFather()!=null
-                		&&cat.getFather().getAge() < 5000;
+                	&& cat.getFather().getAge() < 900;
             }
+            public void constrain(Query q) {
+                Query qf = q.descend("_father");
+                qf.constrain(null).not();
+                qf.descend("_age").constrain(new Integer(900)).smaller();
+            }
+
 		},
-		new Predicate() {
+		new SodaCatPredicate() {
             public boolean match(Cat cat){
                 return cat.getFather()!=null
-                		&&(cat.getFather().getAge() < 5000 
-                			|| cat.getFather().getFirstName().equals("SpeedyClone7500"));
+                    &&(cat.getFather().getAge() < 900 
+                    || cat.getFather().getFirstName().equals("SpeedyClone933"));
             }
-		},
+            public void constrain(Query q) {
+                Query qf = q.descend("_father");
+                Constraint c1 = qf.constrain(null).not();
+                Constraint c2 = qf.descend("_age").constrain(new Integer(900)).smaller();
+                Constraint c3 = qf.descend("_firstName").constrain("SpeedyClone933");
+                c2.or(c3);
+            }
+		}
 	};
 
 	public static void main(String[] args) {
@@ -71,15 +105,17 @@ public class TestCatSpeed {
 		for (int predIdx = 0; predIdx < PREDICATES.length; predIdx++) {
 			long timeUnopt = 0;
 			long timeOpt = 0;
+            long timeSoda = 0;
 			for (int run = 0; run <= NUMRUNS; run++) {
 				boolean warmup = (run == 0);
 				timeUnopt += timeQuery(PREDICATES[predIdx], false, warmup);
 				timeOpt += timeQuery(PREDICATES[predIdx], true, warmup);
+                timeSoda += timeSoda(PREDICATES[predIdx], warmup);
 			}
-			System.out.println("PREDICATE #" + (predIdx + 1)+": "+(timeUnopt/NUMRUNS)+" / "+(timeOpt/NUMRUNS));
+			System.out.println("PREDICATE #" + (predIdx + 1)+": "+(timeUnopt/NUMRUNS)+" / "+(timeOpt/NUMRUNS)+" / "+(timeSoda/NUMRUNS));
 		}
 	}
-
+    
 	public static long timeQuery(Predicate predicate, boolean optimize,
 			boolean warmup) {
 		Db4o.configure().optimizeNativeQueries(optimize);
@@ -90,6 +126,15 @@ public class TestCatSpeed {
 		db.close();
 		return time;
 	}
+    
+    public static long timeSoda(SodaCatPredicate predicate, boolean warmup){
+        ObjectContainer db = Db4o.openFile(FILENAME);
+        long start = System.currentTimeMillis();
+        predicate.sodaQuery(db);
+        long time = (warmup ? 0 : System.currentTimeMillis() - start);
+        db.close();
+        return time;
+    }
 	
     public static void storeCats(int count){
     	System.out.println("STORING "+count+" CATS");
