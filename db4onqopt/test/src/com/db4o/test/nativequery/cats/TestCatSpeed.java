@@ -8,11 +8,30 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 
+/*
+
+Starting out
+Tuesday November 1 23:20
+
+STORING 10000 CATS
+PREDICATE #1: 918 / 25 / 12
+PREDICATE #2: 896 / 187 / 18
+PREDICATE #3: 922 / 16 / 3
+PREDICATE #4: 915 / 381 / 275
+PREDICATE #5: 931 / 703 / 15190
+PREDICATE #6: 890 / 846 / 803
+
+What's wrong with #5 Soda ???
+
+
+
+
+*/
 
 public class TestCatSpeed {
     
 	private final static String FILENAME="catspeed.yap";
-    private final static int[] COUNT = {1000};
+    private final static int[] COUNT = {10000};
     // private final static int[] COUNT = {10000,100000};
 	private static final int NUMRUNS = 5;
 	
