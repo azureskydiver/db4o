@@ -13,11 +13,8 @@ recommended way to query databases from your application. Because native ._
 queries simply use the semantics of your programming language, they are ._
 perfectly standardized and a safe choice for the future.
 
-When this tutorial was written, neither .NET 2.0 nor JDK 5 were commonly ._
-installed in browsers, so we can not yet provide runnable samples for ._
-execution in the tutorial console. However, Native Queries are available ._
-for all platforms supported by db4o: for earlier language versions Native ._
-Queries are just slightly more verbose.
+Native Queries are available for all platforms supported by db4o: for earlier ._
+language versions Native Queries are just slightly more verbose.
 
 .2 Concept ..
 
