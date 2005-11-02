@@ -32,8 +32,8 @@ public class TestCatSpeed {
             }
             public void constrain(Query q) {
                 Query qa = q.descend("_age");
-                qa.constrain(new Integer(750)).greater();
-                qa.constrain(new Integer(900)).smaller();
+                qa.constrain(new Integer(750)).greater().and(
+                qa.constrain(new Integer(900)).smaller());
             }
 		},
 		new SodaCatPredicate() {
@@ -197,6 +197,17 @@ PREDICATE #3: 918 / 6 / 0
 PREDICATE #4: 937 / 346 / 256
 PREDICATE #5: 915 / 822 / 750
 PREDICATE #6: 909 / 918 / 819
+
+
+Using ANDed joined constraints to load initial candidates
+Wednesday November 2 14:00
+STORING 10000 CATS
+PREDICATE #1: 906 / 27 / 15
+PREDICATE #2: 900 / 31 / 15
+PREDICATE #3: 906 / 15 / 0
+PREDICATE #4: 965 / 403 / 321
+PREDICATE #5: 868 / 731 / 668
+PREDICATE #6: 881 / 881 / 828
 
 
 

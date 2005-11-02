@@ -24,7 +24,7 @@ public class QxProcessor {
         while(i.hasNext()){
             QCon qCon = (QCon)i.next();
             qCon.setCandidates(candidates);
-            if(! qCon.hasJoins()){
+            if(! qCon.hasOrJoins()){
                 new QxPath(this, null, qCon, 0).buildPaths();
             }
         }
