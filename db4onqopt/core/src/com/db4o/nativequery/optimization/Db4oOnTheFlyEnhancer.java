@@ -17,6 +17,7 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 		try {
 			ClassEditor classEditor=new ClassEditor(null,loader.loadClass(filter.getClass().getName()));
 			Expression expr=new NativeQueryEnhancer().analyze(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME);
+			//System.err.println(expr);
 			new SODAQueryBuilder().optimizeQuery(expr,query,filter);
 		} catch (ClassNotFoundException exc) {
 			throw new RuntimeException(exc.getMessage());

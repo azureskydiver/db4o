@@ -29,6 +29,7 @@ public class BloatUtil {
 			MethodInfo methodInfo=methods[methodIdx];
 			MethodEditor methodEdit = new MethodEditor(classEdit, methodInfo);
 			if (methodEdit.name().equals(methodName)) {
+				// methodEdit.print(System.out);
 				return new FlowGraph(methodEdit);
 			}
 		}

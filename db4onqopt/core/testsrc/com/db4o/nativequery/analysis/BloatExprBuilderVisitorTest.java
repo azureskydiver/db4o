@@ -470,9 +470,8 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	public void testStringIntOr() throws Exception {
 		OrExpression expr = (OrExpression)expression("sampleStringIntOr");
 		assertComparison(expr.left(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,false);
-		AndExpression right=(AndExpression)expr.right();
-		assertComparison(right.left(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,true);
-		assertComparison(right.right(),new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,false);
+		ComparisonExpression right=(ComparisonExpression)expr.right();
+		assertComparison(right,new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleIntStringNotOr(Data data) {
@@ -484,7 +483,19 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison(expr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,true);
 		assertComparison(expr.right(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,true);
 	}
-	
+
+	boolean sampleMixedAndOr(Data data) {
+		return (data.id==42)&&(data.getName().equals("Bar"))||(data.name.equals("Foo"));
+	}
+
+	public void testMixedAndOr() throws Exception {
+		OrExpression expr = (OrExpression)expression("sampleMixedAndOr");
+		assertComparison(expr.left(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,false);
+		AndExpression andExpr=(AndExpression)expr.right();
+		assertComparison(andExpr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,false);
+		assertComparison(andExpr.right(),new String[]{"name"},"Bar",ComparisonOperator.EQUALS,false);
+	}
+
 	// arithmetic
 	
 	boolean sampleSanityIntAdd(Data data) {
@@ -633,7 +644,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 	
 	private Expression expression(String methodName) throws ClassNotFoundException {
-		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(bloatUtil);		
+		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(bloatUtil);	
 		FlowGraph flowGraph=bloatUtil.flowGraph(getClass().getName(),methodName);
 //		flowGraph.visit(new PrintVisitor());
 //		flowGraph.visit(new TreeStructureVisitor());
