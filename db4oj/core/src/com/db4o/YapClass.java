@@ -754,6 +754,13 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         return null;
     }
+    
+    int indexEntryCount(Transaction ta){
+        if (stateOK() && i_index != null) {
+            return i_index.entryCount(ta);
+        }
+        return 0;
+    }
 
     final Tree getIndex(Transaction a_trans) {
         if (hasIndex()) {
