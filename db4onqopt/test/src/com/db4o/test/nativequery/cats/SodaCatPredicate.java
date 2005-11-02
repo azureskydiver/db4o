@@ -8,6 +8,8 @@ import com.db4o.query.*;
 
 public abstract class SodaCatPredicate extends Predicate {
     
+    private int _count;
+    
     public void sodaQuery(ObjectContainer oc){
         Query q = oc.query();
         q.constrain(Cat.class);
@@ -16,6 +18,19 @@ public abstract class SodaCatPredicate extends Predicate {
     }
     
     public abstract void constrain(Query q);
+    
+    public void setCount(int count){
+        _count = count;
+    }
+    
+    public int lower() {
+        return _count / 2 - 1;
+    }
+    
+    public int upper() {
+        return _count / 2 + 1;
+    }
+
     
 
 }
