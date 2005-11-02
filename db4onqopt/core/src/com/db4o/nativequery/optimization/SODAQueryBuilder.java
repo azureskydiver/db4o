@@ -2,7 +2,7 @@ package com.db4o.nativequery.optimization;
 
 import java.lang.reflect.Field;
 
-import com.db4o.Platform4;
+import com.db4o.*;
 import com.db4o.foundation.Iterator4;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
@@ -141,19 +141,26 @@ public class SODAQueryBuilder {
 
 		private Object findValue(FieldValue spec) {
 			Object value=_predicate;
-			try {
-				Iterator4 fieldNames=spec.fieldNames();
-				while(fieldNames.hasNext()) {
-					// FIXME declared is not enough
-					Field field=value.getClass().getDeclaredField((String)fieldNames.next());
-					Platform4.setAccessible(field);
-					value=field.get(value);
-				}
-				return value;
-			} catch (Exception exc) {
-				exc.printStackTrace();
-				return null;
+			Iterator4 fieldNames=spec.fieldNames();
+			while(fieldNames.hasNext()) {
+                String fieldName = (String)fieldNames.next();
+                Class clazz = value.getClass();
+                while(clazz != null){
+                    try{
+                        Field field=clazz.getDeclaredField(fieldName);
+                        Platform4.setAccessible(field);
+                        value=field.get(value);
+                        return value;
+                    }catch(Exception e){
+                        // e.printStackTrace();
+                    }
+                    clazz = clazz.getSuperclass();
+                    if(clazz == YapConst.CLASS_OBJECT){
+                        return null;
+                    }
+                }
 			}
+			return value;
 		}
 
 		public void visit(NotExpression expression) {

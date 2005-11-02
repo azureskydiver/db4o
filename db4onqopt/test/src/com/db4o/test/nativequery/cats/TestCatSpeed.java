@@ -4,6 +4,8 @@ package com.db4o.test.nativequery.cats;
 
 import java.io.*;
 
+import javax.naming.*;
+
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
@@ -15,8 +17,11 @@ public class TestCatSpeed {
     // private final static int[] COUNT = {10000,100000};
 	private static final int NUMRUNS = 5;
     
-    private static final int ONLY_RUN = -1;
-	
+    private static final int ONLY_RUN_PREDICATE_NR = -1;
+    private  static final boolean NQ_NOPT = true;
+    private  static final boolean NQ_OPT = true;
+    private  static final boolean SODA = true;
+    
 	private final static SodaCatPredicate[]      PREDICATES={
 		new SodaCatPredicate() {
             public boolean match(Cat cat){
@@ -26,16 +31,16 @@ public class TestCatSpeed {
                 q.descend("_age").constrain(new Integer(800)).smaller();
             }
 		},
-		new SodaCatPredicate() {
+        new SodaCatPredicate() {
             public boolean match(Cat cat){
-                return cat.getAge() > 750 && cat.getAge() < 900;
+                return cat.getAge() > lower() && cat.getAge() < upper();
             }
             public void constrain(Query q) {
                 Query qa = q.descend("_age");
-                qa.constrain(new Integer(750)).greater().and(
-                qa.constrain(new Integer(900)).smaller());
+                qa.constrain(new Integer(lower())).greater().and(
+                qa.constrain(new Integer(upper())).smaller());
             }
-		},
+        },
 		new SodaCatPredicate() {
             public boolean match(Cat cat){
                 return cat.getFirstName().equals("SpeedyClone991");
@@ -98,8 +103,11 @@ public class TestCatSpeed {
 		objectClass.objectField("_mother").indexed(true);
     	for(int countIdx=0;countIdx<COUNT.length;countIdx++) {
     		storeCats(COUNT[countIdx]);
-            if(ONLY_RUN > 0){
-                queryCats(ONLY_RUN - 1);
+            for (int predIdx = 0; predIdx < PREDICATES.length; predIdx++) {
+                PREDICATES[predIdx].setCount(COUNT[countIdx]);
+            }
+            if(ONLY_RUN_PREDICATE_NR > 0){
+                queryCats(ONLY_RUN_PREDICATE_NR - 1);
             }else{
                 queryCats();
             }
@@ -118,9 +126,15 @@ public class TestCatSpeed {
         long timeSoda = 0;
         for (int run = 0; run <= NUMRUNS; run++) {
             boolean warmup = (run == 0);
-            timeUnopt += timeQuery(PREDICATES[predIdx], false, warmup);
-            timeOpt += timeQuery(PREDICATES[predIdx], true, warmup);
-            timeSoda += timeSoda(PREDICATES[predIdx], warmup);
+            if(NQ_NOPT){
+                timeUnopt += timeQuery(PREDICATES[predIdx], false, warmup);
+            }
+            if(NQ_OPT){
+                timeOpt += timeQuery(PREDICATES[predIdx], true, warmup);
+            }
+            if(SODA){
+                timeSoda += timeSoda(PREDICATES[predIdx], warmup);
+            }
         }
         System.out.println("PREDICATE #" + (predIdx + 1)+": "+(timeUnopt/NUMRUNS)+" / "+(timeOpt/NUMRUNS)+" / "+(timeSoda/NUMRUNS));
     }
@@ -173,8 +187,8 @@ public class TestCatSpeed {
 Tuning history:
 
 
-Starting out on 5.0.008
 Tuesday November 1 23:20
+Starting out on 5.0.008
 
 STORING 10000 CATS
 PREDICATE #1: 918 / 25 / 12
@@ -186,9 +200,8 @@ PREDICATE #6: 890 / 846 / 803
 
 What's wrong with #5 Soda ???
 
-
-Introduced a limit where index traversal should stop.
 Wednesday November 2 1:50
+Introduced a limit where index traversal should stop.
 
 STORING 10000 CATS
 PREDICATE #1: 918 / 25 / 15
@@ -199,8 +212,9 @@ PREDICATE #5: 915 / 822 / 750
 PREDICATE #6: 909 / 918 / 819
 
 
-Using ANDed joined constraints to load initial candidates
 Wednesday November 2 14:00
+Using ANDed joined constraints to load initial candidates
+
 STORING 10000 CATS
 PREDICATE #1: 906 / 27 / 15
 PREDICATE #2: 900 / 31 / 15
@@ -210,6 +224,16 @@ PREDICATE #5: 868 / 731 / 668
 PREDICATE #6: 881 / 881 / 828
 
 
+Wednesday November 2 15:00
+Modified #2 to show the deficiency on ranges
+
+STORING 10000 CATS
+PREDICATE #1: 906 / 21 / 15
+PREDICATE #2: 884 / 187 / 178
+PREDICATE #3: 912 / 9 / 3
+PREDICATE #4: 925 / 346 / 247
+PREDICATE #5: 887 / 731 / 718
+PREDICATE #6: 884 / 893 / 818
 
 
 */
