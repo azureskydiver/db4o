@@ -106,7 +106,7 @@ public class QConObject extends QCon {
         }
         
         // FIXME: As soon as join index evaluation works, remove
-        if(hasJoins()){
+        if(hasOrJoins()){
             return false;
         }
         

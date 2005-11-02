@@ -357,6 +357,32 @@ public abstract class QCon implements Constraint, Visitor4 {
         return _children != null;
     }
     
+    public boolean hasOrJoins(){
+        Collection4 lookedAt = new Collection4();
+        return hasOrJoins(lookedAt);
+    }
+    
+    boolean hasOrJoins(Collection4 lookedAt){
+        if(lookedAt.containsByIdentity(this)){
+            return false;
+        }
+        lookedAt.add(this);
+        if(i_joins == null){
+            return false;
+        }
+        Iterator4 i = iterateJoins();
+        while(i.hasNext()){
+            QConJoin join = (QConJoin)i.next();
+            if(! join.i_and){
+                return true;
+            }
+            if(join.hasOrJoins(lookedAt)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public boolean hasJoins(){
         if(i_joins == null){
             return false;
