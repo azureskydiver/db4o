@@ -8,32 +8,14 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.query.*;
 
-/*
-
-Starting out
-Tuesday November 1 23:20
-
-STORING 10000 CATS
-PREDICATE #1: 918 / 25 / 12
-PREDICATE #2: 896 / 187 / 18
-PREDICATE #3: 922 / 16 / 3
-PREDICATE #4: 915 / 381 / 275
-PREDICATE #5: 931 / 703 / 15190
-PREDICATE #6: 890 / 846 / 803
-
-What's wrong with #5 Soda ???
-
-
-
-
-*/
-
 public class TestCatSpeed {
     
 	private final static String FILENAME="catspeed.yap";
     private final static int[] COUNT = {10000};
     // private final static int[] COUNT = {10000,100000};
 	private static final int NUMRUNS = 5;
+    
+    private static final int ONLY_RUN = -1;
 	
 	private final static SodaCatPredicate[]      PREDICATES={
 		new SodaCatPredicate() {
@@ -116,24 +98,33 @@ public class TestCatSpeed {
 		objectClass.objectField("_mother").indexed(true);
     	for(int countIdx=0;countIdx<COUNT.length;countIdx++) {
     		storeCats(COUNT[countIdx]);
-    		queryCats();
+            if(ONLY_RUN > 0){
+                queryCats(ONLY_RUN - 1);
+            }else{
+                queryCats();
+            }
     	}
 	}
 
 	public static void queryCats() {
 		for (int predIdx = 0; predIdx < PREDICATES.length; predIdx++) {
-			long timeUnopt = 0;
-			long timeOpt = 0;
-            long timeSoda = 0;
-			for (int run = 0; run <= NUMRUNS; run++) {
-				boolean warmup = (run == 0);
-				timeUnopt += timeQuery(PREDICATES[predIdx], false, warmup);
-				timeOpt += timeQuery(PREDICATES[predIdx], true, warmup);
-                timeSoda += timeSoda(PREDICATES[predIdx], warmup);
-			}
-			System.out.println("PREDICATE #" + (predIdx + 1)+": "+(timeUnopt/NUMRUNS)+" / "+(timeOpt/NUMRUNS)+" / "+(timeSoda/NUMRUNS));
+            queryCats(predIdx);
 		}
 	}
+    
+    private static void queryCats(int predIdx){
+        long timeUnopt = 0;
+        long timeOpt = 0;
+        long timeSoda = 0;
+        for (int run = 0; run <= NUMRUNS; run++) {
+            boolean warmup = (run == 0);
+            timeUnopt += timeQuery(PREDICATES[predIdx], false, warmup);
+            timeOpt += timeQuery(PREDICATES[predIdx], true, warmup);
+            timeSoda += timeSoda(PREDICATES[predIdx], warmup);
+        }
+        System.out.println("PREDICATE #" + (predIdx + 1)+": "+(timeUnopt/NUMRUNS)+" / "+(timeOpt/NUMRUNS)+" / "+(timeSoda/NUMRUNS));
+    }
+    
     
 	public static long timeQuery(Predicate predicate, boolean optimize,
 			boolean warmup) {
@@ -174,3 +165,40 @@ public class TestCatSpeed {
         db.close();
     }
 }
+
+
+/*
+
+
+Tuning history:
+
+
+Starting out on 5.0.008
+Tuesday November 1 23:20
+
+STORING 10000 CATS
+PREDICATE #1: 918 / 25 / 12
+PREDICATE #2: 896 / 187 / 18
+PREDICATE #3: 922 / 16 / 3
+PREDICATE #4: 915 / 381 / 275
+PREDICATE #5: 931 / 703 / 15190
+PREDICATE #6: 890 / 846 / 803
+
+What's wrong with #5 Soda ???
+
+
+Introduced a limit where index traversal should stop.
+Wednesday November 2 1:50
+
+STORING 10000 CATS
+PREDICATE #1: 918 / 25 / 15
+PREDICATE #2: 884 / 193 / 15
+PREDICATE #3: 918 / 6 / 0
+PREDICATE #4: 937 / 346 / 256
+PREDICATE #5: 915 / 822 / 750
+PREDICATE #6: 909 / 918 / 819
+
+
+
+
+*/
