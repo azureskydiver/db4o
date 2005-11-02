@@ -496,6 +496,18 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison(andExpr.right(),new String[]{"name"},"Bar",ComparisonOperator.EQUALS,false);
 	}
 
+	boolean sampleMixedOrAnd(Data data) {
+		return ((data.id<42)||(data.getName().equals("Bar")))&&(data.getId()>10);
+	}
+
+	public void testMixedOrAnd() throws Exception {
+		AndExpression expr = (AndExpression)expression("sampleMixedOrAnd");
+		assertComparison(expr.left(),new String[]{"id"},new Integer(10),ComparisonOperator.GREATER,false);
+		OrExpression orExpr=(OrExpression)expr.right();
+		assertComparison(orExpr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.SMALLER,false);
+		assertComparison(orExpr.right(),new String[]{"name"},"Bar",ComparisonOperator.EQUALS,false);
+	}
+
 	// arithmetic
 	
 	boolean sampleSanityIntAdd(Data data) {

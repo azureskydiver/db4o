@@ -440,6 +440,19 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				return BUILDER.or(orLeft,BUILDER.and(cmp,orRight));
 			}
 		}
+		if(falseExpr instanceof AndExpression) {
+			AndExpression andExpr=(AndExpression)falseExpr;
+			Expression andLeft=andExpr.left();
+			Expression andRight=andExpr.right();
+			if(trueExpr.equals(andRight)) {
+				Expression swap=andRight;
+				andRight=andLeft;
+				andLeft=swap;
+			}
+			if(trueExpr.equals(andLeft)) {
+				return BUILDER.and(andLeft,BUILDER.or(cmp,andRight));
+			}
+		}
 		return null;
 	}
 }
