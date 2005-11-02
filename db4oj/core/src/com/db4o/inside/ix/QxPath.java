@@ -17,14 +17,17 @@ class QxPath extends TreeInt{
     
     private IxTraverser[] _indexTraversers;
     
-    private Tree _candidates; 
+    private Tree _candidates;
+    
+    private final int _depth;
     
     
-    QxPath(QxProcessor processor, QxPath parent, QCon constraint){
+    QxPath(QxProcessor processor, QxPath parent, QCon constraint, int depth){
         super(0);
         _processor = processor;
         _parent = parent;
         _constraint = constraint;
+        _depth = depth;
     }
     
     void buildPaths(){
@@ -41,7 +44,7 @@ class QxPath extends TreeInt{
             isLeaf = false;
             QCon childConstraint = (QCon)i.next();
             if(childConstraint.canLoadByIndex()){
-                new QxPath(_processor, this, childConstraint).buildPaths();
+                new QxPath(_processor, this, childConstraint, _depth + 1).buildPaths();
             }
         }
         if(! isLeaf){
@@ -84,7 +87,11 @@ class QxPath extends TreeInt{
             return;
         }
         
-        QxPath parentPath = new QxPath(_processor, _parent._parent , _parent._constraint);
+        if(_processor.exceedsLimit(Tree.size(_candidates), _depth)){
+            return;
+        }
+        
+        QxPath parentPath = new QxPath(_processor, _parent._parent , _parent._constraint, _depth - 1);
         parentPath.processChildCandidates(_candidates);
         return;
         

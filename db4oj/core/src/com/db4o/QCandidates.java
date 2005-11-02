@@ -154,10 +154,14 @@ public final class QCandidates implements Visitor4 {
     }
 
     void execute() {
+        if(DTrace.enabled){
+            DTrace.QUERY_PROCESS.log();
+        }
+        int limit = i_yapClass.indexEntryCount(i_trans);
         boolean fromClassIndex = true;
         if(i_constraints != null){
             QxProcessor processor = new QxProcessor();
-            if(processor.run(this)){
+            if(processor.run(this, limit)){
                 i_root = processor.toQCandidates(this);
                 fromClassIndex = false;
             }

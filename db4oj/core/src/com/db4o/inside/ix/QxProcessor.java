@@ -10,7 +10,10 @@ import com.db4o.foundation.*;
 public class QxProcessor {
     
     private Tree _paths;
+    
     private QxPath _best;
+    
+    private int _limit;
 
     void addPath(QxPath path){
         _paths = Tree.add(_paths, path);
@@ -22,12 +25,13 @@ public class QxProcessor {
             QCon qCon = (QCon)i.next();
             qCon.setCandidates(candidates);
             if(! qCon.hasJoins()){
-                new QxPath(this, null, qCon).buildPaths();
+                new QxPath(this, null, qCon, 0).buildPaths();
             }
         }
     }
 
-    public boolean run(QCandidates candidates){
+    public boolean run(QCandidates candidates, int limit){
+        _limit = limit;
         buildPaths(candidates);
         if(_paths == null){
             return false;
@@ -50,6 +54,14 @@ public class QxProcessor {
     
     public Tree toQCandidates(QCandidates candidates){
         return _best.toQCandidates(candidates);
+    }
+    
+    boolean exceedsLimit(int count, int depth){
+        int limit = _limit;
+        for (int i = 0; i < depth; i++) {
+            limit = limit / 10;
+        }
+        return count > limit;
     }
 
 }

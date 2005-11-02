@@ -55,6 +55,27 @@ import com.db4o.foundation.*;
         }
     }
     
+    int entryCount(Transaction ta){
+        if(isActive()){
+            return Tree.size(i_root);
+        }
+        int[] addressLength = new int[]{0,0};
+        ta.getSlotInformation(i_id, addressLength);
+        addressLength[1] = YapConst.YAPINT_LENGTH;
+        if(Deploy.debug){
+            addressLength[1] += YapConst.LEADING_LENGTH;
+        }
+        YapReader reader = new YapReader(addressLength[1]);
+        reader.readEncrypt(ta.i_stream, addressLength[0]);
+        if (reader == null) {
+            return 0;
+        }
+        if (Deploy.debug) {
+            reader.readBegin(getID(), getIdentifier());
+        }
+        return reader.readInt();
+    }
+    
     final byte getIdentifier() {
         return YapConst.YAPINDEX;
     }

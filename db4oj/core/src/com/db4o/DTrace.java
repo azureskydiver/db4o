@@ -17,7 +17,7 @@ public class DTrace {
     private static final Object init(){
         if(enabled){
             
-            breakOnEvent(341);
+            breakOnEvent(8);
             // breakOnEvent(1107);
             // breakOnEvent(259);
             
@@ -75,6 +75,7 @@ public class DTrace {
             IO_COPY = new DTrace(true, true, "io copy", true);
             JUST_SET = new DTrace(true, true, "just set", true);
             NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
+            QUERY_PROCESS = new DTrace(true, true, "query process", true);
             READ_ARRAY_WRAPPER = new DTrace(true, true, "read array wrapper", true);
             READ_BYTES = new DTrace(true, true, "readBytes", true); 
             READ_ID = new DTrace(true, true, "read ID", true);
@@ -103,7 +104,7 @@ public class DTrace {
             
             // turnAllOffExceptFor(new DTrace[] {FREE, GET_FREESPACE});
             
-            turnAllOffExceptFor(new DTrace[] {FREE, GET_SLOT});
+            turnAllOffExceptFor(new DTrace[] {QUERY_PROCESS});
             
             // turnAllOffExceptFor(new DTrace[] {WRITE_BYTES});
             
@@ -169,6 +170,7 @@ public class DTrace {
     public static DTrace IO_COPY;
     public static DTrace JUST_SET;
     public static DTrace NEW_INSTANCE;
+    public static DTrace QUERY_PROCESS;
     public static DTrace READ_ARRAY_WRAPPER;
     public static DTrace READ_BYTES;
     public static DTrace READ_ID;
