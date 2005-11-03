@@ -51,7 +51,7 @@ programing language.
 So, let's constrain our query to only those cars driven by a Pilot ._
 with a specific name:
 
-.? net  .s com.db4o.f1.chapter2.StructuredExample#retrieveCarsByPilotNamePredicate +{} -run ..s  ..? ._
+.? net  .s com.db4o.f1.chapter2.StructuredExample#retrieveCarsByPilotNamePredicate +{} -run ..s  ..?
 .s com.db4o.f1.chapter2.StructuredExample#retrieveCarsByPilotNameNative ..
 
 .? net Of course in .NET 2.0, this is MUCH simpler:
@@ -176,7 +176,7 @@ Again: Note that all configuration must take place before the ObjectContainer is
 
 Let's have a look at our pilots again.
 
-.s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilotsQBE ..
+.s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilotsNative ..
 
 .2 Recursive deletion revisited ..
 
@@ -185,7 +185,7 @@ other objects?
 
 .s com.db4o.f1.chapter2.StructuredExample#deleteDeepRevisited ..
 
-.s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilotsQBE ..
+.s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilotsNative ..
 
 Houston, we have a problem - and there's no simple solution at hand. Currently ._
 db4o does  .b not check whether objects to be deleted are referenced anywhere ._

@@ -113,6 +113,16 @@ public class StructuredExample extends Util {
         listResult(result);
     }
     
+    public static void retrieveAllPilotsNative(ObjectContainer db) {
+    	ObjectSet results = db.query(new Predicate() {
+    		public boolean match(Pilot candidate){
+    			return true;
+    		}
+    	});
+    	listResult(results);
+    }
+
+    
     public static void retrieveAllCarsNative(ObjectContainer db) {
     	ObjectSet results = db.query(new Predicate() {
     		public boolean match(Car candidate){
@@ -126,34 +136,54 @@ public class StructuredExample extends Util {
     	final String pilotName = "Rubens Barrichello";
     	ObjectSet results = db.query(new Predicate() {
     		public boolean match(Car candidate){
-    			return candidate.getPilot().getName() == pilotName;
+    			return candidate.getPilot().getName().equals(pilotName);
     		}
     	});
     	listResult(results);
     }
     
     public static void updateCar(ObjectContainer db) {
-        ObjectSet result=db.get(new Car("Ferrari"));
+        ObjectSet result=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return candidate.getModel().equals("Ferrari");
+        	}
+        });
         Car found=(Car)result.next();
         found.setPilot(new Pilot("Somebody else",0));
         db.set(found);
-        result=db.get(new Car("Ferrari"));
+        result=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return candidate.getModel().equals("Ferrari");
+        	}
+        });
         listResult(result);
     }
 
     public static void updatePilotSingleSession(
                 ObjectContainer db) {
-        ObjectSet result=db.get(new Car("Ferrari"));
+        ObjectSet result=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return candidate.getModel().equals("Ferrari");
+        	}
+        });
         Car found=(Car)result.next();
         found.getPilot().addPoints(1);
         db.set(found);
-        result=db.get(new Car("Ferrari"));
+        result=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return candidate.getModel().equals("Ferrari");
+        	}
+        });
         listResult(result);
     }
 
     public static void updatePilotSeparateSessionsPart1(
-                ObjectContainer db) {
-    	ObjectSet result=db.get(new Car("Ferrari"));
+    		ObjectContainer db) {
+        ObjectSet result=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return candidate.getModel().equals("Ferrari");
+        	}
+        });
         Car found=(Car)result.next();
         found.getPilot().addPoints(1);
         db.set(found);
@@ -161,7 +191,11 @@ public class StructuredExample extends Util {
 
     public static void updatePilotSeparateSessionsPart2(
                 ObjectContainer db) {
-        ObjectSet result=db.get(new Car("Ferrari"));
+        ObjectSet result=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return candidate.getModel().equals("Ferrari");
+        	}
+        });
         listResult(result);
     }
 
@@ -172,7 +206,11 @@ public class StructuredExample extends Util {
 
     public static void updatePilotSeparateSessionsImprovedPart2(
                 ObjectContainer db) {
-        ObjectSet result=db.get(new Car("Ferrari"));
+        ObjectSet result=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return candidate.getModel().equals("Ferrari");
+        	}
+        });
         Car found=(Car)result.next();
         found.getPilot().addPoints(1);
         db.set(found);
@@ -180,12 +218,20 @@ public class StructuredExample extends Util {
 
     public static void updatePilotSeparateSessionsImprovedPart3(
                 ObjectContainer db) {
-        ObjectSet result=db.get(new Car("Ferrari"));
+        ObjectSet result=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return candidate.getModel().equals("Ferrari");
+        	}
+        });
         listResult(result);
     }
 
     public static void deleteFlat(ObjectContainer db) {
-        ObjectSet result=db.get(new Car("Ferrari"));
+        ObjectSet result=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return candidate.getModel().equals("Ferrari");
+        	}
+        });
         Car found=(Car)result.next();
         db.delete(found);
         result=db.get(new Car(null));
@@ -198,15 +244,27 @@ public class StructuredExample extends Util {
     }
 
     public static void deleteDeepPart2(ObjectContainer db) {
-        ObjectSet result=db.get(new Car("BMW"));
+        ObjectSet result=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return candidate.getModel().equals("BMW");
+        	}
+        });
         Car found=(Car)result.next();
         db.delete(found);
-        result=db.get(new Car(null));
+        result=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return true;
+        	}
+        });
         listResult(result);
     }
 
     public static void deleteDeepRevisited(ObjectContainer db) {
-        ObjectSet result=db.get(new Pilot("Michael Schumacher",0));
+        ObjectSet result=db.query(new Predicate() {
+        	public boolean match(Pilot candidate){
+        		return candidate.getName().equals("Michael Schumacher");
+        	}
+        });
         Pilot pilot=(Pilot)result.next();
         Car car1=new Car("Ferrari");
         Car car2=new Car("BMW");
@@ -215,16 +273,28 @@ public class StructuredExample extends Util {
         db.set(car1);
         db.set(car2);
         db.delete(car2);
-        result=db.get(new Car(null));
+        result=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return true;
+        	}
+        });
         listResult(result);
     }
     
     public static void deleteAll(ObjectContainer db) {
-        ObjectSet cars=db.get(new Car(null));
+        ObjectSet cars=db.query(new Predicate() {
+        	public boolean match(Car candidate){
+        		return true;
+        	}
+        });
         while(cars.hasNext()) {
             db.delete(cars.next());
         }
-        ObjectSet pilots=db.get(new Pilot(null,0));
+        ObjectSet pilots=db.query(new Predicate() {
+        	public boolean match(Pilot candidate){
+        		return true;
+        	}
+        });
         while(pilots.hasNext()) {
             db.delete(pilots.next());
         }
