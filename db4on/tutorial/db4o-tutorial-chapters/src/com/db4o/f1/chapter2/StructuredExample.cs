@@ -119,6 +119,38 @@ namespace com.db4o.f1.chapter2
 	        listResult(result);
         }
         
+        
+        public class retrieveAllCarsPredicate : Predicate{
+        	public static bool Match(Pilot candidate){
+	        	return true;
+        	}
+        }
+        
+        public static void retrieveAllCarsNative(ObjectContainer db) {
+            ObjectSet results = db.query(new retrieveAllCarsNativePredicate());
+    		listResult(results);
+    	}
+    
+    
+    	public class retrieveCarsByPilotNamePredicate : Predicate{
+    		readonly string pilotName;
+    		
+    		public retrieveCarsByPilotNameNativePredicate(string pilotName){
+    			this.pilotName = pilotName;
+    		}
+    		
+    		public static bool Match(Car candidate){
+    			return candidate.Pilot.Name == pilotName;
+    		}
+    	}
+    
+    	public static void retrieveCarsByPilotNameNative(ObjectContainer db) {
+    		string pilotName = "Rubens Barrichello";
+    		ObjectSet results = db.query(new retrieveCarsByPilotNameNativePredicate( pilotName));
+    		listResult(results);
+  		}
+  		
+  		
         public static void updateCar(ObjectContainer db)
         {
             ObjectSet result = db.get(new Car("Ferrari"));
