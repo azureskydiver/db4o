@@ -6,6 +6,7 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.f1.Util;
+import com.db4o.query.Predicate;
 import com.db4o.query.Query;
 
 
@@ -111,7 +112,25 @@ public class StructuredExample extends Util {
         ObjectSet result=pilotquery.execute();
         listResult(result);
     }
-
+    
+    public static void retrieveAllCarsNative(ObjectContainer db) {
+    	ObjectSet results = db.query(new Predicate() {
+    		public boolean match(Car candidate){
+    			return true;
+    		}
+    	});
+    	listResult(results);
+    }
+    
+    public static void retrieveCarsByPilotNameNative(ObjectContainer db) {
+    	final String pilotName = "Rubens Barrichello";
+    	ObjectSet results = db.query(new Predicate() {
+    		public boolean match(Car candidate){
+    			return candidate.getPilot().getName() == pilotName;
+    		}
+    	});
+    	listResult(results);
+    }
     
     public static void updateCar(ObjectContainer db) {
         ObjectSet result=db.get(new Car("Ferrari"));
