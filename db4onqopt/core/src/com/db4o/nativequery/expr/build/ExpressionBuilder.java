@@ -75,7 +75,80 @@ public class ExpressionBuilder {
 	}
 
 	public Expression ifThenElse(Expression cond, Expression truePath, Expression falsePath) {
+		Expression expr=checkBoolean(cond,truePath,falsePath);
+		if(expr!=null) {
+			return expr;
+		}
 		return or(and(cond,truePath),and(not(cond),falsePath));
+	}
+
+	private Expression checkBoolean(Expression cmp,Expression trueExpr,Expression falseExpr) {		
+		if(cmp instanceof BoolConstExpression) {
+			return null;
+		}
+//		if((trueExpr instanceof BoolConstExpression)&&(falseExpr instanceof BoolConstExpression)) {
+//			//System.out.println("DIRECT BOOL: "+cmp);
+//			return null;
+//		}
+		if(trueExpr instanceof BoolConstExpression) {
+			boolean leftNegative=trueExpr.equals(BoolConstExpression.FALSE);
+			if(!leftNegative) {
+				// x||y
+				//System.out.println(cmp+"&&"+falseExpr);
+				return or(cmp,falseExpr);
+			}
+			else {
+				// !x&&y
+				//System.out.println("!"+cmp+"||"+falseExpr);
+				return and(not(cmp),falseExpr);
+			}
+		}
+		if(falseExpr instanceof BoolConstExpression) {
+			boolean rightNegative=falseExpr.equals(BoolConstExpression.FALSE);
+			if(!rightNegative) {
+				// x&&y
+				//System.out.println(cmp+"&&"+falseExpr);
+				return and(cmp,trueExpr);
+			}
+			else {
+				// !x||y
+				//System.out.println("!"+cmp+"||"+falseExpr);
+				return or(not(cmp),falseExpr);
+			}
+		}
+		if(cmp instanceof NotExpression) {
+			cmp=((NotExpression)cmp).expr();
+			Expression swap=trueExpr;
+			trueExpr=falseExpr;
+			falseExpr=swap;
+		}
+		if(trueExpr instanceof OrExpression) {
+			OrExpression orExpr=(OrExpression)trueExpr;
+			Expression orLeft=orExpr.left();
+			Expression orRight=orExpr.right();
+			if(falseExpr.equals(orRight)) {
+				Expression swap=orRight;
+				orRight=orLeft;
+				orLeft=swap;
+			}
+			if(falseExpr.equals(orLeft)) {
+				return or(orLeft,and(cmp,orRight));
+			}
+		}
+		if(falseExpr instanceof AndExpression) {
+			AndExpression andExpr=(AndExpression)falseExpr;
+			Expression andLeft=andExpr.left();
+			Expression andRight=andExpr.right();
+			if(trueExpr.equals(andRight)) {
+				Expression swap=andRight;
+				andRight=andLeft;
+				andLeft=swap;
+			}
+			if(trueExpr.equals(andLeft)) {
+				return and(andLeft,or(cmp,andRight));
+			}
+		}
+		return null;
 	}
 
 	private boolean negatives(Expression left,Expression right) {

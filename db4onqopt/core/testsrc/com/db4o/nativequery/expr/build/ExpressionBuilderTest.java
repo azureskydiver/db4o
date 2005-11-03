@@ -60,7 +60,9 @@ public class ExpressionBuilderTest extends TestCase {
 		assertSame(BoolConstExpression.FALSE,builder.ifThenElse(expr,BoolConstExpression.FALSE,BoolConstExpression.FALSE));
 		assertSame(expr,builder.ifThenElse(expr,BoolConstExpression.TRUE,BoolConstExpression.FALSE));
 		assertEquals(new NotExpression(expr),builder.ifThenElse(expr,BoolConstExpression.FALSE,BoolConstExpression.TRUE));
-		assertEquals(builder.or(expr,builder.and(builder.not(expr),other)),builder.ifThenElse(expr,BoolConstExpression.TRUE,other));
+		assertEquals(builder.or(expr,other),builder.ifThenElse(expr,BoolConstExpression.TRUE,other));
+		// FIXME more compund boolean constraint tests
+		//assertEquals(builder.or(expr,builder.and(builder.not(expr),other)),builder.ifThenElse(expr,BoolConstExpression.TRUE,other));
 	}
 	
 	public void testCombined() {
