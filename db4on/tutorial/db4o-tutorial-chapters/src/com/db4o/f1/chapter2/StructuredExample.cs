@@ -135,7 +135,7 @@ namespace com.db4o.f1.chapter2
     	public class retrieveCarsByPilotNamePredicate : Predicate{
     		readonly string pilotName;
     		
-    		public retrieveCarsByPilotNameNativePredicate(string pilotName){
+    		public retrieveCarsByPilotNamePredicate(string pilotName){
     			this.pilotName = pilotName;
     		}
     		
