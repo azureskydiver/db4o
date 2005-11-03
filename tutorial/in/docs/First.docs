@@ -42,10 +42,10 @@ We'll need a second pilot, too.
 .1 Retrieving objects ..
 
 db4o includes a few different query systems. The one used in this brief ._
-introduction is called .i  Query by Example .. (QBE). The other query systems are ._
-.i Native Queries .. (NQ) and the .i SODA Query API .. (SODA). For now, we will ._
+introduction is called  .i Query by Example ..  (QBE). The other query systems are ._
+.i Native Queries ..  (NQ) and the  .i SODA Query API ..  (SODA). For now, we will ._
 introduce QBE queries, but once you are familiar with storing objects in your ._
-database, we encourage you to read the chapter on .l NativeQueries Native Queries ..
+database, we encourage you to read the chapter on  .l NativeQueries Native Queries ..
 
 When using QBE, you create a prototypical object for db4o to use as an example of what ._
 you wish to retrieve. db4o will retrieve all objects of the given type that contain the ._

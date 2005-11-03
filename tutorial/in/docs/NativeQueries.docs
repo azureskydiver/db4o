@@ -14,14 +14,15 @@ queries simply use the semantics of your programming language, they are ._
 perfectly standardized and a safe choice for the future.
 
 Native Queries are available for all platforms supported by db4o: for earlier ._
-language versions Native Queries are just slightly more verbose.
+language versions Native Queries are just slightly more verbose. ._
+.? java Throughout this document, we shall use the Java JDK 1.2-1.4 syntax style. ..?
 
 .2 Concept ..
 
 The concept of native queries is taken from the following two papers:
 
-.l http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper ..l
-.l http://www.cs.utexas.edu/users/wcook/papers/SafeQuery/SafeQueryFinal.pdf Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries ..l
+-  .l http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper ..l
+-  .l http://www.cs.utexas.edu/users/wcook/papers/SafeQuery/SafeQueryFinal.pdf Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries ..l
 
 A short abstract summary of the idea:
 Native Queries try to use the simplest syntax possible in the respective ._
@@ -89,9 +90,12 @@ End Class ..c
 A side note on the above syntax:
 Native queries for all language dialects where generics are ._
 not available work by convention. A class that extends the ._
-Predicate class is expected to have a #match() / #Match() method ._
+com.db4o.Predicate class is expected to have a #match() or #Match() method ._
 that has one parameter to describe the class extent and ._
-returns a boolean variable.
+returns a boolean variable:
+
+.? java .c boolean match(Pilot candidate); ..c  ..?
+.? net .c bool Match(Pilot candidate); ..c   ..?
 
 Clearly, native queries look a lot nicer with the most modern ._
 syntax. For very simple queries against single fields you may ._
