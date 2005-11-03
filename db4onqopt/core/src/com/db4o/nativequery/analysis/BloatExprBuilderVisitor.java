@@ -360,10 +360,6 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if(trueExpr==null||falseExpr==null) {
 			return null;
 		}
-		Expression expr=checkBoolean(cmp,trueExpr,falseExpr);
-		if(expr!=null) {
-			return expr;
-		}
 		return BUILDER.ifThenElse(cmp,trueExpr,falseExpr);
 	}
 	
@@ -386,73 +382,4 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		return null;
 	}	
-	
-	private Expression checkBoolean(Expression cmp,Expression trueExpr,Expression falseExpr) {		
-		if(cmp instanceof BoolConstExpression) {
-			return null;
-		}
-		if((trueExpr instanceof BoolConstExpression)&&(falseExpr instanceof BoolConstExpression)) {
-			//System.out.println("DIRECT BOOL: "+cmp);
-			return null;
-		}
-		if(trueExpr instanceof BoolConstExpression) {
-			boolean leftNegative=trueExpr.equals(BoolConstExpression.FALSE);
-			if(!leftNegative) {
-				// x||y
-				//System.out.println(cmp+"&&"+falseExpr);
-				return BUILDER.or(cmp,falseExpr);
-			}
-			else {
-				// !x&&y
-				//System.out.println("!"+cmp+"||"+falseExpr);
-				return BUILDER.and(BUILDER.not(cmp),falseExpr);
-			}
-		}
-		if(falseExpr instanceof BoolConstExpression) {
-			boolean rightNegative=falseExpr.equals(BoolConstExpression.FALSE);
-			if(!rightNegative) {
-				// x&&y
-				//System.out.println(cmp+"&&"+falseExpr);
-				return BUILDER.and(cmp,trueExpr);
-			}
-			else {
-				// !x||y
-				//System.out.println("!"+cmp+"||"+falseExpr);
-				return BUILDER.or(BUILDER.not(cmp),falseExpr);
-			}
-		}
-		if(cmp instanceof NotExpression) {
-			cmp=((NotExpression)cmp).expr();
-			Expression swap=trueExpr;
-			trueExpr=falseExpr;
-			falseExpr=swap;
-		}
-		if(trueExpr instanceof OrExpression) {
-			OrExpression orExpr=(OrExpression)trueExpr;
-			Expression orLeft=orExpr.left();
-			Expression orRight=orExpr.right();
-			if(falseExpr.equals(orRight)) {
-				Expression swap=orRight;
-				orRight=orLeft;
-				orLeft=swap;
-			}
-			if(falseExpr.equals(orLeft)) {
-				return BUILDER.or(orLeft,BUILDER.and(cmp,orRight));
-			}
-		}
-		if(falseExpr instanceof AndExpression) {
-			AndExpression andExpr=(AndExpression)falseExpr;
-			Expression andLeft=andExpr.left();
-			Expression andRight=andExpr.right();
-			if(trueExpr.equals(andRight)) {
-				Expression swap=andRight;
-				andRight=andLeft;
-				andLeft=swap;
-			}
-			if(trueExpr.equals(andLeft)) {
-				return BUILDER.and(andLeft,BUILDER.or(cmp,andRight));
-			}
-		}
-		return null;
-	}
 }

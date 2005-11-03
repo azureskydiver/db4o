@@ -484,24 +484,24 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison(expr.right(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,true);
 	}
 
-	boolean sampleMixedAndOr(Data data) {
+	boolean sampleOuterOrInnerAnd(Data data) {
 		return (data.id==42)&&(data.getName().equals("Bar"))||(data.name.equals("Foo"));
 	}
 
-	public void testMixedAndOr() throws Exception {
-		OrExpression expr = (OrExpression)expression("sampleMixedAndOr");
+	public void testOuterOrInnerAnd() throws Exception {
+		OrExpression expr = (OrExpression)expression("sampleOuterOrInnerAnd");
 		assertComparison(expr.left(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,false);
 		AndExpression andExpr=(AndExpression)expr.right();
 		assertComparison(andExpr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,false);
 		assertComparison(andExpr.right(),new String[]{"name"},"Bar",ComparisonOperator.EQUALS,false);
 	}
 
-	boolean sampleMixedOrAnd(Data data) {
+	boolean sampleOuterAndInnerOr(Data data) {
 		return ((data.id<42)||(data.getName().equals("Bar")))&&(data.getId()>10);
 	}
 
-	public void testMixedOrAnd() throws Exception {
-		AndExpression expr = (AndExpression)expression("sampleMixedOrAnd");
+	public void testOuterAndInnerOr() throws Exception {
+		AndExpression expr = (AndExpression)expression("sampleOuterAndInnerOr");
 		assertComparison(expr.left(),new String[]{"id"},new Integer(10),ComparisonOperator.GREATER,false);
 		OrExpression orExpr=(OrExpression)expr.right();
 		assertComparison(orExpr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.SMALLER,false);
