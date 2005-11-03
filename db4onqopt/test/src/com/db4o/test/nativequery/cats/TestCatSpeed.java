@@ -81,7 +81,7 @@ public class TestCatSpeed {
             public boolean match(Cat cat){
                 return cat.getFather()!=null
                     &&(cat.getFather().getAge() < 900 
-                    || cat.getFather().getFirstName().equals("SpeedyClone933")); // programmer error, father maybe null
+                    || cat.getFather().getFirstName().equals("SpeedyClone933"));
             }
             public void constrain(Query q) {
                 Query qf = q.descend("_father");
