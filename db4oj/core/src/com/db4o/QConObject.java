@@ -63,6 +63,16 @@ public class QConObject extends QCon {
             i_object = null;
             i_comparator = Null.INSTANCE;
             i_yapClass = null;
+            
+            // FIXME: Setting the YapClass to null will prevent index use
+            // If the field is typed we can guess the right one with the
+            // following line. However this does break some SODA test cases.
+            // Revisit!
+            
+//            if(i_field != null){
+//                i_yapClass = i_field.getYapClass();
+//            }
+            
         } else {
             i_yapClass = a_trans.i_stream
                 .getYapClass(a_trans.reflector().forObject(a_object), true);
@@ -266,6 +276,13 @@ public class QConObject extends QCon {
         if (i_yapClass != null) {
             i_yapClassID = i_yapClass.getID();
         }
+    }
+    
+    public boolean onSameFieldAs(QCon other){
+        if(! (other instanceof QConObject)){
+            return false;
+        }
+        return i_field == ((QConObject)other).i_field;
     }
 
     void prepareComparison(QField a_field) {
