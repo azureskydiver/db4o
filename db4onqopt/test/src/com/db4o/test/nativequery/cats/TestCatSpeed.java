@@ -81,7 +81,7 @@ public class TestCatSpeed {
             public boolean match(Cat cat){
                 return cat.getFather()!=null
                     &&(cat.getFather().getAge() < 900 
-                    || cat.getFather().getFirstName().equals("SpeedyClone933"));
+                    || cat.getFather().getFirstName().equals("SpeedyClone933")); // programmer error, father maybe null
             }
             public void constrain(Query q) {
                 Query qf = q.descend("_father");
@@ -89,6 +89,20 @@ public class TestCatSpeed {
                 Constraint c2 = qf.descend("_age").constrain(new Integer(900)).smaller();
                 Constraint c3 = qf.descend("_firstName").constrain("SpeedyClone933");
                 c2.or(c3);
+            }
+		},
+		new SodaCatPredicate() {
+            public boolean match(Cat cat){
+                return cat.getAge()<100
+                	||(cat.getAge()>200&&cat.getAge()<300)
+                	||cat.getAge()<400&&cat.getFirstName().equals("SpeedyClone150");
+            }
+            public void constrain(Query q) {
+                Query qf = q.descend("_age");
+                Constraint c1 = qf.constrain(new Integer(100)).smaller();
+                Constraint c2 = qf.constrain(new Integer(200)).greater().and(qf.constrain(new Integer(300)).smaller());
+                Constraint c3 = qf.constrain(new Integer(400)).smaller().and(q.descend("_firstName").constrain("SpeedyClone150"));
+                c1.or(c2).or(c3);
             }
 		}
 	};
@@ -235,5 +249,10 @@ PREDICATE #4: 925 / 346 / 247
 PREDICATE #5: 887 / 731 / 718
 PREDICATE #6: 884 / 893 / 818
 
-
+Thursday November 3 04:00 (pr)
+Added #7 for compound boolean checks
+Before:
+PREDICATE #7: 279 / 1304 / 139
+After:
+PREDICATE #7: 307 / 172 / 148
 */
