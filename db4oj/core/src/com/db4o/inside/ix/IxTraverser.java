@@ -99,6 +99,15 @@ public class IxTraverser{
         addPathTree(visitor, a_path);
         addAll(visitor, a_path.i_tree.i_subsequent);
     }
+    
+    public NIxPaths convert(){
+        NIxPaths res = new NIxPaths();
+        res.add(new NIxPath(i_smallHead.convert(), i_take[SMALLER], i_take[EQUAL]));
+        res.add(new NIxPath(i_greatHead.convert(), i_take[EQUAL], i_take[GREATER]));
+        IxPath nullPath = findNullPath();
+        res.add(new NIxPath(i_greatHead.convert(), i_take[NULLS], i_take[SMALLER]));
+        return res;
+    }
 
     private int countGreater(IxPath a_path, int a_sum) {
         if (a_path.i_next == null) {
@@ -180,6 +189,52 @@ public class IxTraverser{
             findBoth();
         }
     }
+    
+    private IxPath findNullPath(){
+        resetDelayedAppend();
+        i_handler.prepareComparison(null);
+        IxTree tree = i_greatHead.i_tree;
+        int res = tree.compare(null);
+        IxPath nullHead = new IxPath(this, null, tree, res, tree.lowerAndUpperMatch());
+        IxPath[] headTail = new IxPath[]{nullHead, nullHead};
+        findNullPath1(headTail);
+        return headTail[0];
+    }
+    
+    private void findNullPath1(IxPath[] headTail) {
+        if(headTail[1].i_comparisonResult == 0){
+            findGreatestNullFromNull(headTail, (IxTree)headTail[1].i_tree.i_subsequent);
+        } else if (headTail[1].i_comparisonResult < 0) {
+            findNullPath2(headTail, (IxTree)headTail[1].i_tree.i_subsequent);
+        } else {
+            findNullPath2(headTail, (IxTree)headTail[1].i_tree.i_preceding);
+        }
+    }
+    
+    private void findNullPath2(IxPath[] headTail, IxTree tree) {
+        if (tree != null) {
+            int res = tree.compare(null);
+            headTail[1] = headTail[1].append(tree, res, tree.lowerAndUpperMatch());
+            findNullPath1(headTail);
+        }
+    }
+    
+    private void findGreatestNullFromNull(IxPath[] headTail, IxTree tree) {
+        if (tree != null) {
+            int res = tree.compare(null);
+            delayedAppend(tree, res, tree.lowerAndUpperMatch());
+            if (res == 0) {
+                headTail[1] = headTail[1].append(i_appendHead, i_appendTail);
+                resetDelayedAppend();
+            }
+            if (res > 0) {
+                findGreatestNullFromNull(headTail, (IxTree)tree.i_preceding);
+            } else {
+                findGreatestNullFromNull(headTail, (IxTree)tree.i_subsequent);
+            }
+        }
+    }
+    
 
     public int findBounds(Object a_constraint, IxTree a_tree) {
 

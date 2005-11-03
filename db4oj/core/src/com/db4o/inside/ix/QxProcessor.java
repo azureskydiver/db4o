@@ -15,8 +15,30 @@ public class QxProcessor {
     
     private int _limit;
 
-    void addPath(QxPath path){
-        _paths = Tree.add(_paths, path);
+    void addPath(final QxPath newPath){
+        
+        // FIXME: xcr work in progress
+        
+//        if(_paths == null){
+//            _paths = newPath;
+//            return;
+//        }
+//        _paths.traverse(new Visitor4() {
+//            public void visit(Object a_object) {
+//                QxPath path = (QxPath)a_object;
+//                if(path._parent == newPath._parent){
+//                    if(path.onSameFieldAs(newPath)){
+//                        
+//                        
+//                        
+//                        
+//                        int xxx = 1;
+//                    }
+//                }
+//            }
+//        });
+        
+        _paths = Tree.add(_paths, newPath);
     }
     
     private void buildPaths(QCandidates candidates){

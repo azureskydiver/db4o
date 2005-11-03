@@ -541,6 +541,10 @@ public abstract class QCon implements Constraint, Visitor4 {
     private RuntimeException notSupported() {
         return new RuntimeException("Not supported.");
     }
+    
+    public boolean onSameFieldAs(QCon other){
+        return false;
+    }
 
     public Constraint or(Constraint orWith) {
         synchronized (streamLock()) {

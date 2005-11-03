@@ -13,7 +13,7 @@ class QxPath extends TreeInt{
     
     private QCon _constraint;
     
-    private final QxPath _parent;
+    final QxPath _parent;
     
     private IxTraverser[] _indexTraversers;
     
@@ -62,6 +62,14 @@ class QxPath extends TreeInt{
         
         i_key = ((QConObject)_constraint).findBoundsQuery(_indexTraversers[0]);
         if(i_key >= 0){
+            
+            
+            // FIXME: xcr work in progress
+            
+//            if(i_key > 0){
+//                NIxPaths indexPaths = _indexTraversers[0].convert();
+//            }
+
             _processor.addPath(this);
         }
     }
@@ -142,6 +150,10 @@ class QxPath extends TreeInt{
             
         }
         return false;
+    }
+    
+    boolean onSameFieldAs(QxPath other){
+        return _constraint.onSameFieldAs(other._constraint);
     }
     
     Tree toQCandidates(QCandidates candidates){
