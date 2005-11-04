@@ -15,7 +15,7 @@ namespace com.db4o
 
 		public com.db4o.YapClassCollection i_classCollection;
 
-		internal com.db4o.Config4Impl i_config;
+		public com.db4o.Config4Impl i_config;
 
 		protected int i_entryCounter;
 
@@ -51,7 +51,7 @@ namespace com.db4o
 
 		private com.db4o.foundation.List4 i_stillToSet;
 
-		internal com.db4o.Transaction i_systemTrans;
+		public com.db4o.Transaction i_systemTrans;
 
 		internal com.db4o.Transaction i_trans;
 
@@ -62,6 +62,8 @@ namespace com.db4o
 		internal com.db4o.YapStream i_migrateFrom;
 
 		internal com.db4o.YapReferences i_references;
+
+		private com.db4o.inside.query.NativeQueryHandler _nativeQueryHandler;
 
 		internal YapStream(com.db4o.YapStream a_parent)
 		{
@@ -126,7 +128,7 @@ namespace com.db4o
 		{
 			while (i_stillToActivate != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4(i_stillToActivate
+				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_stillToActivate
 					);
 				i_stillToActivate = null;
 				while (i.hasNext())
@@ -193,6 +195,8 @@ namespace com.db4o
 			hcTreeAdd(a_yapObject);
 		}
 
+		public abstract com.db4o.PBootRecord bootRecord();
+
 		private bool breakDeleteForEnum(com.db4o.YapObject reference, bool userCall)
 		{
 			return false;
@@ -225,7 +229,7 @@ namespace com.db4o
 		{
 			if (i_needsUpdate != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4(i_needsUpdate
+				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_needsUpdate
 					);
 				while (i.hasNext())
 				{
@@ -414,7 +418,7 @@ namespace com.db4o
 			stillToDeactivate(a_activate, a_depth, true);
 			while (i_stillToDeactivate != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4(i_stillToDeactivate
+				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_stillToDeactivate
 					);
 				i_stillToDeactivate = null;
 				while (i.hasNext())
@@ -773,7 +777,7 @@ namespace com.db4o
 			return new com.db4o.YapWriter(a_trans, a_address, a_length);
 		}
 
-		internal virtual com.db4o.Transaction getSystemTransaction()
+		public virtual com.db4o.Transaction getSystemTransaction()
 		{
 			return i_systemTrans;
 		}
@@ -822,7 +826,7 @@ namespace com.db4o
 			return i_idTree.id_find(a_id);
 		}
 
-		internal com.db4o.YapObject getYapObject(object a_object)
+		public com.db4o.YapObject getYapObject(object a_object)
 		{
 			return i_hcTree.hc_find(a_object);
 		}
@@ -912,11 +916,11 @@ namespace com.db4o
 			i_idTree = new com.db4o.YapObject(0);
 			i_idTree.setObject(new object());
 			i_hcTree = i_idTree;
-			initialize2b();
+			initialize2NObjectCarrier();
 		}
 
 		/// <summary>overridden in YapObjectCarrier</summary>
-		internal virtual void initialize2b()
+		internal virtual void initialize2NObjectCarrier()
 		{
 			i_classCollection = new com.db4o.YapClassCollection(i_systemTrans);
 			i_references.startTimer();
@@ -1228,19 +1232,20 @@ namespace com.db4o
 			}
 		}
 
+		public com.db4o.inside.query.NativeQueryHandler getNativeQueryHandler()
+		{
+			if (null == _nativeQueryHandler)
+			{
+				_nativeQueryHandler = new com.db4o.inside.query.NativeQueryHandler(this);
+			}
+			return _nativeQueryHandler;
+		}
+
 		public com.db4o.ObjectSet query(com.db4o.query.Predicate predicate)
 		{
 			lock (i_lock)
 			{
-				if (com.db4o.Db4oVersion.MAJOR < 5)
-				{
-					throw new j4o.lang.RuntimeException("This feature will be available in db4o 5.0 and above."
-						);
-				}
-				else
-				{
-					return new com.db4o.inside.query.PredicateQuery(this, predicate).execute();
-				}
+				return getNativeQueryHandler().execute(predicate);
 			}
 		}
 
@@ -1328,8 +1333,14 @@ namespace com.db4o
 			lock (i_lock)
 			{
 				i_refreshInsteadOfActivate = true;
-				activate1(null, a_refresh, a_depth);
-				i_refreshInsteadOfActivate = false;
+				try
+				{
+					activate1(null, a_refresh, a_depth);
+				}
+				finally
+				{
+					i_refreshInsteadOfActivate = false;
+				}
 			}
 		}
 
@@ -1505,7 +1516,7 @@ namespace com.db4o
 			return setInternal(ta, a_object, com.db4o.YapConst.UNSPECIFIED, a_checkJustSet);
 		}
 
-		internal int setInternal(com.db4o.Transaction ta, object a_object, int a_depth, bool
+		public int setInternal(com.db4o.Transaction ta, object a_object, int a_depth, bool
 			 a_checkJustSet)
 		{
 			ta = checkTransaction(ta);
@@ -1567,7 +1578,8 @@ namespace com.db4o
 			com.db4o.foundation.List4 postponedStillToSet = null;
 			while (i_stillToSet != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4(i_stillToSet);
+				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_stillToSet
+					);
 				i_stillToSet = null;
 				while (i.hasNext())
 				{

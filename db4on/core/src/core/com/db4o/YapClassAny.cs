@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>Undefined YapClass used for members of type Object.</summary>
@@ -79,7 +78,7 @@ namespace com.db4o
 			return false;
 		}
 
-		public override com.db4o.YapDataType readArrayWrapper(com.db4o.Transaction a_trans
+		public override com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction a_trans
 			, com.db4o.YapReader[] a_bytes)
 		{
 			int id = 0;

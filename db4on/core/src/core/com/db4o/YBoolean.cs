@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal sealed class YBoolean : com.db4o.YapJavaClass

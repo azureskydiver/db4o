@@ -20,7 +20,7 @@ namespace com.db4o
 
 		public readonly com.db4o.YapString i_stringHandler;
 
-		private com.db4o.YapDataType[] i_handlers;
+		private com.db4o.TypeHandler4[] i_handlers;
 
 		private int i_maxTypeID = ANY_ARRAY_N_ID + 1;
 
@@ -87,7 +87,7 @@ namespace com.db4o
 			i_virtualFields[1] = i_indexes.i_fieldUUID;
 			i_stringHandler = new com.db4o.YapString(a_stream, com.db4o.YapStringIO.forEncoding
 				(stringEncoding));
-			i_handlers = new com.db4o.YapDataType[] { new com.db4o.YInt(a_stream), new com.db4o.YLong
+			i_handlers = new com.db4o.TypeHandler4[] { new com.db4o.YInt(a_stream), new com.db4o.YLong
 				(a_stream), new com.db4o.YFloat(a_stream), new com.db4o.YBoolean(a_stream), new 
 				com.db4o.YDouble(a_stream), new com.db4o.YByte(a_stream), new com.db4o.YChar(a_stream
 				), new com.db4o.YShort(a_stream), i_stringHandler, new com.db4o.YDate(a_stream), 
@@ -103,8 +103,8 @@ namespace com.db4o
 						i_maxTypeID = i_platformTypes[i].getID();
 					}
 				}
-				com.db4o.YapDataType[] temp = i_handlers;
-				i_handlers = new com.db4o.YapDataType[i_maxTypeID];
+				com.db4o.TypeHandler4[] temp = i_handlers;
+				i_handlers = new com.db4o.TypeHandler4[i_maxTypeID];
 				j4o.lang.JavaSystem.arraycopy(temp, 0, i_handlers, 0, temp.Length);
 				for (int i = 0; i < i_platformTypes.Length; i++)
 				{
@@ -326,12 +326,12 @@ namespace com.db4o
 			}
 		}
 
-		internal com.db4o.YapDataType getHandler(int a_index)
+		internal com.db4o.TypeHandler4 getHandler(int a_index)
 		{
 			return i_handlers[a_index - 1];
 		}
 
-		internal com.db4o.YapDataType handlerForClass(com.db4o.reflect.ReflectClass a_class
+		internal com.db4o.TypeHandler4 handlerForClass(com.db4o.reflect.ReflectClass a_class
 			, com.db4o.reflect.ReflectClass[] a_Supported)
 		{
 			for (int i = 0; i < a_Supported.Length; i++)
@@ -352,7 +352,7 @@ namespace com.db4o
 		/// Can't return ANY class for interfaces, since that would kill the
 		/// translators built into the architecture.
 		/// </remarks>
-		internal com.db4o.YapDataType handlerForClass(com.db4o.YapStream a_stream, com.db4o.reflect.ReflectClass
+		internal com.db4o.TypeHandler4 handlerForClass(com.db4o.YapStream a_stream, com.db4o.reflect.ReflectClass
 			 a_class)
 		{
 			if (a_class == null)

@@ -1,17 +1,16 @@
-
 namespace com.db4o
 {
 	internal class YapArray : com.db4o.YapIndependantType
 	{
 		internal readonly com.db4o.YapStream _stream;
 
-		internal readonly com.db4o.YapDataType i_handler;
+		internal readonly com.db4o.TypeHandler4 i_handler;
 
 		internal readonly bool i_isPrimitive;
 
 		internal readonly com.db4o.reflect.ReflectArray _reflectArray;
 
-		internal YapArray(com.db4o.YapStream stream, com.db4o.YapDataType a_handler, bool
+		internal YapArray(com.db4o.YapStream stream, com.db4o.TypeHandler4 a_handler, bool
 			 a_isPrimitive) : base(stream)
 		{
 			_stream = stream;
@@ -145,7 +144,7 @@ namespace com.db4o
 			return a_bytes.readInt();
 		}
 
-		public sealed override bool equals(com.db4o.YapDataType a_dataType)
+		public sealed override bool equals(com.db4o.TypeHandler4 a_dataType)
 		{
 			if (a_dataType is com.db4o.YapArray)
 			{
@@ -280,7 +279,7 @@ namespace com.db4o
 			return null;
 		}
 
-		public override com.db4o.YapDataType readArrayWrapper(com.db4o.Transaction a_trans
+		public override com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction a_trans
 			, com.db4o.YapReader[] a_bytes)
 		{
 			return this;

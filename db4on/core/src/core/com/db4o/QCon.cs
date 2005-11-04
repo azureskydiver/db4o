@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>Base class for all constraints on queries.</summary>
@@ -87,7 +86,7 @@ namespace com.db4o
 			com.db4o.QCon qcon = this;
 			com.db4o.YapClass yc = getYapClass();
 			bool[] foundField = { false };
-			forEachChildField(a_field, new _AnonymousInnerClass100(this, foundField, query));
+			forEachChildField(a_field, new _AnonymousInnerClass101(this, foundField, query));
 			if (foundField[0])
 			{
 				return true;
@@ -97,7 +96,7 @@ namespace com.db4o
 			{
 				int[] count = { 0 };
 				com.db4o.YapField[] yfs = { null };
-				i_trans.i_stream.i_classCollection.yapFields(a_field, new _AnonymousInnerClass118
+				i_trans.i_stream.i_classCollection.yapFields(a_field, new _AnonymousInnerClass119
 					(this, yfs, count));
 				if (count[0] == 0)
 				{
@@ -133,9 +132,9 @@ namespace com.db4o
 			return true;
 		}
 
-		private sealed class _AnonymousInnerClass100 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass101 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass100(QCon _enclosing, bool[] foundField, com.db4o.QQuery
+			public _AnonymousInnerClass101(QCon _enclosing, bool[] foundField, com.db4o.QQuery
 				 query)
 			{
 				this._enclosing = _enclosing;
@@ -156,9 +155,9 @@ namespace com.db4o
 			private readonly com.db4o.QQuery query;
 		}
 
-		private sealed class _AnonymousInnerClass118 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass119 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass118(QCon _enclosing, com.db4o.YapField[] yfs, int[] count
+			public _AnonymousInnerClass119(QCon _enclosing, com.db4o.YapField[] yfs, int[] count
 				)
 			{
 				this._enclosing = _enclosing;
@@ -419,6 +418,39 @@ namespace com.db4o
 			return _children != null;
 		}
 
+		public virtual bool hasOrJoins()
+		{
+			com.db4o.foundation.Collection4 lookedAt = new com.db4o.foundation.Collection4();
+			return hasOrJoins(lookedAt);
+		}
+
+		internal virtual bool hasOrJoins(com.db4o.foundation.Collection4 lookedAt)
+		{
+			if (lookedAt.containsByIdentity(this))
+			{
+				return false;
+			}
+			lookedAt.add(this);
+			if (i_joins == null)
+			{
+				return false;
+			}
+			com.db4o.foundation.Iterator4 i = iterateJoins();
+			while (i.hasNext())
+			{
+				com.db4o.QConJoin join = (com.db4o.QConJoin)i.next();
+				if (!join.i_and)
+				{
+					return true;
+				}
+				if (join.hasOrJoins(lookedAt))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 		public virtual bool hasJoins()
 		{
 			if (i_joins == null)
@@ -447,7 +479,7 @@ namespace com.db4o
 			return 0;
 		}
 
-		public virtual com.db4o.IxTree indexRoot()
+		public virtual com.db4o.inside.ix.IxTree indexRoot()
 		{
 			throw com.db4o.YapConst.virtualException();
 		}
@@ -466,7 +498,7 @@ namespace com.db4o
 		{
 			if (i_joins == null)
 			{
-				return com.db4o.foundation.Iterator4.EMPTY;
+				return com.db4o.foundation.Iterator4Impl.EMPTY;
 			}
 			return i_joins.iterator();
 		}
@@ -475,9 +507,9 @@ namespace com.db4o
 		{
 			if (_children == null)
 			{
-				return com.db4o.foundation.Iterator4.EMPTY;
+				return com.db4o.foundation.Iterator4Impl.EMPTY;
 			}
-			return new com.db4o.foundation.Iterator4(_children);
+			return new com.db4o.foundation.Iterator4Impl(_children);
 		}
 
 		internal virtual com.db4o.query.Constraint join(com.db4o.query.Constraint a_with, 
@@ -572,6 +604,11 @@ namespace com.db4o
 		private j4o.lang.RuntimeException notSupported()
 		{
 			return new j4o.lang.RuntimeException("Not supported.");
+		}
+
+		public virtual bool onSameFieldAs(com.db4o.QCon other)
+		{
+			return false;
 		}
 
 		public virtual com.db4o.query.Constraint or(com.db4o.query.Constraint orWith)

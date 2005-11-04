@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal sealed class MGetInternalIDs : com.db4o.MsgD

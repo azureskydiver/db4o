@@ -1,11 +1,10 @@
-
 namespace com.db4o
 {
 	internal class YapClassPrimitive : com.db4o.YapClass
 	{
-		internal readonly com.db4o.YapDataType i_handler;
+		internal readonly com.db4o.TypeHandler4 i_handler;
 
-		internal YapClassPrimitive(com.db4o.YapStream a_stream, com.db4o.YapDataType a_handler
+		internal YapClassPrimitive(com.db4o.YapStream a_stream, com.db4o.TypeHandler4 a_handler
 			) : base(a_stream, a_handler.classReflector())
 		{
 			i_fields = com.db4o.YapField.EMPTY_ARRAY;
@@ -207,7 +206,7 @@ namespace com.db4o
 			return i_handler.primitiveClassReflector();
 		}
 
-		public override com.db4o.YapDataType readArrayWrapper(com.db4o.Transaction a_trans
+		public override com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction a_trans
 			, com.db4o.YapReader[] a_bytes)
 		{
 			if (isArray())

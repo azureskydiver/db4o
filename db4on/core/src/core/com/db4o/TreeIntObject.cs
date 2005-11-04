@@ -1,12 +1,11 @@
-
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	internal class TreeIntObject : com.db4o.TreeInt
+	public class TreeIntObject : com.db4o.TreeInt
 	{
-		internal object i_object;
+		public object i_object;
 
-		internal TreeIntObject(int a_key) : base(a_key)
+		public TreeIntObject(int a_key) : base(a_key)
 		{
 		}
 
@@ -50,7 +49,7 @@ namespace com.db4o
 			}
 		}
 
-		internal override int ownLength()
+		public override int ownLength()
 		{
 			if (i_object == null)
 			{

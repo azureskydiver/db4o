@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal class YLong : com.db4o.YapJavaClass

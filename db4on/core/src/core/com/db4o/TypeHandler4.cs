@@ -1,8 +1,7 @@
-
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	public interface YapDataType : com.db4o.YapComparable
+	public interface TypeHandler4 : com.db4o.inside.ix.Indexable4
 	{
 		void appendEmbedded3(com.db4o.YapWriter a_bytes);
 
@@ -19,13 +18,9 @@ namespace com.db4o
 
 		int getID();
 
-		bool equals(com.db4o.YapDataType a_dataType);
+		bool equals(com.db4o.TypeHandler4 a_dataType);
 
 		object indexEntry(object a_object);
-
-		object comparableObject(com.db4o.Transaction trans, object indexEntry);
-
-		int linkLength();
 
 		void prepareLastIoComparison(com.db4o.Transaction a_trans, object obj);
 
@@ -52,14 +47,10 @@ namespace com.db4o
 		void readCandidates(com.db4o.YapReader a_bytes, com.db4o.QCandidates a_candidates
 			);
 
-		object readIndexEntry(com.db4o.YapReader a_reader);
-
-		com.db4o.YapDataType readArrayWrapper(com.db4o.Transaction a_trans, com.db4o.YapReader[]
+		com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction a_trans, com.db4o.YapReader[]
 			 a_bytes);
 
 		/// <summary>performance optimized write (only used for byte[] so far)</summary>
 		bool writeArray(object array, com.db4o.YapWriter reader);
-
-		void writeIndexEntry(com.db4o.YapWriter a_writer, object a_object);
 	}
 }

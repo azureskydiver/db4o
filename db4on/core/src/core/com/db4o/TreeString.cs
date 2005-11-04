@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <exclude></exclude>
@@ -11,7 +10,7 @@ namespace com.db4o
 			this.i_key = a_key;
 		}
 
-		internal override int compare(com.db4o.Tree a_to)
+		public override int compare(com.db4o.Tree a_to)
 		{
 			return com.db4o.YapString.compare(com.db4o.YapConst.stringIO.write(((com.db4o.TreeString
 				)a_to).i_key), com.db4o.YapConst.stringIO.write(i_key));

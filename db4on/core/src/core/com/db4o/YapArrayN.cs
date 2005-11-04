@@ -1,10 +1,9 @@
-
 namespace com.db4o
 {
 	/// <summary>n-dimensional array</summary>
 	internal sealed class YapArrayN : com.db4o.YapArray
 	{
-		internal YapArrayN(com.db4o.YapStream stream, com.db4o.YapDataType a_handler, bool
+		internal YapArrayN(com.db4o.YapStream stream, com.db4o.TypeHandler4 a_handler, bool
 			 a_isPrimitive) : base(stream, a_handler, a_isPrimitive)
 		{
 		}

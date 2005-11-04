@@ -49,7 +49,7 @@ namespace com.db4o
 		{
 			while (_members != null)
 			{
-				com.db4o.foundation.Iterator4 members = new com.db4o.foundation.Iterator4(_members
+				com.db4o.foundation.Iterator4 members = new com.db4o.foundation.Iterator4Impl(_members
 					);
 				_members = null;
 				while (members.hasNext())
@@ -66,7 +66,7 @@ namespace com.db4o
 			checkMembers();
 			while (_statics != null)
 			{
-				com.db4o.foundation.Iterator4 statics = new com.db4o.foundation.Iterator4(_statics
+				com.db4o.foundation.Iterator4 statics = new com.db4o.foundation.Iterator4Impl(_statics
 					);
 				_statics = null;
 				while (statics.hasNext())
@@ -84,7 +84,8 @@ namespace com.db4o
 			checkStatics();
 			while (_writes != null)
 			{
-				com.db4o.foundation.Iterator4 writes = new com.db4o.foundation.Iterator4(_writes);
+				com.db4o.foundation.Iterator4 writes = new com.db4o.foundation.Iterator4Impl(_writes
+					);
 				_writes = null;
 				while (writes.hasNext())
 				{
@@ -102,7 +103,8 @@ namespace com.db4o
 			checkWrites();
 			while (_inits != null)
 			{
-				com.db4o.foundation.Iterator4 inits = new com.db4o.foundation.Iterator4(_inits);
+				com.db4o.foundation.Iterator4 inits = new com.db4o.foundation.Iterator4Impl(_inits
+					);
 				_inits = null;
 				while (inits.hasNext())
 				{

@@ -22,14 +22,14 @@ namespace com.db4o
 
 		private int i_updateDepth = 1;
 
-		internal YapWriter(com.db4o.Transaction a_trans, int a_initialBufferSize)
+		public YapWriter(com.db4o.Transaction a_trans, int a_initialBufferSize)
 		{
 			i_trans = a_trans;
 			i_length = a_initialBufferSize;
 			_buffer = new byte[i_length];
 		}
 
-		internal YapWriter(com.db4o.Transaction a_trans, int a_address, int a_initialBufferSize
+		public YapWriter(com.db4o.Transaction a_trans, int a_address, int a_initialBufferSize
 			) : this(a_trans, a_initialBufferSize)
 		{
 			i_address = a_address;
@@ -186,12 +186,12 @@ namespace com.db4o
 			private readonly com.db4o.VisitorYapBytes a_visitor;
 		}
 
-		internal int getAddress()
+		public int getAddress()
 		{
 			return i_address;
 		}
 
-		internal int addressOffset()
+		public int addressOffset()
 		{
 			return _addressOffset;
 		}
@@ -206,17 +206,17 @@ namespace com.db4o
 			return i_instantionDepth;
 		}
 
-		internal override int getLength()
+		public override int getLength()
 		{
 			return i_length;
 		}
 
-		internal com.db4o.YapStream getStream()
+		public com.db4o.YapStream getStream()
 		{
 			return i_trans.i_stream;
 		}
 
-		internal com.db4o.Transaction getTransaction()
+		public com.db4o.Transaction getTransaction()
 		{
 			return i_trans;
 		}
@@ -309,7 +309,7 @@ namespace com.db4o
 			i_cascadeDelete = depth;
 		}
 
-		internal void setID(int a_id)
+		public void setID(int a_id)
 		{
 			i_id = a_id;
 		}
@@ -354,7 +354,7 @@ namespace com.db4o
 			i_length = a_length;
 		}
 
-		internal void useSlot(int a_id, int a_adress, int a_length)
+		public void useSlot(int a_id, int a_adress, int a_length)
 		{
 			i_id = a_id;
 			useSlot(a_adress, a_length);
@@ -398,7 +398,7 @@ namespace com.db4o
 			writeInt(0);
 		}
 
-		internal void writeEncrypt()
+		public void writeEncrypt()
 		{
 			i_trans.i_stream.i_handlers.encrypt(this);
 			i_trans.i_file.writeBytes(this);

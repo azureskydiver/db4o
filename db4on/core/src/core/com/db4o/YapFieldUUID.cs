@@ -25,7 +25,7 @@ namespace com.db4o
 			}
 			if (uuid == 0)
 			{
-				uuid = yf.i_bootRecord.newUUID();
+				uuid = yf.bootRecord().newUUID();
 			}
 			com.db4o.YLong.writeLong(uuid, a_writer);
 			if (a_new)
@@ -34,14 +34,14 @@ namespace com.db4o
 			}
 		}
 
-		internal override com.db4o.IxField getIndex(com.db4o.Transaction a_trans)
+		internal override com.db4o.inside.ix.Index4 getIndex(com.db4o.Transaction a_trans
+			)
 		{
 			com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.i_stream;
 			if (i_index == null)
 			{
-				com.db4o.PBootRecord bootRecord = stream.i_bootRecord;
-				i_index = new com.db4o.IxField(stream.getSystemTransaction(), this, bootRecord.getUUIDMetaIndex
-					());
+				i_index = new com.db4o.inside.ix.Index4(stream.getSystemTransaction(), getHandler
+					(), stream.bootRecord().getUUIDMetaIndex());
 			}
 			return i_index;
 		}
@@ -95,9 +95,10 @@ namespace com.db4o
 						attr.i_database = db;
 						if (stream is com.db4o.YapFile)
 						{
-							if (((com.db4o.YapFile)stream).i_bootRecord != null)
+							com.db4o.PBootRecord br = stream.bootRecord();
+							if (br != null)
 							{
-								attr.i_uuid = ((com.db4o.YapFile)stream).i_bootRecord.newUUID();
+								attr.i_uuid = br.newUUID();
 								indexEntry = true;
 							}
 						}

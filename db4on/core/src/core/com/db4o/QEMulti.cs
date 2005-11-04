@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <exclude></exclude>
@@ -50,7 +49,7 @@ namespace com.db4o
 			return false;
 		}
 
-		internal override void indexBitMap(bool[] bits)
+		public override void indexBitMap(bool[] bits)
 		{
 			com.db4o.foundation.Iterator4 i = i_evaluators.iterator();
 			while (i.hasNext())
@@ -59,7 +58,7 @@ namespace com.db4o
 			}
 		}
 
-		internal override bool supportsIndex()
+		public override bool supportsIndex()
 		{
 			com.db4o.foundation.Iterator4 i = i_evaluators.iterator();
 			while (i.hasNext())

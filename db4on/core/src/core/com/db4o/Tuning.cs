@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>Tuning switches for customized versions.</summary>
@@ -9,8 +8,6 @@ namespace com.db4o
 		public const bool symbianSeek = false;
 
 		internal const bool fieldIndices = true;
-
-		internal const bool licenseChecks = false;
 
 		internal const bool readableMessages = true;
 	}

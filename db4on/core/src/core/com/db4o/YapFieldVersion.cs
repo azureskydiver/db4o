@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal class YapFieldVersion : com.db4o.YapFieldVirtual
@@ -11,8 +10,7 @@ namespace com.db4o
 
 		internal override void addFieldIndex(com.db4o.YapWriter a_writer, bool a_new)
 		{
-			com.db4o.YLong.writeLong(((com.db4o.YapFile)a_writer.getStream()).i_bootRecord.version
-				(), a_writer);
+			com.db4o.YLong.writeLong(a_writer.getStream().bootRecord().version(), a_writer);
 		}
 
 		internal override void instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject
@@ -27,11 +25,10 @@ namespace com.db4o
 			if (!a_migrating)
 			{
 				com.db4o.YapStream stream = a_bytes.getStream().i_parent;
-				if (stream is com.db4o.YapFile && ((com.db4o.YapFile)stream).i_bootRecord != null
-					)
+				com.db4o.PBootRecord br = stream.bootRecord();
+				if (br != null)
 				{
-					a_yapObject.i_virtualAttributes.i_version = ((com.db4o.YapFile)stream).i_bootRecord
-						.version();
+					a_yapObject.i_virtualAttributes.i_version = br.version();
 				}
 			}
 			if (a_yapObject.i_virtualAttributes == null)

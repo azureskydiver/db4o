@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal abstract class YapFieldVirtual : com.db4o.YapField
@@ -53,8 +52,8 @@ namespace com.db4o
 		{
 			if (i_index == null)
 			{
-				i_index = new com.db4o.IxField(a_stream.getSystemTransaction(), this, a_metaIndex
-					);
+				i_index = new com.db4o.inside.ix.Index4(a_stream.getSystemTransaction(), getHandler
+					(), a_metaIndex);
 			}
 		}
 
@@ -80,43 +79,36 @@ namespace com.db4o
 		{
 			com.db4o.YapStream stream = a_bytes.i_trans.i_stream;
 			bool migrating = false;
-			if (stream is com.db4o.YapFile)
-			{
-				if (stream.i_migrateFrom != null)
-				{
-					migrating = true;
-					if (a_yapObject.i_virtualAttributes == null)
-					{
-						object obj = a_yapObject.getObject();
-						com.db4o.YapObject migrateYapObject = null;
-						if (stream.i_handlers.i_migration != null)
-						{
-							migrateYapObject = stream.i_handlers.i_migration.referenceFor(obj);
-						}
-						if (migrateYapObject == null)
-						{
-							migrateYapObject = stream.i_migrateFrom.getYapObject(obj);
-						}
-						if (migrateYapObject != null && migrateYapObject.i_virtualAttributes != null && migrateYapObject
-							.i_virtualAttributes.i_database != null)
-						{
-							migrating = true;
-							a_yapObject.i_virtualAttributes = migrateYapObject.i_virtualAttributes.shallowClone
-								();
-							a_bytes.getTransaction().ensureDb4oDatabase(migrateYapObject.i_virtualAttributes.
-								i_database);
-						}
-					}
-				}
-				if (a_yapObject.i_virtualAttributes == null)
-				{
-					a_yapObject.i_virtualAttributes = new com.db4o.VirtualAttributes();
-					migrating = false;
-				}
-			}
-			else
+			if (stream.i_migrateFrom != null)
 			{
 				migrating = true;
+				if (a_yapObject.i_virtualAttributes == null)
+				{
+					object obj = a_yapObject.getObject();
+					com.db4o.YapObject migrateYapObject = null;
+					if (stream.i_handlers.i_migration != null)
+					{
+						migrateYapObject = stream.i_handlers.i_migration.referenceFor(obj);
+					}
+					if (migrateYapObject == null)
+					{
+						migrateYapObject = stream.i_migrateFrom.getYapObject(obj);
+					}
+					if (migrateYapObject != null && migrateYapObject.i_virtualAttributes != null && migrateYapObject
+						.i_virtualAttributes.i_database != null)
+					{
+						migrating = true;
+						a_yapObject.i_virtualAttributes = migrateYapObject.i_virtualAttributes.shallowClone
+							();
+						a_bytes.getTransaction().ensureDb4oDatabase(migrateYapObject.i_virtualAttributes.
+							i_database);
+					}
+				}
+			}
+			if (a_yapObject.i_virtualAttributes == null)
+			{
+				a_yapObject.i_virtualAttributes = new com.db4o.VirtualAttributes();
+				migrating = false;
 			}
 			marshall1(a_yapObject, a_bytes, migrating, a_new);
 		}

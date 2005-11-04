@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal sealed class Session
@@ -12,10 +11,6 @@ namespace com.db4o
 		internal Session(string a_fileName)
 		{
 			i_fileName = a_fileName;
-		}
-
-		internal static void checkHackedVersion()
-		{
 		}
 
 		/// <summary>returns true, if session is to be closed completely</summary>

@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal class MReadBlob : com.db4o.MsgBlob

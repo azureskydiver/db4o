@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal sealed class TransactionClient : com.db4o.Transaction

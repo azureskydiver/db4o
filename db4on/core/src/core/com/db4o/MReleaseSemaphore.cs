@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal sealed class MReleaseSemaphore : com.db4o.MsgD

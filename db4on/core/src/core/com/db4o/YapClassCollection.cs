@@ -466,7 +466,8 @@ namespace com.db4o
 			public void visit(object obj)
 			{
 				com.db4o.YapField yf = (com.db4o.YapField)obj;
-				if (yf.alive() && a_field.Equals(yf.getName()))
+				if (yf.alive() && a_field.Equals(yf.getName()) && yf.getParentYapClass() != null 
+					&& !yf.getParentYapClass().isInternal())
 				{
 					a_visitor.visit(new object[] { yc, yf });
 				}

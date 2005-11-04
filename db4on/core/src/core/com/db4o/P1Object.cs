@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>base class for all database aware objects</summary>
@@ -194,7 +193,7 @@ namespace com.db4o
 			return this;
 		}
 
-		internal virtual void store(int a_depth)
+		public virtual void store(int a_depth)
 		{
 			if (i_trans != null)
 			{

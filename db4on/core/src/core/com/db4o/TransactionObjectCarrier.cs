@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>TODO: Check if all time-consuming stuff is overridden!</summary>

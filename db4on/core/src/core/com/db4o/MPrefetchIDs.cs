@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal sealed class MPrefetchIDs : com.db4o.Msg
