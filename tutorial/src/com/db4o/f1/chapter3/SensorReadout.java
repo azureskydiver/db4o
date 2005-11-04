@@ -25,6 +25,10 @@ public class SensorReadout {
         return values.length;
     }
     
+    public double[] getValues(){
+    	return values;
+    }
+    
     public double getValue(int idx) {
         return values[idx];
     }

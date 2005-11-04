@@ -185,10 +185,11 @@ other objects?
 
 .s com.db4o.f1.chapter2.StructuredExample#deleteDeepRevisited ..
 
+.? net  .s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilotsPredicate +{} -run ..s ..?
 .s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilotsNative ..
 
 Houston, we have a problem - and there's no simple solution at hand. Currently ._
-db4o does  .b not check whether objects to be deleted are referenced anywhere ._
+db4o does  .b not ..  check whether objects to be deleted are referenced anywhere ._
 else, so please be very careful when activating this feature.
 
 Let's clear our database for the next chapter.
