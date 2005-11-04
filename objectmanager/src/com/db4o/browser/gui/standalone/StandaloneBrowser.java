@@ -68,11 +68,11 @@ import com.swtworkbench.community.xswt.metalogger.TeeLogger;
 public class StandaloneBrowser implements IControlFactory {
     
     public static final String APPNAME = "db4o Object Manager";
-    public static final String VERSION = "1.6";
+    public static final String VERSION = "1.7";
     public static final String LOGFILE = ".objectmanager.log";
-    private static final String LOGCONFIG = ".objectmanager.logconfig";
+    public static final String LOGCONFIG = ".objectmanager.logconfig";
     
-    private Shell shell;
+    private Shell shell = null;
     private CTabFolder folder;
     private CTabItem mainTab;
     
@@ -90,7 +90,19 @@ public class StandaloneBrowser implements IControlFactory {
     public static final String STATUS_BAR = "StatusBar";
     protected String fileName;
     
-    /* (non-Javadoc)
+    private String commandLineFileName = null;
+    
+    public StandaloneBrowser() {
+    	// Nothing needed here
+    }
+    
+    public StandaloneBrowser(String[] args) {
+    	if (args.length > 0) {
+    		commandLineFileName = args[0];
+    	}
+	}
+
+	/* (non-Javadoc)
 	 * @see com.db4o.browser.gui.standalone.IControlFactory#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createContents(Composite parent) {
@@ -100,22 +112,35 @@ public class StandaloneBrowser implements IControlFactory {
         title_inactive_background = Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND);
         title_inactive_background_gradient = Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT);
         title_inactive_foreground = Display.getCurrent().getSystemColor(SWT.COLOR_TITLE_INACTIVE_FOREGROUND);
-                
-        shell = (Shell) parent;
-        shell.setLayout(new GridLayout());
+        
+        /*
+         * parent is an instanceof Shell when running as a standalone application.
+         * When running as an RCP application parent is an instanceof Composite.
+         * 
+         * In the latter case, the shell branding elements ane menu bar are controlled 
+         * by the RCP framework.
+         */
+        if (!(parent instanceof Shell)) {
+        	shell = parent.getShell();
+        } else {
+        	shell = (Shell) parent;
+        }
         shell.setText(APPNAME);
         shell.setImage(new Image(Display.getCurrent(),
                 DbBrowserPane.class.getResourceAsStream("icons/etool16/database2.gif")));
         buildMenuBar(shell);
+        parent.setLayout(new GridLayout());
         
-        folder = new CTabFolder(shell, SWT.NULL);
+        folder = new CTabFolder(parent, SWT.NULL);
         folder.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
         folder.setBorderVisible(true);
         folder.setSimple(false);
         folder.setSelectionBackground(new Color[] {title_background, title_background_gradient}, new int[] { 75 }, true);
         folder.setSelectionForeground(title_foreground);
         
-        final StatusBar statusBar = new StatusBar(shell, SWT.NULL);
+        final StatusBar statusBar;
+        
+        statusBar = new StatusBar(parent, SWT.NULL);
         statusBar.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
         shell.setData(STATUS_BAR, statusBar);
         
@@ -163,14 +188,11 @@ public class StandaloneBrowser implements IControlFactory {
         
         BrowserCore.getDefault().addBrowserCoreListener(browserCoreListener);
 		
-		// FIXME: hard-coding initial open...
-//        String testFile = getClass().getResource("formula1.yap").getFile();
-//        browserController.open(testFile);
-//        setTabText(testFile);
-
-//        String testFile = getClass().getResource("blah.yap").getFile();
-//        browserController.open(testFile);
-//        setTabText(testFile);
+        if (commandLineFileName != null) {
+        	browserController.open(commandLineFileName);
+        	setTabText(commandLineFileName);
+        	setOpenedDatabaseMenuChoiceState();
+        }
 	}
     
     private void setTabText(String fileName) {
@@ -190,7 +212,7 @@ public class StandaloneBrowser implements IControlFactory {
     private MenuItem preferences;
     private MenuItem helpAbout;
     
-    private void enableOpenedDatabaseMenuChoiceState() {
+    private void setOpenedDatabaseMenuChoiceState() {
         xmlExport.setEnabled(true);
         closeAll.setEnabled(true);
         query.setEnabled(true);
@@ -227,7 +249,7 @@ public class StandaloneBrowser implements IControlFactory {
                 if (file != null) {
                     setTabText(file);
                     browserController.open(file);
-                    enableOpenedDatabaseMenuChoiceState();
+                    setOpenedDatabaseMenuChoiceState();
                 }
             }
         });
@@ -245,7 +267,7 @@ public class StandaloneBrowser implements IControlFactory {
                         try {
                             if (browserController.open(file)) {
                                 setTabText(file);
-                                enableOpenedDatabaseMenuChoiceState();
+                                setOpenedDatabaseMenuChoiceState();
                             }
                         } catch (Throwable ex) {
                             MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
@@ -273,7 +295,7 @@ public class StandaloneBrowser implements IControlFactory {
                     if (browserController.open(host, port, user, password)) {
                         setTabText(host + ":" + port);
                     }
-                    enableOpenedDatabaseMenuChoiceState();
+                    setOpenedDatabaseMenuChoiceState();
                 }
             }
         });
@@ -382,15 +404,13 @@ public class StandaloneBrowser implements IControlFactory {
         Logger.log().debug(SWTProgram.class, APPNAME + ": Initializing " + Db4o.version() + " library");
         
         SWTProgram.registerCloseListener(BrowserCore.getDefault());
-        SWTProgram.runWithLog(new StandaloneBrowser());
+        SWTProgram.runWithLog(new StandaloneBrowser(args));
         
-        //TODO: Getting a multiple-close exception from db4o?
-        //      Race condition with db4o shutdown?  error came after App shutdown message.
         db4ologger.close();
         Logger.log().debug(SWTProgram.class, new Date().toString() + ": Application shutdown");
 	}
 
-    private static String getLogPath(String fileName) {
+    public static String getLogPath(String fileName) {
         return new File(new File(System.getProperty("user.home", ".")),fileName).getAbsolutePath();
     }
 }
