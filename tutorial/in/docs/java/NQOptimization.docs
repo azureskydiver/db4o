@@ -3,7 +3,6 @@
 .0 Native Query Optimization ..
 
 
-
 Native queries will run out of the box in any environment - they ._
 will just be executed as SODA evaluations. This has the downside ._
 that all candidate objects will have to be instantianted to run ._
@@ -27,7 +26,7 @@ use cases. Currently optimization supports:
 Any native query that contains constructs not on this list will ._
 be run in unoptimized mode. This list will be constantly extended.
 
-.a Analysis at query execution time
+.1 Analysis at query execution time ..
 
 .b Note: This won't work with JDK1.1. ..
 
@@ -35,9 +34,9 @@ To enable code analysis and generation of a corresponding live SODA ._
 query at query execution time, you just have to add db4o-5.0-nqopt.jar ._
 to your class path. This behavior is switched via
 
-Db4o.configure().optimizeNativeQueries(boolean optimizeNQ);
+.c Db4o.configure().optimizeNativeQueries(boolean optimizeNQ); ..c
  
-.a Instrumenting class files
+.1 Instrumenting class files ..
 
 .b Note: The resulting optimized classes will work for JDK1.1, but not ._
 the optimization process itself. ..
@@ -50,8 +49,7 @@ name starts with 'my.package' and store the modified files below ._
 directory 'instrumented', ensure the bloat jar is on your class path ._
 and use code like the following:
 
-new com.db4o.nativequery.main.Db4oFileEnhancer()
-  .enhance(
+.c new com.db4o.nativequery.main.Db4oFileEnhancer().enhance(
     "orig",             // source directory
     "instrumented",     // target directory
     new String[]{       // class path
@@ -59,11 +57,11 @@ new com.db4o.nativequery.main.Db4oFileEnhancer()
       "lib/db4o-5.0-java1.x.jar"
     },
     "my.package"        // optional package prefix
-  );
+  ); ..c
   
 An equivalent Ant snippet might look like this:
 
-<taskdef name="db4ooptimize" 
+.c <taskdef name="db4ooptimize" 
          classname="com.db4o.nativequery.main.Db4oFileEnhancerAntTask">
   <classpath>
     <path path="lib/db4o-5.0-java1.x.jar" />
@@ -83,11 +81,11 @@ An equivalent Ant snippet might look like this:
       <path path="lib/db4o-5.0-java1.x.jar" />
     </classpath>
   </db4oenhance>
-</target>
+</target> ..c
 
 All non-Predicate classes will just be copied to the target directory.
 
-.a Instrumenting classes at load time
+.1 Instrumenting classes at load time ..
 
 .b Note: This won't work with JDK1.1. ..
 
@@ -95,11 +93,11 @@ To instrument an existing application on startup, db4o wraps its ._
 execution in a custom class loader. To apply this class loader ._
 manually, use code like this:
 
-ClassLoader loader=
+.c ClassLoader loader=
   new com.db4o.nativequery.main.Db4oEnhancingClassLoader();
 Class clazz=loader.loadClass("my.StarterClass");
 Method method=clazz.getMethod("someStaticMethod",new Class[]{});
-method.invoke(null,new Object[]{});
+method.invoke(null,new Object[]{}); ..c
 
 (Of course the method needn't be static and can have parameters, ._
 too.)
@@ -108,12 +106,12 @@ To start a full application in optimized mode, you can use the ._
 Db4oRunner utility class. If you'd normally start your application ._
 like this:
 
-$> java my.StarterClass some arguments
+.c $> java my.StarterClass some arguments ..c
 
 ...start Db4oRunner with the fully qualified name of your main class ._
 as the first argument and the actual arguments appended:
 
-$> java com.db4o.nativequery.main.Db4oRunner my.StarterClass some arguments
+.c $> java com.db4o.nativequery.main.Db4oRunner my.StarterClass some arguments ..c
 
 Still to be evaluated:
 
@@ -122,16 +120,16 @@ Still to be evaluated:
 - Configuring Tomcat to use the optimizing class loader
   (Tomcat server.xml <Loader/> section)
   
-.a Monitoring optimization
+.1 Monitoring optimization ..
 
 This feature still is as basic as it can get and will soon be improved. ._
 Currently you can just attach a listener to the ObjectContainer:
 
-((YapStream)db).addListener(new Db4oQueryExecutionListener() {
+.c ((YapStream)db).addListener(new Db4oQueryExecutionListener() {
   public void notifyQueryExecuted(Predicate pred, String msg) {
     System.err.println(msg);
   }
-});
+}); ..c
 
 The listener will be notified on each native query call and will be ._
 passed the Predicate object processed and the success status of the ._
@@ -139,8 +137,10 @@ optimization run:
 
 YapStream.UNOPTIMIZED ("UNOPTIMIZED")
   if the predicate could not be optimized and is run in unoptimized mode
+
 YapStream.PREOPTIMIZED ("PREOPTIMIZED")
   if the predicate already was optimized (due to class file or load time
   instrumentation)
+
 YapStream.DYNOPTIMIZED ("DYNOPTIMIZED")
   if the predicate was optimized at query execution time
