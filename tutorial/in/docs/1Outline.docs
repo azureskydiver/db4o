@@ -22,12 +22,12 @@
 .e Encryption ..
 .e RefactoringAndSchemaEvolution ..
 .e Tuning ..
-.e NQOptimization ..
+.? java .e NQOptimization .. ..?
 .e Maintenance ..
 .e Replication ..
 .e Semaphores ..
 .e Messaging ..
-.e DOTNETSpecific ..
+.? net .e DOTNETSpecific ..  ..?
 .e DataBinding
 .e ObjectManager ..
 .e RegressionTests ..
