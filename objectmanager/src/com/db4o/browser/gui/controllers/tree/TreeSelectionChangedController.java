@@ -62,7 +62,11 @@ public class TreeSelectionChangedController implements
                 }
 			}
 		} catch (Throwable t) {
-            Logger.log().error(t, "Exception handling tree selection change");
+        	String message = "Exception handling tree selection change.\n" +
+    		"This usually happens when a class needs its constructor called because it has transient fields.\n" +
+    		"See File | Preferences | Constructor Calling";
+        Logger.log().error(t, message);
+            Logger.log().error(t, message);
 		} finally {
             --treeSelectionChanging;
         }

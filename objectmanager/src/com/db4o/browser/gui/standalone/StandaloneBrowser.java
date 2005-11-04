@@ -190,9 +190,16 @@ public class StandaloneBrowser implements IControlFactory {
     private MenuItem preferences;
     private MenuItem helpAbout;
     
-    private void enableOpenedDatabaseState() {
+    private void enableOpenedDatabaseMenuChoiceState() {
         xmlExport.setEnabled(true);
         closeAll.setEnabled(true);
+        query.setEnabled(true);
+    }
+    
+    private void setClosedDatabaseMenuChoiceState() {
+        xmlExport.setEnabled(false);
+        closeAll.setEnabled(false);
+        query.setEnabled(false);
     }
     
 	/**
@@ -220,7 +227,7 @@ public class StandaloneBrowser implements IControlFactory {
                 if (file != null) {
                     setTabText(file);
                     browserController.open(file);
-                    enableOpenedDatabaseState();
+                    enableOpenedDatabaseMenuChoiceState();
                 }
             }
         });
@@ -238,7 +245,7 @@ public class StandaloneBrowser implements IControlFactory {
                         try {
                             if (browserController.open(file)) {
                                 setTabText(file);
-                                enableOpenedDatabaseState();
+                                enableOpenedDatabaseMenuChoiceState();
                             }
                         } catch (Throwable ex) {
                             MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
@@ -266,14 +273,14 @@ public class StandaloneBrowser implements IControlFactory {
                     if (browserController.open(host, port, user, password)) {
                         setTabText(host + ":" + port);
                     }
-                    enableOpenedDatabaseState();
+                    enableOpenedDatabaseMenuChoiceState();
                 }
             }
         });
         
         closeAll.addSelectionListener(new SelectionAdapter() {
         	public void widgetSelected(SelectionEvent e) {
-        		MessageBox areYouSure = new MessageBox(shell, SWT.YES | SWT.NO);
+        		MessageBox areYouSure = new MessageBox(shell, SWT.YES | SWT.NO | SWT.ICON_QUESTION);
         		areYouSure.setText("Question");
         		areYouSure.setMessage("Are you sure you want to close all open databases?");
         		int userIsSure = areYouSure.open();
@@ -283,8 +290,7 @@ public class StandaloneBrowser implements IControlFactory {
         			IGraphIterator nullGraphIterator = TheNullGraphIterator.getDefault();
         			browserController.setInput(nullGraphIterator, nullGraphIterator.getPath());
         			setTabText("");
-        			closeAll.setEnabled(false);
-        			xmlExport.setEnabled(false);
+        			setClosedDatabaseMenuChoiceState();
         		}
         	}
         });
@@ -348,13 +354,6 @@ public class StandaloneBrowser implements IControlFactory {
 		}
 	}
 
-	/**
-	 * @param xmlExport
-	 */
-	private void enableOpenedFileState(final MenuItem xmlExport) {
-		xmlExport.setEnabled(true);
-	}
-
 	private IBrowserCoreListener browserCoreListener = new IBrowserCoreListener() {
         public void classpathChanged(BrowserCore browserCore) {
             closeAllQueries();
@@ -369,8 +368,7 @@ public class StandaloneBrowser implements IControlFactory {
 			IGraphIterator nullGraphIterator = TheNullGraphIterator.getDefault();
 			browserController.setInput(nullGraphIterator, nullGraphIterator.getPath());
 			setTabText("");
-			closeAll.setEnabled(false);
-			xmlExport.setEnabled(false);
+			setClosedDatabaseMenuChoiceState();
         }
     };
     

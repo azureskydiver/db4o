@@ -23,7 +23,7 @@
 					<menuItem x:style="SEPARATOR"/>
 					<menuItem x:id="XMLExport" enabled="false" text="Export to &amp;XML..."/>
 					<menuItem x:style="SEPARATOR"/>
-					<menuItem x:id="Query" text="&amp;Query..."/>
+					<menuItem x:id="Query" enabled="false" text="&amp;Query..."/>
 					<menuItem x:id="Preferences" text="&amp;Preferences..."/>
 					<menuItem x:style="SEPARATOR"/>
 					<menuItem x:id="NewWindow" text="&amp;New Window"/>
