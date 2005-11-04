@@ -6,7 +6,6 @@ namespace com.db4o
 
 		int typeID();
 
-
 		void write(object obj, byte[] bytes, int offset);
 
 		object read(byte[] bytes, int offset);

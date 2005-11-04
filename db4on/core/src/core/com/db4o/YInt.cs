@@ -1,7 +1,7 @@
-
 namespace com.db4o
 {
-	internal class YInt : com.db4o.YapJavaClass
+	/// <exclude></exclude>
+	public class YInt : com.db4o.YapJavaClass
 	{
 		private static readonly int i_primitive = 0;
 

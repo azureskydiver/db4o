@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <exclude></exclude>
@@ -15,7 +14,7 @@ namespace com.db4o
 			i_candidate = a_candidate;
 		}
 
-		internal override int compare(com.db4o.Tree a_to)
+		public override int compare(com.db4o.Tree a_to)
 		{
 			if (i_constraint.i_comparator.isSmaller(i_candidate.value()))
 			{

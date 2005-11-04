@@ -22,7 +22,7 @@ namespace com.db4o {
         internal P2HashMapIterator(P2HashMap p2hashmap) : base() {
             i_map = p2hashmap;
             i_nextIndex = -1;
-            getNextCurrent(); 
+            getNextCurrent();
         }
 
         public virtual Object Current{

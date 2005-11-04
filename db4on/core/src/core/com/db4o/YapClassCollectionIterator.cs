@@ -1,7 +1,6 @@
-
 namespace com.db4o
 {
-	internal class YapClassCollectionIterator : com.db4o.foundation.Iterator4
+	internal class YapClassCollectionIterator : com.db4o.foundation.Iterator4Impl
 	{
 		private readonly com.db4o.YapClassCollection i_collection;
 

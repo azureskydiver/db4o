@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal sealed class MWriteNew : com.db4o.MsgObject

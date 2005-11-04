@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <exclude></exclude>
@@ -19,7 +18,7 @@ namespace com.db4o
 			return a_constraint.i_object.Equals(null);
 		}
 
-		internal override bool supportsIndex()
+		public override bool supportsIndex()
 		{
 			return false;
 		}

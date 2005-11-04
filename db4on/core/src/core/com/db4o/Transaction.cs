@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <exclude></exclude>
@@ -6,7 +5,7 @@ namespace com.db4o
 	{
 		public readonly com.db4o.YapStream i_stream;
 
-		internal readonly com.db4o.YapFile i_file;
+		public readonly com.db4o.YapFile i_file;
 
 		internal readonly com.db4o.Transaction i_parentTransaction;
 
@@ -51,7 +50,7 @@ namespace com.db4o
 				);
 		}
 
-		internal virtual void addDirtyFieldIndex(com.db4o.IxFieldTransaction a_xft)
+		public virtual void addDirtyFieldIndex(com.db4o.inside.ix.IndexTransaction a_xft)
 		{
 			i_dirtyFieldIndexes = new com.db4o.foundation.List4(i_dirtyFieldIndexes, a_xft);
 		}
@@ -84,7 +83,7 @@ namespace com.db4o
 					foundOne[0] = false;
 					com.db4o.Tree delete = i_delete;
 					i_delete = null;
-					delete.traverse(new _AnonymousInnerClass104(this, foundOne, finalThis));
+					delete.traverse(new _AnonymousInnerClass106(this, foundOne, finalThis));
 				}
 				while (foundOne[0]);
 			}
@@ -92,9 +91,9 @@ namespace com.db4o
 			i_writtenUpdateDeletedMembers = null;
 		}
 
-		private sealed class _AnonymousInnerClass104 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass106 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass104(Transaction _enclosing, bool[] foundOne, com.db4o.Transaction
+			public _AnonymousInnerClass106(Transaction _enclosing, bool[] foundOne, com.db4o.Transaction
 				 finalThis)
 			{
 				this._enclosing = _enclosing;
@@ -202,7 +201,7 @@ namespace com.db4o
 		{
 			if (i_transactionListeners != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4(i_transactionListeners
+				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_transactionListeners
 					);
 				while (i.hasNext())
 				{
@@ -212,35 +211,42 @@ namespace com.db4o
 			}
 		}
 
+		private void commitExceptForFreespace()
+		{
+			beginEndSet();
+			commitTransactionListeners();
+			i_stream.checkNeededUpdates();
+			i_stream.writeDirty();
+			i_stream.i_classCollection.write(i_stream, i_stream.getSystemTransaction());
+			if (i_dirtyFieldIndexes != null)
+			{
+				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_dirtyFieldIndexes
+					);
+				while (i.hasNext())
+				{
+					((com.db4o.inside.ix.IndexTransaction)i.next()).commit();
+				}
+			}
+			if (i_parentTransaction != null)
+			{
+				i_parentTransaction.commitExceptForFreespace();
+			}
+			else
+			{
+				i_stream.writeDirty();
+			}
+			write();
+			freeOnCommit();
+			clearAll();
+		}
+
 		internal virtual void commit()
 		{
 			lock (i_stream.i_lock)
 			{
-				beginEndSet();
-				commitTransactionListeners();
-				i_stream.checkNeededUpdates();
-				i_stream.writeDirty();
-				i_stream.i_classCollection.write(i_stream, i_stream.getSystemTransaction());
-				if (i_dirtyFieldIndexes != null)
-				{
-					com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4(i_dirtyFieldIndexes
-						);
-					while (i.hasNext())
-					{
-						((com.db4o.IxFieldTransaction)i.next()).commit();
-					}
-				}
-				if (i_parentTransaction != null)
-				{
-					i_parentTransaction.commit();
-				}
-				else
-				{
-					i_stream.writeDirty();
-				}
-				write();
-				freeOnCommit();
-				clearAll();
+				i_file.freeSpaceBeginCommit();
+				commitExceptForFreespace();
+				i_file.freeSpaceEndCommit();
 			}
 		}
 
@@ -325,27 +331,27 @@ namespace com.db4o
 
 		internal virtual bool isDeleted(int a_id)
 		{
-			com.db4o.Slot slot = findSlotInHierarchy(a_id);
+			com.db4o.inside.slots.ReferencedSlot slot = findSlotInHierarchy(a_id);
 			if (slot != null)
 			{
-				return slot.i_address == 0;
+				return slot._address == 0;
 			}
 			return false;
 		}
 
-		private com.db4o.Slot findSlot(int a_id)
+		private com.db4o.inside.slots.ReferencedSlot findSlot(int a_id)
 		{
 			com.db4o.Tree tree = com.db4o.TreeInt.find(i_slots, a_id);
 			if (tree != null)
 			{
-				return (com.db4o.Slot)((com.db4o.TreeIntObject)tree).i_object;
+				return (com.db4o.inside.slots.ReferencedSlot)((com.db4o.TreeIntObject)tree).i_object;
 			}
 			return null;
 		}
 
-		private com.db4o.Slot findSlotInHierarchy(int a_id)
+		private com.db4o.inside.slots.ReferencedSlot findSlotInHierarchy(int a_id)
 		{
-			com.db4o.Slot slot = findSlot(a_id);
+			com.db4o.inside.slots.ReferencedSlot slot = findSlot(a_id);
 			if (slot != null)
 			{
 				return slot;
@@ -359,11 +365,13 @@ namespace com.db4o
 
 		private void freeOnBoth()
 		{
-			com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4(i_freeOnBoth);
+			com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_freeOnBoth
+				);
 			while (i.hasNext())
 			{
-				com.db4o.Slot slot = (com.db4o.Slot)i.next();
-				i_file.free(slot.i_address, slot.i_length);
+				com.db4o.inside.slots.ReferencedSlot slot = (com.db4o.inside.slots.ReferencedSlot
+					)i.next();
+				i_file.free(slot._address, slot._length);
 			}
 			i_freeOnBoth = null;
 		}
@@ -373,7 +381,7 @@ namespace com.db4o
 			freeOnBoth();
 			if (i_freeOnCommit != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4(i_freeOnCommit
+				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_freeOnCommit
 					);
 				while (i.hasNext())
 				{
@@ -381,20 +389,22 @@ namespace com.db4o
 					com.db4o.Tree node = com.db4o.TreeInt.find(i_stream.i_freeOnCommit, id);
 					if (node != null)
 					{
-						com.db4o.Slot slot = (com.db4o.Slot)((com.db4o.TreeIntObject)node).i_object;
-						i_file.free(slot.i_address, slot.i_length);
-						slot.i_references--;
+						com.db4o.inside.slots.ReferencedSlot slot = (com.db4o.inside.slots.ReferencedSlot
+							)((com.db4o.TreeIntObject)node).i_object;
+						i_file.free(slot._address, slot._length);
+						slot._references--;
 						bool removeNode = true;
-						if (slot.i_references > 0)
+						if (slot._references > 0)
 						{
 							com.db4o.Tree tio = com.db4o.TreeInt.find(i_freeOnRollback, id);
 							if (tio != null)
 							{
-								com.db4o.Slot newSlot = (com.db4o.Slot)((com.db4o.TreeIntObject)tio).i_object;
-								if (slot.i_address != newSlot.i_address)
+								com.db4o.inside.slots.ReferencedSlot newSlot = (com.db4o.inside.slots.ReferencedSlot
+									)((com.db4o.TreeIntObject)tio).i_object;
+								if (slot._address != newSlot._address)
 								{
-									slot.i_address = newSlot.i_address;
-									slot.i_length = newSlot.i_length;
+									slot._address = newSlot._address;
+									slot._length = newSlot._length;
 									removeNode = false;
 								}
 							}
@@ -427,13 +437,15 @@ namespace com.db4o
 				com.db4o.Tree node = com.db4o.TreeInt.find(i_stream.i_freeOnCommit, a_id);
 				if (node != null)
 				{
-					com.db4o.Slot slot = (com.db4o.Slot)((com.db4o.TreeIntObject)node).i_object;
-					slot.i_references++;
+					com.db4o.inside.slots.ReferencedSlot slot = (com.db4o.inside.slots.ReferencedSlot
+						)((com.db4o.TreeIntObject)node).i_object;
+					slot._references++;
 				}
 				else
 				{
-					com.db4o.Slot slot = new com.db4o.Slot(a_address, a_length);
-					slot.i_references = 1;
+					com.db4o.inside.slots.ReferencedSlot slot = new com.db4o.inside.slots.ReferencedSlot
+						(a_address, a_length);
+					slot._references = 1;
 					i_stream.i_freeOnCommit = com.db4o.Tree.add(i_stream.i_freeOnCommit, new com.db4o.TreeIntObject
 						(a_id, slot));
 				}
@@ -444,7 +456,7 @@ namespace com.db4o
 		internal virtual void freeOnRollback(int a_id, int a_address, int a_length)
 		{
 			i_freeOnRollback = com.db4o.Tree.add(i_freeOnRollback, new com.db4o.TreeIntObject
-				(a_id, new com.db4o.Slot(a_address, a_length)));
+				(a_id, new com.db4o.inside.slots.ReferencedSlot(a_address, a_length)));
 		}
 
 		internal virtual void freePointer(int a_id)
@@ -456,11 +468,11 @@ namespace com.db4o
 		{
 			if (a_id != 0)
 			{
-				com.db4o.Slot slot = findSlot(a_id);
+				com.db4o.inside.slots.ReferencedSlot slot = findSlot(a_id);
 				if (slot != null)
 				{
-					a_addressLength[0] = slot.i_address;
-					a_addressLength[1] = slot.i_length;
+					a_addressLength[0] = slot._address;
+					a_addressLength[1] = slot._length;
 				}
 				else
 				{
@@ -485,22 +497,22 @@ namespace com.db4o
 			)
 		{
 			object[] ret = new object[2];
-			com.db4o.IxTree ixTree = (com.db4o.IxTree)i_stream.i_handlers.i_indexes.i_fieldUUID
-				.getIndexRoot(this);
-			com.db4o.IxTraverser ixTraverser = new com.db4o.IxTraverser();
+			com.db4o.inside.ix.IxTree ixTree = (com.db4o.inside.ix.IxTree)i_stream.i_handlers
+				.i_indexes.i_fieldUUID.getIndexRoot(this);
+			com.db4o.inside.ix.IxTraverser ixTraverser = new com.db4o.inside.ix.IxTraverser();
 			int count = ixTraverser.findBoundsExactMatch(a_uuid, ixTree);
 			if (count > 0)
 			{
 				com.db4o.Transaction finalThis = this;
-				ixTraverser.visitAll(new _AnonymousInnerClass537(this, finalThis, a_signature, ret
+				ixTraverser.visitAll(new _AnonymousInnerClass551(this, finalThis, a_signature, ret
 					));
 			}
 			return ret;
 		}
 
-		private sealed class _AnonymousInnerClass537 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass551 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass537(Transaction _enclosing, com.db4o.Transaction finalThis
+			public _AnonymousInnerClass551(Transaction _enclosing, com.db4o.Transaction finalThis
 				, byte[] a_signature, object[] ret)
 			{
 				this._enclosing = _enclosing;
@@ -585,16 +597,16 @@ namespace com.db4o
 				beginEndSet();
 				if (i_dirtyFieldIndexes != null)
 				{
-					com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4(i_dirtyFieldIndexes
+					com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_dirtyFieldIndexes
 						);
 					while (i.hasNext())
 					{
-						((com.db4o.IxFieldTransaction)i.next()).rollback();
+						((com.db4o.inside.ix.IndexTransaction)i.next()).rollback();
 					}
 				}
 				if (i_freeOnCommit != null)
 				{
-					com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4(i_freeOnCommit
+					com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_freeOnCommit
 						);
 					while (i.hasNext())
 					{
@@ -602,9 +614,10 @@ namespace com.db4o
 							)));
 						if (node != null)
 						{
-							com.db4o.Slot slot = (com.db4o.Slot)((com.db4o.TreeIntObject)node).i_object;
-							slot.i_references--;
-							if (slot.i_references < 1)
+							com.db4o.inside.slots.ReferencedSlot slot = (com.db4o.inside.slots.ReferencedSlot
+								)((com.db4o.TreeIntObject)node).i_object;
+							slot._references--;
+							if (slot._references < 1)
 							{
 								i_stream.i_freeOnCommit = i_stream.i_freeOnCommit.removeNode(node);
 							}
@@ -613,7 +626,7 @@ namespace com.db4o
 				}
 				if (i_freeOnRollback != null)
 				{
-					i_freeOnRollback.traverse(new _AnonymousInnerClass631(this));
+					i_freeOnRollback.traverse(new _AnonymousInnerClass645(this));
 				}
 				freeOnBoth();
 				rollBackTransactionListeners();
@@ -621,9 +634,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass631 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass645 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass631(Transaction _enclosing)
+			public _AnonymousInnerClass645(Transaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -631,8 +644,9 @@ namespace com.db4o
 			public void visit(object obj)
 			{
 				com.db4o.TreeIntObject node = (com.db4o.TreeIntObject)obj;
-				com.db4o.Slot slot = (com.db4o.Slot)node.i_object;
-				((com.db4o.YapFile)this._enclosing.i_stream).free(slot.i_address, slot.i_length);
+				com.db4o.inside.slots.ReferencedSlot slot = (com.db4o.inside.slots.ReferencedSlot
+					)node.i_object;
+				((com.db4o.YapFile)this._enclosing.i_stream).free(slot._address, slot._length);
 			}
 
 			private readonly Transaction _enclosing;
@@ -642,7 +656,7 @@ namespace com.db4o
 		{
 			if (i_transactionListeners != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4(i_transactionListeners
+				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_transactionListeners
 					);
 				while (i.hasNext())
 				{
@@ -659,15 +673,15 @@ namespace com.db4o
 
 		internal virtual void setPointer(int a_id, int a_address, int a_length)
 		{
-			com.db4o.Slot slot = findSlot(a_id);
+			com.db4o.inside.slots.ReferencedSlot slot = findSlot(a_id);
 			if (slot != null)
 			{
-				slot.i_address = a_address;
-				slot.i_length = a_length;
+				slot._address = a_address;
+				slot._length = a_length;
 			}
 			else
 			{
-				i_slots = com.db4o.Tree.add(i_slots, new com.db4o.TreeIntObject(a_id, new com.db4o.Slot
+				i_slots = com.db4o.Tree.add(i_slots, new com.db4o.TreeIntObject(a_id, new com.db4o.inside.slots.ReferencedSlot
 					(a_address, a_length)));
 			}
 		}
@@ -704,8 +718,7 @@ namespace com.db4o
 				))
 			{
 				int length = calculateLength();
-				int address = ((com.db4o.YapFile)i_stream).getSlot(length);
-				freeOnCommit(address, address, length);
+				int address = i_file.getSlot(length);
 				com.db4o.YapWriter bytes = new com.db4o.YapWriter(this, address, length);
 				bytes.writeInt(length);
 				com.db4o.Tree.write(bytes, i_slots);
@@ -715,6 +728,7 @@ namespace com.db4o
 				i_stream.writeTransactionPointer(address);
 				writeSlots();
 				i_stream.writeTransactionPointer(0);
+				i_file.free(address, length);
 			}
 		}
 
@@ -723,13 +737,13 @@ namespace com.db4o
 		{
 			if (a_tree != null)
 			{
-				a_tree.traverse(new _AnonymousInnerClass731(this, a_add, a_indices));
+				a_tree.traverse(new _AnonymousInnerClass745(this, a_add, a_indices));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass731 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass745 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass731(Transaction _enclosing, bool a_add, com.db4o.foundation.Collection4
+			public _AnonymousInnerClass745(Transaction _enclosing, bool a_add, com.db4o.foundation.Collection4
 				 a_indices)
 			{
 				this._enclosing = _enclosing;
@@ -747,11 +761,11 @@ namespace com.db4o
 					com.db4o.foundation.Visitor4 visitor = null;
 					if (a_add)
 					{
-						visitor = new _AnonymousInnerClass740(this, classIndex);
+						visitor = new _AnonymousInnerClass754(this, classIndex);
 					}
 					else
 					{
-						visitor = new _AnonymousInnerClass746(this, classIndex);
+						visitor = new _AnonymousInnerClass760(this, classIndex);
 					}
 					((com.db4o.Tree)node.i_object).traverse(visitor);
 					if (!a_indices.containsByIdentity(classIndex))
@@ -761,9 +775,9 @@ namespace com.db4o
 				}
 			}
 
-			private sealed class _AnonymousInnerClass740 : com.db4o.foundation.Visitor4
+			private sealed class _AnonymousInnerClass754 : com.db4o.foundation.Visitor4
 			{
-				public _AnonymousInnerClass740(_AnonymousInnerClass731 _enclosing, com.db4o.ClassIndex
+				public _AnonymousInnerClass754(_AnonymousInnerClass745 _enclosing, com.db4o.ClassIndex
 					 classIndex)
 				{
 					this._enclosing = _enclosing;
@@ -775,14 +789,14 @@ namespace com.db4o
 					classIndex.add(((com.db4o.TreeInt)a_object).i_key);
 				}
 
-				private readonly _AnonymousInnerClass731 _enclosing;
+				private readonly _AnonymousInnerClass745 _enclosing;
 
 				private readonly com.db4o.ClassIndex classIndex;
 			}
 
-			private sealed class _AnonymousInnerClass746 : com.db4o.foundation.Visitor4
+			private sealed class _AnonymousInnerClass760 : com.db4o.foundation.Visitor4
 			{
-				public _AnonymousInnerClass746(_AnonymousInnerClass731 _enclosing, com.db4o.ClassIndex
+				public _AnonymousInnerClass760(_AnonymousInnerClass745 _enclosing, com.db4o.ClassIndex
 					 classIndex)
 				{
 					this._enclosing = _enclosing;
@@ -800,7 +814,7 @@ namespace com.db4o
 					classIndex.remove(id);
 				}
 
-				private readonly _AnonymousInnerClass731 _enclosing;
+				private readonly _AnonymousInnerClass745 _enclosing;
 
 				private readonly com.db4o.ClassIndex classIndex;
 			}
@@ -827,13 +841,13 @@ namespace com.db4o
 			}
 			if (i_slots != null)
 			{
-				i_slots.traverse(new _AnonymousInnerClass785(this));
+				i_slots.traverse(new _AnonymousInnerClass799(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass785 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass799 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass785(Transaction _enclosing)
+			public _AnonymousInnerClass799(Transaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -841,8 +855,9 @@ namespace com.db4o
 			public void visit(object obj)
 			{
 				com.db4o.TreeIntObject node = (com.db4o.TreeIntObject)obj;
-				com.db4o.Slot slot = (com.db4o.Slot)node.i_object;
-				this._enclosing.writePointer(node.i_key, slot.i_address, slot.i_length);
+				com.db4o.inside.slots.ReferencedSlot slot = (com.db4o.inside.slots.ReferencedSlot
+					)node.i_object;
+				this._enclosing.writePointer(node.i_key, slot._address, slot._length);
 			}
 
 			private readonly Transaction _enclosing;
@@ -860,7 +875,7 @@ namespace com.db4o
 					com.db4o.YapWriter bytes = new com.db4o.YapWriter(this, i_address, length);
 					bytes.read();
 					bytes.incrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
-					i_slots = new com.db4o.TreeReader(bytes, new com.db4o.TreeIntObject(0, new com.db4o.Slot
+					i_slots = new com.db4o.TreeReader(bytes, new com.db4o.TreeIntObject(0, new com.db4o.inside.slots.ReferencedSlot
 						(0, 0))).read();
 					i_addToClassIndex = new com.db4o.TreeReader(bytes, new com.db4o.TreeIntObject(0, 
 						new com.db4o.TreeInt(0))).read();
@@ -877,12 +892,12 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual void writePointer(int a_id, int a_address, int a_length)
+		public virtual void writePointer(int a_id, int a_address, int a_length)
 		{
 			i_pointerIo.useSlot(a_id);
 			i_pointerIo.writeInt(a_address);
 			i_pointerIo.writeInt(a_length);
-			if (com.db4o.Deploy.debug && com.db4o.Deploy.overwrite)
+			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 			{
 				i_pointerIo.setID(com.db4o.YapConst.IGNORE_ID);
 			}

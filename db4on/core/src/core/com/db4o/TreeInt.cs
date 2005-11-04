@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>Base class for balanced trees.</summary>
@@ -13,7 +12,7 @@ namespace com.db4o
 			this.i_key = a_key;
 		}
 
-		internal override int compare(com.db4o.Tree a_to)
+		public override int compare(com.db4o.Tree a_to)
 		{
 			return i_key - ((com.db4o.TreeInt)a_to).i_key;
 		}
@@ -23,7 +22,7 @@ namespace com.db4o
 			return new com.db4o.TreeInt(i_key);
 		}
 
-		internal override bool duplicates()
+		public override bool duplicates()
 		{
 			return false;
 		}
@@ -74,7 +73,7 @@ namespace com.db4o
 			a_writer.writeInt(i_key);
 		}
 
-		internal override int ownLength()
+		public override int ownLength()
 		{
 			return com.db4o.YapConst.YAPINT_LENGTH;
 		}

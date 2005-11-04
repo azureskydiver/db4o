@@ -1,7 +1,7 @@
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	public class YapClass : com.db4o.YapMeta, com.db4o.YapDataType, com.db4o.ext.StoredClass
+	public class YapClass : com.db4o.YapMeta, com.db4o.TypeHandler4, com.db4o.ext.StoredClass
 		, com.db4o.UseSystemTransaction
 	{
 		internal com.db4o.YapClass i_ancestor;
@@ -31,6 +31,13 @@ namespace com.db4o
 		internal bool i_dontCallConstructors;
 
 		private com.db4o.EventDispatcher _eventDispatcher;
+
+		private bool _internal;
+
+		internal virtual bool isInternal()
+		{
+			return _internal;
+		}
 
 		internal int i_lastID;
 
@@ -99,7 +106,7 @@ namespace com.db4o
 				bool found;
 				bool dirty = isDirty();
 				com.db4o.YapField field;
-				com.db4o.YapDataType wrapper;
+				com.db4o.TypeHandler4 wrapper;
 				com.db4o.foundation.Collection4 members = new com.db4o.foundation.Collection4();
 				members.addAll(i_fields);
 				if (generateVersionNumbers())
@@ -313,6 +320,29 @@ namespace com.db4o
 							write(i_stream, i_stream.getSystemTransaction());
 						}
 					}
+				}
+			}
+		}
+
+		private void checkDb4oType()
+		{
+			com.db4o.reflect.ReflectClass claxx = classReflector();
+			if (claxx == null)
+			{
+				return;
+			}
+			if (i_stream.i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))
+			{
+				_internal = true;
+			}
+			if (i_stream.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx))
+			{
+				try
+				{
+					i_db4oType = (com.db4o.Db4oTypeImpl)claxx.newInstance();
+				}
+				catch (System.Exception e)
+				{
 				}
 			}
 		}
@@ -613,7 +643,7 @@ namespace com.db4o
 			return true;
 		}
 
-		public bool equals(com.db4o.YapDataType a_dataType)
+		public bool equals(com.db4o.TypeHandler4 a_dataType)
 		{
 			return (this == a_dataType);
 		}
@@ -670,32 +700,35 @@ namespace com.db4o
 
 		private bool generateUUIDs()
 		{
-			if (i_stream is com.db4o.YapFile)
+			if (!generateVirtual())
 			{
-				com.db4o.YapFile yf = (com.db4o.YapFile)i_stream;
-				int configValue = (i_config == null) ? 0 : i_config.i_generateUUIDs;
-				if (yf.i_bootRecord == null)
-				{
-					return false;
-				}
-				return generate1(yf.i_bootRecord.i_generateUUIDs, configValue);
+				return false;
 			}
-			return false;
+			int configValue = (i_config == null) ? 0 : i_config.i_generateUUIDs;
+			return generate1(i_stream.bootRecord().i_generateUUIDs, configValue);
 		}
 
 		private bool generateVersionNumbers()
 		{
-			if (i_stream is com.db4o.YapFile)
+			if (!generateVirtual())
 			{
-				com.db4o.YapFile yf = (com.db4o.YapFile)i_stream;
-				int configValue = (i_config == null) ? 0 : i_config.i_generateVersionNumbers;
-				if (yf.i_bootRecord == null)
-				{
-					return false;
-				}
-				return generate1(yf.i_bootRecord.i_generateVersionNumbers, configValue);
+				return false;
 			}
-			return false;
+			int configValue = (i_config == null) ? 0 : i_config.i_generateVersionNumbers;
+			return generate1(i_stream.bootRecord().i_generateVersionNumbers, configValue);
+		}
+
+		private bool generateVirtual()
+		{
+			if (_internal)
+			{
+				return false;
+			}
+			if (!(i_stream is com.db4o.YapFile))
+			{
+				return false;
+			}
+			return i_stream.bootRecord() != null;
 		}
 
 		private bool generate1(int bootRecordValue, int configValue)
@@ -860,6 +893,15 @@ namespace com.db4o
 			return null;
 		}
 
+		internal virtual int indexEntryCount(com.db4o.Transaction ta)
+		{
+			if (stateOK() && i_index != null)
+			{
+				return i_index.entryCount(ta);
+			}
+			return 0;
+		}
+
 		internal com.db4o.Tree getIndex(com.db4o.Transaction a_trans)
 		{
 			if (hasIndex())
@@ -937,13 +979,13 @@ namespace com.db4o
 		public virtual com.db4o.YapField getYapField(string name)
 		{
 			com.db4o.YapField[] yf = new com.db4o.YapField[1];
-			forEachYapField(new _AnonymousInnerClass795(this, name, yf));
+			forEachYapField(new _AnonymousInnerClass825(this, name, yf));
 			return yf[0];
 		}
 
-		private sealed class _AnonymousInnerClass795 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass825 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass795(YapClass _enclosing, string name, com.db4o.YapField[]
+			public _AnonymousInnerClass825(YapClass _enclosing, string name, com.db4o.YapField[]
 				 yf)
 			{
 				this._enclosing = _enclosing;
@@ -977,6 +1019,10 @@ namespace com.db4o
 
 		internal virtual bool hasVirtualAttributes()
 		{
+			if (_internal)
+			{
+				return false;
+			}
 			return hasVersionField() || hasUUIDField();
 		}
 
@@ -1109,9 +1155,12 @@ namespace com.db4o
 					}
 					stream.instantiating(false);
 				}
+				if (a_object is com.db4o.TransactionAware)
+				{
+					((com.db4o.TransactionAware)a_object).setTrans(a_bytes.getTransaction());
+				}
 				if (a_object is com.db4o.Db4oTypeImpl)
 				{
-					((com.db4o.Db4oTypeImpl)a_object).setTrans(a_bytes.getTransaction());
 					((com.db4o.Db4oTypeImpl)a_object).setYapObject(a_yapObject);
 				}
 				a_yapObject.setObjectWeak(stream, a_object);
@@ -1493,7 +1542,7 @@ namespace com.db4o
 			return null;
 		}
 
-		public virtual com.db4o.YapDataType readArrayWrapper(com.db4o.Transaction a_trans
+		public virtual com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction a_trans
 			, com.db4o.YapReader[] a_bytes)
 		{
 			if (isArray())
@@ -1503,7 +1552,7 @@ namespace com.db4o
 			return null;
 		}
 
-		public virtual com.db4o.YapDataType readArrayWrapper1(com.db4o.YapReader[] a_bytes
+		public virtual com.db4o.TypeHandler4 readArrayWrapper1(com.db4o.YapReader[] a_bytes
 			)
 		{
 			if (isArray())
@@ -1543,15 +1592,15 @@ namespace com.db4o
 				{
 					int[] idgen = { -2 };
 					a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
-					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1325(this
+					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1360(this
 						, trans, idgen, a_candidates));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1325 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass1360 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass1325(YapClass _enclosing, com.db4o.Transaction trans, 
+			public _AnonymousInnerClass1360(YapClass _enclosing, com.db4o.Transaction trans, 
 				int[] idgen, com.db4o.QCandidates a_candidates)
 			{
 				this._enclosing = _enclosing;
@@ -1772,22 +1821,6 @@ namespace com.db4o
 				i_nameBytes = null;
 				i_reader = null;
 				bitFalse(com.db4o.YapConst.READING);
-			}
-		}
-
-		private void checkDb4oType()
-		{
-			com.db4o.reflect.ReflectClass claxx = classReflector();
-			if (claxx != null && i_stream.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx
-				))
-			{
-				try
-				{
-					i_db4oType = (com.db4o.Db4oTypeImpl)claxx.newInstance();
-				}
-				catch (System.Exception e)
-				{
-				}
 			}
 		}
 

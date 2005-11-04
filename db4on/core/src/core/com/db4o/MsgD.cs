@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>Messages with Data for Client/Server Communication</summary>

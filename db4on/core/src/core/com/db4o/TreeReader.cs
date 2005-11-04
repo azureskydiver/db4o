@@ -1,8 +1,7 @@
-
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	internal sealed class TreeReader
+	public sealed class TreeReader
 	{
 		private readonly com.db4o.Readable i_template;
 
@@ -22,8 +21,8 @@ namespace com.db4o
 			i_bytes = a_bytes;
 		}
 
-		internal TreeReader(com.db4o.YapReader a_bytes, com.db4o.Readable a_template, bool
-			 a_orderOnRead) : this(a_bytes, a_template)
+		public TreeReader(com.db4o.YapReader a_bytes, com.db4o.Readable a_template, bool 
+			a_orderOnRead) : this(a_bytes, a_template)
 		{
 			i_orderOnRead = a_orderOnRead;
 		}

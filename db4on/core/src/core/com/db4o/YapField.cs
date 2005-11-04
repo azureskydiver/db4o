@@ -17,7 +17,7 @@ namespace com.db4o
 
 		private com.db4o.reflect.ReflectField i_javaField;
 
-		internal com.db4o.YapDataType i_handler;
+		internal com.db4o.TypeHandler4 i_handler;
 
 		private int i_handlerID;
 
@@ -29,7 +29,7 @@ namespace com.db4o
 
 		private const int AVAILABLE = 1;
 
-		protected com.db4o.IxField i_index;
+		protected com.db4o.inside.ix.Index4 i_index;
 
 		private com.db4o.Config4Field i_config;
 
@@ -55,7 +55,7 @@ namespace com.db4o
 		}
 
 		internal YapField(com.db4o.YapClass a_yapClass, com.db4o.reflect.ReflectField a_field
-			, com.db4o.YapDataType a_handler)
+			, com.db4o.TypeHandler4 a_handler)
 		{
 			init(a_yapClass, a_field.getName(), 0);
 			i_javaField = a_field;
@@ -99,9 +99,9 @@ namespace com.db4o
 			 valueOrID)
 		{
 			i_handler.prepareLastIoComparison(a_trans, valueOrID);
-			com.db4o.IxFieldTransaction ift = getIndex(a_trans).dirtyFieldTransaction(a_trans
-				);
-			ift.add(new com.db4o.IxAdd(ift, parentID, i_handler.indexEntry(valueOrID)));
+			com.db4o.inside.ix.IndexTransaction ift = getIndex(a_trans).dirtyIndexTransaction
+				(a_trans);
+			ift.add(parentID, i_handler.indexEntry(valueOrID));
 		}
 
 		public virtual bool alive()
@@ -342,9 +342,9 @@ namespace com.db4o
 					{
 					}
 					i_handler.prepareComparison(obj);
-					com.db4o.IxFieldTransaction ift = i_index.dirtyFieldTransaction(a_bytes.getTransaction
+					com.db4o.inside.ix.IndexTransaction ift = i_index.dirtyIndexTransaction(a_bytes.getTransaction
 						());
-					ift.add(new com.db4o.IxRemove(ift, a_bytes.getID(), i_handler.indexEntry(obj)));
+					ift.remove(a_bytes.getID(), i_handler.indexEntry(obj));
 					a_bytes._offset = offset;
 				}
 				bool dotnetValueType = false;
@@ -434,17 +434,17 @@ namespace com.db4o
 			return i_handler.getYapClass(a_stream);
 		}
 
-		internal virtual com.db4o.IxField getIndex(com.db4o.Transaction a_trans)
+		internal virtual com.db4o.inside.ix.Index4 getIndex(com.db4o.Transaction a_trans)
 		{
 			return i_index;
 		}
 
 		internal virtual com.db4o.Tree getIndexRoot(com.db4o.Transaction a_trans)
 		{
-			return getIndex(a_trans).getFieldTransaction(a_trans).getRoot();
+			return getIndex(a_trans).indexTransactionFor(a_trans).getRoot();
 		}
 
-		internal virtual com.db4o.YapDataType getHandler()
+		internal virtual com.db4o.TypeHandler4 getHandler()
 		{
 			return i_handler;
 		}
@@ -546,7 +546,7 @@ namespace com.db4o
 		{
 			if (supportsIndex())
 			{
-				i_index = new com.db4o.IxField(systemTrans, this, metaIndex);
+				i_index = new com.db4o.inside.ix.Index4(systemTrans, getHandler(), metaIndex);
 			}
 		}
 
@@ -617,7 +617,7 @@ namespace com.db4o
 
 		private void loadJavaField()
 		{
-			com.db4o.YapDataType handler = loadJavaField1();
+			com.db4o.TypeHandler4 handler = loadJavaField1();
 			if (handler == null || (!handler.equals(i_handler)))
 			{
 				i_javaField = null;
@@ -625,7 +625,7 @@ namespace com.db4o
 			}
 		}
 
-		private com.db4o.YapDataType loadJavaField1()
+		private com.db4o.TypeHandler4 loadJavaField1()
 		{
 			try
 			{
@@ -637,7 +637,7 @@ namespace com.db4o
 				}
 				i_javaField.setAccessible();
 				stream.showInternalClasses(true);
-				com.db4o.YapDataType handler = stream.i_handlers.handlerForClass(stream, i_javaField
+				com.db4o.TypeHandler4 handler = stream.i_handlers.handlerForClass(stream, i_javaField
 					.getType());
 				stream.showInternalClasses(false);
 				return handler;
@@ -766,7 +766,7 @@ namespace com.db4o
 
 		internal virtual void refresh()
 		{
-			com.db4o.YapDataType handler = loadJavaField1();
+			com.db4o.TypeHandler4 handler = loadJavaField1();
 			if (handler != null)
 			{
 				handler = wrapHandlerToArrays(getStream(), handler);
@@ -809,7 +809,7 @@ namespace com.db4o
 			return alive() && i_handler.supportsIndex();
 		}
 
-		private com.db4o.YapDataType wrapHandlerToArrays(com.db4o.YapStream a_stream, com.db4o.YapDataType
+		private com.db4o.TypeHandler4 wrapHandlerToArrays(com.db4o.YapStream a_stream, com.db4o.TypeHandler4
 			 a_handler)
 		{
 			if (i_isNArray)

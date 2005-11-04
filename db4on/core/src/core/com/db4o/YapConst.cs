@@ -85,7 +85,7 @@ namespace com.db4o
 
 		internal const int OBJECT_LENGTH = ADDED_LENGTH;
 
-		internal const int POINTER_LENGTH = (YAPINT_LENGTH * 2) + ADDED_LENGTH;
+		public const int POINTER_LENGTH = (YAPINT_LENGTH * 2) + ADDED_LENGTH;
 
 		internal const int MESSAGE_LENGTH = YAPINT_LENGTH * 2 + 1;
 
@@ -95,7 +95,7 @@ namespace com.db4o
 
 		internal const byte XBYTE = (byte)'X';
 
-		internal const int IGNORE_ID = -99999;
+		public const int IGNORE_ID = -99999;
 
 		internal const int PRIMITIVE = -2000000000;
 

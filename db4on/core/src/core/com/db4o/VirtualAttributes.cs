@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal class VirtualAttributes : j4o.lang.Cloneable

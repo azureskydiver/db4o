@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>
@@ -30,7 +29,7 @@ namespace com.db4o
 			initialize2();
 		}
 
-		internal override void initialize2b()
+		internal override void initialize2NObjectCarrier()
 		{
 		}
 
@@ -89,11 +88,11 @@ namespace com.db4o
 		{
 		}
 
-		internal sealed override void free(int a_address, int a_length)
+		public sealed override void free(int a_address, int a_length)
 		{
 		}
 
-		internal override int getSlot(int a_length)
+		public override int getSlot(int a_length)
 		{
 			int address = i_writeAt;
 			i_writeAt += a_length;

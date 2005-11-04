@@ -85,7 +85,7 @@ namespace com.db4o
 			}
 		}
 
-		internal override byte blockSize()
+		public override byte blockSize()
 		{
 			return (byte)i_file.blockSize();
 		}
@@ -122,7 +122,7 @@ namespace com.db4o
 								com.db4o.YapWriter lockBytes = new com.db4o.YapWriter(i_systemTrans, com.db4o.YapConst
 									.YAPLONG_LENGTH);
 								com.db4o.YLong.writeLong(0, lockBytes);
-								i_timerFile.blockSeek(i_configBlock._address, com.db4o.YapConfigBlock.ACCESS_TIME_OFFSET
+								i_timerFile.blockSeek(_configBlock._address, com.db4o.YapConfigBlock.ACCESS_TIME_OFFSET
 									);
 								i_timerFile.write(lockBytes._buffer);
 								i_timerFile.close();
@@ -140,10 +140,16 @@ namespace com.db4o
 			return stopSession;
 		}
 
-		internal override void copy(int oldAddress, int oldAddressOffset, int newAddress, 
-			int newAddressOffset, int length)
+		internal override void commit1()
 		{
-			if (com.db4o.Deploy.debug && com.db4o.Deploy.overwrite)
+			ensureLastSlotWritten();
+			base.commit1();
+		}
+
+		public override void copy(int oldAddress, int oldAddressOffset, int newAddress, int
+			 newAddressOffset, int length)
+		{
+			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 			{
 				checkXBytes(newAddress, newAddressOffset, length);
 			}
@@ -174,7 +180,7 @@ namespace com.db4o
 
 		private void checkXBytes(int a_newAddress, int newAddressOffset, int a_length)
 		{
-			if (com.db4o.Deploy.debug && com.db4o.Deploy.overwrite)
+			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 			{
 				try
 				{
@@ -354,7 +360,7 @@ namespace com.db4o
 				}
 				long lockTime = j4o.lang.JavaSystem.currentTimeMillis();
 				com.db4o.YLong.writeLong(lockTime, i_timerBytes);
-				i_timerFile.blockSeek(i_configBlock._address, com.db4o.YapConfigBlock.ACCESS_TIME_OFFSET
+				i_timerFile.blockSeek(_configBlock._address, com.db4o.YapConfigBlock.ACCESS_TIME_OFFSET
 					);
 				i_timerFile.write(i_timerBytes);
 			}
@@ -373,7 +379,7 @@ namespace com.db4o
 			}
 			try
 			{
-				if (com.db4o.Deploy.debug && com.db4o.Deploy.overwrite)
+				if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 				{
 					if (a_bytes.getID() != com.db4o.YapConst.IGNORE_ID)
 					{
@@ -394,7 +400,7 @@ namespace com.db4o
 			}
 		}
 
-		internal override void writeXBytes(int a_address, int a_length)
+		public override void writeXBytes(int a_address, int a_length)
 		{
 		}
 	}

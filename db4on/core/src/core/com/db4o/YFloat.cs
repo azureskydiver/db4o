@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal sealed class YFloat : com.db4o.YInt

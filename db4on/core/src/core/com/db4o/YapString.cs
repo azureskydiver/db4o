@@ -39,7 +39,7 @@ namespace com.db4o
 			return _stream.i_handlers.ICLASS_STRING;
 		}
 
-		public override bool equals(com.db4o.YapDataType a_dataType)
+		public override bool equals(com.db4o.TypeHandler4 a_dataType)
 		{
 			return (this == a_dataType);
 		}
@@ -86,7 +86,7 @@ namespace com.db4o
 			return ret;
 		}
 
-		public override com.db4o.YapDataType readArrayWrapper(com.db4o.Transaction a_trans
+		public override com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction a_trans
 			, com.db4o.YapReader[] a_bytes)
 		{
 			return null;

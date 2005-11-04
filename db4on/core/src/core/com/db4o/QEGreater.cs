@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <exclude></exclude>
@@ -14,7 +13,7 @@ namespace com.db4o
 			return a_constraint.getComparator(a_candidate).isGreater(a_value);
 		}
 
-		internal override void indexBitMap(bool[] bits)
+		public override void indexBitMap(bool[] bits)
 		{
 			bits[2] = true;
 		}

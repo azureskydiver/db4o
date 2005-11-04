@@ -1,7 +1,7 @@
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	public abstract class YapJavaClass : com.db4o.YapDataType
+	public abstract class YapJavaClass : com.db4o.TypeHandler4
 	{
 		protected readonly com.db4o.YapStream _stream;
 
@@ -42,7 +42,7 @@ namespace com.db4o
 			a_bytes.incrementOffset(linkLength());
 		}
 
-		public virtual bool equals(com.db4o.YapDataType a_dataType)
+		public virtual bool equals(com.db4o.TypeHandler4 a_dataType)
 		{
 			return (this == a_dataType);
 		}
@@ -83,7 +83,7 @@ namespace com.db4o
 			return false;
 		}
 
-		public virtual com.db4o.YapDataType readArrayWrapper(com.db4o.Transaction a_trans
+		public virtual com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction a_trans
 			, com.db4o.YapReader[] a_bytes)
 		{
 			return null;
@@ -245,8 +245,8 @@ namespace com.db4o
 
 		internal abstract bool isSmaller1(object obj);
 
-		public abstract int getID();
-
 		public abstract int linkLength();
+
+		public abstract int getID();
 	}
 }

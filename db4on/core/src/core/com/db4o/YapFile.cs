@@ -3,15 +3,15 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public abstract class YapFile : com.db4o.YapStream
 	{
-		internal com.db4o.YapConfigBlock i_configBlock;
+		protected com.db4o.YapConfigBlock _configBlock;
 
-		internal com.db4o.PBootRecord i_bootRecord;
+		private com.db4o.PBootRecord _bootRecord;
 
 		private com.db4o.foundation.Collection4 i_dirty;
 
-		private com.db4o.Tree i_freeByAddress;
+		private com.db4o.inside.freespace.FreespaceManager _freespaceManager;
 
-		private com.db4o.Tree i_freeBySize;
+		private com.db4o.inside.freespace.FreespaceManager _fmChecker;
 
 		private bool i_isServer = false;
 
@@ -21,13 +21,11 @@ namespace com.db4o
 
 		internal int i_writeAt;
 
-		private readonly com.db4o.TreeIntObject i_finder = new com.db4o.TreeIntObject(0);
-
 		internal YapFile(com.db4o.YapStream a_parent) : base(a_parent)
 		{
 		}
 
-		internal virtual byte blockSize()
+		public virtual byte blockSize()
 		{
 			return 1;
 		}
@@ -36,16 +34,19 @@ namespace com.db4o
 		{
 		}
 
+		public override com.db4o.PBootRecord bootRecord()
+		{
+			return _bootRecord;
+		}
+
 		internal override bool close2()
 		{
 			bool ret = base.close2();
-			i_freeBySize = null;
-			i_freeByAddress = null;
 			i_dirty = null;
 			return ret;
 		}
 
-		internal sealed override void commit1()
+		internal override void commit1()
 		{
 			checkClosed();
 			i_entryCounter++;
@@ -62,19 +63,22 @@ namespace com.db4o
 
 		internal virtual void configureNewFile()
 		{
+			_freespaceManager = com.db4o.inside.freespace.FreespaceManager.createNew(this, i_config
+				._freespaceSystem);
 			blockSize(i_config.i_blockSize);
 			i_writeAt = blocksFor(HEADER_LENGTH);
-			i_configBlock = new com.db4o.YapConfigBlock(this, i_config.i_encoding);
-			i_configBlock.write();
-			i_configBlock.go();
+			_configBlock = new com.db4o.YapConfigBlock(this);
+			_configBlock.write();
+			_configBlock.go();
 			initNewClassCollection();
 			initializeEssentialClasses();
 			initBootRecord();
+			_freespaceManager.start(_configBlock._freespaceAddress);
 		}
 
 		internal override long currentVersion()
 		{
-			return i_bootRecord.i_versionGenerator;
+			return _bootRecord.i_versionGenerator;
 		}
 
 		internal virtual void initNewClassCollection()
@@ -124,77 +128,23 @@ namespace com.db4o
 
 		internal abstract string fileName();
 
-		internal virtual void addFreeSlotNodes(int a_address, int a_length)
+		public virtual void free(int a_address, int a_length)
 		{
-			com.db4o.FreeSlotNode addressNode = new com.db4o.FreeSlotNode(a_address);
-			addressNode.createPeer(a_length);
-			i_freeByAddress = com.db4o.Tree.add(i_freeByAddress, addressNode);
-			i_freeBySize = com.db4o.Tree.add(i_freeBySize, addressNode.i_peer);
-		}
-
-		internal virtual void free(int a_address, int a_length)
-		{
-			if (a_length > i_config.i_discardFreeSpace)
-			{
-				a_length = blocksFor(a_length);
-				i_finder.i_key = a_address;
-				com.db4o.FreeSlotNode sizeNode;
-				com.db4o.FreeSlotNode addressnode = (com.db4o.FreeSlotNode)com.db4o.Tree.findSmaller
-					(i_freeByAddress, i_finder);
-				if ((addressnode != null) && ((addressnode.i_key + addressnode.i_peer.i_key) == a_address
-					))
-				{
-					sizeNode = addressnode.i_peer;
-					i_freeBySize = i_freeBySize.removeNode(sizeNode);
-					sizeNode.i_key += a_length;
-					com.db4o.FreeSlotNode secondAddressNode = (com.db4o.FreeSlotNode)com.db4o.Tree.findGreaterOrEqual
-						(i_freeByAddress, i_finder);
-					if ((secondAddressNode != null) && (a_address + a_length == secondAddressNode.i_key
-						))
-					{
-						sizeNode.i_key += secondAddressNode.i_peer.i_key;
-						i_freeBySize = i_freeBySize.removeNode(secondAddressNode.i_peer);
-						i_freeByAddress = i_freeByAddress.removeNode(secondAddressNode);
-					}
-					sizeNode.removeChildren();
-					i_freeBySize = com.db4o.Tree.add(i_freeBySize, sizeNode);
-				}
-				else
-				{
-					addressnode = (com.db4o.FreeSlotNode)com.db4o.Tree.findGreaterOrEqual(i_freeByAddress
-						, i_finder);
-					if ((addressnode != null) && (a_address + a_length == addressnode.i_key))
-					{
-						sizeNode = addressnode.i_peer;
-						i_freeByAddress = i_freeByAddress.removeNode(addressnode);
-						i_freeBySize = i_freeBySize.removeNode(sizeNode);
-						sizeNode.i_key += a_length;
-						addressnode.i_key = a_address;
-						addressnode.removeChildren();
-						sizeNode.removeChildren();
-						i_freeByAddress = com.db4o.Tree.add(i_freeByAddress, addressnode);
-						i_freeBySize = com.db4o.Tree.add(i_freeBySize, sizeNode);
-					}
-					else
-					{
-						addFreeSlotNodes(a_address, a_length);
-					}
-				}
-			}
+			_freespaceManager.free(a_address, a_length);
 		}
 
 		internal void freePrefetchedPointers()
 		{
 			if (i_prefetchedIDs != null)
 			{
-				i_prefetchedIDs.traverse(new _AnonymousInnerClass188(this));
+				i_prefetchedIDs.traverse(new _AnonymousInnerClass155(this));
 			}
 			i_prefetchedIDs = null;
 		}
 
-		private sealed class _AnonymousInnerClass188 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass155 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass188(YapFile _enclosing)
+			public _AnonymousInnerClass155(YapFile _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -206,6 +156,24 @@ namespace com.db4o
 			}
 
 			private readonly YapFile _enclosing;
+		}
+
+		internal void freeSpaceBeginCommit()
+		{
+			if (_freespaceManager == null)
+			{
+				return;
+			}
+			_freespaceManager.beginCommit();
+		}
+
+		internal void freeSpaceEndCommit()
+		{
+			if (_freespaceManager == null)
+			{
+				return;
+			}
+			_freespaceManager.endCommit();
 		}
 
 		internal override void getAll(com.db4o.Transaction ta, com.db4o.QueryResultImpl a_res
@@ -224,16 +192,16 @@ namespace com.db4o
 						com.db4o.Tree tree = yapClass.getIndex(ta);
 						if (tree != null)
 						{
-							tree.traverse(new _AnonymousInnerClass212(this, duplicates, a_res));
+							tree.traverse(new _AnonymousInnerClass194(this, duplicates, a_res));
 						}
 					}
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass212 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass194 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass212(YapFile _enclosing, com.db4o.Tree[] duplicates, com.db4o.QueryResultImpl
+			public _AnonymousInnerClass194(YapFile _enclosing, com.db4o.Tree[] duplicates, com.db4o.QueryResultImpl
 				 a_res)
 			{
 				this._enclosing = _enclosing;
@@ -270,7 +238,7 @@ namespace com.db4o
 			return id;
 		}
 
-		private int blocksFor(long bytes)
+		public virtual int blocksFor(long bytes)
 		{
 			int blockLen = blockSize();
 			int result = (int)(bytes / blockLen);
@@ -281,47 +249,50 @@ namespace com.db4o
 			return result;
 		}
 
-		internal virtual int getSlot(int a_length)
+		public virtual int getSlot(int a_length)
 		{
+			return getSlot1(a_length);
 			int address = getSlot1(a_length);
+			com.db4o.DTrace.GET_SLOT.logLength(address, a_length);
 			return address;
 		}
 
 		private int getSlot1(int bytes)
 		{
-			int blocksNeeded = blocksFor(bytes);
-			i_finder.i_key = blocksNeeded;
-			i_finder.i_object = null;
-			i_freeBySize = com.db4o.FreeSlotNode.removeGreaterOrEqual((com.db4o.FreeSlotNode)
-				i_freeBySize, i_finder);
-			if (i_finder.i_object == null)
+			if (_freespaceManager != null)
 			{
-				if (com.db4o.Deploy.debug && com.db4o.Deploy.overwrite)
+				int freeAddress = _freespaceManager.getSlot(bytes);
+				if (freeAddress > 0)
 				{
-					writeXBytes(i_writeAt, blocksNeeded * blockSize());
+					return freeAddress;
 				}
-				int slotAddress = i_writeAt;
-				i_writeAt += blocksNeeded;
-				return slotAddress;
 			}
-			com.db4o.FreeSlotNode node = (com.db4o.FreeSlotNode)i_finder.i_object;
-			int blocksFound = node.i_key;
-			int address = node.i_peer.i_key;
-			i_freeByAddress = i_freeByAddress.removeNode(node.i_peer);
-			if (blocksFound > blocksNeeded)
+			int blocksNeeded = blocksFor(bytes);
+			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 			{
-				addFreeSlotNodes(address + blocksNeeded, blocksFound - blocksNeeded);
+				writeXBytes(i_writeAt, blocksNeeded * blockSize());
 			}
+			int address = i_writeAt;
+			i_writeAt += blocksNeeded;
 			return address;
+		}
+
+		internal virtual void ensureLastSlotWritten()
+		{
+			if (i_writeAt > blocksFor(fileLength()))
+			{
+				com.db4o.YapWriter writer = getWriter(i_systemTrans, i_writeAt - 1, blockSize());
+				writer.write();
+			}
 		}
 
 		public override com.db4o.ext.Db4oDatabase identity()
 		{
-			if (i_bootRecord == null)
+			if (_bootRecord == null)
 			{
 				return null;
 			}
-			return i_bootRecord.i_db;
+			return _bootRecord.i_db;
 		}
 
 		internal override void initialize2()
@@ -333,12 +304,12 @@ namespace com.db4o
 		private void initBootRecord()
 		{
 			showInternalClasses(true);
-			i_bootRecord = new com.db4o.PBootRecord();
-			i_bootRecord.i_stream = this;
-			i_bootRecord.init(i_config);
-			setInternal(i_systemTrans, i_bootRecord, false);
-			i_configBlock._bootRecordID = getID1(i_systemTrans, i_bootRecord);
-			i_configBlock.write();
+			_bootRecord = new com.db4o.PBootRecord();
+			_bootRecord.i_stream = this;
+			_bootRecord.init(i_config);
+			setInternal(i_systemTrans, _bootRecord, false);
+			_configBlock._bootRecordID = getID1(i_systemTrans, _bootRecord);
+			_configBlock.write();
 			showInternalClasses(false);
 		}
 
@@ -358,7 +329,7 @@ namespace com.db4o
 			return writer;
 		}
 
-		internal int[] newSlot(com.db4o.Transaction a_trans, int a_length)
+		public int[] newSlot(com.db4o.Transaction a_trans, int a_length)
 		{
 			int id = getPointerSlot();
 			int address = getSlot(a_length);
@@ -373,8 +344,7 @@ namespace com.db4o
 
 		internal virtual void prefetchedIDConsumed(int a_id)
 		{
-			i_finder.i_key = a_id;
-			i_prefetchedIDs = i_prefetchedIDs.removeLike(i_finder);
+			i_prefetchedIDs = i_prefetchedIDs.removeLike(new com.db4o.TreeIntObject(a_id));
 		}
 
 		internal virtual int prefetchID()
@@ -386,11 +356,11 @@ namespace com.db4o
 
 		internal override void raiseVersion(long a_minimumVersion)
 		{
-			if (i_bootRecord.i_versionGenerator < a_minimumVersion)
+			if (_bootRecord.i_versionGenerator < a_minimumVersion)
 			{
-				i_bootRecord.i_versionGenerator = a_minimumVersion;
-				i_bootRecord.setDirty();
-				i_bootRecord.store(1);
+				_bootRecord.i_versionGenerator = a_minimumVersion;
+				_bootRecord.setDirty();
+				_bootRecord.store(1);
 			}
 		}
 
@@ -463,49 +433,50 @@ namespace com.db4o
 			}
 			blockSize(blockLen);
 			i_writeAt = blocksFor(fileLength());
-			i_configBlock = new com.db4o.YapConfigBlock(this, blockLen);
-			i_configBlock.read(myreader);
+			_configBlock = new com.db4o.YapConfigBlock(this);
+			_configBlock.read(myreader.readInt());
 			myreader.incrementOffset(com.db4o.YapConst.YAPID_LENGTH);
 			i_classCollection.setID(this, myreader.readInt());
 			i_classCollection.read(i_systemTrans);
-			int freeID = myreader.getAddress() + myreader._offset;
-			int freeSlotsID = myreader.readInt();
-			i_freeBySize = null;
-			i_freeByAddress = null;
-			if (freeSlotsID > 0 && (i_config.i_discardFreeSpace != int.MaxValue))
+			int freespaceID = myreader.readInt();
+			_freespaceManager = com.db4o.inside.freespace.FreespaceManager.createNew(this, _configBlock
+				._freespaceSystem);
+			_freespaceManager.read(freespaceID);
+			_freespaceManager.start(_configBlock._freespaceAddress);
+			if (i_config._freespaceSystem != 0 || _configBlock._freespaceSystem == com.db4o.inside.freespace.FreespaceManager
+				.FM_LEGACY_RAM)
 			{
-				com.db4o.YapWriter reader = readWriterByID(i_systemTrans, freeSlotsID);
-				if (reader != null)
+				if (_freespaceManager.systemType() != i_config._freespaceSystem)
 				{
-					com.db4o.FreeSlotNode.sizeLimit = i_config.i_discardFreeSpace;
-					i_freeBySize = new com.db4o.TreeReader(reader, new com.db4o.FreeSlotNode(0), true
-						).read();
-					com.db4o.Tree[] addressTree = new com.db4o.Tree[1];
-					if (i_freeBySize != null)
-					{
-						i_freeBySize.traverse(new _AnonymousInnerClass477(this, addressTree));
-					}
-					i_freeByAddress = addressTree[0];
-					free(freeSlotsID, com.db4o.YapConst.POINTER_LENGTH);
-					free(reader.getAddress(), reader.getLength());
+					com.db4o.inside.freespace.FreespaceManager newFM = com.db4o.inside.freespace.FreespaceManager
+						.createNew(this, i_config._freespaceSystem);
+					int fmSlot = _configBlock.newFreespaceSlot(i_config._freespaceSystem);
+					newFM.start(fmSlot);
+					_freespaceManager.migrate(newFM);
+					com.db4o.inside.freespace.FreespaceManager oldFM = _freespaceManager;
+					_freespaceManager = newFM;
+					oldFM.freeSelf();
+					_freespaceManager.beginCommit();
+					_freespaceManager.endCommit();
+					_configBlock.write();
 				}
 			}
 			showInternalClasses(true);
 			object bootRecord = null;
-			if (i_configBlock._bootRecordID > 0)
+			if (_configBlock._bootRecordID > 0)
 			{
-				bootRecord = getByID1(i_systemTrans, i_configBlock._bootRecordID);
+				bootRecord = getByID1(i_systemTrans, _configBlock._bootRecordID);
 			}
 			if (bootRecord is com.db4o.PBootRecord)
 			{
-				i_bootRecord = (com.db4o.PBootRecord)bootRecord;
-				i_bootRecord.checkActive();
-				i_bootRecord.i_stream = this;
-				if (i_bootRecord.initConfig(i_config))
+				_bootRecord = (com.db4o.PBootRecord)bootRecord;
+				_bootRecord.checkActive();
+				_bootRecord.i_stream = this;
+				if (_bootRecord.initConfig(i_config))
 				{
 					i_classCollection.reReadYapClass(getYapClass(i_handlers.ICLASS_PBOOTRECORD, false
 						));
-					setInternal(i_systemTrans, i_bootRecord, false);
+					setInternal(i_systemTrans, _bootRecord, false);
 				}
 			}
 			else
@@ -514,7 +485,7 @@ namespace com.db4o
 			}
 			showInternalClasses(false);
 			writeHeader(false);
-			com.db4o.Transaction trans = i_configBlock.getTransactionToCommit();
+			com.db4o.Transaction trans = _configBlock.getTransactionToCommit();
 			if (trans != null)
 			{
 				if (!i_config.i_disableCommitRecovery)
@@ -522,25 +493,6 @@ namespace com.db4o
 					trans.writeOld();
 				}
 			}
-		}
-
-		private sealed class _AnonymousInnerClass477 : com.db4o.foundation.Visitor4
-		{
-			public _AnonymousInnerClass477(YapFile _enclosing, com.db4o.Tree[] addressTree)
-			{
-				this._enclosing = _enclosing;
-				this.addressTree = addressTree;
-			}
-
-			public void visit(object a_object)
-			{
-				com.db4o.FreeSlotNode node = ((com.db4o.FreeSlotNode)a_object).i_peer;
-				addressTree[0] = com.db4o.Tree.add(addressTree[0], node);
-			}
-
-			private readonly YapFile _enclosing;
-
-			private readonly com.db4o.Tree[] addressTree;
 		}
 
 		public override void releaseSemaphore(string name)
@@ -569,15 +521,15 @@ namespace com.db4o
 			{
 				lock (i_semaphores)
 				{
-					i_semaphores.forEachKey(new _AnonymousInnerClass536(this));
+					i_semaphores.forEachKeyForIdentity(new _AnonymousInnerClass554(this), ta);
 					j4o.lang.JavaSystem.notifyAll(i_semaphores);
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass536 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass554 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass536(YapFile _enclosing)
+			public _AnonymousInnerClass554(YapFile _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -670,8 +622,8 @@ namespace com.db4o
 			i_isServer = flag;
 		}
 
-		internal abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, 
-			int newAddressOffset, int length);
+		public abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, int
+			 newAddressOffset, int length);
 
 		internal abstract void syncFiles();
 
@@ -739,37 +691,27 @@ namespace com.db4o
 
 		internal virtual void writeHeader(bool shuttingDown)
 		{
-			int freeBySizeID = 0;
+			int freespaceID = _freespaceManager.write(shuttingDown);
 			if (shuttingDown)
 			{
-				int length = com.db4o.Tree.byteCount(i_freeBySize);
-				int[] slot = newSlot(i_systemTrans, length);
-				freeBySizeID = slot[0];
-				com.db4o.YapWriter sdwriter = new com.db4o.YapWriter(i_systemTrans, length);
-				sdwriter.useSlot(freeBySizeID, slot[1], length);
-				com.db4o.Tree.write(sdwriter, i_freeBySize);
-				sdwriter.writeEncrypt();
-				i_systemTrans.writePointer(slot[0], slot[1], length);
+				_freespaceManager = null;
 			}
 			com.db4o.YapWriter writer = getWriter(i_systemTrans, 0, HEADER_LENGTH);
 			writer.append(com.db4o.YapConst.YAPFILEVERSION);
 			writer.append(blockSize());
-			writer.writeInt(i_configBlock._address);
+			writer.writeInt(_configBlock._address);
 			writer.writeInt(0);
 			writer.writeInt(i_classCollection.getID());
-			if (shuttingDown)
-			{
-				writer.writeInt(freeBySizeID);
-			}
-			else
-			{
-				writer.writeInt(0);
-			}
-			if (com.db4o.Deploy.debug && com.db4o.Deploy.overwrite)
+			writer.writeInt(freespaceID);
+			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 			{
 				writer.setID(com.db4o.YapConst.IGNORE_ID);
 			}
 			writer.write();
+			if (shuttingDown)
+			{
+				ensureLastSlotWritten();
+			}
 		}
 
 		internal sealed override void writeNew(com.db4o.YapClass a_yapClass, com.db4o.YapWriter
@@ -790,10 +732,10 @@ namespace com.db4o
 
 		internal virtual void writeBootRecord()
 		{
-			i_bootRecord.store(1);
+			_bootRecord.store(1);
 		}
 
-		internal abstract void writeXBytes(int a_address, int a_length);
+		public abstract void writeXBytes(int a_address, int a_length);
 
 		internal virtual com.db4o.YapWriter xBytes(int a_address, int a_length)
 		{
@@ -802,12 +744,12 @@ namespace com.db4o
 
 		internal sealed override void writeTransactionPointer(int a_address)
 		{
-			com.db4o.YapWriter bytes = new com.db4o.YapWriter(i_systemTrans, i_configBlock._address
+			com.db4o.YapWriter bytes = new com.db4o.YapWriter(i_systemTrans, _configBlock._address
 				, com.db4o.YapConst.YAPINT_LENGTH * 2);
 			bytes.moveForward(com.db4o.YapConfigBlock.TRANSACTION_OFFSET);
 			bytes.writeInt(a_address);
 			bytes.writeInt(a_address);
-			if (com.db4o.Deploy.debug && com.db4o.Deploy.overwrite)
+			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 			{
 				bytes.setID(com.db4o.YapConst.IGNORE_ID);
 			}

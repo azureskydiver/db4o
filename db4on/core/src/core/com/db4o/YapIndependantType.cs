@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>
@@ -10,7 +9,7 @@ namespace com.db4o
 	/// There is one indirection in the database file to this.
 	/// </remarks>
 	/// <exclude></exclude>
-	public abstract class YapIndependantType : com.db4o.YapDataType
+	public abstract class YapIndependantType : com.db4o.TypeHandler4
 	{
 		internal readonly com.db4o.YapStream _stream;
 
@@ -70,15 +69,23 @@ namespace com.db4o
 			return false;
 		}
 
-		public abstract com.db4o.YapComparable prepareComparison(object arg1);
+		public abstract bool isGreater(object obj);
 
-		public abstract int compareTo(object arg1);
+		public abstract com.db4o.YapComparable prepareComparison(object obj);
 
-		public abstract bool isEqual(object arg1);
+		public abstract int compareTo(object obj);
 
-		public abstract bool isGreater(object arg1);
+		public abstract bool isEqual(object obj);
 
-		public abstract bool isSmaller(object arg1);
+		public abstract bool isSmaller(object obj);
+
+		public abstract object comparableObject(com.db4o.Transaction trans, object indexEntry
+			);
+
+		public abstract object readIndexEntry(com.db4o.YapReader a_reader);
+
+		public abstract void writeIndexEntry(com.db4o.YapWriter a_writer, object a_object
+			);
 
 		public abstract void appendEmbedded3(com.db4o.YapWriter arg1);
 
@@ -91,9 +98,7 @@ namespace com.db4o
 
 		public abstract int getID();
 
-		public abstract bool equals(com.db4o.YapDataType arg1);
-
-		public abstract object comparableObject(com.db4o.Transaction arg1, object arg2);
+		public abstract bool equals(com.db4o.TypeHandler4 arg1);
 
 		public abstract void prepareLastIoComparison(com.db4o.Transaction arg1, object arg2
 			);
@@ -114,11 +119,7 @@ namespace com.db4o
 		public abstract void readCandidates(com.db4o.YapReader arg1, com.db4o.QCandidates
 			 arg2);
 
-		public abstract object readIndexEntry(com.db4o.YapReader arg1);
-
-		public abstract com.db4o.YapDataType readArrayWrapper(com.db4o.Transaction arg1, 
+		public abstract com.db4o.TypeHandler4 readArrayWrapper(com.db4o.Transaction arg1, 
 			com.db4o.YapReader[] arg2);
-
-		public abstract void writeIndexEntry(com.db4o.YapWriter arg1, object arg2);
 	}
 }

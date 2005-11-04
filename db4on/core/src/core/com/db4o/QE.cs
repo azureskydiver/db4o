@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>Query Evaluator - Represents such things as &gt;, &gt;=, &lt;, &lt;=, EQUAL, LIKE, etc.
@@ -56,12 +55,12 @@ namespace com.db4o
 		/// [3] - nulls
 		/// </remarks>
 		/// <param name="bits"></param>
-		internal virtual void indexBitMap(bool[] bits)
+		public virtual void indexBitMap(bool[] bits)
 		{
 			bits[1] = true;
 		}
 
-		internal virtual bool supportsIndex()
+		public virtual bool supportsIndex()
 		{
 			return true;
 		}

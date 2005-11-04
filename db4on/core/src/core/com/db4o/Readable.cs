@@ -1,7 +1,7 @@
-
 namespace com.db4o
 {
-	internal interface Readable
+	/// <exclude></exclude>
+	public interface Readable
 	{
 		object read(com.db4o.YapReader a_reader);
 

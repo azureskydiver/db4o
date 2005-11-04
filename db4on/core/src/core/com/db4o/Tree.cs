@@ -1,14 +1,13 @@
-
 namespace com.db4o
 {
 	/// <exclude></exclude>
 	public abstract class Tree : j4o.lang.Cloneable, com.db4o.Readable
 	{
-		internal com.db4o.Tree i_preceding;
+		public com.db4o.Tree i_preceding;
 
-		internal int i_size = 1;
+		public int i_size = 1;
 
-		internal com.db4o.Tree i_subsequent;
+		public com.db4o.Tree i_subsequent;
 
 		public static com.db4o.Tree add(com.db4o.Tree a_old, com.db4o.Tree a_new)
 		{
@@ -24,7 +23,7 @@ namespace com.db4o
 			return add(a_new, compare(a_new));
 		}
 
-		internal virtual com.db4o.Tree add(com.db4o.Tree a_new, int a_cmp)
+		public virtual com.db4o.Tree add(com.db4o.Tree a_new, int a_cmp)
 		{
 			if (a_cmp < 0)
 			{
@@ -76,7 +75,7 @@ namespace com.db4o
 			return this;
 		}
 
-		internal com.db4o.Tree balance()
+		public com.db4o.Tree balance()
 		{
 			int cmp = i_subsequent.nodes() - i_preceding.nodes();
 			if (cmp < -2)
@@ -97,7 +96,7 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual com.db4o.Tree balanceCheckNulls()
+		public virtual com.db4o.Tree balanceCheckNulls()
 		{
 			if (i_subsequent == null)
 			{
@@ -159,7 +158,7 @@ namespace com.db4o
 			private readonly int[] length;
 		}
 
-		internal virtual void calculateSize()
+		public virtual void calculateSize()
 		{
 			if (i_preceding == null)
 			{
@@ -190,9 +189,9 @@ namespace com.db4o
 		/// returns negative if compared key (a_to) is smaller
 		/// returns positive if compared key (a_to) is greater
 		/// </summary>
-		internal abstract int compare(com.db4o.Tree a_to);
+		public abstract int compare(com.db4o.Tree a_to);
 
-		internal static com.db4o.Tree deepClone(com.db4o.Tree a_tree, object a_param)
+		public static com.db4o.Tree deepClone(com.db4o.Tree a_tree, object a_param)
 		{
 			if (a_tree == null)
 			{
@@ -206,7 +205,7 @@ namespace com.db4o
 			return newNode;
 		}
 
-		internal virtual com.db4o.Tree deepClone(object a_param)
+		public virtual com.db4o.Tree deepClone(object a_param)
 		{
 			try
 			{
@@ -218,7 +217,7 @@ namespace com.db4o
 			return null;
 		}
 
-		internal virtual bool duplicates()
+		public virtual bool duplicates()
 		{
 			return true;
 		}
@@ -276,8 +275,8 @@ namespace com.db4o
 			return null;
 		}
 
-		internal static com.db4o.Tree findGreaterOrEqual(com.db4o.Tree a_in, com.db4o.Tree
-			 a_finder)
+		public static com.db4o.Tree findGreaterOrEqual(com.db4o.Tree a_in, com.db4o.Tree 
+			a_finder)
 		{
 			if (a_in == null)
 			{
@@ -306,8 +305,7 @@ namespace com.db4o
 			}
 		}
 
-		internal static com.db4o.Tree findSmaller(com.db4o.Tree a_in, com.db4o.Tree a_node
-			)
+		public static com.db4o.Tree findSmaller(com.db4o.Tree a_in, com.db4o.Tree a_node)
 		{
 			if (a_in == null)
 			{
@@ -344,21 +342,21 @@ namespace com.db4o
 		}
 
 		/// <returns>the number of nodes in this tree for balancing</returns>
-		internal virtual int nodes()
+		public virtual int nodes()
 		{
 			return i_size;
 		}
 
-		internal virtual void nodes(int count)
+		public virtual void nodes(int count)
 		{
 		}
 
-		internal virtual int ownLength()
+		public virtual int ownLength()
 		{
 			throw com.db4o.YapConst.virtualException();
 		}
 
-		internal virtual int ownSize()
+		public virtual int ownSize()
 		{
 			return 1;
 		}
@@ -374,7 +372,7 @@ namespace com.db4o
 			throw com.db4o.YapConst.virtualException();
 		}
 
-		internal virtual com.db4o.Tree remove()
+		public virtual com.db4o.Tree remove()
 		{
 			if (i_subsequent != null && i_preceding != null)
 			{
@@ -390,7 +388,7 @@ namespace com.db4o
 			return i_preceding;
 		}
 
-		internal virtual void removeChildren()
+		public virtual void removeChildren()
 		{
 			i_preceding = null;
 			i_subsequent = null;
@@ -443,7 +441,7 @@ namespace com.db4o
 			return this;
 		}
 
-		internal com.db4o.Tree removeNode(com.db4o.Tree a_tree)
+		public com.db4o.Tree removeNode(com.db4o.Tree a_tree)
 		{
 			if (this == a_tree)
 			{
@@ -468,7 +466,7 @@ namespace com.db4o
 			return this;
 		}
 
-		internal com.db4o.Tree rotateLeft()
+		public com.db4o.Tree rotateLeft()
 		{
 			com.db4o.Tree tree = i_subsequent;
 			i_subsequent = tree.i_preceding;
@@ -485,7 +483,7 @@ namespace com.db4o
 			return tree;
 		}
 
-		internal com.db4o.Tree rotateRight()
+		public com.db4o.Tree rotateRight()
 		{
 			com.db4o.Tree tree = i_preceding;
 			i_preceding = tree.i_subsequent;
@@ -512,37 +510,37 @@ namespace com.db4o
 			return this;
 		}
 
-		internal virtual void setSizeOwn()
+		public virtual void setSizeOwn()
 		{
 			i_size = ownSize();
 		}
 
-		internal virtual void setSizeOwnPrecedingSubsequent()
+		public virtual void setSizeOwnPrecedingSubsequent()
 		{
 			i_size = ownSize() + i_preceding.i_size + i_subsequent.i_size;
 		}
 
-		internal virtual void setSizeOwnPreceding()
+		public virtual void setSizeOwnPreceding()
 		{
 			i_size = ownSize() + i_preceding.i_size;
 		}
 
-		internal virtual void setSizeOwnSubsequent()
+		public virtual void setSizeOwnSubsequent()
 		{
 			i_size = ownSize() + i_subsequent.i_size;
 		}
 
-		internal virtual void setSizeOwnPlus(com.db4o.Tree tree)
+		public virtual void setSizeOwnPlus(com.db4o.Tree tree)
 		{
 			i_size = ownSize() + tree.i_size;
 		}
 
-		internal virtual void setSizeOwnPlus(com.db4o.Tree tree1, com.db4o.Tree tree2)
+		public virtual void setSizeOwnPlus(com.db4o.Tree tree1, com.db4o.Tree tree2)
 		{
 			i_size = ownSize() + tree1.i_size + tree2.i_size;
 		}
 
-		internal static int size(com.db4o.Tree a_tree)
+		public static int size(com.db4o.Tree a_tree)
 		{
 			if (a_tree == null)
 			{
@@ -555,6 +553,16 @@ namespace com.db4o
 		public virtual int size()
 		{
 			return i_size;
+		}
+
+		public static void traverse(com.db4o.Tree tree, com.db4o.foundation.Visitor4 visitor
+			)
+		{
+			if (tree == null)
+			{
+				return;
+			}
+			tree.traverse(visitor);
 		}
 
 		public void traverse(com.db4o.foundation.Visitor4 a_visitor)
@@ -570,7 +578,7 @@ namespace com.db4o
 			}
 		}
 
-		internal void traverseFromLeaves(com.db4o.foundation.Visitor4 a_visitor)
+		public void traverseFromLeaves(com.db4o.foundation.Visitor4 a_visitor)
 		{
 			if (i_preceding != null)
 			{
@@ -588,7 +596,7 @@ namespace com.db4o
 			throw com.db4o.YapConst.virtualException();
 		}
 
-		internal static void write(com.db4o.YapWriter a_writer, com.db4o.Tree a_tree)
+		public static void write(com.db4o.YapWriter a_writer, com.db4o.Tree a_tree)
 		{
 			if (a_tree == null)
 			{
@@ -597,13 +605,13 @@ namespace com.db4o
 			else
 			{
 				a_writer.writeInt(a_tree.size());
-				a_tree.traverse(new _AnonymousInnerClass440(a_writer));
+				a_tree.traverse(new _AnonymousInnerClass447(a_writer));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass440 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass447 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass440(com.db4o.YapWriter a_writer)
+			public _AnonymousInnerClass447(com.db4o.YapWriter a_writer)
 			{
 				this.a_writer = a_writer;
 			}

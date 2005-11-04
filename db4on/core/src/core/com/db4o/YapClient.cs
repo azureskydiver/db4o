@@ -92,6 +92,11 @@ namespace com.db4o
 			com.db4o.inside.Exceptions4.throwRuntimeException(60);
 		}
 
+		public override com.db4o.PBootRecord bootRecord()
+		{
+			return null;
+		}
+
 		internal override bool close2()
 		{
 			try
@@ -296,13 +301,13 @@ namespace com.db4o
 			}
 			else
 			{
-				return (com.db4o.Msg)messageQueueLock.run(new _AnonymousInnerClass267(this));
+				return (com.db4o.Msg)messageQueueLock.run(new _AnonymousInnerClass272(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass267 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass272 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass267(YapClient _enclosing)
+			public _AnonymousInnerClass272(YapClient _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

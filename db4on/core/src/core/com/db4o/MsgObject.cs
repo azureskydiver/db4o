@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal class MsgObject : com.db4o.MsgD

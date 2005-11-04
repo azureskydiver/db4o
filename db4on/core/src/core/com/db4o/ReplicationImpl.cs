@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal class ReplicationImpl : com.db4o.replication.ReplicationProcess
@@ -93,13 +92,13 @@ namespace com.db4o
 					if (versionA > versionB)
 					{
 						_record._version = versionA;
-						_peerB.raiseVersion(_record._version);
+						_peerB.raiseVersion(_record._version + 1);
 					}
 					else
 					{
 						if (versionB > versionA)
 						{
-							_peerA.raiseVersion(_record._version);
+							_peerA.raiseVersion(_record._version + 1);
 						}
 					}
 					_record.store(_peerA);

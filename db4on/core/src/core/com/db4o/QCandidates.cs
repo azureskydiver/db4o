@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>Holds the tree of QCandidate objects and the list of QContraints during query evaluation.
@@ -188,11 +187,12 @@ namespace com.db4o
 
 		internal void execute()
 		{
+			int limit = i_yapClass.indexEntryCount(i_trans);
 			bool fromClassIndex = true;
 			if (i_constraints != null)
 			{
-				com.db4o.ix.QxProcessor processor = new com.db4o.ix.QxProcessor();
-				if (processor.run(this))
+				com.db4o.inside.ix.QxProcessor processor = new com.db4o.inside.ix.QxProcessor();
+				if (processor.run(this, limit))
 				{
 					i_root = processor.toQCandidates(this);
 					fromClassIndex = false;
@@ -246,13 +246,13 @@ namespace com.db4o
 		internal bool isEmpty()
 		{
 			bool[] ret = new bool[] { true };
-			traverse(new _AnonymousInnerClass210(this, ret));
+			traverse(new _AnonymousInnerClass214(this, ret));
 			return ret[0];
 		}
 
-		private sealed class _AnonymousInnerClass210 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass214 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass210(QCandidates _enclosing, bool[] ret)
+			public _AnonymousInnerClass214(QCandidates _enclosing, bool[] ret)
 			{
 				this._enclosing = _enclosing;
 				this.ret = ret;
@@ -276,14 +276,14 @@ namespace com.db4o
 			if (i_root != null)
 			{
 				i_root.traverse(a_host);
-				i_root = i_root.filter(new _AnonymousInnerClass223(this));
+				i_root = i_root.filter(new _AnonymousInnerClass227(this));
 			}
 			return i_root != null;
 		}
 
-		private sealed class _AnonymousInnerClass223 : com.db4o.VisitorBoolean
+		private sealed class _AnonymousInnerClass227 : com.db4o.VisitorBoolean
 		{
-			public _AnonymousInnerClass223(QCandidates _enclosing)
+			public _AnonymousInnerClass227(QCandidates _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -300,9 +300,9 @@ namespace com.db4o
 		{
 			if (i_constraints == null)
 			{
-				return com.db4o.foundation.Iterator4.EMPTY;
+				return com.db4o.foundation.Iterator4Impl.EMPTY;
 			}
-			return new com.db4o.foundation.Iterator4(i_constraints);
+			return new com.db4o.foundation.Iterator4Impl(i_constraints);
 		}
 
 		internal void loadFromClassIndex()
@@ -316,17 +316,17 @@ namespace com.db4o
 			{
 				com.db4o.Tree[] newRoot = { com.db4o.TreeInt.toQCandidate(i_yapClass.getIndexRoot
 					(), this) };
-				i_trans.traverseAddedClassIDs(i_yapClass.getID(), new _AnonymousInnerClass250(this
+				i_trans.traverseAddedClassIDs(i_yapClass.getID(), new _AnonymousInnerClass254(this
 					, newRoot, finalThis));
-				i_trans.traverseRemovedClassIDs(i_yapClass.getID(), new _AnonymousInnerClass261(this
+				i_trans.traverseRemovedClassIDs(i_yapClass.getID(), new _AnonymousInnerClass265(this
 					, newRoot, finalThis));
 				i_root = newRoot[0];
 			}
 		}
 
-		private sealed class _AnonymousInnerClass250 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass254 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass250(QCandidates _enclosing, com.db4o.Tree[] newRoot, com.db4o.QCandidates
+			public _AnonymousInnerClass254(QCandidates _enclosing, com.db4o.Tree[] newRoot, com.db4o.QCandidates
 				 finalThis)
 			{
 				this._enclosing = _enclosing;
@@ -347,9 +347,9 @@ namespace com.db4o
 			private readonly com.db4o.QCandidates finalThis;
 		}
 
-		private sealed class _AnonymousInnerClass261 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass265 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass261(QCandidates _enclosing, com.db4o.Tree[] newRoot, com.db4o.QCandidates
+			public _AnonymousInnerClass265(QCandidates _enclosing, com.db4o.Tree[] newRoot, com.db4o.QCandidates
 				 finalThis)
 			{
 				this._enclosing = _enclosing;

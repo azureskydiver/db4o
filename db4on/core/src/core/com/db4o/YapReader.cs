@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>public for .NET conversion reasons.</summary>
@@ -8,13 +7,13 @@ namespace com.db4o
 	{
 		internal byte[] _buffer;
 
-		internal int _offset;
+		public int _offset;
 
 		internal YapReader()
 		{
 		}
 
-		internal YapReader(int a_length)
+		public YapReader(int a_length)
 		{
 			_buffer = new byte[a_length];
 		}
@@ -55,7 +54,7 @@ namespace com.db4o
 			return false;
 		}
 
-		internal virtual int getLength()
+		public virtual int getLength()
 		{
 			return _buffer.Length;
 		}
@@ -68,7 +67,7 @@ namespace com.db4o
 		/// <summary>non-encrypted read, used for indexes</summary>
 		/// <param name="a_stream"></param>
 		/// <param name="a_address"></param>
-		internal virtual void read(com.db4o.YapStream a_stream, int a_address, int addressOffset
+		public virtual void read(com.db4o.YapStream a_stream, int a_address, int addressOffset
 			)
 		{
 			a_stream.readBytes(_buffer, a_address, addressOffset, getLength());
@@ -180,7 +179,7 @@ namespace com.db4o
 			}
 		}
 
-		internal void writeInt(int a_int)
+		public void writeInt(int a_int)
 		{
 			int ii = com.db4o.YapConst.WRITE_LOOP;
 			if (com.db4o.YapConst.INTEGER_BYTES == 4)

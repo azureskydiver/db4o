@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>Array of constraints for queries.</summary>

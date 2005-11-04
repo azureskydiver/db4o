@@ -40,6 +40,7 @@ namespace com.db4o
 		{
 			i_db = com.db4o.ext.Db4oDatabase.generate();
 			i_uuidGenerator = com.db4o.Unobfuscated.randomLong();
+			i_uuidMetaIndex = new com.db4o.MetaIndex();
 			initConfig(a_config);
 			i_dirty = true;
 		}
@@ -80,12 +81,12 @@ namespace com.db4o
 			return i_uuidGenerator++;
 		}
 
-		internal virtual void setDirty()
+		public virtual void setDirty()
 		{
 			i_dirty = true;
 		}
 
-		internal override void store(int a_depth)
+		public override void store(int a_depth)
 		{
 			if (i_dirty)
 			{

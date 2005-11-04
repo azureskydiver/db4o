@@ -24,7 +24,7 @@ namespace com.db4o
 		private bool i_selfComparison = false;
 
 		[com.db4o.Transient]
-		private com.db4o.IxTraverser i_indexTraverser;
+		private com.db4o.inside.ix.IxTraverser i_indexTraverser;
 
 		[com.db4o.Transient]
 		private com.db4o.QCon i_indexConstraint;
@@ -72,7 +72,7 @@ namespace com.db4o
 					}
 					if (i_yapClass != null)
 					{
-						i_yapClass.collectConstraints(a_trans, this, i_object, new _AnonymousInnerClass77
+						i_yapClass.collectConstraints(a_trans, this, i_object, new _AnonymousInnerClass88
 							(this));
 					}
 					else
@@ -87,9 +87,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass77 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass88 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass77(QConObject _enclosing)
+			public _AnonymousInnerClass88(QConObject _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -121,7 +121,7 @@ namespace com.db4o
 			{
 				return false;
 			}
-			if (hasJoins())
+			if (hasOrJoins())
 			{
 				return false;
 			}
@@ -223,7 +223,7 @@ namespace com.db4o
 			}
 		}
 
-		public virtual int findBoundsQuery(com.db4o.IxTraverser traverser)
+		public virtual int findBoundsQuery(com.db4o.inside.ix.IxTraverser traverser)
 		{
 			return traverser.findBoundsQuery(this, i_object);
 		}
@@ -286,9 +286,9 @@ namespace com.db4o
 			return 0;
 		}
 
-		public override com.db4o.IxTree indexRoot()
+		public override com.db4o.inside.ix.IxTree indexRoot()
 		{
-			return (com.db4o.IxTree)i_field.i_yapField.getIndexRoot(i_trans);
+			return (com.db4o.inside.ix.IxTree)i_field.i_yapField.getIndexRoot(i_trans);
 		}
 
 		internal override bool isNullConstraint()
@@ -313,6 +313,15 @@ namespace com.db4o
 			{
 				i_yapClassID = i_yapClass.getID();
 			}
+		}
+
+		public override bool onSameFieldAs(com.db4o.QCon other)
+		{
+			if (!(other is com.db4o.QConObject))
+			{
+				return false;
+			}
+			return i_field == ((com.db4o.QConObject)other).i_field;
 		}
 
 		internal virtual void prepareComparison(com.db4o.QField a_field)

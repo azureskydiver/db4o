@@ -196,7 +196,7 @@ namespace com.db4o
 			return va.i_version;
 		}
 
-		internal com.db4o.YapClass getYapClass()
+		public com.db4o.YapClass getYapClass()
 		{
 			return i_yapClass;
 		}
@@ -349,12 +349,26 @@ namespace com.db4o
 		internal com.db4o.VirtualAttributes virtualAttributes(com.db4o.Transaction a_trans
 			)
 		{
-			if (i_virtualAttributes == null && i_yapClass.hasVirtualAttributes())
+			if (a_trans == null)
 			{
-				if (a_trans != null)
+				return i_virtualAttributes;
+			}
+			if (i_virtualAttributes == null)
+			{
+				if (i_yapClass.hasVirtualAttributes())
 				{
 					i_virtualAttributes = new com.db4o.VirtualAttributes();
 					i_yapClass.readVirtualAttributes(a_trans, this);
+				}
+			}
+			else
+			{
+				if (i_virtualAttributes.i_database == null || i_virtualAttributes.i_uuid == 0)
+				{
+					if (i_yapClass.hasVirtualAttributes())
+					{
+						i_yapClass.readVirtualAttributes(a_trans, this);
+					}
 				}
 			}
 			return i_virtualAttributes;

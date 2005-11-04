@@ -61,8 +61,8 @@ namespace com.db4o
 			return true;
 		}
 
-		internal override void copy(int oldAddress, int oldAddressOffset, int newAddress, 
-			int newAddressOffset, int length)
+		public override void copy(int oldAddress, int oldAddressOffset, int newAddress, int
+			 newAddressOffset, int length)
 		{
 			byte[] bytes = memoryFileBytes(newAddress + newAddressOffset + length);
 			j4o.lang.JavaSystem.arraycopy(bytes, oldAddress + oldAddressOffset, bytes, newAddress
@@ -170,7 +170,7 @@ namespace com.db4o
 			return bytes;
 		}
 
-		internal override void writeXBytes(int a_address, int a_length)
+		public override void writeXBytes(int a_address, int a_length)
 		{
 		}
 	}

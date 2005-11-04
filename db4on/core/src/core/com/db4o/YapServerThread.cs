@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal sealed class YapServerThread : j4o.lang.Thread
@@ -222,12 +221,17 @@ namespace com.db4o
 			}
 			if (com.db4o.Msg.IDENTITY.Equals(message))
 			{
-				respondInt((int)getStream().getID(getStream().i_bootRecord.i_db));
+				respondInt((int)getStream().getID(getStream().bootRecord().i_db));
 				return true;
 			}
 			if (com.db4o.Msg.CURRENT_VERSION.Equals(message))
 			{
-				long ver = getStream().i_bootRecord.i_versionGenerator;
+				com.db4o.YapStream stream = getStream();
+				long ver = 0;
+				lock (stream)
+				{
+					ver = getStream().bootRecord().i_versionGenerator;
+				}
 				com.db4o.Msg.ID_LIST.getWriterForLong(getTransaction(), ver).write(getStream(), i_socket
 					);
 				return true;

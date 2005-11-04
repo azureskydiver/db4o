@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>Represents an actual object in the database.</summary>
@@ -61,7 +60,7 @@ namespace com.db4o
 			}
 		}
 
-		internal override int compare(com.db4o.Tree a_to)
+		public override int compare(com.db4o.Tree a_to)
 		{
 			return i_order.compareTo(((com.db4o.QCandidate)a_to).i_order);
 		}
@@ -80,11 +79,11 @@ namespace com.db4o
 			com.db4o.QCandidate candidate = null;
 			if (i_yapField != null)
 			{
-				com.db4o.YapDataType handler = i_yapField.getHandler();
+				com.db4o.TypeHandler4 handler = i_yapField.getHandler();
 				if (handler != null)
 				{
 					com.db4o.YapReader[] arrayBytes = { i_bytes };
-					com.db4o.YapDataType arrayWrapper = handler.readArrayWrapper(getTransaction(), arrayBytes
+					com.db4o.TypeHandler4 arrayWrapper = handler.readArrayWrapper(getTransaction(), arrayBytes
 						);
 					if (arrayWrapper != null)
 					{
@@ -151,7 +150,7 @@ namespace com.db4o
 			{
 				if (i_yapField != null)
 				{
-					com.db4o.YapDataType handler = i_yapField.getHandler();
+					com.db4o.TypeHandler4 handler = i_yapField.getHandler();
 					if (handler != null && (handler.getType() == com.db4o.YapConst.TYPE_CLASS))
 					{
 						com.db4o.YapClass yc = (com.db4o.YapClass)handler;
@@ -256,7 +255,8 @@ namespace com.db4o
 			i_include = false;
 			if (i_dependants != null)
 			{
-				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4(i_dependants);
+				com.db4o.foundation.Iterator4 i = new com.db4o.foundation.Iterator4Impl(i_dependants
+					);
 				i_dependants = null;
 				while (i.hasNext())
 				{
@@ -265,7 +265,7 @@ namespace com.db4o
 			}
 		}
 
-		internal override bool duplicates()
+		public override bool duplicates()
 		{
 			return i_order.hasDuplicates();
 		}
@@ -408,7 +408,7 @@ namespace com.db4o
 				{
 					if (i_member != null && j4o.lang.Class.getClassForObject(i_member).isArray())
 					{
-						com.db4o.YapDataType ydt = (com.db4o.YapDataType)yc.prepareComparison(a_constraint
+						com.db4o.TypeHandler4 ydt = (com.db4o.TypeHandler4)yc.prepareComparison(a_constraint
 							);
 						if (a_stream.reflector().array().isNDimensional(memberClass()))
 						{

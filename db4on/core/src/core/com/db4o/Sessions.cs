@@ -20,7 +20,6 @@ namespace com.db4o
 			{
 				com.db4o.ObjectContainer oc = null;
 				com.db4o.Session newSession = new com.db4o.Session(databaseFileName);
-				com.db4o.Session.checkHackedVersion();
 				com.db4o.Session oldSession = (com.db4o.Session)get(newSession);
 				if (oldSession != null)
 				{
