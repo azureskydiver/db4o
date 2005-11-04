@@ -29,9 +29,8 @@ public class Car {
         return model;
     }
 
-    public SensorReadout[] getHistory() {
-        return (SensorReadout[])history.toArray(
-                new SensorReadout[history.size()]);
+    public List getHistory() {
+        return history;
     }
     
     public void snapshot() {

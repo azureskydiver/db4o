@@ -14,11 +14,14 @@ public class CollectionsExample extends Util {
         try {
             storeFirstCar(db);
             storeSecondCar(db);
-            retrieveAllSensorReadouts(db);
+            retrieveAllSensorReadoutsQBE(db);
             retrieveSensorReadoutQBE(db);
             retrieveCarQBE(db);
             retrieveCollections(db);
             retrieveArrays(db);
+            retrieveAllSensorReadoutsNative(db);
+            retrieveSensorReadoutNative(db);
+            retrieveCarNative(db);
             retrieveSensorReadoutQuery(db);
             retrieveCarQuery(db);
             db.close();
@@ -30,7 +33,6 @@ public class CollectionsExample extends Util {
             deleteAllPart1();
             db=Db4o.openFile(Util.YAPFILENAME);
             deleteAllPart2(db);
-            retrieveAllSensorReadouts(db);
         }
         finally {
             db.close();
@@ -53,19 +55,40 @@ public class CollectionsExample extends Util {
         db.set(car2);
     }
     
-    public static void retrieveAllSensorReadouts(
+    public static void retrieveAllSensorReadoutsQBE(
                 ObjectContainer db) {
         SensorReadout proto=new SensorReadout(null,null,null);
-        ObjectSet result=db.get(proto);
-        listResult(result);
+        ObjectSet results=db.get(proto);
+        listResult(results);
     }
 
+    public static void retrieveAllSensorReadoutsNative(
+            ObjectContainer db) {
+    	ObjectSet results = db.query(new Predicate() {
+    		public boolean match(SensorReadout candidate){
+    			return true;
+    		}
+    	});
+    	listResult(results);
+    }
+    
     public static void retrieveSensorReadoutQBE(
                 ObjectContainer db) {
         SensorReadout proto=new SensorReadout(
                 new double[]{0.3,0.1},null,null);
-        ObjectSet result=db.get(proto);
-        listResult(result);
+        ObjectSet results=db.get(proto);
+        listResult(results);
+    }
+
+    public static void retrieveSensorReadoutNative(
+            ObjectContainer db) {
+    	ObjectSet results = db.query(new Predicate() {
+    		public boolean match(SensorReadout candidate){
+    			return  Arrays.binarySearch(candidate.getValues(), 0.3) >= 0 ||
+    				Arrays.binarySearch(candidate.getValues(), 1.0) >= 0;
+    		}
+    	});
+    	listResult(results);
     }
 
     public static void retrieveCarQBE(ObjectContainer db) {
@@ -78,6 +101,23 @@ public class CollectionsExample extends Util {
         listResult(result);
     }
 
+    public static void retrieveCarNative(
+            ObjectContainer db) {
+    	ObjectSet results = db.query(new Predicate() {
+    		public boolean match(Car candidate){
+    			List history = candidate.getHistory();
+    			for(int i = 0; i < history.size(); i++){
+    				SensorReadout readout = (SensorReadout)history.get(i);
+    				if( Arrays.binarySearch(readout.getValues(), 0.6) >= 0 ||
+    				Arrays.binarySearch(readout.getValues(), 0.2) >= 0)
+    					return true;
+    			}
+    			return false;
+    		}
+    	});
+    	listResult(results);
+    }
+    
     public static void retrieveCollections(ObjectContainer db) {
         ObjectSet result=db.get(new ArrayList());
         listResult(result);
@@ -117,26 +157,35 @@ public class CollectionsExample extends Util {
     }
 
     public static void updateCarPart2(ObjectContainer db) {
-        ObjectSet result=db.get(new Car("BMW",null));
-        Car car=(Car)result.next();
+    	ObjectSet results = db.query(new Predicate() {
+    		public boolean match(Car candidate){
+    			return true;
+    		}
+    	});
+    	Car car=(Car)results.next();
         car.snapshot();
         db.set(car);
-        retrieveAllSensorReadouts(db);
+        retrieveAllSensorReadoutsNative(db);
     }
     
     public static void updateCollection(ObjectContainer db) {
-        Query query=db.query();
-        query.constrain(Car.class);
-        ObjectSet result=query.descend("history").execute();
-        List coll=(List)result.next();
-        coll.remove(0);
-        db.set(coll);
-        Car proto=new Car(null,null);
-        result=db.get(proto);
-        while(result.hasNext()) {
-            Car car=(Car)result.next();
-            for (int idx=0;idx<car.getHistory().length;idx++) {
-                System.out.println(car.getHistory()[idx]);
+    	ObjectSet results = db.query(new Predicate() {
+    		public boolean match(Car candidate){
+    			return true;
+    		}
+    	});
+        Car car =(Car)results.next();
+        car.getHistory().remove(0);
+        db.set(car.getHistory());
+    	results = db.query(new Predicate() {
+    		public boolean match(Car candidate){
+    			return true;
+    		}
+    	});
+        while(results.hasNext()) {
+            car=(Car)results.next();
+            for (int idx=0;idx<car.getHistory().size();idx++) {
+                System.out.println(car.getHistory().get(idx));
             }
         }
     }
@@ -147,12 +196,19 @@ public class CollectionsExample extends Util {
     }
     
     public static void deleteAllPart2(ObjectContainer db) {
-        ObjectSet result=db.get(new Car(null,null));
-        while(result.hasNext()) {
-            db.delete(result.next());
+    	ObjectSet cars = db.query(new Predicate() {
+    		public boolean match(Car candidate){
+    			return true;
+    		}
+    	});
+        while(cars.hasNext()) {
+            db.delete(cars.next());
         }
-        ObjectSet readouts=db.get(
-                new SensorReadout(null,null,null));
+    	ObjectSet readouts = db.query(new Predicate() {
+    		public boolean match(SensorReadout candidate){
+    			return true;
+    		}
+    	});
         while(readouts.hasNext()) {
             db.delete(readouts.next());
         }

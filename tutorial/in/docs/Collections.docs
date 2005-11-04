@@ -31,7 +31,7 @@ The second car will take two snapshots immediately at startup.
 
 First let us verify that we indeed have taken snapshots.
 
-.s com.db4o.f1.chapter3.CollectionsExample#retrieveAllSensorReadouts ..
+.s com.db4o.f1.chapter3.CollectionsExample#retrieveAllSensorReadoutsQBE ..
 
 As a prototype for an array, we provide an array of the same type, ._
 containing only the values we expect the result to contain.
@@ -55,12 +55,25 @@ This doesn't work with arrays, though.
 
 .s com.db4o.f1.chapter3.CollectionsExample#retrieveArrays ..
 
+.2 Native Queries ..
+
+Native Queries are easily understandable. Here's how we find SensorReadouts
+with matching values:
+
+.s com.db4o.f1.chapter3.CollectionsExample#retrieveSensorReadoutNative ..
+
+And here's how we find Cars with matching readout values:
+
+.s com.db4o.f1.chapter3.CollectionsExample#retrieveCarNative ..
+
 .2 Query API ..
 
 Handling of arrays and collections is analogous to the previous ._
-example.
+example. First, lets retrieve only the SensorReadouts with specific values:
 
 .s com.db4o.f1.chapter3.CollectionsExample#retrieveSensorReadoutQuery ..
+
+Then let's get some Cars with matching Readout values:
 
 .s com.db4o.f1.chapter3.CollectionsExample#retrieveCarQuery ..
 

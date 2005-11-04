@@ -120,14 +120,25 @@ namespace com.db4o.f1.chapter2
         }
         
         
-        public class retrieveAllCarsPredicate : Predicate{
+        public class retrieveAllPilotsPredicate : Predicate{
         	public static bool Match(Pilot candidate){
 	        	return true;
         	}
         }
         
+        public static void retrieveAllPilotsNative(ObjectContainer db) {
+            ObjectSet results = db.query(new retrieveAllPilotsPredicate());
+    		listResult(results);
+    	}
+
+        public class retrieveAllCarsPredicate : Predicate{
+        	public static bool Match(Car candidate){
+	        	return true;
+        	}
+        }
+        
         public static void retrieveAllCarsNative(ObjectContainer db) {
-            ObjectSet results = db.query(new retrieveAllCarsNativePredicate());
+            ObjectSet results = db.query(new retrieveAllCarsPredicate());
     		listResult(results);
     	}
     
