@@ -1,4 +1,3 @@
-
 namespace com.db4o.inside.query
 {
 	/// <exclude></exclude>
@@ -17,7 +16,7 @@ namespace com.db4o.inside.query
 
 		public virtual void evaluate(com.db4o.query.Candidate candidate)
 		{
-			candidate.include(_predicate.invoke(candidate.getObject()));
+			candidate.include(_predicate.appliesTo(candidate.getObject()));
 		}
 	}
 }

@@ -1,4 +1,3 @@
-
 namespace com.db4o.foundation
 {
 	/// <summary>

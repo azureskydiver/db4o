@@ -1,4 +1,3 @@
-
 namespace com.db4o.config
 {
 	/// <summary>configuration interface for classes.</summary>
@@ -225,6 +224,7 @@ namespace com.db4o.config
 		/// This method will be ignored if the database file already contains meta
 		/// information for clazz.
 		/// </remarks>
+		/// <param name="clazz">class name, Class object, or example object.<br /><br /></param>
 		void readAs(object clazz);
 
 		/// <summary>renames a stored class.</summary>

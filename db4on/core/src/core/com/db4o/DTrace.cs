@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <exclude></exclude>
@@ -34,7 +33,7 @@ namespace com.db4o
 
 		private static int _rangeCount;
 
-		private static long _eventNr;
+		public static long _eventNr;
 
 		private static long[] _breakEventNrs;
 
@@ -64,11 +63,17 @@ namespace com.db4o
 
 		public static com.db4o.DTrace FREE;
 
+		public static com.db4o.DTrace FREE_RAM;
+
 		public static com.db4o.DTrace FREE_ON_COMMIT;
 
 		public static com.db4o.DTrace FREE_ON_ROLLBACK;
 
 		public static com.db4o.DTrace GET_SLOT;
+
+		public static com.db4o.DTrace GET_FREESPACE;
+
+		public static com.db4o.DTrace GET_FREESPACE_RAM;
 
 		public static com.db4o.DTrace GET_YAPOBJECT;
 
@@ -76,9 +81,13 @@ namespace com.db4o
 
 		public static com.db4o.DTrace ID_TREE_REMOVE;
 
+		public static com.db4o.DTrace IO_COPY;
+
 		public static com.db4o.DTrace JUST_SET;
 
 		public static com.db4o.DTrace NEW_INSTANCE;
+
+		public static com.db4o.DTrace QUERY_PROCESS;
 
 		public static com.db4o.DTrace READ_ARRAY_WRAPPER;
 
@@ -105,6 +114,8 @@ namespace com.db4o
 		public static com.db4o.DTrace YAPCLASS_INIT;
 
 		public static com.db4o.DTrace WRITE_BYTES;
+
+		public static com.db4o.DTrace WRITE_XBYTES;
 
 		public static com.db4o.DTrace WRITE_UPDATE_DELETE_MEMBERS;
 

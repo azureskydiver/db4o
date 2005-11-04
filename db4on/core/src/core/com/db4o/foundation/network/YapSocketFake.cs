@@ -1,4 +1,3 @@
-
 namespace com.db4o.foundation.network
 {
 	/// <summary>Fakes a socket connection for an embedded client.</summary>

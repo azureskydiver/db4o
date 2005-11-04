@@ -1,4 +1,3 @@
-
 namespace com.db4o.config
 {
 	/// <summary>allows special comparison behaviour during query evaluation.</summary>

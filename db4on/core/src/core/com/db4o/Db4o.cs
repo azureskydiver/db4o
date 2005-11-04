@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>factory class with static methods to configure and start the engine.</summary>

@@ -1,4 +1,3 @@
-
 namespace com.db4o.reflect.net
 {
 	public class NetReflector : com.db4o.reflect.Reflector

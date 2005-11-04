@@ -1,4 +1,3 @@
-
 namespace com.db4o.ext
 {
 	/// <summary>callback methods.</summary>

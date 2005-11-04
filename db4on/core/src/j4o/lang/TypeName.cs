@@ -1,4 +1,3 @@
-
 /* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
 using System;
 using System.Reflection;
@@ -105,7 +104,7 @@ namespace j4o.lang
             {
                 AssemblyName unversioned = (AssemblyName)_assembly.Clone();
                 unversioned.Version = null;
-#if COMPACT_1_0
+#if CF_1_0
                 found = Assembly.Load(unversioned);
 #else
                 try
@@ -144,7 +143,7 @@ namespace j4o.lang
                 builder.Append("[");
 
 				System.Type type = _genericArguments[i].Resolve();
-#if COMPACT_1_0
+#if CF_1_0
 				builder.Append(type.FullName);
 				builder.Append(", ");
 				builder.Append(type.Assembly.FullName);

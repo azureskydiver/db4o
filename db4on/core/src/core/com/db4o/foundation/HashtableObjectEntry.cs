@@ -1,4 +1,3 @@
-
 namespace com.db4o.foundation
 {
 	internal class HashtableObjectEntry : com.db4o.foundation.HashtableIntEntry

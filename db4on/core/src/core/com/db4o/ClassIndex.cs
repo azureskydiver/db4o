@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	/// <summary>representation to collect and hold all IDs of one class</summary>
@@ -87,6 +86,24 @@ namespace com.db4o
 			}
 		}
 
+		internal virtual int entryCount(com.db4o.Transaction ta)
+		{
+			if (isActive())
+			{
+				return com.db4o.Tree.size(i_root);
+			}
+			int[] addressLength = new int[] { 0, 0 };
+			ta.getSlotInformation(i_id, addressLength);
+			addressLength[1] = com.db4o.YapConst.YAPINT_LENGTH;
+			com.db4o.YapReader reader = new com.db4o.YapReader(addressLength[1]);
+			reader.readEncrypt(ta.i_stream, addressLength[0]);
+			if (reader == null)
+			{
+				return 0;
+			}
+			return reader.readInt();
+		}
+
 		internal sealed override byte getIdentifier()
 		{
 			return com.db4o.YapConst.YAPINDEX;
@@ -102,13 +119,13 @@ namespace com.db4o
 			}
 			long[] ids = new long[tree.size()];
 			int[] i = new int[] { 0 };
-			tree.traverse(new _AnonymousInnerClass70(this, ids, i));
+			tree.traverse(new _AnonymousInnerClass91(this, ids, i));
 			return ids;
 		}
 
-		private sealed class _AnonymousInnerClass70 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass91 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass70(ClassIndex _enclosing, long[] ids, int[] i)
+			public _AnonymousInnerClass91(ClassIndex _enclosing, long[] ids, int[] i)
 			{
 				this._enclosing = _enclosing;
 				this.ids = ids;

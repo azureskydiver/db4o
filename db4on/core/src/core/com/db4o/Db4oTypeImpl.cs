@@ -1,8 +1,7 @@
-
 namespace com.db4o
 {
 	/// <summary>marker interface for special db4o datatypes</summary>
-	internal interface Db4oTypeImpl
+	internal interface Db4oTypeImpl : com.db4o.TransactionAware
 	{
 		int adjustReadDepth(int a_depth);
 
@@ -13,8 +12,6 @@ namespace com.db4o
 		bool hasClassIndex();
 
 		void replicateFrom(object obj);
-
-		void setTrans(com.db4o.Transaction a_trans);
 
 		void setYapObject(com.db4o.YapObject a_yapObject);
 

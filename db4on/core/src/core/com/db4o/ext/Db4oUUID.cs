@@ -1,4 +1,3 @@
-
 namespace com.db4o.ext
 {
 	/// <summary>a unique universal identify for an object.</summary>

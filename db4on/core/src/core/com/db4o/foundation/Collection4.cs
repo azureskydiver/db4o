@@ -1,4 +1,3 @@
-
 namespace com.db4o.foundation
 {
 	/// <summary>Fast linked list for all usecases.</summary>
@@ -12,6 +11,9 @@ namespace com.db4o.foundation
 		/// <summary>number of elements collected</summary>
 		public int _size;
 
+		/// <summary>Adds an element to the beginning of this collection.</summary>
+		/// <remarks>Adds an element to the beginning of this collection.</remarks>
+		/// <param name="element"></param>
 		public void add(object element)
 		{
 			_first = new com.db4o.foundation.List4(_first, element);
@@ -36,11 +38,15 @@ namespace com.db4o.foundation
 		{
 			if (other != null)
 			{
-				com.db4o.foundation.Iterator4 i = other.iterator();
-				while (i.hasNext())
-				{
-					add(i.next());
-				}
+				addAll(other.iterator());
+			}
+		}
+
+		public void addAll(com.db4o.foundation.Iterator4 iterator)
+		{
+			while (iterator.hasNext())
+			{
+				add(iterator.next());
 			}
 		}
 
@@ -128,13 +134,35 @@ namespace com.db4o.foundation
 			return a_obj;
 		}
 
+		/// <summary>
+		/// Iterates through the collection in
+		/// reversed insertion order which happens
+		/// to be the fastest.
+		/// </summary>
+		/// <remarks>
+		/// Iterates through the collection in
+		/// reversed insertion order which happens
+		/// to be the fastest.
+		/// </remarks>
+		/// <returns></returns>
 		public com.db4o.foundation.Iterator4 iterator()
 		{
-			if (_first == null)
-			{
-				return com.db4o.foundation.Iterator4.EMPTY;
-			}
-			return new com.db4o.foundation.Iterator4(_first);
+			return _first == null ? com.db4o.foundation.Iterator4Impl.EMPTY : new com.db4o.foundation.Iterator4Impl
+				(_first);
+		}
+
+		/// <summary>
+		/// Iterates through the collection in the correct
+		/// order (the insertion order).
+		/// </summary>
+		/// <remarks>
+		/// Iterates through the collection in the correct
+		/// order (the insertion order).
+		/// </remarks>
+		/// <returns></returns>
+		public virtual com.db4o.foundation.Iterator4 strictIterator()
+		{
+			return new com.db4o.foundation.ArrayIterator4(toArray());
 		}
 
 		/// <summary>
@@ -186,6 +214,13 @@ namespace com.db4o.foundation
 			{
 				a_array[--j] = i.next();
 			}
+		}
+
+		public object[] toArray()
+		{
+			object[] array = new object[_size];
+			toArray(array);
+			return array;
 		}
 
 		public override string ToString()

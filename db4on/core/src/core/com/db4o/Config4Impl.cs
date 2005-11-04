@@ -1,10 +1,9 @@
-
 namespace com.db4o
 {
 	/// <summary>Configuration template for creating new db4o files</summary>
 	/// <exclude></exclude>
 	public sealed class Config4Impl : com.db4o.config.Configuration, j4o.lang.Cloneable
-		, com.db4o.foundation.DeepClone, com.db4o.messaging.MessageSender
+		, com.db4o.foundation.DeepClone, com.db4o.messaging.MessageSender, com.db4o.config.FreespaceConfiguration
 	{
 		internal int i_activationDepth = 5;
 
@@ -26,7 +25,7 @@ namespace com.db4o
 
 		internal bool i_disableCommitRecovery;
 
-		internal int i_discardFreeSpace;
+		public int i_discardFreeSpace;
 
 		internal byte i_encoding = com.db4o.YapConst.UNICODE;
 
@@ -36,6 +35,8 @@ namespace com.db4o
 			(16);
 
 		internal bool i_exceptionsOnNotStorable;
+
+		public byte _freespaceSystem;
 
 		public int i_generateUUIDs;
 
@@ -50,6 +51,8 @@ namespace com.db4o
 		internal com.db4o.messaging.MessageRecipient i_messageRecipient;
 
 		internal com.db4o.messaging.MessageSender i_messageSender;
+
+		internal bool _optimizeNQ = true;
 
 		internal j4o.io.PrintStream i_outStream;
 
@@ -182,6 +185,11 @@ namespace com.db4o
 			i_discardFreeSpace = bytes;
 		}
 
+		public void discardSmallerThan(int byteCount)
+		{
+			i_discardFreeSpace = byteCount;
+		}
+
 		public void encrypt(bool flag)
 		{
 			globalSettingOnly();
@@ -214,6 +222,11 @@ namespace com.db4o
 			i_exceptionsOnNotStorable = flag;
 		}
 
+		public com.db4o.config.FreespaceConfiguration freespace()
+		{
+			return this;
+		}
+
 		public void generateUUIDs(int setting)
 		{
 			i_generateUUIDs = setting;
@@ -222,12 +235,17 @@ namespace com.db4o
 
 		private void storeStreamBootRecord()
 		{
-			if (i_stream is com.db4o.YapFile)
+			if (i_stream == null)
 			{
-				com.db4o.YapFile yapFile = (com.db4o.YapFile)i_stream;
-				yapFile.i_bootRecord.initConfig(this);
-				yapFile.setInternal(yapFile.i_systemTrans, yapFile.i_bootRecord, false);
-				yapFile.i_systemTrans.commit();
+				return;
+			}
+			com.db4o.PBootRecord bootRecord = i_stream.bootRecord();
+			if (bootRecord != null)
+			{
+				bootRecord.initConfig(this);
+				com.db4o.Transaction trans = i_stream.getSystemTransaction();
+				i_stream.setInternal(trans, bootRecord, false);
+				trans.commit();
 			}
 		}
 
@@ -274,6 +292,16 @@ namespace com.db4o
 			{
 				setOut(j4o.lang.JavaSystem._out);
 			}
+		}
+
+		public void optimizeNativeQueries(bool optimizeNQ)
+		{
+			_optimizeNQ = optimizeNQ;
+		}
+
+		public bool optimizeNativeQueries()
+		{
+			return _optimizeNQ;
 		}
 
 		public com.db4o.config.ObjectClass objectClass(object clazz)
@@ -356,7 +384,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass313(this));
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass336(this));
 			}
 			else
 			{
@@ -364,9 +392,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass313 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass336 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass313(Config4Impl _enclosing)
+			public _AnonymousInnerClass336(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -410,7 +438,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass349(this));
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass372(this));
 			}
 			else
 			{
@@ -418,9 +446,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass349 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass372 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass349(Config4Impl _enclosing)
+			public _AnonymousInnerClass372(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -446,6 +474,7 @@ namespace com.db4o
 		public void setClassLoader(j4o.lang.ClassLoader classLoader)
 		{
 			i_classLoader = classLoader;
+			reflectWith(com.db4o.Platform4.createReflector(this));
 		}
 
 		public void setMessageRecipient(com.db4o.messaging.MessageRecipient messageRecipient
@@ -507,6 +536,16 @@ namespace com.db4o
 		public void updateDepth(int depth)
 		{
 			i_updateDepth = depth;
+		}
+
+		public void useRamSystem()
+		{
+			_freespaceSystem = com.db4o.inside.freespace.FreespaceManager.FM_RAM;
+		}
+
+		public void useIndexSystem()
+		{
+			_freespaceSystem = com.db4o.inside.freespace.FreespaceManager.FM_IX;
 		}
 
 		public void weakReferenceCollectionInterval(int milliseconds)
