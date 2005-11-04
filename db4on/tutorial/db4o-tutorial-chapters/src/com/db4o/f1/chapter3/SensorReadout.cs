@@ -40,6 +40,14 @@ namespace com.db4o.f1.chapter3
             }
         }
         
+        public double[] Values
+        {
+        	get
+        	{
+        		return _values;
+        	}
+        }
+        
         public double GetValue(int idx)
         {
             return _values[idx];
