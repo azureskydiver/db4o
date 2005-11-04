@@ -7,4 +7,6 @@ public interface IBrowserCoreListener {
 
     void classpathChanged(BrowserCore browserCore);
 
+	void closeEditors(BrowserCore core);
+
 }

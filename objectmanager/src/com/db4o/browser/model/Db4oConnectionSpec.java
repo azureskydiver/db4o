@@ -11,6 +11,8 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.browser.prefs.activation.ActivationPreferences;
 import com.db4o.browser.prefs.classpath.ClasspathPreferences;
+import com.db4o.browser.prefs.constructor.ConstructorPreferences;
+import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
 import com.db4o.reflect.jdk.JdkReflector;
 import com.swtworkbench.community.xswt.metalogger.Logger;
@@ -33,7 +35,27 @@ public abstract class Db4oConnectionSpec {
         String[] classpath = ClasspathPreferences.getDefault().classPath();
 		Db4o.configure().readOnly(readOnly);
 		Db4o.configure().activationDepth(activationDepth);
-		Db4o.configure().reflectWith(createReflector(classpath));
+		Reflector reflector = createReflector(classpath);
+		Db4o.configure().reflectWith(reflector);
+		
+		String[] callConstructorClasses = ConstructorPreferences.getDefault().classes();
+		for (int i = 0; i < callConstructorClasses.length; i++) {
+			try {
+				Class clazz = Class.forName(callConstructorClasses[i]);
+				Db4o.configure().objectClass(clazz).callConstructor(true);
+			} catch (ClassNotFoundException e) {
+				ReflectClass clazz = reflector.forName(callConstructorClasses[i]);
+				if (clazz == null) {
+					Logger.log().message(
+						"Warning: could not resolve class "
+								+ callConstructorClasses[i]
+								+ " when specifying classes whose constructors should be called");
+					continue;
+				}
+				Db4o.configure().objectClass(clazz).callConstructor(true);
+			}
+		}
+
 		return connectInternal();
 	}
 

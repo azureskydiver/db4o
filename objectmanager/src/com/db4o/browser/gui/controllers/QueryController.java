@@ -47,7 +47,18 @@ public class QueryController {
         });
     }
     
-    public void setBrowserController(BrowserTabController browserController) {
+	/**
+	 * Forcably close the specified query tab.  Unsaved changes will be lost.
+	 * 
+	 * @param item The CTabItem referring to the query tab.
+	 */
+	public void close(CTabItem item) {
+		queryTabControllerRegistry.remove(item);
+		item.getControl().dispose();
+		item.dispose();
+	}
+
+	public void setBrowserController(BrowserTabController browserController) {
         this.browserController = browserController;
     }
     
@@ -100,6 +111,7 @@ public class QueryController {
     public BrowserTabController getBrowserController() {
         return browserController;
     }
+
     
 
 }

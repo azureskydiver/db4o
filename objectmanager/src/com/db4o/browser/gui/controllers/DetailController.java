@@ -128,8 +128,17 @@ public class DetailController implements IBrowserController {
 	private IObjectViewer objectViewer = null;
     
 	private void buildUI(IGraphIterator input) {
+		if (!input.hasParent()) {
+			return;
+		}
+		
         // Get the parent object of the fields that we are editing
         input.selectParent();
+        
+        if (!input.hasNext()) {
+        	return;
+        }
+        
         IModelNode parent = (IModelNode) input.next();
         input.previous();
         input.selectNextChild();

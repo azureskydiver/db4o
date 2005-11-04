@@ -51,6 +51,8 @@ import com.db4o.browser.gui.dialogs.SelectServer;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;
 import com.db4o.browser.model.IBrowserCoreListener;
+import com.db4o.browser.model.IGraphIterator;
+import com.db4o.browser.model.TheNullGraphIterator;
 import com.db4o.browser.prefs.PreferenceUI;
 import com.swtworkbench.community.xswt.XSWT;
 import com.swtworkbench.community.xswt.metalogger.FileLogger;
@@ -66,7 +68,7 @@ import com.swtworkbench.community.xswt.metalogger.TeeLogger;
 public class StandaloneBrowser implements IControlFactory {
     
     public static final String APPNAME = "db4o Object Manager";
-    public static final String VERSION = "1.5";
+    public static final String VERSION = "1.6";
     public static final String LOGFILE = ".objectmanager.log";
     private static final String LOGCONFIG = ".objectmanager.logconfig";
     
@@ -177,21 +179,38 @@ public class StandaloneBrowser implements IControlFactory {
         mainTab.setText(tabFile.getName());
     }
     
+    private MenuItem open;
+    private MenuItem openScrambledFile;
+    private MenuItem openServer;
+    private MenuItem closeAll;
+    private MenuItem xmlExport;
+    private MenuItem query;
+    private MenuItem newWindow;
+    private MenuItem closeWindow;
+    private MenuItem preferences;
+    private MenuItem helpAbout;
+    
+    private void enableOpenedDatabaseState() {
+        xmlExport.setEnabled(true);
+        closeAll.setEnabled(true);
+    }
+    
 	/**
 	 * Build the application menu bar
 	 */
 	private void buildMenuBar(final Shell shell) {
         Map choices = XSWT.createl(shell, "menu.xswt", getClass());
 		
-        MenuItem open = (MenuItem) choices.get("Open");
-        MenuItem openScrambledFile = (MenuItem) choices.get("OpenScrambledFile");
-        MenuItem openServer = (MenuItem) choices.get("OpenServer");
-        final MenuItem xmlExport = (MenuItem) choices.get("XMLExport");
-        MenuItem query = (MenuItem) choices.get("Query");
-        MenuItem newWindow = (MenuItem) choices.get("NewWindow");
-        MenuItem close = (MenuItem) choices.get("Close");
-		MenuItem preferences = (MenuItem) choices.get("Preferences");
-        MenuItem helpAbout = (MenuItem)choices.get("HelpAbout");
+        open = (MenuItem) choices.get("Open");
+        openScrambledFile = (MenuItem) choices.get("OpenScrambledFile");
+        openServer = (MenuItem) choices.get("OpenServer");
+        closeAll = (MenuItem) choices.get("CloseAllDatabases");
+        xmlExport = (MenuItem) choices.get("XMLExport");
+        query = (MenuItem) choices.get("Query");
+        newWindow = (MenuItem) choices.get("NewWindow");
+        closeWindow = (MenuItem) choices.get("Close");
+		preferences = (MenuItem) choices.get("Preferences");
+        helpAbout = (MenuItem)choices.get("HelpAbout");
         
         open.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
@@ -201,7 +220,7 @@ public class StandaloneBrowser implements IControlFactory {
                 if (file != null) {
                     setTabText(file);
                     browserController.open(file);
-                    xmlExport.setEnabled(true);
+                    enableOpenedDatabaseState();
                 }
             }
         });
@@ -219,7 +238,7 @@ public class StandaloneBrowser implements IControlFactory {
                         try {
                             if (browserController.open(file)) {
                                 setTabText(file);
-                                xmlExport.setEnabled(true);
+                                enableOpenedDatabaseState();
                             }
                         } catch (Throwable ex) {
                             MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
@@ -247,9 +266,27 @@ public class StandaloneBrowser implements IControlFactory {
                     if (browserController.open(host, port, user, password)) {
                         setTabText(host + ":" + port);
                     }
-                    xmlExport.setEnabled(true);
+                    enableOpenedDatabaseState();
                 }
             }
+        });
+        
+        closeAll.addSelectionListener(new SelectionAdapter() {
+        	public void widgetSelected(SelectionEvent e) {
+        		MessageBox areYouSure = new MessageBox(shell, SWT.YES | SWT.NO);
+        		areYouSure.setText("Question");
+        		areYouSure.setMessage("Are you sure you want to close all open databases?");
+        		int userIsSure = areYouSure.open();
+        		if (userIsSure == SWT.YES) {
+        			closeAllQueries();
+        			BrowserCore.getDefault().closeAllDatabases();
+        			IGraphIterator nullGraphIterator = TheNullGraphIterator.getDefault();
+        			browserController.setInput(nullGraphIterator, nullGraphIterator.getPath());
+        			setTabText("");
+        			closeAll.setEnabled(false);
+        			xmlExport.setEnabled(false);
+        		}
+        	}
         });
         
         xmlExport.addSelectionListener(new SelectionAdapter() {
@@ -283,31 +320,11 @@ public class StandaloneBrowser implements IControlFactory {
 			}
 		});
         
-        close.addSelectionListener(new SelectionAdapter() {
+        closeWindow.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 shell.close();
             }
         });
-
-//        adddirtoclasspath.addSelectionListener(new SelectionAdapter() {
-//            public void widgetSelected(SelectionEvent e) {
-//                DirectoryDialog dialog = new DirectoryDialog(shell, SWT.OPEN);
-//                String file = dialog.open();
-//                if (file != null) {
-//					browserController.addToClasspath(new File(file));
-//                }
-//            }
-//        });
-//        addfiletoclasspath.addSelectionListener(new SelectionAdapter() {
-//            public void widgetSelected(SelectionEvent e) {
-//                FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-//				dialog.setFilterExtensions(new String[]{"*.jar","*.zip"});
-//                String file = dialog.open();
-//                if (file != null) {
-//					browserController.addToClasspath(new File(file));
-//                }
-//            }
-//        });
 
         helpAbout.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
@@ -316,24 +333,44 @@ public class StandaloneBrowser implements IControlFactory {
         });
     }
 
-    private IBrowserCoreListener browserCoreListener = new IBrowserCoreListener() {
+    /**
+	 * Close all open user interface views
+	 */
+	private void closeAllQueries() {
+		CTabItem[] openedViews = folder.getItems();
+		
+		// Close all query tabs
+		for (int view = 0; view < openedViews.length; view++) {
+		    if (openedViews[view] == mainTab) {
+		        continue;
+		    }
+		    queryController.close(openedViews[view]);
+		}
+	}
+
+	/**
+	 * @param xmlExport
+	 */
+	private void enableOpenedFileState(final MenuItem xmlExport) {
+		xmlExport.setEnabled(true);
+	}
+
+	private IBrowserCoreListener browserCoreListener = new IBrowserCoreListener() {
         public void classpathChanged(BrowserCore browserCore) {
-            CTabItem[] openedViews = folder.getItems();
-            
-            // Close all query tabs
-            for (int view = 0; view < openedViews.length; view++) {
-                if (openedViews[view] == mainTab) {
-                    continue;
-                }
-                openedViews[view].getControl().dispose();
-                openedViews[view].dispose();
-            }
-            
+            closeAllQueries();
             // Refresh the browser
-            if (browserController.getInput() != null) {
-                browserController.reopen();//setInput(browserController.getInput(), 
-                        //browserController.getInitialSelection());
-            }
+    		if (browserController.getInput() != null) {
+    		    browserController.reopen();//setInput(browserController.getInput(), 
+    		            //browserController.getInitialSelection());
+    		}        
+    	}
+        public void closeEditors(BrowserCore core) {
+        	closeAllQueries();
+			IGraphIterator nullGraphIterator = TheNullGraphIterator.getDefault();
+			browserController.setInput(nullGraphIterator, nullGraphIterator.getPath());
+			setTabText("");
+			closeAll.setEnabled(false);
+			xmlExport.setEnabled(false);
         }
     };
     
