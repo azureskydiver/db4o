@@ -25,7 +25,7 @@ public class BrowserCore implements ICloseListener {
         }
         return model;
     }
-    
+	
 	private LinkedList databases = new LinkedList();
     private HashMap dbMap = new HashMap();  // Maps path/filename to database
     
@@ -62,11 +62,20 @@ public class BrowserCore implements ICloseListener {
 	 * @see com.db4o.browser.gui.standalone.ICloseListener#closing()
 	 */
 	public void closing() {
+		closeAllDatabases();
+		PreferencesCore.close();
+	}
+
+	/**
+	 * Close all open databases and forget that they ever existed.
+	 */
+	public void closeAllDatabases() {
 		for (Iterator i = databases.iterator(); i.hasNext();) {
 			IDatabase database = (IDatabase) i.next();
 			database.closeIfOpen();
 		}
-		PreferencesCore.close();
+		databases.clear();
+		dbMap.clear();
 	}
     
     /**
@@ -107,9 +116,14 @@ public class BrowserCore implements ICloseListener {
             IDatabase database = (IDatabase) databaseIter.next();
             database.reopen();
         }
-        fireBrowserCoreEvent();
+        fireClassPathChangedEvent();
     }
     
+	public void updateCallConstructorPrefs() {
+		fireCloseEditorsEvent();
+		closeAllDatabases();
+	}
+
     private LinkedList coreListeners = new LinkedList();
     
     public void addBrowserCoreListener(IBrowserCoreListener listener) {
@@ -119,11 +133,18 @@ public class BrowserCore implements ICloseListener {
     public void removeBrowserCoreListener(IBrowserCoreListener listener) {
         coreListeners.remove(listener);
     }
-    
-    private void fireBrowserCoreEvent() {
+
+    private void fireClassPathChangedEvent() {
         for (Iterator listeners = coreListeners.iterator(); listeners.hasNext();) {
             IBrowserCoreListener listener = (IBrowserCoreListener) listeners.next();
             listener.classpathChanged(this);
+        }
+    }
+    
+    private void fireCloseEditorsEvent() {
+        for (Iterator listeners = coreListeners.iterator(); listeners.hasNext();) {
+            IBrowserCoreListener listener = (IBrowserCoreListener) listeners.next();
+            listener.closeEditors(this);
         }
     }
 

@@ -17,6 +17,8 @@ import com.db4o.browser.prefs.activation.ActivationPreferencePage;
 import com.db4o.browser.prefs.activation.ActivationPreferences;
 import com.db4o.browser.prefs.classpath.ClasspathPreferencePage;
 import com.db4o.browser.prefs.classpath.ClasspathPreferences;
+import com.db4o.browser.prefs.constructor.ConstructorPreferencePage;
+import com.db4o.browser.prefs.constructor.ConstructorPreferences;
 import com.db4o.config.ObjectClass;
 import com.db4o.query.Query;
 
@@ -175,6 +177,9 @@ public class PreferencesCore {
         registerPreferences(ClasspathPreferences.CLASSPATH_PREFERENCES_ID,
                 "Classpath", null, ClasspathPreferencePage.class,
                 ClasspathPreferences.getDefault());
+        registerPreferences(ConstructorPreferences.CONSTRUCTOR_PREFERENCES_ID,
+        		"Constructor Calling", null, ConstructorPreferencePage.class,
+        		ConstructorPreferences.getDefault());
 	}
 
 }

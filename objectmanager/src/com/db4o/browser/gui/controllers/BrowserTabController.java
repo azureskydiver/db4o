@@ -209,25 +209,6 @@ public class BrowserTabController implements IBrowserController {
 	public SelectionChangedController getSelectionChangedController() {
 		return selectionChangedController;
 	}
-//
-//	public void addToClasspath(File file) {
-//		try {
-//			Class urlclclass=Class.forName("java.net.URLClassLoader");
-//			ClassLoader loader=getClass().getClassLoader();
-//			while(loader!=null) {
-//				if(urlclclass.isAssignableFrom(loader.getClass())) {
-//					Method addmethod=urlclclass.getDeclaredMethod("addURL",new Class[]{URL.class});
-//					addmethod.setAccessible(true);
-//					addmethod.invoke(loader,new Object[]{file.toURL()});
-//					return;
-//				}
-//				loader=loader.getParent();
-//			}
-//            Logger.log().error(new RuntimeException(), "Could not find a URLClassLoader.");
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 
     /**
      * @return Returns the queryController.
