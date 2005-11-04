@@ -1,4 +1,3 @@
-
 namespace com.db4o.foundation
 {
 	/// <exclude></exclude>
@@ -83,6 +82,30 @@ namespace com.db4o.foundation
 				while (hie != null)
 				{
 					visitor.visit(hie.i_object);
+					hie = hie.i_next;
+				}
+			}
+		}
+
+		public virtual void forEachKeyForIdentity(com.db4o.foundation.Visitor4 visitor, object
+			 a_identity)
+		{
+			for (int i = 0; i < i_table.Length; i++)
+			{
+				com.db4o.foundation.HashtableIntEntry hie = i_table[i];
+				while (hie != null)
+				{
+					if (hie.i_object == a_identity)
+					{
+						if (hie is com.db4o.foundation.HashtableObjectEntry)
+						{
+							visitor.visit(((com.db4o.foundation.HashtableObjectEntry)hie).i_objectKey);
+						}
+						else
+						{
+							visitor.visit(hie.i_key);
+						}
+					}
 					hie = hie.i_next;
 				}
 			}

@@ -1,4 +1,3 @@
-
 namespace com.db4o.config
 {
 	/// <summary>translator interface to translate objects on storage and activation.</summary>

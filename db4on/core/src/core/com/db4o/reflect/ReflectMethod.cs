@@ -1,4 +1,3 @@
-
 namespace com.db4o.reflect
 {
 	/// <summary>representation for java.lang.reflect.Method.</summary>

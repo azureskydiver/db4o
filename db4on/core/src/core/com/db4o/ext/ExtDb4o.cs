@@ -1,4 +1,3 @@
-
 namespace com.db4o.ext
 {
 	/// <summary>extended factory class with static methods to open special db4o sessions.

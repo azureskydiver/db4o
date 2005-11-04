@@ -3,8 +3,7 @@ namespace com.db4o.query
 	/// <summary>Extend this class and add your #match() method to run native queries.</summary>
 	/// <remarks>
 	/// Extend this class and add your #match() method to run native queries.
-	/// <br /><br /><b>! The functionality of this class is not available before db4o version 5.0.
-	/// It is present in 4.x builds for maintenance purposes only !</b><br /><br />
+	/// <br /><br />
 	/// A class that extends Predicate is required to implement the method
 	/// #match() following the native query conventions:<br />
 	/// - The name of the method is "match".<br />
@@ -18,7 +17,7 @@ namespace com.db4o.query
 	/// Here is an example of a #match method that follows these conventions:<br />
 	/// <pre><code>
 	/// public boolean match(Cat cat){<br />
-	/// return cat.name.equals("Frizz");<br />
+	/// return cat.name.equals("Occam");<br />
 	/// }<br />
 	/// </code></pre><br /><br />
 	/// Native queries for Java JDK5 and above define a #match method in the
@@ -28,81 +27,65 @@ namespace com.db4o.query
 	/// </remarks>
 	public abstract class Predicate : j4o.io.Serializable
 	{
-		[com.db4o.Transient]
-		private j4o.lang.reflect.Method _matchMethod;
+		public static readonly string PREDICATEMETHOD_NAME = "match";
+
+		internal static readonly j4o.lang.Class OBJECT_CLASS = j4o.lang.Class.getClassForType
+			(typeof(object));
 
 		[com.db4o.Transient]
-		private j4o.lang.Class _extent;
+		private j4o.lang.reflect.Method cachedFilterMethod = null;
 
-		[com.db4o.Transient]
-		private bool _failed;
-
-		public Predicate()
+		internal virtual j4o.lang.reflect.Method getFilterMethod()
 		{
-			findMatchMethod();
-			if (_matchMethod == null)
+			if (cachedFilterMethod != null)
 			{
-				com.db4o.inside.Exceptions4.throwRuntimeException(64);
+				return cachedFilterMethod;
 			}
-		}
-
-		/// <summary>public for implementation reasons.</summary>
-		/// <remarks>public for implementation reasons. Do not call.</remarks>
-		public j4o.lang.Class getExtent()
-		{
-			return _extent;
-		}
-
-		private void findMatchMethod()
-		{
 			j4o.lang.reflect.Method[] methods = j4o.lang.Class.getClassForObject(this).getMethods
 				();
 			for (int methodIdx = 0; methodIdx < methods.Length; methodIdx++)
 			{
-				j4o.lang.reflect.Method curMethod = methods[methodIdx];
-				string name = curMethod.getName();
-				if ((name.Equals("match") || name.Equals("Match")) && curMethod.getReturnType().Equals
-					(j4o.lang.Class.getClassForType(typeof(bool))))
+				j4o.lang.reflect.Method method = methods[methodIdx];
+				if (isFilterMethod(method))
 				{
-					j4o.lang.Class[] paramTypes = curMethod.getParameterTypes();
-					if (paramTypes != null && paramTypes.Length == 1)
+					if (!OBJECT_CLASS.Equals(method.getParameterTypes()[0]))
 					{
-						_extent = paramTypes[0];
-						_matchMethod = curMethod;
-						com.db4o.Platform4.setAccessible(curMethod);
-						return;
+						cachedFilterMethod = method;
+						return method;
 					}
 				}
 			}
-			_failed = true;
+			throw new System.ArgumentException("Invalid predicate.");
 		}
 
-		/// <summary>public for implementation reasons.</summary>
-		/// <remarks>public for implementation reasons. Do not call.</remarks>
-		public bool invoke(object obj)
+		private bool isFilterMethod(j4o.lang.reflect.Method method)
 		{
-			if (_failed)
+			if (method.getParameterTypes().Length != 1)
 			{
 				return false;
 			}
+			return j4o.lang.JavaSystem.equalsIgnoreCase(method.getName(), PREDICATEMETHOD_NAME
+				);
+		}
+
+		public virtual j4o.lang.Class extentType()
+		{
+			return getFilterMethod().getParameterTypes()[0];
+		}
+
+		public virtual bool appliesTo(object candidate)
+		{
 			try
 			{
-				if (_matchMethod == null)
-				{
-					findMatchMethod();
-				}
-				if (_matchMethod == null)
-				{
-					return false;
-				}
-				object res = _matchMethod.invoke(this, new object[] { obj });
-				return (((bool)res));
+				j4o.lang.reflect.Method filterMethod = getFilterMethod();
+				com.db4o.Platform4.setAccessible(filterMethod);
+				object ret = filterMethod.invoke(this, new object[] { candidate });
+				return ((bool)ret);
 			}
-			catch (System.Exception ex)
+			catch (System.Exception e)
 			{
-				j4o.lang.JavaSystem.printStackTrace(ex);
+				return false;
 			}
-			return false;
 		}
 	}
 }

@@ -1,4 +1,3 @@
-
 namespace com.db4o.types
 {
 	/// <summary>factory and other methods for database-aware collections.</summary>

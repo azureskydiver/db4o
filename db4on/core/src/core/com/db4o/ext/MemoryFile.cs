@@ -1,4 +1,3 @@
-
 namespace com.db4o.ext
 {
 	/// <summary>carries in-memory data for db4o in-memory operation.</summary>

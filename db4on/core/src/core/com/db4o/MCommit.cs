@@ -1,4 +1,3 @@
-
 namespace com.db4o
 {
 	internal sealed class MCommit : com.db4o.Msg

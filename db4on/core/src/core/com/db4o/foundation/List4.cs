@@ -1,4 +1,3 @@
-
 namespace com.db4o.foundation
 {
 	/// <summary>elements in linked list Collection4</summary>

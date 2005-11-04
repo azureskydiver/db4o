@@ -1,4 +1,3 @@
-
 namespace com.db4o.reflect.generic
 {
 	/// <exclude></exclude>

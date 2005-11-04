@@ -1,4 +1,3 @@
-
 namespace com.db4o.reflect.net
 {
 	public class NetMethod : com.db4o.reflect.ReflectMethod

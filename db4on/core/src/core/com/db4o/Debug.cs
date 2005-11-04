@@ -1,8 +1,14 @@
 namespace com.db4o
 {
-
-	internal abstract class Debug : com.db4o.foundation.Debug4
+	/// <exclude></exclude>
+	public abstract class Debug : com.db4o.foundation.Debug4
 	{
+		public const bool ixTrees = false;
+
+		public const bool xbytes = false;
+
+		public const bool freespace = false;
+
 		public const bool checkSychronization = false;
 
 		public const bool atHome = false;
@@ -36,6 +42,14 @@ namespace com.db4o
 		internal static com.db4o.foundation.Queue4 clientMessageQueue;
 
 		internal static com.db4o.foundation.Lock4 clientMessageQueueLock;
+
+		public static void expect(bool cond)
+		{
+			if (!cond)
+			{
+				throw new j4o.lang.RuntimeException("Should never happen");
+			}
+		}
 
 		public static void ensureLock(object obj)
 		{

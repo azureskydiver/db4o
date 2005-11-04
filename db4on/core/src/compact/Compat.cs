@@ -8,6 +8,7 @@ using System.Threading;
 
 namespace System.Runtime.CompilerServices 
 {
+
 	class IsVolatile 
 	{
 	}

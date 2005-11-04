@@ -1,4 +1,3 @@
-
 namespace com.db4o.config
 {
 	/// <summary>generic interface to allow returning an attribute of an object.</summary>

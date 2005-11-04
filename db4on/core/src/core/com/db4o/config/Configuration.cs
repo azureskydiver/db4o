@@ -1,4 +1,3 @@
-
 namespace com.db4o.config
 {
 	/// <summary>configuration interface for db4o.</summary>
@@ -108,7 +107,9 @@ namespace com.db4o.config
 		/// This setting may also be overridden for individual classes in
 		/// <see cref="com.db4o.config.ObjectClass.callConstructor">com.db4o.config.ObjectClass.callConstructor
 		/// 	</see>
-		/// .<br /><br />
+		/// .
+		/// <br /><br />The default setting depends on the features supported by your current environment.
+		/// <br /><br />
 		/// </remarks>
 		/// <param name="flag">
 		/// - specify true, to request calling constructors, specify
@@ -185,6 +186,7 @@ namespace com.db4o.config
 		/// <code>0</code> all space is reused
 		/// </remarks>
 		/// <param name="byteCount">Slots with this size or smaller will be lost.</param>
+		/// <deprecated>please call Db4o.configure().freespace().discardSmallerThan()</deprecated>
 		void discardFreeSpace(int byteCount);
 
 		/// <summary>configures the use of encryption.</summary>
@@ -226,6 +228,10 @@ namespace com.db4o.config
 		/// </remarks>
 		/// <param name="flag">true to throw Exceptions if objects can not be stored.</param>
 		void exceptionsOnNotStorable(bool flag);
+
+		/// <summary>returns the freespace configuration interface</summary>
+		/// <returns>the freespace configuration interface</returns>
+		com.db4o.config.FreespaceConfiguration freespace();
 
 		/// <summary>configures db4o to generate UUIDs for stored objects.</summary>
 		/// <remarks>configures db4o to generate UUIDs for stored objects.</remarks>
@@ -282,7 +288,10 @@ namespace com.db4o.config
 
 		/// <summary>sets the detail level of db4o messages.</summary>
 		/// <remarks>
-		/// sets the detail level of db4o messages.
+		/// sets the detail level of db4o messages. Messages will be output to the
+		/// configured output
+		/// <see cref="j4o.io.PrintStream">PrintStream</see>
+		/// .
 		/// <br /><br />
 		/// Level 0 - no messages<br />
 		/// Level 1 - open and close messages<br />
@@ -333,6 +342,33 @@ namespace com.db4o.config
 		/// </returns>
 		com.db4o.config.ObjectClass objectClass(object clazz);
 
+		/// <summary>
+		/// If set to true, db4o will try to optimize native queries
+		/// dynamically at query execution time, otherwise it will
+		/// run native queries in unoptimized mode as SODA evaluations.
+		/// </summary>
+		/// <remarks>
+		/// If set to true, db4o will try to optimize native queries
+		/// dynamically at query execution time, otherwise it will
+		/// run native queries in unoptimized mode as SODA evaluations.
+		/// The jars needed for native query optimization have to be on
+		/// the classpath at runtime for this switch to have effect.
+		/// <br /><br />The default setting is <code>true</code>.
+		/// </remarks>
+		/// <param name="optimizeNQ">
+		/// true, if db4o should try to optimize
+		/// native queries at query execution time, false otherwise
+		/// </param>
+		void optimizeNativeQueries(bool optimizeNQ);
+
+		/// <returns>
+		/// boolean indicating whether Native Queries will be optimized
+		/// dynamically.
+		/// </returns>
+		/// <seealso cref="com.db4o.config.Configuration.optimizeNativeQueries">com.db4o.config.Configuration.optimizeNativeQueries
+		/// 	</seealso>
+		bool optimizeNativeQueries();
+
 		/// <summary>protects the database file with a password.</summary>
 		/// <remarks>
 		/// protects the database file with a password.
@@ -381,9 +417,9 @@ namespace com.db4o.config
 		/// </remarks>
 		void reflectWith(com.db4o.reflect.Reflector reflector);
 
-		/// <summary>forces analysation of all Classes during a running session.</summary>
+		/// <summary>forces analysis of all Classes during a running session.</summary>
 		/// <remarks>
-		/// forces analysation of all Classes during a running session.
+		/// forces analysis of all Classes during a running session.
 		/// <br /><br />
 		/// This method may be useful in combination with a modified ClassLoader and
 		/// allows exchanging classes during a running db4o session.<br /><br />
@@ -449,10 +485,10 @@ namespace com.db4o.config
 		/// <param name="messageRecipient">the MessageRecipient to be used</param>
 		void setMessageRecipient(com.db4o.messaging.MessageRecipient messageRecipient);
 
-		/// <summary>assigns a <code>PrintStream</code> where db4o is to print its event messages.
-		/// 	</summary>
-		/// <remarks>
-		/// assigns a <code>PrintStream</code> where db4o is to print its event messages.
+		/// <summary>
+		/// Assigns a
+		/// <see cref="j4o.io.PrintStream">PrintStream</see>
+		/// where db4o is to print its event messages.
 		/// <br /><br />Messages are useful for debugging purposes and for learning
 		/// to understand, how db4o works. The message level can be raised with
 		/// <see cref="com.db4o.config.Configuration.messageLevel">Db4o.configure().messageLevel()
@@ -460,8 +496,10 @@ namespace com.db4o.config
 		/// to produce more detailed messages.
 		/// <br /><br />Use <code>setOut(System.out)</code> to print messages to the
 		/// console.<br /><br />
-		/// </remarks>
+		/// </summary>
 		/// <param name="outStream">the new <code>PrintStream</code> for messages.</param>
+		/// <seealso cref="com.db4o.config.Configuration.messageLevel">com.db4o.config.Configuration.messageLevel
+		/// 	</seealso>
 		void setOut(j4o.io.PrintStream outStream);
 
 		/// <summary>
@@ -581,12 +619,17 @@ namespace com.db4o.config
 		/// <remarks>
 		/// turns weak reference management on or off.
 		/// <br /><br />
-		/// Performance may be improved by running db4o without weak
-		/// reference memory management at the cost of higher
+		/// This method must be called before opening a database.
+		/// <br /><br />
+		/// Performance may be improved by running db4o without using weak
+		/// references durring memory management at the cost of higher
 		/// memory consumption or by alternatively implementing a manual
-		/// memory management using
+		/// memory management scheme using
 		/// <see cref="com.db4o.ext.ExtObjectContainer.purge">com.db4o.ext.ExtObjectContainer.purge
 		/// 	</see>
+		/// <br /><br />Setting the value to <code>false</code> causes db4o to use hard
+		/// references to objects, preventing the garbage collection process
+		/// from disposing of unused objects.
 		/// <br /><br />The default setting is <code>true</code>.
 		/// <br /><br />Ignored on JDKs before 1.2.
 		/// </remarks>

@@ -1,4 +1,3 @@
-
 namespace com.db4o.foundation.network
 {
 	public class YapClientSocket : com.db4o.foundation.network.YapSocketReal

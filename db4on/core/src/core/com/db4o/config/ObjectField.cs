@@ -1,4 +1,3 @@
-
 namespace com.db4o.config
 {
 	/// <summary>configuration interface for fields of classes.</summary>
