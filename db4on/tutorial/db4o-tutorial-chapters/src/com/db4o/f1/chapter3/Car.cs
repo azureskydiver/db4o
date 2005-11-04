@@ -41,11 +41,12 @@ namespace com.db4o.f1.chapter3
             }
         }
         
-        public SensorReadout[] GetHistory()
+        public IList History
         {
-            SensorReadout[] history = new SensorReadout[_history.Count];
-            _history.CopyTo(history, 0);
-            return history;
+        	get
+        	{
+	            return _history;
+	        }
         }
         
         public void Snapshot()
