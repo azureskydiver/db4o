@@ -3,7 +3,6 @@ namespace com.db4o.cluster
 	/// <summary>allows running Queries against multiple ObjectContainers.</summary>
 	/// <remarks>allows running Queries against multiple ObjectContainers.</remarks>
 	/// <exclude></exclude>
-
 	public class Cluster
 	{
 		public readonly com.db4o.ObjectContainer[] _objectContainers;
@@ -47,7 +46,7 @@ namespace com.db4o.cluster
 				{
 					queries[i] = _objectContainers[i].query();
 				}
-				return new com.db4o.cluster.inside.ClusterQuery(this, queries);
+				return new com.db4o.inside.cluster.ClusterQuery(this, queries);
 			}
 		}
 
