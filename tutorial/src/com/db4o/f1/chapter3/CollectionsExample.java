@@ -14,12 +14,12 @@ public class CollectionsExample extends Util {
         try {
             storeFirstCar(db);
             storeSecondCar(db);
-            retrieveAllSensorReadoutsQBE(db);
+            retrieveAllSensorReadoutQBE(db);
             retrieveSensorReadoutQBE(db);
             retrieveCarQBE(db);
             retrieveCollections(db);
             retrieveArrays(db);
-            retrieveAllSensorReadoutsNative(db);
+            retrieveAllSensorReadoutNative(db);
             retrieveSensorReadoutNative(db);
             retrieveCarNative(db);
             retrieveSensorReadoutQuery(db);
@@ -55,14 +55,14 @@ public class CollectionsExample extends Util {
         db.set(car2);
     }
     
-    public static void retrieveAllSensorReadoutsQBE(
+    public static void retrieveAllSensorReadoutQBE(
                 ObjectContainer db) {
         SensorReadout proto=new SensorReadout(null,null,null);
         ObjectSet results=db.get(proto);
         listResult(results);
     }
 
-    public static void retrieveAllSensorReadoutsNative(
+    public static void retrieveAllSensorReadoutNative(
             ObjectContainer db) {
     	ObjectSet results = db.query(new Predicate() {
     		public boolean match(SensorReadout candidate){
@@ -165,7 +165,7 @@ public class CollectionsExample extends Util {
     	Car car=(Car)results.next();
         car.snapshot();
         db.set(car);
-        retrieveAllSensorReadoutsNative(db);
+        retrieveAllSensorReadoutNative(db);
     }
     
     public static void updateCollection(ObjectContainer db) {

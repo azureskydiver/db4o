@@ -31,7 +31,7 @@ The second car will take two snapshots immediately at startup.
 
 First let us verify that we indeed have taken snapshots.
 
-.s com.db4o.f1.chapter3.CollectionsExample#retrieveAllSensorReadoutsQBE ..
+.s com.db4o.f1.chapter3.CollectionsExample#retrieveAllSensorReadoutQBE ..
 
 As a prototype for an array, we provide an array of the same type, ._
 containing only the values we expect the result to contain.
