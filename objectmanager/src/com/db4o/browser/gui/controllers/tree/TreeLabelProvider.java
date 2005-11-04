@@ -26,8 +26,11 @@ public class TreeLabelProvider extends LabelProvider {
             IModelNode current = pos.getCurrent();
     		return current == null ? "null" : current.getText();
         } catch (Throwable t) {
-            Logger.log().error(t, "Exception getting tree label");
-            return "Please email " + StandaloneBrowser.LOGFILE + " to support@db4o.com";
+        	String message = "Exception getting tree label text.\n" +
+        		"This usually happens when a class needs its constructor called because it has transient fields.\n" +
+        		"See File | Preferences | Constructor Calling";
+            Logger.log().error(t, message);
+            return "Configure class in \"File | Preferences | Constructor Calling\" or email " + StandaloneBrowser.LOGFILE + " to support@db4o.com";
         }
     }
 

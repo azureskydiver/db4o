@@ -10,7 +10,7 @@
             <layoutData x:class="gridData" grabExcessHorizontalSpace="true" grabExcessVerticalSpace="true" horizontalAlignment="GridData.FILL" verticalAlignment="GridData.FILL"/>
             <layout x:class="gridLayout" numColumns="2" marginHeight="0" marginWidth="0"/>
             <x:children>
-            	<label text="db4o will call the constructors of classes listed on this page.">
+            	<label text="db4o will call the constructors of fully-qualified class names (and their subclasses) listed on this page.">
 		            <layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" horizontalSpan="2"/>
             	</label>
             	<label text="NOTE: This is a global setting.  Changing this preference closes all databases!">
