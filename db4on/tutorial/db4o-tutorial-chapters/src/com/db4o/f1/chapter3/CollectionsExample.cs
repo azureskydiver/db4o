@@ -145,7 +145,7 @@ namespace com.db4o.f1.chapter3
             while (result.hasNext())
             {
                 Car car = (Car)result.next();
-                foreach (object readout in car.GetHistory())
+                foreach (object readout in car.History)
                 {
                     Console.WriteLine(readout);
                 }
