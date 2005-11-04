@@ -150,14 +150,14 @@ namespace com.db4o.f1.chapter2
     			this.pilotName = pilotName;
     		}
     		
-    		public static bool Match(Car candidate){
+    		public bool Match(Car candidate){
     			return candidate.Pilot.Name == pilotName;
     		}
     	}
     
     	public static void retrieveCarsByPilotNameNative(ObjectContainer db) {
     		string pilotName = "Rubens Barrichello";
-    		ObjectSet results = db.query(new retrieveCarsByPilotNameNativePredicate( pilotName));
+    		ObjectSet results = db.query(new retrieveCarsByPilotNamePredicate( pilotName));
     		listResult(results);
   		}
   		
