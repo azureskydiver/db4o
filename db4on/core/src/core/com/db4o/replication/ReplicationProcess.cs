@@ -1,4 +1,3 @@
-
 namespace com.db4o.replication
 {
 	/// <summary>db4o replication interface.</summary>

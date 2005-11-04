@@ -1,4 +1,3 @@
-
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
@@ -8,26 +7,31 @@ namespace j4o.lang.reflect
 {
     public class Method
 	{
-        private MethodInfo methodInfo;
+        private MethodInfo _methodInfo;
 
         internal Method(MethodInfo methodInfo)
 		{
-            this.methodInfo = methodInfo;
+            this._methodInfo = methodInfo;
         }
+
+		internal MethodInfo MethodInfo
+		{
+			get { return _methodInfo; }
+		}
 
         public Object invoke(Object obj, Object[] args)
 		{
-            return methodInfo.Invoke(obj, args);
+            return _methodInfo.Invoke(obj, args);
         }
 
         public String getName()
 		{
-            return methodInfo.Name;
+            return _methodInfo.Name;
         }
 
 		public j4o.lang.Class[] getParameterTypes() 
 		{
-			ParameterInfo[] parameters = methodInfo.GetParameters();
+			ParameterInfo[] parameters = _methodInfo.GetParameters();
 			j4o.lang.Class[] types = new j4o.lang.Class[parameters.Length];
 			for (int i=0; i<parameters.Length; ++i)
 			{
@@ -38,7 +42,8 @@ namespace j4o.lang.reflect
 
 		public j4o.lang.Class getReturnType() 
 		{
-			return j4o.lang.Class.getClassForType(methodInfo.ReturnType);
+			return j4o.lang.Class.getClassForType(_methodInfo.ReturnType);
 		}
     }
 }
+

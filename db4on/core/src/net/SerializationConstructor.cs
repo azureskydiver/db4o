@@ -1,6 +1,5 @@
 using System;
 
-
 namespace com.db4o.reflect.net
 {
 	/// <summary>Constructs objects by using System.Runtime.Serialization.FormatterServices.GetUninitializedObject
