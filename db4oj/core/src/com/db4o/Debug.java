@@ -10,6 +10,8 @@ import com.db4o.foundation.*;
 public abstract class Debug extends Debug4 {
     
     
+    public static final boolean ixTrees = false;
+    
     public static final boolean xbytes = false;
     
     public static final boolean freespace = false;
@@ -42,7 +44,12 @@ public abstract class Debug extends Debug4 {
     static YapClient clientStream;
     static Queue4 clientMessageQueue;
     static Lock4 clientMessageQueueLock;
-
+    
+    public static void expect(boolean cond){
+        if(! cond){
+            throw new RuntimeException("Should never happen");
+        }
+    }
     
     public static void ensureLock(Object obj) {
         if (atHome) {
