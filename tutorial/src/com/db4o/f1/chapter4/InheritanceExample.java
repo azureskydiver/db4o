@@ -90,27 +90,27 @@ public class InheritanceExample extends Util {
     public static void retrieveSensorReadoutNative(
             ObjectContainer db) {
     	ObjectSet results = db.query(new Predicate() {
-    		public boolean match(SensorReadout candidate){
-    			return true;
-    		}
+    	    public boolean match(SensorReadout candidate){
+    	        return true;
+    	    }
     	});
     	listResult(results);
     }
     
     public static void retrieveAllObjectsNative(ObjectContainer db) {
         ObjectSet result=db.query(new Predicate(){
-        	public boolean match(Object candidate){
-        		return true;
-        	}
+            public boolean match(Object candidate){
+                return true;
+            }
         });
         listResult(result);
     }
     
     public static void deleteAllObjectsNative(ObjectContainer db) {
         ObjectSet result=db.query(new Predicate(){
-        	public boolean match(Object candidate){
-        		return true;
-        	}
+            public boolean match(Object candidate){
+                return true;
+            }
         });
         while(result.hasNext()) {
             db.delete(result.next());
