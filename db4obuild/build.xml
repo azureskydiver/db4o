@@ -228,6 +228,7 @@
 				<exclude name="**/editors/**" />
 				<exclude name="**/BrowserPlugin.java" />
 				<exclude name="**/TestStarter.java" />
+				<exclude name="**/rcp/*" />
 			<classpath>
 				<fileset dir="${dir.objectmanager.lib}">
 					<include name="linux/*.jar" />
