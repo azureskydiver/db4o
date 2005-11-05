@@ -44,7 +44,7 @@ class IxPath implements Cloneable, Visitor4 {
     }
 
     void add(Visitor4 visitor) {
-        if (i_comparisonResult == 0 && i_traverser.i_take[1]) {
+        if (i_comparisonResult == 0 && i_traverser.i_take[IxTraverser.EQUAL]) {
             i_tree.visit(visitor, i_lowerAndUpperMatch);
         }
     }

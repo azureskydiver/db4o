@@ -2,12 +2,14 @@
 
 package com.db4o;
 
+import com.db4o.inside.ix.*;
+
 /**
  * @exclude
  */
 public class QEEqual extends QEAbstract
 {
     public void indexBitMap(boolean[] bits){
-        bits[1] = true;
+        bits[IxTraverser.EQUAL] = true;
     }
 }

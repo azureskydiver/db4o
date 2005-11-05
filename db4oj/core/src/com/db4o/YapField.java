@@ -493,7 +493,7 @@ public class YapField implements StoredField {
 
     void initIndex(Transaction systemTrans, MetaIndex metaIndex) {
         if (supportsIndex()) {
-            i_index = new Index4(systemTrans, getHandler(), metaIndex);
+            i_index = new Index4(systemTrans, getHandler(), metaIndex, i_handler.indexNullHandling());
         }
     }
 

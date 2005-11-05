@@ -23,17 +23,17 @@ public class IxTraverser{
     private IxPath i_smallTail;
 
     // Bitmap that denotes, which elements to take, consisting of four booleans:
-    // [0] take smaller
-    // [1] take equal
-    // [2] take greater
-    // [3] take nulls 
+    // [0] take nulls 
+    // [1] take smaller
+    // [2] take equal
+    // [3] take greater
+    
     boolean[] i_take;
     
-    private static final int SMALLER = 0;
-    private static final int EQUAL = 1;
-    private static final int GREATER = 2;
-    private static final int NULLS = 3;
-    
+    public static final int NULLS = 0;
+    public static final int SMALLER = 1;
+    public static final int EQUAL = 2;
+    public static final int GREATER = 3;
     
     private void add(Visitor4 visitor, IxPath a_previousPath, IxPath a_great, IxPath a_small) {
         addPathTree(visitor, a_previousPath);
@@ -44,7 +44,6 @@ public class IxTraverser{
         addGreater(visitor, a_small);
         addSmaller(visitor, a_great);
     }
-    
 
     private void addAll(Visitor4 visitor, Tree a_tree){
         if(a_tree != null){
@@ -102,13 +101,17 @@ public class IxTraverser{
     
     public NIxPaths convert(){
         NIxPaths res = new NIxPaths();
-        res.add(new NIxPath(i_smallHead.convert(), i_take[SMALLER], i_take[EQUAL]));
-        res.add(new NIxPath(i_greatHead.convert(), i_take[EQUAL], i_take[GREATER]));
-        IxPath nullPath = findNullPath();
-        res.add(new NIxPath(i_greatHead.convert(), i_take[NULLS], i_take[SMALLER]));
+        res.add(new NIxPath(i_smallHead.convert(), i_take[SMALLER], i_take[EQUAL], i_take[GREATER], SMALLER));
+        res.add(new NIxPath(i_greatHead.convert(), i_take[SMALLER],i_take[EQUAL], i_take[GREATER], GREATER));
+        if(i_smallHead != null){
+            if( i_smallHead.i_tree.index()._nullHandling){ 
+                IxPath nullPath = findNullPath();
+                res.add(new NIxPath(nullPath.convert(), i_take[NULLS], i_take[NULLS], i_take[SMALLER], NULLS));
+            }
+        }
         return res;
     }
-
+    
     private int countGreater(IxPath a_path, int a_sum) {
         if (a_path.i_next == null) {
             return a_sum + countSubsequent(a_path);
@@ -257,17 +260,17 @@ public class IxTraverser{
 
             int span = 0;
 
-            if (i_take[1]) {
+            if (i_take[EQUAL]) {
                 span += countSpan(i_greatHead, i_greatHead.i_next, i_smallHead.i_next);
             }
-            if (i_take[0]) {
+            if (i_take[SMALLER]) {
                 IxPath head = i_smallHead;
                 while (head != null) {
-                    span += head.countPreceding(i_take[3]);
+                    span += head.countPreceding(i_take[NULLS]);
                     head = head.i_next;
                 }
             }
-            if (i_take[2]) {
+            if (i_take[GREATER]) {
                 IxPath head = i_greatHead;
                 while (head != null) {
                     span += head.countSubsequent();
@@ -280,7 +283,8 @@ public class IxTraverser{
     }
 
     public int findBoundsExactMatch(Object a_constraint, IxTree a_tree){
-        i_take = new boolean[] { false, true, false, false};
+        i_take = new boolean[] { false, false, false, false};
+        i_take[EQUAL] = true;
         return findBounds(a_constraint, a_tree);
     }
     

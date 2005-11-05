@@ -28,6 +28,10 @@ final class YDate extends YLong
 	public int getID(){
 		return 10;
 	}
+    
+    public boolean indexNullHandling() {
+        return true;
+    }
 	
 	protected Class primitiveJavaClass(){
 		return null;

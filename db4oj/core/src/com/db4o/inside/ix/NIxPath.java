@@ -8,32 +8,44 @@ import com.db4o.*;
 public class NIxPath extends Tree {
     
     
-    NIxPathNode _head;
+    final NIxPathNode _head;
     
-    boolean _takePreceding;
+    final boolean _takePreceding;
     
-    boolean _takeSubsequent;
+    final boolean _takeMatches; 
     
+    final boolean _takeSubsequent;
     
-    public NIxPath(){
-        
-    }
+    int _type;  // see constants in IxTraverser
     
-    public NIxPath(NIxPathNode head, boolean takePreceding, boolean takeSubsequent){
+    public NIxPath(NIxPathNode head, boolean takePreceding, boolean takeMatches, boolean takeSubsequent, int pathType){
         _head = head;
         _takePreceding = takePreceding;
+        _takeMatches = takeMatches;
         _takeSubsequent = takeSubsequent;
+        _type = pathType;
     }
-
-
-    
     
     public int compare(Tree a_to) {
-        return _head.compare(((NIxPath)a_to)._head);
+        NIxPath other = (NIxPath)a_to;
+        
+        int cmp = _head.compare(other._head, _type, other._type); 
+        
+        return cmp;
     }
     
-    
-    
+    public String toString() {
+        String str = "NIxPath +\n";
+        String space = " ";
+        NIxPathNode node = _head;
+        while(node != null){
+            str += space;
+            space += " ";
+            str += node.toString() + "\n";
+            node = node._next;
+        }
+        return str;
+    }
     
 
 }

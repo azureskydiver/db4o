@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.inside.ix.*;
+
 /**
  * Query Evaluator - Represents such things as &gt;, &gt;=, &lt;, &lt;=, EQUAL, LIKE, etc.
  * 
@@ -52,7 +54,7 @@ public class QE
 	 * @param bits
 	 */
 	public void indexBitMap(boolean[] bits){
-	    bits[1] = true;
+	    bits[IxTraverser.EQUAL] = true;
 	}
 	
 	public boolean supportsIndex(){

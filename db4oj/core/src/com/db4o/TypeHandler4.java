@@ -29,6 +29,8 @@ public interface TypeHandler4 extends Indexable4
 	boolean equals(TypeHandler4 a_dataType); // needed for YapField.equals
 	
 	Object indexEntry(Object a_object);
+    
+    boolean indexNullHandling(); 
 	
 	void prepareLastIoComparison(Transaction a_trans, Object obj);
 	

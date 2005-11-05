@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.inside.ix.*;
+
 /**
  * @exclude
  */
@@ -15,6 +17,6 @@ public class QEGreater extends QEAbstract
 	}
 	
 	public void indexBitMap(boolean[] bits){
-	    bits[2] = true;
+	    bits[IxTraverser.GREATER] = true;
 	}
 }

@@ -2,6 +2,8 @@
 
 package com.db4o.test;
 
+import com.db4o.test.soda.*;
+
 public class AllTestsConfSingle extends TestSuite{
 
 	static protected final String TEST_CONFIGURATION = "AllTestsConfSingle";
@@ -28,13 +30,19 @@ public class AllTestsConfSingle extends TestSuite{
             
             // MultiLevelIndex.class
             
-            // Soda.class
-            
             // IndexCreateDrop.class,
             
             // ReplicateExistingFile.class
             // ReplicateDb4oList.class
-            SimplestPossible.class
+            
+             IndexCreateDrop.class,
+            
+              CreateIndex.class,
+//             
+             Soda.class
+            
+            // IndexedByIdentity.class
+            
             // MultiDelete.class
             // GenericFeatures.class
     	};
@@ -58,7 +66,7 @@ public class AllTestsConfSingle extends TestSuite{
     /**
       * run the tests in client/server mode 
       */
-    public boolean CLIENT_SERVER = true;
+    public boolean CLIENT_SERVER = false;
 
     /**
      * run the test against a memory file instead of disc file
