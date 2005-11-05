@@ -59,6 +59,10 @@ public abstract class YapJavaClass implements TypeHandler4 {
     public Object indexEntry(Object a_object) {
         return a_object;
     }
+    
+    public boolean indexNullHandling() {
+        return false;
+    }
 
     public Object comparableObject(Transaction a_trans, Object a_object) {
         return a_object;

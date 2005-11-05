@@ -8,7 +8,10 @@ import com.db4o.query.*;
 public class CreateIndex {
 
     public String i_name;
+    
     public int i_int;
+    
+    public Integer i_intWrapper;
 
     public CreateIndex() {
     }
@@ -19,11 +22,13 @@ public class CreateIndex {
 
     public CreateIndex(int a_int) {
         i_int = a_int;
+        i_intWrapper = new Integer(a_int);
     }
 
     public void configure() {
         Db4o.configure().objectClass(this).objectField("i_name").indexed(true);
         Db4o.configure().objectClass(this).objectField("i_int").indexed(true);
+        Db4o.configure().objectClass(this).objectField("i_intWrapper").indexed(true);
     }
 
     public void store() {
@@ -42,11 +47,16 @@ public class CreateIndex {
         Test.store(new CreateIndex(2));
         Test.store(new CreateIndex(3));
 
-        tQueryB();
+        // tQueryB();
         tQueryInts(5);
+        
+        tQueryIntWrapper();
     }
 
     public void test() {
+        
+        tQueryNull(6);
+        
         Test.store(new CreateIndex("d"));
         tQueryB();
         tUpdateB();
@@ -56,6 +66,18 @@ public class CreateIndex {
         tQueryB();
 
         tQueryInts(8);
+    }
+    
+    private void tQueryIntWrapper(){
+        Query q = Test.query();
+        q.constrain(CreateIndex.class);
+        q.descend("i_intWrapper").constrain(new Integer(4)).smaller();
+        tExpectInts(q, new int[] { 1, 2, 3, 3 });
+        
+        q = Test.query();
+        q.constrain(CreateIndex.class);
+        q.descend("i_intWrapper").constrain(new Integer(4)).greater().equal();
+        tExpectInts(q, new int[] { 5, 7 });
     }
 
     private void tQueryInts(int expectedZeroSize) {
@@ -177,6 +199,15 @@ public class CreateIndex {
         Test.ensure(res.size() == 1);
         CreateIndex ci = (CreateIndex)res.next();
         Test.ensure(ci.i_name.equals("b"));
+    }
+    
+    private void tQueryNull(int expect) {
+        ObjectSet res = query(null);
+        Test.ensure(res.size() == expect);
+        while(res.hasNext()){
+            CreateIndex ci = (CreateIndex)res.next();
+            Test.ensure(ci.i_name == null);
+        }
     }
 
     private void tUpdateB() {

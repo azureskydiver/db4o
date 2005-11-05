@@ -62,14 +62,19 @@ class QxPath extends TreeInt{
         
         i_key = ((QConObject)_constraint).findBoundsQuery(_indexTraversers[0]);
         if(i_key >= 0){
-            
-            
-            // FIXME: xcr work in progress
-            
-//            if(i_key > 0){
-//                NIxPaths indexPaths = _indexTraversers[0].convert();
-//            }
-
+        
+        // FIXME: xcr work in progress
+        
+            if(i_key < 0){
+                NIxPaths indexPaths = _indexTraversers[0].convert();
+                // indexPaths.removeRedundancies();
+                int cnt = indexPaths.count();
+                if(i_key != cnt){
+                    System.out.println("" + i_key + ", " + cnt);
+                     System.out.println("BOOOOOM");
+                     // throw new RuntimeException("BOOOOOM");
+                }
+            }
             _processor.addPath(this);
         }
     }

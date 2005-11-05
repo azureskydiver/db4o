@@ -22,11 +22,14 @@ public class Index4 {
     private Collection4        _indexTransactions;
 
     private IxFileRangeReader  _fileRangeReader;
+    
+    final boolean                   _nullHandling;  
 
-    public Index4(Transaction systemTrans, Indexable4 handler, MetaIndex metaIndex) {
+    public Index4(Transaction systemTrans, Indexable4 handler, MetaIndex metaIndex, boolean nullHandling) {
         _metaIndex = metaIndex;
         _handler = handler;
         _globalIndexTransaction = new IndexTransaction(systemTrans, this);
+        _nullHandling = nullHandling;
         createGlobalFileRange();
     }
 

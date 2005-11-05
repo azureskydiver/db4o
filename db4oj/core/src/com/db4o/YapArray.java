@@ -158,6 +158,10 @@ class YapArray extends YapIndependantType {
         return YapConst.YAPARRAY;
     }
     
+    public boolean indexNullHandling() {
+        return i_handler.indexNullHandling();
+    }
+    
     public Object comparableObject(Transaction a_trans, Object a_object){
         throw YapConst.virtualException();
     }

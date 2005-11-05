@@ -55,7 +55,7 @@ abstract class YapFieldVirtual extends YapField {
 
     void initIndex(YapStream a_stream, MetaIndex a_metaIndex) {
         if (i_index == null) {
-            i_index = new Index4(a_stream.getSystemTransaction(), getHandler(),a_metaIndex);
+            i_index = new Index4(a_stream.getSystemTransaction(), getHandler(),a_metaIndex, false);
         }
     }
 

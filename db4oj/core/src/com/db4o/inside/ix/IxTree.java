@@ -60,6 +60,10 @@ public abstract class IxTree extends Tree{
         return i_fieldTransaction.i_index._handler;
     }
     
+    final Index4 index(){
+        return i_fieldTransaction.i_index;
+    }
+    
     /**
      * Overridden in IxFileRange
      * Only call directly after compare() 

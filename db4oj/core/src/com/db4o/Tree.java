@@ -119,11 +119,12 @@ public abstract class Tree implements Cloneable, Readable{
 	}
 	
 	
-	/**
-	 * returns 0, if keys are equal  
-	 * returns negative if compared key (a_to) is smaller
-	 * returns positive if compared key (a_to) is greater
-	 */
+    /**
+     * returns 0, if keys are equal
+     * uses this - other  
+     * returns positive if this is greater than a_to
+     * returns negative if this is smaller than a_to
+     */
 	public abstract int compare(Tree a_to);
 	
 	public static Tree deepClone(Tree a_tree, Object a_param){

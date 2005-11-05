@@ -43,6 +43,14 @@ public final class YapString extends YapIndependantType {
     	return _stream.i_handlers.ICLASS_STRING;
     }
 
+    public Object comparableObject(Transaction a_trans, Object a_object){
+        if(a_object != null){
+            int[] slot = (int[]) a_object;
+            return a_trans.i_stream.readObjectReaderByAddress(slot[0], slot[1]);
+        }
+        return null;
+    }
+    
     public boolean equals(TypeHandler4 a_dataType) {
         return (this == a_dataType);
     }
@@ -59,12 +67,8 @@ public final class YapString extends YapIndependantType {
         return a_stream.i_handlers.i_yapClasses[getID() - 1];
     }
 
-    public Object comparableObject(Transaction a_trans, Object a_object){
-        if(a_object != null){
-	        int[] slot = (int[]) a_object;
-	        return a_trans.i_stream.readObjectReaderByAddress(slot[0], slot[1]);
-        }
-        return null;
+    public boolean indexNullHandling() {
+        return true;
     }
 
     public Object read(YapWriter a_bytes) throws CorruptionException {

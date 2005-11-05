@@ -1066,6 +1066,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     public Object indexEntry(Object a_object) {
         return new Integer(i_lastID);
     }
+    
+    public boolean indexNullHandling() {
+        return true;
+    }
 
     public boolean isArray() {
         return reflector().isCollection(classReflector()); 
