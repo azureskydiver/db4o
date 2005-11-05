@@ -101,12 +101,18 @@ public class IxTraverser{
     
     public NIxPaths convert(){
         NIxPaths res = new NIxPaths();
-        res.add(new NIxPath(i_smallHead.convert(), i_take[SMALLER], i_take[EQUAL], i_take[GREATER], SMALLER));
-        res.add(new NIxPath(i_greatHead.convert(), i_take[SMALLER],i_take[EQUAL], i_take[GREATER], GREATER));
-        if(i_smallHead != null){
-            if( i_smallHead.i_tree.index()._nullHandling){ 
-                IxPath nullPath = findNullPath();
-                res.add(new NIxPath(nullPath.convert(), i_take[NULLS], i_take[NULLS], i_take[SMALLER], NULLS));
+        if(i_take[NULLS] || i_take[SMALLER] || i_take[EQUAL]){
+            res.add(new NIxPath(i_smallHead.convert(), i_take[SMALLER], i_take[EQUAL], i_take[GREATER], SMALLER));
+        }
+        if(i_take[EQUAL] || i_take[GREATER]){
+            res.add(new NIxPath(i_greatHead.convert(), i_take[SMALLER],i_take[EQUAL], i_take[GREATER], GREATER));
+        }
+        if(i_take[SMALLER] || i_take[NULLS]){
+            if(i_smallHead != null){
+                if( i_smallHead.i_tree.index()._nullHandling){ 
+                    IxPath nullPath = findNullPath();
+                    res.add(new NIxPath(nullPath.convert(), i_take[NULLS], i_take[NULLS], i_take[SMALLER], NULLS));
+                }
             }
         }
         return res;

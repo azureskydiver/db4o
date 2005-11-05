@@ -83,7 +83,9 @@ public class TreeInt extends Tree implements ReadWriteable{
 		}
 		return tree.toQCandidate(candidates);
 	}
-	
-	
+    
+    public String toString() {
+        return "" + i_key;
+    }
 	
 }

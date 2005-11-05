@@ -17,6 +17,10 @@ class QxPath extends TreeInt{
     
     private IxTraverser[] _indexTraversers;
     
+    private NIxPaths[] _ixPaths;
+    
+    private Tree _nCandidates;
+    
     private Tree _candidates;
     
     private final int _depth;
@@ -61,53 +65,112 @@ class QxPath extends TreeInt{
         _indexTraversers = new IxTraverser[]{new IxTraverser()};
         
         i_key = ((QConObject)_constraint).findBoundsQuery(_indexTraversers[0]);
-        if(i_key >= 0){
         
-        // FIXME: xcr work in progress
-        
-            if(i_key < 0){
-                NIxPaths indexPaths = _indexTraversers[0].convert();
+        if(i_key < 0){
+            return;
+        }
+            
+        if(Debug.useNIxPaths){
+            
+            if(i_key > 0){
+                
+                _ixPaths = new NIxPaths[]{_indexTraversers[0].convert()};
+
+                // FIXME: remove NIxPath redundancies
                 // indexPaths.removeRedundancies();
-                int cnt = indexPaths.count();
-                if(i_key != cnt){
-                    System.out.println("" + i_key + ", " + cnt);
-                     System.out.println("BOOOOOM");
-                     // throw new RuntimeException("BOOOOOM");
-                }
+                
+                expectNixCount(_ixPaths[0], i_key);
             }
-            _processor.addPath(this);
+        }
+        
+        _processor.addPath(this);
+    }
+    
+    private void expectNixCount(NIxPaths ixPaths, int count){
+        if(Debug.ixTrees){
+            int cnt = ixPaths.count();
+            if(count != cnt){
+                System.err.println("Different Index candidate count");
+                System.err.println("" + count + ", " + cnt);
+                new RuntimeException().printStackTrace();
+            }
         }
     }
     
-    
+
     void load(){
-        if(_indexTraversers != null){
-            for (int i = 0; i < _indexTraversers.length; i++) {
-                _indexTraversers[i].visitAll(new Visitor4() {
+        loadFromIndexTraversers();
+        loadFromNixPaths();    
+        if(_parent == null){
+            return;
+        }
+        if(_processor.exceedsLimit(Tree.size(_candidates), _depth)){
+            return;
+        }
+        QxPath parentPath = new QxPath(_processor, _parent._parent , _parent._constraint, _depth - 1);
+        parentPath.processChildCandidates(_candidates);
+    }
+    
+    private void loadFromIndexTraversers(){
+        if(_indexTraversers == null){
+            return;
+        }
+        for (int i = 0; i < _indexTraversers.length; i++) {
+            _indexTraversers[i].visitAll(new Visitor4() {
+                public void visit(Object a_object) {
+                    int id = ((Integer)a_object).intValue();
+                    if(_candidates == null){
+                        _candidates = new TreeInt(id);
+                    }else{
+                        _candidates = _candidates.add(new TreeInt(id));
+                    }
+                }
+            });
+        }
+    }
+    
+    private void loadFromNixPaths(){
+        if(! Debug.useNIxPaths){
+            return;
+        }
+        if(_ixPaths == null){
+            return;
+        }
+        for (int i = 0; i < _ixPaths.length; i++) {
+            if(_ixPaths[i] != null){
+                _ixPaths[i].traverse(new Visitor4() {
                     public void visit(Object a_object) {
                         int id = ((Integer)a_object).intValue();
-                        if(_candidates == null){
-                            _candidates = new TreeInt(id);
+                        if(_nCandidates == null){
+                            _nCandidates = new TreeInt(id);
                         }else{
-                            _candidates = _candidates.add(new TreeInt(id));
+                            _nCandidates = _nCandidates.add(new TreeInt(id));
                         }
                     }
                 });
             }
         }
+        compareLoadedNixPaths();
+    }
+    
+    private void compareLoadedNixPaths(){
         
-        if(_parent == null){
+        if(Tree.size(_candidates) != Tree.size(_nCandidates)){
+            System.err.println("Different index tree size");
+            System.err.println("" + Tree.size(_candidates) + ", " + Tree.size(_nCandidates));
+            // new RuntimeException().printStackTrace();
             return;
         }
         
-        if(_processor.exceedsLimit(Tree.size(_candidates), _depth)){
-            return;
-        }
-        
-        QxPath parentPath = new QxPath(_processor, _parent._parent , _parent._constraint, _depth - 1);
-        parentPath.processChildCandidates(_candidates);
-        return;
-        
+        Tree.traverse(_nCandidates, new Visitor4() {
+            public void visit(Object a_object) {
+                if(_candidates.find((Tree)a_object) == null){
+                    System.err.println("Element not in old tree");
+                    System.err.println(a_object);
+                    // new RuntimeException().printStackTrace();                                
+                }
+            }
+        });
     }
     
     void processChildCandidates(Tree candidates){
@@ -124,17 +187,38 @@ class QxPath extends TreeInt{
         }
         
         _indexTraversers = new IxTraverser[candidates.size()];
+        
+        if(Debug.useNIxPaths){
+            _ixPaths = new NIxPaths[candidates.size()];
+        }
+        
+        
         final int[] ix = new int[]{0};
         final boolean[] err = new boolean[] {false};
         candidates.traverse(new Visitor4() {
             public void visit(Object a_object) {
-                _indexTraversers[ix[0]] = new IxTraverser();
-                int count = _indexTraversers[ix[0]++].findBoundsQuery(_constraint, new Integer(((TreeInt)a_object).i_key));
+                
+                int idx = ix[0]++;
+                
+                _indexTraversers[idx] = new IxTraverser();
+                int count = _indexTraversers[idx].findBoundsQuery(_constraint, new Integer(((TreeInt)a_object).i_key));
                 if(count >= 0){
                     i_key += count;
                 }else{
                     err[0] = true;
                 }
+                
+                if(Debug.useNIxPaths){
+                    
+                    if(count > 0){
+                        _ixPaths[idx] = _indexTraversers[idx].convert();
+                        
+                        expectNixCount(_ixPaths[idx], count);
+                        
+                    }
+                    
+                }
+                
             }
         });
         if(err[0]){
