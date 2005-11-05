@@ -1,5 +1,5 @@
 #!/bin/sh
-OMVERSION=1.5
+OMVERSION=1.6
 cd objectmanager-builds
 mkdir tmp
 cd tmp
