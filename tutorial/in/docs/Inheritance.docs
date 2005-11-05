@@ -38,9 +38,15 @@ members or direct instances, we just provide a corresponding prototype.
 
 This is one more situation where QBE might not be applicable: What if ._
 the given type is an interface or an abstract class? Well, there's a little ._
-DWIM trick to the rescue: Class objects receive special handling with QBE.
+trick to keep in mind:  .? java Class ..? .? net Type ..? .? mono Type ..?  ._
+objects receive special handling with QBE.
 
 .s com.db4o.f1.chapter4.InheritanceExample#retrieveAllSensorReadoutsQBEAlternative ..
+
+Our Native Query from the previous chapter remains unchanged since all of ._
+our derived SensorReadout classes are still SensorReadout objects.
+
+.s com.db4o.f1.chapter4.InheritanceExample#retrieveSensorReadoutNative ..
 
 And of course there's our query API to the rescue.
 
@@ -49,7 +55,7 @@ And of course there's our query API to the rescue.
 This procedure applies to all first class objects. We can simply query for all ._
 objects present in the database, for example.
 
-.s com.db4o.f1.chapter4.InheritanceExample#retrieveAllObjects ..
+.s com.db4o.f1.chapter4.InheritanceExample#retrieveAllObjectsNative ..
 
 .1 Updating and deleting ..
 
@@ -59,7 +65,7 @@ in the inheritance tree.
 Just like we retrieved all objects from the database above, we can ._
 delete all stored objects to prepare for the next chapter.
 
-.s com.db4o.f1.chapter4.InheritanceExample#deleteAllObjects ..
+.s com.db4o.f1.chapter4.InheritanceExample#deleteAllObjectsNative ..
 
 .1 Conclusion ..
 

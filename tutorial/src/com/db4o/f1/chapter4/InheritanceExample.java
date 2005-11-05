@@ -1,6 +1,8 @@
 package com.db4o.f1.chapter4;
 
 import java.io.*;
+import java.util.Arrays;
+
 import com.db4o.*;
 import com.db4o.f1.*;
 import com.db4o.query.*;
@@ -17,8 +19,11 @@ public class InheritanceExample extends Util {
             retrieveAllSensorReadoutsQBE(db);
             retrieveAllSensorReadoutsQBEAlternative(db);
             retrieveAllSensorReadoutsQuery(db);
-            retrieveAllObjects(db);
-            deleteAllObjects(db);
+            retrieveAllObjectsQBE(db);
+            deleteAllObjectsQBE(db);
+            retrieveSensorReadoutNative(db);
+            retrieveAllObjectsNative(db);
+            deleteAllObjectsNative(db);
         }
         finally {
             db.close();
@@ -70,13 +75,43 @@ public class InheritanceExample extends Util {
         listResult(result);
     }
     
-    public static void retrieveAllObjects(ObjectContainer db) {
+    public static void retrieveAllObjectsQBE(ObjectContainer db) {
         ObjectSet result=db.get(new Object());
         listResult(result);
     }
 
-    public static void deleteAllObjects(ObjectContainer db) {
+    public static void deleteAllObjectsQBE(ObjectContainer db) {
         ObjectSet result=db.get(new Object());
+        while(result.hasNext()) {
+            db.delete(result.next());
+        }
+    }
+    
+    public static void retrieveSensorReadoutNative(
+            ObjectContainer db) {
+    	ObjectSet results = db.query(new Predicate() {
+    		public boolean match(SensorReadout candidate){
+    			return true;
+    		}
+    	});
+    	listResult(results);
+    }
+    
+    public static void retrieveAllObjectsNative(ObjectContainer db) {
+        ObjectSet result=db.query(new Predicate(){
+        	public boolean match(Object candidate){
+        		return true;
+        	}
+        });
+        listResult(result);
+    }
+    
+    public static void deleteAllObjectsNative(ObjectContainer db) {
+        ObjectSet result=db.query(new Predicate(){
+        	public boolean match(Object candidate){
+        		return true;
+        	}
+        });
         while(result.hasNext()) {
             db.delete(result.next());
         }

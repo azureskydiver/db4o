@@ -14,7 +14,7 @@ public class CollectionsExample extends Util {
         try {
             storeFirstCar(db);
             storeSecondCar(db);
-            retrieveAllSensorReadoutQBE(db);
+            retrieveAllSensorReadout(db);
             retrieveSensorReadoutQBE(db);
             retrieveCarQBE(db);
             retrieveCollections(db);
@@ -55,7 +55,7 @@ public class CollectionsExample extends Util {
         db.set(car2);
     }
     
-    public static void retrieveAllSensorReadoutQBE(
+    public static void retrieveAllSensorReadout(
                 ObjectContainer db) {
         SensorReadout proto=new SensorReadout(null,null,null);
         ObjectSet results=db.get(proto);
@@ -84,8 +84,8 @@ public class CollectionsExample extends Util {
             ObjectContainer db) {
     	ObjectSet results = db.query(new Predicate() {
     		public boolean match(SensorReadout candidate){
-    			return  Arrays.binarySearch(candidate.getValues(), 0.3) >= 0 ||
-    				Arrays.binarySearch(candidate.getValues(), 1.0) >= 0;
+    			return Arrays.binarySearch(candidate.getValues(), 0.3) >= 0 
+    				&& Arrays.binarySearch(candidate.getValues(), 1.0) >= 0;
     		}
     	});
     	listResult(results);
