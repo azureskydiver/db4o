@@ -165,7 +165,7 @@ public abstract class Tree implements Cloneable, Readable{
 		return this;
 	}
 	
-	static final Tree find(Tree a_in, Tree a_tree){
+	public static final Tree find(Tree a_in, Tree a_tree){
 		if(a_in == null){
 			return null;
 		}

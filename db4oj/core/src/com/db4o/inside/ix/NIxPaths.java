@@ -151,6 +151,11 @@ public class NIxPaths {
         return Tree.size(a_path._tree.i_subsequent) + a_path.countMatching();
     }
     
+    public void traverse(Visitor4 visitor) {
+        
+        
+    }
+    
     
     
 
