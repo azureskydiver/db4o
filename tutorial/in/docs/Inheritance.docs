@@ -44,11 +44,11 @@ objects receive special handling with QBE.
 .s com.db4o.f1.chapter4.InheritanceExample#retrieveAllSensorReadoutsQBEAlternative ..
 
 Our Native Query from the previous chapter remains unchanged since all of ._
-our derived SensorReadout classes are still SensorReadout objects.
+our derived SensorReadout instances are still SensorReadout objects.
 
 .s com.db4o.f1.chapter4.InheritanceExample#retrieveSensorReadoutNative ..
 
-And of course there's our query API to the rescue.
+And of course there's our query API:
 
 .s com.db4o.f1.chapter4.InheritanceExample#retrieveAllSensorReadoutsQuery ..
 

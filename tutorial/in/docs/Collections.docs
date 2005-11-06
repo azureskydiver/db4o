@@ -108,7 +108,7 @@ We will delete all cars from the database again to prepare for the next chapter.
 
 Ok, collections are just objects. But why did we have to specify the concrete ._
 ArrayList type all the way? Was that necessary? How does db4o handle inheritance? ._
-We will cover that in the  .l Inheritance next chapter ..l .
+We will cover that in the  .l Inheritance next chapter ..l.
 
 .1 Full source ..
 
