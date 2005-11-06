@@ -9,6 +9,9 @@ import com.db4o.*;
  */
 public class NIxPath extends Tree {
     
+    // for debugging purposes, turn on in IxTraverser also
+    // public Object _constraint;
+    
     final NIxPathNode _head;
     
     final boolean _takePreceding;

@@ -2,6 +2,7 @@
 
 package com.db4o.test;
 
+import com.db4o.test.conjunctions.*;
 import com.db4o.test.soda.*;
 
 public class AllTestsConfSingle extends TestSuite{
@@ -35,11 +36,13 @@ public class AllTestsConfSingle extends TestSuite{
             // ReplicateExistingFile.class
             // ReplicateDb4oList.class
             
-             IndexCreateDrop.class,
+            CJSameField.class,
             
-              CreateIndex.class,
+//             IndexCreateDrop.class,
+            
+//              CreateIndex.class,
 //             
-             Soda.class
+//             Soda.class
             
             // IndexedByIdentity.class
             
