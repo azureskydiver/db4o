@@ -117,6 +117,7 @@ public class NIxPaths {
         return count;
     }
     
+    /** see documentation to this class for behaviour **/
     private int countSpan(NIxPath greatPath, NIxPath smallPath, NIxPathNode a_previousGreat, NIxPathNode a_previousSmall,  NIxPathNode a_great, NIxPathNode a_small, int sum) {
         sum +=  a_previousGreat.countSpan(greatPath, smallPath, a_previousSmall);
         if(a_great != null && a_great.carriesTheSame(a_small)){
@@ -216,6 +217,7 @@ public class NIxPaths {
         }
     }
     
+    /** see documentation to this class for behaviour **/
     private void traverseSpan(NIxPath greatPath, NIxPath smallPath, NIxPathNode a_previousGreat, NIxPathNode a_previousSmall,  NIxPathNode a_great, NIxPathNode a_small, Visitor4Dispatch dispatcher) {
         a_previousGreat.traverseSpan(greatPath, smallPath, a_previousSmall, dispatcher);
         if(a_great != null && a_great.carriesTheSame(a_small)){
