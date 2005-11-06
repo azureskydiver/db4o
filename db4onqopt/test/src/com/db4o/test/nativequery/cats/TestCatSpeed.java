@@ -255,4 +255,20 @@ Before:
 PREDICATE #7: 279 / 1304 / 139
 After:
 PREDICATE #7: 307 / 172 / 148
+
+
+Monday November 7 1:00
+AND tuning completed, results are timed with 
+com.db4o.Debug.useNIxPaths = true 
+
+STORING 10000 CATS
+PREDICATE #1: 900 / 31 / 15
+PREDICATE #2: 893 / 31 / 15
+PREDICATE #3: 896 / 15 / 3
+PREDICATE #4: 890 / 281 / 250
+PREDICATE #5: 887 / 703 / 725
+PREDICATE #6: 862 / 840 / 831
+PREDICATE #7: 874 / 353 / 356
+
+
 */
