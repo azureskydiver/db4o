@@ -9,7 +9,7 @@ import com.db4o.inside.freespace.*;
 /**
  * @exclude
  */
-public abstract class IxTree extends Tree{
+public abstract class IxTree extends Tree implements Visitor4{
     
     IndexTransaction i_fieldTransaction;
     
@@ -121,6 +121,8 @@ public abstract class IxTree extends Tree{
     final Transaction trans(){
         return i_fieldTransaction.i_trans;
     }
+    
+    public abstract void visit(Object obj);
     
     public abstract void visit(Visitor4 visitor, int[] a_lowerAndUpperMatch);
     

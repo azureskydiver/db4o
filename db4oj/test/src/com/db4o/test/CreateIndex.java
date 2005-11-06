@@ -47,9 +47,8 @@ public class CreateIndex {
         Test.store(new CreateIndex(2));
         Test.store(new CreateIndex(3));
 
-        // tQueryB();
+        tQueryB();
         tQueryInts(5);
-        
         tQueryIntWrapper();
     }
 
