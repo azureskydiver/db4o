@@ -3,8 +3,11 @@
 package com.db4o.inside.ix;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 
-
+/**
+ * @exclude
+ */
 public class NIxPathNode {
     
     IxTree              _tree;
@@ -22,7 +25,7 @@ public class NIxPathNode {
      * returns positive if this is greater than a_to
      * returns negative if this is smaller than a_to
      */
-    public int compare(NIxPathNode other, int myType, int otherType) {
+    int compare(NIxPathNode other, int myType, int otherType) {
         if(_next == null){
             
             if(other._next != null){
@@ -88,79 +91,11 @@ public class NIxPathNode {
         return _tree.i_subsequent == _next._tree;
     }
     
-    int countMatching() {
-        if (_comparisonResult == 0) {
-            if (_lowerAndUpperMatch == null) {
-                if (_tree instanceof IxRemove) {
-                    return 0;
-                }
-                return 1;
-            }
-            return _lowerAndUpperMatch[1] - _lowerAndUpperMatch[0] + 1;
+    boolean carriesTheSame(NIxPathNode node) {
+        if(node == null){
+            return false;
         }
-        return 0;
-    }
-    
-    int countMatchingSpan(NIxPath greatPath, NIxPath smallPath, NIxPathNode small) {
-        if (_comparisonResult == 0) {
-            if (_lowerAndUpperMatch == null) {
-                if (_tree instanceof IxRemove) {
-                    return 0;
-                }
-                
-                if(greatPath._takeMatches || smallPath._takeMatches){
-                    return 1;
-                }
-                
-                return 0;
-            }
-            
-            if(_lowerAndUpperMatch[0] == small._lowerAndUpperMatch[0]){
-                
-                if(greatPath._takeMatches || smallPath._takeMatches){
-                    //  We had the same constraint, return the match
-                    return _lowerAndUpperMatch[1] - _lowerAndUpperMatch[0] + 1;
-                }
-                return 0;
-            }
-                
-            // We are looking at a range, let's figure out which ones we need
-            
-            int upper = _lowerAndUpperMatch[0] - 1;
-            
-            int lower = 0;
-            
-            if(! smallPath._takePreceding){
-                lower = small._lowerAndUpperMatch[0];
-            }
-            
-            if(! smallPath._takeMatches){
-                lower = small._lowerAndUpperMatch[1] + 1;
-            }
-            
-            return upper - lower + 1;
-            
-        }
-        return 0;
-    }
-
-    
-    int countSubsequent() {
-        int subsequent = 0;
-        if (_tree.i_subsequent != null) {
-            if (_next == null || _next._tree != _tree.i_subsequent) {
-                subsequent += _tree.i_subsequent.size();
-            }
-        }
-        if (_lowerAndUpperMatch != null) {
-            subsequent += ((IxFileRange) _tree)._entries
-                - _lowerAndUpperMatch[1] - 1;
-        } else {
-            if (_comparisonResult > 0 && !(_tree instanceof IxRemove)) {
-                subsequent++;
-            }
-        }
-        return subsequent;
+        return _tree == node._tree;
     }
     
     int countPreceding() {
@@ -180,13 +115,159 @@ public class NIxPathNode {
         return preceding;
     }
     
-    boolean carriesTheSame(NIxPathNode node) {
-        return _tree == node._tree;
+    int countMatching() {
+        if (_comparisonResult == 0) {
+            if (_lowerAndUpperMatch == null) {
+                if (_tree instanceof IxRemove) {
+                    return 0;
+                }
+                return 1;
+            }
+            return _lowerAndUpperMatch[1] - _lowerAndUpperMatch[0] + 1;
+        }
+        return 0;
+    }
+    
+    int countSubsequent() {
+        int subsequent = 0;
+        if (_tree.i_subsequent != null) {
+            if (_next == null || _next._tree != _tree.i_subsequent) {
+                subsequent += _tree.i_subsequent.size();
+            }
+        }
+        if (_lowerAndUpperMatch != null) {
+            subsequent += ((IxFileRange) _tree)._entries
+                - _lowerAndUpperMatch[1] - 1;
+        } else {
+            if (_comparisonResult > 0 && !(_tree instanceof IxRemove)) {
+                subsequent++;
+            }
+        }
+        return subsequent;
+    }
+    
+    int countSpan(NIxPath greatPath, NIxPath smallPath, NIxPathNode small) {
+        if (_comparisonResult != 0) {
+            return 0;
+        }
+        
+        if (_lowerAndUpperMatch == null) {
+            if (_tree instanceof IxRemove) {
+                return 0;
+            }
+            
+            if(greatPath._takeMatches || smallPath._takeMatches){
+                return 1;
+            }
+            
+            return 0;
+        }
+        
+        if(_lowerAndUpperMatch[0] == small._lowerAndUpperMatch[0]){
+            
+            if(greatPath._takeMatches || smallPath._takeMatches){
+                //  We had the same constraint, return the match
+                return _lowerAndUpperMatch[1] - _lowerAndUpperMatch[0] + 1;
+            }
+            return 0;
+        }
+            
+        // We are looking at a range, let's figure out which ones we need
+        
+        int upper = _lowerAndUpperMatch[0] - 1;
+        
+        int lower = 0;
+        
+        if(! smallPath._takePreceding){
+            lower = small._lowerAndUpperMatch[0];
+        }
+        
+        if(! smallPath._takeMatches){
+            lower = small._lowerAndUpperMatch[1] + 1;
+        }
+        
+        return upper - lower + 1;
+            
+    }
+    
+    void traversePreceding(Visitor4Dispatch dispatcher) {
+        if (_tree.i_preceding != null) {
+            if (_next == null || _next._tree != _tree.i_preceding) {
+                _tree.i_preceding.traverse(dispatcher);
+            }
+        }
+        if (_lowerAndUpperMatch != null) {
+            int[] lowerAndUpperMatch = new int[] { 0, _lowerAndUpperMatch[0] - 1};
+            _tree.visit(dispatcher._target, lowerAndUpperMatch);
+            return;
+        } 
+        if (_comparisonResult < 0 && !(_tree instanceof IxRemove)) {
+            _tree.visit(dispatcher._target);
+        }
+    }
+    
+    void traverseMatching(Visitor4Dispatch dispatcher) {
+        if (_comparisonResult == 0) {
+            _tree.visit(dispatcher._target, _lowerAndUpperMatch);
+        }
+    }
+    
+    void traverseSubsequent(Visitor4Dispatch dispatcher) {
+        if (_tree.i_subsequent != null) {
+            if (_next == null || _next._tree != _tree.i_subsequent) {
+                _tree.i_subsequent.traverse(dispatcher);
+            }
+        }
+        if (_lowerAndUpperMatch != null) {
+            int[] lowerAndUpperMatch = new int[] { _lowerAndUpperMatch[1] + 1,
+                ((IxFileRange) _tree)._entries - 1};
+            _tree.visit(dispatcher._target, lowerAndUpperMatch);
+            return;
+        }
+        if (_comparisonResult > 0) {
+            _tree.visit(dispatcher._target);
+        }
+    }
+    
+    void traverseSpan(NIxPath greatPath, NIxPath smallPath, NIxPathNode small, Visitor4Dispatch dispatcher) {
+        if (_comparisonResult != 0) {
+            return;
+        }
+        if (_lowerAndUpperMatch == null) {
+            if(greatPath._takeMatches || smallPath._takeMatches){
+                _tree.visit(dispatcher._target);
+                return;
+            }
+            
+        }
+            
+        if(_lowerAndUpperMatch[0] == small._lowerAndUpperMatch[0]){
+            if(greatPath._takeMatches || smallPath._takeMatches){
+                _tree.visit(dispatcher._target,_lowerAndUpperMatch);
+            }
+            return;
+        }
+            
+        // We are looking at a range, let's figure out which ones we need
+        
+        int upper = _lowerAndUpperMatch[0] - 1;
+        
+        int lower = 0;
+        
+        if(! smallPath._takePreceding){
+            lower = small._lowerAndUpperMatch[0];
+        }
+        
+        if(! smallPath._takeMatches){
+            lower = small._lowerAndUpperMatch[1] + 1;
+        }
+        
+        _tree.visit(dispatcher._target,new int[]{lower, upper});
     }
     
     public String toString() {
-        
         return _tree.toString() + "\n cmp: " + _comparisonResult; 
     }
 
+    
 }

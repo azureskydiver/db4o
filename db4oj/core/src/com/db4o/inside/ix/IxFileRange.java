@@ -65,6 +65,10 @@ class IxFileRange extends IxTree{
         });
        return sb.toString();
     }
+    
+    public void visit(Object obj){
+        visit((Visitor4)obj, null);
+    }
 
     public void visit(Visitor4 visitor, int[] lowerUpper){
         IxFileRangeReader frr = reader();

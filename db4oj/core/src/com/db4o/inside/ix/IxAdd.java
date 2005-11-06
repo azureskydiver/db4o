@@ -22,6 +22,10 @@ public class IxAdd extends IxPatch {
         handler().prepareComparison( handler().comparableObject(trans(), i_value));
     }
     
+    public void visit(Object obj){
+        ((Visitor4)obj).visit(new Integer(i_parentID));
+    }
+    
     public void visit(Visitor4 visitor, int[] lowerAndUpperMatch){
         visitor.visit(new Integer(i_parentID));
     }

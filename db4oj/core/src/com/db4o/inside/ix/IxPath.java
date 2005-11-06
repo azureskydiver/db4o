@@ -267,11 +267,7 @@ class IxPath implements Cloneable, Visitor4 {
     }
 
     public void visit(Object a_object) {
-        ((IxTree) a_object).visit(_visitor, null);
+        ((Visitor4) a_object).visit(_visitor);
     }
-    
-    
-
-
 
 }

@@ -29,6 +29,10 @@ public class IxRemove extends IxPatch {
         // do nothing
     }
     
+    public void visit(Object obj){
+        // do nothing
+    }
+    
     public void visit(Visitor4 visitor, int[] lowerAndUpperMatch){
         // do nothing
     }

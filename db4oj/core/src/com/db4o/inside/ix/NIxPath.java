@@ -4,9 +4,10 @@ package com.db4o.inside.ix;
 
 import com.db4o.*;
 
-
+/**
+ * @exclude
+ */
 public class NIxPath extends Tree {
-    
     
     final NIxPathNode _head;
     
@@ -28,10 +29,7 @@ public class NIxPath extends Tree {
     
     public int compare(Tree a_to) {
         NIxPath other = (NIxPath)a_to;
-        
-        int cmp = _head.compare(other._head, _type, other._type); 
-        
-        return cmp;
+        return _head.compare(other._head, _type, other._type);
     }
     
     public String toString() {
@@ -46,6 +44,5 @@ public class NIxPath extends Tree {
         }
         return str;
     }
-    
 
 }
