@@ -81,6 +81,9 @@ public class NIxPaths {
                 last[0] = current;
             }
         });
+        if(last[0]._takeMatches){
+            sum[0] += countAllMatching(last[0]._head);
+        }
         if(last[0]._takeSubsequent){
             sum[0] += countAllSubsequent(last[0]._head);
         }
@@ -184,6 +187,9 @@ public class NIxPaths {
                 last[0] = current;
             }
         });
+        if(last[0]._takeMatches){
+            traverseAllMatching(last[0]._head, dispatcher);
+        }
         if(last[0]._takeSubsequent){
             traverseAllSubsequent(last[0]._head, dispatcher);
         }

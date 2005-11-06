@@ -92,7 +92,7 @@ class QxPath extends TreeInt{
             if(count != cnt){
                 System.err.println("Different Index candidate count");
                 System.err.println("" + count + ", " + cnt);
-                new RuntimeException().printStackTrace();
+                // new RuntimeException().printStackTrace();
             }
         }
     }
@@ -269,13 +269,21 @@ class QxPath extends TreeInt{
     }
     
     void mergeForSameField(QxPath other){
-        for (int i = 0; i < other._ixPaths.length; i++) {
-            other._ixPaths[i]._paths.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    _ixPaths[0].add((NIxPath)a_object);
-                }
-            });
+        if(other._ixPaths == null){
+            return;
         }
+        int oldCount = _ixPaths[0].count();
+        for (int i = 0; i < other._ixPaths.length; i++) {
+            if(other._ixPaths[i] != null){
+                other._ixPaths[i]._paths.traverse(new Visitor4() {
+                    public void visit(Object a_object) {
+                        _ixPaths[0].add((NIxPath)a_object);
+                    }
+                });
+            }
+        }
+        int newCount = _ixPaths[0].count();
+        i_key += newCount - oldCount;
     }
     
     

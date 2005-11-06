@@ -10,6 +10,9 @@ import com.db4o.inside.freespace.*;
  * @exclude
  */
 public class IxTraverser{
+    
+    // for debugging purposes, search for _constraint to uncomment 
+    // public Object _constraint;
 
     private IxPath i_appendHead;
     private IxPath i_appendTail;
@@ -99,19 +102,29 @@ public class IxTraverser{
         addAll(visitor, a_path.i_tree.i_subsequent);
     }
     
+    private NIxPath createNIxPath(NIxPathNode head, boolean takePreceding, boolean takeMatches, boolean takeSubsequent, int pathType){
+        NIxPath np = new NIxPath(head, takePreceding, takeMatches, takeSubsequent, pathType );
+        // for debugging
+        // np._constraint = _constraint;
+        return np;
+    }
+    
     public NIxPaths convert(){
         NIxPaths res = new NIxPaths();
         if(i_take[NULLS] || i_take[SMALLER] || i_take[EQUAL]){
-            res.add(new NIxPath(i_smallHead.convert(), i_take[SMALLER], i_take[EQUAL], i_take[GREATER], SMALLER));
+            NIxPath smaller = createNIxPath(i_smallHead.convert(), i_take[SMALLER], i_take[EQUAL], i_take[GREATER], SMALLER); 
+            res.add(smaller);
         }
         if(i_take[EQUAL] || i_take[GREATER]){
-            res.add(new NIxPath(i_greatHead.convert(), i_take[SMALLER],i_take[EQUAL], i_take[GREATER], GREATER));
+            NIxPath greater = createNIxPath(i_greatHead.convert(), i_take[SMALLER],i_take[EQUAL], i_take[GREATER], GREATER);
+            res.add(greater);
         }
         if(i_take[SMALLER] || i_take[NULLS]){
             if(i_smallHead != null){
                 if( i_smallHead.i_tree.index()._nullHandling){ 
                     IxPath nullPath = findNullPath();
-                    res.add(new NIxPath(nullPath.convert(), i_take[NULLS], i_take[NULLS], i_take[SMALLER], NULLS));
+                    NIxPath np = createNIxPath(nullPath.convert(), i_take[NULLS], i_take[NULLS], i_take[SMALLER], NULLS);
+                    res.add(np);
                 }
             }
         }
@@ -248,6 +261,11 @@ public class IxTraverser{
     public int findBounds(Object a_constraint, IxTree a_tree) {
 
         if (a_tree != null) {
+            
+            
+            // for debugging
+            // _constraint = a_constraint;
+            
 
             i_handler = a_tree.handler();
             i_handler.prepareComparison(a_constraint);
