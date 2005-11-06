@@ -104,11 +104,22 @@ class QxPath extends TreeInt{
         if(_parent == null){
             return;
         }
-        if(_processor.exceedsLimit(Tree.size(_candidates), _depth)){
-            return;
+        if(Debug.useNIxPaths){
+            if(_processor.exceedsLimit(Tree.size(_nCandidates), _depth)){
+                return;
+            }
+        }else{
+            if(_processor.exceedsLimit(Tree.size(_candidates), _depth)){
+                return;
+            }
         }
+        
         QxPath parentPath = new QxPath(_processor, _parent._parent , _parent._constraint, _depth - 1);
-        parentPath.processChildCandidates(_candidates);
+        if(Debug.useNIxPaths){
+            parentPath.processChildCandidates(_nCandidates);
+        }else{
+            parentPath.processChildCandidates(_candidates);
+        }
     }
     
     private void loadFromIndexTraversers(){
@@ -155,6 +166,10 @@ class QxPath extends TreeInt{
     
     private void compareLoadedNixPaths(){
         
+        if(! Debug.ixTrees){
+            return;
+        }
+        
         if(Tree.size(_candidates) != Tree.size(_nCandidates)){
             System.err.println("Different index tree size");
             System.err.println("" + Tree.size(_candidates) + ", " + Tree.size(_nCandidates));
@@ -182,6 +197,7 @@ class QxPath extends TreeInt{
         
         if(_parent == null){
             _candidates = candidates;
+            _nCandidates = candidates;
             _processor.addPath(this);
             return;
         }
@@ -246,7 +262,20 @@ class QxPath extends TreeInt{
     }
     
     Tree toQCandidates(QCandidates candidates){
+        if(Debug.useNIxPaths){
+            return TreeInt.toQCandidate((TreeInt)_nCandidates, candidates);
+        }
         return TreeInt.toQCandidate((TreeInt)_candidates, candidates);
+    }
+    
+    void mergeForSameField(QxPath other){
+        for (int i = 0; i < other._ixPaths.length; i++) {
+            other._ixPaths[i]._paths.traverse(new Visitor4() {
+                public void visit(Object a_object) {
+                    _ixPaths[0].add((NIxPath)a_object);
+                }
+            });
+        }
     }
     
     

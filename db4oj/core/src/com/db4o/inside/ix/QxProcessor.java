@@ -19,24 +19,33 @@ public class QxProcessor {
         
         // FIXME: xcr work in progress
         
-//        if(_paths == null){
-//            _paths = newPath;
-//            return;
-//        }
-//        _paths.traverse(new Visitor4() {
-//            public void visit(Object a_object) {
-//                QxPath path = (QxPath)a_object;
-//                if(path._parent == newPath._parent){
-//                    if(path.onSameFieldAs(newPath)){
-//                        
-//                        
-//                        
-//                        
-//                        int xxx = 1;
-//                    }
-//                }
-//            }
-//        });
+        if(_paths == null){
+            _paths = newPath;
+            return;
+        }
+        
+        if(! Debug.useNIxPaths){
+            _paths = Tree.add(_paths, newPath);
+            return;
+        }
+        
+        final QxPath[] same = new QxPath[] {null};
+        
+        _paths.traverse(new Visitor4() {
+            public void visit(Object a_object) {
+                QxPath path = (QxPath)a_object;
+                if(path._parent == newPath._parent){
+                    if(path.onSameFieldAs(newPath)){
+                        same[0] = path;
+                    }
+                }
+            }
+        });
+        
+        if(same[0] != null){
+            _paths = _paths.removeNode(same[0]);
+            newPath.mergeForSameField(same[0]);
+        }
         
         _paths = Tree.add(_paths, newPath);
     }
