@@ -46,7 +46,8 @@ objects receive special handling with QBE.
 Our Native Query from the previous chapter remains unchanged since all of ._
 our derived SensorReadout instances are still SensorReadout objects.
 
-.s com.db4o.f1.chapter4.InheritanceExample#retrieveSensorReadoutNative ..
+.? net .s com.db4o.f1.chapter4.InheritanceExample#retrieveAllSensorReadoutsPredicate +{} -run ..s ..?
+.s com.db4o.f1.chapter4.InheritanceExample#retrieveAllSensorReadoutsNative ..
 
 And of course there's our query API:
 
@@ -55,6 +56,7 @@ And of course there's our query API:
 This procedure applies to all first class objects. We can simply query for all ._
 objects present in the database, for example.
 
+.? net .s com.db4o.f1.chapter4.InheritanceExample#retrieveAllObjectsPredicate +{} -run ..s ..?
 .s com.db4o.f1.chapter4.InheritanceExample#retrieveAllObjectsNative ..
 
 .1 Updating and deleting ..
