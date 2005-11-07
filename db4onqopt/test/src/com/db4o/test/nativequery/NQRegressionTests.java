@@ -67,6 +67,14 @@ public class NQRegressionTests {
 	}
 	
 	private static ExpectingPredicate[] PREDICATES={
+		// unconditional/untyped
+		// FIXME in SODA? This should return all objects, not the empty result
+		new ExpectingPredicate() {
+			public int expected() { return 0;}
+			public boolean match(Object candidate) {
+				return true;
+			}
+		},
 		// unconditional
 		new ExpectingPredicate() {
 			public int expected() { return 4;}

@@ -588,7 +588,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	boolean sampleInvalidTemporaryStorage(Data data) {
 		int val=INT_CMPVAL-1;
-		return data.id-1==val;
+		return data.id==val;
 	}
 
 	public void testInvalidTemporaryStorage() throws Exception {
@@ -610,6 +610,30 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	public void testInvalidMethodCall() throws Exception {
 		assertInvalid("sampleInvalidMethodCall");
+	}
+
+	boolean sampleExternalMethodCall(Data data) {
+		return data.next==new Data().getNext();
+	}
+
+	public void testExternalMethodCall() throws Exception {
+		assertInvalid("sampleExternalMethodCall");
+	}
+
+	boolean sampleSimpleObjectComparison(Data data) {
+		return data.equals(new Data());
+	}
+
+	public void testSimpleObjectComparison() throws Exception {
+		assertInvalid("sampleSimpleObjectComparison");
+	}
+
+	boolean sampleSimpleFieldObjectComparison(Data data) {
+		return data.next.equals(new Data());
+	}
+
+	public void testSimpleFieldObjectComparison() throws Exception {
+		assertInvalid("sampleSimpleFieldObjectComparison");
 	}
 
 	// internal

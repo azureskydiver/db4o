@@ -86,33 +86,21 @@ public class ExpressionBuilder {
 		if(cmp instanceof BoolConstExpression) {
 			return null;
 		}
-//		if((trueExpr instanceof BoolConstExpression)&&(falseExpr instanceof BoolConstExpression)) {
-//			//System.out.println("DIRECT BOOL: "+cmp);
-//			return null;
-//		}
 		if(trueExpr instanceof BoolConstExpression) {
 			boolean leftNegative=trueExpr.equals(BoolConstExpression.FALSE);
 			if(!leftNegative) {
-				// x||y
-				//System.out.println(cmp+"&&"+falseExpr);
 				return or(cmp,falseExpr);
 			}
 			else {
-				// !x&&y
-				//System.out.println("!"+cmp+"||"+falseExpr);
 				return and(not(cmp),falseExpr);
 			}
 		}
 		if(falseExpr instanceof BoolConstExpression) {
 			boolean rightNegative=falseExpr.equals(BoolConstExpression.FALSE);
 			if(!rightNegative) {
-				// x&&y
-				//System.out.println(cmp+"&&"+falseExpr);
 				return and(cmp,trueExpr);
 			}
 			else {
-				// !x||y
-				//System.out.println("!"+cmp+"||"+falseExpr);
 				return or(not(cmp),falseExpr);
 			}
 		}

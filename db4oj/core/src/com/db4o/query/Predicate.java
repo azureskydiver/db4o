@@ -45,6 +45,7 @@ public abstract class Predicate implements Serializable {
 			return cachedFilterMethod;
 		}
 		Method[] methods=getClass().getMethods();
+		Method untypedMethod=null;
 		for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
 			Method method=methods[methodIdx];
 			if (isFilterMethod(method)) {
@@ -52,9 +53,15 @@ public abstract class Predicate implements Serializable {
 					cachedFilterMethod=method;
 					return method;
 				}
+				else {
+					untypedMethod=method;
+				}
 			}
 		}
-
+		if(untypedMethod!=null) {
+			cachedFilterMethod=untypedMethod;
+			return untypedMethod;
+		}
 		throw new IllegalArgumentException("Invalid predicate.");
 	}
 
