@@ -15,7 +15,7 @@
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "WinExe"
+                OutputType = "Exe"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
                 RootNamespace = "com.db4o.test"
@@ -695,6 +695,11 @@
                 />
                 <File
                     RelPath = "src\com\db4o\test\nativequeries\NativeQueriesTestCase.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4o\test\nativequeries\NQRegressionTests.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
