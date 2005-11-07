@@ -251,6 +251,11 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow
 			PushBinaryExpression(BinaryOperator.LessThanOrEqual);
 		}
 
+		public override void OnBgt(IInstruction instruction)
+		{
+			PushBinaryExpression(BinaryOperator.GreaterThan);
+		}
+
 		public override void OnBge(IInstruction instruction)
 		{
 			PushBinaryExpression(BinaryOperator.GreaterThanOrEqual);
