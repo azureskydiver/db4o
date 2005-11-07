@@ -101,8 +101,8 @@ namespace com.db4o.f1.chapter3
             Query valuequery = query.descend("_values");
             valuequery.constrain(0.3);
             valuequery.constrain(0.1);
-            ObjectSet result = query.execute();
-            listResult(result);
+            ObjectSet results = query.execute();
+            listResult(results);
         }
         
         public static void retrieveCarQuery(ObjectContainer db)
@@ -114,10 +114,39 @@ namespace com.db4o.f1.chapter3
             Query valuequery = historyquery.descend("_values");
             valuequery.constrain(0.3);
             valuequery.constrain(0.1);
-            ObjectSet result = query.execute();
-            listResult(result);
+            ObjectSet results = query.execute();
+            listResult(results);
         }
+
+			public class retrieveSensorReadoutPredicate : Predicate{
+				public bool Match(SensorReadout candidate){
+					return Array.IndexOf(candidate.Values, 0.3) > -1 &&
+						Array.IndexOf(candidate.Values, 0.1) > -1;
+				}
+			}
         
+			public static void retrieveSensorReadoutNative(ObjectContainer db) {
+				ObjectSet results = db.query(new retrieveSensorReadoutPredicate());
+				listResult(results);
+			}
+
+			public class retrieveCarPredicate : Predicate{
+				public bool Match(Car candidate){
+					IList history = candidate.History;
+					foreach(SensorReadout sensor in history){
+						if(Array.IndexOf(sensor.Values, 0.3) > -1 &&
+							Array.IndexOf(sensor.Values, 0.1) > -1)
+							return true;
+					}
+					return false;
+				}
+			}
+
+			public static void retrieveCarNative(ObjectContainer db){
+				ObjectSet results = db.query(new retrieveCarPredicate());
+				listResult(results);
+			}
+
         public static void updateCarPart1()
         {
             Db4o.configure().objectClass(typeof(Car)).cascadeOnUpdate(true);

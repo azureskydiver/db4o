@@ -21,7 +21,7 @@ public class InheritanceExample extends Util {
             retrieveAllSensorReadoutsQuery(db);
             retrieveAllObjectsQBE(db);
             deleteAllObjectsQBE(db);
-            retrieveSensorReadoutNative(db);
+            retrieveAllSensorReadoutsNative(db);
             retrieveAllObjectsNative(db);
             deleteAllObjectsNative(db);
         }
@@ -87,7 +87,7 @@ public class InheritanceExample extends Util {
         }
     }
     
-    public static void retrieveSensorReadoutNative(
+    public static void retrieveAllSensorReadoutsNative(
             ObjectContainer db) {
     	ObjectSet results = db.query(new Predicate() {
     	    public boolean match(SensorReadout candidate){
