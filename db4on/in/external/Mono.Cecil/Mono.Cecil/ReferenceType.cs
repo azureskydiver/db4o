@@ -28,36 +28,14 @@
 
 namespace Mono.Cecil {
 
-	public sealed class ReferenceType : TypeReference, IReferenceType {
-
-		private TypeReference m_type;
-
-		public override string Name {
-			get { return m_type.Name; }
-			set { m_type.Name = value; }
-		}
-
-		public override string Namespace {
-			get { return m_type.Namespace; }
-			set { m_type.Namespace = value; }
-		}
-
-		public override IMetadataScope Scope {
-			get { return m_type.Scope; }
-		}
-
-		public TypeReference ElementType {
-			get { return m_type; }
-			set { m_type = value; }
-		}
+	public sealed class ReferenceType : TypeSpecification, IReferenceType {
 
 		public override string FullName {
-			get { return string.Concat (m_type.FullName, "&"); }
+			get { return string.Concat (this.ElementType.FullName, "&"); }
 		}
 
-		public ReferenceType (TypeReference type) : base (string.Empty, string.Empty)
+		public ReferenceType (TypeReference type) : base (type)
 		{
-			m_type = type;
 		}
 	}
 }

@@ -192,6 +192,7 @@ namespace Mono.Cecil {
 				throw new ReflectionException ("Type is already attached, clone it instead");
 
 			ea.TypeDefinition.Module = this;
+			ea.TypeDefinition.AttachToScope (this);
 		}
 
 		void OnTypeDefinitionRemoved (Object sender, TypeDefinitionEventArgs ea)
@@ -282,6 +283,8 @@ namespace Mono.Cecil {
 
 		public byte [] GetAsByteArray (SecurityDeclaration dec)
 		{
+			// TODO - add support for 2.0 format
+			// note: the 1.x format is still supported in 2.0 so this isn't an immediate problem
 			if (dec.PermissionSet != null)
 				return Encoding.Unicode.GetBytes (dec.PermissionSet.ToXml ().ToString ());
 

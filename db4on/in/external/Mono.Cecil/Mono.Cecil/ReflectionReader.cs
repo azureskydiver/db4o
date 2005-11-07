@@ -89,7 +89,8 @@ namespace Mono.Cecil {
 			m_reader = m_module.ImageReader;
 			m_root = m_module.Image.MetadataRoot;
 			m_tHeap = m_root.Streams.TablesHeap;
-			m_tableReader = m_reader.MetadataReader.TableReader;
+			if (m_reader != null)
+				m_tableReader = m_reader.MetadataReader.TableReader;
 			m_codeReader = new CodeReader (this);
 			m_sigReader = new SignatureReader (m_root, this);
 			m_isCorlib = module.Assembly.Name.Name == Constants.Corlib;
@@ -147,33 +148,45 @@ namespace Mono.Cecil {
 			case TokenType.TypeDef :
 			case TokenType.TypeRef :
 			case TokenType.TypeSpec :
+				TypeReference declaringType = GetTypeDefOrRef (mrefRow.Class, context);
+				GenericContext nc = context.Clone ();
+
+				if (declaringType is GenericInstanceType) {
+					TypeDefinition type = ((GenericInstanceType) declaringType).ElementType as TypeDefinition;
+					if (type != null)
+						nc.Type = type;
+				} else if (declaringType is TypeDefinition)
+					nc.Type = declaringType as TypeDefinition;
+
 				if (sig is FieldSig) {
 					FieldSig fs = sig as FieldSig;
 					member = new FieldReference (
-						m_root.Streams.StringsHeap [mrefRow.Name], GetTypeRefFromSig (fs.Type, context));
-					member.DeclaringType = GetTypeDefOrRef (mrefRow.Class, context);
-				} else {
-					MethodSig ms = sig as MethodSig;
-					MethodReference methref = new MethodReference (
 						m_root.Streams.StringsHeap [mrefRow.Name],
-						ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
-					methref.DeclaringType = GetTypeDefOrRef (mrefRow.Class, context);
+						declaringType,
+						GetTypeRefFromSig (fs.Type, nc));
+				} else {
+					string name = m_root.Streams.StringsHeap [mrefRow.Name];
+					MethodSig ms = sig as MethodSig;
+					if (sig is MethodDefSig) {
+						TypeDefinition owner = GetTypeDefAt (mrefRow.Class.RID);
+						MethodDefinition [] meths = owner.Methods.GetMethod (name);
+						for (int i = 0; i < meths.Length; i++)
+							// TODO compare sig, this is wrong
+							if (meths [i].Parameters.Count == ms.ParamCount)
+								nc.Method = meths [i];
+					}
 
-					GenericContext nc = context.Clone ();
-
-					if (methref.DeclaringType is GenericInstanceType) {
-						TypeDefinition type = ((GenericInstanceType) methref.DeclaringType).ElementType as TypeDefinition;
-						if (type != null)
-							nc.Type = type;
-					} else if (methref.DeclaringType is TypeDefinition)
-						nc.Type = methref.DeclaringType as TypeDefinition;
+					MethodReference methref = new MethodReference (
+						name, ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
+					methref.DeclaringType = declaringType;
 
 					methref.ReturnType = GetMethodReturnType (ms, nc);
+
 					methref.ReturnType.Method = methref;
 					for (int j = 0; j < ms.ParamCount; j++) {
 						Param p = ms.Parameters [j];
 						ParameterDefinition pdef = BuildParameterDefinition (
-							string.Concat ("arg", index), index, new ParamAttributes (), p, nc);
+							string.Concat ("A_", j), j, new ParamAttributes (), p, nc);
 						pdef.Method = methref;
 						methref.Parameters.Add (pdef);
 					}
@@ -283,6 +296,24 @@ namespace Mono.Cecil {
 				if (parts.Length != 2)
 					throw new ReflectionException ("Unvalid core type name");
 				coreType = new TypeReference (parts [1], parts [0], m_corlib);
+				switch (coreType.FullName) {
+				case Constants.Boolean :
+				case Constants.Char :
+				case Constants.Single :
+				case Constants.Double :
+				case Constants.SByte :
+				case Constants.Byte :
+				case Constants.Int16 :
+				case Constants.UInt16 :
+				case Constants.Int32 :
+				case Constants.UInt32 :
+				case Constants.Int64 :
+				case Constants.UInt64 :
+				case Constants.IntPtr :
+				case Constants.UIntPtr :
+					coreType.IsValueType = true;
+					break;
+				}
 				m_module.TypeReferences.Add (coreType);
 			}
 			return coreType;
@@ -331,8 +362,7 @@ namespace Mono.Cecil {
 				TypeDefinition t = new TypeDefinition (
 					m_root.Streams.StringsHeap [type.Name],
 					m_root.Streams.StringsHeap [type.Namespace],
-					type.Flags,
-					m_module);
+					type.Flags);
 				t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeDef, i);
 
 				m_typeDefs [i] = t;
@@ -715,7 +745,7 @@ namespace Mono.Cecil {
 			return cattr;
 		}
 
-		protected ParameterDefinition BuildParameterDefinition (string name, int sequence,
+		public ParameterDefinition BuildParameterDefinition (string name, int sequence,
 			ParamAttributes attrs, Param psig, GenericContext context)
 		{
 			ParameterDefinition ret = new ParameterDefinition (name, sequence, attrs, null);
@@ -805,7 +835,7 @@ namespace Mono.Cecil {
 			return ret;
 		}
 
-		MethodReturnType GetMethodReturnType (MethodSig msig, GenericContext context)
+		public MethodReturnType GetMethodReturnType (MethodSig msig, GenericContext context)
 		{
 			TypeReference retType = null;
 			if (msig.RetType.Void)
@@ -884,18 +914,18 @@ namespace Mono.Cecil {
 					return new PointerType (SearchCoreType (Constants.Void));
 				return new PointerType (GetTypeRefFromSig (pointer.PtrType, context));
 			case ElementType.FnPtr :
-				// not very sure of this
 				FNPTR funcptr = t as FNPTR;
-				ParameterDefinitionCollection parameters = new ParameterDefinitionCollection (null);
+				FunctionPointerType fnptr = new FunctionPointerType (funcptr.Method.HasThis, funcptr.Method.ExplicitThis,
+					funcptr.Method.MethCallConv, GetMethodReturnType (funcptr.Method, context));
+
 				for (int i = 0; i < funcptr.Method.ParamCount; i++) {
 					Param p = funcptr.Method.Parameters [i];
-					ParameterDefinition pdef = new ParameterDefinition (p.ByRef ? new ReferenceType (
-							GetTypeRefFromSig (p.Type, context)) : GetTypeRefFromSig (p.Type, context));
-					parameters.Add (pdef);
+					fnptr.Parameters.Add (BuildParameterDefinition (
+							string.Concat ("A_", i),
+							i, (ParamAttributes) 0,
+							p, context));
 				}
-				return new FunctionPointerType (funcptr.Method.HasThis, funcptr.Method.ExplicitThis,
-					funcptr.Method.MethCallConv,
-					parameters, GetMethodReturnType (funcptr.Method, context));
+				return fnptr;
 			case ElementType.Var:
 				VAR var = t as VAR;
 				return context.Type.GenericParameters [var.Index];
