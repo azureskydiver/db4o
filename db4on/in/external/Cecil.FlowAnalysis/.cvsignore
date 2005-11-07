@@ -1,3 +1,4 @@
 build
 *.resharperoptions
 *.suo
+_ReSharper.Cecil.FlowAnalysis
