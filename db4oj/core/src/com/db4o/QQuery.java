@@ -82,6 +82,10 @@ public class QQuery implements Query {
              
             if (claxx != null) {
                 
+                if(claxx.equals(i_trans.i_stream.i_handlers.ICLASS_OBJECT)){
+                    return null;
+                }
+                
                 Collection4 col = new Collection4();
                 if (claxx.isInterface()) {
                     Collection4 classes = i_trans.i_stream.i_classCollection.forInterface(claxx);

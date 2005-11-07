@@ -28,6 +28,13 @@ public class GetAllSoda {
         Query q = Test.query();
         ObjectSet objectSet = q.execute();
         Test.ensure(objectSet.size() >= 2);
+        int i = 0;
+        while(objectSet.hasNext()){
+            Object obj = objectSet.next();
+            Test.ensure(obj != null);
+            i ++;
+        }
+        Test.ensure(i >= 2);
     }
 
 }
