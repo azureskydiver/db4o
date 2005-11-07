@@ -26,5 +26,10 @@ namespace com.db4o.test.nativequeries.cats
         public String getFullName(){
             return _firstName + " " + _lastName;
         }
+
+		public Cat getFather() 
+		{
+			return _father;
+		}
     }
 }
