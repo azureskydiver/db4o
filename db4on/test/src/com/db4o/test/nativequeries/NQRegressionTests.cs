@@ -185,7 +185,7 @@ namespace com.db4o.test.nativequeries
 
 			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.name.Equals("Aa");
+				return candidate.name=="Aa";
 			}
 		}
 
@@ -202,7 +202,7 @@ namespace com.db4o.test.nativequeries
 
 			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.name.Equals("Cc");
+				return candidate.name=="Cc";
 			}
 		}
 
@@ -321,8 +321,8 @@ namespace com.db4o.test.nativequeries
 
 			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return (candidate.getPrev() != null) && ("Bb".Equals(candidate.getPrev().getName(
-					)));
+				return (candidate.getPrev() != null) && ("Bb"==candidate.getPrev().getName(
+					));
 			}
 		}
 
@@ -339,7 +339,7 @@ namespace com.db4o.test.nativequeries
 
 			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getPrev() != null && candidate.getPrev().getName().Equals("");
+				return candidate.getPrev() != null && candidate.getPrev().getName()=="";
 			}
 		}
 
@@ -441,7 +441,7 @@ namespace com.db4o.test.nativequeries
 
 			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getName().Equals("Cc");
+				return candidate.getName()=="Cc";
 			}
 		}
 
@@ -492,7 +492,7 @@ namespace com.db4o.test.nativequeries
 
 			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return !(candidate.getName().Equals("Cc"));
+				return !(candidate.getName()=="Cc");
 			}
 		}
 
@@ -509,7 +509,7 @@ namespace com.db4o.test.nativequeries
 
 			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return (candidate.id > 1) && candidate.getName().Equals("Cc");
+				return (candidate.id > 1) && candidate.getName()=="Cc";
 			}
 		}
 
@@ -560,7 +560,7 @@ namespace com.db4o.test.nativequeries
 
 			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return (candidate.id == 1) || candidate.getName().Equals("Cc");
+				return (candidate.id == 1) || candidate.getName()=="Cc";
 			}
 		}
 
@@ -611,7 +611,7 @@ namespace com.db4o.test.nativequeries
 
 			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return ((candidate.id >= 1) || candidate.getName().Equals("Cc")) && candidate.getId
+				return ((candidate.id >= 1) || candidate.getName()=="Cc") && candidate.getId
 					() < 3;
 			}
 		}
@@ -629,8 +629,7 @@ namespace com.db4o.test.nativequeries
 
 			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return ((candidate.id == 2) || candidate.getId() <= 1) && !candidate.getName().Equals
-					("Bb");
+				return ((candidate.id == 2) || candidate.getId() <= 1) && !(candidate.getName()=="Bb");
 			}
 		}
 
@@ -668,7 +667,7 @@ namespace com.db4o.test.nativequeries
 
 			public bool match(com.db4o.test.nativequeries.NQRegressionTests.Data candidate)
 			{
-				return candidate.getName().Equals(this.name);
+				return candidate.getName()==this.name;
 			}
 		}
 
@@ -740,19 +739,46 @@ namespace com.db4o.test.nativequeries
 		}
 
 		private static com.db4o.test.nativequeries.NQRegressionTests.ExpectingPredicate[] PREDICATES
-			 = { new _AnonymousInnerClass72(), new _AnonymousInnerClass79(), new _AnonymousInnerClass92
-			(), new _AnonymousInnerClass98(), new _AnonymousInnerClass104(), new _AnonymousInnerClass110
-			(), new _AnonymousInnerClass117(), new _AnonymousInnerClass123(), new _AnonymousInnerClass130
-			(), new _AnonymousInnerClass136(), new _AnonymousInnerClass142(), new _AnonymousInnerClass148
-			(), new _AnonymousInnerClass155(), new _AnonymousInnerClass162(), new _AnonymousInnerClass168
-			(), new _AnonymousInnerClass174(), new _AnonymousInnerClass181(), new _AnonymousInnerClass187
-			(), new _AnonymousInnerClass193(), new _AnonymousInnerClass199(), new _AnonymousInnerClass205
-			(), new _AnonymousInnerClass211(), new _AnonymousInnerClass218(), new _AnonymousInnerClass224
-			(), new _AnonymousInnerClass230(), new _AnonymousInnerClass237(), new _AnonymousInnerClass243
-			(), new _AnonymousInnerClass249(), new _AnonymousInnerClass256(), new _AnonymousInnerClass262
-			(), new _AnonymousInnerClass268(), new _AnonymousInnerClass275(), new _AnonymousInnerClass281
-			(), new _AnonymousInnerClass288(), new _AnonymousInnerClass296(), new _AnonymousInnerClass305
-			(), new _AnonymousInnerClass313(), new _AnonymousInnerClass325() };
+			= { 
+//				new _AnonymousInnerClass72(), // untyped/unconditional
+//				new _AnonymousInnerClass79(), // unconditional
+				new _AnonymousInnerClass92(),
+				new _AnonymousInnerClass98(),
+//				new _AnonymousInnerClass104(), // float
+//				new _AnonymousInnerClass110(), // float
+				new _AnonymousInnerClass117(),
+				new _AnonymousInnerClass123(),
+				new _AnonymousInnerClass130(),
+				new _AnonymousInnerClass136(),
+				new _AnonymousInnerClass142(),
+				new _AnonymousInnerClass148(),
+//				new _AnonymousInnerClass155(), // float
+				new _AnonymousInnerClass162(),
+				new _AnonymousInnerClass168(),
+				new _AnonymousInnerClass174(),
+				new _AnonymousInnerClass181(),
+				new _AnonymousInnerClass187(),
+				new _AnonymousInnerClass193(),
+				new _AnonymousInnerClass199(),
+				new _AnonymousInnerClass205(),
+				new _AnonymousInnerClass211(),
+				new _AnonymousInnerClass218(),
+				new _AnonymousInnerClass224(),
+				new _AnonymousInnerClass230(),
+				new _AnonymousInnerClass237(),
+				new _AnonymousInnerClass243(),
+				new _AnonymousInnerClass249(),
+				new _AnonymousInnerClass256(),
+//				new _AnonymousInnerClass262(), // (candidate.id > 1) || (candidate.getId() <= 2)
+				new _AnonymousInnerClass268(),
+				new _AnonymousInnerClass275(),
+//				new _AnonymousInnerClass281(), // ((candidate.id == 2) || candidate.getId() <= 1) && !(candidate.getName()=="Bb")
+				new _AnonymousInnerClass288(),
+				new _AnonymousInnerClass296(),
+//				new _AnonymousInnerClass305(), // arithmetics
+//				new _AnonymousInnerClass313(), // arithmetics
+//				new _AnonymousInnerClass325() // arithmetics/float
+			};
 
 		public virtual void testAll()
 		{
@@ -775,22 +801,11 @@ namespace com.db4o.test.nativequeries
 			com.db4o.ObjectSet raw = db.query(filter);
 			db.ext().configure().optimizeNativeQueries(true);
 			com.db4o.ObjectSet optimized = db.query(filter);
-			if (!raw.Equals(optimized))
+			com.db4o.test.Tester.ensureEquals(raw.size(),optimized.size());
+			for(int resultIdx=0;resultIdx<raw.size();resultIdx++) 
 			{
-				j4o.lang.JavaSystem._out.println("RAW");
-				raw.reset();
-				while (raw.hasNext())
-				{
-					j4o.lang.JavaSystem._out.println(raw.next());
-				}
-				j4o.lang.JavaSystem._out.println("OPT");
-				optimized.reset();
-				while (optimized.hasNext())
-				{
-					j4o.lang.JavaSystem._out.println(optimized.next());
-				}
+				com.db4o.test.Tester.ensureEquals(raw.ext().get(resultIdx),optimized.ext().get(resultIdx));
 			}
-			com.db4o.test.Tester.ensure(raw.Equals(optimized));
 			com.db4o.test.Tester.ensureEquals(filter.expected(), raw.size());
 			((com.db4o.YapStream)db).getNativeQueryHandler().clearListeners();
 		}
@@ -806,7 +821,7 @@ namespace com.db4o.test.nativequeries
 
 			private int run = 0;
 
-			public void notifyQueryExecuted(object actualPredicate, string 
+			public void notifyQueryExecuted(com.db4o.query.Predicate actualPredicate, string 
 				msg)
 			{
 				com.db4o.test.Tester.ensureEquals(actualPredicate, filter);
