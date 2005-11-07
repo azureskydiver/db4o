@@ -744,15 +744,15 @@ namespace com.db4o.test.nativequeries
 //				new _AnonymousInnerClass79(), // unconditional
 				new _AnonymousInnerClass92(),
 				new _AnonymousInnerClass98(),
-//				new _AnonymousInnerClass104(), // float
-//				new _AnonymousInnerClass110(), // float
+				new _AnonymousInnerClass104(), // float
+				new _AnonymousInnerClass110(), // float
 				new _AnonymousInnerClass117(),
 				new _AnonymousInnerClass123(),
 				new _AnonymousInnerClass130(),
 				new _AnonymousInnerClass136(),
 				new _AnonymousInnerClass142(),
 				new _AnonymousInnerClass148(),
-//				new _AnonymousInnerClass155(), // float
+				new _AnonymousInnerClass155(), // float
 				new _AnonymousInnerClass162(),
 				new _AnonymousInnerClass168(),
 				new _AnonymousInnerClass174(),
@@ -769,10 +769,10 @@ namespace com.db4o.test.nativequeries
 				new _AnonymousInnerClass243(),
 				new _AnonymousInnerClass249(),
 				new _AnonymousInnerClass256(),
-//				new _AnonymousInnerClass262(), // (candidate.id > 1) || (candidate.getId() <= 2)
+				new _AnonymousInnerClass262(), // (candidate.id > 1) || (candidate.getId() <= 2)
 				new _AnonymousInnerClass268(),
 				new _AnonymousInnerClass275(),
-//				new _AnonymousInnerClass281(), // ((candidate.id == 2) || candidate.getId() <= 1) && !(candidate.getName()=="Bb")
+				new _AnonymousInnerClass281(), // ((candidate.id == 2) || candidate.getId() <= 1) && !(candidate.getName()=="Bb")
 				new _AnonymousInnerClass288(),
 				new _AnonymousInnerClass296(),
 //				new _AnonymousInnerClass305(), // arithmetics
@@ -821,7 +821,7 @@ namespace com.db4o.test.nativequeries
 
 			private int run = 0;
 
-			public void notifyQueryExecuted(com.db4o.query.Predicate actualPredicate, string 
+			public void notifyQueryExecuted(object actualPredicate, string 
 				msg)
 			{
 				com.db4o.test.Tester.ensureEquals(actualPredicate, filter);
