@@ -1,3 +1,151 @@
+2005-11-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/CallSite.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ICallSite.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.dll.sources:
+		Implement support for calli opcodes reading.
+
+2005-11-01  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/FunctionPointerType.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Work on function pointers.
+
+	* Mono.Cecil/AssemblyInfo.cs:
+		Increase Cecil SVN version.
+
+	* Mono.Cecil/ArrayType.cs
+	  Mono.Cecil/MethodSpecification.cs
+	  Mono.Cecil/TypeSpecification.cs
+	  Mono.Cecil/IMethodSpecification.cs
+	  Mono.Cecil/GenericInstanceType.cs
+	  Mono.Cecil/IGenericInstanceType.cs
+	  Mono.Cecil/GenericInstanceMethod.cs
+	  Mono.Cecil/IModifierType.cs
+	  Mono.Cecil/IPinnedType.cs
+	  Mono.Cecil/ReferenceType.cs
+	  Mono.Cecil/IGenericInstanceMethod.cs
+	  Mono.Cecil/PinnedType.cs
+	  Mono.Cecil/PointerType.cs
+	  Mono.Cecil/IPointerType.cs
+	  Mono.Cecil/IReferenceType.cs
+	  Mono.Cecil/IArrayType.cs
+	  Mono.Cecil/ITypeSpecification.cs
+	  Mono.Cecil/Modifiers.cs
+	  Mono.Cecil.dll.sources:
+		Uniformize the specification model.
+
+2005-10-31  Jb Evain  <jbevain@gmail.com>
+
+	* AUTHORS,
+	  NEWS,
+	  README,
+	  TODO,
+	  Mono.Cecil/AssemblyInfo.cs:
+		Cecil 0.1 release.
+
+	* Mono.Cecil/ReflectionReader.cs:
+		Force value type property on known core types.
+
+2005-10-28  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/TypeReference.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Uniformize the API.
+
+	* Mono.Cecil.Signatures/SignatureWriter.cs:
+		Correct a bug in strings encoding in custom attributes.
+
+	* CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Binary/ImageWriter.cs:
+		Implement a big of public key management,
+		here we reserve space for the strong name
+		signature if needed.
+
+	* Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil/StructureReader.cs:
+		Disable public key writing until
+		it is implemented.
+
+	* Mono.Cecil/GenericParameter.cs
+	  Mono.Cecil/TypeReference.cs
+	  Mono.Cecil/MethodReference.cs:
+		Work on generics writing api.
+	* Mono.Cecil/ReflectionReader.cs:
+		Fix a bug when defining a fresh assembly.
+
+	* Mono.Cecil/GenericInstanceType.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/IGenericParameterProvider.cs
+	  Mono.Cecil.Signatures/Var.cs
+	  Mono.Cecil.Signatures/MVar.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs
+	  Mono.Cecil.Cil/CodeWriter.cs:
+		Work on generics writing.
+
+2005-10-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/CilWorker.cs
+	  Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Cil/OpCode.cs:
+		Override op == and != on opcodes.
+
+	* Mono.Cecil/FieldDefinition.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/EventDefinition.cs
+	  Mono.Cecil/PropertyDefinition.cs:
+		Fix setters working on attributes.
+
+	* Mono.Cecil.Cil/CodeWriter.cs:
+		Compute max stack before writing method.
+
+	* Mono.Cecil/GenericContext.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Work on generics support.
+
+	* CodeGen/cecil.xml
+	  Mono.Cecil/ISecurityDeclarationCollection.cs
+	  Mono.Cecil/SecurityDeclarationCollection.cs:
+		Remove the security declaration from the codegen.
+
+2005-10-27  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Mono.Cecil\SecurityDeclaration.cs
+		Copy the permission set when cloning.
+	* Mono.Cecil\SecurityDeclarationCollection.cs
+		Ajusted to use an Hashtable, to Union permission sets on
+		the same action and to set/unset HasSecurity when needed.
+	* Mono.Cecil\ModuleDefinition.cs:
+		Added TODO (remainder) for complete 2.0 format support.
+	* Mono.Cecil\ReflectionWriter.cs:
+		Move MetadataToken finding outside the loop.
+	* Mono.Cecil\ISecurityDeclarationCollection.cs:
+		Adjust interface.
+
+2005-10-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/MethodDefinition.cs:
+		Add generics parameters in visitor path.
+
+	* Mono.Cecil/GenericParamAttributes.cs:
+		Add new constraints flags.
+
 2005-10-22  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/GenericParameter.cs

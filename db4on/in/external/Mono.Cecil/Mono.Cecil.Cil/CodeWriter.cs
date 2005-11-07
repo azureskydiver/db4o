@@ -85,6 +85,8 @@ namespace Mono.Cecil.Cil {
 			MethodBody body = instructions.Container;
 			long start = m_codeWriter.BaseStream.Position;
 
+			ComputeMaxStack (instructions);
+
 			foreach (Instruction instr in instructions) {
 
 				instr.Offset = (int) (m_codeWriter.BaseStream.Position - start);
@@ -115,7 +117,7 @@ namespace Mono.Cecil.Cil {
 					m_codeWriter.Write (0);
 					break;
 				case OperandType.ShortInlineI :
-					if (instr.OpCode.Equals (OpCodes.Ldc_I4_S))
+					if (instr.OpCode == OpCodes.Ldc_I4_S)
 						m_codeWriter.Write ((sbyte) instr.Operand);
 					else
 						m_codeWriter.Write ((byte) instr.Operand);
@@ -128,6 +130,7 @@ namespace Mono.Cecil.Cil {
 					m_codeWriter.Write ((byte) GetParameterIndex (body, (ParameterDefinition) instr.Operand));
 					break;
 				case OperandType.InlineSig :
+					throw new NotImplementedException ();
 				case OperandType.InlineI :
 					m_codeWriter.Write ((int) instr.Operand);
 					break;
@@ -160,7 +163,9 @@ namespace Mono.Cecil.Cil {
 							instr.Operand.GetType ().FullName);
 					break;
 				case OperandType.InlineMethod :
-					if (instr.Operand is IMethodReference)
+					if (instr.Operand is IGenericInstanceMethod)
+						WriteToken (m_reflectWriter.GetMethodSpecToken (instr.Operand as GenericInstanceMethod));
+					else if (instr.Operand is IMethodReference)
 						WriteToken ((instr.Operand as IMethodReference).MetadataToken);
 					else
 						throw new ReflectionException ("Wrong operand for InlineMethod: {0}",
@@ -179,6 +184,8 @@ namespace Mono.Cecil.Cil {
 					if (instr.Operand is ITypeReference)
 						WriteToken (m_reflectWriter.GetTypeDefOrRefToken (
 								instr.Operand as ITypeReference));
+					else if (instr.Operand is IGenericInstanceMethod)
+						WriteToken (m_reflectWriter.GetMethodSpecToken (instr.Operand as GenericInstanceMethod));
 					else if (instr.Operand is IMetadataTokenProvider)
 						WriteToken ((instr.Operand as IMetadataTokenProvider).MetadataToken);
 					else
@@ -353,6 +360,75 @@ namespace Mono.Cecil.Cil {
 				lvs.LocalVariables [i] = lv;
 			}
 			return lvs;
+		}
+
+		void ComputeMaxStack (IInstructionCollection instructions)
+		{
+			InstructionCollection ehs = new InstructionCollection (null);
+			foreach (ExceptionHandler eh in instructions.Container.ExceptionHandlers)
+				switch (eh.Type) {
+				case ExceptionHandlerType.Catch :
+					ehs.Add (eh.HandlerStart);
+					break;
+				case ExceptionHandlerType.Filter :
+					ehs.Add (eh.FilterStart);
+					break;
+				}
+
+			int max = 0, current = 0;
+			foreach (Instruction instr in instructions) {
+
+				if (ehs.Contains (instr))
+					current++;
+
+				switch (instr.OpCode.StackBehaviourPush) {
+				case StackBehaviour.Push1:
+				case StackBehaviour.Pushi:
+				case StackBehaviour.Pushi8:
+				case StackBehaviour.Pushr4:
+				case StackBehaviour.Pushr8:
+				case StackBehaviour.Pushref:
+				case StackBehaviour.Varpush:
+					current++;
+					break;
+				case StackBehaviour.Push1_push1:
+					current += 2;
+					break;
+				}
+
+				if (max < current)
+					max = current;
+
+				switch (instr.OpCode.StackBehaviourPop) {
+				case StackBehaviour.Varpop:
+					break;
+				case StackBehaviour.Pop1:
+				case StackBehaviour.Popi:
+				case StackBehaviour.Popref:
+					current--;
+					break;
+				case StackBehaviour.Pop1_pop1:
+				case StackBehaviour.Popi_pop1:
+				case StackBehaviour.Popi_popi:
+				case StackBehaviour.Popi_popi8:
+				case StackBehaviour.Popi_popr4:
+				case StackBehaviour.Popi_popr8:
+				case StackBehaviour.Popref_pop1:
+				case StackBehaviour.Popref_popi:
+					current -= 2;
+					break;
+				case StackBehaviour.Popi_popi_popi:
+				case StackBehaviour.Popref_popi_popi:
+				case StackBehaviour.Popref_popi_popi8:
+				case StackBehaviour.Popref_popi_popr4:
+				case StackBehaviour.Popref_popi_popr8:
+				case StackBehaviour.Popref_popi_popref:
+					current -= 3;
+					break;
+				}
+			}
+
+			instructions.Container.MaxStack = max;
 		}
 	}
 }
