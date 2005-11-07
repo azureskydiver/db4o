@@ -31,6 +31,12 @@ namespace Cecil.FlowAnalysis.Tests
 	public class ControlFlowTestFixture : AbstractControlFlowTestFixture
 	{
 		[Test]
+		public void BoolOrLessOrEqualThan()
+		{
+			RunTestCase("BoolOrLessOrEqualThan");
+		}
+
+		[Test]
 		public void OptimizedNestedOr()
 		{
 			RunTestCase("OptimizedNestedOr");

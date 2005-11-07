@@ -1,1 +1,3 @@
 build
+*.resharperoptions
+*.suo
