@@ -31,6 +31,18 @@ namespace Cecil.FlowAnalysis.Tests
 	public class ControlFlowTestFixture : AbstractControlFlowTestFixture
 	{
 		[Test]
+		public void FloatGreaterThan()
+		{
+			RunTestCase("FloatGreaterThan");
+		}
+
+		[Test]
+		public void FloatEquals()
+		{
+			RunTestCase("FloatEquals");
+		}
+
+		[Test]
 		public void BoolOrLessOrEqualThan()
 		{
 			RunTestCase("BoolOrLessOrEqualThan");
