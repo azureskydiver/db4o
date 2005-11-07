@@ -8,14 +8,9 @@ public class CJChild {
     public int _id;
     
     public CJChild(){
-        
     }
     
     public CJChild(int id){
         _id = id;
     }
-    
-    
-
-
 }
