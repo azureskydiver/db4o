@@ -443,7 +443,6 @@ public class YapClient extends YapStream implements ExtClient {
     final void queryExecute(QQuery a_query, QueryResultImpl a_res) {
         writeMsg(Msg.QUERY_EXECUTE.getWriter(marshall(a_query.getTransaction(), a_query)));
         readResult(a_res);
-        a_res.reset();
     }
     
     void raiseVersion(long a_minimumVersion){
@@ -487,6 +486,7 @@ public class YapClient extends YapStream implements ExtClient {
         for (int i = 0; i < size; i++) {
             aRes.add(reader.readInt());
         }
+        aRes.reset();
     }
 
     void readThis() {

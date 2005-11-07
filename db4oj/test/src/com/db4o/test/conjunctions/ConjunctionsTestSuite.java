@@ -11,5 +11,7 @@ public class ConjunctionsTestSuite extends TestSuite{
             CJSameField.class
         };
     }
+    
+     
 
 }
