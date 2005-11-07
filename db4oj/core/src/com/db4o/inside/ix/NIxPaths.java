@@ -56,7 +56,7 @@ public class NIxPaths {
         _paths = null;
         Iterator4 i = add.iterator();
         while(i.hasNext()){
-            add((NIxPath)i.next());
+            this.add((NIxPath)i.next());
         }
     }
     
