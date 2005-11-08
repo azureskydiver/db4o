@@ -20,7 +20,9 @@ namespace com.db4o.f1.chapter4
                 retrieveAllSensorReadoutsQBE(db);
                 retrieveAllSensorReadoutsQBEAlternative(db);
                 retrieveAllSensorReadoutsQuery(db);
+                retrieveAllSensorReadoutsNative(db);
                 retrieveAllObjects(db);
+                retrieveAllObjectsNative(db);
                 deleteAllObjects(db);
             }
             finally
@@ -75,9 +77,21 @@ namespace com.db4o.f1.chapter4
             listResult(result);
         }
         
+        public static void retrieveAllSensorReadoutsNative(ObjectContainer db) 
+        {
+	    	ObjectSet results = db.query(new RetrieveAllSensorReadoutsPredicate());
+			listResult(results);
+    	}
+        
         public static void retrieveAllObjects(ObjectContainer db)
         {
             ObjectSet result = db.get(new object());
+            listResult(result);
+        }
+
+        public static void retrieveAllObjectsNative(ObjectContainer db)
+        {
+            ObjectSet result = db.query(new RetrieveAllObjectsPredicate());
             listResult(result);
         }
         
@@ -89,5 +103,15 @@ namespace com.db4o.f1.chapter4
                 db.delete(result.next());
             }
         }
+        
+        public static void deleteAllObjectsNative(ObjectContainer db)
+        {
+            ObjectSet result=db.query(new RetrieveAllObjectsPredicate());
+            while (result.hasNext())
+            {
+                db.delete(result.next());
+            }
+        }
+        
     }
 }
