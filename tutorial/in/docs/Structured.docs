@@ -194,7 +194,7 @@ else, so please be very careful when activating this feature.
 
 Let's clear our database for the next chapter.
 
-.s com.db4o.f1.chapter2.StructuredExample#deleteAll -out ..
+.s com.db4o.f1.Util#deleteAll -out ..
 
 .1 Conclusion ..
 

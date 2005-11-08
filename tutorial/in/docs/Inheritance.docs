@@ -67,7 +67,7 @@ in the inheritance tree.
 Just like we retrieved all objects from the database above, we can ._
 delete all stored objects to prepare for the next chapter.
 
-.s com.db4o.f1.chapter4.InheritanceExample#deleteAllObjectsNative ..
+.s com.db4o.f1.Util#deleteAll -out ..
 
 .1 Conclusion ..
 

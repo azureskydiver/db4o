@@ -28,7 +28,6 @@ namespace com.db4o.f1.chapter5
                 setActivationDepth();
                 db = Db4o.openFile(Util.YapFileName);
                 retrieveSnapshotsSequentially(db);
-                deleteAllObjects(db);
             }
             finally
             {
@@ -100,13 +99,5 @@ namespace com.db4o.f1.chapter5
                 .cascadeOnActivate(true);
         }
         
-        public static void deleteAllObjects(ObjectContainer db)
-        {
-            ObjectSet result = db.get(new object());
-            while (result.hasNext())
-            {
-                db.delete(result.next());
-            }
-        }
     }
 }

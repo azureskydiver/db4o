@@ -20,7 +20,6 @@ public class TransactionExample extends Util {
             listAllCars(db);
             carSnapshotRollback(db);
             carSnapshotRollbackRefresh(db);
-            deleteAllObjects(db);
         }
         finally {
             db.close();
@@ -46,13 +45,6 @@ public class TransactionExample extends Util {
         car.setPilot(pilot);
         db.set(car);
         db.rollback();
-    }
-
-    public static void deleteAllObjects(ObjectContainer db) {
-        ObjectSet result=db.get(new Object());
-        while(result.hasNext()) {
-            db.delete(result.next());
-        }
     }
 
     public static void carSnapshotRollback(ObjectContainer db) {
