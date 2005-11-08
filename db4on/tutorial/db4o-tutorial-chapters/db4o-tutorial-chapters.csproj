@@ -184,6 +184,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4o\f1\chapter4\RetrieveAllObjectsPredicate.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4o\f1\chapter4\RetrieveAllSensorReadoutsPredicate.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4o\f1\chapter4\SensorReadout.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
