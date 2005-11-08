@@ -121,7 +121,7 @@ namespace com.db4o.f1.chapter2
         
         
         public class retrieveAllPilotsPredicate : Predicate{
-        	public static bool Match(Pilot candidate){
+        	public bool Match(Pilot candidate){
 	        	return true;
         	}
         }
@@ -132,7 +132,7 @@ namespace com.db4o.f1.chapter2
     	}
 
         public class retrieveAllCarsPredicate : Predicate{
-        	public static bool Match(Car candidate){
+        	public bool Match(Car candidate){
 	        	return true;
         	}
         }
@@ -255,15 +255,5 @@ namespace com.db4o.f1.chapter2
             listResult(result);
         }
         
-        public static new void deleteAll(ObjectContainer db) {
-          ObjectSet cars=db.get(new Car(null));
-          while(cars.hasNext()) {
-              db.delete(cars.next());
-          }
-          ObjectSet pilots=db.get(new Pilot(null,0));
-          while(pilots.hasNext()) {
-              db.delete(pilots.next());
-          }
-      }        
     }    
 }
