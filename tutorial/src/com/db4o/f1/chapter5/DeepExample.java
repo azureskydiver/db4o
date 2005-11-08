@@ -26,7 +26,6 @@ public class DeepExample extends Util {
             setActivationDepth();
             db=Db4o.openFile(Util.YAPFILENAME);
             retrieveSnapshotsSequentially(db);
-            deleteAllObjects(db);
         }
         finally {
             db.close();
@@ -86,12 +85,5 @@ public class DeepExample extends Util {
     public static void setActivationDepth() {
         Db4o.configure().objectClass(TemperatureSensorReadout.class)
         		.cascadeOnActivate(true);
-    }
-    
-    public static void deleteAllObjects(ObjectContainer db) {
-        ObjectSet result=db.get(new Object());
-        while(result.hasNext()) {
-            db.delete(result.next());
-        }
     }
 }

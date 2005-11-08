@@ -49,7 +49,7 @@ extended functionality in more detail in a later chapter.
 
 Finally, we clean up again.
 
-.s com.db4o.f1.chapter5.TransactionExample#deleteAllObjects ..
+.s com.db4o.f1.Util#deleteAll -out ..
 
 .1 Conclusion ..
 

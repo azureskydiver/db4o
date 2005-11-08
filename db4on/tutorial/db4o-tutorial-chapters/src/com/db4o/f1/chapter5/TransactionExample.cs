@@ -23,7 +23,6 @@ namespace com.db4o.f1.chapter5
                 listAllCars(db);
                 carSnapshotRollback(db);
                 carSnapshotRollbackRefresh(db);
-                deleteAllObjects(db);
             }
             finally
             {
@@ -53,15 +52,6 @@ namespace com.db4o.f1.chapter5
             car.Pilot = pilot;
             db.set(car);
             db.rollback();
-        }
-    
-        public static void deleteAllObjects(ObjectContainer db)
-        {
-            ObjectSet result = db.get(new object());
-            while (result.hasNext())
-            {
-                db.delete(result.next());
-            }
         }
     
         public static void carSnapshotRollback(ObjectContainer db)

@@ -27,4 +27,11 @@ public class Util {
             System.out.println(obj);
         }
     }
+    
+    public static void deleteAll(ObjectContainer db) {
+        ObjectSet result=db.get(new Object());
+        while(result.hasNext()) {
+            db.delete(result.next());
+        }
+    }
 }

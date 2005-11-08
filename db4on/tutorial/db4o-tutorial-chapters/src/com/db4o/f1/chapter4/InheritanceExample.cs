@@ -23,7 +23,6 @@ namespace com.db4o.f1.chapter4
                 retrieveAllSensorReadoutsNative(db);
                 retrieveAllObjects(db);
                 retrieveAllObjectsNative(db);
-                deleteAllObjects(db);
             }
             finally
             {
@@ -93,24 +92,6 @@ namespace com.db4o.f1.chapter4
         {
             ObjectSet result = db.query(new RetrieveAllObjectsPredicate());
             listResult(result);
-        }
-        
-        public static void deleteAllObjects(ObjectContainer db)
-        {
-            ObjectSet result=db.get(new object());
-            while (result.hasNext())
-            {
-                db.delete(result.next());
-            }
-        }
-        
-        public static void deleteAllObjectsNative(ObjectContainer db)
-        {
-            ObjectSet result=db.query(new RetrieveAllObjectsPredicate());
-            while (result.hasNext())
-            {
-                db.delete(result.next());
-            }
         }
         
     }

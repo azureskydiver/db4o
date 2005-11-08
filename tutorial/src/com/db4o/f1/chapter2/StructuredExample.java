@@ -281,22 +281,4 @@ public class StructuredExample extends Util {
         listResult(result);
     }
     
-    public static void deleteAll(ObjectContainer db) {
-        ObjectSet cars=db.query(new Predicate() {
-        	public boolean match(Car candidate){
-        		return true;
-        	}
-        });
-        while(cars.hasNext()) {
-            db.delete(cars.next());
-        }
-        ObjectSet pilots=db.query(new Predicate() {
-        	public boolean match(Pilot candidate){
-        		return true;
-        	}
-        });
-        while(pilots.hasNext()) {
-            db.delete(pilots.next());
-        }
-    }
 }
