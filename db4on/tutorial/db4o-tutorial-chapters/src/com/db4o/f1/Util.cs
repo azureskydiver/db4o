@@ -33,6 +33,11 @@ namespace com.db4o.f1
 			}
 		}
 		
+		public static void retrieveAll(ObjectContainer db) {
+		    ObjectSet result = db.get(typeof(Object));
+		    listResult(result);
+		}
+		
 		public static void deleteAll(ObjectContainer db) {
         	ObjectSet result = db.get(typeof(Object));
         	while(result.hasNext()){
