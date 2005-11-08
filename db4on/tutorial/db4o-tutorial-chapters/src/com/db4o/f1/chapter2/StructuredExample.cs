@@ -255,15 +255,15 @@ namespace com.db4o.f1.chapter2
             listResult(result);
         }
         
-        public static void deleteAll(ObjectContainer db) {
-	        ObjectSet cars=db.get(new Car(null));
-	        while(cars.hasNext()) {
-	            db.delete(cars.next());
-	        }
-	        ObjectSet pilots=db.get(new Pilot(null,0));
-	        while(pilots.hasNext()) {
-	            db.delete(pilots.next());
-	        }
-	    }        
+        public static new void deleteAll(ObjectContainer db) {
+          ObjectSet cars=db.get(new Car(null));
+          while(cars.hasNext()) {
+              db.delete(cars.next());
+          }
+          ObjectSet pilots=db.get(new Pilot(null,0));
+          while(pilots.hasNext()) {
+              db.delete(pilots.next());
+          }
+      }        
     }    
 }
