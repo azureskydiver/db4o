@@ -28,6 +28,11 @@ public class Util {
         }
     }
     
+    public static void retrieveAll(ObjectContainer db){
+        ObjectSet result=db.get(new Object());
+        listResult(result);
+    }
+    
     public static void deleteAll(ObjectContainer db) {
         ObjectSet result=db.get(new Object());
         while(result.hasNext()) {

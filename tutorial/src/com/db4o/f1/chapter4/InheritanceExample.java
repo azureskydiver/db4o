@@ -22,7 +22,6 @@ public class InheritanceExample extends Util {
             retrieveAllObjectsQBE(db);
             retrieveAllSensorReadoutsNative(db);
             retrieveAllObjectsNative(db);
-            deleteAllObjectsNative(db);
         }
         finally {
             db.close();
@@ -98,14 +97,4 @@ public class InheritanceExample extends Util {
         listResult(result);
     }
     
-    public static void deleteAllObjectsNative(ObjectContainer db) {
-        ObjectSet result=db.query(new Predicate(){
-            public boolean match(Object candidate){
-                return true;
-            }
-        });
-        while(result.hasNext()) {
-            db.delete(result.next());
-        }
-    }
 }
