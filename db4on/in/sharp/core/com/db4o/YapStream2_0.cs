@@ -11,9 +11,10 @@ namespace com.db4o
     {
         public IList<Extent> query<Extent>(Predicate<Extent> match)
         {
-            return _nativeQueryHandler.execute(match);
+            return getNativeQueryHandler().execute(match);
         }
     }
 #endif
 }
+
 
