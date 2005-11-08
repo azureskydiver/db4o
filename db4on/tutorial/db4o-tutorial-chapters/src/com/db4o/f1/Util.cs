@@ -34,7 +34,10 @@ namespace com.db4o.f1
 		}
 		
 		public static void deleteAll(ObjectContainer db) {
-        	db.delete(typeof(Object));
+        	ObjectSet result = db.get(typeof(Object));
+        	while(result.hasNext()){
+	            db.delete(result.next());
+	        }
     	}		
     }
 }
