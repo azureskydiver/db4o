@@ -301,8 +301,10 @@ public interface Configuration {
      * If set to true, db4o will try to optimize native queries
      * dynamically at query execution time, otherwise it will
      * run native queries in unoptimized mode as SODA evaluations.
-     * The jars needed for native query optimization have to be on
-     * the classpath at runtime for this switch to have effect. 
+     * On the Java platform the jars needed for native query 
+     * optimization (db4o-X.x-nqopt.jar, bloat-X.x.jar) have to be 
+     * on the classpath at runtime for this
+     * switch to have effect. 
      * <br><br>The default setting is <code>true</code>.
      * @param optimizeNQ true, if db4o should try to optimize
      * native queries at query execution time, false otherwise
@@ -310,8 +312,9 @@ public interface Configuration {
     public void optimizeNativeQueries(boolean optimizeNQ);
     
     /**
-     * 
-     * @return boolean indicating whether Native Queries will be optimized
+     * indicates whether Native Queries will be optimized
+     * dynamically.
+     * @return boolean indicates whether Native Queries will be optimized
      * dynamically.
      * @see #optimizeNativeQueries
      */
