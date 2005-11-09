@@ -6,16 +6,14 @@ Wouldn't it be nice to pose queries in the programming ._
 language that you are using? Wouldn't it be nice if all your query code was ._
 100% typesafe, 100% compile-time checked and 100% refactorable? Wouldn't ._
 it be nice if the full power of object-orientation could be used ._
-by calling methods from within queries? This is exactly what Native Queries are. 
+by calling methods from within queries? Enter Native Queries. 
 
 Native queries are the main query interface to db4o and they are the ._
 recommended way to query databases from your application. Because native ._
 queries simply use the semantics of your programming language, they are ._
 perfectly standardized and a safe choice for the future.
 
-Native Queries are available for all platforms supported by db4o: for earlier ._
-language versions Native Queries are just slightly more verbose. ._
-.? java Throughout this document, we shall use the Java JDK 1.2-1.4 syntax style. ..?
+Native Queries are available for all platforms supported by db4o.
 
 .2 Concept ..
 
@@ -24,17 +22,14 @@ The concept of native queries is taken from the following two papers:
 -  .l http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper ..l
 -  .l http://www.cs.utexas.edu/users/wcook/papers/SafeQuery/SafeQueryFinal.pdf Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries ..l
 
-A short abstract summary of the idea:
-Native Queries try to use the simplest syntax possible in the respective ._
-programming language to run one or more lines of code against all instances ._
-of a class, with hardly any restrictions on the syntax allowed in the native ._
-query expression. A boolean return value is used to specify, whether or not a ._
-specific instance is part of the result set. The database engine will attempt ._
-to optimize the native query code, to run it against indexes and without ._
-instantiating actual objects, where this is possible.
+Native Queries provide the ability to run one or more lines ._
+of code against all instances of a class. Native query expressions should ._
+return true to mark specific instances as part of the result set. ._
+db4o will attempt to optimize native query expressions and run them against indexes ._
+and without instantiating actual objects, where this is possible.
 
 .2 Simple Example ..
-From very abstract to very concrete, let's look at how a very simple query ._
+Let's look at how a very simple query ._
 will look like in some of the programming languages and dialects that db4o ._
 supports:
 

@@ -10,7 +10,7 @@ the version that you plan to experiment with first.
 .< DownloadContents ..
 
 .n
-.1 The db4o Object Manager ..
+.1 db4o Object Manager ..
 
 You can use the Object Manager GUI to browse and query the contents of any ._
 db4o database file. The Object Manager is downloaded seperately from each of ._
@@ -52,7 +52,3 @@ not preserve the executable permissions for objectmanager.sh, you will need
 to 'chmod +x objectmanager.sh'.  Once this is complete, running objectmanager.sh ._
 will start Object Manager.
 
-.1 Using this Tutorial
-
-The code samples shown throughout this document will assume, in many places, that ._
-database objectContainer has already been created, and stored in a variable named "db".

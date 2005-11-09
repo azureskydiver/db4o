@@ -1,6 +1,11 @@
 .n
 .1 API Overview ..
-Don't forget that you can use the  .l APIDocumentation API documentation ..  while we go over this. ._
+Do not forget the API documentation while reading through this ._
+tutorial. It provides an organized view of the API, looking from a ._
+.? java package ..?  .? net namespace ..?  .? mono namespace ..?  ._
+perspective and you may find related functionality to the theme you ._
+are currently reading up on.
+
 For starters, the packages com.db4o and com.db4o.query are ._
 all that you need to worry about. The rest are not commonly used.
 
@@ -48,8 +53,7 @@ within are discussed in the  .l Configuration Configuration ..  section.
 
 .b com.db4o.query ..
 
-The com.db4o.query  .? java package ..?  .? net namespace ..?  .? mono namespace ..?  contains the objects ._
-and interfaces to support the  .l SODAQueryAPI Query API .. . These API members are not ._
-the preferred method of performing db4o queries. We suggest you use  ._
-.l NativeQueries Native Queries ..  instead. This API is included here for backwards ._
-compatibility and there is no plan to remove it at this time.
+The com.db4o.query  .? java package ..?  .? net namespace ..?  .? mono namespace ..?  contains ._
+the Predicate class to construct .l NativeQueries Native Queries .. . The Native Query ._
+interface is the primary db4o querying interface and should be preferred over ._
+the  .l SODAQueryAPI Query API .. . 
