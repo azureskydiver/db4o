@@ -12,6 +12,7 @@ import com.db4o.types.*;
  * represents the database an object was created on.
  * 
  * @persistent
+ * @exclude
  */
 public class Db4oDatabase implements Db4oType, Internal4{
 

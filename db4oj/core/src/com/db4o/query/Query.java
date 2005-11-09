@@ -6,7 +6,7 @@ import com.db4o.*;
 
 
 /**
- * handle to a node in the query graph.
+ * handle to a node in a S.O.D.A. query graph.
  * <br><br>
  * A node in the query graph can represent multiple 
  * classes, one class or an attribute of a class.<br><br>The graph 
@@ -24,7 +24,10 @@ import com.db4o.*;
  * {@link #execute()} can be called from any {@link Query} node
  * of the graph. It will return an {@link ObjectSet} filled with
  * objects of the class/classes that the node, it was called from,
- * represents.
+ * represents.<b><br><br>
+ * <b>Note:<br>
+ * {@link Predicate Native queries} are the recommended main query 
+ * interface of db4o.</b> 
  */
 public interface Query {
 

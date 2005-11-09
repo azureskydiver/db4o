@@ -8,28 +8,77 @@ import java.lang.reflect.*;
 import com.db4o.*;
 
 /**
- * Extend this class and add your #match() method to run native queries.
- * <br><br>
- * A class that extends Predicate is required to implement the method
- * #match() following the native query conventions:<br>
- * - The name of the method is "match".<br>
- * - The method is public.<br>
+ * Base class for native queries.
+ * <br><br>Native Queries provide the ability to run one or more lines
+ * of code against all instances of a class. Native query expressions should
+ * return true to mark specific instances as part of the result set. 
+ * db4o will  attempt to optimize native query expressions and run them 
+ * against indexes and without instantiating actual objects, where this is 
+ * possible.<br><br>
+ * The syntax of the enclosing object for the native query expression varies
+ * slightly, depending on the language version used. Here are some examples,
+ * how a simple native query will look like in some of the programming languages and
+ * dialects that db4o supports:<br><br>
+ * 
+ * <pre>
+ * <b>// C# .NET 2.0</b>
+ * IList <Cat> cats = db.Query <Cat> (delegate(Cat cat) {
+ *   return cat.Name == "Occam";
+ * });
+ * 
+ *
+ * <b>// Java JDK 5</b>
+ * List <Cat> cats = db.query(new Predicate<Cat>() {
+ *     public boolean match(Cat cat) {
+ *         return cat.getName().equals("Occam");
+ *     }
+ * });
+ * 
+ * 
+ * <b>// Java JDK 1.2 to 1.4</b>
+ * List cats = db.query(new Predicate() {
+ *     public boolean match(Cat cat) {
+ *         return cat.getName().equals("Occam");
+ *     }
+ * });
+ * 
+ *     
+ * <b>// Java JDK 1.1</b>
+ * ObjectSet cats = db.query(new CatOccam());
+ * 
+ * public static class CatOccam extends Predicate {
+ *     public boolean match(Cat cat) {
+ *         return cat.getName().equals("Occam");
+ *     }
+ * });
+ *     
+ *     
+ * <b>// C# .NET 1.1</b>
+ * IList cats = db.Query(new CatOccam());
+ * 
+ * public class CatOccam : Predicate {
+ *     public boolean Match(Cat cat) {
+ *         return cat.Name == "Occam";
+ *     }
+ * });
+ * </pre>
+ * 
+ * Summing up the above:<br>
+ * In order to run a Native Query, you can<br>
+ * - use the delegate notation for .NET 2.0.<br>
+ * - extend the Predicate class for all other language dialects<br><br>
+ * A class that extends Predicate is required to 
+ * implement the #match() / #Match() method, following the native query
+ * conventions:<br>
+ * - The name of the method is "#match()" (Java) / "#Match()" (.NET).<br>
+ * - The method must be public public.<br>
  * - The method returns a boolean.<br>
  * - The method takes one parameter.<br>
- * - The type (Class) of the parameter specifies the extent.<br>
+ * - The Type (.NET) / Class (Java) of the parameter specifies the extent.<br>
  * - For all instances of the extent that are to be included into the
- * resultset of the query, the method returns true. For all instances
- * that are not to be included the method returns false. <br><br>
- * Here is an example of a #match method that follows these conventions:<br> 
- * <pre><code>
- * public boolean match(Cat cat){<br>
- *     return cat.name.equals("Occam");<br>
- * }<br>
- * </code></pre><br><br>
- * Native queries for Java JDK5 and above define a #match method in the 
- * abstract Predicate class to ensure these conventions, using generics.
- * Without generics the method is not definable in the Predicate class
- * since alternative method parameter classes would not be possible.
+ * resultset of the query, the match method should return true. For all
+ * instances that are not to be included, the match method should return
+ * false.<br><br>
  */
 public abstract class Predicate implements Serializable {
 	public final static String PREDICATEMETHOD_NAME="match";
