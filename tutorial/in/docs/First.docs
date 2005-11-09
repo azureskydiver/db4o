@@ -2,8 +2,8 @@
 .a First ..
 .0 First Steps ..
 
-Before we start explaining the confusing details, let's start with a few simple ._
-examples. We are going to learn how to store, retrieve, update and delete instances ._
+Let's get started as simple as possible. We are going to demonstrate how to store, ._
+retrieve, update and delete instances ._
 of a single class that only contains primitive and String members. In our example ._
 this will be a Formula One (F1) pilot whose attributes are his name and the F1 points ._
 he has already gained this season.
@@ -41,13 +41,13 @@ We'll need a second pilot, too.
 
 .1 Retrieving objects ..
 
-db4o includes a few different query systems. The one used in this brief ._
-introduction is called  .i Query by Example ..  (QBE). The other query systems are ._
-.i Native Queries ..  (NQ) and the  .i SODA Query API ..  (SODA). For now, we will ._
-introduce QBE queries, but once you are familiar with storing objects in your ._
-database, we encourage you to read the chapter on  .l NativeQueries Native Queries ..
+db4o supplies three different quering systems, .i Query by Example ..  (QBE), ._
+.i Native Queries ..  (NQ) and the  .i SODA Query API ..  (SODA). In this ._
+first example we will introduce QBE. Once you are familiar with storing ._
+objects, we encourage you to use  .l NativeQueries Native Queries .. , the main
+db4o querying interface.
 
-When using QBE, you create a prototypical object for db4o to use as an example of what ._
+When using Query-By-Example, you create a prototypical object for db4o to use as an example of what ._
 you wish to retrieve. db4o will retrieve all objects of the given type that contain the ._
 same (non-default) field values as the example. The results will be returned as an ._
 ObjectSet instance. We will use a convenience method 'listResult' to display the contents ._
