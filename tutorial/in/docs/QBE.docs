@@ -2,7 +2,7 @@
 .a QBE ..
 .1 Query by Example (QBE) ..
 
-When using  .i Query By Example ..  (or QBE) you provide db4o with a ._
+When using  .i Query By Example ..  (QBE) you provide db4o with a ._
 template object. db4o will return all of the objects which match all ._
 non-default field values. This is done via reflecting all of the fields ._
 and building a query expression where all non-default-value fields are ._
@@ -15,5 +15,8 @@ Querying this way has some obvious limitations:
 - You cannot perform advanced query expressions. (AND, OR, NOT, etc.)
 - You cannot constrain on values like 0 (integers), "" (empty strings), ._
 or nulls (reference types) because they would be interpreted as unconstrained.
+- A constructor without field initialisation is required. This makes ._
+it harder to enforce code contracts that objects of a class are only ._
+allowed in a well-defined initialized state.
 
-To get arround these constraints, we provide the Native Query system.
+To get around all of these constraints, db4o provides the Native Query (NQ) system.
