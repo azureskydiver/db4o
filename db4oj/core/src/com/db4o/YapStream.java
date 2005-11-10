@@ -1167,6 +1167,10 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             return query((Transaction)null);
         }
     }
+    
+    public final ObjectSet query(Class clazz) {
+        return get(clazz);
+    }
 
     final Query query(Transaction ta) {
         i_entryCounter++;
