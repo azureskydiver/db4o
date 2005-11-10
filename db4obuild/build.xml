@@ -348,7 +348,7 @@
 			<fileset dir="${src.dir}">
 				<include name="**/*.cs" />
 				<exclude name="net/**" />
-				<exclude name="external/**" />
+				<!-- <exclude name="external/**" /> -->
 			</fileset>
 		</copy>			
 		<versioninfo path="${dir.dist.net.compile}/compact" compact="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}" />
@@ -1179,7 +1179,7 @@
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
 				<exclude name="src/net/**" />
-				<exclude name="src/external/**" />
+				<!-- <exclude name="src/external/**" /> -->
 			</sources>
 		</updatecsharpproject>
 		
