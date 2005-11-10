@@ -18,11 +18,10 @@ namespace com.db4o.test {
         internal Type[] TESTS = new Type[]{
             typeof(SimplestPossible),
 			typeof(com.db4o.test.nativequeries.Cat),
-            typeof(TestCatConsistency),
-#if !CF_1_0 && !CF_2_0
+//            typeof(TestCatConsistency),
 			typeof(QueryExpressionBuilderTestCase),
 			typeof(nativequeries.NativeQueriesTestCase),
-#endif
+			typeof(nativequeries.NQRegressionTests)
          };
        
         /**

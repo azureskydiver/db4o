@@ -3,12 +3,10 @@ using System;
 using System.Collections;
 using System.Reflection;
 
-#if !CF_1_0
 using Mono.Cecil;
 using Cecil.FlowAnalysis;
 using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.CodeStructure;
-#endif
 
 using com.db4o.nativequery.expr;
 using com.db4o.nativequery.expr.cmp;
@@ -29,12 +27,6 @@ namespace com.db4o.inside.query
 	/// </summary>
 	public class QueryExpressionBuilder
 	{	
-#if CF_1_0
-		public static Expression FromMethod(System.Reflection.MethodInfo method)
-		{
-			throw new UnsupportedPredicateException("Not implemented for the Compact Framework yet");
-		}
-#else
 		public static Expression FromMethod(System.Reflection.MethodInfo method)
 		{
 			if (method == null) throw new ArgumentNullException("method");
@@ -86,7 +78,11 @@ namespace com.db4o.inside.query
 
 		private static string GetAssemblyLocation(MethodInfo method)
 		{
+#if CF_1_0
+			return method.DeclaringType.Module.FullyQualifiedName;
+#else
 			return new System.Uri(method.DeclaringType.Assembly.CodeBase).LocalPath;
+#endif
 		}
 
 		private static Expression FromMethodDefinition(IMethodDefinition method)
@@ -543,6 +539,5 @@ namespace com.db4o.inside.query
 				System.Diagnostics.Debug.Assert(condition, message);
 			}
 		}
-#endif
 	}
 }
