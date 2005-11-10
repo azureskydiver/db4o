@@ -29,7 +29,7 @@ db4o will attempt to optimize native query expressions and run them against inde
 and without instantiating actual objects, where this is possible.
 
 .2 Simple Example ..
-Let's look at how a simple query ._
+Let's look at how a simple native query ._
 will look like in some of the programming languages and dialects that db4o ._
 supports:
 
@@ -73,13 +73,14 @@ public class PilotHundredPoints : Predicate {
 .b VB .NET 1.1 ..
 .c Dim pilots As IList = db.Query(new PilotHundredPoints())
 
-Public Class PilotHundredPoints Implements Predicate
-	Public Function Match (pilot As Pilot) as Boolean
-		If pilot.Points = 100 Then 
-			Return True 
-		Else 
-			Return False
-	End Function
+Public Class PilotHundredPoints 
+	Inherits Predicate
+    Public Function Match (pilot As Pilot) as Boolean
+        If pilot.Points = 100 Then 
+            Return True 
+        Else 
+            Return False
+    End Function
 End Class ..c
 
 A side note on the above syntax:
@@ -111,10 +112,6 @@ field:
 
 Now you can create a native query with three keys: n + q + Control-Space.
 Similar features are available in most modern IDEs.
-
-Please experiment with the capabilities of native queries. The ._
-chances are good that you will like the ability to use getters, ._
-properties, navigation and method calls from within a query.
 
 .2 Advanced Example ..
 For complex queries, the native syntax is very precise and quick ._
@@ -161,7 +158,12 @@ available.
 If this all sounds to good to be true, we have to point out one ._
 drawback: Under the hood db4o tries to analyze native queries to ._
 convert them to SODA. This is not possible for all queries. ._
-For some queries it is very difficult to analyze the flowgraph. ._
+For some queries it is very difficult to analyze the flowgraph. In ._
+this case db4o will have to instantiate some of the persistent objects ._
+to actually run the native query code. db4o will try to ._
+analyze parts of native query expressions to keep object instantiation ._
+to the minimum.
+
 The development of the native query optimization processor will ._
 be an ongoing process in a close dialog with the db4o community. ._
 Feel free to contribute your results and your needs by providing ._
@@ -169,8 +171,8 @@ feedback to our  .l http://forums.db4o.com/ db4o forums .. .
 .? java The current state of the query optimization process is detailed ._
 in the chapter on  .l NQOptimization Native Query Optimization ..l. ..?
 
-With the current implementation, our first example above will run ._
-optimized, the second cannot be optimized yet - we are working on it.
+With the current implementation, all above examples will run ._
+optimized, except for the "Arbitrary Code" example - we are working on it.
 
 .2 Full source ..
 

@@ -1,10 +1,10 @@
 .n
 .a Evaluations ..
-.0 Evaluations ..
+.0 SODA Evaluations ..
 
-In the  .l Query Query API chapter ..  we have already mentioned  .i Evaluations .. ._
-as a means of providing user-defined custom constraints. Let's have a closer ._
-look at those.
+In the  .l SODAQueryAPI SODA API chapter ..  we already mentioned  .i Evaluations .. ._
+as a means of providing user-defined custom constraints and as a means to run any ._
+arbitrary code in a SODA query. Let's have a closer look.
 
 .1 Evaluation API ..
 
@@ -33,6 +33,7 @@ An Evaluation implementation may call getObject() to retrieve the actual object 
 instance to be evaluated, it may call include() to instruct db4o whether or not ._
 to include this object in the current candidate set, and finally it may access ._
 the current database directly by calling objectContainer().
+
 
 .1 Example ..
 

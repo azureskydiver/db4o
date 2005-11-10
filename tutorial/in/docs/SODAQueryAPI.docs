@@ -2,28 +2,18 @@
 .a SODAQueryAPI ..
 .1 SODA Query API ..
 
-We have already seen how to retrieve objects from db4o via Query By Example. 
-While the QBE approach ._
-is easy and intuitive, there are situations where it is not sufficient.
+The SODA query API is db4o's low level querying API, allowing direct access ._
+to nodes of query graphs. Since SODA uses strings to identify fields, it is ._
+neither perfectly typesafe nor compile-time checked and it also is quite ._
+verbose to write.
 
-- There are queries that simply cannot be expressed with QBE: Retrieve all ._
-pilots with more than 100 points, for example.
-- Creating a prototype object may have unwanted side effects.
-- Default values (e.g. null) may not be accepted by the domain class constructor.
-- We may want to query for field default values.
+For most applications  .l NativeQueries Native Queries ..  will be the better ._
+querying interface.
 
-For all of the above cases and more db4o provides  .l NativeQueries .. ._
-and the SODA query API.
+However there can be applications where dynamic generation of queries ._
+is required, that's why SODA is explained here.
 
-.l NativeQueries  .. are the main db4o query interface so you may ._
-consider to skip to the  .l NativeQueries next chapter ..  immediately, ._
-where they are explained.
-
-Because  .l NativeQueries ..  are wrapped to SODA under the hood and because ._
-some of the examples in the next chapter refer to SODA, the SODA query API is ._
-explained first.
-
-We need some pilots in our database again to explore it.
+First of all we need some pilots in our database again.
 
 .s com.db4o.f1.chapter1.QueryExample#storeFirstPilot ..
 
@@ -31,14 +21,14 @@ We need some pilots in our database again to explore it.
 
 .2 Simple queries ..
 
-First, let's see how our familiar QBE queries are expressed within the query ._
-API. This is done by retrieving a 'fresh' Query object from the ObjectContainer ._
-and adding Constraint instances to it. To find all Pilot instances, we constrain the ._
+Let's see how our familiar QBE queries are expressed with SODA. A new Query object ._
+is created through the #query() method of the ObjectContainer and we can add ._
+Constraint instances to it. To find all Pilot instances, we constrain the ._
 query with the Pilot class object.
 
 .s com.db4o.f1.chapter1.QueryExample#retrieveAllPilots ..
 
-Basically, we're exchanging our 'real' prototype for a meta description of ._
+Basically, we are exchanging our 'real' prototype for a meta description of ._
 the objects we'd like to hunt down: a .b  query graph ..  made up of ._
 query nodes and constraints. A query node is a placeholder for a candidate ._
 object, a constraint decides whether to add or exclude candidates from the result.
@@ -68,8 +58,8 @@ Note that the class constraint is not required: If we left it out, we would ._
 query for all objects that contain a 'name' member with the given value. In ._
 most cases this will not be the desired behavior, though.
 
-Finding a pilot by exact points is analogous, we just have to cross ._
-the Java primitive/object divide.
+Finding a pilot by exact points is analogous. .? java We just have to cross ._
+the Java primitive/object divide. ..?
 
 .s com.db4o.f1.chapter1.QueryExample#retrievePilotByExactPoints ..
 
@@ -103,8 +93,9 @@ It is also possible to have db4o sort the results.
 
 All these techniques can be combined arbitrarily, of course. Please try ._
 it out. There still may be cases left where the predefined query API ._
-constraints may not be sufficient - don't worry, you can always define ._
-your own by providing Evaluation implementations which will be covered ._
+constraints may not be sufficient - don't worry, you can always let ._
+db4o run any arbitrary code that you provide in an Evaluation. ._
+Evaluations will be discussed ._
 in a  .l Evaluations later chapter .. .
 
 To prepare for the next chapter, let's clear the database.
