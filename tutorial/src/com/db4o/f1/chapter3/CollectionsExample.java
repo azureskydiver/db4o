@@ -152,8 +152,7 @@ public class CollectionsExample extends Util {
     }
 
     public static void updateCarPart1() {
-        Db4o.configure().objectClass(Car.class)
-        		.cascadeOnUpdate(true);
+        Db4o.configure().objectClass(Car.class).cascadeOnUpdate(true);
     }
 
     public static void updateCarPart2(ObjectContainer db) {

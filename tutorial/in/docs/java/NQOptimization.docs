@@ -2,17 +2,21 @@
 .a NQOptimization ..
 .0 Native Query Optimization ..
 
+Native Queries will run out of the box in any environment. ._
+If an optimizer is present in the CLASSPATH and if optimisation ._
+is turned on, Native Queries will be converted to SODA queries ._
+where this is possible, allowing db4o to use indexes and ._
+optimized internal comparison algorithms.
 
-Native queries will run out of the box in any environment - they ._
-will just be executed as SODA evaluations. This has the downside ._
-that all candidate objects will have to be instantianted to run ._
-the evaluation against them, and that evaluations cannot take ._
-advantage of any indices you might have configured.
+If no ._
+optimizer is found in the CLASSPATH or if optimization is turned ._
+off, Native Quer may be executed by instantiating all objects, ._
+using  .l Evaluations SODA Evaluations .. . Naturally performance ._
+will not be as good in this case.
 
-In optimized mode, native queries are converted to plain SODA ._
-queries, if possible. (Otherwise they're just run unoptimized.) ._
-This feature is still experimental and will only cover basic ._
-use cases. Currently optimization supports:
+The Native Query optimizer is still under development to eventually ._
+"understand" all Java constructs. Current optimization supports ._
+the following constructs well:
 
 - constants
 - simple member access
@@ -23,31 +27,43 @@ use cases. Currently optimization supports:
 - arithmetic expressions
 - boolean expressions
 
-Any native query that contains constructs not on this list will ._
-be run in unoptimized mode. This list will be constantly extended.
+This list will constantly grow with the latest versions of db4o.
 
-.1 Analysis at query execution time ..
 
-.b Note: This won't work with JDK1.1. ..
+db4o for Java supplies three different possibilities to run ._
+optimized native queries, optimization at
+(1) query execution time
+(2) deployment time
+(3) class loading time
 
-To enable code analysis and generation of a corresponding live SODA ._
-query at query execution time, you just have to add db4o-5.0-nqopt.jar ._
-to your class path. This behavior is switched via
+The three options are described in the following:
+
+.1 Optimization at query execution time ..
+
+.b Note: This will work with JDK1.1. ..
+
+To enable code analysis and optimization of native query expressions ._
+at query query execution time, you just have to add db4o-5.0-nqopt.jar ._
+and bloat-1.0.jar to your CLASSPATH. Optimization can be turned on and off ._
+with the following configuration setting:
 
 .c Db4o.configure().optimizeNativeQueries(boolean optimizeNQ); ..c
- 
+
+
 .1 Instrumenting class files ..
 
-.b Note: The resulting optimized classes will work for JDK1.1, but not ._
-the optimization process itself. ..
+.b Note: Instrumented optimized classes will work with JDK1.1, but the ._
+optimization process itself requires at least JDK 1.2. ..
 
 File instrumentation can be done either programmatically or during an ._
 Ant build.
 
+.2 Programmatic Instrumentation ..
+
 To instrument all predicate classes in directory 'orig' whose package ._
 name starts with 'my.package' and store the modified files below ._
-directory 'instrumented', ensure the bloat jar is on your class path ._
-and use code like the following:
+directory 'instrumented', ensure that db4o-5.0-nqopt.jar and bloat-1.0.jar ._
+are in your CLASSPATH and use code like the following:
 
 .c new com.db4o.nativequery.main.Db4oFileEnhancer().enhance(
     "orig",             // source directory
@@ -59,7 +75,10 @@ and use code like the following:
     "my.package"        // optional package prefix
   ); ..c
   
-An equivalent Ant snippet might look like this:
+
+.2 Ant Instrumentation ..
+  
+An equivalent Ant target might look like this:
 
 .c <taskdef name="db4ooptimize" 
          classname="com.db4o.nativequery.main.Db4oFileEnhancerAntTask">
@@ -83,27 +102,31 @@ An equivalent Ant snippet might look like this:
   </db4oenhance>
 </target> ..c
 
-All non-Predicate classes will just be copied to the target directory.
+All non-Predicate classes will just be copied to the target directory ._
+without modification.
 
 .1 Instrumenting classes at load time ..
 
-.b Note: This won't work with JDK1.1. ..
+.b Note: This will not work with JDK1.1. ..
 
-To instrument an existing application on startup, db4o wraps its ._
-execution in a custom class loader. To apply this class loader ._
-manually, use code like this:
+If classes of an existing application are to be instrumented when they ._
+are loaded, a special ClassLoader needs to be used to run your application, ._
+com.db4o.nativequery.main.Db4oEnhancingClassLoader. Again ._
+db4o-5.0-nqopt.jar and bloat-1.0.jar need to be in the CLASSPATH. 
+
+All the native query code of your application would need to run in this ._
+ClassLoader. If we assume that you have a static starting method "goNative" ._
+in a class named "my.StarterClass", here is how you could run this method ._
+within the special native query ClassLoader:
 
 .c ClassLoader loader=
   new com.db4o.nativequery.main.Db4oEnhancingClassLoader();
 Class clazz=loader.loadClass("my.StarterClass");
-Method method=clazz.getMethod("someStaticMethod",new Class[]{});
+Method method=clazz.getMethod("goNative",new Class[]{});
 method.invoke(null,new Object[]{}); ..c
 
-(Of course the method needn't be static and can have parameters, ._
-too.)
-
 To start a full application in optimized mode, you can use the ._
-Db4oRunner utility class. If you'd normally start your application ._
+Db4oRunner utility class. If you would normally start your application ._
 like this:
 
 .c $> java my.StarterClass some arguments ..c
@@ -113,7 +136,7 @@ as the first argument and the actual arguments appended:
 
 .c $> java com.db4o.nativequery.main.Db4oRunner my.StarterClass some arguments ..c
 
-Still to be evaluated:
+Further options:
 
 - Setting the system class loader
   (-Djava.system.class.loader=com.db4o.nativequery.main.Db4oEnhancingClassLoader)
@@ -122,8 +145,8 @@ Still to be evaluated:
   
 .1 Monitoring optimization ..
 
-This feature still is as basic as it can get and will soon be improved. ._
-Currently you can just attach a listener to the ObjectContainer:
+This feature still is quite basic but it will soon be improved. ._
+Currently you can only attach a listener to the ObjectContainer:
 
 .c ((YapStream)db).addListener(new Db4oQueryExecutionListener() {
   public void notifyQueryExecuted(Predicate pred, String msg) {

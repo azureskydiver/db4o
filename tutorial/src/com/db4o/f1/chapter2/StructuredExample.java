@@ -115,7 +115,7 @@ public class StructuredExample extends Util {
     
     public static void retrieveAllPilotsNative(ObjectContainer db) {
     	ObjectSet results = db.query(new Predicate() {
-    		public boolean match(Pilot candidate){
+    		public boolean match(Pilot pilot){
     			return true;
     		}
     	});
@@ -123,20 +123,16 @@ public class StructuredExample extends Util {
     }
 
     
-    public static void retrieveAllCarsNative(ObjectContainer db) {
-    	ObjectSet results = db.query(new Predicate() {
-    		public boolean match(Car candidate){
-    			return true;
-    		}
-    	});
+    public static void retrieveAllCars(ObjectContainer db) {
+    	ObjectSet results = db.get(Car.class);
     	listResult(results);
     }
     
     public static void retrieveCarsByPilotNameNative(ObjectContainer db) {
     	final String pilotName = "Rubens Barrichello";
     	ObjectSet results = db.query(new Predicate() {
-    		public boolean match(Car candidate){
-    			return candidate.getPilot().getName().equals(pilotName);
+    		public boolean match(Car car){
+    			return car.getPilot().getName().equals(pilotName);
     		}
     	});
     	listResult(results);
@@ -144,16 +140,16 @@ public class StructuredExample extends Util {
     
     public static void updateCar(ObjectContainer db) {
         ObjectSet result=db.query(new Predicate() {
-        	public boolean match(Car candidate){
-        		return candidate.getModel().equals("Ferrari");
+        	public boolean match(Car car){
+        		return car.getModel().equals("Ferrari");
         	}
         });
         Car found=(Car)result.next();
         found.setPilot(new Pilot("Somebody else",0));
         db.set(found);
         result=db.query(new Predicate() {
-        	public boolean match(Car candidate){
-        		return candidate.getModel().equals("Ferrari");
+        	public boolean match(Car car){
+        		return car.getModel().equals("Ferrari");
         	}
         });
         listResult(result);
@@ -162,16 +158,16 @@ public class StructuredExample extends Util {
     public static void updatePilotSingleSession(
                 ObjectContainer db) {
         ObjectSet result=db.query(new Predicate() {
-        	public boolean match(Car candidate){
-        		return candidate.getModel().equals("Ferrari");
+        	public boolean match(Car car){
+        		return car.getModel().equals("Ferrari");
         	}
         });
         Car found=(Car)result.next();
         found.getPilot().addPoints(1);
         db.set(found);
         result=db.query(new Predicate() {
-        	public boolean match(Car candidate){
-        		return candidate.getModel().equals("Ferrari");
+        	public boolean match(Car car){
+        		return car.getModel().equals("Ferrari");
         	}
         });
         listResult(result);
@@ -180,8 +176,8 @@ public class StructuredExample extends Util {
     public static void updatePilotSeparateSessionsPart1(
     		ObjectContainer db) {
         ObjectSet result=db.query(new Predicate() {
-        	public boolean match(Car candidate){
-        		return candidate.getModel().equals("Ferrari");
+        	public boolean match(Car car){
+        		return car.getModel().equals("Ferrari");
         	}
         });
         Car found=(Car)result.next();
@@ -192,8 +188,8 @@ public class StructuredExample extends Util {
     public static void updatePilotSeparateSessionsPart2(
                 ObjectContainer db) {
         ObjectSet result=db.query(new Predicate() {
-        	public boolean match(Car candidate){
-        		return candidate.getModel().equals("Ferrari");
+        	public boolean match(Car car){
+        		return car.getModel().equals("Ferrari");
         	}
         });
         listResult(result);
@@ -207,8 +203,8 @@ public class StructuredExample extends Util {
     public static void updatePilotSeparateSessionsImprovedPart2(
                 ObjectContainer db) {
         ObjectSet result=db.query(new Predicate() {
-        	public boolean match(Car candidate){
-        		return candidate.getModel().equals("Ferrari");
+        	public boolean match(Car car){
+        		return car.getModel().equals("Ferrari");
         	}
         });
         Car found=(Car)result.next();
@@ -219,8 +215,8 @@ public class StructuredExample extends Util {
     public static void updatePilotSeparateSessionsImprovedPart3(
                 ObjectContainer db) {
         ObjectSet result=db.query(new Predicate() {
-        	public boolean match(Car candidate){
-        		return candidate.getModel().equals("Ferrari");
+        	public boolean match(Car car){
+        		return car.getModel().equals("Ferrari");
         	}
         });
         listResult(result);
@@ -228,8 +224,8 @@ public class StructuredExample extends Util {
 
     public static void deleteFlat(ObjectContainer db) {
         ObjectSet result=db.query(new Predicate() {
-        	public boolean match(Car candidate){
-        		return candidate.getModel().equals("Ferrari");
+        	public boolean match(Car car){
+        		return car.getModel().equals("Ferrari");
         	}
         });
         Car found=(Car)result.next();
@@ -245,14 +241,14 @@ public class StructuredExample extends Util {
 
     public static void deleteDeepPart2(ObjectContainer db) {
         ObjectSet result=db.query(new Predicate() {
-        	public boolean match(Car candidate){
-        		return candidate.getModel().equals("BMW");
+        	public boolean match(Car car){
+        		return car.getModel().equals("BMW");
         	}
         });
         Car found=(Car)result.next();
         db.delete(found);
         result=db.query(new Predicate() {
-        	public boolean match(Car candidate){
+        	public boolean match(Car car){
         		return true;
         	}
         });
@@ -261,8 +257,8 @@ public class StructuredExample extends Util {
 
     public static void deleteDeepRevisited(ObjectContainer db) {
         ObjectSet result=db.query(new Predicate() {
-        	public boolean match(Pilot candidate){
-        		return candidate.getName().equals("Michael Schumacher");
+        	public boolean match(Pilot pilot){
+        		return pilot.getName().equals("Michael Schumacher");
         	}
         });
         Pilot pilot=(Pilot)result.next();
@@ -274,7 +270,7 @@ public class StructuredExample extends Util {
         db.set(car2);
         db.delete(car2);
         result=db.query(new Predicate() {
-        	public boolean match(Car candidate){
+        	public boolean match(Car car){
         		return true;
         	}
         });
