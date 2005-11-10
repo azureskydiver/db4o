@@ -95,9 +95,10 @@ namespace com.db4o.test {
 #endif
 
 #if NET_2_0
-			typeof(net2.Net2SimpleGenericType),
-			typeof(net2.Net2NullableTypes),
 			typeof(net2.Net2GenericContainers),
+			typeof(net2.Net2NullableTypes),
+            typeof(net2.Net2QueryForClass),
+			typeof(net2.Net2SimpleGenericType),
 #endif		
 
 		    typeof(NoInstanceStored),
