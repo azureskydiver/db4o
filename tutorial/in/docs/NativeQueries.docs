@@ -98,9 +98,9 @@ environments (IDEs) can automate this job for you by 100% by ._
 using templates and autocompletion.
 
 Here is a short HowTo for Eclipse 3.1:
-Window + Preferences + Java + Editor + Templates + New
-As the name type "nq". Make sure that "java" is chosen as the ._
-context on the right. Paste the following into the "pattern" ._
+From the menu, choose Window + Preferences + Java + Editor + Templates + New
+As the name type "nq". Make sure that "java" is selected as the ._
+context on the right. Paste the following into the pattern ._
 field:
 
 .c List <${extent}> list = db.query(new Predicate <${extent}> () {
@@ -116,22 +116,16 @@ Please experiment with the capabilities of native queries. The ._
 chances are good that you will like the ability to use getters, ._
 properties, navigation and method calls from within a query.
 
-For complex queries, the native syntax is very precise and quick ._
-to write.
-
 .2 Advanced Example ..
-Let's compare to a SODA query with some degree of complexity. ._
-If we add some content to the database, we can execute ._
-that one:
-
-.s com.db4o.f1.chapter1.NQExample#storePilots -out ..
-
-To find all pilots with a given name or a score within a ._
-given range the SODA query will look like this:
+For complex queries, the native syntax is very precise and quick ._
+to write. Let's compare to a SODA query that finds all pilots ._
+with a given name or a score within a ._
+given range:
 
 .s com.db4o.f1.chapter1.NQExample#retrieveComplexSODA ..
 
-Here is how the same query will look like with native queries, ._
+Here is how the same query will look like with native query ._
+syntax, ._
 fully accessible to autocompletion, refactoring and other IDE ._
 features, fully checked at compile time:
 
@@ -177,28 +171,6 @@ in the chapter on  .l NQOptimization Native Query Optimization ..l. ..?
 
 With the current implementation, our first example above will run ._
 optimized, the second cannot be optimized yet - we are working on it.
-
-.2 Conclusion ..
-Now you have been provided with three alternative approaches to query ._
-db4o databases: Query-By-Example, SODA, Native Queries.	
-
-Which one is the best to use? Some hints:
-- Native queries are targetted to be the primary interface for db4o, so they ._
-should be preferred.
-- With the current state of the native query optimizer there may be queries ._
-that will execute faster in SODA style, so it can be used to tune applications. ._
-SODA can also be more convenient for constructing dynamic queries at runtime.
-- Query-By-Example is nice for simple one-liners, but restricted in ._
-functionality. If you like this approach, use it as long as it suits your ._
-application's needs.
-
-Of course you can mix these strategies as needed.
-
-We have finished our walkthrough and seen the various ways db4o provides ._
-to pose queries. But our domain model is not complex at all, consisting of ._
-one class only. Let's have ._
-a look at the way db4o handles object associations in the  .l Structured next chapter ..l . For the ._
-time being, turning to the SODA query API again.
 
 .2 Full source ..
 

@@ -112,10 +112,25 @@ To prepare for the next chapter, let's clear the database.
 .s com.db4o.f1.chapter1.QueryExample#clearDatabase ..
 
 .2 Conclusion ..
+Now you have been provided with three alternative approaches to query ._
+db4o databases: Query-By-Example, Native Queries, SODA.
 
-Now we know how to build arbitrarily complex queries. But maybe there's ._
-even a better choice for most use cases - let's have a look at ._
-.l NativeQueries native queries .. .
+Which one is the best to use? Some hints:
+- Native queries are targetted to be the primary interface for db4o, so they ._
+should be preferred.
+- With the current state of the native query optimizer there may be queries ._
+that will execute faster in SODA style, so it can be used to tune applications. ._
+SODA can also be more convenient for constructing dynamic queries at runtime.
+- Query-By-Example is nice for simple one-liners, but restricted in ._
+functionality. If you like this approach, use it as long as it suits your ._
+application's needs.
+
+Of course you can mix these strategies as needed.
+
+We have finished our walkthrough and seen the various ways db4o provides ._
+to pose queries. But our domain model is not complex at all, consisting of ._
+one class only. Let's have ._
+a look at the way db4o handles object associations in the  .l Structured next chapter ..l .
 
 .2 Full source ..
 
