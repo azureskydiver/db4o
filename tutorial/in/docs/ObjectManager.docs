@@ -1,14 +1,53 @@
 .n
 .a ObjectManager ..
 .0 Object Manager ..
-
-.1 Introduction
-The db4o Object Manager provides a simple way to efficiently browse the objects ._
-that are stored in your database.  Object Manager currently provides the ._
+The db4o Object Manager is a GUI tool to browse and query the contents of any ._
+db4o database file. Object Manager currently provides the ._
 following features:
 - Open either a local database file or a db4o database server
 - Browse objects in a database
 - Query for objects using a simple graphical query by example.
+
+.1 Installation ..
+
+Object Manager has to be downloaded seperately from ._
+the main db4o distributions. Please visit the  .l http://www.db4o.com/community/ontheroad/downloadcenter/ db4o Download Center ..  ._
+and choose the installation appropriate for your system. The following distributions ._
+are currently available:
+- db4o ObjectManager for Windows IKVM (Java VM included)
+- db4o ObjectManager for Windows no Java VM
+- db4o ObjectManager for Linux
+
+Once you have downloaded the appropriate Object Manager build, create a folder ._
+called Object Manager in any location of your choice and unpack the downloaded ._
+zip file there.
+
+.2 Running ..
+
+.3 Windows IKVM ..
+Object Manager for Windows IKVM includes the open-source IKVM Java virtual ._
+machine in the download.  Simply double-click the objectmanager.bat file ._
+to start Object Manager.
+
+.3 Windows no Java VM ..
+This build assumes that your computer already has a Sun Java Virtual Machine ._
+version 1.3 or later installed and that your operating system path already ._
+lists the directory containing your java.exe file.  If this is true, you ._
+can simply double-click the objectmanager.bat file to start Object Manager. ._
+Otherwise, you will need to edit objectmanager.bat and specify the full ._
+path and file name for your java.exe file on the first line.
+
+.3 Linux ..
+This build assumes that your computer already has a Sun Java Virtual Machine ._
+version 1.3 or later installed and that your PATH variable already lists the ._
+directory containing the java binary.  If this is not the case, you will
+need to edit the objectmanager.sh file and specify the full path and file name ._
+of the Java binary on the "export VMEXE" line".  Since the zip archive does ._
+not preserve the executable permissions for objectmanager.sh, you will need
+to 'chmod +x objectmanager.sh'.  Once this is complete, running objectmanager.sh ._
+will start Object Manager.
+
+
 
 .1 Object Manager Tour ..
 
