@@ -52,9 +52,14 @@ public class FirstStepsExample extends Util {
         System.out.println("Stored "+pilot2);
     }
 
-    public static void retrieveAllPilots(ObjectContainer db) {
+    public static void retrieveAllPilotsQBE(ObjectContainer db) {
         Pilot proto=new Pilot(null,0);
         ObjectSet result=db.get(proto);
+        listResult(result);
+    }
+    
+    public static void retrieveAllPilots(ObjectContainer db) {
+        ObjectSet result=db.get(Pilot.class);
         listResult(result);
     }
 

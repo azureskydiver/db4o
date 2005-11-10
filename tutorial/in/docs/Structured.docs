@@ -38,36 +38,35 @@ Rubens Barrichello.
 .s com.db4o.f1.chapter2.StructuredExample#retrieveCarByPilotQBE ..
 
 What about retrieving a pilot by car? We simply don't need that - ._
-if we already know the car, we can simply ask it for its pilot ._
+if we already know the car, we can simply access the pilot field ._
 directly.
 
 .2 Native Queries ..
 
-When writing complicated queries on deep objects, you can easily ._
-see where not having to remember a complicated query language or API ._
-makes sense. It makes even more sense to make the query in your own ._
-programing language.
+Using native queries with constraints on deep structured objects ._
+is straightforward, you can do it just like you would in plain ._
+other code. 
 
-So, let's constrain our query to only those cars driven by a Pilot ._
+Let's constrain our query to only those cars driven by a Pilot ._
 with a specific name:
 
 .? net  .s com.db4o.f1.chapter2.StructuredExample#retrieveCarsByPilotNamePredicate +{} -run ..s  ..?
 .s com.db4o.f1.chapter2.StructuredExample#retrieveCarsByPilotNameNative ..
 
-.? net Of course in .NET 2.0, this is MUCH simpler:
+.? net Using .NET 2.0 syntax this is a lot simpler:
 
 .b C# .NET 2.0 ..
 .c [retrieveCarsByPilotNameNative]
 string pilotName = "Rubens Barrichello";
-List<Car> results = db.Query<Car>(delegate(Car candidate) {
-    return candidate.Pilot.Name == pilotName; });
+List<Car> results = db.Query<Car>(delegate(Car car) {
+    return car.Pilot.Name == pilotName; });
 listResults(results); ..c  ..?
 
 
 .2 SODA Query API ..
 
-To query for a car given its pilot's name we have to descend one ._
-level deeper in our query.
+In order to use SODA for querying for a car given its pilot's name we have ._
+to descend two levels into our query.
 
 .s com.db4o.f1.chapter2.StructuredExample#retrieveCarByPilotNameQuery ..
 
@@ -77,9 +76,12 @@ the same result.
 .s com.db4o.f1.chapter2.StructuredExample#retrieveCarByPilotProtoQuery ..
 
 We have seen that descending into a query provides us with another ._
-query. You may also have noticed that the associations between ._
-query nodes look somehow bidirectional in our diagrams. Let's move ._
-upstream.
+query. Starting out from a query root we can descend in multiple directions. ._
+In practice this is the same as ascending from one child to a parent ._
+and descending to another child. We can conclude that queries turn ._
+one-directional references in our objects into true relations. ._
+Here is an example that queries for "a Pilot that is being referenced ._
+by a Car, where the Car model is 'Ferrari'":
 
 .s com.db4o.f1.chapter2.StructuredExample#retrievePilotByCarModelQuery ..
 
@@ -176,7 +178,7 @@ Again: Note that all configuration must take place before the ObjectContainer is
 
 Let's have a look at our pilots again.
 
-.s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilotsNative ..
+.s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilots ..
 
 .2 Recursive deletion revisited ..
 
@@ -185,12 +187,11 @@ other objects?
 
 .s com.db4o.f1.chapter2.StructuredExample#deleteDeepRevisited ..
 
-.? net  .s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilotsPredicate +{} -run ..s ..?
-.s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilotsNative ..
+.s com.db4o.f1.chapter2.StructuredExample#retrieveAllPilots ..
 
 Houston, we have a problem - and there's no simple solution at hand. Currently ._
 db4o does  .b not ..  check whether objects to be deleted are referenced anywhere ._
-else, so please be very careful when activating this feature.
+else, so please be very careful when using this feature.
 
 Let's clear our database for the next chapter.
 

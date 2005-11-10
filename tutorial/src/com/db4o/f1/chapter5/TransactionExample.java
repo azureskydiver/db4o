@@ -35,7 +35,7 @@ public class TransactionExample extends Util {
     }
 
     public static void listAllCars(ObjectContainer db) {
-        ObjectSet result=db.get(new Car(null));
+        ObjectSet result=db.get(Car.class);
         listResult(result);
     }
     

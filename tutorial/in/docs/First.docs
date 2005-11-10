@@ -57,10 +57,20 @@ of our results:
 
 To retrieve all pilots from our database, we provide an 'empty' prototype:
 
-.s com.db4o.f1.chapter1.FirstStepsExample#retrieveAllPilots ..
+.s com.db4o.f1.chapter1.FirstStepsExample#retrieveAllPilotsQBE ..
 
 Note that we specify 0 points, but our results were not constrained to only those Pilots ._
 with 0 points; 0 is the default value for int fields.
+
+db4o also supplies a shortcut to retrieve all instances of a class:
+
+.s com.db4o.f1.chapter1.FirstStepsExample#retrieveAllPilots ..
+
+For  .? java JDK 5 ..? .? net .NET 2.0 ..?  there also is a generics shortcut, using the ._
+query method:
+
+.? java .c List <Pilot> pilots = db.query(Pilot.class); ..c ..?
+.? net .c IList <Pilot> pilots = db.query<Pilot>(typeof(Pilot)); ..c ..?
 
 To query for a pilot by name:
 
@@ -69,6 +79,7 @@ To query for a pilot by name:
 And to query for Pilots with a specific number of points:
 
 .s com.db4o.f1.chapter1.FirstStepsExample#retrievePilotByExactPoints ..
+
 
 Of course there's much more to db4o queries. They will be covered in more depth in later chapters.
 

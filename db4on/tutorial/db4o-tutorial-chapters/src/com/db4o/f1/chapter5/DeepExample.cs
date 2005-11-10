@@ -50,7 +50,7 @@ namespace com.db4o.f1.chapter5
         
         public static void takeManySnapshots(ObjectContainer db)
         {
-            ObjectSet result = db.get(new Car(null));
+            ObjectSet result = db.get(typeof(Car));
             Car car = (Car)result.next();
             for(int i=0; i<5; i++)
             {
@@ -70,7 +70,7 @@ namespace com.db4o.f1.chapter5
         
         public static void retrieveSnapshotsSequentially(ObjectContainer db)
         {
-            ObjectSet result = db.get(new Car(null));
+            ObjectSet result = db.get(typeof(Car));
             Car car = (Car)result.next();
             SensorReadout readout = car.GetHistory();
             while (readout != null)
@@ -82,7 +82,7 @@ namespace com.db4o.f1.chapter5
         
         public static void retrieveSnapshotsSequentiallyImproved(ObjectContainer db)
         {
-            ObjectSet result = db.get(new Car(null));
+            ObjectSet result = db.get(typeof(Car));
             Car car = (Car)result.next();
             SensorReadout readout = car.GetHistory();
             while (readout != null)

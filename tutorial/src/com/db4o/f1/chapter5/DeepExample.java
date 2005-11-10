@@ -44,7 +44,7 @@ public class DeepExample extends Util {
     }
     
     public static void takeManySnapshots(ObjectContainer db) {
-        ObjectSet result=db.get(new Car(null));
+        ObjectSet result=db.get(Car.class);
         Car car=(Car)result.next();
         for(int i=0;i<5;i++) {
             car.snapshot();
@@ -61,7 +61,7 @@ public class DeepExample extends Util {
 
     public static void retrieveSnapshotsSequentially(
             ObjectContainer db) {
-        ObjectSet result=db.get(new Car(null));
+        ObjectSet result=db.get(Car.class);
         Car car=(Car)result.next();
         SensorReadout readout=car.getHistory();
         while(readout!=null) {
@@ -72,7 +72,7 @@ public class DeepExample extends Util {
     
     public static void retrieveSnapshotsSequentiallyImproved(
             ObjectContainer db) {
-        ObjectSet result=db.get(new Car(null));
+        ObjectSet result=db.get(Car.class);
         Car car=(Car)result.next();
         SensorReadout readout=car.getHistory();
         while(readout!=null) {

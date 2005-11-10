@@ -129,7 +129,7 @@ public class QueryExample extends Util {
     }
 
     public static void clearDatabase(ObjectContainer db) {
-        ObjectSet result=db.get(new Pilot(null,0));
+        ObjectSet result=db.get(Pilot.class);
         while(result.hasNext()) {
             db.delete(result.next());
         }

@@ -41,7 +41,7 @@ namespace com.db4o.f1.chapter5
     
         public static void listAllCars(ObjectContainer db)
         {
-            ObjectSet result = db.get(new Car(null));
+            ObjectSet result = db.get(typeof(Car));
             listResult(result);
         }
         
