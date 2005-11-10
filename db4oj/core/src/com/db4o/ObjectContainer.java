@@ -158,23 +158,25 @@ public interface ObjectContainer {
     public ObjectSet get (Object template);
     
     /**
-     * factory method to create a new {@link Query Query} object.
+     * creates a new S.O.D.A. {@link Query Query}.
      * <br><br>
-     * Use {@link #get get(Object template)} for
-     * simple Query-By-Example.
+     * Use {@link #get get(Object template)} for simple Query-By-Example.<br><br>
+     * {@link #query(Predicate) Native queries } are the recommended main db4o query
+     * interface. 
      * <br><br>
      * @return a new Query object
      */
     public Query query ();
     
-    
     /**
-     * 
-     * @param predicate
-     * @return
+     * Native Query Interface.
+     * Native Queries allow typesafe, compile-time checked and refactorable querying,
+     * following object-oriented principles. Detailed documentation can be found in
+     * the {@link Predicate} class.  
+     * @param predicate the {@link Predicate} containing the native query expression.
+     * @return the {@link ObjectSet} returned by the query.
      */
     public ObjectSet query(Predicate predicate);
-    
     
     /**
      * rolls back the running transaction.

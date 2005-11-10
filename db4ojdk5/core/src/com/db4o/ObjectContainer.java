@@ -156,15 +156,23 @@ public interface ObjectContainer {
     public ObjectSet get (Object template);
     
     /**
-     * factory method to create a new {@link Query Query} object for S.O.D.A. queries.
+     * creates a new S.O.D.A. {@link Query Query}.
      * <br><br>
-     * Use {@link #get get(Object template)} for simple Query-By-Example. 
+     * Use {@link #get get(Object template)} for simple Query-By-Example.<br><br>
      * {@link #query(Predicate) Native queries } are the recommended main db4o query
      * interface. 
      * <br><br>
      * @return a new Query object
      */
     public Query query ();
+    
+    /**
+     * queries for all instances of a class.
+     * @param clazz the class to query for.
+     * @return the {@link ObjectSet} returned by the query.
+     */
+    public <TargetType> ObjectSet <TargetType> query(Class<TargetType> clazz);
+
     
     /**
      * Native Query Interface.
@@ -174,7 +182,7 @@ public interface ObjectContainer {
      * @param predicate the {@link Predicate} containing the native query expression.
      * @return the {@link ObjectSet} returned by the query.
      */
-    public <TargetType> ObjectSet<TargetType> query(Predicate<TargetType> predicate);
+    public <TargetType> ObjectSet <TargetType> query(Predicate<TargetType> predicate);
     
     /**
      * rolls back the running transaction.

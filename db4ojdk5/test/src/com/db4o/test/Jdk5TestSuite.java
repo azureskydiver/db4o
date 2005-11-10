@@ -9,10 +9,13 @@ public class Jdk5TestSuite extends TestSuite{
             Jdk5EnumTest.class,
             Jdk5DeleteEnum.class,
             
+            CallConstructors.class,
+            EmptyObjectSet.class,
+            FulltextIndex.class,
             ObjectSetAsIterator.class,
             ObjectSetAsList.class,
-            CallConstructors.class,
-            FulltextIndex.class
+            QueryForClass.class,
+            
         };
     }
 }
