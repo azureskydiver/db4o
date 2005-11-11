@@ -132,7 +132,7 @@ namespace Cecil.FlowAnalysis.CodeStructure
 				return;
 			}
 
-			Write(value == null ? "null" : value.ToString().ToLower());
+			Write(value == null ? "null" : CecilFormatter.ToInvariantCultureString(value).ToLower());
 		}
 
 		public override void Visit(IUnaryExpression node)

@@ -46,7 +46,8 @@ namespace com.db4o.inside.ix
 
 		internal virtual void add(com.db4o.foundation.Visitor4 visitor)
 		{
-			if (i_comparisonResult == 0 && i_traverser.i_take[1])
+			if (i_comparisonResult == 0 && i_traverser.i_take[com.db4o.inside.ix.IxTraverser.
+				EQUAL])
 			{
 				i_tree.visit(visitor, i_lowerAndUpperMatch);
 			}
@@ -353,7 +354,7 @@ namespace com.db4o.inside.ix
 
 		public virtual void visit(object a_object)
 		{
-			((com.db4o.inside.ix.IxTree)a_object).visit(_visitor, null);
+			((com.db4o.foundation.Visitor4)a_object).visit(_visitor);
 		}
 	}
 }

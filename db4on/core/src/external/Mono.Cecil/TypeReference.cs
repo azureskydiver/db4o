@@ -39,7 +39,7 @@ namespace Mono.Cecil {
 		string m_namespace;
 		bool m_fullNameDiscarded;
 		string m_fullName;
-		bool m_isValueType;
+		protected bool m_isValueType;
 		TypeReference m_decType;
 		protected IMetadataScope m_scope;
 		MetadataToken m_token;
@@ -99,8 +99,10 @@ namespace Mono.Cecil {
 
 		public GenericParameterCollection GenericParameters {
 			get {
-				if (m_genparams == null)
+				if (m_genparams == null) {
 					m_genparams = new GenericParameterCollection (this);
+					m_genparams.OnGenericParameterAdded += new GenericParameterEventHandler (OnGenericParameterAdded);
+				}
 
 				return m_genparams;
 			}
@@ -148,6 +150,16 @@ namespace Mono.Cecil {
 			this (name, ns, scope)
 		{
 			this.IsValueType = valueType;
+		}
+
+		internal void AttachToScope (IMetadataScope scope)
+		{
+			m_scope = scope;
+		}
+
+		void OnGenericParameterAdded (object sender, GenericParameterEventArgs ea)
+		{
+			ea.GenericParameter.Position = m_genparams.Count + 1;
 		}
 
 		public virtual void Accept (IReflectionVisitor visitor)

@@ -138,7 +138,7 @@ namespace Mono.Cecil.Cil {
 					instr.Operand = new Label (Convert.ToInt32 (br.BaseStream.Position - start + brtgt));
 					break;
 				case OperandType.ShortInlineI :
-					if (op.Equals (OpCodes.Ldc_I4_S))
+					if (op == OpCodes.Ldc_I4_S)
 						instr.Operand = br.ReadSByte ();
 					else
 						instr.Operand = br.ReadByte ();
@@ -150,6 +150,8 @@ namespace Mono.Cecil.Cil {
 					instr.Operand = GetParameter (body, (int) br.ReadByte ());
 					break;
 				case OperandType.InlineSig :
+					instr.Operand = GetCallSiteAt (br.ReadInt32 (), context);
+					break;
 				case OperandType.InlineI :
 					instr.Operand = br.ReadInt32 ();
 					break;
@@ -323,6 +325,26 @@ namespace Mono.Cecil.Cil {
 
 			if ((flags & (byte) MethodDataSection.MoreSects) != 0)
 				ReadSection (body, br, instructions);
+		}
+
+		CallSite GetCallSiteAt (int token, GenericContext context)
+		{
+			StandAloneSigTable sasTable = m_root.Streams.TablesHeap [typeof (StandAloneSigTable)] as StandAloneSigTable;
+			MethodSig ms = m_reflectReader.SigReader.GetStandAloneMethodSig (
+				sasTable [(int) GetRid (token) - 1].Signature);
+			CallSite cs = new CallSite (ms.HasThis, ms.ExplicitThis,
+				ms.MethCallConv, m_reflectReader.GetMethodReturnType (ms, context));
+			cs.MetadataToken = new MetadataToken (TokenType.Signature, GetRid (token));
+
+			for (int i = 0; i < ms.ParamCount; i++) {
+				Param p = ms.Parameters [i];
+				cs.Parameters.Add (m_reflectReader.BuildParameterDefinition (
+						string.Concat ("A_", i),
+						i, (ParamAttributes) 0,
+						p, context));
+			}
+
+			return cs;
 		}
 
 		public override void VisitVariableDefinitionCollection (VariableDefinitionCollection variables)

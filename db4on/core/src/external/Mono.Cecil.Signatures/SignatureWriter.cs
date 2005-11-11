@@ -90,6 +90,13 @@ namespace Mono.Cecil.Signatures {
 			return GetPointer ();
 		}
 
+		public uint AddMethodSpec (MethodSpec ms)
+		{
+			m_sigWriter.Empty ();
+			Write (ms);
+			return GetPointer ();
+		}
+
 		public uint AddMarshalSig (MarshalSig ms)
 		{
 			m_sigWriter.Empty ();
@@ -119,6 +126,8 @@ namespace Mono.Cecil.Signatures {
 		public override void VisitMethodDefSig (MethodDefSig methodDef)
 		{
 			m_sigWriter.Write (methodDef.CallingConvention);
+			if (methodDef.GenericParameterCount > 0)
+				Write (methodDef.GenericParameterCount);
 			Write (methodDef.ParamCount);
 			Write (methodDef.RetType);
 			Write (methodDef.Parameters);
@@ -238,12 +247,37 @@ namespace Mono.Cecil.Signatures {
 			case ElementType.SzArray :
 				Write (((SZARRAY) t).Type);
 				break;
+			case ElementType.Var :
+				Write (((VAR) t).Index);
+				break;
+			case ElementType.MVar :
+				Write (((MVAR) t).Index);
+				break;
+			case ElementType.GenericInst :
+				GENERICINST gi = t as GENERICINST;
+				Write (gi.ValueType ? ElementType.ValueType : ElementType.Class);
+				Write ((int) Utilities.CompressMetadataToken (
+						CodedIndex.TypeDefOrRef, gi.Type));
+				Write (gi.Signature);
+				break;
 			}
 		}
 
 		void Write (TypeSpec ts)
 		{
 			Write (ts.Type);
+		}
+
+		void Write (MethodSpec ms)
+		{
+			Write (ms.Signature);
+		}
+
+		void Write (GenericInstSignature gis)
+		{
+			Write (gis.Arity);
+			for (int i = 0; i < gis.Arity; i++)
+				Write (gis.Types [i]);
 		}
 
 		void Write (Param p)
@@ -405,14 +439,11 @@ namespace Mono.Cecil.Signatures {
 				writer.Write ((long) elem.Value);
 				break;
 			case ElementType.String :
-				string s = (string) elem.Value;
-				Utilities.WriteCompressedInteger (writer, s.Length);
-				writer.Write (Encoding.UTF8.GetBytes (s));
-				break;
 			case ElementType.Type :
-				string t = (string) elem.Value;
-				Utilities.WriteCompressedInteger (writer, t.Length);
-				writer.Write (Encoding.UTF8.GetBytes (t));
+				string s = (string) elem.Value;
+				byte [] data = Encoding.UTF8.GetBytes (s);
+				Utilities.WriteCompressedInteger (writer, data.Length);
+				writer.Write (data);
 				break;
 			default :
 				throw new NotImplementedException ("WriteElem " + elem.FieldOrPropType.ToString ());

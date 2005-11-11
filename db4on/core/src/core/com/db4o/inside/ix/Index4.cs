@@ -15,13 +15,16 @@ namespace com.db4o.inside.ix
 
 		private com.db4o.inside.ix.IxFileRangeReader _fileRangeReader;
 
+		internal readonly bool _nullHandling;
+
 		public Index4(com.db4o.Transaction systemTrans, com.db4o.inside.ix.Indexable4 handler
-			, com.db4o.MetaIndex metaIndex)
+			, com.db4o.MetaIndex metaIndex, bool nullHandling)
 		{
 			_metaIndex = metaIndex;
 			_handler = handler;
 			_globalIndexTransaction = new com.db4o.inside.ix.IndexTransaction(systemTrans, this
 				);
+			_nullHandling = nullHandling;
 			createGlobalFileRange();
 		}
 
@@ -148,14 +151,14 @@ namespace com.db4o.inside.ix
 			int[] entries = new int[] { 0 };
 			if (root != null)
 			{
-				root.traverse(new _AnonymousInnerClass172(this, entries, writer));
+				root.traverse(new _AnonymousInnerClass175(this, entries, writer));
 			}
 			return entries[0];
 		}
 
-		private sealed class _AnonymousInnerClass172 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass175 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass172(Index4 _enclosing, int[] entries, com.db4o.YapWriter
+			public _AnonymousInnerClass175(Index4 _enclosing, int[] entries, com.db4o.YapWriter
 				 writer)
 			{
 				this._enclosing = _enclosing;
@@ -203,7 +206,7 @@ namespace com.db4o.inside.ix
 							clonedTree = clonedTree.deepClone(ft);
 						}
 						com.db4o.Tree[] tree = { clonedTree };
-						ft.getRoot().traverseFromLeaves((new _AnonymousInnerClass220(this, ft, tree)));
+						ft.getRoot().traverseFromLeaves((new _AnonymousInnerClass223(this, ft, tree)));
 						ft.setRoot(tree[0]);
 					}
 				}
@@ -219,9 +222,9 @@ namespace com.db4o.inside.ix
 			}
 		}
 
-		private sealed class _AnonymousInnerClass220 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass223 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass220(Index4 _enclosing, com.db4o.inside.ix.IndexTransaction
+			public _AnonymousInnerClass223(Index4 _enclosing, com.db4o.inside.ix.IndexTransaction
 				 ft, com.db4o.Tree[] tree)
 			{
 				this._enclosing = _enclosing;

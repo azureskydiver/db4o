@@ -109,6 +109,21 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow
 			PushLiteral(instruction.Operand);
 		}
 
+		public override void OnLdc_R4(IInstruction instruction)
+		{
+			PushLiteral(instruction.Operand);
+		}
+
+		public override void OnLdc_R8(IInstruction instruction)
+		{
+			PushLiteral(instruction.Operand);
+		}
+
+		public override void OnLdc_I8(IInstruction instruction)
+		{
+			PushLiteral(instruction.Operand);
+		}
+
 		public override void OnLdc_I4(IInstruction instruction)
 		{
 			PushLiteral(instruction.Operand);
@@ -249,6 +264,11 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow
 		public override void OnBle(IInstruction instruction)
 		{
 			PushBinaryExpression(BinaryOperator.LessThanOrEqual);
+		}
+
+		public override void OnBgt(IInstruction instruction)
+		{
+			PushBinaryExpression(BinaryOperator.GreaterThan);
 		}
 
 		public override void OnBge(IInstruction instruction)

@@ -17,6 +17,11 @@ namespace com.db4o.inside.ix
 			handler().prepareComparison(handler().comparableObject(trans(), i_value));
 		}
 
+		public override void visit(object obj)
+		{
+			((com.db4o.foundation.Visitor4)obj).visit(i_parentID);
+		}
+
 		public override void visit(com.db4o.foundation.Visitor4 visitor, int[] lowerAndUpperMatch
 			)
 		{

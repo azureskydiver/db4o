@@ -27,7 +27,6 @@ namespace Cecil.FlowAnalysis.CodeStructure
 {
 	using System;
 	
-	[Serializable]
 	public enum CodeElementType
 	{
 		MethodInvocationExpression,

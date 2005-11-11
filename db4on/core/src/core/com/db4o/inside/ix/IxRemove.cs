@@ -26,6 +26,10 @@ namespace com.db4o.inside.ix
 		{
 		}
 
+		public override void visit(object obj)
+		{
+		}
+
 		public override void visit(com.db4o.foundation.Visitor4 visitor, int[] lowerAndUpperMatch
 			)
 		{

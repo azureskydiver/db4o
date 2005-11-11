@@ -84,6 +84,11 @@ namespace com.db4o.inside.ix
 			private readonly j4o.lang.StringBuffer sb;
 		}
 
+		public override void visit(object obj)
+		{
+			visit((com.db4o.foundation.Visitor4)obj, null);
+		}
+
 		public override void visit(com.db4o.foundation.Visitor4 visitor, int[] lowerUpper
 			)
 		{
