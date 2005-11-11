@@ -29,27 +29,32 @@ namespace com.db4o.inside.query
 	{	
         private static string _lastAssemblyName;
         private static IAssemblyDefinition _lastAssemblyCache;
-        private static Object _lastAssemblyLock = new Object();
+        private static object _lastAssemblyLock = new object();
 
 		public static Expression FromMethod(System.Reflection.MethodInfo method)
 		{
 			if (method == null) throw new ArgumentNullException("method");
 
-            IAssemblyDefinition assembly = null;
-            string location = null;
-			
-            lock(_lastAssemblyLock){
-                location = GetAssemblyLocation(method);
-                assembly = (location == _lastAssemblyName) ? _lastAssemblyCache : AssemblyFactory.GetAssembly(location);
-                _lastAssemblyCache = assembly;
-                _lastAssemblyName = location;
-            }
-
+			string location = GetAssemblyLocation(method);
+            IAssemblyDefinition assembly = GetAssembly(location);            
             ITypeDefinition type = FindTypeDefinition(assembly.MainModule, method.DeclaringType);
 			if (null == type) UnsupportedPredicate(string.Format("Unable to load type '{0}' from assembly '{1}'", method.DeclaringType.FullName, location));
 			IMethodDefinition methodDef = type.Methods.GetMethod(method.Name,  GetParameterTypes(method));
 			if (null == methodDef) UnsupportedPredicate(string.Format("Unable to load the definition of '{0}' from assembly '{1}'", method, location));
 			return FromMethodDefinition(methodDef);
+		}
+		
+		private static IAssemblyDefinition GetAssembly(string location)
+		{
+            lock (_lastAssemblyLock)
+			{
+                IAssemblyDefinition assembly = (location == _lastAssemblyName)
+					? _lastAssemblyCache
+					: AssemblyFactory.GetAssembly(location);
+                _lastAssemblyCache = assembly;
+                _lastAssemblyName = location;
+				return assembly;
+            }
 		}
 
 		private static Type[] GetParameterTypes(MethodInfo method)
