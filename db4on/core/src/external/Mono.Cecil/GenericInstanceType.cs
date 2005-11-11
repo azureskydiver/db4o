@@ -29,17 +29,11 @@
 
 namespace Mono.Cecil {
 
-	using System;
 	using System.Text;
 
-	public sealed class GenericInstanceType : TypeReference, IGenericInstanceType {
+	public sealed class GenericInstanceType : TypeSpecification, IGenericInstanceType {
 
-		TypeReference m_elementType;
 		GenericArgumentCollection m_arguments;
-
-		public TypeReference ElementType {
-			get { return m_elementType; }
-		}
 
 		public int Arity {
 			get { return m_arguments.Count; }
@@ -49,14 +43,8 @@ namespace Mono.Cecil {
 			get { return m_arguments; }
 		}
 
-		public override string Name {
-			get { return m_elementType.FullName; }
-			set { throw new InvalidOperationException (); }
-		}
-
-		public override string Namespace {
-			get { return string.Empty; }
-			set { throw new InvalidOperationException (); }
+		public override bool IsValueType {
+			set { m_isValueType = value; }
 		}
 
 		public override string FullName {
@@ -74,10 +62,8 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public GenericInstanceType (TypeReference elementType) :
-			base (string.Empty, string.Empty)
+		public GenericInstanceType (TypeReference elementType) : base (elementType)
 		{
-			m_elementType = elementType;
 			m_arguments = new GenericArgumentCollection (this);
 		}
 	}

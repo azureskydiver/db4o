@@ -180,32 +180,62 @@ namespace Mono.Cecil {
 
 		public bool IsAbstract {
 			get { return (m_attributes & TypeAttributes.Abstract) != 0; }
-			set { m_attributes |= value ? TypeAttributes.Abstract : 0; }
+			set {
+				if (value)
+					m_attributes |= TypeAttributes.Abstract;
+				else
+					m_attributes &= ~TypeAttributes.Abstract;
+			}
 		}
 
 		public bool IsBeforeFieldInit {
 			get { return (m_attributes & TypeAttributes.BeforeFieldInit) != 0; }
-			set { m_attributes |= value ? TypeAttributes.BeforeFieldInit : 0; }
+			set {
+				if (value)
+					m_attributes |= TypeAttributes.BeforeFieldInit;
+				else
+					m_attributes &= ~TypeAttributes.BeforeFieldInit;
+			}
 		}
 
 		public bool IsInterface {
 			get { return (m_attributes & TypeAttributes.ClassSemanticMask) == TypeAttributes.Interface; }
-			set { m_attributes |= value ? (TypeAttributes.ClassSemanticMask & TypeAttributes.Interface) : 0; }
+			set {
+				if (value)
+					m_attributes |= (TypeAttributes.ClassSemanticMask & TypeAttributes.Interface);
+				else
+					m_attributes &= ~(TypeAttributes.ClassSemanticMask & TypeAttributes.Interface);
+			}
 		}
 
 		public bool IsRuntimeSpecialName {
 			get { return (m_attributes & TypeAttributes.RTSpecialName) != 0; }
-			set { m_attributes |= value ? TypeAttributes.RTSpecialName : 0; }
+			set {
+				if (value)
+					m_attributes |= TypeAttributes.RTSpecialName;
+				else
+					m_attributes &= ~TypeAttributes.RTSpecialName;
+			}
 		}
 
 		public bool IsSealed {
 			get { return (m_attributes & TypeAttributes.Sealed) != 0; }
-			set { m_attributes |= value ? TypeAttributes.Sealed : 0; }
+			set {
+				if (value)
+					m_attributes |= TypeAttributes.Sealed;
+				else
+					m_attributes &= ~TypeAttributes.Sealed;
+			}
 		}
 
 		public bool IsSpecialName {
 			get { return (m_attributes & TypeAttributes.SpecialName) != 0; }
-			set { m_attributes |= value ? TypeAttributes.SpecialName : 0; }
+			set {
+				if (value)
+					m_attributes |= TypeAttributes.SpecialName;
+				else
+					m_attributes &= ~TypeAttributes.SpecialName;
+			}
 		}
 
 		public bool IsEnum {
@@ -219,29 +249,18 @@ namespace Mono.Cecil {
 			}
 		}
 
-		internal TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module) :
+		internal TypeDefinition (string name, string ns, TypeAttributes attrs) :
 			base (name, ns)
 		{
 			m_hasInfo = false;
 			m_attributes = attrs;
-			m_scope = module;
 		}
 
 		public TypeDefinition (string name, string ns,
-			TypeAttributes attributes, ModuleDefinition module, TypeReference baseType) :
-			this (name, ns, attributes, module)
+			TypeAttributes attributes, TypeReference baseType) :
+			this (name, ns, attributes)
 		{
-			if (baseType.Module != module)
-				baseType = module.Import (baseType);
-
 			this.BaseType = baseType;
-		}
-
-		public TypeDefinition (string name, string ns,
-			TypeAttributes attributes, ModuleDefinition module, Type baseType) :
-		this (name, ns, attributes, module)
-		{
-			this.BaseType = module.Import (baseType);
 		}
 
 		void OnMethodAdded (object sender, MethodDefinitionEventArgs ea)
@@ -345,8 +364,7 @@ namespace Mono.Cecil {
 			TypeDefinition nt = new TypeDefinition (
 				type.Name,
 				type.Namespace,
-				type.Attributes,
-				type.Module);
+				type.Attributes);
 
 			nt.BaseType = helper == null ? type.BaseType : helper.ImportTypeReference (type.BaseType);
 
@@ -381,6 +399,7 @@ namespace Mono.Cecil {
 		{
 			visitor.VisitTypeDefinition (this);
 
+			this.GenericParameters.Accept (visitor);
 			this.Interfaces.Accept (visitor);
 			this.Constructors.Accept (visitor);
 			this.Methods.Accept (visitor);

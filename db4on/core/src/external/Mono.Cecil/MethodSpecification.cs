@@ -1,5 +1,5 @@
 //
-// ISecurityDeclarationCollection.cs
+// MethodSpecification.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -29,38 +29,47 @@
 namespace Mono.Cecil {
 
 	using System;
-	using System.Collections;
 
-	public class SecurityDeclarationEventArgs : EventArgs {
+	public abstract class MethodSpecification : MethodReference, IMethodSpecification {
 
-		private SecurityDeclaration m_item;
+		MethodReference m_elementMethod;
 
-		public SecurityDeclaration SecurityDeclaration {
-			get { return m_item; }
+		public MethodReference ElementMethod {
+			get { return m_elementMethod; }
+			set { m_elementMethod = value; }
 		}
 
-		public SecurityDeclarationEventArgs (SecurityDeclaration item)
+		public override MethodCallingConvention CallingConvention {
+			get { return m_elementMethod.CallingConvention; }
+			set { throw new InvalidOperationException (); }
+		}
+
+		public override bool HasThis {
+			get { return m_elementMethod.HasThis; }
+			set { throw new InvalidOperationException (); }
+		}
+
+		public override bool ExplicitThis {
+			get { return m_elementMethod.ExplicitThis; }
+			set { throw new InvalidOperationException (); }
+		}
+
+		public override MethodReturnType ReturnType {
+			get { return m_elementMethod.ReturnType; }
+			set { throw new InvalidOperationException (); }
+		}
+
+		public override ParameterDefinitionCollection Parameters {
+			get { return m_elementMethod.Parameters; }
+		}
+
+		public override GenericParameterCollection GenericParameters {
+			get { return m_elementMethod.GenericParameters; }
+		}
+
+		internal MethodSpecification (MethodReference elemMethod) : base (string.Empty)
 		{
-			m_item = item;
+			m_elementMethod = elemMethod;
 		}
-	}
-
-	public delegate void SecurityDeclarationEventHandler (
-		object sender, SecurityDeclarationEventArgs ea);
-
-	public interface ISecurityDeclarationCollection : ICollection, IReflectionVisitable {
-
-		SecurityDeclaration this [SecurityAction action] { get; }
-
-		IHasSecurity Container { get; }
-
-		event SecurityDeclarationEventHandler OnSecurityDeclarationAdded;
-		event SecurityDeclarationEventHandler OnSecurityDeclarationRemoved;
-
-		void Add (SecurityDeclaration value);
-		void Clear ();
-		bool Contains (SecurityAction action);
-		bool Contains (SecurityDeclaration value);
-		void Remove (SecurityAction value);
 	}
 }

@@ -45,7 +45,11 @@ namespace Mono.Cecil.Metadata {
 			if (m_cultures != null)
 				return;
 
+#if CF_1_0
+			CultureInfo [] cultures = new CultureInfo[0];
+#else
 			CultureInfo [] cultures = CultureInfo.GetCultures (CultureTypes.AllCultures);
+#endif
 			m_cultures = new Hashtable (cultures.Length + 2);
 
 			foreach (CultureInfo ci in cultures)

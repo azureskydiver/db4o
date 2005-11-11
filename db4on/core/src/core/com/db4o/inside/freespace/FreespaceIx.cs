@@ -13,7 +13,7 @@ namespace com.db4o.inside.freespace
 		internal FreespaceIx(com.db4o.YapFile file, com.db4o.MetaIndex metaIndex)
 		{
 			_index = new com.db4o.inside.ix.Index4(file.getSystemTransaction(), new com.db4o.YInt
-				(file), metaIndex);
+				(file), metaIndex, false);
 			_indexTrans = _index.globalIndexTransaction();
 		}
 

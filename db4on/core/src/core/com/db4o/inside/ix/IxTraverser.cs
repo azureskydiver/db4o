@@ -19,13 +19,13 @@ namespace com.db4o.inside.ix
 
 		internal bool[] i_take;
 
-		private const int SMALLER = 0;
+		public const int NULLS = 0;
 
-		private const int EQUAL = 1;
+		public const int SMALLER = 1;
 
-		private const int GREATER = 2;
+		public const int EQUAL = 2;
 
-		private const int NULLS = 3;
+		public const int GREATER = 3;
 
 		private void add(com.db4o.foundation.Visitor4 visitor, com.db4o.inside.ix.IxPath 
 			a_previousPath, com.db4o.inside.ix.IxPath a_great, com.db4o.inside.ix.IxPath a_small
@@ -122,16 +122,42 @@ namespace com.db4o.inside.ix
 			addAll(visitor, a_path.i_tree.i_subsequent);
 		}
 
+		private com.db4o.inside.ix.NIxPath createNIxPath(com.db4o.inside.ix.NIxPathNode head
+			, bool takePreceding, bool takeMatches, bool takeSubsequent, int pathType)
+		{
+			com.db4o.inside.ix.NIxPath np = new com.db4o.inside.ix.NIxPath(head, takePreceding
+				, takeMatches, takeSubsequent, pathType);
+			return np;
+		}
+
 		public virtual com.db4o.inside.ix.NIxPaths convert()
 		{
 			com.db4o.inside.ix.NIxPaths res = new com.db4o.inside.ix.NIxPaths();
-			res.add(new com.db4o.inside.ix.NIxPath(i_smallHead.convert(), i_take[SMALLER], i_take
-				[EQUAL]));
-			res.add(new com.db4o.inside.ix.NIxPath(i_greatHead.convert(), i_take[EQUAL], i_take
-				[GREATER]));
-			com.db4o.inside.ix.IxPath nullPath = findNullPath();
-			res.add(new com.db4o.inside.ix.NIxPath(i_greatHead.convert(), i_take[NULLS], i_take
-				[SMALLER]));
+			if (i_take[NULLS] || i_take[SMALLER] || i_take[EQUAL])
+			{
+				com.db4o.inside.ix.NIxPath smaller = createNIxPath(i_smallHead.convert(), i_take[
+					SMALLER], i_take[EQUAL], i_take[GREATER], SMALLER);
+				res.add(smaller);
+			}
+			if (i_take[EQUAL] || i_take[GREATER])
+			{
+				com.db4o.inside.ix.NIxPath greater = createNIxPath(i_greatHead.convert(), i_take[
+					SMALLER], i_take[EQUAL], i_take[GREATER], GREATER);
+				res.add(greater);
+			}
+			if (i_take[SMALLER] || i_take[NULLS])
+			{
+				if (i_smallHead != null)
+				{
+					if (i_smallHead.i_tree.index()._nullHandling)
+					{
+						com.db4o.inside.ix.IxPath nullPath = findNullPath();
+						com.db4o.inside.ix.NIxPath np = createNIxPath(nullPath.convert(), i_take[NULLS], 
+							i_take[NULLS], i_take[SMALLER], NULLS);
+						res.add(np);
+					}
+				}
+			}
 			return res;
 		}
 
@@ -350,20 +376,20 @@ namespace com.db4o.inside.ix
 				i_smallTail = i_smallHead;
 				findBoth();
 				int span = 0;
-				if (i_take[1])
+				if (i_take[EQUAL])
 				{
 					span += countSpan(i_greatHead, i_greatHead.i_next, i_smallHead.i_next);
 				}
-				if (i_take[0])
+				if (i_take[SMALLER])
 				{
 					com.db4o.inside.ix.IxPath head = i_smallHead;
 					while (head != null)
 					{
-						span += head.countPreceding(i_take[3]);
+						span += head.countPreceding(i_take[NULLS]);
 						head = head.i_next;
 					}
 				}
-				if (i_take[2])
+				if (i_take[GREATER])
 				{
 					com.db4o.inside.ix.IxPath head = i_greatHead;
 					while (head != null)
@@ -380,7 +406,8 @@ namespace com.db4o.inside.ix
 		public virtual int findBoundsExactMatch(object a_constraint, com.db4o.inside.ix.IxTree
 			 a_tree)
 		{
-			i_take = new bool[] { false, true, false, false };
+			i_take = new bool[] { false, false, false, false };
+			i_take[EQUAL] = true;
 			return findBounds(a_constraint, a_tree);
 		}
 

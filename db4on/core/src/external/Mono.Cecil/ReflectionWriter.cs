@@ -64,6 +64,7 @@ namespace Mono.Cecil {
 			set {
 				m_structureWriter = value;
 				m_mdWriter = new MetadataWriter (
+					m_mod.Assembly,
 					m_mod.Image.MetadataRoot,
 					m_structureWriter.Assembly.Kind,
 					m_mod.Assembly.Runtime,
@@ -151,6 +152,17 @@ namespace Mono.Cecil {
 				return new MetadataToken (TokenType.TypeRef, 0);
 		}
 
+		public MetadataToken GetMethodSpecToken (GenericInstanceMethod gim)
+		{
+			MethodSpecTable msTable = m_tableWriter.GetMethodSpecTable ();
+			MethodSpecRow msRow = m_rowWriter.CreateMethodSpecRow (
+				gim.ElementMethod.MetadataToken,
+				m_sigWriter.AddMethodSpec (GetMethodSpecSig (gim)));
+			msTable.Rows.Add (msRow);
+			gim.MetadataToken = new MetadataToken (TokenType.MethodSpec, (uint) msTable.Rows.Count);
+			return gim.MetadataToken;
+		}
+
 		public override void VisitModuleDefinition (ModuleDefinition mod)
 		{
 			// ensure that everything is loaded before writing
@@ -169,7 +181,7 @@ namespace Mono.Cecil {
 
 			if (types [Constants.ModuleType] == null)
 				types.Add (new TypeDefinition (
-						Constants.ModuleType, string.Empty, (TypeAttributes) 0, m_mod));
+						Constants.ModuleType, string.Empty, (TypeAttributes) 0));
 
 			foreach (ITypeDefinition t in types)
 				orderedTypes.Add (t);
@@ -288,6 +300,38 @@ namespace Mono.Cecil {
 				member.MetadataToken = new MetadataToken (
 					TokenType.MemberRef, (uint) mrTable.Rows.Count);
 				}
+		}
+
+		public override void VisitGenericParameterCollection (GenericParameterCollection parameters)
+		{
+			if (parameters.Count == 0)
+				return;
+
+			GenericParamTable gpTable = m_tableWriter.GetGenericParamTable ();
+			GenericParamConstraintTable gpcTable = m_tableWriter.GetGenericParamConstraintTable ();
+
+			for (int i = 0; i < parameters.Count; i++) {
+
+				GenericParameter gp = parameters [i];
+				GenericParamRow gpRow = m_rowWriter.CreateGenericParamRow (
+					(ushort) i,
+					gp.Attributes,
+					gp.Owner.MetadataToken,
+					m_mdWriter.AddString (gp.Name));
+
+				gpTable.Rows.Add (gpRow);
+
+				if (gp.Constraints.Count == 0)
+					continue;
+
+				foreach (TypeReference constraint in gp.Constraints) {
+					GenericParamConstraintRow gpcRow = m_rowWriter.CreateGenericParamConstraintRow (
+						(uint) gpTable.Rows.Count,
+						GetTypeDefOrRefToken (constraint));
+
+					gpcTable.Rows.Add (gpcRow);
+				}
+			}
 		}
 
 		public override void VisitInterfaceCollection (InterfaceCollection interfaces)
@@ -500,21 +544,26 @@ namespace Mono.Cecil {
 			m_propertyIndex++;
 		}
 
+		private MetadataToken GetMetadataToken (IHasSecurity container)
+		{
+			if (container is IAssemblyDefinition)
+				return new MetadataToken (TokenType.Assembly, 1);
+
+			IMetadataTokenProvider provider = (container as IMetadataTokenProvider);
+			if (container == null)
+				throw new ReflectionException ("Unknown Security Declaration parent");
+
+			return provider.MetadataToken;
+		}
+
 		public override void VisitSecurityDeclarationCollection (SecurityDeclarationCollection secDecls)
 		{
 			if (secDecls.Count == 0)
 				return;
 
+			MetadataToken parent = GetMetadataToken (secDecls.Container);
 			DeclSecurityTable dsTable = m_tableWriter.GetDeclSecurityTable ();
 			foreach (SecurityDeclaration secDec in secDecls) {
-				MetadataToken parent;
-				if (secDecls.Container is IAssemblyDefinition)
-					parent = new MetadataToken (TokenType.Assembly, 1);
-				else if (secDecls.Container is IMetadataTokenProvider)
-					parent = (secDecls.Container as IMetadataTokenProvider).MetadataToken;
-				else
-					throw new ReflectionException ("Unknown Security Declaration parent");
-
 				DeclSecurityRow dsRow = m_rowWriter.CreateDeclSecurityRow (
 					secDec.Action,
 					parent,
@@ -845,7 +894,28 @@ namespace Mono.Cecil {
 				return new SigType (ElementType.TypedByRef);
 			}
 
-			if (type is IArrayType) {
+			if (type is IGenericParameter) {
+				GenericParameter gp = type as GenericParameter;
+				int pos = gp.Owner.GenericParameters.IndexOf (gp);
+				if (gp.Owner is TypeDefinition)
+					return new VAR (pos);
+				else if (gp.Owner is MethodDefinition)
+					return new MVAR (pos);
+				else
+					throw new ReflectionException ("Unkown generic parameter type");
+			} else if (type is GenericInstanceType) {
+				GenericInstanceType git = type as GenericInstanceType;
+				GENERICINST gi = new GENERICINST ();
+				gi.ValueType = git.IsValueType;
+				gi.Type = GetTypeDefOrRefToken (git.ElementType);
+				gi.Signature = new GenericInstSignature ();
+				gi.Signature.Arity = git.Arguments.Count;
+				gi.Signature.Types = new SigType [gi.Signature.Arity];
+				for (int i = 0; i < git.Arguments.Count; i++)
+					gi.Signature.Types [i] = GetSigType (git.Arguments [i]);
+
+				return gi;
+			} else if (type is IArrayType) {
 				IArrayType aryType = type as IArrayType;
 				if (aryType.IsSizedArray) {
 					SZARRAY szary = new SZARRAY ();
@@ -992,6 +1062,11 @@ namespace Mono.Cecil {
 		public MethodDefSig GetMethodDefSig (IMethodDefinition meth)
 		{
 			MethodDefSig sig = new MethodDefSig ();
+			if (meth.GenericParameters.Count > 0) {
+				sig.CallingConvention |= 0x10;
+				sig.GenericParameterCount = meth.GenericParameters.Count;
+			}
+
 			CompleteMethodSig (meth, sig);
 			return sig;
 		}
@@ -1045,6 +1120,17 @@ namespace Mono.Cecil {
 		{
 			TypeSpec ts = new TypeSpec (GetSigType (type));
 			return ts;
+		}
+
+		public MethodSpec GetMethodSpecSig (GenericInstanceMethod gim)
+		{
+			GenericInstSignature gis = new GenericInstSignature ();
+			gis.Arity = gim.Arity;
+			gis.Types = new SigType [gis.Arity];
+			for (int i = 0; i < gis.Arity; i++)
+				gis.Types [i] = GetSigType (gim.Arguments [i]);
+
+			return new MethodSpec (gis);
 		}
 
 		public CustomAttrib GetCustomAttributeSig (ICustomAttribute ca)

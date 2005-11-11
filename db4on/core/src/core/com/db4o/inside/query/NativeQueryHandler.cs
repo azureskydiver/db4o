@@ -1,3 +1,4 @@
+/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 using com.db4o.foundation;
 using com.db4o.nativequery.expr;
 using com.db4o.nativequery.optimization;
@@ -38,6 +39,42 @@ namespace com.db4o.inside.query
 			return configureQuery(predicate).execute();
 		}
 
+#if NET_2_0
+        public virtual System.Collections.Generic.IList<Extent> execute<Extent>(com.db4o.Predicate<Extent> match)
+        {
+            com.db4o.query.Query q = _container.query();
+            q.constrain(typeof(Extent));
+            try
+            {
+                if (OptimizeNativeQueries())
+                {
+					// XXX: check GetDelegateList().Length
+					// only 1 delegate must be allowed
+					// although we could use it as a filter chain
+					// (and)
+                    optimizeQuery(q, match.Target, match.Method);
+                    notifyListeners(match, NativeQueryHandler.DYNOPTIMIZED);
+
+                    return WrapQueryResult<Extent>(q);
+                }
+            }
+            catch (System.Exception e)
+            {
+                OptimizationError(e);
+            }
+            q.constrain(new GenericPredicateEvaluation<Extent>(match));
+            notifyListeners(match, NativeQueryHandler.UNOPTIMIZED);
+
+            return WrapQueryResult<Extent>(q);
+        }
+
+        private static System.Collections.Generic.IList<Extent> WrapQueryResult<Extent>(com.db4o.query.Query q)
+        {
+            com.db4o.inside.query.QueryResult qr = ((QQuery)q).getQueryResult();
+            return new com.db4o.inside.query.GenericObjectSetFacade<Extent>(qr);
+        }
+#endif
+
 		private Query configureQuery(com.db4o.query.Predicate predicate)
 		{
 			Query q = _container.query();
@@ -45,32 +82,42 @@ namespace com.db4o.inside.query
 			
 			try
 			{
-				if (_container.ext().configure().optimizeNativeQueries())
+                if (OptimizeNativeQueries())
 				{
-					optimizeQuery(q, predicate);
+					optimizeQuery(q, predicate, predicate.getFilterMethod().MethodInfo);
 					notifyListeners(predicate, NativeQueryHandler.DYNOPTIMIZED);
 					return q;
 				}
 			}
 			catch (System.Exception e)
 			{
-				// XXX: need to inform the user of the exception
-				// somehow
-				//j4o.lang.JavaSystem.printStackTrace(e);
+                OptimizationError(e);
 			}
 			q.constrain(new com.db4o.inside.query.PredicateEvaluation(predicate));
-			notifyListeners(predicate, NativeQueryHandler.UNOPTIMIZED);
+            notifyListeners(predicate, NativeQueryHandler.UNOPTIMIZED);
 			return q;
 		}
 
-		void optimizeQuery(Query q, Predicate predicate)
+        private static void OptimizationError(System.Exception e)
+        {
+            // XXX: need to inform the user of the exception
+            // somehow
+            //j4o.lang.JavaSystem.printStackTrace(e);
+        }
+
+        private bool OptimizeNativeQueries()
+        {
+            return _container.ext().configure().optimizeNativeQueries();
+        }
+
+		void optimizeQuery(Query q, object predicate, System.Reflection.MethodInfo filterMethod)
 		{
 			// TODO: cache predicate expressions here
-			Expression expression = QueryExpressionBuilder.FromMethod(predicate.getFilterMethod().MethodInfo);
+			Expression expression = QueryExpressionBuilder.FromMethod(filterMethod);
 			new SODAQueryBuilder().optimizeQuery(expression, q, predicate);
 		}
 
-		private void notifyListeners(com.db4o.query.Predicate predicate, string msg)
+		private void notifyListeners(object predicate, string msg)
 		{
 			for (Iterator4 iter = new Iterator4Impl(_listeners
 				); iter.hasNext(); )
@@ -80,5 +127,23 @@ namespace com.db4o.inside.query
 			}
 		}
 	}
+
+#if NET_2_0
+    class GenericPredicateEvaluation<T> : DelegateEnvelope, com.db4o.query.Evaluation
+    {
+        public GenericPredicateEvaluation(com.db4o.Predicate<T> predicate)
+            : base(predicate)
+        {
+        }
+
+        public void evaluate(com.db4o.query.Candidate candidate)
+        {
+            // use starting _ for PascalCase conversion purposes
+            com.db4o.Predicate<T> _predicate = (com.db4o.Predicate<T>)GetContent();
+            candidate.include(_predicate((T)candidate.getObject()));
+        }
+    }
+#endif
 }
+
 

@@ -1,5 +1,5 @@
 //
-// FunctionPointerType.cs
+// CallSite.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -31,7 +31,9 @@ namespace Mono.Cecil {
 	using System;
 	using System.Text;
 
-	public sealed class FunctionPointerType : TypeSpecification, IFunctionPointerType {
+	using Mono.Cecil.Metadata;
+
+	public sealed class CallSite : ICallSite {
 
 		MethodReference m_function;
 
@@ -59,42 +61,29 @@ namespace Mono.Cecil {
 			set { m_function.ReturnType = value; }
 		}
 
-		public override string Name {
-			get { return m_function.Name; }
-			set { throw new InvalidOperationException (); }
+		public MetadataToken MetadataToken {
+			get { return m_function.MetadataToken; }
+			set { m_function.MetadataToken = value; }
 		}
 
-		public override string Namespace {
-			get { return string.Empty; }
-			set { throw new InvalidOperationException (); }
-		}
-
-		public override IMetadataScope Scope {
-			get { return m_function.DeclaringType.Scope; }
-		}
-
-		public override string FullName {
-			get {
-				StringBuilder sb = new StringBuilder ();
-				sb.Append (m_function.Name);
-				sb.Append (" ");
-				sb.Append (m_function.ReturnType.ReturnType.FullName);
-				sb.Append (" *(");
-				for (int i = 0; i < m_function.Parameters.Count; i++) {
-					if (i > 0)
-						sb.Append (",");
-					sb.Append (m_function.Parameters [i].ParameterType.FullName);
-				}
-				sb.Append (")");
-				return sb.ToString ();
-			}
-		}
-
-		public FunctionPointerType (bool hasThis, bool explicitThis, MethodCallingConvention callConv, MethodReturnType retType) :
-			base (retType.ReturnType)
+		public CallSite (bool hasThis, bool explicitThis, MethodCallingConvention callConv, MethodReturnType retType)
 		{
-			m_function = new MethodReference ("method", hasThis, explicitThis, callConv);
+			m_function = new MethodReference (string.Empty, hasThis, explicitThis, callConv);
 			m_function.ReturnType = retType;
+		}
+
+		public override string ToString ()
+		{
+			StringBuilder sb = new StringBuilder ();
+			sb.Append (m_function.ReturnType.ReturnType.FullName);
+			sb.Append ("(");
+			for (int i = 0; i < m_function.Parameters.Count; i++) {
+				if (i > 0)
+					sb.Append (",");
+				sb.Append (m_function.Parameters [i].ParameterType.FullName);
+			}
+			sb.Append (")");
+			return sb.ToString ();
 		}
 	}
 }

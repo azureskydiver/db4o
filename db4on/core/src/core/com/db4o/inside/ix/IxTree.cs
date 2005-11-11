@@ -1,7 +1,7 @@
 namespace com.db4o.inside.ix
 {
 	/// <exclude></exclude>
-	public abstract class IxTree : com.db4o.Tree
+	public abstract class IxTree : com.db4o.Tree, com.db4o.foundation.Visitor4
 	{
 		internal com.db4o.inside.ix.IndexTransaction i_fieldTransaction;
 
@@ -68,6 +68,11 @@ namespace com.db4o.inside.ix
 		internal com.db4o.inside.ix.Indexable4 handler()
 		{
 			return i_fieldTransaction.i_index._handler;
+		}
+
+		internal com.db4o.inside.ix.Index4 index()
+		{
+			return i_fieldTransaction.i_index;
 		}
 
 		/// <summary>
@@ -140,6 +145,8 @@ namespace com.db4o.inside.ix
 		{
 			return i_fieldTransaction.i_trans;
 		}
+
+		public abstract void visit(object obj);
 
 		public abstract void visit(com.db4o.foundation.Visitor4 visitor, int[] a_lowerAndUpperMatch
 			);

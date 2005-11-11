@@ -109,8 +109,17 @@ namespace Cecil.FlowAnalysis.CecilUtilities
 				writer.Write("\"" + s + "\"");
 				return;
 			}
-			
-			writer.Write(operand.ToString());
+
+			s = ToInvariantCultureString(operand);
+			writer.Write(s);
+		}
+
+		public static string ToInvariantCultureString(object value)
+		{	
+			IConvertible convertible = value as IConvertible;
+			return (null != convertible)
+				? convertible.ToString(System.Globalization.CultureInfo.InvariantCulture)
+				: value.ToString();
 		}
 
 		private static void WriteMethodReference(TextWriter writer, IMethodReference method)
@@ -138,7 +147,10 @@ namespace Cecil.FlowAnalysis.CecilUtilities
 				case "System.Void": return "void";
 				case "System.String": return "string";
 				case "System.Int32": return "int32";
+				case "System.Long": return "int64";
 				case "System.Boolean": return "bool";
+				case "System.Single": return "float32";
+				case "System.Double": return "float64";
 			}
 			return typeName;
 		}

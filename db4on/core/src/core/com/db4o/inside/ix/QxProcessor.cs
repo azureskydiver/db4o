@@ -11,7 +11,48 @@ namespace com.db4o.inside.ix
 
 		internal virtual void addPath(com.db4o.inside.ix.QxPath newPath)
 		{
+			if (_paths == null)
+			{
+				_paths = newPath;
+				return;
+			}
+			com.db4o.inside.ix.QxPath[] same = new com.db4o.inside.ix.QxPath[] { null };
+			_paths.traverse(new _AnonymousInnerClass34(this, newPath, same));
+			if (same[0] != null)
+			{
+				_paths = _paths.removeNode(same[0]);
+				newPath.mergeForSameField(same[0]);
+			}
 			_paths = com.db4o.Tree.add(_paths, newPath);
+		}
+
+		private sealed class _AnonymousInnerClass34 : com.db4o.foundation.Visitor4
+		{
+			public _AnonymousInnerClass34(QxProcessor _enclosing, com.db4o.inside.ix.QxPath newPath
+				, com.db4o.inside.ix.QxPath[] same)
+			{
+				this._enclosing = _enclosing;
+				this.newPath = newPath;
+				this.same = same;
+			}
+
+			public void visit(object a_object)
+			{
+				com.db4o.inside.ix.QxPath path = (com.db4o.inside.ix.QxPath)a_object;
+				if (path._parent == newPath._parent)
+				{
+					if (path.onSameFieldAs(newPath))
+					{
+						same[0] = path;
+					}
+				}
+			}
+
+			private readonly QxProcessor _enclosing;
+
+			private readonly com.db4o.inside.ix.QxPath newPath;
+
+			private readonly com.db4o.inside.ix.QxPath[] same;
 		}
 
 		private void buildPaths(com.db4o.QCandidates candidates)

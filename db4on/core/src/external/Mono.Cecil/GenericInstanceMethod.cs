@@ -28,69 +28,34 @@
 
 namespace Mono.Cecil {
 
-	using System;
 	using System.Text;
 
-	public sealed class GenericInstanceMethod : MethodReference, IGenericInstanceMethod {
+	public sealed class GenericInstanceMethod : MethodSpecification, IGenericInstanceMethod {
 
-		MethodReference m_elementMethod;
 		GenericArgumentCollection m_arguments;
-
-		public MethodReference ElementMethod {
-			get { return m_elementMethod; }
-			set { m_elementMethod = value; }
-		}
 
 		public GenericArgumentCollection Arguments {
 			get { return m_arguments; }
-		}
-
-		public override MethodCallingConvention CallingConvention {
-			get { return m_elementMethod.CallingConvention; }
-			set { throw new InvalidOperationException (); }
-		}
-
-		public override bool HasThis {
-			get { return m_elementMethod.HasThis; }
-			set { throw new InvalidOperationException (); }
-		}
-
-		public override bool ExplicitThis {
-			get { return m_elementMethod.ExplicitThis; }
-			set { throw new InvalidOperationException (); }
-		}
-
-		public override MethodReturnType ReturnType {
-			get { return m_elementMethod.ReturnType; }
-			set { throw new InvalidOperationException (); }
-		}
-
-		public override ParameterDefinitionCollection Parameters {
-			get { return m_elementMethod.Parameters; }
-		}
-
-		public override GenericParameterCollection GenericParameters {
-			get { return m_elementMethod.GenericParameters; }
 		}
 
 		public int Arity {
 			get { return m_arguments.Count; }
 		}
 
-		public GenericInstanceMethod (MethodReference elemMethod) : base (string.Empty)
+		public GenericInstanceMethod (MethodReference elemMethod) : base (elemMethod)
 		{
-			m_elementMethod = elemMethod;
 			m_arguments = new GenericArgumentCollection (this);
 		}
 
 		public override string ToString ()
 		{
 			StringBuilder sb = new StringBuilder ();
-			sb.Append (m_elementMethod.ReturnType.ReturnType.FullName);
+			MethodReference meth = this.ElementMethod;
+			sb.Append (meth.ReturnType.ReturnType.FullName);
 			sb.Append (" ");
-			sb.Append (m_elementMethod.DeclaringType.FullName);
+			sb.Append (meth.DeclaringType.FullName);
 			sb.Append ("::");
-			sb.Append (m_elementMethod.Name);
+			sb.Append (meth.Name);
 			sb.Append ("<");
 			for (int i = 0; i < this.Arguments.Count; i++) {
 				if (i > 0)
@@ -99,9 +64,9 @@ namespace Mono.Cecil {
 			}
 			sb.Append (">");
 			sb.Append ("(");
-			for (int i = 0; i < m_elementMethod.Parameters.Count; i++) {
-				sb.Append (m_elementMethod.Parameters [i].ParameterType.FullName);
-				if (i < m_elementMethod.Parameters.Count - 1)
+			for (int i = 0; i < meth.Parameters.Count; i++) {
+				sb.Append (meth.Parameters [i].ParameterType.FullName);
+				if (i < meth.Parameters.Count - 1)
 					sb.Append (",");
 			}
 			sb.Append (")");
