@@ -153,7 +153,7 @@ public interface ObjectContainer {
 	 * @see com.db4o.config.Configuration#activationDepth Why activation?
 	 * @see ObjectCallbacks Using callbacks
 	 */
-    public ObjectSet get (Object template);
+    public <T> ObjectSet<T> get (Object template);
     
     /**
      * creates a new S.O.D.A. {@link Query Query}.
