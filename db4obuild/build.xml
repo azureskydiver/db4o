@@ -379,7 +379,7 @@
 		</antcall>
 	</target>
 	
-	<target name="runtestsnet" depends="compiletestsnet">
+	<target name="runtestsnet" depends="configure-net1.1, compiletestsnet">
 		<exec executable="${dir.dist.dll.net}/db4o-net-test.exe" dir="${dir.dist.dll.net}">
 		</exec>
 	</target>
@@ -771,7 +771,9 @@
 	<target name="configure-net2-pascalcase">
 		
 		<property name="target.framework.version" value="2.0" />
-		<property name="csc.executable" value="csc" />
+		
+		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
+		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
 		
 		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
 		<property name="pascalcase.converter.exe" location="bin/pascalcase2.exe" />
@@ -1035,28 +1037,17 @@
 			<param name="target.dir" value="${target.dir}/src/core" />
 		</antcall>
 		
-		<!--
-			compile compact framework first as some code will get
-			removed by the CF_1_0 define
-		-->
 		<exec executable="${pascalcase.converter.exe}" failonerror="true">
 			<arg file="${dir.n.in.sharp}" />
 			<arg file="${target.dir}/src" />
-			<arg value="CF_1_0" />
-		</exec>		
-		
-		<antcall target="compilecoredll-compact">
-			<param name="src.dir" value="${target.dir}/src" />
-		</antcall>
-
-		<exec executable="${pascalcase.converter.exe}" failonerror="true">
-			<arg file="${dir.n.in.sharp}" />
-			<arg file="${target.dir}/src" />
-			<arg value="${csharp.defines}" />
 		</exec>		
 		
 		<antcall target="copy-external-files">
 			<param name="target.dir" value="${target.dir}/src" />
+		</antcall>
+		
+		<antcall target="compilecoredll-compact">
+			<param name="src.dir" value="${target.dir}/src" />
 		</antcall>
 
 		<antcall target="compilecoredll-net">
@@ -1187,7 +1178,7 @@
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
 				<exclude name="src/net/**" />
-				<exclude name="src/external/**" />
+				<!-- <exclude name="src/external/**" /> -->
 			</sources>
 		</updatecsharpproject>
 
