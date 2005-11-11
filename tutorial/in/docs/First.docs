@@ -41,10 +41,10 @@ We'll need a second pilot, too.
 
 .1 Retrieving objects ..
 
-db4o supplies three different quering systems, .i Query by Example ..  (QBE), ._
+db4o supplies three different quering systems,  .i Query by Example ..  (QBE), ._
 .i Native Queries ..  (NQ) and the  .i SODA Query API ..  (SODA). In this ._
 first example we will introduce QBE. Once you are familiar with storing ._
-objects, we encourage you to use  .l NativeQueries Native Queries .. , the main
+objects, we encourage you to use  .l NativeQueries Native Queries .. , the main ._
 db4o querying interface.
 
 When using Query-By-Example, you create a prototypical object for db4o to use as an example of what ._
@@ -57,7 +57,7 @@ of our results:
 
 To retrieve all pilots from our database, we provide an 'empty' prototype:
 
-.s com.db4o.f1.chapter1.FirstStepsExample#retrieveAllPilotsQBE ..
+.s com.db4o.f1.chapter1.FirstStepsExample#retrieveAllPilotQBE ..
 
 Note that we specify 0 points, but our results were not constrained to only those Pilots ._
 with 0 points; 0 is the default value for int fields.
@@ -91,7 +91,7 @@ your objects: just call set() again after modifying any object.
 .s com.db4o.f1.chapter1.FirstStepsExample#updatePilot ..
 
 Notice that we query for the object first. This is an importaint point. When you call set() to modify a ._
-stored object, if the object is not 'known' (having been previously stored or retrieved durring the current session), ._
+stored object, if the object is not 'known' (having been previously stored or retrieved during the current session), ._
 db4o will insert a new object. db4o does this because it does not automatically match up objects to be ._
 stored, with objects previously stored. It assumes you are inserting a second object which happens to have ._
 the same field values.
