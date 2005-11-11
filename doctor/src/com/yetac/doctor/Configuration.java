@@ -18,6 +18,7 @@ public abstract class Configuration {
     public static final byte         BR                = (byte) '\n';
     public static final byte         LF                = (byte) '\r';
     public static final byte         BACKSLASH         = (byte) '\\';
+    public static final byte         TAB               = (byte) '\t';
 
     public static final byte[]       NUMBERS           = new byte[10];
 

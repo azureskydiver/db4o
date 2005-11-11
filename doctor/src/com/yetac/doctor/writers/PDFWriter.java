@@ -41,6 +41,9 @@ public class PDFWriter extends AbstractWriter {
     private Font      smallFont;
 
     PdfOutline[]      outlineNodes;
+    
+    static final byte[]      PDF_WHITESPACE  = " ".getBytes();
+    static final byte[]      PDF_TAB = multiple(PDF_WHITESPACE, TAB_WHITESPACES);
 
     public void start(Files _files) throws Exception {
         super.start(_files);
@@ -237,7 +240,15 @@ public class PDFWriter extends AbstractWriter {
     }
 
     public void write(byte[] bytes, int start, int end) {
-        writeToFile(bytes, start, end);
+        bufferPos = 0;
+        for (int i = start; i <= end; i++) {
+            if(bytes[i] == TAB){
+                toBuffer(PDF_TAB);
+            } else {
+                toBuffer(bytes[i]);
+            }
+        }
+        writeToFile(conversionBuffer, 0, bufferPos - 1);
     }
 
     protected void writeToFile(byte[] bytes, int start, int end) {
