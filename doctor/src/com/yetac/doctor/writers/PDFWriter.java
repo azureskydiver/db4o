@@ -188,6 +188,7 @@ public class PDFWriter extends AbstractWriter {
     }
 
     private void writeSourceCodeBlock(byte[] code,String methodName) throws Exception {
+        code = convert(code);
         Table table = new Table(1, 1);
         Chunk ch = new Chunk(new String(code), sourceFont);
         Color c = new Color(245, 245, 245);
@@ -238,8 +239,12 @@ public class PDFWriter extends AbstractWriter {
     public void write(Code command) throws Exception {
         writeSourceCodeBlock(command.text,null);
     }
-
-    public void write(byte[] bytes, int start, int end) {
+    
+    private byte[] convert(byte[] bytes){
+        return convert(bytes, 0, bytes.length -1);
+    }
+    
+    private byte[] convert(byte[] bytes, int start, int end){
         bufferPos = 0;
         for (int i = start; i <= end; i++) {
             if(bytes[i] == TAB){
@@ -248,7 +253,14 @@ public class PDFWriter extends AbstractWriter {
                 toBuffer(bytes[i]);
             }
         }
-        writeToFile(conversionBuffer, 0, bufferPos - 1);
+        byte[] res = new byte[bufferPos];
+        System.arraycopy(conversionBuffer, 0, res, 0, bufferPos);
+        return res;
+    }
+
+    public void write(byte[] bytes, int start, int end) {
+        bytes = convert(bytes, start, end);
+        writeToFile(bytes, 0, bytes.length - 1);
     }
 
     protected void writeToFile(byte[] bytes, int start, int end) {
