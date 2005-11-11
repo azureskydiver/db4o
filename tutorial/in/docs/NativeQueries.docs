@@ -16,7 +16,6 @@ perfectly standardized and a safe choice for the future.
 Native Queries are available for all platforms supported by db4o.
 
 .2 Concept ..
-
 The concept of native queries is taken from the following two papers:
 
 -  .l http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper ..l
@@ -94,12 +93,12 @@ class extent:
 .? java .c boolean match(Pilot candidate); ..c  ..?  ._
 .? net .c bool Match(Pilot candidate); ..c   ..?
 
-At first sight, native queries seem to require you to do some ._
-typing work but don't forget that modern integrated development ._
-environments (IDEs) can automate this job for you by 100% by ._
-using templates and autocompletion.
+When using native queries, don't forget that modern integrated ._
+development environments (IDEs) can do all the typing ._
+work around the native query expression for you, if you use ._
+templates and autocompletion.
 
-Here is a short HowTo for Eclipse 3.1:
+Here is how to configure a Native Query template with Eclipse 3.1:
 From the menu, choose Window + Preferences + Java + Editor + Templates + New
 As the name type "nq". Make sure that "java" is selected as the ._
 context on the right. Paste the following into the pattern ._
