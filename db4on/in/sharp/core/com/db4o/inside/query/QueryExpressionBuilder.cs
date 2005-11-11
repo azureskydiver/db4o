@@ -192,10 +192,7 @@ namespace com.db4o.inside.query
 
 			public Expression Expression
 			{
-				get
-				{
-					return (Expression)_current;
-				}
+				get { return (Expression)_current; }
 			}
 
 			private bool InsideCandidate
