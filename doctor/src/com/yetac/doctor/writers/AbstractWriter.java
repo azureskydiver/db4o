@@ -31,6 +31,9 @@ import com.yetac.doctor.workers.Files;
 public abstract class AbstractWriter extends Configuration implements
     DocsWriter {
     
+    static final int         TAB_WHITESPACES = 4; 
+
+    
     protected ExampleRunner runner;
 
 
@@ -40,6 +43,10 @@ public abstract class AbstractWriter extends Configuration implements
     protected boolean firstPage;
 
     private DocsFile   source;
+    
+    protected byte[]           conversionBuffer = new byte[1000];
+    protected int              bufferPos;
+
     
     public void beginEmbedded(DocsFile source)  throws Exception{
     }
@@ -111,6 +118,22 @@ public abstract class AbstractWriter extends Configuration implements
         outlineLevel = 0;
         outlineNumbers = new int[10];
         this.files = _files;
+    }
+    
+    protected void toBuffer(byte b) {
+        if (bufferPos > conversionBuffer.length -1) {
+            byte[] temp = new byte[conversionBuffer.length + 1000];
+            System.arraycopy(conversionBuffer, 0, temp, 0,
+                conversionBuffer.length);
+            conversionBuffer = temp;
+        }
+        conversionBuffer[bufferPos++] = b;
+    }
+
+    protected void toBuffer(byte[] bs) {
+        for (int i = 0; i < bs.length; i++) {
+            toBuffer(bs[i]);
+        }
     }
 
     public void write(Anchor command) throws Exception {
@@ -227,4 +250,16 @@ public abstract class AbstractWriter extends Configuration implements
         result=result.replaceAll("\\n {"+depth+"}","\n");
         return result.getBytes("iso-8859-1");
     }
+    
+    static byte[] multiple(byte[] ofWhat, int times){
+        int len = ofWhat.length;
+        int pos = 0;
+        byte[] res = new byte[len * times];
+        for (int i = 0; i < times ; i++) {
+            System.arraycopy(ofWhat, 0, res,pos, len);
+            pos += len;
+        }
+        return res;
+    }
+    
 }

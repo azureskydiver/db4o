@@ -37,10 +37,10 @@ public class HtmlWriter extends AbstractWriter {
 
     static final byte[]      HTML_BR          = "<br>\r\n".getBytes();
     static final byte[]      HTML_WHITESPACE  = "&nbsp;".getBytes();
+    static final byte[]      HTML_TAB = multiple(HTML_WHITESPACE, TAB_WHITESPACES);
+    
     static final byte        CLOSING_BRACE    = ">".getBytes()[0];
 
-    private byte[]           conversionBuffer = new byte[1000];
-    private int              bufferPos;
     private boolean          ignoreCRforOutline;
     private boolean          executableInCurrent;
 
@@ -482,28 +482,14 @@ public class HtmlWriter extends AbstractWriter {
         writeSourceCodeBlock(command.text,null);
     }
 
-    private void toBuffer(byte b) {
-        if (bufferPos > conversionBuffer.length -1) {
-            byte[] temp = new byte[conversionBuffer.length + 1000];
-            System.arraycopy(conversionBuffer, 0, temp, 0,
-                conversionBuffer.length);
-            conversionBuffer = temp;
-        }
-        conversionBuffer[bufferPos++] = b;
-    }
-
-    private void toBuffer(byte[] bs) {
-        for (int i = 0; i < bs.length; i++) {
-            toBuffer(bs[i]);
-        }
-    }
-
     public void write(byte[] bytes, int start, int end) {
         byte prev = WHITESPACE;
         int whiteSpaces = 0;
         bufferPos = 0;
         for (int i = start; i <= end; i++) {
-            if (bytes[i] == WHITESPACE
+            if(bytes[i] == TAB){
+                toBuffer(HTML_TAB);
+            } else if (bytes[i] == WHITESPACE
                 && (prev == WHITESPACE || (i < end && bytes[i + 1] == WHITESPACE))) {
                 toBuffer(HTML_WHITESPACE);
             } else if (bytes[i] == LF || bytes[i] == BR) {
