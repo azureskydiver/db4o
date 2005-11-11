@@ -41,7 +41,7 @@ public class NQExample extends Util {
         	public boolean match(Pilot pilot) {
         		return pilot.getPoints()>99
         			&& pilot.getPoints()<199
-        			||pilot.getName().equals("Rubens Barrichello");
+        			|| pilot.getName().equals("Rubens Barrichello");
 			}
         });
         listResult(result);

@@ -75,6 +75,11 @@ public class StructuredExample extends Util {
         listResult(result);
     }
 
+    public static void retrieveAllPilots(ObjectContainer db) {
+        ObjectSet result=db.get(Pilot.class);
+        listResult(result);
+    }
+
     public static void retrieveCarByPilotQBE(
             ObjectContainer db) {
         Pilot pilotproto=new Pilot("Rubens Barrichello",0);
