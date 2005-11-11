@@ -1006,12 +1006,13 @@
 	<target name="pascalcase" depends="install-javatocsharp-plugin">
 		
 		<property name="dir.sharpen.pc" location="${dir.sharpen}/pascalcase" />
+		<property name="pascalcase.converter.ant.target" value="build" />
 		
 		<antcall target="prepare-conversion-workspace">
 			<param name="target.dir" value="${dir.sharpen.pc}" />
 		</antcall>
 			
-		<java jvm="${file.jvm.jdk1.5}" classname="org.eclipse.core.launcher.Main" fork="yes" failonerror="true">
+		<java jvmargs="-Xmx256m" jvm="${file.jvm.jdk1.5}" classname="org.eclipse.core.launcher.Main" fork="yes" failonerror="true">
 			<classpath>
 				<pathelement location="${eclipse.home}/startup.jar" />
 			</classpath>

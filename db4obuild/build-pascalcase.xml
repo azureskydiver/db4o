@@ -8,6 +8,10 @@
 	<property name="dir.pascalcase.src" location="${dir.dist.pascalcase}/src" />
 	<property name="dir.pascalcase.bin" location="${dir.dist.pascalcase}/bin" />
 	
+	<condition property="dotnetvm" value="mono" else="cmd">
+	  <os family="unix"/>
+	</condition>
+
 	<target name="rebuild" depends="clean, build">
 	</target>
 	
@@ -39,8 +43,13 @@
 	<target name="run-converter">
 		
 		<echo>Converted files will be written to ${dir.pascalcase.src}</echo>
-
-		<exec executable="${converter.exe}" failonerror="true">
+		<echo>${dotnetvm}</echo>
+		<echo>${converter.exe}</echo>
+		<echo>${dir.n.core.src}</echo>
+		<echo>${dir.pascalcase.src}</echo>
+		<echo>${defines}</echo>
+		<exec executable="${dotnetvm}" failonerror="true">
+			<arg file="${converter.exe}" />
 			<arg file="${dir.n.core.src}" />
 			<arg file="${dir.pascalcase.src}/core/src" />
 			<arg value="${defines}" />
@@ -54,13 +63,15 @@
 		</copy>
 
 		
-		<exec executable="${converter.exe}" failonerror="true">
+		<exec executable="${dotnetvm}" failonerror="true">
+			<arg file="${converter.exe}" />
 			<arg file="${dir.n.tools}/src" />
 			<arg file="${dir.pascalcase.src}/tools/src" />
 			<arg value="${defines}" />
 		</exec>
 		
-		<exec executable="${converter.exe}" failonerror="true">
+		<exec executable="${dotnetvm}" failonerror="true">
+			<arg file="${converter.exe}" />
 			<arg file="${dir.n.test}/src" />
 			<arg file="${dir.pascalcase.src}/test/src" />
 			<arg value="${defines}" />
@@ -132,7 +143,8 @@
 	</target>
 	
 	<target name="compile-converter" depends="init">
-		<exec executable="lib/boo/booc.exe" failonerror="true">
+		<exec executable="${dotnetvm}" failonerror="true">
+			<arg file="lib/boo/booc.exe" />
 			<arg value="-o:bin/pascalcase.exe" />
 			<arg value="-r:bin/ICSharpCode.SharpRefactory.dll" />
 			<arg value="-r:bin/Boo.Lang.Useful.dll" />
