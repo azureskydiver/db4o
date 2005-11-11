@@ -27,12 +27,25 @@ namespace com.db4o.inside.query
 	/// </summary>
 	public class QueryExpressionBuilder
 	{	
+        private static string _lastAssemblyName;
+        private static IAssemblyDefinition _lastAssemblyCache;
+        private static Object _lastAssemblyLock = new Object();
+
 		public static Expression FromMethod(System.Reflection.MethodInfo method)
 		{
 			if (method == null) throw new ArgumentNullException("method");
-			string location = GetAssemblyLocation(method);
-			IAssemblyDefinition assembly = AssemblyFactory.GetAssembly(location);
-			ITypeDefinition type = FindTypeDefinition(assembly.MainModule, method.DeclaringType);
+
+            IAssemblyDefinition assembly = null;
+            string location = null;
+			
+            lock(_lastAssemblyLock){
+                location = GetAssemblyLocation(method);
+                assembly = (location == _lastAssemblyName) ? _lastAssemblyCache : AssemblyFactory.GetAssembly(location);
+                _lastAssemblyCache = assembly;
+                _lastAssemblyName = location;
+            }
+
+            ITypeDefinition type = FindTypeDefinition(assembly.MainModule, method.DeclaringType);
 			if (null == type) UnsupportedPredicate(string.Format("Unable to load type '{0}' from assembly '{1}'", method.DeclaringType.FullName, location));
 			IMethodDefinition methodDef = type.Methods.GetMethod(method.Name,  GetParameterTypes(method));
 			if (null == methodDef) UnsupportedPredicate(string.Format("Unable to load the definition of '{0}' from assembly '{1}'", method, location));
