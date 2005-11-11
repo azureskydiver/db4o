@@ -132,7 +132,7 @@ namespace HelloWorld
 		
 		static void WriteFile(string fname, string contents)
 		{
-			using (StreamWriter writer = new StreamWriter(fname, false, System.Text.Encoding.UTF8))
+			using (StreamWriter writer = new StreamWriter(fname, false, System.Text.Encoding.ASCII))
 			{
 				writer.Write(contents);
 			}
