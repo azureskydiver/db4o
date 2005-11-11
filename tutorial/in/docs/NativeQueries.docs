@@ -8,7 +8,7 @@ language that you are using? Wouldn't it be nice if all your query code was ._
 it be nice if the full power of object-orientation could be used ._
 by calling methods from within queries? Enter Native Queries. 
 
-Native queries are the main query interface to db4o and they are the ._
+Native queries are the main db4o query interface and they are the ._
 recommended way to query databases from your application. Because native ._
 queries simply use the semantics of your programming language, they are ._
 perfectly standardized and a safe choice for the future.
@@ -22,6 +22,7 @@ The concept of native queries is taken from the following two papers:
 -  .l http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper ..l
 -  .l http://www.cs.utexas.edu/users/wcook/papers/SafeQuery/SafeQueryFinal.pdf Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries ..l
 
+.2 Principle ..
 Native Queries provide the ability to run one or more lines ._
 of code against all instances of a class. Native query expressions should ._
 return true to mark specific instances as part of the result set. ._

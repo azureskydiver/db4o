@@ -6,8 +6,9 @@ tutorial. It provides an organized view of the API, looking from a ._
 perspective and you may find related functionality to the theme you ._
 are currently reading up on.
 
-For starters, the packages com.db4o and com.db4o.query are ._
-all that you need to worry about. The rest are not commonly used.
+For starters, the ._
+.? java packages ..?  .? net namespace ..?  .? mono namespace ..?  ._
+com.db4o and com.db4o.query are all that you need to worry about.
 
 .b com.db4o ..
 
@@ -16,7 +17,8 @@ contains almost all of the functionality you will commonly ._
 need when using db4o. Two objects of note are com.db4o.Db4o, and the ._
 com.db4o.ObjectContainer interface.
 
-The com.db4o.Db4o factory object is your starting point. Static methods on this object ._
+The com.db4o.Db4o factory is your starting point. Static methods in ._
+this class ._
 allow you to open a database file, start a server, or connect to an existing server. ._
 It also lets you configure the db4o environment before opening a database.
 
@@ -30,6 +32,9 @@ commit() or rollback(), the next transaction is started immediately.
 - Every ObjectContainer maintains it's own references to stored and ._
 instantiated objects. In doing so, it manages object identities, and ._
 is able to achieve a high level of performance.
+- ObjectContainers are intended to be kept open as long as you work ._
+against them. When you close an ObjectContainer, all database references ._
+to objects in RAM will be discarded.
 
 .b com.db4o.ext ..
 
@@ -54,6 +59,6 @@ within are discussed in the  .l Configuration Configuration ..  section.
 .b com.db4o.query ..
 
 The com.db4o.query  .? java package ..?  .? net namespace ..?  .? mono namespace ..?  contains ._
-the Predicate class to construct .l NativeQueries Native Queries .. . The Native Query ._
+the Predicate class to construct  .l NativeQueries Native Queries .. . The Native Query ._
 interface is the primary db4o querying interface and should be preferred over ._
 the  .l SODAQueryAPI Query API .. . 

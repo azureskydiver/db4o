@@ -57,7 +57,7 @@ namespace com.db4o.f1.chapter1
             Console.WriteLine("Stored " + pilot2);
         }
     
-        public static void retrieveAllPilotsQBE(ObjectContainer db) {
+        public static void retrieveAllPilotQBE(ObjectContainer db) {
             Pilot proto = new Pilot(null, 0);
             ObjectSet result = db.get(proto);
             listResult(result);

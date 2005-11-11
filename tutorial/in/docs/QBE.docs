@@ -15,8 +15,10 @@ Querying this way has some obvious limitations:
 - You cannot perform advanced query expressions. (AND, OR, NOT, etc.)
 - You cannot constrain on values like 0 (integers), "" (empty strings), ._
 or nulls (reference types) because they would be interpreted as unconstrained.
-- A constructor without field initialisation is required. This makes ._
-it harder to enforce code contracts that objects of a class are only ._
+- You need to be able to create objects without initialized fields. ._
+That means you can not initialize fields where they are declared. ._
+You can not enforce contracts that objects of a class are only ._
 allowed in a well-defined initialized state.
+- You need a constructor to create objects without initialized fields.
 
 To get around all of these constraints, db4o provides the Native Query (NQ) system.
