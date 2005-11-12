@@ -2,32 +2,36 @@
 
 namespace com.db4o
 {
-#if NET_2_0
+#if NET_2_0 || CF_2_0
     using System.Collections.Generic;
 
 	/// <summary>
-	/// A native query predicate.
+	/// Native Query delegate for .NET 2.0
 	/// </summary>	
 	/// <remarks>
-	/// The type parameter specifies the extent for the query.<br />
-	/// For all instances of the extent that are to be included into the
-	/// resultset of the query, the method returns true. For all instances
-	/// that are not to be included the method returns false. <br /><br />
-	/// Here is an example of an anonymous method that follows these conventions:<br />
-	/// <pre><code>
-	/// delegate(Cat cat) {<br />
-	///     return cat.name.equals("Frizz");<br />
-	/// }<br />
-	/// </code></pre><br /><br />
+    /// See the detailed Native Query documentation in the
+    /// <see cref="com.db4o.query.Predicate">Predicate</see>
+    /// class.
 	/// </remarks>
-    public delegate bool Predicate<T>(T candidate);
+    public delegate bool Predicate <T> (T candidate);
 
     public partial interface ObjectContainer
     {
     	/// <summary>
-    	/// Executes a native query against this container.
+    	/// .NET 2.0 Native Query interface.
     	/// </summary>
-        IList<Extent> query<Extent>(Predicate<Extent> match);
+        /// <remarks>
+        /// See the detailed Native Query documentation in the
+        /// <see cref="com.db4o.query.Predicate">Predicate</see>
+        /// class.
+        /// </remarks>
+        IList <Extent> query <Extent>( Predicate<Extent> match );
+
+        /// <summary>
+        /// queries for all instances of a class.
+        /// </summary>
+        IList <Extent> query <Extent> (System.Type extent);
+
     }
 #endif
 }
