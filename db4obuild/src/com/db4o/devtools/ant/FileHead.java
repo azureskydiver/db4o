@@ -19,10 +19,10 @@ public class FileHead extends File {
             throw new IllegalArgumentException(errMsg);
         }
         FileHeadAntTask task = new FileHeadAntTask();
-        task.setPath(args[0]);
+        task.path = args[0];
         task.setHeader(args[1]);
         task.setBeforePattern(args[2]);
-        task.setFileExt(args[3]);
+        task.fileExt = args[3];
         new FileHead(args[0], task).run();
     }
 

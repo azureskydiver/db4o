@@ -12,6 +12,7 @@
 	font.pdf.base=<true type font>
 	dir.dll.wince=<path to .NET CE dll, leave empty if not available>
 	eclipse.home=<eclipse home dir>
+	csc.executable.path.net2=<path to csc.exe for .NET 2.0>
 
 
 	An example:
@@ -22,6 +23,8 @@
 	font.pdf.base=C:/WINDOWS/Fonts/VERDANA.TTF
 	dir.dll.wince=C:/Program Files/Microsoft Visual Studio .NET 2003/CompactFrameworkSDK/v1.0.5000/Windows CE/
 	eclipse.home=c:/Program Files/Eclipse	
+	csc.executable.path.net2=C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
+	
 -->
 	<property environment="env" />
 	<property file="machine.properties" />
@@ -104,15 +107,43 @@
 		</delete>
 		<ant dir="${dir.n.tutorial}" target="clean"/>
 	</target>
-
+	
 	<target name="filehead" depends="init" description="Add copyright header to all input sources">
-		<filehead path="${dir.j}" beforePattern="package" fileext="java" header="${content.copyrightheader}" />
-		<filehead path="${dir.doctor.src}" beforePattern="package" fileext="java" header="${content.copyrightheader}" />
-		<filehead path="${dir.n.in.java}" beforePattern="package" fileext="java" header="${content.copyrightheader}" />
-		<filehead path="${dir.n.in.sharp}" beforePattern="using|namespace" fileext="cs" header="${content.copyrightheader}" />
-		<filehead path="${dir.n.core}" beforePattern="using|namespace" fileext="cs" header="${content.copyrightheader}" />
-		<filehead path="${dir.n.test}" beforePattern="using|namespace" fileext="cs" header="${content.copyrightheader}" />
-		<filehead path="${dir.n.tools}" beforePattern="using|namespace" fileext="cs" header="${content.copyrightheader}" />
+		<filehead beforePattern="package" header="${content.copyrightheader}" >
+			<sources dir="${dir.j}">
+				<include name="**/*.java" />
+			</sources>
+		</filehead>
+		<filehead beforePattern="package" header="${content.copyrightheader}" >
+			<sources dir="${dir.doctor.src}">
+				<include name="**/*.java" />
+			</sources>
+		</filehead>
+		<filehead beforePattern="package" header="${content.copyrightheader}" >
+			<sources dir="${dir.n.in.java}">
+				<include name="**/*.java" />
+			</sources>
+		</filehead>
+		<filehead beforePattern="using|namespace"  header="${content.copyrightheader}" >
+			<sources dir="${dir.n.in.sharp}">
+				<include name="**/*.cs" />
+			</sources>
+		</filehead>
+		<filehead beforePattern="using|namespace"  header="${content.copyrightheader}" >
+			<sources dir="${dir.n.core}">
+				<include name="**/*.cs" />
+			</sources>
+		</filehead>
+		<filehead beforePattern="using|namespace"  header="${content.copyrightheader}" >
+			<sources dir="${dir.n.test}">
+				<include name="**/*.cs" />
+			</sources>
+		</filehead>
+		<filehead beforePattern="using|namespace"  header="${content.copyrightheader}" >
+			<sources dir="${dir.n.tools}">
+				<include name="**/*.cs" />
+			</sources>
+		</filehead>
 	</target>
 
 	<target name="copyjava1.1">
@@ -669,7 +700,12 @@
 				<include name="**/src/**" />
 			</fileset>
 		</copy>
-		<filehead path="${dir.dist.java.src}" beforePattern="package" fileext="java" header="${content.gplheader}" />
+		<filehead beforePattern="package" header="${content.gplheader}" >
+			<sources dir="${dir.dist.java.src}">
+				<include name="**/*.java" />
+			</sources>
+		</filehead>
+
 		<zip destfile="${file.java.core.src.zip}">
 			<fileset dir="${dir.dist.java.src}" includes="*/**" excludes="*.zip" />
 		</zip>
@@ -684,7 +720,11 @@
 		<copy todir="${dir.dist.java.src}">
 			<fileset dir="${dir.j.test.src}" />
 		</copy>
-		<filehead path="${dir.dist.java.src}" beforePattern="package" fileext="java" header="${content.gplheader}" />
+		<filehead beforePattern="package" header="${content.gplheader}" >
+			<sources dir="${dir.dist.java.src}">
+				<include name="**/*.java" />
+			</sources>
+		</filehead>
 		<zip destfile="${file.java.test.src.zip}">
 			<fileset dir="${dir.dist.java.src}" includes="*/**" excludes="*.zip" />
 		</zip>
@@ -702,7 +742,11 @@
 				<include name="tools/**/*.java" />
 			</fileset>
 		</copy>
-		<filehead path="${dir.dist.java.src}" beforePattern="package" fileext="java" header="${content.gplheader}" />
+		<filehead beforePattern="package" header="${content.gplheader}" >
+			<sources dir="${dir.dist.java.src}">
+				<include name="**/*.java" />
+			</sources>
+		</filehead>
 		<copy todir="${dir.dist.java.build.tutorial}">
 			<fileset dir="${dir.j.tutorial.out.java}">
 				<include name="**/**" />
@@ -863,7 +907,13 @@
 			</fileset>
 		</copy>
 	
-		<filehead path="${dir.dist.net.build.src}" beforePattern="using|namespace" fileext="cs" header="${content.gplheader}" />
+		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
+			<sources dir="${dir.dist.net.build.src}">
+				<include name="**/*.cs" />
+				<exclude name="**/external/**" />
+			</sources>
+		</filehead>
+
 	
 		<copy todir="${dir.dist.net.build}">
 			<fileset dir="${dir.dist}" includes="dll/**/**" />
@@ -935,7 +985,12 @@
 				<include name="**/**" />
 			</fileset>
 		</copy>
-		<filehead path="${dir.dist.mono.build.src}" beforePattern="using|namespace" fileext="cs" header="${content.gplheader}" />
+		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
+			<sources dir="${dir.dist.mono.build.src}">
+				<include name="**/*.cs" />
+				<exclude name="**/external/**" />
+			</sources>
+		</filehead>
 		<copy todir="${dir.dist.mono.build}">
 			<fileset dir="${dir.dist.mono}" includes="dll/**/**" />
 			<fileset dir="${dir.j}" includes="GPL.txt" />
