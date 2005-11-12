@@ -15,12 +15,21 @@ public class QueryForClass {
         name = "one";
     }
     
-    public void test(){
+    public void testQuery(){
         ObjectContainer oc = Test.objectContainer();
         List <QueryForClass> list = oc.query(QueryForClass.class);
         for (QueryForClass res : list) {
             Test.ensure(res.name.equals("one"));
         }
     }
+    
+    public void testGet(){
+        ObjectContainer oc = Test.objectContainer();
+        List <QueryForClass> list = oc.get(QueryForClass.class);
+        for (QueryForClass res : list) {
+            Test.ensure(res.name.equals("one"));
+        }
+    }
+
 
 }
