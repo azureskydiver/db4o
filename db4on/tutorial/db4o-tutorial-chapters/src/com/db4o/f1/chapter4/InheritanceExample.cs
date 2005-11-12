@@ -20,9 +20,7 @@ namespace com.db4o.f1.chapter4
                 retrieveAllSensorReadoutsQBE(db);
                 retrieveAllSensorReadoutsQBEAlternative(db);
                 retrieveAllSensorReadoutsQuery(db);
-                retrieveAllSensorReadoutsNative(db);
                 retrieveAllObjects(db);
-                retrieveAllObjectsNative(db);
             }
             finally
             {
