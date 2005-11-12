@@ -90,9 +90,8 @@ namespace com.db4o.test {
             typeof(MaxByEvaluation),
             typeof(Messaging),
 			typeof(nativequeries.Cat),
-#if !CF_1_0 && !CF_2_0
 			typeof(nativequeries.NativeQueriesTestCase),
-#endif
+            typeof(nativequeries.cats.TestCatConsistency),
 
 #if NET_2_0
 			typeof(net2.Net2GenericContainers),
@@ -136,6 +135,7 @@ namespace com.db4o.test {
 			typeof(StringInLists),
 #endif
             typeof(SwitchingFilesFromClient),
+
             typeof(TestHashTable),
             typeof(TwoClients),
             typeof(TypedArrayInObject),
