@@ -184,9 +184,6 @@
     <Compile Include="src\com\db4o\test\CollectionActivation.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\com\db4o\test\Compare.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\com\db4o\test\ConfMemTrack.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -274,6 +271,7 @@
     <Compile Include="src\com\db4o\test\IndexedByIdentity.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\com\db4o\test\inside\query\QueryExpressionBuilderTestCase.cs" />
     <Compile Include="src\com\db4o\test\Isolation.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -304,6 +302,15 @@
     <Compile Include="src\com\db4o\test\Molecule.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\com\db4o\test\nativequeries\Cat.cs" />
+    <Compile Include="src\com\db4o\test\nativequeries\cats\Animal.cs" />
+    <Compile Include="src\com\db4o\test\nativequeries\cats\Cat.cs" />
+    <Compile Include="src\com\db4o\test\nativequeries\cats\SodaCatPredicate.cs" />
+    <Compile Include="src\com\db4o\test\nativequeries\cats\TestCatConsistency.cs" />
+    <Compile Include="src\com\db4o\test\nativequeries\cats\TestCatSpeed.cs" />
+    <Compile Include="src\com\db4o\test\nativequeries\NativeQueriesTestCase.cs" />
+    <Compile Include="src\com\db4o\test\nativequeries\NQRegressionTests.cs" />
+    <Compile Include="src\com\db4o\test\nativequeries\Predicates.cs" />
     <Compile Include="src\com\db4o\test\NoInstanceStored.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -313,6 +320,7 @@
     <Compile Include="src\com\db4o\test\ObjectNotStorable.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\com\db4o\test\ObjectSetAsList.cs" />
     <Compile Include="src\com\db4o\test\ObjectSetIDs.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -688,12 +696,11 @@
     <Compile Include="src\com\db4o\test\SwitchingFilesFromClient.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\com\db4o\test\Test.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="src\com\db4o\test\Tester.cs" />
     <Compile Include="src\com\db4o\test\TestHashTable.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\com\db4o\test\TestUtil.cs" />
     <Compile Include="src\com\db4o\test\TwoClients.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -850,10 +857,10 @@
     <Compile Include="src\com\db4o\test\VMTermination.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\compact\Console.cs">
+    <Compile Include="src\compact-2005\Console.cs">
       <SubType>Form</SubType>
     </Compile>
-    <EmbeddedResource Include="src\compact\Console.resx">
+    <EmbeddedResource Include="src\compact-2005\Console.resx">
       <DependentUpon>Console.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
