@@ -155,8 +155,8 @@ available.
 .? java .s com.db4o.f1.chapter1.NQExample#retrieveArbitraryCodeNQ ..s  ..?
 
 .2 Native Query Performance ..
-If this all sounds to good to be true, we have to point out one ._
-drawback: Under the hood db4o tries to analyze native queries to ._
+One drawback of native queries has to be pointed out: ._
+Under the hood db4o tries to analyze native queries to ._
 convert them to SODA. This is not possible for all queries. ._
 For some queries it is very difficult to analyze the flowgraph. In ._
 this case db4o will have to instantiate some of the persistent objects ._
