@@ -76,23 +76,10 @@ namespace com.db4o.f1.chapter4
             listResult(result);
         }
         
-        public static void retrieveAllSensorReadoutsNative(ObjectContainer db) 
-        {
-	    	ObjectSet results = db.query(new RetrieveAllSensorReadoutsPredicate());
-			listResult(results);
-    	}
-        
         public static void retrieveAllObjects(ObjectContainer db)
         {
             ObjectSet result = db.get(new object());
             listResult(result);
         }
-
-        public static void retrieveAllObjectsNative(ObjectContainer db)
-        {
-            ObjectSet result = db.query(new RetrieveAllObjectsPredicate());
-            listResult(result);
-        }
-        
     }
 }

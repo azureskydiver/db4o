@@ -60,8 +60,7 @@ namespace com.db4o.f1.chapter3
         
         public static void retrieveAllSensorReadouts(ObjectContainer db)
         {
-            SensorReadout proto = new SensorReadout(null, DateTime.MinValue, null);
-            ObjectSet result = db.get(proto);
+            ObjectSet result = db.get(typeof(SensorReadout));
             listResult(result);
         }
         
@@ -120,8 +119,8 @@ namespace com.db4o.f1.chapter3
 
 			public class retrieveSensorReadoutPredicate : Predicate{
 				public bool Match(SensorReadout candidate){
-					return Array.IndexOf(candidate.Values, 0.3) > -1 &&
-						Array.IndexOf(candidate.Values, 0.1) > -1;
+					return Array.IndexOf(candidate.Values, 0.3) > -1
+                        && Array.IndexOf(candidate.Values, 0.1) > -1;
 				}
 			}
         
@@ -131,16 +130,16 @@ namespace com.db4o.f1.chapter3
 			}
 
 			public class retrieveCarPredicate : Predicate{
-				public bool Match(Car candidate){
-					IList history = candidate.History;
-					foreach(SensorReadout sensor in history){
-						if(Array.IndexOf(sensor.Values, 0.3) > -1 &&
-							Array.IndexOf(sensor.Values, 0.1) > -1)
-							return true;
-					}
-					return false;
-				}
-			}
+                public bool Match(Car car){
+                    foreach(SensorReadout sensor in car.History){
+                        if(Array.IndexOf(sensor.Values, 0.3) > -1 && 
+                            Array.IndexOf(sensor.Values, 0.1) > -1){
+                            return true; 
+                        }
+                    }
+                    return false;
+                }
+            }
 
 			public static void retrieveCarNative(ObjectContainer db){
 				ObjectSet results = db.query(new retrieveCarPredicate());

@@ -43,21 +43,9 @@ objects receive special handling with QBE.
 
 .s com.db4o.f1.chapter4.InheritanceExample#retrieveAllSensorReadoutsQBEAlternative ..
 
-Our Native Query from the previous chapter remains unchanged since all of ._
-our derived SensorReadout instances are still SensorReadout objects.
-
-.? net .s com.db4o.f1.chapter4.RetrieveAllSensorReadoutsPredicate ..s ..?
-.s com.db4o.f1.chapter4.InheritanceExample#retrieveAllSensorReadoutsNative ..
-
-And of course there's our query API:
+And of course there's our SODA API:
 
 .s com.db4o.f1.chapter4.InheritanceExample#retrieveAllSensorReadoutsQuery ..
-
-This procedure applies to all first class objects. We can simply query for all ._
-objects present in the database, for example.
-
-.? net .s com.db4o.f1.chapter4.RetrieveAllObjectsPredicate ..s ..?
-.s com.db4o.f1.chapter4.InheritanceExample#retrieveAllObjectsNative ..
 
 .1 Updating and deleting ..
 
