@@ -17,8 +17,6 @@ public class QxProcessor {
 
     void addPath(final QxPath newPath){
         
-        // FIXME: xcr work in progress
-        
         if(_paths == null){
             _paths = newPath;
             return;
