@@ -4,7 +4,7 @@ namespace com.db4o.test.nativequeries.cats
 	{
 		private static readonly string FILENAME = "catspeed.yap";
 
-		private static readonly int[] COUNT = { 10000 };
+		private static readonly int[] COUNT = { 1000 };
 
 		private const int NUMRUNS = 5;
 
@@ -16,12 +16,8 @@ namespace com.db4o.test.nativequeries.cats
 
 		private const bool SODA = true;
 
-		private sealed class _AnonymousInnerClass26 : com.db4o.test.nativequeries.cats.SodaCatPredicate
+		private sealed class AgeSmaller800 : SodaCatPredicate
 		{
-			public _AnonymousInnerClass26()
-			{
-			}
-
 			public bool match(com.db4o.test.nativequeries.cats.Cat cat)
 			{
 				return cat.getAge() < 800;
@@ -31,14 +27,22 @@ namespace com.db4o.test.nativequeries.cats
 			{
 				q.descend("_age").constrain(800).smaller();
 			}
+
+#if NET_2_0
+            public override void delegateNQ(ObjectContainer oc)
+            {
+                oc.query<Cat>(delegate(Cat cat)
+                {
+                    return cat.getAge() < 800;
+                });
+
+            }
+#endif
+
 		}
 
-		private sealed class _AnonymousInnerClass34 : com.db4o.test.nativequeries.cats.SodaCatPredicate
+		private sealed class AgeInRange : SodaCatPredicate
 		{
-			public _AnonymousInnerClass34()
-			{
-			}
-
 			public bool match(com.db4o.test.nativequeries.cats.Cat cat)
 			{
 				return cat.getAge() > this.lower() && cat.getAge() < this.upper();
@@ -49,14 +53,21 @@ namespace com.db4o.test.nativequeries.cats
 				com.db4o.query.Query qa = q.descend("_age");
 				qa.constrain(this.lower()).greater().and(qa.constrain(this.upper()).smaller());
 			}
-		}
+#if NET_2_0
+            public override void delegateNQ(ObjectContainer oc)
+            {
+                oc.query<Cat>(delegate(Cat cat)
+                {
+                    return cat.getAge() > this.lower() && cat.getAge() < this.upper();
+                });
 
-		private sealed class _AnonymousInnerClass44 : com.db4o.test.nativequeries.cats.SodaCatPredicate
+            }
+#endif
+
+        }
+
+		private sealed class NameIs : SodaCatPredicate
 		{
-			public _AnonymousInnerClass44()
-			{
-			}
-
 			public bool match(com.db4o.test.nativequeries.cats.Cat cat)
 			{
 				return cat.getFirstName()=="SpeedyClone991";
@@ -66,17 +77,26 @@ namespace com.db4o.test.nativequeries.cats
 			{
 				q.descend("_firstName").constrain("SpeedyClone991");
 			}
-		}
+#if NET_2_0
+            public override void delegateNQ(ObjectContainer oc)
+            {
+                oc.query<Cat>(delegate(Cat cat)
+                {
+                    return cat.getFirstName() == "SpeedyClone991";
+                });
 
-		private sealed class _AnonymousInnerClass53 : com.db4o.test.nativequeries.cats.SodaCatPredicate
+            }
+#endif
+
+        }
+
+		private sealed class AgeRangeName : com.db4o.test.nativequeries.cats.SodaCatPredicate
 		{
-			public _AnonymousInnerClass53()
-			{
-			}
-
 			public bool match(com.db4o.test.nativequeries.cats.Cat cat)
 			{
-				return cat.getAge() < 750 || cat.getAge() > 900 || cat.getFirstName()=="SpeedyClone888";
+				return cat.getAge() < 750 
+                    || cat.getAge() > 900 
+                    || cat.getFirstName()=="SpeedyClone888";
 			}
 
 			public override void constrain(com.db4o.query.Query q)
@@ -88,17 +108,27 @@ namespace com.db4o.test.nativequeries.cats
 					);
 				ca1.or(ca2).or(cn);
 			}
-		}
+#if NET_2_0
+            public override void delegateNQ(ObjectContainer oc)
+            {
+                oc.query<Cat>(delegate(Cat cat)
+                {
+                    return cat.getAge() < 750
+                        || cat.getAge() > 900
+                        || cat.getFirstName() == "SpeedyClone888";
+                });
 
-		private sealed class _AnonymousInnerClass68 : com.db4o.test.nativequeries.cats.SodaCatPredicate
+            }
+#endif
+
+        }
+
+		private sealed class FatherAgeSmaller : SodaCatPredicate
 		{
-			public _AnonymousInnerClass68()
-			{
-			}
-
 			public bool match(com.db4o.test.nativequeries.cats.Cat cat)
 			{
-				return cat.getFather() != null && cat.getFather().getAge() < 900;
+				return cat.getFather() != null 
+                    && cat.getFather().getAge() < 900;
 			}
 
 			public override void constrain(com.db4o.query.Query q)
@@ -107,18 +137,28 @@ namespace com.db4o.test.nativequeries.cats
 				qf.constrain(null).not();
 				qf.descend("_age").constrain(900).smaller();
 			}
-		}
+#if NET_2_0
+            public override void delegateNQ(ObjectContainer oc)
+            {
+                oc.query<Cat>(delegate(Cat cat)
+                {
+                    return cat.getFather() != null
+                        && cat.getFather().getAge() < 900;
+                });
 
-		private sealed class _AnonymousInnerClass80 : com.db4o.test.nativequeries.cats.SodaCatPredicate
+            }
+#endif
+
+        }
+
+		private sealed class FatherAgeFirstname : SodaCatPredicate
 		{
-			public _AnonymousInnerClass80()
-			{
-			}
 
 			public bool match(com.db4o.test.nativequeries.cats.Cat cat)
 			{
-				return cat.getFather() != null && (cat.getFather().getAge() < 900 || cat.getFather
-					().getFirstName()=="SpeedyClone933");
+				return cat.getFather() != null 
+                        && (cat.getFather().getAge() < 900 
+                        || cat.getFather().getFirstName()=="SpeedyClone933");
 			}
 
 			public override void constrain(com.db4o.query.Query q)
@@ -130,13 +170,23 @@ namespace com.db4o.test.nativequeries.cats
 					);
 				c2.or(c3);
 			}
-		}
+#if NET_2_0
+            public override void delegateNQ(ObjectContainer oc)
+            {
+                oc.query<Cat>(delegate(Cat cat)
+                {
+                    return cat.getFather() != null
+                            && (cat.getFather().getAge() < 900
+                            || cat.getFather().getFirstName() == "SpeedyClone933");
+                });
 
-		private sealed class _AnonymousInnerClass94 : com.db4o.test.nativequeries.cats.SodaCatPredicate
+            }
+#endif
+
+        }
+
+		private sealed class MultiRangeFirstname : SodaCatPredicate
 		{
-			public _AnonymousInnerClass94()
-			{
-			}
 
 			public bool match(com.db4o.test.nativequeries.cats.Cat cat)
 			{
@@ -154,18 +204,30 @@ namespace com.db4o.test.nativequeries.cats
 					).constrain("SpeedyClone150"));
 				c1.or(c2).or(c3);
 			}
-		}
+#if NET_2_0
+            public override void delegateNQ(ObjectContainer oc)
+            {
+                oc.query<Cat>(delegate(Cat cat)
+                {
+                    return true;
+                });
+
+            }
+#endif
+
+        }
 
 		private static readonly com.db4o.test.nativequeries.cats.SodaCatPredicate[] PREDICATES = 
 			{ 
-				new _AnonymousInnerClass26(), 
-//				new _AnonymousInnerClass34(), 
-				new _AnonymousInnerClass44(),
-//				new _AnonymousInnerClass53(),
-				new _AnonymousInnerClass68(),
-				new _AnonymousInnerClass80(), 
-				new _AnonymousInnerClass94() 
+				new AgeSmaller800(), 
+//				new AgeInRange(), 
+				new NameIs(),
+//				new AgeRangeName(),
+				new FatherAgeSmaller(),
+				new FatherAgeFirstname(), 
+				new MultiRangeFirstname() 
 			};
+
 
 		public static void Main(string[] args)
 		{
@@ -211,22 +273,33 @@ namespace com.db4o.test.nativequeries.cats
 			for (int run = 0; run <= NUMRUNS; run++)
 			{
 				bool warmup = (run == 0);
-				timeUnopt += timeQuery(PREDICATES[predIdx], false, warmup);
-				timeOpt += timeQuery(PREDICATES[predIdx], true, warmup);
-				timeSoda += TestCatSpeed.timeSoda(PREDICATES[predIdx], warmup);
+                if(NQ_NOPT){
+                    timeUnopt += timeQuery(PREDICATES[predIdx], false, warmup);
+                }
+                if(NQ_OPT){
+                    timeOpt += timeQuery(PREDICATES[predIdx], true, warmup);
+                }
+                if(SODA){
+                    timeSoda += TestCatSpeed.timeSoda(PREDICATES[predIdx], warmup);
+                }
 			}
-			j4o.lang.JavaSystem._out.println("PREDICATE #" + (predIdx + 1) + ": " + (timeUnopt
+            println
+			("PREDICATE #" + (predIdx + 1) + ": " + (timeUnopt
 				 / NUMRUNS) + " / " + (timeOpt / NUMRUNS) + " / " + (timeSoda / NUMRUNS));
 		}
 
-		public static long timeQuery(com.db4o.query.Predicate predicate, bool optimize, bool
+		public static long timeQuery(SodaCatPredicate predicate, bool optimize, bool
 			 warmup)
 		{
 			com.db4o.Db4o.configure().optimizeNativeQueries(optimize);
 			com.db4o.ObjectContainer db = com.db4o.Db4o.openFile(FILENAME);
-			long start = j4o.lang.JavaSystem.currentTimeMillis();
+			long start = now();
+#if NET_2_0
+            predicate.delegateNQ(db);
+#else
 			db.query(predicate);
-			long time = (warmup ? 0 : j4o.lang.JavaSystem.currentTimeMillis() - start);
+#endif
+            long time = (warmup ? 0 : now() - start);
 			db.close();
 			return time;
 		}
@@ -235,16 +308,16 @@ namespace com.db4o.test.nativequeries.cats
 			, bool warmup)
 		{
 			com.db4o.ObjectContainer db = com.db4o.Db4o.openFile(FILENAME);
-			long start = j4o.lang.JavaSystem.currentTimeMillis();
+			long start = now();
 			predicate.sodaQuery(db);
-			long time = (warmup ? 0 : j4o.lang.JavaSystem.currentTimeMillis() - start);
+			long time = (warmup ? 0 : now() - start);
 			db.close();
 			return time;
 		}
 
 		public static void storeCats(int count)
 		{
-			j4o.lang.JavaSystem._out.println("STORING " + count + " CATS");
+			println("STORING " + count + " CATS");
 			new j4o.io.File(FILENAME).delete();
 			com.db4o.ObjectContainer db = com.db4o.Db4o.openFile(FILENAME);
 			com.db4o.test.nativequeries.cats.Cat lastCat = null;
@@ -264,5 +337,18 @@ namespace com.db4o.test.nativequeries.cats
 			}
 			db.close();
 		}
+
+        public static void println(string str){
+#if CF_1_0 || CF_2_0
+            com.db4o.Console.WriteLine(str);
+#endif
+#if NET_1_0 || NET_2_0
+            System.Console.WriteLine(str);
+#endif
+        }
+
+        public static long now(){
+            return System.Environment.TickCount;
+        }
 	}
 }
