@@ -57,10 +57,10 @@ This doesn't work with arrays, though.
 
 .2 Native Queries ..
 
-Native Queries are easily understandable. Here's how we find SensorReadouts
-with matching values:
+If we want to use Native Queries to find SensorReadouts with matching ._
+values, we simply write this as if we would check every single instance:
 
-.? net .s com.db4o.f1.chapter3.CollectionsExample#retrieveSensorReadoutNative +{} -run ..s  ..?
+.? net .s com.db4o.f1.chapter3.CollectionsExample#retrieveSensorReadoutPredicate +{} -run ..s  ..?
 .s com.db4o.f1.chapter3.CollectionsExample#retrieveSensorReadoutNative ..s
 
 And here's how we find Cars with matching readout values:

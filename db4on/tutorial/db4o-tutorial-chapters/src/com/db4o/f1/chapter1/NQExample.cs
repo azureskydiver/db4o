@@ -36,8 +36,8 @@ namespace com.db4o.f1.chapter1
 	        query.constrain(typeof(Pilot));
 	        Query pointQuery=query.descend("_points");
 	        query.descend("_name").constrain("Rubens Barrichello")
-	        	.or(pointQuery.constrain(99).greater()
-	        	    .and(pointQuery.constrain(199).smaller()));
+                .or(pointQuery.constrain(99).greater()
+                .and(pointQuery.constrain(199).smaller()));
 	        ObjectSet result=query.execute();
 	        listResult(result);
         }
