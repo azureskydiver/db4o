@@ -28,23 +28,23 @@ namespace com.db4o
         /// <code>
         /// <b>// C# .NET 2.0</b><br />
         /// IList &lt;Cat&gt; cats = db.Query &lt;Cat&gt; (delegate(Cat cat) {<br />
-        /// &nbsp;&nbsp;&nbsp;return cat.Name == "Occam";<br />
+        /// &#160;&#160;&#160;return cat.Name == "Occam";<br />
         /// });<br />
         /// <br />
         /// <br />
         /// <b>// Java JDK 5</b><br />
         /// List &lt;Cat&gt; cats = db.query(new Predicate&lt;Cat&gt;() {<br />
-        /// &nbsp;&nbsp;&nbsp;public boolean match(Cat cat) {<br />
-        /// &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return cat.getName().equals("Occam");<br />
-        /// &nbsp;&nbsp;&nbsp;}<br />
+        /// &#160;&#160;&#160;public boolean match(Cat cat) {<br />
+        /// &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br />
+        /// &#160;&#160;&#160;}<br />
         /// });<br />
         /// <br />
         /// <br />
         /// <b>// Java JDK 1.2 to 1.4</b><br />
         /// List cats = db.query(new Predicate() {<br />
-        /// &nbsp;&nbsp;&nbsp;public boolean match(Cat cat) {<br />
-        /// &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return cat.getName().equals("Occam");<br />
-        /// &nbsp;&nbsp;&nbsp;}<br />
+        /// &#160;&#160;&#160;public boolean match(Cat cat) {<br />
+        /// &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br />
+        /// &#160;&#160;&#160;}<br />
         /// });<br />
         /// <br />
         /// <br />
@@ -52,9 +52,9 @@ namespace com.db4o
         /// ObjectSet cats = db.query(new CatOccam());<br />
         /// <br />
         /// public static class CatOccam extends Predicate {<br />
-        /// &nbsp;&nbsp;&nbsp;public boolean match(Cat cat) {<br />
-        /// &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return cat.getName().equals("Occam");<br />
-        /// &nbsp;&nbsp;&nbsp;}<br />
+        /// &#160;&#160;&#160;public boolean match(Cat cat) {<br />
+        /// &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br />
+        /// &#160;&#160;&#160;}<br />
         /// });<br />
         /// <br />
         /// <br />
@@ -62,9 +62,9 @@ namespace com.db4o
         /// IList cats = db.Query(new CatOccam());<br />
         /// <br />
         /// public class CatOccam : Predicate {<br />
-        /// &nbsp;&nbsp;&nbsp;public boolean Match(Cat cat) {<br />
-        /// &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return cat.Name == "Occam";<br />
-        /// &nbsp;&nbsp;&nbsp;}<br />
+        /// &#160;&#160;&#160;public boolean Match(Cat cat) {<br />
+        /// &#160;&#160;&#160;&#160;&#160;&#160;return cat.Name == "Occam";<br />
+        /// &#160;&#160;&#160;}<br />
         /// });<br />
         /// </code>
         /// <br />
