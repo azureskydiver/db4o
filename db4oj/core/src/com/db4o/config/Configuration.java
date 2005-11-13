@@ -13,7 +13,7 @@ import com.db4o.reflect.*;
  * <br><br>This interface contains methods to configure db4o.<br><br>
  * The global Configuration context is available with {@link com.db4o.Db4o#configure()}.
  * When an ObjectContainer or ObjectServer is opened, the global Configuration 
- * interface is cloned and copied into the ObjectContainer/ObjectServer.
+ * context is cloned and copied into the ObjectContainer/ObjectServer.
  * That means every ObjectContainer/ObjectServer gets it's own copy of
  * configuration settings.<br><br>
  * <b>Most configuration settings should be set before opening an 
