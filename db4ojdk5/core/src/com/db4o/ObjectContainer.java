@@ -27,28 +27,31 @@ public interface ObjectContainer {
 	
     /**
      * activates all members on a stored object to the specified depth.
-	 * <br><br><b>Examples: ../com/db4o/samples/activate.</b><br><br>
-     * This method serves to traverse the graph of persistent objects.
-     * All members of an object can be activated in turn with subsequent calls.<br><br>
-     * Only objects in <code>DEACTIVATED</code> state are modified.
-     * <code>Object</code> members at the specified depth are
-     * instantiated in <code>DEACTIVATED</code> state.
-     * <br><br>Duplicate <code>activate()</code> calls on the same object have no effect.
-     * Passing an object that is not stored in the <code>ObjectContainer
-     * </code> has no effect.<br><br>
+     * <br><br>
+     * See {@link com.db4o.config.Configuration#activationDepth(int) "Why activation"}
+     * for an explanation why activation is necessary.<br><br>
+     * The activate method activates a graph of persistent objects in memory.
+     * Only deactivated objects in the graph will be touched: their
+     * fields will be loaded from the database. 
+     * The activate methods starts from a
+     * root object and traverses all member objects to the depth specified by the
+     * depth parameter. The depth parameter is the distance in "field hops" 
+     * (object.field.field) away from the root object. The nodes at 'depth' level
+     * away from the root (for a depth of 3: object.member.member) will be instantiated
+     * but deactivated, their fields will be null.
      * The activation depth of individual classes can be overruled
      * with the methods
      * {@link com.db4o.config.ObjectClass#maximumActivationDepth maximumActivationDepth()} and
      * {@link com.db4o.config.ObjectClass#minimumActivationDepth minimumActivationDepth()} in the
      * {@link com.db4o.config.ObjectClass ObjectClass interface}.<br><br>
-     * A successful <code>activate()</code> triggers the callback method
+     * A successful call to activate triggers the callback method
      * {@link com.db4o.ext.ObjectCallbacks#objectOnActivate objectOnActivate}
      * which can be used for cascaded activation.<br><br>
-	 * @see com.db4o.config.Configuration#activationDepth Why activation?
-	 * @see ObjectCallbacks Using callbacks
+     * @see com.db4o.config.Configuration#activationDepth Why activation?
+     * @see ObjectCallbacks Using callbacks
      * @param obj the object to be activated.
-	 * @param depth the member {@link com.db4o.config.Configuration#activationDepth depth}
-	 *  to which activate is to cascade.
+     * @param depth the member {@link com.db4o.config.Configuration#activationDepth depth}
+     *  to which activate is to cascade.
      */
     public void activate (Object obj, int depth);
     

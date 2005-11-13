@@ -41,7 +41,7 @@ public interface Configuration {
      * A concrete example with the preconfigured activation depth of 5:<br>
      * <pre>
      * // Object foo is the result of a query, it is delivered by the ObjectSet 
-     * Object foo = objectSet.next();</pre><br> 
+     * Object foo = objectSet.next();</pre> 
      * foo.member1.member2.member3.member4.member5 will be a valid object<br>
      * foo, member1, member2, member3 and member4 will be activated<br>
      * member5 will be deactivated, all of it's members will be null<br>
@@ -53,8 +53,7 @@ public interface Configuration {
      * the global activation depth needs more individual activation work but can
      * increase performance of queries.<br><br>
      * {@link com.db4o.ObjectContainer#deactivate ObjectContainer#deactivate(Object, depth)}
-     * can be used to manually free memory by deactivating objects.
-     * <br><br><b>Examples: ../com/db4o/samples/activate.</b><br><br>
+     * can be used to manually free memory by deactivating objects.<br><br>
      * @param depth the desired global activation depth.
      * @see ObjectClass#maximumActivationDepth configuring classes individually
      */
