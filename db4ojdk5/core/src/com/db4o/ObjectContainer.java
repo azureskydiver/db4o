@@ -202,49 +202,49 @@ public interface ObjectContainer {
      * how a simple native query will look like in some of the programming languages 
      * and dialects that db4o supports:<br><br>
      * 
-     * <pre>
-     * <b>// C# .NET 2.0</b>
-     * IList <Cat> cats = db.Query <Cat> (delegate(Cat cat) {
-     *   return cat.Name == "Occam";
-     * });
-     * 
-     *
-     * <b>// Java JDK 5</b>
-     * List <Cat> cats = db.query(new Predicate<Cat>() {
-     *     public boolean match(Cat cat) {
-     *         return cat.getName().equals("Occam");
-     *     }
-     * });
-     * 
-     * 
-     * <b>// Java JDK 1.2 to 1.4</b>
-     * List cats = db.query(new Predicate() {
-     *     public boolean match(Cat cat) {
-     *         return cat.getName().equals("Occam");
-     *     }
-     * });
-     * 
-     *     
-     * <b>// Java JDK 1.1</b>
-     * ObjectSet cats = db.query(new CatOccam());
-     * 
-     * public static class CatOccam extends Predicate {
-     *     public boolean match(Cat cat) {
-     *         return cat.getName().equals("Occam");
-     *     }
-     * });
-     *     
-     *     
-     * <b>// C# .NET 1.1</b>
-     * IList cats = db.Query(new CatOccam());
-     * 
-     * public class CatOccam : Predicate {
-     *     public boolean Match(Cat cat) {
-     *         return cat.Name == "Occam";
-     *     }
-     * });
-     * </pre>
-     * 
+     * <code>
+     * <b>// C# .NET 2.0</b><br>
+     * IList &lt;Cat&gt; cats = db.Query &lt;Cat&gt; (delegate(Cat cat) {<br>
+     * &nbsp;&nbsp;&nbsp;return cat.Name == "Occam";<br>
+     * });<br>
+     * <br>
+     *<br>
+     * <b>// Java JDK 5</b><br>
+     * List &lt;Cat&gt; cats = db.query(new Predicate&lt;Cat&gt;() {<br>
+     * &nbsp;&nbsp;&nbsp;public boolean match(Cat cat) {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return cat.getName().equals("Occam");<br>
+     * &nbsp;&nbsp;&nbsp;}<br>
+     * });<br>
+     * <br>
+     * <br>
+     * <b>// Java JDK 1.2 to 1.4</b><br>
+     * List cats = db.query(new Predicate() {<br>
+     * &nbsp;&nbsp;&nbsp;public boolean match(Cat cat) {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return cat.getName().equals("Occam");<br>
+     * &nbsp;&nbsp;&nbsp;}<br>
+     * });<br>
+     * <br>
+     * <br>
+     * <b>// Java JDK 1.1</b><br>
+     * ObjectSet cats = db.query(new CatOccam());<br>
+     * <br>
+     * public static class CatOccam extends Predicate {<br>
+     * &nbsp;&nbsp;&nbsp;public boolean match(Cat cat) {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return cat.getName().equals("Occam");<br>
+     * &nbsp;&nbsp;&nbsp;}<br>
+     * });<br>
+     * <br>
+     * <br>     
+     * <b>// C# .NET 1.1</b><br>
+     * IList cats = db.Query(new CatOccam());<br>
+     * <br>
+     * public class CatOccam : Predicate {<br>
+     * &nbsp;&nbsp;&nbsp;public boolean Match(Cat cat) {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return cat.Name == "Occam";<br>
+     * &nbsp;&nbsp;&nbsp;}<br>
+     * });<br>
+     * </code>
+     * <br>
      * Summing up the above:<br>
      * In order to run a Native Query, you can<br>
      * - use the delegate notation for .NET 2.0.<br>

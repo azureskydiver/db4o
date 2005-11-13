@@ -24,7 +24,7 @@ import com.db4o.*;
  * {@link #execute()} can be called from any {@link Query} node
  * of the graph. It will return an {@link ObjectSet} filled with
  * objects of the class/classes that the node, it was called from,
- * represents.<b><br><br>
+ * represents.<br><br>
  * <b>Note:<br>
  * {@link Predicate Native queries} are the recommended main query 
  * interface of db4o.</b> 
