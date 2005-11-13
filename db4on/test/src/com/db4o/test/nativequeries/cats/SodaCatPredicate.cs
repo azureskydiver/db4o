@@ -17,7 +17,9 @@ namespace com.db4o.test.nativequeries.cats
 
 		public abstract void constrain(com.db4o.query.Query q);
 
+#if NET_2_0
         public abstract void delegateNQ(ObjectContainer oc);
+#endif
 
 		public virtual void setCount(int count)
 		{
