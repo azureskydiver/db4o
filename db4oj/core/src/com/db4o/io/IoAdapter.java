@@ -4,33 +4,58 @@ import java.io.*;
 
 import com.db4o.*;
 
+/**
+ * Base class for database file adapters, both for file and memory 
+ * databases.
+ */
 public abstract class IoAdapter {
     
 	private int _blockSize;
     
+    /**
+     * converts address and address offset to an absolute address 
+     */
     protected final long regularAddress(int blockAddress, int blockAddressOffset){
         return (long)blockAddress * _blockSize + blockAddressOffset;
     }
     
+    /**
+     * copies a block within a file in block mode 
+     */
     public void blockCopy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) throws IOException{
         copy(regularAddress(oldAddress, oldAddressOffset), regularAddress(newAddress, newAddressOffset), length);
     }
     
+    /**
+     * sets the read/write pointer in the file using block mode 
+     */
 	public void blockSeek(int address) throws IOException {
 		blockSeek(address,0);
 	}
 
+    /**
+     * sets the read/write pointer in the file using block mode 
+     */
 	public void blockSeek(int address, int offset)
 			throws IOException {		
 		seek(regularAddress(address,offset));
 	}
 
-	public void blockSize(int blockSize) {
+	/**
+     * outside call to set the block size of this adapter 
+	 */
+    public void blockSize(int blockSize) {
 		_blockSize=blockSize;
 	}
 
-	public abstract void close() throws IOException;
+	/**
+     * implement to close the adapter 
+	 */
+    public abstract void close() throws IOException;
 
+    /**
+     * copies a block within a file in absolute mode 
+     */
     public void copy(long oldAddress, long newAddress, int length) throws IOException{
         
         if(DTrace.enabled){
@@ -44,32 +69,62 @@ public abstract class IoAdapter {
         write(copyBytes);
     }
     
+    /**
+     * checks whether a file exists 
+     */
     public boolean exists(String path){
         File existingFile = new File(path);
         return  existingFile.exists() && existingFile.length() > 0;
     }
     
-	public abstract long getLength() throws IOException;
+	/**
+     * implement to return the absolute length of the file 
+	 */
+    public abstract long getLength() throws IOException;
 
+    /**
+     * implement to open the file 
+     */
     public abstract IoAdapter open(String path, boolean lockFile, long initialLength) throws IOException;
 
+    /**
+     * reads a buffer at the seeked address 
+     */
 	public int read(byte[] buffer) throws IOException {
 		return read(buffer,buffer.length);		
 	}
 
+    /**
+     * implement to read a buffer at the seeked address 
+     */
 	public abstract int read(byte[] bytes, int length) throws IOException;
 
+    /**
+     * implement to set the read/write pointer in the file, absolute mode 
+     */
 	public abstract void seek(long pos) throws IOException;
 
-	public abstract void sync() throws IOException;
+	/**
+     * implement to flush the file contents to storage 
+	 */
+    public abstract void sync() throws IOException;
 
-	public void write(byte[] bytes) throws IOException {
+	/**
+     * writes a buffer to the seeked address 
+	 */
+    public void write(byte[] bytes) throws IOException {
 		write(bytes,bytes.length);
 	}
 
+    /**
+     * implement to write a buffer at the seeked address 
+     */
 	public abstract void write(byte[] buffer, int length) throws IOException;
 	
-	public int blockSize() {
+	/**
+     * returns the block size currently used 
+	 */
+    public int blockSize() {
 		return _blockSize;
 	}
 

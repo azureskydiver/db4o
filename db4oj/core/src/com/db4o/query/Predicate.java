@@ -9,16 +9,18 @@ import com.db4o.*;
 
 /**
  * Base class for native queries.
- * <br><br>Native Queries provide the ability to run one or more lines
- * of code against all instances of a class. Native query expressions should
- * return true to mark specific instances as part of the result set. 
- * db4o will  attempt to optimize native query expressions and run them 
+ * <br><br>Native Queries allow typesafe, compile-time checked and refactorable 
+ * querying, following object-oriented principles. Native Queries expressions
+ * are written as if one or more lines of code would be run against all
+ * instances of a class. A Native Query expression should return true to mark 
+ * specific instances as part of the result set. 
+ * db4o will  attempt to optimize native query expressions and execute them 
  * against indexes and without instantiating actual objects, where this is 
  * possible.<br><br>
- * The syntax of the enclosing object for the native query expression varies
- * slightly, depending on the language version used. Here are some examples,
- * how a simple native query will look like in some of the programming languages and
- * dialects that db4o supports:<br><br>
+ * The syntax of the enclosing object for the native query expression varies,
+ * depending on the language version used. Here are some examples,
+ * how a simple native query will look like in some of the programming languages 
+ * and dialects that db4o supports:<br><br>
  * 
  * <pre>
  * <b>// C# .NET 2.0</b>
@@ -81,7 +83,11 @@ import com.db4o.*;
  * false.<br><br>
  */
 public abstract class Predicate implements Serializable {
-	public final static String PREDICATEMETHOD_NAME="match";
+	
+    /**
+     * public for implementation reasons, please ignore.
+     */
+    public final static String PREDICATEMETHOD_NAME="match";
 	
 	static final Class OBJECT_CLASS = Object.class;
 	
@@ -125,10 +131,16 @@ public abstract class Predicate implements Serializable {
 		}
 	}
 
+    /**
+     * public for implementation reasons, please ignore.
+     */
 	public Class extentType() {
 		return getFilterMethod().getParameterTypes()[0];
 	}
 
+    /**
+     * public for implementation reasons, please ignore.
+     */
 	public boolean appliesTo(Object candidate) {
 		try {
 			Method filterMethod=getFilterMethod();

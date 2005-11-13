@@ -7,33 +7,44 @@ import com.db4o.query.*;
 
 
 /**
- * storage and query interface.
- * <br><br>The <code>ObjectContainer</code> interface provides methods
- * to store, retrieve and delete objects and to commit and rollback
- * transactions.
+ * the interface to a db4o database, stand-alone or client/server.
+ * <br><br>The ObjectContainer interface provides methods
+ * to store, query and delete objects and to commit and rollback
+ * transactions.<br><br>
+ * An ObjectContainer can either represent a stand-alone database
+ * or a connection to a {@link Db4o#openServer(String, int) db4o server}.
+ * <br><br>An ObjectContainer also represents a transaction. All work
+ * with db4o always is transactional. Both {@link #commit()} and
+ * {@link #rollback()} start new transactions immediately. For working 
+ * against the same database with multiple transactions,  
+ * {@link Db4o#openServer(String, int) open a db4o server} and 
+ * {@link ObjectServer#openClient() connect locally} or
+ * {@link Db4o#openClient(String, int, String, String) over TCP}.
  * @see ExtObjectContainer ExtObjectContainer for extended functionality.
- * 
  * @partial
  */
 public interface ObjectContainer {
 	
     /**
      * activates all members on a stored object to the specified depth.
-	 * <br><br><b>Examples: ../com/db4o/samples/activate.</b><br><br>
-     * This method serves to traverse the graph of persistent objects.
-     * All members of an object can be activated in turn with subsequent calls.<br><br>
-     * Only objects in <code>DEACTIVATED</code> state are modified.
-     * <code>Object</code> members at the specified depth are
-     * instantiated in <code>DEACTIVATED</code> state.
-     * <br><br>Duplicate <code>activate()</code> calls on the same object have no effect.
-     * Passing an object that is not stored in the <code>ObjectContainer
-     * </code> has no effect.<br><br>
+	 * <br><br>
+     * See {@link com.db4o.config.Configuration#activationDepth(int) "Why activation"}
+     * for an explanation why activation is necessary.<br><br>
+     * The activate method activates a graph of persistent objects in memory.
+     * Only deactivated objects in the graph will be touched: their
+     * fields will be loaded from the database. 
+     * The activate methods starts from a
+     * root object and traverses all member objects to the depth specified by the
+     * depth parameter. The depth parameter is the distance in "field hops" 
+     * (object.field.field) away from the root object. The nodes at 'depth' level
+     * away from the root (for a depth of 3: object.member.member) will be instantiated
+     * but deactivated, their fields will be null.
      * The activation depth of individual classes can be overruled
      * with the methods
      * {@link com.db4o.config.ObjectClass#maximumActivationDepth maximumActivationDepth()} and
      * {@link com.db4o.config.ObjectClass#minimumActivationDepth minimumActivationDepth()} in the
      * {@link com.db4o.config.ObjectClass ObjectClass interface}.<br><br>
-     * A successful <code>activate()</code> triggers the callback method
+     * A successful call to activate triggers the callback method
      * {@link com.db4o.ext.ObjectCallbacks#objectOnActivate objectOnActivate}
      * which can be used for cascaded activation.<br><br>
 	 * @see com.db4o.config.Configuration#activationDepth Why activation?
@@ -45,8 +56,8 @@ public interface ObjectContainer {
     public void activate (Object obj, int depth);
     
     /**
-     * closes the <code>ObjectContainer</code>.
-     * <br><br>A call to <code>close()</code> automatically performs a 
+     * closes this ObjectContainer.
+     * <br><br>A call to close() automatically performs a 
      * {@link #commit commit()}.
      * <br><br>Note that every session opened with Db4o.openFile() requires one
      * close()call, even if the same filename was used multiple times.<br><br>
@@ -58,6 +69,8 @@ public interface ObjectContainer {
 
     /**
      * commits the running transaction.
+     * <br><br>Transactions are back-to-back. A call to commit will starts
+     * a new transaction immedidately.
      */
     public void commit ();
     
@@ -158,7 +171,7 @@ public interface ObjectContainer {
     public ObjectSet get (Object template);
     
     /**
-     * creates a new S.O.D.A. {@link Query Query}.
+     * creates a new SODA {@link Query Query}.
      * <br><br>
      * Use {@link #get get(Object template)} for simple Query-By-Example.<br><br>
      * {@link #query(Predicate) Native queries } are the recommended main db4o query
@@ -170,9 +183,79 @@ public interface ObjectContainer {
     
     /**
      * Native Query Interface.
-     * Native Queries allow typesafe, compile-time checked and refactorable querying,
-     * following object-oriented principles. Detailed documentation can be found in
-     * the {@link Predicate} class.  
+     * <br><br>Native Queries allow typesafe, compile-time checked and refactorable 
+     * querying, following object-oriented principles. Native Queries expressions
+     * are written as if one or more lines of code would be run against all
+     * instances of a class. A Native Query expression should return true to mark 
+     * specific instances as part of the result set. 
+     * db4o will  attempt to optimize native query expressions and execute them 
+     * against indexes and without instantiating actual objects, where this is 
+     * possible.<br><br>
+     * The syntax of the enclosing object for the native query expression varies,
+     * depending on the language version used. Here are some examples,
+     * how a simple native query will look like in some of the programming languages 
+     * and dialects that db4o supports:<br><br>
+     * 
+     * <pre>
+     * <b>// C# .NET 2.0</b>
+     * IList <Cat> cats = db.Query <Cat> (delegate(Cat cat) {
+     *   return cat.Name == "Occam";
+     * });
+     * 
+     *
+     * <b>// Java JDK 5</b>
+     * List <Cat> cats = db.query(new Predicate<Cat>() {
+     *     public boolean match(Cat cat) {
+     *         return cat.getName().equals("Occam");
+     *     }
+     * });
+     * 
+     * 
+     * <b>// Java JDK 1.2 to 1.4</b>
+     * List cats = db.query(new Predicate() {
+     *     public boolean match(Cat cat) {
+     *         return cat.getName().equals("Occam");
+     *     }
+     * });
+     * 
+     *     
+     * <b>// Java JDK 1.1</b>
+     * ObjectSet cats = db.query(new CatOccam());
+     * 
+     * public static class CatOccam extends Predicate {
+     *     public boolean match(Cat cat) {
+     *         return cat.getName().equals("Occam");
+     *     }
+     * });
+     *     
+     *     
+     * <b>// C# .NET 1.1</b>
+     * IList cats = db.Query(new CatOccam());
+     * 
+     * public class CatOccam : Predicate {
+     *     public boolean Match(Cat cat) {
+     *         return cat.Name == "Occam";
+     *     }
+     * });
+     * </pre>
+     * 
+     * Summing up the above:<br>
+     * In order to run a Native Query, you can<br>
+     * - use the delegate notation for .NET 2.0.<br>
+     * - extend the Predicate class for all other language dialects<br><br>
+     * A class that extends Predicate is required to 
+     * implement the #match() / #Match() method, following the native query
+     * conventions:<br>
+     * - The name of the method is "#match()" (Java) / "#Match()" (.NET).<br>
+     * - The method must be public public.<br>
+     * - The method returns a boolean.<br>
+     * - The method takes one parameter.<br>
+     * - The Type (.NET) / Class (Java) of the parameter specifies the extent.<br>
+     * - For all instances of the extent that are to be included into the
+     * resultset of the query, the match method should return true. For all
+     * instances that are not to be included, the match method should return
+     * false.<br><br>  
+     *   
      * @param predicate the {@link Predicate} containing the native query expression.
      * @return the {@link ObjectSet} returned by the query.
      */
@@ -180,9 +263,11 @@ public interface ObjectContainer {
     
     /**
      * rolls back the running transaction.
-     * <br><br>Modified application objects im memory are not restored.
-     * Use combined calls to {@link #deactivate deactivate()}
-     * and {@link #activate activate()} to reload an objects member values.
+     * <br><br>Transactions are back-to-back. A call to rollback will starts
+     * a new transaction immedidately.
+     * <br><br>rollback will not restore modified objects in memory. They
+     * can be refreshed from the database by calling 
+     * {@link ExtObjectContainer#refresh(Object, int)}.
      */
     public void rollback();
     

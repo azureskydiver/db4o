@@ -6,6 +6,9 @@ import java.io.*;
 
 import com.db4o.*;
 
+/**
+ * IO adapter for random access files.
+ */
 public class RandomAccessFileAdapter extends IoAdapter {
 
     private RandomAccessFile _delegate;
