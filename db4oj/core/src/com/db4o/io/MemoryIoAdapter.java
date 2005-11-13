@@ -22,7 +22,8 @@ import com.db4o.foundation.*;
  * <code>byte[]</code> content to a MemoryIoAdapter use 
  * {@link #put(String, byte[])}. To reduce memory consumption of memory
  * file names that will no longer be used call {@link #put(String, byte[])}
- * and pass an empty byte array.  
+ * and pass an empty byte array.
+ * {@see com.db4o.io.IoAdapter} for a documentation of the methods 
  */
 public class MemoryIoAdapter extends IoAdapter{
 
