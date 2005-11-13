@@ -5,7 +5,13 @@ package com.db4o;
 import com.db4o.ext.*;
 
 /**
- * the db4o server class. 
+ * the db4o server interface.
+ * <br><br>- db4o servers can be opened with {@link Db4o#openServer(String, int)}.<br>
+ * - Direct in-memory connections to servers can be made with {@link #openClient()} <br>
+ * - TCP connections are available through {@link Db4o#openClient(String, int, String, String)}.
+ * <br><br>Before connecting clients over TCP, you have to 
+ * {@link #grantAccess(String, String)} to the username and password combination
+ * that you want to use. 
  * @see Db4o#openServer(java.lang.String, int) Db4o.openServer
  * @see ExtObjectServer ExtObjectServer for extended functionality
  */

@@ -8,17 +8,20 @@ import com.db4o.ext.*;
 
 /**
  * query resultset.
- * <br><br>The <code>ObjectSet</code> class serves as a cursor to
- * iterate through a set of objects retrieved by a 
- * call to
- * {@link ObjectContainer#get ObjectContainer.get(template)}.
- * <br><br>An <code>ObjectSet</code> can easily be wrapped to a
- * <code>java.util.List</code> (Java)  / <code>System.Collections.IList</code>  (.NET)
- * using the source code supplied in ../com/db4o/wrap/     
- * <br><br>Note that the used
- * {@link ObjectContainer ObjectContainer} needs to remain opened during the
- * use of an <code>ObjectSet</code> to allow lazy instantiation.
+ * <br><br>An ObjectSet is a representation for a set of objects returned 
+ * by a query.
+ * <br><br>ObjectSet extends the system collection interfaces 
+ * java.util.List/System.Collections.IList where they are available. It is
+ * recommended, never to reference ObjectSet directly in code but to use
+ * List / IList instead.
+ * <br><br>Note that the underlying 
+ * {@link ObjectContainer ObjectContainer} of an ObjectSet
+ * needs to remain open as long as an ObjectSet is used. This is necessary
+ * for lazy instantiation. The objects in an ObjectSet are only instantiated
+ * when they are actually being used by the application. 
  * @see ExtObjectSet for extended functionality.
+ * 
+ * @extends System.Collections.IList
  */
 public interface ObjectSet<Item> extends List<Item>, Iterator<Item> {
 	

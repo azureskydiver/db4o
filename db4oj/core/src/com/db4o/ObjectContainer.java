@@ -16,8 +16,8 @@ import com.db4o.query.*;
  * <br><br>An ObjectContainer also represents a transaction. All work
  * with db4o always is transactional. Both {@link #commit()} and
  * {@link #rollback()} start new transactions immediately. For working 
- * against the same database with multiple transactions,  
- * {@link Db4o#openServer(String, int) open a db4o server} and 
+ * against the same database with multiple transactions, open a db4o server
+ * with {@link Db4o#openServer(String, int)} and 
  * {@link ObjectServer#openClient() connect locally} or
  * {@link Db4o#openClient(String, int, String, String) over TCP}.
  * @see ExtObjectContainer ExtObjectContainer for extended functionality.
