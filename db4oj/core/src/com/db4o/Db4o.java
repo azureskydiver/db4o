@@ -11,15 +11,13 @@ import com.db4o.foundation.network.*;
 import com.db4o.reflect.*;
 
 /**
- * factory class with static methods to configure and start the engine.
- * <br><br>This class serves as a factory class, to open
- * {@link ObjectContainer ObjectContainer}
- * instances on database files.<br><br>
- * The global db4o {@link com.db4o.config.Configuration Configuration}
- * object for the running Java session is available through the
- * {@link #configure configure} method.
- * <br><br>On running the <code>Db4o</code> class it prints the current
- * version to System.out.
+ * factory class to start db4o database engines.
+ * <br><br>This class provides static methods to<br> 
+ * - open single-user databases {@link #openFile(String)} <br>
+ * - open db4o servers {@link #openServer(String, int)} <br>
+ * - connect to db4o servers {@link #openClient(String, int, String, String)} <br>
+ * - provide access to the global configuration context {@link #configure()} <br>
+ * - print the version number of this db4o version {@link #main(String[])} 
  * @see ExtDb4o ExtDb4o for extended functionality.
  */
 public class Db4o {
