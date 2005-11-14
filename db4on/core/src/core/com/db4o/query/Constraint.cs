@@ -10,9 +10,9 @@ namespace com.db4o.query
 	/// .
 	/// <br /><br />
 	/// Constraints can be joined with the methods
-	/// <see cref="com.db4o.query.Constraint.and">and()</see>
+	/// <see cref="com.db4o.query.Constraint.and">com.db4o.query.Constraint.and</see>
 	/// and
-	/// <see cref="com.db4o.query.Constraint.or">or()</see>
+	/// <see cref="com.db4o.query.Constraint.or">com.db4o.query.Constraint.or</see>
 	/// .
 	/// <br /><br />
 	/// The methods to modify the constraint evaluation algorithm may

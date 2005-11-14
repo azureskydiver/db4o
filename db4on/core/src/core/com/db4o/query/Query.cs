@@ -1,8 +1,8 @@
 namespace com.db4o.query
 {
-	/// <summary>handle to a node in the query graph.</summary>
+	/// <summary>handle to a node in a S.O.D.A.</summary>
 	/// <remarks>
-	/// handle to a node in the query graph.
+	/// handle to a node in a S.O.D.A. query graph.
 	/// <br /><br />
 	/// A node in the query graph can represent multiple
 	/// classes, one class or an attribute of a class.<br /><br />The graph
@@ -10,12 +10,12 @@ namespace com.db4o.query
 	/// (see
 	/// <see cref="com.db4o.query.Query.constrain">com.db4o.query.Query.constrain</see>
 	/// ) and upon calls to
-	/// <see cref="com.db4o.query.Query.descend">descend()</see>
+	/// <see cref="com.db4o.query.Query.descend">com.db4o.query.Query.descend</see>
 	/// that request nodes that do not yet exist.
 	/// <br /><br />
 	/// References to joined nodes in the query graph can be obtained
 	/// by "walking" along the nodes of the graph with the method
-	/// <see cref="com.db4o.query.Query.descend">descend()</see>
+	/// <see cref="com.db4o.query.Query.descend">com.db4o.query.Query.descend</see>
 	/// .
 	/// <br /><br />
 	/// <see cref="com.db4o.query.Query.execute">com.db4o.query.Query.execute</see>
@@ -29,7 +29,11 @@ namespace com.db4o.query
 	/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
 	/// filled with
 	/// objects of the class/classes that the node, it was called from,
-	/// represents.
+	/// represents.<br /><br />
+	/// <b>Note:<br />
+	/// <see cref="com.db4o.query.Predicate">Native queries</see>
+	/// are the recommended main query
+	/// interface of db4o.</b>
 	/// </remarks>
 	public interface Query
 	{

@@ -1,5 +1,7 @@
 namespace com.db4o.io
 {
+	/// <summary>IO adapter for random access files.</summary>
+	/// <remarks>IO adapter for random access files.</remarks>
 	public class RandomAccessFileAdapter : com.db4o.io.IoAdapter
 	{
 		private j4o.io.RandomAccessFile _delegate;

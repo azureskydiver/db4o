@@ -21,6 +21,8 @@ namespace com.db4o.io
 	/// file names that will no longer be used call
 	/// <see cref="com.db4o.io.MemoryIoAdapter.put">com.db4o.io.MemoryIoAdapter.put</see>
 	/// and pass an empty byte array.
+	/// <seealso>com.db4o.io.IoAdapter</seealso>
+	/// for a documentation of the methods
 	/// </remarks>
 	public class MemoryIoAdapter : com.db4o.io.IoAdapter
 	{
