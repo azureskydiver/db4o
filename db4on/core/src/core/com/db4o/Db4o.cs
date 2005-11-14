@@ -1,18 +1,24 @@
 namespace com.db4o
 {
-	/// <summary>factory class with static methods to configure and start the engine.</summary>
+	/// <summary>factory class to start db4o database engines.</summary>
 	/// <remarks>
-	/// factory class with static methods to configure and start the engine.
-	/// <br /><br />This class serves as a factory class, to open
-	/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
-	/// instances on database files.<br /><br />
-	/// The global db4o
-	/// <see cref="com.db4o.config.Configuration">Configuration</see>
-	/// object for the running Java session is available through the
-	/// <see cref="com.db4o.Db4o.configure">configure</see>
-	/// method.
-	/// <br /><br />On running the <code>Db4o</code> class it prints the current
-	/// version to System.out.
+	/// factory class to start db4o database engines.
+	/// <br /><br />This class provides static methods to<br />
+	/// - open single-user databases
+	/// <see cref="com.db4o.Db4o.openFile">com.db4o.Db4o.openFile</see>
+	/// <br />
+	/// - open db4o servers
+	/// <see cref="com.db4o.Db4o.openServer">com.db4o.Db4o.openServer</see>
+	/// <br />
+	/// - connect to db4o servers
+	/// <see cref="com.db4o.Db4o.openClient">com.db4o.Db4o.openClient</see>
+	/// <br />
+	/// - provide access to the global configuration context
+	/// <see cref="com.db4o.Db4o.configure">com.db4o.Db4o.configure</see>
+	/// <br />
+	/// - print the version number of this db4o version
+	/// <see cref="com.db4o.Db4o.Main">com.db4o.Db4o.Main</see>
+	/// 
 	/// </remarks>
 	/// <seealso cref="com.db4o.ext.ExtDb4o">ExtDb4o for extended functionality.</seealso>
 	public class Db4o
