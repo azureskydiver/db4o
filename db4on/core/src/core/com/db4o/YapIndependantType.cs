@@ -100,6 +100,8 @@ namespace com.db4o
 
 		public abstract bool equals(com.db4o.TypeHandler4 arg1);
 
+		public abstract bool indexNullHandling();
+
 		public abstract void prepareLastIoComparison(com.db4o.Transaction arg1, object arg2
 			);
 

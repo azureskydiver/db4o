@@ -2,7 +2,7 @@
 
 namespace com.db4o
 {
-#if NET_2_0 || CF_2_0
+#if NET_2_0
 
     using com.db4o.inside.query;
     using com.db4o.query;

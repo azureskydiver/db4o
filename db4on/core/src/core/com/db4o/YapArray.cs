@@ -176,6 +176,11 @@ namespace com.db4o
 			return com.db4o.YapConst.YAPARRAY;
 		}
 
+		public override bool indexNullHandling()
+		{
+			return i_handler.indexNullHandling();
+		}
+
 		public override object comparableObject(com.db4o.Transaction a_trans, object a_object
 			)
 		{

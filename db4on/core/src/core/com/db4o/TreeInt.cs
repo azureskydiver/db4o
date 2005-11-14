@@ -102,5 +102,10 @@ namespace com.db4o
 			}
 			return tree.toQCandidate(candidates);
 		}
+
+		public override string ToString()
+		{
+			return "" + i_key;
+		}
 	}
 }

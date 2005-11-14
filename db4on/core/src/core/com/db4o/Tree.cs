@@ -186,8 +186,9 @@ namespace com.db4o
 
 		/// <summary>
 		/// returns 0, if keys are equal
-		/// returns negative if compared key (a_to) is smaller
-		/// returns positive if compared key (a_to) is greater
+		/// uses this - other
+		/// returns positive if this is greater than a_to
+		/// returns negative if this is smaller than a_to
 		/// </summary>
 		public abstract int compare(com.db4o.Tree a_to);
 
@@ -239,7 +240,7 @@ namespace com.db4o
 			return this;
 		}
 
-		internal static com.db4o.Tree find(com.db4o.Tree a_in, com.db4o.Tree a_tree)
+		public static com.db4o.Tree find(com.db4o.Tree a_in, com.db4o.Tree a_tree)
 		{
 			if (a_in == null)
 			{
@@ -605,13 +606,13 @@ namespace com.db4o
 			else
 			{
 				a_writer.writeInt(a_tree.size());
-				a_tree.traverse(new _AnonymousInnerClass447(a_writer));
+				a_tree.traverse(new _AnonymousInnerClass448(a_writer));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass447 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass448 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass447(com.db4o.YapWriter a_writer)
+			public _AnonymousInnerClass448(com.db4o.YapWriter a_writer)
 			{
 				this.a_writer = a_writer;
 			}

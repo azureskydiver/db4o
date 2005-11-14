@@ -1286,6 +1286,11 @@ namespace com.db4o
 			return i_lastID;
 		}
 
+		public virtual bool indexNullHandling()
+		{
+			return true;
+		}
+
 		public virtual bool isArray()
 		{
 			return reflector().isCollection(classReflector());
@@ -1592,15 +1597,15 @@ namespace com.db4o
 				{
 					int[] idgen = { -2 };
 					a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
-					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1360(this
+					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1364(this
 						, trans, idgen, a_candidates));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1360 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass1364 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass1360(YapClass _enclosing, com.db4o.Transaction trans, 
+			public _AnonymousInnerClass1364(YapClass _enclosing, com.db4o.Transaction trans, 
 				int[] idgen, com.db4o.QCandidates a_candidates)
 			{
 				this._enclosing = _enclosing;

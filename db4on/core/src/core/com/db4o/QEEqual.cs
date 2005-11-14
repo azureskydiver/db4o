@@ -5,7 +5,7 @@ namespace com.db4o
 	{
 		public override void indexBitMap(bool[] bits)
 		{
-			bits[1] = true;
+			bits[com.db4o.inside.ix.IxTraverser.EQUAL] = true;
 		}
 	}
 }

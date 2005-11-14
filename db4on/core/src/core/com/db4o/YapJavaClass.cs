@@ -62,6 +62,11 @@ namespace com.db4o
 			return a_object;
 		}
 
+		public virtual bool indexNullHandling()
+		{
+			return false;
+		}
+
 		public virtual object comparableObject(com.db4o.Transaction a_trans, object a_object
 			)
 		{

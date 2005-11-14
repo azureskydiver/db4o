@@ -518,7 +518,6 @@ namespace com.db4o
 			writeMsg(com.db4o.Msg.QUERY_EXECUTE.getWriter(marshall(a_query.getTransaction(), 
 				a_query)));
 			readResult(a_res);
-			a_res.reset();
 		}
 
 		internal override void raiseVersion(long a_minimumVersion)
@@ -577,6 +576,7 @@ namespace com.db4o
 			{
 				aRes.add(reader.readInt());
 			}
+			aRes.reset();
 		}
 
 		internal virtual void readThis()
