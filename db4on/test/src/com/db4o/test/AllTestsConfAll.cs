@@ -1,213 +1,223 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004	db4objects Inc.	  http://www.db4o.com */
 
 using System;
 using com.db4o.test.inside.query;
 using j4o.lang;
 using com.db4o.test.cs;
+using System.Collections;
 
 namespace com.db4o.test {
 
-    public class AllTestsConfAll {
+	public class AllTestsConfAll {
 
-        /**
-         * new testcases here
-         */
-        internal Type[] TESTS = new Type[]{
-            typeof(ArrayNOrder),	
-            typeof(BackReferences),
-#if NET || NET_2_0 || MONO
-            typeof(BasicClusterTest),
-#endif
-            typeof(BindFileSize),
-            typeof(Book),
-            typeof(Callbacks),
-            typeof(CascadeDeleteArray),
-            typeof(CascadeOnActivate),
-            typeof(CascadeOnDelete),
-			
-			// FIXME: these tests are currently failing
-            //typeof(CascadeOnUpdate),
-            //typeof(CascadeToArray),
-            //typeof(CascadeToArrayList),
-			
-            typeof(CascadeToExistingArrayListMember),
-            typeof(CascadeToHashtable),
-            typeof(CaseInsensitive),
-            typeof(Circular1),
-            typeof(Circular2),
-            typeof(CollectionActivation),
-            typeof(Cs),
-            typeof(CsArrays),
-#if NET || NET_2_0
-			typeof(CsAppDomains),
-	#if !PASCALCASE
-			typeof(CsAssemblyVersionChange),
+		/**
+		 * Add new testcases here
+		 */
+		internal Type[] TESTS
+		{
+			// using property instead of array initializer
+			// so the camelCase->PascalCase converter does
+			// not get lost
+			get
+			{
+				ArrayList tests = new ArrayList();
+
+				tests.Add(typeof(ArrayNOrder)); 
+				tests.Add(typeof(BackReferences));
+	#if NET || NET_2_0 || MONO
+				tests.Add(typeof(BasicClusterTest));
 	#endif
-#endif
-            typeof(CsCascadeDeleteToStructs),
-			typeof(CsCollections),
-			typeof(CsCustomTransientAttribute),
-			typeof(CsDate),
-#if NET
-		    typeof(CsDelegate),
-#endif
-			typeof(CsEnum),
-                                              
-            typeof(CsEvaluationDelegate),
-            
-#if !MONO
-			typeof(CsMarshalByRef),
-#endif
-            typeof(CsStructs),
+				tests.Add(typeof(BindFileSize));
+				tests.Add(typeof(Book));
+				tests.Add(typeof(Callbacks));
+				tests.Add(typeof(CascadeDeleteArray));
+				tests.Add(typeof(CascadeOnActivate));
+				tests.Add(typeof(CascadeOnDelete));
+				
+				// FIXME: these tests are currently failing
+				//tests.Add(typeof(CascadeOnUpdate));
+				//tests.Add(typeof(CascadeToArray));
+				//tests.Add(typeof(CascadeToArrayList));
+				
+				tests.Add(typeof(CascadeToExistingArrayListMember));
+				tests.Add(typeof(CascadeToHashtable));
+				tests.Add(typeof(CaseInsensitive));
+				tests.Add(typeof(Circular1));
+				tests.Add(typeof(Circular2));
+				tests.Add(typeof(CollectionActivation));
+				tests.Add(typeof(Cs));
+				tests.Add(typeof(CsArrays));
+	#if NET || NET_2_0
+				tests.Add(typeof(CsAppDomains));
+				tests.Add(typeof(CsAssemblyVersionChange));
+	#endif
+				tests.Add(typeof(CsCascadeDeleteToStructs));
+				tests.Add(typeof(CsCollections));
+				tests.Add(typeof(CsCustomTransientAttribute));
+				tests.Add(typeof(CsDate));
+	#if NET
+				tests.Add(typeof(CsDelegate));
+	#endif
+				tests.Add(typeof(CsEnum));
+												  
+				tests.Add(typeof(CsEvaluationDelegate));
+				
+	#if !MONO
+				tests.Add(typeof(CsMarshalByRef));
+	#endif
+				tests.Add(typeof(CsStructs));
 
-		    typeof(CsType),
+				tests.Add(typeof(CsType));
 
-            typeof(DerivedFromArrayList),
-#if !MONO
-			typeof(Db4oHashMap),
-#endif
-			typeof(Db4oLinkedList),
-            // FIXME: current failing
-		    // typeof(Db4oLinkedListUntyped),
-            typeof(DifferentAccessPaths),
-            typeof(DualDelete),
-            typeof(ExtendsDate),
-            typeof(ExtendsHashTable),
-            typeof(ExternalBlobs),
-            typeof(ExtMethods),
-		    typeof(HashtableModifiedUpdateDepth),
-#if NET || NET_2_0 || MONO
-		    typeof(HoldsAnArrayList),
-#endif
-            typeof(IndexedByIdentity),
-            typeof(Isolation),
-            typeof(IsStored),
-			
-			typeof(j4otest.ClassTest),
-            typeof(j4otest.TypeNameTest),
-			
-            typeof(KeepCollectionContent),
-            typeof(MaxByEvaluation),
-            typeof(Messaging),
-			typeof(nativequeries.Cat),
-#if !MONO
-			typeof(nativequeries.NativeQueriesTestCase),
-#endif
-            typeof(nativequeries.cats.TestCatConsistency),
+				tests.Add(typeof(DerivedFromArrayList));
+	#if !MONO
+				tests.Add(typeof(Db4oHashMap));
+	#endif
+				tests.Add(typeof(Db4oLinkedList));
+				// FIXME: current failing
+				// tests.Add(typeof(Db4oLinkedListUntyped));
+				tests.Add(typeof(DifferentAccessPaths));
+				tests.Add(typeof(DualDelete));
+				tests.Add(typeof(ExtendsDate));
+				tests.Add(typeof(ExtendsHashTable));
+				tests.Add(typeof(ExternalBlobs));
+				tests.Add(typeof(ExtMethods));
+				tests.Add(typeof(HashtableModifiedUpdateDepth));
+	#if NET || NET_2_0 || MONO
+				tests.Add(typeof(HoldsAnArrayList));
+	#endif
+				tests.Add(typeof(IndexedByIdentity));
+				tests.Add(typeof(Isolation));
+				tests.Add(typeof(IsStored));
+				
+				tests.Add(typeof(j4otest.ClassTest));
+				tests.Add(typeof(j4otest.TypeNameTest));
+				
+				tests.Add(typeof(KeepCollectionContent));
+				tests.Add(typeof(MaxByEvaluation));
+				tests.Add(typeof(Messaging));
+				tests.Add(typeof(nativequeries.Cat));
+	#if !MONO
+				tests.Add(typeof(nativequeries.NativeQueriesTestCase));
+	#endif
+				tests.Add(typeof(nativequeries.cats.TestCatConsistency));
 
-#if NET_2_0
-			typeof(net2.Net2GenericContainers),
-			typeof(net2.Net2NullableTypes),
-            typeof(net2.Net2QueryForClass),
-			typeof(net2.Net2SimpleGenericType),
-#endif		
+	#if NET_2_0
+				tests.Add(typeof(net2.Net2GenericContainers));
+				tests.Add(typeof(net2.Net2NullableTypes));
+				tests.Add(typeof(net2.Net2QueryForClass));
+				tests.Add(typeof(net2.Net2SimpleGenericType));
+	#endif		
 
-		    typeof(NoInstanceStored),
-            typeof(NoInternalClasses),
-            typeof(ObjectSetIDs),
-			typeof(ObjectSetAsList),
-            typeof(OrClassConstraintInList),
-            typeof(PersistStaticFieldValues),
+				tests.Add(typeof(NoInstanceStored));
+				tests.Add(typeof(NoInternalClasses));
+				tests.Add(typeof(ObjectSetIDs));
+				tests.Add(typeof(ObjectSetAsList));
+				tests.Add(typeof(OrClassConstraintInList));
+				tests.Add(typeof(PersistStaticFieldValues));
 
-            // disabled because it fails due to fix
-            // See comments in YapClass.deleteEmbedded1() in the Java sources
+				// disabled because it fails due to fix
+				// See comments in YapClass.deleteEmbedded1() in the Java sources
 
-            // typeof(PrimitiveArrayFileSize),
+				// tests.Add(typeof(PrimitiveArrayFileSize));
 
-            typeof(PrimitivesInCollection),
+				tests.Add(typeof(PrimitivesInCollection));
 
-#if !CF_1_0 && !CF_2_0
-			typeof(QueryExpressionBuilderTestCase),
-#endif
-            typeof(QueryDeleted),
-            typeof(QueryNonExistant),
-            typeof(Refresh),
-            typeof(Rename),
-            typeof(SelectDistinct),
-            typeof(ServerRevokeAccess),
-            typeof(SetDeactivated),
-            typeof(SetSemaphore),
-            typeof(SharedObjectContainer),
-            typeof(Soda),
-            typeof(SodaEvaluation),
-            typeof(SodaNoDuplicates),
-            typeof(StoredClassInformation),
-            typeof(StoredFieldValue),
-#if !MONO
-			typeof(StringInLists),
-#endif
-            typeof(SwitchingFilesFromClient),
+	#if !CF_1_0 && !CF_2_0
+				tests.Add(typeof(QueryExpressionBuilderTestCase));
+	#endif
+				tests.Add(typeof(QueryDeleted));
+				tests.Add(typeof(QueryNonExistant));
+				tests.Add(typeof(Refresh));
+				tests.Add(typeof(Rename));
+				tests.Add(typeof(SelectDistinct));
+				tests.Add(typeof(ServerRevokeAccess));
+				tests.Add(typeof(SetDeactivated));
+				tests.Add(typeof(SetSemaphore));
+				tests.Add(typeof(SharedObjectContainer));
+				tests.Add(typeof(Soda));
+				tests.Add(typeof(SodaEvaluation));
+				tests.Add(typeof(SodaNoDuplicates));
+				tests.Add(typeof(StoredClassInformation));
+				tests.Add(typeof(StoredFieldValue));
+	#if !MONO
+				tests.Add(typeof(StringInLists));
+	#endif
+				tests.Add(typeof(SwitchingFilesFromClient));
 
-            typeof(TestHashTable),
-            typeof(TwoClients),
-            typeof(TypedArrayInObject),
-            typeof(TypedDerivedArray),
-		    typeof(UnknownClass),
-            typeof(UpdatingDb4oVersions)
-        };
-       
-        /**
-          * the number of test runs
-          */
-        internal int RUNS = 1;
+				tests.Add(typeof(TestHashTable));
+				tests.Add(typeof(TwoClients));
+				tests.Add(typeof(TypedArrayInObject));
+				tests.Add(typeof(TypedDerivedArray));
+				tests.Add(typeof(UnknownClass));
+				tests.Add(typeof(UpdatingDb4oVersions));
+				
+				return (Type[])tests.ToArray(typeof(Type));
+			}
+		}
+	   
+		/**
+		  * the number of test runs
+		  */
+		internal int RUNS = 1;
 
-        /**
-        * delete the database files
-        */
-        internal bool DELETE_FILE = true;
-      
-        /**
-          * run the tests stand-alone
-          */
-        internal bool SOLO = true;
-      
-        /**
-          * run the tests in client/server mode
-          */
-        internal bool CLIENT_SERVER = true;
-      
-        /**
-          * run the client/server test against a remote server.
-          * This requires AllTestsServer to be started on the other machine and
-          * SERVER_HOSTNAME to be set correctly.
-          */
-        internal bool REMOTE_SERVER = false;
+		/**
+		* delete the database files
+		*/
+		internal bool DELETE_FILE = true;
+	  
+		/**
+		  * run the tests stand-alone
+		  */
+		internal bool SOLO = true;
+	  
+		/**
+		  * run the tests in client/server mode
+		  */
+		internal bool CLIENT_SERVER = true;
+	  
+		/**
+		  * run the client/server test against a remote server.
+		  * This requires AllTestsServer to be started on the other machine and
+		  * SERVER_HOSTNAME to be set correctly.
+		  */
+		internal bool REMOTE_SERVER = false;
 
-        /**
-         * the database file to be used for the server.
-         */
-        public static String FILE_SERVER = "xt_serv.yap";
+		/**
+		 * the database file to be used for the server.
+		 */
+		public static String FILE_SERVER = "xt_serv.yap";
 
-        /**
-         * the database file to be used stand-alone.
-         */
-        public static String FILE_SOLO = "xt_solo.yap";
+		/**
+		 * the database file to be used stand-alone.
+		 */
+		public static String FILE_SOLO = "xt_solo.yap";
 
-        /**
-         * the server host name.
-         */
-        public static String SERVER_HOSTNAME = "localhost";
+		/**
+		 * the server host name.
+		 */
+		public static String SERVER_HOSTNAME = "localhost";
 
-        /**
-         * the server port.
-         */
-        public static int SERVER_PORT = 4448;
+		/**
+		 * the server port.
+		 */
+		public static int SERVER_PORT = 4448;
 
-        /**
-         * the db4o user.
-         */
-        public static String DB4O_USER = "db4o";
+		/**
+		 * the db4o user.
+		 */
+		public static String DB4O_USER = "db4o";
 
-        /**
-         * the db4o password.
-         */
-        public static String DB4O_PASSWORD = "db4o";
+		/**
+		 * the db4o password.
+		 */
+		public static String DB4O_PASSWORD = "db4o";
 
-        /**
-         * path to blobs held externally
-         */
-        public static String BLOB_PATH = "test/TEMP/db4oTestBlobs";
-        
+		/**
+		 * path to blobs held externally
+		 */
+		public static String BLOB_PATH = "test/TEMP/db4oTestBlobs";
+		
 
-    }
+	}
 }
