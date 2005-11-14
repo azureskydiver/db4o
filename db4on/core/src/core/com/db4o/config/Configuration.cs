@@ -1,13 +1,27 @@
 namespace com.db4o.config
 {
-	/// <summary>configuration interface for db4o.</summary>
+	/// <summary>configuration interface.</summary>
 	/// <remarks>
-	/// configuration interface for db4o.
-	/// <br /><br />This interface contains methods to configure db4o. All methods
-	/// should be called <b>before</b> starting the db4o engine.
-	/// <br /><br />
-	/// <see cref="com.db4o.Db4o.configure">Db4o.configure()</see>
-	/// returns the single global Configuration object.
+	/// configuration interface.
+	/// <br /><br />This interface contains methods to configure db4o.<br /><br />
+	/// The global Configuration context is available with
+	/// <see cref="com.db4o.Db4o.configure">com.db4o.Db4o.configure</see>
+	/// .
+	/// When an ObjectContainer or ObjectServer is opened, the global Configuration
+	/// context is cloned and copied into the ObjectContainer/ObjectServer.
+	/// That means every ObjectContainer/ObjectServer gets it's own copy of
+	/// configuration settings.<br /><br />
+	/// <b>Most configuration settings should be set before opening an
+	/// ObjectContainer/ObjectServer</b>.
+	/// <br /><br />Some configuration settings can be modified on an open
+	/// ObjectContainer/ObjectServer. The local Configuration context is
+	/// available with
+	/// <see cref="com.db4o.ext.ExtObjectContainer.configure">com.db4o.ext.ExtObjectContainer.configure
+	/// 	</see>
+	/// and
+	/// <see cref="com.db4o.ext.ExtObjectServer.configure">com.db4o.ext.ExtObjectServer.configure
+	/// 	</see>
+	/// .
 	/// </remarks>
 	public interface Configuration
 	{
@@ -15,20 +29,25 @@ namespace com.db4o.config
 		/// <remarks>
 		/// sets the activation depth to the specified value.
 		/// <br /><br /><b>Why activation?</b><br />
-		/// During the instantiation
-		/// of stored objects from persistent storage, the instantiation of members
-		/// needs to be limited to a certain depth. Otherwise a possible root object
-		/// would completely instantiate all stored objects to memory.<br /><br /><b>db4o uses a
-		/// preconfigured "activation depth" of 5.</b><br /><br />If an object is returned in an
+		/// When objects are instantiated from the database, the instantiation of member
+		/// objects needs to be limited to a certain depth. Otherwise a single object
+		/// could lead to loading the complete database into memory, if all objects where
+		/// reachable from a single root object.<br /><br />
+		/// db4o uses the concept "depth", the number of field-to-field hops an object
+		/// is away from another object. <b>The preconfigured "activation depth" db4o uses
+		/// in the default setting is 5.</b>
+		/// <br /><br />Whenever an application iterates through the
 		/// <see cref="com.db4o.ObjectSet">ObjectSet</see>
-		/// as a result of a
-		/// <see cref="com.db4o.ObjectContainer.get">query</see>
-		/// <code>
-		/// object.member1.member2.member3.member4.member5</code> will be instantiated.
-		/// member5 will have all it's members set to null. Primitive
-		/// types will have the default values respectively. In db4o terminology, the
-		/// state of member5 is called <code>DEACTIVATED</code>. member5 can be
-		/// activated by calling
+		/// of a query result, the result objects
+		/// will be activated to the configured activation depth.<br /><br />
+		/// A concrete example with the preconfigured activation depth of 5:<br />
+		/// <pre>
+		/// // Object foo is the result of a query, it is delivered by the ObjectSet
+		/// Object foo = objectSet.next();</pre>
+		/// foo.member1.member2.member3.member4.member5 will be a valid object<br />
+		/// foo, member1, member2, member3 and member4 will be activated<br />
+		/// member5 will be deactivated, all of it's members will be null<br />
+		/// member5 can be activated at any time by calling
 		/// <see cref="com.db4o.ObjectContainer.activate">ObjectContainer#activate(member5, depth)
 		/// 	</see>
 		/// .
@@ -39,8 +58,7 @@ namespace com.db4o.config
 		/// increase performance of queries.<br /><br />
 		/// <see cref="com.db4o.ObjectContainer.deactivate">ObjectContainer#deactivate(Object, depth)
 		/// 	</see>
-		/// can be used to manually free memory by deactivating objects.
-		/// <br /><br /><b>Examples: ../com/db4o/samples/activate.</b><br /><br />
+		/// can be used to manually free memory by deactivating objects.<br /><br />
 		/// </remarks>
 		/// <param name="depth">the desired global activation depth.</param>
 		/// <seealso cref="com.db4o.config.ObjectClass.maximumActivationDepth">configuring classes individually
@@ -351,8 +369,10 @@ namespace com.db4o.config
 		/// If set to true, db4o will try to optimize native queries
 		/// dynamically at query execution time, otherwise it will
 		/// run native queries in unoptimized mode as SODA evaluations.
-		/// The jars needed for native query optimization have to be on
-		/// the classpath at runtime for this switch to have effect.
+		/// On the Java platform the jars needed for native query
+		/// optimization (db4o-X.x-nqopt.jar, bloat-X.x.jar) have to be
+		/// on the classpath at runtime for this
+		/// switch to have effect.
 		/// <br /><br />The default setting is <code>true</code>.
 		/// </remarks>
 		/// <param name="optimizeNQ">
@@ -361,8 +381,16 @@ namespace com.db4o.config
 		/// </param>
 		void optimizeNativeQueries(bool optimizeNQ);
 
+		/// <summary>
+		/// indicates whether Native Queries will be optimized
+		/// dynamically.
+		/// </summary>
+		/// <remarks>
+		/// indicates whether Native Queries will be optimized
+		/// dynamically.
+		/// </remarks>
 		/// <returns>
-		/// boolean indicating whether Native Queries will be optimized
+		/// boolean indicates whether Native Queries will be optimized
 		/// dynamically.
 		/// </returns>
 		/// <seealso cref="com.db4o.config.Configuration.optimizeNativeQueries">com.db4o.config.Configuration.optimizeNativeQueries

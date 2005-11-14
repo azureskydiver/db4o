@@ -3,6 +3,8 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public abstract class Debug : com.db4o.foundation.Debug4
 	{
+		public const bool useNIxPaths = true;
+
 		public const bool ixTrees = false;
 
 		public const bool xbytes = false;

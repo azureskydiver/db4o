@@ -29,6 +29,11 @@ namespace com.db4o
 			return 10;
 		}
 
+		public override bool indexNullHandling()
+		{
+			return true;
+		}
+
 		protected override j4o.lang.Class primitiveJavaClass()
 		{
 			return null;
