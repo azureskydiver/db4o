@@ -11,12 +11,11 @@ import com.db4o.*;
  * A node in the query graph can represent multiple 
  * classes, one class or an attribute of a class.<br><br>The graph 
  * is automatically extended with attributes of added constraints 
- * (see {@link #constrain(java.lang.Object)}) and upon calls to  {@link #descend(java.lang.String)
- * descend()} that request nodes that do not yet exist.
+ * (see {@link #constrain(java.lang.Object)}) and upon calls to  {@link #descend(java.lang.String)} that request nodes that do not yet exist.
  * <br><br>
  * References to joined nodes in the query graph can be obtained
  * by "walking" along the nodes of the graph with the method 
- * {@link #descend(java.lang.String) descend()}.
+ * {@link #descend(java.lang.String)}.
  * <br><br>
  * {@link #execute()}
  * evaluates the entire graph against all persistent objects. 
