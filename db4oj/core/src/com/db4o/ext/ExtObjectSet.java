@@ -9,7 +9,7 @@ import com.db4o.*;
  * {@link ObjectSet ObjectSet} interface.
  * <br><br>Every db4o {@link ObjectSet ObjectSet}
  * always is an ExtObjectSet so a cast is possible.<br><br>
- * {@link ObjectSet#ext ObjectSet.ext()}
+ * {@link ObjectSet#ext}
  * is a convenient method to perform the cast.<br><br>
  * The ObjectSet functionality is split to two interfaces to allow newcomers to
  * focus on the essential methods.

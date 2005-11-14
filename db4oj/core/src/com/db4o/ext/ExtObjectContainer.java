@@ -16,7 +16,7 @@ import com.db4o.types.*;
  * {@link com.db4o.ObjectContainer ObjectContainer} interface.
  * <br><br>Every db4o {@link com.db4o.ObjectContainer ObjectContainer}
  * always is an <code>ExtObjectContainer</code> so a cast is possible.<br><br>
- * {@link com.db4o.ObjectContainer#ext ObjectContainer.ext()}
+ * {@link com.db4o.ObjectContainer#ext}
  * is a convenient method to perform the cast.<br><br>
  * The ObjectContainer functionality is split to two interfaces to allow newcomers to
  * focus on the essential methods.

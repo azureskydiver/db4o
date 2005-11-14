@@ -9,8 +9,8 @@ package  com.db4o.query;
  * Constraints are constructed by calling 
  * {@link Query#constrain Query.constrain()}.
  * <br><br>
- * Constraints can be joined with the methods {@link #and and()}
- * and {@link #or or()}.
+ * Constraints can be joined with the methods {@link #and}
+ * and {@link #or}.
  * <br><br>
  * The methods to modify the constraint evaluation algorithm may
  * be merged, to construct combined evaluation rules.
