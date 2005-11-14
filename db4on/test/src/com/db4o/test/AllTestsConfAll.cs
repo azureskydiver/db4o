@@ -90,7 +90,9 @@ namespace com.db4o.test {
             typeof(MaxByEvaluation),
             typeof(Messaging),
 			typeof(nativequeries.Cat),
+#if !MONO
 			typeof(nativequeries.NativeQueriesTestCase),
+#endif
             typeof(nativequeries.cats.TestCatConsistency),
 
 #if NET_2_0
