@@ -5,7 +5,7 @@ namespace com.db4o.ext
 	/// extended functionality for the ObjectServer interface.
 	/// <br /><br />Every ObjectServer also always is an ExtObjectServer
 	/// so a cast is possible.<br /><br />
-	/// <see cref="com.db4o.ObjectServer.ext">ObjectServer.ext()</see>
+	/// <see cref="com.db4o.ObjectServer.ext">com.db4o.ObjectServer.ext</see>
 	/// is a convenient method to perform the cast.<br /><br />
 	/// The functionality is split to two interfaces to allow newcomers to
 	/// focus on the essential methods.

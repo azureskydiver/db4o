@@ -7,7 +7,7 @@ namespace com.db4o.ext
 	/// <br /><br />Every db4o
 	/// <see cref="com.db4o.ObjectSet">ObjectSet</see>
 	/// always is an ExtObjectSet so a cast is possible.<br /><br />
-	/// <see cref="com.db4o.ObjectSet.ext">ObjectSet.ext()</see>
+	/// <see cref="com.db4o.ObjectSet.ext">com.db4o.ObjectSet.ext</see>
 	/// is a convenient method to perform the cast.<br /><br />
 	/// The ObjectSet functionality is split to two interfaces to allow newcomers to
 	/// focus on the essential methods.

@@ -7,7 +7,7 @@ namespace com.db4o.ext
 	/// <br /><br />Every db4o
 	/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
 	/// always is an <code>ExtObjectContainer</code> so a cast is possible.<br /><br />
-	/// <see cref="com.db4o.ObjectContainer.ext">ObjectContainer.ext()</see>
+	/// <see cref="com.db4o.ObjectContainer.ext">com.db4o.ObjectContainer.ext</see>
 	/// is a convenient method to perform the cast.<br /><br />
 	/// The ObjectContainer functionality is split to two interfaces to allow newcomers to
 	/// focus on the essential methods.
@@ -248,9 +248,7 @@ namespace com.db4o.ext
 		/// desirable to preserve virtual object attributes such as the object version number
 		/// or the UUID. Use this method to signal to an ObjectContainer that it should read
 		/// existing version numbers and UUIDs from another ObjectContainer. This method should
-		/// also be used during the
-		/// <see cref="com.db4o.tools.Defragment">Defragment</see>
-		/// operation. It is included in the default
+		/// also be used during the Defragment. It is included in the default
 		/// implementation supplied in Defragment.java/Defragment.cs.<br /><br />
 		/// </remarks>
 		/// <param name="objectContainer">
