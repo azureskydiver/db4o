@@ -60,12 +60,12 @@ namespace com.db4o {
             // menuItem2
             // 
             this.menuItem2.Text = "Run Regression Tests";
-            this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
+            this.menuItem2.Click += new System.EventHandler(this._menuItem2_Click);
             // 
             // menuItem3
             // 
             this.menuItem3.Text = "Exit";
-            this.menuItem3.Click += new System.EventHandler(this.menuItem3_Click);
+            this.menuItem3.Click += new System.EventHandler(this._menuItem3_Click);
             // 
             // Console
             // 
@@ -135,12 +135,12 @@ namespace com.db4o {
         static Console staticThis;
         static int entry = 0;
 
-        private void menuItem2_Click(object sender, System.EventArgs e) {
+        private void _menuItem2_Click(object sender, System.EventArgs e) {
             AllTests.Main(null);
             // com.db4o.test.nativequeries.cats.TestCatSpeed.Main(null);
         }
 
-        private void menuItem3_Click(object sender, System.EventArgs e) {
+        private void _menuItem3_Click(object sender, System.EventArgs e) {
             Application.Exit();
         }
     }
