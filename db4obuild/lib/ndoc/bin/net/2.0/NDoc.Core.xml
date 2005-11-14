@@ -1082,7 +1082,7 @@
             <param name="progress">Percentage progress value</param>
         </member>
         <member name="M:NDoc.Core.BaseDocumenter.CanBuild(NDoc.Core.Project)">
-            <summary>See <see cref="M:NDoc.Core.IDocumenter.CanBuild(NDoc.Core.Project,System.Boolean)">IDocumenter.CanBuild</see>.</summary>
+            <summary>See <see cref="M:NDoc.Core.IDocumenter.CanBuild(NDoc.Core.Project)">IDocumenter.CanBuild</see>.</summary>
         </member>
         <member name="M:NDoc.Core.BaseDocumenter.CanBuild(NDoc.Core.Project,System.Boolean)">
             <summary>See <see cref="M:NDoc.Core.IDocumenter.CanBuild(NDoc.Core.Project,System.Boolean)">CanBuild</see>.</summary>
