@@ -568,8 +568,8 @@
 	<target name="ndoc" depends="preparendoc" description="Build public .net docs">		
 		<exec executable="${ndoc.home}/bin/net/${target.framework.version}/NDocConsole.exe">
 			<arg value="${file.dll.net}" />
-			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
 			<arg value="-documenter=MSDN 2003" />
+			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
 			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
 			<arg value="-HtmlHelpName=db4o" />
 			<arg value="-Title=db4o" />
