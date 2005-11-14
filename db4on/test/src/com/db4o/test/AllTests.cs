@@ -120,10 +120,10 @@ namespace com.db4o.test
 		private void runTests() 
 		{
 			String cs = Tester.clientServer ? "C/S" : "SOLO";
-			for (int i = 0; i < TESTS.Length; i++) 
+            foreach (Type test in TESTS)
 			{
-				Console.WriteLine(cs + " testing " +  TESTS[i].Name);
-				Object toTest1 = newInstance(TESTS[i]);
+				Console.WriteLine(cs + " testing " +  test.Name);
+				Object toTest1 = newInstance(test);
 				Tester.open();
 				if(! runStoreOne(toTest1))
 				{
@@ -132,10 +132,10 @@ namespace com.db4o.test
 				Tester.commit();
 				Tester.close();
 				Tester.open();
-				toTest1 = newInstance(TESTS[i]);
+				toTest1 = newInstance(test);
 				runTestOne(toTest1);
-				toTest1 = newInstance(TESTS[i]);
-				Method[] methods1 = Class.getClassForType(TESTS[i]).getDeclaredMethods();
+				toTest1 = newInstance(test);
+				Method[] methods1 = Class.getClassForType(test).getDeclaredMethods();
 				for (int j1 = 0; j1 < methods1.Length; j1++) 
 				{
 					Method method1 = methods1[j1];
