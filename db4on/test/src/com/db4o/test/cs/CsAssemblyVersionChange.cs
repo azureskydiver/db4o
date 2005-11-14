@@ -21,121 +21,11 @@ namespace com.db4o.test.cs
 		public virtual string BaseCode
 		{
 			get
-			{
-#if NET_2_0
-				return @"
-using System;
-using System.IO;
-using com.db4o;
-
-public class SimpleGenericType<T>
-{
-	public T value;
-
-	public SimpleGenericType(T value)
-	{
-		this.value = value;
-	}
-}
-
-public class Tester
-{
-	public static void store(string fname)
-	{
-		ObjectContainer container = Db4o.openFile(fname);
-		try
-		{
-			container.set(new SimpleGenericType<string>(""spam""));
-			container.set(new SimpleGenericType<SimpleGenericType<string>>(new SimpleGenericType<string>(""eggs"")));
-		}
-		finally
-		{
-			container.close();
-		}
-	}
-	
-	public static void load(string fname)
-	{
-		ObjectContainer container = Db4o.openFile(fname);
-		try
-		{
-			ObjectSet os = container.get(typeof(SimpleGenericType<string>));
-			assertEquals(2, os.size());
-			
-			os = container.get(typeof(SimpleGenericType<SimpleGenericType<string>>));
-			assertEquals(1, os.size());
-		}
-		finally
-		{
-			container.close();
-		}
-	}
-	
-	static void assertEquals(object expected, object actual)
-	{
-		if (!Object.Equals(expected, actual))
-		{
-			throw new ApplicationException(string.Format(""'{0}' != '{1}'"", expected, actual));
-		}
-	}
-}
-            ";
-#else
-				return @"
-using System;
-using System.IO;
-using com.db4o;
-
-public class ST
-{
-	public int value;
-
-	public ST(int value)
-	{
-		this.value = value;
-	}
-}
-
-public class Tester
-{
-	public static void store(string fname)
-	{
-		ObjectContainer container = Db4o.openFile(fname);
-		try
-		{
-			container.set(new ST(42));
-		}
-		finally
-		{
-			container.close();
-		}
-	}
-	
-	public static void load(string fname)
-	{
-		ObjectContainer container = Db4o.openFile(fname);
-		try
-		{
-			ObjectSet os = container.get(typeof(ST));
-			assertEquals(1, os.size());
-		}
-		finally
-		{
-			container.close();
-		}
-	}
-	
-	static void assertEquals(object expected, object actual)
-	{
-		if (!Object.Equals(expected, actual))
-		{
-			throw new ApplicationException();
-		}
-	}
-}
-            ";
-#endif
-			}
+            {
+                return IsPascalCase
+                    ? BaseCodePascalCase
+                    : BaseCodeCamelCase;
+            }
 		}
 
 		public void test()
@@ -313,5 +203,263 @@ public class Tester
 			}
 			return builder.ToString();
 		}
+
+        bool IsPascalCase
+        {
+            get
+            {
+                return GetType().GetMethod("Test") != null;
+            }
+        }
+
+        string BaseCodeCamelCase
+        {
+            get
+            {
+#if NET_2_0
+                #region .NET 2.0 version
+                return @"
+using System;
+using System.IO;
+using com.db4o;
+
+public class SimpleGenericType<T>
+{
+	public T value;
+
+	public SimpleGenericType(T value)
+	{
+		this.value = value;
 	}
+}
+
+public class Tester
+{
+	public static void store(string fname)
+	{
+		ObjectContainer container = Db4o.openFile(fname);
+		try
+		{
+			container.set(new SimpleGenericType<string>(""spam""));
+			container.set(new SimpleGenericType<SimpleGenericType<string>>(new SimpleGenericType<string>(""eggs"")));
+		}
+		finally
+		{
+			container.close();
+		}
+	}
+	
+	public static void load(string fname)
+	{
+		ObjectContainer container = Db4o.openFile(fname);
+		try
+		{
+			ObjectSet os = container.get(typeof(SimpleGenericType<string>));
+			assertEquals(2, os.size());
+			
+			os = container.get(typeof(SimpleGenericType<SimpleGenericType<string>>));
+			assertEquals(1, os.size());
+		}
+		finally
+		{
+			container.close();
+		}
+	}
+	
+	static void assertEquals(object expected, object actual)
+	{
+		if (!Object.Equals(expected, actual))
+		{
+			throw new ApplicationException(string.Format(""'{0}' != '{1}'"", expected, actual));
+		}
+	}
+}
+            ";
+#endregion
+#else
+                #region .NET 1.1 version
+				return @"
+using System;
+using System.IO;
+using com.db4o;
+
+public class ST
+{
+	public int value;
+
+	public ST(int value)
+	{
+		this.value = value;
+	}
+}
+
+public class Tester
+{
+	public static void store(string fname)
+	{
+		ObjectContainer container = Db4o.openFile(fname);
+		try
+		{
+			container.set(new ST(42));
+		}
+		finally
+		{
+			container.close();
+		}
+	}
+	
+	public static void load(string fname)
+	{
+		ObjectContainer container = Db4o.openFile(fname);
+		try
+		{
+			ObjectSet os = container.get(typeof(ST));
+			assertEquals(1, os.size());
+		}
+		finally
+		{
+			container.close();
+		}
+	}
+	
+	static void assertEquals(object expected, object actual)
+	{
+		if (!Object.Equals(expected, actual))
+		{
+			throw new ApplicationException();
+		}
+	}
+}
+            ";
+#endregion
+#endif
+
+            }
+        }
+        
+        string BaseCodePascalCase
+        {
+            get
+            {
+#if NET_2_0
+                #region .NET 2.0 version
+                return @"
+using System;
+using System.IO;
+using com.db4o;
+
+public class SimpleGenericType<T>
+{
+	public T value;
+
+	public SimpleGenericType(T value)
+	{
+		this.value = value;
+	}
+}
+
+public class Tester
+{
+	public static void store(string fname)
+	{
+		ObjectContainer container = Db4o.OpenFile(fname);
+		try
+		{
+			container.Set(new SimpleGenericType<int>(42));
+			container.Set(new SimpleGenericType<SimpleGenericType<int>>(new SimpleGenericType<int>(13)));
+		}
+		finally
+		{
+			container.Close();
+		}
+	}
+	
+	public static void load(string fname)
+	{
+		ObjectContainer container = Db4o.OpenFile(fname);
+		try
+		{
+			ObjectSet os = container.Get(typeof(SimpleGenericType<int>));
+			assertEquals(2, os.Size());
+			
+			os = container.Get(typeof(SimpleGenericType<SimpleGenericType<int>>));
+			assertEquals(1, os.Size());
+		}
+		finally
+		{
+			container.Close();
+		}
+	}
+	
+	static void assertEquals(object expected, object actual)
+	{
+		if (!Object.Equals(expected, actual))
+		{
+			throw new ApplicationException();
+		}
+	}
+}
+            ";
+                #endregion
+#else
+                #region .NET 1.1 version
+				return @"
+using System;
+using System.IO;
+using com.db4o;
+
+public class ST
+{
+	public int value;
+
+	public ST(int value)
+	{
+		this.value = value;
+	}
+}
+
+public class Tester
+{
+	public static void store(string fname)
+	{
+		ObjectContainer container = Db4o.OpenFile(fname);
+		try
+		{
+			container.Set(new ST(42));
+		}
+		finally
+		{
+			container.Close();
+		}
+	}
+	
+	public static void load(string fname)
+	{
+		ObjectContainer container = Db4o.OpenFile(fname);
+		try
+		{
+			ObjectSet os = container.Get(typeof(ST));
+			assertEquals(1, os.Size());
+		}
+		finally
+		{
+			container.Close();
+		}
+	}
+	
+	static void assertEquals(object expected, object actual)
+	{
+		if (!Object.Equals(expected, actual))
+		{
+			throw new ApplicationException();
+		}
+	}
+}
+            ";
+                #endregion
+#endif
+
+            }
+        }
+    }
 }
