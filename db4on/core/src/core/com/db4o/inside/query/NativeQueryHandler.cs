@@ -39,7 +39,7 @@ namespace com.db4o.inside.query
 			return configureQuery(predicate).execute();
 		}
 
-#if NET_2_0 || CF_2_0
+#if NET_2_0
         public virtual System.Collections.Generic.IList<Extent> execute<Extent>(com.db4o.Predicate<Extent> match)
         {
             com.db4o.query.Query q = _container.query();
@@ -128,7 +128,7 @@ namespace com.db4o.inside.query
 		}
 	}
 
-#if NET_2_0 || CF_2_0
+#if NET_2_0
     class GenericPredicateEvaluation<T> : DelegateEnvelope, com.db4o.query.Evaluation
     {
         public GenericPredicateEvaluation(com.db4o.Predicate<T> predicate)

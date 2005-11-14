@@ -1,32 +1,84 @@
 namespace com.db4o.query
 {
-	/// <summary>Extend this class and add your #match() method to run native queries.</summary>
+	/// <summary>Base class for native queries.</summary>
 	/// <remarks>
-	/// Extend this class and add your #match() method to run native queries.
-	/// <br /><br />
-	/// A class that extends Predicate is required to implement the method
-	/// #match() following the native query conventions:<br />
-	/// - The name of the method is "match".<br />
-	/// - The method is public.<br />
+	/// Base class for native queries.
+	/// <br /><br />Native Queries allow typesafe, compile-time checked and refactorable
+	/// querying, following object-oriented principles. Native Queries expressions
+	/// are written as if one or more lines of code would be run against all
+	/// instances of a class. A Native Query expression should return true to mark
+	/// specific instances as part of the result set.
+	/// db4o will  attempt to optimize native query expressions and execute them
+	/// against indexes and without instantiating actual objects, where this is
+	/// possible.<br /><br />
+	/// The syntax of the enclosing object for the native query expression varies,
+	/// depending on the language version used. Here are some examples,
+	/// how a simple native query will look like in some of the programming languages
+	/// and dialects that db4o supports:<br /><br />
+	/// <code>
+	/// <b>// C# .NET 2.0</b><br />
+	/// IList &lt;Cat&gt; cats = db.Query &lt;Cat&gt; (delegate(Cat cat) {<br />
+	/// &#160;&#160;&#160;return cat.Name == "Occam";<br />
+	/// });<br />
+	/// <br />
+	/// <br />
+	/// <b>// Java JDK 5</b><br />
+	/// List &lt;Cat&gt; cats = db.query(new Predicate&lt;Cat&gt;() {<br />
+	/// &#160;&#160;&#160;public boolean match(Cat cat) {<br />
+	/// &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br />
+	/// &#160;&#160;&#160;}<br />
+	/// });<br />
+	/// <br />
+	/// <br />
+	/// <b>// Java JDK 1.2 to 1.4</b><br />
+	/// List cats = db.query(new Predicate() {<br />
+	/// &#160;&#160;&#160;public boolean match(Cat cat) {<br />
+	/// &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br />
+	/// &#160;&#160;&#160;}<br />
+	/// });<br />
+	/// <br />
+	/// <br />
+	/// <b>// Java JDK 1.1</b><br />
+	/// ObjectSet cats = db.query(new CatOccam());<br />
+	/// <br />
+	/// public static class CatOccam extends Predicate {<br />
+	/// &#160;&#160;&#160;public boolean match(Cat cat) {<br />
+	/// &#160;&#160;&#160;&#160;&#160;&#160;return cat.getName().equals("Occam");<br />
+	/// &#160;&#160;&#160;}<br />
+	/// });<br />
+	/// <br />
+	/// <br />
+	/// <b>// C# .NET 1.1</b><br />
+	/// IList cats = db.Query(new CatOccam());<br />
+	/// <br />
+	/// public class CatOccam : Predicate {<br />
+	/// &#160;&#160;&#160;public boolean Match(Cat cat) {<br />
+	/// &#160;&#160;&#160;&#160;&#160;&#160;return cat.Name == "Occam";<br />
+	/// &#160;&#160;&#160;}<br />
+	/// });<br />
+	/// </code>
+	/// <br />
+	/// Summing up the above:<br />
+	/// In order to run a Native Query, you can<br />
+	/// - use the delegate notation for .NET 2.0.<br />
+	/// - extend the Predicate class for all other language dialects<br /><br />
+	/// A class that extends Predicate is required to
+	/// implement the #match() / #Match() method, following the native query
+	/// conventions:<br />
+	/// - The name of the method is "#match()" (Java) / "#Match()" (.NET).<br />
+	/// - The method must be public public.<br />
 	/// - The method returns a boolean.<br />
 	/// - The method takes one parameter.<br />
-	/// - The type (Class) of the parameter specifies the extent.<br />
+	/// - The Type (.NET) / Class (Java) of the parameter specifies the extent.<br />
 	/// - For all instances of the extent that are to be included into the
-	/// resultset of the query, the method returns true. For all instances
-	/// that are not to be included the method returns false. <br /><br />
-	/// Here is an example of a #match method that follows these conventions:<br />
-	/// <pre><code>
-	/// public boolean match(Cat cat){<br />
-	/// return cat.name.equals("Occam");<br />
-	/// }<br />
-	/// </code></pre><br /><br />
-	/// Native queries for Java JDK5 and above define a #match method in the
-	/// abstract Predicate class to ensure these conventions, using generics.
-	/// Without generics the method is not definable in the Predicate class
-	/// since alternative method parameter classes would not be possible.
+	/// resultset of the query, the match method should return true. For all
+	/// instances that are not to be included, the match method should return
+	/// false.<br /><br />
 	/// </remarks>
 	public abstract class Predicate : j4o.io.Serializable
 	{
+		/// <summary>public for implementation reasons, please ignore.</summary>
+		/// <remarks>public for implementation reasons, please ignore.</remarks>
 		public static readonly string PREDICATEMETHOD_NAME = "match";
 
 		internal static readonly j4o.lang.Class OBJECT_CLASS = j4o.lang.Class.getClassForType
@@ -43,6 +95,7 @@ namespace com.db4o.query
 			}
 			j4o.lang.reflect.Method[] methods = j4o.lang.Class.getClassForObject(this).getMethods
 				();
+			j4o.lang.reflect.Method untypedMethod = null;
 			for (int methodIdx = 0; methodIdx < methods.Length; methodIdx++)
 			{
 				j4o.lang.reflect.Method method = methods[methodIdx];
@@ -53,7 +106,16 @@ namespace com.db4o.query
 						cachedFilterMethod = method;
 						return method;
 					}
+					else
+					{
+						untypedMethod = method;
+					}
 				}
+			}
+			if (untypedMethod != null)
+			{
+				cachedFilterMethod = untypedMethod;
+				return untypedMethod;
 			}
 			throw new System.ArgumentException("Invalid predicate.");
 		}
@@ -68,11 +130,15 @@ namespace com.db4o.query
 				);
 		}
 
+		/// <summary>public for implementation reasons, please ignore.</summary>
+		/// <remarks>public for implementation reasons, please ignore.</remarks>
 		public virtual j4o.lang.Class extentType()
 		{
 			return getFilterMethod().getParameterTypes()[0];
 		}
 
+		/// <summary>public for implementation reasons, please ignore.</summary>
+		/// <remarks>public for implementation reasons, please ignore.</remarks>
 		public virtual bool appliesTo(object candidate)
 		{
 			try

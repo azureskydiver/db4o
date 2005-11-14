@@ -17,7 +17,7 @@ namespace com.db4o.inside.ix
 				return;
 			}
 			com.db4o.inside.ix.QxPath[] same = new com.db4o.inside.ix.QxPath[] { null };
-			_paths.traverse(new _AnonymousInnerClass34(this, newPath, same));
+			_paths.traverse(new _AnonymousInnerClass32(this, newPath, same));
 			if (same[0] != null)
 			{
 				_paths = _paths.removeNode(same[0]);
@@ -26,9 +26,9 @@ namespace com.db4o.inside.ix
 			_paths = com.db4o.Tree.add(_paths, newPath);
 		}
 
-		private sealed class _AnonymousInnerClass34 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass32 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass34(QxProcessor _enclosing, com.db4o.inside.ix.QxPath newPath
+			public _AnonymousInnerClass32(QxProcessor _enclosing, com.db4o.inside.ix.QxPath newPath
 				, com.db4o.inside.ix.QxPath[] same)
 			{
 				this._enclosing = _enclosing;
