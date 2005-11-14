@@ -53,7 +53,7 @@ namespace com.db4o
 			if (i_index == null)
 			{
 				i_index = new com.db4o.inside.ix.Index4(a_stream.getSystemTransaction(), getHandler
-					(), a_metaIndex);
+					(), a_metaIndex, false);
 			}
 		}
 

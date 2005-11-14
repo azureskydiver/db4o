@@ -39,6 +39,17 @@ namespace com.db4o
 			return _stream.i_handlers.ICLASS_STRING;
 		}
 
+		public override object comparableObject(com.db4o.Transaction a_trans, object a_object
+			)
+		{
+			if (a_object != null)
+			{
+				int[] slot = (int[])a_object;
+				return a_trans.i_stream.readObjectReaderByAddress(slot[0], slot[1]);
+			}
+			return null;
+		}
+
 		public override bool equals(com.db4o.TypeHandler4 a_dataType)
 		{
 			return (this == a_dataType);
@@ -59,15 +70,9 @@ namespace com.db4o
 			return a_stream.i_handlers.i_yapClasses[getID() - 1];
 		}
 
-		public override object comparableObject(com.db4o.Transaction a_trans, object a_object
-			)
+		public override bool indexNullHandling()
 		{
-			if (a_object != null)
-			{
-				int[] slot = (int[])a_object;
-				return a_trans.i_stream.readObjectReaderByAddress(slot[0], slot[1]);
-			}
-			return null;
+			return true;
 		}
 
 		public override object read(com.db4o.YapWriter a_bytes)

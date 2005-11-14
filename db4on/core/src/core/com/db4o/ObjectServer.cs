@@ -1,7 +1,22 @@
 namespace com.db4o
 {
-	/// <summary>the db4o server class.</summary>
-	/// <remarks>the db4o server class.</remarks>
+	/// <summary>the db4o server interface.</summary>
+	/// <remarks>
+	/// the db4o server interface.
+	/// <br /><br />- db4o servers can be opened with
+	/// <see cref="com.db4o.Db4o.openServer">com.db4o.Db4o.openServer</see>
+	/// .<br />
+	/// - Direct in-memory connections to servers can be made with
+	/// <see cref="com.db4o.ObjectServer.openClient">com.db4o.ObjectServer.openClient</see>
+	/// <br />
+	/// - TCP connections are available through
+	/// <see cref="com.db4o.Db4o.openClient">com.db4o.Db4o.openClient</see>
+	/// .
+	/// <br /><br />Before connecting clients over TCP, you have to
+	/// <see cref="com.db4o.ObjectServer.grantAccess">com.db4o.ObjectServer.grantAccess</see>
+	/// to the username and password combination
+	/// that you want to use.
+	/// </remarks>
 	/// <seealso cref="com.db4o.Db4o.openServer">Db4o.openServer</seealso>
 	/// <seealso cref="com.db4o.ext.ExtObjectServer">ExtObjectServer for extended functionality
 	/// 	</seealso>

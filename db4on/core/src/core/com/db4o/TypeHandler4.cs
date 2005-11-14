@@ -22,6 +22,8 @@ namespace com.db4o
 
 		object indexEntry(object a_object);
 
+		bool indexNullHandling();
+
 		void prepareLastIoComparison(com.db4o.Transaction a_trans, object obj);
 
 		com.db4o.reflect.ReflectClass primitiveClassReflector();

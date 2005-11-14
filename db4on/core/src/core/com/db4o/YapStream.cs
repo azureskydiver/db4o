@@ -1257,6 +1257,11 @@ namespace com.db4o
 			}
 		}
 
+		public com.db4o.ObjectSet query(j4o.lang.Class clazz)
+		{
+			return get(clazz);
+		}
+
 		internal com.db4o.query.Query query(com.db4o.Transaction ta)
 		{
 			i_entryCounter++;

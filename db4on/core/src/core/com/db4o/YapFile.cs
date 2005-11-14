@@ -197,6 +197,7 @@ namespace com.db4o
 					}
 				}
 			}
+			a_res.reset();
 		}
 
 		private sealed class _AnonymousInnerClass194 : com.db4o.foundation.Visitor4
@@ -521,15 +522,15 @@ namespace com.db4o
 			{
 				lock (i_semaphores)
 				{
-					i_semaphores.forEachKeyForIdentity(new _AnonymousInnerClass554(this), ta);
+					i_semaphores.forEachKeyForIdentity(new _AnonymousInnerClass555(this), ta);
 					j4o.lang.JavaSystem.notifyAll(i_semaphores);
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass554 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass555 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass554(YapFile _enclosing)
+			public _AnonymousInnerClass555(YapFile _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

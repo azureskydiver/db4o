@@ -546,7 +546,8 @@ namespace com.db4o
 		{
 			if (supportsIndex())
 			{
-				i_index = new com.db4o.inside.ix.Index4(systemTrans, getHandler(), metaIndex);
+				i_index = new com.db4o.inside.ix.Index4(systemTrans, getHandler(), metaIndex, i_handler
+					.indexNullHandling());
 			}
 		}
 

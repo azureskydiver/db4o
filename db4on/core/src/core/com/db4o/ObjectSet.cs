@@ -3,18 +3,18 @@ namespace com.db4o
 	/// <summary>query resultset.</summary>
 	/// <remarks>
 	/// query resultset.
-	/// <br /><br />The <code>ObjectSet</code> class serves as a cursor to
-	/// iterate through a set of objects retrieved by a call to
-	/// <see cref="com.db4o.ObjectContainer.get">ObjectContainer.get(template)</see>
-	/// or by
-	/// execution of a
-	/// <see cref="com.db4o.query.Query">com.db4o.query.Query</see>
-	/// .
-	/// <br /><br />Note that the
+	/// <br /><br />An ObjectSet is a representation for a set of objects returned
+	/// by a query.
+	/// <br /><br />ObjectSet extends the system collection interfaces
+	/// java.util.List/System.Collections.IList where they are available. It is
+	/// recommended, never to reference ObjectSet directly in code but to use
+	/// List / IList instead.
+	/// <br /><br />Note that the underlying
 	/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
-	/// 
-	/// against which the query is executed needs to remain opened during
-	/// the use of an <code>ObjectSet</code> to allow lazy instantiation.
+	/// of an ObjectSet
+	/// needs to remain open as long as an ObjectSet is used. This is necessary
+	/// for lazy instantiation. The objects in an ObjectSet are only instantiated
+	/// when they are actually being used by the application.
 	/// </remarks>
 	/// <seealso cref="com.db4o.ext.ExtObjectSet">for extended functionality.</seealso>
 	public interface ObjectSet : System.Collections.IList
