@@ -39,6 +39,24 @@ namespace com.db4o
 			catch(Exception e) 
 			{
 			}
+
+            // We may be running the CF app on .NET Framework 1.1
+            // for profiling, let's give that a chance
+
+            try {
+                Type t = assembly.GetType(
+                    "System.Runtime.CompilerServices.RuntimeHelpers");
+                return t.GetMethod(
+                    "GetHashCode",
+                    BindingFlags.Public |
+                    BindingFlags.Static);
+            }
+            catch (Exception e) {
+            }
+
+            // and for completeness sake, let's provide .NET Framework 1.0
+            // compliance also so we can debug the CF app there too
+            return (typeof(System.Object)).GetMethod("GetHashCode");
 			
 			return null;
 		}
