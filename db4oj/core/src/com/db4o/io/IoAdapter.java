@@ -10,6 +10,8 @@ import com.db4o.*;
  */
 public abstract class IoAdapter {
     
+    private static final int COPY_SIZE = 4096;
+    
 	private int _blockSize;
     
     /**
@@ -62,12 +64,29 @@ public abstract class IoAdapter {
             DTrace.IO_COPY.logLength(newAddress, length);
         }
         
-        byte[] copyBytes = new byte[length];
-        seek(oldAddress);
-        read(copyBytes);
-        seek(newAddress);
-        write(copyBytes);
+        if(length > COPY_SIZE){
+            byte[] buffer = new byte[COPY_SIZE];
+            int pos = 0;
+            while(pos + COPY_SIZE < length){
+                copy(buffer, oldAddress + pos, newAddress + pos);
+                pos+= COPY_SIZE;
+            }
+            oldAddress += pos;
+            newAddress += pos;
+            length -= pos;
+        }
+        
+        copy(new byte[length], oldAddress, newAddress);
     }
+    
+    
+    private void copy(byte[] buffer, long oldAddress, long newAddress) throws IOException {
+        seek(oldAddress);
+        read(buffer);
+        seek(newAddress);
+        write(buffer);
+    }
+    
     
     /**
      * checks whether a file exists 
