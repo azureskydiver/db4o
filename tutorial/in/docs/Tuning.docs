@@ -51,10 +51,12 @@ objects.
 .i Effect ..
 On VMs where this is supported (Sun Java VM > 1.4, .NET, Mono) ._
 db4o tries to create instances of objects without calling ._
-a constructor. db4o is using reflection for this feature ._
+a constructor. On Java VMs db4o is using reflection for this feature ._
 so this may be considerably slower than using a constructor. For ._
-the best performance it is recommended to add a public zero-parameter ._
-constructor to every persistent class and to turn constructors on.
+the best performance on Java it is recommended to add a public ._
+zero-parameter constructor to every persistent class and to turn ._
+constructors on. Benchmarks on .NET have shown that the default
+setting ( #callConstructors(false) ) is faster.
 
 .i Alternate Strategies ..
 Constructors can also be turned on for individual classes only with
