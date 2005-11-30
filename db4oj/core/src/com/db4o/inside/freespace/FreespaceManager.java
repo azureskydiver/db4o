@@ -21,7 +21,7 @@ public abstract class FreespaceManager {
 
     public static byte checkType(byte systemType){
         if(systemType == 0){
-            return FM_IX;    
+            return FM_RAM;    
         }
         return systemType;
     }
