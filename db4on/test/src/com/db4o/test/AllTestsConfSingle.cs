@@ -12,6 +12,8 @@ namespace com.db4o.test {
          */
         internal Type[] TESTS = new Type[]{
             typeof(com.db4o.test.SimplestPossible),
+            typeof(com.db4o.test.j4otest.TypeNameTest),
+            //typeof(com.db4o.test.net2.Net2GenericContainers),
          };
        
         /**

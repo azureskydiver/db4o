@@ -2,6 +2,9 @@ using System;
 using System.Reflection;
 using System.Text;
 using j4o.lang;
+#if NET_2_0
+using System.Collections.Generic;
+#endif
 
 namespace com.db4o.test.j4otest
 {
@@ -9,12 +12,16 @@ namespace com.db4o.test.j4otest
     class SimpleGenericType<T>
     {
         public T Value;
-    }
+    }    
 
     class GenericType<T1, T2>
     {
         public T1 First;
         public T2 Second;
+
+        public class NestedInGeneric
+        {
+        }
 
         public GenericType(T1 first, T2 second)
         {
@@ -129,6 +136,22 @@ namespace com.db4o.test.j4otest
 		}
 
 #if NET_2_0
+        class NestedGeneric<Key, Value>
+        {
+        }
+
+        public void testDeepGenericTypeName()
+        {
+            ensureRoundtrip(typeof(Dictionary<string, List<string>>));
+            ensureRoundtrip(typeof(Dictionary<string, List<List<string>>>));
+
+            ensureRoundtrip(typeof(Dictionary<string, List<List<NestedType>>>));
+            ensureRoundtrip(typeof(NestedGeneric<string, List<string>[]>));
+            ensureRoundtrip(typeof(NestedGeneric<string, List<string>>[]));
+
+            ensureRoundtrip(typeof(GenericType<string, List<string>>.NestedInGeneric));
+        }
+
         public void testGenericArrays()
         {
             ensureRoundtrip(typeof(SimpleGenericType<string>));
