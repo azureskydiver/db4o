@@ -1,5 +1,6 @@
 #! /usr/bin/python
 
+# YES!
 
 # Copyright (c) 2002, 2003, 2004 Barry Warsaw, Fred Drake, and contributors
 # All rights reserved.
@@ -89,7 +90,7 @@ The rest of the command line arguments are:
     email-addrs
         At least one email address.
 """
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 import os
 import re
