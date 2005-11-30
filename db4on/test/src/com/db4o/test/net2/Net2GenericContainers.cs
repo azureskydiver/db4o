@@ -44,7 +44,29 @@ namespace com.db4o.test.net2
 			Tester.store(p1);
 			Tester.reOpen();
 			Tester.store(p2);
+
+            Dictionary<string, List<Task>> dict = new Dictionary<string, List<Task>>();
+            dict.Add(p1.name, p1.tasks);
+            dict.Add(p2.name, p2.tasks);
+
+            Tester.store(dict);
 		}
+
+        public void testDict()
+        {
+            Query query = Tester.query();
+            query.constrain(typeof(Dictionary<string, List<Task>>));
+
+            ObjectSet os = query.execute();
+            Tester.ensureEquals(1, os.size());
+
+            Dictionary<string, List<Task>> dict = (Dictionary<string, List<Task>>)os.next();
+            Tester.ensure(dict != null);
+
+            Tester.ensureEquals(2, dict.Count);
+            Tester.ensure(dict.ContainsKey("enlightenment"));
+            Tester.ensure(dict.ContainsKey("db4o"));
+        }
 
 		public void testProjects()
 		{
