@@ -46,9 +46,20 @@ public class Dog implements SelfReflectable {
         Dog laika = (Dog) res.next();
         Test.ensure(laika._name.equals("Laika"));
     }
-    
-    
-    
-    
 
+   private final static String[] FIELDNAMES={"_name"};
+   private final static Class[] FIELDTYPES={String.class};
+    
+	public String[] db4o$getFieldNames() {
+		return FIELDNAMES;
+	}
+
+	public Class db4o$getFieldType(String fieldName) {
+		for(int idx=0;idx<FIELDNAMES.length;idx++) {
+			if(FIELDNAMES[idx].equals(fieldName)) {
+				return FIELDTYPES[idx];
+			}
+		}
+		return null;
+	}
 }

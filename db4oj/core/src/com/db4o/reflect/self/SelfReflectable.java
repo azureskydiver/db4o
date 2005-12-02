@@ -4,5 +4,6 @@ package com.db4o.reflect.self;
 
 
 public interface SelfReflectable {
-
+	String[] db4o$getFieldNames();
+	Class db4o$getFieldType(String fieldName);
 }
