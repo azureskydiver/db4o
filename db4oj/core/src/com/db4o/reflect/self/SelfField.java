@@ -4,6 +4,14 @@ import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 
 public class SelfField implements ReflectField{
+	private String _name;
+	private Class _type;
+	
+	
+	public SelfField(String name, Class type) {
+		_name=name;
+		_type=type;
+	}
 
 	public Object get(Object onObject) {
 		// TODO Auto-generated method stub

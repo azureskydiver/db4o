@@ -6,11 +6,11 @@ import com.db4o.reflect.*;
 
 public class SelfClass implements ReflectClass {
 
-	private final Reflector _reflector;
+	private final SelfReflector _reflector;
 
 	private final Class _class;
 
-	public SelfClass(Reflector reflector, Class clazz) {
+	public SelfClass(SelfReflector reflector, Class clazz) {
 		_reflector = reflector;
 		_class = clazz;
 
@@ -31,13 +31,11 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public ReflectConstructor[] getDeclaredConstructors() {
-		// TODO Auto-generated method stub
-		return null;
+		return new SelfConstructor[]{new SelfConstructor(_class)};
 	}
 
 	public ReflectField[] getDeclaredFields() {
-		// TODO Auto-generated method stub
-		return null;
+		return _reflector._registry.fieldsFor(_class);
 	}
 
 	public ReflectField getDeclaredField(String name) {
@@ -116,13 +114,12 @@ public class SelfClass implements ReflectClass {
 	
 
 	public boolean skipConstructor(boolean flag) {
-		// TODO Auto-generated method stub
+		// cannot skip constructors, only available for JDK1.4+
 		return false;
 	}
 
 	public void useConstructor(ReflectConstructor constructor, Object[] params) {
-		// TODO Auto-generated method stub
-
+		// ignore, there must be a public no-args constructor suitable for Class.newInstance()
 	}
 
 	public Object[] toArray(Object obj) {
