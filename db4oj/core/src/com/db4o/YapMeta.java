@@ -126,13 +126,15 @@ public abstract class YapMeta {
         }
     }
 
-    YapWriter write(YapStream a_stream, Transaction a_trans) {
+    final YapWriter write(Transaction a_trans) {
         if (writeObjectBegin()) {
+            
+            YapFile stream = (YapFile)a_trans.i_stream;
 
             YapWriter writer =
                 (getID() == 0)
-                    ? a_stream.newObject(a_trans, this)
-                    : a_stream.updateObject(a_trans, this);
+                    ? stream.newObject(a_trans, this)
+                    : stream.updateObject(a_trans, this);
 
             writeThis(writer);
 
@@ -141,19 +143,13 @@ public abstract class YapMeta {
                 writer.debugCheckBytes();
             }
 
-            ((YapFile)a_stream).writeObject(this, writer);
+            ((YapFile)stream).writeObject(this, writer);
 
             if (isActive()) {
                 setStateClean();
             }
             endProcessing();
 
-            if (Debug.verbose) {
-                if (a_stream instanceof YapClient) {
-                    System.out.println(
-                        "YapMeta:write(): " + this.getClass().getName() + " " + getID());
-                }
-            }
 
             return writer;
         }
@@ -168,7 +164,7 @@ public abstract class YapMeta {
     }
 
     void writeOwnID(YapWriter a_writer) {
-        write(a_writer.getStream(), a_writer.getTransaction());
+        write(a_writer.getTransaction());
         a_writer.writeInt(getID());
     }
 

@@ -81,7 +81,7 @@ class PendingClassInits {
 			while(writes.hasNext()) {
 				YapClass yc = (YapClass)writes.next();
 		        yc.setStateDirty();
-		        yc.write(_classColl.i_stream, _classColl.i_systemTrans);
+		        yc.write(_classColl.i_systemTrans);
                 _inits = new List4(_inits, yc);
 				checkStatics();
 			}

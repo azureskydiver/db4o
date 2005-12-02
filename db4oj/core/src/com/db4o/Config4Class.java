@@ -155,7 +155,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
         return _translator;
     }
 
-    public boolean initOnUp(Transaction systemTrans) {
+    public boolean initOnUp(Transaction systemTrans, final int[] metaClassID) {
         if(_processing){
             return false;
         }
@@ -164,11 +164,20 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
             YapStream stream = systemTrans.i_stream;
             if (stream.maintainsIndices()) {
                 if(_maintainMetaClass){
-                    i_metaClass = (MetaClass) stream.get1(systemTrans,
-                        new MetaClass(i_name)).next();
+                    
+                    if(metaClassID[0] > 0){
+                        i_metaClass = (MetaClass)stream.getByID1(systemTrans, metaClassID[0]);
+                    }
+                    
+                    if(i_metaClass == null){
+                        i_metaClass = (MetaClass) stream.get1(systemTrans,new MetaClass(i_name)).next();
+                        metaClassID[0] = stream.getID1(systemTrans, i_metaClass);
+                    }
+                            
                     if (i_metaClass == null) {
                         i_metaClass = new MetaClass(i_name);
                         stream.setInternal(systemTrans, i_metaClass, Integer.MAX_VALUE, false);
+                        metaClassID[0] = stream.getID1(systemTrans, i_metaClass);
                     } else {
                         stream.activate1(systemTrans, i_metaClass,
                             Integer.MAX_VALUE);

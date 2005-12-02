@@ -223,7 +223,7 @@ public class Transaction {
         
         i_stream.writeDirty();
         
-        i_stream.i_classCollection.write(i_stream, i_stream.getSystemTransaction());
+        i_stream.i_classCollection.write(i_stream.getSystemTransaction());
 
         if (i_dirtyFieldIndexes != null) {
             Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
@@ -793,7 +793,7 @@ public class Transaction {
         while (i.hasNext()) {
             ClassIndex classIndex = (ClassIndex) i.next();
             classIndex.setDirty(i_stream);
-            classIndex.write(i_stream, this);
+            classIndex.write(this);
         }
         if (i_slots != null) {
             i_slots.traverse(new Visitor4() {

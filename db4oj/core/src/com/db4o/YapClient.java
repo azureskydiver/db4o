@@ -468,6 +468,9 @@ public class YapClient extends YapStream implements ExtClient {
         try {
             writeMsg(Msg.READ_OBJECT.getWriterForInt(a_ta, a_id));
             YapWriter bytes = ((MsgObject)expectedResponse(Msg.OBJECT_TO_CLIENT)).unmarshall();
+            if(bytes == null){
+                return null;
+            }
             bytes.setTransaction(a_ta);
             return bytes;
         } catch (Exception e) {

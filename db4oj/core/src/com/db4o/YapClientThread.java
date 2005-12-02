@@ -36,6 +36,9 @@ class YapClientThread extends Thread{
 	public void run() {
 		while(i_socket != null){
 			try {
+                if(i_stream == null){
+                    return;
+                }
 				final Msg message = Msg.readMessage(i_stream.getTransaction(), i_socket);
                 if(i_stream == null){
                     return;
@@ -44,10 +47,14 @@ class YapClientThread extends Thread{
 				    i_stream.writeMsg(Msg.OK);
 				}else if(Msg.CLOSE.equals(message)){
 					i_stream.logMsg(35, i_stream.toString());
-					close();
+                    if(i_stream == null){
+                        return;
+                    }
 					synchronized(i_stream){
 						i_stream.notify();
 					}
+                    i_stream = null;
+                    i_socket = null;
 				}else if (message != null){
 					messageQueueLock.run(new Closure4() {
                         public Object run() {
