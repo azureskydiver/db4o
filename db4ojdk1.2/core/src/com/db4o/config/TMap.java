@@ -31,9 +31,11 @@ public class TMap implements ObjectTranslator
 		if(members != null){
 			Entry[] entries = (Entry[]) members;
 			for(int i = 0; i < entries.length; i++){
-				if(entries[i].key != null && entries[i].value != null){
-					map.put(entries[i].key,entries[i].value);
-				}
+                if(entries[i] != null){
+    				if(entries[i].key != null && entries[i].value != null){
+    					map.put(entries[i].key,entries[i].value);
+    				}
+                }
 			}
 		}
 	}
