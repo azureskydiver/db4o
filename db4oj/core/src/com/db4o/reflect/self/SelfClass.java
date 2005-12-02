@@ -4,117 +4,129 @@ package com.db4o.reflect.self;
 
 import com.db4o.reflect.*;
 
+public class SelfClass implements ReflectClass {
 
-public class SelfClass implements ReflectClass{
-    
-    private final Class _class;
-    
-    public SelfClass(Class clazz) {
-        _class = clazz;
-    }
+	private final Reflector _reflector;
 
-    public ReflectClass getComponentType() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	private final Class _class;
 
-    public ReflectConstructor[] getDeclaredConstructors() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	public SelfClass(Reflector reflector, Class clazz) {
+		_reflector = reflector;
+		_class = clazz;
 
-    public ReflectField[] getDeclaredFields() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	}
 
-    public ReflectField getDeclaredField(String name) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	public Class getJavaClass() {
+		return _class;
+	}
+	
 
-    public ReflectClass getDelegate() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	public Reflector reflector() {
+		return _reflector;
+	}
+	
 
-    public ReflectMethod getMethod(String methodName, ReflectClass[] paramClasses) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	public ReflectClass getComponentType() {
+		return _reflector.forClass(_class.getComponentType());
+	}
 
-    public String getName() {
-        return _class.getName();
-    }
+	public ReflectConstructor[] getDeclaredConstructors() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public ReflectClass getSuperclass() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	public ReflectField[] getDeclaredFields() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public boolean isAbstract() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	public ReflectField getDeclaredField(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public boolean isArray() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	public ReflectClass getDelegate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public boolean isAssignableFrom(ReflectClass type) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	public ReflectMethod getMethod(String methodName,
+			ReflectClass[] paramClasses) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public boolean isCollection() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	public String getName() {
+		return _class.getName();
+	}
 
-    public boolean isInstance(Object obj) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	public ReflectClass getSuperclass() {
+		return _reflector.forClass(_class.getSuperclass());
+	}
 
-    public boolean isInterface() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	public boolean isAbstract() {
+		// TODO
+		return false;
+	}
 
-    public boolean isPrimitive() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	public boolean isArray() {
+		return false;
+	}
 
-    public boolean isSecondClass() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	public boolean isAssignableFrom(ReflectClass type) {
+		if (!(type instanceof SelfClass)) {
+			return false;
+		}
+		return _class.isAssignableFrom(((SelfClass)type).getJavaClass());
+	}
 
-    public Object newInstance() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	public boolean isCollection() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    public Reflector reflector() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	public boolean isInstance(Object obj) {
+		return _class.isInstance(obj);
+	}
 
-    public boolean skipConstructor(boolean flag) {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	public boolean isInterface() {
+		return _class.isInterface();
+	}
 
-    public void useConstructor(ReflectConstructor constructor, Object[] params) {
-        // TODO Auto-generated method stub
-        
-    }
+	public boolean isPrimitive() {
+		return _class.isPrimitive();
+	}
 
-    public Object[] toArray(Object obj) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	public boolean isSecondClass() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public Object newInstance() {
+		try {
+			return _class.newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	
+
+	public boolean skipConstructor(boolean flag) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void useConstructor(ReflectConstructor constructor, Object[] params) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public Object[] toArray(Object obj) {
+		return null;
+	}
 
 }
