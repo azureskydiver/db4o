@@ -18,7 +18,7 @@ final class MCreateClass extends MsgD {
                     if (yapClass != null) {
                         stream.checkStillToSet();
                         yapClass.setStateDirty();
-                        yapClass.write(stream, trans);
+                        yapClass.write(trans);
                         trans.commit();
                         returnBytes = stream.readWriterByID(trans, yapClass.getID());
                     } else {

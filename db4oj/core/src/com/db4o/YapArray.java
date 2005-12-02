@@ -413,6 +413,9 @@ class YapArray extends YapIndependantType {
     }
     
     public boolean isEqual(Object obj) {
+        if(obj == null){
+            return false;
+        }
         Object[] compareWith = allElements(obj);
         for (int j = 0; j < compareWith.length; j++) {
             if (i_handler.isEqual(compareWith[j])) {

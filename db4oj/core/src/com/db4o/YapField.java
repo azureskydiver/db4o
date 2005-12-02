@@ -685,7 +685,7 @@ public class YapField implements StoredField {
         if (! stream.isClient()) {
             i_name = newName;
             i_yapClass.setStateDirty();
-            i_yapClass.write(stream, stream.getSystemTransaction());
+            i_yapClass.write(stream.getSystemTransaction());
         } else {
             Exceptions4.throwRuntimeException(58);
         }

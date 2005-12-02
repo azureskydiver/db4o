@@ -259,7 +259,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             while (i.hasNext()) {
                 YapClass yapClass = (YapClass) i.next();
                 yapClass.setStateDirty();
-                yapClass.write(this, i_systemTrans);
+                yapClass.write(i_systemTrans);
             }
             i_needsUpdate = null;
         }

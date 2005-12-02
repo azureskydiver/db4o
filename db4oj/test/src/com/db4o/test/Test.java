@@ -241,8 +241,12 @@ public class Test extends AllTests {
     public static ExtObjectContainer open() {
         if (runServer && clientServer && objectServer == null) {
             objectServer = Db4o.openServer(FILE_SERVER, SERVER_PORT);
-            objectServer.grantAccess(DB4O_USER, DB4O_PASSWORD);
-            objectServer.ext().configure().messageLevel(0);
+            
+            // Null can happen, for EncryptionWrongPassword            
+            if(objectServer != null){
+                objectServer.grantAccess(DB4O_USER, DB4O_PASSWORD);
+                objectServer.ext().configure().messageLevel(0);
+            }
         }
         if (clientServer) {
             oc = openClient();

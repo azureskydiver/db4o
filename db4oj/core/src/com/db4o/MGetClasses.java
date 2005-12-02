@@ -13,7 +13,7 @@ final class MGetClasses extends MsgD {
 				// Since every new Client reads the class
 				// collection from the file, we have to 
 				// make sure, it has been written.
-				stream.i_classCollection.write(stream, getTransaction());
+				stream.i_classCollection.write(getTransaction());
 
 			} catch (Exception e) {
 				if (Deploy.debug) {

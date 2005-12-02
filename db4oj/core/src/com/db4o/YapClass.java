@@ -18,6 +18,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     YapClass i_ancestor;
 
     Config4Class i_config;
+    int _metaClassID;
+    
     YapField[] i_fields;
     private ClassIndex i_index;
     protected String i_name;
@@ -270,7 +272,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                 if (_reflector != null) {
                     addMembers(i_stream);
                     if (!i_stream.isClient()) {
-                        write(i_stream, i_stream.getSystemTransaction());
+                        write(i_stream.getSystemTransaction());
                     }
                 }
             }
@@ -898,15 +900,22 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if (! stateOK()) {
             return;
         }
-        systemTrans.i_stream.showInternalClasses(true);
-        if(i_config.initOnUp(systemTrans)){
+        YapStream stream = systemTrans.i_stream; 
+        stream.showInternalClasses(true);
+        int[] metaClassID = new int[]{_metaClassID};
+        if(i_config.initOnUp(systemTrans, metaClassID)){
+            if(_metaClassID != metaClassID[0]){
+                _metaClassID = metaClassID[0];
+                setStateDirty();
+                write(systemTrans);
+            }
             if (i_fields != null) {
                 for (int i = 0; i < i_fields.length; i++) {
                     i_fields[i].initConfigOnUp(systemTrans);
                 }
             }
         }
-        systemTrans.i_stream.showInternalClasses(false);
+        stream.showInternalClasses(false);
     }
 
     void initOnUp(Transaction systemTrans) {
@@ -1437,11 +1446,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                 i_nameBytes  = Platform4.updateClassName(i_nameBytes);
             }
 
-            // TODO:
-            // We are skipping one free pointer that is not needed
-            // It can be replaced with something else, possible a
-            // pointer to the index table.
-            a_reader.incrementOffset(len + YapConst.YAPINT_LENGTH);
+            a_reader.incrementOffset(len);
+            _metaClassID = a_reader.readInt();
 
             setStateUnread();
 
@@ -1500,7 +1506,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             setStateOK();
             i_name = newName;
             setStateDirty();
-            write(i_stream, i_stream.getSystemTransaction());
+            write(i_stream.getSystemTransaction());
             i_state = tempState;
         }else{
             Exceptions4.throwRuntimeException(58);
@@ -1859,13 +1865,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     void writeThis(YapWriter a_writer) {
         
         a_writer.writeShortString(nameToWrite());
-
-        // TODO:
-        // this is a free pointer that is not needed
-        // It can be replaced with something else, possible a
-        // pointer to the index table.
-        a_writer.writeInt(0);
-
+        a_writer.writeInt(_metaClassID);
+        
         writeIDOf(i_ancestor, a_writer);
         writeIDOf(i_index, a_writer);
         if (i_fields == null) {
