@@ -5,19 +5,25 @@ import com.db4o.reflect.ReflectConstructor;
 
 public class SelfConstructor implements ReflectConstructor{
 
-	public void setAccessible() {
-		// TODO Auto-generated method stub
-		
+	private Class _class;
+	
+	public SelfConstructor(Class _class) {
+		this._class = _class;
 	}
 
+	public void setAccessible() {
+	}
+	
 	public ReflectClass[] getParameterTypes() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ReflectClass[] {};
 	}
 
 	public Object newInstance(Object[] parameters) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return _class.newInstance();
+		} catch (Exception exc) {
+			return null;
+		}
 	}
 
 }
