@@ -3,14 +3,15 @@ package com.db4o.reflect.self;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 
-public class SelfField implements ReflectField{
+public class SelfField implements ReflectField {
+
 	private String _name;
+
 	private Class _type;
-	
-	
+
 	public SelfField(String name, Class type) {
-		_name=name;
-		_type=type;
+		_name = name;
+		_type = type;
 	}
 
 	public Object get(Object onObject) {
@@ -19,38 +20,33 @@ public class SelfField implements ReflectField{
 	}
 
 	public String getName() {
-
-		return null;
+		return _name;
 	}
 
 	public ReflectClass getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return new SelfClass(new SelfReflector(), _type).getDeclaredField(_name).getType();
 	}
 
 	public boolean isPublic() {
-		// TODO Auto-generated method stub
-		return false;
+		return new SelfClass(new SelfReflector(), _type).getDeclaredField(_name).isPublic();
 	}
 
 	public boolean isStatic() {
-		// TODO Auto-generated method stub
-		return false;
+		return new SelfClass(new SelfReflector(), _type).getDeclaredField(_name).isStatic();
 	}
 
 	public boolean isTransient() {
-		// TODO Auto-generated method stub
-		return false;
+		return new SelfClass(new SelfReflector(), _type).getDeclaredField(_name).isTransient();
 	}
 
 	public void set(Object onObject, Object value) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void setAccessible() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

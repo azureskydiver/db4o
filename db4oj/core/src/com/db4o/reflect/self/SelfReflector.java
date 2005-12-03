@@ -8,9 +8,13 @@ public class SelfReflector implements Reflector {
 
 	SelfReflectionRegistry _registry;
 	private Reflector _parent;
+	
+	public SelfReflector(){
+		
+	}
 
 	public SelfReflector(SelfReflectionRegistry registry) {
-		_registry=registry;
+		_registry= registry;
 	}
 	
 	public ReflectArray array() {
@@ -51,8 +55,8 @@ public class SelfReflector implements Reflector {
 	}
 
 	public Object deepClone(Object context) {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO !!!
+		return new SelfReflector(_registry);
 	}
 
 }
