@@ -22,6 +22,7 @@ public class SelfReflectTest extends TestCase {
 		assertEquals(Dog.class.getName(), selfClass.getName());
 		assertEquals(Object.class.getName(), selfClass.getSuperclass()
 				.getName());
+		assertNull(selfClass.getSuperclass().getSuperclass());
 		ReflectField[] fields = selfClass.getDeclaredFields();
 		assertEquals(1, fields.length);
 		assertEquals(selfClass, selfClass.getDelegate());
@@ -37,8 +38,12 @@ public class SelfReflectTest extends TestCase {
 	
 	public void testInstanceField() {
 		Dog laika=new Dog("Laika");
-		Object value=selfclass().getDeclaredField("_name").get(laika);
+		ReflectField field = selfclass().getDeclaredField("_name");
+		Object value=field.get(laika);
 		assertEquals(laika.name(),value);
+		field.set(laika, "Lassie");
+		assertEquals(laika.name(),"Lassie");
+		assertEquals(field.get(laika),"Lassie");
 	}
 
 	private SelfClass selfclass() {

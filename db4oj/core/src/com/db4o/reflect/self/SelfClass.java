@@ -5,6 +5,7 @@ package com.db4o.reflect.self;
 import com.db4o.reflect.*;
 
 public class SelfClass implements ReflectClass {
+	private SelfField[] fields;
 
 	private SelfReflector _reflector;
 
@@ -35,25 +36,34 @@ public class SelfClass implements ReflectClass {
 	public ReflectConstructor[] getDeclaredConstructors() {
 		return new SelfConstructor[] { new SelfConstructor(_class) };
 	}
-
+	
 	public ReflectField[] getDeclaredFields() {
-		FieldInfo[] fieldInfo=_reflector._registry.fieldsFor(_class);
-		if(fieldInfo==null) {
-			return new SelfField[0];
-		}
-		SelfField[] fields=new SelfField[fieldInfo.length];
-		for(int idx=0;idx<fieldInfo.length;idx++) {
-			fields[idx]=selfFieldFor(fieldInfo[idx]);
-		}
+		ensureFieldsLoaded();
 		return fields;
 	}
 
-	public ReflectField getDeclaredField(String name) {
-		FieldInfo fieldInfo=fieldFor(_class,name);
-		if(fieldInfo==null) {
-			return null;
+	private void ensureFieldsLoaded() {
+		if(fields==null) {
+			FieldInfo[] fieldInfo=_reflector._registry.fieldsFor(_class);
+			if(fieldInfo==null) {
+				fields=new SelfField[0];
+				return;
+			}
+			fields=new SelfField[fieldInfo.length];
+			for(int idx=0;idx<fieldInfo.length;idx++) {
+				fields[idx]=selfFieldFor(fieldInfo[idx]);
+			}
 		}
-		return selfFieldFor(fieldInfo);
+	}
+	
+	public ReflectField getDeclaredField(String name) {
+		ensureFieldsLoaded();
+		for(int idx=0;idx<fields.length;idx++) {
+			if(fields[idx].getName().equals(name)) {
+				return fields[idx];
+			}
+		}
+		return null;
 	}
 
 	private SelfField selfFieldFor(FieldInfo fieldInfo) {
@@ -74,8 +84,12 @@ public class SelfClass implements ReflectClass {
 		return _class.getName();
 	}
 
-	public ReflectClass getSuperclass() {
-		return _reflector.forClass(_class.getSuperclass());
+	public ReflectClass getSuperclass() {		
+		Class clazz = _class.getSuperclass();
+		if(clazz==null) {
+			return null;
+		}
+		return _reflector.forClass(clazz);
 	}
 
 	public boolean isAbstract() {
@@ -136,16 +150,6 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public Object[] toArray(Object obj) {
-		return null;
-	}
-
-	private FieldInfo fieldFor(Class clazz, String fieldName) {
-		FieldInfo[] fields=_reflector._registry.fieldsFor(clazz);
-		for(int idx=0;idx<fields.length;idx++) {
-			if(fields[idx].name().equals(fieldName)) {
-				return fields[idx];
-			}
-		}
 		return null;
 	}
 
