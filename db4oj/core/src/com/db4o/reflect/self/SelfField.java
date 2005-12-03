@@ -6,9 +6,9 @@ import com.db4o.reflect.ReflectField;
 public class SelfField implements ReflectField {
 
 	private String _name;
-	private SelfClass _type;
+	private ReflectClass _type;
 
-	public SelfField(String name, SelfClass type) {
+	public SelfField(String name, ReflectClass type) {
 		_name = name;
 		_type = type;
 	}

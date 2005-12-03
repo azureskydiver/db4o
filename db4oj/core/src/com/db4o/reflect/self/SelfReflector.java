@@ -6,7 +6,7 @@ import com.db4o.reflect.*;
 
 public class SelfReflector implements Reflector {
 
-	SelfReflectionRegistry _registry;
+	private SelfReflectionRegistry _registry;
 	private Reflector _parent;
 	
 	public SelfReflector(SelfReflectionRegistry registry) {
@@ -23,7 +23,7 @@ public class SelfReflector implements Reflector {
 	}
 
 	public ReflectClass forClass(Class clazz) {
-		return new SelfClass(this, clazz);
+		return new SelfClass(_parent,_registry, clazz);
 	}
 
 	public ReflectClass forName(String className) {

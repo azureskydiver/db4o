@@ -5,10 +5,12 @@ import junit.framework.*;
 import com.db4o.reflect.*;
 
 public class SelfReflectTest extends TestCase {
+	private SelfReflectionRegistry _registry;
 	private SelfReflector _reflector;
 
 	protected void setUp() throws Exception {
-		_reflector = new SelfReflector(new UnitDogSelfReflectionRegistry());
+		_registry=new UnitDogSelfReflectionRegistry();
+		_reflector = new SelfReflector(_registry);
 	}
 
 	public void testReflectorClassRetrieval() {
@@ -47,7 +49,7 @@ public class SelfReflectTest extends TestCase {
 	}
 
 	private SelfClass selfclass() {
-		SelfClass selfClass = new SelfClass(_reflector, Dog.class);
+		SelfClass selfClass = new SelfClass(_reflector,_registry, Dog.class);
 		return selfClass;
 	}
 
