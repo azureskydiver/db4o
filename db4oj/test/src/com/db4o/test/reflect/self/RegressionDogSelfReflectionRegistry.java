@@ -14,7 +14,13 @@ public class RegressionDogSelfReflectionRegistry implements SelfReflectionRegist
 		FIELDINFO.put(P1Object.class, new SelfField[]{});
 	}
 	
+	
+	
 	public SelfField[] fieldsFor(Class clazz) {
 		return (SelfField[])FIELDINFO.get(clazz);
+	}
+
+	public boolean isKnownClass(Class clazz) {
+		return FIELDINFO.get(clazz)!=null;
 	}
 }
