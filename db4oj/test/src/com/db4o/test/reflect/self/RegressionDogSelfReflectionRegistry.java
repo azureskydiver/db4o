@@ -9,9 +9,9 @@ public class RegressionDogSelfReflectionRegistry implements SelfReflectionRegist
 	private final static Hashtable FIELDINFO;
 	
 	static {
-		FIELDINFO=new Hashtable(2);
+		FIELDINFO=new Hashtable(1);
 		FIELDINFO.put(Dog.class, new FieldInfo[]{new FieldInfo("_name",String.class)});
-		FIELDINFO.put(P1Object.class, new FieldInfo[]{});
+		//FIELDINFO.put(P1Object.class, new FieldInfo[]{});
 	}
 	
 	public FieldInfo[] fieldsFor(Class clazz) {

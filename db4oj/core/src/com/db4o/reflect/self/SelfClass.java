@@ -6,9 +6,9 @@ import com.db4o.reflect.*;
 
 public class SelfClass implements ReflectClass {
 	private SelfField[] fields;
-
-	private SelfReflector _reflector;
-
+	private Reflector _parentReflector;
+	private SelfReflectionRegistry _registry;
+	
 	private Class _class;
 	
 
@@ -16,8 +16,9 @@ public class SelfClass implements ReflectClass {
 //		super();
 //	}
 
-	public SelfClass(SelfReflector reflector, Class clazz) {
-		_reflector = reflector;
+	public SelfClass(Reflector parentReflector,SelfReflectionRegistry registry, Class clazz) {
+		_parentReflector=parentReflector;
+		_registry = registry;
 		_class = clazz;
 	}
 
@@ -26,11 +27,11 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public Reflector reflector() {
-		return _reflector;
+		return _parentReflector;
 	}
 
 	public ReflectClass getComponentType() {
-		return _reflector.forClass(_class.getComponentType());
+		return _parentReflector.forClass(_class.getComponentType());
 	}
 
 	public ReflectConstructor[] getDeclaredConstructors() {
@@ -44,7 +45,7 @@ public class SelfClass implements ReflectClass {
 
 	private void ensureFieldsLoaded() {
 		if(fields==null) {
-			FieldInfo[] fieldInfo=_reflector._registry.fieldsFor(_class);
+			FieldInfo[] fieldInfo=_registry.fieldsFor(_class);
 			if(fieldInfo==null) {
 				fields=new SelfField[0];
 				return;
@@ -67,7 +68,7 @@ public class SelfClass implements ReflectClass {
 	}
 
 	private SelfField selfFieldFor(FieldInfo fieldInfo) {
-		return new SelfField(fieldInfo.name(),(SelfClass)_reflector.forClass(fieldInfo.type()));
+		return new SelfField(fieldInfo.name(),_parentReflector.forClass(fieldInfo.type()));
 	}
 
 	public ReflectClass getDelegate() {
@@ -89,7 +90,7 @@ public class SelfClass implements ReflectClass {
 		if(clazz==null) {
 			return null;
 		}
-		return _reflector.forClass(clazz);
+		return _parentReflector.forClass(clazz);
 	}
 
 	public boolean isAbstract() {
