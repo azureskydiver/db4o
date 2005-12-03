@@ -6,32 +6,34 @@ import com.db4o.reflect.*;
 
 public class SelfClass implements ReflectClass {
 
-	private final SelfReflector _reflector;
+	private SelfReflector _reflector;
 
-	private final Class _class;
+	private Class _class;
+	
+
+//	public SelfClass() {
+//		super();
+//	}
 
 	public SelfClass(SelfReflector reflector, Class clazz) {
 		_reflector = reflector;
 		_class = clazz;
-
 	}
 
 	public Class getJavaClass() {
 		return _class;
 	}
-	
 
 	public Reflector reflector() {
 		return _reflector;
 	}
-	
 
 	public ReflectClass getComponentType() {
 		return _reflector.forClass(_class.getComponentType());
 	}
 
 	public ReflectConstructor[] getDeclaredConstructors() {
-		return new SelfConstructor[]{new SelfConstructor(_class)};
+		return new SelfConstructor[] { new SelfConstructor(_class) };
 	}
 
 	public ReflectField[] getDeclaredFields() {
@@ -39,18 +41,16 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public ReflectField getDeclaredField(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return new SelfField(name, _class);
 	}
 
 	public ReflectClass getDelegate() {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 
 	public ReflectMethod getMethod(String methodName,
 			ReflectClass[] paramClasses) {
-		// TODO Auto-generated method stub
+		// TODO !!!!
 		return null;
 	}
 
@@ -75,11 +75,10 @@ public class SelfClass implements ReflectClass {
 		if (!(type instanceof SelfClass)) {
 			return false;
 		}
-		return _class.isAssignableFrom(((SelfClass)type).getJavaClass());
+		return _class.isAssignableFrom(((SelfClass) type).getJavaClass());
 	}
 
 	public boolean isCollection() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -96,8 +95,7 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public boolean isSecondClass() {
-		// TODO Auto-generated method stub
-		return false;
+		return isPrimitive();
 	}
 
 	public Object newInstance() {
@@ -111,15 +109,14 @@ public class SelfClass implements ReflectClass {
 		return null;
 	}
 
-	
-
 	public boolean skipConstructor(boolean flag) {
 		// cannot skip constructors, only available for JDK1.4+
 		return false;
 	}
 
 	public void useConstructor(ReflectConstructor constructor, Object[] params) {
-		// ignore, there must be a public no-args constructor suitable for Class.newInstance()
+		// ignore, there must be a public no-args constructor suitable for
+		// Class.newInstance()
 	}
 
 	public Object[] toArray(Object obj) {
