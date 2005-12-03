@@ -7,14 +7,10 @@ public class UnitDogSelfReflectionRegistry implements SelfReflectionRegistry {
 	
 	static {
 		FIELDINFO=new Hashtable(1);
-		FIELDINFO.put(Dog.class, new SelfField[]{new SelfField("_name",String.class)});
+		FIELDINFO.put(Dog.class, new FieldInfo[]{new FieldInfo("_name",String.class)});
 	}
 	
-	public SelfField[] fieldsFor(Class clazz) {
-		return (SelfField[])FIELDINFO.get(clazz);
-	}
-
-	public boolean isKnownClass(Class clazz) {
-		return FIELDINFO.get(clazz)!=null;
+	public FieldInfo[] fieldsFor(Class clazz) {
+		return (FieldInfo[])FIELDINFO.get(clazz);
 	}
 }

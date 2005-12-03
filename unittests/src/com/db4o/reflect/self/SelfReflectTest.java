@@ -17,31 +17,28 @@ public class SelfReflectTest extends TestCase {
 		assertSelfClass(Dog.class, _reflector.forObject(new Dog("Laika")));
 	}
 
-	public void testSelfClass() {
+	public void testSelfClass() throws Exception {
 		SelfClass selfClass = selfclass();
 		assertEquals(Dog.class.getName(), selfClass.getName());
 		assertEquals(Object.class.getName(), selfClass.getSuperclass()
 				.getName());
 		ReflectField[] fields = selfClass.getDeclaredFields();
 		assertEquals(1, fields.length);
-		ReflectField field = selfClass.getDeclaredField("_name");
-		try {
-			assertEquals(Dog.class.getDeclaredField("_name"), field);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		}
-		assertEquals(selfClass.reflector(), selfClass.getDelegate());
+		assertEquals(selfClass, selfClass.getDelegate());
 		assertSame(_reflector, selfClass.reflector());
 	}
 
 	public void testSelfField() {
 		SelfClass selfClass = selfclass();
 		ReflectField field = selfClass.getDeclaredField("_name");
-		SelfField selfField = new SelfField("_name", String.class);
-		assertEquals(field.getType(), selfField.getType());
-		assertEquals("_name", selfField.getName());
+		assertEquals(String.class.getName(),field.getType().getName());
+		assertEquals("_name", field.getName());
+	}
+	
+	public void testInstanceField() {
+		Dog laika=new Dog("Laika");
+		Object value=selfclass().getDeclaredField("_name").get(laika);
+		assertEquals(laika.name(),value);
 	}
 
 	private SelfClass selfclass() {

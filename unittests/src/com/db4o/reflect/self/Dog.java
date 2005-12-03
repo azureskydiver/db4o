@@ -1,6 +1,6 @@
 package com.db4o.reflect.self;
 
-public class Dog {
+public class Dog implements SelfReflectable {
 	private String _name;
 
 	public Dog() {
@@ -10,7 +10,18 @@ public class Dog {
 		this._name = _name;
 	}
 	
+	public String name() {
+		return _name;
+	}
+	
 	public String toString() {
 		return "DOG: "+_name;
+	}
+	
+	public Object db4o$get(String fieldName) {
+		if(fieldName.equals("_name")) {
+			return _name;
+		}
+		return null;
 	}
 }
