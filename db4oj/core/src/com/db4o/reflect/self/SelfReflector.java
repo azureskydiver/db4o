@@ -27,7 +27,10 @@ public class SelfReflector implements Reflector {
 	}
 
 	public ReflectClass forClass(Class clazz) {
-		return new SelfClass(this, clazz);
+		//if(_registry.isKnownClass(clazz)) {
+			return new SelfClass(this, clazz);
+		//}
+		//return null;
 	}
 
 	public ReflectClass forName(String className) {
