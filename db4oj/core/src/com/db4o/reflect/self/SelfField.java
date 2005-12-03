@@ -29,7 +29,7 @@ public class SelfField implements ReflectField {
 	}
 
 	public boolean isPublic() {
-		return false;
+		return true;
 	}
 
 	public boolean isStatic() {
@@ -41,8 +41,9 @@ public class SelfField implements ReflectField {
 	}
 
 	public void set(Object onObject, Object value) {
-		// TODO Auto-generated method stub
-
+		if(onObject instanceof SelfReflectable) {
+			((SelfReflectable)onObject).db4o$set(_name, value);
+		}
 	}
 
 	public void setAccessible() {

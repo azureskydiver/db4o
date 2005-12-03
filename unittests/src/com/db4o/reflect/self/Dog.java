@@ -24,4 +24,10 @@ public class Dog implements SelfReflectable {
 		}
 		return null;
 	}
+
+	public void db4o$set(String fieldName,Object value) {
+		if(fieldName.equals("_name")) {
+			_name=(String)value;
+		}
+	}
 }

@@ -9,7 +9,8 @@ import com.db4o.test.*;
 
 
 public class Dog implements SelfReflectable {
-    
+	
+    // must be public for the time being due to setAccessible() check in Platform4
     public String _name;
     
     public Dog() {
@@ -21,10 +22,7 @@ public class Dog implements SelfReflectable {
     }
     
     public void configure(){
-    	Db4o.configure().callConstructors(true);
-    	Db4o.configure().exceptionsOnNotStorable(true);
-       	Db4o.configure().activationDepth(Integer.MAX_VALUE);
-        //Db4o.configure().reflectWith(new SelfReflector(new RegressionDogSelfReflectionRegistry()));
+        Db4o.configure().reflectWith(new SelfReflector(new RegressionDogSelfReflectionRegistry()));
     }
     
     public void store(){
@@ -55,5 +53,11 @@ public class Dog implements SelfReflectable {
 			return _name;
 		}
 		return null;
+	}
+
+	public void db4o$set(String fieldName,Object value) {
+		if(fieldName.equals("_name")) {
+			_name=(String)value;
+		}
 	}
 }
