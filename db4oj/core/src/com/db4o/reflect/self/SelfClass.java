@@ -37,11 +37,27 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public ReflectField[] getDeclaredFields() {
-		return _reflector._registry.fieldsFor(_class);
+		FieldInfo[] fieldInfo=_reflector._registry.fieldsFor(_class);
+		if(fieldInfo==null) {
+			return new SelfField[0];
+		}
+		SelfField[] fields=new SelfField[fieldInfo.length];
+		for(int idx=0;idx<fieldInfo.length;idx++) {
+			fields[idx]=selfFieldFor(fieldInfo[idx]);
+		}
+		return fields;
 	}
 
 	public ReflectField getDeclaredField(String name) {
-		return new SelfField(name, _class);
+		FieldInfo fieldInfo=fieldFor(_class,name);
+		if(fieldInfo==null) {
+			return null;
+		}
+		return selfFieldFor(fieldInfo);
+	}
+
+	private SelfField selfFieldFor(FieldInfo fieldInfo) {
+		return new SelfField(fieldInfo.name(),(SelfClass)_reflector.forClass(fieldInfo.type()));
 	}
 
 	public ReflectClass getDelegate() {
@@ -120,6 +136,16 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public Object[] toArray(Object obj) {
+		return null;
+	}
+
+	private FieldInfo fieldFor(Class clazz, String fieldName) {
+		FieldInfo[] fields=_reflector._registry.fieldsFor(clazz);
+		for(int idx=0;idx<fields.length;idx++) {
+			if(fields[idx].name().equals(fieldName)) {
+				return fields[idx];
+			}
+		}
 		return null;
 	}
 

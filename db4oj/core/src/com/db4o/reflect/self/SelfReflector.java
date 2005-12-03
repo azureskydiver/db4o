@@ -9,10 +9,6 @@ public class SelfReflector implements Reflector {
 	SelfReflectionRegistry _registry;
 	private Reflector _parent;
 	
-	public SelfReflector(){
-		
-	}
-
 	public SelfReflector(SelfReflectionRegistry registry) {
 		_registry= registry;
 	}
@@ -27,10 +23,7 @@ public class SelfReflector implements Reflector {
 	}
 
 	public ReflectClass forClass(Class clazz) {
-		//if(_registry.isKnownClass(clazz)) {
-			return new SelfClass(this, clazz);
-		//}
-		//return null;
+		return new SelfClass(this, clazz);
 	}
 
 	public ReflectClass forName(String className) {
@@ -62,4 +55,8 @@ public class SelfReflector implements Reflector {
 		return new SelfReflector(_registry);
 	}
 
+
+	public boolean isKnownClass(Class clazz) {
+		return _registry.fieldsFor(clazz)!=null;
+	}
 }
