@@ -53,6 +53,8 @@
 			<fileset dir="${dir.j.src.core}">
 				<include name="**/*.java" />
 			</fileset>
+		</copy>
+		<copy todir="${dir.build.src.tools}">
 			<fileset dir="${dir.j.src.tools}">
 				<include name="**/*.java" />
 			</fileset>
@@ -64,8 +66,12 @@
 		</copy>
 	</target>
 	
-	<target name="compiletools" depends="prepare">
-		<javac compiler="javac1.1" srcdir="${dir.build.src.tools}" destdir="${dir.build.classes.tools}" debug="off" target="1.1" source="1.2" />
+	<target name="compiletools" depends="compile">
+		<javac compiler="javac1.1" srcdir="${dir.build.src.tools}" destdir="${dir.build.classes.tools}" debug="off" target="1.1" source="1.2">
+			<classpath>
+				<path location="${dir.build.classes.core}" />
+			</classpath>
+		</javac>
 		<jar destfile="${dir.build.jar}/db4o-tools.jar">
 			<fileset dir="${dir.build.classes.tools}" />
 		</jar>
