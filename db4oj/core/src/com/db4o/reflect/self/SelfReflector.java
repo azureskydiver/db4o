@@ -7,12 +7,13 @@ import com.db4o.reflect.*;
 public class SelfReflector implements Reflector {
 
 	private SelfReflectionRegistry _registry;
+
 	private Reflector _parent;
-	
+
 	public SelfReflector(SelfReflectionRegistry registry) {
-		_registry= registry;
+		_registry = registry;
 	}
-	
+
 	public ReflectArray array() {
 		return null;
 	}
@@ -22,12 +23,12 @@ public class SelfReflector implements Reflector {
 	}
 
 	public ReflectClass forClass(Class clazz) {
-		return new SelfClass(_parent,_registry, clazz);
+		return new SelfClass(_parent, _registry, clazz);
 	}
 
 	public ReflectClass forName(String className) {
 		try {
-			Class clazz=Class.forName(className);
+			Class clazz = Class.forName(className);
 			return forClass(clazz);
 		} catch (ClassNotFoundException e) {
 			return null;
@@ -50,12 +51,13 @@ public class SelfReflector implements Reflector {
 	}
 
 	public Object deepClone(Object context) {
-		// TODO !!! ? why we need the parameter context? see in jdkReflector too
+		// TODO !!!
+		// TODO QUESTION ? why we need the parameter context? see in
+		// jdkReflector too
 		return new SelfReflector(_registry);
 	}
 
-
 	public boolean isKnownClass(Class clazz) {
-		return _registry.fieldsFor(clazz)!=null;
+		return _registry.fieldsFor(clazz) != null;
 	}
 }
