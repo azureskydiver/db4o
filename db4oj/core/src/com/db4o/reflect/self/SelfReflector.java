@@ -14,7 +14,6 @@ public class SelfReflector implements Reflector {
 	}
 	
 	public ReflectArray array() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -51,7 +50,7 @@ public class SelfReflector implements Reflector {
 	}
 
 	public Object deepClone(Object context) {
-		// TODO !!!
+		// TODO !!! ? why we need the parameter context? see in jdkReflector too
 		return new SelfReflector(_registry);
 	}
 
