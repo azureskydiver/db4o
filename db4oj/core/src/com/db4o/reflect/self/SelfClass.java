@@ -99,7 +99,7 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public boolean isArray() {
-		return false;
+		return _class.isArray();
 	}
 
 	public boolean isAssignableFrom(ReflectClass type) {
@@ -110,7 +110,7 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public boolean isCollection() {
-		return false;
+		return _parentReflector.isCollection(this);
 	}
 
 	public boolean isInstance(Object obj) {
