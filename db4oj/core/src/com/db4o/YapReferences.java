@@ -44,6 +44,10 @@ class YapReferences implements Runnable {
     	if (!_weak) {
     		return;
     	}
+        
+        if(! _stream.i_config.i_weakReferences){
+            return;
+        }
     	
         if (_stream.i_config.i_weakReferenceCollectionInterval <= 0) {
         	return;

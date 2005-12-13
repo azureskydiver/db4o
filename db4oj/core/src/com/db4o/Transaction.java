@@ -717,7 +717,7 @@ public class Transaction {
     }
     
     private void flushFile(){
-        if(Debug.flush){
+        if(i_file.i_config._flushFileBuffers){
             i_file.syncFiles();
         }
     }

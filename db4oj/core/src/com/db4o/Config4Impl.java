@@ -37,6 +37,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     boolean          i_encrypt;
     Hashtable4       i_exceptionalClasses               = new Hashtable4(16);
     boolean          i_exceptionsOnNotStorable;
+    public boolean   _flushFileBuffers;
     public byte      _freespaceSystem;                   
     public int       i_generateUUIDs;
     public int       i_generateVersionNumbers;
@@ -200,6 +201,10 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 
     public void exceptionsOnNotStorable(boolean flag) {
         i_exceptionsOnNotStorable = flag;
+    }
+    
+    public void flushFileBuffers(boolean flag){
+        _flushFileBuffers = flag;
     }
 
     public FreespaceConfiguration freespace() {
