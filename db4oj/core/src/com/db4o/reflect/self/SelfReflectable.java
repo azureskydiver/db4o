@@ -4,6 +4,9 @@ package com.db4o.reflect.self;
 
 
 public interface SelfReflectable {
-	Object db4o$get(String fieldName);
-	void db4o$set(String fieldName,Object value);
+    
+	Object self_get(String fieldName);
+    
+	void self_set(String fieldName,Object value);
+    
 }
