@@ -132,11 +132,21 @@ public class SelfClass implements ReflectClass {
 	public Object newInstance() {
 		try {
 			return _class.newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        // Specialized exceptions break conversion to .NET
+        
+//           
+//        
+//            
+//		} catch (InstantiationException e) {
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			e.printStackTrace();
+//		}
+        
 		return null;
 	}
 

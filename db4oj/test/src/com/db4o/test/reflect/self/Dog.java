@@ -59,14 +59,14 @@ public class Dog implements SelfReflectable {
         Test.ensure(laika._name.equals("Laika"));
     }
 
-	public Object db4o$get(String fieldName) {
+	public Object self_get(String fieldName) {
 		if(fieldName.equals("_name")) {
 			return _name;
 		}
 		return null;
 	}
 
-	public void db4o$set(String fieldName,Object value) {
+	public void self_set(String fieldName,Object value) {
 		if(fieldName.equals("_name")) {
 			_name=(String)value;
 		}

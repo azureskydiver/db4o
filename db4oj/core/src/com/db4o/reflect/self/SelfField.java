@@ -15,7 +15,7 @@ public class SelfField implements ReflectField {
 
 	public Object get(Object onObject) {
 		if(onObject instanceof SelfReflectable) {
-			return ((SelfReflectable)onObject).db4o$get(_name);
+			return ((SelfReflectable)onObject).self_get(_name);
 		}
 		return null;
 	}
@@ -42,7 +42,7 @@ public class SelfField implements ReflectField {
 
 	public void set(Object onObject, Object value) {
 		if(onObject instanceof SelfReflectable) {
-			((SelfReflectable)onObject).db4o$set(_name, value);
+			((SelfReflectable)onObject).self_set(_name, value);
 		}
 	}
 
