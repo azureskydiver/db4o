@@ -715,6 +715,12 @@ public class Transaction {
             }
         }
     }
+    
+    private void flushFile(){
+        if(Debug.flush){
+            i_file.syncFiles();
+        }
+    }
 
     private void write() {
         if(Debug.checkSychronization){
@@ -729,9 +735,13 @@ public class Transaction {
             Tree.write(bytes, i_addToClassIndex);
             Tree.write(bytes, i_removeFromClassIndex);
             bytes.write();
+            flushFile();
             i_stream.writeTransactionPointer(address);
+            flushFile();
             writeSlots();
+            flushFile();
             i_stream.writeTransactionPointer(0);
+            flushFile();
             i_file.free(address, length);
         }
     }
@@ -824,10 +834,13 @@ public class Transaction {
                 i_removeFromClassIndex = new TreeReader(bytes,
                     new TreeIntObject(0, new TreeInt(0))).read();
                 writeSlots();
+                flushFile();
                 i_stream.writeTransactionPointer(0);
+                flushFile();
                 freeOnCommit();
             } else {
                 i_stream.writeTransactionPointer(0);
+                flushFile();
             }
         }
     }

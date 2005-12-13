@@ -9,6 +9,8 @@ import com.db4o.foundation.*;
  */
 public abstract class Debug extends Debug4 {
     
+    public static final boolean flush = true;
+    
     public static final boolean useNIxPaths = true;
     
     public static final boolean ixTrees = false;

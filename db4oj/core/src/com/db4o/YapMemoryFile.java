@@ -112,7 +112,7 @@ public class YapMemoryFile extends YapFile {
         readBytes(bytes, address + addressOffset, length);
     }
 
-    void syncFiles() {
+    public void syncFiles() {
     }
 
     boolean writeAccessTime() {

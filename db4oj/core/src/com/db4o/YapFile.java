@@ -631,7 +631,7 @@ public abstract class YapFile extends YapStream {
 
     public abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length);
 
-    abstract void syncFiles();
+    public abstract void syncFiles();
 
     public String toString() {
         if (Debug.prettyToStrings) {
@@ -726,7 +726,7 @@ public abstract class YapFile extends YapStream {
         if(shuttingDown){
             ensureLastSlotWritten();
         }
-
+        syncFiles();
     }
 
     final void writeNew(YapClass a_yapClass, YapWriter aWriter) {
