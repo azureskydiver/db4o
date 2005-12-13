@@ -304,7 +304,7 @@ public class YapRandomAccessFile extends YapFile {
         }
     }
 
-    void syncFiles() {
+    public void syncFiles() {
         try {
             i_file.sync();
             if (needsLockFileThread() && Debug.lockFile) {
