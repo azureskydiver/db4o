@@ -799,15 +799,17 @@ public class Transaction {
         traverseYapClassEntries(i_addToClassIndex, true, indicesToBeWritten);
         traverseYapClassEntries(i_removeFromClassIndex, false,
             indicesToBeWritten);
-        Iterator4 i = indicesToBeWritten.iterator();
-        while (i.hasNext()) {
-            ClassIndex classIndex = (ClassIndex) i.next();
-            classIndex.setDirty(i_stream);
-            classIndex.write(this);
+        if(indicesToBeWritten.size() >= 0){
+            Iterator4 i = indicesToBeWritten.iterator();
+            while (i.hasNext()) {
+                ClassIndex classIndex = (ClassIndex) i.next();
+                classIndex.setDirty(i_stream);
+                classIndex.write(this);
+            }
+            flushFile();
         }
         if (i_slots != null) {
             i_slots.traverse(new Visitor4() {
-
                 public void visit(Object obj) {
                     TreeIntObject node = (TreeIntObject) obj;
                     ReferencedSlot slot = (ReferencedSlot) node.i_object;

@@ -37,7 +37,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     boolean          i_encrypt;
     Hashtable4       i_exceptionalClasses               = new Hashtable4(16);
     boolean          i_exceptionsOnNotStorable;
-    public boolean   _flushFileBuffers;
+    public boolean   _flushFileBuffers                  = true;
     public byte      _freespaceSystem;                   
     public int       i_generateUUIDs;
     public int       i_generateVersionNumbers;
