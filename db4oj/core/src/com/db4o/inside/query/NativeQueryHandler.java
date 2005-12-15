@@ -38,26 +38,27 @@ public class NativeQueryHandler {
 		q.constrain(predicate.extentType());
 		if(predicate instanceof Db4oEnhancedFilter) {
 			((Db4oEnhancedFilter)predicate).optimizeQuery(q);
-			notifyListeners(predicate,NativeQueryHandler.PREOPTIMIZED);
+			notifyListeners(predicate,NativeQueryHandler.PREOPTIMIZED,null);
 			return q;
 		}
 		try {
 			if (_container.ext().configure().optimizeNativeQueries() && _enhancer!=null) {
-				_enhancer.optimize(q,predicate);
-				notifyListeners(predicate,NativeQueryHandler.DYNOPTIMIZED);
+				Object optimized=_enhancer.optimize(q,predicate);
+				notifyListeners(predicate,NativeQueryHandler.DYNOPTIMIZED,optimized);
 				return q;
 			}
 		} catch (Exception exc) {
 			//exc.printStackTrace();
 		}
 		q.constrain(new PredicateEvaluation(predicate));
-		notifyListeners(predicate,NativeQueryHandler.UNOPTIMIZED);
+		notifyListeners(predicate,NativeQueryHandler.UNOPTIMIZED,null);
 		return q;
 	}
 
-	private void notifyListeners(Predicate predicate, String msg) {
+	private void notifyListeners(Predicate predicate, String msg,Object optimized) {
+		NQOptimizationInfo info=new NQOptimizationInfo(predicate,msg,optimized);
 		for(Iterator4 iter=new Iterator4Impl(_listeners);iter.hasNext();/**/) {
-			((Db4oQueryExecutionListener)iter.next()).notifyQueryExecuted(predicate,msg);
+			((Db4oQueryExecutionListener)iter.next()).notifyQueryExecuted(info);
 		}
 	}
 	

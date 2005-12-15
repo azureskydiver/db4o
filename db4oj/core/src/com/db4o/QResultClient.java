@@ -10,6 +10,7 @@ class QResultClient extends QueryResultImpl {
 	private Object[] i_prefetched = new Object[YapConst.PREFETCH_OBJECT_COUNT];
 	private int i_remainingObjects;
 	private int i_prefetchCount = YapConst.PREFETCH_OBJECT_COUNT;
+	private int i_prefetchRight;
 
 	QResultClient(Transaction a_ta) {
 		super(a_ta);
@@ -37,22 +38,24 @@ class QResultClient extends QueryResultImpl {
 			if (i_remainingObjects < 1) {
 				if (super.hasNext()) {
 					i_remainingObjects = (stream).prefetchObjects(this, i_prefetched, i_prefetchCount);
+					i_prefetchRight=i_remainingObjects;
 				}
 			}
 			i_remainingObjects --;
 			if(i_remainingObjects < 0){
 				return null;
 			}
-			if(i_prefetched[i_remainingObjects] == null){
+			if(i_prefetched[i_prefetchRight-i_remainingObjects-1] == null){
 				return next();
 			}
-			return activate(i_prefetched[i_remainingObjects]);
+			return activate(i_prefetched[i_prefetchRight-i_remainingObjects-1]);
 		}
 	}
 	
 	public void reset() {
 		synchronized (streamLock()) {
 			i_remainingObjects = 0;
+			i_prefetchRight=0;
 			super.reset();
 		}
 	}

@@ -2,8 +2,12 @@
 
 package com.db4o;
 
+import java.util.*;
+
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.query.*;
+import com.db4o.query.*;
 
 /**
  * @exclude
@@ -132,4 +136,37 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
         return i_trans.i_stream;
     }
 
+	public void sort(QueryComparator cmp) {
+		sort(cmp,0,size()-1);
+		reset();
+	}
+
+	private void sort(QueryComparator cmp,int from,int to) {
+		if(to-from<1) {
+			return;
+		}
+		Object pivot=get(to);
+		int left=from;
+		int right=to;
+		while(left<right) {
+			while(left<right&&cmp.compare(pivot,get(left))<0) {
+				left++;
+			}
+			while(left<right&&cmp.compare(pivot,get(right))>=0) {
+				right--;
+			}
+			swap(left, right);
+		}
+		swap(to, right);
+		sort(cmp,from,right-1);
+		sort(cmp,right+1,to);
+	}
+
+	private void swap(int left, int right) {
+		if(left!=right) {
+			int swap=i_content[left];
+			i_content[left]=i_content[right];
+			i_content[right]=swap;
+		}
+	}
 }

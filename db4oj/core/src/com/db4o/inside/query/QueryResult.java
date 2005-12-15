@@ -3,6 +3,8 @@
 package com.db4o.inside.query;
 
 import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
 /**
  * @exclude
@@ -26,4 +28,6 @@ public interface QueryResult {
     public ObjectContainer objectContainer();
     
     public int indexOf(int id);
+
+	public void sort(QueryComparator cmp);
 }

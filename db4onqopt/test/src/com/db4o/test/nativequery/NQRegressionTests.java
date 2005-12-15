@@ -4,6 +4,7 @@ import java.lang.reflect.*;
 
 import com.db4o.*;
 import com.db4o.inside.query.*;
+import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.main.*;
 import com.db4o.query.*;
 import com.db4o.test.*;
@@ -347,23 +348,26 @@ public class NQRegressionTests {
 		Db4oQueryExecutionListener listener = new Db4oQueryExecutionListener() {
 			private int run=0;
 			
-			public void notifyQueryExecuted(Predicate actualPredicate, String msg) {
+			public void notifyQueryExecuted(NQOptimizationInfo info) {
 				if(run<2) {
-					Test.ensureEquals(actualPredicate,filter);
+					Test.ensureEquals(info.predicate(),filter);
 				}
 				String expMsg=null;
 				switch(run) {
 					case 0:
 						expMsg=NativeQueryHandler.UNOPTIMIZED;
+						Test.ensure(info.optimized()==null);
 						break;
 					case 1:
 						expMsg=NativeQueryHandler.DYNOPTIMIZED;
+						Test.ensure(info.optimized() instanceof Expression);
 						break;
 					case 2:
 						expMsg=NativeQueryHandler.PREOPTIMIZED;
+						Test.ensure(info.optimized()==null);
 						break;
 				}
-				Test.ensureEquals(expMsg,msg);
+				Test.ensureEquals(expMsg,info.message());
 				run++;
 			}
 		};

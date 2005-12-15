@@ -3,6 +3,7 @@
 package com.db4o.inside.query;
 
 import com.db4o.ext.*;
+import com.db4o.query.*;
 
 /**
  * @exclude 
@@ -43,4 +44,7 @@ public class ObjectSetFacade implements ExtObjectSet{
         return _delegate.size();
     }
 
+	public void sort(QueryComparator cmp) {
+		_delegate.sort(cmp);
+	}
 }

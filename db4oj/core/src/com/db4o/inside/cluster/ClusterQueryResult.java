@@ -4,6 +4,7 @@ package com.db4o.inside.cluster;
 
 import com.db4o.*;
 import com.db4o.cluster.*;
+import com.db4o.ext.*;
 import com.db4o.inside.*;
 import com.db4o.inside.query.*;
 import com.db4o.query.*;
@@ -107,6 +108,11 @@ public class ClusterQueryResult implements QueryResult{
         Exceptions4.notSupported();
         return 0;
     }
+
+	public void sort(QueryComparator cmp) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
 
