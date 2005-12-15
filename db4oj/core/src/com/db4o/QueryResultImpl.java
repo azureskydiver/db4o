@@ -136,10 +136,9 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
         return i_trans.i_stream;
     }
 
-	public QueryResult sort(QueryComparator cmp) {
+	public void sort(QueryComparator cmp) {
 		sort(cmp,0,size()-1);
 		reset();
-		return this;
 	}
 
 	private void sort(QueryComparator cmp,int from,int to) {

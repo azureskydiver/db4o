@@ -45,7 +45,7 @@ public class ObjectSetFacade implements ExtObjectSet{
     }
 
 	public void sort(QueryComparator cmp) {
-		_delegate=_delegate.sort(cmp);
+		_delegate.sort(cmp);
 	}
 	
 	public QueryResult delegate() {

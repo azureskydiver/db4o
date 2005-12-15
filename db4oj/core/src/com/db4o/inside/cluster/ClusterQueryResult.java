@@ -108,8 +108,7 @@ public class ClusterQueryResult implements QueryResult{
         return 0;
     }
 
-	public QueryResult sort(QueryComparator cmp) {
-		return this;
+	public void sort(QueryComparator cmp) {
 	}
 }
 
