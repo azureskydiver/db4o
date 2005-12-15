@@ -102,12 +102,13 @@ public class AllTestsConfAll extends TestSuite{
 	    	SortResult.class,
 	    	StoredClassInformation.class,
 	    	StoredFieldValue.class,
-	    	StoreObject.class,
+	    	//StoreObject.class,
 			SwitchingFilesFromClient.class,
 	        TestHashTable.class,
 	        TwoClients.class,
 	        TypedArrayInObject.class,
 	        TypedDerivedArray.class,
+	        XTEAEncryption.class
         };
     }
     
