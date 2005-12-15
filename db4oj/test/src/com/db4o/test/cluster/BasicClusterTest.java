@@ -34,7 +34,7 @@ public class BasicClusterTest {
         second.close();
     }
     
-    public void test(){
+    public void testConstrained(){
         ObjectContainer second = Db4o.openFile(SECOND_FILE);
         Cluster cluster = new Cluster(new ObjectContainer[]{
             Test.objectContainer(),
@@ -45,12 +45,55 @@ public class BasicClusterTest {
         tQuery(cluster, "inBoth", 2);
         second.close();
     }
-    
+
+    public void testPlain(){
+        ObjectContainer second = Db4o.openFile(SECOND_FILE);
+        Cluster cluster = new Cluster(new ObjectContainer[]{
+            Test.objectContainer(),
+            second
+        });
+        Query q = cluster.query();
+        q.constrain(this.getClass());
+        ObjectSet result=q.execute();
+        Test.ensure(result.size() == 4);
+        while(result.hasNext()) {
+        	Test.ensure(result.next() instanceof BasicClusterTest);
+        }
+        second.close();
+    }
+
+    public void XtestSorted(){
+        ObjectContainer second = Db4o.openFile(SECOND_FILE);
+        Cluster cluster = new Cluster(new ObjectContainer[]{
+            Test.objectContainer(),
+            second
+        });
+        Query q = cluster.query();
+        q.constrain(this.getClass());
+        ObjectSet result=q.execute();
+        result.ext().sort(new QueryComparator() {
+			public int compare(Object first, Object second) {
+				char firstC=((BasicClusterTest)first)._name.charAt(3);
+				char secondC=((BasicClusterTest)second)._name.charAt(3);
+				return firstC-secondC;
+			}
+        });
+        String[] expected={"inTwo","inTwo","inBoth","inOne"};
+        for (int expidx = 0; expidx < expected.length; expidx++) {			
+        	Test.ensureEquals(expected[expidx],((BasicClusterTest)result.next())._name);
+        }
+        second.close();
+    }
+
     private void tQuery(Cluster cluster, String name, int expected){
         Query q = cluster.query();
         q.constrain(this.getClass());
         q.descend("_name").constrain(name);
-        Test.ensure(q.execute().size() == expected);
+        ObjectSet result=q.execute();
+        Test.ensure(result.size() == expected);
+        while(result.hasNext()) {
+        	Test.ensure(result.next() instanceof BasicClusterTest);
+        }
     }
     
     

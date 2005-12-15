@@ -4,7 +4,6 @@ package com.db4o.inside.cluster;
 
 import com.db4o.*;
 import com.db4o.cluster.*;
-import com.db4o.ext.*;
 import com.db4o.inside.*;
 import com.db4o.inside.query.*;
 import com.db4o.query.*;
@@ -48,7 +47,7 @@ public class ClusterQueryResult implements QueryResult{
         if(current().hasNext()){
             return true;
         }
-        if(_current >= _objectSets.length){
+        if(_current >= _objectSets.length-1){
             return false;
         }
         _current ++;
@@ -87,7 +86,7 @@ public class ClusterQueryResult implements QueryResult{
                 index -= _sizes[i];
                 i++;
             }
-            return ((ObjectSetFacade)_objectSets[i])._delegate.get(index); 
+            return ((ObjectSetFacade)_objectSets[i]).delegate().get(index); 
         }
     }
 
@@ -109,10 +108,8 @@ public class ClusterQueryResult implements QueryResult{
         return 0;
     }
 
-	public void sort(QueryComparator cmp) {
-		// TODO Auto-generated method stub
-		
+	public QueryResult sort(QueryComparator cmp) {
+		return this;
 	}
-
 }
 
