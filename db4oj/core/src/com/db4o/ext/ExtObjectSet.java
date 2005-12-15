@@ -3,6 +3,7 @@
 package com.db4o.ext;
 
 import com.db4o.*;
+import com.db4o.query.*;
 
 /**
  * extended functionality for the
@@ -33,5 +34,5 @@ public interface ExtObjectSet extends ObjectSet {
      */
     public Object get(int index);
 	
-	
+	public void sort(QueryComparator cmp);
 }

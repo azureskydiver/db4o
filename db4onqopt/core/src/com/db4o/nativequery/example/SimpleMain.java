@@ -44,8 +44,8 @@ public class SimpleMain {
 				}
 			};
 			((YapStream)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
-				public void notifyQueryExecuted(Predicate filter, String msg) {
-					System.err.println(msg);
+				public void notifyQueryExecuted(NQOptimizationInfo info) {
+					System.err.println(info.message());
 				}
 			});
 			long startTime=System.currentTimeMillis();

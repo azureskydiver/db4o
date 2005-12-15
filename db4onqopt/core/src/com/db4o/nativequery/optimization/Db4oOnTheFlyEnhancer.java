@@ -13,12 +13,13 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 	private transient ClassFileLoader loader=new ClassFileLoader();
 	private transient BloatUtil bloatUtil=new BloatUtil(loader);
 
-	public void optimize(Query query,Predicate filter) {
+	public Object optimize(Query query,Predicate filter) {
 		try {
 			ClassEditor classEditor=new ClassEditor(null,loader.loadClass(filter.getClass().getName()));
 			Expression expr=new NativeQueryEnhancer().analyze(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME);
 			//System.err.println(expr);
 			new SODAQueryBuilder().optimizeQuery(expr,query,filter);
+			return expr;
 		} catch (ClassNotFoundException exc) {
 			throw new RuntimeException(exc.getMessage());
 		}
