@@ -29,5 +29,5 @@ public interface QueryResult {
     
     public int indexOf(int id);
 
-	public void sort(QueryComparator cmp);
+	public QueryResult sort(QueryComparator cmp);
 }
