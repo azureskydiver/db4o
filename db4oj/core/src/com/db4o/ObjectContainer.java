@@ -182,6 +182,14 @@ public interface ObjectContainer {
     public Query query ();
     
     /**
+     * queries for all instances of a class.
+     * @param clazz the class to query for.
+     * @return the {@link ObjectSet} returned by the query.
+     */
+    public ObjectSet query(Class clazz);
+
+    
+    /**
      * Native Query Interface.
      * <br><br>Native Queries allow typesafe, compile-time checked and refactorable 
      * querying, following object-oriented principles. Native Queries expressions
