@@ -109,6 +109,7 @@ public class ClusterQueryResult implements QueryResult{
     }
 
 	public void sort(QueryComparator cmp) {
+        Exceptions4.notSupported();
 	}
 }
 
