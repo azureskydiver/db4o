@@ -80,4 +80,8 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet{
 	public void sort(QueryComparator cmp) {
 		_delegate.sort(cmp);
 	}
+	
+	public QueryResult delegate() {
+		return _delegate;
+	}
 }
