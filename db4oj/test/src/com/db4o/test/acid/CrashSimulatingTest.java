@@ -1,0 +1,133 @@
+/* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
+
+package com.db4o.test.acid;
+
+import java.io.*;
+
+import com.db4o.*;
+import com.db4o.io.*;
+import com.db4o.query.*;
+import com.db4o.test.*;
+import com.db4o.test.lib.*;
+
+
+public class CrashSimulatingTest {
+    
+    
+    public String _name;
+    
+    public CrashSimulatingTest _next;
+    
+    private static final String PATH = "TEMP/crashSimulate";
+    private static final String FILE = PATH + "/cs"; 
+    
+    
+    public CrashSimulatingTest() {
+    }
+    
+    public CrashSimulatingTest(CrashSimulatingTest next_, String name) {
+        _next = next_;
+        _name = name;
+    }
+    
+    public void test() throws IOException{
+        
+        new File(FILE).delete();
+        new File(PATH).mkdirs();
+        
+        
+        // Db4o.configure().freespace().useIndexSystem();
+        
+        createFile();
+        
+        CrashSimulatingIoAdapter adapterFactory = new CrashSimulatingIoAdapter(new RandomAccessFileAdapter());
+        Db4o.configure().io(adapterFactory);
+        
+        ObjectContainer oc = Db4o.openFile(FILE);
+        
+        ObjectSet objectSet = oc.get(new CrashSimulatingTest(null, "three"));
+        oc.delete(objectSet.next());
+        
+        oc.set(new CrashSimulatingTest(null, "four"));
+        
+        oc.commit();
+        oc.close();
+        
+        int count = adapterFactory.batch.writeVersions(FILE);
+        
+        for (int i = 1; i <= count; i++) {
+            String fileName = FILE + "W" + i;
+            oc = Db4o.openFile(fileName);
+            if(! stateBeforeCommit(oc)){
+                if(! stateAfterCommit(oc)){
+                    Test.error();
+                }
+            }
+            oc.close();
+        }
+        
+        System.out.println("Total versions: " + count);
+        
+        
+        Db4o.configure().io(new RandomAccessFileAdapter());
+    }
+    
+    private boolean stateBeforeCommit(ObjectContainer oc){
+        return expect(oc, new String[] {"one", "two", "three"});
+    }
+    
+    private boolean stateAfterCommit (ObjectContainer oc){
+        return expect(oc, new String[] {"one", "two", "four"});
+    }
+    
+    private boolean expect(ObjectContainer oc, String[] names){
+        ObjectSet objectSet = oc.query(CrashSimulatingTest.class);
+        while(objectSet.hasNext()){
+            CrashSimulatingTest cst = (CrashSimulatingTest)objectSet.next();
+            boolean found = false;
+            for (int i = 0; i < names.length; i++) {
+                if(cst._name.equals(names[i])){
+                    names[i] = null;
+                    found = true;
+                    break;
+                }
+            }
+            if(! found){
+                return false;
+            }
+        }
+        for (int i = 0; i < names.length; i++) {
+            if(names[i] != null){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private void createFile(){
+        ObjectContainer oc = Db4o.openFile(FILE);
+        for (int i = 0; i < 10; i++) {
+            oc.set(new SimplestPossible("delme"));
+        }
+        CrashSimulatingTest one = new CrashSimulatingTest(null, "one");
+        CrashSimulatingTest two = new CrashSimulatingTest(one, "two");
+        CrashSimulatingTest three = new CrashSimulatingTest(one, "three");
+        oc.set(one);
+        oc.set(two);
+        oc.set(three);
+        oc.commit();
+        ObjectSet objectSet = oc.query(SimplestPossible.class);
+        while(objectSet.hasNext()){
+            oc.delete(objectSet.next());
+        }
+        oc.close();
+        new File4(FILE).copy(FILE + "0");
+    }
+    
+    
+    
+    
+    
+    
+
+}
