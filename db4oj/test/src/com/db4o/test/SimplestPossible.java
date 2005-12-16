@@ -5,6 +5,14 @@ package com.db4o.test;
 public class SimplestPossible {
     
 	public String name;
+    
+    
+    public SimplestPossible() {
+    }
+    
+    public SimplestPossible(String name) {
+        this.name = name;
+    }
 	
 	public void storeOne(){
 		name = "sp";
