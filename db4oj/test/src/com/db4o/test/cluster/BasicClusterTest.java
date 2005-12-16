@@ -62,29 +62,6 @@ public class BasicClusterTest {
         second.close();
     }
 
-    public void XtestSorted(){
-        ObjectContainer second = Db4o.openFile(SECOND_FILE);
-        Cluster cluster = new Cluster(new ObjectContainer[]{
-            Test.objectContainer(),
-            second
-        });
-        Query q = cluster.query();
-        q.constrain(this.getClass());
-        ObjectSet result=q.execute();
-        result.ext().sort(new QueryComparator() {
-			public int compare(Object first, Object second) {
-				char firstC=((BasicClusterTest)first)._name.charAt(3);
-				char secondC=((BasicClusterTest)second)._name.charAt(3);
-				return firstC-secondC;
-			}
-        });
-        String[] expected={"inTwo","inTwo","inBoth","inOne"};
-        for (int expidx = 0; expidx < expected.length; expidx++) {			
-        	Test.ensureEquals(expected[expidx],((BasicClusterTest)result.next())._name);
-        }
-        second.close();
-    }
-
     private void tQuery(Cluster cluster, String name, int expected){
         Query q = cluster.query();
         q.constrain(this.getClass());
