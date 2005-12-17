@@ -1,35 +1,80 @@
+/* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
+
+This file is part of the db4o open source object database.
+
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
+
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. 
+
+XTEA.java:
+
+Java version of XTEA encryption algorithm was developed using the prinsiple
+described in http://en.wikipedia.org/wiki/XTEA. 
+
+
+*/
 package com.db4o.io.crypt;
 
 public class XTEA {
 
+	public final static class IterationSpec {
+		private int _iterations;
+		private int _deltaSumInitial;
+		
+		private IterationSpec(int iterations,int deltaSumInitial) {
+			_iterations=iterations;
+			_deltaSumInitial=deltaSumInitial;
+		}
+	}
+
+	public final static IterationSpec ITERATIONS8=new IterationSpec(8,0xF1BBCDC8);
+	public final static IterationSpec ITERATIONS16=new IterationSpec(16,0xE3779B90);
+	public final static IterationSpec ITERATIONS32=new IterationSpec(32,0xC6EF3720);
+	public final static IterationSpec ITERATIONS64=new IterationSpec(64,0x8DDE6E40);
+
+	private final IterationSpec _iterationSpec;
+	
 	private static final int DELTA = 0x9E3779B9;
 
-	private int DELTA_SUM_INITIAL = 0xC6EF3720;
-
-	private int ITERATIONS = 32;
-
-	private int[] key;
+	private int[] _key;
 
 	/**
 	 * creates an XTEA object from the given String key and iterations count.
 	 * 
-	 * @param key the key, used in ecryption/decryption routine.
-	 * @param iterations iterations count. Possible values are 8, 16, 32 and 64.
+	 * @param key
+	 *            the key, used in ecryption/decryption routine.
+	 * @param iterations
+	 *            iterations count. Possible values are 8, 16, 32 and 64.
 	 * 
 	 */
-	public XTEA(String key, int iterations) {
-		this(new KeyGenerator().core(key), iterations);
+	public XTEA(String key, IterationSpec iterationSpec) {
+		this(new KeyGenerator().core(key), iterationSpec);
 	}
 
 	/**
 	 * creates an XTEA object from the given String key. The default value of
 	 * rounds is 32;
 	 * 
-	 * @param key the key, used in ecryption/decryption routine.
+	 * @param key
+	 *            the key, used in ecryption/decryption routine.
+	 * 
 	 * 
 	 */
 	public XTEA(String key) {
-		this(new KeyGenerator().core(key), 32);
+		this(new KeyGenerator().core(key), ITERATIONS32);
 	}
 
 	/**
@@ -37,41 +82,12 @@ public class XTEA {
 	 * @throws IllegalArgumentException
 	 * 
 	 */
-	private XTEA(int[] key, int iterations) throws IllegalArgumentException {
+	private XTEA(int[] key, IterationSpec iterationSpec) throws IllegalArgumentException {
 		if (key.length != 4) {
 			throw new IllegalArgumentException();
 		}
-		this.key = key;
-		valueInt(iterations);
-		this.ITERATIONS = iterations;
-	}
-
-	/**
-	 * values the parameter of constructor
-	 * 
-	 * @param iterations
-	 *            must be 8, 16, 32 or 64;
-	 * @throws IllegalArgumentException
-	 */
-	private void valueInt(int iterations) throws IllegalArgumentException {
-		switch (iterations) {
-		case 8:
-			DELTA_SUM_INITIAL = 0xF1BBCDC8;
-			break;
-		case 16:
-			DELTA_SUM_INITIAL = 0xE3779B90;
-			break;
-		case 32:
-			DELTA_SUM_INITIAL = 0xC6EF3720;
-			break;
-		case 64:
-			DELTA_SUM_INITIAL = 0x8DDE6E40;
-			break;
-		default:
-			throw new IllegalArgumentException(
-					"illegal argument: Iterations must be set 8, 16, 32 or 64");
-		}
-
+		_key = key;
+		_iterationSpec=iterationSpec;
 	}
 
 	/**
@@ -79,9 +95,12 @@ public class XTEA {
 	 * integer values.<br>
 	 * (An Integer is represented in memory as four bytes.)
 	 * 
-	 * @param bytes Incoming byte array of length eight to be converted<br>
-	 * @param offset Offset from which to start converting bytes<br>
-	 * @param res Int array of length two which contains converted array bytes.
+	 * @param bytes-
+	 *            Incoming byte array of length eight to be converted<br>
+	 * @param offset-
+	 *            Offset from which to start converting bytes<br>
+	 * @param res-
+	 *            Int array of length two which contains converted array bytes.
 	 * 
 	 */
 	private void byte2int(byte[] bytes, int offset, int[] res) {
@@ -98,9 +117,13 @@ public class XTEA {
 	 * bytes.<br>
 	 * (An Integer is represented in memory as four bytes.)
 	 * 
-	 * @param i Incoming integer array of two to be converted<br>
-	 * @param offset Offset from which to start converting integer values<br>
-	 * @param res byte array of length eight which contains converted integer array i.
+	 * @param i-
+	 *            Incoming integer array of two to be converted<br>
+	 * @param offset-
+	 *            Offset from which to start converting integer values<br>
+	 * @param res-
+	 *            byte array of length eight which contains converted integer
+	 *            array i.
 	 */
 	private void int2byte(int[] i, int offset, byte[] res) {
 		res[offset] = (byte) ((i[0] & 0xff000000) >>> 24);
@@ -117,7 +140,9 @@ public class XTEA {
 	/**
 	 * enciphers two int values
 	 * 
-	 * @param block int array to be encipher according to the XTEA encryption algorithm<br>
+	 * @param block -
+	 *            int array to be encipher according to the XTEA encryption
+	 *            algorithm<br>
 	 *            <br>
 	 *            block[0] += ((block[1] << 4 ^ block[1] >> 5) + block[1]) ^
 	 *            (delta_sum + key[delta_sum & 3]);<br>
@@ -126,14 +151,14 @@ public class XTEA {
 	 *            (delta_sum + key[delta_sum >> 11 & 3]);
 	 */
 	private void encipher(int[] block) {
-		int n = ITERATIONS;
+		int n = _iterationSpec._iterations;
 		int delta_sum = 0;
 		while (n-- > 0) {
 			block[0] += ((block[1] << 4 ^ block[1] >> 5) + block[1])
-					^ (delta_sum + key[delta_sum & 3]);
+					^ (delta_sum + _key[delta_sum & 3]);
 			delta_sum += DELTA;
 			block[1] += ((block[0] << 4 ^ block[0] >> 5) + block[0])
-					^ (delta_sum + key[delta_sum >> 11 & 3]);
+					^ (delta_sum + _key[delta_sum >> 11 & 3]);
 
 		}
 	}
@@ -141,7 +166,9 @@ public class XTEA {
 	/**
 	 * deciphers two int values
 	 * 
-	 * @param e_block int array to be decipher according to the XTEA encryption algorithm<br>
+	 * @param e_block -
+	 *            int array to be decipher according to the XTEA encryption
+	 *            algorithm<br>
 	 *            <br>
 	 *            e_block[1] -= ((e_block[0] << 4 ^ e_block[0] >> 5) +
 	 *            e_block[0]) ^ (delta_sum + key[delta_sum >> 11 & 3]);<br>
@@ -150,21 +177,22 @@ public class XTEA {
 	 *            e_block[1]) ^ (delta_sum + key[delta_sum & 3]);
 	 */
 	private void decipher(int[] e_block) {
-		int delta_sum = DELTA_SUM_INITIAL;
-		int n = ITERATIONS;
+		int delta_sum = _iterationSpec._deltaSumInitial;
+		int n = _iterationSpec._iterations;
 		while (n-- > 0) {
 			e_block[1] -= ((e_block[0] << 4 ^ e_block[0] >> 5) + e_block[0])
-					^ (delta_sum + key[delta_sum >> 11 & 3]);
+					^ (delta_sum + _key[delta_sum >> 11 & 3]);
 			delta_sum -= DELTA;
 			e_block[0] -= ((e_block[1] << 4 ^ e_block[1] >> 5) + e_block[1])
-					^ (delta_sum + key[delta_sum & 3]);
+					^ (delta_sum + _key[delta_sum & 3]);
 		}
 	}
 
 	/**
 	 * encrypts incoming byte array according XTEA
 	 * 
-	 * @param buffer incoming byte array to be encrypted
+	 * @param buffer -
+	 *            incoming byte array to be encrypted
 	 * 
 	 */
 	public void encrypt(byte[] buffer) {
@@ -179,7 +207,8 @@ public class XTEA {
 	/**
 	 * decrypts incoming byte array according XTEA
 	 * 
-	 * @param buffer incoming byte array to be decrypted
+	 * @param buffer -
+	 *            incoming byte array to be decrypted
 	 * 
 	 */
 	public void decrypt(byte[] buffer) {
@@ -190,13 +219,4 @@ public class XTEA {
 			int2byte(asInt, i, buffer);
 		}
 	}
-
-	public int iterations() {
-		return ITERATIONS;
-	}
-
-	public void iterations(int iterations) {
-		ITERATIONS = iterations;
-	}
-
 }
