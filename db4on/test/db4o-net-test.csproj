@@ -20,7 +20,7 @@
                 PostBuildEvent = ""
                 RootNamespace = "com.db4o.test"
                 RunPostBuildEvent = "OnBuildSuccess"
-                StartupObject = "com.db4o.test.nativequeries.cats.TestCatSpeed"
+                StartupObject = "com.db4o.test.AllTests"
             >
                 <Config
                     Name = "Debug"

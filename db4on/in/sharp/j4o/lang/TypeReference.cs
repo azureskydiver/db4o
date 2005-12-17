@@ -196,7 +196,13 @@ namespace j4o.lang
 
 		public override Type Resolve()
 		{
+#if NET_2_0
 			return _elementType.Resolve().MakePointerType();
+#else
+			StringBuilder builder = new StringBuilder();
+			AppendTypeName(builder);
+			return _elementType.Resolve().Assembly.GetType(builder.ToString(), true);
+#endif
 		}
 	}
 
@@ -243,10 +249,14 @@ namespace j4o.lang
 
 		public override Type Resolve()
 		{
+#if NET_2_0
 			Type baseType = base.Resolve();
 			return _genericArguments.Length > 0
 				? baseType.MakeGenericType(Resolve(_genericArguments))
 				: baseType;
+#else
+			throw new System.NotSupportedException();
+#endif
 		}
 
 		Type[] Resolve(TypeReference[] typeRefs)
@@ -281,8 +291,3 @@ namespace j4o.lang
 		}
 	}
 }
-
-
-
-
-
