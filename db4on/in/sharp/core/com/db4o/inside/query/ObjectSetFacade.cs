@@ -18,10 +18,16 @@ namespace com.db4o.inside.query
 		}
 
 		#region ObjectSet Members
+		
 		public Object get(int index) {
             return _delegate.get(index);
         }
-		
+
+		public void sort(com.db4o.query.QueryComparator cmp)
+		{
+			throw new NotImplementedException();
+		}
+
 		public long[] getIDs() 
 		{
 			return _delegate.getIDs();
@@ -60,6 +66,11 @@ namespace com.db4o.inside.query
 		private ObjectContainer objectContainer()
 		{
 			return _delegate.objectContainer();
+		}
+
+		public QueryResult delegate_()
+		{
+			return _delegate;
 		}
 		#endregion
 
@@ -222,4 +233,5 @@ namespace com.db4o.inside.query
 		#endregion
 	}
 }
+
 
