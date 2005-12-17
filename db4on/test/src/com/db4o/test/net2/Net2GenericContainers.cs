@@ -42,7 +42,6 @@ namespace com.db4o.test.net2
 			p2.tasks.Add(new Task("meditate"));
 
 			Tester.store(p1);
-			Tester.reOpen();
 			Tester.store(p2);
 
             Dictionary<string, List<Task>> dict = new Dictionary<string, List<Task>>();
@@ -50,6 +49,8 @@ namespace com.db4o.test.net2
             dict.Add(p2.name, p2.tasks);
 
             Tester.store(dict);
+			
+			Tester.reOpenAll();
 		}
 
         public void testDict()

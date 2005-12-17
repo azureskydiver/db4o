@@ -2,14 +2,20 @@
 
 using System;
 
-namespace j4o.lang {
-
-    public class ClassNotFoundException : System.Exception {
-
-        public ClassNotFoundException() {
+namespace j4o.lang
+{
+    public class ClassNotFoundException : System.Exception
+    {
+        public ClassNotFoundException()
+        {
         }
 
-        public ClassNotFoundException(String name) : base(name) {
+        public ClassNotFoundException(string message) : base(message)
+        {
         }
+    	
+    	public ClassNotFoundException(string message, Exception cause) : base(message, cause)
+    	{
+    	}
     }
 }

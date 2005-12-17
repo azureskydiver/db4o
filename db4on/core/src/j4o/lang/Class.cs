@@ -52,11 +52,11 @@ namespace j4o.lang {
 			}
 
             try {
-                Type t = TypeName.Parse(name).Resolve();
+                Type t = TypeReference.FromString(name).Resolve();
                 returnValue = getClassForType(t);
 				_typeNameToClassMap[name] = returnValue;
             } catch(Exception ex) {
-                throw new ClassNotFoundException(name);
+                throw new ClassNotFoundException(name, ex);
             }
 			return returnValue;
         }
@@ -173,7 +173,7 @@ namespace j4o.lang {
 
         public String getName() {
             if (name == null) {
-                name = TypeName.FromType(type).GetUnversionedName();
+                name = TypeReference.FromType(type).GetUnversionedName();
             }
             return name;
         }

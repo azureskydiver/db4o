@@ -41,10 +41,9 @@ namespace com.db4o.test.j4otest
         {
 			try
 			{
-				TypeName stringName = TypeName.Parse("System.String");
+				TypeReference stringName = TypeReference.FromString("System.String");
 				Tester.ensureEquals("System.String", stringName.SimpleName);
 				Tester.ensure(stringName.AssemblyName == null);
-				Tester.ensureEquals(0, stringName.GenericArguments.Length);
                 Tester.ensureEquals(typeof(string), stringName.Resolve());
 			}
 			catch (Exception e)
@@ -55,9 +54,9 @@ namespace com.db4o.test.j4otest
 
 		public void testVoidPointer()
         {
-			TypeName voidPointer = TypeName.Parse("System.Void*");
+			TypeReference voidPointer = TypeReference.FromString("System.Void*");
 			Tester.ensureEquals("System.Void", voidPointer.SimpleName);
-			Tester.ensure(!voidPointer.HasGenericArguments);
+			Tester.ensure(voidPointer is PointerTypeReference);
 			Tester.ensureEquals(Type.GetType("System.Void*", true), voidPointer.Resolve());
         }
 
@@ -65,7 +64,7 @@ namespace com.db4o.test.j4otest
         {
 			try
 			{
-				TypeName typeName = TypeName.FromType(typeof(NestedType));
+				TypeReference typeName = TypeReference.FromType(typeof(NestedType));
 				Tester.ensureEquals("com.db4o.test.j4otest.TypeNameTest+NestedType", typeName.SimpleName);
 				Tester.ensureEquals(typeof(NestedType), typeName.Resolve());
 			}
@@ -80,7 +79,7 @@ namespace com.db4o.test.j4otest
 		{
 			try
 			{
-				TypeName stringName = TypeName.Parse("System.String, mscorlib, Version=1.14.27.0");
+				TypeReference stringName = TypeReference.FromString("System.String, mscorlib, Version=1.14.27.0");
 				Tester.ensureEquals(typeof(string), stringName.Resolve());
 			}
 			catch (Exception e)
@@ -94,12 +93,11 @@ namespace com.db4o.test.j4otest
         {
 			try
 			{
-				TypeName stringName = TypeName.FromType(typeof(string));
-				Tester.ensureEquals(0, stringName.GenericArguments.Length);
+				TypeReference stringName = TypeReference.FromType(typeof(string));
 				Tester.ensureEquals("System.String", stringName.SimpleName);
 				Tester.ensureEquals(typeof(string).Assembly.FullName, stringName.AssemblyName.FullName);
 
-				Tester.ensureEquals(stringName, TypeName.FromType(typeof(string)));
+				Tester.ensureEquals(stringName, TypeReference.FromType(typeof(string)));
 			}
 			catch (Exception e)
 			{
@@ -117,7 +115,7 @@ namespace com.db4o.test.j4otest
         {
             try
             {
-                TypeName typeName = TypeName.FromType(type);
+                TypeReference typeName = TypeReference.FromType(type);
                 Tester.ensureEquals(type, typeName.Resolve());
             }
             catch (Exception e)
@@ -175,11 +173,11 @@ namespace com.db4o.test.j4otest
         {
 			try
 			{
-				string simpleAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+				string simpleAssemblyName = GetExecutingAssemblySimpleName();
 				Type t = typeof(GenericType<int, GenericType<int, string>>);
-				TypeName tn = TypeName.Parse(t.AssemblyQualifiedName);
+				TypeReference tn = TypeReference.FromString(t.AssemblyQualifiedName);
 				Tester.ensureEquals(
-					"com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib],[com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib],[System.String, mscorlib]], " + simpleAssemblyName +"]], " + simpleAssemblyName,
+					"com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib], [com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib], [System.String, mscorlib]], " + simpleAssemblyName +"]], " + simpleAssemblyName,
 					tn.GetUnversionedName());
 			}
 			catch (Exception e)
@@ -195,31 +193,36 @@ namespace com.db4o.test.j4otest
 
             try
             {
-                TypeName stringName = TypeName.Parse(typeof(string).AssemblyQualifiedName);
+                TypeReference stringName = TypeReference.FromString(typeof(string).AssemblyQualifiedName);
 
-                TypeName genericTypeName = TypeName.Parse(t.AssemblyQualifiedName);
+                GenericTypeReference genericTypeName = (GenericTypeReference)TypeReference.FromString(t.AssemblyQualifiedName);
                 AssertEquals("com.db4o.test.j4otest.GenericType`2", genericTypeName.SimpleName);
                 AssertEquals(2, genericTypeName.GenericArguments.Length);
 
-                AssertEquals(TypeName.Parse(typeof(int).AssemblyQualifiedName), genericTypeName.GenericArguments[0]);
+                AssertEquals(TypeReference.FromString(typeof(int).AssemblyQualifiedName), genericTypeName.GenericArguments[0]);
                 AssertEquals(stringName, genericTypeName.GenericArguments[1]);
 
                 Type complexType = typeof(GenericType<string, GenericType<int, string>>);
-                TypeName complexTypeName = TypeName.Parse(complexType.AssemblyQualifiedName);
+                GenericTypeReference complexTypeName = (GenericTypeReference) TypeReference.FromString(complexType.AssemblyQualifiedName);
                 AssertEquals(genericTypeName.SimpleName, complexTypeName.SimpleName);
                 AssertEquals(genericTypeName.AssemblyName.FullName, complexTypeName.AssemblyName.FullName);
                 AssertEquals(2, complexTypeName.GenericArguments.Length);
                 AssertEquals(stringName, complexTypeName.GenericArguments[0]);
                 AssertEquals(genericTypeName, complexTypeName.GenericArguments[1]);
 
-                AssertEquals(typeof(string), TypeName.Parse("System.String, mscorlib").Resolve());
-                AssertEquals(t, TypeName.Parse("com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib],[System.String, mscorlib]], " + Assembly.GetExecutingAssembly().GetName().Name).Resolve());
+                AssertEquals(typeof(string), TypeReference.FromString("System.String, mscorlib").Resolve());
+                AssertEquals(t, TypeReference.FromString("com.db4o.test.j4otest.GenericType`2[[System.Int32, mscorlib],[System.String, mscorlib]], " + GetExecutingAssemblySimpleName()).Resolve());
             }
             catch (Exception e)
             {
                 Tester.error(e);
             }
         }
+
+    	private static string GetExecutingAssemblySimpleName()
+    	{
+    		return Assembly.GetExecutingAssembly().GetName().Name;
+    	}
 #endif
 
         static void AssertEquals(object expected, object actual)
