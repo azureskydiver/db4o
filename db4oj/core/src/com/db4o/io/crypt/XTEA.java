@@ -13,10 +13,8 @@ public class XTEA {
 	/**
 	 * creates an XTEA object from the given String key and iterations count.
 	 * 
-	 * @param key
-	 *            the key, used in ecryption/decryption routine.
-	 * @param iterations
-	 *            iterations count. Possible values are 8, 16, 32 and 64.
+	 * @param key the key, used in ecryption/decryption routine.
+	 * @param iterations iterations count. Possible values are 8, 16, 32 and 64.
 	 * 
 	 */
 	public XTEA(String key, int iterations) {
@@ -27,9 +25,7 @@ public class XTEA {
 	 * creates an XTEA object from the given String key. The default value of
 	 * rounds is 32;
 	 * 
-	 * @param key
-	 *            the key, used in ecryption/decryption routine.
-	 * 
+	 * @param key the key, used in ecryption/decryption routine.
 	 * 
 	 */
 	public XTEA(String key) {
@@ -83,12 +79,9 @@ public class XTEA {
 	 * integer values.<br>
 	 * (An Integer is represented in memory as four bytes.)
 	 * 
-	 * @param bytes-
-	 *            Incoming byte array of length eight to be converted<br>
-	 * @param offset-
-	 *            Offset from which to start converting bytes<br>
-	 * @param res-
-	 *            Int array of length two which contains converted array bytes.
+	 * @param bytes Incoming byte array of length eight to be converted<br>
+	 * @param offset Offset from which to start converting bytes<br>
+	 * @param res Int array of length two which contains converted array bytes.
 	 * 
 	 */
 	private void byte2int(byte[] bytes, int offset, int[] res) {
@@ -105,13 +98,9 @@ public class XTEA {
 	 * bytes.<br>
 	 * (An Integer is represented in memory as four bytes.)
 	 * 
-	 * @param i-
-	 *            Incoming integer array of two to be converted<br>
-	 * @param offset-
-	 *            Offset from which to start converting integer values<br>
-	 * @param res-
-	 *            byte array of length eight which contains converted integer
-	 *            array i.
+	 * @param i Incoming integer array of two to be converted<br>
+	 * @param offset Offset from which to start converting integer values<br>
+	 * @param res byte array of length eight which contains converted integer array i.
 	 */
 	private void int2byte(int[] i, int offset, byte[] res) {
 		res[offset] = (byte) ((i[0] & 0xff000000) >>> 24);
@@ -128,9 +117,7 @@ public class XTEA {
 	/**
 	 * enciphers two int values
 	 * 
-	 * @param block -
-	 *            int array to be encipher according to the XTEA encryption
-	 *            algorithm<br>
+	 * @param block int array to be encipher according to the XTEA encryption algorithm<br>
 	 *            <br>
 	 *            block[0] += ((block[1] << 4 ^ block[1] >> 5) + block[1]) ^
 	 *            (delta_sum + key[delta_sum & 3]);<br>
@@ -154,9 +141,7 @@ public class XTEA {
 	/**
 	 * deciphers two int values
 	 * 
-	 * @param e_block -
-	 *            int array to be decipher according to the XTEA encryption
-	 *            algorithm<br>
+	 * @param e_block int array to be decipher according to the XTEA encryption algorithm<br>
 	 *            <br>
 	 *            e_block[1] -= ((e_block[0] << 4 ^ e_block[0] >> 5) +
 	 *            e_block[0]) ^ (delta_sum + key[delta_sum >> 11 & 3]);<br>
@@ -179,8 +164,7 @@ public class XTEA {
 	/**
 	 * encrypts incoming byte array according XTEA
 	 * 
-	 * @param buffer -
-	 *            incoming byte array to be encrypted
+	 * @param buffer incoming byte array to be encrypted
 	 * 
 	 */
 	public void encrypt(byte[] buffer) {
@@ -195,8 +179,7 @@ public class XTEA {
 	/**
 	 * decrypts incoming byte array according XTEA
 	 * 
-	 * @param buffer -
-	 *            incoming byte array to be decrypted
+	 * @param buffer incoming byte array to be decrypted
 	 * 
 	 */
 	public void decrypt(byte[] buffer) {
