@@ -3,9 +3,12 @@
 package com.db4o.reflect.self;
 
 import com.db4o.reflect.*;
+import com.db4o.types.*;
 
 public class SelfClass implements ReflectClass {
-	private SelfField[] fields;
+	private static final SelfField[] EMPTY_FIELDS = new SelfField[0];
+	private boolean _isAbstract;
+	private SelfField[] _fields;
 	private Reflector _parentReflector;
 	private SelfReflectionRegistry _registry;
 	
@@ -21,7 +24,8 @@ public class SelfClass implements ReflectClass {
 		_registry = registry;
 		_class = clazz;
 	}
-
+	
+	// TODO: Is this needed at all?
 	public Class getJavaClass() {
 		return _class;
 	}
@@ -35,33 +39,42 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public ReflectConstructor[] getDeclaredConstructors() {
+		if(isInterface()) {
+			return new SelfConstructor[0];
+		}
 		return new SelfConstructor[] { new SelfConstructor(_class) };
 	}
 	
 	public ReflectField[] getDeclaredFields() {
-		ensureFieldsLoaded();
-		return fields;
+		ensureClassInfoLoaded();
+		return _fields;
 	}
 
-	private void ensureFieldsLoaded() {
-		if(fields==null) {
-			FieldInfo[] fieldInfo=_registry.fieldsFor(_class);
-			if(fieldInfo==null) {
-				fields=new SelfField[0];
+	private void ensureClassInfoLoaded() {
+		if(_fields==null) {
+			ClassInfo classInfo=_registry.infoFor(_class);
+			if(classInfo==null) {
+				_fields=EMPTY_FIELDS;
 				return;
 			}
-			fields=new SelfField[fieldInfo.length];
+			_isAbstract=classInfo.isAbstract();
+			FieldInfo[] fieldInfo=classInfo.fieldInfo();
+			if(fieldInfo==null) {
+				_fields=EMPTY_FIELDS;
+				return;
+			}
+			_fields=new SelfField[fieldInfo.length];
 			for(int idx=0;idx<fieldInfo.length;idx++) {
-				fields[idx]=selfFieldFor(fieldInfo[idx]);
+				_fields[idx]=selfFieldFor(fieldInfo[idx]);
 			}
 		}
 	}
 	
 	public ReflectField getDeclaredField(String name) {
-		ensureFieldsLoaded();
-		for(int idx=0;idx<fields.length;idx++) {
-			if(fields[idx].getName().equals(name)) {
-				return fields[idx];
+		ensureClassInfoLoaded();
+		for(int idx=0;idx<_fields.length;idx++) {
+			if(_fields[idx].getName().equals(name)) {
+				return _fields[idx];
 			}
 		}
 		return null;
@@ -94,8 +107,8 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public boolean isAbstract() {
-		// TODO
-		return false;
+		ensureClassInfoLoaded();
+		return _isAbstract||isInterface();
 	}
 
 	public boolean isArray() {
@@ -122,11 +135,11 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public boolean isPrimitive() {
-		return _class.isPrimitive();
+		return _registry.isPrimitive(_class);
 	}
 
 	public boolean isSecondClass() {
-		return isPrimitive();
+		return isPrimitive()||SecondClass.class.isAssignableFrom(_class);
 	}
 
 	public Object newInstance() {

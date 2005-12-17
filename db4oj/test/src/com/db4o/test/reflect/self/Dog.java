@@ -10,19 +10,21 @@ import com.db4o.reflect.self.*;
 import com.db4o.test.*;
 
 
-public class Dog implements SelfReflectable {
+public class Dog extends Animal {
 
 	private transient static List dogs;
 	
     // must be public for the time being due to setAccessible() check in Platform4
-    public String _name;
+    public int _age;
     
     public Dog() {
     	// require public no-args constructor
+    	this(null,0);
     }
     
-    public Dog(String name){
-        _name = name;
+    public Dog(String name,int age){
+    	super(name);
+        _age = age;
     }
     
     public void configure(){
@@ -31,9 +33,9 @@ public class Dog implements SelfReflectable {
     
     public void store(){
     	dogs=new ArrayList();
-    	dogs.add(new Dog("Laika"));
-    	dogs.add(new Dog("Lassie"));
-    	dogs.add(new Dog("Sharik"));
+    	dogs.add(new Dog("Laika",7));
+    	dogs.add(new Dog("Lassie",6));
+    	dogs.add(new Dog("Sharik",100));
     	for (Iterator iter = dogs.iterator(); iter.hasNext();) {
     		Test.store(iter.next());
 		}
@@ -60,16 +62,18 @@ public class Dog implements SelfReflectable {
     }
 
 	public Object self_get(String fieldName) {
-		if(fieldName.equals("_name")) {
-			return _name;
+		if(fieldName.equals("_age")) {
+			return new Integer(_age);
 		}
-		return null;
+		return super.self_get(fieldName);
 	}
 
 	public void self_set(String fieldName,Object value) {
-		if(fieldName.equals("_name")) {
-			_name=(String)value;
+		if(fieldName.equals("_age")) {
+			_age=((Integer)value).intValue();
+			return;
 		}
+		super.self_set(fieldName,value);
 	}
 	
 	public boolean equals(Object obj) {
