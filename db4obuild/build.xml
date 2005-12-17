@@ -1168,6 +1168,10 @@
 				<exclude name="com/db4o/config/TTreeMap.cs" />
 				<exclude name="com/db4o/config/TTreeSet.cs" />
 				<exclude name="com/db4o/config/TVector.cs" />
+				
+				<!-- XXX: temporarily exclude crypt support -->
+				<exclude name="com/db4o/io/crypt/**" />
+
 			</fileset>
 		</copy>
 	</target>
