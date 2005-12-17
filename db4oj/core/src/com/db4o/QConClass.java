@@ -76,7 +76,16 @@ public class QConClass extends QConObject{
 	boolean isNullConstraint() {
 		return false;
 	}
-	
+    
+    String logObject() {
+        if (Deploy.debugQueries) {
+            if(_claxx != null){
+                return _claxx.toString();
+            }
+        } 
+        return "";
+    }
+    
     void marshall() {
         super.marshall();
         if(_claxx!=null) {
@@ -103,10 +112,6 @@ public class QConClass extends QConObject{
             }
         }
     }
-
-
-
-	
-
+    
 }
 
