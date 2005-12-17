@@ -5,22 +5,29 @@ package com.db4o;
 import com.db4o.foundation.network.*;
 
 final class MQueryExecute extends MsgObject {
+    
 	boolean processMessageAtServer(YapSocket sock) {
 		Transaction trans = getTransaction();
 		YapStream stream = getStream();
 		QueryResultImpl qr = new QueryResultImpl(trans);
 		this.unmarshall();
-		QQuery query = (QQuery) stream.unmarshall(payLoad);
-		query.unmarshall(getTransaction());
+
 		synchronized (stream.i_lock) {
+            
+            // TODO: The following used to run outside of the
+            // synchronisation block for better performance but
+            // produced inconsistent results, cause unknown.
+
+            QQuery query = (QQuery) stream.unmarshall(payLoad);
+            
+            query.unmarshall(getTransaction());
 			try {
 				query.executeLocal(qr);
 			} catch (Exception e) {
-				// 
 				qr = new QueryResultImpl(getTransaction());
 			}
 		}
-		writeQueryResult(getTransaction(), qr, sock);
+        writeQueryResult(getTransaction(), qr, sock);
 		return true;
 	}
 }
