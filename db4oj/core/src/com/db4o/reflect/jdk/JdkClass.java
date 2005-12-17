@@ -6,6 +6,7 @@ import java.lang.reflect.*;
 
 import com.db4o.*;
 import com.db4o.reflect.*;
+import com.db4o.types.*;
 
 /**
  * Reflection implementation for Class to map to JDK reflection.
@@ -111,7 +112,7 @@ public class JdkClass implements ReflectClass{
 	}
     
     public boolean isSecondClass() {
-        return isPrimitive();
+        return isPrimitive()||SecondClass.class.isAssignableFrom(_clazz);
     }
     
     public Object newInstance(){

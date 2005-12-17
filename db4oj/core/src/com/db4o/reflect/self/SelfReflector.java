@@ -5,7 +5,7 @@ package com.db4o.reflect.self;
 import com.db4o.reflect.*;
 
 public class SelfReflector implements Reflector {
-
+	
 	private SelfReflectionRegistry _registry;
 
 	private Reflector _parent;
@@ -58,6 +58,6 @@ public class SelfReflector implements Reflector {
 	}
 
 	public boolean isKnownClass(Class clazz) {
-		return _registry.fieldsFor(clazz) != null;
+		return _registry.infoFor(clazz) != null;
 	}
 }
