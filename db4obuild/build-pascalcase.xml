@@ -133,8 +133,14 @@
 	</target>
 	
 	<target name="compile-converter2" depends="init">
+		
+		<property environment="env" />
+		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
+		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
+
 		<csc srcdir="src/pascalcase2"
-			outputfile="bin/pascalcase2.exe">
+			outputfile="bin/pascalcase2.exe"
+			executable="${csc.executable}">
 			<reference dir="bin">
 				<include name="ICSharpCode.NRefactory.dll" />
 				<include name="Boo.Lang.Useful.dll" />
