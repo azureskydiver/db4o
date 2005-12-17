@@ -19,20 +19,7 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. 
 
-XTEA.java:
 
-Java version of XTEA encryption algorithm was developed using the prinsiple
-described in http://en.wikipedia.org/wiki/XTEA. 
-
-KeyGenerator.java:
-
-Computation of 128-bit int number, returned as an array of four.
-Implementation based of the RSA Data Security, Inc. MD5 Message Digest
-Algorithm, as defined in RFC 1321.
-
-MD5 Message Digest Algorithm description in "Applied Cryptography.
-Protocols, Algorithms, and Source Code in C", Bruce Schneier, second
-edition, Chapter 18, P.436.
 */
 package com.db4o.io.crypt;
 
@@ -58,7 +45,7 @@ import com.db4o.io.*;
 */
 public class XTeaEncryptionFileAdapter extends IoAdapter {
 	// used as prototype in factory mode and as delegate in implementation mode
-	private IoAdapter _delegate;
+	private IoAdapter _adapter;
 
 	// factory mode member
 	private String _key;
@@ -68,7 +55,7 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 
 	private long _pos;
 
-	private int _iterat;
+	private XTEA.IterationSpec _iterat;
 
 	/**
 	 * 
@@ -79,7 +66,7 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 	 *            the key, used in ecryption/decryption routine.
 	 */
 	public XTeaEncryptionFileAdapter(String password) {
-		this(new RandomAccessFileAdapter(), password, 32);
+		this(new RandomAccessFileAdapter(), password, XTEA.ITERATIONS32);
 
 	}
 
@@ -94,7 +81,7 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 	 *            iterations count. Possible values are 8, 16, 32 and 64.
 	 * 
 	 */
-	public XTeaEncryptionFileAdapter(String password, int iterat) {
+	public XTeaEncryptionFileAdapter(String password, XTEA.IterationSpec iterat) {
 		this(new RandomAccessFileAdapter(), password, iterat);
 
 	}
@@ -112,8 +99,8 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 	 *            iterations count. Possible values are 8, 16, 32 and 64.
 	 */
 	public XTeaEncryptionFileAdapter(IoAdapter adapter, String password,
-			int iterat) {
-		_delegate = adapter;
+			XTEA.IterationSpec iterat) {
+		_adapter = adapter;
 		_key = password;
 		_iterat = iterat;
 	}
@@ -129,29 +116,28 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 	 * 
 	 */
 	public XTeaEncryptionFileAdapter(IoAdapter adapter, String password) {
-		_delegate = adapter;
+		_adapter = adapter;
 		_key = password;
-		_iterat = 32;
+		_iterat = XTEA.ITERATIONS32;
 	}
 
-	private XTeaEncryptionFileAdapter(IoAdapter adapter, XTEA xtea, int iter) {
-		_delegate = adapter;
+	private XTeaEncryptionFileAdapter(IoAdapter adapter, XTEA xtea) {
+		_adapter = adapter;
 		_xtea = xtea;
-		_xtea.iterations(iter);
 	}
 
 	/**
 	 * implement to close the adapter
 	 */
 	public void close() throws IOException {
-		_delegate.close();
+		_adapter.close();
 	}
 
 	/**
 	 * implement to return the absolute length of the file
 	 */
 	public long getLength() throws IOException {
-		return _delegate.getLength();
+		return _adapter.getLength();
 	}
 
 	/**
@@ -159,8 +145,9 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 	 */
 	public IoAdapter open(String path, boolean lockFile, long initialLength)
 			throws IOException {
-		return new XTeaEncryptionFileAdapter(_delegate.open(path, lockFile,
-				initialLength), new XTEA(_key, _iterat), _iterat);
+		//System.out.println(_iterat + " iteration number");
+		return new XTeaEncryptionFileAdapter(_adapter.open(path, lockFile,
+				initialLength), new XTEA(_key, _iterat));
 
 	}
 
@@ -179,7 +166,7 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 		if (prePad != 0) {
 			seek(_pos - prePad);
 		}
-		int readResult = _delegate.read(pb);
+		int readResult = _adapter.read(pb);
 		if (Deploy.debug) {
 			log("3. before dencrypt/read->", pb);
 		}
@@ -198,14 +185,14 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 	 */
 	public void seek(long pos) throws IOException {
 		_pos = pos;
-		_delegate.seek(pos);
+		_adapter.seek(pos);
 	}
 
 	/**
 	 * implement to flush the file contents to storage
 	 */
 	public void sync() throws IOException {
-		_delegate.sync();
+		_adapter.sync();
 	}
 
 	/**
@@ -223,6 +210,10 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 		if (prePad != 0) {
 			seek(origPos - prePad);
 		}
+		// NOTE: This heuristic may break if unaligned accesses within db4o (for example
+		// due to config block layout changes) change behavior. To make this more safe
+		// (but at the cost of a ~20% performance penalty on writes) make this read/seek
+		// action unconditional, i.e. comment the if block.
 		if (blockSize() % 8 != 0 || prePad != 0) {
 			read(pb);
 			seek(origPos - prePad);
@@ -241,7 +232,7 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 		if (Deploy.debug) {
 			log("2. after encrypt/write->", pb);
 		}
-		_delegate.write(pb, pb.length);
+		_adapter.write(pb, pb.length);
 		seek(origPos + length);
 	}
 
