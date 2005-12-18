@@ -1,5 +1,7 @@
 package com.db4o.test;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.io.*;
 import com.db4o.io.crypt.*;
@@ -25,6 +27,7 @@ public class XTEAEncryption {
 		Db4o.configure().blockSize(1);
 		Db4o.configure().io(new XTeaEncryptionFileAdapter("db4o"));
 
+		new File("encrypted.yap").delete();
 		ObjectContainer db=Db4o.openFile("encrypted.yap");		
 		XTEAEncryption last=null;
 		for(int i=0;i<NUMSTORED;i++) {
