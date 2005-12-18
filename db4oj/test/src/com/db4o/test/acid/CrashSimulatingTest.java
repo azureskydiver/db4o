@@ -48,6 +48,12 @@ public class CrashSimulatingTest {
         oc.delete(objectSet.next());
         
         oc.set(new CrashSimulatingTest(null, "four"));
+        oc.set(new CrashSimulatingTest(null, "five"));
+        oc.set(new CrashSimulatingTest(null, "six"));
+        oc.set(new CrashSimulatingTest(null, "seven"));
+        oc.set(new CrashSimulatingTest(null, "eight"));
+        oc.set(new CrashSimulatingTest(null, "nine"));
+        
         
         oc.commit();
         oc.close();
@@ -82,18 +88,14 @@ public class CrashSimulatingTest {
     }
     
     private boolean stateAfterCommit (ObjectContainer oc){
-        return expect(oc, new String[] {"one", "two", "four"});
+        return expect(oc, new String[] {"one", "two", "four", "five", "six", "seven", "eight", "nine"});
     }
     
     private boolean expect(ObjectContainer oc, String[] names){
         ObjectSet objectSet = oc.query(CrashSimulatingTest.class);
         if(objectSet.size()!=names.length) {
-        	System.err.println("> OUCH!");
-        	while(objectSet.hasNext()) {
-        		System.err.println(">> "+objectSet.next());
-        	}
+            return false;
         }
-        Test.ensure(objectSet.size()==names.length);
         while(objectSet.hasNext()){
             CrashSimulatingTest cst = (CrashSimulatingTest)objectSet.next();
             boolean found = false;
