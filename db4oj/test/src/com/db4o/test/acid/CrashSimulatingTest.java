@@ -6,7 +6,6 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.io.*;
-import com.db4o.query.*;
 import com.db4o.test.*;
 import com.db4o.test.lib.*;
 
@@ -36,13 +35,13 @@ public class CrashSimulatingTest {
         new File(PATH).mkdirs();
         
         
-        // Db4o.configure().freespace().useIndexSystem();
+        Db4o.configure().freespace().useIndexSystem();
         
         createFile();
         
         CrashSimulatingIoAdapter adapterFactory = new CrashSimulatingIoAdapter(new RandomAccessFileAdapter());
         Db4o.configure().io(adapterFactory);
-        
+
         ObjectContainer oc = Db4o.openFile(FILE);
         
         ObjectSet objectSet = oc.get(new CrashSimulatingTest(null, "three"));
@@ -52,12 +51,23 @@ public class CrashSimulatingTest {
         
         oc.commit();
         oc.close();
-        
+
+        Db4o.configure().io(new RandomAccessFileAdapter());
+
         int count = adapterFactory.batch.writeVersions(FILE);
+
+        checkFiles("R", adapterFactory.batch.numSyncs());
+        checkFiles("W", count);
+                
+        System.out.println("Total versions: " + count);
         
+        
+    }
+    
+    private void checkFiles(String infix,int count) {
         for (int i = 1; i <= count; i++) {
-            String fileName = FILE + "W" + i;
-            oc = Db4o.openFile(fileName);
+            String fileName = FILE + infix + i;
+            ObjectContainer oc = Db4o.openFile(fileName);
             if(! stateBeforeCommit(oc)){
                 if(! stateAfterCommit(oc)){
                     Test.error();
@@ -65,11 +75,6 @@ public class CrashSimulatingTest {
             }
             oc.close();
         }
-        
-        System.out.println("Total versions: " + count);
-        
-        
-        Db4o.configure().io(new RandomAccessFileAdapter());
     }
     
     private boolean stateBeforeCommit(ObjectContainer oc){
@@ -82,6 +87,13 @@ public class CrashSimulatingTest {
     
     private boolean expect(ObjectContainer oc, String[] names){
         ObjectSet objectSet = oc.query(CrashSimulatingTest.class);
+        if(objectSet.size()!=names.length) {
+        	System.err.println("> OUCH!");
+        	while(objectSet.hasNext()) {
+        		System.err.println(">> "+objectSet.next());
+        	}
+        }
+        Test.ensure(objectSet.size()==names.length);
         while(objectSet.hasNext()){
             CrashSimulatingTest cst = (CrashSimulatingTest)objectSet.next();
             boolean found = false;
@@ -126,7 +138,9 @@ public class CrashSimulatingTest {
     
     
     
-    
+  public String toString() {
+	return _name+" -> "+_next;
+}  
     
     
 

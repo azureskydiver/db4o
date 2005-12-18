@@ -4,7 +4,6 @@ package com.db4o.test.acid;
 
 import java.io.*;
 
-import com.db4o.foundation.*;
 import com.db4o.io.*;
 
 
@@ -35,13 +34,13 @@ public class CrashSimulatingIoAdapter extends VanillaIoAdapter{
     
     public void write(byte[] buffer, int length) throws IOException {
         super.write(buffer, length);
-        batch.add(buffer, curPos, length);
+        byte[] copy=new byte[buffer.length];
+        System.arraycopy(buffer, 0, copy, 0, buffer.length);
+        batch.add(copy, curPos, length);
     }
     
     public void sync() throws IOException {
         super.sync();
         batch.sync();
     }
-    
-
 }
