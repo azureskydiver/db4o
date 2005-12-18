@@ -6,7 +6,7 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.query.QueryComparator;
+import com.db4o.query.*;
 
 /**
  * @exclude 
@@ -81,7 +81,4 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet{
 		_delegate.sort(cmp);
 	}
 	
-	public QueryResult delegate() {
-		return _delegate;
-	}
 }

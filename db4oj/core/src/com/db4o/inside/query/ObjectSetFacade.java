@@ -10,7 +10,7 @@ import com.db4o.query.*;
  */
 public class ObjectSetFacade implements ExtObjectSet{
     
-    private QueryResult _delegate;
+    public final QueryResult _delegate;
     
     public ObjectSetFacade(QueryResult QueryResult){
         _delegate = QueryResult;
@@ -48,7 +48,4 @@ public class ObjectSetFacade implements ExtObjectSet{
 		_delegate.sort(cmp);
 	}
 	
-	public QueryResult delegate() {
-		return _delegate;
-	}
 }
