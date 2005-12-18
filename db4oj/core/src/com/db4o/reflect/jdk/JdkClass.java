@@ -112,7 +112,13 @@ public class JdkClass implements ReflectClass{
 	}
     
     public boolean isSecondClass() {
-        return isPrimitive()||SecondClass.class.isAssignableFrom(_clazz);
+        
+        return isPrimitive();
+        
+        // TODO: Internal SecondClass needs testing with many test cases first.
+        // Not sure if the following could break Entry class. 
+        
+        // return isPrimitive()||SecondClass.class.isAssignableFrom(_clazz);
     }
     
     public Object newInstance(){
