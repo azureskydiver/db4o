@@ -1,6 +1,7 @@
 package com.db4o.test;
 
 import com.db4o.*;
+import com.db4o.io.*;
 import com.db4o.io.crypt.*;
 import com.db4o.query.*;
 
@@ -20,25 +21,26 @@ public class XTEAEncryption {
 		this.parent = parent;
 	}
 
-	public void configure() {
+	public void test() {
 		Db4o.configure().blockSize(1);
 		Db4o.configure().io(new XTeaEncryptionFileAdapter("db4o"));
-	}
-	
-	public void store() {
+
+		ObjectContainer db=Db4o.openFile("encrypted.yap");		
 		XTEAEncryption last=null;
 		for(int i=0;i<NUMSTORED;i++) {
 			XTEAEncryption current=new XTEAEncryption(i,"X"+i,last);
-			Test.store(current);
+			db.set(current);
 			last=current;
 		}
-	}
-	
-	public void test() {
-		Test.ensureOccurrences(getClass(), NUMSTORED);
-		Query query=Test.query();
+		db.close();
+		
+		db=Db4o.openFile("encrypted.yap");		
+		Query query=db.query();
 		query.constrain(getClass());
 		query.descend("id").constrain(new Integer(50));
 		Test.ensure(query.execute().size()==1);
+		db.close();
+		
+		Db4o.configure().io(new RandomAccessFileAdapter());
 	}
 }
