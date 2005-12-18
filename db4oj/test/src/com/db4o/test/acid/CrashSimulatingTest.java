@@ -34,9 +34,6 @@ public class CrashSimulatingTest {
         new File(FILE).delete();
         new File(PATH).mkdirs();
         
-        
-        Db4o.configure().freespace().useIndexSystem();
-        
         createFile();
         
         CrashSimulatingIoAdapter adapterFactory = new CrashSimulatingIoAdapter(new RandomAccessFileAdapter());
