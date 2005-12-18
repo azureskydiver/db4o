@@ -86,7 +86,7 @@ public class ClusterQueryResult implements QueryResult{
                 index -= _sizes[i];
                 i++;
             }
-            return ((ObjectSetFacade)_objectSets[i]).delegate().get(index); 
+            return ((ObjectSetFacade)_objectSets[i])._delegate.get(index); 
         }
     }
 
