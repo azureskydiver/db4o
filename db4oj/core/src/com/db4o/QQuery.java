@@ -90,7 +90,10 @@ public class QQuery implements Query {
                 if (claxx.isInterface()) {
                     Collection4 classes = i_trans.i_stream.i_classCollection.forInterface(claxx);
                     if (classes.size() == 0) {
-                        return null;
+                        QConClass qcc = new QConClass(i_trans, null, null, claxx);
+                        addConstraint(qcc);
+                        return qcc;
+//                        return null;
                     }
                     Iterator4 i = classes.iterator();
                     Constraint constr = null;
