@@ -2,6 +2,7 @@
 
 package com.db4o.test;
 
+import com.db4o.test.acid.*;
 import com.db4o.test.conjunctions.*;
 import com.db4o.test.interfaces.*;
 import com.db4o.test.soda.*;
@@ -37,11 +38,7 @@ public class AllTestsConfSingle extends TestSuite{
             // ReplicateExistingFile.class
             // ReplicateDb4oList.class
             
-            GetAllSoda.class,
-            
-            ThreeSomeParent.class
-            
-            
+            CrashSimulatingTest.class
             
             // CJSameField.class,
             
@@ -76,7 +73,7 @@ public class AllTestsConfSingle extends TestSuite{
     /**
       * run the tests in client/server mode 
       */
-    public boolean CLIENT_SERVER = true;
+    public boolean CLIENT_SERVER = false;
 
     /**
      * run the test against a memory file instead of disc file
