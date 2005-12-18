@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.*;
+import com.db4o.test.acid.*;
 import com.db4o.test.cluster.*;
 import com.db4o.test.conjunctions.*;
 import com.db4o.test.constraints.*;
@@ -46,6 +47,7 @@ public class AllTestsConfAll extends TestSuite{
 	        Circular1.class,
 	        Circular2.class,
 	        Collection4TestCase.class,
+            CrashSimulatingTest.class,
 	        CreateIndex.class,
 	        CreateIndexInherited.class,
 			CustomActivationDepth.class,
