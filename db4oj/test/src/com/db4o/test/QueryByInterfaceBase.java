@@ -3,11 +3,17 @@ package com.db4o.test;
 import com.db4o.*;
 import com.db4o.query.*;
 
-public class QueryByInterface {
+public abstract class QueryByInterfaceBase {
 	
 	private static class SimpleEvaluation implements Evaluation {
+		private String value;
+		
+		private SimpleEvaluation(String value) {
+			this.value = value;
+		}
+
 		public void evaluate(Candidate candidate) {
-			candidate.include(((IFoo)candidate.getObject()).s().equals("A"));
+			candidate.include(((IFoo)candidate.getObject()).s().equals(value));
 		}
 	}
 
@@ -23,7 +29,7 @@ public class QueryByInterface {
 		}
 
 		public String s() {
-			return String.valueOf(i);
+			return String.valueOf((char)('A'+i));
 		}
 	}
 
@@ -39,26 +45,21 @@ public class QueryByInterface {
 		}
 	}
 
-	public void store() {
-		//Test.objectContainer().set(new Bar(1));
-		//Test.objectContainer().set(new Baz("A"));
-	}
-	
-	public void testSODA() {
+	protected void assertSODA(String value,int expCount) {
 		Query query=Test.objectContainer().query();
 		Constraint constraint=query.constrain(IFoo.class);
 		Test.ensure(constraint!=null);
-		query.descend("s").constrain("A");
+		query.descend("s").constrain(value);
 		ObjectSet result=query.execute();
-		Test.ensure(result.size()==1);
+		Test.ensure(result.size()==expCount);
 	}
 
-	public void testEvaluation() {
+	protected void assertEvaluation(String value,int expCount) {
 		Query query=Test.objectContainer().query();
 		Constraint constraint=query.constrain(IFoo.class);
 		Test.ensure(constraint!=null);
-		query.constrain(new SimpleEvaluation());
+		query.constrain(new SimpleEvaluation(value));
 		ObjectSet result=query.execute();
-		Test.ensure(result.size()==1);
+		Test.ensure(result.size()==expCount);
 	}
 }
