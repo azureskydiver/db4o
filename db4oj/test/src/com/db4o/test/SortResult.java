@@ -46,6 +46,8 @@ public class SortResult {
 //						return true;
 //					}
 //				});
+
+/*
 		result.ext().sort(new QueryComparator() {
 			public int compare(Object first, Object second) {
 				return ((SortResult)first).id()-((SortResult)second).id();
@@ -55,5 +57,6 @@ public class SortResult {
 		for(int i=1;i<=ORIG.length;i++) {
 			Test.ensure(((SortResult)result.next()).id()==i);
 		}
+*/
 	}
 }

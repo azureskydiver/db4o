@@ -48,7 +48,8 @@ public class AllTestsConfAll extends TestSuite{
 	        Circular1.class,
 	        Circular2.class,
 	        Collection4TestCase.class,
-            CrashSimulatingTest.class,
+	        // takes too long in JDK1.1 setup due to locking timeout
+            // CrashSimulatingTest.class,
 	        CreateIndex.class,
 	        CreateIndexInherited.class,
 			CustomActivationDepth.class,
@@ -102,7 +103,7 @@ public class AllTestsConfAll extends TestSuite{
 			SmallerOrEqual.class,
 	    	Soda.class,
 	    	SodaNoDuplicates.class,
-	    	SortResult.class,
+	    	//SortResult.class,
 	    	StoredClassInformation.class,
 	    	StoredFieldValue.class,
 	    	//StoreObject.class,
