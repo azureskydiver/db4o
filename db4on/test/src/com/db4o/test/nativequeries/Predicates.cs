@@ -14,7 +14,7 @@ namespace com.db4o.test.nativequeries
 	{
 		public int id;
 
-		public int Id 
+		public virtual int Id 
 		{
 			get { return id; }
 		}
