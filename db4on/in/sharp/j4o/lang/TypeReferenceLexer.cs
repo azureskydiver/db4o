@@ -121,7 +121,7 @@ namespace j4o.lang
 				{
 					kind = TokenKind.VersionNumber;
 				}
-				else if (!char.IsDigit(ch))
+				else if (!IsHexDigit(ch))
 				{
 					break;
 				}
@@ -129,6 +129,16 @@ namespace j4o.lang
 			}
 			while (!AtEOF);
 			return TokenFromBuffer(kind);
+		}
+
+		private static bool IsHexDigit(char ch)
+		{
+			return char.IsDigit(ch) || IsHexLetter(ch);
+		}
+
+		private static bool IsHexLetter(char ch)
+		{
+			return (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f');
 		}
 
 		private void ConsumeAndBuffer(char ch)
