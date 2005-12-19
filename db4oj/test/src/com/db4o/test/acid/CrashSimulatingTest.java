@@ -30,6 +30,8 @@ public class CrashSimulatingTest {
     }
     
     public void test() throws IOException{
+    	
+    	if (Test.isClientServer()) return;
         
         new File(FILE).delete();
         new File(PATH).mkdirs();
