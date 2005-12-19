@@ -2,14 +2,20 @@ package com.db4o.reflect.self;
 
 import com.db4o.reflect.*;
 
-public class SelfArray implements ReflectArray{
+public class SelfArray implements ReflectArray {
+	private final Reflector _reflector;
+
+	SelfArray(Reflector reflector) {
+		_reflector = reflector;
+	}
 
 	public int[] dimensions(Object arr) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public int flatten(Object a_shaped, int[] a_dimensions, int a_currentDimension, Object[] a_flat, int a_flatElement) {
+	public int flatten(Object a_shaped, int[] a_dimensions,
+			int a_currentDimension, Object[] a_flat, int a_flatElement) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -46,10 +52,11 @@ public class SelfArray implements ReflectArray{
 
 	public void set(Object onArray, int index, Object element) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	public int shape(Object[] a_flat, int a_flatElement, Object a_shaped, int[] a_dimensions, int a_currentDimension) {
+	public int shape(Object[] a_flat, int a_flatElement, Object a_shaped,
+			int[] a_dimensions, int a_currentDimension) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
