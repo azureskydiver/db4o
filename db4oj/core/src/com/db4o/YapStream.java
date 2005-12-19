@@ -478,20 +478,30 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                 
                 YapClass yc = yo.getYapClass();
                 Object obj = yo.getObject();
-                if (yc.dispatchEvent(this, obj,
-                    EventDispatcher.CAN_DELETE)) {
-                    if(DTrace.enabled){
-                        DTrace.DELETE.log(yo.getID());
-                    }
-                    
-                    
-                    if(delete5(ta, yo, a_cascade, userCall)){
-                    	yc.dispatchEvent(this, obj, EventDispatcher.DELETE);
-                        if (i_config.i_messageLevel > YapConst.STATE) {
-                            message("" + yo.getID() + " delete " + yo.getYapClass().getName());
-                        }
+                
+                // We have to end processing temporarily here, otherwise the can delete callback
+                // can't do anything at all with this object.
+                
+                yo.endProcessing();
+                
+                if (! yc.dispatchEvent(this, obj, EventDispatcher.CAN_DELETE)) {
+                    return;
+                }
+                
+                yo.beginProcessing();
+
+                if(DTrace.enabled){
+                    DTrace.DELETE.log(yo.getID());
+                }
+                
+                
+                if(delete5(ta, yo, a_cascade, userCall)){
+                	yc.dispatchEvent(this, obj, EventDispatcher.DELETE);
+                    if (i_config.i_messageLevel > YapConst.STATE) {
+                        message("" + yo.getID() + " delete " + yo.getYapClass().getName());
                     }
                 }
+                
                 yo.endProcessing();
             }
         }
