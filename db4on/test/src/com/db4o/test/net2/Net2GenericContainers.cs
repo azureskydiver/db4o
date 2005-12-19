@@ -52,8 +52,25 @@ namespace com.db4o.test.net2
 			
 			Tester.reOpenAll();
 		}
+		
+		public void testDescendOnList()
+		{
+			ensureProjectByTaskName("enlightenment", "meditate");
+			ensureProjectByTaskName("db4o", "clean mono build");
+		}
 
-        public void testDict()
+		private static void ensureProjectByTaskName(string expectedProjectName, string taskName)
+		{
+			Query q = Tester.query();
+			q.constrain(typeof (Project));
+			q.descend("tasks").descend("name").constrain(taskName);
+			ObjectSet result = q.execute();
+			Tester.ensureEquals(1, result.Count, "testDescendOnList.Count");
+			Tester.ensureEquals(expectedProjectName, ((Project) result[0]).name, "testDescendOnList.name");
+		}
+
+
+		public void testDict()
         {
             Query query = Tester.query();
             query.constrain(typeof(Dictionary<string, List<Task>>));
