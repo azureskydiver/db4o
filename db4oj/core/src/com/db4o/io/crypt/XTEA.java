@@ -31,10 +31,10 @@ package com.db4o.io.crypt;
 public class XTEA {
 
 	public final static class IterationSpec {
-		private int _iterations;
-		private int _deltaSumInitial;
+		int _iterations;
+		int _deltaSumInitial;
 		
-		private IterationSpec(int iterations,int deltaSumInitial) {
+		IterationSpec(int iterations,int deltaSumInitial) {
 			_iterations=iterations;
 			_deltaSumInitial=deltaSumInitial;
 		}
