@@ -3,7 +3,6 @@
 package com.db4o.reflect.self;
 
 import com.db4o.reflect.*;
-import com.db4o.types.*;
 
 public class SelfClass implements ReflectClass {
 	private static final SelfField[] EMPTY_FIELDS = new SelfField[0];
@@ -13,7 +12,7 @@ public class SelfClass implements ReflectClass {
 	private SelfReflectionRegistry _registry;
 	
 	private Class _class;
-	
+	private Class _superClass;
 
 //	public SelfClass() {
 //		super();
@@ -35,7 +34,7 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public ReflectClass getComponentType() {
-		return _parentReflector.forClass(_class.getComponentType());
+		return null;
 	}
 
 	public ReflectConstructor[] getDeclaredConstructors() {
@@ -57,6 +56,7 @@ public class SelfClass implements ReflectClass {
 				_fields=EMPTY_FIELDS;
 				return;
 			}
+			_superClass=classInfo.superClass();
 			_isAbstract=classInfo.isAbstract();
 			FieldInfo[] fieldInfo=classInfo.fieldInfo();
 			if(fieldInfo==null) {
@@ -98,12 +98,12 @@ public class SelfClass implements ReflectClass {
 		return _class.getName();
 	}
 
-	public ReflectClass getSuperclass() {		
-		Class clazz = _class.getSuperclass();
-		if(clazz==null) {
+	public ReflectClass getSuperclass() {	
+		ensureClassInfoLoaded();
+		if(_superClass==null) {
 			return null;
 		}
-		return _parentReflector.forClass(clazz);
+		return _parentReflector.forClass(_superClass);
 	}
 
 	public boolean isAbstract() {
@@ -139,7 +139,7 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public boolean isSecondClass() {
-		return isPrimitive()||SecondClass.class.isAssignableFrom(_class);
+		return isPrimitive();
 	}
 
 	public Object newInstance() {

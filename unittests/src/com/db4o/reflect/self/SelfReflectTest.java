@@ -67,7 +67,7 @@ public class SelfReflectTest extends TestCase {
 	}
 
 	public void testPrimitive() {
-		Class[] primitives={Integer.class,Long.class,Float.class,Double.class,Short.class,Character.class,Byte.class,String.class};
+		Class[] primitives={Integer.class,Long.class,Short.class,Character.class,Byte.class,String.class};
 		for(int idx=0;idx<primitives.length;idx++) {
 			assertPrimitive(primitives[idx]);
 		}
@@ -105,6 +105,6 @@ public class SelfReflectTest extends TestCase {
 		SelfClass primitiveClass=(SelfClass)_reflector.forClass(clazz);
 		assertFalse(primitiveClass.isInterface());
 		assertFalse(primitiveClass.isAbstract());
-		assertTrue(primitiveClass.isPrimitive());
+		assertTrue(clazz.getName(),primitiveClass.isPrimitive());
 	}
 }
