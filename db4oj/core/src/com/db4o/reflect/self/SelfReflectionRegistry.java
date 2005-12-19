@@ -7,11 +7,11 @@ package com.db4o.reflect.self;
  */
 public abstract class SelfReflectionRegistry {	
 
-	private final static Class[] PRIMITIVES={Integer.class,Long.class,Float.class,Double.class,Short.class,Character.class,Byte.class,String.class};
+	private final static String[] PRIMITIVES={"Integer","Long","Short","Character","Byte","String"};
 	
 	public boolean isPrimitive(Class clazz) {
 		for (int idx = 0; idx < PRIMITIVES.length; idx++) {
-			if(PRIMITIVES[idx].equals(clazz)) {
+			if(("java.lang."+PRIMITIVES[idx]).equals(clazz.getName())) {
 				return true;
 			}
 		}
