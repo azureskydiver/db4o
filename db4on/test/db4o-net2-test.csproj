@@ -99,10 +99,6 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\com\db4o\test\acid\CrashSimulatingBatch.cs" />
-    <Compile Include="src\com\db4o\test\acid\CrashSimulatingIoAdapter.cs" />
-    <Compile Include="src\com\db4o\test\acid\CrashSimulatingTest.cs" />
-    <Compile Include="src\com\db4o\test\acid\CrashSimulatingWrite.cs" />
     <Compile Include="src\com\db4o\test\AllTests.cs" />
     <Compile Include="src\com\db4o\test\AllTestsConfAll.cs" />
     <Compile Include="src\com\db4o\test\AllTestsConfSingle.cs" />
