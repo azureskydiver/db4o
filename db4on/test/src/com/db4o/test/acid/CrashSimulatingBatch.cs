@@ -33,7 +33,7 @@ namespace com.db4o.test.acid
 			int rcount = 0;
 			string lastFileName = file + "0";
 			string rightFileName = file + "R";
-			File.Copy(lastFileName,rightFileName);
+			copyFile(lastFileName,rightFileName);
 			com.db4o.foundation.Iterator4 syncIter = writes.strictIterator();
 			while (syncIter.hasNext())
 			{
@@ -57,17 +57,23 @@ namespace com.db4o.test.acid
 					com.db4o.test.acid.CrashSimulatingWrite csw = (com.db4o.test.acid.CrashSimulatingWrite
 						)singleBackwardIter.next();
 					string currentFileName = file + "W" + count;
-					File.Copy(lastFileName,currentFileName);
+					copyFile(lastFileName,currentFileName);
 					j4o.io.RandomAccessFile raf = new j4o.io.RandomAccessFile(currentFileName, "rw");
 					csw.write(raf);
 					raf.close();
 					lastFileName = currentFileName;
 				}
 				rcount++;
-				File.Copy(rightFileName,rightFileName + rcount);
+				copyFile(rightFileName,rightFileName + rcount);
 				lastFileName = rightFileName;
 			}
 			return count;
+		}
+		
+		private void copyFile(string from,string to) 
+		{
+			File.Delete(to);
+			File.Copy(from,to);
 		}
 	}
 }
