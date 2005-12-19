@@ -102,11 +102,12 @@ namespace com.db4o.test.j4otest
         {
 			try
 			{
-				TypeReference stringName = TypeReference.FromType(typeof(string));
-				Tester.ensureEquals("System.String", stringName.SimpleName);
-				Tester.ensureEquals(typeof(string).Assembly.FullName, stringName.AssemblyName.FullName);
-
-				Tester.ensureEquals(stringName, TypeReference.FromType(typeof(string)));
+				string assemblyName = "mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac";
+				TypeReference typeReference =
+					TypeReference.FromString(
+						"System.String, " + assemblyName);
+				Tester.ensureEquals("System.String", typeReference.SimpleName);
+				Tester.ensureEquals(new AssemblyName(assemblyName).FullName, typeReference.AssemblyName.FullName, "string.Assembly.FullName");
 			}
 			catch (Exception e)
 			{
@@ -125,7 +126,7 @@ namespace com.db4o.test.j4otest
             try
             {
                 TypeReference typeName = TypeReference.FromType(type);
-                Tester.ensureEquals(type, typeName.Resolve());
+				Tester.ensureEquals(type, typeName.Resolve(), type.FullName);
             }
             catch (Exception e)
             {
