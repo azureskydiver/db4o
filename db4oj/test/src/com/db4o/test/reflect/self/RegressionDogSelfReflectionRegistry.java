@@ -10,11 +10,31 @@ public class RegressionDogSelfReflectionRegistry extends SelfReflectionRegistry 
 	static {
 		CLASSINFO=new Hashtable(2);
 		CLASSINFO.put(Animal.class, new ClassInfo(true,Object.class,new FieldInfo[]{new FieldInfo("_name",String.class)}));
-		CLASSINFO.put(Dog.class, new ClassInfo(false,Animal.class,new FieldInfo[]{new FieldInfo("_age",Integer.class)}));
+		CLASSINFO.put(Dog.class, new ClassInfo(false,Animal.class,new FieldInfo[]{new FieldInfo("_age",Integer.class),new FieldInfo("_parents",Dog[].class)}));
 		//FIELDINFO.put(P1Object.class, new FieldInfo[]{});
 	}
 	
 	public ClassInfo infoFor(Class clazz) {
 		return (ClassInfo)CLASSINFO.get(clazz);
+	}
+	
+	public Object arrayFor(Class clazz, int length) {
+		if(Dog.class.isAssignableFrom(clazz)) {
+			return new Dog[length];
+		}
+		if(Animal.class.isAssignableFrom(clazz)) {
+			return new Animal[length];
+		}
+		return null;
+	}
+
+	public Class componentType(Class clazz) {
+		if(Dog[].class.isAssignableFrom(clazz)) {
+			return Dog.class;
+		}
+		if(Animal[].class.isAssignableFrom(clazz)) {
+			return Animal.class;
+		}
+		return null;
 	}
 }

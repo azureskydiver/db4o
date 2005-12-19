@@ -14,4 +14,24 @@ public class UnitDogSelfReflectionRegistry extends SelfReflectionRegistry {
 	public ClassInfo infoFor(Class clazz) {
 		return (ClassInfo)CLASSINFO.get(clazz);
 	}
+
+	public Object arrayFor(Class clazz, int length) {
+		if(Dog.class.isAssignableFrom(clazz)) {
+			return new Dog[length];
+		}
+		if(Animal.class.isAssignableFrom(clazz)) {
+			return new Animal[length];
+		}
+		return null;
+	}
+
+	public Class componentType(Class clazz) {
+		if(Dog[].class.isAssignableFrom(clazz)) {
+			return Dog.class;
+		}
+		if(Animal[].class.isAssignableFrom(clazz)) {
+			return Animal.class;
+		}
+		return null;
+	}
 }

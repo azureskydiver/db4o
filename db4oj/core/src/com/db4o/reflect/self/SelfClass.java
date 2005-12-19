@@ -34,7 +34,10 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public ReflectClass getComponentType() {
-		return null;
+		if(!isArray()) {
+			return null;
+		}
+		return _parentReflector.forClass(_registry.componentType(_class));
 	}
 
 	public ReflectConstructor[] getDeclaredConstructors() {
@@ -173,6 +176,7 @@ public class SelfClass implements ReflectClass {
 		// Class.newInstance()
 	}
 
+    // FIXME: remove. Reintroduced since OM depends on it - refactor OM.
 	public Object[] toArray(Object obj) {
 		return null;
 	}

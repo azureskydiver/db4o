@@ -4,9 +4,11 @@ import com.db4o.reflect.*;
 
 public class SelfArray implements ReflectArray {
 	private final Reflector _reflector;
+	private final SelfReflectionRegistry _registry;
 
-	SelfArray(Reflector reflector) {
+	SelfArray(Reflector reflector,SelfReflectionRegistry registry) {
 		_reflector = reflector;
+		_registry=registry;
 	}
 
 	public int[] dimensions(Object arr) {
@@ -26,8 +28,7 @@ public class SelfArray implements ReflectArray {
 	}
 
 	public ReflectClass getComponentType(ReflectClass a_class) {
-		// TODO Auto-generated method stub
-		return null;
+		return ((SelfClass)a_class).getComponentType();
 	}
 
 	public int getLength(Object array) {
@@ -41,8 +42,7 @@ public class SelfArray implements ReflectArray {
 	}
 
 	public Object newInstance(ReflectClass componentType, int length) {
-		// TODO Auto-generated method stub
-		return null;
+		return _registry.arrayFor(((SelfClass)componentType).getJavaClass(),length);
 	}
 
 	public Object newInstance(ReflectClass componentType, int[] dimensions) {
