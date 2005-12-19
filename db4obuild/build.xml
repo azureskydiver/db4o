@@ -1080,7 +1080,9 @@
 			<arg value="-pascalcase" />
 		</java>
 		
-		<ant antfile="build-pascalcase.xml" target="${pascalcase.converter.ant.target}">
+		<ant antfile="build-pascalcase.xml"
+			target="${pascalcase.converter.ant.target}"
+			inheritall="false">
 		</ant>
 		
 		<property name="dir.dist.pascalcase" location="${dir.dist}/pascalcase" />
