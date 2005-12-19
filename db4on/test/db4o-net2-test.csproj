@@ -368,6 +368,11 @@
     <Compile Include="src\com\db4o\test\UpdateDepth.cs" />
     <Compile Include="src\com\db4o\test\UpdatingDb4oVersions.cs" />
     <Compile Include="src\com\db4o\test\VMTermination.cs" />
+    <Compile Include="src\com\db4o\test\acid\CrashSimulatingBatch.cs" />
+    <Compile Include="src\com\db4o\test\acid\CrashSimulatingIoAdapter.cs" />
+    <Compile Include="src\com\db4o\test\acid\CrashSimulatingTest.cs" />
+    <Compile Include="src\com\db4o\test\acid\CrashSimulatingWrite.cs" />
+    <Compile Include="src\com\db4o\test\XTEAEncryption.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\com\db4o\test\soda\test\" />
