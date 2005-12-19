@@ -19,4 +19,6 @@ public abstract class SelfReflectionRegistry {
 	}
 	
 	public abstract ClassInfo infoFor(Class clazz);
+	public abstract Object arrayFor(Class clazz,int length);
+	public abstract Class componentType(Class clazz);
 }

@@ -5,7 +5,7 @@ package com.db4o.reflect.self;
 import com.db4o.reflect.*;
 
 public class SelfReflector implements Reflector {
-	
+	private SelfArray _arrayHandler;
 	private SelfReflectionRegistry _registry;
 
 	private Reflector _parent;
@@ -15,7 +15,10 @@ public class SelfReflector implements Reflector {
 	}
 
 	public ReflectArray array() {
-		return null;
+		if(_arrayHandler==null) {
+			_arrayHandler=new SelfArray(this,_registry);
+		}
+		return _arrayHandler;
 	}
 
 	public boolean constructorCallsSupported() {
@@ -55,9 +58,5 @@ public class SelfReflector implements Reflector {
 		// TODO QUESTION ? why we need the parameter context? see in
 		// jdkReflector too
 		return new SelfReflector(_registry);
-	}
-
-	public boolean isKnownClass(Class clazz) {
-		return _registry.infoFor(clazz) != null;
 	}
 }

@@ -17,14 +17,21 @@ public class Dog extends Animal {
     // must be public for the time being due to setAccessible() check in Platform4
     public int _age;
     
+    public Dog[] _parents;
+    
     public Dog() {
     	// require public no-args constructor
     	this(null,0);
     }
     
     public Dog(String name,int age){
+    	this(name,age,new Dog[0]);
+    }
+
+    public Dog(String name,int age,Dog[] parents){
     	super(name);
         _age = age;
+        _parents=parents;
     }
     
     public void configure(){
@@ -33,9 +40,11 @@ public class Dog extends Animal {
     
     public void store(){
     	dogs=new ArrayList();
-    	dogs.add(new Dog("Laika",7));
-    	dogs.add(new Dog("Lassie",6));
-    	dogs.add(new Dog("Sharik",100));
+    	Dog laika = new Dog("Laika",7);
+    	Dog lassie = new Dog("Lassie",6);
+		dogs.add(laika);
+		dogs.add(lassie);
+    	dogs.add(new Dog("Sharik",100, new Dog[]{laika,lassie}));
     	for (Iterator iter = dogs.iterator(); iter.hasNext();) {
     		Test.store(iter.next());
 		}
@@ -65,12 +74,19 @@ public class Dog extends Animal {
 		if(fieldName.equals("_age")) {
 			return new Integer(_age);
 		}
+		if(fieldName.equals("_parents")) {
+			return _parents;
+		}
 		return super.self_get(fieldName);
 	}
 
 	public void self_set(String fieldName,Object value) {
 		if(fieldName.equals("_age")) {
 			_age=((Integer)value).intValue();
+			return;
+		}
+		if(fieldName.equals("_parents")) {
+			_parents=(Dog[])value;
 			return;
 		}
 		super.self_set(fieldName,value);
@@ -84,13 +100,16 @@ public class Dog extends Animal {
 			return false;
 		}
 		Dog dog=(Dog)obj;
-		if(_name==null) {
-			return dog._name==null;
-		}
-		return _name.equals(dog._name);
+		boolean sameName=(_name==null ? dog._name==null : _name.equals(dog._name));
+		boolean sameAge=_age==dog._age;
+		boolean sameParentLength=_parents.length==dog._parents.length;
+		return sameName&&sameAge&&sameParentLength;
 	}
 	
 	public int hashCode() {
-		return (_name==null ? 0 : _name.hashCode());
+		int hash=_age;
+		hash=hash*29+(_name==null ? 0 : _name.hashCode());
+		hash=hash*29+_parents.length;
+		return hash;
 	}
 }

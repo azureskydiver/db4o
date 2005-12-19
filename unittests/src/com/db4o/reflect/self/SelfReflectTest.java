@@ -17,7 +17,7 @@ public class SelfReflectTest extends TestCase {
 	public void testReflectorClassRetrieval() {
 		assertSelfClass(Dog.class, _reflector.forClass(Dog.class));
 		assertSelfClass(Dog.class, _reflector.forName(Dog.class.getName()));
-		assertSelfClass(Dog.class, _reflector.forObject(new Dog("Laika",7)));
+		assertSelfClass(Dog.class, _reflector.forObject(new Dog("Laika",7,new Dog[0])));
 	}
 
 	public void testSelfClass() throws Exception {
@@ -27,6 +27,7 @@ public class SelfReflectTest extends TestCase {
 		assertFalse(selfClass.isAbstract());
 		assertFalse(selfClass.isInterface());
 		assertFalse(selfClass.isPrimitive());
+		assertNull(selfClass.getComponentType());
 		
 		SelfClass superClass = (SelfClass)selfClass.getSuperclass();
 		assertEquals(Animal.class.getName(), superClass.getName());
@@ -82,7 +83,7 @@ public class SelfReflectTest extends TestCase {
 	}
 	
 	public void testInstanceField() {
-		Dog laika=new Dog("Laika",7);
+		Dog laika=new Dog("Laika",7,new Dog[0]);
 		ReflectField field = selfclass().getDeclaredField("_age");
 		Object value=field.get(laika);
 		assertEquals(new Integer(laika.age()),value);
@@ -91,6 +92,17 @@ public class SelfReflectTest extends TestCase {
 		assertEquals(field.get(laika),new Integer(8));
 	}
 
+	public void testArray() {
+		SelfClass arrayClass=(SelfClass)_reflector.forClass(Dog[].class);
+		assertTrue(arrayClass.isArray());
+		assertEquals(_reflector.forClass(Dog.class).getName(),arrayClass.getComponentType().getName());
+		
+		SelfArray arrayHandler=(SelfArray)_reflector.array();
+		assertEquals(_reflector.forClass(Dog.class).getName(),arrayHandler.getComponentType(arrayClass).getName());
+		Dog[] dogs=(Dog[])arrayHandler.newInstance(_reflector.forClass(Dog.class), 2);
+		assertEquals(2,dogs.length);
+	}
+	
 	private SelfClass selfclass() {
 		SelfClass selfClass = new SelfClass(_reflector,_registry, Dog.class);
 		return selfClass;
