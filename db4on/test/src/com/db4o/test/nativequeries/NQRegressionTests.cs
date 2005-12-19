@@ -740,8 +740,10 @@ namespace com.db4o.test.nativequeries
 
 		private static com.db4o.test.nativequeries.NQRegressionTests.ExpectingPredicate[] PREDICATES
 			= { 
-				new _AnonymousInnerClass72(), // untyped/unconditional
-				new _AnonymousInnerClass79(), // unconditional
+			  	// TODO: unconditional
+				// new _AnonymousInnerClass72(), // untyped/unconditional
+				// new _AnonymousInnerClass79(), // unconditional
+				
 				new _AnonymousInnerClass92(),
 				new _AnonymousInnerClass98(),
 				new _AnonymousInnerClass104(), // float
@@ -775,9 +777,11 @@ namespace com.db4o.test.nativequeries
 				new _AnonymousInnerClass281(), // ((candidate.id == 2) || candidate.getId() <= 1) && !(candidate.getName()=="Bb")
 				new _AnonymousInnerClass288(),
 				new _AnonymousInnerClass296(),
-				new _AnonymousInnerClass305(), // arithmetics
-				new _AnonymousInnerClass313(), // arithmetics
-				new _AnonymousInnerClass325() // arithmetics/float
+				
+				// TODO: arithmetics
+				// new _AnonymousInnerClass305(), // arithmetics
+				// new _AnonymousInnerClass313(), // arithmetics
+				// new _AnonymousInnerClass325() // arithmetics/float
 			};
 
 		public virtual void testAll()
@@ -793,6 +797,7 @@ namespace com.db4o.test.nativequeries
 		private void assertNQResult(com.db4o.test.nativequeries.NQRegressionTests.ExpectingPredicate
 			 filter)
 		{
+			// System.Console.WriteLine(filter.GetType());
 			com.db4o.ObjectContainer db = com.db4o.test.Tester.objectContainer();
 			com.db4o.inside.query.Db4oQueryExecutionListener listener = new _AnonymousInnerClass348
 				(this, filter);
