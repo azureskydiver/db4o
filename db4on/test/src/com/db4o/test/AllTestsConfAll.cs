@@ -3,6 +3,7 @@
 using System;
 using com.db4o.test.acid;
 using com.db4o.test.inside.query;
+using com.db4o.test.soda;
 using j4o.lang;
 using com.db4o.test.cs;
 using System.Collections;
@@ -140,6 +141,7 @@ namespace com.db4o.test {
 				tests.Add(typeof(Soda));
 				tests.Add(typeof(SodaEvaluation));
 				tests.Add(typeof(SodaNoDuplicates));
+				tests.Add(typeof(SodaNumberCoercion));
 				tests.Add(typeof(StoredClassInformation));
 				tests.Add(typeof(StoredFieldValue));
 	#if !MONO
