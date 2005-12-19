@@ -80,11 +80,16 @@ namespace j4o.lang
 					Consume();
 					return NextToken();
 				default:
-					if (char.IsLetter(ch)) return Id();
+					if (IsIdStart(ch)) return Id();
 					if (char.IsDigit(ch)) return NumberOrVersion();
 					break;
 			}
 			throw new Exception(string.Format("Unexpected char '{0}'", ch));
+		}
+
+		private static bool IsIdStart(char ch)
+		{
+			return char.IsLetter(ch) || '_' == ch;
 		}
 
 		private Token Id()
