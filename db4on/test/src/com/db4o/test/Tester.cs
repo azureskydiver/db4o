@@ -162,8 +162,13 @@ namespace com.db4o.test
 			}
 			return true;
 		}
-
+		
 		public static bool ensureEquals(object expected, object actual)
+		{
+			return ensureEquals(expected, actual, null);
+		}
+
+		public static bool ensureEquals(object expected, object actual, string message)
 		{
 			bool eq = true;
 			if(expected == null)
@@ -174,7 +179,10 @@ namespace com.db4o.test
 			{
 				eq = expected.Equals(actual);
 			}
-			return ensure(string.Format("'{0}' != '{1}'", expected, actual), eq);
+			string text = message == null
+			              	? string.Format("'{0}' != '{1}'", expected, actual)
+			              	: string.Format("{0} - '{1}' != '{2}'", message, expected, actual);
+			return ensure(text, eq);
 		}
       
 		public static void ensureOccurrences(Object obj, int count) 
