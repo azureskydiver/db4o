@@ -12,6 +12,9 @@ namespace com.db4o.test {
          */
         internal Type[] TESTS = new Type[]{
             typeof(com.db4o.test.SimplestPossible),
+            typeof(com.db4o.test.soda.SodaNumberCoercion),
+            //typeof(com.db4o.test.nativequeries.NativeQueriesTestCase),
+            //typeof(com.db4o.test.nativequeries.NQRegressionTests),
             typeof(com.db4o.test.j4otest.TypeNameTest),
             //typeof(com.db4o.test.net2.Net2GenericContainers),
          };
@@ -34,7 +37,7 @@ namespace com.db4o.test {
         /**
           * run the tests in client/server mode
           */
-        internal bool CLIENT_SERVER = true;
+        internal bool CLIENT_SERVER = false;
       
         /**
           * run the client/server test against a remote server.

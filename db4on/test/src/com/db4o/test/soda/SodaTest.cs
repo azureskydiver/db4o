@@ -101,7 +101,7 @@ namespace com.db4o.test.soda
 														   new STRUH1(),
 														   new STTH1(),
 														   new STUH1(),
-														   new STMagic()      
+														   new STMagic()
 													   };
 		protected static bool quiet = false;
 		protected static STEngine engine;
