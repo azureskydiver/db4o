@@ -177,7 +177,21 @@ public class YapClient extends YapStream implements ExtClient {
 
     boolean createYapClass(YapClass a_yapClass, ReflectClass a_class, YapClass a_superYapClass) {
         writeMsg(Msg.CREATE_CLASS.getWriterForString(i_systemTrans, a_class.getName()));
-        MsgObject message = (MsgObject)expectedResponse(Msg.OBJECT_TO_CLIENT);
+        Msg resp = getResponse();
+        if(resp == null){
+            return false;
+        }
+        if(resp.equals(Msg.FAILED)){
+            if(i_config.i_exceptionsOnNotStorable){
+                throw new ObjectNotStorableException(a_class);
+            }
+            return false;
+        }
+        if(! resp.equals(Msg.OBJECT_TO_CLIENT)){
+            return false;
+        }
+        
+        MsgObject message = (MsgObject)resp;
         YapWriter bytes = message.unmarshall();
         if (bytes == null) {
             return false;

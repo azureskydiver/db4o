@@ -10,29 +10,37 @@ final class MCreateClass extends MsgD {
         YapStream stream = getStream();
         Transaction trans = stream.getSystemTransaction();
         YapWriter returnBytes = new YapWriter(trans, 0);
-        ReflectClass claxx = trans.reflector().forName(readString());
-        if (claxx != null) {
-            synchronized (stream.i_lock) {
-                try {
-                    YapClass yapClass = stream.getYapClass(claxx, true);
-                    if (yapClass != null) {
-                        stream.checkStillToSet();
-                        yapClass.setStateDirty();
-                        yapClass.write(trans);
-                        trans.commit();
-                        returnBytes = stream.readWriterByID(trans, yapClass.getID());
-                    } else {
-                        // TODO: handling, if the class can't be created 
-                    }
-                } catch (Throwable t) {
-                    if (Deploy.debug) {
-                        System.out.println("MsgD.CreateClass failed");
+        try{
+            ReflectClass claxx = trans.reflector().forName(readString());
+            if (claxx != null) {
+                synchronized (stream.i_lock) {
+                    try {
+                        YapClass yapClass = stream.getYapClass(claxx, true);
+                        if (yapClass != null) {
+                            stream.checkStillToSet();
+                            yapClass.setStateDirty();
+                            yapClass.write(trans);
+                            trans.commit();
+                            returnBytes = stream.readWriterByID(trans, yapClass.getID());
+                            Msg.OBJECT_TO_CLIENT.getWriter(returnBytes).write(stream, sock);
+                            return true;
+    
+                        } else {
+                            // TODO: handling, if the class can't be created 
+                        }
+                    } catch (Throwable t) {
+                        if (Deploy.debug) {
+                            System.out.println("MCreateClass failed");
+                        }
                     }
                 }
             }
+        }catch(Throwable th){
+            if (Deploy.debug) {
+                System.out.println("MCreateClass failed");
+            }
         }
-        //		TODO: now what is written here, if the class can't be created?
-        Msg.OBJECT_TO_CLIENT.getWriter(returnBytes).write(stream, sock);
+        Msg.FAILED.write(stream, sock);
         return true;
     }
 }
