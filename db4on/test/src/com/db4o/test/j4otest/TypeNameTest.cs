@@ -33,9 +33,18 @@ namespace com.db4o.test.j4otest
 
     class TypeNameTest
     {
+		class __Funny123Name_
+		{
+		}
+    	
         class NestedType
         {
         }
+    	
+    	public void testFunnyName()
+    	{
+    		ensureRoundtrip(typeof(__Funny123Name_));
+    	}
 
         public void testSimpleName()
         {
