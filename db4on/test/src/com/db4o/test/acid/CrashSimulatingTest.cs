@@ -63,6 +63,7 @@ namespace com.db4o.test.acid
 				com.db4o.ObjectContainer oc = com.db4o.Db4o.openFile(fileName);
 				if (!stateBeforeCommit(oc))
 				{
+
 					if (!stateAfterCommit(oc))
 					{
 						Tester.error();
@@ -86,7 +87,6 @@ namespace com.db4o.test.acid
 		private bool expect(com.db4o.ObjectContainer oc, string[] names)
 		{
 			com.db4o.ObjectSet objectSet = oc.query(j4o.lang.Class.getClassForType(typeof(com.db4o.test.acid.CrashSimulatingTest
-
 				)));
 			if (objectSet.size() != names.Length)
 			{
@@ -147,6 +147,7 @@ namespace com.db4o.test.acid
 				oc.delete(objectSet.next());
 			}
 			oc.close();
+			File.Delete(FILE + "0");
 			File.Copy(FILE,FILE + "0");
 		}
 
