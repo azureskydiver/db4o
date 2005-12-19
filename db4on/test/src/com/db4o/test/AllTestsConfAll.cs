@@ -1,6 +1,7 @@
 /* Copyright (C) 2004	db4objects Inc.	  http://www.db4o.com */
 
 using System;
+using com.db4o.test.acid;
 using com.db4o.test.inside.query;
 using j4o.lang;
 using com.db4o.test.cs;
@@ -42,6 +43,7 @@ namespace com.db4o.test {
 				tests.Add(typeof(CascadeToExistingArrayListMember));
 				tests.Add(typeof(CascadeToHashtable));
 				tests.Add(typeof(CaseInsensitive));
+				tests.Add(typeof(CrashSimulatingTest));
 				tests.Add(typeof(Circular1));
 				tests.Add(typeof(Circular2));
 				tests.Add(typeof(CollectionActivation));
