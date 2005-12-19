@@ -247,6 +247,9 @@ public class Test extends AllTests {
                 objectServer.grantAccess(DB4O_USER, DB4O_PASSWORD);
                 objectServer.ext().configure().messageLevel(0);
             }
+            else {
+            	throw new RuntimeException("Couldn't open server.");
+            }
         }
         if (clientServer) {
             oc = openClient();
