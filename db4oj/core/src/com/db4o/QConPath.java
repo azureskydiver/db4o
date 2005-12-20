@@ -63,15 +63,17 @@ public class QConPath extends QConClass {
         Object obj = i_field.coerce(a_object);
         if(obj == No4.INSTANCE){
 //        	return null;
-        	QConObject newConstraint = new QConFalse(i_trans, i_parent, i_field);
-            ReflectClass claxx = i_trans.reflector().forObject(obj);
-            morph(removeExisting, newConstraint, claxx);
-    		return newConstraint;
+        	QConObject falseConstraint = new QConFalse(i_trans, i_parent, i_field);
+            morph(removeExisting, falseConstraint, reflectClassForObject(obj));
+    		return falseConstraint;
         }
         QConObject newConstraint = new QConObject(i_trans, i_parent, i_field, obj);
-        ReflectClass claxx = i_trans.reflector().forObject(obj);
-        morph(removeExisting, newConstraint, claxx);
+        morph(removeExisting, newConstraint, reflectClassForObject(obj));
 		return newConstraint;
+	}
+
+	private ReflectClass reflectClassForObject(Object obj) {
+		return i_trans.reflector().forObject(obj);
 	}
 
 	// Our QConPath objects are just placeholders to fields,
