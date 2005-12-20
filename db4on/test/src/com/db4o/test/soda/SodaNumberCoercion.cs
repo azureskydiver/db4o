@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using com.db4o.query;
 
 namespace com.db4o.test.soda
