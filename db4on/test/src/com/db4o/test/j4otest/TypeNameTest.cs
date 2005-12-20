@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 using j4o.lang;
@@ -102,12 +103,18 @@ namespace com.db4o.test.j4otest
         {
 			try
 			{
-				string assemblyName = "mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac";
+				string assemblyNameString = "mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=969db8053d3322ac";
 				TypeReference typeReference =
 					TypeReference.FromString(
-						"System.String, " + assemblyName);
+						"System.String, " + assemblyNameString);
 				Tester.ensureEquals("System.String", typeReference.SimpleName);
-				Tester.ensureEquals(new AssemblyName(assemblyName).FullName, typeReference.AssemblyName.FullName, "string.Assembly.FullName");
+				
+				AssemblyName assemblyName = new AssemblyName();
+				assemblyName.Name = "mscorlib";
+				assemblyName.Version = new Version(2, 0, 0, 0);
+				assemblyName.CultureInfo = CultureInfo.InvariantCulture;
+				assemblyName.SetPublicKeyToken(ParsePublicKeyToken("969db8053d3322ac"));
+				Tester.ensureEquals(assemblyName.FullName, typeReference.AssemblyName.FullName, "string.Assembly.FullName");
 			}
 			catch (Exception e)
 			{
@@ -115,6 +122,17 @@ namespace com.db4o.test.j4otest
 			}
 
         }
+    	
+		static byte[] ParsePublicKeyToken(string token)
+		{
+			int len = token.Length / 2;
+			byte[] bytes = new byte[len];
+			for (int i = 0; i < len; ++i)
+			{
+				bytes[i] = byte.Parse(token.Substring(i * 2, 2), System.Globalization.NumberStyles.HexNumber);
+			}
+			return bytes;
+		}
 
         public void testSimpleArray()
         {

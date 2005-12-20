@@ -11,10 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-net-tools", "..\tools\
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsSpikes", "..\..\..\..\Documents and Settings\rodrigob\Meus documentos\Visual Studio Projects\CsSpikes\CsSpikes.csproj", "{B841935D-4899-4A30-A8F3-E48132E5A15E}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -33,10 +29,6 @@ Global
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Debug.Build.0 = Debug|.NET
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release.ActiveCfg = Release|.NET
 		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release.Build.0 = Release|.NET
-		{B841935D-4899-4A30-A8F3-E48132E5A15E}.Debug.ActiveCfg = Debug|.NET
-		{B841935D-4899-4A30-A8F3-E48132E5A15E}.Debug.Build.0 = Debug|.NET
-		{B841935D-4899-4A30-A8F3-E48132E5A15E}.Release.ActiveCfg = Release|.NET
-		{B841935D-4899-4A30-A8F3-E48132E5A15E}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

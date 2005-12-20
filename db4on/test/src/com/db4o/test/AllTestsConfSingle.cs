@@ -13,12 +13,14 @@ namespace com.db4o.test {
         internal Type[] TESTS = new Type[]{
             typeof(com.db4o.test.SimplestPossible),
             //typeof(com.db4o.test.soda.SodaNumberCoercion),
+#if NET_2_0
             typeof(com.db4o.test.net2.Net2GenericContainers),
             typeof(com.db4o.test.net2.Net2GenericList),
+#endif
             //typeof(com.db4o.test.nativequeries.NativeQueriesTestCase),
             //typeof(com.db4o.test.nativequeries.NQRegressionTests),
             typeof(com.db4o.test.j4otest.TypeNameTest),
-            //typeof(com.db4o.test.net2.Net2GenericContainers),
+            typeof(com.db4o.test.soda.SodaNumberCoercion),
          };
        
         /**
