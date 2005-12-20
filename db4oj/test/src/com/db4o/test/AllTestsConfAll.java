@@ -10,6 +10,7 @@ import com.db4o.test.constraints.*;
 import com.db4o.test.foundation.Collection4TestCase;
 import com.db4o.test.interfaces.*;
 import com.db4o.test.nativequery.*;
+import com.db4o.test.soda.*;
 
 public class AllTestsConfAll extends TestSuite{
 
@@ -103,6 +104,7 @@ public class AllTestsConfAll extends TestSuite{
 			SmallerOrEqual.class,
 	    	Soda.class,
 	    	SodaNoDuplicates.class,
+	    	SodaNumberCoercion.class,
 	    	//SortResult.class,
 	    	StoredClassInformation.class,
 	    	StoredFieldValue.class,
