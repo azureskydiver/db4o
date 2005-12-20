@@ -43,3 +43,7 @@ for a fixed amount of objects (~10,000).
 
 (1) will be faster.
 (2) will keep memory consumption lower.
+
+.b Further reading ..
+To improve performance even further, consider reading about some of the ._
+.l Tuning ..  options discussed elsewhere in this tutorial.

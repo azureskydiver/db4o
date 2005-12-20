@@ -9,6 +9,10 @@ because it provides a side glance at db4o features with ._
 .i Alternate Strategies ..  and some insight on how ._
 db4o works.
 
+.1 Enable Field Indexes ..
+The fastest way to improve the performance of your queries is ._
+to enable indexing on some of your class's key fields. Indexing ._
+is discussed .l Indexing elsewhere .. in this tutorial.
 
 .1 Discarding Free Space ..
 .c Db4o.configure().discardFreeSpace(byteCount); ..
