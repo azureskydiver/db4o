@@ -22,6 +22,10 @@ public class YInt extends YapJavaClass {
             return obj;
         }
         if(obj instanceof Number){
+        	Number number=(Number)obj;
+//        	if(number.intValue()!=number.doubleValue()) {
+//        		return No4.INSTANCE;
+//        	}
             return new Integer(((Number)obj).intValue());
         }
         return No4.INSTANCE;
