@@ -107,6 +107,7 @@ namespace com.db4o.test {
 
 	#if NET_2_0
 				tests.Add(typeof(net2.Net2GenericContainers));
+				tests.Add(typeof(net2.Net2GenericList));
 				tests.Add(typeof(net2.Net2NullableTypes));
 				tests.Add(typeof(net2.Net2QueryForClass));
 				tests.Add(typeof(net2.Net2SimpleGenericType));
