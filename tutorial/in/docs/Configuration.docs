@@ -61,6 +61,6 @@ this class both to the server and to all clients.
 .1 Further reading ..
 Some configuration switches are discussed in more detail in the following ._
 chapters:
-.l Tuning ..
-.l Indexes ..
- 
+- .l Tuning ..
+- .l Indexes ..
+- .l Encryption ..
