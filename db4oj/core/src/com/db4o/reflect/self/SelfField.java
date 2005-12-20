@@ -58,8 +58,6 @@ public class SelfField implements ReflectField {
 	}
 
 	public void setAccessible() {
-		// TODO Auto-generated method stub
-
 	}
 
 }
