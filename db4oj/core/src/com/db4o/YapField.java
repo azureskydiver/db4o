@@ -172,6 +172,15 @@ public class YapField implements StoredField {
         return i_handler.canHold(claxx);
     }
 
+    public Object coerce(ReflectClass claxx, Object obj) {
+        // alive() is checked in QField caller
+        
+        if (claxx == null || obj == null) {
+            return i_isPrimitive ? No4.INSTANCE : obj;
+        }
+        return i_handler.coerce(claxx, obj);
+    }
+
     public boolean canLoadByIndex(QConObject a_qco, QE a_evaluator) {
         if (i_handler instanceof YapClass) {
             YapClass yc = (YapClass) i_handler;

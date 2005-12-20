@@ -43,28 +43,31 @@ public class QConPath extends QConClass {
 	}
 
 	QConClass shareParentForClass(ReflectClass a_class, boolean[] removeExisting) {
-		if (i_parent != null) {
-			if (i_field.canHold(a_class)) {
-				QConClass newConstraint = new QConClass(i_trans, i_parent, i_field, a_class);
-				morph(removeExisting,newConstraint, a_class);
-				return newConstraint;
-			}
-		}
-		return null;
+        if (i_parent == null) {
+            return null;
+        }
+		if (! i_field.canHold(a_class)) {
+            return null;
+        }
+		QConClass newConstraint = new QConClass(i_trans, i_parent, i_field, a_class);
+		morph(removeExisting,newConstraint, a_class);
+		return newConstraint;
 	}
 
 
 	QCon shareParent(Object a_object, boolean[] removeExisting) {
-		if (i_parent != null) {
-			if (i_field.canHold(a_object)) {
-				QConObject newConstraint =
-					new QConObject(i_trans, i_parent, i_field, a_object);
-				ReflectClass claxx = i_trans.reflector().forObject(a_object);
-                morph(removeExisting, newConstraint, claxx);
-				return newConstraint;
-			}
-		}
-		return null;
+        if (i_parent == null) {
+            return null;
+        }
+        
+        Object obj = i_field.coerce(a_object);
+        if(obj == No4.INSTANCE){
+            return null;
+        }
+        QConObject newConstraint = new QConObject(i_trans, i_parent, i_field, obj);
+        ReflectClass claxx = i_trans.reflector().forObject(obj);
+        morph(removeExisting, newConstraint, claxx);
+		return newConstraint;
 	}
 
 	// Our QConPath objects are just placeholders to fields,

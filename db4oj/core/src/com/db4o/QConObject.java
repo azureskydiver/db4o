@@ -299,24 +299,26 @@ public class QConObject extends QCon {
     }
 
     QCon shareParent(Object a_object, boolean[] removeExisting) {
-        if (i_parent != null) {
-            if (i_field.canHold(a_object)) {
-                return i_parent.addSharedConstraint(i_field, a_object);
-            }
+        if(i_parent == null){
+            return null;
         }
-        return null;
+        Object obj = i_field.coerce(a_object);
+        if(obj == No4.INSTANCE){
+            return null;
+        }
+        return i_parent.addSharedConstraint(i_field, obj);
     }
 
     QConClass shareParentForClass(ReflectClass a_class, boolean[] removeExisting) {
-        if (i_parent != null) {
-            if (i_field.canHold(a_class)) {
-                QConClass newConstraint = new QConClass(i_trans, i_parent,
-                    i_field, a_class);
-                i_parent.addConstraint(newConstraint);
-                return newConstraint;
-            }
+        if(i_parent == null){
+            return null;
         }
-        return null;
+        if (! i_field.canHold(a_class)) {
+            return null;
+        }
+        QConClass newConstraint = new QConClass(i_trans, i_parent,i_field, a_class);
+        i_parent.addConstraint(newConstraint);
+        return newConstraint;
     }
 
     final Object translate(Object candidate) {

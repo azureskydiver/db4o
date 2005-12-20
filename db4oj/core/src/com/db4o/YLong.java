@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
+
 
 class YLong extends YapJavaClass
 {
@@ -10,6 +13,16 @@ class YLong extends YapJavaClass
 
     public YLong(YapStream stream) {
         super(stream);
+    }
+    
+    public Object coerce(ReflectClass claxx, Object obj) {
+        if(obj instanceof Long){
+            return obj;
+        }
+        if(obj instanceof Number){
+            return new Long(((Number)obj).longValue());
+        }
+        return No4.INSTANCE;
     }
     
     public Object defaultValue(){

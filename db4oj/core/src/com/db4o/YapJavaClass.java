@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 /**
@@ -32,6 +33,10 @@ public abstract class YapJavaClass implements TypeHandler4 {
     public void cascadeActivation(Transaction a_trans, Object a_object,
         int a_depth, boolean a_activate) {
         // do nothing
+    }
+    
+    public Object coerce(ReflectClass claxx, Object obj) {
+        return canHold(claxx) ? obj : No4.INSTANCE;
     }
 
     public void copyValue(Object a_from, Object a_to) {

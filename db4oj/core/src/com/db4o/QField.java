@@ -32,8 +32,12 @@ public class QField implements Visitor4{
 		    }
 		}
 	}
+    
+    boolean canHold(ReflectClass claxx){
+        return i_yapField == null || i_yapField.canHold(claxx);
+    }
 	
-	boolean canHold(Object a_object){
+	Object coerce(Object a_object){
 	    ReflectClass claxx = null;
 	    Reflector reflector = i_trans.reflector();
 	    if(a_object != null){
@@ -44,11 +48,15 @@ public class QField implements Visitor4{
 	        }
 	    }else{
 			if(Deploy.csharp){
-				return true;
+				return a_object;
 			}
 	    }
-		return i_yapField == null || i_yapField.canHold(claxx);
+        if(i_yapField == null){
+            return a_object;
+        }
+        return i_yapField.coerce(claxx, a_object);
 	}
+    
 	
 	YapClass getYapClass(){
 		if(i_yapField != null){
