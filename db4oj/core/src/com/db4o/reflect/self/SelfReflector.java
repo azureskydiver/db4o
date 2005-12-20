@@ -54,9 +54,6 @@ public class SelfReflector implements Reflector {
 	}
 
 	public Object deepClone(Object context) {
-		// TODO !!!
-		// TODO QUESTION ? why we need the parameter context? see in
-		// jdkReflector too
 		return new SelfReflector(_registry);
 	}
 }
