@@ -7,8 +7,8 @@ public class UnitDogSelfReflectionRegistry extends SelfReflectionRegistry {
 	
 	static {
 		CLASSINFO=new Hashtable(2);
-		CLASSINFO.put(Animal.class, new ClassInfo(true,Object.class,new FieldInfo[]{new FieldInfo("_name",String.class)}));
-		CLASSINFO.put(Dog.class, new ClassInfo(false,Animal.class,new FieldInfo[]{new FieldInfo("_age",Integer.class)}));
+		CLASSINFO.put(Animal.class, new ClassInfo(true,Object.class,new FieldInfo[]{new FieldInfo("_name",String.class,true,false,false)}));
+		CLASSINFO.put(Dog.class, new ClassInfo(false,Animal.class,new FieldInfo[]{new FieldInfo("_age",Integer.class,true,false,false)}));
 	}
 	
 	public ClassInfo infoFor(Class clazz) {
