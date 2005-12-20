@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
+
 
 final class YFloat extends YInt {
     
@@ -11,6 +14,16 @@ final class YFloat extends YInt {
         super(stream);
     }
     
+    public Object coerce(ReflectClass claxx, Object obj) {
+        if(obj instanceof Float){
+            return obj;
+        }
+        if(obj instanceof Number){
+            return new Float(((Number)obj).floatValue());
+        }
+        return No4.INSTANCE;
+    }
+
 	public Object defaultValue(){
 		return i_primitive;
 	}
