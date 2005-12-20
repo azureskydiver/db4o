@@ -158,6 +158,32 @@ public class NQRegressionTests {
 				return candidate.value>2.9f;
 			}
 		},
+		// mixed comparison (coercion)
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return candidate.id==1.0f;
+			}
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 3;}
+			public boolean match(Data candidate) {
+				return candidate.id!=1.0f;
+			}
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 4;}
+			public boolean match(Data candidate) {
+				return candidate.value!=1;
+			}
+		},
+// won't work: SODA coercion is broken for greater/smaller comparisons
+//		new ExpectingPredicate() {
+//			public int expected() { return 1;}
+//			public boolean match(Data candidate) {
+//				return candidate.value>2.9d;
+//			}
+//		},
 		// descend field
 		new ExpectingPredicate() {
 			public int expected() { return 2;}
