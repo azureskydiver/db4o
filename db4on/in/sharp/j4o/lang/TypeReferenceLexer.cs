@@ -89,7 +89,13 @@ namespace j4o.lang
 
 		private static bool IsIdStart(char ch)
 		{
-			return char.IsLetter(ch) || '_' == ch;
+			switch (ch)
+			{
+				case '_':
+				case '<': // c# compiler generated classes
+					return true;
+			}
+			return char.IsLetter(ch);
 		}
 
 		private Token Id()
@@ -100,7 +106,9 @@ namespace j4o.lang
 				if (!char.IsLetterOrDigit(ch)
 				    && '.' != ch
 					&& '-' != ch
-					&& '_' != ch)
+					&& '_' != ch
+					&& '<' != ch
+					&& '>' != ch)
 				{
 					break;
 				}
