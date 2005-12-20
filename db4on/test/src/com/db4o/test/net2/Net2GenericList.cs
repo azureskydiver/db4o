@@ -54,6 +54,16 @@ namespace com.db4o.test.net2
 
             updateHolder = QueryForNamedHolder("update");
             updateHolder.CheckListsAfterUpdate();
+
+            Query q = Tester.objectContainer().query();
+            q.constrain(typeof(LHolder1));
+            q.descend("nList1").descend("_name").constrain("update");
+            ObjectSet objectSet = q.execute();
+            Tester.ensure(objectSet.size() == 1);
+            LHolder1 lh1 = (LHolder1 )objectSet.next();
+            Tester.ensure(updateHolder == lh1);
+
+
         }
 
         private LHolder1 QueryForNamedHolder(string name)
@@ -168,7 +178,7 @@ namespace com.db4o.test.net2
     }
 
 
-    public class LItem1 : Named
+    public class LItem1
     {
         string _name;
 
@@ -197,15 +207,9 @@ namespace com.db4o.test.net2
 
             return _name.Equals(other._name);
         }
-
-        public string Name()
-        {
-            return _name;
-        }
-
     }
 
-    public class LItem2 : Named
+    public class LItem2
     {
         string _name;
 
@@ -240,10 +244,6 @@ namespace com.db4o.test.net2
             return _name;
         }
 
-    }
-
-    public interface Named{
-        string Name();
     }
 
 #endif
