@@ -6,16 +6,24 @@ import com.db4o.reflect.ReflectField;
 public class SelfField implements ReflectField {
 
 	private String _name;
+
 	private ReflectClass _type;
 
-	public SelfField(String name, ReflectClass type) {
+	private SelfClass _selfclass;
+
+	private SelfReflectionRegistry _registry;
+
+	public SelfField(String name, ReflectClass type, SelfClass selfclass,
+			SelfReflectionRegistry registry) {
 		_name = name;
 		_type = type;
+		_selfclass = selfclass;
+		_registry = registry;
 	}
 
 	public Object get(Object onObject) {
-		if(onObject instanceof SelfReflectable) {
-			return ((SelfReflectable)onObject).self_get(_name);
+		if (onObject instanceof SelfReflectable) {
+			return ((SelfReflectable) onObject).self_get(_name);
 		}
 		return null;
 	}
@@ -29,20 +37,23 @@ public class SelfField implements ReflectField {
 	}
 
 	public boolean isPublic() {
-		return true;
+		return _registry.infoFor(_selfclass.getJavaClass()).fieldByName(_name)
+				.isPublic();
 	}
 
 	public boolean isStatic() {
-		return false;
+		return _registry.infoFor(_selfclass.getJavaClass()).fieldByName(_name)
+				.isStatic();
 	}
 
 	public boolean isTransient() {
-		return false;
+		return _registry.infoFor(_selfclass.getJavaClass()).fieldByName(_name)
+				.isTransient();
 	}
 
 	public void set(Object onObject, Object value) {
-		if(onObject instanceof SelfReflectable) {
-			((SelfReflectable)onObject).self_set(_name, value);
+		if (onObject instanceof SelfReflectable) {
+			((SelfReflectable) onObject).self_set(_name, value);
 		}
 	}
 
