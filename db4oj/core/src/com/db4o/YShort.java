@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
+
 
 final class YShort extends YapJavaClass
 {
@@ -13,6 +16,15 @@ final class YShort extends YapJavaClass
         super(stream);
     }
     
+    public Object coerce(ReflectClass claxx, Object obj) {
+        if(obj instanceof Short){
+            return obj;
+        }
+        if(obj instanceof Number){
+            return new Short(((Number)obj).shortValue());
+        }
+        return No4.INSTANCE;
+    }
     public Object defaultValue(){
 		return i_primitive;
 	}
