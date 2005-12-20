@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.foundation.Coercion4;
 import com.db4o.reflect.*;
 
 

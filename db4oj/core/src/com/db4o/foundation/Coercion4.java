@@ -1,6 +1,4 @@
-package com.db4o;
-
-import com.db4o.foundation.*;
+package com.db4o.foundation;
 
 public class Coercion4 {
 	public static Object toSByte(Object obj) {
