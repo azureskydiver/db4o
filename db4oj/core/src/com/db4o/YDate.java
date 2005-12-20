@@ -4,6 +4,9 @@ package com.db4o;
 
 import java.util.*;
 
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
+
 
 final class YDate extends YLong
 {
@@ -14,6 +17,10 @@ final class YDate extends YLong
         super(stream);
     }
     
+    public Object coerce(ReflectClass claxx, Object obj) {
+        return canHold(claxx) ? obj : No4.INSTANCE;
+    }
+
 	public void copyValue(Object a_from, Object a_to){
 		try{
 			((Date)a_to).setTime(((Date)a_from).getTime());
