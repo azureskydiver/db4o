@@ -238,6 +238,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         return false;
     }
+    
+    public Object coerce(ReflectClass claxx, Object obj) {
+        return canHold(claxx) ? obj : No4.INSTANCE;
+    }
 
     public void cascadeActivation(
         Transaction a_trans,

@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 
@@ -20,6 +21,10 @@ public abstract class YapIndependantType implements TypeHandler4
     }
     
     YapWriter i_lastIo;
+    
+    public Object coerce(ReflectClass claxx, Object obj) {
+        return canHold(claxx) ? obj : No4.INSTANCE;
+    }
 	
 	public final void copyValue(Object a_from, Object a_to){
 		// do nothing

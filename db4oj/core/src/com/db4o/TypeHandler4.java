@@ -18,6 +18,8 @@ public interface TypeHandler4 extends Indexable4
 	void cascadeActivation(Transaction a_trans, Object a_object, int a_depth, boolean a_activate);
 	
 	ReflectClass classReflector();
+    
+    Object coerce(ReflectClass claxx, Object obj);
 	
 	// special construct for deriving from simple types
 	void copyValue(Object a_from, Object a_to);

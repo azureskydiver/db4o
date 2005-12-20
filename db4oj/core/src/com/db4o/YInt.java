@@ -2,6 +2,9 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
+
 
 /**
  * @exclude
@@ -12,6 +15,16 @@ public class YInt extends YapJavaClass {
     
     public YInt(YapStream stream) {
         super(stream);
+    }
+    
+    public Object coerce(ReflectClass claxx, Object obj) {
+        if(obj instanceof Integer){
+            return obj;
+        }
+        if(obj instanceof Number){
+            return new Integer(((Number)obj).intValue());
+        }
+        return No4.INSTANCE;
     }
 
     public Object defaultValue(){
