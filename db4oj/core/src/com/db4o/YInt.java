@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 
@@ -18,17 +17,7 @@ public class YInt extends YapJavaClass {
     }
     
     public Object coerce(ReflectClass claxx, Object obj) {
-        if(obj instanceof Integer){
-            return obj;
-        }
-        if(obj instanceof Number){
-        	Number number=(Number)obj;
-//        	if(number.intValue()!=number.doubleValue()) {
-//        		return No4.INSTANCE;
-//        	}
-            return new Integer(((Number)obj).intValue());
-        }
-        return No4.INSTANCE;
+    	return Coercion4.toInt(obj);
     }
 
     public Object defaultValue(){

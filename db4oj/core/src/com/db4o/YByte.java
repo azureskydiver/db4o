@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 
@@ -18,13 +17,7 @@ final class YByte extends YapJavaClass
     }
     
     public Object coerce(ReflectClass claxx, Object obj) {
-        if(obj instanceof Byte){
-            return obj;
-        }
-        if(obj instanceof Number){
-            return new Byte(((Number)obj).byteValue());
-        }
-        return No4.INSTANCE;
+    	return Coercion4.toSByte(obj);
     }
 
 	public int getID(){

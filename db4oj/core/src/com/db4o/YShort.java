@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 
@@ -17,13 +16,7 @@ final class YShort extends YapJavaClass
     }
     
     public Object coerce(ReflectClass claxx, Object obj) {
-        if(obj instanceof Short){
-            return obj;
-        }
-        if(obj instanceof Number){
-            return new Short(((Number)obj).shortValue());
-        }
-        return No4.INSTANCE;
+    	return Coercion4.toShort(obj);
     }
     public Object defaultValue(){
 		return i_primitive;

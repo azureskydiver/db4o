@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 
@@ -15,13 +14,7 @@ final class YDouble extends YLong
     }
     
     public Object coerce(ReflectClass claxx, Object obj) {
-        if(obj instanceof Double){
-            return obj;
-        }
-        if(obj instanceof Number){
-            return new Double(((Number)obj).doubleValue());
-        }
-        return No4.INSTANCE;
+    	return Coercion4.toDouble(obj);
     }
 
 	public Object defaultValue(){
