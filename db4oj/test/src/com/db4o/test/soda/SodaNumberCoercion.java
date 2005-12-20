@@ -84,17 +84,8 @@ public class SodaNumberCoercion {
 		assertSingleCoercionResult(DOUBLEFIELD, LONGVALUE);
 	}
 	
-	/* Ok, so what to do here?
-	 *
-	 * a) Throw an exception upon 111==111.11? Ridiculous, IMO.
-	 * b) Just round the float? Will return a false positive.
-	 * c) Return No4? Gives us all instances, thanks to the union query feature.
-	 * 
-	 * d) Disallow integer vs. floating point types and hope we'll get
-	 * away with the overflow behavior?
-	 */
-	
 	public void testRounding() {
+		assertCoercionResult(FLOATFIELD, new Double(111.11), 0); // 111.11f!=111.11d
 		assertCoercionResult(FLOATFIELD, new Integer(111), 0);
 		assertCoercionResult(INTFIELD, new Float(111.11), 0);
 	}
@@ -111,7 +102,8 @@ public class SodaNumberCoercion {
 	private void assertCoercionResult(String fieldName,Number value,int expCount) {
 		Query q = Test.query();
 		q.constrain(Thing.class);
-		q.descend(fieldName).constrain(value);
+		Constraint constr=q.descend(fieldName).constrain(value);
+		Test.ensure(constr!=null);
 		Test.ensureEquals(expCount, q.execute().size());
 	}
 }

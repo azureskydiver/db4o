@@ -62,7 +62,11 @@ public class QConPath extends QConClass {
         
         Object obj = i_field.coerce(a_object);
         if(obj == No4.INSTANCE){
-            return null;
+//        	return null;
+        	QConObject newConstraint = new QConFalse(i_trans, i_parent, i_field);
+            ReflectClass claxx = i_trans.reflector().forObject(obj);
+            morph(removeExisting, newConstraint, claxx);
+    		return newConstraint;
         }
         QConObject newConstraint = new QConObject(i_trans, i_parent, i_field, obj);
         ReflectClass claxx = i_trans.reflector().forObject(obj);
