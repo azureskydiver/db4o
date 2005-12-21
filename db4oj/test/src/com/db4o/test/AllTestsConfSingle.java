@@ -17,6 +17,7 @@ public class AllTestsConfSingle extends TestSuite{
     
     public Class[] tests(){
         return new Class[] {
+        	CascadeToHashtable.class,
             // Db4oLinkedList.class,
             
             // DeleteDeep.class
@@ -38,7 +39,7 @@ public class AllTestsConfSingle extends TestSuite{
             // ReplicateExistingFile.class
             // ReplicateDb4oList.class
             
-            CrashSimulatingTest.class
+            // CrashSimulatingTest.class
             
             // CJSameField.class,
             

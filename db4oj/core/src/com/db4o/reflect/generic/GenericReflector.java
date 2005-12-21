@@ -14,6 +14,19 @@ public class GenericReflector implements Reflector, DeepClone {
 	public interface ReflectClassPredicate {
 		boolean match(ReflectClass item);
 	}
+	
+	private static class CollectionUpdateDepthEntry {
+		
+		final ReflectClassPredicate _predicate;
+		
+		final int _depth;
+		
+		public CollectionUpdateDepthEntry(ReflectClassPredicate predicate,
+				int depth) {
+			_predicate = predicate;
+			_depth = depth;
+		}
+	}
 
     private Reflector _delegate;
     private GenericArrayReflector _array;
@@ -88,11 +101,10 @@ public class GenericReflector implements Reflector, DeepClone {
     public int collectionUpdateDepth(ReflectClass candidate) {
         Iterator4 i = _collectionUpdateDepths.iterator();
         while(i.hasNext()){
-            Object[] entry = (Object[])i.next();
-            ReflectClass claxx = (ReflectClass) entry[0];
-            if(claxx.isAssignableFrom(candidate)){
-                return ((Integer)entry[1]).intValue();
-            }
+        	CollectionUpdateDepthEntry entry = (CollectionUpdateDepthEntry) i.next();
+        	if (entry._predicate.match(candidate)) {
+        		return entry._depth;
+        	}
         }
         return 2;
         
@@ -188,18 +200,26 @@ public class GenericReflector implements Reflector, DeepClone {
     }
 
     public void registerCollection(Class clazz) {
-        final ReflectClass collectionClass = forClass(clazz).getDelegate();
-		_collectionPredicates.add(new ReflectClassPredicate() {
+		_collectionPredicates.add(classPredicate(clazz));
+    }
+
+	private ReflectClassPredicate classPredicate(Class clazz) {
+		final ReflectClass collectionClass = forClass(clazz);
+		ReflectClassPredicate predicate = new ReflectClassPredicate() {
 			public boolean match(ReflectClass candidate) {
 	            return collectionClass.isAssignableFrom(candidate);
 			}
-		});
-    }
+		};
+		return predicate;
+	}
 
     public void registerCollectionUpdateDepth(Class clazz, int depth) {
-        Object[] entry = new Object[]{forClass(clazz), new Integer(depth) };
-        _collectionUpdateDepths.add(entry);
+		registerCollectionUpdateDepth(classPredicate(clazz), depth);
     }
+
+	public void registerCollectionUpdateDepth(ReflectClassPredicate predicate, int depth) {
+        _collectionUpdateDepths.add(new CollectionUpdateDepthEntry(predicate, depth));
+	}
     
     public void register(GenericClass clazz) {
     	String name = clazz.getName();
