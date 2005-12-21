@@ -231,7 +231,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             return true;
         }
         if (_reflector != null) {
-        	if(reflector().isCollection(classReflector())){
+        	if(classReflector().isCollection()){
                 return true;
             }
             return classReflector().isAssignableFrom(claxx);
@@ -309,7 +309,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if (depth == YapConst.UNSPECIFIED) {
             depth = checkUpdateDepthUnspecified(a_bytes.getStream());
         }
-        if (config != null && (config.i_cascadeOnDelete == 1 || config.i_cascadeOnUpdate == 1)) {
+        if (classReflector().isCollection() || (config != null && (config.i_cascadeOnDelete == 1 || config.i_cascadeOnUpdate == 1))) {
             int depthBorder = reflector().collectionUpdateDepth(classReflector());
             if (depth < depthBorder) {
                 depth = depthBorder;
@@ -508,7 +508,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 	        Config4Class config = configOrAncestorConfig();
 	        if (config != null && (config.i_cascadeOnDelete == 1)) {
 	            int preserveCascade = a_bytes.cascadeDeletes();
-	            if (reflector().isCollection(classReflector())) {
+	            if (classReflector().isCollection()) {
 	                int newCascade =
 	                    preserveCascade + reflector().collectionUpdateDepth(classReflector()) - 3;
 	                if (newCascade < 1) {
@@ -844,7 +844,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     public boolean hasField(YapStream a_stream, String a_field) {
-    	if(reflector().isCollection(classReflector())){
+    	if(classReflector().isCollection()){
             return true;
         }
         return getYapField(a_field) != null;
@@ -858,7 +858,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     public boolean holdsAnyClass() {
-      return reflector().isCollection(classReflector());
+      return classReflector().isCollection();
     }
 
     void incrementFieldsOffset1(YapReader a_bytes) {
@@ -1089,11 +1089,11 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     public boolean isArray() {
-        return reflector().isCollection(classReflector()); 
+        return classReflector().isCollection(); 
     }
     
 	boolean isCollection(Object obj) {
-		return reflector().isCollection(reflector().forObject(obj));
+		return reflector().forObject(obj).isCollection();
 	}
 
     public boolean isDirty() {

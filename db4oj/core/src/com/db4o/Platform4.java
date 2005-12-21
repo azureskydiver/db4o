@@ -173,7 +173,7 @@ public final class Platform4 {
 
     static final void flattenCollection2(final YapStream a_stream, Object a_object, final com.db4o.foundation.Collection4 col) {
         Reflector reflector = a_stream.reflector();
-        if (reflector.isCollection(reflector.forObject(a_object))) {
+        if (reflector.forObject(a_object).isCollection()) {
             forEachCollectionElement(a_object, new Visitor4() {
                 public void visit(Object obj) {
                     flattenCollection1(a_stream, obj, col);
