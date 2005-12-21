@@ -28,7 +28,7 @@ public class GenericClass implements ReflectClass, DeepClone {
     private boolean _isSecondClass;
     private boolean _isPrimitive;
     
-    private int _isCollection = 0;
+    private int _isCollection;
     
     private GenericConverter _converter;
     
