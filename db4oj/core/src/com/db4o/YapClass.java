@@ -257,7 +257,11 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if (a_depth > 0) {
             YapStream stream = a_trans.i_stream;
             if (a_activate) {
-                stream.stillToActivate(a_object, a_depth - 1);
+                if(isValueType()){
+                    activateFields(a_trans, a_object, a_depth - 1);
+                }else{
+                    stream.stillToActivate(a_object, a_depth - 1);
+                }
             } else {
                 stream.stillToDeactivate(a_object, a_depth - 1, false);
             }
@@ -1114,6 +1118,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     boolean isStrongTyped() {
         return true;
     }
+    
+    boolean isValueType(){
+        return Platform4.isValueType(classReflector());
+    }
 
     void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_new) {
         Config4Class config = configOrAncestorConfig();
@@ -1263,7 +1271,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                 return stream.peekPersisted1(trans, id, depth);
             }
             
-            if (Platform4.isValueType(classReflector())) {
+            if (isValueType()) {
 
                 // for C# value types only:
                 // they need to be instantiated fully before setting them
