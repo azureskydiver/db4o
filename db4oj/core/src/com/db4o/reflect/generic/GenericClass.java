@@ -28,6 +28,8 @@ public class GenericClass implements ReflectClass, DeepClone {
     private boolean _isSecondClass;
     private boolean _isPrimitive;
     
+    private int _isCollection = 0;
+    
     private GenericConverter _converter;
     
     private GenericField[] _fields = NO_FIELDS;
@@ -222,7 +224,14 @@ public class GenericClass implements ReflectClass, DeepClone {
     }
 
 	public boolean isCollection() {
-		return _reflector.isCollection(this);
+        if(_isCollection == 1){
+            return true;
+        }
+        if(_isCollection == -1){
+            return false;
+        }
+        _isCollection = _reflector.isCollection(this) ? 1 : -1;
+		return isCollection();
 	}
 	
     public boolean isInstance(Object candidate) {
