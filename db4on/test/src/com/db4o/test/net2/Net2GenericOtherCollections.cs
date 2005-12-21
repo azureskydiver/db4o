@@ -83,12 +83,31 @@ namespace com.db4o.test.net2
 
         public void TestBeforeUpdate()
         {
+            ObjectContainer oc = Tester.objectContainer();
+
             Tester.ensure(linkedList.Last.Value.Equals(new CItem("ll9")));
 
             for (int i = 0; i < 10; i++)
             {
                 Tester.ensure(queue.Dequeue().Equals(new CItem("q" + i)));
             }
+
+
+
+            oc.activate(sortedDictionary, int.MaxValue);
+
+            foreach (CItem cItem in sortedDictionary.Keys){
+                Console.WriteLine(cItem.Name());
+            }
+
+
+            for (int i = 0; i < 10; i++)
+            {
+                Object obj = sortedDictionary[new CItem("sd" + i)];
+
+                Tester.ensure(obj.Equals("sd" + i));
+            }
+
 
 
 
@@ -102,11 +121,12 @@ namespace com.db4o.test.net2
             linkedList.AddLast(new CItem("update"));
             oc.set(linkedList);
 
+
         }
 
         public void TestAfterUpdate()
         {
-            Tester.ensure(linkedList.Last.Value.Equals(new CItem("update")));
+            // Tester.ensure(linkedList.Last.Value.Equals(new CItem("update")));
 
         }
 
