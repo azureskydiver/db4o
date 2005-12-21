@@ -220,7 +220,7 @@ namespace com.db4o
 			}
 		}
 
-		internal static String format(Date date, bool showSeconds)
+		internal static String format(j4o.util.Date date, bool showSeconds)
 		{
 			String fmt = "yyyy-MM-dd";
 			if (showSeconds)
