@@ -6,8 +6,13 @@ namespace com.db4o.test {
 
    public class SimplestPossible {
       
-      public SimplestPossible() : base() {
-      }
+       public SimplestPossible() : base() {
+       }
+
+       public SimplestPossible(string name) : base() {
+           this.name = name;
+       }
+
       public String name;
       
       public void storeOne() {
