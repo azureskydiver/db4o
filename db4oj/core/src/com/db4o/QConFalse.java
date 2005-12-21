@@ -2,6 +2,9 @@ package com.db4o;
 
 import com.db4o.foundation.*;
 
+/** 
+ * @exclude
+ */
 public class QConFalse extends QConPath {
 	public QConFalse(){
 	}
