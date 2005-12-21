@@ -14,8 +14,10 @@ namespace com.db4o.test {
             typeof(com.db4o.test.SimplestPossible),
             //typeof(com.db4o.test.soda.SodaNumberCoercion),
 #if NET_2_0
-            typeof(com.db4o.test.net2.Net2GenericContainers),
-            typeof(com.db4o.test.net2.Net2GenericList),
+            typeof(net2.Net2GenericContainers),
+            typeof(net2.Net2GenericDictionary),
+			typeof(net2.Net2GenericList),
+			typeof(net2.Net2GenericOtherCollections),
 #endif
             //typeof(com.db4o.test.nativequeries.NativeQueriesTestCase),
             //typeof(com.db4o.test.nativequeries.NQRegressionTests),
