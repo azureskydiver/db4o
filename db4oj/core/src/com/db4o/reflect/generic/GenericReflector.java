@@ -10,6 +10,10 @@ import com.db4o.reflect.*;
  * @exclude
  */
 public class GenericReflector implements Reflector, DeepClone {
+	
+	public interface ReflectClassPredicate {
+		boolean match(ReflectClass item);
+	}
 
     private Reflector _delegate;
     private GenericArrayReflector _array;
@@ -22,7 +26,7 @@ public class GenericReflector implements Reflector, DeepClone {
     private final Collection4 _classes = new Collection4();
     private final Hashtable4 _classByID = new Hashtable4(1);
     
-    private Collection4 _collectionClasses = new Collection4();
+    private Collection4 _collectionPredicates = new Collection4();
     private Collection4 _collectionUpdateDepths = new Collection4();
 	private Collection4 _pendingClasses = new Collection4();
     
@@ -39,7 +43,7 @@ public class GenericReflector implements Reflector, DeepClone {
 	
 	public Object deepClone(Object obj)  {
         GenericReflector myClone = new GenericReflector(null, (Reflector)_delegate.deepClone(this));
-        myClone._collectionClasses = (Collection4)_collectionClasses.deepClone(myClone);
+        myClone._collectionPredicates = (Collection4)_collectionPredicates.deepClone(myClone);
         myClone._collectionUpdateDepths = (Collection4)_collectionUpdateDepths.deepClone(myClone);
         
         
@@ -171,11 +175,10 @@ public class GenericReflector implements Reflector, DeepClone {
 
     public boolean isCollection(ReflectClass candidate) {
         candidate = candidate.getDelegate(); 
-        Iterator4 i = _collectionClasses.iterator();
+        Iterator4 i = _collectionPredicates.iterator();
         while(i.hasNext()){
-            ReflectClass claxx = ((ReflectClass)i.next()).getDelegate();
-            if(claxx.isAssignableFrom(candidate)){
-                return true;
+            if (((ReflectClassPredicate)i.next()).match(candidate)) {
+            	return true;
             }
         }
         return _delegate.isCollection(candidate);
@@ -185,7 +188,12 @@ public class GenericReflector implements Reflector, DeepClone {
     }
 
     public void registerCollection(Class clazz) {
-        _collectionClasses.add(forClass(clazz));
+        final ReflectClass collectionClass = forClass(clazz).getDelegate();
+		_collectionPredicates.add(new ReflectClassPredicate() {
+			public boolean match(ReflectClass candidate) {
+	            return collectionClass.isAssignableFrom(candidate);
+			}
+		});
     }
 
     public void registerCollectionUpdateDepth(Class clazz, int depth) {
