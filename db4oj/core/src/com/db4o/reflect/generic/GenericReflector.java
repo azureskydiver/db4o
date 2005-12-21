@@ -176,7 +176,7 @@ public class GenericReflector implements Reflector, DeepClone {
             	return true;
             }
         }
-        return _delegate.isCollection(candidate);
+        return _delegate.isCollection(candidate.getDelegate());
         
         //TODO: will need knowledge for .NET collections here
         // possibility: call registercollection with strings
