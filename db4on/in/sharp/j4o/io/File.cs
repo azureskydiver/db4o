@@ -4,88 +4,104 @@ using System;
 using System.IO;
 using com.db4o;
 
-namespace j4o.io {
+namespace j4o.io
+{
+	public class File
+	{	
+		public static readonly char separator = Path.DirectorySeparatorChar;
+		
+		private string _path;
 
-    public class File {
+		public File(string path)
+		{
+			_path = path;
+		}
 
-        private String path;
+		public File(string dir, string file)
+		{
+			if (dir == null)
+			{
+				_path = file;
+			}
+			else
+			{
+				_path = Path.Combine(dir, file);
+			}
+		}
 
-        public static char separator = Path.DirectorySeparatorChar;
+		public virtual bool delete()
+		{
+			if (exists())
+			{
+				System.IO.File.Delete(_path);
+				return !exists();
+			}
+			return false;
+		}
 
-        public File(String path) {
-            this.path = path;
-        }
+		public bool exists()
+		{
+			return System.IO.File.Exists(_path) || Directory.Exists(_path);
+		}
 
-        public File(String dir, String file) {
-            if(dir == null) {
-                path = file;
-            } else {
-                if(dir.LastIndexOf(separator) != dir.Length) {
-                    dir += separator;
-                }
-                path = dir + file;
-            }
-        }
+		public string getAbsolutePath()
+		{
+			return _path;
+		}
 
-        public virtual bool delete() {
-            if(exists()) {
-                System.IO.File.Delete(path);
-                return !exists();
-            }
-            return false;
-        }
+		public string getName()
+		{
+			int index = _path.LastIndexOf(separator);
+			return _path.Substring(index + 1);
+		}
 
-        public bool exists() {
-            return System.IO.File.Exists(path) || System.IO.Directory.Exists(path);
-        }
+		public string getPath()
+		{
+			return _path;
+		}
 
-        public String getAbsolutePath() {
-            return path;
-        }
+		public bool isDirectory()
+		{
+			return Compat.isDirectory(_path);
+		}
 
-        public String getName() {
-            int index = path.LastIndexOf(separator);
-            return path.Substring(index + 1);
-        }
+		public long length()
+		{
+			return new FileInfo(_path).Length;
+		}
 
-        public String getPath() {
-            return path;
-        }
+		public string[] list()
+		{
+			return Directory.GetFiles(_path);
+		}
 
-        public bool isDirectory() {
-            return Compat.isDirectory(path);
-        }
+		public bool mkdir()
+		{
+			if (exists())
+			{
+				return false;
+			}
+			Directory.CreateDirectory(_path);
+			return exists();
+		}
 
-        public long length() {
-            return new System.IO.FileInfo(path).Length;
-        }
+		public bool mkdirs()
+		{
+			if (exists())
+			{
+				return false;
+			}
+			int pos = _path.LastIndexOf(separator);
+			if (pos > 0)
+			{
+				new File(_path.Substring(0, pos)).mkdirs();
+			}
+			return mkdir();
+		}
 
-        public String[] list() {
-            return Directory.GetFiles(path);
-        }
-
-        public bool mkdir() {
-            if(exists()) {
-                return false;
-            }
-            System.IO.Directory.CreateDirectory(path);
-            return exists();
-        }
-
-        public bool mkdirs() {
-            if(exists()) {
-                return false;
-            }
-            int pos = path.LastIndexOf(separator);
-            if(pos > 0) {
-                new File(path.Substring(0, pos)).mkdirs();
-            }
-            return mkdir();
-        }
-
-        public void renameTo(File file) {
-            new FileInfo(path).MoveTo(file.getPath());
-        }
-    }
+		public void renameTo(File file)
+		{
+			new FileInfo(_path).MoveTo(file.getPath());
+		}
+	}
 }
-

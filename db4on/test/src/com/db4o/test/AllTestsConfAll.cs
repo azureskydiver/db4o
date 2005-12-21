@@ -1,6 +1,7 @@
 /* Copyright (C) 2004	db4objects Inc.	  http://www.db4o.com */
 
 using System;
+using System.IO;
 using com.db4o.test.acid;
 using com.db4o.test.inside.query;
 using com.db4o.test.soda;
@@ -223,7 +224,7 @@ namespace com.db4o.test {
 		/**
 		 * path to blobs held externally
 		 */
-		public static String BLOB_PATH = "test/TEMP/db4oTestBlobs";
+		public static String BLOB_PATH = Path.Combine(Path.GetTempPath(), "BLOBS");
 		
 
 	}
