@@ -99,6 +99,9 @@ public class StandaloneBrowser implements IControlFactory {
     public StandaloneBrowser(String[] args) {
     	if (args.length > 0) {
     		commandLineFileName = args[0];
+    		if(commandLineFileName==null||commandLineFileName.trim().length()<1) {
+    			commandLineFileName=null;
+    		}
     	}
 	}
 

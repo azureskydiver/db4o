@@ -707,7 +707,11 @@
 		</filehead>
 
 		<zip destfile="${file.java.core.src.zip}">
-			<fileset dir="${dir.dist.java.src}" includes="*/**" excludes="*.zip" />
+			<fileset dir="${dir.dist.java.src}" includes="*/**" excludes="*.zip">
+				<include name="*/**" />
+				<exclude name="*.zip" />
+				<exclude name="tools/**" />
+			</fileset>
 		</zip>
 		<delete includeemptydirs="true">
 			<fileset dir="${dir.dist.java.src}">
