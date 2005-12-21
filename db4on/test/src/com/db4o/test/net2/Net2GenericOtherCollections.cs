@@ -1,160 +1,188 @@
 using System;
 using System.Collections.Generic;
+using com.db4o.ext;
 
 namespace com.db4o.test.net2
 {
-	public class Net2GenericOtherCollections
-	{
-		public void store()
-		{
-			CHolder ch = new CHolder();
-			ch.CreateCollections();
-			Tester.store(ch);
-		}
+    public class Net2GenericOtherCollections
+    {
 
-		public void test()
-		{
-			CHolder ch = QueryHolder();
-			ch.TestBeforeUpdate();
-			ch.Update();
-			Tester.reOpen();
-			ch = QueryHolder();
-			ch.TestAfterUpdate();
-		}
+        public void store()
+        {
+            CHolder ch = new CHolder();
+            ch.CreateCollections();
+            Tester.store(ch);
+        }
 
-		private CHolder QueryHolder()
-		{
-			return Tester.objectContainer().query<CHolder>(typeof(CHolder))[0];
-		}
-	}
+        public void test()
+        {
+            CHolder ch = QueryHolder();
+            ch.TestBeforeUpdate();
+            ch.Update();
+            Tester.reOpen();
+            ch = QueryHolder();
+            ch.TestAfterUpdate();
+        }
 
-	public class CHolder
-	{
-		private LinkedList<CItem> linkedList;
-		private Queue<CItem> queue;
-		private SortedDictionary<CItem, string> sortedDictionary;
-		private SortedList<CItem, string> sortedList;
-		private Stack<CItem> stack;
+        private CHolder QueryHolder()
+        {
+            return Tester.objectContainer().query<CHolder>(typeof(CHolder))[0];
+        }
 
-		public void CreateCollections()
-		{
-			linkedList = new LinkedList<CItem>();
-			for (int i = 0; i < 10; i++)
-			{
-				linkedList.AddLast(new CItem("ll" + i));
-			}
+    }
 
-			queue = new Queue<CItem>();
-			for (int i = 0; i < 10; i++)
-			{
-				queue.Enqueue(new CItem("q" + i));
-			}
+    public class CHolder
+    {
+        LinkedList <CItem> linkedList;
+        Queue<CItem> queue;
+        SortedDictionary<CItem,string> sortedDictionary;
+        SortedList<CItem,string> sortedList;
+        Stack<CItem> stack;
 
-			sortedDictionary = new SortedDictionary<CItem, string>();
-			for (int i = 0; i < 10; i++)
-			{
-				sortedDictionary.Add(new CItem("sd" + i), "sd" + i);
-			}
+        public void CreateCollections()
+        {
+            linkedList = new LinkedList<CItem>();
+            for(int i = 0; i < 10; i++)
+            {
+                linkedList.AddLast(new CItem("ll" + i));
+            }
 
-			sortedList = new SortedList<CItem, string>();
-			for (int i = 0; i < 10; i++)
-			{
-				sortedList.Add(new CItem("sl" + i), "sl" + i);
-			}
+            queue = new Queue<CItem>();
+            for (int i = 0; i < 10; i++)
+            {
+                queue.Enqueue(new CItem("q" + i));
+            }
 
-			stack = new Stack<CItem>();
-			for (int i = 0; i < 10; i++)
-			{
-				stack.Push(new CItem("st" + i));
-			}
-		}
+            sortedDictionary = new SortedDictionary<CItem, string>();
+            for (int i = 0; i < 10; i++)
+            {
+                sortedDictionary.Add(new CItem("sd" + i), "sd" + i);
+            }
 
-		public void TestBeforeUpdate()
-		{
-			CheckLinkedList();
-			CheckQueue();
+            sortedList = new SortedList<CItem,string>();
+            for (int i = 0; i < 10; i++)
+            {
+                sortedList.Add(new CItem("sl" + i), "sl" + i);
+            }
 
-			Tester.objectContainer().activate(sortedDictionary, int.MaxValue);
-			CheckSortedDictionary();
-		}
+            stack = new Stack<CItem>();
+            for (int i = 0; i < 10; i++)
+            {
+                stack.Push(new CItem("st" + i));
+            }
 
-		private void CheckLinkedList()
-		{
-			Tester.ensure(linkedList.Last.Value.Equals(new CItem("ll9")));
-		}
+        }
 
-		private void CheckQueue()
-		{
-			for (int i = 0; i < 10; i++)
-			{
-				Tester.ensure(queue.Dequeue().Equals(new CItem("q" + i)));
-			}
-		}
+        public void TestBeforeUpdate()
+        {
+            ExtObjectContainer oc = Tester.objectContainer();
 
-		private void CheckSortedDictionary()
-		{
-			foreach (CItem cItem in sortedDictionary.Keys)
-			{
-				Console.WriteLine(cItem.Name);
-			}
-			for (int i = 0; i < 10; i++)
-			{
-				Object obj = sortedDictionary[new CItem("sd" + i)];
-				Tester.ensure(obj.Equals("sd" + i));
-			}
-		}
+            Tester.ensure(linkedList.Last.Value.Equals(new CItem("ll9")));
 
-		public void Update()
-		{
-			ObjectContainer oc = Tester.objectContainer();
+            for (int i = 0; i < 10; i++)
+            {
+                Tester.ensure(queue.Dequeue().Equals(new CItem("q" + i)));
+            }
 
-			linkedList.AddLast(new CItem("update"));
-			oc.set(linkedList);
-		}
+            // Sorted dictionary needs explicit activation since it uses a TreeSet underneath.
+            oc.activate(sortedDictionary, int.MaxValue);
+            for (int i = 0; i < 10; i++)
+            {
+                Object obj = sortedDictionary[new CItem("sd" + i)];
+                Tester.ensure(obj.Equals("sd" + i));
+            }
 
-		public void TestAfterUpdate()
-		{
-			// Tester.ensure(linkedList.Last.Value.Equals(new CItem("update")));
-		}
-	}
+            for (int i = 0; i < 10; i++)
+            {
+                Tester.ensure(sortedList[new CItem("sl" + i)].Equals("sl" + i));
+            }
 
-	public class CItem : IComparable
-	{
-		private string _name;
+            for (int i = 9; i >= 0; i--)
+            {
+                Tester.ensure(stack.Pop().Equals(new CItem("st" + i)));
+            }
 
-		public CItem()
-		{
-		}
+        }
 
-		public CItem(string name)
-		{
-			_name = name;
-		}
+        public void Update()
+        {
+            ObjectContainer oc = Tester.objectContainer();
+            
+            linkedList.AddLast(new CItem("update"));
+            oc.set(linkedList);
 
-		public override int GetHashCode()
-		{
-			return _name.GetHashCode();
-		}
+            queue.Enqueue(new CItem("update"));
+            oc.set(queue);
 
-		public override bool Equals(object obj)
-		{
-			CItem other = obj as CItem;
-			if (other == null)
-			{
-				return false;
-			}
-			return _name == other._name;
-		}
+            sortedDictionary.Add(new CItem("update"), "update");
+            oc.set(sortedDictionary);
 
-		public string Name
-		{
-			get { return _name; }
-		}
+            sortedList.Add(new CItem("update"), "update");
+            oc.set(sortedList);
 
-		public int CompareTo(Object other)
-		{
-			CItem otherCItem = other as CItem;
-			return _name.CompareTo(otherCItem._name);
-		}
-	}
+            stack.Push(new CItem("update"));
+            oc.set(stack);
+        }
+
+        public void TestAfterUpdate()
+        {
+            Tester.ensure(linkedList.Last.Value.Equals(new CItem("update")));
+
+            Tester.ensure(queue.Dequeue().Equals(new CItem("update")));
+
+            Tester.ensure(sortedList[new CItem("update")].Equals("update"));
+
+            Tester.ensure(stack.Pop().Equals(new CItem("update")));
+
+        }
+
+    }
+
+    public class CItem : IComparable
+    {
+        string _name;
+
+        public CItem()
+        {
+        }
+
+        public CItem(string name)
+        {
+            _name = name;
+        }
+
+        public override int GetHashCode()
+        {
+            return _name.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            CItem other = obj as CItem;
+
+            if (other == null)
+            {
+                return false;
+            }
+
+            return _name.Equals(other._name);
+        }
+
+        public string Name()
+        {
+            return _name;
+        }
+
+        public int CompareTo(Object other)
+        {
+            CItem otherCItem = other as CItem;
+            return _name.CompareTo(otherCItem._name);
+        }
+
+    }
 }
