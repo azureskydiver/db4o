@@ -38,14 +38,14 @@ runtest: buildtest
 	$(MONO) ./$(EXE_TEST_PATH)
 
 buildtest: buildtools
-	find $(DIR_SRC_TEST) -name "*.cs"|grep -v "/compact/"|xargs $(MCS) $(MCS_OPTS) -target:exe -r:$(DLL_CORE) -r:$(DLL_TOOLS) -main:$(MAIN_TEST) -out:$(EXE_TEST_PATH)
+	find $(DIR_SRC_TEST) -name "*.cs"|grep -v "/compact/"|grep -v "/compact-2005/"|grep -v "/net2/"|xargs $(MCS) $(MCS_OPTS) -target:exe -r:$(DLL_CORE) -r:$(DLL_TOOLS) -main:$(MAIN_TEST) -out:$(EXE_TEST_PATH)
 
 buildtools: buildcore
 	find $(DIR_SRC_TOOLS) -name "*.cs"|xargs $(MCS) $(MCS_OPTS) -target:library -r:$(DLL_CORE) -out:$(DLL_TOOLS)
 
 buildcore: init
 	#cp dll/db4o.dll $(DLL_CORE)
-	find $(DIR_SRC_CORE) -name "*.cs"|grep -v -E "src/compact/"|xargs $(MCS) $(MCS_OPTS) -target:library -out:$(DLL_CORE)
+	find $(DIR_SRC_CORE) -name "*.cs"|grep -v -E "src/compact/"|grep -v -E "src/compact-2005/"|xargs $(MCS) $(MCS_OPTS) -target:library -out:$(DLL_CORE)
 
 init:
 ifndef RPM_BUILD_ROOT
