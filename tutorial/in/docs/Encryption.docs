@@ -29,7 +29,7 @@ first version which includes the XTeaEncryptionFileAdapter (the encryption ._
 IoAdapter plug-in for db4o file IO that realizes XTEA).
 
 2)	Configure db4o to add this encryption mechanism:
-.c Db4o.configure ().io(new XTeaEncryptionFileAdapter(“password”)); ..
+.c Db4o.configure ().io(new XTeaEncryptionFileAdapter(ï¿½passwordï¿½)); ..
 This is the simplest way to add the encryption adapter. But the ._
 XTEAEncryptionFileAdapter can also wrap other custom IoAdapters to use:
 .c Db4o.configure ().io(new XTeaEncryptionFileAdapter(new myIoAdapter(),"password")); ..
@@ -45,9 +45,9 @@ time (iterations = XTEA.ITERATIONS16).
 (iterations = XTEA.ITERATIONS32).
 - 64 rounds achieve the best security but db4o will be about 20 per cent ._
 slower then without encryption (iterations = XTEA.ITERATIONS64).
-.c Db4o.configure ().io(new XTeaEncryptionFileAdapter( “password”, iteraions) ); ..
+.c Db4o.configure ().io(new XTeaEncryptionFileAdapter( ï¿½passwordï¿½, iteraions) ); ..
 Or, if you wish to use your own IoAdapter:
-.c Db4o.configure ().io(new XTeaEncryptionFileAdapter(new myIoAdapter(), “password”, iteraions) ); ..
+.c Db4o.configure ().io(new XTeaEncryptionFileAdapter(new myIoAdapter(), ï¿½passwordï¿½, iteraions) ); ..
 
 Keep in mind that all configurations must be set before opening the ObjectContainer.
 
@@ -56,7 +56,7 @@ There is no possibility of changing the password on an existing file. You will n
 be able to access your data if you lose the password. Thus please keep your key! ._
 And make sure that you always use the same password when subsequently opening your ._
 encrypted files. You can, however open a new file with a different password and ._
-.l Replication replicate ..  (or .l Maintenance#Defragment defragment .. ) your ._
+.l Replication replicate ..  (or .l Defragment defragment .. ) your ._
 objects from one database to the other.
 
 Feel free to use XTeaEncryptionFileAdapter for your own purposes. You may modify the ._
