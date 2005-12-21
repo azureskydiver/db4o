@@ -668,8 +668,9 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     final int getID1(Transaction ta, Object a_object) {
         checkClosed();
 
-        // TODO: this doesn't look transactional at all.
-        // Should it be transactional?
+        if(a_object == null){
+            return 0;
+        }
 
         YapObject yo = i_hcTree.hc_find(a_object);
         if (yo != null) {

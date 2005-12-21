@@ -11,23 +11,6 @@ import com.db4o.reflect.*;
  */
 public class GenericReflector implements Reflector, DeepClone {
 	
-	public interface ReflectClassPredicate {
-		boolean match(ReflectClass item);
-	}
-	
-	private static class CollectionUpdateDepthEntry {
-		
-		final ReflectClassPredicate _predicate;
-		
-		final int _depth;
-		
-		public CollectionUpdateDepthEntry(ReflectClassPredicate predicate,
-				int depth) {
-			_predicate = predicate;
-			_depth = depth;
-		}
-	}
-
     private Reflector _delegate;
     private GenericArrayReflector _array;
     
