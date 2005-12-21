@@ -2,32 +2,31 @@
 
 using System;
 using System.IO;
-using System.Collections;
 using System.Reflection;
-using System.Threading;
+using com.db4o.reflect;
+using j4o.lang;
+using Thread=System.Threading.Thread;
 
-namespace System.Runtime.CompilerServices 
+namespace System.Runtime.CompilerServices
 {
-
-	class IsVolatile 
+	internal class IsVolatile
 	{
 	}
 }
 
-namespace com.db4o 
+namespace com.db4o
 {
-
 	/// <exclude />
 	public class Compat
-	{		
-		static MethodInfo _hashMethod = getIdentityHashCodeMethod();
-		
-		private static MethodInfo getIdentityHashCodeMethod() 
+	{
+		private static MethodInfo _hashMethod = getIdentityHashCodeMethod();
+
+		private static MethodInfo getIdentityHashCodeMethod()
 		{
 			Assembly assembly = typeof(object).Assembly;
 
 			// CompactFramework
-			try 
+			try
 			{
 				Type t = assembly.GetType("System.PInvoke.EE");
 				return t.GetMethod(
@@ -35,40 +34,41 @@ namespace com.db4o
 					BindingFlags.Public |
 					BindingFlags.NonPublic |
 					BindingFlags.Static);
-			} 
-			catch(Exception e) 
+			}
+			catch (Exception e)
 			{
 			}
 
-            // We may be running the CF app on .NET Framework 1.1
-            // for profiling, let's give that a chance
+			// We may be running the CF app on .NET Framework 1.1
+			// for profiling, let's give that a chance
+			try
+			{
+				Type t = assembly.GetType(
+					"System.Runtime.CompilerServices.RuntimeHelpers");
+				return t.GetMethod(
+					"GetHashCode",
+					BindingFlags.Public |
+					BindingFlags.Static);
+			}
+			catch (Exception e)
+			{
+			}
 
-            try {
-                Type t = assembly.GetType(
-                    "System.Runtime.CompilerServices.RuntimeHelpers");
-                return t.GetMethod(
-                    "GetHashCode",
-                    BindingFlags.Public |
-                    BindingFlags.Static);
-            }
-            catch (Exception e) {
-            }
+			// and for completeness sake, let's provide .NET Framework 1.0
+			// compliance also so we can debug the CF app there too
+			return (typeof(Object)).GetMethod("GetHashCode");
 
-            // and for completeness sake, let's provide .NET Framework 1.0
-            // compliance also so we can debug the CF app there too
-            return (typeof(System.Object)).GetMethod("GetHashCode");
-			
 			return null;
 		}
-		
-		private static int _identityHashCode(object o) 
+
+		private static int _identityHashCode(object o)
 		{
-			return (int)_hashMethod.Invoke(null, new object[] { o });
+			return (int) _hashMethod.Invoke(null, new object[] {o});
 		}
-		
-		public static j4o.lang.IdentityHashCodeProvider.HashCodeFunction getIdentityHashCodeFunction() 
+
+		public static IdentityHashCodeProvider.HashCodeFunction getIdentityHashCodeFunction()
 		{
-			return new j4o.lang.IdentityHashCodeProvider.HashCodeFunction(_identityHashCode);
+			return new IdentityHashCodeProvider.HashCodeFunction(_identityHashCode);
 		}
 
 		public static void addShutDownHook(EventHandler handler)
@@ -97,7 +97,7 @@ namespace com.db4o
 
 		public static int getArrayRank(Type type)
 		{
-			if(type.Name.EndsWith(",]"))
+			if (type.Name.EndsWith(",]"))
 			{
 				return 2;
 			}
@@ -106,7 +106,7 @@ namespace com.db4o
 
 		public static bool isDirectory(string path)
 		{
-			return false;
+			return Directory.Exists(path);
 		}
 
 		public static void lockFileStream(FileStream fs)
@@ -117,8 +117,8 @@ namespace com.db4o
 		{
 			return 0;
 		}
-    
-		public static void notify(object obj) 
+
+		public static void notify(object obj)
 		{
 		}
 
@@ -126,7 +126,7 @@ namespace com.db4o
 		{
 		}
 
-		public static com.db4o.reflect.ReflectConstructor serializationConstructor(Type type)
+		public static ReflectConstructor serializationConstructor(Type type)
 		{
 			return null;
 		}
@@ -145,15 +145,14 @@ namespace com.db4o
 			return "";
 		}
 
-		public static void wait(object obj, long timeout) 
+		public static void wait(object obj, long timeout)
 		{
 		}
-        
-		static internal object wrapEvaluation(object evaluation) 
+
+		internal static object wrapEvaluation(object evaluation)
 		{
 			// FIXME: How to better support EvaluationDelegate on the CompactFramework?
 			return evaluation;
 		}
-        
 	}
 }

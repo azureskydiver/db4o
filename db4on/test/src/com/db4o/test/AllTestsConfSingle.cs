@@ -12,6 +12,7 @@ namespace com.db4o.test {
          */
         internal Type[] TESTS = new Type[]{
             typeof(com.db4o.test.SimplestPossible),
+            //typeof(com.db4o.test.ExternalBlobs),
             //typeof(com.db4o.test.soda.SodaNumberCoercion),
 #if NET_2_0
             typeof(net2.Net2GenericContainers),
