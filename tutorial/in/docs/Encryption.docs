@@ -37,10 +37,14 @@ XTEAEncryptionFileAdapter can also wrap other custom IoAdapters to use:
 3)	Choose your own password and number of cycles. The security of XTEA ._
 can be enhanced by increasing the number of iterations. There are four ._
 possible values: 
-- 8 rounds guarantee highest speed of db4o and lowest security.
-- 16 rounds assure high speed of db4o and sufficient security in the same time.
-- 32 rounds are ample for most applications, this is the default value.
-- 64 rounds achieve the best security but db4o will be about 20 per cent slower then without encryption.
+- 8 rounds guarantee highest speed of db4o and lowest security ._
+(iterations = XTEA.ITERATIONS8).
+- 16 rounds assure high speed of db4o and sufficient security in the same ._
+time (iterations = XTEA.ITERATIONS16).
+- 32 rounds are ample for most applications, this is the default value ._
+(iterations = XTEA.ITERATIONS32).
+- 64 rounds achieve the best security but db4o will be about 20 per cent ._
+slower then without encryption (iterations = XTEA.ITERATIONS64).
 .c Db4o.configure ().io(new XTeaEncryptionFileAdapter( “password”, iteraions) ); ..
 Or, if you wish to use your own IoAdapter:
 .c Db4o.configure ().io(new XTeaEncryptionFileAdapter(new myIoAdapter(), “password”, iteraions) ); ..
