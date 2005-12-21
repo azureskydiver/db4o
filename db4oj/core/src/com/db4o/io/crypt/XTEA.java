@@ -28,8 +28,14 @@ described in http://en.wikipedia.org/wiki/XTEA.
 */
 package com.db4o.io.crypt;
 
+/**
+ * @exclude
+ */
 public class XTEA {
 
+	/**
+	 * @exclude
+	 */
 	public final static class IterationSpec {
 		int _iterations;
 		int _deltaSumInitial;

@@ -31,6 +31,9 @@ edition, Chapter 18, P.436.
 */
 package com.db4o.io.crypt;
 
+/**
+ * @exclude
+ */
 public class KeyGenerator {
 	/**
 	 * default constructor, creates an instance of KeyGenerator.
