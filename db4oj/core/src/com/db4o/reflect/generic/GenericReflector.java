@@ -186,7 +186,7 @@ public class GenericReflector implements Reflector, DeepClone {
     }
 
     public boolean isCollection(ReflectClass candidate) {
-        candidate = candidate.getDelegate(); 
+        //candidate = candidate.getDelegate(); 
         Iterator4 i = _collectionPredicates.iterator();
         while(i.hasNext()){
             if (((ReflectClassPredicate)i.next()).match(candidate)) {
@@ -200,8 +200,12 @@ public class GenericReflector implements Reflector, DeepClone {
     }
 
     public void registerCollection(Class clazz) {
-		_collectionPredicates.add(classPredicate(clazz));
+		registerCollection(classPredicate(clazz));
     }
+
+	public void registerCollection(ReflectClassPredicate predicate) {
+		_collectionPredicates.add(predicate);
+	}
 
 	private ReflectClassPredicate classPredicate(Class clazz) {
 		final ReflectClass collectionClass = forClass(clazz);
