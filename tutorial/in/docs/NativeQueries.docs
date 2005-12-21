@@ -119,6 +119,8 @@ to write. Let's compare to a SODA query that finds all pilots ._
 with a given name or a score within a ._
 given range:
 
+.s com.db4o.f1.chapter1.NQExample#storePilots -out ..
+
 .s com.db4o.f1.chapter1.NQExample#retrieveComplexSODA ..
 
 Here is how the same query will look like with native query ._
