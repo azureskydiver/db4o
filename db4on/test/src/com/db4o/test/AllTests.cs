@@ -1,17 +1,8 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 using System;
-using System.Reflection;
-using System.IO;
-using j4o.io;
 using j4o.lang;
 using j4o.lang.reflect;
-using com.db4o;
-using com.db4o.query;
-using com.db4o.config;
-using com.db4o.test.cs;
-using com.db4o.tools;
-using com.db4o.test.soda;
 
 namespace com.db4o.test 
 {
@@ -72,7 +63,7 @@ namespace com.db4o.test
 		{
 			Db4o.configure().messageLevel(-1);
 			logConfiguration();
-			long time1 = j4o.lang.JavaSystem.currentTimeMillis();
+			long time1 = JavaSystem.currentTimeMillis();
 			if(DELETE_FILE)
 			{
 				Tester.delete();
@@ -96,7 +87,7 @@ namespace com.db4o.test
 				}
 				Tester.end();
 			}
-			time1 = j4o.lang.JavaSystem.currentTimeMillis() - time1;
+			time1 = JavaSystem.currentTimeMillis() - time1;
 			Console.WriteLine("\n\nAllTests completed.\nAssertions: " + Tester.assertionCount + "\nTime: " + time1 + "ms");
 			if(Tester.errorCount == 0)
 			{
@@ -221,7 +212,7 @@ namespace com.db4o.test
 
 		private Method getMethod(Object onObject, string methodName)
 		{
-			Class clazz = j4o.lang.Class.getClassForObject(onObject);
+			Class clazz = Class.getClassForObject(onObject);
 			foreach (Method m in clazz.getDeclaredMethods()) 
 			{
 				if (equalsIgnoringCase(methodName, m.getName()))
