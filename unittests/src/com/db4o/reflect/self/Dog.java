@@ -1,17 +1,19 @@
 package com.db4o.reflect.self;
 
 public class Dog extends Animal {
-	private Dog[] _parents;
-	private int _age;
+	public Dog[] _parents;
+	public int _age;
+	private int[] _prices;
 	
 	public Dog() {
-		this(null,0,new Dog[0]);
+		this(null,0,new Dog[0],new int[0]);
 	}
 	
-	public Dog(String name,int age,Dog[] parents) {
+	public Dog(String name,int age,Dog[] parents,int[] prices) {
 		super(name);
 		_age=age;
 		_parents=parents;
+		_prices=prices;
 	}
 
 	public int age() {
@@ -22,8 +24,12 @@ public class Dog extends Animal {
 		return _parents;
 	}
 	
+	public int[] prices() {
+		return _prices;
+	}
+	
 	public String toString() {
-		return "DOG: "+name()+"/"+age()+"/"+_parents.length;
+		return "DOG: "+name()+"/"+age()+"/"+_parents.length+"/"+_prices.length;
 	}
 	
 	public Object self_get(String fieldName) {
@@ -32,6 +38,9 @@ public class Dog extends Animal {
 		}
 		if(fieldName.equals("_parents")) {
 			return _parents;
+		}
+		if(fieldName.equals("_prices")) {
+			return _prices;
 		}
 		return super.self_get(fieldName);
 	}
@@ -43,6 +52,10 @@ public class Dog extends Animal {
 		}
 		if(fieldName.equals("_parents")) {
 			_parents=(Dog[])value;
+			return;
+		}
+		if(fieldName.equals("_prices")) {
+			_prices=(int[])value;
 			return;
 		}
 		super.self_set(fieldName,value);
