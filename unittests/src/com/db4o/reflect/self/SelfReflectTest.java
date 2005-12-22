@@ -18,8 +18,7 @@ public class SelfReflectTest extends TestCase {
 	public void testReflectorClassRetrieval() {
 		assertSelfClass(Dog.class, _reflector.forClass(Dog.class));
 		assertSelfClass(Dog.class, _reflector.forName(Dog.class.getName()));
-		assertSelfClass(Dog.class, _reflector.forObject(new Dog("Laika", 7,
-				new Dog[0])));
+		assertSelfClass(Dog.class, _reflector.forObject(new Dog("Laika", 7,new Dog[0],new int[0])));
 	}
 
 	public void testSelfClass() throws Exception {
@@ -50,7 +49,7 @@ public class SelfReflectTest extends TestCase {
 		assertFalse(selfClass.isInstance(new Object()));
 
 		ReflectField[] fields = selfClass.getDeclaredFields();
-		assertEquals(2, fields.length);
+		assertEquals(3, fields.length);
 		assertEquals(selfClass, selfClass.getDelegate());
 	}
 
@@ -94,14 +93,14 @@ public class SelfReflectTest extends TestCase {
 		assertFalse(selfClass.getDeclaredField("_parents").isTransient());
 
 		SelfClass superClass = (SelfClass) selfClass.getSuperclass();
-		assertTrue(superClass.getDeclaredField("_name").isPublic());
+		assertFalse(superClass.getDeclaredField("_name").isPublic());
 		assertFalse(superClass.getDeclaredField("_name").isStatic());
 		assertFalse(superClass.getDeclaredField("_name").isTransient());
 
 	}
 
 	public void testInstanceField() {
-		Dog laika = new Dog("Laika", 7, new Dog[0]);
+		Dog laika = new Dog("Laika", 7, new Dog[0],new int[0]);
 		ReflectField field = selfclass().getDeclaredField("_age");
 		Object value = field.get(laika);
 		assertEquals(new Integer(laika.age()), value);
@@ -122,8 +121,74 @@ public class SelfReflectTest extends TestCase {
 		Dog[] dogs = (Dog[]) arrayHandler.newInstance(_reflector
 				.forClass(Dog.class), 2);
 		assertEquals(2, dogs.length);
+		dogs = (Dog[]) arrayHandler.newInstance(_reflector.forClass(Dog.class), new int[]{2});
+		assertEquals(2, dogs.length);
+		assertFalse(arrayHandler.isNDimensional(arrayClass));
+		assertEquals(2,arrayHandler.getLength(dogs));
+		int[] dim=arrayHandler.dimensions(dogs);
+		assertEquals(1,dim.length);
+		assertEquals(dogs.length,dim[0]);
+		
+		dogs[0]=new Dog("Laika",7,new Dog[0],new int[0]);
+		dogs[1]=new Dog("Lassie",6,new Dog[0],new int[0]);
+		assertEquals(dogs[1],arrayHandler.get(dogs,1));	
+		Dog sharik = new Dog("Sharik",100,new Dog[0],new int[0]);
+		arrayHandler.set(dogs,1,sharik);
+		assertEquals(sharik,arrayHandler.get(dogs,1));	
+		
+		Object[] flattened=new Object[2];
+		int numFlat=arrayHandler.flatten(dogs, new int[]{2}, 0, flattened, 0);
+		assertEquals(dogs.length,numFlat);
+		for (int i = 0; i < dogs.length; i++) {
+			assertEquals(dogs[i],flattened[i]);
+		}
+		int numShape=arrayHandler.shape(flattened, 0, dogs, new int[]{2}, 0);
+		assertEquals(flattened.length,numShape);
+		for (int i = 0; i < dogs.length; i++) {
+			assertEquals(flattened[i],dogs[i]);
+		}
 	}
 
+	public void testPrimitiveArray() {
+		SelfClass arrayClass = (SelfClass) _reflector.forClass(int[].class);
+		assertTrue(arrayClass.isArray());
+		assertEquals(_reflector.forClass(Integer.class).getName(), arrayClass
+				.getComponentType().getName());
+		SelfArray arrayHandler = (SelfArray) _reflector.array();
+		assertEquals(_reflector.forClass(Integer.class).getName(), arrayHandler
+				.getComponentType(arrayClass).getName());
+		int[] prices = (int[]) arrayHandler.newInstance(_reflector.forClass(Integer.class),2);
+		assertEquals(2, prices.length);
+		prices = (int[]) arrayHandler.newInstance(_reflector.forClass(int.class), new int[]{2});
+		assertEquals(2, prices.length);
+
+		assertFalse(arrayHandler.isNDimensional(arrayClass));
+		assertEquals(prices.length,arrayHandler.getLength(prices));
+		int[] dim=arrayHandler.dimensions(prices);
+		assertEquals(1,dim.length);
+		assertEquals(prices.length,dim[0]);
+
+		prices[0]=3;
+		prices[1]=1;
+		assertEquals(new Integer(prices[1]),arrayHandler.get(prices,1));	
+		arrayHandler.set(prices,1,new Integer(2));
+		assertEquals(2,prices[1]);
+		assertEquals(new Integer(2),arrayHandler.get(prices,1));	
+		
+		Object[] flattened=new Object[2];
+		int numFlat=arrayHandler.flatten(prices, new int[]{2}, 0, flattened, 0);
+		assertEquals(prices.length,numFlat);
+		for (int i = 0; i < prices.length; i++) {
+			assertEquals(new Integer(prices[i]),flattened[i]);
+		}
+		int numShape=arrayHandler.shape(flattened, 0, prices, new int[]{2}, 0);
+		assertEquals(flattened.length,numShape);
+		for (int i = 0; i < prices.length; i++) {
+			assertEquals(flattened[i],new Integer(prices[i]));
+		}
+
+	}
+	
 	private SelfClass selfclass() {
 		SelfClass selfClass = new SelfClass(_reflector, _registry, Dog.class);
 		return selfClass;

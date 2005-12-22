@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.db4o.reflect.self.*;
 
+/* GENERATE */
 public class RegressionDogSelfReflectionRegistry extends SelfReflectionRegistry {
 	private final static Hashtable CLASSINFO;
 
@@ -18,7 +19,10 @@ public class RegressionDogSelfReflectionRegistry extends SelfReflectionRegistry 
 								new FieldInfo("_age", Integer.class, true,
 										false, false),
 								new FieldInfo("_parents", Dog[].class, true,
-										false, false) }));
+										false, false), 
+								new FieldInfo("_prices", int[].class, true,
+										false, false),
+				}));
 		// FIELDINFO.put(P1Object.class, new FieldInfo[]{});
 	}
 
@@ -33,7 +37,7 @@ public class RegressionDogSelfReflectionRegistry extends SelfReflectionRegistry 
 		if (Animal.class.isAssignableFrom(clazz)) {
 			return new Animal[length];
 		}
-		return null;
+		return super.arrayFor(clazz, length);
 	}
 
 	public Class componentType(Class clazz) {
@@ -43,6 +47,6 @@ public class RegressionDogSelfReflectionRegistry extends SelfReflectionRegistry 
 		if (Animal[].class.isAssignableFrom(clazz)) {
 			return Animal.class;
 		}
-		return null;
+		return super.componentType(clazz);
 	}
 }

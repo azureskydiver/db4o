@@ -8,15 +8,14 @@ public class UnitDogSelfReflectionRegistry extends SelfReflectionRegistry {
 	static {
 		CLASSINFO = new Hashtable(2);
 		CLASSINFO.put(Animal.class, new ClassInfo(true, Object.class,
-				new FieldInfo[] { new FieldInfo("_name", String.class, true,
-						false, false) }));
+				new FieldInfo[] { new FieldInfo("_name", String.class, false,false, false) }));
 		CLASSINFO.put(Dog.class,
 				new ClassInfo(false, Animal.class,
 						new FieldInfo[] {
-								new FieldInfo("_age", Integer.class, true,
-										false, false),
-								new FieldInfo("_parents", Dog[].class, true,
-										false, false) }));
+								new FieldInfo("_age", Integer.class, true, false, false),
+								new FieldInfo("_parents", Dog[].class, true, false, false),
+								new FieldInfo("_prices", int[].class, false, false, false)})
+		);
 	}
 
 	public ClassInfo infoFor(Class clazz) {
@@ -30,7 +29,7 @@ public class UnitDogSelfReflectionRegistry extends SelfReflectionRegistry {
 		if (Animal.class.isAssignableFrom(clazz)) {
 			return new Animal[length];
 		}
-		return null;
+		return super.arrayFor(clazz, length);
 	}
 
 	public Class componentType(Class clazz) {
@@ -40,6 +39,6 @@ public class UnitDogSelfReflectionRegistry extends SelfReflectionRegistry {
 		if (Animal[].class.isAssignableFrom(clazz)) {
 			return Animal.class;
 		}
-		return null;
+		return super.componentType(clazz);
 	}
 }

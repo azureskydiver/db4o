@@ -12,19 +12,24 @@ public class SelfArray implements ReflectArray {
 	}
 
 	public int[] dimensions(Object arr) {
-		// TODO Auto-generated method stub
-		return null;
+		return new int[]{getLength(arr)};
 	}
 
 	public int flatten(Object a_shaped, int[] a_dimensions,
 			int a_currentDimension, Object[] a_flat, int a_flatElement) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(a_shaped instanceof Object[]) {
+			Object[] shaped=(Object[])a_shaped;
+			System.arraycopy(shaped, 0, a_flat, 0, shaped.length);
+			return shaped.length;
+		}
+		return _registry.flattenArray(a_shaped,a_flat);
 	}
 
 	public Object get(Object onArray, int index) {
-		// TODO Auto-generated method stub
-		return null;
+		if(onArray instanceof Object[]) {
+			return ((Object[])onArray)[index];
+		}
+		return _registry.getArray(onArray,index);
 	}
 
 	public ReflectClass getComponentType(ReflectClass a_class) {
@@ -32,12 +37,13 @@ public class SelfArray implements ReflectArray {
 	}
 
 	public int getLength(Object array) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(array instanceof Object[]) {
+			return ((Object[])array).length;
+		}
+		return _registry.arrayLength(array);
 	}
 
 	public boolean isNDimensional(ReflectClass a_class) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -46,19 +52,25 @@ public class SelfArray implements ReflectArray {
 	}
 
 	public Object newInstance(ReflectClass componentType, int[] dimensions) {
-		// TODO Auto-generated method stub
-		return null;
+		return newInstance(componentType,dimensions[0]);
 	}
 
 	public void set(Object onArray, int index, Object element) {
-		// TODO Auto-generated method stub
-
+		if(onArray instanceof Object[]) {
+			((Object[])onArray)[index]=element;
+			return;
+		}
+		_registry.setArray(onArray,index,element);
 	}
 
 	public int shape(Object[] a_flat, int a_flatElement, Object a_shaped,
 			int[] a_dimensions, int a_currentDimension) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(a_shaped instanceof Object[]) {
+			Object[] shaped=(Object[])a_shaped;
+			System.arraycopy(a_flat, 0, shaped, 0, a_flat.length);
+			return a_flat.length;
+		}
+		return _registry.shapeArray(a_flat,a_shaped);
 	}
 
 }
