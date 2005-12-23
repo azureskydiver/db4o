@@ -80,11 +80,22 @@ namespace j4o.lang
 					Consume();
 					return NextToken();
 				default:
-					if (char.IsLetter(ch)) return Id();
+					if (IsIdStart(ch)) return Id();
 					if (char.IsDigit(ch)) return NumberOrVersion();
 					break;
 			}
 			throw new Exception(string.Format("Unexpected char '{0}'", ch));
+		}
+
+		private static bool IsIdStart(char ch)
+		{
+			switch (ch)
+			{
+				case '_':
+				case '<': // c# compiler generated classes
+					return true;
+			}
+			return char.IsLetter(ch);
 		}
 
 		private Token Id()
@@ -95,7 +106,9 @@ namespace j4o.lang
 				if (!char.IsLetterOrDigit(ch)
 				    && '.' != ch
 					&& '-' != ch
-					&& '_' != ch)
+					&& '_' != ch
+					&& '<' != ch
+					&& '>' != ch)
 				{
 					break;
 				}
@@ -116,7 +129,7 @@ namespace j4o.lang
 				{
 					kind = TokenKind.VersionNumber;
 				}
-				else if (!char.IsDigit(ch))
+				else if (!IsHexDigit(ch))
 				{
 					break;
 				}
@@ -124,6 +137,16 @@ namespace j4o.lang
 			}
 			while (!AtEOF);
 			return TokenFromBuffer(kind);
+		}
+
+		private static bool IsHexDigit(char ch)
+		{
+			return char.IsDigit(ch) || IsHexLetter(ch);
+		}
+
+		private static bool IsHexLetter(char ch)
+		{
+			return (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f');
 		}
 
 		private void ConsumeAndBuffer(char ch)

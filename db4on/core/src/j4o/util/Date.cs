@@ -38,4 +38,5 @@ namespace j4o.util {
             this.javaMilliSeconds = javaMilliSeconds;
         }
     }
+
 }

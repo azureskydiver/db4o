@@ -6,4 +6,5 @@ namespace j4o.lang {
 
     public class CloneNotSupportedException : Exception {
     }
+
 }
