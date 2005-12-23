@@ -2,6 +2,11 @@
 
 using System;
 using System.IO;
+
+#if NET || NET_2_0
+using System.Runtime.InteropServices;
+#endif
+
 using com.db4o;
 
 namespace j4o.io {
@@ -9,6 +14,11 @@ namespace j4o.io {
     public class RandomAccessFile {
 
         private FileStream fileStream;
+
+#if NET || NET_2_0
+        [DllImport("kernel32.dll", SetLastError=true)] 
+        static extern int FlushFileBuffers(IntPtr fileHandle); 
+#endif
 
         public RandomAccessFile(String file, String fileMode) {
             fileStream = new FileStream(file, FileMode.OpenOrCreate,
@@ -38,6 +48,11 @@ namespace j4o.io {
 
         public void sync() {
             fileStream.Flush();
+
+#if NET || NET_2_0
+        FlushFileBuffers(fileStream.Handle);
+#endif
+
         }
         
         public RandomAccessFile getFD() {

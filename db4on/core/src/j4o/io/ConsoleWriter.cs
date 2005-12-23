@@ -19,4 +19,5 @@ namespace j4o.io {
             Console.WriteLine(obj);
         }
     }
+
 }

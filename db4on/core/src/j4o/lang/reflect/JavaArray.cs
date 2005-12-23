@@ -26,4 +26,5 @@ namespace j4o.lang.reflect {
             return Array.CreateInstance(elementType.getNetType(), dimensions);
         }
     }
+
 }

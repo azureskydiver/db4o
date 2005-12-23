@@ -121,6 +121,11 @@ namespace j4o.lang
 
 		private System.Reflection.Assembly ResolveAssembly()
 		{
+			if (null == _assemblyName.Version)
+			{
+				return LoadUnversionedAssembly(_assemblyName);
+			}
+			
 			Assembly found = null;
 			try
 			{
@@ -130,24 +135,21 @@ namespace j4o.lang
 			{
 				AssemblyName unversioned = (AssemblyName)_assemblyName.Clone();
 				unversioned.Version = null;
-#if CF_1_0
-                found = Assembly.Load(unversioned);
-#else
-				try
-				{
-					found = Assembly.Load(unversioned);
-				}
-				catch (Exception)
-				{
-					found = Assembly.LoadWithPartialName(unversioned.FullName);
-					if (null == found)
-					{
-						throw;
-					}
-				}
-#endif
+				found = LoadUnversionedAssembly(unversioned);
 			}
 			return found;
+		}
+
+		private Assembly LoadUnversionedAssembly(AssemblyName unversioned)
+		{	
+#if CF_1_0
+            return Assembly.Load(unversioned);
+#else
+			Assembly found = Assembly.LoadWithPartialName(unversioned.FullName);
+			return found == null
+			       	? Assembly.Load(unversioned)
+			       	: found;
+#endif
 		}
 	}
 
@@ -196,7 +198,13 @@ namespace j4o.lang
 
 		public override Type Resolve()
 		{
+#if NET_2_0
 			return _elementType.Resolve().MakePointerType();
+#else
+			StringBuilder builder = new StringBuilder();
+			AppendTypeName(builder);
+			return _elementType.Resolve().Assembly.GetType(builder.ToString(), true);
+#endif
 		}
 	}
 
@@ -243,10 +251,14 @@ namespace j4o.lang
 
 		public override Type Resolve()
 		{
+#if NET_2_0
 			Type baseType = base.Resolve();
 			return _genericArguments.Length > 0
 				? baseType.MakeGenericType(Resolve(_genericArguments))
 				: baseType;
+#else
+			throw new System.NotSupportedException();
+#endif
 		}
 
 		Type[] Resolve(TypeReference[] typeRefs)
@@ -281,8 +293,3 @@ namespace j4o.lang
 		}
 	}
 }
-
-
-
-
-

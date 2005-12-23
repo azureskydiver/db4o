@@ -28,4 +28,5 @@ namespace j4o.io {
             textWriter.WriteLine(obj);
         }
     }
+
 }
