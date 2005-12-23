@@ -21,7 +21,7 @@ namespace com.db4o.inside.freespace
 		{
 			if (systemType == 0)
 			{
-				return FM_IX;
+				return FM_RAM;
 			}
 			return systemType;
 		}

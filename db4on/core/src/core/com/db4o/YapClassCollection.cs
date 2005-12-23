@@ -47,7 +47,7 @@ namespace com.db4o
 			}
 			if (yapClass.getID() == 0)
 			{
-				yapClass.write(i_stream, i_systemTrans);
+				yapClass.write(i_systemTrans);
 			}
 			i_yapClassByID.put(yapClass.getID(), yapClass);
 		}
@@ -175,7 +175,7 @@ namespace com.db4o
 			int id = yapClass.getID();
 			if (id == 0)
 			{
-				yapClass.write(i_stream, i_stream.getSystemTransaction());
+				yapClass.write(i_stream.getSystemTransaction());
 				id = yapClass.getID();
 			}
 			if (i_yapClassByID.get(id) == null)

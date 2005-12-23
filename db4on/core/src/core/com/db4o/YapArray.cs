@@ -446,6 +446,10 @@ namespace com.db4o
 
 		public override bool isEqual(object obj)
 		{
+			if (obj == null)
+			{
+				return false;
+			}
 			object[] compareWith = allElements(obj);
 			for (int j = 0; j < compareWith.Length; j++)
 			{

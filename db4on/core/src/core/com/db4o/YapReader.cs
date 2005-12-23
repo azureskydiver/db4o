@@ -136,7 +136,7 @@ namespace com.db4o
 				int ii = _offset + com.db4o.YapConst.INTEGER_BYTES;
 				while (_offset < ii)
 				{
-					ret = (ret << 8) + (_buffer[_offset++] & 0xff);
+					ret = (ret << 8) + (_buffer[_offset++] & unchecked((int)(0xff)));
 				}
 				return ret;
 			}

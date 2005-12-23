@@ -345,30 +345,33 @@ namespace com.db4o
 		internal override com.db4o.QCon shareParent(object a_object, bool[] removeExisting
 			)
 		{
-			if (i_parent != null)
+			if (i_parent == null)
 			{
-				if (i_field.canHold(a_object))
-				{
-					return i_parent.addSharedConstraint(i_field, a_object);
-				}
+				return null;
 			}
-			return null;
+			object obj = i_field.coerce(a_object);
+			if (obj == com.db4o.foundation.No4.INSTANCE)
+			{
+				return null;
+			}
+			return i_parent.addSharedConstraint(i_field, obj);
 		}
 
 		internal override com.db4o.QConClass shareParentForClass(com.db4o.reflect.ReflectClass
 			 a_class, bool[] removeExisting)
 		{
-			if (i_parent != null)
+			if (i_parent == null)
 			{
-				if (i_field.canHold(a_class))
-				{
-					com.db4o.QConClass newConstraint = new com.db4o.QConClass(i_trans, i_parent, i_field
-						, a_class);
-					i_parent.addConstraint(newConstraint);
-					return newConstraint;
-				}
+				return null;
 			}
-			return null;
+			if (!i_field.canHold(a_class))
+			{
+				return null;
+			}
+			com.db4o.QConClass newConstraint = new com.db4o.QConClass(i_trans, i_parent, i_field
+				, a_class);
+			i_parent.addConstraint(newConstraint);
+			return newConstraint;
 		}
 
 		internal object translate(object candidate)

@@ -24,8 +24,8 @@ namespace com.db4o
 			checkBufferLength(a_length);
 			for (int ii = 0; ii < a_length; ii++)
 			{
-				chars[ii] = (char)((bytes._buffer[bytes._offset++] & 0xff) | ((bytes._buffer[bytes
-					._offset++] & 0xff) << 8));
+				chars[ii] = (char)((bytes._buffer[bytes._offset++] & unchecked((int)(0xff))) | ((
+					bytes._buffer[bytes._offset++] & unchecked((int)(0xff))) << 8));
 			}
 			return new string(chars, 0, a_length);
 		}
@@ -37,7 +37,8 @@ namespace com.db4o
 			int j = 0;
 			for (int ii = 0; ii < len; ii++)
 			{
-				chars[ii] = (char)((a_bytes[j++] & 0xff) | ((a_bytes[j++] & 0xff) << 8));
+				chars[ii] = (char)((a_bytes[j++] & unchecked((int)(0xff))) | ((a_bytes[j++] & unchecked(
+					(int)(0xff))) << 8));
 			}
 			return new string(chars, 0, len);
 		}
@@ -52,7 +53,7 @@ namespace com.db4o
 			int len = writetoBuffer(_string);
 			for (int i = 0; i < len; i++)
 			{
-				bytes._buffer[bytes._offset++] = (byte)(chars[i] & 0xff);
+				bytes._buffer[bytes._offset++] = (byte)(chars[i] & unchecked((int)(0xff)));
 				bytes._buffer[bytes._offset++] = (byte)(chars[i] >> 8);
 			}
 		}
@@ -64,7 +65,7 @@ namespace com.db4o
 			int j = 0;
 			for (int i = 0; i < len; i++)
 			{
-				bytes[j++] = (byte)(chars[i] & 0xff);
+				bytes[j++] = (byte)(chars[i] & unchecked((int)(0xff)));
 				bytes[j++] = (byte)(chars[i] >> 8);
 			}
 			return bytes;

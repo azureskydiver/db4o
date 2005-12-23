@@ -129,5 +129,47 @@ namespace com.db4o
 		{
 			return i_trans.i_stream;
 		}
+
+		public virtual void sort(com.db4o.query.QueryComparator cmp)
+		{
+			sort(cmp, 0, size() - 1);
+			reset();
+		}
+
+		private void sort(com.db4o.query.QueryComparator cmp, int from, int to)
+		{
+			if (to - from < 1)
+			{
+				return;
+			}
+			object pivot = get(to);
+			int left = from;
+			int right = to;
+			while (left < right)
+			{
+				while (left < right && cmp.compare(pivot, get(left)) < 0)
+				{
+					left++;
+				}
+				while (left < right && cmp.compare(pivot, get(right)) >= 0)
+				{
+					right--;
+				}
+				swap(left, right);
+			}
+			swap(to, right);
+			sort(cmp, from, right - 1);
+			sort(cmp, right + 1, to);
+		}
+
+		private void swap(int left, int right)
+		{
+			if (left != right)
+			{
+				int swap = i_content[left];
+				i_content[left] = i_content[right];
+				i_content[right] = swap;
+			}
+		}
 	}
 }

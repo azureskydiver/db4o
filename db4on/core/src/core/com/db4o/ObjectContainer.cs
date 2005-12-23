@@ -236,6 +236,16 @@ namespace com.db4o
 		/// <returns>a new Query object</returns>
 		com.db4o.query.Query query();
 
+		/// <summary>queries for all instances of a class.</summary>
+		/// <remarks>queries for all instances of a class.</remarks>
+		/// <param name="clazz">the class to query for.</param>
+		/// <returns>
+		/// the
+		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
+		/// returned by the query.
+		/// </returns>
+		com.db4o.ObjectSet query(j4o.lang.Class clazz);
+
 		/// <summary>Native Query Interface.</summary>
 		/// <remarks>
 		/// Native Query Interface.

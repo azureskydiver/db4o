@@ -131,7 +131,7 @@ namespace com.db4o
 			readBytes(bytes, address + addressOffset, length);
 		}
 
-		internal override void syncFiles()
+		public override void syncFiles()
 		{
 		}
 

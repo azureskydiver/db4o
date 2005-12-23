@@ -12,6 +12,8 @@ namespace com.db4o
 
 		com.db4o.reflect.ReflectClass classReflector();
 
+		object coerce(com.db4o.reflect.ReflectClass claxx, object obj);
+
 		void copyValue(object a_from, object a_to);
 
 		void deleteEmbedded(com.db4o.YapWriter a_bytes);

@@ -626,7 +626,7 @@ namespace com.db4o
 		public abstract void copy(int oldAddress, int oldAddressOffset, int newAddress, int
 			 newAddressOffset, int length);
 
-		internal abstract void syncFiles();
+		public abstract void syncFiles();
 
 		public override string ToString()
 		{
@@ -669,7 +669,7 @@ namespace com.db4o
 			while (i.hasNext())
 			{
 				dirty = (com.db4o.YapMeta)i.next();
-				dirty.write(this, i_systemTrans);
+				dirty.write(i_systemTrans);
 				dirty.notCachedDirty();
 			}
 			i_dirty.clear();
@@ -713,6 +713,7 @@ namespace com.db4o
 			{
 				ensureLastSlotWritten();
 			}
+			syncFiles();
 		}
 
 		internal sealed override void writeNew(com.db4o.YapClass a_yapClass, com.db4o.YapWriter

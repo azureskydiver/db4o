@@ -16,4 +16,5 @@ namespace com.db4o {
             return compare.Equals(with);
         }
 	}
+
 }

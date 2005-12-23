@@ -9,10 +9,10 @@ namespace com.db4o
 			com.db4o.YapStream stream = getStream();
 			com.db4o.QueryResultImpl qr = new com.db4o.QueryResultImpl(trans);
 			this.unmarshall();
-			com.db4o.QQuery query = (com.db4o.QQuery)stream.unmarshall(payLoad);
-			query.unmarshall(getTransaction());
 			lock (stream.i_lock)
 			{
+				com.db4o.QQuery query = (com.db4o.QQuery)stream.unmarshall(payLoad);
+				query.unmarshall(getTransaction());
 				try
 				{
 					query.executeLocal(qr);

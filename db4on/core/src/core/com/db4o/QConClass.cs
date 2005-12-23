@@ -82,6 +82,11 @@ namespace com.db4o
 			return false;
 		}
 
+		internal override string logObject()
+		{
+			return "";
+		}
+
 		internal override void marshall()
 		{
 			base.marshall();

@@ -36,7 +36,12 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual bool canHold(object a_object)
+		internal virtual bool canHold(com.db4o.reflect.ReflectClass claxx)
+		{
+			return i_yapField == null || i_yapField.canHold(claxx);
+		}
+
+		internal virtual object coerce(object a_object)
 		{
 			com.db4o.reflect.ReflectClass claxx = null;
 			com.db4o.reflect.Reflector reflector = i_trans.reflector();
@@ -53,9 +58,13 @@ namespace com.db4o
 			}
 			else
 			{
-				return true;
+				return a_object;
 			}
-			return i_yapField == null || i_yapField.canHold(claxx);
+			if (i_yapField == null)
+			{
+				return a_object;
+			}
+			return i_yapField.coerce(claxx, a_object);
 		}
 
 		internal virtual com.db4o.YapClass getYapClass()

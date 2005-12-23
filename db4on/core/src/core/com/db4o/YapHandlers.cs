@@ -400,8 +400,8 @@ namespace com.db4o
 				i_encryptor = new byte[j4o.lang.JavaSystem.getLengthOf(a_config.i_password)];
 				for (int i = 0; i < i_encryptor.Length; i++)
 				{
-					i_encryptor[i] = (byte)(j4o.lang.JavaSystem.getCharAt(a_config.i_password, i) & 0xff
-						);
+					i_encryptor[i] = (byte)(j4o.lang.JavaSystem.getCharAt(a_config.i_password, i) & unchecked(
+						(int)(0xff)));
 				}
 				i_lastEncryptorByte = j4o.lang.JavaSystem.getLengthOf(a_config.i_password) - 1;
 			}

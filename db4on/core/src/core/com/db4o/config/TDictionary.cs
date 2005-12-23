@@ -19,7 +19,7 @@ namespace com.db4o.config {
                     if(entries[i].key != null && entries[i].value != null){
                         dict[entries[i].key] =  entries[i].value;
                     }
-                }
+           }
             }
         }
 
@@ -41,4 +41,5 @@ namespace com.db4o.config {
             return Class.getClassForType(typeof(Entry[]));
         }
     }
+
 }
