@@ -20,6 +20,8 @@ namespace com.db4o.reflect.generic
 
 		private bool _isPrimitive;
 
+		private int _isCollection;
+
 		private com.db4o.reflect.generic.GenericConverter _converter;
 
 		private com.db4o.reflect.generic.GenericField[] _fields = NO_FIELDS;
@@ -269,7 +271,16 @@ namespace com.db4o.reflect.generic
 
 		public virtual bool isCollection()
 		{
-			return _reflector.isCollection(this);
+			if (_isCollection == 1)
+			{
+				return true;
+			}
+			if (_isCollection == -1)
+			{
+				return false;
+			}
+			_isCollection = _reflector.isCollection(this) ? 1 : -1;
+			return isCollection();
 		}
 
 		public virtual bool isInstance(object candidate)

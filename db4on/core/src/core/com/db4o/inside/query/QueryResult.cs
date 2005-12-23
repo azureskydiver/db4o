@@ -20,5 +20,7 @@ namespace com.db4o.inside.query
 		com.db4o.ObjectContainer objectContainer();
 
 		int indexOf(int id);
+
+		void sort(com.db4o.query.QueryComparator cmp);
 	}
 }
