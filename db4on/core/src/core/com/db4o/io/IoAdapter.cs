@@ -10,6 +10,8 @@ namespace com.db4o.io
 	/// </remarks>
 	public abstract class IoAdapter
 	{
+		private const int COPY_SIZE = 4096;
+
 		private int _blockSize;
 
 		/// <summary>converts address and address offset to an absolute address</summary>
@@ -50,11 +52,28 @@ namespace com.db4o.io
 		/// <summary>copies a block within a file in absolute mode</summary>
 		public virtual void copy(long oldAddress, long newAddress, int length)
 		{
-			byte[] copyBytes = new byte[length];
+			if (length > COPY_SIZE)
+			{
+				byte[] buffer = new byte[COPY_SIZE];
+				int pos = 0;
+				while (pos + COPY_SIZE < length)
+				{
+					copy(buffer, oldAddress + pos, newAddress + pos);
+					pos += COPY_SIZE;
+				}
+				oldAddress += pos;
+				newAddress += pos;
+				length -= pos;
+			}
+			copy(new byte[length], oldAddress, newAddress);
+		}
+
+		private void copy(byte[] buffer, long oldAddress, long newAddress)
+		{
 			seek(oldAddress);
-			read(copyBytes);
+			read(buffer);
 			seek(newAddress);
-			write(copyBytes);
+			write(buffer);
 		}
 
 		/// <summary>checks whether a file exists</summary>

@@ -16,7 +16,7 @@ namespace com.db4o.reflect.generic
 		private readonly com.db4o.foundation.Hashtable4 _classByID = new com.db4o.foundation.Hashtable4
 			(1);
 
-		private com.db4o.foundation.Collection4 _collectionClasses = new com.db4o.foundation.Collection4
+		private com.db4o.foundation.Collection4 _collectionPredicates = new com.db4o.foundation.Collection4
 			();
 
 		private com.db4o.foundation.Collection4 _collectionUpdateDepths = new com.db4o.foundation.Collection4
@@ -44,8 +44,8 @@ namespace com.db4o.reflect.generic
 		{
 			com.db4o.reflect.generic.GenericReflector myClone = new com.db4o.reflect.generic.GenericReflector
 				(null, (com.db4o.reflect.Reflector)_delegate.deepClone(this));
-			myClone._collectionClasses = (com.db4o.foundation.Collection4)_collectionClasses.
-				deepClone(myClone);
+			myClone._collectionPredicates = (com.db4o.foundation.Collection4)_collectionPredicates
+				.deepClone(myClone);
 			myClone._collectionUpdateDepths = (com.db4o.foundation.Collection4)_collectionUpdateDepths
 				.deepClone(myClone);
 			return myClone;
@@ -84,11 +84,11 @@ namespace com.db4o.reflect.generic
 			com.db4o.foundation.Iterator4 i = _collectionUpdateDepths.iterator();
 			while (i.hasNext())
 			{
-				object[] entry = (object[])i.next();
-				com.db4o.reflect.ReflectClass claxx = (com.db4o.reflect.ReflectClass)entry[0];
-				if (claxx.isAssignableFrom(candidate))
+				com.db4o.reflect.generic.CollectionUpdateDepthEntry entry = (com.db4o.reflect.generic.CollectionUpdateDepthEntry
+					)i.next();
+				if (entry._predicate.match(candidate))
 				{
-					return ((int)entry[1]);
+					return entry._depth;
 				}
 			}
 			return 2;
@@ -184,30 +184,67 @@ namespace com.db4o.reflect.generic
 
 		public virtual bool isCollection(com.db4o.reflect.ReflectClass candidate)
 		{
-			candidate = candidate.getDelegate();
-			com.db4o.foundation.Iterator4 i = _collectionClasses.iterator();
+			com.db4o.foundation.Iterator4 i = _collectionPredicates.iterator();
 			while (i.hasNext())
 			{
-				com.db4o.reflect.ReflectClass claxx = ((com.db4o.reflect.ReflectClass)i.next()).getDelegate
-					();
-				if (claxx.isAssignableFrom(candidate))
+				if (((com.db4o.reflect.ReflectClassPredicate)i.next()).match(candidate))
 				{
 					return true;
 				}
 			}
-			return _delegate.isCollection(candidate);
+			return _delegate.isCollection(candidate.getDelegate());
 		}
 
 		public virtual void registerCollection(j4o.lang.Class clazz)
 		{
-			_collectionClasses.add(forClass(clazz));
+			registerCollection(classPredicate(clazz));
+		}
+
+		public virtual void registerCollection(com.db4o.reflect.ReflectClassPredicate predicate
+			)
+		{
+			_collectionPredicates.add(predicate);
+		}
+
+		private com.db4o.reflect.ReflectClassPredicate classPredicate(j4o.lang.Class clazz
+			)
+		{
+			com.db4o.reflect.ReflectClass collectionClass = forClass(clazz);
+			com.db4o.reflect.ReflectClassPredicate predicate = new _AnonymousInnerClass195(this
+				, collectionClass);
+			return predicate;
+		}
+
+		private sealed class _AnonymousInnerClass195 : com.db4o.reflect.ReflectClassPredicate
+		{
+			public _AnonymousInnerClass195(GenericReflector _enclosing, com.db4o.reflect.ReflectClass
+				 collectionClass)
+			{
+				this._enclosing = _enclosing;
+				this.collectionClass = collectionClass;
+			}
+
+			public bool match(com.db4o.reflect.ReflectClass candidate)
+			{
+				return collectionClass.isAssignableFrom(candidate);
+			}
+
+			private readonly GenericReflector _enclosing;
+
+			private readonly com.db4o.reflect.ReflectClass collectionClass;
 		}
 
 		public virtual void registerCollectionUpdateDepth(j4o.lang.Class clazz, int depth
 			)
 		{
-			object[] entry = new object[] { forClass(clazz), depth };
-			_collectionUpdateDepths.add(entry);
+			registerCollectionUpdateDepth(classPredicate(clazz), depth);
+		}
+
+		public virtual void registerCollectionUpdateDepth(com.db4o.reflect.ReflectClassPredicate
+			 predicate, int depth)
+		{
+			_collectionUpdateDepths.add(new com.db4o.reflect.generic.CollectionUpdateDepthEntry
+				(predicate, depth));
 		}
 
 		public virtual void register(com.db4o.reflect.generic.GenericClass clazz)

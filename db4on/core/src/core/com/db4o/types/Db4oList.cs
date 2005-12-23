@@ -7,4 +7,5 @@ namespace com.db4o.types {
 
    public interface Db4oList : Db4oCollection, IList, IEnumerable {
    }
+
 }
