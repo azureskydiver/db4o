@@ -9,6 +9,11 @@ namespace com.db4o
 		{
 		}
 
+		public override object coerce(com.db4o.reflect.ReflectClass claxx, object obj)
+		{
+			return com.db4o.foundation.Coercion4.toInt(obj);
+		}
+
 		public override object defaultValue()
 		{
 			return i_primitive;

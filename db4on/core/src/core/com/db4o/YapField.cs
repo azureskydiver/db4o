@@ -166,6 +166,15 @@ namespace com.db4o
 			return i_handler.canHold(claxx);
 		}
 
+		public virtual object coerce(com.db4o.reflect.ReflectClass claxx, object obj)
+		{
+			if (claxx == null || obj == null)
+			{
+				return i_isPrimitive ? com.db4o.foundation.No4.INSTANCE : obj;
+			}
+			return i_handler.coerce(claxx, obj);
+		}
+
 		public virtual bool canLoadByIndex(com.db4o.QConObject a_qco, com.db4o.QE a_evaluator
 			)
 		{
@@ -787,7 +796,7 @@ namespace com.db4o
 			{
 				i_name = newName;
 				i_yapClass.setStateDirty();
-				i_yapClass.write(stream, stream.getSystemTransaction());
+				i_yapClass.write(stream.getSystemTransaction());
 			}
 			else
 			{

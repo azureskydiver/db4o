@@ -8,6 +8,11 @@ namespace com.db4o
 		{
 		}
 
+		public override object coerce(com.db4o.reflect.ReflectClass claxx, object obj)
+		{
+			return canHold(claxx) ? obj : com.db4o.foundation.No4.INSTANCE;
+		}
+
 		public override void copyValue(object a_from, object a_to)
 		{
 			try

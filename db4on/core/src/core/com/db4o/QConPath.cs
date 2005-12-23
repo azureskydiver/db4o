@@ -47,34 +47,44 @@ namespace com.db4o
 		internal override com.db4o.QConClass shareParentForClass(com.db4o.reflect.ReflectClass
 			 a_class, bool[] removeExisting)
 		{
-			if (i_parent != null)
+			if (i_parent == null)
 			{
-				if (i_field.canHold(a_class))
-				{
-					com.db4o.QConClass newConstraint = new com.db4o.QConClass(i_trans, i_parent, i_field
-						, a_class);
-					morph(removeExisting, newConstraint, a_class);
-					return newConstraint;
-				}
+				return null;
 			}
-			return null;
+			if (!i_field.canHold(a_class))
+			{
+				return null;
+			}
+			com.db4o.QConClass newConstraint = new com.db4o.QConClass(i_trans, i_parent, i_field
+				, a_class);
+			morph(removeExisting, newConstraint, a_class);
+			return newConstraint;
 		}
 
 		internal override com.db4o.QCon shareParent(object a_object, bool[] removeExisting
 			)
 		{
-			if (i_parent != null)
+			if (i_parent == null)
 			{
-				if (i_field.canHold(a_object))
-				{
-					com.db4o.QConObject newConstraint = new com.db4o.QConObject(i_trans, i_parent, i_field
-						, a_object);
-					com.db4o.reflect.ReflectClass claxx = i_trans.reflector().forObject(a_object);
-					morph(removeExisting, newConstraint, claxx);
-					return newConstraint;
-				}
+				return null;
 			}
-			return null;
+			object obj = i_field.coerce(a_object);
+			if (obj == com.db4o.foundation.No4.INSTANCE)
+			{
+				com.db4o.QConObject falseConstraint = new com.db4o.QConFalse(i_trans, i_parent, i_field
+					);
+				morph(removeExisting, falseConstraint, reflectClassForObject(obj));
+				return falseConstraint;
+			}
+			com.db4o.QConObject newConstraint = new com.db4o.QConObject(i_trans, i_parent, i_field
+				, obj);
+			morph(removeExisting, newConstraint, reflectClassForObject(obj));
+			return newConstraint;
+		}
+
+		private com.db4o.reflect.ReflectClass reflectClassForObject(object obj)
+		{
+			return i_trans.reflector().forObject(obj);
 		}
 
 		private void morph(bool[] removeExisting, com.db4o.QConObject newConstraint, com.db4o.reflect.ReflectClass

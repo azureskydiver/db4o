@@ -331,7 +331,7 @@ namespace com.db4o
 			}
 		}
 
-		internal override void syncFiles()
+		public override void syncFiles()
 		{
 			try
 			{

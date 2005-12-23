@@ -49,6 +49,10 @@ namespace com.db4o
 			{
 				try
 				{
+					if (i_stream == null)
+					{
+						return;
+					}
 					com.db4o.Msg message = com.db4o.Msg.readMessage(i_stream.getTransaction(), i_socket
 						);
 					if (i_stream == null)
@@ -64,17 +68,22 @@ namespace com.db4o
 						if (com.db4o.Msg.CLOSE.Equals(message))
 						{
 							i_stream.logMsg(35, i_stream.ToString());
-							close();
+							if (i_stream == null)
+							{
+								return;
+							}
 							lock (i_stream)
 							{
 								j4o.lang.JavaSystem.notify(i_stream);
 							}
+							i_stream = null;
+							i_socket = null;
 						}
 						else
 						{
 							if (message != null)
 							{
-								messageQueueLock.run(new _AnonymousInnerClass52(this, message));
+								messageQueueLock.run(new _AnonymousInnerClass59(this, message));
 							}
 						}
 					}
@@ -85,9 +94,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass52 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass59 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass52(YapClientThread _enclosing, com.db4o.Msg message)
+			public _AnonymousInnerClass59(YapClientThread _enclosing, com.db4o.Msg message)
 			{
 				this._enclosing = _enclosing;
 				this.message = message;

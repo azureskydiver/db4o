@@ -39,7 +39,8 @@ namespace com.db4o
 		{
 			byte b1 = a_bytes.readByte();
 			byte b2 = a_bytes.readByte();
-			char ret = (char)((b1 & 0xff) | ((b2 & 0xff) << 8));
+			char ret = (char)((b1 & unchecked((int)(0xff))) | ((b2 & unchecked((int)(0xff))) 
+				<< 8));
 			return ret;
 		}
 
@@ -54,7 +55,7 @@ namespace com.db4o
 			{
 				l_char = ((char)a_object);
 			}
-			a_bytes.append((byte)(l_char & 0xff));
+			a_bytes.append((byte)(l_char & unchecked((int)(0xff))));
 			a_bytes.append((byte)(l_char >> 8));
 		}
 

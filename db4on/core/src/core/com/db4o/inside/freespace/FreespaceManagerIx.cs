@@ -46,6 +46,10 @@ namespace com.db4o.inside.freespace
 				, slotLength());
 			_addressIx._index._metaIndex.write(writer);
 			_lengthIx._index._metaIndex.write(writer);
+			if (_file.i_config._flushFileBuffers)
+			{
+				_file.syncFiles();
+			}
 			writer.writeEncrypt();
 		}
 
@@ -141,15 +145,15 @@ namespace com.db4o.inside.freespace
 			{
 				return;
 			}
-			com.db4o.foundation.IntObjectVisitor addToNewFM = new _AnonymousInnerClass178(this
+			com.db4o.foundation.IntObjectVisitor addToNewFM = new _AnonymousInnerClass181(this
 				, newFM);
-			com.db4o.Tree.traverse(_addressIx._indexTrans.getRoot(), new _AnonymousInnerClass183
+			com.db4o.Tree.traverse(_addressIx._indexTrans.getRoot(), new _AnonymousInnerClass186
 				(this, addToNewFM));
 		}
 
-		private sealed class _AnonymousInnerClass178 : com.db4o.foundation.IntObjectVisitor
+		private sealed class _AnonymousInnerClass181 : com.db4o.foundation.IntObjectVisitor
 		{
-			public _AnonymousInnerClass178(FreespaceManagerIx _enclosing, com.db4o.inside.freespace.FreespaceManager
+			public _AnonymousInnerClass181(FreespaceManagerIx _enclosing, com.db4o.inside.freespace.FreespaceManager
 				 newFM)
 			{
 				this._enclosing = _enclosing;
@@ -166,9 +170,9 @@ namespace com.db4o.inside.freespace
 			private readonly com.db4o.inside.freespace.FreespaceManager newFM;
 		}
 
-		private sealed class _AnonymousInnerClass183 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass186 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass183(FreespaceManagerIx _enclosing, com.db4o.foundation.IntObjectVisitor
+			public _AnonymousInnerClass186(FreespaceManagerIx _enclosing, com.db4o.foundation.IntObjectVisitor
 				 addToNewFM)
 			{
 				this._enclosing = _enclosing;

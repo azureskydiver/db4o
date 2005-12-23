@@ -91,7 +91,7 @@ namespace com.db4o
 				{
 					com.db4o.YapClass yc = (com.db4o.YapClass)writes.next();
 					yc.setStateDirty();
-					yc.write(_classColl.i_stream, _classColl.i_systemTrans);
+					yc.write(_classColl.i_systemTrans);
 					_inits = new com.db4o.foundation.List4(_inits, yc);
 					checkStatics();
 				}

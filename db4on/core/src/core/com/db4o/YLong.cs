@@ -8,6 +8,11 @@ namespace com.db4o
 		{
 		}
 
+		public override object coerce(com.db4o.reflect.ReflectClass claxx, object obj)
+		{
+			return com.db4o.foundation.Coercion4.toLong(obj);
+		}
+
 		public override object defaultValue()
 		{
 			return i_primitive;
@@ -44,7 +49,8 @@ namespace com.db4o
 			long l_return = 0;
 			for (int i = 0; i < com.db4o.YapConst.LONG_BYTES; i++)
 			{
-				l_return = (l_return << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
+				l_return = (l_return << 8) + (a_bytes._buffer[a_bytes._offset++] & unchecked((int
+					)(0xff)));
 			}
 			return l_return;
 		}
@@ -83,7 +89,8 @@ namespace com.db4o
 			long l_return = 0;
 			for (int i = 0; i < com.db4o.YapConst.LONG_BYTES; i++)
 			{
-				l_return = (l_return << 8) + (writer._buffer[writer._offset++] & 0xff);
+				l_return = (l_return << 8) + (writer._buffer[writer._offset++] & unchecked((int)(
+					0xff)));
 			}
 			return l_return;
 		}

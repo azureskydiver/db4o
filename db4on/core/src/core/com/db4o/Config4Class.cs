@@ -165,7 +165,7 @@ namespace com.db4o
 			return _translator;
 		}
 
-		public virtual bool initOnUp(com.db4o.Transaction systemTrans)
+		public virtual bool initOnUp(com.db4o.Transaction systemTrans, int[] metaClassID)
 		{
 			if (_processing)
 			{
@@ -177,12 +177,21 @@ namespace com.db4o
 			{
 				if (_maintainMetaClass)
 				{
-					i_metaClass = (com.db4o.MetaClass)stream.get1(systemTrans, new com.db4o.MetaClass
-						(i_name)).next();
+					if (metaClassID[0] > 0)
+					{
+						i_metaClass = (com.db4o.MetaClass)stream.getByID1(systemTrans, metaClassID[0]);
+					}
+					if (i_metaClass == null)
+					{
+						i_metaClass = (com.db4o.MetaClass)stream.get1(systemTrans, new com.db4o.MetaClass
+							(i_name)).next();
+						metaClassID[0] = stream.getID1(systemTrans, i_metaClass);
+					}
 					if (i_metaClass == null)
 					{
 						i_metaClass = new com.db4o.MetaClass(i_name);
 						stream.setInternal(systemTrans, i_metaClass, int.MaxValue, false);
+						metaClassID[0] = stream.getID1(systemTrans, i_metaClass);
 					}
 					else
 					{

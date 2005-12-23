@@ -235,7 +235,7 @@ namespace com.db4o
 				{
 					com.db4o.YapClass yapClass = (com.db4o.YapClass)i.next();
 					yapClass.setStateDirty();
-					yapClass.write(this, i_systemTrans);
+					yapClass.write(i_systemTrans);
 				}
 				i_needsUpdate = null;
 			}
@@ -496,15 +496,18 @@ namespace com.db4o
 					}
 					com.db4o.YapClass yc = yo.getYapClass();
 					object obj = yo.getObject();
-					if (yc.dispatchEvent(this, obj, com.db4o.EventDispatcher.CAN_DELETE))
+					yo.endProcessing();
+					if (!yc.dispatchEvent(this, obj, com.db4o.EventDispatcher.CAN_DELETE))
 					{
-						if (delete5(ta, yo, a_cascade, userCall))
+						return;
+					}
+					yo.beginProcessing();
+					if (delete5(ta, yo, a_cascade, userCall))
+					{
+						yc.dispatchEvent(this, obj, com.db4o.EventDispatcher.DELETE);
+						if (i_config.i_messageLevel > com.db4o.YapConst.STATE)
 						{
-							yc.dispatchEvent(this, obj, com.db4o.EventDispatcher.DELETE);
-							if (i_config.i_messageLevel > com.db4o.YapConst.STATE)
-							{
-								message("" + yo.getID() + " delete " + yo.getYapClass().getName());
-							}
+							message("" + yo.getID() + " delete " + yo.getYapClass().getName());
 						}
 					}
 					yo.endProcessing();
@@ -712,6 +715,10 @@ namespace com.db4o
 		internal int getID1(com.db4o.Transaction ta, object a_object)
 		{
 			checkClosed();
+			if (a_object == null)
+			{
+				return 0;
+			}
 			com.db4o.YapObject yo = i_hcTree.hc_find(a_object);
 			if (yo != null)
 			{

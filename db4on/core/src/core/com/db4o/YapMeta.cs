@@ -142,15 +142,15 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual com.db4o.YapWriter write(com.db4o.YapStream a_stream, com.db4o.Transaction
-			 a_trans)
+		internal com.db4o.YapWriter write(com.db4o.Transaction a_trans)
 		{
 			if (writeObjectBegin())
 			{
-				com.db4o.YapWriter writer = (getID() == 0) ? a_stream.newObject(a_trans, this) : 
-					a_stream.updateObject(a_trans, this);
+				com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.i_stream;
+				com.db4o.YapWriter writer = (getID() == 0) ? stream.newObject(a_trans, this) : stream
+					.updateObject(a_trans, this);
 				writeThis(writer);
-				((com.db4o.YapFile)a_stream).writeObject(this, writer);
+				((com.db4o.YapFile)stream).writeObject(this, writer);
 				if (isActive())
 				{
 					setStateClean();
@@ -172,7 +172,7 @@ namespace com.db4o
 
 		internal virtual void writeOwnID(com.db4o.YapWriter a_writer)
 		{
-			write(a_writer.getStream(), a_writer.getTransaction());
+			write(a_writer.getTransaction());
 			a_writer.writeInt(getID());
 		}
 

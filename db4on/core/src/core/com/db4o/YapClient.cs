@@ -187,8 +187,24 @@ namespace com.db4o
 		{
 			writeMsg(com.db4o.Msg.CREATE_CLASS.getWriterForString(i_systemTrans, a_class.getName
 				()));
-			com.db4o.MsgObject message = (com.db4o.MsgObject)expectedResponse(com.db4o.Msg.OBJECT_TO_CLIENT
-				);
+			com.db4o.Msg resp = getResponse();
+			if (resp == null)
+			{
+				return false;
+			}
+			if (resp.Equals(com.db4o.Msg.FAILED))
+			{
+				if (i_config.i_exceptionsOnNotStorable)
+				{
+					throw new com.db4o.ext.ObjectNotStorableException(a_class);
+				}
+				return false;
+			}
+			if (!resp.Equals(com.db4o.Msg.OBJECT_TO_CLIENT))
+			{
+				return false;
+			}
+			com.db4o.MsgObject message = (com.db4o.MsgObject)resp;
 			com.db4o.YapWriter bytes = message.unmarshall();
 			if (bytes == null)
 			{
@@ -301,13 +317,13 @@ namespace com.db4o
 			}
 			else
 			{
-				return (com.db4o.Msg)messageQueueLock.run(new _AnonymousInnerClass272(this));
+				return (com.db4o.Msg)messageQueueLock.run(new _AnonymousInnerClass286(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass272 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass286 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass272(YapClient _enclosing)
+			public _AnonymousInnerClass286(YapClient _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -553,6 +569,10 @@ namespace com.db4o
 				writeMsg(com.db4o.Msg.READ_OBJECT.getWriterForInt(a_ta, a_id));
 				com.db4o.YapWriter bytes = ((com.db4o.MsgObject)expectedResponse(com.db4o.Msg.OBJECT_TO_CLIENT
 					)).unmarshall();
+				if (bytes == null)
+				{
+					return null;
+				}
 				bytes.setTransaction(a_ta);
 				return bytes;
 			}

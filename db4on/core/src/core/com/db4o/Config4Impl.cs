@@ -36,6 +36,8 @@ namespace com.db4o
 
 		internal bool i_exceptionsOnNotStorable;
 
+		public bool _flushFileBuffers = true;
+
 		public byte _freespaceSystem;
 
 		public int i_generateUUIDs;
@@ -222,6 +224,11 @@ namespace com.db4o
 			i_exceptionsOnNotStorable = flag;
 		}
 
+		public void flushFileBuffers(bool flag)
+		{
+			_flushFileBuffers = flag;
+		}
+
 		public com.db4o.config.FreespaceConfiguration freespace()
 		{
 			return this;
@@ -384,7 +391,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass336(this));
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass341(this));
 			}
 			else
 			{
@@ -392,9 +399,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass336 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass341 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass336(Config4Impl _enclosing)
+			public _AnonymousInnerClass341(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -438,7 +445,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass372(this));
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass377(this));
 			}
 			else
 			{
@@ -446,9 +453,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass372 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass377 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass372(Config4Impl _enclosing)
+			public _AnonymousInnerClass377(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

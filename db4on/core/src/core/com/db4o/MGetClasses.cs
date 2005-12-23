@@ -10,7 +10,7 @@ namespace com.db4o
 			{
 				try
 				{
-					stream.i_classCollection.write(stream, getTransaction());
+					stream.i_classCollection.write(getTransaction());
 				}
 				catch (System.Exception e)
 				{

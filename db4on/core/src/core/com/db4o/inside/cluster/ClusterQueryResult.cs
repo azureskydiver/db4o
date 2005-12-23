@@ -48,7 +48,7 @@ namespace com.db4o.inside.cluster
 			{
 				return true;
 			}
-			if (_current >= _objectSets.Length)
+			if (_current >= _objectSets.Length - 1)
 			{
 				return false;
 			}
@@ -124,6 +124,11 @@ namespace com.db4o.inside.cluster
 		{
 			com.db4o.inside.Exceptions4.notSupported();
 			return 0;
+		}
+
+		public virtual void sort(com.db4o.query.QueryComparator cmp)
+		{
+			com.db4o.inside.Exceptions4.notSupported();
 		}
 	}
 }

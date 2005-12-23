@@ -36,4 +36,5 @@ namespace com.db4o
             bytes[--offset] = (byte)(ui >>= 8);
         }
     }
+
 }
