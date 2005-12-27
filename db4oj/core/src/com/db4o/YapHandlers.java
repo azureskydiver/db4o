@@ -206,7 +206,7 @@ public final class YapHandlers {
                     try{
                         constructors[i].setAccessible();
                         int parameterCount =  constructors[i].getParameterTypes().length;
-                        sortedConstructors = Tree.add(sortedConstructors, new TreeIntObject(parameterCount, constructors[i]));
+                        sortedConstructors = Tree.add(sortedConstructors, new TreeIntObject(i+constructors.length*parameterCount, constructors[i]));
                     } catch (Throwable t) {
                         if(Debug.atHome){
                             t.printStackTrace();
