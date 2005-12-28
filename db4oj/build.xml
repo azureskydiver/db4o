@@ -1,4 +1,5 @@
 <project name="db4obuildcore" basedir=".">
+	
 	<property name="dir.build" value="../db4obuild/dist/java" />
 	<property name="dir.build.src" value="${dir.build}/src" />
 	<property name="dir.build.src.core" value="${dir.build.src}/core" />
