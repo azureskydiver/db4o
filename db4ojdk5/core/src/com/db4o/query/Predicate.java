@@ -85,8 +85,18 @@ public abstract class Predicate<ExtentType> implements Serializable{
      */
 	public final static String PREDICATEMETHOD_NAME="match";
 	
+	private Class<ExtentType> _extentType;
+
 	private transient Method cachedFilterMethod=null;
 	
+	public Predicate() {
+		this(null);
+	}
+
+	public Predicate(Class<ExtentType> extentType) {
+		_extentType=extentType;
+	}
+
 	private Method getFilterMethod() {
 		if(cachedFilterMethod!=null) {
 			return cachedFilterMethod;
@@ -109,7 +119,18 @@ public abstract class Predicate<ExtentType> implements Serializable{
      * public for implementation reasons, please ignore.
      */
 	public Class<ExtentType> extentType() {
-		return (Class<ExtentType>)getFilterMethod().getParameterTypes()[0];
+		if(_extentType!=null) {
+			return _extentType;
+		}
+		Class<ExtentType> extentType=(Class<ExtentType>)getFilterMethod().getParameterTypes()[0];
+		try {
+			Type genericType=((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+			if((genericType instanceof Class)&&(extentType.isAssignableFrom((Class)genericType))) {
+				extentType=(Class<ExtentType>)genericType;
+			}
+		} catch (RuntimeException e) {
+		}
+		return extentType;
 	}
 
     /**

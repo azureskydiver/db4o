@@ -91,8 +91,17 @@ public abstract class Predicate implements Serializable {
 	
 	static final Class OBJECT_CLASS = Object.class;
 	
+	private Class _extentType;
 	private transient Method cachedFilterMethod=null;
 	
+	public Predicate() {
+		this(null);
+	}
+
+	public Predicate(Class extentType) {
+		_extentType=extentType;
+	}
+
 	// IMPORTANT: must have package visibility because it is used as
 	// internal on the .net side
 	Method getFilterMethod() {
@@ -135,7 +144,7 @@ public abstract class Predicate implements Serializable {
      * public for implementation reasons, please ignore.
      */
 	public Class extentType() {
-		return getFilterMethod().getParameterTypes()[0];
+		return (_extentType!=null ? _extentType : getFilterMethod().getParameterTypes()[0]);
 	}
 
     /**

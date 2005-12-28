@@ -21,7 +21,13 @@ public class NQRegressionTests {
 		public int getId() {
 			return id;
 		}
-}
+	}
+	
+	private static class Other extends Base {
+		public Other() {
+			super(1);
+		}
+	}
 	
 	private static class Data extends Base {
 		float value;
@@ -61,21 +67,36 @@ public class NQRegressionTests {
 		Test.store(b);
 		Test.store(c);
 		Test.store(cc);
+		Test.store(new Other());
 	}
 	
 	private abstract static class ExpectingPredicate extends Predicate {
+		public ExpectingPredicate() {
+			super();
+		}
+
+		public ExpectingPredicate(Class extentType) {
+			super(extentType);
+		}
+
 		public abstract int expected();
 	}
 	
 	private static ExpectingPredicate[] PREDICATES={
 		// unconditional/untyped
 		new ExpectingPredicate() {
-			public int expected() { return 4;}
+			public int expected() { return 5;}
 			public boolean match(Object candidate) {
 				return true;
 			}
 		},
 		// unconditional
+		new ExpectingPredicate() {
+			public int expected() { return 5;}
+			public boolean match(Base candidate) {
+				return true;
+			}
+		},
 		new ExpectingPredicate() {
 			public int expected() { return 4;}
 			public boolean match(Data candidate) {
@@ -359,7 +380,14 @@ public class NQRegressionTests {
 			public boolean match(Data candidate) {
 				return candidate.getValue()==calc();
 			}
-		}
+		},
+		// force extent
+		new ExpectingPredicate(Data.class) {
+			public int expected() { return 1;}
+			public boolean match(Object candidate) {
+				return ((Data)candidate).getId()==1;
+			}
+		},
 	};
 		
 	public void testAll() {
@@ -421,9 +449,18 @@ public class NQRegressionTests {
 		try {
 			Db4oEnhancingClassloader loader=new Db4oEnhancingClassloader(getClass().getClassLoader());
 			Class filterClass=loader.loadClass(filter.getClass().getName());
-			Constructor constr=filterClass.getDeclaredConstructor(new Class[]{});
+			Constructor constr=null;
+			Object[] args=null;
+			try {
+				constr=filterClass.getDeclaredConstructor(new Class[]{});
+				args=new Object[0];
+			}
+			catch(NoSuchMethodException exc) {
+				constr=filterClass.getDeclaredConstructor(new Class[]{Class.class});
+				args=new Object[]{Data.class};
+			}
 			constr.setAccessible(true);
-			Predicate predicate=(Predicate)constr.newInstance(new Object[]{});
+			Predicate predicate=(Predicate)constr.newInstance(args);
 			ObjectSet preoptimized=db.query(predicate);
 			Test.ensureEquals(filter.expected(),preoptimized.size());
 			Test.ensure(raw.equals(preoptimized));
