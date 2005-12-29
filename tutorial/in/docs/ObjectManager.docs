@@ -47,7 +47,23 @@ not preserve the executable permissions for objectmanager.sh, you will need
 to 'chmod +x objectmanager.sh'.  Once this is complete, running objectmanager.sh ._
 will start Object Manager.
 
+.3 Mac OS X ..
+Currently there is no dedicated ObjectManager build for Mac OS X. To prepare ._
+the Linux or Windows NoVM build to run on OS X, you'll have to copy the ._
+respective native SWT files from an OS X Eclipse install to ObjectManager's ._
+lib directory. This list might look like this (but may vary depending on the ._
+Eclipse/SWT version):
 
+- java_swt
+- libswt-carbon-xxxx.jnilib
+- libswt-pi-carbon-xxxx.jnilib
+- libswt-webkit-carbon-xxxx.jnilib
+- swt-pi.jar
+- swt.jar
+
+The startup script has to be modified to include the correct library path and ._
+the OS X specific jars on the classpath. If ObjectManager seems to hang on startup, ._
+you may also have to provide the VM parameter '-XstartOnFirstThread'.
 
 .1 Object Manager Tour ..
 
