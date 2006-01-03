@@ -1392,4 +1392,20 @@
 	</target>
 
 	<target name="serverside" depends="buildall, serversidecopy" />
+	
+	<target name="replication_doc">
+		<doctor 
+			name="replication" 
+			home="${dir.workspace}/replication/doc" 
+			interactive="false" 
+			workspace="${dir.workspace}" 
+			inputsource="${dir.workspace}/replication/src" 
+			sourceextension="java" 
+			outputfile="db4o_replication" 
+			outputpath="${dir.workspace}/replication/doc/out" 
+			pdfbasefont="${font.pdf.base}" 
+			outlineimage="db4objects1.jpg" 
+			linkhome="http://www.db4o.com">
+		</doctor>
+	</target>
 </project>
