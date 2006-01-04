@@ -4,7 +4,7 @@ package com.db4o.test;
 
 import com.db4o.*;
 import com.db4o.test.nativequery.*;
-import com.db4o.test.replication.*;
+import com.db4o.test.replication.old.*;
 
 public class AllTestsJdk1_2 extends AllTests{
 	

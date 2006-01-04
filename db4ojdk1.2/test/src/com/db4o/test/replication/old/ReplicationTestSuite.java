@@ -1,4 +1,4 @@
-package com.db4o.test.replication;
+package com.db4o.test.replication.old;
 
 import com.db4o.test.*;
 
