@@ -89,6 +89,13 @@ public class Db4oDatabase implements Db4oType, Internal4{
         return i_id;
     }
     
+    /**
+     * returns the unique signature 
+     */
+    public byte[] getSignature(){
+        return i_signature;
+    }
+    
     public String toString(){
         return "Db4oDatabase: " + i_signature;
     }
