@@ -1,4 +1,4 @@
-
+REM is this script needed at all?
 SET SJAVAC="C:\Program Files\Java\jdk1.5.0_01\bin\javac.exe"
 SET SROOT=C:\_db4o\HEAD\db4oj\
 
