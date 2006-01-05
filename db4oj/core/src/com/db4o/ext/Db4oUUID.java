@@ -2,6 +2,8 @@
 
 package com.db4o.ext;
 
+import java.util.Arrays;
+
 
 /**
  * a unique universal identify for an object.
@@ -13,10 +15,10 @@ package com.db4o.ext;
  * over multiple ObjectContainers 
  */
 public class Db4oUUID {
-    
+
     private final long longPart;
     private final byte[] signaturePart;
-    
+
     /**
      * constructs a Db4oUUID from a long part and a signature part
      * @param longPart the long part 
@@ -26,7 +28,7 @@ public class Db4oUUID {
         this.longPart = longPart;
         this.signaturePart = signaturePart;
     }
-    
+
     /**
      * returns the long part of this UUID.
      * <br><br>To uniquely identify an object universally, db4o
@@ -37,7 +39,7 @@ public class Db4oUUID {
     public long getLongPart(){
         return longPart;
     }
-    
+
 
     /**
      * returns the signature part of this UUID.
@@ -52,4 +54,21 @@ public class Db4oUUID {
     public byte[] getSignaturePart(){
         return signaturePart;
     }
+
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		final Db4oUUID db4oUUID = (Db4oUUID) o;
+
+		if (longPart != db4oUUID.longPart) return false;
+		if (!Arrays.equals(signaturePart, db4oUUID.signaturePart))
+			return false;
+
+		return true;
+	}
+
+	public int hashCode() {
+		return (int) (longPart ^ (longPart >>> 32));
+	}
 }
