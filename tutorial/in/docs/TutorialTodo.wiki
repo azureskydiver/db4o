@@ -1,4 +1,13 @@
 
+---++++ (010) 
+
+The Tutorial is not user friendly in Java. 
+It doesn't report problems if applets don't work. Suggestions:
+
+brief paragraph in chapter 1: "Troubleshooting this interactive tutorial"
+check system config upon start - are applets activated - if not: error message.
+
+
 ---++++ (300) Explaining the Reflector concept
 working against GenericReflector classes
 writing your own Reflector
