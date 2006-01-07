@@ -2,7 +2,6 @@
 
 package com.db4o.ext;
 
-import java.util.Arrays;
 
 
 /**
@@ -62,9 +61,17 @@ public class Db4oUUID {
 		final Db4oUUID db4oUUID = (Db4oUUID) o;
 
 		if (longPart != db4oUUID.longPart) return false;
-		if (!Arrays.equals(signaturePart, db4oUUID.signaturePart))
+		if(signaturePart==null) {
+			return db4oUUID.signaturePart==null;
+		}
+		if(signaturePart.length!=db4oUUID.signaturePart.length) {
 			return false;
-
+		}
+		for (int i = 0; i < signaturePart.length; i++) {
+			if(signaturePart[i]!=db4oUUID.signaturePart[i]) {
+				return false;
+			}
+		}
 		return true;
 	}
 
