@@ -7,6 +7,8 @@ package com.db4o;
  */
 public final class YapStringIOUnicode extends YapStringIO{
 	
+	public YapStringIOUnicode() {}
+	
     int bytesPerChar(){
         return 2;
     }
@@ -36,12 +38,16 @@ public final class YapStringIOUnicode extends YapStringIO{
 		return (a_string.length() * 2) + YapConst.OBJECT_LENGTH + YapConst.YAPINT_LENGTH;
 	}
 	
-	public String read(YapReader bytes, int a_length){
+	public String read(YapReader bytes, int a_length, boolean doIntern){
 	    checkBufferLength(a_length);
 		for(int ii = 0; ii < a_length; ii++){
 			chars[ii] = (char)((bytes._buffer[bytes._offset ++]& 0xff) | ((bytes._buffer[bytes._offset ++]& 0xff) << 8));
 		}
-		return new String(chars,0,a_length);
+		String str=new String(chars,0,a_length);
+		if(doIntern) {
+			str=str.intern();
+		}
+		return str;
 	}
 	
 	String read(byte[] a_bytes){

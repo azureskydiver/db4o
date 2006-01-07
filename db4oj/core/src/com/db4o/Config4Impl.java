@@ -41,6 +41,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     public byte      _freespaceSystem;                   
     public int       i_generateUUIDs;
     public int       i_generateVersionNumbers;
+    boolean 			i_internStrings = false;
     boolean			 i_isServer = false;
     boolean          i_lockFile                         = true;
     int              i_messageLevel                     = YapConst.NONE;
@@ -243,6 +244,10 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
             new Exception().printStackTrace();
             Exceptions4.throwRuntimeException(46);
         }
+    }
+    
+    public void internStrings(boolean doIntern) {
+    	i_internStrings=doIntern;
     }
     
     public void io(IoAdapter adapter){

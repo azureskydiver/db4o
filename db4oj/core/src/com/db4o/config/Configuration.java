@@ -276,6 +276,12 @@ public interface Configuration {
     public MessageSender getMessageSender();
     
     /**
+     * Configures db4o to call intern() on strings upon retrieval.
+     * @param doIntern intern strings on retrieval if true, don't otherwise
+     */
+    public void internStrings(boolean doIntern);
+    
+    /**
      * allows to configure db4o to use a customized byte IO adapter.
      * <br><br>Derive from the abstract class {@link IoAdapter} to
      * write your own. Possible usecases could be improved performance
