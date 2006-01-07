@@ -68,6 +68,7 @@ public class AllTestsConfAll extends TestSuite{
 			IndexedByIdentity.class,
 			IndexCreateDrop.class,
 			IndexedUpdatesWithNull.class,
+			InternStrings.class,
 	        IsStored.class,
 	        Isolation.class,
 			Messaging.class,

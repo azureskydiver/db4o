@@ -119,7 +119,7 @@ public final class YapString extends YapIndependantType {
             throw new CorruptionException();
         }
         if (length > 0) {
-            return i_stringIo.read(a_bytes, length);
+            return i_stringIo.read(a_bytes, length, ((Config4Impl)_stream.configure()).i_internStrings);
         }
         return "";
     }
