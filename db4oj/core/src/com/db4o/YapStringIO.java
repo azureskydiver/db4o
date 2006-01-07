@@ -52,19 +52,11 @@ public class YapStringIO {
 	}
 	
 	public String read(YapReader bytes, int a_length){
-		return read(bytes,a_length,false);
-	}
-	
-	public String read(YapReader bytes, int a_length, boolean doIntern){
 	    checkBufferLength(a_length);
 		for(int ii = 0; ii < a_length; ii++){
 			chars[ii] = (char)(bytes._buffer[bytes._offset ++]& 0xff);
 		}
-		String str=new String(chars,0,a_length);
-		if(doIntern) {
-			str=str.intern();
-		}
-		return str;
+		return new String(chars,0,a_length);
 	}
 	
 	String read(byte[] a_bytes){
