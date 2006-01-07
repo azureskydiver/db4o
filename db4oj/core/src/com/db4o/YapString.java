@@ -119,7 +119,13 @@ public final class YapString extends YapIndependantType {
             throw new CorruptionException();
         }
         if (length > 0) {
-            return i_stringIo.read(a_bytes, length, ((Config4Impl)_stream.configure()).i_internStrings);
+            String str = i_stringIo.read(a_bytes, length);
+            if(! Deploy.csharp){
+                if(_stream.i_config.i_internStrings){
+                    str = str.intern();
+                }
+            }
+            return str;
         }
         return "";
     }
