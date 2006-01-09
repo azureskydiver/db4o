@@ -134,7 +134,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         activate1(ta, a_activate, i_config.i_activationDepth);
     }
 
-    final void activate1(Transaction ta, Object a_activate, int a_depth) {
+    public final void activate1(Transaction ta, Object a_activate, int a_depth) {
         ta = checkTransaction(ta);
         beginEndActivation();
         activate2(ta, a_activate, a_depth);
@@ -374,7 +374,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             showInternalClasses(true);
             Query q = querySharpenBug();
             q.constrain(database.getClass());
-            q.descend("i_uuid").constrain(new Long(database.i_uuid));
+            q.descend(Db4oDatabase.CREATIONTIME_FIELD).constrain(new Long(database.i_uuid));
             ObjectSet objectSet = q.execute();
             while (objectSet.hasNext()) {
                 Db4oDatabase storedDatabase = (Db4oDatabase) objectSet.next();
@@ -738,7 +738,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return i_systemTrans;
     }
 
-    Transaction getTransaction() {
+    public Transaction getTransaction() {
         return i_trans;
     }
     
@@ -1200,7 +1200,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return query(ta);
     }
     
-    abstract void raiseVersion(long a_minimumVersion);
+    public abstract void raiseVersion(long a_minimumVersion);
 
     abstract void readBytes(byte[] a_bytes, int a_address, int a_length);
 

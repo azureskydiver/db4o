@@ -21,7 +21,7 @@ public class ReplicationRecord implements Internal4{
     public ReplicationRecord(){
     }
     
-    private ReplicationRecord(Db4oDatabase younger, Db4oDatabase older){
+    public ReplicationRecord(Db4oDatabase younger, Db4oDatabase older){
         _youngerPeer = younger;
         _olderPeer = older;
     }
@@ -85,7 +85,7 @@ public class ReplicationRecord implements Internal4{
         return rrA;
     }
     
-    private static ReplicationRecord queryForReplicationRecord(YapStream stream, Db4oDatabase younger, Db4oDatabase older) {
+    public static ReplicationRecord queryForReplicationRecord(YapStream stream, Db4oDatabase younger, Db4oDatabase older) {
         ReplicationRecord res = null;
         stream.showInternalClasses(true);
         Query q = stream.querySharpenBug();

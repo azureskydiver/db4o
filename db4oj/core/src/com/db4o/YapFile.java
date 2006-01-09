@@ -364,7 +364,7 @@ public abstract class YapFile extends YapStream {
         return id;
     }
 
-    void raiseVersion(long a_minimumVersion) {
+    public void raiseVersion(long a_minimumVersion) {
         if (_bootRecord.i_versionGenerator < a_minimumVersion) {
             _bootRecord.i_versionGenerator = a_minimumVersion;
             _bootRecord.setDirty();

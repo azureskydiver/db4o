@@ -117,7 +117,7 @@ public class YapObjectCarrier extends YapMemoryFile {
 	    return false;
 	}
 	
-	void raiseVersion(long a_minimumVersion){
+	public void raiseVersion(long a_minimumVersion){
 	    // do nothing
 	}
 	

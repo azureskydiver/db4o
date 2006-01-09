@@ -459,7 +459,7 @@ public class YapClient extends YapStream implements ExtClient {
         readResult(a_res);
     }
     
-    void raiseVersion(long a_minimumVersion){
+    public void raiseVersion(long a_minimumVersion){
         writeMsg(Msg.RAISE_VERSION.getWriterForLong(i_trans, a_minimumVersion));
     }
     
