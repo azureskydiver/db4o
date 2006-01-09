@@ -15,6 +15,7 @@ import com.db4o.types.*;
  * @exclude
  */
 public class Db4oDatabase implements Db4oType, Internal4{
+    
 
     /**
      * Field is public for implementation reasons, DO NOT TOUCH!
@@ -23,8 +24,14 @@ public class Db4oDatabase implements Db4oType, Internal4{
     
     /**
      * Field is public for implementation reasons, DO NOT TOUCH!
+     * 
+     * This field is badly named, it really is the creation time.
      */
+    // TODO: change to _creationTime with PersistentFormatUpdater
     public long i_uuid;
+    
+    public static final String CREATIONTIME_FIELD = "i_uuid"; 
+
     
     /**
      * cached ObjectContainer for getting the own ID.
@@ -34,8 +41,21 @@ public class Db4oDatabase implements Db4oType, Internal4{
     /**
      * cached ID, only valid in combination with i_objectContainer
      */
-    private transient int i_id; 
+    private transient int i_id;
     
+    /**
+     * constructor for persistence
+     */
+    public Db4oDatabase(){
+    }
+    
+    /**
+     * constructor for comparison and to store new ones
+     */
+    public Db4oDatabase(byte[] signature, long creationTime){
+        i_signature = signature;
+        i_uuid = creationTime;
+    }
     
     /**
      * generates a new Db4oDatabase object with a unique signature.
@@ -87,6 +107,10 @@ public class Db4oDatabase implements Db4oType, Internal4{
             i_id = trans.ensureDb4oDatabase(this);
         }
         return i_id;
+    }
+    
+    public long getCreationTime(){
+        return i_uuid;
     }
     
     /**

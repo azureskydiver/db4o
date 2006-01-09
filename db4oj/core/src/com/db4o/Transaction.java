@@ -322,7 +322,7 @@ public class Transaction {
     }
     
     
-    // This method should really by in Db4oDatabase but we don't want to
+    // This method should really be in Db4oDatabase but we don't want to
     // expose the package methods used 
     public int ensureDb4oDatabase(Db4oDatabase a_db){
         if(Debug.checkSychronization){
