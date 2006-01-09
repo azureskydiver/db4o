@@ -46,7 +46,7 @@ namespace com.db4o.test.j4otest
     	{
     		ensureRoundtrip(typeof(__Funny123Name_));
     	}
-
+    	
         public void testSimpleName()
         {
 			try
@@ -98,6 +98,13 @@ namespace com.db4o.test.j4otest
 			}
 		}
 
+		public void testAssemblyNameWithSpaces()
+		{
+			TypeReference typeReference =
+				TypeReference.FromString("Foo, Business Objects, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+			Tester.ensureEquals("Foo", typeReference.SimpleName);
+			Tester.ensureEquals("Business Objects", typeReference.AssemblyName.Name);
+		}
 
         public void testAssemblyQualifiedName()
         {
