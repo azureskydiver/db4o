@@ -1,12 +1,13 @@
-using System;
-using System.Collections.Generic;
-using com.db4o.ext;
-
 namespace com.db4o.test.net2
 {
+#if NET_2_0
+
+	using System;
+	using System.Collections.Generic;
+	using com.db4o.ext;
+
     public class Net2GenericOtherCollections
     {
-
         public void store()
         {
             CHolder ch = new CHolder();
@@ -183,6 +184,6 @@ namespace com.db4o.test.net2
             CItem otherCItem = other as CItem;
             return _name.CompareTo(otherCItem._name);
         }
-
     }
+#endif
 }

@@ -101,9 +101,9 @@ namespace com.db4o.test {
 				tests.Add(typeof(MaxByEvaluation));
 				tests.Add(typeof(Messaging));
 				tests.Add(typeof(nativequeries.Cat));
-	#if !MONO
+//	#if !MONO
 				tests.Add(typeof(nativequeries.NativeQueriesTestCase));
-	#endif
+//	#endif
 				tests.Add(typeof(nativequeries.cats.TestCatConsistency));
 
 	#if NET_2_0
