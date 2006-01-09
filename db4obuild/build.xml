@@ -464,7 +464,7 @@
 			extraoptions="-r:System.Drawing"
 			definitions="MONO">
 			
-			<exclude name="compact/**" />
+			<exclude name="compact*/**" />
 			
 			<reference dir="${dir.dist.dll.mono}">
 				<include name="db4o.dll" />
@@ -491,7 +491,7 @@
 			optimize="true"
 			definitions="MONO">
 			<include name="*.cs" />
-			<exclude name="compact/**" />
+			<exclude name="compact*/**" />
 		</csc>
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
 	</target>
@@ -1174,6 +1174,8 @@
 				<exclude name="com/db4o/config/TTreeMap.cs" />
 				<exclude name="com/db4o/config/TTreeSet.cs" />
 				<exclude name="com/db4o/config/TVector.cs" />
+				
+				<exclude name="com/db4o/reflect/self/*.*" />
 				
 			</fileset>
 		</copy>
