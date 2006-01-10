@@ -3,12 +3,13 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 /**
  * @exclude
  */
-public final class YapObject extends YapMeta implements ObjectInfo{
+public class YapObject extends YapMeta implements ObjectInfo{
     
 	private YapClass i_yapClass;
 	Object i_object;
@@ -22,6 +23,9 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 	private YapObject hc_subsequent;
 	private int hc_size;
 	private int hc_code; // redundant hashCode
+    
+    public YapObject(){
+    }
 	
 	YapObject(int a_id) {
 		i_id = a_id;
@@ -304,7 +308,7 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 		}
 	}
 
-	void setObject(Object a_object) {
+	public void setObject(Object a_object) {
 		i_object = a_object;
 	}
 
@@ -431,7 +435,7 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 
 	/***** HCTREE *****/
 
-	YapObject hc_add(YapObject a_add) {
+	public YapObject hc_add(YapObject a_add) {
 		Object obj = a_add.getObject();
 		if (obj != null) {
 			a_add.hc_preceding = null;
@@ -509,7 +513,7 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 		return cmp;
 	}
 
-	YapObject hc_find(Object obj) {
+	public YapObject hc_find(Object obj) {
 		return hc_find(hc_getCode(obj), obj);
 	}
 
@@ -600,6 +604,16 @@ public final class YapObject extends YapMeta implements ObjectInfo{
 		hc_calculateSize();
 		return this;
 	}
+    
+    public void hc_traverse(Visitor4 visitor){
+        if(hc_preceding != null){
+            hc_preceding.hc_traverse(visitor);
+        }
+        visitor.visit(this);
+        if(hc_subsequent != null){
+            hc_subsequent.hc_traverse(visitor);
+        }
+    }
 
 	private YapObject hc_remove() {
 		if (hc_subsequent != null && hc_preceding != null) {
