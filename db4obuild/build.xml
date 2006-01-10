@@ -1220,14 +1220,14 @@
 		<updatecsharpproject projectFile="${dir.n.core}/db4o-net.csproj">
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
-				<exclude name="src/compact/**" />
+				<exclude name="src/compact*/**" />
 			</sources>
 		</updatecsharpproject>
 		
 		<updatecsharpproject projectFile="${dir.n.core}/db4o-net2.csproj">
 			<sources dir="${dir.n.core}">
 				<include name="**/*.cs" />
-				<exclude name="src/compact/**" />
+				<exclude name="src/compact*/**" />
 			</sources>
 		</updatecsharpproject>
 		
@@ -1244,6 +1244,13 @@
 				<include name="**/*.cs" />
 				<exclude name="src/net/**" />
 				<!-- <exclude name="src/external/**" /> -->
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectFile="${dir.n.core}/db4o-mono.mdp">
+			<sources dir="${dir.n.core}">
+				<include name="**/*.cs" />
+				<exclude name="src/compact*/**" />
 			</sources>
 		</updatecsharpproject>
 

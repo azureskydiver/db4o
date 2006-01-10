@@ -25,12 +25,17 @@ public abstract class CSharpProject {
 	public static CSharpProject load(File projectFile) throws Exception {
 		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(projectFile);
 		
+		String fname = projectFile.getName();
+		if (fname.endsWith(".mdp")) {
+			return new MonoDevelopProject(document);
+		}
+		
 		if (document.getDocumentElement().getNodeName().equals("Project")) {
 			// VS 2005
 			return new CSharp2005Project(document);
 		}
 		
-		if (projectFile.getName().endsWith(".csdproj")) {
+		if (fname.endsWith(".csdproj")) {
 			return new CSharp2003ProjectCF(document);
 		}
 		return new CSharp2003Project(document);
@@ -45,8 +50,12 @@ public abstract class CSharpProject {
 	}
 
 	public void addFile(String file) {
-		String relativePath = file.replace('/', '\\');
+		String relativePath = prepareFileNameForNode(file);
 		_files.appendChild(createFileNode(relativePath));
+	}
+
+	protected String prepareFileNameForNode(String file) {
+		return file.replace('/', '\\');
 	}
 
 	public void addFiles(String[] files) {

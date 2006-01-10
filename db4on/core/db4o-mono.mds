@@ -1,0 +1,16 @@
+<Combine name="db4o-mono" fileversion="2.0">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="CombineConfiguration">
+      <Entry configuration="Debug" build="True" name="db4o-mono" />
+    </Configuration>
+    <Configuration name="Release" ctype="CombineConfiguration">
+      <Entry configuration="Debug" build="True" name="db4o-mono" />
+    </Configuration>
+  </Configurations>
+  <StartMode startupentry="db4o-mono" single="True">
+    <Execute type="None" entry="db4o-mono" />
+  </StartMode>
+  <Entries>
+    <Entry filename="./db4o-mono.mdp" />
+  </Entries>
+</Combine>
