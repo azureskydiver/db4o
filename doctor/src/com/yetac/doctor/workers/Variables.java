@@ -5,19 +5,18 @@ package com.yetac.doctor.workers;
 import com.yetac.doctor.*;
 
 public class Variables extends Configuration{
-    
-    public static byte[] getVariable(Doctor task, byte[] parameter) {
+        
+    public static String getVariable(Doctor task, String parameter) {
         String fieldName = new String(parameter);
         try {
             Class clazz = task.getClass();
             String str = (String)clazz.getDeclaredField(fieldName).get(task);
-            return str.getBytes();
+            return str;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new byte[0];
+        return "";
     }
-    
     
     
 

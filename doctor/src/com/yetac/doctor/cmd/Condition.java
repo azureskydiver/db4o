@@ -15,7 +15,7 @@ public class Condition extends Command{
     }
     
     protected void adjustNextTextCommand(int pos) {
-        pos = offset + parameter.length + 3;
+        pos = offset + parameter.length() + 3;
         Command textCommand = source.nextCommand(index, TEXT.cmd);
         if (textCommand != null) {
             if (textCommand.offset < pos) {

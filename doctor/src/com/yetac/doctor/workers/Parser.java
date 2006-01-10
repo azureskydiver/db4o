@@ -10,15 +10,19 @@ import com.yetac.doctor.cmd.*;
 public class Parser extends Configuration {
 
     public void parse(DocsFile source) throws IOException, CloneNotSupportedException {
-
-        RandomAccessFile raf = new RandomAccessFile(source.path, "r");
-        byte[] bytes = new byte[(int) raf.length()];
-        raf.read(bytes);
-        raf.close();
-        source.setBytes(bytes);
+    	BufferedReader in=new BufferedReader(new InputStreamReader(new FileInputStream(source.path),"UTF-8"));
+    	StringBuffer buf=new StringBuffer();
+    	String curLine=null;
+    	while((curLine=in.readLine())!=null) {
+    		buf.append(curLine);
+    		buf.append('\n');
+    	}
+    	in.close();
+        char[] bytes = buf.toString().toCharArray();
+        source.setBytes(buf.toString());
         
         int inCommand = 0;
-        byte prev = WHITESPACE;
+        char prev = WHITESPACE;
         
         source.addCommand(new Text(), 0);
         
@@ -55,7 +59,7 @@ public class Parser extends Configuration {
                 }
             } else {
                 if (bytes[i] == COMMAND) {
-                    if (isWhiteSpace(prev)) {
+                    if (Character.isWhitespace(prev)) {
                         inCommand = 1;
                     }else {
                         if(prev == BACKSLASH) {

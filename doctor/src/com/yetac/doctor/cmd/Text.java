@@ -13,11 +13,11 @@ public class Text extends Command {
         if (index < source.commandCount - 1) {
             Command nextCommand = source.commands[index + 1];
             offsetEnd = nextCommand.offset - 2;
-            if(offsetEnd >= 0 && source.bytes[offsetEnd] == Configuration.WHITESPACE) {
+            if(offsetEnd >= 0 && source.bytes.charAt(offsetEnd) == Configuration.WHITESPACE) {
                 offsetEnd--;
             }
         } else {
-            offsetEnd = source.bytes.length - 1;
+            offsetEnd = source.bytes.length() - 1;
         }
     }
 

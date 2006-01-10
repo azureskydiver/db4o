@@ -43,11 +43,7 @@ public abstract class AbstractWriter extends Configuration implements
     protected boolean firstPage;
 
     private DocsFile   source;
-    
-    protected byte[]           conversionBuffer = new byte[1000];
-    protected int              bufferPos;
-
-    
+        
     public void beginEmbedded(DocsFile source)  throws Exception{
     }
 
@@ -120,22 +116,6 @@ public abstract class AbstractWriter extends Configuration implements
         this.files = _files;
     }
     
-    protected void toBuffer(byte b) {
-        if (bufferPos > conversionBuffer.length -1) {
-            byte[] temp = new byte[conversionBuffer.length + 1000];
-            System.arraycopy(conversionBuffer, 0, temp, 0,
-                conversionBuffer.length);
-            conversionBuffer = temp;
-        }
-        conversionBuffer[bufferPos++] = b;
-    }
-
-    protected void toBuffer(byte[] bs) {
-        for (int i = 0; i < bs.length; i++) {
-            toBuffer(bs[i]);
-        }
-    }
-
     public void write(Anchor command) throws Exception {
     }
 
@@ -180,13 +160,14 @@ public abstract class AbstractWriter extends Configuration implements
     public void write(Source command) throws Exception {
     }
 
-    public void write(String str) {
-        write(str.getBytes());
+    public abstract void write(String str);
+
+    public void write(String str, int start, int end) {
+        write(str.substring(start,end+1));
     }
 
     public void writeln(String str) {
-        write(str);
-        writeToFile(new byte[] { BR}, 0, 1);
+        write(str+BR);
     }
 
     public void write(Text command) {
@@ -197,26 +178,15 @@ public abstract class AbstractWriter extends Configuration implements
         write(command.text);
     }
 
-    public void write(byte[] bytes) {
-        if (bytes != null) {
-            write(bytes, 0, bytes.length - 1);
-        }
-    }
+    abstract protected void writeToFile(String str);
 
-    public void write(byte[] bytes, int start, int end) {
-        writeToFile(bytes, start, end);
-    }
-
-    abstract protected void writeToFile(byte[] bytes, int start, int end);
-
-    protected byte[] extractMethod(byte[] orig,String methodName,boolean full) throws UnsupportedEncodingException {
-        String src=new String(orig,"iso-8859-1");
+    protected String extractMethod(String src,String methodName,boolean full) throws UnsupportedEncodingException {
         String methodheadregexp="(public|protected|private) [^\\n]*"+methodName;
         Pattern methodheadpattern=Pattern.compile(methodheadregexp,Pattern.CASE_INSENSITIVE);
         Matcher matcher=methodheadpattern.matcher(src);
         if(!matcher.find()) {
 			System.err.println("Not found: "+methodName);
-            return new byte[0];
+            return "";
         }
         int startidx=matcher.start();
         int idx=src.indexOf('{',startidx)+1;
@@ -248,18 +218,15 @@ public abstract class AbstractWriter extends Configuration implements
         result=result.replaceAll("^\\s*","");
         result=result.replaceAll("\\t","    ");
         result=result.replaceAll("\\n {"+depth+"}","\n");
-        return result.getBytes("iso-8859-1");
+        return result;
     }
     
-    static byte[] multiple(byte[] ofWhat, int times){
-        int len = ofWhat.length;
-        int pos = 0;
-        byte[] res = new byte[len * times];
+    static String multiple(String ofWhat, int times){
+    	StringBuffer buf=new StringBuffer();
         for (int i = 0; i < times ; i++) {
-            System.arraycopy(ofWhat, 0, res,pos, len);
-            pos += len;
+        	buf.append(ofWhat);
         }
-        return res;
+        return buf.toString();
     }
     
 }

@@ -13,11 +13,7 @@ public abstract class Format extends Command {
         if(text == null) {
             text = parameter;
         } else{
-            byte[] temp = new byte[parameter.length + text.length + 1];
-            System.arraycopy(parameter, 0, temp, 0, parameter.length);
-            temp[parameter.length] = (byte)' ';
-            System.arraycopy(text, 0, temp, parameter.length + 1, text.length);
-            text = temp;
+        	text=parameter+' '+text;
         }
     }
 }

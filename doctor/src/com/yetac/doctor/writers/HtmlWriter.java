@@ -3,10 +3,6 @@
 package com.yetac.doctor.writers;
 
 import java.io.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.io.UnsupportedEncodingException;
 import java.util.Stack;
 
 import com.yetac.doctor.applet.*;
@@ -30,16 +26,16 @@ public class HtmlWriter extends AbstractWriter {
     
     private Stack            embedInto;
     
-    private byte[]           preHeader;
-    private byte[]           preDiv;
-    private byte[]           preTable;
+    private String           preHeader;
+    private String           preDiv;
+    private String           preTable;
     private int              outLineNumber;
 
-    static final byte[]      HTML_BR          = "<br>\r\n".getBytes();
-    static final byte[]      HTML_WHITESPACE  = "&nbsp;".getBytes();
-    static final byte[]      HTML_TAB = multiple(HTML_WHITESPACE, TAB_WHITESPACES);
+    static final String      HTML_BR          = "<br>\r\n";
+    static final String      HTML_WHITESPACE  = "&nbsp;";
+    static final String      HTML_TAB = multiple(HTML_WHITESPACE, TAB_WHITESPACES);
     
-    static final byte        CLOSING_BRACE    = ">".getBytes()[0];
+    static final char        CLOSING_BRACE    = '>';
 
     private boolean          ignoreCRforOutline;
     private boolean          executableInCurrent;
@@ -67,17 +63,17 @@ public class HtmlWriter extends AbstractWriter {
             if(new File(inputPath("interactive")).exists()){
                 templateHtmlFileName = "interactive";    
             }
-            preDiv="<div id=\"pagecontainer\">".getBytes();
-            preTable="<table><tr><td width=\"5\">&nbsp;</td><td>".getBytes();
-	        preHeader=read(inputPath(templateHtmlFileName), "<body".getBytes());
+            preDiv="<div id=\"pagecontainer\">";
+            preTable="<table><tr><td width=\"5\">&nbsp;</td><td>";
+	        preHeader=read(inputPath(templateHtmlFileName), "<body");
         }else{
-            preHeader=read(inputPath("docs"), "<body".getBytes());
+            preHeader=read(inputPath("docs"), "<body");
         }
         String outlinePath = outputPath("outline");
         new File(outlinePath).delete();
         outline = new RandomAccessFile(outlinePath, "rw");
-        byte[] outlineHeader = read(inputPath("outline"), "<body".getBytes());
-        outline.write(outlineHeader);
+        String outlineHeader = read(inputPath("outline"), "<body");
+        outline.write(toBytes(outlineHeader));
         String outlineImage = files.task.getOutlineImage();
         if(outlineImage != null){
         	
@@ -90,7 +86,7 @@ public class HtmlWriter extends AbstractWriter {
         }
         outline.writeBytes("<ul>\r\n");
     }
-
+    
     private void writeIndexHtml(String frontPage) {
         String path = files.task.getOutputPath() + "/index.html";
         new File(path).delete();
@@ -125,12 +121,12 @@ public class HtmlWriter extends AbstractWriter {
         embedInto.push(new HtmlWriterStackEntry(currentOutlineTarget, current, outlineLevel));
         current = new RandomAccessFile(path, "rw");
         currentOutlineTarget = source;
-        writeToFile(preHeader, 0, preHeader.length - 1);
+        writeToFile(preHeader);
         if(preDiv != null){
-            writeToFile(preDiv, 0, preDiv.length - 1);
+            writeToFile(preDiv);
         }
         if(preTable != null){
-            writeToFile(preTable, 0, preTable.length - 1);
+            writeToFile(preTable);
         }
         
     }
@@ -177,20 +173,20 @@ public class HtmlWriter extends AbstractWriter {
         new File(path).delete();
         current = new RandomAccessFile(path, "rw");
         currentOutlineTarget = source;
-        writeToFile(preHeader, 0, preHeader.length - 1);
+        writeToFile(preHeader);
         if(preDiv != null){
-            writeToFile(preDiv, 0, preDiv.length - 1);
+            writeToFile(preDiv);
         }
         if(firstPage) {
             if(new File(inputPath("frontpage")).exists()){
-                byte[] preFirstBody = readBody(inputPath("frontpage"));
+                String preFirstBody = readBody(inputPath("frontpage"));
                 if(preFirstBody != null){
-                    writeToFile(preFirstBody, 0, preFirstBody.length - 1);
+                    writeToFile(preFirstBody);
                 }
             }
         }
         if(preTable != null){
-            writeToFile(preTable, 0, preTable.length - 1);
+            writeToFile(preTable);
         }
     }
 
@@ -221,59 +217,26 @@ public class HtmlWriter extends AbstractWriter {
         return "html";
     }
 
-    private byte[] read(String path, byte[] until) throws Exception {
-        RandomAccessFile raf = new RandomAccessFile(path, "r");
-        byte[] buffer = new byte[(int) raf.length()];
-        raf.read(buffer);
-        raf.close();
-        for (int i = 0; i < buffer.length; i++) {
-            boolean match = true;
-            for (int j = 0; j < until.length; j++) {
-                if (buffer[i + j] != until[j]) {
-                    match = false;
-                    break;
-                }
-            }
-            if (match) {
-                while (buffer[i++] != CLOSING_BRACE)
-                    ;
-                byte[] ret = new byte[i];
-                System.arraycopy(buffer, 0, ret, 0, i);
-                return ret;
-            }
+    private String read(String path, String until) throws Exception {
+        String buffer = files.readFileStr(path);
+        int matchidx=buffer.indexOf(until);
+        if(matchidx<0) {
+        	return null;
         }
-        return null;
+        matchidx=buffer.indexOf(CLOSING_BRACE,matchidx+until.length());
+        if(matchidx<0) {
+        	return null;
+        }
+        return buffer.substring(0,matchidx);
     }
     
-    private byte[] readBody(String path) throws Exception {
-        RandomAccessFile raf = new RandomAccessFile(path, "r");
-        byte[] buffer = new byte[(int) raf.length()];
-        raf.read(buffer);
-        raf.close();
-        int begin = find(buffer, "<body>".getBytes());
-        int end = find(buffer, "</body>".getBytes());
-        int len = end - begin - 6;
-        byte[] temp = new byte[len];
-        System.arraycopy(buffer, begin + 6, temp, 0, len);
-        return temp;
+    private String readBody(String path) throws Exception {
+        String buffer = files.readFileStr(path);
+        int begin = buffer.indexOf("<body>");
+        int end = buffer.indexOf("</body>",begin);
+        return buffer.substring(begin+6,end);
     }
     
-    private int find(byte[] buffer, byte[] what){
-        int pos = 0;
-        for(int i = 0; i < buffer.length ; i ++){
-            if(buffer[i] == what[pos]){
-                if(pos == what.length - 1){
-                    return i - pos;
-                }
-                pos ++;
-            }else{
-                pos = 0;
-            }
-        }
-        return 0;
-    }
-
-
     public void write(Anchor command) throws Exception {
         write("<a name=\"");
         write(command.parameter);
@@ -302,7 +265,7 @@ public class HtmlWriter extends AbstractWriter {
         writeOutputBlock(command.text);
     }
 
-    private void writeOutputBlock(byte[] text) {
+    private void writeOutputBlock(String text) {
         write("<table width=\"100%\" cellpadding=\"3\" cellspacing=\"0\" border=\"0\"><tr><td class=\"co\">");
         write("<b>OUTPUT:</b><br/>");
         write(text);
@@ -391,7 +354,7 @@ public class HtmlWriter extends AbstractWriter {
             raf.writeBytes(anchorName);
             raf.writeBytes("\">");
             raf.writeBytes(numbers);
-            raf.write(command.parameter);
+            raf.write(toBytes(command.parameter));
             raf.writeBytes("</a></");
             raf.writeBytes(hx);
             raf.writeBytes(">\r\n");
@@ -403,26 +366,25 @@ public class HtmlWriter extends AbstractWriter {
         outline.writeBytes(anchorName);
         outline.writeBytes("\">");
         outline.writeBytes(numbers);
-        outline.write(command.parameter);
+        outline.write(toBytes(command.parameter));
         outline.writeBytes("</a></li>\r\n");
         ignoreCRforOutline = true;
     }
 
-    private void writeSourceCodeBlock(byte[] code,Source command) throws UnsupportedEncodingException {
+    private void writeSourceCodeBlock(String code,Source command) throws UnsupportedEncodingException {
         writeToFile("<table width=\"100%\" cellpadding=\"3\" cellspacing=\"0\" border=\"0\"><tr><td class=\"lg\">\r\n");
         writeToFile("<code>");
         if(command!=null&&command.getMethodName()!=null) {
             code=extractMethod(code,command.getMethodName(),command.getParamValue(Source.CMD_FULL));
-            if(code.length==0) {
+            if(code.length()==0) {
             	throw new RuntimeException("Method '"+command.getClassName()+"#"+command.getMethodName()+"' not found.");
             }
         }
-        String codestr=new String(code,"iso8859-1");
+        String codestr=new String(code);
         codestr=codestr.replaceAll("&","&amp;");
         codestr=codestr.replaceAll("<","&lt;");
 
-        byte[] bytes = codestr.getBytes();
-        write(bytes, 0, bytes.length-1);
+        write(codestr);
 
         writeToFile("</code></td>");
         if(files.task.isInteractive()){
@@ -454,7 +416,7 @@ public class HtmlWriter extends AbstractWriter {
                         runner.runExample(command.getClassName(),command.getMethodName(),out);
                         out.close();
                         if(command.getParamValue(Source.CMD_OUTPUT)) {
-                            writeOutputBlock(out.toByteArray());
+                            writeOutputBlock(new String(out.toByteArray(),"ISO-8859-1"));
                         }
                     }
                     catch(Exception exc) {
@@ -471,10 +433,7 @@ public class HtmlWriter extends AbstractWriter {
             System.err.println("File not found: " + file.getAbsolutePath());
             return;
         }
-        RandomAccessFile raf = new RandomAccessFile(file, "r");
-        byte[] bytes = new byte[(int) raf.length()];
-        raf.read(bytes);
-        raf.close();
+        String bytes = files.readFileStr(file);
         writeSourceCodeBlock(bytes,command);
     }
 
@@ -482,50 +441,48 @@ public class HtmlWriter extends AbstractWriter {
         writeSourceCodeBlock(command.text,null);
     }
 
-    public void write(byte[] bytes, int start, int end) {
-        byte prev = WHITESPACE;
-        int whiteSpaces = 0;
-        bufferPos = 0;
-        for (int i = start; i <= end; i++) {
-            if(bytes[i] == TAB){
-                toBuffer(HTML_TAB);
-            } else if (bytes[i] == WHITESPACE
-                && (prev == WHITESPACE || (i < end && bytes[i + 1] == WHITESPACE))) {
-                toBuffer(HTML_WHITESPACE);
-            } else if (bytes[i] == LF || bytes[i] == BR) {
+    public void write(String str) {
+    	StringBuffer buf=new StringBuffer();
+        char prev = WHITESPACE;
+        for (int i = 0; i < str.length(); i++) {
+        	char ch=str.charAt(i);
+            if(ch == TAB){
+                buf.append(HTML_TAB);
+            } else if (ch == WHITESPACE
+                && (prev == WHITESPACE || (i < str.length()-1 && str.charAt(i + 1) == WHITESPACE))) {
+            	buf.append(HTML_WHITESPACE);
+            } else if (ch == LF || ch == BR) {
                 if(! ignoreCRforOutline) {
-                    toBuffer(HTML_BR);
+                	buf.append(HTML_BR);
                 }
                 ignoreCRforOutline = false;
-                if (i < bytes.length - 1) {
-                    if (bytes[i + 1] == LF || bytes[i + 1] == BR) {
+                if (i < str.length() - 1) {
+                    if (str.charAt(i + 1) == LF || str.charAt(i + 1) == BR) {
                         i++;
                     }
                 }
             } else {
-                toBuffer(bytes[i]);
+            	buf.append(ch);
             }
-            prev = bytes[i];
+            prev = ch;
         }
-        writeToFile(conversionBuffer, 0, bufferPos - 1);
+        writeToFile(buf.toString());
     }
 
     protected void writeToFile(String str) {
-        byte[] bytes = str.getBytes();
-        writeToFile(bytes, 0, bytes.length - 1);
+    	try {
+			current.write(toBytes(str));
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+		}
     }
 
-    protected void writeToFile(byte[] bytes, int start, int end) {
-        if(bytes != null){
-            int len = end - start + 1;
-            if (len > 0) {
-                try {
-                    current.write(bytes, start, len);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+    private byte[] toBytes(String str) {
+    	try {
+			return str.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException exc) {
+			throw new RuntimeException(exc);
+		}
     }
 }
 

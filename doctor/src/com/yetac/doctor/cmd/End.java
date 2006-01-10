@@ -12,10 +12,10 @@ public class End extends Command{
     }
 
     public void resolve() {
-        byte identifier = source.byteAt(offset +1);
+        char identifier = source.byteAt(offset +1);
         Command command = null;
         int textOffsetInc = 1;
-        if(! Configuration.isWhiteSpace(identifier)) {
+        if(! Character.isWhitespace(identifier)) {
             command = source.previousCommand(index, identifier);
             textOffsetInc = 2;
         }else {

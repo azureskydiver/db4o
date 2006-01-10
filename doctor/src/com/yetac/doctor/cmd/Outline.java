@@ -17,11 +17,7 @@ public class Outline extends Command{
     public void resolve() {
         detectParameters();
         if(text != null) {
-            byte[] temp = new byte[parameter.length + 1 + text.length];
-            System.arraycopy(parameter, 0, temp, 0, parameter.length);
-            temp[parameter.length] = Configuration.WHITESPACE;
-            System.arraycopy(text, 0, temp, parameter.length + 1, text.length);
-            parameter = temp;
+            parameter = parameter+' '+text;
         }
     }
 

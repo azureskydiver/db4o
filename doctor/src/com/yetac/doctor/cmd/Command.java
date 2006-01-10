@@ -2,7 +2,6 @@
 
 package com.yetac.doctor.cmd;
 
-import com.yetac.doctor.*;
 import com.yetac.doctor.workers.*;
 import com.yetac.doctor.writers.*;
 
@@ -10,7 +9,7 @@ public abstract class Command implements Cloneable {
 
     public DocsFile   source;
 
-    public byte       cmd;
+    public char       cmd;
 
     public int        offset;
 
@@ -20,9 +19,9 @@ public abstract class Command implements Cloneable {
 
     public boolean    ignore;
 
-    public byte[]     parameter;
+    public String     parameter;
 
-    public byte[]     text;
+    public String     text;
 
     static final Text TEXT = new Text();
 
@@ -39,7 +38,7 @@ public abstract class Command implements Cloneable {
         String ident = name.substring(pos + 1, pos + 2).toLowerCase();
         char[] chars = new char[1];
         ident.getChars(0, 1, chars, 0);
-        cmd = (byte) chars[0];
+        cmd =  chars[0];
     }
 
     public boolean writeable() {
@@ -50,13 +49,13 @@ public abstract class Command implements Cloneable {
 
     public void detectParameters() {
         int i = offset + 1;
-        byte[] bytes = source.bytes;
+        char[] bytes = source.bytes.toCharArray();
 
         int search = 0;
         int[] pos = new int[3];
 
         while (i < bytes.length) {
-            if (Configuration.isWhiteSpace(bytes[i])) {
+            if (Character.isWhitespace(bytes[i])) {
                 pos[search++] = i + 1;
             }
             if (search == 2) {
@@ -73,13 +72,11 @@ public abstract class Command implements Cloneable {
 
         if (pos[1] > 0) {
             int len = pos[1] - pos[0] - 1;
-            parameter = new byte[len];
-            System.arraycopy(bytes, pos[0], parameter, 0, len);
+            parameter = new String(bytes,pos[0],len);
             if (end != null) {
                 len = end.offset - pos[1] - 2;
                 if (len > 0) {
-                    text = new byte[len];
-                    System.arraycopy(bytes, pos[1], text, 0, len);
+                    text = new String(bytes, pos[1], len);
                 }
                 endPos = end.offset + 3;
             } else {
@@ -91,8 +88,8 @@ public abstract class Command implements Cloneable {
 
     public void hide() {
         int i = offset + 1;
-        byte[] bytes = source.bytes;
-        while (i < bytes.length && Configuration.isWhiteSpace(bytes[i++]));
+        char[] bytes = source.bytes.toCharArray();
+        while (i < bytes.length && Character.isWhitespace(bytes[i++]));
         i-=1;
         adjustNextTextCommand(i);
     }
@@ -107,7 +104,7 @@ public abstract class Command implements Cloneable {
     }
 
     public String toString() {
-        return new String(source.bytes, offset, 10);
+        return source.bytes.substring(offset, offset+10);
     }
 
 }
