@@ -3,7 +3,6 @@
 package com.yetac.doctor.workers;
 
 import java.io.*;
-import java.lang.reflect.*;
 import java.util.*;
 
 import com.yetac.doctor.*;
@@ -126,5 +125,21 @@ public class Files extends Configuration {
                 copyFile(files[idx].getAbsolutePath(),new File(targetdir,files[idx].getName()).getAbsolutePath());
             }
         }
+    }
+
+    public String readFileStr(String path) throws IOException {
+    	return readFileStr(new File(path));
+    }
+
+    public String readFileStr(File file) throws IOException {
+		BufferedReader in=new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF-8"));
+		StringBuffer buf=new StringBuffer();
+		String curLine=null;
+		while((curLine=in.readLine())!=null) {
+			buf.append(curLine);
+			buf.append('\n');
+		}
+		in.close();
+	    return buf.toString();
     }
 }

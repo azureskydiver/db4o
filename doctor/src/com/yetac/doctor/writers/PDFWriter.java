@@ -42,8 +42,8 @@ public class PDFWriter extends AbstractWriter {
 
     PdfOutline[]      outlineNodes;
     
-    static final byte[]      PDF_WHITESPACE  = " ".getBytes();
-    static final byte[]      PDF_TAB = multiple(PDF_WHITESPACE, TAB_WHITESPACES);
+    static final String      PDF_WHITESPACE  = " ";
+    static final String      PDF_TAB = multiple(PDF_WHITESPACE, TAB_WHITESPACES);
 
     public void start(Files _files) throws Exception {
         super.start(_files);
@@ -72,7 +72,7 @@ public class PDFWriter extends AbstractWriter {
         invisibleFont = FontFactory.getFont(FontFactory.COURIER, 1,
             Font.NORMAL, Color.WHITE);
         try {
-            baseFont = BaseFont.createFont(baseFontPath, BaseFont.WINANSI,
+            baseFont = BaseFont.createFont(baseFontPath, BaseFont.IDENTITY_H,
                 BaseFont.EMBEDDED);
         } catch (Exception e) {
             files.task.log("Font for PDF generation not available: "
@@ -174,7 +174,7 @@ public class PDFWriter extends AbstractWriter {
         writeOutputBlock(command.text);
     }
 
-    private void writeOutputBlock(byte[] text) throws BadElementException, DocumentException {
+    private void writeOutputBlock(String text) throws BadElementException, DocumentException {
         Table table = new Table(1, 1);
         Phrase ph=new Phrase(new Chunk(new String("OUTPUT:\n"), boldFont));
         ph.add(new Chunk(new String(text), sourceFont));
@@ -187,7 +187,7 @@ public class PDFWriter extends AbstractWriter {
         document.add(table);
     }
 
-    private void writeSourceCodeBlock(byte[] code,String methodName) throws Exception {
+    private void writeSourceCodeBlock(String code,String methodName) throws Exception {
         code = convert(code);
         Table table = new Table(1, 1);
         Chunk ch = new Chunk(new String(code), sourceFont);
@@ -207,19 +207,16 @@ public class PDFWriter extends AbstractWriter {
             System.err.println("File not found: " + file.getAbsolutePath());
             return;
         }
-        RandomAccessFile raf = new RandomAccessFile(file, "r");
-        byte[] bytes = new byte[(int) raf.length()];
-        raf.read(bytes);
-        raf.close();
+        String codeStr=files.readFileStr(file);
         if (command.getMethodName() != null) {
-            bytes = extractMethod(bytes, command.getMethodName(), command
+            codeStr = extractMethod(codeStr, command.getMethodName(), command
                     .getParamValue(Source.CMD_FULL));
-            if (bytes.length == 0) {
+            if (codeStr.length() == 0) {
                 throw new RuntimeException("Method '" + command.getClassName()
                         + "#" + command.getMethodName() + "' not found.");
             }
         }
-        writeSourceCodeBlock(bytes, command.getMethodName());
+        writeSourceCodeBlock(codeStr, command.getMethodName());
         String methodname = command.getMethodName();
         if (methodname != null && command.getParamValue(Source.CMD_RUN)) {
             try {
@@ -228,7 +225,7 @@ public class PDFWriter extends AbstractWriter {
                         .getMethodName(), out);
                 out.close();
                 if (command.getParamValue(Source.CMD_OUTPUT)) {
-                    writeOutputBlock(out.toByteArray());
+                    writeOutputBlock(new String(out.toByteArray(),"ISO-8859-1"));
                 }
             } catch (Exception exc) {
                 exc.printStackTrace();
@@ -237,41 +234,23 @@ public class PDFWriter extends AbstractWriter {
     }
 
     public void write(Code command) throws Exception {
-        writeSourceCodeBlock(command.text,null);
+        writeSourceCodeBlock(String.valueOf(command.text),null);
     }
     
-    private byte[] convert(byte[] bytes){
-        return convert(bytes, 0, bytes.length -1);
-    }
-    
-    private byte[] convert(byte[] bytes, int start, int end){
-        bufferPos = 0;
-        for (int i = start; i <= end; i++) {
-            if(bytes[i] == TAB){
-                toBuffer(PDF_TAB);
-            } else {
-                toBuffer(bytes[i]);
-            }
-        }
-        byte[] res = new byte[bufferPos];
-        System.arraycopy(conversionBuffer, 0, res, 0, bufferPos);
-        return res;
+    private String convert(String str){
+    	return str.replace(String.valueOf(TAB), PDF_TAB);
     }
 
-    public void write(byte[] bytes, int start, int end) {
-        bytes = convert(bytes, start, end);
-        writeToFile(bytes, 0, bytes.length - 1);
+    public void write(String str) {
+        String conv = convert(str);
+        writeToFile(conv);
     }
 
-    protected void writeToFile(byte[] bytes, int start, int end) {
-        int len = end - start + 1;
-        if (len > 0) {
-            try {
-                document.add(new Chunk(new String(bytes, start, len),
-                    defaultFont));
-            } catch (DocumentException e) {
-                throw new RuntimeException(e);
-            }
+    protected void writeToFile(String str) {
+    	try {
+        	document.add(new Chunk(str,defaultFont));
+        } catch (DocumentException e) {
+        	throw new RuntimeException(e);
         }
     }
 

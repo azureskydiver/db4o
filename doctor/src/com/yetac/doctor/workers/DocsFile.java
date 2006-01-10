@@ -11,7 +11,7 @@ import com.yetac.doctor.writers.*;
 public class DocsFile extends Configuration implements Comparable {
     
     public Files files;
-    public byte[] bytes;
+    public String bytes;
     
     public String title;
     public String name;
@@ -61,7 +61,7 @@ public class DocsFile extends Configuration implements Comparable {
         }
     }
     
-    public void setBytes(byte[] bytes) {
+    public void setBytes(String bytes) {
         this.bytes = bytes;
         commands = new Command[0];
     }
@@ -85,14 +85,14 @@ public class DocsFile extends Configuration implements Comparable {
         }
     }
     
-    public byte byteAt(int pos) {
-        if(pos < bytes.length) {
-            return bytes[pos];
+    public char byteAt(int pos) {
+        if(pos < bytes.length()) {
+            return bytes.charAt(pos);
         }
         return WHITESPACE;
     }
     
-    public Command previousCommand(int index, byte cmd) {
+    public Command previousCommand(int index, char cmd) {
         index --;
         while(index >= 0) {
             if(commands[index].cmd == cmd) {
@@ -110,7 +110,7 @@ public class DocsFile extends Configuration implements Comparable {
         return null; 
     }
     
-    public Command nextCommand(int index, byte cmd) {
+    public Command nextCommand(int index, char cmd) {
         index ++;
         while(index < commandCount) {
             if(commands[index].cmd == cmd) {

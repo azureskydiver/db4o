@@ -13,14 +13,14 @@ public abstract class Configuration {
 
     public static final String       FILE_EXTENSION    = "docs";
 
-    public static final byte         COMMAND           = (byte) '.';
-    public static final byte         WHITESPACE        = (byte) ' ';
-    public static final byte         BR                = (byte) '\n';
-    public static final byte         LF                = (byte) '\r';
-    public static final byte         BACKSLASH         = (byte) '\\';
-    public static final byte         TAB               = (byte) '\t';
+    public static final char         COMMAND           = '.';
+    public static final char         WHITESPACE        = ' ';
+    public static final char         BR                = '\n';
+    public static final char         LF                = '\r';
+    public static final char         BACKSLASH         = '\\';
+    public static final char         TAB               = '\t';
 
-    public static final byte[]       NUMBERS           = new byte[10];
+    public static final char[]       NUMBERS           = new char[10];
 
     public static final Command[]    COMMANDS          = { new Anchor(), new Bold(),
         new Comment(), new Condition(), new Code(), new Embed(), new End(), new Graphic(), 
@@ -30,15 +30,11 @@ public abstract class Configuration {
     static {
 
         for (int i = 0; i < NUMBERS.length; i++) {
-            NUMBERS[i] = (byte) (("" + i).charAt(0));
+            NUMBERS[i] = (char)('0'+i);
         }
 
         for (int i = 0; i < COMMANDS.length; i++) {
             COMMANDS[i].setCmd();
         }
-    }
-
-    public static boolean isWhiteSpace(byte b) {
-        return b == WHITESPACE || b == BR || b == LF;
     }
 }

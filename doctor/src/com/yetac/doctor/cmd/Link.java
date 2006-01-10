@@ -8,9 +8,9 @@ import com.yetac.doctor.writers.*;
 
 public class Link extends Command {
 
-    private static final byte[][] EXTERNALS = { "http:".getBytes(),
-        "mailto:".getBytes(), "news:".getBytes(), "ftp:".getBytes(),
-        "callto:".getBytes()};
+    private static final char[][] EXTERNALS = { "http:".toCharArray(),
+        "mailto:".toCharArray(), "news:".toCharArray(), "ftp:".toCharArray(),
+        "callto:".toCharArray()};
 
     public void resolve() {
         detectParameters();
@@ -27,9 +27,9 @@ public class Link extends Command {
         int len = Array.getLength(EXTERNALS);
         for (int i = 0; i < len; i++) {
             boolean take = true;
-            if (parameter.length > EXTERNALS[i].length) {
+            if (parameter.length() > EXTERNALS[i].length) {
                 for (int j = 0; j < EXTERNALS[i].length; j++) {
-                    if (parameter[j] != EXTERNALS[i][j]) {
+                    if (parameter.charAt(j) != EXTERNALS[i][j]) {
                         take = false;
                     }
                 }
