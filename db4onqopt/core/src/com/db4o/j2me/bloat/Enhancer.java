@@ -13,7 +13,7 @@ import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.file.ClassFileLoader;
 
 public class Enhancer {
-	protected ClassEditor createClass(ClassFileLoader loader, String outputDir,
+	protected  ClassEditor createClass(ClassFileLoader loader, String outputDir,
 			int modifiers, String className, Type superType, Type[] Interfaces) {
 		loader.setOutputDir(new File(outputDir));
 		EditorContext context = new PersistentBloatContext(loader);
