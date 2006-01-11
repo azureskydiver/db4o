@@ -89,6 +89,7 @@ public class ClassEnhancer extends Enhancer {
 		// INVOKESPECIAL Animal.self_get(String) : Object
 		//		    ARETURN
 		//		   L7 (35)
+		me.commit();
 	}
 
 	private void generateSelf_set(ClassEditor ce) {
@@ -154,6 +155,7 @@ public class ClassEnhancer extends Enhancer {
 		//		   L10 (42)
 		//		    RETURN
 		//		   L11 (44)
+		me.commit();
 	}
 
 	public static void main(String[] args) {
