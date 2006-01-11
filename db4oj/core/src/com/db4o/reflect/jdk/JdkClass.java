@@ -6,7 +6,6 @@ import java.lang.reflect.*;
 
 import com.db4o.*;
 import com.db4o.reflect.*;
-import com.db4o.types.*;
 
 /**
  * Reflection implementation for Class to map to JDK reflection.
