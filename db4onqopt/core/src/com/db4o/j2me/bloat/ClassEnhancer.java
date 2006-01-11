@@ -1,16 +1,34 @@
 package com.db4o.j2me.bloat;
 
+import EDU.purdue.cs.bloat.context.PersistentBloatContext;
 import EDU.purdue.cs.bloat.editor.ClassEditor;
+import EDU.purdue.cs.bloat.editor.EditorContext;
 import EDU.purdue.cs.bloat.editor.Label;
 import EDU.purdue.cs.bloat.editor.MemberRef;
 import EDU.purdue.cs.bloat.editor.MethodEditor;
 import EDU.purdue.cs.bloat.editor.Opcode;
 import EDU.purdue.cs.bloat.editor.Type;
+import EDU.purdue.cs.bloat.file.ClassFile;
+import EDU.purdue.cs.bloat.file.ClassFileLoader;
+import EDU.purdue.cs.bloat.reflect.ClassInfo;
 import EDU.purdue.cs.bloat.reflect.MethodInfo;
 import EDU.purdue.cs.bloat.reflect.Modifiers;
 
 public class ClassEnhancer extends Enhancer {
-	private boolean inspectNoArgsConstr(ClassEditor ce, MethodInfo[] methods) {
+	public ClassEditor loadClass(ClassFileLoader loader, String classPath,
+			String className) {
+		loader.appendClassPath(classPath);
+		try {
+			ClassInfo info = loader.loadClass(className);
+			EditorContext context = new PersistentBloatContext(info.loader());
+			return context.editClass(info);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public boolean inspectNoArgConstr(ClassEditor ce, MethodInfo[] methods) {
 		MethodEditor me;
 		for (int i = 0; i < methods.length; i++) {
 			me = new MethodEditor(ce, methods[i]);
@@ -24,7 +42,7 @@ public class ClassEnhancer extends Enhancer {
 		return false;
 	}
 
-	private void addNoArgConstructor(ClassEditor ce) {
+	public void addNoArgConstructor(ClassEditor ce) {
 		MethodEditor init = new MethodEditor(ce, Modifiers.PUBLIC, Type
 				.getType("()V"), "<init>", new Type[0], new Type[0]);
 		MemberRef mr = methodRef(ce.getClass(), "<init>", new Class[0],
@@ -36,7 +54,7 @@ public class ClassEnhancer extends Enhancer {
 		init.commit();
 	}
 
-	private void generateSelf_get(ClassEditor ce) {
+	public void generateSelf_get(ClassEditor ce) {
 		MethodEditor me = createMethod(ce, Modifiers.PUBLIC, Object.class,
 				"self_get", new Class[] { String.class }, new Class[0]);
 		MemberRef mr = methodRef(ce.getClass(), "self_get",
@@ -51,7 +69,7 @@ public class ClassEnhancer extends Enhancer {
 		 * super.self_get(fieldName); }
 		 * 
 		 */
-		//		 access flags 1
+		// access flags 1
 		// public self_get(String) : Object
 		// L0 (0)
 		// ALOAD 1: fieldName
@@ -87,12 +105,12 @@ public class ClassEnhancer extends Enhancer {
 		// ALOAD 0: this
 		// ALOAD 1: fieldName
 		// INVOKESPECIAL Animal.self_get(String) : Object
-		//		    ARETURN
-		//		   L7 (35)
+		// ARETURN
+		// L7 (35)
 		me.commit();
 	}
 
-	private void generateSelf_set(ClassEditor ce) {
+	public void generateSelf_set(ClassEditor ce) {
 		MethodEditor me = new MethodEditor(ce, Modifiers.PUBLIC, Type.VOID,
 				"self_set", new Type[] { getType(String.class),
 						getType(Object.class) }, new Type[0]);
@@ -152,13 +170,10 @@ public class ClassEnhancer extends Enhancer {
 		// ALOAD 1: fieldName
 		// ALOAD 2: value
 		// INVOKESPECIAL Animal.self_set(String,Object) : void
-		//		   L10 (42)
-		//		    RETURN
-		//		   L11 (44)
+		// L10 (42)
+		// RETURN
+		// L11 (44)
 		me.commit();
 	}
 
-	public static void main(String[] args) {
-
-	}
 }

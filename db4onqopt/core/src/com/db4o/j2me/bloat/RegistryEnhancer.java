@@ -1,6 +1,9 @@
-package com.db4o.bloat;
+package com.db4o.j2me.bloat;
 
+import java.io.File;
 import java.util.Hashtable;
+
+import org.apache.tools.ant.taskdefs.GenerateKey;
 
 import EDU.purdue.cs.bloat.editor.ClassEditor;
 import EDU.purdue.cs.bloat.editor.FieldEditor;
@@ -10,14 +13,16 @@ import EDU.purdue.cs.bloat.editor.MemberRef;
 import EDU.purdue.cs.bloat.editor.MethodEditor;
 import EDU.purdue.cs.bloat.editor.Opcode;
 import EDU.purdue.cs.bloat.editor.Type;
+import EDU.purdue.cs.bloat.file.ClassFileLoader;
 import EDU.purdue.cs.bloat.reflect.Modifiers;
 
 import com.db4o.reflect.self.ClassInfo;
+import com.db4o.reflect.self.SelfReflectionRegistry;
 import com.sun.org.apache.xpath.internal.axes.SelfIteratorNoPredicate;
 
 public class RegistryEnhancer extends Enhancer {
 
-	private void generateCLASSINFOField(ClassEditor ce) {
+	public void generateCLASSINFOField(ClassEditor ce) {
 		FieldEditor fe = createField(ce, 26, Type.getType(Hashtable.class),
 				"CLASSINFO");
 		// TODO: inject declaration:
@@ -132,7 +137,7 @@ public class RegistryEnhancer extends Enhancer {
 		// RETURN
 	}
 
-	private void generateInfoForMethod(ClassEditor ce) {
+	public void generateInfoForMethod(ClassEditor ce) {
 		MethodEditor me = createMethod(ce, Modifiers.PUBLIC,
 				com.db4o.reflect.self.ClassInfo.class, "infoFor",
 				new Class[] { Class.class }, new Class[0]);
@@ -166,7 +171,7 @@ public class RegistryEnhancer extends Enhancer {
 
 	}
 
-	private void generateArrayForMethod(ClassEditor ce, Class clazz) {
+	public void generateArrayForMethod(ClassEditor ce, Class clazz) {
 		// clazz==Dog.class;
 		MethodEditor me = createMethod(ce, Modifiers.PUBLIC, Object.class,
 				"arrayFor", new Class[] { Class.class, Integer.class },
@@ -235,7 +240,7 @@ public class RegistryEnhancer extends Enhancer {
 		me.commit();
 	}
 
-	private void generateComponentTypeMethod(ClassEditor ce, Class clazz) {
+	public void generateComponentTypeMethod(ClassEditor ce, Class clazz) {
 		// clazz== Dog.class;
 		MethodEditor me = createMethod(ce, Modifiers.PUBLIC, Class.class,
 				"componentType", new Class[] { Class.class }, new Class[0]);
@@ -289,16 +294,14 @@ public class RegistryEnhancer extends Enhancer {
 		me.addInstruction(Opcode.opc_aload_1, localVariable1);
 		// INVOKESPECIAL SelfReflectionRegistry.componentType(Class) : Class
 		me.addInstruction(Opcode.opc_invokespecial, methodRef(
-				SelfReflectionRegistry.class, "componentType",
-				new Class[] { Class.class }, Class.class));
+				com.db4o.reflect.self.SelfReflectionRegistry.class,
+				"componentType", new Class[] { Class.class }, Class.class));
+		
 		// ARETURN
 		me.addInstruction(Opcode.opc_areturn);
 		// L5 (21)
 		me.commit();
-	}
-
-	public static void main(String[] args) {
-
+		
 	}
 
 }
