@@ -37,6 +37,10 @@ public class Enhancer {
 		return new MemberRef(getType(parent), new NameAndType(name,
 				getType(fieldClass)));
 	}
+	protected MemberRef fieldRef(String parent, Class fieldClass, String name) {
+		return new MemberRef(Type.getType("L"+ parent + ";"), new NameAndType(name,
+				getType(fieldClass)));
+	}
 
 	protected MemberRef methodRef(Class parent, String name, Class[] param,
 			Class ret) {
