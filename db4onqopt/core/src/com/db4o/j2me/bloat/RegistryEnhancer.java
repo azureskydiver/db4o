@@ -13,6 +13,7 @@ import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.reflect.Modifiers;
 
 import com.db4o.reflect.self.ClassInfo;
+import com.sun.org.apache.xpath.internal.axes.SelfIteratorNoPredicate;
 
 public class RegistryEnhancer extends Enhancer {
 
@@ -30,7 +31,7 @@ public class RegistryEnhancer extends Enhancer {
 		 * new FieldInfo("_prices", int[].class, true, false, false), })); //
 		 * FIELDINFO.put(P1Object.class, new FieldInfo[]{}); }
 		 */
-//		 access flags 8
+		// access flags 8
 		// static <clinit>() : void
 		// L0 (0)
 		// NEW Hashtable
@@ -124,12 +125,11 @@ public class RegistryEnhancer extends Enhancer {
 		// AASTORE
 		// L18 (86)
 		// INVOKESPECIAL ClassInfo.<init>(boolean,Class,FieldInfo[]) : void
-		//		   L19 (88)
-		//		    INVOKEVIRTUAL Hashtable.put(Object,Object) : Object
-		//		    POP
-		//		   L20 (91)
-		//		    RETURN
-
+		// L19 (88)
+		// INVOKEVIRTUAL Hashtable.put(Object,Object) : Object
+		// POP
+		// L20 (91)
+		// RETURN
 	}
 
 	private void generateInfoForMethod(ClassEditor ce) {
@@ -138,7 +138,7 @@ public class RegistryEnhancer extends Enhancer {
 				new Class[] { Class.class }, new Class[0]);
 		MemberRef mr = methodRef(ce.getClass(), "infoFor",
 				new Class[] { Class.class }, ClassInfo.class);
-//		 TODO: inject instructions:
+		// TODO: inject instructions:
 		/*
 		 * public ClassInfo infoFor(Class clazz) { return (ClassInfo)
 		 * CLASSINFO.get(clazz); }
@@ -163,15 +163,19 @@ public class RegistryEnhancer extends Enhancer {
 		me.addInstruction(Opcode.opc_checkcast, getType(ClassInfo.class));
 		me.addInstruction(Opcode.opc_areturn);
 		me.commit();
-		
+
 	}
 
-	private void generateArrayForMethod(ClassEditor ce) {
+	private void generateArrayForMethod(ClassEditor ce, Class clazz) {
+		// clazz==Dog.class;
 		MethodEditor me = createMethod(ce, Modifiers.PUBLIC, Object.class,
 				"arrayFor", new Class[] { Class.class, Integer.class },
 				new Class[0]);
 		MemberRef mr = methodRef(ce.getClass(), "arrayFor", new Class[] {
 				Class.class, Integer.class }, Object.class);
+		LocalVariable localVariable0 = new LocalVariable(0);
+		LocalVariable localVariable1 = new LocalVariable(1);
+		LocalVariable localVariable2 = new LocalVariable(2);
 		me.addLabel(new Label(1));
 		// TODO: inject instructions:
 		/*
@@ -185,13 +189,26 @@ public class RegistryEnhancer extends Enhancer {
 		// public arrayFor(Class,int) : Object
 		// L0 (0)
 		// LDC Lcom/db4o/bloat/Dog;.class
-		// ALOAD 1: clazz
-		// INVOKEVIRTUAL Class.isAssignableFrom(Class) : boolean
-		// IFEQ L1
-		// L2 (5)
-		// ILOAD 2: length
-		// ANEWARRAY Dog
-		// ARETURN
+		while (!(clazz.getSuperclass().equals(Object.class))) {
+
+			me.addInstruction(Opcode.opc_ldc, clazz);
+			// ALOAD 1: clazz
+			me.addInstruction(Opcode.opc_aload_1, localVariable1);
+			// INVOKEVIRTUAL Class.isAssignableFrom(Class) : boolean
+			me.addInstruction(Opcode.opc_invokevirtual, methodRef(Class.class,
+					"isAssignableFrom", new Class[] { Class.class },
+					Boolean.class));
+			// IFEQ L1
+			me.addInstruction(Opcode.opc_ifeq);
+			// L2 (5)
+			// ILOAD 2: length
+			me.addInstruction(Opcode.opc_iload_2, localVariable2);
+			// ANEWARRAY Dog
+			me.addInstruction(Opcode.opc_anewarray, clazz);
+			// ARETURN
+			me.addInstruction(Opcode.opc_areturn);
+			clazz = clazz.getSuperclass();
+		}
 		// L1 (9)
 		// LDC Lcom/db4o/bloat/Animal;.class
 		// ALOAD 1: clazz
@@ -200,21 +217,32 @@ public class RegistryEnhancer extends Enhancer {
 		// L4 (14)
 		// ILOAD 2: length
 		// ANEWARRAY Animal
-		// ARETURN
+		// ARETURN---------
 		// L3 (18)
 		// ALOAD 0: this
+		me.addInstruction(Opcode.opc_aload_0, localVariable0);
 		// ALOAD 1: clazz
+		me.addInstruction(Opcode.opc_iload_1, localVariable1);
 		// ILOAD 2: length
+		me.addInstruction(Opcode.opc_iload_2, localVariable2);
 		// INVOKESPECIAL SelfReflectionRegistry.arrayFor(Class,int) : Object
+		me.addInstruction(Opcode.opc_invokespecial, methodRef(
+				SelfReflectionRegistry.class, "arrayFor", new Class[] {
+						Class.class, Integer.class }, Object.class));
 		// ARETURN
+		me.addInstruction(Opcode.opc_areturn);
 		// L5 (24)
+		me.commit();
 	}
 
-	private void generateComponentTypeMethod(ClassEditor ce) {
+	private void generateComponentTypeMethod(ClassEditor ce, Class clazz) {
+		// clazz== Dog.class;
 		MethodEditor me = createMethod(ce, Modifiers.PUBLIC, Class.class,
 				"componentType", new Class[] { Class.class }, new Class[0]);
 		MemberRef mr = methodRef(ce.getClass(), "componentType",
 				new Class[] { Class.class }, Class.class);
+		LocalVariable localVariable0 = new LocalVariable(0);
+		LocalVariable localVariable1 = new LocalVariable(1);
 		me.addLabel(new Label(1));
 		// TODO:inject instructions:
 		/*
@@ -227,12 +255,24 @@ public class RegistryEnhancer extends Enhancer {
 		// public componentType(Class) : Class
 		// L0 (0)
 		// LDC [Lcom/db4o/bloat/Dog;.class
-		// ALOAD 1: clazz
-		// INVOKEVIRTUAL Class.isAssignableFrom(Class) : boolean
-		// IFEQ L1
-		// L2 (5)
-		// LDC Lcom/db4o/bloat/Dog;.class
-		// ARETURN
+		while (!(clazz.getSuperclass().equals(Object.class))) {
+
+			me.addInstruction(Opcode.opc_ldc, clazz);
+			// ALOAD 1: clazz
+			me.addInstruction(Opcode.opc_aload_1, localVariable1);
+			// INVOKEVIRTUAL Class.isAssignableFrom(Class) : boolean
+			me.addInstruction(Opcode.opc_invokevirtual, methodRef(Class.class,
+					"isAssignableFrom", new Class[] { Class.class },
+					Boolean.class));
+			// IFEQ L1
+			me.addInstruction(Opcode.opc_ifeq);
+			// L2 (5)
+			// LDC Lcom/db4o/bloat/Dog;.class
+			me.addInstruction(Opcode.opc_ldc, clazz);
+			// ARETURN
+			me.addInstruction(Opcode.opc_areturn);
+			clazz = clazz.getSuperclass();
+		}
 		// L1 (8)
 		// LDC [Lcom/db4o/bloat/Animal;.class
 		// ALOAD 1: clazz
@@ -240,13 +280,21 @@ public class RegistryEnhancer extends Enhancer {
 		// IFEQ L3
 		// L4 (13)
 		// LDC Lcom/db4o/bloat/Animal;.class
-		// ARETURN
+		// ARETURN--------------
+
 		// L3 (16)
 		// ALOAD 0: this
+		me.addInstruction(Opcode.opc_aload_0, localVariable0);
 		// ALOAD 1: clazz
+		me.addInstruction(Opcode.opc_aload_1, localVariable1);
 		// INVOKESPECIAL SelfReflectionRegistry.componentType(Class) : Class
+		me.addInstruction(Opcode.opc_invokespecial, methodRef(
+				SelfReflectionRegistry.class, "componentType",
+				new Class[] { Class.class }, Class.class));
 		// ARETURN
+		me.addInstruction(Opcode.opc_areturn);
 		// L5 (21)
+		me.commit();
 	}
 
 	public static void main(String[] args) {
