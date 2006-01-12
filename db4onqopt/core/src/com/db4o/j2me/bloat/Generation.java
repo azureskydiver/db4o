@@ -5,20 +5,18 @@ import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.file.ClassFileLoader;
 import EDU.purdue.cs.bloat.reflect.Modifiers;
 
-import com.db4o.bloat.RegistryEnhancer;
-
 public class Generation {
 	private static ClassEnhancer classEnhancer;
 
 	private static RegistryEnhancer registryEnhancer;
 
-	public void init() {
-
+	public static  void init() {
+		registryEnhancer = new RegistryEnhancer();
+		classEnhancer = new ClassEnhancer();
 	}
 
 	public static void main(String[] args) {
-
-		registryEnhancer = new RegistryEnhancer();
+		init();
 		String outputDirName = "DirName";
 		ClassFileLoader loader = new ClassFileLoader();
 		ClassEditor ce = registryEnhancer.createClass(loader, outputDirName,
@@ -34,15 +32,14 @@ public class Generation {
 
 		ce.commit();
 
-		classEnhancer = new ClassEnhancer();
-		ClassEditor ced = classEnhancer.loadClass(loader, "add here classPath",
-				"Dog");
-		if (!(classEnhancer.inspectNoArgConstr(ced, ced.methods()))) {
-			classEnhancer.addNoArgConstructor(ced);
+		ClassEditor cled = classEnhancer.loadClass(loader,
+				"add here classPath", "Dog");
+		if (!(classEnhancer.inspectNoArgConstr(cled, cled.methods()))) {
+			classEnhancer.addNoArgConstructor(cled);
 		}
-		classEnhancer.generateSelf_get(ced);
-		classEnhancer.generateSelf_set(ced);
-		ced.commit();
+		classEnhancer.generateSelf_get(cled);
+		classEnhancer.generateSelf_set(cled);
+		cled.commit();
 
 	}
 
