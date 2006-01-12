@@ -196,7 +196,7 @@ public class RegistryEnhancer extends Enhancer {
 
 			me.addInstruction(Opcode.opc_ldc, clazz);
 			// ALOAD 1: clazz
-			me.addInstruction(Opcode.opc_aload_1, localVariable1);
+			me.addInstruction(Opcode.opc_aload, localVariable1);
 			// INVOKEVIRTUAL Class.isAssignableFrom(Class) : boolean
 			me.addInstruction(Opcode.opc_invokevirtual, methodRef(Class.class,
 					"isAssignableFrom", new Class[] { Class.class },
@@ -206,9 +206,9 @@ public class RegistryEnhancer extends Enhancer {
 												// another parameters???
 			// L2 (5)
 			// ILOAD 2: length
-			me.addInstruction(Opcode.opc_iload_2, localVariable2);
+			me.addInstruction(Opcode.opc_iload, localVariable2);
 			// ANEWARRAY Dog
-			me.addInstruction(Opcode.opc_anewarray, clazz);
+			me.addInstruction(Opcode.opc_anewarray, getType(clazz));
 			// ARETURN
 			me.addInstruction(Opcode.opc_areturn);
 			clazz = clazz.getSuperclass();
