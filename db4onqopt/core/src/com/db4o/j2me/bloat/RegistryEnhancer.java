@@ -1,9 +1,6 @@
 package com.db4o.j2me.bloat;
 
-import java.io.File;
 import java.util.Hashtable;
-
-import org.apache.tools.ant.taskdefs.GenerateKey;
 
 import EDU.purdue.cs.bloat.editor.ClassEditor;
 import EDU.purdue.cs.bloat.editor.FieldEditor;
@@ -13,12 +10,10 @@ import EDU.purdue.cs.bloat.editor.MemberRef;
 import EDU.purdue.cs.bloat.editor.MethodEditor;
 import EDU.purdue.cs.bloat.editor.Opcode;
 import EDU.purdue.cs.bloat.editor.Type;
-import EDU.purdue.cs.bloat.file.ClassFileLoader;
 import EDU.purdue.cs.bloat.reflect.Modifiers;
 
 import com.db4o.reflect.self.ClassInfo;
 import com.db4o.reflect.self.SelfReflectionRegistry;
-import com.sun.org.apache.xpath.internal.axes.SelfIteratorNoPredicate;
 
 public class RegistryEnhancer extends Enhancer {
 
@@ -194,6 +189,9 @@ public class RegistryEnhancer extends Enhancer {
 		// public arrayFor(Class,int) : Object
 		// L0 (0)
 		// LDC Lcom/db4o/bloat/Dog;.class
+		// FIXME:
+		// Create list of classes, topological sort this list:
+		// while (!(clazz.getSuperclass().equals(Object.class)))
 		while (!(clazz.getSuperclass().equals(Object.class))) {
 
 			me.addInstruction(Opcode.opc_ldc, clazz);
@@ -204,7 +202,8 @@ public class RegistryEnhancer extends Enhancer {
 					"isAssignableFrom", new Class[] { Class.class },
 					Boolean.class));
 			// IFEQ L1
-			me.addInstruction(Opcode.opc_ifeq);
+			me.addInstruction(Opcode.opc_ifeq); // is that correct?? do we need
+												// another parameters???
 			// L2 (5)
 			// ILOAD 2: length
 			me.addInstruction(Opcode.opc_iload_2, localVariable2);
@@ -296,12 +295,12 @@ public class RegistryEnhancer extends Enhancer {
 		me.addInstruction(Opcode.opc_invokespecial, methodRef(
 				com.db4o.reflect.self.SelfReflectionRegistry.class,
 				"componentType", new Class[] { Class.class }, Class.class));
-		
+
 		// ARETURN
 		me.addInstruction(Opcode.opc_areturn);
 		// L5 (21)
 		me.commit();
-		
+
 	}
 
 }
