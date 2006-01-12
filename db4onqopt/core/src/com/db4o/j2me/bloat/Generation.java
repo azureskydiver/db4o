@@ -1,5 +1,8 @@
 package com.db4o.j2me.bloat;
 
+import com.db4o.reflect.self.*;
+import com.db4o.test.reflect.self.*;
+
 import EDU.purdue.cs.bloat.editor.ClassEditor;
 import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.file.ClassFileLoader;
@@ -17,23 +20,23 @@ public class Generation {
 
 	public static void main(String[] args) {
 		init();
-		String outputDirName = "DirName";
+		String outputDirName = "generated";
 		ClassFileLoader loader = new ClassFileLoader();
 		ClassEditor ce = registryEnhancer.createClass(loader, outputDirName,
 				Modifiers.PUBLIC, "RegressionDogSelfReflectionRegistry", Type
-						.getType("SelfReflectionRegistry"), new Type[0]);
+						.getType("L"+SelfReflectionRegistry.class.getName()+";"), new Type[0]);
 
 		registryEnhancer.generateCLASSINFOField(ce);
 		registryEnhancer.generateInfoForMethod(ce);
-		registryEnhancer.generateArrayForMethod(ce,
-				com.db4o.test.reflect.self.Dog.class);
-		registryEnhancer.generateComponentTypeMethod(ce,
-				com.db4o.test.reflect.self.Dog.class);
+//		registryEnhancer.generateArrayForMethod(ce,
+//				com.db4o.test.reflect.self.Dog.class);
+//		registryEnhancer.generateComponentTypeMethod(ce,
+//				com.db4o.test.reflect.self.Dog.class);
 
 		ce.commit();
 
 		ClassEditor cled = classEnhancer.loadClass(loader,
-				"add here classPath", "Dog");
+				"../unittests/bin", "com.db4o.reflect.self.Dog");
 		if (!(classEnhancer.inspectNoArgConstr(cled, cled.methods()))) {
 			classEnhancer.addNoArgConstructor(cled);
 		}

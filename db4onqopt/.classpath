@@ -7,7 +7,7 @@
 	<classpathentry kind="src" path="core/src"/>
 	<classpathentry kind="src" path="core/testsrc"/>
 	<classpathentry kind="src" path="test/src"/>
-	<classpathentry kind="lib" path="lib/bloat-1.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/bloat"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

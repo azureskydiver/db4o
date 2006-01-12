@@ -50,11 +50,27 @@ public class ClassEnhancer extends Enhancer {
 				.getType("()V"), "<init>", new Type[0], new Type[0]);
 		MemberRef mr = methodRef(ce.getClass(), "<init>", new Class[0],
 				void.class);
-		init.addLabel(init.newLabel());
+		init.addLabel(new Label(0));
 		init.addInstruction(Opcode.opcx_aload, init.paramAt(0));
 		init.addInstruction(Opcode.opcx_invokespecial, mr);
 		init.addInstruction(Opcode.opcx_return);
 		init.commit();
+	}
+
+	private Label[] createLabels(int num) {
+		Label[] labels=new Label[num+1];
+		for(int i=0;i<=num;i++) {
+			labels[i]=new Label(i);
+		}
+		return labels;
+	}
+
+	private LocalVariable[] createLocalVariables(int num) {
+		LocalVariable[] localVars=new LocalVariable[num+1];
+		for(int i=0;i<=num;i++) {
+			localVars[i]=new LocalVariable(i);
+		}
+		return localVars;
 	}
 
 	public void generateSelf_get(ClassEditor ce) {
@@ -62,9 +78,8 @@ public class ClassEnhancer extends Enhancer {
 				"self_get", new Class[] { String.class }, new Class[0]);
 		MemberRef mr = methodRef(ce.getClass(), "self_get",
 				new Class[] { String.class }, Object.class);
-		LocalVariable localVariable0 = new LocalVariable(0);
-		LocalVariable localVariable1 = new LocalVariable(1);
-		me.addLabel(new Label(1));
+		LocalVariable[] localVars=createLocalVariables(1);
+		Label[] labels=createLabels(7);
 		// TODO: instructions:
 		/*
 		 * public Object self_get(String fieldName) {
@@ -77,22 +92,24 @@ public class ClassEnhancer extends Enhancer {
 		// access flags 1
 		// public self_get(String) : Object
 		// L0 (0)
+		me.addLabel(labels[0]);
 		// ALOAD 1: fieldName
-		me.addInstruction(Opcode.opc_aload_1, localVariable1);
+		me.addInstruction(Opcode.opc_aload, localVars[1]);
 		// LDC "_age"
 		me.addInstruction(Opcode.opc_ldc, "_age");
 		// INVOKEVIRTUAL String.equals(Object) : boolean
 		me.addInstruction(Opcode.opc_invokevirtual, methodRef(String.class,
 				"equals", new Class[] { Object.class }, Boolean.class));
 		// IFEQ L1
-		me.addInstruction(Opcode.opc_ifeq);
+		me.addInstruction(Opcode.opc_ifeq,labels[1]);
 		// L2 (5)
+		me.addLabel(labels[2]);
 		// NEW Integer
-		me.addInstruction(Opcode.opc_new, Integer.class);
+		me.addInstruction(Opcode.opc_new, getType(Integer.class));
 		// DUP
 		me.addInstruction(Opcode.opc_dup);
 		// ALOAD 0: this
-		me.addInstruction(Opcode.opc_aload_0, localVariable0);
+		me.addInstruction(Opcode.opc_aload, localVars[0]);
 		// GETFIELD Dog._age : int
 		me.addInstruction(Opcode.opc_getfield, fieldRef(Dog.class,
 				Integer.class, "_age"));
@@ -102,52 +119,58 @@ public class ClassEnhancer extends Enhancer {
 		// ARETURN
 		me.addInstruction(Opcode.opc_areturn);
 		// L1 (12)
+		me.addLabel(labels[1]);
 		// ALOAD 1: fieldName
-		me.addInstruction(Opcode.opc_aload_1, localVariable1);
+		me.addInstruction(Opcode.opc_aload, localVars[1]);
 		// LDC "_parents"
 		me.addInstruction(Opcode.opc_ldc, "_parents");
 		// INVOKEVIRTUAL String.equals(Object) : boolean
 		me.addInstruction(Opcode.opc_invokevirtual, methodRef(String.class,
 				"equals", new Class[] { Object.class }, Boolean.class));
 		// IFEQ L3
-		me.addInstruction(Opcode.opc_ifeq);
+		me.addInstruction(Opcode.opc_ifeq,labels[3]);
 		// L4 (17)
+		me.addLabel(labels[4]);
 		// ALOAD 0: this
-		me.addInstruction(Opcode.opc_aload_0, localVariable0);
+		me.addInstruction(Opcode.opc_aload, localVars[0]);
 		// GETFIELD Dog._parents : Dog[]
 		me.addInstruction(Opcode.opc_getfield, fieldRef(Dog.class, Dog[].class,
 				"_parents"));
 		// ARETURN
 		me.addInstruction(Opcode.opc_areturn);
 		// L3 (21)
+		me.addLabel(labels[3]);
 		// ALOAD 1: fieldName
-		me.addInstruction(Opcode.opc_aload_1, localVariable1);
+		me.addInstruction(Opcode.opc_aload, localVars[1]);
 		// LDC "_prices"
 		me.addInstruction(Opcode.opc_ldc, "_prices");
 		// INVOKEVIRTUAL String.equals(Object) : boolean
 		me.addInstruction(Opcode.opc_invokevirtual, methodRef(String.class,
 				"equals", new Class[] { Object.class }, Boolean.class));
 		// IFEQ L5
-		me.addInstruction(Opcode.opc_ifeq);
+		me.addInstruction(Opcode.opc_ifeq,labels[5]);
 		// L6 (26)
+		me.addLabel(labels[6]);
 		// ALOAD 0: this
-		me.addInstruction(Opcode.opc_aload_0, localVariable0);
+		me.addInstruction(Opcode.opc_aload, localVars[0]);
 		// GETFIELD Dog._prices : int[]
 		me.addInstruction(Opcode.opc_getfield, fieldRef(Dog.class,
 				Integer[].class, "_prices"));
 		// ARETURN
 		me.addInstruction(Opcode.opc_areturn);
 		// L5 (30)
+		me.addLabel(labels[5]);
 		// ALOAD 0: this
-		me.addInstruction(Opcode.opc_aload_0, localVariable0);
+		me.addInstruction(Opcode.opc_aload, localVars[0]);
 		// ALOAD 1: fieldName
-		me.addInstruction(Opcode.opc_aload_1, localVariable1);
+		me.addInstruction(Opcode.opc_aload, localVars[1]);
 		// INVOKESPECIAL Animal.self_get(String) : Object
 		me.addInstruction(Opcode.opc_invokespecial, methodRef(Animal.class,
 				"self_get", new Class[] { String.class }, Object.class));
 		// ARETURN
 		me.addInstruction(Opcode.opc_areturn);
 		// L7 (35)
+		me.addLabel(labels[7]);
 		me.commit();
 	}
 
