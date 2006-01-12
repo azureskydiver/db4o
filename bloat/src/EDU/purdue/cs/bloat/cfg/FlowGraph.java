@@ -2597,8 +2597,9 @@ public class FlowGraph extends Graph {
       tree.addInstruction(new Instruction(Opcode.opcx_goto,
 					  method.firstBlock()));
 
+      // (pr)
       if (catchBodies != null) {
-	addHandlerEdges(iniBlock, catchBodies, labelPos, null);
+	addHandlerEdges(iniBlock, catchBodies, labelPos, null,new HashSet());
       }
     }
   }
@@ -2632,11 +2633,14 @@ public class FlowGraph extends Graph {
    *        buildTreeForBlock).
    */
   private void addHandlerEdges(Block block,
-			       Map catchBodies, Map labelPos, Subroutine sub)
+			       Map catchBodies, Map labelPos, Subroutine sub, Set visited)
   {
-//	if(catchBodies.containsValue(block)) {
-//		throw new RuntimeException();
-//	}
+	  // (pr)
+	  if(visited.contains(block)) {
+		  return;
+	  }
+	  visited.add(block);
+
     Tree tree = block.tree();
 
     Assert.isTrue(tree != null);
@@ -2706,9 +2710,9 @@ public class FlowGraph extends Graph {
 			    labelPos, catchBodies);
 	}
 	// (pr)
-	if(!handler.catchBlock.equals(block)) {
-		addHandlerEdges(catchBlock, catchBodies, labelPos, sub);
-	}
+	// if(!handler.catchBlock.equals(block)) {
+		addHandlerEdges(catchBlock, catchBodies, labelPos, sub, visited);
+	// }
       }
     }
   }
@@ -2933,7 +2937,7 @@ public class FlowGraph extends Graph {
       }
     }
 
-    addHandlerEdges(block, catchBodies, labelPos, sub);
+    addHandlerEdges(block, catchBodies, labelPos, sub, new HashSet());
   }
 
   /**
