@@ -25,13 +25,13 @@ public class Generation {
 		ClassEditor ce = registryEnhancer.createClass(loader, outputDirName,
 				Modifiers.PUBLIC, "RegressionDogSelfReflectionRegistry", Type
 						.getType("L"+SelfReflectionRegistry.class.getName()+";"), new Type[0]);
-
+		registryEnhancer.createLoadClassConstMethod(ce);
 		registryEnhancer.generateCLASSINFOField(ce);
 		registryEnhancer.generateInfoForMethod(ce);
-//		registryEnhancer.generateArrayForMethod(ce,
-//				com.db4o.test.reflect.self.Dog.class);
-//		registryEnhancer.generateComponentTypeMethod(ce,
-//				com.db4o.test.reflect.self.Dog.class);
+		registryEnhancer.generateArrayForMethod(ce,
+				com.db4o.test.reflect.self.Dog.class);
+		registryEnhancer.generateComponentTypeMethod(ce,
+				com.db4o.test.reflect.self.Dog.class);
 
 		ce.commit();
 

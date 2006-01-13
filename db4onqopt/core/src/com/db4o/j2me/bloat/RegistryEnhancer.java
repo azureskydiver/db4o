@@ -10,7 +10,7 @@ import EDU.purdue.cs.bloat.editor.MemberRef;
 import EDU.purdue.cs.bloat.editor.MethodEditor;
 import EDU.purdue.cs.bloat.editor.Opcode;
 import EDU.purdue.cs.bloat.editor.Type;
-import EDU.purdue.cs.bloat.reflect.Modifiers;
+import EDU.purdue.cs.bloat.reflect.*;
 
 import com.db4o.reflect.self.ClassInfo;
 import com.db4o.reflect.self.FieldInfo;
@@ -48,7 +48,7 @@ public class RegistryEnhancer extends Enhancer {
 		// DUP
 		me.addInstruction(Opcode.opc_dup);
 		// ICONST_2
-		me.addInstruction(Opcode.opc_iconst_2);
+		me.addInstruction(Opcode.opc_ldc,new Integer(2)/*new Constant(Constant.INTEGER,new Integer(2))*/);
 		// INVOKESPECIAL Hashtable.<init>(int) : void
 		me.addInstruction(Opcode.opc_invokespecial, methodRef(Hashtable.class,
 				"<init>", new Class[] { Integer.class }, void.class));
@@ -61,25 +61,26 @@ public class RegistryEnhancer extends Enhancer {
 		me.addInstruction(Opcode.opc_getstatic, fieldRef(ce.name(),
 				Hashtable.class, "CLASSINFO"));
 		// LDC Lcom/db4o/bloat/Animal;.class
-		me.addInstruction(Opcode.opc_ldc, getType(Animal.class));
+		invokeClassGetter(me, Animal.class);
+		//me.addInstruction(Opcode.opc_ldc, getType(Animal.class));
 		// NEW ClassInfo
 		me.addInstruction(Opcode.opc_new, getType(ClassInfo.class));
 		// DUP
 		me.addInstruction(Opcode.opc_dup);
 		// ICONST_1
-		me.addInstruction(Opcode.opc_iconst_1);
+		me.addInstruction(Opcode.opc_ldc,new Integer(1));
 		// LDC Ljava/lang/Object;.class
-		me.addInstruction(Opcode.opc_ldc, getType(Object.class));
+		invokeClassGetter(me, Object.class);
 		// L2 (13)
 		me.addLabel(labels[2]);
 		// ICONST_1
-		me.addInstruction(Opcode.opc_iconst_1);
+		me.addInstruction(Opcode.opc_ldc,new Integer(1));
 		// ANEWARRAY FieldInfo
-		me.addInstruction(Opcode.opc_anewarray, getType(FieldInfo.class));
+		me.addInstruction(Opcode.opc_newarray, getType(FieldInfo.class));
 		// DUP
 		me.addInstruction(Opcode.opc_dup);
 		// ICONST_0
-		me.addInstruction(Opcode.opc_iconst_0);
+		me.addInstruction(Opcode.opc_ldc,new Integer(0));
 		// L3 (18)
 		me.addLabel(labels[3]);
 		// NEW FieldInfo
@@ -89,15 +90,15 @@ public class RegistryEnhancer extends Enhancer {
 		// LDC "_name"
 		me.addInstruction(Opcode.opc_ldc, "_name");
 		// LDC Ljava/lang/String;.class
-		me.addInstruction(Opcode.opc_ldc, getType(String.class));
+		invokeClassGetter(me, String.class);
 		// ICONST_1
-		me.addInstruction(Opcode.opc_iconst_1);
+		me.addInstruction(Opcode.opc_ldc,new Integer(1));
 		// L4 (24)
 		me.addLabel(labels[4]);
 		// ICONST_0
-		me.addInstruction(Opcode.opc_iconst_0);
+		me.addInstruction(Opcode.opc_ldc,new Integer(0));
 		// ICONST_0
-		me.addInstruction(Opcode.opc_iconst_0);
+		me.addInstruction(Opcode.opc_ldc,new Integer(0));
 		// INVOKESPECIAL FieldInfo.<init>(String,Class,boolean,boolean,boolean)
 		// : void
 		me.addInstruction(Opcode.opc_invokespecial, methodRef(FieldInfo.class,
@@ -124,27 +125,27 @@ public class RegistryEnhancer extends Enhancer {
 		me.addInstruction(Opcode.opc_getstatic, fieldRef(ce.name(),
 				Hashtable.class, "CLASSINFO"));
 		// LDC Lcom/db4o/bloat/Dog;.class
-		me.addInstruction(Opcode.opc_ldc, getType(Dog.class));
+		invokeClassGetter(me, Dog.class);
 		// L7 (36)
 		me.addLabel(labels[7]);
 		// NEW ClassInfo
-		me.addInstruction(Opcode.opc_new, getType(ClassInfo.class));
+		invokeClassGetter(me, ClassInfo.class);
 		// DUP
 		me.addInstruction(Opcode.opc_dup);
 		// ICONST_0
-		me.addInstruction(Opcode.opc_iconst_0);
+		me.addInstruction(Opcode.opc_ldc,new Integer(0));
 		// LDC Lcom/db4o/bloat/Animal;.class
-		me.addInstruction(Opcode.opc_ldc, getType(Animal.class));
+		invokeClassGetter(me, Animal.class);
 		// L8 (41)
 		me.addLabel(labels[8]);
 		// ICONST_3
-		me.addInstruction(Opcode.opc_iconst_3);
+		me.addInstruction(Opcode.opc_ldc,new Integer(3));
 		// ANEWARRAY FieldInfo
-		me.addInstruction(Opcode.opc_anewarray, getType(FieldInfo.class));
+		me.addInstruction(Opcode.opc_newarray, getType(FieldInfo.class));
 		// DUP
 		me.addInstruction(Opcode.opc_dup);
 		// ICONST_0
-		me.addInstruction(Opcode.opc_iconst_0);
+		me.addInstruction(Opcode.opc_ldc,new Integer(0));
 		// L9 (46)
 		me.addLabel(labels[9]);
 		// NEW FieldInfo
@@ -154,15 +155,15 @@ public class RegistryEnhancer extends Enhancer {
 		// LDC "_age"
 		me.addInstruction(Opcode.opc_ldc, "_age");
 		// LDC Ljava/lang/Integer;.class
-		me.addInstruction(Opcode.opc_ldc, getType(Integer.class));
+		invokeClassGetter(me, Integer.class);
 		// ICONST_1
-		me.addInstruction(Opcode.opc_iconst_1);
+		me.addInstruction(Opcode.opc_ldc, new Integer(1));
 		// L10 (52)
 		me.addLabel(labels[10]);
 		// ICONST_0
-		me.addInstruction(Opcode.opc_iconst_0);
+		me.addInstruction(Opcode.opc_ldc,new Integer(0));
 		// ICONST_0
-		me.addInstruction(Opcode.opc_iconst_0);
+		me.addInstruction(Opcode.opc_ldc,new Integer(0));
 		// L11 (55)
 		me.addLabel(labels[11]);
 		// INVOKESPECIAL FieldInfo.<init>(String,Class,boolean,boolean,boolean)
@@ -176,7 +177,7 @@ public class RegistryEnhancer extends Enhancer {
 		// DUP
 		me.addInstruction(Opcode.opc_dup);
 		// ICONST_1
-		me.addInstruction(Opcode.opc_iconst_1);
+		me.addInstruction(Opcode.opc_ldc,new Integer(1));
 		// L12 (60)
 		me.addLabel(labels[12]);
 		// NEW FieldInfo
@@ -186,15 +187,15 @@ public class RegistryEnhancer extends Enhancer {
 		// LDC "_parents"
 		me.addInstruction(Opcode.opc_ldc, "_parents");
 		// LDC [Lcom/db4o/bloat/Dog;.class
-		me.addInstruction(Opcode.opc_ldc, getType(Dog.class));
+		invokeClassGetter(me, Dog.class);
 		// ICONST_1
-		me.addInstruction(Opcode.opc_iconst_1);
+		me.addInstruction(Opcode.opc_ldc,new Integer(1));
 		// L13 (66)
 		me.addLabel(labels[13]);
 		// ICONST_0
-		me.addInstruction(Opcode.opc_iconst_0);
+		me.addInstruction(Opcode.opc_ldc,new Integer(0));
 		// ICONST_0
-		me.addInstruction(Opcode.opc_iconst_0);
+		me.addInstruction(Opcode.opc_ldc,new Integer(0));
 		// L14 (69)
 		me.addLabel(labels[14]);
 		// INVOKESPECIAL FieldInfo.<init>(String,Class,boolean,boolean,boolean)
@@ -208,7 +209,7 @@ public class RegistryEnhancer extends Enhancer {
 		// DUP
 		me.addInstruction(Opcode.opc_dup);
 		// ICONST_2
-		me.addInstruction(Opcode.opc_iconst_2);
+		me.addInstruction(Opcode.opc_ldc,new Integer(2));
 		// L15 (74)
 		me.addLabel(labels[15]);
 		// NEW FieldInfo
@@ -218,15 +219,15 @@ public class RegistryEnhancer extends Enhancer {
 		// LDC "_prices"
 		me.addInstruction(Opcode.opc_ldc, "_prices");
 		// LDC [I.class
-		me.addInstruction(Opcode.opc_ldc, getType(Integer.class));
+		invokeClassGetter(me, Integer.class);
 		// ICONST_1
-		me.addInstruction(Opcode.opc_iconst_1);
+		me.addInstruction(Opcode.opc_ldc,new Integer(1));
 		// L16 (80)
 		me.addLabel(labels[16]);
 		// ICONST_0
-		me.addInstruction(Opcode.opc_iconst_0);
+		me.addInstruction(Opcode.opc_ldc,new Integer(0));
 		// ICONST_0
-		me.addInstruction(Opcode.opc_iconst_0);
+		me.addInstruction(Opcode.opc_ldc,new Integer(0));
 		// L17 (83)
 		me.addLabel(labels[17]);
 		// INVOKESPECIAL FieldInfo.<init>(String,Class,boolean,boolean,boolean)
@@ -260,6 +261,12 @@ public class RegistryEnhancer extends Enhancer {
 
 	}
 
+	protected void invokeClassGetter(MethodEditor me,Class clazz) {
+		MemberRef classGetter=methodRef(getType("L"+me.declaringClass().name()+";"), "db4o$class$", new Class[]{String.class}, Class.class);
+		me.addInstruction(Opcode.opc_ldc,clazz.getName());
+		me.addInstruction(Opcode.opc_invokestatic,classGetter);
+	}
+	
 	public void generateInfoForMethod(ClassEditor ce) {
 		MethodEditor me = createMethod(ce, Modifiers.PUBLIC,
 				com.db4o.reflect.self.ClassInfo.class, "infoFor",
@@ -305,7 +312,6 @@ public class RegistryEnhancer extends Enhancer {
 		MemberRef mr = methodRef(ce.getClass(), "arrayFor", new Class[] {
 				Class.class, Integer.class }, Object.class);
 		LocalVariable[] localVars = createLocalVariables(2);
-		Label[] labels = createLabels(5);
 		// TODO: inject instructions:
 		/*
 		 * public Object arrayFor(Class clazz, int length) { if
@@ -317,15 +323,15 @@ public class RegistryEnhancer extends Enhancer {
 		// access flags 1
 		// public arrayFor(Class,int) : Object
 		// L0 (0)
-		me.addLabel(labels[0]);
+		me.addLabel(new Label(0));
 		// LDC Lcom/db4o/bloat/Dog;.class
 
 		// FIXME:
 		// Create list of classes, topological sort this list:
 		// while (!(clazz.getSuperclass().equals(Object.class)))
-		while (!(clazz.getSuperclass().equals(Object.class))) {
-
-			me.addInstruction(Opcode.opc_ldc, clazz);
+		int labelIdx=1;
+		while (!(clazz.equals(Object.class))) {
+			invokeClassGetter(me, clazz);
 			// ALOAD 1: clazz
 			me.addInstruction(Opcode.opc_aload, localVars[1]);
 			// INVOKEVIRTUAL Class.isAssignableFrom(Class) : boolean
@@ -333,28 +339,33 @@ public class RegistryEnhancer extends Enhancer {
 					"isAssignableFrom", new Class[] { Class.class },
 					Boolean.class));
 			// IFEQ L1
-			me.addInstruction(Opcode.opc_ifeq, labels[1]); 
+			Label label=new Label(labelIdx);
+			me.addInstruction(Opcode.opc_ifeq, label); 
 			// L2 (5)
-			
+			//me.addLabel(labels[2]);
 			// ILOAD 2: length
 			me.addInstruction(Opcode.opc_iload, localVars[2]);
 			// ANEWARRAY Dog
-			me.addInstruction(Opcode.opc_anewarray, getType(clazz));
+			me.addInstruction(Opcode.opc_newarray, getType(clazz));
 			// ARETURN
 			me.addInstruction(Opcode.opc_areturn);
+			me.addLabel(label);
+			labelIdx++;
 			clazz = clazz.getSuperclass();
 		}
 		// L1 (9)
+		//me.addLabel(labels[1]);
 		// LDC Lcom/db4o/bloat/Animal;.class
 		// ALOAD 1: clazz
 		// INVOKEVIRTUAL Class.isAssignableFrom(Class) : boolean
 		// IFEQ L3
 		// L4 (14)
+		//me.addLabel(labels[4]);
 		// ILOAD 2: length
 		// ANEWARRAY Animal
 		// ARETURN---------
 		// L3 (18)
-		me.addLabel(labels[3]);
+		//me.addLabel(labels[3]);
 		// ALOAD 0: this
 		me.addInstruction(Opcode.opc_aload, localVars[0]);
 		// ALOAD 1: clazz
@@ -368,7 +379,7 @@ public class RegistryEnhancer extends Enhancer {
 		// ARETURN
 		me.addInstruction(Opcode.opc_areturn);
 		// L5 (24)
-		me.addLabel(labels[5]);
+		//me.addLabel(labels[5]);
 		me.commit();
 	}
 
@@ -379,7 +390,6 @@ public class RegistryEnhancer extends Enhancer {
 		MemberRef mr = methodRef(ce.getClass(), "componentType",
 				new Class[] { Class.class }, Class.class);
 		LocalVariable[] localVars = createLocalVariables(1);
-		Label[] labels = createLabels(5);
 		// TODO:inject instructions:
 		/*
 		 * public Class componentType(Class clazz) { if
@@ -390,26 +400,30 @@ public class RegistryEnhancer extends Enhancer {
 		// access flags 1
 		// public componentType(Class) : Class
 		// L0 (0)
-		me.addLabel(labels[0]);
+		me.addLabel(new Label(0));
 		// LDC [Lcom/db4o/bloat/Dog;.class
 
-		while (!(clazz.getSuperclass().equals(Object.class))) {
-
-			me.addInstruction(Opcode.opc_ldc, clazz);
+		int labelId=1;
+		while (!(clazz.equals(Object.class))) {
+			invokeClassGetter(me, clazz);
 			// ALOAD 1: clazz
-			me.addInstruction(Opcode.opc_aload_1, localVars[1]);
+			me.addInstruction(Opcode.opc_aload, localVars[1]);
 			// INVOKEVIRTUAL Class.isAssignableFrom(Class) : boolean
 			me.addInstruction(Opcode.opc_invokevirtual, methodRef(Class.class,
 					"isAssignableFrom", new Class[] { Class.class },
 					Boolean.class));
 			// IFEQ L1
-			me.addInstruction(Opcode.opc_ifeq, labels[1]);
+			Label label=new Label(labelId);
+			me.addInstruction(Opcode.opc_ifeq, label);
 			// L2 (5)
+			// me.addLabel(labels[2]);
 			// LDC Lcom/db4o/bloat/Dog;.class
-			me.addInstruction(Opcode.opc_ldc, clazz);
+			invokeClassGetter(me, clazz);
 			// ARETURN
 			me.addInstruction(Opcode.opc_areturn);
 			clazz = clazz.getSuperclass();
+			me.addLabel(label);
+			labelId++;
 		}
 		// L1 (8)
 		// LDC [Lcom/db4o/bloat/Animal;.class
@@ -421,7 +435,7 @@ public class RegistryEnhancer extends Enhancer {
 		// ARETURN--------------
 
 		// L3 (16)
-		me.addLabel(labels[3]);
+		//me.addLabel(labels[3]);
 		// ALOAD 0: this
 		me.addInstruction(Opcode.opc_aload, localVars[0]);
 		// ALOAD 1: clazz
@@ -434,7 +448,7 @@ public class RegistryEnhancer extends Enhancer {
 		// ARETURN
 		me.addInstruction(Opcode.opc_areturn);
 		// L5 (21)
-		me.addLabel(labels[5]);
+		//me.addLabel(labels[5]);
 		me.commit();
 
 	}
