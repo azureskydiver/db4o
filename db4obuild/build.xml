@@ -223,6 +223,7 @@
 			</fileset>
 		</delete>
 		<javac srcdir="${dir.j.nqopt.src}" destdir="${dir.dist.classes.nqopt}" debug="off" target="1.2" source="1.2">
+			<exclude name="**/j2me/**"/>
 			<classpath>
 				<pathelement path="${file.java1.2.jar}"/>
 				<pathelement path="${file.bloat.jar}"/>
