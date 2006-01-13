@@ -13,18 +13,11 @@ public class RandomAccessFileAdapter extends IoAdapter {
 
     private RandomAccessFile _delegate;
 
-    private byte[]           _seekBytes;
-    
     public RandomAccessFileAdapter(){
     }
 
-    private RandomAccessFileAdapter(String path, boolean lockFile, long initialLength) throws IOException {
+    protected RandomAccessFileAdapter(String path, boolean lockFile, long initialLength) throws IOException {
         _delegate = new RandomAccessFile(path, "rw");
-        if (Tuning.symbianSeek) {
-            _seekBytes = new byte[500];
-        } else {
-            _seekBytes = null;
-        }
         if(initialLength>0) {
 	        _delegate.seek(initialLength - 1);
 	        _delegate.write(new byte[] {0});
@@ -59,25 +52,6 @@ public class RandomAccessFileAdapter extends IoAdapter {
         if(DTrace.enabled){
             DTrace.REGULAR_SEEK.log(pos);
         }
-
-        /** 
-         * Workaround for the Symbian JDK that does not allow you to seek
-         * beyond the length of the file.
-         */
-        if (Tuning.symbianSeek) {
-            if (pos > _delegate.length()) {
-                int len = (int) (pos - _delegate.length());
-                _delegate.seek(_delegate.length());
-                if (len < 500) {
-                    _delegate.write(_seekBytes, 0, len);
-                } else {
-                    _delegate.write(new byte[len]);
-                    seek(pos);
-                    return;
-                }
-            }
-        }
-
         _delegate.seek(pos);
 
     }
