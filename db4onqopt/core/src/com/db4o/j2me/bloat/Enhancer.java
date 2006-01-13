@@ -3,16 +3,9 @@ package com.db4o.j2me.bloat;
 import java.io.File;
 
 import EDU.purdue.cs.bloat.context.PersistentBloatContext;
-import EDU.purdue.cs.bloat.editor.ClassEditor;
-import EDU.purdue.cs.bloat.editor.EditorContext;
-import EDU.purdue.cs.bloat.editor.FieldEditor;
-import EDU.purdue.cs.bloat.editor.Label;
-import EDU.purdue.cs.bloat.editor.LocalVariable;
-import EDU.purdue.cs.bloat.editor.MemberRef;
-import EDU.purdue.cs.bloat.editor.MethodEditor;
-import EDU.purdue.cs.bloat.editor.NameAndType;
-import EDU.purdue.cs.bloat.editor.Type;
+import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.ClassFileLoader;
+import EDU.purdue.cs.bloat.reflect.*;
 
 public class Enhancer {
 	protected  ClassEditor createClass(ClassFileLoader loader, String outputDir,
@@ -54,7 +47,7 @@ public class Enhancer {
 		return fieldRef(type,fieldClass,name);
 	}
 
-	protected MemberRef methodRef(Class parent, String name, Class[] param,
+	protected MemberRef methodRef(Type parent, String name, Class[] param,
 			Class ret) {
 		Type[] paramTypes = new Type[param.length];
 		for (int i = 0; i < paramTypes.length; i++) {
@@ -62,11 +55,20 @@ public class Enhancer {
 		}
 		NameAndType nat = new NameAndType(name, Type.getType(paramTypes,
 				getType(ret)));
-		return new MemberRef(getType(parent), nat);
+		return new MemberRef(parent, nat);
+	}
+
+	protected MemberRef methodRef(Class parent, String name, Class[] param,
+			Class ret) {
+		return methodRef(getType(parent),name,param,ret);
 	}
 
 	protected Type getType(Class clazz) {
 		return Type.getType(clazz);
+	}
+
+	protected Type getType(String desc) {
+		return Type.getType(desc);
 	}
 
 	protected Label[] createLabels(int num) {
@@ -83,5 +85,38 @@ public class Enhancer {
 			localVars[i]=new LocalVariable(i);
 		}
 		return localVars;
+	}
+	
+	// TODO: Why is an empty 'throws' generated according to javap?
+	public void createLoadClassConstMethod(ClassEditor ce) {
+		MethodEditor me=createMethod(ce, Modifiers.PROTECTED|Modifiers.STATIC, Class.class, "db4o$class$", new Class[]{String.class}, null);
+		LocalVariable[] localVars=createLocalVariables(1);
+		Label[] labels=createLabels(2);
+		me.addLabel(labels[0]);
+//		   0:   aload_0
+		me.addInstruction(Opcode.opc_aload,localVars[0]);
+//		   1:   invokestatic    #1; //Method java/lang/Class.forName:(Ljava/lang/String;)Ljava/lang/Class;
+		me.addInstruction(Opcode.opc_invokestatic, methodRef(Class.class, "forName", new Class[]{String.class}, Class.class));
+		me.addLabel(labels[1]);
+//		   4:   areturn
+		me.addInstruction(Opcode.opc_areturn);
+//		   5:   astore_1		
+		me.addLabel(labels[2]);
+		me.addInstruction(Opcode.opc_astore,localVars[1]);
+//		   6:   new     #3; //class NoClassDefFoundError
+		me.addInstruction(Opcode.opc_new,getType(NoClassDefFoundError.class));
+//		   9:   dup
+		me.addInstruction(Opcode.opc_dup);
+//		   10:  aload_1
+		me.addInstruction(Opcode.opc_aload,localVars[1]);
+//		   11:  invokevirtual   #4; //Method java/lang/ClassNotFoundException.getMessage:()Ljava/lang/String;
+		me.addInstruction(Opcode.opc_invokevirtual, methodRef(ClassNotFoundException.class, "getMessage", new Class[]{}, String.class));
+//		   14:  invokespecial   #5; //Method java/lang/NoClassDefFoundError."<init>":(Ljava/lang/String;)V
+		me.addInstruction(Opcode.opc_invokespecial, methodRef(NoClassDefFoundError.class, "<init>", new Class[]{String.class}, Void.TYPE));
+//		   17:  athrow
+		me.addInstruction(Opcode.opc_athrow);
+//	    0     4     5   Class java/lang/ClassNotFoundException
+		me.addTryCatch(new TryCatch(labels[0],labels[1],labels[2],getType(ClassNotFoundException.class)));
+		me.commit();
 	}
 }
