@@ -6,6 +6,8 @@ import EDU.purdue.cs.bloat.context.PersistentBloatContext;
 import EDU.purdue.cs.bloat.editor.ClassEditor;
 import EDU.purdue.cs.bloat.editor.EditorContext;
 import EDU.purdue.cs.bloat.editor.FieldEditor;
+import EDU.purdue.cs.bloat.editor.Label;
+import EDU.purdue.cs.bloat.editor.LocalVariable;
 import EDU.purdue.cs.bloat.editor.MemberRef;
 import EDU.purdue.cs.bloat.editor.MethodEditor;
 import EDU.purdue.cs.bloat.editor.NameAndType;
@@ -32,6 +34,7 @@ public class Enhancer {
 		fe.commit();
 		return fe;
 	}
+	
 
 	protected MemberRef fieldRef(Class parent, Class fieldClass, String name) {
 		return fieldRef(getType(parent),fieldClass,name);
@@ -66,5 +69,19 @@ public class Enhancer {
 		return Type.getType(clazz);
 	}
 
+	protected Label[] createLabels(int num) {
+		Label[] labels=new Label[num+1];
+		for(int i=0;i<=num;i++) {
+			labels[i]=new Label(i);
+		}
+		return labels;
+	}
 
+	protected LocalVariable[] createLocalVariables(int num) {
+		LocalVariable[] localVars=new LocalVariable[num+1];
+		for(int i=0;i<=num;i++) {
+			localVars[i]=new LocalVariable(i);
+		}
+		return localVars;
+	}
 }
