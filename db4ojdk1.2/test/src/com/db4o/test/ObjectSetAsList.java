@@ -4,6 +4,7 @@ package com.db4o.test;
 
 import java.util.*;
 
+import com.db4o.*;
 import com.db4o.query.*;
 
 
@@ -25,7 +26,7 @@ public class ObjectSetAsList {
         Test.store(new ObjectSetAsList("three"));
     }
     
-    public void test(){
+    public void testContent(){
         Query q = Test.query();
         q.constrain(ObjectSetAsList.class);
         List list = q.execute();
@@ -41,4 +42,14 @@ public class ObjectSetAsList {
         Test.ensure(found);
     }
 
+	public void testAccessOrder() {
+		Query query=Test.query();
+		query.constrain(getClass());
+		ObjectSet result=query.execute();
+		Test.ensureEquals(3,result.size());
+		for(int i=0;i<3;i++) {
+			Test.ensure(result.next()==result.get(i));
+		}
+		Test.ensure(!result.hasNext());
+	}
 }
