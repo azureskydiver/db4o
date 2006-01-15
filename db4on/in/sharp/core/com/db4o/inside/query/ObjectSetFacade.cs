@@ -88,7 +88,7 @@ namespace com.db4o.inside.query
 		{
 			get
 			{
-				return _delegate.get(index);
+				return _delegate.get(reverseIndex(index));
 			}
 			set
 			{
@@ -130,7 +130,7 @@ namespace com.db4o.inside.query
 				{
 					return -1;
 				}
-				return _delegate.indexOf(id);
+				return reverseIndex(_delegate.indexOf(id));
 			}
 		}
 
@@ -174,7 +174,7 @@ namespace com.db4o.inside.query
                 int s = _delegate.size();
                 while (i < s)
                 {
-                    array.SetValue(_delegate.get(i), index + i);
+                    array.SetValue(_delegate.get(reverseIndex(i)), index + i);
                     i++;
                 }
             }
@@ -231,6 +231,11 @@ namespace com.db4o.inside.query
 			return new ObjectSetImplEnumerator(_delegate);
 		}
 		#endregion
+		
+		private int reverseIndex(int idx) 
+		{
+        	return size()-idx-1;
+    	}
 	}
 }
 

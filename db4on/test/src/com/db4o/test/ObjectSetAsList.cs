@@ -75,6 +75,16 @@ namespace com.db4o.test
 			Tester.ensure("Contains is not by value", !os.Contains(new ObjectSetAsList(42)));
 		}
 
+		public void testAccessOrder() 
+		{
+			ObjectSet os = getObjectSet();
+			for(int i=0;i<os.Count;i++) {
+				Tester.ensure(os.hasNext());
+				Tester.ensure(os.next()==os[i]);
+			}
+			Tester.ensure(!os.hasNext());
+		}
+
 		public void testCopyTo()
 		{
 			IList os = getObjectSet();
