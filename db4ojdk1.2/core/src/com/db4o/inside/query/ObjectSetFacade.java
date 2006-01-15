@@ -56,7 +56,7 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet{
     }
 
     public Object get(int index) {
-        return _delegate.get(index);
+        return _delegate.get(reverseIndex(index));
     }
 
     public int indexOf(Object a_object) {
@@ -65,10 +65,14 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet{
             if(id <= 0){
                 return -1;
             }
-            return _delegate.indexOf(id);
+            return reverseIndex(_delegate.indexOf(id));
         }
     }
 
+    private int reverseIndex(int idx) {
+        return size()-idx-1;
+    }
+    
     public int lastIndexOf(Object a_object) {
         return indexOf(a_object);
     }

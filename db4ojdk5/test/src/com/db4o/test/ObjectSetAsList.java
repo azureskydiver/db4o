@@ -4,9 +4,10 @@ package com.db4o.test;
 
 import java.util.*;
 
+import com.db4o.*;
 import com.db4o.query.*;
 
-
+// Why is this duplicated in jdk1.2/jdk5?
 public class ObjectSetAsList {
     
     String name;
@@ -41,4 +42,14 @@ public class ObjectSetAsList {
         Test.ensure(found);
     }
 
+	public void testAccessOrder() {
+		Query query=Test.query();
+		query.constrain(getClass());
+		ObjectSet result=query.execute();
+		Test.ensureEquals(3,result.size());
+		for(int i=0;i<3;i++) {
+			Test.ensure(result.next()==result.get(i));
+		}
+		Test.ensure(!result.hasNext());
+	}
 }
