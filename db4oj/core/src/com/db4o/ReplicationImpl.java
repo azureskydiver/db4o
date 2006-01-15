@@ -3,13 +3,14 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.inside.replication.*;
 import com.db4o.query.*;
 import com.db4o.replication.*;
 
 /**
- * 
+ * @exclude
  */
-class ReplicationImpl implements ReplicationProcess {
+public class ReplicationImpl implements ReplicationProcess {
 
     final YapStream _peerA;
 
@@ -33,7 +34,7 @@ class ReplicationImpl implements ReplicationProcess {
 
     private static final int CHECK_CONFLICT = -99;
     
-	ReplicationImpl(YapStream peerA, ObjectContainer peerB,
+	public ReplicationImpl(YapStream peerA, ObjectContainer peerB,
 			ReplicationConflictHandler conflictHandler) {
         
         if(conflictHandler == null){
@@ -51,15 +52,15 @@ class ReplicationImpl implements ReplicationProcess {
 				_peerB = (YapStream) peerB;
 				_transB = _peerB.checkTransaction(null);
 
-				MigrationConnection mgc = new MigrationConnection();
+				MigrationConnection mgc = new MigrationConnection(_peerA, _peerB);
 
 				_peerA.i_handlers.i_migration = mgc;
 				_peerA.i_handlers.i_replication = this;
-				_peerA.i_migrateFrom = _peerB;
+				_peerA._replicationCallState = ReplicationHandler.OLD;
 
 				_peerB.i_handlers.i_migration = mgc;
 				_peerB.i_handlers.i_replication = this;
-				_peerB.i_migrateFrom = _peerA;
+                _peerB._replicationCallState = ReplicationHandler.OLD;
 
 				_conflictHandler = conflictHandler;
 
@@ -117,10 +118,12 @@ class ReplicationImpl implements ReplicationProcess {
 	}
 
 	private void endReplication() {
-		_peerA.i_migrateFrom = null;
+        
+		_peerA._replicationCallState = ReplicationHandler.NONE;
         _peerA.i_handlers.i_migration = null;
 		_peerA.i_handlers.i_replication = null;
-		_peerB.i_migrateFrom = null;
+        
+        _peerA._replicationCallState = ReplicationHandler.NONE;
         _peerB.i_handlers.i_migration = null;
 		_peerB.i_handlers.i_replication = null;
 	}

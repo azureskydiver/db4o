@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.replication.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.types.*;
@@ -50,8 +51,10 @@ public final class YapHandlers {
     YapIndexes              		i_indexes;
     
     ReplicationImpl				    i_replication;
+    
     MigrationConnection             i_migration;
     
+    ReplicationHandler              _replicationHandler;
     
     boolean                 i_encrypt;
     byte[]                  i_encryptor;

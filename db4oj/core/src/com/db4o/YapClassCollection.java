@@ -54,6 +54,23 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         return i_stream.stringIO().write(str);
     }
 
+    void attachQueryNode(final String fieldName, final Visitor4 a_visitor) {
+        YapClassCollectionIterator i = iterator();
+        while (i.hasNext()) {
+            final YapClass yc = i.nextClass();
+            if(! yc.isInternal()){
+                yc.forEachYapField(new Visitor4() {
+                    public void visit(Object obj) {
+                        YapField yf = (YapField)obj;
+                        if(yf.canAddToQuery(fieldName)){
+                            a_visitor.visit(new Object[] {yc, yf});
+                        }
+                    }
+                });
+            }
+        }
+    }
+
     void checkChanges() {
         Iterator4 i = i_classes.iterator();
         while (i.hasNext()) {
@@ -369,21 +386,6 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         }
     }
     
-    void yapFields(final String a_field, final Visitor4 a_visitor) {
-        YapClassCollectionIterator i = iterator();
-        while (i.hasNext()) {
-            final YapClass yc = i.nextClass();
-            yc.forEachYapField(new Visitor4() {
-                public void visit(Object obj) {
-                    YapField yf = (YapField)obj;
-                    if (yf.alive() && a_field.equals(yf.getName())  && yf.getParentYapClass() != null && !yf.getParentYapClass().isInternal() ) {
-                        a_visitor.visit(new Object[] {yc, yf});
-                    }
-                }
-            });
-        }
-    }
-
     // Debug info:
 
     //	public String toString(){

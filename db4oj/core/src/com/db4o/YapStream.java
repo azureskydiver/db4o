@@ -7,6 +7,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.query.*;
+import com.db4o.inside.replication.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -88,14 +89,11 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     // "Internal" interface are visible in queries and can
     // be used.
     int                     i_showInternalClasses = 0;
-    long                    i_startTime;
+    
     private List4           i_stillToActivate;
     private List4           i_stillToDeactivate;
 
     private List4           i_stillToSet;
-
-    // String translator
-//    public YapStringIO             i_stringIo;
 
     // used for YapClass and YapClassCollection
     // may be parent or equal to i_trans
@@ -110,7 +108,11 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     // want created in YapobjectCarrier
     public YapHandlers             i_handlers;
 
-    YapStream               i_migrateFrom;
+    // One of three constants in ReplicationHandler: NONE, OLD, NEW
+    // Detailed replication variables are stored in i_handlers.
+    // Call state has to be maintained here, so YapObjectCarrier (who shares i_handlers) does
+    // not accidentally think it operates in a replication call. 
+    int                 _replicationCallState;  
 
     // weak reference management
     YapReferences           i_references;
@@ -365,26 +367,16 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
      * in the #set() method. 
      * @return object if handled here and #set() should not continue processing
      */
-    Db4oType db4oTypeStored(Transaction a_trans, Object a_object) {
+    public Db4oType db4oTypeStored(Transaction a_trans, Object a_object) {
         if (a_object instanceof Db4oDatabase) {
             Db4oDatabase database = (Db4oDatabase) a_object;
             if (getYapObject(a_object) != null) {
                 return database;
             }
             showInternalClasses(true);
-            Query q = querySharpenBug();
-            q.constrain(database.getClass());
-            q.descend(Db4oDatabase.CREATIONTIME_FIELD).constrain(new Long(database.i_uuid));
-            ObjectSet objectSet = q.execute();
-            while (objectSet.hasNext()) {
-                Db4oDatabase storedDatabase = (Db4oDatabase) objectSet.next();
-                activate1(null, storedDatabase, 4);
-                if (storedDatabase.equals(a_object)) {
-                    showInternalClasses(false);
-                    return storedDatabase;
-                }
-            }
+            Db4oDatabase res = database.query(a_trans);
             showInternalClasses(false);
+            return res;
         }
         return null;
     }
@@ -653,6 +645,9 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     
     public final Object getByUUID(Db4oUUID uuid){
         synchronized (i_lock) {
+            if(uuid == null){
+                return null;
+            }
             Transaction ta = checkTransaction(null);
             Object[] arr = ta.objectAndYapObjectBySignature(uuid.getLongPart(), uuid.getSignaturePart());
             return arr[0]; 
@@ -665,7 +660,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         }
     }
 
-    final int getID1(Transaction ta, Object a_object) {
+    public final int getID1(Transaction ta, Object a_object) {
         checkClosed();
 
         if(a_object == null){
@@ -1063,16 +1058,20 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     public void migrateFrom(ObjectContainer objectContainer) {
         if(objectContainer == null){
-            YapStream migratedFrom = i_migrateFrom;
-            i_migrateFrom = null;
-            if(migratedFrom != null && migratedFrom.i_migrateFrom == this){
-                migratedFrom.migrateFrom(null);
+            if(_replicationCallState == ReplicationHandler.NONE){
+                return;
+            }
+            _replicationCallState = ReplicationHandler.NONE;
+            if(i_handlers.i_migration != null){
+                i_handlers.i_migration.terminate();
             }
             i_handlers.i_migration = null;
         }else{
-            i_migrateFrom = (YapStream) objectContainer;
-            i_handlers.i_migration = new MigrationConnection();
-            i_migrateFrom.i_handlers.i_migration = i_handlers.i_migration;
+            YapStream peer = (YapStream)objectContainer;
+            _replicationCallState = ReplicationHandler.OLD;
+            peer._replicationCallState = ReplicationHandler.OLD;
+            i_handlers.i_migration = new MigrationConnection(this, (YapStream)objectContainer);
+            peer.i_handlers.i_migration = i_handlers.i_migration;
         }
     }
 
@@ -1195,7 +1194,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return query();
     }
 
-    Query querySharpenBug(Transaction ta) {
+    public Query querySharpenBug(Transaction ta) {
         // A bug in the CSharp converter makes this redirection necessary.
         return query(ta);
     }
@@ -1346,11 +1345,15 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return new ReplicationImpl(this, peerB,conflictHandler);
     }
     
-    final int replicationHandles(Object obj){
+    final int oldReplicationHandles(Object obj){
         
         // The double check on i_migrateFrom is necessary:
         // i_handlers.i_replicateFrom may be set in YapObjectCarrier for parent YapStream 
-        if(i_migrateFrom == null  || i_handlers.i_replication == null){
+        if(_replicationCallState != ReplicationHandler.OLD){
+            return 0;
+        }
+        
+        if(i_handlers.i_replication == null){
             return 0;
         }
         
@@ -1411,7 +1414,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     
     public final int setInternal(Transaction ta, Object a_object, int a_depth,  boolean a_checkJustSet) {
         ta = checkTransaction(ta);
-        int id = replicationHandles(a_object); 
+        int id = oldReplicationHandles(a_object); 
         if (id != 0){
             if(id < 0){
                 return 0;
@@ -1452,6 +1455,27 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         
         return id;
     }
+    
+    public final void setByNewReplication(Object obj, Db4oDatabase provider, long uuidLong, long version){
+        synchronized(i_lock){
+            
+            _replicationCallState = ReplicationHandler.NEW;
+            
+            // if(i_handlers._replicationHandler == null){
+                i_handlers._replicationHandler = new ReplicationHandler();
+            // }
+            
+            i_handlers._replicationHandler.associateObjectWith(obj, provider, uuidLong, version);
+            
+            Transaction ta = checkTransaction(null);
+            
+            set2(ta, obj, 1, false);
+            
+            _replicationCallState = ReplicationHandler.NONE;
+            
+            i_handlers._replicationHandler = null;
+        }
+    }
 
     private final int set2(Transaction ta, Object obj, int depth, boolean checkJust) {
         int id = set3(ta, obj, depth, checkJust);
@@ -1459,7 +1483,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         // The entry counter helps us to know how far we are
         // away from a top level call.  
         if(i_entryCounter < YapConst.MAX_STACK_DEPTH){
-            checkStillToSet();    
+            checkStillToSet();
         }
         
         return id;
@@ -1485,7 +1509,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         i_stillToSet = postponedStillToSet;
     }
 
-    final int set3(Transaction a_trans, Object a_object, int a_updateDepth, boolean a_checkJustSet) {
+    public final int set3(Transaction a_trans, Object a_object, int a_updateDepth, boolean a_checkJustSet) {
         if (a_object != null & !(a_object instanceof TransientClass)) {
         	
             if (a_object instanceof Db4oTypeImpl) {

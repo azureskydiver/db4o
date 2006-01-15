@@ -163,6 +163,13 @@ public class YapField implements StoredField {
             a_bytes.incrementOffset(linkLength());
         }
     }
+    
+    boolean canAddToQuery(String fieldName){
+        if(! alive()){
+            return false;
+        }
+        return fieldName.equals(getName())  && getParentYapClass() != null && !getParentYapClass().isInternal(); 
+    }
 
     boolean canHold(ReflectClass claxx) {
         // alive() is checked in QField caller

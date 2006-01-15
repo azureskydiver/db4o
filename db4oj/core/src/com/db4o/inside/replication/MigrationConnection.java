@@ -1,18 +1,24 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o;
+package com.db4o.inside.replication;
 
+import com.db4o.*;
 import com.db4o.foundation.Hashtable4;
 
 /**
  * @exclude
  */
 public class MigrationConnection {
+    
+    public final YapStream _peerA;
+    public final YapStream _peerB;
 
     private final Hashtable4 _referenceMap;
 
-    MigrationConnection() {
+    public MigrationConnection(YapStream peerA, YapStream peerB) {
         _referenceMap = new Hashtable4(1);
+        _peerA = peerA;
+        _peerB = peerB;
     }
 
     public void mapReference(Object obj, YapObject ref) {
@@ -36,5 +42,19 @@ public class MigrationConnection {
         _referenceMap.remove(hcode);
         return ref;
     }
+    
+    public void terminate(){
+        _peerA.migrateFrom(null);
+        _peerB.migrateFrom(null);
+    }
+    
+    public YapStream peer(YapStream stream){
+        if(_peerA == stream){
+            return _peerB;
+        }
+        return _peerA;
+    }
+    
+    
 
 }

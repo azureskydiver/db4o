@@ -2,8 +2,10 @@
 
 package com.db4o;
 
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.ix.*;
+import com.db4o.inside.replication.*;
 
 /**
  * 
@@ -24,6 +26,10 @@ abstract class YapFieldVirtual extends YapField {
     
     public boolean alive() {
         return true;
+    }
+    
+    boolean canAddToQuery(String fieldName){
+        return fieldName.equals(getName()); 
     }
     
     void collectConstraints(Transaction a_trans, QConObject a_parent,
@@ -75,29 +81,54 @@ abstract class YapFieldVirtual extends YapField {
 
     void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes,
         Config4Class a_config, boolean a_new) {
-        YapStream stream = a_bytes.i_trans.i_stream;
+        Transaction trans = a_bytes.i_trans;
+        YapStream stream = trans.i_stream;
+        YapHandlers handlers = stream.i_handlers;
         boolean migrating = false;
-        if (stream.i_migrateFrom != null) {
-            migrating = true;
-            if (a_yapObject.i_virtualAttributes == null) {
-                Object obj = a_yapObject.getObject();
-                YapObject migrateYapObject = null;
-                if(stream.i_handlers.i_migration != null){
-                    migrateYapObject = stream.i_handlers.i_migration.referenceFor(obj);
+        
+        // old replication code 
+        
+        if (stream._replicationCallState != ReplicationHandler.NONE) {
+            if (stream._replicationCallState == ReplicationHandler.OLD) {
+                migrating = true;
+                if (a_yapObject.i_virtualAttributes == null) {
+                    Object obj = a_yapObject.getObject();
+                    YapObject migrateYapObject = null;
+                    MigrationConnection mgc = handlers.i_migration;
+                    if(mgc != null){
+                        migrateYapObject = mgc.referenceFor(obj);
+                        if(migrateYapObject == null){
+                            migrateYapObject = mgc.peer(stream).getYapObject(obj);
+                        }
+                    }
+                    if (migrateYapObject != null
+                        && migrateYapObject.i_virtualAttributes != null
+                        && migrateYapObject.i_virtualAttributes.i_database != null) {
+                        migrating = true;
+                        a_yapObject.i_virtualAttributes = migrateYapObject.i_virtualAttributes
+                            .shallowClone();
+                        if(migrateYapObject.i_virtualAttributes.i_database != null){
+                            migrateYapObject.i_virtualAttributes.i_database.bind(trans);
+                        }
+                    }
                 }
-                if(migrateYapObject == null){
-                    migrateYapObject = stream.i_migrateFrom.getYapObject(obj);
-                }
-                if (migrateYapObject != null
-                    && migrateYapObject.i_virtualAttributes != null
-                    && migrateYapObject.i_virtualAttributes.i_database != null) {
+            }else {
+                ReplicationHandler handler = handlers._replicationHandler;
+                Object parentObject = a_yapObject.getObject();
+                Db4oDatabase db = handler.providerFor(parentObject);
+                if(db != null){
                     migrating = true;
-                    a_yapObject.i_virtualAttributes = migrateYapObject.i_virtualAttributes
-                        .shallowClone();
-                    a_bytes.getTransaction().ensureDb4oDatabase(migrateYapObject.i_virtualAttributes.i_database);
+                    if(a_yapObject.i_virtualAttributes == null){
+                        a_yapObject.i_virtualAttributes = new VirtualAttributes();
+                    }
+                    VirtualAttributes va = a_yapObject.i_virtualAttributes;
+                    va.i_version = handler.versionFor(parentObject);
+                    va.i_uuid = handler.uuidLongFor(parentObject);
+                    va.i_database = handler.providerFor(parentObject);
                 }
             }
         }
+        
         if (a_yapObject.i_virtualAttributes == null) {
             a_yapObject.i_virtualAttributes = new VirtualAttributes();
             migrating = false;

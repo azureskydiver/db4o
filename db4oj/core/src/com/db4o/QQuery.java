@@ -198,7 +198,7 @@ public class QQuery implements Query {
 
             final boolean[] anyClassCollected = { false };
 
-            i_trans.i_stream.i_classCollection.yapFields(a_field, new Visitor4() {
+            i_trans.i_stream.i_classCollection.attachQueryNode(a_field, new Visitor4() {
 
                 public void visit(Object obj) {
 

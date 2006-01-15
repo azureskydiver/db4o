@@ -46,8 +46,8 @@ public class ReplicationRecord implements Internal4{
         Db4oDatabase dbA = peerA.identity();
         Db4oDatabase dbB = peerB.identity();
         
-        transA.ensureDb4oDatabase(dbB);
-        transB.ensureDb4oDatabase(dbA);
+        dbB.bind(transA);
+        dbA.bind(transB);
         
         Db4oDatabase younger = null;
         Db4oDatabase older = null;

@@ -3,6 +3,7 @@
 package com.db4o.ext;
 
 import com.db4o.*;
+import com.db4o.query.*;
 import com.db4o.types.*;
 
 
@@ -30,7 +31,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
     // TODO: change to _creationTime with PersistentFormatUpdater
     public long i_uuid;
     
-    public static final String CREATIONTIME_FIELD = "i_uuid"; 
+    private static final String CREATIONTIME_FIELD = "i_uuid"; 
 
     
     /**
@@ -104,7 +105,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
         YapStream stream = trans.i_stream;
         if(stream != i_stream) {
             i_stream = stream;
-            i_id = trans.ensureDb4oDatabase(this);
+            i_id = bind(trans);
         }
         return i_id;
     }
@@ -157,6 +158,66 @@ public class Db4oDatabase implements Db4oType, Internal4{
         // FIXME: Add a message and move to Messages.
         // 
         throw new RuntimeException();
+    }
+    
+    /**
+     * make sure this Db4oDatabase is stored. Return the ID.  
+     */
+    public int bind(Transaction trans){
+        YapStream stream = trans.i_stream;
+        Db4oDatabase stored = (Db4oDatabase)stream.db4oTypeStored(trans,this);
+        if (stored == null) {
+            stream.showInternalClasses(true);
+            stream.set3(trans,this, 2, false);
+            int newID = stream.getID1(trans, this);
+            stream.showInternalClasses(false);
+            return newID;
+        }
+        if(stored == this){
+            return stream.getID1(trans, this);
+        }
+        if(i_uuid == 0){
+            i_uuid = stored.i_uuid;
+        }
+        stream.showInternalClasses(true);
+        int id = stream.getID1(trans, stored);
+        stream.bind(this, id);
+        stream.showInternalClasses(false);
+        return id;
+    }
+    
+    /**
+     * find a Db4oDatabase with the same signature as this one
+     */
+    public Db4oDatabase query(Transaction trans){
+        // showInternalClasses(true);  has to be set for this method to be successful
+        if(i_uuid > 0){
+            // try fast query over uuid (creation time) first
+            Db4oDatabase res = query(trans, true);
+            if(res != null){
+                return res;
+            }
+        }
+        // if not found, try to find with signature
+        return query(trans, false);
+    }
+    
+    private Db4oDatabase query(Transaction trans, boolean constrainByUUID){
+        YapStream stream = trans.i_stream;
+        Query q = stream.querySharpenBug(trans);
+        q.constrain(getClass());
+        if(constrainByUUID){
+            q.descend(CREATIONTIME_FIELD).constrain(new Long(i_uuid));
+        }
+        ObjectSet objectSet = q.execute();
+        while (objectSet.hasNext()) {
+            Db4oDatabase storedDatabase = (Db4oDatabase) objectSet.next();
+            stream.activate1(null, storedDatabase, 4);
+            if (storedDatabase.equals(this)) {
+                return storedDatabase;
+            }
+        }
+        return null;
     }
     
     
