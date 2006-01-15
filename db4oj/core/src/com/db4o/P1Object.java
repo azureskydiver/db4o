@@ -109,7 +109,7 @@ public class P1Object implements Db4oTypeImpl{
         
         synchronized(fromStream.lock()){
 		
-    		int id = toStream.replicationHandles(this);
+    		int id = toStream.oldReplicationHandles(this);
             
             if(id == -1){
                 // no action to be taken, already handled

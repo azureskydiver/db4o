@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.slots.*;
@@ -321,31 +320,6 @@ public class Transaction {
         }
     }
     
-    
-    // This method should really be in Db4oDatabase but we don't want to
-    // expose the package methods used 
-    public int ensureDb4oDatabase(Db4oDatabase a_db){
-        if(Debug.checkSychronization){
-            i_stream.i_lock.notify();
-        }
-        Db4oDatabase stored = (Db4oDatabase)i_stream.db4oTypeStored(this,a_db);
-        if (stored == null) {
-            i_stream.showInternalClasses(true);
-            i_stream.set3(this,a_db, 2, false);
-            int newID = i_stream.getID1(this, a_db);
-            i_stream.showInternalClasses(false);
-            return newID;
-        }
-        if(stored == a_db){
-            return i_stream.getID1(this, a_db);
-        }
-        i_stream.showInternalClasses(true);
-        int id = i_stream.getID1(this, stored);
-        i_stream.bind(a_db, id);
-        i_stream.showInternalClasses(false);
-        return id;
-    }
-
     boolean isDeleted(int a_id) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();

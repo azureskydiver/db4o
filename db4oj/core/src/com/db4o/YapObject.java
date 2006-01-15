@@ -438,15 +438,20 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	public YapObject hc_add(YapObject a_add) {
 		Object obj = a_add.getObject();
 		if (obj != null) {
-			a_add.hc_preceding = null;
-			a_add.hc_subsequent = null;
-			a_add.hc_size = 1;
-			a_add.hc_code = hc_getCode(obj);
+			a_add.hc_init(obj);
 			return hc_add1(a_add);
 		} else {
 			return this;
-}
+		}
 	}
+    
+    public void hc_init(Object obj){
+        hc_preceding = null;
+        hc_subsequent = null;
+        hc_size = 1;
+        hc_code = hc_getCode(obj);
+    }
+    
 	private YapObject hc_add1(YapObject a_new) {
 		int cmp = hc_compare(a_new);
 		if (cmp < 0) {
