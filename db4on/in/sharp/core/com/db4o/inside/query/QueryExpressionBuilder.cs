@@ -96,11 +96,11 @@ namespace com.db4o.inside.query
 
 		private static string GetAssemblyLocation(MethodInfo method)
 		{
-#if CF_1_0
+//#if CF_1_0
 			return method.DeclaringType.Module.FullyQualifiedName;
-#else
-			return new System.Uri(method.DeclaringType.Assembly.CodeBase).LocalPath;
-#endif
+//#else
+//			return new System.Uri(method.DeclaringType.Assembly.CodeBase).LocalPath;
+//#endif
 		}
 
 		private static Expression FromMethodDefinition(IMethodDefinition method)
