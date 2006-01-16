@@ -54,7 +54,7 @@ public final class YapHandlers {
     
     MigrationConnection             i_migration;
     
-    ReplicationHandler              _replicationHandler;
+    Db4oReplicationReferenceProvider _replicationReferenceProvider;
     
     boolean                 i_encrypt;
     byte[]                  i_encryptor;

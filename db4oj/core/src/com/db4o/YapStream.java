@@ -1058,18 +1058,18 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     public void migrateFrom(ObjectContainer objectContainer) {
         if(objectContainer == null){
-            if(_replicationCallState == ReplicationHandler.NONE){
+            if(_replicationCallState == YapConst.NONE){
                 return;
             }
-            _replicationCallState = ReplicationHandler.NONE;
+            _replicationCallState = YapConst.NONE;
             if(i_handlers.i_migration != null){
                 i_handlers.i_migration.terminate();
             }
             i_handlers.i_migration = null;
         }else{
             YapStream peer = (YapStream)objectContainer;
-            _replicationCallState = ReplicationHandler.OLD;
-            peer._replicationCallState = ReplicationHandler.OLD;
+            _replicationCallState = YapConst.OLD;
+            peer._replicationCallState = YapConst.OLD;
             i_handlers.i_migration = new MigrationConnection(this, (YapStream)objectContainer);
             peer.i_handlers.i_migration = i_handlers.i_migration;
         }
@@ -1349,7 +1349,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         
         // The double check on i_migrateFrom is necessary:
         // i_handlers.i_replicateFrom may be set in YapObjectCarrier for parent YapStream 
-        if(_replicationCallState != ReplicationHandler.OLD){
+        if(_replicationCallState != YapConst.OLD){
             return 0;
         }
         
@@ -1456,24 +1456,18 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return id;
     }
     
-    public final void setByNewReplication(Object obj, Db4oDatabase provider, long uuidLong, long version){
+    public final void setByNewReplication(Db4oReplicationReferenceProvider referenceProvider, Object obj){
         synchronized(i_lock){
             
-            _replicationCallState = ReplicationHandler.NEW;
+            _replicationCallState = YapConst.NEW;
             
-            // if(i_handlers._replicationHandler == null){
-                i_handlers._replicationHandler = new ReplicationHandler();
-            // }
+            i_handlers._replicationReferenceProvider = referenceProvider;
             
-            i_handlers._replicationHandler.associateObjectWith(obj, provider, uuidLong, version);
+            set2(checkTransaction(null), obj, 1, false);
             
-            Transaction ta = checkTransaction(null);
+            _replicationCallState = YapConst.NONE;
             
-            set2(ta, obj, 1, false);
-            
-            _replicationCallState = ReplicationHandler.NONE;
-            
-            i_handlers._replicationHandler = null;
+            i_handlers._replicationReferenceProvider = null;
         }
     }
 
