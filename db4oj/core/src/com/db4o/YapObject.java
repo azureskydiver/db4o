@@ -13,7 +13,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
     
 	private YapClass i_yapClass;
 	Object i_object;
-	protected VirtualAttributes i_virtualAttributes;
+	VirtualAttributes i_virtualAttributes;
 
 	protected YapObject id_preceding;
 	private YapObject id_subsequent;
