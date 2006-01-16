@@ -56,11 +56,11 @@ public class ReplicationImpl implements ReplicationProcess {
 
 				_peerA.i_handlers.i_migration = mgc;
 				_peerA.i_handlers.i_replication = this;
-				_peerA._replicationCallState = ReplicationHandler.OLD;
+				_peerA._replicationCallState = YapConst.OLD;
 
 				_peerB.i_handlers.i_migration = mgc;
 				_peerB.i_handlers.i_replication = this;
-                _peerB._replicationCallState = ReplicationHandler.OLD;
+                _peerB._replicationCallState = YapConst.OLD;
 
 				_conflictHandler = conflictHandler;
 
@@ -119,11 +119,11 @@ public class ReplicationImpl implements ReplicationProcess {
 
 	private void endReplication() {
         
-		_peerA._replicationCallState = ReplicationHandler.NONE;
+		_peerA._replicationCallState = YapConst.NONE;
         _peerA.i_handlers.i_migration = null;
 		_peerA.i_handlers.i_replication = null;
         
-        _peerA._replicationCallState = ReplicationHandler.NONE;
+        _peerA._replicationCallState = YapConst.NONE;
         _peerB.i_handlers.i_migration = null;
 		_peerB.i_handlers.i_replication = null;
 	}

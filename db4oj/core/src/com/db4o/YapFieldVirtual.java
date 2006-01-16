@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.replication.*;
@@ -88,8 +87,8 @@ abstract class YapFieldVirtual extends YapField {
         
         // old replication code 
         
-        if (stream._replicationCallState != ReplicationHandler.NONE) {
-            if (stream._replicationCallState == ReplicationHandler.OLD) {
+        if (stream._replicationCallState != YapConst.NONE) {
+            if (stream._replicationCallState == YapConst.OLD) {
                 migrating = true;
                 if (a_yapObject.i_virtualAttributes == null) {
                     Object obj = a_yapObject.getObject();
@@ -113,18 +112,18 @@ abstract class YapFieldVirtual extends YapField {
                     }
                 }
             }else {
-                ReplicationHandler handler = handlers._replicationHandler;
+                Db4oReplicationReferenceProvider provider = handlers._replicationReferenceProvider;
                 Object parentObject = a_yapObject.getObject();
-                Db4oDatabase db = handler.providerFor(parentObject);
-                if(db != null){
+                Db4oReplicationReference ref = provider.referenceFor(parentObject); 
+                if(ref != null){
                     migrating = true;
                     if(a_yapObject.i_virtualAttributes == null){
                         a_yapObject.i_virtualAttributes = new VirtualAttributes();
                     }
                     VirtualAttributes va = a_yapObject.i_virtualAttributes;
-                    va.i_version = handler.versionFor(parentObject);
-                    va.i_uuid = handler.uuidLongFor(parentObject);
-                    va.i_database = handler.providerFor(parentObject);
+                    va.i_version = ref.version();
+                    va.i_uuid = ref.longPart();
+                    va.i_database = ref.signaturePart();
                 }
             }
         }
