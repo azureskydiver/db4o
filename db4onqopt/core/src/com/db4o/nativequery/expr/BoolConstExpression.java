@@ -2,12 +2,6 @@ package com.db4o.nativequery.expr;
 
 
 public class BoolConstExpression implements Expression {	
-	public interface Visitor extends ExpressionVisitor  {
-
-		void visit(BoolConstExpression expression);
-
-	}
-
 	public static final BoolConstExpression TRUE=new BoolConstExpression(true);
 	public static final BoolConstExpression FALSE=new BoolConstExpression(false);
 
@@ -30,7 +24,7 @@ public class BoolConstExpression implements Expression {
 	}
 
 	public void accept(ExpressionVisitor visitor) {
-		((Visitor)visitor).visit(this);
+		visitor.visit(this);
 	}
 
 	public Expression negate() {

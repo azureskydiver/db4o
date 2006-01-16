@@ -27,7 +27,7 @@ public class SODABloatMethodBuilder {
 	private Type queryType;
 	private Map conversions;
 
-	private class SODABloatMethodVisitor implements DiscriminatingExpressionVisitor {
+	private class SODABloatMethodVisitor implements ExpressionVisitor {
 		private ClassLoader classLoader;
 		private Class predicateClass;
 		private Class candidateClass;
@@ -61,7 +61,7 @@ public class SODABloatMethodBuilder {
 				methodEditor.addInstruction(Opcode.opc_ldc,(String)fieldNames.next());
 				methodEditor.addInstruction(Opcode.opc_invokeinterface,descendRef);
 			}
-			expression.right().accept(new DiscriminatingComparisonOperandVisitor() {
+			expression.right().accept(new ComparisonOperandVisitor() {
 				private boolean inArithmetic=false;
 				private Class opClass=null;
 				

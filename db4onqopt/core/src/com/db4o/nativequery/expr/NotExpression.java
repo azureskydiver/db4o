@@ -2,12 +2,6 @@ package com.db4o.nativequery.expr;
 
 
 public class NotExpression implements Expression {
-	public interface Visitor extends ExpressionVisitor  {
-
-		void visit(NotExpression expression);
-
-	}
-
 	private Expression _expr;
 
 	public NotExpression(Expression expr) {
@@ -38,6 +32,6 @@ public class NotExpression implements Expression {
 	}
 
 	public void accept(ExpressionVisitor visitor) {
-		((Visitor)visitor).visit(this);
+		visitor.visit(this);
 	}
 }

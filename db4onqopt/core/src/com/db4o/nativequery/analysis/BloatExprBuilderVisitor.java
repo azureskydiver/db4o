@@ -1,18 +1,40 @@
 package com.db4o.nativequery.analysis;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.context.*;
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.file.*;
-import EDU.purdue.cs.bloat.tree.*;
+import EDU.purdue.cs.bloat.cfg.Block;
+import EDU.purdue.cs.bloat.cfg.FlowGraph;
+import EDU.purdue.cs.bloat.editor.MemberRef;
+import EDU.purdue.cs.bloat.tree.ArithExpr;
+import EDU.purdue.cs.bloat.tree.CallMethodExpr;
+import EDU.purdue.cs.bloat.tree.CallStaticExpr;
+import EDU.purdue.cs.bloat.tree.ConstantExpr;
+import EDU.purdue.cs.bloat.tree.Expr;
+import EDU.purdue.cs.bloat.tree.ExprStmt;
+import EDU.purdue.cs.bloat.tree.FieldExpr;
+import EDU.purdue.cs.bloat.tree.IfCmpStmt;
+import EDU.purdue.cs.bloat.tree.IfStmt;
+import EDU.purdue.cs.bloat.tree.IfZeroStmt;
+import EDU.purdue.cs.bloat.tree.LocalExpr;
+import EDU.purdue.cs.bloat.tree.ReturnExprStmt;
+import EDU.purdue.cs.bloat.tree.TreeVisitor;
 
 import com.db4o.foundation.Iterator4;
-import com.db4o.nativequery.bloat.*;
-import com.db4o.nativequery.expr.*;
-import com.db4o.nativequery.expr.build.*;
-import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.bloat.BloatUtil;
+import com.db4o.nativequery.expr.BoolConstExpression;
+import com.db4o.nativequery.expr.ComparisonExpression;
+import com.db4o.nativequery.expr.Expression;
+import com.db4o.nativequery.expr.ExpressionVisitor;
+import com.db4o.nativequery.expr.TraversingExpressionVisitor;
+import com.db4o.nativequery.expr.build.ExpressionBuilder;
+import com.db4o.nativequery.expr.cmp.ArithmeticExpression;
+import com.db4o.nativequery.expr.cmp.ArithmeticOperator;
+import com.db4o.nativequery.expr.cmp.ComparisonOperand;
+import com.db4o.nativequery.expr.cmp.ComparisonOperator;
+import com.db4o.nativequery.expr.cmp.ConstValue;
+import com.db4o.nativequery.expr.cmp.FieldValue;
+import com.db4o.nativequery.expr.cmp.ThreeWayComparison;
 
 public class BloatExprBuilderVisitor extends TreeVisitor {
 	private final static ExpressionBuilder BUILDER=new ExpressionBuilder();
@@ -107,7 +129,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return true;
 		}
 		final boolean[] result={true};
-		DiscriminatingExpressionVisitor visitor=new TraversingExpressionVisitor() {
+		ExpressionVisitor visitor=new TraversingExpressionVisitor() {
 			public void visit(ComparisonExpression expression) {
 				if(expression.left().parentIdx()!=1) {
 					result[0]=false;

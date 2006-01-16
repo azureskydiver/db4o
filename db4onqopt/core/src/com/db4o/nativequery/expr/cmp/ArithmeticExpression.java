@@ -3,12 +3,6 @@ package com.db4o.nativequery.expr.cmp;
 
 
 public class ArithmeticExpression implements ComparisonOperand {
-	public static interface Visitor extends ComparisonOperandVisitor {
-
-		void visit(ArithmeticExpression operand);
-
-	}
-
 	private ArithmeticOperator _op;
 	private ComparisonOperand _left;
 	private ComparisonOperand _right;
@@ -54,6 +48,6 @@ public class ArithmeticExpression implements ComparisonOperand {
 	}
 
 	public void accept(ComparisonOperandVisitor visitor) {
-		((Visitor)visitor).visit(this);
+		visitor.visit(this);
 	}
 }
