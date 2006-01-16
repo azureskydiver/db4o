@@ -2,12 +2,6 @@ package com.db4o.nativequery.expr.cmp;
 
 
 public class ConstValue implements ComparisonOperand {	
-	public static interface Visitor extends ComparisonOperandVisitor {
-
-		void visit(ConstValue operand);
-
-	}
-
 	private Object _value;
 	
 	public ConstValue(Object value) {
@@ -44,6 +38,6 @@ public class ConstValue implements ComparisonOperand {
 	}
 
 	public void accept(ComparisonOperandVisitor visitor) {
-		((Visitor)visitor).visit(this);
+		visitor.visit(this);
 	}
 }

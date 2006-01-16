@@ -1,6 +1,6 @@
 package com.db4o.nativequery.expr;
 
-public class TraversingExpressionVisitor implements DiscriminatingExpressionVisitor {
+public class TraversingExpressionVisitor implements ExpressionVisitor {
 	public void visit(AndExpression expression) {
 		expression.left().accept(this);
 		expression.right().accept(this);

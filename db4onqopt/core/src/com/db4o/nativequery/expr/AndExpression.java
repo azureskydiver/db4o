@@ -2,12 +2,6 @@ package com.db4o.nativequery.expr;
 
 
 public class AndExpression implements Expression {
-	public interface Visitor extends ExpressionVisitor {
-
-		void visit(AndExpression expression);
-
-	}
-
 	private Expression _left;
 	private Expression _right;
 	
@@ -44,6 +38,6 @@ public class AndExpression implements Expression {
 	}
 
 	public void accept(ExpressionVisitor visitor) {
-		((Visitor)visitor).visit(this);
+		visitor.visit(this);
 	}
 }

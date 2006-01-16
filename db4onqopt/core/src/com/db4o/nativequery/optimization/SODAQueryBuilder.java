@@ -9,7 +9,7 @@ import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.query.*;
 
 public class SODAQueryBuilder {		
-	private static class SODAQueryVisitor implements DiscriminatingExpressionVisitor {
+	private static class SODAQueryVisitor implements ExpressionVisitor {
 		private Object _predicate;
 		private Query _query;
 		private Constraint _constraint;
@@ -45,7 +45,7 @@ public class SODAQueryBuilder {
 				subQuery=subQuery.descend((String)fieldNames.next());
 			}
 			final Object[] value={null};
-			expression.right().accept(new DiscriminatingComparisonOperandVisitor() {				
+			expression.right().accept(new ComparisonOperandVisitor() {				
 				public void visit(ConstValue operand) {
 					value[0] = operand.value();
 				}

@@ -5,12 +5,6 @@ import com.db4o.nativequery.expr.cmp.ComparisonOperator;
 import com.db4o.nativequery.expr.cmp.FieldValue;
 
 public class ComparisonExpression implements Expression {
-	public interface Visitor extends ExpressionVisitor  {
-
-		void visit(ComparisonExpression expression);
-
-	}
-
 	private FieldValue _left;
 	private ComparisonOperand _right;
 	private ComparisonOperator _op;
@@ -53,6 +47,6 @@ public class ComparisonExpression implements Expression {
 	}
 	
 	public void accept(ExpressionVisitor visitor) {
-		((Visitor)visitor).visit(this);
+		visitor.visit(this);
 	}
 }
