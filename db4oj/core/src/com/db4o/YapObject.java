@@ -13,9 +13,9 @@ public class YapObject extends YapMeta implements ObjectInfo{
     
 	private YapClass i_yapClass;
 	Object i_object;
-	VirtualAttributes i_virtualAttributes;
+	protected VirtualAttributes i_virtualAttributes;
 
-	private YapObject id_preceding;
+	protected YapObject id_preceding;
 	private YapObject id_subsequent;
 	private int id_size;
 
@@ -161,7 +161,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
     // this method will only work client-side or on
     // single ObjectContainers, after the YapClass
     // is set.
-    private Transaction getTrans(){
+    public Transaction getTrans(){
         if(i_yapClass != null){
             YapStream stream = i_yapClass.getStream();
             if(stream != null){
@@ -362,7 +362,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return false;
 	}
 	
-	VirtualAttributes virtualAttributes(Transaction a_trans){
+	public VirtualAttributes virtualAttributes(Transaction a_trans){
         if(a_trans == null){
             return i_virtualAttributes;
         }
