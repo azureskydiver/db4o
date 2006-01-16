@@ -221,7 +221,7 @@ namespace com.db4o
 			{
 				run[0] = 0;
 				bool[] anyClassCollected = { false };
-				i_trans.i_stream.i_classCollection.yapFields(a_field, new _AnonymousInnerClass201
+				i_trans.i_stream.i_classCollection.attachQueryNode(a_field, new _AnonymousInnerClass201
 					(this, anyClassCollected));
 			}
 			com.db4o.foundation.Iterator4 i = iterateConstraints();

@@ -1,6 +1,6 @@
 namespace com.db4o.nativequery.expr
 {
-	public class TraversingExpressionVisitor : com.db4o.nativequery.expr.DiscriminatingExpressionVisitor
+	public class TraversingExpressionVisitor : com.db4o.nativequery.expr.ExpressionVisitor
 	{
 		public virtual void visit(com.db4o.nativequery.expr.AndExpression expression)
 		{

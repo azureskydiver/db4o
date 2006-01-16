@@ -23,5 +23,4 @@ namespace j4o.io {
 			_stream.Close();
 		}
 	}
-
 }

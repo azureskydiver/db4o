@@ -130,7 +130,8 @@ namespace com.db4o
 			}
 			if (length > 0)
 			{
-				return i_stringIo.read(a_bytes, length);
+				string str = i_stringIo.read(a_bytes, length);
+				return str;
 			}
 			return "";
 		}

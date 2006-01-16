@@ -35,13 +35,13 @@ namespace j4o.lang
 			return string.Format("Token(Kind: {0}, Value: '{1}')", Kind, Value);
 		}
 	}
-	
+
 	internal class TypeReferenceLexer
 	{
 		string _input;
 		int _index;
 		StringBuilder _buffer; // TODO: get rid of StringBuilder and use string.Substring
-		
+
 		public TypeReferenceLexer(string input)
 		{
 			if (null == input) throw new ArgumentNullException("input");
@@ -104,11 +104,12 @@ namespace j4o.lang
 			{
 				char ch = Peek();
 				if (!char.IsLetterOrDigit(ch)
-				    && '.' != ch
+					&& '.' != ch
 					&& '-' != ch
 					&& '_' != ch
 					&& '<' != ch
-					&& '>' != ch)
+					&& '>' != ch
+					&& ' ' != ch) // assembly names can contain spaces
 				{
 					break;
 				}

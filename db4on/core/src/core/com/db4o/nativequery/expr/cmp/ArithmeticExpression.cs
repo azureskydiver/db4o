@@ -2,11 +2,6 @@ namespace com.db4o.nativequery.expr.cmp
 {
 	public class ArithmeticExpression : com.db4o.nativequery.expr.cmp.ComparisonOperand
 	{
-		public interface Visitor : com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
-		{
-			void visit(com.db4o.nativequery.expr.cmp.ArithmeticExpression operand);
-		}
-
 		private com.db4o.nativequery.expr.cmp.ArithmeticOperator _op;
 
 		private com.db4o.nativequery.expr.cmp.ComparisonOperand _left;
@@ -70,7 +65,7 @@ namespace com.db4o.nativequery.expr.cmp
 		public virtual void accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
 			 visitor)
 		{
-			((com.db4o.nativequery.expr.cmp.ArithmeticExpression.Visitor)visitor).visit(this);
+			visitor.visit(this);
 		}
 	}
 }

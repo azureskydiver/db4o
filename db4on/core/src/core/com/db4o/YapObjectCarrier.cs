@@ -118,7 +118,7 @@ namespace com.db4o
 			return false;
 		}
 
-		internal override void raiseVersion(long a_minimumVersion)
+		public override void raiseVersion(long a_minimumVersion)
 		{
 		}
 

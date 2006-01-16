@@ -536,7 +536,7 @@ namespace com.db4o
 			readResult(a_res);
 		}
 
-		internal override void raiseVersion(long a_minimumVersion)
+		public override void raiseVersion(long a_minimumVersion)
 		{
 			writeMsg(com.db4o.Msg.RAISE_VERSION.getWriterForLong(i_trans, a_minimumVersion));
 		}

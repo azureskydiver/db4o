@@ -28,5 +28,4 @@ namespace j4o.io {
             return (0 == read) ? -1 : read;
 		}
 	}
-
 }

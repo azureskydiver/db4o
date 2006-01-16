@@ -2,11 +2,6 @@ namespace com.db4o.nativequery.expr.cmp
 {
 	public class FieldValue : com.db4o.nativequery.expr.cmp.ComparisonOperand
 	{
-		public interface Visitor : com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
-		{
-			void visit(com.db4o.nativequery.expr.cmp.FieldValue operand);
-		}
-
 		private int _parentIdx;
 
 		private com.db4o.foundation.Collection4 _fieldNames = new com.db4o.foundation.Collection4
@@ -102,7 +97,7 @@ namespace com.db4o.nativequery.expr.cmp
 		public virtual void accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
 			 visitor)
 		{
-			((com.db4o.nativequery.expr.cmp.FieldValue.Visitor)visitor).visit(this);
+			visitor.visit(this);
 		}
 	}
 }

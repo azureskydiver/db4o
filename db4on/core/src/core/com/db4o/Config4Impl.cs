@@ -44,6 +44,8 @@ namespace com.db4o
 
 		public int i_generateVersionNumbers;
 
+		internal bool i_internStrings = false;
+
 		internal bool i_isServer = false;
 
 		internal bool i_lockFile = true;
@@ -276,6 +278,11 @@ namespace com.db4o
 			}
 		}
 
+		public void internStrings(bool doIntern)
+		{
+			i_internStrings = doIntern;
+		}
+
 		public void io(com.db4o.io.IoAdapter adapter)
 		{
 			globalSettingOnly();
@@ -391,7 +398,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass341(this));
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass346(this));
 			}
 			else
 			{
@@ -399,9 +406,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass341 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass346 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass341(Config4Impl _enclosing)
+			public _AnonymousInnerClass346(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -445,7 +452,7 @@ namespace com.db4o
 		{
 			if (i_stream == null)
 			{
-				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass377(this));
+				com.db4o.Db4o.forEachSession(new _AnonymousInnerClass382(this));
 			}
 			else
 			{
@@ -453,9 +460,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass377 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass382 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass377(Config4Impl _enclosing)
+			public _AnonymousInnerClass382(Config4Impl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

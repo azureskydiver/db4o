@@ -2,11 +2,6 @@ namespace com.db4o.nativequery.expr.cmp
 {
 	public class ConstValue : com.db4o.nativequery.expr.cmp.ComparisonOperand
 	{
-		public interface Visitor : com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
-		{
-			void visit(com.db4o.nativequery.expr.cmp.ConstValue operand);
-		}
-
 		private object _value;
 
 		public ConstValue(object value)
@@ -55,7 +50,7 @@ namespace com.db4o.nativequery.expr.cmp
 		public virtual void accept(com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
 			 visitor)
 		{
-			((com.db4o.nativequery.expr.cmp.ConstValue.Visitor)visitor).visit(this);
+			visitor.visit(this);
 		}
 	}
 }

@@ -17,5 +17,4 @@ namespace com.db4o
 			return this.Target;
 		}
 	}
-
 }

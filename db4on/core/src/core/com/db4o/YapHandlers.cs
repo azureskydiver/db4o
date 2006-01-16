@@ -46,7 +46,9 @@ namespace com.db4o
 
 		internal com.db4o.ReplicationImpl i_replication;
 
-		internal com.db4o.MigrationConnection i_migration;
+		internal com.db4o.inside.replication.MigrationConnection i_migration;
+
+		internal com.db4o.inside.replication.ReplicationHandler _replicationHandler;
 
 		internal bool i_encrypt;
 
@@ -209,7 +211,7 @@ namespace com.db4o
 							constructors[i].setAccessible();
 							int parameterCount = constructors[i].getParameterTypes().Length;
 							sortedConstructors = com.db4o.Tree.add(sortedConstructors, new com.db4o.TreeIntObject
-								(parameterCount, constructors[i]));
+								(i + constructors.Length * parameterCount, constructors[i]));
 						}
 						catch (System.Exception t)
 						{
@@ -218,7 +220,7 @@ namespace com.db4o
 					bool[] foundConstructor = { false };
 					if (sortedConstructors != null)
 					{
-						sortedConstructors.traverse(new _AnonymousInnerClass220(this, foundConstructor, claxx
+						sortedConstructors.traverse(new _AnonymousInnerClass223(this, foundConstructor, claxx
 							));
 					}
 					if (foundConstructor[0])
@@ -233,9 +235,9 @@ namespace com.db4o
 			return false;
 		}
 
-		private sealed class _AnonymousInnerClass220 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass223 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass220(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
+			public _AnonymousInnerClass223(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
 				 claxx)
 			{
 				this._enclosing = _enclosing;

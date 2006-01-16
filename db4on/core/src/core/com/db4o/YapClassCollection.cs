@@ -57,6 +57,49 @@ namespace com.db4o
 			return i_stream.stringIO().write(str);
 		}
 
+		internal void attachQueryNode(string fieldName, com.db4o.foundation.Visitor4 a_visitor
+			)
+		{
+			com.db4o.YapClassCollectionIterator i = iterator();
+			while (i.hasNext())
+			{
+				com.db4o.YapClass yc = i.nextClass();
+				if (!yc.isInternal())
+				{
+					yc.forEachYapField(new _AnonymousInnerClass62(this, fieldName, a_visitor, yc));
+				}
+			}
+		}
+
+		private sealed class _AnonymousInnerClass62 : com.db4o.foundation.Visitor4
+		{
+			public _AnonymousInnerClass62(YapClassCollection _enclosing, string fieldName, com.db4o.foundation.Visitor4
+				 a_visitor, com.db4o.YapClass yc)
+			{
+				this._enclosing = _enclosing;
+				this.fieldName = fieldName;
+				this.a_visitor = a_visitor;
+				this.yc = yc;
+			}
+
+			public void visit(object obj)
+			{
+				com.db4o.YapField yf = (com.db4o.YapField)obj;
+				if (yf.canAddToQuery(fieldName))
+				{
+					a_visitor.visit(new object[] { yc, yf });
+				}
+			}
+
+			private readonly YapClassCollection _enclosing;
+
+			private readonly string fieldName;
+
+			private readonly com.db4o.foundation.Visitor4 a_visitor;
+
+			private readonly com.db4o.YapClass yc;
+		}
+
 		internal void checkChanges()
 		{
 			com.db4o.foundation.Iterator4 i = i_classes.iterator();
@@ -302,12 +345,12 @@ namespace com.db4o
 				i_yapClassByBytes.put(yapClass.readName(a_trans), yapClass);
 			}
 			com.db4o.foundation.Hashtable4 readAs = i_stream.i_config._readAs;
-			readAs.forEachKey(new _AnonymousInnerClass272(this, readAs));
+			readAs.forEachKey(new _AnonymousInnerClass289(this, readAs));
 		}
 
-		private sealed class _AnonymousInnerClass272 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass289 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass272(YapClassCollection _enclosing, com.db4o.foundation.Hashtable4
+			public _AnonymousInnerClass289(YapClassCollection _enclosing, com.db4o.foundation.Hashtable4
 				 readAs)
 			{
 				this._enclosing = _enclosing;
@@ -440,46 +483,6 @@ namespace com.db4o
 			{
 				writeIDOf((com.db4o.YapClass)i.next(), a_writer);
 			}
-		}
-
-		internal void yapFields(string a_field, com.db4o.foundation.Visitor4 a_visitor)
-		{
-			com.db4o.YapClassCollectionIterator i = iterator();
-			while (i.hasNext())
-			{
-				com.db4o.YapClass yc = i.nextClass();
-				yc.forEachYapField(new _AnonymousInnerClass376(this, a_field, a_visitor, yc));
-			}
-		}
-
-		private sealed class _AnonymousInnerClass376 : com.db4o.foundation.Visitor4
-		{
-			public _AnonymousInnerClass376(YapClassCollection _enclosing, string a_field, com.db4o.foundation.Visitor4
-				 a_visitor, com.db4o.YapClass yc)
-			{
-				this._enclosing = _enclosing;
-				this.a_field = a_field;
-				this.a_visitor = a_visitor;
-				this.yc = yc;
-			}
-
-			public void visit(object obj)
-			{
-				com.db4o.YapField yf = (com.db4o.YapField)obj;
-				if (yf.alive() && a_field.Equals(yf.getName()) && yf.getParentYapClass() != null 
-					&& !yf.getParentYapClass().isInternal())
-				{
-					a_visitor.visit(new object[] { yc, yf });
-				}
-			}
-
-			private readonly YapClassCollection _enclosing;
-
-			private readonly string a_field;
-
-			private readonly com.db4o.foundation.Visitor4 a_visitor;
-
-			private readonly com.db4o.YapClass yc;
 		}
 	}
 }

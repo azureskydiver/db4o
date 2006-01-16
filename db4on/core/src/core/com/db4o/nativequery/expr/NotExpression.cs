@@ -2,11 +2,6 @@ namespace com.db4o.nativequery.expr
 {
 	public class NotExpression : com.db4o.nativequery.expr.Expression
 	{
-		public interface Visitor : com.db4o.nativequery.expr.ExpressionVisitor
-		{
-			void visit(com.db4o.nativequery.expr.NotExpression expression);
-		}
-
 		private com.db4o.nativequery.expr.Expression _expr;
 
 		public NotExpression(com.db4o.nativequery.expr.Expression expr)
@@ -47,7 +42,7 @@ namespace com.db4o.nativequery.expr
 
 		public virtual void accept(com.db4o.nativequery.expr.ExpressionVisitor visitor)
 		{
-			((com.db4o.nativequery.expr.NotExpression.Visitor)visitor).visit(this);
+			visitor.visit(this);
 		}
 	}
 }

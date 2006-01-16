@@ -13,8 +13,17 @@ namespace com.db4o.ext
 		/// <summary>Field is public for implementation reasons, DO NOT TOUCH!</summary>
 		public byte[] i_signature;
 
-		/// <summary>Field is public for implementation reasons, DO NOT TOUCH!</summary>
+		/// <summary>
+		/// Field is public for implementation reasons, DO NOT TOUCH!
+		/// This field is badly named, it really is the creation time.
+		/// </summary>
+		/// <remarks>
+		/// Field is public for implementation reasons, DO NOT TOUCH!
+		/// This field is badly named, it really is the creation time.
+		/// </remarks>
 		public long i_uuid;
+
+		private static readonly string CREATIONTIME_FIELD = "i_uuid";
 
 		/// <summary>cached ObjectContainer for getting the own ID.</summary>
 		/// <remarks>cached ObjectContainer for getting the own ID.</remarks>
@@ -24,6 +33,16 @@ namespace com.db4o.ext
 		/// <summary>cached ID, only valid in combination with i_objectContainer</summary>
 		[com.db4o.Transient]
 		private int i_id;
+
+		public Db4oDatabase()
+		{
+		}
+
+		public Db4oDatabase(byte[] signature, long creationTime)
+		{
+			i_signature = signature;
+			i_uuid = creationTime;
+		}
 
 		/// <summary>generates a new Db4oDatabase object with a unique signature.</summary>
 		/// <remarks>generates a new Db4oDatabase object with a unique signature.</remarks>
@@ -77,9 +96,20 @@ namespace com.db4o.ext
 			if (stream != i_stream)
 			{
 				i_stream = stream;
-				i_id = trans.ensureDb4oDatabase(this);
+				i_id = bind(trans);
 			}
 			return i_id;
+		}
+
+		public virtual long getCreationTime()
+		{
+			return i_uuid;
+		}
+
+		/// <summary>returns the unique signature</summary>
+		public virtual byte[] getSignature()
+		{
+			return i_signature;
 		}
 
 		public override string ToString()
@@ -109,6 +139,74 @@ namespace com.db4o.ext
 				}
 			}
 			throw new j4o.lang.RuntimeException();
+		}
+
+		/// <summary>make sure this Db4oDatabase is stored.</summary>
+		/// <remarks>make sure this Db4oDatabase is stored. Return the ID.</remarks>
+		public virtual int bind(com.db4o.Transaction trans)
+		{
+			com.db4o.YapStream stream = trans.i_stream;
+			com.db4o.ext.Db4oDatabase stored = (com.db4o.ext.Db4oDatabase)stream.db4oTypeStored
+				(trans, this);
+			if (stored == null)
+			{
+				stream.showInternalClasses(true);
+				stream.set3(trans, this, 2, false);
+				int newID = stream.getID1(trans, this);
+				stream.showInternalClasses(false);
+				return newID;
+			}
+			if (stored == this)
+			{
+				return stream.getID1(trans, this);
+			}
+			if (i_uuid == 0)
+			{
+				i_uuid = stored.i_uuid;
+			}
+			stream.showInternalClasses(true);
+			int id = stream.getID1(trans, stored);
+			stream.bind(this, id);
+			stream.showInternalClasses(false);
+			return id;
+		}
+
+		/// <summary>find a Db4oDatabase with the same signature as this one</summary>
+		public virtual com.db4o.ext.Db4oDatabase query(com.db4o.Transaction trans)
+		{
+			if (i_uuid > 0)
+			{
+				com.db4o.ext.Db4oDatabase res = query(trans, true);
+				if (res != null)
+				{
+					return res;
+				}
+			}
+			return query(trans, false);
+		}
+
+		private com.db4o.ext.Db4oDatabase query(com.db4o.Transaction trans, bool constrainByUUID
+			)
+		{
+			com.db4o.YapStream stream = trans.i_stream;
+			com.db4o.query.Query q = stream.querySharpenBug(trans);
+			q.constrain(j4o.lang.Class.getClassForObject(this));
+			if (constrainByUUID)
+			{
+				q.descend(CREATIONTIME_FIELD).constrain(i_uuid);
+			}
+			com.db4o.ObjectSet objectSet = q.execute();
+			while (objectSet.hasNext())
+			{
+				com.db4o.ext.Db4oDatabase storedDatabase = (com.db4o.ext.Db4oDatabase)objectSet.next
+					();
+				stream.activate1(null, storedDatabase, 4);
+				if (storedDatabase.Equals(this))
+				{
+					return storedDatabase;
+				}
+			}
+			return null;
 		}
 	}
 }

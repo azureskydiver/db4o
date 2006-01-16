@@ -136,7 +136,7 @@ namespace com.db4o
 			com.db4o.YapStream toStream = toTrans.i_stream;
 			lock (fromStream.Lock())
 			{
-				int id = toStream.replicationHandles(this);
+				int id = toStream.oldReplicationHandles(this);
 				if (id == -1)
 				{
 					return this;

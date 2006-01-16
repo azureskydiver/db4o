@@ -309,6 +309,11 @@ namespace com.db4o.config
 		/// <returns>MessageSender</returns>
 		com.db4o.messaging.MessageSender getMessageSender();
 
+		/// <summary>Configures db4o to call intern() on strings upon retrieval.</summary>
+		/// <remarks>Configures db4o to call intern() on strings upon retrieval.</remarks>
+		/// <param name="doIntern">intern strings on retrieval if true, don't otherwise</param>
+		void internStrings(bool doIntern);
+
 		/// <summary>allows to configure db4o to use a customized byte IO adapter.</summary>
 		/// <remarks>
 		/// allows to configure db4o to use a customized byte IO adapter.
