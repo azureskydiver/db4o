@@ -38,9 +38,8 @@ public class SymbianIoAdapter extends RandomAccessFileAdapter {
 		RandomAccessFile file=new RandomAccessFile(_path,"r");
 		try {
 			return file.length();
-		} catch (IOException exc) {
+		} finally {
 			file.close();
-			throw exc;
 		}
 	}
 	
