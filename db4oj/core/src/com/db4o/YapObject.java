@@ -380,6 +380,10 @@ public class YapObject extends YapMeta implements ObjectInfo{
         }
 	    return i_virtualAttributes;
 	}
+    
+    public void setVirtualAttributes(VirtualAttributes at){
+        i_virtualAttributes = at;
+    }
 
 	void writeThis(YapWriter a_writer) {
 		if (Deploy.debug) {
