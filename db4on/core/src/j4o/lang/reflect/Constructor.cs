@@ -27,5 +27,4 @@ namespace j4o.lang.reflect {
             return constructorInfo.Invoke(parameters);
         }
     }
-
 }

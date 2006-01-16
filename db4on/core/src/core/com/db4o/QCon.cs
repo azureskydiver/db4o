@@ -96,7 +96,7 @@ namespace com.db4o
 			{
 				int[] count = { 0 };
 				com.db4o.YapField[] yfs = { null };
-				i_trans.i_stream.i_classCollection.yapFields(a_field, new _AnonymousInnerClass119
+				i_trans.i_stream.i_classCollection.attachQueryNode(a_field, new _AnonymousInnerClass119
 					(this, yfs, count));
 				if (count[0] == 0)
 				{

@@ -2,11 +2,6 @@ namespace com.db4o.nativequery.expr
 {
 	public class AndExpression : com.db4o.nativequery.expr.Expression
 	{
-		public interface Visitor : com.db4o.nativequery.expr.ExpressionVisitor
-		{
-			void visit(com.db4o.nativequery.expr.AndExpression expression);
-		}
-
 		private com.db4o.nativequery.expr.Expression _left;
 
 		private com.db4o.nativequery.expr.Expression _right;
@@ -57,7 +52,7 @@ namespace com.db4o.nativequery.expr
 
 		public virtual void accept(com.db4o.nativequery.expr.ExpressionVisitor visitor)
 		{
-			((com.db4o.nativequery.expr.AndExpression.Visitor)visitor).visit(this);
+			visitor.visit(this);
 		}
 	}
 }

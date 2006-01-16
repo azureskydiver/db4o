@@ -2,11 +2,6 @@ namespace com.db4o.nativequery.expr
 {
 	public class BoolConstExpression : com.db4o.nativequery.expr.Expression
 	{
-		public interface Visitor : com.db4o.nativequery.expr.ExpressionVisitor
-		{
-			void visit(com.db4o.nativequery.expr.BoolConstExpression expression);
-		}
-
 		public static readonly com.db4o.nativequery.expr.BoolConstExpression TRUE = new com.db4o.nativequery.expr.BoolConstExpression
 			(true);
 
@@ -37,7 +32,7 @@ namespace com.db4o.nativequery.expr
 
 		public virtual void accept(com.db4o.nativequery.expr.ExpressionVisitor visitor)
 		{
-			((com.db4o.nativequery.expr.BoolConstExpression.Visitor)visitor).visit(this);
+			visitor.visit(this);
 		}
 
 		public virtual com.db4o.nativequery.expr.Expression negate()

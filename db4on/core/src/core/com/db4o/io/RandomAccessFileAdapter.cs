@@ -6,16 +6,13 @@ namespace com.db4o.io
 	{
 		private j4o.io.RandomAccessFile _delegate;
 
-		private byte[] _seekBytes;
-
 		public RandomAccessFileAdapter()
 		{
 		}
 
-		private RandomAccessFileAdapter(string path, bool lockFile, long initialLength)
+		protected RandomAccessFileAdapter(string path, bool lockFile, long initialLength)
 		{
 			_delegate = new j4o.io.RandomAccessFile(path, "rw");
-			_seekBytes = null;
 			if (initialLength > 0)
 			{
 				_delegate.seek(initialLength - 1);

@@ -1,6 +1,7 @@
 namespace com.db4o
 {
-	internal class ReplicationImpl : com.db4o.replication.ReplicationProcess
+	/// <exclude></exclude>
+	public class ReplicationImpl : com.db4o.replication.ReplicationProcess
 	{
 		internal readonly com.db4o.YapStream _peerA;
 
@@ -24,8 +25,8 @@ namespace com.db4o
 
 		private const int CHECK_CONFLICT = -99;
 
-		internal ReplicationImpl(com.db4o.YapStream peerA, com.db4o.ObjectContainer peerB
-			, com.db4o.replication.ReplicationConflictHandler conflictHandler)
+		public ReplicationImpl(com.db4o.YapStream peerA, com.db4o.ObjectContainer peerB, 
+			com.db4o.replication.ReplicationConflictHandler conflictHandler)
 		{
 			if (conflictHandler == null)
 			{
@@ -39,13 +40,14 @@ namespace com.db4o
 					_transA = peerA.checkTransaction(null);
 					_peerB = (com.db4o.YapStream)peerB;
 					_transB = _peerB.checkTransaction(null);
-					com.db4o.MigrationConnection mgc = new com.db4o.MigrationConnection();
+					com.db4o.inside.replication.MigrationConnection mgc = new com.db4o.inside.replication.MigrationConnection
+						(_peerA, _peerB);
 					_peerA.i_handlers.i_migration = mgc;
 					_peerA.i_handlers.i_replication = this;
-					_peerA.i_migrateFrom = _peerB;
+					_peerA._replicationCallState = com.db4o.inside.replication.ReplicationHandler.OLD;
 					_peerB.i_handlers.i_migration = mgc;
 					_peerB.i_handlers.i_replication = this;
-					_peerB.i_migrateFrom = _peerA;
+					_peerB._replicationCallState = com.db4o.inside.replication.ReplicationHandler.OLD;
 					_conflictHandler = conflictHandler;
 					_record = com.db4o.ReplicationRecord.beginReplication(_transA, _transB);
 				}
@@ -109,10 +111,10 @@ namespace com.db4o
 
 		private void endReplication()
 		{
-			_peerA.i_migrateFrom = null;
+			_peerA._replicationCallState = com.db4o.inside.replication.ReplicationHandler.NONE;
 			_peerA.i_handlers.i_migration = null;
 			_peerA.i_handlers.i_replication = null;
-			_peerB.i_migrateFrom = null;
+			_peerA._replicationCallState = com.db4o.inside.replication.ReplicationHandler.NONE;
 			_peerB.i_handlers.i_migration = null;
 			_peerB.i_handlers.i_replication = null;
 		}

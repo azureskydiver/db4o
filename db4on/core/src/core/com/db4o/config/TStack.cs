@@ -37,5 +37,4 @@ namespace com.db4o.config {
             return Class.getClassForType(typeof(object[]));
         }
     }
-
 }

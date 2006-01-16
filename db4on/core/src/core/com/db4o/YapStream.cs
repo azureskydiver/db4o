@@ -43,8 +43,6 @@ namespace com.db4o
 
 		internal int i_showInternalClasses = 0;
 
-		internal long i_startTime;
-
 		private com.db4o.foundation.List4 i_stillToActivate;
 
 		private com.db4o.foundation.List4 i_stillToDeactivate;
@@ -59,7 +57,7 @@ namespace com.db4o
 
 		public com.db4o.YapHandlers i_handlers;
 
-		internal com.db4o.YapStream i_migrateFrom;
+		internal int _replicationCallState;
 
 		internal com.db4o.YapReferences i_references;
 
@@ -86,7 +84,7 @@ namespace com.db4o
 			activate1(ta, a_activate, i_config.i_activationDepth);
 		}
 
-		internal void activate1(com.db4o.Transaction ta, object a_activate, int a_depth)
+		public void activate1(com.db4o.Transaction ta, object a_activate, int a_depth)
 		{
 			ta = checkTransaction(ta);
 			beginEndActivation();
@@ -357,7 +355,7 @@ namespace com.db4o
 		/// in the #set() method.
 		/// </remarks>
 		/// <returns>object if handled here and #set() should not continue processing</returns>
-		internal virtual com.db4o.types.Db4oType db4oTypeStored(com.db4o.Transaction a_trans
+		public virtual com.db4o.types.Db4oType db4oTypeStored(com.db4o.Transaction a_trans
 			, object a_object)
 		{
 			if (a_object is com.db4o.ext.Db4oDatabase)
@@ -368,22 +366,9 @@ namespace com.db4o
 					return database;
 				}
 				showInternalClasses(true);
-				com.db4o.query.Query q = querySharpenBug();
-				q.constrain(j4o.lang.Class.getClassForObject(database));
-				q.descend("i_uuid").constrain(database.i_uuid);
-				com.db4o.ObjectSet objectSet = q.execute();
-				while (objectSet.hasNext())
-				{
-					com.db4o.ext.Db4oDatabase storedDatabase = (com.db4o.ext.Db4oDatabase)objectSet.next
-						();
-					activate1(null, storedDatabase, 4);
-					if (storedDatabase.Equals(a_object))
-					{
-						showInternalClasses(false);
-						return storedDatabase;
-					}
-				}
+				com.db4o.ext.Db4oDatabase res = database.query(a_trans);
 				showInternalClasses(false);
+				return res;
 			}
 			return null;
 		}
@@ -697,6 +682,10 @@ namespace com.db4o
 		{
 			lock (i_lock)
 			{
+				if (uuid == null)
+				{
+					return null;
+				}
 				com.db4o.Transaction ta = checkTransaction(null);
 				object[] arr = ta.objectAndYapObjectBySignature(uuid.getLongPart(), uuid.getSignaturePart
 					());
@@ -712,7 +701,7 @@ namespace com.db4o
 			}
 		}
 
-		internal int getID1(com.db4o.Transaction ta, object a_object)
+		public int getID1(com.db4o.Transaction ta, object a_object)
 		{
 			checkClosed();
 			if (a_object == null)
@@ -789,7 +778,7 @@ namespace com.db4o
 			return i_systemTrans;
 		}
 
-		internal virtual com.db4o.Transaction getTransaction()
+		public virtual com.db4o.Transaction getTransaction()
 		{
 			return i_trans;
 		}
@@ -1120,19 +1109,25 @@ namespace com.db4o
 		{
 			if (objectContainer == null)
 			{
-				com.db4o.YapStream migratedFrom = i_migrateFrom;
-				i_migrateFrom = null;
-				if (migratedFrom != null && migratedFrom.i_migrateFrom == this)
+				if (_replicationCallState == com.db4o.inside.replication.ReplicationHandler.NONE)
 				{
-					migratedFrom.migrateFrom(null);
+					return;
+				}
+				_replicationCallState = com.db4o.inside.replication.ReplicationHandler.NONE;
+				if (i_handlers.i_migration != null)
+				{
+					i_handlers.i_migration.terminate();
 				}
 				i_handlers.i_migration = null;
 			}
 			else
 			{
-				i_migrateFrom = (com.db4o.YapStream)objectContainer;
-				i_handlers.i_migration = new com.db4o.MigrationConnection();
-				i_migrateFrom.i_handlers.i_migration = i_handlers.i_migration;
+				com.db4o.YapStream peer = (com.db4o.YapStream)objectContainer;
+				_replicationCallState = com.db4o.inside.replication.ReplicationHandler.OLD;
+				peer._replicationCallState = com.db4o.inside.replication.ReplicationHandler.OLD;
+				i_handlers.i_migration = new com.db4o.inside.replication.MigrationConnection(this
+					, (com.db4o.YapStream)objectContainer);
+				peer.i_handlers.i_migration = i_handlers.i_migration;
 			}
 		}
 
@@ -1282,12 +1277,12 @@ namespace com.db4o
 			return query();
 		}
 
-		internal virtual com.db4o.query.Query querySharpenBug(com.db4o.Transaction ta)
+		public virtual com.db4o.query.Query querySharpenBug(com.db4o.Transaction ta)
 		{
 			return query(ta);
 		}
 
-		internal abstract void raiseVersion(long a_minimumVersion);
+		public abstract void raiseVersion(long a_minimumVersion);
 
 		internal abstract void readBytes(byte[] a_bytes, int a_address, int a_length);
 
@@ -1458,9 +1453,13 @@ namespace com.db4o
 			return new com.db4o.ReplicationImpl(this, peerB, conflictHandler);
 		}
 
-		internal int replicationHandles(object obj)
+		internal int oldReplicationHandles(object obj)
 		{
-			if (i_migrateFrom == null || i_handlers.i_replication == null)
+			if (_replicationCallState != com.db4o.inside.replication.ReplicationHandler.OLD)
+			{
+				return 0;
+			}
+			if (i_handlers.i_replication == null)
 			{
 				return 0;
 			}
@@ -1532,7 +1531,7 @@ namespace com.db4o
 			 a_checkJustSet)
 		{
 			ta = checkTransaction(ta);
-			int id = replicationHandles(a_object);
+			int id = oldReplicationHandles(a_object);
 			if (id != 0)
 			{
 				if (id < 0)
@@ -1575,6 +1574,23 @@ namespace com.db4o
 			return id;
 		}
 
+		public void setByNewReplication(object obj, com.db4o.ext.Db4oDatabase provider, long
+			 uuidLong, long version)
+		{
+			lock (i_lock)
+			{
+				_replicationCallState = com.db4o.inside.replication.ReplicationHandler.NEW;
+				i_handlers._replicationHandler = new com.db4o.inside.replication.ReplicationHandler
+					();
+				i_handlers._replicationHandler.associateObjectWith(obj, provider, uuidLong, version
+					);
+				com.db4o.Transaction ta = checkTransaction(null);
+				set2(ta, obj, 1, false);
+				_replicationCallState = com.db4o.inside.replication.ReplicationHandler.NONE;
+				i_handlers._replicationHandler = null;
+			}
+		}
+
 		private int set2(com.db4o.Transaction ta, object obj, int depth, bool checkJust)
 		{
 			int id = set3(ta, obj, depth, checkJust);
@@ -1610,8 +1626,8 @@ namespace com.db4o
 			i_stillToSet = postponedStillToSet;
 		}
 
-		internal int set3(com.db4o.Transaction a_trans, object a_object, int a_updateDepth
-			, bool a_checkJustSet)
+		public int set3(com.db4o.Transaction a_trans, object a_object, int a_updateDepth, 
+			bool a_checkJustSet)
 		{
 			if (a_object != null & !(a_object is com.db4o.types.TransientClass))
 			{

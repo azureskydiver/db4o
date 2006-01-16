@@ -22,7 +22,7 @@ namespace com.db4o
 		{
 		}
 
-		private ReplicationRecord(com.db4o.ext.Db4oDatabase younger, com.db4o.ext.Db4oDatabase
+		public ReplicationRecord(com.db4o.ext.Db4oDatabase younger, com.db4o.ext.Db4oDatabase
 			 older)
 		{
 			_youngerPeer = younger;
@@ -50,8 +50,8 @@ namespace com.db4o
 			com.db4o.YapStream peerB = transB.i_stream;
 			com.db4o.ext.Db4oDatabase dbA = peerA.identity();
 			com.db4o.ext.Db4oDatabase dbB = peerB.identity();
-			transA.ensureDb4oDatabase(dbB);
-			transB.ensureDb4oDatabase(dbA);
+			dbB.bind(transA);
+			dbA.bind(transB);
 			com.db4o.ext.Db4oDatabase younger = null;
 			com.db4o.ext.Db4oDatabase older = null;
 			if (dbA.isOlderThan(dbB))
@@ -90,7 +90,7 @@ namespace com.db4o
 			return rrA;
 		}
 
-		private static com.db4o.ReplicationRecord queryForReplicationRecord(com.db4o.YapStream
+		public static com.db4o.ReplicationRecord queryForReplicationRecord(com.db4o.YapStream
 			 stream, com.db4o.ext.Db4oDatabase younger, com.db4o.ext.Db4oDatabase older)
 		{
 			com.db4o.ReplicationRecord res = null;

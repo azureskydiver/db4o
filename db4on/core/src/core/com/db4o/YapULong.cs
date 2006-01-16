@@ -36,5 +36,4 @@ namespace com.db4o {
             return ul;
         }
     }
-
 }

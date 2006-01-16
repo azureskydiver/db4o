@@ -47,5 +47,4 @@ namespace j4o.lang.reflect {
             return (mod & TRANSIENT) != 0;
         }
     }
-
 }

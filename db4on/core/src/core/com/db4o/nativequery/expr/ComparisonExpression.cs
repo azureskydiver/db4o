@@ -2,11 +2,6 @@ namespace com.db4o.nativequery.expr
 {
 	public class ComparisonExpression : com.db4o.nativequery.expr.Expression
 	{
-		public interface Visitor : com.db4o.nativequery.expr.ExpressionVisitor
-		{
-			void visit(com.db4o.nativequery.expr.ComparisonExpression expression);
-		}
-
 		private com.db4o.nativequery.expr.cmp.FieldValue _left;
 
 		private com.db4o.nativequery.expr.cmp.ComparisonOperand _right;
@@ -65,7 +60,7 @@ namespace com.db4o.nativequery.expr
 
 		public virtual void accept(com.db4o.nativequery.expr.ExpressionVisitor visitor)
 		{
-			((com.db4o.nativequery.expr.ComparisonExpression.Visitor)visitor).visit(this);
+			visitor.visit(this);
 		}
 	}
 }

@@ -10,5 +10,4 @@ namespace j4o.lang {
             return null;
         }
     }
-
 }

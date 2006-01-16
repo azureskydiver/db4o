@@ -84,8 +84,19 @@ namespace com.db4o.query
 		internal static readonly j4o.lang.Class OBJECT_CLASS = j4o.lang.Class.getClassForType
 			(typeof(object));
 
+		private j4o.lang.Class _extentType;
+
 		[com.db4o.Transient]
 		private j4o.lang.reflect.Method cachedFilterMethod = null;
+
+		public Predicate() : this(null)
+		{
+		}
+
+		public Predicate(j4o.lang.Class extentType)
+		{
+			_extentType = extentType;
+		}
 
 		internal virtual j4o.lang.reflect.Method getFilterMethod()
 		{
@@ -134,7 +145,8 @@ namespace com.db4o.query
 		/// <remarks>public for implementation reasons, please ignore.</remarks>
 		public virtual j4o.lang.Class extentType()
 		{
-			return getFilterMethod().getParameterTypes()[0];
+			return (_extentType != null ? _extentType : getFilterMethod().getParameterTypes()
+				[0]);
 		}
 
 		/// <summary>public for implementation reasons, please ignore.</summary>

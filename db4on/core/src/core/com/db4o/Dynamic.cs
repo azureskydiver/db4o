@@ -44,5 +44,4 @@ namespace com.db4o {
             return obj.GetType();
         }
     }
-
 }

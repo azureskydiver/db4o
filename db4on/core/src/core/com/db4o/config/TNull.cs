@@ -20,5 +20,4 @@ namespace com.db4o {
             return Class.getClassForType(typeof(object));
         }
     }
-
 }

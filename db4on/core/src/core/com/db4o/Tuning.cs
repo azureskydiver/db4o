@@ -5,6 +5,7 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public class Tuning
 	{
+		/// <deprecated>Use Db4o.configure().io(new com.db4o.io.SymbianIoAdapter()) instead</deprecated>
 		public const bool symbianSeek = false;
 
 		internal const bool fieldIndices = true;

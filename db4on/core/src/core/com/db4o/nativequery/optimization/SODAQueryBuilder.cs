@@ -2,7 +2,7 @@ namespace com.db4o.nativequery.optimization
 {
 	public class SODAQueryBuilder
 	{
-		private class SODAQueryVisitor : com.db4o.nativequery.expr.DiscriminatingExpressionVisitor
+		private class SODAQueryVisitor : com.db4o.nativequery.expr.ExpressionVisitor
 		{
 			private object _predicate;
 
@@ -66,7 +66,7 @@ namespace com.db4o.nativequery.optimization
 				}
 			}
 
-			private sealed class _AnonymousInnerClass48 : com.db4o.nativequery.expr.cmp.DiscriminatingComparisonOperandVisitor
+			private sealed class _AnonymousInnerClass48 : com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
 			{
 				public _AnonymousInnerClass48(SODAQueryVisitor _enclosing, object[] value)
 				{

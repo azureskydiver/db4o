@@ -355,7 +355,7 @@ namespace com.db4o
 			return id;
 		}
 
-		internal override void raiseVersion(long a_minimumVersion)
+		public override void raiseVersion(long a_minimumVersion)
 		{
 			if (_bootRecord.i_versionGenerator < a_minimumVersion)
 			{

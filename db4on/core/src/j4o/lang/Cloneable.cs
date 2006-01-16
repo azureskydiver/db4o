@@ -6,5 +6,4 @@ namespace j4o.lang {
 
     public interface Cloneable {
     }
-
 }

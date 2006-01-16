@@ -157,6 +157,16 @@ namespace com.db4o
 			}
 		}
 
+		internal virtual bool canAddToQuery(string fieldName)
+		{
+			if (!alive())
+			{
+				return false;
+			}
+			return fieldName.Equals(getName()) && getParentYapClass() != null && !getParentYapClass
+				().isInternal();
+		}
+
 		internal virtual bool canHold(com.db4o.reflect.ReflectClass claxx)
 		{
 			if (claxx == null)

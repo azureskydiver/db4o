@@ -1,7 +1,7 @@
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	public sealed class YapObject : com.db4o.YapMeta, com.db4o.ext.ObjectInfo
+	public class YapObject : com.db4o.YapMeta, com.db4o.ext.ObjectInfo
 	{
 		private com.db4o.YapClass i_yapClass;
 
@@ -23,6 +23,10 @@ namespace com.db4o
 
 		private int hc_code;
 
+		public YapObject()
+		{
+		}
+
 		internal YapObject(int a_id)
 		{
 			i_id = a_id;
@@ -34,15 +38,15 @@ namespace com.db4o
 			i_id = a_id;
 		}
 
-		internal void activate(com.db4o.Transaction ta, object a_object, int a_depth, bool
-			 a_refresh)
+		internal virtual void activate(com.db4o.Transaction ta, object a_object, int a_depth
+			, bool a_refresh)
 		{
 			activate1(ta, a_object, a_depth, a_refresh);
 			ta.i_stream.activate3CheckStill(ta);
 		}
 
-		internal void activate1(com.db4o.Transaction ta, object a_object, int a_depth, bool
-			 a_refresh)
+		internal virtual void activate1(com.db4o.Transaction ta, object a_object, int a_depth
+			, bool a_refresh)
 		{
 			if (a_object is com.db4o.Db4oTypeImpl)
 			{
@@ -94,7 +98,8 @@ namespace com.db4o
 		}
 
 		/// <summary>return false if class not completely initialized, otherwise true *</summary>
-		internal bool continueSet(com.db4o.Transaction a_trans, int a_updateDepth)
+		internal virtual bool continueSet(com.db4o.Transaction a_trans, int a_updateDepth
+			)
 		{
 			if (bitIsTrue(com.db4o.YapConst.CONTINUE))
 			{
@@ -127,7 +132,7 @@ namespace com.db4o
 			return true;
 		}
 
-		internal void deactivate(com.db4o.Transaction a_trans, int a_depth)
+		internal virtual void deactivate(com.db4o.Transaction a_trans, int a_depth)
 		{
 			if (a_depth > 0)
 			{
@@ -154,7 +159,7 @@ namespace com.db4o
 			return com.db4o.YapConst.YAPOBJECT;
 		}
 
-		public object getObject()
+		public virtual object getObject()
 		{
 			if (com.db4o.Platform4.hasWeakReferences())
 			{
@@ -176,7 +181,7 @@ namespace com.db4o
 			return null;
 		}
 
-		public com.db4o.ext.Db4oUUID getUUID()
+		public virtual com.db4o.ext.Db4oUUID getUUID()
 		{
 			com.db4o.VirtualAttributes va = virtualAttributes(getTrans());
 			if (va != null && va.i_database != null)
@@ -186,7 +191,7 @@ namespace com.db4o
 			return null;
 		}
 
-		public long getVersion()
+		public virtual long getVersion()
 		{
 			com.db4o.VirtualAttributes va = virtualAttributes(getTrans());
 			if (va == null)
@@ -196,7 +201,7 @@ namespace com.db4o
 			return va.i_version;
 		}
 
-		public com.db4o.YapClass getYapClass()
+		public virtual com.db4o.YapClass getYapClass()
 		{
 			return i_yapClass;
 		}
@@ -287,7 +292,7 @@ namespace com.db4o
 			i_id = a_id;
 		}
 
-		internal void setObjectWeak(com.db4o.YapStream a_stream, object a_object)
+		internal virtual void setObjectWeak(com.db4o.YapStream a_stream, object a_object)
 		{
 			if (a_stream.i_references._weak)
 			{
@@ -304,12 +309,12 @@ namespace com.db4o
 			}
 		}
 
-		internal void setObject(object a_object)
+		public virtual void setObject(object a_object)
 		{
 			i_object = a_object;
 		}
 
-		internal void setStateOnRead(com.db4o.YapWriter reader)
+		internal virtual void setStateOnRead(com.db4o.YapWriter reader)
 		{
 		}
 
@@ -321,8 +326,8 @@ namespace com.db4o
 		/// return true for complex objects to instruct YapStream to add to lookup trees
 		/// and to perform delayed storage through call to continueset further up the stack.
 		/// </remarks>
-		internal bool store(com.db4o.Transaction a_trans, com.db4o.YapClass a_yapClass, object
-			 a_object, int a_updateDepth)
+		internal virtual bool store(com.db4o.Transaction a_trans, com.db4o.YapClass a_yapClass
+			, object a_object, int a_updateDepth)
 		{
 			i_object = a_object;
 			writeObjectBegin();
@@ -346,8 +351,8 @@ namespace com.db4o
 			return false;
 		}
 
-		internal com.db4o.VirtualAttributes virtualAttributes(com.db4o.Transaction a_trans
-			)
+		internal virtual com.db4o.VirtualAttributes virtualAttributes(com.db4o.Transaction
+			 a_trans)
 		{
 			if (a_trans == null)
 			{
@@ -378,7 +383,8 @@ namespace com.db4o
 		{
 		}
 
-		internal void writeUpdate(com.db4o.Transaction a_trans, int a_updatedepth)
+		internal virtual void writeUpdate(com.db4o.Transaction a_trans, int a_updatedepth
+			)
 		{
 			continueSet(a_trans, a_updatedepth);
 			if (beginProcessing())
@@ -409,21 +415,26 @@ namespace com.db4o
 		}
 
 		/// <summary>HCTREE ****</summary>
-		internal com.db4o.YapObject hc_add(com.db4o.YapObject a_add)
+		public virtual com.db4o.YapObject hc_add(com.db4o.YapObject a_add)
 		{
 			object obj = a_add.getObject();
 			if (obj != null)
 			{
-				a_add.hc_preceding = null;
-				a_add.hc_subsequent = null;
-				a_add.hc_size = 1;
-				a_add.hc_code = hc_getCode(obj);
+				a_add.hc_init(obj);
 				return hc_add1(a_add);
 			}
 			else
 			{
 				return this;
 			}
+		}
+
+		public virtual void hc_init(object obj)
+		{
+			hc_preceding = null;
+			hc_subsequent = null;
+			hc_size = 1;
+			hc_code = hc_getCode(obj);
 		}
 
 		private com.db4o.YapObject hc_add1(com.db4o.YapObject a_new)
@@ -529,7 +540,7 @@ namespace com.db4o
 			return cmp;
 		}
 
-		internal com.db4o.YapObject hc_find(object obj)
+		public virtual com.db4o.YapObject hc_find(object obj)
 		{
 			return hc_find(hc_getCode(obj), obj);
 		}
@@ -630,7 +641,7 @@ namespace com.db4o
 			return this;
 		}
 
-		internal com.db4o.YapObject hc_remove(com.db4o.YapObject a_find)
+		internal virtual com.db4o.YapObject hc_remove(com.db4o.YapObject a_find)
 		{
 			if (this == a_find)
 			{
@@ -655,6 +666,19 @@ namespace com.db4o
 			return this;
 		}
 
+		public virtual void hc_traverse(com.db4o.foundation.Visitor4 visitor)
+		{
+			if (hc_preceding != null)
+			{
+				hc_preceding.hc_traverse(visitor);
+			}
+			visitor.visit(this);
+			if (hc_subsequent != null)
+			{
+				hc_subsequent.hc_traverse(visitor);
+			}
+		}
+
 		private com.db4o.YapObject hc_remove()
 		{
 			if (hc_subsequent != null && hc_preceding != null)
@@ -672,7 +696,7 @@ namespace com.db4o
 		}
 
 		/// <summary>IDTREE ****</summary>
-		internal com.db4o.YapObject id_add(com.db4o.YapObject a_add)
+		internal virtual com.db4o.YapObject id_add(com.db4o.YapObject a_add)
 		{
 			a_add.id_preceding = null;
 			a_add.id_subsequent = null;
@@ -773,7 +797,7 @@ namespace com.db4o
 			}
 		}
 
-		internal com.db4o.YapObject id_find(int a_id)
+		internal virtual com.db4o.YapObject id_find(int a_id)
 		{
 			int cmp = a_id - i_id;
 			if (cmp > 0)
@@ -844,7 +868,7 @@ namespace com.db4o
 			return this;
 		}
 
-		internal com.db4o.YapObject id_remove(int a_id)
+		internal virtual com.db4o.YapObject id_remove(int a_id)
 		{
 			int cmp = a_id - i_id;
 			if (cmp < 0)

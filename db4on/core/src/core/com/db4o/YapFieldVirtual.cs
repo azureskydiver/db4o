@@ -21,6 +21,11 @@ namespace com.db4o
 			return true;
 		}
 
+		internal override bool canAddToQuery(string fieldName)
+		{
+			return fieldName.Equals(getName());
+		}
+
 		internal override void collectConstraints(com.db4o.Transaction a_trans, com.db4o.QConObject
 			 a_parent, object a_template, com.db4o.foundation.Visitor4 a_visitor)
 		{
@@ -77,31 +82,59 @@ namespace com.db4o
 		internal override void marshall(com.db4o.YapObject a_yapObject, object a_object, 
 			com.db4o.YapWriter a_bytes, com.db4o.Config4Class a_config, bool a_new)
 		{
-			com.db4o.YapStream stream = a_bytes.i_trans.i_stream;
+			com.db4o.Transaction trans = a_bytes.i_trans;
+			com.db4o.YapStream stream = trans.i_stream;
+			com.db4o.YapHandlers handlers = stream.i_handlers;
 			bool migrating = false;
-			if (stream.i_migrateFrom != null)
+			if (stream._replicationCallState != com.db4o.inside.replication.ReplicationHandler
+				.NONE)
 			{
-				migrating = true;
-				if (a_yapObject.i_virtualAttributes == null)
+				if (stream._replicationCallState == com.db4o.inside.replication.ReplicationHandler
+					.OLD)
 				{
-					object obj = a_yapObject.getObject();
-					com.db4o.YapObject migrateYapObject = null;
-					if (stream.i_handlers.i_migration != null)
+					migrating = true;
+					if (a_yapObject.i_virtualAttributes == null)
 					{
-						migrateYapObject = stream.i_handlers.i_migration.referenceFor(obj);
+						object obj = a_yapObject.getObject();
+						com.db4o.YapObject migrateYapObject = null;
+						com.db4o.inside.replication.MigrationConnection mgc = handlers.i_migration;
+						if (mgc != null)
+						{
+							migrateYapObject = mgc.referenceFor(obj);
+							if (migrateYapObject == null)
+							{
+								migrateYapObject = mgc.peer(stream).getYapObject(obj);
+							}
+						}
+						if (migrateYapObject != null && migrateYapObject.i_virtualAttributes != null && migrateYapObject
+							.i_virtualAttributes.i_database != null)
+						{
+							migrating = true;
+							a_yapObject.i_virtualAttributes = migrateYapObject.i_virtualAttributes.shallowClone
+								();
+							if (migrateYapObject.i_virtualAttributes.i_database != null)
+							{
+								migrateYapObject.i_virtualAttributes.i_database.bind(trans);
+							}
+						}
 					}
-					if (migrateYapObject == null)
-					{
-						migrateYapObject = stream.i_migrateFrom.getYapObject(obj);
-					}
-					if (migrateYapObject != null && migrateYapObject.i_virtualAttributes != null && migrateYapObject
-						.i_virtualAttributes.i_database != null)
+				}
+				else
+				{
+					com.db4o.inside.replication.ReplicationHandler handler = handlers._replicationHandler;
+					object parentObject = a_yapObject.getObject();
+					com.db4o.ext.Db4oDatabase db = handler.providerFor(parentObject);
+					if (db != null)
 					{
 						migrating = true;
-						a_yapObject.i_virtualAttributes = migrateYapObject.i_virtualAttributes.shallowClone
-							();
-						a_bytes.getTransaction().ensureDb4oDatabase(migrateYapObject.i_virtualAttributes.
-							i_database);
+						if (a_yapObject.i_virtualAttributes == null)
+						{
+							a_yapObject.i_virtualAttributes = new com.db4o.VirtualAttributes();
+						}
+						com.db4o.VirtualAttributes va = a_yapObject.i_virtualAttributes;
+						va.i_version = handler.versionFor(parentObject);
+						va.i_uuid = handler.uuidLongFor(parentObject);
+						va.i_database = handler.providerFor(parentObject);
 					}
 				}
 			}

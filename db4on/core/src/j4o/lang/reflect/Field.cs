@@ -106,5 +106,4 @@ namespace j4o.lang.reflect {
             fieldInfo.SetValue(obj, value);
         }
     }
-
 }
