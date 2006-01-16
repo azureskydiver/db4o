@@ -1,4 +1,8 @@
-<project name="db4obuildcore" basedir=".">
+<project name="db4obuildcore" basedir="." default="test">
+	
+	<property name="exe.javac" value="javac" />
+	<property name="exe.java" value="java" />
+	<property name="file.jdkclasses" value="" />
 	
 	<property name="dir.build" value="../db4obuild/dist/java" />
 	<property name="dir.build.src" value="${dir.build}/src" />
@@ -65,10 +69,17 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
-	</target>
+	</target>	
 	
+	<target name="compile" depends="prepare">
+		<javac executable="${exe.javac}" compiler="javac1.1" srcdir="${dir.build.src.core}" destdir="${dir.build.classes.core}" debug="off" target="1.1" source="1.2" />
+		<jar destfile="${dir.build.jar}/db4o-jdk1.1.jar">
+			<fileset dir="${dir.build.classes.core}" />
+		</jar>
+	</target>
+
 	<target name="compiletools" depends="compile">
-		<javac compiler="javac1.1" srcdir="${dir.build.src.tools}" destdir="${dir.build.classes.tools}" debug="off" target="1.1" source="1.2">
+		<javac executable="${exe.javac}" compiler="javac1.1" srcdir="${dir.build.src.tools}" destdir="${dir.build.classes.tools}" debug="off" target="1.1" source="1.2">
 			<classpath>
 				<path location="${dir.build.classes.core}" />
 			</classpath>
@@ -77,27 +88,26 @@
 			<fileset dir="${dir.build.classes.tools}" />
 		</jar>
 	</target>
-	
-	<target name="compile" depends="prepare">
-		<javac compiler="javac1.1" srcdir="${dir.build.src.core}" destdir="${dir.build.classes.core}" debug="off" target="1.1" source="1.2" />
-		<jar destfile="${dir.build.jar}/db4o-jdk1.1.jar">
-			<fileset dir="${dir.build.classes.core}" />
-		</jar>
-	</target>
 
-	
-	<target name="test" depends="compiletools">
-		<javac compiler="javac1.1" srcdir="${dir.build.src.test}" destdir="${dir.build.classes.test}" debug="off" target="1.1" source="1.2">
+	<target name="compiletests" depends="compiletools">
+		<javac executable="${exe.javac}" compiler="javac1.1" srcdir="${dir.build.src.test}" destdir="${dir.build.classes.test}" debug="off" target="1.1" source="1.2">
 			<classpath>
 				<pathelement location="${dir.build.jar}/db4o-jdk1.1.jar"/>
 				<pathelement location="${dir.build.jar}/db4o-tools.jar"/>
 			</classpath>
 		</javac>
-		<java classname="com.db4o.test.AllTests" failonerror="true">
+		<jar destfile="${dir.build.jar}/db4o-tests.jar">
+			<fileset dir="${dir.build.classes.test}" />
+		</jar>
+	</target>
+	
+	<target name="test" depends="compiletests">
+		<java jvm="${exe.java}" classname="com.db4o.test.AllTests" failonerror="true">
 			<classpath>
-				<pathelement path="${dir.build.jar}/db4o-jdk1.1.jar"/>
+				<pathelement location="${dir.build.jar}/db4o-jdk1.1.jar"/>
 				<pathelement location="${dir.build.jar}/db4o-tools.jar"/>
-				<pathelement path="${dir.build.classes.test}"/>
+				<pathelement location="${dir.build.jar}/db4o-tests.jar"/>
+				<pathelement location="${file.jdkclasses}"/>
 			</classpath>
 		</java>
 	</target>
