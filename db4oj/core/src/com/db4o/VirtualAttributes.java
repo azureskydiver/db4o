@@ -6,15 +6,15 @@ import com.db4o.ext.*;
 
 
 /**
- * 
+ * @exclude
  */
-class VirtualAttributes implements Cloneable{
+public class VirtualAttributes implements Cloneable{
     
-    Db4oDatabase i_database;
-    long i_version;
-    long i_uuid;
+    public Db4oDatabase i_database;
+    public long i_version;
+    public long i_uuid;
     
-    VirtualAttributes shallowClone() {
+    public VirtualAttributes shallowClone() {
         try {
             return (VirtualAttributes)this.clone();
         }catch(Exception e) {
