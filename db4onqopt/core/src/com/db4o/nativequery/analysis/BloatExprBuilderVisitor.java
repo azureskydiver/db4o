@@ -215,14 +215,13 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 	
 	public void visitCallMethodExpr(CallMethodExpr expr) {	
+		if(methodCallDepth>0) {
+			return;
+		}
 		if(expr.method().name().equals("equals")) {
 			if(isPrimitive(expr.receiver().type())) {
 				processEqualsCall(expr);
 			}
-			return;
-		}
-		//System.err.println(expr.receiver());
-		if(methodCallDepth>0) {
 			return;
 		}
 		MemberRef methodRef=expr.method();
