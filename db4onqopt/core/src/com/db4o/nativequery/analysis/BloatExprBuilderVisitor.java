@@ -1,42 +1,34 @@
 package com.db4o.nativequery.analysis;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import EDU.purdue.cs.bloat.cfg.Block;
-import EDU.purdue.cs.bloat.cfg.FlowGraph;
-import EDU.purdue.cs.bloat.editor.MemberRef;
-import EDU.purdue.cs.bloat.tree.ArithExpr;
-import EDU.purdue.cs.bloat.tree.CallMethodExpr;
-import EDU.purdue.cs.bloat.tree.CallStaticExpr;
-import EDU.purdue.cs.bloat.tree.ConstantExpr;
-import EDU.purdue.cs.bloat.tree.Expr;
-import EDU.purdue.cs.bloat.tree.ExprStmt;
-import EDU.purdue.cs.bloat.tree.FieldExpr;
-import EDU.purdue.cs.bloat.tree.IfCmpStmt;
-import EDU.purdue.cs.bloat.tree.IfStmt;
-import EDU.purdue.cs.bloat.tree.IfZeroStmt;
-import EDU.purdue.cs.bloat.tree.LocalExpr;
-import EDU.purdue.cs.bloat.tree.ReturnExprStmt;
-import EDU.purdue.cs.bloat.tree.TreeVisitor;
+import EDU.purdue.cs.bloat.cfg.*;
+import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.tree.*;
 
-import com.db4o.foundation.Iterator4;
-import com.db4o.nativequery.bloat.BloatUtil;
-import com.db4o.nativequery.expr.BoolConstExpression;
-import com.db4o.nativequery.expr.ComparisonExpression;
-import com.db4o.nativequery.expr.Expression;
-import com.db4o.nativequery.expr.ExpressionVisitor;
-import com.db4o.nativequery.expr.TraversingExpressionVisitor;
-import com.db4o.nativequery.expr.build.ExpressionBuilder;
-import com.db4o.nativequery.expr.cmp.ArithmeticExpression;
-import com.db4o.nativequery.expr.cmp.ArithmeticOperator;
-import com.db4o.nativequery.expr.cmp.ComparisonOperand;
-import com.db4o.nativequery.expr.cmp.ComparisonOperator;
-import com.db4o.nativequery.expr.cmp.ConstValue;
-import com.db4o.nativequery.expr.cmp.FieldValue;
-import com.db4o.nativequery.expr.cmp.ThreeWayComparison;
+import com.db4o.foundation.*;
+import com.db4o.nativequery.bloat.*;
+import com.db4o.nativequery.expr.*;
+import com.db4o.nativequery.expr.build.*;
+import com.db4o.nativequery.expr.cmp.*;
 
 public class BloatExprBuilderVisitor extends TreeVisitor {
+	private final static String[] PRIMITIVES={
+		Boolean.class.getName(),
+		Byte.class.getName(),
+		Short.class.getName(),
+		Character.class.getName(),
+		Integer.class.getName(),
+		Long.class.getName(),
+		Double.class.getName(),
+		Float.class.getName(),
+		String.class.getName(),
+	};
+	
+	static {
+		Arrays.sort(PRIMITIVES);
+	}
+	
 	private final static ExpressionBuilder BUILDER=new ExpressionBuilder();
 
 	private final static Map BUILDERS=new HashMap();
@@ -224,7 +216,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	
 	public void visitCallMethodExpr(CallMethodExpr expr) {	
 		if(expr.method().name().equals("equals")) {
-			processEqualsCall(expr);
+			if(isPrimitive(expr.receiver().type())) {
+				processEqualsCall(expr);
+			}
 			return;
 		}
 		//System.err.println(expr.receiver());
@@ -261,25 +255,37 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 	}
 
+	private boolean isPrimitive(Type type) {
+		return Arrays.binarySearch(PRIMITIVES,type.className().replace('/', '.'))>=0;
+	}
+
 	private void processEqualsCall(CallMethodExpr expr) {
 		Expr left=expr.receiver();
 		Expr right=expr.params()[0];
-		if(/*(right instanceof FieldExpr)&&*/(left instanceof ConstantExpr)) {
-			Expr swap=left;
-			left=right;
-			right=swap;
-		}
-		if(!((left instanceof FieldExpr)||(left instanceof CallMethodExpr)||(left instanceof ConstantExpr))||!((right instanceof ConstantExpr)||(right instanceof FieldExpr)||(right instanceof CallMethodExpr))) {
+		if(!isComparableExprOperand(left)||!isComparableExprOperand(right)) {
 			return;
 		}
 		left.visit(this);
-		// FIXME check before!
-		FieldValue fieldValue=(FieldValue)purgeReturnValue();
-		if(fieldValue.parentIdx()==1) {
-			right.visit(this);
-			ComparisonOperand valueExpr=(ComparisonOperand)purgeReturnValue();
-			expression(new ComparisonExpression(fieldValue,valueExpr,ComparisonOperator.EQUALS));
+		ComparisonOperand leftOp=(ComparisonOperand) purgeReturnValue();
+		right.visit(this);
+		ComparisonOperand rightOp=(ComparisonOperand) purgeReturnValue();
+		if(isCandidateFieldValue(rightOp)&&!isCandidateFieldValue(leftOp)) {
+			ComparisonOperand swap=leftOp;
+			leftOp=rightOp;
+			rightOp=swap;
 		}
+		if(!isCandidateFieldValue(leftOp)) {
+			return;
+		}
+		expression(new ComparisonExpression((FieldValue)leftOp,rightOp,ComparisonOperator.EQUALS));
+	}
+
+	private boolean isCandidateFieldValue(ComparisonOperand op) {
+		return (op instanceof FieldValue)&&((FieldValue)op).parentIdx()==1;
+	}
+	
+	private boolean isComparableExprOperand(Expr expr) {
+		return (expr instanceof FieldExpr)||(expr instanceof StaticFieldExpr)||(expr instanceof CallMethodExpr)||(expr instanceof ConstantExpr)||(expr instanceof LocalExpr);
 	}
 
 	public void visitFieldExpr(FieldExpr expr) {

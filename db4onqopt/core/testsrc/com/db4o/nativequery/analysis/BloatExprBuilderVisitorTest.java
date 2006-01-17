@@ -12,9 +12,14 @@ import com.db4o.nativequery.expr.cmp.*;
 
 class Base {
 	int id;
+	Integer idWrap;
 
 	public int getId() {
 		return id;
+	}
+
+	public Integer getIdWrapped() {
+		return idWrap;
 	}
 
 	public int getIdPlusOne() {
@@ -47,6 +52,7 @@ class Data extends Base {
 }
 
 public class BloatExprBuilderVisitorTest extends TestCase {	
+	private static final String INT_WRAPPED_FIELDNAME = "idWrap";
 	private static final String INT_FIELDNAME = "id";
 	private static final String FLOAT_FIELDNAME = "value";
 	private static final String DATA_FIELDNAME="next";
@@ -54,6 +60,9 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	private final static int INT_CMPVAL=42;
 	private final static float FLOAT_CMPVAL=12.3f;
 	private final static String STRING_CMPVAL="Test";
+	// TODO: handle StaticFieldExpr
+	private final static Integer INT_WRAPPER_CMPVAL=new Integer(INT_CMPVAL);
+	private final Integer intWrapperCmpVal=new Integer(INT_CMPVAL);
 	
 	private String stringMember="foo";
 	private int intMember=43;
@@ -165,20 +174,20 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	// object identity
 
-	boolean sampleEqualsNullComp(Data data) {
+	boolean sampleIdentityNullComp(Data data) {
 		return data.next==null;
 	}
 
-	public void testEqualsNullComp() throws Exception {
-		assertComparison("sampleEqualsNullComp",DATA_FIELDNAME,null,ComparisonOperator.EQUALS,false);
+	public void testIdentityNullComp() throws Exception {
+		assertComparison("sampleIdentityNullComp",DATA_FIELDNAME,null,ComparisonOperator.EQUALS,false);
 	}
 
-	boolean sampleNotEqualsNullComp(Data data) {
+	boolean sampleNotIdentityNullComp(Data data) {
 		return data.next!=null;
 	}
 
-	public void testNotEqualsNullComp() throws Exception {
-		assertComparison("sampleNotEqualsNullComp",DATA_FIELDNAME,null,ComparisonOperator.EQUALS,true);
+	public void testNotIdentityNullComp() throws Exception {
+		assertComparison("sampleNotIdentityNullComp",DATA_FIELDNAME,null,ComparisonOperator.EQUALS,true);
 	}
 
 	// primitive unequal comparison
@@ -290,7 +299,25 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	public void testStringFieldEqualsComp() throws Exception {
 		assertComparison("sampleStringFieldEqualsComp",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.EQUALS,false);
 	}
+	
+	// primitive wrapper equality
 
+	boolean sampleFieldIntWrapperEqualsComp(Data data) {
+		return data.getIdWrapped().equals(intWrapperCmpVal);
+	}
+
+	public void testFieldIntWrapperEqualsComp() throws Exception {
+		assertComparison("sampleFieldIntWrapperEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(0,"intWrapperCmpVal"),ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleIntWrapperFieldEqualsComp(Data data) {
+		return intWrapperCmpVal.equals(data.getIdWrapped());
+	}
+
+	public void testIntWrapperFieldEqualsComp() throws Exception {
+		assertComparison("sampleIntWrapperFieldEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(0,"intWrapperCmpVal"),ComparisonOperator.EQUALS,false);
+	}	
+	
 	// getter
 	
 	boolean sampleGetterIntEqualsComp(Data data) {
@@ -634,6 +661,30 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	public void testSimpleFieldObjectComparison() throws Exception {
 		assertInvalid("sampleSimpleFieldObjectComparison");
+	}
+
+	boolean sampleSimpleFieldObjectIdentityComparison(Data data) {
+		return data.next.equals(data.next);
+	}
+
+	public void testSimpleFieldObjectIdentityComparison() throws Exception {
+		assertInvalid("sampleSimpleFieldObjectIdentityComparison");
+	}
+
+	boolean sampleCandEqualsNullComparison(Data data) {
+		return data.equals(null);
+	}
+
+	public void testCandEqualsNullComparison() throws Exception {
+		assertInvalid("sampleCandEqualsNullComparison");
+	}
+
+	boolean sampleCandIdentityObjectComparison(Data data) {
+		return data.equals(data);
+	}
+
+	public void testCandIdentityObjectComparison() throws Exception {
+		assertInvalid("sampleCandIdentityObjectComparison");
 	}
 
 	// internal
