@@ -35,7 +35,7 @@ public class HtmlWriter extends AbstractWriter {
     static final String      HTML_WHITESPACE  = "&nbsp;";
     static final String      HTML_TAB = multiple(HTML_WHITESPACE, TAB_WHITESPACES);
     
-    static final char        CLOSING_BRACE    = '>';
+    static final char        CLOSING_BRACKET    = '>';
 
     private boolean          ignoreCRforOutline;
     private boolean          executableInCurrent;
@@ -65,14 +65,14 @@ public class HtmlWriter extends AbstractWriter {
             }
             preDiv="<div id=\"pagecontainer\">";
             preTable="<table><tr><td width=\"5\">&nbsp;</td><td>";
-	        preHeader=read(inputPath(templateHtmlFileName), "<body");
+	        preHeader=readTag(inputPath(templateHtmlFileName), "<body");
         }else{
-            preHeader=read(inputPath("docs"), "<body");
+            preHeader=readTag(inputPath("docs"), "<body");
         }
         String outlinePath = outputPath("outline");
         new File(outlinePath).delete();
         outline = new RandomAccessFile(outlinePath, "rw");
-        String outlineHeader = read(inputPath("outline"), "<body");
+        String outlineHeader = readTag(inputPath("outline"), "<body");
         outline.write(toBytes(outlineHeader));
         String outlineImage = files.task.getOutlineImage();
         if(outlineImage != null){
@@ -217,17 +217,17 @@ public class HtmlWriter extends AbstractWriter {
         return "html";
     }
 
-    private String read(String path, String until) throws Exception {
+    private String readTag(String path, String until) throws Exception {
         String buffer = files.readFileStr(path);
         int matchidx=buffer.indexOf(until);
         if(matchidx<0) {
         	return null;
         }
-        matchidx=buffer.indexOf(CLOSING_BRACE,matchidx+until.length());
+        matchidx=buffer.indexOf(CLOSING_BRACKET,matchidx+until.length());
         if(matchidx<0) {
         	return null;
         }
-        return buffer.substring(0,matchidx);
+        return buffer.substring(0, matchidx+1);
     }
     
     private String readBody(String path) throws Exception {
