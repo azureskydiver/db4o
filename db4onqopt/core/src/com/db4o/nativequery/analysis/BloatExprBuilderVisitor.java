@@ -265,7 +265,11 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return;
 		}
 		left.visit(this);
-		ComparisonOperand leftOp=(ComparisonOperand) purgeReturnValue();
+		Object leftObj=purgeReturnValue();
+		if(!(leftObj instanceof ComparisonOperand)) {
+			return;
+		}
+		ComparisonOperand leftOp=(ComparisonOperand)leftObj;
 		right.visit(this);
 		ComparisonOperand rightOp=(ComparisonOperand) purgeReturnValue();
 		if(isCandidateFieldValue(rightOp)&&!isCandidateFieldValue(leftOp)) {
@@ -273,7 +277,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			leftOp=rightOp;
 			rightOp=swap;
 		}
-		if(!isCandidateFieldValue(leftOp)) {
+		if(!isCandidateFieldValue(leftOp)||rightOp==null) {
 			return;
 		}
 		expression(new ComparisonExpression((FieldValue)leftOp,rightOp,ComparisonOperator.EQUALS));
