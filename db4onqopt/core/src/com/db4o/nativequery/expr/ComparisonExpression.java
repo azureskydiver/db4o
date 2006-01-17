@@ -10,6 +10,9 @@ public class ComparisonExpression implements Expression {
 	private ComparisonOperator _op;
 
 	public ComparisonExpression(FieldValue left, ComparisonOperand right,ComparisonOperator op) {
+		if(left==null||right==null||op==null) {
+			throw new NullPointerException();
+		}
 		this._left = left;
 		this._right = right;
 		this._op = op;

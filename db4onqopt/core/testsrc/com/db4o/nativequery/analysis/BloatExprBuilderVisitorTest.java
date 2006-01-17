@@ -317,7 +317,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	public void testIntWrapperFieldEqualsComp() throws Exception {
 		assertComparison("sampleIntWrapperFieldEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(0,"intWrapperCmpVal"),ComparisonOperator.EQUALS,false);
 	}	
-	
+
 	// getter
 	
 	boolean sampleGetterIntEqualsComp(Data data) {
@@ -686,6 +686,24 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	public void testCandIdentityObjectComparison() throws Exception {
 		assertInvalid("sampleCandIdentityObjectComparison");
 	}
+
+	boolean sampleStaticFieldIntWrapperEqualsComp(Data data) {
+		return data.getIdWrapped().equals(INT_WRAPPER_CMPVAL);
+	}
+
+	public void testStaticFieldIntWrapperEqualsComp() throws Exception {
+		assertInvalid("sampleStaticFieldIntWrapperEqualsComp");
+		//assertComparison("sampleStaticFieldIntWrapperEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(0,"INT_WRAPPER_CMPVAL"),ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleStaticIntWrapperFieldEqualsComp(Data data) {
+		return INT_WRAPPER_CMPVAL.equals(data.getIdWrapped());
+	}
+
+	public void testStaticIntWrapperFieldEqualsComp() throws Exception {
+		assertInvalid("sampleStaticIntWrapperFieldEqualsComp");
+		//assertComparison("sampleStaticIntWrapperFieldEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(0,"INT_WRAPPER_CMPVAL"),ComparisonOperator.EQUALS,false);
+	}	
 
 	// internal
 	
