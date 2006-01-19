@@ -24,11 +24,15 @@ class YapFieldVersion extends YapFieldVirtual {
     }
 
     void marshall1(YapObject a_yapObject, YapWriter a_bytes, boolean a_migrating, boolean a_new) {
+        YapStream stream = a_bytes.getStream().i_parent;
+        PBootRecord br = stream.bootRecord();
         if (!a_migrating) {
-            YapStream stream = a_bytes.getStream().i_parent;
-            PBootRecord br = stream.bootRecord();
             if (br != null) {
                 a_yapObject.i_virtualAttributes.i_version = br.version();
+            }
+        }else{
+            if(br != null){
+                br.setDirty();
             }
         }
         if(a_yapObject.i_virtualAttributes == null){
