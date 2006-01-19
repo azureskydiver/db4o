@@ -26,10 +26,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 #if CF_1_0
-namespace System
-{
-	internal class NotImplementedException : System.Exception
-	{
+namespace System {
+	
+	internal class NotImplementedException : System.Exception {
+		
 		public NotImplementedException (string message) : base (message)
 		{
 		}
@@ -40,10 +40,10 @@ namespace System
 	}
 }
 
-namespace System.Security
-{
-	public class PermissionSet
-	{	
+namespace System.Security {
+	
+	public class PermissionSet {
+		
 		public PermissionSet Copy ()
 		{
 			return this;
@@ -70,8 +70,8 @@ namespace System.Security
 		}
 	}
 
-	public class SecurityElement
-	{
+	public class SecurityElement 	{
+		
 		public SecurityElement (string tag)
 		{	
 		}
@@ -92,10 +92,10 @@ namespace System.Security
 	}
 }
 
-namespace System.Security.Permissions
-{
-	public class SecurityAttribute
-	{	
+namespace System.Security.Permissions {
+	
+	public class SecurityAttribute {
+		
 	}
 }
 #endif

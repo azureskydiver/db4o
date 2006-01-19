@@ -44,6 +44,7 @@ namespace Mono.Cecil {
 		byte [] m_publicKeyToken;
 		AssemblyHashAlgorithm m_hashAlgo;
 		byte [] m_hash;
+		MetadataToken m_token;
 
 		public string Name {
 			get { return m_name; }
@@ -80,7 +81,7 @@ namespace Mono.Cecil {
 		public byte [] PublicKeyToken {
 			get {
 #if !CF_1_0
-				if ((m_publicKeyToken == null) && (m_publicKey != null)) {
+				if ((m_publicKeyToken == null || m_publicKeyToken.Length == 0) && (m_publicKey != null && m_publicKey.Length > 0)) {
 					HashAlgorithm ha = null;
 					switch (m_hashAlgo) {
 					case AssemblyHashAlgorithm.Reserved:
@@ -135,6 +136,11 @@ namespace Mono.Cecil {
 		public virtual byte [] Hash {
 			get { return m_hash; }
 			set { m_hash = value; }
+		}
+
+		public MetadataToken MetadataToken {
+			get { return m_token; }
+			set { m_token = value; }
 		}
 
 		public AssemblyNameReference () : this (string.Empty, string.Empty, new Version (0, 0, 0, 0))

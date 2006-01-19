@@ -39,6 +39,11 @@ namespace Mono.Cecil {
 			set { m_elementMethod = value; }
 		}
 
+		public override string Name {
+			get { return m_elementMethod.Name; }
+			set { throw new InvalidOperationException (); }
+		}
+
 		public override MethodCallingConvention CallingConvention {
 			get { return m_elementMethod.CallingConvention; }
 			set { throw new InvalidOperationException (); }
@@ -59,12 +64,13 @@ namespace Mono.Cecil {
 			set { throw new InvalidOperationException (); }
 		}
 
-		public override ParameterDefinitionCollection Parameters {
-			get { return m_elementMethod.Parameters; }
+		public override TypeReference DeclaringType {
+			get { return m_elementMethod.DeclaringType; }
+			set { throw new InvalidOperationException (); }
 		}
 
-		public override GenericParameterCollection GenericParameters {
-			get { return m_elementMethod.GenericParameters; }
+		public override ParameterDefinitionCollection Parameters {
+			get { return m_elementMethod.Parameters; }
 		}
 
 		internal MethodSpecification (MethodReference elemMethod) : base (string.Empty)

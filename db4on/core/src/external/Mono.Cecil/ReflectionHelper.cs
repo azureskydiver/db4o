@@ -46,7 +46,7 @@ namespace Mono.Cecil {
 			m_module = module;
 			m_asmCache = new Hashtable ();
 			m_memberRefCache = new Hashtable ();
-			m_cacheLoaded = true;
+			m_cacheLoaded = false;
 		}
 
 		void ImportCache ()
@@ -93,15 +93,41 @@ namespace Mono.Cecil {
 			return string.Concat (t.Namespace, ".", t.Name);
 		}
 
+		TypeReference GetTypeSpec (Type t)
+		{
+			Stack s = new Stack ();
+			while (t.HasElementType) {
+				s.Push (t);
+				t = t.GetElementType ();
+			}
+
+			TypeReference elementType = ImportSystemType (t);
+			while (s.Count > 0) {
+				t = s.Pop () as Type;
+				if (t.IsPointer)
+					elementType = new PointerType (elementType);
+				else if (t.IsArray) // deal with complex arrays
+					elementType = new ArrayType (elementType);
+				else if (t.IsByRef)
+					elementType = new ReferenceType (elementType);
+				else
+					throw new ReflectionException ("Unknown element type");
+			}
+
+			return elementType;
+		}
+
 		public TypeReference ImportSystemType (Type t)
 		{
+			if (t.HasElementType)
+				return GetTypeSpec (t);
+
 			TypeReference type = m_module.TypeReferences [GetTypeSignature (t)];
 			if (type != null)
 				return type;
 
 			AssemblyNameReference asm = ImportAssembly (t.Assembly);
 			type = new TypeReference (t.Name, t.Namespace, asm, t.IsValueType);
-
 			m_module.TypeReferences.Add (type);
 			return type;
 		}
@@ -203,10 +229,37 @@ namespace Mono.Cecil {
 			return asmRef;
 		}
 
+		TypeReference GetTypeSpec (TypeReference t)
+		{
+			Stack s = new Stack ();
+			while (t is TypeSpecification) {
+				s.Push (t);
+				t = (t as TypeSpecification).ElementType;
+			}
+
+			TypeReference elementType = ImportTypeReference (t);
+			while (s.Count > 0) {
+				t = s.Pop () as TypeReference;
+				if (t is PointerType)
+					elementType = new PointerType (elementType);
+				else if (t is ArrayType) // deal with complex arrays
+					elementType = new ArrayType (elementType);
+				else if (t is ReferenceType)
+					elementType = new ReferenceType (elementType);
+				else
+					throw new ReflectionException ("Unknown element type");
+			}
+
+			return elementType;
+		}
+
 		public TypeReference ImportTypeReference (TypeReference t)
 		{
 			if (t.Module == m_module)
 				return t;
+
+			if (t is TypeSpecification)
+				return GetTypeSpec (t);
 
 			TypeReference type = m_module.TypeReferences [t.FullName];
 			if (type != null)
