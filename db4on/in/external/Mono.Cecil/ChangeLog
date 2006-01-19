@@ -1,3 +1,326 @@
+2006-01-19  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyName.cs:
+		Fix computation of public key token.
+
+2006-01-18  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Metadata/MetadataToken.cs:
+		Add an use an ToUInt method and use it.
+	  CodeGen/templates/DebugHeader.cs
+	  Mono.Cecil.Binary/DebugHeader.cs:
+		Fix the size of the debug header.
+
+	* Mono.Cecil/ModuleReference.cs
+	  Mono.Cecil/AssemblyName.cs
+	  Mono.Cecil/StructureReader.cs
+	  Mono.Cecil/IMetadataScope.cs:
+		Make IMetadataScope implement IMetadataTokenProvider.
+	* Mono.Cecil/ReflectionWriter.cs:
+		Fix a typo when saving nested type refs.
+
+2006-01-17  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ArrayType.cs
+	  Mono.Cecil/ArrayDimension.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		End arrays support.
+
+2006-01-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/GenericParameter.cs
+	  Mono.Cecil/ReflectionHelper.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/GenericContext.cs:
+		Work on generics.
+
+2005-12-31  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionHelper.cs:
+		Fix import of type specs.
+
+2005-12-30  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/ImageReader.cs
+	  Mono.Cecil.Metadata/MetadataReader.cs
+	  Mono.Cecil.Binary/Image.cs
+	  Mono.Cecil.Binary/ImageReader.cs:
+		Add support to assemblies where the metadata is defined
+		outside of the text section. (c++/cli /safe for instance)
+
+2005-12-23  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyInfo.cs:
+		Version 0.2.2.2 devel.
+
+	* Mono.Cecil/AssemblyInfo.cs:
+		Version 0.2 to be released.
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		IGenericInstance are typespecs as well.
+
+	* Mono.Cecil/ArrayType.cs:
+		Add a single dimension in the default ctor.
+	* Mono.Cecil/ReflectionReader.cs:
+		Don't manually add the default dimension as it's done
+		int the array type ctor.
+	* Mono.Cecil/ReflectionHelper.cs:
+		Import type specs.
+
+2005-12-22  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter:
+		Write pinvoke infos as well.
+
+	* Mono.Cecil/ReflectionReader.cs:
+		Unsure that primitive value types are viewed as
+		value types.
+
+	* CodeGen/templates/Section.cs
+	  CodeGen/templates/ImageReader.cs
+	  Mono.Cecil.Metadata/MetadataReader.cs
+	  Mono.Cecil.Binary/Image.cs
+	  Mono.Cecil.Binary/Section.cs
+	  Mono.Cecil.Binary/ImageReader.cs:
+		Simplify the way you read binary data whithin
+		high level layer.
+
+	* Mono.Cecil.Cil/CodeReader.cs:
+		Make helper methods public static.
+	* Mono.Cecil/ReflectionReader.cs:
+		Don't try to get the entry point method
+		if it don't point on a valid method RID.
+
+	* CodeGen/templates/NamedCollectionImplem.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  Mono.Cecil/TypeDefinitionCollection.cs
+	  Mono.Cecil/TypeReferenceCollection.cs:
+		Don't add existing values.
+
+	* Mono.Cecil/ModuleDefinition.cs:
+		Protect import from null refs.
+
+2005-12-21  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/StructureWriter.cs:
+		Don't increment pdb age. Not Cecil's job.
+
+	* Mono.Cecil.Cil/ICilWorker.cs
+	  Mono.Cecil.Cil/CilWorker.cs:
+		Add a new replace method.
+
+2005-12-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/StructureWriter.cs:
+		Ensure every assembly reference is processed.
+
+	* Mono.Cecil/ReflectionHelper.cs:
+		Don't assume the cache is magically loaded.
+		Aka: most stupid bug of the year.
+
+2005-12-19  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/DebugHeader.cs
+	  Mono.Cecil.Binary/DebugHeader.cs
+	  Mono.Cecil.Binary/DebugStoreType.cs:
+		New files to store debug header infos.
+	* Mono.Cecil.dll.sources: updated
+	* CodeGen/cecil.xml
+	  CodeGen/cecil-gen.rb
+	  Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil.Binary/IBinaryVisitor.cs
+	  Mono.Cecil.Binary/ImageWriter.cs
+	  Mono.Cecil.Binary/Image.cs
+	  Mono.Cecil.Binary/ImageInitializer.cs
+	  Mono.Cecil.Binary/BaseImageVisitor.cs
+	  Mono.Cecil.Binary/ImageReader.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs:
+		Read and write debug header.
+
+	* CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil.Binary/ImageWriter.cs:
+		Revert revision 54409.
+
+2005-12-14  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/ICilWorker.cs
+	  Mono.Cecil.Cil/CilWorker.cs:
+		Add a remove method.
+
+	* CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil.Binary/ImageWriter.cs:
+		Don't allocate potential big arrays here.
+
+2005-12-13  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Metadata/MetadataWriter.cs:
+		Set the correct version for .net 2 assemblies.
+		Correctly write embedded resources.
+		Fix #76963.
+
+2005-12-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/MethodSpecification.cs:
+		Override the declaring type and the name property to
+		match the inner method.
+	* Mono.Cecil/GenericInstanceType.cs:
+		Correctly set the FullName.
+	* Mono.Cecil/GenericInstanceMethod.cs:
+		Style.
+
+2005-12-02  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/TypeDefinition.cs:
+		Fix interface import. Patch by Thomas Gil.
+
+2005-11-24  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/cecil-gen.rb
+	  CodeGen/templates/MetadataTableReader.cs
+	  CodeGen/templates/PEFileHeader.cs
+	  CodeGen/templates/CLIHeader.cs
+	  CodeGen/templates/PEOptionalHeader.cs
+	  CodeGen/templates/Table.cs
+	  CodeGen/templates/MetadataRowReader.cs
+	  CodeGen/templates/OpCodes.cs
+	  CodeGen/templates/Section.cs
+	  CodeGen/templates/ImageReader.cs:
+		Update the codegen engine so that everyone can run it
+		without having to install a dependency (eruby).
+
+	* Mono.Cecil.Metadata/Utilities.cs: re-codegenerated.
+
+2005-11-23  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IGenericArgumentProvider.cs
+		Style.
+	* CodeGen/cecil.xml:
+		Mirror Martin's change in the codegen engine.
+
+2005-11-23  Martin Baulig  <martin@ximian.com>
+
+	Generics API changes:
+	TypeReference and MethodReference now contain a
+	`GenericArguments' property (of type `GenericArgumentCollection')
+	and `GenericParameters' is moved into TypeDefinition/MethodDefinition.
+
+	* Mono.Cecil/IGenericArgumentProvider.cs: New file.
+	(IGenericArgumentProvider): New public interface.
+
+	* Mono.Cecil/IGenericArgumentCollection.cs
+	(IGenericArgumentCollection.Container): Changed type from
+	`IGenericInstance' -> `IGenericArgumentProvider'.
+
+	* Mono.Cecil/IGenericInstance.cs
+	(IGenericInstance.Arguments): Renamed to `GenericArguments'.
+
+	* Mono.Cecil/ITypeReference.cs
+	(ITypeReference): Implement `IGenericArgumentProvider' instead of
+	`IGenericParameterProvider'.
+
+	* Mono.Cecil/ITypeDefinition.cs
+	(ITypeDefinition): Implement `IGenericParameterProvider'.
+
+	* Mono.Cecil/IMethod.cs
+	(IMethodReference): Implement `IGenericArgumentProvider' instead of
+	`IGenericParameterProvider'.
+	(IMethodDefinition): Implement `IGenericParameterProvider'.
+
+	* Mono.Cecil/TypeReference.cs
+	(TypeReference.GenericParameters): Removed.
+	(TypeReference.GenericArguments): New public property.
+
+	* Mono.Cecil/TypeDefinition.cs
+	(TypeDefinition.GenericParameters): New public property.
+	(TypeDefinition.OnGenericParameterAdded): If a generic parameter
+	is added, also add it to the `GenericArguments'.
+
+	* Mono.Cecil/MethodReference.cs
+	(MethodReference.GenericParameters): Removed.
+	(MethodReference.GenericArguments): New public property.
+
+	* Mono.Cecil/MethodDefinition.cs
+	(MethodDefinition.GenericParameters): New public property.
+	(MethodDefinition.OnGenericParameterAdded): If a generic parameter
+	is added, also add it to the `GenericArguments'.
+
+	* Mono.Cecil/GenericInstanceType.cs
+	(GenericInstanceType): Removed the `m_arguments' field; we now
+	inherit the `GenericArguments' property from `TypeReference'.
+
+	* Mono.Cecil/GenericInstanceMethod.cs
+	(GenericInstanceMethod): Removed the `m_arguments' field; we now
+	inherit the `GenericArguments' property from `MethodReference'.
+
+	* Mono.Cecil/GenericContext.cs
+	(GenericContext): We now operate on type/method references and not
+	definitions.
+	(GenericContext.Type): Changed type to `TypeReference'.
+	(GenericContext.Method): Changed type to `MethodReference'.	
+
+2005-11-23  Martin Baulig  <martin@ximian.com>
+
+	* Mono.Cecil.Metadata/TokenType.cs: Added `GenericParam'.
+
+	* Mono.Cecil.Metadata/Utilities.cs
+	(GetMetadataToken): In `case CodedIndex.HasCustomAttribute', add
+	`TokenType.GenericParam'.
+
+2005-11-22  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IMethodDefinitionCollection.cs
+	  Mono.Cecil/MethodDefinitionCollection.cs
+	  CodeGen/templates/IndexedCollectionImplem.cs
+	  CodeGen/templates/IIndexedCollection.cs:
+		Add a new search method.
+	* CodeGen/templates/NamedCollectionImplem.cs
+	  Mono.Cecil/TypeReferenceCollection.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  Mono.Cecil/TypeDefinitionCollection.cs:
+		Style.
+
+2005-11-13	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+	* Mono.Cecil/ReflectionReader.cs
+		Fix for NRE when reading assemblies with a field initializer
+		pointing to a data section
+		(TestCases/Regression/OddInt64Initializer.dll).
+
+2005-11-11  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Mono.Cecil.Metadata/MetadataWriter.cs
+		Add support for different strongname key size (between 384 
+		and 16384 bits) as now supported in fx 2.0. Default is still
+		1024 bits.
+
+2005-11-10	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+	* Mono.Cecil/CompactFrameworkCompatibility.cs
+	  Mono.Cecil/SecurityDeclarationReader.cs
+	  Mono.Cecil/TypeReferenceCollection.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/AssemblyName.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/TypeDefinitionCollection.cs
+	  CodeGen/templates/NamedCollectionImplem.cs
+	  CodeGen/templates/ImageReader.cs
+	  Mono.Cecil.Metadata/MetadataReader.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Metadata/CultureUtils.cs
+	  Mono.Xml/SecurityParser.cs
+	  Mono.Xml/SmallXmlParser.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.Binary/ImageReader.cs
+	  cecil.build
+	  	Implement support for compiling on the CompactFramework
+	
+2005-11-08  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/GenericInstanceType.cs
+	  Mono.Cecil/TypeReference.cs:
+		Fix a regression with 2.0 assemblies.
+
 2005-11-03  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/CallSite.cs
