@@ -97,9 +97,16 @@ namespace com.db4o
         IList <Extent> query <Extent>( Predicate<Extent> match );
 
         /// <summary>
-        /// queries for all instances of a class.
+        /// queries for all instances of the type extent, returning
+		/// a IList of ElementType which must be assignable from
+		/// extent.
         /// </summary>
-        IList <Extent> query <Extent> (System.Type extent);
+        IList <ElementType> query <ElementType> (System.Type extent);
+		
+		/// <summary>
+        /// queries for all instances of the type extent.
+        /// </summary>
+        IList <Extent> query <Extent> ();
 
     }
 #endif
