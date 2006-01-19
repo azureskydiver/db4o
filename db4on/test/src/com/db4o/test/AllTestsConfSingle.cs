@@ -3,7 +3,9 @@
 using System;
 using System.Collections;
 using System.IO;
+using com.db4o.test.cs;
 using com.db4o.test.j4otest;
+using com.db4o.test.nativequeries;
 using com.db4o.test.soda;
 
 namespace com.db4o.test
@@ -24,6 +26,8 @@ namespace com.db4o.test
 				ArrayList tests = new ArrayList();
 
 				tests.Add(typeof (SimplestPossible));
+				//tests.Add(typeof (CsAssemblyVersionChange));
+				tests.Add(typeof (MultipleAssemblySupportTestCase));
 				//tests.Add(typeof(com.db4o.test.ExternalBlobs));
 				//tests.Add(typeof(com.db4o.test.soda.SodaNumberCoercion));
 #if NET_2_0
@@ -34,8 +38,8 @@ namespace com.db4o.test
 #endif
 				//tests.Add(typeof(com.db4o.test.nativequeries.NativeQueriesTestCase));
 				//tests.Add(typeof(com.db4o.test.nativequeries.NQRegressionTests));
-				tests.Add(typeof (TypeNameTest));
-				tests.Add(typeof (SodaNumberCoercion));
+				//tests.Add(typeof (TypeNameTest));
+				//tests.Add(typeof (SodaNumberCoercion));
 				return (Type[]) tests.ToArray(typeof (Type));
 			}
 		}

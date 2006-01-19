@@ -16,6 +16,8 @@ namespace com.db4o.test.cs
 	/// </summary>
 	public class CsAssemblyVersionChange
 	{
+		const string TestAssemblyName = "test.exe";
+
 		protected static readonly string DataFile = Path.Combine(Path.GetTempPath(), "test.yap");
 
 		public virtual string BaseCode
@@ -36,14 +38,8 @@ namespace com.db4o.test.cs
 			string appDomain1BasePath = Path.Combine(Path.GetTempPath(), "appdomain1");
 			string appDomain2BasePath = Path.Combine(Path.GetTempPath(), "appdomain2");
 
-			if (!Tester.ensure(EmitAssembly(appDomain1BasePath, BaseCode, version1Code)))
-			{
-				return;
-			}
-			if (!Tester.ensure(EmitAssembly(appDomain2BasePath, BaseCode, version2Code)))
-			{
-				return;
-			}
+			CompilationServices.EmitAssembly(Path.Combine(appDomain1BasePath, TestAssemblyName), BaseCode, version1Code);
+			CompilationServices.EmitAssembly(Path.Combine(appDomain2BasePath, TestAssemblyName), BaseCode, version2Code);
             
 			if (File.Exists(DataFile))
 			{
@@ -76,8 +72,8 @@ namespace com.db4o.test.cs
 			}
 
 			public void Execute()
-			{
-				Assembly testAssembly = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.exe"));
+			{	
+				Assembly testAssembly = Assembly.LoadFrom(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, TestAssemblyName));
 				Type type = testAssembly.GetType("Tester", true);
 				MethodInfo method = type.GetMethod(_methodName);
 				method.Invoke(null, new object[1] { DataFile });
@@ -111,97 +107,6 @@ namespace com.db4o.test.cs
 		void CopyToDir(string fname, string dir)
 		{
 			File.Copy(fname, Path.Combine(dir, Path.GetFileName(fname)), true);
-		}
-
-		bool EmitAssembly(string basePath, params string[] code)
-		{
-			CreateDirectoryIfNeeded(basePath);
-
-			string[] sourceFiles = WriteSourceFiles(basePath, code);
-			return CompileFiles(Path.Combine(basePath, "test.exe"), sourceFiles);
-		}
-
-		void CreateDirectoryIfNeeded(string directory)
-		{
-			if (!Directory.Exists(directory))
-			{
-				Directory.CreateDirectory(directory);
-			}
-		}
-
-		string[] WriteSourceFiles(string basePath, string[] code)
-		{
-			string[] sourceFiles = new string[code.Length];
-			for (int i=0; i<code.Length; ++i)
-			{
-				string sourceFile = Path.Combine(basePath, "source" + i + ".cs");
-				WriteFile(sourceFile, code[i]);
-				sourceFiles[i] = sourceFile;
-			}
-			return sourceFiles;
-		}
-
-		void WriteFile(string fname, string contents)
-		{
-			using (StreamWriter writer = new StreamWriter(fname))
-			{
-				writer.Write(contents);
-			}
-		}
-
-#if NET_2_0
-		CompilerInfo GetCSharpCompilerInfo()
-		{
-			return CodeDomProvider.GetCompilerInfo(CodeDomProvider.GetLanguageFromExtension(".cs"));
-		}
-#endif
-
-		protected CodeDomProvider GetCSharpCodeDomProvider()
-		{
-#if NET_2_0
-			return GetCSharpCompilerInfo().CreateProvider();
-#else
-			return (CodeDomProvider)j4o.lang.Class.forName("Microsoft.CSharp.CSharpCodeProvider, System").newInstance();
-#endif
-		}
-
-		protected CompilerParameters CreateDefaultCompilerParameters()
-		{
-#if NET_2_0
-			return GetCSharpCompilerInfo().CreateDefaultCompilerParameters();
-#else
-			return new CompilerParameters();
-#endif
-		}
-
-		public bool CompileFiles(string assemblyFName, string[] files)
-		{	
-			using (CodeDomProvider provider = GetCSharpCodeDomProvider())
-			{
-				CompilerParameters parameters = CreateDefaultCompilerParameters();
-				parameters.IncludeDebugInformation = false;
-				parameters.OutputAssembly = assemblyFName;
-				parameters.ReferencedAssemblies.Add(typeof(Db4o).Assembly.Location);
-
-				ICodeCompiler compiler = provider.CreateCompiler();
-				CompilerResults results = compiler.CompileAssemblyFromFileBatch(parameters, files);
-				if (results.Errors.Count > 0)
-				{
-					Tester.ensure(GetErrorString(results.Errors), false);
-				}
-				return 0 == results.Errors.Count;
-			}
-		}
-
-		string GetErrorString(CompilerErrorCollection errors)
-		{
-			StringBuilder builder = new StringBuilder();
-			foreach (CompilerError error in errors)
-			{
-				builder.Append(error.ToString());
-				builder.Append(Environment.NewLine);
-			}
-			return builder.ToString();
 		}
 
         bool IsPascalCase
