@@ -151,12 +151,8 @@ namespace Mono.Cecil {
 				TypeReference declaringType = GetTypeDefOrRef (mrefRow.Class, context);
 				GenericContext nc = context.Clone ();
 
-				if (declaringType is GenericInstanceType) {
-					TypeDefinition type = ((GenericInstanceType) declaringType).ElementType as TypeDefinition;
-					if (type != null)
-						nc.Type = type;
-				} else if (declaringType is TypeDefinition)
-					nc.Type = declaringType as TypeDefinition;
+				if (mrefRow.Class.TokenType == TokenType.TypeSpec)
+					nc.TypeArguments = declaringType.GenericArguments;
 
 				if (sig is FieldSig) {
 					FieldSig fs = sig as FieldSig;
@@ -167,14 +163,6 @@ namespace Mono.Cecil {
 				} else {
 					string name = m_root.Streams.StringsHeap [mrefRow.Name];
 					MethodSig ms = sig as MethodSig;
-					if (sig is MethodDefSig) {
-						TypeDefinition owner = GetTypeDefAt (mrefRow.Class.RID);
-						MethodDefinition [] meths = owner.Methods.GetMethod (name);
-						for (int i = 0; i < meths.Length; i++)
-							// TODO compare sig, this is wrong
-							if (meths [i].Parameters.Count == ms.ParamCount)
-								nc.Method = meths [i];
-					}
 
 					MethodReference methref = new MethodReference (
 						name, ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
@@ -191,6 +179,7 @@ namespace Mono.Cecil {
 						methref.Parameters.Add (pdef);
 					}
 					member = methref;
+					nc.MethodArguments = methref.GenericArguments;
 				}
 				break;
 			case TokenType.Method :
@@ -242,18 +231,25 @@ namespace Mono.Cecil {
 			MethodSpecTable msTable = m_tableReader.GetMethodSpecTable ();
 			MethodSpecRow msRow = msTable [index];
 
+			MethodSpec sig = m_sigReader.GetMethodSpec (msRow.Instantiation);
+			GenericArgumentCollection methArgs = new GenericArgumentCollection (null);
+			foreach (SigType st in sig.Signature.Types)
+				methArgs.Add (GetTypeRefFromSig (st, context));
+
+			GenericContext nc = context.Clone ();
+			nc.MethodArguments = methArgs;
+
 			MethodReference meth;
 			if (msRow.Method.TokenType == TokenType.Method)
 				meth = GetMethodDefAt (msRow.Method.RID);
 			else if (msRow.Method.TokenType == TokenType.MemberRef)
-				meth = (MethodReference) GetMemberRefAt (msRow.Method.RID, context);
+				meth = (MethodReference) GetMemberRefAt (msRow.Method.RID, nc);
 			else
 				throw new ReflectionException ("Unknown method type for method spec");
 
 			gim = new GenericInstanceMethod (meth);
-			MethodSpec sig = m_sigReader.GetMethodSpec (msRow.Instantiation);
-			foreach (SigType st in sig.Signature.Types)
-				gim.Arguments.Add (GetTypeRefFromSig (st, context));
+			foreach (TypeReference arg in methArgs)
+				gim.GenericArguments.Add (arg);
 
 			m_methodSpecs [index] = gim;
 
@@ -296,6 +292,9 @@ namespace Mono.Cecil {
 				if (parts.Length != 2)
 					throw new ReflectionException ("Unvalid core type name");
 				coreType = new TypeReference (parts [1], parts [0], m_corlib);
+				m_module.TypeReferences.Add (coreType);
+			}
+			if (!coreType.IsValueType) {
 				switch (coreType.FullName) {
 				case Constants.Boolean :
 				case Constants.Char :
@@ -314,7 +313,6 @@ namespace Mono.Cecil {
 					coreType.IsValueType = true;
 					break;
 				}
-				m_module.TypeReferences.Add (coreType);
 			}
 			return coreType;
 		}
@@ -647,8 +645,8 @@ namespace Mono.Cecil {
 				}
 			}
 
-			uint eprid = m_reader.Image.CLIHeader.EntryPointToken & 0x00ffffff;
-			if (eprid != 0)
+			uint eprid = CodeReader.GetRid ((int) m_reader.Image.CLIHeader.EntryPointToken);
+			if (eprid > 0 && eprid <= m_meths.Length)
 				m_module.Assembly.EntryPoint = GetMethodDefAt (eprid);
 		}
 
@@ -906,7 +904,6 @@ namespace Mono.Cecil {
 			case ElementType.SzArray :
 				SZARRAY szary = t as SZARRAY;
 				ArrayType at = new ArrayType (GetTypeRefFromSig (szary.Type, context));
-				(at.Dimensions as ArrayDimensionCollection).Add (new ArrayDimension (0, 0));
 				return at;
 			case ElementType.Ptr :
 				PTR pointer = t as PTR;
@@ -928,16 +925,16 @@ namespace Mono.Cecil {
 				return fnptr;
 			case ElementType.Var:
 				VAR var = t as VAR;
-				return context.Type.GenericParameters [var.Index];
+				return context.TypeArguments [var.Index];
 			case ElementType.MVar:
 				MVAR mvar = t as MVAR;
-				return context.Method.GenericParameters [mvar.Index];
+				return context.MethodArguments [mvar.Index];
 			case ElementType.GenericInst:
 				GENERICINST ginst = t as GENERICINST;
 				GenericInstanceType instance = new GenericInstanceType (GetTypeDefOrRef (ginst.Type, context));
 				instance.IsValueType = ginst.ValueType;
 				for (int i = 0; i < ginst.Signature.Arity; i++)
-					instance.Arguments.Add (GetTypeRefFromSig (ginst.Signature.Types [i], context));
+					instance.GenericArguments.Add (GetTypeRefFromSig (ginst.Signature.Types [i], context));
 
 				return instance;
 			default:
@@ -977,7 +974,7 @@ namespace Mono.Cecil {
 			case ElementType.R8 :
 				return br.ReadDouble ();
 			case ElementType.String :
-				byte[] bytes = br.ReadBytes (constant.Length);
+				byte [] bytes = br.ReadBytes (constant.Length);
 				string str = Encoding.Unicode.GetString (bytes, 0, bytes.Length);
 				return str;
 			case ElementType.Class :

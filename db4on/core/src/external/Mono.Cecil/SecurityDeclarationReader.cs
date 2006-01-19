@@ -42,7 +42,7 @@ namespace Mono.Cecil {
 	internal class SecurityDeclarationReader {
 
 #if !CF_1_0
-		static object[] action = new object[1] { (SSP.SecurityAction) 0 };
+		static object [] action = new object [1] { (SSP.SecurityAction) 0 };
 #endif
 
 		private SecurityParser m_parser;

@@ -1,8 +1,8 @@
 //
-// FrameworkCompatibility.cs
+// IGenericInstanceMethod.cs
 //
 // Author:
-//   Rodrigo B. de Oliveira (rodrigobamboo@gmail.com)
+//   Martin Baulig (martin@ximian.com)
 //
 // (C) 2005 Jb Evain
 //
@@ -25,77 +25,11 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-#if CF_1_0
-namespace System
-{
-	internal class NotImplementedException : System.Exception
-	{
-		public NotImplementedException (string message) : base (message)
-		{
-		}
 
-		public NotImplementedException ()
-		{	
-		}
+namespace Mono.Cecil {
+
+	public interface IGenericArgumentProvider {
+
+		GenericArgumentCollection GenericArguments { get; }
 	}
 }
-
-namespace System.Security
-{
-	public class PermissionSet
-	{	
-		public PermissionSet Copy ()
-		{
-			return this;
-		}
-
-		public PermissionSet Union (PermissionSet other)
-		{
-			return this;
-		}
-
-		public bool IsSubsetOf (PermissionSet other)
-		{
-			return false;
-		}
-
-		public string ToXml ()
-		{
-			return string.Empty;
-		}
-		
-		public static PermissionSet FromXml (string xml)
-		{
-			return new PermissionSet ();
-		}
-	}
-
-	public class SecurityElement
-	{
-		public SecurityElement (string tag)
-		{	
-		}
-
-		public string Text
-		{
-			get { return string.Empty; }
-			set {}
-		}
-
-		public void AddChild (SecurityElement child)
-		{	
-		}
-
-		public void AddAttribute (string name, string value)
-		{	
-		}
-	}
-}
-
-namespace System.Security.Permissions
-{
-	public class SecurityAttribute
-	{	
-	}
-}
-#endif

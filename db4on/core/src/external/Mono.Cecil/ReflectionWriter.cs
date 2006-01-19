@@ -137,9 +137,15 @@ namespace Mono.Cecil {
 			return (uint) m_mod.ModuleReferences.IndexOf (modRef) + 1;
 		}
 
+		bool IsTypeSpec (ITypeReference type)
+		{
+			return type is IArrayType || type is IFunctionPointerType ||
+				type is IPointerType || type is IGenericInstance;
+		}
+
 		public MetadataToken GetTypeDefOrRefToken (ITypeReference type)
 		{
-			if (type is IArrayType || type is IFunctionPointerType || type is IPointerType) {
+			if (IsTypeSpec (type)) {
 				TypeSpecTable tsTable = m_tableWriter.GetTypeSpecTable ();
 				TypeSpecRow tsRow = m_rowWriter.CreateTypeSpecRow (
 					m_sigWriter.AddTypeSpec (GetTypeSpecSig (type)));
@@ -231,6 +237,8 @@ namespace Mono.Cecil {
 				VisitOverrideCollection (meth.Overrides);
 				VisitCustomAttributeCollection (meth.CustomAttributes);
 				VisitSecurityDeclarationCollection (meth.SecurityDeclarations);
+				if (meth.PInvokeInfo != null)
+					VisitPInvokeInfo (meth.PInvokeInfo);
 			}
 
 			foreach (TypeDefinition t in orderedTypes)
@@ -257,7 +265,7 @@ namespace Mono.Cecil {
 
 				if (t.DeclaringType != null)
 					scope = new MetadataToken (TokenType.TypeRef, GetRidFor (t.DeclaringType));
-				if (t.Scope is AssemblyNameReference)
+				else if (t.Scope is AssemblyNameReference)
 					scope = new MetadataToken (TokenType.AssemblyRef,
 						GetRidFor ((AssemblyNameReference) t.Scope));
 				else if (t.Scope is ModuleDefinition)
@@ -909,10 +917,10 @@ namespace Mono.Cecil {
 				gi.ValueType = git.IsValueType;
 				gi.Type = GetTypeDefOrRefToken (git.ElementType);
 				gi.Signature = new GenericInstSignature ();
-				gi.Signature.Arity = git.Arguments.Count;
+				gi.Signature.Arity = git.GenericArguments.Count;
 				gi.Signature.Types = new SigType [gi.Signature.Arity];
-				for (int i = 0; i < git.Arguments.Count; i++)
-					gi.Signature.Types [i] = GetSigType (git.Arguments [i]);
+				for (int i = 0; i < git.GenericArguments.Count; i++)
+					gi.Signature.Types [i] = GetSigType (git.GenericArguments [i]);
 
 				return gi;
 			} else if (type is IArrayType) {
@@ -923,7 +931,22 @@ namespace Mono.Cecil {
 					return szary;
 				}
 
-				throw new NotImplementedException ("Complex arrays are not implemented"); // TODO
+				// not optimized
+				ArrayShape shape = new ArrayShape ();
+				shape.Rank = aryType.Dimensions.Count;
+				shape.Sizes = new int [shape.Rank];
+				shape.LoBounds = new int [shape.Rank];
+
+				for (int i = 0; i < shape.Rank; i++) {
+					ArrayDimension dim = aryType.Dimensions [i];
+					shape.LoBounds [i] = dim.LowerBound;
+					shape.Sizes [i] = dim.UpperBound - dim.LowerBound + 1;
+				}
+
+				ARRAY ary = new ARRAY ();
+				ary.Shape = shape;
+				ary.Type = GetSigType (aryType.ElementType);
+				return ary;
 			} else if (type is IPointerType) {
 				PTR p = new PTR ();
 				ITypeReference elementType = (type as IPointerType).ElementType;
@@ -1128,7 +1151,7 @@ namespace Mono.Cecil {
 			gis.Arity = gim.Arity;
 			gis.Types = new SigType [gis.Arity];
 			for (int i = 0; i < gis.Arity; i++)
-				gis.Types [i] = GetSigType (gim.Arguments [i]);
+				gis.Types [i] = GetSigType (gim.GenericArguments [i]);
 
 			return new MethodSpec (gis);
 		}
