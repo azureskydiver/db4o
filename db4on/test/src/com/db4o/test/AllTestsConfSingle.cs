@@ -26,7 +26,8 @@ namespace com.db4o.test
 				ArrayList tests = new ArrayList();
 
 				tests.Add(typeof (SimplestPossible));
-				//tests.Add(typeof (CsAssemblyVersionChange));
+				tests.Add(typeof (CsAssemblyVersionChange));
+                tests.Add(typeof(com.db4o.test.nativequeries.Cat));
 				tests.Add(typeof (MultipleAssemblySupportTestCase));
 				//tests.Add(typeof(com.db4o.test.ExternalBlobs));
 				//tests.Add(typeof(com.db4o.test.soda.SodaNumberCoercion));
@@ -36,8 +37,8 @@ namespace com.db4o.test
 				tests.Add(typeof(net2.Net2GenericList));
 				tests.Add(typeof(net2.Net2GenericOtherCollections));
 #endif
-				//tests.Add(typeof(com.db4o.test.nativequeries.NativeQueriesTestCase));
-				//tests.Add(typeof(com.db4o.test.nativequeries.NQRegressionTests));
+				tests.Add(typeof(com.db4o.test.nativequeries.NativeQueriesTestCase));
+				tests.Add(typeof(com.db4o.test.nativequeries.NQRegressionTests));
 				//tests.Add(typeof (TypeNameTest));
 				//tests.Add(typeof (SodaNumberCoercion));
 				return (Type[]) tests.ToArray(typeof (Type));
@@ -63,7 +64,7 @@ namespace com.db4o.test
 		/**
           * run the tests in client/server mode
           */
-		internal bool CLIENT_SERVER = false;
+		internal bool CLIENT_SERVER = true;
 
 		/**
           * run the client/server test against a remote server.
