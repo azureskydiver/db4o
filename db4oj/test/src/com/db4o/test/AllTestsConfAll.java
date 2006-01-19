@@ -115,6 +115,7 @@ public class AllTestsConfAll extends TestSuite{
 	        TwoClients.class,
 	        TypedArrayInObject.class,
 	        TypedDerivedArray.class,
+            UuidAware.class,
 	        XTEAEncryption.class
         };
     }
