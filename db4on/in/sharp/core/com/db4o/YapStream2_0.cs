@@ -17,13 +17,18 @@ namespace com.db4o
             return getNativeQueryHandler().execute(match);
         }
 
-        public IList<Extent> query<Extent>(System.Type extent)
+        public IList<ElementType> query<ElementType>(System.Type extent)
         {
-            QQuery q = (QQuery)query();
-            q.constrain(extent);
-            QueryResult qres = q.getQueryResult();
-            return new com.db4o.inside.query.GenericObjectSetFacade<Extent>(qres);
+			QQuery q = (QQuery)query();
+			q.constrain(extent);
+			QueryResult qres = q.getQueryResult();
+			return new com.db4o.inside.query.GenericObjectSetFacade<ElementType>(qres);
         }
+		
+		public IList<Extent> query<Extent>()
+		{ 
+			return query<Extent>(typeof(Extent));
+		}
     }
 #endif
 }
