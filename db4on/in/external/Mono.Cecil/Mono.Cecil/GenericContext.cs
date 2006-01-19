@@ -32,57 +32,50 @@ namespace Mono.Cecil {
 
 	internal class GenericContext {
 
-		TypeDefinition m_type;
-		MethodDefinition m_method;
+		GenericArgumentCollection m_typeArgs;
+		GenericArgumentCollection m_methodArgs;
 
-		public TypeDefinition Type {
-			get { return m_type; }
-			set { m_type = value; }
+		public GenericArgumentCollection TypeArguments {
+			get { return m_typeArgs; }
+			set { m_typeArgs = value; }
 		}
 
-		public MethodDefinition Method {
-			get { return m_method; }
-			set { m_method = value; }
+		public GenericArgumentCollection MethodArguments {
+			get { return m_methodArgs; }
+			set { m_methodArgs = value; }
 		}
 
 		public bool Null {
-			get { return m_type == null && m_method == null; }
+			get { return m_typeArgs == null && m_methodArgs == null; }
 		}
 
 		public GenericContext ()
 		{
 		}
 
-		public GenericContext (TypeDefinition type)
+		public GenericContext (TypeReference type, MethodReference meth)
 		{
-			m_type = type;
-		}
-
-		public GenericContext (MethodDefinition meth)
-		{
-			m_type = (TypeDefinition) meth.DeclaringType;
-			m_method = meth;
-		}
-
-		public GenericContext (TypeDefinition type, MethodDefinition meth)
-		{
-			m_type = type;
-			m_method = meth;
+			m_typeArgs = type.GenericArguments;
+			m_methodArgs = meth.GenericArguments;
 		}
 
 		public GenericContext (IGenericParameterProvider provider)
 		{
-			if (provider is TypeDefinition)
-				m_type = provider as TypeDefinition;
+			if (provider is TypeReference)
+				m_typeArgs = (provider as TypeReference).GenericArguments;
 			else {
-				m_method = provider as MethodDefinition;
-				m_type = m_method.DeclaringType as TypeDefinition;
+				MethodReference meth = provider as MethodReference;
+				m_methodArgs = meth.GenericArguments;
+				m_typeArgs = meth.DeclaringType.GenericArguments;
 			}
 		}
 
 		public GenericContext Clone ()
 		{
-			return new GenericContext (m_type, m_method);
+			GenericContext ctx = new GenericContext ();
+			ctx.TypeArguments = m_typeArgs;
+			ctx.MethodArguments = m_methodArgs;
+			return ctx;
 		}
 	}
 }

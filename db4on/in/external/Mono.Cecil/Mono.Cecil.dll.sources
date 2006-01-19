@@ -15,6 +15,7 @@
 ./Mono.Cecil/BaseReflectionVisitor.cs
 ./Mono.Cecil/BaseStructureVisitor.cs
 ./Mono.Cecil/CallSite.cs
+./Mono.Cecil/CompactFrameworkCompatibility.cs
 ./Mono.Cecil/Constants.cs
 ./Mono.Cecil/ConstructorCollection.cs
 ./Mono.Cecil/CustomAttribute.cs
@@ -61,6 +62,7 @@
 ./Mono.Cecil/IFieldLayoutInfo.cs
 ./Mono.Cecil/IFunctionPointerType.cs
 ./Mono.Cecil/IGenericArgumentCollection.cs
+./Mono.Cecil/IGenericArgumentProvider.cs
 ./Mono.Cecil/IGenericInstance.cs
 ./Mono.Cecil/IGenericInstanceMethod.cs
 ./Mono.Cecil/IGenericInstanceType.cs
@@ -172,6 +174,8 @@
 ./Mono.Cecil.Binary/BaseImageVisitor.cs
 ./Mono.Cecil.Binary/CLIHeader.cs
 ./Mono.Cecil.Binary/DataDirectory.cs
+./Mono.Cecil.Binary/DebugHeader.cs
+./Mono.Cecil.Binary/DebugStoreType.cs
 ./Mono.Cecil.Binary/DOSHeader.cs
 ./Mono.Cecil.Binary/IBinaryVisitable.cs
 ./Mono.Cecil.Binary/IBinaryVisitor.cs

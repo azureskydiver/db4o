@@ -33,14 +33,8 @@ namespace Mono.Cecil {
 
 	public sealed class GenericInstanceType : TypeSpecification, IGenericInstanceType {
 
-		GenericArgumentCollection m_arguments;
-
 		public int Arity {
-			get { return m_arguments.Count; }
-		}
-
-		public GenericArgumentCollection Arguments {
-			get { return m_arguments; }
+			get { return GenericArguments.Count; }
 		}
 
 		public override bool IsValueType {
@@ -50,12 +44,12 @@ namespace Mono.Cecil {
 		public override string FullName {
 			get {
 				StringBuilder sb = new StringBuilder ();
-				sb.Append (this.Name);
+				sb.Append (base.FullName);
 				sb.Append ("<");
-				for (int i = 0; i < this.Arguments.Count; i++) {
+				for (int i = 0; i < this.GenericArguments.Count; i++) {
 					if (i > 0)
 						sb.Append (",");
-					sb.Append (this.Arguments [i].FullName);
+					sb.Append (this.GenericArguments [i].FullName);
 				}
 				sb.Append (">");
 				return sb.ToString ();
@@ -64,7 +58,6 @@ namespace Mono.Cecil {
 
 		public GenericInstanceType (TypeReference elementType) : base (elementType)
 		{
-			m_arguments = new GenericArgumentCollection (this);
 		}
 	}
 }
