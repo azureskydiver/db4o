@@ -4,6 +4,7 @@ using System.Reflection;
 using com.db4o;
 using com.db4o.inside.query;
 using com.db4o.query;
+using com.db4o.ext;
 
 namespace com.db4o.test.nativequeries
 {
@@ -43,7 +44,7 @@ namespace com.db4o.test.nativequeries
 		}
 
 		public void store()
-		{
+		{            
 			Tester.store(new Author(1, "Kurt Vonnegut"));
 			Tester.store(new Author(2, "Kilgore Trout"));
 			Tester.store(new InnerAuthor(3, "Joao Saramago"));
@@ -86,11 +87,14 @@ public class InnerAuthorNamePredicate : Predicate
 
 		private void AssertPredicate(int expectedId, string predicateCode, string predicateTypeName)
 		{
-			Assembly assembly = EmitAssemblyAndLoad(predicateTypeName + ".dll", predicateCode);
+            // use a prefix to avoid conflicts between SOLO and C/S tests run
+            string assemblyNamePrefix = Tester.isClientServer() ? "CS" : "";
+			Assembly assembly = EmitAssemblyAndLoad(assemblyNamePrefix + predicateTypeName + ".dll", predicateCode);
 	
 			Predicate predicate = (Predicate)Activator.CreateInstance(assembly.GetType(predicateTypeName));
 	
-			ObjectContainer container = Tester.objectContainer();
+			ExtObjectContainer container = Tester.objectContainer();
+            container.configure().optimizeNativeQueries(true);
 			SetUpListener(container);
 			try
 			{
