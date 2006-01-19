@@ -100,11 +100,11 @@ namespace com.db4o.test {
 				tests.Add(typeof(KeepCollectionContent));
 				tests.Add(typeof(MaxByEvaluation));
 				tests.Add(typeof(Messaging));
+
 				tests.Add(typeof(nativequeries.Cat));
-//	#if !MONO
 				tests.Add(typeof(nativequeries.NativeQueriesTestCase));
-//	#endif
 				tests.Add(typeof(nativequeries.cats.TestCatConsistency));
+				tests.Add(typeof(nativequeries.MultipleAssemblySupportTestCase));
 
 	#if NET_2_0
 				tests.Add(typeof(net2.Net2GenericContainers));
