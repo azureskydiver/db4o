@@ -42,7 +42,7 @@
                     BaseAddress = "0"
                     CheckForOverflowUnderflow = "false"
                     ConfigurationOverrideFile = ""
-                    DefineConstants = "TRACE"
+                    DefineConstants = "TRACE;CF_1_0"
                     DocumentationFile = ""
                     DebugSymbols = "false"
                     FileAlignment = "4096"
