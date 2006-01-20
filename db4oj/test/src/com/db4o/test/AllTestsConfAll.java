@@ -46,6 +46,7 @@ public class AllTestsConfAll extends TestSuite{
 	        CascadeToHashtable.class,
 	        CascadeToVector.class,
 	        CaseInsensitive.class,
+            ChangeIdentity.class,
 	        Circular1.class,
 	        Circular2.class,
 	        Collection4TestCase.class,
