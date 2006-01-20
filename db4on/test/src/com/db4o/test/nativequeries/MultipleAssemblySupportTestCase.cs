@@ -97,7 +97,7 @@ public class InnerAuthorNamePredicate : Predicate
             container.configure().optimizeNativeQueries(true);
 
 			NativeQueryHandler handler = GetNativeQueryHandler(container);
-			handler.QueryExecuted += new QueryExecutedHandler(handler_QueryExecuted);
+            handler.QueryExecution += new QueryExecutionHandler(OnQueryExecution);
 			try
 			{
 				ObjectSet os = container.query(predicate);
@@ -106,7 +106,7 @@ public class InnerAuthorNamePredicate : Predicate
 			}
 			finally
 			{
-				handler.QueryExecuted -= new QueryExecutedHandler(handler_QueryExecuted);
+                handler.QueryExecution -= new QueryExecutionHandler(OnQueryExecution);
 			}
 		}
 		
@@ -123,7 +123,7 @@ public class InnerAuthorNamePredicate : Predicate
 			return System.Reflection.Assembly.LoadFrom(assemblyFile);
 		}
 
-		private void handler_QueryExecuted(object sender, QueryExecutedEventArgs args)
+		private void OnQueryExecution(object sender, QueryExecutionEventArgs args)
 		{
 			Tester.ensureEquals(QueryExecutionKind.DynamicallyOptimized, args.ExecutionKind);
 		}
