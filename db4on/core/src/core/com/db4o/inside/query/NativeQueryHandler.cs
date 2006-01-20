@@ -8,30 +8,17 @@ namespace com.db4o.inside.query
 {
 	public class NativeQueryHandler
 	{
-		public static readonly string UNOPTIMIZED = "UNOPTIMIZED";
-
-		public static readonly string DYNOPTIMIZED = "DYNOPTIMIZED";
-
 		private ObjectContainer _container;
 
 		private Db4oNQOptimizer _enhancer;
 
-		private List4 _listeners;
+		public event QueryExecutionHandler QueryExecution;
+
+		public event QueryOptimizationFailureHandler QueryOptimizationFailure;
 
 		public NativeQueryHandler(com.db4o.ObjectContainer container)
 		{
 			_container = container;
-		}
-
-		public virtual void addListener(com.db4o.inside.query.Db4oQueryExecutionListener 
-			listener)
-		{
-			_listeners = new List4(_listeners, listener);
-		}
-
-		public virtual void clearListeners()
-		{
-			_listeners = null;
 		}
 
 		public virtual com.db4o.ObjectSet execute(com.db4o.query.Predicate predicate)
@@ -53,17 +40,17 @@ namespace com.db4o.inside.query
 					// although we could use it as a filter chain
 					// (and)
                     optimizeQuery(q, match.Target, match.Method);
-                    notifyListeners(match, NativeQueryHandler.DYNOPTIMIZED);
+                    OnQueryExecution(match, QueryExecutionKind.Unoptimized);
 
                     return WrapQueryResult<Extent>(q);
                 }
             }
             catch (System.Exception e)
             {
-                OptimizationError(e);
+                OnQueryOptimizationFailure(e);
             }
             q.constrain(new GenericPredicateEvaluation<Extent>(match));
-            notifyListeners(match, NativeQueryHandler.UNOPTIMIZED);
+            OnQueryExecution(match, QueryExecutionKind.DynamicallyOptimized);
 
             return WrapQueryResult<Extent>(q);
         }
@@ -85,26 +72,19 @@ namespace com.db4o.inside.query
                 if (OptimizeNativeQueries())
 				{
 					optimizeQuery(q, predicate, predicate.getFilterMethod().MethodInfo);
-					notifyListeners(predicate, NativeQueryHandler.DYNOPTIMIZED);
+					OnQueryExecution(predicate, QueryExecutionKind.DynamicallyOptimized);
 					return q;
 				}
 			}
 			catch (System.Exception e)
 			{
-                OptimizationError(e);
+                OnQueryOptimizationFailure(e);
 			}
 			q.constrain(new com.db4o.inside.query.PredicateEvaluation(predicate));
-            notifyListeners(predicate, NativeQueryHandler.UNOPTIMIZED);
+            OnQueryExecution(predicate, QueryExecutionKind.Unoptimized);
 			return q;
 		}
-
-        private static void OptimizationError(System.Exception e)
-        {
-            // XXX: need to inform the user of the exception
-            // somehow
-            //j4o.lang.JavaSystem.printStackTrace(e);
-        }
-
+        
         private bool OptimizeNativeQueries()
         {
             return _container.ext().configure().optimizeNativeQueries();
@@ -117,13 +97,19 @@ namespace com.db4o.inside.query
 			new SODAQueryBuilder().optimizeQuery(expression, q, predicate);
 		}
 
-		private void notifyListeners(object predicate, string msg)
+		private void OnQueryExecution(object predicate, QueryExecutionKind kind)
 		{
-			for (Iterator4 iter = new Iterator4Impl(_listeners
-				); iter.hasNext(); )
+			if (null != QueryExecution)
+            {
+				QueryExecution(this, new QueryExecutionEventArgs(predicate, kind));
+            }
+		}
+
+		private void OnQueryOptimizationFailure(System.Exception e)
+		{
+			if (null != QueryOptimizationFailure)
 			{
-				((Db4oQueryExecutionListener)iter.next()).notifyQueryExecuted
-					(predicate, msg);
+				QueryOptimizationFailure(this, new QueryOptimizationFailureEventArgs(e));
 			}
 		}
 	}

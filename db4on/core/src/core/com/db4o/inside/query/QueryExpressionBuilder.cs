@@ -27,9 +27,21 @@ namespace com.db4o.inside.query
 	/// </summary>
 	public class QueryExpressionBuilder
 	{	
-        private static string _lastAssemblyName;
-        private static IAssemblyDefinition _lastAssemblyCache;
-        private static object _lastAssemblyLock = new object();
+        private static ICachingStrategy _assemblyCachingStrategy = new SingleItemCachingStrategy();
+
+		public static ICachingStrategy AssemblyCachingStrategy
+		{
+			get
+			{
+				return _assemblyCachingStrategy;
+			}
+
+			set
+			{
+				if (null == value) throw new ArgumentNullException("AssemblyCachingStrategy");
+				_assemblyCachingStrategy = value;
+			}
+		}
 
 		public static Expression FromMethod(System.Reflection.MethodInfo method)
 		{
@@ -46,15 +58,13 @@ namespace com.db4o.inside.query
 		
 		private static IAssemblyDefinition GetAssembly(string location)
 		{
-            lock (_lastAssemblyLock)
+			IAssemblyDefinition assembly = (IAssemblyDefinition)_assemblyCachingStrategy.Get(location);
+			if (null == assembly)
 			{
-                IAssemblyDefinition assembly = (location == _lastAssemblyName)
-					? _lastAssemblyCache
-					: AssemblyFactory.GetAssembly(location);
-                _lastAssemblyCache = assembly;
-                _lastAssemblyName = location;
-				return assembly;
-            }
+				assembly = AssemblyFactory.GetAssembly(location);
+				_assemblyCachingStrategy.Add(location, assembly);
+			}
+			return assembly;
 		}
 
 		private static Type[] GetParameterTypes(MethodInfo method)
@@ -96,11 +106,7 @@ namespace com.db4o.inside.query
 
 		private static string GetAssemblyLocation(MethodInfo method)
 		{
-#if CF_1_0
 			return method.DeclaringType.Module.FullyQualifiedName;
-#else
-			return new System.Uri(method.DeclaringType.Assembly.CodeBase).LocalPath;
-#endif
 		}
 
 		private static Expression FromMethodDefinition(IMethodDefinition method)
@@ -112,8 +118,8 @@ namespace com.db4o.inside.query
 
 			IExpression expression = GetQueryExpression(method);
 			if (null == expression) UnsupportedPredicate("No expression found.");
-
-			Visitor visitor = new Visitor();
+			
+			Visitor visitor = new Visitor(method);
 			expression.Accept(visitor);
 			return visitor.Expression;
 		}
@@ -189,6 +195,27 @@ namespace com.db4o.inside.query
 		{
 			object _current;
 			private int _insideCandidate = 0;
+			Hashtable _assemblies = new Hashtable();
+
+			public Visitor(IMethodDefinition topLevelMethod)
+			{
+				RegisterAssembly(topLevelMethod.DeclaringType.Module.Assembly);
+			}
+
+			/// <summary>
+			/// Registers an assembly so it can be looked up by its assembly name
+			/// string later.
+			/// </summary>
+			/// <param name="assembly"></param>
+			private void RegisterAssembly(IAssemblyDefinition assembly)
+			{
+				_assemblies.Add(assembly.Name.FullName, assembly);
+			}
+
+			private IAssemblyDefinition LookupAssembly(string fullName)
+			{
+				return (IAssemblyDefinition) _assemblies[fullName];
+			}
 
 			public Expression Expression
 			{
@@ -327,7 +354,7 @@ namespace com.db4o.inside.query
 			public override void Visit(IMethodInvocationExpression node)
 			{	
 				IMethodReferenceExpression methodRef = node.Target as IMethodReferenceExpression;
-				if (null == methodRef) UnsupportedExpression(methodRef);
+				if (null == methodRef) UnsupportedExpression(node);
 
 				IMethodReference method = methodRef.Method;
 				if (IsOperator(method))
@@ -336,28 +363,25 @@ namespace com.db4o.inside.query
 					return;
 				}
 
-				if (node.Arguments.Count == 0)
+				if (node.Arguments.Count != 0) UnsupportedExpression(node);
+                
+				IExpression target = methodRef.Target;
+				switch (target.CodeElementType)
 				{
-					IExpression target = methodRef.Target;
-					switch (target.CodeElementType)
-					{
-						case CodeElementType.ThisReferenceExpression:
-							if (!InsideCandidate) UnsupportedExpression(node);
-							ProcessCandidateMethodInvocation(node, methodRef);
-							return;
+					case CodeElementType.ThisReferenceExpression:
+						if (!InsideCandidate) UnsupportedExpression(node);
+						ProcessCandidateMethodInvocation(node, methodRef);
+						return;
 
-						case CodeElementType.ArgumentReferenceExpression:
-							ProcessCandidateMethodInvocation(node, methodRef);
-							return;
+					case CodeElementType.ArgumentReferenceExpression:
+						ProcessCandidateMethodInvocation(node, methodRef);
+						return;
 
-						default:
-							Push(ToFieldValue(target));
-							ProcessCandidateMethodInvocation(node, methodRef);
-							return;
-					}
+					default:
+						Push(ToFieldValue(target));
+						ProcessCandidateMethodInvocation(node, methodRef);
+						return;
 				}
-
-				UnsupportedExpression(node);
 			}
 
 			private void ProcessOperatorMethodInvocation(IMethodInvocationExpression node, IMethodReference method)
@@ -401,7 +425,7 @@ namespace com.db4o.inside.query
 
 			private void ProcessCandidateMethodInvocation(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
 			{
-				IMethodDefinition method = methodRef.Method as IMethodDefinition;
+				IMethodDefinition method = GetMethodDefinition(methodRef);
 				if (null == method) UnsupportedExpression(node);
 
 				IExpression expression = GetQueryExpression(method);
@@ -416,6 +440,37 @@ namespace com.db4o.inside.query
 				{
 					LeaveCandidateMethod();
 				}
+			}
+
+			private IMethodDefinition GetMethodDefinition(IMethodReferenceExpression methodRef)
+			{
+				IMethodDefinition definition = methodRef.Method as IMethodDefinition;
+				return definition != null
+					? definition
+					: LoadExternalMethodDefinition(methodRef);
+			}
+
+			private IMethodDefinition LoadExternalMethodDefinition(IMethodReferenceExpression methodRef)
+			{
+				IMethodReference method = methodRef.Method;
+				IAssemblyDefinition assemblyDef = GetContainingAssembly(method.DeclaringType);
+				ITypeDefinition type = assemblyDef.MainModule.Types[method.DeclaringType.FullName];
+				return type.Methods.GetMethod(method.Name, method.Parameters);
+			}
+
+			private IAssemblyDefinition GetContainingAssembly(ITypeReference type)
+			{
+				AssemblyNameReference scope = (AssemblyNameReference) type.Scope;
+				string assemblyName = scope.FullName;
+				IAssemblyDefinition definition = LookupAssembly(assemblyName);
+				if (null == definition)
+				{
+					Assembly assembly = Assembly.Load(assemblyName);
+					string location = assembly.GetType(type.FullName).Module.FullyQualifiedName;
+					definition = QueryExpressionBuilder.GetAssembly(location);
+					RegisterAssembly(definition);
+				}
+				return definition;
 			}
 
 			private void LeaveCandidateMethod()
