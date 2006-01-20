@@ -6,11 +6,10 @@ using ICSharpCode.NRefactory;
 using ICSharpCode.NRefactory.Parser;
 using ICSharpCode.NRefactory.Parser.AST;
 using ICSharpCode.NRefactory.PrettyPrinter;
-using Boo.Lang.Useful.IO;
 
 namespace HelloWorld
 {	
-	class PascalCaseConverter : AbstractASTVisitor
+	class PascalCaseConverter : AbstractAstVisitor
 	{
 		public override object Visit(MethodDeclaration method, object data)
 		{

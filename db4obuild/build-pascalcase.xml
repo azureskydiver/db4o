@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="PascalCaseConverter" default="build">
+<project name="PascalCaseConverter" default="build2">
 
 	<property file="machine.properties" />
 	<property file="ant.properties" />
@@ -7,6 +7,8 @@
 	<property name="dir.dist.pascalcase" location="${dir.dist}/pascalcase" />
 	<property name="dir.pascalcase.src" location="${dir.dist.pascalcase}/src" />
 	<property name="dir.pascalcase.bin" location="${dir.dist.pascalcase}/bin" />
+	
+	<property name="converter.exe" location="bin/pascalcase2.exe" />
 	
 	<condition property="dotnetvm" value="mono" else="cmd">
 	  <os family="unix"/>
@@ -26,15 +28,13 @@
 	</target>
 	
 	<target name="build2" depends="compile-converter2">
-		<property name="converter.exe" location="bin/pascalcase2.exe" />
 		<property name="defines" value="NET_2_0" />
 		<antcall target="run-converter">
 		</antcall>
 	</target>
 		
-	<target name="build" depends="compile-converter">
+	<target name="build" depends="compile-converter2">
 		
-		<property name="converter.exe" location="bin/pascalcase.exe" />
 		<property name="defines" value="NET" />
 		<antcall target="run-converter">
 		</antcall>
@@ -143,19 +143,8 @@
 			executable="${csc.executable}">
 			<reference dir="bin">
 				<include name="ICSharpCode.NRefactory.dll" />
-				<include name="Boo.Lang.Useful.dll" />
 			</reference>
 		</csc>
-	</target>
-	
-	<target name="compile-converter" depends="init">
-		<exec executable="${dotnetvm}" failonerror="true">
-			<arg file="lib/boo/booc.exe" />
-			<arg value="-o:bin/pascalcase.exe" />
-			<arg value="-r:bin/ICSharpCode.SharpRefactory.dll" />
-			<arg value="-r:bin/Boo.Lang.Useful.dll" />
-			<arg file="src/pascalcase/main.boo" />
-		</exec>
 	</target>
 	
 	<target name="clean">
@@ -167,13 +156,7 @@
 		<mkdir dir="bin" />
 		<mkdir dir="${dir.pascalcase.bin}" />
 		<copy todir="bin">
-			<fileset dir="lib/boo">
-				<include name="Boo.Lang.dll" />
-				<include name="Boo.Lang.Useful.dll" />
-				<include name="Boo.Lang.Parser.dll" />
-			</fileset>
 			<fileset dir="lib/SharpDevelop">
-				<include name="ICSharpCode.SharpRefactory.dll" />
 				<include name="ICSharpCode.NRefactory.dll" />
 			</fileset>
 		</copy>
