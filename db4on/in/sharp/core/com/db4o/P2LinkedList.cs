@@ -355,8 +355,10 @@ namespace com.db4o {
         public override Object storedTo(Transaction transaction) {
             if (getTrans() == null){
                 setTrans(transaction);
-            }else if (transaction != getTrans()){
-                return replicate(getTrans(), transaction);
+            } else {
+				if (transaction != getTrans()) {
+					return replicate(getTrans(), transaction);
+				}
             }
             return this;
         }
