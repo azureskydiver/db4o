@@ -4,27 +4,27 @@ using System;
 using j4o.lang;
 using com.db4o.config;
 
-namespace com.db4o
+namespace com.db4o.config
 {
 
     /// <exclude />
     public class TTransient : ObjectConstructor
     {
-        public void OnActivate(ObjectContainer objectContainer, object obj, object members)
+        public void onActivate(ObjectContainer objectContainer, object obj, object members)
         {
         }
 
-        public object OnStore(ObjectContainer objectContainer, object obj)
+        public object onStore(ObjectContainer objectContainer, object obj)
         {
             return null;
         }
 
-        public Class StoredClass()
+        public Class storedClass()
         {
-            return Class.GetClassForType(typeof(object));
+            return Class.getClassForType(typeof(object));
         }
 
-        public object OnInstantiate(ObjectContainer objectContainer, object storedObject)
+        public object onInstantiate(ObjectContainer objectContainer, object storedObject)
         {
             return null;
         }
