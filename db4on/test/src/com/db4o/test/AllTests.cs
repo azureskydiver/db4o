@@ -19,7 +19,7 @@ namespace com.db4o.test
 	/// the AllTestsConfSingle#TESTS[] array.
 	/// </summary>
 	///
-	public class AllTests : AllTestsConfAll, Runnable  
+	public class AllTests : AllTestsConfSingle, Runnable  
 	{
 
 		public static void Main(String[] args) 

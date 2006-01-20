@@ -95,7 +95,9 @@ public class InnerAuthorNamePredicate : Predicate
 	
 			ExtObjectContainer container = Tester.objectContainer();
             container.configure().optimizeNativeQueries(true);
-			SetUpListener(container);
+
+			NativeQueryHandler handler = GetNativeQueryHandler(container);
+			handler.QueryExecuted += new QueryExecutedHandler(handler_QueryExecuted);
 			try
 			{
 				ObjectSet os = container.query(predicate);
@@ -104,28 +106,10 @@ public class InnerAuthorNamePredicate : Predicate
 			}
 			finally
 			{
-				ClearListeners(container);
+				handler.QueryExecuted -= new QueryExecutedHandler(handler_QueryExecuted);
 			}
 		}
-
-		class Listener : com.db4o.inside.query.Db4oQueryExecutionListener
-		{
-			public void notifyQueryExecuted(object filter, string msg)
-			{
-				Tester.ensureEquals("DYNOPTIMIZED", msg);
-			}
-		}
-
-		private void ClearListeners(ObjectContainer container)
-		{
-			GetNativeQueryHandler(container).clearListeners();
-		}
-
-		private static void SetUpListener(ObjectContainer container)
-		{
-			GetNativeQueryHandler(container).addListener(new Listener());
-		}
-
+		
 		private static NativeQueryHandler GetNativeQueryHandler(ObjectContainer container)
 		{
 			return ((YapStream)container).getNativeQueryHandler();
@@ -137,6 +121,11 @@ public class InnerAuthorNamePredicate : Predicate
 			string assemblyFile = Path.Combine(domain.BaseDirectory, assemblyName);
 			CompilationServices.EmitAssembly(assemblyFile, code);
 			return System.Reflection.Assembly.LoadFrom(assemblyFile);
+		}
+
+		private void handler_QueryExecuted(object sender, QueryExecutedEventArgs args)
+		{
+			Tester.ensureEquals(QueryExecutionKind.DynamicallyOptimized, args.ExecutionKind);
 		}
 	}
 }

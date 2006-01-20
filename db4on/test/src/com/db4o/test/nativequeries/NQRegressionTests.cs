@@ -1,3 +1,5 @@
+using com.db4o.inside.query;
+
 namespace com.db4o.test.nativequeries
 {
 	public class NQRegressionTests
@@ -799,59 +801,60 @@ namespace com.db4o.test.nativequeries
 		{
 			// System.Console.WriteLine(filter.GetType());
 			com.db4o.ObjectContainer db = com.db4o.test.Tester.objectContainer();
-			com.db4o.inside.query.Db4oQueryExecutionListener listener = new _AnonymousInnerClass348
-				(this, filter);
-			((com.db4o.YapStream)db).getNativeQueryHandler().addListener(listener);
-			db.ext().configure().optimizeNativeQueries(false);
-			com.db4o.ObjectSet raw = db.query(filter);
-			db.ext().configure().optimizeNativeQueries(true);
-			com.db4o.ObjectSet optimized = db.query(filter);
-			com.db4o.test.Tester.ensureEquals(raw.size(),optimized.size());
-			for(int resultIdx=0;resultIdx<raw.size();resultIdx++) 
+			
+			QueryExecutionListener listener = new QueryExecutionListener(filter);
+			NativeQueryHandler handler = ((com.db4o.YapStream)db).getNativeQueryHandler();
+			handler.QueryExecuted += new QueryExecutedHandler(listener.OnQueryExecuted);
+			try
 			{
-				com.db4o.test.Tester.ensureEquals(raw.ext().get(resultIdx),optimized.ext().get(resultIdx));
+				db.ext().configure().optimizeNativeQueries(false);
+				com.db4o.ObjectSet raw = db.query(filter);
+				db.ext().configure().optimizeNativeQueries(true);
+				com.db4o.ObjectSet optimized = db.query(filter);
+				com.db4o.test.Tester.ensureEquals(raw.size(),optimized.size());
+				for(int resultIdx=0;resultIdx<raw.size();resultIdx++) 
+				{
+					com.db4o.test.Tester.ensureEquals(raw.ext().get(resultIdx),optimized.ext().get(resultIdx));
+				}
+				com.db4o.test.Tester.ensureEquals(filter.expected(), raw.size());
 			}
-			com.db4o.test.Tester.ensureEquals(filter.expected(), raw.size());
-			((com.db4o.YapStream)db).getNativeQueryHandler().clearListeners();
+			finally
+			{
+				handler.QueryExecuted -= new QueryExecutedHandler(listener.OnQueryExecuted);
+			}
 		}
 
-		private sealed class _AnonymousInnerClass348 : com.db4o.inside.query.Db4oQueryExecutionListener
+		private sealed class QueryExecutionListener
 		{
-			public _AnonymousInnerClass348(NQRegressionTests _enclosing, com.db4o.test.nativequeries.NQRegressionTests.ExpectingPredicate
-				 filter)
-			{
-				this._enclosing = _enclosing;
-				this.filter = filter;
-			}
+			private readonly com.db4o.test.nativequeries.NQRegressionTests.ExpectingPredicate filter;
 
 			private int run = 0;
 
-			public void notifyQueryExecuted(object actualPredicate, string 
-				msg)
+			public QueryExecutionListener(com.db4o.test.nativequeries.NQRegressionTests.ExpectingPredicate
+				 filter)
 			{
-				com.db4o.test.Tester.ensureEquals(actualPredicate, filter);
-				string expMsg = null;
+				this.filter = filter;
+			}
+
+			public void OnQueryExecuted(object sender, QueryExecutedEventArgs args)
+			{
+				com.db4o.test.Tester.ensureEquals(args.Predicate, filter);
 				switch (this.run)
 				{
 					case 0:
 					{
-						expMsg = com.db4o.inside.query.NativeQueryHandler.UNOPTIMIZED;
+						Tester.ensureEquals(QueryExecutionKind.Unoptimized, args.ExecutionKind);
 						break;
 					}
 
 					case 1:
 					{
-						expMsg = com.db4o.inside.query.NativeQueryHandler.DYNOPTIMIZED;
+						Tester.ensureEquals(QueryExecutionKind.DynamicallyOptimized, args.ExecutionKind);
 						break;
 					}
 				}
-				com.db4o.test.Tester.ensureEquals(expMsg, msg);
 				this.run++;
 			}
-
-			private readonly NQRegressionTests _enclosing;
-
-			private readonly com.db4o.test.nativequeries.NQRegressionTests.ExpectingPredicate filter;
 		}
 	}
 }
