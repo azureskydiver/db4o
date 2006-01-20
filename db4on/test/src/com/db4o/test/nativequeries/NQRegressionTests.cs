@@ -804,7 +804,7 @@ namespace com.db4o.test.nativequeries
 			
 			QueryExecutionListener listener = new QueryExecutionListener(filter);
 			NativeQueryHandler handler = ((com.db4o.YapStream)db).getNativeQueryHandler();
-			handler.QueryExecuted += new QueryExecutedHandler(listener.OnQueryExecuted);
+			handler.QueryExecution += new QueryExecutionHandler(listener.OnQueryExecution);
 			try
 			{
 				db.ext().configure().optimizeNativeQueries(false);
@@ -820,7 +820,7 @@ namespace com.db4o.test.nativequeries
 			}
 			finally
 			{
-				handler.QueryExecuted -= new QueryExecutedHandler(listener.OnQueryExecuted);
+                handler.QueryExecution -= new QueryExecutionHandler(listener.OnQueryExecution);
 			}
 		}
 
@@ -836,7 +836,7 @@ namespace com.db4o.test.nativequeries
 				this.filter = filter;
 			}
 
-			public void OnQueryExecuted(object sender, QueryExecutedEventArgs args)
+			public void OnQueryExecution(object sender, QueryExecutionEventArgs args)
 			{
 				com.db4o.test.Tester.ensureEquals(args.Predicate, filter);
 				switch (this.run)
