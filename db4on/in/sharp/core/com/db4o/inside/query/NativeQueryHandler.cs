@@ -12,9 +12,9 @@ namespace com.db4o.inside.query
 
 		private Db4oNQOptimizer _enhancer;
 
-		public event QueryExecutedHandler QueryExecuted;
+		public event QueryExecutionHandler QueryExecution;
 
-		public event OptimizationErrorHandler OptimizationError;
+		public event QueryOptimizationFailureHandler QueryOptimizationFailure;
 
 		public NativeQueryHandler(com.db4o.ObjectContainer container)
 		{
@@ -40,17 +40,17 @@ namespace com.db4o.inside.query
 					// although we could use it as a filter chain
 					// (and)
                     optimizeQuery(q, match.Target, match.Method);
-                    notifyListeners(match, NativeQueryHandler.DYNOPTIMIZED);
+                    OnQueryExecution(match, QueryExecutionKind.Unoptimized);
 
                     return WrapQueryResult<Extent>(q);
                 }
             }
             catch (System.Exception e)
             {
-                OptimizationError(e);
+                OnQueryOptimizationFailure(e);
             }
             q.constrain(new GenericPredicateEvaluation<Extent>(match));
-            notifyListeners(match, NativeQueryHandler.UNOPTIMIZED);
+            OnQueryExecution(match, QueryExecutionKind.DynamicallyOptimized);
 
             return WrapQueryResult<Extent>(q);
         }
@@ -72,16 +72,16 @@ namespace com.db4o.inside.query
                 if (OptimizeNativeQueries())
 				{
 					optimizeQuery(q, predicate, predicate.getFilterMethod().MethodInfo);
-					OnQueryExecuted(predicate, QueryExecutionKind.DynamicallyOptimized);
+					OnQueryExecution(predicate, QueryExecutionKind.DynamicallyOptimized);
 					return q;
 				}
 			}
 			catch (System.Exception e)
 			{
-                OnOptimizationError(e);
+                OnQueryOptimizationFailure(e);
 			}
 			q.constrain(new com.db4o.inside.query.PredicateEvaluation(predicate));
-            OnQueryExecuted(predicate, QueryExecutionKind.Unoptimized);
+            OnQueryExecution(predicate, QueryExecutionKind.Unoptimized);
 			return q;
 		}
         
@@ -97,19 +97,19 @@ namespace com.db4o.inside.query
 			new SODAQueryBuilder().optimizeQuery(expression, q, predicate);
 		}
 
-		private void OnQueryExecuted(object predicate, QueryExecutionKind kind)
+		private void OnQueryExecution(object predicate, QueryExecutionKind kind)
 		{
-			if (null != QueryExecuted)
+			if (null != QueryExecution)
             {
-				QueryExecuted(this, new QueryExecutedEventArgs(predicate, kind));
+				QueryExecution(this, new QueryExecutionEventArgs(predicate, kind));
             }
 		}
 
-		private void OnOptimizationError(System.Exception e)
+		private void OnQueryOptimizationFailure(System.Exception e)
 		{
-			if (null != OptimizationError)
+			if (null != QueryOptimizationFailure)
 			{
-				OptimizationError(this, new OptimizationErrorEventArgs(e));
+				QueryOptimizationFailure(this, new QueryOptimizationFailureEventArgs(e));
 			}
 		}
 	}

@@ -6,12 +6,12 @@ namespace com.db4o.inside.query
 		DynamicallyOptimized
 	}
 
-	public class QueryExecutedEventArgs : System.EventArgs
+	public class QueryExecutionEventArgs : System.EventArgs
 	{
 		private object _predicate;
 		private QueryExecutionKind _kind;
 
-		public QueryExecutedEventArgs(object predicate, QueryExecutionKind kind)
+		public QueryExecutionEventArgs(object predicate, QueryExecutionKind kind)
 		{
 			_predicate = predicate;
 			_kind = kind;
@@ -28,5 +28,5 @@ namespace com.db4o.inside.query
 		}
 	}
 
-	public delegate void QueryExecutedHandler(object sender, QueryExecutedEventArgs args);
+	public delegate void QueryExecutionHandler(object sender, QueryExecutionEventArgs args);
 }
