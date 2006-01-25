@@ -15,7 +15,7 @@ namespace com.db4o.test
 			string basePath = Path.GetDirectoryName(assemblyFileName);
 			CreateDirectoryIfNeeded(basePath);
 
-			string[] sourceFiles = WriteSourceFiles(basePath, code);
+			string[] sourceFiles = WriteSourceFiles(Path.GetTempPath(), code);
 			CompileFiles(assemblyFileName, sourceFiles);
 		}
 
