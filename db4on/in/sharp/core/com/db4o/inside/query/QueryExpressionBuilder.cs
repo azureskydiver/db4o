@@ -196,10 +196,23 @@ namespace com.db4o.inside.query
 			object _current;
 			private int _insideCandidate = 0;
 			Hashtable _assemblies = new Hashtable();
+			Stack _methodDefinitionStack = new Stack();
 
 			public Visitor(IMethodDefinition topLevelMethod)
 			{
+				EnterMethodDefinition(topLevelMethod);
 				RegisterAssembly(topLevelMethod.DeclaringType.Module.Assembly);
+			}
+
+			private void EnterMethodDefinition(IMethodDefinition method)
+			{
+				_methodDefinitionStack.Push(method);
+			}
+
+			private void LeaveMethodDefinition(IMethodDefinition method)
+			{
+				object popped = _methodDefinitionStack.Pop();
+				System.Diagnostics.Debug.Assert(method == popped);
 			}
 
 			/// <summary>
@@ -428,18 +441,25 @@ namespace com.db4o.inside.query
 				IMethodDefinition method = GetMethodDefinition(methodRef);
 				if (null == method) UnsupportedExpression(node);
 
+				AssertMethodCanBeVisited(node, method);
+
 				IExpression expression = GetQueryExpression(method);
 				if (null == expression) UnsupportedExpression(node);
 
-				EnterCandidateMethod();
+				EnterCandidateMethod(method);
 				try 
 				{
 					Visit(expression);
 				}
 				finally
 				{
-					LeaveCandidateMethod();
+					LeaveCandidateMethod(method);
 				}
+			}
+
+			private void AssertMethodCanBeVisited(IMethodInvocationExpression node, IMethodDefinition method)
+			{
+				if (_methodDefinitionStack.Contains(method)) UnsupportedExpression(node);
 			}
 
 			private IMethodDefinition GetMethodDefinition(IMethodReferenceExpression methodRef)
@@ -473,14 +493,16 @@ namespace com.db4o.inside.query
 				return definition;
 			}
 
-			private void LeaveCandidateMethod()
+			private void EnterCandidateMethod(IMethodDefinition method)
 			{
-				--_insideCandidate;
+				EnterMethodDefinition(method);
+				++_insideCandidate;
 			}
 
-			private void EnterCandidateMethod()
+			private void LeaveCandidateMethod(IMethodDefinition method)
 			{
-				++_insideCandidate;
+				--_insideCandidate;
+				LeaveMethodDefinition(method);
 			}
 
 			private static bool IsOperator(IMethodReference method)
