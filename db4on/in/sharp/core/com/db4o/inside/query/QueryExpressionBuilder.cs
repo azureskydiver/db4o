@@ -196,7 +196,7 @@ namespace com.db4o.inside.query
 			object _current;
 			private int _insideCandidate = 0;
 			Hashtable _assemblies = new Hashtable();
-			Stack _methodDefinitionStack = new Stack();
+			IList _methodDefinitionStack = new ArrayList();
 
 			public Visitor(IMethodDefinition topLevelMethod)
 			{
@@ -206,13 +206,15 @@ namespace com.db4o.inside.query
 
 			private void EnterMethodDefinition(IMethodDefinition method)
 			{
-				_methodDefinitionStack.Push(method);
+				_methodDefinitionStack.Add(method);
 			}
 
 			private void LeaveMethodDefinition(IMethodDefinition method)
 			{
-				object popped = _methodDefinitionStack.Pop();
+				int lastIndex = _methodDefinitionStack.Count-1;
+				object popped = _methodDefinitionStack[lastIndex];
 				System.Diagnostics.Debug.Assert(method == popped);
+				_methodDefinitionStack.RemoveAt(lastIndex);
 			}
 
 			/// <summary>
