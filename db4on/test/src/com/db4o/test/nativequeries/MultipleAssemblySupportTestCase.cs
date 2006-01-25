@@ -117,8 +117,7 @@ public class InnerAuthorNamePredicate : Predicate
 
 		private static Assembly EmitAssemblyAndLoad(string assemblyName, string code)
 		{	
-			AppDomain domain = AppDomain.CurrentDomain;
-			string assemblyFile = Path.Combine(domain.BaseDirectory, assemblyName);
+			string assemblyFile = Path.Combine(Path.GetTempPath(), assemblyName);
 			CompilationServices.EmitAssembly(assemblyFile, code);
 			return System.Reflection.Assembly.LoadFrom(assemblyFile);
 		}
