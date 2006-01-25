@@ -13,12 +13,6 @@ querying interface.
 However there can be applications where dynamic generation of queries ._
 is required, that's why SODA is explained here.
 
-First of all we need some pilots in our database again.
-
-.s com.db4o.f1.chapter1.QueryExample#storeFirstPilot ..
-
-.s com.db4o.f1.chapter1.QueryExample#storeSecondPilot ..
-
 .2 Simple queries ..
 
 Let's see how our familiar QBE queries are expressed with SODA. A new Query object ._
