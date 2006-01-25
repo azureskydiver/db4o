@@ -29,7 +29,9 @@ namespace com.db4o.test
 				tests.Add(typeof(OptimizationFailuresTestCase));
 				//tests.Add(typeof (CsAssemblyVersionChange));
                 tests.Add(typeof(com.db4o.test.nativequeries.Cat));
+#if !CF_1_0 && !CF_2_0
 				tests.Add(typeof (MultipleAssemblySupportTestCase));
+#endif
 				//tests.Add(typeof(com.db4o.test.ExternalBlobs));
 				//tests.Add(typeof(com.db4o.test.soda.SodaNumberCoercion));
 #if NET_2_0
