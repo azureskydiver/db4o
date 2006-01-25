@@ -104,7 +104,9 @@ namespace com.db4o.test {
 				tests.Add(typeof(nativequeries.Cat));
 				tests.Add(typeof(nativequeries.NativeQueriesTestCase));
 				tests.Add(typeof(nativequeries.cats.TestCatConsistency));
+#if !CF_1_0 && !CF_2_0
 				tests.Add(typeof(nativequeries.MultipleAssemblySupportTestCase));
+#endif
 				tests.Add(typeof(nativequeries.OptimizationFailuresTestCase));
 
 	#if NET_2_0
