@@ -8,10 +8,10 @@ class PendingClassInits {
 	
 	private Collection4 _pending = new Collection4();
 
-	private List4 _members;
-	private List4 _statics;
-    private List4 _writes;
-    private List4 _inits;
+	private Queue4 _members = new Queue4();
+	private Queue4 _statics = new Queue4();
+    private Queue4 _writes = new Queue4();
+    private Queue4 _inits = new Queue4();
 	
 	private boolean _running = false;
 	
@@ -31,7 +31,9 @@ class PendingClassInits {
         }
 		
 		_pending.add(newYapClass);
-		_members = new List4(_members, newYapClass);
+        
+        _members.add(newYapClass);
+        
 		
 		if(_running) {
 			return;
@@ -48,56 +50,40 @@ class PendingClassInits {
 
 	
 	private void checkMembers() {
-		while(_members != null) {
-			Iterator4 members = new Iterator4Impl(_members);
-			_members = null;
-			while(members.hasNext()) {
-				YapClass yc = (YapClass)members.next();
-				yc.addMembers(_classColl.i_stream);
-				_statics = new List4(_statics, yc);
-			}
+		while(_members.hasNext()) {
+			YapClass yc = (YapClass)_members.next();
+			yc.addMembers(_classColl.i_stream);
+            _statics.add(yc);
 		}
 	}
 	
 	private void checkStatics() {
 		checkMembers();
-		while(_statics != null) {
-			Iterator4 statics = new Iterator4Impl(_statics);
-			_statics = null;
-			while(statics.hasNext()) {
-				YapClass yc = (YapClass)statics.next();
-				yc.storeStaticFieldValues(_classColl.i_systemTrans, true);
-				_writes = new List4(_writes, yc);
-				checkMembers();
-			}
+		while(_statics.hasNext()) {
+			YapClass yc = (YapClass)_statics.next();
+			yc.storeStaticFieldValues(_classColl.i_systemTrans, true);
+			_writes.add(yc);
+			checkMembers();
 		}
 	}
 	
 	private void checkWrites() {
 		checkStatics();
-		while(_writes != null) {
-			Iterator4 writes = new Iterator4Impl(_writes);
-			_writes = null;
-			while(writes.hasNext()) {
-				YapClass yc = (YapClass)writes.next();
-		        yc.setStateDirty();
-		        yc.write(_classColl.i_systemTrans);
-                _inits = new List4(_inits, yc);
-				checkStatics();
-			}
+		while(_writes.hasNext()) {
+			YapClass yc = (YapClass)_writes.next();
+	        yc.setStateDirty();
+	        yc.write(_classColl.i_systemTrans);
+            _inits.add(yc);
+			checkStatics();
 		}
 	}
     
     private void checkInits() {
         checkWrites();
-        while(_inits != null) {
-            Iterator4 inits = new Iterator4Impl(_inits);
-            _inits = null;
-            while(inits.hasNext()) {
-                YapClass yc = (YapClass)inits.next();
-                yc.initConfigOnUp(_classColl.i_systemTrans);
-                checkWrites();
-            }
+        while(_inits.hasNext()) {
+            YapClass yc = (YapClass)_inits.next();
+            yc.initConfigOnUp(_classColl.i_systemTrans);
+            checkWrites();
         }
     }
 

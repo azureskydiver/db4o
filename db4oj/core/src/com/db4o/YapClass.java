@@ -87,7 +87,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     
     void addMembers(YapStream a_stream) {
         bitTrue(YapConst.CHECKED_CHANGES);
-        if (addTranslatorField()) {
+        if (addTranslatorFields(a_stream)) {
         	return;
         }
 
@@ -162,7 +162,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         setStateOK();
     }
     
-    private boolean addTranslatorField() {
+    private boolean addTranslatorFields(YapStream a_stream) {
+        
     	ObjectTranslator ot = getTranslator();
     	if (ot == null) {
     		return false;
@@ -171,8 +172,48 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     	if (isNewTranslator(ot)) {
     		i_stream.setDirty(this);
     	}
+        
+        int fieldCount = 1;
+        
+        boolean versions = generateVersionNumbers() && ! ancestorHasVersionField();
+        boolean uuids = generateUUIDs()  && ! ancestorHasUUIDField();
+        
+        if(versions){
+            fieldCount = 2;
+        }
+        
+        if(uuids){
+            fieldCount = 3;
+        }
     	
-    	i_fields = new YapField[] { new YapFieldTranslator(this, ot) };
+    	i_fields = new YapField[fieldCount];
+        
+        i_fields[0] = new YapFieldTranslator(this, ot);
+        
+        // Some explanation on the thoughts here:
+        
+        // Since i_fields for the translator are generated every time,
+        // we want to make sure that the order of fields is consistent.
+        
+        // Therefore it's easier to implement with fixed index places in
+        // the i_fields array:
+        
+        // [0] is the translator
+        // [1] is the version
+        // [2] is the UUID
+        
+        if(versions || uuids) {
+            
+            // We don't want to have a null field, so let's add the version
+            // number, if we have a UUID, even if it's not needed.
+            
+            i_fields[1] = a_stream.i_handlers.i_indexes.i_fieldVersion;
+        }
+        
+        if(uuids){
+            i_fields[2] = a_stream.i_handlers.i_indexes.i_fieldUUID;
+        }
+        
     	setStateOK();
     	return true;
     }
@@ -725,11 +766,16 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return i_db4oType == null || i_db4oType.hasClassIndex();
     }
     
+    private boolean ancestorHasUUIDField(){
+        if(i_ancestor == null) {
+            return false;
+        }
+        return i_ancestor.hasUUIDField();
+    }
+    
     private boolean hasUUIDField() {
-        if(i_ancestor != null) {
-            if(i_ancestor.hasUUIDField()) {
-                return true;
-            }
+        if(ancestorHasUUIDField()){
+            return true;
         }
         if(i_fields != null) {
             for (int i = 0; i < i_fields.length; i++) {
@@ -741,11 +787,16 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return false;
     }
     
+    private boolean ancestorHasVersionField(){
+        if(i_ancestor == null){
+            return false;
+        }
+        return i_ancestor.hasVersionField();
+    }
+    
     private boolean hasVersionField() {
-        if(i_ancestor != null) {
-            if(i_ancestor.hasVersionField()) {
-                return true;
-            }
+        if(ancestorHasVersionField()){
+            return true;
         }
         if(i_fields != null) {
             for (int i = 0; i < i_fields.length; i++) {

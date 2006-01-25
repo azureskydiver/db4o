@@ -34,4 +34,9 @@ public class Queue4 {
 		}
 		return ret;
 	}
+    
+    public final boolean hasNext(){
+        return _last != null;
+    }
+    
 }
