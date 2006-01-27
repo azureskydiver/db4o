@@ -1,38 +1,24 @@
 package com.db4o.j2me.bloat;
 
-import com.db4o.reflect.self.*;
-import com.db4o.test.reflect.self.*;
+import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.file.*;
+import EDU.purdue.cs.bloat.reflect.*;
 
-import EDU.purdue.cs.bloat.editor.ClassEditor;
-import EDU.purdue.cs.bloat.editor.Type;
-import EDU.purdue.cs.bloat.file.ClassFileLoader;
-import EDU.purdue.cs.bloat.reflect.Modifiers;
+import com.db4o.reflect.self.*;
 
 public class Generation {
-	private static ClassEnhancer classEnhancer;
-
-	private static RegistryEnhancer registryEnhancer;
-
-	public static  void init() {
-		registryEnhancer = new RegistryEnhancer();
-		classEnhancer = new ClassEnhancer();
-	}
 
 	public static void main(String[] args) {
-		init();
 		String outputDirName = "generated";
 		ClassFileLoader loader = new ClassFileLoader();
-		ClassEditor ce = registryEnhancer.createClass(loader, outputDirName,
+		Enhancer context=new Enhancer(loader,outputDirName);
+		ClassEnhancer classEnhancer = new ClassEnhancer(loader,outputDirName);
+		ClassEditor ce = context.createClass(
 				Modifiers.PUBLIC, "RegressionDogSelfReflectionRegistry", Type
 						.getType("L"+SelfReflectionRegistry.class.getName()+";"), new Type[0]);
-		registryEnhancer.createLoadClassConstMethod(ce);
-		registryEnhancer.generateCLASSINFOField(ce);
-		registryEnhancer.generateInfoForMethod(ce);
-		registryEnhancer.generateArrayForMethod(ce,
-				com.db4o.test.reflect.self.Dog.class);
-		registryEnhancer.generateComponentTypeMethod(ce,
-				com.db4o.test.reflect.self.Dog.class);
-
+		MethodBuilder.createLoadClassConstMethod(context,ce);
+		RegistryEnhancer registryEnhancer = new RegistryEnhancer(context,ce,com.db4o.test.reflect.self.Dog.class);
+		registryEnhancer.generate();
 		ce.commit();
 
 		ClassEditor cled = classEnhancer.loadClass(loader,
