@@ -8,20 +8,26 @@ import EDU.purdue.cs.bloat.file.ClassFileLoader;
 import EDU.purdue.cs.bloat.reflect.*;
 
 public class Enhancer {
-	protected  ClassEditor createClass(ClassFileLoader loader, String outputDir,
-			int modifiers, String className, Type superType, Type[] Interfaces) {
-		loader.setOutputDir(new File(outputDir));
-		EditorContext context = new PersistentBloatContext(loader);
+	private ClassFileLoader _loader;
+	private File _outputDir;
+	
+	public Enhancer(ClassFileLoader loader, String outputDirPath) {
+		_loader = loader;
+		_loader.setOutputDir(new File(outputDirPath));
+	}
+
+	public ClassEditor createClass(int modifiers, String className, Type superType, Type[] Interfaces) {
+		EditorContext context = new PersistentBloatContext(_loader);
 		return context.newClass(modifiers, className, superType, Interfaces);
 	}
 
-	protected MethodEditor createMethod(ClassEditor ce, int modiefiers,
+	public MethodEditor createMethod(ClassEditor ce, int modiefiers,
 			Class type, String methodName, Class[] params, Class[] exeptions) {
 		return new MethodEditor(ce, modiefiers, type, methodName, params,
 				exeptions);
 	}
 
-	protected FieldEditor createField(ClassEditor ce, int modifiers, Type type,
+	public FieldEditor createField(ClassEditor ce, int modifiers, Type type,
 			String fieldName) {
 		FieldEditor fe = new FieldEditor(ce, modifiers, type, fieldName);
 		fe.commit();
@@ -29,25 +35,29 @@ public class Enhancer {
 	}
 	
 
-	protected MemberRef fieldRef(Class parent, Class fieldClass, String name) {
+	public MemberRef fieldRef(Class parent, Class fieldClass, String name) {
 		return fieldRef(getType(parent),fieldClass,name);
 	}
 
-	protected MemberRef fieldRef(Type parent, Class fieldClass, String name) {
-		return new MemberRef(parent, new NameAndType(name,
-				getType(fieldClass)));
+	public MemberRef fieldRef(Type parent, Class fieldClass, String name) {
+		return fieldRef(parent,getType(fieldClass),name);
 	}
+
+	public MemberRef fieldRef(Type parent, Type type, String name) {
+		return new MemberRef(parent, new NameAndType(name,type));
+	}
+
 //	protected MemberRef fieldRef(String parent, Class fieldClass, String name) {
 //		return new MemberRef(Type.getType("L"+ parent + ";"), new NameAndType(name,
 //				getType(fieldClass)));
 //	}
 
-	protected MemberRef fieldRef(String parent, Class fieldClass, String name) {
+	public MemberRef fieldRef(String parent, Class fieldClass, String name) {
 		Type type=Type.getType("L"+parent+";");
 		return fieldRef(type,fieldClass,name);
 	}
 
-	protected MemberRef methodRef(Type parent, String name, Class[] param,
+	public MemberRef methodRef(Type parent, String name, Class[] param,
 			Class ret) {
 		Type[] paramTypes = new Type[param.length];
 		for (int i = 0; i < paramTypes.length; i++) {
@@ -58,20 +68,20 @@ public class Enhancer {
 		return new MemberRef(parent, nat);
 	}
 
-	protected MemberRef methodRef(Class parent, String name, Class[] param,
+	public MemberRef methodRef(Class parent, String name, Class[] param,
 			Class ret) {
 		return methodRef(getType(parent),name,param,ret);
 	}
 
-	protected Type getType(Class clazz) {
+	public Type getType(Class clazz) {
 		return Type.getType(clazz);
 	}
 
-	protected Type getType(String desc) {
+	public Type getType(String desc) {
 		return Type.getType(desc);
 	}
 
-	protected Label[] createLabels(int num) {
+	public Label[] createLabels(int num) {
 		Label[] labels=new Label[num+1];
 		for(int i=0;i<=num;i++) {
 			labels[i]=new Label(i);
@@ -79,7 +89,7 @@ public class Enhancer {
 		return labels;
 	}
 
-	protected LocalVariable[] createLocalVariables(int num) {
+	public LocalVariable[] createLocalVariables(int num) {
 		LocalVariable[] localVars=new LocalVariable[num+1];
 		for(int i=0;i<=num;i++) {
 			localVars[i]=new LocalVariable(i);

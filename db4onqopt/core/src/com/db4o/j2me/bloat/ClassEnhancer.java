@@ -18,6 +18,10 @@ import com.db4o.test.reflect.self.Animal;
 import com.db4o.test.reflect.self.Dog;
 
 public class ClassEnhancer extends Enhancer {
+	public ClassEnhancer(ClassFileLoader loader, String outputDirPath) {
+		super(loader, outputDirPath);
+	}
+
 	public ClassEditor loadClass(ClassFileLoader loader, String classPath,
 			String className) {
 		loader.appendClassPath(classPath);
