@@ -11,25 +11,28 @@ public class Generation {
 	public static void main(String[] args) {
 		String outputDirName = "generated";
 		ClassFileLoader loader = new ClassFileLoader();
-		Enhancer context=new Enhancer(loader,outputDirName);
-		ClassEnhancer classEnhancer = new ClassEnhancer(loader,outputDirName);
-		ClassEditor ce = context.createClass(
-				Modifiers.PUBLIC, "RegressionDogSelfReflectionRegistry", Type
-						.getType("L"+SelfReflectionRegistry.class.getName()+";"), new Type[0]);
-		MethodBuilder.createLoadClassConstMethod(context,ce);
-		RegistryEnhancer registryEnhancer = new RegistryEnhancer(context,ce,com.db4o.test.reflect.self.Dog.class);
+		Enhancer context = new Enhancer(loader, outputDirName);
+		
+		ClassEditor ce = context.createClass(Modifiers.PUBLIC,
+				"RegressionDogSelfReflectionRegistry", Type.getType("L"
+						+ SelfReflectionRegistry.class.getName() + ";"),
+				new Type[0]);
+		MethodBuilder.createLoadClassConstMethod(context, ce);
+
+		RegistryEnhancer registryEnhancer = new RegistryEnhancer(context, ce,
+				com.db4o.test.reflect.self.Dog.class);
 		registryEnhancer.generate();
 		ce.commit();
 
-		ClassEditor cled = classEnhancer.loadClass(loader,
-				"../unittests/bin", "com.db4o.reflect.self.Dog");
-		if (!(classEnhancer.inspectNoArgConstr(cled, cled.methods()))) {
-			classEnhancer.addNoArgConstructor(cled);
+		ClassEditor cled = context.loadClass(loader, "../unittests/bin",
+				"com.db4o.reflect.self.Dog");
+		ClassEnhancer classEnhancer = new ClassEnhancer(context, cled);
+
+		if (!(classEnhancer.inspectNoArgConstr(cled.methods()))) {
+			classEnhancer.addNoArgConstructor();
 		}
-		classEnhancer.generateSelf_get(cled);
-		classEnhancer.generateSelf_set(cled);
+		classEnhancer.generate();
 		cled.commit();
 
 	}
-
 }
