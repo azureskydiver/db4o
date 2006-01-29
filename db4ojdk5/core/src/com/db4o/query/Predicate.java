@@ -85,7 +85,7 @@ public abstract class Predicate<ExtentType> implements Serializable{
      */
 	public final static String PREDICATEMETHOD_NAME="match";
 	
-	private Class<ExtentType> _extentType;
+	private Class<? extends ExtentType> _extentType;
 
 	private transient Method cachedFilterMethod=null;
 	
@@ -118,7 +118,7 @@ public abstract class Predicate<ExtentType> implements Serializable{
     /**
      * public for implementation reasons, please ignore.
      */
-	public Class<ExtentType> extentType() {
+	public Class<? extends ExtentType> extentType() {
 		if(_extentType!=null) {
 			return _extentType;
 		}
