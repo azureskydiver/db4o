@@ -3,3 +3,5 @@ blocks already visited to break 'infinite loop' in compiler-generated
 'self-handling' exception handlers since JDK 1.4
 
 - Type#getType(Class): small fix for array type descriptors
+
+- Tree#visit_ldc: broken hack for JDK5 class constants - check usages and fix

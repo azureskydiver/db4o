@@ -1023,6 +1023,10 @@ public class Tree extends Node implements InstructionVisitor, Opcode
     else if (value instanceof String) {
       type = Type.STRING;
     }
+    // FIXME this won't work - check usages
+    else if (value instanceof Type) {
+        type = Type.CLASS;
+      }
     else {
       throwClassFormatException("Illegal constant type: " +
 				value.getClass().getName() + ": " + value);
