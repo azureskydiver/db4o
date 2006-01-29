@@ -15,11 +15,11 @@ public class Enhancer {
 		_loader = loader;
 		_loader.setOutputDir(new File(outputDirPath));
 	}
-	public ClassEditor loadClass(ClassFileLoader loader, String classPath,
+	public ClassEditor loadClass(String classPath,
 			String className) {
-		loader.appendClassPath(classPath);
+		_loader.appendClassPath(classPath);
 		try {
-			ClassInfo info = loader.loadClass(className);
+			ClassInfo info = _loader.loadClass(className);
 			EditorContext context = new PersistentBloatContext(info.loader());
 			return context.editClass(info);
 		} catch (ClassNotFoundException e) {

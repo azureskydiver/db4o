@@ -24,7 +24,7 @@ public class Generation {
 		registryEnhancer.generate();
 		ce.commit();
 
-		ClassEditor cled = context.loadClass(loader, "../unittests/bin",
+		ClassEditor cled = context.loadClass("../unittests/bin",
 				"com.db4o.reflect.self.Dog");
 		ClassEnhancer classEnhancer = new ClassEnhancer(context, cled);
 
