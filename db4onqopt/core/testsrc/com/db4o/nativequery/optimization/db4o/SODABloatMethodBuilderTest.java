@@ -10,6 +10,7 @@ import EDU.purdue.cs.bloat.file.*;
 import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 import com.db4o.nativequery.optimization.*;
 
 public class SODABloatMethodBuilderTest extends TestCase {
@@ -46,7 +47,7 @@ public class SODABloatMethodBuilderTest extends TestCase {
 //	}
 
 	public void testComparison() {
-		FieldValue left=new FieldValue(1,FIELDNAMES);
+		FieldValue left=new FieldValue(CandidateFieldRoot.INSTANCE,FIELDNAMES);
 		ConstValue right=new ConstValue(CONSTVALUE);
 		
 		Expression expr=new ComparisonExpression(left,right,ComparisonOperator.SMALLER);
@@ -67,7 +68,7 @@ public class SODABloatMethodBuilderTest extends TestCase {
 	}
 
 	public void testBoolean() {
-		FieldValue left=new FieldValue(1,FIELDNAMES);
+		FieldValue left=new FieldValue(CandidateFieldRoot.INSTANCE,FIELDNAMES);
 		ConstValue right=new ConstValue(CONSTVALUE);
 		
 		Expression expr=new ComparisonExpression(left,right,ComparisonOperator.SMALLER);
@@ -102,7 +103,7 @@ public class SODABloatMethodBuilderTest extends TestCase {
 	}
 
 	public void testArithmetic() {
-		FieldValue left=new FieldValue(1,FIELDNAMES);
+		FieldValue left=new FieldValue(CandidateFieldRoot.INSTANCE,FIELDNAMES);
 		ConstValue constVal=new ConstValue(CONSTVALUE);
 		ArithmeticExpression right=new ArithmeticExpression(constVal,constVal,ArithmeticOperator.SUBTRACT);
 		
@@ -126,8 +127,8 @@ public class SODABloatMethodBuilderTest extends TestCase {
 	}
 
 	public void testPredicateFieldObjectAccess() {
-		FieldValue left=new FieldValue(1,FIELDNAMES);
-		FieldValue right=new FieldValue(0,"CONSTVALUE");
+		FieldValue left=new FieldValue(CandidateFieldRoot.INSTANCE,FIELDNAMES);
+		FieldValue right=new FieldValue(PredicateFieldRoot.INSTANCE,"CONSTVALUE");
 		
 		Expression expr=new ComparisonExpression(left,right,ComparisonOperator.SMALLER);
 		int[] expected={
@@ -145,8 +146,8 @@ public class SODABloatMethodBuilderTest extends TestCase {
 	}
 
 	public void testPredicateFieldPrimitiveAccess() {
-		FieldValue left=new FieldValue(1,FIELDNAMES);
-		FieldValue right=new FieldValue(0,"primitive");
+		FieldValue left=new FieldValue(CandidateFieldRoot.INSTANCE,FIELDNAMES);
+		FieldValue right=new FieldValue(PredicateFieldRoot.INSTANCE,"primitive");
 		
 		Expression expr=new ComparisonExpression(left,right,ComparisonOperator.SMALLER);
 		int[] expected={
@@ -167,8 +168,8 @@ public class SODABloatMethodBuilderTest extends TestCase {
 	}
 
 	public void testNegatedPredicateFieldPrimitiveAccess() {
-		FieldValue left=new FieldValue(1,FIELDNAMES);
-		FieldValue right=new FieldValue(0,"primitive");
+		FieldValue left=new FieldValue(CandidateFieldRoot.INSTANCE,FIELDNAMES);
+		FieldValue right=new FieldValue(PredicateFieldRoot.INSTANCE,"primitive");
 		
 		Expression expr=new NotExpression(new ComparisonExpression(left,right,ComparisonOperator.SMALLER));
 		int[] expected={

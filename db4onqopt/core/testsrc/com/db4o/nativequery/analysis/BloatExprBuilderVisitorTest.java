@@ -3,12 +3,12 @@ package com.db4o.nativequery.analysis;
 import junit.framework.*;
 import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.file.*;
-import EDU.purdue.cs.bloat.tree.*;
 
 import com.db4o.foundation.*;
 import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 
 class Base {
 	int id;
@@ -307,7 +307,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFieldIntWrapperEqualsComp() throws Exception {
-		assertComparison("sampleFieldIntWrapperEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(0,"intWrapperCmpVal"),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleFieldIntWrapperEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(PredicateFieldRoot.INSTANCE,"intWrapperCmpVal"),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleIntWrapperFieldEqualsComp(Data data) {
@@ -315,9 +315,29 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntWrapperFieldEqualsComp() throws Exception {
-		assertComparison("sampleIntWrapperFieldEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(0,"intWrapperCmpVal"),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleIntWrapperFieldEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(PredicateFieldRoot.INSTANCE,"intWrapperCmpVal"),ComparisonOperator.EQUALS,false);
 	}	
 
+	//static member comparison
+
+	boolean sampleStaticFieldIntWrapperEqualsComp(Data data) {
+		return data.getIdWrapped().equals(INT_WRAPPER_CMPVAL);
+	}
+
+	public void testStaticFieldIntWrapperEqualsComp() throws Exception {
+		//assertInvalid("sampleStaticFieldIntWrapperEqualsComp");
+		assertComparison("sampleStaticFieldIntWrapperEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(new StaticFieldRoot(getClass().getName()),"INT_WRAPPER_CMPVAL"),ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleStaticIntWrapperFieldEqualsComp(Data data) {
+		return INT_WRAPPER_CMPVAL.equals(data.getIdWrapped());
+	}
+
+	public void testStaticIntWrapperFieldEqualsComp() throws Exception {
+		//assertInvalid("sampleStaticIntWrapperFieldEqualsComp");
+		assertComparison("sampleStaticIntWrapperFieldEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(new StaticFieldRoot(getClass().getName()),"INT_WRAPPER_CMPVAL"),ComparisonOperator.EQUALS,false);
+	}	
+	
 	// getter
 	
 	boolean sampleGetterIntEqualsComp(Data data) {
@@ -393,7 +413,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFieldIntMemberEqualsComp() throws Exception {
-		assertComparison("sampleFieldIntMemberEqualsComp",new String[]{INT_FIELDNAME},new FieldValue(0,"intMember"),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleFieldIntMemberEqualsComp",new String[]{INT_FIELDNAME},new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleIntMemberFieldGreaterEqualsComp(Data data) {
@@ -401,7 +421,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntMemberFieldGreaterEqualsComp() throws Exception {
-		assertComparison("sampleIntMemberFieldGreaterEqualsComp",new String[]{INT_FIELDNAME},new FieldValue(0,"intMember"),ComparisonOperator.GREATER,true);
+		assertComparison("sampleIntMemberFieldGreaterEqualsComp",new String[]{INT_FIELDNAME},new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),ComparisonOperator.GREATER,true);
 	}
 
 	boolean sampleFieldStringMemberEqualsComp(Data data) {
@@ -409,7 +429,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFieldStringMemberEqualsComp() throws Exception {
-		assertComparison("sampleFieldStringMemberEqualsComp",new String[]{STRING_FIELDNAME},new FieldValue(0,"stringMember"),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleFieldStringMemberEqualsComp",new String[]{STRING_FIELDNAME},new FieldValue(PredicateFieldRoot.INSTANCE,"stringMember"),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleFieldFloatMemberNotEqualsComp(Data data) {
@@ -417,7 +437,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFieldFloatMemberNotEqualsComp() throws Exception {
-		assertComparison("sampleFieldFloatMemberNotEqualsComp",new String[]{FLOAT_FIELDNAME},new FieldValue(0,"floatMember"),ComparisonOperator.EQUALS,true);
+		assertComparison("sampleFieldFloatMemberNotEqualsComp",new String[]{FLOAT_FIELDNAME},new FieldValue(PredicateFieldRoot.INSTANCE,"floatMember"),ComparisonOperator.EQUALS,true);
 	}
 
 	boolean sampleFloatMemberFieldNotEqualsComp(Data data) {
@@ -425,7 +445,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testFloatMemberFieldNotEqualsComp() throws Exception {
-		assertComparison("sampleFloatMemberFieldNotEqualsComp",new String[]{FLOAT_FIELDNAME},new FieldValue(0,"floatMember"),ComparisonOperator.EQUALS,true);
+		assertComparison("sampleFloatMemberFieldNotEqualsComp",new String[]{FLOAT_FIELDNAME},new FieldValue(PredicateFieldRoot.INSTANCE,"floatMember"),ComparisonOperator.EQUALS,true);
 	}
 
 	// negations
@@ -558,7 +578,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 	
 	public void testMemberIntMultiply() throws Exception {
-		assertComparison("sampleMemberIntMultiply",INT_FIELDNAME,new ArithmeticExpression(new ConstValue(new Integer(2)),new FieldValue(0,"intMember"),ArithmeticOperator.MULTIPLY),ComparisonOperator.SMALLER,false);
+		assertComparison("sampleMemberIntMultiply",INT_FIELDNAME,new ArithmeticExpression(new ConstValue(new Integer(2)),new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),ArithmeticOperator.MULTIPLY),ComparisonOperator.SMALLER,false);
 	}
 
 	boolean sampleIntMemberDivide(Data data) {
@@ -566,7 +586,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 	
 	public void testIntMemberDivide() throws Exception {
-		assertComparison("sampleIntMemberDivide",INT_FIELDNAME,new ArithmeticExpression(new FieldValue(0,"intMember"),new ConstValue(new Integer(2)),ArithmeticOperator.DIVIDE),ComparisonOperator.GREATER,false);
+		assertComparison("sampleIntMemberDivide",INT_FIELDNAME,new ArithmeticExpression(new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),new ConstValue(new Integer(2)),ArithmeticOperator.DIVIDE),ComparisonOperator.GREATER,false);
 	}
 
 	boolean sampleIntMemberMemberAdd(Data data) {
@@ -574,7 +594,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 	
 	public void testIntMemberMemberAdd() throws Exception {
-		assertComparison("sampleIntMemberMemberAdd",INT_FIELDNAME,new ArithmeticExpression(new FieldValue(0,"intMember"),new FieldValue(0,"intMember"),ArithmeticOperator.ADD),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleIntMemberMemberAdd",INT_FIELDNAME,new ArithmeticExpression(new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),ArithmeticOperator.ADD),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleIntAddInPredicateMethod(Data data) {
@@ -582,7 +602,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntAddInPredicateMethod() throws Exception {
-		assertComparison("sampleIntAddInPredicateMethod",INT_FIELDNAME,new ArithmeticExpression(new FieldValue(0,"intMember"),new ConstValue(new Integer(1)),ArithmeticOperator.ADD),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleIntAddInPredicateMethod",INT_FIELDNAME,new ArithmeticExpression(new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),new ConstValue(new Integer(1)),ArithmeticOperator.ADD),ComparisonOperator.EQUALS,false);
 	}
 
 	// TODO: string append via '+'?
@@ -687,23 +707,13 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertInvalid("sampleCandIdentityObjectComparison");
 	}
 
-	boolean sampleStaticFieldIntWrapperEqualsComp(Data data) {
-		return data.getIdWrapped().equals(INT_WRAPPER_CMPVAL);
+	boolean sampleRecursiveCall(Data data) {
+		return sampleRecursiveCall(data);
 	}
 
-	public void testStaticFieldIntWrapperEqualsComp() throws Exception {
-		assertInvalid("sampleStaticFieldIntWrapperEqualsComp");
-		//assertComparison("sampleStaticFieldIntWrapperEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(0,"INT_WRAPPER_CMPVAL"),ComparisonOperator.EQUALS,false);
+	public void testRecursiveCall() throws Exception {
+		assertInvalid("sampleRecursiveCall");
 	}
-
-	boolean sampleStaticIntWrapperFieldEqualsComp(Data data) {
-		return INT_WRAPPER_CMPVAL.equals(data.getIdWrapped());
-	}
-
-	public void testStaticIntWrapperFieldEqualsComp() throws Exception {
-		assertInvalid("sampleStaticIntWrapperFieldEqualsComp");
-		//assertComparison("sampleStaticIntWrapperFieldEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(0,"INT_WRAPPER_CMPVAL"),ComparisonOperator.EQUALS,false);
-	}	
 
 	// internal
 	
@@ -728,7 +738,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		ComparisonExpression cmpExpr=(ComparisonExpression)expr;
 		assertEquals(op, cmpExpr.op());
 		FieldValue fieldValue=(FieldValue) cmpExpr.left();
-		assertEquals(1,fieldValue.parentIdx());
+		assertEquals(CandidateFieldRoot.INSTANCE,fieldValue.root());
 		Iterator4 foundNames=fieldValue.fieldNames();
 		int foundFieldIdx=0;
 		while(foundNames.hasNext()) {
@@ -745,7 +755,8 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	private void assertInvalid(String methodName) throws ClassNotFoundException {
-		assertNull(expression(methodName));
+		Expression expression = expression(methodName);
+		assertNull(expression);
 	}
 	
 	private Expression expression(String methodName) throws ClassNotFoundException {

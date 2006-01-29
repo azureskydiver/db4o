@@ -1,20 +1,21 @@
 package com.db4o.nativequery.expr;
 
-import com.db4o.nativequery.expr.cmp.*;
-
 import junit.framework.*;
+
+import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 
 public class ExpressionTest extends TestCase {
 	public void testEqualsHashCodeFieldValue() {
-		FieldValue fieldValue = new FieldValue(0,"a");
-		assertEqualsHashCode(fieldValue,new FieldValue(0,"a"));
-		assertNotEquals(fieldValue,new FieldValue(0,"b"));
+		FieldValue fieldValue = new FieldValue(PredicateFieldRoot.INSTANCE,"a");
+		assertEqualsHashCode(fieldValue,new FieldValue(PredicateFieldRoot.INSTANCE,"a"));
+		assertNotEquals(fieldValue,new FieldValue(PredicateFieldRoot.INSTANCE,"b"));
 	}
 	
 	public void testEqualsHashCodeConst() {
 		BoolConstExpression expr = BoolConstExpression.TRUE;
 		assertEqualsHashCode(expr,BoolConstExpression.TRUE);
-		assertNotEquals(expr,new FieldValue(0,"b"));
+		assertNotEquals(expr,new FieldValue(PredicateFieldRoot.INSTANCE,"b"));
 	}
 
 	public void testEqualsHashCodeNot() {
@@ -40,7 +41,7 @@ public class ExpressionTest extends TestCase {
 	}
 
 	public void testEqualsHashCodeComparison() {
-		FieldValue[] fieldVals={new FieldValue(0,"A"),new FieldValue(1,"B")};
+		FieldValue[] fieldVals={new FieldValue(PredicateFieldRoot.INSTANCE,"A"),new FieldValue(CandidateFieldRoot.INSTANCE,"B")};
 		ConstValue[] constVals={new ConstValue("X"),new ConstValue("Y")};
 		ComparisonExpression expr = new ComparisonExpression(fieldVals[0],constVals[0],ComparisonOperator.EQUALS);
 		assertEqualsHashCode(expr,new ComparisonExpression(fieldVals[0],constVals[0],ComparisonOperator.EQUALS));

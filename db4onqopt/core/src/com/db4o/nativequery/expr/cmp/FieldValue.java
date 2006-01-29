@@ -1,25 +1,56 @@
 package com.db4o.nativequery.expr.cmp;
 
 import com.db4o.foundation.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 
 // FIXME need to carry more info, must know about Integer.class vs. Integer.TYPE
 
 public class FieldValue implements ComparisonOperand {
-	private int _parentIdx;
+	private FieldRoot _root;
 	private Collection4 _fieldNames = new Collection4();
 
-	public FieldValue(int parentIdx,String name) {
-		_parentIdx=parentIdx;
+	private static FieldRoot rootFor(int id) {
+		switch(id) {
+			case 0: return PredicateFieldRoot.INSTANCE;
+			case 1: return CandidateFieldRoot.INSTANCE;
+			default: throw new RuntimeException();
+		}
+	}
+	
+	public FieldValue(int id,String name) {
+		this(rootFor(id),name);
+	}
+
+	public FieldValue(int id,String[] names) {
+		this(rootFor(id),names);
+	}
+
+	public FieldValue(int id,Iterator4 names) {
+		this(rootFor(id),names);
+	}
+
+	public int parentIdx() {
+		if(_root==PredicateFieldRoot.INSTANCE) {
+			return 0;
+		}
+		if(_root==CandidateFieldRoot.INSTANCE) {
+			return 1;
+		}
+		throw new RuntimeException();
+	}
+	
+	public FieldValue(FieldRoot root,String name) {
+		_root=root;
 		descend(name);
 	}
 	
-	public FieldValue(int parentIdx,String[] fieldNames) {
-		_parentIdx=parentIdx;
+	public FieldValue(FieldRoot root,String[] fieldNames) {
+		_root=root;
 		_fieldNames.addAll(fieldNames);
 	}
 
-	public FieldValue(int parentIdx, Iterator4 fieldNames) {
-		_parentIdx=parentIdx;
+	public FieldValue(FieldRoot root, Iterator4 fieldNames) {
+		_root=root;
 		_fieldNames.addAll(fieldNames);
 	}
 
@@ -32,8 +63,8 @@ public class FieldValue implements ComparisonOperand {
 		return _fieldNames.strictIterator();
 	}
 
-	public int parentIdx() {
-		return _parentIdx;
+	public FieldRoot root() {
+		return _root;
 	}
 	
 	public boolean equals(Object other) {
@@ -56,7 +87,7 @@ public class FieldValue implements ComparisonOperand {
 				return false;
 			}
 		}
-		return _parentIdx==casted._parentIdx;
+		return _root.equals(casted._root);
 	}
 	
 	public int hashCode() {
@@ -66,12 +97,12 @@ public class FieldValue implements ComparisonOperand {
 		while(firstIter.hasNext()) {
 			hashCode*=29+firstIter.next().hashCode();
 		}
-		return hashCode*29+_parentIdx;
+		return hashCode*29+_root.hashCode();
 	}
 	
 	public String toString() {
 		StringBuffer str=new StringBuffer();
-		str.append(_parentIdx);
+		str.append(_root);
 		for (Iterator4 nameIter = fieldNames(); nameIter.hasNext();) {
 			String fieldName = (String) nameIter.next();
 			str.append('.');

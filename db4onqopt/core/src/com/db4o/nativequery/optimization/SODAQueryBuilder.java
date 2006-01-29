@@ -1,11 +1,12 @@
 package com.db4o.nativequery.optimization;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.*;
 
 import com.db4o.*;
 import com.db4o.foundation.Iterator4;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 import com.db4o.query.*;
 
 public class SODAQueryBuilder {		
@@ -139,7 +140,32 @@ public class SODAQueryBuilder {
 			}
 		}
 
+		private Field fieldFor(final Class clazz,final String name) {
+			Class curclazz=clazz;
+			while(curclazz!=null) {
+				try {
+					Field field=curclazz.getDeclaredField(name);
+					Platform4.setAccessible(field);
+					return field;
+				} catch (Exception e) {
+				}
+				curclazz=curclazz.getSuperclass();
+			}
+			return null;
+		}
+		
 		private Object findValue(FieldValue spec) {
+			if(spec.root() instanceof StaticFieldRoot) {
+				StaticFieldRoot root=(StaticFieldRoot)spec.root();
+				try {
+					Class clazz=Class.forName(root.className());
+					// FIXME need declared for private fields
+					Field field=fieldFor(clazz,(String)spec.fieldNames().next());
+					return field.get(null);
+				} catch (Exception exc) {
+					throw new RuntimeException("Unable to resolve static field: "+spec);
+				}
+			}
 			Object value=_predicate;
 			Iterator4 fieldNames=spec.fieldNames();
 			while(fieldNames.hasNext()) {
@@ -162,7 +188,7 @@ public class SODAQueryBuilder {
 			}
 			return value;
 		}
-
+		
 		public void visit(NotExpression expression) {
 			expression.expr().accept(this);
 			_constraint.not();

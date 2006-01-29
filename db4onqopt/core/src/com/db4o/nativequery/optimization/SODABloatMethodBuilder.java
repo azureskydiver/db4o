@@ -11,6 +11,7 @@ import com.db4o.foundation.*;
 import com.db4o.inside.query.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 import com.db4o.query.*;
 
 // TODO split into top level classes and refactor
@@ -85,8 +86,19 @@ public class SODABloatMethodBuilder {
 						if(needConversion) {
 							prepareConversion(lastFieldClass,!inArithmetic);
 						}
-						methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(0));
-
+						
+						if(fieldValue.root()==PredicateFieldRoot.INSTANCE) {
+							methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(0));
+						}
+						else if (fieldValue.root()==CandidateFieldRoot.INSTANCE) {
+							methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(1));
+						}
+						else {
+							StaticFieldRoot root=(StaticFieldRoot)fieldValue.root();
+							// FIXME handle chaining
+							methodEditor.addInstruction(Opcode.opc_getstatic,createFieldReference(Class.forName(root.className()), lastFieldClass, (String)fieldValue.fieldNames().next()));
+							return;
+						}
 						opClass=lastFieldClass;
 
 						Iterator4 targetFieldNames =fieldValue.fieldNames();
@@ -120,8 +132,9 @@ public class SODABloatMethodBuilder {
 //				}
 
 				private Class deduceFieldClass(FieldValue fieldValue) throws Exception {
-					Class root=(fieldValue.parentIdx()==0 ? predicateClass : candidateClass);
-					Class curClass=classLoader.loadClass(root.getName());
+					FieldRootClassNameVisitor visitor=new FieldRootClassNameVisitor(predicateClass,candidateClass);
+					fieldValue.root().accept(visitor);
+					Class curClass=classLoader.loadClass(visitor.className());
 					Iterator4 fieldIter=fieldValue.fieldNames();
 					while(fieldIter.hasNext()) {
 						String fieldName=(String)fieldIter.next();
@@ -348,5 +361,32 @@ public class SODABloatMethodBuilder {
 	
 	private Class fieldClass(Class parent, String name) throws NoSuchFieldException {
 		return parent.getDeclaredField(name).getType();
+	}
+	
+	private static class FieldRootClassNameVisitor implements FieldRootVisitor {
+		private Class _predicateClass;
+		private Class _candidateClass;
+		private String _className;
+		
+		public FieldRootClassNameVisitor(Class predicateClass, Class candidateClass) {
+			this._predicateClass = predicateClass;
+			this._candidateClass = candidateClass;
+		}
+
+		public void visit(PredicateFieldRoot root) {
+			_className=_predicateClass.getName();
+		}
+
+		public void visit(CandidateFieldRoot root) {
+			_className=_candidateClass.getName();
+		}
+
+		public void visit(StaticFieldRoot root) {
+			_className=root.className();
+		}
+		
+		public String className() {
+			return _className;
+		}
 	}
 }
