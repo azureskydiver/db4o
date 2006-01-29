@@ -81,6 +81,12 @@ public class MethodBuilder {
 				ret));
 	}
 
+	public void invoke(int mode, Type parent, String name, Type[] params,
+			Type ret) {
+		_editor.addInstruction(mode, _context.methodRef(parent, name, params,
+				ret));
+	}
+
 	public void newRef(Class clazz) {
 		_editor.addInstruction(Opcode.opc_new, _context.getType(clazz));
 	}
@@ -111,8 +117,7 @@ public class MethodBuilder {
 	}
 
 	public void getstatic(Type parent, Class type, String name) {
-		_editor.addInstruction(Opcode.opc_getstatic, _context.fieldRef(parent,
-				_context.getType(type), name));
+		getstatic(parent,_context.getType(type), name);
 	}
 
 	public void getstatic(Type parent, Type type, String name) {
@@ -175,6 +180,10 @@ public class MethodBuilder {
 		bld.athrow();
 		bld.addTryCatch(0, 1, 2, ClassNotFoundException.class);
 		bld.commit();
+	}
+
+	public void getfield(MemberRef field) {
+		_editor.addInstruction(Opcode.opc_getfield,field);
 	}
 
 }

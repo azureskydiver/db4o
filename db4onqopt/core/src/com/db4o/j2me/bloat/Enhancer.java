@@ -9,7 +9,6 @@ import EDU.purdue.cs.bloat.reflect.*;
 
 public class Enhancer {
 	private ClassFileLoader _loader;
-	private File _outputDir;
 	
 	public Enhancer(ClassFileLoader loader, String outputDirPath) {
 		_loader = loader;
@@ -65,8 +64,14 @@ public class Enhancer {
 //	}
 
 	public MemberRef fieldRef(String parent, Class fieldClass, String name) {
-		Type type=Type.getType("L"+parent+";");
+		Type type=Type.getType(Type.classDescriptor(parent));
 		return fieldRef(type,fieldClass,name);
+	}
+
+	public MemberRef methodRef(Type parent, String name, Type[] param,
+			Type ret) {
+		NameAndType nat = new NameAndType(name, Type.getType(param,ret));
+		return new MemberRef(parent, nat);
 	}
 
 	public MemberRef methodRef(Type parent, String name, Class[] param,
@@ -75,9 +80,7 @@ public class Enhancer {
 		for (int i = 0; i < paramTypes.length; i++) {
 			paramTypes[i] = getType(param[i]);
 		}
-		NameAndType nat = new NameAndType(name, Type.getType(paramTypes,
-				getType(ret)));
-		return new MemberRef(parent, nat);
+		return methodRef(parent,name,paramTypes,getType(ret));
 	}
 
 	public MemberRef methodRef(Class parent, String name, Class[] param,
@@ -140,5 +143,9 @@ public class Enhancer {
 //	    0     4     5   Class java/lang/ClassNotFoundException
 		me.addTryCatch(new TryCatch(labels[0],labels[1],labels[2],getType(ClassNotFoundException.class)));
 		me.commit();
+	}
+	
+	public String normalizeClassName(String name) {
+		return name.replace('/', '.');
 	}
 }
