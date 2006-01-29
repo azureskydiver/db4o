@@ -11,11 +11,16 @@ import com.db4o.test.*;
 
 
 public class NQRegressionTests {
+	public final static Integer INTWRAPPER=new Integer(1);
+	private final static Integer PRIVATE_INTWRAPPER=new Integer(1);
+	
 	private static abstract class Base {
 		int id;
+		Integer idWrap;
 		
 		public Base(int id) {
 			this.id=id;
+			idWrap=new Integer(id);
 		}
 
 		public int getId() {
@@ -388,6 +393,20 @@ public class NQRegressionTests {
 				return ((Data)candidate).getId()==1;
 			}
 		},
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return NQRegressionTests.INTWRAPPER.equals(candidate.idWrap);
+			}
+		},
+		// Problem: We never get to see a static field access here - non-static inner class
+		// stuff converts this to NQRegressionTests#access$0()
+//		new ExpectingPredicate() {
+//			public int expected() { return 1;}
+//			public boolean match(Data candidate) {
+//				return NQRegressionTests.PRIVATE_INTWRAPPER.equals(candidate.idWrap);
+//			}
+//		},
 	};
 		
 	public void testAll() {
@@ -415,6 +434,7 @@ public class NQRegressionTests {
 					case 1:
 						expMsg=NativeQueryHandler.DYNOPTIMIZED;
 						Test.ensure(info.optimized() instanceof Expression);
+						//System.out.println(info.optimized());
 						break;
 					case 2:
 						expMsg=NativeQueryHandler.PREOPTIMIZED;

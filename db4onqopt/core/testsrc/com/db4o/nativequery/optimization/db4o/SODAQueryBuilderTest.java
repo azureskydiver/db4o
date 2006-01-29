@@ -4,6 +4,7 @@ import junit.framework.*;
 
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 import com.db4o.nativequery.optimization.SODAQueryBuilder;
 import com.db4o.query.*;
 
@@ -83,7 +84,7 @@ public class SODAQueryBuilderTest extends TestCase {
 	}
 
 	private ComparisonExpression simpleComparison(String fieldName,Object value,ComparisonOperator op) {
-		FieldValue left=new FieldValue(1,fieldName);
+		FieldValue left=new FieldValue(CandidateFieldRoot.INSTANCE,fieldName);
 		ConstValue right=new ConstValue(value);
 		return new ComparisonExpression(left,right,op);
 	}	

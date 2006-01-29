@@ -11,8 +11,12 @@ import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.build.*;
 import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 
 public class BloatExprBuilderVisitor extends TreeVisitor {
+	// TODO discuss: drop or make configurable
+	private final static int MAX_DEPTH=10;
+	
 	private final static String[] PRIMITIVES={
 		Boolean.class.getName(),
 		Byte.class.getName(),
@@ -76,8 +80,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	private Object retval;
 	private Map seenBlocks=new HashMap();
 	private BloatUtil bloatUtil;
-	// FIXME
-	private int methodCallDepth=0;
+
+	private LinkedList methodStack=new LinkedList();
 	private int retCount=0;
 	private int blockCount=0;
 	
@@ -123,7 +127,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		final boolean[] result={true};
 		ExpressionVisitor visitor=new TraversingExpressionVisitor() {
 			public void visit(ComparisonExpression expression) {
-				if(expression.left().parentIdx()!=1) {
+				if(expression.left().root()!=CandidateFieldRoot.INSTANCE) {
 					result[0]=false;
 				}
 			}
@@ -187,7 +191,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		int op=stmt.comparison();
 		if((left instanceof ComparisonOperand)&&(right instanceof FieldValue)) {
 			FieldValue rightField=(FieldValue)right;
-			if(rightField.parentIdx()==1) {
+			if(rightField.root()==CandidateFieldRoot.INSTANCE) {
 				Object swap=left;
 				left=right;
 				right=swap;
@@ -210,26 +214,35 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		super.visitExprStmt(stmt);
 	}
 	
-	public void visitCallStaticExpr(CallStaticExpr expr) {
-		expression(null);
-	}
+//	public void visitCallStaticExpr(CallStaticExpr expr) {
+//		expression(null);
+//	}
 	
-	public void visitCallMethodExpr(CallMethodExpr expr) {	
-		if(methodCallDepth>0) {
-			return;
-		}
-		if(expr.method().name().equals("equals")) {
-			if(isPrimitive(expr.receiver().type())) {
-				processEqualsCall(expr);
+	//public void visitCallMethodExpr(CallMethodExpr expr) {	
+	public void visitCallExpr(CallExpr expr) {	
+		boolean isStatic=(expr instanceof CallStaticExpr);
+		if(!isStatic&&expr.method().name().equals("equals")) {
+			CallMethodExpr call=(CallMethodExpr)expr;
+			if(isPrimitive(call.receiver().type())) {
+				processEqualsCall(call);
 			}
 			return;
 		}
 		MemberRef methodRef=expr.method();
+		if(methodStack.contains(methodRef)||methodStack.size()>MAX_DEPTH) {
+			return;
+		}
+		methodStack.addLast(methodRef);
 		try {
-			expr.receiver().visit(this);
-			methodCallDepth++;
-			Object rcvRetval=purgeReturnValue();
+			Object rcvRetval=null;
+			if(!isStatic) {
+				((CallMethodExpr)expr).receiver().visit(this);
+				rcvRetval=purgeReturnValue();
+			}
 			FlowGraph flowGraph=bloatUtil.flowGraph(methodRef.declaringClass().className(),methodRef.name());
+			if(flowGraph==null) {
+				return;
+			}
 			flowGraph.visit(this);
 			Object methodRetval=purgeReturnValue();
 			if(methodRetval instanceof FieldValue) {
@@ -242,15 +255,21 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 					retval(rcvField);
 				}
 				else {
-					retval(new FieldValue(1,((FieldValue)methodRetval).fieldNames()));
+					retval(new FieldValue(CandidateFieldRoot.INSTANCE,((FieldValue)methodRetval).fieldNames()));
+//					retval(methodRetval);
 				}
 			}
 			else {
 				retval(methodRetval);
 			}
-			methodCallDepth--;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		}
+		finally {
+			Object last=methodStack.removeLast();
+			if(!last.equals(methodRef)) {
+				throw new RuntimeException("method stack inconsistent: push="+methodRef+" , pop="+last);
+			}
 		}
 	}
 
@@ -284,11 +303,11 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	private boolean isCandidateFieldValue(ComparisonOperand op) {
-		return (op instanceof FieldValue)&&((FieldValue)op).parentIdx()==1;
+		return (op instanceof FieldValue)&&((FieldValue)op).root()==CandidateFieldRoot.INSTANCE;
 	}
 	
 	private boolean isComparableExprOperand(Expr expr) {
-		return (expr instanceof FieldExpr)||(expr instanceof StaticFieldExpr)||(expr instanceof CallMethodExpr)||(expr instanceof ConstantExpr)||(expr instanceof LocalExpr);
+		return (expr instanceof FieldExpr)||(expr instanceof StaticFieldExpr)||(expr instanceof CallMethodExpr)||(expr instanceof CallStaticExpr)||(expr instanceof ConstantExpr)||(expr instanceof LocalExpr);
 	}
 
 	public void visitFieldExpr(FieldExpr expr) {
@@ -304,9 +323,27 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return;
 		}
 		int idx=((Integer)fieldObj).intValue();
-		retval(new FieldValue(idx,fieldName));
+		FieldRoot root=null;
+		switch(idx) {
+			case 0:
+				root=PredicateFieldRoot.INSTANCE;
+				break;
+			case 1:
+				root=CandidateFieldRoot.INSTANCE;
+				break;
+			default:
+		}
+		if(root==null) {
+			return;
+		}
+		retval(new FieldValue(root,fieldName));
 	}
 
+	public void visitStaticFieldExpr(StaticFieldExpr expr) {
+		MemberRef field = expr.field();
+		retval(new FieldValue(new StaticFieldRoot(field.declaringClass().className().replace('/','.')),field.name()));
+	}
+	
 	public void visitConstantExpr(ConstantExpr expr) {
 		super.visitConstantExpr(expr);
 		retval(new ConstValue(expr.value()));
@@ -330,9 +367,17 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	public void visitArithExpr(ArithExpr expr) {
 		expr.left().visit(this);
-		ComparisonOperand left=(ComparisonOperand)purgeReturnValue();
+		Object leftObj=purgeReturnValue();
+		if(!(leftObj instanceof ComparisonOperand)) {
+			return;
+		}
+		ComparisonOperand left=(ComparisonOperand)leftObj;
 		expr.right().visit(this);
-		ComparisonOperand right=(ComparisonOperand)purgeReturnValue();
+		Object rightObj=purgeReturnValue();
+		if(!(rightObj instanceof ComparisonOperand)) {
+			return;
+		}
+		ComparisonOperand right=(ComparisonOperand)rightObj;
 		switch(expr.operation()) {
 			case ArithExpr.ADD:
 			case ArithExpr.SUB:
@@ -346,7 +391,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				// FIXME duplication?
 				if((left instanceof ComparisonOperand)&&(right instanceof FieldValue)) {
 					FieldValue rightField=(FieldValue)right;
-					if(rightField.parentIdx()==1) {
+					if(rightField.root()==CandidateFieldRoot.INSTANCE) {
 						ComparisonOperand swap=left;
 						left=right;
 						right=swap;
