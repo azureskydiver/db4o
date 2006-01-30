@@ -11,6 +11,9 @@ import com.db4o.test.*;
 
 
 public class NQRegressionTests {
+	private static final String CSTR = "Cc";
+	private static final String BSTR = "Ba";
+	private static final String ASTR = "Aa";
 	public final static Integer INTWRAPPER=new Integer(1);
 	private final static Integer PRIVATE_INTWRAPPER=new Integer(1);
 	
@@ -64,10 +67,10 @@ public class NQRegressionTests {
 	}
 
 	public void store() {
-		Data a=new Data(1,1.1f,"Aa",null);
-		Data b=new Data(2,1.1f,"Bb",a);
-		Data c=new Data(3,2.2f,"Cc",b);
-		Data cc=new Data(3,3.3f,"Cc",null);
+		Data a=new Data(1,1.1f,ASTR,null);
+		Data b=new Data(2,1.1f,BSTR,a);
+		Data c=new Data(3,2.2f,CSTR,b);
+		Data cc=new Data(3,3.3f,CSTR,null);
 		Test.store(a);
 		Test.store(b);
 		Test.store(c);
@@ -143,20 +146,26 @@ public class NQRegressionTests {
 		new ExpectingPredicate() {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
-				return candidate.name.equals("Aa");
+				return candidate.name.equals(ASTR);
 			}
 		},
 		new ExpectingPredicate() {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
-				return candidate.name.equals("Cc");
+				return candidate.name.equals(CSTR);
 			}
 		},
 		// string contains
 		new ExpectingPredicate() {
-			public int expected() { return 1;}
+			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.name.contains("a");
+			}
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return candidate.name.contains("A");
 			}
 		},
 		// int field comparison
@@ -227,7 +236,7 @@ public class NQRegressionTests {
 		new ExpectingPredicate() {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
-				return (candidate.getPrev()!=null)&&("Bb".equals(candidate.getPrev().getName()));
+				return (candidate.getPrev()!=null)&&(BSTR.equals(candidate.getPrev().getName()));
 			}
 		},
 		new ExpectingPredicate() {
@@ -270,7 +279,7 @@ public class NQRegressionTests {
 		new ExpectingPredicate() {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
-				return candidate.getName().equals("Cc");
+				return candidate.getName().equals(CSTR);
 			}
 		},
 		// negation
@@ -289,14 +298,14 @@ public class NQRegressionTests {
 		new ExpectingPredicate() {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
-				return !(candidate.getName().equals("Cc"));
+				return !(candidate.getName().equals(CSTR));
 			}
 		},
 		// conjunction
 		new ExpectingPredicate() {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
-				return (candidate.id>1)&&candidate.getName().equals("Cc");
+				return (candidate.id>1)&&candidate.getName().equals(CSTR);
 			}
 		},
 		new ExpectingPredicate() {
@@ -315,7 +324,7 @@ public class NQRegressionTests {
 		new ExpectingPredicate() {
 			public int expected() { return 3;}
 			public boolean match(Data candidate) {
-				return (candidate.id==1)||candidate.getName().equals("Cc");
+				return (candidate.id==1)||candidate.getName().equals(CSTR);
 			}
 		},
 		new ExpectingPredicate() {
@@ -334,13 +343,13 @@ public class NQRegressionTests {
 		new ExpectingPredicate() {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
-				return ((candidate.id>=1)||candidate.getName().equals("Cc"))&&candidate.getId()<3;
+				return ((candidate.id>=1)||candidate.getName().equals(CSTR))&&candidate.getId()<3;
 			}
 		},
 		new ExpectingPredicate() {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
-				return ((candidate.id==2)||candidate.getId()<=1)&&!candidate.getName().equals("Bb");
+				return ((candidate.id==2)||candidate.getId()<=1)&&!candidate.getName().equals(BSTR);
 			}
 		},
 		// predicate member comparison
@@ -353,7 +362,7 @@ public class NQRegressionTests {
 			}
 		},
 		new ExpectingPredicate() {
-			private String name="Bb";
+			private String name=BSTR;
 			
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
