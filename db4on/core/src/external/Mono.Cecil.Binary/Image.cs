@@ -48,6 +48,7 @@ namespace Mono.Cecil.Binary {
 		ImportLookupTable m_importLookupTable;
 		HintNameTable m_hintNameTable;
 
+		DebugHeader m_debugHeader;
 		MetadataRoot m_mdRoot;
 
 		FileInfo m_img;
@@ -79,6 +80,11 @@ namespace Mono.Cecil.Binary {
 
 		public CLIHeader CLIHeader {
 			get { return m_cliHeader; }
+		}
+
+		public DebugHeader DebugHeader {
+			get { return m_debugHeader; }
+			set { m_debugHeader = value; }
 		}
 
 		public MetadataRoot MetadataRoot {
@@ -120,11 +126,6 @@ namespace Mono.Cecil.Binary {
 			m_img = img;
 		}
 
-		public long ResolveTextVirtualAddress (RVA rva)
-		{
-			return rva + m_textSection.PointerToRawData - m_textSection.VirtualAddress;
-		}
-
 		public long ResolveVirtualAddress (RVA rva)
 		{
 			foreach (Section sect in this.Sections) {
@@ -134,6 +135,27 @@ namespace Mono.Cecil.Binary {
 					return rva + sect.PointerToRawData - sect.VirtualAddress;
 			}
 			return 0;
+		}
+
+		public BinaryReader GetReaderAtVirtualAddress (RVA rva)
+		{
+			foreach (Section sect in this.Sections) {
+				if (rva >= sect.VirtualAddress &&
+					rva < sect.VirtualAddress + sect.SizeOfRawData) {
+
+					BinaryReader br = new BinaryReader (new MemoryStream (sect.Data));
+					br.BaseStream.Position = rva - sect.VirtualAddress;
+					return br;
+				}
+			}
+
+			return null;
+		}
+
+		public void AddDebugHeader ()
+		{
+			m_debugHeader = new DebugHeader ();
+			m_debugHeader.SetDefaultValues ();
 		}
 
 		public void Accept (IBinaryVisitor visitor)
@@ -148,6 +170,9 @@ namespace Mono.Cecil.Binary {
 
 			m_importAddressTable.Accept (visitor);
 			m_cliHeader.Accept (visitor);
+
+			if (m_debugHeader != null)
+				m_debugHeader.Accept (visitor);
 
 			m_importTable.Accept (visitor);
 			m_importLookupTable.Accept (visitor);

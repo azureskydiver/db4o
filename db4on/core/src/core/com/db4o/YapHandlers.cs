@@ -48,7 +48,7 @@ namespace com.db4o
 
 		internal com.db4o.inside.replication.MigrationConnection i_migration;
 
-		internal com.db4o.inside.replication.ReplicationHandler _replicationHandler;
+		internal com.db4o.inside.replication.Db4oReplicationReferenceProvider _replicationReferenceProvider;
 
 		internal bool i_encrypt;
 

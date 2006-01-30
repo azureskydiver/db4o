@@ -22,13 +22,20 @@ namespace com.db4o
 		internal override void marshall1(com.db4o.YapObject a_yapObject, com.db4o.YapWriter
 			 a_bytes, bool a_migrating, bool a_new)
 		{
+			com.db4o.YapStream stream = a_bytes.getStream().i_parent;
+			com.db4o.PBootRecord br = stream.bootRecord();
 			if (!a_migrating)
 			{
-				com.db4o.YapStream stream = a_bytes.getStream().i_parent;
-				com.db4o.PBootRecord br = stream.bootRecord();
 				if (br != null)
 				{
 					a_yapObject.i_virtualAttributes.i_version = br.version();
+				}
+			}
+			else
+			{
+				if (br != null)
+				{
+					br.setDirty();
 				}
 			}
 			if (a_yapObject.i_virtualAttributes == null)

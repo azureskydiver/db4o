@@ -9,7 +9,7 @@ namespace com.db4o
 
 		internal com.db4o.VirtualAttributes i_virtualAttributes;
 
-		private com.db4o.YapObject id_preceding;
+		protected com.db4o.YapObject id_preceding;
 
 		private com.db4o.YapObject id_subsequent;
 
@@ -168,7 +168,7 @@ namespace com.db4o
 			return i_object;
 		}
 
-		private com.db4o.Transaction getTrans()
+		public virtual com.db4o.Transaction getTrans()
 		{
 			if (i_yapClass != null)
 			{
@@ -351,8 +351,8 @@ namespace com.db4o
 			return false;
 		}
 
-		internal virtual com.db4o.VirtualAttributes virtualAttributes(com.db4o.Transaction
-			 a_trans)
+		public virtual com.db4o.VirtualAttributes virtualAttributes(com.db4o.Transaction 
+			a_trans)
 		{
 			if (a_trans == null)
 			{
@@ -377,6 +377,11 @@ namespace com.db4o
 				}
 			}
 			return i_virtualAttributes;
+		}
+
+		public virtual void setVirtualAttributes(com.db4o.VirtualAttributes at)
+		{
+			i_virtualAttributes = at;
 		}
 
 		internal override void writeThis(com.db4o.YapWriter a_writer)

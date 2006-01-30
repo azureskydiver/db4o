@@ -1,14 +1,15 @@
 namespace com.db4o
 {
-	internal class VirtualAttributes : j4o.lang.Cloneable
+	/// <exclude></exclude>
+	public class VirtualAttributes : j4o.lang.Cloneable
 	{
-		internal com.db4o.ext.Db4oDatabase i_database;
+		public com.db4o.ext.Db4oDatabase i_database;
 
-		internal long i_version;
+		public long i_version;
 
-		internal long i_uuid;
+		public long i_uuid;
 
-		internal virtual com.db4o.VirtualAttributes shallowClone()
+		public virtual com.db4o.VirtualAttributes shallowClone()
 		{
 			try
 			{

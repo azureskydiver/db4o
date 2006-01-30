@@ -46,10 +46,9 @@ namespace com.db4o.io
 			{
 				return file.length();
 			}
-			catch (System.IO.IOException exc)
+			finally
 			{
 				file.close();
-				throw exc;
 			}
 		}
 

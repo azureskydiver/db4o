@@ -11,6 +11,10 @@ namespace com.db4o.nativequery.expr
 		public ComparisonExpression(com.db4o.nativequery.expr.cmp.FieldValue left, com.db4o.nativequery.expr.cmp.ComparisonOperand
 			 right, com.db4o.nativequery.expr.cmp.ComparisonOperator op)
 		{
+			if (left == null || right == null || op == null)
+			{
+				throw new System.ArgumentNullException();
+			}
 			this._left = left;
 			this._right = right;
 			this._op = op;
