@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<!-- Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com -->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-access="field">
+	<class name="com.db4o.test.replication.R0">
+		<id column="id" type="int">
+			<generator class="native"/>
+		</id>
+		<discriminator/>
+		<property name="name"/>
+		<many-to-one name="r0" cascade="all"/>
+		<many-to-one name="r1" cascade="all"/>
+		<subclass name="com.db4o.test.replication.R1">
+			<many-to-one name="circle1" cascade="all"/>
+			<many-to-one name="r2" cascade="all"/>
+			<subclass name="com.db4o.test.replication.R2">
+				<many-to-one name="circle2" cascade="all"/>
+				<many-to-one name="r3" cascade="all"/>
+				<subclass name="com.db4o.test.replication.R3">
+					<many-to-one name="circle3" cascade="all"/>
+					<many-to-one name="r4" cascade="all"/>
+					<subclass name="com.db4o.test.replication.R4">
+						<many-to-one name="circle4" cascade="all"/>
+					</subclass>
+				</subclass>
+			</subclass>
+		</subclass>
+	</class>
+</hibernate-mapping>

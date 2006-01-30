@@ -1,0 +1,31 @@
+.n
+.a Roadmap ..
+.0 Roadmap ..
+
+This section describes the features supported in current release and features planned in
+._ upcoming releases.
+
+.1 Current Version ..
+.2 Supported Features ..
+- db4o to db4o replication
+- db4o to Hibernate replication
+- Hibernate to Hibernate replication
+
+- Array Replication
+- Inheritance hierarchies
+- Standard Primitive Types
+- One-To-One Relations
+- Many-To-One Relations 
+
+- UUID generation for db4o and Hibernate
+- Version number generation for db4o and Hibernate
+- Queries for changed objects
+- Parent-to-Child traversal along changed objects
+
+
+.2 Under Current Development ..
+- Collection Replication
+
+.2 Unsupported Features ..
+- Collection types other than List
+- Asymmetrical Arrays
