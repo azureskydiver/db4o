@@ -1,0 +1,87 @@
+.n
+.a db4oReplication ..
+.0 db4o Replication ..
+
+We can meed the first three requirements all at once, by enabling UUIDs in our db4o database.
+
+.c // Enable UUIDs for ALL stored objects. Call this before opening your database.
+Db4o.configure().generateUUIDs(Integer.MAX_VALUE); ..
+
+The db4o UUID contains two parts. The first part, contains an object ID. The second part identifies the ._
+database that originally created this ID. This UUID is not part of your object, but can be retrieved by ._
+any code accessing the database, and by the replication system. Please see the db4o tutorial to learn more ._
+about db4o UUIDs.
+
+The fourth requirement is just as simple. Attatching a version number to an object is also only a single ._
+line of code:
+
+.c //Enable VersionNumbers for ALL stored objects. Call this before opening your database.
+Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE); ..
+
+The replication system will use this version number to invisibly tell when an object was last replicated, ._
+and if any changes have been made to the object since it was last replicated. 
+
+.1 Simple Replication ..
+
+In order to use replication, the following configuration settings have ._
+to be called before a database file is created or opened:
+
+.c Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE); ..
+(See the  .l ReplicatingExisting section below ..  on how to enable replication for ._
+existing databases)
+
+Both settings can also be configured on a per-class basis:
+.c Db4o.configure().objectClass(Foo.class).generateUUIDs(true);
+Db4o.configure().objectClass(Foo.class).generateVersionNumbers(true); ..
+
+Now suppose we have opened two ObjectContainers from two different databases called ._
+"handheld" and "desktop", that we want to replicate. This is how we do it:
+
+.c ObjectContainer handheld = db4o.OpenFile("handheld.yap");
+ObjectContainer desktop = db4o.OpenFile("desktop.yap");
+
+ReplicationSession replication = Replication.begin(handheld, desktop);
+
+ObjectSet changed = replication.getProviderA().objectsChangedSinceLastReplication(); 
+
+while (changed.hasNext()) 
+	replication.replicate(changed.next()); 
+
+replication.commit(); 
+handheld.close();
+desktop.close(); ..
+
+We start by opening two ObjectContainers. The next line, creates the ReplicationSession. This object ._
+contains all of the replication-related logic.
+
+After creating the session, there is an interesting line:
+.c ObjectSet changed = replication.getProviderA().objectsChangedSinceLastReplication(); ..
+This line of code will get the provider associated with the first of our sources (the handheld ._
+ObjectContainer in this case). Then it finds all of the objects that have been updated or created. ._
+The new/modified objects will be returned in an enumerable ObjectSet.
+
+After that comes a simple loop where the resulting objects are replicated one at a time.
+
+The replication.commit() call at the end is importaint. This line will save all of the changes we 
+have made, and end any needed transactions. Forgetting to make this call will probably result in ._
+your replication changes being discarded when your application ends, or your ObjectContainers are ._
+closed.
+
+.a ReplicatingExisting ..
+.1 Replicating Existing Data Files ..
+
+As we learned in the previous section, Db4o.configure().generateUUIDs() and ._
+Db4o.configure().generateVersionNumbers()  (or its objectClass counterparts) ._
+must be called before storing any objects to a data file because db4o replication needs ._
+object versions and UUIDs to work. This implies that objects in existing data files ._
+stored without the correct settings can't be replicated.
+
+Fortunately enabling replication for existing data files is a very simple process: 
+We just need to use the Defragment tool in com.db4o.tools (source code only) after ._
+enabling replication:
+
+.c Db4o.configure().objectClass(Task.class).enableReplication(true);
+ new Defragment().run(currentFileName(), true); ..
+			
+After a successful defragmentation our data files are ready for replication.

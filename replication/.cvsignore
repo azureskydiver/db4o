@@ -1,0 +1,6 @@
+bin
+*.yap
+test
+build
+dist
+temp
