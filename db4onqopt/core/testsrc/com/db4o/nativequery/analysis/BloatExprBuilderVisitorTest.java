@@ -300,6 +300,16 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison("sampleStringFieldEqualsComp",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.EQUALS,false);
 	}
 	
+	// string contains
+
+	boolean sampleFieldStringContains(Data data) {
+		return data.name.contains(STRING_CMPVAL);
+	}
+
+	public void testFieldStringContains() throws Exception {
+		assertComparison("sampleFieldStringContains",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.CONTAINS,false);
+	}
+
 	// primitive wrapper equality
 
 	boolean sampleFieldIntWrapperEqualsComp(Data data) {

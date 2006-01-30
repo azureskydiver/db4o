@@ -152,6 +152,13 @@ public class NQRegressionTests {
 				return candidate.name.equals("Cc");
 			}
 		},
+		// string contains
+		new ExpectingPredicate() {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return candidate.name.contains("a");
+			}
+		},
 		// int field comparison
 		new ExpectingPredicate() {
 			public int expected() { return 1;}

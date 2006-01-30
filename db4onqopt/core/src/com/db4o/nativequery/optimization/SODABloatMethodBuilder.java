@@ -22,6 +22,7 @@ public class SODABloatMethodBuilder {
 	private MemberRef constrainRef;
 	private MemberRef greaterRef;
 	private MemberRef smallerRef;
+	private MemberRef containsRef;
 	private MemberRef notRef;
 	private MemberRef andRef;
 	private MemberRef orRef;
@@ -282,8 +283,14 @@ public class SODABloatMethodBuilder {
 				if(expression.op().equals(ComparisonOperator.GREATER)) {
 					methodEditor.addInstruction(Opcode.opc_invokeinterface,greaterRef);
 				}
-				else {
+				else if(expression.op().equals(ComparisonOperator.SMALLER)) {
 					methodEditor.addInstruction(Opcode.opc_invokeinterface,smallerRef);
+				}
+				else if(expression.op().equals(ComparisonOperator.CONTAINS)) {
+					methodEditor.addInstruction(Opcode.opc_invokeinterface,containsRef);
+				}
+				else {
+					throw new RuntimeException("Cannot interpret constraint: "+expression.op());
 				}
 			}
 		}
@@ -322,6 +329,7 @@ public class SODABloatMethodBuilder {
 		constrainRef=createMethodReference(Query.class,"constrain",new Class[]{Object.class},Constraint.class);
 		greaterRef=createMethodReference(Constraint.class,"greater",new Class[]{},Constraint.class);
 		smallerRef=createMethodReference(Constraint.class,"smaller",new Class[]{},Constraint.class);
+		containsRef=createMethodReference(Constraint.class,"contains",new Class[]{},Constraint.class);
 		notRef=createMethodReference(Constraint.class,"not",new Class[]{},Constraint.class);
 		andRef=createMethodReference(Constraint.class,"and",new Class[]{Constraint.class},Constraint.class);
 		orRef=createMethodReference(Constraint.class,"or",new Class[]{Constraint.class},Constraint.class);
