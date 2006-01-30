@@ -200,6 +200,10 @@ namespace com.db4o
 
 		internal const int DEFAULT = 0;
 
+		public const int OLD = -1;
+
+		public const int NEW = 1;
+
 		internal static readonly com.db4o.YapStringIOUnicode stringIO = new com.db4o.YapStringIOUnicode
 			();
 

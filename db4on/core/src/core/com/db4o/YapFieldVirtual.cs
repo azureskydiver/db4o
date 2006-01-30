@@ -86,11 +86,9 @@ namespace com.db4o
 			com.db4o.YapStream stream = trans.i_stream;
 			com.db4o.YapHandlers handlers = stream.i_handlers;
 			bool migrating = false;
-			if (stream._replicationCallState != com.db4o.inside.replication.ReplicationHandler
-				.NONE)
+			if (stream._replicationCallState != com.db4o.YapConst.NONE)
 			{
-				if (stream._replicationCallState == com.db4o.inside.replication.ReplicationHandler
-					.OLD)
+				if (stream._replicationCallState == com.db4o.YapConst.OLD)
 				{
 					migrating = true;
 					if (a_yapObject.i_virtualAttributes == null)
@@ -121,10 +119,12 @@ namespace com.db4o
 				}
 				else
 				{
-					com.db4o.inside.replication.ReplicationHandler handler = handlers._replicationHandler;
+					com.db4o.inside.replication.Db4oReplicationReferenceProvider provider = handlers.
+						_replicationReferenceProvider;
 					object parentObject = a_yapObject.getObject();
-					com.db4o.ext.Db4oDatabase db = handler.providerFor(parentObject);
-					if (db != null)
+					com.db4o.inside.replication.Db4oReplicationReference _ref = provider.referenceFor
+						(parentObject);
+					if (_ref != null)
 					{
 						migrating = true;
 						if (a_yapObject.i_virtualAttributes == null)
@@ -132,9 +132,9 @@ namespace com.db4o
 							a_yapObject.i_virtualAttributes = new com.db4o.VirtualAttributes();
 						}
 						com.db4o.VirtualAttributes va = a_yapObject.i_virtualAttributes;
-						va.i_version = handler.versionFor(parentObject);
-						va.i_uuid = handler.uuidLongFor(parentObject);
-						va.i_database = handler.providerFor(parentObject);
+						va.i_version = _ref.version();
+						va.i_uuid = _ref.longPart();
+						va.i_database = _ref.signaturePart();
 					}
 				}
 			}

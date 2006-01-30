@@ -373,7 +373,9 @@ namespace com.db4o {
                     if (last != null) {
                         last.i_next = phe.i_next;
                         last.update();
-                    } else i_table[hash & i_mask] = (P1HashElement)phe.i_next;
+                    } else {
+						i_table[hash & i_mask] = (P1HashElement)phe.i_next;
+					}
                     modified();
                     i_size--;
                     Object obj = phe.activatedObject(elementActivationDepth());
@@ -431,8 +433,10 @@ namespace com.db4o {
             if (this.getTrans() == null) {
                 this.setTrans(transaction);
                 modified();
-            } else if (transaction != this.getTrans()){
-             	return replicate(getTrans(), transaction);
+            } else {
+				if (transaction != this.getTrans()) {
+					return replicate(getTrans(), transaction);
+				}
             }
             return this;
         }

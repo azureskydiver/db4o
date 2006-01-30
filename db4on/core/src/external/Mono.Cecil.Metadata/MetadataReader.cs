@@ -42,9 +42,6 @@ namespace Mono.Cecil.Metadata {
 		MetadataTableReader m_tableReader;
 		MetadataRoot m_root;
 
-		BinaryReader m_dataReader;
-		RVA m_baseOfCodeOrRes = new RVA (0x2050);
-
 		public MetadataTableReader TableReader {
 			get { return m_tableReader; }
 		}
@@ -62,8 +59,7 @@ namespace Mono.Cecil.Metadata {
 
 		public BinaryReader GetDataReader (RVA rva)
 		{
-			m_dataReader.BaseStream.Position = rva - m_baseOfCodeOrRes;
-			return m_dataReader;
+			return m_ir.Image.GetReaderAtVirtualAddress (rva);
 		}
 
 		public override void VisitMetadataRoot (MetadataRoot root)
@@ -71,15 +67,6 @@ namespace Mono.Cecil.Metadata {
 			m_root = root;
 			root.Header = new MetadataRoot.MetadataRootHeader ();
 			root.Streams = new MetadataStreamCollection ();
-
-			long pos = m_binaryReader.BaseStream.Position;
-			m_binaryReader.BaseStream.Position = m_ir.Image.ResolveTextVirtualAddress (m_baseOfCodeOrRes);
-			byte [] data = m_binaryReader.ReadBytes (
-				(int) (m_binaryReader.BaseStream.Length - m_binaryReader.BaseStream.Position));
-
-			m_dataReader = new BinaryReader (new MemoryStream (data));
-
-			m_binaryReader.BaseStream.Position = pos;
 		}
 
 		public override void VisitMetadataRootHeader (MetadataRoot.MetadataRootHeader header)
@@ -146,7 +133,7 @@ namespace Mono.Cecil.Metadata {
 			if (header.Name.Length == 0)
 				throw new MetadataFormatException ("Invalid stream name");
 
-			long rootpos = m_root.GetImage ().ResolveTextVirtualAddress (
+			long rootpos = m_root.GetImage ().ResolveVirtualAddress (
 				m_root.GetImage ().CLIHeader.Metadata.VirtualAddress);
 
 			long curpos = m_binaryReader.BaseStream.Position;
@@ -236,7 +223,7 @@ namespace Mono.Cecil.Metadata {
 		{
 			long cursor = m_binaryReader.BaseStream.Position;
 
-			m_binaryReader.BaseStream.Position = m_root.GetImage ().ResolveTextVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_root.GetImage ().ResolveVirtualAddress (
 				m_root.GetImage ().CLIHeader.Metadata.VirtualAddress)
 				+ heap.GetStream ().Header.Offset;
 

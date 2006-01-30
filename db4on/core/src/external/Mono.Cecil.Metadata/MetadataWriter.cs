@@ -66,6 +66,7 @@ namespace Mono.Cecil.Metadata {
 		uint m_mdStart, m_mdSize;
 		uint m_resStart, m_resSize;
 		uint m_snsStart, m_snsSize;
+		uint m_debugHeaderStart;
 		uint m_imporTableStart;
 
 		uint m_entryPointToken;
@@ -74,6 +75,10 @@ namespace Mono.Cecil.Metadata {
 
 		public MemoryBinaryWriter CilWriter {
 			get { return m_cilWriter; }
+		}
+
+		public uint DebugHeaderPosition {
+			get { return m_debugHeaderStart; }
 		}
 
 		public uint ImportTablePosition {
@@ -229,6 +234,7 @@ namespace Mono.Cecil.Metadata {
 		public uint AddResource (byte [] data)
 		{
 			uint offset = (uint) m_resWriter.BaseStream.Position;
+			m_resWriter.Write (data.Length);
 			m_resWriter.Write (data);
 			m_resWriter.QuadAlign ();
 			return offset;
@@ -242,8 +248,15 @@ namespace Mono.Cecil.Metadata {
 
 		uint GetStrongNameSignatureSize ()
 		{
-			// TODO: in 1.x its 128, in 2.0 it may be more
-			return 128;
+			if (m_assembly.Name.PublicKey != null) {
+				// in fx 2.0 the key may be from 384 to 16384 bits
+				// so we must calculate the signature size based on
+				// the size of the public key (minus the 32 byte header)
+				int size = m_assembly.Name.PublicKey.Length;
+				if (size > 0)
+					return (uint) (size - 32);
+			}
+			return 128; // default strongname signature size
 		}
 
 		public override void VisitMetadataRoot (MetadataRoot root)
@@ -259,6 +272,13 @@ namespace Mono.Cecil.Metadata {
 				m_snsStart = (uint) m_binaryWriter.BaseStream.Position;
 				m_snsSize = GetStrongNameSignatureSize ();
 				m_binaryWriter.Write (new byte [m_snsSize]);
+				m_binaryWriter.QuadAlign ();
+			}
+
+			// save place for debug header
+			if (m_imgWriter.GetImage ().DebugHeader != null) {
+				m_debugHeaderStart = (uint) m_binaryWriter.BaseStream.Position;
+				m_binaryWriter.Write (new byte [m_imgWriter.GetImage ().DebugHeader.GetSize ()]);
 				m_binaryWriter.QuadAlign ();
 			}
 
@@ -297,7 +317,7 @@ namespace Mono.Cecil.Metadata {
 				m_root.Header.Version = "v1.1.4322";
 				break;
 			case TargetRuntime.NET_2_0 :
-				m_root.Header.Version = "Standard CLI 2005";
+				m_root.Header.Version = "v2.0.50727";
 				break;
 			}
 
@@ -440,6 +460,10 @@ namespace Mono.Cecil.Metadata {
 			if (m_snsStart > 0)
 				img.CLIHeader.StrongNameSignature = new DataDirectory (
 					img.TextSection.VirtualAddress + m_snsStart, m_snsSize);
+
+			if (m_debugHeaderStart > 0)
+				img.PEOptionalHeader.DataDirectories.Debug = new DataDirectory (
+					img.TextSection.VirtualAddress + m_debugHeaderStart, 0x1c);
 		}
 
 		public override void TerminateMetadataRoot (MetadataRoot root)

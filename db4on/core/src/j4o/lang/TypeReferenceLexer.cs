@@ -130,9 +130,12 @@ namespace j4o.lang
 				{
 					kind = TokenKind.VersionNumber;
 				}
-				else if (!IsHexDigit(ch))
+				else 
 				{
-					break;
+					if (!IsHexDigit(ch)) 
+					{
+						break;
+					}
 				}
 				ConsumeAndBuffer(ch);
 			}

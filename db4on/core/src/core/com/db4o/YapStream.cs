@@ -1109,11 +1109,11 @@ namespace com.db4o
 		{
 			if (objectContainer == null)
 			{
-				if (_replicationCallState == com.db4o.inside.replication.ReplicationHandler.NONE)
+				if (_replicationCallState == com.db4o.YapConst.NONE)
 				{
 					return;
 				}
-				_replicationCallState = com.db4o.inside.replication.ReplicationHandler.NONE;
+				_replicationCallState = com.db4o.YapConst.NONE;
 				if (i_handlers.i_migration != null)
 				{
 					i_handlers.i_migration.terminate();
@@ -1123,8 +1123,8 @@ namespace com.db4o
 			else
 			{
 				com.db4o.YapStream peer = (com.db4o.YapStream)objectContainer;
-				_replicationCallState = com.db4o.inside.replication.ReplicationHandler.OLD;
-				peer._replicationCallState = com.db4o.inside.replication.ReplicationHandler.OLD;
+				_replicationCallState = com.db4o.YapConst.OLD;
+				peer._replicationCallState = com.db4o.YapConst.OLD;
 				i_handlers.i_migration = new com.db4o.inside.replication.MigrationConnection(this
 					, (com.db4o.YapStream)objectContainer);
 				peer.i_handlers.i_migration = i_handlers.i_migration;
@@ -1455,7 +1455,7 @@ namespace com.db4o
 
 		internal int oldReplicationHandles(object obj)
 		{
-			if (_replicationCallState != com.db4o.inside.replication.ReplicationHandler.OLD)
+			if (_replicationCallState != com.db4o.YapConst.OLD)
 			{
 				return 0;
 			}
@@ -1574,20 +1574,16 @@ namespace com.db4o
 			return id;
 		}
 
-		public void setByNewReplication(object obj, com.db4o.ext.Db4oDatabase provider, long
-			 uuidLong, long version)
+		public void setByNewReplication(com.db4o.inside.replication.Db4oReplicationReferenceProvider
+			 referenceProvider, object obj)
 		{
 			lock (i_lock)
 			{
-				_replicationCallState = com.db4o.inside.replication.ReplicationHandler.NEW;
-				i_handlers._replicationHandler = new com.db4o.inside.replication.ReplicationHandler
-					();
-				i_handlers._replicationHandler.associateObjectWith(obj, provider, uuidLong, version
-					);
-				com.db4o.Transaction ta = checkTransaction(null);
-				set2(ta, obj, 1, false);
-				_replicationCallState = com.db4o.inside.replication.ReplicationHandler.NONE;
-				i_handlers._replicationHandler = null;
+				_replicationCallState = com.db4o.YapConst.NEW;
+				i_handlers._replicationReferenceProvider = referenceProvider;
+				set2(checkTransaction(null), obj, 1, false);
+				_replicationCallState = com.db4o.YapConst.NONE;
+				i_handlers._replicationReferenceProvider = null;
 			}
 		}
 

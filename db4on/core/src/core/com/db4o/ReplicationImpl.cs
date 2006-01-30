@@ -44,10 +44,10 @@ namespace com.db4o
 						(_peerA, _peerB);
 					_peerA.i_handlers.i_migration = mgc;
 					_peerA.i_handlers.i_replication = this;
-					_peerA._replicationCallState = com.db4o.inside.replication.ReplicationHandler.OLD;
+					_peerA._replicationCallState = com.db4o.YapConst.OLD;
 					_peerB.i_handlers.i_migration = mgc;
 					_peerB.i_handlers.i_replication = this;
-					_peerB._replicationCallState = com.db4o.inside.replication.ReplicationHandler.OLD;
+					_peerB._replicationCallState = com.db4o.YapConst.OLD;
 					_conflictHandler = conflictHandler;
 					_record = com.db4o.ReplicationRecord.beginReplication(_transA, _transB);
 				}
@@ -111,10 +111,10 @@ namespace com.db4o
 
 		private void endReplication()
 		{
-			_peerA._replicationCallState = com.db4o.inside.replication.ReplicationHandler.NONE;
+			_peerA._replicationCallState = com.db4o.YapConst.NONE;
 			_peerA.i_handlers.i_migration = null;
 			_peerA.i_handlers.i_replication = null;
-			_peerA._replicationCallState = com.db4o.inside.replication.ReplicationHandler.NONE;
+			_peerA._replicationCallState = com.db4o.YapConst.NONE;
 			_peerB.i_handlers.i_migration = null;
 			_peerB.i_handlers.i_replication = null;
 		}

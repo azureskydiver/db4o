@@ -39,5 +39,10 @@ namespace com.db4o.foundation
 			}
 			return ret;
 		}
+
+		public bool hasNext()
+		{
+			return _last != null;
+		}
 	}
 }

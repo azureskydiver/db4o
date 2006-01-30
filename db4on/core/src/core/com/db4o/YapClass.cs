@@ -98,7 +98,7 @@ namespace com.db4o
 		internal virtual void addMembers(com.db4o.YapStream a_stream)
 		{
 			bitTrue(com.db4o.YapConst.CHECKED_CHANGES);
-			if (addTranslatorField())
+			if (addTranslatorFields(a_stream))
 			{
 				return;
 			}
@@ -184,7 +184,7 @@ namespace com.db4o
 			setStateOK();
 		}
 
-		private bool addTranslatorField()
+		private bool addTranslatorFields(com.db4o.YapStream a_stream)
 		{
 			com.db4o.config.ObjectTranslator ot = getTranslator();
 			if (ot == null)
@@ -195,7 +195,27 @@ namespace com.db4o
 			{
 				i_stream.setDirty(this);
 			}
-			i_fields = new com.db4o.YapField[] { new com.db4o.YapFieldTranslator(this, ot) };
+			int fieldCount = 1;
+			bool versions = generateVersionNumbers() && !ancestorHasVersionField();
+			bool uuids = generateUUIDs() && !ancestorHasUUIDField();
+			if (versions)
+			{
+				fieldCount = 2;
+			}
+			if (uuids)
+			{
+				fieldCount = 3;
+			}
+			i_fields = new com.db4o.YapField[fieldCount];
+			i_fields[0] = new com.db4o.YapFieldTranslator(this, ot);
+			if (versions || uuids)
+			{
+				i_fields[1] = a_stream.i_handlers.i_indexes.i_fieldVersion;
+			}
+			if (uuids)
+			{
+				i_fields[2] = a_stream.i_handlers.i_indexes.i_fieldUUID;
+			}
 			setStateOK();
 			return true;
 		}
@@ -853,14 +873,20 @@ namespace com.db4o
 			return i_db4oType == null || i_db4oType.hasClassIndex();
 		}
 
+		private bool ancestorHasUUIDField()
+		{
+			if (i_ancestor == null)
+			{
+				return false;
+			}
+			return i_ancestor.hasUUIDField();
+		}
+
 		private bool hasUUIDField()
 		{
-			if (i_ancestor != null)
+			if (ancestorHasUUIDField())
 			{
-				if (i_ancestor.hasUUIDField())
-				{
-					return true;
-				}
+				return true;
 			}
 			if (i_fields != null)
 			{
@@ -875,14 +901,20 @@ namespace com.db4o
 			return false;
 		}
 
+		private bool ancestorHasVersionField()
+		{
+			if (i_ancestor == null)
+			{
+				return false;
+			}
+			return i_ancestor.hasVersionField();
+		}
+
 		private bool hasVersionField()
 		{
-			if (i_ancestor != null)
+			if (ancestorHasVersionField())
 			{
-				if (i_ancestor.hasVersionField())
-				{
-					return true;
-				}
+				return true;
 			}
 			if (i_fields != null)
 			{
@@ -993,13 +1025,13 @@ namespace com.db4o
 		public virtual com.db4o.YapField getYapField(string name)
 		{
 			com.db4o.YapField[] yf = new com.db4o.YapField[1];
-			forEachYapField(new _AnonymousInnerClass835(this, name, yf));
+			forEachYapField(new _AnonymousInnerClass886(this, name, yf));
 			return yf[0];
 		}
 
-		private sealed class _AnonymousInnerClass835 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass886 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass835(YapClass _enclosing, string name, com.db4o.YapField[]
+			public _AnonymousInnerClass886(YapClass _enclosing, string name, com.db4o.YapField[]
 				 yf)
 			{
 				this._enclosing = _enclosing;
@@ -1624,15 +1656,15 @@ namespace com.db4o
 				{
 					int[] idgen = { -2 };
 					a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
-					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1385(this
+					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1436(this
 						, trans, idgen, a_candidates));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1385 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass1436 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass1385(YapClass _enclosing, com.db4o.Transaction trans, 
+			public _AnonymousInnerClass1436(YapClass _enclosing, com.db4o.Transaction trans, 
 				int[] idgen, com.db4o.QCandidates a_candidates)
 			{
 				this._enclosing = _enclosing;
