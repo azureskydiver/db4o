@@ -26,6 +26,7 @@ namespace com.db4o.test
 				ArrayList tests = new ArrayList();
 
 				tests.Add(typeof (SimplestPossible));
+                tests.Add(typeof(CsDelegate));
 				tests.Add(typeof(OptimizationFailuresTestCase));
 				//tests.Add(typeof (CsAssemblyVersionChange));
                 tests.Add(typeof(com.db4o.test.nativequeries.Cat));

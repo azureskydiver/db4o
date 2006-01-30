@@ -59,9 +59,9 @@ namespace com.db4o.test {
 				tests.Add(typeof(CsCollections));
 				tests.Add(typeof(CsCustomTransientAttribute));
 				tests.Add(typeof(CsDate));
-	#if NET
+	
 				tests.Add(typeof(CsDelegate));
-	#endif
+
 				tests.Add(typeof(CsEnum));
 												  
 				tests.Add(typeof(CsEvaluationDelegate));

@@ -60,31 +60,7 @@ namespace com.db4o.test.cs
 			// delegate fields are simply not stored
 			Tester.ensureEquals(null, Bang);
         }
-
-		public void testTSerializableForDelegate()
-		{
-			Db4o.configure().objectClass(typeof(EventHandler)).translate(new com.db4o.config.TSerializable());			
-			try
-			{
-				Tester.deleteAllInstances(typeof(CsDelegate));
-				Tester.reOpen();
-
-				CsDelegate.Message = null;
-				CsDelegate obj = new CsDelegate();
-				obj.Bang += new EventHandler(OnBang);
-				Tester.store(obj);
-
-				obj = (CsDelegate)Tester.getOne(typeof(CsDelegate));
-				obj.RaiseBang();
-				Tester.ensureEquals("Bang!!!!", CsDelegate.Message);
-			}
-			finally
-			{
-				Db4o.configure().objectClass(typeof(EventHandler)).translate(new TNull());
-			}
-		}
-
-		/* TODO: See why this is not working
+		
 		public void testOnActivateEventStrategy()
 		{
 			Tester.deleteAllInstances(typeof(OnActivateEventStrategy));
@@ -95,7 +71,6 @@ namespace com.db4o.test.cs
 			obj.RaiseCrash();
 			OnActivateEventStrategy.Assert();
 		}
-		*/
 
 		static void OnBang(object sender, EventArgs args) 
 		{
