@@ -113,6 +113,7 @@ public class Enhancer {
 	}
 	
 	// TODO: Why is an empty 'throws' generated according to javap?
+	// Move to MethodBuilder, make label idxs configurable
 	public void createLoadClassConstMethod(ClassEditor ce) {
 		MethodEditor me=createMethod(ce, Modifiers.PROTECTED|Modifiers.STATIC, Class.class, "db4o$class$", new Class[]{String.class}, null);
 		LocalVariable[] localVars=createLocalVariables(1);

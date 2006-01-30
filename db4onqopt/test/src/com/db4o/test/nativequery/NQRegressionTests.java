@@ -168,6 +168,12 @@ public class NQRegressionTests {
 				return candidate.name.contains("A");
 			}
 		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
+			public boolean match(Data candidate) {
+				return candidate.name.contains("C");
+			}
+		},
 		// int field comparison
 		new ExpectingPredicate() {
 			public int expected() { return 1;}
