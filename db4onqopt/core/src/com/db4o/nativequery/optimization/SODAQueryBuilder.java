@@ -134,8 +134,14 @@ public class SODAQueryBuilder {
 				if(expression.op().equals(ComparisonOperator.GREATER)) {
 					_constraint.greater();
 				}
-				else {
+				else if(expression.op().equals(ComparisonOperator.SMALLER)) {
 					_constraint.smaller();
+				}
+				else if(expression.op().equals(ComparisonOperator.CONTAINS)) {
+					_constraint.contains();
+				}
+				else {
+					throw new RuntimeException("Can't handle constraint: "+expression.op());
 				}
 			}
 		}

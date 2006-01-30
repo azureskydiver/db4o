@@ -224,8 +224,12 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if(!isStatic&&expr.method().name().equals("equals")) {
 			CallMethodExpr call=(CallMethodExpr)expr;
 			if(isPrimitive(call.receiver().type())) {
-				processEqualsCall(call);
+				processEqualsCall(call,ComparisonOperator.EQUALS);
 			}
+			return;
+		}
+		if(expr.method().name().equals("contains")&&expr.method().declaringClass().equals(Type.STRING)) {
+			processEqualsCall((CallMethodExpr)expr,ComparisonOperator.CONTAINS);
 			return;
 		}
 		MemberRef methodRef=expr.method();
@@ -277,7 +281,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		return Arrays.binarySearch(PRIMITIVES,type.className().replace('/', '.'))>=0;
 	}
 
-	private void processEqualsCall(CallMethodExpr expr) {
+	private void processEqualsCall(CallMethodExpr expr,ComparisonOperator op) {
 		Expr left=expr.receiver();
 		Expr right=expr.params()[0];
 		if(!isComparableExprOperand(left)||!isComparableExprOperand(right)) {
@@ -291,7 +295,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		ComparisonOperand leftOp=(ComparisonOperand)leftObj;
 		right.visit(this);
 		ComparisonOperand rightOp=(ComparisonOperand) purgeReturnValue();
-		if(isCandidateFieldValue(rightOp)&&!isCandidateFieldValue(leftOp)) {
+		if(op.isSymmetric()&&isCandidateFieldValue(rightOp)&&!isCandidateFieldValue(leftOp)) {
 			ComparisonOperand swap=leftOp;
 			leftOp=rightOp;
 			rightOp=swap;
@@ -299,7 +303,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if(!isCandidateFieldValue(leftOp)||rightOp==null) {
 			return;
 		}
-		expression(new ComparisonExpression((FieldValue)leftOp,rightOp,ComparisonOperator.EQUALS));
+		expression(new ComparisonExpression((FieldValue)leftOp,rightOp,op));
 	}
 
 	private boolean isCandidateFieldValue(ComparisonOperand op) {
