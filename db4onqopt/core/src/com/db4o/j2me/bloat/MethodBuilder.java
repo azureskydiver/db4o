@@ -70,6 +70,10 @@ public class MethodBuilder {
 		_editor.addInstruction(Opcode.opc_areturn);
 	}
 
+	public void returnInstruction() {
+		_editor.addInstruction(Opcode.opc_return);
+	}
+
 	public void invoke(int mode, Class parent, String name, Class[] params,
 			Class ret) {
 		invoke(mode, _context.getType(parent), name, params, ret);
@@ -117,7 +121,7 @@ public class MethodBuilder {
 	}
 
 	public void getstatic(Type parent, Class type, String name) {
-		getstatic(parent,_context.getType(type), name);
+		getstatic(parent, _context.getType(type), name);
 	}
 
 	public void getstatic(Type parent, Type type, String name) {
@@ -183,7 +187,41 @@ public class MethodBuilder {
 	}
 
 	public void getfield(MemberRef field) {
-		_editor.addInstruction(Opcode.opc_getfield,field);
+		_editor.addInstruction(Opcode.opc_getfield, field);
+	}
+
+	public void putfield(MemberRef field) {
+		_editor.addInstruction(Opcode.opc_putfield, field);
+	}
+
+	public void iconstForBoolean(int i) {
+		if (i == 1) {
+			_editor.addInstruction(Opcode.opc_iconst_1);
+		} else if (i == 0) {
+			_editor.addInstruction(Opcode.opc_iconst_0);
+		} else {
+			System.err.print("i should be 1 or 0");
+		}
+
+	}
+
+	public void iconstForBoolean(boolean b) {
+		if (b) {
+			_editor.addInstruction(Opcode.opc_iconst_1);
+		} else
+			_editor.addInstruction(Opcode.opc_iconst_0);
+	}
+
+	public void anewarray(Class clazz) {
+		_editor.addInstruction(Opcode.opc_newarray, _context.getType(clazz));
+	}
+
+	public void aastore() {
+		_editor.addInstruction(Opcode.opc_aastore);
+	}
+
+	public void pop() {
+		_editor.addInstruction(Opcode.opc_pop);
 	}
 
 }

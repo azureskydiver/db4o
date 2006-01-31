@@ -1,12 +1,22 @@
 package com.db4o.j2me.bloat;
 
-import java.util.*;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.reflect.*;
+import EDU.purdue.cs.bloat.editor.ClassEditor;
+import EDU.purdue.cs.bloat.editor.FieldEditor;
+import EDU.purdue.cs.bloat.editor.MemberRef;
+import EDU.purdue.cs.bloat.editor.Opcode;
+import EDU.purdue.cs.bloat.editor.Type;
+import EDU.purdue.cs.bloat.file.ClassFileLoader;
+import EDU.purdue.cs.bloat.reflect.ClassFormatException;
+import EDU.purdue.cs.bloat.reflect.FieldInfo;
+import EDU.purdue.cs.bloat.reflect.Modifiers;
 
-import com.db4o.reflect.self.*;
 import com.db4o.reflect.self.ClassInfo;
+import com.db4o.reflect.self.SelfReflectionRegistry;
 
 public class RegistryEnhancer {
 
@@ -54,218 +64,206 @@ public class RegistryEnhancer {
 		 * new FieldInfo("_prices", int[].class, true, false, false), })); //
 		 * FIELDINFO.put(P1Object.class, new FieldInfo[]{}); }
 		 */
-		// access flags 8
-		// static <clinit>() : void
-		MethodBuilder bld = new MethodBuilder(context, ce, Modifiers.STATIC,
-				void.class, "<clinit>", new Class[0], new Class[0]);
-		bld.newRef(Hashtable.class);
-		bld.dup();
-		bld.ldc(2);
-		bld.invoke(Opcode.opc_invokespecial, Hashtable.class, "<init>",
-				new Class[] { Integer.class }, void.class);
-		bld.putstatic(bld.parentType(), Hashtable.class, "CLASSINFO");
 
-		// bld.label(1);
-		// bld.getstatic(bld.parentType(),Hashtable.class, "CLASSINFO");
-		// invokeClassGetter(bld, Animal.class);
-		// bld.newRef(ClassInfo.class);
-		// bld.dup();
-		// bld.ldc(1);
-		// invokeClassGetter(bld, Object.class);
-		// bld.label(2);
-		// bld.ldc(1);
-		// bld.newarray(FieldInfo.class);
-		// bld.dup();
-		// bld.ldc(0);
-		// // L3 (18)
-		// me.addLabel(labels[3]);
-		// // NEW FieldInfo
-		// me.addInstruction(Opcode.opc_new, getType(FieldInfo.class));
-		// // DUP
-		// me.addInstruction(Opcode.opc_dup);
-		// // LDC "_name"
-		// me.addInstruction(Opcode.opc_ldc, "_name");
-		// // LDC Ljava/lang/String;.class
-		// invokeClassGetter(me, String.class);
-		// // ICONST_1
-		// me.addInstruction(Opcode.opc_ldc,new Integer(1));
-		// // L4 (24)
-		// me.addLabel(labels[4]);
-		// // ICONST_0
-		// me.addInstruction(Opcode.opc_ldc,new Integer(0));
-		// // ICONST_0
-		// me.addInstruction(Opcode.opc_ldc,new Integer(0));
-		// // INVOKESPECIAL
-		// FieldInfo.<init>(String,Class,boolean,boolean,boolean)
-		// // : void
-		// me.addInstruction(Opcode.opc_invokespecial,
-		// methodRef(FieldInfo.class,
-		// "<init>", new Class[] { String.class, Class.class,
-		// Boolean.class, Boolean.class, Boolean.class },
-		// void.class));
-		// // AASTORE
-		// me.addInstruction(Opcode.opc_aastore);
-		// // INVOKESPECIAL ClassInfo.<init>(boolean,Class,FieldInfo[]) : void
-		// me.addInstruction(Opcode.opc_invokespecial,
-		// methodRef(ClassInfo.class,
-		// "<init>", new Class[] { Boolean.class, Class.class,
-		// FieldInfo[].class }, void.class));
-		// // L5 (30)
-		// me.addLabel(labels[5]);
-		// // INVOKEVIRTUAL Hashtable.put(Object,Object) : Object
-		// me.addInstruction(Opcode.opc_invokevirtual,
-		// methodRef(Hashtable.class, "put", new Class[] { Object.class,
-		// Object.class }, Object.class));
-		// // POP
-		// me.addInstruction(Opcode.opc_pop);
-		// // L6 (33)
-		// me.addLabel(labels[6]);
-		// // GETSTATIC RegressionDogSelfReflectionRegistry.CLASSINFO :
-		// Hashtable
-		// me.addInstruction(Opcode.opc_getstatic, fieldRef(ce.name(),
-		// Hashtable.class, "CLASSINFO"));
-		// // LDC Lcom/db4o/bloat/Dog;.class
-		// invokeClassGetter(me, Dog.class);
-		// // L7 (36)
-		// me.addLabel(labels[7]);
-		// // NEW ClassInfo
-		// invokeClassGetter(me, ClassInfo.class);
-		// // DUP
-		// me.addInstruction(Opcode.opc_dup);
-		// // ICONST_0
-		// me.addInstruction(Opcode.opc_ldc,new Integer(0));
-		// // LDC Lcom/db4o/bloat/Animal;.class
-		// invokeClassGetter(me, Animal.class);
-		// // L8 (41)
-		// me.addLabel(labels[8]);
-		// // ICONST_3
-		// me.addInstruction(Opcode.opc_ldc,new Integer(3));
-		// // ANEWARRAY FieldInfo
-		// me.addInstruction(Opcode.opc_newarray, getType(FieldInfo.class));
-		// // DUP
-		// me.addInstruction(Opcode.opc_dup);
-		// // ICONST_0
-		// me.addInstruction(Opcode.opc_ldc,new Integer(0));
-		// // L9 (46)
-		// me.addLabel(labels[9]);
-		// // NEW FieldInfo
-		// me.addInstruction(Opcode.opc_new, getType(FieldInfo.class));
-		// // DUP
-		// me.addInstruction(Opcode.opc_dup);
-		// // LDC "_age"
-		// me.addInstruction(Opcode.opc_ldc, "_age");
-		// // LDC Ljava/lang/Integer;.class
-		// invokeClassGetter(me, Integer.class);
-		// // ICONST_1
-		// me.addInstruction(Opcode.opc_ldc, new Integer(1));
-		// // L10 (52)
-		// me.addLabel(labels[10]);
-		// // ICONST_0
-		// me.addInstruction(Opcode.opc_ldc,new Integer(0));
-		// // ICONST_0
-		// me.addInstruction(Opcode.opc_ldc,new Integer(0));
-		// // L11 (55)
-		// me.addLabel(labels[11]);
-		// // INVOKESPECIAL
-		// FieldInfo.<init>(String,Class,boolean,boolean,boolean)
-		// // : void
-		// me.addInstruction(Opcode.opc_invokespecial,
-		// methodRef(FieldInfo.class,
-		// "<init>", new Class[] { String.class, Class.class,
-		// Boolean.class, Boolean.class, Boolean.class },
-		// void.class));
-		// // AASTORE
-		// me.addInstruction(Opcode.opc_aastore);
-		// // DUP
-		// me.addInstruction(Opcode.opc_dup);
-		// // ICONST_1
-		// me.addInstruction(Opcode.opc_ldc,new Integer(1));
-		// // L12 (60)
-		// me.addLabel(labels[12]);
-		// // NEW FieldInfo
-		// me.addInstruction(Opcode.opc_new, getType(FieldInfo.class));
-		// // DUP
-		// me.addInstruction(Opcode.opc_dup);
-		// // LDC "_parents"
-		// me.addInstruction(Opcode.opc_ldc, "_parents");
-		// // LDC [Lcom/db4o/bloat/Dog;.class
-		// invokeClassGetter(me, Dog.class);
-		// // ICONST_1
-		// me.addInstruction(Opcode.opc_ldc,new Integer(1));
-		// // L13 (66)
-		// me.addLabel(labels[13]);
-		// // ICONST_0
-		// me.addInstruction(Opcode.opc_ldc,new Integer(0));
-		// // ICONST_0
-		// me.addInstruction(Opcode.opc_ldc,new Integer(0));
-		// // L14 (69)
-		// me.addLabel(labels[14]);
-		// // INVOKESPECIAL
-		// FieldInfo.<init>(String,Class,boolean,boolean,boolean)
-		// // : void
-		// me.addInstruction(Opcode.opc_invokespecial,
-		// methodRef(FieldInfo.class,
-		// "<init>", new Class[] { String.class, Class.class,
-		// Boolean.class, Boolean.class, Boolean.class },
-		// void.class));
-		// // AASTORE
-		// me.addInstruction(Opcode.opc_aastore);
-		// // DUP
-		// me.addInstruction(Opcode.opc_dup);
-		// // ICONST_2
-		// me.addInstruction(Opcode.opc_ldc,new Integer(2));
-		// // L15 (74)
-		// me.addLabel(labels[15]);
-		// // NEW FieldInfo
-		// me.addInstruction(Opcode.opc_new, getType(FieldInfo.class));
-		// // DUP
-		// me.addInstruction(Opcode.opc_dup);
-		// // LDC "_prices"
-		// me.addInstruction(Opcode.opc_ldc, "_prices");
-		// // LDC [I.class
-		// invokeClassGetter(me, Integer.class);
-		// // ICONST_1
-		// me.addInstruction(Opcode.opc_ldc,new Integer(1));
-		// // L16 (80)
-		// me.addLabel(labels[16]);
-		// // ICONST_0
-		// me.addInstruction(Opcode.opc_ldc,new Integer(0));
-		// // ICONST_0
-		// me.addInstruction(Opcode.opc_ldc,new Integer(0));
-		// // L17 (83)
-		// me.addLabel(labels[17]);
-		// // INVOKESPECIAL
-		// FieldInfo.<init>(String,Class,boolean,boolean,boolean)
-		// // : void
-		// me.addInstruction(Opcode.opc_invokespecial,
-		// methodRef(FieldInfo.class,
-		// "<init>", new Class[] { String.class, Class.class,
-		// Boolean.class, Boolean.class, Boolean.class },
-		// void.class));
-		// // AASTORE
-		// me.addInstruction(Opcode.opc_aastore);
-		// // L18 (86)
-		// me.addLabel(labels[18]);
-		// // INVOKESPECIAL ClassInfo.<init>(boolean,Class,FieldInfo[]) : void
-		// me.addInstruction(Opcode.opc_invokespecial,
-		// methodRef(ClassInfo.class,
-		// "<init>", new Class[] { Boolean.class, Class.class,
-		// FieldInfo[].class }, void.class));
-		// // L19 (88)
-		// me.addLabel(labels[19]);
-		// // INVOKEVIRTUAL Hashtable.put(Object,Object) : Object
-		// me.addInstruction(Opcode.opc_invokevirtual,
-		// methodRef(Hashtable.class, "put", new Class[] { Object.class,
-		// Object.class }, Object.class));
-		// // POP
-		// me.addInstruction(Opcode.opc_pop);
-		// // L20 (91)
-		// me.addLabel(labels[20]);
-		// // RETURN
-		// me.addInstruction(Opcode.opc_return);
-		bld.commit();
+		// static <clinit>()V
+		// L0 (0)
+		MethodBuilder builder = new MethodBuilder(context, ce,
+				Modifiers.STATIC, void.class, "<clinit>", new Class[0],
+				new Class[0]);
+		MemberRef[] fields = context.collectDeclaredFields(ce);
+
+		// LINENUMBER 9 L0
+		// NEW java/util/Hashtable
+		builder.newRef(Hashtable.class);
+		// DUP
+		builder.dup();
+		// ICONST_2
+		// INVOKESPECIAL java/util/Hashtable.<init>(I)V
+		builder.invoke(Opcode.opc_invokespecial, Hashtable.class, "<init>",
+				new Class[0], Void.TYPE);
+		// PUTSTATIC
+		// com/db4o/reflect/self/UnitDogSelfReflectionRegistry.CLASSINFO :
+		// Ljava/util/Hashtable;
+		builder.putstatic(ce.type(), Hashtable.class, "CLASSINFO");
+		// L1 (6)
+		// LINENUMBER 10 L1
+		int labelIdx = 1;// do we need labels anyway?
+		for (int classIdx = 0; classIdx < clazzes.length; classIdx++) {
+			classForName(builder, clazzes[classIdx]);
+			builder.getstatic(ce.type(), Hashtable.class, "CLASSINFO");
+			builder.ldc(clazzes[classIdx].getName());
+			builder.newRef(com.db4o.reflect.self.ClassInfo.class);
+			builder.dup();
+			if (clazzes[classIdx].getSuperclass() != null) {
+				builder.iconstForBoolean(isAbstractClass(clazzes[classIdx]));
+				builder.anewarray(clazzes[classIdx]);
+				FieldInfo[] fieldsInf = collectFieldsOfClass(clazzes[classIdx]);
+				for (int i = 0; i < fieldsInf.length; i++) {
+					builder.newRef(FieldInfo.class);
+					builder.dup();
+					FieldEditor f = fieldEditor(classIdx, fieldsInf, i);
+					builder.ldc(f.name());
+					builder.ldc(f.type());
+					builder.iconstForBoolean(f.isPublic());
+					builder.iconstForBoolean(f.isStatic());
+					builder.iconstForBoolean(f.isTransient());
+					builder
+							.invoke(Opcode.opc_invokespecial, FieldInfo.class,
+									"<init>", new Class[] { String.class,
+											Class.class, Boolean.class,
+											Boolean.class, Boolean.class },
+									Void.TYPE);
+					builder.aastore();
+
+				}// for fieldsInf
+				builder.invoke(Opcode.opc_invokespecial, ClassInfo.class,
+						"<init>", new Class[] { Boolean.class, Class.class,
+								com.db4o.reflect.self.FieldInfo[].class },
+						Void.TYPE);
+			}// if
+			builder.invoke(Opcode.opc_invokevirtual, Hashtable.class, "put",
+					new Class[] { Object.class, Object.class }, Object.class);
+			builder.pop();
+		}// for clazzes
+
+		builder.returnInstruction();
+
+		// GETSTATIC
+		// com/db4o/reflect/self/UnitDogSelfReflectionRegistry.CLASSINFO :
+		// Ljava/util/Hashtable;
+		// LDC Lcom/db4o/reflect/self/Animal;.class
+		// NEW com/db4o/reflect/self/ClassInfo
+		// DUP
+		// ICONST_1
+		// LDC Ljava/lang/Object;.class
+		// L2 (13)
+		// LINENUMBER 11 L2
+		// ICONST_1
+		// ANEWARRAY com/db4o/reflect/self/FieldInfo
+		// DUP
+		// ICONST_0
+		// NEW com/db4o/reflect/self/FieldInfo
+		// DUP
+		// LDC "_name"
+		// LDC Ljava/lang/String;.class
+		// ICONST_0
+		// ICONST_0
+		// ICONST_0
+		// INVOKESPECIAL
+		// com/db4o/reflect/self/FieldInfo.<init>(Ljava/lang/String;Ljava/lang/Class;ZZZ)V
+		// AASTORE
+		// INVOKESPECIAL
+		// com/db4o/reflect/self/ClassInfo.<init>(ZLjava/lang/Class;[Lcom/db4o/reflect/self/FieldInfo;)V
+		// L3 (28)
+		// LINENUMBER 10 L3
+		// INVOKEVIRTUAL
+		// java/util/Hashtable.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+		// POP
+		// L4 (31)
+		// LINENUMBER 12 L4
+		// GETSTATIC
+		// com/db4o/reflect/self/UnitDogSelfReflectionRegistry.CLASSINFO :
+		// Ljava/util/Hashtable;
+		// LDC Lcom/db4o/reflect/self/Dog;.class
+		// L5 (34)
+		// LINENUMBER 13 L5
+		// NEW com/db4o/reflect/self/ClassInfo
+		// DUP
+		// ICONST_0
+		// LDC Lcom/db4o/reflect/self/Animal;.class
+		// L6 (39)
+		// LINENUMBER 14 L6
+		// ICONST_3
+		// ANEWARRAY com/db4o/reflect/self/FieldInfo
+		// DUP
+		// ICONST_0
+		// L7 (44)
+		// LINENUMBER 15 L7
+		// NEW com/db4o/reflect/self/FieldInfo
+		// DUP
+		// LDC "_age"
+		// LDC Ljava/lang/Integer;.class
+		// ICONST_1
+		// ICONST_0
+		// ICONST_0
+		// INVOKESPECIAL
+		// com/db4o/reflect/self/FieldInfo.<init>(Ljava/lang/String;Ljava/lang/Class;ZZZ)V
+		// AASTORE
+		// DUP
+		// ICONST_1
+		// L8 (56)
+		// LINENUMBER 16 L8
+		// NEW com/db4o/reflect/self/FieldInfo
+		// DUP
+		// LDC "_parents"
+		// LDC [Lcom/db4o/reflect/self/Dog;.class
+		// ICONST_1
+		// ICONST_0
+		// ICONST_0
+		// INVOKESPECIAL
+		// com/db4o/reflect/self/FieldInfo.<init>(Ljava/lang/String;Ljava/lang/Class;ZZZ)V
+		// AASTORE
+		// DUP
+		// ICONST_2
+		// L9 (68)
+		// LINENUMBER 17 L9
+		// NEW com/db4o/reflect/self/FieldInfo
+		// DUP
+		// LDC "_prices"
+		// LDC [I.class
+		// ICONST_0
+		// ICONST_0
+		// ICONST_0
+		// INVOKESPECIAL
+		// com/db4o/reflect/self/FieldInfo.<init>(Ljava/lang/String;Ljava/lang/Class;ZZZ)V
+		// AASTORE
+		// L10 (78)
+		// LINENUMBER 13 L10
+		// INVOKESPECIAL
+		// com/db4o/reflect/self/ClassInfo.<init>(ZLjava/lang/Class;[Lcom/db4o/reflect/self/FieldInfo;)V
+		// L11 (80)
+		// LINENUMBER 12 L11
+		// INVOKEVIRTUAL
+		// java/util/Hashtable.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+		// POP
+		// L12 (83)
+		// LINENUMBER 5 L12
+		// RETURN
+
+		builder.commit();
 		fe.commit();
 
+	}
+
+	private FieldEditor fieldEditor(int classIdx, FieldInfo[] fieldsInf, int i) {
+		FieldEditor f = null;
+
+		try {
+			f = new FieldEditor(new ClassEditor(null, new ClassFileLoader()
+					.loadClass(clazzes[classIdx].getName())), fieldsInf[i]);
+		} catch (ClassFormatException e) {
+			System.err.println(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return f;
+	}
+
+	private FieldInfo[] collectFieldsOfClass(Class clazz) {
+		ClassEditor ce = null;
+		FieldInfo[] fields = null;
+		try {
+			ce = new ClassEditor(null, new ClassFileLoader().loadClass(clazz
+					.getName()));
+			fields = ce.fields();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return fields;
+	}
+
+	private int isAbstractClass(Class clazz) {
+		return Modifier.isAbstract(clazz.getModifiers()) ? 1 : 0;
 	}
 
 	private void classForName(MethodBuilder builder, Class clazz) {
@@ -275,71 +273,71 @@ public class RegistryEnhancer {
 	}
 
 	private void generateInfoForMethod() {
-		MethodBuilder bld = new MethodBuilder(context, ce, Modifiers.PUBLIC,
-				com.db4o.reflect.self.ClassInfo.class, "infoFor",
-				new Class[] { Class.class }, null);
-		bld.getstatic(ce.type(), Hashtable.class, "CLASSINFO");
-		bld.aload(1);
-		bld.invoke(Opcode.opc_invokevirtual, Hashtable.class, "get",
+		MethodBuilder builder = new MethodBuilder(context, ce,
+				Modifiers.PUBLIC, com.db4o.reflect.self.ClassInfo.class,
+				"infoFor", new Class[] { Class.class }, null);
+		builder.getstatic(ce.type(), Hashtable.class, "CLASSINFO");
+		builder.aload(1);
+		builder.invoke(Opcode.opc_invokevirtual, Hashtable.class, "get",
 				new Class[] { Object.class }, Object.class);
-		bld.checkcast(ClassInfo.class);
-		bld.areturn();
-		bld.commit();
+		builder.checkcast(ClassInfo.class);
+		builder.areturn();
+		builder.commit();
 
 	}
 
 	private void generateArrayForMethod() {
-		MethodBuilder bld = new MethodBuilder(context, ce, Modifiers.PUBLIC,
-				Object.class, "arrayFor", new Class[] { Class.class,
-						Integer.class }, null);
+		MethodBuilder builder = new MethodBuilder(context, ce,
+				Modifiers.PUBLIC, Object.class, "arrayFor", new Class[] {
+						Class.class, Integer.class }, null);
 		int labelIdx = 1;
 		for (int classIdx = 0; classIdx < clazzes.length; classIdx++) {
-			classForName(bld, clazzes[classIdx]);
-			bld.aload(1);
-			bld.invoke(Opcode.opc_invokevirtual, Class.class,
+			classForName(builder, clazzes[classIdx]);
+			builder.aload(1);
+			builder.invoke(Opcode.opc_invokevirtual, Class.class,
 					"isAssignableFrom", new Class[] { Class.class },
 					Boolean.class);
-			bld.ifeq(labelIdx);
-			bld.iload(2);
-			bld.newarray(clazzes[classIdx]);
-			bld.areturn();
-			bld.label(labelIdx);
+			builder.ifeq(labelIdx);
+			builder.iload(2);
+			builder.newarray(clazzes[classIdx]);
+			builder.areturn();
+			builder.label(labelIdx);
 			labelIdx++;
 		}
-		bld.aload(0);
-		bld.aload(1);
-		bld.iload(2);
-		bld.invoke(Opcode.opc_invokespecial, SelfReflectionRegistry.class,
+		builder.aload(0);
+		builder.aload(1);
+		builder.iload(2);
+		builder.invoke(Opcode.opc_invokespecial, SelfReflectionRegistry.class,
 				"arrayFor", new Class[] { Class.class, Integer.class },
 				Object.class);
-		bld.areturn();
-		bld.commit();
+		builder.areturn();
+		builder.commit();
 	}
 
 	private void generateComponentTypeMethod() {
-		MethodBuilder bld = new MethodBuilder(context, ce, Modifiers.PUBLIC,
-				Class.class, "componentType", new Class[] { Class.class },
-				new Class[0]);
+		MethodBuilder builder = new MethodBuilder(context, ce,
+				Modifiers.PUBLIC, Class.class, "componentType",
+				new Class[] { Class.class }, new Class[0]);
 		int labelId = 1;
 		for (int classIdx = 0; classIdx < clazzes.length; classIdx++) {
-			classForName(bld, clazzes[classIdx]);
-			bld.aload(1);
-			bld.invoke(Opcode.opc_invokevirtual, Class.class,
+			classForName(builder, clazzes[classIdx]);
+			builder.aload(1);
+			builder.invoke(Opcode.opc_invokevirtual, Class.class,
 					"isAssignableFrom", new Class[] { Class.class },
 					Boolean.class);
-			bld.ifeq(labelId);
-			classForName(bld, clazzes[classIdx]);
-			bld.areturn();
-			bld.label(labelId);
+			builder.ifeq(labelId);
+			classForName(builder, clazzes[classIdx]);
+			builder.areturn();
+			builder.label(labelId);
 			labelId++;
 		}
-		bld.aload(0);
-		bld.aload(1);
-		bld.invoke(Opcode.opc_invokespecial,
+		builder.aload(0);
+		builder.aload(1);
+		builder.invoke(Opcode.opc_invokespecial,
 				com.db4o.reflect.self.SelfReflectionRegistry.class,
 				"componentType", new Class[] { Class.class }, Class.class);
-		bld.areturn();
-		bld.commit();
+		builder.areturn();
+		builder.commit();
 
 	}
 }
