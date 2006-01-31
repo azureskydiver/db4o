@@ -134,6 +134,10 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     byte getIdentifier() {
         return YapConst.YAPCLASSCOLLECTION;
     }
+    
+    YapClass getActiveYapClass(ReflectClass a_class) {
+        return (YapClass)i_yapClassByClass.get(a_class);
+    }
 
     YapClass getYapClass(ReflectClass a_class, boolean a_create) {
         YapClass yapClass = (YapClass)i_yapClassByClass.get(a_class);

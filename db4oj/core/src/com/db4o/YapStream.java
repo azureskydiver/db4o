@@ -757,6 +757,32 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         
         return i_classCollection.getYapClass(a_class, a_create);
     }
+    
+    /**
+     * Differentiating getActiveYapClass from getYapClass is a tuning 
+     * optimization: If we initialize a YapClass, #set3() has to check for
+     * the possibility that class initialization associates the currently
+     * stored object with a previously stored static object, causing the
+     * object to be known afterwards.
+     * 
+     * In this call we only return active YapClasses, initialization
+     * is not done on purpose
+     */
+    final YapClass getActiveYapClass(ReflectClass a_class) {
+        if (a_class == null) {
+            return null;
+        }
+        if ((!showInternalClasses())
+            && i_handlers.ICLASS_INTERNAL.isAssignableFrom(a_class)) {
+            return null;
+        }
+        YapClass yc = i_handlers.getYapClassStatic(a_class);
+        if (yc != null) {
+            return yc;
+        }
+        return i_classCollection.getActiveYapClass(a_class);
+    }
+    
 
     YapClass getYapClass(int a_id) {
     	if(DTrace.enabled){
@@ -1514,7 +1540,9 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             if (yapObject == null) {
             	
                 ReflectClass claxx = reflector().forObject(a_object);
-                yc = getYapClass(claxx, false);
+                
+                yc = getActiveYapClass(claxx);
+                
                 if (yc == null) {
                     yc = getYapClass(claxx, true);
                     if (yc == null) {
@@ -1522,11 +1550,12 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
                     }
 
                     // The following may return a yapObject if the object is held
-                    // in a static variable somewhere that gets stored on creation
-                    // of the YapClass.
+                    // in a static variable somewhere ( often: Enums) that gets
+                    // stored or associated on initialization of the YapClass.
+                    
+                    yapObject = i_hcTree.hc_find(a_object);
+                    
                 }
-
-                yapObject = i_hcTree.hc_find(a_object);
                 
             } else {
                 yc = yapObject.getYapClass();
