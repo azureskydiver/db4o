@@ -149,4 +149,12 @@ public class Enhancer {
 	public String normalizeClassName(String name) {
 		return name.replace('/', '.');
 	}
+	public MemberRef[] collectDeclaredFields(ClassEditor ce) {
+		FieldInfo[] fields = ce.fields();
+		MemberRef[] refs = new MemberRef[fields.length];
+		for (int i = 0; i < fields.length; i++) {
+			refs[i] = new FieldEditor(ce, fields[i]).memberRef();
+		}
+		return refs;
+	}
 }
