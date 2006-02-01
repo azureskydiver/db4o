@@ -107,6 +107,10 @@ public class MethodBuilder {
 		ldc(new Integer(constant));
 	}
 
+	public void ldc(boolean constant) {
+		ldc(constant ? 1 : 0);
+	}
+
 	public void ldc(Object constant) {
 		_editor.addInstruction(Opcode.opc_ldc, constant);
 	}
@@ -118,6 +122,10 @@ public class MethodBuilder {
 	public void addTryCatch(int from, int to, int handler, Class thrown) {
 		_editor.addTryCatch(new TryCatch(forceLabel(from), forceLabel(to),
 				forceLabel(handler), _context.getType(thrown)));
+	}
+
+	public void getstatic(Class parent, Class type, String name) {
+		getstatic(_context.getType(parent),type, name);
 	}
 
 	public void getstatic(Type parent, Class type, String name) {
@@ -135,7 +143,7 @@ public class MethodBuilder {
 	}
 
 	public void checkcast(Class type) {
-		_editor.addInstruction(Opcode.opc_checkcast, _context.getType(type));
+		checkcast(_context.getType(type));
 	}
 
 	public void checkcast(Type type) {
@@ -159,57 +167,12 @@ public class MethodBuilder {
 		return _editor;
 	}
 
-	// TODO: Why is an empty 'throws' generated according to javap?
-	public static void createLoadClassConstMethod(Enhancer context,
-			ClassEditor ce) {
-		MethodBuilder bld = new MethodBuilder(context, ce, Modifiers.PROTECTED
-				| Modifiers.STATIC, Class.class, "db4o$class$",
-				new Class[] { String.class }, null);
-		// invoke Class#forName() and return result
-		bld.aload(0);
-		bld.invoke(Opcode.opc_invokestatic, Class.class, "forName",
-				new Class[] { String.class }, Class.class);
-		bld.label(1);
-		bld.areturn();
-		// wrap ClassNotFoundException in NoClassDefFoundError
-		bld.label(2);
-		bld.astore(1);
-		bld.newRef(NoClassDefFoundError.class);
-		bld.dup();
-		bld.aload(1);
-		bld.invoke(Opcode.opc_invokevirtual, ClassNotFoundException.class,
-				"getMessage", new Class[] {}, String.class);
-		bld.invoke(Opcode.opc_invokespecial, NoClassDefFoundError.class,
-				"<init>", new Class[] { String.class }, Void.TYPE);
-		bld.athrow();
-		bld.addTryCatch(0, 1, 2, ClassNotFoundException.class);
-		bld.commit();
-	}
-
 	public void getfield(MemberRef field) {
 		_editor.addInstruction(Opcode.opc_getfield, field);
 	}
 
 	public void putfield(MemberRef field) {
 		_editor.addInstruction(Opcode.opc_putfield, field);
-	}
-
-	public void iconstForBoolean(int i) {
-		if (i == 1) {
-			_editor.addInstruction(Opcode.opc_iconst_1);
-		} else if (i == 0) {
-			_editor.addInstruction(Opcode.opc_iconst_0);
-		} else {
-			System.err.print("i should be 1 or 0");
-		}
-
-	}
-
-	public void iconstForBoolean(boolean b) {
-		if (b) {
-			_editor.addInstruction(Opcode.opc_iconst_1);
-		} else
-			_editor.addInstruction(Opcode.opc_iconst_0);
 	}
 
 	public void anewarray(Class clazz) {
@@ -223,5 +186,12 @@ public class MethodBuilder {
 	public void pop() {
 		_editor.addInstruction(Opcode.opc_pop);
 	}
+	
+	public void invokeLoadClassConstMethod(Class clazz) {
+		invokeLoadClassConstMethod(clazz.getName());
+	}
 
+	public void invokeLoadClassConstMethod(String clazzName) {
+		_context.invokeLoadClassConstMethod(this,clazzName);
+	}
 }
