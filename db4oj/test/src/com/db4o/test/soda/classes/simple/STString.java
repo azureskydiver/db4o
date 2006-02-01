@@ -83,6 +83,28 @@ public class STString implements STClass1, STInterface {
 		st.expectOne(q,store()[3]);
 	}
 
+	public void testStartsWith() {
+		Query q = st.query();
+		Constraint c = q.constrain(new STString("do"));
+		q.descend("str").constraints().startsWith(true);
+		st.expectOne(q, new STString("dod"));
+		q = st.query();
+		c = q.constrain(new STString("od"));
+		q.descend("str").constraints().startsWith(true);
+		st.expectNone(q);
+	}
+
+	public void testEndsWith() {
+		Query q = st.query();
+		Constraint c = q.constrain(new STString("do"));
+		q.descend("str").constraints().endsWith(true);
+		st.expectNone(q);
+		q = st.query();
+		c = q.constrain(new STString("od"));
+		q.descend("str").constraints().endsWith(true);
+		st.expectOne(q, new STString("dod"));
+	}
+
 	public void testNotLike() {
 		Query q = st.query();
 		Constraint c = q.constrain(new STString("aaa"));

@@ -5,13 +5,13 @@ package com.db4o;
 /**
  * @exclude
  */
-public class QEContains extends QEStringCmp
+public class QEStartsWith extends QEStringCmp
 {
-	public QEContains(boolean caseSensitive) {
+	public QEStartsWith(boolean caseSensitive) {
 		super(caseSensitive);
 	}
 
 	protected boolean compareStrings(String candidate, String constraint) {
-		return candidate.indexOf(constraint) > -1;
+		return candidate.indexOf(constraint)==0;
 	}
 }

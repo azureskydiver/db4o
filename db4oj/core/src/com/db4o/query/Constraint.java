@@ -82,6 +82,20 @@ public interface Constraint {
      */
     public Constraint contains ();
 
+    /**
+     * sets the evaluation mode to string startsWith comparison.
+     * @param caseSensitive comparison will be case sensitive if true, case insensitive otherwise
+     * @return this {@link Constraint} to allow the chaining of method calls.
+     */
+    public Constraint startsWith(boolean caseSensitive);
+
+    /**
+     * sets the evaluation mode to string endsWith comparison.
+     * @param caseSensitive comparison will be case sensitive if true, case insensitive otherwise
+     * @return this {@link Constraint} to allow the chaining of method calls.
+     */
+    public Constraint endsWith(boolean caseSensitive);
+
 
     /**
      * turns on not() comparison.

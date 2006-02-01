@@ -487,7 +487,15 @@ public abstract class QCon implements Constraint, Visitor4 {
     public Constraint like() {
         throw notSupported();
     }
-    
+
+    public Constraint startsWith(boolean caseSensitive) {
+        throw notSupported();
+    }
+
+    public Constraint endsWith(boolean caseSensitive) {
+        throw notSupported();
+    }
+
     void log(String indent) {
         if (Deploy.debugQueries) {
 

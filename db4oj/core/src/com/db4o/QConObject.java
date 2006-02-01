@@ -382,7 +382,7 @@ public class QConObject extends QCon {
 
     public Constraint contains() {
         synchronized (streamLock()) {
-            i_evaluator = i_evaluator.add(new QEContains());
+            i_evaluator = i_evaluator.add(new QEContains(true));
             return this;
         }
     }
@@ -426,7 +426,7 @@ public class QConObject extends QCon {
 
     public Constraint like() {
         synchronized (streamLock()) {
-            i_evaluator = i_evaluator.add(new QELike());
+            i_evaluator = i_evaluator.add(new QEContains(false));
             return this;
         }
     }
@@ -434,6 +434,20 @@ public class QConObject extends QCon {
     public Constraint smaller() {
         synchronized (streamLock()) {
             i_evaluator = i_evaluator.add(new QESmaller());
+            return this;
+        }
+    }
+
+    public Constraint startsWith(boolean caseSensitive) {
+        synchronized (streamLock()) {
+            i_evaluator = i_evaluator.add(new QEStartsWith(caseSensitive));
+            return this;
+        }
+    }
+
+    public Constraint endsWith(boolean caseSensitive) {
+        synchronized (streamLock()) {
+            i_evaluator = i_evaluator.add(new QEEndsWith(caseSensitive));
             return this;
         }
     }
