@@ -1,12 +1,14 @@
 package com.db4o.nativequery.expr.cmp;
 
 public class ThreeWayComparison {
-	FieldValue _left;
-	ComparisonOperand _right;
+	private FieldValue _left;
+	private ComparisonOperand _right;
+	private boolean _swapped;
 
-	public ThreeWayComparison(FieldValue left, ComparisonOperand right) {
+	public ThreeWayComparison(FieldValue left, ComparisonOperand right,boolean swapped) {
 		this._left = left;
 		this._right = right;
+		_swapped=swapped;
 	}
 
 	public FieldValue left() {
@@ -17,5 +19,7 @@ public class ThreeWayComparison {
 		return _right;
 	}
 	
-	
+	public boolean swapped() {
+		return _swapped;
+	}
 }

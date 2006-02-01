@@ -290,6 +290,22 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison("sampleFieldFloatSmallerEqualsComp",FLOAT_FIELDNAME,new Float(FLOAT_CMPVAL),ComparisonOperator.GREATER,true);
 	}
 
+	boolean sampleMemberIntSmallerEqualsComp(Data data) {
+		return intMember<=data.id;
+	}
+
+	public void testMemberIntSmallerEqualsComp() throws Exception {
+		assertComparison("sampleMemberIntSmallerEqualsComp",INT_FIELDNAME,new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),ComparisonOperator.SMALLER,true);
+	}
+	
+	boolean sampleMemberFloatSmallerEqualsComp(Data data) {
+		return floatMember<=data.value;
+	}
+
+	public void testMemberFloatSmallerEqualsComp() throws Exception {
+		assertComparison("sampleMemberFloatSmallerEqualsComp",FLOAT_FIELDNAME,new FieldValue(PredicateFieldRoot.INSTANCE,"floatMember"),ComparisonOperator.SMALLER,true);
+	}
+	
 	// string equality
 	
 	boolean sampleFieldStringEqualsComp(Data data) {
@@ -461,7 +477,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testGetterCascadeFloatFieldGreaterEqualsComp() throws Exception {
-		assertComparison("sampleGetterCascadeFloatFieldGreaterEqualsComp",new String[]{DATA_FIELDNAME,FLOAT_FIELDNAME},new Float(FLOAT_CMPVAL),ComparisonOperator.SMALLER,true);
+		assertComparison("sampleGetterCascadeFloatFieldGreaterEqualsComp",new String[]{DATA_FIELDNAME,FLOAT_FIELDNAME},new Float(FLOAT_CMPVAL),ComparisonOperator.GREATER,true);
 	}
 
 	// member field comparison
