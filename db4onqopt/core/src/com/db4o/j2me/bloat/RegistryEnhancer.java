@@ -1,10 +1,12 @@
 package com.db4o.j2me.bloat;
 
 import java.lang.reflect.Modifier;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.editor.ClassEditor;
 import EDU.purdue.cs.bloat.editor.FieldEditor;
 import EDU.purdue.cs.bloat.editor.MemberRef;
@@ -19,6 +21,21 @@ import com.db4o.reflect.self.ClassInfo;
 import com.db4o.reflect.self.SelfReflectionRegistry;
 
 public class RegistryEnhancer {
+	// FIXME: Move primitive conversion stuff from ClassEnhancer and here to a class of its own
+	
+	private final static Map PRIMITIVES;
+
+	static {
+		PRIMITIVES = new HashMap();
+		PRIMITIVES.put(Type.BOOLEAN, Boolean.class);
+		PRIMITIVES.put(Type.BYTE, Byte.class);
+		PRIMITIVES.put(Type.CHARACTER, Character.class);
+		PRIMITIVES.put(Type.SHORT, Short.class);
+		PRIMITIVES.put(Type.INTEGER, Integer.class);
+		PRIMITIVES.put(Type.LONG, Long.class);
+		PRIMITIVES.put(Type.FLOAT, Float.class);
+		PRIMITIVES.put(Type.DOUBLE, Double.class);
+	}
 
 	private ClassEditor ce;
 
@@ -43,6 +60,7 @@ public class RegistryEnhancer {
 	}
 
 	public void generate() {
+		addNoArgConstructor();
 		generateCLASSINFOField();
 		generateInfoForMethod();
 		generateArrayForMethod();
@@ -53,7 +71,6 @@ public class RegistryEnhancer {
 		FieldEditor fe = context.createField(ce, 26, Type
 				.getType(Hashtable.class), "CLASSINFO");
 
-		// TODO: inject declaration:
 		/*
 		 * static { CLASSINFO = new Hashtable(2); CLASSINFO.put(Animal.class,
 		 * new ClassInfo(true, Object.class, new FieldInfo[] { new
@@ -65,171 +82,61 @@ public class RegistryEnhancer {
 		 * FIELDINFO.put(P1Object.class, new FieldInfo[]{}); }
 		 */
 
-		// static <clinit>()V
-		// L0 (0)
 		MethodBuilder builder = new MethodBuilder(context, ce,
 				Modifiers.STATIC, void.class, "<clinit>", new Class[0],
 				new Class[0]);
-		MemberRef[] fields = context.collectDeclaredFields(ce);
-
-		// LINENUMBER 9 L0
-		// NEW java/util/Hashtable
 		builder.newRef(Hashtable.class);
-		// DUP
 		builder.dup();
-		// ICONST_2
-		// INVOKESPECIAL java/util/Hashtable.<init>(I)V
 		builder.invoke(Opcode.opc_invokespecial, Hashtable.class, "<init>",
 				new Class[0], Void.TYPE);
-		// PUTSTATIC
-		// com/db4o/reflect/self/UnitDogSelfReflectionRegistry.CLASSINFO :
-		// Ljava/util/Hashtable;
 		builder.putstatic(ce.type(), Hashtable.class, "CLASSINFO");
-		// L1 (6)
-		// LINENUMBER 10 L1
-		int labelIdx = 1;// do we need labels anyway?
 		for (int classIdx = 0; classIdx < clazzes.length; classIdx++) {
-			classForName(builder, clazzes[classIdx]);
 			builder.getstatic(ce.type(), Hashtable.class, "CLASSINFO");
-			builder.ldc(clazzes[classIdx].getName());
+			builder.invokeLoadClassConstMethod(clazzes[classIdx]);
 			builder.newRef(com.db4o.reflect.self.ClassInfo.class);
 			builder.dup();
-			if (clazzes[classIdx].getSuperclass() != null) {
-				builder.iconstForBoolean(isAbstractClass(clazzes[classIdx]));
-				builder.anewarray(clazzes[classIdx]);
+//			if (clazzes[classIdx].getSuperclass() != null) {
 				FieldInfo[] fieldsInf = collectFieldsOfClass(clazzes[classIdx]);
+				builder.ldc(isAbstractClass(clazzes[classIdx]));
+				builder.invokeLoadClassConstMethod(clazzes[classIdx]);
+				builder.ldc(fieldsInf.length);
+				builder.anewarray(com.db4o.reflect.self.FieldInfo.class);
 				for (int i = 0; i < fieldsInf.length; i++) {
-					builder.newRef(FieldInfo.class);
+					builder.dup();
+					builder.ldc(i);
+					builder.newRef(com.db4o.reflect.self.FieldInfo.class);
 					builder.dup();
 					FieldEditor f = fieldEditor(classIdx, fieldsInf, i);
 					builder.ldc(f.name());
-					builder.ldc(f.type());
-					builder.iconstForBoolean(f.isPublic());
-					builder.iconstForBoolean(f.isStatic());
-					builder.iconstForBoolean(f.isTransient());
+					Class wrapper=(Class)PRIMITIVES.get(f.type());
+					if(wrapper!=null) {
+						builder.getstatic(wrapper, Class.class, "TYPE");
+					}
+					else {
+						builder.invokeLoadClassConstMethod(f.type().className());
+					}
+					builder.ldc(f.isPublic());
+					builder.ldc(f.isStatic());
+					builder.ldc(f.isTransient());
 					builder
-							.invoke(Opcode.opc_invokespecial, FieldInfo.class,
+							.invoke(Opcode.opc_invokespecial, com.db4o.reflect.self.FieldInfo.class,
 									"<init>", new Class[] { String.class,
-											Class.class, Boolean.class,
-											Boolean.class, Boolean.class },
+											Class.class, Boolean.TYPE,
+											Boolean.TYPE, Boolean.TYPE },
 									Void.TYPE);
 					builder.aastore();
 
 				}// for fieldsInf
 				builder.invoke(Opcode.opc_invokespecial, ClassInfo.class,
-						"<init>", new Class[] { Boolean.class, Class.class,
+						"<init>", new Class[] { Boolean.TYPE, Class.class,
 								com.db4o.reflect.self.FieldInfo[].class },
 						Void.TYPE);
-			}// if
+//			}// if
 			builder.invoke(Opcode.opc_invokevirtual, Hashtable.class, "put",
 					new Class[] { Object.class, Object.class }, Object.class);
-			builder.pop();
 		}// for clazzes
 
 		builder.returnInstruction();
-
-		// GETSTATIC
-		// com/db4o/reflect/self/UnitDogSelfReflectionRegistry.CLASSINFO :
-		// Ljava/util/Hashtable;
-		// LDC Lcom/db4o/reflect/self/Animal;.class
-		// NEW com/db4o/reflect/self/ClassInfo
-		// DUP
-		// ICONST_1
-		// LDC Ljava/lang/Object;.class
-		// L2 (13)
-		// LINENUMBER 11 L2
-		// ICONST_1
-		// ANEWARRAY com/db4o/reflect/self/FieldInfo
-		// DUP
-		// ICONST_0
-		// NEW com/db4o/reflect/self/FieldInfo
-		// DUP
-		// LDC "_name"
-		// LDC Ljava/lang/String;.class
-		// ICONST_0
-		// ICONST_0
-		// ICONST_0
-		// INVOKESPECIAL
-		// com/db4o/reflect/self/FieldInfo.<init>(Ljava/lang/String;Ljava/lang/Class;ZZZ)V
-		// AASTORE
-		// INVOKESPECIAL
-		// com/db4o/reflect/self/ClassInfo.<init>(ZLjava/lang/Class;[Lcom/db4o/reflect/self/FieldInfo;)V
-		// L3 (28)
-		// LINENUMBER 10 L3
-		// INVOKEVIRTUAL
-		// java/util/Hashtable.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-		// POP
-		// L4 (31)
-		// LINENUMBER 12 L4
-		// GETSTATIC
-		// com/db4o/reflect/self/UnitDogSelfReflectionRegistry.CLASSINFO :
-		// Ljava/util/Hashtable;
-		// LDC Lcom/db4o/reflect/self/Dog;.class
-		// L5 (34)
-		// LINENUMBER 13 L5
-		// NEW com/db4o/reflect/self/ClassInfo
-		// DUP
-		// ICONST_0
-		// LDC Lcom/db4o/reflect/self/Animal;.class
-		// L6 (39)
-		// LINENUMBER 14 L6
-		// ICONST_3
-		// ANEWARRAY com/db4o/reflect/self/FieldInfo
-		// DUP
-		// ICONST_0
-		// L7 (44)
-		// LINENUMBER 15 L7
-		// NEW com/db4o/reflect/self/FieldInfo
-		// DUP
-		// LDC "_age"
-		// LDC Ljava/lang/Integer;.class
-		// ICONST_1
-		// ICONST_0
-		// ICONST_0
-		// INVOKESPECIAL
-		// com/db4o/reflect/self/FieldInfo.<init>(Ljava/lang/String;Ljava/lang/Class;ZZZ)V
-		// AASTORE
-		// DUP
-		// ICONST_1
-		// L8 (56)
-		// LINENUMBER 16 L8
-		// NEW com/db4o/reflect/self/FieldInfo
-		// DUP
-		// LDC "_parents"
-		// LDC [Lcom/db4o/reflect/self/Dog;.class
-		// ICONST_1
-		// ICONST_0
-		// ICONST_0
-		// INVOKESPECIAL
-		// com/db4o/reflect/self/FieldInfo.<init>(Ljava/lang/String;Ljava/lang/Class;ZZZ)V
-		// AASTORE
-		// DUP
-		// ICONST_2
-		// L9 (68)
-		// LINENUMBER 17 L9
-		// NEW com/db4o/reflect/self/FieldInfo
-		// DUP
-		// LDC "_prices"
-		// LDC [I.class
-		// ICONST_0
-		// ICONST_0
-		// ICONST_0
-		// INVOKESPECIAL
-		// com/db4o/reflect/self/FieldInfo.<init>(Ljava/lang/String;Ljava/lang/Class;ZZZ)V
-		// AASTORE
-		// L10 (78)
-		// LINENUMBER 13 L10
-		// INVOKESPECIAL
-		// com/db4o/reflect/self/ClassInfo.<init>(ZLjava/lang/Class;[Lcom/db4o/reflect/self/FieldInfo;)V
-		// L11 (80)
-		// LINENUMBER 12 L11
-		// INVOKEVIRTUAL
-		// java/util/Hashtable.put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-		// POP
-		// L12 (83)
-		// LINENUMBER 5 L12
-		// RETURN
-
 		builder.commit();
 		fe.commit();
 
@@ -262,14 +169,8 @@ public class RegistryEnhancer {
 		return fields;
 	}
 
-	private int isAbstractClass(Class clazz) {
-		return Modifier.isAbstract(clazz.getModifiers()) ? 1 : 0;
-	}
-
-	private void classForName(MethodBuilder builder, Class clazz) {
-		builder.ldc(clazz.getName());
-		builder.invoke(Opcode.opc_invokestatic, builder.parentType(),
-				"db4o$class$", new Class[] { String.class }, Class.class);
+	private boolean isAbstractClass(Class clazz) {
+		return Modifier.isAbstract(clazz.getModifiers());
 	}
 
 	private void generateInfoForMethod() {
@@ -289,14 +190,14 @@ public class RegistryEnhancer {
 	private void generateArrayForMethod() {
 		MethodBuilder builder = new MethodBuilder(context, ce,
 				Modifiers.PUBLIC, Object.class, "arrayFor", new Class[] {
-						Class.class, Integer.class }, null);
+						Class.class, Integer.TYPE }, null);
 		int labelIdx = 1;
 		for (int classIdx = 0; classIdx < clazzes.length; classIdx++) {
-			classForName(builder, clazzes[classIdx]);
+			builder.invokeLoadClassConstMethod(clazzes[classIdx]);
 			builder.aload(1);
 			builder.invoke(Opcode.opc_invokevirtual, Class.class,
 					"isAssignableFrom", new Class[] { Class.class },
-					Boolean.class);
+					Boolean.TYPE);
 			builder.ifeq(labelIdx);
 			builder.iload(2);
 			builder.newarray(clazzes[classIdx]);
@@ -308,7 +209,7 @@ public class RegistryEnhancer {
 		builder.aload(1);
 		builder.iload(2);
 		builder.invoke(Opcode.opc_invokespecial, SelfReflectionRegistry.class,
-				"arrayFor", new Class[] { Class.class, Integer.class },
+				"arrayFor", new Class[] { Class.class, Integer.TYPE },
 				Object.class);
 		builder.areturn();
 		builder.commit();
@@ -320,13 +221,13 @@ public class RegistryEnhancer {
 				new Class[] { Class.class }, new Class[0]);
 		int labelId = 1;
 		for (int classIdx = 0; classIdx < clazzes.length; classIdx++) {
-			classForName(builder, clazzes[classIdx]);
+			builder.invokeLoadClassConstMethod(clazzes[classIdx]);
 			builder.aload(1);
 			builder.invoke(Opcode.opc_invokevirtual, Class.class,
 					"isAssignableFrom", new Class[] { Class.class },
-					Boolean.class);
+					Boolean.TYPE);
 			builder.ifeq(labelId);
-			classForName(builder, clazzes[classIdx]);
+			builder.invokeLoadClassConstMethod(clazzes[classIdx]);
 			builder.areturn();
 			builder.label(labelId);
 			labelId++;
@@ -339,5 +240,18 @@ public class RegistryEnhancer {
 		builder.areturn();
 		builder.commit();
 
+	}
+	
+	// for testing only
+	protected void addNoArgConstructor() {
+		MethodEditor init = new MethodEditor(ce, Modifiers.PUBLIC, Type.VOID,
+				"<init>", new Type[0], new Type[0]);
+		MemberRef mr = context.methodRef(ce.superclass(), "<init>",
+				new Class[0], void.class);
+		init.addLabel(new Label(0));
+		init.addInstruction(Opcode.opcx_aload, init.paramAt(0));
+		init.addInstruction(Opcode.opcx_invokespecial, mr);
+		init.addInstruction(Opcode.opcx_return);
+		init.commit();
 	}
 }

@@ -4,6 +4,7 @@ import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 import EDU.purdue.cs.bloat.reflect.*;
 
+import com.db4o.j2me.bloat.testdata.*;
 import com.db4o.reflect.self.*;
 
 // TODO: Use plain classes for testing, not the SelfReflector test cases
@@ -18,10 +19,10 @@ public class Generation {
 		ClassEditor ce = context.createClass(Modifiers.PUBLIC,
 				"RegressionDogSelfReflectionRegistry", Type.getType(Type.classDescriptor(SelfReflectionRegistry.class.getName())),
 				new Type[0]);
-		MethodBuilder.createLoadClassConstMethod(context, ce);
+		context.createLoadClassConstMethod(ce);
 
 		RegistryEnhancer registryEnhancer = new RegistryEnhancer(context, ce,
-				com.db4o.test.reflect.self.Dog.class);
+				Dog.class);
 		registryEnhancer.generate();
 		ce.commit();
 

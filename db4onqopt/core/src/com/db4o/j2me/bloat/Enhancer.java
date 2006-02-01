@@ -146,6 +146,12 @@ public class Enhancer {
 		me.commit();
 	}
 	
+	public void invokeLoadClassConstMethod(MethodBuilder builder,String clazzName) {
+		builder.ldc(normalizeClassName(clazzName));
+		builder.invoke(Opcode.opc_invokestatic, builder.parentType(),
+				"db4o$class$", new Class[] { String.class }, Class.class);
+	}
+	
 	public String normalizeClassName(String name) {
 		return name.replace('/', '.');
 	}

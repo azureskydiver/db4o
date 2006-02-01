@@ -2,7 +2,10 @@ package com.db4o.j2me.bloat;
 
 import java.util.*;
 
+import com.sun.org.apache.bcel.internal.generic.*;
+
 import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.reflect.*;
 
 // TODO: Add SelfReflectable interface declaration
@@ -219,7 +222,7 @@ public class ClassEnhancer {
 
 	protected void generateSelf_set(MemberRef[] fields) {
 		MethodBuilder builder = new MethodBuilder(context, ce, Modifiers.PUBLIC,
-				Void.class, "self_set", new Class[] { String.class,
+				Void.TYPE, "self_set", new Class[] { String.class,
 						Object.class }, null);
 
 		/*
@@ -232,24 +235,22 @@ public class ClassEnhancer {
 		for (int fieldIdx = 0; fieldIdx < fields.length; fieldIdx++) {
 			Type fieldType = fields[fieldIdx].type();
 
-			Class wrapper = null;
-			if (fieldType.isPrimitive()) {
-				wrapper = (Class) PRIMITIVES.get(fieldType);
-			}
+			Class wrapper = (Class) PRIMITIVES.get(fieldType);
 			builder.aload(1);
 			builder.ldc(fields[fieldIdx].name());
 			builder.invoke(Opcode.opc_invokevirtual, String.class, "equals",
-					new Class[] { Object.class }, Boolean.class);
+					new Class[] { Object.class }, Boolean.TYPE);
 			builder.ifeq(fieldIdx + 1);
 			builder.aload(0);
 			builder.aload(2);
-			builder.checkcast(fieldType);
-			if (isNumberClass(fieldType)) {
-				wrapper = (Class) PRIMITIVES.get(fieldType);
-				
-				builder.invoke(Opcode.opc_invokevirtual, wrapper,
+			if(wrapper!=null) {
+				builder.checkcast(wrapper);
+				builder.invoke(Opcode.opc_invokevirtual, context.getType(wrapper),
 						(String) CONVERTIONFUNKTIONS.get(wrapper),
-						new Class[0], wrapper);
+						new Type[0], fieldType);
+			}
+			else {
+				builder.checkcast(fieldType);
 			}
 			builder.putfield(fields[fieldIdx]);
 			builder.returnInstruction();
