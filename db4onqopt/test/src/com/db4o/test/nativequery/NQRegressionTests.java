@@ -155,7 +155,7 @@ public class NQRegressionTests {
 				return candidate.name.equals(CSTR);
 			}
 		},
-		// string contains
+		// string specific comparisons
 		new ExpectingPredicate() {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
@@ -172,6 +172,30 @@ public class NQRegressionTests {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.name.contains("C");
+			}
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
+			public boolean match(Data candidate) {
+				return candidate.name.startsWith("C");
+			}
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 0;}
+			public boolean match(Data candidate) {
+				return candidate.name.startsWith("a");
+			}
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
+			public boolean match(Data candidate) {
+				return candidate.name.endsWith("a");
+			}
+		},
+		new ExpectingPredicate() {
+			public int expected() { return 0;}
+			public boolean match(Data candidate) {
+				return candidate.name.endsWith("A");
 			}
 		},
 		// int field comparison

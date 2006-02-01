@@ -23,6 +23,8 @@ public class SODABloatMethodBuilder {
 	private MemberRef greaterRef;
 	private MemberRef smallerRef;
 	private MemberRef containsRef;
+	private MemberRef startsWithRef;
+	private MemberRef endsWithRef;
 	private MemberRef notRef;
 	private MemberRef andRef;
 	private MemberRef orRef;
@@ -277,6 +279,21 @@ public class SODABloatMethodBuilder {
 						methodEditor.addInstruction(Opcode.opc_invokespecial,createMethodReference(convSpec[0],"<init>",new Class[]{convSpec[1]},Void.TYPE));
 					}
 				}
+
+				public void visit(CandidateFieldRoot root) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				public void visit(PredicateFieldRoot root) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				public void visit(StaticFieldRoot root) {
+					// TODO Auto-generated method stub
+					
+				}
 			});
 			methodEditor.addInstruction(Opcode.opc_invokeinterface,constrainRef);
 			if(!expression.op().equals(ComparisonOperator.EQUALS)) {
@@ -288,6 +305,14 @@ public class SODABloatMethodBuilder {
 				}
 				else if(expression.op().equals(ComparisonOperator.CONTAINS)) {
 					methodEditor.addInstruction(Opcode.opc_invokeinterface,containsRef);
+				}
+				else if(expression.op().equals(ComparisonOperator.STARTSWITH)) {
+					methodEditor.addInstruction(Opcode.opc_ldc, new Integer(1));
+					methodEditor.addInstruction(Opcode.opc_invokeinterface,startsWithRef);
+				}
+				else if(expression.op().equals(ComparisonOperator.ENDSWITH)) {
+					methodEditor.addInstruction(Opcode.opc_ldc, new Integer(1));
+					methodEditor.addInstruction(Opcode.opc_invokeinterface,endsWithRef);
 				}
 				else {
 					throw new RuntimeException("Cannot interpret constraint: "+expression.op());
@@ -330,6 +355,8 @@ public class SODABloatMethodBuilder {
 		greaterRef=createMethodReference(Constraint.class,"greater",new Class[]{},Constraint.class);
 		smallerRef=createMethodReference(Constraint.class,"smaller",new Class[]{},Constraint.class);
 		containsRef=createMethodReference(Constraint.class,"contains",new Class[]{},Constraint.class);
+		startsWithRef=createMethodReference(Constraint.class,"startsWith",new Class[]{Boolean.TYPE},Constraint.class);
+		endsWithRef=createMethodReference(Constraint.class,"endsWith",new Class[]{Boolean.TYPE},Constraint.class);
 		notRef=createMethodReference(Constraint.class,"not",new Class[]{},Constraint.class);
 		andRef=createMethodReference(Constraint.class,"and",new Class[]{Constraint.class},Constraint.class);
 		orRef=createMethodReference(Constraint.class,"or",new Class[]{Constraint.class},Constraint.class);
@@ -371,7 +398,7 @@ public class SODABloatMethodBuilder {
 		return parent.getDeclaredField(name).getType();
 	}
 	
-	private static class FieldRootClassNameVisitor implements FieldRootVisitor {
+	private static class FieldRootClassNameVisitor implements ComparisonOperandVisitor {
 		private Class _predicateClass;
 		private Class _candidateClass;
 		private String _className;
@@ -395,6 +422,15 @@ public class SODABloatMethodBuilder {
 		
 		public String className() {
 			return _className;
+		}
+
+		public void visit(ArithmeticExpression operand) {
+		}
+
+		public void visit(ConstValue operand) {
+		}
+
+		public void visit(FieldValue operand) {
 		}
 	}
 }

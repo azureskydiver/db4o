@@ -127,7 +127,21 @@ public class SODAQueryBuilder {
 							break;
 					}
 				}
-				
+
+				public void visit(CandidateFieldRoot root) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				public void visit(PredicateFieldRoot root) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				public void visit(StaticFieldRoot root) {
+					// TODO Auto-generated method stub
+					
+				}
 			});
 			_constraint=subQuery.constrain(value[0]);
 			if(!expression.op().equals(ComparisonOperator.EQUALS)) {
@@ -139,6 +153,12 @@ public class SODAQueryBuilder {
 				}
 				else if(expression.op().equals(ComparisonOperator.CONTAINS)) {
 					_constraint.contains();
+				}
+				else if(expression.op().equals(ComparisonOperator.STARTSWITH)) {
+					_constraint.startsWith(true);
+				}
+				else if(expression.op().equals(ComparisonOperator.ENDSWITH)) {
+					_constraint.endsWith(true);
 				}
 				else {
 					throw new RuntimeException("Can't handle constraint: "+expression.op());

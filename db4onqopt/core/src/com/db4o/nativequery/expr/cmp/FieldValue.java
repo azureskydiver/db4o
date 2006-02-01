@@ -6,10 +6,11 @@ import com.db4o.nativequery.expr.cmp.field.*;
 // FIXME need to carry more info, must know about Integer.class vs. Integer.TYPE
 
 public class FieldValue implements ComparisonOperand {
-	private FieldRoot _root;
+	private String _fieldName;
+	private ComparisonOperand _root;
 	private Collection4 _fieldNames = new Collection4();
 
-	private static FieldRoot rootFor(int id) {
+	private static ComparisonOperand rootFor(int id) {
 		switch(id) {
 			case 0: return PredicateFieldRoot.INSTANCE;
 			case 1: return CandidateFieldRoot.INSTANCE;
@@ -39,17 +40,18 @@ public class FieldValue implements ComparisonOperand {
 		throw new RuntimeException();
 	}
 	
-	public FieldValue(FieldRoot root,String name) {
+	public FieldValue(ComparisonOperand root,String name) {
 		_root=root;
-		descend(name);
+		_fieldName=name;
+		_fieldNames.add(name);
 	}
 	
-	public FieldValue(FieldRoot root,String[] fieldNames) {
+	public FieldValue(ComparisonOperand root,String[] fieldNames) {
 		_root=root;
 		_fieldNames.addAll(fieldNames);
 	}
 
-	public FieldValue(FieldRoot root, Iterator4 fieldNames) {
+	public FieldValue(ComparisonOperand root, Iterator4 fieldNames) {
 		_root=root;
 		_fieldNames.addAll(fieldNames);
 	}
@@ -63,7 +65,7 @@ public class FieldValue implements ComparisonOperand {
 		return _fieldNames.strictIterator();
 	}
 
-	public FieldRoot root() {
+	public ComparisonOperand root() {
 		return _root;
 	}
 	
