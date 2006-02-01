@@ -114,35 +114,21 @@ public class Enhancer {
 	
 	// TODO: Why is an empty 'throws' generated according to javap?
 	public void createLoadClassConstMethod(ClassEditor ce) {
-		MethodEditor me=createMethod(ce, Modifiers.PROTECTED|Modifiers.STATIC, Class.class, "db4o$class$", new Class[]{String.class}, null);
-		LocalVariable[] localVars=createLocalVariables(1);
-		Label[] labels=createLabels(2);
-		me.addLabel(labels[0]);
-//		   0:   aload_0
-		me.addInstruction(Opcode.opc_aload,localVars[0]);
-//		   1:   invokestatic    #1; //Method java/lang/Class.forName:(Ljava/lang/String;)Ljava/lang/Class;
-		me.addInstruction(Opcode.opc_invokestatic, methodRef(Class.class, "forName", new Class[]{String.class}, Class.class));
-		me.addLabel(labels[1]);
-//		   4:   areturn
-		me.addInstruction(Opcode.opc_areturn);
-//		   5:   astore_1		
-		me.addLabel(labels[2]);
-		me.addInstruction(Opcode.opc_astore,localVars[1]);
-//		   6:   new     #3; //class NoClassDefFoundError
-		me.addInstruction(Opcode.opc_new,getType(NoClassDefFoundError.class));
-//		   9:   dup
-		me.addInstruction(Opcode.opc_dup);
-//		   10:  aload_1
-		me.addInstruction(Opcode.opc_aload,localVars[1]);
-//		   11:  invokevirtual   #4; //Method java/lang/ClassNotFoundException.getMessage:()Ljava/lang/String;
-		me.addInstruction(Opcode.opc_invokevirtual, methodRef(ClassNotFoundException.class, "getMessage", new Class[]{}, String.class));
-//		   14:  invokespecial   #5; //Method java/lang/NoClassDefFoundError."<init>":(Ljava/lang/String;)V
-		me.addInstruction(Opcode.opc_invokespecial, methodRef(NoClassDefFoundError.class, "<init>", new Class[]{String.class}, Void.TYPE));
-//		   17:  athrow
-		me.addInstruction(Opcode.opc_athrow);
-//	    0     4     5   Class java/lang/ClassNotFoundException
-		me.addTryCatch(new TryCatch(labels[0],labels[1],labels[2],getType(ClassNotFoundException.class)));
-		me.commit();
+		MethodBuilder builder=new MethodBuilder(this,ce, Modifiers.PROTECTED|Modifiers.STATIC, Class.class, "db4o$class$", new Class[]{String.class}, null);
+		builder.aload(0);
+		builder.invoke(Opcode.opc_invokestatic, Class.class, "forName", new Class[]{String.class}, Class.class);
+		builder.label(1);
+		builder.areturn();
+		builder.label(2);
+		builder.astore(1);
+		builder.newRef(NoClassDefFoundError.class);
+		builder.dup();
+		builder.aload(1);
+		builder.invoke(Opcode.opc_invokevirtual, ClassNotFoundException.class, "getMessage", new Class[]{}, String.class);
+		builder.invoke(Opcode.opc_invokespecial, NoClassDefFoundError.class, "<init>", new Class[]{String.class}, Void.TYPE);
+		builder.athrow();
+		builder.addTryCatch(0,1,2,ClassNotFoundException.class);
+		builder.commit();
 	}
 	
 	public void invokeLoadClassConstMethod(MethodBuilder builder,String clazzName) {
