@@ -2,6 +2,7 @@ package com.db4o.j2me.bloat;
 
 import java.util.*;
 
+import com.db4o.reflect.self.*;
 import com.sun.org.apache.bcel.internal.generic.*;
 
 import EDU.purdue.cs.bloat.editor.*;
@@ -383,6 +384,7 @@ public class ClassEnhancer {
 	}
 
 	public void generate() {
+		ce.addInterface(SelfReflectable.class);
 		if (!(inspectNoArgConstr(ce.methods()))) {
 			addNoArgConstructor();
 		}
