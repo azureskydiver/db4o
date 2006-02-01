@@ -60,7 +60,6 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	private final static int INT_CMPVAL=42;
 	private final static float FLOAT_CMPVAL=12.3f;
 	private final static String STRING_CMPVAL="Test";
-	// TODO: handle StaticFieldExpr
 	private final static Integer INT_WRAPPER_CMPVAL=new Integer(INT_CMPVAL);
 	private final Integer intWrapperCmpVal=new Integer(INT_CMPVAL);
 	
@@ -173,6 +172,15 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	// object identity
+
+// TODO: nonsense, but need single roots for method calls
+//	boolean sampleCandidateIdentity(Data data) {
+//		return data==null;
+//	}
+//
+//	public void testCandidateIdentity() throws Exception {
+//		assertComparison("sampleCandidateIdentity",new String[]{},null,ComparisonOperator.EQUALS,false);
+//	}
 
 	boolean sampleIdentityNullComp(Data data) {
 		return data.next==null;
@@ -300,7 +308,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison("sampleStringFieldEqualsComp",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.EQUALS,false);
 	}
 	
-	// string contains
+	// string-specific comparisons
 
 	boolean sampleFieldStringContains(Data data) {
 		return data.name.contains(STRING_CMPVAL);
@@ -308,6 +316,46 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	public void testFieldStringContains() throws Exception {
 		assertComparison("sampleFieldStringContains",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.CONTAINS,false);
+	}
+
+	boolean sampleFieldStringContainsWrongWay(Data data) {
+		return STRING_CMPVAL.contains(data.name);
+	}
+
+	public void testFieldStringContainsWrongWay() throws Exception {
+		assertInvalid("sampleFieldStringContainsWrongWay");
+	}
+
+	boolean sampleFieldStringStartsWith(Data data) {
+		return data.name.startsWith(STRING_CMPVAL);
+	}
+
+	public void testFieldStringStartsWith() throws Exception {
+		assertComparison("sampleFieldStringStartsWith",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.STARTSWITH,false);
+	}
+
+	boolean sampleFieldStringStartsWithWrongWay(Data data) {
+		return STRING_CMPVAL.startsWith(data.name);
+	}
+
+	public void testFieldStringStartsWithWrongWay() throws Exception {
+		assertInvalid("sampleFieldStringStartsWithWrongWay");
+	}
+
+	boolean sampleFieldStringEndsWith(Data data) {
+		return data.name.endsWith(STRING_CMPVAL);
+	}
+
+	public void testFieldStringEndsWith() throws Exception {
+		assertComparison("sampleFieldStringEndsWith",STRING_FIELDNAME,STRING_CMPVAL,ComparisonOperator.ENDSWITH,false);
+	}
+
+	boolean sampleFieldStringEndsWithWrongWay(Data data) {
+		return STRING_CMPVAL.endsWith(data.name);
+	}
+
+	public void testFieldStringEndsWithWrongWay() throws Exception {
+		assertInvalid("sampleFieldStringEndsWithWrongWay");
 	}
 
 	// primitive wrapper equality
@@ -766,6 +814,9 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	private void assertInvalid(String methodName) throws ClassNotFoundException {
 		Expression expression = expression(methodName);
+		if(expression!=null) {
+			System.err.println(expression);
+		}
 		assertNull(expression);
 	}
 	

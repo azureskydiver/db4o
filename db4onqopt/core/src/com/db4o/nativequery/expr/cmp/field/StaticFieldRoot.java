@@ -2,7 +2,7 @@ package com.db4o.nativequery.expr.cmp.field;
 
 import com.db4o.nativequery.expr.cmp.*;
 
-public class StaticFieldRoot implements FieldRoot {
+public class StaticFieldRoot implements ComparisonOperand {
 	private String _className;
 	
 	public StaticFieldRoot(String className) {
@@ -13,10 +13,6 @@ public class StaticFieldRoot implements FieldRoot {
 		return _className;
 	}
 
-	public void accept(FieldRootVisitor visitor) {
-		visitor.visit(this);
-	}
-	
 	public boolean equals(Object obj) {
 		if(obj==this) {
 			return true;
@@ -34,5 +30,9 @@ public class StaticFieldRoot implements FieldRoot {
 	
 	public String toString() {
 		return _className;
+	}
+
+	public void accept(ComparisonOperandVisitor visitor) {
+		visitor.visit(this);
 	}
 }

@@ -232,6 +232,14 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			processEqualsCall((CallMethodExpr)expr,ComparisonOperator.CONTAINS);
 			return;
 		}
+		if(expr.method().name().equals("startsWith")&&expr.method().declaringClass().equals(Type.STRING)) {
+			processEqualsCall((CallMethodExpr)expr,ComparisonOperator.STARTSWITH);
+			return;
+		}
+		if(expr.method().name().equals("endsWith")&&expr.method().declaringClass().equals(Type.STRING)) {
+			processEqualsCall((CallMethodExpr)expr,ComparisonOperator.ENDSWITH);
+			return;
+		}
 		MemberRef methodRef=expr.method();
 		if(methodStack.contains(methodRef)||methodStack.size()>MAX_DEPTH) {
 			return;
@@ -254,7 +262,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				if(rcvRetval instanceof FieldValue) {
 					FieldValue rcvField=(FieldValue)rcvRetval;
 					for(Iterator4 nameIter=methField.fieldNames();nameIter.hasNext();) {
-						rcvField.descend((String)nameIter.next());
+						rcvField=rcvField.descend((String)nameIter.next());
 					}
 					retval(rcvField);
 				}
@@ -319,7 +327,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		Object fieldObj=retval;
 		String fieldName=expr.field().name();
 		if(fieldObj instanceof FieldValue) {
-			((FieldValue)fieldObj).descend(fieldName);
+			retval(((FieldValue)fieldObj).descend(fieldName));
 			return;
 		}
 		if(!(fieldObj instanceof Integer)) {
@@ -327,7 +335,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return;
 		}
 		int idx=((Integer)fieldObj).intValue();
-		FieldRoot root=null;
+		ComparisonOperand root=null;
 		switch(idx) {
 			case 0:
 				root=PredicateFieldRoot.INSTANCE;
