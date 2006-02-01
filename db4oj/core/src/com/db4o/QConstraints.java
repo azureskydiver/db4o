@@ -92,6 +92,24 @@ public class QConstraints extends QCon implements Constraints {
 		}
 	}
 
+	public Constraint startsWith(boolean caseSensitive) {
+		synchronized(streamLock()){
+			for (int i = 0; i < i_constraints.length; i++) {
+				i_constraints[i].startsWith(caseSensitive);
+			}
+			return this;
+		}
+	}
+
+	public Constraint endsWith(boolean caseSensitive) {
+		synchronized(streamLock()){
+			for (int i = 0; i < i_constraints.length; i++) {
+				i_constraints[i].endsWith(caseSensitive);
+			}
+			return this;
+		}
+	}
+
 	public Constraint smaller() {
 		synchronized(streamLock()){
 			for (int i = 0; i < i_constraints.length; i++) {

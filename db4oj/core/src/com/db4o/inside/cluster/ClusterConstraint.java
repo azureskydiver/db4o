@@ -96,6 +96,24 @@ public class ClusterConstraint implements Constraint{
         }
     }
 
+    public Constraint startsWith(boolean caseSensitive) {
+        synchronized(_cluster){
+            for (int i = 0; i < _constraints.length; i++) {
+                _constraints[i].startsWith(caseSensitive);
+            }
+            return this;
+        }
+    }
+
+    public Constraint endsWith(boolean caseSensitive) {
+        synchronized(_cluster){
+            for (int i = 0; i < _constraints.length; i++) {
+                _constraints[i].endsWith(caseSensitive);
+            }
+            return this;
+        }
+    }
+
     public Constraint contains() {
         synchronized(_cluster){
             for (int i = 0; i < _constraints.length; i++) {
