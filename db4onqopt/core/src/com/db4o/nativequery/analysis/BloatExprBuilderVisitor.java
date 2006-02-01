@@ -158,7 +158,11 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		ThreeWayComparison cmp=(ThreeWayComparison)retval;
 		Expression expr=null;
-		switch(stmt.comparison()) {
+		int comparison=stmt.comparison();
+		if(cmp.swapped()) {
+			comparison=((Integer)OP_SYMMETRY.get(new Integer(comparison))).intValue();
+		}
+		switch(comparison) {
 			case IfStmt.EQ:
 				expr=new ComparisonExpression(cmp.left(),cmp.right(),ComparisonOperator.EQUALS);
 				break;
@@ -400,17 +404,20 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			case ArithExpr.CMP:
 			case ArithExpr.CMPG:
 			case ArithExpr.CMPL:
+				// XXX
 				// FIXME duplication?
+				boolean swapped=false;
 				if((left instanceof ComparisonOperand)&&(right instanceof FieldValue)) {
 					FieldValue rightField=(FieldValue)right;
 					if(rightField.root()==CandidateFieldRoot.INSTANCE) {
 						ComparisonOperand swap=left;
 						left=right;
 						right=swap;
+						swapped=true;
 					}
 				}
 				if(left instanceof FieldValue) {
-					retval(new ThreeWayComparison((FieldValue)left,right));
+					retval(new ThreeWayComparison((FieldValue)left,right,swapped));
 				}
 				break;
 			default:

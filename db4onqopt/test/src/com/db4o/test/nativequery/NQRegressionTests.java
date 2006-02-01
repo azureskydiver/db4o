@@ -230,6 +230,12 @@ public class NQRegressionTests {
 				return candidate.value>2.9f;
 			}
 		},
+		new ExpectingPredicate() {
+			public int expected() { return 2;}
+			public boolean match(Data candidate) {
+				return 1.5f >= candidate.value;
+			}
+		},
 		// mixed comparison (coercion)
 		new ExpectingPredicate() {
 			public int expected() { return 1;}
