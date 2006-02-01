@@ -10,13 +10,15 @@ namespace j4o.lang
 {
 	public class Class
 	{
-		private static IDictionary _typeToClassMap = new Hashtable();
+		private static readonly IDictionary _typeToClassMap = new Hashtable();
 
-		private static IDictionary _typeNameToClassMap = new Hashtable();
+		private static readonly IDictionary _typeNameToClassMap = new Hashtable();
 
-		private static Type[] PRIMITIVE_TYPES = {
-		                                        	typeof (DateTime), typeof (Decimal)
-		                                        };
+		private static readonly IList PrimitiveTypes = new Type[] {
+				typeof (DateTime), typeof (Decimal)
+		};
+
+		private const BindingFlags AllDeclaredMembers = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
 		private Type _type;
 		private String _name;
@@ -25,21 +27,7 @@ namespace j4o.lang
 		public Class(Type type)
 		{
 			_type = type;
-			_primitive = type.IsPrimitive;
-			//getName();
-			for (int i = 0; i < PRIMITIVE_TYPES.Length; i++)
-			{
-				if (type == PRIMITIVE_TYPES[i])
-				{
-					_primitive = true;
-					break;
-				}
-			}
-		}
-
-		internal static BindingFlags declared()
-		{
-			return BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
+			_primitive = type.IsPrimitive || PrimitiveTypes.Contains(type);
 		}
 
 		public override bool Equals(object obj)
@@ -108,7 +96,7 @@ namespace j4o.lang
 
 		public Constructor[] getDeclaredConstructors()
 		{
-			ConstructorInfo[] constructorInfos = _type.GetConstructors(declared());
+			ConstructorInfo[] constructorInfos = _type.GetConstructors(AllDeclaredMembers);
 			Constructor[] constructors = new Constructor[constructorInfos.Length];
 			for (int i = 0; i < constructorInfos.Length; i++)
 			{
@@ -119,12 +107,12 @@ namespace j4o.lang
 
 		public Field getDeclaredField(String name)
 		{
-			return getField(_type.GetField(name, declared() | BindingFlags.Static));
+			return getField(_type.GetField(name, AllDeclaredMembers | BindingFlags.Static));
 		}
 
 		public Field[] getDeclaredFields()
 		{
-			FieldInfo[] fieldInfos = _type.GetFields(declared() | BindingFlags.Static);
+			FieldInfo[] fieldInfos = _type.GetFields(AllDeclaredMembers | BindingFlags.Static);
 			Field[] fields = new Field[fieldInfos.Length];
 			for (int i = 0; i < fieldInfos.Length; i++)
 			{
@@ -135,12 +123,12 @@ namespace j4o.lang
 
 		public Method getDeclaredMethod(String name, Class[] parameterTypes)
 		{
-			return getMethod(_type.GetMethod(name, declared(), null, getTypes(parameterTypes), null));
+			return getMethod(_type.GetMethod(name, AllDeclaredMembers, null, getTypes(parameterTypes), null));
 		}
 
 		public Method[] getDeclaredMethods()
 		{
-			MethodInfo[] methodInfos = _type.GetMethods(declared());
+			MethodInfo[] methodInfos = _type.GetMethods(AllDeclaredMembers);
 			Method[] methods = new Method[methodInfos.Length];
 			for (int i = 0; i < methodInfos.Length; i++)
 			{
@@ -155,7 +143,7 @@ namespace j4o.lang
 			{
 				return null;
 			}
-			return new Field(fieldInfo, _type.GetEvent(fieldInfo.Name, declared()));
+			return new Field(fieldInfo, _type.GetEvent(fieldInfo.Name, AllDeclaredMembers));
 		}
 
 		public Field getField(String name)
