@@ -7,89 +7,114 @@ using com.db4o.query;
 
 namespace com.db4o.test.nativequeries.cats
 {
-	public class TestCatConsistency
-	{
-        public void configure(){
-            Db4o.configure().optimizeNativeQueries(false);
-        }
-        
-        public void store(){
+    public class TestCatConsistency
+    {
+        public void store()
+        {
             storeCats();
         }
-        
-        public void test(){
-            
+
+        public void test()
+        {
             ExtObjectContainer oc = Tester.objectContainer();
-            oc.configure().optimizeNativeQueries(true);
-            runTests();
-            oc.configure().optimizeNativeQueries(false);
-            runTests();
+            try
+            {   
+                oc.configure().optimizeNativeQueries(true);
+                runTests();
+                oc.configure().optimizeNativeQueries(false);
+                runTests();
+            }
+            finally
+            {
+                oc.configure().optimizeNativeQueries(true);
+            }
 
         }
 
-        public class NoneFound : Predicate {
-            public bool match(Cat cat) {
+        public class NoneFound : Predicate
+        {
+            public bool match(Cat cat)
+            {
                 return cat._age == 7;
             }
         }
 
-        public class AgeOne : Predicate {
-            public bool match(Cat cat) {
+        public class AgeOne : Predicate
+        {
+            public bool match(Cat cat)
+            {
                 return cat._age == 1;
             }
         }
 
-        public class FatherAgeOne : Predicate {
-            public bool match(Cat cat) {
+        public class FatherAgeOne : Predicate
+        {
+            public bool match(Cat cat)
+            {
                 return cat._father._age == 1;
             }
         }
 
-        public class GrandFatherName : Predicate {
-            public bool match(Cat cat) {
+        public class GrandFatherName : Predicate
+        {
+            public bool match(Cat cat)
+            {
                 return cat._father._father._firstName == "Edwin";
             }
         }
 
-        public class OrFatherName : Predicate {
-            public bool match(Cat cat) {
+        public class OrFatherName : Predicate
+        {
+            public bool match(Cat cat)
+            {
                 return (cat._father._father != null && cat._father._father._firstName == "Edwin")
                     || cat._father._firstName == "Edwin";
             }
         }
 
-        public class AddToAge : Predicate {
-            public bool match(Cat cat) {
+        public class AddToAge : Predicate
+        {
+            public bool match(Cat cat)
+            {
                 return cat._age + 1 == 2;
             }
         }
 
-        public class TwoGetters : Predicate {
-            public bool match(Cat cat) {
+        public class TwoGetters : Predicate
+        {
+            public bool match(Cat cat)
+            {
                 return cat.getFirstName() == "Occam"
                     && cat.getAge() == 1;
             }
         }
 
-        public class CalculatedGetter : Predicate {
-            public bool match(Cat cat) {
+        public class CalculatedGetter : Predicate
+        {
+            public bool match(Cat cat)
+            {
                 return cat.getFullName() == "Achat Leo Lenis";
             }
         }
 
-        public class GetterNull : Predicate {
-            public bool match(Cat cat) {
+        public class GetterNull : Predicate
+        {
+            public bool match(Cat cat)
+            {
                 return cat.getFullName() == null;
             }
         }
 
-        public class StartsWith : Predicate {
-            public bool match(Cat cat) {
+        public class StartsWith : Predicate
+        {
+            public bool match(Cat cat)
+            {
                 return cat._firstName.StartsWith("A");
             }
         }
 
-        public void runTests(){
+        public void runTests()
+        {
 
             expect(new NoneFound(), null);
             expect(new AgeOne(), new String[] { "Occam", "Vahiné" });
@@ -104,57 +129,68 @@ namespace com.db4o.test.nativequeries.cats
 
 #if NET_2_0
 
-            expect <Cat>(delegate(Cat cat) { 
-                return cat._age == 7; 
+            expect<Cat>(delegate(Cat cat)
+            {
+                return cat._age == 7;
             }, null);
-            expect<Cat>(delegate(Cat cat) { 
-                return cat._age == 1; 
+            expect<Cat>(delegate(Cat cat)
+            {
+                return cat._age == 1;
             }, new String[] { "Occam", "Vahiné" });
-            expect<Cat>(delegate(Cat cat) { 
-                return cat._father._age == 1; 
+            expect<Cat>(delegate(Cat cat)
+            {
+                return cat._father._age == 1;
             }, new String[] { "Achat", "Acrobat" });
-            expect<Cat>(delegate(Cat cat) { 
-                return cat._father._father._firstName == "Edwin"; 
+            expect<Cat>(delegate(Cat cat)
+            {
+                return cat._father._father._firstName == "Edwin";
             }, new String[] { "Achat", "Acrobat" });
-            expect<Cat>(delegate(Cat cat){
-                return (cat._father._father != null && 
+            expect<Cat>(delegate(Cat cat)
+            {
+                return (cat._father._father != null &&
                         cat._father._father._firstName == "Edwin")
                     || cat._father._firstName == "Edwin";
             }, new String[] { "Achat", "Acrobat", "Occam" });
-            expect<Cat>(delegate(Cat cat) { 
-                return cat._age + 1 == 2; 
+            expect<Cat>(delegate(Cat cat)
+            {
+                return cat._age + 1 == 2;
             }, new String[] { "Occam", "Vahiné" });
-            expect<Cat>(delegate(Cat cat) {
+            expect<Cat>(delegate(Cat cat)
+            {
                 return cat.getFirstName() == "Occam"
                     && cat.getAge() == 1;
             }, new String[] { "Occam" });
-            expect<Cat>(delegate(Cat cat) {
+            expect<Cat>(delegate(Cat cat)
+            {
                 return cat.getFullName() == "Achat Leo Lenis";
             }, new String[] { "Achat" });
-            expect<Cat>(delegate(Cat cat) {
+            expect<Cat>(delegate(Cat cat)
+            {
                 return cat.getFullName() == null;
             }, new String[] { });
-            expect<Cat>(delegate(Cat cat) {
+            expect<Cat>(delegate(Cat cat)
+            {
                 return cat._firstName.StartsWith("A");
             }, new String[] { "Achat", "Acrobat" });
 #endif
-            
+
         }
-        
-        public void storeCats(){
-            
+
+        public void storeCats()
+        {
+
             Cat winni = new Cat();
             winni._sex = Animal.MALE;
             winni._firstName = "Edwin";
             winni._lastName = "Sanddrops";
             winni._age = 12;
-            
+
             Cat bachi = new Cat();
             bachi._sex = Animal.FEMALE;
             bachi._firstName = "Frau Bachmann";
             bachi._lastName = "von der Bärenhöhle";
             bachi._age = 10;
-            
+
             Cat occam = new Cat();
             occam._sex = Animal.MALE;
             occam._firstName = "Occam";
@@ -162,64 +198,63 @@ namespace com.db4o.test.nativequeries.cats
             occam._age = 1;
             occam._father = winni;
             occam._mother = bachi;
-            
+
             Cat zora = new Cat();
             zora._sex = Animal.FEMALE;
             zora._firstName = "Vahiné";
             zora._lastName = "des Fauves et Or";
             zora._age = 1;
-            
+
             Cat achat = new Cat();
             achat._sex = Animal.FEMALE;
             achat._firstName = "Achat";
             achat._lastName = "Leo Lenis";
             achat._father = occam;
             achat._mother = zora;
-            
+
             Cat acrobat = new Cat();
             acrobat._sex = Animal.FEMALE;
             acrobat._firstName = "Acrobat";
             acrobat._lastName = "Leo Lenis";
             acrobat._father = occam;
             acrobat._mother = zora;
-            
+
             Tester.store(achat);
             Tester.store(acrobat);
-            
+
             Cat trulla = new Cat();
             trulla._firstName = "Trulla";
-            
+
         }
-        
-        private void expect(Predicate predicate, String[] names){
+
+        private void expect(Predicate predicate, String[] names)
+        {
             IList list = Tester.objectContainer().query(predicate);
             expect(list, names);
         }
 
 #if NET_2_0
-
-        private void expect <Extent>(Predicate<Extent> match , String[] names){
+        private void expect<Extent>(Predicate<Extent> match, String[] names)
+        {
             System.Collections.Generic.IList<Extent> list = Tester.objectContainer().query(match);
             System.Collections.IList untypedList = new ArrayList();
-            foreach(object obj in list){
+            foreach (object obj in list)
+            {
                 untypedList.Add(obj);
             }
             expect(untypedList, names);
         }
 #endif
 
-        private void expect(IList list, String[] names)
+        private void expect(IList list, string[] names)
         {
             if (names == null)
             {
                 names = new String[] { };
             }
 
-            IEnumerator i = list.GetEnumerator();
-
-            while (i.MoveNext())
+            foreach (Cat cat in list)
             {
-                Cat cat = (Cat)i.Current;
                 bool good = false;
                 for (int j = 0; j < names.Length; j++)
                 {
@@ -237,10 +272,10 @@ namespace com.db4o.test.nativequeries.cats
             }
             for (int j = 0; j < names.Length; j++)
             {
-                Tester.ensure(names[j] == null);
+                Tester.ensureEquals(null, names[j]);
             }
 
         }
 
-	}
+    }
 }
