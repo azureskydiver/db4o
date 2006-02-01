@@ -14,6 +14,10 @@ public class ReplicationTestSuite extends TestSuite {
 		System.err.println("Overcome absence of constructor in VMs other than Sun's.");
         
 		return new Class[]{
+            
+            Db4oListTest.class,
+            Db4oListTest.class,
+            
                 //UuidLongPartGeneratorTest.class,
 				TransientReplicationProviderTest.class,
 				Db4oReplicationProviderTest.class,
