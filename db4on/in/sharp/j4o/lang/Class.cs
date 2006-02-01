@@ -88,20 +88,6 @@ namespace j4o.lang
 			{
 				return null;
 			}
-			if (forType.IsPointer)
-			{
-				return null;
-			}
-
-            // TODO: need to find another place for
-            // this condition
-            /*
-			if (forType.IsSubclassOf(typeof(Delegate)) 
-				&& forType != typeof(EvaluationDelegate))
-			{
-				return null;
-			}
-            */
 			
 			lock (_typeToClassMap.SyncRoot)
 			{

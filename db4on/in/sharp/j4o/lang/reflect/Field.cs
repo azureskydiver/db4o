@@ -5,104 +5,139 @@ using System.Reflection;
 using System.Collections;
 using com.db4o;
 
-namespace j4o.lang.reflect {
-
-    public class Field {
-
+namespace j4o.lang.reflect
+{
+    public class Field
+    {
         private FieldInfo fieldInfo;
         private EventInfo eventInfo;
         private Class fieldClass;
         private int fieldModifiers;
 
-        private static IList markedTransient;
+        private static IList _transientMarkers;
 
-        public Field(FieldInfo fieldInfo, EventInfo eventInfo) {
+        public Field(FieldInfo fieldInfo, EventInfo eventInfo)
+        {
             this.fieldInfo = fieldInfo;
             this.eventInfo = eventInfo;
             fieldModifiers = -1;
         }
 
-        private int checkTransient(int modifiers, object[] attributes) {
-            if(attributes != null) {
-                for(int i = 0; i < attributes.Length; i++) {
-                    if("com.db4o.Transient".Equals(attributes[i].ToString())) {
-                        modifiers |= Modifier.TRANSIENT;
-                        return modifiers;
-                    }
-                    if(markedTransient != null) {
-                        IEnumerator e = markedTransient.GetEnumerator();
-                        while(e.MoveNext()) {
-                            if(e.Current.Equals(attributes[i].ToString())) {
-                                modifiers |= Modifier.TRANSIENT;
-                                return modifiers;
-                            }
-                        }
-                    }
+        private bool checkForTransient(object[] attributes)
+        {
+            if (attributes == null) return false;
+
+            foreach (object attribute in attributes)
+            {
+                string attributeName = attribute.ToString();
+                if ("com.db4o.Transient" == attributeName) return true;
+
+                if (_transientMarkers == null) continue;
+                
+                foreach (string transientMarker in _transientMarkers)
+                {
+                    if (transientMarker == attributeName) return true;
+                }
+            }
+            return false;
+        }
+
+        public Object get(Object obj)
+        {
+            return fieldInfo.GetValue(obj);
+        }
+
+        public int getModifiers()
+        {
+            if (fieldModifiers == -1)
+            {
+                fieldModifiers = composeModifiers();
+            }
+            return fieldModifiers;
+        }
+
+        private int composeModifiers()
+        {
+            int modifiers = 0;
+            if (fieldInfo.IsFamilyAndAssembly)
+            {
+                modifiers |= Modifier.PROTECTED;
+            }
+            if (fieldInfo.IsInitOnly)
+            {
+                modifiers |= Modifier.FINAL;
+            }
+            if (fieldInfo.IsLiteral)
+            {
+                modifiers |= Modifier.FINAL;
+                modifiers |= Modifier.STATIC;
+            }
+            if (fieldInfo.IsPrivate)
+            {
+                modifiers |= Modifier.PRIVATE;
+            }
+            if (fieldInfo.IsPublic)
+            {
+                modifiers |= Modifier.PUBLIC;
+            }
+            if (fieldInfo.IsStatic)
+            {
+                modifiers |= Modifier.STATIC;
+            }
+
+            if (isTransientType(fieldInfo.FieldType))
+            {
+                modifiers |= Modifier.TRANSIENT;
+            }
+            else if (checkForTransient(fieldInfo.GetCustomAttributes(true)))
+            {
+                modifiers |= Modifier.TRANSIENT;
+            }
+            else if (eventInfo != null)
+            {
+                if (checkForTransient(eventInfo.GetCustomAttributes(true)))
+                {
+                    modifiers |= Modifier.TRANSIENT;
                 }
             }
             return modifiers;
         }
 
-        public Object get(Object obj) {
-            return fieldInfo.GetValue(obj);
+        private bool isTransientType(System.Type type)
+        {
+            return type.IsPointer
+                || type.IsSubclassOf(typeof(Delegate));
         }
 
-        public int getModifiers() {
-            if(fieldModifiers == -1) {
-                int modifiers = 0;
-                if(fieldInfo.IsFamilyAndAssembly) {
-                    modifiers |= Modifier.PROTECTED;
-                }
-                if(fieldInfo.IsInitOnly) {
-                    modifiers |= Modifier.FINAL;
-                }
-                if(fieldInfo.IsLiteral) {
-                    modifiers |= Modifier.FINAL;
-                    modifiers |= Modifier.STATIC;
-                }
-                if(fieldInfo.IsPrivate) {
-                    modifiers |= Modifier.PRIVATE;
-                }
-                if(fieldInfo.IsPublic) {
-                    modifiers |= Modifier.PUBLIC;
-                }
-                if(fieldInfo.IsStatic) {
-                    modifiers |= Modifier.STATIC;
-                }
-                modifiers = checkTransient(modifiers, fieldInfo.GetCustomAttributes(true));
-                if(eventInfo != null) {
-                    modifiers = checkTransient(modifiers, eventInfo.GetCustomAttributes(true));
-                }
-                fieldModifiers = modifiers;
-            }
-            return fieldModifiers;
-        }
-
-        public String getName() {
+        public String getName()
+        {
             return fieldInfo.Name;
         }
 
-        public Class getType() {
-            if(fieldClass == null) {
+        public Class getType()
+        {
+            if (fieldClass == null)
+            {
                 fieldClass = Class.getClassForType(fieldInfo.FieldType);
             }
             return fieldClass;
         }
 
-        public static void markTransient(String attributeName) {
-            if(markedTransient == null) {
-                markedTransient = new ArrayList();
+        public static void markTransient(string attributeName)
+        {
+            if (_transientMarkers == null)
+            {
+                _transientMarkers = new ArrayList();
             }
-            IEnumerator i = markedTransient.GetEnumerator();
-            while(i.MoveNext()) {
-                if(attributeName.Equals(i.Current)) {
-                    return;
-                }
+            else if (_transientMarkers.Contains(attributeName))
+            {
+                return;
             }
-            markedTransient.Add(attributeName);
+            _transientMarkers.Add(attributeName);
         }
 
-        public void set(Object obj, Object value) {
+        public void set(Object obj, Object value)
+        {
             fieldInfo.SetValue(obj, value);
         }
     }

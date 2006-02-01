@@ -25,10 +25,6 @@ namespace com.db4o.test
 			{
 				ArrayList tests = new ArrayList();
 
-                tests.Add(typeof(com.db4o.test.nativequeries.cats.TestCatConsistency));
-
-#if ZERO
-
                 tests.Add(typeof(SimplestPossible));
                 tests.Add(typeof(CsDelegate));
 				tests.Add(typeof(OptimizationFailuresTestCase));
@@ -58,7 +54,7 @@ namespace com.db4o.test
 				tests.Add(typeof(net2.Net2GenericList));
 				tests.Add(typeof(net2.Net2GenericOtherCollections));
 #endif
-#endif
+
 				return (Type[]) tests.ToArray(typeof (Type));
 			}
 		}
