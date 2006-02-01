@@ -709,11 +709,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\com\db4o\test\j4otest\ClassTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\com\db4o\test\j4otest\TypeNameTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

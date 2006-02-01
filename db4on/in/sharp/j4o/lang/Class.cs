@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using com.db4o.query;
 using j4o.lang.reflect;
 
 namespace j4o.lang
@@ -88,6 +89,11 @@ namespace j4o.lang
 				return null;
 			}
 			if (forType.IsPointer)
+			{
+				return null;
+			}
+			if (forType.IsSubclassOf(typeof(Delegate)) 
+				&& forType != typeof(EvaluationDelegate))
 			{
 				return null;
 			}
