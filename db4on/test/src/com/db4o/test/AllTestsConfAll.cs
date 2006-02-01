@@ -94,7 +94,6 @@ namespace com.db4o.test {
 				tests.Add(typeof(Isolation));
 				tests.Add(typeof(IsStored));
 				
-				tests.Add(typeof(j4otest.ClassTest));
 				tests.Add(typeof(j4otest.TypeNameTest));
 				
 				tests.Add(typeof(KeepCollectionContent));
