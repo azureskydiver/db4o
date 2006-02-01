@@ -147,6 +147,7 @@ final class YapServerThread extends Thread {
                     getStream().logMsg(33, i_clientName);
                     break;
                 }
+                if (null == i_socket) break;
                 Msg.PING.write(getStream(), i_socket);
                 i_pingAttempts++;
             }
