@@ -25,11 +25,28 @@ namespace com.db4o.test
 			{
 				ArrayList tests = new ArrayList();
 
-				tests.Add(typeof (SimplestPossible));
+                tests.Add(typeof(com.db4o.test.nativequeries.cats.TestCatConsistency));
+
+#if ZERO
+
+                tests.Add(typeof(SimplestPossible));
                 tests.Add(typeof(CsDelegate));
 				tests.Add(typeof(OptimizationFailuresTestCase));
-				//tests.Add(typeof (CsAssemblyVersionChange));
+				tests.Add(typeof(CsAssemblyVersionChange));
                 tests.Add(typeof(com.db4o.test.nativequeries.Cat));
+                tests.Add(typeof(com.db4o.test.nativequeries.NativeQueriesTestCase));
+                tests.Add(typeof(com.db4o.test.nativequeries.NQRegressionTests));
+                tests.Add(typeof(com.db4o.test.nativequeries.cats.TestCatConsistency));
+                tests.Add(typeof(TypeNameTest));
+
+                tests.Add(typeof(CsDelegate));
+                tests.Add(typeof(CsEnum));
+                tests.Add(typeof(CsEvaluationDelegate));
+
+#if !MONO
+                tests.Add(typeof(CsMarshalByRef));
+#endif
+
 #if !CF_1_0 && !CF_2_0
 				tests.Add(typeof (MultipleAssemblySupportTestCase));
 #endif
@@ -41,9 +58,7 @@ namespace com.db4o.test
 				tests.Add(typeof(net2.Net2GenericList));
 				tests.Add(typeof(net2.Net2GenericOtherCollections));
 #endif
-				tests.Add(typeof(com.db4o.test.nativequeries.NativeQueriesTestCase));
-				tests.Add(typeof(com.db4o.test.nativequeries.NQRegressionTests));
-				tests.Add(typeof(TypeNameTest));				
+#endif
 				return (Type[]) tests.ToArray(typeof (Type));
 			}
 		}

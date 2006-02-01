@@ -5,9 +5,6 @@ namespace com.db4o
 #if NET_2_0
     using System.Collections.Generic;
 
-	/// <exclude></exclude>
-    public delegate bool Predicate<T>(T candidate);
-
     public partial interface ObjectContainer
     {
         /// <summary>.NET 2.0 Native Query interface.</summary>
@@ -94,7 +91,7 @@ namespace com.db4o
         /// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
         /// returned by the query.
         /// </returns>
-        IList <Extent> query <Extent>( Predicate<Extent> match );
+        IList <Extent> query <Extent>(System.Predicate<Extent> match );
 
         /// <summary>
         /// queries for all instances of the type extent, returning

@@ -27,7 +27,7 @@ namespace com.db4o.inside.query
 		}
 
 #if NET_2_0
-        public virtual System.Collections.Generic.IList<Extent> execute<Extent>(com.db4o.Predicate<Extent> match)
+        public virtual System.Collections.Generic.IList<Extent> execute<Extent>(System.Predicate<Extent> match)
         {
             com.db4o.query.Query q = _container.query();
             q.constrain(typeof(Extent));
@@ -117,7 +117,7 @@ namespace com.db4o.inside.query
 #if NET_2_0
     class GenericPredicateEvaluation<T> : DelegateEnvelope, com.db4o.query.Evaluation
     {
-        public GenericPredicateEvaluation(com.db4o.Predicate<T> predicate)
+        public GenericPredicateEvaluation(System.Predicate<T> predicate)
             : base(predicate)
         {
         }
@@ -125,7 +125,7 @@ namespace com.db4o.inside.query
         public void evaluate(com.db4o.query.Candidate candidate)
         {
             // use starting _ for PascalCase conversion purposes
-            com.db4o.Predicate<T> _predicate = (com.db4o.Predicate<T>)GetContent();
+            System.Predicate<T> _predicate = (System.Predicate<T>)GetContent();
             candidate.include(_predicate((T)candidate.getObject()));
         }
     }
