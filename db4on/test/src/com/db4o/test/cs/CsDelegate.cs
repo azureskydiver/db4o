@@ -65,6 +65,7 @@ namespace com.db4o.test.cs
 		{
 			Tester.deleteAllInstances(typeof(OnActivateEventStrategy));
 			Tester.store(new OnActivateEventStrategy());
+            Tester.reOpenAll();
             
 			OnActivateEventStrategy.Prepare();
 			OnActivateEventStrategy obj = (OnActivateEventStrategy)Tester.objectContainer().get(typeof(OnActivateEventStrategy)).next();

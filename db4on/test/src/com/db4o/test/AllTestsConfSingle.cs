@@ -43,8 +43,7 @@ namespace com.db4o.test
 #endif
 				tests.Add(typeof(com.db4o.test.nativequeries.NativeQueriesTestCase));
 				tests.Add(typeof(com.db4o.test.nativequeries.NQRegressionTests));
-				//tests.Add(typeof (TypeNameTest));
-				//tests.Add(typeof (SodaNumberCoercion));
+				tests.Add(typeof(TypeNameTest));				
 				return (Type[]) tests.ToArray(typeof (Type));
 			}
 		}
