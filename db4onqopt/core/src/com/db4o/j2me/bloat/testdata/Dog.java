@@ -25,6 +25,6 @@ public class Dog extends Animal {
 	}
 	
 	public String toString() {
-		return "DOG: "+name()+"/"+age();//+"/"+_parents.length+"/"+_prices.length;
+		return "DOG: "+name()+"/"+age()+"/"+(_parents!=null ? String.valueOf(_parents.length) : "null")+" parents/"+(_prices!=null ? String.valueOf(_prices.length) : "null")+" prices";
 	}
 }
