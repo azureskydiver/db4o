@@ -66,6 +66,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	private String stringMember="foo";
 	private int intMember=43;
 	private float floatMember=47.11f;
+	private int[] intArrayMember={};
 
 	private ClassFileLoader loader;
 	private BloatUtil bloatUtil;
@@ -787,6 +788,14 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	public void testRecursiveCall() throws Exception {
 		assertInvalid("sampleRecursiveCall");
+	}
+
+	boolean sampleIntArrayAccess(Data data) {
+		return data.id==intArrayMember[0];
+	}
+
+	public void testIntArrayAccess() throws Exception {
+		assertInvalid("sampleIntArrayAccess");
 	}
 
 	// internal
