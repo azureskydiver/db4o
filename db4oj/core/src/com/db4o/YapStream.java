@@ -898,7 +898,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     void initialize1() {
 
         i_config = (Config4Impl) ((DeepClone) Db4o.configure()).deepClone(this);
-        i_handlers = new YapHandlers(this, i_config.i_encoding);
+        i_handlers = new YapHandlers(this, i_config.i_encoding, i_config.reflector());
         
         if (i_references != null) {
             gc();
@@ -1270,7 +1270,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
     
     public GenericReflector reflector(){
-        return i_config.reflector();
+        return i_handlers._reflector;
     }
 
     public void refresh(Object a_refresh, int a_depth) {
@@ -1439,7 +1439,6 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
     
     public final int setInternal(Transaction ta, Object a_object, int a_depth,  boolean a_checkJustSet) {
-        ta = checkTransaction(ta);
         int id = oldReplicationHandles(a_object); 
         if (id != 0){
             if(id < 0){

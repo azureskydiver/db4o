@@ -60,6 +60,8 @@ public final class YapHandlers {
     byte[]                  i_encryptor;
     int                     i_lastEncryptorByte;
     
+    final GenericReflector                _reflector;
+    
     ReflectClass ICLASS_COMPARE;
     ReflectClass ICLASS_DB4OTYPE;
     ReflectClass ICLASS_DB4OTYPEIMPL;
@@ -72,12 +74,11 @@ public final class YapHandlers {
 	ReflectClass ICLASS_STRING;
     ReflectClass ICLASS_TRANSIENTCLASS;
 
-    YapHandlers(final YapStream a_stream, byte stringEncoding) {
+    YapHandlers(final YapStream a_stream, byte stringEncoding, GenericReflector reflector) {
     	
     	_masterStream = a_stream;
     	a_stream.i_handlers = this;
-    	
-    	GenericReflector reflector = a_stream.reflector();
+        _reflector = reflector;
     	
     	initClassReflectors(reflector);
         
