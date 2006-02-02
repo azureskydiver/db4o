@@ -17,7 +17,7 @@ public class Generation {
 		Enhancer context = new Enhancer(loader, outputDirName);
 		
 		ClassEditor ce = context.createClass(Modifiers.PUBLIC,
-				"RegressionDogSelfReflectionRegistry", Type.getType(Type.classDescriptor(SelfReflectionRegistry.class.getName())),
+				"com.db4o.j2me.bloat.testdata.GeneratedDogSelfReflectionRegistry", Type.getType(Type.classDescriptor(SelfReflectionRegistry.class.getName())),
 				new Type[0]);
 		context.createLoadClassConstMethod(ce);
 

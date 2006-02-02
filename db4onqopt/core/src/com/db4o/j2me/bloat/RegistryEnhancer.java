@@ -90,6 +90,12 @@ public class RegistryEnhancer {
 		builder.invoke(Opcode.opc_invokespecial, Hashtable.class, "<init>",
 				new Class[0], Void.TYPE);
 		builder.putstatic(ce.type(), Hashtable.class, "CLASSINFO");
+// just a bit of sabotage for testing purposes
+//		if(1==1) {
+//			builder.returnInstruction();
+//			builder.commit();
+//			return;
+//		}
 		for (int classIdx = 0; classIdx < clazzes.length; classIdx++) {
 			builder.getstatic(ce.type(), Hashtable.class, "CLASSINFO");
 			builder.invokeLoadClassConstMethod(clazzes[classIdx]);
@@ -98,7 +104,7 @@ public class RegistryEnhancer {
 //			if (clazzes[classIdx].getSuperclass() != null) {
 				FieldInfo[] fieldsInf = collectFieldsOfClass(clazzes[classIdx]);
 				builder.ldc(isAbstractClass(clazzes[classIdx]));
-				builder.invokeLoadClassConstMethod(clazzes[classIdx]);
+				builder.invokeLoadClassConstMethod(clazzes[classIdx].getSuperclass());
 				builder.ldc(fieldsInf.length);
 				builder.anewarray(com.db4o.reflect.self.FieldInfo.class);
 				for (int i = 0; i < fieldsInf.length; i++) {
