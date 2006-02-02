@@ -425,6 +425,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 	}
 
+	public void visitArrayRefExpr(ArrayRefExpr expr) {
+		retval(null);
+	}
+	
 	public void visitReturnExprStmt(ReturnExprStmt stat) {
 		stat.expr().visit(this);
 		retCount++;
