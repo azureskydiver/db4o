@@ -378,24 +378,47 @@ namespace com.db4o.inside.query
 					return;
 				}
 
+				if (method.DeclaringType.FullName == "System.String")
+				{
+					ProcessStringMethod(node, methodRef);
+					return;
+				}
+
+				ProcessRegularMethodInvocation(node, methodRef);
+			}
+
+			private void ProcessStringMethod(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
+			{
+				IMethodReference method = methodRef.Method;
+				if (method.Name != "StartsWith") UnsupportedExpression(methodRef);
+
+				// ComparisonExpression
+				//	Operator.StartsWith
+				//	FieldValue
+				//	ComparisonOperand
+				PushComparison(methodRef.Target, node.Arguments[0], ComparisonOperator.STARTSWITH);
+			}
+
+			private void ProcessRegularMethodInvocation(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
+			{
 				if (node.Arguments.Count != 0) UnsupportedExpression(node);
-                
+	
 				IExpression target = methodRef.Target;
 				switch (target.CodeElementType)
 				{
 					case CodeElementType.ThisReferenceExpression:
 						if (!InsideCandidate) UnsupportedExpression(node);
 						ProcessCandidateMethodInvocation(node, methodRef);
-						return;
+						break;
 
 					case CodeElementType.ArgumentReferenceExpression:
 						ProcessCandidateMethodInvocation(node, methodRef);
-						return;
+						break;
 
 					default:
 						Push(ToFieldValue(target));
 						ProcessCandidateMethodInvocation(node, methodRef);
-						return;
+						break;
 				}
 			}
 

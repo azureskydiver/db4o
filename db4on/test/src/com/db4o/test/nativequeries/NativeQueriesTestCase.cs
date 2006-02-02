@@ -1,33 +1,8 @@
 using System;
-using System.Collections;
-using System.IO;
-using System.Text;
-using com.db4o;
-using com.db4o.inside.query;
-using com.db4o.nativequery.expr;
-using com.db4o.nativequery.optimization;
-using com.db4o.query;
 
 namespace com.db4o.test.nativequeries
 {
-	// TODO: update to latest SODAQueryBuilder
-	// TODO: Public API integration
-	// TODO: float fields
-	// TODO: double fields
-	// TODO: arithmetic expressions: return candidate.id >= id-1;
-	// TODO: test deeply nested &&|| patterns
-	// TODO: predicate methods: return HasPrevious(candidate);
-	// TODO: optimized nested &&|| patterns
-	// TODO: decimal fields
-	// TODO: arrays
-	// TODO: unsigned integer fields
-	// TODO: predicate inheritance
-	// TODO: existential qualifiers for collections?
-	// TODO: CompactFramework 1.0
-	// TODO: use delegates as predicates
-	// TODO: .net 2.0 (generic predicates)
-	// TODO: predicate composition (&& ||)
-	public class NativeQueriesTestCase
+	public class NativeQueriesTestCase : AbstractNativeQueriesTestCase
 	{	
 		private Data _a;
 		private Data _b;
@@ -276,42 +251,6 @@ namespace com.db4o.test.nativequeries
 //		{
 			AssertNQResult(new ConstStringFieldNotEqual(), _a, _b);
 		}
-		
-		void AssertNQResult(object predicate, params Data[] expected)
-		{
-			ObjectSet os = QueryFromPredicate(predicate).execute();
-			string actualString = ToString(os);
-			if (!Tester.ensure("Expected: " + ToString(expected) + ", Actual: " + actualString, expected.Length == os.size()))
-			{
-				return;
-			}
 
-			foreach (Data data in expected)
-			{
-				Tester.ensure("Expected item: " + data + " but got: " + actualString, os.Contains(data));
-			}
-		}
-
-		private string ToString(IEnumerable os)
-		{
-			StringBuilder buffer = new StringBuilder();
-			buffer.Append('[');
-			foreach (object item in os)
-			{
-				if (buffer.Length > 1) buffer.Append(", ");
-				buffer.Append(item.ToString());
-			}
-			buffer.Append(']');
-			return buffer.ToString();
-		}
-
-		private Query QueryFromPredicate(object predicate)
-		{
-			Expression expression = QueryExpressionBuilder.FromMethod(predicate.GetType().GetMethod("Match"));
-			Query q = Tester.query();
-			q.constrain(typeof(Data));
-			new SODAQueryBuilder().optimizeQuery(expression, q, predicate);
-			return q;
-		}
 	}
 }

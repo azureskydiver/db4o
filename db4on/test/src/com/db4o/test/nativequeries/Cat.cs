@@ -1,5 +1,4 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
-using System;
 using com.db4o;
 using com.db4o.query;
 using System.Collections;
@@ -8,13 +7,13 @@ namespace com.db4o.test.nativequeries
 {
 	public class Cat 
 	{
-		public String name;
+		public string name;
     
 		public Cat()
 		{
 		}
     
-		public Cat(String name)
+		public Cat(string name)
 		{
 			this.name = name;
 		}

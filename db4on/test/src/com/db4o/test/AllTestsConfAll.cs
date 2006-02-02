@@ -107,6 +107,7 @@ namespace com.db4o.test {
 				tests.Add(typeof(nativequeries.MultipleAssemblySupportTestCase));
 #endif
 				tests.Add(typeof(nativequeries.OptimizationFailuresTestCase));
+				tests.Add(typeof(nativequeries.StringComparisonTestCase));
 
 	#if NET_2_0
 				tests.Add(typeof(net2.Net2GenericContainers));
