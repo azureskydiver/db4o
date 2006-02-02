@@ -1,17 +1,10 @@
 package com.db4o.j2me.bloat;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.editor.ClassEditor;
-import EDU.purdue.cs.bloat.editor.FieldEditor;
-import EDU.purdue.cs.bloat.editor.MemberRef;
-import EDU.purdue.cs.bloat.editor.Opcode;
-import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.file.ClassFileLoader;
 import EDU.purdue.cs.bloat.reflect.ClassFormatException;
 import EDU.purdue.cs.bloat.reflect.FieldInfo;
@@ -21,8 +14,9 @@ import com.db4o.reflect.self.ClassInfo;
 import com.db4o.reflect.self.SelfReflectionRegistry;
 
 public class RegistryEnhancer {
-	// FIXME: Move primitive conversion stuff from ClassEnhancer and here to a class of its own
-	
+	// FIXME: Move primitive conversion stuff from ClassEnhancer and here to a
+	// class of its own
+
 	private final static Map PRIMITIVES;
 
 	static {
@@ -71,17 +65,6 @@ public class RegistryEnhancer {
 		FieldEditor fe = context.createField(ce, 26, Type
 				.getType(Hashtable.class), "CLASSINFO");
 
-		/*
-		 * static { CLASSINFO = new Hashtable(2); CLASSINFO.put(Animal.class,
-		 * new ClassInfo(true, Object.class, new FieldInfo[] { new
-		 * FieldInfo("_name", String.class, true, false, false) }));
-		 * CLASSINFO.put(Dog.class, new ClassInfo(false, Animal.class, new
-		 * FieldInfo[] { new FieldInfo("_age", Integer.class, true, false,
-		 * false), new FieldInfo("_parents", Dog[].class, true, false, false),
-		 * new FieldInfo("_prices", int[].class, true, false, false), })); //
-		 * FIELDINFO.put(P1Object.class, new FieldInfo[]{}); }
-		 */
-
 		MethodBuilder builder = new MethodBuilder(context, ce,
 				Modifiers.STATIC, void.class, "<clinit>", new Class[0],
 				new Class[0]);
@@ -90,54 +73,52 @@ public class RegistryEnhancer {
 		builder.invoke(Opcode.opc_invokespecial, Hashtable.class, "<init>",
 				new Class[0], Void.TYPE);
 		builder.putstatic(ce.type(), Hashtable.class, "CLASSINFO");
-// just a bit of sabotage for testing purposes
-//		if(1==1) {
-//			builder.returnInstruction();
-//			builder.commit();
-//			return;
-//		}
+		// just a bit of sabotage for testing purposes
+		// if(1==1) {
+		// builder.returnInstruction();
+		// builder.commit();
+		// return;
+		// }
 		for (int classIdx = 0; classIdx < clazzes.length; classIdx++) {
 			builder.getstatic(ce.type(), Hashtable.class, "CLASSINFO");
 			builder.invokeLoadClassConstMethod(clazzes[classIdx]);
 			builder.newRef(com.db4o.reflect.self.ClassInfo.class);
 			builder.dup();
-//			if (clazzes[classIdx].getSuperclass() != null) {
-				FieldInfo[] fieldsInf = collectFieldsOfClass(clazzes[classIdx]);
-				builder.ldc(isAbstractClass(clazzes[classIdx]));
-				builder.invokeLoadClassConstMethod(clazzes[classIdx].getSuperclass());
-				builder.ldc(fieldsInf.length);
-				builder.anewarray(com.db4o.reflect.self.FieldInfo.class);
-				for (int i = 0; i < fieldsInf.length; i++) {
-					builder.dup();
-					builder.ldc(i);
-					builder.newRef(com.db4o.reflect.self.FieldInfo.class);
-					builder.dup();
-					FieldEditor f = fieldEditor(classIdx, fieldsInf, i);
-					builder.ldc(f.name());
-					Class wrapper=(Class)PRIMITIVES.get(f.type());
-					if(wrapper!=null) {
-						builder.getstatic(wrapper, Class.class, "TYPE");
-					}
-					else {
-						builder.invokeLoadClassConstMethod(f.type().className());
-					}
-					builder.ldc(f.isPublic());
-					builder.ldc(f.isStatic());
-					builder.ldc(f.isTransient());
-					builder
-							.invoke(Opcode.opc_invokespecial, com.db4o.reflect.self.FieldInfo.class,
-									"<init>", new Class[] { String.class,
-											Class.class, Boolean.TYPE,
-											Boolean.TYPE, Boolean.TYPE },
-									Void.TYPE);
-					builder.aastore();
+			// if (clazzes[classIdx].getSuperclass() != null) {
+			FieldInfo[] fieldsInf = collectFieldsOfClass(clazzes[classIdx]);
+			builder.ldc(isAbstractClass(clazzes[classIdx]));
+			builder.invokeLoadClassConstMethod(clazzes[classIdx]
+					.getSuperclass());
+			builder.ldc(fieldsInf.length);
+			builder.anewarray(com.db4o.reflect.self.FieldInfo.class);
+			for (int i = 0; i < fieldsInf.length; i++) {
+				builder.dup();
+				builder.ldc(i);
+				builder.newRef(com.db4o.reflect.self.FieldInfo.class);
+				builder.dup();
+				FieldEditor f = fieldEditor(classIdx, fieldsInf, i);
+				builder.ldc(f.name());
+				Class wrapper = (Class) PRIMITIVES.get(f.type());
+				if (wrapper != null) {
+					builder.getstatic(wrapper, Class.class, "TYPE");
+				} else {
+					builder.invokeLoadClassConstMethod(f.type().className());
+				}
+				builder.ldc(f.isPublic());
+				builder.ldc(f.isStatic());
+				builder.ldc(f.isTransient());
+				builder.invoke(Opcode.opc_invokespecial,
+						com.db4o.reflect.self.FieldInfo.class, "<init>",
+						new Class[] { String.class, Class.class, Boolean.TYPE,
+								Boolean.TYPE, Boolean.TYPE }, Void.TYPE);
+				builder.aastore();
 
-				}// for fieldsInf
-				builder.invoke(Opcode.opc_invokespecial, ClassInfo.class,
-						"<init>", new Class[] { Boolean.TYPE, Class.class,
-								com.db4o.reflect.self.FieldInfo[].class },
-						Void.TYPE);
-//			}// if
+			}// for fieldsInf
+			builder.invoke(Opcode.opc_invokespecial, ClassInfo.class, "<init>",
+					new Class[] { Boolean.TYPE, Class.class,
+							com.db4o.reflect.self.FieldInfo[].class },
+					Void.TYPE);
+			// }// if
 			builder.invoke(Opcode.opc_invokevirtual, Hashtable.class, "put",
 					new Class[] { Object.class, Object.class }, Object.class);
 		}// for clazzes
@@ -227,7 +208,7 @@ public class RegistryEnhancer {
 				new Class[] { Class.class }, new Class[0]);
 		int labelId = 1;
 		for (int classIdx = 0; classIdx < clazzes.length; classIdx++) {
-			builder.invokeLoadClassConstMethod(clazzes[classIdx]);
+			builder.invokeLoadClassConstMethod(contvertToArray(clazzes[classIdx]));
 			builder.aload(1);
 			builder.invoke(Opcode.opc_invokevirtual, Class.class,
 					"isAssignableFrom", new Class[] { Class.class },
@@ -247,7 +228,11 @@ public class RegistryEnhancer {
 		builder.commit();
 
 	}
-	
+
+	private Object contvertToArray(Class clazz) {
+		return  Array.newInstance(clazz, new int[1]);
+	}
+
 	// for testing only
 	protected void addNoArgConstructor() {
 		MethodEditor init = new MethodEditor(ce, Modifiers.PUBLIC, Type.VOID,

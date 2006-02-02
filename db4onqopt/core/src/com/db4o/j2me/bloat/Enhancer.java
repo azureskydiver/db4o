@@ -9,13 +9,17 @@ import EDU.purdue.cs.bloat.reflect.*;
 
 public class Enhancer {
 	private ClassFileLoader _loader;
-	
+
 	public Enhancer(ClassFileLoader loader, String outputDirPath) {
 		_loader = loader;
 		_loader.setOutputDir(new File(outputDirPath));
 	}
-	public ClassEditor loadClass(String classPath,
-			String className) {
+
+	public ClassFileLoader getLoader() {
+		return _loader;
+	}
+
+	public ClassEditor loadClass(String classPath, String className) {
 		_loader.appendClassPath(classPath);
 		try {
 			ClassInfo info = _loader.loadClass(className);
@@ -27,7 +31,8 @@ public class Enhancer {
 		return null;
 	}
 
-	public ClassEditor createClass(int modifiers, String className, Type superType, Type[] Interfaces) {
+	public ClassEditor createClass(int modifiers, String className,
+			Type superType, Type[] Interfaces) {
 		EditorContext context = new PersistentBloatContext(_loader);
 		return context.newClass(modifiers, className, superType, Interfaces);
 	}
@@ -44,33 +49,33 @@ public class Enhancer {
 		fe.commit();
 		return fe;
 	}
-	
 
 	public MemberRef fieldRef(Class parent, Class fieldClass, String name) {
-		return fieldRef(getType(parent),fieldClass,name);
+		return fieldRef(getType(parent), fieldClass, name);
 	}
 
 	public MemberRef fieldRef(Type parent, Class fieldClass, String name) {
-		return fieldRef(parent,getType(fieldClass),name);
+		return fieldRef(parent, getType(fieldClass), name);
 	}
 
 	public MemberRef fieldRef(Type parent, Type type, String name) {
-		return new MemberRef(parent, new NameAndType(name,type));
+		return new MemberRef(parent, new NameAndType(name, type));
 	}
 
-//	protected MemberRef fieldRef(String parent, Class fieldClass, String name) {
-//		return new MemberRef(Type.getType("L"+ parent + ";"), new NameAndType(name,
-//				getType(fieldClass)));
-//	}
+	// protected MemberRef fieldRef(String parent, Class fieldClass, String
+	// name) {
+	// return new MemberRef(Type.getType("L"+ parent + ";"), new
+	// NameAndType(name,
+	// getType(fieldClass)));
+	// }
 
 	public MemberRef fieldRef(String parent, Class fieldClass, String name) {
-		Type type=Type.getType(Type.classDescriptor(parent));
-		return fieldRef(type,fieldClass,name);
+		Type type = Type.getType(Type.classDescriptor(parent));
+		return fieldRef(type, fieldClass, name);
 	}
 
-	public MemberRef methodRef(Type parent, String name, Type[] param,
-			Type ret) {
-		NameAndType nat = new NameAndType(name, Type.getType(param,ret));
+	public MemberRef methodRef(Type parent, String name, Type[] param, Type ret) {
+		NameAndType nat = new NameAndType(name, Type.getType(param, ret));
 		return new MemberRef(parent, nat);
 	}
 
@@ -80,12 +85,12 @@ public class Enhancer {
 		for (int i = 0; i < paramTypes.length; i++) {
 			paramTypes[i] = getType(param[i]);
 		}
-		return methodRef(parent,name,paramTypes,getType(ret));
+		return methodRef(parent, name, paramTypes, getType(ret));
 	}
 
 	public MemberRef methodRef(Class parent, String name, Class[] param,
 			Class ret) {
-		return methodRef(getType(parent),name,param,ret);
+		return methodRef(getType(parent), name, param, ret);
 	}
 
 	public Type getType(Class clazz) {
@@ -97,26 +102,29 @@ public class Enhancer {
 	}
 
 	public Label[] createLabels(int num) {
-		Label[] labels=new Label[num+1];
-		for(int i=0;i<=num;i++) {
-			labels[i]=new Label(i);
+		Label[] labels = new Label[num + 1];
+		for (int i = 0; i <= num; i++) {
+			labels[i] = new Label(i);
 		}
 		return labels;
 	}
 
 	public LocalVariable[] createLocalVariables(int num) {
-		LocalVariable[] localVars=new LocalVariable[num+1];
-		for(int i=0;i<=num;i++) {
-			localVars[i]=new LocalVariable(i);
+		LocalVariable[] localVars = new LocalVariable[num + 1];
+		for (int i = 0; i <= num; i++) {
+			localVars[i] = new LocalVariable(i);
 		}
 		return localVars;
 	}
-	
+
 	// TODO: Why is an empty 'throws' generated according to javap?
 	public void createLoadClassConstMethod(ClassEditor ce) {
-		MethodBuilder builder=new MethodBuilder(this,ce, Modifiers.PROTECTED|Modifiers.STATIC, Class.class, "db4o$class$", new Class[]{String.class}, null);
+		MethodBuilder builder = new MethodBuilder(this, ce, Modifiers.PROTECTED
+				| Modifiers.STATIC, Class.class, "db4o$class$",
+				new Class[] { String.class }, null);
 		builder.aload(0);
-		builder.invoke(Opcode.opc_invokestatic, Class.class, "forName", new Class[]{String.class}, Class.class);
+		builder.invoke(Opcode.opc_invokestatic, Class.class, "forName",
+				new Class[] { String.class }, Class.class);
 		builder.label(1);
 		builder.areturn();
 		builder.label(2);
@@ -124,22 +132,26 @@ public class Enhancer {
 		builder.newRef(NoClassDefFoundError.class);
 		builder.dup();
 		builder.aload(1);
-		builder.invoke(Opcode.opc_invokevirtual, ClassNotFoundException.class, "getMessage", new Class[]{}, String.class);
-		builder.invoke(Opcode.opc_invokespecial, NoClassDefFoundError.class, "<init>", new Class[]{String.class}, Void.TYPE);
+		builder.invoke(Opcode.opc_invokevirtual, ClassNotFoundException.class,
+				"getMessage", new Class[] {}, String.class);
+		builder.invoke(Opcode.opc_invokespecial, NoClassDefFoundError.class,
+				"<init>", new Class[] { String.class }, Void.TYPE);
 		builder.athrow();
-		builder.addTryCatch(0,1,2,ClassNotFoundException.class);
+		builder.addTryCatch(0, 1, 2, ClassNotFoundException.class);
 		builder.commit();
 	}
-	
-	public void invokeLoadClassConstMethod(MethodBuilder builder,String clazzName) {
+
+	public void invokeLoadClassConstMethod(MethodBuilder builder,
+			String clazzName) {
 		builder.ldc(normalizeClassName(clazzName));
 		builder.invoke(Opcode.opc_invokestatic, builder.parentType(),
 				"db4o$class$", new Class[] { String.class }, Class.class);
 	}
-	
+
 	public String normalizeClassName(String name) {
 		return name.replace('/', '.');
 	}
+
 	public MemberRef[] collectDeclaredFields(ClassEditor ce) {
 		FieldInfo[] fields = ce.fields();
 		MemberRef[] refs = new MemberRef[fields.length];
