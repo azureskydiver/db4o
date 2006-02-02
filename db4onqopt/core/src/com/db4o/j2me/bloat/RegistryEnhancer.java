@@ -208,7 +208,8 @@ public class RegistryEnhancer {
 				new Class[] { Class.class }, new Class[0]);
 		int labelId = 1;
 		for (int classIdx = 0; classIdx < clazzes.length; classIdx++) {
-			builder.invokeLoadClassConstMethod(contvertToArray(clazzes[classIdx]));
+			builder
+					.invokeLoadClassConstMethod(contvertToArray(clazzes[classIdx]));
 			builder.aload(1);
 			builder.invoke(Opcode.opc_invokevirtual, Class.class,
 					"isAssignableFrom", new Class[] { Class.class },
@@ -229,8 +230,8 @@ public class RegistryEnhancer {
 
 	}
 
-	private Object contvertToArray(Class clazz) {
-		return  Array.newInstance(clazz, new int[1]);
+	private Class contvertToArray(Class clazz) {
+		return Array.newInstance(clazz, new int[1]).getClass();
 	}
 
 	// for testing only
