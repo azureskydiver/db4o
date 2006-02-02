@@ -181,11 +181,7 @@ public class ClassEnhancer {
 	}
 
 	public void generate() {
-		if (implementsSelfReflectable(ce)) {
-			return;
-		} else
-			addInterfaceIfNeeded();
-
+		addInterfaceIfNeeded();
 		if (!(inspectNoArgConstr(ce.methods()))) {
 			addNoArgConstructor();
 		}
@@ -195,14 +191,8 @@ public class ClassEnhancer {
 	}
 
 	private void addInterfaceIfNeeded() {
-		Class clazz = ce.getClass();
-		while (!(clazz.getSuperclass().equals(Object.class))) {
-			if (!(implementsSelfReflectable(ce))) {
-				ce.addInterface(SelfReflectable.class);
-			}
-			clazz = clazz.getSuperclass();
-			ce = context.loadClass(context.getLoader().getClassPath(), clazz
-					.getSimpleName());
+		if(!instrumentedType(ce.superclass())&&!implementsSelfReflectable(ce)) {
+			ce.addInterface(SelfReflectable.class);
 		}
 	}
 
