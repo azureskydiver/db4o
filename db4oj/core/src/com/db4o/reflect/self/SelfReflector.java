@@ -42,7 +42,7 @@ public class SelfReflector implements Reflector {
 		if (a_object == null) {
 			return null;
 		}
-		return forClass(a_object.getClass());
+		return _parent.forClass(a_object.getClass());
 	}
 
 	public boolean isCollection(ReflectClass claxx) {

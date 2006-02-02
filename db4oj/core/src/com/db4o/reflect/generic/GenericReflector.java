@@ -14,11 +14,8 @@ public class GenericReflector implements Reflector, DeepClone {
     private Reflector _delegate;
     private GenericArrayReflector _array;
     
-    // TODO: _classByName is our fastest access to the classes
-    //      consider to improve access speed by special 
-    //      hashcode, maybe on names
-    
     private final Hashtable4 _classByName = new Hashtable4(1);
+    private final Hashtable4 _classByClass = new Hashtable4(1);
     private final Collection4 _classes = new Collection4();
     private final Hashtable4 _classByID = new Hashtable4(1);
     
@@ -118,12 +115,22 @@ public class GenericReflector implements Reflector, DeepClone {
         if(clazz == null){
             return null;
         }
-        ReflectClass claxx = forName(clazz.getName());
+        ReflectClass claxx = (ReflectClass) _classByClass.get(clazz);
         if(claxx != null){
             return claxx;
         }
+        claxx = forName(clazz.getName());
+        if(claxx != null){
+            _classByClass.put(clazz, claxx);
+            return claxx;
+        }
         claxx = _delegate.forClass(clazz);
-        return ensureDelegate(claxx);
+        if(claxx == null){
+            return null;
+        }
+        claxx = ensureDelegate(claxx);
+        _classByClass.put(clazz, claxx);
+        return claxx;
     }
     
 
@@ -157,11 +164,7 @@ public class GenericReflector implements Reflector, DeepClone {
         if (obj instanceof GenericObject){
             return ((GenericObject)obj)._class;
         }
-        ReflectClass clazz = _delegate.forObject(obj);
-        if(clazz != null){
-            return ensureDelegate(clazz);
-        }
-        return null;
+        return _delegate.forObject(obj);
     }
     
     public Reflector getDelegate(){
