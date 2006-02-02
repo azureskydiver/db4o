@@ -125,7 +125,7 @@ public class MethodBuilder {
 	}
 
 	public void getstatic(Class parent, Class type, String name) {
-		getstatic(_context.getType(parent),type, name);
+		getstatic(_context.getType(parent), type, name);
 	}
 
 	public void getstatic(Type parent, Class type, String name) {
@@ -186,12 +186,12 @@ public class MethodBuilder {
 	public void pop() {
 		_editor.addInstruction(Opcode.opc_pop);
 	}
-	
-	public void invokeLoadClassConstMethod(Class clazz) {
-		invokeLoadClassConstMethod(clazz.getName());
+
+	public void invokeLoadClassConstMethod(Object o) {
+		invokeLoadClassConstMethod(o.getClass().getName());
 	}
 
 	public void invokeLoadClassConstMethod(String clazzName) {
-		_context.invokeLoadClassConstMethod(this,clazzName);
+		_context.invokeLoadClassConstMethod(this, clazzName);
 	}
 }
