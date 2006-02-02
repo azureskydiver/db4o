@@ -1,8 +1,8 @@
 package com.db4o.j2me.bloat.testdata;
 
 public class Dog extends Animal {
-	public Dog[] _parents;
-	public int _age;
+	private Dog[] _parents;
+	private int _age;
 	private int[] _prices;
 	
 	public Dog(String name,int age,Dog[] parents,int[] prices) {
