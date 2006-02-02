@@ -190,6 +190,9 @@ public class MethodBuilder {
 	public void invokeLoadClassConstMethod(Object o) {
 		invokeLoadClassConstMethod(o.getClass().getName());
 	}
+	public void invokeLoadClassConstMethod(Class clazz) {
+		invokeLoadClassConstMethod(clazz.getName());
+	}
 
 	public void invokeLoadClassConstMethod(String clazzName) {
 		_context.invokeLoadClassConstMethod(this, clazzName);
