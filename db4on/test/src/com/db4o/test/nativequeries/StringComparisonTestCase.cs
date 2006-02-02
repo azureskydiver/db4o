@@ -22,7 +22,6 @@ namespace com.db4o.test.nativequeries
 		{
 			return _name;
 		}
-
 	}
 
 	class NameStartsWith : Predicate
@@ -40,6 +39,36 @@ namespace com.db4o.test.nativequeries
 		}
 	}
 
+	class NameEndsWith : Predicate
+	{
+		string _s;
+
+		public NameEndsWith(string s)
+		{
+			_s = s;
+		}
+
+		public bool Match(NamedThing thing)
+		{
+			return thing.Name.EndsWith(_s);
+		}
+	}
+
+	class NameEquals : Predicate
+	{
+		string _s;
+
+		public NameEquals(string s)
+		{
+			_s = s;
+		}
+
+		public bool Match(NamedThing thing)
+		{
+			return _s.Equals(thing.Name);
+		}
+	}
+
 	/// <summary>
 	/// </summary>
 	public class StringComparisonTestCase : AbstractNativeQueriesTestCase
@@ -52,6 +81,7 @@ namespace com.db4o.test.nativequeries
 
 		void setUpData()
 		{
+			Tester.deleteAllInstances(typeof(NamedThing));
 			Tester.store(_frisbee = new NamedThing("Frisbee"));
 			Tester.store(_bee = new NamedThing("Bee"));
 			Tester.store(_friday = new NamedThing("Friday"));
@@ -66,6 +96,25 @@ namespace com.db4o.test.nativequeries
 			AssertNQResult(new NameStartsWith("Bee"), _bee);
 			AssertNQResult(new NameStartsWith("r"));
 			AssertNQResult(new NameStartsWith("R"), _robinson, _round);
+		}
+
+		public void testEndsWith()
+		{
+			setUpData();
+			AssertNQResult(new NameEndsWith("ee"), _frisbee, _bee);
+			AssertNQResult(new NameEndsWith("day"), _friday);
+			AssertNQResult(new NameEndsWith("Y"));
+			AssertNQResult(new NameEndsWith("r"));
+			AssertNQResult(new NameEndsWith("e"), _frisbee, _bee, _robinson);
+		}
+
+		public void testEquals()
+		{
+			setUpData();
+			AssertNQResult(new NameEquals("Bee"), _bee);
+			AssertNQResult(new NameEquals("Round Robin"), _round);
+			AssertNQResult(new NameEquals("ee"));
+			AssertNQResult(new NameEquals("Round"));
 		}
 	}
 }

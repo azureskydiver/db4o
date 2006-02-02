@@ -390,13 +390,24 @@ namespace com.db4o.inside.query
 			private void ProcessStringMethod(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
 			{
 				IMethodReference method = methodRef.Method;
-				if (method.Name != "StartsWith") UnsupportedExpression(methodRef);
+				switch (method.Name)
+				{
+					case "StartsWith":
+						PushComparison(methodRef.Target, node.Arguments[0], ComparisonOperator.STARTSWITH);
+						break;
 
-				// ComparisonExpression
-				//	Operator.StartsWith
-				//	FieldValue
-				//	ComparisonOperand
-				PushComparison(methodRef.Target, node.Arguments[0], ComparisonOperator.STARTSWITH);
+					case "EndsWith":
+						PushComparison(methodRef.Target, node.Arguments[0], ComparisonOperator.ENDSWITH);
+						break;
+
+					case "Equals":
+						PushComparison(methodRef.Target, node.Arguments[0], ComparisonOperator.EQUALS);
+						break;
+
+					default:
+						UnsupportedExpression(methodRef);
+						break;
+				}
 			}
 
 			private void ProcessRegularMethodInvocation(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
