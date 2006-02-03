@@ -4,42 +4,16 @@ import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.ObjectSetIteratorFacade;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
-import com.db4o.inside.replication.ReplicationReference;
-import com.db4o.inside.replication.ReplicationReferenceImpl;
-import com.db4o.inside.replication.TestableReplicationProvider;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
-import org.hibernate.Criteria;
-import org.hibernate.FlushMode;
-import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import com.db4o.inside.replication.*;
+import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.event.EventListeners;
-import org.hibernate.event.FlushEvent;
-import org.hibernate.event.FlushEventListener;
-import org.hibernate.event.PostUpdateEvent;
-import org.hibernate.event.PostUpdateEventListener;
+import org.hibernate.event.*;
 import org.hibernate.mapping.PersistentClass;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.sql.*;
+import java.util.*;
 
 /**
  * Facade to a Hibernate-mapped database. During Instantiation of an instance of
@@ -205,7 +179,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 		if (newPeer) {
 			replicationRecord = new ReplicationRecord();
-			replicationRecord.peerId = peerSignature.getId();
+			replicationRecord.setPeerSignature(peerSignature);
 		} else {
 			replicationRecord = getRecord(this.peerSignature);
 		}
@@ -215,8 +189,11 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	public void storeReplicationRecord(long version) {
-		replicationRecord.version = version;
+		replicationRecord.setVersion(version);
 		_session.saveOrUpdate(replicationRecord);
+
+		if (getRecord(peerSignature).getVersion() != version)
+			throw new RuntimeException("The version numbers of persisted record does not match the parameter");
 	}
 
 	public final void commit(long raisedDatabaseVersion) {
@@ -395,12 +372,12 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 	public final ObjectSet objectsChangedSinceLastReplication(Class clazz) {
 		_session.flush();
-        Set out = new HashSet();
-        PersistentClass persistentClass = cfg.getClassMapping(clazz.getName());
-        if(persistentClass != null){
-            out.addAll(getNewObjectsSinceLastReplication(persistentClass));
-            out.addAll(getChangedObjectsSinceLastReplication(persistentClass));
-        }
+		Set out = new HashSet();
+		PersistentClass persistentClass = cfg.getClassMapping(clazz.getName());
+		if (persistentClass != null) {
+			out.addAll(getNewObjectsSinceLastReplication(persistentClass));
+			out.addAll(getChangedObjectsSinceLastReplication(persistentClass));
+		}
 		return new ObjectSetIteratorFacade(out.iterator());
 	}
 
@@ -534,10 +511,18 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
 	}
 
-	private ReplicationRecord getRecord(PeerSignature peerSignature) {
-		Criteria criteria = _session.createCriteria(ReplicationRecord.class).add(Restrictions.eq("peerId", new Long(peerSignature.getId())));
+	protected ReplicationRecord getRecord(PeerSignature peerSignature) {
+		Criteria criteria = _session.createCriteria(ReplicationRecord.class).createCriteria("peerSignature").add(Restrictions.eq("id", peerSignature.getId()));
+
 		final List exisitingRecords = criteria.list();
-		return (ReplicationRecord) exisitingRecords.get(0);
+		int count = exisitingRecords.size();
+
+		if (count == 0)
+			throw new RuntimeException("Record not found. Hibernate was unable to persist the record in the last replication round");
+		else if (count > 1)
+			throw new RuntimeException("Only one Record should exist for this peer");
+		else
+			return (ReplicationRecord) exisitingRecords.get(0);
 	}
 
 	private void generateReplicationMetaData(Collection newObjects) {
