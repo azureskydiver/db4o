@@ -1,5 +1,6 @@
 package com.db4o.replication.hibernate;
 
+import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.Column;
@@ -7,28 +8,23 @@ import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.PrimaryKey;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Iterator;
 
 public class Util {
-	public static void addMetaDataClasses(Configuration cfg) {
+	static void addMetaDataClasses(Configuration cfg) {
 		addClass(cfg, ReplicationProviderSignature.class);
 		addClass(cfg, ReplicationRecord.class);
 		addClass(cfg, ReplicationComponentIdentity.class);
 		addClass(cfg, ReplicationComponentField.class);
 	}
 
-	protected static void addClass(Configuration cfg, Class aClass) {
+	static void addClass(Configuration cfg, Class aClass) {
 		if (cfg.getClassMapping(aClass.getName()) == null)
 			cfg.addClass(aClass);
 	}
 
-	public static String getPrimaryKeyColumnName(Configuration cfg, Object entity) {
+	static String getPrimaryKeyColumnName(Configuration cfg, Object entity) {
 		final String className = entity.getClass().getName();
 		final PersistentClass pClass = cfg.getClassMapping(className);
 
@@ -45,7 +41,7 @@ public class Util {
 		return pkColName;
 	}
 
-	public static String getTableName(Configuration cfg, Class pClass) {
+	static String getTableName(Configuration cfg, Class pClass) {
 		PersistentClass mapped = cfg.getClassMapping(pClass.getName());
 		if (mapped == null)
 			throw new RuntimeException(pClass + " is not mapped using a hbm.xml file.");
@@ -121,7 +117,7 @@ public class Util {
 		}
 	}
 
-	public static void dumpTable(Connection con, String tableName) {
+	static void dumpTable(Connection con, String tableName) {
 		ResultSet rs = null;
 
 		try {
@@ -148,7 +144,7 @@ public class Util {
 		}
 	}
 
-	public static void closePreparedStatement(PreparedStatement ps) {
+	static void closePreparedStatement(PreparedStatement ps) {
 		if (ps != null) {
 			try {
 				ps.close();
@@ -158,7 +154,7 @@ public class Util {
 		}
 	}
 
-	public static void closeResultSet(ResultSet rs) {
+	static void closeResultSet(ResultSet rs) {
 		if (rs != null) {
 			try {
 				rs.close();
@@ -168,7 +164,7 @@ public class Util {
 		}
 	}
 
-	public static void closeStatement(Statement st) {
+	static void closeStatement(Statement st) {
 		if (st != null) {
 			try {
 				st.close();
@@ -177,4 +173,12 @@ public class Util {
 			}
 		}
 	}
+
+	static boolean skip(Object obj) {
+		return obj instanceof ReplicationRecord
+				|| obj instanceof ReadonlyReplicationProviderSignature
+				|| obj instanceof ReplicationComponentField
+				|| obj instanceof ReplicationComponentIdentity;
+	}
+
 }
