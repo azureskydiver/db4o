@@ -4,7 +4,7 @@ import com.db4o.inside.replication.*;
 
 import java.util.Arrays;
 
-public class ReplicationProviderSignature implements ReadonlyReplicationProviderSignature {
+class ReplicationProviderSignature implements ReadonlyReplicationProviderSignature {
 
     /**
      * Table for storing ReplicationProviderSignature byte[]. Each signature

@@ -1,13 +1,9 @@
 package com.db4o.replication.hibernate;
 
 public class ReplicationRecord {
-    
-	/**
-	 * Table for storing ReplicationRecord.
-	 */
-	public static String TABLE_NAME = "ReplicationRecord";
+	static final String TABLE_NAME = "ReplicationRecord";
 
-	public static String VERSION = "version";
+	static final String VERSION = "version";
 
 	private long version;
 

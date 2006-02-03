@@ -30,7 +30,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
     
 
 	public TransientReplicationProvider(byte[] signature, String name) {
-		_signature = new ReplicationProviderSignature(signature);
+		_signature = new MySignature(signature);
 		_name = name;
         
         ReplicationReflector reflector = new ReplicationReflector();

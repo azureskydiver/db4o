@@ -11,6 +11,7 @@ import java.util.Vector;
 public abstract class ReplicationProviderTest extends Test {
 
 	private static final byte[] ARBITRARY_SIGNATURE = new byte[]{99, -1, 42, 17};
+	private static final PeerSignature PEER_SIGNATURE = new PeerSignature(ARBITRARY_SIGNATURE);
 
 	public void testReplicationProvider() {
 		tstSignature();
@@ -28,7 +29,7 @@ public abstract class ReplicationProviderTest extends Test {
 		if (!subjectSupportsRollback()) return;
 
 		TestableReplicationProviderInside subject = prepareSubject();
-		subject.startReplicationTransaction(new ReplicationProviderSignature(ARBITRARY_SIGNATURE));
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Db4oUUID uuid = new Db4oUUID(5678, ARBITRARY_SIGNATURE);
         
@@ -38,7 +39,7 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.storeReplica(object1);
 		subject.rollbackReplication();
 
-		subject.startReplicationTransaction(new ReplicationProviderSignature(ARBITRARY_SIGNATURE));
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 		ensure(null == subject.produceReference(object1));
 		ReplicationReference byUUID = subject.produceReferenceByUUID(uuid, object1.getClass());
 		ensure(null == byUUID);
@@ -48,7 +49,7 @@ public abstract class ReplicationProviderTest extends Test {
 
 	private void tstStore() {
 		TestableReplicationProviderInside subject = prepareSubject();
-		subject.startReplicationTransaction(new ReplicationProviderSignature(ARBITRARY_SIGNATURE));
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Db4oUUID uuid = new Db4oUUID(1234, ARBITRARY_SIGNATURE);
         
@@ -62,14 +63,14 @@ public abstract class ReplicationProviderTest extends Test {
         subject.storeReplicationRecord(9);
 		subject.commit(10);
 
-		subject.startReplicationTransaction(new ReplicationProviderSignature(ARBITRARY_SIGNATURE));
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 		object1._name = "i am updated";
 		subject.storeReplica(object1);
         subject.storeReplicationRecord(14);
 		subject.commit(15);
 
 		subject.clearAllReferences();
-		subject.startReplicationTransaction(new ReplicationProviderSignature(ARBITRARY_SIGNATURE));
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		reference = subject.produceReferenceByUUID(uuid, object1.getClass());
 		ensure(((Pilot) reference.object())._name.equals("i am updated"));
@@ -82,7 +83,7 @@ public abstract class ReplicationProviderTest extends Test {
 		Pilot object1 = new Pilot("tst References", 42);
 		ensure(subject.produceReference(object1) == null);
 
-		subject.startReplicationTransaction(new ReplicationProviderSignature(ARBITRARY_SIGNATURE));
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 		subject.storeNew(object1);
 	   
 		ReplicationReference reference = subject.produceReference(object1);
@@ -102,7 +103,7 @@ public abstract class ReplicationProviderTest extends Test {
 
 	private void tstObjectsChangedSinceLastReplication() {
 		TestableReplicationProviderInside subject = prepareSubject();
-		subject.startReplicationTransaction(new ReplicationProviderSignature(ARBITRARY_SIGNATURE));
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Pilot object2 = new Pilot("Terry Gilliam", 53);
@@ -149,7 +150,7 @@ public abstract class ReplicationProviderTest extends Test {
 
 	private void tstVersionIncrement() {
 		TestableReplicationProviderInside subject = prepareSubject();
-		subject.startReplicationTransaction(new ReplicationProviderSignature(ARBITRARY_SIGNATURE));
+		subject.startReplicationTransaction(PEER_SIGNATURE);
         
         // This won't work for db4o: There is no guarantee that the version starts with 1.
 		// ensure(subject.getCurrentVersion() == 1);
@@ -157,7 +158,7 @@ public abstract class ReplicationProviderTest extends Test {
         subject.storeReplicationRecord(59);
 		subject.commit(60);
 
-		subject.startReplicationTransaction(new ReplicationProviderSignature(ARBITRARY_SIGNATURE));
+		subject.startReplicationTransaction(PEER_SIGNATURE);
         
         long version = subject.getCurrentVersion();
         
