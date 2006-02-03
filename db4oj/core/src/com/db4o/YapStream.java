@@ -729,11 +729,11 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         return new YapWriter(a_trans, a_address, a_length);
     }
 
-    public Transaction getSystemTransaction() {
+    public final Transaction getSystemTransaction() {
         return i_systemTrans;
     }
 
-    public Transaction getTransaction() {
+    public final Transaction getTransaction() {
         return i_trans;
     }
     
@@ -1415,23 +1415,17 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         // so far this only works from YapClient
     }
 
-    public void set(Object a_object) {
-        synchronized (i_lock) {
-            setExternal(null, a_object, YapConst.UNSPECIFIED);
-        }
+    public final void set(Object a_object) {
+        set(a_object, YapConst.UNSPECIFIED);
     }
 
-    public void set(Object a_object, int a_depth) {
+    public final void set(Object a_object, int a_depth) {
         synchronized (i_lock) {
-            setExternal(null, a_object, a_depth);
+            checkClosed();
+            beginEndSet(i_trans);
+            setInternal(i_trans, a_object, a_depth, true);
+            beginEndSet(i_trans);
         }
-    }
-    
-    final void setExternal(Transaction ta, Object a_object, int a_depth) {
-        ta = checkTransaction(ta);
-        beginEndSet(ta);
-        setInternal(ta, a_object, a_depth, true);
-        beginEndSet(ta);
     }
     
     final int setInternal(Transaction ta, Object a_object, boolean a_checkJustSet) {
@@ -1495,13 +1489,13 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             i_handlers._replicationReferenceProvider = null;
         }
     }
-
+    
     private final int set2(Transaction ta, Object obj, int depth, boolean checkJust) {
         int id = set3(ta, obj, depth, checkJust);
         
         // The entry counter helps us to know how far we are
         // away from a top level call.  
-        if(i_entryCounter < YapConst.MAX_STACK_DEPTH){
+        if(stackIsSmall()){
             checkStillToSet();
         }
         
@@ -1649,6 +1643,10 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
             i_showInternalClasses = 0;
         }
     }
+    
+    private final boolean stackIsSmall(){
+        return i_entryCounter < YapConst.MAX_STACK_DEPTH;
+    }
 
     boolean stateMessages() {
         return true; // overridden to do nothing in YapObjectCarrier
@@ -1730,6 +1728,11 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
 
     void stillToSet(Transaction a_trans, YapObject a_yapObject, int a_updateDepth) {
+        if(stackIsSmall()){
+            if(a_yapObject.continueSet(a_trans, a_updateDepth)){
+                return;
+            }
+        }
         i_stillToSet = new List4(i_stillToSet, a_trans);
         i_stillToSet = new List4(i_stillToSet, a_yapObject);
         i_stillToSet = new List4(i_stillToSet, new Integer(a_updateDepth));
