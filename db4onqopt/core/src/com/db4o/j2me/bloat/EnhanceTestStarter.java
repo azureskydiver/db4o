@@ -17,7 +17,7 @@ public class EnhanceTestStarter {
 		for (int pathIdx = 0; pathIdx < classpath.length; pathIdx++) {
 			urls[pathIdx]=new File(classpath[pathIdx]).toURI().toURL();
 		}
-		// a risky move, but usually this should be the extent classloader
+		// a risky move, but usually this should be the ext classloader
 		ClassLoader extCL = ClassLoader.getSystemClassLoader().getParent();
 		URLClassLoader urlCL=new URLClassLoader(urls,extCL);
 		Class mainClazz=urlCL.loadClass(EnhanceTestMain.class.getName());

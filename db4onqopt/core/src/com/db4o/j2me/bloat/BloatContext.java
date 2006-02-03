@@ -7,10 +7,13 @@ import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.ClassFileLoader;
 import EDU.purdue.cs.bloat.reflect.*;
 
-public class Enhancer {
+public class BloatContext {
+	public static final String INIT_METHODNAME = "<init>";
+	public static final String EQUALS_METHODNAME = "equals";
+	private static final String LOADCLASSCONSTMETHODNAME = "db4o$class$";
 	private ClassFileLoader _loader;
 
-	public Enhancer(ClassFileLoader loader, String outputDirPath) {
+	public BloatContext(ClassFileLoader loader, String outputDirPath) {
 		_loader = loader;
 		_loader.setOutputDir(new File(outputDirPath));
 	}
@@ -61,13 +64,6 @@ public class Enhancer {
 	public MemberRef fieldRef(Type parent, Type type, String name) {
 		return new MemberRef(parent, new NameAndType(name, type));
 	}
-
-	// protected MemberRef fieldRef(String parent, Class fieldClass, String
-	// name) {
-	// return new MemberRef(Type.getType("L"+ parent + ";"), new
-	// NameAndType(name,
-	// getType(fieldClass)));
-	// }
 
 	public MemberRef fieldRef(String parent, Class fieldClass, String name) {
 		Type type = Type.getType(Type.classDescriptor(parent));
@@ -120,11 +116,11 @@ public class Enhancer {
 	// TODO: Why is an empty 'throws' generated according to javap?
 	public void createLoadClassConstMethod(ClassEditor ce) {
 		MethodBuilder builder = new MethodBuilder(this, ce, Modifiers.PROTECTED
-				| Modifiers.STATIC, Class.class, "db4o$class$",
+				| Modifiers.STATIC, Class.class, LOADCLASSCONSTMETHODNAME,
 				new Class[] { String.class }, null);
 		builder.aload(0);
-		builder.invoke(Opcode.opc_invokestatic, Class.class, "forName",
-				new Class[] { String.class }, Class.class);
+		builder.invokeStatic(Type.CLASS, "forName",
+				new Type[] { Type.STRING }, Type.CLASS);
 		builder.label(1);
 		builder.areturn();
 		builder.label(2);
@@ -132,10 +128,10 @@ public class Enhancer {
 		builder.newRef(NoClassDefFoundError.class);
 		builder.dup();
 		builder.aload(1);
-		builder.invoke(Opcode.opc_invokevirtual, ClassNotFoundException.class,
-				"getMessage", new Class[] {}, String.class);
-		builder.invoke(Opcode.opc_invokespecial, NoClassDefFoundError.class,
-				"<init>", new Class[] { String.class }, Void.TYPE);
+		builder.invokeVirtual(getType(ClassNotFoundException.class),
+				"getMessage", new Type[] {}, Type.STRING);
+		builder.invokeSpecial(getType(NoClassDefFoundError.class),
+				INIT_METHODNAME, new Type[] { Type.STRING }, Type.VOID);
 		builder.athrow();
 		builder.addTryCatch(0, 1, 2, ClassNotFoundException.class);
 		builder.commit();
@@ -144,8 +140,8 @@ public class Enhancer {
 	public void invokeLoadClassConstMethod(MethodBuilder builder,
 			String clazzName) {
 		builder.ldc(normalizeClassName(clazzName));
-		builder.invoke(Opcode.opc_invokestatic, builder.parentType(),
-				"db4o$class$", new Class[] { String.class }, Class.class);
+		builder.invokeStatic(builder.parentType(),
+				LOADCLASSCONSTMETHODNAME, new Type[] { Type.STRING }, Type.CLASS);
 	}
 
 	public String normalizeClassName(String name) {
@@ -159,5 +155,31 @@ public class Enhancer {
 			refs[i] = new FieldEditor(ce, fields[i]).memberRef();
 		}
 		return refs;
+	}
+	
+	public void addNoArgConstructor(ClassEditor ce) {
+		MethodEditor init = new MethodEditor(ce, Modifiers.PUBLIC, Type.VOID,
+				INIT_METHODNAME, new Type[0], new Type[0]);
+		MemberRef mr = methodRef(ce.superclass(), INIT_METHODNAME,
+				new Class[0], void.class);
+		init.addLabel(new Label(0));
+		init.addInstruction(Opcode.opcx_aload, init.paramAt(0));
+		init.addInstruction(Opcode.opcx_invokespecial, mr);
+		init.addInstruction(Opcode.opcx_return);
+		init.commit();
+	}
+	
+	public FieldEditor fieldEditor(Class clazz, FieldInfo fieldInfo) {
+		FieldEditor f = null;
+
+		try {
+			f = new FieldEditor(new ClassEditor(null, new ClassFileLoader()
+					.loadClass(clazz.getName())), fieldInfo);
+		} catch (ClassFormatException e) {
+			System.err.println(e.getMessage());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return f;
 	}
 }

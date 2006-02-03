@@ -3,7 +3,6 @@ package com.db4o.j2me.bloat;
 import java.util.*;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.reflect.*;
 
 public class MethodBuilder {
 	private Map _labels;
@@ -12,9 +11,9 @@ public class MethodBuilder {
 
 	private MethodEditor _editor;
 
-	private Enhancer _context;
+	private BloatContext _context;
 
-	public MethodBuilder(Enhancer context, ClassEditor classEditor,
+	public MethodBuilder(BloatContext context, ClassEditor classEditor,
 			int modifiers, Class type, String name, Class[] params,
 			Class[] exceptions) {
 		_context = context;
@@ -74,18 +73,27 @@ public class MethodBuilder {
 		_editor.addInstruction(Opcode.opc_return);
 	}
 
-	public void invoke(int mode, Class parent, String name, Class[] params,
-			Class ret) {
-		invoke(mode, _context.getType(parent), name, params, ret);
+	public void invokeSpecial(Type parent, String name, Type[] params,
+			Type ret) {
+		invoke(Opcode.opc_invokespecial,parent,name,params,ret);
 	}
 
-	public void invoke(int mode, Type parent, String name, Class[] params,
-			Class ret) {
-		_editor.addInstruction(mode, _context.methodRef(parent, name, params,
-				ret));
+	public void invokeVirtual(Type parent, String name, Type[] params,
+			Type ret) {
+		invoke(Opcode.opc_invokevirtual,parent,name,params,ret);
 	}
 
-	public void invoke(int mode, Type parent, String name, Type[] params,
+	public void invokeStatic(Type parent, String name, Type[] params,
+			Type ret) {
+		invoke(Opcode.opc_invokestatic,parent,name,params,ret);
+	}
+
+	public void invokeInterface(Type parent, String name, Type[] params,
+			Type ret) {
+		invoke(Opcode.opc_invokeinterface,parent,name,params,ret);
+	}
+
+	private void invoke(int mode, Type parent, String name, Type[] params,
 			Type ret) {
 		_editor.addInstruction(mode, _context.methodRef(parent, name, params,
 				ret));
@@ -162,11 +170,6 @@ public class MethodBuilder {
 		return _editor.declaringClass().type();
 	}
 
-	/** @deprecated */
-	public MethodEditor editor() {
-		return _editor;
-	}
-
 	public void getfield(MemberRef field) {
 		_editor.addInstruction(Opcode.opc_getfield, field);
 	}
@@ -187,9 +190,6 @@ public class MethodBuilder {
 		_editor.addInstruction(Opcode.opc_pop);
 	}
 
-	public void invokeLoadClassConstMethod(Object o) {
-		invokeLoadClassConstMethod(o.getClass().getName());
-	}
 	public void invokeLoadClassConstMethod(Class clazz) {
 		invokeLoadClassConstMethod(clazz.getName());
 	}
