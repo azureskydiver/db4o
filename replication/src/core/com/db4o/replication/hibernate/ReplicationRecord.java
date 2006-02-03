@@ -9,15 +9,31 @@ public class ReplicationRecord {
 
 	public static String VERSION = "version";
 
-	public long version;
+	private long version;
 
-	public long peerId;
+	private PeerSignature peerSignature;
 
 	public ReplicationRecord() {
 		version = 0;
 	}
 
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(long version) {
+		this.version = version;
+	}
+
+	public PeerSignature getPeerSignature() {
+		return peerSignature;
+	}
+
+	public void setPeerSignature(PeerSignature peerSignature) {
+		this.peerSignature = peerSignature;
+	}
+
 	public String toString() {
-		return "peerId = " + peerId + ", version = " + version;
+		return "peerSignature = " + peerSignature + ", version = " + version;
 	}
 }
