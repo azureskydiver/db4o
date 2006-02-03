@@ -103,6 +103,10 @@ public class STString implements STClass1, STInterface {
 		c = q.constrain(new STString("od"));
 		q.descend("str").constraints().endsWith(true);
 		st.expectOne(q, new STString("dod"));
+		q = st.query();
+		c = q.constrain(new STString("D"));
+		q.descend("str").constraints().endsWith(false);
+		st.expectOne(q, new STString("dod"));
 	}
 
 	public void testNotLike() {
