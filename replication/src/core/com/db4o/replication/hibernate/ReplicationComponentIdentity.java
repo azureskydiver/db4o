@@ -1,6 +1,8 @@
 package com.db4o.replication.hibernate;
 
 public class ReplicationComponentIdentity {
+	static final String TABLE_NAME = "ReplicationComponentIdentity";
+
 	private long uuidLongPart;
 	private long providerId;
 	private long ownerUuidLongPart;

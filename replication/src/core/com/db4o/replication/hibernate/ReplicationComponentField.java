@@ -1,6 +1,8 @@
 package com.db4o.replication.hibernate;
 
 public class ReplicationComponentField {
+	static final String TABLE_NAME = "ReplicationComponentField";
+
 	private String className;
 	private String fieldName;
 
