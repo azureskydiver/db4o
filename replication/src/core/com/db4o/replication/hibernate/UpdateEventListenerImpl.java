@@ -1,6 +1,5 @@
 package com.db4o.replication.hibernate;
 
-import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Interceptor;
@@ -45,7 +44,7 @@ public class UpdateEventListenerImpl extends EmptyInterceptor
 		PersistentCollection persistentCollection = ((PersistentCollection) collection);
 		Object owner = persistentCollection.getOwner();
 
-		if (skip(owner)) return;
+		if (Util.skip(owner)) return;
 
 		Serializable id = getId(owner);
 		ObjectUpdated(owner, id);
@@ -54,10 +53,6 @@ public class UpdateEventListenerImpl extends EmptyInterceptor
 	protected static Serializable getId(Object obj) {
 		Session session = getSession();
 		return session.getIdentifier(obj);
-	}
-
-	protected static boolean skip(Object obj) {
-		return obj instanceof ReplicationRecord || obj instanceof ReadonlyReplicationProviderSignature;
 	}
 
 	protected static Configuration getConfiguration() {
@@ -84,7 +79,7 @@ public class UpdateEventListenerImpl extends EmptyInterceptor
 	public void onPostUpdate(PostUpdateEvent event) {
 		Object object = event.getEntity();
 
-		if (skip(object)) return;
+		if (Util.skip(object)) return;
 
 		ObjectUpdated(object, event.getId());
 	}

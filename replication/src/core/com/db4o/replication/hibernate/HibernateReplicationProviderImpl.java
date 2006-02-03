@@ -670,8 +670,9 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		public final void onPostUpdate(PostUpdateEvent event) {
 			synchronized (HibernateReplicationProviderImpl.this) {
 				Object entity = event.getEntity();
-				if (entity instanceof ReplicationRecord || entity instanceof ReadonlyReplicationProviderSignature)
-					return;
+
+				if (Util.skip(entity)) return;
+
 				//TODO performance sucks, but this method is called when testing only.
 				long newVer = Util.getMaxVersion(_session.connection()) + 1;
 				Util.incrementObjectVersion(_session.connection(), event.getId(), newVer,
