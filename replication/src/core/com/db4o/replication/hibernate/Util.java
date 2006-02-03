@@ -19,6 +19,8 @@ public class Util {
 	public static void addMetaDataClasses(Configuration cfg) {
 		addClass(cfg, ReplicationProviderSignature.class);
 		addClass(cfg, ReplicationRecord.class);
+		addClass(cfg, ReplicationComponentIdentity.class);
+		addClass(cfg, ReplicationComponentField.class);
 	}
 
 	protected static void addClass(Configuration cfg, Class aClass) {
