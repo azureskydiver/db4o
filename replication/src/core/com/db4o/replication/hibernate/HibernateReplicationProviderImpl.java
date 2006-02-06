@@ -224,14 +224,13 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	public final void storeReplica(Object obj) {
-		ReplicationReference ref = getCachedReference(obj);
+		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
+		if (obj instanceof Collection) return;
 
-		if (ref == null) {
-			throw new RuntimeException("Reference should always be available before storeReplica");
-		}
+		ReplicationReference ref = getCachedReference(obj);
+		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
 
 		_session.saveOrUpdate(obj);
-
 		dirtyRefs.add(ref);
 	}
 
