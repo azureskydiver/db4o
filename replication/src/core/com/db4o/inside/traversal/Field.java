@@ -7,9 +7,12 @@ public class Field {
 	private Object field;
 
 	public Field(Object owner, String name, Object field) {
-		if (owner == null) throw new IllegalArgumentException("owner cannot be null");
-		if (name == null) throw new IllegalArgumentException("name cannot be null");
-		if (field == null) throw new IllegalArgumentException("field be null");
+		if (owner == null)
+			throw new IllegalArgumentException("owner cannot be null");
+		if (name == null)
+			throw new IllegalArgumentException("name cannot be null");
+		if (field == null)
+			throw new IllegalArgumentException("field be null");
 
 		this.owner = owner;
 		this.name = name;

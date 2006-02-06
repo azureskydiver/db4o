@@ -1,6 +1,7 @@
 package com.db4o.inside.traversal;
 
-import com.db4o.foundation.*;
+import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.Queue4;
 import com.db4o.reflect.ReflectArray;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
@@ -45,13 +46,13 @@ public class TraverserImpl implements Traverser {
 	}
 
 	private void traverseFields(Object object, ReflectClass claxx) {
-		currentFieldOwner = object;
 
 		ReflectField[] fields;
 
 		fields = claxx.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			ReflectField field = fields[i];
+			currentFieldOwner = object;
 			currentFieldName = field.getName();
 			if (field.isStatic()) continue;
 			if (field.isTransient()) continue;
@@ -88,9 +89,13 @@ public class TraverserImpl implements Traverser {
 		if (isSecondClass(claxx)) return;
 
 		if (_collectionFlattener.canHandle(claxx)) {
-			_queue.add(new Field(currentFieldOwner, currentFieldName, object));
-			currentFieldName = null;
-
+			if (currentFieldName != null && currentFieldOwner != null) {
+				_queue.add(new Field(currentFieldOwner, currentFieldName, object));
+				currentFieldName = null;
+				currentFieldOwner = null;
+			}else {
+				_queue.add(object);
+			}
 			traverseCollection(object);
 		} else {
 			if (claxx.isArray()) {
@@ -101,11 +106,11 @@ public class TraverserImpl implements Traverser {
 		}
 	}
 
-    private boolean isSecondClass(ReflectClass claxx){
-        //      TODO Optimization: Compute this lazily in ReflectClass;
-        if (claxx.isSecondClass()) return true;
-        return claxx.isArray() && claxx.getComponentType().isSecondClass();
-    }
+	private boolean isSecondClass(ReflectClass claxx) {
+		//      TODO Optimization: Compute this lazily in ReflectClass;
+		if (claxx.isSecondClass()) return true;
+		return claxx.isArray() && claxx.getComponentType().isSecondClass();
+	}
 
 
 	final Object[] contents(Object array) { //FIXME Eliminate duplication. Move this to ReflectArray. This logic is in the GenericReplicationSessio too.

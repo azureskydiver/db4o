@@ -16,6 +16,7 @@ public class ReplicationTestSuite extends TestSuite {
 		return new Class[]{
 				TransientListTest.class,
 				Db4oListTest.class,
+				                          
 				//FIXME Db4oReplicationProvider Db4oListTest.class,
 
 				//UuidLongPartGeneratorTest.class,
