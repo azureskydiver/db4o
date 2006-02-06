@@ -2,17 +2,18 @@
 
 package com.db4o.inside.replication;
 
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.replication.*;
+import com.db4o.ext.Db4oUUID;
+import com.db4o.foundation.Visitor4;
+import com.db4o.inside.traversal.Field;
+import com.db4o.replication.ReplicationProvider;
 
 
 public interface ReplicationProviderInside extends ReplicationProvider{
-    
+
     public void activate(Object object);
-    
+
     public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference);
-    
+
     /**
     Activates the fields, e.g. Collections, arrays, of an object
 
@@ -41,7 +42,7 @@ public interface ReplicationProviderInside extends ReplicationProvider{
    public Object getMonitor();
 
    ReadonlyReplicationProviderSignature getSignature();
-   
+
 
    /**
     Determines if this Provider has the ReplicationReference of an object
@@ -84,7 +85,7 @@ public interface ReplicationProviderInside extends ReplicationProvider{
     */
    void startReplicationTransaction(ReadonlyReplicationProviderSignature peerSignature);
 
-   
+
    /**
     Stores the new replicated state of obj. It can also be a new object to this
     provider.
@@ -92,8 +93,8 @@ public interface ReplicationProviderInside extends ReplicationProvider{
     @param obj  Object with updated state or a clone of new object in the peer.
     */
    void storeReplica(Object obj);
-   
-   
+
+
    public void storeReplicationRecord(long maxVersion);
 
 
@@ -104,8 +105,11 @@ public interface ReplicationProviderInside extends ReplicationProvider{
     */
    void visitCachedReferences(Visitor4 visitor);
 
-   
 
 
+	boolean hasReplicationReferenceAlreadyForField(Field field);
 
+	ReplicationReference produceReferenceForField(Field field);
+
+	ReplicationReference produceFieldReferenceByUUID(Db4oUUID uuid, Field field);
 }

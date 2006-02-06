@@ -2,26 +2,23 @@
 
 package com.db4o.test.replication.db4o;
 
-import com.db4o.inside.replication.*;
-import com.db4o.replication.db4o.*;
-import com.db4o.test.*;
-import com.db4o.test.replication.*;
-
+import com.db4o.ext.ExtDb4o;
+import com.db4o.ext.MemoryFile;
+import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.replication.db4o.Db4oReplicationProvider;
+import com.db4o.test.replication.ReplicationFeaturesMain;
 
 public class Db4oReplicationFeaturesMain extends ReplicationFeaturesMain {
-    
-    protected TestableReplicationProvider prepareProviderA() {
-        return new Db4oReplicationProvider(Test.objectContainer());
-    }
 
-    protected TestableReplicationProvider prepareProviderB() {
-        return Db4oReplicationTestUtil.providerB();
-    }
+	protected TestableReplicationProvider prepareProviderA() {
+		return new Db4oReplicationProvider(ExtDb4o.openMemoryFile(new MemoryFile()));
+	}
 
-    public void test() {
-        super.test();
-    }
+	protected TestableReplicationProvider prepareProviderB() {
+		return new Db4oReplicationProvider(ExtDb4o.openMemoryFile(new MemoryFile()));
+	}
 
-    
-
+	public void test() {
+		super.test();
+	}
 }

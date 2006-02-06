@@ -20,7 +20,7 @@ public class ListHolder {
         this.list = new ArrayList();
     }
     
-    public void add(Object obj){
+    public void add(ListContent obj){
         list.add(obj);
     }
     
@@ -40,4 +40,7 @@ public class ListHolder {
         this.list = list;
     }
 
+	public String toString() {
+		return "name = " + name + ", list = " + list;
+	}
 }
