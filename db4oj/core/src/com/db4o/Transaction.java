@@ -362,10 +362,6 @@ public class Transaction {
         }
         SlotChange change = findSlotChange(a_id);
         if (change != null) {
-            
-            
-            // FIXME: Do we have to check that?
-            
             if(change.isSetPointer()){
                 return change.newSlot();
             }
@@ -452,12 +448,9 @@ public class Transaction {
     }
     
     private SlotChange produceSlotChange(int id){
-        SlotChange slot = (SlotChange)TreeInt.find(_slotChanges, id);
-        if(slot == null){
-            slot = new SlotChange(id);
-            _slotChanges = Tree.add(_slotChanges, slot);
-        }
-        return slot;
+        SlotChange slot = new SlotChange(id);
+        _slotChanges = Tree.add(_slotChanges, slot);
+        return (SlotChange)slot.duplicateOrThis();
     }
     
     Reflector reflector(){

@@ -71,7 +71,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     private Tree            i_justPeeked;
     private Tree            i_justSet;
 
-    final Object            i_lock                = new Object();
+    final Object            i_lock;
 
     // currently used to resolve self-linking concurrency problems
     // in cylic links, stores only YapClass objects
@@ -120,6 +120,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
 
     YapStream(YapStream a_parent) {
         i_parent = a_parent == null ? this : a_parent;
+        i_lock = a_parent == null ? new Object() : a_parent.i_lock;
         initialize0();
         createTransaction();
         initialize1();
@@ -1414,7 +1415,7 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
         // so far this only works from YapClient
     }
 
-    public final void set(Object a_object) {
+    public void set(Object a_object) {
         set(a_object, YapConst.UNSPECIFIED);
     }
 

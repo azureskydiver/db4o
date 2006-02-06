@@ -54,6 +54,21 @@ public abstract class Tree implements Cloneable, Readable{
 	    }
 	    return this;
 	}
+    
+    
+    /**
+     * On adding a node to a tree, if it already exists, 
+     * #isDuplicateOf() will be called and the added node
+     * can be asked for the node that prevails in the 
+     * tree. This mechanism allows doing find() and add()
+     * in one run.
+     */
+    public Tree duplicateOrThis(){
+        if(i_size == 0){
+            return i_preceding;
+        }
+        return this;
+    }
 	
 	public final Tree balance(){
 		int cmp = i_subsequent.nodes() - i_preceding.nodes(); 
@@ -236,6 +251,7 @@ public abstract class Tree implements Cloneable, Readable{
     
 	void isDuplicateOf(Tree a_tree){
 		i_size = 0;
+        i_preceding = a_tree;
 	}
 	
     /**
