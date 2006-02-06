@@ -230,10 +230,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 			throw new RuntimeException("Reference should always be available before storeReplica");
 		}
 
-		if (_session.contains(obj))
-			update(obj);
-		else
-			_session.save(obj);
+		_session.saveOrUpdate(obj);
 
 		dirtyRefs.add(ref);
 	}
