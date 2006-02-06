@@ -9,9 +9,9 @@ namespace com.db4o.test.acid
 
 		public com.db4o.test.acid.CrashSimulatingTest _next;
 
-		private static readonly string PATH = "TEMP/crashSimulate";
+		private static readonly string PATH = Path.Combine(Path.GetTempPath(), "crashSimulate");
 
-		private static readonly string FILE = PATH + "/cs";
+		private static readonly string FILE = Path.Combine(PATH, "cs");
 
 		public CrashSimulatingTest()
 		{
