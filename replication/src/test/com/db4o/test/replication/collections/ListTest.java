@@ -115,7 +115,8 @@ public abstract class ListTest extends ReplicationTestcase {
             List list = lh.getList();
             for (int j = 0; j < contentNames.length; j++) {
                 ListContent lc = (ListContent)list.get(j);
-                Test.ensure(contentNames[j].equals(lc.getName()));
+	            final String name = lc.getName();
+	            Test.ensure(contentNames[j].equals(name));
             }
         }
     }
