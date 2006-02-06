@@ -13,6 +13,9 @@ public class TraverserImpl implements Traverser {
 	private final CollectionFlattener _collectionFlattener;
 	private final Queue4 _queue = new Queue4();
 
+	private Object currentFieldOwner;
+	private String currentFieldName;
+
 	public TraverserImpl(Reflector reflector, CollectionFlattener collectionFlattener) {
 		_reflector = reflector;
 		_arrayReflector = _reflector.array();
@@ -32,7 +35,7 @@ public class TraverserImpl implements Traverser {
         if (!visitor.visit(object)){
             return;
         }
-        
+
         ReflectClass claxx = _reflector.forObject(object);
 		traverseFields(object, claxx);
 	}
@@ -46,7 +49,7 @@ public class TraverserImpl implements Traverser {
 			if (field.isStatic()) continue;
 			if (field.isTransient()) continue;
 			field.setAccessible(); //TODO Optimize: Change the reflector so I dont have to call setAcessible all the time.
-			
+
 			Object value = field.get(object);
 			queueUpForTraversing(value);
 		}
@@ -74,18 +77,19 @@ public class TraverserImpl implements Traverser {
 
 	private void queueUpForTraversing(Object object) {
 		if (object == null) return;
-        ReflectClass claxx = _reflector.forObject(object);
+		ReflectClass claxx = _reflector.forObject(object);
 		if (isSecondClass(claxx)) return;
-        
-        if (_collectionFlattener.canHandle(claxx)) {
-            traverseCollection(object);
-        }else{
-            if (claxx.isArray()) {
-                traverseArray(object, claxx);
-                return;
-            }
-        }
-		_queue.add(object);
+
+		if (_collectionFlattener.canHandle(claxx)) {
+			traverseCollection(object);
+			_queue.add(object);
+		} else {
+			if (claxx.isArray()) {
+				traverseArray(object, claxx);
+			} else {
+				_queue.add(object);
+			}
+		}
 	}
 
     private boolean isSecondClass(ReflectClass claxx){
@@ -93,7 +97,7 @@ public class TraverserImpl implements Traverser {
         if (claxx.isSecondClass()) return true;
         return claxx.isArray() && claxx.getComponentType().isSecondClass();
     }
-    
+
 
 	final Object[] contents(Object array) { //FIXME Eliminate duplication. Move this to ReflectArray. This logic is in the GenericReplicationSessio too.
 		int[] dim = _arrayReflector.dimensions(array);
