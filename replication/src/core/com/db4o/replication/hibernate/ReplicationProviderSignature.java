@@ -1,40 +1,40 @@
 package com.db4o.replication.hibernate;
 
-import com.db4o.inside.replication.*;
+import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 
 import java.util.Arrays;
 
 class ReplicationProviderSignature implements ReadonlyReplicationProviderSignature {
 
-    /**
-     * Table for storing ReplicationProviderSignature byte[]. Each signature
-     * is identified by a {@link #SIGNATURE_ID_COLUMN_NAME}
-     */
-    static final String TABLE_NAME = "ReplicationProviderSignature";
+	/**
+	 * Table for storing ReplicationProviderSignature byte[]. Each signature
+	 * is identified by a {@link #SIGNATURE_ID_COLUMN_NAME}
+	 */
+	static final String TABLE_NAME = "ReplicationProviderSignature";
 
-    /**
-     * Column name of the ReplicationProviderSignature byte_array.
-     */
-    static final String SIGNATURE_BYTE_ARRAY_COLUMN_NAME = "bytes";
+	/**
+	 * Column name of the ReplicationProviderSignature byte_array.
+	 */
+	static final String SIGNATURE_BYTE_ARRAY_COLUMN_NAME = "bytes";
 
-    /**
-     * Unique ID for {@link #SIGNATURE_BYTE_ARRAY_COLUMN_NAME}.
-     */
-    static final String SIGNATURE_ID_COLUMN_NAME = "drs_provider_id";
+	/**
+	 * Unique ID for {@link #SIGNATURE_BYTE_ARRAY_COLUMN_NAME}.
+	 */
+	static final String SIGNATURE_ID_COLUMN_NAME = "drs_provider_id";
 
 
-    private byte[] bytes;
+	private byte[] bytes;
 
 	private long id;
 
-    private long creationTime;
+	private long creationTime;
 
 	public ReplicationProviderSignature() {
 	}
 
 	public ReplicationProviderSignature(byte[] signature) {
 		this.bytes = signature;
-        this.creationTime = System.currentTimeMillis();
+		this.creationTime = System.currentTimeMillis();
 	}
 
 	public long getId() {
@@ -53,13 +53,13 @@ class ReplicationProviderSignature implements ReadonlyReplicationProviderSignatu
 		this.bytes = signature;
 	}
 
-    public long getCreationTime() {
-        return creationTime;
-    }
+	public long getCreationTime() {
+		return creationTime;
+	}
 
-    public void setCreationTime(long creationTime) {
-        this.creationTime = creationTime;
-    }
+	public void setCreationTime(long creationTime) {
+		this.creationTime = creationTime;
+	}
 
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -67,11 +67,18 @@ class ReplicationProviderSignature implements ReadonlyReplicationProviderSignatu
 
 		final ReplicationProviderSignature that = (ReplicationProviderSignature) o;
 
-		return Arrays.equals(bytes, that.bytes);
+		if (creationTime != that.creationTime) return false;
+		if (id != that.id) return false;
+		if (!Arrays.equals(bytes, that.bytes)) return false;
+
+		return true;
 	}
 
 	public int hashCode() {
-		return 0;
+		int result;
+		result = (int) (id ^ (id >>> 32));
+		result = 29 * result + (int) (creationTime ^ (creationTime >>> 32));
+		return result;
 	}
 
 	public String toString() {
