@@ -642,7 +642,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 			PersistentClass persistentClass = (PersistentClass) classMappings.next();
 			Class claxx = persistentClass.getMappedClass();
 
-			if (claxx == ReplicationRecord.class || claxx == ReplicationProviderSignature.class || claxx == PeerSignature.class || claxx == MySignature.class)
+			if (Util.skip(claxx))
 				continue;
 
 			out.add(persistentClass);

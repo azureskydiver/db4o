@@ -6,6 +6,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.PrimaryKey;
+import org.hibernate.mapping.Table;
 
 import java.io.Serializable;
 import java.sql.*;
@@ -181,4 +182,19 @@ public class Util {
 				|| obj instanceof ReplicationComponentIdentity;
 	}
 
+	static boolean skip(Class claxx) {
+		return claxx == ReplicationRecord.class
+				|| claxx == ReplicationProviderSignature.class
+				|| claxx == PeerSignature.class
+				|| claxx == MySignature.class
+				|| claxx == ReplicationComponentField.class
+				|| claxx == ReplicationComponentIdentity.class;
+	}
+
+	static boolean skip(Table table) {
+		return table.getName().equals(ReplicationProviderSignature.TABLE_NAME)
+				|| table.getName().equals(ReplicationRecord.TABLE_NAME)
+				|| table.getName().equals(ReplicationComponentField.TABLE_NAME)
+				|| table.getName().equals(ReplicationComponentIdentity.TABLE_NAME);
+	}
 }

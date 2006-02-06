@@ -32,12 +32,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		<id column="id" type="int">
 			<generator class="native"/>
 		</id>
+
 		<natural-id mutable="false">
 			<property name="uuidLongPart"/>
-			<property name="providerId"/>
-
 			<property name="ownerUuidLongPart"/>
 			<many-to-one name="ownerField" cascade="all"/>
 		</natural-id>
+
+		<one-to-one name="provider"/>
+
 	</class>
 </hibernate-mapping>

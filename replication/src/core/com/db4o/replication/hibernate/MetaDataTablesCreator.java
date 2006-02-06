@@ -81,7 +81,7 @@ public class MetaDataTablesCreator {
 		while (tableMappings.hasNext()) {
 			Table table = (Table) tableMappings.next();
 
-			if (skipTable(table))
+			if (Util.skip(table))
 				continue;
 			tables.add(table);
 		}
@@ -91,19 +91,12 @@ public class MetaDataTablesCreator {
 	protected void checkMappedTables() {
 		for (Iterator iterator = mappedTables.iterator(); iterator.hasNext();) {
 			Table table = (Table) iterator.next();
-			if (skipTable(table))
+			if (Util.skip(table))
 				continue;
 
 			if (!isVersionColumnExist(table))
 				createDb4oColumns(table.getName());
 		}
-	}
-
-	protected boolean skipTable(Table table) {
-		return table.getName().equals(ReplicationProviderSignature.TABLE_NAME)
-				|| table.getName().equals(ReplicationRecord.TABLE_NAME)
-				|| table.getName().equals(ReplicationComponentField.TABLE_NAME)
-				|| table.getName().equals(ReplicationComponentIdentity.TABLE_NAME);
 	}
 
 	protected boolean isVersionColumnExist(Table table) {
