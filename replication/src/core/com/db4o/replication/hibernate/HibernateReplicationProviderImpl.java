@@ -5,6 +5,7 @@ import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.ObjectSetIteratorFacade;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.replication.*;
+import com.db4o.inside.traversal.Field;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
@@ -291,7 +292,9 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference) {
-
+		if (obj instanceof Collection)
+					throw new RuntimeException("Create ref for collection here");
+			   
 		Db4oUUID uuid = counterpartReference.uuid();
 		long version = counterpartReference.version();
 
@@ -386,6 +389,18 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		while (i.hasNext()) {
 			visitor.visit(i.next());
 		}
+	}
+
+	public boolean hasReplicationReferenceAlreadyForField(Field field) {
+		throw new RuntimeException("not impl");
+	}
+
+	public ReplicationReference produceReferenceForField(Field aField) {
+		throw new RuntimeException("not impl");
+	}
+
+	public ReplicationReference produceFieldReferenceByUUID(Db4oUUID uuid, Field aField) {
+		throw new RuntimeException("not impl");
 	}
 
 	public final String getModifiedObjectCriterion() {

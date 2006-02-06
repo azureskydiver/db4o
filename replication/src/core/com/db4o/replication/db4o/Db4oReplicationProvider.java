@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.replication.*;
+import com.db4o.inside.traversal.Field;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -158,7 +159,11 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
         
         return newNode;
     }
-    
+
+	public ReplicationReference produceReferenceForField(Field field) {
+		return produceReference(field.getField());
+	}
+
     private void addReference(Db4oReplicationReferenceImpl newNode){
         if (_referencesByObject == null){
             _referencesByObject = newNode;
@@ -202,13 +207,21 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
         return produceReference(obj); 
     }
 
+	public ReplicationReference produceFieldReferenceByUUID(Db4oUUID uuid, Field field) {
+		return produceReferenceByUUID(uuid, null);
+	}
+
     public boolean hasReplicationReferenceAlready(Object obj) {
         if(_referencesByObject == null){
             return false;
         }
         return _referencesByObject.find(obj) != null;
     }
-    
+	
+	public boolean hasReplicationReferenceAlreadyForField(Field field) {
+		return hasReplicationReferenceAlready(field.getField());
+	}
+
     public void visitCachedReferences(final Visitor4 visitor) {
         if(_referencesByObject != null){
             _referencesByObject.traverse(new Visitor4() {

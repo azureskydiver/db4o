@@ -1,7 +1,5 @@
 package com.db4o.inside.traversal;
 
-import java.util.Collection;
-
 public class Field {
 	private Object owner;
 
@@ -18,10 +16,6 @@ public class Field {
 		this.field = field;
 	}
 
-	public boolean isCollection() {
-		return field instanceof Collection;
-	}
-
 	public Object getOwner() {
 		return owner;
 	}
@@ -32,5 +26,9 @@ public class Field {
 
 	public Object getField() {
 		return field;
+	}
+
+	public String toString() {
+		return "owner =" + owner + ", name = " + name + ", field = " + field;
 	}
 }

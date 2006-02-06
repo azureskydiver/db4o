@@ -22,7 +22,7 @@ public class TraverserImpl implements Traverser {
 		_collectionFlattener = collectionFlattener;
 	}
 
-	public void traverseGraph(Object object, Visitor visitor) {
+	public synchronized void traverseGraph(Object object, Visitor visitor) {
 		queueUpForTraversing(object);
 		while (true) {
 			Object next = _queue.next();
@@ -32,20 +32,27 @@ public class TraverserImpl implements Traverser {
 	}
 
 	private void traverseObject(Object object, Visitor visitor) {
-        if (!visitor.visit(object)){
-            return;
-        }
+		if (!visitor.visit(object)) {
+			return;
+		}
 
-        ReflectClass claxx = _reflector.forObject(object);
-		traverseFields(object, claxx);
+		if (object instanceof Field) {
+			//do nothing
+		} else {
+			ReflectClass claxx = _reflector.forObject(object);
+			traverseFields(object, claxx);
+		}
 	}
 
 	private void traverseFields(Object object, ReflectClass claxx) {
+		currentFieldOwner = object;
+
 		ReflectField[] fields;
 
 		fields = claxx.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			ReflectField field = fields[i];
+			currentFieldName = field.getName();
 			if (field.isStatic()) continue;
 			if (field.isTransient()) continue;
 			field.setAccessible(); //TODO Optimize: Change the reflector so I dont have to call setAcessible all the time.
@@ -68,7 +75,7 @@ public class TraverserImpl implements Traverser {
 		}
 	}
 
-	private void traverseArray(Object array, ReflectClass arrayClass) {
+	private void traverseArray(Object array) {
 		Object[] contents = contents(array);
 		for (int i = 0; i < contents.length; i++) {
 			queueUpForTraversing(contents[i]);
@@ -81,11 +88,13 @@ public class TraverserImpl implements Traverser {
 		if (isSecondClass(claxx)) return;
 
 		if (_collectionFlattener.canHandle(claxx)) {
+			_queue.add(new Field(currentFieldOwner, currentFieldName, object));
+			currentFieldName = null;
+
 			traverseCollection(object);
-			_queue.add(object);
 		} else {
 			if (claxx.isArray()) {
-				traverseArray(object, claxx);
+				traverseArray(object);
 			} else {
 				_queue.add(object);
 			}

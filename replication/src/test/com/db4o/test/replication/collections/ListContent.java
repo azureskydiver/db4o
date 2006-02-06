@@ -24,4 +24,7 @@ public class ListContent {
         this.name = name;
     }
 
+	public String toString() {
+		return "name = " + name;
+	}
 }

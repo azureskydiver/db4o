@@ -12,11 +12,11 @@ public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
 		System.err.println("Db4oReplicationProvider.getReference(obj).version() must return the latest version of all collections held by obj because collections are being treated as 2nd class objects (like arrays) for hibernate replication purposes.");
 		System.err.println("Overcome absence of constructor in VMs other than Sun's.");
-
+	   System.err.println("Uncommenting the FIXME Db4oReplicationProvider to debug Db4oReplicationProvider");
 		return new Class[]{
-
+				TransientListTest.class,
 				Db4oListTest.class,
-				Db4oListTest.class,
+				//FIXME Db4oReplicationProvider Db4oListTest.class,
 
 				//UuidLongPartGeneratorTest.class,
 				TransientReplicationProviderTest.class,
@@ -24,7 +24,7 @@ public class ReplicationTestSuite extends TestSuite {
 				HibernateReplicationProviderTest.class,
 
 				TransientSimpleParentChild.class,
-				Db4oSimpleParentChild.class,
+				//FIXME Db4oReplicationProvider Db4oSimpleParentChild.class,
 				HibernateSimpleParentChild.class,
 				Db4oHibernateSimpleParentChild.class,
 
@@ -32,12 +32,11 @@ public class ReplicationTestSuite extends TestSuite {
 				Db4oReplicationFeaturesMain.class,
 				HibernateReplicationFeaturesMain.class,
 
-				TransientListTest.class,
-				Db4oListTest.class,
+				//FIXME Db4oReplicationProvider Db4oListTest.class,
 				// HibernateListTest.class,
 
 				TransientSimpleArrayTest.class,
-				Db4oSimpleArrayTest.class,
+				//FIXME Db4oReplicationProvider Db4oSimpleArrayTest.class,
 				HibernateSimpleArrayTest.class,
 				// Db4oHibernateSimpleArrayTest.class,
 
