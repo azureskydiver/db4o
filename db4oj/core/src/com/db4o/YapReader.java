@@ -125,20 +125,24 @@ public class YapReader {
         if (Deploy.debug) {
             return YInt.readInt(this);
         } else {
-            if (YapConst.INTEGER_BYTES == 4) {
+            
+            // if (YapConst.INTEGER_BYTES == 4) {
+                
                 int o = (_offset += 4) - 1;
                 return (_buffer[o] & 255) | (_buffer[--o] & 255)
                     << 8 | (_buffer[--o] & 255)
                     << 16 | _buffer[--o]
                     << 24;
-            } else {
-            	int ret = 0;
-                int ii = _offset + YapConst.INTEGER_BYTES;
-                while (_offset < ii) {
-                    ret = (ret << 8) + (_buffer[_offset++] & 0xff);
-                }
-				return ret;
-            }
+                
+//            } else {
+//            	int ret = 0;
+//                int ii = _offset + YapConst.INTEGER_BYTES;
+//                while (_offset < ii) {
+//                    ret = (ret << 8) + (_buffer[_offset++] & 0xff);
+//                }
+//				return ret;
+//            }
+                
         }
 		
     }
@@ -182,12 +186,17 @@ public class YapReader {
     }
     
     public final void writeInt(int a_int) {
-		// FIXME: variable ii declared outside the loop to circumvent mono bug 
-		int ii = YapConst.WRITE_LOOP;
+        
+        
+		// FIXME: variable ii declared outside the loop to circumvent mono bug
+		// int ii = YapConst.WRITE_LOOP;
+        
         if (Deploy.debug) {
             YInt.writeInt(a_int, this);
         } else {
-            if (YapConst.INTEGER_BYTES == 4) {
+            
+//            if (YapConst.INTEGER_BYTES == 4) {
+                
                 int o = _offset + 4;
                 _offset = o;
                 byte[] b = _buffer;
@@ -195,11 +204,13 @@ public class YapReader {
                 b[--o] = (byte) (a_int >>= 8);
                 b[--o] = (byte) (a_int >>= 8);
                 b[--o] = (byte) (a_int >>= 8);
-            } else {
-                for (; ii >= 0; ii -= 8) {
-                    _buffer[_offset++] = (byte) (a_int >> ii);
-                }
-            }
+                
+//            } else {
+//                for (; ii >= 0; ii -= 8) {
+//                    _buffer[_offset++] = (byte) (a_int >> ii);
+//                }
+//            }
+                
         }
     }
     

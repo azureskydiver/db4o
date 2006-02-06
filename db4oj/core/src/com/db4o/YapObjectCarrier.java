@@ -17,11 +17,8 @@ import com.db4o.types.*;
  */
 public class YapObjectCarrier extends YapMemoryFile {
 	
-	YapObjectCarrier (
-		YapStream a_callingStream,
-		MemoryFile memoryFile
-		) {
-			super(a_callingStream, memoryFile);
+	YapObjectCarrier (YapStream a_callingStream, MemoryFile memoryFile) {
+	    super(a_callingStream, memoryFile);
 	}
 	
 	void initialize0b(){
