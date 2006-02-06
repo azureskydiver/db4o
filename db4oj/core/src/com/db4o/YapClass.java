@@ -39,6 +39,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     private EventDispatcher _eventDispatcher;
     
     private boolean _internal;
+    private boolean _unversioned;
     
     boolean isInternal() {
     	return _internal;
@@ -335,6 +336,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         if (i_stream.i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)) {
             _internal = true;
+        }
+        if (i_stream.i_handlers.ICLASS_UNVERSIONED.isAssignableFrom(claxx)) {
+            _unversioned = true;
         }
         if (i_stream.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
             try {
@@ -673,6 +677,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     private boolean generateVirtual(){
+        if(_unversioned){
+            return false;
+        }
         if(_internal){
             return false;
         }

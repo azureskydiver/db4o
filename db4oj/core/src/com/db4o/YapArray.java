@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.inside.slots.*;
 import com.db4o.reflect.*;
 
 class YapArray extends YapIndependantType {
@@ -95,7 +96,7 @@ class YapArray extends YapIndependantType {
                     }
                 }
             }
-            trans.freeOnCommit(address, address, length);
+            trans.slotFreeOnCommit(address, address, length);
         }
     }
 
@@ -114,12 +115,11 @@ class YapArray extends YapIndependantType {
                 }
                 for (int i = elementCount(trans, bytes); i > 0; i--) {
                     int id = bytes.readInt();
-                    int addressLength[] = new int[2];
-                    trans.getSlotInformation(id, addressLength);
-					a_classPrimitive.free(trans, id, addressLength[0],addressLength[1]);
+                    Slot slot = trans.getSlotInformation(id);
+					a_classPrimitive.free(trans, id, slot._address,slot._length);
                 }
             }
-            trans.freeOnCommit(address, address, length);
+            trans.slotFreeOnCommit(address, address, length);
         }
     }
 

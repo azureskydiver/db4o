@@ -3,13 +3,14 @@
 package com.db4o;
 
 import com.db4o.inside.ix.*;
+import com.db4o.types.*;
 
 /**
  * Query Evaluator - Represents such things as &gt;, &gt;=, &lt;, &lt;=, EQUAL, LIKE, etc.
  * 
  * @exclude
  */
-public class QE
+public class QE implements Unversioned
 {
     
 	static final QE DEFAULT = new QE();

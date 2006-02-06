@@ -60,7 +60,6 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     // A value > 0 signals that the engine crashed with an uncaught exception.
     // and prevents the finalizer.
     protected int           i_entryCounter;
-    Tree                    i_freeOnCommit;
 
     // Tree of all YapObject references, sorted by IdentityHashCode
     private YapObject       i_hcTree;
@@ -1575,6 +1574,14 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     				if (i_config.i_messageLevel > YapConst.STATE) {
     					message("" + yapObject.getID() + " new " + yapObject.getYapClass().getName());
     				}
+                    
+                    if(a_checkJustSet && canUpdate()){
+                        if(! yapObject.getYapClass().isPrimitive()){
+                            rememberJustSet(yapObject.getID());
+                            a_checkJustSet = false;
+                        }
+                    }
+                    
     				stillToSet(a_trans, yapObject, a_updateDepth);
                 }
 

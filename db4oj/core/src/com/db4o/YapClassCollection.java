@@ -312,6 +312,9 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     }
 
     YapClass readYapClass(YapClass yapClass, ReflectClass a_class) {
+        if (yapClass != null  && ! yapClass.stateUnread()) {
+            return yapClass;
+        }
         i_yapClassCreationDepth++;
         if (yapClass != null  && yapClass.stateUnread()) {
             yapClass.createConfigAndConstructor(i_yapClassByBytes, i_stream, a_class);

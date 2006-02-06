@@ -69,11 +69,7 @@ class YapClassPrimitive extends YapClass{
             
             if(ya.i_isPrimitive){
                 ya.deletePrimitiveEmbedded(a_bytes, this);
-                a_bytes.getTransaction().freeOnCommit(
-                    a_bytes.getID(),
-                    a_bytes.getAddress(),
-                    a_bytes.getLength());
-                a_bytes.getTransaction().setPointer(a_bytes.getID(), 0, 0);
+                a_bytes.slotDelete();
                 return;
             }
         }
@@ -101,16 +97,12 @@ class YapClassPrimitive extends YapClass{
     }
     
 	final void free(Transaction a_trans, int a_id, int a_address, int a_length) {
-		a_trans.freeOnCommit(a_address, a_address, a_length);
-		a_trans.freePointer(a_id);
+        a_trans.slotFreePointerOnCommit(a_id, a_address, a_length);
 	}
 	
 	final void free(YapWriter a_bytes, int a_id) {
-		  Transaction ta = a_bytes.getTransaction();
-		  ta.freeOnCommit(a_bytes.getAddress(), a_bytes.getAddress(), a_bytes.getLength());
-		  ta.freePointer(a_id);
-	  }
-
+          a_bytes.getTransaction().slotFreePointerOnCommit(a_id, a_bytes.getAddress(), a_bytes.getLength());
+	}
     
 	final ClassIndex getIndex() {
 		return null;

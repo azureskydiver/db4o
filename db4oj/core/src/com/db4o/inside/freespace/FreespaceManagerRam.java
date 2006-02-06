@@ -109,7 +109,7 @@ public class FreespaceManagerRam extends FreespaceManager {
             }
         }
         if (Debug.xbytes) {
-            if(! Debug.freespace){
+            if(! Debug.freespaceChecker){
                 _file.writeXBytes(a_address, a_length * blockSize());
             }
         }

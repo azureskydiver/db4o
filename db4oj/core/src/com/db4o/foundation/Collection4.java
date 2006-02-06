@@ -2,12 +2,14 @@
 
 package com.db4o.foundation;
 
+import com.db4o.types.*;
+
 /**
  * Fast linked list for all usecases.
  * 
  * @exclude
  */
-public class Collection4 implements DeepClone {
+public class Collection4 implements DeepClone, Unversioned {
 
 	// TODO: encapsulate field access
 	
