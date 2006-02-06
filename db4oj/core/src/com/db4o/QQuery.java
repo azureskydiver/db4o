@@ -6,6 +6,7 @@ import com.db4o.foundation.*;
 import com.db4o.inside.query.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
+import com.db4o.types.*;
 
 /**
  * QQuery is the users hook on our graph.
@@ -14,12 +15,12 @@ import com.db4o.reflect.*;
  * 
  * @exclude
  */
-public class QQuery implements Query {
+public class QQuery implements Query, Unversioned {
 
     private static final transient IDGenerator i_orderingGenerator = new IDGenerator();
 
     transient Transaction i_trans;
-    public  Collection4 i_constraints = new Collection4();
+    public Collection4 i_constraints = new Collection4();
 
     public QQuery i_parent;
     public String i_field;

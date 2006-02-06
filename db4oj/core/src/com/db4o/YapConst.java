@@ -114,7 +114,8 @@ public final class YapConst
     static Class CLASS_DB4OTYPE;
     static Class CLASS_DB4OTYPEIMPL;
     static Class CLASS_ENUM;
-	static Class CLASS_INTERNAL;
+    static Class CLASS_INTERNAL;
+    static Class CLASS_UNVERSIONED;
     static Class CLASS_METACLASS;
     static Class CLASS_METAFIELD;
 	static Class CLASS_METAINDEX;
@@ -166,6 +167,7 @@ public final class YapConst
 			CLASS_ENUM = classForName("java.lang.Enum");
 		}
         CLASS_INTERNAL = db4oClass("Internal4");
+        CLASS_UNVERSIONED = db4oClass("types.Unversioned");
         CLASS_METACLASS = new MetaClass().getClass();
         CLASS_METAFIELD = new MetaField().getClass();
         CLASS_METAINDEX = new MetaIndex().getClass();

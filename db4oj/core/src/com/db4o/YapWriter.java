@@ -255,6 +255,10 @@ public final class YapWriter extends YapReader {
         i_updateDepth = a_depth;
     }
 
+    public void slotDelete() {
+        i_trans.slotDelete(i_id, i_address, i_length);
+    }
+    
     void trim4(int a_offset, int a_length) {
         byte[] temp = new byte[a_length];
         System.arraycopy(_buffer, a_offset, temp, 0, a_length);

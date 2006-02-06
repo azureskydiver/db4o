@@ -4,11 +4,12 @@ package com.db4o;
 
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;
+import com.db4o.types.*;
 
 /**
  * @exclude
  */
-public class QField implements Visitor4{
+public class QField implements Visitor4, Unversioned{
 	
 	transient Transaction i_trans;
 	public String i_name;

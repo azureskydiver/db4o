@@ -1,20 +1,43 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.inside.slots;
 
 import com.db4o.*;
 
-public final class ReferencedSlot extends Slot{
+/**
+ * @exclude
+ */
+public class ReferencedSlot extends TreeInt{
     
-	public int _references;
-	
-	public ReferencedSlot(int address, int length){
-        super(address, length);
-	}
-	
-	public Object read(YapReader a_bytes){
-		int address = a_bytes.readInt();
-		int length = a_bytes.readInt();
-		return new ReferencedSlot(address, length);
-	}
+    private Slot _slot;
+    
+    private int _references;
+
+    public ReferencedSlot(int a_key) {
+        super(a_key);
+    }
+    
+    public void pointTo(Slot slot){
+        _slot = slot;
+    }
+    
+    public Tree free(YapFile file, Tree treeRoot, Slot slot){
+        file.free(_slot._address, _slot._length);
+        if(removeReferenceIsLast()){
+            return treeRoot.removeNode(this);
+        }
+        pointTo(slot);
+        return treeRoot;
+    }
+    
+    public boolean addReferenceIsFirst(){
+        _references ++;
+        return (_references == 1);
+    }
+    
+    public boolean removeReferenceIsLast(){
+        _references --;
+        return _references < 1;
+    }
+
 }

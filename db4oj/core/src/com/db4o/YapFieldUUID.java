@@ -9,6 +9,8 @@ import com.db4o.inside.ix.*;
  * 
  */
 class YapFieldUUID extends YapFieldVirtual {
+    
+    private static final int LINK_LENGTH = YapConst.YAPLONG_LENGTH + YapConst.YAPID_LENGTH;
 
     YapFieldUUID(YapStream stream) {
         super();
@@ -63,7 +65,7 @@ class YapFieldUUID extends YapFieldVirtual {
     }
 
     public int linkLength() {
-        return YapConst.YAPLONG_LENGTH + YapConst.YAPID_LENGTH;
+        return LINK_LENGTH;
     }
     
     void marshall1(YapObject a_yapObject, YapWriter a_bytes, boolean a_migrating, boolean a_new) {
@@ -113,6 +115,11 @@ class YapFieldUUID extends YapFieldVirtual {
             YLong.writeLong(0, a_bytes);
         }
     }
-
+    
+    void marshallIgnore(YapWriter writer) {
+        writer.writeInt(0);
+        YLong.writeLong(0, writer);
+    }
+ 
 
 }

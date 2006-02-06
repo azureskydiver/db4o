@@ -6,13 +6,14 @@ import com.db4o.foundation.*;
 import com.db4o.inside.ix.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
+import com.db4o.types.*;
 
 /**
  * Base class for all constraints on queries. 
  * 
  * @exclude
  */
-public abstract class QCon implements Constraint, Visitor4 {
+public abstract class QCon implements Constraint, Visitor4, Unversioned {
 	
 	//Used for query debug only.
     static final IDGenerator idGenerator = new IDGenerator();

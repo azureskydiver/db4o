@@ -2,12 +2,14 @@
 
 package com.db4o.foundation;
 
+import com.db4o.types.*;
+
 /**
  * elements in linked list Collection4
  * 
  * @exclude
  */
-public final class List4
+public final class List4 implements Unversioned
 {
 	// TODO: encapsulate field access
 	/**

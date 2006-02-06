@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.slots.*;
 
 /**
  * representation to collect and hold all IDs of one class
@@ -59,14 +60,13 @@ import com.db4o.foundation.*;
         if(isActive()){
             return Tree.size(i_root);
         }
-        int[] addressLength = new int[]{0,0};
-        ta.getSlotInformation(i_id, addressLength);
-        addressLength[1] = YapConst.YAPINT_LENGTH;
+        Slot slot = ta.getSlotInformation(i_id);
+        int length = YapConst.YAPINT_LENGTH;
         if(Deploy.debug){
-            addressLength[1] += YapConst.LEADING_LENGTH;
+            length += YapConst.LEADING_LENGTH;
         }
-        YapReader reader = new YapReader(addressLength[1]);
-        reader.readEncrypt(ta.i_stream, addressLength[0]);
+        YapReader reader = new YapReader(length);
+        reader.readEncrypt(ta.i_stream, slot._address);
         if (reader == null) {
             return 0;
         }

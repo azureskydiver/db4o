@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.types.*;
 
 /**
  * no reading
@@ -81,6 +82,10 @@ public class YapObjectCarrier extends YapMemoryFile {
 	long currentVersion(){
 	    return 0;
 	}
+    
+    public Db4oType db4oTypeStored(Transaction a_trans, Object a_object) {
+        return null;
+    }
 	
     public boolean dispatchsEvents() {
         return false;

@@ -13,9 +13,11 @@ public abstract class Debug extends Debug4 {
     
     public static final boolean ixTrees = false;
     
-    public static final boolean xbytes = false;
+    public static final boolean freespace = Deploy.debug ? true :false;
     
-    public static final boolean freespace = false;
+    public static final boolean xbytes = Debug.freespace ? true : false;
+    
+    public static final boolean freespaceChecker = false;
     
     public static final boolean checkSychronization = false;
     

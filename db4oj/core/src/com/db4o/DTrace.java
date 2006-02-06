@@ -17,39 +17,16 @@ public class DTrace {
     private static final Object init(){
         if(enabled){
             
-            breakOnEvent(8);
-            // breakOnEvent(1107);
-            // breakOnEvent(259);
-            
-            // address: 244346, 44
-            
-            // addRange(15603); // investmentbalance class id
-            
+            breakOnEvent(11);
+
             // addRange(4874);
             
-            // addRange(15611); // investmentbalance class
+            // addRangeWithEnd(3835808, 3836267);
             
+            // addRangeWithLength(10666,1);
             
-            // addRange(5948);
-            // addRange(4580);
+            addRangeWithLength(10697,231);
             
-//            addRange(383512);
-//            
-//            addRangeWithEnd(3835808, 3836267);
-            
-            
-            
-            // addRangeWithLength(16754, 87);
-            
-            addRangeWithLength(0,10000000);
-            
-            
-//            addRangeWithLength(18,47);
-//            addRangeWithLength(1455,47);
-            
-            // addRangeWithLength(25876597, 44);
-            // addRange(7274611);
-            // addRange(17920);
             
             ADD_TO_CLASS_INDEX = new DTrace(true, true, "add to class index tree", true);
             BIND = new DTrace(true, true, "bind", true);
@@ -63,6 +40,7 @@ public class DTrace {
             DONOTINCLUDE = new DTrace(true, true, "donotinclude", true);
             EVALUATE_SELF = new DTrace(true, true, "evaluate self", true);
             FREE = new DTrace(true, true, "free", true);
+            FILE_FREE = new DTrace(true, true, "fileFree", true);
             FREE_RAM = new DTrace(true, true, "freeRAM", true);
             FREE_ON_COMMIT = new DTrace(true, true, "trans freeOnCommit", true);
             FREE_ON_ROLLBACK = new DTrace(true, true, "trans freeOnRollback", true);
@@ -92,29 +70,9 @@ public class DTrace {
             WRITE_XBYTES = new DTrace(true, true, "writeXBytes", true); 
             WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true, "trans writeUpdateDeleteMembers", true);
             
-            // turnAllOffExceptFor(new DTrace[] {JUST_SET});
-            // turnAllOffExceptFor(new DTrace[] {CANDIDATE_READ, CREATE_CANDIDATE, DONOTINCLUDE, EVALUATE_SELF});
-            // turnAllOffExceptFor(new DTrace[] {DELETE});
             
             // turnAllOffExceptFor(new DTrace[] {GET_SLOT, FREE_ON_COMMIT, FREE, WRITE_BYTES});
             
-            // turnAllOffExceptFor(new DTrace[] {GET_SLOT, FREE, FREE_RAM, GET_FREESPACE, GET_FREESPACE_RAM, WRITE_XBYTES, WRITE_BYTES, REGULAR_SEEK});
-            
-            // turnAllOffExceptFor(new DTrace[] {WRITE_XBYTES, WRITE_BYTES, IO_COPY, READ_BYTES});
-            
-            // turnAllOffExceptFor(new DTrace[] {FREE, GET_FREESPACE});
-            
-            turnAllOffExceptFor(new DTrace[] {QUERY_PROCESS});
-            
-            // turnAllOffExceptFor(new DTrace[] {WRITE_BYTES});
-            
-            
-            
-            
-            // turnAllOffExceptFor(new DTrace[] {FREE, GET_FREESPACE, WRITE_XBYTES});
-            
-            // turnAllOffExceptFor(new DTrace[] {FREE, GET_FREESPACE, WRITE_XBYTES});
-            // turnAllOffExceptFor(new DTrace[] {WRITE_BYTES, YAPCLASS_INIT});
          
         }
         return null;
@@ -157,6 +115,7 @@ public class DTrace {
     public static DTrace DELETE;
     public static DTrace DONOTINCLUDE;
     public static DTrace EVALUATE_SELF;
+    public static DTrace FILE_FREE;
     public static DTrace FREE;
     public static DTrace FREE_RAM;
     public static DTrace FREE_ON_COMMIT;
@@ -236,16 +195,30 @@ public class DTrace {
             }
             boolean inRange = false;
             for (int i = 0; i < _rangeCount; i++) {
+                
+                // Case 1 start in range
                 if(start >= _rangeStart[i] && start <= _rangeEnd[i]){
                     inRange = true;
                     break;
                 }
-                if(end != 0 && (end >= _rangeStart[i] && end <= _rangeEnd[i])){
-                    inRange = true;
-                    break;
+                
+                if(end != 0){
+                    
+                    // Case 2 end in range
+                    if (end >= _rangeStart[i] && end <= _rangeEnd[i]){
+                        inRange = true;
+                        break;
+                    }
+                    
+                    // Case 3 start before range, end after range
+                    if(start <= _rangeStart[i]  && end >= _rangeEnd[i]){
+                        inRange = true;
+                        break;
+                    }
                 }
             }
-            if(inRange || (start == -1 )){
+            // if(inRange || (start == -1 )){
+            if(inRange){
                 if(_log){
                     _eventNr ++;
                     StringBuffer sb = new StringBuffer(":");

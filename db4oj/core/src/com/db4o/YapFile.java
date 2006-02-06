@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.freespace.*;
+import com.db4o.inside.slots.*;
 import com.db4o.reflect.*;
 
 /**
@@ -33,6 +34,9 @@ public abstract class YapFile extends YapStream {
     private Hashtable4          i_semaphores;
 
     int                         i_writeAt;
+    
+    private Tree                _freeOnCommit;
+    
 
     YapFile(YapStream a_parent) {
         super(a_parent);
@@ -72,7 +76,7 @@ public abstract class YapFile extends YapStream {
         
         _freespaceManager = FreespaceManager.createNew(this, i_config._freespaceSystem);
         
-        if(Debug.freespace){
+        if(Debug.freespaceChecker){
             _fmChecker = new FreespaceManagerRam(this);
         }
         
@@ -86,7 +90,7 @@ public abstract class YapFile extends YapStream {
         initBootRecord();
         _freespaceManager.start(_configBlock._freespaceAddress);
         
-        if(Debug.freespace){
+        if(Debug.freespace  && Debug.freespaceChecker){
             _fmChecker.start(0);
         }
         
@@ -121,10 +125,9 @@ public abstract class YapFile extends YapStream {
                 }
             }
             reader.setCascadeDeletes(a_cascade);
-            ta.setPointer(id, 0, 0);
+            reader.slotDelete();
             YapClass yc = yo.getYapClass();
             yc.delete(reader, obj);
-            ta.freeOnCommit(id, reader.getAddress(), reader.getLength());
 
             // The following will not work with this approach.
             // Free blocks are identified in the Transaction by their ID.
@@ -142,10 +145,23 @@ public abstract class YapFile extends YapStream {
     abstract long fileLength();
 
     abstract String fileName();
+    
+    public void free(Slot slot) {
+        if(slot == null){
+            return;
+        }
+        if(slot._address == 0){
+            return;
+        }
+        free(slot._address, slot._length);
+    }
 
     public void free(int a_address, int a_length) {
+        if(DTrace.enabled){
+            DTrace.FILE_FREE.logLength(a_address, a_length);
+        }
         _freespaceManager.free(a_address, a_length);
-        if(Debug.freespace){
+        if(Debug.freespace && Debug.freespaceChecker){
             _fmChecker.free(a_address, a_length);
         }
     }
@@ -257,7 +273,7 @@ public abstract class YapFile extends YapStream {
             
             int freeAddress = _freespaceManager.getSlot(bytes);
             
-            if(Debug.freespace){
+            if(Debug.freespace && Debug.freespaceChecker){
                 if(freeAddress > 0){
                     Collection4 wrongOnes = new Collection4();
                     int freeCheck = _fmChecker.getSlot(bytes);
@@ -363,6 +379,26 @@ public abstract class YapFile extends YapStream {
         i_prefetchedIDs = Tree.add(i_prefetchedIDs, new TreeInt(id));
         return id;
     }
+    
+    public ReferencedSlot produceFreeOnCommitEntry(int id){
+        Tree node = TreeInt.find(_freeOnCommit, id);
+        if (node != null) {
+            return (ReferencedSlot) node;
+        }
+        ReferencedSlot slot = new ReferencedSlot(id);
+        _freeOnCommit = Tree.add(_freeOnCommit, slot);
+        return slot;
+    }
+    
+    public void reduceFreeOnCommitReferences(ReferencedSlot slot){
+        if(slot.removeReferenceIsLast()){
+            _freeOnCommit = _freeOnCommit.removeNode(slot);
+        }
+    }
+    
+    public void freeDuringCommit(ReferencedSlot referencedSlot, Slot slot){
+        _freeOnCommit = referencedSlot.free(this, _freeOnCommit, slot);
+    }
 
     public void raiseVersion(long a_minimumVersion) {
         if (_bootRecord.i_versionGenerator < a_minimumVersion) {
@@ -389,27 +425,29 @@ public abstract class YapFile extends YapStream {
             DTrace.READ_ID.log(a_id);
         }
         
-        int[] addressLength = new int[2];
-        
         try {
-            a_ta.getSlotInformation(a_id, addressLength);
-            if (addressLength[0] == 0) {
+            Slot slot = a_ta.getSlotInformation(a_id);
+            if (slot == null) {
+                return null;
+            }
+            
+            if (slot._address == 0) {
                 return null;
             }
             
             if(DTrace.enabled){
-                DTrace.READ_SLOT.logLength(addressLength[0], addressLength[1]);
+                DTrace.READ_SLOT.logLength(slot._address, slot._length);
             }
             
             YapReader reader = null;
             if(useReader){
-                reader = new YapReader(addressLength[1]);
+                reader = new YapReader(slot._length);
             }else{
-                reader = getWriter(a_ta, addressLength[0], addressLength[1]);
+                reader = getWriter(a_ta, slot._address, slot._length);
                 ((YapWriter)reader).setID(a_id);
             }
 
-            reader.readEncrypt(this, addressLength[0]);
+            reader.readEncrypt(this, slot._address);
             return reader;
             
         } catch (Exception e) {
@@ -644,14 +682,9 @@ public abstract class YapFile extends YapStream {
         int length = a_object.ownLength();
         int id = a_object.getID();
         int address = getSlot(length);
-
-        int[] oldAddressLength = new int[2];
-        a_trans.getSlotInformation(id, oldAddressLength);
-
-        a_trans.freeOnCommit(id, oldAddressLength[0], oldAddressLength[1]);
-        a_trans.freeOnRollback(id, address, length);
-        a_trans.setPointer(id, address, length);
-
+        
+        a_trans.slotFreeOnRollbackCommitSetPointer(id, address, length);
+        
         YapWriter writer = a_trans.i_stream.getWriter(a_trans, length);
         writer.useSlot(id, address, length);
 
@@ -691,7 +724,7 @@ public abstract class YapFile extends YapStream {
     final void writeEmbedded(YapWriter a_parent, YapWriter a_child) {
         int length = a_child.getLength();
         int address = getSlot(length);
-        a_child.getTransaction().freeOnRollback(address, address, length);
+        a_child.getTransaction().slotFreeOnRollback(address, address, length);
         a_child.address(address);
         a_child.writeEncrypt();
         int offsetBackup = a_parent._offset;
@@ -708,7 +741,7 @@ public abstract class YapFile extends YapStream {
             _freespaceManager = null;
         }
         
-        if(Debug.freespace){
+        if(Debug.freespace && Debug.freespaceChecker){
             freespaceID = _fmChecker.write(shuttingDown);
         }
         
@@ -781,8 +814,7 @@ public abstract class YapFile extends YapStream {
         int length = a_bytes.getLength();
         int address = getSlot(length);
         a_bytes.address(address);
-        trans.setPointer(id, address, length);
-        trans.freeOnRollback(id, address, length);
+        trans.slotFreeOnRollbackSetPointer(id, address, length);
         i_handlers.encrypt(a_bytes);
         a_bytes.write();
     }

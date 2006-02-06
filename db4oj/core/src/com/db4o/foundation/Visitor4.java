@@ -7,6 +7,6 @@ package com.db4o.foundation;
  */
 public interface Visitor4 {
     
-	public void visit(Object a_object);
+	public void visit(Object obj);
 	
 }

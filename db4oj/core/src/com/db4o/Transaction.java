@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2006   db4objects Inc.   http://www.db4o.com */
 
 package com.db4o;
 
@@ -12,31 +12,11 @@ import com.db4o.reflect.*;
  */
 public class Transaction {
 
-    public final YapStream         i_stream;
-
-    public final YapFile           i_file;
-
-    final Transaction       i_parentTransaction;
-
-    private final YapWriter i_pointerIo;
-
-    private Tree            i_slots;
-
-    private Tree            i_addToClassIndex;
-
-    private Tree            i_removeFromClassIndex;
-
-    private List4           i_freeOnCommit;
-
-    private Tree            i_freeOnRollback;
-
-    private List4           i_freeOnBoth;
-
-    private List4           i_dirtyFieldIndexes;
-
-    private List4           i_transactionListeners;
+    private Tree            _slotChanges;
 
     private int             i_address;                                  // only used to pass address to Thread
+
+    private Tree            i_addToClassIndex;
 
     private byte[]          i_bytes = new byte[YapConst.POINTER_LENGTH];
 
@@ -44,6 +24,20 @@ public class Transaction {
     // if TreeIntObject#i_object is null then this means DONT delete.
     // Otherwise TreeIntObject#i_object contains the YapObject
     public Tree          i_delete;  // public for .NET conversion
+
+    private List4           i_dirtyFieldIndexes;
+
+    public final YapFile           i_file;
+
+    final Transaction       i_parentTransaction;
+
+    private final YapWriter i_pointerIo;
+
+    private Tree            i_removeFromClassIndex;
+
+    public final YapStream         i_stream;
+    
+    private List4           i_transactionListeners;
     
     protected Tree			i_writtenUpdateDeletedMembers;
 
@@ -52,10 +46,6 @@ public class Transaction {
         i_file = (a_stream instanceof YapFile) ? (YapFile) a_stream : null;
         i_parentTransaction = a_parent;
         i_pointerIo = new YapWriter(this, YapConst.POINTER_LENGTH);
-    }
-
-    public void addTransactionListener(TransactionListener a_listener) {
-        i_transactionListeners = new List4(i_transactionListeners, a_listener);
     }
 
     public void addDirtyFieldIndex(IndexTransaction a_xft) {
@@ -89,6 +79,10 @@ public class Transaction {
         a_tree = createClassIndexNode(a_tree, node);
         node[0].i_object = Tree.add((Tree) node[0].i_object, new TreeInt(a_id));
         return a_tree;
+    }
+
+    public void addTransactionListener(TransactionListener a_listener) {
+        i_transactionListeners = new List4(i_transactionListeners, a_listener);
     }
 
     void beginEndSet() {
@@ -135,37 +129,32 @@ public class Transaction {
     }
     
     private final int calculateLength() {
+        
+        final int[] count = {0};
+        
+        if(_slotChanges != null){
+            _slotChanges.traverse(new Visitor4() {
+                public void visit(Object obj) {
+                    SlotChange slot = (SlotChange)obj;
+                    if(slot.isSetPointer()){
+                        count[0] ++;
+                    }
+                }
+            });
+        }
+        
         return ((2 // Transaction slot length
-            + (Tree.size(i_slots) * 3)) * YapConst.YAPINT_LENGTH)
+            + (count[0] * 3)) * YapConst.YAPINT_LENGTH)
             + Tree.byteCount(i_addToClassIndex)
             + Tree.byteCount(i_removeFromClassIndex);
     }
 
     private final void clearAll() {
-        i_slots = null;
+        _slotChanges = null;
         i_addToClassIndex = null;
         i_removeFromClassIndex = null;
-        i_freeOnCommit = null;
-        i_freeOnRollback = null;
         i_dirtyFieldIndexes = null;
         i_transactionListeners = null;
-    }
-
-    private final Tree createClassIndexNode(Tree a_tree, Tree[] a_node) {
-        if(Debug.checkSychronization){
-            i_stream.i_lock.notify();
-        }
-        if (a_tree != null) {
-            Tree existing = a_tree.find(a_node[0]);
-            if (existing != null) {
-                a_node[0] = existing;
-            } else {
-                a_tree = a_tree.add(a_node[0]);
-            }
-        } else {
-            a_tree = a_node[0];
-        }
-        return a_tree;
     }
 
     void close(boolean a_rollbackOnClose) {
@@ -192,19 +181,14 @@ public class Transaction {
         }
     }
 
-    void commitTransactionListeners() {
-        if(Debug.checkSychronization){
-            i_stream.i_lock.notify();
-        }
-        if (i_transactionListeners != null) {
-            Iterator4 i = new Iterator4Impl(i_transactionListeners);
-            while (i.hasNext()) {
-                ((TransactionListener) i.next()).preCommit();
-            }
-            i_transactionListeners = null;
+    void commit() {
+        synchronized (i_stream.i_lock) {
+            i_file.freeSpaceBeginCommit();
+            commitExceptForFreespace();
+            i_file.freeSpaceEndCommit();
         }
     }
-    
+
     private void commitExceptForFreespace(){
         
         if(DTrace.enabled){
@@ -244,13 +228,35 @@ public class Transaction {
         clearAll();
     }
     
-
-    void commit() {
-        synchronized (i_stream.i_lock) {
-            i_file.freeSpaceBeginCommit();
-            commitExceptForFreespace();
-            i_file.freeSpaceEndCommit();
+    void commitTransactionListeners() {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
         }
+        if (i_transactionListeners != null) {
+            Iterator4 i = new Iterator4Impl(i_transactionListeners);
+            while (i.hasNext()) {
+                ((TransactionListener) i.next()).preCommit();
+            }
+            i_transactionListeners = null;
+        }
+    }
+    
+
+    private final Tree createClassIndexNode(Tree a_tree, Tree[] a_node) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
+        if (a_tree != null) {
+            Tree existing = a_tree.find(a_node[0]);
+            if (existing != null) {
+                a_node[0] = existing;
+            } else {
+                a_tree = a_tree.add(a_node[0]);
+            }
+        } else {
+            a_tree = a_node[0];
+        }
+        return a_tree;
     }
 
     void delete(YapObject a_yo, int a_cascade) {
@@ -273,6 +279,7 @@ public class Transaction {
             info._cascade = a_cascade;
         }
     }
+    
 
     void dontDelete(int classID, int a_id) {
         if(Debug.checkSychronization){
@@ -320,196 +327,87 @@ public class Transaction {
         }
     }
     
-    boolean isDeleted(int a_id) {
+    private final SlotChange findSlotChange(int a_id) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        ReferencedSlot slot = findSlotInHierarchy(a_id);
-        if (slot != null) {
-            return slot._address == 0;
-        }
-        return false;
+        return (SlotChange)TreeInt.find(_slotChanges, a_id);
     }
 
-    private final ReferencedSlot findSlot(int a_id) {
-        if(Debug.checkSychronization){
-            i_stream.i_lock.notify();
+    private void flushFile(){
+        if(i_file.i_config._flushFileBuffers){
+            i_file.syncFiles();
         }
-        Tree tree = TreeInt.find(i_slots, a_id);
-        if (tree != null) {
-            return (ReferencedSlot) ((TreeIntObject) tree).i_object;
-        }
-        return null;
-    }
-
-    private final ReferencedSlot findSlotInHierarchy(int a_id) {
-        if(Debug.checkSychronization){
-            i_stream.i_lock.notify();
-        }
-        ReferencedSlot slot = findSlot(a_id);
-        if (slot != null) {
-            return slot;
-        }
-        if (i_parentTransaction != null) {
-            return i_parentTransaction.findSlotInHierarchy(a_id);
-        }
-        return null;
-    }
-
-    private final void freeOnBoth() {
-        if(Debug.checkSychronization){
-            i_stream.i_lock.notify();
-        }
-        Iterator4 i = new Iterator4Impl(i_freeOnBoth);
-        while (i.hasNext()) {
-            ReferencedSlot slot = (ReferencedSlot) i.next();
-            i_file.free(slot._address, slot._length);
-        }
-        i_freeOnBoth = null;
     }
 
     private final void freeOnCommit() {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        freeOnBoth();
-        if (i_freeOnCommit != null) {
-            Iterator4 i = new Iterator4Impl(i_freeOnCommit);
-            while (i.hasNext()) {
-                int id = ((Integer) i.next()).intValue();
-                Tree node = TreeInt.find(i_stream.i_freeOnCommit, id);
-                if (node != null) {
-                    ReferencedSlot slot = (ReferencedSlot) ((TreeIntObject) node).i_object;
-                    i_file.free(slot._address, slot._length);
-                    
-                    //TODO: Instead of working with a reference counting
-                    //      system it could work better to push the 
-                    //      information from the system transaction to
-                    //      individual transactions on commit. Consider.
-                    
-                    slot._references--;
-                    
-                    boolean removeNode = true;
-                    if (slot._references > 0) {
-                        Tree tio = TreeInt.find(i_freeOnRollback, id);
-                        if (tio != null) {
-                            ReferencedSlot newSlot = (ReferencedSlot) ((TreeIntObject) tio).i_object;
-                            if (slot._address != newSlot._address) {
-                                slot._address = newSlot._address;
-                                slot._length = newSlot._length;
-                                removeNode = false;
-                            }
-                        }
-                    }
-                    if (removeNode) {
-                        i_stream.i_freeOnCommit = i_stream.i_freeOnCommit
-                            .removeNode(node);
-                    }
+        if(_slotChanges != null){
+            _slotChanges.traverse(new Visitor4() {
+                public void visit(Object obj) {
+                    ((SlotChange)obj).freeDuringCommit(i_file);
                 }
-            }
+            });
         }
-        i_freeOnCommit = null;
     }
 
-    void freeOnCommit(int a_id, int a_address, int a_length) {
+    Slot getSlotInformation(int a_id) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
-        }
-        if(DTrace.enabled){
-            DTrace.FREE_ON_COMMIT.log(a_id);
-            DTrace.FREE_ON_COMMIT.logLength(a_address, a_length);
         }
         if (a_id == 0) {
-            return;
+            return null;
         }
-        Tree isSecondWrite = TreeInt.find(i_freeOnRollback, a_id);
-        if (isSecondWrite != null) {
-            i_freeOnBoth = new List4(i_freeOnBoth,
-                ((TreeIntObject) isSecondWrite).i_object);
-            i_freeOnRollback = i_freeOnRollback.removeNode(isSecondWrite);
-        } else {
-            Tree node = TreeInt.find(i_stream.i_freeOnCommit, a_id);
-            if (node != null) {
-                ReferencedSlot slot = (ReferencedSlot) ((TreeIntObject) node).i_object;
-                slot._references++;
-                if (Debug.atHome) {
-                    if (slot._address != a_address
-                        || slot._length != a_length) {
-                        System.out
-                            .println("Unexpected condition in Transaction::freeOnCommit: Differing addresses.");
-                    }
-                }
-            } else {
-                ReferencedSlot slot = new ReferencedSlot(a_address, a_length);
-                slot._references = 1;
-                i_stream.i_freeOnCommit = Tree.add(i_stream.i_freeOnCommit,
-                    new TreeIntObject(a_id, slot));
+        SlotChange change = findSlotChange(a_id);
+        if (change != null) {
+            
+            
+            // FIXME: Do we have to check that?
+            
+            if(change.isSetPointer()){
+                return change.newSlot();
             }
-            i_freeOnCommit = new List4(i_freeOnCommit, new Integer(a_id));
         }
-    }
-
-    void freeOnRollback(int a_id, int a_address, int a_length) {
-        if(Debug.checkSychronization){
-            i_stream.i_lock.notify();
+        
+        if (i_parentTransaction != null) {
+            Slot parentSlot = i_parentTransaction.getSlotInformation(a_id); 
+            if (parentSlot != null) {
+                return parentSlot;
+            }
         }
-        if(DTrace.enabled){
-            DTrace.FREE_ON_ROLLBACK.log(a_id);
-            DTrace.FREE_ON_ROLLBACK.logLength(a_address, a_length);
-        }
-
         if (Deploy.debug) {
-            if (a_id == 0) {
-                throw new RuntimeException();
-            }
+            i_pointerIo.useSlot(a_id);
+            i_pointerIo.read();
+            i_pointerIo.readBegin(YapConst.YAPPOINTER);
+            int debugAddress = i_pointerIo.readInt();
+            int debugLength = i_pointerIo.readInt();
+            i_pointerIo.readEnd();
+            return new Slot(debugAddress, debugLength);
         }
-        i_freeOnRollback = Tree.add(i_freeOnRollback, new TreeIntObject(a_id,
-            new ReferencedSlot(a_address, a_length)));
+        i_file.readBytes(i_bytes, a_id, YapConst.POINTER_LENGTH);
+        int address = (i_bytes[3] & 255)
+            | (i_bytes[2] & 255) << 8 | (i_bytes[1] & 255) << 16
+            | i_bytes[0] << 24;
+        int length = (i_bytes[7] & 255)
+            | (i_bytes[6] & 255) << 8 | (i_bytes[5] & 255) << 16
+            | i_bytes[4] << 24;
+        return new Slot(address, length);
     }
 
-    void freePointer(int a_id) {
+    boolean isDeleted(int a_id) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        freeOnCommit(a_id, a_id, YapConst.POINTER_LENGTH);
-    }
-
-    void getSlotInformation(int a_id, int[] a_addressLength) {
-        if(Debug.checkSychronization){
-            i_stream.i_lock.notify();
+        SlotChange slot = findSlotChange(a_id);
+        if (slot != null) {
+            return slot.isDeleted();
         }
-        if (a_id != 0) {
-            ReferencedSlot slot = findSlot(a_id);
-            if (slot != null) {
-                a_addressLength[0] = slot._address;
-                a_addressLength[1] = slot._length;
-            } else {
-                if (i_parentTransaction != null) {
-                    i_parentTransaction.getSlotInformation(a_id,
-                        a_addressLength);
-                    if (a_addressLength[0] != 0) {
-                        return;
-                    }
-                }
-                if (Deploy.debug) {
-                    i_pointerIo.useSlot(a_id);
-                    i_pointerIo.read();
-                    i_pointerIo.readBegin(YapConst.YAPPOINTER);
-                    a_addressLength[0] = i_pointerIo.readInt();
-                    a_addressLength[1] = i_pointerIo.readInt();
-                    i_pointerIo.readEnd();
-                } else {
-                    i_file.readBytes(i_bytes, a_id, YapConst.POINTER_LENGTH);
-                    a_addressLength[0] = (i_bytes[3] & 255)
-                        | (i_bytes[2] & 255) << 8 | (i_bytes[1] & 255) << 16
-                        | i_bytes[0] << 24;
-                    a_addressLength[1] = (i_bytes[7] & 255)
-                        | (i_bytes[6] & 255) << 8 | (i_bytes[5] & 255) << 16
-                        | i_bytes[4] << 24;
-                }
-
-            }
+        if (i_parentTransaction != null) {
+            return i_parentTransaction.isDeleted(a_id);
         }
+        return false;
     }
     
     Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
@@ -553,6 +451,15 @@ public class Transaction {
         return ret;
     }
     
+    private SlotChange produceSlotChange(int id){
+        SlotChange slot = (SlotChange)TreeInt.find(_slotChanges, id);
+        if(slot == null){
+            slot = new SlotChange(id);
+            _slotChanges = Tree.add(_slotChanges, slot);
+        }
+        return slot;
+    }
+    
     Reflector reflector(){
     	return i_stream.reflector();
     }
@@ -573,7 +480,7 @@ public class Transaction {
         i_removeFromClassIndex = addToClassIndexTree(i_removeFromClassIndex,
             a_yapClassID, a_id);
     }
-
+    
     private final void removeFromClassIndexTree(Tree a_tree, int a_yapClassID,
         int a_id) {
         if(Debug.checkSychronization){
@@ -588,7 +495,7 @@ public class Transaction {
             }
         }
     }
-
+    
     public void rollback() {
         synchronized (i_stream.i_lock) {
             
@@ -600,38 +507,18 @@ public class Transaction {
                     ((IndexTransaction) i.next()).rollback();
                 }
             }
-            if (i_freeOnCommit != null) {
-                Iterator4 i = new Iterator4Impl(i_freeOnCommit);
-                while (i.hasNext()) {
-                    Tree node = TreeInt.find(i_stream.i_freeOnCommit,
-                        ((Integer) i.next()).intValue());
-                    if (node != null) {
-                        ReferencedSlot slot = (ReferencedSlot) ((TreeIntObject) node).i_object;
-                        slot._references--;
-                        if (slot._references < 1) {
-                            i_stream.i_freeOnCommit = i_stream.i_freeOnCommit
-                                .removeNode(node);
-                        }
-                    }
-                }
-            }
-            if (i_freeOnRollback != null) {
-                i_freeOnRollback.traverse(new Visitor4() {
-
-                    public void visit(Object obj) {
-                        TreeIntObject node = (TreeIntObject) obj;
-                        ReferencedSlot slot = (ReferencedSlot) node.i_object;
-                        ((YapFile) i_stream)
-                            .free(slot._address, slot._length);
+            if(_slotChanges != null){
+                _slotChanges.traverse(new Visitor4() {
+                    public void visit(Object a_object) {
+                        ((SlotChange)a_object).rollback(i_file);
                     }
                 });
             }
-            freeOnBoth();
             rollBackTransactionListeners();
             clearAll();
         }
     }
-
+    
     void rollBackTransactionListeners() {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
@@ -653,28 +540,102 @@ public class Transaction {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        ReferencedSlot slot = findSlot(a_id);
-        if (slot != null) {
-            slot._address = a_address;
-            slot._length = a_length;
-        } else {
-            i_slots = Tree.add(i_slots, new TreeIntObject(a_id, new ReferencedSlot(
-                a_address, a_length)));
-        }
+        produceSlotChange(a_id).setPointer(a_address, a_length);
     }
 
+    void slotDelete(int a_id, int a_address, int a_length) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
+        if(DTrace.enabled){
+            DTrace.FREE_ON_COMMIT.log(a_id);
+            DTrace.FREE_ON_COMMIT.logLength(a_address, a_length);
+        }
+        if (a_id == 0) {
+            return;
+        }
+        SlotChange slot = produceSlotChange(a_id);
+        slot.freeOnCommit(i_file, new Slot(a_address, a_length));
+        slot.setPointer(0, 0);
+    }
+
+    void slotFreeOnCommit(int a_id, int a_address, int a_length) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
+        if(DTrace.enabled){
+            DTrace.FREE_ON_COMMIT.log(a_id);
+            DTrace.FREE_ON_COMMIT.logLength(a_address, a_length);
+        }
+        if (a_id == 0) {
+            return;
+        }
+        produceSlotChange(a_id).freeOnCommit(i_file, new Slot(a_address, a_length));
+    }
+
+    void slotFreeOnRollback(int a_id, int a_address, int a_length) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
+        if(DTrace.enabled){
+            DTrace.FREE_ON_ROLLBACK.log(a_id);
+            DTrace.FREE_ON_ROLLBACK.logLength(a_address, a_length);
+        }
+        produceSlotChange(a_id).freeOnRollback(a_address, a_length);
+    }
+
+    void slotFreeOnRollbackCommitSetPointer(int a_id, int newAddress, int newLength) {
+        
+        Slot slot = getSlotInformation(a_id);
+        
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
+        
+        if(DTrace.enabled){
+            DTrace.FREE_ON_ROLLBACK.log(a_id);
+            DTrace.FREE_ON_ROLLBACK.logLength(newAddress, newLength);
+            DTrace.FREE_ON_COMMIT.log(a_id);
+            DTrace.FREE_ON_COMMIT.logLength(slot._address, slot._length);
+        }
+        
+        SlotChange change = produceSlotChange(a_id);
+        change.freeOnRollbackSetPointer(newAddress, newLength);
+        change.freeOnCommit(i_file, slot);
+    }
+
+    void slotFreeOnRollbackSetPointer(int a_id, int a_address, int a_length) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
+        if(DTrace.enabled){
+            DTrace.FREE_ON_ROLLBACK.log(a_id);
+            DTrace.FREE_ON_ROLLBACK.logLength(a_address, a_length);
+        }
+        produceSlotChange(a_id).freeOnRollbackSetPointer(a_address, a_length);
+    }
+    
+    void slotFreePointerOnCommit(int a_id, int a_address, int a_length) {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
+        slotFreeOnCommit(a_address, a_address, a_length);
+        slotFreeOnCommit(a_id, a_id, YapConst.POINTER_LENGTH);
+    }
+
+    boolean supportsVirtualFields(){
+        return true;
+    }
+
+    public String toString() {
+        return i_stream.toString();
+    }
+    
     void traverseAddedClassIDs(int a_yapClassID, Visitor4 visitor) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
         traverseDeep(i_addToClassIndex, a_yapClassID, visitor);
-    }
-
-    void traverseRemovedClassIDs(int a_yapClassID, Visitor4 visitor) {
-        if(Debug.checkSychronization){
-            i_stream.i_lock.notify();
-        }
-        traverseDeep(i_removeFromClassIndex, a_yapClassID, visitor);
     }
 
     void traverseDeep(Tree a_tree, int a_yapClassID, Visitor4 visitor) {
@@ -689,35 +650,12 @@ public class Transaction {
             }
         }
     }
-    
-    private void flushFile(){
-        if(i_file.i_config._flushFileBuffers){
-            i_file.syncFiles();
-        }
-    }
 
-    private void write() {
+    void traverseRemovedClassIDs(int a_yapClassID, Visitor4 visitor) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        if (!(i_slots == null && i_addToClassIndex == null && i_removeFromClassIndex == null)) {
-            int length = calculateLength();
-            int address = i_file.getSlot(length);
-            final YapWriter bytes = new YapWriter(this, address, length);
-            bytes.writeInt(length);
-            Tree.write(bytes, i_slots);
-            Tree.write(bytes, i_addToClassIndex);
-            Tree.write(bytes, i_removeFromClassIndex);
-            bytes.write();
-            flushFile();
-            i_stream.writeTransactionPointer(address);
-            flushFile();
-            writeSlots();
-            flushFile();
-            i_stream.writeTransactionPointer(0);
-            flushFile();
-            i_file.free(address, length);
-        }
+        traverseDeep(i_removeFromClassIndex, a_yapClassID, visitor);
     }
 
     private void traverseYapClassEntries(final Tree a_tree,
@@ -730,7 +668,7 @@ public class Transaction {
 
                 public void visit(Object obj) {
                     TreeIntObject node = (TreeIntObject) obj;
-                    YapClass yapClass = i_stream.getYapClass(node.i_key);
+                    YapClass yapClass = i_stream.i_classCollection.getYapClass(node.i_key);
                     final ClassIndex classIndex = yapClass.getIndex();
                     if (node.i_object != null) {
                         Visitor4 visitor = null;
@@ -765,33 +703,31 @@ public class Transaction {
         }
     }
 
-    private void writeSlots() {
+    private void write() {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        final Collection4 indicesToBeWritten = new Collection4();
-        traverseYapClassEntries(i_addToClassIndex, true, indicesToBeWritten);
-        traverseYapClassEntries(i_removeFromClassIndex, false,
-            indicesToBeWritten);
-        if(indicesToBeWritten.size() >= 0){
-            Iterator4 i = indicesToBeWritten.iterator();
-            while (i.hasNext()) {
-                ClassIndex classIndex = (ClassIndex) i.next();
-                classIndex.setDirty(i_stream);
-                classIndex.write(this);
-            }
-            flushFile();
+        if (i_addToClassIndex == null && i_removeFromClassIndex == null && _slotChanges == null) {
+            return;
         }
-        if (i_slots != null) {
-            i_slots.traverse(new Visitor4() {
-                public void visit(Object obj) {
-                    TreeIntObject node = (TreeIntObject) obj;
-                    ReferencedSlot slot = (ReferencedSlot) node.i_object;
-                    writePointer(node.i_key, slot._address, slot._length);
-                }
-            });
-        }
-
+        
+        int length = calculateLength();
+        int address = i_file.getSlot(length);
+        final YapWriter bytes = new YapWriter(this, address, length);
+        bytes.writeInt(length);
+        Tree.write(bytes, _slotChanges);
+        Tree.write(bytes, i_addToClassIndex);
+        Tree.write(bytes, i_removeFromClassIndex);
+        bytes.write();
+        flushFile();
+        i_stream.writeTransactionPointer(address);
+        flushFile();
+        writeSlots();
+        flushFile();
+        i_stream.writeTransactionPointer(0);
+        flushFile();
+        i_file.free(address, length);
+        
     }
 
     void writeOld() {
@@ -803,8 +739,7 @@ public class Transaction {
                 YapWriter bytes = new YapWriter(this, i_address, length);
                 bytes.read();
                 bytes.incrementOffset(YapConst.YAPINT_LENGTH);
-                i_slots = new TreeReader(bytes, new TreeIntObject(0, new ReferencedSlot(
-                    0, 0))).read();
+                _slotChanges = new TreeReader(bytes, new SlotChange(0)).read();
                 i_addToClassIndex = new TreeReader(bytes, new TreeIntObject(0,
                     new TreeInt(0))).read();
                 i_removeFromClassIndex = new TreeReader(bytes,
@@ -840,6 +775,32 @@ public class Transaction {
         i_pointerIo.write();
     }
 
+    private void writeSlots() {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
+        final Collection4 indicesToBeWritten = new Collection4();
+        traverseYapClassEntries(i_addToClassIndex, true, indicesToBeWritten);
+        traverseYapClassEntries(i_removeFromClassIndex, false,
+            indicesToBeWritten);
+        if(indicesToBeWritten.size() >= 0){
+            Iterator4 i = indicesToBeWritten.iterator();
+            while (i.hasNext()) {
+                ClassIndex classIndex = (ClassIndex) i.next();
+                classIndex.setDirty(i_stream);
+                classIndex.write(this);
+            }
+            flushFile();
+        }
+        if(_slotChanges != null){
+            _slotChanges.traverse(new Visitor4() {
+                public void visit(Object a_object) {
+                    ((SlotChange)a_object).writePointer(Transaction.this);
+                }
+            });
+        }
+    }
+    
     void writeUpdateDeleteMembers(int a_id, YapClass a_yc, int a_type, int a_cascade) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
@@ -869,10 +830,6 @@ public class Transaction {
         
         objectBytes.setCascadeDeletes(a_cascade);
         a_yc.deleteMembers(objectBytes, a_type);
-        freeOnCommit(a_id, objectBytes.getAddress(), objectBytes.getLength());
-    }
-
-    public String toString() {
-        return i_stream.toString();
+        slotFreeOnCommit(a_id, objectBytes.getAddress(), objectBytes.getLength());
     }
 }

@@ -45,5 +45,10 @@ class YapFieldVersion extends YapFieldVirtual {
     public int linkLength() {
         return YapConst.YAPLONG_LENGTH;
     }
+    
+    void marshallIgnore(YapWriter writer) {
+        YLong.writeLong(0, writer);
+    }
+
 
 }

@@ -81,6 +81,12 @@ abstract class YapFieldVirtual extends YapField {
     void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes,
         Config4Class a_config, boolean a_new) {
         Transaction trans = a_bytes.i_trans;
+        
+        if(! trans.supportsVirtualFields()){
+            marshallIgnore(a_bytes);
+            return;
+        }
+        
         YapStream stream = trans.i_stream;
         YapHandlers handlers = stream.i_handlers;
         boolean migrating = false;
@@ -138,10 +144,16 @@ abstract class YapFieldVirtual extends YapField {
     abstract void marshall1(YapObject a_yapObject, YapWriter a_bytes,
         boolean a_migrating, boolean a_new);
     
+    abstract void marshallIgnore(YapWriter writer);
+    
     public void readVirtualAttribute(Transaction a_trans, YapReader a_reader, YapObject a_yapObject) {
+        if(! a_trans.supportsVirtualFields()){
+            a_reader.incrementOffset(linkLength());
+            return;
+        }
         instantiate1(a_trans, a_yapObject, a_reader);
     }
-
+    
     void writeThis(YapWriter a_writer, YapClass a_onClass) {
         a_writer.writeShortString(i_name);
     }
