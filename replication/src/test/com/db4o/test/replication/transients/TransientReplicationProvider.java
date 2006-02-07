@@ -16,7 +16,6 @@ import com.db4o.inside.replication.ReplicationReflector;
 import com.db4o.inside.replication.TestableReplicationProvider;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.inside.traversal.CollectionFlattener;
-import com.db4o.inside.traversal.Field;
 import com.db4o.inside.traversal.Traverser;
 import com.db4o.inside.traversal.Traverser.Visitor;
 import com.db4o.reflect.ReflectArray;
@@ -142,7 +141,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return createReferenceFor(obj);
 	}
 
-	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference) {
+	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, Object referencingObj, String fieldName) {
 		Db4oUUID uuid = counterpartReference.uuid();
 		long version = counterpartReference.version();
 
@@ -241,18 +240,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		while (i.hasNext()) {
 			visitor.visit(i.next());
 		}
-	}
-
-	public boolean hasReplicationReferenceAlreadyForField(Field field) {
-		return hasReplicationReferenceAlready(field.getField());
-	}
-
-	public ReplicationReference produceReferenceForField(Field field) {
-		return produceReference(field.getField());
-	}
-
-	public ReplicationReference produceFieldReferenceByUUID(Db4oUUID uuid, Field field) {
-		return produceReferenceByUUID(uuid, null);
 	}
 
 	public void clearAllReferences() {

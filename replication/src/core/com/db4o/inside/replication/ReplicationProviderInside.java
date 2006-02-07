@@ -8,108 +8,100 @@ import com.db4o.inside.traversal.Field;
 import com.db4o.replication.ReplicationProvider;
 
 
-public interface ReplicationProviderInside extends ReplicationProvider{
+public interface ReplicationProviderInside extends ReplicationProvider {
 
-    public void activate(Object object);
+	public void activate(Object object);
 
-    public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference);
+	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, Object referencingObj, String fieldName);
 
-    /**
-    Activates the fields, e.g. Collections, arrays, of an object
+	/**
+	 * Activates the fields, e.g. Collections, arrays, of an object
+	 * <p/>
+	 * /** Clear the  ReplicationReference cache
+	 */
+	void clearAllReferences();
 
-   /** Clear the  ReplicationReference cache */
-   void clearAllReferences();
+	/**
+	 * Destroys this provider and frees up resources.
+	 */
+	public void closeIfOpened();
 
-   /** Destroys this provider and frees up resources. */
-   public void closeIfOpened();
+	public void commit(long raisedDatabaseVersion);
 
-   public void commit(long raisedDatabaseVersion);
+	/**
+	 * Returns the current transaction serial number.
+	 *
+	 * @return the current transaction serial number
+	 */
+	long getCurrentVersion();
 
-   /**
-    Returns the current transaction serial number.
+	/**
+	 * Returns the version number of the last Replication with the ReplicationProvider specified in  {@link #startReplicationTransaction}
+	 *
+	 * @return the version number of the last Replication with the ReplicationProvider
+	 */
+	long getLastReplicationVersion();
 
-    @return the current transaction serial number
-    */
-   long getCurrentVersion();
+	public Object getMonitor();
 
-   /**
-    Returns the version number of the last Replication with the ReplicationProvider specified in  {@link #startReplicationTransaction}
-
-    @return the version number of the last Replication with the ReplicationProvider
-    */
-   long getLastReplicationVersion();
-
-   public Object getMonitor();
-
-   ReadonlyReplicationProviderSignature getSignature();
-
-
-   /**
-    Determines if this Provider has the ReplicationReference of an object
-
-    @param obj object concerned
-
-    @return true if this provider has the ReplicationReference
-    */
-   boolean hasReplicationReferenceAlready(Object obj);
-
-   /**
-    Returns the ReplicationReference of an object
-
-    @param obj object queried
-
-    @return null if the object is not owned by this ReplicationProvider.
-    */
-   ReplicationReference produceReference(Object obj);
-
-   /**
-    Returns the ReplicationReference of an object by specifying the uuid of the object.
-
-    @param uuid the uuid of the object
-    @param hint the type of the object
-
-    @return the ReplicationReference
-    */
-   ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint);
-
-   /**
-    Rollbacks all changes done during the replication session  and terminates the Transaction.
-    Guarantees the changes will not be applied to the underlying databases.
-    */
-   void rollbackReplication();
-
-   /**
-    Start a Replication Transaction with another ReplicationProvider
-
-    @param peerSignature the signature of another ReplicationProvider.
-    */
-   void startReplicationTransaction(ReadonlyReplicationProviderSignature peerSignature);
+	ReadonlyReplicationProviderSignature getSignature();
 
 
-   /**
-    Stores the new replicated state of obj. It can also be a new object to this
-    provider.
+	/**
+	 * Determines if this Provider has the ReplicationReference of an object
+	 *
+	 * @param obj object concerned
+	 * @return true if this provider has the ReplicationReference
+	 */
+	boolean hasReplicationReferenceAlready(Object obj);
 
-    @param obj  Object with updated state or a clone of new object in the peer.
-    */
-   void storeReplica(Object obj);
+	/**
+	 * Returns the ReplicationReference of an object
+	 *
+	 * @param obj object queried
+	 * @return null if the object is not owned by this ReplicationProvider.
+	 */
+	ReplicationReference produceReference(Object obj);
+
+	/**
+	 * Returns the ReplicationReference of an object by specifying the uuid of the object.
+	 *
+	 * @param uuid the uuid of the object
+	 * @param hint the type of the object
+	 * @return the ReplicationReference
+	 */
+	ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint);
+
+	/**
+	 * Rollbacks all changes done during the replication session  and terminates the Transaction.
+	 * Guarantees the changes will not be applied to the underlying databases.
+	 */
+	void rollbackReplication();
+
+	/**
+	 * Start a Replication Transaction with another ReplicationProvider
+	 *
+	 * @param peerSignature the signature of another ReplicationProvider.
+	 */
+	void startReplicationTransaction(ReadonlyReplicationProviderSignature peerSignature);
 
 
-   public void storeReplicationRecord(long maxVersion);
+	/**
+	 * Stores the new replicated state of obj. It can also be a new object to this
+	 * provider.
+	 *
+	 * @param obj Object with updated state or a clone of new object in the peer.
+	 */
+	void storeReplica(Object obj);
 
 
-   /**
-    Visits the object of each cached ReplicationReference.
-
-    @param visitor implements the visit functions, including copying of object states, and storing of changed objects
-    */
-   void visitCachedReferences(Visitor4 visitor);
+	public void storeReplicationRecord(long maxVersion);
 
 
-
-	boolean hasReplicationReferenceAlreadyForField(Field field);
-
-	ReplicationReference produceReferenceForField(Field field);
-
-	ReplicationReference produceFieldReferenceByUUID(Db4oUUID uuid, Field field);
+	/**
+	 * Visits the object of each cached ReplicationReference.
+	 *
+	 * @param visitor implements the visit functions, including copying of object states, and storing of changed objects
+	 */
+	void visitCachedReferences(Visitor4 visitor);
 }
