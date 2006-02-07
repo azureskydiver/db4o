@@ -20,6 +20,9 @@ public class CollectionHandlerImpl implements CollectionHandler {
 	private final ReflectClass _reflectCollectionClass;
 	private final Reflector _reflector;
 
+	public CollectionHandlerImpl() {
+		this(new ReplicationReflector().reflector());
+	}
 
 	public CollectionHandlerImpl(Reflector reflector) {
 		_mapHandler = new MapHandler(reflector);
@@ -30,6 +33,10 @@ public class CollectionHandlerImpl implements CollectionHandler {
 	public boolean canHandle(ReflectClass claxx) {
 		if (_mapHandler.canHandle(claxx)) return true;
 		return _reflectCollectionClass.isAssignableFrom(claxx);
+	}
+
+	public boolean canHandle(Object obj) {
+		return canHandle(_reflector.forObject(obj));
 	}
 
 	public Object cloneWithCounterparts(Object originalCollection, ReflectClass claxx, CounterpartFinder counterpartFinder) {

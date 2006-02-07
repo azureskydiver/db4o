@@ -7,6 +7,8 @@ public interface CollectionFlattener {
 
 	boolean canHandle(ReflectClass claxx);
 
+	boolean canHandle(Object obj);
+
 	Iterator4 iteratorFor(Object collection);
 
 }
