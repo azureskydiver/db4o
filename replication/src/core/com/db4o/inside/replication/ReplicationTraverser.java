@@ -1,28 +1,32 @@
-package com.db4o.inside.traversal;
+package com.db4o.inside.replication;
 
-import com.db4o.foundation.*;
+import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.Queue4;
 import com.db4o.reflect.ReflectArray;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
+import com.db4o.inside.traversal.Traverser;
+import com.db4o.inside.traversal.CollectionFlattener;
+import com.db4o.inside.traversal.Field;
 
-/**
- * @deprecated GenericTraverser replaces this class
- */
-public class TraverserImpl implements Traverser {
+public class ReplicationTraverser implements Traverser {
 
 	private final Reflector _reflector;
 	private final ReflectArray _arrayReflector;
 	private final CollectionFlattener _collectionFlattener;
 	private final Queue4 _queue = new Queue4();
 
-	public TraverserImpl(Reflector reflector, CollectionFlattener collectionFlattener) {
+	private Object currentFieldOwner;
+	private String currentFieldName;
+
+	public ReplicationTraverser(Reflector reflector, CollectionFlattener collectionFlattener) {
 		_reflector = reflector;
 		_arrayReflector = _reflector.array();
 		_collectionFlattener = collectionFlattener;
 	}
 
-	public void traverseGraph(Object object, Visitor visitor) {
+	public synchronized void traverseGraph(Object object, Visitor visitor) {
 		queueUpForTraversing(object);
 		while (true) {
 			Object next = _queue.next();
@@ -32,20 +36,27 @@ public class TraverserImpl implements Traverser {
 	}
 
 	private void traverseObject(Object object, Visitor visitor) {
-        if (!visitor.visit(object)){
-            return;
-        }
+		if (!visitor.visit(object)) {
+			return;
+		}
 
-        ReflectClass claxx = _reflector.forObject(object);
-		traverseFields(object, claxx);
+		if (object instanceof Field) {
+			//do nothing
+		} else {
+			ReflectClass claxx = _reflector.forObject(object);
+			traverseFields(object, claxx);
+		}
 	}
 
 	private void traverseFields(Object object, ReflectClass claxx) {
+
 		ReflectField[] fields;
 
 		fields = claxx.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			ReflectField field = fields[i];
+			currentFieldOwner = object;
+			currentFieldName = field.getName();
 			if (field.isStatic()) continue;
 			if (field.isTransient()) continue;
 			field.setAccessible(); //TODO Optimize: Change the reflector so I dont have to call setAcessible all the time.
@@ -68,7 +79,7 @@ public class TraverserImpl implements Traverser {
 		}
 	}
 
-	private void traverseArray(Object array, ReflectClass arrayClass) {
+	private void traverseArray(Object array) {
 		Object[] contents = contents(array);
 		for (int i = 0; i < contents.length; i++) {
 			queueUpForTraversing(contents[i]);
@@ -77,25 +88,32 @@ public class TraverserImpl implements Traverser {
 
 	private void queueUpForTraversing(Object object) {
 		if (object == null) return;
-        ReflectClass claxx = _reflector.forObject(object);
+		ReflectClass claxx = _reflector.forObject(object);
 		if (isSecondClass(claxx)) return;
 
-        if (_collectionFlattener.canHandle(claxx)) {
-            traverseCollection(object);
-        }else{
-            if (claxx.isArray()) {
-                traverseArray(object, claxx);
-                return;
-            }
-        }
-		_queue.add(object);
+		if (_collectionFlattener.canHandle(claxx)) {
+			if (currentFieldName != null && currentFieldOwner != null) {
+				_queue.add(new Field(currentFieldOwner, currentFieldName, object));
+				currentFieldName = null;
+				currentFieldOwner = null;
+			}else {
+				_queue.add(object);
+			}
+			traverseCollection(object);
+		} else {
+			if (claxx.isArray()) {
+				traverseArray(object);
+			} else {
+				_queue.add(object);
+			}
+		}
 	}
 
-    private boolean isSecondClass(ReflectClass claxx){
-        //      TODO Optimization: Compute this lazily in ReflectClass;
-        if (claxx.isSecondClass()) return true;
-        return claxx.isArray() && claxx.getComponentType().isSecondClass();
-    }
+	private boolean isSecondClass(ReflectClass claxx) {
+		//      TODO Optimization: Compute this lazily in ReflectClass;
+		if (claxx.isSecondClass()) return true;
+		return claxx.isArray() && claxx.getComponentType().isSecondClass();
+	}
 
 
 	final Object[] contents(Object array) { //FIXME Eliminate duplication. Move this to ReflectArray. This logic is in the GenericReplicationSessio too.

@@ -5,7 +5,6 @@ import com.db4o.foundation.Visitor4;
 import com.db4o.inside.traversal.Field;
 import com.db4o.inside.traversal.Traverser;
 import com.db4o.inside.traversal.Traverser.Visitor;
-import com.db4o.inside.traversal.TraverserImpl;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.replication.ConflictResolver;
@@ -33,7 +32,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		_reflector = new ReplicationReflector();
 		_collectionHandler = new CollectionHandlerImpl(_reflector.reflector());
-		_traverser = new TraverserImpl(_reflector.reflector(), _collectionHandler);
+		_traverser = new ReplicationTraverser(_reflector.reflector(), _collectionHandler);
 
 		_peerA = (ReplicationProviderInside) providerA;
 		_peerB = (ReplicationProviderInside) providerB;
