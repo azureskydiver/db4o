@@ -71,10 +71,12 @@ public class GenericReplicationSession implements ReplicationSession {
 	private void activateGraphToBeReplicated(Object root) {
 		_traverser.traverseGraph(root, new Visitor() {
 			public boolean visit(Object object) {
-				if (object instanceof Field)
-					return activateFieldToBeReplicated((Field) object);
-				else
-					return activateObjectToBeReplicated(object);
+				if (object instanceof Field) {
+					final Field field = ((Field) object);
+					return activateObjectToBeReplicated(field.getValue(), field.getReferencingObject(), field.getName());
+				} else {
+					return activateObjectToBeReplicated(object, null, null);
+				}
 			}
 		});
 	}
@@ -122,107 +124,7 @@ public class GenericReplicationSession implements ReplicationSession {
 		destination.storeReplica(reference.counterpart());
 	}
 
-	private boolean activateFieldToBeReplicated(Field field) {
-		if (_peerA.hasReplicationReferenceAlreadyForField(field)) return false;
-		if (_peerB.hasReplicationReferenceAlreadyForField(field)) return false;
-
-		final Object obj = field.getField();
-		ReplicationReference refA = _peerA.produceReference(obj);
-		ReplicationReference refB = _peerB.produceReference(obj);
-
-
-		if (refA == null && refB == null)
-			throw new RuntimeException("" + obj.getClass() + " " + obj + " must be stored in one of the databases being replicated."); //FIXME: Use db4o's standard for throwing exceptions.
-		if (refA != null && refB != null)
-			throw new RuntimeException("" + obj.getClass() + " " + obj + " cannot be referenced by both databases being replicated."); //FIXME: Use db4o's standard for throwing exceptions.
-
-		ReplicationProviderInside owner = refA == null ? _peerB : _peerA;
-		ReplicationReference ownerRef = refA == null ? refB : refA;
-
-		ReplicationProviderInside other = other(owner);
-
-		Db4oUUID uuid = ownerRef.uuid();
-
-		ReplicationReference otherRef = other.produceFieldReferenceByUUID(uuid, field);
-
-		if (refA == null)
-			refA = otherRef;
-		else
-			refB = otherRef;
-
-		if (otherRef == null) {  //New object to the other peer.
-			if (_directionTo == owner) return false;
-
-			owner.activate(obj);
-
-			Object counterpart = emptyClone(owner, obj);
-
-			ownerRef.setCounterpart(counterpart);
-			ownerRef.markForReplicating();
-
-			otherRef = other.referenceNewObject(counterpart, ownerRef);
-
-			// TODO: We might not need counterpart in otherRef. Check.
-			if (otherRef != null) {
-
-				otherRef.setCounterpart(obj);
-
-			}
-
-			return true;
-		}
-
-		ownerRef.setCounterpart(otherRef.object());
-
-		Object objectA = refA.object();
-		Object objectB = refB.object();
-
-		boolean changedInA = refA.version() > _lastReplicationVersion;
-		boolean changedInB = refB.version() > _lastReplicationVersion;
-		if (!changedInA && !changedInB) return false;
-
-		boolean conflict = false;
-		if (_lastReplicationVersion > 0) {
-			if (changedInA && changedInB) {
-				conflict = true;
-			}
-			if (changedInA && _directionTo == _peerA) {
-				conflict = true;
-			}
-			if (changedInB && _directionTo == _peerB) {
-				conflict = true;
-			}
-		}
-
-		Object prevailing = obj;
-		if (conflict) {
-			_peerA.activate(objectA);
-			_peerB.activate(objectB);
-			prevailing = _resolver.resolveConflict(this, objectA, objectB);
-			if (prevailing == null) return false;
-			if (prevailing != objectA && prevailing != objectB)
-				throw new RuntimeException("ConflictResolver must return objectA, objectB or null."); //FIXME Use Db4o's standard exception throwing mechanism.
-		}
-
-		ReplicationProviderInside prevailingPeer = prevailing == objectA ? _peerA : _peerB;
-		if (_directionTo == prevailingPeer) return false;
-
-		if (!conflict)
-			prevailingPeer.activate(prevailing); //Already activated if there was a conflict.
-
-		if (prevailing != obj) {
-			otherRef.setCounterpart(obj);
-			otherRef.markForReplicating();
-			_traverser.extendTraversalTo(prevailing); //Now we start traversing objects on the other peer! Is that cool or what? ;)
-			return false;
-		}
-
-		ownerRef.markForReplicating();
-
-		return true;
-	}
-
-	private boolean activateObjectToBeReplicated(Object obj) { //TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
+	private boolean activateObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) { //TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
 		if (_peerA.hasReplicationReferenceAlready(obj)) return false;
 		if (_peerB.hasReplicationReferenceAlready(obj)) return false;
 
@@ -257,7 +159,7 @@ public class GenericReplicationSession implements ReplicationSession {
 			ownerRef.setCounterpart(counterpart);
 			ownerRef.markForReplicating();
 
-			otherRef = other.referenceNewObject(counterpart, ownerRef);
+			otherRef = other.referenceNewObject(counterpart, ownerRef, referencingObject, fieldName);
 
 			// TODO: We might not need counterpart in otherRef. Check.
 			if (otherRef != null) {

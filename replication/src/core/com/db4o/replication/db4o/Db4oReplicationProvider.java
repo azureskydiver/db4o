@@ -2,31 +2,44 @@
 
 package com.db4o.replication.db4o;
 
-import com.db4o.*;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.inside.replication.*;
-import com.db4o.inside.traversal.Field;
-import com.db4o.query.*;
-import com.db4o.reflect.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.ReplicationRecord;
+import com.db4o.Transaction;
+import com.db4o.YapStream;
+import com.db4o.ext.Db4oDatabase;
+import com.db4o.ext.Db4oUUID;
+import com.db4o.ext.ObjectInfo;
+import com.db4o.ext.VirtualField;
+import com.db4o.foundation.Visitor4;
+import com.db4o.inside.replication.Db4oReplicationReference;
+import com.db4o.inside.replication.Db4oReplicationReferenceProvider;
+import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
+import com.db4o.inside.replication.ReplicationReference;
+import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.query.Query;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.Reflector;
 
 //TODO: Add additional query methods (whereModified )
 
 
 public class Db4oReplicationProvider implements TestableReplicationProvider, Db4oReplicationReferenceProvider, TestableReplicationProviderInside {
-    
+
     private ReadonlyReplicationProviderSignature _mySignature;
-    
+
     private final YapStream _stream;
-    
+
     private final Reflector _reflector;
-    
+
     private ReplicationRecord _replicationRecord;
-    
+
     private Db4oReplicationReferenceImpl _referencesByObject;
-    
+
     private Db4oSignatureMap _signatureMap;
-    
+
     public Db4oReplicationProvider(ObjectContainer objectContainer){
         _stream = (YapStream)objectContainer;
         _reflector = _stream.reflector();
@@ -37,29 +50,29 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
         if(_mySignature == null){
             _mySignature = new Db4oReplicationProviderSignature(_stream.identity());
         }
-        return _mySignature; 
+        return _mySignature;
     }
-    
+
     public Object getMonitor() {
         return _stream.lock();
     }
-    
+
     public void startReplicationTransaction(ReadonlyReplicationProviderSignature peerSignature) {
-        
+
         clearAllReferences();
-        
+
         synchronized(getMonitor()){
-        
+
             Transaction trans = _stream.getTransaction();
-            
+
             Db4oDatabase myIdentity = _stream.identity();
             _signatureMap.put(myIdentity);
-            
-            Db4oDatabase otherIdentity = _signatureMap.produce(peerSignature.getBytes(), peerSignature.getCreationTime()); 
-            
+
+            Db4oDatabase otherIdentity = _signatureMap.produce(peerSignature.getBytes(), peerSignature.getCreationTime());
+
             Db4oDatabase younger = null;
             Db4oDatabase older = null;
-            
+
             if(myIdentity.isOlderThan(otherIdentity)){
                 younger = otherIdentity;
                 older = myIdentity;
@@ -67,29 +80,29 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
                 younger = myIdentity;
                 older = otherIdentity;
             }
-            
+
             _replicationRecord = ReplicationRecord.queryForReplicationRecord(_stream, younger, older);
             if(_replicationRecord == null){
                 _replicationRecord = new ReplicationRecord(younger, older);
                 _replicationRecord.store(_stream);
             }
-            
+
             long localInitialVersion = _stream.version();
         }
     }
 
-    
+
     public void storeReplicationRecord(long version){
         long versionTest = getCurrentVersion();
         _replicationRecord._version = version;
         _replicationRecord.store(_stream);
     }
-    
+
 
     public void commit(long raisedDatabaseVersion) {
-        
+
         long versionTest = getCurrentVersion();
-        
+
         _stream.raiseVersion(raisedDatabaseVersion);
         _stream.commit();
     }
@@ -114,82 +127,78 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
     }
 
     public void activate(Object obj) {
-        
+
         if(obj == null){
             return;
         }
-        
+
         ReflectClass claxx = _reflector.forObject(obj);
-        
+
         int level = claxx.isCollection() ? 3 : 1;
-        
+
         _stream.activate(obj, level);
-        
+
     }
-    
+
     public Db4oReplicationReference referenceFor(Object obj) {
         if(_referencesByObject == null){
             return null;
         }
         return  _referencesByObject.find(obj);
     }
-    
+
     public ReplicationReference produceReference(Object obj) {
-        
+
         if(obj == null){
             return null;
         }
-        
+
         if(_referencesByObject != null){
             Db4oReplicationReferenceImpl existingNode =  _referencesByObject.find(obj);
             if(existingNode != null){
                 return existingNode;
             }
         }
-        
+
         ObjectInfo objectInfo = _stream.getObjectInfo(obj);
-        
+
         if(objectInfo == null){
             return null;
         }
-        
+
         Db4oReplicationReferenceImpl newNode = new Db4oReplicationReferenceImpl (objectInfo);
-        
+
         addReference(newNode);
-        
+
         return newNode;
     }
-
-	public ReplicationReference produceReferenceForField(Field field) {
-		return produceReference(field.getField());
-	}
 
     private void addReference(Db4oReplicationReferenceImpl newNode){
         if (_referencesByObject == null){
             _referencesByObject = newNode;
         }else{
-            _referencesByObject = _referencesByObject.add(newNode);  
+            _referencesByObject = _referencesByObject.add(newNode);
         }
     }
-    
-    public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference){
-        
+
+    public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, Object referencingObj, String fieldName){
+
         Db4oUUID uuid = counterpartReference.uuid();
-        
+
         if(uuid == null){
             return null;
         }
-        
+
         byte[] signature = uuid.getSignaturePart();
         long longPart = uuid.getLongPart();
         long version = counterpartReference.version();
-        
+
         Db4oDatabase db = _signatureMap.produce(signature, 0);
-        
-        Db4oReplicationReferenceImpl ref = new Db4oReplicationReferenceImpl (obj, db, longPart, version); 
-        
+
+        Db4oReplicationReferenceImpl ref = new Db4oReplicationReferenceImpl (obj, db, longPart, version);
+
         addReference(ref);
-        
+
         return ref;
     }
 
@@ -204,12 +213,8 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
         if(! _stream.isActive(obj)){
             _stream.activate(obj, 1);
         }
-        return produceReference(obj); 
+        return produceReference(obj);
     }
-
-	public ReplicationReference produceFieldReferenceByUUID(Db4oUUID uuid, Field field) {
-		return produceReferenceByUUID(uuid, null);
-	}
 
     public boolean hasReplicationReferenceAlready(Object obj) {
         if(_referencesByObject == null){
@@ -217,10 +222,6 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
         }
         return _referencesByObject.find(obj) != null;
     }
-	
-	public boolean hasReplicationReferenceAlreadyForField(Field field) {
-		return hasReplicationReferenceAlready(field.getField());
-	}
 
     public void visitCachedReferences(final Visitor4 visitor) {
         if(_referencesByObject != null){

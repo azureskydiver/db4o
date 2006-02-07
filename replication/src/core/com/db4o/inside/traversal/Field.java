@@ -1,37 +1,37 @@
 package com.db4o.inside.traversal;
 
 public class Field {
-	private Object owner;
+	private Object referencingObject;
 
 	private String name;
-	private Object field;
+	private Object value;
 
-	public Field(Object owner, String name, Object field) {
-		if (owner == null)
-			throw new IllegalArgumentException("owner cannot be null");
+	public Field(Object referencingObject, String name, Object value) {
+		if (referencingObject == null)
+			throw new IllegalArgumentException("referencingObject cannot be null");
 		if (name == null)
 			throw new IllegalArgumentException("name cannot be null");
-		if (field == null)
-			throw new IllegalArgumentException("field be null");
+		if (value == null)
+			throw new IllegalArgumentException("value be null");
 
-		this.owner = owner;
+		this.referencingObject = referencingObject;
 		this.name = name;
-		this.field = field;
+		this.value = value;
 	}
 
-	public Object getOwner() {
-		return owner;
+	public Object getReferencingObject() {
+		return referencingObject;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public Object getField() {
-		return field;
+	public Object getValue() {
+		return value;
 	}
 
 	public String toString() {
-		return "owner =" + owner + ", name = " + name + ", field = " + field;
+		return "referencingObject =" + referencingObject + ", name = " + name + ", value = " + value;
 	}
 }

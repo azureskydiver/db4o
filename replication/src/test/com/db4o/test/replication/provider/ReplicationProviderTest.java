@@ -1,10 +1,13 @@
 package com.db4o.test.replication.provider;
 
-import com.db4o.ext.Db4oUUID;
-import com.db4o.inside.replication.*;
-import com.db4o.replication.hibernate.*;
-import com.db4o.test.Test;
 import com.db4o.ObjectSet;
+import com.db4o.ext.Db4oUUID;
+import com.db4o.inside.replication.ReplicationReference;
+import com.db4o.inside.replication.ReplicationReferenceImpl;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
+import com.db4o.replication.hibernate.PeerSignature;
+import com.db4o.test.Test;
 
 import java.util.Vector;
 
@@ -32,10 +35,10 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Db4oUUID uuid = new Db4oUUID(5678, ARBITRARY_SIGNATURE);
-        
-        ReplicationReference ref = new ReplicationReferenceImpl(object1, uuid, 1);
-        subject.referenceNewObject(object1, ref);
-        
+
+		ReplicationReference ref = new ReplicationReferenceImpl(object1, uuid, 1);
+		subject.referenceNewObject(object1, ref, null, null);
+
 		subject.storeReplica(object1);
 		subject.rollbackReplication();
 
@@ -52,21 +55,21 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Db4oUUID uuid = new Db4oUUID(1234, ARBITRARY_SIGNATURE);
-        
-        ReplicationReference ref = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", uuid, 1);
-        subject.referenceNewObject(object1, ref);
+
+		ReplicationReference ref = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", uuid, 1);
+		subject.referenceNewObject(object1, ref, null, null);
 
 		subject.storeReplica(object1);
 		ReplicationReference reference = subject.produceReferenceByUUID(uuid, object1.getClass());
 		ensure(subject.produceReference(object1) == reference);
 		ensure(reference.object() == object1);
-        subject.storeReplicationRecord(9);
+		subject.storeReplicationRecord(9);
 		subject.commit(10);
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		object1._name = "i am updated";
 		subject.storeReplica(object1);
-        subject.storeReplicationRecord(14);
+		subject.storeReplicationRecord(14);
 		subject.commit(15);
 
 		subject.clearAllReferences();
@@ -85,7 +88,7 @@ public abstract class ReplicationProviderTest extends Test {
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		subject.storeNew(object1);
-	   
+
 		ReplicationReference reference = subject.produceReference(object1);
 		ensure(reference.object() == object1);
 
@@ -130,10 +133,10 @@ public abstract class ReplicationProviderTest extends Test {
 		ensure(!changed.contains(object2));
 		ensure(changed.contains(object3));
 		//ensure(changed.contains(object4));
-        
-        subject.storeReplicationRecord(99);
-        subject.commit(100);
-        
+
+		subject.storeReplicationRecord(99);
+		subject.commit(100);
+
 		ensure(!subject.objectsChangedSinceLastReplication().hasNext());
 
 		object1._name = "Terry Jones";
@@ -151,19 +154,19 @@ public abstract class ReplicationProviderTest extends Test {
 	private void tstVersionIncrement() {
 		TestableReplicationProviderInside subject = prepareSubject();
 		subject.startReplicationTransaction(PEER_SIGNATURE);
-        
-        // This won't work for db4o: There is no guarantee that the version starts with 1.
+
+		// This won't work for db4o: There is no guarantee that the version starts with 1.
 		// ensure(subject.getCurrentVersion() == 1);
-        
-        subject.storeReplicationRecord(59);
+
+		subject.storeReplicationRecord(59);
 		subject.commit(60);
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
-        
-        long version = subject.getCurrentVersion();
-        
+
+		long version = subject.getCurrentVersion();
+
 		ensure(version >= 60 && version <= 61);
-        long v = subject.getLastReplicationVersion();
+		long v = subject.getLastReplicationVersion();
 		ensure(subject.getLastReplicationVersion() == 59);
 	}
 
@@ -175,7 +178,7 @@ public abstract class ReplicationProviderTest extends Test {
 	}
 
 
-	static private Vector toVector(ObjectSet  iterator) {
+	static private Vector toVector(ObjectSet iterator) {
 		Vector result = new Vector();
 		while (iterator.hasNext()) result.add(iterator.next());
 		return result;
