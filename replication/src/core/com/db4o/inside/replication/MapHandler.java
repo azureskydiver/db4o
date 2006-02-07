@@ -25,6 +25,10 @@ public class MapHandler implements CollectionHandler {
 		return _reflectMapClass.isAssignableFrom(claxx);
 	}
 
+	public boolean canHandle(Object obj) {
+		return canHandle(_reflector.forObject(obj));
+	}
+
 	public Iterator4 iteratorFor(final Object collection) {
 		Map map = (Map)collection;
 		Collection4 result = new Collection4();

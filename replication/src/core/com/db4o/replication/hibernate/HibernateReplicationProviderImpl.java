@@ -9,6 +9,7 @@ import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.ReplicationReferenceImpl;
 import com.db4o.inside.replication.TestableReplicationProvider;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.inside.replication.CollectionHandlerImpl;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
@@ -103,12 +104,6 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	private final Map _referencesByObject = new IdentityHashMap();
 
 	/**
-	 * true if this Database has never replicated with the  {@link
-	 * #peerSignature}.
-	 */
-	private boolean newPeer;
-
-	/**
 	 * The ReplicationRecord of {@link #peerSignature}.
 	 */
 	private ReplicationRecord replicationRecord;
@@ -131,7 +126,10 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	 * Objects which meta data not yet updated.
 	 */
 	private final Set dirtyRefs = new HashSet();
+
 	protected SessionFactory _sessionFactory;
+
+	private final CollectionHandlerImpl _collectionHandler = new CollectionHandlerImpl();
 
 	public HibernateReplicationProviderImpl(Configuration cfg) {
 		this(cfg, null, null);
@@ -192,21 +190,15 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 		PeerSignature existingPeerSignature = getPeerSignature(peerSigBytes);
 		if (existingPeerSignature == null) {
-			newPeer = true;
 			this.peerSignature = new PeerSignature(peerSigBytes);
 			_session.save(this.peerSignature);
 			_session.flush();
 			if (getPeerSignature(peerSigBytes) == null)
 				throw new RuntimeException("Cannot insert existingPeerSignature");
-		} else {
-			newPeer = false;
-			this.peerSignature = existingPeerSignature;
-		}
-
-		if (newPeer) {
 			replicationRecord = new ReplicationRecord();
 			replicationRecord.setPeerSignature(peerSignature);
 		} else {
+			this.peerSignature = existingPeerSignature;
 			replicationRecord = getRecord(this.peerSignature);
 		}
 
@@ -251,7 +243,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 	public final void storeReplica(Object obj) {
 		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
-		if (obj instanceof Collection) return;
+		if (_collectionHandler.canHandle(obj)) return;
 
 		ReplicationReference ref = getCachedReference(obj);
 		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
