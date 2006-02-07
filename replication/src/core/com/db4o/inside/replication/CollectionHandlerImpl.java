@@ -39,6 +39,10 @@ public class CollectionHandlerImpl implements CollectionHandler {
 		return canHandle(_reflector.forObject(obj));
 	}
 
+	public boolean canHandle(Class c) {
+		return canHandle(_reflector.forClass(c));
+	}
+
 	public Object cloneWithCounterparts(Object originalCollection, ReflectClass claxx, CounterpartFinder counterpartFinder) {
 		if (_mapHandler.canHandle(claxx))
 			return _mapHandler.cloneWithCounterparts(originalCollection, claxx, counterpartFinder);
