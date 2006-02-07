@@ -43,6 +43,11 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 		super.test();
 	}
 
+	protected void clean() {
+		pA.closeIfOpened();
+		pB.closeIfOpened();
+	}
+
 	private void clean(Configuration cfg) {
 		SessionFactory sessionFactory = cfg.buildSessionFactory();
 		Session session = sessionFactory.openSession();
