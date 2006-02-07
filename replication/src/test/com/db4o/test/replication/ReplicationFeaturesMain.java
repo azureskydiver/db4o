@@ -65,7 +65,10 @@ public abstract class ReplicationFeaturesMain {
 		System.out.println("Peek for conflict");
 		System.out.println("Run test on JDK1.");
 
+		clean();
 	}
+
+	protected abstract void clean();
 
 	private void tstDirection(Set direction) {
 		_direction = direction;
@@ -183,7 +186,7 @@ public abstract class ReplicationFeaturesMain {
 		replication.commit();
 
 		checkNames();
-		//System.out.println("round = " + round++);
+//		System.out.println("round = " + round++);
 	}
 
 
