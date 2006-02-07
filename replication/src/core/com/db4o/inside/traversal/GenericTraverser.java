@@ -6,17 +6,14 @@ import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
 
-/**
- * @deprecated GenericTraverser replaces this class
- */
-public class TraverserImpl implements Traverser {
+public class GenericTraverser implements Traverser {
 
 	private final Reflector _reflector;
 	private final ReflectArray _arrayReflector;
 	private final CollectionFlattener _collectionFlattener;
 	private final Queue4 _queue = new Queue4();
 
-	public TraverserImpl(Reflector reflector, CollectionFlattener collectionFlattener) {
+	public GenericTraverser(Reflector reflector, CollectionFlattener collectionFlattener) {
 		_reflector = reflector;
 		_arrayReflector = _reflector.array();
 		_collectionFlattener = collectionFlattener;
