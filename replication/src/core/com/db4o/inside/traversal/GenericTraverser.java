@@ -7,11 +7,10 @@ import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
 
 public class GenericTraverser implements Traverser {
-
-	private final Reflector _reflector;
+	protected final Reflector _reflector;
 	private final ReflectArray _arrayReflector;
-	private final CollectionFlattener _collectionFlattener;
-	private final Queue4 _queue = new Queue4();
+	protected final CollectionFlattener _collectionFlattener;
+	protected final Queue4 _queue = new Queue4();
 
 	public GenericTraverser(Reflector reflector, CollectionFlattener collectionFlattener) {
 		_reflector = reflector;
@@ -28,7 +27,7 @@ public class GenericTraverser implements Traverser {
 		}
 	}
 
-	private void traverseObject(Object object, Visitor visitor) {
+	protected void traverseObject(Object object, Visitor visitor) {
         if (!visitor.visit(object)){
             return;
         }
@@ -37,7 +36,7 @@ public class GenericTraverser implements Traverser {
 		traverseFields(object, claxx);
 	}
 
-	private void traverseFields(Object object, ReflectClass claxx) {
+	protected void traverseFields(Object object, ReflectClass claxx) {
 		ReflectField[] fields;
 
 		fields = claxx.getDeclaredFields();
@@ -56,7 +55,7 @@ public class GenericTraverser implements Traverser {
 		traverseFields(object, superclass);
 	}
 
-	private void traverseCollection(Object collection) {
+	protected void traverseCollection(Object collection) {
 		Iterator4 elements = _collectionFlattener.iteratorFor(collection); //TODO Optimization: visit instead of flattening.
 		while (elements.hasNext()) {
 			Object element = elements.next();
@@ -65,14 +64,14 @@ public class GenericTraverser implements Traverser {
 		}
 	}
 
-	private void traverseArray(Object array, ReflectClass arrayClass) {
+	protected void traverseArray(Object array) {
 		Object[] contents = contents(array);
 		for (int i = 0; i < contents.length; i++) {
 			queueUpForTraversing(contents[i]);
 		}
 	}
 
-	private void queueUpForTraversing(Object object) {
+	protected void queueUpForTraversing(Object object) {
 		if (object == null) return;
         ReflectClass claxx = _reflector.forObject(object);
 		if (isSecondClass(claxx)) return;
@@ -81,14 +80,14 @@ public class GenericTraverser implements Traverser {
             traverseCollection(object);
         }else{
             if (claxx.isArray()) {
-                traverseArray(object, claxx);
+                traverseArray(object);
                 return;
             }
         }
 		_queue.add(object);
 	}
 
-    private boolean isSecondClass(ReflectClass claxx){
+    protected boolean isSecondClass(ReflectClass claxx){
         //      TODO Optimization: Compute this lazily in ReflectClass;
         if (claxx.isSecondClass()) return true;
         return claxx.isArray() && claxx.getComponentType().isSecondClass();
