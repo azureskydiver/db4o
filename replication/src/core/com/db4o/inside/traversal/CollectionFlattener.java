@@ -9,6 +9,7 @@ public interface CollectionFlattener {
 
 	boolean canHandle(Object obj);
 
-	Iterator4 iteratorFor(Object collection);
+	boolean canHandle(Class c);
 
+	Iterator4 iteratorFor(Object collection);
 }

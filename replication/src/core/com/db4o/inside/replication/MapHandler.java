@@ -29,6 +29,10 @@ public class MapHandler implements CollectionHandler {
 		return canHandle(_reflector.forObject(obj));
 	}
 
+	public boolean canHandle(Class c) {
+		return canHandle(_reflector.forClass(c));
+	}
+
 	public Iterator4 iteratorFor(final Object collection) {
 		Map map = (Map)collection;
 		Collection4 result = new Collection4();

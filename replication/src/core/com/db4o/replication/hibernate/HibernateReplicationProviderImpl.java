@@ -4,12 +4,12 @@ import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.ObjectSetIteratorFacade;
 import com.db4o.foundation.Visitor4;
+import com.db4o.inside.replication.CollectionHandlerImpl;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.ReplicationReferenceImpl;
 import com.db4o.inside.replication.TestableReplicationProvider;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.inside.replication.CollectionHandlerImpl;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
@@ -309,54 +309,68 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, Object referencingObj, String fieldName) {
-		if (obj instanceof Collection)
-					throw new RuntimeException("Create ref for collection here");
+		if (_collectionHandler.canHandle(obj)) {
+			return referenceNewCollection(obj, counterpartReference, referencingObj, fieldName);
+		} else {
+			Db4oUUID uuid = counterpartReference.uuid();
+			long version = counterpartReference.version();
 
-		Db4oUUID uuid = counterpartReference.uuid();
-		long version = counterpartReference.version();
+			return createReference(obj, uuid, version);
+		}
+	}
 
-		return createReference(obj, uuid, version);
+	private ReplicationReference referenceNewCollection(Object obj, ReplicationReference counterpartReference, Object referencingObj, String fieldName) {
+		return null;
+
 	}
 
 	public final ReplicationReference produceReferenceByUUID(final Db4oUUID uuid, Class hint) {
-		if (uuid == null) {
-			return null;
-		}
-		_session.flush();
-		ReadonlyReplicationProviderSignature signature = getProviderSignature(uuid.getSignaturePart());
-
-		final long sigId;
-
-		if (signature == null) return null;
-		else sigId = signature.getId();
-
-		String alias = "whatever";
-
-		String tableName = Util.getTableName(cfg, hint);
-
-		String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
-				+ " where " + Db4oColumns.DB4O_UUID_LONG_PART + "=" + uuid.getLongPart()
-				+ " AND " + ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + "=" + sigId;
-		SQLQuery sqlQuery = _session.createSQLQuery(sql);
-		sqlQuery.addEntity(alias, hint);
-
-		final List results = sqlQuery.list();
-
-		final int rowCount = results.size();
-
-		if (rowCount == 0) {
-			return null;
-		} else if (rowCount == 1) {
-			final Object obj = results.get(0);
-
-			ReplicationReference existing = getCachedReference(obj);
-			if (existing != null) return existing;
-
-			long version = Util.getVersion(cfg, _session, obj);
-			return createReference(obj, uuid, version);
+		if (_collectionHandler.canHandle(hint)) {
+			return produceCollectionReferenceByUUID(uuid);
 		} else {
-			throw new RuntimeException("The object may either be found or not, it will never find more than one objects");
+			if (uuid == null) {
+				return null;
+			}
+			_session.flush();
+			ReadonlyReplicationProviderSignature signature = getProviderSignature(uuid.getSignaturePart());
+
+			final long sigId;
+
+			if (signature == null) return null;
+			else sigId = signature.getId();
+
+			String alias = "whatever";
+
+			String tableName = Util.getTableName(cfg, hint);
+
+			String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
+					+ " where " + Db4oColumns.DB4O_UUID_LONG_PART + "=" + uuid.getLongPart()
+					+ " AND " + ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + "=" + sigId;
+			SQLQuery sqlQuery = _session.createSQLQuery(sql);
+			sqlQuery.addEntity(alias, hint);
+
+			final List results = sqlQuery.list();
+
+			final int rowCount = results.size();
+
+			if (rowCount == 0) {
+				return null;
+			} else if (rowCount == 1) {
+				final Object obj = results.get(0);
+
+				ReplicationReference existing = getCachedReference(obj);
+				if (existing != null) return existing;
+
+				long version = Util.getVersion(cfg, _session, obj);
+				return createReference(obj, uuid, version);
+			} else {
+				throw new RuntimeException("The object may either be found or not, it will never find more than one objects");
+			}
 		}
+	}
+
+	private ReplicationReference produceCollectionReferenceByUUID(Db4oUUID uuid) {
+		return null;  
 	}
 
 	public final void clearAllReferences() {

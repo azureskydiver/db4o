@@ -30,29 +30,34 @@ public class CollectionHandlerImplTest {
 		Vector vector = new Vector();
 		Test.ensure(_collectionHandler.canHandle(vector));
 		Test.ensure(_collectionHandler.canHandle(_reflector.forObject(vector)));
+		Test.ensure(_collectionHandler.canHandle(Vector.class));
 	}
 
 	public void testList() {
 		List list = new LinkedList();
 		Test.ensure(_collectionHandler.canHandle(list));
 		Test.ensure(_collectionHandler.canHandle(_reflector.forObject(list)));
+		Test.ensure(_collectionHandler.canHandle(List.class));
 	}
 
 	public void testSet() {
 		Set set = new HashSet();
 		Test.ensure(_collectionHandler.canHandle(set));
 		Test.ensure(_collectionHandler.canHandle(_reflector.forObject(set)));
+		Test.ensure(_collectionHandler.canHandle(Set.class));
 	}
 
 	public void testMap() {
 		Map map = new HashMap();
 		Test.ensure(_collectionHandler.canHandle(map));
 		Test.ensure(_collectionHandler.canHandle(_reflector.forObject(map)));
+		Test.ensure(_collectionHandler.canHandle(Map.class));
 	}
 
 	public void testString() {
 		String str = "abc";
 		Test.ensure(!_collectionHandler.canHandle(str));
 		Test.ensure(!_collectionHandler.canHandle(_reflector.forObject(str)));
+		Test.ensure(!_collectionHandler.canHandle(String.class));
 	}
 }
