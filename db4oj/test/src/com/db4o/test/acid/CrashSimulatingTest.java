@@ -18,7 +18,9 @@ public class CrashSimulatingTest {
     public CrashSimulatingTest _next;
     
     private static final String PATH = "TEMP/crashSimulate";
-    private static final String FILE = PATH + "/cs"; 
+    private static final String FILE = PATH + "/cs";
+    
+    static final boolean LOG = false;
     
     
     public CrashSimulatingTest() {
@@ -71,6 +73,9 @@ public class CrashSimulatingTest {
     
     private void checkFiles(String infix,int count) {
         for (int i = 1; i <= count; i++) {
+            if(LOG){
+                System.out.println("Checking " + infix + i);
+            }
             String fileName = FILE + infix + i;
             ObjectContainer oc = Db4o.openFile(fileName);
             if(! stateBeforeCommit(oc)){

@@ -21,6 +21,10 @@ public class CrashSimulatingWrite {
         raf.seek(offset);
         raf.write(data, 0, length);
     }
+    
+    public String toString(){
+        return "A " + offset + " L " + length;
+    }
 
 
 
