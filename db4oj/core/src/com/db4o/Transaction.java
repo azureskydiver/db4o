@@ -128,26 +128,6 @@ public class Transaction {
         i_writtenUpdateDeletedMembers = null;
     }
     
-    private final int calculateLength() {
-        
-        final int[] count = {0};
-        
-        if(_slotChanges != null){
-            _slotChanges.traverse(new Visitor4() {
-                public void visit(Object obj) {
-                    SlotChange slot = (SlotChange)obj;
-                    if(slot.isSetPointer()){
-                        count[0] ++;
-                    }
-                }
-            });
-        }
-        
-        return ((2 // Transaction slot length
-            + (count[0] * 3)) * YapConst.YAPINT_LENGTH)
-            + Tree.byteCount(i_addToClassIndex)
-            + Tree.byteCount(i_removeFromClassIndex);
-    }
 
     private final void clearAll() {
         _slotChanges = null;
@@ -335,6 +315,9 @@ public class Transaction {
     }
 
     private void flushFile(){
+        if(DTrace.enabled){
+            DTrace.TRANS_FLUSH.log();
+        }
         if(i_file.i_config._flushFileBuffers){
             i_file.syncFiles();
         }
@@ -695,20 +678,38 @@ public class Transaction {
             });
         }
     }
-
+    
+    
     private void write() {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
-        if (i_addToClassIndex == null && i_removeFromClassIndex == null && _slotChanges == null) {
-            return;
+            
+        final int slotSetPointerCount[]  = {0};
+        
+        if(_slotChanges != null){
+            _slotChanges.traverse(new Visitor4() {
+                public void visit(Object obj) {
+                    SlotChange slot = (SlotChange)obj;
+                    if(slot.isSetPointer()){
+                        slotSetPointerCount[0] ++;
+                    }
+                }
+            });
         }
         
-        int length = calculateLength();
+        if (i_addToClassIndex == null && i_removeFromClassIndex == null && slotSetPointerCount[0] == 0) {
+            return;
+        }
+
+        int length = (((slotSetPointerCount[0] * 3) + 2) * YapConst.YAPINT_LENGTH)
+          + Tree.byteCount(i_addToClassIndex)
+          + Tree.byteCount(i_removeFromClassIndex);
+        
         int address = i_file.getSlot(length);
         final YapWriter bytes = new YapWriter(this, address, length);
         bytes.writeInt(length);
-        Tree.write(bytes, _slotChanges);
+        Tree.write(bytes, _slotChanges, slotSetPointerCount[0]);
         Tree.write(bytes, i_addToClassIndex);
         Tree.write(bytes, i_removeFromClassIndex);
         bytes.write();
@@ -716,7 +717,6 @@ public class Transaction {
         i_stream.writeTransactionPointer(address);
         flushFile();
         writeSlots();
-        flushFile();
         i_stream.writeTransactionPointer(0);
         flushFile();
         i_file.free(address, length);
@@ -738,7 +738,6 @@ public class Transaction {
                 i_removeFromClassIndex = new TreeReader(bytes,
                     new TreeIntObject(0, new TreeInt(0))).read();
                 writeSlots();
-                flushFile();
                 i_stream.writeTransactionPointer(0);
                 flushFile();
                 freeOnCommit();
@@ -776,7 +775,7 @@ public class Transaction {
         traverseYapClassEntries(i_addToClassIndex, true, indicesToBeWritten);
         traverseYapClassEntries(i_removeFromClassIndex, false,
             indicesToBeWritten);
-        if(indicesToBeWritten.size() >= 0){
+        if(indicesToBeWritten.size() > 0){
             Iterator4 i = indicesToBeWritten.iterator();
             while (i.hasNext()) {
                 ClassIndex classIndex = (ClassIndex) i.next();
@@ -791,6 +790,7 @@ public class Transaction {
                     ((SlotChange)a_object).writePointer(Transaction.this);
                 }
             });
+            flushFile();
         }
     }
     

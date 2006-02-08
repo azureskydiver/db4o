@@ -457,17 +457,22 @@ public abstract class Tree implements Cloneable, Readable{
 	}
 	
 	public static void write(final YapWriter a_writer, Tree a_tree){
-		if(a_tree == null){
-			a_writer.writeInt(0);
-		}else{
-			a_writer.writeInt(a_tree.size());
-			a_tree.traverse(new Visitor4() {
-				public void visit(Object a_object) {
-					((Tree)a_object).write(a_writer);
-				}
-			});
-		}
+        write(a_writer, a_tree, a_tree == null ? 0 : a_tree.size());
 	}
+    
+    public static void write(final YapWriter a_writer, Tree a_tree, int size){
+        if(a_tree == null){
+            a_writer.writeInt(0);
+            return;
+        }
+        a_writer.writeInt(size);
+        a_tree.traverse(new Visitor4() {
+            public void visit(Object a_object) {
+                ((Tree)a_object).write(a_writer);
+            }
+        });
+    }
+
 	
 	public void write(YapWriter a_writer){
 		throw YapConst.virtualException();

@@ -17,7 +17,7 @@ public class DTrace {
     private static final Object init(){
         if(enabled){
             
-            breakOnEvent(11);
+            // breakOnEvent(87);
 
             // addRange(4874);
             
@@ -25,7 +25,7 @@ public class DTrace {
             
             // addRangeWithLength(10666,1);
             
-            addRangeWithLength(10697,231);
+            addRangeWithLength(0,Integer.MAX_VALUE);
             
             
             ADD_TO_CLASS_INDEX = new DTrace(true, true, "add to class index tree", true);
@@ -64,6 +64,8 @@ public class DTrace {
             TRANS_COMMIT = new DTrace(false, false, "trans commit", false);
             TRANS_DELETE = new DTrace(true, true, "trans delete", true);
             TRANS_DONT_DELETE = new DTrace(true, true, "trans dontDelete", true);
+            TRANS_FLUSH = new DTrace(true, true, "trans flush", true);
+            
             YAPCLASS_BY_ID = new DTrace(true, true, "yapclass by id", true);
             YAPCLASS_INIT = new DTrace(true, true, "yapclass init", true);
             WRITE_BYTES = new DTrace(true, true, "writeBytes", true); 
@@ -72,7 +74,6 @@ public class DTrace {
             
             
             // turnAllOffExceptFor(new DTrace[] {GET_SLOT, FREE_ON_COMMIT, FREE, WRITE_BYTES});
-            
          
         }
         return null;
@@ -140,6 +141,7 @@ public class DTrace {
     public static DTrace TRANS_COMMIT;
     public static DTrace TRANS_DONT_DELETE;
     public static DTrace TRANS_DELETE;
+    public static DTrace TRANS_FLUSH;
     public static DTrace YAPCLASS_BY_ID;
     public static DTrace YAPCLASS_INIT;
     public static DTrace WRITE_BYTES;
@@ -217,8 +219,7 @@ public class DTrace {
                     }
                 }
             }
-            // if(inRange || (start == -1 )){
-            if(inRange){
+            if(inRange || (start == -1 )){
                 if(_log){
                     _eventNr ++;
                     StringBuffer sb = new StringBuffer(":");
