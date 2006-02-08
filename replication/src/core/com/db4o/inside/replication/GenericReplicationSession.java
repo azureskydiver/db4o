@@ -180,17 +180,9 @@ public class GenericReplicationSession implements ReplicationSession {
 		if (!changedInA && !changedInB) return false;
 
 		boolean conflict = false;
-		if (_lastReplicationVersion > 0) {
-			if (changedInA && changedInB) {
-				conflict = true;
-			}
-			if (changedInA && _directionTo == _peerA) {
-				conflict = true;
-			}
-			if (changedInB && _directionTo == _peerB) {
-				conflict = true;
-			}
-		}
+		if (changedInA && changedInB) conflict = true;
+		if (changedInA && _directionTo == _peerA) conflict = true;
+		if (changedInB && _directionTo == _peerB) conflict = true;
 
 		Object prevailing = obj;
 		if (conflict) {

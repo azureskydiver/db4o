@@ -14,10 +14,13 @@ public class ReplicationTestSuite extends TestSuite {
 		System.err.println("Overcome absence of constructor in VMs other than Sun's.");
 	   System.err.println("Uncommenting the FIXME Db4oReplicationProvider to debug Db4oReplicationProvider");
 		return new Class[]{
-				TransientListTest.class,
+                Db4oReplicationAfterDeletionTest.class,
+                
+                Db4oSimpleParentChild.class,
+
+                TransientListTest.class,
 				Db4oListTest.class,
-				                          
-				//FIXME Db4oReplicationProvider Db4oListTest.class,
+				//Db4oListTest.class, //FIXME Db4oReplicationProvider 
 
 				//UuidLongPartGeneratorTest.class,
 				TransientReplicationProviderTest.class,
@@ -25,15 +28,13 @@ public class ReplicationTestSuite extends TestSuite {
 				HibernateReplicationProviderTest.class,
 
 				TransientSimpleParentChild.class,
-				//FIXME Db4oReplicationProvider Db4oSimpleParentChild.class,
 				HibernateSimpleParentChild.class,
 				Db4oHibernateSimpleParentChild.class,
 
 				TransientReplicationFeaturesMain.class,
 				Db4oReplicationFeaturesMain.class,
 				HibernateReplicationFeaturesMain.class,
-
-				//FIXME Db4oReplicationProvider Db4oListTest.class,
+				
 				// HibernateListTest.class,
 
 				TransientSimpleArrayTest.class,
