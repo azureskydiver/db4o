@@ -22,12 +22,12 @@ public class Db4oReplicationTestUtil {
     }
     
     public static TestableReplicationProvider providerB(){
-//        close();
-//        new File(PROVIDER_B_FILE).delete();
-//        
-        if(_objectcontainer == null){
+        close();
+        new File(PROVIDER_B_FILE).delete();
+        
+//        if(_objectcontainer == null){
             _objectcontainer = Db4o.openFile(PROVIDER_B_FILE);
-        }
+//        }
         return new Db4oReplicationProvider(_objectcontainer); 
     }
     
