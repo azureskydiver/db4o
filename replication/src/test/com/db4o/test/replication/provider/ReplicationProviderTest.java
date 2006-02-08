@@ -43,7 +43,7 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.rollbackReplication();
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
-		ensure(null == subject.produceReference(object1));
+		ensure(null == subject.produceReference(object1, null, null));
 		ReplicationReference byUUID = subject.produceReferenceByUUID(uuid, object1.getClass());
 		ensure(null == byUUID);
 	}
@@ -61,7 +61,7 @@ public abstract class ReplicationProviderTest extends Test {
 
 		subject.storeReplica(object1);
 		ReplicationReference reference = subject.produceReferenceByUUID(uuid, object1.getClass());
-		ensure(subject.produceReference(object1) == reference);
+		ensure(subject.produceReference(object1, null, null) == reference);
 		ensure(reference.object() == object1);
 		subject.storeReplicationRecord(9);
 		subject.commit(10);
@@ -84,12 +84,12 @@ public abstract class ReplicationProviderTest extends Test {
 		TestableReplicationProviderInside subject = prepareSubject();
 
 		Pilot object1 = new Pilot("tst References", 42);
-		ensure(subject.produceReference(object1) == null);
+		ensure(subject.produceReference(object1, null, null) == null);
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		subject.storeNew(object1);
 
-		ReplicationReference reference = subject.produceReference(object1);
+		ReplicationReference reference = subject.produceReference(object1, null, null);
 		ensure(reference.object() == object1);
 
 		Db4oUUID uuid = reference.uuid();
@@ -98,7 +98,7 @@ public abstract class ReplicationProviderTest extends Test {
 
 		subject.clearAllReferences();
 		ensure(!subject.hasReplicationReferenceAlready(object1));
-		Db4oUUID db4oUUID = subject.produceReference(object1).uuid();
+		Db4oUUID db4oUUID = subject.produceReference(object1, null, null).uuid();
 		//TODO implements Db4oUUID.equals, don't use hashcode to compare
 		ensure(db4oUUID.equals(uuid));
 	}

@@ -1,6 +1,7 @@
 package com.db4o.inside.replication;
 
 import com.db4o.ext.Db4oUUID;
+import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.traversal.Field;
 import com.db4o.inside.traversal.Traverser;
@@ -27,6 +28,18 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	private final long _lastReplicationVersion;
 	private final Traverser _traverser;
+
+	/**
+	 * key = object originated from one provider
+	 * value = the ReplicationReference of the original object
+	 */
+	private final Hashtable4 _originalRefMap = new Hashtable4(10000);
+
+	/**
+	 * key = object originated from one provider
+	 * value = the counterpart ReplicationReference of the original object
+	 */
+	private final Hashtable4 _originalCounterPartRefMap = new Hashtable4(10000);
 
 	public GenericReplicationSession(ReplicationProvider providerA, ReplicationProvider providerB, ConflictResolver resolver) {
 
@@ -123,12 +136,21 @@ public class GenericReplicationSession implements ReplicationSession {
 		destination.storeReplica(reference.counterpart());
 	}
 
+	ReplicationReference getReferencingObjectRef(Object referencingObject) {
+		return (ReplicationReference) _originalRefMap.get(referencingObject);
+	}
+
+	ReplicationReference getReferencingObjectCounterPartRef(Object referencingObject) {
+		return (ReplicationReference) _originalCounterPartRefMap.get(referencingObject);
+	}
+
 	private boolean activateObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) { //TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
 		if (_peerA.hasReplicationReferenceAlready(obj)) return false;
 		if (_peerB.hasReplicationReferenceAlready(obj)) return false;
 
-		ReplicationReference refA = _peerA.produceReference(obj);
-		ReplicationReference refB = _peerB.produceReference(obj);
+		ReplicationReference referencingObjectRef = getReferencingObjectRef(referencingObject);
+		ReplicationReference refA = _peerA.produceReference(obj, referencingObjectRef, fieldName);
+		ReplicationReference refB = _peerB.produceReference(obj, referencingObjectRef, fieldName);
 		if (refA == null && refB == null)
 			throw new RuntimeException("" + obj.getClass() + " " + obj + " must be stored in one of the databases being replicated."); //FIXME: Use db4o's standard for throwing exceptions.
 		if (refA != null && refB != null)
@@ -136,6 +158,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		ReplicationProviderInside owner = refA == null ? _peerB : _peerA;
 		ReplicationReference ownerRef = refA == null ? refB : refA;
+		_originalRefMap.put(obj, ownerRef);
 
 		ReplicationProviderInside other = other(owner);
 
@@ -158,7 +181,8 @@ public class GenericReplicationSession implements ReplicationSession {
 			ownerRef.setCounterpart(counterpart);
 			ownerRef.markForReplicating();
 
-			otherRef = other.referenceNewObject(counterpart, ownerRef, referencingObject, fieldName);
+			otherRef = other.referenceNewObject(counterpart, ownerRef, getReferencingObjectCounterPartRef(referencingObject), fieldName);
+			_originalCounterPartRefMap.put(obj, otherRef);
 
 			// TODO: We might not need counterpart in otherRef. Check.
 			if (otherRef != null) {
@@ -250,7 +274,9 @@ public class GenericReplicationSession implements ReplicationSession {
 		ReflectClass claxx = _reflector.forObject(value);
 		if (claxx.isArray()) return arrayClone(value, claxx, sourceProvider);
 		if (claxx.isSecondClass()) return value;
-		return sourceProvider.produceReference(value).counterpart();
+
+		//TODO supports collection here
+		return sourceProvider.produceReference(value, null, null).counterpart();
 	}
 
 	private Object collectionClone(Object original, ReflectClass claxx, final ReplicationProviderInside sourceProvider) {
@@ -277,7 +303,9 @@ public class GenericReplicationSession implements ReplicationSession {
 		for (int i = 0; i < objects.length; i++) {
 			Object object = objects[i];
 			if (object == null) continue;
-			ReplicationReference replicationReference = sourceProvider.produceReference(object);
+
+			//TODO supports collection here
+			ReplicationReference replicationReference = sourceProvider.produceReference(object, null, null);
 
 			if (replicationReference == null)
 				throw new RuntimeException(sourceProvider + " cannot find ref for " + object);

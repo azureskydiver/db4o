@@ -35,8 +35,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 		<natural-id mutable="false">
 			<property name="uuidLongPart"/>
-			<property name="ownerUuidLongPart"/>
-			<many-to-one name="ownerField" cascade="all"/>
+			<property name="referencingObjectUuidLongPart"/>
+			<many-to-one name="referencingObjectField" cascade="all"/>
 		</natural-id>
 
 		<one-to-one name="provider"/>

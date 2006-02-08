@@ -34,8 +34,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		</id>
 
 		<natural-id mutable="false">
-			<property name="className"/>
-			<property name="fieldName"/>
+			<property name="referencingObjectClassName"/>
+			<property name="referencingObjectFieldName"/>
 		</natural-id>
 	</class>
 </hibernate-mapping>

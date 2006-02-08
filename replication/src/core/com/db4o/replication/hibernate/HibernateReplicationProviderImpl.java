@@ -10,6 +10,7 @@ import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.ReplicationReferenceImpl;
 import com.db4o.inside.replication.TestableReplicationProvider;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.inside.traversal.CollectionFlattener;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
@@ -129,7 +130,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 	protected SessionFactory _sessionFactory;
 
-	private final CollectionHandlerImpl _collectionHandler = new CollectionHandlerImpl();
+	private final CollectionFlattener _collectionHandler = new CollectionHandlerImpl();
 
 	public HibernateReplicationProviderImpl(Configuration cfg) {
 		this(cfg, null, null);
@@ -256,16 +257,25 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		Hibernate.initialize(object);
 	}
 
-	public final ReplicationReference produceReference(Object obj) {
+	public final ReplicationReference produceReference(Object obj, ReplicationReference referencingObjRef, String fieldName) {
+		//System.out.println("produceReference. =  obj = " + obj);
 
 		ReplicationReference existing = getCachedReference(obj);
-		if (existing != null) {
-			return existing;
-		}
 
-		if (!_session.contains(obj)) {
-			return null;
-		}
+		//System.out.println("existing = " + existing);
+
+		if (existing != null) return existing;
+
+		if (_collectionHandler.canHandle(obj))
+			//TODO if referencingObjRef exists in cache, create ref for collection.
+			return getCachedReference(obj);
+		else
+			return produceObjectReference(obj);
+	}
+
+	private ReplicationReference produceObjectReference(Object obj) {
+		//System.out.println("produceObjectReference() obj = " + obj);
+		if (!_session.contains(obj)) return null;
 
 		String tableName = Util.getTableName(cfg, obj.getClass());
 		String pkColumn = Util.getPrimaryKeyColumnName(cfg, obj);
@@ -308,9 +318,9 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		}
 	}
 
-	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, Object referencingObj, String fieldName) {
+	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference referencingObjCounterPartRef, String fieldName) {
 		if (_collectionHandler.canHandle(obj)) {
-			return referenceNewCollection(obj, counterpartReference, referencingObj, fieldName);
+			return referenceClonedCollection(obj, counterpartReference, referencingObjCounterPartRef, fieldName);
 		} else {
 			Db4oUUID uuid = counterpartReference.uuid();
 			long version = counterpartReference.version();
@@ -319,58 +329,121 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		}
 	}
 
-	private ReplicationReference referenceNewCollection(Object obj, ReplicationReference counterpartReference, Object referencingObj, String fieldName) {
-		return null;
-
+	private ReplicationReference referenceClonedCollection(Object obj, ReplicationReference counterpartReference, ReplicationReference referencingObjRef, String fieldName) {
+		return createRefForCollection(obj, counterpartReference, referencingObjRef, fieldName);
 	}
 
-	public final ReplicationReference produceReferenceByUUID(final Db4oUUID uuid, Class hint) {
-		if (_collectionHandler.canHandle(hint)) {
-			return produceCollectionReferenceByUUID(uuid);
+	private ReplicationReference createRefForCollection(Object obj, ReplicationReference counterpartReference, ReplicationReference referencingObjRef, String fieldName) {
+		ReplicationComponentField rcf = produceReplicationComponentField(referencingObjRef.object().getClass().getName(), fieldName);
+		ReplicationComponentIdentity rci = new ReplicationComponentIdentity();
+
+		rci.setReferencingObjectField(rcf);
+		rci.setReferencingObjectUuidLongPart(referencingObjRef.uuid().getLongPart());
+		rci.setProvider(getProviderSignature(referencingObjRef.uuid().getSignaturePart()));
+		rci.setUuidLongPart(counterpartReference.uuid().getLongPart());
+
+		_session.save(rci);
+		return createReference(obj, counterpartReference.uuid(), counterpartReference.version());
+	}
+
+	private ReplicationComponentField produceReplicationComponentField(String referencingObjectClassName, String referencingObjectFieldName) {
+		Criteria criteria = _session.createCriteria(ReplicationComponentField.class);
+		criteria.add(Restrictions.eq("referencingObjectClassName", referencingObjectClassName));
+		criteria.add(Restrictions.eq("referencingObjectFieldName", referencingObjectFieldName));
+
+		final List exisitings = criteria.list();
+		int count = exisitings.size();
+
+		if (count == 0) {
+			ReplicationComponentField out = new ReplicationComponentField();
+			out.setReferencingObjectClassName(referencingObjectClassName);
+			out.setReferencingObjectFieldName(referencingObjectFieldName);
+			_session.save(out);
+
+			//Double-check, you know Hibernate sometimes fail to save an object.
+			return produceReplicationComponentField(referencingObjectClassName, referencingObjectFieldName);
+		} else if (count > 1) {
+			throw new RuntimeException("Only one Record should exist for this peer");
 		} else {
-			if (uuid == null) {
-				return null;
-			}
-			_session.flush();
-			ReadonlyReplicationProviderSignature signature = getProviderSignature(uuid.getSignaturePart());
-
-			final long sigId;
-
-			if (signature == null) return null;
-			else sigId = signature.getId();
-
-			String alias = "whatever";
-
-			String tableName = Util.getTableName(cfg, hint);
-
-			String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
-					+ " where " + Db4oColumns.DB4O_UUID_LONG_PART + "=" + uuid.getLongPart()
-					+ " AND " + ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + "=" + sigId;
-			SQLQuery sqlQuery = _session.createSQLQuery(sql);
-			sqlQuery.addEntity(alias, hint);
-
-			final List results = sqlQuery.list();
-
-			final int rowCount = results.size();
-
-			if (rowCount == 0) {
-				return null;
-			} else if (rowCount == 1) {
-				final Object obj = results.get(0);
-
-				ReplicationReference existing = getCachedReference(obj);
-				if (existing != null) return existing;
-
-				long version = Util.getVersion(cfg, _session, obj);
-				return createReference(obj, uuid, version);
-			} else {
-				throw new RuntimeException("The object may either be found or not, it will never find more than one objects");
-			}
+			return (ReplicationComponentField) exisitings.get(0);
 		}
 	}
 
+	public final ReplicationReference produceReferenceByUUID(final Db4oUUID uuid, Class hint) {
+		if (uuid == null) throw new IllegalArgumentException("uuid cannot be null");
+		if (hint == null) throw new IllegalArgumentException("hint cannot be null");
+
+		if (_collectionHandler.canHandle(hint)) {
+			return produceCollectionReferenceByUUID(uuid);
+		} else {
+			return produceObjectReferenceByUUID(uuid, hint);
+		}
+	}
+
+	private ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid, Class hint) {
+		_session.flush();
+		ReadonlyReplicationProviderSignature signature = getProviderSignature(uuid.getSignaturePart());
+
+		final long sigId;
+
+		if (signature == null) return null;
+		else sigId = signature.getId();
+
+		String alias = "whatever";
+
+		String tableName = Util.getTableName(cfg, hint);
+
+		String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
+				+ " where " + Db4oColumns.DB4O_UUID_LONG_PART + "=" + uuid.getLongPart()
+				+ " AND " + ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + "=" + sigId;
+		SQLQuery sqlQuery = _session.createSQLQuery(sql);
+		sqlQuery.addEntity(alias, hint);
+
+		final List results = sqlQuery.list();
+
+		final int rowCount = results.size();
+
+		ReplicationReference out;
+		if (rowCount == 0) {
+			out = null;
+		} else if (rowCount == 1) {
+			final Object obj = results.get(0);
+
+			ReplicationReference existing = getCachedReference(obj);
+			if (existing != null) return existing;
+
+			long version = Util.getVersion(cfg, _session, obj);
+			out = createReference(obj, uuid, version);
+		} else {
+			throw new RuntimeException("The object may either be found or not, it will never find more than one objects");
+		}
+
+		return out;
+	}
+
 	private ReplicationReference produceCollectionReferenceByUUID(Db4oUUID uuid) {
-		return null;  
+		Criteria criteria = _session.createCriteria(ReplicationComponentIdentity.class);
+		criteria.add(Restrictions.eq("uuidLongPart", uuid.getLongPart()));
+		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getSignaturePart()));
+
+		final List exisitings = criteria.list();
+		int count = exisitings.size();
+
+		ReplicationReference out;
+		if (count == 0) {
+			out = null;
+		} else if (count > 1) {
+			throw new RuntimeException("Only one Record should exist for this peer");
+		} else {
+			Object obj = exisitings.get(0);
+			ReplicationReference existing = getCachedReference(obj);
+			if (existing != null) return existing;
+
+			long version = Util.getVersion(cfg, _session, obj);
+			out = createReference(obj, uuid, version);
+		}
+
+		return out;
 	}
 
 	public final void clearAllReferences() {
@@ -493,12 +566,12 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		return sqlQuery.list();
 	}
 
-	private ReadonlyReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
+	private ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
 		final List exisitingSigs = _session.createCriteria(ReadonlyReplicationProviderSignature.class)
 				.add(Restrictions.eq(ReplicationProviderSignature.SIGNATURE_BYTE_ARRAY_COLUMN_NAME, signaturePart))
 				.list();
 		if (exisitingSigs.size() == 1)
-			return (ReadonlyReplicationProviderSignature) exisitingSigs.get(0);
+			return (ReplicationProviderSignature) exisitingSigs.get(0);
 		else if (exisitingSigs.size() == 0) return null;
 		else
 			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
@@ -682,6 +755,20 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		return out;
 	}
 
+	public void closeIfOpened() {
+		_session.close();
+		_sessionFactory.close();
+	}
+
+	public Session getSession() {
+		return _session;
+	}
+
+	public void delete(Class clazz) {
+		String className = clazz.getName();
+		_session.createQuery("delete from " + className).executeUpdate();
+	}
+
 	public final String toString() {
 		return "name = " + _name + ", sig = " + flattenBytes(getMySig().getBytes());
 	}
@@ -710,20 +797,4 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 			}
 		}
 	}
-
-	public void closeIfOpened() {
-		_session.close();
-		_sessionFactory.close();
-	}
-
-	public Session getSession() {
-		return _session;
-	}
-
-	public void delete(Class clazz) {
-		String className = clazz.getName();
-		_session.createQuery("delete from " + className).executeUpdate();
-	}
-
-
 }

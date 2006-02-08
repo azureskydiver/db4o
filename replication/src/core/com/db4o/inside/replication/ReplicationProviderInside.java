@@ -4,7 +4,6 @@ package com.db4o.inside.replication;
 
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.traversal.Field;
 import com.db4o.replication.ReplicationProvider;
 
 
@@ -12,7 +11,7 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 
 	public void activate(Object object);
 
-	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, Object referencingObj, String fieldName);
+	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference referencingObjRef, String fieldName);
 
 	/**
 	 * Activates the fields, e.g. Collections, arrays, of an object
@@ -58,17 +57,19 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	/**
 	 * Returns the ReplicationReference of an object
 	 *
-	 * @param obj object queried
+	 * @param obj               object queried
+	 * @param referencingObjRef
+	 * @param fieldName
 	 * @return null if the object is not owned by this ReplicationProvider.
 	 */
-	ReplicationReference produceReference(Object obj);
+	ReplicationReference produceReference(Object obj, ReplicationReference referencingObjRef, String fieldName);
 
 	/**
 	 * Returns the ReplicationReference of an object by specifying the uuid of the object.
 	 *
 	 * @param uuid the uuid of the object
 	 * @param hint the type of the object
-	 * @return the ReplicationReference
+	 * @return the ReplicationReference or null if the reference cannot be found
 	 */
 	ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint);
 
