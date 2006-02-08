@@ -3,26 +3,26 @@ package com.db4o.replication.hibernate;
 public class ReplicationComponentField {
 	static final String TABLE_NAME = "ReplicationComponentField";
 
-	private String className;
-	private String fieldName;
+	private String referencingObjectClassName;
+	private String referencingObjectFieldName;
 
 	public ReplicationComponentField() {
 	}
 
-	public String getClassName() {
-		return className;
+	public String getReferencingObjectClassName() {
+		return referencingObjectClassName;
 	}
 
-	public void setClassName(String className) {
-		this.className = className;
+	public void setReferencingObjectClassName(String referencingObjectClassName) {
+		this.referencingObjectClassName = referencingObjectClassName;
 	}
 
-	public String getFieldName() {
-		return fieldName;
+	public String getReferencingObjectFieldName() {
+		return referencingObjectFieldName;
 	}
 
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
+	public void setReferencingObjectFieldName(String referencingObjectFieldName) {
+		this.referencingObjectFieldName = referencingObjectFieldName;
 	}
 
 	public boolean equals(Object o) {
@@ -31,16 +31,16 @@ public class ReplicationComponentField {
 
 		final ReplicationComponentField that = (ReplicationComponentField) o;
 
-		if (!className.equals(that.className)) return false;
-		if (!fieldName.equals(that.fieldName)) return false;
+		if (!referencingObjectClassName.equals(that.referencingObjectClassName)) return false;
+		if (!referencingObjectFieldName.equals(that.referencingObjectFieldName)) return false;
 
 		return true;
 	}
 
 	public int hashCode() {
 		int result;
-		result = className.hashCode();
-		result = 29 * result + fieldName.hashCode();
+		result = referencingObjectClassName.hashCode();
+		result = 29 * result + referencingObjectFieldName.hashCode();
 		return result;
 	}
 }

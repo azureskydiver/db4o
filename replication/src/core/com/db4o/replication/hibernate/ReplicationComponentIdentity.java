@@ -5,9 +5,9 @@ public class ReplicationComponentIdentity {
 
 	private long uuidLongPart;
 
-	private long ownerUuidLongPart;
+	private long referencingObjectUuidLongPart;
 
-	private ReplicationComponentField ownerField;
+	private ReplicationComponentField referencingObjectField;
 
 	private ReplicationProviderSignature provider;
 
@@ -22,20 +22,23 @@ public class ReplicationComponentIdentity {
 		this.uuidLongPart = uuidLongPart;
 	}
 
-	public long getOwnerUuidLongPart() {
-		return ownerUuidLongPart;
+	public long getReferencingObjectUuidLongPart() {
+		return referencingObjectUuidLongPart;
 	}
 
-	public void setOwnerUuidLongPart(long ownerUuidLongPart) {
-		this.ownerUuidLongPart = ownerUuidLongPart;
+	public void setReferencingObjectUuidLongPart(long referencingObjectUuidLongPart) {
+		this.referencingObjectUuidLongPart = referencingObjectUuidLongPart;
 	}
 
-	public ReplicationComponentField getOwnerField() {
-		return ownerField;
+	public ReplicationComponentField getReferencingObjectField() {
+		return referencingObjectField;
 	}
 
-	public void setOwnerField(ReplicationComponentField ownerField) {
-		this.ownerField = ownerField;
+	public void setReferencingObjectField(ReplicationComponentField referencingObjectField) {
+		if (referencingObjectField == null)
+			throw new RuntimeException("referencingObjectField cannot be null");
+
+		this.referencingObjectField = referencingObjectField;
 	}
 
 	public ReplicationProviderSignature getProvider() {
@@ -43,6 +46,9 @@ public class ReplicationComponentIdentity {
 	}
 
 	public void setProvider(ReplicationProviderSignature provider) {
+		if (provider == null)
+			throw new RuntimeException("provider cannot be null");
+
 		this.provider = provider;
 	}
 
@@ -52,9 +58,9 @@ public class ReplicationComponentIdentity {
 
 		final ReplicationComponentIdentity that = (ReplicationComponentIdentity) o;
 
-		if (ownerUuidLongPart != that.ownerUuidLongPart) return false;
+		if (referencingObjectUuidLongPart != that.referencingObjectUuidLongPart) return false;
 		if (uuidLongPart != that.uuidLongPart) return false;
-		if (!ownerField.equals(that.ownerField)) return false;
+		if (!referencingObjectField.equals(that.referencingObjectField)) return false;
 		if (!provider.equals(that.provider)) return false;
 
 		return true;
@@ -63,8 +69,8 @@ public class ReplicationComponentIdentity {
 	public int hashCode() {
 		int result;
 		result = (int) (uuidLongPart ^ (uuidLongPart >>> 32));
-		result = 29 * result + (int) (ownerUuidLongPart ^ (ownerUuidLongPart >>> 32));
-		result = 29 * result + ownerField.hashCode();
+		result = 29 * result + (int) (referencingObjectUuidLongPart ^ (referencingObjectUuidLongPart >>> 32));
+		result = 29 * result + referencingObjectField.hashCode();
 		result = 29 * result + provider.hashCode();
 		return result;
 	}

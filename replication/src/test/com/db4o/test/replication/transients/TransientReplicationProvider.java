@@ -13,9 +13,9 @@ import com.db4o.inside.replication.ReplicationReferenceImpl;
 import com.db4o.inside.replication.ReplicationReflector;
 import com.db4o.inside.replication.TestableReplicationProvider;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.inside.traversal.GenericTraverser;
 import com.db4o.inside.traversal.Traverser;
 import com.db4o.inside.traversal.Traverser.Visitor;
-import com.db4o.inside.traversal.GenericTraverser;
 import com.db4o.reflect.Reflector;
 import com.db4o.replication.hibernate.MySignature;
 
@@ -126,7 +126,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		store(obj, ref.uuid(), ref.version());
 	}
 
-	public ReplicationReference produceReference(Object obj) {
+	public ReplicationReference produceReference(Object obj, ReplicationReference referencingObjRef, String fieldName) {
+
 		ReplicationReference cached = getCachedReference(obj);
 		if (cached != null) return cached;
 
@@ -135,7 +136,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return createReferenceFor(obj);
 	}
 
-	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, Object referencingObj, String fieldName) {
+	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference unused, String unused2) {
 		Db4oUUID uuid = counterpartReference.uuid();
 		long version = counterpartReference.version();
 
@@ -168,7 +169,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		}
 		Object object = getObjectByUUID(uuid);
 		if (object == null) return null;
-		return produceReference(object);
+		return produceReference(object, null, null);
 	}
 
 	private Object getObjectByUUID(Db4oUUID uuid) {
