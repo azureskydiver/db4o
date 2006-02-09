@@ -60,7 +60,7 @@ public class SODABloatMethodBuilder {
 
 		public void visit(final ComparisonExpression expression) {
 			methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable("query",queryType,1));
-			Iterator4 fieldNames = expression.left().fieldNames();
+			Iterator4 fieldNames = fieldNames(expression.left());
 			while(fieldNames.hasNext()) {
 				methodEditor.addInstruction(Opcode.opc_ldc,(String)fieldNames.next());
 				methodEditor.addInstruction(Opcode.opc_invokeinterface,descendRef);
@@ -99,12 +99,12 @@ public class SODABloatMethodBuilder {
 						else {
 							StaticFieldRoot root=(StaticFieldRoot)fieldValue.root();
 							// FIXME handle chaining
-							methodEditor.addInstruction(Opcode.opc_getstatic,createFieldReference(Class.forName(root.className()), lastFieldClass, (String)fieldValue.fieldNames().next()));
+							methodEditor.addInstruction(Opcode.opc_getstatic,createFieldReference(Class.forName(root.className()), lastFieldClass, (String)fieldNames(fieldValue).next()));
 							return;
 						}
 						opClass=lastFieldClass;
 
-						Iterator4 targetFieldNames =fieldValue.fieldNames();
+						Iterator4 targetFieldNames =fieldNames(fieldValue);
 						Class curClass=predicateClass;
 						while(targetFieldNames.hasNext()) {
 							String fieldName=(String)targetFieldNames.next();
@@ -138,7 +138,7 @@ public class SODABloatMethodBuilder {
 					FieldRootClassNameVisitor visitor=new FieldRootClassNameVisitor(predicateClass,candidateClass);
 					fieldValue.root().accept(visitor);
 					Class curClass=classLoader.loadClass(visitor.className());
-					Iterator4 fieldIter=fieldValue.fieldNames();
+					Iterator4 fieldIter=fieldNames(fieldValue);
 					while(fieldIter.hasNext()) {
 						String fieldName=(String)fieldIter.next();
 						Field curField=curClass.getDeclaredField(fieldName);
@@ -294,6 +294,11 @@ public class SODABloatMethodBuilder {
 					// TODO Auto-generated method stub
 					
 				}
+
+				public void visit(ArrayAccessValue operand) {
+					// FIXME Auto-generated method stub
+					
+				}
 			});
 			methodEditor.addInstruction(Opcode.opc_invokeinterface,constrainRef);
 			if(!expression.op().equals(ComparisonOperator.EQUALS)) {
@@ -324,7 +329,17 @@ public class SODABloatMethodBuilder {
 			expression.expr().accept(this);
 			methodEditor.addInstruction(Opcode.opc_invokeinterface,notRef);
 		}
-
+		
+		private Iterator4 fieldNames(FieldValue fieldValue) {
+			Collection4 coll=new Collection4();
+			ComparisonOperand curOp=fieldValue;
+			while(curOp instanceof FieldValue) {
+				FieldValue curField=(FieldValue)curOp;
+				coll.add(curField.fieldName());
+				curOp=curField.parent();
+			}
+			return coll.iterator();
+		}
 	}
 	
 	public SODABloatMethodBuilder() {
@@ -431,6 +446,11 @@ public class SODABloatMethodBuilder {
 		}
 
 		public void visit(FieldValue operand) {
+		}
+
+		public void visit(ArrayAccessValue operand) {
+			// FIXME Auto-generated method stub
+			
 		}
 	}
 }

@@ -31,6 +31,8 @@ class Data extends Base {
 	float value;
 	String name;
 	Data next;
+	int[] intArray;
+	Data[] objArray;
 	
 	public float getValue() {
 		return value;
@@ -795,7 +797,39 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntArrayAccess() throws Exception {
-		assertInvalid("sampleIntArrayAccess");
+		assertComparison("sampleIntArrayAccess","id",new ArrayAccessValue(new FieldValue(PredicateFieldRoot.INSTANCE,"intArrayMember"),new ConstValue(new Integer(0))),ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleCandidateIntArrayAccess(Data data) {
+		return data.intArray[0]==0;
+	}
+
+	public void testCandidateIntArrayAccess() throws Exception {
+		assertInvalid("sampleCandidateIntArrayAccess");
+	}
+
+	boolean sampleCandidateObjectArrayAccess(Data data) {
+		return data.objArray[0].id==0;
+	}
+
+	public void testCandidateObjectArrayAccess() throws Exception {
+		assertInvalid("sampleCandidateObjectArrayAccess");
+	}
+
+	boolean sampleSwitch(Data data) {
+		switch(data.id) {
+			case 0:
+			case 1:
+			case 2:
+			case 4:
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	public void testSwitch() throws Exception {
+		assertInvalid("sampleSwitch");
 	}
 
 	// internal
@@ -820,15 +854,13 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		}
 		ComparisonExpression cmpExpr=(ComparisonExpression)expr;
 		assertEquals(op, cmpExpr.op());
-		FieldValue fieldValue=(FieldValue) cmpExpr.left();
-		assertEquals(CandidateFieldRoot.INSTANCE,fieldValue.root());
-		Iterator4 foundNames=fieldValue.fieldNames();
-		int foundFieldIdx=0;
-		while(foundNames.hasNext()) {
-			assertEquals(fieldNames[foundFieldIdx], (String)foundNames.next());
-			foundFieldIdx++;
+		ComparisonOperand curop=cmpExpr.left();
+		for(int foundFieldIdx=fieldNames.length-1;foundFieldIdx>=0;foundFieldIdx--) {
+			FieldValue fieldValue=(FieldValue)curop;
+			assertEquals(fieldNames[foundFieldIdx], fieldValue.fieldName());
+			curop=fieldValue.parent();
 		}
-		assertEquals(fieldNames.length,foundFieldIdx);
+		assertEquals(CandidateFieldRoot.INSTANCE,curop);
 		ComparisonOperand right = cmpExpr.right();
 		if(right instanceof ConstValue) {
 			assertEquals(value, ((ConstValue) right).value());
