@@ -79,33 +79,40 @@ public class NQRegressionTests {
 	}
 	
 	private abstract static class ExpectingPredicate extends Predicate {
-		public ExpectingPredicate() {
-			super();
+		private String _name;
+		
+		public ExpectingPredicate(String name) {
+			_name=name;
 		}
 
-		public ExpectingPredicate(Class extentType) {
+		public ExpectingPredicate(String name,Class extentType) {
 			super(extentType);
+			_name=name;
 		}
 
 		public abstract int expected();
+		
+		public String toString() {
+			return _name;
+		}
 	}
 	
 	private static ExpectingPredicate[] PREDICATES={
 		// unconditional/untyped
-		new ExpectingPredicate() {
+		new ExpectingPredicate("unconditional/untyped") {
 			public int expected() { return 5;}
 			public boolean match(Object candidate) {
 				return true;
 			}
 		},
 		// unconditional
-		new ExpectingPredicate() {
+		new ExpectingPredicate("unconditional: Base") {
 			public int expected() { return 5;}
 			public boolean match(Base candidate) {
 				return true;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("unconditional: Data") {
 			public int expected() { return 4;}
 			public boolean match(Data candidate) {
 				return true;
@@ -118,138 +125,138 @@ public class NQRegressionTests {
 //			}
 //		},
 		// primitive equals
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id==1") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.id==1;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id==3") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.id==3;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("value==1.1") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.value==1.1f;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("value==3.3") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.value==3.3f;
 			}
 		},
 		// string equals
-		new ExpectingPredicate() {
+		new ExpectingPredicate("name.eq(ASTR)") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.name.equals(ASTR);
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("name.eq(CSTR)") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.name.equals(CSTR);
 			}
 		},
 		// string specific comparisons
-		new ExpectingPredicate() {
+		new ExpectingPredicate("name.contains('a')") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.name.contains("a");
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("name.contains('A')") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.name.contains("A");
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("name.contains('C')") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.name.contains("C");
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("name.startsWith('C')") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.name.startsWith("C");
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("name.startsWith('a')") {
 			public int expected() { return 0;}
 			public boolean match(Data candidate) {
 				return candidate.name.startsWith("a");
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("name.endsWith('A')") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.name.endsWith("a");
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("name.endsWith('A')") {
 			public int expected() { return 0;}
 			public boolean match(Data candidate) {
 				return candidate.name.endsWith("A");
 			}
 		},
 		// int field comparison
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id<2") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.id<2;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id>2") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.id>2;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id<=2") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.id<=2;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id>=2") {
 			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return candidate.id>=2;
 			}
 		},
 		// float field comparison
-		new ExpectingPredicate() {
+		new ExpectingPredicate("value>2.9") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.value>2.9f;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("1.5>=value") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return 1.5f >= candidate.value;
 			}
 		},
 		// mixed comparison (coercion)
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id==1.0") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.id==1.0f;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id!=1.0") {
 			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return candidate.id!=1.0f;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("value!=1") {
 			public int expected() { return 4;}
 			public boolean match(Data candidate) {
 				return candidate.value!=1;
@@ -263,133 +270,133 @@ public class NQRegressionTests {
 //			}
 //		},
 		// descend field
-		new ExpectingPredicate() {
+		new ExpectingPredicate("getPrev().getId()>=1") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.getPrev()!=null&&candidate.getPrev().getId()>=1;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("BSTR.eq(getPrev().getName()") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return (candidate.getPrev()!=null)&&(BSTR.equals(candidate.getPrev().getName()));
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("getPrev().getName().eq('')") {
 			public int expected() { return 0;}
 			public boolean match(Data candidate) {
 				return candidate.getPrev()!=null&&candidate.getPrev().getName().equals("");
 			}
 		},
 		// getter comparisons
-		new ExpectingPredicate() {
+		new ExpectingPredicate("getId()==2") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.getId()==2;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("getId()<2") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return candidate.getId()<2;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("getId()>2") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.getId()>2;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("getId()<=2") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.getId()<=2;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("getId()>=2") {
 			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return candidate.getId()>=2;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("getName().eq(CSTR)") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.getName().equals(CSTR);
 			}
 		},
 		// negation
-		new ExpectingPredicate() {
+		new ExpectingPredicate("!(id==1)") {
 			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return !(candidate.id==1);
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("!(getId()>2)") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return !(candidate.getId()>2);
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("!getName().eq(CSTR)") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return !(candidate.getName().equals(CSTR));
 			}
 		},
 		// conjunction
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id>1&&getName().eq(CSTR)") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return (candidate.id>1)&&candidate.getName().equals(CSTR);
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id>1&&getId()<=2") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return (candidate.id>1)&&(candidate.getId()<=2);
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id>1&&getId()<1") {
 			public int expected() { return 0;}
 			public boolean match(Data candidate) {
 				return (candidate.id>1)&&(candidate.getId()<1);
 			}
 		},
 		// disjunction
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id==1||getName().eq(CSTR)") {
 			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return (candidate.id==1)||candidate.getName().equals(CSTR);
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id>1||getId()<=2") {
 			public int expected() { return 4;}
 			public boolean match(Data candidate) {
 				return (candidate.id>1)||(candidate.getId()<=2);
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id<=1||getId()>=3") {
 			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return (candidate.id<=1)||(candidate.getId()>=3);
 			}
 		},
 		// nested boolean
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id>=1||getName().eq(CSTR)&&getId()<3") {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return ((candidate.id>=1)||candidate.getName().equals(CSTR))&&candidate.getId()<3;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("(id==2||getId()<=1)&&!(getName().eq(BSTR))") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return ((candidate.id==2)||candidate.getId()<=1)&&!candidate.getName().equals(BSTR);
 			}
 		},
 		// predicate member comparison
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id>=P.id") {
 			private int id=2;
 			
 			public int expected() { return 3;}
@@ -397,7 +404,7 @@ public class NQRegressionTests {
 				return candidate.id>=id;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("getName().eq(P.name)") {
 			private String name=BSTR;
 			
 			public int expected() { return 1;}
@@ -406,7 +413,7 @@ public class NQRegressionTests {
 			}
 		},
 		// arithmetic
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id>=P.id+1") {
 			private int id=2;
 			
 			public int expected() { return 2;}
@@ -414,7 +421,7 @@ public class NQRegressionTests {
 				return candidate.id>=id+1;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("id>=P.calc()") {
 			private int factor=2;
 			
 			private int calc() {
@@ -426,7 +433,7 @@ public class NQRegressionTests {
 				return candidate.id>=calc();
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("getValue()==P.calc()") {
 			private float predFactor=2.0f;
 			
 			private float calc() {
@@ -439,13 +446,13 @@ public class NQRegressionTests {
 			}
 		},
 		// force extent
-		new ExpectingPredicate(Data.class) {
+		new ExpectingPredicate("force extent",Data.class) {
 			public int expected() { return 1;}
 			public boolean match(Object candidate) {
 				return ((Data)candidate).getId()==1;
 			}
 		},
-		new ExpectingPredicate() {
+		new ExpectingPredicate("INTWRAPPER.eq(iwrap)") {
 			public int expected() { return 1;}
 			public boolean match(Data candidate) {
 				return NQRegressionTests.INTWRAPPER.equals(candidate.idWrap);
@@ -524,12 +531,12 @@ public class NQRegressionTests {
 			Constructor constr=null;
 			Object[] args=null;
 			try {
-				constr=filterClass.getDeclaredConstructor(new Class[]{});
-				args=new Object[0];
+				constr=filterClass.getDeclaredConstructor(new Class[]{String.class});
+				args=new Object[]{filterClass.getName()};
 			}
 			catch(NoSuchMethodException exc) {
-				constr=filterClass.getDeclaredConstructor(new Class[]{Class.class});
-				args=new Object[]{Data.class};
+				constr=filterClass.getDeclaredConstructor(new Class[]{String.class,Class.class});
+				args=new Object[]{filterClass.getName(),Data.class};
 			}
 			constr.setAccessible(true);
 			Predicate predicate=(Predicate)constr.newInstance(args);

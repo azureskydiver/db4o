@@ -3,7 +3,7 @@ package com.db4o.nativequery.optimization;
 import java.lang.reflect.*;
 
 import com.db4o.*;
-import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.field.*;
@@ -41,7 +41,7 @@ public class SODAQueryBuilder {
 
 		public void visit(ComparisonExpression expression) {
 			Query subQuery=_query;
-			Iterator4 fieldNames = expression.left().fieldNames();
+			Iterator4 fieldNames = fieldNames(expression.left());
 			while(fieldNames.hasNext()) {
 				subQuery=subQuery.descend((String)fieldNames.next());
 			}
@@ -52,7 +52,14 @@ public class SODAQueryBuilder {
 				}
 
 				public void visit(FieldValue operand) {
-					value[0]=findValue(operand);
+					operand.parent().accept(this);
+					Class clazz=((operand.parent() instanceof StaticFieldRoot) ? (Class)value[0] : value[0].getClass());
+					try {
+						Field field=fieldFor(clazz,operand.fieldName());
+						value[0]=field.get(value[0]); // arg is ignored for static
+					} catch (Exception exc) {
+						exc.printStackTrace();
+					}
 				}
 
 				private Object add(Object a,Object b) {
@@ -129,18 +136,26 @@ public class SODAQueryBuilder {
 				}
 
 				public void visit(CandidateFieldRoot root) {
-					// TODO Auto-generated method stub
-					
 				}
 
 				public void visit(PredicateFieldRoot root) {
-					// TODO Auto-generated method stub
-					
+					value[0]=_predicate;
 				}
 
 				public void visit(StaticFieldRoot root) {
-					// TODO Auto-generated method stub
-					
+					try {
+						value[0]=Class.forName(root.className());
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+
+				public void visit(ArrayAccessValue operand) {
+					operand.parent().accept(this);
+					Object parent=value[0];
+					operand.index().accept(this);
+					Integer index=(Integer)value[0];
+					value[0]=Array.get(parent, index.intValue());
 				}
 			});
 			_constraint=subQuery.constrain(value[0]);
@@ -180,46 +195,22 @@ public class SODAQueryBuilder {
 			return null;
 		}
 		
-		private Object findValue(FieldValue spec) {
-			if(spec.root() instanceof StaticFieldRoot) {
-				StaticFieldRoot root=(StaticFieldRoot)spec.root();
-				try {
-					Class clazz=Class.forName(root.className());
-					// FIXME need declared for private fields
-					Field field=fieldFor(clazz,(String)spec.fieldNames().next());
-					return field.get(null);
-				} catch (Exception exc) {
-					throw new RuntimeException("Unable to resolve static field: "+spec);
-				}
-			}
-			Object value=_predicate;
-			Iterator4 fieldNames=spec.fieldNames();
-			while(fieldNames.hasNext()) {
-                String fieldName = (String)fieldNames.next();
-                Class clazz = value.getClass();
-                while(clazz != null){
-                    try{
-                        Field field=clazz.getDeclaredField(fieldName);
-                        Platform4.setAccessible(field);
-                        value=field.get(value);
-                        return value;
-                    }catch(Exception e){
-                        // e.printStackTrace();
-                    }
-                    clazz = clazz.getSuperclass();
-                    if(clazz == YapConst.CLASS_OBJECT){
-                        return null;
-                    }
-                }
-			}
-			return value;
-		}
-		
 		public void visit(NotExpression expression) {
 			expression.expr().accept(this);
 			_constraint.not();
 		}
 
+	}
+	
+	private static Iterator4 fieldNames(FieldValue fieldValue) {
+		Collection4 coll=new Collection4();
+		ComparisonOperand curOp=fieldValue;
+		while(curOp instanceof FieldValue) {
+			FieldValue curField=(FieldValue)curOp;
+			coll.add(curField.fieldName());
+			curOp=curField.parent();
+		}
+		return coll.iterator();
 	}
 	
 	public void optimizeQuery(Expression expr, Query query, Object predicate) {

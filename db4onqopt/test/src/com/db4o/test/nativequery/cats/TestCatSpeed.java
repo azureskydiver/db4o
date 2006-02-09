@@ -13,7 +13,7 @@ import com.db4o.query.*;
 public class TestCatSpeed {
     
 	private final static String FILENAME="catspeed.yap";
-    private final static int[] COUNT = {10000};
+    private final static int[] COUNT = {50000};
     // private final static int[] COUNT = {10000,100000};
 	private static final int NUMRUNS = 5;
     
@@ -103,6 +103,14 @@ public class TestCatSpeed {
                 Constraint c2 = qf.constrain(new Integer(200)).greater().and(qf.constrain(new Integer(300)).smaller());
                 Constraint c3 = qf.constrain(new Integer(400)).smaller().and(q.descend("_firstName").constrain("SpeedyClone150"));
                 c1.or(c2).or(c3);
+            }
+		},
+		new SodaCatPredicate() {
+            public boolean match(Cat cat){
+                return cat.getFirstName().endsWith("0");
+            }
+            public void constrain(Query q) {
+                q.descend("_firstName").constrain("0").endsWith(true);
             }
 		}
 	};

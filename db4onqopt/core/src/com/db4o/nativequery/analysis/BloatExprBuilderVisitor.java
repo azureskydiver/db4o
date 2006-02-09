@@ -82,11 +82,13 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	private BloatUtil bloatUtil;
 
 	private LinkedList methodStack=new LinkedList();
+	private LinkedList localStack=new LinkedList();
 	private int retCount=0;
 	private int blockCount=0;
 	
 	public BloatExprBuilderVisitor(BloatUtil bloatUtil) {
 		this.bloatUtil=bloatUtil;
+		localStack.addLast(new ComparisonOperand[]{PredicateFieldRoot.INSTANCE,CandidateFieldRoot.INSTANCE});
 	}
 	
 	private Object purgeReturnValue() {
@@ -250,38 +252,49 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		methodStack.addLast(methodRef);
 		try {
-			Object rcvRetval=null;
+			ComparisonOperand rcvRetval=null;
 			if(!isStatic) {
 				((CallMethodExpr)expr).receiver().visit(this);
-				rcvRetval=purgeReturnValue();
+				rcvRetval=(ComparisonOperand)purgeReturnValue();
 			}
+			List params=new ArrayList(expr.params().length+1);
+			params.add(rcvRetval);
+			for(int idx=0;idx<expr.params().length;idx++) {
+				expr.params()[idx].visit(this);
+				ComparisonOperand curparam=(ComparisonOperand)purgeReturnValue();
+				params.add(curparam);
+			}
+			localStack.addLast(params.toArray(new ComparisonOperand[params.size()]));
 			FlowGraph flowGraph=bloatUtil.flowGraph(methodRef.declaringClass().className(),methodRef.name());
 			if(flowGraph==null) {
 				return;
 			}
 			flowGraph.visit(this);
 			Object methodRetval=purgeReturnValue();
-			if(methodRetval instanceof FieldValue) {
-				FieldValue methField=(FieldValue)methodRetval;
-				if(rcvRetval instanceof FieldValue) {
-					FieldValue rcvField=(FieldValue)rcvRetval;
-					for(Iterator4 nameIter=methField.fieldNames();nameIter.hasNext();) {
-						rcvField=rcvField.descend((String)nameIter.next());
-					}
-					retval(rcvField);
-				}
-				else {
-					retval(new FieldValue(CandidateFieldRoot.INSTANCE,((FieldValue)methodRetval).fieldNames()));
-//					retval(methodRetval);
-				}
-			}
-			else {
-				retval(methodRetval);
-			}
+			// FIXME
+			retval(methodRetval);
+//			if(methodRetval instanceof FieldValue) {
+//				FieldValue methField=(FieldValue)methodRetval;
+//				if(rcvRetval instanceof FieldValue) {
+//					FieldValue rcvField=(FieldValue)rcvRetval;
+//					for(Iterator4 nameIter=methField.fieldNames();nameIter.hasNext();) {
+//						rcvField=rcvField.descend((String)nameIter.next());
+//					}
+//					retval(rcvField);
+//				}
+//				else {
+//					retval(new FieldValue(CandidateFieldRoot.INSTANCE,((FieldValue)methodRetval).fieldNames()));
+////					retval(methodRetval);
+//				}
+//			}
+//			else {
+//				retval(methodRetval);
+//			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		finally {
+			localStack.removeLast();
 			Object last=methodStack.removeLast();
 			if(!last.equals(methodRef)) {
 				throw new RuntimeException("method stack inconsistent: push="+methodRef+" , pop="+last);
@@ -319,7 +332,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	private boolean isCandidateFieldValue(ComparisonOperand op) {
-		return (op instanceof FieldValue)&&((FieldValue)op).root()==CandidateFieldRoot.INSTANCE;
+		return((op instanceof FieldValue)&&((FieldValue)op).root()==CandidateFieldRoot.INSTANCE);
 	}
 	
 	private boolean isComparableExprOperand(Expr expr) {
@@ -328,31 +341,31 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	public void visitFieldExpr(FieldExpr expr) {
 		expr.object().visit(this);	
-		Object fieldObj=retval;
+		Object fieldObj=purgeReturnValue();
 		String fieldName=expr.field().name();
-		if(fieldObj instanceof FieldValue) {
-			retval(((FieldValue)fieldObj).descend(fieldName));
+		if(fieldObj instanceof ComparisonOperand) {
+			retval(new FieldValue((ComparisonOperand)fieldObj,fieldName));
 			return;
 		}
-		if(!(fieldObj instanceof Integer)) {
-			expression(null);
-			return;
-		}
-		int idx=((Integer)fieldObj).intValue();
-		ComparisonOperand root=null;
-		switch(idx) {
-			case 0:
-				root=PredicateFieldRoot.INSTANCE;
-				break;
-			case 1:
-				root=CandidateFieldRoot.INSTANCE;
-				break;
-			default:
-		}
-		if(root==null) {
-			return;
-		}
-		retval(new FieldValue(root,fieldName));
+//		if(!(fieldObj instanceof Integer)) {
+//			expression(null);
+//			return;
+//		}
+//		int idx=((Integer)fieldObj).intValue();
+//		ComparisonOperand root=null;
+//		switch(idx) {
+//			case 0:
+//				root=PredicateFieldRoot.INSTANCE;
+//				break;
+//			case 1:
+//				root=CandidateFieldRoot.INSTANCE;
+//				break;
+//			default:
+//		}
+//		if(root==null) {
+//			return;
+//		}
+//		retval(new FieldValue(root,fieldName));
 	}
 
 	public void visitStaticFieldExpr(StaticFieldExpr expr) {
@@ -367,7 +380,12 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	public void visitLocalExpr(LocalExpr expr) {
 		super.visitLocalExpr(expr);
-		retval(new Integer(expr.index()));
+		ComparisonOperand[] locals=(ComparisonOperand[])localStack.getLast();
+		if(expr.index()>=locals.length) {
+			retval(null);
+			return;
+		}
+		retval(locals[expr.index()]);
 	}
 	
 	public void visitBlock(Block block) {
@@ -404,8 +422,6 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			case ArithExpr.CMP:
 			case ArithExpr.CMPG:
 			case ArithExpr.CMPL:
-				// XXX
-				// FIXME duplication?
 				boolean swapped=false;
 				if((left instanceof ComparisonOperand)&&(right instanceof FieldValue)) {
 					FieldValue rightField=(FieldValue)right;
@@ -426,7 +442,14 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	public void visitArrayRefExpr(ArrayRefExpr expr) {
-		retval(null);
+		expr.array().visit(this);
+		ComparisonOperand arrayOp=(ComparisonOperand)purgeReturnValue();
+		expr.index().visit(this);
+		ComparisonOperand idxOp=(ComparisonOperand)purgeReturnValue();
+		if(arrayOp==null||idxOp==null) {
+			retval(null);
+		}
+		retval(new ArrayAccessValue(arrayOp,idxOp));
 	}
 	
 	public void visitReturnExprStmt(ReturnExprStmt stat) {
