@@ -257,7 +257,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		Hibernate.initialize(object);
 	}
 
-	public final ReplicationReference produceReference(Object obj, ReplicationReference referencingObjRef, String fieldName) {
+	public final ReplicationReference produceReference(Object obj, Object referencingObj, String fieldName) {
 		//System.out.println("produceReference. =  obj = " + obj);
 
 		ReplicationReference existing = getCachedReference(obj);
@@ -267,10 +267,19 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		if (existing != null) return existing;
 
 		if (_collectionHandler.canHandle(obj))
-			//TODO if referencingObjRef exists in cache, create ref for collection.
-			return getCachedReference(obj);
+			return produceCollectionReference(obj, referencingObj, fieldName);
 		else
 			return produceObjectReference(obj);
+	}
+
+	private ReplicationReference produceCollectionReference(Object obj, Object referencingObj, String fieldName) {
+		final ReplicationReference refObjRef = produceReference(referencingObj, null, null);
+
+		if (refObjRef == null) {
+			return null;
+		} else {
+			return createRefForCollection(obj, refObjRef, fieldName, generateUuidLongPartSeqNo(), currentVersion);
+		}
 	}
 
 	private ReplicationReference produceObjectReference(Object obj) {
@@ -330,20 +339,24 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	private ReplicationReference referenceClonedCollection(Object obj, ReplicationReference counterpartReference, ReplicationReference referencingObjRef, String fieldName) {
-		return createRefForCollection(obj, counterpartReference, referencingObjRef, fieldName);
+		return createRefForCollection(obj, referencingObjRef, fieldName, counterpartReference.uuid().getLongPart(), counterpartReference.version());
 	}
 
-	private ReplicationReference createRefForCollection(Object obj, ReplicationReference counterpartReference, ReplicationReference referencingObjRef, String fieldName) {
+	private ReplicationReference createRefForCollection(Object obj, ReplicationReference referencingObjRef, String fieldName, long uuidLong, long version) {
+		final byte[] signaturePart = referencingObjRef.uuid().getSignaturePart();
+
 		ReplicationComponentField rcf = produceReplicationComponentField(referencingObjRef.object().getClass().getName(), fieldName);
 		ReplicationComponentIdentity rci = new ReplicationComponentIdentity();
 
 		rci.setReferencingObjectField(rcf);
 		rci.setReferencingObjectUuidLongPart(referencingObjRef.uuid().getLongPart());
-		rci.setProvider(getProviderSignature(referencingObjRef.uuid().getSignaturePart()));
-		rci.setUuidLongPart(counterpartReference.uuid().getLongPart());
+		rci.setProvider(getProviderSignature(signaturePart));
+		rci.setUuidLongPart(uuidLong);
+
+		Db4oUUID uuid = new Db4oUUID(uuidLong, signaturePart);
 
 		_session.save(rci);
-		return createReference(obj, counterpartReference.uuid(), counterpartReference.version());
+		return createReference(obj, uuid, version);
 	}
 
 	private ReplicationComponentField produceReplicationComponentField(String referencingObjectClassName, String referencingObjectFieldName) {

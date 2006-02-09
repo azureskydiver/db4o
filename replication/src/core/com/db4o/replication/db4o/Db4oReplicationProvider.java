@@ -147,7 +147,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		return _referencesByObject.find(obj);
 	}
 
-	public ReplicationReference produceReference(Object obj, ReplicationReference referencingObjRef, String fieldName) {
+	public ReplicationReference produceReference(Object obj, Object unused, String unused2) {
 
 		if (obj == null) {
 			return null;

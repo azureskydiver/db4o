@@ -57,12 +57,12 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	/**
 	 * Returns the ReplicationReference of an object
 	 *
-	 * @param obj               object queried
-	 * @param referencingObjRef
+	 * @param obj            object queried
+	 * @param referencingObj
 	 * @param fieldName
 	 * @return null if the object is not owned by this ReplicationProvider.
 	 */
-	ReplicationReference produceReference(Object obj, ReplicationReference referencingObjRef, String fieldName);
+	ReplicationReference produceReference(Object obj, Object referencingObj, String fieldName);
 
 	/**
 	 * Returns the ReplicationReference of an object by specifying the uuid of the object.
