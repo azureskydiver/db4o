@@ -25,7 +25,9 @@ import java.util.Map;
 
 public class TransientReplicationProvider implements TestableReplicationProvider, TestableReplicationProviderInside {
 
-	private long nextObjectId = 1;
+    private final String _name;
+
+    private long nextObjectId = 1;
 
 	private final Traverser _traverser;
 
@@ -38,8 +40,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	private ReadonlyReplicationProviderSignature _peerSignature;
 
 	private long _lastReplicationVersion;
-	private final String _name;
-
+    private final Collection4 _uuidsReplicatedInThisSession = new Collection4();
 
 	public TransientReplicationProvider(byte[] signature, String name) {
 		_signature = new MySignature(signature);
@@ -71,12 +72,12 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		_peerSignature = peerSignature;
 	}
 
-	public void storeReplicationRecord(long version) {
+	public void syncVersionWithPeer(long version) {
 		_lastReplicationVersion = version;
 	}
 
 	public void commit(long raisedDatabaseVersion) {
-		// do nothing
+        _uuidsReplicatedInThisSession.clear();
 	}
 
 	public void rollbackReplication() {
@@ -116,6 +117,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	private void store(Object obj, Db4oUUID uuid, long version) {
 		if (obj == null) throw new RuntimeException();
 		_storedObjects.put(obj, new ObjectInfo(uuid, version));
+        _uuidsReplicatedInThisSession.add(uuid);
 	}
 
 	public void storeReplica(Object obj) {
@@ -337,4 +339,9 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			_delegate.extendTraversalTo(disconnected);
 		}
 	}
+
+    public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
+        if (_uuidsReplicatedInThisSession.contains(reference.uuid())) return false;
+        return reference.version() > _lastReplicationVersion;
+    }
 }

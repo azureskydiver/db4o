@@ -73,6 +73,8 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint);
 
+    boolean wasChangedSinceLastReplication(ReplicationReference reference);
+
 	/**
 	 * Rollbacks all changes done during the replication session  and terminates the Transaction.
 	 * Guarantees the changes will not be applied to the underlying databases.
@@ -96,7 +98,7 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	void storeReplica(Object obj);
 
 
-	public void storeReplicationRecord(long maxVersion);
+	public void syncVersionWithPeer(long maxVersion);
 
 
 	/**

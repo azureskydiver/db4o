@@ -207,7 +207,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		currentVersion = lastVersion + 1;
 	}
 
-	public void storeReplicationRecord(long version) {
+	public void syncVersionWithPeer(long version) {
 		replicationRecord.setVersion(version);
 		_session.saveOrUpdate(replicationRecord);
 
@@ -436,7 +436,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 	private ReplicationReference produceCollectionReferenceByUUID(Db4oUUID uuid) {
 		Criteria criteria = _session.createCriteria(ReplicationComponentIdentity.class);
-		criteria.add(Restrictions.eq("uuidLongPart", uuid.getLongPart()));
+		criteria.add(Restrictions.eq("uuidLongPart", new Long(uuid.getLongPart())));
 		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getSignaturePart()));
 
 		final List exisitings = criteria.list();
@@ -628,7 +628,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	protected ReplicationRecord getRecord(PeerSignature peerSignature) {
-		Criteria criteria = _session.createCriteria(ReplicationRecord.class).createCriteria("peerSignature").add(Restrictions.eq("id", peerSignature.getId()));
+		Criteria criteria = _session.createCriteria(ReplicationRecord.class).createCriteria("peerSignature").add(Restrictions.eq("id", new Long(peerSignature.getId())));
 
 		final List exisitingRecords = criteria.list();
 		int count = exisitingRecords.size();
@@ -810,4 +810,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 			}
 		}
 	}
+
+    public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
+        throw new RuntimeException("Implement me");
+    }
 }
