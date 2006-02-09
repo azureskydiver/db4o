@@ -102,12 +102,11 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private void copyStateAcross(Object source, Object dest, final ReplicationProviderInside sourceProvider) {
-		final GenericReplicationSession grs = this;
 		ReflectClass claxx = _reflector.forObject(source);
 		if (_collectionHandler.canHandle(claxx)) {
 			_collectionHandler.copyState(source, dest, new CounterpartFinder() {
 				public Object findCounterpart(Object original) {
-					return grs.findCounterpart(original, sourceProvider);
+					return GenericReplicationSession.this.findCounterpart(original, sourceProvider);
 				}
 			});
 			return;
@@ -269,7 +268,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	private Object collectionClone(Object original, ReflectClass claxx, final ReplicationProviderInside sourceProvider) {
 		final GenericReplicationSession grs = this;
-		return _collectionHandler.cloneWithCounterparts(original, claxx, new CounterpartFinder() {
+		return _collectionHandler.cloneWithCounterparts(original, claxx, new CounterpartFinder() { //TODO Optimize: Have a single CounterpartFinder instance. Dont create it all the time.
 			public Object findCounterpart(Object original) {
 				return grs.findCounterpart(original, sourceProvider);
 			}
