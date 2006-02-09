@@ -9,6 +9,7 @@ import com.db4o.test.replication.db4o.Db4oReplicationFeaturesMain;
 import com.db4o.test.replication.db4o.Db4oReplicationProviderTest;
 import com.db4o.test.replication.db4o.Db4oSimpleParentChild;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateSimpleParentChild;
+import com.db4o.test.replication.hibernate.HibernateCollectionTest;
 import com.db4o.test.replication.hibernate.HibernateR0to4Runner;
 import com.db4o.test.replication.hibernate.HibernateReplicationAfterDeletionTest;
 import com.db4o.test.replication.hibernate.HibernateReplicationFeaturesMain;
@@ -31,6 +32,7 @@ public class ReplicationTestSuite extends TestSuite {
 		System.err.println("Overcome absence of constructor in VMs other than Sun's.");
 		System.err.println("Uncommenting the FIXME Db4oReplicationProvider to debug Db4oReplicationProvider");
 		return new Class[]{
+				HibernateCollectionTest.class,
 				HibernateReplicationAfterDeletionTest.class,
 				Db4oReplicationAfterDeletionTest.class,
 

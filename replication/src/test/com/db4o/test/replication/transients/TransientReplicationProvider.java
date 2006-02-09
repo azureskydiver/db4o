@@ -126,7 +126,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		store(obj, ref.uuid(), ref.version());
 	}
 
-	public ReplicationReference produceReference(Object obj, ReplicationReference referencingObjRef, String fieldName) {
+	public ReplicationReference produceReference(Object obj, Object unused, String unused2) {
 
 		ReplicationReference cached = getCachedReference(obj);
 		if (cached != null) return cached;

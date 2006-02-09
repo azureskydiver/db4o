@@ -31,12 +31,6 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	/**
 	 * key = object originated from one provider
-	 * value = the ReplicationReference of the original object
-	 */
-	private final Hashtable4 _originalRefMap = new Hashtable4(10000);
-
-	/**
-	 * key = object originated from one provider
 	 * value = the counterpart ReplicationReference of the original object
 	 */
 	private final Hashtable4 _originalCounterPartRefMap = new Hashtable4(10000);
@@ -136,10 +130,6 @@ public class GenericReplicationSession implements ReplicationSession {
 		destination.storeReplica(reference.counterpart());
 	}
 
-	ReplicationReference getReferencingObjectRef(Object referencingObject) {
-		return (ReplicationReference) _originalRefMap.get(referencingObject);
-	}
-
 	ReplicationReference getReferencingObjectCounterPartRef(Object referencingObject) {
 		return (ReplicationReference) _originalCounterPartRefMap.get(referencingObject);
 	}
@@ -148,9 +138,8 @@ public class GenericReplicationSession implements ReplicationSession {
 		if (_peerA.hasReplicationReferenceAlready(obj)) return false;
 		if (_peerB.hasReplicationReferenceAlready(obj)) return false;
 
-		ReplicationReference referencingObjectRef = getReferencingObjectRef(referencingObject);
-		ReplicationReference refA = _peerA.produceReference(obj, referencingObjectRef, fieldName);
-		ReplicationReference refB = _peerB.produceReference(obj, referencingObjectRef, fieldName);
+		ReplicationReference refA = _peerA.produceReference(obj, referencingObject, fieldName);
+		ReplicationReference refB = _peerB.produceReference(obj, referencingObject, fieldName);
 		if (refA == null && refB == null)
 			throw new RuntimeException("" + obj.getClass() + " " + obj + " must be stored in one of the databases being replicated."); //FIXME: Use db4o's standard for throwing exceptions.
 		if (refA != null && refB != null)
@@ -158,7 +147,6 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		ReplicationProviderInside owner = refA == null ? _peerB : _peerA;
 		ReplicationReference ownerRef = refA == null ? refB : refA;
-		_originalRefMap.put(obj, ownerRef);
 
 		ReplicationProviderInside other = other(owner);
 
