@@ -186,8 +186,9 @@ public class GenericReplicationSession implements ReplicationSession {
 		Object objectA = refA.object();
 		Object objectB = refB.object();
 
-		boolean changedInA = refA.version() > _lastReplicationVersion;
-		boolean changedInB = refB.version() > _lastReplicationVersion;
+        boolean changedInA = _peerA.wasChangedSinceLastReplication(refA);
+        boolean changedInB = _peerB.wasChangedSinceLastReplication(refB);
+        
 		if (!changedInA && !changedInB) return false;
 
 		boolean conflict = false;
@@ -263,7 +264,10 @@ public class GenericReplicationSession implements ReplicationSession {
 		if (claxx.isSecondClass()) return value;
 
 		//TODO supports collection here
-		return sourceProvider.produceReference(value, null, null).counterpart();
+		Object result = sourceProvider.produceReference(value, null, null).counterpart();
+        if (result == null)
+            throw new RuntimeException();
+        return result;
 	}
 
 	private Object collectionClone(Object original, ReflectClass claxx, final ReplicationProviderInside sourceProvider) {
@@ -334,8 +338,8 @@ public class GenericReplicationSession implements ReplicationSession {
 				long maxVersion = _peerA.getCurrentVersion() > _peerB.getCurrentVersion()
 						? _peerA.getCurrentVersion() : _peerB.getCurrentVersion();
 
-				_peerA.storeReplicationRecord(maxVersion);
-				_peerB.storeReplicationRecord(maxVersion);
+				_peerA.syncVersionWithPeer(maxVersion);
+				_peerB.syncVersionWithPeer(maxVersion);
 
 				maxVersion ++;
 
