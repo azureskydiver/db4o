@@ -107,7 +107,7 @@ public class SODABloatMethodBuilder {
 					}
 				}
 
-				private Class deduceFieldClass(ComparisonOperand fieldValue) throws Exception {
+				private Class deduceFieldClass(ComparisonOperand fieldValue) {
 					TypeDeducingVisitor visitor=new TypeDeducingVisitor(predicateClass,candidateClass);
 					fieldValue.accept(visitor);
 					return visitor.operandClass();
@@ -263,14 +263,28 @@ public class SODABloatMethodBuilder {
 				}
 
 				public void visit(ArrayAccessValue operand) {
-					prepareConversion(Integer.TYPE, true);
+					Class cmpType=deduceFieldClass(operand.parent()).getComponentType();
+					prepareConversion(cmpType, !inArithmetic);
 					operand.parent().accept(this);
 					boolean outerInArithmetic=inArithmetic;
 					inArithmetic=true;
 					operand.index().accept(this);
-					methodEditor.addInstruction(Opcode.opc_iaload);
-					applyConversion(Integer.TYPE, true);
 					inArithmetic=outerInArithmetic;
+					int opcode=Opcode.opc_aaload;
+					if(cmpType==Integer.TYPE) {
+						opcode=Opcode.opc_iaload;
+					}
+					if(cmpType==Long.TYPE) {
+						opcode=Opcode.opc_laload;
+					}
+					if(cmpType==Float.TYPE) {
+						opcode=Opcode.opc_faload;
+					}
+					if(cmpType==Double.TYPE) {
+						opcode=Opcode.opc_daload;
+					}
+					methodEditor.addInstruction(opcode);
+					applyConversion(cmpType, !inArithmetic);
 				}
 			});
 			methodEditor.addInstruction(Opcode.opc_invokeinterface,constrainRef);
