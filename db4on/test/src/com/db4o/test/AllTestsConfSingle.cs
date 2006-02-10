@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.IO;
+using com.db4o.test.acid;
 using com.db4o.test.cs;
 using com.db4o.test.j4otest;
 using com.db4o.test.nativequeries;
@@ -26,6 +27,7 @@ namespace com.db4o.test
 				ArrayList tests = new ArrayList();
 
                 tests.Add(typeof(SimplestPossible));
+				tests.Add(typeof(CrashSimulatingTest));
                 tests.Add(typeof(com.db4o.test.nativequeries.Cat));
                 tests.Add(typeof(com.db4o.test.nativequeries.NativeQueriesTestCase));
                 tests.Add(typeof(com.db4o.test.nativequeries.NQRegressionTests));
