@@ -271,25 +271,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			}
 			flowGraph.visit(this);
 			Object methodRetval=purgeReturnValue();
-			// FIXME
 			retval(methodRetval);
-//			if(methodRetval instanceof FieldValue) {
-//				FieldValue methField=(FieldValue)methodRetval;
-//				if(rcvRetval instanceof FieldValue) {
-//					FieldValue rcvField=(FieldValue)rcvRetval;
-//					for(Iterator4 nameIter=methField.fieldNames();nameIter.hasNext();) {
-//						rcvField=rcvField.descend((String)nameIter.next());
-//					}
-//					retval(rcvField);
-//				}
-//				else {
-//					retval(new FieldValue(CandidateFieldRoot.INSTANCE,((FieldValue)methodRetval).fieldNames()));
-////					retval(methodRetval);
-//				}
-//			}
-//			else {
-//				retval(methodRetval);
-//			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -347,25 +329,6 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			retval(new FieldValue((ComparisonOperand)fieldObj,fieldName));
 			return;
 		}
-//		if(!(fieldObj instanceof Integer)) {
-//			expression(null);
-//			return;
-//		}
-//		int idx=((Integer)fieldObj).intValue();
-//		ComparisonOperand root=null;
-//		switch(idx) {
-//			case 0:
-//				root=PredicateFieldRoot.INSTANCE;
-//				break;
-//			case 1:
-//				root=CandidateFieldRoot.INSTANCE;
-//				break;
-//			default:
-//		}
-//		if(root==null) {
-//			return;
-//		}
-//		retval(new FieldValue(root,fieldName));
 	}
 
 	public void visitStaticFieldExpr(StaticFieldExpr expr) {

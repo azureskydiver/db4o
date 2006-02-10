@@ -200,19 +200,18 @@ public class SODAQueryBuilder {
 			_constraint.not();
 		}
 
-	}
-	
-	private static Iterator4 fieldNames(FieldValue fieldValue) {
-		Collection4 coll=new Collection4();
-		ComparisonOperand curOp=fieldValue;
-		while(curOp instanceof FieldValue) {
-			FieldValue curField=(FieldValue)curOp;
-			coll.add(curField.fieldName());
-			curOp=curField.parent();
+		private Iterator4 fieldNames(FieldValue fieldValue) {
+			Collection4 coll=new Collection4();
+			ComparisonOperand curOp=fieldValue;
+			while(curOp instanceof FieldValue) {
+				FieldValue curField=(FieldValue)curOp;
+				coll.add(curField.fieldName());
+				curOp=curField.parent();
+			}
+			return coll.iterator();
 		}
-		return coll.iterator();
 	}
-	
+		
 	public void optimizeQuery(Expression expr, Query query, Object predicate) {
 		expr.accept(new SODAQueryVisitor(query, predicate));
 	}	

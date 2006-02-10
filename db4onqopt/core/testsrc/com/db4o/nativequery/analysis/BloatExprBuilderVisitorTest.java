@@ -69,6 +69,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	private int intMember=43;
 	private float floatMember=47.11f;
 	private int[] intArrayMember={};
+	private Data[] objArrayMember={};
 
 	private ClassFileLoader loader;
 	private BloatUtil bloatUtil;
@@ -798,6 +799,14 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	public void testIntArrayAccess() throws Exception {
 		assertComparison("sampleIntArrayAccess","id",new ArrayAccessValue(new FieldValue(PredicateFieldRoot.INSTANCE,"intArrayMember"),new ConstValue(new Integer(0))),ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleObjectArrayAccess(Data data) {
+		return data.next.id==objArrayMember[0].id;
+	}
+
+	public void testObjectArrayAccess() throws Exception {
+		assertComparison("sampleObjectArrayAccess",new String[]{"next","id"},new FieldValue(new ArrayAccessValue(new FieldValue(PredicateFieldRoot.INSTANCE,"objArrayMember"),new ConstValue(new Integer(0))),"id"),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleCandidateIntArrayAccess(Data data) {
