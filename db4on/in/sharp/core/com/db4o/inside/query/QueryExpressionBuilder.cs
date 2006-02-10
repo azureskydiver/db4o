@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-
+using com.db4o.nativequery.expr.cmp.field;
 using Mono.Cecil;
 using Cecil.FlowAnalysis;
 using Cecil.FlowAnalysis.ActionFlow;
@@ -362,8 +362,7 @@ namespace com.db4o.inside.query
 			{
 				FieldValue value = o as FieldValue;
 				if (value == null) return false;
-				// parentIdx() == 1 means candidate
-				return value.parentIdx() == 1;
+				return value.root() is CandidateFieldRoot;
 			}
 
 			public override void Visit(IMethodInvocationExpression node)
@@ -552,8 +551,8 @@ namespace com.db4o.inside.query
 				switch (target.CodeElementType)
 				{
 					case CodeElementType.ArgumentReferenceExpression:
-						IArgumentReferenceExpression arg = (IArgumentReferenceExpression)target;
-						Push(new FieldValue(arg.Parameter.Sequence, node.Field.Name));
+						//IArgumentReferenceExpression arg = (IArgumentReferenceExpression)target;
+						Push(new FieldValue(CandidateFieldRoot.INSTANCE, node.Field.Name));
 						break;
 						
 					case CodeElementType.ThisReferenceExpression:
@@ -562,25 +561,23 @@ namespace com.db4o.inside.query
 							if (_current != null)
 							{
 								FieldValue current = PopFieldValue(node);
-								current.descend(node.Field.Name);
-								Push(current);
+								Push(new FieldValue(current, node.Field.Name));
 							}
 							else
 							{
-								Push(new FieldValue(1, node.Field.Name));
+								Push(new FieldValue(CandidateFieldRoot.INSTANCE, node.Field.Name));
 							}
 						}
 						else
 						{
-							Push(new FieldValue(0, node.Field.Name));
+							Push(new FieldValue(PredicateFieldRoot.INSTANCE, node.Field.Name));
 						}
 						break;
 
 					case CodeElementType.MethodInvocationExpression:
 					case CodeElementType.FieldReferenceExpression:
 						FieldValue value = ToFieldValue(target);
-						value.descend(node.Field.Name);
-						Push(value);
+						Push(new FieldValue(value, node.Field.Name));
 						break;
 
 					default:

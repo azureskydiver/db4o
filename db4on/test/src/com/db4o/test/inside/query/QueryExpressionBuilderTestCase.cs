@@ -1,5 +1,6 @@
 using System;
 using com.db4o.inside.query;
+using com.db4o.nativequery.expr.cmp.field;
 using com.db4o.test.nativequeries;
 
 namespace com.db4o.test.inside.query
@@ -15,8 +16,8 @@ namespace com.db4o.test.inside.query
 			Expression expression = ExpressionFromPredicate(typeof(NameEqualsTo));
 			Tester.ensureEquals(
 				new ComparisonExpression(
-				new FieldValue(1, "name"),
-				new FieldValue(0, "_name"),
+				new FieldValue(CandidateFieldRoot.INSTANCE, "name"),
+				new FieldValue(PredicateFieldRoot.INSTANCE, "_name"),
 				ComparisonOperator.EQUALS),
 				expression);
 		}
@@ -29,12 +30,14 @@ namespace com.db4o.test.inside.query
 				new AndExpression(
 				new NotExpression(
 				new ComparisonExpression(
-				new FieldValue(1, "previous"), 
+				new FieldValue(CandidateFieldRoot.INSTANCE, "previous"), 
 				new ConstValue(null),
 				ComparisonOperator.EQUALS)),
 				new NotExpression(
 				new ComparisonExpression(
-				new FieldValue(1, new string[] { "previous", "previous" }),
+				new FieldValue(
+					new FieldValue(CandidateFieldRoot.INSTANCE, "previous"),
+					"previous"),
 				new ConstValue(null),
 				ComparisonOperator.EQUALS)));
 
