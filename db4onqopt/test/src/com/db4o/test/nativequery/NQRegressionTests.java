@@ -16,7 +16,6 @@ public class NQRegressionTests {
 	private static final String ASTR = "Aa";
 	public final static Integer INTWRAPPER=new Integer(1);
 	private final static Integer PRIVATE_INTWRAPPER=new Integer(1);
-	private int[] INTARRAY={0,1,2,3,4};
 	
 	private static abstract class Base {
 		int id;
@@ -466,6 +465,14 @@ public class NQRegressionTests {
 			public int expected() { return 2;}
 			public boolean match(Data candidate) {
 				return candidate.id==data[3];
+			}
+		},
+		new ExpectingPredicate("prev==P.data[3]") {
+			private Data[] data={null,null,null,null};
+			
+			public int expected() { return 2;}
+			public boolean match(Data candidate) {
+				return candidate.prev==data[3];
 			}
 		},
 		// Problem: We never get to see a static field access here - non-static inner class
