@@ -32,13 +32,11 @@ public class SODABloatMethodBuilder {
 	private Map conversions;
 
 	private class SODABloatMethodVisitor implements ExpressionVisitor {
-		private ClassLoader classLoader;
 		private Class predicateClass;
 		private Class candidateClass;
 		
 		public SODABloatMethodVisitor(Class predicateClass, ClassLoader classLoader) {
 			this.predicateClass=predicateClass;
-			this.classLoader=classLoader;
 		}
 		
 		public void visit(AndExpression expression) {
@@ -68,6 +66,7 @@ public class SODABloatMethodBuilder {
 			expression.right().accept(new ComparisonOperandVisitor() {
 				private boolean inArithmetic=false;
 				private Class opClass=null;
+				private Class staticRoot=null;
 				
 				public void visit(ConstValue operand) {
 					Object value = operand.value();
@@ -85,66 +84,33 @@ public class SODABloatMethodBuilder {
 				public void visit(FieldValue fieldValue) {
 					try {
 						Class lastFieldClass = deduceFieldClass(fieldValue);
+						Class parentClass=deduceFieldClass(fieldValue.parent());
 						boolean needConversion=lastFieldClass.isPrimitive();
 						if(needConversion) {
 							prepareConversion(lastFieldClass,!inArithmetic);
 						}
 						
-						if(fieldValue.root()==PredicateFieldRoot.INSTANCE) {
-							methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(0));
-						}
-						else if (fieldValue.root()==CandidateFieldRoot.INSTANCE) {
-							methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(1));
-						}
-						else {
-							StaticFieldRoot root=(StaticFieldRoot)fieldValue.root();
-							// FIXME handle chaining
-							methodEditor.addInstruction(Opcode.opc_getstatic,createFieldReference(Class.forName(root.className()), lastFieldClass, (String)fieldNames(fieldValue).next()));
+						fieldValue.parent().accept(this);
+						if(staticRoot!=null) {
+							methodEditor.addInstruction(Opcode.opc_getstatic,createFieldReference(staticRoot, lastFieldClass,fieldValue.fieldName()));
+							staticRoot=null;
 							return;
 						}
-						opClass=lastFieldClass;
-
-						Iterator4 targetFieldNames =fieldNames(fieldValue);
-						Class curClass=predicateClass;
-						while(targetFieldNames.hasNext()) {
-							String fieldName=(String)targetFieldNames.next();
-							Class fieldClass=fieldClass(curClass,fieldName);
-							MemberRef fieldRef=createFieldReference(curClass,fieldClass,fieldName);
-							methodEditor.addInstruction(Opcode.opc_getfield,fieldRef);
-							curClass=fieldClass;
-						}
-						
+						MemberRef fieldRef=createFieldReference(parentClass,lastFieldClass,fieldValue.fieldName());
+						methodEditor.addInstruction(Opcode.opc_getfield,fieldRef);
 						
 						if(needConversion) {
-							applyConversion(opClass,!inArithmetic);
+							applyConversion(lastFieldClass,!inArithmetic);
 						}
 					} catch (Exception exc) {
 						throw new RuntimeException(exc.getMessage());
 					}
 				}
 
-//				private Class fieldType(FieldValue fieldValue) throws NoSuchFieldException {
-//					Iterator4 targetFieldNames2 =fieldValue.fieldNames();
-//					Class curClass2=predicateClass;
-//					while(targetFieldNames2.hasNext()) {
-//						String fieldName=(String)targetFieldNames2.next();
-//						Class fieldClass=fieldClass(curClass2,fieldName);
-//						curClass2=fieldClass;
-//					}
-//					return curClass2;
-//				}
-
-				private Class deduceFieldClass(FieldValue fieldValue) throws Exception {
-					FieldRootClassNameVisitor visitor=new FieldRootClassNameVisitor(predicateClass,candidateClass);
-					fieldValue.root().accept(visitor);
-					Class curClass=classLoader.loadClass(visitor.className());
-					Iterator4 fieldIter=fieldNames(fieldValue);
-					while(fieldIter.hasNext()) {
-						String fieldName=(String)fieldIter.next();
-						Field curField=curClass.getDeclaredField(fieldName);
-						curClass=curField.getType();
-					}
-					return curClass;
+				private Class deduceFieldClass(ComparisonOperand fieldValue) throws Exception {
+					TypeDeducingVisitor visitor=new TypeDeducingVisitor(predicateClass,candidateClass);
+					fieldValue.accept(visitor);
+					return visitor.operandClass();
 				}
 
 				private Class arithmeticType(ComparisonOperand operand) {
@@ -281,23 +247,30 @@ public class SODABloatMethodBuilder {
 				}
 
 				public void visit(CandidateFieldRoot root) {
-					// TODO Auto-generated method stub
-					
+					methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(1));
 				}
 
 				public void visit(PredicateFieldRoot root) {
-					// TODO Auto-generated method stub
-					
+					methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(0));
 				}
 
 				public void visit(StaticFieldRoot root) {
-					// TODO Auto-generated method stub
-					
+					try {
+						staticRoot=Class.forName(root.className());
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+					}
 				}
 
 				public void visit(ArrayAccessValue operand) {
-					// FIXME Auto-generated method stub
-					
+					prepareConversion(Integer.TYPE, true);
+					operand.parent().accept(this);
+					boolean outerInArithmetic=inArithmetic;
+					inArithmetic=true;
+					operand.index().accept(this);
+					methodEditor.addInstruction(Opcode.opc_iaload);
+					applyConversion(Integer.TYPE, true);
+					inArithmetic=outerInArithmetic;
 				}
 			});
 			methodEditor.addInstruction(Opcode.opc_invokeinterface,constrainRef);
@@ -357,6 +330,7 @@ public class SODABloatMethodBuilder {
 			methodEditor.addLabel(new Label(1,false));
 			methodEditor.addInstruction(Opcode.opc_return);
 			methodEditor.addLabel(new Label(2,true));
+			//methodEditor.print(System.out);
 			return methodEditor;
 		} catch (ClassNotFoundException exc) {
 			throw new RuntimeException(exc.getMessage());
@@ -409,48 +383,66 @@ public class SODABloatMethodBuilder {
 		return Type.getType(clazz);
 	}
 	
-	private Class fieldClass(Class parent, String name) throws NoSuchFieldException {
-		return parent.getDeclaredField(name).getType();
-	}
-	
-	private static class FieldRootClassNameVisitor implements ComparisonOperandVisitor {
+	private static class TypeDeducingVisitor implements ComparisonOperandVisitor {
 		private Class _predicateClass;
 		private Class _candidateClass;
-		private String _className;
+		private Class _clazz;
 		
-		public FieldRootClassNameVisitor(Class predicateClass, Class candidateClass) {
+		public TypeDeducingVisitor(Class predicateClass, Class candidateClass) {
 			this._predicateClass = predicateClass;
 			this._candidateClass = candidateClass;
+			_clazz=null;
 		}
 
 		public void visit(PredicateFieldRoot root) {
-			_className=_predicateClass.getName();
+			_clazz=_predicateClass;
 		}
 
 		public void visit(CandidateFieldRoot root) {
-			_className=_candidateClass.getName();
+			_clazz=_candidateClass;
 		}
 
 		public void visit(StaticFieldRoot root) {
-			_className=root.className();
+			try {
+				_clazz=Class.forName(root.className());
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
 		
-		public String className() {
-			return _className;
+		public Class operandClass() {
+			return _clazz;
 		}
 
 		public void visit(ArithmeticExpression operand) {
 		}
 
 		public void visit(ConstValue operand) {
+			_clazz=operand.value().getClass();
 		}
 
 		public void visit(FieldValue operand) {
+			operand.parent().accept(this);
+			try {
+				_clazz=fieldFor(_clazz,operand.fieldName()).getType();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		public void visit(ArrayAccessValue operand) {
-			// FIXME Auto-generated method stub
-			
+			operand.parent().accept(this);
+			_clazz=_clazz.getComponentType();
+		}
+		
+		private Field fieldFor(Class clazz,String fieldName) {
+			while(clazz!=null) {
+				try {
+					return clazz.getDeclaredField(fieldName);
+				} catch (Exception e) {
+				}
+			}
+			return null;
 		}
 	}
 }

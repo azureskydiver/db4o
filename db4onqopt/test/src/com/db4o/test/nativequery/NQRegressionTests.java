@@ -16,6 +16,7 @@ public class NQRegressionTests {
 	private static final String ASTR = "Aa";
 	public final static Integer INTWRAPPER=new Integer(1);
 	private final static Integer PRIVATE_INTWRAPPER=new Integer(1);
+	private int[] INTARRAY={0,1,2,3,4};
 	
 	private static abstract class Base {
 		int id;
@@ -97,7 +98,7 @@ public class NQRegressionTests {
 		}
 	}
 	
-	private static ExpectingPredicate[] PREDICATES={
+	private static ExpectingPredicate[] _PREDICATES={
 		// unconditional/untyped
 		new ExpectingPredicate("unconditional/untyped") {
 			public int expected() { return 5;}
@@ -458,6 +459,15 @@ public class NQRegressionTests {
 				return NQRegressionTests.INTWRAPPER.equals(candidate.idWrap);
 			}
 		},
+		// array access
+		new ExpectingPredicate("id==P.data[3]") {
+			private int[] data={0,1,2,3,4};
+			
+			public int expected() { return 2;}
+			public boolean match(Data candidate) {
+				return candidate.id==data[3];
+			}
+		},
 		// Problem: We never get to see a static field access here - non-static inner class
 		// stuff converts this to NQRegressionTests#access$0()
 //		new ExpectingPredicate() {
@@ -467,7 +477,19 @@ public class NQRegressionTests {
 //			}
 //		},
 	};
-		
+	
+	private static ExpectingPredicate[] PREDICATES=_PREDICATES;
+//	{
+//		new ExpectingPredicate("id==P.data[3]") {
+//			private int[] data={0,1,2,3,4};
+//			
+//			public int expected() { return 2;}
+//			public boolean match(Data candidate) {
+//				return candidate.id==data[3];
+//			}
+//		},
+//	};
+
 	public void testAll() {
 		for (int predIdx = 0; predIdx < PREDICATES.length; predIdx++) {
 			ExpectingPredicate predicate = PREDICATES[predIdx];
@@ -526,6 +548,7 @@ public class NQRegressionTests {
 
 		db.ext().configure().optimizeNativeQueries(false);
 		try {
+			System.err.println("PREDICATE: "+filter);
 			Db4oEnhancingClassloader loader=new Db4oEnhancingClassloader(getClass().getClassLoader());
 			Class filterClass=loader.loadClass(filter.getClass().getName());
 			Constructor constr=null;
@@ -544,7 +567,7 @@ public class NQRegressionTests {
 			Test.ensureEquals(filter.expected(),preoptimized.size());
 			Test.ensure(raw.equals(preoptimized));
 			Test.ensure(optimized.equals(preoptimized));
-		} catch (Exception exc) {
+		} catch (Throwable exc) {
 			exc.printStackTrace();
 		}
 		
