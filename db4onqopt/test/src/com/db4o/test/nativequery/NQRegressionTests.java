@@ -205,6 +205,18 @@ public class NQRegressionTests {
 				return candidate.name.endsWith("A");
 			}
 		},
+		new ExpectingPredicate("!(name.contains('A'))") {
+			public int expected() { return 3;}
+			public boolean match(Data candidate) {
+				return !candidate.name.contains("A");
+			}
+		},
+		new ExpectingPredicate("!(name.startsWith('C'))") {
+			public int expected() { return 2;}
+			public boolean match(Data candidate) {
+				return !candidate.name.startsWith("C");
+			}
+		},
 		// int field comparison
 		new ExpectingPredicate("id<2") {
 			public int expected() { return 1;}
