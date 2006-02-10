@@ -435,7 +435,7 @@
 			mainclass="com.db4o.test.AllTests"
 			definitions="NET">
 			
-			<exclude name="compact/**" />
+			<exclude name="compact*/**" />
 			
 			<reference dir="${dir.dist.dll.net}">
 				<include name="db4o.dll" />
