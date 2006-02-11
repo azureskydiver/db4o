@@ -115,29 +115,37 @@ public class MetaDataTablesCreator {
 
 	protected void createDb4oColumns(String tableName) {
 		Connection connection = this.connection;
-		Statement st = null;
+		String addcolStr = " " + dialect.getAddColumnString() + " ";
+
+		Statement st;
+
 		try {
 			st = connection.createStatement();
-			String addcolStr = " " + dialect.getAddColumnString() + " ";
-
-			String sql = ALTER_TABLE + tableName + addcolStr
-					+ Db4oColumns.DB4O_UUID_LONG_PART + " " + getBigIntType();
-			st.execute(sql);
-
-			String sql2 = ALTER_TABLE + tableName + addcolStr
-					+ Db4oColumns.DB4O_VERSION + " " + getBigIntType();
-			st.execute(sql2);
-
-			String sql3 = ALTER_TABLE + tableName + addcolStr
-					+ ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + " " + getBigIntType();
-			st.execute(sql3);
-
-			final String addForeignKeyConstraintString = getDb4oSigIdFKConstraintString(tableName);
-			st.execute(addForeignKeyConstraintString);
 		} catch (SQLException e) {
-			throw new RuntimeException(e.getMessage());
-		} finally {
-			Util.closeStatement(st);
+			throw new RuntimeException(e);
+		}
+
+		executeQuery(st, ALTER_TABLE + tableName + addcolStr
+				+ Db4oColumns.DB4O_UUID_LONG_PART + " " + getBigIntType());
+
+		executeQuery(st, ALTER_TABLE + tableName + addcolStr
+				+ Db4oColumns.DB4O_VERSION + " " + getBigIntType());
+
+		executeQuery(st, ALTER_TABLE + tableName + addcolStr
+				+ ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + " " + getBigIntType());
+
+		executeQuery(st, getDb4oSigIdFKConstraintString(tableName));
+
+		Util.closeStatement(st);
+	}
+
+	private void executeQuery(Statement st, String sql) {
+		try {
+			st.execute(sql);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
