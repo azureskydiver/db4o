@@ -63,14 +63,14 @@ public abstract class ReplicationProviderTest extends Test {
 		ReplicationReference reference = subject.produceReferenceByUUID(uuid, object1.getClass());
 		ensure(subject.produceReference(object1, null, null) == reference);
 		ensure(reference.object() == object1);
-		subject.syncVersionWithPeer(9);
-		subject.commit(10);
+		subject.syncVersionWithPeer(5000);
+		subject.commit(5001);
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		object1._name = "i am updated";
 		subject.storeReplica(object1);
-		subject.syncVersionWithPeer(14);
-		subject.commit(15);
+		subject.syncVersionWithPeer(6000);
+		subject.commit(6001);
 
 		subject.clearAllReferences();
 		subject.startReplicationTransaction(PEER_SIGNATURE);
@@ -158,16 +158,16 @@ public abstract class ReplicationProviderTest extends Test {
 		// This won't work for db4o: There is no guarantee that the version starts with 1.
 		// ensure(subject.getCurrentVersion() == 1);
 
-		subject.syncVersionWithPeer(59);
-		subject.commit(60);
+		subject.syncVersionWithPeer(5000);
+		subject.commit(5001);
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		long version = subject.getCurrentVersion();
 
-		ensure(version >= 60 && version <= 61);
+		ensure(version >= 5000 && version <= 5002);
 		long v = subject.getLastReplicationVersion();
-		ensure(subject.getLastReplicationVersion() == 59);
+		ensure(subject.getLastReplicationVersion() == 5000);
 	}
 
 

@@ -5,6 +5,7 @@ import com.db4o.replication.hibernate.Constants;
 import com.db4o.replication.hibernate.Util;
 import com.db4o.test.Test;
 import com.db4o.test.replication.CollectionHolder;
+import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -114,10 +115,15 @@ public class ReplicationConfiguratorTest {
 	protected Session openSession() {
 		Session session = sessionFactory.openSession();
 		ReplicationConfigurator.install(session, cfg);
+		session.setFlushMode(FlushMode.ALWAYS);
 		return session;
 	}
 
 	protected void checkVersion(Configuration cfg, Session session, Object obj, long expected) {
-		Test.ensure(Util.getVersion(cfg, session, obj) == expected);
+		long actual = Util.getVersion(cfg, session, obj);
+		boolean condition = actual == expected;
+		if (!condition)
+			System.out.println("actual = " + actual + ", expected = " + expected);
+		Test.ensure(condition);
 	}
 }

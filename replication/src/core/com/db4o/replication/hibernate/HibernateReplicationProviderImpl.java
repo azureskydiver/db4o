@@ -232,6 +232,9 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	public void syncVersionWithPeer(long version) {
+		if (version < Constants.MIN_VERSION_NO)
+			throw new RuntimeException("version must be great than " + Constants.MIN_VERSION_NO);
+
 		replicationRecord.setVersion(version);
 		_session.saveOrUpdate(replicationRecord);
 
