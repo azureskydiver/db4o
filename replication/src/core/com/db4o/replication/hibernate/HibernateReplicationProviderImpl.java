@@ -154,6 +154,10 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		new MetaDataTablesCreator(cfg).createTables();
 
 		EventListeners eventListeners = this.cfg.getEventListeners();
+
+		//TODO use createFlushListeners()
+		//FlushEventListener[] myFlushListeners = createFlushListeners(eventListeners);
+
 		eventListeners.setFlushEventListeners(new FlushEventListener[]{new MyFlushEventListener()});
 		eventListeners.setPostUpdateEventListeners(new PostUpdateEventListener[]{new MyPostUpdateEventListener()});
 		_sessionFactory = this.cfg.buildSessionFactory();
@@ -170,6 +174,24 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 		_transaction = _session.beginTransaction();
 
+	}
+
+	private FlushEventListener[] createFlushListeners(EventListeners eventListeners) {
+		FlushEventListener[] defaultFlushListeners = eventListeners.getFlushEventListeners();
+		FlushEventListener[] myFlushListeners;
+
+		if (defaultFlushListeners == null) {
+			myFlushListeners = new FlushEventListener[]{new MyFlushEventListener()};
+		} else {
+			final int count = defaultFlushListeners.length;
+			myFlushListeners = new FlushEventListener[count + 1];
+			System.arraycopy(defaultFlushListeners, 0, myFlushListeners, 0, count);
+
+			if (myFlushListeners[count] != null)
+				throw new RuntimeException("bug");
+			myFlushListeners[count] = new MyFlushEventListener();
+		}
+		return myFlushListeners;
 	}
 
 	public final ReadonlyReplicationProviderSignature getSignature() {
@@ -811,7 +833,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		}
 	}
 
-    public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
-        throw new RuntimeException("Implement me");
-    }
+	public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
+		if (_session.contains(reference.object())) return false;
+		return reference.version() > getLastReplicationVersion();
+	}
 }
