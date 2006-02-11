@@ -69,4 +69,8 @@ class TypeDeducingVisitor implements ComparisonOperandVisitor {
 		}
 		return null;
 	}
+
+	public void visit(MethodCallValue value) {
+		// FIXME
+	}
 }

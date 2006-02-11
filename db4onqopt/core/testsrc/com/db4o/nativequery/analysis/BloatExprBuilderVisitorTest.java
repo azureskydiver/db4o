@@ -675,12 +675,22 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison("sampleIntMemberMemberAdd",INT_FIELDNAME,new ArithmeticExpression(new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),ArithmeticOperator.ADD),ComparisonOperator.EQUALS,false);
 	}
 
+	// non-candidate method calls
+
 	boolean sampleIntAddInPredicateMethod(Data data) {
 		return data.getId()==intMemberPlusOne();
 	}
 
 	public void testIntAddInPredicateMethod() throws Exception {
-		assertComparison("sampleIntAddInPredicateMethod",INT_FIELDNAME,new ArithmeticExpression(new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),new ConstValue(new Integer(1)),ArithmeticOperator.ADD),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleIntAddInPredicateMethod",INT_FIELDNAME,new MethodCallValue(PredicateFieldRoot.INSTANCE,"intMemberPlusOne",new String[]{},new ComparisonOperand[]{}),ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleStaticMethodCall(Data data) {
+		return data.id==Integer.parseInt(data.name);
+	}
+
+	public void testStaticMethodCall() throws Exception {
+		assertComparison("sampleStaticMethodCall",INT_FIELDNAME,new MethodCallValue(new StaticFieldRoot(Integer.class.getName()),"parseInt",new String[]{String.class.getName()},new ComparisonOperand[]{new FieldValue(CandidateFieldRoot.INSTANCE,STRING_FIELDNAME)}),ComparisonOperator.EQUALS,false);
 	}
 
 	// TODO: string append via '+'?
@@ -720,14 +730,6 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertInvalid("sampleInvalidTemporaryStorage");
 	}
 
-	boolean sampleInvalidStaticMethodCall(Data data) {
-		return data.id==Integer.parseInt(data.name);
-	}
-
-	public void testInvalidStaticMethodCall() throws Exception {
-		assertInvalid("sampleInvalidStaticMethodCall");
-	}
-
 	boolean sampleInvalidMethodCall(Data data) {
 		data.someMethod();
 		return true;
@@ -737,12 +739,12 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertInvalid("sampleInvalidMethodCall");
 	}
 
-	boolean sampleExternalMethodCall(Data data) {
+	boolean sampleInvalidConstructorCall(Data data) {
 		return data.next==new Data().getNext();
 	}
 
-	public void testExternalMethodCall() throws Exception {
-		assertInvalid("sampleExternalMethodCall");
+	public void testInvalidConstructorCall() throws Exception {
+		assertInvalid("sampleInvalidConstructorCall");
 	}
 
 	boolean sampleSimpleObjectComparison(Data data) {

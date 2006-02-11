@@ -1,12 +1,8 @@
 package com.db4o.nativequery.optimization;
 
-import java.lang.reflect.*;
-
-import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
-import com.db4o.nativequery.expr.cmp.field.*;
 import com.db4o.query.*;
 
 public class SODAQueryBuilder {		
@@ -45,120 +41,9 @@ public class SODAQueryBuilder {
 			while(fieldNameIterator.hasNext()) {
 				subQuery=subQuery.descend((String)fieldNameIterator.next());
 			}
-			final Object[] value={null};
-			expression.right().accept(new ComparisonOperandVisitor() {				
-				public void visit(ConstValue operand) {
-					value[0] = operand.value();
-				}
-
-				public void visit(FieldValue operand) {
-					operand.parent().accept(this);
-					Class clazz=((operand.parent() instanceof StaticFieldRoot) ? (Class)value[0] : value[0].getClass());
-					try {
-						Field field=fieldFor(clazz,operand.fieldName());
-						value[0]=field.get(value[0]); // arg is ignored for static
-					} catch (Exception exc) {
-						exc.printStackTrace();
-					}
-				}
-
-				private Object add(Object a,Object b) {
-					if(a instanceof Double||b instanceof Double) {
-						return new Double(((Double)a).doubleValue()+ ((Double)b).doubleValue());
-					}
-					if(a instanceof Float||b instanceof Float) {
-						return new Float(((Float)a).floatValue()+ ((Float)b).floatValue());
-					}
-					if(a instanceof Long||b instanceof Long) {
-						return new Long(((Long)a).longValue()+ ((Long)b).longValue());
-					}
-					return new Integer(((Integer)a).intValue()+ ((Integer)b).intValue());
-				}
-
-				private Object subtract(Object a,Object b) {
-					if(a instanceof Double||b instanceof Double) {
-                        return new Double(((Double)a).doubleValue()- ((Double)b).doubleValue());
-					}
-					if(a instanceof Float||b instanceof Float) {
-                        return new Float(((Float)a).floatValue() - ((Float)b).floatValue());
-					}
-					if(a instanceof Long||b instanceof Long) {
-                        return new Long(((Long)a).longValue() - ((Long)b).longValue());
-					}
-                    return new Integer(((Integer)a).intValue() - ((Integer)b).intValue());
-				}
-
-				private Object multiply(Object a,Object b) {
-                    if(a instanceof Double||b instanceof Double) {
-                        return new Double(((Double)a).doubleValue() * ((Double)b).doubleValue());
-                    }
-                    if(a instanceof Float||b instanceof Float) {
-                        return new Float(((Float)a).floatValue() * ((Float)b).floatValue());
-                    }
-                    if(a instanceof Long||b instanceof Long) {
-                        return new Long(((Long)a).longValue() * ((Long)b).longValue());
-                    }
-                    return new Integer(((Integer)a).intValue() * ((Integer)b).intValue());
-				}
-
-				private Object divide(Object a,Object b) {
-                    if(a instanceof Double||b instanceof Double) {
-                        return new Double(((Double)a).doubleValue()/ ((Double)b).doubleValue());
-                    }
-                    if(a instanceof Float||b instanceof Float) {
-                        return new Float(((Float)a).floatValue() / ((Float)b).floatValue());
-                    }
-                    if(a instanceof Long||b instanceof Long) {
-                        return new Long(((Long)a).longValue() / ((Long)b).longValue());
-                    }
-                    return new Integer(((Integer)a).intValue() / ((Integer)b).intValue());
-				}
-
-				public void visit(ArithmeticExpression operand) {
-					operand.left().accept(this);
-					Object left=value[0];
-					operand.right().accept(this);
-					Object right=value[0];
-					switch(operand.op().id()) {
-						case ArithmeticOperator.ADD_ID: 
-							value[0]=add(left,right);
-							break;
-						case ArithmeticOperator.SUBTRACT_ID: 
-							value[0]=subtract(left,right);
-							break;
-						case ArithmeticOperator.MULTIPLY_ID: 
-							value[0]=multiply(left,right);
-							break;
-						case ArithmeticOperator.DIVIDE_ID: 
-							value[0]=divide(left,right);
-							break;
-					}
-				}
-
-				public void visit(CandidateFieldRoot root) {
-				}
-
-				public void visit(PredicateFieldRoot root) {
-					value[0]=_predicate;
-				}
-
-				public void visit(StaticFieldRoot root) {
-					try {
-						value[0]=Class.forName(root.className());
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					}
-				}
-
-				public void visit(ArrayAccessValue operand) {
-					operand.parent().accept(this);
-					Object parent=value[0];
-					operand.index().accept(this);
-					Integer index=(Integer)value[0];
-					value[0]=Array.get(parent, index.intValue());
-				}
-			});
-			_constraint=subQuery.constrain(value[0]);
+			ComparisonQueryGeneratingVisitor visitor = new ComparisonQueryGeneratingVisitor(_predicate);
+			expression.right().accept(visitor);
+			_constraint=subQuery.constrain(visitor.value());
 			if(!expression.op().equals(ComparisonOperator.EQUALS)) {
 				if(expression.op().equals(ComparisonOperator.GREATER)) {
 					_constraint.greater();
@@ -181,20 +66,6 @@ public class SODAQueryBuilder {
 			}
 		}
 
-		private Field fieldFor(final Class clazz,final String name) {
-			Class curclazz=clazz;
-			while(curclazz!=null) {
-				try {
-					Field field=curclazz.getDeclaredField(name);
-					Platform4.setAccessible(field);
-					return field;
-				} catch (Exception e) {
-				}
-				curclazz=curclazz.getSuperclass();
-			}
-			return null;
-		}
-		
 		public void visit(NotExpression expression) {
 			expression.expr().accept(this);
 			_constraint.not();

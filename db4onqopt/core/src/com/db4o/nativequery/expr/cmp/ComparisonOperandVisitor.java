@@ -13,4 +13,5 @@ public interface ComparisonOperandVisitor {
 	void visit(PredicateFieldRoot root);
 	void visit(StaticFieldRoot root);
 	void visit(ArrayAccessValue operand);
+	void visit(MethodCallValue value);
 }

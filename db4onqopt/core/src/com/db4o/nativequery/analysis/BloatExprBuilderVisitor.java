@@ -207,7 +207,6 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if(!(left instanceof FieldValue)||!(right instanceof ComparisonOperand)) {
 			expression(null);
 			return;
-//			throw new RuntimeException();
 		}
 		FieldValue fieldExpr=(FieldValue)left;
 		ComparisonOperand valueExpr=(ComparisonOperand)right;
@@ -220,13 +219,12 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		super.visitExprStmt(stmt);
 	}
 	
-//	public void visitCallStaticExpr(CallStaticExpr expr) {
-//		expression(null);
-//	}
-	
-	//public void visitCallMethodExpr(CallMethodExpr expr) {	
 	public void visitCallExpr(CallExpr expr) {	
 		boolean isStatic=(expr instanceof CallStaticExpr);
+		if(!isStatic&&expr.method().name().equals("<init>")) {
+			retval(null);
+			return;
+		}
 		if(!isStatic&&expr.method().name().equals("equals")) {
 			CallMethodExpr call=(CallMethodExpr)expr;
 			if(isPrimitive(call.receiver().type())) {
@@ -252,10 +250,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		methodStack.addLast(methodRef);
 		try {
-			ComparisonOperand rcvRetval=null;
+			ComparisonOperandAnchor rcvRetval=null;
 			if(!isStatic) {
 				((CallMethodExpr)expr).receiver().visit(this);
-				rcvRetval=(ComparisonOperand)purgeReturnValue();
+				rcvRetval=(ComparisonOperandAnchor)purgeReturnValue();
 			}
 			List params=new ArrayList(expr.params().length+1);
 			params.add(rcvRetval);
@@ -265,6 +263,21 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				params.add(curparam);
 			}
 			localStack.addLast(params.toArray(new ComparisonOperand[params.size()]));
+
+			if(rcvRetval==null||rcvRetval.root()!=CandidateFieldRoot.INSTANCE) {
+				if(rcvRetval==null) {
+					rcvRetval=new StaticFieldRoot(expr.method().declaringClass().className().replace('/', '.'));
+				}
+				params.remove(0);
+				Type[] paramTypes=expr.method().nameAndType().type().paramTypes();
+				String[] paramTypeNames=new String[paramTypes.length];
+				for (int paramIdx = 0; paramIdx < paramTypes.length; paramIdx++) {
+					paramTypeNames[paramIdx]=paramTypes[paramIdx].className().replace('/', '.');
+				}
+				retval(new MethodCallValue(rcvRetval,expr.method().name(),paramTypeNames,(ComparisonOperand[])params.toArray(new ComparisonOperand[params.size()])));
+				return;
+			}
+
 			FlowGraph flowGraph=bloatUtil.flowGraph(methodRef.declaringClass().className(),methodRef.name());
 			if(flowGraph==null) {
 				return;
