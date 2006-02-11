@@ -132,6 +132,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 	private final CollectionFlattener _collectionHandler = new CollectionHandlerImpl();
 
+	private final Set _uuidsReplicatedInThisSession = new HashSet();
+
 	public HibernateReplicationProviderImpl(Configuration cfg) {
 		this(cfg, null, null);
 	}
@@ -238,11 +240,11 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	public final void commit(long raisedDatabaseVersion) {
-		_transaction.commit();
-		_transaction = _session.beginTransaction();
+		commit();
 	}
 
 	public void commit() {
+		_uuidsReplicatedInThisSession.clear();
 		_session.flush();
 		_transaction.commit();
 		_transaction = _session.beginTransaction();
@@ -265,11 +267,13 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	public final void storeReplica(Object obj) {
-		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
-		if (_collectionHandler.canHandle(obj)) return;
-
 		ReplicationReference ref = getCachedReference(obj);
 		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
+
+		_uuidsReplicatedInThisSession.add(ref.uuid());
+
+		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
+		if (_collectionHandler.canHandle(obj)) return;
 
 		_session.saveOrUpdate(obj);
 		dirtyRefs.add(ref);
@@ -834,7 +838,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
-		if (_session.contains(reference.object())) return false;
+		if (_uuidsReplicatedInThisSession.contains(reference.uuid())) return false;
 		return reference.version() > getLastReplicationVersion();
 	}
 }
