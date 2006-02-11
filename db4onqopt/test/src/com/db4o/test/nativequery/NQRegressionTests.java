@@ -549,6 +549,7 @@ public class NQRegressionTests {
 		db.ext().configure().optimizeNativeQueries(false);
 		ObjectSet raw=db.query(filter);
 		db.ext().configure().optimizeNativeQueries(true);
+		System.err.println("PREDICATE: "+filter);
 		ObjectSet optimized=db.query(filter);
 		if(!raw.equals(optimized)) {
 			System.out.println("RAW");
@@ -567,7 +568,6 @@ public class NQRegressionTests {
 
 		db.ext().configure().optimizeNativeQueries(false);
 		try {
-			System.err.println("PREDICATE: "+filter);
 			Db4oEnhancingClassloader loader=new Db4oEnhancingClassloader(getClass().getClassLoader());
 			Class filterClass=loader.loadClass(filter.getClass().getName());
 			Constructor constr=null;
@@ -592,25 +592,4 @@ public class NQRegressionTests {
 		
 		((YapStream)db).getNativeQueryHandler().clearListeners();
 	}
-
-	// TODO incorporate
-	
-//	public void testMixedFieldComparisons() {
-//		 FIXME
-//				assertNQResult(new Predicate() {
-//					public boolean match(Data candidate) {
-//						return candidate.value>2.9;
-//					}
-//				},1);
-//	}
-	
-//	public void testPredicateMemberComparison() {
-//		final int id=2;
-//		final String name="Aa";
-//		assertNQResult(new Predicate() {
-//			public boolean match(Data candidate) {
-//				return candidate.getName().equals(name)||candidate.getId()<=id;
-//			}
-//		},2);
-//	}	
 }

@@ -278,4 +278,8 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		conversions.put(Double.TYPE,conversions.get(Double.class));
 		conversions.put(Float.TYPE,conversions.get(Float.class));
 	}
+
+	public void visit(MethodCallValue value) {
+		// FIXME
+	}
 }
