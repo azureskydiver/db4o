@@ -2,7 +2,6 @@ package com.db4o.test.replication;
 
 import com.db4o.test.TestSuite;
 import com.db4o.test.replication.db4o.Db4oArrayReplicationTest;
-import com.db4o.test.replication.db4o.Db4oListTest;
 import com.db4o.test.replication.db4o.Db4oR0to4Runner;
 import com.db4o.test.replication.db4o.Db4oReplicationAfterDeletionTest;
 import com.db4o.test.replication.db4o.Db4oReplicationFeaturesMain;
@@ -19,7 +18,6 @@ import com.db4o.test.replication.hibernate.HibernateSimpleParentChild;
 import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
 import com.db4o.test.replication.provider.TransientReplicationProviderTest;
 import com.db4o.test.replication.transients.TransientArrayReplicationTest;
-import com.db4o.test.replication.transients.TransientListTest;
 import com.db4o.test.replication.transients.TransientR0to4Runner;
 import com.db4o.test.replication.transients.TransientReplicationFeaturesMain;
 import com.db4o.test.replication.transients.TransientSimpleArrayTest;
@@ -38,8 +36,8 @@ public class ReplicationTestSuite extends TestSuite {
 
 				Db4oSimpleParentChild.class,
 
-				TransientListTest.class,
-				Db4oListTest.class,
+				//TransientListTest.class,
+				//Db4oListTest.class,
 				//Db4oListTest.class, //FIXME Db4oReplicationProvider
 
 				//UuidLongPartGeneratorTest.class,

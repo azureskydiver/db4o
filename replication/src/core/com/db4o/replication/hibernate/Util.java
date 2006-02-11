@@ -9,7 +9,12 @@ import org.hibernate.mapping.PrimaryKey;
 import org.hibernate.mapping.Table;
 
 import java.io.Serializable;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Iterator;
 
 public class Util {
@@ -57,10 +62,9 @@ public class Util {
 			st = con.createStatement();
 			rs = st.executeQuery(sql);
 
-			if (rs.next())
-				return rs.getLong(1);
-			else
-				return Constants.MIN_VERSION_NO;
+			if (!rs.next())
+				throw new RuntimeException("failed to get the max version, the sql was = " + sql);
+			return Math.max(rs.getLong(1), Constants.MIN_VERSION_NO);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -70,7 +74,9 @@ public class Util {
 	}
 
 	public static long getVersion(Configuration cfg, Session session, Object obj) {
+		Connection connection = session.connection();
 		String tableName = Util.getTableName(cfg, obj.getClass());
+		//Util.dumpTable(connection, tableName);
 		String pkColumn = Util.getPrimaryKeyColumnName(cfg, obj);
 		Serializable identifier = session.getIdentifier(obj);
 
@@ -82,12 +88,12 @@ public class Util {
 		ResultSet rs = null;
 
 		try {
-			rs = session.connection().createStatement().executeQuery(sql);
+			rs = connection.createStatement().executeQuery(sql);
 
 			if (!rs.next())
 				throw new RuntimeException("Cannot find the version of " + obj);
 
-			return rs.getLong(1);
+			return Math.max(rs.getLong(1), Constants.MIN_VERSION_NO);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {

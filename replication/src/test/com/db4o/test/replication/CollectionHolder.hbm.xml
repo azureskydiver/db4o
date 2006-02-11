@@ -26,12 +26,16 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping default-access="field"  default-lazy="false">
+<hibernate-mapping default-access="field" default-lazy="false">
 	<class name="com.db4o.test.replication.CollectionHolder" table="CollectionHolder">
 		<id column="id" type="int">
 			<generator class="native"/>
 		</id>
 		<property name="_name"/>
+		<set name="_set">
+			<key column="holderId"/>
+			<element type="string"/>
+		</set>
 		<map name="_map">
 			<key column="holderId"/>
 			<map-key type="string"/>
@@ -42,9 +46,5 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 			<list-index column="sortOrder"/>
 			<element type="string"/>
 		</list>
-		<set name="_set">
-			<key column="holderId"/>
-			<element type="string"/>
-		</set>
 	</class>
 </hibernate-mapping>
