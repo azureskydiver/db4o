@@ -2,7 +2,7 @@ package com.db4o.nativequery.expr.cmp.field;
 
 import com.db4o.nativequery.expr.cmp.*;
 
-public class StaticFieldRoot implements ComparisonOperand {
+public class StaticFieldRoot extends ComparisonOperandRoot {
 	private String _className;
 	
 	public StaticFieldRoot(String className) {
