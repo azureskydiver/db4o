@@ -812,7 +812,7 @@
 		-->
 		
 		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
-		<property name="pascalcase.converter.exe" location="bin/pascalcase2.exe" />
+		<property name="pascalcase.converter.exe" location="bin/CSharpConverter.exe" />
 
 
 	</target>
@@ -825,7 +825,7 @@
 		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
 		
 		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
-		<property name="pascalcase.converter.exe" location="bin/pascalcase2.exe" />
+		<property name="pascalcase.converter.exe" location="bin/CSharpConverter.exe" />
 
 		<property name="csharp.defines" value="NET_2_0" />
 		<property name="installer.package.suffix" value="net2" />

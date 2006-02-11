@@ -8,7 +8,7 @@
 	<property name="dir.pascalcase.src" location="${dir.dist.pascalcase}/src" />
 	<property name="dir.pascalcase.bin" location="${dir.dist.pascalcase}/bin" />
 	
-	<property name="converter.exe" location="bin/pascalcase2.exe" />
+	<property name="converter.exe" location="bin/CSharpConverter.exe" />
 	
 	<condition property="dotnetvm" value="mono" else="cmd">
 	  <os family="unix"/>
@@ -28,14 +28,11 @@
 	</target>
 	
 	<target name="build2" depends="compile-converter2">
-		<property name="defines" value="NET_2_0" />
 		<antcall target="run-converter">
 		</antcall>
 	</target>
 		
 	<target name="build" depends="compile-converter2">
-		
-		<property name="defines" value="NET" />
 		<antcall target="run-converter">
 		</antcall>
 	</target>
@@ -47,12 +44,10 @@
 		<echo>${converter.exe}</echo>
 		<echo>${dir.n.core.src}</echo>
 		<echo>${dir.pascalcase.src}</echo>
-		<echo>${defines}</echo>
 		<exec executable="${dotnetvm}" failonerror="true">
 			<arg file="${converter.exe}" />
 			<arg file="${dir.n.core.src}" />
 			<arg file="${dir.pascalcase.src}/core/src" />
-			<arg value="${defines}" />
 		</exec>
 		
 		<!-- overwrite files that should have not been converted -->
@@ -61,7 +56,6 @@
 				<include name="core/src/external/**/*.cs" />
 			</fileset>
 		</copy>
-
 		
 		<exec executable="${dotnetvm}" failonerror="true">
 			<arg file="${converter.exe}" />
@@ -138,8 +132,8 @@
 		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
 		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
 
-		<csc srcdir="src/pascalcase2"
-			outputfile="bin/pascalcase2.exe"
+		<csc srcdir="src/CSharpConverter"
+			outputfile="bin/CSharpConverter.exe"
 			executable="${csc.executable}">
 			<reference dir="bin">
 				<include name="ICSharpCode.NRefactory.dll" />
