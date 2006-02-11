@@ -12,7 +12,7 @@ import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.ext.VirtualField;
-import com.db4o.foundation.*;
+import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.replication.Db4oReplicationReference;
 import com.db4o.inside.replication.Db4oReplicationReferenceProvider;
@@ -40,8 +40,8 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 	private Db4oReplicationReferenceImpl _referencesByObject;
 
 	private Db4oSignatureMap _signatureMap;
-    
-    private final Collection4 _idsReplicatedInThisSession = new Collection4();
+
+	private final Collection4 _idsReplicatedInThisSession = new Collection4();
 
 
 	public Db4oReplicationProvider(ObjectContainer objectContainer) {
@@ -109,7 +109,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 
 		_stream.raiseVersion(raisedDatabaseVersion);
 		_stream.commit();
-        _idsReplicatedInThisSession.clear();
+		_idsReplicatedInThisSession.clear();
 
 	}
 
@@ -129,7 +129,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 	public void storeReplica(Object obj) {
 		synchronized (getMonitor()) {
 			_stream.setByNewReplication(this, obj);
-            _idsReplicatedInThisSession.add(new Long(_stream.getID(obj)));
+			_idsReplicatedInThisSession.add(new Long(_stream.getID(obj)));
 		}
 	}
 
@@ -293,11 +293,11 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		}
 	}
 
-    public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
-        System.out.println("OPTIMIZE contains() call. Dont use a Collection4.");
-        long id = _stream.getID(reference.object());
-        if (_idsReplicatedInThisSession.contains(new Long(id))) return false;
-        return reference.version() > getLastReplicationVersion();
-    }
-    
+	public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
+		//TODO OPTIMIZE contains() call. Dont use a Collection4
+		long id = _stream.getID(reference.object());
+		if (_idsReplicatedInThisSession.contains(new Long(id))) return false;
+		return reference.version() > getLastReplicationVersion();
+	}
+
 }

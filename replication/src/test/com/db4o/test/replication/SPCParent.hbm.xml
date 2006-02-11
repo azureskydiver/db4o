@@ -11,8 +11,7 @@
 		<id column="id" type="int">
 			<generator class="native"/>
 		</id>
-		<discriminator/>
 		<property name="name"/>
-		<many-to-one name="child" cascade="all"/>
+		<one-to-one name="child" cascade="all"/>
 	</class>
 </hibernate-mapping>
