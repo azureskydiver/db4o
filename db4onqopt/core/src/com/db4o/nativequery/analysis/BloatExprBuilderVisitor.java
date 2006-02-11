@@ -325,8 +325,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		expr.object().visit(this);	
 		Object fieldObj=purgeReturnValue();
 		String fieldName=expr.field().name();
-		if(fieldObj instanceof ComparisonOperand) {
-			retval(new FieldValue((ComparisonOperand)fieldObj,fieldName));
+		if(fieldObj instanceof ComparisonOperandAnchor) {
+			retval(new FieldValue((ComparisonOperandAnchor)fieldObj,fieldName));
 			return;
 		}
 	}
@@ -406,11 +406,12 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	public void visitArrayRefExpr(ArrayRefExpr expr) {
 		expr.array().visit(this);
-		ComparisonOperand arrayOp=(ComparisonOperand)purgeReturnValue();
+		ComparisonOperandAnchor arrayOp=(ComparisonOperandAnchor)purgeReturnValue();
 		expr.index().visit(this);
 		ComparisonOperand idxOp=(ComparisonOperand)purgeReturnValue();
-		if(arrayOp==null||idxOp==null) {
+		if(arrayOp==null||idxOp==null||arrayOp.root()==CandidateFieldRoot.INSTANCE) {
 			retval(null);
+			return;
 		}
 		retval(new ArrayAccessValue(arrayOp,idxOp));
 	}

@@ -2,7 +2,7 @@ package com.db4o.nativequery.expr.cmp.field;
 
 import com.db4o.nativequery.expr.cmp.*;
 
-public class PredicateFieldRoot implements ComparisonOperand {
+public class PredicateFieldRoot extends ComparisonOperandRoot {
 	public final static PredicateFieldRoot INSTANCE=new PredicateFieldRoot();
 	
 	private PredicateFieldRoot() {}
