@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>pascalcase2</RootNamespace>
-    <AssemblyName>pascalcase2</AssemblyName>
+    <AssemblyName>CSharpConverter</AssemblyName>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4C5619D2-CEFC-4B6F-BB5A-7C3CC5F1040D}</ProjectGuid>
@@ -36,18 +36,16 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Boo.Lang.Useful">
-      <HintPath>..\..\lib\boo\Boo.Lang.Useful.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
     <Reference Include="ICSharpCode.NRefactory">
       <HintPath>..\..\..\..\..\Corsavy\SharpDevelop\bin\ICSharpCode.NRefactory.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="PascalCaseConverter.cs" />
+    <Compile Include="Options.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>
