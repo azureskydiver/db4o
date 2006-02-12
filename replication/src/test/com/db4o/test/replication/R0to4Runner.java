@@ -2,14 +2,17 @@
 
 package com.db4o.test.replication;
 
-import com.db4o.inside.replication.*;
-import com.db4o.replication.*;
-import com.db4o.test.Test;
 import com.db4o.ObjectSet;
+import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.replication.ConflictResolver;
+import com.db4o.replication.Replication;
+import com.db4o.replication.ReplicationSession;
+import com.db4o.test.Test;
 
 public abstract class R0to4Runner {
 
 	protected abstract TestableReplicationProvider prepareProviderA();
+
 	protected abstract TestableReplicationProvider prepareProviderB();
 
 	private final static ConflictResolver _ignoreConflictHandler = new ConflictResolver() {
@@ -21,11 +24,10 @@ public abstract class R0to4Runner {
 	private static final int LINKERS = 4;
 
 	public void test() {
-        
-        TestableReplicationProvider peerA = prepareProviderA();
-        TestableReplicationProvider peerB = prepareProviderB();
 
-		System.out.println("R0to4Runner.test");
+		TestableReplicationProvider peerA = prepareProviderA();
+		TestableReplicationProvider peerB = prepareProviderB();
+
 		init(peerA, peerB);
 		ensureCount(peerA, LINKERS);
 
@@ -42,9 +44,9 @@ public abstract class R0to4Runner {
 	}
 
 	private void init(TestableReplicationProvider peerA, TestableReplicationProvider peerB) {
-        
-        ReplicationSession replication =  Replication.begin(peerA, peerB, _ignoreConflictHandler);
-        
+
+		ReplicationSession replication = Replication.begin(peerA, peerB, _ignoreConflictHandler);
+
 		R0Linker lCircles = new R0Linker();
 		lCircles.setNames("circles");
 		lCircles.linkCircles();
@@ -64,9 +66,9 @@ public abstract class R0to4Runner {
 		lBack.setNames("back");
 		lBack.linkBack();
 		lBack.store(peerA);
-        
-        replication.commit();
-        
+
+		replication.commit();
+
 	}
 
 	private void ensureR4Different(TestableReplicationProvider peerA, TestableReplicationProvider peerB) {
@@ -98,7 +100,7 @@ public abstract class R0to4Runner {
 		while (it.hasNext()) {
 			R4 r4 = (R4) it.next();
 			r4.name = r4.name + "_";
-            provider.update(r4);
+			provider.update(r4);
 		}
 	}
 
@@ -115,13 +117,13 @@ public abstract class R0to4Runner {
 	}
 
 	private void replicateR4(TestableReplicationProvider peerA, TestableReplicationProvider peerB) {
-        int replicatedObjectsCount = replicateAll(peerA, peerB, true);
+		int replicatedObjectsCount = replicateAll(peerA, peerB, true);
 		Test.ensure(replicatedObjectsCount == LINKERS);
 	}
 
 	private int replicateAll(TestableReplicationProvider peerA, TestableReplicationProvider peerB, boolean modifiedOnly) {
-		
-        ReplicationSession replication =  Replication.begin(peerA, peerB, _ignoreConflictHandler);
+
+		ReplicationSession replication = Replication.begin(peerA, peerB, _ignoreConflictHandler);
 
 		ObjectSet it = modifiedOnly
 				? peerA.objectsChangedSinceLastReplication(R0.class)
@@ -134,7 +136,7 @@ public abstract class R0to4Runner {
 			replicated++;
 		}
 		replication.commit();
-        
+
 		ensureCount(peerA, LINKERS);
 		ensureCount(peerB, LINKERS);
 		return replicated;

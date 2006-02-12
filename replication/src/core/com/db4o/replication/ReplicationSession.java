@@ -9,7 +9,7 @@ package com.db4o.replication;
  * <pre>
  * ReplicationSession session = Replication.begin(objectContainer1, objectContainer2);
  * session.replicate(object);
- * session.commit();
+ * session.commitReplicationTransaction();
  * session.close();
  * </pre>
  *
@@ -38,7 +38,7 @@ public interface ReplicationSession {
 	 * Hibernate Sessions created from Hibernate Configurations will be closed.
 	 * db4o ObjectContainers will remain open.
 	 *
-	 * @throws IllegalStateException if the session is still active (neither commit() nor rollback is called).
+	 * @throws IllegalStateException if the session is still active (neither commitReplicationTransaction() nor rollback is called).
 	 */
 	public void close();
 
@@ -71,7 +71,6 @@ public interface ReplicationSession {
 	 * were replicated.
 	 *
 	 * @param obj the object to be replicated.
-	 *
 	 * @see ConflictResolver
 	 */
 	public void replicate(Object obj);

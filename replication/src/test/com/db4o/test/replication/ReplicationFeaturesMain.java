@@ -4,7 +4,8 @@ package com.db4o.test.replication;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectSet;
-import com.db4o.inside.replication.*;
+import com.db4o.inside.replication.GenericReplicationSession;
+import com.db4o.inside.replication.TestableReplicationProvider;
 import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.ReplicationProvider;
 import com.db4o.replication.ReplicationSession;
@@ -186,7 +187,15 @@ public abstract class ReplicationFeaturesMain {
 		replication.commit();
 
 		checkNames();
-//		System.out.println("round = " + round++);
+
+		//printRound();
+	}
+
+	private void printRound() {
+		round++;
+
+		if ((round % 10) == 0)
+			System.out.println("round = " + round++);
 	}
 
 
@@ -347,9 +356,9 @@ public abstract class ReplicationFeaturesMain {
 	private void initState() {
 		_containerA = prepareProviderA();
 		_containerB = prepareProviderB();
-        
-        _containerA.delete(Replicated.class);
-        _containerB.delete(Replicated.class);
+
+		_containerA.delete(Replicated.class);
+		_containerB.delete(Replicated.class);
 
 		checkEmpty(_containerA);
 		checkEmpty(_containerB);

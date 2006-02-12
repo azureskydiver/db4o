@@ -186,9 +186,9 @@ public class GenericReplicationSession implements ReplicationSession {
 		Object objectA = refA.object();
 		Object objectB = refB.object();
 
-        boolean changedInA = _peerA.wasChangedSinceLastReplication(refA);
-        boolean changedInB = _peerB.wasChangedSinceLastReplication(refB);
-        
+		boolean changedInA = _peerA.wasChangedSinceLastReplication(refA);
+		boolean changedInB = _peerB.wasChangedSinceLastReplication(refB);
+
 		if (!changedInA && !changedInB) return false;
 
 		boolean conflict = false;
@@ -265,14 +265,15 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		//TODO supports collection here
 		Object result = sourceProvider.produceReference(value, null, null).counterpart();
-        if (result == null)
-            throw new RuntimeException();
-        return result;
+		if (result == null)
+			throw new RuntimeException();
+		return result;
 	}
 
 	private Object collectionClone(Object original, ReflectClass claxx, final ReplicationProviderInside sourceProvider) {
 		final GenericReplicationSession grs = this;
 		return _collectionHandler.cloneWithCounterparts(original, claxx, new CounterpartFinder() { //TODO Optimize: Have a single CounterpartFinder instance. Dont create it all the time.
+
 			public Object findCounterpart(Object original) {
 				return grs.findCounterpart(original, sourceProvider);
 			}
@@ -343,8 +344,8 @@ public class GenericReplicationSession implements ReplicationSession {
 
 				maxVersion ++;
 
-				_peerA.commit(maxVersion);
-				_peerB.commit(maxVersion);
+				_peerA.commitReplicationTransaction(maxVersion);
+				_peerB.commitReplicationTransaction(maxVersion);
 			}
 
 		}
