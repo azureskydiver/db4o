@@ -2,22 +2,23 @@
 
 package com.db4o.test.replication;
 
-import com.db4o.test.*;
-import com.db4o.test.replication.db4o.*;
+import com.db4o.test.AllTests;
+import com.db4o.test.TestSuite;
+import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
 
 public class AllTestsReplication extends AllTests {
 
-    public static void main(String[] args) {
-        
-        Db4oReplicationTestUtil.configure();
-        
-        new AllTestsReplication().run();
+	public static void main(String[] args) {
+		Db4oReplicationTestUtil.configure();
 
-        Db4oReplicationTestUtil.close();
-    }
+		//runSolo(HibernateReplicationProviderTest.class);
+		new AllTestsReplication().run();
 
-    protected void addTestSuites(TestSuite suites) {
-        CLIENT_SERVER = false;
-        suites.add(new ReplicationTestSuite());
-    }
+		Db4oReplicationTestUtil.close();
+	}
+
+	protected void addTestSuites(TestSuite suites) {
+		CLIENT_SERVER = false;
+		suites.add(new ReplicationTestSuite());
+	}
 }

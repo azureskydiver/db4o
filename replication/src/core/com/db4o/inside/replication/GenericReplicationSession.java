@@ -263,7 +263,7 @@ public class GenericReplicationSession implements ReplicationSession {
 		if (claxx.isArray()) return arrayClone(value, claxx, sourceProvider);
 		if (claxx.isSecondClass()) return value;
 
-		//TODO supports collection here
+		//if value is a Collection, result should be found by passing in just the value
 		Object result = sourceProvider.produceReference(value, null, null).counterpart();
 		if (result == null)
 			throw new NullPointerException("unable to find the counterpart of " + value + " of class " + value.getClass());
@@ -296,7 +296,6 @@ public class GenericReplicationSession implements ReplicationSession {
 			Object object = objects[i];
 			if (object == null) continue;
 
-			//TODO supports collection here
 			ReplicationReference replicationReference = sourceProvider.produceReference(object, null, null);
 
 			if (replicationReference == null)

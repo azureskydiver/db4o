@@ -47,7 +47,7 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.referenceNewObject(collection, collectionRef, ref, "list");
 		subject.storeReplica(collection);
 		ensure(subject.produceReference(collection, lh, "list").object() == collection);
-
+		ensure(subject.produceReference(collection, null, null).object() == collection);
 	}
 
 	protected abstract TestableReplicationProviderInside prepareSubject();
