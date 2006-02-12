@@ -28,7 +28,7 @@ public abstract class ReplicationProviderTest extends Test {
 		tstCollection();
 	}
 
-	private void tstc() {
+	private void tstCollection() {
 		TestableReplicationProviderInside subject = prepareSubject();
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 
