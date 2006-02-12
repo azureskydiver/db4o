@@ -70,7 +70,9 @@ class TypeDeducingVisitor implements ComparisonOperandVisitor {
 		return null;
 	}
 
-	public void visit(MethodCallValue value) {
-		// FIXME
+	public void visit(MethodCallValue operand) {
+		operand.parent().accept(this);
+		Method method=ReflectUtil.methodFor(_clazz, operand.methodName(), operand.paramTypes());
+		_clazz=method.getReturnType();
 	}
 }

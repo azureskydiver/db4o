@@ -11,6 +11,7 @@ public class AllTestsNQ extends AllTests{
     }
     
     protected void addTestSuites(TestSuite suites) {
+    	//CLIENT_SERVER=false;
         suites.add(new NQTestSuite());
     }
 

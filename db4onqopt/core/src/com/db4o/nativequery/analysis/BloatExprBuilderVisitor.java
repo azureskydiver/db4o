@@ -17,7 +17,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	// TODO discuss: drop or make configurable
 	private final static int MAX_DEPTH=10;
 	
-	private final static String[] PRIMITIVES={
+	private final static String[] PRIMITIVE_WRAPPER_NAMES={
 		Boolean.class.getName(),
 		Byte.class.getName(),
 		Short.class.getName(),
@@ -30,7 +30,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	};
 	
 	static {
-		Arrays.sort(PRIMITIVES);
+		Arrays.sort(PRIMITIVE_WRAPPER_NAMES);
 	}
 	
 	private final static ExpressionBuilder BUILDER=new ExpressionBuilder();
@@ -270,11 +270,12 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				}
 				params.remove(0);
 				Type[] paramTypes=expr.method().nameAndType().type().paramTypes();
-				String[] paramTypeNames=new String[paramTypes.length];
+				Class[] javaParamTypes=new Class[paramTypes.length];
 				for (int paramIdx = 0; paramIdx < paramTypes.length; paramIdx++) {
-					paramTypeNames[paramIdx]=paramTypes[paramIdx].className().replace('/', '.');
+					String className = paramTypes[paramIdx].className().replace('/', '.');
+					javaParamTypes[paramIdx]=(PRIMITIVE_CLASSES.containsKey(className) ? (Class)PRIMITIVE_CLASSES.get(className) : Class.forName(className));
 				}
-				retval(new MethodCallValue(rcvRetval,expr.method().name(),paramTypeNames,(ComparisonOperand[])params.toArray(new ComparisonOperand[params.size()])));
+				retval(new MethodCallValue(rcvRetval,expr.method().name(),javaParamTypes,(ComparisonOperand[])params.toArray(new ComparisonOperand[params.size()])));
 				return;
 			}
 
@@ -297,8 +298,22 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 	}
 
+	private final static Map PRIMITIVE_CLASSES;
+	
+	static {
+		PRIMITIVE_CLASSES=new HashMap();
+		PRIMITIVE_CLASSES.put("Z",Boolean.TYPE);
+		PRIMITIVE_CLASSES.put("B",Byte.TYPE);
+		PRIMITIVE_CLASSES.put("S",Short.TYPE);
+		PRIMITIVE_CLASSES.put("C",Character.TYPE);
+		PRIMITIVE_CLASSES.put("I",Integer.TYPE);
+		PRIMITIVE_CLASSES.put("J",Long.TYPE);
+		PRIMITIVE_CLASSES.put("F",Float.TYPE);
+		PRIMITIVE_CLASSES.put("D",Double.TYPE);
+	}
+	
 	private boolean isPrimitive(Type type) {
-		return Arrays.binarySearch(PRIMITIVES,type.className().replace('/', '.'))>=0;
+		return Arrays.binarySearch(PRIMITIVE_WRAPPER_NAMES,type.className().replace('/', '.'))>=0;
 	}
 
 	private void processEqualsCall(CallMethodExpr expr,ComparisonOperator op) {

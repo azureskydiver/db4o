@@ -82,6 +82,10 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		return intMember+1;
 	}
 
+	private int sum(int a,int b) {
+		return a+b;
+	}
+	
 	protected void setUp() throws Exception {
 		loader=new ClassFileLoader();
 		bloatUtil=new BloatUtil(loader);
@@ -682,7 +686,7 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testIntAddInPredicateMethod() throws Exception {
-		assertComparison("sampleIntAddInPredicateMethod",INT_FIELDNAME,new MethodCallValue(PredicateFieldRoot.INSTANCE,"intMemberPlusOne",new String[]{},new ComparisonOperand[]{}),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleIntAddInPredicateMethod",INT_FIELDNAME,new MethodCallValue(PredicateFieldRoot.INSTANCE,"intMemberPlusOne",new Class[]{},new ComparisonOperand[]{}),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleStaticMethodCall(Data data) {
@@ -690,7 +694,15 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	public void testStaticMethodCall() throws Exception {
-		assertComparison("sampleStaticMethodCall",INT_FIELDNAME,new MethodCallValue(new StaticFieldRoot(Integer.class.getName()),"parseInt",new String[]{String.class.getName()},new ComparisonOperand[]{new FieldValue(CandidateFieldRoot.INSTANCE,STRING_FIELDNAME)}),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleStaticMethodCall",INT_FIELDNAME,new MethodCallValue(new StaticFieldRoot(Integer.class.getName()),"parseInt",new Class[]{String.class},new ComparisonOperand[]{new FieldValue(CandidateFieldRoot.INSTANCE,STRING_FIELDNAME)}),ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleTwoParamMethodCall(Data data) {
+		return data.id==sum(data.id,0);
+	}
+
+	public void testTwoParamMethodCall() throws Exception {
+		assertComparison("sampleTwoParamMethodCall",INT_FIELDNAME,new MethodCallValue(PredicateFieldRoot.INSTANCE,"sum",new Class[]{Integer.TYPE,Integer.TYPE},new ComparisonOperand[]{new FieldValue(CandidateFieldRoot.INSTANCE,INT_FIELDNAME),new ConstValue(new Integer(0))}),ComparisonOperator.EQUALS,false);
 	}
 
 	// TODO: string append via '+'?
