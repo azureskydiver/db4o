@@ -308,6 +308,10 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 			if (referencingObjCounterPartRef == null)
 				throw new NullPointerException("referencingObjCounterPartRef is null");
 			if (fieldName == null) throw new NullPointerException("fieldName is null");
+
+			ReplicationReference cachedReference = getCachedReference(obj);
+			if (cachedReference != null) return cachedReference;
+
 			return referenceClonedCollection(obj, counterpartReference, referencingObjCounterPartRef, fieldName);
 		} else {
 			Db4oUUID uuid = counterpartReference.uuid();
