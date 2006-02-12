@@ -690,19 +690,19 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 	}
 
 	boolean sampleStaticMethodCall(Data data) {
-		return data.id==Integer.parseInt(data.name);
+		return data.id==Integer.parseInt(stringMember);
 	}
 
 	public void testStaticMethodCall() throws Exception {
-		assertComparison("sampleStaticMethodCall",INT_FIELDNAME,new MethodCallValue(new StaticFieldRoot(Integer.class.getName()),"parseInt",new Class[]{String.class},new ComparisonOperand[]{new FieldValue(CandidateFieldRoot.INSTANCE,STRING_FIELDNAME)}),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleStaticMethodCall",INT_FIELDNAME,new MethodCallValue(new StaticFieldRoot(Integer.class.getName()),"parseInt",new Class[]{String.class},new ComparisonOperand[]{new FieldValue(PredicateFieldRoot.INSTANCE,"stringMember")}),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleTwoParamMethodCall(Data data) {
-		return data.id==sum(data.id,0);
+		return data.id==sum(intMember,0);
 	}
 
 	public void testTwoParamMethodCall() throws Exception {
-		assertComparison("sampleTwoParamMethodCall",INT_FIELDNAME,new MethodCallValue(PredicateFieldRoot.INSTANCE,"sum",new Class[]{Integer.TYPE,Integer.TYPE},new ComparisonOperand[]{new FieldValue(CandidateFieldRoot.INSTANCE,INT_FIELDNAME),new ConstValue(new Integer(0))}),ComparisonOperator.EQUALS,false);
+		assertComparison("sampleTwoParamMethodCall",INT_FIELDNAME,new MethodCallValue(PredicateFieldRoot.INSTANCE,"sum",new Class[]{Integer.TYPE,Integer.TYPE},new ComparisonOperand[]{new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),new ConstValue(new Integer(0))}),ComparisonOperator.EQUALS,false);
 	}
 
 	// TODO: string append via '+'?
@@ -837,6 +837,22 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	public void testCandidateObjectArrayAccess() throws Exception {
 		assertInvalid("sampleCandidateObjectArrayAccess");
+	}
+
+	boolean sampleCandidateParamMethodCall(Data data) {
+		return data.id==sum(data.id,0);
+	}
+
+	public void testCandidateParamMethodCall() throws Exception {
+		assertInvalid("sampleCandidateParamMethodCall");
+	}
+
+	boolean sampleCandidateParamStaticMethodCall(Data data) {
+		return data.id==Integer.parseInt(data.name);
+	}
+
+	public void testCandidateParamStaticMethodCall() throws Exception {
+		assertInvalid("sampleCandidateParamStaticMethodCall");
 	}
 
 	boolean sampleSwitch(Data data) {

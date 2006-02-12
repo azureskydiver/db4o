@@ -260,6 +260,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			for(int idx=0;idx<expr.params().length;idx++) {
 				expr.params()[idx].visit(this);
 				ComparisonOperand curparam=(ComparisonOperand)purgeReturnValue();
+				if((curparam instanceof ComparisonOperandAnchor)&&(((ComparisonOperandAnchor)curparam).root()==CandidateFieldRoot.INSTANCE)) {
+					retval(null);
+					return;
+				}
 				params.add(curparam);
 			}
 			localStack.addLast(params.toArray(new ComparisonOperand[params.size()]));

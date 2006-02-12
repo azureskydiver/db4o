@@ -8,8 +8,12 @@ import javax.naming.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.inside.query.*;
 import com.db4o.query.*;
 
+// FIXME: Something is wrong here. nqopt seems to be very slow, though it seems to do
+// exactly the same thing as soda, and optimization overhead shouldn't be that big.
+// When NQ_NOPT is set to false, figures look much better?!?
 public class TestCatSpeed {
     
 	private final static String FILENAME="catspeed.yap";
@@ -71,9 +75,11 @@ public class TestCatSpeed {
                 	&& cat.getFather().getAge() < 900;
             }
             public void constrain(Query q) {
-                Query qf = q.descend("_father");
-                qf.constrain(null).not();
-                qf.descend("_age").constrain(new Integer(900)).smaller();
+//                Query qf = q.descend("_father");
+//                qf.constrain(null).not();
+//                qf.descend("_age").constrain(new Integer(900)).smaller();
+            	q.descend("_father").constrain(null).not().and(q.descend("_father").descend("_age").constrain(new Integer(900)).smaller());
+            	
             }
 
 		},
@@ -114,7 +120,7 @@ public class TestCatSpeed {
             }
 		}
 	};
-
+	
 	public static void main(String[] args) {
 		Db4o.configure().freespace().useRamSystem();
 		ObjectClass objectClass = Db4o.configure().objectClass(Cat.class);
@@ -146,16 +152,20 @@ public class TestCatSpeed {
         long timeUnopt = 0;
         long timeOpt = 0;
         long timeSoda = 0;
+        System.gc();
         for (int run = 0; run <= NUMRUNS; run++) {
             boolean warmup = (run == 0);
             if(NQ_NOPT){
                 timeUnopt += timeQuery(PREDICATES[predIdx], false, warmup);
+                System.gc();
             }
             if(NQ_OPT){
                 timeOpt += timeQuery(PREDICATES[predIdx], true, warmup);
+                System.gc();
             }
             if(SODA){
                 timeSoda += timeSoda(PREDICATES[predIdx], warmup);
+                System.gc();
             }
         }
         System.out.println("PREDICATE #" + (predIdx + 1)+": "+(timeUnopt/NUMRUNS)+" / "+(timeOpt/NUMRUNS)+" / "+(timeSoda/NUMRUNS));
@@ -166,6 +176,13 @@ public class TestCatSpeed {
 			boolean warmup) {
 		Db4o.configure().optimizeNativeQueries(optimize);
 		ObjectContainer db = Db4o.openFile(FILENAME);
+//		if(optimize&&!warmup) {
+//			((YapStream)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
+//				public void notifyQueryExecuted(NQOptimizationInfo info) {
+//					System.out.println(info);
+//				}
+//			});
+//		}
 		long start = System.currentTimeMillis();
 		db.query(predicate);
 		long time = (warmup ? 0 : System.currentTimeMillis() - start);
