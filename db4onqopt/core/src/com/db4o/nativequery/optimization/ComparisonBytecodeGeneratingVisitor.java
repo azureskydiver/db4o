@@ -111,9 +111,9 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		prepareConversion(retType, !inArithmetic&&needConversion);
 		operand.parent().accept(this);
 		boolean oldInArithmetic=inArithmetic;
-		for (int paramIdx = 0; paramIdx < operand.params().length; paramIdx++) {
+		for (int paramIdx = 0; paramIdx < operand.args().length; paramIdx++) {
 			inArithmetic=operand.paramTypes()[paramIdx].isPrimitive();
-			operand.params()[paramIdx].accept(this);
+			operand.args()[paramIdx].accept(this);
 		}
 		inArithmetic=oldInArithmetic;
 		// FIXME: invokeinterface
