@@ -12,11 +12,12 @@ import com.db4o.test.replication.collections.ListHolder;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 public abstract class ReplicationProviderTest extends Test {
 
-	private static final byte[] PEER_SIGNATURE_BYTES = new byte[]{99, -1, 42, 17};
+	private static final byte[] PEER_SIGNATURE_BYTES = new byte[]{1, 2, 3, 4};
 	private static final PeerSignature PEER_SIGNATURE = new PeerSignature(PEER_SIGNATURE_BYTES);
 
 	public void testReplicationProvider() {
@@ -51,11 +52,26 @@ public abstract class ReplicationProviderTest extends Test {
 		ReplicationReference collectionRefFromB = providerB.produceReference(collectionInB, listHolderClonedInB, "list");
 		ensure(collectionRefFromB.object() == collectionInB);
 
-		ReplicationReference collectionRefFromA = new ReplicationReferenceImpl(new ArrayList(), collectionRefFromB.uuid(), 9555);
+		final Db4oUUID collectionUuid = collectionRefFromB.uuid();
+		ReplicationReference collectionRefFromA = new ReplicationReferenceImpl(new ArrayList(), collectionUuid, 9555);
 
 		providerB.referenceNewObject(collectionInB, collectionRefFromA, listHolderFromB, "list");
 		providerB.storeReplica(collectionInB);
+		ensure(providerB.produceReference(collectionInB, null, null) == collectionRefFromB);
 		ensure(providerB.produceReference(collectionInB, null, null).object() == collectionInB);
+
+		final ReplicationReference byUuid = providerB.produceReferenceByUUID(collectionUuid, List.class);
+		ensure(byUuid != null);
+
+		providerB.clearAllReferences();
+		final ReplicationReference refFromBAfterClear = providerB.produceReferenceByUUID(listHolderUuid, ListHolder.class);
+		ensure(refFromBAfterClear != null);
+
+		final ListHolder listHolderInBAfterClear = ((ListHolder) refFromBAfterClear.object());
+		final ReplicationReference collectionRefFromBAfterClear = providerB.produceReference(listHolderInBAfterClear.getList(), listHolderInBAfterClear, "list");
+		ensure(collectionRefFromBAfterClear != null);
+
+		ensure(collectionRefFromBAfterClear.uuid().equals(collectionUuid));
 	}
 
 	protected abstract TestableReplicationProviderInside prepareSubject();

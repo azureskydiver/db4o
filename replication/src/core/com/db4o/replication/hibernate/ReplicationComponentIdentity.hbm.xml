@@ -39,7 +39,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 			<many-to-one name="referencingObjectField" cascade="all"/>
 		</natural-id>
 
-		<one-to-one name="provider"/>
+		<many-to-one name="provider"/>
 
 	</class>
 </hibernate-mapping>
