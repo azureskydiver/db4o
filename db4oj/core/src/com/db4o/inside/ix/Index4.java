@@ -268,6 +268,9 @@ public class Index4 {
     }
 
     public String toString() {
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
         StringBuffer sb = new StringBuffer();
         sb.append("IxField  " + System.identityHashCode(this));
         if (_globalIndexTransaction != null) {

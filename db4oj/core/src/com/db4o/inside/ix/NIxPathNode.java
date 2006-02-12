@@ -266,6 +266,9 @@ public class NIxPathNode {
     }
     
     public String toString() {
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
         return _tree.toString() + "\n cmp: " + _comparisonResult; 
     }
 

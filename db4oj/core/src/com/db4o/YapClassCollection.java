@@ -141,11 +141,11 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
 
     YapClass getYapClass(ReflectClass a_class, boolean a_create) {
         YapClass yapClass = (YapClass)i_yapClassByClass.get(a_class);
+        
         if (yapClass == null) {
             yapClass = (YapClass)i_yapClassByBytes.remove(asBytes(a_class.getName()));
             readYapClass(yapClass, a_class);
         }
-        
 
         if (yapClass != null || (!a_create)) {
             return yapClass;
@@ -192,7 +192,9 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         }
         
         i_creating.remove(a_class);
-
+        
+        i_stream.setDirty(this);
+        
         return yapClass;
     }
 
@@ -392,17 +394,18 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
             writeIDOf((YapClass)i.next(), a_writer);
         }
     }
-    
-    // Debug info:
 
-    //	public String toString(){
-    //		String str = "";
-    //		Iterator4 i = i_classes.iterator();
-    //		while(i.hasNext()){
-    //			YapClass yc = (YapClass)i.next();
-    //			str += yc.getID() + " " + yc + "\r\n";
-    //		}
-    //		return str;
-    //	}
+	public String toString(){
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
+		String str = "";
+		Iterator4 i = i_classes.iterator();
+		while(i.hasNext()){
+			YapClass yc = (YapClass)i.next();
+			str += yc.getID() + " " + yc + "\r\n";
+		}
+		return str;
+	}
 
 }

@@ -176,35 +176,121 @@ public class Transaction {
             DTrace.TRANS_COMMIT.logInfo( "server == " + i_stream.isServer() + ", systemtrans == " +  systemTrans);
         }
         
-        // Just to make sure that no pending deletes 
-        // get carried into the next transaction.
-        beginEndSet();
+        commit1BeginEndSet();
         
-        commitTransactionListeners();
-
-        i_stream.checkNeededUpdates();
+        commit2Listeners();
+        
+        commit3Stream();
+        
+        commit4FieldIndexes();
+        
+        commit5writeClassIndexChanges();
         
         i_stream.writeDirty();
         
+        commit6WriteChanges();
+        
+        freeOnCommit();
+        
+        commit7ClearAll();
+    }
+    
+    private void commit1BeginEndSet(){
+        if (i_parentTransaction != null) {
+            i_parentTransaction.commit1BeginEndSet();
+        } 
+        beginEndSet();
+    }
+    
+    private void commit2Listeners(){
+        if (i_parentTransaction != null) {
+            i_parentTransaction.commit2Listeners();
+        } 
+        commitTransactionListeners();
+    }
+    
+    
+    private void commit3Stream(){
+        i_stream.checkNeededUpdates();
+        i_stream.writeDirty();
         i_stream.i_classCollection.write(i_stream.getSystemTransaction());
-
+    }
+    
+    
+    private void commit4FieldIndexes(){
+        if(i_parentTransaction != null){
+            i_parentTransaction.commit4FieldIndexes();
+        }
         if (i_dirtyFieldIndexes != null) {
             Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
             while (i.hasNext()) {
                 ((IndexTransaction) i.next()).commit();
             }
         }
+    }
+    
+    private void commit5writeClassIndexChanges(){
         
-        if (i_parentTransaction != null) {
-            i_parentTransaction.commitExceptForFreespace();
-        } else {
-            i_stream.writeDirty();
+        if(i_parentTransaction != null){
+            i_parentTransaction.commit5writeClassIndexChanges();
         }
         
-        write();
+        final Collection4 indicesToBeWritten = new Collection4();
+        traverseYapClassEntries(i_addToClassIndex, true, indicesToBeWritten);
+        traverseYapClassEntries(i_removeFromClassIndex, false,
+            indicesToBeWritten);
+        if(indicesToBeWritten.size() > 0){
+            Iterator4 i = indicesToBeWritten.iterator();
+            while (i.hasNext()) {
+                ClassIndex classIndex = (ClassIndex) i.next();
+                classIndex.setStateDirty();
+                classIndex.write(this);
+            }
+        }
+    }
+    
+    private void commit6WriteChanges() {
+        if(Debug.checkSychronization){
+            i_stream.i_lock.notify();
+        }
         
-        freeOnCommit();
+        if(i_parentTransaction != null){
+            i_parentTransaction.commit6WriteChanges();
+        }
+            
+        final int slotSetPointerCount[]  = {0};
         
+        if(_slotChanges != null){
+            _slotChanges.traverse(new Visitor4() {
+                public void visit(Object obj) {
+                    SlotChange slot = (SlotChange)obj;
+                    if(slot.isSetPointer()){
+                        slotSetPointerCount[0] ++;
+                    }
+                }
+            });
+        }
+        if (slotSetPointerCount[0] > 0) {
+            int length = (((slotSetPointerCount[0] * 3) + 2) * YapConst.YAPINT_LENGTH);
+            int address = i_file.getSlot(length);
+            final YapWriter bytes = new YapWriter(this, address, length);
+            bytes.writeInt(length);
+            Tree.write(bytes, _slotChanges, slotSetPointerCount[0]);
+            bytes.write();
+            flushFile();
+            i_stream.writeTransactionPointer(address);
+            flushFile();
+            writeSlots();
+            i_stream.writeTransactionPointer(0);
+            flushFile();
+            i_file.free(address, length);
+        }
+    }
+    
+    private void commit7ClearAll(){
+        if(i_parentTransaction != null){
+            i_parentTransaction.commit7ClearAll();
+        }
         clearAll();
     }
     
@@ -326,6 +412,9 @@ public class Transaction {
     private final void freeOnCommit() {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
+        }
+        if(i_parentTransaction != null){
+            i_parentTransaction.freeOnCommit();
         }
         if(_slotChanges != null){
             _slotChanges.traverse(new Visitor4() {
@@ -680,48 +769,6 @@ public class Transaction {
     }
     
     
-    private void write() {
-        if(Debug.checkSychronization){
-            i_stream.i_lock.notify();
-        }
-            
-        final int slotSetPointerCount[]  = {0};
-        
-        if(_slotChanges != null){
-            _slotChanges.traverse(new Visitor4() {
-                public void visit(Object obj) {
-                    SlotChange slot = (SlotChange)obj;
-                    if(slot.isSetPointer()){
-                        slotSetPointerCount[0] ++;
-                    }
-                }
-            });
-        }
-        
-        if (i_addToClassIndex == null && i_removeFromClassIndex == null && slotSetPointerCount[0] == 0) {
-            return;
-        }
-
-        int length = (((slotSetPointerCount[0] * 3) + 2) * YapConst.YAPINT_LENGTH)
-          + Tree.byteCount(i_addToClassIndex)
-          + Tree.byteCount(i_removeFromClassIndex);
-        
-        int address = i_file.getSlot(length);
-        final YapWriter bytes = new YapWriter(this, address, length);
-        bytes.writeInt(length);
-        Tree.write(bytes, _slotChanges, slotSetPointerCount[0]);
-        Tree.write(bytes, i_addToClassIndex);
-        Tree.write(bytes, i_removeFromClassIndex);
-        bytes.write();
-        flushFile();
-        i_stream.writeTransactionPointer(address);
-        flushFile();
-        writeSlots();
-        i_stream.writeTransactionPointer(0);
-        flushFile();
-        i_file.free(address, length);
-        
-    }
 
     void writeOld() {
         synchronized (i_stream.i_lock) {
@@ -733,10 +780,6 @@ public class Transaction {
                 bytes.read();
                 bytes.incrementOffset(YapConst.YAPINT_LENGTH);
                 _slotChanges = new TreeReader(bytes, new SlotChange(0)).read();
-                i_addToClassIndex = new TreeReader(bytes, new TreeIntObject(0,
-                    new TreeInt(0))).read();
-                i_removeFromClassIndex = new TreeReader(bytes,
-                    new TreeIntObject(0, new TreeInt(0))).read();
                 writeSlots();
                 i_stream.writeTransactionPointer(0);
                 flushFile();
@@ -749,6 +792,10 @@ public class Transaction {
     }
 
     public void writePointer(int a_id, int a_address, int a_length) {
+        if(DTrace.enabled){
+            DTrace.WRITE_POINTER.log(a_id);
+            DTrace.WRITE_POINTER.logLength(a_address, a_length);
+        }
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
@@ -766,23 +813,11 @@ public class Transaction {
         }
         i_pointerIo.write();
     }
-
+    
+    
     private void writeSlots() {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
-        }
-        final Collection4 indicesToBeWritten = new Collection4();
-        traverseYapClassEntries(i_addToClassIndex, true, indicesToBeWritten);
-        traverseYapClassEntries(i_removeFromClassIndex, false,
-            indicesToBeWritten);
-        if(indicesToBeWritten.size() > 0){
-            Iterator4 i = indicesToBeWritten.iterator();
-            while (i.hasNext()) {
-                ClassIndex classIndex = (ClassIndex) i.next();
-                classIndex.setDirty(i_stream);
-                classIndex.write(this);
-            }
-            flushFile();
         }
         if(_slotChanges != null){
             _slotChanges.traverse(new Visitor4() {

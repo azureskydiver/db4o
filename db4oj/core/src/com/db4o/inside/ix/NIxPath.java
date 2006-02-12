@@ -3,6 +3,7 @@
 package com.db4o.inside.ix;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 
 /**
  * @exclude
@@ -36,6 +37,9 @@ public class NIxPath extends Tree {
     }
     
     public String toString() {
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
         String str = "NIxPath +\n";
         String space = " ";
         NIxPathNode node = _head;

@@ -352,5 +352,12 @@ public final class YapWriter extends YapReader {
         _addressOffset += i_length;
         _offset = 0;
     }
+    
+    public String toString(){
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
+        return "id " + i_id + " adr " + i_address + " len " + i_length;
+    }
 
 }

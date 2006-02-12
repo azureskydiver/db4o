@@ -785,6 +785,9 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	}
 	
 	public String toString(){
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
 	    try{
 		    int id = getID();
 		    String str = "YapObject\nID=" + id;

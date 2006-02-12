@@ -131,20 +131,18 @@ public class QConJoin extends QCon {
 	}
 	
 	public String toString(){
-		if(Deploy.debugQueries){
-			String str = "QConJoin " + (i_and ? "AND ": "OR");
-			if(i_constraint1 != null){
-				str += "\n   " + i_constraint1;  
-			}
-			if(i_constraint2 != null){
-				str += "\n   " + i_constraint2;  
-			}
-			return str;
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
+		String str = "QConJoin " + (i_and ? "AND ": "OR");
+		if(i_constraint1 != null){
+			str += "\n   " + i_constraint1;  
 		}
-		return super.toString();
+		if(i_constraint2 != null){
+			str += "\n   " + i_constraint2;  
+		}
+		return str;
 	}
-
-	
 	
 
 }

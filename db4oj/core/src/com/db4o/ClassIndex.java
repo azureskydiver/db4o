@@ -132,4 +132,11 @@ import com.db4o.inside.slots.*;
     final void writeThis(final YapWriter a_writer) {
     	Tree.write(a_writer, i_root);
     }
+    
+    public String toString(){
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
+        return _yapClass + " index";  
+    }
 }
