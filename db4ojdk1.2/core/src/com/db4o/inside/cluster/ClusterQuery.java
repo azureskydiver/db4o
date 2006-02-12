@@ -2,6 +2,8 @@
 
 package com.db4o.inside.cluster;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.cluster.*;
 import com.db4o.inside.*;
@@ -69,7 +71,12 @@ public class ClusterQuery implements Query{
     }
 
 	public Query sortBy(QueryComparator comparator) {
-        Exceptions4.notSupported();        
-        return this;
+		// FIXME
+		Exceptions4.notSupported();
+		return this;
+	}
+
+	public Query sortBy(Comparator comparator) {
+		return sortBy(new JdkComparatorWrapper(comparator));
 	}
 }

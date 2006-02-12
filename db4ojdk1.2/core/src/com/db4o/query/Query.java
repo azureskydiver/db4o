@@ -2,6 +2,8 @@
 
 package  com.db4o.query;
 
+import java.util.*;
+
 import com.db4o.*;
 
 
@@ -106,7 +108,15 @@ public interface Query {
      * @return this {@link Query} object to allow the chaining of method calls.
      */
     public Query sortBy(QueryComparator comparator);
-    
+
+    /**
+     * Sort the resulting ObjectSet by the given comparator.
+     * 
+     * @param comparator The comparator to apply.
+     * @return this {@link Query} object to allow the chaining of method calls.
+     */
+    public Query sortBy(Comparator comparator);
+
 //    /**
 //     * defines a Query node to be represented as a column in the array
 //     * returned in every element of the ObjectSet upon query execution. 

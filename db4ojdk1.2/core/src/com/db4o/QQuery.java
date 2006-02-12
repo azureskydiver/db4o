@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import java.util.*;
+
 import com.db4o.foundation.*;
 import com.db4o.inside.query.*;
 import com.db4o.query.*;
@@ -524,5 +526,9 @@ public class QQuery implements Query, Unversioned {
         if(_comparator!=null) {
         	result.sort(_comparator);
         }
+	}
+
+	public Query sortBy(Comparator comparator) {
+		return sortBy(new JdkComparatorWrapper(comparator));
 	}
 }

@@ -105,6 +105,7 @@ public class AllTestsConfAll extends TestSuite{
             SimpleTypeArrayInUntypedVariable.class,
 			SmallerOrEqual.class,
 	    	Soda.class,
+	    	SodaComparatorSort.class,
 	    	SodaNoDuplicates.class,
 	    	SodaNumberCoercion.class,
 	    	//SortResult.class,
