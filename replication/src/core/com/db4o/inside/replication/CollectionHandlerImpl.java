@@ -4,14 +4,13 @@ import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
-
 import org.hibernate.collection.PersistentList;
 import org.hibernate.collection.PersistentSet;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class CollectionHandlerImpl implements CollectionHandler {
 
@@ -49,14 +48,14 @@ public class CollectionHandlerImpl implements CollectionHandler {
 
 		Collection original = (Collection) originalCollection;
 		Object result;
-		if ( (original instanceof PersistentList) || (original instanceof ArrayList)) {
+		if ((original instanceof PersistentList) || (original instanceof ArrayList)) {
 			result = new ArrayList(original.size());
 		} else if (original instanceof PersistentSet) {
 			result = new HashSet(original.size());
 		} else {
 			result = _reflector.forClass(original.getClass()).newInstance();
 		}
-        copyState(original, result, counterpartFinder);
+		copyState(original, result, counterpartFinder);
 		return result;
 	}
 
@@ -73,17 +72,22 @@ public class CollectionHandlerImpl implements CollectionHandler {
 		return result.iterator();
 	}
 
-    public void copyState(Object original, Object destination, CounterpartFinder counterpartFinder) {
-        Collection originalCollection = (Collection) original;
-        Collection destinationCollection = (Collection) destination;
-        destinationCollection.clear();
-        Iterator it = originalCollection.iterator();
-        while (it.hasNext()) {
-            Object element = it.next();
-            Object counterpart = counterpartFinder.findCounterpart(element);
-            destinationCollection.add(counterpart);
-        }
-    }
+	public void copyState(Object original, Object destination, CounterpartFinder counterpartFinder) {
+		if (_mapHandler.canHandle(original))
+			_mapHandler.copyState(original, destination, counterpartFinder);
+		else
+			doCopyState(original, destination, counterpartFinder);
+	}
 
-
+	private void doCopyState(Object original, Object destination, CounterpartFinder counterpartFinder) {
+		Collection originalCollection = (Collection) original;
+		Collection destinationCollection = (Collection) destination;
+		destinationCollection.clear();
+		Iterator it = originalCollection.iterator();
+		while (it.hasNext()) {
+			Object element = it.next();
+			Object counterpart = counterpartFinder.findCounterpart(element);
+			destinationCollection.add(counterpart);
+		}
+	}
 }

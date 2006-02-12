@@ -10,11 +10,11 @@ import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.test.replication.ReplicationFeaturesMain;
 
 public class Db4oReplicationFeaturesMain extends ReplicationFeaturesMain {
-	private final ObjectContainer cA = ExtDb4o.openMemoryFile(new MemoryFile());
-	private final ObjectContainer cB = ExtDb4o.openMemoryFile(new MemoryFile());
+	static private final ObjectContainer cA = ExtDb4o.openMemoryFile(new MemoryFile());
+	static private final ObjectContainer cB = ExtDb4o.openMemoryFile(new MemoryFile());
 
-	private final Db4oReplicationProvider pA = new Db4oReplicationProvider(cA);
-	private final Db4oReplicationProvider pB = new Db4oReplicationProvider(cB);
+	static private final Db4oReplicationProvider pA = new Db4oReplicationProvider(cA);
+	static private final Db4oReplicationProvider pB = new Db4oReplicationProvider(cB);
 
 	protected TestableReplicationProvider prepareProviderA() {
 		return pA;
@@ -29,6 +29,8 @@ public class Db4oReplicationFeaturesMain extends ReplicationFeaturesMain {
 	}
 
 	protected void clean() {
+		pA.closeIfOpened();
+		pB.closeIfOpened();
 		cA.close();
 		cB.close();
 	}
