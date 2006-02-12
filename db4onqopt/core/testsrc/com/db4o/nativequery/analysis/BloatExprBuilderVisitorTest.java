@@ -4,7 +4,6 @@ import junit.framework.*;
 import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.file.*;
 
-import com.db4o.foundation.*;
 import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
@@ -679,6 +678,25 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison("sampleIntMemberMemberAdd",INT_FIELDNAME,new ArithmeticExpression(new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),ArithmeticOperator.ADD),ComparisonOperator.EQUALS,false);
 	}
 
+	// array access
+	
+	boolean sampleIntArrayAccess(Data data) {
+		return data.id==intArrayMember[0];
+	}
+
+	public void testIntArrayAccess() throws Exception {
+		assertComparison("sampleIntArrayAccess","id",new ArrayAccessValue(new FieldValue(PredicateFieldRoot.INSTANCE,"intArrayMember"),new ConstValue(new Integer(0))),ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleObjectArrayAccess(Data data) {
+		return data.next.id==objArrayMember[0].id;
+	}
+
+	public void testObjectArrayAccess() throws Exception {
+		assertComparison("sampleObjectArrayAccess",new String[]{"next","id"},new FieldValue(new ArrayAccessValue(new FieldValue(PredicateFieldRoot.INSTANCE,"objArrayMember"),new ConstValue(new Integer(0))),"id"),ComparisonOperator.EQUALS,false);
+	}
+
+	
 	// non-candidate method calls
 
 	boolean sampleIntAddInPredicateMethod(Data data) {
@@ -705,10 +723,9 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertComparison("sampleTwoParamMethodCall",INT_FIELDNAME,new MethodCallValue(PredicateFieldRoot.INSTANCE,"sum",new Class[]{Integer.TYPE,Integer.TYPE},new ComparisonOperand[]{new FieldValue(PredicateFieldRoot.INSTANCE,"intMember"),new ConstValue(new Integer(0))}),ComparisonOperator.EQUALS,false);
 	}
 
-	// TODO: string append via '+'?
-	
 	// not applicable
 	
+	// TODO: definitely applicable - fix!
 	boolean sampleInvalidOtherMemberEqualsComp(Data data) {
 		return stringMember.equals(STRING_CMPVAL);
 	}
@@ -807,22 +824,6 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 		assertInvalid("sampleRecursiveCall");
 	}
 
-	boolean sampleIntArrayAccess(Data data) {
-		return data.id==intArrayMember[0];
-	}
-
-	public void testIntArrayAccess() throws Exception {
-		assertComparison("sampleIntArrayAccess","id",new ArrayAccessValue(new FieldValue(PredicateFieldRoot.INSTANCE,"intArrayMember"),new ConstValue(new Integer(0))),ComparisonOperator.EQUALS,false);
-	}
-
-	boolean sampleObjectArrayAccess(Data data) {
-		return data.next.id==objArrayMember[0].id;
-	}
-
-	public void testObjectArrayAccess() throws Exception {
-		assertComparison("sampleObjectArrayAccess",new String[]{"next","id"},new FieldValue(new ArrayAccessValue(new FieldValue(PredicateFieldRoot.INSTANCE,"objArrayMember"),new ConstValue(new Integer(0))),"id"),ComparisonOperator.EQUALS,false);
-	}
-
 	boolean sampleCandidateIntArrayAccess(Data data) {
 		return data.intArray[0]==0;
 	}
@@ -869,6 +870,14 @@ public class BloatExprBuilderVisitorTest extends TestCase {
 
 	public void testSwitch() throws Exception {
 		assertInvalid("sampleSwitch");
+	}
+
+	boolean sampleStringAppend(Data data) {
+		return data.name.equals(stringMember+"X");
+	}
+
+	public void testStringAppend() throws Exception {
+		assertInvalid("sampleStringAppend");
 	}
 
 	// internal

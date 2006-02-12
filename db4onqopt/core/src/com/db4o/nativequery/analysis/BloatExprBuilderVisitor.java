@@ -6,7 +6,6 @@ import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.tree.*;
 
-import com.db4o.foundation.*;
 import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.build.*;

@@ -496,7 +496,7 @@ public class NQRegressionTests {
 				return candidate.id==Integer.parseInt("3");
 			}
 		},
-		new ExpectingPredicate("id==sum(3,0)") {
+		new ExpectingPredicate("id==P.sum(3,0)") {
 			public int expected() { return 2;}
 			private int sum(int a,int b) {
 				return a+b;
