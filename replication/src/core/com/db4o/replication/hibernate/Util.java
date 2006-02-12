@@ -102,7 +102,7 @@ public class Util {
 	}
 
 	static void incrementObjectVersion(Connection connection, Serializable id, long newVersion,
-	                                   String tableName, String primaryKeyColumnName) {
+			String tableName, String primaryKeyColumnName) {
 		PreparedStatement ps = null;
 
 		try {
@@ -122,6 +122,10 @@ public class Util {
 		} finally {
 			closePreparedStatement(ps);
 		}
+	}
+
+	public static void dumpTable(Session sess, String tableName) {
+		dumpTable(sess.connection(), tableName);
 	}
 
 	static void dumpTable(Connection con, String tableName) {

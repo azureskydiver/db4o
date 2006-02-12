@@ -8,9 +8,12 @@ import com.db4o.inside.replication.CollectionHandlerImpl;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.ReplicationReferenceImpl;
+import com.db4o.inside.replication.ReplicationReflector;
 import com.db4o.inside.replication.TestableReplicationProvider;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.inside.traversal.CollectionFlattener;
+import com.db4o.reflect.ReflectField;
+import com.db4o.reflect.Reflector;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
@@ -135,6 +138,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	protected final Set _uuidsReplicatedInThisSession = new HashSet();
 
 	protected boolean _inReplication = false;
+
+	protected Reflector _reflector = new ReplicationReflector().reflector();
 
 	public HibernateReplicationProviderImpl(Configuration cfg) {
 		this(cfg, null, null);
@@ -305,8 +310,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		if (counterpartReference == null) throw new NullPointerException("counterpartReference is null");
 
 		if (_collectionHandler.canHandle(obj)) {
-			if (referencingObjCounterPartRef == null)
-				throw new NullPointerException("referencingObjCounterPartRef is null");
+			if (referencingObjCounterPartRef == null) throw new NullPointerException("referencingObjCounterPartRef is null");
 			if (fieldName == null) throw new NullPointerException("fieldName is null");
 
 			ReplicationReference cachedReference = getCachedReference(obj);
@@ -446,11 +450,44 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	protected ReplicationReference produceCollectionReference(Object obj, Object referencingObj, String fieldName) {
 		final ReplicationReference refObjRef = produceReference(referencingObj, null, null);
 
-		if (refObjRef == null) {
+		if (refObjRef == null)
 			return null;
-		} else {
-			return createRefForCollection(obj, refObjRef, fieldName, generateUuidLongPartSeqNo(), _currentVersion);
+		else {
+			ReplicationReference existingReference = produceCollectionReferenceByReferencingObjUuid(refObjRef, fieldName);
+			if (existingReference != null)
+				return existingReference;
+			else
+				return createRefForCollection(obj, refObjRef, fieldName, generateUuidLongPartSeqNo(), _currentVersion);
 		}
+	}
+
+	protected ReplicationReference produceCollectionReferenceByReferencingObjUuid(ReplicationReference refObjRef, String fieldName) {
+		Criteria criteria = _session.createCriteria(ReplicationComponentIdentity.class);
+		criteria.add(Restrictions.eq("referencingObjectUuidLongPart", new Long(refObjRef.uuid().getLongPart())));
+		criteria.createCriteria("referencingObjectField").add(Restrictions.eq("referencingObjectFieldName", fieldName));
+		criteria.createCriteria("provider").add(Restrictions.eq("bytes", refObjRef.uuid().getSignaturePart()));
+
+		final List exisitings = criteria.list();
+		int count = exisitings.size();
+
+		ReplicationReference out;
+		if (count == 0) {
+			out = null;
+		} else if (count > 1) {
+			throw new RuntimeException("Only one Record should exist for this peer");
+		} else {
+			ReplicationComponentIdentity rci = (ReplicationComponentIdentity) exisitings.get(0);
+
+			final Object fieldValue = getFieldValue(refObjRef.object(), rci.getReferencingObjectField().getReferencingObjectFieldName());
+
+			final ReplicationReference cachedReference = getCachedReference(fieldValue);
+			if (cachedReference != null) return cachedReference;
+
+			Db4oUUID fieldUuid = new Db4oUUID(rci.getUuidLongPart(), rci.getProvider().getBytes());
+			out = createReference(fieldValue, fieldUuid, refObjRef.version());
+		}
+
+		return out;
 	}
 
 	protected ReplicationReference produceObjectReference(Object obj) {
@@ -587,6 +624,10 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	protected ReplicationReference produceCollectionReferenceByUUID(Db4oUUID uuid) {
+//		Util.dumpTable(_session, "ReplicationProviderSignature");
+//		Util.dumpTable(_session, "ReplicationComponentField");
+//		Util.dumpTable(_session, "ReplicationComponentIdentity");
+
 		Criteria criteria = _session.createCriteria(ReplicationComponentIdentity.class);
 		criteria.add(Restrictions.eq("uuidLongPart", new Long(uuid.getLongPart())));
 		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getSignaturePart()));
@@ -600,15 +641,41 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		} else if (count > 1) {
 			throw new RuntimeException("Only one Record should exist for this peer");
 		} else {
-			Object obj = exisitings.get(0);
-			ReplicationReference existing = getCachedReference(obj);
+			ReplicationComponentIdentity rci = (ReplicationComponentIdentity) exisitings.get(0);
+
+
+			Db4oUUID refObjUuid = new Db4oUUID(rci.getReferencingObjectUuidLongPart(), rci.getProvider().getBytes());
+
+			final Class hint;
+			final ReplicationComponentField referencingObjectField = rci.getReferencingObjectField();
+			try {
+				hint = Class.forName(referencingObjectField.getReferencingObjectClassName());
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			}
+
+			final ReplicationReference refObjRef = produceReferenceByUUID(refObjUuid, hint);
+			if (refObjRef == null) throw new NullPointerException("refObjRefcannot be null");
+
+			final Object field = getFieldValue(refObjRef.object(), referencingObjectField.getReferencingObjectFieldName());
+
+			ReplicationReference existing = getCachedReference(field);
 			if (existing != null) return existing;
 
-			long version = Util.getVersion(_cfg, _session, obj);
-			out = createReference(obj, uuid, version);
+			out = createReference(field, uuid, refObjRef.version());
 		}
 
 		return out;
+	}
+
+	private Object getFieldValue(Object refObject, String referencingObjectFieldName) {
+		final ReflectField declaredField = _reflector.forObject(refObject).getDeclaredField(referencingObjectFieldName);
+
+		declaredField.setAccessible();
+		final Object field = declaredField.get(refObject);
+		if (field == null) throw new NullPointerException("field cannot be null");
+
+		return field;
 	}
 
 	protected void setSignature(byte[] b) {
