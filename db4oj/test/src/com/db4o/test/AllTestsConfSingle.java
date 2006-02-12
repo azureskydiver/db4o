@@ -17,42 +17,7 @@ public class AllTestsConfSingle extends TestSuite{
     
     public Class[] tests(){
         return new Class[] {
-        	CascadeToHashtable.class,
-            // Db4oLinkedList.class,
-            
-            // DeleteDeep.class
-            
-            
-            // CreateIndex.class,
-            
-        	// StoreObject.class,
-//            IndexedByIdentity.class,
-//            IndexCreateDrop.class,
-//            IndexedUpdatesWithNull.class,
-            
-            // Db4oLinkedList.class
-            
-            // MultiLevelIndex.class
-            
-            // IndexCreateDrop.class,
-            
-            // ReplicateExistingFile.class
-            // ReplicateDb4oList.class
-            
-            // CrashSimulatingTest.class
-            
-            // CJSameField.class,
-            
-//             IndexCreateDrop.class,
-            
-//              CreateIndex.class,
-//             
-//             Soda.class
-            
-            // IndexedByIdentity.class
-            
-            // MultiDelete.class
-            // GenericFeatures.class
+            SimplestPossible.class
     	};
     }
 
