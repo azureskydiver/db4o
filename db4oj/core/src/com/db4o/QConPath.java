@@ -124,10 +124,10 @@ public class QConPath extends QConClass {
 	}
 	
 	public String toString(){
-		if(Deploy.debugQueries){
-			return "QConPath " + super.toString();
-		}
-		return super.toString();
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
+        return "QConPath " + super.toString();
 	}
 
 

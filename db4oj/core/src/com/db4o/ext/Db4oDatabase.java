@@ -122,7 +122,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
     }
     
     public String toString(){
-        return "Db4oDatabase: " + i_signature;
+        return "db " + i_signature;
     }
     
     public boolean isOlderThan(Db4oDatabase peer){

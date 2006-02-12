@@ -263,6 +263,9 @@ class IxPath implements Cloneable, Visitor4 {
     }
 
     public String toString() {
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
         return i_tree.toString();
     }
 

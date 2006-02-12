@@ -17,7 +17,7 @@ public class DTrace {
     private static final Object init(){
         if(enabled){
             
-            // breakOnEvent(87);
+            // breakOnEvent(15);
 
             // addRange(4874);
             
@@ -25,7 +25,21 @@ public class DTrace {
             
             // addRangeWithLength(10666,1);
             
-            addRangeWithLength(0,Integer.MAX_VALUE);
+            // addRangeWithLength(1013,1);
+            
+            // addRangeWithLength(3212,1);
+            
+            // addRangeWithLength(0,Integer.MAX_VALUE);
+
+            
+            trackEventsWithoutRange();
+            
+            // addRangeWithLength(3181,1);
+            
+            addRangeWithLength(3243,1);
+            
+            
+
             
             
             ADD_TO_CLASS_INDEX = new DTrace(true, true, "add to class index tree", true);
@@ -69,16 +83,23 @@ public class DTrace {
             YAPCLASS_BY_ID = new DTrace(true, true, "yapclass by id", true);
             YAPCLASS_INIT = new DTrace(true, true, "yapclass init", true);
             WRITE_BYTES = new DTrace(true, true, "writeBytes", true); 
-            WRITE_XBYTES = new DTrace(true, true, "writeXBytes", true); 
+            WRITE_POINTER = new DTrace(true, true, "write pointer", true);
             WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true, "trans writeUpdateDeleteMembers", true);
-            
+            WRITE_XBYTES = new DTrace(true, true, "writeXBytes", true); 
             
             // turnAllOffExceptFor(new DTrace[] {GET_SLOT, FREE_ON_COMMIT, FREE, WRITE_BYTES});
+            
+            // turnAllOffExceptFor(new DTrace[] {WRITE_POINTER});
+            
          
         }
         return null;
     }
     
+    private static void trackEventsWithoutRange() {
+        _trackEventsWithoutRange = true;
+    }
+
     private DTrace(boolean enabled_, boolean break_, String tag_, boolean log_){
         if(enabled){
             _enabled = enabled_;
@@ -104,6 +125,9 @@ public class DTrace {
     public static long _eventNr;
     private static long[] _breakEventNrs;
     private static int _breakEventCount;
+    
+    private static boolean _trackEventsWithoutRange;
+
     
     public static DTrace ADD_TO_CLASS_INDEX;
     public static DTrace BIND;
@@ -145,6 +169,7 @@ public class DTrace {
     public static DTrace YAPCLASS_BY_ID;
     public static DTrace YAPCLASS_INIT;
     public static DTrace WRITE_BYTES;
+    public static DTrace WRITE_POINTER;
     public static DTrace WRITE_XBYTES;
     public static DTrace WRITE_UPDATE_DELETE_MEMBERS;
     
@@ -196,6 +221,11 @@ public class DTrace {
                 return;
             }
             boolean inRange = false;
+            
+            if(_rangeCount == 0){
+                inRange = true;
+            }
+            
             for (int i = 0; i < _rangeCount; i++) {
                 
                 // Case 1 start in range
@@ -219,7 +249,7 @@ public class DTrace {
                     }
                 }
             }
-            if(inRange || (start == -1 )){
+            if(inRange || ( _trackEventsWithoutRange &&  (start == -1) )){
                 if(_log){
                     _eventNr ++;
                     StringBuffer sb = new StringBuffer(":");

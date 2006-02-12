@@ -50,6 +50,9 @@ class IxFileRange extends IxTree{
 	}
     
     public String toString(){
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
         YapFile yf = stream();
         Transaction transaction = trans();
         YapReader fileReader = new YapReader(slotLength());

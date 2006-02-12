@@ -46,8 +46,6 @@ class Sessions extends Collection4{
 			} else {
 				try {
 					oc = new YapRandomAccessFile(newSession);
-				} catch (ExpirationException e) {
-					throw e;
 				} catch (LongJumpOutException e) {
 					throw e;
 				} catch (DatabaseFileLockedException e) {

@@ -516,26 +516,26 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
     }
 
     public String toString() {
-        if (Deploy.debugQueries) {
-            String str = "QCandidate ";
-            if (i_yapClass != null) {
-                str += "\n   YapClass " + i_yapClass.getName();
-            }
-            if (i_yapField != null) {
-                str += "\n   YapField " + i_yapField.getName();
-            }
-            if (i_member != null) {
-                str += "\n   Member " + i_member.toString();
-            }
-            if (i_root != null) {
-                str += "\n  rooted by:\n";
-                str += i_root.toString();
-            } else {
-                str += "\n  ROOT";
-            }
-            return str;
+        if(! Debug4.prettyToStrings){
+            return super.toString();
         }
-        return super.toString();
+        String str = "QCandidate ";
+        if (i_yapClass != null) {
+            str += "\n   YapClass " + i_yapClass.getName();
+        }
+        if (i_yapField != null) {
+            str += "\n   YapField " + i_yapField.getName();
+        }
+        if (i_member != null) {
+            str += "\n   Member " + i_member.toString();
+        }
+        if (i_root != null) {
+            str += "\n  rooted by:\n";
+            str += i_root.toString();
+        } else {
+            str += "\n  ROOT";
+        }
+        return str;
     }
 
     void useField(QField a_field) {

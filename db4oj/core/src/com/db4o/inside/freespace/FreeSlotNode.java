@@ -102,13 +102,14 @@ public final class FreeSlotNode extends TreeInt
 //	}
     
     public String toString() {
-        if(Debug.freespace){
-            String str = "FreeSlotNode " + i_key;
-            if(i_peer != null){
-                str += " peer: " + i_peer.i_key;
-            }
-            return str;
+        if(!Debug.freespace){
+            return super.toString();
+            
         }
-        return super.toString();
+        String str = "FreeSlotNode " + i_key;
+        if(i_peer != null){
+            str += " peer: " + i_peer.i_key;
+        }
+        return str;
     }
 }

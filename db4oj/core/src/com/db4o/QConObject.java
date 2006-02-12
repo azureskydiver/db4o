@@ -453,14 +453,14 @@ public class QConObject extends QCon {
     }
 
     public String toString() {
-        if (Deploy.debugQueries) {
-            String str = "QConObject ";
-            if (i_object != null) {
-                str += i_object.toString();
-            }
-            return str;
+        if(! Debug4.prettyToStrings){
+            return super.toString();
         }
-        return super.toString();
+        String str = "QConObject ";
+        if (i_object != null) {
+            str += i_object.toString();
+        }
+        return str;
     }
 
 }

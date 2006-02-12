@@ -191,21 +191,21 @@ public class Collection4 implements DeepClone, Unversioned {
     }
     
     public String toString() {
-        if(Debug4.prettyToStrings){
-            if(_size == 0){
-                return "[]";
-            }
-            StringBuffer sb = new StringBuffer();
-            sb.append("[");
-            Iterator4 i = iterator();
-            sb.append(i.next());
-            while(i.hasNext()){
-                sb.append(", ");
-                sb.append(i.next());
-            }
-            sb.append("]");
-            return sb.toString();
+        if(! Debug4.prettyToStrings){
+            return super.toString();
         }
-        return super.toString();
+        if(_size == 0){
+            return "[]";
+        }
+        StringBuffer sb = new StringBuffer();
+        sb.append("[");
+        Iterator4 i = iterator();
+        sb.append(i.next());
+        while(i.hasNext()){
+            sb.append(", ");
+            sb.append(i.next());
+        }
+        sb.append("]");
+        return sb.toString();
     }
 }

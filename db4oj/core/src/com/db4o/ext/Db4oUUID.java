@@ -2,6 +2,8 @@
 
 package com.db4o.ext;
 
+import com.db4o.foundation.*;
+
 
 /**
  * a unique universal identify for an object. <br><br>The db4o UUID consists of
@@ -78,16 +80,16 @@ public class Db4oUUID {
 	}
 
 	public String toString() {
-		System.out.println("toString");
-		return "long part = " + longPart + ", sign = " + flattenSign();
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
+        
+        String sig = "";
+        for (int i = 0; i < signaturePart.length; i++) {
+            sig += signaturePart[i] + " ";
+        }
+        
+		return "long " + longPart + " ,  signature " + sig;
 	}
 
-	protected String flattenSign() {
-		String out = "";
-		for (int i = 0; i < signaturePart.length; i++) {
-			if (i != 0) out += ", ";
-			out += signaturePart[i];
-		}
-		return out;
-	}
 }

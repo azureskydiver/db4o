@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -94,14 +95,14 @@ public class QConClass extends QConObject{
     }
 	
 	public String toString(){
-		if(Deploy.debugQueries){
-			String str = "QConClass ";
-			if(_claxx != null){
-				str += _claxx.toString() + " ";
-			}
-			return str + super.toString();
+        if(! Debug4.prettyToStrings){
+            return super.toString();
+        }
+		String str = "QConClass ";
+		if(_claxx != null){
+			str += _claxx.toString() + " ";
 		}
-		return super.toString();
+		return str + super.toString();
 	}
 	
     void unmarshall(Transaction a_trans) {
