@@ -1053,6 +1053,8 @@
 			<fileset dir="../db4onqopt">
 				<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
 				<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
+				<include name="core/src/com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
+				<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
 			</fileset>
 		</copy>
 		
@@ -1120,20 +1122,16 @@
 		<exec executable="${pascalcase.converter.exe}" failonerror="true">
 			<arg file="${dir.n.tools}/src" />
 			<arg file="${dir.dist.pascalcase}/tools/src" />
-			<arg value="${csharp.defines}" />
 		</exec>
 		
 		<exec executable="${pascalcase.converter.exe}" failonerror="true">
 			<arg file="${dir.n.test}/src" />
 			<arg file="${dir.dist.pascalcase}/test/src" />
-			<arg value="${csharp.defines}" />
-			<arg value="PASCALCASE" />
 		</exec>
 		
 		<exec executable="${pascalcase.converter.exe}" failonerror="true">
 			<arg file="${dir.n.tutorial}" />
 			<arg file="${dir.dist.pascalcase}/tutorial" />
-			<arg value="PASCALCASE" />
 		</exec>
 		
 		<copy todir="${dir.dist.pascalcase}">

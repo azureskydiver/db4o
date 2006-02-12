@@ -5,19 +5,6 @@ import java.lang.reflect.*;
 import com.db4o.*;
 
 public class ReflectUtil {
-	public static Method methodFor(Class clazz, String methodName, String[] paramTypeNames) {
-		Class[] paramTypes=new Class[paramTypeNames.length];
-		for (int paramIdx = 0; paramIdx < paramTypeNames.length; paramIdx++) {
-			try {
-				paramTypes[paramIdx]=Class.forName(paramTypeNames[paramIdx]);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-		return methodFor(clazz, methodName, paramTypes);
-	}
-
 	public static Method methodFor(Class clazz, String methodName, Class[] paramTypes) {
 		Class curclazz=clazz;
 		while(curclazz!=null) {

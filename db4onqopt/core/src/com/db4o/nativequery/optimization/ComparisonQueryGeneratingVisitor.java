@@ -5,30 +5,28 @@ package com.db4o.nativequery.optimization;
 
 import java.lang.reflect.*;
 
-import com.db4o.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.field.*;
 
 final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor {
-	private Object predicate;
+	private Object _predicate;
 	
-	
-	private Object value=null;
+	private Object _value=null;
 
 	public Object value() {
-		return value;
+		return _value;
 	}
 	
 	public void visit(ConstValue operand) {
-		value = operand.value();
+		_value = operand.value();
 	}
 
 	public void visit(FieldValue operand) {
 		operand.parent().accept(this);
-		Class clazz=((operand.parent() instanceof StaticFieldRoot) ? (Class)value : value.getClass());
+		Class clazz=((operand.parent() instanceof StaticFieldRoot) ? (Class)_value : _value.getClass());
 		try {
 			Field field=ReflectUtil.fieldFor(clazz,operand.fieldName());
-			value=field.get(value); // arg is ignored for static
+			_value=field.get(_value); // arg is ignored for static
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
@@ -88,21 +86,21 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 
 	public void visit(ArithmeticExpression operand) {
 		operand.left().accept(this);
-		Object left=value;
+		Object left=_value;
 		operand.right().accept(this);
-		Object right=value;
+		Object right=_value;
 		switch(operand.op().id()) {
 			case ArithmeticOperator.ADD_ID: 
-				value=add(left,right);
+				_value=add(left,right);
 				break;
 			case ArithmeticOperator.SUBTRACT_ID: 
-				value=subtract(left,right);
+				_value=subtract(left,right);
 				break;
 			case ArithmeticOperator.MULTIPLY_ID: 
-				value=multiply(left,right);
+				_value=multiply(left,right);
 				break;
 			case ArithmeticOperator.DIVIDE_ID: 
-				value=divide(left,right);
+				_value=divide(left,right);
 				break;
 		}
 	}
@@ -111,12 +109,12 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 	}
 
 	public void visit(PredicateFieldRoot root) {
-		value=predicate;
+		_value=_predicate;
 	}
 
 	public void visit(StaticFieldRoot root) {
 		try {
-			value=Class.forName(root.className());
+			_value=Class.forName(root.className());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -124,19 +122,19 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 
 	public void visit(ArrayAccessValue operand) {
 		operand.parent().accept(this);
-		Object parent=value;
+		Object parent=_value;
 		operand.index().accept(this);
-		Integer index=(Integer)value;
-		value=Array.get(parent, index.intValue());
+		Integer index=(Integer)_value;
+		_value=Array.get(parent, index.intValue());
 	}
 
 	public void visit(MethodCallValue operand) {
 		operand.parent().accept(this);
-		Object receiver=value;
-		Object[] params=new Object[operand.params().length];
-		for (int paramIdx = 0; paramIdx < operand.params().length; paramIdx++) {
-			operand.params()[paramIdx].accept(this);
-			params[paramIdx]=value;
+		Object receiver=_value;
+		Object[] params=new Object[operand.args().length];
+		for (int paramIdx = 0; paramIdx < operand.args().length; paramIdx++) {
+			operand.args()[paramIdx].accept(this);
+			params[paramIdx]=_value;
 		}
 		Class clazz=receiver.getClass();
 		if(operand.parent().root() instanceof StaticFieldRoot) {
@@ -144,16 +142,16 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 		}
 		Method method=ReflectUtil.methodFor(clazz,operand.methodName(),operand.paramTypes());
 		try {
-			value=method.invoke(receiver, params);
+			_value=method.invoke(receiver, params);
 		} catch (Exception exc) {
 			exc.printStackTrace();
-			value=null;
+			_value=null;
 		}
 	}
 
 	public ComparisonQueryGeneratingVisitor(Object predicate) {
 		super();
-		this.predicate = predicate;
+		this._predicate = predicate;
 	}
 	
 }

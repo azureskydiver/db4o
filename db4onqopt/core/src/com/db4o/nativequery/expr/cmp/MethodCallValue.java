@@ -3,13 +3,13 @@ package com.db4o.nativequery.expr.cmp;
 public class MethodCallValue extends ComparisonOperandDescendant {
 	private String _methodName;
 	private Class[] _paramTypes; 
-	private ComparisonOperand[] _params;
+	private ComparisonOperand[] _args;
 	
-	public MethodCallValue(ComparisonOperandAnchor parent, String name, Class[] paramTypes, ComparisonOperand[] params) {
+	public MethodCallValue(ComparisonOperandAnchor parent, String name, Class[] paramTypes, ComparisonOperand[] args) {
 		super(parent);
 		_methodName = name;
 		_paramTypes = paramTypes;
-		_params = params;
+		_args = args;
 	}
 
 	public void accept(ComparisonOperandVisitor visitor) {
@@ -24,8 +24,8 @@ public class MethodCallValue extends ComparisonOperandDescendant {
 		return _paramTypes;
 	}
 
-	public ComparisonOperand[] params() {
-		return _params;
+	public ComparisonOperand[] args() {
+		return _args;
 	}
 	
 	public boolean equals(Object obj) {
@@ -33,14 +33,14 @@ public class MethodCallValue extends ComparisonOperandDescendant {
 			return false;
 		}
 		MethodCallValue casted=(MethodCallValue)obj;
-		return _methodName.equals(casted._methodName)&&arrayCmp(_paramTypes, casted._paramTypes)&&arrayCmp(_params, casted._params);
+		return _methodName.equals(casted._methodName)&&arrayCmp(_paramTypes, casted._paramTypes)&&arrayCmp(_args, casted._args);
 	}
 
 	public int hashCode() {
 		int hc=super.hashCode();
 		hc*=29+_methodName.hashCode();
 		hc*=29+_paramTypes.hashCode();
-		hc*=29+_params.hashCode();
+		hc*=29+_args.hashCode();
 		return hc;
 	}
 	
@@ -50,7 +50,7 @@ public class MethodCallValue extends ComparisonOperandDescendant {
 			if(paramIdx>0) {
 				str+=",";
 			}
-			str+=_paramTypes[paramIdx]+":"+_params[paramIdx];
+			str+=_paramTypes[paramIdx]+":"+_args[paramIdx];
 		}
 		str+=")";
 		return str;
