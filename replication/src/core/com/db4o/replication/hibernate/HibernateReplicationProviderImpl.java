@@ -283,18 +283,18 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	public final ReplicationReference produceReference(Object obj, Object referencingObj, String fieldName) {
 		ensureReplicationActive();
 
-		//System.out.println("produceReference. =  obj = " + obj);
-
 		ReplicationReference existing = getCachedReference(obj);
-
-		//System.out.println("existing = " + existing);
 
 		if (existing != null) return existing;
 
-		if (_collectionHandler.canHandle(obj))
+		if (_collectionHandler.canHandle(obj)) {
+			if (referencingObj == null) throw new NullPointerException("referencingObj cannot be null");
+			if (fieldName == null) throw new NullPointerException("fieldName cannot be null");
+
 			return produceCollectionReference(obj, referencingObj, fieldName);
-		else
+		} else {
 			return produceObjectReference(obj);
+		}
 	}
 
 	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference,
