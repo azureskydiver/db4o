@@ -19,12 +19,16 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 	
 	public Object optimize(Query query,Predicate filter) {
 		try {
+			//long start=System.currentTimeMillis();
 			Expression expr = analyzeInternal(filter);
+			//System.err.println((System.currentTimeMillis()-start)+" ms");
 			//System.err.println(expr);
 			if(expr==null) {
 				throw new RuntimeException();
 			}
+			//start=System.currentTimeMillis();
 			new SODAQueryBuilder().optimizeQuery(expr,query,filter);
+			//System.err.println((System.currentTimeMillis()-start)+" ms");
 			return expr;
 		} catch (ClassNotFoundException exc) {
 			throw new RuntimeException(exc.getMessage());
