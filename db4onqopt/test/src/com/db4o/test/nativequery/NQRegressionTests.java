@@ -487,6 +487,22 @@ public class NQRegressionTests {
 				return candidate.prev==data[3];
 			}
 		},
+		// non-candidate method calls
+		new ExpectingPredicate("id==Integer.parseInt('3')") {
+			public int expected() { return 2;}
+			public boolean match(Data candidate) {
+				return candidate.id==Integer.parseInt("3");
+			}
+		},
+		new ExpectingPredicate("id==sum(3,0)") {
+			public int expected() { return 2;}
+			private int sum(int a,int b) {
+				return a+b;
+			}
+			public boolean match(Data candidate) {
+				return candidate.id==sum(3,0);
+			}
+		},
 		// Problem: We never get to see a static field access here - non-static inner class
 		// stuff converts this to NQRegressionTests#access$0()
 //		new ExpectingPredicate() {
@@ -498,16 +514,6 @@ public class NQRegressionTests {
 	};
 	
 	private static ExpectingPredicate[] PREDICATES=_PREDICATES;
-//	{
-//		new ExpectingPredicate("id==P.data[3]") {
-//			private int[] data={0,1,2,3,4};
-//			
-//			public int expected() { return 2;}
-//			public boolean match(Data candidate) {
-//				return candidate.id==data[3];
-//			}
-//		},
-//	};
 
 	public void testAll() {
 		for (int predIdx = 0; predIdx < PREDICATES.length; predIdx++) {

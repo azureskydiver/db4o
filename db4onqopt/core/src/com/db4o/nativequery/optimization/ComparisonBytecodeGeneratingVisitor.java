@@ -1,8 +1,10 @@
 package com.db4o.nativequery.optimization;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.editor.Type;
 
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.field.*;
@@ -63,46 +65,63 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		}
 	}
 
-	private Class deduceFieldClass(ComparisonOperand fieldValue) {
-		TypeDeducingVisitor visitor=new TypeDeducingVisitor(predicateClass,candidateClass);
-		fieldValue.accept(visitor);
-		return visitor.operandClass();
+	public void visit(CandidateFieldRoot root) {
+		methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(1));
 	}
 
-	private MemberRef createFieldReference(Class parentClass,Class fieldClass,String name) throws NoSuchFieldException {
-		NameAndType nameAndType=new NameAndType(name,createType(fieldClass));
-		return new MemberRef(createType(parentClass),nameAndType);
+	public void visit(PredicateFieldRoot root) {
+		methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(0));
 	}
 
+	public void visit(StaticFieldRoot root) {
+		try {
+			staticRoot=Class.forName(root.className());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 
-	private Class arithmeticType(ComparisonOperand operand) {
-		if (operand instanceof ConstValue) {
-			return ((ConstValue) operand).value().getClass();
+	public void visit(ArrayAccessValue operand) {
+		Class cmpType=deduceFieldClass(operand.parent()).getComponentType();
+		prepareConversion(cmpType, !inArithmetic);
+		operand.parent().accept(this);
+		boolean outerInArithmetic=inArithmetic;
+		inArithmetic=true;
+		operand.index().accept(this);
+		inArithmetic=outerInArithmetic;
+		int opcode=Opcode.opc_aaload;
+		if(cmpType==Integer.TYPE) {
+			opcode=Opcode.opc_iaload;
 		}
-		if (operand instanceof FieldValue) {
-			try {
-				return deduceFieldClass((FieldValue) operand);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
+		if(cmpType==Long.TYPE) {
+			opcode=Opcode.opc_laload;
 		}
-		if (operand instanceof ArithmeticExpression) {
-			ArithmeticExpression expr=(ArithmeticExpression)operand;
-			Class left=arithmeticType(expr.left());
-			Class right=arithmeticType(expr.right());
-			if(left==Double.class||right==Double.class) {
-				return Double.class;
-			}
-			if(left==Float.class||right==Float.class) {
-				return Float.class;
-			}
-			if(left==Long.class||right==Long.class) {
-				return Long.class;
-			}
-			return Integer.class;
+		if(cmpType==Float.TYPE) {
+			opcode=Opcode.opc_faload;
 		}
-		return null;
+		if(cmpType==Double.TYPE) {
+			opcode=Opcode.opc_daload;
+		}
+		methodEditor.addInstruction(opcode);
+		applyConversion(cmpType, !inArithmetic);
+	}
+
+	public void visit(MethodCallValue operand) {
+		Class rcvType=deduceFieldClass(operand.parent());
+		Method method=ReflectUtil.methodFor(rcvType, operand.methodName(), operand.paramTypes());
+		Class retType=method.getReturnType();
+		prepareConversion(retType, !inArithmetic);
+		operand.parent().accept(this);
+		boolean oldInArithmetic=inArithmetic;
+		for (int paramIdx = 0; paramIdx < operand.params().length; paramIdx++) {
+			inArithmetic=operand.paramTypes()[paramIdx].isPrimitive();
+			operand.params()[paramIdx].accept(this);
+		}
+		inArithmetic=oldInArithmetic;
+		// FIXME: invokeinterface
+		int opcode=((method.getModifiers()&Modifier.STATIC)!=0 ? Opcode.opc_invokestatic : Opcode.opc_invokevirtual);
+		methodEditor.addInstruction(opcode,createMethodReference(method.getDeclaringClass(), method.getName(), method.getParameterTypes(), method.getReturnType()));
+		applyConversion(retType, !inArithmetic);
 	}
 
 	public void visit(ArithmeticExpression operand) {
@@ -186,6 +205,48 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		// FIXME: need to map dX,fX,...
 	}
 
+	private Class deduceFieldClass(ComparisonOperand fieldValue) {
+		TypeDeducingVisitor visitor=new TypeDeducingVisitor(predicateClass,candidateClass);
+		fieldValue.accept(visitor);
+		return visitor.operandClass();
+	}
+
+	private MemberRef createFieldReference(Class parentClass,Class fieldClass,String name) throws NoSuchFieldException {
+		NameAndType nameAndType=new NameAndType(name,createType(fieldClass));
+		return new MemberRef(createType(parentClass),nameAndType);
+	}
+
+
+	private Class arithmeticType(ComparisonOperand operand) {
+		if (operand instanceof ConstValue) {
+			return ((ConstValue) operand).value().getClass();
+		}
+		if (operand instanceof FieldValue) {
+			try {
+				return deduceFieldClass((FieldValue) operand);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		if (operand instanceof ArithmeticExpression) {
+			ArithmeticExpression expr=(ArithmeticExpression)operand;
+			Class left=arithmeticType(expr.left());
+			Class right=arithmeticType(expr.right());
+			if(left==Double.class||right==Double.class) {
+				return Double.class;
+			}
+			if(left==Float.class||right==Float.class) {
+				return Float.class;
+			}
+			if(left==Long.class||right==Long.class) {
+				return Long.class;
+			}
+			return Integer.class;
+		}
+		return null;
+	}
+
 	private Instruction prepareConversion(Class clazz,boolean canApply) {
 		return prepareConversion(clazz,canApply,false);
 	}
@@ -208,47 +269,6 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		}
 	}
 
-	public void visit(CandidateFieldRoot root) {
-		methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(1));
-	}
-
-	public void visit(PredicateFieldRoot root) {
-		methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable(0));
-	}
-
-	public void visit(StaticFieldRoot root) {
-		try {
-			staticRoot=Class.forName(root.className());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void visit(ArrayAccessValue operand) {
-		Class cmpType=deduceFieldClass(operand.parent()).getComponentType();
-		prepareConversion(cmpType, !inArithmetic);
-		operand.parent().accept(this);
-		boolean outerInArithmetic=inArithmetic;
-		inArithmetic=true;
-		operand.index().accept(this);
-		inArithmetic=outerInArithmetic;
-		int opcode=Opcode.opc_aaload;
-		if(cmpType==Integer.TYPE) {
-			opcode=Opcode.opc_iaload;
-		}
-		if(cmpType==Long.TYPE) {
-			opcode=Opcode.opc_laload;
-		}
-		if(cmpType==Float.TYPE) {
-			opcode=Opcode.opc_faload;
-		}
-		if(cmpType==Double.TYPE) {
-			opcode=Opcode.opc_daload;
-		}
-		methodEditor.addInstruction(opcode);
-		applyConversion(cmpType, !inArithmetic);
-	}
-	
 	private MemberRef createMethodReference(Class parent,String name,Class[] args,Class ret) {
 		Type[] argTypes=new Type[args.length];
 		for (int argIdx = 0; argIdx < args.length; argIdx++) {
@@ -277,9 +297,5 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		conversions.put(Byte.TYPE,conversions.get(Byte.class));
 		conversions.put(Double.TYPE,conversions.get(Double.class));
 		conversions.put(Float.TYPE,conversions.get(Float.class));
-	}
-
-	public void visit(MethodCallValue value) {
-		// FIXME
 	}
 }

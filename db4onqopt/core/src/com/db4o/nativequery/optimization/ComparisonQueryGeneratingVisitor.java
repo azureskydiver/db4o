@@ -27,7 +27,7 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 		operand.parent().accept(this);
 		Class clazz=((operand.parent() instanceof StaticFieldRoot) ? (Class)value : value.getClass());
 		try {
-			Field field=fieldFor(clazz,operand.fieldName());
+			Field field=ReflectUtil.fieldFor(clazz,operand.fieldName());
 			value=field.get(value); // arg is ignored for static
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -142,50 +142,13 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 		if(operand.parent().root() instanceof StaticFieldRoot) {
 			clazz=(Class)receiver;
 		}
-		Method method=methodFor(clazz,operand.methodName(),operand.paramTypeNames());
+		Method method=ReflectUtil.methodFor(clazz,operand.methodName(),operand.paramTypes());
 		try {
 			value=method.invoke(receiver, params);
 		} catch (Exception exc) {
 			exc.printStackTrace();
 			value=null;
 		}
-	}
-
-	private Method methodFor(Class clazz, String methodName, String[] paramTypeNames) {
-		Class curclazz=clazz;
-		Class[] paramTypes=new Class[paramTypeNames.length];
-		for (int paramIdx = 0; paramIdx < paramTypeNames.length; paramIdx++) {
-			try {
-				paramTypes[paramIdx]=Class.forName(paramTypeNames[paramIdx]);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-		while(curclazz!=null) {
-			try {
-				Method method=curclazz.getDeclaredMethod(methodName, paramTypes);
-				Platform4.setAccessible(method);
-				return method;
-			} catch (Exception e) {
-			}
-			curclazz=curclazz.getSuperclass();
-		}
-		return null;
-	}
-
-	Field fieldFor(final Class clazz,final String name) {
-		Class curclazz=clazz;
-		while(curclazz!=null) {
-			try {
-				Field field=curclazz.getDeclaredField(name);
-				Platform4.setAccessible(field);
-				return field;
-			} catch (Exception e) {
-			}
-			curclazz=curclazz.getSuperclass();
-		}
-		return null;
 	}
 
 	public ComparisonQueryGeneratingVisitor(Object predicate) {
