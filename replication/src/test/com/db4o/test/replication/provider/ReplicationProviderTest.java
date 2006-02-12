@@ -8,17 +8,13 @@ import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
 import com.db4o.replication.hibernate.PeerSignature;
 import com.db4o.test.Test;
-import com.db4o.test.replication.collections.ListHolder;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Vector;
 
 public abstract class ReplicationProviderTest extends Test {
 
-	private static final byte[] PEER_SIGNATURE_BYTES = new byte[]{1, 2, 3, 4};
-	private static final PeerSignature PEER_SIGNATURE = new PeerSignature(PEER_SIGNATURE_BYTES);
+	protected static final byte[] PEER_SIGNATURE_BYTES = new byte[]{1, 2, 3, 4};
+	protected static final PeerSignature PEER_SIGNATURE = new PeerSignature(PEER_SIGNATURE_BYTES);
 
 	public void testReplicationProvider() {
 		tstSignature();
@@ -27,51 +23,6 @@ public abstract class ReplicationProviderTest extends Test {
 		tstReferences();
 		tstStore();
 		tstRollback();
-		tstCollection();
-	}
-
-	private void tstCollection() {
-		TestableReplicationProviderInside providerB = prepareSubject();
-		providerB.startReplicationTransaction(PEER_SIGNATURE);
-
-		Db4oUUID listHolderUuid = new Db4oUUID(1234, PEER_SIGNATURE_BYTES);
-
-		ListHolder listHolderFromA = new ListHolder("i am a list");
-
-		ReplicationReference refFromA = new ReplicationReferenceImpl(listHolderFromA, listHolderUuid, 9555);
-
-		ListHolder listHolderClonedInB = new ListHolder("i am a list");
-
-		providerB.referenceNewObject(listHolderClonedInB, refFromA, null, null);
-		providerB.storeReplica(listHolderClonedInB);
-		ReplicationReference listHolderFromB = providerB.produceReference(listHolderClonedInB, null, null);
-		ensure(listHolderFromB.object() == listHolderClonedInB);
-
-		Collection collectionInB = listHolderClonedInB.getList();
-
-		ReplicationReference collectionRefFromB = providerB.produceReference(collectionInB, listHolderClonedInB, "list");
-		ensure(collectionRefFromB.object() == collectionInB);
-
-		final Db4oUUID collectionUuid = collectionRefFromB.uuid();
-		ReplicationReference collectionRefFromA = new ReplicationReferenceImpl(new ArrayList(), collectionUuid, 9555);
-
-		providerB.referenceNewObject(collectionInB, collectionRefFromA, listHolderFromB, "list");
-		providerB.storeReplica(collectionInB);
-		ensure(providerB.produceReference(collectionInB, null, null) == collectionRefFromB);
-		ensure(providerB.produceReference(collectionInB, null, null).object() == collectionInB);
-
-		final ReplicationReference byUuid = providerB.produceReferenceByUUID(collectionUuid, List.class);
-		ensure(byUuid != null);
-
-		providerB.clearAllReferences();
-		final ReplicationReference refFromBAfterClear = providerB.produceReferenceByUUID(listHolderUuid, ListHolder.class);
-		ensure(refFromBAfterClear != null);
-
-		final ListHolder listHolderInBAfterClear = ((ListHolder) refFromBAfterClear.object());
-		final ReplicationReference collectionRefFromBAfterClear = providerB.produceReference(listHolderInBAfterClear.getList(), listHolderInBAfterClear, "list");
-		ensure(collectionRefFromBAfterClear != null);
-
-		ensure(collectionRefFromBAfterClear.uuid().equals(collectionUuid));
 	}
 
 	protected abstract TestableReplicationProviderInside prepareSubject();
