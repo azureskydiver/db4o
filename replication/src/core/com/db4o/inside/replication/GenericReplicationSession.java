@@ -266,7 +266,7 @@ public class GenericReplicationSession implements ReplicationSession {
 		//TODO supports collection here
 		Object result = sourceProvider.produceReference(value, null, null).counterpart();
 		if (result == null)
-			throw new RuntimeException();
+			throw new NullPointerException("unable to find the counterpart of " + value + " of class " + value.getClass());
 		return result;
 	}
 
