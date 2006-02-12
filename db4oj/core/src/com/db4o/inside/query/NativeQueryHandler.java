@@ -29,12 +29,15 @@ public class NativeQueryHandler {
 		_listeners=null;
 	}
 	
-	public ObjectSet execute(Predicate predicate) {
-		return configureQuery(predicate).execute();
+	public ObjectSet execute(Predicate predicate,QueryComparator comparator) {
+		return configureQuery(predicate,comparator).execute();
 	}
 	
-	private Query configureQuery(Predicate predicate) {
+	private Query configureQuery(Predicate predicate,QueryComparator comparator) {
 		Query q=_container.query();
+		if(comparator!=null) {
+			q.sortBy(comparator);
+		}
 		q.constrain(predicate.extentType());
 		if(predicate instanceof Db4oEnhancedFilter) {
 			((Db4oEnhancedFilter)predicate).optimizeQuery(q);

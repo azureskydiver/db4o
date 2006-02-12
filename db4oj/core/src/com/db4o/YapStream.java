@@ -1190,14 +1190,15 @@ public abstract class YapStream implements ObjectContainer, ExtObjectContainer,
     }
     
     public final ObjectSet query(Predicate predicate){
+    	return query(predicate,null);
+    }
+
+    public final ObjectSet query(Predicate predicate,QueryComparator comparator){
         synchronized (i_lock) {
-//            if (Db4oVersion.MAJOR < 5) {
-//                throw new RuntimeException("This feature will be available in db4o 5.0 and above.");
-//            }
-            return getNativeQueryHandler().execute(predicate);
+            return getNativeQueryHandler().execute(predicate,comparator);
         }
     }
-	
+
 	public Query query() {
         synchronized (i_lock) {
             return query((Transaction)null);

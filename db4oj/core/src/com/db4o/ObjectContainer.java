@@ -268,7 +268,9 @@ public interface ObjectContainer {
      * @return the {@link ObjectSet} returned by the query.
      */
     public ObjectSet query(Predicate predicate);
-    
+
+    public ObjectSet query(Predicate predicate,QueryComparator comparator);
+
     /**
      * rolls back the running transaction.
      * <br><br>Transactions are back-to-back. A call to rollback will starts
