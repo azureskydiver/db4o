@@ -70,7 +70,7 @@ public class Db4oEnhancingClassloader extends BloatingClassLoader {
 					return;
 				}
 				ClassInfo classInfo=getClassInfoLoader().loadClass(type.className());
-				type=new ClassEditor(null,classInfo).superclass();
+				type=new ClassEditor(new CachingBloatContext(getClassInfoLoader(),new ArrayList(),false),classInfo).superclass();
 			}
 			//System.err.println("Bypassing "+ce.name());
 		} catch (Exception exc) {

@@ -44,9 +44,7 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 			Class lastFieldClass = deduceFieldClass(fieldValue);
 			Class parentClass=deduceFieldClass(fieldValue.parent());
 			boolean needConversion=lastFieldClass.isPrimitive();
-			if(needConversion) {
-				prepareConversion(lastFieldClass,!inArithmetic);
-			}
+			prepareConversion(lastFieldClass,!inArithmetic&&needConversion);
 			
 			fieldValue.parent().accept(this);
 			if(staticRoot!=null) {
@@ -57,9 +55,7 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 			MemberRef fieldRef=createFieldReference(parentClass,lastFieldClass,fieldValue.fieldName());
 			methodEditor.addInstruction(Opcode.opc_getfield,fieldRef);
 			
-			if(needConversion) {
-				applyConversion(lastFieldClass,!inArithmetic);
-			}
+			applyConversion(lastFieldClass,!inArithmetic&&needConversion);
 		} catch (Exception exc) {
 			throw new RuntimeException(exc.getMessage());
 		}
@@ -110,7 +106,9 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		Class rcvType=deduceFieldClass(operand.parent());
 		Method method=ReflectUtil.methodFor(rcvType, operand.methodName(), operand.paramTypes());
 		Class retType=method.getReturnType();
-		prepareConversion(retType, !inArithmetic);
+		// FIXME: this should be handled within conversions
+		boolean needConversion=retType.isPrimitive();
+		prepareConversion(retType, !inArithmetic&&needConversion);
 		operand.parent().accept(this);
 		boolean oldInArithmetic=inArithmetic;
 		for (int paramIdx = 0; paramIdx < operand.params().length; paramIdx++) {
@@ -121,7 +119,7 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		// FIXME: invokeinterface
 		int opcode=((method.getModifiers()&Modifier.STATIC)!=0 ? Opcode.opc_invokestatic : Opcode.opc_invokevirtual);
 		methodEditor.addInstruction(opcode,createMethodReference(method.getDeclaringClass(), method.getName(), method.getParameterTypes(), method.getReturnType()));
-		applyConversion(retType, !inArithmetic);
+		applyConversion(retType, !inArithmetic&&needConversion);
 	}
 
 	public void visit(ArithmeticExpression operand) {

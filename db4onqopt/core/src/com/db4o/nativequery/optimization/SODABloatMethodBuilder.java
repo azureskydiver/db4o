@@ -10,6 +10,8 @@ import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.query.*;
 
 public class SODABloatMethodBuilder {	
+	private final static boolean LOG_BYTECODE=false;
+	
 	private MethodEditor methodEditor;
 	
 	private MemberRef descendRef;
@@ -115,7 +117,9 @@ public class SODABloatMethodBuilder {
 			methodEditor.addLabel(new Label(1,false));
 			methodEditor.addInstruction(Opcode.opc_return);
 			methodEditor.addLabel(new Label(2,true));
-			//methodEditor.print(System.out);
+			if(LOG_BYTECODE) {
+				methodEditor.print(System.out);
+			}
 			return methodEditor;
 		} catch (ClassNotFoundException exc) {
 			throw new RuntimeException(exc.getMessage());
