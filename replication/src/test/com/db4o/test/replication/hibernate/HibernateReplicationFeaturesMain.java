@@ -4,10 +4,8 @@ import com.db4o.inside.replication.TestableReplicationProvider;
 import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
 import com.db4o.test.replication.Replicated;
 import com.db4o.test.replication.ReplicationFeaturesMain;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.classic.Session;
 
 public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 	static protected Configuration cfgA;
@@ -30,12 +28,12 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 	}
 
 	protected TestableReplicationProvider prepareProviderA() {
-		clean(cfgA);
+		delete(pA.getSession());
 		return pA;
 	}
 
 	protected TestableReplicationProvider prepareProviderB() {
-		clean(cfgB);
+		delete(pA.getSession());
 		return pB;
 	}
 
@@ -48,13 +46,7 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 		pB.closeIfOpened();
 	}
 
-	private void clean(Configuration cfg) {
-		SessionFactory sessionFactory = cfg.buildSessionFactory();
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
+	private void delete(Session session) {
 		session.createQuery("delete from Replicated").executeUpdate();
-		tx.commit();
-		session.close();
-		sessionFactory.close();
 	}
 }

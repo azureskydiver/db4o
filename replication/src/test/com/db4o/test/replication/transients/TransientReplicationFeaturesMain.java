@@ -6,8 +6,8 @@ import com.db4o.replication.ReplicationProvider;
 import com.db4o.test.replication.ReplicationFeaturesMain;
 
 public class TransientReplicationFeaturesMain extends ReplicationFeaturesMain {
-	private static TransientReplicationProvider a = new TransientReplicationProvider(new byte[]{1}, "A");
-	private static TransientReplicationProvider b = new TransientReplicationProvider(new byte[]{2}, "B");
+	private TransientReplicationProvider a = new TransientReplicationProvider(new byte[]{1}, "A");
+	private TransientReplicationProvider b = new TransientReplicationProvider(new byte[]{2}, "B");
 
 	protected TestableReplicationProvider prepareProviderB() {
 		return a;

@@ -8,13 +8,15 @@ import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
 import com.db4o.replication.hibernate.PeerSignature;
 import com.db4o.test.Test;
+import com.db4o.test.replication.collections.ListHolder;
 
+import java.util.Collection;
 import java.util.Vector;
 
 public abstract class ReplicationProviderTest extends Test {
 
-	private static final byte[] ARBITRARY_SIGNATURE = new byte[]{99, -1, 42, 17};
-	private static final PeerSignature PEER_SIGNATURE = new PeerSignature(ARBITRARY_SIGNATURE);
+	private static final byte[] PEER_SIGNATURE_BYTES = new byte[]{99, -1, 42, 17};
+	private static final PeerSignature PEER_SIGNATURE = new PeerSignature(PEER_SIGNATURE_BYTES);
 
 	public void testReplicationProvider() {
 		tstSignature();
@@ -23,6 +25,29 @@ public abstract class ReplicationProviderTest extends Test {
 		tstReferences();
 		tstStore();
 		tstRollback();
+		tstCollection();
+	}
+
+	private void tstc() {
+		TestableReplicationProviderInside subject = prepareSubject();
+		subject.startReplicationTransaction(PEER_SIGNATURE);
+
+		ListHolder lh = new ListHolder("i am a list");
+		Db4oUUID lhUuid = new Db4oUUID(1234, PEER_SIGNATURE_BYTES);
+
+		ReplicationReference ref = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", lhUuid, 1000);
+		subject.referenceNewObject(lh, ref, null, null);
+		subject.storeReplica(lh);
+		ensure(subject.produceReference(lh, null, null).object() == lh);
+
+		Collection collection = lh.getList();
+		Db4oUUID collectionUuid = new Db4oUUID(4567, PEER_SIGNATURE_BYTES);
+
+		ReplicationReference collectionRef = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", collectionUuid, 1000);
+		subject.referenceNewObject(collection, collectionRef, ref, "list");
+		subject.storeReplica(collection);
+		ensure(subject.produceReference(collection, lh, "list").object() == collection);
+
 	}
 
 	protected abstract TestableReplicationProviderInside prepareSubject();
@@ -34,12 +59,14 @@ public abstract class ReplicationProviderTest extends Test {
 		TestableReplicationProviderInside subject = prepareSubject();
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		Pilot object1 = new Pilot("John Cleese", 42);
-		Db4oUUID uuid = new Db4oUUID(5678, ARBITRARY_SIGNATURE);
+		Db4oUUID uuid = new Db4oUUID(5678, PEER_SIGNATURE_BYTES);
 
 		ReplicationReference ref = new ReplicationReferenceImpl(object1, uuid, 1);
 		subject.referenceNewObject(object1, ref, null, null);
 
 		subject.storeReplica(object1);
+		ensure(!subject.wasChangedSinceLastReplication(ref));
+
 		subject.rollbackReplication();
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
@@ -54,7 +81,7 @@ public abstract class ReplicationProviderTest extends Test {
 		TestableReplicationProviderInside subject = prepareSubject();
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		Pilot object1 = new Pilot("John Cleese", 42);
-		Db4oUUID uuid = new Db4oUUID(1234, ARBITRARY_SIGNATURE);
+		Db4oUUID uuid = new Db4oUUID(1234, PEER_SIGNATURE_BYTES);
 
 		ReplicationReference ref = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", uuid, 1);
 		subject.referenceNewObject(object1, ref, null, null);
@@ -64,15 +91,16 @@ public abstract class ReplicationProviderTest extends Test {
 		ensure(subject.produceReference(object1, null, null) == reference);
 		ensure(reference.object() == object1);
 		subject.syncVersionWithPeer(5000);
-		subject.commit(5001);
+		subject.commitReplicationTransaction(5001);
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		object1._name = "i am updated";
 		subject.storeReplica(object1);
 		subject.syncVersionWithPeer(6000);
-		subject.commit(6001);
-
 		subject.clearAllReferences();
+
+		subject.commitReplicationTransaction(6001);
+
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		reference = subject.produceReferenceByUUID(uuid, object1.getClass());
@@ -82,11 +110,11 @@ public abstract class ReplicationProviderTest extends Test {
 
 	private void tstReferences() {
 		TestableReplicationProviderInside subject = prepareSubject();
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		Pilot object1 = new Pilot("tst References", 42);
 		ensure(subject.produceReference(object1, null, null) == null);
 
-		subject.startReplicationTransaction(PEER_SIGNATURE);
 		subject.storeNew(object1);
 
 		ReplicationReference reference = subject.produceReference(object1, null, null);
@@ -135,7 +163,7 @@ public abstract class ReplicationProviderTest extends Test {
 		//ensure(changed.contains(object4));
 
 		subject.syncVersionWithPeer(99);
-		subject.commit(100);
+		subject.commitReplicationTransaction(100);
 
 		ensure(!subject.objectsChangedSinceLastReplication().hasNext());
 
@@ -159,7 +187,7 @@ public abstract class ReplicationProviderTest extends Test {
 		// ensure(subject.getCurrentVersion() == 1);
 
 		subject.syncVersionWithPeer(5000);
-		subject.commit(5001);
+		subject.commitReplicationTransaction(5001);
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 

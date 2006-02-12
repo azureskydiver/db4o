@@ -8,7 +8,6 @@ import com.db4o.test.replication.db4o.Db4oReplicationFeaturesMain;
 import com.db4o.test.replication.db4o.Db4oReplicationProviderTest;
 import com.db4o.test.replication.db4o.Db4oSimpleParentChild;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateSimpleParentChild;
-import com.db4o.test.replication.hibernate.HibernateCollectionTest;
 import com.db4o.test.replication.hibernate.HibernateR0to4Runner;
 import com.db4o.test.replication.hibernate.HibernateReplicationAfterDeletionTest;
 import com.db4o.test.replication.hibernate.HibernateReplicationFeaturesMain;
@@ -30,30 +29,27 @@ public class ReplicationTestSuite extends TestSuite {
 		System.err.println("Overcome absence of constructor in VMs other than Sun's.");
 		System.err.println("Uncommenting the FIXME Db4oReplicationProvider to debug Db4oReplicationProvider");
 		return new Class[]{
-				HibernateCollectionTest.class,
 				HibernateReplicationAfterDeletionTest.class,
 				Db4oReplicationAfterDeletionTest.class,
-
-				Db4oSimpleParentChild.class,
-
-				//TransientListTest.class,
-				//Db4oListTest.class,
-				//Db4oListTest.class, //FIXME Db4oReplicationProvider
 
 				//UuidLongPartGeneratorTest.class,
 				TransientReplicationProviderTest.class,
 				Db4oReplicationProviderTest.class,
 				HibernateReplicationProviderTest.class,
 
+				TransientR0to4Runner.class,
+				Db4oR0to4Runner.class,
+				HibernateR0to4Runner.class,
+				// Db4oHibernateR0to4Runner.class,
+
 				TransientSimpleParentChild.class,
+				Db4oSimpleParentChild.class,
 				HibernateSimpleParentChild.class,
 				Db4oHibernateSimpleParentChild.class,
 
-				TransientReplicationFeaturesMain.class,
-				Db4oReplicationFeaturesMain.class,
-				HibernateReplicationFeaturesMain.class,
-
 				// HibernateListTest.class,
+				//TransientListTest.class,
+				//Db4oListTest.class,
 
 				TransientSimpleArrayTest.class,
 				//FIXME Db4oReplicationProvider Db4oSimpleArrayTest.class,
@@ -64,13 +60,7 @@ public class ReplicationTestSuite extends TestSuite {
 
 				// TransientSingleTypeCollectionReplicationTest.class,
 				// HibernateSingleTypeCollectionReplicationTest.class,
-
 				// TransientMixedTypesCollectionReplicationTest.class,
-
-				TransientR0to4Runner.class,
-				Db4oR0to4Runner.class,
-				HibernateR0to4Runner.class,
-				// Db4oHibernateR0to4Runner.class,
 
 				ReplicationTraversalTest.class,
 
@@ -79,6 +69,10 @@ public class ReplicationTestSuite extends TestSuite {
 				//HibernateArrayReplicationTest.class,
 
 				ReplicationFeatures.class,
+
+				TransientReplicationFeaturesMain.class,
+				Db4oReplicationFeaturesMain.class,
+				HibernateReplicationFeaturesMain.class,
 		};
 	}
 }

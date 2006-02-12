@@ -25,7 +25,7 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	public void closeIfOpened();
 
-	public void commit(long raisedDatabaseVersion);
+	public void commitReplicationTransaction(long raisedDatabaseVersion);
 
 	/**
 	 * Returns the current transaction serial number.
@@ -73,7 +73,7 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint);
 
-    boolean wasChangedSinceLastReplication(ReplicationReference reference);
+	boolean wasChangedSinceLastReplication(ReplicationReference reference);
 
 	/**
 	 * Rollbacks all changes done during the replication session  and terminates the Transaction.

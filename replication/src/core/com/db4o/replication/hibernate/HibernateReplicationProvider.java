@@ -4,9 +4,11 @@ import org.hibernate.Session;
 
 public interface HibernateReplicationProvider {
 	/**
-	 Returns the session currently in use by this provider
-
-	 @return the session currently in use by this provider
+	 * Returns the session currently in use by this provider
+	 *
+	 * @return the session currently in use by this provider
 	 */
 	Session getSession();
+
+	String getModifiedObjectCriterion();
 }

@@ -103,7 +103,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 	}
 
 
-	public void commit(long raisedDatabaseVersion) {
+	public void commitReplicationTransaction(long raisedDatabaseVersion) {
 
 		long versionTest = getCurrentVersion();
 
@@ -116,6 +116,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 	public void rollbackReplication() {
 		_stream.rollback();
 		_referencesByObject = null;
+		_idsReplicatedInThisSession.clear();
 	}
 
 	public long getCurrentVersion() {
