@@ -1,5 +1,7 @@
 package com.db4o.query;
 
-public interface QueryComparator {
+import java.io.*;
+
+public interface QueryComparator extends Serializable {
 	int compare(Object first,Object second);
 }

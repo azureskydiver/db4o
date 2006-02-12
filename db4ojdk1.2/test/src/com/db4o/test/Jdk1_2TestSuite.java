@@ -4,6 +4,7 @@ package com.db4o.test;
 
 import com.db4o.test.cluster.*;
 import com.db4o.test.reflect.*;
+import com.db4o.test.soda.*;
 
 public class Jdk1_2TestSuite extends TestSuite{
     
@@ -33,6 +34,7 @@ public class Jdk1_2TestSuite extends TestSuite{
             RefreshList.class,
             SelectDistinct.class,
             SodaEvaluation.class,
+            SodaJdkComparatorSort.class,
             StoreBigDecimal.class,
             StringCaseInsensitive.class,
             StringInLists.class,

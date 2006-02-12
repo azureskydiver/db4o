@@ -5,6 +5,7 @@ import java.math.*;
 import com.db4o.*;
 import com.db4o.query.*;
 
+// TODO This fails on JDK1.3. JDK1.4+ is fine.
 public class StoreBigDecimal {
 	public BigDecimal _bd;
 

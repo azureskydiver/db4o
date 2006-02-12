@@ -6,7 +6,6 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.query.*;
 
 /**
  * @exclude 
@@ -80,9 +79,4 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet{
     public void remove() {
         throw new UnsupportedOperationException();
     }
-
-	public void sort(QueryComparator cmp) {
-		_delegate.sort(cmp);
-	}
-	
 }
