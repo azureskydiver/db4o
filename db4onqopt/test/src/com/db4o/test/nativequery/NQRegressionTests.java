@@ -11,6 +11,8 @@ import com.db4o.test.*;
 
 
 public class NQRegressionTests {
+	private final static boolean RUN_LOADTIME=true;
+	
 	private static final String CSTR = "Cc";
 	private static final String BSTR = "Ba";
 	private static final String ASTR = "Aa";
@@ -503,18 +505,18 @@ public class NQRegressionTests {
 				return candidate.id==sum(3,0);
 			}
 		},
-		// Problem: We never get to see a static field access here - non-static inner class
+		// Note: We never get to see a static field access here - non-static inner class
 		// stuff converts this to NQRegressionTests#access$0()
-//		new ExpectingPredicate() {
-//			public int expected() { return 1;}
-//			public boolean match(Data candidate) {
-//				return NQRegressionTests.PRIVATE_INTWRAPPER.equals(candidate.idWrap);
-//			}
-//		},
+		new ExpectingPredicate("PRIVATE_INTWRAPPER.eq(idWrap)") {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return NQRegressionTests.PRIVATE_INTWRAPPER.equals(candidate.idWrap);
+			}
+		},
 	};
 	
 	private static ExpectingPredicate[] PREDICATES=_PREDICATES;
-
+	
 	public void testAll() {
 		for (int predIdx = 0; predIdx < PREDICATES.length; predIdx++) {
 			ExpectingPredicate predicate = PREDICATES[predIdx];
@@ -572,28 +574,30 @@ public class NQRegressionTests {
 		Test.ensure(raw.equals(optimized));
 		Test.ensureEquals(filter.expected(),raw.size());
 
-		db.ext().configure().optimizeNativeQueries(false);
-		try {
-			Db4oEnhancingClassloader loader=new Db4oEnhancingClassloader(getClass().getClassLoader());
-			Class filterClass=loader.loadClass(filter.getClass().getName());
-			Constructor constr=null;
-			Object[] args=null;
+		if(RUN_LOADTIME) {
+			db.ext().configure().optimizeNativeQueries(false);
 			try {
-				constr=filterClass.getDeclaredConstructor(new Class[]{String.class});
-				args=new Object[]{filterClass.getName()};
+				Db4oEnhancingClassloader loader=new Db4oEnhancingClassloader(getClass().getClassLoader());
+				Class filterClass=loader.loadClass(filter.getClass().getName());
+				Constructor constr=null;
+				Object[] args=null;
+				try {
+					constr=filterClass.getDeclaredConstructor(new Class[]{String.class});
+					args=new Object[]{filterClass.getName()};
+				}
+				catch(NoSuchMethodException exc) {
+					constr=filterClass.getDeclaredConstructor(new Class[]{String.class,Class.class});
+					args=new Object[]{filterClass.getName(),Data.class};
+				}
+				constr.setAccessible(true);
+				Predicate predicate=(Predicate)constr.newInstance(args);
+				ObjectSet preoptimized=db.query(predicate);
+				Test.ensureEquals(filter.expected(),preoptimized.size());
+				Test.ensure(raw.equals(preoptimized));
+				Test.ensure(optimized.equals(preoptimized));
+			} catch (Throwable exc) {
+				exc.printStackTrace();
 			}
-			catch(NoSuchMethodException exc) {
-				constr=filterClass.getDeclaredConstructor(new Class[]{String.class,Class.class});
-				args=new Object[]{filterClass.getName(),Data.class};
-			}
-			constr.setAccessible(true);
-			Predicate predicate=(Predicate)constr.newInstance(args);
-			ObjectSet preoptimized=db.query(predicate);
-			Test.ensureEquals(filter.expected(),preoptimized.size());
-			Test.ensure(raw.equals(preoptimized));
-			Test.ensure(optimized.equals(preoptimized));
-		} catch (Throwable exc) {
-			exc.printStackTrace();
 		}
 		
 		((YapStream)db).getNativeQueryHandler().clearListeners();
