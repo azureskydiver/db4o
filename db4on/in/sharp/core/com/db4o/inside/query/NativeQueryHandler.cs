@@ -21,7 +21,7 @@ namespace com.db4o.inside.query
 			_container = container;
 		}
 
-		public virtual com.db4o.ObjectSet execute(com.db4o.query.Predicate predicate)
+		public virtual com.db4o.ObjectSet execute(com.db4o.query.Predicate predicate, com.db4o.query.QueryComparator comparator)
 		{
 			return configureQuery(predicate).execute();
 		}
