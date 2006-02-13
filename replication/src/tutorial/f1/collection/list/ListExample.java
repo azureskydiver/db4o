@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 public class ListExample {
 	public static void main(String[] args) {
+		new File("ListExample.yap").delete();
+
 		System.out.println("Running List example.");
 
 		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);

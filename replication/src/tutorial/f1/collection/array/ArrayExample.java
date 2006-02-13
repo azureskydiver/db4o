@@ -13,6 +13,8 @@ import java.io.File;
 
 public class ArrayExample {
 	public static void main(String[] args) {
+		new File("ArrayExample.yap").delete();
+
 		System.out.println("Running Array example.");
 
 		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);

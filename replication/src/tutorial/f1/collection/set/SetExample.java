@@ -14,6 +14,8 @@ import java.util.HashSet;
 
 public class SetExample {
 	public static void main(String[] args) {
+		new File("SetExample.yap").delete();
+
 		System.out.println("Running Set example.");
 
 		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);
