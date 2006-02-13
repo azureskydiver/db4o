@@ -14,6 +14,8 @@ import java.util.HashMap;
 
 public class MapExample {
 	public static void main(String[] args) {
+		new File("MapExample.yap").delete();
+
 		System.out.println("Running Map example.");
 
 		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);

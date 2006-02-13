@@ -150,17 +150,11 @@ public class StepByStepExample {
 
 		System.out.println("Finding Pilot 'Anna' in Db4o.");
 
-//        Pilot anna = db4o.query(new Predicate<Pilot>() {
-//            public boolean match(Pilot p) {
-//                return p.name.equals("Anna");
-//            }
-//        }).next();
-
-        Pilot anna = (Pilot)db4o.query(new Predicate() {
-            public boolean match(Object p) {
-                return ((Pilot)p).name.equals("Anna");
-            }
-        }).next();
+		Pilot anna = db4o.query(new Predicate<Pilot>() {
+			public boolean match(Pilot p) {
+				return p.name.equals("Anna");
+			}
+		}).next();
 
 		System.out.println("Changing the name of Pilot from 'Anna' to 'Eric' ");
 		anna.name = "Eric";

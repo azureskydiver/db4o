@@ -12,6 +12,8 @@ import java.io.File;
 
 public class OneToOneExample {
 	public static void main(String[] args) {
+		new File("OneToOneExample.yap").delete();
+
 		System.out.println("Running OneToOneExample example.");
 
 		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);

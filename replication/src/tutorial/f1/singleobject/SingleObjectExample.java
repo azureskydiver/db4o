@@ -13,6 +13,8 @@ import java.io.File;
 public class SingleObjectExample {
 
 	public static void main(String[] args) {
+		new File("SingleObjectExample.yap").delete();
+
 		System.out.println("Running SingleObjectExample example.");
 		ExtDb4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		ExtDb4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
