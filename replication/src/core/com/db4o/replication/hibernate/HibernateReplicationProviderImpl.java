@@ -430,7 +430,9 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	public final ObjectSet getStoredObjects(Class aClass) {
-		_session.flush();
+		if (_collectionHandler.canHandle(aClass))
+			throw new IllegalArgumentException("Hibernate does not query by Collection");
+
 		return new ObjectSetIteratorFacade(_session.createCriteria(aClass).list().iterator());
 	}
 
@@ -438,8 +440,12 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		_session.save(object);
 	}
 
-	public final void update(Object o) {
-		_session.update(o);
+	public final void update(Object obj) {
+		if (_collectionHandler.canHandle(obj))
+			return;
+		else
+			_session.update(obj);
+
 		_session.flush();
 	}
 
@@ -540,7 +546,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		return createRefForCollection(obj, referencingObjRef, fieldName, counterpartReference.uuid().getLongPart(), counterpartReference.version());
 	}
 
-	protected ReplicationReference createRefForCollection(Object obj, ReplicationReference referencingObjRef,
+	protected ReplicationReference createRefForCollection(Object collection, ReplicationReference referencingObjRef,
 			String fieldName, long uuidLong, long version) {
 		final byte[] signaturePart = referencingObjRef.uuid().getSignaturePart();
 
@@ -555,7 +561,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		Db4oUUID uuid = new Db4oUUID(uuidLong, signaturePart);
 
 		_session.save(rci);
-		return createReference(obj, uuid, version);
+		return createReference(collection, uuid, version);
 	}
 
 	protected ReplicationComponentField produceReplicationComponentField(String referencingObjectClassName,
