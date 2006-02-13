@@ -27,6 +27,8 @@ public abstract class ReplicationProviderTest extends Test {
 
 	protected abstract TestableReplicationProviderInside prepareSubject();
 
+	protected abstract void destroySubject();
+
 	private void tstRollback() {
 		if (!subjectSupportsRollback()) return;
 
@@ -47,6 +49,7 @@ public abstract class ReplicationProviderTest extends Test {
 		ensure(null == subject.produceReference(object1, null, null));
 		ReplicationReference byUUID = subject.produceReferenceByUUID(uuid, object1.getClass());
 		ensure(null == byUUID);
+		destroySubject();
 	}
 
 	protected abstract boolean subjectSupportsRollback();
@@ -79,7 +82,7 @@ public abstract class ReplicationProviderTest extends Test {
 
 		reference = subject.produceReferenceByUUID(uuid, object1.getClass());
 		ensure(((Pilot) reference.object())._name.equals("i am updated"));
-
+		destroySubject();
 	}
 
 	private void tstReferences() {
@@ -103,6 +106,8 @@ public abstract class ReplicationProviderTest extends Test {
 		Db4oUUID db4oUUID = subject.produceReference(object1, null, null).uuid();
 		//TODO implements Db4oUUID.equals, don't use hashcode to compare
 		ensure(db4oUUID.equals(uuid));
+		destroySubject();
+
 	}
 
 
@@ -150,6 +155,8 @@ public abstract class ReplicationProviderTest extends Test {
 		ensure(changed.contains(object1));
 		ensure(!changed.contains(object2));
 		ensure(changed.contains(object3));
+		destroySubject();
+
 	}
 
 
@@ -170,6 +177,8 @@ public abstract class ReplicationProviderTest extends Test {
 		ensure(version >= 5000 && version <= 5002);
 		long v = subject.getLastReplicationVersion();
 		ensure(subject.getLastReplicationVersion() == 5000);
+		destroySubject();
+
 	}
 
 
