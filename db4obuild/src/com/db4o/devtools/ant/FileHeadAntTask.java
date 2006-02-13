@@ -41,7 +41,7 @@ public class FileHeadAntTask extends Task {
             for (int i = 0; i < fileNames.length; i++) {
                 FileHead fh = new FileHead(scanner.getBasedir().getAbsolutePath(), fileNames[i], this);
                 try {
-                    log("Adding header to " + fh.getAbsolutePath());
+                    log("Adding header to " + fh.getAbsolutePath(), Project.MSG_VERBOSE);
                     fh.run();
                 } catch (Exception e) {
                     e.printStackTrace();
