@@ -184,7 +184,12 @@
 			</fileset>
 		</delete>
 		<antcall target="copyjava1.1" />
-		<javac compiler="classic" fork="yes" executable="${file.compiler.jdk1.3}" srcdir="${dir.dist.java.temp.src.core}" destdir="${dir.dist.classes.java1.1}" debug="off">
+		<javac compiler="classic"
+			fork="yes"
+			executable="${file.compiler.jdk1.3}"
+			srcdir="${dir.dist.java.temp.src.core}"
+			destdir="${dir.dist.classes.java1.1}" debug="off"
+			source="1.3">
 			<compilerarg line="-target 1.1"/>
 		</javac>
 
@@ -481,9 +486,9 @@
 		</exec>
 	</target>
 	
-	<target name="compiledllmono" depends="init, sharpen">
-		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}" />
-		<csc srcdir="${dir.n.core.src}"
+	<target name="do-compiledllmono">
+		<versioninfo path="${src.dir}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}" />
+		<csc srcdir="${src.dir}"
 			targettype="library"
 			destfile="${file.dll.mono}"
 			docfile="${file.xml.mono}"
@@ -494,6 +499,12 @@
 			<include name="*.cs" />
 			<exclude name="compact*/**" />
 		</csc>
+	</target>
+	
+	<target name="compiledllmono" depends="init, sharpen">
+		<antcall target="do-compiledllmono">
+			<param name="src.dir" location="${dir.n.core.src}" />
+		</antcall>
 		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
 	</target>
 
@@ -540,15 +551,14 @@
 	</target>
 	
 	<target name="preparendoc">
-		<property name="db4o-namespace-summaries.xml" location="config/db4o-namespace-summaries.xml" />
-		<property name="dir.dist.ndoc" location="${dir.dist}/ndoc" />
+		<property name="db4o-namespace-summaries.xml" location="config/db4o-namespace-summaries.xml" />		
 		<property name="ndoc.home" location="lib/ndoc" />
 				
 		<delete dir="${dir.dist.ndoc}" />
 		<mkdir dir="${dir.dist.ndoc}" />
 	</target>
 	
-	<target name="ndocmono" depends="compiledllmono, preparendoc" description="Builds public .net docs for the mono platform">
+	<target name="ndocmono" depends="preparendoc" description="Builds public .net docs for the mono platform">
 		<exec executable="mono" failonerror="true">
 			<arg file="${ndoc.home}/bin/mono/1.0/NDocConsole.exe" />
 			<arg value="${file.dll.mono}" />
@@ -813,6 +823,7 @@
 		
 		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
 		<property name="pascalcase.converter.exe" location="bin/CSharpConverter.exe" />
+		<property name="dotnetvm" value="cmd" />
 
 
 	</target>
@@ -826,6 +837,7 @@
 		
 		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
 		<property name="pascalcase.converter.exe" location="bin/CSharpConverter.exe" />
+		<property name="dotnetvm" value="cmd" />
 
 		<property name="csharp.defines" value="NET_2_0" />
 		<property name="installer.package.suffix" value="net2" />
@@ -952,13 +964,57 @@
 		</ant>
 	</target>
 	
+	<target name="zipmono-pascalcase" depends="init"  description="Zip Mono PascalCase distribution">
+		
+		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
+		<property name="pascalcase.converter.exe" location="bin/CSharpConverter.exe" />
+		<property name="dotnetvm" value="mono" />
+		
+		<mkdir dir="${dir.dist.mono.src.core}" />
+		
+		<antcall target="sharpen-pascalcase">
+		</antcall>
+		
+		<property name="dir.dist.pascalcase" location="${dir.dist}/pascalcase" />
+			
+		<antcall target="do-compiledllmono">
+			<param name="src.dir" location="${dir.dist.pascalcase}/core/src" />
+		</antcall>
+		
+		<antcall target="ndocmono">
+		</antcall>
+		
+		<antcall target="doctor">
+			<param name="dir.n.tutorial.src" value="${dir.dist.pascalcase}/tutorial/db4o-tutorial-chapters/src" />
+		</antcall>
+		
+		<!--
+		<antcall target="compile-legacy">
+		</antcall>
+		-->
+		
+		<antcall target="prepare-mono-distro">
+			<param name="dir.n.core" location="${dir.dist.pascalcase}/core" />
+			<param name="dir.n.tools" location="${dir.dist.pascalcase}/tools" />
+			<param name="dir.n.test" location="${dir.dist.pascalcase}/test" />
+			<param name="dir.n.tutorial" location="${dir.dist.pascalcase}/tutorial" />
+		</antcall>
+	</target>
+	
 	<target name="zipmono" depends="init, compiledllmono, ndocmono" description="Zip Mono distribution">
+		<antcall target="prepare-mono-distro" />
+	</target>
+		
+	<target name="prepare-mono-distro">
 		<mkdir dir="${dir.dist.mono.src.core}" />
 		<copy todir="${dir.dist.mono.src.core}">
 			<fileset dir="${dir.n.core}">
 				<include name="**/*.cs" />
 				<include name="**/*.csproj" />
-				<exclude name="**/compact/**"/>
+				<include name="**/*.sln" />				
+				<include name="**/*.mdp" />
+				<include name="**/*.mds" />
+				<exclude name="**/compact*/**"/>
 			</fileset>
 		</copy>
 		<versioninfo path="${dir.dist.mono.src.core}/src/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
@@ -967,6 +1023,9 @@
 			<fileset dir="${dir.n.tools}">
 				<include name="**/*.cs" />
 				<include name="**/*.csproj" />
+				<include name="**/*.sln" />				
+				<include name="**/*.mdp" />
+				<include name="**/*.mds" />
 			</fileset>
 		</copy>
 		<mkdir dir="${dir.dist.mono.src.test}" />
@@ -976,6 +1035,9 @@
 				<exclude name="**/compact/**"/>
 				<exclude name="**/CsImage.cs" />
 				<include name="**/*.csproj" />
+				<include name="**/*.sln" />				
+				<include name="**/*.mdp" />
+				<include name="**/*.mds" />
 			</fileset>
 		</copy>
 		<mkdir dir="${dir.dist.mono.build.tutorial}" />
@@ -1065,10 +1127,10 @@
 		</copy>
 	</target>
 	
-	<target name="pascalcase" depends="install-javatocsharp-plugin">
+	<target name="sharpen-pascalcase" depends="install-javatocsharp-plugin">	
 		
 		<property name="dir.sharpen.pc" location="${dir.sharpen}/pascalcase" />
-		<property name="pascalcase.converter.ant.target" value="build2" />
+		<property name="pascalcase.converter.ant.target" value="build2" />				
 		
 		<antcall target="prepare-conversion-workspace">
 			<param name="target.dir" value="${dir.sharpen.pc}" />
@@ -1090,7 +1152,7 @@
 		<ant antfile="build-pascalcase.xml"
 			target="${pascalcase.converter.ant.target}"
 			inheritall="false">
-		</ant>
+		</ant>		
 		
 		<property name="dir.dist.pascalcase" location="${dir.dist}/pascalcase" />
 		<property name="target.dir" value="${dir.dist.pascalcase}/core" />
@@ -1102,14 +1164,63 @@
 			<param name="target.dir" value="${target.dir}/src/core" />
 		</antcall>
 		
-		<exec executable="${pascalcase.converter.exe}" failonerror="true">
-			<arg file="${dir.n.in.sharp}" />
-			<arg file="${target.dir}/src" />
-		</exec>		
+		<antcall target="execute-pascalcase-converter">
+			<param name="src.dir" location="${dir.n.in.sharp}" />
+			<param name="target.dir" location="${target.dir}/src" />
+		</antcall>		
 		
 		<antcall target="copy-external-files">
 			<param name="target.dir" value="${target.dir}/src" />
 		</antcall>
+		
+		<antcall target="execute-pascalcase-converter">
+			<param name="src.dir" location="${dir.n.tools}/src" />
+			<param name="target.dir" location="${dir.dist.pascalcase}/tools/src" />
+		</antcall>
+		
+		<antcall target="execute-pascalcase-converter">
+			<param name="src.dir" location="${dir.n.test}/src" />
+			<param name="target.dir" location="${dir.dist.pascalcase}/test/src" />
+		</antcall>
+		
+		<antcall target="execute-pascalcase-converter">
+			<param name="src.dir" location="${dir.n.tutorial}" />
+			<param name="target.dir" location="${dir.dist.pascalcase}/tutorial" />
+		</antcall>
+		
+		<copy todir="${dir.dist.pascalcase}">
+			<fileset dir="${dir.n}">
+				<include name="**/test/AssemblyInfo.cs" />
+				<include name="**/tools/AssemblyInfo.cs" />
+				
+				<include name="**/*.resx" />
+				<include name="**/*.resources" />
+				<include name="**/*.ico" />
+				<include name="**/lib/*.dll" />
+				<include name="tutorial/build.xml" />
+				<include name="tutorial/**/*.config" />
+				
+				<!-- Visual Studio files -->
+				<include name="**/*.csproj" />
+				<include name="**/*.csdproj" />
+				<include name="**/*.sln" />
+				
+				<!-- MonoDevelop files -->
+				<include name="**/*.mdp" />
+				<include name="**/*.mds" />				
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="execute-pascalcase-converter">
+		<exec executable="${dotnetvm}" failonerror="true">
+			<arg file="${pascalcase.converter.exe}" />
+			<arg file="${src.dir}" />
+			<arg file="${target.dir}" />
+		</exec>		
+	</target>	
+	
+	<target name="pascalcase" depends="sharpen-pascalcase">
 		
 		<antcall target="compilecoredll-compact">
 			<param name="src.dir" value="${target.dir}/src" />
@@ -1118,37 +1229,6 @@
 		<antcall target="compilecoredll-net">
 			<param name="src.dir" value="${target.dir}/src" />
 		</antcall>
-		
-		<exec executable="${pascalcase.converter.exe}" failonerror="true">
-			<arg file="${dir.n.tools}/src" />
-			<arg file="${dir.dist.pascalcase}/tools/src" />
-		</exec>
-		
-		<exec executable="${pascalcase.converter.exe}" failonerror="true">
-			<arg file="${dir.n.test}/src" />
-			<arg file="${dir.dist.pascalcase}/test/src" />
-		</exec>
-		
-		<exec executable="${pascalcase.converter.exe}" failonerror="true">
-			<arg file="${dir.n.tutorial}" />
-			<arg file="${dir.dist.pascalcase}/tutorial" />
-		</exec>
-		
-		<copy todir="${dir.dist.pascalcase}">
-			<fileset dir="${dir.n}">
-				<include name="**/test/AssemblyInfo.cs" />
-				<include name="**/tools/AssemblyInfo.cs" />
-				<include name="**/*.csproj" />
-				<include name="**/*.csdproj" />
-				<include name="**/*.sln" />
-				<include name="**/*.resx" />
-				<include name="**/*.resources" />
-				<include name="**/*.ico" />
-				<include name="**/lib/*.dll" />
-				<include name="tutorial/build.xml" />
-				<include name="tutorial/**/*.config" />
-			</fileset>
-		</copy>
 		
 		<ant dir="${dir.dist.pascalcase}/tutorial">
 			<property name="dir.db4obuild" location="." />
@@ -1359,7 +1439,7 @@
 	
 	<target name="buildnet-pascalcase2" depends="zipnet-pascalcase2" description="Full PascalCase NET 2.0 build" />
 	
-	<target name="buildmono" depends="doctor, zipmono" description="Full Mono build" />
+	<target name="buildmono" depends="zipmono-pascalcase" description="Full Mono build (now PascalCase)" />
 
 	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build" />
 	

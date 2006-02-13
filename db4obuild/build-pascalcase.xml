@@ -10,8 +10,8 @@
 	
 	<property name="converter.exe" location="bin/CSharpConverter.exe" />
 	
-	<condition property="dotnetvm" value="mono" else="cmd">
-	  <os family="unix"/>
+	<condition property="mono" value="1">
+		<os family="unix" />
 	</condition>
 
 	<target name="rebuild" depends="clean, build">
@@ -126,12 +126,22 @@
 		</csc>
 	</target>
 	
-	<target name="compile-converter2" depends="init">
-		
-		<property environment="env" />
+	<target name="detect-dotnet" unless="mono">
+		<property environment="env" />		
 		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
-		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
-
+		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />		
+		<property name="dotnetvm" value="cmd" />
+	</target>
+		
+	<target name="detect-mono" if="mono">
+		<property name="csc.executable" value="gmcs" />
+		<property name="dotnetvm" value="mono" />
+	</target>
+	
+	<target name="detect-environment" depends="detect-mono, detect-dotnet">
+	</target>
+	
+	<target name="compile-converter2" depends="init">
 		<csc srcdir="src/CSharpConverter"
 			outputfile="bin/CSharpConverter.exe"
 			executable="${csc.executable}">
@@ -146,7 +156,7 @@
 		<delete dir="bin" />
 	</target>
 		
-	<target name="init">
+	<target name="init" depends="detect-environment">
 		<mkdir dir="bin" />
 		<mkdir dir="${dir.pascalcase.bin}" />
 		<copy todir="bin">
