@@ -2,6 +2,10 @@
 
 package com.db4o;
 
+import java.util.*;
+
+import com.db4o.query.*;
+
 
 /**
  * @exclude
@@ -10,5 +14,9 @@ package com.db4o;
 public abstract class YapStream extends YapStreamBase {
 	YapStream(YapStream a_parent) {
 		super(a_parent);
+	}
+	
+	public ObjectSet query(Predicate predicate,Comparator comparator) {
+		return query(predicate,new JdkComparatorWrapper(comparator));
 	}
 }

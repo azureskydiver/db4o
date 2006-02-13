@@ -77,6 +77,8 @@ public class ClusterQuery implements Query{
 	}
 
 	public Query sortBy(Comparator comparator) {
-		return sortBy(new JdkComparatorWrapper(comparator));
+		// FIXME
+		Exceptions4.notSupported();
+		return this;
 	}
 }

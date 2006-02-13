@@ -22,6 +22,7 @@ public class Jdk1_2TestSuite extends TestSuite{
             ExternalBlobs.class,
             GenericObjects.class,
             HashMapClearUnsaved.class,
+            JdkComparatorSort.class,
             KeepCollectionContent.class,
             MassUpdates.class,
             MultipleEvaluationGetObjectCalls.class,

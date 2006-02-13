@@ -1,25 +1,27 @@
 package com.db4o.test;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.query.*;
 
-public class ComparatorSort {
-	private static class AscendingIdComparator implements QueryComparator {
+public class JdkComparatorSort {
+	private static class AscendingIdComparator implements Comparator {
 		public int compare(Object first, Object second) {
-			return ((ComparatorSort)first)._id-((ComparatorSort)second)._id;
+			return ((JdkComparatorSort)first)._id-((JdkComparatorSort)second)._id;
 		}
 	}
 
-	private static class DescendingIdComparator implements QueryComparator {
+	private static class DescendingIdComparator implements Comparator {
 		public int compare(Object first, Object second) {
-			return ((ComparatorSort)second)._id-((ComparatorSort)first)._id;
+			return ((JdkComparatorSort)second)._id-((JdkComparatorSort)first)._id;
 		}
 	}
 
-	private static class OddEvenIdComparator implements QueryComparator {
+	private static class OddEvenIdComparator implements Comparator {
 		public int compare(Object first, Object second) {
-			int idA=((ComparatorSort)first)._id;
-			int idB=((ComparatorSort)second)._id;
+			int idA=((JdkComparatorSort)first)._id;
+			int idB=((JdkComparatorSort)second)._id;
 			int modA=idA%2;
 			int modB=idB%2;
 			if(modA!=modB) {
@@ -29,14 +31,14 @@ public class ComparatorSort {
 		}
 	}
 
-	private static class AscendingNameComparator implements QueryComparator {
+	private static class AscendingNameComparator implements Comparator {
 		public int compare(Object first, Object second) {
-			return ((ComparatorSort)first)._name.compareTo(((ComparatorSort)second)._name);
+			return ((JdkComparatorSort)first)._name.compareTo(((JdkComparatorSort)second)._name);
 		}
 	}
 
 	public static class SmallerThanThreePredicate extends Predicate {
-		public boolean match(ComparatorSort candidate) {
+		public boolean match(JdkComparatorSort candidate) {
 			return candidate._id<3;
 		}
 	}
@@ -44,18 +46,18 @@ public class ComparatorSort {
 	public int _id;
 	public String _name;
 	
-	public ComparatorSort() {
+	public JdkComparatorSort() {
 		this(0,null);
 	}
 	
-	public ComparatorSort(int id, String name) {
+	public JdkComparatorSort(int id, String name) {
 		this._id = id;
 		this._name = name;
 	}
 
 	public void store() {
 		for(int i=0;i<4;i++) {
-			Test.store(new ComparatorSort(i,String.valueOf(3-i)));
+			Test.store(new JdkComparatorSort(i,String.valueOf(3-i)));
 		}
 	}
 	
@@ -123,13 +125,13 @@ public class ComparatorSort {
 		assertIdOrder(result,new int[]{2,1,0});
 	}
 
-	private void assertIdOrder(QueryComparator comparator,int[] ids) {
+	private void assertIdOrder(Comparator comparator,int[] ids) {
 		Query query=Test.query();
 		query.constrain(getClass());
 		assertIdOrder(query,comparator,ids);
 	}
 
-	private void assertIdOrder(Query query,QueryComparator comparator,int[] ids) {
+	private void assertIdOrder(Query query,Comparator comparator,int[] ids) {
 		query.sortBy(comparator);
 		ObjectSet result=query.execute();
 		assertIdOrder(result,ids);
@@ -138,12 +140,11 @@ public class ComparatorSort {
 	private void assertIdOrder(ObjectSet result,int[] ids) {
 		Test.ensureEquals(ids.length,result.size());
 		for (int idx = 0; idx < ids.length; idx++) {
-			Test.ensureEquals(ids[idx], ((ComparatorSort)result.next())._id);
+			Test.ensureEquals(ids[idx], ((JdkComparatorSort)result.next())._id);
 		}
 	}
 	
-	
 	public static void main(String[] args) {
-		Test.run(ComparatorSort.class);
+		Test.run(JdkComparatorSort.class);
 	}
 }
