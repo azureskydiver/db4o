@@ -1,141 +1,23 @@
 <?xml version="1.0"?>
-<project name="PascalCaseConverter" default="build2">
+<project name="PascalCaseConverter" default="compile-converter2">
 
 	<property file="machine.properties" />
 	<property file="ant.properties" />
-	
-	<property name="dir.dist.pascalcase" location="${dir.dist}/pascalcase" />
-	<property name="dir.pascalcase.src" location="${dir.dist.pascalcase}/src" />
-	<property name="dir.pascalcase.bin" location="${dir.dist.pascalcase}/bin" />
 	
 	<property name="converter.exe" location="bin/CSharpConverter.exe" />
 	
 	<condition property="mono" value="1">
 		<os family="unix" />
 	</condition>
-
-	<target name="rebuild" depends="clean, build">
-	</target>
-	
-	<target name="test" depends="build">
-		<exec executable="${dir.pascalcase.bin}/db4o-net-test.exe" dir="${dir.pascalcase.bin}">
-		</exec>
-	</target>
-	
-	<target name="test2" depends="build2">
-		<exec executable="${dir.pascalcase.bin}/db4o-net-test.exe" dir="${dir.pascalcase.bin}">
-		</exec>
-	</target>
-	
-	<target name="build2" depends="compile-converter2">
-		<antcall target="run-converter">
-		</antcall>
-	</target>
-		
-	<target name="build" depends="compile-converter2">
-		<antcall target="run-converter">
-		</antcall>
-	</target>
-			
-	<target name="run-converter">
-		
-		<echo>Converted files will be written to ${dir.pascalcase.src}</echo>
-		<echo>${dotnetvm}</echo>
-		<echo>${converter.exe}</echo>
-		<echo>${dir.n.core.src}</echo>
-		<echo>${dir.pascalcase.src}</echo>
-		<exec executable="${dotnetvm}" failonerror="true">
-			<arg file="${converter.exe}" />
-			<arg file="${dir.n.core.src}" />
-			<arg file="${dir.pascalcase.src}/core/src" />
-		</exec>
-		
-		<!-- overwrite files that should have not been converted -->
-		<copy todir="${dir.pascalcase.src}" overwrite="true">
-			<fileset dir="${dir.n}">
-				<include name="core/src/external/**/*.cs" />
-			</fileset>
-		</copy>
-		
-		<exec executable="${dotnetvm}" failonerror="true">
-			<arg file="${converter.exe}" />
-			<arg file="${dir.n.tools}/src" />
-			<arg file="${dir.pascalcase.src}/tools/src" />
-			<arg value="${defines}" />
-		</exec>
-		
-		<exec executable="${dotnetvm}" failonerror="true">
-			<arg file="${converter.exe}" />
-			<arg file="${dir.n.test}/src" />
-			<arg file="${dir.pascalcase.src}/test/src" />
-			<arg value="${defines}" />
-		</exec>
-		
-		<copy todir="${dir.pascalcase.src}">
-			<fileset dir="${dir.n}">
-				<include name="**/*.csproj" />
-				<include name="**/*.sln" />
-			</fileset>
-		</copy>
-		
-		<antcall target="compile-converted-files" />
-	</target>
-		
-	<target name="compile-converted-files">
-
-		<csc
-			srcdir="${dir.pascalcase.src}/core/src"
-			targettype="library"
-			destfile="${dir.pascalcase.bin}/db4o.dll"
-			debug="true"
-			warnlevel="0"
-			optimize="true"
-			failonerror="true"
-			definitions="${defines}">
-			
-			<include name="*.cs" />
-			<exclude name="compact/**" />
-		</csc>
-		
-		<csc srcdir="${dir.pascalcase.src}/tools/src"
-			targettype="library"
-			destfile="${dir.pascalcase.bin}/db4o-net-tools.dll"
-			debug="true"
-			definitions="${defines}">
-			<reference dir="${dir.pascalcase.bin}">
-				<include name="db4o.dll" />
-			</reference>
-		</csc>
-			
-		<copy todir="${dir.pascalcase.src}/test/src" file="src/pascalcase/FixUp.cs" />
-		<csc srcdir="${dir.pascalcase.src}/test/src"
-			targettype="exe"
-			destfile="${dir.pascalcase.bin}/db4o-net-test.exe"
-			debug="true"
-			mainclass="com.db4o.test.AllTests"
-			definitions="${defines}">
-			
-			<exclude name="**/CsAssemblyVersionChange.cs" />
-			<exclude name="compact/**" />
-			
-			<reference dir="${dir.pascalcase.bin}">
-				<include name="db4o.dll" />
-				<include name="db4o-net-tools.dll" />
-				<include name="System.Drawing.dll" />
-			</reference>
-		</csc>
-	</target>
 	
 	<target name="detect-dotnet" unless="mono">
 		<property environment="env" />		
 		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
 		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />		
-		<property name="dotnetvm" value="cmd" />
 	</target>
 		
 	<target name="detect-mono" if="mono">
 		<property name="csc.executable" value="gmcs" />
-		<property name="dotnetvm" value="mono" />
 	</target>
 	
 	<target name="detect-environment" depends="detect-mono, detect-dotnet">
@@ -152,7 +34,6 @@
 	</target>
 	
 	<target name="clean">
-		<delete dir="${dir.dist.pascalcase}" />
 		<delete dir="bin" />
 	</target>
 		
