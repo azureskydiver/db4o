@@ -109,6 +109,7 @@ public interface Query {
      */
     public Query sortBy(QueryComparator comparator);
 
+
     /**
      * Sort the resulting ObjectSet by the given comparator.
      * 
