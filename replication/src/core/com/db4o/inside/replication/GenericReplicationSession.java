@@ -271,13 +271,7 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private Object collectionClone(Object original, ReflectClass claxx, final ReplicationProviderInside sourceProvider) {
-		final GenericReplicationSession grs = this;
-		return _collectionHandler.cloneWithCounterparts(original, claxx, new CounterpartFinder() { //TODO Optimize: Have a single CounterpartFinder instance. Dont create it all the time.
-
-			public Object findCounterpart(Object original) {
-				return grs.findCounterpart(original, sourceProvider);
-			}
-		});
+		return _collectionHandler.emptyClone(original, claxx);
 	}
 
 	private Object arrayClone(Object original, ReflectClass claxx, ReplicationProviderInside sourceProvider) {

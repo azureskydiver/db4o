@@ -42,9 +42,9 @@ public class CollectionHandlerImpl implements CollectionHandler {
 		return canHandle(_reflector.forClass(c));
 	}
 
-	public Object cloneWithCounterparts(Object originalCollection, ReflectClass claxx, CounterpartFinder counterpartFinder) {
-		if (_mapHandler.canHandle(claxx))
-			return _mapHandler.cloneWithCounterparts(originalCollection, claxx, counterpartFinder);
+	public Object emptyClone(Object originalCollection, ReflectClass originalCollectionClass) {
+		if (_mapHandler.canHandle(originalCollectionClass))
+			return _mapHandler.emptyClone(originalCollection, originalCollectionClass);
 
 		Collection original = (Collection) originalCollection;
 		Object result;
@@ -55,7 +55,6 @@ public class CollectionHandlerImpl implements CollectionHandler {
 		} else {
 			result = _reflector.forClass(original.getClass()).newInstance();
 		}
-		copyState(original, result, counterpartFinder);
 		return result;
 	}
 
