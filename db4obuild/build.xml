@@ -188,8 +188,7 @@
 			fork="yes"
 			executable="${file.compiler.jdk1.3}"
 			srcdir="${dir.dist.java.temp.src.core}"
-			destdir="${dir.dist.classes.java1.1}" debug="off"
-			source="1.3">
+			destdir="${dir.dist.classes.java1.1}" debug="off">
 			<compilerarg line="-target 1.1"/>
 		</javac>
 
@@ -816,17 +815,7 @@
 	</target>
 	
 	<target name="configure-net1.1-pascalcase" depends="configure-net1.1">
-		<!--
-		<property name="pascalcase.converter.ant.target" value="compile-converter" />
-		<property name="pascalcase.converter.exe" location="bin/pascalcase.exe" />
-		-->
-		
-		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
-		<property name="pascalcase.converter.exe" location="bin/CSharpConverter.exe" />
-		<property name="dotnetvm" value="cmd" />
-
-
-	</target>
+	</target>	
 	
 	<target name="configure-net2-pascalcase">
 		
@@ -835,10 +824,6 @@
 		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
 		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
 		
-		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
-		<property name="pascalcase.converter.exe" location="bin/CSharpConverter.exe" />
-		<property name="dotnetvm" value="cmd" />
-
 		<property name="csharp.defines" value="NET_2_0" />
 		<property name="installer.package.suffix" value="net2" />
 		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
@@ -965,11 +950,7 @@
 	</target>
 	
 	<target name="zipmono-pascalcase" depends="init"  description="Zip Mono PascalCase distribution">
-		
-		<property name="pascalcase.converter.ant.target" value="compile-converter2" />
-		<property name="pascalcase.converter.exe" location="bin/CSharpConverter.exe" />
-		<property name="dotnetvm" value="mono" />
-		
+			
 		<mkdir dir="${dir.dist.mono.src.core}" />
 		
 		<antcall target="sharpen-pascalcase">
@@ -1129,8 +1110,7 @@
 	
 	<target name="sharpen-pascalcase" depends="install-javatocsharp-plugin">	
 		
-		<property name="dir.sharpen.pc" location="${dir.sharpen}/pascalcase" />
-		<property name="pascalcase.converter.ant.target" value="build2" />				
+		<property name="dir.sharpen.pc" location="${dir.sharpen}/pascalcase" />		
 		
 		<antcall target="prepare-conversion-workspace">
 			<param name="target.dir" value="${dir.sharpen.pc}" />
@@ -1149,9 +1129,7 @@
 			<arg value="-pascalcase" />
 		</java>
 		
-		<ant antfile="build-pascalcase.xml"
-			target="${pascalcase.converter.ant.target}"
-			inheritall="false">
+		<ant antfile="build-pascalcase.xml" inheritall="false">
 		</ant>		
 		
 		<property name="dir.dist.pascalcase" location="${dir.dist}/pascalcase" />
@@ -1213,7 +1191,25 @@
 	</target>
 	
 	<target name="execute-pascalcase-converter">
-		<exec executable="${dotnetvm}" failonerror="true">
+		<property name="pascalcase.converter.exe" value="bin/CSharpConverter.exe" />
+		
+		<condition property="mono" value="true">
+			<os family="unix" />
+		</condition>
+			
+		<antcall target="execute-pascalcase-converter-mono" />
+		<antcall target="execute-pascalcase-converter-dotnet" />
+	</target>
+		
+	<target name="execute-pascalcase-converter-dotnet" unless="mono">
+		<exec executable="${pascalcase.converter.exe}" failonerror="true">
+			<arg file="${src.dir}" />
+			<arg file="${target.dir}" />
+		</exec>
+	</target>
+		
+	<target name="execute-pascalcase-converter-mono" if="mono">
+		<exec executable="mono" failonerror="true" os="unix">
 			<arg file="${pascalcase.converter.exe}" />
 			<arg file="${src.dir}" />
 			<arg file="${target.dir}" />
