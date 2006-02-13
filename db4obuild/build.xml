@@ -24,7 +24,6 @@
 	dir.dll.wince=C:/Program Files/Microsoft Visual Studio .NET 2003/CompactFrameworkSDK/v1.0.5000/Windows CE/
 	eclipse.home=c:/Program Files/Eclipse	
 	csc.executable.path.net2=C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
-	
 -->
 	<property environment="env" />
 	<property file="machine.properties" />
@@ -189,7 +188,7 @@
 			executable="${file.compiler.jdk1.3}"
 			srcdir="${dir.dist.java.temp.src.core}"
 			destdir="${dir.dist.classes.java1.1}" debug="off">
-			<compilerarg line="-target 1.1"/>
+			<compilerarg line="${file.compiler.jdk1.3.args}"/>
 		</javac>
 
 		<mkdir dir="${dir.dist.classes.java1.2}" />
@@ -495,16 +494,16 @@
 			warnlevel="0"
 			optimize="true"
 			definitions="MONO">
-			<include name="*.cs" />
+			<include name="**/*.cs" />
 			<exclude name="compact*/**" />
 		</csc>
+		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
 	</target>
 	
 	<target name="compiledllmono" depends="init, sharpen">
 		<antcall target="do-compiledllmono">
 			<param name="src.dir" location="${dir.n.core.src}" />
 		</antcall>
-		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
 	</target>
 
 	<target name="compiletestsjava" depends="compilecorejava" description="Compile Db4o test sources">
@@ -969,10 +968,12 @@
 			<param name="dir.n.tutorial.src" value="${dir.dist.pascalcase}/tutorial/db4o-tutorial-chapters/src" />
 		</antcall>
 		
-		<!--
-		<antcall target="compile-legacy">
+		<!-- legacy dll -->
+		<mkdir dir="${dir.dist.mono.legacy}" />
+		<antcall target="compiledllmono">
+			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/db4o.dll" />
+			<param name="file.xml.mono" location="${dir.dist.mono.legacy}/db4o.xml" />
 		</antcall>
-		-->
 		
 		<antcall target="prepare-mono-distro">
 			<param name="dir.n.core" location="${dir.dist.pascalcase}/core" />
@@ -1209,7 +1210,7 @@
 	</target>
 		
 	<target name="execute-pascalcase-converter-mono" if="mono">
-		<exec executable="mono" failonerror="true" os="unix">
+		<exec executable="mono" failonerror="true">
 			<arg file="${pascalcase.converter.exe}" />
 			<arg file="${src.dir}" />
 			<arg file="${target.dir}" />
