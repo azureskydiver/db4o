@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class HibernateReplicationProviderTest extends ReplicationProviderTest {
+	protected HibernateReplicationProviderImpl hibernateReplicationProvider;
+
 	public void testReplicationProvider() {
 		super.testReplicationProvider();
 		tstCollection();
@@ -78,6 +80,11 @@ public class HibernateReplicationProviderTest extends ReplicationProviderTest {
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);
 
-		return new HibernateReplicationProviderImpl(configuration);
+		hibernateReplicationProvider = new HibernateReplicationProviderImpl(configuration);
+		return hibernateReplicationProvider;
+	}
+
+	protected void destroySubject() {
+		hibernateReplicationProvider.closeIfOpened();
 	}
 }
