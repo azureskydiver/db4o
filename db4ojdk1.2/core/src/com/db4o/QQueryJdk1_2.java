@@ -13,11 +13,14 @@ import com.db4o.query.*;
  * 
  * @exclude
  */
-public class QQuery extends QQueryBase {
-    public QQuery() {
+public class QQueryJdk1_2 extends QQuery {
+    public QQueryJdk1_2() {
     }
 
-    QQuery(Transaction a_trans, QQuery a_parent, String a_field) {
+    /**
+     * @deprecated use QQueryFactory#createQQuery() instead
+     */
+    QQueryJdk1_2(Transaction a_trans, QQuery a_parent, String a_field) {
     	super(a_trans,a_parent,a_field);
     }
 

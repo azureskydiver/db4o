@@ -15,6 +15,10 @@ import com.db4o.replication.*;
 import com.db4o.types.*;
 
 /**
+ * NOTE: This is just a 'partial' base class to allow for variant implementations
+ * in db4oj and db4ojdk1.2. It assumes that itself is an instance of YapStream
+ * and should never be used explicitly.
+ * 
  * @exclude
  * @partial
  */
@@ -1211,7 +1215,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
 
     final Query query(Transaction ta) {
         i_entryCounter++;
-        Query q = new QQuery(checkTransaction(ta), null, null);
+        Query q = QQueryFactory.createQQuery(checkTransaction(ta), null, null);
         i_entryCounter--;
         return q;
     }
@@ -1831,6 +1835,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
         Platform4.killYapRef(yo.i_object);
     }
     
+    // cheat emulating '(YapStream)this'
     private static YapStream cast(YapStreamBase obj) {
     	return (YapStream)obj;
     }
