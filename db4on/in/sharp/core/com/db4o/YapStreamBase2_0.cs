@@ -10,7 +10,7 @@ namespace com.db4o
 	using System.Collections.Generic;
 	using System.Text;
 
-    public partial class YapStream
+    public partial class YapStreamBase
     {
         public IList<Extent> query<Extent>(Predicate<Extent> match)
         {

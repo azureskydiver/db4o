@@ -91,20 +91,19 @@ namespace com.db4o
         /// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
         /// returned by the query.
         /// </returns>
-        IList <Extent> query <Extent>(System.Predicate<Extent> match );
+        IList<Extent> query<Extent>(System.Predicate<Extent> match );
 
         /// <summary>
         /// queries for all instances of the type extent, returning
 		/// a IList of ElementType which must be assignable from
 		/// extent.
         /// </summary>
-        IList <ElementType> query <ElementType> (System.Type extent);
+        IList<ElementType> query<ElementType>(System.Type extent);
 		
 		/// <summary>
         /// queries for all instances of the type extent.
         /// </summary>
-        IList <Extent> query <Extent> ();
-
+        IList<Extent> query<Extent>();
     }
 #endif
 }
