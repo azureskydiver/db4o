@@ -20,10 +20,11 @@ public class CreateSomeData {
 	}
 	
 	public static void main(String[] args) {
-		new File("io.log").delete();
+		new File("io.log.1").delete();
 		new File("somedata.yap").delete();
 		Db4o.configure().io(new RecordingIoAdapter(new RandomAccessFileAdapter(),"io.log"));
 		ObjectContainer db=Db4o.openFile("somedata.yap");
+		long start=System.currentTimeMillis();
 		for(int i=0;i<10000;i++) {
 			db.set(new SomeData(i,"Data"+i));
 		}
@@ -31,6 +32,7 @@ public class CreateSomeData {
 		System.gc();
 		ObjectSet result=db.query(SomeData.class);
 		System.out.println(result.size());
+		System.err.println(System.currentTimeMillis()-start);
 		db.close();
 	}
 }

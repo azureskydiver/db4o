@@ -12,42 +12,39 @@ public class RecordingIoAdapter extends VanillaIoAdapter {
 	// NOTE/FIXME: Ugly hack to prevent YapRandomAccessFile timer file handle from
 	// writing asonchronously to our log file. Very fragile, basically YapRandomAccessFile
 	// timer handles - or IoAdapter design ;P - needs to be fixed.
-	private static boolean ALREADY_ACTIVE=false;
-	private boolean active;
-	private int count;
+	private int _runningId;
 	
 	private String _logPath;
 
 	private DataOutputStream _writer;
 
 	private long _pos;
+	
+	private int _runs;
 
 	public RecordingIoAdapter(IoAdapter adapter, String logPath) {
 		super(adapter);
 		_logPath = logPath;
+		_runningId=0;
 	}
 
 	protected RecordingIoAdapter(IoAdapter adapter, String logPath,
 			String file, boolean append, long initialLength) throws IOException {
 		super(adapter, file, append, initialLength);
-		if(!ALREADY_ACTIVE) {
-			ALREADY_ACTIVE=true;
-			active=true;
-			_writer = new DataOutputStream(new FileOutputStream(logPath));
-		}
+		_writer = new DataOutputStream(new FileOutputStream(logPath));
+		_runs=0;
 	}
 
 	public void close() throws IOException {
 		super.close();
 		writeLogChar('q');
-		if(active) {
-			_writer.close();
-		}
+		//System.err.println(_runs);
 	}
 
 	public IoAdapter open(String path, boolean lockFile, long initialLength)
 			throws IOException {
-		return new RecordingIoAdapter(_delegate, _logPath, path, lockFile,
+		_runningId++;
+		return new RecordingIoAdapter(_delegate, _logPath+"."+_runningId, path, lockFile,
 				initialLength);
 	}
 
@@ -69,26 +66,18 @@ public class RecordingIoAdapter extends VanillaIoAdapter {
 	
 	public void sync() throws IOException {
 		writeLogChar('f');
-		_writer.flush();
 		super.sync();
 	}
 	
 	private void writeLog(char type,long pos,int length) throws IOException {
-		if(!active) {
-			return;
-		}
 		_writer.writeChar(type);
 		_writer.writeLong(pos);
 		_writer.writeInt(length);
-		_writer.flush();
-		count++;
+		_runs++;
 	}
 	
 	private void writeLogChar(char c) throws IOException {
-		if(!active) {
-			return;
-		}
 		_writer.writeChar(c);
-		count++;
+		_runs++;
 	}
 }
