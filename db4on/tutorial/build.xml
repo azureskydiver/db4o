@@ -49,7 +49,9 @@
 				
 			<resource
 				file="db4o-tutorial/src/db4obrowser.TutorialOutlineViewControl.resources" embed="true" />			
+			
 			<reference dir="${dir.n.tutorial.bin}/bin">
+				<include name="db4o.dll" />
 				<include name="db4o-tutorial-chapters.dll" />
 				<include name="WeifenLuo.WinFormsUI.dll" />
 				<include name="AxSHDocVw.dll" />

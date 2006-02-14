@@ -54,7 +54,7 @@ namespace com.db4o.f1.chapter3
             _history.Add(new SensorReadout(Poll(), DateTime.Now, this));
         }
         
-        protected double[]  Poll()
+        protected double[] Poll()
         {
             int factor = _history.Count + 1;
             return new double[] { 0.1d*factor, 0.2d*factor, 0.3d*factor };

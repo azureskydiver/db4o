@@ -52,7 +52,7 @@ namespace com.db4o.f1.chapter5
         {
             ObjectSet result = db.get(typeof(Car));
             Car car = (Car)result.next();
-            for(int i=0; i<5; i++)
+            for (int i=0; i<5; i++)
             {
                 car.Snapshot();
             }
