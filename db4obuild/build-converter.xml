@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="PascalCaseConverter" default="compile-converter2">
+<project name="CSharpConverter" default="compile-converter2">
 
 	<property file="machine.properties" />
 	<property file="ant.properties" />
@@ -9,6 +9,16 @@
 	<condition property="mono" value="1">
 		<os family="unix" />
 	</condition>
+		
+	<target name="compile-converter2" depends="init">
+		<csc srcdir="src/CSharpConverter"
+			outputfile="bin/CSharpConverter.exe"
+			executable="${csc.executable}">
+			<reference dir="bin">
+				<include name="ICSharpCode.NRefactory.dll" />
+			</reference>
+		</csc>
+	</target>
 	
 	<target name="detect-dotnet" unless="mono">
 		<property environment="env" />		
@@ -23,23 +33,12 @@
 	<target name="detect-environment" depends="detect-mono, detect-dotnet">
 	</target>
 	
-	<target name="compile-converter2" depends="init">
-		<csc srcdir="src/CSharpConverter"
-			outputfile="bin/CSharpConverter.exe"
-			executable="${csc.executable}">
-			<reference dir="bin">
-				<include name="ICSharpCode.NRefactory.dll" />
-			</reference>
-		</csc>
-	</target>
-	
 	<target name="clean">
 		<delete dir="bin" />
 	</target>
 		
 	<target name="init" depends="detect-environment">
 		<mkdir dir="bin" />
-		<mkdir dir="${dir.pascalcase.bin}" />
 		<copy todir="bin">
 			<fileset dir="lib/SharpDevelop">
 				<include name="ICSharpCode.NRefactory.dll" />
