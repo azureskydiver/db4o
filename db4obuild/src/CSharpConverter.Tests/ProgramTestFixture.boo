@@ -18,6 +18,9 @@ class ProgramTestFixture:
 		Directory.CreateDirectory(SourceDir)
 		CreateSourceFile("Foo.cs", """
 public class Foo {
+	public Foo() {
+	}
+	
 	public void methodOne() {
 		// comments are preserved
 		methodTwo();
@@ -35,14 +38,49 @@ public class Bar {
 		get { return null; }
 	}
 }		""")
+		
 
 	[Test]
-	def CSharpPascalCase():
+	def CSharpPascalCaseIfPragma():
+		CreateSourceFile("YapStreamBase.cs", """
+namespace com.db4o
+{
+#if NET_2_0
+	using System.Collections.Generic;
+
+	public partial class YapStreamBase
+	{
+	}
+#endif
+}""")
+		RunCSharpConverter()
+		
+		AssertTargetFile("YapStreamBase.cs", """
+namespace com.db4o
+{
+	#if NET_2_0
+	using System.Collections.Generic;
+	public partial class YapStreamBase
+	{
+	}
+	#endif
+}""")
+
+
+	def RunCSharpConverter():
 		args = (SourceDir, TargetDir)
 		CSharpConverter.Program.Main(args)
+		
+	[Test]
+	def CSharpPascalCase():
+		RunCSharpConverter()
 		AssertTargetFile("Foo.cs", """
 public class Foo
 {
+	public Foo()
+	{
+	}
+
 	public void MethodOne()
 	{
 		// comments are preserved
@@ -76,6 +114,9 @@ public class Bar
 		CSharpConverter.Program.Main(args)
 		AssertTargetFile("Foo.vb", """
 Public Class Foo
+	Public Sub New()
+	End Sub 
+
 	Public Sub MethodOne()
 		' comments are preserved
 		MethodTwo()
@@ -95,7 +136,7 @@ Public Class Bar
 		Get
 			Return Nothing
 		End Get
-	End Property
+	End Property 
 
 End Class""")
 		

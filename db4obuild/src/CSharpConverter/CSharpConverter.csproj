@@ -37,7 +37,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="ICSharpCode.NRefactory">
-      <HintPath>..\..\..\..\..\Corsavy\SharpDevelop\bin\ICSharpCode.NRefactory.dll</HintPath>
+      <HintPath>..\..\lib\SharpDevelop\ICSharpCode.NRefactory.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
   </ItemGroup>
