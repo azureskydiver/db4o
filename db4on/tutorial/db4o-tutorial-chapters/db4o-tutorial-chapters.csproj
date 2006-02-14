@@ -89,11 +89,6 @@
         <Files>
             <Include>
                 <File
-                    RelPath = "src\com\db4o\f1\ExampleRunner.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "src\com\db4o\f1\Util.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -1,9 +1,10 @@
-namespace com.db4o.f1
+namespace db4obrowser
 {
     using System;
     using System.IO;
     using System.Reflection;
     using com.db4o;
+    using com.db4o.f1;
     
     public class ExampleRunner
     {   
@@ -42,7 +43,7 @@ namespace com.db4o.f1
         
         void RunExample(string typeName, string method)
         {
-        	Type type = Assembly.GetExecutingAssembly().GetType(typeName);
+        	Type type = typeof(com.db4o.f1.Util).Assembly.GetType(typeName);
         	MethodInfo example = type.GetMethod(method, BindingFlags.IgnoreCase|BindingFlags.Static|BindingFlags.Public);
             
             bool found = false;

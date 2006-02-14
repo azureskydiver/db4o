@@ -13,9 +13,9 @@ namespace com.db4o.f1.chapter1
     
     	public bool match(Pilot pilot)
     	{
-        	for (int i=0;i<_points.Length;i++)
+        	foreach (int points in _points)
         	{
-        		if (pilot.Points == _points[i])
+        		if (pilot.Points == points)
         		{
         			return true;
         		}

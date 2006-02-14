@@ -141,9 +141,9 @@ namespace com.db4o.f1.chapter1
         public static void clearDatabase(ObjectContainer db)
         {
             ObjectSet result = db.get(typeof(Pilot));
-            while (result.hasNext())
+            foreach (object item in result)
             {
-                db.delete(result.next());
+                db.delete(item);
             }
         }
     }
