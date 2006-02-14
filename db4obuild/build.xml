@@ -1130,7 +1130,7 @@
 			<arg value="-pascalcase" />
 		</java>
 		
-		<ant antfile="build-pascalcase.xml" inheritall="false">
+		<ant antfile="build-converter.xml" inheritall="false">
 		</ant>		
 		
 		<property name="dir.dist.pascalcase" location="${dir.dist}/pascalcase" />
@@ -1167,6 +1167,13 @@
 			<param name="target.dir" location="${dir.dist.pascalcase}/tutorial" />
 		</antcall>
 		
+		<!-- Visual Basic tutorial -->
+		<antcall target="execute-pascalcase-converter">
+			<param name="src.dir" location="${dir.n.tutorial}/db4o-tutorial-chapters" />
+			<param name="target.dir" location="${dir.dist.pascalcase}/tutorial/vb/db4o-tutorial-chapters" />
+			<param name="converter.args" value="-vb" />
+		</antcall>
+		
 		<copy todir="${dir.dist.pascalcase}">
 			<fileset dir="${dir.n}">
 				<include name="**/test/AssemblyInfo.cs" />
@@ -1193,6 +1200,7 @@
 	
 	<target name="execute-pascalcase-converter">
 		<property name="pascalcase.converter.exe" value="bin/CSharpConverter.exe" />
+		<property name="converter.args" value="" />
 		
 		<condition property="mono" value="true">
 			<os family="unix" />
@@ -1206,6 +1214,7 @@
 		<exec executable="${pascalcase.converter.exe}" failonerror="true">
 			<arg file="${src.dir}" />
 			<arg file="${target.dir}" />
+			<arg value="${converter.args}" />
 		</exec>
 	</target>
 		
@@ -1214,6 +1223,7 @@
 			<arg file="${pascalcase.converter.exe}" />
 			<arg file="${src.dir}" />
 			<arg file="${target.dir}" />
+			<arg value="${converter.args}" />
 		</exec>		
 	</target>	
 	
