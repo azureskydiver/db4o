@@ -19,8 +19,10 @@ public static void main(String[] args) throws IOException {
 	public static long benchmark(DataInputStream recordedIn,IoAdapter adapter) throws IOException {
 		byte[] defaultData=new byte[1000];
 		long start = System.currentTimeMillis();
+		int runs=0;
 		try {
 			while(true) {
+					runs++;
 					char type=recordedIn.readChar();
 					if(type=='q') {
 						break;
@@ -49,6 +51,7 @@ public static void main(String[] args) throws IOException {
 			recordedIn.close();
 			adapter.close();
 		}
+		//System.err.println(runs);
 		return System.currentTimeMillis()-start;
 	}
 }
