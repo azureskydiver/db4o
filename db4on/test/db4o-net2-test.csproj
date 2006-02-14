@@ -172,6 +172,7 @@
     <Compile Include="src\com\db4o\test\MemTrack.cs" />
     <Compile Include="src\com\db4o\test\Messaging.cs" />
     <Compile Include="src\com\db4o\test\Molecule.cs" />
+    <Compile Include="src\com\db4o\test\nativequeries\AbstractNativeQueriesTestCase.cs" />
     <Compile Include="src\com\db4o\test\nativequeries\Cat.cs" />
     <Compile Include="src\com\db4o\test\nativequeries\cats\Animal.cs" />
     <Compile Include="src\com\db4o\test\nativequeries\cats\Cat.cs" />
@@ -181,6 +182,7 @@
     <Compile Include="src\com\db4o\test\nativequeries\NQRegressionTests.cs" />
     <Compile Include="src\com\db4o\test\nativequeries\OptimizationFailuresTestCase.cs" />
     <Compile Include="src\com\db4o\test\nativequeries\Predicates.cs" />
+    <Compile Include="src\com\db4o\test\nativequeries\StringComparisonTestCase.cs" />
     <Compile Include="src\com\db4o\test\net2\Net2GenericContainers.cs" />
     <Compile Include="src\com\db4o\test\net2\Net2GenericDictionary.cs" />
     <Compile Include="src\com\db4o\test\net2\Net2GenericList.cs" />
