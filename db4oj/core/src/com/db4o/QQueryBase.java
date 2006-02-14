@@ -25,7 +25,7 @@ public abstract class QQueryBase implements Query, Unversioned {
     public QQuery i_parent;
     public String i_field;
 
-    private QueryComparator _comparator;
+    public QueryComparator _comparator;
     
     protected QQueryBase() {
         // C/S only
@@ -273,7 +273,7 @@ public abstract class QQueryBase implements Query, Unversioned {
 
 	private QueryResult classOnlyQuery() {
         
-		if(i_constraints.size()!=1) {
+		if(i_constraints.size()!=1||_comparator!=null) {
 			return null;
 		}
 		Constraint constr=(Constraint)iterateConstraints().next(); 
@@ -329,7 +329,6 @@ public abstract class QQueryBase implements Query, Unversioned {
         } else {
             executeLocal(result);
         }
-        sort(result);
     }
 
     void executeLocal(final QueryResultImpl result) {
@@ -448,6 +447,7 @@ public abstract class QQueryBase implements Query, Unversioned {
                 }
             }
         }
+        sort(result);
         result.reset();
     }
 

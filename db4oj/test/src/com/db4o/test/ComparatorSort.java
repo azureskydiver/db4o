@@ -4,19 +4,19 @@ import com.db4o.*;
 import com.db4o.query.*;
 
 public class ComparatorSort {
-	private static class AscendingIdComparator implements QueryComparator {
+	public static class AscendingIdComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
 			return ((ComparatorSort)first)._id-((ComparatorSort)second)._id;
 		}
 	}
 
-	private static class DescendingIdComparator implements QueryComparator {
+	public static class DescendingIdComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
 			return ((ComparatorSort)second)._id-((ComparatorSort)first)._id;
 		}
 	}
 
-	private static class OddEvenIdComparator implements QueryComparator {
+	public static class OddEvenIdComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
 			int idA=((ComparatorSort)first)._id;
 			int idB=((ComparatorSort)second)._id;
@@ -29,7 +29,7 @@ public class ComparatorSort {
 		}
 	}
 
-	private static class AscendingNameComparator implements QueryComparator {
+	public static class AscendingNameComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
 			return ((ComparatorSort)first)._name.compareTo(((ComparatorSort)second)._name);
 		}
@@ -53,6 +53,10 @@ public class ComparatorSort {
 		this._name = name;
 	}
 
+	public void configure() {
+		Db4o.configure().exceptionsOnNotStorable(true);
+	}
+	
 	public void store() {
 		for(int i=0;i<4;i++) {
 			Test.store(new ComparatorSort(i,String.valueOf(3-i)));

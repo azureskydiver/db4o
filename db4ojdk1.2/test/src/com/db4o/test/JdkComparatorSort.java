@@ -37,7 +37,7 @@ public class JdkComparatorSort {
 		}
 	}
 
-	public static class SmallerThanThreePredicate extends Predicate {
+	private static class SmallerThanThreePredicate extends Predicate {
 		public boolean match(JdkComparatorSort candidate) {
 			return candidate._id<3;
 		}

@@ -18,17 +18,22 @@ The Native Query optimizer is still under development to eventually ._
 "understand" all Java constructs. Current optimization supports ._
 the following constructs well:
 
-- constants
+- compile-time constants
 - simple member access
-- simple getter methods
-- chaining of member access/simple getter methods
 - primitive comparisons
-- String#equals()
+- #equals() on primitive wrappers and Strings
+- #contains()/#startsWith()/#endsWith() for Strings
 - arithmetic expressions
 - boolean expressions
+- static field access
+- array access for static/predicate fields
+- arbitrary method calls on static/predicate fields (without candidate based params)
+- candidate methods composed of the above
+- chained combinations of the above
 
 This list will constantly grow with the latest versions of db4o.
 
+Note that the current implementation doesn't support polymorphism yet.
 
 db4o for Java supplies three different possibilities to run ._
 optimized native queries, optimization at
@@ -40,11 +45,11 @@ The three options are described in the following:
 
 .1 Optimization at query execution time ..
 
-.b Note: This will work with JDK1.1. ..
+.b Note: This will not work with JDK1.1. ..
 
 To enable code analysis and optimization of native query expressions ._
-at query query execution time, you just have to add db4o-5.0-nqopt.jar ._
-and bloat-1.0.jar to your CLASSPATH. Optimization can be turned on and off ._
+at query query execution time, you just have to add db4o-5.x-nqopt.jar ._
+and bloat-1.x.jar to your CLASSPATH. Optimization can be turned on and off ._
 with the following configuration setting:
 
 .c Db4o.configure().optimizeNativeQueries(boolean optimizeNQ); ..c
@@ -148,15 +153,15 @@ Further options:
 This feature still is quite basic but it will soon be improved. ._
 Currently you can only attach a listener to the ObjectContainer:
 
-.c ((YapStream)db).addListener(new Db4oQueryExecutionListener() {
-  public void notifyQueryExecuted(Predicate pred, String msg) {
-    System.err.println(msg);
+.c ((YapStream)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
+  public void notifyQueryExecuted(NQOptimizationInfo info) {
+    System.err.println(info);
   }
 }); ..c
 
 The listener will be notified on each native query call and will be ._
-passed the Predicate object processed and the success status of the ._
-optimization run:
+passed the Predicate object processed, the optimized expression tree (if
+successful) and the success status of the optimization run:
 
 YapStream.UNOPTIMIZED ("UNOPTIMIZED")
   if the predicate could not be optimized and is run in unoptimized mode
