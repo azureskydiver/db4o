@@ -2,6 +2,8 @@
 
 package  com.db4o;
 
+import java.util.*;
+
 import com.db4o.ext.*;
 import com.db4o.query.*;
 
@@ -267,7 +269,11 @@ public interface ObjectContainer {
      * @return the {@link ObjectSet} returned by the query.
      */
     public <TargetType> ObjectSet <TargetType> query(Predicate<TargetType> predicate);
-    
+
+    public <TargetType> ObjectSet <TargetType> query(Predicate<TargetType> predicate,QueryComparator<TargetType> comparator);
+
+    public <TargetType> ObjectSet <TargetType> query(Predicate<TargetType> predicate,Comparator<TargetType> comparator);
+
     /**
      * rolls back the running transaction.
      * <br><br>Modified application objects im memory are not restored.

@@ -1,28 +1,27 @@
-package com.db4o.test.soda;
+package com.db4o.test;
 
 import java.util.*;
 
 import com.db4o.*;
 import com.db4o.query.*;
-import com.db4o.test.*;
 
-public class SodaJdkComparatorSort {
+public class JdkComparatorSort {
 	private static class AscendingIdComparator implements Comparator {
 		public int compare(Object first, Object second) {
-			return ((SodaJdkComparatorSort)first)._id-((SodaJdkComparatorSort)second)._id;
+			return ((JdkComparatorSort)first)._id-((JdkComparatorSort)second)._id;
 		}
 	}
 
 	private static class DescendingIdComparator implements Comparator {
 		public int compare(Object first, Object second) {
-			return ((SodaJdkComparatorSort)second)._id-((SodaJdkComparatorSort)first)._id;
+			return ((JdkComparatorSort)second)._id-((JdkComparatorSort)first)._id;
 		}
 	}
 
 	private static class OddEvenIdComparator implements Comparator {
 		public int compare(Object first, Object second) {
-			int idA=((SodaJdkComparatorSort)first)._id;
-			int idB=((SodaJdkComparatorSort)second)._id;
+			int idA=((JdkComparatorSort)first)._id;
+			int idB=((JdkComparatorSort)second)._id;
 			int modA=idA%2;
 			int modB=idB%2;
 			if(modA!=modB) {
@@ -34,25 +33,31 @@ public class SodaJdkComparatorSort {
 
 	private static class AscendingNameComparator implements Comparator {
 		public int compare(Object first, Object second) {
-			return ((SodaJdkComparatorSort)first)._name.compareTo(((SodaJdkComparatorSort)second)._name);
+			return ((JdkComparatorSort)first)._name.compareTo(((JdkComparatorSort)second)._name);
 		}
 	}
 
+	private static class SmallerThanThreePredicate extends Predicate<JdkComparatorSort> {
+		public boolean match(JdkComparatorSort candidate) {
+			return candidate._id<3;
+		}
+	}
+	
 	public int _id;
 	public String _name;
 	
-	public SodaJdkComparatorSort() {
+	public JdkComparatorSort() {
 		this(0,null);
 	}
 	
-	public SodaJdkComparatorSort(int id, String name) {
+	public JdkComparatorSort(int id, String name) {
 		this._id = id;
 		this._name = name;
 	}
 
 	public void store() {
 		for(int i=0;i<4;i++) {
-			Test.store(new SodaJdkComparatorSort(i,String.valueOf(3-i)));
+			Test.store(new JdkComparatorSort(i,String.valueOf(3-i)));
 		}
 	}
 	
@@ -67,6 +72,11 @@ public class SodaJdkComparatorSort {
 		assertIdOrder(query,new AscendingIdComparator(),new int[]{0,1,2});
 	}
 
+	public void testByIdAscendingNQ() {
+		ObjectSet result=Test.objectContainer().query(new SmallerThanThreePredicate(),new AscendingIdComparator());
+		assertIdOrder(result,new int[]{0,1,2});
+	}
+
 	public void testByIdDescending() {
 		assertIdOrder(new DescendingIdComparator(),new int[]{3,2,1,0});
 	}
@@ -76,6 +86,11 @@ public class SodaJdkComparatorSort {
 		query.constrain(getClass());
 		query.descend("_id").constrain(new Integer(3)).smaller();
 		assertIdOrder(query,new DescendingIdComparator(),new int[]{2,1,0});
+	}
+
+	public void testByIdDescendingNQ() {
+		ObjectSet result=Test.objectContainer().query(new SmallerThanThreePredicate(),new DescendingIdComparator());
+		assertIdOrder(result,new int[]{2,1,0});
 	}
 
 	public void testByIdOddEven() {
@@ -89,6 +104,11 @@ public class SodaJdkComparatorSort {
 		assertIdOrder(query,new OddEvenIdComparator(),new int[]{0,2,1});
 	}
 
+	public void testByIdOddEvenNQ() {
+		ObjectSet result=Test.objectContainer().query(new SmallerThanThreePredicate(),new OddEvenIdComparator());
+		assertIdOrder(result,new int[]{0,2,1});
+	}
+
 	public void testByNameAscending() {
 		assertIdOrder(new AscendingNameComparator(),new int[]{3,2,1,0});
 	}
@@ -98,6 +118,11 @@ public class SodaJdkComparatorSort {
 		query.constrain(getClass());
 		query.descend("_id").constrain(new Integer(3)).smaller();
 		assertIdOrder(query,new AscendingNameComparator(),new int[]{2,1,0});
+	}
+	
+	public void testByNameAscendingNQ() {
+		ObjectSet result=Test.objectContainer().query(new SmallerThanThreePredicate(),new AscendingNameComparator());
+		assertIdOrder(result,new int[]{2,1,0});
 	}
 
 	private void assertIdOrder(Comparator comparator,int[] ids) {
@@ -109,13 +134,17 @@ public class SodaJdkComparatorSort {
 	private void assertIdOrder(Query query,Comparator comparator,int[] ids) {
 		query.sortBy(comparator);
 		ObjectSet result=query.execute();
-		Test.ensureEquals(result.size(), ids.length);
+		assertIdOrder(result,ids);
+	}
+
+	private void assertIdOrder(ObjectSet result,int[] ids) {
+		Test.ensureEquals(ids.length,result.size());
 		for (int idx = 0; idx < ids.length; idx++) {
-			Test.ensureEquals(ids[idx], ((SodaJdkComparatorSort)result.next())._id);
+			Test.ensureEquals(ids[idx], ((JdkComparatorSort)result.next())._id);
 		}
 	}
 	
 	public static void main(String[] args) {
-		Test.run(SodaJdkComparatorSort.class);
+		Test.run(JdkComparatorSort.class);
 	}
 }

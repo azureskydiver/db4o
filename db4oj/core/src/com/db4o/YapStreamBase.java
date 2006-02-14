@@ -1215,7 +1215,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
 
     final Query query(Transaction ta) {
         i_entryCounter++;
-        Query q = QQueryFactory.createQQuery(checkTransaction(ta), null, null);
+        Query q = new QQuery(checkTransaction(ta), null, null);
         i_entryCounter--;
         return q;
     }
