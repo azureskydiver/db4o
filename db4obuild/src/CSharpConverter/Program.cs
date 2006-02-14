@@ -92,21 +92,27 @@ namespace CSharpConverter
 			
 			SpecialNodesInserter sni = new SpecialNodesInserter(specials,
 			                                                    new SpecialOutputVisitor(visitor.OutputFormatter));
-			visitor.NodeTracker.NodeVisiting += sni.AcceptNodeStart;
+			visitor.NodeTracker.NodeVisiting += sni.AcceptNodeStart;			
 			visitor.NodeTracker.NodeVisited += sni.AcceptNodeEnd;
+			visitor.NodeTracker.NodeChildrenVisited += sni.AcceptNodeEnd;
 			visitor.NodeTracker.NodeVisited += delegate(INode node) {
-				if (node is MethodDeclaration
-				    || node is FieldDeclaration
-				   	|| node is PropertyDeclaration
-				    || node is MethodDeclaration)
+				if (IsMemberDeclaration(node))
 				{
 					visitor.OutputFormatter.NewLine();
 				}
 			};
-			visitor.NodeTracker.NodeChildrenVisited += sni.AcceptNodeEnd;
 			parser.CompilationUnit.AcceptVisitor(visitor, null);
 			sni.Finish();
 			return visitor.Text;
+		}
+		
+		static bool IsMemberDeclaration(INode node)
+		{	
+			return node is MethodDeclaration
+				|| node is FieldDeclaration
+				|| node is PropertyDeclaration
+				|| node is EventDeclaration
+				|| node is ConstructorDeclaration;
 		}
 		
 		IOutputASTVisitor CreateOutputVisitor()
