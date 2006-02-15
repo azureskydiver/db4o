@@ -3,18 +3,33 @@
 package com.db4o.test.replication;
 
 public class Replicated {
-	public String _name;
-	public Replicated _link;
+	private String name;
+	private Replicated link;
 
 	public Replicated() {
 	}
 
 	public Replicated(String name) {
-		_name = name;
+		this.setName(name);
 	}
 
 	public String toString() {
-		return _name + ", hashcode = " + hashCode();
+		return getName() + ", hashcode = " + hashCode();
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Replicated getLink() {
+		return link;
+	}
+
+	public void setLink(Replicated link) {
+		this.link = link;
+	}
 }

@@ -290,7 +290,7 @@ public abstract class ReplicationFeaturesMain {
 
 	private void changeObject(TestableReplicationProvider container, String name, String newName) {
 		Replicated obj = find(container, name);
-		obj._name = newName;
+		obj.setName(newName);
 		container.update(obj);
 	}
 
@@ -326,7 +326,7 @@ public abstract class ReplicationFeaturesMain {
 //			System.out.println("replicated = " + replicated);
 			if (replicated == null)
 				System.out.println("??????????????????????????????");
-			if (name.equals(replicated._name)) {
+			if (name.equals(replicated.getName())) {
 				result = replicated;
 				resultCount++;
 			}

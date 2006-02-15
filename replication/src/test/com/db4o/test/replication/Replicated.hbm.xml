@@ -6,13 +6,13 @@
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping default-access="field">
+<hibernate-mapping default-access="property">
 	<class name="com.db4o.test.replication.Replicated">
 		<id column="id" type="int">
 			<generator class="native"/>
 		</id>
 		<discriminator/>
-		<property name="_name"/>
-		<many-to-one name="_link" cascade="all"/>
+		<property name="name"/>
+		<many-to-one name="link" cascade="all"/>
 	</class>
 </hibernate-mapping>
