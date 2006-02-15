@@ -19,7 +19,7 @@ import com.db4o.types.*;
  * 
  * @exclude
  */
-public abstract class QQueryBase implements Query, Unversioned {
+public abstract class QQueryBase implements Unversioned {
 
     private static final transient IDGenerator i_orderingGenerator = new IDGenerator();
 
@@ -30,6 +30,8 @@ public abstract class QQueryBase implements Query, Unversioned {
     public String i_field;
 
     public QueryComparator _comparator;
+    
+    private final QQuery _this=cast(this);
     
     protected QQueryBase() {
         // C/S only
@@ -173,7 +175,7 @@ public abstract class QQueryBase implements Query, Unversioned {
 
     public Query descend(final String a_field) {
         synchronized (streamLock()) {
-            final QQuery query = new QQuery(i_trans, cast(this), a_field);
+            final QQuery query = new QQuery(i_trans, _this, a_field);
             int[] run = { 1 };
             if (!descend1(query, a_field, run)) {
 
@@ -329,7 +331,7 @@ public abstract class QQueryBase implements Query, Unversioned {
     void execute1(final QueryResultImpl result) {
         if (i_trans.i_stream.isClient()) {
             marshall();
-            ((YapClient)i_trans.i_stream).queryExecute(cast(this), result);
+            ((YapClient)i_trans.i_stream).queryExecute(_this, result);
         } else {
             executeLocal(result);
         }
@@ -466,14 +468,14 @@ public abstract class QQueryBase implements Query, Unversioned {
     public Query orderAscending() {
         synchronized (streamLock()) {
             setOrdering(i_orderingGenerator.next());
-            return cast(this);
+            return _this;
         }
     }
 
     public Query orderDescending() {
         synchronized (streamLock()) {
             setOrdering(-i_orderingGenerator.next());
-            return cast(this);
+            return _this;
         }
     }
 
@@ -521,7 +523,7 @@ public abstract class QQueryBase implements Query, Unversioned {
 
 	public Query sortBy(QueryComparator comparator) {
 		_comparator=comparator;
-		return cast(this);
+		return _this;
 	}
 	
 	private void sort(QueryResultImpl result) {
@@ -530,7 +532,8 @@ public abstract class QQueryBase implements Query, Unversioned {
         }
 	}
 	
-	private QQuery cast(QQueryBase obj) {
+    // cheat emulating '(QQuery)this'
+	private static QQuery cast(QQueryBase obj) {
 		return (QQuery)obj;
 	}
 }

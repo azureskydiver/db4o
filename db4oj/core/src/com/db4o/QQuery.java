@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.query.*;
+
 /**
  * QQuery is the users hook on our graph.
  * 
@@ -9,7 +11,7 @@ package com.db4o;
  * 
  * @exclude
  */
-public class QQuery extends QQueryBase {
+public class QQuery extends QQueryBase implements Query {
     QQuery(Transaction a_trans, QQuery a_parent, String a_field) {
     	super(a_trans,a_parent,a_field);
     }
