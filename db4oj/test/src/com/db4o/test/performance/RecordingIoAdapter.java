@@ -16,7 +16,7 @@ public class RecordingIoAdapter extends VanillaIoAdapter {
 	
 	private String _logPath;
 
-	private DataOutputStream _writer;
+	private RandomAccessFile _writer;
 
 	private long _pos;
 	
@@ -31,7 +31,7 @@ public class RecordingIoAdapter extends VanillaIoAdapter {
 	protected RecordingIoAdapter(IoAdapter adapter, String logPath,
 			String file, boolean append, long initialLength) throws IOException {
 		super(adapter, file, append, initialLength);
-		_writer = new DataOutputStream(new FileOutputStream(logPath));
+		_writer = new RandomAccessFile(logPath, "rw");
 		_runs=0;
 	}
 
@@ -44,7 +44,7 @@ public class RecordingIoAdapter extends VanillaIoAdapter {
 	public IoAdapter open(String path, boolean lockFile, long initialLength)
 			throws IOException {
 		_runningId++;
-		return new RecordingIoAdapter(_delegate, _logPath+"."+_runningId, path, lockFile,
+		return new RecordingIoAdapter(_delegate, _logPath/*+"."+_runningId*/, path, lockFile,
 				initialLength);
 	}
 
