@@ -31,13 +31,15 @@ public abstract class QQueryBase implements Unversioned {
 
     public QueryComparator _comparator;
     
-    private final QQuery _this=cast(this);
+    private final QQuery _this;
     
     protected QQueryBase() {
         // C/S only
+    	_this = cast(this);
     }
 
     protected QQueryBase(Transaction a_trans, QQuery a_parent, String a_field) {
+    	_this = cast(this);
         i_trans = a_trans;
         i_parent = a_parent;
         i_field = a_field;

@@ -23,14 +23,17 @@ namespace com.db4o.inside.query
 
 		public virtual com.db4o.ObjectSet execute(com.db4o.query.Predicate predicate, com.db4o.query.QueryComparator comparator)
 		{
-			return configureQuery(predicate).execute();
+		    com.db4o.query.Query q = configureQuery(predicate);
+		    q.sortBy(comparator);
+			return q.execute();
 		}
 
 #if NET_2_0
-        public virtual System.Collections.Generic.IList<Extent> execute<Extent>(System.Predicate<Extent> match)
+        public virtual System.Collections.Generic.IList<Extent> execute<Extent>(System.Predicate<Extent> match, com.db4o.query.QueryComparator comparator)
         {
             com.db4o.query.Query q = _container.query();
             q.constrain(typeof(Extent));
+            q.sortBy(comparator);
             try
             {
                 if (OptimizeNativeQueries())

@@ -121,9 +121,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4 {
 
 	private NativeQueryHandler _nativeQueryHandler;
 
-	private final YapStream _this=cast(this);
+	private final YapStream _this;
 	
     protected YapStreamBase(YapStream a_parent) {
+    	_this = cast(this);
         i_parent = a_parent == null ? _this : a_parent;
         i_lock = a_parent == null ? new Object() : a_parent.i_lock;
         initialize0();
