@@ -35,10 +35,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 		<discriminator/>
 
-		<natural-id>
-			<property name="bytes" column="bytes"/>
-		</natural-id>
-		
+		<property name="bytes" column="bytes"/>
+
 		<property name="creationTime"/>
 
 		<subclass name="com.db4o.replication.hibernate.MySignature"/>
