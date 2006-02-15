@@ -200,7 +200,7 @@ public abstract class YapFile extends YapStream {
 
         YapClassCollectionIterator i = i_classCollection.iterator();
         while (i.hasNext()) {
-            YapClass yapClass = i.nextClass();
+            YapClass yapClass = i.readNextClass();
             if (yapClass.getName() != null) {
                 ReflectClass claxx = yapClass.classReflector();
                 if (claxx == null

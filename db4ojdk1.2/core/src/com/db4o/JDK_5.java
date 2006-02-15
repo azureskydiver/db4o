@@ -7,7 +7,9 @@ import com.db4o.reflect.*;
 
 class JDK_5 extends JDK_1_4 {
     
-    private ReflectClass enumClass;
+    private static final String ENUM_CLASSNAME = "java.lang.Enum"; 
+    
+    private static ReflectClass enumClass;
     
     boolean isEnum(Reflector reflector, ReflectClass claxx) {
         
@@ -17,7 +19,7 @@ class JDK_5 extends JDK_1_4 {
         
         if(enumClass == null){
             try {
-                enumClass = reflector.forClass(Class.forName(Platform4.ENUM));
+                enumClass = reflector.forClass(Class.forName(ENUM_CLASSNAME));
             } catch (ClassNotFoundException e) {
                 return false;
             }
