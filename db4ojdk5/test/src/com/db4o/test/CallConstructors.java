@@ -27,6 +27,7 @@ public class CallConstructors {
     };
     
     public void configure(){
+        Db4o.configure().callConstructors(false);
         Db4o.configure().objectClass(new CallLocalYes()).callConstructor(true);
         Db4o.configure().objectClass(new CallLocalNo()).callConstructor(false);
     }
