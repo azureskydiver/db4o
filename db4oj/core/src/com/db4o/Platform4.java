@@ -40,7 +40,6 @@ public final class Platform4 {
     static final String DB4O_PACKAGE = "com.db4o.";
     static final String DB4O_CONFIG = DB4O_PACKAGE + "config.";
     static final String DB4O_ASSEMBLY = ", db4o";
-    static final String ENUM = "java.lang.Enum"; 
     
     
     // static private int cCreateNewFile;

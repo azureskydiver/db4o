@@ -444,7 +444,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         _eventDispatcher = EventDispatcher.forClass(a_stream, a_class);
         
         if(a_class != null){
-            _isEnum = YapConst.CLASS_ENUM !=null && (a_stream.i_handlers.ICLASS_ENUM.isAssignableFrom(a_class));
+            _isEnum = Platform4.jdk().isEnum(reflector(), a_class);
         }
         
         if(configInstantiates()){
@@ -1271,6 +1271,9 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     private final int callConstructorSpecialized(){
+        if(_isEnum){
+            return YapConst.NO;
+        }
         if(i_config!= null){
             int res = i_config.callConstructor();
             if(res != YapConst.DEFAULT){

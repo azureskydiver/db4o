@@ -57,7 +57,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     void attachQueryNode(final String fieldName, final Visitor4 a_visitor) {
         YapClassCollectionIterator i = iterator();
         while (i.hasNext()) {
-            final YapClass yc = i.nextClass();
+            final YapClass yc = i.readNextClass();
             if(! yc.isInternal()){
                 yc.forEachYapField(new Visitor4() {
                     public void visit(Object obj) {
@@ -95,7 +95,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     boolean fieldExists(String a_field) {
         YapClassCollectionIterator i = iterator();
         while (i.hasNext()) {
-            if (i.nextClass().getYapField(a_field) != null) {
+            if (i.readNextClass().getYapField(a_field) != null) {
                 return true;
             }
         }
@@ -106,7 +106,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         Collection4 col = new Collection4();
         YapClassCollectionIterator i = iterator();
         while (i.hasNext()) {
-            YapClass yc = i.nextClass();
+            YapClass yc = i.readNextClass();
             ReflectClass candidate = yc.classReflector();
             if(! candidate.isInterface()){
                 if (claxx.isAssignableFrom(candidate)) {
@@ -208,8 +208,9 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         if (yapClass == null) {
             YapClassCollectionIterator i = iterator();
             while (i.hasNext()) {
-                yapClass = i.nextClass();
+                yapClass = (YapClass)i.next();
                 if (a_name.equals(yapClass.getName())) {
+                    readYapClass(yapClass, null);
                     return yapClass;
                 }
             }

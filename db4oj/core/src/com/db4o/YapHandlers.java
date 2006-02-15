@@ -65,7 +65,6 @@ public final class YapHandlers {
     ReflectClass ICLASS_COMPARE;
     ReflectClass ICLASS_DB4OTYPE;
     ReflectClass ICLASS_DB4OTYPEIMPL;
-    ReflectClass ICLASS_ENUM;
 	public ReflectClass ICLASS_INTERNAL;
     ReflectClass ICLASS_UNVERSIONED;
     ReflectClass ICLASS_OBJECT;
@@ -332,7 +331,6 @@ public final class YapHandlers {
 		ICLASS_COMPARE = reflector.forClass(YapConst.CLASS_COMPARE);
 		ICLASS_DB4OTYPE = reflector.forClass(YapConst.CLASS_DB4OTYPE);
 		ICLASS_DB4OTYPEIMPL = reflector.forClass(YapConst.CLASS_DB4OTYPEIMPL);
-		ICLASS_ENUM = reflector.forClass(YapConst.CLASS_ENUM);
         ICLASS_INTERNAL = reflector.forClass(YapConst.CLASS_INTERNAL);
         ICLASS_UNVERSIONED = reflector.forClass(YapConst.CLASS_UNVERSIONED);
 		ICLASS_OBJECT = reflector.forClass(YapConst.CLASS_OBJECT);

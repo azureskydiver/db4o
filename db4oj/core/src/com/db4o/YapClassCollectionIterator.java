@@ -16,7 +16,7 @@ class YapClassCollectionIterator extends Iterator4Impl{
         i_collection = a_collection;
     }
     
-    YapClass nextClass(){
+    YapClass readNextClass(){
         YapClass yc = (YapClass)next();
         i_collection.readYapClass(yc, null);
         return yc;
