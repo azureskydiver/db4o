@@ -12,7 +12,7 @@ import com.db4o.query.*;
  * @exclude
  * @partial
  */
-public abstract class YapStream extends YapStreamBase implements ObjectContainer, ExtObjectContainer {
+public abstract class YapStream extends YapStreamBase implements ExtObjectContainer {
 	YapStream(YapStream a_parent) {
 		super(a_parent);
 	}

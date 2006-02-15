@@ -22,7 +22,7 @@ import com.db4o.types.*;
  * @exclude
  * @partial
  */
-public abstract class YapStreamBase implements TransientClass, Internal4 {
+public abstract class YapStreamBase implements TransientClass, Internal4, YapStreamSpec {
 
 	    public static final int        HEADER_LENGTH         = 2 + (YapConst.YAPINT_LENGTH * 4);
 
