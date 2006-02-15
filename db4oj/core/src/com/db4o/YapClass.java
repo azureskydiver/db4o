@@ -1271,14 +1271,14 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     private final int callConstructorSpecialized(){
-        if(_isEnum){
-            return YapConst.NO;
-        }
         if(i_config!= null){
             int res = i_config.callConstructor();
             if(res != YapConst.DEFAULT){
                 return res;
             }
+        }
+        if(_isEnum){
+            return YapConst.NO;
         }
         if(i_ancestor != null){
             return i_ancestor.callConstructorSpecialized();
