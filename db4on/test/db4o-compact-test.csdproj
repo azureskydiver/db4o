@@ -664,6 +664,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4o\test\cs\CsDelegate.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4o\test\cs\CsEnum.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -694,12 +699,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\com\db4o\test\j4otest\ClassTest.cs"
+                    RelPath = "src\com\db4o\test\j4otest\TypeNameTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "src\com\db4o\test\j4otest\TypeNameTest.cs"
+                    RelPath = "src\com\db4o\test\nativequeries\AbstractNativeQueriesTestCase.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -725,6 +730,11 @@
                 />
                 <File
                     RelPath = "src\com\db4o\test\nativequeries\Predicates.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "src\com\db4o\test\nativequeries\StringComparisonTestCase.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
