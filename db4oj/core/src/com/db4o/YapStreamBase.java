@@ -22,7 +22,7 @@ import com.db4o.types.*;
  * @exclude
  * @partial
  */
-public abstract class YapStreamBase implements TransientClass {
+public abstract class YapStreamBase implements TransientClass, Internal4 {
 
 	    public static final int        HEADER_LENGTH         = 2 + (YapConst.YAPINT_LENGTH * 4);
 
@@ -748,9 +748,16 @@ public abstract class YapStreamBase implements TransientClass {
 	// TODO: Instead of using a parameter to denote create, use
 	//       two methods with different names
     final YapClass getYapClass(ReflectClass a_class, boolean a_create) {
+        
         if (a_class == null) {
             return null;
         }
+        
+        if(a_class.getName().indexOf("YapStream") >0){
+            int xxx = 1;
+        }
+
+
         if ((!showInternalClasses())
             && i_handlers.ICLASS_INTERNAL.isAssignableFrom(a_class)) {
             return null;
@@ -1643,7 +1650,7 @@ public abstract class YapStreamBase implements TransientClass {
     }
 
     /**
-     * Objects implementing the "Internal" marker interface are
+     * Objects implementing the "Internal4" marker interface are
      * not visible to queries, unless this flag is set to true.
      * The caller should reset the flag after the call.
      */
