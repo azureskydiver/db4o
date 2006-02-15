@@ -9,6 +9,8 @@ namespace CSharpConverter
 			Options options = new Options();
 			foreach (string arg in args)
 			{
+				if (null == arg || 0 == arg.Length) continue;
+				
 				if (arg.StartsWith("-"))
 				{
 					if ("-vb" == arg)
