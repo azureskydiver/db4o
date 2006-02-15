@@ -1,38 +1,70 @@
 package com.db4o.test.performance;
 
-import java.io.*;
+import java.io.File;
 
-import com.db4o.*;
-import com.db4o.io.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.io.RandomAccessFileAdapter;
 
 /**
  * @exclude
  */
 public class CreateSomeData {
+	public static final int DEPTH = 3;
+
+	public static final int COUNT = 10;
+
+	public static int c = 100;
+
 	public static class SomeData {
 		public int id;
-		public String name;
 
-		public SomeData(int id, String name) {
+		public SomeData _parent;
+
+		public SomeData(int id, SomeData parent) {
 			this.id = id;
-			this.name = name;
+			this._parent = parent;
+		}
+
+		public String toString() {
+			return " " + id;
 		}
 	}
-	
+
 	public static void main(String[] args) {
-		new File("io.log.1").delete();
-		new File("somedata.yap").delete();
-		Db4o.configure().io(new RecordingIoAdapter(new RandomAccessFileAdapter(),"io.log"));
-		ObjectContainer db=Db4o.openFile("somedata.yap");
-		long start=System.currentTimeMillis();
-		for(int i=0;i<10000;i++) {
-			db.set(new SomeData(i,"Data"+i));
+		new File(Util.BENCHFILE).delete();
+		new File(Util.DBFILE).delete();
+		Db4o.configure().io(
+				new RecordingIoAdapter(new RandomAccessFileAdapter(),
+						Util.BENCHFILE));
+		Db4o.configure().optimizeNativeQueries(true);
+		ObjectContainer db = Db4o.openFile(Util.DBFILE);
+
+		long start = System.currentTimeMillis();
+
+		for (int i = 1; i <= COUNT; i++) {
+			SomeData obj = new SomeData(i, null);
+
+			for (int j = 0; j < DEPTH; j++) {
+				obj = new SomeData(c++, obj);
+			}
+			db.set(obj);
+
 		}
 		db.commit();
+		System.err.println("to store " + (COUNT + COUNT * DEPTH)
+				+ " objects needed " + (System.currentTimeMillis() - start));
 		System.gc();
-		ObjectSet result=db.query(SomeData.class);
-		System.out.println(result.size());
-		System.err.println(System.currentTimeMillis()-start);
+		start = System.currentTimeMillis();
+		ObjectSet result = db.query(SomeData.class);
+		while (result.hasNext()) {
+			System.out.println(result.next());
+		}
+
+		// System.out.println(result.size());
+		System.err.println("to query and retrive " + result.size()
+				+ " objects needed " + (System.currentTimeMillis() - start));
 		db.close();
 	}
 }
