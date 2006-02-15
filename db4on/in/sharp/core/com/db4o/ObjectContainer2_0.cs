@@ -104,6 +104,10 @@ namespace com.db4o
         /// queries for all instances of the type extent.
         /// </summary>
         IList<Extent> query<Extent>();
+
+        IList<Extent> query<Extent>(System.Collections.Generic.IComparer<Extent> comparer);
+
+        IList<Extent> query<Extent>(System.Predicate<Extent> match, System.Collections.Generic.IComparer<Extent> comparer);
     }
 #endif
 }
