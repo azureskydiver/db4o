@@ -443,8 +443,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         
         _eventDispatcher = EventDispatcher.forClass(a_stream, a_class);
         
-        if(a_class != null){
-            _isEnum = Platform4.jdk().isEnum(reflector(), a_class);
+        if(! Deploy.csharp){
+            if(a_class != null){
+                _isEnum = Platform4.jdk().isEnum(reflector(), a_class);
+            }
         }
         
         if(configInstantiates()){
