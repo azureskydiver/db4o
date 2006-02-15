@@ -44,7 +44,7 @@ public class RecordingIoAdapter extends VanillaIoAdapter {
 	public IoAdapter open(String path, boolean lockFile, long initialLength)
 			throws IOException {
 		_runningId++;
-		return new RecordingIoAdapter(_delegate, _logPath/*+"."+_runningId*/, path, lockFile,
+		return new RecordingIoAdapter(_delegate, _logPath+"."+_runningId, path, lockFile,
 				initialLength);
 	}
 

@@ -11,7 +11,7 @@ import com.db4o.io.*;
 public class RunIOBench {
 	public static void main(String[] args) throws IOException {
 
-		RandomAccessFile recordedIn = new RandomAccessFile(Util.BENCHFILE, "rw");
+		RandomAccessFile recordedIn = new RandomAccessFile(Util.BENCHFILE+".1", "rw");
 		new File(Util.DBFILE).delete();
 		IoAdapter testadapt = new RandomAccessFileAdapter().open(Util.DBFILE,
 				false, 1024);
