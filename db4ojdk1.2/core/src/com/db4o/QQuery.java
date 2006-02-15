@@ -13,7 +13,7 @@ import com.db4o.query.*;
  * 
  * @exclude
  */
-public class QQuery extends QQueryBase {
+public class QQuery extends QQueryBase implements Query {
     public QQuery() {
     	// C/S only
     }

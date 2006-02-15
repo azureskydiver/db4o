@@ -22,8 +22,7 @@ import com.db4o.types.*;
  * @exclude
  * @partial
  */
-public abstract class YapStreamBase implements ObjectContainer, ExtObjectContainer,
-    TransientClass {
+public abstract class YapStreamBase implements TransientClass {
 
 	    public static final int        HEADER_LENGTH         = 2 + (YapConst.YAPINT_LENGTH * 4);
 
@@ -122,8 +121,10 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
 
 	private NativeQueryHandler _nativeQueryHandler;
 
+	private final YapStream _this=cast(this);
+	
     protected YapStreamBase(YapStream a_parent) {
-        i_parent = a_parent == null ? cast(this) : a_parent;
+        i_parent = a_parent == null ? _this : a_parent;
         i_lock = a_parent == null ? new Object() : a_parent.i_lock;
         initialize0();
         createTransaction();
@@ -228,7 +229,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
         yapObjectGCd(a_yapObject);
         a_yapObject = new YapObject(getYapClass(reflector().forObject(obj), false),
             id);
-        a_yapObject.setObjectWeak(cast(this), obj);
+        a_yapObject.setObjectWeak(_this, obj);
         a_yapObject.setStateDirty();
         idTreeAdd(a_yapObject);
         hcTreeAdd(a_yapObject);
@@ -293,7 +294,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
         if (i_classCollection == null) {
             return true;
         }
-        Platform4.preClose(this);
+        Platform4.preClose(_this);
         checkNeededUpdates();
         if (stateMessages()) {
             logMsg(2, toString());
@@ -354,14 +355,14 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
     }
 
     void createTransaction() {
-        i_systemTrans = new Transaction(cast(this), null);
-        i_trans = new Transaction(cast(this), i_systemTrans);
+        i_systemTrans = new Transaction(_this, null);
+        i_trans = new Transaction(_this, i_systemTrans);
     }
 
     abstract long currentVersion();
     
     boolean createYapClass(YapClass a_yapClass, ReflectClass a_class, YapClass a_superYapClass) {
-        return a_yapClass.init(cast(this), a_superYapClass, a_class, false);
+        return a_yapClass.init(_this, a_superYapClass, a_class, false);
     }
 
 
@@ -480,7 +481,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
                 
                 yo.endProcessing();
                 
-                if (! yc.dispatchEvent(cast(this), obj, EventDispatcher.CAN_DELETE)) {
+                if (! yc.dispatchEvent(_this, obj, EventDispatcher.CAN_DELETE)) {
                     return;
                 }
                 
@@ -492,7 +493,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
                 
                 
                 if(delete5(ta, yo, a_cascade, userCall)){
-                	yc.dispatchEvent(cast(this), obj, EventDispatcher.DELETE);
+                	yc.dispatchEvent(_this, obj, EventDispatcher.DELETE);
                     if (i_config.i_messageLevel > YapConst.STATE) {
                         message("" + yo.getID() + " delete " + yo.getYapClass().getName());
                     }
@@ -520,7 +521,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
     }
 
     public ExtObjectContainer ext() {
-        return this;
+        return _this;
     }
 
     void failedToShutDown() {
@@ -902,14 +903,14 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
     void initialize1() {
 
         i_config = (Config4Impl) ((DeepClone) Db4o.configure()).deepClone(this);
-        i_handlers = new YapHandlers(cast(this), i_config.i_encoding, i_config.reflector());
+        i_handlers = new YapHandlers(_this, i_config.i_encoding, i_config.reflector());
         
         if (i_references != null) {
             gc();
             i_references.stopTimer();
         }
 
-        i_references = new YapReferences(cast(this));
+        i_references = new YapReferences(_this);
 
         if (hasShutDownHook()) {
             Platform4.addShutDownHook(this, i_lock);
@@ -1074,7 +1075,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
         memoryFile.setInitialSize(223);
         memoryFile.setIncrementSizeBy(300);
         getYapClass(reflector().forObject(obj), true);
-        YapObjectCarrier carrier = new YapObjectCarrier(cast(this), memoryFile);
+        YapObjectCarrier carrier = new YapObjectCarrier(_this, memoryFile);
         carrier.i_showInternalClasses = i_showInternalClasses;
         carrier.set(obj);
         id[0] = (int) carrier.getID(obj);
@@ -1083,7 +1084,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
     }
 
     void message(String msg) {
-        new Message(cast(this), msg);
+        new Message(_this, msg);
     }
 
     public void migrateFrom(ObjectContainer objectContainer) {
@@ -1100,7 +1101,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
             YapStream peer = (YapStream)objectContainer;
             _replicationCallState = YapConst.OLD;
             peer._replicationCallState = YapConst.OLD;
-            i_handlers.i_migration = new MigrationConnection(cast(this), (YapStream)objectContainer);
+            i_handlers.i_migration = new MigrationConnection(_this, (YapStream)objectContainer);
             peer.i_handlers.i_migration = i_handlers.i_migration;
         }
     }
@@ -1188,7 +1189,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
     
     public final NativeQueryHandler getNativeQueryHandler() {
     	if (null == _nativeQueryHandler) {
-    		_nativeQueryHandler = new NativeQueryHandler(this);
+    		_nativeQueryHandler = new NativeQueryHandler(_this);
     	}
     	return _nativeQueryHandler;
     }
@@ -1255,7 +1256,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
             // TODO:
             // load from cache here
             YapWriter reader = getWriter(a_trans, a_address, a_length);
-            reader.readEncrypt(cast(this), a_address);
+            reader.readEncrypt(_this, a_address);
             return reader;
         }
         return null;
@@ -1270,7 +1271,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
         int ccID = i_classCollection.getID();
         i_references.stopTimer();
         initialize2();
-        i_classCollection.setID(cast(this), ccID);
+        i_classCollection.setID(_this, ccID);
         i_classCollection.read(i_systemTrans);
     }
     
@@ -1373,7 +1374,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
     }
 
     public ReplicationProcess replicationBegin(ObjectContainer peerB, ReplicationConflictHandler conflictHandler) {
-        return new ReplicationImpl(cast(this), peerB,conflictHandler);
+        return new ReplicationImpl(_this, peerB,conflictHandler);
     }
     
     final int oldReplicationHandles(Object obj){
@@ -1400,7 +1401,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
             }
         }
         
-        return i_handlers.i_replication.tryToHandle(cast(this), obj);        
+        return i_handlers.i_replication.tryToHandle(_this, obj);        
     }
 
     void reserve(int byteCount) {
@@ -1560,7 +1561,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
             }
             boolean dontDelete = true;
             if (yapObject == null) {
-                if (!yc.dispatchEvent(cast(this), a_object, EventDispatcher.CAN_NEW)) {
+                if (!yc.dispatchEvent(_this, a_object, EventDispatcher.CAN_NEW)) {
                     return 0;
                 }
                 yapObject = new YapObject(0);
@@ -1689,7 +1690,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
                     final ReflectClass clazz = reflector().forObject(a_object);
 					if (clazz.isArray()) {
 						if (!clazz.getComponentType().isPrimitive()) {
-	                        Object[] arr = YapArray.toArray(cast(this), a_object);
+	                        Object[] arr = YapArray.toArray(_this, a_object);
 	                        for (int i = 0; i < arr.length; i++) {
 	                            a_still = stillTo1(a_still, a_just, arr[i],
 	                                a_depth, a_forceUnknownDeactivate);
@@ -1791,7 +1792,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
 
     Object unmarshall(byte[] bytes, int id) {
         MemoryFile memoryFile = new MemoryFile(bytes);
-        YapObjectCarrier carrier = new YapObjectCarrier(cast(this), memoryFile);
+        YapObjectCarrier carrier = new YapObjectCarrier(_this, memoryFile);
         Object obj = carrier.getByID(id);
         carrier.activate(obj, Integer.MAX_VALUE);
         carrier.close();
@@ -1831,7 +1832,7 @@ public abstract class YapStreamBase implements ObjectContainer, ExtObjectContain
 
         // setting the ID to minus 1 ensures that the
         // gc mechanism does not kill the new YapObject
-        yo.setID(cast(this), -1);
+        yo.setID(_this, -1);
         Platform4.killYapRef(yo.i_object);
     }
     

@@ -4,6 +4,7 @@ package com.db4o;
 
 import java.util.*;
 
+import com.db4o.ext.*;
 import com.db4o.query.*;
 
 
@@ -11,7 +12,7 @@ import com.db4o.query.*;
  * @exclude
  * @partial
  */
-public abstract class YapStream extends YapStreamBase {
+public abstract class YapStream extends YapStreamBase implements ObjectContainer, ExtObjectContainer {
 	YapStream(YapStream a_parent) {
 		super(a_parent);
 	}

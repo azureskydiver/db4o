@@ -2,12 +2,14 @@
 
 package com.db4o;
 
+import com.db4o.ext.*;
+
 
 /**
  * @exclude
  * @partial
  */
-public abstract class YapStream extends YapStreamBase {
+public abstract class YapStream extends YapStreamBase implements ObjectContainer, ExtObjectContainer {
 	YapStream(YapStream a_parent) {
 		super(a_parent);
 	}
