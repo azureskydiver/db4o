@@ -1,11 +1,11 @@
+using System;
+using System.IO;
+using com.db4o;
+using com.db4o.f1;
+using com.db4o.query;
+
 namespace com.db4o.f1.chapter2
-{
-	using System;
-	using System.IO;
-	using com.db4o;
-	using com.db4o.f1;
-	using com.db4o.query;
-    
+{	
 	public class StructuredExample : Util
 	{
 		public static void Main(String[] args)

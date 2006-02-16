@@ -1,10 +1,10 @@
+using System;
+using System.IO;
+using com.db4o;
+using com.db4o.f1;
+
 namespace com.db4o.f1.chapter1
 {
-	using System;
-	using System.IO;
-	using com.db4o;
-	using com.db4o.f1;
-
 	public class FirstStepsExample : Util
 	{    
 		public static void Main(string[] args)
@@ -47,14 +47,14 @@ namespace com.db4o.f1.chapter1
 		{
 			Pilot pilot1 = new Pilot("Michael Schumacher", 100);
 			db.set(pilot1);
-			Console.WriteLine("Stored " + pilot1);
+			Console.WriteLine("Stored {0}", pilot1);
 		}
     
 		public static void storeSecondPilot(ObjectContainer db)
 		{
 			Pilot pilot2 = new Pilot("Rubens Barrichello", 99);
 			db.set(pilot2);
-			Console.WriteLine("Stored " + pilot2);
+			Console.WriteLine("Stored {0}", pilot2);
 		}
     
 		public static void retrieveAllPilotQBE(ObjectContainer db) 
@@ -90,7 +90,7 @@ namespace com.db4o.f1.chapter1
 			Pilot found = (Pilot)result.next();
 			found.AddPoints(11);
 			db.set(found);
-			Console.WriteLine("Added 11 points for " + found);
+			Console.WriteLine("Added 11 points for {0}", found);
 			retrieveAllPilots(db);
 		}
     
@@ -99,7 +99,7 @@ namespace com.db4o.f1.chapter1
 			ObjectSet result = db.get(new Pilot("Michael Schumacher", 0));
 			Pilot found = (Pilot)result.next();
 			db.delete(found);
-			Console.WriteLine("Deleted " + found);
+			Console.WriteLine("Deleted {0}", found);
 			retrieveAllPilots(db);
 		}
     
@@ -108,7 +108,7 @@ namespace com.db4o.f1.chapter1
 			ObjectSet result = db.get(new Pilot("Rubens Barrichello", 0));
 			Pilot found = (Pilot)result.next();
 			db.delete(found);
-			Console.WriteLine("Deleted " + found);
+			Console.WriteLine("Deleted {0}", found);
 			retrieveAllPilots(db);
 		}
 	}

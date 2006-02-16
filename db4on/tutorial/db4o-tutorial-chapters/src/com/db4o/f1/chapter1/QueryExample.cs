@@ -1,10 +1,10 @@
+using System;
+using com.db4o;
+using com.db4o.query;
+using com.db4o.f1;
+
 namespace com.db4o.f1.chapter1
 {
-    using System;
-    using com.db4o;
-    using com.db4o.query;
-    using com.db4o.f1;
-
     public class QueryExample : Util
     {
         public static void Main(string[] args)
@@ -35,14 +35,14 @@ namespace com.db4o.f1.chapter1
         {
             Pilot pilot1 = new Pilot("Michael Schumacher", 100);
             db.set(pilot1);
-            Console.WriteLine("Stored " + pilot1);
+            Console.WriteLine("Stored {0}", pilot1);
         }
     
         public static void storeSecondPilot(ObjectContainer db)
         {
             Pilot pilot2 = new Pilot("Rubens Barrichello", 99);
             db.set(pilot2);
-            Console.WriteLine("Stored " + pilot2);
+            Console.WriteLine("Stored {0}", pilot2);
         }
     
         public static void retrieveAllPilots(ObjectContainer db)

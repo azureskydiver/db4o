@@ -1,10 +1,9 @@
+using com.db4o;
+using com.db4o.query;
+using com.db4o.f1;
+
 namespace com.db4o.f1.chapter1
 {
-	using System;
-	using com.db4o;
-	using com.db4o.query;
-	using com.db4o.f1;
-
 	public class NQExample : Util
 	{
 		public static void Main(string[] args)

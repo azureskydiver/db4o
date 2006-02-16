@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using com.db4o;
 using com.db4o.messaging;
-using j4o.lang;
 
 namespace com.db4o.f1.chapter5
 {

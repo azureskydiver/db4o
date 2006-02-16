@@ -1,7 +1,7 @@
+using System.Globalization;
+
 namespace com.db4o.f1.chapter6
 {
-    using System.Globalization;
-
     /// <summary>
     /// A CultureInfo aware list of objects.
     /// CultureInfo objects hold a native pointer to 
@@ -20,7 +20,7 @@ namespace com.db4o.f1.chapter6
 
         override public string ToString()
         {
-            return string.Join(_culture.TextInfo.ListSeparator + " ", _items);
+            return string.Join(string.Concat(_culture.TextInfo.ListSeparator,  " "), _items);
         }
     }
 }

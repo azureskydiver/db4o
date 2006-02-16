@@ -1,8 +1,8 @@
+using System;
+using System.Text;
+    
 namespace com.db4o.f1.chapter3
 {   
-    using System;
-    using System.Text;
-    
     public class SensorReadout
     {
         double[] _values;
