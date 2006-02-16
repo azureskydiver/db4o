@@ -22,7 +22,7 @@ public class Logger
 	
 	/**
 	 * opens a database file and logs the content of a class to standard out.
-	 * @param [database filename] [fully qualified classname]
+	 * @param args expects [database filename] [fully qualified classname]
 	 */
 	public static void main(String[] args) {
 		if(args == null || args.length == 0){
@@ -85,7 +85,7 @@ public class Logger
 	 * logs the structure of an object.
 	 * @param container the {@link ObjectContainer} to be used, or null
 	 * to log any object.
-	 * @param <code>Object</code> the object to be analysed.
+	 * @param obj the object to be analysed.
 	 */
 	public static void log(ObjectContainer container, Object obj){
 		if(obj == null){
@@ -98,7 +98,7 @@ public class Logger
 	
 	/**
 	 * logs the structure of an object.
-	 * @param <code>Object</code> the object to be analysed.
+	 * @param obj the object to be analysed.
 	 */
 	public static void log(Object obj){
 		log(null, obj);
@@ -118,7 +118,7 @@ public class Logger
 	
 	/**
 	 * redirects output to a different PrintStream.
-	 * @param PrintStream the Printstream to be used.
+	 * @param ps the Printstream to be used.
 	 */
 	public static void setOut(java.io.PrintStream ps){
 		out = ps;
@@ -126,7 +126,7 @@ public class Logger
 	
 	/**
 	 * limits logging to a maximum depth.
-	 * @param int the maximum depth.
+	 * @param depth the maximum depth.
 	 */
 	public static void setMaximumDepth(int depth){
 		maximumDepth = depth;

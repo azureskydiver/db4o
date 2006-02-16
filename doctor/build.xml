@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <project name="rundoctor" default="run" basedir=".">
 	
-	<property name="workspace" value="/db4o/HEAD" />
-	<property name="pdffont" value="/usr/X11R6/lib/X11/fonts/truetype/verdana.ttf" />
+	<property name="workspace" value="C:/_db4o/HEAD" />
+	<property name="pdffont" value="C:/WINDOWS/Fonts/verdana.TTF" />
 	
 	<target name="run" description="runs doctor locally and passes the workspace path">
 		<java classname="com.yetac.doctor.Doctor">

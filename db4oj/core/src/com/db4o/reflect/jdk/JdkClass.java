@@ -144,7 +144,7 @@ public class JdkClass implements ReflectClass{
             Constructor constructor = Platform4.jdk().serializableConstructor(_clazz);
             if(constructor != null){
                 try{
-                    Object o = constructor.newInstance(null);
+                    Object o = constructor.newInstance((Object[])null);
                     if(o != null){
                         useConstructor(new JdkConstructor(_reflector, constructor), null);
                         return true;
