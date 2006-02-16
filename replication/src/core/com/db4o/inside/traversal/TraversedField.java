@@ -1,12 +1,12 @@
 package com.db4o.inside.traversal;
 
-public class Field {
+public class TraversedField {
 	private Object referencingObject;
 
 	private String name;
 	private Object value;
 
-	public Field(Object referencingObject, String name, Object value) {
+	public TraversedField(Object referencingObject, String name, Object value) {
 		if (referencingObject == null)
 			throw new IllegalArgumentException("referencingObject cannot be null");
 		if (name == null)

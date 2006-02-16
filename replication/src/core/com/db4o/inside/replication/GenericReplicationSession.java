@@ -3,7 +3,7 @@ package com.db4o.inside.replication;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.traversal.Field;
+import com.db4o.inside.traversal.TraversedField;
 import com.db4o.inside.traversal.Traverser;
 import com.db4o.inside.traversal.Traverser.Visitor;
 import com.db4o.reflect.ReflectClass;
@@ -77,9 +77,9 @@ public class GenericReplicationSession implements ReplicationSession {
 	private void activateGraphToBeReplicated(Object root) {
 		_traverser.traverseGraph(root, new Visitor() {
 			public boolean visit(Object object) {
-				if (object instanceof Field) {
-					final Field field = ((Field) object);
-					return activateObjectToBeReplicated(field.getValue(), field.getReferencingObject(), field.getName());
+				if (object instanceof TraversedField) {
+					final TraversedField traversedField = ((TraversedField) object);
+					return activateObjectToBeReplicated(traversedField.getValue(), traversedField.getReferencingObject(), traversedField.getName());
 				} else {
 					return activateObjectToBeReplicated(object, null, null);
 				}
