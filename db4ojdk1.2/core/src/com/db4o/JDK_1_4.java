@@ -62,7 +62,7 @@ class JDK_1_4 extends JDK_1_3 {
             return false;
         }
         try{
-            objectConstructor = Object.class.getDeclaredConstructor(null);
+            objectConstructor = Object.class.getDeclaredConstructor((Class[])null);
         }catch(Exception e){
             e.printStackTrace();
         }

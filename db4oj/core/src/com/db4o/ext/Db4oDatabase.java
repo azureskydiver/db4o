@@ -97,8 +97,6 @@ public class Db4oDatabase implements Db4oType, Internal4{
     /**
 	 * gets the db4o ID, and may cache it for performance reasons.
 	 * 
-	 * @param a_oc
-	 *            the ObjectContainer
 	 * @return the db4o ID for the ObjectContainer
 	 */
     public int getID(Transaction trans) {

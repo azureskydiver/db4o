@@ -133,7 +133,7 @@ public interface ExtObjectContainer extends ObjectContainer {
     public ObjectInfo getObjectInfo(Object obj);
     
     /**
-     * returns the {@link Db4oDatabase} object for this ObjectContainer. 
+     * returns the Db4oDatabase identity object for this ObjectContainer. 
      * @return
      */
     public Db4oDatabase identity();

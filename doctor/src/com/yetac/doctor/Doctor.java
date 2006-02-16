@@ -13,15 +13,17 @@ import com.yetac.doctor.workers.*;
 public class Doctor extends Task {
     
 	public Doctor() {
-		System.err.println("*** CREATED DOCTOR TASK");
+		System.out.println("*** CREATED DOCTOR TASK");
 	}
 	
     public static void main(String[] args){
-    	
-//    	args = new String[] {
-//    	    	"/db4o/HEAD",
-//    	    	"/usr/X11R6/lib/X11/fonts/truetype/verdana.ttf"
-//    	} ;
+        
+        if(args == null || args.length == 0){
+        	args = new String[] {
+        	    	"C:/_db4o/HEAD",
+        	    	"C:/WINDOWS/Fonts/VERDANA.TTF"
+        	} ;
+        }
 
 		if(args.length<1||args.length>2) {
 			System.out.println("Usage: Doctor <workspace path> [<pdf font path>]");
@@ -41,14 +43,18 @@ public class Doctor extends Task {
 		if(pdffontpath!=null) {
 			setPdfBaseFont(pdffontpath);
 		}
-        String tutorial = workspace + "/db4oj/tutorial"; 
+        String tutorial = workspace + "/tutorial"; 
         setName("f1");
         setHome(tutorial);
         setInteractive(true);
         setWorkspace(workspace);
         setInputSource(tutorial + "/src");
-        setArchive("doctor-applets.jar, db4o-4.5-java1.4.jar, f1.jar");
+        setArchive("doctor-applets.jar, db4o-5.0-java1.2.jar, f1.jar");
         setVariable("java", true);
+        IgnoreInputFolder iif = createIgnoreInputFolder();
+        iif.setName("net");
+        iif = createIgnoreInputFolder();
+        iif.setName("mono");
         return tutorial + "/out/index.html";
     }
     

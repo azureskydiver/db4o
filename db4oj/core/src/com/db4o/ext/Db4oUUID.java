@@ -30,8 +30,8 @@ public class Db4oUUID {
 
 	/**
 	 * returns the long part of this UUID. <br><br>To uniquely identify an object
-	 * universally, db4o uses an indexed long and a reference to the {@link
-	 * Db4oDatabase} object it was created on.
+	 * universally, db4o uses an indexed long and a reference to the 
+     * Db4oDatabase object it was created on.
 	 *
 	 * @return the long part of this UUID.
 	 */
@@ -43,7 +43,7 @@ public class Db4oUUID {
 	/**
 	 * returns the signature part of this UUID. <br><br> <br><br>To uniquely
 	 * identify an object universally, db4o uses an indexed long and a reference to
-	 * the {@link Db4oDatabase} singleton object of the {@link
+	 * the Db4oDatabase singleton object of the {@link
 	 * com.db4o.ObjectContainer ObjectContainer} it was created on. This method
 	 * returns the signature of the Db4oDatabase object of the ObjectContainer: the
 	 * signature of the origin ObjectContainer.

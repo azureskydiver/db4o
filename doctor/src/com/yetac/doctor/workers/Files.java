@@ -116,8 +116,8 @@ public class Files extends Configuration {
     public void copyAllFiles(String srcdirpath,String targetdirpath) throws IOException {
         File srcdir=new File(srcdirpath);
         File targetdir=new File(targetdirpath);
-        System.err.println("src: "+srcdir.getAbsolutePath());
-        System.err.println("target: "+targetdir.getAbsolutePath());
+        System.out.println("src: "+srcdir.getAbsolutePath());
+        System.out.println("target: "+targetdir.getAbsolutePath());
         targetdir.mkdirs();
         File[] files=srcdir.listFiles();
         for (int idx=0;idx<files.length;idx++) {

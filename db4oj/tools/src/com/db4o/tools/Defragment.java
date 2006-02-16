@@ -46,7 +46,7 @@ public class Defragment {
 
 	/**
 	 * the main method that runs Defragment.
-	 * @param String[] a String array of length 1, with the name of the database
+	 * @param args a String array of length 1, with the name of the database
 	 * file as element 0.
 	 */
 	public static void main(String[] args) {
