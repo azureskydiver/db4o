@@ -27,9 +27,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property">
-	<class name="com.db4o.replication.hibernate.UuidHolder">
-		<id name="uuid" type="long">
-			<generator class="assigned"/>
+	<class name="com.db4o.replication.hibernate.UuidLongPartSequence" table="uuid_long_part_sequence">
+		<id column="unused_id" type="int">
+			<generator class="native"/>
 		</id>
+		<property name="current" column="current_seq_number"/>
 	</class>
 </hibernate-mapping>

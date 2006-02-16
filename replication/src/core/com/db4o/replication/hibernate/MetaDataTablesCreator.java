@@ -66,7 +66,6 @@ public class MetaDataTablesCreator {
 
 		mappedTables = getMappedTables();
 		checkMappedTables();
-		checkUuidLongPartSequenceTable();
 		session.flush();
 		tx.commit();
 		session.close();
@@ -159,35 +158,5 @@ public class MetaDataTablesCreator {
 				constriantName, foreignKeys, ReplicationProviderSignature.TABLE_NAME, foreignKeys, true);
 
 		return addForeignKeyConstraintString;
-	}
-
-	protected void checkUuidLongPartSequenceTable() {
-		TableMetadata uuidTable = metadata.getTableMetadata(Constants.UUID_LONG_PART_SEQUENCE, null, null);
-
-		if (uuidTable == null) {
-			Connection connection = this.connection;
-			Statement st = null;
-
-			try {
-				st = connection.createStatement();
-
-				StringBuffer sql = new StringBuffer();
-				sql.append("CREATE TABLE ")
-						.append(Constants.UUID_LONG_PART_SEQUENCE)
-						.append(" ( ")
-						.append(Constants.CURRENT_SEQ_NO)
-						.append(" ")
-						.append(getBigIntType())
-						.append(" ) ");
-
-				st.executeUpdate(sql.toString());
-
-				st.close();
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-			} finally {
-				Util.closeStatement(st);
-			}
-		}
 	}
 }

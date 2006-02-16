@@ -18,14 +18,41 @@ import java.sql.Statement;
 import java.util.Iterator;
 
 public class Util {
-	static void addMetaDataClasses(Configuration cfg) {
+	public static void addMetaDataClasses(Configuration cfg) {
 		addClass(cfg, ReplicationProviderSignature.class);
 		addClass(cfg, ReplicationRecord.class);
 		addClass(cfg, ReplicationComponentIdentity.class);
 		addClass(cfg, ReplicationComponentField.class);
+		addClass(cfg, UuidLongPartSequence.class);
 	}
 
-	static void addClass(Configuration cfg, Class aClass) {
+	static boolean skip(Object obj) {
+		return obj instanceof ReplicationRecord
+				|| obj instanceof ReadonlyReplicationProviderSignature
+				|| obj instanceof ReplicationComponentField
+				|| obj instanceof ReplicationComponentIdentity
+				|| obj instanceof UuidLongPartSequence;
+	}
+
+	static boolean skip(Class claxx) {
+		return claxx == ReplicationRecord.class
+				|| claxx == ReplicationProviderSignature.class
+				|| claxx == PeerSignature.class
+				|| claxx == MySignature.class
+				|| claxx == ReplicationComponentField.class
+				|| claxx == ReplicationComponentIdentity.class
+				|| claxx == UuidLongPartSequence.class;
+	}
+
+	static boolean skip(Table table) {
+		return table.getName().equals(ReplicationProviderSignature.TABLE_NAME)
+				|| table.getName().equals(ReplicationRecord.TABLE_NAME)
+				|| table.getName().equals(ReplicationComponentField.TABLE_NAME)
+				|| table.getName().equals(ReplicationComponentIdentity.TABLE_NAME)
+				|| table.getName().equals(UuidLongPartSequence.TABLE_NAME);
+	}
+
+	private static void addClass(Configuration cfg, Class aClass) {
 		if (cfg.getClassMapping(aClass.getName()) == null)
 			cfg.addClass(aClass);
 	}
@@ -183,28 +210,5 @@ public class Util {
 				throw new RuntimeException(e);
 			}
 		}
-	}
-
-	static boolean skip(Object obj) {
-		return obj instanceof ReplicationRecord
-				|| obj instanceof ReadonlyReplicationProviderSignature
-				|| obj instanceof ReplicationComponentField
-				|| obj instanceof ReplicationComponentIdentity;
-	}
-
-	static boolean skip(Class claxx) {
-		return claxx == ReplicationRecord.class
-				|| claxx == ReplicationProviderSignature.class
-				|| claxx == PeerSignature.class
-				|| claxx == MySignature.class
-				|| claxx == ReplicationComponentField.class
-				|| claxx == ReplicationComponentIdentity.class;
-	}
-
-	static boolean skip(Table table) {
-		return table.getName().equals(ReplicationProviderSignature.TABLE_NAME)
-				|| table.getName().equals(ReplicationRecord.TABLE_NAME)
-				|| table.getName().equals(ReplicationComponentField.TABLE_NAME)
-				|| table.getName().equals(ReplicationComponentIdentity.TABLE_NAME);
 	}
 }

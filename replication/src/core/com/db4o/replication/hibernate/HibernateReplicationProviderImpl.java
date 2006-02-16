@@ -32,11 +32,9 @@ import org.hibernate.event.PostUpdateEventListener;
 import org.hibernate.mapping.PersistentClass;
 
 import java.io.Serializable;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -141,6 +139,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 	protected Reflector _reflector = new ReplicationReflector().reflector();
 
+	protected UuidLongPartGenerator uuidLongPartGenerator;
+
 	public HibernateReplicationProviderImpl(Configuration cfg) {
 		this(cfg, null, null);
 	}
@@ -171,6 +171,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		_session.setFlushMode(FlushMode.ALWAYS);
 		_mappedClasses = getMappedClasses();
 		_name = name;
+		uuidLongPartGenerator = new UuidLongPartGenerator(_session);
 
 		if (signature == null) {
 			initMySignature();
@@ -179,7 +180,6 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		}
 
 		_transaction = _session.beginTransaction();
-
 	}
 
 	public final ReadonlyReplicationProviderSignature getSignature() {
@@ -463,7 +463,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 			if (existingReference != null)
 				return existingReference;
 			else
-				return createRefForCollection(obj, refObjRef, fieldName, generateUuidLongPartSeqNo(), _currentVersion);
+				return createRefForCollection(obj, refObjRef, fieldName, uuidLongPartGenerator.next(), _currentVersion);
 		}
 	}
 
@@ -521,9 +521,10 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 			ReplicationReference out;
 
+			//if the value is SQL NULL, the value returned is 0
 			long longPart = rs.getLong(2);
-			if (longPart < Constants.MIN_SEQ_NO) {
-				Db4oUUID uuid = new Db4oUUID(generateUuidLongPartSeqNo(), getMySig().getBytes());
+			if (longPart == 0) {
+				Db4oUUID uuid = new Db4oUUID(uuidLongPartGenerator.next(), getMySig().getBytes());
 				ReplicationReferenceImpl ref = new ReplicationReferenceImpl(obj, uuid, getLastReplicationVersion());
 				storeReplicationMetaData(ref);
 				out = createReference(obj, uuid, ref.version());
@@ -797,7 +798,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	protected void generateReplicationMetaData(Collection newObjects) {
 		for (Iterator iterator = newObjects.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
-			Db4oUUID uuid = new Db4oUUID(generateUuidLongPartSeqNo(), getMySig().getBytes());
+			Db4oUUID uuid = new Db4oUUID(uuidLongPartGenerator.next(), getMySig().getBytes());
 			ReplicationReferenceImpl ref = new ReplicationReferenceImpl(o, uuid, _currentVersion);
 			storeReplicationMetaData(ref);
 		}
@@ -807,47 +808,6 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		if (_mySig == null)
 			initMySignature();
 		return _mySig;
-	}
-
-	protected long generateUuidLongPartSeqNo() {
-
-		Connection connection = _session.connection();
-		Statement st = null;
-		ResultSet rs = null;
-
-		try {
-			st = connection.createStatement();
-			rs = st.executeQuery("SELECT count(*) FROM " + Constants.UUID_LONG_PART_SEQUENCE);
-			rs.next();
-
-			long rowCount = rs.getLong(1);
-			if (rowCount == 0) {
-				insertSeqNo(st);
-			} else if (rowCount > 1) {
-				st.executeQuery("DELETE FROM " + Constants.UUID_LONG_PART_SEQUENCE);
-				insertSeqNo(st);
-			}
-
-			ResultSet rs2 = st.executeQuery("SELECT " + Constants.CURRENT_SEQ_NO + " FROM " + Constants.UUID_LONG_PART_SEQUENCE);
-			rs2.next();
-			long currSeqNo = rs2.getLong(1);
-			long raised = currSeqNo + 1;
-
-			st.execute("UPDATE " + Constants.UUID_LONG_PART_SEQUENCE + " SET " + Constants.CURRENT_SEQ_NO + " = " + raised);
-			st.close();
-
-			return currSeqNo;
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			Util.closeResultSet(rs);
-			Util.closeStatement(st);
-		}
-
-	}
-
-	protected static void insertSeqNo(Statement st) throws SQLException {
-		st.executeUpdate("INSERT INTO " + Constants.UUID_LONG_PART_SEQUENCE + " ( " + Constants.CURRENT_SEQ_NO + " ) VALUES ( " + Constants.MIN_SEQ_NO + " ) ");
 	}
 
 	protected ReplicationReference createReference(Object obj, Db4oUUID uuid, long version) {
