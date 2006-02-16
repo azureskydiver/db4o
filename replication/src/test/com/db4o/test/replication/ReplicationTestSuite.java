@@ -18,6 +18,7 @@ import com.db4o.test.replication.hibernate.HibernateSimpleArrayTest;
 import com.db4o.test.replication.hibernate.HibernateSimpleParentChild;
 import com.db4o.test.replication.hibernate.HibernateSingleTypeCollectionReplicationTest;
 import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
+import com.db4o.test.replication.hibernate.UuidLongPartGeneratorTest;
 import com.db4o.test.replication.provider.TransientReplicationProviderTest;
 import com.db4o.test.replication.transients.TransientArrayReplicationTest;
 import com.db4o.test.replication.transients.TransientListTest;
@@ -68,7 +69,7 @@ public class ReplicationTestSuite extends TestSuite {
 				TransientArrayReplicationTest.class,
 				Db4oArrayReplicationTest.class,
 
-				//UuidLongPartGeneratorTest.class,
+				UuidLongPartGeneratorTest.class,
 				ReplicationConfiguratorTest.class,
 				ReplicationTraversalTest.class,
 				ReplicationFeatures.class,
