@@ -1,8 +1,8 @@
 package com.db4o.inside.replication;
 
 import com.db4o.inside.traversal.CollectionFlattener;
-import com.db4o.inside.traversal.Field;
 import com.db4o.inside.traversal.GenericTraverser;
+import com.db4o.inside.traversal.TraversedField;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
@@ -20,7 +20,7 @@ public class ReplicationTraverser extends GenericTraverser {
 			return;
 		}
 
-		if (object instanceof Field) {
+		if (object instanceof TraversedField) {
 			//do nothing
 		} else {
 			ReflectClass claxx = _reflector.forObject(object);
@@ -57,7 +57,7 @@ public class ReplicationTraverser extends GenericTraverser {
 
 		if (_collectionFlattener.canHandle(claxx)) {
 			if (currentFieldName != null && currentFieldOwner != null) {
-				_queue.add(new Field(currentFieldOwner, currentFieldName, object));
+				_queue.add(new TraversedField(currentFieldOwner, currentFieldName, object));
 				currentFieldName = null;
 				currentFieldOwner = null;
 			} else {
