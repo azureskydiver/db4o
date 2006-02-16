@@ -1,10 +1,10 @@
+using System.Globalization;
+using com.db4o;
+using com.db4o.config;
+
 namespace com.db4o.f1.chapter6
 {
-    using System.Globalization;
-    using com.db4o;
-    using com.db4o.config;
-    
-    public class CultureInfoTranslator : ObjectConstructor
+	public class CultureInfoTranslator : ObjectConstructor
     {
         public object onStore(ObjectContainer container, object applicationObject)
         {

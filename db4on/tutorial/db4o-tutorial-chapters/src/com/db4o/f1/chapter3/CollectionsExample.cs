@@ -1,11 +1,11 @@
+using System;
+using System.Collections;
+using System.IO;
+using com.db4o;
+using com.db4o.query;
+
 namespace com.db4o.f1.chapter3
-{
-	using System;
-	using System.Collections;
-	using System.IO;
-	using com.db4o;
-	using com.db4o.query;
-    
+{	
 	public class CollectionsExample : Util
 	{
 		public static void Main(string[] args)

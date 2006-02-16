@@ -1,8 +1,8 @@
+using System;
+using com.db4o;
+
 namespace com.db4o.f1
 {
-	using System;
-	using com.db4o;
-    
 	public class Util
 	{
 		public readonly static string YapFileName = "formula1.yap";

@@ -1,11 +1,11 @@
+using System;
+using System.Globalization;
+using com.db4o;
+using com.db4o.f1;
+
 namespace com.db4o.f1.chapter6
 {
-    using System;
-    using System.Globalization;
-    using com.db4o;
-    using com.db4o.f1;
-    
-    public class TranslatorExample : Util
+	public class TranslatorExample : Util
     {
         public static void Main(string[] args)
         {

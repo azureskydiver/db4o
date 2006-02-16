@@ -1,11 +1,11 @@
+using System;
+using System.IO;
+using com.db4o;
+using com.db4o.f1;
+using com.db4o.query;
+
 namespace com.db4o.f1.chapter4
-{
-    using System;
-    using System.IO;
-    using com.db4o;
-    using com.db4o.f1;
-    using com.db4o.query;
-    
+{   
     public class InheritanceExample : Util
     {        
         public static void Main(string[] args)

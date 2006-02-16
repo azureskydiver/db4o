@@ -34,7 +34,7 @@ namespace com.db4o.f1.chapter4
         
         override public string ToString()
         {
-            return _name + "/" + _points;
+            return string.Format("{0}/{1}", _name, _points);
         }
     }
 }

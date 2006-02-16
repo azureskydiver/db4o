@@ -1,7 +1,7 @@
+using System;
+
 namespace com.db4o.f1.chapter5
-{
-    using System;
-    
+{   
     public class TemperatureSensorReadout : SensorReadout
     {
         double _temperature;
@@ -22,7 +22,7 @@ namespace com.db4o.f1.chapter5
         
         override public string ToString()
         {
-            return base.ToString() + " temp: " + _temperature;
+            return string.Concat(base.ToString(), " temp: ", _temperature.ToString());
         }
     }
 }

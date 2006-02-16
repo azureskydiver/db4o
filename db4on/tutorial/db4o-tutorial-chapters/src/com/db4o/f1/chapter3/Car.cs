@@ -1,8 +1,8 @@
+using System;
+using System.Collections;
+    
 namespace com.db4o.f1.chapter3
 {
-    using System;
-    using System.Collections;
-    
     public class Car
     {
         string _model;
@@ -62,7 +62,7 @@ namespace com.db4o.f1.chapter3
         
         override public string ToString()
         {
-            return _model + "[" + _pilot + "]/" + _history.Count;
+			return string.Format("{0}[{1}]/{2}", _model, _pilot, _history.Count);
         }
     }
 }

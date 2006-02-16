@@ -1,10 +1,10 @@
+using System;
+using System.IO;
+using com.db4o;
+
 namespace com.db4o.f1.chapter5
 {
-    using System;
-    using System.IO;
-    using com.db4o;
-    
-    public class DeepExample : Util
+	public class DeepExample : Util
     {
         public static void Main(string[] args)
         {

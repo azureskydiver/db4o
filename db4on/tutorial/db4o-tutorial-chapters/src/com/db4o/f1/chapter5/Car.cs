@@ -1,7 +1,7 @@
+using System;
+
 namespace com.db4o.f1.chapter5
 {
-    using System;
-    
     public class Car
     {
         string _model;
@@ -68,7 +68,7 @@ namespace com.db4o.f1.chapter5
         
         override public string ToString()
         {
-            return _model + "[" + _pilot + "]/" + CountHistoryElements();
+			return string.Format("{0}[{1}]/{2}", _model, _pilot, CountHistoryElements());
         }
         
         private int CountHistoryElements()

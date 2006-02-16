@@ -1,8 +1,8 @@
+using com.db4o.query;
+
 namespace com.db4o.f1.chapter1
 {
-    using com.db4o.query;
-
-    public class ArbitraryQuery : Predicate
+	public class ArbitraryQuery : Predicate
     {
     	private int[] _points;
     	

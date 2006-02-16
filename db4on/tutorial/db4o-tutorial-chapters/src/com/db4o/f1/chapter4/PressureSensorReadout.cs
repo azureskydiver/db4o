@@ -1,7 +1,7 @@
+using System;
+
 namespace com.db4o.f1.chapter4
 {
-    using System;
-
     public class PressureSensorReadout : SensorReadout
     {
         double _pressure;
@@ -22,7 +22,7 @@ namespace com.db4o.f1.chapter4
         
         override public string ToString()
         {
-            return base.ToString() + " pressure : " + _pressure;
+            return string.Format("{0} pressure: {1}", base.ToString(), _pressure);
         }
     }
 }

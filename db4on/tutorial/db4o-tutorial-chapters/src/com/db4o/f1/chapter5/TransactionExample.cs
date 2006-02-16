@@ -1,10 +1,10 @@
+using System;
+using System.IO;
+using com.db4o;
+using com.db4o.f1;
+
 namespace com.db4o.f1.chapter5
 {
-    using System;
-    using System.IO;
-    using com.db4o;
-    using com.db4o.f1;
-
     public class TransactionExample : Util
     {
         public static void Main(string[] args)

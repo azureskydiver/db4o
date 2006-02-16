@@ -1,7 +1,7 @@
+using System;
+
 namespace com.db4o.f1.chapter5
-{
-    using System;
-    
+{   
     public abstract class SensorReadout
     {
         DateTime _time;
@@ -60,7 +60,7 @@ namespace com.db4o.f1.chapter5
         
         override public string ToString()
         {
-            return _car + " : " + _time + " : " + _description;
+            return string.Format("{0} : {1} : {2}", _car, _time, _description);
         }
     }
 }
