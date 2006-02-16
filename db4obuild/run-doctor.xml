@@ -52,7 +52,7 @@
 			outputfile="${db4o.file}tutorial" 
 			outputpath="${dir.j.tutorial.out.java}" 
 			pdfbasefont="${font.pdf.base}" 
-			archive="${file.doctor.applets.jar}, ${file.java1.2.jar}, ${file.tutorial.jar}" 
+			archive="${filename.doctor.applets.jar}, ${filename.java1.2.jar}, ${filename.tutorial.jar}" 
 			outlineimage="db4objects1.jpg" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="true" />
