@@ -167,7 +167,7 @@ public class SodaTest {
                         Method method = methods[j];
                         if (method.getName().startsWith("test")) {
                             try {
-                                method.invoke(classes[i], null);
+                                method.invoke(classes[i], (Object[])null);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

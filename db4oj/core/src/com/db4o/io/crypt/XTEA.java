@@ -62,8 +62,9 @@ public class XTEA {
 	 * 
 	 * @param key
 	 *            the key, used in ecryption/decryption routine.
-	 * @param iterations
-	 *            iterations count. Possible values are 8, 16, 32 and 64.
+	 * @param iterationSpec
+	 *            The iteration spec containing iterations count. 
+     *            Possible values are 8, 16, 32 and 64.
 	 * 
 	 */
 	public XTEA(String key, IterationSpec iterationSpec) {
@@ -101,11 +102,11 @@ public class XTEA {
 	 * integer values.<br>
 	 * (An Integer is represented in memory as four bytes.)
 	 * 
-	 * @param bytes-
+	 * @param bytes
 	 *            Incoming byte array of length eight to be converted<br>
-	 * @param offset-
+	 * @param offset
 	 *            Offset from which to start converting bytes<br>
-	 * @param res-
+	 * @param res
 	 *            Int array of length two which contains converted array bytes.
 	 * 
 	 */
@@ -123,11 +124,11 @@ public class XTEA {
 	 * bytes.<br>
 	 * (An Integer is represented in memory as four bytes.)
 	 * 
-	 * @param i-
+	 * @param i
 	 *            Incoming integer array of two to be converted<br>
-	 * @param offset-
+	 * @param offset
 	 *            Offset from which to start converting integer values<br>
-	 * @param res-
+	 * @param res
 	 *            byte array of length eight which contains converted integer
 	 *            array i.
 	 */
@@ -146,7 +147,7 @@ public class XTEA {
 	/**
 	 * enciphers two int values
 	 * 
-	 * @param block -
+	 * @param block 
 	 *            int array to be encipher according to the XTEA encryption
 	 *            algorithm<br>
 	 */
@@ -166,7 +167,7 @@ public class XTEA {
 	/**
 	 * deciphers two int values
 	 * 
-	 * @param e_block -
+	 * @param e_block
 	 *            int array to be decipher according to the XTEA encryption
 	 *            algorithm<br>
 	 */
@@ -185,9 +186,8 @@ public class XTEA {
 	/**
 	 * encrypts incoming byte array according XTEA
 	 * 
-	 * @param buffer -
+	 * @param buffer
 	 *            incoming byte array to be encrypted
-	 * 
 	 */
 	public void encrypt(byte[] buffer) {
 		int[] asInt = new int[2];
@@ -201,7 +201,7 @@ public class XTEA {
 	/**
 	 * decrypts incoming byte array according XTEA
 	 * 
-	 * @param buffer -
+	 * @param buffer
 	 *            incoming byte array to be decrypted
 	 * 
 	 */

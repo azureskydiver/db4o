@@ -134,7 +134,7 @@ public interface ExtObjectContainer extends ObjectContainer {
     
     /**
      * returns the Db4oDatabase identity object for this ObjectContainer. 
-     * @return
+     * @return the Db4oDatabase identity object for this ObjectContainer.
      */
     public Db4oDatabase identity();
 

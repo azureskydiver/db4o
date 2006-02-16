@@ -131,7 +131,7 @@ public class AllTests extends AllTestsConfAll implements Runnable {
                 if (!methodName.equals("testOne")) {
                     if (method.getName().indexOf("test") == 0) {
                         try {
-                            method.invoke(toTest, null);
+                            method.invoke(toTest, (Object[])null);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -157,10 +157,10 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     private void runMethod(Object onObject, String methodName) {
         try {
             Method method = onObject.getClass().getDeclaredMethod(methodName,
-                null);
+                (Class[])null);
             if (method != null) {
                 try {
-                    method.invoke(onObject, null);
+                    method.invoke(onObject, (Object[])null);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -172,11 +172,11 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     private boolean runStoreOne(Object onObject) {
         try {
             Method method = onObject.getClass().getDeclaredMethod("storeOne",
-                null);
+                (Class[])null);
             if (method != null) {
                 try {
                     Test.deleteAllInstances(onObject);
-                    method.invoke(onObject, null);
+                    method.invoke(onObject, (Object[])null);
                     Test.store(onObject);
                     return true;
                 } catch (Exception e2) {
@@ -191,11 +191,11 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     private boolean runTestOne(Object onObject) {
         try {
             Method method = onObject.getClass().getDeclaredMethod("testOne",
-                null);
+                (Class[])null);
             if (method != null) {
                 try {
                     onObject = Test.getOne(onObject);
-                    method.invoke(onObject, null);
+                    method.invoke(onObject, (Object[])null);
                     return true;
                 } catch (Exception e2) {
                     e2.printStackTrace();
