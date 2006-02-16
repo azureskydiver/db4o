@@ -141,6 +141,10 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 	protected UuidLongPartGenerator uuidLongPartGenerator;
 
+	protected final FlushEventListener myFlushEventListener = new MyFlushEventListener();
+
+	protected final PostUpdateEventListener myPostUpdateEventListener = new MyPostUpdateEventListener();
+
 	public HibernateReplicationProviderImpl(Configuration cfg) {
 		this(cfg, null, null);
 	}
@@ -161,11 +165,9 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 		EventListeners eventListeners = this._cfg.getEventListeners();
 
-		//TODO use createFlushListeners()
-		//FlushEventListener[] myFlushListeners = createFlushListeners(eventListeners);
+		eventListeners.setFlushEventListeners(createFlushEventListeners(eventListeners.getFlushEventListeners()));
+		eventListeners.setPostUpdateEventListeners(createPostUpdateListeners(eventListeners.getPostUpdateEventListeners()));
 
-		eventListeners.setFlushEventListeners(new FlushEventListener[]{new MyFlushEventListener()});
-		eventListeners.setPostUpdateEventListeners(new PostUpdateEventListener[]{new MyPostUpdateEventListener()});
 		_sessionFactory = this._cfg.buildSessionFactory();
 		_session = _sessionFactory.openSession();
 		_session.setFlushMode(FlushMode.ALWAYS);
@@ -894,23 +896,32 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 			throw new UnsupportedOperationException("Method not supported because replication transaction is active");
 	}
 
-	protected FlushEventListener[] createFlushListeners(EventListeners eventListeners) {
-		FlushEventListener[] defaultFlushListeners = eventListeners.getFlushEventListeners();
-		FlushEventListener[] myFlushListeners;
-
-		if (defaultFlushListeners == null) {
-			myFlushListeners = new FlushEventListener[]{new MyFlushEventListener()};
+	protected FlushEventListener[] createFlushEventListeners(FlushEventListener[] defaultListeners) {
+		if (defaultListeners == null) {
+			return new FlushEventListener[]{myFlushEventListener};
 		} else {
-			final int count = defaultFlushListeners.length;
-			myFlushListeners = new FlushEventListener[count + 1];
-			System.arraycopy(defaultFlushListeners, 0, myFlushListeners, 0, count);
-
-			if (myFlushListeners[count] != null)
-				throw new RuntimeException("bug");
-			myFlushListeners[count] = new MyFlushEventListener();
+			FlushEventListener[] out;
+			final int count = defaultListeners.length;
+			out = new FlushEventListener[count + 1];
+			System.arraycopy(defaultListeners, 0, out, 0, count);
+			out[count] = myFlushEventListener;
+			return out;
 		}
-		return myFlushListeners;
 	}
+
+	private PostUpdateEventListener[] createPostUpdateListeners(PostUpdateEventListener[] defaultListeners) {
+		if (defaultListeners == null) {
+			return new PostUpdateEventListener[]{myPostUpdateEventListener};
+		} else {
+			PostUpdateEventListener[] out;
+			final int count = defaultListeners.length;
+			out = new PostUpdateEventListener[count + 1];
+			System.arraycopy(defaultListeners, 0, out, 0, count);
+			out[count] = myPostUpdateEventListener;
+			return out;
+		}
+	}
+
 
 	final class MyFlushEventListener implements FlushEventListener {
 		public final void onFlush(FlushEvent event) throws HibernateException {
