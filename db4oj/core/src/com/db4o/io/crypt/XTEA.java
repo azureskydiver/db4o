@@ -149,12 +149,6 @@ public class XTEA {
 	 * @param block -
 	 *            int array to be encipher according to the XTEA encryption
 	 *            algorithm<br>
-	 *            <br>
-	 *            block[0] += ((block[1] << 4 ^ block[1] >> 5) + block[1]) ^
-	 *            (delta_sum + key[delta_sum & 3]);<br>
-	 *            delta_sum += DELTA;<br>
-	 *            block[1] += ((block[0] << 4 ^ block[0] >> 5) + block[0]) ^
-	 *            (delta_sum + key[delta_sum >> 11 & 3]);
 	 */
 	private void encipher(int[] block) {
 		int n = _iterationSpec._iterations;
@@ -175,12 +169,6 @@ public class XTEA {
 	 * @param e_block -
 	 *            int array to be decipher according to the XTEA encryption
 	 *            algorithm<br>
-	 *            <br>
-	 *            e_block[1] -= ((e_block[0] << 4 ^ e_block[0] >> 5) +
-	 *            e_block[0]) ^ (delta_sum + key[delta_sum >> 11 & 3]);<br>
-	 *            delta_sum -= DELTA;<br>
-	 *            e_block[0] -= ((e_block[1] << 4 ^ e_block[1] >> 5) +
-	 *            e_block[1]) ^ (delta_sum + key[delta_sum & 3]);
 	 */
 	private void decipher(int[] e_block) {
 		int delta_sum = _iterationSpec._deltaSumInitial;
