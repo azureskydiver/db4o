@@ -330,7 +330,15 @@ namespace com.db4o.test
 			{
 				try 
 				{
-					oc = Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
+                    if (EMBEDDED_CLIENT)
+                    {
+                        oc = objectServer.openClient().ext();
+                    }
+                    else
+                    {
+                        oc = Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
+                    }
+                    
 				}  
 				catch (Exception e) 
 				{

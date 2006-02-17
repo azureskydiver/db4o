@@ -27,12 +27,13 @@ namespace com.db4o.test
 				ArrayList tests = new ArrayList();
 
                 tests.Add(typeof(SimplestPossible));
-				tests.Add(typeof(CrashSimulatingTest));
-                tests.Add(typeof(com.db4o.test.nativequeries.Cat));
-                tests.Add(typeof(com.db4o.test.nativequeries.NativeQueriesTestCase));
-                tests.Add(typeof(com.db4o.test.nativequeries.NQRegressionTests));
-                tests.Add(typeof(com.db4o.test.nativequeries.cats.TestCatConsistency));
-				tests.Add(typeof(com.db4o.test.nativequeries.StringComparisonTestCase));
+//                tests.Add(typeof(Db4oHashMap));
+//                tests.Add(typeof(CrashSimulatingTest));
+//                tests.Add(typeof(com.db4o.test.nativequeries.Cat));
+//                tests.Add(typeof(com.db4o.test.nativequeries.NativeQueriesTestCase));
+//                tests.Add(typeof(com.db4o.test.nativequeries.NQRegressionTests));
+//                tests.Add(typeof(com.db4o.test.nativequeries.cats.TestCatConsistency));
+//				tests.Add(typeof(com.db4o.test.nativequeries.StringComparisonTestCase));
                 
 #if NET_2_0
 				tests.Add(typeof(net2.Net2GenericContainers));
@@ -65,6 +66,11 @@ namespace com.db4o.test
           * run the tests in client/server mode
           */
 		internal bool CLIENT_SERVER = true;
+
+        /**
+         * use ObjectServer#openClient() instead of Db4o.openClient()
+         */
+        public static bool EMBEDDED_CLIENT = false;
 
 		/**
           * run the client/server test against a remote server.
