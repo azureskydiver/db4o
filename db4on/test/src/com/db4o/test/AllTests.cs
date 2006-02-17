@@ -50,7 +50,7 @@ namespace com.db4o.test
 			Tester.currentRunner = this;
 			if(Compat.compact())
 			{
-				CLIENT_SERVER = false;
+				EMBEDDED_CLIENT = true;
 			}
 		}
 
