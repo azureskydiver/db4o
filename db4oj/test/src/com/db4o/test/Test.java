@@ -267,6 +267,11 @@ public class Test extends AllTests {
     public static ExtObjectContainer openClient(){
         if (clientServer) {
             try {
+                
+                if(EMBEDDED_CLIENT){
+                    return objectServer.openClient().ext();
+                }
+                
                 return Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, DB4O_USER, DB4O_PASSWORD).ext();
                 // oc = objectServer.openClient().ext();
             } catch (Exception e) {

@@ -144,6 +144,11 @@ public class AllTestsConfAll extends TestSuite{
     public boolean CLIENT_SERVER = true;
     
     /**
+     * use ObjectServer#openClient() instead of Db4o.openClient()
+     */
+    public static boolean EMBEDDED_CLIENT = false;
+    
+    /**
      * run the test against a memory file instead of disc file
      */
     public static boolean MEMORY_FILE = false;
