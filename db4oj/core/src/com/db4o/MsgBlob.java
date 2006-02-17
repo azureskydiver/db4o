@@ -41,6 +41,11 @@ abstract class MsgBlob extends MsgD {
             int stilltoread=length-totalread;
             int readsize=(stilltoread<buffer.length ? stilltoread : buffer.length);
             int curread=sock.read(buffer,0,readsize);
+            
+            if(curread < 0){
+                throw new IOException();
+            }
+            
             out.write(buffer,0,curread);
             totalread+=curread;
             if(update) {
