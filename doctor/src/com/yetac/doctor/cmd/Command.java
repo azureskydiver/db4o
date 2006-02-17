@@ -104,7 +104,15 @@ public abstract class Command implements Cloneable {
     }
 
     public String toString() {
-        return source.bytes.substring(offset, offset+10);
+        return source.bytes.substring(offset, endOffset());
+    }
+    
+    protected int endOffset(){
+        int pos = offset + 10;
+        if(end != null){
+            pos = end.offset;
+        }
+        return pos;
     }
 
 }

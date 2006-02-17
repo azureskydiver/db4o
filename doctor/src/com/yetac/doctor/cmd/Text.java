@@ -28,4 +28,13 @@ public class Text extends Command {
     public void write(DocsWriter writer) throws Exception{
         writer.write(this);
     }
+    
+    public String toString() {
+        if(offsetEnd < offset){
+            return "[Empty]";
+        }
+        return source.bytes.substring(offset, offsetEnd);
+    }
+
+
 }

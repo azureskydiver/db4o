@@ -15,7 +15,7 @@ public class Parser extends Configuration {
     	String curLine=null;
     	while((curLine=in.readLine())!=null) {
     		buf.append(curLine);
-    		buf.append('\n');
+            buf.append("\r\n");
     	}
     	in.close();
         char[] bytes = buf.toString().toCharArray();

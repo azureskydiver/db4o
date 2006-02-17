@@ -170,7 +170,7 @@ public abstract class AbstractWriter extends Configuration implements
         write(str+BR);
     }
 
-    public void write(Text command) {
+    public final void write(Text command) {
         write(command.source.bytes, command.offset, command.offsetEnd);
     }
 
