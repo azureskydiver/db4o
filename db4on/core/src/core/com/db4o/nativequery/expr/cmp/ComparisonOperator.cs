@@ -8,6 +8,12 @@ namespace com.db4o.nativequery.expr.cmp
 
 		public const int GREATER_ID = 2;
 
+		public const int CONTAINS_ID = 3;
+
+		public const int STARTSWITH_ID = 4;
+
+		public const int ENDSWITH_ID = 5;
+
 		public static readonly com.db4o.nativequery.expr.cmp.ComparisonOperator EQUALS = 
 			new com.db4o.nativequery.expr.cmp.ComparisonOperator(EQUALS_ID, "==", true);
 
@@ -16,6 +22,18 @@ namespace com.db4o.nativequery.expr.cmp
 
 		public static readonly com.db4o.nativequery.expr.cmp.ComparisonOperator GREATER = 
 			new com.db4o.nativequery.expr.cmp.ComparisonOperator(GREATER_ID, ">", false);
+
+		public static readonly com.db4o.nativequery.expr.cmp.ComparisonOperator CONTAINS = 
+			new com.db4o.nativequery.expr.cmp.ComparisonOperator(CONTAINS_ID, "<CONTAINS>", 
+			false);
+
+		public static readonly com.db4o.nativequery.expr.cmp.ComparisonOperator STARTSWITH
+			 = new com.db4o.nativequery.expr.cmp.ComparisonOperator(STARTSWITH_ID, "<STARTSWITH>"
+			, false);
+
+		public static readonly com.db4o.nativequery.expr.cmp.ComparisonOperator ENDSWITH = 
+			new com.db4o.nativequery.expr.cmp.ComparisonOperator(ENDSWITH_ID, "<ENDSWITH>", 
+			false);
 
 		private int _id;
 

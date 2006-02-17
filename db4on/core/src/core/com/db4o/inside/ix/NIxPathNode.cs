@@ -279,6 +279,7 @@ namespace com.db4o.inside.ix
 
 		public override string ToString()
 		{
+			return base.ToString();
 			return _tree.ToString() + "\n cmp: " + _comparisonResult;
 		}
 	}

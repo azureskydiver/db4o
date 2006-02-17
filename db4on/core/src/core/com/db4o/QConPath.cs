@@ -142,6 +142,7 @@ namespace com.db4o
 		public override string ToString()
 		{
 			return base.ToString();
+			return "QConPath " + base.ToString();
 		}
 	}
 }

@@ -2,6 +2,9 @@ namespace com.db4o
 {
 	internal class YapFieldUUID : com.db4o.YapFieldVirtual
 	{
+		private const int LINK_LENGTH = com.db4o.YapConst.YAPLONG_LENGTH + com.db4o.YapConst
+			.YAPID_LENGTH;
+
 		internal YapFieldUUID(com.db4o.YapStream stream) : base()
 		{
 			i_name = com.db4o.YapConst.VIRTUAL_FIELD_PREFIX + "uuid";
@@ -65,7 +68,7 @@ namespace com.db4o
 
 		public override int linkLength()
 		{
-			return com.db4o.YapConst.YAPLONG_LENGTH + com.db4o.YapConst.YAPID_LENGTH;
+			return LINK_LENGTH;
 		}
 
 		internal override void marshall1(com.db4o.YapObject a_yapObject, com.db4o.YapWriter
@@ -130,6 +133,12 @@ namespace com.db4o
 			{
 				com.db4o.YLong.writeLong(0, a_bytes);
 			}
+		}
+
+		internal override void marshallIgnore(com.db4o.YapWriter writer)
+		{
+			writer.writeInt(0);
+			com.db4o.YLong.writeLong(0, writer);
 		}
 	}
 }

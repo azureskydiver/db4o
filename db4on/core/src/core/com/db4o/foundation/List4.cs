@@ -2,7 +2,7 @@ namespace com.db4o.foundation
 {
 	/// <summary>elements in linked list Collection4</summary>
 	/// <exclude></exclude>
-	public sealed class List4
+	public sealed class List4 : com.db4o.types.Unversioned
 	{
 		/// <summary>next element in list</summary>
 		public com.db4o.foundation.List4 _next;

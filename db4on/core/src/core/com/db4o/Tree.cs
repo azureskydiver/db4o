@@ -75,6 +75,28 @@ namespace com.db4o
 			return this;
 		}
 
+		/// <summary>
+		/// On adding a node to a tree, if it already exists,
+		/// #isDuplicateOf() will be called and the added node
+		/// can be asked for the node that prevails in the
+		/// tree.
+		/// </summary>
+		/// <remarks>
+		/// On adding a node to a tree, if it already exists,
+		/// #isDuplicateOf() will be called and the added node
+		/// can be asked for the node that prevails in the
+		/// tree. This mechanism allows doing find() and add()
+		/// in one run.
+		/// </remarks>
+		public virtual com.db4o.Tree duplicateOrThis()
+		{
+			if (i_size == 0)
+			{
+				return i_preceding;
+			}
+			return this;
+		}
+
 		public com.db4o.Tree balance()
 		{
 			int cmp = i_subsequent.nodes() - i_preceding.nodes();
@@ -131,7 +153,7 @@ namespace com.db4o
 			if (variableLength())
 			{
 				int[] length = new int[] { com.db4o.YapConst.YAPINT_LENGTH };
-				traverse(new _AnonymousInnerClass93(this, length));
+				traverse(new _AnonymousInnerClass108(this, length));
 				return length[0];
 			}
 			else
@@ -140,9 +162,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass93 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass108 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass93(Tree _enclosing, int[] length)
+			public _AnonymousInnerClass108(Tree _enclosing, int[] length)
 			{
 				this._enclosing = _enclosing;
 				this.length = length;
@@ -340,6 +362,7 @@ namespace com.db4o
 		internal virtual void isDuplicateOf(com.db4o.Tree a_tree)
 		{
 			i_size = 0;
+			i_preceding = a_tree;
 		}
 
 		/// <returns>the number of nodes in this tree for balancing</returns>
@@ -599,20 +622,24 @@ namespace com.db4o
 
 		public static void write(com.db4o.YapWriter a_writer, com.db4o.Tree a_tree)
 		{
+			write(a_writer, a_tree, a_tree == null ? 0 : a_tree.size());
+		}
+
+		public static void write(com.db4o.YapWriter a_writer, com.db4o.Tree a_tree, int size
+			)
+		{
 			if (a_tree == null)
 			{
 				a_writer.writeInt(0);
+				return;
 			}
-			else
-			{
-				a_writer.writeInt(a_tree.size());
-				a_tree.traverse(new _AnonymousInnerClass448(a_writer));
-			}
+			a_writer.writeInt(size);
+			a_tree.traverse(new _AnonymousInnerClass469(a_writer));
 		}
 
-		private sealed class _AnonymousInnerClass448 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass469 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass448(com.db4o.YapWriter a_writer)
+			public _AnonymousInnerClass469(com.db4o.YapWriter a_writer)
 			{
 				this.a_writer = a_writer;
 			}

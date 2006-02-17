@@ -124,22 +124,9 @@ namespace com.db4o
 
 		public int readInt()
 		{
-			if (com.db4o.YapConst.INTEGER_BYTES == 4)
-			{
-				int o = (_offset += 4) - 1;
-				return (_buffer[o] & 255) | (_buffer[--o] & 255) << 8 | (_buffer[--o] & 255) << 16
-					 | _buffer[--o] << 24;
-			}
-			else
-			{
-				int ret = 0;
-				int ii = _offset + com.db4o.YapConst.INTEGER_BYTES;
-				while (_offset < ii)
-				{
-					ret = (ret << 8) + (_buffer[_offset++] & unchecked((int)(0xff)));
-				}
-				return ret;
-			}
+			int o = (_offset += 4) - 1;
+			return (_buffer[o] & 255) | (_buffer[--o] & 255) << 8 | (_buffer[--o] & 255) << 16
+				 | _buffer[--o] << 24;
 		}
 
 		internal virtual void replaceWith(byte[] a_bytes)
@@ -181,24 +168,13 @@ namespace com.db4o
 
 		public void writeInt(int a_int)
 		{
-			int ii = com.db4o.YapConst.WRITE_LOOP;
-			if (com.db4o.YapConst.INTEGER_BYTES == 4)
-			{
-				int o = _offset + 4;
-				_offset = o;
-				byte[] b = _buffer;
-				b[--o] = (byte)a_int;
-				b[--o] = (byte)(a_int >>= 8);
-				b[--o] = (byte)(a_int >>= 8);
-				b[--o] = (byte)(a_int >>= 8);
-			}
-			else
-			{
-				for (; ii >= 0; ii -= 8)
-				{
-					_buffer[_offset++] = (byte)(a_int >> ii);
-				}
-			}
+			int o = _offset + 4;
+			_offset = o;
+			byte[] b = _buffer;
+			b[--o] = (byte)a_int;
+			b[--o] = (byte)(a_int >>= 8);
+			b[--o] = (byte)(a_int >>= 8);
+			b[--o] = (byte)(a_int >>= 8);
 		}
 	}
 }

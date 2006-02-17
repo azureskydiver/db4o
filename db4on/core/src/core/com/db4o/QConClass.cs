@@ -99,6 +99,12 @@ namespace com.db4o
 		public override string ToString()
 		{
 			return base.ToString();
+			string str = "QConClass ";
+			if (_claxx != null)
+			{
+				str += _claxx.ToString() + " ";
+			}
+			return str + base.ToString();
 		}
 
 		internal override void unmarshall(com.db4o.Transaction a_trans)

@@ -10,7 +10,7 @@ namespace com.db4o
 			i_collection = a_collection;
 		}
 
-		internal virtual com.db4o.YapClass nextClass()
+		internal virtual com.db4o.YapClass readNextClass()
 		{
 			com.db4o.YapClass yc = (com.db4o.YapClass)next();
 			i_collection.readYapClass(yc, null);

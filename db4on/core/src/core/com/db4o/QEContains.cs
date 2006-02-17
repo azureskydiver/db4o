@@ -1,25 +1,15 @@
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	public class QEContains : com.db4o.QEAbstract
+	public class QEContains : com.db4o.QEStringCmp
 	{
-		internal override bool evaluate(com.db4o.QConObject a_constraint, com.db4o.QCandidate
-			 a_candidate, object a_value)
+		public QEContains(bool caseSensitive) : base(caseSensitive)
 		{
-			if (a_value != null)
-			{
-				if (a_value is com.db4o.YapReader)
-				{
-					a_value = ((com.db4o.YapReader)a_value).toString(a_constraint.i_trans);
-				}
-				return a_value.ToString().IndexOf(a_constraint.i_object.ToString()) > -1;
-			}
-			return a_constraint.i_object.Equals(null);
 		}
 
-		public override bool supportsIndex()
+		protected override bool compareStrings(string candidate, string constraint)
 		{
-			return false;
+			return candidate.IndexOf(constraint) > -1;
 		}
 	}
 }

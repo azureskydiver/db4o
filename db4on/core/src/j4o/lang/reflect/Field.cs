@@ -3,105 +3,99 @@
 using System;
 using System.Reflection;
 using System.Collections;
-using com.db4o;
 
 namespace j4o.lang.reflect
 {
     public class Field
     {
-        private FieldInfo fieldInfo;
-        private EventInfo eventInfo;
-        private Class fieldClass;
-        private int fieldModifiers;
+        private FieldInfo _fieldInfo;
+        private EventInfo _eventInfo;
+        private Class _fieldClass;
+        private int _modifiers;
 
         private static IList _transientMarkers;
 
         public Field(FieldInfo fieldInfo, EventInfo eventInfo)
         {
-            this.fieldInfo = fieldInfo;
-            this.eventInfo = eventInfo;
-            fieldModifiers = -1;
+            _fieldInfo = fieldInfo;
+            _eventInfo = eventInfo;
+        	_modifiers = -1;
         }
-
-        private bool checkForTransient(object[] attributes)
-        {
-            if (attributes == null) return false;
-
-            foreach (object attribute in attributes)
-            {
-                string attributeName = attribute.ToString();
-                if ("com.db4o.Transient" == attributeName) return true;
-
-                if (_transientMarkers == null) continue;
-                
-                foreach (string transientMarker in _transientMarkers)
-                {
-                    if (transientMarker == attributeName) return true;
-                }
-            }
-            return false;
-        }
-
+        
         public Object get(Object obj)
         {
-            return fieldInfo.GetValue(obj);
+            return _fieldInfo.GetValue(obj);
         }
 
         public int getModifiers()
         {
-            if (fieldModifiers == -1)
+            if (_modifiers == -1)
             {
-                fieldModifiers = composeModifiers();
+            	_modifiers = composeModifiers();
             }
-            return fieldModifiers;
+            return _modifiers;
         }
 
         private int composeModifiers()
         {
             int modifiers = 0;
-            if (fieldInfo.IsFamilyAndAssembly)
+            if (_fieldInfo.IsFamilyAndAssembly)
             {
                 modifiers |= Modifier.PROTECTED;
             }
-            if (fieldInfo.IsInitOnly)
+            if (_fieldInfo.IsInitOnly)
             {
                 modifiers |= Modifier.FINAL;
             }
-            if (fieldInfo.IsLiteral)
+            if (_fieldInfo.IsLiteral)
             {
                 modifiers |= Modifier.FINAL;
                 modifiers |= Modifier.STATIC;
             }
-            if (fieldInfo.IsPrivate)
+            if (_fieldInfo.IsPrivate)
             {
                 modifiers |= Modifier.PRIVATE;
             }
-            if (fieldInfo.IsPublic)
+            if (_fieldInfo.IsPublic)
             {
                 modifiers |= Modifier.PUBLIC;
             }
-            if (fieldInfo.IsStatic)
+            if (_fieldInfo.IsStatic)
             {
                 modifiers |= Modifier.STATIC;
             }
 
-            if (isTransientType(fieldInfo.FieldType))
+            if (isTransientType(_fieldInfo.FieldType))
             {
                 modifiers |= Modifier.TRANSIENT;
             }
-            else if (checkForTransient(fieldInfo.GetCustomAttributes(true)))
+            else if (checkForTransient(_fieldInfo.GetCustomAttributes(true)))
             {
                 modifiers |= Modifier.TRANSIENT;
             }
-            else if (eventInfo != null)
+            else if (_eventInfo != null)
             {
-                if (checkForTransient(eventInfo.GetCustomAttributes(true)))
+                if (checkForTransient(_eventInfo.GetCustomAttributes(true)))
                 {
                     modifiers |= Modifier.TRANSIENT;
                 }
             }
             return modifiers;
         }
+
+		private bool checkForTransient(object[] attributes)
+		{
+			if (attributes == null) return false;
+
+			foreach (object attribute in attributes)
+			{
+				string attributeName = attribute.ToString();
+				if ("com.db4o.Transient" == attributeName) return true;
+				if (_transientMarkers == null) continue;
+				if (_transientMarkers.Contains(attributeName)) return true;
+			}
+			return false;
+		}
 
         private bool isTransientType(System.Type type)
         {
@@ -111,16 +105,16 @@ namespace j4o.lang.reflect
 
         public String getName()
         {
-            return fieldInfo.Name;
+            return _fieldInfo.Name;
         }
 
         public Class getType()
         {
-            if (fieldClass == null)
+            if (_fieldClass == null)
             {
-                fieldClass = Class.getClassForType(fieldInfo.FieldType);
+            	_fieldClass = Class.getClassForType(_fieldInfo.FieldType);
             }
-            return fieldClass;
+            return _fieldClass;
         }
 
         public static void markTransient(string attributeName)
@@ -138,7 +132,7 @@ namespace j4o.lang.reflect
 
         public void set(Object obj, Object value)
         {
-            fieldInfo.SetValue(obj, value);
+        	_fieldInfo.SetValue(obj, value);
         }
     }
 }

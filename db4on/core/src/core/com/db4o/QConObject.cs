@@ -448,7 +448,7 @@ namespace com.db4o
 		{
 			lock (streamLock())
 			{
-				i_evaluator = i_evaluator.add(new com.db4o.QEContains());
+				i_evaluator = i_evaluator.add(new com.db4o.QEContains(true));
 				return this;
 			}
 		}
@@ -499,7 +499,7 @@ namespace com.db4o
 		{
 			lock (streamLock())
 			{
-				i_evaluator = i_evaluator.add(new com.db4o.QELike());
+				i_evaluator = i_evaluator.add(new com.db4o.QEContains(false));
 				return this;
 			}
 		}
@@ -513,9 +513,33 @@ namespace com.db4o
 			}
 		}
 
+		public override com.db4o.query.Constraint startsWith(bool caseSensitive)
+		{
+			lock (streamLock())
+			{
+				i_evaluator = i_evaluator.add(new com.db4o.QEStartsWith(caseSensitive));
+				return this;
+			}
+		}
+
+		public override com.db4o.query.Constraint endsWith(bool caseSensitive)
+		{
+			lock (streamLock())
+			{
+				i_evaluator = i_evaluator.add(new com.db4o.QEEndsWith(caseSensitive));
+				return this;
+			}
+		}
+
 		public override string ToString()
 		{
 			return base.ToString();
+			string str = "QConObject ";
+			if (i_object != null)
+			{
+				str += i_object.ToString();
+			}
+			return str;
 		}
 	}
 }

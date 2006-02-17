@@ -65,7 +65,6 @@ namespace com.db4o
 					i_backupFile.seek(pos);
 					i_backupFile.write(buffer, read);
 					pos += read;
-					j4o.lang.JavaSystem.notify(i_lock);
 				}
 			}
 			while (pos < i_file.getLength());

@@ -43,14 +43,15 @@ namespace com.db4o.nativequery.optimization
 				)
 			{
 				com.db4o.query.Query subQuery = _query;
-				com.db4o.foundation.Iterator4 fieldNames = expression.left().fieldNames();
-				while (fieldNames.hasNext())
+				com.db4o.foundation.Iterator4 fieldNameIterator = fieldNames(expression.left());
+				while (fieldNameIterator.hasNext())
 				{
-					subQuery = subQuery.descend((string)fieldNames.next());
+					subQuery = subQuery.descend((string)fieldNameIterator.next());
 				}
-				object[] value = { null };
-				expression.right().accept(new _AnonymousInnerClass48(this, value));
-				_constraint = subQuery.constrain(value[0]);
+				com.db4o.nativequery.optimization.ComparisonQueryGeneratingVisitor visitor = new 
+					com.db4o.nativequery.optimization.ComparisonQueryGeneratingVisitor(_predicate);
+				expression.right().accept(visitor);
+				_constraint = subQuery.constrain(visitor.value());
 				if (!expression.op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.EQUALS
 					))
 				{
@@ -61,170 +62,63 @@ namespace com.db4o.nativequery.optimization
 					}
 					else
 					{
-						_constraint.smaller();
-					}
-				}
-			}
-
-			private sealed class _AnonymousInnerClass48 : com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor
-			{
-				public _AnonymousInnerClass48(SODAQueryVisitor _enclosing, object[] value)
-				{
-					this._enclosing = _enclosing;
-					this.value = value;
-				}
-
-				public void visit(com.db4o.nativequery.expr.cmp.ConstValue operand)
-				{
-					value[0] = operand.value();
-				}
-
-				public void visit(com.db4o.nativequery.expr.cmp.FieldValue operand)
-				{
-					value[0] = this._enclosing.findValue(operand);
-				}
-
-				private object add(object a, object b)
-				{
-					if (a is double || b is double)
-					{
-						return ((double)a) + ((double)b);
-					}
-					if (a is float || b is float)
-					{
-						return ((float)a) + ((float)b);
-					}
-					if (a is long || b is long)
-					{
-						return ((long)a) + ((long)b);
-					}
-					return ((int)a) + ((int)b);
-				}
-
-				private object subtract(object a, object b)
-				{
-					if (a is double || b is double)
-					{
-						return ((double)a) - ((double)b);
-					}
-					if (a is float || b is float)
-					{
-						return ((float)a) - ((float)b);
-					}
-					if (a is long || b is long)
-					{
-						return ((long)a) - ((long)b);
-					}
-					return ((int)a) - ((int)b);
-				}
-
-				private object multiply(object a, object b)
-				{
-					if (a is double || b is double)
-					{
-						return ((double)a) * ((double)b);
-					}
-					if (a is float || b is float)
-					{
-						return ((float)a) * ((float)b);
-					}
-					if (a is long || b is long)
-					{
-						return ((long)a) * ((long)b);
-					}
-					return ((int)a) * ((int)b);
-				}
-
-				private object divide(object a, object b)
-				{
-					if (a is double || b is double)
-					{
-						return ((double)a) / ((double)b);
-					}
-					if (a is float || b is float)
-					{
-						return ((float)a) / ((float)b);
-					}
-					if (a is long || b is long)
-					{
-						return ((long)a) / ((long)b);
-					}
-					return ((int)a) / ((int)b);
-				}
-
-				public void visit(com.db4o.nativequery.expr.cmp.ArithmeticExpression operand)
-				{
-					operand.left().accept(this);
-					object left = value[0];
-					operand.right().accept(this);
-					object right = value[0];
-					switch (operand.op().id())
-					{
-						case com.db4o.nativequery.expr.cmp.ArithmeticOperator.ADD_ID:
+						if (expression.op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.SMALLER
+							))
 						{
-							value[0] = this.add(left, right);
-							break;
+							_constraint.smaller();
 						}
-
-						case com.db4o.nativequery.expr.cmp.ArithmeticOperator.SUBTRACT_ID:
+						else
 						{
-							value[0] = this.subtract(left, right);
-							break;
-						}
-
-						case com.db4o.nativequery.expr.cmp.ArithmeticOperator.MULTIPLY_ID:
-						{
-							value[0] = this.multiply(left, right);
-							break;
-						}
-
-						case com.db4o.nativequery.expr.cmp.ArithmeticOperator.DIVIDE_ID:
-						{
-							value[0] = this.divide(left, right);
-							break;
+							if (expression.op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.CONTAINS
+								))
+							{
+								_constraint.contains();
+							}
+							else
+							{
+								if (expression.op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.STARTSWITH
+									))
+								{
+									_constraint.startsWith(true);
+								}
+								else
+								{
+									if (expression.op().Equals(com.db4o.nativequery.expr.cmp.ComparisonOperator.ENDSWITH
+										))
+									{
+										_constraint.endsWith(true);
+									}
+									else
+									{
+										throw new j4o.lang.RuntimeException("Can't handle constraint: " + expression.op()
+											);
+									}
+								}
+							}
 						}
 					}
 				}
-
-				private readonly SODAQueryVisitor _enclosing;
-
-				private readonly object[] value;
-			}
-
-			private object findValue(com.db4o.nativequery.expr.cmp.FieldValue spec)
-			{
-				object value = _predicate;
-				com.db4o.foundation.Iterator4 fieldNames = spec.fieldNames();
-				while (fieldNames.hasNext())
-				{
-					string fieldName = (string)fieldNames.next();
-					j4o.lang.Class clazz = j4o.lang.Class.getClassForObject(value);
-					while (clazz != null)
-					{
-						try
-						{
-							j4o.lang.reflect.Field field = clazz.getDeclaredField(fieldName);
-							com.db4o.Platform4.setAccessible(field);
-							value = field.get(value);
-							return value;
-						}
-						catch (System.Exception e)
-						{
-						}
-						clazz = clazz.getSuperclass();
-						if (clazz == com.db4o.YapConst.CLASS_OBJECT)
-						{
-							return null;
-						}
-					}
-				}
-				return value;
 			}
 
 			public virtual void visit(com.db4o.nativequery.expr.NotExpression expression)
 			{
 				expression.expr().accept(this);
 				_constraint.not();
+			}
+
+			private com.db4o.foundation.Iterator4 fieldNames(com.db4o.nativequery.expr.cmp.FieldValue
+				 fieldValue)
+			{
+				com.db4o.foundation.Collection4 coll = new com.db4o.foundation.Collection4();
+				com.db4o.nativequery.expr.cmp.ComparisonOperand curOp = fieldValue;
+				while (curOp is com.db4o.nativequery.expr.cmp.FieldValue)
+				{
+					com.db4o.nativequery.expr.cmp.FieldValue curField = (com.db4o.nativequery.expr.cmp.FieldValue
+						)curOp;
+					coll.add(curField.fieldName());
+					curOp = curField.parent();
+				}
+				return coll.iterator();
 			}
 		}
 

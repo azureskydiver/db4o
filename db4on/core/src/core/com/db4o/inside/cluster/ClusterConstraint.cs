@@ -117,6 +117,30 @@ namespace com.db4o.inside.cluster
 			}
 		}
 
+		public virtual com.db4o.query.Constraint startsWith(bool caseSensitive)
+		{
+			lock (_cluster)
+			{
+				for (int i = 0; i < _constraints.Length; i++)
+				{
+					_constraints[i].startsWith(caseSensitive);
+				}
+				return this;
+			}
+		}
+
+		public virtual com.db4o.query.Constraint endsWith(bool caseSensitive)
+		{
+			lock (_cluster)
+			{
+				for (int i = 0; i < _constraints.Length; i++)
+				{
+					_constraints[i].endsWith(caseSensitive);
+				}
+				return this;
+			}
+		}
+
 		public virtual com.db4o.query.Constraint contains()
 		{
 			lock (_cluster)

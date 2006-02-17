@@ -105,7 +105,7 @@ namespace com.db4o
 						}
 					}
 				}
-				trans.freeOnCommit(address, address, length);
+				trans.slotFreeOnCommit(address, address, length);
 			}
 		}
 
@@ -124,12 +124,11 @@ namespace com.db4o
 					for (int i = elementCount(trans, bytes); i > 0; i--)
 					{
 						int id = bytes.readInt();
-						int[] addressLength = new int[2];
-						trans.getSlotInformation(id, addressLength);
-						a_classPrimitive.free(trans, id, addressLength[0], addressLength[1]);
+						com.db4o.inside.slots.Slot slot = trans.getSlotInformation(id);
+						a_classPrimitive.free(trans, id, slot._address, slot._length);
 					}
 				}
-				trans.freeOnCommit(address, address, length);
+				trans.slotFreeOnCommit(address, address, length);
 			}
 		}
 

@@ -4,6 +4,7 @@ namespace com.db4o
 	/// <remarks>Base class for all constraints on queries.</remarks>
 	/// <exclude></exclude>
 	public abstract class QCon : com.db4o.query.Constraint, com.db4o.foundation.Visitor4
+		, com.db4o.types.Unversioned
 	{
 		internal static readonly com.db4o.IDGenerator idGenerator = new com.db4o.IDGenerator
 			();
@@ -86,7 +87,7 @@ namespace com.db4o
 			com.db4o.QCon qcon = this;
 			com.db4o.YapClass yc = getYapClass();
 			bool[] foundField = { false };
-			forEachChildField(a_field, new _AnonymousInnerClass101(this, foundField, query));
+			forEachChildField(a_field, new _AnonymousInnerClass102(this, foundField, query));
 			if (foundField[0])
 			{
 				return true;
@@ -96,7 +97,7 @@ namespace com.db4o
 			{
 				int[] count = { 0 };
 				com.db4o.YapField[] yfs = { null };
-				i_trans.i_stream.i_classCollection.attachQueryNode(a_field, new _AnonymousInnerClass119
+				i_trans.i_stream.i_classCollection.attachQueryNode(a_field, new _AnonymousInnerClass120
 					(this, yfs, count));
 				if (count[0] == 0)
 				{
@@ -132,9 +133,9 @@ namespace com.db4o
 			return true;
 		}
 
-		private sealed class _AnonymousInnerClass101 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass102 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass101(QCon _enclosing, bool[] foundField, com.db4o.QQuery
+			public _AnonymousInnerClass102(QCon _enclosing, bool[] foundField, com.db4o.QQuery
 				 query)
 			{
 				this._enclosing = _enclosing;
@@ -155,9 +156,9 @@ namespace com.db4o
 			private readonly com.db4o.QQuery query;
 		}
 
-		private sealed class _AnonymousInnerClass119 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass120 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass119(QCon _enclosing, com.db4o.YapField[] yfs, int[] count
+			public _AnonymousInnerClass120(QCon _enclosing, com.db4o.YapField[] yfs, int[] count
 				)
 			{
 				this._enclosing = _enclosing;
@@ -567,6 +568,16 @@ namespace com.db4o
 		}
 
 		public virtual com.db4o.query.Constraint like()
+		{
+			throw notSupported();
+		}
+
+		public virtual com.db4o.query.Constraint startsWith(bool caseSensitive)
+		{
+			throw notSupported();
+		}
+
+		public virtual com.db4o.query.Constraint endsWith(bool caseSensitive)
 		{
 			throw notSupported();
 		}

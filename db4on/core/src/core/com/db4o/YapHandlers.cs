@@ -56,15 +56,17 @@ namespace com.db4o
 
 		internal int i_lastEncryptorByte;
 
+		internal readonly com.db4o.reflect.generic.GenericReflector _reflector;
+
 		internal com.db4o.reflect.ReflectClass ICLASS_COMPARE;
 
 		internal com.db4o.reflect.ReflectClass ICLASS_DB4OTYPE;
 
 		internal com.db4o.reflect.ReflectClass ICLASS_DB4OTYPEIMPL;
 
-		internal com.db4o.reflect.ReflectClass ICLASS_ENUM;
-
 		public com.db4o.reflect.ReflectClass ICLASS_INTERNAL;
+
+		internal com.db4o.reflect.ReflectClass ICLASS_UNVERSIONED;
 
 		internal com.db4o.reflect.ReflectClass ICLASS_OBJECT;
 
@@ -78,11 +80,12 @@ namespace com.db4o
 
 		internal com.db4o.reflect.ReflectClass ICLASS_TRANSIENTCLASS;
 
-		internal YapHandlers(com.db4o.YapStream a_stream, byte stringEncoding)
+		internal YapHandlers(com.db4o.YapStream a_stream, byte stringEncoding, com.db4o.reflect.generic.GenericReflector
+			 reflector)
 		{
 			_masterStream = a_stream;
 			a_stream.i_handlers = this;
-			com.db4o.reflect.generic.GenericReflector reflector = a_stream.reflector();
+			_reflector = reflector;
 			initClassReflectors(reflector);
 			i_indexes = new com.db4o.YapIndexes(a_stream);
 			i_virtualFields[0] = i_indexes.i_fieldVersion;
@@ -220,7 +223,7 @@ namespace com.db4o
 					bool[] foundConstructor = { false };
 					if (sortedConstructors != null)
 					{
-						sortedConstructors.traverse(new _AnonymousInnerClass223(this, foundConstructor, claxx
+						sortedConstructors.traverse(new _AnonymousInnerClass224(this, foundConstructor, claxx
 							));
 					}
 					if (foundConstructor[0])
@@ -235,9 +238,9 @@ namespace com.db4o
 			return false;
 		}
 
-		private sealed class _AnonymousInnerClass223 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass224 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass223(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
+			public _AnonymousInnerClass224(YapHandlers _enclosing, bool[] foundConstructor, com.db4o.reflect.ReflectClass
 				 claxx)
 			{
 				this._enclosing = _enclosing;
@@ -379,8 +382,8 @@ namespace com.db4o
 			ICLASS_COMPARE = reflector.forClass(com.db4o.YapConst.CLASS_COMPARE);
 			ICLASS_DB4OTYPE = reflector.forClass(com.db4o.YapConst.CLASS_DB4OTYPE);
 			ICLASS_DB4OTYPEIMPL = reflector.forClass(com.db4o.YapConst.CLASS_DB4OTYPEIMPL);
-			ICLASS_ENUM = reflector.forClass(com.db4o.YapConst.CLASS_ENUM);
 			ICLASS_INTERNAL = reflector.forClass(com.db4o.YapConst.CLASS_INTERNAL);
+			ICLASS_UNVERSIONED = reflector.forClass(com.db4o.YapConst.CLASS_UNVERSIONED);
 			ICLASS_OBJECT = reflector.forClass(com.db4o.YapConst.CLASS_OBJECT);
 			ICLASS_OBJECTCONTAINER = reflector.forClass(com.db4o.YapConst.CLASS_OBJECTCONTAINER
 				);

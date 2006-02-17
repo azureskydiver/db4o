@@ -54,18 +54,19 @@ namespace com.db4o.inside.ix
 
 		public override string ToString()
 		{
+			return base.ToString();
 			com.db4o.YapFile yf = stream();
 			com.db4o.Transaction transaction = trans();
 			com.db4o.YapReader fileReader = new com.db4o.YapReader(slotLength());
 			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
 			sb.append("IxFileRange");
-			visitAll(new _AnonymousInnerClass58(this, sb));
+			visitAll(new _AnonymousInnerClass61(this, sb));
 			return sb.ToString();
 		}
 
-		private sealed class _AnonymousInnerClass58 : com.db4o.foundation.IntObjectVisitor
+		private sealed class _AnonymousInnerClass61 : com.db4o.foundation.IntObjectVisitor
 		{
-			public _AnonymousInnerClass58(IxFileRange _enclosing, j4o.lang.StringBuffer sb)
+			public _AnonymousInnerClass61(IxFileRange _enclosing, j4o.lang.StringBuffer sb)
 			{
 				this._enclosing = _enclosing;
 				this.sb = sb;

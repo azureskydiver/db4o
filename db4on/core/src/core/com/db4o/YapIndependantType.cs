@@ -36,7 +36,7 @@ namespace com.db4o
 			int length = a_bytes.readInt();
 			if (address > 0)
 			{
-				a_bytes.getTransaction().freeOnCommit(address, address, length);
+				a_bytes.getTransaction().slotFreeOnCommit(address, address, length);
 			}
 		}
 

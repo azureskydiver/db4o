@@ -117,6 +117,28 @@ namespace com.db4o.query
 		/// </returns>
 		com.db4o.query.Constraint contains();
 
+		/// <summary>sets the evaluation mode to string startsWith comparison.</summary>
+		/// <remarks>sets the evaluation mode to string startsWith comparison.</remarks>
+		/// <param name="caseSensitive">comparison will be case sensitive if true, case insensitive otherwise
+		/// 	</param>
+		/// <returns>
+		/// this
+		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
+		/// to allow the chaining of method calls.
+		/// </returns>
+		com.db4o.query.Constraint startsWith(bool caseSensitive);
+
+		/// <summary>sets the evaluation mode to string endsWith comparison.</summary>
+		/// <remarks>sets the evaluation mode to string endsWith comparison.</remarks>
+		/// <param name="caseSensitive">comparison will be case sensitive if true, case insensitive otherwise
+		/// 	</param>
+		/// <returns>
+		/// this
+		/// <see cref="com.db4o.query.Constraint">com.db4o.query.Constraint</see>
+		/// to allow the chaining of method calls.
+		/// </returns>
+		com.db4o.query.Constraint endsWith(bool caseSensitive);
+
 		/// <summary>turns on not() comparison.</summary>
 		/// <remarks>turns on not() comparison.</remarks>
 		/// <returns>

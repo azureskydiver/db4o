@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
-
+using com.db4o.nativequery.expr.cmp.field;
 using Mono.Cecil;
 using Cecil.FlowAnalysis;
 using Cecil.FlowAnalysis.ActionFlow;
@@ -362,8 +362,7 @@ namespace com.db4o.inside.query
 			{
 				FieldValue value = o as FieldValue;
 				if (value == null) return false;
-				// parentIdx() == 1 means candidate
-				return value.parentIdx() == 1;
+				return value.root() is CandidateFieldRoot;
 			}
 
 			public override void Visit(IMethodInvocationExpression node)
@@ -378,24 +377,58 @@ namespace com.db4o.inside.query
 					return;
 				}
 
+				if (method.DeclaringType.FullName == "System.String")
+				{
+					ProcessStringMethod(node, methodRef);
+					return;
+				}
+
+				ProcessRegularMethodInvocation(node, methodRef);
+			}
+
+			private void ProcessStringMethod(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
+			{
+				IMethodReference method = methodRef.Method;
+				switch (method.Name)
+				{
+					case "StartsWith":
+						PushComparison(methodRef.Target, node.Arguments[0], ComparisonOperator.STARTSWITH);
+						break;
+
+					case "EndsWith":
+						PushComparison(methodRef.Target, node.Arguments[0], ComparisonOperator.ENDSWITH);
+						break;
+
+					case "Equals":
+						PushComparison(methodRef.Target, node.Arguments[0], ComparisonOperator.EQUALS);
+						break;
+
+					default:
+						UnsupportedExpression(methodRef);
+						break;
+				}
+			}
+
+			private void ProcessRegularMethodInvocation(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
+			{
 				if (node.Arguments.Count != 0) UnsupportedExpression(node);
-                
+	
 				IExpression target = methodRef.Target;
 				switch (target.CodeElementType)
 				{
 					case CodeElementType.ThisReferenceExpression:
 						if (!InsideCandidate) UnsupportedExpression(node);
 						ProcessCandidateMethodInvocation(node, methodRef);
-						return;
+						break;
 
 					case CodeElementType.ArgumentReferenceExpression:
 						ProcessCandidateMethodInvocation(node, methodRef);
-						return;
+						break;
 
 					default:
 						Push(ToFieldValue(target));
 						ProcessCandidateMethodInvocation(node, methodRef);
-						return;
+						break;
 				}
 			}
 
@@ -518,8 +551,8 @@ namespace com.db4o.inside.query
 				switch (target.CodeElementType)
 				{
 					case CodeElementType.ArgumentReferenceExpression:
-						IArgumentReferenceExpression arg = (IArgumentReferenceExpression)target;
-						Push(new FieldValue(arg.Parameter.Sequence, node.Field.Name));
+						//IArgumentReferenceExpression arg = (IArgumentReferenceExpression)target;
+						Push(new FieldValue(CandidateFieldRoot.INSTANCE, node.Field.Name));
 						break;
 						
 					case CodeElementType.ThisReferenceExpression:
@@ -528,25 +561,23 @@ namespace com.db4o.inside.query
 							if (_current != null)
 							{
 								FieldValue current = PopFieldValue(node);
-								current.descend(node.Field.Name);
-								Push(current);
+								Push(new FieldValue(current, node.Field.Name));
 							}
 							else
 							{
-								Push(new FieldValue(1, node.Field.Name));
+								Push(new FieldValue(CandidateFieldRoot.INSTANCE, node.Field.Name));
 							}
 						}
 						else
 						{
-							Push(new FieldValue(0, node.Field.Name));
+							Push(new FieldValue(PredicateFieldRoot.INSTANCE, node.Field.Name));
 						}
 						break;
 
 					case CodeElementType.MethodInvocationExpression:
 					case CodeElementType.FieldReferenceExpression:
 						FieldValue value = ToFieldValue(target);
-						value.descend(node.Field.Name);
-						Push(value);
+						Push(new FieldValue(value, node.Field.Name));
 						break;
 
 					default:

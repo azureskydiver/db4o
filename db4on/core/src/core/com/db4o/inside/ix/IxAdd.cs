@@ -45,6 +45,7 @@ namespace com.db4o.inside.ix
 
 		public override string ToString()
 		{
+			return base.ToString();
 			string str = "IxAdd " + i_parentID + "\n " + handler().comparableObject(trans(), 
 				i_value);
 			return str;

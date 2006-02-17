@@ -148,9 +148,9 @@ namespace com.db4o
 
 		internal static j4o.lang.Class CLASS_DB4OTYPEIMPL;
 
-		internal static j4o.lang.Class CLASS_ENUM;
-
 		internal static j4o.lang.Class CLASS_INTERNAL;
+
+		internal static j4o.lang.Class CLASS_UNVERSIONED;
 
 		internal static j4o.lang.Class CLASS_METACLASS;
 
@@ -219,6 +219,7 @@ namespace com.db4o
 			CLASS_DB4OTYPE = db4oClass("types.Db4oType");
 			CLASS_DB4OTYPEIMPL = db4oClass("Db4oTypeImpl");
 			CLASS_INTERNAL = db4oClass("Internal4");
+			CLASS_UNVERSIONED = db4oClass("types.Unversioned");
 			CLASS_METACLASS = j4o.lang.Class.getClassForObject(new com.db4o.MetaClass());
 			CLASS_METAFIELD = j4o.lang.Class.getClassForObject(new com.db4o.MetaField());
 			CLASS_METAINDEX = j4o.lang.Class.getClassForObject(new com.db4o.MetaIndex());

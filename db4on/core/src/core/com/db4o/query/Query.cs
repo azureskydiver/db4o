@@ -145,5 +145,15 @@ namespace com.db4o.query
 		/// object to allow the chaining of method calls.
 		/// </returns>
 		com.db4o.query.Query orderDescending();
+
+		/// <summary>Sort the resulting ObjectSet by the given comparator.</summary>
+		/// <remarks>Sort the resulting ObjectSet by the given comparator.</remarks>
+		/// <param name="comparator">The comparator to apply.</param>
+		/// <returns>
+		/// this
+		/// <see cref="com.db4o.query.Query">com.db4o.query.Query</see>
+		/// object to allow the chaining of method calls.
+		/// </returns>
+		com.db4o.query.Query sortBy(com.db4o.query.QueryComparator comparator);
 	}
 }

@@ -83,6 +83,11 @@ namespace com.db4o
 			com.db4o.YapWriter a_bytes, com.db4o.Config4Class a_config, bool a_new)
 		{
 			com.db4o.Transaction trans = a_bytes.i_trans;
+			if (!trans.supportsVirtualFields())
+			{
+				marshallIgnore(a_bytes);
+				return;
+			}
 			com.db4o.YapStream stream = trans.i_stream;
 			com.db4o.YapHandlers handlers = stream.i_handlers;
 			bool migrating = false;
@@ -149,9 +154,16 @@ namespace com.db4o
 		internal abstract void marshall1(com.db4o.YapObject a_yapObject, com.db4o.YapWriter
 			 a_bytes, bool a_migrating, bool a_new);
 
+		internal abstract void marshallIgnore(com.db4o.YapWriter writer);
+
 		public override void readVirtualAttribute(com.db4o.Transaction a_trans, com.db4o.YapReader
 			 a_reader, com.db4o.YapObject a_yapObject)
 		{
+			if (!a_trans.supportsVirtualFields())
+			{
+				a_reader.incrementOffset(linkLength());
+				return;
+			}
 			instantiate1(a_trans, a_yapObject, a_reader);
 		}
 

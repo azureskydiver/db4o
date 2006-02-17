@@ -3,7 +3,7 @@ namespace com.db4o.foundation
 	/// <summary>Fast linked list for all usecases.</summary>
 	/// <remarks>Fast linked list for all usecases.</remarks>
 	/// <exclude></exclude>
-	public class Collection4 : com.db4o.foundation.DeepClone
+	public class Collection4 : com.db4o.foundation.DeepClone, com.db4o.types.Unversioned
 	{
 		/// <summary>first element of the linked list</summary>
 		public com.db4o.foundation.List4 _first;
@@ -226,6 +226,21 @@ namespace com.db4o.foundation
 		public override string ToString()
 		{
 			return base.ToString();
+			if (_size == 0)
+			{
+				return "[]";
+			}
+			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
+			sb.append("[");
+			com.db4o.foundation.Iterator4 i = iterator();
+			sb.append(i.next());
+			while (i.hasNext())
+			{
+				sb.append(", ");
+				sb.append(i.next());
+			}
+			sb.append("]");
+			return sb.ToString();
 		}
 	}
 }

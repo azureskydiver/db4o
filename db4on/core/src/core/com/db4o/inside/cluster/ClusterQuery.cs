@@ -75,5 +75,12 @@ namespace com.db4o.inside.cluster
 			com.db4o.inside.Exceptions4.notSupported();
 			return this;
 		}
+
+		public virtual com.db4o.query.Query sortBy(com.db4o.query.QueryComparator comparator
+			)
+		{
+			com.db4o.inside.Exceptions4.notSupported();
+			return this;
+		}
 	}
 }

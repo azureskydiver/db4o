@@ -31,6 +31,7 @@ namespace com.db4o.inside.ix
 
 		public override string ToString()
 		{
+			return base.ToString();
 			string str = "NIxPath +\n";
 			string space = " ";
 			com.db4o.inside.ix.NIxPathNode node = _head;

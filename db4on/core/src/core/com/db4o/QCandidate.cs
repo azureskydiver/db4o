@@ -525,6 +525,29 @@ namespace com.db4o
 		public override string ToString()
 		{
 			return base.ToString();
+			string str = "QCandidate ";
+			if (i_yapClass != null)
+			{
+				str += "\n   YapClass " + i_yapClass.getName();
+			}
+			if (i_yapField != null)
+			{
+				str += "\n   YapField " + i_yapField.getName();
+			}
+			if (i_member != null)
+			{
+				str += "\n   Member " + i_member.ToString();
+			}
+			if (i_root != null)
+			{
+				str += "\n  rooted by:\n";
+				str += i_root.ToString();
+			}
+			else
+			{
+				str += "\n  ROOT";
+			}
+			return str;
 		}
 
 		internal virtual void useField(com.db4o.QField a_field)

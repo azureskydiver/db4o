@@ -109,6 +109,30 @@ namespace com.db4o
 			}
 		}
 
+		public override com.db4o.query.Constraint startsWith(bool caseSensitive)
+		{
+			lock (streamLock())
+			{
+				for (int i = 0; i < i_constraints.Length; i++)
+				{
+					i_constraints[i].startsWith(caseSensitive);
+				}
+				return this;
+			}
+		}
+
+		public override com.db4o.query.Constraint endsWith(bool caseSensitive)
+		{
+			lock (streamLock())
+			{
+				for (int i = 0; i < i_constraints.Length; i++)
+				{
+					i_constraints[i].endsWith(caseSensitive);
+				}
+				return this;
+			}
+		}
+
 		public override com.db4o.query.Constraint smaller()
 		{
 			lock (streamLock())
