@@ -34,10 +34,6 @@ namespace com.db4o
 				{
 					oc = new com.db4o.YapRandomAccessFile(newSession);
 				}
-				catch (com.db4o.ExpirationException e)
-				{
-					throw e;
-				}
 				catch (com.db4o.LongJumpOutException e)
 				{
 					throw e;

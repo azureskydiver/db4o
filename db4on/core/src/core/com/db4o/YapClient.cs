@@ -317,13 +317,20 @@ namespace com.db4o
 			}
 			else
 			{
-				return (com.db4o.Msg)messageQueueLock.run(new _AnonymousInnerClass286(this));
+				try
+				{
+					return (com.db4o.Msg)messageQueueLock.run(new _AnonymousInnerClass288(this));
+				}
+				catch (System.Exception ex)
+				{
+					return null;
+				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass286 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass288 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass286(YapClient _enclosing)
+			public _AnonymousInnerClass288(YapClient _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

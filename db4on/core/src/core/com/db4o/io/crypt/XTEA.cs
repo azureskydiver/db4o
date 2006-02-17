@@ -60,6 +60,9 @@ namespace com.db4o.io.crypt
 		/// integer values.<br />
 		/// (An Integer is represented in memory as four bytes.)
 		/// </summary>
+		/// <param name="bytes">Incoming byte array of length eight to be converted<br /></param>
+		/// <param name="offset">Offset from which to start converting bytes<br /></param>
+		/// <param name="res">Int array of length two which contains converted array bytes.</param>
 		private void byte2int(byte[] bytes, int offset, int[] res)
 		{
 			res[0] = (int)((((int)bytes[offset] & unchecked((int)(0xff))) << 24) | (((int)bytes
@@ -76,6 +79,12 @@ namespace com.db4o.io.crypt
 		/// bytes.<br />
 		/// (An Integer is represented in memory as four bytes.)
 		/// </summary>
+		/// <param name="i">Incoming integer array of two to be converted<br /></param>
+		/// <param name="offset">Offset from which to start converting integer values<br /></param>
+		/// <param name="res">
+		/// byte array of length eight which contains converted integer
+		/// array i.
+		/// </param>
 		private void int2byte(int[] i, int offset, byte[] res)
 		{
 			res[offset] = (byte)(unchecked((int)(unchecked((uint)((i[0] & unchecked((int)(0xff000000
@@ -96,15 +105,9 @@ namespace com.db4o.io.crypt
 
 		/// <summary>enciphers two int values</summary>
 		/// <param name="block">
-		/// -
+		/// 
 		/// int array to be encipher according to the XTEA encryption
 		/// algorithm<br />
-		/// <br />
-		/// block[0] += ((block[1] << 4 ^ block[1] >> 5) + block[1]) ^
-		/// (delta_sum + key[delta_sum & 3]);<br />
-		/// delta_sum += DELTA;<br />
-		/// block[1] += ((block[0] << 4 ^ block[0] >> 5) + block[0]) ^
-		/// (delta_sum + key[delta_sum >> 11 & 3]);
 		/// </param>
 		private void encipher(int[] block)
 		{
@@ -122,15 +125,8 @@ namespace com.db4o.io.crypt
 
 		/// <summary>deciphers two int values</summary>
 		/// <param name="e_block">
-		/// -
 		/// int array to be decipher according to the XTEA encryption
 		/// algorithm<br />
-		/// <br />
-		/// e_block[1] -= ((e_block[0] << 4 ^ e_block[0] >> 5) +
-		/// e_block[0]) ^ (delta_sum + key[delta_sum >> 11 & 3]);<br />
-		/// delta_sum -= DELTA;<br />
-		/// e_block[0] -= ((e_block[1] << 4 ^ e_block[1] >> 5) +
-		/// e_block[1]) ^ (delta_sum + key[delta_sum & 3]);
 		/// </param>
 		private void decipher(int[] e_block)
 		{
@@ -147,10 +143,7 @@ namespace com.db4o.io.crypt
 		}
 
 		/// <summary>encrypts incoming byte array according XTEA</summary>
-		/// <param name="buffer">
-		/// -
-		/// incoming byte array to be encrypted
-		/// </param>
+		/// <param name="buffer">incoming byte array to be encrypted</param>
 		public virtual void encrypt(byte[] buffer)
 		{
 			int[] asInt = new int[2];
@@ -163,10 +156,7 @@ namespace com.db4o.io.crypt
 		}
 
 		/// <summary>decrypts incoming byte array according XTEA</summary>
-		/// <param name="buffer">
-		/// -
-		/// incoming byte array to be decrypted
-		/// </param>
+		/// <param name="buffer">incoming byte array to be decrypted</param>
 		public virtual void decrypt(byte[] buffer)
 		{
 			int[] asInt = new int[2];

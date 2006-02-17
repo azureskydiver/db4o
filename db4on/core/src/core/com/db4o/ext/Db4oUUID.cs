@@ -25,8 +25,7 @@ namespace com.db4o.ext
 		/// <remarks>
 		/// returns the long part of this UUID. <br /><br />To uniquely identify an object
 		/// universally, db4o uses an indexed long and a reference to the
-		/// <see cref="com.db4o.ext.Db4oDatabase">com.db4o.ext.Db4oDatabase</see>
-		/// object it was created on.
+		/// Db4oDatabase object it was created on.
 		/// </remarks>
 		/// <returns>the long part of this UUID.</returns>
 		public virtual long getLongPart()
@@ -38,9 +37,7 @@ namespace com.db4o.ext
 		/// <remarks>
 		/// returns the signature part of this UUID. <br /><br /> <br /><br />To uniquely
 		/// identify an object universally, db4o uses an indexed long and a reference to
-		/// the
-		/// <see cref="com.db4o.ext.Db4oDatabase">com.db4o.ext.Db4oDatabase</see>
-		/// singleton object of the
+		/// the Db4oDatabase singleton object of the
 		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
 		/// it was created on. This method
 		/// returns the signature of the Db4oDatabase object of the ObjectContainer: the
@@ -93,22 +90,13 @@ namespace com.db4o.ext
 
 		public override string ToString()
 		{
-			j4o.lang.JavaSystem._out.println("toString");
-			return "long part = " + longPart + ", sign = " + flattenSign();
-		}
-
-		protected virtual string flattenSign()
-		{
-			string _out = "";
+			return base.ToString();
+			string sig = "";
 			for (int i = 0; i < signaturePart.Length; i++)
 			{
-				if (i != 0)
-				{
-					_out += ", ";
-				}
-				_out += signaturePart[i];
+				sig += signaturePart[i] + " ";
 			}
-			return _out;
+			return "long " + longPart + " ,  signature " + sig;
 		}
 	}
 }

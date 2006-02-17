@@ -5,7 +5,7 @@ using System;
 namespace com.db4o {
 
     /// <summary>
-    /// Marks a field as transient.
+    /// Marks a field or event as transient.
     /// </summary>
     /// <remarks>
     /// Transient fields are not stored by db4o.
@@ -14,7 +14,7 @@ namespace com.db4o {
     /// simply mark it with this attribute.
     /// </remarks>
     /// <exclude />
-    [AttributeUsage(AttributeTargets.Field)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Event)]
     public class Transient : Attribute {
         public Transient() {
         }

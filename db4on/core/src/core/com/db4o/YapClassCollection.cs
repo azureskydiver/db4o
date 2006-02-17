@@ -63,7 +63,7 @@ namespace com.db4o
 			com.db4o.YapClassCollectionIterator i = iterator();
 			while (i.hasNext())
 			{
-				com.db4o.YapClass yc = i.nextClass();
+				com.db4o.YapClass yc = i.readNextClass();
 				if (!yc.isInternal())
 				{
 					yc.forEachYapField(new _AnonymousInnerClass62(this, fieldName, a_visitor, yc));
@@ -130,7 +130,7 @@ namespace com.db4o
 			com.db4o.YapClassCollectionIterator i = iterator();
 			while (i.hasNext())
 			{
-				if (i.nextClass().getYapField(a_field) != null)
+				if (i.readNextClass().getYapField(a_field) != null)
 				{
 					return true;
 				}
@@ -145,7 +145,7 @@ namespace com.db4o
 			com.db4o.YapClassCollectionIterator i = iterator();
 			while (i.hasNext())
 			{
-				com.db4o.YapClass yc = i.nextClass();
+				com.db4o.YapClass yc = i.readNextClass();
 				com.db4o.reflect.ReflectClass candidate = yc.classReflector();
 				if (!candidate.isInterface())
 				{
@@ -181,6 +181,12 @@ namespace com.db4o
 		internal override byte getIdentifier()
 		{
 			return com.db4o.YapConst.YAPCLASSCOLLECTION;
+		}
+
+		internal com.db4o.YapClass getActiveYapClass(com.db4o.reflect.ReflectClass a_class
+			)
+		{
+			return (com.db4o.YapClass)i_yapClassByClass.get(a_class);
 		}
 
 		internal com.db4o.YapClass getYapClass(com.db4o.reflect.ReflectClass a_class, bool
@@ -231,6 +237,7 @@ namespace com.db4o
 				_classInits.process(yapClass);
 			}
 			i_creating.remove(a_class);
+			i_stream.setDirty(this);
 			return yapClass;
 		}
 
@@ -249,9 +256,10 @@ namespace com.db4o
 				com.db4o.YapClassCollectionIterator i = iterator();
 				while (i.hasNext())
 				{
-					yapClass = i.nextClass();
+					yapClass = (com.db4o.YapClass)i.next();
 					if (a_name.Equals(yapClass.getName()))
 					{
+						readYapClass(yapClass, null);
 						return yapClass;
 					}
 				}
@@ -345,12 +353,12 @@ namespace com.db4o
 				i_yapClassByBytes.put(yapClass.readName(a_trans), yapClass);
 			}
 			com.db4o.foundation.Hashtable4 readAs = i_stream.i_config._readAs;
-			readAs.forEachKey(new _AnonymousInnerClass289(this, readAs));
+			readAs.forEachKey(new _AnonymousInnerClass296(this, readAs));
 		}
 
-		private sealed class _AnonymousInnerClass289 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass296 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass289(YapClassCollection _enclosing, com.db4o.foundation.Hashtable4
+			public _AnonymousInnerClass296(YapClassCollection _enclosing, com.db4o.foundation.Hashtable4
 				 readAs)
 			{
 				this._enclosing = _enclosing;
@@ -389,6 +397,10 @@ namespace com.db4o
 		internal com.db4o.YapClass readYapClass(com.db4o.YapClass yapClass, com.db4o.reflect.ReflectClass
 			 a_class)
 		{
+			if (yapClass != null && !yapClass.stateUnread())
+			{
+				return yapClass;
+			}
 			i_yapClassCreationDepth++;
 			if (yapClass != null && yapClass.stateUnread())
 			{
@@ -483,6 +495,19 @@ namespace com.db4o
 			{
 				writeIDOf((com.db4o.YapClass)i.next(), a_writer);
 			}
+		}
+
+		public override string ToString()
+		{
+			return base.ToString();
+			string str = "";
+			com.db4o.foundation.Iterator4 i = i_classes.iterator();
+			while (i.hasNext())
+			{
+				com.db4o.YapClass yc = (com.db4o.YapClass)i.next();
+				str += yc.getID() + " " + yc + "\r\n";
+			}
+			return str;
 		}
 	}
 }

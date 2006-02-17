@@ -52,5 +52,10 @@ namespace com.db4o
 		{
 			return com.db4o.YapConst.YAPLONG_LENGTH;
 		}
+
+		internal override void marshallIgnore(com.db4o.YapWriter writer)
+		{
+			com.db4o.YLong.writeLong(0, writer);
+		}
 	}
 }

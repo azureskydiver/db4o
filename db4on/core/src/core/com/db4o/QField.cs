@@ -1,7 +1,7 @@
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	public class QField : com.db4o.foundation.Visitor4
+	public class QField : com.db4o.foundation.Visitor4, com.db4o.types.Unversioned
 	{
 		[com.db4o.Transient]
 		internal com.db4o.Transaction i_trans;

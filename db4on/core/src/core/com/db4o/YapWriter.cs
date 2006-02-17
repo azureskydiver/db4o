@@ -329,6 +329,11 @@ namespace com.db4o
 			i_updateDepth = a_depth;
 		}
 
+		public void slotDelete()
+		{
+			i_trans.slotDelete(i_id, i_address, i_length);
+		}
+
 		internal void trim4(int a_offset, int a_length)
 		{
 			byte[] temp = new byte[a_length];
@@ -368,13 +373,13 @@ namespace com.db4o
 		internal void writeEmbedded()
 		{
 			com.db4o.YapWriter finalThis = this;
-			forEachEmbedded(new _AnonymousInnerClass293(this, finalThis));
+			forEachEmbedded(new _AnonymousInnerClass297(this, finalThis));
 			i_embedded = null;
 		}
 
-		private sealed class _AnonymousInnerClass293 : com.db4o.VisitorYapBytes
+		private sealed class _AnonymousInnerClass297 : com.db4o.VisitorYapBytes
 		{
-			public _AnonymousInnerClass293(YapWriter _enclosing, com.db4o.YapWriter finalThis
+			public _AnonymousInnerClass297(YapWriter _enclosing, com.db4o.YapWriter finalThis
 				)
 			{
 				this._enclosing = _enclosing;
@@ -433,6 +438,12 @@ namespace com.db4o
 			write();
 			_addressOffset += i_length;
 			_offset = 0;
+		}
+
+		public override string ToString()
+		{
+			return base.ToString();
+			return "id " + i_id + " adr " + i_address + " len " + i_length;
 		}
 	}
 }

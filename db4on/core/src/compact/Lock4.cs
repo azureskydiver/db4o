@@ -3,10 +3,10 @@
 using System;
 using System.Threading;
 
-namespace com.db4o.foundation {
-
-    internal class Lock4 {
-
+namespace com.db4o.foundation
+{
+    internal class Lock4
+    {
         private volatile Thread lockedByThread;
 
         private volatile Thread waitReleased;
@@ -14,74 +14,94 @@ namespace com.db4o.foundation {
 
         AutoResetEvent waitEvent = new AutoResetEvent(false);
         AutoResetEvent closureEvent = new AutoResetEvent(false);
-    
-        public Object run(Closure4 closure4) {
+
+        public Object run(Closure4 closure4)
+        {
             enterClosure();
             Object ret;
-            try{
+            try
+            {
                 ret = closure4.run();
-            }catch(Exception e){
+            }
+            catch (Exception e)
+            {
                 awakeClosure();
-                throw e;
+                throw;
             }
             awakeClosure();
             return ret;
         }
-    
-        public void snooze(long l) {
+
+        public void snooze(long l)
+        {
             awakeClosure();
             waitWait();
             enterClosure();
         }
 
-        public void awake() {
+        public void awake()
+        {
             awakeWait();
         }
 
-        private void awakeWait() {
-            lock(this){
+        private void awakeWait()
+        {
+            lock (this)
+            {
                 waitReleased = Thread.CurrentThread;
                 waitEvent.Set();
                 Thread.Sleep(0);
-                if(waitReleased == Thread.CurrentThread){
+                if (waitReleased == Thread.CurrentThread)
+                {
                     waitEvent.Reset();
                 }
             }
         }
 
-        private void awakeClosure() {
-            lock(this){
+        private void awakeClosure()
+        {
+            lock (this)
+            {
                 removeLock();
                 closureReleased = Thread.CurrentThread;
                 closureEvent.Set();
                 Thread.Sleep(0);
-                if(closureReleased == Thread.CurrentThread){
+                if (closureReleased == Thread.CurrentThread)
+                {
                     closureEvent.Reset();
                 }
             }
         }
 
-        private void waitWait(){
+        private void waitWait()
+        {
             waitEvent.WaitOne();
             waitReleased = Thread.CurrentThread;
         }
 
-        private void waitClosure(){
+        private void waitClosure()
+        {
             closureEvent.WaitOne();
             closureReleased = Thread.CurrentThread;
         }
 
-        private void enterClosure(){
-            while(lockedByThread != Thread.CurrentThread){
-                while(! setLock()){
+        private void enterClosure()
+        {
+            while (lockedByThread != Thread.CurrentThread)
+            {
+                while (!setLock())
+                {
                     waitClosure();
                 }
             }
         }
-    
-        private bool setLock(){
-            lock(this){
-                if(lockedByThread == null){
+
+        private bool setLock()
+        {
+            lock (this)
+            {
+                if (lockedByThread == null)
+                {
                     lockedByThread = Thread.CurrentThread;
                     return true;
                 }
@@ -89,13 +109,15 @@ namespace com.db4o.foundation {
             }
         }
 
-        private void removeLock(){
-            lock(this){
-                if(lockedByThread == Thread.CurrentThread){
+        private void removeLock()
+        {
+            lock (this)
+            {
+                if (lockedByThread == Thread.CurrentThread)
+                {
                     lockedByThread = null;
                 }
             }
         }
-
     }
 }

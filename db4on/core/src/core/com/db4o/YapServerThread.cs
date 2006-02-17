@@ -154,6 +154,10 @@ namespace com.db4o
 						getStream().logMsg(33, i_clientName);
 						break;
 					}
+					if (null == i_socket)
+					{
+						break;
+					}
 					com.db4o.Msg.PING.write(getStream(), i_socket);
 					i_pingAttempts++;
 				}

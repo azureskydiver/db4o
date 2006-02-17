@@ -15,6 +15,11 @@ namespace com.db4o
 			return null;
 		}
 
+		private static void trackEventsWithoutRange()
+		{
+			_trackEventsWithoutRange = true;
+		}
+
 		private DTrace(bool enabled_, bool break_, string tag_, bool log_)
 		{
 		}
@@ -39,6 +44,8 @@ namespace com.db4o
 
 		private static int _breakEventCount;
 
+		private static bool _trackEventsWithoutRange;
+
 		public static com.db4o.DTrace ADD_TO_CLASS_INDEX;
 
 		public static com.db4o.DTrace BIND;
@@ -60,6 +67,8 @@ namespace com.db4o
 		public static com.db4o.DTrace DONOTINCLUDE;
 
 		public static com.db4o.DTrace EVALUATE_SELF;
+
+		public static com.db4o.DTrace FILE_FREE;
 
 		public static com.db4o.DTrace FREE;
 
@@ -109,11 +118,15 @@ namespace com.db4o
 
 		public static com.db4o.DTrace TRANS_DELETE;
 
+		public static com.db4o.DTrace TRANS_FLUSH;
+
 		public static com.db4o.DTrace YAPCLASS_BY_ID;
 
 		public static com.db4o.DTrace YAPCLASS_INIT;
 
 		public static com.db4o.DTrace WRITE_BYTES;
+
+		public static com.db4o.DTrace WRITE_POINTER;
 
 		public static com.db4o.DTrace WRITE_XBYTES;
 

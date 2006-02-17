@@ -349,6 +349,7 @@ namespace com.db4o.inside.ix
 
 		public override string ToString()
 		{
+			return base.ToString();
 			return i_tree.ToString();
 		}
 

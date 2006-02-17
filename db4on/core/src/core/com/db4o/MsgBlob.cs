@@ -43,6 +43,10 @@ namespace com.db4o
 				int stilltoread = length - totalread;
 				int readsize = (stilltoread < buffer.Length ? stilltoread : buffer.Length);
 				int curread = sock.read(buffer, 0, readsize);
+				if (curread < 0)
+				{
+					throw new System.IO.IOException();
+				}
 				_out.write(buffer, 0, curread);
 				totalread += curread;
 				if (update)

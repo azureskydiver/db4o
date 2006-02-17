@@ -90,6 +90,12 @@ namespace com.db4o.inside.freespace
 		public override string ToString()
 		{
 			return base.ToString();
+			string str = "FreeSlotNode " + i_key;
+			if (i_peer != null)
+			{
+				str += " peer: " + i_peer.i_key;
+			}
+			return str;
 		}
 	}
 }

@@ -102,6 +102,16 @@ namespace com.db4o
 		public override string ToString()
 		{
 			return base.ToString();
+			string str = "QConJoin " + (i_and ? "AND " : "OR");
+			if (i_constraint1 != null)
+			{
+				str += "\n   " + i_constraint1;
+			}
+			if (i_constraint2 != null)
+			{
+				str += "\n   " + i_constraint2;
+			}
+			return str;
 		}
 	}
 }

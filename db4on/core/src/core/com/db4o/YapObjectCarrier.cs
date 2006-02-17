@@ -79,6 +79,12 @@ namespace com.db4o
 			return 0;
 		}
 
+		public override com.db4o.types.Db4oType db4oTypeStored(com.db4o.Transaction a_trans
+			, object a_object)
+		{
+			return null;
+		}
+
 		public override bool dispatchsEvents()
 		{
 			return false;

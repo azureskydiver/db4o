@@ -22,7 +22,8 @@ namespace com.db4o.foundation.network
 
 		private int i_writeOffset;
 
-		private readonly object i_lock = new object();
+		private readonly com.db4o.foundation.Lock4 i_lock = new com.db4o.foundation.Lock4
+			();
 
 		public ByteBuffer4(int timeout)
 		{
@@ -80,30 +81,91 @@ namespace com.db4o.foundation.network
 
 		public virtual int read()
 		{
-			lock (i_lock)
+			try
 			{
-				waitForAvailable();
-				int ret = i_cache[i_readOffset++];
-				checkDiscardCache();
+				int ret = (int)i_lock.run(new _AnonymousInnerClass71(this));
 				return ret;
 			}
+			catch (System.IO.IOException iex)
+			{
+				throw iex;
+			}
+			catch (System.Exception bex)
+			{
+			}
+			return -1;
+		}
+
+		private sealed class _AnonymousInnerClass71 : com.db4o.foundation.Closure4
+		{
+			public _AnonymousInnerClass71(ByteBuffer4 _enclosing)
+			{
+				this._enclosing = _enclosing;
+			}
+
+			public object run()
+			{
+				this._enclosing.waitForAvailable();
+				int ret = this._enclosing.i_cache[this._enclosing.i_readOffset++];
+				this._enclosing.checkDiscardCache();
+				return ret;
+			}
+
+			private readonly ByteBuffer4 _enclosing;
 		}
 
 		public virtual int read(byte[] a_bytes, int a_offset, int a_length)
 		{
-			lock (i_lock)
+			try
 			{
-				waitForAvailable();
-				int avail = available();
+				int ret = (int)i_lock.run(new _AnonymousInnerClass91(this, a_length, a_bytes, a_offset
+					));
+				return ret;
+			}
+			catch (System.IO.IOException iex)
+			{
+				throw iex;
+			}
+			catch (System.Exception bex)
+			{
+			}
+			return -1;
+		}
+
+		private sealed class _AnonymousInnerClass91 : com.db4o.foundation.Closure4
+		{
+			public _AnonymousInnerClass91(ByteBuffer4 _enclosing, int a_length, byte[] a_bytes
+				, int a_offset)
+			{
+				this._enclosing = _enclosing;
+				this.a_length = a_length;
+				this.a_bytes = a_bytes;
+				this.a_offset = a_offset;
+			}
+
+			public object run()
+			{
+				this._enclosing.waitForAvailable();
+				int avail = this._enclosing.available();
+				int length = a_length;
 				if (avail < a_length)
 				{
-					a_length = avail;
+					length = avail;
 				}
-				j4o.lang.JavaSystem.arraycopy(i_cache, i_readOffset, a_bytes, a_offset, a_length);
-				i_readOffset += a_length;
-				checkDiscardCache();
+				j4o.lang.JavaSystem.arraycopy(this._enclosing.i_cache, this._enclosing.i_readOffset
+					, a_bytes, a_offset, length);
+				this._enclosing.i_readOffset += length;
+				this._enclosing.checkDiscardCache();
 				return avail;
 			}
+
+			private readonly ByteBuffer4 _enclosing;
+
+			private readonly int a_length;
+
+			private readonly byte[] a_bytes;
+
+			private readonly int a_offset;
 		}
 
 		public virtual void setTimeout(int timeout)
@@ -117,7 +179,7 @@ namespace com.db4o.foundation.network
 			{
 				try
 				{
-					j4o.lang.JavaSystem.wait(i_lock, i_timeout);
+					i_lock.snooze(i_timeout);
 				}
 				catch (System.Exception e)
 				{
@@ -137,23 +199,75 @@ namespace com.db4o.foundation.network
 
 		public virtual void write(byte[] bytes, int off, int len)
 		{
-			lock (i_lock)
+			try
 			{
-				makefit(len);
-				j4o.lang.JavaSystem.arraycopy(bytes, off, i_cache, i_writeOffset, len);
-				i_writeOffset += len;
-				j4o.lang.JavaSystem.notify(i_lock);
+				i_lock.run(new _AnonymousInnerClass139(this, len, bytes, off));
 			}
+			catch (System.Exception e)
+			{
+			}
+		}
+
+		private sealed class _AnonymousInnerClass139 : com.db4o.foundation.Closure4
+		{
+			public _AnonymousInnerClass139(ByteBuffer4 _enclosing, int len, byte[] bytes, int
+				 off)
+			{
+				this._enclosing = _enclosing;
+				this.len = len;
+				this.bytes = bytes;
+				this.off = off;
+			}
+
+			public object run()
+			{
+				this._enclosing.makefit(len);
+				j4o.lang.JavaSystem.arraycopy(bytes, off, this._enclosing.i_cache, this._enclosing
+					.i_writeOffset, len);
+				this._enclosing.i_writeOffset += len;
+				this._enclosing.i_lock.awake();
+				return null;
+			}
+
+			private readonly ByteBuffer4 _enclosing;
+
+			private readonly int len;
+
+			private readonly byte[] bytes;
+
+			private readonly int off;
 		}
 
 		public virtual void write(int i)
 		{
-			lock (i_lock)
+			try
 			{
-				makefit(1);
-				i_cache[i_writeOffset++] = (byte)i;
-				j4o.lang.JavaSystem.notify(i_lock);
+				i_lock.run(new _AnonymousInnerClass157(this, i));
 			}
+			catch (System.Exception e)
+			{
+			}
+		}
+
+		private sealed class _AnonymousInnerClass157 : com.db4o.foundation.Closure4
+		{
+			public _AnonymousInnerClass157(ByteBuffer4 _enclosing, int i)
+			{
+				this._enclosing = _enclosing;
+				this.i = i;
+			}
+
+			public object run()
+			{
+				this._enclosing.makefit(1);
+				this._enclosing.i_cache[this._enclosing.i_writeOffset++] = (byte)i;
+				this._enclosing.i_lock.awake();
+				return null;
+			}
+
+			private readonly ByteBuffer4 _enclosing;
+
+			private readonly int i;
 		}
 	}
 }

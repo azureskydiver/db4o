@@ -21,6 +21,8 @@ namespace com.db4o
 
 		internal int i_writeAt;
 
+		private com.db4o.Tree _freeOnCommit;
+
 		internal YapFile(com.db4o.YapStream a_parent) : base(a_parent)
 		{
 		}
@@ -74,6 +76,10 @@ namespace com.db4o
 			initializeEssentialClasses();
 			initBootRecord();
 			_freespaceManager.start(_configBlock._freespaceAddress);
+			if (com.db4o.Debug.freespace && com.db4o.Debug.freespaceChecker)
+			{
+				_fmChecker.start(0);
+			}
 		}
 
 		internal override long currentVersion()
@@ -115,10 +121,9 @@ namespace com.db4o
 					}
 				}
 				reader.setCascadeDeletes(a_cascade);
-				ta.setPointer(id, 0, 0);
+				reader.slotDelete();
 				com.db4o.YapClass yc = yo.getYapClass();
 				yc.delete(reader, obj);
-				ta.freeOnCommit(id, reader.getAddress(), reader.getLength());
 				return true;
 			}
 			return false;
@@ -128,23 +133,40 @@ namespace com.db4o
 
 		internal abstract string fileName();
 
+		public virtual void free(com.db4o.inside.slots.Slot slot)
+		{
+			if (slot == null)
+			{
+				return;
+			}
+			if (slot._address == 0)
+			{
+				return;
+			}
+			free(slot._address, slot._length);
+		}
+
 		public virtual void free(int a_address, int a_length)
 		{
 			_freespaceManager.free(a_address, a_length);
+			if (com.db4o.Debug.freespace && com.db4o.Debug.freespaceChecker)
+			{
+				_fmChecker.free(a_address, a_length);
+			}
 		}
 
 		internal void freePrefetchedPointers()
 		{
 			if (i_prefetchedIDs != null)
 			{
-				i_prefetchedIDs.traverse(new _AnonymousInnerClass155(this));
+				i_prefetchedIDs.traverse(new _AnonymousInnerClass171(this));
 			}
 			i_prefetchedIDs = null;
 		}
 
-		private sealed class _AnonymousInnerClass155 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass171 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass155(YapFile _enclosing)
+			public _AnonymousInnerClass171(YapFile _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -183,7 +205,7 @@ namespace com.db4o
 			com.db4o.YapClassCollectionIterator i = i_classCollection.iterator();
 			while (i.hasNext())
 			{
-				com.db4o.YapClass yapClass = i.nextClass();
+				com.db4o.YapClass yapClass = i.readNextClass();
 				if (yapClass.getName() != null)
 				{
 					com.db4o.reflect.ReflectClass claxx = yapClass.classReflector();
@@ -192,7 +214,7 @@ namespace com.db4o
 						com.db4o.Tree tree = yapClass.getIndex(ta);
 						if (tree != null)
 						{
-							tree.traverse(new _AnonymousInnerClass194(this, duplicates, a_res));
+							tree.traverse(new _AnonymousInnerClass210(this, duplicates, a_res));
 						}
 					}
 				}
@@ -200,9 +222,9 @@ namespace com.db4o
 			a_res.reset();
 		}
 
-		private sealed class _AnonymousInnerClass194 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass210 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass194(YapFile _enclosing, com.db4o.Tree[] duplicates, com.db4o.QueryResultImpl
+			public _AnonymousInnerClass210(YapFile _enclosing, com.db4o.Tree[] duplicates, com.db4o.QueryResultImpl
 				 a_res)
 			{
 				this._enclosing = _enclosing;
@@ -263,6 +285,30 @@ namespace com.db4o
 			if (_freespaceManager != null)
 			{
 				int freeAddress = _freespaceManager.getSlot(bytes);
+				if (com.db4o.Debug.freespace && com.db4o.Debug.freespaceChecker)
+				{
+					if (freeAddress > 0)
+					{
+						com.db4o.foundation.Collection4 wrongOnes = new com.db4o.foundation.Collection4();
+						int freeCheck = _fmChecker.getSlot(bytes);
+						while (freeCheck != freeAddress && freeCheck > 0)
+						{
+							wrongOnes.add(new int[] { freeCheck, bytes });
+							freeCheck = _fmChecker.getSlot(bytes);
+						}
+						com.db4o.foundation.Iterator4 i = wrongOnes.iterator();
+						while (i.hasNext())
+						{
+							int[] adrLength = (int[])i.next();
+							_fmChecker.free(adrLength[0], adrLength[1]);
+						}
+						if (freeCheck == 0)
+						{
+							_freespaceManager.debug();
+							_fmChecker.debug();
+						}
+					}
+				}
 				if (freeAddress > 0)
 				{
 					return freeAddress;
@@ -355,6 +401,35 @@ namespace com.db4o
 			return id;
 		}
 
+		public virtual com.db4o.inside.slots.ReferencedSlot produceFreeOnCommitEntry(int 
+			id)
+		{
+			com.db4o.Tree node = com.db4o.TreeInt.find(_freeOnCommit, id);
+			if (node != null)
+			{
+				return (com.db4o.inside.slots.ReferencedSlot)node;
+			}
+			com.db4o.inside.slots.ReferencedSlot slot = new com.db4o.inside.slots.ReferencedSlot
+				(id);
+			_freeOnCommit = com.db4o.Tree.add(_freeOnCommit, slot);
+			return slot;
+		}
+
+		public virtual void reduceFreeOnCommitReferences(com.db4o.inside.slots.ReferencedSlot
+			 slot)
+		{
+			if (slot.removeReferenceIsLast())
+			{
+				_freeOnCommit = _freeOnCommit.removeNode(slot);
+			}
+		}
+
+		public virtual void freeDuringCommit(com.db4o.inside.slots.ReferencedSlot referencedSlot
+			, com.db4o.inside.slots.Slot slot)
+		{
+			_freeOnCommit = referencedSlot.free(this, _freeOnCommit, slot);
+		}
+
 		public override void raiseVersion(long a_minimumVersion)
 		{
 			if (_bootRecord.i_versionGenerator < a_minimumVersion)
@@ -384,25 +459,28 @@ namespace com.db4o
 			{
 				return null;
 			}
-			int[] addressLength = new int[2];
 			try
 			{
-				a_ta.getSlotInformation(a_id, addressLength);
-				if (addressLength[0] == 0)
+				com.db4o.inside.slots.Slot slot = a_ta.getSlotInformation(a_id);
+				if (slot == null)
+				{
+					return null;
+				}
+				if (slot._address == 0)
 				{
 					return null;
 				}
 				com.db4o.YapReader reader = null;
 				if (useReader)
 				{
-					reader = new com.db4o.YapReader(addressLength[1]);
+					reader = new com.db4o.YapReader(slot._length);
 				}
 				else
 				{
-					reader = getWriter(a_ta, addressLength[0], addressLength[1]);
+					reader = getWriter(a_ta, slot._address, slot._length);
 					((com.db4o.YapWriter)reader).setID(a_id);
 				}
-				reader.readEncrypt(this, addressLength[0]);
+				reader.readEncrypt(this, slot._address);
 				return reader;
 			}
 			catch (System.Exception e)
@@ -522,15 +600,15 @@ namespace com.db4o
 			{
 				lock (i_semaphores)
 				{
-					i_semaphores.forEachKeyForIdentity(new _AnonymousInnerClass555(this), ta);
+					i_semaphores.forEachKeyForIdentity(new _AnonymousInnerClass593(this), ta);
 					j4o.lang.JavaSystem.notifyAll(i_semaphores);
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass555 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass593 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass555(YapFile _enclosing)
+			public _AnonymousInnerClass593(YapFile _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -639,11 +717,7 @@ namespace com.db4o
 			int length = a_object.ownLength();
 			int id = a_object.getID();
 			int address = getSlot(length);
-			int[] oldAddressLength = new int[2];
-			a_trans.getSlotInformation(id, oldAddressLength);
-			a_trans.freeOnCommit(id, oldAddressLength[0], oldAddressLength[1]);
-			a_trans.freeOnRollback(id, address, length);
-			a_trans.setPointer(id, address, length);
+			a_trans.slotFreeOnRollbackCommitSetPointer(id, address, length);
 			com.db4o.YapWriter writer = a_trans.i_stream.getWriter(a_trans, length);
 			writer.useSlot(id, address, length);
 			return writer;
@@ -681,7 +755,7 @@ namespace com.db4o
 		{
 			int length = a_child.getLength();
 			int address = getSlot(length);
-			a_child.getTransaction().freeOnRollback(address, address, length);
+			a_child.getTransaction().slotFreeOnRollback(address, address, length);
 			a_child.address(address);
 			a_child.writeEncrypt();
 			int offsetBackup = a_parent._offset;
@@ -696,6 +770,10 @@ namespace com.db4o
 			if (shuttingDown)
 			{
 				_freespaceManager = null;
+			}
+			if (com.db4o.Debug.freespace && com.db4o.Debug.freespaceChecker)
+			{
+				freespaceID = _fmChecker.write(shuttingDown);
 			}
 			com.db4o.YapWriter writer = getWriter(i_systemTrans, 0, HEADER_LENGTH);
 			writer.append(com.db4o.YapConst.YAPFILEVERSION);
@@ -766,8 +844,7 @@ namespace com.db4o
 			int length = a_bytes.getLength();
 			int address = getSlot(length);
 			a_bytes.address(address);
-			trans.setPointer(id, address, length);
-			trans.freeOnRollback(id, address, length);
+			trans.slotFreeOnRollbackSetPointer(id, address, length);
 			i_handlers.encrypt(a_bytes);
 			a_bytes.write();
 		}

@@ -280,6 +280,7 @@ namespace com.db4o.inside.ix
 
 		public override string ToString()
 		{
+			return base.ToString();
 			j4o.lang.StringBuffer sb = new j4o.lang.StringBuffer();
 			sb.append("IxField  " + j4o.lang.JavaSystem.identityHashCode(this));
 			if (_globalIndexTransaction != null)

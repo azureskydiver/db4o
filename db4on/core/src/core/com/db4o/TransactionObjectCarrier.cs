@@ -12,13 +12,39 @@ namespace com.db4o
 		{
 		}
 
-		internal override void freeOnRollback(int a_id, int a_address, int a_length)
+		internal override void slotFreeOnCommit(int a_id, int a_address, int a_length)
+		{
+		}
+
+		internal override void slotFreeOnRollback(int a_id, int a_address, int a_length)
+		{
+		}
+
+		internal override void slotFreeOnRollbackSetPointer(int a_id, int a_address, int 
+			a_length)
+		{
+			setPointer(a_id, a_address, a_length);
+		}
+
+		internal override void slotFreeOnRollbackCommitSetPointer(int a_id, int newAddress
+			, int newLength)
+		{
+			setPointer(a_id, newAddress, newLength);
+		}
+
+		internal override void slotFreePointerOnCommit(int a_id, int a_address, int a_length
+			)
 		{
 		}
 
 		internal override void setPointer(int a_id, int a_address, int a_length)
 		{
 			writePointer(a_id, a_address, a_length);
+		}
+
+		internal override bool supportsVirtualFields()
+		{
+			return false;
 		}
 	}
 }

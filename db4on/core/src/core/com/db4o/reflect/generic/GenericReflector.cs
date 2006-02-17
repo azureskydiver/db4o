@@ -10,6 +10,9 @@ namespace com.db4o.reflect.generic
 		private readonly com.db4o.foundation.Hashtable4 _classByName = new com.db4o.foundation.Hashtable4
 			(1);
 
+		private readonly com.db4o.foundation.Hashtable4 _classByClass = new com.db4o.foundation.Hashtable4
+			(1);
+
 		private readonly com.db4o.foundation.Collection4 _classes = new com.db4o.foundation.Collection4
 			();
 
@@ -124,13 +127,26 @@ namespace com.db4o.reflect.generic
 			{
 				return null;
 			}
-			com.db4o.reflect.ReflectClass claxx = forName(clazz.getName());
+			com.db4o.reflect.ReflectClass claxx = (com.db4o.reflect.ReflectClass)_classByClass
+				.get(clazz);
 			if (claxx != null)
 			{
 				return claxx;
 			}
+			claxx = forName(clazz.getName());
+			if (claxx != null)
+			{
+				_classByClass.put(clazz, claxx);
+				return claxx;
+			}
 			claxx = _delegate.forClass(clazz);
-			return ensureDelegate(claxx);
+			if (claxx == null)
+			{
+				return null;
+			}
+			claxx = ensureDelegate(claxx);
+			_classByClass.put(clazz, claxx);
+			return claxx;
 		}
 
 		public virtual com.db4o.reflect.ReflectClass forName(string className)
@@ -169,12 +185,7 @@ namespace com.db4o.reflect.generic
 			{
 				return ((com.db4o.reflect.generic.GenericObject)obj)._class;
 			}
-			com.db4o.reflect.ReflectClass clazz = _delegate.forObject(obj);
-			if (clazz != null)
-			{
-				return ensureDelegate(clazz);
-			}
-			return null;
+			return _delegate.forObject(obj);
 		}
 
 		public virtual com.db4o.reflect.Reflector getDelegate()
@@ -210,14 +221,14 @@ namespace com.db4o.reflect.generic
 			)
 		{
 			com.db4o.reflect.ReflectClass collectionClass = forClass(clazz);
-			com.db4o.reflect.ReflectClassPredicate predicate = new _AnonymousInnerClass195(this
+			com.db4o.reflect.ReflectClassPredicate predicate = new _AnonymousInnerClass198(this
 				, collectionClass);
 			return predicate;
 		}
 
-		private sealed class _AnonymousInnerClass195 : com.db4o.reflect.ReflectClassPredicate
+		private sealed class _AnonymousInnerClass198 : com.db4o.reflect.ReflectClassPredicate
 		{
-			public _AnonymousInnerClass195(GenericReflector _enclosing, com.db4o.reflect.ReflectClass
+			public _AnonymousInnerClass198(GenericReflector _enclosing, com.db4o.reflect.ReflectClass
 				 collectionClass)
 			{
 				this._enclosing = _enclosing;

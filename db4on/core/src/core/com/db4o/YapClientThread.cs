@@ -72,10 +72,6 @@ namespace com.db4o
 							{
 								return;
 							}
-							lock (i_stream)
-							{
-								j4o.lang.JavaSystem.notify(i_stream);
-							}
 							i_stream = null;
 							i_socket = null;
 						}
@@ -83,7 +79,7 @@ namespace com.db4o
 						{
 							if (message != null)
 							{
-								messageQueueLock.run(new _AnonymousInnerClass59(this, message));
+								messageQueueLock.run(new _AnonymousInnerClass67(this, message));
 							}
 						}
 					}
@@ -94,9 +90,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass59 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass67 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass59(YapClientThread _enclosing, com.db4o.Msg message)
+			public _AnonymousInnerClass67(YapClientThread _enclosing, com.db4o.Msg message)
 			{
 				this._enclosing = _enclosing;
 				this.message = message;

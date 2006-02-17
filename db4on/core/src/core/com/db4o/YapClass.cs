@@ -36,6 +36,8 @@ namespace com.db4o
 
 		private bool _internal;
 
+		private bool _unversioned;
+
 		internal virtual bool isInternal()
 		{
 			return _internal;
@@ -369,6 +371,10 @@ namespace com.db4o
 			{
 				_internal = true;
 			}
+			if (i_stream.i_handlers.ICLASS_UNVERSIONED.isAssignableFrom(claxx))
+			{
+				_unversioned = true;
+			}
 			if (i_stream.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx))
 			{
 				try
@@ -498,11 +504,6 @@ namespace com.db4o
 		{
 			_reflector = a_class;
 			_eventDispatcher = com.db4o.EventDispatcher.forClass(a_stream, a_class);
-			if (a_class != null)
-			{
-				_isEnum = com.db4o.YapConst.CLASS_ENUM != null && (a_stream.i_handlers.ICLASS_ENUM
-					.isAssignableFrom(a_class));
-			}
 			if (configInstantiates())
 			{
 				return true;
@@ -754,6 +755,10 @@ namespace com.db4o
 
 		private bool generateVirtual()
 		{
+			if (_unversioned)
+			{
+				return false;
+			}
 			if (_internal)
 			{
 				return false;
@@ -1025,13 +1030,13 @@ namespace com.db4o
 		public virtual com.db4o.YapField getYapField(string name)
 		{
 			com.db4o.YapField[] yf = new com.db4o.YapField[1];
-			forEachYapField(new _AnonymousInnerClass886(this, name, yf));
+			forEachYapField(new _AnonymousInnerClass895(this, name, yf));
 			return yf[0];
 		}
 
-		private sealed class _AnonymousInnerClass886 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass895 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass886(YapClass _enclosing, string name, com.db4o.YapField[]
+			public _AnonymousInnerClass895(YapClass _enclosing, string name, com.db4o.YapField[]
 				 yf)
 			{
 				this._enclosing = _enclosing;
@@ -1493,6 +1498,10 @@ namespace com.db4o
 					return res;
 				}
 			}
+			if (_isEnum)
+			{
+				return com.db4o.YapConst.NO;
+			}
 			if (i_ancestor != null)
 			{
 				return i_ancestor.callConstructorSpecialized();
@@ -1656,15 +1665,15 @@ namespace com.db4o
 				{
 					int[] idgen = { -2 };
 					a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
-					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1436(this
+					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1448(this
 						, trans, idgen, a_candidates));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1436 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass1448 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass1436(YapClass _enclosing, com.db4o.Transaction trans, 
+			public _AnonymousInnerClass1448(YapClass _enclosing, com.db4o.Transaction trans, 
 				int[] idgen, com.db4o.QCandidates a_candidates)
 			{
 				this._enclosing = _enclosing;

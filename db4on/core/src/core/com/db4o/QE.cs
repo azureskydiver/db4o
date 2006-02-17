@@ -5,7 +5,7 @@ namespace com.db4o
 	/// <remarks>Query Evaluator - Represents such things as &gt;, &gt;=, &lt;, &lt;=, EQUAL, LIKE, etc.
 	/// 	</remarks>
 	/// <exclude></exclude>
-	public class QE
+	public class QE : com.db4o.types.Unversioned
 	{
 		internal static readonly com.db4o.QE DEFAULT = new com.db4o.QE();
 

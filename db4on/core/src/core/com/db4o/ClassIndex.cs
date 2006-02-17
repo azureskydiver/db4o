@@ -33,16 +33,16 @@ namespace com.db4o
 		{
 			com.db4o.Tree[] tree = new com.db4o.Tree[] { com.db4o.Tree.deepClone(i_root, null
 				) };
-			a_trans.traverseAddedClassIDs(a_yapClassID, new _AnonymousInnerClass38(this, tree
+			a_trans.traverseAddedClassIDs(a_yapClassID, new _AnonymousInnerClass39(this, tree
 				));
-			a_trans.traverseRemovedClassIDs(a_yapClassID, new _AnonymousInnerClass43(this, tree
+			a_trans.traverseRemovedClassIDs(a_yapClassID, new _AnonymousInnerClass44(this, tree
 				));
 			return tree[0];
 		}
 
-		private sealed class _AnonymousInnerClass38 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass39 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass38(ClassIndex _enclosing, com.db4o.Tree[] tree)
+			public _AnonymousInnerClass39(ClassIndex _enclosing, com.db4o.Tree[] tree)
 			{
 				this._enclosing = _enclosing;
 				this.tree = tree;
@@ -59,9 +59,9 @@ namespace com.db4o
 			private readonly com.db4o.Tree[] tree;
 		}
 
-		private sealed class _AnonymousInnerClass43 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass44 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass43(ClassIndex _enclosing, com.db4o.Tree[] tree)
+			public _AnonymousInnerClass44(ClassIndex _enclosing, com.db4o.Tree[] tree)
 			{
 				this._enclosing = _enclosing;
 				this.tree = tree;
@@ -92,11 +92,10 @@ namespace com.db4o
 			{
 				return com.db4o.Tree.size(i_root);
 			}
-			int[] addressLength = new int[] { 0, 0 };
-			ta.getSlotInformation(i_id, addressLength);
-			addressLength[1] = com.db4o.YapConst.YAPINT_LENGTH;
-			com.db4o.YapReader reader = new com.db4o.YapReader(addressLength[1]);
-			reader.readEncrypt(ta.i_stream, addressLength[0]);
+			com.db4o.inside.slots.Slot slot = ta.getSlotInformation(i_id);
+			int length = com.db4o.YapConst.YAPINT_LENGTH;
+			com.db4o.YapReader reader = new com.db4o.YapReader(length);
+			reader.readEncrypt(ta.i_stream, slot._address);
 			if (reader == null)
 			{
 				return 0;
@@ -189,6 +188,12 @@ namespace com.db4o
 		internal sealed override void writeThis(com.db4o.YapWriter a_writer)
 		{
 			com.db4o.Tree.write(a_writer, i_root);
+		}
+
+		public override string ToString()
+		{
+			return base.ToString();
+			return _yapClass + " index";
 		}
 	}
 }

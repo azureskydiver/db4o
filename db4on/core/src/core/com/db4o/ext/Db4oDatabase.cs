@@ -88,7 +88,6 @@ namespace com.db4o.ext
 
 		/// <summary>gets the db4o ID, and may cache it for performance reasons.</summary>
 		/// <remarks>gets the db4o ID, and may cache it for performance reasons.</remarks>
-		/// <param name="a_oc">the ObjectContainer</param>
 		/// <returns>the db4o ID for the ObjectContainer</returns>
 		public virtual int getID(com.db4o.Transaction trans)
 		{
@@ -114,7 +113,7 @@ namespace com.db4o.ext
 
 		public override string ToString()
 		{
-			return "Db4oDatabase: " + i_signature;
+			return "db " + i_signature;
 		}
 
 		public virtual bool isOlderThan(com.db4o.ext.Db4oDatabase peer)

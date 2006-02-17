@@ -7,9 +7,11 @@ namespace com.db4o
 
 		public const bool ixTrees = false;
 
-		public const bool xbytes = false;
+		public const bool freespace = com.db4o.Deploy.debug ? true : false;
 
-		public const bool freespace = false;
+		public const bool xbytes = com.db4o.Debug.freespace ? true : false;
+
+		public const bool freespaceChecker = false;
 
 		public const bool checkSychronization = false;
 

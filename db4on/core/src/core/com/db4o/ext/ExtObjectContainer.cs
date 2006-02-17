@@ -172,12 +172,9 @@ namespace com.db4o.ext
 		/// </returns>
 		com.db4o.ext.ObjectInfo getObjectInfo(object obj);
 
-		/// <summary>
-		/// returns the
-		/// <see cref="com.db4o.ext.Db4oDatabase">com.db4o.ext.Db4oDatabase</see>
-		/// object for this ObjectContainer.
-		/// </summary>
-		/// <returns></returns>
+		/// <summary>returns the Db4oDatabase identity object for this ObjectContainer.</summary>
+		/// <remarks>returns the Db4oDatabase identity object for this ObjectContainer.</remarks>
+		/// <returns>the Db4oDatabase identity object for this ObjectContainer.</returns>
 		com.db4o.ext.Db4oDatabase identity();
 
 		/// <summary>tests if an object is activated.</summary>
