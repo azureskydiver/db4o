@@ -3,18 +3,20 @@ package com.db4o.io;
 import java.io.*;
 
 /**
- * Workaround for two Symbian/Epoc I/O bugs:
- * - seek() cannot move beyond the current file length.
- *   Fix: Write padding bytes up to the seek target if necessary
+ * Workaround for two I/O bugs in Symbian JDK versions:<br>
+ * - seek() cannot move beyond the current file length.<br>
+ *   Fix: Write padding bytes up to the seek target if necessary<br>
  * - Under certain (rare) conditions, calls to RAF.length() seems
- *   to garble up following reads.
+ *   to garble up following reads.<br>
  *   Fix: Use a second RAF handle to the file for length() calls
- *   only.
+ *   only.<br><br>
  *   
- * TODO: 
+ *   <b>Usage:</b><br>
+ *   Db4o.configure().io(new com.db4o.io.SymbianIoAdapter())<br><br>
+ *   
+ * TODO:<br> 
  * - BasicClusterTest C/S fails (in AllTests context only)
  * 
- * @exclude
  */
 public class SymbianIoAdapter extends RandomAccessFileAdapter {
     private byte[] _seekBytes=new byte[500];
