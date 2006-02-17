@@ -66,7 +66,6 @@ public class YapRandomAccessFile extends YapFile {
                 i_backupFile.seek(pos);
                 i_backupFile.write(buffer, read);
                 pos += read;
-                i_lock.notify();
             }
         } while (pos < i_file.getLength());
         synchronized (i_lock) {

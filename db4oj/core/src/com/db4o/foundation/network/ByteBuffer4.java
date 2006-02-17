@@ -5,6 +5,8 @@ package com.db4o.foundation.network;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
+import com.db4o.io.*;
 
 /**
  * Transport buffer for C/S mode to simulate a
@@ -18,7 +20,7 @@ class ByteBuffer4 {
     private int i_readOffset;
     protected int i_timeout;
     private int i_writeOffset;
-    private final Object i_lock = new Object();
+    private final Lock4 i_lock = new Lock4();
 
     public ByteBuffer4(int timeout) {
         i_timeout = timeout;
@@ -65,26 +67,49 @@ class ByteBuffer4 {
     }
 
     public int read() throws IOException {
-        synchronized (i_lock) {
-            waitForAvailable();
-            int ret = i_cache[i_readOffset++];
-            checkDiscardCache();
-            return ret;
+        try{
+            Integer ret = (Integer)i_lock.run(new Closure4() {
+                public Object run() throws Exception {
+                    waitForAvailable();
+                    int ret = i_cache[i_readOffset++];
+                    checkDiscardCache();
+                    return new Integer(ret);
+                }
+            
+            });
+            return ret.intValue();
+        }catch(IOException iex){
+            throw iex;
+        }catch(Exception bex){
+            // TODO: lots is caught here, be more exact
         }
+        return -1;
     }
 
-    public int read(byte[] a_bytes, int a_offset, int a_length) throws IOException {
-        synchronized (i_lock) {
-            waitForAvailable();
-            int avail = available();
-            if (avail < a_length) {
-                a_length = avail;
-            }
-            System.arraycopy(i_cache, i_readOffset, a_bytes, a_offset, a_length);
-            i_readOffset += a_length;
-            checkDiscardCache();
-            return avail;
+    public int read(final  byte[] a_bytes, final int a_offset, final int a_length) throws IOException {
+        try{
+            Integer ret = (Integer)i_lock.run(new Closure4() {
+                public Object run() throws Exception {
+                    waitForAvailable();
+                    int avail = available();
+                    int length = a_length;
+                    if (avail < a_length) {
+                        length = avail;
+                    }
+                    System.arraycopy(i_cache, i_readOffset, a_bytes, a_offset, length);
+                    i_readOffset += length;
+                    checkDiscardCache();
+                    return new Integer(avail);
+                }
+            
+            });
+            return ret.intValue();
+        }catch(IOException iex){
+            throw iex;
+        }catch(Exception bex){
+            // TODO: lots is caught here, be more exact
         }
+        return -1;
     }
 
     public void setTimeout(int timeout) {
@@ -94,7 +119,7 @@ class ByteBuffer4 {
     private void waitForAvailable() throws IOException {
         while (available() == 0) {
             try {
-                i_lock.wait(i_timeout);
+                i_lock.snooze(i_timeout);
             } catch (Exception e) {
                 throw new IOException(Messages.get(55));
             }
@@ -109,20 +134,38 @@ class ByteBuffer4 {
     	write(bytes, 0, bytes.length);
     }
     
-	public void write(byte[] bytes, int off, int len) {
-		synchronized (i_lock) {
-            makefit(len);
-            System.arraycopy(bytes, off, i_cache, i_writeOffset, len);
-            i_writeOffset += len;
-            i_lock.notify();
+	public void write(final byte[] bytes, final int off, final int len) {
+        try {
+            i_lock.run(new Closure4() {
+                public Object run() throws Exception {
+                    makefit(len);
+                    System.arraycopy(bytes, off, i_cache, i_writeOffset, len);
+                    i_writeOffset += len;
+                    i_lock.awake();
+                    return null;
+                }
+            });
+        } catch (Exception e) {
+            
+            // TODO: delegate up
+         
         }
 	}
 
-    public void write(int i) {
-        synchronized (i_lock) {
-            makefit(1);
-            i_cache[i_writeOffset++] = (byte) i;
-            i_lock.notify();
+    public void write(final int i) {
+        try {
+            i_lock.run(new Closure4() {
+                public Object run() throws Exception {
+                    makefit(1);
+                    i_cache[i_writeOffset++] = (byte) i;
+                    i_lock.awake();
+                    return null;
+                }
+            });
+        } catch (Exception e) {
+            
+            // TODO: delegate up
+         
         }
     }
 }

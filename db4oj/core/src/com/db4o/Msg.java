@@ -177,13 +177,19 @@ class Msg implements Cloneable{
 			setTransaction(i_stream.getTransaction());
 			fakePayLoad(i_stream.getTransaction());
 			if (stream == Debug.serverStream) {
-				final Object finalThis = this; 
-				Debug.clientMessageQueueLock.run(new Closure4() {
-                    public Object run() {
-						Debug.clientMessageQueue.add(finalThis);
-                        return null;
-                    }
-                });
+				final Object finalThis = this;
+                try{
+    				Debug.clientMessageQueueLock.run(new Closure4() {
+                        public Object run() {
+    						Debug.clientMessageQueue.add(finalThis);
+                            return null;
+                        }
+                    });
+                }catch(Exception ex){
+                    
+                    // TODO: notify client app about problems and try to fix here
+                    
+                }
 			} else {
 				processMessageAtServer(null);
 			}

@@ -282,32 +282,40 @@ public class YapClient extends YapStream implements ExtClient {
             }
             return null;
         } else {
+            
+            try{
 
-            return (Msg)messageQueueLock.run(new Closure4() {
-                public Object run() {
-                    Msg message = null;
-                    message = (Msg)messageQueue.next();
-                    if (message != null) {
+                return (Msg)messageQueueLock.run(new Closure4() {
+                    public Object run() {
+                        Msg message = null;
+                        message = (Msg)messageQueue.next();
+                        if (message != null) {
+                            if (Debug.messages) {
+                                System.out.println(message + " processed at client");
+                            }
+                            return message;
+                        }
+    
+                        if (readerThread.isClosed()) {
+                            Exceptions4.throwRuntimeException(20, name());
+                        }
+                        messageQueueLock.snooze(i_config.i_timeoutClientSocket);
+                        if (readerThread.isClosed()) {
+                            Exceptions4.throwRuntimeException(20, name());
+                        }
+                        message = (Msg)messageQueue.next();
                         if (Debug.messages) {
                             System.out.println(message + " processed at client");
                         }
                         return message;
                     }
-
-                    if (readerThread.isClosed()) {
-                        Exceptions4.throwRuntimeException(20, name());
-                    }
-                    messageQueueLock.snooze(i_config.i_timeoutClientSocket);
-                    if (readerThread.isClosed()) {
-                        Exceptions4.throwRuntimeException(20, name());
-                    }
-                    message = (Msg)messageQueue.next();
-                    if (Debug.messages) {
-                        System.out.println(message + " processed at client");
-                    }
-                    return message;
-                }
-            });
+                });
+            } catch(Exception ex){
+                
+                // TODO: notify client app about problems and try to fix here
+                
+                return null;
+            }
         }
 
     }

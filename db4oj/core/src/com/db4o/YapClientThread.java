@@ -50,9 +50,17 @@ class YapClientThread extends Thread{
                     if(i_stream == null){
                         return;
                     }
-					synchronized(i_stream){
-						i_stream.notify();
-					}
+                    
+                    // TODO: There was a strange notify call here,
+                    // possibly to accelerate shutting down.
+                    
+                    // Old code was: i_stream.notify(), but we found
+                    // no reference to YapStream.wait().
+                    
+                    // The possible intention was probably the following:
+                    
+                    // messageQueueLock.awake();
+                    
                     i_stream = null;
                     i_socket = null;
 				}else if (message != null){
