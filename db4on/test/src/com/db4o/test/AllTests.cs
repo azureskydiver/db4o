@@ -51,6 +51,7 @@ namespace com.db4o.test
 			if(Compat.compact())
 			{
 				EMBEDDED_CLIENT = true;
+                SERVER_PORT = 0;
 			}
 		}
 
