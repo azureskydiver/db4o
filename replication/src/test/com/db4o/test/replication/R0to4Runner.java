@@ -10,6 +10,8 @@ import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
 public abstract class R0to4Runner {
+	protected TestableReplicationProvider peerA;
+	protected TestableReplicationProvider peerB;
 
 	protected abstract TestableReplicationProvider prepareProviderA();
 
@@ -25,8 +27,10 @@ public abstract class R0to4Runner {
 
 	public void test() {
 
-		TestableReplicationProvider peerA = prepareProviderA();
-		TestableReplicationProvider peerB = prepareProviderB();
+		peerA = prepareProviderA();
+		peerB = prepareProviderB();
+
+		delete(new Class[]{R0.class});
 
 		init(peerA, peerB);
 		ensureCount(peerA, LINKERS);
@@ -41,6 +45,15 @@ public abstract class R0to4Runner {
 		replicateR4(peerA, peerB);
 
 		ensureR4Same(peerA, peerB);
+	}
+
+	private void delete(Class[] classes) {
+		for (int i = 0; i < classes.length; i++) {
+			peerA.delete(classes[i]);
+			peerB.delete(classes[i]);
+		}
+		peerA.commit();
+		peerB.commit();
 	}
 
 	private void init(TestableReplicationProvider peerA, TestableReplicationProvider peerB) {
