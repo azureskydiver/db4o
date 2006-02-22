@@ -18,4 +18,12 @@ public class HibernateConfigurationFactory {
 		//System.out.println("url = " + url);
 		return configuration.setProperty("hibernate.connection.url", url);
 	}
+
+	public static Configuration producePostgreSQLConfigA() {
+		return new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-A.cfg.xml");
+	}
+
+	public static Configuration producePostgreSQLConfigB() {
+		return new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-B.cfg.xml");
+	}
 }

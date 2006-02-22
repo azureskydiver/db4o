@@ -8,12 +8,13 @@ import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
 public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
-	static protected Configuration cfgA;
-	static protected Configuration cfgB;
-	static protected HibernateReplicationProviderImpl pA;
-	static protected HibernateReplicationProviderImpl pB;
+	protected Configuration cfgA;
+	protected Configuration cfgB;
+	protected HibernateReplicationProviderImpl pA;
+	protected HibernateReplicationProviderImpl pB;
 
-	static {
+
+	public HibernateReplicationFeaturesMain() {
 		cfgA = HibernateConfigurationFactory.createNewDbConfig();
 		cfgA.addClass(Replicated.class);
 		pA = new HibernateReplicationProviderImpl(cfgA, "A", new byte[]{1});
@@ -21,10 +22,6 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 		cfgB = HibernateConfigurationFactory.createNewDbConfig();
 		cfgB.addClass(Replicated.class);
 		pB = new HibernateReplicationProviderImpl(cfgB, "B", new byte[]{2});
-	}
-
-	public HibernateReplicationFeaturesMain() {
-
 	}
 
 	protected TestableReplicationProvider prepareProviderA() {
@@ -46,7 +43,7 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 		pB.closeIfOpened();
 	}
 
-	private void delete(Session session) {
+	protected void delete(Session session) {
 		session.createQuery("delete from Replicated").executeUpdate();
 	}
 }

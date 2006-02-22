@@ -17,7 +17,7 @@ public abstract class ListTest extends ReplicationTestcase {
 
 		init();
 
-		delete(new Class[]{ListHolder.class, ListContent.class, ArrayList.class});
+		delete(new Class[]{ListContent.class, ListHolder.class, ArrayList.class});
 
 		storeListToProviderA();
 
@@ -105,7 +105,7 @@ public abstract class ListTest extends ReplicationTestcase {
 		int holderCount = holderNames.length;
 		ensureInstanceCount(provider, ListHolder.class, holderCount);
 
-		//Hibernate does not query by Collection
+		//Hibernate does not support query by Collection
 		if (!(provider instanceof HibernateReplicationProvider))
 			ensureInstanceCount(provider, ArrayList.class, holderCount);
 

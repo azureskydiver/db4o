@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<!-- Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com -->
+
+<!DOCTYPE hibernate-mapping PUBLIC
+		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-access="property" default-lazy="false" default-cascade="all">
+	<class name="com.db4o.test.replication.collections.map.MapHolder">
+		<id column="id" type="int">
+			<generator class="native"/>
+		</id>
+
+		<property name="name"/>
+
+		<map name="map" table="MapContents">
+			<key column="MapHolderId"/>
+			<map-key type="string"/>
+			<one-to-many class="com.db4o.test.replication.collections.map.MapContent"/>
+		</map>
+	</class>
+</hibernate-mapping>

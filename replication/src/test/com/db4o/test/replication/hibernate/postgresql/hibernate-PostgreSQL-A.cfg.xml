@@ -6,9 +6,9 @@
 <hibernate-configuration>
 	<session-factory>
 		<!-- Database connection settings -->
-		<property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+		<property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
 
-		<property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:step</property>
+		<property name="hibernate.connection.url">jdbc:postgresql://localhost/testa</property>
 
 		<property name="hibernate.connection.username">db4o</property>
 		<property name="hibernate.connection.password">db4o</property>
@@ -17,13 +17,14 @@
 		<property name="hibernate.connection.pool_size">1</property>
 
 		<!-- SQL dialect -->
-		<property name="hibernate.dialect">org.hibernate.dialect.Oracle9Dialect</property>
+		<property name="hibernate.dialect">
+			org.hibernate.dialect.PostgreSQLDialect</property>
 
 		<!-- Echo all executed SQL to stdout -->
 		<property name="hibernate.show_sql">false</property>
 
 		<!-- Update the database schema if out of date -->
-		<property name="hibernate.hbm2ddl.auto">validate</property>
+		<property name="hibernate.hbm2ddl.auto">update</property>
 
 		<!-- Specify all your data entity classes here -->
 		<mapping resource="f1/stepbystep/Pilot.hbm.xml"/>

@@ -30,6 +30,7 @@ import org.hibernate.event.FlushEventListener;
 import org.hibernate.event.PostUpdateEvent;
 import org.hibernate.event.PostUpdateEventListener;
 import org.hibernate.mapping.PersistentClass;
+import org.hibernate.tool.hbm2ddl.SchemaValidator;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
@@ -161,6 +162,10 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 		Util.addMetaDataClasses(cfg);
 
+//TODO dRS 1.2
+//		if (_cfg.getProperties().get(Environment.HBM2DDL_AUTO).equals("validate"))
+//			validateSchema();
+
 		new MetaDataTablesCreator(cfg).createTables();
 
 		EventListeners eventListeners = this._cfg.getEventListeners();
@@ -182,6 +187,14 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		}
 
 		_transaction = _session.beginTransaction();
+	}
+
+	protected void validateSchema() {
+		try {
+			new SchemaValidator(_cfg).validate();
+		} catch (HibernateException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public final ReadonlyReplicationProviderSignature getSignature() {
@@ -241,6 +254,9 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		_uuidsReplicatedInThisSession.clear();
 		_dirtyRefs.clear();
 		_inReplication = false;
+//		System.out.println("_name = " + _name);
+//		Util.dumpTable(_session, "ReplicationComponentField");
+//		Util.dumpTable(_session, "ReplicationComponentIdentity");
 	}
 
 	public synchronized final void rollbackReplication() {
@@ -693,13 +709,18 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		final Criteria criteria = _session.createCriteria(MySignature.class);
 		final List firstResult = criteria.list();
 
-		if (firstResult.size() == 1)
-			_session.delete(firstResult.get(0));
-		else if (firstResult.size() > 1)
+		if (firstResult.size() == 1) {
+			MySignature mySignature = (MySignature) firstResult.get(0);
+			mySignature.setBytes(b);
+			_session.update(mySignature);
+			_mySig = mySignature;
+		} else if (firstResult.size() > 1)
 			throw new RuntimeException("Number of MySignature should be either 0 or 1");
+		else {
+			_mySig = new MySignature(b);
+			_session.save(_mySig);
+		}
 
-		_mySig = new MySignature(b);
-		_session.save(_mySig);
 		_session.flush();
 	}
 
