@@ -454,9 +454,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         
         if(a_class != null){
-            
-            
-            if(a_stream.i_handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class)){
+            if(a_stream.i_handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class)
+            	|| Platform4.isTransient(a_class)) {
                 a_class = null;
             }
         }

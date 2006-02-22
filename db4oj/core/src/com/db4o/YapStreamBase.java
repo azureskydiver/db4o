@@ -754,11 +754,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             return null;
         }
         
-        if(a_class.getName().indexOf("YapStream") >0){
-            int xxx = 1;
-        }
-
-
         if ((!showInternalClasses())
             && i_handlers.ICLASS_INTERNAL.isAssignableFrom(a_class)) {
             return null;

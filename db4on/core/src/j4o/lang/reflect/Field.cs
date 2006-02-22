@@ -65,11 +65,7 @@ namespace j4o.lang.reflect
                 modifiers |= Modifier.STATIC;
             }
 
-            if (isTransientType(_fieldInfo.FieldType))
-            {
-                modifiers |= Modifier.TRANSIENT;
-            }
-            else if (checkForTransient(_fieldInfo.GetCustomAttributes(true)))
+            if (checkForTransient(_fieldInfo.GetCustomAttributes(true)))
             {
                 modifiers |= Modifier.TRANSIENT;
             }
@@ -96,12 +92,6 @@ namespace j4o.lang.reflect
 			}
 			return false;
 		}
-
-        private bool isTransientType(System.Type type)
-        {
-            return type.IsPointer
-                || type.IsSubclassOf(typeof(Delegate));
-        }
 
         public String getName()
         {
