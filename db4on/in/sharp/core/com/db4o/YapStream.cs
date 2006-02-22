@@ -4,6 +4,9 @@ namespace com.db4o
     using com.db4o.inside.query;
     using com.db4o.ext;
 
+	/// <summary>
+	/// </summary>
+	/// <exclude />
 	public abstract class YapStream : com.db4o.YapStreamBase, ObjectContainer, ExtObjectContainer
 	{
 		internal YapStream(com.db4o.YapStream a_parent) : base(a_parent)

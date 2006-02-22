@@ -619,5 +619,9 @@ public final class Platform4 {
     
 	public static Object wrapEvaluation(Object evaluation) {
 		throw YapConst.virtualException();
+	}
+
+	public static boolean isTransient(ReflectClass a_class) {
+		return false;
 	}	
 }

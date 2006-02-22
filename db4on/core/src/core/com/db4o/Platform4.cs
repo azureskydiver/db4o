@@ -516,6 +516,30 @@ namespace com.db4o
 			return Compat.wrapEvaluation(evaluation);
 		}
 
+		internal static bool isTransient(ReflectClass clazz)
+		{
+			return false;
+			System.Type type = GetNetType(clazz);
+			if (null == type) return false;
+			return type.IsPointer
+				|| type.IsSubclassOf(typeof(Delegate));
+		}
+
+		private static Type GetNetType(ReflectClass clazz)
+		{
+			if (null == clazz)
+			{
+				return null;
+			}
+
+			NetClass netClass = clazz as NetClass;
+			if (null != netClass)
+			{
+				return netClass.getNetType();
+			}
+			return GetNetType(clazz.getDelegate());
+		}
+
 		internal static YapTypeAbstract[] types(YapStream stream)
 		{
 			return new YapTypeAbstract[]

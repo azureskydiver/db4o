@@ -43,6 +43,8 @@ namespace com.db4o.test.cs
 	{
         public event EventHandler Bang;
 
+		object UntypedDelegate;
+
 		static string Message = null;
 
 		public void RaiseBang()
@@ -53,12 +55,14 @@ namespace com.db4o.test.cs
         public void storeOne()
 		{
 			this.Bang += new EventHandler(OnBang);
+			this.UntypedDelegate = new EventHandler(OnBang);
         }
 
         public void testOne()
 		{
 			// delegate fields are simply not stored
 			Tester.ensureEquals(null, Bang);
+			Tester.ensureEquals(null, UntypedDelegate);
         }
 		
 		public void testOnActivateEventStrategy()
