@@ -26,4 +26,12 @@ public class HibernateConfigurationFactory {
 	public static Configuration producePostgreSQLConfigB() {
 		return new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-B.cfg.xml");
 	}
+
+	public static Configuration produceMySQLConfigA() {
+		return new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-A.cfg.xml");
+	}
+
+	public static Configuration produceMySQLConfigB() {
+		return new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-B.cfg.xml");
+	}
 }
