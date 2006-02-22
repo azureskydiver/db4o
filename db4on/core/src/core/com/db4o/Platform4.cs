@@ -518,7 +518,6 @@ namespace com.db4o
 
 		internal static bool isTransient(ReflectClass clazz)
 		{
-			return false;
 			System.Type type = GetNetType(clazz);
 			if (null == type) return false;
 			return type.IsPointer
