@@ -888,6 +888,9 @@
 			</fileset>
 			<fileset dir="${dir.tutorial}">
 				<include name="**/*.cs" />
+				<include name="vb/**/*.vb" />
+				<include name="vb/**/*.vbproj" />
+				<include name="vb/**/*.sln" />
 				<exclude name="db4o-tutorial/**/*.*" />
 			</fileset>
 			<fileset dir="${dir.n.tutorial.bin}">
@@ -1098,6 +1101,24 @@
 		</copy>
 	</target>
 	
+	<target name="generate-vb-tutorial">
+		<!-- don't convert for now, pending issues
+		<antcall target="execute-pascalcase-converter">
+			<param name="src.dir" location="${dir.n.tutorial}/db4o-tutorial-chapters" />
+			<param name="target.dir" location="${dir.dist.pascalcase}/tutorial/vb/db4o-tutorial-chapters" />
+			<param name="converter.args" value="-vb" />
+		</antcall>
+		-->
+		
+		<copy todir="${dir.dist.pascalcase}/tutorial/vb">
+			<fileset dir="${dir.n.tutorial}/vb">
+				<include name="**/*.vb" />
+				<include name="**/*.vbproj" />
+				<include name="**/*.sln" />
+			</fileset>
+		</copy>
+	</target>
+	
 	<target name="sharpen-pascalcase" depends="install-javatocsharp-plugin">	
 		
 		<property name="dir.sharpen.pc" location="${dir.sharpen}/pascalcase" />		
@@ -1156,12 +1177,7 @@
 			<param name="target.dir" location="${dir.dist.pascalcase}/tutorial" />
 		</antcall>
 		
-		<!-- Visual Basic tutorial -->
-		<antcall target="execute-pascalcase-converter">
-			<param name="src.dir" location="${dir.n.tutorial}/db4o-tutorial-chapters" />
-			<param name="target.dir" location="${dir.dist.pascalcase}/tutorial/vb/db4o-tutorial-chapters" />
-			<param name="converter.args" value="-vb" />
-		</antcall>
+		<antcall target="generate-vb-tutorial" />
 		
 		<copy todir="${dir.dist.pascalcase}">
 			<fileset dir="${dir.n}">
