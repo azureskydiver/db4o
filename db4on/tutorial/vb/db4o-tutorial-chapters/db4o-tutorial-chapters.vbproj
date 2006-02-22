@@ -1,0 +1,103 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <StartupObject>db4o_tutorial_chapters.Program</StartupObject>
+    <RootNamespace>db4o_tutorial_chapters</RootNamespace>
+    <AssemblyName>db4o-tutorial-chapters</AssemblyName>
+    <MyType>Console</MyType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <IncrementalBuild>true</IncrementalBuild>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>_MyType="Windows"</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <IncrementalBuild>false</IncrementalBuild>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>_MyType="Windows"</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src\com\db4o\f1\chapter1\ArbitraryQuery.vb" />
+    <Compile Include="src\com\db4o\f1\chapter1\ComplexQuery.vb" />
+    <Compile Include="src\com\db4o\f1\chapter1\FirstStepsExample.vb" />
+    <Compile Include="src\com\db4o\f1\chapter1\NQExample.vb" />
+    <Compile Include="src\com\db4o\f1\chapter1\Pilot.vb" />
+    <Compile Include="src\com\db4o\f1\chapter1\QueryExample.vb" />
+    <Compile Include="src\com\db4o\f1\chapter2\Car.vb" />
+    <Compile Include="src\com\db4o\f1\chapter2\Pilot.vb" />
+    <Compile Include="src\com\db4o\f1\chapter2\StructuredExample.vb" />
+    <Compile Include="src\com\db4o\f1\chapter3\Car.vb" />
+    <Compile Include="src\com\db4o\f1\chapter3\CollectionsExample.vb" />
+    <Compile Include="src\com\db4o\f1\chapter3\Pilot.vb" />
+    <Compile Include="src\com\db4o\f1\chapter3\SensorReadout.vb" />
+    <Compile Include="src\com\db4o\f1\chapter4\Car.vb" />
+    <Compile Include="src\com\db4o\f1\chapter4\InheritanceExample.vb" />
+    <Compile Include="src\com\db4o\f1\chapter4\Pilot.vb" />
+    <Compile Include="src\com\db4o\f1\chapter4\PressureSensorReadout.vb" />
+    <Compile Include="src\com\db4o\f1\chapter4\RetrieveAllSensorReadoutsPredicate.vb" />
+    <Compile Include="src\com\db4o\f1\chapter4\SensorReadout.vb" />
+    <Compile Include="src\com\db4o\f1\chapter4\TemperatureSensorReadout.vb" />
+    <Compile Include="src\com\db4o\f1\chapter5\Car.vb" />
+    <Compile Include="src\com\db4o\f1\chapter5\ClientServerExample.vb" />
+    <Compile Include="src\com\db4o\f1\chapter5\DeepExample.vb" />
+    <Compile Include="src\com\db4o\f1\chapter5\Pilot.vb" />
+    <Compile Include="src\com\db4o\f1\chapter5\PressureSensorReadout.vb" />
+    <Compile Include="src\com\db4o\f1\chapter5\SensorReadout.vb" />
+    <Compile Include="src\com\db4o\f1\chapter5\ServerConfiguration.vb" />
+    <Compile Include="src\com\db4o\f1\chapter5\StartServer.vb" />
+    <Compile Include="src\com\db4o\f1\chapter5\StopServer.vb" />
+    <Compile Include="src\com\db4o\f1\chapter5\TemperatureSensorReadout.vb" />
+    <Compile Include="src\com\db4o\f1\chapter5\TransactionExample.vb" />
+    <Compile Include="src\com\db4o\f1\chapter6\CultureInfoTranslator.vb" />
+    <Compile Include="src\com\db4o\f1\chapter6\EvaluationExample.vb" />
+    <Compile Include="src\com\db4o\f1\chapter6\EvenHistoryEvaluation.vb" />
+    <Compile Include="src\com\db4o\f1\chapter6\LocalizedItemList.vb" />
+    <Compile Include="src\com\db4o\f1\chapter6\TranslatorExample.vb" />
+    <Compile Include="src\com\db4o\f1\Util.vb" />
+    <Compile Include="src\Program.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\core\db4o-net2.csproj">
+      <Project>{7A07E089-078C-433A-BD15-60763FE3B8F2}</Project>
+      <Name>db4o-net2</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="My Project\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.Targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <ProjectExtensions>
+    <VisualStudio AllowExistingFolder="true" />
+  </ProjectExtensions>
+</Project>

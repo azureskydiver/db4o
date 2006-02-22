@@ -1,0 +1,68 @@
+Imports System
+Imports System.IO
+Imports com.db4o
+
+Namespace com.db4o.f1.chapter5
+	Public Class TransactionExample
+	Inherits Util
+		Public Shared Sub Main(ByVal args As String())
+			File.Delete(Util.YapFileName)
+            Dim db As ObjectContainer = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+			Try
+				StoreCarCommit(db)
+				db.Close()
+                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+				ListAllCars(db)
+				StoreCarRollback(db)
+				db.Close()
+                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+				ListAllCars(db)
+				CarSnapshotRollback(db)
+				CarSnapshotRollbackRefresh(db)
+			Finally
+				db.Close()
+			End Try
+		End Sub
+
+		Public Shared Sub StoreCarCommit(ByVal db As ObjectContainer)
+			Dim pilot As Pilot = New Pilot("Rubens Barrichello", 99)
+			Dim car As Car = New Car("BMW")
+			car.Pilot = pilot
+			db.[Set](car)
+			db.Commit()
+		End Sub
+
+		Public Shared Sub ListAllCars(ByVal db As ObjectContainer)
+			Dim result As ObjectSet = db.[Get](GetType(Car))
+			ListResult(result)
+		End Sub
+
+		Public Shared Sub StoreCarRollback(ByVal db As ObjectContainer)
+			Dim pilot As Pilot = New Pilot("Michael Schumacher", 100)
+			Dim car As Car = New Car("Ferrari")
+			car.Pilot = pilot
+			db.[Set](car)
+			db.Rollback()
+		End Sub
+
+		Public Shared Sub CarSnapshotRollback(ByVal db As ObjectContainer)
+			Dim result As ObjectSet = db.[Get](New Car("BMW"))
+			Dim car As Car = DirectCast(result.[Next](), Car)
+			car.Snapshot()
+			db.[Set](car)
+			db.Rollback()
+			Console.WriteLine(car)
+		End Sub
+
+		Public Shared Sub CarSnapshotRollbackRefresh(ByVal db As ObjectContainer)
+			Dim result As ObjectSet = db.[Get](New Car("BMW"))
+			Dim car As Car = DirectCast(result.[Next](), Car)
+			car.Snapshot()
+			db.[Set](car)
+			db.Rollback()
+			db.Ext().Refresh(car, Integer.MaxValue)
+			Console.WriteLine(car)
+		End Sub
+
+	End Class
+End Namespace
