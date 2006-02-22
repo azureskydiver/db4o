@@ -34,4 +34,14 @@ public class HibernateConfigurationFactory {
 	public static Configuration produceMySQLConfigB() {
 		return new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-B.cfg.xml");
 	}
+
+	public static Configuration produceOracleConfigA() {
+		return new Configuration().configure("com/db4o/test/replication/hibernate/oracle/hibernate-Oracle-A.cfg.xml");
+	}
+
+	public static Configuration produceOracleConfigB() {
+		//Uncomment if you have 2 instances of Oracle on 2 machines
+		//return new Configuration().configure("com/db4o/test/replication/hibernate/oracle/hibernate-Oracle-B.cfg.xml");
+		return createNewDbConfig();
+	}
 }
