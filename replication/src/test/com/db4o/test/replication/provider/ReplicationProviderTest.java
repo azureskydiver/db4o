@@ -131,7 +131,11 @@ public abstract class ReplicationProviderTest extends Test {
 		//ensure(changed.contains(object4));
 
 		if (subject instanceof HibernateReplicationProviderImpl) {
-			System.err.println("FIX ME, uncommen t, and debug from here ");
+            
+            // FIXME: not nice in the test output of a build  
+            
+			// System.err.println("FIX ME, uncommen t, and debug from here ");
+            
 			return;
 		}
 
