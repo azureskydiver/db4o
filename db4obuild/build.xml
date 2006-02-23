@@ -1068,6 +1068,12 @@
 				<include name="**/**" />
 			</fileset>
 		</copy>
+		<mkdir dir="${dir.dist.mono.build.tutorial}/vb" />
+		<copy todir="${dir.dist.mono.build.tutorial}/vb">
+			<fileset dir="${dir.j.tutorial.out.vb}">
+				<include name="**/**" />
+			</fileset>
+		</copy>
 		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
 			<sources dir="${dir.dist.mono.build.src}">
 				<include name="**/*.cs" />
