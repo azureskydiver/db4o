@@ -21,10 +21,8 @@ This section describes the features supported in current release and features pl
 - Version number generation for db4o and Hibernate
 - Queries for changed objects
 - Parent-to-Child traversal along changed objects
-
-
-.2 Under Current Development ..
 - Collection Replication
+
 
 .2 Unsupported Features ..
 - Collection types other than List
