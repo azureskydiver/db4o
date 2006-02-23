@@ -227,7 +227,7 @@ public class Index4 {
                             if (ixTree.i_version == ft.i_version) {
                                 if (!(ixTree instanceof IxFileRange)) {
                                     ixTree.beginMerge();
-                                    tree[0] = tree[0].add(ixTree);
+                                    tree[0] = Tree.add(tree[0], ixTree);
                                 }
                             }
                         }
