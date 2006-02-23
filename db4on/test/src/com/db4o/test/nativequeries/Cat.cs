@@ -103,6 +103,22 @@ namespace com.db4o.test.nativequeries
             System.Collections.Generic.IList<Cat> result = Tester.objectContainer().query(GenericCatComparer.Instance);
             assertCatOrder(result, "Fritz", "Garfield", "Occam", "Tom", "Zora");
         }
+	    
+	    public void testGenericComparison()
+	    {
+            System.Collections.Generic.IList<Cat> result = Tester.objectContainer().query<Cat>(delegate(Cat candidate)
+                                                                                                   {
+                                                                                                       return true;
+                                                                                                   },
+                                                                                                delegate(Cat x, Cat y)
+                                                                                                    {
+                                                                                                        return
+                                                                                                            y.name.
+                                                                                                                CompareTo
+                                                                                                                (x.name);
+                                                                                                    });
+            assertCatOrder(result, "Fritz", "Garfield", "Occam", "Tom", "Zora");
+	    }
 
 #endif
 	    
