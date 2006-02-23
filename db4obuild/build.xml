@@ -437,21 +437,25 @@
 		</csc>
 	</target>
 	
-	<target name="compiletestsmono" depends="compiledllmono">
-		<csc srcdir="${dir.n.tools}/src"
+	<target name="do-compiletoolsmono">
+		<csc srcdir="${src.dir}"
 			targettype="library"
-			destfile="${dir.dist.dll.mono}/db4o-net-tools.dll"
+			destfile="${file.dll.tools.mono}"
 			debug="true"
 			definitions="MONO">
 			
+			<exclude name="compact*/**" />
+
 			<reference dir="${dir.dist.dll.mono}">
 				<include name="db4o.dll" />
 			</reference>
 		</csc>
-		
-		<csc srcdir="${dir.n.test}/src"
+	</target>
+
+	<target name="do-compiletestsmono">
+		<csc srcdir="${src.dir}"
 			targettype="exe"
-			destfile="${dir.dist.dll.mono}/db4o-net-test.exe"
+			destfile="${file.exe.tests.mono}"
 			debug="true"
 			mainclass="com.db4o.test.AllTests"
 			extraoptions="-r:System.Drawing"
@@ -461,11 +465,11 @@
 			
 			<reference dir="${dir.dist.dll.mono}">
 				<include name="db4o.dll" />
-				<include name="db4o-net-tools.dll" />
+				<include name="${file.name.dll.tools.mono}" />
 			</reference>
 		</csc>
 	</target>
-	
+
 	<target name="runtestsmono" depends="compiletestsmono">
 		<exec executable="mono" dir="${dir.dist.dll.mono}">
 			<arg value="--debug" />
@@ -488,10 +492,22 @@
 		</csc>
 		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
 	</target>
-	
+
 	<target name="compiledllmono" depends="init, sharpen">
 		<antcall target="do-compiledllmono">
 			<param name="src.dir" location="${dir.n.core.src}" />
+		</antcall>
+	</target>
+
+	<target name="compiletoolsmono">
+		<antcall target="do-compiletoolsmono">
+			<param name="src.dir" location="${dir.n.tools.src}" />
+		</antcall>
+	</target>
+
+	<target name="compiletestsmono">
+		<antcall target="do-compiletestsmono">
+			<param name="src.dir" location="${dir.n.test.src}" />
 		</antcall>
 	</target>
 
@@ -949,8 +965,18 @@
 		
 		<property name="dir.dist.pascalcase" location="${dir.dist}/pascalcase" />
 			
+		<echo message="MONO PASCALCASE" />
+		<echo message="MONO PASCALCASE: core" />
 		<antcall target="do-compiledllmono">
 			<param name="src.dir" location="${dir.dist.pascalcase}/core/src" />
+		</antcall>
+		<echo message="MONO PASCALCASE: tools" />
+		<antcall target="do-compiletoolsmono">
+			<param name="src.dir" location="${dir.dist.pascalcase}/tools/src" />
+		</antcall>
+		<echo message="MONO PASCALCASE: tests" />
+		<antcall target="do-compiletestsmono">
+			<param name="src.dir" location="${dir.dist.pascalcase}/test/src" />
 		</antcall>
 		
 		<antcall target="ndocmono">
@@ -961,10 +987,26 @@
 		</antcall>
 		
 		<!-- legacy dll -->
+		<echo message="MONO LEGACY" />
 		<mkdir dir="${dir.dist.mono.legacy}" />
+		<echo message="MONO LEGACY: core" />
 		<antcall target="compiledllmono">
+			<param name="dir.dist.dll.mono" location="${dir.dist.mono.legacy}" />
 			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/db4o.dll" />
 			<param name="file.xml.mono" location="${dir.dist.mono.legacy}/db4o.xml" />
+		</antcall>
+		<echo message="MONO LEGACY: tools" />
+		<antcall target="compiletoolsmono">
+			<param name="dir.dist.dll.mono" location="${dir.dist.mono.legacy}" />
+			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/db4o.dll" />
+			<param name="file.dll.tools.mono" location="${dir.dist.mono.legacy}/${file.name.dll.tools.mono}" />
+		</antcall>
+		<echo message="MONO LEGACY: tests" />
+		<antcall target="compiletestsmono">
+			<param name="dir.dist.dll.mono" location="${dir.dist.mono.legacy}" />
+			<param name="file.dll.mono" location="${dir.dist.mono.legacy}/db4o.dll" />
+			<param name="file.dll.tools.mono" location="${dir.dist.mono.legacy}/${file.name.dll.tools.mono}" />
+			<param name="file.exe.tests.mono" location="${dir.dist.mono.legacy}/${file.name.exe.tests.mono}" />
 		</antcall>
 		
 		<antcall target="prepare-mono-distro">

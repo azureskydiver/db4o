@@ -375,7 +375,7 @@ public class HtmlWriter extends AbstractWriter {
         writeToFile("<table width=\"100%\" cellpadding=\"3\" cellspacing=\"0\" border=\"0\"><tr><td class=\"lg\">\r\n");
         writeToFile("<code>");
         if(command!=null&&command.getMethodName()!=null) {
-            code=extractMethod(code,command.getMethodName(),command.getParamValue(Source.CMD_FULL));
+            code=extractSource(code,command.getMethodName(),command.getParamValue(Source.CMD_FULL));
             if(code.length()==0) {
             	throw new RuntimeException("Method '"+command.getClassName()+"#"+command.getMethodName()+"' not found.");
             }

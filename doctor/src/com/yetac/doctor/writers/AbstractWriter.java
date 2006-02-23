@@ -180,8 +180,44 @@ public abstract class AbstractWriter extends Configuration implements
 
     abstract protected void writeToFile(String str);
 
-    protected String extractMethod(String src,String methodName,boolean full) throws UnsupportedEncodingException {
-        String methodheadregexp="(public|protected|private) [^\\n]*"+methodName;
+    protected String extractSource(String src,String methodName,boolean full) throws UnsupportedEncodingException {
+    	boolean isVB=".vb".equals(source.files.task.getSourceExtension());
+    	return isVB
+    	? extractSourceVB(src, methodName, full)
+    	: extractSourceJavaCSharp(src, methodName, full);
+    }
+    
+	private String extractSourceVB(String src, String methodName, boolean full) {
+		String methodheadregexp="(public|protected|private)\\s+(shared\\s+)?(sub|class)[^\\n]*"+methodName;
+        Pattern methodheadpattern=Pattern.compile(methodheadregexp,Pattern.CASE_INSENSITIVE);
+        Matcher matcher=methodheadpattern.matcher(src);
+        if(!matcher.find()) {
+			System.err.println("Not found: "+methodName);
+            return "";
+        }
+        int startidx=matcher.start();
+        if (!full) {
+        	startidx = src.indexOf('\n',startidx)+1;
+        }        
+        String codeEndRegexp="end (sub|class)";
+        Pattern codeEndPattern=Pattern.compile(codeEndRegexp,Pattern.CASE_INSENSITIVE);
+        matcher=codeEndPattern.matcher(src.substring(startidx));
+        if(!matcher.find()) {
+			System.err.println("End point not found: "+methodName);
+            return "";
+        }
+        int endidx=startidx+matcher.start();
+        if(full) {
+        	endidx=startidx+matcher.end();
+        }
+        
+        String code = src.substring(startidx, endidx);
+        return formatMethod(methodName, code, full);
+	}
+
+
+	private String extractSourceJavaCSharp(String src, String methodName, boolean full) {
+		String methodheadregexp="(public|protected|private)\\s+[^\\n]*"+methodName;
         Pattern methodheadpattern=Pattern.compile(methodheadregexp,Pattern.CASE_INSENSITIVE);
         Matcher matcher=methodheadpattern.matcher(src);
         if(!matcher.find()) {
@@ -212,15 +248,19 @@ public abstract class AbstractWriter extends Configuration implements
         }
         if(full) {
             methodsrc.append("}");
-        }
-        int depth=((full ? 1 : 2)+(files.task.variableIsTrue("net") ? 1 : 0))*4;
-        String result=(full ? "" : "["+methodName+"]\n\n")+methodsrc.toString().trim();
+        }        
+        return formatMethod(methodName, methodsrc.toString(), full);
+	}
+
+	private String formatMethod(String methodName, String code, boolean full) {
+		int depth=((full ? 1 : 2)+(files.task.variableIsTrue("net") ? 1 : 0))*4;
+		String result=(full ? "" : "["+methodName+"]\n\n")+code.trim();
         result=result.replaceAll("^\\s*","");
         result=result.replaceAll("\\t","    ");
         result=result.replaceAll("\\n {"+depth+"}","\n");
         return result;
-    }
-    
+	}
+	
     static String multiple(String ofWhat, int times){
     	StringBuffer buf=new StringBuffer();
         for (int i = 0; i < times ; i++) {
