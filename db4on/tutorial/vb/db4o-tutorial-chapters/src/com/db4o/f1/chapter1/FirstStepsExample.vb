@@ -9,7 +9,7 @@ Namespace com.db4o.f1.chapter1
 			File.Delete(Util.YapFileName)
 			AccessDb4o()
 			File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
 			Try
 				StoreFirstPilot(db)
 				StoreSecondPilot(db)
@@ -25,7 +25,7 @@ Namespace com.db4o.f1.chapter1
 		End Sub
 
 		Public Shared Sub AccessDb4o()
-            Dim db As ObjectContainer = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
 			Try
 				' do something with db4o
 			Finally

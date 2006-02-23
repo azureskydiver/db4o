@@ -7,15 +7,15 @@ Namespace com.db4o.f1.chapter5
 	Inherits Util
 		Public Shared Sub Main(ByVal args As String())
 			File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
 			Try
 				StoreCarCommit(db)
 				db.Close()
-                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(Util.YapFileName)
 				ListAllCars(db)
 				StoreCarRollback(db)
 				db.Close()
-                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(Util.YapFileName)
 				ListAllCars(db)
 				CarSnapshotRollback(db)
 				CarSnapshotRollbackRefresh(db)

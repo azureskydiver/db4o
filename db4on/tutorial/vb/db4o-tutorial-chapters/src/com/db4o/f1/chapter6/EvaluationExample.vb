@@ -7,7 +7,7 @@ Namespace com.db4o.f1.chapter6
 	Inherits Util
 		Public Shared Sub Main(ByVal args As String())
 			File.Delete(Util.YapFileName)
-            Dim db As Global.com.db4o.ObjectContainer = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+            Dim db As Global.com.db4o.ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
 			Try
 				StoreCars(db)
 				QueryWithEvaluation(db)

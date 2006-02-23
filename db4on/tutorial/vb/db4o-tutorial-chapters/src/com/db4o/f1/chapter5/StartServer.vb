@@ -36,7 +36,7 @@ Namespace com.db4o.f1.chapter5
 		''' </summary>
 		Public Sub RunServer()
 			SyncLock Me
-                Dim db4oServer As ObjectServer = Global.com.db4o.Db4o.OpenServer(FILE, PORT)
+                Dim db4oServer As ObjectServer = Db4oFactory.OpenServer(FILE, PORT)
 				db4oServer.GrantAccess(USER, PASS)
 				' Using the messaging functionality to redirect all
 				' messages to this.processMessage

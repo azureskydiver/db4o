@@ -6,7 +6,7 @@ Namespace com.db4o.f1.chapter1
 	Public Class QueryExample
 	Inherits Util
 		Public Shared Sub Main(ByVal args As String())
-            Dim db As ObjectContainer = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
 			Try
 				StoreFirstPilot(db)
 				StoreSecondPilot(db)
