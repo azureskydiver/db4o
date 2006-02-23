@@ -8,7 +8,6 @@ import com.db4o.inside.replication.*;
 import com.db4o.replication.db4o.*;
 import com.db4o.replication.hibernate.*;
 import com.db4o.test.*;
-import com.db4o.test.replication.*;
 import com.db4o.test.replication.collections.*;
 import com.db4o.test.replication.hibernate.*;
 
