@@ -513,7 +513,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     void delete1(YapWriter a_bytes, Object a_object) {
         removeFromIndex(a_bytes.getTransaction(), a_bytes.getID());
-        deleteMembers(a_bytes, a_bytes.getTransaction().i_stream.i_handlers.arrayType(a_object));
+        deleteMembers(a_bytes, a_bytes.getTransaction().i_stream.i_handlers.arrayType(a_object), false);
     }
 
     public void deleteEmbedded(YapWriter a_bytes) {
@@ -549,7 +549,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
 
-    void deleteMembers(YapWriter a_bytes, int a_type) {
+    void deleteMembers(YapWriter a_bytes, int a_type, boolean isUpdate) {
         try{
 	        Config4Class config = configOrAncestorConfig();
 	        if (config != null && (config.i_cascadeOnDelete == 1)) {
@@ -564,10 +564,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 	            } else {
 	                a_bytes.setCascadeDeletes(1);
 	            }
-	            deleteMembers1(a_bytes, a_type);
+	            deleteMembers1(a_bytes, a_type, isUpdate);
 	            a_bytes.setCascadeDeletes(preserveCascade);
 	        } else {
-	            deleteMembers1(a_bytes, a_type);
+	            deleteMembers1(a_bytes, a_type, isUpdate);
 	        }
         }catch(Exception e){
             
@@ -582,13 +582,13 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
 
-   private void deleteMembers1(YapWriter a_bytes, int a_type) {
+   private void deleteMembers1(YapWriter a_bytes, int a_type, boolean isUpdate) {
         int length = readFieldLength(a_bytes);
         for (int i = 0; i < length; i++) {
-            i_fields[i].delete(a_bytes);
+            i_fields[i].delete(a_bytes, isUpdate);
         }
         if (i_ancestor != null) {
-            i_ancestor.deleteMembers(a_bytes, a_type);
+            i_ancestor.deleteMembers(a_bytes, a_type, isUpdate);
         }
     }
 

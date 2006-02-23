@@ -707,6 +707,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 yo = new YapObject(a_id);
                 arr[0] = yo.read(ta, null, null, 0, YapConst.ADD_TO_ID_TREE, true);
                 
+                if(arr[0] == null){
+                    return arr;
+                }
+                
                 // check class creation side effect and simply retry recursively
                 // if it hits:
                 if(arr[0] != yo.getObject()){
