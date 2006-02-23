@@ -54,6 +54,19 @@ namespace com.db4o
             }
 	    }
 
+        class GenericComparisonAdaptor<T> : DelegateEnvelope, com.db4o.query.QueryComparator
+        {
+            public GenericComparisonAdaptor(System.Comparison<T> comparer) : base(comparer)
+            {
+            }
+
+            public int compare(object first, object second)
+            {
+                System.Comparison<T> _comparer = (System.Comparison<T>)GetContent();
+                return _comparer((T) first, (T) second);
+            }
+        }
+
         public System.Collections.Generic.IList<Extent> query<Extent>(Predicate<Extent> match)
         {
             if (null == match) throw new ArgumentNullException("match");
@@ -65,6 +78,15 @@ namespace com.db4o
             if (null == match) throw new ArgumentNullException("match");
             com.db4o.query.QueryComparator comparator = null != comparer
                                                             ? new GenericComparerAdaptor<Extent>(comparer)
+                                                            : null;
+            return getNativeQueryHandler().execute(match, comparator);
+        }
+
+        public System.Collections.Generic.IList<Extent> query<Extent>(Predicate<Extent> match, System.Comparison<Extent> comparison)
+        {
+            if (null == match) throw new ArgumentNullException("match");
+            com.db4o.query.QueryComparator comparator = null != comparison
+                                                            ? new GenericComparisonAdaptor<Extent>(comparison)
                                                             : null;
             return getNativeQueryHandler().execute(match, comparator);
         }
