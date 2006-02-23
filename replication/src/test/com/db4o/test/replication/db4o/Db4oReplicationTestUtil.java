@@ -7,7 +7,6 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.inside.replication.*;
 import com.db4o.replication.db4o.*;
-import com.db4o.test.replication.*;
 
 public class Db4oReplicationTestUtil {
     
