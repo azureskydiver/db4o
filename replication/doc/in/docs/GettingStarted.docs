@@ -8,7 +8,7 @@ To run the provided build scripts dRS requires Apache Ant 1.6 or later.
 .l http://ant.apache.org .. 
 
 
-dRS is dependand on the db4o object database. A db4o-X.x.java5.jar has ._
+dRS is dependant on the db4o object database. A db4o-X.x.java5.jar has ._
 been included ._
 in the "lib" directory of the distribution.
 
