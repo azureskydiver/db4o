@@ -44,9 +44,7 @@ abstract class YapFieldVirtual extends YapField {
         // do nothing
     }
     
-    void delete(YapWriter a_bytes) {
-        a_bytes.incrementOffset(linkLength());
-    }
+    abstract void delete(YapWriter a_bytes, boolean isUpdate);
     
     Object getOrCreate(Transaction a_trans, Object a_OnObject) {
         // This is the first part of marshalling

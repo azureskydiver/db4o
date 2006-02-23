@@ -100,6 +100,13 @@ public class YapField implements StoredField {
         IndexTransaction ift = getIndex(a_trans).dirtyIndexTransaction(a_trans);
         ift.add(parentID, i_handler.indexEntry(valueOrID));
     }
+    
+    void removeIndexEntry(Transaction trans, int parentID, Object valueOrID){
+        i_handler.prepareComparison(valueOrID);
+        IndexTransaction ift = getIndex(trans).dirtyIndexTransaction(trans);
+        ift.remove(parentID, i_handler.indexEntry(valueOrID));
+    }
+    
 
     public boolean alive() {
         if (i_state == AVAILABLE) {
@@ -309,7 +316,7 @@ public class YapField implements StoredField {
         }
     }
 
-    void delete(YapWriter a_bytes) {
+    void delete(YapWriter a_bytes, boolean isUpdate) {
         if (alive()) {
             if (i_index != null) {
                 int offset = a_bytes._offset;
@@ -321,10 +328,7 @@ public class YapField implements StoredField {
                         e.printStackTrace();
                     }
                 }
-                i_handler.prepareComparison(obj);
-                IndexTransaction ift = i_index.dirtyIndexTransaction(a_bytes
-                    .getTransaction());
-                ift.remove(a_bytes.getID(), i_handler.indexEntry(obj));
+                removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), obj);
                 a_bytes._offset = offset;
             }
             
@@ -332,7 +336,6 @@ public class YapField implements StoredField {
             if(Deploy.csharp){
             	dotnetValueType = Platform4.isValueType(i_handler.classReflector());	
             }
-            
             
             if ((i_config != null && i_config.i_cascadeOnDelete == 1)
                 || dotnetValueType) {

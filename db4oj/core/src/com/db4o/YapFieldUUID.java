@@ -43,6 +43,21 @@ class YapFieldUUID extends YapFieldVirtual {
         }
     }
     
+    void delete(YapWriter a_bytes, boolean isUpdate) {
+        if(isUpdate){
+            a_bytes.incrementOffset(linkLength());
+            return;
+        }
+        a_bytes.incrementOffset(YapConst.YAPINT_LENGTH);
+        long longPart = YLong.readLong(a_bytes);
+        if(longPart > 0){
+            YapStream stream = a_bytes.getStream();
+            if (stream.maintainsIndices()){
+                removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), new Long(longPart));
+            }
+        }
+    }
+    
     Index4 getIndex(Transaction a_trans){
         YapFile stream = (YapFile)a_trans.i_stream;
         if(i_index == null){

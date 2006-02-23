@@ -103,29 +103,6 @@ class YLong extends YapJavaClass
 		}
 	}	
 	
-	static final long readLong(YapWriter writer){
-	    
-        if (Deploy.debug) {
-			long ret = 0;
-            writer.readBegin(YapConst.YAPLONG);
-            if (Deploy.debugLong) {
-                ret = new Long(new YapStringIO().read(writer, YapConst.LONG_BYTES).trim())
-                        .longValue();
-            } else {
-                for (int i = 0; i < YapConst.LONG_BYTES; i++) {
-                    ret = (ret << 8) + (writer._buffer[i] & 0xff);
-                }
-                writer._offset += YapConst.LONG_BYTES;
-            }
-            writer.readEnd();
-			return ret;
-        }
-		long l_return = 0;
-		for (int i = 0; i < YapConst.LONG_BYTES; i++){
-			l_return = (l_return << 8) + (writer._buffer[writer._offset++ ] & 0xff);
-		}
-		return l_return;
-	}
 	
 		
 	// Comparison_______________________

@@ -19,6 +19,10 @@ class YapFieldVersion extends YapFieldVirtual {
         YLong.writeLong(a_writer.getStream().bootRecord().version(), a_writer);
     }
     
+    void delete(YapWriter a_bytes, boolean isUpdate) {
+        a_bytes.incrementOffset(linkLength());
+    }
+
     void instantiate1(Transaction a_trans, YapObject a_yapObject, YapReader a_bytes) {
         a_yapObject.i_virtualAttributes.i_version = YLong.readLong(a_bytes);
     }
