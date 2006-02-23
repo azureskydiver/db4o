@@ -182,10 +182,10 @@ public abstract class ReplicationProviderTest extends Test {
 	}
 
 
-	private TestableReplicationProviderInside tstSignature() {
+	private void tstSignature() {
 		TestableReplicationProviderInside subject = prepareSubject();
 		ensure(subject.getSignature() != null);
-		return subject;
+        destroySubject();
 	}
 
 
