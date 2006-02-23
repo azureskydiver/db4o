@@ -30,7 +30,7 @@ public abstract class R0to4Runner {
 		peerA = prepareProviderA();
 		peerB = prepareProviderB();
 
-		delete(new Class[]{R0.class});
+		delete(new Class[]{R0.class, R1.class, R2.class, R3.class, R4.class});
 
 		init(peerA, peerB);
 		ensureCount(peerA, LINKERS);

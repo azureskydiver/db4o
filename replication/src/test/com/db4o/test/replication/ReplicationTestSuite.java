@@ -10,6 +10,7 @@ import com.db4o.test.replication.db4o.Db4oReplicationFeaturesMain;
 import com.db4o.test.replication.db4o.Db4oReplicationProviderTest;
 import com.db4o.test.replication.db4o.Db4oSimpleArrayTest;
 import com.db4o.test.replication.db4o.Db4oSimpleParentChild;
+import com.db4o.test.replication.db4o.hibernate.*;
 import com.db4o.test.replication.hibernate.HibernateListTest;
 import com.db4o.test.replication.hibernate.HibernateMapTest;
 import com.db4o.test.replication.hibernate.HibernateR0to4Runner;
@@ -35,9 +36,11 @@ import com.db4o.test.replication.transients.TransientSingleTypeCollectionReplica
 public class ReplicationTestSuite extends TestSuite {
 
 	public Class[] tests() {
-		System.err.println("Db4oReplicationProvider.getReference(obj).version() must return the latest version of all collections held by obj because collections are being treated as 2nd class objects (like arrays) for hibernate replication purposes.");
-		System.err.println("Overcome absence of constructor in VMs other than Sun's.");
-		System.err.println("Uncommenting the FIXME Db4oReplicationProvider to debug Db4oReplicationProvider");
+        
+		// System.err.println("Db4oReplicationProvider.getReference(obj).version() must return the latest version of all collections held by obj because collections are being treated as 2nd class objects (like arrays) for hibernate replication purposes.");
+		// System.err.println("Overcome absence of constructor in VMs other than Sun's.");
+        
+        
 		return new Class[]{
 				HibernateReplicationAfterDeletionTest.class,
 				Db4oReplicationAfterDeletionTest.class,
@@ -49,12 +52,12 @@ public class ReplicationTestSuite extends TestSuite {
 				TransientR0to4Runner.class,
 				Db4oR0to4Runner.class,
 				HibernateR0to4Runner.class,
-				//Db4oHibernateR0to4Runner.class,
+				// Db4oHibernateR0to4Runner.class,
 
 				TransientSimpleParentChild.class,
 				Db4oSimpleParentChild.class,
 				HibernateSimpleParentChild.class,
-				//Db4oHibernateSimpleParentChild.class,
+				// Db4oHibernateSimpleParentChild.class,
 
 				TransientListTest.class,
 				Db4oListTest.class,
@@ -67,7 +70,7 @@ public class ReplicationTestSuite extends TestSuite {
 				TransientSimpleArrayTest.class,
 				Db4oSimpleArrayTest.class,
 				HibernateSimpleArrayTest.class,
-				//Db4oHibernateSimpleArrayTest.class,
+				Db4oHibernateSimpleArrayTest.class,
 
 				TransientSingleTypeCollectionReplicationTest.class,
 				HibernateSingleTypeCollectionReplicationTest.class,
