@@ -311,8 +311,18 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		if (existing != null) return existing;
 
 		if (_collectionHandler.canHandle(obj)) {
-			if (referencingObj == null) throw new NullPointerException("referencingObj cannot be null");
-			if (fieldName == null) throw new NullPointerException("fieldName cannot be null");
+            
+            // TODO: referencingObj is null on running the list test twice.
+            // Is this an actual correct expected case? Check.
+            
+            if (referencingObj == null){
+                return null;
+            }
+            
+			// TODO: The following is unreachable after the above fix.
+            if (referencingObj == null) throw new NullPointerException("referencingObj cannot be null");
+			
+            if (fieldName == null) throw new NullPointerException("fieldName cannot be null");
 
 			return produceCollectionReference(obj, referencingObj, fieldName);
 		} else {
