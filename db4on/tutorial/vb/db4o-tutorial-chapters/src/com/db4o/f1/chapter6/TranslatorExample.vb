@@ -12,13 +12,13 @@ Namespace com.db4o.f1.chapter6
 		End Sub
 
 		Public Shared Sub TryStoreWithCallConstructors()
-            Global.com.db4o.Db4o.Configure().ExceptionsOnNotStorable(True)
-            Global.com.db4o.Db4o.Configure().ObjectClass(GetType(CultureInfo)).CallConstructor(True)
+            Db4oFactory.Configure().ExceptionsOnNotStorable(True)
+            Db4oFactory.Configure().ObjectClass(GetType(CultureInfo)).CallConstructor(True)
 			TryStoreAndRetrieve()
 		End Sub
 
 		Public Shared Sub TryStoreWithoutCallConstructors()
-            Global.com.db4o.Db4o.Configure().ObjectClass(GetType(CultureInfo)).CallConstructor(False)
+            Db4oFactory.Configure().ObjectClass(GetType(CultureInfo)).CallConstructor(False)
 			' trying to store objects that hold onto
 			' system resources can be pretty nasty
 			' uncomment the following line to see
@@ -27,13 +27,13 @@ Namespace com.db4o.f1.chapter6
 		End Sub
 
 		Public Shared Sub StoreWithTranslator()
-            Global.com.db4o.Db4o.Configure().ObjectClass(GetType(CultureInfo)).Translate(New CultureInfoTranslator())
+            Db4oFactory.Configure().ObjectClass(GetType(CultureInfo)).Translate(New CultureInfoTranslator())
 			TryStoreAndRetrieve()
-            Global.com.db4o.Db4o.Configure().ObjectClass(GetType(CultureInfo)).Translate(Nothing)
+            Db4oFactory.Configure().ObjectClass(GetType(CultureInfo)).Translate(Nothing)
 		End Sub
 
 		Public Shared Sub TryStoreAndRetrieve()
-            Dim db As ObjectContainer = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
 			Try
 				Dim champs As String() = New String() {"Ayrton Senna", "Nelson Piquet"}
 				Dim LocalizedItemList As LocalizedItemList = New LocalizedItemList(CultureInfo.CreateSpecificCulture("pt-BR"), champs)
@@ -45,7 +45,7 @@ Namespace com.db4o.f1.chapter6
 			Finally
 				db.Close()
 			End Try
-            db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+            db = Db4oFactory.OpenFile(Util.YapFileName)
 			Try
 				Dim result As ObjectSet = db.[Get](GetType(LocalizedItemList))
 				While result.HasNext()

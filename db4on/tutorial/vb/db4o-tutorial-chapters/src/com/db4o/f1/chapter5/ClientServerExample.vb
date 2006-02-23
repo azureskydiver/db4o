@@ -9,7 +9,7 @@ Namespace com.db4o.f1.chapter5
 			File.Delete(Util.YapFileName)
 			AccessLocalServer()
 			File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
 			Try
 				SetFirstCar(db)
 				SetSecondCar(db)
@@ -17,7 +17,7 @@ Namespace com.db4o.f1.chapter5
 				db.Close()
 			End Try
 			ConfigureDb4o()
-            Dim server As ObjectServer = Global.com.db4o.Db4o.OpenServer(Util.YapFileName, 0)
+            Dim server As ObjectServer = Db4oFactory.OpenServer(Util.YapFileName, 0)
 			Try
 				QueryLocalServer(server)
 				DemonstrateLocalReadCommitted(server)
@@ -26,7 +26,7 @@ Namespace com.db4o.f1.chapter5
 				server.Close()
 			End Try
 			AccessRemoteServer()
-            server = Global.com.db4o.Db4o.OpenServer(Util.YapFileName, ServerPort)
+            server = Db4oFactory.OpenServer(Util.YapFileName, ServerPort)
 			server.GrantAccess(ServerUser, ServerPassword)
 			Try
 				QueryRemoteServer(ServerPort, ServerUser, ServerPassword)
@@ -52,7 +52,7 @@ Namespace com.db4o.f1.chapter5
 		End Sub
 
 		Public Shared Sub AccessLocalServer()
-            Dim server As ObjectServer = Global.com.db4o.Db4o.OpenServer(Util.YapFileName, 0)
+            Dim server As ObjectServer = Db4oFactory.OpenServer(Util.YapFileName, 0)
 			Try
 				Dim client As ObjectContainer = server.OpenClient()
 				' Do something with this client, or open more clients
@@ -69,7 +69,7 @@ Namespace com.db4o.f1.chapter5
 		End Sub
 
 		Public Shared Sub ConfigureDb4o()
-            Global.com.db4o.Db4o.Configure().ObjectClass(GetType(Car)).UpdateDepth(3)
+            Db4oFactory.Configure().ObjectClass(GetType(Car)).UpdateDepth(3)
 		End Sub
 
 		Public Shared Sub DemonstrateLocalReadCommitted(ByVal server As ObjectServer)
@@ -107,10 +107,10 @@ Namespace com.db4o.f1.chapter5
 		End Sub
 
 		Public Shared Sub AccessRemoteServer()
-            Dim server As ObjectServer = Global.com.db4o.Db4o.OpenServer(Util.YapFileName, ServerPort)
+            Dim server As ObjectServer = Db4oFactory.OpenServer(Util.YapFileName, ServerPort)
 			server.GrantAccess(ServerUser, ServerPassword)
 			Try
-                Dim client As ObjectContainer = Global.com.db4o.Db4o.OpenClient("localhost", ServerPort, ServerUser, ServerPassword)
+                Dim client As ObjectContainer = Db4oFactory.OpenClient("localhost", ServerPort, ServerUser, ServerPassword)
 				' Do something with this client, or open more clients
 				client.Close()
 			Finally
@@ -119,14 +119,14 @@ Namespace com.db4o.f1.chapter5
 		End Sub
 
 		Public Shared Sub QueryRemoteServer(ByVal port As Integer, ByVal user As String, ByVal password As String)
-            Dim client As ObjectContainer = Global.com.db4o.Db4o.OpenClient("localhost", port, user, password)
+            Dim client As ObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
 			ListResult(client.[Get](New Car(Nothing)))
 			client.Close()
 		End Sub
 
 		Public Shared Sub DemonstrateRemoteReadCommitted(ByVal port As Integer, ByVal user As String, ByVal password As String)
-            Dim client1 As ObjectContainer = Global.com.db4o.Db4o.OpenClient("localhost", port, user, password)
-            Dim client2 As ObjectContainer = Global.com.db4o.Db4o.OpenClient("localhost", port, user, password)
+            Dim client1 As ObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
+            Dim client2 As ObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
 			Dim pilot As Pilot = New Pilot("Jenson Button", 97)
 			Dim result As ObjectSet = client1.[Get](New Car(Nothing))
 			Dim car As Car = DirectCast(result.[Next](), Car)
@@ -142,8 +142,8 @@ Namespace com.db4o.f1.chapter5
 		End Sub
 
 		Public Shared Sub DemonstrateRemoteRollback(ByVal port As Integer, ByVal user As String, ByVal password As String)
-            Dim client1 As ObjectContainer = Global.com.db4o.Db4o.OpenClient("localhost", port, user, password)
-            Dim client2 As ObjectContainer = Global.com.db4o.Db4o.OpenClient("localhost", port, user, password)
+            Dim client1 As ObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
+            Dim client2 As ObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
 			Dim result As ObjectSet = client1.[Get](New Car(Nothing))
 			Dim car As Car = DirectCast(result.[Next](), Car)
 			car.Pilot = New Pilot("Someone else", 0)

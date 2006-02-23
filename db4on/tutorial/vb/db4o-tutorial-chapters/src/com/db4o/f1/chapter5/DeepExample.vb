@@ -6,23 +6,23 @@ Namespace com.db4o.f1.chapter5
 	Inherits Util
 		Public Shared Sub Main(ByVal args As String())
 			File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
 			Try
 				StoreCar(db)
 				db.Close()
 				SetCascadeOnUpdate()
-                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(Util.YapFileName)
 				TakeManySnapshots(db)
 				db.Close()
-                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(Util.YapFileName)
 				RetrieveAllSnapshots(db)
 				db.Close()
-                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(Util.YapFileName)
 				RetrieveSnapshotsSequentially(db)
 				RetrieveSnapshotsSequentiallyImproved(db)
 				db.Close()
 				SetActivationDepth()
-                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(Util.YapFileName)
 				RetrieveSnapshotsSequentially(db)
 			Finally
 				db.Close()
@@ -37,7 +37,7 @@ Namespace com.db4o.f1.chapter5
 		End Sub
 
 		Public Shared Sub SetCascadeOnUpdate()
-            Global.com.db4o.Db4o.Configure().ObjectClass(GetType(Car)).CascadeOnUpdate(True)
+            Db4oFactory.Configure().ObjectClass(GetType(Car)).CascadeOnUpdate(True)
 		End Sub
 
 		Public Shared Sub TakeManySnapshots(ByVal db As ObjectContainer)
@@ -80,7 +80,7 @@ Namespace com.db4o.f1.chapter5
 		End Sub
 
 		Public Shared Sub SetActivationDepth()
-            Global.com.db4o.Db4o.Configure().ObjectClass(GetType(TemperatureSensorReadout)).CascadeOnActivate(True)
+            Db4oFactory.Configure().ObjectClass(GetType(TemperatureSensorReadout)).CascadeOnActivate(True)
 		End Sub
 
 	End Class

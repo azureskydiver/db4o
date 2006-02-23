@@ -19,7 +19,7 @@ Namespace com.db4o.f1.chapter5
 			Dim objectContainer As ObjectContainer = Nothing
 			Try
 				' connect to the server
-                objectContainer = Global.com.db4o.Db4o.OpenClient(HOST, PORT, USER, PASS)
+                objectContainer = Db4oFactory.OpenClient(HOST, PORT, USER, PASS)
 			Catch e As Exception
 				Console.WriteLine(e.ToString())
 			End Try

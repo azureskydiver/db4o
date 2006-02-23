@@ -8,7 +8,7 @@ Namespace com.db4o.f1.chapter2
 	Inherits Util
 		Public Shared Sub Main(ByVal args As String())
 			File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
 			Try
 				StoreFirstCar(db)
 				StoreSecondCar(db)
@@ -22,19 +22,19 @@ Namespace com.db4o.f1.chapter2
 				UpdatePilotSingleSession(db)
 				UpdatePilotSeparateSessionsPart1(db)
 				db.Close()
-                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(Util.YapFileName)
 				UpdatePilotSeparateSessionsPart2(db)
 				db.Close()
 				UpdatePilotSeparateSessionsImprovedPart1(db)
-                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(Util.YapFileName)
 				UpdatePilotSeparateSessionsImprovedPart2(db)
 				db.Close()
-                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(Util.YapFileName)
 				UpdatePilotSeparateSessionsImprovedPart3(db)
 				DeleteFlat(db)
 				db.Close()
 				DeleteDeepPart1(db)
-                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(Util.YapFileName)
 				DeleteDeepPart2(db)
 				DeleteDeepRevisited(db)
 			Finally
@@ -163,7 +163,7 @@ Namespace com.db4o.f1.chapter2
 		End Sub
 
 		Public Shared Sub UpdatePilotSeparateSessionsImprovedPart1(ByVal db As ObjectContainer)
-            Global.com.db4o.Db4o.Configure().ObjectClass(GetType(Car)).CascadeOnUpdate(True)
+            Db4oFactory.Configure().ObjectClass(GetType(Car)).CascadeOnUpdate(True)
 		End Sub
 
 		Public Shared Sub UpdatePilotSeparateSessionsImprovedPart2(ByVal db As ObjectContainer)
@@ -187,7 +187,7 @@ Namespace com.db4o.f1.chapter2
 		End Sub
 
 		Public Shared Sub DeleteDeepPart1(ByVal db As ObjectContainer)
-            Global.com.db4o.Db4o.Configure().ObjectClass(GetType(Car)).CascadeOnDelete(True)
+            Db4oFactory.Configure().ObjectClass(GetType(Car)).CascadeOnDelete(True)
 		End Sub
 
 		Public Shared Sub DeleteDeepPart2(ByVal db As ObjectContainer)

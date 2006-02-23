@@ -8,7 +8,7 @@ Namespace com.db4o.f1.chapter3
 	Inherits Util
 		Public Shared Sub Main(ByVal args As String())
 			File.Delete(Util.YapFileName)
-            Dim db As ObjectContainer = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+            Dim db As ObjectContainer = Db4oFactory.OpenFile(Util.YapFileName)
 			Try
 				StoreFirstCar(db)
 				StoreSecondCar(db)
@@ -21,12 +21,12 @@ Namespace com.db4o.f1.chapter3
 				RetrieveCarQuery(db)
 				db.Close()
 				UpdateCarPart1()
-                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(Util.YapFileName)
 				UpdateCarPart2(db)
 				UpdateCollection(db)
 				db.Close()
 				DeleteAllPart1()
-                db = Global.com.db4o.Db4o.OpenFile(Util.YapFileName)
+                db = Db4oFactory.OpenFile(Util.YapFileName)
 				DeleteAllPart2(db)
 				RetrieveAllSensorReadouts(db)
 			Finally
@@ -132,7 +132,7 @@ Namespace com.db4o.f1.chapter3
 		End Sub
 
 		Public Shared Sub UpdateCarPart1()
-            Global.com.db4o.Db4o.Configure().ObjectClass(GetType(Car)).CascadeOnUpdate(True)
+            Db4oFactory.Configure().ObjectClass(GetType(Car)).CascadeOnUpdate(True)
 		End Sub
 
 		Public Shared Sub UpdateCarPart2(ByVal db As ObjectContainer)
@@ -160,7 +160,7 @@ Namespace com.db4o.f1.chapter3
 		End Sub
 
 		Public Shared Sub DeleteAllPart1()
-            Global.com.db4o.Db4o.Configure().ObjectClass(GetType(Car)).CascadeOnDelete(True)
+            Db4oFactory.Configure().ObjectClass(GetType(Car)).CascadeOnDelete(True)
 		End Sub
 
 		Public Shared Sub DeleteAllPart2(ByVal db As ObjectContainer)
