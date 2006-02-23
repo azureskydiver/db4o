@@ -23,6 +23,9 @@ endif
 MAIN_TEST=com.db4o.test.AllTests
 
 DLL_CORE_DIST=$(DIR_HOME)/dll/db4o.dll
+DIR_LEGACY_DIST=$(DIR_HOME)/legacy
+DIR_LEGACY_BIN=$(DIR_BIN)/legacy
+DIR_INSTALL_LEGACY=$(DIR_INSTALL_BIN)/legacy
 DLL_CORE=$(DIR_BIN)/db4o.dll
 DLL_TOOLS=$(DIR_BIN)/db4o-mono-tools.dll
 DEBUGGER_FILES=$(DIR_BIN)/*.mdb
@@ -44,7 +47,9 @@ buildtools: buildcore
 	find $(DIR_SRC_TOOLS) -name "*.cs"|xargs $(MCS) $(MCS_OPTS) -target:library -r:$(DLL_CORE) -out:$(DLL_TOOLS)
 
 buildcore: init
-	#cp dll/db4o.dll $(DLL_CORE)
+	mkdir -p $(DIR_LEGACY_BIN)
+	cp $(DIR_LEGACY_DIST)/*.dll $(DIR_LEGACY_BIN)
+	cp $(DIR_LEGACY_DIST)/*.exe $(DIR_LEGACY_BIN)
 	find $(DIR_SRC_CORE) -name "*.cs"|grep -v -E "src/compact/"|grep -v -E "src/compact-2005/"|xargs $(MCS) $(MCS_OPTS) -target:library -out:$(DLL_CORE)
 
 init:
@@ -57,12 +62,12 @@ clean:
 	rm -rf $(DIR_BIN)
 	
 install:
-	#echo ">>> *** " $(RPM_BUILD_ROOT)
 	mkdir -p $(DIR_INSTALL_BIN)
 	cp $(DLL_CORE) $(DIR_INSTALL_BIN)
-	#cp $(DEBUGGER_FILES) $(DIR_INSTALL_BIN)
 	cp $(DLL_TOOLS) $(DIR_INSTALL_BIN)
 	cp $(EXE_TEST_PATH) $(DIR_INSTALL_BIN)
+	mkdir -p $(DIR_INSTALL_LEGACY)
+	cp $(DIR_LEGACY_BIN)/* $(DIR_INSTALL_LEGACY) 
 ifndef RPM_DOC_DIR
 	mkdir -p $(DIR_INSTALL_DOC)
 	cp -R $(DIR_DOC)/* $(DIR_INSTALL_DOC)

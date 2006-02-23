@@ -209,7 +209,7 @@ public class PDFWriter extends AbstractWriter {
         }
         String codeStr=files.readFileStr(file);
         if (command.getMethodName() != null) {
-            codeStr = extractMethod(codeStr, command.getMethodName(), command
+            codeStr = extractSource(codeStr, command.getMethodName(), command
                     .getParamValue(Source.CMD_FULL));
             if (codeStr.length() == 0) {
                 throw new RuntimeException("Method '" + command.getClassName()
