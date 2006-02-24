@@ -454,3 +454,47 @@ For example, if the maximum version number is 10, then the version number used i
 replication is 11. dRS uses this number to compare with the version number of objects. If the object ._
 version number is larger than the replication version number, then dRS knows the object is changed since ._
 last replication.
+
+.2 List of dRS tables and columns ..
+
+.3 dRS tables ..
+ - ReplicationComponentField
+ - ReplicationComponentIdentity
+ - ReplicationProviderSignature
+ - ReplicationRecord
+ - uuid_long_part_sequence
+
+Oracle 9i/10g dialect of the DDL
+.c
+create table ReplicationComponentField (id number(10,0) not null, referencingObjectClassName varchar2(255 char) not null, referencingObjectFieldName varchar2(255 char) not null, primary key (id), unique (referencingObjectClassName, referencingObjectFieldName));
+create table ReplicationComponentIdentity (id number(10,0) not null, uuidLongPart number(19,0) not null, referencingObjectUuidLongPart number(19,0) not null, referencingObjectField number(10,0) not null, provider number(19,0), primary key (id), unique (uuidLongPart, referencingObjectUuidLongPart, referencingObjectField));
+create table ReplicationProviderSignature (drs_provider_id number(19,0) not null, class varchar2(255 char) not null, bytes raw(255), creationTime number(19,0), primary key (drs_provider_id));
+create table ReplicationRecord (id number(19,0) not null, version number(19,0), primary key (id));
+create table uuid_long_part_sequence (unused_id number(10,0) not null, current_seq_number number(19,0), primary key (unused_id));
+
+alter table ReplicationComponentIdentity add constraint FK4BFE028F150828D2 foreign key (provider) references ReplicationProviderSignature;
+alter table ReplicationComponentIdentity add constraint FK4BFE028F8E65D9F6 foreign key (referencingObjectField) references ReplicationComponentField;
+alter table ReplicationRecord add constraint FK7F31971DFC6E5FCB foreign key (id) references ReplicationProviderSignature;
+..
+
+To find out the dialect of other RDBMS, run any of the dRS example with your RDBMS, set the output level ._
+in log4j.xml from "FATAL" to "DEBUG". Search for entries of "SchemaUpdate" , then you will find out the ._
+DDL of your RDBMS dialect.
+
+.3 dRS columns ..
+For each table for persisted object, e.g. Car or Pilot, the following columns are created:
+ - drs_uuid_long_part 
+ - drs_version 
+ - drs_provider_id 
+
+Oracle 9i/10g dialect of the DDL
+.c
+ALTER TABLE Car add drs_uuid_long_part number(19,0);
+ALTER TABLE Car add drs_version number(19,0);
+ALTER TABLE Car add drs_provider_id number(19,0);
+ALTER TABLE Car add constraint DB4O_Car foreign key (drs_provider_id) references ReplicationProviderSignature;
+..
+
+.2 Turning off the automatic creation of dRS tables and columns ..
+
+
