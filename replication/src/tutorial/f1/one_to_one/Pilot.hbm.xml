@@ -8,7 +8,9 @@
                    default-cascade="all">
 	<class name="f1.one_to_one.Pilot">
 		<id column="id" type="int">
-			<generator class="native"/>
+			<generator class="foreign">
+				<param name="property">helmet</param>
+			</generator>
 		</id>
 		<property name="name"/>
 		<one-to-one name="helmet"/>
