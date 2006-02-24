@@ -5,7 +5,6 @@ import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.ReplicationReferenceImpl;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
 import com.db4o.replication.hibernate.PeerSignature;
 import com.db4o.test.Test;
 
@@ -130,23 +129,16 @@ public abstract class ReplicationProviderTest extends Test {
 		ensure(changed.contains(object3));
 		//ensure(changed.contains(object4));
 
-		if (subject instanceof HibernateReplicationProviderImpl) {
-            
-            // FIXME: not nice in the test output of a build  
-            
-			// System.err.println("FIX ME, uncommen t, and debug from here ");
-            
-			return;
-		}
-
 		changed = toVector(subject.objectsChangedSinceLastReplication(Car.class));
 		ensure(!changed.contains(object1));
 		ensure(!changed.contains(object2));
 		ensure(changed.contains(object3));
 		//ensure(changed.contains(object4));
 
-		subject.syncVersionWithPeer(99);
-		subject.commitReplicationTransaction(100);
+		subject.syncVersionWithPeer(9800);
+		subject.commitReplicationTransaction(9801);
+
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		ensure(!subject.objectsChangedSinceLastReplication().hasNext());
 
@@ -189,7 +181,7 @@ public abstract class ReplicationProviderTest extends Test {
 	private void tstSignature() {
 		TestableReplicationProviderInside subject = prepareSubject();
 		ensure(subject.getSignature() != null);
-        destroySubject();
+		destroySubject();
 	}
 
 
