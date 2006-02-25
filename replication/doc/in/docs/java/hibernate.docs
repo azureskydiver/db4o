@@ -496,5 +496,12 @@ ALTER TABLE Car add constraint DB4O_Car foreign key (drs_provider_id) references
 ..
 
 .2 Turning off the automatic creation of dRS tables and columns ..
+In some situations, you may not have the privilege to create or alter tables. You may need to ask your DBA ._
+to create the tables and columns for you before using dRS.
 
+You can turn off the automatic creation of dRS tables and columns by changing the "hibernate.hbm2ddl.auto" ._
+property to "validate" in hibernate.cfg.xml. By doing so, dRS will not create or alter any tables. Rather, ._
+it will check the existence of the dRS tables and columns before starting replication.
 
+If the required dRS tables and columns do not exist, dRS will throw a RuntimeException notifying the user ._
+and the replication will not begin.
