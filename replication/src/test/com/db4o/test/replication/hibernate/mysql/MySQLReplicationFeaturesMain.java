@@ -9,11 +9,11 @@ public class MySQLReplicationFeaturesMain extends HibernateReplicationFeaturesMa
 	public MySQLReplicationFeaturesMain() {
 		cfgA = HibernateConfigurationFactory.produceMySQLConfigA();
 		cfgA.addClass(Replicated.class);
-		pA = new HibernateReplicationProviderImpl(cfgA, "A", new byte[]{1});
+		pA = new HibernateReplicationProviderImpl(cfgA, "A");
 
 		cfgB = HibernateConfigurationFactory.produceMySQLConfigB();
 		cfgB.addClass(Replicated.class);
-		pB = new HibernateReplicationProviderImpl(cfgB, "B", new byte[]{2});
+		pB = new HibernateReplicationProviderImpl(cfgB, "B");
 	}
 
 	public void test() {

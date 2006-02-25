@@ -2,32 +2,32 @@
 
 package com.db4o.test.replication.db4o.hibernate;
 
-import org.hibernate.cfg.*;
-
-import com.db4o.inside.replication.*;
-import com.db4o.replication.db4o.*;
-import com.db4o.replication.hibernate.*;
-import com.db4o.test.*;
-import com.db4o.test.replication.*;
-import com.db4o.test.replication.hibernate.*;
+import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.replication.db4o.Db4oReplicationProvider;
+import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
+import com.db4o.test.Test;
+import com.db4o.test.replication.SPCChild;
+import com.db4o.test.replication.SPCParent;
+import com.db4o.test.replication.SimpleParentChild;
+import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
+import org.hibernate.cfg.Configuration;
 
 
 public class Db4oHibernateSimpleParentChild extends SimpleParentChild {
 
-    protected TestableReplicationProvider prepareProviderA() {
-        Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
-        configuration.addClass(SPCParent.class);
-        configuration.addClass(SPCChild.class);
-        HibernateReplicationProviderImpl p = new HibernateReplicationProviderImpl(configuration, "A", new byte[]{1});
-        return p;
-    }
+	protected TestableReplicationProvider prepareProviderA() {
+		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
+		configuration.addClass(SPCParent.class);
+		configuration.addClass(SPCChild.class);
+		return new HibernateReplicationProviderImpl(configuration, "A");
+	}
 
-    protected TestableReplicationProvider prepareProviderB() {
-        return new Db4oReplicationProvider(Test.objectContainer());
-    }
+	protected TestableReplicationProvider prepareProviderB() {
+		return new Db4oReplicationProvider(Test.objectContainer());
+	}
 
-    public void test() {
-        super.test();
-    }
+	public void test() {
+		super.test();
+	}
 
 }

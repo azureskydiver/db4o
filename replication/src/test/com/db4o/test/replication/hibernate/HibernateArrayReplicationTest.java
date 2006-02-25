@@ -11,15 +11,13 @@ public class HibernateArrayReplicationTest extends ArrayReplicationTest {
 	protected TestableReplicationProvider prepareProviderA() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(ArrayHolder.class);
-		HibernateReplicationProviderImpl p = new HibernateReplicationProviderImpl(configuration, "A", new byte[]{1});
-		return p;
+		return new HibernateReplicationProviderImpl(configuration, "A");
 	}
 
 	protected TestableReplicationProvider prepareProviderB() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(ArrayHolder.class);
-		HibernateReplicationProviderImpl p = new HibernateReplicationProviderImpl(configuration, "B", new byte[]{2});
-		return p;
+		return new HibernateReplicationProviderImpl(configuration, "B");
 	}
 
 	public void testArrayReplication() {

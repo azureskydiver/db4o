@@ -13,14 +13,14 @@ public class HibernateReplicationAfterDeletionTest extends ReplicationAfterDelet
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(SPCParent.class);
 		configuration.addClass(SPCChild.class);
-		return new HibernateReplicationProviderImpl(configuration, "A", new byte[]{1});
+		return new HibernateReplicationProviderImpl(configuration, "A");
 	}
 
 	protected TestableReplicationProvider prepareProviderB() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(SPCParent.class);
 		configuration.addClass(SPCChild.class);
-		return new HibernateReplicationProviderImpl(configuration, "B", new byte[]{2});
+		return new HibernateReplicationProviderImpl(configuration, "B");
 	}
 
 	public void test() {

@@ -12,13 +12,13 @@ public class PostgreSQLR0to4Runner extends HibernateR0to4Runner {
 	protected TestableReplicationProvider prepareProviderA() {
 		Configuration configuration = HibernateConfigurationFactory.producePostgreSQLConfigA();
 		configuration.addClass(R0.class);
-		return new HibernateReplicationProviderImpl(configuration, "A", new byte[]{1});
+		return new HibernateReplicationProviderImpl(configuration, "A");
 	}
 
 	protected TestableReplicationProvider prepareProviderB() {
 		Configuration configuration = HibernateConfigurationFactory.producePostgreSQLConfigB();
 		configuration.addClass(R0.class);
-		return new HibernateReplicationProviderImpl(configuration, "B", new byte[]{2});
+		return new HibernateReplicationProviderImpl(configuration, "B");
 	}
 
 	public void test() {

@@ -17,11 +17,11 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 	public HibernateReplicationFeaturesMain() {
 		cfgA = HibernateConfigurationFactory.createNewDbConfig();
 		cfgA.addClass(Replicated.class);
-		pA = new HibernateReplicationProviderImpl(cfgA, "A", new byte[]{1});
+		pA = new HibernateReplicationProviderImpl(cfgA, "A");
 
 		cfgB = HibernateConfigurationFactory.createNewDbConfig();
 		cfgB.addClass(Replicated.class);
-		pB = new HibernateReplicationProviderImpl(cfgB, "B", new byte[]{2});
+		pB = new HibernateReplicationProviderImpl(cfgB, "B");
 	}
 
 	protected TestableReplicationProvider prepareProviderA() {

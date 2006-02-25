@@ -26,6 +26,7 @@ public class UpdateEventListenerImpl extends EmptyInterceptor
 	}
 
 	public static void configure(Configuration cfg) {
+		Util.addMetaDataClasses(cfg);
 		new MetaDataTablesCreator(cfg).createTables();
 		cfg.setInterceptor(instance);
 		EventListeners eventListeners = cfg.getEventListeners();

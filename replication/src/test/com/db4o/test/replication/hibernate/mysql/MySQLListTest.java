@@ -14,14 +14,14 @@ public class MySQLListTest extends HibernateListTest {
 		Configuration configuration = HibernateConfigurationFactory.produceMySQLConfigA();
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);
-		return new HibernateReplicationProviderImpl(configuration, "A", new byte[]{1});
+		return new HibernateReplicationProviderImpl(configuration, "A");
 	}
 
 	protected TestableReplicationProvider prepareProviderB() {
 		Configuration configuration = HibernateConfigurationFactory.produceMySQLConfigB();
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);
-		return new HibernateReplicationProviderImpl(configuration, "B", new byte[]{2});
+		return new HibernateReplicationProviderImpl(configuration, "B");
 	}
 
 	public void test() {
