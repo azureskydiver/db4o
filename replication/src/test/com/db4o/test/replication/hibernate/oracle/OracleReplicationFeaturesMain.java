@@ -9,11 +9,11 @@ public class OracleReplicationFeaturesMain extends HibernateReplicationFeaturesM
 	public OracleReplicationFeaturesMain() {
 		cfgA = HibernateConfigurationFactory.produceOracleConfigA();
 		cfgA.addClass(Replicated.class);
-		pA = new HibernateReplicationProviderImpl(cfgA, "A", new byte[]{1});
+		pA = new HibernateReplicationProviderImpl(cfgA, "A");
 
 		cfgB = HibernateConfigurationFactory.produceOracleConfigB();
 		cfgB.addClass(Replicated.class);
-		pB = new HibernateReplicationProviderImpl(cfgB, "B", new byte[]{2});
+		pB = new HibernateReplicationProviderImpl(cfgB, "B");
 	}
 
 	public void test() {

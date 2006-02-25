@@ -14,14 +14,14 @@ public class OracleMapTest extends MapTest {
 		Configuration configuration = HibernateConfigurationFactory.produceOracleConfigA();
 		configuration.addClass(MapHolder.class);
 		configuration.addClass(MapContent.class);
-		return new HibernateReplicationProviderImpl(configuration, "A", new byte[]{1});
+		return new HibernateReplicationProviderImpl(configuration, "A");
 	}
 
 	protected TestableReplicationProvider prepareProviderB() {
 		Configuration configuration = HibernateConfigurationFactory.produceOracleConfigB();
 		configuration.addClass(MapHolder.class);
 		configuration.addClass(MapContent.class);
-		return new HibernateReplicationProviderImpl(configuration, "B", new byte[]{2});
+		return new HibernateReplicationProviderImpl(configuration, "B");
 	}
 
 	public void test() {

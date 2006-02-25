@@ -2,32 +2,30 @@
 
 package com.db4o.test.replication.hibernate;
 
-import org.hibernate.cfg.*;
+import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
+import com.db4o.test.replication.performance.SPTFlatObject;
+import com.db4o.test.replication.performance.SimplePerformanceTests;
+import org.hibernate.cfg.Configuration;
 
-import com.db4o.inside.replication.*;
-import com.db4o.replication.hibernate.*;
-import com.db4o.test.replication.performance.*;
 
+public class HibernateSimplePerformanceTests extends SimplePerformanceTests {
 
-public class HibernateSimplePerformanceTests extends SimplePerformanceTests{
-    
-    protected TestableReplicationProvider prepareProviderA() {
-        Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
-        configuration.addClass(SPTFlatObject.class);
-        HibernateReplicationProviderImpl p = new HibernateReplicationProviderImpl(configuration, "A", new byte[]{1});
-        return p;
-    }
+	protected TestableReplicationProvider prepareProviderA() {
+		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
+		configuration.addClass(SPTFlatObject.class);
+		return new HibernateReplicationProviderImpl(configuration, "A");
+	}
 
-    protected TestableReplicationProvider prepareProviderB() {
-        Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
-        configuration.addClass(SPTFlatObject.class);
-        HibernateReplicationProviderImpl p = new HibernateReplicationProviderImpl(configuration, "B", new byte[]{2});
-        return p;
-    }
+	protected TestableReplicationProvider prepareProviderB() {
+		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
+		configuration.addClass(SPTFlatObject.class);
+		return new HibernateReplicationProviderImpl(configuration, "B");
+	}
 
-    public void test() {
-        super.test();
-    }
+	public void test() {
+		super.test();
+	}
 
 
 }

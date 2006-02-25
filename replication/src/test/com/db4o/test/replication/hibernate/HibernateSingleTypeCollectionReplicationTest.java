@@ -1,6 +1,6 @@
 package com.db4o.test.replication.hibernate;
 
-import com.db4o.inside.replication.*;
+import com.db4o.inside.replication.TestableReplicationProvider;
 import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
 import com.db4o.test.replication.CollectionHolder;
 import com.db4o.test.replication.SingleTypeCollectionReplicationTest;
@@ -10,13 +10,13 @@ public class HibernateSingleTypeCollectionReplicationTest extends SingleTypeColl
 	protected TestableReplicationProvider prepareProviderA() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(CollectionHolder.class);
-		return new HibernateReplicationProviderImpl(configuration, "A", new byte[]{1});
+		return new HibernateReplicationProviderImpl(configuration, "A");
 	}
 
 	protected TestableReplicationProvider prepareProviderB() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(CollectionHolder.class);
-		return new HibernateReplicationProviderImpl(configuration, "B", new byte[]{2});
+		return new HibernateReplicationProviderImpl(configuration, "B");
 	}
 
 	public void testCollectionReplication() {

@@ -44,16 +44,29 @@ public class MetaDataTablesCreator {
 	protected Connection connection;
 
 	public MetaDataTablesCreator(Configuration aCfg) {
+
+//		if (_cfg.getProperties().get(Environment.HBM2DDL_AUTO).equals("validate"))
+
 		cfg = aCfg;
 		dialect = Dialect.getDialect(cfg.getProperties());
+	}
+
+//	protected void validateSchema() {
+//		try {
+//			new SchemaValidator(_cfg).validate();
+//		} catch (HibernateException e) {
+//			throw new RuntimeException(e);
+//		}
+//	}
+
+	public void validate() {
+
 	}
 
 	public void createTables() {
 		cfg.setProperty("hibernate.hbm2ddl.auto", "update");
 
-		Util.addMetaDataClasses(cfg);
-
-		SessionFactory sessionFactory = cfg.buildSessionFactory();
+		SessionFactory sessionFactory = cfg. buildSessionFactory();
 		session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		connection = session.connection();

@@ -9,11 +9,11 @@ public class PostgreSQLReplicationFeaturesMain extends HibernateReplicationFeatu
 	public PostgreSQLReplicationFeaturesMain() {
 		cfgA = HibernateConfigurationFactory.producePostgreSQLConfigA();
 		cfgA.addClass(Replicated.class);
-		pA = new HibernateReplicationProviderImpl(cfgA, "A", new byte[]{1});
+		pA = new HibernateReplicationProviderImpl(cfgA, "A");
 
 		cfgB = HibernateConfigurationFactory.producePostgreSQLConfigB();
 		cfgB.addClass(Replicated.class);
-		pB = new HibernateReplicationProviderImpl(cfgB, "B", new byte[]{2});
+		pB = new HibernateReplicationProviderImpl(cfgB, "B");
 	}
 
 	public void test() {

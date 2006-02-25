@@ -30,7 +30,6 @@ import org.hibernate.event.FlushEventListener;
 import org.hibernate.event.PostUpdateEvent;
 import org.hibernate.event.PostUpdateEventListener;
 import org.hibernate.mapping.PersistentClass;
-import org.hibernate.tool.hbm2ddl.SchemaValidator;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
@@ -147,10 +146,10 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	protected final PostUpdateEventListener myPostUpdateEventListener = new MyPostUpdateEventListener();
 
 	public HibernateReplicationProviderImpl(Configuration cfg) {
-		this(cfg, null, null);
+		this(cfg, null);
 	}
 
-	public HibernateReplicationProviderImpl(Configuration cfg, String name, byte[] signature) {
+	public HibernateReplicationProviderImpl(Configuration cfg, String name) {
 		this._cfg = cfg;
 		this._cfg.setProperty("hibernate.format_sql", "true");
 		this._cfg.setProperty("hibernate.use_sql_comments", "true");
@@ -161,11 +160,6 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		this._cfg.setProperty("hibernate.connection.release_mode", "after_transaction");
 
 		Util.addMetaDataClasses(cfg);
-
-//TODO dRS 1.2
-//		if (_cfg.getProperties().get(Environment.HBM2DDL_AUTO).equals("validate"))
-//			validateSchema();
-
 		new MetaDataTablesCreator(cfg).createTables();
 
 		EventListeners eventListeners = this._cfg.getEventListeners();
@@ -176,25 +170,12 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		_sessionFactory = this._cfg.buildSessionFactory();
 		_session = _sessionFactory.openSession();
 		_session.setFlushMode(FlushMode.ALWAYS);
+		_transaction = _session.beginTransaction();
+
 		_mappedClasses = getMappedClasses();
 		_name = name;
 		uuidLongPartGenerator = new UuidLongPartGenerator(_session);
-
-		if (signature == null) {
-			initMySignature();
-		} else {
-			setSignature(signature);
-		}
-
-		_transaction = _session.beginTransaction();
-	}
-
-	protected void validateSchema() {
-		try {
-			new SchemaValidator(_cfg).validate();
-		} catch (HibernateException e) {
-			throw new RuntimeException(e);
-		}
+		initMySignature();
 	}
 
 	public final ReadonlyReplicationProviderSignature getSignature() {
@@ -311,18 +292,18 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		if (existing != null) return existing;
 
 		if (_collectionHandler.canHandle(obj)) {
-            
-            // TODO: referencingObj is null on running the list test twice.
-            // Is this an actual correct expected case? Check.
-            
-            if (referencingObj == null){
-                return null;
-            }
-            
+
+			// TODO: referencingObj is null on running the list test twice.
+			// Is this an actual correct expected case? Check.
+
+			if (referencingObj == null) {
+				return null;
+			}
+
 			// TODO: The following is unreachable after the above fix.
-            if (referencingObj == null) throw new NullPointerException("referencingObj cannot be null");
-			
-            if (fieldName == null) throw new NullPointerException("fieldName cannot be null");
+			if (referencingObj == null) throw new NullPointerException("referencingObj cannot be null");
+
+			if (fieldName == null) throw new NullPointerException("fieldName cannot be null");
 
 			return produceCollectionReference(obj, referencingObj, fieldName);
 		} else {

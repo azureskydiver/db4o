@@ -20,7 +20,7 @@ public class HibernateDb4oListTest extends ListTest {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);
-		return new HibernateReplicationProviderImpl(configuration, "A", new byte[]{1});
+		return new HibernateReplicationProviderImpl(configuration, "A");
 	}
 
 	public void test() {
