@@ -43,7 +43,7 @@ namespace com.db4o.inside.query
 					// although we could use it as a filter chain
 					// (and)
                     optimizeQuery(q, match.Target, match.Method);
-                    OnQueryExecution(match, QueryExecutionKind.Unoptimized);
+                    OnQueryExecution(match, QueryExecutionKind.DynamicallyOptimized);
 
                     return WrapQueryResult<Extent>(q);
                 }
@@ -53,7 +53,7 @@ namespace com.db4o.inside.query
                 OnQueryOptimizationFailure(e);
             }
             q.constrain(new GenericPredicateEvaluation<Extent>(match));
-            OnQueryExecution(match, QueryExecutionKind.DynamicallyOptimized);
+            OnQueryExecution(match, QueryExecutionKind.Unoptimized);
 
             return WrapQueryResult<Extent>(q);
         }
