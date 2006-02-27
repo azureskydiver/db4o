@@ -1,12 +1,9 @@
 package com.db4o.replication.hibernate;
 
-import org.hibernate.HibernateException;
+import com.db4o.foundation.Visitor4;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
 import org.hibernate.classic.Session;
-import org.hibernate.dialect.Dialect;
 import org.hibernate.mapping.Table;
 import org.hibernate.tool.hbm2ddl.ColumnMetadata;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
@@ -14,172 +11,94 @@ import org.hibernate.tool.hbm2ddl.TableMetadata;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 public class SchemaValidator {
-	protected static final String ALTER_TABLE = "ALTER TABLE ";
+	private ReplicationConfiguration cfg;
 
-	Configuration cfg;
+	protected org.hibernate.tool.hbm2ddl.SchemaValidator delegate;
+	protected SessionFactory sessionFactory;
 
-	/**
-	 * Represents a dialect of SQL implemented by a particular RDBMS.
-	 */
-	protected Dialect dialect;
-
-	/**
-	 * Comprehensive information about the database as a whole.
-	 */
-	protected DatabaseMetadata metadata;
-
-	/**
-	 * Hibernate mapped tables, excluding  {@link com.db4o.inside.replication.ReadonlyReplicationProviderSignature}
-	 * and {@link com.db4o.replication.hibernate.ReplicationRecord}.
-	 */
-	protected Set mappedTables;
-
-	protected Session session;
-
-	protected Connection connection;
-
-	public SchemaValidator(Configuration aCfg) {
+	public SchemaValidator(ReplicationConfiguration aCfg) {
 		cfg = aCfg;
-		dialect = Dialect.getDialect(cfg.getProperties());
-	}
 
-	public void execute() {
-		mappedTables = getMappedTables();
+		delegate = new org.hibernate.tool.hbm2ddl.SchemaValidator(cfg.getConfiguration());
 
-		SessionFactory sessionFactory = cfg. buildSessionFactory();
-		session = sessionFactory.openSession();
-		connection = session.connection();
+		sessionFactory = cfg.getConfiguration(). buildSessionFactory();
 
-		try {
-			metadata = new DatabaseMetadata(connection, dialect);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-
-		if (cfg.getProperties().get(Environment.HBM2DDL_AUTO).equals("validate")) {
-			validate();
-		} else {
-			createColumns();
-			validate();
-		}
-
-		session.close();
-		sessionFactory.close();
 	}
 
 	public void validate() {
-		boolean ok = true;
-		try {
-			new org.hibernate.tool.hbm2ddl.SchemaValidator(cfg).validate();
-		} catch (HibernateException e) {
-			throw new RuntimeException(e);
-		}
+		delegate.validate();
 
-		//TODO check columns
-	}
-
-	private void createColumns() {
+		final Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 
-		checkColumns(true);
-		session.flush();
+		final Connection connection = session.connection();
+		DatabaseMetadata metadata;
+		try {
+			metadata = new DatabaseMetadata(connection, cfg.getDialect());
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+		cfg.visitMappedTables(new TableVisitor(metadata));
+
 		tx.commit();
-
+		session.close();
 	}
 
-
-	protected Set getMappedTables() {
-		Set tables = new HashSet();
-		Iterator tableMappings = cfg.getTableMappings();
-
-		while (tableMappings.hasNext()) {
-			Table table = (Table) tableMappings.next();
-
-			if (Util.skip(table))
-				continue;
-			tables.add(table);
-		}
-		return tables;
+	public void destroy() {
+		sessionFactory.close();
 	}
 
-	protected void checkColumns(boolean createCol) {
-		for (Iterator iterator = mappedTables.iterator(); iterator.hasNext();) {
-			Table table = (Table) iterator.next();
-			if (Util.skip(table))
-				continue;
+//	public void validateColumns(Dialect dialect, Mapping mapping, TableMetadata tableInfo) {
+//		Iterator iter = getColumnIterator();
+//		while (iter.hasNext()) {
+//			Column col = (Column) iter.next();
+//
+//			ColumnMetadata columnInfo = tableInfo.getColumnMetadata(col.getName());
+//
+//			if (columnInfo == null) {
+//				throw new HibernateException("Missing column: " + col.getName());
+//			} else {
+//				final boolean typesMatch = col.getSqlType(dialect, mapping)
+//						.startsWith(columnInfo.getTypeName().toLowerCase())
+//						|| columnInfo.getTypeCode() == col.getSqlTypeCode(mapping);
+//				if (!typesMatch) {
+//					throw new HibernateException(
+//							"Wrong column type: " + col.getName() +
+//									", expected: " + col.getSqlType(dialect, mapping)
+//					);
+//				}
+//			}
+//		}
+//
+//	}
 
-			if (!isVersionColumnExist(table))
-				if (createCol)
-					createDb4oColumns(table.getName());
-		}
-	}
+	class TableVisitor implements Visitor4 {
+		DatabaseMetadata metadata;
 
-	protected boolean isVersionColumnExist(Table table) {
-		TableMetadata tableMetadata = metadata.getTableMetadata(table.getName(), null, null);
-		ColumnMetadata versionCol = tableMetadata.getColumnMetadata(Db4oColumns.DB4O_VERSION);
-		return versionCol != null;
-	}
-
-	protected String getLongVarBinaryType() {
-		return dialect.getTypeName(Types.LONGVARBINARY);
-	}
-
-	protected String getBigIntType() {
-		return dialect.getTypeName(Types.BIGINT);
-	}
-
-	protected void createDb4oColumns(String tableName) {
-		Connection connection = this.connection;
-		String addcolStr = " " + dialect.getAddColumnString() + " ";
-
-		Statement st;
-
-		try {
-			st = connection.createStatement();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
+		public TableVisitor(DatabaseMetadata metadata) {
+			this.metadata = metadata;
 		}
 
-		executeQuery(st, SchemaValidator.ALTER_TABLE + tableName + addcolStr
-				+ Db4oColumns.DB4O_UUID_LONG_PART + " " + getBigIntType());
-
-		executeQuery(st, SchemaValidator.ALTER_TABLE + tableName + addcolStr
-				+ Db4oColumns.DB4O_VERSION + " " + getBigIntType());
-
-		executeQuery(st, SchemaValidator.ALTER_TABLE + tableName + addcolStr
-				+ ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + " " + getBigIntType());
-
-		executeQuery(st, getDb4oSigIdFKConstraintString(tableName));
-
-		Util.closeStatement(st);
-	}
-
-	private void executeQuery(Statement st, String sql) {
-		try {
-			st.execute(sql);
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			throw new RuntimeException(e);
+		public void visit(Object obj) {
+			isVersionColumnExistOk(metadata, (Table) obj);
 		}
-	}
 
-	protected String getDb4oSigIdFKConstraintString(String tableName) {
-		//ADD foreign key constraint
-		String constriantName = "DB4O_" + tableName;
-		final String[] foreignKeys = {ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME};
-		final String addForeignKeyConstraintString;
-		addForeignKeyConstraintString = SchemaValidator.ALTER_TABLE + tableName
-				+ dialect.getAddForeignKeyConstraintString(
-				constriantName, foreignKeys, ReplicationProviderSignature.TABLE_NAME, foreignKeys, true);
+		protected boolean isVersionColumnExistOk(DatabaseMetadata metadata, Table table) {
+			TableMetadata tableMetadata = metadata.getTableMetadata(table.getName(), table.getSchema(), table.getCatalog());
+			ColumnMetadata versionCol = tableMetadata.getColumnMetadata(Db4oColumns.VERSION.name);
+			final boolean exist = versionCol != null;
 
-		return addForeignKeyConstraintString;
+			if (exist) {
+				final String typeName = versionCol.getTypeName();
+				//System.out.println("typeName = " + typeName);
+				final int typeCode = versionCol.getTypeCode();
+				//System.out.println("typeCode = " + typeCode);
+			}
+
+			return exist;
+		}
 	}
 }

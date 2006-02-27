@@ -416,7 +416,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	public final String getModifiedObjectCriterion() {
 		ensureReplicationActive();
 
-		return Db4oColumns.DB4O_VERSION + " > " + getLastReplicationVersion();
+		return Db4oColumns.VERSION.name + " > " + getLastReplicationVersion();
 	}
 
 	public void delete(Class clazz) {
@@ -506,8 +506,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		Serializable identifier = _session.getIdentifier(obj);
 
 		String sql = "SELECT "
-				+ Db4oColumns.DB4O_VERSION
-				+ ", " + Db4oColumns.DB4O_UUID_LONG_PART
+				+ Db4oColumns.VERSION.name
+				+ ", " + Db4oColumns.UUID_LONG_PART.name
 				+ ", " + ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME
 				+ " FROM " + tableName
 				+ " where " + pkColumn + "=" + identifier;
@@ -604,7 +604,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		String tableName = _cfg.getTableName(hint);
 
 		String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
-				+ " where " + Db4oColumns.DB4O_UUID_LONG_PART + "=" + uuid.getLongPart()
+				+ " where " + Db4oColumns.UUID_LONG_PART.name + "=" + uuid.getLongPart()
 				+ " AND " + ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + "=" + sigId;
 		SQLQuery sqlQuery = _session.createSQLQuery(sql);
 		sqlQuery.addEntity(alias, hint);
@@ -713,7 +713,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		String tableName = type.getTable().getName();
 		//dumpTable(tableName);
 		String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
-				+ " where " + Db4oColumns.DB4O_UUID_LONG_PART + IS_NULL
+				+ " where " + Db4oColumns.UUID_LONG_PART.name + IS_NULL
 				//+ " AND " + Db4oColumns.DB4O_VERSION + IS_NULL
 				+ " AND " + ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + IS_NULL;
 		//+ " AND class=" + type
@@ -730,7 +730,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 		String tableName = type.getTable().getName();
 		String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
-				+ " where " + Db4oColumns.DB4O_VERSION + ">" + _lastVersion;
+				+ " where " + Db4oColumns.VERSION.name + ">" + _lastVersion;
 		//+ " where " + Db4oColumns.DB4O_VERSION + ">" + lastVersion + " OR " + Db4oColumns.DB4O_VERSION + "=0";
 
 		SQLQuery sqlQuery = _session.createSQLQuery(sql);
@@ -831,8 +831,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		String pkColumn = _cfg.getPrimaryKeyColumnName(ref.object());
 		Serializable identifier = _session.getIdentifier(ref.object());
 
-		String sql = "UPDATE " + tableName + " SET " + Db4oColumns.DB4O_VERSION + "=?"
-				+ ", " + Db4oColumns.DB4O_UUID_LONG_PART + "=?"
+		String sql = "UPDATE " + tableName + " SET " + Db4oColumns.VERSION.name + "=?"
+				+ ", " + Db4oColumns.UUID_LONG_PART.name + "=?"
 				+ ", " + ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + "=?"
 				+ " WHERE " + pkColumn + " =?";
 

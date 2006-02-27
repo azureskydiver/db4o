@@ -1,12 +1,29 @@
 package com.db4o.replication.hibernate;
 
-public interface Db4oColumns {
+import java.sql.Types;
+
+class Db4oColumns {
 	/**
-	 * Column name of the version number of an object.
+	 * Column of the version number of an object.
 	 */
-	public static final String DB4O_VERSION = "drs_version";
+	static final Db4oColumns VERSION = new Db4oColumns("drs_version", Types.BIGINT);
+
 	/**
-	 * Column name of the db4o uuid long part.
+	 * Column of the db4o uuid long part.
 	 */
-	public static final String DB4O_UUID_LONG_PART = "drs_uuid_long_part";
+	static final Db4oColumns UUID_LONG_PART = new Db4oColumns("drs_uuid_long_part", Types.BIGINT);
+
+	final String name;
+
+	final int sqlType;
+
+	Db4oColumns(String name, int sqlType) {
+		this.name = name;
+		this.sqlType = sqlType;
+	}
+
+	public String toString() {
+		System.err.println("you shouldn't call this method. a bug? ");
+		return name;
+	}
 }
