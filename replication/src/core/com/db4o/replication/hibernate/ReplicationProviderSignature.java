@@ -2,6 +2,7 @@ package com.db4o.replication.hibernate;
 
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 
+import java.sql.Types;
 import java.util.Arrays;
 
 class ReplicationProviderSignature implements ReadonlyReplicationProviderSignature {
@@ -22,6 +23,7 @@ class ReplicationProviderSignature implements ReadonlyReplicationProviderSignatu
 	 */
 	static final String SIGNATURE_ID_COLUMN_NAME = "drs_provider_id";
 
+	static final int SIGNATURE_ID_COLUMN_TYPE = Types.BIGINT;
 
 	private byte[] bytes;
 

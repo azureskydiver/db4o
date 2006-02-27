@@ -69,7 +69,7 @@ public class Util {
 		Serializable identifier = session.getIdentifier(obj);
 
 		String sql = "SELECT "
-				+ Db4oColumns.DB4O_VERSION
+				+ Db4oColumns.VERSION.name
 				+ " FROM " + tableName
 				+ " where " + pkColumn + "=" + identifier;
 
@@ -94,7 +94,7 @@ public class Util {
 		PreparedStatement ps = null;
 
 		try {
-			String sql = "UPDATE " + tableName + " SET " + Db4oColumns.DB4O_VERSION + "=?"
+			String sql = "UPDATE " + tableName + " SET " + Db4oColumns.VERSION.name + "=?"
 					+ " WHERE " + primaryKeyColumnName + " =?";
 			ps = connection.prepareStatement(sql);
 			ps.setLong(1, newVersion);

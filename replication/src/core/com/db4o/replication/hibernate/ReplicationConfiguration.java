@@ -1,5 +1,6 @@
 package com.db4o.replication.hibernate;
 
+import com.db4o.foundation.Visitor4;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.mapping.Column;
@@ -13,11 +14,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class ReplicationConfiguration {
-	static HashMap<Configuration, ReplicationConfiguration> cache = new HashMap<Configuration, ReplicationConfiguration>();
+	private static HashMap<Configuration, ReplicationConfiguration> cache = new HashMap<Configuration, ReplicationConfiguration>();
 
-	Configuration configuration;
-	protected Set tables;
-	protected Dialect dialect;
+	private Configuration configuration;
+
+	private Set tables;
+
+	private Dialect dialect;
 
 	public static ReplicationConfiguration produce(Configuration cfg) {
 		Object exist = cache.get(cfg);
@@ -79,6 +82,11 @@ public class ReplicationConfiguration {
 		return mapped.getTable().getName();
 	}
 
+	/**
+	 * Return entity tables without meta data tables.
+	 *
+	 * @return entity tables
+	 */
 	Set getMappedTables() {
 		if (tables == null) {
 			tables = new HashSet();
@@ -100,5 +108,15 @@ public class ReplicationConfiguration {
 		if (dialect == null)
 			dialect = Dialect.getDialect(configuration.getProperties());
 		return dialect;
+	}
+
+	public void visitMappedTables(Visitor4 visitor) {
+		final Set mappedTables = getMappedTables();
+		for (Iterator iterator = mappedTables.iterator(); iterator.hasNext();)
+			visitor.visit(iterator.next());
+	}
+
+	protected String getType(int sqlType) {
+		return dialect.getTypeName(sqlType);
 	}
 }

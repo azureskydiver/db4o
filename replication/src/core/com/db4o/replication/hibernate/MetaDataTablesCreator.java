@@ -2,6 +2,7 @@ package com.db4o.replication.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.Environment;
 import org.hibernate.classic.Session;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.mapping.Table;
@@ -12,7 +13,6 @@ import org.hibernate.tool.hbm2ddl.TableMetadata;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -46,12 +46,12 @@ public class MetaDataTablesCreator {
 	public MetaDataTablesCreator(ReplicationConfiguration aCfg) {
 		cfg = aCfg;
 		dialect = cfg.getDialect();
-		//validator = new SchemaValidator(cfg);
+		validator = new SchemaValidator(cfg);
 	}
 
 	public void execute() {
-//		if (cfg.getProperties().get(Environment.HBM2DDL_AUTO).equals("validate"))
-//			validator.validate();
+		if (cfg.getConfiguration().getProperties().get(Environment.HBM2DDL_AUTO).equals("validate"))
+			validator.validate();
 
 		SessionFactory sessionFactory = cfg.getConfiguration(). buildSessionFactory();
 		session = sessionFactory.openSession();
@@ -71,7 +71,7 @@ public class MetaDataTablesCreator {
 		session.close();
 		sessionFactory.close();
 
-		//validator.validate();
+		validator.validate();
 	}
 
 
@@ -88,17 +88,10 @@ public class MetaDataTablesCreator {
 
 	protected boolean isVersionColumnExist(Table table) {
 		TableMetadata tableMetadata = metadata.getTableMetadata(table.getName(), null, null);
-		ColumnMetadata versionCol = tableMetadata.getColumnMetadata(Db4oColumns.DB4O_VERSION);
+		ColumnMetadata versionCol = tableMetadata.getColumnMetadata(Db4oColumns.VERSION.name);
 		return versionCol != null;
 	}
 
-	protected String getLongVarBinaryType() {
-		return dialect.getTypeName(Types.LONGVARBINARY);
-	}
-
-	protected String getBigIntType() {
-		return dialect.getTypeName(Types.BIGINT);
-	}
 
 	protected void createDb4oColumns(String tableName) {
 		Connection connection = this.connection;
@@ -113,13 +106,14 @@ public class MetaDataTablesCreator {
 		}
 
 		executeQuery(st, ALTER_TABLE + tableName + addcolStr
-				+ Db4oColumns.DB4O_UUID_LONG_PART + " " + getBigIntType());
+				+ Db4oColumns.UUID_LONG_PART.name + " " + cfg.getType(Db4oColumns.UUID_LONG_PART.sqlType));
 
 		executeQuery(st, ALTER_TABLE + tableName + addcolStr
-				+ Db4oColumns.DB4O_VERSION + " " + getBigIntType());
+				+ Db4oColumns.VERSION.name + " " + cfg.getType(Db4oColumns.VERSION.sqlType));
 
 		executeQuery(st, ALTER_TABLE + tableName + addcolStr
-				+ ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + " " + getBigIntType());
+				+ ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + " "
+				+ cfg.getType(ReplicationProviderSignature.SIGNATURE_ID_COLUMN_TYPE));
 
 		executeQuery(st, getDb4oSigIdFKConstraintString(tableName));
 
