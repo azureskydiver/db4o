@@ -27,6 +27,7 @@ namespace com.db4o.test
 				ArrayList tests = new ArrayList();
 
                 tests.Add(typeof(SimplestPossible));
+				tests.Add(typeof(CsStructsRegression));
 //                tests.Add(typeof(Db4oHashMap));
 //                tests.Add(typeof(CrashSimulatingTest));
 //                tests.Add(typeof(com.db4o.test.nativequeries.Cat));
