@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using com.db4o;
 using com.db4o.ext;
 using com.db4o.test;
