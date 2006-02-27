@@ -63,7 +63,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	/**
 	 * The Hibernate Configuration, for getting metadata of mapped classes.
 	 */
-	protected final Configuration _cfg;
+	protected final ReplicationConfiguration _cfg;
 
 	/**
 	 * The Hibernate facade to a JDBC Connection. The connection is created when
@@ -150,24 +150,16 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	public HibernateReplicationProviderImpl(Configuration cfg, String name) {
-		this._cfg = cfg;
-		this._cfg.setProperty("hibernate.format_sql", "true");
-		this._cfg.setProperty("hibernate.use_sql_comments", "true");
-		this._cfg.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.NoCacheProvider");
-		this._cfg.setProperty("hibernate.cache.use_query_cache", "false");
-		this._cfg.setProperty("hibernate.cache.use_second_level_cache", "false");
-		this._cfg.setProperty("hibernate.cglib.use_reflection_optimizer", "true");
-		this._cfg.setProperty("hibernate.connection.release_mode", "after_transaction");
+		_cfg = ReplicationConfiguration.produce(cfg);
 
-		Util.addMetaDataClasses(cfg);
-		new MetaDataTablesCreator(cfg).createTables();
+		new MetaDataTablesCreator(_cfg).execute();
 
-		EventListeners eventListeners = this._cfg.getEventListeners();
+		EventListeners eventListeners = this._cfg.getConfiguration().getEventListeners();
 
 		eventListeners.setFlushEventListeners(createFlushEventListeners(eventListeners.getFlushEventListeners()));
 		eventListeners.setPostUpdateEventListeners(createPostUpdateListeners(eventListeners.getPostUpdateEventListeners()));
 
-		_sessionFactory = this._cfg.buildSessionFactory();
+		_sessionFactory = this._cfg.getConfiguration().buildSessionFactory();
 		_session = _sessionFactory.openSession();
 		_session.setFlushMode(FlushMode.ALWAYS);
 		_transaction = _session.beginTransaction();
@@ -383,7 +375,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 		_session.flush();
 		Set out = new HashSet();
-		PersistentClass persistentClass = _cfg.getClassMapping(clazz.getName());
+		PersistentClass persistentClass = _cfg.getConfiguration().getClassMapping(clazz.getName());
 		if (persistentClass != null) {
 			out.addAll(getNewObjectsSinceLastReplication(persistentClass));
 			out.addAll(getChangedObjectsSinceLastReplication(persistentClass));
@@ -509,8 +501,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		//System.out.println("produceObjectReference() obj = " + obj);
 		if (!_session.contains(obj)) return null;
 
-		String tableName = Util.getTableName(_cfg, obj.getClass());
-		String pkColumn = Util.getPrimaryKeyColumnName(_cfg, obj);
+		String tableName = _cfg.getTableName(obj.getClass());
+		String pkColumn = _cfg.getPrimaryKeyColumnName(obj);
 		Serializable identifier = _session.getIdentifier(obj);
 
 		String sql = "SELECT "
@@ -609,7 +601,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 		String alias = "whatever";
 
-		String tableName = Util.getTableName(_cfg, hint);
+		String tableName = _cfg.getTableName(hint);
 
 		String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
 				+ " where " + Db4oColumns.DB4O_UUID_LONG_PART + "=" + uuid.getLongPart()
@@ -630,7 +622,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 			ReplicationReference existing = getCachedReference(obj);
 			if (existing != null) return existing;
 
-			long version = Util.getVersion(_cfg, _session, obj);
+			long version = Util.getVersion(_cfg.getConfiguration(), _session, obj);
 			out = createReference(obj, uuid, version);
 		} else {
 			throw new RuntimeException("The object may either be found or not, it will never find more than one objects");
@@ -835,8 +827,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	protected void storeReplicationMetaData(ReplicationReference ref) {
-		String tableName = Util.getTableName(_cfg, ref.object().getClass());
-		String pkColumn = Util.getPrimaryKeyColumnName(_cfg, ref.object());
+		String tableName = _cfg.getTableName(ref.object().getClass());
+		String pkColumn = _cfg.getPrimaryKeyColumnName(ref.object());
 		Serializable identifier = _session.getIdentifier(ref.object());
 
 		String sql = "UPDATE " + tableName + " SET " + Db4oColumns.DB4O_VERSION + "=?"
@@ -879,7 +871,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 	protected Set getMappedClasses() {
 		Set out = new HashSet();
-		Iterator classMappings = _cfg.getClassMappings();
+		Iterator classMappings = _cfg.getConfiguration().getClassMappings();
 		while (classMappings.hasNext()) {
 			PersistentClass persistentClass = (PersistentClass) classMappings.next();
 			Class claxx = persistentClass.getMappedClass();
@@ -955,7 +947,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 				//TODO performance sucks, but this method is called when testing only.
 				long newVer = Util.getMaxVersion(_session.connection()) + 1;
 				Util.incrementObjectVersion(_session.connection(), event.getId(), newVer,
-						Util.getTableName(_cfg, entity.getClass()), Util.getPrimaryKeyColumnName(_cfg, entity));
+						_cfg.getTableName(entity.getClass()), _cfg.getPrimaryKeyColumnName(entity));
 			}
 		}
 	}

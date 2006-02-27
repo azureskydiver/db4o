@@ -3,9 +3,6 @@ package com.db4o.replication.hibernate;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.mapping.Column;
-import org.hibernate.mapping.PersistentClass;
-import org.hibernate.mapping.PrimaryKey;
 import org.hibernate.mapping.Table;
 
 import java.io.Serializable;
@@ -15,17 +12,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Iterator;
 
 public class Util {
-	public static void addMetaDataClasses(Configuration cfg) {
-		addClass(cfg, ReplicationProviderSignature.class);
-		addClass(cfg, ReplicationRecord.class);
-		addClass(cfg, ReplicationComponentIdentity.class);
-		addClass(cfg, ReplicationComponentField.class);
-		addClass(cfg, UuidLongPartSequence.class);
-	}
-
 	static boolean skip(Object obj) {
 		return obj instanceof ReplicationRecord
 				|| obj instanceof ReadonlyReplicationProviderSignature
@@ -52,34 +40,6 @@ public class Util {
 				|| table.getName().equals(UuidLongPartSequence.TABLE_NAME);
 	}
 
-	private static void addClass(Configuration cfg, Class aClass) {
-		if (cfg.getClassMapping(aClass.getName()) == null)
-			cfg.addClass(aClass);
-	}
-
-	static String getPrimaryKeyColumnName(Configuration cfg, Object entity) {
-		final String className = entity.getClass().getName();
-		final PersistentClass pClass = cfg.getClassMapping(className);
-
-		PrimaryKey primaryKey = pClass.getTable().getPrimaryKey();
-		Iterator columnIterator = primaryKey.getColumnIterator();
-
-		String pkColName;
-
-		pkColName = ((Column) columnIterator.next()).getName();
-		if (columnIterator.hasNext()) {
-			throw new RuntimeException("we don't support composite primary keys");
-		}
-
-		return pkColName;
-	}
-
-	static String getTableName(Configuration cfg, Class pClass) {
-		PersistentClass mapped = cfg.getClassMapping(pClass.getName());
-		if (mapped == null)
-			throw new RuntimeException(pClass + " is not mapped using a hbm.xml file.");
-		return mapped.getTable().getName();
-	}
 
 	static long getMaxVersion(Connection con) {
 		String sql = "SELECT max(" + ReplicationRecord.VERSION + ") from " + ReplicationRecord.TABLE_NAME;
@@ -102,9 +62,10 @@ public class Util {
 
 	public static long getVersion(Configuration cfg, Session session, Object obj) {
 		Connection connection = session.connection();
-		String tableName = Util.getTableName(cfg, obj.getClass());
+		ReplicationConfiguration rc = ReplicationConfiguration.produce(cfg);
+		String tableName = rc.getTableName(obj.getClass());
 		//Util.dumpTable(connection, tableName);
-		String pkColumn = Util.getPrimaryKeyColumnName(cfg, obj);
+		String pkColumn = rc.getPrimaryKeyColumnName(obj);
 		Serializable identifier = session.getIdentifier(obj);
 
 		String sql = "SELECT "
