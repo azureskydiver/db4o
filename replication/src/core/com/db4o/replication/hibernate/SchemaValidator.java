@@ -1,7 +1,10 @@
 package com.db4o.replication.hibernate;
 
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 import org.hibernate.classic.Session;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.mapping.Table;
@@ -13,13 +16,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class MetaDataTablesCreator {
+public class SchemaValidator {
 	protected static final String ALTER_TABLE = "ALTER TABLE ";
 
-	ReplicationConfiguration cfg;
+	Configuration cfg;
 
 	/**
 	 * Represents a dialect of SQL implemented by a particular RDBMS.
@@ -33,7 +37,7 @@ public class MetaDataTablesCreator {
 
 	/**
 	 * Hibernate mapped tables, excluding  {@link com.db4o.inside.replication.ReadonlyReplicationProviderSignature}
-	 * and {@link ReplicationRecord}.
+	 * and {@link com.db4o.replication.hibernate.ReplicationRecord}.
 	 */
 	protected Set mappedTables;
 
@@ -41,21 +45,16 @@ public class MetaDataTablesCreator {
 
 	protected Connection connection;
 
-	protected SchemaValidator validator;
-
-	public MetaDataTablesCreator(ReplicationConfiguration aCfg) {
+	public SchemaValidator(Configuration aCfg) {
 		cfg = aCfg;
-		dialect = cfg.getDialect();
-		//validator = new SchemaValidator(cfg);
+		dialect = Dialect.getDialect(cfg.getProperties());
 	}
 
 	public void execute() {
-//		if (cfg.getProperties().get(Environment.HBM2DDL_AUTO).equals("validate"))
-//			validator.validate();
+		mappedTables = getMappedTables();
 
-		SessionFactory sessionFactory = cfg.getConfiguration(). buildSessionFactory();
+		SessionFactory sessionFactory = cfg. buildSessionFactory();
 		session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
 		connection = session.connection();
 
 		try {
@@ -64,25 +63,61 @@ public class MetaDataTablesCreator {
 			throw new RuntimeException(e);
 		}
 
-		mappedTables = cfg.getMappedTables();
-		checkMappedTables();
-		session.flush();
-		tx.commit();
+		if (cfg.getProperties().get(Environment.HBM2DDL_AUTO).equals("validate")) {
+			validate();
+		} else {
+			createColumns();
+			validate();
+		}
+
 		session.close();
 		sessionFactory.close();
+	}
 
-		//validator.validate();
+	public void validate() {
+		boolean ok = true;
+		try {
+			new org.hibernate.tool.hbm2ddl.SchemaValidator(cfg).validate();
+		} catch (HibernateException e) {
+			throw new RuntimeException(e);
+		}
+
+		//TODO check columns
+	}
+
+	private void createColumns() {
+		Transaction tx = session.beginTransaction();
+
+		checkColumns(true);
+		session.flush();
+		tx.commit();
+
 	}
 
 
-	protected void checkMappedTables() {
+	protected Set getMappedTables() {
+		Set tables = new HashSet();
+		Iterator tableMappings = cfg.getTableMappings();
+
+		while (tableMappings.hasNext()) {
+			Table table = (Table) tableMappings.next();
+
+			if (Util.skip(table))
+				continue;
+			tables.add(table);
+		}
+		return tables;
+	}
+
+	protected void checkColumns(boolean createCol) {
 		for (Iterator iterator = mappedTables.iterator(); iterator.hasNext();) {
 			Table table = (Table) iterator.next();
 			if (Util.skip(table))
 				continue;
 
 			if (!isVersionColumnExist(table))
-				createDb4oColumns(table.getName());
+				if (createCol)
+					createDb4oColumns(table.getName());
 		}
 	}
 
@@ -112,13 +147,13 @@ public class MetaDataTablesCreator {
 			throw new RuntimeException(e);
 		}
 
-		executeQuery(st, ALTER_TABLE + tableName + addcolStr
+		executeQuery(st, SchemaValidator.ALTER_TABLE + tableName + addcolStr
 				+ Db4oColumns.DB4O_UUID_LONG_PART + " " + getBigIntType());
 
-		executeQuery(st, ALTER_TABLE + tableName + addcolStr
+		executeQuery(st, SchemaValidator.ALTER_TABLE + tableName + addcolStr
 				+ Db4oColumns.DB4O_VERSION + " " + getBigIntType());
 
-		executeQuery(st, ALTER_TABLE + tableName + addcolStr
+		executeQuery(st, SchemaValidator.ALTER_TABLE + tableName + addcolStr
 				+ ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + " " + getBigIntType());
 
 		executeQuery(st, getDb4oSigIdFKConstraintString(tableName));
@@ -141,7 +176,7 @@ public class MetaDataTablesCreator {
 		String constriantName = "DB4O_" + tableName;
 		final String[] foreignKeys = {ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME};
 		final String addForeignKeyConstraintString;
-		addForeignKeyConstraintString = ALTER_TABLE + tableName
+		addForeignKeyConstraintString = SchemaValidator.ALTER_TABLE + tableName
 				+ dialect.getAddForeignKeyConstraintString(
 				constriantName, foreignKeys, ReplicationProviderSignature.TABLE_NAME, foreignKeys, true);
 
