@@ -69,6 +69,23 @@ namespace com.db4o.test.nativequeries
 		}
 	}
 
+#if NET_2_0
+	class NameContains : Predicate
+	{
+		string _s;
+
+		public NameContains(string s)
+		{
+			_s = s;
+		}
+
+		public bool Match(NamedThing thing)
+		{
+			return thing.Name.Contains(_s);
+		}
+	}
+#endif
+
 	/// <summary>
 	/// </summary>
 	public class StringComparisonTestCase : AbstractNativeQueriesTestCase
@@ -97,6 +114,17 @@ namespace com.db4o.test.nativequeries
 			AssertNQResult(new NameStartsWith("r"));
 			AssertNQResult(new NameStartsWith("R"), _robinson, _round);
 		}
+
+#if NET_2_0
+		public void testContains()
+		{
+			setUpData();
+			AssertNQResult(new NameContains("Fri"), _frisbee, _friday);
+			AssertNQResult(new NameContains("ee"), _frisbee, _bee);
+			AssertNQResult(new NameContains("r"), _frisbee, _friday, _robinson);
+			AssertNQResult(new NameContains("R"), _robinson, _round);
+		}
+#endif
 
 		public void testEndsWith()
 		{

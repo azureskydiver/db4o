@@ -70,6 +70,7 @@ namespace com.db4o.test {
 				tests.Add(typeof(CsMarshalByRef));
 	#endif
 				tests.Add(typeof(CsStructs));
+				tests.Add(typeof(CsStructsRegression));
 
 				tests.Add(typeof(CsType));
 
