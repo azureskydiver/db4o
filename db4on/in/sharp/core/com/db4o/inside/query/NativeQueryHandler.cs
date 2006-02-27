@@ -102,18 +102,14 @@ namespace com.db4o.inside.query
 
 		private void OnQueryExecution(object predicate, QueryExecutionKind kind)
 		{
-			if (null != QueryExecution)
-            {
-				QueryExecution(this, new QueryExecutionEventArgs(predicate, kind));
-            }
+            if (null == QueryExecution) return;
+		    QueryExecution(this, new QueryExecutionEventArgs(predicate, kind));
 		}
 
 		private void OnQueryOptimizationFailure(System.Exception e)
 		{
-			if (null != QueryOptimizationFailure)
-			{
-				QueryOptimizationFailure(this, new QueryOptimizationFailureEventArgs(e));
-			}
+            if (null == QueryOptimizationFailure) return;
+		    QueryOptimizationFailure(this, new QueryOptimizationFailureEventArgs(e));
 		}
 	}
 

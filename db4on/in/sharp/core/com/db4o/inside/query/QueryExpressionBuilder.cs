@@ -377,7 +377,7 @@ namespace com.db4o.inside.query
 					return;
 				}
 
-				if (method.DeclaringType.FullName == "System.String")
+			    if (IsSystemString(method.DeclaringType))
 				{
 					ProcessStringMethod(node, methodRef);
 					return;
@@ -386,11 +386,27 @@ namespace com.db4o.inside.query
 				ProcessRegularMethodInvocation(node, methodRef);
 			}
 
-			private void ProcessStringMethod(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
+		    private static bool IsSystemString(TypeReference type)
+		    {
+		        return type.FullName == "System.String";
+		    }
+
+		    private void ProcessStringMethod(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
 			{
 				IMethodReference method = methodRef.Method;
+		        
+		        if (method.Parameters.Count != 1
+		            || !IsSystemString(method.Parameters[0].ParameterType))
+		        {
+                    UnsupportedExpression(methodRef);
+		        }
+		        
 				switch (method.Name)
 				{
+                    case "Contains":
+                        PushComparison(methodRef.Target, node.Arguments[0], ComparisonOperator.CONTAINS);
+                        break;
+				        
 					case "StartsWith":
 						PushComparison(methodRef.Target, node.Arguments[0], ComparisonOperator.STARTSWITH);
 						break;
