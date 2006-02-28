@@ -2,36 +2,47 @@
 
 package com.db4o.test.replication.db4o;
 
-import java.io.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ext.ExtDb4o;
+import com.db4o.ext.MemoryFile;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.replication.db4o.Db4oReplicationProvider;
+import com.db4o.test.Test;
 
-import com.db4o.*;
-import com.db4o.inside.replication.*;
-import com.db4o.replication.db4o.*;
+import java.io.File;
 
 public class Db4oReplicationTestUtil {
-    
-    private static ObjectContainer _objectcontainer;
-    
-    public static final String PROVIDER_B_FILE = "providerB.yap";
-    
-    public static void configure(){
-        Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
-        Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
-        new File(PROVIDER_B_FILE).delete();
-    }
-    
-    public static TestableReplicationProvider providerB(){
-        if(_objectcontainer == null){
-            _objectcontainer = Db4o.openFile(PROVIDER_B_FILE);
-        }
-        return new Db4oReplicationProvider(_objectcontainer); 
-    }
-    
-    public static void close(){
-        if(_objectcontainer != null){
-            _objectcontainer.close();
-            _objectcontainer = null;
-        }
-    }
 
+	private static ObjectContainer _objectcontainer;
+
+	public static final String PROVIDER_B_FILE = "providerB.yap";
+
+	static MemoryFile memoryFile;
+
+	public static void configure() {
+		Test.MEMORY_FILE = true;
+
+		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+		new File(PROVIDER_B_FILE).delete();
+	}
+
+	public static TestableReplicationProviderInside providerB() {
+		if (_objectcontainer == null) {
+			if (Test.MEMORY_FILE) {
+				memoryFile = new MemoryFile();
+				_objectcontainer = ExtDb4o.openMemoryFile(memoryFile);
+			} else
+				_objectcontainer = Db4o.openFile(PROVIDER_B_FILE);
+		}
+		return new Db4oReplicationProvider(_objectcontainer);
+	}
+
+	public static void close() {
+		if (_objectcontainer != null) {
+			_objectcontainer.close();
+			_objectcontainer = null;
+		}
+	}
 }
