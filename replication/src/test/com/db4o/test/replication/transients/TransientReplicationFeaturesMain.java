@@ -1,19 +1,19 @@
 package com.db4o.test.replication.transients;
 
 import com.db4o.ObjectSet;
-import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ReplicationProvider;
 import com.db4o.test.replication.ReplicationFeaturesMain;
 
 public class TransientReplicationFeaturesMain extends ReplicationFeaturesMain {
-	private TransientReplicationProvider a = new TransientReplicationProvider(new byte[]{1}, "A");
-	private TransientReplicationProvider b = new TransientReplicationProvider(new byte[]{2}, "B");
+	private TestableReplicationProviderInside a = new TransientReplicationProvider(new byte[]{1}, "A");
+	private TestableReplicationProviderInside b = new TransientReplicationProvider(new byte[]{2}, "B");
 
-	protected TestableReplicationProvider prepareProviderB() {
+	protected TestableReplicationProviderInside prepareProviderB() {
 		return a;
 	}
 
-	protected TestableReplicationProvider prepareProviderA() {
+	protected TestableReplicationProviderInside prepareProviderA() {
 		return b;
 	}
 

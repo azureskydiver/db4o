@@ -4,6 +4,8 @@ import com.db4o.foundation.Visitor4;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
+import org.hibernate.dialect.Dialect;
+import org.hibernate.dialect.Oracle9Dialect;
 import org.hibernate.mapping.Table;
 import org.hibernate.tool.hbm2ddl.ColumnMetadata;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
@@ -17,17 +19,19 @@ public class SchemaValidator {
 
 	protected org.hibernate.tool.hbm2ddl.SchemaValidator delegate;
 	protected SessionFactory sessionFactory;
+	protected final Dialect dialect;
 
 	public SchemaValidator(ReplicationConfiguration aCfg) {
 		cfg = aCfg;
 
 		delegate = new org.hibernate.tool.hbm2ddl.SchemaValidator(cfg.getConfiguration());
-
-		sessionFactory = cfg.getConfiguration(). buildSessionFactory();
-
+		dialect = cfg.getDialect();
 	}
 
 	public void validate() {
+		if (sessionFactory == null)
+			sessionFactory = cfg.getConfiguration(). buildSessionFactory();
+
 		delegate.validate();
 
 		final Session session = sessionFactory.openSession();
@@ -36,12 +40,13 @@ public class SchemaValidator {
 		final Connection connection = session.connection();
 		DatabaseMetadata metadata;
 		try {
-			metadata = new DatabaseMetadata(connection, cfg.getDialect());
+			metadata = new DatabaseMetadata(connection, dialect);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 
-		cfg.visitMappedTables(new TableVisitor(metadata));
+		final ValidatingTableVisitor visitor = new ValidatingTableVisitor(metadata);
+		cfg.visitMappedTables(visitor);
 
 		tx.commit();
 		session.close();
@@ -51,54 +56,39 @@ public class SchemaValidator {
 		sessionFactory.close();
 	}
 
-//	public void validateColumns(Dialect dialect, Mapping mapping, TableMetadata tableInfo) {
-//		Iterator iter = getColumnIterator();
-//		while (iter.hasNext()) {
-//			Column col = (Column) iter.next();
-//
-//			ColumnMetadata columnInfo = tableInfo.getColumnMetadata(col.getName());
-//
-//			if (columnInfo == null) {
-//				throw new HibernateException("Missing column: " + col.getName());
-//			} else {
-//				final boolean typesMatch = col.getSqlType(dialect, mapping)
-//						.startsWith(columnInfo.getTypeName().toLowerCase())
-//						|| columnInfo.getTypeCode() == col.getSqlTypeCode(mapping);
-//				if (!typesMatch) {
-//					throw new HibernateException(
-//							"Wrong column type: " + col.getName() +
-//									", expected: " + col.getSqlType(dialect, mapping)
-//					);
-//				}
-//			}
-//		}
-//
-//	}
+	class ValidatingTableVisitor implements Visitor4 {
+		final DatabaseMetadata metadata;
 
-	class TableVisitor implements Visitor4 {
-		DatabaseMetadata metadata;
-
-		public TableVisitor(DatabaseMetadata metadata) {
+		ValidatingTableVisitor(DatabaseMetadata metadata) {
 			this.metadata = metadata;
 		}
 
 		public void visit(Object obj) {
-			isVersionColumnExistOk(metadata, (Table) obj);
+			final Table table = (Table) obj;
+			visitCol(table, Db4oColumns.VERSION);
+			visitCol(table, Db4oColumns.UUID_LONG_PART);
+			visitCol(table, Db4oColumns.PROVIDER_ID);
 		}
 
-		protected boolean isVersionColumnExistOk(DatabaseMetadata metadata, Table table) {
+		protected void visitCol(Table table, Db4oColumns db4oCol) {
 			TableMetadata tableMetadata = metadata.getTableMetadata(table.getName(), table.getSchema(), table.getCatalog());
-			ColumnMetadata versionCol = tableMetadata.getColumnMetadata(Db4oColumns.VERSION.name);
-			final boolean exist = versionCol != null;
+			ColumnMetadata col = tableMetadata.getColumnMetadata(db4oCol.name);
 
-			if (exist) {
-				final String typeName = versionCol.getTypeName();
-				//System.out.println("typeName = " + typeName);
-				final int typeCode = versionCol.getTypeCode();
-				//System.out.println("typeCode = " + typeCode);
+			if (col == null)
+				throw new RuntimeException("Missing column: column name = " + db4oCol.name + ", table = " + table);
+			else {
+				final int actualType = col.getTypeCode();
+				final int expected = db4oCol.type;
+
+				if (actualType != expected) {
+					if (dialect instanceof Oracle9Dialect) {
+						if (!Util.oracleTypeMatches(expected, actualType))
+							throw new RuntimeException("Wrong column type: " + db4oCol.name + ", expected: " + cfg.getType(expected) + ", table = " + table);
+					} else {
+						throw new RuntimeException("Wrong column type: " + db4oCol.name + ", expected: " + cfg.getType(expected) + ", table = " + table);
+					}
+				}
 			}
-
-			return exist;
 		}
 	}
 }

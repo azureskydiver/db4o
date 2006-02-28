@@ -1,6 +1,6 @@
 package com.db4o.test.replication.hibernate;
 
-import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
 import com.db4o.test.replication.Replicated;
 import com.db4o.test.replication.ReplicationFeaturesMain;
@@ -15,6 +15,20 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 
 
 	public HibernateReplicationFeaturesMain() {
+
+	}
+
+	protected TestableReplicationProviderInside prepareProviderA() {
+		delete(pA.getSession());
+		return pA;
+	}
+
+	protected TestableReplicationProviderInside prepareProviderB() {
+		delete(pA.getSession());
+		return pB;
+	}
+
+	public void test() {
 		cfgA = HibernateConfigurationFactory.createNewDbConfig();
 		cfgA.addClass(Replicated.class);
 		pA = new HibernateReplicationProviderImpl(cfgA, "A");
@@ -22,19 +36,7 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 		cfgB = HibernateConfigurationFactory.createNewDbConfig();
 		cfgB.addClass(Replicated.class);
 		pB = new HibernateReplicationProviderImpl(cfgB, "B");
-	}
 
-	protected TestableReplicationProvider prepareProviderA() {
-		delete(pA.getSession());
-		return pA;
-	}
-
-	protected TestableReplicationProvider prepareProviderB() {
-		delete(pA.getSession());
-		return pB;
-	}
-
-	public void test() {
 		super.test();
 	}
 

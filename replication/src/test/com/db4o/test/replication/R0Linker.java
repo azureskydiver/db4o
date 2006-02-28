@@ -2,7 +2,7 @@
 
 package com.db4o.test.replication;
 
-import com.db4o.inside.replication.*;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 
 
 class R0Linker {
@@ -59,7 +59,7 @@ class R0Linker {
 		r4.r3 = r3;
 	}
 
-	public void store(TestableReplicationProvider provider) {
+	public void store(TestableReplicationProviderInside provider) {
 		provider.storeNew(r4);
 		provider.storeNew(r3);
 		provider.storeNew(r2);

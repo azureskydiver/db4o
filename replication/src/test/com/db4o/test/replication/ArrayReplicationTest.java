@@ -2,17 +2,18 @@
 
 package com.db4o.test.replication;
 
-import com.db4o.inside.replication.*;
+import com.db4o.ObjectSet;
+import com.db4o.inside.replication.GenericReplicationSession;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
-import com.db4o.ObjectSet;
 
 public abstract class ArrayReplicationTest {
 
 	public void testArrayReplication() {
-		TestableReplicationProvider _containerA;
-		TestableReplicationProvider _containerB;
+		TestableReplicationProviderInside _containerA;
+		TestableReplicationProviderInside _containerB;
 
 		_containerA = prepareProviderA();
 		_containerB = prepareProviderB();
@@ -45,9 +46,9 @@ public abstract class ArrayReplicationTest {
 		check((ArrayHolder) objects.next());
 	}
 
-	protected abstract TestableReplicationProvider prepareProviderB();
+	protected abstract TestableReplicationProviderInside prepareProviderB();
 
-	protected abstract TestableReplicationProvider prepareProviderA();
+	protected abstract TestableReplicationProviderInside prepareProviderA();
 
 	private void check(ArrayHolder holder) {
 		if (holder._name.equals("h1"))

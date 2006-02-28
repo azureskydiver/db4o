@@ -2,14 +2,12 @@ package com.db4o.replication.hibernate;
 
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 
-import java.sql.Types;
 import java.util.Arrays;
 
 class ReplicationProviderSignature implements ReadonlyReplicationProviderSignature {
 
 	/**
-	 * Table for storing ReplicationProviderSignature byte[]. Each signature
-	 * is identified by a {@link #SIGNATURE_ID_COLUMN_NAME}
+	 * Table for storing ReplicationProviderSignature byte[].
 	 */
 	static final String TABLE_NAME = "ReplicationProviderSignature";
 
@@ -17,13 +15,6 @@ class ReplicationProviderSignature implements ReadonlyReplicationProviderSignatu
 	 * Column name of the ReplicationProviderSignature byte_array.
 	 */
 	static final String SIGNATURE_BYTE_ARRAY_COLUMN_NAME = "bytes";
-
-	/**
-	 * Unique ID for {@link #SIGNATURE_BYTE_ARRAY_COLUMN_NAME}.
-	 */
-	static final String SIGNATURE_ID_COLUMN_NAME = "drs_provider_id";
-
-	static final int SIGNATURE_ID_COLUMN_TYPE = Types.BIGINT;
 
 	private byte[] bytes;
 

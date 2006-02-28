@@ -1,10 +1,13 @@
 package com.db4o.replication.hibernate;
 
+import com.db4o.foundation.Visitor4;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Environment;
 import org.hibernate.classic.Session;
 import org.hibernate.dialect.Dialect;
+import org.hibernate.dialect.Oracle9Dialect;
+import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Table;
 import org.hibernate.tool.hbm2ddl.ColumnMetadata;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
@@ -13,7 +16,6 @@ import org.hibernate.tool.hbm2ddl.TableMetadata;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Iterator;
 import java.util.Set;
 
 public class MetaDataTablesCreator {
@@ -49,10 +51,20 @@ public class MetaDataTablesCreator {
 		validator = new SchemaValidator(cfg);
 	}
 
+	/**
+	 * @throws RuntimeException when tables/columns not found
+	 */
 	public void execute() {
 		if (cfg.getConfiguration().getProperties().get(Environment.HBM2DDL_AUTO).equals("validate"))
 			validator.validate();
+		else {
+			visitTables();
+			validator.validate();
+		}
+		validator.destroy();
+	}
 
+	private void visitTables() {
 		SessionFactory sessionFactory = cfg.getConfiguration(). buildSessionFactory();
 		session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
@@ -64,81 +76,102 @@ public class MetaDataTablesCreator {
 			throw new RuntimeException(e);
 		}
 
-		mappedTables = cfg.getMappedTables();
-		checkMappedTables();
+		final Statement st = Util.getStatement(connection);
+
+		final ModifyingTableVisitor visitor = new ModifyingTableVisitor(metadata, st);
+		cfg.visitMappedTables(visitor);
+
+		Util.closeStatement(st);
+
 		session.flush();
 		tx.commit();
 		session.close();
 		sessionFactory.close();
-
-		validator.validate();
 	}
 
+	class ModifyingTableVisitor implements Visitor4 {
+		protected final DatabaseMetadata metadata;
+		final Statement st;
 
-	protected void checkMappedTables() {
-		for (Iterator iterator = mappedTables.iterator(); iterator.hasNext();) {
-			Table table = (Table) iterator.next();
-			if (Util.skip(table))
-				continue;
-
-			if (!isVersionColumnExist(table))
-				createDb4oColumns(table.getName());
-		}
-	}
-
-	protected boolean isVersionColumnExist(Table table) {
-		TableMetadata tableMetadata = metadata.getTableMetadata(table.getName(), null, null);
-		ColumnMetadata versionCol = tableMetadata.getColumnMetadata(Db4oColumns.VERSION.name);
-		return versionCol != null;
-	}
-
-
-	protected void createDb4oColumns(String tableName) {
-		Connection connection = this.connection;
-		String addcolStr = " " + dialect.getAddColumnString() + " ";
-
-		Statement st;
-
-		try {
-			st = connection.createStatement();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
+		public ModifyingTableVisitor(DatabaseMetadata metadata, Statement st) {
+			this.metadata = metadata;
+			this.st = st;
 		}
 
-		executeQuery(st, ALTER_TABLE + tableName + addcolStr
-				+ Db4oColumns.UUID_LONG_PART.name + " " + cfg.getType(Db4oColumns.UUID_LONG_PART.sqlType));
+		public void visit(Object obj) {
+			final Table table = (Table) obj;
 
-		executeQuery(st, ALTER_TABLE + tableName + addcolStr
-				+ Db4oColumns.VERSION.name + " " + cfg.getType(Db4oColumns.VERSION.sqlType));
+			if (colNotExist(table, Db4oColumns.VERSION))
+				createDb4oColumns(table, Db4oColumns.VERSION);
 
-		executeQuery(st, ALTER_TABLE + tableName + addcolStr
-				+ ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + " "
-				+ cfg.getType(ReplicationProviderSignature.SIGNATURE_ID_COLUMN_TYPE));
+			if (colNotExist(table, Db4oColumns.UUID_LONG_PART))
+				createDb4oColumns(table, Db4oColumns.UUID_LONG_PART);
 
-		executeQuery(st, getDb4oSigIdFKConstraintString(tableName));
-
-		Util.closeStatement(st);
-	}
-
-	private void executeQuery(Statement st, String sql) {
-		try {
-			st.execute(sql);
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			throw new RuntimeException(e);
+			if (colNotExist(table, Db4oColumns.PROVIDER_ID)) {
+				createDb4oColumns(table, Db4oColumns.PROVIDER_ID);
+				executeQuery(st, getDb4oSigIdFKConstraintString(table));
+			}
 		}
-	}
 
-	protected String getDb4oSigIdFKConstraintString(String tableName) {
-		//ADD foreign key constraint
-		String constriantName = "DB4O_" + tableName;
-		final String[] foreignKeys = {ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME};
-		final String addForeignKeyConstraintString;
-		addForeignKeyConstraintString = ALTER_TABLE + tableName
-				+ dialect.getAddForeignKeyConstraintString(
-				constriantName, foreignKeys, ReplicationProviderSignature.TABLE_NAME, foreignKeys, true);
+		protected boolean colNotExist(Table table, Db4oColumns db4oCol) {
+			TableMetadata tableMetadata = metadata.getTableMetadata(table.getName(), table.getSchema(), table.getCatalog());
+			ColumnMetadata col = tableMetadata.getColumnMetadata(db4oCol.name);
 
-		return addForeignKeyConstraintString;
+			if (col == null)
+				return true;
+			else {
+				final int actual = col.getTypeCode();
+				final int expected = db4oCol.type;
+				if (actual != expected) {
+					if (dialect instanceof Oracle9Dialect) {
+						if (!Util.oracleTypeMatches(expected, actual))
+							throw new RuntimeException("Wrong column type: " + db4oCol.name + ", expected: " + expected + ", table = " + table
+									+ "Please delete this column and restart dRS.");
+					} else {
+						throw new RuntimeException("Wrong column type: " + db4oCol.name + ", expected: " + expected + ", table = " + table
+								+ "Please delete this column and restart dRS.");
+					}
+				}
+
+				return false;
+			}
+		}
+
+		protected void createDb4oColumns(Table table, Db4oColumns db4oCol) {
+			final String tableName = table.getQualifiedName(cfg.getDialect(), null, null);
+			String addcolStr = " " + cfg.getDialect().getAddColumnString() + " ";
+			final String sql = ALTER_TABLE + tableName + addcolStr + db4oCol.name + " " + cfg.getType(db4oCol.type);
+			executeQuery(st, sql);
+		}
+
+		private void executeQuery(Statement st, String sql) {
+			//System.out.println(dialect + " ||| " + sql);
+			try {
+				st.execute(sql);
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		}
+
+		protected String getDb4oSigIdFKConstraintString(Table table) {
+			final String tableName = table.getQualifiedName(cfg.getDialect(), null, null);
+
+			final PersistentClass classMapping = cfg.getConfiguration().getClassMapping(ReplicationProviderSignature.class.getName());
+			final Table rpsTable = classMapping.getTable();
+
+			final String rpsqualifiedName = rpsTable.getQualifiedName(cfg.getDialect(), null, null);
+
+			//ADD foreign key constraint
+			String constriantName = "DB4O_" + tableName;
+			final String[] foreignKeys = {Db4oColumns.PROVIDER_ID.name};
+			final String addForeignKeyConstraintString;
+			addForeignKeyConstraintString = ALTER_TABLE + tableName
+					+ cfg.getDialect().getAddForeignKeyConstraintString(
+					constriantName, foreignKeys, rpsqualifiedName, foreignKeys, true);
+
+			return addForeignKeyConstraintString;
+		}
 	}
 }

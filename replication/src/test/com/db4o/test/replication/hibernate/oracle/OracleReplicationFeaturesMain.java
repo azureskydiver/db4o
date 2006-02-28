@@ -7,6 +7,10 @@ import com.db4o.test.replication.hibernate.HibernateReplicationFeaturesMain;
 
 public class OracleReplicationFeaturesMain extends HibernateReplicationFeaturesMain {
 	public OracleReplicationFeaturesMain() {
+
+	}
+
+	public void test() {
 		cfgA = HibernateConfigurationFactory.produceOracleConfigA();
 		cfgA.addClass(Replicated.class);
 		pA = new HibernateReplicationProviderImpl(cfgA, "A");
@@ -14,9 +18,6 @@ public class OracleReplicationFeaturesMain extends HibernateReplicationFeaturesM
 		cfgB = HibernateConfigurationFactory.produceOracleConfigB();
 		cfgB.addClass(Replicated.class);
 		pB = new HibernateReplicationProviderImpl(cfgB, "B");
-	}
-
-	public void test() {
 		super.test();
 	}
 }

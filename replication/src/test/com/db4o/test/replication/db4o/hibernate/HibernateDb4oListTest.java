@@ -1,6 +1,6 @@
 package com.db4o.test.replication.db4o.hibernate;
 
-import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
 import com.db4o.test.Test;
@@ -12,11 +12,11 @@ import org.hibernate.cfg.Configuration;
 
 public class HibernateDb4oListTest extends ListTest {
 
-	protected TestableReplicationProvider prepareProviderA() {
+	protected TestableReplicationProviderInside prepareProviderA() {
 		return new Db4oReplicationProvider(Test.objectContainer());
 	}
 
-	protected TestableReplicationProvider prepareProviderB() {
+	protected TestableReplicationProviderInside prepareProviderB() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);

@@ -2,25 +2,22 @@
 
 package com.db4o.test.replication.transients;
 
-import com.db4o.inside.replication.*;
-import com.db4o.replication.db4o.*;
-import com.db4o.test.*;
-import com.db4o.test.replication.*;
-import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.test.replication.SimpleParentChild;
 
 
 public class TransientSimpleParentChild extends SimpleParentChild {
 
-    protected TestableReplicationProvider prepareProviderA() {
-        return new TransientReplicationProvider(new byte[]{1},"A");
-    }
+	protected TestableReplicationProviderInside prepareProviderA() {
+		return new TransientReplicationProvider(new byte[]{1}, "A");
+	}
 
-    protected TestableReplicationProvider prepareProviderB() {
-	    return new TransientReplicationProvider(new byte[]{2},"B");
-    }
+	protected TestableReplicationProviderInside prepareProviderB() {
+		return new TransientReplicationProvider(new byte[]{2}, "B");
+	}
 
-    public void test() {
-        super.test();
-    }
+	public void test() {
+		super.test();
+	}
 
 }

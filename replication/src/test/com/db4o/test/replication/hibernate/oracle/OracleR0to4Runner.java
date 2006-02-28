@@ -1,6 +1,6 @@
 package com.db4o.test.replication.hibernate.oracle;
 
-import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
 import com.db4o.test.replication.R0;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
@@ -9,13 +9,13 @@ import org.hibernate.cfg.Configuration;
 
 public class OracleR0to4Runner extends HibernateR0to4Runner {
 
-	protected TestableReplicationProvider prepareProviderA() {
+	protected TestableReplicationProviderInside prepareProviderA() {
 		Configuration configuration = HibernateConfigurationFactory.produceOracleConfigA();
 		configuration.addClass(R0.class);
 		return new HibernateReplicationProviderImpl(configuration, "A");
 	}
 
-	protected TestableReplicationProvider prepareProviderB() {
+	protected TestableReplicationProviderInside prepareProviderB() {
 		Configuration configuration = HibernateConfigurationFactory.produceOracleConfigB();
 		configuration.addClass(R0.class);
 		return new HibernateReplicationProviderImpl(configuration, "B");

@@ -2,22 +2,22 @@
 
 package com.db4o.test.replication.transients;
 
-import com.db4o.inside.replication.*;
-import com.db4o.test.replication.collections.*;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.test.replication.collections.SimpleArrayTest;
 
 
-public class TransientSimpleArrayTest extends SimpleArrayTest{
-    
-    protected TestableReplicationProvider prepareProviderA() {
-        return new TransientReplicationProvider(new byte[]{0});
-    }
+public class TransientSimpleArrayTest extends SimpleArrayTest {
 
-    protected TestableReplicationProvider prepareProviderB() {
-        return new TransientReplicationProvider(new byte[]{1});
-    }
+	protected TestableReplicationProviderInside prepareProviderA() {
+		return new TransientReplicationProvider(new byte[]{0});
+	}
 
-    public void test() {
-        super.test();
-    }
-    
+	protected TestableReplicationProviderInside prepareProviderB() {
+		return new TransientReplicationProvider(new byte[]{1});
+	}
+
+	public void test() {
+		super.test();
+	}
+
 }

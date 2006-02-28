@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 
 public class Util {
 	static boolean skip(Object obj) {
@@ -171,5 +172,23 @@ public class Util {
 				throw new RuntimeException(e);
 			}
 		}
+	}
+
+	public static Statement getStatement(Connection connection) {
+		try {
+			return connection.createStatement();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static boolean oracleTypeMatches(int expected, int actual) {
+		if (expected == actual)
+			return true;
+
+		if (expected != Types.BIGINT)
+			throw new UnsupportedOperationException("Only support Types.BIGINT");
+
+		return actual == Types.DECIMAL;
 	}
 }

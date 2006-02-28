@@ -13,13 +13,15 @@ class Db4oColumns {
 	 */
 	static final Db4oColumns UUID_LONG_PART = new Db4oColumns("drs_uuid_long_part", Types.BIGINT);
 
+	static final Db4oColumns PROVIDER_ID = new Db4oColumns("drs_provider_id", Types.BIGINT);
+
 	final String name;
 
-	final int sqlType;
+	final int type;
 
-	Db4oColumns(String name, int sqlType) {
+	private Db4oColumns(String name, int sqlType) {
 		this.name = name;
-		this.sqlType = sqlType;
+		this.type = sqlType;
 	}
 
 	public String toString() {

@@ -2,23 +2,23 @@
 
 package com.db4o.test.replication.db4o;
 
-import com.db4o.inside.replication.*;
-import com.db4o.replication.db4o.*;
-import com.db4o.test.*;
-import com.db4o.test.replication.collections.*;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.replication.db4o.Db4oReplicationProvider;
+import com.db4o.test.Test;
+import com.db4o.test.replication.collections.ListTest;
 
-public class Db4oListTest extends ListTest{
+public class Db4oListTest extends ListTest {
 
-    protected TestableReplicationProvider prepareProviderA() {
-        return new Db4oReplicationProvider(Test.objectContainer());
-    }
+	protected TestableReplicationProviderInside prepareProviderA() {
+		return new Db4oReplicationProvider(Test.objectContainer());
+	}
 
-    protected TestableReplicationProvider prepareProviderB() {
-        return Db4oReplicationTestUtil.providerB();
-    }
+	protected TestableReplicationProviderInside prepareProviderB() {
+		return Db4oReplicationTestUtil.providerB();
+	}
 
-    public void test() {
-        super.test();
-    }
-    
+	public void test() {
+		super.test();
+	}
+
 }
