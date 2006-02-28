@@ -3,7 +3,7 @@
 package com.db4o.test.replication.collections;
 
 import com.db4o.ObjectSet;
-import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.test.Test;
 import com.db4o.test.replication.ReplicationTestcase;
@@ -30,6 +30,8 @@ public abstract class ListTest extends ReplicationTestcase {
 		addElementInProviderA();
 
 		replicateHolderStep3();
+
+		destroy();
 	}
 
 	private void storeListToProviderA() {
@@ -101,7 +103,7 @@ public abstract class ListTest extends ReplicationTestcase {
 		ensureContent(_providerB, new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
 	}
 
-	private void ensureContent(TestableReplicationProvider provider, String[] holderNames, String[] contentNames) {
+	private void ensureContent(TestableReplicationProviderInside provider, String[] holderNames, String[] contentNames) {
 		int holderCount = holderNames.length;
 		ensureInstanceCount(provider, ListHolder.class, holderCount);
 

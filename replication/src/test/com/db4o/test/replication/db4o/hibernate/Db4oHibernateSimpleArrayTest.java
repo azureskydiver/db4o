@@ -2,7 +2,7 @@
 
 package com.db4o.test.replication.db4o.hibernate;
 
-import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
 import com.db4o.test.Test;
@@ -15,14 +15,14 @@ import org.hibernate.cfg.Configuration;
 
 public class Db4oHibernateSimpleArrayTest extends SimpleArrayTest {
 
-	protected TestableReplicationProvider prepareProviderA() {
+	protected TestableReplicationProviderInside prepareProviderA() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(SimpleArrayHolder.class);
 		configuration.addClass(SimpleArrayContent.class);
 		return new HibernateReplicationProviderImpl(configuration, "A");
 	}
 
-	protected TestableReplicationProvider prepareProviderB() {
+	protected TestableReplicationProviderInside prepareProviderB() {
 		return new Db4oReplicationProvider(Test.objectContainer());
 	}
 

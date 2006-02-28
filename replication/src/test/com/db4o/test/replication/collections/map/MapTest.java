@@ -1,7 +1,7 @@
 package com.db4o.test.replication.collections.map;
 
 import com.db4o.ObjectSet;
-import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.test.Test;
 import com.db4o.test.replication.ReplicationTestcase;
@@ -27,6 +27,8 @@ public abstract class MapTest extends ReplicationTestcase {
 		addElementInProviderA();
 
 		replicateHolderStep3();
+
+		destroy();
 	}
 
 	private void storeMapToProviderA() {
@@ -98,7 +100,7 @@ public abstract class MapTest extends ReplicationTestcase {
 		ensureContent(_providerB, new String[]{"h3"}, new String[]{"key1", "key2", "key3"}, new String[]{"co1", "co2", "co3"});
 	}
 
-	private void ensureContent(TestableReplicationProvider provider, String[] holderNames, String[] keyNames, String[] valueNames) {
+	private void ensureContent(TestableReplicationProviderInside provider, String[] holderNames, String[] keyNames, String[] valueNames) {
 		int holderCount = holderNames.length;
 		ensureInstanceCount(provider, MapHolder.class, holderCount);
 

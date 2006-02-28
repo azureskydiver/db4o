@@ -10,7 +10,7 @@ import com.db4o.test.replication.db4o.Db4oReplicationFeaturesMain;
 import com.db4o.test.replication.db4o.Db4oReplicationProviderTest;
 import com.db4o.test.replication.db4o.Db4oSimpleArrayTest;
 import com.db4o.test.replication.db4o.Db4oSimpleParentChild;
-import com.db4o.test.replication.db4o.hibernate.*;
+import com.db4o.test.replication.db4o.hibernate.Db4oHibernateSimpleArrayTest;
 import com.db4o.test.replication.hibernate.HibernateListTest;
 import com.db4o.test.replication.hibernate.HibernateMapTest;
 import com.db4o.test.replication.hibernate.HibernateR0to4Runner;
@@ -22,6 +22,7 @@ import com.db4o.test.replication.hibernate.HibernateSimpleParentChild;
 import com.db4o.test.replication.hibernate.HibernateSingleTypeCollectionReplicationTest;
 import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.UuidLongPartGeneratorTest;
+import com.db4o.test.replication.hibernate.hsql.HsqlMetaDataTablesCreatorTest;
 import com.db4o.test.replication.provider.TransientReplicationProviderTest;
 import com.db4o.test.replication.transients.TransientArrayReplicationTest;
 import com.db4o.test.replication.transients.TransientListTest;
@@ -36,12 +37,13 @@ import com.db4o.test.replication.transients.TransientSingleTypeCollectionReplica
 public class ReplicationTestSuite extends TestSuite {
 
 	public Class[] tests() {
-        
+
 		// System.err.println("Db4oReplicationProvider.getReference(obj).version() must return the latest version of all collections held by obj because collections are being treated as 2nd class objects (like arrays) for hibernate replication purposes.");
 		// System.err.println("Overcome absence of constructor in VMs other than Sun's.");
-        
-        
+
+
 		return new Class[]{
+				HsqlMetaDataTablesCreatorTest.class,
 				HibernateReplicationAfterDeletionTest.class,
 				Db4oReplicationAfterDeletionTest.class,
 
@@ -62,6 +64,8 @@ public class ReplicationTestSuite extends TestSuite {
 				TransientListTest.class,
 				Db4oListTest.class,
 				HibernateListTest.class,
+				//Db4oHibernateListTest.class,
+				//HibernateDb4oListTest.class,
 
 				TransientMapTest.class,
 				Db4oMapTest.class,

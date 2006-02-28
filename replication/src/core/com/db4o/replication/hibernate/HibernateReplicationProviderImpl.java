@@ -508,7 +508,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		String sql = "SELECT "
 				+ Db4oColumns.VERSION.name
 				+ ", " + Db4oColumns.UUID_LONG_PART.name
-				+ ", " + ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME
+				+ ", " + Db4oColumns.PROVIDER_ID.name
 				+ " FROM " + tableName
 				+ " where " + pkColumn + "=" + identifier;
 
@@ -605,7 +605,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 		String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
 				+ " where " + Db4oColumns.UUID_LONG_PART.name + "=" + uuid.getLongPart()
-				+ " AND " + ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + "=" + sigId;
+				+ " AND " + Db4oColumns.PROVIDER_ID.name + "=" + sigId;
 		SQLQuery sqlQuery = _session.createSQLQuery(sql);
 		sqlQuery.addEntity(alias, hint);
 
@@ -686,27 +686,6 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		return field;
 	}
 
-	protected void setSignature(byte[] b) {
-		//Idempotent
-		if (_mySig != null) return;
-		final Criteria criteria = _session.createCriteria(MySignature.class);
-		final List firstResult = criteria.list();
-
-		if (firstResult.size() == 1) {
-			MySignature mySignature = (MySignature) firstResult.get(0);
-			mySignature.setBytes(b);
-			_session.update(mySignature);
-			_mySig = mySignature;
-		} else if (firstResult.size() > 1)
-			throw new RuntimeException("Number of MySignature should be either 0 or 1");
-		else {
-			_mySig = new MySignature(b);
-			_session.save(_mySig);
-		}
-
-		_session.flush();
-	}
-
 	protected Collection getNewObjectsSinceLastReplication(PersistentClass type) {
 		String alias = "whatever";
 
@@ -715,7 +694,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
 				+ " where " + Db4oColumns.UUID_LONG_PART.name + IS_NULL
 				//+ " AND " + Db4oColumns.DB4O_VERSION + IS_NULL
-				+ " AND " + ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + IS_NULL;
+				+ " AND " + Db4oColumns.PROVIDER_ID.name + IS_NULL;
 		//+ " AND class=" + type
 		SQLQuery sqlQuery = _session.createSQLQuery(sql);
 		sqlQuery.addEntity(alias, type.getMappedClass());
@@ -833,7 +812,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 		String sql = "UPDATE " + tableName + " SET " + Db4oColumns.VERSION.name + "=?"
 				+ ", " + Db4oColumns.UUID_LONG_PART.name + "=?"
-				+ ", " + ReplicationProviderSignature.SIGNATURE_ID_COLUMN_NAME + "=?"
+				+ ", " + Db4oColumns.PROVIDER_ID.name + "=?"
 				+ " WHERE " + pkColumn + " =?";
 
 		PreparedStatement ps = null;

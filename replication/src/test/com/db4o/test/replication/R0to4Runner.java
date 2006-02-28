@@ -3,19 +3,19 @@
 package com.db4o.test.replication;
 
 import com.db4o.ObjectSet;
-import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
 public abstract class R0to4Runner {
-	protected TestableReplicationProvider peerA;
-	protected TestableReplicationProvider peerB;
+	protected TestableReplicationProviderInside peerA;
+	protected TestableReplicationProviderInside peerB;
 
-	protected abstract TestableReplicationProvider prepareProviderA();
+	protected abstract TestableReplicationProviderInside prepareProviderA();
 
-	protected abstract TestableReplicationProvider prepareProviderB();
+	protected abstract TestableReplicationProviderInside prepareProviderB();
 
 	private final static ConflictResolver _ignoreConflictHandler = new ConflictResolver() {
 		public Object resolveConflict(ReplicationSession ignored, Object a, Object b) {
@@ -45,6 +45,13 @@ public abstract class R0to4Runner {
 		replicateR4(peerA, peerB);
 
 		ensureR4Same(peerA, peerB);
+
+		destroy();
+	}
+
+	private void destroy() {
+		peerA.closeIfOpened();
+		peerB.closeIfOpened();
 	}
 
 	private void delete(Class[] classes) {
@@ -56,7 +63,7 @@ public abstract class R0to4Runner {
 		peerB.commit();
 	}
 
-	private void init(TestableReplicationProvider peerA, TestableReplicationProvider peerB) {
+	private void init(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
 
 		ReplicationSession replication = Replication.begin(peerA, peerB, _ignoreConflictHandler);
 
@@ -84,16 +91,16 @@ public abstract class R0to4Runner {
 
 	}
 
-	private void ensureR4Different(TestableReplicationProvider peerA, TestableReplicationProvider peerB) {
+	private void ensureR4Different(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
 		compareR4(peerB, peerA, false);
 	}
 
-	private void ensureR4Same(TestableReplicationProvider peerA, TestableReplicationProvider peerB) {
+	private void ensureR4Same(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
 		compareR4(peerB, peerA, true);
 		compareR4(peerA, peerB, true);
 	}
 
-	private void compareR4(TestableReplicationProvider a, TestableReplicationProvider b, boolean isSameExpected) {
+	private void compareR4(TestableReplicationProviderInside a, TestableReplicationProviderInside b, boolean isSameExpected) {
 		ObjectSet it = a.getStoredObjects(R4.class);
 		while (it.hasNext()) {
 			String name = ((R4) it.next()).name;
@@ -108,7 +115,7 @@ public abstract class R0to4Runner {
 		}
 	}
 
-	private void modifyR4(TestableReplicationProvider provider) {
+	private void modifyR4(TestableReplicationProviderInside provider) {
 		ObjectSet it = provider.getStoredObjects(R4.class);
 		while (it.hasNext()) {
 			R4 r4 = (R4) it.next();
@@ -117,24 +124,24 @@ public abstract class R0to4Runner {
 		}
 	}
 
-	private void copyAllToB(TestableReplicationProvider peerA, TestableReplicationProvider peerB) {
+	private void copyAllToB(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
 		Test.ensure(replicateAll(peerA, peerB, false) == LINKERS * 5);
 	}
 
-	private void replicateNoneModified(TestableReplicationProvider peerA, TestableReplicationProvider peerB) {
+	private void replicateNoneModified(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
 		Test.ensure(replicateAll(peerA, peerB) == 0);
 	}
 
-	private int replicateAll(TestableReplicationProvider peerA, TestableReplicationProvider peerB) {
+	private int replicateAll(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
 		return replicateAll(peerA, peerB, true);
 	}
 
-	private void replicateR4(TestableReplicationProvider peerA, TestableReplicationProvider peerB) {
+	private void replicateR4(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
 		int replicatedObjectsCount = replicateAll(peerA, peerB, true);
 		Test.ensure(replicatedObjectsCount == LINKERS);
 	}
 
-	private int replicateAll(TestableReplicationProvider peerA, TestableReplicationProvider peerB, boolean modifiedOnly) {
+	private int replicateAll(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB, boolean modifiedOnly) {
 
 		ReplicationSession replication = Replication.begin(peerA, peerB, _ignoreConflictHandler);
 
@@ -155,7 +162,7 @@ public abstract class R0to4Runner {
 		return replicated;
 	}
 
-	private void ensureCount(TestableReplicationProvider provider, int linkers) {
+	private void ensureCount(TestableReplicationProviderInside provider, int linkers) {
 		ensureCount(provider, R0.class, linkers * 5);
 		ensureCount(provider, R1.class, linkers * 4);
 		ensureCount(provider, R2.class, linkers * 3);
@@ -163,7 +170,7 @@ public abstract class R0to4Runner {
 		ensureCount(provider, R4.class, linkers * 1);
 	}
 
-	private void ensureCount(TestableReplicationProvider provider, Class clazz, int count) {
+	private void ensureCount(TestableReplicationProviderInside provider, Class clazz, int count) {
 		ObjectSet instances = provider.getStoredObjects(clazz);
 		int i = count;
 		while (instances.hasNext()) {

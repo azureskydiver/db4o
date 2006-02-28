@@ -5,9 +5,11 @@ import com.db4o.test.TestSuite;
 public class PostgreSQLTestSuite extends TestSuite {
 	public Class[] tests() {
 		return new Class[]{
-				PostgreSQLListTest.class,
+				PostgreSQLMetaDataTablesCreatorTest.class,
 				PostgreSQLR0to4Runner.class,
-				PostgreSQLReplicationFeaturesMain.class
+				PostgreSQLReplicationFeaturesMain.class,
+				PostgreSQLMapTest.class,
+				PostgreSQLListTest.class,
 		};
 	}
 }

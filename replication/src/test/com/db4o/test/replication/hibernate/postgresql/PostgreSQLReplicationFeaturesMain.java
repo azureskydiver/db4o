@@ -7,6 +7,10 @@ import com.db4o.test.replication.hibernate.HibernateReplicationFeaturesMain;
 
 public class PostgreSQLReplicationFeaturesMain extends HibernateReplicationFeaturesMain {
 	public PostgreSQLReplicationFeaturesMain() {
+
+	}
+
+	public void test() {
 		cfgA = HibernateConfigurationFactory.producePostgreSQLConfigA();
 		cfgA.addClass(Replicated.class);
 		pA = new HibernateReplicationProviderImpl(cfgA, "A");
@@ -14,9 +18,6 @@ public class PostgreSQLReplicationFeaturesMain extends HibernateReplicationFeatu
 		cfgB = HibernateConfigurationFactory.producePostgreSQLConfigB();
 		cfgB.addClass(Replicated.class);
 		pB = new HibernateReplicationProviderImpl(cfgB, "B");
-	}
-
-	public void test() {
 		super.test();
 	}
 }

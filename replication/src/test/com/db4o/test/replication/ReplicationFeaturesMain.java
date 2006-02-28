@@ -5,7 +5,7 @@ package com.db4o.test.replication;
 import com.db4o.Db4o;
 import com.db4o.ObjectSet;
 import com.db4o.inside.replication.GenericReplicationSession;
-import com.db4o.inside.replication.TestableReplicationProvider;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.ReplicationProvider;
 import com.db4o.replication.ReplicationSession;
@@ -22,8 +22,8 @@ public abstract class ReplicationFeaturesMain {
 	private final Set _setBoth = new HashSet(2);
 	private final Set _NONE = Collections.EMPTY_SET;
 
-	protected TestableReplicationProvider _containerA;
-	protected TestableReplicationProvider _containerB;
+	protected TestableReplicationProviderInside _containerA;
+	protected TestableReplicationProviderInside _containerB;
 
 	private Set _direction;
 	private Set _containersToQueryFrom;
@@ -213,7 +213,7 @@ public abstract class ReplicationFeaturesMain {
 		checkName(container(inspected), "oldFromBChangedIn" + origin, isChangedNameExpected(origin, inspected));
 	}
 
-	private TestableReplicationProvider container(String aOrB) {
+	private TestableReplicationProviderInside container(String aOrB) {
 		return aOrB.equals(A) ? _containerA : _containerB;
 	}
 
@@ -288,13 +288,13 @@ public abstract class ReplicationFeaturesMain {
 
 	}
 
-	private void changeObject(TestableReplicationProvider container, String name, String newName) {
+	private void changeObject(TestableReplicationProviderInside container, String name, String newName) {
 		Replicated obj = find(container, name);
 		obj.setName(newName);
 		container.update(obj);
 	}
 
-	private void checkName(TestableReplicationProvider container, String name, boolean isExpected) {
+	private void checkName(TestableReplicationProviderInside container, String name, boolean isExpected) {
 //		System.out.println("");
 //		System.out.println(name + (isExpected ? " " : " NOT ") + " expected in container " + containerName(container));
 		Replicated obj = find(container, name);
@@ -313,7 +313,7 @@ public abstract class ReplicationFeaturesMain {
 		throw new IllegalStateException();
 	}
 
-	private Replicated find(TestableReplicationProvider container, String name) {
+	private Replicated find(TestableReplicationProviderInside container, String name) {
 		//System.out.println("container = " + container);
 		//System.out.println("name = " + name);
 
@@ -349,9 +349,9 @@ public abstract class ReplicationFeaturesMain {
 		throw new RuntimeException(string);
 	}
 
-	protected abstract TestableReplicationProvider prepareProviderB();
+	protected abstract TestableReplicationProviderInside prepareProviderB();
 
-	protected abstract TestableReplicationProvider prepareProviderA();
+	protected abstract TestableReplicationProviderInside prepareProviderA();
 
 	private void initState() {
 		_containerA = prepareProviderA();
@@ -379,7 +379,7 @@ public abstract class ReplicationFeaturesMain {
 		replication.commit();
 	}
 
-	private void checkEmpty(TestableReplicationProvider provider) {
+	private void checkEmpty(TestableReplicationProviderInside provider) {
 		if (provider.getStoredObjects(Replicated.class).hasNext())
 			throw new RuntimeException(provider.getName() + " is not empty");
 	}

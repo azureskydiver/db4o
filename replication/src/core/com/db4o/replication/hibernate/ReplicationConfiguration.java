@@ -20,7 +20,7 @@ public class ReplicationConfiguration {
 
 	private Set tables;
 
-	private Dialect dialect;
+	private final Dialect dialect;
 
 	public static ReplicationConfiguration produce(Configuration cfg) {
 		Object exist = cache.get(cfg);
@@ -47,6 +47,7 @@ public class ReplicationConfiguration {
 		addClass(ReplicationComponentIdentity.class);
 		addClass(ReplicationComponentField.class);
 		addClass(UuidLongPartSequence.class);
+		dialect = Dialect.getDialect(configuration.getProperties());
 	}
 
 	public Configuration getConfiguration() {
@@ -105,8 +106,6 @@ public class ReplicationConfiguration {
 	}
 
 	public Dialect getDialect() {
-		if (dialect == null)
-			dialect = Dialect.getDialect(configuration.getProperties());
 		return dialect;
 	}
 
