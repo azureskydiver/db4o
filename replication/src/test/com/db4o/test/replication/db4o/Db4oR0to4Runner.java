@@ -20,4 +20,9 @@ public class Db4oR0to4Runner extends R0to4Runner {
 	public void test() {
 		super.test();
 	}
+
+	protected void clean() {
+		delete(peerA);
+		delete(peerB);
+	}
 }

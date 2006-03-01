@@ -1,26 +1,38 @@
 package com.db4o.test.replication.hibernate;
 
-import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
-import com.db4o.test.replication.R0;
 import com.db4o.test.replication.R0to4Runner;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.classic.Session;
 
-public class HibernateR0to4Runner extends R0to4Runner {
+import java.sql.SQLException;
+import java.sql.Statement;
 
-	protected TestableReplicationProviderInside prepareProviderA() {
-		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
-		configuration.addClass(R0.class);
-		return new HibernateReplicationProviderImpl(configuration, "A");
+public abstract class HibernateR0to4Runner extends R0to4Runner {
+	protected Configuration cfgA;
+	protected Configuration cfgB;
+
+	protected void clean() {
+		dropTables(cfgA);
+		dropTables(cfgB);
 	}
 
-	protected TestableReplicationProviderInside prepareProviderB() {
-		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
-		configuration.addClass(R0.class);
-		return new HibernateReplicationProviderImpl(configuration, "B");
-	}
+	protected void dropTables(Configuration cfg) {
+		final SessionFactory sf = cfg.buildSessionFactory();
+		final Session session = sf.openSession();
+		final Transaction tx = session.beginTransaction();
+		final Statement st;
 
-	public void test() {
-		super.test();
+		try {
+			st = session.connection().createStatement();
+			st.execute("drop table R0");
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+		tx.commit();
+		session.close();
+		sf.close();
 	}
 }
