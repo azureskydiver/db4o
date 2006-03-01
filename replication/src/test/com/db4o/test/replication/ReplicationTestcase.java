@@ -40,10 +40,13 @@ public abstract class ReplicationTestcase {
 	}
 
 	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
+		//System.out.println("from = " + providerFrom + ", to = " + providerTo);
 		ReplicationSession replication = Replication.begin(providerFrom, providerTo);
 		ObjectSet allObjects = providerFrom.objectsChangedSinceLastReplication();
 		while (allObjects.hasNext()) {
-			replication.replicate(allObjects.next());
+			Object changed = allObjects.next();
+			//System.out.println("changed = " + changed);
+			replication.replicate(changed);
 		}
 		replication.commit();
 	}

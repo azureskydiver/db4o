@@ -5,20 +5,18 @@ import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
 import com.db4o.test.replication.R0;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
 import com.db4o.test.replication.hibernate.HibernateR0to4Runner;
-import org.hibernate.cfg.Configuration;
 
 public class PostgreSQLR0to4Runner extends HibernateR0to4Runner {
-
 	protected TestableReplicationProviderInside prepareProviderA() {
-		Configuration configuration = HibernateConfigurationFactory.producePostgreSQLConfigA();
-		configuration.addClass(R0.class);
-		return new HibernateReplicationProviderImpl(configuration, "A");
+		cfgA = HibernateConfigurationFactory.producePostgreSQLConfigA();
+		cfgA.addClass(R0.class);
+		return new HibernateReplicationProviderImpl(cfgA, "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		Configuration configuration = HibernateConfigurationFactory.producePostgreSQLConfigB();
-		configuration.addClass(R0.class);
-		return new HibernateReplicationProviderImpl(configuration, "B");
+		cfgB = HibernateConfigurationFactory.producePostgreSQLConfigB();
+		cfgB.addClass(R0.class);
+		return new HibernateReplicationProviderImpl(cfgB, "B");
 	}
 
 	public void test() {

@@ -26,11 +26,8 @@ public abstract class R0to4Runner {
 	private static final int LINKERS = 4;
 
 	public void test() {
-
 		peerA = prepareProviderA();
 		peerB = prepareProviderB();
-
-		delete(new Class[]{R0.class, R1.class, R2.class, R3.class, R4.class});
 
 		init(peerA, peerB);
 		ensureCount(peerA, LINKERS);
@@ -46,21 +43,25 @@ public abstract class R0to4Runner {
 
 		ensureR4Same(peerA, peerB);
 
+		clean();
+
 		destroy();
 	}
+
+	abstract protected void clean();
 
 	private void destroy() {
 		peerA.closeIfOpened();
 		peerB.closeIfOpened();
 	}
 
-	private void delete(Class[] classes) {
+	protected void delete(TestableReplicationProviderInside provider) {
+		Class[] classes = new Class[]{R0.class, R1.class, R2.class, R3.class, R4.class};
+
 		for (int i = 0; i < classes.length; i++) {
-			peerA.delete(classes[i]);
-			peerB.delete(classes[i]);
+			provider.delete(classes[i]);
 		}
-		peerA.commit();
-		peerB.commit();
+		provider.commit();
 	}
 
 	private void init(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {

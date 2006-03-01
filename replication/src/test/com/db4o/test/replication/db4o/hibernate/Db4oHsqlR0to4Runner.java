@@ -2,30 +2,34 @@
 
 package com.db4o.test.replication.db4o.hibernate;
 
+import com.db4o.ext.ExtObjectContainer;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
 import com.db4o.test.Test;
 import com.db4o.test.replication.R0;
-import com.db4o.test.replication.R0to4Runner;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
-import org.hibernate.cfg.Configuration;
+import com.db4o.test.replication.hibernate.HibernateR0to4Runner;
 
 
-public class Db4oHibernateR0to4Runner extends R0to4Runner {
-
+public class Db4oHsqlR0to4Runner extends HibernateR0to4Runner {
 	protected TestableReplicationProviderInside prepareProviderA() {
-		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
-		configuration.addClass(R0.class);
-		return new HibernateReplicationProviderImpl(configuration, "A");
+		cfgA = HibernateConfigurationFactory.createNewDbConfig();
+		cfgA.addClass(R0.class);
+		return new HibernateReplicationProviderImpl(cfgA, "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		return new Db4oReplicationProvider(Test.objectContainer());
+		ExtObjectContainer ocB = Test.objectContainer();
+		return new Db4oReplicationProvider(ocB);
 	}
 
 	public void test() {
 		super.test();
 	}
 
+	protected void clean() {
+		dropTables(cfgA);
+		delete(peerB);
+	}
 }
