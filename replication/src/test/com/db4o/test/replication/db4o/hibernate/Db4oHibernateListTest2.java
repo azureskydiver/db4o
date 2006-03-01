@@ -13,7 +13,7 @@ import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
 import org.hibernate.cfg.Configuration;
 
 
-public class Db4oHibernateListTest extends ListTest {
+public class Db4oHibernateListTest2 extends ListTest {
 
 	protected TestableReplicationProviderInside prepareProviderA() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();

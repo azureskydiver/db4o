@@ -11,7 +11,7 @@ public abstract class SimpleParentChild extends ReplicationTestcase {
 
 		init();
 
-		delete(new Class[]{SPCParent.class, SPCChild.class});
+		clean();
 
 		storeParentAndChildToProviderA();
 
@@ -24,7 +24,11 @@ public abstract class SimpleParentChild extends ReplicationTestcase {
 		modifyParentAndChildInProviderA();
 
 		replicateParentClassStep3();
+
+		clean();
 	}
+
+	private void clean() {delete(new Class[]{SPCParent.class, SPCChild.class});}
 
 	private void storeParentAndChildToProviderA() {
 		SPCChild child = new SPCChild("c1");
