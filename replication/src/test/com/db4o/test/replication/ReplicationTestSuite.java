@@ -4,16 +4,16 @@ import com.db4o.test.TestSuite;
 import com.db4o.test.replication.db4o.Db4oArrayReplicationTest;
 import com.db4o.test.replication.db4o.Db4oListTest;
 import com.db4o.test.replication.db4o.Db4oMapTest;
-import com.db4o.test.replication.db4o.Db4oR0to4Runner;
 import com.db4o.test.replication.db4o.Db4oReplicationAfterDeletionTest;
 import com.db4o.test.replication.db4o.Db4oReplicationFeaturesMain;
 import com.db4o.test.replication.db4o.Db4oReplicationProviderTest;
 import com.db4o.test.replication.db4o.Db4oSimpleArrayTest;
 import com.db4o.test.replication.db4o.Db4oSimpleParentChild;
+import com.db4o.test.replication.db4o.hibernate.Db4oHibernateListTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateSimpleArrayTest;
+import com.db4o.test.replication.db4o.hibernate.HibernateDb4oListTest;
 import com.db4o.test.replication.hibernate.HibernateListTest;
 import com.db4o.test.replication.hibernate.HibernateMapTest;
-import com.db4o.test.replication.hibernate.HibernateR0to4Runner;
 import com.db4o.test.replication.hibernate.HibernateReplicationAfterDeletionTest;
 import com.db4o.test.replication.hibernate.HibernateReplicationFeaturesMain;
 import com.db4o.test.replication.hibernate.HibernateReplicationProviderTest;
@@ -28,7 +28,6 @@ import com.db4o.test.replication.transients.TransientArrayReplicationTest;
 import com.db4o.test.replication.transients.TransientListTest;
 import com.db4o.test.replication.transients.TransientMapTest;
 import com.db4o.test.replication.transients.TransientMixedTypesCollectionReplicationTest;
-import com.db4o.test.replication.transients.TransientR0to4Runner;
 import com.db4o.test.replication.transients.TransientReplicationFeaturesMain;
 import com.db4o.test.replication.transients.TransientSimpleArrayTest;
 import com.db4o.test.replication.transients.TransientSimpleParentChild;
@@ -51,9 +50,9 @@ public class ReplicationTestSuite extends TestSuite {
 				Db4oReplicationProviderTest.class,
 				HibernateReplicationProviderTest.class,
 
-				TransientR0to4Runner.class,
-				Db4oR0to4Runner.class,
-				HibernateR0to4Runner.class,
+//				TransientR0to4Runner.class,
+//				Db4oR0to4Runner.class,
+//				HibernateR0to4Runner.class,
 				// Db4oHibernateR0to4Runner.class,
 
 				TransientSimpleParentChild.class,
@@ -64,8 +63,8 @@ public class ReplicationTestSuite extends TestSuite {
 				TransientListTest.class,
 				Db4oListTest.class,
 				HibernateListTest.class,
-				//Db4oHibernateListTest.class,
-				//HibernateDb4oListTest.class,
+				Db4oHibernateListTest.class,
+				HibernateDb4oListTest.class,
 
 				TransientMapTest.class,
 				Db4oMapTest.class,

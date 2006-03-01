@@ -258,13 +258,13 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	public final void storeReplica(Object obj) {
 		ensureReplicationActive();
 
+		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
+		if (_collectionHandler.canHandle(obj)) return;
+
 		ReplicationReference ref = getCachedReference(obj);
 		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
 
 		_uuidsReplicatedInThisSession.add(ref.uuid());
-
-		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
-		if (_collectionHandler.canHandle(obj)) return;
 
 		_session.saveOrUpdate(obj);
 		_dirtyRefs.add(ref);
@@ -284,18 +284,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		if (existing != null) return existing;
 
 		if (_collectionHandler.canHandle(obj)) {
-
-			// TODO: referencingObj is null on running the list test twice.
-			// Is this an actual correct expected case? Check.
-
-			if (referencingObj == null) {
+			if (referencingObj == null)
 				return null;
-			}
-
-			// TODO: The following is unreachable after the above fix.
-			if (referencingObj == null) throw new NullPointerException("referencingObj cannot be null");
-
-			if (fieldName == null) throw new NullPointerException("fieldName cannot be null");
 
 			return produceCollectionReference(obj, referencingObj, fieldName);
 		} else {
@@ -311,8 +301,9 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		if (counterpartReference == null) throw new NullPointerException("counterpartReference is null");
 
 		if (_collectionHandler.canHandle(obj)) {
-			if (referencingObjCounterPartRef == null) throw new NullPointerException("referencingObjCounterPartRef is null");
-			if (fieldName == null) throw new NullPointerException("fieldName is null");
+
+			if (referencingObjCounterPartRef == null || fieldName == null)
+				return null;
 
 			ReplicationReference cachedReference = getCachedReference(obj);
 			if (cachedReference != null) return cachedReference;
