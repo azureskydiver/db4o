@@ -1,3 +1,5 @@
+/* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
+
 package com.db4o.test.replication.db4o.hibernate;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
@@ -10,17 +12,18 @@ import com.db4o.test.replication.collections.ListTest;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
 import org.hibernate.cfg.Configuration;
 
+
 public class HibernateDb4oListTest extends ListTest {
 
 	protected TestableReplicationProviderInside prepareProviderA() {
-		return new Db4oReplicationProvider(Test.objectContainer());
-	}
-
-	protected TestableReplicationProviderInside prepareProviderB() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);
 		return new HibernateReplicationProviderImpl(configuration, "A");
+	}
+
+	protected TestableReplicationProviderInside prepareProviderB() {
+		return new Db4oReplicationProvider(Test.objectContainer());
 	}
 
 	public void test() {
