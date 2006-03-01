@@ -9,7 +9,7 @@ import com.db4o.test.replication.db4o.Db4oReplicationFeaturesMain;
 import com.db4o.test.replication.db4o.Db4oReplicationProviderTest;
 import com.db4o.test.replication.db4o.Db4oSimpleArrayTest;
 import com.db4o.test.replication.db4o.Db4oSimpleParentChild;
-import com.db4o.test.replication.db4o.hibernate.Db4oHibernateListTest;
+import com.db4o.test.replication.db4o.hibernate.Db4oHibernateListTest2;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateSimpleArrayTest;
 import com.db4o.test.replication.db4o.hibernate.HibernateDb4oListTest;
 import com.db4o.test.replication.hibernate.HibernateListTest;
@@ -63,7 +63,7 @@ public class ReplicationTestSuite extends TestSuite {
 				TransientListTest.class,
 				Db4oListTest.class,
 				HibernateListTest.class,
-				Db4oHibernateListTest.class,
+				Db4oHibernateListTest2.class,
 				HibernateDb4oListTest.class,
 
 				TransientMapTest.class,
