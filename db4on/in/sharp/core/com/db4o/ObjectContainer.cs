@@ -27,7 +27,7 @@ namespace com.db4o
 	/// </remarks>
 	/// <seealso cref="com.db4o.ext.ExtObjectContainer">ExtObjectContainer for extended functionality.
 	/// 	</seealso>
-	public interface ObjectContainer
+	public interface ObjectContainer : System.IDisposable
 	{
 		/// <summary>activates all members on a stored object to the specified depth.</summary>
 		/// <remarks>
