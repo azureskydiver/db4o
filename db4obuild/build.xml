@@ -915,6 +915,12 @@
 				<include name="**/*.config" />
 			</fileset>
 		</copy>
+		
+		<copy todir="${dir.dist.net.build.tutorial}/vb">
+			<fileset dir="${dir.j.tutorial.out.vb}">
+				<include name="**/**" />
+			</fileset>
+		</copy>
 	
 		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
 			<sources dir="${dir.dist.net.build.src}">
