@@ -16,13 +16,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class SchemaValidator {
-	private ReplicationConfiguration cfg;
+	private MetadataProviderReplicationConfiguration cfg;
 
 	protected org.hibernate.tool.hbm2ddl.SchemaValidator delegate;
 	protected SessionFactory sessionFactory;
 	protected final Dialect dialect;
 
-	public SchemaValidator(ReplicationConfiguration aCfg) {
+	public SchemaValidator(MetadataProviderReplicationConfiguration aCfg) {
 		cfg = aCfg;
 
 		delegate = new org.hibernate.tool.hbm2ddl.SchemaValidator(cfg.getConfiguration());

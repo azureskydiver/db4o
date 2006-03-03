@@ -1,7 +1,7 @@
 package com.db4o.replication.hibernate.metadata;
 
 import com.db4o.foundation.Visitor4;
-import com.db4o.replication.hibernate.ReplicationConfiguration;
+import com.db4o.replication.hibernate.MetadataProviderReplicationConfiguration;
 import com.db4o.replication.hibernate.SchemaValidator;
 import com.db4o.replication.hibernate.Util;
 import org.hibernate.SessionFactory;
@@ -24,7 +24,7 @@ import java.util.Set;
 public class MetaDataTablesCreator {
 	protected static final String ALTER_TABLE = "ALTER TABLE ";
 
-	ReplicationConfiguration cfg;
+	MetadataProviderReplicationConfiguration cfg;
 
 	/**
 	 * Represents a dialect of SQL implemented by a particular RDBMS.
@@ -48,7 +48,7 @@ public class MetaDataTablesCreator {
 
 	protected SchemaValidator validator;
 
-	public MetaDataTablesCreator(ReplicationConfiguration aCfg) {
+	public MetaDataTablesCreator(MetadataProviderReplicationConfiguration aCfg) {
 		cfg = aCfg;
 		dialect = cfg.getDialect();
 		validator = new SchemaValidator(cfg);

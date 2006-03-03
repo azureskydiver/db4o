@@ -1,6 +1,6 @@
 package com.db4o.test.replication.hibernate;
 
-import com.db4o.replication.hibernate.ReplicationConfiguration;
+import com.db4o.replication.hibernate.MetadataProviderReplicationConfiguration;
 import com.db4o.replication.hibernate.metadata.UuidLongPartGenerator;
 import com.db4o.test.Test;
 import org.hibernate.SessionFactory;
@@ -10,7 +10,7 @@ import org.hibernate.classic.Session;
 public class UuidLongPartGeneratorTest {
 	public void testUuidLongPartGenerator() {
 		Configuration cfg = HibernateConfigurationFactory.createNewDbConfig();
-		ReplicationConfiguration rc = ReplicationConfiguration.produce(cfg);
+		MetadataProviderReplicationConfiguration rc = MetadataProviderReplicationConfiguration.produce(cfg);
 
 		final SessionFactory sessionFactory = rc.getConfiguration().buildSessionFactory();
 

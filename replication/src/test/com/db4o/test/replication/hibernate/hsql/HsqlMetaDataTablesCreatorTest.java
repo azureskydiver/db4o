@@ -1,6 +1,6 @@
 package com.db4o.test.replication.hibernate.hsql;
 
-import com.db4o.replication.hibernate.ReplicationConfiguration;
+import com.db4o.replication.hibernate.MetadataProviderReplicationConfiguration;
 import com.db4o.replication.hibernate.SchemaValidator;
 import com.db4o.replication.hibernate.metadata.MetaDataTablesCreator;
 import com.db4o.test.Test;
@@ -13,7 +13,7 @@ public class HsqlMetaDataTablesCreatorTest extends AbstractMetaDataTablesCreator
 
 	public void testCreate() {
 		Configuration positive = createCfg();
-		ReplicationConfiguration rc = ReplicationConfiguration.produce(positive);
+		MetadataProviderReplicationConfiguration rc = MetadataProviderReplicationConfiguration.produce(positive);
 		final MetaDataTablesCreator creator = new MetaDataTablesCreator(rc);
 
 		creator.execute();
@@ -26,7 +26,7 @@ public class HsqlMetaDataTablesCreatorTest extends AbstractMetaDataTablesCreator
 
 	public void testValidate() {
 		Configuration negative = validateCfg();
-		ReplicationConfiguration rc = ReplicationConfiguration.produce(negative);
+		MetadataProviderReplicationConfiguration rc = MetadataProviderReplicationConfiguration.produce(negative);
 		final MetaDataTablesCreator creator = new MetaDataTablesCreator(rc);
 
 		boolean exception = false;

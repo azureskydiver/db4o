@@ -18,8 +18,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class ReplicationConfiguration {
-	private static HashMap<Configuration, ReplicationConfiguration> cache = new HashMap<Configuration, ReplicationConfiguration>();
+public class MetadataProviderReplicationConfiguration {
+	private static HashMap<Configuration, MetadataProviderReplicationConfiguration> cache = new HashMap<Configuration, MetadataProviderReplicationConfiguration>();
 
 	private Configuration configuration;
 
@@ -27,17 +27,17 @@ public class ReplicationConfiguration {
 
 	private final Dialect dialect;
 
-	public static ReplicationConfiguration produce(Configuration cfg) {
+	public static MetadataProviderReplicationConfiguration produce(Configuration cfg) {
 		Object exist = cache.get(cfg);
 		if (exist != null)
-			return (ReplicationConfiguration) exist;
+			return (MetadataProviderReplicationConfiguration) exist;
 
-		ReplicationConfiguration rc = new ReplicationConfiguration(cfg);
+		MetadataProviderReplicationConfiguration rc = new MetadataProviderReplicationConfiguration(cfg);
 		cache.put(cfg, rc);
 		return rc;
 	}
 
-	private ReplicationConfiguration(Configuration aCfg) {
+	private MetadataProviderReplicationConfiguration(Configuration aCfg) {
 		configuration = aCfg;
 		configuration.setProperty("hibernate.format_sql", "true");
 		configuration.setProperty("hibernate.use_sql_comments", "true");
