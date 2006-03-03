@@ -71,7 +71,7 @@ public class Util {
 
 	public static long getVersion(Configuration cfg, Session session, Object obj) {
 		Connection connection = session.connection();
-		ReplicationConfiguration rc = ReplicationConfiguration.produce(cfg);
+		MetadataProviderReplicationConfiguration rc = MetadataProviderReplicationConfiguration.produce(cfg);
 		String tableName = rc.getTableName(obj.getClass());
 		//Util.dumpTable(connection, tableName);
 		String pkColumn = rc.getPrimaryKeyColumnName(obj);

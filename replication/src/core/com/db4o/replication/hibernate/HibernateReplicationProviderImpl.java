@@ -15,9 +15,7 @@ import com.db4o.inside.traversal.CollectionFlattener;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
 import com.db4o.replication.hibernate.metadata.Db4oColumns;
-import com.db4o.replication.hibernate.metadata.MetaDataTablesCreator;
 import com.db4o.replication.hibernate.metadata.MySignature;
-import com.db4o.replication.hibernate.metadata.PeerSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
@@ -74,7 +72,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	/**
 	 * The Hibernate Configuration, for getting metadata of mapped classes.
 	 */
-	protected final ReplicationConfiguration _cfg;
+	protected final MetadataProviderReplicationConfiguration metadataProviderReplicationConfiguration;
 
 	/**
 	 * The Hibernate facade to a JDBC Connection. The connection is created when
@@ -112,26 +110,9 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	/**
 	 * The Signature of the peer in the current Transaction.
 	 */
-	protected PeerSignature _peerSignature;
 
 	protected final Map _referencesByObject = new IdentityHashMap();
 
-	/**
-	 * The ReplicationRecord of {@link #_peerSignature}.
-	 */
-	protected ReplicationRecord _replicationRecord;
-
-	/**
-	 * Current transaction number = {@link #getLastReplicationVersion()} + 1. The
-	 * minimum version number is 1, when this database is never replicated with
-	 * other peers.
-	 */
-	protected long _currentVersion;
-
-	/**
-	 * The max(version numbers of all replication records).
-	 */
-	protected long _lastVersion;
 
 	protected final String _name;
 
@@ -156,21 +137,30 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 	protected final PostUpdateEventListener myPostUpdateEventListener = new MyPostUpdateEventListener();
 
+	DefaultMetadataProvider metadataProvider;
+
+	DefaultObjectProvider objectProvider;
+
+	protected ObjectProviderConfiguration objectProviderConfiguration;
+
 	public HibernateReplicationProviderImpl(Configuration cfg) {
 		this(cfg, null);
 	}
 
 	public HibernateReplicationProviderImpl(Configuration cfg, String name) {
-		_cfg = ReplicationConfiguration.produce(cfg);
+		metadataProviderReplicationConfiguration = MetadataProviderReplicationConfiguration.produce(cfg);
+		objectProviderConfiguration = new ObjectProviderConfiguration(cfg);
 
-		new MetaDataTablesCreator(_cfg).execute();
+		objectProvider = new DefaultObjectProvider(objectProviderConfiguration);
+		metadataProvider = new DefaultMetadataProvider(metadataProviderReplicationConfiguration);
 
-		EventListeners eventListeners = this._cfg.getConfiguration().getEventListeners();
+		//TODO move
+		EventListeners eventListeners = metadataProviderReplicationConfiguration.getConfiguration().getEventListeners();
 
 		eventListeners.setFlushEventListeners(createFlushEventListeners(eventListeners.getFlushEventListeners()));
 		eventListeners.setPostUpdateEventListeners(createPostUpdateListeners(eventListeners.getPostUpdateEventListeners()));
 
-		_sessionFactory = this._cfg.getConfiguration().buildSessionFactory();
+		_sessionFactory = this.metadataProviderReplicationConfiguration.getConfiguration().buildSessionFactory();
 		_session = _sessionFactory.openSession();
 		_session.setFlushMode(FlushMode.ALWAYS);
 		_transaction = _session.beginTransaction();
@@ -200,22 +190,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		_transaction.commit();
 		_transaction = _session.beginTransaction();
 
-		PeerSignature existingPeerSignature = getPeerSignature(peerSigBytes);
-		if (existingPeerSignature == null) {
-			this._peerSignature = new PeerSignature(peerSigBytes);
-			_session.save(this._peerSignature);
-			_session.flush();
-			if (getPeerSignature(peerSigBytes) == null)
-				throw new RuntimeException("Cannot insert existingPeerSignature");
-			_replicationRecord = new ReplicationRecord();
-			_replicationRecord.setPeerSignature(_peerSignature);
-		} else {
-			this._peerSignature = existingPeerSignature;
-			_replicationRecord = getRecord(this._peerSignature);
-		}
+		metadataProvider.startReplication(peerSigBytes);
 
-		_lastVersion = Util.getMaxVersion(_session.connection());
-		_currentVersion = _lastVersion + 1;
 		_inReplication = true;
 	}
 
@@ -225,15 +201,13 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		if (version < Constants.MIN_VERSION_NO)
 			throw new RuntimeException("version must be great than " + Constants.MIN_VERSION_NO);
 
-		_replicationRecord.setVersion(version);
-		_session.saveOrUpdate(_replicationRecord);
-
-		if (getRecord(_peerSignature).getVersion() != version)
-			throw new RuntimeException("The version numbers of persisted record does not match the parameter");
+		metadataProvider.syncVersionWithPeer(version);
 	}
 
 	public synchronized final void commitReplicationTransaction(long raisedDatabaseVersion) {
 		ensureReplicationActive();
+		metadataProvider.commit();
+
 		commit();
 		_uuidsReplicatedInThisSession.clear();
 		_dirtyRefs.clear();
@@ -257,13 +231,13 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	public final long getCurrentVersion() {
 		ensureReplicationActive();
 
-		return _currentVersion;
+		return metadataProvider.getCurrentVersion();
 	}
 
 	public final long getLastReplicationVersion() {
 		ensureReplicationActive();
 
-		return _lastVersion;
+		return getCurrentVersion() - 1;
 	}
 
 	public final void storeReplica(Object obj) {
@@ -377,7 +351,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 		_session.flush();
 		Set out = new HashSet();
-		PersistentClass persistentClass = _cfg.getConfiguration().getClassMapping(clazz.getName());
+		PersistentClass persistentClass = metadataProviderReplicationConfiguration.getConfiguration().getClassMapping(clazz.getName());
 		if (persistentClass != null) {
 			out.addAll(getNewObjectsSinceLastReplication(persistentClass));
 			out.addAll(getChangedObjectsSinceLastReplication(persistentClass));
@@ -429,6 +403,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	public void commit() {
 		_session.flush();
 		_transaction.commit();
+
+
 		_transaction = _session.beginTransaction();
 	}
 
@@ -466,7 +442,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 			if (existingReference != null)
 				return existingReference;
 			else
-				return createRefForCollection(obj, refObjRef, fieldName, uuidLongPartGenerator.next(), _currentVersion);
+				return createRefForCollection(obj, refObjRef, fieldName, uuidLongPartGenerator.next(), getCurrentVersion());
 		}
 	}
 
@@ -503,8 +479,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		//System.out.println("produceObjectReference() obj = " + obj);
 		if (!_session.contains(obj)) return null;
 
-		String tableName = _cfg.getTableName(obj.getClass());
-		String pkColumn = _cfg.getPrimaryKeyColumnName(obj);
+		String tableName = metadataProviderReplicationConfiguration.getTableName(obj.getClass());
+		String pkColumn = metadataProviderReplicationConfiguration.getPrimaryKeyColumnName(obj);
 		Serializable identifier = _session.getIdentifier(obj);
 
 		String sql = "SELECT "
@@ -603,7 +579,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 		String alias = "whatever";
 
-		String tableName = _cfg.getTableName(hint);
+		String tableName = metadataProviderReplicationConfiguration.getTableName(hint);
 
 		String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
 				+ " where " + Db4oColumns.UUID_LONG_PART.name + "=" + uuid.getLongPart()
@@ -624,7 +600,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 			ReplicationReference existing = getCachedReference(obj);
 			if (existing != null) return existing;
 
-			long version = Util.getVersion(_cfg.getConfiguration(), _session, obj);
+			long version = Util.getVersion(metadataProviderReplicationConfiguration.getConfiguration(), _session, obj);
 			out = createReference(obj, uuid, version);
 		} else {
 			throw new RuntimeException("The object may either be found or not, it will never find more than one objects");
@@ -689,7 +665,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	protected Collection getNewObjectsSinceLastReplication(PersistentClass type) {
-		String primaryKeyColumnName = _cfg.getPrimaryKeyColumnName(type);
+		String primaryKeyColumnName = metadataProviderReplicationConfiguration.getPrimaryKeyColumnName(type);
 		String tableName = type.getTable().getName();
 
 		String sql = "SELECT " + primaryKeyColumnName + " FROM " + tableName
@@ -704,11 +680,11 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	protected Collection getChangedObjectsSinceLastReplication(PersistentClass type) {
-		String primaryKeyColumnName = _cfg.getPrimaryKeyColumnName(type);
+		String primaryKeyColumnName = metadataProviderReplicationConfiguration.getPrimaryKeyColumnName(type);
 		String tableName = type.getTable().getName();
 
 		String sql = "SELECT " + primaryKeyColumnName + " FROM " + tableName
-				+ " where " + Db4oColumns.VERSION.name + ">" + _lastVersion;
+				+ " where " + Db4oColumns.VERSION.name + ">" + getLastReplicationVersion();
 
 		return loadObjects(_session, sql, type);
 	}
@@ -778,37 +754,12 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 		}
 	}
 
-	protected PeerSignature getPeerSignature(byte[] bytes) {
-		final List exisitingSigs = _session.createCriteria(PeerSignature.class)
-				.add(Restrictions.eq(ReplicationProviderSignature.SIGNATURE_BYTE_ARRAY_COLUMN_NAME, bytes))
-				.list();
-
-		if (exisitingSigs.size() == 1)
-			return (PeerSignature) exisitingSigs.get(0);
-		else if (exisitingSigs.size() == 0) return null;
-		else
-			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
-	}
-
-	protected ReplicationRecord getRecord(PeerSignature peerSignature) {
-		Criteria criteria = _session.createCriteria(ReplicationRecord.class).createCriteria("peerSignature").add(Restrictions.eq("id", new Long(peerSignature.getId())));
-
-		final List exisitingRecords = criteria.list();
-		int count = exisitingRecords.size();
-
-		if (count == 0)
-			throw new RuntimeException("Record not found. Hibernate was unable to persist the record in the last replication round");
-		else if (count > 1)
-			throw new RuntimeException("Only one Record should exist for this peer");
-		else
-			return (ReplicationRecord) exisitingRecords.get(0);
-	}
 
 	protected void generateReplicationMetaData(Collection newObjects) {
 		for (Iterator iterator = newObjects.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
 			Db4oUUID uuid = new Db4oUUID(uuidLongPartGenerator.next(), getMySig().getBytes());
-			ReplicationReferenceImpl ref = new ReplicationReferenceImpl(o, uuid, _currentVersion);
+			ReplicationReferenceImpl ref = new ReplicationReferenceImpl(o, uuid, getCurrentVersion());
 			storeReplicationMetaData(ref);
 		}
 	}
@@ -830,8 +781,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	protected void storeReplicationMetaData(ReplicationReference ref) {
-		String tableName = _cfg.getTableName(ref.object().getClass());
-		String pkColumn = _cfg.getPrimaryKeyColumnName(ref.object());
+		String tableName = metadataProviderReplicationConfiguration.getTableName(ref.object().getClass());
+		String pkColumn = metadataProviderReplicationConfiguration.getPrimaryKeyColumnName(ref.object());
 		Serializable identifier = _session.getIdentifier(ref.object());
 
 		String sql = "UPDATE " + tableName + " SET " + Db4oColumns.VERSION.name + "=?"
@@ -874,7 +825,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 	protected Set getMappedClasses() {
 		Set out = new HashSet();
-		Iterator classMappings = _cfg.getConfiguration().getClassMappings();
+		Iterator classMappings = metadataProviderReplicationConfiguration.getConfiguration().getClassMappings();
 		while (classMappings.hasNext()) {
 			PersistentClass persistentClass = (PersistentClass) classMappings.next();
 			Class claxx = persistentClass.getMappedClass();
@@ -901,6 +852,14 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	protected void ensureReplicationInActive() {
 		if (_inReplication)
 			throw new UnsupportedOperationException("Method not supported because replication transaction is active");
+	}
+
+	private void flushDirtyRefs() {
+		for (Iterator iterator = _dirtyRefs.iterator(); iterator.hasNext();) {
+			ReplicationReference ref = (ReplicationReference) iterator.next();
+			storeReplicationMetaData(ref);
+		}
+		_dirtyRefs.clear();
 	}
 
 	protected FlushEventListener[] createFlushEventListeners(FlushEventListener[] defaultListeners) {
@@ -932,11 +891,7 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 
 	final class MyFlushEventListener implements FlushEventListener {
 		public final void onFlush(FlushEvent event) throws HibernateException {
-			for (Iterator iterator = _dirtyRefs.iterator(); iterator.hasNext();) {
-				ReplicationReference ref = (ReplicationReference) iterator.next();
-				storeReplicationMetaData(ref);
-			}
-			_dirtyRefs.clear();
+			flushDirtyRefs();
 		}
 	}
 
@@ -950,7 +905,8 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 				//TODO performance sucks, but this method is called when testing only.
 				long newVer = Util.getMaxVersion(_session.connection()) + 1;
 				Util.incrementObjectVersion(_session.connection(), event.getId(), newVer,
-						_cfg.getTableName(entity.getClass()), _cfg.getPrimaryKeyColumnName(entity));
+						metadataProviderReplicationConfiguration.getTableName(entity.getClass()),
+						metadataProviderReplicationConfiguration.getPrimaryKeyColumnName(entity));
 			}
 		}
 	}
