@@ -1,6 +1,11 @@
 package com.db4o.replication.hibernate;
 
 import com.db4o.foundation.Visitor4;
+import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
+import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
+import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
+import com.db4o.replication.hibernate.metadata.ReplicationRecord;
+import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.mapping.Column;
@@ -119,7 +124,7 @@ public class ReplicationConfiguration {
 			visitor.visit(iterator.next());
 	}
 
-	protected String getType(int sqlType) {
+	public String getType(int sqlType) {
 		return dialect.getTypeName(sqlType);
 	}
 }

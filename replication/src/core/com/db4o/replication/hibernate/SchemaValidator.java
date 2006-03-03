@@ -1,6 +1,7 @@
 package com.db4o.replication.hibernate;
 
 import com.db4o.foundation.Visitor4;
+import com.db4o.replication.hibernate.metadata.Db4oColumns;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;

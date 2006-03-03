@@ -1,6 +1,4 @@
-<?xml version="1.0"?>
-
-<!-- Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
+/* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com
 
 This file is part of the db4o open source object database.
 
@@ -19,23 +17,30 @@ for more details.
 
 You should have received a copy of the GNU General Public License along
 with this program; if not, write to the Free Software Foundation, Inc.,
-59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
--->
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
+package com.db4o.replication.hibernate.metadata;
 
-<!DOCTYPE hibernate-mapping PUBLIC
-		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+import com.db4o.Unobfuscated;
 
-<hibernate-mapping>
-	<class name="com.db4o.replication.hibernate.ReplicationComponentField"
-	       table="ReplicationComponentField">
-		<id column="id" type="int">
-			<generator class="native"/>
-		</id>
+import java.util.Arrays;
 
-		<natural-id mutable="false">
-			<property name="referencingObjectClassName"/>
-			<property name="referencingObjectFieldName"/>
-		</natural-id>
-	</class>
-</hibernate-mapping>
+public class MySignature extends ReplicationProviderSignature {
+
+	public MySignature() {
+		super();
+	}
+
+	public MySignature(byte[] bytes) {
+		super(bytes);
+	}
+
+	public static MySignature generateSignature() {
+		return new MySignature(Unobfuscated.generateSignature());
+	}
+
+	public static void main(String[] args) {
+		MySignature a = generateSignature();
+		MySignature b = generateSignature();
+		Arrays.equals(a.getBytes(), b.getBytes());
+	}
+}

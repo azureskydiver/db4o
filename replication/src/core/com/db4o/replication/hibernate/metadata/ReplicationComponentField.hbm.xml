@@ -27,19 +27,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="com.db4o.replication.hibernate.ReplicationComponentIdentity"
-	       table="ReplicationComponentIdentity">
+	<class name="com.db4o.replication.hibernate.metadata.ReplicationComponentField"
+	       table="ReplicationComponentField">
 		<id column="id" type="int">
 			<generator class="native"/>
 		</id>
 
 		<natural-id mutable="false">
-			<property name="uuidLongPart"/>
-			<property name="referencingObjectUuidLongPart"/>
-			<many-to-one name="referencingObjectField" cascade="all"/>
+			<property name="referencingObjectClassName"/>
+			<property name="referencingObjectFieldName"/>
 		</natural-id>
-
-		<many-to-one name="provider"/>
-
 	</class>
 </hibernate-mapping>

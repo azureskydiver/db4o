@@ -1,6 +1,9 @@
-package com.db4o.replication.hibernate;
+package com.db4o.replication.hibernate.metadata;
 
 import com.db4o.foundation.Visitor4;
+import com.db4o.replication.hibernate.ReplicationConfiguration;
+import com.db4o.replication.hibernate.SchemaValidator;
+import com.db4o.replication.hibernate.Util;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Environment;
@@ -35,7 +38,7 @@ public class MetaDataTablesCreator {
 
 	/**
 	 * Hibernate mapped tables, excluding  {@link com.db4o.inside.replication.ReadonlyReplicationProviderSignature}
-	 * and {@link ReplicationRecord}.
+	 * and {@link com.db4o.replication.hibernate.metadata.ReplicationRecord}.
 	 */
 	protected Set mappedTables;
 
