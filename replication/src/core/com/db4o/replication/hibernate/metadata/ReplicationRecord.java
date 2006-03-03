@@ -1,9 +1,9 @@
-package com.db4o.replication.hibernate;
+package com.db4o.replication.hibernate.metadata;
 
 public class ReplicationRecord {
-	static final String TABLE_NAME = "ReplicationRecord";
+	public static final String TABLE_NAME = "ReplicationRecord";
 
-	static final String VERSION = "version";
+	public static final String VERSION = "version";
 
 	private long version;
 

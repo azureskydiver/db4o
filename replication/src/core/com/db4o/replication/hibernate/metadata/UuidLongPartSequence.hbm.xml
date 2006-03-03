@@ -26,20 +26,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping>
-	<class name="com.db4o.replication.hibernate.ReplicationProviderSignature"
-	       table="ReplicationProviderSignature">
-		<id name="id" column="drs_provider_id">
+<hibernate-mapping default-access="property">
+	<class name="com.db4o.replication.hibernate.metadata.UuidLongPartSequence" table="uuid_long_part_sequence">
+		<id column="unused_id" type="int">
 			<generator class="native"/>
 		</id>
-
-		<discriminator/>
-
-		<property name="bytes" column="bytes"/>
-
-		<property name="creationTime"/>
-
-		<subclass name="com.db4o.replication.hibernate.MySignature"/>
-		<subclass name="com.db4o.replication.hibernate.PeerSignature"/>
+		<property name="current" column="current_seq_number"/>
 	</class>
 </hibernate-mapping>

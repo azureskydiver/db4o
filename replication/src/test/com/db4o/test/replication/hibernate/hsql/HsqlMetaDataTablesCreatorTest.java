@@ -1,8 +1,8 @@
 package com.db4o.test.replication.hibernate.hsql;
 
-import com.db4o.replication.hibernate.MetaDataTablesCreator;
 import com.db4o.replication.hibernate.ReplicationConfiguration;
 import com.db4o.replication.hibernate.SchemaValidator;
+import com.db4o.replication.hibernate.metadata.MetaDataTablesCreator;
 import com.db4o.test.Test;
 import com.db4o.test.replication.hibernate.AbstractMetaDataTablesCreatorTest;
 import org.hibernate.cfg.Configuration;

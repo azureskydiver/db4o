@@ -1,4 +1,4 @@
-package com.db4o.replication.hibernate;
+package com.db4o.replication.hibernate.metadata;
 
 import com.db4o.Unobfuscated;
 

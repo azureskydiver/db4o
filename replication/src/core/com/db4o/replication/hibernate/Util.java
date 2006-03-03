@@ -1,6 +1,14 @@
 package com.db4o.replication.hibernate;
 
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
+import com.db4o.replication.hibernate.metadata.Db4oColumns;
+import com.db4o.replication.hibernate.metadata.MySignature;
+import com.db4o.replication.hibernate.metadata.PeerSignature;
+import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
+import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
+import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
+import com.db4o.replication.hibernate.metadata.ReplicationRecord;
+import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.Table;
@@ -164,7 +172,7 @@ public class Util {
 		}
 	}
 
-	static void closeStatement(Statement st) {
+	public static void closeStatement(Statement st) {
 		if (st != null) {
 			try {
 				st.close();

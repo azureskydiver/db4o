@@ -1,4 +1,4 @@
-package com.db4o.replication.hibernate;
+package com.db4o.replication.hibernate.metadata;
 
 public class UuidLongPartSequence {
 	public static final String TABLE_NAME = "uuid_long_part_sequence";

@@ -1,5 +1,6 @@
 package com.db4o.replication.hibernate;
 
+import com.db4o.replication.hibernate.metadata.MetaDataTablesCreator;
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Interceptor;

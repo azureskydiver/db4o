@@ -1,20 +1,20 @@
-package com.db4o.replication.hibernate;
+package com.db4o.replication.hibernate.metadata;
 
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 
 import java.util.Arrays;
 
-class ReplicationProviderSignature implements ReadonlyReplicationProviderSignature {
+public class ReplicationProviderSignature implements ReadonlyReplicationProviderSignature {
 
 	/**
 	 * Table for storing ReplicationProviderSignature byte[].
 	 */
-	static final String TABLE_NAME = "ReplicationProviderSignature";
+	public static final String TABLE_NAME = "ReplicationProviderSignature";
 
 	/**
 	 * Column name of the ReplicationProviderSignature byte_array.
 	 */
-	static final String SIGNATURE_BYTE_ARRAY_COLUMN_NAME = "bytes";
+	public static final String SIGNATURE_BYTE_ARRAY_COLUMN_NAME = "bytes";
 
 	private byte[] bytes;
 
