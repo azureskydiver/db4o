@@ -117,23 +117,20 @@ public abstract class ReplicationProviderTest extends Test {
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Pilot object2 = new Pilot("Terry Gilliam", 53);
 		Car object3 = new Car("Volvo");
-		//Car object4 = new F1Car("Lotus");
+
 		subject.storeNew(object1);
 		subject.storeNew(object2);
 		subject.storeNew(object3);
-		//providerSpecificSave(object4, subject);
 
 		Vector changed = toVector(subject.objectsChangedSinceLastReplication());
 		ensure(changed.contains(object1));
 		ensure(changed.contains(object2));
 		ensure(changed.contains(object3));
-		//ensure(changed.contains(object4));
 
 		changed = toVector(subject.objectsChangedSinceLastReplication(Car.class));
 		ensure(!changed.contains(object1));
 		ensure(!changed.contains(object2));
 		ensure(changed.contains(object3));
-		//ensure(changed.contains(object4));
 
 		subject.syncVersionWithPeer(9800);
 		subject.commitReplicationTransaction(9801);

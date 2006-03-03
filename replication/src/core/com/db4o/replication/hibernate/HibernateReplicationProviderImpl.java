@@ -32,9 +32,11 @@ import org.hibernate.event.PostUpdateEventListener;
 import org.hibernate.mapping.PersistentClass;
 
 import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -678,35 +680,57 @@ public final class HibernateReplicationProviderImpl implements TestableReplicati
 	}
 
 	protected Collection getNewObjectsSinceLastReplication(PersistentClass type) {
-		String alias = "whatever";
-
+		String primaryKeyColumnName = _cfg.getPrimaryKeyColumnName(type);
 		String tableName = type.getTable().getName();
-		//dumpTable(tableName);
-		String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
-				+ " where " + Db4oColumns.UUID_LONG_PART.name + IS_NULL
-				//+ " AND " + Db4oColumns.DB4O_VERSION + IS_NULL
-				+ " AND " + Db4oColumns.PROVIDER_ID.name + IS_NULL;
-		//+ " AND class=" + type
-		SQLQuery sqlQuery = _session.createSQLQuery(sql);
-		sqlQuery.addEntity(alias, type.getMappedClass());
 
-		List list = sqlQuery.list();
-		generateReplicationMetaData(list);
-		return list;
+		String sql = "SELECT " + primaryKeyColumnName + " FROM " + tableName
+				+ " where " + Db4oColumns.UUID_LONG_PART.name + IS_NULL
+				+ " AND " + Db4oColumns.PROVIDER_ID.name + IS_NULL;
+
+		Collection out = loadObjects(_session, sql, type);
+
+		generateReplicationMetaData(out);
+
+		return out;
 	}
 
 	protected Collection getChangedObjectsSinceLastReplication(PersistentClass type) {
-		String alias = "whatever";
-
+		String primaryKeyColumnName = _cfg.getPrimaryKeyColumnName(type);
 		String tableName = type.getTable().getName();
-		String sql = "SELECT {" + alias + ".*} FROM " + tableName + " " + alias
+
+		String sql = "SELECT " + primaryKeyColumnName + " FROM " + tableName
 				+ " where " + Db4oColumns.VERSION.name + ">" + _lastVersion;
-		//+ " where " + Db4oColumns.DB4O_VERSION + ">" + lastVersion + " OR " + Db4oColumns.DB4O_VERSION + "=0";
 
-		SQLQuery sqlQuery = _session.createSQLQuery(sql);
-		sqlQuery.addEntity(alias, type.getMappedClass());
+		return loadObjects(_session, sql, type);
+	}
 
-		return sqlQuery.list();
+	protected static Collection loadObjects(Session sess, String sql, PersistentClass type) {
+		Connection connection = sess.connection();
+		Statement st = Util.getStatement(connection);
+
+		Set<ChangedObjectId> changedObjectIds = new HashSet();
+
+		try {
+			ResultSet rs = st.executeQuery(sql);
+			while (rs.next()) {
+				Object object = rs.getObject(1);
+				changedObjectIds.add(new ChangedObjectId((Serializable) object, type.getClassName()));
+			}
+
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+		Set out = new HashSet();
+
+		for (Iterator<ChangedObjectId> iterator = changedObjectIds.iterator(); iterator.hasNext();) {
+			ChangedObjectId changedObjectId = iterator.next();
+			out.add(sess.load(changedObjectId.className, changedObjectId.hibernateId));
+		}
+
+		return out;
 	}
 
 	protected ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
