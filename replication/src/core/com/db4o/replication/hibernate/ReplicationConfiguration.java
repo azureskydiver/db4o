@@ -63,6 +63,10 @@ public class ReplicationConfiguration {
 		final String className = entity.getClass().getName();
 		final PersistentClass pClass = configuration.getClassMapping(className);
 
+		return getPrimaryKeyColumnName(pClass);
+	}
+
+	protected String getPrimaryKeyColumnName(PersistentClass pClass) {
 		PrimaryKey primaryKey = pClass.getTable().getPrimaryKey();
 		Iterator columnIterator = primaryKey.getColumnIterator();
 
