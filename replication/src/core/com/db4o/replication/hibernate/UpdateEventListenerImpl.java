@@ -27,7 +27,7 @@ public class UpdateEventListenerImpl extends EmptyInterceptor
 	}
 
 	public static void configure(Configuration cfg) {
-		new MetaDataTablesCreator(MetadataProviderReplicationConfiguration.produce(cfg)).execute();
+		new MetaDataTablesCreator(ReplicationConfiguration.produce(cfg)).execute();
 		cfg.setInterceptor(instance);
 		EventListeners eventListeners = cfg.getEventListeners();
 		eventListeners.setPostUpdateEventListeners(new PostUpdateEventListener[]{instance});
@@ -72,7 +72,7 @@ public class UpdateEventListenerImpl extends EmptyInterceptor
 		long newVersion = Util.getMaxVersion(session.connection()) + 1;
 		Configuration cfg = getConfiguration();
 
-		MetadataProviderReplicationConfiguration rc = MetadataProviderReplicationConfiguration.produce(cfg);
+		ReplicationConfiguration rc = ReplicationConfiguration.produce(cfg);
 
 		String tableName = rc.getTableName(obj.getClass());
 		String primaryKeyColumnName = rc.getPrimaryKeyColumnName(obj);
