@@ -71,7 +71,7 @@ public final class Messages
 						"The database file is locked by another process.",
 						"Class not available: %. Check CLASSPATH settings.",
 						"finalized while performing a task.\n DO NOT USE CTRL + C OR System.exit() TO STOP THE ENGINE.",
-						"Please mail the following to info@db4o.com:\n <db4o stacktrace>", // 25
+						"Please mail the following to exception@db4o.com:\n <db4o stacktrace>", // 25
 						"</db4o stacktrace>",
 						"Creation of lock file failed: %",
 						"Previous session was not shut down correctly",
