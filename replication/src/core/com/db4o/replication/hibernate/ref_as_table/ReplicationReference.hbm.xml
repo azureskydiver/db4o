@@ -27,16 +27,20 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="com.db4o.replication.hibernate.metadata.ReplicationRecord"
-	       table="ReplicationRecord">
-		<id column="id" type="long">
-			<generator class="foreign">
-				<param name="property">peerSignature</param>
-			</generator>
+	<class name="com.db4o.replication.hibernate.ref_as_table.ReplicationReference"
+	       table="ReplicationReference">
+
+		<id column="id" type="int">
+			<generator class="native"/>
 		</id>
-		<property name="version" column="version"/>
-		<one-to-one name="peerSignature"
-		            cascade="all"
-		            constrained="true"/>
+
+		<natural-id mutable="false">
+			<property name="className"/>
+			<property name="objectId"/>
+		</natural-id>
+
+		<property name="uuidLongPart"/>
+		<many-to-one name="provider"/>
+
 	</class>
 </hibernate-mapping>

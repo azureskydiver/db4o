@@ -1,8 +1,8 @@
 package com.db4o.test.replication.hibernate;
 
 import com.db4o.replication.ReplicationConfigurator;
-import com.db4o.replication.hibernate.Constants;
-import com.db4o.replication.hibernate.Util;
+import com.db4o.replication.hibernate.common.Common;
+import com.db4o.replication.hibernate.ref_as_columns.Shared;
 import com.db4o.test.Test;
 import com.db4o.test.replication.CollectionHolder;
 import org.hibernate.FlushMode;
@@ -15,7 +15,7 @@ public class ReplicationConfiguratorTest {
 	SessionFactory sessionFactory;
 	Configuration cfg;
 
-	final static long INIT_VER = Constants.MIN_VERSION_NO;
+	final static long INIT_VER = Common.MIN_VERSION_NO;
 
 	final static long RAISED_VER = INIT_VER + 1;
 
@@ -120,7 +120,7 @@ public class ReplicationConfiguratorTest {
 	}
 
 	protected void checkVersion(Configuration cfg, Session session, Object obj, long expected) {
-		long actual = Util.getVersion(cfg, session, obj);
+		long actual = Shared.getVersion(cfg, session, obj);
 		boolean condition = actual == expected;
 		if (!condition)
 			System.out.println("actual = " + actual + ", expected = " + expected);

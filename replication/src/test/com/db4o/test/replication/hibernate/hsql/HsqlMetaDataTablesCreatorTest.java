@@ -1,8 +1,8 @@
 package com.db4o.test.replication.hibernate.hsql;
 
-import com.db4o.replication.hibernate.ReplicationConfiguration;
-import com.db4o.replication.hibernate.SchemaValidator;
-import com.db4o.replication.hibernate.metadata.MetaDataTablesCreator;
+import com.db4o.replication.hibernate.ref_as_columns.MetaDataTablesCreator;
+import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsConfiguration;
+import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsSchemaValidator;
 import com.db4o.test.Test;
 import com.db4o.test.replication.hibernate.AbstractMetaDataTablesCreatorTest;
 import org.hibernate.cfg.Configuration;
@@ -13,12 +13,12 @@ public class HsqlMetaDataTablesCreatorTest extends AbstractMetaDataTablesCreator
 
 	public void testCreate() {
 		Configuration positive = createCfg();
-		ReplicationConfiguration rc = ReplicationConfiguration.produce(positive);
+		RefAsColumnsConfiguration rc = RefAsColumnsConfiguration.produce(positive);
 		final MetaDataTablesCreator creator = new MetaDataTablesCreator(rc);
 
 		creator.execute();
 
-		SchemaValidator validator = new SchemaValidator(rc);
+		RefAsColumnsSchemaValidator validator = new RefAsColumnsSchemaValidator(rc);
 
 		validator.validate();
 		validator.destroy();
@@ -26,7 +26,7 @@ public class HsqlMetaDataTablesCreatorTest extends AbstractMetaDataTablesCreator
 
 	public void testValidate() {
 		Configuration negative = validateCfg();
-		ReplicationConfiguration rc = ReplicationConfiguration.produce(negative);
+		RefAsColumnsConfiguration rc = RefAsColumnsConfiguration.produce(negative);
 		final MetaDataTablesCreator creator = new MetaDataTablesCreator(rc);
 
 		boolean exception = false;

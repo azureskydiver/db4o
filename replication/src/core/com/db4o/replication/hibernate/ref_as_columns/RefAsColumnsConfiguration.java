@@ -1,11 +1,13 @@
-package com.db4o.replication.hibernate;
+package com.db4o.replication.hibernate.ref_as_columns;
 
 import com.db4o.foundation.Visitor4;
-import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
-import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
-import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
-import com.db4o.replication.hibernate.metadata.ReplicationRecord;
-import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
+import com.db4o.replication.hibernate.RefConfig;
+import com.db4o.replication.hibernate.common.Common;
+import com.db4o.replication.hibernate.common.ReplicationComponentField;
+import com.db4o.replication.hibernate.common.ReplicationComponentIdentity;
+import com.db4o.replication.hibernate.common.ReplicationProviderSignature;
+import com.db4o.replication.hibernate.common.ReplicationRecord;
+import com.db4o.replication.hibernate.common.UuidLongPartSequence;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.mapping.Column;
@@ -18,8 +20,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class ReplicationConfiguration {
-	private static HashMap<Configuration, ReplicationConfiguration> cache = new HashMap<Configuration, ReplicationConfiguration>();
+public class RefAsColumnsConfiguration implements RefConfig {
+	private static HashMap<Configuration, RefAsColumnsConfiguration> cache = new HashMap<Configuration, RefAsColumnsConfiguration>();
 
 	private Configuration configuration;
 
@@ -27,17 +29,17 @@ public class ReplicationConfiguration {
 
 	private final Dialect dialect;
 
-	public static ReplicationConfiguration produce(Configuration cfg) {
+	public static RefAsColumnsConfiguration produce(Configuration cfg) {
 		Object exist = cache.get(cfg);
 		if (exist != null)
-			return (ReplicationConfiguration) exist;
+			return (RefAsColumnsConfiguration) exist;
 
-		ReplicationConfiguration rc = new ReplicationConfiguration(cfg);
+		RefAsColumnsConfiguration rc = new RefAsColumnsConfiguration(cfg);
 		cache.put(cfg, rc);
 		return rc;
 	}
 
-	private ReplicationConfiguration(Configuration aCfg) {
+	private RefAsColumnsConfiguration(Configuration aCfg) {
 		configuration = aCfg;
 		configuration.setProperty("hibernate.format_sql", "true");
 		configuration.setProperty("hibernate.use_sql_comments", "true");
@@ -71,7 +73,7 @@ public class ReplicationConfiguration {
 		return getPrimaryKeyColumnName(pClass);
 	}
 
-	protected String getPrimaryKeyColumnName(PersistentClass pClass) {
+	public String getPrimaryKeyColumnName(PersistentClass pClass) {
 		PrimaryKey primaryKey = pClass.getTable().getPrimaryKey();
 		Iterator columnIterator = primaryKey.getColumnIterator();
 
@@ -105,7 +107,7 @@ public class ReplicationConfiguration {
 			while (tableMappings.hasNext()) {
 				Table table = (Table) tableMappings.next();
 
-				if (Util.skip(table))
+				if (Common.skip(table))
 					continue;
 				tables.add(table);
 			}

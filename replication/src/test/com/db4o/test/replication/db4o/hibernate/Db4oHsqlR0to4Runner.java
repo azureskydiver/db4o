@@ -5,7 +5,7 @@ package com.db4o.test.replication.db4o.hibernate;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
-import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
+import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.Test;
 import com.db4o.test.replication.R0;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
@@ -16,7 +16,7 @@ public class Db4oHsqlR0to4Runner extends HibernateR0to4Runner {
 	protected TestableReplicationProviderInside prepareProviderA() {
 		cfgA = HibernateConfigurationFactory.createNewDbConfig();
 		cfgA.addClass(R0.class);
-		return new HibernateReplicationProviderImpl(cfgA, "A");
+		return new RefAsColumnsReplicationProvider(cfgA, "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {

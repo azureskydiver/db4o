@@ -3,22 +3,23 @@
 package com.db4o.test.replication;
 
 import com.db4o.ObjectSet;
-import com.db4o.inside.replication.*;
+import com.db4o.inside.replication.GenericReplicationSession;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
 public abstract class SingleTypeCollectionReplicationTest {
-	protected TestableReplicationProvider _containerA;
-	protected TestableReplicationProvider _containerB;
+	protected TestableReplicationProviderInside _containerA;
+	protected TestableReplicationProviderInside _containerB;
 
 	public void testCollectionReplication() {
 		new SimplestTest().run();
 	}
 
-	protected abstract TestableReplicationProvider prepareProviderB();
+	protected abstract TestableReplicationProviderInside prepareProviderB();
 
-	protected abstract TestableReplicationProvider prepareProviderA();
+	protected abstract TestableReplicationProviderInside prepareProviderA();
 
 	abstract class TheTest {
 		final void run() {

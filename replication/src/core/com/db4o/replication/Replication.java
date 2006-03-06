@@ -6,7 +6,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.inside.replication.DefaultConflictResolver;
 import com.db4o.inside.replication.GenericReplicationSession;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
-import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
+import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
 import org.hibernate.cfg.Configuration;
 
 /**
@@ -101,7 +101,7 @@ public class Replication {
 			return new Db4oReplicationProvider((ObjectContainer) obj);
 		}
 		if (obj instanceof Configuration) {
-			return new HibernateReplicationProviderImpl((Configuration) obj);
+			return new RefAsColumnsReplicationProvider((Configuration) obj);
 		}
 
 		throw new IllegalArgumentException();
