@@ -3,7 +3,7 @@
 package com.db4o.test.replication.hibernate;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
+import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.collections.SimpleArrayContent;
 import com.db4o.test.replication.collections.SimpleArrayHolder;
 import com.db4o.test.replication.collections.SimpleArrayTest;
@@ -16,14 +16,14 @@ public class HibernateSimpleArrayTest extends SimpleArrayTest {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(SimpleArrayHolder.class);
 		configuration.addClass(SimpleArrayContent.class);
-		return new HibernateReplicationProviderImpl(configuration, "A");
+		return new RefAsColumnsReplicationProvider(configuration, "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(SimpleArrayHolder.class);
 		configuration.addClass(SimpleArrayContent.class);
-		return new HibernateReplicationProviderImpl(configuration, "B");
+		return new RefAsColumnsReplicationProvider(configuration, "B");
 	}
 
 	public void test() {

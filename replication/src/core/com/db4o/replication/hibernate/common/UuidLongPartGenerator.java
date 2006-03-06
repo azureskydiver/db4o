@@ -1,4 +1,4 @@
-package com.db4o.replication.hibernate.metadata;
+package com.db4o.replication.hibernate.common;
 
 import org.hibernate.Session;
 

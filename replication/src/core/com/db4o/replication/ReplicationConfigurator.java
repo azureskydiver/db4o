@@ -1,6 +1,6 @@
 package com.db4o.replication;
 
-import com.db4o.replication.hibernate.UpdateEventListenerImpl;
+import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsUpdateEventListener;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
@@ -8,10 +8,10 @@ import org.hibernate.cfg.Configuration;
 /**
  * Utility class to configure Hibernate object update listeners to
  * generate object version numbers in everyday day usage.
- * 
+ * <p/>
  * Version numbers are required for replication to identify modified
  * objects.
- * 
+ * <p/>
  * Please install the replication configuration as follows:
  * <pre>
  * // Read or create the Configuration as usual
@@ -41,7 +41,7 @@ public class ReplicationConfigurator {
 	 * @param cfg a properly configured Configuration
 	 */
 	public static void configure(Configuration cfg) {
-		UpdateEventListenerImpl.configure(cfg);
+		RefAsColumnsUpdateEventListener.configure(cfg);
 	}
 
 	/**
@@ -52,6 +52,6 @@ public class ReplicationConfigurator {
 	 * @param cfg a Configuration that has previously been passed to ReplicationConfigurator.configure();
 	 */
 	public static void install(Session s, Configuration cfg) {
-		UpdateEventListenerImpl.install(s, cfg);
+		RefAsColumnsUpdateEventListener.install(s, cfg);
 	}
 }

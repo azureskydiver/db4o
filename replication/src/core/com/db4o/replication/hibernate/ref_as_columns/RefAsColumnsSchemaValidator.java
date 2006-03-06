@@ -1,7 +1,7 @@
-package com.db4o.replication.hibernate;
+package com.db4o.replication.hibernate.ref_as_columns;
 
 import com.db4o.foundation.Visitor4;
-import com.db4o.replication.hibernate.metadata.Db4oColumns;
+import com.db4o.replication.hibernate.RefConfig;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
@@ -10,22 +10,23 @@ import org.hibernate.dialect.Oracle9Dialect;
 import org.hibernate.mapping.Table;
 import org.hibernate.tool.hbm2ddl.ColumnMetadata;
 import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
+import org.hibernate.tool.hbm2ddl.SchemaValidator;
 import org.hibernate.tool.hbm2ddl.TableMetadata;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class SchemaValidator {
-	private ReplicationConfiguration cfg;
+public class RefAsColumnsSchemaValidator {
+	private RefConfig cfg;
 
-	protected org.hibernate.tool.hbm2ddl.SchemaValidator delegate;
+	protected SchemaValidator delegate;
 	protected SessionFactory sessionFactory;
 	protected final Dialect dialect;
 
-	public SchemaValidator(ReplicationConfiguration aCfg) {
+	public RefAsColumnsSchemaValidator(RefConfig aCfg) {
 		cfg = aCfg;
 
-		delegate = new org.hibernate.tool.hbm2ddl.SchemaValidator(cfg.getConfiguration());
+		delegate = new SchemaValidator(cfg.getConfiguration());
 		dialect = cfg.getDialect();
 	}
 
@@ -83,7 +84,7 @@ public class SchemaValidator {
 
 				if (actualType != expected) {
 					if (dialect instanceof Oracle9Dialect) {
-						if (!Util.oracleTypeMatches(expected, actualType))
+						if (!com.db4o.replication.hibernate.common.Common.oracleTypeMatches(expected, actualType))
 							throw new RuntimeException("Wrong column type: " + db4oCol.name + ", expected: " + cfg.getType(expected) + ", table = " + table);
 					} else {
 						throw new RuntimeException("Wrong column type: " + db4oCol.name + ", expected: " + cfg.getType(expected) + ", table = " + table);

@@ -1,9 +1,8 @@
-package com.db4o.replication.hibernate.metadata;
+package com.db4o.replication.hibernate.ref_as_columns;
 
 import com.db4o.foundation.Visitor4;
-import com.db4o.replication.hibernate.ReplicationConfiguration;
-import com.db4o.replication.hibernate.SchemaValidator;
-import com.db4o.replication.hibernate.Util;
+import com.db4o.replication.hibernate.RefConfig;
+import com.db4o.replication.hibernate.common.ReplicationProviderSignature;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Environment;
@@ -24,7 +23,7 @@ import java.util.Set;
 public class MetaDataTablesCreator {
 	protected static final String ALTER_TABLE = "ALTER TABLE ";
 
-	ReplicationConfiguration cfg;
+	RefConfig cfg;
 
 	/**
 	 * Represents a dialect of SQL implemented by a particular RDBMS.
@@ -38,7 +37,7 @@ public class MetaDataTablesCreator {
 
 	/**
 	 * Hibernate mapped tables, excluding  {@link com.db4o.inside.replication.ReadonlyReplicationProviderSignature}
-	 * and {@link com.db4o.replication.hibernate.metadata.ReplicationRecord}.
+	 * and {@link com.db4o.replication.hibernate.common.ReplicationRecord}.
 	 */
 	protected Set mappedTables;
 
@@ -46,12 +45,12 @@ public class MetaDataTablesCreator {
 
 	protected Connection connection;
 
-	protected SchemaValidator validator;
+	protected RefAsColumnsSchemaValidator validator;
 
-	public MetaDataTablesCreator(ReplicationConfiguration aCfg) {
+	public MetaDataTablesCreator(RefConfig aCfg) {
 		cfg = aCfg;
 		dialect = cfg.getDialect();
-		validator = new SchemaValidator(cfg);
+		validator = new RefAsColumnsSchemaValidator(cfg);
 	}
 
 	/**
@@ -79,12 +78,12 @@ public class MetaDataTablesCreator {
 			throw new RuntimeException(e);
 		}
 
-		final Statement st = Util.getStatement(connection);
+		final Statement st = com.db4o.replication.hibernate.common.Common.getStatement(connection);
 
 		final ModifyingTableVisitor visitor = new ModifyingTableVisitor(metadata, st);
 		cfg.visitMappedTables(visitor);
 
-		Util.closeStatement(st);
+		com.db4o.replication.hibernate.common.Common.closeStatement(st);
 
 		session.flush();
 		tx.commit();
@@ -127,7 +126,7 @@ public class MetaDataTablesCreator {
 				final int expected = db4oCol.type;
 				if (actual != expected) {
 					if (dialect instanceof Oracle9Dialect) {
-						if (!Util.oracleTypeMatches(expected, actual))
+						if (!com.db4o.replication.hibernate.common.Common.oracleTypeMatches(expected, actual))
 							throw new RuntimeException("Wrong column type: " + db4oCol.name + ", expected: " + expected + ", table = " + table
 									+ "Please delete this column and restart dRS.");
 					} else {

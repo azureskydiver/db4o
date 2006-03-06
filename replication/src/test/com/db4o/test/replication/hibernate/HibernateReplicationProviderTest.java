@@ -4,7 +4,7 @@ import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.ReplicationReferenceImpl;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
+import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
 import com.db4o.test.replication.provider.Car;
@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class HibernateReplicationProviderTest extends ReplicationProviderTest {
-	protected HibernateReplicationProviderImpl hibernateReplicationProvider;
+	protected RefAsColumnsReplicationProvider hibernateReplicationProvider;
 
 	public void testReplicationProvider() {
 		super.testReplicationProvider();
@@ -80,7 +80,7 @@ public class HibernateReplicationProviderTest extends ReplicationProviderTest {
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);
 
-		hibernateReplicationProvider = new HibernateReplicationProviderImpl(configuration);
+		hibernateReplicationProvider = new RefAsColumnsReplicationProvider(configuration);
 		return hibernateReplicationProvider;
 	}
 

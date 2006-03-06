@@ -17,7 +17,7 @@ import com.db4o.inside.traversal.GenericTraverser;
 import com.db4o.inside.traversal.Traverser;
 import com.db4o.inside.traversal.Traverser.Visitor;
 import com.db4o.reflect.Reflector;
-import com.db4o.replication.hibernate.metadata.MySignature;
+import com.db4o.replication.hibernate.common.MySignature;
 
 import java.util.IdentityHashMap;
 import java.util.Iterator;

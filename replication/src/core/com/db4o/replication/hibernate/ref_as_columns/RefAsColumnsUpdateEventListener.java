@@ -1,6 +1,7 @@
-package com.db4o.replication.hibernate;
+package com.db4o.replication.hibernate.ref_as_columns;
 
-import com.db4o.replication.hibernate.metadata.MetaDataTablesCreator;
+import com.db4o.replication.hibernate.UpdateEventListener;
+import com.db4o.replication.hibernate.common.Common;
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Interceptor;
@@ -16,18 +17,18 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UpdateEventListenerImpl extends EmptyInterceptor
+public class RefAsColumnsUpdateEventListener extends EmptyInterceptor
 		implements Interceptor, UpdateEventListener {
-	private static final UpdateEventListener instance = new UpdateEventListenerImpl();
+	private static final UpdateEventListener instance = new RefAsColumnsUpdateEventListener();
 	private static final Map threadSessionMap = new HashMap();
 	private static final Map sessionConfigurationMap = new HashMap();
 
-	UpdateEventListenerImpl() {
+	RefAsColumnsUpdateEventListener() {
 		//empty
 	}
 
 	public static void configure(Configuration cfg) {
-		new MetaDataTablesCreator(ReplicationConfiguration.produce(cfg)).execute();
+		new MetaDataTablesCreator(RefAsColumnsConfiguration.produce(cfg)).execute();
 		cfg.setInterceptor(instance);
 		EventListeners eventListeners = cfg.getEventListeners();
 		eventListeners.setPostUpdateEventListeners(new PostUpdateEventListener[]{instance});
@@ -45,7 +46,7 @@ public class UpdateEventListenerImpl extends EmptyInterceptor
 		PersistentCollection persistentCollection = ((PersistentCollection) collection);
 		Object owner = persistentCollection.getOwner();
 
-		if (Util.skip(owner)) return;
+		if (Common.skip(owner)) return;
 
 		Serializable id = getId(owner);
 		ObjectUpdated(owner, id);
@@ -69,21 +70,21 @@ public class UpdateEventListenerImpl extends EmptyInterceptor
 		if (session == null)
 			throw new RuntimeException("Unable to update the version number of an object. Did you forget to call ReplicationConfigurator.install(session, cfg) after opening a session?");
 
-		long newVersion = Util.getMaxVersion(session.connection()) + 1;
+		long newVersion = Shared.getMaxVersion(session.connection()) + 1;
 		Configuration cfg = getConfiguration();
 
-		ReplicationConfiguration rc = ReplicationConfiguration.produce(cfg);
+		RefAsColumnsConfiguration rc = RefAsColumnsConfiguration.produce(cfg);
 
 		String tableName = rc.getTableName(obj.getClass());
 		String primaryKeyColumnName = rc.getPrimaryKeyColumnName(obj);
 		Connection connection = session.connection();
-		Util.incrementObjectVersion(connection, id, newVersion, tableName, primaryKeyColumnName);
+		Shared.incrementObjectVersion(connection, id, newVersion, tableName, primaryKeyColumnName);
 	}
 
 	public void onPostUpdate(PostUpdateEvent event) {
 		Object object = event.getEntity();
 
-		if (Util.skip(object)) return;
+		if (Common.skip(object)) return;
 
 		ObjectUpdated(object, event.getId());
 	}

@@ -1,4 +1,4 @@
-package com.db4o.replication.hibernate.metadata;
+package com.db4o.replication.hibernate.common;
 
 public class ReplicationRecord {
 	public static final String TABLE_NAME = "ReplicationRecord";

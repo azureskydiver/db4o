@@ -3,7 +3,7 @@
 package com.db4o.test.replication.hibernate;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
+import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.SPCChild;
 import com.db4o.test.replication.SPCParent;
 import com.db4o.test.replication.SimpleParentChild;
@@ -15,14 +15,14 @@ public class HibernateSimpleParentChild extends SimpleParentChild {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(SPCParent.class);
 		configuration.addClass(SPCChild.class);
-		return new HibernateReplicationProviderImpl(configuration, "A");
+		return new RefAsColumnsReplicationProvider(configuration, "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(SPCParent.class);
 		configuration.addClass(SPCChild.class);
-		return new HibernateReplicationProviderImpl(configuration, "B");
+		return new RefAsColumnsReplicationProvider(configuration, "B");
 	}
 
 	public void test() {

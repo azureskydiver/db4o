@@ -1,7 +1,7 @@
 package com.db4o.test.replication.hibernate.mysql;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.HibernateReplicationProviderImpl;
+import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
@@ -14,14 +14,14 @@ public class MySQLListTest extends HibernateListTest {
 		Configuration configuration = HibernateConfigurationFactory.produceMySQLConfigA();
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);
-		return new HibernateReplicationProviderImpl(configuration, "A");
+		return new RefAsColumnsReplicationProvider(configuration, "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
 		Configuration configuration = HibernateConfigurationFactory.produceMySQLConfigB();
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);
-		return new HibernateReplicationProviderImpl(configuration, "B");
+		return new RefAsColumnsReplicationProvider(configuration, "B");
 	}
 
 	public void test() {
