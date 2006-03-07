@@ -349,21 +349,21 @@ public abstract class YapFile extends YapStream {
 
     final YapWriter newObject(Transaction a_trans, YapMeta a_object) {
         int length = a_object.ownLength();
-        int[] slot = newSlot(a_trans, length);
-        a_object.setID(this, slot[0]);
+        Pointer4 ptr = newSlot(a_trans, length);
+        a_object.setID(this, ptr._id);
         YapWriter writer = new YapWriter(a_trans, length);
-        writer.useSlot(slot[0], slot[1], length);
+        writer.useSlot(ptr._id, ptr._address, length);
         if (Deploy.debug) {
             writer.writeBegin(a_object.getIdentifier(), length);
         }
         return writer;
     }
 
-    public final int[] newSlot(Transaction a_trans, int a_length) {
+    public final Pointer4 newSlot(Transaction a_trans, int a_length) {
         int id = getPointerSlot();
         int address = getSlot(a_length);
         a_trans.setPointer(id, address, a_length);
-        return new int[] { id, address};
+        return new Pointer4(id, address);
     }
 
     final int newUserObject() {
@@ -707,7 +707,7 @@ public abstract class YapFile extends YapStream {
 
     abstract boolean writeAccessTime() throws IOException;
 
-    abstract void writeBytes(YapWriter a_Bytes);
+    abstract void writeBytes(YapReader a_Bytes, int address, int addressOffset);
 
     final void writeDirty() {
         YapMeta dirty;
@@ -763,16 +763,16 @@ public abstract class YapFile extends YapStream {
     }
 
     final void writeNew(YapClass a_yapClass, YapWriter aWriter) {
-        writeObject(null, aWriter);
+        writeObject(null, aWriter, aWriter.getAddress());
         if (maintainsIndices()) {
             a_yapClass.addToIndex(this, aWriter.getTransaction(), aWriter
                 .getID());
         }
     }
 
-    final void writeObject(YapMeta a_object, YapWriter a_writer) {
+    final void writeObject(YapMeta a_object, YapReader a_writer, int address) {
         i_handlers.encrypt(a_writer);
-        writeBytes(a_writer);
+        writeBytes(a_writer, address, 0);
     }
 
     void writeBootRecord() {

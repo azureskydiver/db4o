@@ -152,7 +152,7 @@ abstract class YapFieldVirtual extends YapField {
         instantiate1(a_trans, a_yapObject, a_reader);
     }
     
-    void writeThis(YapWriter a_writer, YapClass a_onClass) {
-        a_writer.writeShortString(i_name);
+    void writeThis(Transaction trans, YapReader a_writer, YapClass a_onClass) {
+        a_writer.writeShortString(trans,i_name);
     }
 }

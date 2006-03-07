@@ -749,7 +749,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return a_yapClass.getHigherHierarchy1(this);
     }
 
-    byte getIdentifier() {
+    public byte getIdentifier() {
         return YapConst.YAPCLASS;
     }
 
@@ -1294,7 +1294,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return i_objectLength;
     }
 
-    int ownLength() {
+    public int ownLength() {
         int len =
             i_stream.stringIO().shortLength(nameToWrite())
                 + YapConst.OBJECT_LENGTH
@@ -1664,7 +1664,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return false;
     }
 
-    void readThis(Transaction a_trans, YapReader a_reader) {
+    public void readThis(Transaction a_trans, YapReader a_reader) {
         throw YapConst.virtualException();
     }
 
@@ -1936,19 +1936,19 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 		return id;
     }
 
-    void writeThis(YapWriter a_writer) {
+    public void writeThis(Transaction trans, YapReader a_writer) {
         
-        a_writer.writeShortString(nameToWrite());
+        a_writer.writeShortString(trans, nameToWrite());
         a_writer.writeInt(_metaClassID);
         
-        writeIDOf(i_ancestor, a_writer);
-        writeIDOf(i_index, a_writer);
+        writeIDOf(trans, i_ancestor, a_writer);
+        writeIDOf(trans, i_index, a_writer);
         if (i_fields == null) {
             a_writer.writeInt(0);
         } else {
             a_writer.writeInt(i_fields.length);
             for (int i = 0; i < i_fields.length; i++) {
-                i_fields[i].writeThis(a_writer, this);
+                i_fields[i].writeThis(trans, a_writer, this);
             }
         }
         

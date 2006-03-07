@@ -147,7 +147,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		}
 	}
 	
-	byte getIdentifier() {
+	public byte getIdentifier() {
 		return YapConst.YAPOBJECT;
 	}
 
@@ -192,7 +192,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return i_yapClass;
 	}
 
-	int ownLength() {
+	public int ownLength() {
 		return i_yapClass.objectLength();
 	}
 
@@ -278,7 +278,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return readObject;
 	}
 
-	final void readThis(Transaction a_trans, YapReader a_bytes) {
+	public final void readThis(Transaction a_trans, YapReader a_bytes) {
 		if (Deploy.debug) {
 			System.out.println(
 				"YapObject.readThis should never be called. All handling takes place in read");
@@ -385,7 +385,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
         i_virtualAttributes = at;
     }
 
-	void writeThis(YapWriter a_writer) {
+	public void writeThis(Transaction trans, YapReader a_writer) {
 		if (Deploy.debug) {
 			System.out.println("YapObject.writeThis should never be called.");
 		}

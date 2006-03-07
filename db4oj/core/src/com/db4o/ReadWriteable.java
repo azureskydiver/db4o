@@ -6,5 +6,5 @@ package com.db4o;
  * @exclude
  */
 public interface ReadWriteable extends Readable{
-	public void write(YapWriter a_writer);
+	public void write(YapReader a_writer);
 }

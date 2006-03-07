@@ -289,7 +289,7 @@ public final class YapWriter extends YapReader {
         if (Debug.xbytes) {
             debugCheckBytes();
         }
-        i_trans.i_file.writeBytes(this);
+        i_trans.i_file.writeBytes(this, i_address, _addressOffset);
     }
 
     void writeEmbedded() {
@@ -320,7 +320,7 @@ public final class YapWriter extends YapReader {
             debugCheckBytes();
         }
         i_trans.i_stream.i_handlers.encrypt(this);
-        i_trans.i_file.writeBytes(this);
+        i_trans.i_file.writeBytes(this, i_address, _addressOffset);
         i_trans.i_stream.i_handlers.decrypt(this);
     }
 
@@ -340,7 +340,7 @@ public final class YapWriter extends YapReader {
     }
 
     void writeShortString(String a_string) {
-        i_trans.i_stream.i_handlers.i_stringHandler.writeShort(a_string, this);
+        writeShortString(i_trans, a_string);
     }
 
     public void moveForward(int length) {

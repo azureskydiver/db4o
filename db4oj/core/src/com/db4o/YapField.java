@@ -733,12 +733,12 @@ public class YapField implements StoredField {
         return a_handler;
     }
 
-    void writeThis(YapWriter a_writer, YapClass a_onClass) {
+    void writeThis(Transaction trans, YapReader a_writer, YapClass a_onClass) {
         alive();
-        a_writer.writeShortString(i_name);
+        a_writer.writeShortString(trans, i_name);
         if (i_handler instanceof YapClass) {
             if (i_handler.getID() == 0) {
-                a_writer.getStream().needsUpdate(a_onClass);
+                trans.i_stream.needsUpdate(a_onClass);
             }
         }
         int wrapperID = 0;

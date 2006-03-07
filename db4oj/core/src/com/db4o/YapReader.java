@@ -214,4 +214,8 @@ public class YapReader {
         }
     }
     
+    void writeShortString(Transaction trans, String a_string) {
+        trans.i_stream.i_handlers.i_stringHandler.writeShort(a_string, this);
+    }
+    
 }

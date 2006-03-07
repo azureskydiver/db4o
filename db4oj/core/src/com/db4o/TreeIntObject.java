@@ -28,7 +28,7 @@ public class TreeIntObject extends TreeInt{
 		return new TreeIntObject(key, obj);
 	}
 	
-	public void write(YapWriter a_writer){
+	public void write(YapReader a_writer){
 		a_writer.writeInt(i_key);
 		if(i_object == null){
 			a_writer.writeInt(0);

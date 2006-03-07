@@ -84,7 +84,7 @@ public final class FreeSlotNode extends TreeInt
 	    return null;
 	}
 
-	public final void write(YapWriter a_writer){
+	public final void write(YapReader a_writer){
 		// byte order: size, address
 		a_writer.writeInt(i_key);
 		a_writer.writeInt(i_peer.i_key);

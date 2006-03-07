@@ -297,8 +297,7 @@ public class YapRandomAccessFile extends YapFile {
     void reserve(int byteCount) {
         synchronized (i_lock) {
             int address = getSlot(byteCount);
-            YapWriter yb = new YapWriter(i_systemTrans, address, byteCount);
-            writeBytes(yb);
+            writeBytes(new YapReader(byteCount), address, 0);
             free(address, byteCount);
         }
     }
@@ -343,7 +342,7 @@ public class YapRandomAccessFile extends YapFile {
         return true;
     }
 
-    void writeBytes(YapWriter a_bytes) {
+    void writeBytes(YapReader a_bytes, int address, int addressOffset) {
         if (i_config.i_readonly) {
             return;
         }
@@ -354,20 +353,27 @@ public class YapRandomAccessFile extends YapFile {
         try {
 
             if (Debug.xbytes && Deploy.overwrite) {
-                if (a_bytes.getID() != YapConst.IGNORE_ID) {
-                    checkXBytes(a_bytes.getAddress(), a_bytes.addressOffset(), a_bytes.getLength());
+                
+                boolean doCheck = true;
+                if(a_bytes instanceof YapWriter){
+                    YapWriter writer = (YapWriter)a_bytes;
+                    if(writer.getID() == YapConst.IGNORE_ID){
+                        doCheck = false;
+                    }
+                }
+                if (doCheck) {
+                    checkXBytes(address, addressOffset, a_bytes.getLength());
                 }
             }
 
             if (DTrace.enabled) {
-                DTrace.WRITE_BYTES.logLength(a_bytes.getAddress() + a_bytes.addressOffset(),
-                    a_bytes.getLength());
+                DTrace.WRITE_BYTES.logLength(address + addressOffset,a_bytes.getLength());
             }
 
-            i_file.blockSeek(a_bytes.getAddress(), a_bytes.addressOffset());
+            i_file.blockSeek(address, addressOffset);
             i_file.write(a_bytes._buffer, a_bytes.getLength());
             if (i_backupFile != null) {
-                i_backupFile.blockSeek(a_bytes.getAddress(), a_bytes.addressOffset());
+                i_backupFile.blockSeek(address, addressOffset);
                 i_backupFile.write(a_bytes._buffer, a_bytes.getLength());
             }
 

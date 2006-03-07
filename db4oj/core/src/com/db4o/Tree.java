@@ -456,11 +456,11 @@ public abstract class Tree implements Cloneable, Readable{
 		throw YapConst.virtualException();
 	}
 	
-	public static void write(final YapWriter a_writer, Tree a_tree){
+	public static void write(final YapReader a_writer, Tree a_tree){
         write(a_writer, a_tree, a_tree == null ? 0 : a_tree.size());
 	}
     
-    public static void write(final YapWriter a_writer, Tree a_tree, int size){
+    public static void write(final YapReader a_writer, Tree a_tree, int size){
         if(a_tree == null){
             a_writer.writeInt(0);
             return;
@@ -474,7 +474,7 @@ public abstract class Tree implements Cloneable, Readable{
     }
 
 	
-	public void write(YapWriter a_writer){
+	public void write(YapReader a_writer){
 		throw YapConst.virtualException();
 	}
 
