@@ -34,6 +34,8 @@ public final class YapConst
 	static final byte	YAPFLOAT			= (byte)'f';
 	static final byte	YAPEND				= (byte)'}';
 	static final byte	YAPNULL				= (byte)'0';
+    public static final byte   BTREE               = (byte)'T';               
+    public static final byte   BTREE_NODE          = (byte)'B';               
 	
 	static final int	IDENTIFIER_LENGTH	= (Deploy.debug && Deploy.identifiers)?1:0;
 	static final int	BRACKETS_BYTES		= (Deploy.debug && Deploy.brackets)?1:0;

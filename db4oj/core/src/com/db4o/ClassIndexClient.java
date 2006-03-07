@@ -50,7 +50,7 @@ final class ClassIndexClient extends ClassIndex {
 		// do nothing
 	}
 
-	final void writeOwnID(YapWriter a_writer) {
+	final void writeOwnID(Transaction trans, YapReader a_writer) {
 		a_writer.writeInt(0);
 	}
 	

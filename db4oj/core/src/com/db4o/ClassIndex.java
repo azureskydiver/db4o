@@ -76,7 +76,7 @@ import com.db4o.inside.slots.*;
         return reader.readInt();
     }
     
-    final byte getIdentifier() {
+    public final byte getIdentifier() {
         return YapConst.YAPINDEX;
     }
 
@@ -105,7 +105,7 @@ import com.db4o.inside.slots.*;
         return _yapClass.getStream();
     }
 
-    final int ownLength() {
+    public final int ownLength() {
         return YapConst.OBJECT_LENGTH + byteCount();
     }
 
@@ -113,7 +113,7 @@ import com.db4o.inside.slots.*;
     	throw YapConst.virtualException();
     }
 
-    final void readThis(Transaction a_trans, YapReader a_reader) {
+    public final void readThis(Transaction a_trans, YapReader a_reader) {
     	i_root = new TreeReader(a_reader, new TreeInt(0)).read();
     }
 
@@ -125,11 +125,11 @@ import com.db4o.inside.slots.*;
         a_stream.setDirty(this);
     }
 
-    public void write(YapWriter a_writer) {
-        writeThis(a_writer);
+    public void write(YapReader a_writer) {
+        writeThis(null, a_writer);
     }
 
-    final void writeThis(final YapWriter a_writer) {
+    public final void writeThis(Transaction trans, final YapReader a_writer) {
     	Tree.write(a_writer, i_root);
     }
     

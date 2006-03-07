@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.slots.*;
 
 /**
  * @exclude
@@ -52,7 +53,7 @@ public abstract class YapMeta {
         return i_id;
     }
 
-    abstract byte getIdentifier();
+    public abstract byte getIdentifier();
 
     public final boolean isActive() {
         return bitIsTrue(YapConst.ACTIVE);
@@ -70,7 +71,7 @@ public abstract class YapMeta {
         bitFalse(YapConst.CACHED_DIRTY);
     }
 
-    abstract int ownLength();
+    public abstract int ownLength();
 
     void read(Transaction a_trans) {
         try {
@@ -94,7 +95,7 @@ public abstract class YapMeta {
         }
     }
     
-    abstract void readThis(Transaction a_trans, YapReader a_reader);
+    public abstract void readThis(Transaction a_trans, YapReader a_reader);
 
 
     void setID(YapStream a_stream, int a_id) {
@@ -126,34 +127,57 @@ public abstract class YapMeta {
         }
     }
 
-    final YapWriter write(Transaction a_trans) {
-        if (writeObjectBegin()) {
-            
-            YapFile stream = (YapFile)a_trans.i_stream;
-
-            YapWriter writer =
-                (getID() == 0)
-                    ? stream.newObject(a_trans, this)
-                    : stream.updateObject(a_trans, this);
-
-            writeThis(writer);
-
-            if (Deploy.debug) {
-                writer.writeEnd();
-                writer.debugCheckBytes();
-            }
-
-            ((YapFile)stream).writeObject(this, writer);
-
-            if (isActive()) {
-                setStateClean();
-            }
-            endProcessing();
-
-
-            return writer;
+    final void write(Transaction a_trans) {
+        
+        if (! writeObjectBegin()) {
+            return;
         }
-        return null;
+            
+        YapFile stream = (YapFile)a_trans.i_stream;
+        
+        int id = getID();
+        int address = 0;
+        int length = ownLength();
+        
+        YapReader writer = new YapReader(length);
+        
+        if(id == 0){
+            
+            // new
+            
+            Pointer4 ptr = stream.newSlot(a_trans, length);
+            id = ptr._id;
+            address = ptr._address;
+            setID(stream, id);
+            
+            // FIXME: Free everything on rollback here ?
+            
+        }else{
+            
+            // update
+            
+            address = stream.getSlot(length);
+            a_trans.slotFreeOnRollbackCommitSetPointer(id, address, length);
+            
+        }
+        
+        if (Deploy.debug) {
+            writer.writeBegin(getIdentifier(), length);
+        }
+
+        writeThis(a_trans, writer);
+
+        if (Deploy.debug) {
+            writer.writeEnd();
+        }
+
+        ((YapFile)stream).writeObject(this, writer, address);
+
+        if (isActive()) {
+            setStateClean();
+        }
+        endProcessing();
+
     }
 
     boolean writeObjectBegin() {
@@ -163,16 +187,16 @@ public abstract class YapMeta {
         return false;
     }
 
-    void writeOwnID(YapWriter a_writer) {
-        write(a_writer.getTransaction());
+    void writeOwnID(Transaction trans, YapReader a_writer) {
+        write(trans);
         a_writer.writeInt(getID());
     }
 
-    abstract void writeThis(YapWriter a_writer);
+    public abstract void writeThis(Transaction trans, YapReader a_writer);
 
-    static final void writeIDOf(YapMeta a_object, YapWriter a_writer) {
+    static final void writeIDOf(Transaction trans, YapMeta a_object, YapReader a_writer) {
         if (a_object != null) {
-            a_object.writeOwnID(a_writer);
+            a_object.writeOwnID(trans, a_writer);
         } else {
             a_writer.writeInt(0);
         }

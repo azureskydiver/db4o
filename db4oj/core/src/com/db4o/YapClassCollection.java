@@ -131,7 +131,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         return col;
     }
 
-    byte getIdentifier() {
+    public byte getIdentifier() {
         return YapConst.YAPCLASSCOLLECTION;
     }
     
@@ -264,7 +264,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         return new YapClassCollectionIterator(this, i_classes._first);
     }
 
-    int ownLength() {
+    public int ownLength() {
         return YapConst.OBJECT_LENGTH
             + YapConst.YAPINT_LENGTH
             + (i_classes.size() * YapConst.YAPID_LENGTH);
@@ -277,7 +277,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         }
     }
 
-    final void readThis(Transaction a_trans, YapReader a_reader) {
+    public final void readThis(Transaction a_trans, YapReader a_reader) {
         int classCount = a_reader.readInt();
 
         initTables(classCount);
@@ -388,11 +388,11 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         return sclasses;
     }
 
-    void writeThis(YapWriter a_writer) {
+    public void writeThis(Transaction trans, YapReader a_writer) {
         a_writer.writeInt(i_classes.size());
         Iterator4 i = i_classes.iterator();
         while (i.hasNext()) {
-            writeIDOf((YapClass)i.next(), a_writer);
+            writeIDOf(trans, (YapClass)i.next(), a_writer);
         }
     }
 

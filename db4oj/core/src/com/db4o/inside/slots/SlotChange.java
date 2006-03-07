@@ -122,7 +122,7 @@ public class SlotChange extends TreeInt {
         _newSlot = new Slot(address, length);
     }
 
-    public void write(YapWriter writer){
+    public void write(YapReader writer){
         if(isSetPointer()){
             writer.writeInt(i_key);
             writer.writeInt(_newSlot._address);

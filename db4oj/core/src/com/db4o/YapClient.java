@@ -382,10 +382,6 @@ public class YapClient extends YapStream implements ExtClient {
         return false;
     }
 
-    final YapWriter newObject(Transaction a_trans, YapMeta a_object) {
-        throw YapConst.virtualException();
-    }
-
     final int newUserObject() {
         YapWriter reader = null;
         if (remainingIDs < 1) {
@@ -603,10 +599,6 @@ public class YapClient extends YapStream implements ExtClient {
         //            return i_classCollection.toString();
         //        }
         return "Client Connection " + userName;
-    }
-
-    final YapWriter updateObject(Transaction a_trans, YapMeta a_object) {
-        throw YapConst.virtualException();
     }
 
     void write(boolean shuttingDown) {

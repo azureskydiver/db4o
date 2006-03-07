@@ -1117,8 +1117,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_needsUpdate = new List4(i_needsUpdate, a_yapClass);
     }
 
-    abstract YapWriter newObject(Transaction a_trans, YapMeta a_object);
-
     abstract int newUserObject();
 
     public Object peekPersisted(Object a_object, int a_depth,
@@ -1806,8 +1804,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return obj;
     }
 
-    abstract YapWriter updateObject(Transaction a_trans, YapMeta a_object);
-    
     public long version(){
     	synchronized(i_lock){
     		return currentVersion();

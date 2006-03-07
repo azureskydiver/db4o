@@ -57,7 +57,7 @@ public class TreeInt extends Tree implements ReadWriteable{
 		return new TreeInt(a_bytes.readInt());
 	}
 	
-	public void write(YapWriter a_writer){
+	public void write(YapReader a_writer){
 		a_writer.writeInt(i_key);
 	}
 
