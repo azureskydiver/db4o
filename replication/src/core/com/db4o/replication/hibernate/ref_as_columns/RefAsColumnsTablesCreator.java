@@ -3,6 +3,7 @@ package com.db4o.replication.hibernate.ref_as_columns;
 import com.db4o.foundation.Visitor4;
 import com.db4o.replication.hibernate.RefConfig;
 import com.db4o.replication.hibernate.common.ReplicationProviderSignature;
+import com.db4o.replication.hibernate.ref_as_table.ObjectConfig;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Environment;
@@ -20,7 +21,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Set;
 
-public class MetaDataTablesCreator {
+public class RefAsColumnsTablesCreator {
 	protected static final String ALTER_TABLE = "ALTER TABLE ";
 
 	RefConfig cfg;
@@ -47,7 +48,7 @@ public class MetaDataTablesCreator {
 
 	protected RefAsColumnsSchemaValidator validator;
 
-	public MetaDataTablesCreator(RefConfig aCfg) {
+	public RefAsColumnsTablesCreator(RefConfig aCfg) {
 		cfg = aCfg;
 		dialect = cfg.getDialect();
 		validator = new RefAsColumnsSchemaValidator(cfg);
@@ -81,7 +82,8 @@ public class MetaDataTablesCreator {
 		final Statement st = com.db4o.replication.hibernate.common.Common.getStatement(connection);
 
 		final ModifyingTableVisitor visitor = new ModifyingTableVisitor(metadata, st);
-		cfg.visitMappedTables(visitor);
+		ObjectConfig objectConfig = new ObjectConfig(cfg.getConfiguration());
+		objectConfig.visitMappedTables(visitor);
 
 		com.db4o.replication.hibernate.common.Common.closeStatement(st);
 

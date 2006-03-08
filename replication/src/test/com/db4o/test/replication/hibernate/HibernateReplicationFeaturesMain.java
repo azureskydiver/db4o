@@ -1,6 +1,7 @@
 package com.db4o.test.replication.hibernate;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.Replicated;
 import com.db4o.test.replication.ReplicationFeaturesMain;
@@ -10,8 +11,8 @@ import org.hibernate.cfg.Configuration;
 public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 	protected Configuration cfgA;
 	protected Configuration cfgB;
-	protected RefAsColumnsReplicationProvider pA;
-	protected RefAsColumnsReplicationProvider pB;
+	protected HibernateReplicationProvider pA;
+	protected HibernateReplicationProvider pB;
 
 
 	public HibernateReplicationFeaturesMain() {
@@ -19,12 +20,12 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 	}
 
 	protected TestableReplicationProviderInside prepareProviderA() {
-		delete(pA.getSession());
+		delete(pA.getObjectSession());
 		return pA;
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		delete(pA.getSession());
+		delete(pA.getObjectSession());
 		return pB;
 	}
 

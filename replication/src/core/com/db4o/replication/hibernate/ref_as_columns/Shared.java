@@ -1,7 +1,7 @@
 package com.db4o.replication.hibernate.ref_as_columns;
 
 import com.db4o.replication.hibernate.common.Common;
-import com.db4o.replication.hibernate.common.ReplicationRecord;
+import com.db4o.replication.hibernate.ref_as_table.ObjectConfig;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
@@ -10,34 +10,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Shared {
-	static long getMaxVersion(Connection con) {
-		String sql = "SELECT max(" + ReplicationRecord.VERSION + ") from " + ReplicationRecord.TABLE_NAME;
-		Statement st = null;
-		ResultSet rs = null;
-		try {
-			st = con.createStatement();
-			rs = st.executeQuery(sql);
-
-			if (!rs.next())
-				throw new RuntimeException("failed to get the max version, the sql was = " + sql);
-			return Math.max(rs.getLong(1), Common.MIN_VERSION_NO);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			Common.closeStatement(st);
-			Common.closeResultSet(rs);
-		}
-	}
 
 	public static long getVersion(Configuration cfg, Session session, Object obj) {
 		Connection connection = session.connection();
-		RefAsColumnsConfiguration rc = RefAsColumnsConfiguration.produce(cfg);
-		String tableName = rc.getTableName(obj.getClass());
-		//Util.dumpTable(connection, tableName);
-		String pkColumn = rc.getPrimaryKeyColumnName(obj);
+		ObjectConfig objectConfig = new ObjectConfig(cfg);
+		String tableName = objectConfig.getTableName(obj.getClass());
+		String pkColumn = objectConfig.getPrimaryKeyColumnName(obj);
 		Serializable identifier = session.getIdentifier(obj);
 
 		String sql = "SELECT "
