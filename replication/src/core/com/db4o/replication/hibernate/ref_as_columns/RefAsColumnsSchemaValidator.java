@@ -1,8 +1,8 @@
 package com.db4o.replication.hibernate.ref_as_columns;
 
 import com.db4o.foundation.Visitor4;
+import com.db4o.replication.hibernate.ObjectConfig;
 import com.db4o.replication.hibernate.RefConfig;
-import com.db4o.replication.hibernate.ref_as_table.ObjectConfig;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;

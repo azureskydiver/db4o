@@ -2,8 +2,8 @@ package com.db4o.test.replication.hibernate;
 
 import com.db4o.test.AllTests;
 import com.db4o.test.TestSuite;
-import com.db4o.test.replication.hibernate.mysql.MySQLTestSuite;
-import com.db4o.test.replication.hibernate.postgresql.PostgreSQLTestSuite;
+import com.db4o.test.replication.hibernate.ref_as_columns.mysql.MySQLTestSuite;
+import com.db4o.test.replication.hibernate.ref_as_columns.postgresql.PostgreSQLTestSuite;
 
 public class RdbmsTests extends AllTests {
 

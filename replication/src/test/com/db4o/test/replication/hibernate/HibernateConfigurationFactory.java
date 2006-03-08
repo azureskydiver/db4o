@@ -13,30 +13,34 @@ public class HibernateConfigurationFactory {
 	 * @return configuration
 	 */
 	public static Configuration createNewDbConfig() {
-		Configuration configuration = new Configuration().configure("com/db4o/test/replication/hibernate/hibernate.cfg.xml");
+		Configuration configuration = new Configuration().configure("com/db4o/test/replication/hibernate/hibernate-HSQL.cfg.xml");
 		String url = JDBC_URL_HEAD + jdbcUrlCounter++;
-		//System.out.println("url = " + url);
 		return configuration.setProperty("hibernate.connection.url", url);
 	}
 
+	public static Configuration createNewDbConfigNotCreateTables() {
+		Configuration configuration = createNewDbConfig();
+		return configuration.setProperty("hibernate.hbm2ddl.auto", "validate");
+	}
+
 	public static Configuration producePostgreSQLConfigA() {
-		return new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-A.cfg.xml");
+		return new Configuration().configure("com/db4o/test/replication/hibernate/ref_as_columns/postgresql/hibernate-PostgreSQL-A.cfg.xml");
 	}
 
 	public static Configuration producePostgreSQLConfigB() {
-		return new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-B.cfg.xml");
+		return new Configuration().configure("com/db4o/test/replication/hibernate/ref_as_columns/postgresql/hibernate-PostgreSQL-B.cfg.xml");
 	}
 
 	public static Configuration produceMySQLConfigA() {
-		return new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-A.cfg.xml");
+		return new Configuration().configure("com/db4o/test/replication/hibernate/ref_as_columns/mysql/hibernate-MySQL-A.cfg.xml");
 	}
 
 	public static Configuration produceMySQLConfigB() {
-		return new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-B.cfg.xml");
+		return new Configuration().configure("com/db4o/test/replication/hibernate/ref_as_columns/mysql/hibernate-MySQL-B.cfg.xml");
 	}
 
 	public static Configuration produceOracleConfigA() {
-		return new Configuration().configure("com/db4o/test/replication/hibernate/oracle/hibernate-Oracle-A.cfg.xml");
+		return new Configuration().configure("com/db4o/test/replication/hibernate/ref_as_columns/oracle/hibernate-Oracle-A.cfg.xml");
 	}
 
 	public static Configuration produceOracleConfigB() {
