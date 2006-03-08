@@ -1,12 +1,14 @@
 package com.db4o.replication.hibernate;
 
+import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
+import com.db4o.foundation.ObjectSetIteratorFacade;
+import com.db4o.foundation.Visitor4;
 import com.db4o.inside.replication.CollectionHandlerImpl;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.ReplicationReferenceImpl;
 import com.db4o.inside.replication.ReplicationReflector;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.inside.traversal.CollectionFlattener;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
@@ -19,13 +21,22 @@ import com.db4o.replication.hibernate.common.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.common.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.common.ReplicationRecord;
 import com.db4o.replication.hibernate.common.UuidLongPartGenerator;
+import com.db4o.replication.hibernate.ref_as_table.ObjectConfig;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.event.EventListeners;
+import org.hibernate.event.FlushEvent;
 import org.hibernate.event.FlushEventListener;
+import org.hibernate.event.PostUpdateEvent;
 import org.hibernate.event.PostUpdateEventListener;
+import org.hibernate.mapping.PersistentClass;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -34,12 +45,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AbstractReplicationProvider implements
-		HibernateReplicationProvider, TestableReplicationProviderInside {
+public abstract class AbstractReplicationProvider implements HibernateReplicationProvider {
+	protected Session _objectSession;
 
-	protected FlushEventListener myFlushEventListener;
+	protected SessionFactory _objectSessionFactory;
 
-	protected PostUpdateEventListener myPostUpdateEventListener;
+	protected RefConfig _refCfg;
+
+	protected ObjectConfig _objectConfig;
+
+	protected Transaction _objectTransaction;
+
+	protected FlushEventListener myFlushEventListener = new MyFlushEventListener();
+
+	protected PostUpdateEventListener myPostUpdateEventListener = new MyPostUpdateEventListener();
 
 	/**
 	 * Hibernate mapped classes
@@ -402,15 +421,15 @@ public abstract class AbstractReplicationProvider implements
 		}
 	}
 
-	protected void initMySignature(Session session) {
-		final Criteria criteria = session.createCriteria(MySignature.class);
+	protected void initMySignature() {
+		final Criteria criteria = getRefSession().createCriteria(MySignature.class);
 
 		final List firstResult = criteria.list();
 		final int mySigCount = firstResult.size();
 
 		if (mySigCount < 1) {
 			_mySig = MySignature.generateSignature();
-			session.save(_mySig);
+			getRefSession().save(_mySig);
 		} else if (mySigCount == 1) {
 			_mySig = (MySignature) firstResult.get(0);
 		} else {
@@ -433,7 +452,14 @@ public abstract class AbstractReplicationProvider implements
 
 	protected abstract void storeReplicationMetaData(ReplicationReference ref);
 
-	protected PeerSignature getPeerSignature(byte[] bytes, Session session) {
+	protected void initEventListeners() {
+		EventListeners eventListeners = getObjectConfig().getConfiguration().getEventListeners();
+
+		eventListeners.setFlushEventListeners(createFlushEventListeners(eventListeners.getFlushEventListeners()));
+		eventListeners.setPostUpdateEventListeners(createPostUpdateListeners(eventListeners.getPostUpdateEventListeners()));
+	}
+
+	private PeerSignature getPeerSignature(byte[] bytes, Session session) {
 		final List exisitingSigs = session.createCriteria(PeerSignature.class)
 				.add(Restrictions.eq(ReplicationProviderSignature.SIGNATURE_BYTE_ARRAY_COLUMN_NAME, bytes))
 				.list();
@@ -472,7 +498,7 @@ public abstract class AbstractReplicationProvider implements
 			throw new RuntimeException("The version numbers of persisted record does not match the parameter");
 	}
 
-	public synchronized final void commitReplicationTransaction(long raisedDatabaseVersion) {
+	public synchronized void commitReplicationTransaction(long raisedDatabaseVersion) {
 		ensureReplicationActive();
 		commit();
 		_uuidsReplicatedInThisSession.clear();
@@ -494,10 +520,23 @@ public abstract class AbstractReplicationProvider implements
 	protected void init() {
 		initMappedClasses();
 		uuidLongPartGenerator = new UuidLongPartGenerator(getRefSession());
-		initMySignature(getRefSession());
+		initMySignature();
 	}
 
-	protected abstract void initMappedClasses();
+	protected void initMappedClasses() {
+		_mappedClasses = new HashSet();
+
+		Iterator classMappings = getObjectConfig().getConfiguration().getClassMappings();
+		while (classMappings.hasNext()) {
+			PersistentClass persistentClass = (PersistentClass) classMappings.next();
+			Class claxx = persistentClass.getMappedClass();
+
+			if (Common.skip(claxx))
+				continue;
+
+			_mappedClasses.add(persistentClass);
+		}
+	}
 
 	protected FlushEventListener[] createFlushEventListeners(FlushEventListener[] defaultListeners) {
 		if (defaultListeners == null) {
@@ -522,6 +561,176 @@ public abstract class AbstractReplicationProvider implements
 			System.arraycopy(defaultListeners, 0, out, 0, count);
 			out[count] = myPostUpdateEventListener;
 			return out;
+		}
+	}
+
+	public final ObjectSet objectsChangedSinceLastReplication() {
+		ensureReplicationActive();
+
+		getObjectSession().flush();
+
+		Set out = new HashSet();
+
+		for (Iterator iterator = _mappedClasses.iterator(); iterator.hasNext();) {
+			PersistentClass persistentClass = (PersistentClass) iterator.next();
+
+			//Case 1 - Objects inserted to Db since last replication with any peers.
+			out.addAll(getNewObjectsSinceLastReplication(persistentClass));
+
+			//Case 2 - Objects updated since last replication with any peers.
+			out.addAll(getChangedObjectsSinceLastReplication(persistentClass));
+		}
+
+		return new ObjectSetIteratorFacade(out.iterator());
+	}
+
+	public Session getObjectSession() {
+		return _objectSession;
+	}
+
+	protected abstract Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass);
+
+	protected abstract Collection getNewObjectsSinceLastReplication(PersistentClass persistentClass);
+
+	public final String getName() {
+		return _name;
+	}
+
+	public final void storeNew(Object object) {
+		getObjectSession().save(object);
+	}
+
+	public final void update(Object obj) {
+		if (!_collectionHandler.canHandle(obj)) {
+			getObjectSession().update(obj);
+			getObjectSession().flush();
+		}
+	}
+
+	public final ObjectSet getStoredObjects(Class aClass) {
+		if (_collectionHandler.canHandle(aClass))
+			throw new IllegalArgumentException("Hibernate does not query by Collection");
+
+		return new ObjectSetIteratorFacade(getObjectSession().createCriteria(aClass).list().iterator());
+	}
+
+	public final void visitCachedReferences(Visitor4 visitor) {
+		ensureReplicationActive();
+
+		Iterator i = _referencesByObject.values().iterator();
+		while (i.hasNext()) {
+			visitor.visit(i.next());
+		}
+	}
+
+	protected abstract RefConfig getRefConfig();
+
+	public final ObjectSet objectsChangedSinceLastReplication(Class clazz) {
+		ensureReplicationActive();
+
+		getObjectSession().flush();
+		Set out = new HashSet();
+		PersistentClass persistentClass = getRefConfig().getConfiguration().getClassMapping(clazz.getName());
+		if (persistentClass != null) {
+			out.addAll(getNewObjectsSinceLastReplication(persistentClass));
+			out.addAll(getChangedObjectsSinceLastReplication(persistentClass));
+		}
+		return new ObjectSetIteratorFacade(out.iterator());
+	}
+
+	public void delete(Class clazz) {
+		String className = clazz.getName();
+		getObjectSession().createQuery("delete from " + className).executeUpdate();
+	}
+
+	public final void storeReplica(Object obj) {
+		ensureReplicationActive();
+
+		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
+		if (_collectionHandler.canHandle(obj)) return;
+
+		ReplicationReference ref = getCachedReference(obj);
+		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
+
+		_uuidsReplicatedInThisSession.add(ref.uuid());
+
+		getObjectSession().saveOrUpdate(obj);
+		_dirtyRefs.add(ref);
+	}
+
+	protected Transaction getObjectTransaction() {
+		return _objectTransaction;
+	}
+
+	public synchronized void rollbackReplication() {
+		ensureReplicationActive();
+
+		getObjectTransaction().rollback();
+		_objectTransaction = getObjectSession().beginTransaction();
+		clearAllReferences();
+		_dirtyRefs.clear();
+		_uuidsReplicatedInThisSession.clear();
+		_inReplication = false;
+	}
+
+	protected RefConfig getRefCfg() {
+		return _refCfg;
+	}
+
+	public void commit() {
+		getObjectSession().flush();
+		getObjectTransaction().commit();
+		_objectTransaction = getObjectSession().beginTransaction();
+	}
+
+	public void startReplicationTransaction(ReadonlyReplicationProviderSignature aPeerSignature) {
+		ensureReplicationInActive();
+
+		byte[] peerSigBytes = aPeerSignature.getBytes();
+
+		if (Arrays.equals(peerSigBytes, getSignature().getBytes()))
+			throw new RuntimeException("peerSigBytes must not equal to my own sig");
+
+		getObjectTransaction().commit();
+		_objectTransaction = getObjectSession().beginTransaction();
+
+		initPeerSigAndRecord(peerSigBytes, _objectSession);
+
+		_currentVersion = Common.getMaxVersion(_objectSession.connection()) + 1;
+
+		_inReplication = true;
+	}
+
+	public ObjectConfig getObjectConfig() {
+		return _objectConfig;
+	}
+
+	protected abstract void incrementObjectVersion(PostUpdateEvent event);
+
+	public void closeIfOpened() {
+		_objectSession.close();
+		_objectSessionFactory.close();
+	}
+
+	final class MyFlushEventListener implements FlushEventListener {
+		public final void onFlush(FlushEvent event) throws HibernateException {
+			for (Iterator iterator = _dirtyRefs.iterator(); iterator.hasNext();) {
+				ReplicationReference ref = (ReplicationReference) iterator.next();
+				storeReplicationMetaData(ref);
+			}
+			_dirtyRefs.clear();
+		}
+	}
+
+	final class MyPostUpdateEventListener implements PostUpdateEventListener {
+		public final void onPostUpdate(PostUpdateEvent event) {
+			synchronized (AbstractReplicationProvider.this) {
+				Object entity = event.getEntity();
+
+				if (Common.skip(entity)) return;
+
+				incrementObjectVersion(event);
+			}
 		}
 	}
 }

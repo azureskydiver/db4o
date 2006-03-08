@@ -2,6 +2,7 @@ package com.db4o.replication.hibernate.ref_as_columns;
 
 import com.db4o.foundation.Visitor4;
 import com.db4o.replication.hibernate.RefConfig;
+import com.db4o.replication.hibernate.ref_as_table.ObjectConfig;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
@@ -48,7 +49,8 @@ public class RefAsColumnsSchemaValidator {
 		}
 
 		final ValidatingTableVisitor visitor = new ValidatingTableVisitor(metadata);
-		cfg.visitMappedTables(visitor);
+		ObjectConfig objectConfig = new ObjectConfig(cfg.getConfiguration());
+		objectConfig.visitMappedTables(visitor);
 
 		tx.commit();
 		session.close();

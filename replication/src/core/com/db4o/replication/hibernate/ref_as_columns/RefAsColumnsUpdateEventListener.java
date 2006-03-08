@@ -2,6 +2,7 @@ package com.db4o.replication.hibernate.ref_as_columns;
 
 import com.db4o.replication.hibernate.UpdateEventListener;
 import com.db4o.replication.hibernate.common.Common;
+import com.db4o.replication.hibernate.ref_as_table.ObjectConfig;
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Interceptor;
@@ -28,7 +29,7 @@ public class RefAsColumnsUpdateEventListener extends EmptyInterceptor
 	}
 
 	public static void configure(Configuration cfg) {
-		new MetaDataTablesCreator(RefAsColumnsConfiguration.produce(cfg)).execute();
+		new RefAsColumnsTablesCreator(RefAsColumnsConfiguration.produce(cfg)).execute();
 		cfg.setInterceptor(instance);
 		EventListeners eventListeners = cfg.getEventListeners();
 		eventListeners.setPostUpdateEventListeners(new PostUpdateEventListener[]{instance});
@@ -70,13 +71,13 @@ public class RefAsColumnsUpdateEventListener extends EmptyInterceptor
 		if (session == null)
 			throw new RuntimeException("Unable to update the version number of an object. Did you forget to call ReplicationConfigurator.install(session, cfg) after opening a session?");
 
-		long newVersion = Shared.getMaxVersion(session.connection()) + 1;
+		long newVersion = Common.getMaxVersion(session.connection()) + 1;
 		Configuration cfg = getConfiguration();
 
-		RefAsColumnsConfiguration rc = RefAsColumnsConfiguration.produce(cfg);
+		ObjectConfig objectConfig = new ObjectConfig(cfg);
 
-		String tableName = rc.getTableName(obj.getClass());
-		String primaryKeyColumnName = rc.getPrimaryKeyColumnName(obj);
+		String tableName = objectConfig.getTableName(obj.getClass());
+		String primaryKeyColumnName = objectConfig.getPrimaryKeyColumnName(obj);
 		Connection connection = session.connection();
 		Shared.incrementObjectVersion(connection, id, newVersion, tableName, primaryKeyColumnName);
 	}

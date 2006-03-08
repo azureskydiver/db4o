@@ -1,5 +1,9 @@
 package com.db4o.replication.hibernate;
 
-public interface HibernateReplicationProvider {
-	String getModifiedObjectCriterion();
+import com.db4o.inside.replication.TestableReplicationProviderInside;
+import org.hibernate.Session;
+
+public interface HibernateReplicationProvider extends TestableReplicationProviderInside {
+
+	Session getObjectSession();
 }

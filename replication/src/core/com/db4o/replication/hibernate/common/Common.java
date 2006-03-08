@@ -123,4 +123,23 @@ public class Common {
 				|| table.getName().equals(UuidLongPartSequence.TABLE_NAME)
 				|| table.getName().equals(ReplicationReference.TABLE_NAME);
 	}
+
+	public static long getMaxVersion(Connection con) {
+		String sql = "SELECT max(" + ReplicationRecord.VERSION + ") from " + ReplicationRecord.TABLE_NAME;
+		Statement st = null;
+		ResultSet rs = null;
+		try {
+			st = con.createStatement();
+			rs = st.executeQuery(sql);
+
+			if (!rs.next())
+				throw new RuntimeException("failed to get the max version, the sql was = " + sql);
+			return Math.max(rs.getLong(1), MIN_VERSION_NO);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			closeStatement(st);
+			closeResultSet(rs);
+		}
+	}
 }
