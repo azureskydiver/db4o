@@ -5,11 +5,11 @@ import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.ReplicationReferenceImpl;
 import com.db4o.replication.hibernate.AbstractReplicationProvider;
+import com.db4o.replication.hibernate.ObjectConfig;
 import com.db4o.replication.hibernate.RefConfig;
 import com.db4o.replication.hibernate.common.ChangedObjectId;
 import com.db4o.replication.hibernate.common.Common;
 import com.db4o.replication.hibernate.common.ReplicationRecord;
-import com.db4o.replication.hibernate.ref_as_table.ObjectConfig;
 import org.hibernate.FlushMode;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -110,7 +110,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 				storeReplicationMetaData(ref);
 				out = createReference(obj, uuid, ref.version());
 			} else {
-				ReadonlyReplicationProviderSignature owner = getById(rs.getLong(3), _objectSession);
+				ReadonlyReplicationProviderSignature owner = getById(rs.getLong(3));
 				Db4oUUID uuid = new Db4oUUID(rs.getLong(2), owner.getBytes());
 				long version = rs.getLong(1);
 				out = createReference(obj, uuid, version);
@@ -129,7 +129,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 
 	protected ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid, Class hint) {
 		_objectSession.flush();
-		ReadonlyReplicationProviderSignature signature = getProviderSignature(uuid.getSignaturePart(), _objectSession);
+		ReadonlyReplicationProviderSignature signature = getProviderSignature(uuid.getSignaturePart());
 
 		final long sigId;
 
@@ -176,7 +176,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 				+ " where " + Db4oColumns.UUID_LONG_PART.name + IS_NULL
 				+ " AND " + Db4oColumns.PROVIDER_ID.name + IS_NULL;
 
-		Collection out = loadObj(getChangedObjectIds(_objectSession, sql, type), _objectSession);
+		Collection out = loadObj(getChangedObjectIds(_objectSession, sql, type));
 
 		generateReplicationMetaData(out);
 
@@ -190,7 +190,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		String sql = "SELECT " + primaryKeyColumnName + " FROM " + tableName
 				+ " where " + Db4oColumns.VERSION.name + ">" + getLastReplicationVersion();
 
-		return loadObj(getChangedObjectIds(_objectSession, sql, type), _objectSession);
+		return loadObj(getChangedObjectIds(_objectSession, sql, type));
 	}
 
 	protected Collection<ChangedObjectId> getChangedObjectIds(Session sess, String sql, PersistentClass type) {
@@ -232,7 +232,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 			long refVer = ref.version();
 			ps.setLong(1, refVer);
 			ps.setLong(2, ref.uuid().getLongPart());
-			ps.setLong(3, getProviderSignature(ref.uuid().getSignaturePart(), _objectSession).getId());
+			ps.setLong(3, getProviderSignature(ref.uuid().getSignaturePart()).getId());
 			ps.setObject(4, identifier);
 
 			int affected = ps.executeUpdate();

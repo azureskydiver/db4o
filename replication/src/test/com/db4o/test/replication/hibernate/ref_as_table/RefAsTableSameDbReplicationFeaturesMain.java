@@ -3,7 +3,7 @@ package com.db4o.test.replication.hibernate.ref_as_table;
 import com.db4o.replication.hibernate.ref_as_table.RefAsTableReplicationProvider;
 import com.db4o.test.replication.Replicated;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
-import com.db4o.test.replication.hibernate.HibernateReplicationFeaturesMain;
+import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicationFeaturesMain;
 
 public class RefAsTableSameDbReplicationFeaturesMain extends HibernateReplicationFeaturesMain {
 	public void test() {

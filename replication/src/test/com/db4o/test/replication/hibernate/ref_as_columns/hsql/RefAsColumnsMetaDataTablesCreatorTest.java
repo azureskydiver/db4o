@@ -1,0 +1,44 @@
+package com.db4o.test.replication.hibernate.ref_as_columns.hsql;
+
+import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsConfiguration;
+import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsSchemaValidator;
+import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsTablesCreator;
+import com.db4o.test.Test;
+import org.hibernate.cfg.Configuration;
+
+public abstract class RefAsColumnsMetaDataTablesCreatorTest {
+	public RefAsColumnsMetaDataTablesCreatorTest() {
+	}
+
+	public void testCreate() {
+		Configuration cfg = createCfg();
+		RefAsColumnsConfiguration rc = RefAsColumnsConfiguration.produce(cfg);
+		final RefAsColumnsTablesCreator creator = new RefAsColumnsTablesCreator(rc);
+
+		creator.execute();
+
+		RefAsColumnsSchemaValidator validator = new RefAsColumnsSchemaValidator(rc);
+
+		validator.validate();
+		validator.destroy();
+	}
+
+	public void testValidate() {
+		Configuration cfg = validateCfg();
+		RefAsColumnsConfiguration rc = RefAsColumnsConfiguration.produce(cfg);
+		final RefAsColumnsTablesCreator creator = new RefAsColumnsTablesCreator(rc);
+
+		boolean exception = false;
+		try {
+			creator.execute();
+		} catch (RuntimeException e) {
+			exception = true;
+		}
+
+		Test.ensure(exception);
+	}
+
+	protected abstract Configuration createCfg();
+
+	protected abstract Configuration validateCfg();
+}

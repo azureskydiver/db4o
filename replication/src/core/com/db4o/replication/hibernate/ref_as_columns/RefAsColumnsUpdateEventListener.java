@@ -1,8 +1,8 @@
 package com.db4o.replication.hibernate.ref_as_columns;
 
+import com.db4o.replication.hibernate.ObjectConfig;
 import com.db4o.replication.hibernate.UpdateEventListener;
 import com.db4o.replication.hibernate.common.Common;
-import com.db4o.replication.hibernate.ref_as_table.ObjectConfig;
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Interceptor;

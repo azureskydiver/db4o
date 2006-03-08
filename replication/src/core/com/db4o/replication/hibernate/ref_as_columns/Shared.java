@@ -1,7 +1,7 @@
 package com.db4o.replication.hibernate.ref_as_columns;
 
+import com.db4o.replication.hibernate.ObjectConfig;
 import com.db4o.replication.hibernate.common.Common;
-import com.db4o.replication.hibernate.ref_as_table.ObjectConfig;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 

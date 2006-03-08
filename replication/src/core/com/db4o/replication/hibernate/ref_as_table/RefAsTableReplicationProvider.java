@@ -3,6 +3,7 @@ package com.db4o.replication.hibernate.ref_as_table;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.replication.hibernate.AbstractReplicationProvider;
+import com.db4o.replication.hibernate.ObjectConfig;
 import com.db4o.replication.hibernate.RefConfig;
 import com.db4o.replication.hibernate.common.ChangedObjectId;
 import com.db4o.replication.hibernate.common.ReplicationProviderSignature;
@@ -134,7 +135,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 
 	protected void storeReplicationMetaData(com.db4o.inside.replication.ReplicationReference in) {
 		long id = (Long) getObjectSession().getIdentifier(in.object());
-		ReplicationProviderSignature provider = getProviderSignature(in.uuid().getSignaturePart(), getRefSession());
+		ReplicationProviderSignature provider = getProviderSignature(in.uuid().getSignaturePart());
 
 		ReplicationReference ref = new ReplicationReference();
 		ref.setClassName(in.object().getClass().getName());
@@ -162,7 +163,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 			ids.add(changedObjectId);
 		}
 
-		return loadObj(ids, getObjectSession());
+		return loadObj(ids);
 	}
 
 	protected Collection getNewObjectsSinceLastReplication(PersistentClass persistentClass) {
@@ -180,7 +181,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 			ids.add(changedObjectId);
 		}
 
-		final Collection newObjects = loadObj(ids, getObjectSession());
+		final Collection newObjects = loadObj(ids);
 
 		generateReplicationMetaData(newObjects);
 
