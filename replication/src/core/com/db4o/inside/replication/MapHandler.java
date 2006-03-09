@@ -1,14 +1,13 @@
 package com.db4o.inside.replication;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
-import org.hibernate.collection.PersistentMap;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class MapHandler implements CollectionHandler {
 
@@ -47,21 +46,10 @@ public class MapHandler implements CollectionHandler {
 	}
 
 	public Object emptyClone(Object original, ReflectClass originalCollectionClass) {
-
-		Map originalMap = (Map) original;
-		Map result;
-
-		if (originalMap instanceof PersistentMap) {
-			result = new HashMap(originalMap.size());
-		} else {
-			result = (Map) _reflector.forClass(originalMap.getClass()).newInstance();
-		}
-
-		//copyState(originalMap, result, elementCloner);
-
-		return result;
+			return new HashMap(((Map)original).size());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void copyState(Object original, Object destination, CounterpartFinder counterpartFinder) {
 
 		Map originalMap = (Map) original;
