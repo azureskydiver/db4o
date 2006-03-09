@@ -1,16 +1,16 @@
 package com.db4o.inside.replication;
 
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.Iterator4;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.Reflector;
-import org.hibernate.collection.PersistentList;
-import org.hibernate.collection.PersistentSet;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import com.db4o.foundation.Collection4;
+import com.db4o.foundation.Iterator4;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.Reflector;
 
 public class CollectionHandlerImpl implements CollectionHandler {
 
@@ -47,15 +47,10 @@ public class CollectionHandlerImpl implements CollectionHandler {
 			return _mapHandler.emptyClone(originalCollection, originalCollectionClass);
 
 		Collection original = (Collection) originalCollection;
-		Object result;
-		if ((original instanceof PersistentList) || (original instanceof ArrayList)) {
-			result = new ArrayList(original.size());
-		} else if (original instanceof PersistentSet) {
-			result = new HashSet(original.size());
-		} else {
-			result = _reflector.forClass(original.getClass()).newInstance();
-		}
-		return result;
+
+		if (original instanceof List) return new ArrayList(original.size());
+		if (original instanceof Set) return new HashSet(original.size());
+		return _reflector.forClass(original.getClass()).newInstance();
 	}
 
 	public Iterator4 iteratorFor(Object collection) {
@@ -78,6 +73,7 @@ public class CollectionHandlerImpl implements CollectionHandler {
 			doCopyState(original, destination, counterpartFinder);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void doCopyState(Object original, Object destination, CounterpartFinder counterpartFinder) {
 		Collection originalCollection = (Collection) original;
 		Collection destinationCollection = (Collection) destination;
