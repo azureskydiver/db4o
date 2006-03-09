@@ -58,8 +58,8 @@ public abstract class SimpleArrayTest extends ReplicationTestcase {
 		SimpleArrayHolder sah = (SimpleArrayHolder) getOneInstance(_providerB, SimpleArrayHolder.class);
 
 		sah.setName("h2");
-		SimpleArrayContent sac1 = (SimpleArrayContent) sah.getArr()[0];
-		SimpleArrayContent sac2 = (SimpleArrayContent) sah.getArr()[1];
+		SimpleArrayContent sac1 = sah.getArr()[0];
+		SimpleArrayContent sac2 = sah.getArr()[1];
 		sac1.setName("co1");
 		sac2.setName("co2");
 

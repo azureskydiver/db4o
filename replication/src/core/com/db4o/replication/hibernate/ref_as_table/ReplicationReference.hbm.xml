@@ -42,5 +42,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		<property name="uuidLongPart"/>
 		<many-to-one name="provider"/>
 
+		<property name="version"/>
+
 	</class>
 </hibernate-mapping>

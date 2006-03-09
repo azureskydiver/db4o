@@ -38,6 +38,11 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		this(objCfg, refCfg, null);
 	}
 
+	protected void initEventListeners() {
+		super.initEventListeners();
+		//TODO add ObjectInsertedListener
+	}
+
 	public RefAsTableReplicationProvider(Configuration objCfg, Configuration refCfg, String name) {
 		_name = name;
 
@@ -106,7 +111,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 
 		Serializable id = getObjectSession().getIdentifier(obj);
 
-		ensureLong(id);
+		Shared.ensureLong(id);
 
 		Criteria criteria = getRefSession().createCriteria(ReplicationReference.class);
 		criteria.add(Restrictions.eq("objectId", id));
@@ -128,11 +133,6 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		}
 	}
 
-	protected void ensureLong(Serializable id) {
-		if (!(id instanceof Long))
-			throw new IllegalStateException("You must use 'long' as the type of the hibernate id");
-	}
-
 	protected void storeReplicationMetaData(com.db4o.inside.replication.ReplicationReference in) {
 		long id = (Long) getObjectSession().getIdentifier(in.object());
 		ReplicationProviderSignature provider = getProviderSignature(in.uuid().getSignaturePart());
@@ -144,8 +144,8 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		ref.setUuidLongPart(in.uuid().getLongPart());
 		ref.setVersion(_currentVersion);
 
-		Serializable refId = getRefSession().save(ref);
-		getRefSession().load(ReplicationReference.class, refId);
+		getRefSession().save(ref);
+		getRefSession().flush();
 	}
 
 	protected Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
@@ -177,6 +177,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		final Iterator results = criteria.list().iterator();
 		while (results.hasNext()) {
 			ReplicationReference ref = (ReplicationReference) results.next();
+			System.out.println("ref = " + ref);
 			final ChangedObjectId changedObjectId = new ChangedObjectId(ref.getObjectId(), className);
 			ids.add(changedObjectId);
 		}
@@ -195,7 +196,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 	protected void incrementObjectVersion(PostUpdateEvent event) {
 		final String className = event.getEntity().getClass().getName();
 		final Serializable id = event.getId();
-		ensureLong(id);
+		Shared.ensureLong(id);
 
 		Criteria criteria = getRefSession().createCriteria(ReplicationReference.class);
 		criteria.add(Restrictions.eq("objectId", id));

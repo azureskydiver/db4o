@@ -67,7 +67,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	/**
 	 * Objects which meta data not yet updated.
 	 */
-	protected final Set _dirtyRefs = new HashSet();
+	private final Set _dirtyRefs = new HashSet();
 
 	/**
 	 * The ReplicationProviderSignature of this  Hibernate-mapped database.
@@ -570,8 +570,14 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 		Set out = new HashSet();
 
+//		Common.dumpTable(getRefSession(), "ReplicationReference");
+//		Common.dumpTable(getObjectSession(), "SimpleArrayContent");
+//		Common.dumpTable(getObjectSession(), "SimpleArrayContent");
+
 		for (Iterator iterator = _mappedClasses.iterator(); iterator.hasNext();) {
 			PersistentClass persistentClass = (PersistentClass) iterator.next();
+
+			//System.out.println("persistentClass = " + persistentClass);
 
 			//Case 1 - Objects inserted to Db since last replication with any peers.
 			out.addAll(getNewObjectsSinceLastReplication(persistentClass));
@@ -609,6 +615,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	public final ObjectSet getStoredObjects(Class aClass) {
 		if (_collectionHandler.canHandle(aClass))
 			throw new IllegalArgumentException("Hibernate does not query by Collection");
+
+		getObjectSession().flush();
 
 		return new ObjectSetIteratorFacade(getObjectSession().createCriteria(aClass).list().iterator());
 	}
@@ -695,7 +703,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 		initPeerSigAndRecord(peerSigBytes);
 
-		_currentVersion = Common.getMaxVersion(_objectSession.connection()) + 1;
+		_currentVersion = Common.getMaxVersion(getRefSession().connection()) + 1;
 
 		_inReplication = true;
 	}
