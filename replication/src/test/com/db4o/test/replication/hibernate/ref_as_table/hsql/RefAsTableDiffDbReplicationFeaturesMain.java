@@ -1,4 +1,4 @@
-package com.db4o.test.replication.hibernate.ref_as_table;
+package com.db4o.test.replication.hibernate.ref_as_table.hsql;
 
 import com.db4o.replication.hibernate.ref_as_table.RefAsTableReplicationProvider;
 import com.db4o.test.replication.Replicated;

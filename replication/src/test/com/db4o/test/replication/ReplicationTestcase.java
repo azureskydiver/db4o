@@ -43,6 +43,10 @@ public abstract class ReplicationTestcase {
 		//System.out.println("from = " + providerFrom + ", to = " + providerTo);
 		ReplicationSession replication = Replication.begin(providerFrom, providerTo);
 		ObjectSet allObjects = providerFrom.objectsChangedSinceLastReplication();
+
+		if (!allObjects.hasNext())
+			throw new RuntimeException("Can't find any objects to replicate");
+
 		while (allObjects.hasNext()) {
 			Object changed = allObjects.next();
 			//System.out.println("changed = " + changed);
@@ -78,6 +82,10 @@ public abstract class ReplicationTestcase {
 
 	protected Object getOneInstance(TestableReplicationProviderInside provider, Class clazz) {
 		ObjectSet objectSet = provider.getStoredObjects(clazz);
+
+		if (!objectSet.hasNext())
+			throw new RuntimeException("object not found");
+
 		return objectSet.next();
 	}
 
