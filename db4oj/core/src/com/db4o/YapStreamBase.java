@@ -6,6 +6,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.btree.*;
 import com.db4o.inside.query.*;
 import com.db4o.inside.replication.*;
 import com.db4o.query.*;
@@ -348,6 +349,8 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
     abstract ClassIndex createClassIndex(YapClass a_yapClass);
+
+    abstract BTree createBTreeClassIndex(YapClass a_yapClass, int id);
 
     abstract QueryResultImpl createQResult(Transaction a_ta);
 
@@ -1276,7 +1279,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         int ccID = i_classCollection.getID();
         i_references.stopTimer();
         initialize2();
-        i_classCollection.setID(_this, ccID);
+        i_classCollection.setID(ccID);
         i_classCollection.read(i_systemTrans);
     }
     
@@ -1835,7 +1838,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
         // setting the ID to minus 1 ensures that the
         // gc mechanism does not kill the new YapObject
-        yo.setID(_this, -1);
+        yo.setID(-1);
         Platform4.killYapRef(yo.i_object);
     }
     

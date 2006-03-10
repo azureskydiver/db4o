@@ -10,7 +10,7 @@ import com.db4o.inside.slots.*;
  */
 public abstract class YapMeta {
     
-    int i_id = 0; // UID and address of pointer to the object in our file
+    int i_id; // UID and address of pointer to the object in our file
 
     protected int i_state = 2; // DIRTY and ACTIVE
 
@@ -62,6 +62,10 @@ public abstract class YapMeta {
     public boolean isDirty() {
         return bitIsTrue(YapConst.ACTIVE) && (!bitIsTrue(YapConst.CLEAN));
     }
+    
+    public boolean isNew(){
+        return i_id == 0;
+    }
 
     public int linkLength() {
         return YapConst.YAPID_LENGTH;
@@ -73,7 +77,7 @@ public abstract class YapMeta {
 
     public abstract int ownLength();
 
-    void read(Transaction a_trans) {
+    public void read(Transaction a_trans) {
         try {
             if (beginProcessing()) {
                 YapReader reader = a_trans.i_stream.readReaderByID(a_trans, getID());
@@ -98,20 +102,20 @@ public abstract class YapMeta {
     public abstract void readThis(Transaction a_trans, YapReader a_reader);
 
 
-    void setID(YapStream a_stream, int a_id) {
+    public void setID(int a_id) {
         i_id = a_id;
     }
 
-    final void setStateClean() {
+    public final void setStateClean() {
         bitTrue(YapConst.ACTIVE);
         bitTrue(YapConst.CLEAN);
     }
 
-    final void setStateDeactivated() {
+    public final void setStateDeactivated() {
         bitFalse(YapConst.ACTIVE);
     }
 
-    void setStateDirty() {
+    public void setStateDirty() {
         bitTrue(YapConst.ACTIVE);
         bitFalse(YapConst.CLEAN);
     }
@@ -135,30 +139,20 @@ public abstract class YapMeta {
             
         YapFile stream = (YapFile)a_trans.i_stream;
         
-        int id = getID();
         int address = 0;
         int length = ownLength();
         
         YapReader writer = new YapReader(length);
         
-        if(id == 0){
-            
-            // new
-            
+        if(isNew()){
             Pointer4 ptr = stream.newSlot(a_trans, length);
-            id = ptr._id;
+            i_id = ptr._id;
             address = ptr._address;
-            setID(stream, id);
             
             // FIXME: Free everything on rollback here ?
-            
         }else{
-            
-            // update
-            
             address = stream.getSlot(length);
-            a_trans.slotFreeOnRollbackCommitSetPointer(id, address, length);
-            
+            a_trans.slotFreeOnRollbackCommitSetPointer(i_id, address, length);
         }
         
         if (Deploy.debug) {
@@ -194,7 +188,7 @@ public abstract class YapMeta {
 
     public abstract void writeThis(Transaction trans, YapReader a_writer);
 
-    static final void writeIDOf(Transaction trans, YapMeta a_object, YapReader a_writer) {
+    public static final void writeIDOf(Transaction trans, YapMeta a_object, YapReader a_writer) {
         if (a_object != null) {
             a_object.writeOwnID(trans, a_writer);
         } else {

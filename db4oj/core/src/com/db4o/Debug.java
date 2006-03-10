@@ -9,6 +9,11 @@ import com.db4o.foundation.*;
  */
 public abstract class Debug extends Debug4 {
     
+
+    public static final boolean useOldClassIndex = true;
+    
+    public static final boolean useBTrees = false;
+    
     public static final boolean useNIxPaths = true;
     
     public static final boolean ixTrees = false;

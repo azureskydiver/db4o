@@ -32,18 +32,12 @@ final class ClassIndexClient extends ClassIndex {
 		return ids;
 	}
 	
-	void read(Transaction a_trans) {
+	public void read(Transaction a_trans) {
 		// do nothing
 	}
 
 	void setDirty(YapStream a_stream) {
 		// do nothing
-	}
-
-	void setID(YapStream a_stream, int a_id) {
-		// do nothing and dont cache
-		// ID will remain zero, so the index
-		// will be stored automatically on the server side
 	}
 
 	void write(YapStream a_stream) {

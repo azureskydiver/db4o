@@ -171,8 +171,17 @@ public abstract class YapJavaClass implements TypeHandler4 {
         prepareComparison1(obj);
         return this;
     }
+    
+    public Object current(){
+        if (i_compareToIsNull){
+            return null;
+        }
+        return current1();
+    }
 
     abstract void prepareComparison1(Object obj);
+    
+    abstract Object current1();
 
     public int compareTo(Object obj) {
         if (i_compareToIsNull) {

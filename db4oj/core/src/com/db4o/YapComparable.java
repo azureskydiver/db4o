@@ -16,5 +16,8 @@ public interface YapComparable {
 	boolean isGreater(Object obj);
 	
 	boolean isSmaller(Object obj);
+    
+    Object current();
+    
 }
 

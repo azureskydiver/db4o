@@ -6,6 +6,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.btree.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -21,7 +22,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     int _metaClassID;
     
     YapField[] i_fields;
+    
     private ClassIndex i_index;
+    
+    private BTree _index;
+    
+    
     protected String i_name;
     protected int i_objectLength;
 
@@ -246,7 +252,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             i_ancestor.addToIndex1(a_stream, a_trans, a_id);
         }
         if (hasIndex()) {
-            a_trans.addToClassIndex(getID(), a_id);
+            if(Debug.useOldClassIndex){
+                a_trans.addToClassIndex(getID(), a_id);
+            }
+            if(Debug.useBTrees){
+                _index.add(a_trans, new Integer(a_id));
+            }
         }
     }
 
@@ -951,7 +962,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         
         checkDb4oType();
         if (allowsQueries()) {
-            i_index = a_stream.createClassIndex(this);
+            if(Debug.useOldClassIndex){
+                i_index = a_stream.createClassIndex(this);
+            }
+            if(Debug.useBTrees){
+                _index = a_stream.createBTreeClassIndex(this, 0);
+            }
         }
         i_name = claxx.getName();
         i_ancestor = a_ancestor;
@@ -1299,12 +1315,22 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             i_stream.stringIO().shortLength(nameToWrite())
                 + YapConst.OBJECT_LENGTH
                 + (YapConst.YAPINT_LENGTH * 2)
-                + (YapConst.YAPID_LENGTH * 2);
+                + (YapConst.YAPID_LENGTH);
+        
+        if(Debug.useOldClassIndex){
+            len += YapConst.YAPID_LENGTH;
+        }
+        
+        if(Debug.useBTrees){
+            len += YapConst.YAPID_LENGTH;
+        }
+        
         if (i_fields != null) {
             for (int i = 0; i < i_fields.length; i++) {
                 len += i_fields[i].ownLength(i_stream);
             }
         }
+        
         return len;
     }
     
@@ -1633,16 +1659,25 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 	        }
 	        
 	        checkDb4oType();
-	        int indexID = i_reader.readInt();
-	        if (hasIndex()) {
-	            i_index = i_stream.createClassIndex(this);
-	            if (indexID > 0) {
-	                // setID caches the index in the meta cache
-	                // we don't want 0 entries
-	                i_index.setID(i_stream, indexID);
-	            }
-	            i_index.setStateDeactivated();
-	        }
+            
+            if(Debug.useOldClassIndex){
+                int indexID = i_reader.readInt();
+                if (hasIndex()) {
+                    i_index = i_stream.createClassIndex(this);
+                    if (indexID > 0) {
+                        i_index.setID(indexID);
+                    }
+                    i_index.setStateDeactivated();
+                }
+            }
+            
+            if(Debug.useBTrees){
+                int btreeID = i_reader.readInt();
+                if(hasIndex()){
+                    _index = i_stream.createBTreeClassIndex(this, btreeID);
+                }
+            }
+            
 	        i_fields = new YapField[i_reader.readInt()];
 	        for (int i = 0; i < i_fields.length; i++) {
 	            i_fields[i] = new YapField(this);
@@ -1714,10 +1749,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if(i_config == null){
             i_config = config;
         }
-    }
-
-    void setID(YapStream a_stream, int a_id) {
-        super.setID(a_stream, a_id);
     }
 
     void setName(String a_name) {
@@ -1942,7 +1973,15 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         a_writer.writeInt(_metaClassID);
         
         writeIDOf(trans, i_ancestor, a_writer);
-        writeIDOf(trans, i_index, a_writer);
+        
+        if(Debug.useOldClassIndex){
+            writeIDOf(trans, i_index, a_writer);
+        }
+        
+        if(Debug.useBTrees){
+            writeIDOf(trans, _index, a_writer);
+        }
+        
         if (i_fields == null) {
             a_writer.writeInt(0);
         } else {
@@ -1974,6 +2013,13 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             i_compareTo = null;
         }
         return this;
+    }
+    
+    public Object current(){
+        if(i_compareTo == null){
+            return null;
+        }
+        return new Integer(i_lastID);
     }
 
     public int compareTo(Object a_obj) {

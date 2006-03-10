@@ -6,7 +6,7 @@ import com.db4o.*;
 
 
 /**
- *  
+ *  @exclude
  */
 class IxFileRangeReader {
 

@@ -89,6 +89,10 @@ final class YBoolean extends YapJavaClass
 	void prepareComparison1(Object obj){
 		i_compareTo = val(obj);
 	}
+    
+    public Object current1(){
+        return new Boolean(i_compareTo);
+    }
 	
 	boolean isEqual1(Object obj){
 		return obj instanceof Boolean && val(obj) == i_compareTo;

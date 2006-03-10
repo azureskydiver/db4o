@@ -89,6 +89,10 @@ public abstract class YapTypeAbstract extends YapJavaClass implements YapType{
 	void prepareComparison1(Object obj) {
 		i_compareTo = obj;
 	}
+    
+    public Object current1(){
+        return i_compareTo;
+    }
 
 	boolean isEqual1(Object obj) {
 		return isEqual(i_compareTo, obj);

@@ -11,6 +11,10 @@ class Null implements YapComparable{
         return -1;
     }
     
+    public Object current(){
+        return null;
+    }
+    
 	public boolean equals(Object obj){
 		return obj == null;
 	}

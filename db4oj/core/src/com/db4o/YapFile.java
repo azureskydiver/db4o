@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
+import com.db4o.inside.btree.*;
 import com.db4o.inside.freespace.*;
 import com.db4o.inside.slots.*;
 import com.db4o.reflect.*;
@@ -107,6 +108,10 @@ public abstract class YapFile extends YapStream {
 
     final ClassIndex createClassIndex(YapClass yapClass) {
         return new ClassIndex(yapClass);
+    }
+    
+    final BTree createBTreeClassIndex(YapClass a_yapClass, int id){
+        return new BTree(new YInt(this), id);
     }
 
     final QueryResultImpl createQResult(Transaction a_ta) {
@@ -350,7 +355,7 @@ public abstract class YapFile extends YapStream {
     final YapWriter newObject(Transaction a_trans, YapMeta a_object) {
         int length = a_object.ownLength();
         Pointer4 ptr = newSlot(a_trans, length);
-        a_object.setID(this, ptr._id);
+        a_object.setID(ptr._id);
         YapWriter writer = new YapWriter(a_trans, length);
         writer.useSlot(ptr._id, ptr._address, length);
         if (Deploy.debug) {
@@ -510,7 +515,7 @@ public abstract class YapFile extends YapStream {
         // configuration lock time skipped
         myreader.incrementOffset(YapConst.YAPID_LENGTH);
 
-        i_classCollection.setID(this, myreader.readInt());
+        i_classCollection.setID(myreader.readInt());
         i_classCollection.read(i_systemTrans);
 
         int freespaceID = myreader.readInt();
