@@ -142,13 +142,13 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return true;
     }
 
-    public abstract void write(Object a_object, YapWriter a_bytes);
+    public abstract void write(Object a_object, YapReader a_bytes);
     
     public boolean writeArray(Object array, YapWriter reader) {
         return false;
     }
 
-    public void writeIndexEntry(YapWriter a_writer, Object a_object) {
+    public void writeIndexEntry(YapReader a_writer, Object a_object) {
         write(a_object, a_writer);
     }
 

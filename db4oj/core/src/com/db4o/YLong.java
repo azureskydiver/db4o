@@ -69,7 +69,7 @@ class YLong extends YapJavaClass
 		return l_return;
 	}
 
-	public void write(Object a_object, YapWriter a_bytes){
+	public void write(Object a_object, YapReader a_bytes){
 		if (! Deploy.csharp && a_object == null){
 			writeLong(Long.MAX_VALUE,a_bytes);
 		} else {
@@ -77,7 +77,7 @@ class YLong extends YapJavaClass
 		}
 	}
 	
-	static final void writeLong(long a_long, YapWriter a_bytes){
+	static final void writeLong(long a_long, YapReader a_bytes){
 		if(Deploy.debug){
 			a_bytes.writeBegin(YapConst.YAPLONG);
 			if(Deploy.debugLong){

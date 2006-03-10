@@ -78,7 +78,7 @@ public abstract class YapTypeAbstract extends YapJavaClass implements YapType{
     
     public abstract void write(Object obj, byte[] bytes, int offset);
 
-    public void write(Object a_object, YapWriter a_bytes) {
+    public void write(Object a_object, YapReader a_bytes) {
         int offset = a_bytes._offset;
         if(a_object != null){
             write(a_object, a_bytes._buffer, a_bytes._offset);

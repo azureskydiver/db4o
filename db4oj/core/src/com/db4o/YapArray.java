@@ -358,7 +358,7 @@ class YapArray extends YapIndependantType {
         }
     }
     
-    public void writeIndexEntry(YapWriter a_writer, Object a_object) {
+    public void writeIndexEntry(YapReader a_writer, Object a_object) {
         // TODO: implement
         throw YapConst.virtualException();
     }

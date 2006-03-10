@@ -75,6 +75,6 @@ public abstract class YapIndependantType implements TypeHandler4
     
     public abstract Object comparableObject(Transaction trans, Object indexEntry);
     public abstract Object readIndexEntry(YapReader a_reader);
-    public abstract void writeIndexEntry(YapWriter a_writer, Object a_object);
+    public abstract void writeIndexEntry(YapReader a_writer, Object a_object);
 
 }

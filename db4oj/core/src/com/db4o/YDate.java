@@ -56,7 +56,7 @@ final class YDate extends YLong
 		return new Date(ret);
 	}
 	
-	public void write(Object a_object, YapWriter a_bytes){
+	public void write(Object a_object, YapReader a_bytes){
 		if (a_object == null){
 			writeLong(Long.MAX_VALUE,a_bytes);
 		} else {

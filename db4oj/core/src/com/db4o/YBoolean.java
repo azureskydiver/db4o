@@ -57,7 +57,7 @@ final class YBoolean extends YapJavaClass
 		return null;
 	}
 	
-	public void write(Object a_object, YapWriter a_bytes){
+	public void write(Object a_object, YapReader a_bytes){
 		if(Deploy.debug){
 			a_bytes.writeBegin(YapConst.YAPBOOLEAN);
 		}

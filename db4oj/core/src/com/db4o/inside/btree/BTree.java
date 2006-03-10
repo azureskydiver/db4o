@@ -10,24 +10,27 @@ import com.db4o.inside.ix.*;
  */
 public class BTree extends YapMeta{
     
-    Indexable4 _handler;
+    final Indexable4 _keyHandler;
+    
+    final Indexable4 _valueHandler;
     
     BTreeNode _root;
     
     private int _size;
     
-    public BTree(Indexable4 handler, int id){
-        _handler = handler;
+    public BTree(int id, Indexable4 keyHandler, Indexable4 valueHandler){
+        _keyHandler = keyHandler;
+        _valueHandler = valueHandler;
         if(id > 0){
             setStateDeactivated();
         }else{
-            _root = new BTreeNode(_handler);
+            _root = new BTreeNode(this);
             setStateClean();
         }
     }
     
     public void add(Transaction trans, Object value){
-        _handler.prepareComparison(value);
+        _keyHandler.prepareComparison(value);
         ensureActive(trans);
         BTreeNode split = _root.add(trans);
         if(split != null){
@@ -52,7 +55,7 @@ public class BTree extends YapMeta{
 
     public void readThis(Transaction a_trans, YapReader a_reader) {
         _size = a_reader.readInt();
-        _root = new BTreeNode(_handler, a_reader.readInt());
+        _root = new BTreeNode(this, a_reader.readInt());
     }
     
     public void writeThis(Transaction trans, YapReader a_writer) {
