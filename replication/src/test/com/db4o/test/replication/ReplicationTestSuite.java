@@ -27,8 +27,8 @@ import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HsqlMetaDataTable
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HsqlR0to4Runner;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.UuidLongPartGeneratorTest;
-import com.db4o.test.replication.hibernate.ref_as_table.hsql.RefAsTableDiffDbReplicationFeaturesMain;
-import com.db4o.test.replication.hibernate.ref_as_table.hsql.RefAsTableSameDbReplicationFeaturesMain;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.RefAsTableReplicationFeaturesMain;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.SimpleArrayTestHsqlRefAsTable;
 import com.db4o.test.replication.provider.TransientReplicationProviderTest;
 import com.db4o.test.replication.transients.TransientArrayReplicationTest;
 import com.db4o.test.replication.transients.TransientListTest;
@@ -82,8 +82,7 @@ public class ReplicationTestSuite extends TestSuite {
 				HibernateSimpleArrayTest.class,
 				Db4oHibernateSimpleArrayTest.class,
 
-				//TODO SimpleArrayTestHsqlRefAsTableDiffDb.class,
-				//SimpleArrayTestHsqlRefAsTableSameDb.class,
+				SimpleArrayTestHsqlRefAsTable.class,
 
 				TransientSingleTypeCollectionReplicationTest.class,
 				HibernateSingleTypeCollectionReplicationTest.class,
@@ -100,8 +99,7 @@ public class ReplicationTestSuite extends TestSuite {
 				TransientReplicationFeaturesMain.class,
 				Db4oReplicationFeaturesMain.class,
 				HibernateReplicationFeaturesMain.class,
-				RefAsTableSameDbReplicationFeaturesMain.class,
-				RefAsTableDiffDbReplicationFeaturesMain.class
+				RefAsTableReplicationFeaturesMain.class,
 		};
 	}
 }

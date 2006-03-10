@@ -7,4 +7,9 @@ public class Shared {
 		if (!(id instanceof Long))
 			throw new IllegalStateException("You must use 'long' as the type of the hibernate id");
 	}
+
+	public static long castAsLong(Serializable id) {
+		ensureLong(id);
+		return ((Long) id).longValue();
+	}
 }

@@ -4,12 +4,11 @@ import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.ObjectSetIteratorFacade;
 import com.db4o.foundation.Visitor4;
+import com.db4o.inside.replication.CollectionHandler;
 import com.db4o.inside.replication.CollectionHandlerImpl;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
-import com.db4o.inside.replication.ReplicationReferenceImpl;
 import com.db4o.inside.replication.ReplicationReflector;
-import com.db4o.inside.traversal.CollectionFlattener;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
 import com.db4o.replication.hibernate.common.ChangedObjectId;
@@ -20,6 +19,7 @@ import com.db4o.replication.hibernate.common.ReplicationComponentField;
 import com.db4o.replication.hibernate.common.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.common.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.common.ReplicationRecord;
+import com.db4o.replication.hibernate.common.ReplicationReferenceImpl;
 import com.db4o.replication.hibernate.common.UuidLongPartGenerator;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -67,7 +67,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	/**
 	 * Objects which meta data not yet updated.
 	 */
-	private final Set _dirtyRefs = new HashSet();
+	private final Set<ReplicationReference> _dirtyRefs = new HashSet();
 
 	/**
 	 * The ReplicationProviderSignature of this  Hibernate-mapped database.
@@ -93,7 +93,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected String _name;
 
-	protected final CollectionFlattener _collectionHandler = new CollectionHandlerImpl();
+	protected final CollectionHandler _collectionHandler = new CollectionHandlerImpl();
 
 	protected final Set _uuidsReplicatedInThisSession = new HashSet();
 
@@ -120,7 +120,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	public final String toString() {
-		return "name = " + _name + ", sig = " + flattenBytes(getSignature().getBytes());
+		return "name = " + _name;
 	}
 
 	protected void ensureReplicationActive() {
@@ -316,10 +316,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	protected ReplicationReference produceCollectionReferenceByUUID(Db4oUUID uuid) {
-//		Util.dumpTable(_session, "ReplicationProviderSignature");
-//		Util.dumpTable(_session, "ReplicationComponentField");
-//		Util.dumpTable(_session, "ReplicationComponentIdentity");
-
 		Criteria criteria = getRefSession().createCriteria(ReplicationComponentIdentity.class);
 		criteria.add(Restrictions.eq("uuidLongPart", new Long(uuid.getLongPart())));
 		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getSignaturePart()));
@@ -440,17 +436,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		return (ReadonlyReplicationProviderSignature) getRefSession().get(ReplicationProviderSignature.class, new Long(sigId));
 	}
 
-	protected void generateReplicationMetaData(Collection newObjects) {
-		for (Iterator iterator = newObjects.iterator(); iterator.hasNext();) {
-			Object o = iterator.next();
-			Db4oUUID uuid = new Db4oUUID(uuidLongPartGenerator.next(), getSignature().getBytes());
-			ReplicationReferenceImpl ref = new ReplicationReferenceImpl(o, uuid, _currentVersion);
-			storeReplicationMetaData(ref);
-		}
-	}
-
-	protected abstract void storeReplicationMetaData(ReplicationReference ref);
-
 	protected void initEventListeners() {
 		EventListeners eventListeners = getObjectConfig().getConfiguration().getEventListeners();
 
@@ -492,7 +477,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 		_replicationRecord.setVersion(version);
 		getRefSession().saveOrUpdate(_replicationRecord);
-
+		getRefSession().flush();
 		if (getRecord(_peerSignature).getVersion() != version)
 			throw new RuntimeException("The version numbers of persisted record does not match the parameter");
 	}
@@ -570,10 +555,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 		Set out = new HashSet();
 
-//		Common.dumpTable(getRefSession(), "ReplicationReference");
-//		Common.dumpTable(getObjectSession(), "SimpleArrayContent");
-//		Common.dumpTable(getObjectSession(), "SimpleArrayContent");
-
 		for (Iterator iterator = _mappedClasses.iterator(); iterator.hasNext();) {
 			PersistentClass persistentClass = (PersistentClass) iterator.next();
 
@@ -601,12 +582,16 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		return _name;
 	}
 
-	public final void storeNew(Object object) {
-		getObjectSession().save(object);
+	public void storeNew(Object object) {
+		Session s = getObjectSession();
+		s.save(object);
+		s.flush();
 	}
 
 	public final void update(Object obj) {
+		ensureReplicationInActive();
 		if (!_collectionHandler.canHandle(obj)) {
+			getObjectSession().flush();
 			getObjectSession().update(obj);
 			getObjectSession().flush();
 		}
@@ -650,19 +635,33 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		getObjectSession().createQuery("delete from " + className).executeUpdate();
 	}
 
-	public final void storeReplica(Object obj) {
+	public final void storeReplica(Object entity) {
+//		if (_name.equals("A"))
+//			System.out.println("obj = " + obj);
 		ensureReplicationActive();
 
 		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
-		if (_collectionHandler.canHandle(obj)) return;
+		if (_collectionHandler.canHandle(entity)) return;
 
-		ReplicationReference ref = getCachedReference(obj);
+		ReplicationReference ref = getCachedReference(entity);
 		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
 
 		_uuidsReplicatedInThisSession.add(ref.uuid());
 
-		getObjectSession().saveOrUpdate(obj);
+		final Session s = getObjectSession();
+		if (s.contains(entity)) {
+			s.update(entity);
+		} else {
+			s.save(entity);
+		}
+
+		getObjectSession().saveOrUpdate(entity);
+
 		_dirtyRefs.add(ref);
+
+		getObjectSession().flush();
+
+		getRefSession().flush();
 	}
 
 	protected Transaction getObjectTransaction() {
@@ -685,7 +684,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	public void commit() {
-		getObjectSession().flush();
 		getObjectTransaction().commit();
 		_objectTransaction = getObjectSession().beginTransaction();
 	}
@@ -719,19 +717,25 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		_objectSessionFactory.close();
 	}
 
+	protected abstract void saveOrUpdateReplicaMetadata(ReplicationReference ref);
+
 	final class MyFlushEventListener implements FlushEventListener {
 		public final void onFlush(FlushEvent event) throws HibernateException {
+			if (!_inReplication) return;
+
 			for (Iterator iterator = _dirtyRefs.iterator(); iterator.hasNext();) {
 				ReplicationReference ref = (ReplicationReference) iterator.next();
-				storeReplicationMetaData(ref);
+				iterator.remove();
+				saveOrUpdateReplicaMetadata(ref);
 			}
-			_dirtyRefs.clear();
 		}
 	}
 
 	final class MyPostUpdateEventListener implements PostUpdateEventListener {
 		public final void onPostUpdate(PostUpdateEvent event) {
 			synchronized (AbstractReplicationProvider.this) {
+				if (_inReplication) return;
+
 				Object entity = event.getEntity();
 
 				if (Common.skip(entity)) return;

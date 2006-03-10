@@ -3,9 +3,9 @@ package com.db4o.test.replication.provider;
 import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
-import com.db4o.inside.replication.ReplicationReferenceImpl;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.common.PeerSignature;
+import com.db4o.replication.hibernate.common.ReplicationReferenceImpl;
 import com.db4o.test.Test;
 
 import java.util.Vector;
@@ -138,12 +138,14 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		ensure(!subject.objectsChangedSinceLastReplication().hasNext());
+		subject.commitReplicationTransaction(9909);
 
 		object1._name = "Terry Jones";
 		object3.setModel("McLaren");
 		subject.update(object1);
 		subject.update(object3);
 
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 		changed = toVector(subject.objectsChangedSinceLastReplication());
 		ensure(changed.contains(object1));
 		ensure(!changed.contains(object2));

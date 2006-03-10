@@ -16,15 +16,15 @@ import java.sql.Types;
 public class Common {
 	public static final long MIN_VERSION_NO = 100;
 
-	public static void dumpTable(Session sess, String tableName) {
-		dumpTable(sess.connection(), tableName);
+	public static void dumpTable(String providerName, Session sess, String tableName) {
+		dumpTable(providerName, sess.connection(), tableName);
 	}
 
-	public static void dumpTable(Connection con, String tableName) {
+	public static void dumpTable(String providerName, Connection con, String tableName) {
 		ResultSet rs = null;
 
 		try {
-			System.out.println("Printing table = " + tableName);
+			System.out.println("providerName = " + providerName + ", table = " + tableName);
 			String sql = "SELECT * FROM " + tableName;
 			rs = con.createStatement().executeQuery(sql);
 			ResultSetMetaData metaData = rs.getMetaData();

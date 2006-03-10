@@ -10,4 +10,8 @@ public class ChangedObjectId {
 		this.hibernateId = hibernateId;
 		this.className = className;
 	}
+
+	public String toString() {
+		return "ChangedObjectId, className = " + className + ", hibernateId = " + hibernateId;
+	}
 }

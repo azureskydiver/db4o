@@ -2,8 +2,8 @@ package com.db4o.test.replication.hibernate.ref_as_columns.hsql;
 
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
-import com.db4o.inside.replication.ReplicationReferenceImpl;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.replication.hibernate.common.ReplicationReferenceImpl;
 import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
