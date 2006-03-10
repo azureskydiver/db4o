@@ -37,11 +37,11 @@ public class Db4oReplicationTestUtil {
 		new File(PROVIDER_B_FILE).delete();
 	}
 
-	public static TestableReplicationProviderInside providerA() {
+	public static TestableReplicationProviderInside newProviderA() {
 		return new Db4oReplicationProvider(Test.objectContainer(), "db4o-a");
 	}
 
-	public static TestableReplicationProviderInside providerB() {
+	public static TestableReplicationProviderInside newProviderB() {
 		return new Db4oReplicationProvider(ocB, "db4o-b");
 	}
 

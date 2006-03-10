@@ -8,7 +8,7 @@
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="all">
 	<class name="com.db4o.test.replication.collections.map.MapHolder">
-		<id column="id" type="int">
+		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
 

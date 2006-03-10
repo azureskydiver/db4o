@@ -6,7 +6,7 @@
 
 <hibernate-mapping default-access="field" default-lazy="false" default-cascade="all">
 	<class name="f1.collection.array.Pilot">
-		<id column="id" type="int">
+		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
 

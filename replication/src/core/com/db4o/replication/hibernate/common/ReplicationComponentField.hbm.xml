@@ -29,7 +29,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 <hibernate-mapping>
 	<class name="com.db4o.replication.hibernate.common.ReplicationComponentField"
 	       table="ReplicationComponentField">
-		<id column="id" type="int">
+		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
 

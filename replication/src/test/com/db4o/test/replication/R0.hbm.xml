@@ -8,7 +8,7 @@
 
 <hibernate-mapping default-access="field">
 	<class name="com.db4o.test.replication.R0" table="R0">
-		<id column="id" type="int">
+		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
 		<discriminator/>

@@ -28,10 +28,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 <hibernate-mapping default-access="field">
 	<class name="com.db4o.test.replication.provider.Pilot">
-		<id column="id" type="int">
+		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
-		
+
 		<property name="_name"/>
 		<property name="_age"/>
 	</class>

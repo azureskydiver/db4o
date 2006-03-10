@@ -14,7 +14,7 @@ public class Db4oR0to4Runner extends R0to4Runner {
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		return Db4oReplicationTestUtil.providerB();
+		return Db4oReplicationTestUtil.newProviderB();
 	}
 
 	public void test() {
