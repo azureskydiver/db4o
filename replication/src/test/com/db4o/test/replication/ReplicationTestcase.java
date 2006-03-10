@@ -3,6 +3,7 @@
 package com.db4o.test.replication;
 
 import com.db4o.ObjectSet;
+import com.db4o.foundation.Collection4;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
@@ -13,12 +14,41 @@ public abstract class ReplicationTestcase {
 
 	private long _timer;
 
-	protected abstract TestableReplicationProviderInside prepareProviderA();
+	protected void printCombination(ProviderPair p) {
+		String claxx = this.getClass().getName();
+		String pa = p._providerA.getName();
+		String pb = p._providerB.getName();
 
-	protected abstract TestableReplicationProviderInside prepareProviderB();
+		String out = "Test = " + claxx + ", provider A = " + pa + ", provider B = " + pb;
+
+		System.out.println(out);
+	}
 
 	protected TestableReplicationProviderInside _providerA;
 	protected TestableReplicationProviderInside _providerB;
+
+	protected Collection4 providerPairs = new Collection4();
+
+	protected ReplicationTestcase() {
+		initproviderPairs();
+	}
+
+	protected void addProviderPairs(TestableReplicationProviderInside a, TestableReplicationProviderInside b) {
+		providerPairs.add(new ProviderPair(a, b));
+	}
+
+	//TODO make abstract
+	protected void initproviderPairs() {
+
+	}
+
+	protected TestableReplicationProviderInside prepareProviderA() {
+		throw new UnsupportedOperationException("unreachable");
+	}
+
+	protected TestableReplicationProviderInside prepareProviderB() {
+		throw new UnsupportedOperationException("unreachable me");
+	}
 
 	protected void init() {
 		_providerA = prepareProviderA();

@@ -14,6 +14,7 @@ public class AllTestsReplication extends AllTests {
 		//runSolo(SimpleArrayTestHsqlRefAsTable.class);
 		new AllTestsReplication().run();
 		Db4oReplicationTestUtil.close();
+		System.exit(0);
 	}
 
 	protected void addTestSuites(TestSuite suites) {

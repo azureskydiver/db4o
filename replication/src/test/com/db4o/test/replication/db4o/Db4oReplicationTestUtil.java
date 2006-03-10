@@ -36,7 +36,7 @@ public class Db4oReplicationTestUtil {
 			} else
 				_objectcontainer = Db4o.openFile(PROVIDER_B_FILE);
 		}
-		return new Db4oReplicationProvider(_objectcontainer);
+		return new Db4oReplicationProvider(_objectcontainer, "db4o (b)");
 	}
 
 	public static void close() {

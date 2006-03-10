@@ -2,7 +2,6 @@
 
 package com.db4o.replication.db4o;
 
-import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.ReplicationRecord;
@@ -44,7 +43,14 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 
 	private Tree _idsReplicatedInThisSession;
 
+	private final String _name;
+
 	public Db4oReplicationProvider(ObjectContainer objectContainer) {
+		this(objectContainer, "null");
+	}
+
+	public Db4oReplicationProvider(ObjectContainer objectContainer, String name) {
+		_name = name;
 		_stream = (YapStream) objectContainer;
 		_reflector = _stream.reflector();
 		_signatureMap = new Db4oSignatureMap(_stream);
@@ -281,7 +287,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 	}
 
 	public String getName() {
-		return Db4o.version();
+		return _name;
 	}
 
 	public void closeIfOpened() {

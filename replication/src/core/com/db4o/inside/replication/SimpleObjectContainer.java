@@ -2,23 +2,22 @@
 
 package com.db4o.inside.replication;
 
-import com.db4o.*;
-
+import com.db4o.ObjectSet;
 
 public interface SimpleObjectContainer {
-    
-    public void activate(Object object);
-    
-    public void commit();
-    
-    public void delete(Class clazz);
-    
-    public String getName();
 
-    public ObjectSet getStoredObjects(Class type);
-     
-    public void storeNew(Object o);
-     
-    public void update(Object o);
+	public void activate(Object object);
+
+	public void commit();
+
+	public void delete(Class clazz);
+
+	public String getName();
+
+	public ObjectSet getStoredObjects(Class type);
+
+	public void storeNew(Object o);
+
+	public void update(Object o);
 
 }
