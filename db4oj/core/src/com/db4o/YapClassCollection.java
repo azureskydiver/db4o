@@ -285,7 +285,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         for (int i = classCount; i > 0; i--) {
             YapClass yapClass = new YapClass(i_stream, null);
             int id = a_reader.readInt();
-            yapClass.setID(i_stream, id);
+            yapClass.setID(id);
             i_classes.add(yapClass);
             i_yapClassByID.put(id, yapClass);
             i_yapClassByBytes.put(yapClass.readName(a_trans), yapClass);

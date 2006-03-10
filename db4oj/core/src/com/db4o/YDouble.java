@@ -64,6 +64,10 @@ final class YDouble extends YLong
 	void prepareComparison1(Object obj){
 		i_compareToDouble = dval(obj);
 	}
+    
+    public Object current1(){
+        return new Double(i_compareTo);
+    }
 	
 	boolean isEqual1(Object obj){
 		return obj instanceof Double && dval(obj) == i_compareToDouble;

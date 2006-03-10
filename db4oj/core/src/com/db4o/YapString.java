@@ -227,6 +227,10 @@ public final class YapString extends YapIndependantType {
         return this;
     }
     
+    public Object current(){
+        return i_compareTo;
+    }
+    
     public int compareTo(Object obj) {
         if(i_compareTo == null) {
             if(obj == null) {

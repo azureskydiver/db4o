@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.inside.*;
+import com.db4o.inside.btree.*;
 import com.db4o.reflect.*;
 
 /**
@@ -140,6 +141,10 @@ public class YapClient extends YapStream implements ExtClient {
     final void commit1() {
         i_trans.commit();
     }
+    
+    final BTree createBTreeClassIndex(YapClass a_yapClass, int id){
+        return new ClientBTree(new YInt(this), id);
+    }
 
     final ClassIndex createClassIndex(YapClass a_yapClass) {
         return new ClassIndexClient(a_yapClass);
@@ -200,7 +205,7 @@ public class YapClient extends YapStream implements ExtClient {
         if(! super.createYapClass(a_yapClass, a_class, a_superYapClass)){
             return false;
         }
-        a_yapClass.setID(this, message.i_id);
+        a_yapClass.setID(message.i_id);
         a_yapClass.readName1(getSystemTransaction(), bytes);
         i_classCollection.addYapClass(a_yapClass);
         i_classCollection.readYapClass(a_yapClass, a_class);
@@ -513,7 +518,7 @@ public class YapClient extends YapStream implements ExtClient {
     void readThis() {
         writeMsg(Msg.GET_CLASSES.getWriter(i_systemTrans));
         YapWriter bytes = expectedByteResponse(Msg.GET_CLASSES);
-        i_classCollection.setID(this, bytes.readInt());
+        i_classCollection.setID(bytes.readInt());
         createStringIO(bytes.readByte());
         i_classCollection.read(i_systemTrans);
         i_classCollection.refreshClasses();

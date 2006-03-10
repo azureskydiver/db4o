@@ -17,7 +17,7 @@ public class Transaction {
     private int             i_address;                                  // only used to pass address to Thread
 
     private Tree            i_addToClassIndex;
-
+    
     private byte[]          i_bytes = new byte[YapConst.POINTER_LENGTH];
 
     // contains TreeIntObject nodes
@@ -64,9 +64,11 @@ public class Transaction {
                 throw new RuntimeException();
             }
         }
-        removeFromClassIndexTree(i_removeFromClassIndex, a_yapClassID, a_id);
-        i_addToClassIndex = addToClassIndexTree(i_addToClassIndex,
-            a_yapClassID, a_id);
+        if(Debug.useOldClassIndex){
+            removeFromClassIndexTree(i_removeFromClassIndex, a_yapClassID, a_id);
+            i_addToClassIndex = addToClassIndexTree(i_addToClassIndex,
+                a_yapClassID, a_id);
+        }
     }
 
     private final Tree addToClassIndexTree(Tree a_tree, int a_yapClassID,
@@ -425,7 +427,7 @@ public class Transaction {
         }
     }
 
-    Slot getSlotInformation(int a_id) {
+    public Slot getSlotInformation(int a_id) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
@@ -454,7 +456,11 @@ public class Transaction {
             i_pointerIo.readEnd();
             return new Slot(debugAddress, debugLength);
         }
-        i_file.readBytes(i_bytes, a_id, YapConst.POINTER_LENGTH);
+        return readSlot(a_id);
+    }
+    
+    public Slot readSlot(int id){
+        i_file.readBytes(i_bytes, id, YapConst.POINTER_LENGTH);
         int address = (i_bytes[3] & 255)
             | (i_bytes[2] & 255) << 8 | (i_bytes[1] & 255) << 16
             | i_bytes[0] << 24;
@@ -690,6 +696,13 @@ public class Transaction {
 
     boolean supportsVirtualFields(){
         return true;
+    }
+    
+    public Transaction systemTransaction(){
+        if(i_parentTransaction != null){
+            return i_parentTransaction;
+        }
+        return this;
     }
 
     public String toString() {

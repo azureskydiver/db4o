@@ -408,6 +408,10 @@ class YapArray extends YapIndependantType {
         return this;
     }
     
+    public Object current(){
+        return i_handler.current();
+    }
+    
     public int compareTo(Object a_obj) {
         return -1;
     }

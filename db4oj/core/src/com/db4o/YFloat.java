@@ -65,6 +65,10 @@ final class YFloat extends YInt {
 	void prepareComparison1(Object obj) {
 		i_compareTo = valu(obj);
 	}
+    
+    public Object current1(){
+        return new Float(i_compareTo);
+    }
 
 	boolean isEqual1(Object obj) {
 		return obj instanceof Float && valu(obj) == i_compareTo;

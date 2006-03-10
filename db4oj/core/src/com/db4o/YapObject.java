@@ -292,11 +292,6 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return a_reader.getStream().getYapClass(a_reader.readInt());
 	}
     
-    
-	void setID(YapStream a_stream, int a_id) {
-		i_id = a_id;
-	}
-
 	void setObjectWeak(YapStream a_stream, Object a_object) {
 		if (a_stream.i_references._weak) {
 			if(i_object != null){
@@ -334,7 +329,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			throw new ObjectNotStorableException(i_yapClass.classReflector());
 		}
 		    
-	    setID(stream, stream.newUserObject());
+	    setID(stream.newUserObject());
 
 	    // will be ended in continueset()
 		beginProcessing();

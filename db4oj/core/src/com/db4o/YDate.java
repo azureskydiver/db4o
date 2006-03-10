@@ -63,6 +63,10 @@ final class YDate extends YLong
 			writeLong(((Date)a_object).getTime(), a_bytes);
 		}
 	}
+    
+    public Object current1(){
+        return new Date(i_compareTo);
+    }
 	
 	static String now(){
 		return Platform4.format(new Date(), true);
