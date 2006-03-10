@@ -6,7 +6,6 @@ import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProv
 import com.db4o.test.replication.Replicated;
 import com.db4o.test.replication.ReplicationFeaturesMain;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
-import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
 public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
@@ -21,12 +20,10 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 	}
 
 	protected TestableReplicationProviderInside prepareProviderA() {
-		delete(pA.getObjectSession());
 		return pA;
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		delete(pA.getObjectSession());
 		return pB;
 	}
 
@@ -40,14 +37,5 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 		pB = new RefAsColumnsReplicationProvider(cfgB, "B");
 
 		super.test();
-	}
-
-	protected void clean() {
-		pA.destroy();
-		pB.destroy();
-	}
-
-	protected void delete(Session session) {
-		session.createQuery("delete from Replicated").executeUpdate();
 	}
 }

@@ -45,14 +45,14 @@ public abstract class SingleTypeCollectionReplicationTest {
 			h1._set.add("two");
 			h1._list.add("three");
 
+			_containerA.storeNew(h1);
+			_containerA.activate(h1);
+
 			final ReplicationSession replication = new GenericReplicationSession(_containerA, _containerB, new ConflictResolver() {
 				public Object resolveConflict(ReplicationSession session, Object a, Object b) {
 					return null;
 				}
 			});
-
-			_containerA.storeNew(h1);
-			_containerA.activate(h1);
 
 			replication.replicate(h1);
 			replication.commit();

@@ -33,10 +33,12 @@ public abstract class R0to4Runner extends ReplicationTestcase {
 	}
 
 	private void tst() {
-		init(_providerA, _providerB);
+		init(_providerA);
+
 		ensureCount(_providerA, LINKERS);
 
 		copyAllToB(_providerA, _providerB);
+
 		replicateNoneModified(_providerA, _providerB);
 
 		modifyR4(_providerA);
@@ -63,10 +65,7 @@ public abstract class R0to4Runner extends ReplicationTestcase {
 		provider.commit();
 	}
 
-	private void init(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
-
-		ReplicationSession replication = Replication.begin(peerA, peerB, _ignoreConflictHandler);
-
+	private void init(TestableReplicationProviderInside peerA) {
 		R0Linker lCircles = new R0Linker();
 		lCircles.setNames("circles");
 		lCircles.linkCircles();
@@ -87,8 +86,7 @@ public abstract class R0to4Runner extends ReplicationTestcase {
 		lBack.linkBack();
 		lBack.store(peerA);
 
-		replication.commit();
-
+		peerA.commit();
 	}
 
 	private void ensureR4Different(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
@@ -122,6 +120,7 @@ public abstract class R0to4Runner extends ReplicationTestcase {
 			r4.name = r4.name + "_";
 			provider.update(r4);
 		}
+		provider.commit();
 	}
 
 	private void copyAllToB(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
@@ -142,7 +141,6 @@ public abstract class R0to4Runner extends ReplicationTestcase {
 	}
 
 	private int replicateAll(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB, boolean modifiedOnly) {
-
 		ReplicationSession replication = Replication.begin(peerA, peerB, _ignoreConflictHandler);
 
 		ObjectSet it = modifiedOnly

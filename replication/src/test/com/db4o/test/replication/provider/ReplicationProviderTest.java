@@ -85,13 +85,14 @@ public abstract class ReplicationProviderTest extends Test {
 	}
 
 	private void tstReferences() {
-		TestableReplicationProviderInside subject = prepareSubject();
-		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		Pilot object1 = new Pilot("tst References", 42);
-		ensure(subject.produceReference(object1, null, null) == null);
+
+		TestableReplicationProviderInside subject = prepareSubject();
 
 		subject.storeNew(object1);
+
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		ReplicationReference reference = subject.produceReference(object1, null, null);
 		ensure(reference.object() == object1);
@@ -112,7 +113,6 @@ public abstract class ReplicationProviderTest extends Test {
 
 	private void tstObjectsChangedSinceLastReplication() {
 		TestableReplicationProviderInside subject = prepareSubject();
-		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Pilot object2 = new Pilot("Terry Gilliam", 53);
@@ -121,6 +121,8 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.storeNew(object1);
 		subject.storeNew(object2);
 		subject.storeNew(object3);
+
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		Vector changed = toVector(subject.objectsChangedSinceLastReplication());
 		ensure(changed.contains(object1));

@@ -172,8 +172,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	public final void activate(Object object) {
-		ensureReplicationActive();
-
 		Hibernate.initialize(object);
 	}
 
@@ -597,6 +595,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	public void storeNew(Object object) {
+		ensureReplicationInActive();
 		Session s = getObjectSession();
 		s.save(object);
 		s.flush();
@@ -645,6 +644,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	public void delete(Class clazz) {
+		ensureReplicationInActive();
 		String className = clazz.getName();
 		getObjectSession().createQuery("delete from " + className).executeUpdate();
 	}
