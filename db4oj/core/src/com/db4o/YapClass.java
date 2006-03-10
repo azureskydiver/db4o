@@ -1947,7 +1947,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return super.writeObjectBegin();
     }
 
-    public void writeIndexEntry(YapWriter a_writer, Object a_object) {
+    public void writeIndexEntry(YapReader a_writer, Object a_object) {
         a_writer.writeInt(((Integer)a_object).intValue());
     }
 

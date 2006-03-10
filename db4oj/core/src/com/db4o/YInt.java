@@ -71,7 +71,7 @@ public class YInt extends YapJavaClass {
         }
     }
 
-    public void write(Object a_object, YapWriter a_bytes) {
+    public void write(Object a_object, YapReader a_bytes) {
         if (!Deploy.csharp && a_object == null) {
             writeInt(Integer.MAX_VALUE, a_bytes);
         } else {

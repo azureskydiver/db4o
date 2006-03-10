@@ -9,8 +9,8 @@ import com.db4o.inside.ix.*;
  */
 public class ClientBTree extends BTree{
     
-    public ClientBTree(Indexable4 handler, int id){
-        super(handler, id);
+    public ClientBTree(int id, Indexable4 keyHandler, Indexable4 valueHandler){
+        super(id, keyHandler, valueHandler);
     }
 
 }

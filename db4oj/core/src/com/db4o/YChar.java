@@ -51,7 +51,7 @@ final class YChar extends YapJavaClass {
 		return new Character(ret);
 	}
 
-	public void write(Object a_object, YapWriter a_bytes) {
+	public void write(Object a_object, YapReader a_bytes) {
 		if (Deploy.debug) {
 			a_bytes.writeBegin(YapConst.YAPCHAR);
 		}

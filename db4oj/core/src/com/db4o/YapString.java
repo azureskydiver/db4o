@@ -138,7 +138,7 @@ public final class YapString extends YapIndependantType {
         return true;
     }
 
-    public void writeIndexEntry(YapWriter a_writer, Object a_object) {
+    public void writeIndexEntry(YapReader a_writer, Object a_object) {
         if(a_object == null){
             a_writer.writeInt(0);
             a_writer.writeInt(0);

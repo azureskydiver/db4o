@@ -44,7 +44,7 @@ final class YDouble extends YLong
 		return new Double(Platform4.longToDouble(ret));
 	}
 	
-	public void write(Object a_object, YapWriter a_bytes){
+	public void write(Object a_object, YapReader a_bytes){
 		if (! Deploy.csharp && a_object == null){
 			writeLong(Long.MAX_VALUE,a_bytes);
 		} else {

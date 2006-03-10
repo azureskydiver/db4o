@@ -21,9 +21,14 @@ public class BTreeNode extends YapMeta{
     private static final int MAX_ENTRIES = 8;
 
     private static final int HALF_ENTRIES = MAX_ENTRIES / 2;
+
+    
+    final BTree _btree;
     
     
-    final Indexable4 _handler;
+    private int _count;
+    
+    private int _height;
     
     
     private Object[] _keys;
@@ -33,30 +38,25 @@ public class BTreeNode extends YapMeta{
     private Object[] _values;
 
     
-    private int _count;
-    
-    private int _height;
-    
-    
     private int _address;
-
+    
     
     /* Constructor for new nodes */
-    public BTreeNode(Indexable4 handler){
-        _handler = handler;
+    public BTreeNode(BTree btree){
+        _btree = btree;
         setStateClean();
     }
     
     /* Constructor for existing nodes, requires valid ID */
-    public BTreeNode(Indexable4 handler, int id){
-        _handler = handler;
+    public BTreeNode(BTree btree, int id){
+        _btree = btree;
         setID(id);
         setStateDeactivated();
     }
     
     public BTreeNode add(Transaction trans){
         
-        Object obj = _handler.current();
+        Object obj = keyHandler().current();
         
         if(isLeaf()){
             int xxx = 1;
@@ -76,7 +76,7 @@ public class BTreeNode extends YapMeta{
                 s._cursor ++;
             }
             insert(trans, s._cursor);
-            _keys[s._cursor] = _handler.current();
+            _keys[s._cursor] = keyHandler().current();
         }else{
             BTreeNode splitChild = _children[s._cursor].add(trans);
             if(splitChild == null){
@@ -96,25 +96,16 @@ public class BTreeNode extends YapMeta{
     
     private void compare(Searcher s){
         if(_keys != null){
-            s.resultIs(_handler.compareTo(_keys[s._cursor]));
+            s.resultIs(keyHandler().compareTo(_keys[s._cursor]));
         }else{
             
             
         }
     }
     
-    BTreeNode newRoot(Transaction trans, BTreeNode peer){
-        BTreeNode res = new BTreeNode(_handler);
-        res._height = _height + 1;
-        res._count = 2;
-        res.prepareWrite(trans);
-        res._keys[0] = _keys[0];
-        res._children[0] = this;
-        res._keys[1] = peer._keys[0];
-        res._children[1] = peer;
-        return res;
+    private Indexable4 keyHandler(){
+        return _btree._keyHandler;
     }
-    
     
     public byte getIdentifier() {
         return YapConst.BTREE_NODE;
@@ -144,16 +135,28 @@ public class BTreeNode extends YapMeta{
         return _height == 0;
     }
     
+    BTreeNode newRoot(Transaction trans, BTreeNode peer){
+        BTreeNode res = new BTreeNode(_btree);
+        res._height = _height + 1;
+        res._count = 2;
+        res.prepareWrite(trans);
+        res._keys[0] = _keys[0];
+        res._children[0] = this;
+        res._keys[1] = peer._keys[0];
+        res._children[1] = peer;
+        return res;
+    }
+    
     public int ownLength() {
-        
         int length = YapConst.YAPINT_LENGTH * 2;  // height, count
-        
-        
+        length += _count * keyHandler().linkLength();
         if(isLeaf()){
-            
-            
+            if(valueHandler() != null){
+                length += _count * valueHandler().linkLength();
+            }
+        }else{
+           length += _count * YapConst.YAPID_LENGTH;
         }
-        
         return length;
     }
     
@@ -215,7 +218,7 @@ public class BTreeNode extends YapMeta{
     
 
     private BTreeNode split(Transaction trans){
-        BTreeNode res = new BTreeNode(_handler);
+        BTreeNode res = new BTreeNode(_btree);
         res.prepareWrite(trans);
         System.arraycopy(_keys, HALF_ENTRIES, res._keys, 0, HALF_ENTRIES);
         if(_values != null){
@@ -232,11 +235,24 @@ public class BTreeNode extends YapMeta{
         
         return res;
     }
+    
+    private Indexable4 valueHandler(){
+        return _btree._valueHandler;
+    }
 
     public void writeThis(Transaction trans, YapReader a_writer) {
+        a_writer.writeInt(_count);
+        a_writer.writeInt(_height);
         
+        for (int i = 0; i < _count; i++) {
+            // keyHandler().writeIndexEntry(a_writer, _keys[i]);
+        }
         
-        // TODO Auto-generated method stub
+        if(isLeaf()){
+            
+        }else{
+            
+        }
         
     }
     

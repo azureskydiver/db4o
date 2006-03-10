@@ -63,7 +63,7 @@ final class YShort extends YapJavaClass
 		return (short)ret;
 	}
 
-	public void write(Object a_object, YapWriter a_bytes){
+	public void write(Object a_object, YapReader a_bytes){
 		if (! Deploy.csharp && a_object == null){
 			writeShort(Short.MAX_VALUE,a_bytes);
 		} else {
@@ -71,7 +71,7 @@ final class YShort extends YapJavaClass
 		}
 	}
 	
-	static final void writeShort(int a_short, YapWriter a_bytes){
+	static final void writeShort(int a_short, YapReader a_bytes){
 		if(Deploy.debug){
 			a_bytes.writeBegin(YapConst.YAPSHORT);
 		}
