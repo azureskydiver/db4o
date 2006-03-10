@@ -27,12 +27,6 @@ public abstract class SimpleParentChild extends ReplicationTestcase {
 		}
 	}
 
-	//TODO move to super class
-	private void init(ProviderPair p) {
-		_providerA = p._providerA;
-		_providerB = p._providerB;
-	}
-
 	private void actualTst() {
 		clean();
 

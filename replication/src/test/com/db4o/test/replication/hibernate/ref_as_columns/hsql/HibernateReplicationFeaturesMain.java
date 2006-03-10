@@ -43,8 +43,8 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 	}
 
 	protected void clean() {
-		pA.closeIfOpened();
-		pB.closeIfOpened();
+		pA.destroy();
+		pB.destroy();
 	}
 
 	protected void delete(Session session) {

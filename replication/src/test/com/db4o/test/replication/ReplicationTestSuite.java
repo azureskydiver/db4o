@@ -4,14 +4,12 @@ import com.db4o.test.TestSuite;
 import com.db4o.test.replication.db4o.Db4oArrayReplicationTest;
 import com.db4o.test.replication.db4o.Db4oListTest;
 import com.db4o.test.replication.db4o.Db4oMapTest;
-import com.db4o.test.replication.db4o.Db4oR0to4Runner;
 import com.db4o.test.replication.db4o.Db4oReplicationAfterDeletionTest;
 import com.db4o.test.replication.db4o.Db4oReplicationFeaturesMain;
 import com.db4o.test.replication.db4o.Db4oReplicationProviderTest;
 import com.db4o.test.replication.db4o.Db4oSimpleArrayTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateListTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateSimpleArrayTest;
-import com.db4o.test.replication.db4o.hibernate.Db4oHsqlR0to4Runner;
 import com.db4o.test.replication.db4o.hibernate.HibernateDb4oListTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateListTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateMapTest;
@@ -21,19 +19,19 @@ import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicat
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateSimpleArrayTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateSingleTypeCollectionReplicationTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HsqlMetaDataTablesCreatorTest;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HsqlR0to4Runner;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.UuidLongPartGeneratorTest;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.RefAsTableReplicationFeaturesMain;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.SimpleArrayTestHsqlRefAsTable;
+import com.db4o.test.replication.jdk11.R0to4RunnerCore;
 import com.db4o.test.replication.jdk11.SimpleParentChildCore;
+import com.db4o.test.replication.jdk14.R0to4RunnerCombinations;
 import com.db4o.test.replication.jdk14.SimpleParentChildCombinations;
 import com.db4o.test.replication.provider.TransientReplicationProviderTest;
 import com.db4o.test.replication.transients.TransientArrayReplicationTest;
 import com.db4o.test.replication.transients.TransientListTest;
 import com.db4o.test.replication.transients.TransientMapTest;
 import com.db4o.test.replication.transients.TransientMixedTypesCollectionReplicationTest;
-import com.db4o.test.replication.transients.TransientR0to4Runner;
 import com.db4o.test.replication.transients.TransientReplicationFeaturesMain;
 import com.db4o.test.replication.transients.TransientSimpleArrayTest;
 import com.db4o.test.replication.transients.TransientSingleTypeCollectionReplicationTest;
@@ -55,10 +53,8 @@ public class ReplicationTestSuite extends TestSuite {
 				Db4oReplicationProviderTest.class,
 				HibernateReplicationProviderTest.class,
 
-				TransientR0to4Runner.class,
-				Db4oR0to4Runner.class,
-				HsqlR0to4Runner.class,
-				Db4oHsqlR0to4Runner.class,
+				R0to4RunnerCore.class,
+				R0to4RunnerCombinations.class,
 
 				SimpleParentChildCore.class,
 				SimpleParentChildCombinations.class,

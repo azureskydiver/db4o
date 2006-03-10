@@ -309,7 +309,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return _name;
 	}
 
-	public void closeIfOpened() {
+	public void destroy() {
 		// do nothing
 	}
 

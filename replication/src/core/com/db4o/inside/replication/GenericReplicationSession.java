@@ -321,8 +321,8 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	public void close() {
-		_peerA.closeIfOpened();
-		_peerB.closeIfOpened();
+		_peerA.destroy();
+		_peerB.destroy();
 	}
 
 	public void commit() {

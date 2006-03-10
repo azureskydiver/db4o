@@ -86,6 +86,6 @@ public class HibernateReplicationProviderTest extends ReplicationProviderTest {
 	}
 
 	protected void destroySubject() {
-		hibernateReplicationProvider.closeIfOpened();
+		hibernateReplicationProvider.destroy();
 	}
 }
