@@ -3,7 +3,7 @@
 package com.db4o.test.replication.transients;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.test.replication.R0to4Runner;
+import com.db4o.test.replication.template.r0tor4.R0to4Runner;
 
 public class TransientR0to4Runner extends R0to4Runner {
 
@@ -20,7 +20,7 @@ public class TransientR0to4Runner extends R0to4Runner {
 	}
 
 	protected void clean() {
-		delete(peerA);
-		delete(peerB);
+		delete(_providerA);
+		delete(_providerB);
 	}
 }

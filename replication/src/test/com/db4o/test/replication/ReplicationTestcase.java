@@ -4,6 +4,7 @@ package com.db4o.test.replication;
 
 import com.db4o.ObjectSet;
 import com.db4o.foundation.Collection4;
+import com.db4o.foundation.Iterator4;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
@@ -13,6 +14,15 @@ import com.db4o.test.Test;
 public abstract class ReplicationTestcase {
 
 	private long _timer;
+
+	protected TestableReplicationProviderInside _providerA;
+	protected TestableReplicationProviderInside _providerB;
+
+	protected Collection4 providerPairs = new Collection4();
+
+	protected ReplicationTestcase() {
+		initproviderPairs();
+	}
 
 	protected void printCombination(ProviderPair p) {
 		String claxx = this.getClass().getName();
@@ -24,16 +34,22 @@ public abstract class ReplicationTestcase {
 		System.out.println(out);
 	}
 
-	protected TestableReplicationProviderInside _providerA;
-	protected TestableReplicationProviderInside _providerB;
-
-	protected Collection4 providerPairs = new Collection4();
-
-	protected ReplicationTestcase() {
-		initproviderPairs();
+	protected void init(ProviderPair p) {
+		_providerA = p._providerA;
+		_providerB = p._providerB;
 	}
 
 	protected void addProviderPairs(TestableReplicationProviderInside a, TestableReplicationProviderInside b) {
+		final Iterator4 it = providerPairs.iterator();
+		while (it.hasNext()) {
+			ProviderPair pair = (ProviderPair) it.next();
+
+			if ((a == pair._providerA) || (a == pair._providerB))
+				throw new RuntimeException("Do not reuse providers");
+
+			if ((b == pair._providerA) || (b == pair._providerB))
+				throw new RuntimeException("Do not reuse providers");
+		}
 		providerPairs.add(new ProviderPair(a, b));
 	}
 
@@ -56,8 +72,8 @@ public abstract class ReplicationTestcase {
 	}
 
 	protected void destroy() {
-		_providerA.closeIfOpened();
-		_providerB.closeIfOpened();
+		_providerA.destroy();
+		_providerB.destroy();
 	}
 
 	protected void delete(Class[] classes) {

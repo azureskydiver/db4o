@@ -2,10 +2,10 @@ package com.db4o.test.replication.jdk11;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
-import com.db4o.test.replication.template.SimpleParentChild;
+import com.db4o.test.replication.template.r0tor4.R0to4Runner;
 import com.db4o.test.replication.transients.TransientReplicationProvider;
 
-public class SimpleParentChildCore extends SimpleParentChild {
+public class R0to4RunnerCore extends R0to4Runner {
 
 	protected void initproviderPairs() {
 		TestableReplicationProviderInside a;
@@ -27,5 +27,10 @@ public class SimpleParentChildCore extends SimpleParentChild {
 
 	public void test() {
 		super.test();
+	}
+
+	protected void clean() {
+		delete(_providerA);
+		delete(_providerB);
 	}
 }

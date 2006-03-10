@@ -18,7 +18,7 @@ public class Db4oReplicationProviderTest extends ReplicationProviderTest {
 	}
 
 	protected void destroySubject() {
-		db4oReplicationProvider.closeIfOpened();
+		db4oReplicationProvider.destroy();
 		myOc.close();
 		db4oReplicationProvider = null;
 		myOc = null;

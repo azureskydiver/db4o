@@ -27,6 +27,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.event.EventListeners;
 import org.hibernate.event.FlushEvent;
@@ -103,6 +104,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected UuidLongPartGenerator uuidLongPartGenerator;
 
+	private boolean _alive = true;
+
 	protected void initPeerSigAndRecord(byte[] peerSigBytes) {
 		PeerSignature existingPeerSignature = getPeerSignature(peerSigBytes);
 		if (existingPeerSignature == null) {
@@ -124,13 +127,20 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	protected void ensureReplicationActive() {
+		ensureAlive();
 		if (!_inReplication)
 			throw new UnsupportedOperationException("Method not supported because replication transaction is not active");
 	}
 
 	protected void ensureReplicationInActive() {
+		ensureAlive();
 		if (_inReplication)
 			throw new UnsupportedOperationException("Method not supported because replication transaction is active");
+	}
+
+	private void ensureAlive() {
+		if (!_alive)
+			throw new UnsupportedOperationException("This provider is dead because #destroy() is called");
 	}
 
 	protected static String flattenBytes(byte[] b) {
@@ -574,6 +584,10 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		return _objectSession;
 	}
 
+	public Configuration getConfiguration() {
+		return getObjectConfig().getConfiguration();
+	}
+
 	protected abstract Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass);
 
 	protected abstract Collection getNewObjectsSinceLastReplication(PersistentClass persistentClass);
@@ -712,9 +726,10 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected abstract void incrementObjectVersion(PostUpdateEvent event);
 
-	public void closeIfOpened() {
+	public void destroy() {
 		_objectSession.close();
 		_objectSessionFactory.close();
+		_alive = false;
 	}
 
 	protected abstract void saveOrUpdateReplicaMetadata(ReplicationReference ref);

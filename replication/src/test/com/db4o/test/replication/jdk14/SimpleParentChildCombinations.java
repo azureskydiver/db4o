@@ -25,9 +25,13 @@ public class SimpleParentChildCombinations extends SimpleParentChild {
 		b = new RefAsColumnsReplicationProvider(newCfg(), "HSQL RefAsColumns");
 		addProviderPairs(a, b);
 
-		final TestableReplicationProviderInside db4o = Db4oReplicationTestUtil.newProviderA();
-		addProviderPairs(a, db4o);
-		addProviderPairs(db4o, a);
+		a = new RefAsColumnsReplicationProvider(newCfg(), "HSQL RefAsColumns");
+		b = Db4oReplicationTestUtil.newProviderA();
+		addProviderPairs(a, b);
+
+		a = Db4oReplicationTestUtil.newProviderA();
+		b = new RefAsColumnsReplicationProvider(newCfg(), "HSQL RefAsColumns");
+		addProviderPairs(a, b);
 
 		a = new RefAsTableReplicationProvider(newCfg(), "HSQL RefAsTable");
 		b = new RefAsTableReplicationProvider(newCfg(), "HSQL RefAsTable");

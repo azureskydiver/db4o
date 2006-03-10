@@ -114,7 +114,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 
 		int count = exisitings.size();
 
-		if (count != 1) throw new RuntimeException("ReplicationReference must exist");
+		if (count != 1) throw new RuntimeException("ReplicationReference must exist for " + obj);
 
 		ReplicationReference ref;
 		ref = (ReplicationReference) exisitings.get(0);

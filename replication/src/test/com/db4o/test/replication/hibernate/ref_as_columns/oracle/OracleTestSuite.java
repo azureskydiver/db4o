@@ -8,7 +8,7 @@ public class OracleTestSuite extends TestSuite {
 				OracleMetaDataTablesCreatorTest.class,
 				OracleListTest.class,
 				OracleMapTest.class,
-				OracleR0to4Runner.class,
+				//OracleR0to4Runner.class,
 				OracleReplicationFeaturesMain.class
 		};
 	}

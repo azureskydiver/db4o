@@ -290,7 +290,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		return _name;
 	}
 
-	public void closeIfOpened() {
+	public void destroy() {
 		// do nothing
 	}
 

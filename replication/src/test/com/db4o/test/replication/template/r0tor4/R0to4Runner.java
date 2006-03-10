@@ -1,47 +1,51 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.test.replication;
+package com.db4o.test.replication.template.r0tor4;
 
 import com.db4o.ObjectSet;
+import com.db4o.foundation.Iterator4;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
+import com.db4o.test.replication.ProviderPair;
+import com.db4o.test.replication.ReplicationTestcase;
 
-public abstract class R0to4Runner {
-	protected TestableReplicationProviderInside peerA;
-	protected TestableReplicationProviderInside peerB;
-
-	protected abstract TestableReplicationProviderInside prepareProviderA();
-
-	protected abstract TestableReplicationProviderInside prepareProviderB();
-
-	private final static ConflictResolver _ignoreConflictHandler = new ConflictResolver() {
-		public Object resolveConflict(ReplicationSession ignored, Object a, Object b) {
-			return null;
-		}
-	};
+public abstract class R0to4Runner extends ReplicationTestcase {
+	private final static ConflictResolver _ignoreConflictHandler = new MyConflictResolver();
 
 	private static final int LINKERS = 4;
 
+	public R0to4Runner() {
+		super();
+	}
+
 	public void test() {
-		peerA = prepareProviderA();
-		peerB = prepareProviderB();
+		final Iterator4 it = providerPairs.strictIterator();
 
-		init(peerA, peerB);
-		ensureCount(peerA, LINKERS);
+		while (it.hasNext()) {
+			ProviderPair pair = (ProviderPair) it.next();
+			init(pair);
+			printCombination(pair);
+			tst();
+		}
+	}
 
-		copyAllToB(peerA, peerB);
-		replicateNoneModified(peerA, peerB);
+	private void tst() {
+		init(_providerA, _providerB);
+		ensureCount(_providerA, LINKERS);
 
-		modifyR4(peerA);
+		copyAllToB(_providerA, _providerB);
+		replicateNoneModified(_providerA, _providerB);
 
-		ensureR4Different(peerA, peerB);
+		modifyR4(_providerA);
 
-		replicateR4(peerA, peerB);
+		ensureR4Different(_providerA, _providerB);
 
-		ensureR4Same(peerA, peerB);
+		replicateR4(_providerA, _providerB);
+
+		ensureR4Same(_providerA, _providerB);
 
 		clean();
 
@@ -49,11 +53,6 @@ public abstract class R0to4Runner {
 	}
 
 	abstract protected void clean();
-
-	private void destroy() {
-		peerA.closeIfOpened();
-		peerB.closeIfOpened();
-	}
 
 	protected void delete(TestableReplicationProviderInside provider) {
 		Class[] classes = new Class[]{R0.class, R1.class, R2.class, R3.class, R4.class};
@@ -130,10 +129,10 @@ public abstract class R0to4Runner {
 	}
 
 	private void replicateNoneModified(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
-		Test.ensure(replicateAll(peerA, peerB) == 0);
+		Test.ensure(replicate(peerA, peerB) == 0);
 	}
 
-	private int replicateAll(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
+	private int replicate(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB) {
 		return replicateAll(peerA, peerB, true);
 	}
 
@@ -181,4 +180,9 @@ public abstract class R0to4Runner {
 		Test.ensure(i == 0);
 	}
 
+	private static class MyConflictResolver implements ConflictResolver {
+		public Object resolveConflict(ReplicationSession ignored, Object a, Object b) {
+			return null;
+		}
+	}
 }

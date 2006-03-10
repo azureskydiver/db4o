@@ -23,7 +23,7 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	/**
 	 * Destroys this provider and frees up resources.
 	 */
-	public void closeIfOpened();
+	public void destroy();
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion);
 
