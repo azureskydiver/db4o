@@ -12,6 +12,8 @@ import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.event.EventListeners;
 import org.hibernate.event.PostInsertEvent;
@@ -19,6 +21,7 @@ import org.hibernate.event.PostInsertEventListener;
 import org.hibernate.event.PostUpdateEvent;
 import org.hibernate.mapping.PersistentClass;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -86,9 +89,9 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 
 	protected com.db4o.inside.replication.ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid, Class hint) {
 		Criteria criteria = getRefSession().createCriteria(ReplicationReference.class);
-		criteria.add(Restrictions.eq("uuidLongPart", new Long(uuid.getLongPart())));
-		criteria.add(Restrictions.eq("className", hint.getName()));
-		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getSignaturePart()));
+		criteria.add(Restrictions.eq(ReplicationReference.UUID_LONG_PART, new Long(uuid.getLongPart())));
+		criteria.add(Restrictions.eq(ReplicationReference.CLASS_NAME, hint.getName()));
+		criteria.add(Restrictions.eq(ReplicationReference.PROVIDER, getProviderSignature(uuid.getSignaturePart())));
 
 		final List exisitings = criteria.list();
 		int count = exisitings.size();
@@ -131,8 +134,8 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 
 	private List getByHibernateId(String className, long id) {
 		Criteria criteria = getRefSession().createCriteria(ReplicationReference.class);
-		criteria.add(Restrictions.eq("objectId", id));
-		criteria.add(Restrictions.eq("className", className));
+		criteria.add(Restrictions.eq(ReplicationReference.OBJECT_ID, id));
+		criteria.add(Restrictions.eq(ReplicationReference.CLASS_NAME, className));
 
 		return criteria.list();
 	}
@@ -167,17 +170,18 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 	}
 
 	protected Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
-		final String className = persistentClass.getClassName();
+		List<String> classNames = getTypeClassNames(persistentClass);
 
 		Criteria criteria = getRefSession().createCriteria(ReplicationReference.class);
-		criteria.add(Restrictions.gt("version", getLastReplicationVersion()));
-		criteria.add(Restrictions.eq("className", className));
+		criteria.add(Restrictions.gt(ReplicationReference.VERSION, getLastReplicationVersion()));
+		final Criterion nestedOr = build(classNames, ReplicationReference.CLASS_NAME);
+		criteria.add(nestedOr);
 
 		Collection<ChangedObjectId> ids = new HashSet();
 		final Iterator results = criteria.list().iterator();
 		while (results.hasNext()) {
 			ReplicationReference ref = (ReplicationReference) results.next();
-			final ChangedObjectId changedObjectId = new ChangedObjectId(ref.getObjectId(), className);
+			final ChangedObjectId changedObjectId = new ChangedObjectId(ref.getObjectId(), persistentClass.getRootClass().getClassName());
 			ids.add(changedObjectId);
 		}
 
@@ -185,17 +189,18 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 	}
 
 	protected Collection getNewObjectsSinceLastReplication(PersistentClass persistentClass) {
-		final String className = persistentClass.getClassName();
+		List<String> classNames = getTypeClassNames(persistentClass);
 
 		Criteria criteria = getRefSession().createCriteria(ReplicationReference.class);
-		criteria.add(Restrictions.isNull("provider"));
-		criteria.add(Restrictions.eq("className", className));
+		criteria.add(Restrictions.isNull(ReplicationReference.PROVIDER));
+		final Criterion nestedOr = build(classNames, ReplicationReference.CLASS_NAME);
+		criteria.add(nestedOr);
 
 		Collection<ChangedObjectId> ids = new HashSet();
 		final Iterator results = criteria.list().iterator();
 		while (results.hasNext()) {
 			ReplicationReference ref = (ReplicationReference) results.next();
-			final ChangedObjectId changedObjectId = new ChangedObjectId(ref.getObjectId(), className);
+			final ChangedObjectId changedObjectId = new ChangedObjectId(ref.getObjectId(), persistentClass.getRootClass().getClassName());
 			ids.add(changedObjectId);
 
 			ref.setProvider(_mySig);
@@ -207,6 +212,34 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		getRefSession().flush();
 
 		return loadObj(ids);
+	}
+
+	private Criterion build(List<String> classNames, String fieldName) {
+		final int tail = classNames.size() - 1;
+		return recursiveBuild(classNames, fieldName, Restrictions.eq(fieldName, classNames.remove(tail)));
+	}
+
+	private Criterion recursiveBuild(List<String> classNames, String fieldName, Criterion rhs) {
+		if (classNames.size() == 0) {
+			return rhs;
+		} else {
+			final int tail = classNames.size() - 1;
+			final LogicalExpression tmp = Restrictions.or(Restrictions.eq(fieldName, classNames.remove(tail)), rhs);
+			return recursiveBuild(classNames, fieldName, tmp);
+		}
+	}
+
+	private List<String> getTypeClassNames(PersistentClass rootClass) {
+		List<String> out = new ArrayList<String>();
+		out.add(rootClass.getClassName());
+		if (rootClass.hasSubclasses()) {
+			final Iterator it = rootClass.getSubclassClosureIterator();
+			while (it.hasNext()) {
+				PersistentClass subC = (PersistentClass) it.next();
+				out.add(subC.getClassName());
+			}
+		}
+		return out;
 	}
 
 	protected RefConfig getRefConfig() {

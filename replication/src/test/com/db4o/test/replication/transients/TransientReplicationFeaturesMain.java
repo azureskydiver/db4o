@@ -24,13 +24,4 @@ public class TransientReplicationFeaturesMain extends ReplicationFeaturesMain {
 	public void test() {
 		super.test();
 	}
-
-	protected void clean() {
-		a = null;
-		b = null;
-	}
-
-	protected void cleanUp() {
-		//do nothing
-	}
 }

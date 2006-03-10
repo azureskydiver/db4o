@@ -45,6 +45,11 @@ public class ReplicationTestSuite extends TestSuite {
 
 
 		return new Class[]{
+				TransientReplicationFeaturesMain.class,
+				Db4oReplicationFeaturesMain.class,
+				HibernateReplicationFeaturesMain.class,
+				RefAsTableReplicationFeaturesMain.class,
+
 				HsqlMetaDataTablesCreatorTest.class,
 				HibernateReplicationAfterDeletionTest.class,
 				Db4oReplicationAfterDeletionTest.class,
@@ -88,10 +93,7 @@ public class ReplicationTestSuite extends TestSuite {
 				ReplicationTraversalTest.class,
 				ReplicationFeatures.class,
 
-				TransientReplicationFeaturesMain.class,
-				Db4oReplicationFeaturesMain.class,
-				HibernateReplicationFeaturesMain.class,
-				RefAsTableReplicationFeaturesMain.class,
+
 		};
 	}
 }

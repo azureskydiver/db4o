@@ -20,7 +20,4 @@ public class Db4oReplicationFeaturesMain extends ReplicationFeaturesMain {
 	public void test() {
 		super.test();
 	}
-
-	protected void clean() {
-	}
 }

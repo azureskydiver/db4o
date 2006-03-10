@@ -5,6 +5,11 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class ReplicationReference {
 	public static final String TABLE_NAME = "ReplicationReference";
+	public static final String CLASS_NAME = "className";
+	public static final String OBJECT_ID = "objectId";
+	public static final String UUID_LONG_PART = "uuidLongPart";
+	public static final String PROVIDER = "provider";
+	public static final String VERSION = "version";
 
 	private String className;
 	private long objectId;

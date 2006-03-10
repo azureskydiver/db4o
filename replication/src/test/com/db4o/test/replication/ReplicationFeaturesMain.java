@@ -15,15 +15,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class ReplicationFeaturesMain {
+public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 
 	private final Set _setA = new HashSet(1);
 	private final Set _setB = new HashSet(1);
 	private final Set _setBoth = new HashSet(2);
 	private final Set _NONE = Collections.EMPTY_SET;
-
-	protected TestableReplicationProviderInside _containerA;
-	protected TestableReplicationProviderInside _containerB;
 
 	private Set _direction;
 	private Set _containersToQueryFrom;
@@ -45,7 +42,6 @@ public abstract class ReplicationFeaturesMain {
 	}
 
 	public void test() {
-
 		_setA.add(A);
 		_setB.add(B);
 
@@ -69,7 +65,11 @@ public abstract class ReplicationFeaturesMain {
 		clean();
 	}
 
-	protected abstract void clean();
+	protected void clean() {
+		delete(new Class[]{Replicated.class});
+		checkEmpty(_providerA);
+		checkEmpty(_providerB);
+	}
 
 	private void tstDirection(Set direction) {
 		_direction = direction;
@@ -156,7 +156,7 @@ public abstract class ReplicationFeaturesMain {
 
 		performChanges();
 
-		final ReplicationSession replication = new GenericReplicationSession(_containerA, _containerB, new ConflictResolver() {
+		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ConflictResolver() {
 
 			public Object resolveConflict(ReplicationSession session, Object a, Object b) {
 				if (_objectsToPrevailInConflicts.isEmpty()) return null;
@@ -167,25 +167,24 @@ public abstract class ReplicationFeaturesMain {
 
 		if (_direction.size() == 1) {
 			if (_direction.contains(A)) {
-				replication.setDirection(_containerB, _containerA);
+				replication.setDirection(_providerB, _providerA);
 			}
 			if (_direction.contains(B)) {
-				replication.setDirection(_containerA, _containerB);
+				replication.setDirection(_providerA, _providerB);
 			}
 		}
 
 
 		if (_containersToQueryFrom.contains(A)) {
-			replicateQueryingFrom(replication, _containerA);
+			replicateQueryingFrom(replication, _providerA);
 		}
 		if (_containersToQueryFrom.contains(B)) {
-			replicateQueryingFrom(replication, _containerB);
+			replicateQueryingFrom(replication, _providerB);
 		}
 
 		replication.commit();
 
 		checkNames();
-
 		//printRound();
 	}
 
@@ -212,7 +211,7 @@ public abstract class ReplicationFeaturesMain {
 	}
 
 	private TestableReplicationProviderInside container(String aOrB) {
-		return aOrB.equals(A) ? _containerA : _containerB;
+		return aOrB.equals(A) ? _providerA : _providerB;
 	}
 
 	private boolean isOldNameExpected(String inspected) {
@@ -269,19 +268,19 @@ public abstract class ReplicationFeaturesMain {
 	private void performChanges() {
 
 		if (_containersWithNewObjects.contains(A)) {
-			_containerA.storeNew(new Replicated("newFromA"));
+			_providerA.storeNew(new Replicated("newFromA"));
 		}
 		if (_containersWithNewObjects.contains(B)) {
-			_containerB.storeNew(new Replicated("newFromB"));
+			_providerB.storeNew(new Replicated("newFromB"));
 		}
 
 		if (_containersWithChangedObjects.contains(A)) {
-			changeObject(_containerA, "oldFromA", "oldFromAChangedInA");
-			changeObject(_containerA, "oldFromB", "oldFromBChangedInA");
+			changeObject(_providerA, "oldFromA", "oldFromAChangedInA");
+			changeObject(_providerA, "oldFromB", "oldFromBChangedInA");
 		}
 		if (_containersWithChangedObjects.contains(B)) {
-			changeObject(_containerB, "oldFromA", "oldFromAChangedInB");
-			changeObject(_containerB, "oldFromB", "oldFromBChangedInB");
+			changeObject(_providerB, "oldFromA", "oldFromAChangedInB");
+			changeObject(_providerB, "oldFromB", "oldFromBChangedInB");
 		}
 
 	}
@@ -306,8 +305,8 @@ public abstract class ReplicationFeaturesMain {
 
 
 	private String containerName(ReplicationProvider container) {
-		if (container == _containerA) return A;
-		if (container == _containerB) return B;
+		if (container == _providerA) return A;
+		if (container == _providerB) return B;
 		throw new IllegalStateException();
 	}
 
@@ -347,32 +346,27 @@ public abstract class ReplicationFeaturesMain {
 		throw new RuntimeException(string);
 	}
 
-	protected abstract TestableReplicationProviderInside prepareProviderB();
-
-	protected abstract TestableReplicationProviderInside prepareProviderA();
-
 	private void initState() {
-		_containerA = prepareProviderA();
-		_containerB = prepareProviderB();
+		_providerA = prepareProviderA();
+		_providerB = prepareProviderB();
 
-		_containerA.delete(Replicated.class);
-		_containerB.delete(Replicated.class);
+		_providerA.delete(Replicated.class);
+		_providerB.delete(Replicated.class);
 
-		checkEmpty(_containerA);
-		checkEmpty(_containerB);
+		checkEmpty(_providerA);
+		checkEmpty(_providerB);
 
-		final ReplicationSession replication = new GenericReplicationSession(_containerA, _containerB, new ConflictResolver() {
+		_providerA.storeNew(new Replicated("oldFromA"));
+		_providerB.storeNew(new Replicated("oldFromB"));
+
+		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ConflictResolver() {
 			public Object resolveConflict(ReplicationSession session, Object a, Object b) {
 				return null;
 			}
 		});
 
-		_containerA.storeNew(new Replicated("oldFromA"));
-		_containerB.storeNew(new Replicated("oldFromB"));
-
-
-		replicateQueryingFrom(replication, _containerA);
-		replicateQueryingFrom(replication, _containerB);
+		replicateQueryingFrom(replication, _providerA);
+		replicateQueryingFrom(replication, _providerB);
 
 		replication.commit();
 	}
