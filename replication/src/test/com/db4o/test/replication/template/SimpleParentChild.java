@@ -1,16 +1,39 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.test.replication;
+package com.db4o.test.replication.template;
 
+import com.db4o.foundation.Iterator4;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.Test;
+import com.db4o.test.replication.ProviderPair;
+import com.db4o.test.replication.ReplicationTestcase;
+import com.db4o.test.replication.SPCChild;
+import com.db4o.test.replication.SPCParent;
 
 public abstract class SimpleParentChild extends ReplicationTestcase {
+	public SimpleParentChild() {
+		super();
+	}
 
+	//TODO move to super class
 	public void test() {
+		final Iterator4 it = providerPairs.strictIterator();
 
-		init();
+		while (it.hasNext()) {
+			ProviderPair p = (ProviderPair) it.next();
+			init(p);
+			printCombination(p);
+			actualTst();
+		}
+	}
 
+	//TODO move to super class
+	private void init(ProviderPair p) {
+		_providerA = p._providerA;
+		_providerB = p._providerB;
+	}
+
+	private void actualTst() {
 		clean();
 
 		storeParentAndChildToProviderA();

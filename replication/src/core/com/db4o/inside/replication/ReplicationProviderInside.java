@@ -107,4 +107,6 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 * @param visitor implements the visit functions, including copying of object states, and storing of changed objects
 	 */
 	void visitCachedReferences(Visitor4 visitor);
+
+	String getName();
 }
