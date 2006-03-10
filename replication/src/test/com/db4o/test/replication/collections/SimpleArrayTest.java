@@ -6,8 +6,6 @@ import com.db4o.ObjectSet;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.Test;
 import com.db4o.test.replication.ReplicationTestcase;
-import com.db4o.test.replication.SPCChild;
-import com.db4o.test.replication.SPCParent;
 
 
 public abstract class SimpleArrayTest extends ReplicationTestcase {
@@ -118,11 +116,4 @@ public abstract class SimpleArrayTest extends ReplicationTestcase {
 			}
 		}
 	}
-
-	private void ensureOneInstanceOfParentAndChild(TestableReplicationProviderInside provider) {
-		ensureOneInstance(provider, SPCParent.class);
-		ensureOneInstance(provider, SPCChild.class);
-	}
-
-
 }
