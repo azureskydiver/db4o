@@ -154,6 +154,7 @@ public abstract class ReplicationFeaturesMain {
 		initState();
 		//reopenContainers();
 
+		performChanges();
 
 		final ReplicationSession replication = new GenericReplicationSession(_containerA, _containerB, new ConflictResolver() {
 
@@ -163,9 +164,6 @@ public abstract class ReplicationFeaturesMain {
 			}
 
 		});
-
-		performChanges();
-
 
 		if (_direction.size() == 1) {
 			if (_direction.contains(A)) {

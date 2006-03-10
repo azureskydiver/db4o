@@ -1,6 +1,7 @@
 package com.db4o.replication.hibernate.ref_as_table;
 
 import com.db4o.replication.hibernate.common.ReplicationProviderSignature;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class ReplicationReference {
 	public static final String TABLE_NAME = "ReplicationReference";
@@ -54,5 +55,15 @@ public class ReplicationReference {
 
 	public void setVersion(long version) {
 		this.version = version;
+	}
+
+	public String toString() {
+		return new ToStringBuilder(this).
+				append("className", className).
+				append("objectId", objectId).
+				append("uuidLongPart", uuidLongPart).
+				append("version", version).
+				append("provider", provider).
+				toString();
 	}
 }

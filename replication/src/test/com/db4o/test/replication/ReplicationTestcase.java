@@ -72,10 +72,13 @@ public abstract class ReplicationTestcase {
 	}
 
 	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {
+		//System.out.println("ReplicationTestcase.replicateClass");
 		ReplicationSession replication = Replication.begin(providerA, providerB);
 		ObjectSet allObjects = providerA.objectsChangedSinceLastReplication(clazz);
 		while (allObjects.hasNext()) {
-			replication.replicate(allObjects.next());
+			final Object obj = allObjects.next();
+			//System.out.println("obj = " + obj);
+			replication.replicate(obj);
 		}
 		replication.commit();
 	}

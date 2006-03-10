@@ -9,7 +9,6 @@ import com.db4o.inside.replication.CollectionHandler;
 import com.db4o.inside.replication.CollectionHandlerImpl;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
-import com.db4o.inside.replication.ReplicationReferenceImpl;
 import com.db4o.inside.replication.ReplicationReflector;
 import com.db4o.inside.replication.TestableReplicationProvider;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
@@ -18,6 +17,7 @@ import com.db4o.inside.traversal.Traverser;
 import com.db4o.inside.traversal.Traverser.Visitor;
 import com.db4o.reflect.Reflector;
 import com.db4o.replication.hibernate.common.MySignature;
+import com.db4o.replication.hibernate.common.ReplicationReferenceImpl;
 
 import java.util.IdentityHashMap;
 import java.util.Iterator;

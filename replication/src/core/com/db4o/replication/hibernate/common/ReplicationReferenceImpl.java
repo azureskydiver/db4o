@@ -1,6 +1,8 @@
-package com.db4o.inside.replication;
+package com.db4o.replication.hibernate.common;
 
-import com.db4o.ext.*;
+import com.db4o.ext.Db4oUUID;
+import com.db4o.inside.replication.ReplicationReference;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class ReplicationReferenceImpl implements ReplicationReference {
 	private Object obj;
@@ -16,7 +18,7 @@ public class ReplicationReferenceImpl implements ReplicationReference {
 	}
 
 	public void setObject(Object obj) {
-		this.obj=obj;
+		this.obj = obj;
 	}
 
 	public Object object() {
@@ -33,7 +35,7 @@ public class ReplicationReferenceImpl implements ReplicationReference {
 
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		
+
 		if (o == null || o.getClass().getSuperclass() != o.getClass().getSuperclass()) return false;
 
 		final ReplicationReference that = (ReplicationReferenceImpl) o;
@@ -60,10 +62,20 @@ public class ReplicationReferenceImpl implements ReplicationReference {
 	}
 
 	public void markForReplicating() {
-		markedForReplicating=true;
+		markedForReplicating = true;
 	}
 
 	public boolean isMarkedForReplicating() {
 		return markedForReplicating;
+	}
+
+	public String toString() {
+		return new ToStringBuilder(this).
+				append("className", obj).
+				append("objectId", uuid).
+				append("version", version).
+				append("counterPart", counterPart).
+				append("markedForReplicating", markedForReplicating).
+				toString();
 	}
 }
