@@ -13,36 +13,41 @@ import com.db4o.test.Test;
 import java.io.File;
 
 public class Db4oReplicationTestUtil {
+	static boolean MEMORY_FILE = true;
 
-	private static ObjectContainer _objectcontainer;
+	static ObjectContainer ocB;
 
 	public static final String PROVIDER_B_FILE = "providerB.yap";
 
-	static MemoryFile memoryFile;
-
 	public static void configure() {
-		Test.MEMORY_FILE = true;
+		Test.MEMORY_FILE = MEMORY_FILE;
 
 		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+
+		clean();
+
+		if (MEMORY_FILE) {
+			ocB = ExtDb4o.openMemoryFile(new MemoryFile());
+		} else
+			ocB = Db4o.openFile(PROVIDER_B_FILE);
+	}
+
+	private static void clean() {
 		new File(PROVIDER_B_FILE).delete();
 	}
 
+	public static TestableReplicationProviderInside providerA() {
+		return new Db4oReplicationProvider(Test.objectContainer(), "db4o-a");
+	}
+
 	public static TestableReplicationProviderInside providerB() {
-		if (_objectcontainer == null) {
-			if (Test.MEMORY_FILE) {
-				memoryFile = new MemoryFile();
-				_objectcontainer = ExtDb4o.openMemoryFile(memoryFile);
-			} else
-				_objectcontainer = Db4o.openFile(PROVIDER_B_FILE);
-		}
-		return new Db4oReplicationProvider(_objectcontainer, "db4o (b)");
+		return new Db4oReplicationProvider(ocB, "db4o-b");
 	}
 
 	public static void close() {
-		if (_objectcontainer != null) {
-			_objectcontainer.close();
-			_objectcontainer = null;
-		}
+		if (null != ocB)
+			while (!ocB.close()) {}
+		clean();
 	}
 }
