@@ -30,7 +30,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 	<class name="com.db4o.replication.hibernate.ref_as_table.ReplicationReference"
 	       table="ReplicationReference">
 
-		<id column="id" type="int">
+		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
 

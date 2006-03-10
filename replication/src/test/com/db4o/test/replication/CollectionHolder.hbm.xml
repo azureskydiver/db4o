@@ -28,7 +28,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 <hibernate-mapping default-access="field" default-lazy="false">
 	<class name="com.db4o.test.replication.CollectionHolder" table="CollectionHolder">
-		<id column="id" type="int">
+		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
 		<property name="_name"/>

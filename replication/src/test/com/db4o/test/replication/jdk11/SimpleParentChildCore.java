@@ -15,8 +15,8 @@ public class SimpleParentChildCore extends SimpleParentChild {
 		b = new TransientReplicationProvider(new byte[]{1}, "Transient");
 		addProviderPairs(a, b);
 
-		a = Db4oReplicationTestUtil.providerA();
-		b = Db4oReplicationTestUtil.providerB();
+		a = Db4oReplicationTestUtil.newProviderA();
+		b = Db4oReplicationTestUtil.newProviderB();
 		addProviderPairs(a, b);
 
 		//Second run

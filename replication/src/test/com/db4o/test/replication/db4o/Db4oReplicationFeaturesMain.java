@@ -14,7 +14,7 @@ public class Db4oReplicationFeaturesMain extends ReplicationFeaturesMain {
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		return Db4oReplicationTestUtil.providerB();
+		return Db4oReplicationTestUtil.newProviderB();
 	}
 
 	public void test() {

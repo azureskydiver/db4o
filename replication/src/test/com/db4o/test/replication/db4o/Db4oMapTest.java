@@ -12,7 +12,7 @@ public class Db4oMapTest extends MapTest {
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		return Db4oReplicationTestUtil.providerB();
+		return Db4oReplicationTestUtil.newProviderB();
 	}
 
 	public void test() {

@@ -15,7 +15,7 @@ public class Db4oSimplePerformanceTests extends SimplePerformanceTests {
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		return Db4oReplicationTestUtil.providerB();
+		return Db4oReplicationTestUtil.newProviderB();
 	}
 
 	public void test() {
