@@ -30,6 +30,10 @@ public abstract class R0to4Runner extends ReplicationTestcase {
 			printCombination(pair);
 			tst();
 		}
+
+		providerPairs = null;
+
+		System.gc();
 	}
 
 	private void tst() {

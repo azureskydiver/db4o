@@ -68,7 +68,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	/**
 	 * Objects which meta data not yet updated.
 	 */
-	private final Set<ReplicationReference> _dirtyRefs = new HashSet();
+	private Set<ReplicationReference> _dirtyRefs = new HashSet();
 
 	/**
 	 * The ReplicationProviderSignature of this  Hibernate-mapped database.
@@ -80,7 +80,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	 */
 	protected PeerSignature _peerSignature;
 
-	protected final Map _referencesByObject = new IdentityHashMap();
+	protected Map _referencesByObject = new IdentityHashMap();
 	/**
 	 * The ReplicationRecord of {@link #_peerSignature}.
 	 */
@@ -96,9 +96,9 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected final CollectionHandler _collectionHandler = new CollectionHandlerImpl();
 
-	protected final Set _uuidsReplicatedInThisSession = new HashSet();
+	protected Set _uuidsReplicatedInThisSession = new HashSet();
 
-	protected boolean _inReplication = false;
+	private boolean _inReplication = false;
 
 	protected Reflector _reflector = new ReplicationReflector().reflector();
 
@@ -126,15 +126,19 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		return "name = " + _name;
 	}
 
+	protected boolean isReplicationActive() {
+		return _inReplication;
+	}
+
 	protected void ensureReplicationActive() {
 		ensureAlive();
-		if (!_inReplication)
+		if (!isReplicationActive())
 			throw new UnsupportedOperationException("Method not supported because replication transaction is not active");
 	}
 
 	protected void ensureReplicationInActive() {
 		ensureAlive();
-		if (_inReplication)
+		if (isReplicationActive())
 			throw new UnsupportedOperationException("Method not supported because replication transaction is active");
 	}
 
@@ -726,17 +730,30 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected abstract void incrementObjectVersion(PostUpdateEvent event);
 
-	public void destroy() {
+	public synchronized void destroy() {
+		_alive = false;
+
 		_objectSession.close();
 		_objectSessionFactory.close();
-		_alive = false;
+
+		_objectTransaction = null;
+		_objectSession = null;
+		_objectSessionFactory = null;
+
+		_mappedClasses = null;
+		_dirtyRefs = null;
+
+		_referencesByObject = null;
+		_uuidsReplicatedInThisSession = null;
+
+		_reflector = null;
 	}
 
 	protected abstract void saveOrUpdateReplicaMetadata(ReplicationReference ref);
 
 	final class MyFlushEventListener implements FlushEventListener {
 		public final void onFlush(FlushEvent event) throws HibernateException {
-			if (!_inReplication) return;
+			if (!isReplicationActive()) return;
 
 			for (Iterator iterator = _dirtyRefs.iterator(); iterator.hasNext();) {
 				ReplicationReference ref = (ReplicationReference) iterator.next();
@@ -749,7 +766,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	final class MyPostUpdateEventListener implements PostUpdateEventListener {
 		public final void onPostUpdate(PostUpdateEvent event) {
 			synchronized (AbstractReplicationProvider.this) {
-				if (_inReplication) return;
+				if (isReplicationActive()) return;
 
 				Object entity = event.getEntity();
 
