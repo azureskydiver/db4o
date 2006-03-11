@@ -35,14 +35,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		</id>
 
 		<natural-id mutable="false">
-			<property name="className"/>
-			<property name="objectId"/>
+			<property name="className" column="className"/>
+			<property name="objectId" column="objectId"/>
 		</natural-id>
 
-		<property name="uuidLongPart"/>
-		<many-to-one name="provider"/>
+		<property name="uuidLongPart" column="uuidLongPart"/>
+		<many-to-one name="provider" column="provider"/>
 
-		<property name="version"/>
+		<property name="version" column="version"/>
 
 	</class>
 </hibernate-mapping>

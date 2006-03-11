@@ -113,13 +113,15 @@ public class StepByStepRefAsTablesExample {
 		System.out.println("Changing the name of Pilot from 'John' to 'Anna'");
 		john.name = "Anna";
 
+		System.out.println("Remember to call session.flush() after changing an object.");
+		session.flush();
+
 		tx.commit();
 
 		session.close();
 		sessionFactory.close();
 
 		System.out.println("The change is commited and the version number of Anna is incremented.");
-
 	}
 
 	private void replicateChangesToDb4o() {

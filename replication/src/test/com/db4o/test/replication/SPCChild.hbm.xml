@@ -6,7 +6,7 @@
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping default-access="property">
+<hibernate-mapping default-access="property" default-lazy="false">
 	<class name="com.db4o.test.replication.SPCChild">
 		<id column="id" type="long">
 			<generator class="native"/>

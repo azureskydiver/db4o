@@ -106,7 +106,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 
 		long id = Shared.castAsLong(getObjectSession().getIdentifier(obj));
 
-		final List exisitings = Shared.getByHibernateId(getRefSession(), obj.getClass().getName(), id);
+		final List exisitings = getRefById(id, obj);
 
 		int count = exisitings.size();
 
@@ -125,6 +125,13 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		return createReference(obj, new Db4oUUID(ref.getUuidLongPart(), ref.getProvider().getBytes()), ref.getVersion());
 	}
 
+	protected List getRefById(long id, Object obj) {
+		Criteria criteria = getRefSession().createCriteria(ReplicationReference.class);
+		criteria.add(Restrictions.eq(ReplicationReference.OBJECT_ID, id));
+		criteria.add(Restrictions.eq(ReplicationReference.CLASS_NAME, obj.getClass().getName()));
+		return criteria.list();
+	}
+
 	protected void saveOrUpdateReplicaMetadata(com.db4o.inside.replication.ReplicationReference ref) {
 		ensureReplicationActive();
 		final Object obj = ref.object();
@@ -132,7 +139,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		final long id = Shared.castAsLong(getObjectSession().getIdentifier(obj));
 		final Session s = getRefSession();
 
-		final List existings = Shared.getByHibernateId(s, obj.getClass().getName(), id);
+		final List existings = getRefById(id, obj);
 		if (existings.size() == 0) {
 			ReplicationProviderSignature provider = getProviderSignature(ref.uuid().getSignaturePart());
 
