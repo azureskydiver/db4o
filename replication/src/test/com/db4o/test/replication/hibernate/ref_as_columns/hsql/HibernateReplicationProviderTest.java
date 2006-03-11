@@ -3,6 +3,7 @@ package com.db4o.test.replication.hibernate.ref_as_columns.hsql;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.common.ReplicationReferenceImpl;
 import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.collections.ListContent;
@@ -18,7 +19,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class HibernateReplicationProviderTest extends ReplicationProviderTest {
-	protected RefAsColumnsReplicationProvider hibernateReplicationProvider;
+	protected HibernateReplicationProvider hibernateReplicationProvider;
 
 	public void testReplicationProvider() {
 		super.testReplicationProvider();
@@ -74,15 +75,18 @@ public class HibernateReplicationProviderTest extends ReplicationProviderTest {
 	}
 
 	protected TestableReplicationProviderInside prepareSubject() {
+		hibernateReplicationProvider = new RefAsColumnsReplicationProvider(newCfg());
+		return hibernateReplicationProvider;
+	}
+
+	protected static Configuration newCfg() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 
 		configuration.addClass(Car.class);
 		configuration.addClass(Pilot.class);
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);
-
-		hibernateReplicationProvider = new RefAsColumnsReplicationProvider(configuration);
-		return hibernateReplicationProvider;
+		return configuration;
 	}
 
 	protected void destroySubject() {

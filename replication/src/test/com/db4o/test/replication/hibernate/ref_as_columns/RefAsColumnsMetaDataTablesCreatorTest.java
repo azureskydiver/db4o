@@ -1,4 +1,4 @@
-package com.db4o.test.replication.hibernate.ref_as_columns.hsql;
+package com.db4o.test.replication.hibernate.ref_as_columns;
 
 import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsConfiguration;
 import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsSchemaValidator;
@@ -10,7 +10,12 @@ public abstract class RefAsColumnsMetaDataTablesCreatorTest {
 	public RefAsColumnsMetaDataTablesCreatorTest() {
 	}
 
-	public void testCreate() {
+	public void test() {
+		tstValidate();
+		tstCreate();
+	}
+
+	public void tstCreate() {
 		Configuration cfg = createCfg();
 		RefAsColumnsConfiguration rc = RefAsColumnsConfiguration.produce(cfg);
 		final RefAsColumnsTablesCreator creator = new RefAsColumnsTablesCreator(rc);
@@ -23,7 +28,7 @@ public abstract class RefAsColumnsMetaDataTablesCreatorTest {
 		validator.destroy();
 	}
 
-	public void testValidate() {
+	public void tstValidate() {
 		Configuration cfg = validateCfg();
 		RefAsColumnsConfiguration rc = RefAsColumnsConfiguration.produce(cfg);
 		final RefAsColumnsTablesCreator creator = new RefAsColumnsTablesCreator(rc);

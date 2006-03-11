@@ -2,17 +2,18 @@
 
 package com.db4o.test.replication;
 
-import com.db4o.inside.replication.*;
+import com.db4o.ObjectSet;
+import com.db4o.inside.replication.GenericReplicationSession;
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
-import com.db4o.ObjectSet;
 
 public abstract class MixedTypesCollectionReplicationTest {
 
 	public void testCollectionReplication() {
-		TestableReplicationProvider _containerA;
-		TestableReplicationProvider _containerB;
+		TestableReplicationProviderInside _containerA;
+		TestableReplicationProviderInside _containerB;
 
 		_containerA = prepareProviderA();
 		_containerB = prepareProviderB();
@@ -56,13 +57,13 @@ public abstract class MixedTypesCollectionReplicationTest {
 		replication.commit();
 
 		ObjectSet objects = _containerA.getStoredObjects(CollectionHolder.class);
-		check((CollectionHolder)objects.next(), h1, h2);
-		check((CollectionHolder)objects.next(), h1, h2);
+		check((CollectionHolder) objects.next(), h1, h2);
+		check((CollectionHolder) objects.next(), h1, h2);
 	}
 
-	protected abstract TestableReplicationProvider prepareProviderB();
+	protected abstract TestableReplicationProviderInside prepareProviderB();
 
-	protected abstract TestableReplicationProvider prepareProviderA();
+	protected abstract TestableReplicationProviderInside prepareProviderA();
 
 	private void check(CollectionHolder holder, CollectionHolder original1, CollectionHolder original2) {
 		Test.ensure(holder != original1);
@@ -87,16 +88,16 @@ public abstract class MixedTypesCollectionReplicationTest {
 	}
 
 	private void checkH2(CollectionHolder holder) {
-		Test.ensureEquals("h1", ((CollectionHolder)holder._map.get("key"))._name);
-		Test.ensureEquals("h1", ((CollectionHolder)holder._map.get(holder))._name);
+		Test.ensureEquals("h1", ((CollectionHolder) holder._map.get("key"))._name);
+		Test.ensureEquals("h1", ((CollectionHolder) holder._map.get(holder))._name);
 
 		Test.ensureEquals("two", holder._list.get(0));
-		Test.ensureEquals("h1", ((CollectionHolder)holder._list.get(1))._name);
+		Test.ensureEquals("h1", ((CollectionHolder) holder._list.get(1))._name);
 		Test.ensureEquals(holder, holder._list.get(2));
 
 		Test.ensure(holder._set.remove("two"));
 		Test.ensure(holder._set.remove(holder));
-		CollectionHolder remaining = (CollectionHolder)holder._set.iterator().next();
+		CollectionHolder remaining = (CollectionHolder) holder._set.iterator().next();
 		Test.ensureEquals("h1", remaining._name);
 	}
 
