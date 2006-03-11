@@ -6,7 +6,6 @@ import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicat
 
 public class ReplicationProviderTestHsqlRefAsTable extends HibernateReplicationProviderTest {
 	protected TestableReplicationProviderInside prepareSubject() {
-		hibernateReplicationProvider = HibernateUtil.newRefAsTable(newCfg(), "subject");
-		return hibernateReplicationProvider;
+		return HibernateUtil.newRefAsTable(newCfg(), "subject");
 	}
 }

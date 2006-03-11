@@ -11,7 +11,7 @@ import com.db4o.test.Test;
 import java.util.Vector;
 
 public abstract class ReplicationProviderTest extends Test {
-
+	protected TestableReplicationProviderInside subject;
 	protected static final byte[] PEER_SIGNATURE_BYTES = new byte[]{1, 2, 3, 4};
 	protected static final PeerSignature PEER_SIGNATURE = new PeerSignature(PEER_SIGNATURE_BYTES);
 
@@ -31,7 +31,7 @@ public abstract class ReplicationProviderTest extends Test {
 	private void tstRollback() {
 		if (!subjectSupportsRollback()) return;
 
-		TestableReplicationProviderInside subject = prepareSubject();
+		subject = prepareSubject();
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Db4oUUID uuid = new Db4oUUID(5678, PEER_SIGNATURE_BYTES);
@@ -54,7 +54,7 @@ public abstract class ReplicationProviderTest extends Test {
 	protected abstract boolean subjectSupportsRollback();
 
 	private void tstStore() {
-		TestableReplicationProviderInside subject = prepareSubject();
+		subject = prepareSubject();
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Db4oUUID uuid = new Db4oUUID(1234, PEER_SIGNATURE_BYTES);
@@ -88,7 +88,7 @@ public abstract class ReplicationProviderTest extends Test {
 
 		Pilot object1 = new Pilot("tst References", 42);
 
-		TestableReplicationProviderInside subject = prepareSubject();
+		subject = prepareSubject();
 
 		subject.storeNew(object1);
 
@@ -112,7 +112,7 @@ public abstract class ReplicationProviderTest extends Test {
 
 
 	private void tstObjectsChangedSinceLastReplication() {
-		TestableReplicationProviderInside subject = prepareSubject();
+		subject = prepareSubject();
 
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Pilot object2 = new Pilot("Terry Gilliam", 53);
@@ -158,7 +158,7 @@ public abstract class ReplicationProviderTest extends Test {
 
 
 	private void tstVersionIncrement() {
-		TestableReplicationProviderInside subject = prepareSubject();
+		subject = prepareSubject();
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		// This won't work for db4o: There is no guarantee that the version starts with 1.
@@ -180,7 +180,7 @@ public abstract class ReplicationProviderTest extends Test {
 
 
 	private void tstSignature() {
-		TestableReplicationProviderInside subject = prepareSubject();
+		subject = prepareSubject();
 		ensure(subject.getSignature() != null);
 		destroySubject();
 	}

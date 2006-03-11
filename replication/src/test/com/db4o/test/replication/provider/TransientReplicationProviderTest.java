@@ -10,7 +10,7 @@ public class TransientReplicationProviderTest extends ReplicationProviderTest {
 	}
 
 	protected void destroySubject() {
-		//do nothing
+		subject = null;
 	}
 
 	protected boolean subjectSupportsRollback() {

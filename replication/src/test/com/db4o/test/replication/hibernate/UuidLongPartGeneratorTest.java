@@ -1,9 +1,8 @@
-package com.db4o.test.replication.hibernate.ref_as_columns.hsql;
+package com.db4o.test.replication.hibernate;
 
 import com.db4o.replication.hibernate.common.UuidLongPartGenerator;
 import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsConfiguration;
 import com.db4o.test.Test;
-import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;

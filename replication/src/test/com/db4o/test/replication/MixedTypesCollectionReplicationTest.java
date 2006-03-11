@@ -4,19 +4,14 @@ package com.db4o.test.replication;
 
 import com.db4o.ObjectSet;
 import com.db4o.inside.replication.GenericReplicationSession;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
-public abstract class MixedTypesCollectionReplicationTest {
-
+public abstract class MixedTypesCollectionReplicationTest extends ReplicationTestcase {
 	public void testCollectionReplication() {
-		TestableReplicationProviderInside _containerA;
-		TestableReplicationProviderInside _containerB;
-
-		_containerA = prepareProviderA();
-		_containerB = prepareProviderB();
+		_providerA = prepareProviderA();
+		_providerB = prepareProviderB();
 
 		CollectionHolder h1 = new CollectionHolder("h1");
 		CollectionHolder h2 = new CollectionHolder("h2");
@@ -43,10 +38,10 @@ public abstract class MixedTypesCollectionReplicationTest {
 		h2._set.add(h2);
 
 
-		_containerB.storeNew(h2);
-		_containerB.storeNew(h1);
+		_providerB.storeNew(h2);
+		_providerB.storeNew(h1);
 
-		final ReplicationSession replication = new GenericReplicationSession(_containerA, _containerB, new ConflictResolver() {
+		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ConflictResolver() {
 			public Object resolveConflict(ReplicationSession session, Object a, Object b) {
 				return null;
 			}
@@ -56,14 +51,12 @@ public abstract class MixedTypesCollectionReplicationTest {
 
 		replication.commit();
 
-		ObjectSet objects = _containerA.getStoredObjects(CollectionHolder.class);
+		ObjectSet objects = _providerA.getStoredObjects(CollectionHolder.class);
 		check((CollectionHolder) objects.next(), h1, h2);
 		check((CollectionHolder) objects.next(), h1, h2);
+
+		destroy();
 	}
-
-	protected abstract TestableReplicationProviderInside prepareProviderB();
-
-	protected abstract TestableReplicationProviderInside prepareProviderA();
 
 	private void check(CollectionHolder holder, CollectionHolder original1, CollectionHolder original2) {
 		Test.ensure(holder != original1);

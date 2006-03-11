@@ -25,6 +25,7 @@ public abstract class SimpleParentChild extends ReplicationTestcase {
 			printCombination(p);
 			actualTst();
 		}
+		providerPairs = null;
 	}
 
 	private void actualTst() {
@@ -43,6 +44,8 @@ public abstract class SimpleParentChild extends ReplicationTestcase {
 		replicateParentClassStep3();
 
 		clean();
+
+		destroy();
 	}
 
 	private void clean() {delete(new Class[]{SPCParent.class, SPCChild.class});}

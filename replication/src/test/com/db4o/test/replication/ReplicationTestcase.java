@@ -74,6 +74,9 @@ public abstract class ReplicationTestcase {
 	protected void destroy() {
 		_providerA.destroy();
 		_providerB.destroy();
+
+		_providerA = null;
+		_providerB = null;
 	}
 
 	protected void delete(Class[] classes) {

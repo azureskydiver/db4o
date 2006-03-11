@@ -11,18 +11,21 @@ import com.db4o.reflect.Reflector;
 
 
 public class ReplicationReflector {
-
+	private static ReplicationReflector instance = new ReplicationReflector();
 	private final Reflector _reflector;
 	private final ReflectArray _arrayReflector;
 
-	public ReplicationReflector() {
-
+	private ReplicationReflector() {
 		ExtObjectContainer tempOcToGetReflector = ExtDb4o.openMemoryFile(new MemoryFile()).ext();
 //      FIXME: Find a better way without depending on ExtDb4o.  :P
 
 		_reflector = tempOcToGetReflector.reflector();
 		_arrayReflector = _reflector.array();
 		tempOcToGetReflector.close();
+	}
+
+	public static ReplicationReflector getInstance() {
+		return instance;
 	}
 
 	public Object[] arrayContents(Object array) {

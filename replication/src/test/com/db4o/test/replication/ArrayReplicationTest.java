@@ -4,19 +4,15 @@ package com.db4o.test.replication;
 
 import com.db4o.ObjectSet;
 import com.db4o.inside.replication.GenericReplicationSession;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
-public abstract class ArrayReplicationTest {
+public abstract class ArrayReplicationTest extends ReplicationTestcase {
 
 	public void testArrayReplication() {
-		TestableReplicationProviderInside _containerA;
-		TestableReplicationProviderInside _containerB;
-
-		_containerA = prepareProviderA();
-		_containerB = prepareProviderB();
+		_providerA = prepareProviderA();
+		_providerB = prepareProviderB();
 
 		ArrayHolder h1 = new ArrayHolder("h1");
 		ArrayHolder h2 = new ArrayHolder("h2");
@@ -28,10 +24,10 @@ public abstract class ArrayReplicationTest {
 
 		h2._arrayN = new ArrayHolder[][]{{h1, null}, {null, h2}, {null, null}}; //TODO Fix ReflectArray.shape() and test with innermost arrays of varying sizes:  {{h1}, {null, h2}, {null}}
 
-		_containerB.storeNew(h2);
-		_containerB.storeNew(h1);
+		_providerB.storeNew(h2);
+		_providerB.storeNew(h1);
 
-		final ReplicationSession replication = new GenericReplicationSession(_containerA, _containerB, new ConflictResolver() {
+		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ConflictResolver() {
 			public Object resolveConflict(ReplicationSession session, Object a, Object b) {
 				return null;
 			}
@@ -41,14 +37,12 @@ public abstract class ArrayReplicationTest {
 
 		replication.commit();
 
-		ObjectSet objects = _containerA.getStoredObjects(ArrayHolder.class);
+		ObjectSet objects = _providerA.getStoredObjects(ArrayHolder.class);
 		check((ArrayHolder) objects.next());
 		check((ArrayHolder) objects.next());
+
+		destroy();
 	}
-
-	protected abstract TestableReplicationProviderInside prepareProviderB();
-
-	protected abstract TestableReplicationProviderInside prepareProviderA();
 
 	private void check(ArrayHolder holder) {
 		if (holder._name.equals("h1"))
