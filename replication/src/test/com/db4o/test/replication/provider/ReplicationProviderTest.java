@@ -172,10 +172,7 @@ public abstract class ReplicationProviderTest extends Test {
 		long version = subject.getCurrentVersion();
 
 		ensure(version >= 5000 && version <= 5002);
-		long v = subject.getLastReplicationVersion();
-		ensure(subject.getLastReplicationVersion() == 5000);
 		destroySubject();
-
 	}
 
 

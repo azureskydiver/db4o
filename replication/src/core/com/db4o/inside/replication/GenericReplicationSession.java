@@ -19,21 +19,20 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	private final CollectionHandler _collectionHandler;
 
-	private final ReplicationProviderInside _peerA;
-	private final ReplicationProviderInside _peerB;
+	private ReplicationProviderInside _peerA;
+	private ReplicationProviderInside _peerB;
 
 	private ReplicationProvider _directionTo; //null means bidirectional replication.
 
 	private final ConflictResolver _resolver;
 
-	private final long _lastReplicationVersion;
 	private final Traverser _traverser;
 
 	/**
 	 * key = object originated from one provider
 	 * value = the counterpart ReplicationReference of the original object
 	 */
-	private final Hashtable4 _originalCounterPartRefMap = new Hashtable4(10000);
+	private Hashtable4 _originalCounterPartRefMap = new Hashtable4(10000);
 
 	public GenericReplicationSession(ReplicationProvider providerA, ReplicationProvider providerB, ConflictResolver resolver) {
 
@@ -51,8 +50,6 @@ public class GenericReplicationSession implements ReplicationSession {
 				_peerB.startReplicationTransaction(_peerA.getSignature());
 			}
 		}
-
-		_lastReplicationVersion = _peerA.getLastReplicationVersion();
 	}
 
 	public GenericReplicationSession(ReplicationProviderInside _peerA, ReplicationProviderInside _peerB) {
@@ -230,7 +227,7 @@ public class GenericReplicationSession implements ReplicationSession {
 		if (claxx.isSecondClass()) return obj;
 		if (claxx.isArray()) return arrayClone(obj, claxx, sourceProvider);
 		if (_collectionHandler.canHandle(claxx)) {
-			return collectionClone(obj, claxx, sourceProvider);
+			return collectionClone(obj, claxx);
 		}
 		claxx.skipConstructor(true); // FIXME This is ridiculously slow to do every time. Should ALWAYS be done automatically in the reflector.
 		Object result = claxx.newInstance();
@@ -270,7 +267,7 @@ public class GenericReplicationSession implements ReplicationSession {
 		return result;
 	}
 
-	private Object collectionClone(Object original, ReflectClass claxx, final ReplicationProviderInside sourceProvider) {
+	private Object collectionClone(Object original, ReflectClass claxx) {
 		return _collectionHandler.emptyClone(original, claxx);
 	}
 
@@ -323,6 +320,10 @@ public class GenericReplicationSession implements ReplicationSession {
 	public void close() {
 		_peerA.destroy();
 		_peerB.destroy();
+
+		_peerA = null;
+		_peerB = null;
+		_originalCounterPartRefMap = null;
 	}
 
 	public void commit() {
