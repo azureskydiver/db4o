@@ -46,7 +46,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		_signature = new MySignature(signature);
 		_name = name;
 
-		ReplicationReflector reflector = new ReplicationReflector();
+		ReplicationReflector reflector = ReplicationReflector.getInstance();
 		CollectionHandler _collectionHandler = new CollectionHandlerImpl(reflector.reflector());
 		_traverser = new MyTraverser(reflector.reflector(), _collectionHandler);
 	}

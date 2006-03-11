@@ -100,7 +100,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	private boolean _inReplication = false;
 
-	protected Reflector _reflector = new ReplicationReflector().reflector();
+	protected Reflector _reflector = ReplicationReflector.getInstance().reflector();
 
 	protected UuidLongPartGenerator uuidLongPartGenerator;
 

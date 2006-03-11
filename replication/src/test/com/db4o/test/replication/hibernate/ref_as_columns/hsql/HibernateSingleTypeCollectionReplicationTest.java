@@ -25,4 +25,8 @@ public class HibernateSingleTypeCollectionReplicationTest extends SingleTypeColl
 	public void testCollectionReplication() {
 		super.testCollectionReplication();
 	}
+
+	protected void cleanUp() {
+		//do nothing
+	}
 }

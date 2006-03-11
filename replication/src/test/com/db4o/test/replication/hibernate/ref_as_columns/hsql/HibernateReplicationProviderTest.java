@@ -3,7 +3,6 @@ package com.db4o.test.replication.hibernate.ref_as_columns.hsql;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.common.ReplicationReferenceImpl;
 import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.collections.ListContent;
@@ -19,8 +18,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class HibernateReplicationProviderTest extends ReplicationProviderTest {
-	protected HibernateReplicationProvider hibernateReplicationProvider;
-
 	public void testReplicationProvider() {
 		super.testReplicationProvider();
 		tstCollection();
@@ -75,8 +72,7 @@ public class HibernateReplicationProviderTest extends ReplicationProviderTest {
 	}
 
 	protected TestableReplicationProviderInside prepareSubject() {
-		hibernateReplicationProvider = new RefAsColumnsReplicationProvider(newCfg());
-		return hibernateReplicationProvider;
+		return new RefAsColumnsReplicationProvider(newCfg());
 	}
 
 	protected static Configuration newCfg() {
@@ -90,6 +86,7 @@ public class HibernateReplicationProviderTest extends ReplicationProviderTest {
 	}
 
 	protected void destroySubject() {
-		hibernateReplicationProvider.destroy();
+		subject.destroy();
+		subject = null;
 	}
 }

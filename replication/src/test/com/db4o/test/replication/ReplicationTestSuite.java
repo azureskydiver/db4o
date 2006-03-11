@@ -12,6 +12,7 @@ import com.db4o.test.replication.db4o.Db4oSingleTypeCollectionReplicationTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateListTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateSimpleArrayTest;
 import com.db4o.test.replication.db4o.hibernate.HibernateDb4oListTest;
+import com.db4o.test.replication.hibernate.UuidLongPartGeneratorTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.Db4oHibernateMapTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateDb4oMapTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateListTest;
@@ -23,7 +24,6 @@ import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateSimpleAr
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateSingleTypeCollectionReplicationTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HsqlMetaDataTablesCreatorTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.ReplicationConfiguratorTest;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.UuidLongPartGeneratorTest;
 import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.AfterDeletionTestHsqlRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.ListTestHsqlRefAsTable;
@@ -49,12 +49,15 @@ import com.db4o.test.replication.transients.TransientSingleTypeCollectionReplica
 public class ReplicationTestSuite extends TestSuite {
 
 	public Class[] tests() {
-
-		// System.err.println("Db4oReplicationProvider.getReference(obj).version() must return the latest version of all collections held by obj because collections are being treated as 2nd class objects (like arrays) for hibernate replication purposes.");
-		// System.err.println("Overcome absence of constructor in VMs other than Sun's.");
-
-
 		return new Class[]{
+				TransientReplicationFeaturesMain.class,
+				Db4oReplicationFeaturesMain.class,
+				HibernateReplicationFeaturesMain.class,
+				RefAsTableReplicationFeaturesMain.class,
+
+				CollectionHandlerImplTest.class,
+				GetByUUID.class,
+
 				HsqlMetaDataTablesCreatorTest.class,
 				RefAsTableTablesCreatorTestHsql.class,
 
@@ -109,11 +112,6 @@ public class ReplicationTestSuite extends TestSuite {
 
 				ReplicationTraversalTest.class,
 				ReplicationFeatures.class,
-
-				TransientReplicationFeaturesMain.class,
-				Db4oReplicationFeaturesMain.class,
-				HibernateReplicationFeaturesMain.class,
-				RefAsTableReplicationFeaturesMain.class,
 		};
 	}
 }

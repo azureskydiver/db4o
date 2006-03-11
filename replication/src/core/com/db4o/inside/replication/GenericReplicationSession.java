@@ -37,7 +37,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	public GenericReplicationSession(ReplicationProvider providerA, ReplicationProvider providerB, ConflictResolver resolver) {
 
-		_reflector = new ReplicationReflector();
+		_reflector = ReplicationReflector.getInstance();
 		_collectionHandler = new CollectionHandlerImpl(_reflector.reflector());
 		_traverser = new ReplicationTraverser(_reflector.reflector(), _collectionHandler);
 

@@ -9,8 +9,8 @@ import com.db4o.test.replication.transients.TransientReplicationProvider;
 
 public class ReplicationTraversalTest {
 
-	private final TransientReplicationProvider _peerA = new TransientReplicationProvider(new byte[]{0});
-	private final TransientReplicationProvider _peerB = new TransientReplicationProvider(new byte[]{1});
+	private TransientReplicationProvider _peerA = new TransientReplicationProvider(new byte[]{0});
+	private TransientReplicationProvider _peerB = new TransientReplicationProvider(new byte[]{1});
 
 	public void test() {
 		Replicated obj1 = new Replicated("1");
@@ -31,7 +31,8 @@ public class ReplicationTraversalTest {
 		Test.ensure(_peerA.activatedObjects().containsKey(obj1));
 		Test.ensure(_peerA.activatedObjects().containsKey(obj2));
 		Test.ensure(_peerA.activatedObjects().containsKey(obj3));
+
+		_peerA = null;
+		_peerB = null;
 	}
-
-
 }

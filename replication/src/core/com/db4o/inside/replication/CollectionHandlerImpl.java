@@ -1,16 +1,16 @@
 package com.db4o.inside.replication;
 
+import com.db4o.foundation.Collection4;
+import com.db4o.foundation.Iterator4;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.Reflector;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.Iterator4;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.Reflector;
 
 public class CollectionHandlerImpl implements CollectionHandler {
 
@@ -20,7 +20,7 @@ public class CollectionHandlerImpl implements CollectionHandler {
 	private final Reflector _reflector;
 
 	public CollectionHandlerImpl() {
-		this(new ReplicationReflector().reflector());
+		this(ReplicationReflector.getInstance().reflector());
 	}
 
 	public CollectionHandlerImpl(Reflector reflector) {

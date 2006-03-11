@@ -32,8 +32,6 @@ public abstract class R0to4Runner extends ReplicationTestcase {
 		}
 
 		providerPairs = null;
-
-		System.gc();
 	}
 
 	private void tst() {

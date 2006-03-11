@@ -1,6 +1,7 @@
 package com.db4o.test.replication;
 
 public abstract class ReplicateDeletionTest extends ReplicationTestcase {
+	//TODO
 	public void test() {
 		init();
 
@@ -15,25 +16,27 @@ public abstract class ReplicateDeletionTest extends ReplicationTestcase {
 		replicateAllToProviderA();
 
 		clean();
+
+		destroy();
 	}
 
 	private void replicateAllToProviderA() {
-		throw new UnsupportedOperationException("fs");
+		throw new UnsupportedOperationException("todo implement");
 	}
 
 	private void deleteObjectInProviderB() {
-		throw new UnsupportedOperationException("fs");
+		throw new UnsupportedOperationException("todo implement");
 	}
 
 	private void replicateAllToProviderBFirstTime() {
-		throw new UnsupportedOperationException("fs");
+		throw new UnsupportedOperationException("todo implement");
 	}
 
 	private void storeObjectToProviderA() {
-		throw new UnsupportedOperationException("fs");
+		throw new UnsupportedOperationException("todo implement");
 	}
 
 	private void clean() {
-		throw new UnsupportedOperationException("fs");
+		throw new UnsupportedOperationException("todo implement");
 	}
 }

@@ -64,18 +64,11 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		System.out.println("Run test on JDK1.");
 
 		clean();
+		destroy();
 	}
 
 	protected void clean() {
 		delete(new Class[]{Replicated.class});
-
-		checkEmpty(_providerA);
-		checkEmpty(_providerB);
-
-		_providerA = null;
-		_providerB = null;
-
-		System.gc();
 	}
 
 	private void tstDirection(Set direction) {
@@ -360,8 +353,7 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		_providerA = prepareProviderA();
 		_providerB = prepareProviderB();
 
-		_providerA.delete(Replicated.class);
-		_providerB.delete(Replicated.class);
+		clean();
 
 		checkEmpty(_providerA);
 		checkEmpty(_providerB);
