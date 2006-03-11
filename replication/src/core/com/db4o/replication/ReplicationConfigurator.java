@@ -2,6 +2,8 @@ package com.db4o.replication;
 
 import com.db4o.replication.hibernate.UpdateEventListener;
 import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsUpdateEventListener;
+import com.db4o.replication.hibernate.ref_as_table.ObjectInsertedListener;
+import com.db4o.replication.hibernate.ref_as_table.RefAsTableUpdateEventListener;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
@@ -33,12 +35,13 @@ import org.hibernate.cfg.Configuration;
  */
 public class ReplicationConfigurator {
 	private static UpdateEventListener refAsColumnstListener = new RefAsColumnsUpdateEventListener();
+	private static UpdateEventListener refAstablestListener = new RefAsTableUpdateEventListener();
+
+	private static ObjectInsertedListener objectInsertedListener = new ObjectInsertedListener();
 
 	/**
 	 * Registers object update event listeners to Configuration.
-	 * Checks each entity table, if the version and uuid columns do not exist,
-	 * this method will create them. This method will also create
-	 * the "uuid Long part sequence table" if it does not exist.
+	 * If required drs tables and columns do not exist, create them automatically.
 	 * <p/> This method must be called before calling Configuration.buildSessionFactory();
 	 *
 	 * @param cfg a properly configured Configuration
@@ -56,5 +59,27 @@ public class ReplicationConfigurator {
 	 */
 	public static void install(Session s, Configuration cfg) {
 		refAsColumnstListener.install(s, cfg);
+	}
+
+	/**
+	 * <b>Use this method in conjuction with the *Use drs without drs columns approach.*</b>
+	 *
+	 * @param cfg a properly configured Configuration
+	 * @see #configure(org.hibernate.cfg.Configuration)
+	 */
+	public static void refAsTableConfigure(Configuration cfg) {
+		refAstablestListener.configure(cfg);
+		objectInsertedListener.configure(cfg);
+	}
+
+	/**
+	 * <b>Use this method in conjuction with the *Use drs without drs columns approach.*</b>
+	 *
+	 * @param s   a just opened Session
+	 * @param cfg a Configuration that has previously been passed to ReplicationConfigurator.configure();
+	 * @see #install(org.hibernate.Session, org.hibernate.cfg.Configuration)
+	 */
+	public static void refAsTableInstall(Session s, Configuration cfg) {
+		refAstablestListener.install(s, cfg);
 	}
 }

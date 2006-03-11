@@ -34,17 +34,9 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	long getCurrentVersion();
 
-	/**
-	 * Returns the version number of the last Replication with the ReplicationProvider specified in  {@link #startReplicationTransaction}
-	 *
-	 * @return the version number of the last Replication with the ReplicationProvider
-	 */
-	long getLastReplicationVersion();
-
 	public Object getMonitor();
 
 	ReadonlyReplicationProviderSignature getSignature();
-
 
 	/**
 	 * Determines if this Provider has the ReplicationReference of an object

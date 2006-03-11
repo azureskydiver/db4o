@@ -10,11 +10,19 @@ import org.hibernate.event.PostUpdateEventListener;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RefAsColumnsUpdateEventListener extends AbstractUpdateEventListener {
+	protected final Map<Session, Configuration> sessionConfigurationMap = new HashMap();
 
 	public RefAsColumnsUpdateEventListener() {
 		//empty
+	}
+
+	public void install(Session session, Configuration cfg) {
+		super.install(session, cfg);
+		sessionConfigurationMap.put(session, cfg);
 	}
 
 	public void configure(Configuration cfg) {
@@ -24,15 +32,8 @@ public class RefAsColumnsUpdateEventListener extends AbstractUpdateEventListener
 		eventListeners.setPostUpdateEventListeners(new PostUpdateEventListener[]{this});
 	}
 
-	public void install(Session session, Configuration cfg) {
-		threadSessionMap.put(Thread.currentThread(), session);
-		sessionConfigurationMap.put(session, cfg);
-	}
-
 	protected void ObjectUpdated(Object obj, Serializable id) {
 		final Session session = getSession();
-		if (session == null)
-			throw new RuntimeException("Unable to update the version number of an object. Did you forget to call ReplicationConfigurator.install(session, cfg) after opening a session?");
 
 		long newVersion = Common.getMaxVersion(session.connection()) + 1;
 		Configuration cfg = getConfiguration();
@@ -43,5 +44,9 @@ public class RefAsColumnsUpdateEventListener extends AbstractUpdateEventListener
 		String primaryKeyColumnName = objectConfig.getPrimaryKeyColumnName(obj);
 		Connection connection = session.connection();
 		Shared.incrementObjectVersion(connection, id, newVersion, tableName, primaryKeyColumnName);
+	}
+
+	protected final Configuration getConfiguration() {
+		return sessionConfigurationMap.get(getSession());
 	}
 }

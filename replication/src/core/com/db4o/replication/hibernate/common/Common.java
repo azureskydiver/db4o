@@ -3,6 +3,8 @@ package com.db4o.replication.hibernate.common;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.replication.hibernate.ref_as_table.ReplicationReference;
 import org.hibernate.Session;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 import org.hibernate.mapping.Table;
 
 import java.sql.Connection;
@@ -141,5 +143,11 @@ public class Common {
 			closeStatement(st);
 			closeResultSet(rs);
 		}
+	}
+
+	public static void setCurrentSessionContext(Configuration cfg) {
+		String key = Environment.CURRENT_SESSION_CONTEXT_CLASS;
+		if (cfg.getProperty(key) == null)
+			cfg.setProperty(key, "thread");
 	}
 }

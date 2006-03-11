@@ -11,7 +11,6 @@ import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Restrictions;
@@ -30,12 +29,6 @@ import java.util.List;
 public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 	public RefAsTableReplicationProvider(Configuration cfg) {
 		this(cfg, null);
-	}
-
-	protected void setCurrentSessionContext(Configuration cfg) {
-		String key = Environment.CURRENT_SESSION_CONTEXT_CLASS;
-		if (cfg.getProperty(key) == null)
-			cfg.setProperty(key, "thread");
 	}
 
 	public RefAsTableReplicationProvider(Configuration cfg, String name) {
@@ -113,7 +106,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 
 		long id = Shared.castAsLong(getObjectSession().getIdentifier(obj));
 
-		final List exisitings = getByHibernateId(obj.getClass().getName(), id);
+		final List exisitings = Shared.getByHibernateId(getRefSession(), obj.getClass().getName(), id);
 
 		int count = exisitings.size();
 
@@ -132,14 +125,6 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		return createReference(obj, new Db4oUUID(ref.getUuidLongPart(), ref.getProvider().getBytes()), ref.getVersion());
 	}
 
-	private List getByHibernateId(String className, long id) {
-		Criteria criteria = getRefSession().createCriteria(ReplicationReference.class);
-		criteria.add(Restrictions.eq(ReplicationReference.OBJECT_ID, id));
-		criteria.add(Restrictions.eq(ReplicationReference.CLASS_NAME, className));
-
-		return criteria.list();
-	}
-
 	protected void saveOrUpdateReplicaMetadata(com.db4o.inside.replication.ReplicationReference ref) {
 		ensureReplicationActive();
 		final Object obj = ref.object();
@@ -147,7 +132,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		final long id = Shared.castAsLong(getObjectSession().getIdentifier(obj));
 		final Session s = getRefSession();
 
-		final List existings = getByHibernateId(obj.getClass().getName(), id);
+		final List existings = Shared.getByHibernateId(s, obj.getClass().getName(), id);
 		if (existings.size() == 0) {
 			ReplicationProviderSignature provider = getProviderSignature(ref.uuid().getSignaturePart());
 
@@ -251,23 +236,8 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		final Object entity = event.getEntity();
 		final long id = Shared.castAsLong(event.getId());
 
-		final List exisitings = getByHibernateId(entity.getClass().getName(), id);
-		int count = exisitings.size();
-
-		if (count != 1)
-			throw new RuntimeException("ReplicationReference not found");
-		else {
-			ReplicationReference exist = (ReplicationReference) exisitings.get(0);
-
-			long newVer = Common.getMaxVersion(_objectSession.connection()) + 1;
-
-			exist.setVersion(newVer);
-			getRefSession().update(exist);
-
-			final ReplicationReference loaded = (ReplicationReference) getRefSession().load(ReplicationReference.class, getRefSession().getIdentifier(exist));
-			if (loaded.getVersion() != newVer)
-				throw new RuntimeException("Unable to update the version");
-		}
+		final Session sess = getRefSession();
+		Shared.incrementObjectVersion(sess, entity, id);
 	}
 
 

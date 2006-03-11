@@ -15,7 +15,6 @@ import java.util.Map;
 public abstract class AbstractUpdateEventListener extends EmptyInterceptor
 		implements UpdateEventListener {
 	protected final Map<Thread, Session> threadSessionMap = new HashMap();
-	protected final Map<Session, Configuration> sessionConfigurationMap = new HashMap();
 
 	protected AbstractUpdateEventListener() {
 		//empty
@@ -44,12 +43,12 @@ public abstract class AbstractUpdateEventListener extends EmptyInterceptor
 		return session.getIdentifier(obj);
 	}
 
-	protected final Configuration getConfiguration() {
-		return sessionConfigurationMap.get(getSession());
-	}
-
 	protected final Session getSession() {
-		return threadSessionMap.get(Thread.currentThread());
+		Session session = threadSessionMap.get(Thread.currentThread());
+
+		if (session == null)
+			throw new RuntimeException("Unable to update the version number of an object. Did you forget to call ReplicationConfigurator.install(session, cfg) after opening a session?");
+		return session;
 	}
 
 	protected final void collectionUpdated(Object collection) {
@@ -63,5 +62,9 @@ public abstract class AbstractUpdateEventListener extends EmptyInterceptor
 
 		Serializable id = getId(owner);
 		ObjectUpdated(owner, id);
+	}
+
+	public void install(Session session, Configuration cfg) {
+		threadSessionMap.put(Thread.currentThread(), session);
 	}
 }
