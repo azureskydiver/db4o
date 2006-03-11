@@ -87,6 +87,15 @@ public class Common {
 		}
 	}
 
+	public static PreparedStatement getPreparedStatement(Connection connection, String sql) {
+		try {
+			return connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+
 	public static boolean oracleTypeMatches(int expected, int actual) {
 		if (expected == actual)
 			return true;

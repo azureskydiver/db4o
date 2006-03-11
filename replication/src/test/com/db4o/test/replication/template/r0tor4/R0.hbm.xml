@@ -6,7 +6,7 @@
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping default-access="field">
+<hibernate-mapping default-access="field" default-lazy="false">
 	<class name="com.db4o.test.replication.template.r0tor4.R0" table="R0">
 		<id column="id" type="long">
 			<generator class="native"/>

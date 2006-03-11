@@ -81,5 +81,6 @@ public class ReplicationConfigurator {
 	 */
 	public static void refAsTableInstall(Session s, Configuration cfg) {
 		refAstablestListener.install(s, cfg);
+		objectInsertedListener.install(s, cfg);
 	}
 }

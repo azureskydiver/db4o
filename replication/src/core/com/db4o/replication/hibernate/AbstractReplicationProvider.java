@@ -690,11 +690,17 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		ensureReplicationActive();
 
 		getObjectTransaction().rollback();
+		clearSession();
+
 		_objectTransaction = getObjectSession().beginTransaction();
 		clearAllReferences();
 		_dirtyRefs.clear();
 		_uuidsReplicatedInThisSession.clear();
 		_inReplication = false;
+	}
+
+	private void clearSession() {
+		getObjectSession().clear();
 	}
 
 	protected RefConfig getRefCfg() {
@@ -703,11 +709,13 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	public void commit() {
 		getObjectTransaction().commit();
+		clearSession();
 		_objectTransaction = getObjectSession().beginTransaction();
 	}
 
 	public void startReplicationTransaction(ReadonlyReplicationProviderSignature aPeerSignature) {
 		ensureReplicationInActive();
+		clearSession();
 
 		byte[] peerSigBytes = aPeerSignature.getBytes();
 

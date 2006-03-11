@@ -31,7 +31,12 @@ public abstract class SingleTypeCollectionReplicationTest extends ReplicationTes
 			}
 		});
 
-		replication.replicate(h1);
+		final ObjectSet objectSet = _providerA.objectsChangedSinceLastReplication();
+
+		while (objectSet.hasNext()) {
+			replication.replicate(objectSet.next());
+		}
+
 		replication.commit();
 
 		ObjectSet it = _providerB.getStoredObjects(CollectionHolder.class);
