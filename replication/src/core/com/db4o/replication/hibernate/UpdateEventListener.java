@@ -2,6 +2,8 @@ package com.db4o.replication.hibernate;
 
 import org.hibernate.CallbackException;
 import org.hibernate.Interceptor;
+import org.hibernate.Session;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.event.PostUpdateEvent;
 import org.hibernate.event.PostUpdateEventListener;
 
@@ -15,4 +17,8 @@ public interface UpdateEventListener extends Interceptor, PostUpdateEventListene
 	public void onCollectionRecreate(Object collection, Serializable key) throws CallbackException;
 
 	public void onCollectionUpdate(Object collection, Serializable key) throws CallbackException;
+
+	void configure(Configuration cfg);
+
+	void install(Session session, Configuration cfg);
 }

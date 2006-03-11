@@ -1,5 +1,6 @@
 package com.db4o.replication;
 
+import com.db4o.replication.hibernate.UpdateEventListener;
 import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsUpdateEventListener;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
@@ -31,6 +32,8 @@ import org.hibernate.cfg.Configuration;
  * @since dRS 1.0
  */
 public class ReplicationConfigurator {
+	private static UpdateEventListener refAsColumnstListener = new RefAsColumnsUpdateEventListener();
+
 	/**
 	 * Registers object update event listeners to Configuration.
 	 * Checks each entity table, if the version and uuid columns do not exist,
@@ -41,7 +44,7 @@ public class ReplicationConfigurator {
 	 * @param cfg a properly configured Configuration
 	 */
 	public static void configure(Configuration cfg) {
-		RefAsColumnsUpdateEventListener.configure(cfg);
+		refAsColumnstListener.configure(cfg);
 	}
 
 	/**
@@ -52,6 +55,6 @@ public class ReplicationConfigurator {
 	 * @param cfg a Configuration that has previously been passed to ReplicationConfigurator.configure();
 	 */
 	public static void install(Session s, Configuration cfg) {
-		RefAsColumnsUpdateEventListener.install(s, cfg);
+		refAsColumnstListener.install(s, cfg);
 	}
 }
