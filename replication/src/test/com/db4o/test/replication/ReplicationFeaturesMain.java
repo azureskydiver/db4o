@@ -28,13 +28,14 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 	private Set _containersWithChangedObjects;
 	private Set _objectsToPrevailInConflicts;
 
-	private int _errors;
 	private String _intermittentErrors = "";
 	private int _testCombination;
 	private static final String A = "A";
 	private static final String B = "B";
 
 	private int round = 0;
+
+	protected boolean printRound = false;
 
 	public void configure() {
 		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
@@ -67,8 +68,14 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 
 	protected void clean() {
 		delete(new Class[]{Replicated.class});
+
 		checkEmpty(_providerA);
 		checkEmpty(_providerB);
+
+		_providerA = null;
+		_providerB = null;
+
+		System.gc();
 	}
 
 	private void tstDirection(Set direction) {
@@ -115,7 +122,7 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		if (_testCombination < 0)
 			return; //Use this to skip some combinations and avoid waiting.
 
-		_errors = 0;
+		int _errors = 0;
 		while (true) {
 			try {
 				doIt();
@@ -185,10 +192,13 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		replication.commit();
 
 		checkNames();
-		//printRound();
+		printRound();
 	}
 
 	private void printRound() {
+		if (!printRound)
+			return;
+
 		round++;
 
 		if ((round % 10) == 0)

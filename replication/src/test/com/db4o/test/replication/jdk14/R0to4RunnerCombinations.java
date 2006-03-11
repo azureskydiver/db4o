@@ -39,16 +39,8 @@ public class R0to4RunnerCombinations extends R0to4Runner {
 		b = Db4oReplicationTestUtil.newProviderA();
 		addProviderPairs(a, b);
 
-		a = Db4oReplicationTestUtil.newProviderA();
-		b = new RefAsColumnsReplicationProvider(newCfg(), "HSQL RefAsColumns");
-		addProviderPairs(a, b);
-
 		a = new RefAsTableReplicationProvider(newCfg(), "HSQL RefAsTable A");
 		b = new RefAsTableReplicationProvider(newCfg(), "HSQL RefAsTable B");
-		addProviderPairs(a, b);
-
-		a = new RefAsTableReplicationProvider(newCfg(), "HSQL RefAsTable A");
-		b = Db4oReplicationTestUtil.newProviderA();
 		addProviderPairs(a, b);
 	}
 

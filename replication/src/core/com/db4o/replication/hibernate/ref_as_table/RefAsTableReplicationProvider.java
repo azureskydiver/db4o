@@ -273,7 +273,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 
 	public class MyObjectInsertedListener implements PostInsertEventListener {
 		public void onPostInsert(PostInsertEvent event) {
-			if (_inReplication) return;
+			if (isReplicationActive()) return;
 
 			Object entity = event.getEntity();
 
