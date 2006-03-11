@@ -11,17 +11,18 @@ import org.hibernate.cfg.Configuration;
 public class HibernateReplicationAfterDeletionTest extends ReplicationAfterDeletionTest {
 
 	protected TestableReplicationProviderInside prepareProviderA() {
+		return new RefAsColumnsReplicationProvider(newCfg(), "A");
+	}
+
+	protected Configuration newCfg() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(SPCParent.class);
 		configuration.addClass(SPCChild.class);
-		return new RefAsColumnsReplicationProvider(configuration, "A");
+		return configuration;
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
-		configuration.addClass(SPCParent.class);
-		configuration.addClass(SPCChild.class);
-		return new RefAsColumnsReplicationProvider(configuration, "B");
+		return new RefAsColumnsReplicationProvider(newCfg(), "B");
 	}
 
 	public void test() {

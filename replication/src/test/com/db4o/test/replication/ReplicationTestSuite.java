@@ -8,9 +8,12 @@ import com.db4o.test.replication.db4o.Db4oReplicationAfterDeletionTest;
 import com.db4o.test.replication.db4o.Db4oReplicationFeaturesMain;
 import com.db4o.test.replication.db4o.Db4oReplicationProviderTest;
 import com.db4o.test.replication.db4o.Db4oSimpleArrayTest;
+import com.db4o.test.replication.db4o.Db4oSingleTypeCollectionReplicationTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateListTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateSimpleArrayTest;
 import com.db4o.test.replication.db4o.hibernate.HibernateDb4oListTest;
+import com.db4o.test.replication.hibernate.ref_as_columns.hsql.Db4oHibernateMapTest;
+import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateDb4oMapTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateListTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateMapTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicationAfterDeletionTest;
@@ -21,8 +24,15 @@ import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateSingleTy
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HsqlMetaDataTablesCreatorTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.UuidLongPartGeneratorTest;
+import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableReplicationConfiguratorTest;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.AfterDeletionTestHsqlRefAsTable;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.ListTestHsqlRefAsTable;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.MapTestHsqlRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.RefAsTableReplicationFeaturesMain;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.RefAsTableTablesCreatorTestHsql;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.ReplicationProviderTestHsqlRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.SimpleArrayTestHsqlRefAsTable;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.SingleTypeCollectionTestHsqlRefAsTable;
 import com.db4o.test.replication.jdk11.R0to4RunnerCore;
 import com.db4o.test.replication.jdk11.SimpleParentChildCore;
 import com.db4o.test.replication.jdk14.R0to4RunnerCombinations;
@@ -46,12 +56,16 @@ public class ReplicationTestSuite extends TestSuite {
 
 		return new Class[]{
 				HsqlMetaDataTablesCreatorTest.class,
+				RefAsTableTablesCreatorTestHsql.class,
+
 				HibernateReplicationAfterDeletionTest.class,
 				Db4oReplicationAfterDeletionTest.class,
+				AfterDeletionTestHsqlRefAsTable.class,
 
 				TransientReplicationProviderTest.class,
 				Db4oReplicationProviderTest.class,
 				HibernateReplicationProviderTest.class,
+				ReplicationProviderTestHsqlRefAsTable.class,
 
 				R0to4RunnerCore.class,
 				R0to4RunnerCombinations.class,
@@ -64,20 +78,26 @@ public class ReplicationTestSuite extends TestSuite {
 				HibernateListTest.class,
 				HibernateDb4oListTest.class,
 				Db4oHibernateListTest.class,
+				ListTestHsqlRefAsTable.class,
 
 				TransientMapTest.class,
 				Db4oMapTest.class,
 				HibernateMapTest.class,
+				HibernateDb4oMapTest.class,
+				Db4oHibernateMapTest.class,
+				MapTestHsqlRefAsTable.class,
 
 				TransientSimpleArrayTest.class,
 				Db4oSimpleArrayTest.class,
 				HibernateSimpleArrayTest.class,
 				Db4oHibernateSimpleArrayTest.class,
-
 				SimpleArrayTestHsqlRefAsTable.class,
 
 				TransientSingleTypeCollectionReplicationTest.class,
+				Db4oSingleTypeCollectionReplicationTest.class,
 				HibernateSingleTypeCollectionReplicationTest.class,
+				SingleTypeCollectionTestHsqlRefAsTable.class,
+
 				TransientMixedTypesCollectionReplicationTest.class,
 
 				TransientArrayReplicationTest.class,
@@ -85,6 +105,8 @@ public class ReplicationTestSuite extends TestSuite {
 
 				UuidLongPartGeneratorTest.class,
 				ReplicationConfiguratorTest.class,
+				RefAsTableReplicationConfiguratorTest.class,
+
 				ReplicationTraversalTest.class,
 				ReplicationFeatures.class,
 

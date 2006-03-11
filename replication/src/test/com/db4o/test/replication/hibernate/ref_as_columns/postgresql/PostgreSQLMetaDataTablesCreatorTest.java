@@ -1,20 +1,15 @@
 package com.db4o.test.replication.hibernate.ref_as_columns.postgresql;
 
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.RefAsColumnsMetaDataTablesCreatorTest;
+import com.db4o.test.replication.hibernate.ref_as_columns.RefAsColumnsMetaDataTablesCreatorTest;
 import org.hibernate.cfg.Configuration;
 
 public class PostgreSQLMetaDataTablesCreatorTest extends RefAsColumnsMetaDataTablesCreatorTest {
-	public void testCreate() {
-		super.testCreate();
-	}
-
-	public void testValidate() {
-		super.testValidate();
+	public void test() {
+		super.test();
 	}
 
 	protected Configuration createCfg() {
 		return new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-A.cfg.xml");
-
 	}
 
 	protected Configuration validateCfg() {

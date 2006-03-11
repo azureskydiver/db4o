@@ -9,23 +9,20 @@ import org.hibernate.cfg.Configuration;
 
 public class HibernateSingleTypeCollectionReplicationTest extends SingleTypeCollectionReplicationTest {
 	protected TestableReplicationProviderInside prepareProviderA() {
+		return new RefAsColumnsReplicationProvider(newCfg(), "A");
+	}
+
+	protected Configuration newCfg() {
 		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
 		configuration.addClass(CollectionHolder.class);
-		return new RefAsColumnsReplicationProvider(configuration, "A");
+		return configuration;
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
-		configuration.addClass(CollectionHolder.class);
-		return new RefAsColumnsReplicationProvider(configuration, "B");
+		return new RefAsColumnsReplicationProvider(newCfg(), "B");
 	}
 
 	public void testCollectionReplication() {
-		try {
-			super.testCollectionReplication();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
+		super.testCollectionReplication();
 	}
 }

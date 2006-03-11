@@ -1,13 +1,12 @@
 package com.db4o.test.replication.hibernate.ref_as_columns.oracle;
 
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.RefAsColumnsMetaDataTablesCreatorTest;
+import com.db4o.test.replication.hibernate.ref_as_columns.RefAsColumnsMetaDataTablesCreatorTest;
 import org.hibernate.cfg.Configuration;
 
 public class OracleMetaDataTablesCreatorTest extends RefAsColumnsMetaDataTablesCreatorTest {
 	public void test() {
-		super.testValidate();
-		super.testCreate();
+		super.test();
 	}
 
 	protected Configuration createCfg() {
