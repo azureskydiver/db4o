@@ -3,6 +3,7 @@
 package com.db4o.inside.btree;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.inside.ix.*;
 
 /**
@@ -27,10 +28,11 @@ public class BTree extends YapMeta{
         _keyHandler = keyHandler;
         _valueHandler = valueHandler;
         if(id > 0){
+            setID(id);
             setStateDeactivated();
         }else{
             _root = new BTreeNode(this);
-            setStateClean();
+            setStateDirty();
         }
     }
     
@@ -40,8 +42,32 @@ public class BTree extends YapMeta{
         BTreeNode split = _root.add(trans);
         if(split != null){
             _root = _root.newRoot(trans, split);
+            setStateDirty();
         }
         _size ++;
+    }
+    
+    public void commit(final Transaction trans){
+        if(_nodes != null){
+            _nodes.traverse(new Visitor4() {
+                public void visit(Object obj) {
+                    BTreeNode node = (BTreeNode) ((TreeIntObject)obj).i_object;
+                    node.commit(trans);
+                }
+            });
+        }
+        write(trans);
+    }
+    
+    public void rollback(final Transaction trans){
+        if(_nodes != null){
+            _nodes.traverse(new Visitor4() {
+                public void visit(Object obj) {
+                    BTreeNode node = (BTreeNode) ((TreeIntObject)obj).i_object;
+                    node.rollback(trans);
+                }
+            });
+        }
     }
     
     private void ensureActive(Transaction trans){

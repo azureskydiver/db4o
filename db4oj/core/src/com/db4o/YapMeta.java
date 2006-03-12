@@ -131,7 +131,7 @@ public abstract class YapMeta {
         }
     }
 
-    final void write(Transaction a_trans) {
+    public final void write(Transaction a_trans) {
         
         if (! writeObjectBegin()) {
             return;
