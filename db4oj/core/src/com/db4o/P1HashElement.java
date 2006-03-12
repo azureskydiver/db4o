@@ -29,6 +29,23 @@ public class P1HashElement extends P1ListElement {
         
         // TODO: It may be possible to optimise away the following call.
         checkActive();
+
+        
+        // The pathologic case here:
+        // No activation depth for the map.
+        // Global activation depth of 0 during defragment
+        // The key can't activate at all.
+        
+        // Let's make sure it has a depth of 1 at least, but of course that
+        // may not be sufficient for more complex #hashCode calls.
+        if(a_depth < 0){
+            Transaction trans = getTrans();
+            if(trans != null){
+                if(trans.i_stream.i_config.i_activationDepth < 1){
+                    a_depth = 1;
+                }
+            }
+        }
         
         activate(i_key, a_depth);
         return i_key;

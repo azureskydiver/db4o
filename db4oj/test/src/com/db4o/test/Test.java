@@ -84,6 +84,20 @@ public class Test extends AllTests {
     	}
     	return null;
     }
+    
+    public static void defragment(){
+        String fileName = FILE_SOLO;
+        close();
+        if (isClientServer()) {
+            server().close();
+            fileName = FILE_SERVER;
+        }
+        try {
+            new Defragment().run(fileName, true);
+        } finally {
+            reOpen();
+        }
+    }
 
     public static void delete() {
         new File(FILE_SOLO).delete();

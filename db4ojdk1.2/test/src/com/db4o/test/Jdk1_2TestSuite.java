@@ -4,7 +4,6 @@ package com.db4o.test;
 
 import com.db4o.test.cluster.*;
 import com.db4o.test.reflect.*;
-import com.db4o.test.soda.*;
 
 public class Jdk1_2TestSuite extends TestSuite{
     
@@ -16,6 +15,7 @@ public class Jdk1_2TestSuite extends TestSuite{
             CollectionActivation.class,
             Db4oLinkedList.class,
             Db4oHashMap.class,
+            Db4oHashMapDeletedKey.class,
             DeleteRemovedMapElements.class,
             DiscreteArrayInMap.class,
             ExtendsHashMap.class,
@@ -44,9 +44,6 @@ public class Jdk1_2TestSuite extends TestSuite{
             TransientClone.class,
             TreeSetCustomComparable.class,
             UpdatingDb4oVersions.class
-            
-
         };
     }
-    
 }

@@ -114,7 +114,9 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
         P2HashMapIterator i = new P2HashMapIterator(this);
         while (i.hasNext()) {
             Object key = i.next();
-            m4.put4(key, get4(key));
+            if(key != null){
+                m4.put4(key, get4(key));
+            }
         }
         return m4;
     }
@@ -143,6 +145,9 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
     }
 
     Object get4(Object key) {
+        if(key == null){
+            return null;
+        }
         int hash = hashOf(key);
         P1HashElement phe = i_table[hash & i_mask];
         while (phe != null) {
