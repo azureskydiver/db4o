@@ -1972,14 +1972,14 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         a_writer.writeShortString(trans, nameToWrite());
         a_writer.writeInt(_metaClassID);
         
-        writeIDOf(trans, i_ancestor, a_writer);
+        a_writer.writeIDOf(trans, i_ancestor);
         
         if(Debug.useOldClassIndex){
-            writeIDOf(trans, i_index, a_writer);
+            a_writer.writeIDOf(trans, i_index);
         }
         
         if(Debug.useBTrees){
-            writeIDOf(trans, _index, a_writer);
+            a_writer.writeIDOf(trans, _index);
         }
         
         if (i_fields == null) {

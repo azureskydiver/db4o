@@ -27,7 +27,7 @@ public class TreeInt extends Tree implements ReadWriteable{
 		return false;
 	}
 	
-	static final TreeInt find(Tree a_in, int a_key){
+	public static final TreeInt find(Tree a_in, int a_key){
 		if(a_in == null){
 			return null;
 		}

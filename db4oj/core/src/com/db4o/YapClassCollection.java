@@ -392,7 +392,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         a_writer.writeInt(i_classes.size());
         Iterator4 i = i_classes.iterator();
         while (i.hasNext()) {
-            writeIDOf(trans, (YapClass)i.next(), a_writer);
+            a_writer.writeIDOf(trans, i.next());
         }
     }
 

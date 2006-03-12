@@ -214,6 +214,32 @@ public class YapReader {
         }
     }
     
+    public void writeIDOf(Transaction trans, Object obj) {
+        if(obj == null){
+            writeInt(0);
+            return;
+        }
+        
+        if(obj instanceof YapMeta){
+            ((YapMeta)obj).writeOwnID(trans, this);
+            return;
+        }
+        
+        writeInt(((Integer)obj).intValue());
+    }
+    
+    public void writeIDOf(Transaction trans, YapMeta yapMeta) {
+        if(yapMeta == null){
+            writeInt(0);
+            return;
+        }
+        yapMeta.writeOwnID(trans, this);
+    }
+    
+    public void writeIDOf(Transaction trans, Integer i) {
+        writeInt(i.intValue());
+    }
+    
     void writeShortString(Transaction trans, String a_string) {
         trans.i_stream.i_handlers.i_stringHandler.writeShort(a_string, this);
     }
