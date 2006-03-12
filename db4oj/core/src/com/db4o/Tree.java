@@ -24,6 +24,13 @@ public abstract class Tree implements Cloneable, Readable{
 	    return add(a_new, compare(a_new));
 	}
 	
+    /**
+     * On adding a node to a tree, if it already exists, and if
+     * Tree#duplicates() returns false, #isDuplicateOf() will be
+     * called. The added node can then be asked for the node that
+     * prevails in the tree using #duplicateOrThis(). This mechanism
+     * allows doing find() and add() in one run.
+     */
 	public Tree add(final Tree a_new, final int a_cmp){
 	    if(a_cmp < 0){
 	        if(i_subsequent == null){
@@ -57,11 +64,11 @@ public abstract class Tree implements Cloneable, Readable{
     
     
     /**
-     * On adding a node to a tree, if it already exists, 
-     * #isDuplicateOf() will be called and the added node
-     * can be asked for the node that prevails in the 
-     * tree. This mechanism allows doing find() and add()
-     * in one run.
+     * On adding a node to a tree, if it already exists, and if
+     * Tree#duplicates() returns false, #isDuplicateOf() will be
+     * called. The added node can then be asked for the node that
+     * prevails in the tree using #duplicateOrThis(). This mechanism
+     * allows doing find() and add() in one run.
      */
     public Tree duplicateOrThis(){
         if(i_size == 0){

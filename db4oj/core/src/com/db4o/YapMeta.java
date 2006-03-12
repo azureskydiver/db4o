@@ -146,7 +146,7 @@ public abstract class YapMeta {
         
         if(isNew()){
             Pointer4 ptr = stream.newSlot(a_trans, length);
-            i_id = ptr._id;
+            setID(ptr._id);
             address = ptr._address;
             
             // FIXME: Free everything on rollback here ?
@@ -188,11 +188,4 @@ public abstract class YapMeta {
 
     public abstract void writeThis(Transaction trans, YapReader a_writer);
 
-    public static final void writeIDOf(Transaction trans, YapMeta a_object, YapReader a_writer) {
-        if (a_object != null) {
-            a_object.writeOwnID(trans, a_writer);
-        } else {
-            a_writer.writeInt(0);
-        }
-    }
 }

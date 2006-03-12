@@ -12,7 +12,7 @@ public class TreeIntObject extends TreeInt{
 		super(a_key);
 	}
 	
-	TreeIntObject(int a_key, Object a_object){
+	public TreeIntObject(int a_key, Object a_object){
 		super(a_key);
 		i_object = a_object;
 	}

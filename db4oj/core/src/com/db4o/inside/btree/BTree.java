@@ -16,6 +16,11 @@ public class BTree extends YapMeta{
     
     BTreeNode _root;
     
+    /**
+     * All instantiated nodes are held in this tree. 
+     */
+    private Tree _nodes;  
+    
     private int _size;
     
     public BTree(int id, Indexable4 keyHandler, Indexable4 valueHandler){
@@ -48,19 +53,35 @@ public class BTree extends YapMeta{
     public byte getIdentifier() {
         return YapConst.BTREE;
     }
-
+    
     public int ownLength() {
         return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
+    }
+    
+    BTreeNode produceNode(int id){
+        TreeIntObject tio = new TreeIntObject(id);
+        _nodes = Tree.add(_nodes, tio);
+        tio = (TreeIntObject)tio.duplicateOrThis();
+        if(tio.i_object != null){
+            return (BTreeNode)tio.i_object;
+        }
+        BTreeNode node = new BTreeNode(this, id);
+        tio.i_object = node;
+        return node;
+    }
+    
+    void addNode(int id, BTreeNode node){
+        _nodes = Tree.add(_nodes, new TreeIntObject(id, node));
     }
 
     public void readThis(Transaction a_trans, YapReader a_reader) {
         _size = a_reader.readInt();
-        _root = new BTreeNode(this, a_reader.readInt());
+        _root = produceNode(a_reader.readInt());
     }
     
     public void writeThis(Transaction trans, YapReader a_writer) {
         a_writer.writeInt(_size);
-        writeIDOf(trans, _root, a_writer);
+        a_writer.writeIDOf(trans, _root);
     }
 
 
