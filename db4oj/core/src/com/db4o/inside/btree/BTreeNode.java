@@ -92,6 +92,10 @@ public class BTreeNode extends YapMeta{
         return null;
     }
     
+    void commit(Transaction trans){
+        
+    }
+    
     private void compare(Searcher s){
         if(_keys != null){
             s.resultIs(keyHandler().compareTo(_keys[s._cursor]));
@@ -196,6 +200,9 @@ public class BTreeNode extends YapMeta{
         }
     }
     
+    void rollback(Transaction trans){
+        
+    }
 
     private void prepareRead(Transaction trans){
         if(canWrite()){

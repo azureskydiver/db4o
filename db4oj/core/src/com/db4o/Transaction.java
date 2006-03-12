@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.btree.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.slots.*;
 import com.db4o.reflect.*;
@@ -26,6 +27,8 @@ public class Transaction {
     public Tree          i_delete;  // public for .NET conversion
 
     private List4           i_dirtyFieldIndexes;
+    
+    private Tree            _dirtyBTrees;
 
     public final YapFile           i_file;
 
@@ -133,6 +136,7 @@ public class Transaction {
 
     private final void clearAll() {
         _slotChanges = null;
+        _dirtyBTrees = null;
         i_addToClassIndex = null;
         i_removeFromClassIndex = null;
         i_dirtyFieldIndexes = null;
@@ -237,16 +241,29 @@ public class Transaction {
             i_parentTransaction.commit5writeClassIndexChanges();
         }
         
-        final Collection4 indicesToBeWritten = new Collection4();
-        traverseYapClassEntries(i_addToClassIndex, true, indicesToBeWritten);
-        traverseYapClassEntries(i_removeFromClassIndex, false,
-            indicesToBeWritten);
-        if(indicesToBeWritten.size() > 0){
-            Iterator4 i = indicesToBeWritten.iterator();
-            while (i.hasNext()) {
-                ClassIndex classIndex = (ClassIndex) i.next();
-                classIndex.setStateDirty();
-                classIndex.write(this);
+        if(Debug.useOldClassIndex){
+            final Collection4 indicesToBeWritten = new Collection4();
+            traverseYapClassEntries(i_addToClassIndex, true, indicesToBeWritten);
+            traverseYapClassEntries(i_removeFromClassIndex, false,
+                indicesToBeWritten);
+            if(indicesToBeWritten.size() > 0){
+                Iterator4 i = indicesToBeWritten.iterator();
+                while (i.hasNext()) {
+                    ClassIndex classIndex = (ClassIndex) i.next();
+                    classIndex.setStateDirty();
+                    classIndex.write(this);
+                }
+            }
+        }
+        
+        if(Debug.useBTrees){
+            if(_dirtyBTrees != null){
+                _dirtyBTrees.traverse(new Visitor4() {
+                    public void visit(Object obj) {
+                        BTree btree = (BTree) ((TreeIntObject)obj).i_object;
+                        btree.commit(Transaction.this);
+                    }
+                });
             }
         }
     }
@@ -348,6 +365,11 @@ public class Transaction {
         }
     }
     
+    public void dirtyBTree(BTree btree){
+        if(Debug.useBTrees){
+            _dirtyBTrees = Tree.add(_dirtyBTrees, new TreeIntObject(btree.getID(), btree));
+        }
+    }
 
     void dontDelete(int classID, int a_id) {
         if(Debug.checkSychronization){
@@ -585,6 +607,17 @@ public class Transaction {
                     }
                 });
             }
+            if(Debug.useBTrees){
+                if(_dirtyBTrees != null){
+                    _dirtyBTrees.traverse(new Visitor4() {
+                        public void visit(Object obj) {
+                            BTree btree = (BTree) ((TreeIntObject)obj).i_object;
+                            btree.rollback(Transaction.this);
+                        }
+                    });
+                }
+            }
+            
             rollBackTransactionListeners();
             clearAll();
         }
