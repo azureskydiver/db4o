@@ -60,6 +60,24 @@ public interface Configuration {
     public void activationDepth(int depth);
     
     /**
+     * turns automatic database file format version updates on.
+     * <br><br>Upon db4o database file format version changes,
+     * db4o can automatically update database files to the 
+     * current version. db4objects does not provide functionality
+     * to reverse this process. It is not ensured that updated
+     * database files can be read with older db4o versions.  
+     * In some cases (Example: using ObjectManager) it may not be
+     * desirable to update database files automatically therfore
+     * automatic updating is turned off by default for  
+     * security reasons.
+     * <br><br>Call this method to turn automatic database file
+     * version updating on.
+     * <br><br>If automatic updating is turned off, db4o will refuse
+     * to open database files that use an older database file format.
+     */
+    public void allowVersionUpdates(boolean flag);
+    
+    /**
      * turns automatic shutdown of the engine on and off.
      * <br><br>Depending on the JDK, db4o uses one of the following
      * two methods to shut down, if no more references to the ObjectContainer

@@ -221,6 +221,11 @@ public final class YapConfigBlock implements Runnable
 		if(oldLength > LENGTH  || oldLength < MINIMUM_LENGTH){
 			Exceptions4.throwRuntimeException(17);
 		}
+        if(oldLength != LENGTH){
+            if(! _stream.i_config.i_readonly  && ! _stream.i_config._allowVersionUpdates){
+                Exceptions4.throwRuntimeException(65);
+            }
+        }
 		long lastOpenTime = YLong.readLong(reader);
 		long lastAccessTime = YLong.readLong(reader);
 		_encoding = reader.readByte();

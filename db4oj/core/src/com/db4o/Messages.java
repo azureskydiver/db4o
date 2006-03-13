@@ -111,7 +111,9 @@ public final class Messages
 						"Backup in progress.", 
                         "Only use persisted first class objects as keys for IdentityHashMap.",
                         "This functionality is only available from version 5.0 onwards.",
-                        "By convention a Predicate needs the following method: public boolean match(ExtentClass extent){}" // 64
+                        "By convention a Predicate needs the following method: public boolean match(ExtentClass extent){}",
+                        "Old database file format detected. To allow automatic updates call Db4o.configure().allowVersionUpdates(true)." // 65
+                        
 						
 									};
 		        }else{

@@ -23,6 +23,7 @@ public final class Config4Impl
 implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfiguration {
 
     int              i_activationDepth                  = 5;
+    boolean          _allowVersionUpdates;
     boolean          i_automaticShutDown                = true;
     byte			 i_blockSize						= 1;  // TODO: set this to 8, when implementation is done
     String           i_blobPath;
@@ -76,6 +77,10 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 
     public void activationDepth(int depth) {
         i_activationDepth = depth;
+    }
+    
+    public void allowVersionUpdates(boolean flag){
+        _allowVersionUpdates = flag;
     }
 
     public void automaticShutDown(boolean flag) {
