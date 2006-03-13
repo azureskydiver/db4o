@@ -1478,6 +1478,9 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             } catch (ObjectNotStorableException e) {
                 i_entryCounter--;
                 throw e;
+            } catch (Db4oException exc) {
+                id = 0;
+                throw exc;
             } catch (Throwable t) {
                 id = 0;
                 fatalException(t);

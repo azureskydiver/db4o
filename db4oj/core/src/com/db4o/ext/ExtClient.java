@@ -51,6 +51,6 @@ public interface ExtClient extends ExtObjectContainer{
 	 */
 	public void switchToMainFile();
 	
-	
+	public boolean isAlive();
 }
 
