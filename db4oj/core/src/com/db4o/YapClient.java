@@ -112,24 +112,39 @@ public class YapClient extends YapStream implements ExtClient {
     }
 
     boolean close2() {
+    	if(readerThread.isClosed()) {
+    		throw new Db4oException("Connection is already closed.");
+    	}
         try {
             Msg.COMMIT_OK.write(this, i_socket);
             expectedResponse(Msg.OK);
         } catch (Exception e) {
+        	if(e instanceof Db4oException) {
+        		throw (Db4oException)e;
+        	}
         }
         try {
             Msg.CLOSE.write(this, i_socket);
         } catch (Exception e) {
+        	if(e instanceof Db4oException) {
+        		throw (Db4oException)e;
+        	}
         }
         try {
             if (!singleThreaded) {
                 readerThread.close();
             }
         } catch (Exception e) {
+        	if(e instanceof Db4oException) {
+        		throw (Db4oException)e;
+        	}
         }
         try {
             i_socket.close();
         } catch (Exception e) {
+        	if(e instanceof Db4oException) {
+        		throw (Db4oException)e;
+        	}
         }
         boolean ret = super.close2();
         if (Debug.fakeServer) {
@@ -292,25 +307,33 @@ public class YapClient extends YapStream implements ExtClient {
 
                 return (Msg)messageQueueLock.run(new Closure4() {
                     public Object run() {
+                        Msg message = retrieveMessage();
+                        if(message!=null) {
+                        	return message;
+                        }
+    
+                        if (readerThread.isClosed()) {
+                            //Exceptions4.throwRuntimeException(20, name());
+                        	throw new Db4oException("Connection already closed.");
+                        }
+                        messageQueueLock.snooze(i_config.i_timeoutClientSocket);
+                        if (readerThread.isClosed()) {
+                            //Exceptions4.throwRuntimeException(20, name());
+                        	throw new Db4oException("Connection already closed.");
+                        }
+                        return retrieveMessage();
+                    }
+                    
+                    private Msg retrieveMessage() {
                         Msg message = null;
                         message = (Msg)messageQueue.next();
                         if (message != null) {
                             if (Debug.messages) {
                                 System.out.println(message + " processed at client");
                             }
-                            return message;
-                        }
-    
-                        if (readerThread.isClosed()) {
-                            Exceptions4.throwRuntimeException(20, name());
-                        }
-                        messageQueueLock.snooze(i_config.i_timeoutClientSocket);
-                        if (readerThread.isClosed()) {
-                            Exceptions4.throwRuntimeException(20, name());
-                        }
-                        message = (Msg)messageQueue.next();
-                        if (Debug.messages) {
-                            System.out.println(message + " processed at client");
+                            if(Msg.ERROR.equals(message)) {
+                            	throw new Db4oException("Client connection error");
+                            }
                         }
                         return message;
                     }
@@ -318,7 +341,9 @@ public class YapClient extends YapStream implements ExtClient {
             } catch(Exception ex){
                 
                 // TODO: notify client app about problems and try to fix here
-                
+            	if(ex instanceof Db4oException) {
+            		throw (Db4oException)ex;
+            	}
                 return null;
             }
         }
@@ -634,4 +659,12 @@ public class YapClient extends YapStream implements ExtClient {
         writeMsg(Msg.WRITE_UPDATE.getWriter(a_yapClass, a_bytes));
     }
 
+	public boolean isAlive() {
+		try {
+			writeMsg(Msg.PING);
+			return expectedResponse(Msg.OK)!=null;
+		} catch (Db4oException exc) {
+			return false;
+		}
+	}
 }

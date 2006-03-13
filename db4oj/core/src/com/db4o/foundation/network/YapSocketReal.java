@@ -11,6 +11,10 @@ public class YapSocketReal implements YapSocket {
     private OutputStream _out;
     private InputStream _in;
     
+    public YapSocketReal(String hostName, int port) throws IOException {
+        this(new Socket(hostName, port));
+    }
+
     public YapSocketReal(Socket socket) throws IOException {
     	_socket = socket;
     	_out = _socket.getOutputStream();
@@ -56,6 +60,6 @@ public class YapSocketReal implements YapSocket {
     }
     
 	public YapSocket openParalellSocket() throws IOException {
-		throw new IOException(); // not supported
+		return new YapSocketReal(_socket.getInetAddress().getHostName(),_socket.getPort());
 	}
 }

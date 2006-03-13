@@ -132,7 +132,7 @@ class Msg implements Cloneable{
 		return false; // since not processed
 	}
 
-	static final Msg readMessage(Transaction a_trans, YapSocket sock) {
+	static final Msg readMessage(Transaction a_trans, YapSocket sock) throws Db4oException {
 		YapWriter reader = new YapWriter(a_trans, YapConst.MESSAGE_LENGTH);
 		try {
 			if(!reader.read(sock)) {
@@ -144,10 +144,9 @@ class Msg implements Cloneable{
 			}
 			return message;
 
-		} catch (Exception e) {
-		    // e.printStackTrace();
+		} catch (Exception exc) {
+		    throw new Db4oException(exc);
 		}
-		return null;
 	}
 
 	Msg readPayLoad(Transaction a_trans, YapSocket sock, YapWriter reader)

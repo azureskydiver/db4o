@@ -198,6 +198,10 @@ final class YapServerThread extends Thread {
             return true;
         }
         
+        if (Msg.PING.equals(message)) {
+            Msg.OK.write(getStream(), i_socket);
+            return true;
+        }
         if (Msg.CLOSE.equals(message)) {
             Msg.CLOSE.write(getStream(), i_socket);
             getTransaction().commit();

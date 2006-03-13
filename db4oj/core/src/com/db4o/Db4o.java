@@ -80,12 +80,17 @@ public class Db4o {
      * @see ObjectServer#grantAccess
 	 */
 	public static ObjectContainer openClient(String hostName, int port, String user, String password)
-		throws IOException {
+			throws IOException {
+		return openClient(new YapSocketReal(hostName, port), user, password);
+	}
+
+	public static ObjectContainer openClient(YapSocket socket, String user, String password)
+			throws IOException {
 		synchronized(Db4o.lock){
-			return new YapClient(new YapClientSocket(hostName, port), user, password, true);
+			return new YapClient(socket, user, password, true);
 		}
 	}
-	
+
     /**
      * opens an {@link ObjectContainer ObjectContainer}
 	 * on the specified database file for local use.

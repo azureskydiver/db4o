@@ -7,7 +7,6 @@ import com.db4o.foundation.network.*;
 
 class YapClientThread extends Thread{
 	
-	private Thread streamThread;
 	private YapClient i_stream;
 	private YapSocket i_socket;
 	final Queue4 messageQueue;
@@ -19,7 +18,6 @@ class YapClientThread extends Thread{
 			i_stream = client;
 			this.messageQueue = messageQueue;
 			i_socket = a_socket;
-			streamThread = Thread.currentThread();
 			this.messageQueueLock = messageQueueLock;
 		}
 	}
@@ -31,6 +29,7 @@ class YapClientThread extends Thread{
 	synchronized void close(){
 		i_stream = null;
 		i_socket = null;
+		//interrupt();
 	}
 	
 	public void run() {
@@ -39,7 +38,23 @@ class YapClientThread extends Thread{
                 if(i_stream == null){
                     return;
                 }
-				final Msg message = Msg.readMessage(i_stream.getTransaction(), i_socket);
+				final Msg message;
+				try {
+					message=Msg.readMessage(i_stream.getTransaction(), i_socket);
+				}
+				catch(Exception exc) {
+					messageQueueLock.run(new Closure4() {
+                        public Object run() {
+							messageQueue.add(Msg.ERROR);
+							close();
+							messageQueueLock.awake();
+                            return null;
+                        }
+                    });
+					
+					close();
+					return;
+				}
                 if(i_stream == null){
                     return;
                 }
@@ -63,7 +78,7 @@ class YapClientThread extends Thread{
                     
                     i_stream = null;
                     i_socket = null;
-				}else if (message != null){
+				}else /*if (message != null)*/{
 					messageQueueLock.run(new Closure4() {
                         public Object run() {
 							messageQueue.add(message);
@@ -72,7 +87,9 @@ class YapClientThread extends Thread{
                         }
                     });
 				}
-			} catch (Exception e) {
+			} catch (Exception exc) {
+				close();
+				return;
 			}
 		}
 	}

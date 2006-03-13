@@ -16,6 +16,7 @@ public class SimpleTimer implements Runnable {
 		_runnable = runnable;
 		_interval = interval;
 		Thread thread = new Thread(this);
+		thread.setDaemon(true);
 		thread.setName(name);
 		thread.start();
         // TODO: thread.setDaemon(true) but follow up on .NET 
