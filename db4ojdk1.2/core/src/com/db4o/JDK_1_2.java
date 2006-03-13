@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import java.lang.ref.*;
+
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.reflect.generic.*;
@@ -31,6 +33,10 @@ class JDK_1_2 extends JDKReflect {
         return new YapReferenceQueue();
     }
 
+    public Object createWeakReference(Object obj){
+        return new WeakReference(obj);
+    }
+    
     Object createYapRef(Object a_queue, YapObject a_yapObject, Object a_object) {
         return new YapRef(a_queue, a_yapObject, a_object);
     }
@@ -101,4 +107,12 @@ class JDK_1_2 extends JDKReflect {
     void setAccessible(Object a_accessible) {
         ((java.lang.reflect.AccessibleObject) a_accessible).setAccessible(true);
     }
+    
+    public Object weakReferenceTarget(Object weakRef){
+        if(weakRef instanceof WeakReference){
+            return ((WeakReference)weakRef).get();
+        }
+        return weakRef;
+    }
+
 }

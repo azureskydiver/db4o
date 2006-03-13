@@ -103,6 +103,11 @@ namespace com.db4o
 			return new YapReferenceQueue();
 		}
 
+        public static Object createWeakReference(Object obj)
+        {
+            return new WeakReference(obj, false);
+        }
+
 		internal static Object createYapRef(Object referenceQueue, Object yapObject, Object obj)
 		{
 			return new YapRef(referenceQueue, yapObject, obj);
@@ -510,6 +515,16 @@ namespace com.db4o
 			}
 			return bytes;
 		}
+
+        public static Object weakReferenceTarget(Object weakRef)
+        {
+            WeakReference wr = weakRef as WeakReference;
+            if(wr != null) 
+            {
+                return wr.Target;
+            }
+            return weakRef;
+        }
 
 		internal static object wrapEvaluation(object evaluation)
 		{
