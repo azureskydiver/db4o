@@ -33,6 +33,10 @@ public class JDK {
 		return null;
 	}
 
+    public Object createWeakReference(Object obj){
+        return obj;
+    }
+    
 	Object createYapRef(Object a_queue, YapObject a_yapObject, Object a_object) {
 		return null;
 	}
@@ -119,5 +123,9 @@ public class JDK {
 	
 	synchronized void unlock(RandomAccessFile file) {
 	}
+    
+    public Object weakReferenceTarget(Object weakRef){
+        return weakRef;
+    }
     
 }

@@ -44,6 +44,8 @@ public final class Platform4 {
     
     // static private int cCreateNewFile;
     static private int weakReferenceCheck;
+    
+    private static final Class[] SIMPLE_CLASSES = JavaOnly.SIMPLE_CLASSES;
 
     static final void addShutDownHook(Object a_stream, Object a_lock) {
         synchronized (a_lock) {
@@ -100,6 +102,10 @@ public final class Platform4 {
 
     static final Object createReferenceQueue() {
         return jdk().createReferenceQueue();
+    }
+    
+    public static Object createWeakReference(Object obj){
+        return jdk().createWeakReference(obj);
     }
 
     static final Object createYapRef(Object a_queue, Object a_yapObject, Object a_object) {
@@ -614,9 +620,11 @@ public final class Platform4 {
         // needed for .NET only: update assembly names if necessary
         return bytes;
     }
-
-	private static final Class[] SIMPLE_CLASSES = JavaOnly.SIMPLE_CLASSES;
     
+    public static Object weakReferenceTarget(Object weakRef){
+        return jdk().weakReferenceTarget(weakRef);
+    }
+
 	public static Object wrapEvaluation(Object evaluation) {
 		throw YapConst.virtualException();
 	}
