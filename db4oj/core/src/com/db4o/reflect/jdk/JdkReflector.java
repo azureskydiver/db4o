@@ -83,12 +83,24 @@ public class JdkReflector implements Reflector{
         if(claxx != null){
             clazz = new Class[claxx.length];
             for (int i = 0; i < claxx.length; i++) {
-                if(claxx[i] != null){
-                    clazz[i] = ((JdkClass)claxx[i].getDelegate()).getJavaClass();
-                }
+                clazz[i] = toNative(claxx[i]);
             }
         }
         return clazz;
+    }
+    
+    public static Class toNative(ReflectClass claxx){
+        if(claxx == null){
+            return null;
+        }
+        if(claxx instanceof JdkClass){
+            return ((JdkClass)claxx).getJavaClass();
+        }
+        ReflectClass d = claxx.getDelegate();
+        if(d == claxx){
+            return null;
+        }
+        return toNative(d);
     }
 
 }

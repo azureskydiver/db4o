@@ -88,11 +88,11 @@ public class JdkArray implements ReflectArray {
     }
 
     public Object newInstance(ReflectClass componentType, int length) {
-        return Array.newInstance(((JdkClass)componentType).getJavaClass(), length);
+        return Array.newInstance(JdkReflector.toNative(componentType), length);
     }
 
     public Object newInstance(ReflectClass componentType, int[] dimensions) {
-        return Array.newInstance(((JdkClass)componentType).getJavaClass(), dimensions);
+        return Array.newInstance(JdkReflector.toNative(componentType), dimensions);
     }
 
     public void set(Object onArray, int index, Object element) {
