@@ -91,7 +91,7 @@ public class JdkClass implements ReflectClass{
 		if(!(type instanceof JdkClass)) {
 			return false;
 		}
-		return _clazz.isAssignableFrom(((JdkClass)type).getJavaClass());
+		return _clazz.isAssignableFrom(JdkReflector.toNative(type));
 	}
 	
 	public boolean isCollection() {

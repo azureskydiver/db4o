@@ -3,24 +3,25 @@
 package com.db4o.config;
 
 import com.db4o.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.jdk.*;
 
 /**
  * @exclude
  */
 public class TClass implements ObjectConstructor
 {
-	public Object onStore(ObjectContainer con, Object object){
+	public Object onStore(ObjectContainer oc, Object object){
 		return ((Class)object).getName();
 	}
 	
-	public void onActivate(ObjectContainer con, Object object, Object members){
+	public void onActivate(ObjectContainer oc, Object object, Object members){
 		// do nothing
 	}
 
-	public Object onInstantiate(ObjectContainer con, Object storedObject){
+	public Object onInstantiate(ObjectContainer oc, Object storedObject){
 		try{
-			// return Db4o.classForName((String)storedObject);
-		    return Class.forName((String)storedObject);
+		    return JdkReflector.toNative(oc.ext().reflector().forName((String)storedObject));
 		}catch(Exception e){}
 		return null;
 	}
