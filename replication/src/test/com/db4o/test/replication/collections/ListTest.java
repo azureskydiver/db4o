@@ -19,6 +19,8 @@ public abstract class ListTest extends ReplicationTestcase {
 
 		clean();
 
+		//checkEmpty();
+
 		storeListToProviderA();
 
 		replicateAllToProviderBFirstTime();
@@ -35,6 +37,7 @@ public abstract class ListTest extends ReplicationTestcase {
 
 		destroy();
 	}
+
 
 	private void clean() {delete(new Class[]{ListContent.class, ListHolder.class, ArrayList.class});}
 

@@ -1,5 +1,7 @@
 package com.db4o.replication.hibernate.cfg;
 
+import com.db4o.replication.hibernate.impl.Util;
+import com.db4o.replication.hibernate.metadata.DeletedObject;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
@@ -26,20 +28,16 @@ public class RefConfig {
 	}
 
 	protected void addClasses() {
-		addClass(ReplicationProviderSignature.class);
-		addClass(ReplicationRecord.class);
-		addClass(ReplicationComponentIdentity.class);
-		addClass(ReplicationComponentField.class);
-		addClass(UuidLongPartSequence.class);
+		Util.addClass(configuration, ReplicationProviderSignature.class);
+		Util.addClass(configuration, ReplicationRecord.class);
+		Util.addClass(configuration, ReplicationComponentIdentity.class);
+		Util.addClass(configuration, ReplicationComponentField.class);
+		Util.addClass(configuration, UuidLongPartSequence.class);
+		Util.addClass(configuration, DeletedObject.class);
 	}
 
 	public Configuration getConfiguration() {
 		return configuration;
-	}
-
-	protected void addClass(Class aClass) {
-		if (configuration.getClassMapping(aClass.getName()) == null)
-			configuration.addClass(aClass);
 	}
 
 	public Dialect getDialect() {

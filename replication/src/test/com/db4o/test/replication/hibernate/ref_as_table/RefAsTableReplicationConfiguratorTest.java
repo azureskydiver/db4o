@@ -1,7 +1,7 @@
 package com.db4o.test.replication.hibernate.ref_as_table;
 
 import com.db4o.replication.ReplicationConfigurator;
-import com.db4o.replication.hibernate.impl.Util;
+import com.db4o.replication.hibernate.impl.Constants;
 import com.db4o.replication.hibernate.impl.ref_as_table.Shared;
 import com.db4o.test.Test;
 import com.db4o.test.replication.CollectionHolder;
@@ -15,7 +15,7 @@ public class RefAsTableReplicationConfiguratorTest {
 	SessionFactory sessionFactory;
 	Configuration cfg;
 
-	final static long INIT_VER = Util.MIN_VERSION_NO;
+	final static long INIT_VER = Constants.MIN_VERSION_NO;
 
 	final static long RAISED_VER = INIT_VER + 1;
 

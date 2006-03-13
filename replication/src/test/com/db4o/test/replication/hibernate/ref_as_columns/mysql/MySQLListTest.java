@@ -5,10 +5,10 @@ import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicatio
 import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateListTest;
+import com.db4o.test.replication.hibernate.ref_as_columns.hsql.ListTestHsqlRefAsColumns;
 import org.hibernate.cfg.Configuration;
 
-public class MySQLListTest extends HibernateListTest {
+public class MySQLListTest extends ListTestHsqlRefAsColumns {
 
 	protected TestableReplicationProviderInside prepareProviderA() {
 		Configuration configuration = HibernateConfigurationFactory.produceMySQLConfigA();

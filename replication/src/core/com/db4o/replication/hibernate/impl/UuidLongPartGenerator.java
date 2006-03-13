@@ -8,7 +8,6 @@ import java.util.List;
 public class UuidLongPartGenerator {
 	protected Session _session;
 	protected UuidLongPartSequence _uuidLongPartSequence;
-	public static final long MIN_SEQ_NO = 1000;
 
 	public UuidLongPartGenerator(Session session) {
 		_session = session;
@@ -21,6 +20,7 @@ public class UuidLongPartGenerator {
 		else if (count == 0) {
 			_uuidLongPartSequence = new UuidLongPartSequence();
 			_session.save(_uuidLongPartSequence);
+			_session.flush();
 		} else
 			throw new RuntimeException("result size = " + count + ". It should be either 1 or 0");
 	}

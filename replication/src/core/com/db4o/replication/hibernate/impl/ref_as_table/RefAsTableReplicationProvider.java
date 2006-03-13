@@ -263,6 +263,9 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 			ref.setObjectId(id);
 
 			Session s = getRefSession();
+
+			if (s == null)
+				System.out.println(entity);
 			s.save(ref);
 		}
 	}

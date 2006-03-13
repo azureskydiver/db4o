@@ -483,8 +483,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	public void syncVersionWithPeer(long version) {
 		ensureReplicationActive();
 
-		if (version < Util.MIN_VERSION_NO)
-			throw new RuntimeException("version must be great than " + Util.MIN_VERSION_NO);
+		if (version < Constants.MIN_VERSION_NO)
+			throw new RuntimeException("version must be great than " + Constants.MIN_VERSION_NO);
 
 		_replicationRecord.setVersion(version);
 		getRefSession().saveOrUpdate(_replicationRecord);

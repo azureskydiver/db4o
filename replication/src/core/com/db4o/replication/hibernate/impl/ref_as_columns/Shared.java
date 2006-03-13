@@ -1,6 +1,7 @@
 package com.db4o.replication.hibernate.impl.ref_as_columns;
 
 import com.db4o.replication.hibernate.cfg.ObjectConfig;
+import com.db4o.replication.hibernate.impl.Constants;
 import com.db4o.replication.hibernate.impl.Util;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
@@ -33,7 +34,7 @@ public class Shared {
 			if (!rs.next())
 				throw new RuntimeException("Cannot find the version of " + obj);
 
-			return Math.max(rs.getLong(1), Util.MIN_VERSION_NO);
+			return Math.max(rs.getLong(1), Constants.MIN_VERSION_NO);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {

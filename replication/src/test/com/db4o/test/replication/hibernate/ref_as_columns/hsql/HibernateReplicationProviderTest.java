@@ -25,8 +25,8 @@ public class HibernateReplicationProviderTest extends ReplicationProviderTest {
 	}
 
 	private void tstCollection() {
-		TestableReplicationProviderInside providerB = prepareSubject();
-		providerB.startReplicationTransaction(PEER_SIGNATURE);
+		subject = prepareSubject();
+		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		Db4oUUID listHolderUuid = new Db4oUUID(1234, PEER_SIGNATURE_BYTES);
 
@@ -36,36 +36,38 @@ public class HibernateReplicationProviderTest extends ReplicationProviderTest {
 
 		ListHolder listHolderClonedInB = new ListHolder("i am a list");
 
-		providerB.referenceNewObject(listHolderClonedInB, refFromA, null, null);
-		providerB.storeReplica(listHolderClonedInB);
-		ReplicationReference listHolderFromB = providerB.produceReference(listHolderClonedInB, null, null);
+		subject.referenceNewObject(listHolderClonedInB, refFromA, null, null);
+		subject.storeReplica(listHolderClonedInB);
+		ReplicationReference listHolderFromB = subject.produceReference(listHolderClonedInB, null, null);
 		ensure(listHolderFromB.object() == listHolderClonedInB);
 
 		Collection collectionInB = listHolderClonedInB.getList();
 
-		ReplicationReference collectionRefFromB = providerB.produceReference(collectionInB, listHolderClonedInB, "list");
+		ReplicationReference collectionRefFromB = subject.produceReference(collectionInB, listHolderClonedInB, "list");
 		ensure(collectionRefFromB.object() == collectionInB);
 
 		final Db4oUUID collectionUuid = collectionRefFromB.uuid();
 		ReplicationReference collectionRefFromA = new ReplicationReferenceImpl(new ArrayList(), collectionUuid, 9555);
 
-		providerB.referenceNewObject(collectionInB, collectionRefFromA, listHolderFromB, "list");
-		providerB.storeReplica(collectionInB);
-		ensure(providerB.produceReference(collectionInB, null, null) == collectionRefFromB);
-		ensure(providerB.produceReference(collectionInB, null, null).object() == collectionInB);
+		subject.referenceNewObject(collectionInB, collectionRefFromA, listHolderFromB, "list");
+		subject.storeReplica(collectionInB);
+		ensure(subject.produceReference(collectionInB, null, null) == collectionRefFromB);
+		ensure(subject.produceReference(collectionInB, null, null).object() == collectionInB);
 
-		final ReplicationReference byUuid = providerB.produceReferenceByUUID(collectionUuid, List.class);
+		final ReplicationReference byUuid = subject.produceReferenceByUUID(collectionUuid, List.class);
 		ensure(byUuid != null);
 
-		providerB.clearAllReferences();
-		final ReplicationReference refFromBAfterClear = providerB.produceReferenceByUUID(listHolderUuid, ListHolder.class);
+		subject.clearAllReferences();
+		final ReplicationReference refFromBAfterClear = subject.produceReferenceByUUID(listHolderUuid, ListHolder.class);
 		ensure(refFromBAfterClear != null);
 
 		final ListHolder listHolderInBAfterClear = ((ListHolder) refFromBAfterClear.object());
-		final ReplicationReference collectionRefFromBAfterClear = providerB.produceReference(listHolderInBAfterClear.getList(), listHolderInBAfterClear, "list");
+		final ReplicationReference collectionRefFromBAfterClear = subject.produceReference(listHolderInBAfterClear.getList(), listHolderInBAfterClear, "list");
 		ensure(collectionRefFromBAfterClear != null);
 
 		ensure(collectionRefFromBAfterClear.uuid().equals(collectionUuid));
+
+		destroySubject();
 	}
 
 	protected boolean subjectSupportsRollback() {

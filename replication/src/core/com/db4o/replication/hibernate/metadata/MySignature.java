@@ -22,25 +22,16 @@ package com.db4o.replication.hibernate.metadata;
 
 import com.db4o.Unobfuscated;
 
-import java.util.Arrays;
-
 public class MySignature extends ReplicationProviderSignature {
 
 	public MySignature() {
 		super();
 	}
 
-	public MySignature(byte[] bytes) {
-		super(bytes);
-	}
-
 	public static MySignature generateSignature() {
-		return new MySignature(Unobfuscated.generateSignature());
-	}
-
-	public static void main(String[] args) {
-		MySignature a = generateSignature();
-		MySignature b = generateSignature();
-		Arrays.equals(a.getBytes(), b.getBytes());
+		MySignature out = new MySignature();
+		out.setBytes(Unobfuscated.generateSignature());
+		out.setCreationTime(System.currentTimeMillis());
+		return out;
 	}
 }

@@ -1,6 +1,7 @@
 package com.db4o.replication.hibernate.impl.ref_as_table;
 
 import com.db4o.replication.hibernate.ObjectInsertedListener;
+import com.db4o.replication.hibernate.impl.Constants;
 import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import org.hibernate.Session;
@@ -41,7 +42,7 @@ public class ObjectInsertedListenerImpl implements ObjectInsertedListener {
 		ObjectReference ref = new ObjectReference();
 		ref.setClassName(entity.getClass().getName());
 		ref.setObjectId(id);
-		ref.setVersion(Util.MIN_VERSION_NO);
+		ref.setVersion(Constants.MIN_VERSION_NO);
 		getSession().save(ref);
 	}
 

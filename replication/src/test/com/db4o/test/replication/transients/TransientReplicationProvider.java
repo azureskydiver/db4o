@@ -36,14 +36,15 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 	private final Map _referencesByObject = new IdentityHashMap();
 
-	private final ReadonlyReplicationProviderSignature _signature;
+	private final MySignature _signature;
 	private ReadonlyReplicationProviderSignature _peerSignature;
 
 	private long _lastReplicationVersion;
 	private final Collection4 _uuidsReplicatedInThisSession = new Collection4();
 
 	public TransientReplicationProvider(byte[] signature, String name) {
-		_signature = new MySignature(signature);
+		_signature = new MySignature();
+		_signature.setBytes(signature);
 		_name = name;
 
 		ReplicationReflector reflector = ReplicationReflector.getInstance();

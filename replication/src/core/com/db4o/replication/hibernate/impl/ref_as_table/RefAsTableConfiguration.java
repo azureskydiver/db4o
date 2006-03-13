@@ -1,6 +1,7 @@
 package com.db4o.replication.hibernate.impl.ref_as_table;
 
 import com.db4o.replication.hibernate.cfg.RefConfig;
+import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import org.hibernate.cfg.Configuration;
 
@@ -26,6 +27,6 @@ public class RefAsTableConfiguration extends RefConfig {
 
 	protected void addClasses() {
 		super.addClasses();
-		addClass(ObjectReference.class);
+		Util.addClass(configuration, ObjectReference.class);
 	}
 }

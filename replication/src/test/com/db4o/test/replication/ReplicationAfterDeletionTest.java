@@ -15,6 +15,8 @@ public abstract class ReplicationAfterDeletionTest extends ReplicationTestcase {
 		replicate();
 
 		delete(new Class[]{SPCChild.class, SPCParent.class});
+
+		destroy();
 	}
 
 	private void replicate() {
