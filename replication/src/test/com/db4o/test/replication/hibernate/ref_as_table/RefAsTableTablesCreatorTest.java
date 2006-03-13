@@ -1,7 +1,7 @@
 package com.db4o.test.replication.hibernate.ref_as_table;
 
-import com.db4o.replication.hibernate.ref_as_table.RefAsTableConfiguration;
-import com.db4o.replication.hibernate.ref_as_table.RefAsTableTablesCreator;
+import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableConfiguration;
+import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableTablesCreator;
 import com.db4o.test.Test;
 import org.hibernate.cfg.Configuration;
 
@@ -19,7 +19,7 @@ public abstract class RefAsTableTablesCreatorTest {
 		RefAsTableConfiguration rc = RefAsTableConfiguration.produce(cfg);
 		final RefAsTableTablesCreator creator = new RefAsTableTablesCreator(rc);
 
-		creator.execute();
+		creator.createTables();
 	}
 
 	public void tstValidate() {
@@ -30,7 +30,7 @@ public abstract class RefAsTableTablesCreatorTest {
 
 		boolean exception = false;
 		try {
-			creator.execute();
+			creator.createTables();
 		} catch (RuntimeException e) {
 			exception = true;
 		}

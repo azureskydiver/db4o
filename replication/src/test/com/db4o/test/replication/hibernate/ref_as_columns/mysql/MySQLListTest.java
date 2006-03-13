@@ -1,7 +1,7 @@
 package com.db4o.test.replication.hibernate.ref_as_columns.mysql;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
