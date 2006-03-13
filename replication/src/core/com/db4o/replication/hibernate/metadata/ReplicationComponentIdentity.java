@@ -1,5 +1,7 @@
 package com.db4o.replication.hibernate.metadata;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 public class ReplicationComponentIdentity {
 	public static final String TABLE_NAME = "ReplicationComponentIdentity";
 
@@ -73,5 +75,9 @@ public class ReplicationComponentIdentity {
 		result = 29 * result + referencingObjectField.hashCode();
 		result = 29 * result + provider.hashCode();
 		return result;
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 }

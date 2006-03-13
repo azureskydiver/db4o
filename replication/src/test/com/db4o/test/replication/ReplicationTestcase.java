@@ -24,6 +24,18 @@ public abstract class ReplicationTestcase {
 		initproviderPairs();
 	}
 
+	protected void checkEmpty() {
+		ReplicationSession replication = Replication.begin(_providerA, _providerB);
+
+		if (_providerA.objectsChangedSinceLastReplication().hasNext())
+			throw new RuntimeException("_providerA database is not cleaned");
+
+		if (_providerB.objectsChangedSinceLastReplication().hasNext())
+			throw new RuntimeException("_providerB database is not cleaned");
+
+		replication.rollback();
+	}
+
 	protected void printCombination(ProviderPair p) {
 		String claxx = this.getClass().getName();
 		String pa = p._providerA.getName();

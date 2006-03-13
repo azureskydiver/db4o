@@ -1,27 +1,17 @@
 package com.db4o.test.replication.hibernate.ref_as_table.hsql;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.test.replication.collections.ListContent;
-import com.db4o.test.replication.collections.ListHolder;
-import com.db4o.test.replication.collections.ListTest;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
-import com.db4o.test.replication.hibernate.HibernateUtil;
-import org.hibernate.cfg.Configuration;
+import com.db4o.test.replication.hibernate.HibernateListTest;
+import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableUtil;
 
-public class ListTestHsqlRefAsTable extends ListTest {
+public class ListTestHsqlRefAsTable extends HibernateListTest {
 	protected TestableReplicationProviderInside prepareProviderA() {
-		return HibernateUtil.newRefAsTable(newCfg(), "A");
+		return RefAsTableUtil.newProvider(addClasses(HibernateConfigurationFactory.createNewDbConfig()), "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		return HibernateUtil.newRefAsTable(newCfg(), "B");
-	}
-
-	private Configuration newCfg() {
-		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
-		configuration.addClass(ListHolder.class);
-		configuration.addClass(ListContent.class);
-		return configuration;
+		return RefAsTableUtil.newProvider(addClasses(HibernateConfigurationFactory.createNewDbConfig()), "A");
 	}
 
 	public void test() {

@@ -15,14 +15,14 @@ import com.db4o.test.replication.db4o.hibernate.HibernateDb4oListTest;
 import com.db4o.test.replication.hibernate.UuidLongPartGeneratorTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.Db4oHibernateMapTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateDb4oMapTest;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateListTest;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateMapTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicationAfterDeletionTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicationFeaturesMain;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicationProviderTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateSimpleArrayTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateSingleTypeCollectionReplicationTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HsqlMetaDataTablesCreatorTest;
+import com.db4o.test.replication.hibernate.ref_as_columns.hsql.ListTestHsqlRefAsColumns;
+import com.db4o.test.replication.hibernate.ref_as_columns.hsql.MapTestHsqlRefAsColumns;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.AfterDeletionTestHsqlRefAsTable;
@@ -78,14 +78,14 @@ public class ReplicationTestSuite extends TestSuite {
 
 				TransientListTest.class,
 				Db4oListTest.class,
-				HibernateListTest.class,
+				ListTestHsqlRefAsColumns.class,
 				HibernateDb4oListTest.class,
 				Db4oHibernateListTest.class,
 				ListTestHsqlRefAsTable.class,
 
 				TransientMapTest.class,
 				Db4oMapTest.class,
-				HibernateMapTest.class,
+				MapTestHsqlRefAsColumns.class,
 				HibernateDb4oMapTest.class,
 				Db4oHibernateMapTest.class,
 				MapTestHsqlRefAsTable.class,

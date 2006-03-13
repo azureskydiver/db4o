@@ -53,7 +53,7 @@ public class Shared {
 		String sql = "SELECT " + ObjectReference.VERSION + " FROM " + ObjectReference.TABLE_NAME
 				+ " WHERE " + ObjectReference.CLASS_NAME + " = ?"
 				+ " AND " + ObjectReference.OBJECT_ID + " = ?";
-		final PreparedStatement ps = Util.getPreparedStatement(con, sql);
+		final PreparedStatement ps = Util.prepareStatement(con, sql);
 
 
 		ResultSet rs = null;
