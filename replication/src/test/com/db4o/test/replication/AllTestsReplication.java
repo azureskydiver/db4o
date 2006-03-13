@@ -10,8 +10,8 @@ public class AllTestsReplication extends AllTests {
 
 	public static void main(String[] args) {
 		Db4oReplicationTestUtil.configure();
-//		runSolo(ListTestHsqlRefAsTable.class);
-		//runSolo(RefAsTableReplicationConfiguratorTest.class);
+//		runSolo(MapTestHsqlRefAsColumns.class);
+//		runSolo(MapTestHsqlRefAsColumns.class);
 		new AllTestsReplication().run();
 		Db4oReplicationTestUtil.close();
 		System.exit(0);

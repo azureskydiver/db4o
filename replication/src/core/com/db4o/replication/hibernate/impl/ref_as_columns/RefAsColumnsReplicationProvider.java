@@ -66,6 +66,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		_objectTransaction = _objectSession.beginTransaction();
 
 		init();
+		_alive = true;
 	}
 
 	protected RefConfig getRefConfig() {
@@ -79,7 +80,6 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 	}
 
 	protected ReplicationReference produceObjectReference(Object obj) {
-		//System.out.println("produceObjectReference() obj = " + obj);
 		if (!getSession().contains(obj)) return null;
 
 		String tableName = getObjectConfig().getTableName(obj.getClass());
@@ -263,8 +263,9 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		//TODO performance sucks, but this method is called when testing only.
 		Object entity = event.getEntity();
 
-		long newVer = Util.getMaxVersion(_objectSession.connection()) + 1;
-		Shared.incrementObjectVersion(_objectSession.connection(), event.getId(), newVer,
+		Connection con = getSession().connection();
+		long newVer = Util.getMaxVersion(con) + 1;
+		Shared.incrementObjectVersion(con, event.getId(), newVer,
 				getObjectConfig().getTableName(entity.getClass()), getObjectConfig().getPrimaryKeyColumnName(entity));
 	}
 }

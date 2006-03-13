@@ -1,6 +1,7 @@
 package com.db4o.replication.hibernate.impl;
 
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
+import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.metadata.DeletedObject;
 import com.db4o.replication.hibernate.metadata.MySignature;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
@@ -172,5 +173,9 @@ public class Util {
 	public static void addClass(Configuration cfg, Class aClass) {
 		if (cfg.getClassMapping(aClass.getName()) == null)
 			cfg.addClass(aClass);
+	}
+
+	public static void dumpTable(HibernateReplicationProvider p, String s) {
+		dumpTable(p.getName(), p.getSession(), s);
 	}
 }

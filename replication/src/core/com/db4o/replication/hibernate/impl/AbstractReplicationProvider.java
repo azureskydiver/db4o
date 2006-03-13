@@ -20,6 +20,7 @@ import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
+import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -103,7 +104,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected UuidLongPartGenerator uuidLongPartGenerator;
 
-	private boolean _alive = true;
+	protected boolean _alive = false;
 
 	protected void initPeerSigAndRecord(byte[] peerSigBytes) {
 		PeerSignature existingPeerSignature = getPeerSignature(peerSigBytes);
@@ -514,7 +515,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected void init() {
 		initMappedClasses();
-		uuidLongPartGenerator = new UuidLongPartGenerator(getRefSession());
 		initMySignature();
 	}
 
@@ -728,6 +728,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 		_currentVersion = Util.getMaxVersion(getRefSession().connection()) + 1;
 
+		uuidLongPartGenerator = new UuidLongPartGenerator(getRefSession());
+
 		_inReplication = true;
 	}
 
@@ -754,14 +756,36 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		_uuidsReplicatedInThisSession = null;
 
 		_reflector = null;
+
+		destroyListeners();
+	}
+
+	private void destroyListeners() {
+		EventListeners eventListeners = getObjectConfig().getConfiguration().getEventListeners();
+		FlushEventListener[] o1 = eventListeners.getFlushEventListeners();
+		FlushEventListener[] r1 = (FlushEventListener[]) ArrayUtils.removeElement(
+				o1, myFlushEventListener);
+		if ((o1.length - r1.length) != 1)
+			throw new RuntimeException("can't remove");
+
+		eventListeners.setFlushEventListeners(r1);
+		myFlushEventListener = null;
+
+		PostUpdateEventListener[] o2 = eventListeners.getPostUpdateEventListeners();
+		PostUpdateEventListener[] r2 = (PostUpdateEventListener[]) ArrayUtils.removeElement(
+				o2, myPostUpdateEventListener);
+		if ((o2.length - r2.length) != 1)
+			throw new RuntimeException("can't remove");
+		eventListeners.setPostUpdateEventListeners(r2);
+		myPostUpdateEventListener = null;
 	}
 
 	protected abstract void saveOrUpdateReplicaMetadata(ReplicationReference ref);
 
 	final class MyFlushEventListener implements FlushEventListener {
 		public final void onFlush(FlushEvent event) throws HibernateException {
+			ensureAlive();
 			if (!isReplicationActive()) return;
-
 			for (Iterator iterator = _dirtyRefs.iterator(); iterator.hasNext();) {
 				ReplicationReference ref = (ReplicationReference) iterator.next();
 				iterator.remove();
