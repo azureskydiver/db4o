@@ -28,7 +28,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 <hibernate-mapping default-access="property" default-lazy="false">
 	<class name="com.db4o.replication.hibernate.metadata.UuidLongPartSequence"
-	       table="uuid_long_part_sequence">
+	       table="UuidLongPartSequence">
 		<id column="unused_id" type="long">
 			<generator class="native"/>
 		</id>

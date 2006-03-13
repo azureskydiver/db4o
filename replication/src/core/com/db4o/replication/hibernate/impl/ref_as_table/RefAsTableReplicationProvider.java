@@ -50,6 +50,8 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		_objectTransaction = _objectSession.beginTransaction();
 
 		init();
+
+		_alive = true;
 	}
 
 	protected void initEventListeners() {

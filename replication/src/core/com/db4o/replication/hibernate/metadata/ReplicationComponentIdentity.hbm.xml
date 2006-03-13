@@ -35,11 +35,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 		<natural-id mutable="false">
 			<property name="uuidLongPart"/>
-			<property name="referencingObjectUuidLongPart"/>
-			<many-to-one name="referencingObjectField" cascade="all"/>
+			<many-to-one name="provider"/>
 		</natural-id>
 
-		<many-to-one name="provider"/>
-
+		<property name="referencingObjectUuidLongPart"/>
+		<many-to-one name="referencingObjectField" cascade="all"/>
 	</class>
 </hibernate-mapping>

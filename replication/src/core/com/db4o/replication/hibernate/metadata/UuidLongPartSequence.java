@@ -3,7 +3,7 @@ package com.db4o.replication.hibernate.metadata;
 import com.db4o.replication.hibernate.impl.Constants;
 
 public class UuidLongPartSequence {
-	public static final String TABLE_NAME = "uuid_long_part_sequence";
+	public static final String TABLE_NAME = "UuidLongPartSequence";
 
 	private long current;
 
