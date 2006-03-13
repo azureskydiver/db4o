@@ -4,8 +4,8 @@ import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.common.PeerSignature;
-import com.db4o.replication.hibernate.common.ReplicationReferenceImpl;
+import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
+import com.db4o.replication.hibernate.metadata.PeerSignature;
 import com.db4o.test.Test;
 
 import java.util.Vector;

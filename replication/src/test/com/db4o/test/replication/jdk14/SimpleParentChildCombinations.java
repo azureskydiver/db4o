@@ -3,8 +3,8 @@
 package com.db4o.test.replication.jdk14;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
-import com.db4o.replication.hibernate.ref_as_table.RefAsTableReplicationProvider;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
+import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableReplicationProvider;
 import com.db4o.test.replication.SPCChild;
 import com.db4o.test.replication.SPCParent;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;

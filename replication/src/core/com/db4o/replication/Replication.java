@@ -6,8 +6,8 @@ import com.db4o.ObjectContainer;
 import com.db4o.inside.replication.DefaultConflictResolver;
 import com.db4o.inside.replication.GenericReplicationSession;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
-import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
-import com.db4o.replication.hibernate.ref_as_table.RefAsTableReplicationProvider;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
+import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableReplicationProvider;
 import org.hibernate.cfg.Configuration;
 
 /**

@@ -1,7 +1,7 @@
 package com.db4o.test.replication.hibernate.ref_as_columns.hsql;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.collections.map.MapContent;
 import com.db4o.test.replication.collections.map.MapHolder;
 import com.db4o.test.replication.collections.map.MapTest;

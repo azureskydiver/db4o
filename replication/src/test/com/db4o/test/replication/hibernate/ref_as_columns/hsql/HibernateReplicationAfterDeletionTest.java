@@ -1,7 +1,7 @@
 package com.db4o.test.replication.hibernate.ref_as_columns.hsql;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.ReplicationAfterDeletionTest;
 import com.db4o.test.replication.SPCChild;
 import com.db4o.test.replication.SPCParent;

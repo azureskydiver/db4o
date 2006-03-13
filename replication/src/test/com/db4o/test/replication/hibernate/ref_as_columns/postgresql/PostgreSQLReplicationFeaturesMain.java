@@ -1,6 +1,6 @@
 package com.db4o.test.replication.hibernate.ref_as_columns.postgresql;
 
-import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.Replicated;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicationFeaturesMain;

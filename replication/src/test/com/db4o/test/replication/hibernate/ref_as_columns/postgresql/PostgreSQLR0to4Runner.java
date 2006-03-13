@@ -1,8 +1,8 @@
 package com.db4o.test.replication.hibernate.ref_as_columns.postgresql;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsReplicationProvider;
-import com.db4o.replication.hibernate.ref_as_table.RefAsTableReplicationProvider;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
+import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableReplicationProvider;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
 import com.db4o.test.replication.jdk14.R0to4RunnerCombinations;

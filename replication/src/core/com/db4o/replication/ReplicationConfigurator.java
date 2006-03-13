@@ -1,9 +1,10 @@
 package com.db4o.replication;
 
+import com.db4o.replication.hibernate.ObjectInsertedListener;
 import com.db4o.replication.hibernate.UpdateEventListener;
-import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsUpdateEventListener;
-import com.db4o.replication.hibernate.ref_as_table.ObjectInsertedListener;
-import com.db4o.replication.hibernate.ref_as_table.RefAsTableUpdateEventListener;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsUpdateEventListener;
+import com.db4o.replication.hibernate.impl.ref_as_table.ObjectInsertedListenerImpl;
+import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableUpdateEventListener;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
@@ -37,7 +38,7 @@ public class ReplicationConfigurator {
 	private static UpdateEventListener refAsColumnstListener = new RefAsColumnsUpdateEventListener();
 	private static UpdateEventListener refAstablestListener = new RefAsTableUpdateEventListener();
 
-	private static ObjectInsertedListener objectInsertedListener = new ObjectInsertedListener();
+	private static ObjectInsertedListener objectInsertedListener = new ObjectInsertedListenerImpl();
 
 	/**
 	 * Registers object update event listeners to Configuration.

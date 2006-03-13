@@ -1,8 +1,8 @@
 package com.db4o.test.replication.hibernate.ref_as_columns;
 
-import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsConfiguration;
-import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsSchemaValidator;
-import com.db4o.replication.hibernate.ref_as_columns.RefAsColumnsTablesCreator;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsConfiguration;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsSchemaValidator;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsTablesCreator;
 import com.db4o.test.Test;
 import org.hibernate.cfg.Configuration;
 
@@ -20,7 +20,7 @@ public abstract class RefAsColumnsMetaDataTablesCreatorTest {
 		RefAsColumnsConfiguration rc = RefAsColumnsConfiguration.produce(cfg);
 		final RefAsColumnsTablesCreator creator = new RefAsColumnsTablesCreator(rc);
 
-		creator.execute();
+		creator.createTables();
 
 		RefAsColumnsSchemaValidator validator = new RefAsColumnsSchemaValidator(rc);
 
@@ -35,7 +35,7 @@ public abstract class RefAsColumnsMetaDataTablesCreatorTest {
 
 		boolean exception = false;
 		try {
-			creator.execute();
+			creator.createTables();
 		} catch (RuntimeException e) {
 			exception = true;
 		}
