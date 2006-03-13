@@ -8,6 +8,7 @@ import com.db4o.replication.hibernate.impl.ChangedObjectId;
 import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
+import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
@@ -28,6 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
+	protected PostInsertEventListener objectInsertedListener;
+
 	public RefAsTableReplicationProvider(Configuration cfg) {
 		this(cfg, null);
 	}
@@ -64,8 +67,22 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		super.storeNew(root);
 	}
 
+	public void destroyListeners() {
+		super.destroyListeners();
+
+		EventListeners eventListeners = getObjectConfig().getConfiguration().getEventListeners();
+		PostInsertEventListener[] o1 = eventListeners.getPostInsertEventListeners();
+		PostInsertEventListener[] r1 = (PostInsertEventListener[]) ArrayUtils.removeElement(
+				o1, objectInsertedListener);
+		if ((o1.length - r1.length) != 1)
+			throw new RuntimeException("can't remove");
+
+		eventListeners.setPostInsertEventListeners(r1);
+		objectInsertedListener = null;
+	}
+
 	protected PostInsertEventListener[] createPostInsertEventListeners(PostInsertEventListener[] defaultListeners) {
-		PostInsertEventListener objectInsertedListener = new MyObjectInsertedListener();
+		objectInsertedListener = new MyObjectInsertedListener();
 
 		if (defaultListeners == null) {
 			return new PostInsertEventListener[]{objectInsertedListener};
@@ -250,7 +267,6 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		Shared.incrementObjectVersion(sess, entity, id);
 	}
 
-
 	public class MyObjectInsertedListener implements PostInsertEventListener {
 		public void onPostInsert(PostInsertEvent event) {
 			if (isReplicationActive()) return;
@@ -265,9 +281,6 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 			ref.setObjectId(id);
 
 			Session s = getRefSession();
-
-			if (s == null)
-				System.out.println(entity);
 			s.save(ref);
 		}
 	}

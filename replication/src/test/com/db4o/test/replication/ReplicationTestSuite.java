@@ -13,9 +13,9 @@ import com.db4o.test.replication.db4o.hibernate.Db4oHibernateListTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateSimpleArrayTest;
 import com.db4o.test.replication.db4o.hibernate.HibernateDb4oListTest;
 import com.db4o.test.replication.hibernate.UuidLongPartGeneratorTest;
+import com.db4o.test.replication.hibernate.ref_as_columns.hsql.AfterDeletionHsqlRefAsColumns;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.Db4oHibernateMapTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateDb4oMapTest;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicationAfterDeletionTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicationFeaturesMain;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicationProviderTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateSimpleArrayTest;
@@ -61,8 +61,8 @@ public class ReplicationTestSuite extends TestSuite {
 				HsqlMetaDataTablesCreatorTest.class,
 				RefAsTableTablesCreatorTestHsql.class,
 
-				HibernateReplicationAfterDeletionTest.class,
 				Db4oReplicationAfterDeletionTest.class,
+				AfterDeletionHsqlRefAsColumns.class,
 				AfterDeletionTestHsqlRefAsTable.class,
 
 				TransientReplicationProviderTest.class,

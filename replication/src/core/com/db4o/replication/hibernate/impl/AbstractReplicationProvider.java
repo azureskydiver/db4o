@@ -760,7 +760,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		destroyListeners();
 	}
 
-	private void destroyListeners() {
+	protected void destroyListeners() {
 		EventListeners eventListeners = getObjectConfig().getConfiguration().getEventListeners();
 		FlushEventListener[] o1 = eventListeners.getFlushEventListeners();
 		FlushEventListener[] r1 = (FlushEventListener[]) ArrayUtils.removeElement(
