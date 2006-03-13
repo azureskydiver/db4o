@@ -1,17 +1,21 @@
 package com.db4o.test.replication.hibernate.ref_as_table.hsql;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicationAfterDeletionTest;
+import com.db4o.test.replication.hibernate.HibernateAfterDeletion;
 import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableUtil;
+import org.hibernate.cfg.Configuration;
 
-public class AfterDeletionTestHsqlRefAsTable extends HibernateReplicationAfterDeletionTest {
-
+public class AfterDeletionTestHsqlRefAsTable extends HibernateAfterDeletion {
 	protected TestableReplicationProviderInside prepareProviderA() {
-		return RefAsTableUtil.newProvider(newCfg(), "A");
+		Configuration cfg = RefAsTableUtil.cfgA;
+		addClasses(cfg);
+		return RefAsTableUtil.newProvider(cfg, "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		return RefAsTableUtil.newProvider(newCfg(), "B");
+		Configuration cfg = RefAsTableUtil.cfgB;
+		addClasses(cfg);
+		return RefAsTableUtil.newProvider(cfg, "B");
 	}
 
 	public void test() {
