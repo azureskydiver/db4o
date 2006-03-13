@@ -12,4 +12,8 @@ public class RefAsTableTablesCreatorTestHsql extends RefAsTableTablesCreatorTest
 	protected Configuration validateCfg() {
 		return HibernateConfigurationFactory.createNewDbConfigNotCreateTables();
 	}
+
+	public void test() {
+		super.test();
+	}
 }

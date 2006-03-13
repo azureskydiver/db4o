@@ -22,6 +22,7 @@ import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Criteria;
+import org.hibernate.EmptyInterceptor;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -449,7 +450,9 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	protected void initEventListeners() {
-		EventListeners eventListeners = getObjectConfig().getConfiguration().getEventListeners();
+		Configuration cfg = getObjectConfig().getConfiguration();
+		cfg.setInterceptor(EmptyInterceptor.INSTANCE);
+		EventListeners eventListeners = cfg.getEventListeners();
 
 		eventListeners.setFlushEventListeners(createFlushEventListeners(eventListeners.getFlushEventListeners()));
 		eventListeners.setPostUpdateEventListeners(createPostUpdateListeners(eventListeners.getPostUpdateEventListeners()));
@@ -507,7 +510,10 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 		for (Iterator<ChangedObjectId> iterator = changedObjectIds.iterator(); iterator.hasNext();) {
 			ChangedObjectId changedObjectId = iterator.next();
-			out.add(getSession().load(changedObjectId.className, changedObjectId.hibernateId));
+			Object loaded = getSession().get(changedObjectId.className, changedObjectId.hibernateId);
+			//TODO FIXME, use load()
+			if (loaded != null)
+				out.add(loaded);
 		}
 
 		return out;
@@ -534,29 +540,16 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	protected FlushEventListener[] createFlushEventListeners(FlushEventListener[] defaultListeners) {
-		if (defaultListeners == null) {
-			return new FlushEventListener[]{myFlushEventListener};
-		} else {
-			FlushEventListener[] out;
-			final int count = defaultListeners.length;
-			out = new FlushEventListener[count + 1];
-			System.arraycopy(defaultListeners, 0, out, 0, count);
-			out[count] = myFlushEventListener;
-			return out;
-		}
+		FlushEventListener[] out;
+		final int count = defaultListeners.length;
+		out = new FlushEventListener[count + 1];
+		System.arraycopy(defaultListeners, 0, out, 0, count);
+		out[count] = myFlushEventListener;
+		return out;
 	}
 
 	protected PostUpdateEventListener[] createPostUpdateListeners(PostUpdateEventListener[] defaultListeners) {
-		if (defaultListeners == null) {
-			return new PostUpdateEventListener[]{myPostUpdateEventListener};
-		} else {
-			PostUpdateEventListener[] out;
-			final int count = defaultListeners.length;
-			out = new PostUpdateEventListener[count + 1];
-			System.arraycopy(defaultListeners, 0, out, 0, count);
-			out[count] = myPostUpdateEventListener;
-			return out;
-		}
+		return new PostUpdateEventListener[]{myPostUpdateEventListener};
 	}
 
 	public final ObjectSet objectsChangedSinceLastReplication() {

@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
-	protected PostInsertEventListener objectInsertedListener;
+	protected PostInsertEventListener objectInsertedListener = new MyObjectInsertedListener();
 
 	public RefAsTableReplicationProvider(Configuration cfg) {
 		this(cfg, null);
@@ -82,18 +82,20 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 	}
 
 	protected PostInsertEventListener[] createPostInsertEventListeners(PostInsertEventListener[] defaultListeners) {
-		objectInsertedListener = new MyObjectInsertedListener();
-
-		if (defaultListeners == null) {
-			return new PostInsertEventListener[]{objectInsertedListener};
-		} else {
-			PostInsertEventListener[] out;
-			final int count = defaultListeners.length;
-			out = new PostInsertEventListener[count + 1];
-			System.arraycopy(defaultListeners, 0, out, 0, count);
-			out[count] = objectInsertedListener;
-			return out;
+		for (int i = 0; i < defaultListeners.length; i++) {
+			if (defaultListeners[i] instanceof ObjectInsertedListenerImpl) {
+				defaultListeners[i] = objectInsertedListener;
+				return defaultListeners;
+			}
 		}
+
+		PostInsertEventListener[] out;
+
+		final int count = defaultListeners.length;
+		out = new PostInsertEventListener[count + 1];
+		System.arraycopy(defaultListeners, 0, out, 0, count);
+		out[count] = objectInsertedListener;
+		return out;
 	}
 
 	protected Session getRefSession() {
