@@ -1,10 +1,44 @@
 package com.db4o.test.replication.hibernate;
 
+import com.db4o.test.replication.CollectionHolder;
+import com.db4o.test.replication.Replicated;
+import com.db4o.test.replication.SPCChild;
+import com.db4o.test.replication.SPCParent;
+import com.db4o.test.replication.collections.ListContent;
+import com.db4o.test.replication.collections.ListHolder;
+import com.db4o.test.replication.collections.SimpleArrayContent;
+import com.db4o.test.replication.collections.SimpleArrayHolder;
+import com.db4o.test.replication.collections.map.MapContent;
+import com.db4o.test.replication.collections.map.MapHolder;
+import com.db4o.test.replication.provider.Car;
+import com.db4o.test.replication.provider.Pilot;
+import com.db4o.test.replication.template.r0tor4.R0;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 
 public class HibernateConfigurationFactory {
+	private static final String HSQL_CFG_XML = "com/db4o/test/replication/hibernate/hibernate-HSQL.cfg.xml";
+
 	protected static final String JDBC_URL_HEAD = "jdbc:hsqldb:mem:unique_";
+
 	protected static int jdbcUrlCounter = 0;
+
+	public static final Class[] mappings;
+
+	static {
+		mappings = new Class[]{CollectionHolder.class, Replicated.class,
+				SPCParent.class, SPCChild.class,
+				ListHolder.class, ListContent.class,
+				MapHolder.class, MapContent.class,
+				SimpleArrayContent.class, SimpleArrayHolder.class,
+				R0.class, Pilot.class, Car.class};
+	}
+
+	public static void addAllMappings(Configuration cfg) {
+		for (int i = 0; i < mappings.length; i++) {
+			cfg.addClass(mappings[i]);
+		}
+	}
 
 	/**
 	 * Create a unique Configuration with the underlying database guaranteed to be
@@ -13,9 +47,14 @@ public class HibernateConfigurationFactory {
 	 * @return configuration
 	 */
 	public static Configuration createNewDbConfig() {
-		Configuration configuration = new Configuration().configure("com/db4o/test/replication/hibernate/hibernate-HSQL.cfg.xml");
+		Configuration configuration = new Configuration().configure(HSQL_CFG_XML);
 		String url = JDBC_URL_HEAD + jdbcUrlCounter++;
-		return configuration.setProperty("hibernate.connection.url", url);
+		return configuration.setProperty(Environment.URL, url);
+	}
+
+	public static Configuration reuse(String url) {
+		Configuration configuration = new Configuration().configure(HSQL_CFG_XML);
+		return configuration.setProperty(Environment.URL, url);
 	}
 
 	public static Configuration createNewDbConfigNotCreateTables() {

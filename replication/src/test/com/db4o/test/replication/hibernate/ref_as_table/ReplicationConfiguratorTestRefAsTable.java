@@ -19,7 +19,7 @@ public class ReplicationConfiguratorTestRefAsTable extends AbstractReplicationCo
 	}
 
 	protected void init() {
-		cfg = RefAsTableUtil.cfgA;
+		cfg = RefAsTableUtil.getCfgA();
 		Util.addClass(cfg, CollectionHolder.class);
 		ReplicationConfigurator.refAsTableConfigure(cfg);
 	}

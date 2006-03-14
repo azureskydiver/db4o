@@ -7,13 +7,13 @@ import org.hibernate.cfg.Configuration;
 
 public class AfterDeletionTestHsqlRefAsTable extends HibernateAfterDeletion {
 	protected TestableReplicationProviderInside prepareProviderA() {
-		Configuration cfg = RefAsTableUtil.cfgA;
+		Configuration cfg = RefAsTableUtil.getCfgA();
 		addClasses(cfg);
 		return RefAsTableUtil.newProvider(cfg, "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		Configuration cfg = RefAsTableUtil.cfgB;
+		Configuration cfg = RefAsTableUtil.getCfgB();
 		addClasses(cfg);
 		return RefAsTableUtil.newProvider(cfg, "B");
 	}

@@ -510,10 +510,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 		for (Iterator<ChangedObjectId> iterator = changedObjectIds.iterator(); iterator.hasNext();) {
 			ChangedObjectId changedObjectId = iterator.next();
-			Object loaded = getSession().get(changedObjectId.className, changedObjectId.hibernateId);
-			//TODO FIXME, use load()
-			if (loaded != null)
-				out.add(loaded);
+			out.add(getSession().load(changedObjectId.className, changedObjectId.hibernateId));
 		}
 
 		return out;

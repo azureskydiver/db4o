@@ -82,20 +82,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 	}
 
 	protected PostInsertEventListener[] createPostInsertEventListeners(PostInsertEventListener[] defaultListeners) {
-		for (int i = 0; i < defaultListeners.length; i++) {
-			if (defaultListeners[i] instanceof ObjectInsertedListenerImpl) {
-				defaultListeners[i] = objectInsertedListener;
-				return defaultListeners;
-			}
-		}
-
-		PostInsertEventListener[] out;
-
-		final int count = defaultListeners.length;
-		out = new PostInsertEventListener[count + 1];
-		System.arraycopy(defaultListeners, 0, out, 0, count);
-		out[count] = objectInsertedListener;
-		return out;
+		return new PostInsertEventListener[]{objectInsertedListener};
 	}
 
 	protected Session getRefSession() {

@@ -7,14 +7,14 @@ import org.hibernate.cfg.Configuration;
 
 public class MapTestHsqlRefAsTable extends HibernateMapTest {
 	protected TestableReplicationProviderInside prepareProviderA() {
-		Configuration cfg = RefAsTableUtil.cfgA;
-		addClasses(cfg);
+		Configuration cfg = RefAsTableUtil.getCfgA();
+		add(cfg);
 		return RefAsTableUtil.newProvider(cfg, "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		Configuration cfg = RefAsTableUtil.cfgB;
-		addClasses(cfg);
+		Configuration cfg = RefAsTableUtil.getCfgB();
+		add(cfg);
 		return RefAsTableUtil.newProvider(cfg, "B");
 	}
 

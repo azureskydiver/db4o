@@ -7,6 +7,8 @@ import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicatio
 import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableReplicationProvider;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
 import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
+import com.db4o.test.replication.hibernate.ref_as_columns.RefAsColumnsUtil;
+import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableUtil;
 import com.db4o.test.replication.template.r0tor4.R0;
 import com.db4o.test.replication.template.r0tor4.R0to4Runner;
 import com.db4o.test.replication.transients.TransientReplicationProvider;
@@ -31,21 +33,21 @@ public class R0to4RunnerCombinations extends R0to4Runner {
 		TestableReplicationProviderInside a;
 		TestableReplicationProviderInside b;
 
-		a = new RefAsColumnsReplicationProvider(newCfg(), "HSQL RefAsColumns");
-		b = new RefAsColumnsReplicationProvider(newCfg(), "HSQL RefAsColumns");
+
+		a = new RefAsColumnsReplicationProvider(addClasses(RefAsColumnsUtil.getCfgA()), "HSQL RefAsColumns");
+		b = new RefAsColumnsReplicationProvider(addClasses(RefAsColumnsUtil.getCfgB()), "HSQL RefAsColumns");
 		addProviderPairs(a, b);
 
-		a = new RefAsColumnsReplicationProvider(newCfg(), "HSQL RefAsColumns");
+		a = new RefAsColumnsReplicationProvider(addClasses(RefAsColumnsUtil.getCfgA()), "HSQL RefAsColumns");
 		b = Db4oReplicationTestUtil.newProviderA();
 		addProviderPairs(a, b);
 
-		a = new RefAsTableReplicationProvider(newCfg(), "HSQL RefAsTable A");
-		b = new RefAsTableReplicationProvider(newCfg(), "HSQL RefAsTable B");
+		a = new RefAsTableReplicationProvider(addClasses(RefAsTableUtil.getCfgA()), "HSQL RefAsTable A");
+		b = new RefAsTableReplicationProvider(addClasses(RefAsTableUtil.getCfgA()), "HSQL RefAsTable B");
 		addProviderPairs(a, b);
 	}
 
-	protected Configuration newCfg() {
-		Configuration cfg;
+	protected Configuration addClasses(Configuration cfg) {
 		cfg = HibernateConfigurationFactory.createNewDbConfig();
 		cfg.addClass(R0.class);
 
