@@ -9,14 +9,14 @@ import com.db4o.test.Test;
 import com.db4o.test.replication.collections.SimpleArrayContent;
 import com.db4o.test.replication.collections.SimpleArrayHolder;
 import com.db4o.test.replication.collections.SimpleArrayTest;
-import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 import org.hibernate.cfg.Configuration;
 
 
 public class Db4oHibernateSimpleArrayTest extends SimpleArrayTest {
 
 	protected TestableReplicationProviderInside prepareProviderA() {
-		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
+		Configuration configuration = HibernateUtil.createNewDbConfig();
 		configuration.addClass(SimpleArrayHolder.class);
 		configuration.addClass(SimpleArrayContent.class);
 		return new RefAsColumnsReplicationProvider(configuration, "A");

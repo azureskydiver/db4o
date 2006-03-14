@@ -7,7 +7,7 @@ public class PostgreSQLTestSuite extends TestSuite {
 		return new Class[]{
 				PostgreSQLMetaDataTablesCreatorTest.class,
 				PostgreSQLR0to4Runner.class,
-				PostgreSQLReplicationFeaturesMain.class,
+				PostgreSQLFeaturesMainRefAsColumns.class,
 				PostgreSQLMapTest.class,
 				PostgreSQLListTest.class,
 		};

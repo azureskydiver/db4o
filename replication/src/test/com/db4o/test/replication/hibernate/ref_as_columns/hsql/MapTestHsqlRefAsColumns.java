@@ -2,15 +2,15 @@ package com.db4o.test.replication.hibernate.ref_as_columns.hsql;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.replication.hibernate.HibernateMapTest;
-import com.db4o.test.replication.hibernate.ref_as_columns.RefAsColumnsUtil;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 
 public class MapTestHsqlRefAsColumns extends HibernateMapTest {
 	protected TestableReplicationProviderInside prepareProviderA() {
-		return RefAsColumnsUtil.newProviderA();
+		return HibernateUtil.refAsColumnsProviderA();
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		return RefAsColumnsUtil.newProviderB();
+		return HibernateUtil.refAsColumnsProviderB();
 	}
 
 	public void test() {

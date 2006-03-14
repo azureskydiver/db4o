@@ -9,7 +9,7 @@ public class OracleTestSuite extends TestSuite {
 				OracleListTest.class,
 				OracleMapTest.class,
 				//OracleR0to4Runner.class,
-				OracleReplicationFeaturesMain.class
+				OracleFeaturesMainRefAsColumns.class
 		};
 	}
 }

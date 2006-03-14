@@ -6,6 +6,7 @@ import com.db4o.replication.hibernate.impl.ref_as_columns.Shared;
 import com.db4o.test.Test;
 import com.db4o.test.replication.CollectionHolder;
 import com.db4o.test.replication.hibernate.AbstractReplicationConfiguratorTest;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
@@ -20,7 +21,7 @@ public class ReplicationConfiguratorTestRefAsColumns extends AbstractReplication
 	}
 
 	protected void init() {
-		cfg = RefAsColumnsUtil.getCfgA();
+		cfg = HibernateUtil.createNewDbConfig();
 		Util.addClass(cfg, CollectionHolder.class);
 		ReplicationConfigurator.configure(cfg);
 	}

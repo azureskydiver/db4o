@@ -10,7 +10,7 @@ import org.hibernate.classic.Session;
 
 public class UuidLongPartGeneratorTest {
 	public void testUuidLongPartGenerator() {
-		Configuration cfg = HibernateConfigurationFactory.createNewDbConfig();
+		Configuration cfg = HibernateUtil.createNewDbConfig();
 		RefAsColumnsConfiguration rc = RefAsColumnsConfiguration.produce(cfg);
 
 		final SessionFactory sessionFactory = rc.getConfiguration().buildSessionFactory();

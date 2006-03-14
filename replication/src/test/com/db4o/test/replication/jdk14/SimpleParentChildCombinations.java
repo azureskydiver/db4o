@@ -8,7 +8,7 @@ import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableReplicationPro
 import com.db4o.test.replication.SPCChild;
 import com.db4o.test.replication.SPCParent;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
-import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 import com.db4o.test.replication.template.SimpleParentChild;
 import org.hibernate.cfg.Configuration;
 
@@ -40,7 +40,7 @@ public class SimpleParentChildCombinations extends SimpleParentChild {
 
 	protected Configuration newCfg() {
 		Configuration cfg;
-		cfg = HibernateConfigurationFactory.createNewDbConfig();
+		cfg = HibernateUtil.createNewDbConfig();
 		cfg.addClass(SPCParent.class);
 		cfg.addClass(SPCChild.class);
 		return cfg;

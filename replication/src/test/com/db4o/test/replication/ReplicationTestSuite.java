@@ -15,7 +15,7 @@ import com.db4o.test.replication.db4o.hibernate.HibernateDb4oListTest;
 import com.db4o.test.replication.hibernate.UuidLongPartGeneratorTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.ReplicationConfiguratorTestRefAsColumns;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.AfterDeletionHsqlRefAsColumns;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicationFeaturesMain;
+import com.db4o.test.replication.hibernate.ref_as_columns.hsql.FeaturesMainRefAsColumns;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateReplicationProviderTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateSingleTypeCollectionReplicationTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HsqlMetaDataTablesCreatorTest;
@@ -25,10 +25,10 @@ import com.db4o.test.replication.hibernate.ref_as_columns.hsql.MapTestRefAsColum
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.SimpleArrayTestRefAsColumns;
 import com.db4o.test.replication.hibernate.ref_as_table.ReplicationConfiguratorTestRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.AfterDeletionTestHsqlRefAsTable;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.FeaturesMainRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.ListTestHsqlRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.MapTestHsqlRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.MapTestRefAsTableDb4o;
-import com.db4o.test.replication.hibernate.ref_as_table.hsql.RefAsTableReplicationFeaturesMain;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.RefAsTableTablesCreatorTestHsql;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.ReplicationProviderTestHsqlRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.SimpleArrayTestHsqlRefAsTable;
@@ -55,8 +55,8 @@ public class ReplicationTestSuite extends TestSuite {
 
 				TransientReplicationFeaturesMain.class,
 				Db4oReplicationFeaturesMain.class,
-				HibernateReplicationFeaturesMain.class,
-				RefAsTableReplicationFeaturesMain.class,
+				FeaturesMainRefAsColumns.class,
+				FeaturesMainRefAsTable.class,
 
 				CollectionHandlerImplTest.class,
 				GetByUUID.class,

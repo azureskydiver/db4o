@@ -2,20 +2,15 @@ package com.db4o.test.replication.hibernate.ref_as_table.hsql;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.replication.hibernate.HibernateMapTest;
-import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableUtil;
-import org.hibernate.cfg.Configuration;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 
 public class MapTestHsqlRefAsTable extends HibernateMapTest {
 	protected TestableReplicationProviderInside prepareProviderA() {
-		Configuration cfg = RefAsTableUtil.getCfgA();
-		add(cfg);
-		return RefAsTableUtil.newProvider(cfg, "A");
+		return HibernateUtil.refAsTableProviderA();
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		Configuration cfg = RefAsTableUtil.getCfgB();
-		add(cfg);
-		return RefAsTableUtil.newProvider(cfg, "B");
+		return HibernateUtil.refAsTableProviderB();
 	}
 
 	public void test() {

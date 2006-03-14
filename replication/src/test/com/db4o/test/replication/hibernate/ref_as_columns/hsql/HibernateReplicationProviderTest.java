@@ -7,7 +7,7 @@ import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
-import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 import com.db4o.test.replication.provider.Car;
 import com.db4o.test.replication.provider.Pilot;
 import com.db4o.test.replication.provider.ReplicationProviderTest;
@@ -79,7 +79,7 @@ public class HibernateReplicationProviderTest extends ReplicationProviderTest {
 	}
 
 	protected static Configuration newCfg() {
-		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
+		Configuration configuration = HibernateUtil.createNewDbConfig();
 
 		configuration.addClass(Car.class);
 		configuration.addClass(Pilot.class);
