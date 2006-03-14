@@ -12,7 +12,7 @@ public abstract class HibernateSingleTypeCollectionTest extends SingleTypeCollec
 	}
 
 	protected Configuration newCfg() {
-		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
+		Configuration configuration = HibernateUtil.createNewDbConfig();
 		configuration.addClass(CollectionHolder.class);
 		return configuration;
 	}

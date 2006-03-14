@@ -1,5 +1,8 @@
 package com.db4o.test.replication.hibernate;
 
+import com.db4o.replication.hibernate.HibernateReplicationProvider;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
+import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableReplicationProvider;
 import com.db4o.test.replication.CollectionHolder;
 import com.db4o.test.replication.Replicated;
 import com.db4o.test.replication.SPCChild;
@@ -16,7 +19,7 @@ import com.db4o.test.replication.template.r0tor4.R0;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 
-public class HibernateConfigurationFactory {
+public class HibernateUtil {
 	private static final String HSQL_CFG_XML = "com/db4o/test/replication/hibernate/hibernate-HSQL.cfg.xml";
 
 	protected static final String JDBC_URL_HEAD = "jdbc:hsqldb:mem:unique_";
@@ -34,10 +37,33 @@ public class HibernateConfigurationFactory {
 				R0.class, Pilot.class, Car.class};
 	}
 
-	public static void addAllMappings(Configuration cfg) {
+	public static Configuration addAllMappings(Configuration cfg) {
 		for (int i = 0; i < mappings.length; i++) {
 			cfg.addClass(mappings[i]);
 		}
+		return cfg;
+	}
+
+	private static final String refAsTableA = createNewDbConfig().getProperty(Environment.URL);
+	private static final String refAsTableB = createNewDbConfig().getProperty(Environment.URL);
+
+	public static HibernateReplicationProvider refAsTableProviderA() {
+		return new RefAsTableReplicationProvider(addAllMappings(reuse(refAsTableA)), "refAsTableA");
+	}
+
+	public static HibernateReplicationProvider refAsTableProviderB() {
+		return new RefAsTableReplicationProvider(addAllMappings(reuse(refAsTableB)), "refAsTableB");
+	}
+
+	private static final String refAsColumnsA = createNewDbConfig().getProperty(Environment.URL);
+	private static final String refAsColumnsB = createNewDbConfig().getProperty(Environment.URL);
+
+	public static HibernateReplicationProvider refAsColumnsProviderA() {
+		return new RefAsColumnsReplicationProvider(addAllMappings(reuse(refAsColumnsA)), "refAsColumnsB");
+	}
+
+	public static HibernateReplicationProvider refAsColumnsProviderB() {
+		return new RefAsColumnsReplicationProvider(addAllMappings(reuse(refAsColumnsB)), "refAsColumnsB");
 	}
 
 	/**

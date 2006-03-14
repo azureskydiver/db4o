@@ -4,11 +4,8 @@ import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
-import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableReplicationProvider;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
-import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
-import com.db4o.test.replication.hibernate.ref_as_columns.RefAsColumnsUtil;
-import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableUtil;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 import com.db4o.test.replication.template.r0tor4.R0;
 import com.db4o.test.replication.template.r0tor4.R0to4Runner;
 import com.db4o.test.replication.transients.TransientReplicationProvider;
@@ -34,21 +31,22 @@ public class R0to4RunnerCombinations extends R0to4Runner {
 		TestableReplicationProviderInside b;
 
 
-		a = new RefAsColumnsReplicationProvider(addClasses(RefAsColumnsUtil.getCfgA()), "HSQL RefAsColumns");
-		b = new RefAsColumnsReplicationProvider(addClasses(RefAsColumnsUtil.getCfgB()), "HSQL RefAsColumns");
+		a = HibernateUtil.refAsColumnsProviderA();
+		b = HibernateUtil.refAsColumnsProviderB();
+
 		addProviderPairs(a, b);
 
-		a = new RefAsColumnsReplicationProvider(addClasses(RefAsColumnsUtil.getCfgA()), "HSQL RefAsColumns");
+		a = new RefAsColumnsReplicationProvider(addClasses(HibernateUtil.createNewDbConfig()), "HSQL RefAsColumns");
 		b = Db4oReplicationTestUtil.newProviderA();
 		addProviderPairs(a, b);
 
-		a = new RefAsTableReplicationProvider(addClasses(RefAsTableUtil.getCfgA()), "HSQL RefAsTable A");
-		b = new RefAsTableReplicationProvider(addClasses(RefAsTableUtil.getCfgA()), "HSQL RefAsTable B");
+		a = HibernateUtil.refAsTableProviderA();
+		b = HibernateUtil.refAsTableProviderB();
 		addProviderPairs(a, b);
 	}
 
 	protected Configuration addClasses(Configuration cfg) {
-		cfg = HibernateConfigurationFactory.createNewDbConfig();
+		cfg = HibernateUtil.createNewDbConfig();
 		cfg.addClass(R0.class);
 
 		return cfg;

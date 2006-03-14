@@ -9,7 +9,7 @@ public class MySQLTestSuite extends TestSuite {
 				//MySQLR0to4Runner.class,
 				MySQLMapTest.class,
 				MySQLListTest.class,
-				MySQLReplicationFeaturesMain.class
+				MySQLFeaturesMainRefAsColumns.class
 		};
 	}
 }

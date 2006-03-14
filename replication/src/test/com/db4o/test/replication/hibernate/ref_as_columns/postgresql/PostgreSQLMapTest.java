@@ -5,20 +5,20 @@ import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicatio
 import com.db4o.test.replication.collections.map.MapContent;
 import com.db4o.test.replication.collections.map.MapHolder;
 import com.db4o.test.replication.collections.map.MapTest;
-import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 import org.hibernate.cfg.Configuration;
 
 public class PostgreSQLMapTest extends MapTest {
 
 	protected TestableReplicationProviderInside prepareProviderA() {
-		Configuration configuration = HibernateConfigurationFactory.producePostgreSQLConfigA();
+		Configuration configuration = HibernateUtil.producePostgreSQLConfigA();
 		configuration.addClass(MapHolder.class);
 		configuration.addClass(MapContent.class);
 		return new RefAsColumnsReplicationProvider(configuration, "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		Configuration configuration = HibernateConfigurationFactory.producePostgreSQLConfigB();
+		Configuration configuration = HibernateUtil.producePostgreSQLConfigB();
 		configuration.addClass(MapHolder.class);
 		configuration.addClass(MapContent.class);
 		return new RefAsColumnsReplicationProvider(configuration, "B");

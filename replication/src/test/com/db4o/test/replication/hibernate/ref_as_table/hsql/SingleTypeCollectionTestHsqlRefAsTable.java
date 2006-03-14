@@ -1,16 +1,16 @@
 package com.db4o.test.replication.hibernate.ref_as_table.hsql;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateSingleTypeCollectionReplicationTest;
-import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableUtil;
 
 public class SingleTypeCollectionTestHsqlRefAsTable extends HibernateSingleTypeCollectionReplicationTest {
 	protected TestableReplicationProviderInside prepareProviderA() {
-		return RefAsTableUtil.newProvider(newCfg(), "A");
+		return HibernateUtil.refAsTableProviderA();
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		return RefAsTableUtil.newProvider(newCfg(), "B");
+		return HibernateUtil.refAsTableProviderB();
 	}
 
 	public void testCollectionReplication() {
