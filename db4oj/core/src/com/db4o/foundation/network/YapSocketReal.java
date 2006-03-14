@@ -10,9 +10,11 @@ public class YapSocketReal implements YapSocket {
     private Socket _socket;
     private OutputStream _out;
     private InputStream _in;
+    private String _hostName;
     
     public YapSocketReal(String hostName, int port) throws IOException {
         this(new Socket(hostName, port));
+        _hostName=hostName;
     }
 
     public YapSocketReal(Socket socket) throws IOException {
@@ -60,6 +62,9 @@ public class YapSocketReal implements YapSocket {
     }
     
 	public YapSocket openParalellSocket() throws IOException {
-		return new YapSocketReal(_socket.getInetAddress().getHostName(),_socket.getPort());
+		if(_hostName==null) {
+			throw new IOException("Cannot open parallel socket - invalid state.");
+		}
+		return new YapSocketReal(_hostName,_socket.getPort());
 	}
 }

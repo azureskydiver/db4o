@@ -8,7 +8,7 @@ public class Db4oException extends RuntimeException {
 	}
 
 	public Db4oException(Exception cause) {
-		this(cause.getMessage());
+		this(cause.toString());
 		_cause = cause;
 	}
 

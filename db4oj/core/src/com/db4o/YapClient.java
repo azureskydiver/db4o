@@ -119,32 +119,24 @@ public class YapClient extends YapStream implements ExtClient {
             Msg.COMMIT_OK.write(this, i_socket);
             expectedResponse(Msg.OK);
         } catch (Exception e) {
-        	if(e instanceof Db4oException) {
-        		throw (Db4oException)e;
-        	}
+        	Exceptions4.catchAll(e);
         }
         try {
             Msg.CLOSE.write(this, i_socket);
         } catch (Exception e) {
-        	if(e instanceof Db4oException) {
-        		throw (Db4oException)e;
-        	}
+        	Exceptions4.catchAll(e);
         }
         try {
             if (!singleThreaded) {
                 readerThread.close();
             }
         } catch (Exception e) {
-        	if(e instanceof Db4oException) {
-        		throw (Db4oException)e;
-        	}
+        	Exceptions4.catchAll(e);
         }
         try {
             i_socket.close();
         } catch (Exception e) {
-        	if(e instanceof Db4oException) {
-        		throw (Db4oException)e;
-        	}
+        	Exceptions4.catchAll(e);
         }
         boolean ret = super.close2();
         if (Debug.fakeServer) {
@@ -339,11 +331,7 @@ public class YapClient extends YapStream implements ExtClient {
                     }
                 });
             } catch(Exception ex){
-                
-                // TODO: notify client app about problems and try to fix here
-            	if(ex instanceof Db4oException) {
-            		throw (Db4oException)ex;
-            	}
+            	Exceptions4.catchAll(ex);
                 return null;
             }
         }
