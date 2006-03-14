@@ -29,4 +29,10 @@ public class Exceptions4 {
     public static final void notSupported(){
 		throwRuntimeException(53);
     }
+    
+    public static final void catchAll(Throwable exc) throws Db4oException {
+    	if(exc instanceof Db4oException) {
+    		throw (Db4oException)exc;
+    	}
+    }
 }
