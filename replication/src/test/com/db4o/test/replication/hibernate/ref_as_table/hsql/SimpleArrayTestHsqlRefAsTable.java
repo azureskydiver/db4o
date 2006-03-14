@@ -1,27 +1,21 @@
 package com.db4o.test.replication.hibernate.ref_as_table.hsql;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableReplicationProvider;
-import com.db4o.test.replication.collections.SimpleArrayContent;
-import com.db4o.test.replication.collections.SimpleArrayHolder;
-import com.db4o.test.replication.collections.SimpleArrayTest;
-import com.db4o.test.replication.hibernate.HibernateConfigurationFactory;
+import com.db4o.test.replication.hibernate.HibernateSimpleArrayTest;
+import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableUtil;
 import org.hibernate.cfg.Configuration;
 
-public class SimpleArrayTestHsqlRefAsTable extends SimpleArrayTest {
-
+public class SimpleArrayTestHsqlRefAsTable extends HibernateSimpleArrayTest {
 	protected TestableReplicationProviderInside prepareProviderA() {
-		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
-		configuration.addClass(SimpleArrayHolder.class);
-		configuration.addClass(SimpleArrayContent.class);
-		return new RefAsTableReplicationProvider(configuration, "A");
+		Configuration cfg = RefAsTableUtil.getCfgA();
+		add(cfg);
+		return RefAsTableUtil.newProvider(cfg, "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		Configuration configuration = HibernateConfigurationFactory.createNewDbConfig();
-		configuration.addClass(SimpleArrayHolder.class);
-		configuration.addClass(SimpleArrayContent.class);
-		return new RefAsTableReplicationProvider(configuration, "B");
+		Configuration cfg = RefAsTableUtil.getCfgB();
+		add(cfg);
+		return RefAsTableUtil.newProvider(cfg, "B");
 	}
 
 	public void test() {

@@ -20,7 +20,7 @@ public class ReplicationConfiguratorTestRefAsColumns extends AbstractReplication
 	}
 
 	protected void init() {
-		cfg = RefAsColumnsUtil.cfgA;
+		cfg = RefAsColumnsUtil.getCfgA();
 		Util.addClass(cfg, CollectionHolder.class);
 		ReplicationConfigurator.configure(cfg);
 	}

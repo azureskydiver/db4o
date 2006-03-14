@@ -4,8 +4,8 @@ import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.test.Test;
 
-public class HibernateDb4oMapTest extends MapTestHsqlRefAsColumns {
-	protected TestableReplicationProviderInside prepareProviderB() {
+public class MapTestRefAsColumnsDb4o extends MapTestHsqlRefAsColumns {
+	protected TestableReplicationProviderInside prepareProviderA() {
 		return new Db4oReplicationProvider(Test.objectContainer());
 	}
 

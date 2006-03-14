@@ -3,10 +3,10 @@
 package com.db4o.test.replication.hibernate.ref_as_columns.hsql;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.test.replication.hibernate.HibernateListTest;
+import com.db4o.test.replication.hibernate.HibernateSimpleArrayTest;
 import com.db4o.test.replication.hibernate.ref_as_columns.RefAsColumnsUtil;
 
-public class ListTestHsqlRefAsColumns extends HibernateListTest {
+public class SimpleArrayTestRefAsColumns extends HibernateSimpleArrayTest {
 	protected TestableReplicationProviderInside prepareProviderA() {
 		return RefAsColumnsUtil.newProviderA();
 	}
