@@ -13,11 +13,6 @@ namespace com.db4o
 		{
 		}
 
-		void System.IDisposable.Dispose()
-		{
-			close();
-		}
-
         public abstract com.db4o.ext.Db4oDatabase identity();
 
         public abstract void backup(string path);

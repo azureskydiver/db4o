@@ -924,7 +924,7 @@ namespace com.db4o
 				}
 			}
 			objectBytes.setCascadeDeletes(a_cascade);
-			a_yc.deleteMembers(objectBytes, a_type);
+			a_yc.deleteMembers(objectBytes, a_type, true);
 			slotFreeOnCommit(a_id, objectBytes.getAddress(), objectBytes.getLength());
 		}
 	}

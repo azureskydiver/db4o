@@ -756,6 +756,10 @@ namespace com.db4o
 				{
 					yo = new com.db4o.YapObject(a_id);
 					arr[0] = yo.read(ta, null, null, 0, com.db4o.YapConst.ADD_TO_ID_TREE, true);
+					if (arr[0] == null)
+					{
+						return arr;
+					}
 					if (arr[0] != yo.getObject())
 					{
 						return getObjectAndYapObjectByID(ta, a_id);
@@ -800,10 +804,6 @@ namespace com.db4o
 			if (a_class == null)
 			{
 				return null;
-			}
-			if (a_class.getName().IndexOf("YapStream") > 0)
-			{
-				int xxx = 1;
 			}
 			if ((!showInternalClasses()) && i_handlers.ICLASS_INTERNAL.isAssignableFrom(a_class
 				))
