@@ -717,6 +717,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		getObjectTransaction().commit();
 		_objectTransaction = getSession().beginTransaction();
 
+		initMySignature();
 		initPeerSigAndRecord(peerSigBytes);
 
 		_currentVersion = Util.getMaxVersion(getRefSession().connection()) + 1;
