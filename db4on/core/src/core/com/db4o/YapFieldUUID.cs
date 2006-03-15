@@ -37,25 +37,6 @@ namespace com.db4o
 			}
 		}
 
-		internal override void delete(com.db4o.YapWriter a_bytes, bool isUpdate)
-		{
-			if (isUpdate)
-			{
-				a_bytes.incrementOffset(linkLength());
-				return;
-			}
-			a_bytes.incrementOffset(com.db4o.YapConst.YAPINT_LENGTH);
-			long longPart = com.db4o.YLong.readLong(a_bytes);
-			if (longPart > 0)
-			{
-				com.db4o.YapStream stream = a_bytes.getStream();
-				if (stream.maintainsIndices())
-				{
-					removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), longPart);
-				}
-			}
-		}
-
 		internal override com.db4o.inside.ix.Index4 getIndex(com.db4o.Transaction a_trans
 			)
 		{

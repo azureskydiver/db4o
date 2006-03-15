@@ -478,12 +478,7 @@ namespace com.db4o
         /// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
         /// returned by the query.
         /// </returns>
-        System.Collections.Generic.IList<Extent> query<Extent>(System.Predicate<Extent> match);
-        
-        System.Collections.Generic.IList<Extent> query<Extent>(System.Predicate<Extent> match, System.Collections.Generic.IComparer<Extent> comparer);
-
-        System.Collections.Generic.IList<Extent> query<Extent>(System.Predicate<Extent> match, System.Comparison<Extent> comparison);
-        
+        System.Collections.Generic.IList<Extent> query<Extent>(System.Predicate<Extent> match );
 
         /// <summary>
         /// queries for all instances of the type extent, returning
@@ -497,10 +492,9 @@ namespace com.db4o
         /// </summary>
         System.Collections.Generic.IList<Extent> query<Extent>();
 
-		/// <summary>
-        /// queries for all instances of the type extent sorting with the specified comparer.
-        /// </summary>
         System.Collections.Generic.IList<Extent> query<Extent>(System.Collections.Generic.IComparer<Extent> comparer);
+
+        System.Collections.Generic.IList<Extent> query<Extent>(System.Predicate<Extent> match, System.Collections.Generic.IComparer<Extent> comparer);
 #endif
 	}
 }

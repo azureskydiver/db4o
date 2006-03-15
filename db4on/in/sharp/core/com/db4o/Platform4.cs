@@ -103,6 +103,11 @@ namespace com.db4o
 			return new YapReferenceQueue();
 		}
 
+        public static Object createWeakReference(Object obj)
+        {
+            return new WeakReference(obj, false);
+        }
+
 		internal static Object createYapRef(Object referenceQueue, Object yapObject, Object obj)
 		{
 			return new YapRef(referenceQueue, yapObject, obj);
@@ -511,6 +516,16 @@ namespace com.db4o
 			return bytes;
 		}
 
+        public static Object weakReferenceTarget(Object weakRef)
+        {
+            WeakReference wr = weakRef as WeakReference;
+            if(wr != null) 
+            {
+                return wr.Target;
+            }
+            return weakRef;
+        }
+
 		internal static object wrapEvaluation(object evaluation)
 		{
 			return Compat.wrapEvaluation(evaluation);
@@ -526,22 +541,22 @@ namespace com.db4o
 
         private static Type GetNetType(ReflectClass clazz)
         {
-            if (null == clazz)
-            {
-                return null;
-            }
+	        if (null == clazz)
+	        {
+		        return null;
+	        }
 
-            NetClass netClass = clazz as NetClass;
-            if (null != netClass)
-            {
-                return netClass.getNetType();
-            }
+	        NetClass netClass = clazz as NetClass;
+	        if (null != netClass)
+	        {
+		        return netClass.getNetType();
+	        }
             ReflectClass claxx = clazz.getDelegate();
-            if (claxx == clazz)
+            if(claxx == clazz)
             {
                 return null;
             }
-            return GetNetType(claxx);
+	        return GetNetType(claxx);
         }
 
 		internal static YapTypeAbstract[] types(YapStream stream)

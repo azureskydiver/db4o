@@ -68,8 +68,7 @@ namespace com.db4o
 			free(a_bytes, a_id);
 		}
 
-		internal override void deleteMembers(com.db4o.YapWriter a_bytes, int a_type, bool
-			 isUpdate)
+		internal override void deleteMembers(com.db4o.YapWriter a_bytes, int a_type)
 		{
 			if (a_type == com.db4o.YapConst.TYPE_ARRAY)
 			{

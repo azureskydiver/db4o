@@ -104,15 +104,6 @@ namespace com.db4o
 			ift.add(parentID, i_handler.indexEntry(valueOrID));
 		}
 
-		internal virtual void removeIndexEntry(com.db4o.Transaction trans, int parentID, 
-			object valueOrID)
-		{
-			i_handler.prepareComparison(valueOrID);
-			com.db4o.inside.ix.IndexTransaction ift = getIndex(trans).dirtyIndexTransaction(trans
-				);
-			ift.remove(parentID, i_handler.indexEntry(valueOrID));
-		}
-
 		public virtual bool alive()
 		{
 			if (i_state == AVAILABLE)
@@ -354,7 +345,7 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual void delete(com.db4o.YapWriter a_bytes, bool isUpdate)
+		internal virtual void delete(com.db4o.YapWriter a_bytes)
 		{
 			if (alive())
 			{
@@ -369,7 +360,10 @@ namespace com.db4o
 					catch (com.db4o.CorruptionException e)
 					{
 					}
-					removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), obj);
+					i_handler.prepareComparison(obj);
+					com.db4o.inside.ix.IndexTransaction ift = i_index.dirtyIndexTransaction(a_bytes.getTransaction
+						());
+					ift.remove(a_bytes.getID(), i_handler.indexEntry(obj));
 					a_bytes._offset = offset;
 				}
 				bool dotnetValueType = false;

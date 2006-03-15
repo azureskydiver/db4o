@@ -13,11 +13,6 @@ namespace com.db4o
 			com.db4o.YLong.writeLong(a_writer.getStream().bootRecord().version(), a_writer);
 		}
 
-		internal override void delete(com.db4o.YapWriter a_bytes, bool isUpdate)
-		{
-			a_bytes.incrementOffset(linkLength());
-		}
-
 		internal override void instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject
 			 a_yapObject, com.db4o.YapReader a_bytes)
 		{
