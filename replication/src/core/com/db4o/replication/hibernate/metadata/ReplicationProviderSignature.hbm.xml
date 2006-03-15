@@ -26,18 +26,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping default-access="property" default-lazy="false">
-	<class name="com.db4o.replication.hibernate.metadata.ReplicationProviderSignature"
-	       table="ReplicationProviderSignature">
+<hibernate-mapping default-access="property" default-lazy="false" default-cascade="all">
+	<class table="ReplicationProviderSignature" name="com.db4o.replication.hibernate.metadata.ReplicationProviderSignature">
 		<id name="id" column="drs_provider_id" type="long">
 			<generator class="native"/>
 		</id>
 
 		<discriminator/>
 
-		<property name="bytes" column="bytes"/>
+		<natural-id>
+			<property name="bytes" column="bytes" not-null="true"/>
+		</natural-id>
 
-		<property name="creationTime"/>
+		<property name="creationTime" column="creationTime"/>
 
 		<subclass name="com.db4o.replication.hibernate.metadata.MySignature"/>
 		<subclass name="com.db4o.replication.hibernate.metadata.PeerSignature"/>

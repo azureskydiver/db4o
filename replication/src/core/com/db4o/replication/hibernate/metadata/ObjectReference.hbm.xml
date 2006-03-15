@@ -27,9 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="property" default-lazy="false" default-cascade="all">
-	<class name="com.db4o.replication.hibernate.metadata.ObjectReference"
-	       table="ObjectReference">
-
+	<class table="ObjectReference" name="com.db4o.replication.hibernate.metadata.ObjectReference">
 		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
