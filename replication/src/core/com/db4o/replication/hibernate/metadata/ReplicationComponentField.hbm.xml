@@ -26,16 +26,15 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping default-access="property" default-lazy="false">
-	<class name="com.db4o.replication.hibernate.metadata.ReplicationComponentField"
-	       table="ReplicationComponentField">
+<hibernate-mapping default-access="property" default-lazy="false" default-cascade="all">
+	<class table="ReplicationComponentField" name="com.db4o.replication.hibernate.metadata.ReplicationComponentField">
 		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
 
 		<natural-id mutable="false">
-			<property name="referencingObjectClassName"/>
-			<property name="referencingObjectFieldName"/>
+			<property name="referencingObjectClassName" column="referencingObjectClassName" not-null="true"/>
+			<property name="referencingObjectFieldName" column="referencingObjectFieldName" not-null="true"/>
 		</natural-id>
 	</class>
 </hibernate-mapping>
