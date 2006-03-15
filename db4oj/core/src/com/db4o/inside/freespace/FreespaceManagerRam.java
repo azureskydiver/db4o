@@ -156,14 +156,16 @@ public class FreespaceManagerRam extends FreespaceManager {
     
 
     public void migrate(final FreespaceManager newFM) {
-        _freeByAddress.traverse(new Visitor4() {
-            public void visit(Object a_object) {
-                FreeSlotNode fsn = (FreeSlotNode)a_object;
-                int address = fsn.i_key;
-                int length = fsn.i_peer.i_key;
-                newFM.free(address, length);
-            }
-        });
+        if(_freeByAddress != null){
+            _freeByAddress.traverse(new Visitor4() {
+                public void visit(Object a_object) {
+                    FreeSlotNode fsn = (FreeSlotNode)a_object;
+                    int address = fsn.i_key;
+                    int length = fsn.i_peer.i_key;
+                    newFM.free(address, length);
+                }
+            });
+        }
     }
     
     public void read(int freeSlotsID) {
