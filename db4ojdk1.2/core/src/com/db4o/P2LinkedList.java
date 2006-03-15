@@ -465,13 +465,16 @@ public class P2LinkedList extends P1Collection implements Db4oList {
             setTrans(a_trans);
         } else {
             if (a_trans != getTrans()) {
-				return replicate(getTrans(), a_trans);
+                Object replicated =  asReplicated(getTrans(), a_trans);
+                if (replicated != null){
+                    return replicated;
+                }
             }
         }
         return this;
     }
 
-	public List subList(int fromIndex, int toIndex) {
+    public List subList(int fromIndex, int toIndex) {
         throw new UnsupportedOperationException();
     }
 

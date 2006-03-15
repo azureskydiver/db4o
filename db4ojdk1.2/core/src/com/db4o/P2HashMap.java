@@ -386,7 +386,10 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
             modified();
         } else {
             if (a_trans != getTrans()) {
-                return replicate(getTrans(), a_trans);
+                Object replicated =  asReplicated(getTrans(), a_trans);
+                if (replicated != null){
+                    return replicated;
+                }
             }
         }
         return this;
