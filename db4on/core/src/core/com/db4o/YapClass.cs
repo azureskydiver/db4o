@@ -510,8 +510,8 @@ namespace com.db4o
 			}
 			if (a_class != null)
 			{
-				if (a_stream.i_handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class) || com.db4o.Platform4
-					.isTransient(a_class))
+				if (a_stream.i_handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class) 
+                    || Platform4.isTransient(a_class))
 				{
 					a_class = null;
 				}
@@ -578,7 +578,7 @@ namespace com.db4o
 		{
 			removeFromIndex(a_bytes.getTransaction(), a_bytes.getID());
 			deleteMembers(a_bytes, a_bytes.getTransaction().i_stream.i_handlers.arrayType(a_object
-				), false);
+				));
 		}
 
 		public virtual void deleteEmbedded(com.db4o.YapWriter a_bytes)
@@ -619,8 +619,7 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual void deleteMembers(com.db4o.YapWriter a_bytes, int a_type, bool 
-			isUpdate)
+		internal virtual void deleteMembers(com.db4o.YapWriter a_bytes, int a_type)
 		{
 			try
 			{
@@ -642,12 +641,12 @@ namespace com.db4o
 					{
 						a_bytes.setCascadeDeletes(1);
 					}
-					deleteMembers1(a_bytes, a_type, isUpdate);
+					deleteMembers1(a_bytes, a_type);
 					a_bytes.setCascadeDeletes(preserveCascade);
 				}
 				else
 				{
-					deleteMembers1(a_bytes, a_type, isUpdate);
+					deleteMembers1(a_bytes, a_type);
 				}
 			}
 			catch (System.Exception e)
@@ -655,17 +654,16 @@ namespace com.db4o
 			}
 		}
 
-		private void deleteMembers1(com.db4o.YapWriter a_bytes, int a_type, bool isUpdate
-			)
+		private void deleteMembers1(com.db4o.YapWriter a_bytes, int a_type)
 		{
 			int length = readFieldLength(a_bytes);
 			for (int i = 0; i < length; i++)
 			{
-				i_fields[i].delete(a_bytes, isUpdate);
+				i_fields[i].delete(a_bytes);
 			}
 			if (i_ancestor != null)
 			{
-				i_ancestor.deleteMembers(a_bytes, a_type, isUpdate);
+				i_ancestor.deleteMembers(a_bytes, a_type);
 			}
 		}
 
@@ -1033,13 +1031,13 @@ namespace com.db4o
 		public virtual com.db4o.YapField getYapField(string name)
 		{
 			com.db4o.YapField[] yf = new com.db4o.YapField[1];
-			forEachYapField(new _AnonymousInnerClass894(this, name, yf));
+			forEachYapField(new _AnonymousInnerClass895(this, name, yf));
 			return yf[0];
 		}
 
-		private sealed class _AnonymousInnerClass894 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass895 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass894(YapClass _enclosing, string name, com.db4o.YapField[]
+			public _AnonymousInnerClass895(YapClass _enclosing, string name, com.db4o.YapField[]
 				 yf)
 			{
 				this._enclosing = _enclosing;
@@ -1668,15 +1666,15 @@ namespace com.db4o
 				{
 					int[] idgen = { -2 };
 					a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
-					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1447(this
+					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1448(this
 						, trans, idgen, a_candidates));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1447 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass1448 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass1447(YapClass _enclosing, com.db4o.Transaction trans, 
+			public _AnonymousInnerClass1448(YapClass _enclosing, com.db4o.Transaction trans, 
 				int[] idgen, com.db4o.QCandidates a_candidates)
 			{
 				this._enclosing = _enclosing;

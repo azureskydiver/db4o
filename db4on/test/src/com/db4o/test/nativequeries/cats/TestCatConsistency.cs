@@ -240,7 +240,7 @@ namespace com.db4o.test.nativequeries.cats
             expect(ToUntypedList(list), names);
         }
 
-        private static IList ToUntypedList<T>(IList<T> list)
+        private static IList ToUntypedList<T>(System.Collections.Generic.IList<T> list)
         {
             ArrayList untypedList = new ArrayList(list.Count);
             foreach (object item in list)

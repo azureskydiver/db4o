@@ -524,25 +524,20 @@ namespace com.db4o
 				|| type.IsSubclassOf(typeof(Delegate));
 		}
 
-        private static Type GetNetType(ReflectClass clazz)
-        {
-            if (null == clazz)
-            {
-                return null;
-            }
+		private static Type GetNetType(ReflectClass clazz)
+		{
+			if (null == clazz)
+			{
+				return null;
+			}
 
-            NetClass netClass = clazz as NetClass;
-            if (null != netClass)
-            {
-                return netClass.getNetType();
-            }
-            ReflectClass claxx = clazz.getDelegate();
-            if (claxx == clazz)
-            {
-                return null;
-            }
-            return GetNetType(claxx);
-        }
+			NetClass netClass = clazz as NetClass;
+			if (null != netClass)
+			{
+				return netClass.getNetType();
+			}
+			return GetNetType(clazz.getDelegate());
+		}
 
 		internal static YapTypeAbstract[] types(YapStream stream)
 		{

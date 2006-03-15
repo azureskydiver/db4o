@@ -84,6 +84,17 @@ namespace com.db4o
 			}
 		}
 
+		internal static long readLong(com.db4o.YapWriter writer)
+		{
+			long l_return = 0;
+			for (int i = 0; i < com.db4o.YapConst.LONG_BYTES; i++)
+			{
+				l_return = (l_return << 8) + (writer._buffer[writer._offset++] & unchecked((int)(
+					0xff)));
+			}
+			return l_return;
+		}
+
 		protected long i_compareTo;
 
 		internal virtual long val(object obj)

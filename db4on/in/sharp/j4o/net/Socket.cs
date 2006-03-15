@@ -10,12 +10,14 @@ namespace j4o.net
 	{	
 		InputStream _in;
 		OutputStream _out;
+		int _port;
 
 		public Socket(string hostName, int port)
 		{
 			NativeSocket socket = new NativeSocket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 			socket.Connect(new IPEndPoint(Dns.Resolve(hostName).AddressList[0], port));
 			Initialize(socket);
+			_port=port;
 		}
 
 		public Socket(NativeSocket socket)
@@ -31,6 +33,11 @@ namespace j4o.net
 		public OutputStream getOutputStream()
 		{
 			return _out;
+		}
+
+		public int getPort() 
+		{
+			return _port;
 		}
 
 		override protected void Initialize(NativeSocket socket)
