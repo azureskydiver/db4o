@@ -109,7 +109,6 @@ namespace j4o.lang
 					&& '_' != ch
 					&& '<' != ch
 					&& '>' != ch
-					&& ':' != ch
 					&& ' ' != ch) // assembly names can contain spaces
 				{
 					break;

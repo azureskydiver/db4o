@@ -36,10 +36,7 @@ namespace com.db4o
 		{
 		}
 
-		internal override void delete(com.db4o.YapWriter a_bytes)
-		{
-			a_bytes.incrementOffset(linkLength());
-		}
+		internal abstract void delete(com.db4o.YapWriter a_bytes, bool isUpdate);
 
 		internal override object getOrCreate(com.db4o.Transaction a_trans, object a_OnObject
 			)

@@ -240,7 +240,7 @@ namespace com.db4o.inside.ix
 					if (!(ixTree is com.db4o.inside.ix.IxFileRange))
 					{
 						ixTree.beginMerge();
-						tree[0] = tree[0].add(ixTree);
+						tree[0] = com.db4o.Tree.add(tree[0], ixTree);
 					}
 				}
 			}

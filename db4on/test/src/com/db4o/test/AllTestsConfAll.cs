@@ -5,14 +5,13 @@ using System.IO;
 using com.db4o.test.acid;
 using com.db4o.test.inside.query;
 using com.db4o.test.soda;
+using j4o.lang;
 using com.db4o.test.cs;
 using System.Collections;
 
-namespace com.db4o.test 
-{
+namespace com.db4o.test {
 
-	public class AllTestsConfAll 
-	{
+	public class AllTestsConfAll {
 
 		/**
 		 * Add new testcases here
@@ -28,9 +27,9 @@ namespace com.db4o.test
 
 				tests.Add(typeof(ArrayNOrder)); 
 				tests.Add(typeof(BackReferences));
-#if NET || NET_2_0 || MONO
+	#if NET || NET_2_0 || MONO
 				tests.Add(typeof(BasicClusterTest));
-#endif
+	#endif
 				tests.Add(typeof(BindFileSize));
 				tests.Add(typeof(Book));
 				tests.Add(typeof(Callbacks));
@@ -52,10 +51,10 @@ namespace com.db4o.test
 				tests.Add(typeof(CollectionActivation));
 				tests.Add(typeof(Cs));
 				tests.Add(typeof(CsArrays));
-#if NET || NET_2_0
+	#if NET || NET_2_0
 				tests.Add(typeof(CsAppDomains));
 				tests.Add(typeof(CsAssemblyVersionChange));
-#endif
+	#endif
 				tests.Add(typeof(CsCascadeDeleteToStructs));
 				tests.Add(typeof(CsCollections));
 				tests.Add(typeof(CsCustomTransientAttribute));
@@ -63,24 +62,22 @@ namespace com.db4o.test
 	
 				tests.Add(typeof(CsDelegate));
 
-				tests.Add(typeof(CsDisposableTestCase));
-
 				tests.Add(typeof(CsEnum));
 												  
 				tests.Add(typeof(CsEvaluationDelegate));
 				
-#if !MONO
+	#if !MONO
 				tests.Add(typeof(CsMarshalByRef));
-#endif
+	#endif
 				tests.Add(typeof(CsStructs));
 				tests.Add(typeof(CsStructsRegression));
 
 				tests.Add(typeof(CsType));
 
 				tests.Add(typeof(DerivedFromArrayList));
-#if !MONO
+	#if !MONO
 				tests.Add(typeof(Db4oHashMap));
-#endif
+	#endif
 				tests.Add(typeof(Db4oLinkedList));
 				// FIXME: current failing
 				// tests.Add(typeof(Db4oLinkedListUntyped));
@@ -91,9 +88,9 @@ namespace com.db4o.test
 				tests.Add(typeof(ExternalBlobs));
 				tests.Add(typeof(ExtMethods));
 				tests.Add(typeof(HashtableModifiedUpdateDepth));
-#if NET || NET_2_0 || MONO
+	#if NET || NET_2_0 || MONO
 				tests.Add(typeof(HoldsAnArrayList));
-#endif
+	#endif
 				tests.Add(typeof(IndexedByIdentity));
 				tests.Add(typeof(Isolation));
 				tests.Add(typeof(IsStored));
@@ -113,7 +110,7 @@ namespace com.db4o.test
 				tests.Add(typeof(nativequeries.OptimizationFailuresTestCase));
 				tests.Add(typeof(nativequeries.StringComparisonTestCase));
 
-#if NET_2_0
+	#if NET_2_0
 				tests.Add(typeof(net2.Net2GenericContainers));
 				tests.Add(typeof(net2.Net2GenericDictionary));
 				tests.Add(typeof(net2.Net2GenericList));
@@ -121,7 +118,7 @@ namespace com.db4o.test
 				tests.Add(typeof(net2.Net2NullableTypes));
 				tests.Add(typeof(net2.Net2QueryForClass));
 				tests.Add(typeof(net2.Net2SimpleGenericType));
-#endif		
+	#endif		
 
 				tests.Add(typeof(NoInstanceStored));
 				tests.Add(typeof(NoInternalClasses));
@@ -137,9 +134,9 @@ namespace com.db4o.test
 
 				tests.Add(typeof(PrimitivesInCollection));
 
-#if !CF_1_0 && !CF_2_0
+	#if !CF_1_0 && !CF_2_0
 				tests.Add(typeof(QueryExpressionBuilderTestCase));
-#endif
+	#endif
 				tests.Add(typeof(QueryDeleted));
 				tests.Add(typeof(QueryNonExistant));
 				tests.Add(typeof(Refresh));
@@ -155,9 +152,9 @@ namespace com.db4o.test
 				tests.Add(typeof(SodaNumberCoercion));
 				tests.Add(typeof(StoredClassInformation));
 				tests.Add(typeof(StoredFieldValue));
-#if !MONO
+	#if !MONO
 				tests.Add(typeof(StringInLists));
-#endif
+	#endif
 				tests.Add(typeof(SwitchingFilesFromClient));
 
 				tests.Add(typeof(TestHashTable));
@@ -191,10 +188,10 @@ namespace com.db4o.test
 		  */
 		internal bool CLIENT_SERVER = true;
 
-		/**
-		 * use ObjectServer#openClient() instead of Db4o.openClient()
-		 */
-		public static bool EMBEDDED_CLIENT = false;
+        /**
+         * use ObjectServer#openClient() instead of Db4o.openClient()
+         */
+        public static bool EMBEDDED_CLIENT = false;
 	  
 		/**
 		  * run the client/server test against a remote server.

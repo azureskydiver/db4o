@@ -13,8 +13,6 @@ namespace j4o.lang {
         private string name;
 
         private System.Threading.Thread thread;
-        
-        private bool _isDaemon;
 
         static int idGenerator = 1;
 
@@ -66,17 +64,11 @@ namespace j4o.lang {
 
         public void start() {
             thread = new System.Threading.Thread(new System.Threading.ThreadStart(_run));
-            thread.IsBackground=_isDaemon;
             if(name != null) {
                 setName(name);
             }
             thread.Start();
         }
-		
-		public void setDaemon(bool isDaemon)
-		{
-			_isDaemon=isDaemon;
-		}
 		
 		// HACK: for PascalCase conversion purposes
 		private void _run() {
