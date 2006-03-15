@@ -4,36 +4,24 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class DeletedObject {
 	public static final String TABLE_NAME = "DeletedObject";
-	public static final String UUID_LONG_PART = "uuidLongPart";
-	public static final String PROVIDER = "provider";
+	public static final String UUID = "uuid";
 
-	private long uuidLongPart;
-	private ReplicationProviderSignature provider;
+	Uuid uuid;
 
 	public DeletedObject() {
 	}
 
-	public long getUuidLongPart() {
-		return uuidLongPart;
+	public Uuid getUuid() {
+		return uuid;
 	}
 
-	public void setUuidLongPart(long uuidLongPart) {
-		this.uuidLongPart = uuidLongPart;
+	public void setUuid(Uuid uuid) {
+		this.uuid = uuid;
 	}
-
-	public ReplicationProviderSignature getProvider() {
-		return provider;
-	}
-
-	public void setProvider(ReplicationProviderSignature provider) {
-		this.provider = provider;
-	}
-
 
 	public String toString() {
 		return new ToStringBuilder(this).
-				append("uuidLongPart", uuidLongPart).
-				append("provider", provider).
+				append(UUID, uuid).
 				toString();
 	}
 }

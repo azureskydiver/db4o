@@ -17,6 +17,8 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 	 */
 	public static final String SIGNATURE_BYTE_ARRAY_COLUMN_NAME = "bytes";
 
+	public static final String ID = "id";
+
 	private byte[] bytes;
 
 	private long id;
@@ -77,7 +79,7 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 
 	public String toString() {
 		return new ToStringBuilder(this).
-				append("id", id).
+				append(ID, id).
 				toString();
 	}
 }
