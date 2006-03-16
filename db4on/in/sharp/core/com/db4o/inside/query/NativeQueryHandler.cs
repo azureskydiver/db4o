@@ -6,6 +6,31 @@ using com.db4o.query;
 
 namespace com.db4o.inside.query
 {
+#if NET_2_0 || CF_2_0
+    /// <summary>
+    /// Supplies the information missing in the CompactFramework System.Delegate API: Target and Method.
+    /// </summary>
+    /// <typeparam name="DelegateType"></typeparam>
+    public class MetaDelegate<DelegateType>
+    {
+        public readonly DelegateType Delegate;
+        public readonly object Target;
+        public readonly System.Reflection.MethodInfo Method;
+
+        // IMPORTANT: don't change the order of parameters here because it is
+        // assumed by the instrumentation tool to be exactly like this:
+        //  1) target object
+        //  2) delegate reference
+        //  3) method info object
+        public MetaDelegate(object target, DelegateType delegateRef, System.Reflection.MethodInfo method)
+        {
+            this.Target = target;
+            this.Method = method;
+            this.Delegate = delegateRef;
+        }
+    }
+#endif
+    
 	public class NativeQueryHandler
 	{
 		private ObjectContainer _container;
@@ -29,7 +54,37 @@ namespace com.db4o.inside.query
 		}
 
 #if NET_2_0
-        public virtual System.Collections.Generic.IList<Extent> execute<Extent>(System.Predicate<Extent> match, com.db4o.query.QueryComparator comparator)
+        public virtual System.Collections.Generic.IList<Extent> execute<Extent>(System.Predicate<Extent> match,
+                                                                                com.db4o.query.QueryComparator comparator)
+        {
+            // XXX: check GetDelegateList().Length
+            // only 1 delegate must be allowed
+            // although we could use it as a filter chain
+            // (and)
+            return ExecuteImpl<Extent>(match, match.Target, match.Method, match, comparator);
+        }
+#endif
+
+#if NET_2_0 || CF_2_0
+	    /// <summary>
+	    /// ExecuteMeta should not generally be called by user's code. Calls to ExecuteMeta should
+	    /// be inserted by an instrumentation tool.
+	    /// </summary>
+	    /// <typeparam name="Extent"></typeparam>
+	    /// <param name="predicate"></param>
+	    /// <param name="comparator"></param>
+	    /// <returns></returns>
+        public System.Collections.Generic.IList<Extent> ExecuteMeta<Extent>(MetaDelegate<System.Predicate<Extent>> predicate, com.db4o.query.QueryComparator comparator)
+	    {
+            return ExecuteImpl<Extent>(predicate, predicate.Target, predicate.Method, predicate.Delegate, comparator);
+	    }
+	    
+        private System.Collections.Generic.IList<Extent> ExecuteImpl<Extent>(
+                                                                        object originalPredicate,
+                                                                        object matchTarget,
+                                                                        System.Reflection.MethodInfo matchMethod,
+                                                                        System.Predicate<Extent> match,
+                                                                        com.db4o.query.QueryComparator comparator)
         {
             com.db4o.query.Query q = _container.query();
             q.constrain(typeof(Extent));
@@ -38,12 +93,8 @@ namespace com.db4o.inside.query
             {
                 if (OptimizeNativeQueries())
                 {
-					// XXX: check GetDelegateList().Length
-					// only 1 delegate must be allowed
-					// although we could use it as a filter chain
-					// (and)
-                    optimizeQuery(q, match.Target, match.Method);
-                    OnQueryExecution(match, QueryExecutionKind.DynamicallyOptimized);
+                    optimizeQuery(q, matchTarget, matchMethod);
+                    OnQueryExecution(originalPredicate, QueryExecutionKind.DynamicallyOptimized);
 
                     return WrapQueryResult<Extent>(q);
                 }
@@ -64,6 +115,7 @@ namespace com.db4o.inside.query
             return new com.db4o.inside.query.GenericObjectSetFacade<Extent>(qr);
         }
 #endif
+
 
 		private Query configureQuery(com.db4o.query.Predicate predicate)
 		{
