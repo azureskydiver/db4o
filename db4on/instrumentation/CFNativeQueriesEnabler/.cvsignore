@@ -1,0 +1,5 @@
+*.CFNativeQueriesEnabler
+bin
+obj
+*.user
+*.suo
