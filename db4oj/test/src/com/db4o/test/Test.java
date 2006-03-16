@@ -94,9 +94,11 @@ public class Test extends AllTests {
         }
         try {
             new Defragment().run(fileName, true);
-        } finally {
-            reOpen();
+           
+        } catch(Exception e){
+            e.printStackTrace();
         }
+        open();
     }
 
     public static void delete() {
@@ -311,7 +313,7 @@ public class Test extends AllTests {
 				objectServer.close();
 				objectServer = null;
 			}
-			Cool.sleepIgnoringInterruption(100);
+			Cool.sleepIgnoringInterruption(500);
 			return open();
 		}else{
 			return reOpen();

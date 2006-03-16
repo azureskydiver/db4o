@@ -6,6 +6,6 @@ package com.db4o;
 * @exclude
 */
 public class Db4oVersion {
-    public static final String NAME = "5.2.003";
+    public static final String NAME = "5.2.004";
     public static final int MAJOR = 5;
 }

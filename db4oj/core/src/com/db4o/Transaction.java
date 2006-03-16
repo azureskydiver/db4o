@@ -19,7 +19,7 @@ public class Transaction {
 
     private Tree            i_addToClassIndex;
     
-    private byte[]          i_bytes = new byte[YapConst.POINTER_LENGTH];
+    private final byte[]          _pointerBuffer = new byte[YapConst.POINTER_LENGTH];
 
     // contains TreeIntObject nodes
     // if TreeIntObject#i_object is null then this means DONT delete.
@@ -478,17 +478,13 @@ public class Transaction {
             i_pointerIo.readEnd();
             return new Slot(debugAddress, debugLength);
         }
-        return readSlot(a_id);
-    }
-    
-    public Slot readSlot(int id){
-        i_file.readBytes(i_bytes, id, YapConst.POINTER_LENGTH);
-        int address = (i_bytes[3] & 255)
-            | (i_bytes[2] & 255) << 8 | (i_bytes[1] & 255) << 16
-            | i_bytes[0] << 24;
-        int length = (i_bytes[7] & 255)
-            | (i_bytes[6] & 255) << 8 | (i_bytes[5] & 255) << 16
-            | i_bytes[4] << 24;
+        i_file.readBytes(_pointerBuffer, a_id, YapConst.POINTER_LENGTH);
+        int address = (_pointerBuffer[3] & 255)
+            | (_pointerBuffer[2] & 255) << 8 | (_pointerBuffer[1] & 255) << 16
+            | _pointerBuffer[0] << 24;
+        int length = (_pointerBuffer[7] & 255)
+            | (_pointerBuffer[6] & 255) << 8 | (_pointerBuffer[5] & 255) << 16
+            | _pointerBuffer[4] << 24;
         return new Slot(address, length);
     }
 

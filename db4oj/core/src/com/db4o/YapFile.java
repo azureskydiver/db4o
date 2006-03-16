@@ -214,21 +214,45 @@ public abstract class YapFile extends YapStream {
                 ReflectClass claxx = yapClass.classReflector();
                 if (claxx == null
                     || !( i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))) {
-                    Tree tree = yapClass.getIndex(ta);
-                    if (tree != null) {
-                        tree.traverse(new Visitor4() {
-
-                            public void visit(Object obj) {
-                                int id = ((TreeInt) obj).i_key;
-                                TreeInt newNode = new TreeInt(id);
-                                duplicates[0] = Tree
-                                    .add(duplicates[0], newNode);
-                                if (newNode.size() != 0) {
-                                    a_res.add(id);
+                    
+                    if(Debug.useBTrees){
+                        BTree btree = yapClass.index();
+                        if(btree != null){
+                            btree.traverseKeys(ta, new Visitor4() {
+                                public void visit(Object obj) {
+                                    int id = ((Integer)obj).intValue();
+                                    TreeInt newNode = new TreeInt(id);
+                                    duplicates[0] = Tree
+                                        .add(duplicates[0], newNode);
+                                    if (newNode.size() != 0) {
+                                        a_res.add(id);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                            
+                        }
                     }
+                    
+                    if(Debug.useOldClassIndex){
+                    
+                        Tree tree = yapClass.getIndex(ta);
+                        if (tree != null) {
+                            tree.traverse(new Visitor4() {
+    
+                                public void visit(Object obj) {
+                                    int id = ((TreeInt) obj).i_key;
+                                    TreeInt newNode = new TreeInt(id);
+                                    duplicates[0] = Tree
+                                        .add(duplicates[0], newNode);
+                                    if (newNode.size() != 0) {
+                                        a_res.add(id);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    
+                    
                 }
             }
         }
@@ -421,7 +445,7 @@ public abstract class YapFile extends YapStream {
         return (YapWriter)readReaderOrWriterByID(a_ta, a_id, false);    
     }
 
-    YapReader readReaderByID(Transaction a_ta, int a_id) {
+    public YapReader readReaderByID(Transaction a_ta, int a_id) {
         return readReaderOrWriterByID(a_ta, a_id, true);
     }
     
