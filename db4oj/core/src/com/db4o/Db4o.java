@@ -84,7 +84,7 @@ public class Db4o {
 		return openClient(new YapSocketReal(hostName, port), user, password);
 	}
 
-	public static ObjectContainer openClient(YapSocket socket, String user, String password)
+	private static ObjectContainer openClient(YapSocket socket, String user, String password)
 			throws IOException {
 		synchronized(Db4o.lock){
 			return new YapClient(socket, user, password, true);

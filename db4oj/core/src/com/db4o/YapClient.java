@@ -655,4 +655,9 @@ public class YapClient extends YapStream implements ExtClient {
 			return false;
 		}
 	}
+
+	// Remove, for testing purposes only
+	public YapSocket socket() {
+		return i_socket;
+	}
 }
