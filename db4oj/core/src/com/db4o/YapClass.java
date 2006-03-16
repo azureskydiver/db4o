@@ -826,6 +826,13 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         return false;
     }
+    
+    BTree index(){
+        if(! stateOK()){
+            return null;
+        }
+        return _index;
+    }
 
     ClassIndex getIndex() {
         if (stateOK() && i_index != null) {
@@ -836,9 +843,22 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
     
     int indexEntryCount(Transaction ta){
-        if (stateOK() && i_index != null) {
-            return i_index.entryCount(ta);
+        if(!stateOK()){
+            return 0;
         }
+        
+        if(Debug.useOldClassIndex){
+            if (i_index != null) {
+                return i_index.entryCount(ta);
+            }
+        }
+        
+        if(Debug.useBTrees){
+            if(_index != null){
+                return _index.size();
+            }
+        }
+        
         return 0;
     }
 

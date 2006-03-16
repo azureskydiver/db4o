@@ -89,10 +89,13 @@ public class BTree extends YapMeta{
         _nodes = Tree.add(_nodes, tio);
         tio = (TreeIntObject)tio.duplicateOrThis();
         if(tio.i_object != null){
-            return (BTreeNode)tio.i_object;
+            Object obj = Platform4.weakReferenceTarget(tio.i_object);
+            if(obj != null){
+                return (BTreeNode)obj;
+            }
         }
         BTreeNode node = new BTreeNode(this, id);
-        tio.i_object = node;
+        tio.i_object = Platform4.createWeakReference(node);
         return node;
     }
     
@@ -108,6 +111,16 @@ public class BTree extends YapMeta{
     public void writeThis(Transaction trans, YapReader a_writer) {
         a_writer.writeInt(_size);
         a_writer.writeIDOf(trans, _root);
+    }
+    
+    public int size(){
+        return _size;
+    }
+    
+    public void traverseKeys(Transaction trans, Visitor4 visitor){
+        if(_root != null){
+            _root.traverseKeys(trans, visitor);
+        }
     }
 
 
