@@ -534,7 +534,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 if (i_entryCounter == 0) {
                     Messages.logErr(i_config, 50, toString(), null);
                     while (!close()) {
-
                     }
                 } else {
                     emergencyClose();
