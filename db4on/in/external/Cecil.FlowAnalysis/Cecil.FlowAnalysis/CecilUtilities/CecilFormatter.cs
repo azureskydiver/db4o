@@ -52,15 +52,20 @@ namespace Cecil.FlowAnalysis.CecilUtilities
 		public static void WriteMethodBody(TextWriter writer, IMethodDefinition method)
 		{
 			writer.WriteLine(method.ToString());
-			foreach (IInstruction instruction in method.Body.Instructions)
-			{
-				writer.Write('\t');
-				WriteInstruction(writer, instruction);
-				writer.WriteLine();
-			}
+		    WriteMethodBody(writer, method.Body);
 		}
 
-		public static void WriteInstruction(TextWriter writer, IInstruction instruction)
+	    public static void WriteMethodBody(TextWriter writer, IMethodBody body)
+	    {
+	        foreach (IInstruction instruction in body.Instructions)
+	        {
+	            writer.Write('\t');
+	            WriteInstruction(writer, instruction);
+	            writer.WriteLine();
+	        }
+	    }
+
+	    public static void WriteInstruction(TextWriter writer, IInstruction instruction)
 		{
 			writer.Write(FormatLabel(instruction.Offset));
 			writer.Write(": ");

@@ -29,6 +29,8 @@ namespace com.db4o.inside.query
 	{	
         private static ICachingStrategy _assemblyCachingStrategy = new SingleItemCachingStrategy();
 
+        private static ICachingStrategy _expressionCachingStrategy = new SingleItemCachingStrategy();
+
 		public static ICachingStrategy AssemblyCachingStrategy
 		{
 			get
@@ -43,9 +45,25 @@ namespace com.db4o.inside.query
 			}
 		}
 
+        public static ICachingStrategy ExpressionCachingStrategy
+        {
+            get
+            {
+                return _expressionCachingStrategy;
+            }
+
+            set
+            {
+                if (null == value) throw new ArgumentNullException("ExpressionCachingStrategy");
+                _expressionCachingStrategy = value;
+            }
+        }
+
 		public static Expression FromMethod(System.Reflection.MethodInfo method)
 		{
 			if (method == null) throw new ArgumentNullException("method");
+            Expression e = (Expression)_expressionCachingStrategy.Get(method);
+            if (e != null) return e;
 
 			string location = GetAssemblyLocation(method);
             IAssemblyDefinition assembly = GetAssembly(location);            
@@ -53,7 +71,10 @@ namespace com.db4o.inside.query
 			if (null == type) UnsupportedPredicate(string.Format("Unable to load type '{0}' from assembly '{1}'", method.DeclaringType.FullName, location));
 			IMethodDefinition methodDef = type.Methods.GetMethod(method.Name,  GetParameterTypes(method));
 			if (null == methodDef) UnsupportedPredicate(string.Format("Unable to load the definition of '{0}' from assembly '{1}'", method, location));
-			return FromMethodDefinition(methodDef);
+		    
+			e = FromMethodDefinition(methodDef);
+		    _expressionCachingStrategy.Add(method, e);
+            return e;
 		}
 		
 		private static IAssemblyDefinition GetAssembly(string location)
