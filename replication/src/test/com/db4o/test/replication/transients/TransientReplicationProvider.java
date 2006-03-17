@@ -3,7 +3,7 @@ package com.db4o.test.replication.transients;
 import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Collection4;
-import com.db4o.foundation.ObjectSetIterator4Facade;
+import com.db4o.foundation.ObjectSetCollection4Facade;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.replication.CollectionHandler;
 import com.db4o.inside.replication.CollectionHandlerImpl;
@@ -103,7 +103,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			if (wasChangedSinceLastReplication(candidate))
 				result.add(candidate);
 		}
-		return new ObjectSetIterator4Facade(result.iterator());
+		return new ObjectSetCollection4Facade(result);
 	}
 
 	private boolean wasChangedSinceLastReplication(Object candidate) {
@@ -201,7 +201,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			if (clazz.isAssignableFrom(candidate.getClass()))
 				result.add(candidate);
 		}
-		return new ObjectSetIterator4Facade(result.iterator());
+		return new ObjectSetCollection4Facade(result);
 	}
 
 	public void storeNew(Object o) {
@@ -319,25 +319,15 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		// do nothing
 	}
 
-	public void delete(Class clazz) {
+	public void deleteAllInstances(Class clazz) {
 		ObjectSet iterator = getStoredObjects(clazz);
 		while (iterator.hasNext()) delete(iterator.next());
 	}
 
-	private void delete(Object obj) {
+	public void delete(Object obj) {
 		Db4oUUID uuid = produceReference(obj, null, null).uuid();
 		_uuidsDeletedSinceLastReplication.add(uuid);
 		_storedObjects.remove(obj);
-	}
-
-	public void deleteGraph(Object root) {
-		_traverser.traverseGraph(root, new Visitor() {
-			public boolean visit(Object obj) {
-				if (!isStored(obj)) 	return false;
-				delete(obj);
-				return true;
-			}
-		});
 	}
 	
 	public class MyTraverser implements Traverser {
@@ -362,6 +352,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public ObjectSet uuidsDeletedSinceLastReplication() {
-		return new ObjectSetIterator4Facade(_uuidsDeletedSinceLastReplication.iterator());
+		return new ObjectSetCollection4Facade(_uuidsDeletedSinceLastReplication);
 	}
 }

@@ -89,8 +89,8 @@ public abstract class ReplicationTestcase {
 
 	protected void delete(Class[] classes) {
 		for (int i = 0; i < classes.length; i++) {
-			_providerA.delete(classes[i]);
-			_providerB.delete(classes[i]);
+			_providerA.deleteAllInstances(classes[i]);
+			_providerB.deleteAllInstances(classes[i]);
 		}
 		_providerA.commit();
 		_providerB.commit();
