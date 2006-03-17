@@ -1,7 +1,7 @@
 package com.db4o.replication.hibernate.impl.ref_as_table;
 
-import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
+import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.replication.hibernate.cfg.ObjectConfig;
 import com.db4o.replication.hibernate.cfg.RefConfig;
 import com.db4o.replication.hibernate.impl.AbstractReplicationProvider;
@@ -9,6 +9,7 @@ import com.db4o.replication.hibernate.impl.ChangedObjectId;
 import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
+import com.db4o.replication.hibernate.metadata.Uuid;
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
@@ -23,6 +24,7 @@ import org.hibernate.event.PostInsertEventListener;
 import org.hibernate.event.PostUpdateEvent;
 import org.hibernate.mapping.PersistentClass;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -111,19 +113,12 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		}
 	}
 
-	protected com.db4o.inside.replication.ReplicationReference produceObjectReference(Object obj) {
+	protected ReplicationReference produceObjectReference(Object obj) {
 		if (!getSession().contains(obj)) return null;
 
-		long id = Shared.castAsLong(getSession().getIdentifier(obj));
+		final ObjectReference ref = getRefById(obj);
 
-		final List exisitings = getRefById(id, obj);
-
-		int count = exisitings.size();
-
-		if (count != 1) throw new RuntimeException("ObjectReference must exist for " + obj);
-
-		ObjectReference ref;
-		ref = (ObjectReference) exisitings.get(0);
+		if (ref == null) throw new RuntimeException("ObjectReference must exist for " + obj);
 
 		if (ref.getProvider() == null) {
 			ref.setProvider(_mySig);
@@ -135,11 +130,19 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		return createReference(obj, new Db4oUUID(ref.getUuidLongPart(), ref.getProvider().getBytes()), ref.getVersion());
 	}
 
-	protected List getRefById(long id, Object obj) {
+	protected ObjectReference getRefById(Object obj) {
+		Serializable id = getSession().getIdentifier(obj);
 		Criteria criteria = getRefSession().createCriteria(ObjectReference.class);
 		criteria.add(Restrictions.eq(ObjectReference.OBJECT_ID, id));
 		criteria.add(Restrictions.eq(ObjectReference.CLASS_NAME, obj.getClass().getName()));
-		return criteria.list();
+		List list = criteria.list();
+
+		if (list.size() == 0)
+			return null;
+		else if (list.size() == 1)
+			return (ObjectReference) list.get(0);
+		else
+			throw new RuntimeException("Duplicated uuid");
 	}
 
 	protected void saveOrUpdateReplicaMetadata(com.db4o.inside.replication.ReplicationReference ref) {
@@ -149,8 +152,8 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		final long id = Shared.castAsLong(getSession().getIdentifier(obj));
 		final Session s = getRefSession();
 
-		final List existings = getRefById(id, obj);
-		if (existings.size() == 0) {
+		final ObjectReference exist = getRefById(obj);
+		if (exist == null) {
 			ReplicationProviderSignature provider = getProviderSignature(ref.uuid().getSignaturePart());
 
 			ObjectReference tmp = new ObjectReference();
@@ -162,13 +165,17 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 
 			s.save(tmp);
 		} else {
-			ObjectReference exist = (ObjectReference) existings.get(0);
-			exist.setProvider(getProviderSignature(ref.uuid().getSignaturePart()));
-			exist.setUuidLongPart(ref.uuid().getLongPart());
 			exist.setVersion(ref.version());
 			s.update(exist);
 		}
+	}
 
+	protected Uuid getUuid(Object obj) {
+		ObjectReference ref = getRefById(obj);
+		Uuid uuid = new Uuid();
+		uuid.setLongPart(ref.getUuidLongPart());
+		uuid.setProvider(ref.getProvider());
+		return uuid;
 	}
 
 	protected Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
@@ -275,7 +282,5 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		}
 	}
 
-	public ObjectSet uuidsDeletedSinceLastReplication() {
-		throw new RuntimeException("TODO");
-	}
+
 }

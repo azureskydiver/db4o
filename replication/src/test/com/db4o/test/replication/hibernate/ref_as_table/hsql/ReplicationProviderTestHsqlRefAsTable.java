@@ -10,6 +10,8 @@ public class ReplicationProviderTestHsqlRefAsTable extends HibernateReplicationP
 	}
 
 	public void testReplicationProvider() {
-		super.testReplicationProvider();
+		prepare();
+		tstDeletion();
+		destroySubject();
 	}
 }
