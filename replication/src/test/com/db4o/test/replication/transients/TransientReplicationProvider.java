@@ -325,6 +325,10 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		}
 	}
 
+	public void deleteGraph(Object root) {
+		throw new RuntimeException("TODO");
+	}
+	
 	public class MyTraverser implements Traverser {
 		Traverser _delegate;
 
@@ -344,5 +348,9 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
 		if (_uuidsReplicatedInThisSession.contains(reference.uuid())) return false;
 		return reference.version() > _lastReplicationVersion;
+	}
+
+	public ObjectSet uuidsDeletedSinceLastReplication() {
+		throw new RuntimeException("TODO");
 	}
 }

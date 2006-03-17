@@ -70,13 +70,9 @@ public abstract class ReplicationTestcase {
 
 	}
 
-	protected TestableReplicationProviderInside prepareProviderA() {
-		throw new UnsupportedOperationException("unreachable");
-	}
+	protected abstract TestableReplicationProviderInside prepareProviderA();
 
-	protected TestableReplicationProviderInside prepareProviderB() {
-		throw new UnsupportedOperationException("unreachable me");
-	}
+	protected abstract TestableReplicationProviderInside prepareProviderB();
 
 	protected void init() {
 		_providerA = prepareProviderA();

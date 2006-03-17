@@ -645,6 +645,10 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		getSession().createQuery("delete from " + className).executeUpdate();
 	}
 
+	public void deleteGraph(Object root) {
+		throw new RuntimeException("TODO");
+	}
+
 	public final void storeReplica(Object entity) {
 //		if (_name.equals("A"))
 //			System.out.println("obj = " + obj);

@@ -23,7 +23,8 @@ package com.db4o.test.replication.provider;
 
 public class Car {
 
-	private String _model;
+	String _model;
+	Pilot _pilot;
 
 	public Car() {
 	}
@@ -39,4 +40,5 @@ public class Car {
 	public void setModel(String model) {
 		_model = model;
 	}
+
 }

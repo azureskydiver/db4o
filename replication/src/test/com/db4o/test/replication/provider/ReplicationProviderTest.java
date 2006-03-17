@@ -22,6 +22,35 @@ public abstract class ReplicationProviderTest extends Test {
 		tstReferences();
 		tstStore();
 		tstRollback();
+		//tstDeletion();
+	}
+
+	private void tstDeletion() {
+		subject = prepareSubject();
+		subject.storeNew(new Pilot("John Cleese", 42));
+		
+		subject.startReplicationTransaction(PEER_SIGNATURE);
+		subject.commitReplicationTransaction(6);
+		
+		subject.delete(Pilot.class);
+
+		subject.startReplicationTransaction(PEER_SIGNATURE);
+		ensure(subject.uuidsDeletedSinceLastReplication().hasNext());
+		subject.commitReplicationTransaction(7);
+
+		Pilot root = new Pilot("Terry Gilliam", 33);
+		subject.storeNew(root);
+		
+		subject.startReplicationTransaction(PEER_SIGNATURE);
+		subject.commitReplicationTransaction(6);
+		
+		subject.deleteGraph(root);
+
+		subject.startReplicationTransaction(PEER_SIGNATURE);
+		ensure(subject.uuidsDeletedSinceLastReplication().hasNext());
+		subject.commitReplicationTransaction(8);
+
+		destroySubject();
 	}
 
 	protected abstract TestableReplicationProviderInside prepareSubject();

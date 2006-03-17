@@ -1,5 +1,6 @@
 package com.db4o.replication.hibernate.impl.ref_as_columns;
 
+import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
@@ -267,5 +268,9 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		long newVer = Util.getMaxVersion(con) + 1;
 		Shared.incrementObjectVersion(con, event.getId(), newVer,
 				getObjectConfig().getTableName(entity.getClass()), getObjectConfig().getPrimaryKeyColumnName(entity));
+	}
+
+	public ObjectSet uuidsDeletedSinceLastReplication() {
+		throw new RuntimeException("TODO");
 	}
 }

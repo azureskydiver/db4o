@@ -28,4 +28,14 @@ public class SimpleParentChildCore extends SimpleParentChild {
 	public void test() {
 		super.test();
 	}
+
+	@Override
+	protected TestableReplicationProviderInside prepareProviderA() {
+		throw new RuntimeException("REVISE");
+	}
+
+	@Override
+	protected TestableReplicationProviderInside prepareProviderB() {
+		throw new RuntimeException("REVISE");
+	}
 }

@@ -1,6 +1,7 @@
 package com.db4o.test.replication;
 
 public abstract class ReplicateDeletionTest extends ReplicationTestcase {
+	
 	//TODO
 	public void test() {
 		init();

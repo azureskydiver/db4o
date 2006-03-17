@@ -89,4 +89,14 @@ public class R0to4RunnerCombinations extends R0to4Runner {
 		session.close();
 		sf.close();
 	}
+
+	@Override
+	protected TestableReplicationProviderInside prepareProviderA() {
+		throw new RuntimeException("REVISE");
+	}
+
+	@Override
+	protected TestableReplicationProviderInside prepareProviderB() {
+		throw new RuntimeException("REVISE");
+	}
 }
