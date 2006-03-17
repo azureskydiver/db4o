@@ -19,8 +19,7 @@ import java.util.List;
 
 public class HibernateReplicationProviderTest extends ReplicationProviderTest {
 	public void testReplicationProvider() {
-		System.err.println("Uncomment this in HibernateReplicationProviderTest.");
-		//super.testReplicationProvider();
+		super.testReplicationProvider();
 		tstCollection();
 	}
 

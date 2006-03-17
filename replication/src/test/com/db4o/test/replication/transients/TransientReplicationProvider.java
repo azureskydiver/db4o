@@ -42,6 +42,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	private long _lastReplicationVersion;
 	private final Collection4 _uuidsReplicatedInThisSession = new Collection4();
 
+	private Collection4 _uuidsDeletedSinceLastReplication = new Collection4();
+
 	public TransientReplicationProvider(byte[] signature, String name) {
 		_signature = new MySignature();
 		_signature.setBytes(signature);
@@ -79,6 +81,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
 		_uuidsReplicatedInThisSession.clear();
+		_uuidsDeletedSinceLastReplication.clear();
 	}
 
 	public void rollbackReplication() {
@@ -204,9 +207,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	public void storeNew(Object o) {
 		_traverser.traverseGraph(o, new Visitor() {
 			public boolean visit(Object obj) {
-				if (_storedObjects.get(obj) != null) {
-					return false;
-				}
+				if (isStored(obj)) return false;
 				transientProviderSpecificStore(obj);
 				return true;
 			}
@@ -320,13 +321,23 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 	public void delete(Class clazz) {
 		ObjectSet iterator = getStoredObjects(clazz);
-		while (iterator.hasNext()) {
-			_storedObjects.remove(iterator.next());
-		}
+		while (iterator.hasNext()) delete(iterator.next());
+	}
+
+	private void delete(Object obj) {
+		Db4oUUID uuid = produceReference(obj, null, null).uuid();
+		_uuidsDeletedSinceLastReplication.add(uuid);
+		_storedObjects.remove(obj);
 	}
 
 	public void deleteGraph(Object root) {
-		throw new RuntimeException("TODO");
+		_traverser.traverseGraph(root, new Visitor() {
+			public boolean visit(Object obj) {
+				if (!isStored(obj)) 	return false;
+				delete(obj);
+				return true;
+			}
+		});
 	}
 	
 	public class MyTraverser implements Traverser {
@@ -351,6 +362,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public ObjectSet uuidsDeletedSinceLastReplication() {
-		throw new RuntimeException("TODO");
+		return new ObjectSetIterator4Facade(_uuidsDeletedSinceLastReplication.iterator());
 	}
 }

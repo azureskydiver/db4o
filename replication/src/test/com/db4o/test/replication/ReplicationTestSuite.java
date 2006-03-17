@@ -50,9 +50,9 @@ public class ReplicationTestSuite extends TestSuite {
 
 	public Class[] tests() {
 		return new Class[]{
-				HibernateReplicationProviderTest.class,
 				TransientReplicationProviderTest.class,
 				Db4oReplicationProviderTest.class,
+				HibernateReplicationProviderTest.class,
 				ReplicationProviderTestHsqlRefAsTable.class,
 
 				ReplicationConfiguratorTestRefAsColumns.class,
@@ -78,7 +78,7 @@ public class ReplicationTestSuite extends TestSuite {
 
 				SimpleParentChildCore.class,
 				SimpleParentChildCombinations.class,
-
+				
 				TransientListTest.class,
 				Db4oListTest.class,
 				ListTestHsqlRefAsColumns.class,
