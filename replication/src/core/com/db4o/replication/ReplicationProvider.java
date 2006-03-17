@@ -36,4 +36,11 @@ public interface ReplicationProvider {
 	 */
 	ObjectSet objectsChangedSinceLastReplication(Class clazz);
 
+	/**
+	 * Returns the UUIDs of the objects deleted since last replication.
+	 *
+	 * @return newly created objects and changed objects since last replication
+	 */
+	ObjectSet uuidsDeletedSinceLastReplication();
+
 }

@@ -1,5 +1,6 @@
 package com.db4o.replication.hibernate.impl.ref_as_table;
 
+import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.replication.hibernate.cfg.ObjectConfig;
 import com.db4o.replication.hibernate.cfg.RefConfig;
@@ -272,5 +273,9 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 			Session s = getRefSession();
 			s.save(ref);
 		}
+	}
+
+	public ObjectSet uuidsDeletedSinceLastReplication() {
+		throw new RuntimeException("TODO");
 	}
 }

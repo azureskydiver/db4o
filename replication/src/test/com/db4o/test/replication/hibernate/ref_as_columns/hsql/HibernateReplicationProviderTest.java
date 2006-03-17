@@ -19,7 +19,7 @@ import java.util.List;
 
 public class HibernateReplicationProviderTest extends ReplicationProviderTest {
 	public void testReplicationProvider() {
-		//TODO HibernateReplicationProvider does not cache a just stored object  
+		System.err.println("Uncomment this in HibernateReplicationProviderTest.");
 		//super.testReplicationProvider();
 		tstCollection();
 	}

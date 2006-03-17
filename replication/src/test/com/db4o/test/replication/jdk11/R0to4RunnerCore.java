@@ -33,4 +33,14 @@ public class R0to4RunnerCore extends R0to4Runner {
 		delete(_providerA);
 		delete(_providerB);
 	}
+
+	@Override
+	protected TestableReplicationProviderInside prepareProviderA() {
+		throw new RuntimeException("REVISE");
+	}
+
+	@Override
+	protected TestableReplicationProviderInside prepareProviderB() {
+		throw new RuntimeException("REVISE");
+	}
 }

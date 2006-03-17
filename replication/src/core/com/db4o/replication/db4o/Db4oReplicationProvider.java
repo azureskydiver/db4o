@@ -261,19 +261,28 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 
 	public ObjectSet objectsChangedSinceLastReplication() {
 		Query q = _stream.query();
-		q.descend(VirtualField.VERSION).constrain(
-				new Long(getLastReplicationVersion())).greater();
+		whereModified(q);
 		return q.execute();
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication(Class clazz) {
 		Query q = _stream.query();
 		q.constrain(clazz);
-		q.descend(VirtualField.VERSION).constrain(
-				new Long(getLastReplicationVersion())).greater();
+		whereModified(q);
 		return q.execute();
 	}
-
+	
+    /**
+	 * adds a constraint to the passed Query to query only for objects that
+	 * were modified since the last replication process between this and the
+	 * other ObjectContainer involved in the current replication process.
+	 * @param query the Query to be constrained 
+	 */
+	public void whereModified(Query query) {
+		query.descend(VirtualField.VERSION).constrain(
+				new Long(getLastReplicationVersion())).greater();
+	}
+	
 	public ObjectSet getStoredObjects(Class type) {
 		return _stream.query(type);
 	}
@@ -307,6 +316,10 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		}
 	}
 
+	public void deleteGraph(Object root) {
+		throw new RuntimeException("TODO");
+	}
+
 	public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
 		if (_idsReplicatedInThisSession != null) {
 			int id = (int) _stream.getID(reference.object());
@@ -315,4 +328,9 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 
 		return reference.version() > getLastReplicationVersion();
 	}
+
+	public ObjectSet uuidsDeletedSinceLastReplication() {
+		throw new RuntimeException("TODO");
+	}
+
 }
