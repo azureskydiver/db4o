@@ -15,7 +15,7 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 	/**
 	 * Column name of the ReplicationProviderSignature byte_array.
 	 */
-	public static final String SIGNATURE_BYTE_ARRAY_COLUMN_NAME = "bytes";
+	public static final String BYTES = "bytes";
 
 	public static final String ID = "id";
 

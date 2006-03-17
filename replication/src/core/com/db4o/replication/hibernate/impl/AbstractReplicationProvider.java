@@ -14,12 +14,14 @@ import com.db4o.reflect.Reflector;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.cfg.ObjectConfig;
 import com.db4o.replication.hibernate.cfg.RefConfig;
+import com.db4o.replication.hibernate.metadata.DeletedObject;
 import com.db4o.replication.hibernate.metadata.MySignature;
 import com.db4o.replication.hibernate.metadata.PeerSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
+import com.db4o.replication.hibernate.metadata.Uuid;
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Criteria;
 import org.hibernate.EmptyInterceptor;
@@ -35,6 +37,8 @@ import org.hibernate.event.FlushEvent;
 import org.hibernate.event.FlushEventListener;
 import org.hibernate.event.PostUpdateEvent;
 import org.hibernate.event.PostUpdateEventListener;
+import org.hibernate.event.PreDeleteEvent;
+import org.hibernate.event.PreDeleteEventListener;
 import org.hibernate.mapping.PersistentClass;
 
 import java.util.Arrays;
@@ -60,6 +64,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	protected FlushEventListener myFlushEventListener = new MyFlushEventListener();
 
 	protected PostUpdateEventListener myPostUpdateEventListener = new MyPostUpdateEventListener();
+
+	protected PreDeleteEventListener myPreDeleteEventListener = new MyPreDeleteEventListener();
 
 	/**
 	 * Hibernate mapped classes
@@ -313,7 +319,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
 		final List exisitingSigs = getRefSession().createCriteria(ReadonlyReplicationProviderSignature.class)
-				.add(Restrictions.eq(ReplicationProviderSignature.SIGNATURE_BYTE_ARRAY_COLUMN_NAME, signaturePart))
+				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, signaturePart))
 				.list();
 		if (exisitingSigs.size() == 1)
 			return (ReplicationProviderSignature) exisitingSigs.get(0);
@@ -456,11 +462,12 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 		eventListeners.setFlushEventListeners(createFlushEventListeners(eventListeners.getFlushEventListeners()));
 		eventListeners.setPostUpdateEventListeners(createPostUpdateListeners(eventListeners.getPostUpdateEventListeners()));
+		eventListeners.setPreDeleteEventListeners(new PreDeleteEventListener[]{myPreDeleteEventListener});
 	}
 
 	private PeerSignature getPeerSignature(byte[] bytes) {
 		final List exisitingSigs = getRefSession().createCriteria(PeerSignature.class)
-				.add(Restrictions.eq(ReplicationProviderSignature.SIGNATURE_BYTE_ARRAY_COLUMN_NAME, bytes))
+				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, bytes))
 				.list();
 
 		if (exisitingSigs.size() == 1)
@@ -499,6 +506,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	public synchronized void commitReplicationTransaction(long raisedDatabaseVersion) {
 		ensureReplicationActive();
+		clearDeletedUuids();
 		commit();
 		_uuidsReplicatedInThisSession.clear();
 		_dirtyRefs.clear();
@@ -559,19 +567,27 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 		Set out = new HashSet();
 
+		out.addAll(getAllNewObjects());
+
 		for (Iterator iterator = _mappedClasses.iterator(); iterator.hasNext();) {
 			PersistentClass persistentClass = (PersistentClass) iterator.next();
-
-			//System.out.println("persistentClass = " + persistentClass);
-
-			//Case 1 - Objects inserted to Db since last replication with any peers.
-			out.addAll(getNewObjectsSinceLastReplication(persistentClass));
 
 			//Case 2 - Objects updated since last replication with any peers.
 			out.addAll(getChangedObjectsSinceLastReplication(persistentClass));
 		}
 
 		return new ObjectSetIteratorFacade(out.iterator());
+	}
+
+	private Set getAllNewObjects() {
+		Set out = new HashSet();
+		for (Iterator iterator = _mappedClasses.iterator(); iterator.hasNext();) {
+			PersistentClass persistentClass = (PersistentClass) iterator.next();
+
+			//Case 1 - Objects inserted to Db since last replication with any peers.
+			out.addAll(getNewObjectsSinceLastReplication(persistentClass));
+		}
+		return out;
 	}
 
 	public Session getSession() {
@@ -642,11 +658,19 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	public void delete(Class clazz) {
 		ensureReplicationInActive();
 		String className = clazz.getName();
-		getSession().createQuery("delete from " + className).executeUpdate();
+		//getSession().createQuery("delete from " + className).executeUpdate();
+		List col = getSession().createCriteria(clazz).list();
+		for (int i = 0; i < col.size(); i++) {
+			Object o = col.get(i);
+			System.out.println("o = " + o);
+			getSession().delete(o);
+		}
 	}
 
 	public void deleteGraph(Object root) {
-		throw new RuntimeException("TODO");
+		System.out.println("AbstractReplicationProvider.deleteGraph");
+		System.out.println("root = " + root);
+		getSession().delete(root);
 	}
 
 	public final void storeReplica(Object entity) {
@@ -728,7 +752,13 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 		uuidLongPartGenerator = new UuidLongPartGenerator(getRefSession());
 
+		getAllNewObjects();
+
 		_inReplication = true;
+	}
+
+	private void clearDeletedUuids() {
+		getRefSession().createQuery("delete from " + DeletedObject.TABLE_NAME).executeUpdate();
 	}
 
 	public ObjectConfig getObjectConfig() {
@@ -776,9 +806,24 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			throw new RuntimeException("can't remove");
 		eventListeners.setPostUpdateEventListeners(r2);
 		myPostUpdateEventListener = null;
+
+		PreDeleteEventListener[] o3 = eventListeners.getPreDeleteEventListeners();
+		PreDeleteEventListener[] r3 = (PreDeleteEventListener[]) ArrayUtils.removeElement(
+				o3, myPreDeleteEventListener);
+		if ((o3.length - r3.length) != 1)
+			throw new RuntimeException("can't remove");
+		eventListeners.setPreDeleteEventListeners(r3);
+		myPreDeleteEventListener = null;
 	}
 
 	protected abstract void saveOrUpdateReplicaMetadata(ReplicationReference ref);
+
+	public ObjectSet uuidsDeletedSinceLastReplication() {
+		List results = getRefSession().createCriteria(DeletedObject.class).list();
+		return new ObjectSetCollectionFacade(results);
+	}
+
+	protected abstract Uuid getUuid(Object obj);
 
 	final class MyFlushEventListener implements FlushEventListener {
 		public final void onFlush(FlushEvent event) throws HibernateException {
@@ -803,6 +848,28 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 				incrementObjectVersion(event);
 			}
+		}
+	}
+
+	class MyPreDeleteEventListener implements PreDeleteEventListener {
+		private void addToDeletedObjects(PreDeleteEvent event) {
+			Uuid uuid = getUuid(event.getEntity());
+			DeletedObject deletedObject = new DeletedObject();
+			deletedObject.setUuid(uuid);
+			getRefSession().save(deletedObject);
+			System.out.println("saved");
+		}
+
+		public boolean onPreDelete(PreDeleteEvent event) {
+			System.out.println("event = " + event);
+			boolean ret = true;
+
+			if (isReplicationActive()) return ret;
+			if (Util.skip(event.getEntity())) return ret;
+
+			addToDeletedObjects(event);
+
+			return ret;
 		}
 	}
 }

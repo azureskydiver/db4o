@@ -8,8 +8,6 @@ import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.replication.hibernate.metadata.PeerSignature;
 import com.db4o.test.Test;
 
-import java.util.Vector;
-
 public abstract class ReplicationProviderTest extends Test {
 	protected TestableReplicationProviderInside subject;
 	protected static final byte[] PEER_SIGNATURE_BYTES = new byte[]{1, 2, 3, 4};
@@ -18,7 +16,7 @@ public abstract class ReplicationProviderTest extends Test {
 	public void testReplicationProvider() {
 		prepare();
 		tstSignature();
-		
+
 		prepare();
 		tstVersionIncrement();
 
@@ -36,23 +34,25 @@ public abstract class ReplicationProviderTest extends Test {
 
 		prepare();
 		tstDeletion();
-		
+
 		destroySubject();
 	}
 
-	private void prepare() {
+	protected void prepare() {
 		if (subject != null) destroySubject();
 		subject = prepareSubject();
 	}
 
-	private void tstDeletion() {
+	protected void tstDeletion() {
 		subject.storeNew(new Pilot("John Cleese", 42));
-		
+		subject.commit();
+
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		subject.syncVersionWithPeer(105);
 		subject.commitReplicationTransaction(106);
-		
+
 		subject.delete(Pilot.class);
+		subject.commit();
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		ObjectSet deletedUuids = subject.uuidsDeletedSinceLastReplication();
@@ -64,19 +64,24 @@ public abstract class ReplicationProviderTest extends Test {
 		Car root = new Car("Ferrari");
 		root._pilot = new Pilot("Terry Gilliam", 33);
 		subject.storeNew(root);
-		
+		subject.commit();
+
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		subject.syncVersionWithPeer(107);
 		subject.commitReplicationTransaction(108);
-		
-		subject.deleteGraph(root);
+
+		ObjectSet cars = subject.getStoredObjects(Car.class);
+		ensure(cars.hasNext());
+		Car loadedRoot = (Car) cars.next();
+		subject.deleteGraph(loadedRoot);
+		subject.commit();
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		deletedUuids = subject.uuidsDeletedSinceLastReplication();
 		deletedUuids.next();
 		deletedUuids.next();
 		ensure(!deletedUuids.hasNext());
-		
+
 	}
 
 	protected abstract TestableReplicationProviderInside prepareSubject();
@@ -142,7 +147,7 @@ public abstract class ReplicationProviderTest extends Test {
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 
-		Pilot object1 = (Pilot)subject.getStoredObjects(Pilot.class).next();
+		Pilot object1 = (Pilot) subject.getStoredObjects(Pilot.class).next();
 
 		ReplicationReference reference = subject.produceReference(object1, null, null);
 		ensure(reference.object() == object1);
@@ -167,21 +172,21 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.storeNew(object1);
 		subject.storeNew(object2);
 		subject.storeNew(object3);
-	
+
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 
 		System.err.println("Uncomment in ReplicationProviderTest");
 		//ensure(subject.objectsChangedSinceLastReplication().size() == 3);
-		
+
 		ObjectSet pilots = subject.objectsChangedSinceLastReplication(Pilot.class);
-		String name1 = ((Pilot)pilots.next())._name;
-		String name2 = ((Pilot)pilots.next())._name;
+		String name1 = ((Pilot) pilots.next())._name;
+		String name2 = ((Pilot) pilots.next())._name;
 		ensure(name1.equals("John Cleese") || name1.equals("Terry Gilliam"));
 		ensure(name2.equals("John Cleese") || name2.equals("Terry Gilliam"));
 		ensure(!pilots.hasNext());
 
 		ObjectSet cars = subject.objectsChangedSinceLastReplication(Car.class);
-		ensure(((Car)cars.next()).getModel().equals("Volvo"));
+		ensure(((Car) cars.next()).getModel().equals("Volvo"));
 		ensure(!cars.hasNext());
 
 		subject.syncVersionWithPeer(9800);
@@ -193,25 +198,25 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.syncVersionWithPeer(9908);
 		subject.commitReplicationTransaction(9909);
 
-		Pilot pilot = (Pilot)subject.getStoredObjects(Pilot.class).next();
+		Pilot pilot = (Pilot) subject.getStoredObjects(Pilot.class).next();
 		pilot._name = "Terry Jones";
 
-		Car car = (Car)subject.getStoredObjects(Car.class).next();
+		Car car = (Car) subject.getStoredObjects(Car.class).next();
 		car.setModel("McLaren");
-		
+
 		subject.update(pilot);
 		subject.update(car);
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		System.err.println("Uncomment in ReplicationProviderTest");
 		//ensure(subject.objectsChangedSinceLastReplication().size() == 2);
-		
+
 		pilots = subject.objectsChangedSinceLastReplication(Pilot.class);
-		ensure(((Pilot)pilots.next())._name.equals("Terry Jones"));
+		ensure(((Pilot) pilots.next())._name.equals("Terry Jones"));
 		ensure(!pilots.hasNext());
 
 		cars = subject.objectsChangedSinceLastReplication(Car.class);
-		ensure(((Car)cars.next()).getModel().equals("McLaren"));
+		ensure(((Car) cars.next()).getModel().equals("McLaren"));
 		ensure(!cars.hasNext());
 	}
 

@@ -1,6 +1,5 @@
 package com.db4o.replication.hibernate.impl.ref_as_columns;
 
-import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
@@ -11,6 +10,7 @@ import com.db4o.replication.hibernate.impl.ChangedObjectId;
 import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
+import com.db4o.replication.hibernate.metadata.Uuid;
 import org.hibernate.FlushMode;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -230,6 +230,10 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		updateMetadata(ref);
 	}
 
+	protected Uuid getUuid(Object obj) {
+		throw new RuntimeException("todo");
+	}
+
 	private void updateMetadata(ReplicationReference ref) {
 		String tableName = getObjectConfig().getTableName(ref.object().getClass());
 		String pkColumn = getObjectConfig().getPrimaryKeyColumnName(ref.object());
@@ -268,9 +272,5 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		long newVer = Util.getMaxVersion(con) + 1;
 		Shared.incrementObjectVersion(con, event.getId(), newVer,
 				getObjectConfig().getTableName(entity.getClass()), getObjectConfig().getPrimaryKeyColumnName(entity));
-	}
-
-	public ObjectSet uuidsDeletedSinceLastReplication() {
-		throw new RuntimeException("TODO");
 	}
 }
