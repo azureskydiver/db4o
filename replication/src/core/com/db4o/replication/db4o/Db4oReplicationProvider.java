@@ -307,18 +307,16 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		_stream.commit();
 	}
 
-	public void delete(Class clazz) {
+	public void deleteAllInstances(Class clazz) {
 		Query q = _stream.query();
 		q.constrain(clazz);
 		ObjectSet objectSet = q.execute();
-		while (objectSet.hasNext()) {
-			_stream.delete(objectSet.next());
-		}
+		while (objectSet.hasNext()) delete(objectSet.next());
 	}
 
-	public void deleteGraph(Object root) {
-		throw new RuntimeException("TODO");
-	}
+    public void delete(Object obj) {
+        _stream.delete(obj);
+    }
 
 	public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
 		if (_idsReplicatedInThisSession != null) {

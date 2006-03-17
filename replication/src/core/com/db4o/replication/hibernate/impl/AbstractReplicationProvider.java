@@ -655,7 +655,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		return new ObjectSetIteratorFacade(out.iterator());
 	}
 
-	public void delete(Class clazz) {
+	public void deleteAllInstances(Class clazz) {
 		ensureReplicationInActive();
 		String className = clazz.getName();
 		//getSession().createQuery("delete from " + className).executeUpdate();
@@ -663,15 +663,13 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		for (int i = 0; i < col.size(); i++) {
 			Object o = col.get(i);
 			System.out.println("o = " + o);
-			getSession().delete(o);
+			delete(o);
 		}
 	}
 
-	public void deleteGraph(Object root) {
-		System.out.println("AbstractReplicationProvider.deleteGraph");
-		System.out.println("root = " + root);
-		getSession().delete(root);
-	}
+    public void delete(Object obj) {
+        getSession().delete(obj);
+    }
 
 	public final void storeReplica(Object entity) {
 //		if (_name.equals("A"))

@@ -10,10 +10,9 @@ public interface SimpleObjectContainer {
 
 	public void commit();
 
-	public void delete(Class clazz);
-	
-	/** Deletes all objects in the graph starting at root. */
-	public void deleteGraph(Object root);
+    public void delete(Object obj);
+
+    public void deleteAllInstances(Class clazz);
 
 	public String getName();
 

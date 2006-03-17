@@ -62,7 +62,7 @@ public abstract class R0to4Runner extends ReplicationTestcase {
 		Class[] classes = new Class[]{R0.class, R1.class, R2.class, R3.class, R4.class};
 
 		for (int i = 0; i < classes.length; i++) {
-			provider.delete(classes[i]);
+			provider.deleteAllInstances(classes[i]);
 		}
 		provider.commit();
 	}
