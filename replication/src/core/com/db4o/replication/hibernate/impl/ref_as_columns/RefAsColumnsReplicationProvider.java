@@ -164,7 +164,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 			long version = Shared.getVersion(getRefCfg().getConfiguration(), _objectSession, obj);
 			out = createReference(obj, uuid, version);
 		} else {
-			throw new RuntimeException("The object may either be found or not, it will never find more than one objects");
+			throw new RuntimeException("The object may either be found or not, it should never find more than one object");
 		}
 
 		return out;
