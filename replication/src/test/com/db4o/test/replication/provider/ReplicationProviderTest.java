@@ -44,71 +44,71 @@ public abstract class ReplicationProviderTest extends Test {
 	}
 
 	protected void tstDeletion() {
-        subject.storeNew(new Pilot("Pilot1", 42));
-        subject.storeNew(new Pilot("Pilot2", 43));
+		subject.storeNew(new Pilot("Pilot1", 42));
+		subject.storeNew(new Pilot("Pilot2", 43));
 		subject.commit();
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
-        Db4oUUID uuidPilot1 = uuid(findPilot("Pilot1"));
+		Db4oUUID uuidPilot1 = uuid(findPilot("Pilot1"));
 		subject.syncVersionWithPeer(105);
 		subject.commitReplicationTransaction(106);
 
-        subject.storeNew(new Pilot("Pilot3", 44));
+		subject.storeNew(new Pilot("Pilot3", 44));
 
-        subject.delete(findPilot("Pilot1"));
-        
-        Car car = new Car("Car1");
-        car._pilot = findPilot("Pilot2");
-        subject.storeNew(car);
+		subject.delete(findPilot("Pilot1"));
 
-        subject.commit();
+		Car car = new Car("Car1");
+		car._pilot = findPilot("Pilot2");
+		subject.storeNew(car);
+
+		subject.commit();
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		ObjectSet deletedUuids = subject.uuidsDeletedSinceLastReplication();
-		ensure(deletedUuids.next().equals(uuidPilot1));;
+		ensure(deletedUuids.next().equals(uuidPilot1));
 		ensure(!deletedUuids.hasNext());
-        
-        Db4oUUID uuidCar1 = uuid(findCar("Car1"));
-        Db4oUUID uuidPilot2 = uuid(findPilot("Pilot2"));
-        
+
+		Db4oUUID uuidCar1 = uuid(findCar("Car1"));
+		Db4oUUID uuidPilot2 = uuid(findPilot("Pilot2"));
+
 		subject.syncVersionWithPeer(106);
 		subject.commitReplicationTransaction(107);
 
-        subject.delete(findCar("Car1"));
-        subject.delete(findPilot("Pilot2"));
+		subject.delete(findCar("Car1"));
+		subject.delete(findPilot("Pilot2"));
 		subject.commit();
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		deletedUuids = subject.uuidsDeletedSinceLastReplication();
-        ensure(deletedUuids.contains(uuidCar1));
-        ensure(deletedUuids.contains(uuidPilot2));
+		ensure(deletedUuids.contains(uuidCar1));
+		ensure(deletedUuids.contains(uuidPilot2));
 		ensure(deletedUuids.size() == 2);
 
 	}
 
-    private Db4oUUID uuid(Object obj) {
-        return subject.produceReference(obj, null, null).uuid();
-    }
+	private Db4oUUID uuid(Object obj) {
+		return subject.produceReference(obj, null, null).uuid();
+	}
 
-    private Object findCar(String model) {
-        ObjectSet cars = subject.getStoredObjects(Car.class);
-        while (cars.hasNext()) {
-            Car candidate = (Car)cars.next();
-            if(candidate.getModel().equals(model)) return candidate;
-        }
-        return null;
-    }
+	private Object findCar(String model) {
+		ObjectSet cars = subject.getStoredObjects(Car.class);
+		while (cars.hasNext()) {
+			Car candidate = (Car) cars.next();
+			if (candidate.getModel().equals(model)) return candidate;
+		}
+		return null;
+	}
 
-    private Pilot findPilot(String name) {
-        ObjectSet pilots = subject.getStoredObjects(Pilot.class);
-        while (pilots.hasNext()) {
-            Pilot candidate = (Pilot)pilots.next();
-            if(candidate._name.equals(name)) return candidate;
-        }
-        return null;
-    }
+	private Pilot findPilot(String name) {
+		ObjectSet pilots = subject.getStoredObjects(Pilot.class);
+		while (pilots.hasNext()) {
+			Pilot candidate = (Pilot) pilots.next();
+			if (candidate._name.equals(name)) return candidate;
+		}
+		return null;
+	}
 
-    protected abstract TestableReplicationProviderInside prepareSubject();
+	protected abstract TestableReplicationProviderInside prepareSubject();
 
 	protected abstract void destroySubject();
 
@@ -151,8 +151,17 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.commitReplicationTransaction(5001);
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
-		object1._name = "i am updated";
-		subject.storeReplica(object1);
+		ObjectSet<Pilot> storedObjects = subject.getStoredObjects(Pilot.class);
+		ensure(storedObjects.hasNext());
+
+		Pilot reloaded = storedObjects.next();
+
+		ensure(!storedObjects.hasNext());
+
+		ensure(subject.produceReference(reloaded, null, null).equals(reference));
+
+		reloaded._name = "i am updated";
+		subject.storeReplica(reloaded);
 
 		subject.clearAllReferences();
 
@@ -161,9 +170,8 @@ public abstract class ReplicationProviderTest extends Test {
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 
-		System.err.println("Uncomment in ReplicationProviderTest");
-		//reference = subject.produceReferenceByUUID(uuid, object1.getClass());
-		//ensure(((Pilot) reference.object())._name.equals("i am updated"));
+		reference = subject.produceReferenceByUUID(uuid, reloaded.getClass());
+		ensure(((Pilot) reference.object())._name.equals("i am updated"));
 	}
 
 	private void tstReferences() {
@@ -202,8 +210,8 @@ public abstract class ReplicationProviderTest extends Test {
 		ensure(subject.objectsChangedSinceLastReplication().size() == 3);
 
 		ObjectSet pilots = subject.objectsChangedSinceLastReplication(Pilot.class);
-        ensure(pilots.contains(findPilot("John Cleese")));
-        ensure(pilots.contains(findPilot("Terry Gilliam")));
+		ensure(pilots.contains(findPilot("John Cleese")));
+		ensure(pilots.contains(findPilot("Terry Gilliam")));
 		ensure(pilots.size() == 2);
 
 		ObjectSet cars = subject.objectsChangedSinceLastReplication(Car.class);
@@ -229,8 +237,7 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.update(car);
 
 		subject.startReplicationTransaction(PEER_SIGNATURE);
-		System.err.println("Uncomment in ReplicationProviderTest");
-		//ensure(subject.objectsChangedSinceLastReplication().size() == 2);
+		ensure(subject.objectsChangedSinceLastReplication().size() == 2);
 
 		pilots = subject.objectsChangedSinceLastReplication(Pilot.class);
 		ensure(((Pilot) pilots.next())._name.equals("Terry Jones"));

@@ -650,13 +650,9 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			s.save(entity);
 		}
 
-		getSession().saveOrUpdate(entity);
-
 		_dirtyRefs.add(ref);
 
 		getSession().flush();
-
-		getRefSession().flush();
 	}
 
 	protected Transaction getObjectTransaction() {
