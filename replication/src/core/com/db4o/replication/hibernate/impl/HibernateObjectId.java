@@ -2,16 +2,16 @@ package com.db4o.replication.hibernate.impl;
 
 import java.io.Serializable;
 
-public class ChangedObjectId {
+public class HibernateObjectId {
 	public final Serializable hibernateId;
 	public final String className;
 
-	public ChangedObjectId(Serializable hibernateId, String className) {
+	public HibernateObjectId(Serializable hibernateId, String className) {
 		this.hibernateId = hibernateId;
 		this.className = className;
 	}
 
 	public String toString() {
-		return "ChangedObjectId, className = " + className + ", hibernateId = " + hibernateId;
+		return "HibernateObjectId, className = " + className + ", hibernateId = " + hibernateId;
 	}
 }

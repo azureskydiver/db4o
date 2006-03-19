@@ -5,7 +5,7 @@ import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.replication.hibernate.cfg.ObjectConfig;
 import com.db4o.replication.hibernate.cfg.RefConfig;
 import com.db4o.replication.hibernate.impl.AbstractReplicationProvider;
-import com.db4o.replication.hibernate.impl.ChangedObjectId;
+import com.db4o.replication.hibernate.impl.HibernateObjectId;
 import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
@@ -16,7 +16,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.LogicalExpression;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.event.PostInsertEvent;
 import org.hibernate.event.PostUpdateEvent;
@@ -154,34 +154,23 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		final Criterion nestedOr = build(classNames, ObjectReference.CLASS_NAME);
 		criteria.add(nestedOr);
 
-		Collection<ChangedObjectId> ids = new HashSet();
+		Collection<HibernateObjectId> ids = new HashSet();
 		final Iterator results = criteria.list().iterator();
 		while (results.hasNext()) {
 			ObjectReference ref = (ObjectReference) results.next();
-			final ChangedObjectId changedObjectId = new ChangedObjectId(ref.getObjectId(), persistentClass.getRootClass().getClassName());
-			ids.add(changedObjectId);
+			final HibernateObjectId hibernateObjectId = new HibernateObjectId(ref.getObjectId(), persistentClass.getRootClass().getClassName());
+			ids.add(hibernateObjectId);
 		}
 
-		return loadObj(ids);
-	}
-
-	protected Collection getNewObjectsSinceLastReplication(PersistentClass persistentClass) {
-		return new HashSet();
+		return loadObject(ids);
 	}
 
 	private Criterion build(List<String> classNames, String fieldName) {
-		final int tail = classNames.size() - 1;
-		return recursiveBuild(classNames, fieldName, Restrictions.eq(fieldName, classNames.remove(tail)));
-	}
+		Disjunction disjunction = Restrictions.disjunction();
 
-	private Criterion recursiveBuild(List<String> classNames, String fieldName, Criterion rhs) {
-		if (classNames.size() == 0) {
-			return rhs;
-		} else {
-			final int tail = classNames.size() - 1;
-			final LogicalExpression tmp = Restrictions.or(Restrictions.eq(fieldName, classNames.remove(tail)), rhs);
-			return recursiveBuild(classNames, fieldName, tmp);
-		}
+		for (String s : classNames)
+			disjunction.add(Restrictions.eq(fieldName, s));
+		return disjunction;
 	}
 
 	private List<String> getTypeClassNames(PersistentClass rootClass) {

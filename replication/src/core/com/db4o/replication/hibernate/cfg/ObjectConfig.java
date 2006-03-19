@@ -32,6 +32,10 @@ public class ObjectConfig {
 		return getPrimaryKeyColumnName(pClass);
 	}
 
+	public String getPrimaryKeyColumnName(Class claxx) {
+		return getPrimaryKeyColumnName(configuration.getClassMapping(claxx.getName()));
+	}
+
 	public String getPrimaryKeyColumnName(PersistentClass pClass) {
 		PrimaryKey primaryKey = pClass.getTable().getPrimaryKey();
 		Iterator columnIterator = primaryKey.getColumnIterator();
