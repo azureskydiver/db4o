@@ -185,6 +185,8 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		replication.commit();
 
 		checkNames();
+
+		clean();
 		printRound();
 	}
 
@@ -353,13 +355,16 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		_providerA = prepareProviderA();
 		_providerB = prepareProviderB();
 
-		clean();
+		//clean();
 
 		checkEmpty(_providerA);
 		checkEmpty(_providerB);
 
 		_providerA.storeNew(new Replicated("oldFromA"));
 		_providerB.storeNew(new Replicated("oldFromB"));
+
+		_providerA.commit();
+		_providerB.commit();
 
 		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ConflictResolver() {
 			public Object resolveConflict(ReplicationSession session, Object a, Object b) {

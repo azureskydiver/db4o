@@ -37,8 +37,10 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 			<property name="objectId" column="objectId"/>
 		</natural-id>
 
-		<property name="uuidLongPart" column="uuidLongPart"/>
-		<many-to-one name="provider" column="provider"/>
+		<component name="uuid" unique="true">
+			<property name="longPart" column="longPart"/>
+			<many-to-one name="provider" column="provider"/>
+		</component>
 
 		<property name="version" column="version"/>
 

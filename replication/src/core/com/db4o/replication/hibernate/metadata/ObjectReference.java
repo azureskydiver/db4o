@@ -6,19 +6,24 @@ public class ObjectReference {
 	public static final String TABLE_NAME = "ObjectReference";
 	public static final String CLASS_NAME = "className";
 	public static final String OBJECT_ID = "objectId";
-	public static final String UUID_LONG_PART = "uuidLongPart";
-	public static final String PROVIDER = "provider";
+	public static final String UUID = "uuid";
 	public static final String VERSION = "version";
 
 	private String className;
 	private long objectId;
 
-	private long uuidLongPart;
-	private ReplicationProviderSignature provider;
-
+	private Uuid uuid;
 	private long version;
 
-	public ObjectReference() {
+	public ObjectReference() {}
+
+	public String toString() {
+		return new ToStringBuilder(this).
+				append(CLASS_NAME, className).
+				append(OBJECT_ID, objectId).
+				append(UUID, uuid).
+				append(VERSION, version).
+				toString();
 	}
 
 	public String getClassName() {
@@ -37,20 +42,12 @@ public class ObjectReference {
 		this.objectId = objectId;
 	}
 
-	public long getUuidLongPart() {
-		return uuidLongPart;
+	public Uuid getUuid() {
+		return uuid;
 	}
 
-	public void setUuidLongPart(long uuidLongPart) {
-		this.uuidLongPart = uuidLongPart;
-	}
-
-	public ReplicationProviderSignature getProvider() {
-		return provider;
-	}
-
-	public void setProvider(ReplicationProviderSignature provider) {
-		this.provider = provider;
+	public void setUuid(Uuid uuid) {
+		this.uuid = uuid;
 	}
 
 	public long getVersion() {
@@ -59,15 +56,5 @@ public class ObjectReference {
 
 	public void setVersion(long version) {
 		this.version = version;
-	}
-
-	public String toString() {
-		return new ToStringBuilder(this).
-				append("className", className).
-				append("objectId", objectId).
-				append("uuidLongPart", uuidLongPart).
-				append("version", version).
-				append("provider", provider).
-				toString();
 	}
 }

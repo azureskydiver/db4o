@@ -15,6 +15,7 @@ import org.hibernate.FlushMode;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.event.PostInsertEvent;
 import org.hibernate.event.PostUpdateEvent;
 import org.hibernate.mapping.PersistentClass;
 
@@ -68,6 +69,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 
 		init();
 		_alive = true;
+
 	}
 
 	protected RefConfig getRefConfig() {
@@ -107,7 +109,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 			//if the value is SQL NULL, the value returned is 0
 			long longPart = rs.getLong(2);
 			if (longPart == 0) {
-				Db4oUUID uuid = new Db4oUUID(uuidLongPartGenerator.next(), getSignature().getBytes());
+				Db4oUUID uuid = new Db4oUUID(nextt(), getSignature().getBytes());
 				ReplicationReferenceImpl ref = new ReplicationReferenceImpl(obj, uuid, getLastReplicationVersion());
 				updateMetadata(ref);
 				out = createReference(obj, uuid, ref.version());
@@ -188,7 +190,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 	protected void generateReplicationMetaData(Collection newObjects) {
 		for (Iterator iterator = newObjects.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
-			Db4oUUID uuid = new Db4oUUID(uuidLongPartGenerator.next(), getSignature().getBytes());
+			Db4oUUID uuid = new Db4oUUID(nextt(), getSignature().getBytes());
 			ReplicationReferenceImpl ref = new ReplicationReferenceImpl(o, uuid, _currentVersion);
 			updateMetadata(ref);
 		}
@@ -232,6 +234,10 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 
 	protected Uuid getUuid(Object obj) {
 		throw new RuntimeException("todo");
+	}
+
+	protected void objectInserted(PostInsertEvent event) {
+
 	}
 
 	private void updateMetadata(ReplicationReference ref) {

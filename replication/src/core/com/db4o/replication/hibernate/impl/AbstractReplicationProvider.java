@@ -22,6 +22,7 @@ import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
 import com.db4o.replication.hibernate.metadata.Uuid;
+import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Criteria;
 import org.hibernate.EmptyInterceptor;
@@ -35,6 +36,8 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.event.EventListeners;
 import org.hibernate.event.FlushEvent;
 import org.hibernate.event.FlushEventListener;
+import org.hibernate.event.PostInsertEvent;
+import org.hibernate.event.PostInsertEventListener;
 import org.hibernate.event.PostUpdateEvent;
 import org.hibernate.event.PostUpdateEventListener;
 import org.hibernate.event.PreDeleteEvent;
@@ -66,6 +69,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	protected PostUpdateEventListener myPostUpdateEventListener = new MyPostUpdateEventListener();
 
 	protected PreDeleteEventListener myPreDeleteEventListener = new MyPreDeleteEventListener();
+
+	protected PostInsertEventListener objectInsertedListener = new MyObjectInsertedListener();
 
 	/**
 	 * Hibernate mapped classes
@@ -108,8 +113,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	private boolean _inReplication = false;
 
 	protected Reflector _reflector = ReplicationReflector.getInstance().reflector();
-
-	protected UuidLongPartGenerator uuidLongPartGenerator;
 
 	protected boolean _alive = false;
 
@@ -266,7 +269,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			if (existingReference != null)
 				return existingReference;
 			else
-				return createRefForCollection(obj, refObjRef, fieldName, uuidLongPartGenerator.next(), _currentVersion);
+				return createRefForCollection(obj, refObjRef, fieldName, nextt(), _currentVersion);
 		}
 	}
 
@@ -435,22 +438,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		}
 	}
 
-	protected void initMySignature() {
-		final Criteria criteria = getRefSession().createCriteria(MySignature.class);
-
-		final List firstResult = criteria.list();
-		final int mySigCount = firstResult.size();
-
-		if (mySigCount < 1) {
-			_mySig = MySignature.generateSignature();
-			getRefSession().save(_mySig);
-		} else if (mySigCount == 1) {
-			_mySig = (MySignature) firstResult.get(0);
-		} else {
-			throw new RuntimeException("Number of MySignature should be exactly 1, but i got " + mySigCount);
-		}
-	}
-
 	protected ReadonlyReplicationProviderSignature getById(long sigId) {
 		return (ReadonlyReplicationProviderSignature) getRefSession().get(ReplicationProviderSignature.class, new Long(sigId));
 	}
@@ -463,6 +450,9 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		eventListeners.setFlushEventListeners(createFlushEventListeners(eventListeners.getFlushEventListeners()));
 		eventListeners.setPostUpdateEventListeners(createPostUpdateListeners(eventListeners.getPostUpdateEventListeners()));
 		eventListeners.setPreDeleteEventListeners(new PreDeleteEventListener[]{myPreDeleteEventListener});
+
+		eventListeners.setPostInsertEventListeners(new PostInsertEventListener[]{objectInsertedListener});
+
 	}
 
 	private PeerSignature getPeerSignature(byte[] bytes) {
@@ -529,7 +519,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected void init() {
 		initMappedClasses();
-		initMySignature();
+		_mySig = Util.genMySignature(getRefSession());
+		_uuidLongPartSequence = initUuidLongPartGenerator();
 	}
 
 	protected void initMappedClasses() {
@@ -657,19 +648,14 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	public void deleteAllInstances(Class clazz) {
 		ensureReplicationInActive();
-		String className = clazz.getName();
-		//getSession().createQuery("delete from " + className).executeUpdate();
 		List col = getSession().createCriteria(clazz).list();
-		for (int i = 0; i < col.size(); i++) {
-			Object o = col.get(i);
-			System.out.println("o = " + o);
+		for (Object o : col)
 			delete(o);
-		}
 	}
 
-    public void delete(Object obj) {
-        getSession().delete(obj);
-    }
+	public void delete(Object obj) {
+		getSession().delete(obj);
+	}
 
 	public final void storeReplica(Object entity) {
 //		if (_name.equals("A"))
@@ -729,6 +715,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		getObjectTransaction().commit();
 		clearSession();
 		_objectTransaction = getSession().beginTransaction();
+		_uuidLongPartSequence = initUuidLongPartGenerator();
+
 	}
 
 	public void startReplicationTransaction(ReadonlyReplicationProviderSignature aPeerSignature) {
@@ -743,16 +731,44 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		getObjectTransaction().commit();
 		_objectTransaction = getSession().beginTransaction();
 
-		initMySignature();
+		_mySig = Util.genMySignature(getRefSession());
+
 		initPeerSigAndRecord(peerSigBytes);
 
 		_currentVersion = Util.getMaxVersion(getRefSession().connection()) + 1;
 
-		uuidLongPartGenerator = new UuidLongPartGenerator(getRefSession());
+		_uuidLongPartSequence = initUuidLongPartGenerator();
 
 		getAllNewObjects();
 
 		_inReplication = true;
+	}
+
+	protected UuidLongPartSequence _uuidLongPartSequence;
+
+	public UuidLongPartSequence initUuidLongPartGenerator() {
+		Session _session = getRefSession();
+
+		final List exisitings = _session.createCriteria(UuidLongPartSequence.class).list();
+		final int count = exisitings.size();
+
+		if (count == 1)
+			return (UuidLongPartSequence) exisitings.get(0);
+		else if (count == 0) {
+			UuidLongPartSequence tmp = new UuidLongPartSequence();
+			_session.save(tmp);
+			return tmp;
+		} else
+			throw new RuntimeException("result size = " + count + ". It should be either 1 or 0");
+	}
+
+	public long nextt() {
+		_uuidLongPartSequence.increment();
+
+//		Serializable id = getRefSession().getIdentifier(_uuidLongPartSequence);
+//		System.out.println("id = " + id);
+
+		return _uuidLongPartSequence.getCurrent();
 	}
 
 	private void clearDeletedUuids() {
@@ -812,20 +828,39 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			throw new RuntimeException("can't remove");
 		eventListeners.setPreDeleteEventListeners(r3);
 		myPreDeleteEventListener = null;
+
+		PostInsertEventListener[] o4 = eventListeners.getPostInsertEventListeners();
+		PostInsertEventListener[] r4 = (PostInsertEventListener[]) ArrayUtils.removeElement(
+				o4, objectInsertedListener);
+		if ((o4.length - r4.length) != 1)
+			throw new RuntimeException("can't remove");
+
+		eventListeners.setPostInsertEventListeners(r4);
+		objectInsertedListener = null;
 	}
 
 	protected abstract void saveOrUpdateReplicaMetadata(ReplicationReference ref);
 
 	public ObjectSet uuidsDeletedSinceLastReplication() {
-		List results = getRefSession().createCriteria(DeletedObject.class).list();
-		return new ObjectSetCollectionFacade(results);
+		List<DeletedObject> results = getRefSession().createCriteria(DeletedObject.class).list();
+		Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
+
+		for (DeletedObject doo : results) {
+			out.add(translate(doo));
+		}
+		return new ObjectSetCollectionFacade(out);
+	}
+
+	Db4oUUID translate(DeletedObject doo) {
+		return new Db4oUUID(doo.getUuid().getLongPart(), doo.getUuid().getProvider().getBytes());
 	}
 
 	protected abstract Uuid getUuid(Object obj);
 
+	protected abstract void objectInserted(PostInsertEvent event);
+
 	final class MyFlushEventListener implements FlushEventListener {
 		public final void onFlush(FlushEvent event) throws HibernateException {
-			ensureAlive();
 			if (!isReplicationActive()) return;
 			for (Iterator iterator = _dirtyRefs.iterator(); iterator.hasNext();) {
 				ReplicationReference ref = (ReplicationReference) iterator.next();
@@ -849,18 +884,16 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		}
 	}
 
-	class MyPreDeleteEventListener implements PreDeleteEventListener {
+	final class MyPreDeleteEventListener implements PreDeleteEventListener {
 		private void addToDeletedObjects(PreDeleteEvent event) {
 			Uuid uuid = getUuid(event.getEntity());
 			DeletedObject deletedObject = new DeletedObject();
 			deletedObject.setUuid(uuid);
 			getRefSession().save(deletedObject);
-			System.out.println("saved");
 		}
 
 		public boolean onPreDelete(PreDeleteEvent event) {
-			System.out.println("event = " + event);
-			boolean ret = true;
+			boolean ret = false;
 
 			if (isReplicationActive()) return ret;
 			if (Util.skip(event.getEntity())) return ret;
@@ -868,6 +901,18 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			addToDeletedObjects(event);
 
 			return ret;
+		}
+	}
+
+	final class MyObjectInsertedListener implements PostInsertEventListener {
+		public void onPostInsert(PostInsertEvent event) {
+			if (isReplicationActive()) return;
+
+			Object entity = event.getEntity();
+
+			if (Util.skip(entity)) return;
+
+			objectInserted(event);
 		}
 	}
 }

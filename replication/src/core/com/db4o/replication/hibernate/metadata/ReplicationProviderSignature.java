@@ -80,6 +80,7 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 	public String toString() {
 		return new ToStringBuilder(this).
 				append(ID, id).
+				append(BYTES, bytes).
 				toString();
 	}
 }
