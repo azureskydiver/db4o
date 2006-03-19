@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class HibernateReplicationProviderTest extends ReplicationProviderTest {
+public class ProviderTestRefAsColumns extends ReplicationProviderTest {
 	public void testReplicationProvider() {
 		super.testReplicationProvider();
 		tstCollection();

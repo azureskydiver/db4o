@@ -2,7 +2,6 @@ package com.db4o.replication.hibernate.impl;
 
 import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
-import com.db4o.foundation.ObjectSetIteratorFacade;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.replication.CollectionHandler;
 import com.db4o.inside.replication.CollectionHandlerImpl;
@@ -75,7 +74,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	/**
 	 * Hibernate mapped classes
 	 */
-	protected Set _mappedClasses;
+	protected Set<PersistentClass> _mappedClasses;
 
 	/**
 	 * Objects which meta data not yet updated.
@@ -438,8 +437,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		}
 	}
 
-	protected ReadonlyReplicationProviderSignature getById(long sigId) {
-		return (ReadonlyReplicationProviderSignature) getRefSession().get(ReplicationProviderSignature.class, new Long(sigId));
+	protected ReplicationProviderSignature getById(long sigId) {
+		return (ReplicationProviderSignature) getRefSession().get(ReplicationProviderSignature.class, new Long(sigId));
 	}
 
 	protected void initEventListeners() {
@@ -503,18 +502,17 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		_inReplication = false;
 	}
 
-	protected Collection loadObj(Collection<ChangedObjectId> changedObjectIds) {
+	protected Collection loadObject(Collection<HibernateObjectId> changedObjectIds) {
 		Set out = new HashSet();
 
-		for (Iterator<ChangedObjectId> iterator = changedObjectIds.iterator(); iterator.hasNext();) {
-			ChangedObjectId changedObjectId = iterator.next();
-			Object tmp = getSession().get(changedObjectId.className, changedObjectId.hibernateId);
-			if (tmp != null)
-				out.add(tmp);
-
-		}
+		for (HibernateObjectId hibernateObjectId : changedObjectIds)
+			out.add(loadObject(hibernateObjectId));
 
 		return out;
+	}
+
+	protected Object loadObject(HibernateObjectId hibernateObjectId) {
+		return getSession().load(hibernateObjectId.className, hibernateObjectId.hibernateId);
 	}
 
 	protected void init() {
@@ -557,28 +555,10 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		getSession().flush();
 
 		Set out = new HashSet();
-
-		out.addAll(getAllNewObjects());
-
-		for (Iterator iterator = _mappedClasses.iterator(); iterator.hasNext();) {
-			PersistentClass persistentClass = (PersistentClass) iterator.next();
-
-			//Case 2 - Objects updated since last replication with any peers.
+		for (PersistentClass persistentClass : _mappedClasses)
 			out.addAll(getChangedObjectsSinceLastReplication(persistentClass));
-		}
 
-		return new ObjectSetIteratorFacade(out.iterator());
-	}
-
-	private Set getAllNewObjects() {
-		Set out = new HashSet();
-		for (Iterator iterator = _mappedClasses.iterator(); iterator.hasNext();) {
-			PersistentClass persistentClass = (PersistentClass) iterator.next();
-
-			//Case 1 - Objects inserted to Db since last replication with any peers.
-			out.addAll(getNewObjectsSinceLastReplication(persistentClass));
-		}
-		return out;
+		return new ObjectSetCollectionFacade(out);
 	}
 
 	public Session getSession() {
@@ -590,8 +570,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	protected abstract Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass);
-
-	protected abstract Collection getNewObjectsSinceLastReplication(PersistentClass persistentClass);
 
 	public final String getName() {
 		return _name;
@@ -619,7 +597,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 		getSession().flush();
 
-		return new ObjectSetIteratorFacade(getSession().createCriteria(aClass).list().iterator());
+		return new ObjectSetCollectionFacade(getSession().createCriteria(aClass).list());
 	}
 
 	public final void visitCachedReferences(Visitor4 visitor) {
@@ -635,15 +613,10 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	public final ObjectSet objectsChangedSinceLastReplication(Class clazz) {
 		ensureReplicationActive();
-
 		getSession().flush();
-		Set out = new HashSet();
+
 		PersistentClass persistentClass = getRefConfig().getConfiguration().getClassMapping(clazz.getName());
-		if (persistentClass != null) {
-			out.addAll(getNewObjectsSinceLastReplication(persistentClass));
-			out.addAll(getChangedObjectsSinceLastReplication(persistentClass));
-		}
-		return new ObjectSetIteratorFacade(out.iterator());
+		return new ObjectSetCollectionFacade(getChangedObjectsSinceLastReplication(persistentClass));
 	}
 
 	public void deleteAllInstances(Class clazz) {
@@ -738,8 +711,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		_currentVersion = Util.getMaxVersion(getRefSession().connection()) + 1;
 
 		_uuidLongPartSequence = initUuidLongPartGenerator();
-
-		getAllNewObjects();
 
 		_inReplication = true;
 	}
@@ -851,8 +822,12 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		return new ObjectSetCollectionFacade(out);
 	}
 
-	Db4oUUID translate(DeletedObject doo) {
-		return new Db4oUUID(doo.getUuid().getLongPart(), doo.getUuid().getProvider().getBytes());
+	protected Db4oUUID translate(DeletedObject doo) {
+		return translate(doo.getUuid());
+	}
+
+	protected Db4oUUID translate(Uuid uuid) {
+		return new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes());
 	}
 
 	protected abstract Uuid getUuid(Object obj);
