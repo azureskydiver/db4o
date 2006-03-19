@@ -23,6 +23,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.List;
 
 public class Util {
 
@@ -177,5 +178,19 @@ public class Util {
 
 	public static void dumpTable(HibernateReplicationProvider p, String s) {
 		dumpTable(p.getName(), p.getSession(), s);
+	}
+
+	public static MySignature genMySignature(Session session) {
+		final List sigs = session.createCriteria(MySignature.class).list();
+		final int mySigCount = sigs.size();
+
+		if (mySigCount < 1) {
+			MySignature out = MySignature.generateSignature();
+			session.save(out);
+			return out;
+		} else if (mySigCount == 1)
+			return (MySignature) sigs.get(0);
+		else
+			throw new RuntimeException("Number of MySignature should be exactly 1, but i got " + mySigCount);
 	}
 }

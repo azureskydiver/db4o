@@ -10,17 +10,15 @@ import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.Uuid;
-import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.event.EventListeners;
 import org.hibernate.event.PostInsertEvent;
-import org.hibernate.event.PostInsertEventListener;
 import org.hibernate.event.PostUpdateEvent;
 import org.hibernate.mapping.PersistentClass;
 
@@ -32,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
-	protected PostInsertEventListener objectInsertedListener = new MyObjectInsertedListener();
 
 	public RefAsTableReplicationProvider(Configuration cfg) {
 		this(cfg, null);
@@ -58,47 +55,24 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		init();
 
 		_alive = true;
-	}
 
-	protected void initEventListeners() {
-		super.initEventListeners();
-		EventListeners el = getObjectConfig().getConfiguration().getEventListeners();
-		el.setPostInsertEventListeners(createPostInsertEventListeners(el.getPostInsertEventListeners()));
-	}
-
-	public void storeNew(Object root) {
-		super.storeNew(root);
-	}
-
-	public void destroyListeners() {
-		super.destroyListeners();
-
-		EventListeners eventListeners = getObjectConfig().getConfiguration().getEventListeners();
-		PostInsertEventListener[] o1 = eventListeners.getPostInsertEventListeners();
-		PostInsertEventListener[] r1 = (PostInsertEventListener[]) ArrayUtils.removeElement(
-				o1, objectInsertedListener);
-		if ((o1.length - r1.length) != 1)
-			throw new RuntimeException("can't remove");
-
-		eventListeners.setPostInsertEventListeners(r1);
-		objectInsertedListener = null;
-	}
-
-	protected PostInsertEventListener[] createPostInsertEventListeners(PostInsertEventListener[] defaultListeners) {
-		return new PostInsertEventListener[]{objectInsertedListener};
 	}
 
 	protected Session getRefSession() {
 		return getSession();
 	}
 
-	protected com.db4o.inside.replication.ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid, Class hint) {
-		Criteria criteria = getRefSession().createCriteria(ObjectReference.class);
-		criteria.add(Restrictions.eq(ObjectReference.UUID_LONG_PART, new Long(uuid.getLongPart())));
-		criteria.add(Restrictions.eq(ObjectReference.CLASS_NAME, hint.getName()));
-		criteria.add(Restrictions.eq(ObjectReference.PROVIDER, getProviderSignature(uuid.getSignaturePart())));
+	protected ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid, Class hint) {
+		String alias = "objRef";
+		String uuidPath = alias + "." + ObjectReference.UUID + ".";
+		String queryString = "from " + ObjectReference.TABLE_NAME
+				+ " as " + alias + " where " + uuidPath + Uuid.LONG_PART + "=?"
+				+ " AND " + uuidPath + Uuid.PROVIDER + "." + ReplicationProviderSignature.BYTES + "=?";
+		Query c = getRefSession().createQuery(queryString);
+		c.setLong(0, uuid.getLongPart());
+		c.setBinary(1, uuid.getSignaturePart());
 
-		final List exisitings = criteria.list();
+		final List exisitings = c.list();
 		int count = exisitings.size();
 
 		if (count == 0)
@@ -120,14 +94,8 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 
 		if (ref == null) throw new RuntimeException("ObjectReference must exist for " + obj);
 
-		if (ref.getProvider() == null) {
-			ref.setProvider(_mySig);
-			ref.setUuidLongPart(uuidLongPartGenerator.next());
-			ref.setVersion(getLastReplicationVersion());
-			getRefSession().update(ref);
-		}
-
-		return createReference(obj, new Db4oUUID(ref.getUuidLongPart(), ref.getProvider().getBytes()), ref.getVersion());
+		Uuid uuid = ref.getUuid();
+		return createReference(obj, new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes()), ref.getVersion());
 	}
 
 	protected ObjectReference getRefById(Object obj) {
@@ -145,7 +113,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 			throw new RuntimeException("Duplicated uuid");
 	}
 
-	protected void saveOrUpdateReplicaMetadata(com.db4o.inside.replication.ReplicationReference ref) {
+	protected void saveOrUpdateReplicaMetadata(ReplicationReference ref) {
 		ensureReplicationActive();
 		final Object obj = ref.object();
 
@@ -159,8 +127,12 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 			ObjectReference tmp = new ObjectReference();
 			tmp.setClassName(obj.getClass().getName());
 			tmp.setObjectId(id);
-			tmp.setProvider(provider);
-			tmp.setUuidLongPart(ref.uuid().getLongPart());
+
+			Uuid uuid = new Uuid();
+			uuid.setLongPart(ref.uuid().getLongPart());
+			uuid.setProvider(provider);
+			tmp.setUuid(uuid);
+
 			tmp.setVersion(ref.version());
 
 			s.save(tmp);
@@ -171,11 +143,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 	}
 
 	protected Uuid getUuid(Object obj) {
-		ObjectReference ref = getRefById(obj);
-		Uuid uuid = new Uuid();
-		uuid.setLongPart(ref.getUuidLongPart());
-		uuid.setProvider(ref.getProvider());
-		return uuid;
+		return getRefById(obj).getUuid();
 	}
 
 	protected Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
@@ -198,29 +166,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 	}
 
 	protected Collection getNewObjectsSinceLastReplication(PersistentClass persistentClass) {
-		List<String> classNames = getTypeClassNames(persistentClass);
-
-		Criteria criteria = getRefSession().createCriteria(ObjectReference.class);
-		criteria.add(Restrictions.isNull(ObjectReference.PROVIDER));
-		final Criterion nestedOr = build(classNames, ObjectReference.CLASS_NAME);
-		criteria.add(nestedOr);
-
-		Collection<ChangedObjectId> ids = new HashSet();
-		final Iterator results = criteria.list().iterator();
-		while (results.hasNext()) {
-			ObjectReference ref = (ObjectReference) results.next();
-			final ChangedObjectId changedObjectId = new ChangedObjectId(ref.getObjectId(), persistentClass.getRootClass().getClassName());
-			ids.add(changedObjectId);
-
-			ref.setProvider(_mySig);
-			ref.setUuidLongPart(uuidLongPartGenerator.next());
-			ref.setVersion(_currentVersion);
-			getRefSession().update(ref);
-		}
-
-		getRefSession().flush();
-
-		return loadObj(ids);
+		return new HashSet();
 	}
 
 	private Criterion build(List<String> classNames, String fieldName) {
@@ -264,23 +210,21 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		Shared.incrementObjectVersion(sess, entity, id);
 	}
 
-	public class MyObjectInsertedListener implements PostInsertEventListener {
-		public void onPostInsert(PostInsertEvent event) {
-			if (isReplicationActive()) return;
+	protected void objectInserted(PostInsertEvent event) {
+		long id = Shared.castAsLong(event.getId());
+		Session s = getRefSession();
 
-			Object entity = event.getEntity();
+		ObjectReference ref = new ObjectReference();
+		ref.setClassName(event.getEntity().getClass().getName());
+		ref.setObjectId(id);
 
-			if (Util.skip(entity)) return;
-			long id = Shared.castAsLong(event.getId());
+		Uuid uuid = new Uuid();
+		uuid.setLongPart(nextt());
+		uuid.setProvider(_mySig);
+		ref.setUuid(uuid);
 
-			ObjectReference ref = new ObjectReference();
-			ref.setClassName(entity.getClass().getName());
-			ref.setObjectId(id);
+		ref.setVersion(Util.getMaxVersion(s.connection()) + 1);
 
-			Session s = getRefSession();
-			s.save(ref);
-		}
+		s.save(ref);
 	}
-
-
 }

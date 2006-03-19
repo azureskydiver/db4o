@@ -26,4 +26,8 @@ public class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
 	public int size() {
 		return _delegate.size();
 	}
+
+	public boolean contains(Object o) {
+		return _delegate.contains(o);
+	}
 }
