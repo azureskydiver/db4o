@@ -3,18 +3,11 @@ package com.db4o.replication.hibernate.metadata;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class ReplicationComponentIdentity {
+// ------------------------------ FIELDS ------------------------------
+
 	public static final String TABLE_NAME = "ReplicationComponentIdentity";
 
 	private long uuidLongPart;
-
-	private long referencingObjectUuidLongPart;
-
-	private ReplicationComponentField referencingObjectField;
-
-	private ReplicationProviderSignature provider;
-
-	public ReplicationComponentIdentity() {
-	}
 
 	public long getUuidLongPart() {
 		return uuidLongPart;
@@ -24,6 +17,8 @@ public class ReplicationComponentIdentity {
 		this.uuidLongPart = uuidLongPart;
 	}
 
+	private long referencingObjectUuidLongPart;
+
 	public long getReferencingObjectUuidLongPart() {
 		return referencingObjectUuidLongPart;
 	}
@@ -31,6 +26,8 @@ public class ReplicationComponentIdentity {
 	public void setReferencingObjectUuidLongPart(long referencingObjectUuidLongPart) {
 		this.referencingObjectUuidLongPart = referencingObjectUuidLongPart;
 	}
+
+	private ReplicationComponentField referencingObjectField;
 
 	public ReplicationComponentField getReferencingObjectField() {
 		return referencingObjectField;
@@ -43,6 +40,8 @@ public class ReplicationComponentIdentity {
 		this.referencingObjectField = referencingObjectField;
 	}
 
+	private ReplicationProviderSignature provider;
+
 	public ReplicationProviderSignature getProvider() {
 		return provider;
 	}
@@ -53,6 +52,13 @@ public class ReplicationComponentIdentity {
 
 		this.provider = provider;
 	}
+
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public ReplicationComponentIdentity() {
+	}
+
+// ------------------------ CANONICAL METHODS ------------------------
 
 	public boolean equals(Object o) {
 		if (this == o) return true;

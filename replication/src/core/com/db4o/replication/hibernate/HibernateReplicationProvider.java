@@ -5,8 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
 public interface HibernateReplicationProvider extends TestableReplicationProviderInside {
+	Configuration getConfiguration();
 
 	Session getSession();
-
-	Configuration getConfiguration();
 }

@@ -18,17 +18,24 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class RefAsColumnsSchemaValidator {
-	private RefConfig cfg;
+// ------------------------------ FIELDS ------------------------------
 
 	protected SchemaValidator delegate;
 	protected SessionFactory sessionFactory;
 	protected final Dialect dialect;
+	private RefConfig cfg;
+
+// --------------------------- CONSTRUCTORS ---------------------------
 
 	public RefAsColumnsSchemaValidator(RefConfig aCfg) {
 		cfg = aCfg;
 
 		delegate = new SchemaValidator(cfg.getConfiguration());
 		dialect = cfg.getDialect();
+	}
+
+	public void destroy() {
+		sessionFactory.close();
 	}
 
 	public void validate() {
@@ -56,9 +63,7 @@ public class RefAsColumnsSchemaValidator {
 		session.close();
 	}
 
-	public void destroy() {
-		sessionFactory.close();
-	}
+// -------------------------- INNER CLASSES --------------------------
 
 	class ValidatingTableVisitor implements Visitor4 {
 		final DatabaseMetadata metadata;

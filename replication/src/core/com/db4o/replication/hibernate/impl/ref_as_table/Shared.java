@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Shared {
+// -------------------------- STATIC METHODS --------------------------
+
 	public static void ensureLong(Serializable id) {
 		if (!(id instanceof Long))
 			throw new IllegalStateException("You must use 'long' as the type of the hibernate id");
@@ -20,10 +22,6 @@ public class Shared {
 	public static long castAsLong(Serializable id) {
 		ensureLong(id);
 		return ((Long) id).longValue();
-	}
-
-	static void incrementObjectVersion(Session sess, Object entity, long id) {
-		incrementObjectVersion(sess.connection(), entity.getClass().getName(), castAsLong(sess.getIdentifier(entity)));
 	}
 
 	static void incrementObjectVersion(Connection con, String className, long id) {
@@ -45,6 +43,10 @@ public class Shared {
 		} finally {
 			Util.closeStatement(st);
 		}
+	}
+
+	static void incrementObjectVersion(Session sess, Object entity, long id) {
+		incrementObjectVersion(sess.connection(), entity.getClass().getName(), castAsLong(sess.getIdentifier(entity)));
 	}
 
 	public static long getVersion(Connection con, String className, long id) {

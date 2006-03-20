@@ -42,8 +42,11 @@ import java.util.Set;
  * @since 5.0
  */
 public final class RefAsColumnsReplicationProvider extends AbstractReplicationProvider {
+// ------------------------------ FIELDS ------------------------------
+
 	protected static final String IS_NULL = " IS NULL ";
 
+// --------------------------- CONSTRUCTORS ---------------------------
 
 	public RefAsColumnsReplicationProvider(Configuration cfg) {
 		this(cfg, null);
@@ -60,69 +63,13 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 
 		initEventListeners();
 
-		_objectSessionFactory = this.getRefCfg().getConfiguration().buildSessionFactory();
-		_objectSession = _objectSessionFactory.openSession();
-		_objectSession.setFlushMode(FlushMode.COMMIT);
-		_objectTransaction = _objectSession.beginTransaction();
+		_sessionFactory = this.getRefCfg().getConfiguration().buildSessionFactory();
+		_session = _sessionFactory.openSession();
+		_session.setFlushMode(FlushMode.COMMIT);
+		_transaction = _session.beginTransaction();
 
 		init();
 		_alive = true;
-
-	}
-
-	protected RefConfig getRefConfig() {
-		return getRefCfg();
-	}
-
-	public final String getModifiedObjectCriterion() {
-		ensureReplicationActive();
-
-		return Db4oColumns.VERSION.name + " > " + getLastReplicationVersion();
-	}
-
-	protected ReplicationReference produceObjectReference(Object obj) {
-		if (!getSession().contains(obj)) return null;
-
-		Object[] uuidAndVersion = getUuidAndVersion(obj);
-		Uuid uuid = (Uuid) uuidAndVersion[0];
-		long version = (Long) uuidAndVersion[1];
-
-		return objRefs.put(obj, translate(uuid), version);
-	}
-
-	protected Session getRefSession() {
-		return getSession();
-	}
-
-	protected ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid, Class hint) {
-		_objectSession.flush();
-
-		ReplicationProviderSignature signature = getProviderSignature(uuid.getSignaturePart());
-		final long sigId;
-
-		if (signature == null) return null;
-		else sigId = signature.getId();
-
-		String tableName = getObjectConfig().getTableName(hint);
-		String primaryKeyColumnName = getObjectConfig().getPrimaryKeyColumnName(hint);
-		String verColName = Db4oColumns.VERSION.name;
-
-		String sql = "SELECT " + primaryKeyColumnName + "," + verColName + " FROM " + tableName
-				+ " where " + Db4oColumns.UUID_LONG_PART.name + "=" + uuid.getLongPart()
-				+ " AND " + Db4oColumns.PROVIDER_ID.name + "=" + sigId;
-
-		try {
-			ResultSet rs = _objectSession.connection().createStatement().executeQuery(sql);
-
-			if (rs.next())
-				return objRefs.put(loadObject(new HibernateObjectId(
-						(Serializable) rs.getObject(1), hint.getName())), uuid, rs.getLong(2));
-			else
-				return null;
-
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	protected Collection getChangedObjectsSinceLastReplication(PersistentClass type) {
@@ -132,7 +79,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		String sql = "SELECT " + primaryKeyColumnName + " FROM " + tableName
 				+ " where " + Db4oColumns.VERSION.name + ">" + getLastReplicationVersion();
 
-		Connection connection = _objectSession.connection();
+		Connection connection = _session.connection();
 		Statement st = Util.getStatement(connection);
 
 		Set<HibernateObjectId> changedObjectIds = new HashSet();
@@ -153,8 +100,12 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		return loadObject(changedObjectIds);
 	}
 
-	protected void saveOrUpdateReplicaMetadata(ReplicationReference ref) {
-		updateMetadata(ref, _objectSession.getIdentifier(ref.object()));
+	protected RefConfig getRefConfig() {
+		return getRefCfg();
+	}
+
+	protected Session getRefSession() {
+		return getSession();
 	}
 
 	protected Uuid getUuid(Object obj) {
@@ -192,11 +143,71 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		}
 	}
 
+	protected void incrementObjectVersion(PostUpdateEvent event) {
+		//TODO performance sucks, but this method is called when testing only.
+		Object entity = event.getEntity();
+
+		Connection con = getSession().connection();
+		long newVer = Util.getMaxVersion(con) + 1;
+		Shared.incrementObjectVersion(con, event.getId(), newVer,
+				getObjectConfig().getTableName(entity.getClass()), getObjectConfig().getPrimaryKeyColumnName(entity));
+	}
+
 	protected void objectInserted(PostInsertEvent event) {
 		Db4oUUID db4oUUID = new Db4oUUID(nextt(), _mySig.getBytes());
 		ReplicationReference ref = new ReplicationReferenceImpl(event.getEntity(),
 				db4oUUID, Util.getMaxVersion(getRefSession().connection()) + 1);
 		updateMetadata(ref, event.getId());
+	}
+
+	protected ReplicationReference produceObjectReference(Object obj) {
+		if (!getSession().contains(obj)) return null;
+
+		Object[] uuidAndVersion = getUuidAndVersion(obj);
+		Uuid uuid = (Uuid) uuidAndVersion[0];
+		long version = (Long) uuidAndVersion[1];
+
+		return _objRefs.put(obj, Util.translate(uuid), version);
+	}
+
+	protected ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid, Class hint) {
+		_session.flush();
+
+		ReplicationProviderSignature signature = getProviderSignature(uuid.getSignaturePart());
+		final long sigId;
+
+		if (signature == null) return null;
+		else sigId = signature.getId();
+
+		String tableName = getObjectConfig().getTableName(hint);
+		String primaryKeyColumnName = getObjectConfig().getPrimaryKeyColumnName(hint);
+		String verColName = Db4oColumns.VERSION.name;
+
+		String sql = "SELECT " + primaryKeyColumnName + "," + verColName + " FROM " + tableName
+				+ " where " + Db4oColumns.UUID_LONG_PART.name + "=" + uuid.getLongPart()
+				+ " AND " + Db4oColumns.PROVIDER_ID.name + "=" + sigId;
+
+		try {
+			ResultSet rs = _session.connection().createStatement().executeQuery(sql);
+
+			if (rs.next())
+				return _objRefs.put(loadObject(new HibernateObjectId(
+						(Serializable) rs.getObject(1), hint.getName())), uuid, rs.getLong(2));
+			else
+				return null;
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected void saveOrUpdateReplicaMetadata(ReplicationReference ref) {
+		updateMetadata(ref, _session.getIdentifier(ref.object()));
+	}
+
+	public final String getModifiedObjectCriterion() {
+		ensureReplicationActive();
+
+		return Db4oColumns.VERSION.name + " > " + getLastReplicationVersion();
 	}
 
 	private void updateMetadata(ReplicationReference ref, Serializable identifier) {
@@ -210,7 +221,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 
 		PreparedStatement ps = null;
 		try {
-			ps = _objectSession.connection().prepareStatement(sql);
+			ps = _session.connection().prepareStatement(sql);
 
 			ps.setLong(1, ref.version());
 			ps.setLong(2, ref.uuid().getLongPart());
@@ -226,15 +237,5 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		} finally {
 			Util.closePreparedStatement(ps);
 		}
-	}
-
-	protected void incrementObjectVersion(PostUpdateEvent event) {
-		//TODO performance sucks, but this method is called when testing only.
-		Object entity = event.getEntity();
-
-		Connection con = getSession().connection();
-		long newVer = Util.getMaxVersion(con) + 1;
-		Shared.incrementObjectVersion(con, event.getId(), newVer,
-				getObjectConfig().getTableName(entity.getClass()), getObjectConfig().getPrimaryKeyColumnName(entity));
 	}
 }

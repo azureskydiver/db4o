@@ -23,6 +23,8 @@ import java.sql.Statement;
 import java.util.Set;
 
 public class RefAsColumnsTablesCreator implements TablesCreator {
+// ------------------------------ FIELDS ------------------------------
+
 	protected static final String ALTER_TABLE = "ALTER TABLE ";
 
 	RefConfig cfg;
@@ -49,11 +51,17 @@ public class RefAsColumnsTablesCreator implements TablesCreator {
 
 	protected RefAsColumnsSchemaValidator validator;
 
+// --------------------------- CONSTRUCTORS ---------------------------
+
 	public RefAsColumnsTablesCreator(RefConfig aCfg) {
 		cfg = aCfg;
 		dialect = cfg.getDialect();
 		validator = new RefAsColumnsSchemaValidator(cfg);
 	}
+
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface TablesCreator ---------------------
 
 	/**
 	 * @throws RuntimeException when tables/columns not found
@@ -93,6 +101,8 @@ public class RefAsColumnsTablesCreator implements TablesCreator {
 		session.close();
 		sessionFactory.close();
 	}
+
+// -------------------------- INNER CLASSES --------------------------
 
 	class ModifyingTableVisitor implements Visitor4 {
 		protected final DatabaseMetadata metadata;

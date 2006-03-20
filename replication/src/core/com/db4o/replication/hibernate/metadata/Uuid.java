@@ -3,14 +3,12 @@ package com.db4o.replication.hibernate.metadata;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class Uuid {
+// ------------------------------ FIELDS ------------------------------
+
 	public static final String LONG_PART = "longPart";
 	public static final String PROVIDER = "provider";
 
 	private long longPart;
-	private ReplicationProviderSignature provider;
-
-	public Uuid() {
-	}
 
 	public long getLongPart() {
 		return longPart;
@@ -20,6 +18,8 @@ public class Uuid {
 		this.longPart = longPart;
 	}
 
+	private ReplicationProviderSignature provider;
+
 	public ReplicationProviderSignature getProvider() {
 		return provider;
 	}
@@ -28,12 +28,12 @@ public class Uuid {
 		this.provider = provider;
 	}
 
-	public String toString() {
-		return new ToStringBuilder(this).
-				append(LONG_PART, longPart).
-				append(PROVIDER, provider).
-				toString();
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public Uuid() {
 	}
+
+// ------------------------ CANONICAL METHODS ------------------------
 
 	public boolean equals(Object o) {
 		System.out.println("Uuid.equals");
@@ -49,5 +49,12 @@ public class Uuid {
 
 	public int hashCode() {
 		return (int) (longPart ^ (longPart >>> 32));
+	}
+
+	public String toString() {
+		return new ToStringBuilder(this).
+				append(LONG_PART, longPart).
+				append(PROVIDER, provider).
+				toString();
 	}
 }

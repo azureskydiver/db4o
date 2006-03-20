@@ -3,13 +3,11 @@ package com.db4o.replication.hibernate.metadata;
 import com.db4o.replication.hibernate.impl.Constants;
 
 public class UuidLongPartSequence {
+// ------------------------------ FIELDS ------------------------------
+
 	public static final String TABLE_NAME = "UuidLongPartSequence";
 
 	private long current;
-
-	public UuidLongPartSequence() {
-		current = Constants.MIN_SEQ_NO;
-	}
 
 	public long getCurrent() {
 		return current;
@@ -17,6 +15,12 @@ public class UuidLongPartSequence {
 
 	public void setCurrent(long current) {
 		this.current = current;
+	}
+
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public UuidLongPartSequence() {
+		current = Constants.MIN_SEQ_NO;
 	}
 
 	public void increment() {

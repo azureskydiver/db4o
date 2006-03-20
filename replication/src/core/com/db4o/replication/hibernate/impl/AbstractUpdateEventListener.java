@@ -14,18 +14,33 @@ import java.util.Map;
 
 public abstract class AbstractUpdateEventListener extends EmptyInterceptor
 		implements UpdateEventListener {
+// ------------------------------ FIELDS ------------------------------
+
 	protected final Map<Thread, Session> threadSessionMap = new HashMap();
+
+// --------------------------- CONSTRUCTORS ---------------------------
 
 	protected AbstractUpdateEventListener() {
 		//empty
 	}
 
-	public void onPostUpdate(PostUpdateEvent event) {
-		Object object = event.getEntity();
+// --------------------- GETTER / SETTER METHODS ---------------------
 
-		if (Util.skip(object)) return;
+	protected final Session getSession() {
+		Session session = threadSessionMap.get(Thread.currentThread());
 
-		ObjectUpdated(object, event.getId());
+		if (session == null)
+			throw new RuntimeException("Unable to update the version number of an object. Did you forget to call ReplicationConfigurator.install(session, cfg) after opening a session?");
+		return session;
+	}
+
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface UpdateEventListener ---------------------
+
+
+	public void install(Session session, Configuration cfg) {
+		threadSessionMap.put(Thread.currentThread(), session);
 	}
 
 	public void onCollectionRemove(Object collection, Serializable key) throws CallbackException {
@@ -36,20 +51,17 @@ public abstract class AbstractUpdateEventListener extends EmptyInterceptor
 		collectionUpdated(collection);
 	}
 
+	public void onPostUpdate(PostUpdateEvent event) {
+		Object object = event.getEntity();
+
+		if (Util.skip(object)) return;
+
+		ObjectUpdated(object, event.getId());
+	}
+
+// -------------------------- OTHER METHODS --------------------------
+
 	protected abstract void ObjectUpdated(Object obj, Serializable id);
-
-	protected final Serializable getId(Object obj) {
-		Session session = getSession();
-		return session.getIdentifier(obj);
-	}
-
-	protected final Session getSession() {
-		Session session = threadSessionMap.get(Thread.currentThread());
-
-		if (session == null)
-			throw new RuntimeException("Unable to update the version number of an object. Did you forget to call ReplicationConfigurator.install(session, cfg) after opening a session?");
-		return session;
-	}
 
 	protected final void collectionUpdated(Object collection) {
 		if (!(collection instanceof PersistentCollection))
@@ -64,7 +76,8 @@ public abstract class AbstractUpdateEventListener extends EmptyInterceptor
 		ObjectUpdated(owner, id);
 	}
 
-	public void install(Session session, Configuration cfg) {
-		threadSessionMap.put(Thread.currentThread(), session);
+	protected final Serializable getId(Object obj) {
+		Session session = getSession();
+		return session.getIdentifier(obj);
 	}
 }

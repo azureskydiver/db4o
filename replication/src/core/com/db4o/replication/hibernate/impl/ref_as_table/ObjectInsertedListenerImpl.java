@@ -14,10 +14,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ObjectInsertedListenerImpl implements ObjectInsertedListener {
+// ------------------------------ FIELDS ------------------------------
+
 	protected final Map<Thread, Session> threadSessionMap = new HashMap();
+
+// --------------------------- CONSTRUCTORS ---------------------------
 
 	public ObjectInsertedListenerImpl() {
 	}
+
+// --------------------- GETTER / SETTER METHODS ---------------------
+
+	protected final Session getSession() {
+		Session session = threadSessionMap.get(Thread.currentThread());
+
+		if (session == null)
+			throw new RuntimeException("Unable to insert the replication reference of an object. Did you forget to call ReplicationConfigurator.refAsTableInstall(session, cfg) after opening a session?");
+		return session;
+	}
+
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface ObjectInsertedListener ---------------------
 
 	public void configure(Configuration cfg) {
 		EventListeners eventListeners = cfg.getEventListeners();
@@ -27,6 +45,9 @@ public class ObjectInsertedListenerImpl implements ObjectInsertedListener {
 	public void install(Session session, Configuration cfg) {
 		threadSessionMap.put(Thread.currentThread(), session);
 	}
+
+// --------------------- Interface PostInsertEventListener ---------------------
+
 
 	public void onPostInsert(PostInsertEvent event) {
 		insertRef(event);
@@ -44,13 +65,5 @@ public class ObjectInsertedListenerImpl implements ObjectInsertedListener {
 		ref.setObjectId(id);
 		ref.setVersion(Constants.MIN_VERSION_NO);
 		getSession().save(ref);
-	}
-
-	protected final Session getSession() {
-		Session session = threadSessionMap.get(Thread.currentThread());
-
-		if (session == null)
-			throw new RuntimeException("Unable to insert the replication reference of an object. Did you forget to call ReplicationConfigurator.refAsTableInstall(session, cfg) after opening a session?");
-		return session;
 	}
 }

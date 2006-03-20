@@ -9,24 +9,28 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class ObjectReferenceMap {
+// ------------------------------ FIELDS ------------------------------
+
 	Map<Object, ReplicationReference> delegate;
+
+// --------------------------- CONSTRUCTORS ---------------------------
 
 	public ObjectReferenceMap() {
 		delegate = new IdentityHashMap();
 	}
 
-	public ReplicationReference put(Object obj, Db4oUUID uuid, long version) {
-		ReplicationReference result = new ReplicationReferenceImpl(obj, uuid, version);
-		delegate.put(obj, result);
-		return result;
+	public void clear() {
+		delegate.clear();
 	}
 
 	public ReplicationReference get(Object obj) {
 		return delegate.get(obj);
 	}
 
-	public void clear() {
-		delegate.clear();
+	public ReplicationReference put(Object obj, Db4oUUID uuid, long version) {
+		ReplicationReference result = new ReplicationReferenceImpl(obj, uuid, version);
+		delegate.put(obj, result);
+		return result;
 	}
 
 	public final void visitEntries(Visitor4 visitor) {
