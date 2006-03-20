@@ -51,494 +51,90 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractReplicationProvider implements HibernateReplicationProvider {
-	protected Session _objectSession;
-
-	protected SessionFactory _objectSessionFactory;
+// ------------------------------ FIELDS ------------------------------
 
 	protected RefConfig _refCfg;
 
 	protected ObjectConfig _objectConfig;
 
-	protected Transaction _objectTransaction;
+	protected String _name;
 
-	protected FlushEventListener myFlushEventListener = new MyFlushEventListener();
+	protected Session _session;
 
-	protected PostUpdateEventListener myPostUpdateEventListener = new MyPostUpdateEventListener();
+	protected SessionFactory _sessionFactory;
 
-	protected PreDeleteEventListener myPreDeleteEventListener = new MyPreDeleteEventListener();
-
-	protected PostInsertEventListener objectInsertedListener = new MyObjectInsertedListener();
-
-	/**
-	 * Hibernate mapped classes
-	 */
-	protected Set<PersistentClass> _mappedClasses;
-
-	/**
-	 * Objects which meta data not yet updated.
-	 */
-	private Set<ReplicationReference> _dirtyRefs = new HashSet();
+	protected Transaction _transaction;
 
 	/**
 	 * The ReplicationProviderSignature of this  Hibernate-mapped database.
 	 */
 	protected MySignature _mySig;
 
+	protected ObjectReferenceMap _objRefs = new ObjectReferenceMap();
+
+	protected boolean _alive = false;
+
 	/**
 	 * The Signature of the peer in the current Transaction.
 	 */
-	protected PeerSignature _peerSignature;
+	private PeerSignature _peerSignature;
 
-	protected ObjectReferenceMap objRefs = new ObjectReferenceMap();
+	private Set<PersistentClass> _mappedClasses;
+
+	private FlushEventListener myFlushEventListener = new MyFlushEventListener();
+
+	private PostUpdateEventListener myPostUpdateEventListener = new MyPostUpdateEventListener();
+
+	private PreDeleteEventListener myPreDeleteEventListener = new MyPreDeleteEventListener();
+
+	private PostInsertEventListener objectInsertedListener = new MyObjectInsertedListener();
+
 	/**
 	 * The ReplicationRecord of {@link #_peerSignature}.
 	 */
-	protected ReplicationRecord _replicationRecord;
+	private ReplicationRecord _replicationRecord;
+
 	/**
 	 * Current transaction number = {@link #getLastReplicationVersion()} + 1. The
 	 * minimum version number is 1, when this database is never replicated with
 	 * other peers.
 	 */
-	protected long _currentVersion;
+	private long _currentVersion;
 
-	protected String _name;
+	private final CollectionHandler _collectionHandler = new CollectionHandlerImpl();
 
-	protected final CollectionHandler _collectionHandler = new CollectionHandlerImpl();
+	private Set _uuidsReplicatedInThisSession = new HashSet();
 
-	protected Set _uuidsReplicatedInThisSession = new HashSet();
+	private Reflector _reflector = ReplicationReflector.getInstance().reflector();
+
+	private UuidLongPartSequence _uuidLongPartSequence;
+
+	/**
+	 * Objects which meta data not yet updated.
+	 */
+	private Set<ReplicationReference> _dirtyRefs = new HashSet();
 
 	private boolean _inReplication = false;
 
-	protected Reflector _reflector = ReplicationReflector.getInstance().reflector();
-
-	protected boolean _alive = false;
-
-	CollectionRegistry collectionRegistry;
-
-	protected void initPeerSigAndRecord(byte[] peerSigBytes) {
-		PeerSignature existingPeerSignature = getPeerSignature(peerSigBytes);
-		if (existingPeerSignature == null) {
-			this._peerSignature = new PeerSignature(peerSigBytes);
-			getRefSession().save(this._peerSignature);
-			getRefSession().flush();
-			if (getPeerSignature(peerSigBytes) == null)
-				throw new RuntimeException("Cannot insert existingPeerSignature");
-			_replicationRecord = new ReplicationRecord();
-			_replicationRecord.setPeerSignature(_peerSignature);
-		} else {
-			this._peerSignature = existingPeerSignature;
-			_replicationRecord = getRecord(_peerSignature);
-		}
-	}
+// ------------------------ CANONICAL METHODS ------------------------
 
 	public final String toString() {
 		return "name = " + _name;
 	}
 
-	protected boolean isReplicationActive() {
-		return _inReplication;
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface HibernateReplicationProvider ---------------------
+
+	public final Configuration getConfiguration() {
+		return getObjectConfig().getConfiguration();
 	}
 
-	protected void ensureReplicationActive() {
-		ensureAlive();
-		if (!isReplicationActive())
-			throw new UnsupportedOperationException("Method not supported because replication transaction is not active");
+	public final Session getSession() {
+		return _session;
 	}
 
-	protected void ensureReplicationInActive() {
-		ensureAlive();
-		if (isReplicationActive())
-			throw new UnsupportedOperationException("Method not supported because replication transaction is active");
-	}
-
-	private void ensureAlive() {
-		if (!_alive)
-			throw new UnsupportedOperationException("This provider is dead because #destroy() is called");
-	}
-
-	protected static String flattenBytes(byte[] b) {
-		String out = "";
-		for (int i = 0; i < b.length; i++) {
-			out += ", " + b[i];
-		}
-		return out;
-	}
-
-	public final ReadonlyReplicationProviderSignature getSignature() {
-		return _mySig;
-	}
-
-	public final Object getMonitor() {
-		return this;
-	}
-
-	public final long getCurrentVersion() {
-		ensureReplicationActive();
-
-		return _currentVersion;
-	}
-
-	public final long getLastReplicationVersion() {
-		ensureReplicationActive();
-
-		return getCurrentVersion() - 1;
-	}
-
-	public final void activate(Object object) {
-		Hibernate.initialize(object);
-	}
-
-	public final void clearAllReferences() {
-		ensureReplicationActive();
-
-		objRefs.clear();
-	}
-
-	public final boolean hasReplicationReferenceAlready(Object obj) {
-		ensureReplicationActive();
-
-		return objRefs.get(obj) != null;
-	}
-
-
-	protected static void sleep(int i, String s) {
-		System.out.println(s);
-		try {
-			Thread.sleep(i * 1000);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e.getMessage());
-		}
-	}
-
-	protected ReplicationReference produceCollectionReferenceByReferencingObjUuid(ReplicationReference refObjRef, String fieldName) {
-		Criteria criteria = getRefSession().createCriteria(ReplicationComponentIdentity.class);
-		criteria.add(Restrictions.eq("referencingObjectUuidLongPart", new Long(refObjRef.uuid().getLongPart())));
-		criteria.createCriteria("referencingObjectField").add(Restrictions.eq("referencingObjectFieldName", fieldName));
-		criteria.createCriteria("provider").add(Restrictions.eq("bytes", refObjRef.uuid().getSignaturePart()));
-
-		final List exisitings = criteria.list();
-		int count = exisitings.size();
-
-		ReplicationReference out;
-		if (count == 0) {
-			out = null;
-		} else if (count > 1) {
-			throw new RuntimeException("Only one Record should exist for this peer");
-		} else {
-			ReplicationComponentIdentity rci = (ReplicationComponentIdentity) exisitings.get(0);
-
-			final Object fieldValue = getFieldValue(refObjRef.object(), rci.getReferencingObjectField().getReferencingObjectFieldName());
-
-			final ReplicationReference cachedReference = objRefs.get(fieldValue);
-			if (cachedReference != null) return cachedReference;
-
-			Db4oUUID fieldUuid = new Db4oUUID(rci.getUuidLongPart(), rci.getProvider().getBytes());
-			out = objRefs.put(fieldValue, fieldUuid, refObjRef.version());
-		}
-
-		return out;
-	}
-
-	protected Object getFieldValue(Object refObject, String referencingObjectFieldName) {
-		final ReflectField declaredField = _reflector.forObject(refObject).getDeclaredField(referencingObjectFieldName);
-
-		declaredField.setAccessible();
-		final Object field = declaredField.get(refObject);
-		if (field == null) throw new NullPointerException("field cannot be null");
-
-		return field;
-	}
-
-	protected ReplicationReference produceCollectionReference(Object obj, Object referencingObj, String fieldName) {
-		final ReplicationReference refObjRef = produceReference(referencingObj, null, null);
-
-		if (refObjRef == null)
-			return null;
-		else {
-			ReplicationReference existingReference = produceCollectionReferenceByReferencingObjUuid(refObjRef, fieldName);
-			if (existingReference != null)
-				return existingReference;
-			else
-				return createRefForCollection(obj, refObjRef, fieldName, nextt(), _currentVersion);
-		}
-	}
-
-	protected ReplicationReference createRefForCollection(Object collection, ReplicationReference referencingObjRef,
-			String fieldName, long uuidLong, long version) {
-		final byte[] signaturePart = referencingObjRef.uuid().getSignaturePart();
-
-		ReplicationComponentField rcf = produceReplicationComponentField(referencingObjRef.object().getClass().getName(), fieldName);
-		ReplicationComponentIdentity rci = new ReplicationComponentIdentity();
-
-		rci.setReferencingObjectField(rcf);
-		rci.setReferencingObjectUuidLongPart(referencingObjRef.uuid().getLongPart());
-		rci.setProvider(getProviderSignature(signaturePart));
-		rci.setUuidLongPart(uuidLong);
-
-		Db4oUUID uuid = new Db4oUUID(uuidLong, signaturePart);
-
-		getRefSession().save(rci);
-		return objRefs.put(collection, uuid, version);
-	}
-
-	protected ReplicationComponentField produceReplicationComponentField(String referencingObjectClassName,
-			String referencingObjectFieldName) {
-		Criteria criteria = getRefSession().createCriteria(ReplicationComponentField.class);
-		criteria.add(Restrictions.eq("referencingObjectClassName", referencingObjectClassName));
-		criteria.add(Restrictions.eq("referencingObjectFieldName", referencingObjectFieldName));
-
-		final List exisitings = criteria.list();
-		int count = exisitings.size();
-
-		if (count == 0) {
-			ReplicationComponentField out = new ReplicationComponentField();
-			out.setReferencingObjectClassName(referencingObjectClassName);
-			out.setReferencingObjectFieldName(referencingObjectFieldName);
-			getRefSession().save(out);
-
-			//Double-check, you know Hibernate sometimes fail to save an object.
-			return produceReplicationComponentField(referencingObjectClassName, referencingObjectFieldName);
-		} else if (count > 1) {
-			throw new RuntimeException("Only one Record should exist for this peer");
-		} else {
-			return (ReplicationComponentField) exisitings.get(0);
-		}
-	}
-
-	protected ReplicationReference referenceClonedCollection(Object obj, ReplicationReference counterpartReference,
-			ReplicationReference referencingObjRef, String fieldName) {
-		return createRefForCollection(obj, referencingObjRef, fieldName, counterpartReference.uuid().getLongPart(), counterpartReference.version());
-	}
-
-	protected ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
-		final List exisitingSigs = getRefSession().createCriteria(ReadonlyReplicationProviderSignature.class)
-				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, signaturePart))
-				.list();
-		if (exisitingSigs.size() == 1)
-			return (ReplicationProviderSignature) exisitingSigs.get(0);
-		else if (exisitingSigs.size() == 0) return null;
-		else
-			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
-	}
-
-	public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
-		ensureReplicationActive();
-		if (_uuidsReplicatedInThisSession.contains(reference.uuid())) return false;
-		return reference.version() > getLastReplicationVersion();
-	}
-
-	protected ReplicationReference produceCollectionReferenceByUUID(Db4oUUID uuid) {
-		Criteria criteria = getRefSession().createCriteria(ReplicationComponentIdentity.class);
-		criteria.add(Restrictions.eq("uuidLongPart", new Long(uuid.getLongPart())));
-		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getSignaturePart()));
-
-		final List exisitings = criteria.list();
-		int count = exisitings.size();
-
-		ReplicationReference out;
-		if (count == 0) {
-			out = null;
-		} else if (count > 1) {
-			throw new RuntimeException("Only one Record should exist for this peer");
-		} else {
-			ReplicationComponentIdentity rci = (ReplicationComponentIdentity) exisitings.get(0);
-
-
-			Db4oUUID refObjUuid = new Db4oUUID(rci.getReferencingObjectUuidLongPart(), rci.getProvider().getBytes());
-
-			final Class hint;
-			final ReplicationComponentField referencingObjectField = rci.getReferencingObjectField();
-			try {
-				hint = Class.forName(referencingObjectField.getReferencingObjectClassName());
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			}
-
-			final ReplicationReference refObjRef = produceReferenceByUUID(refObjUuid, hint);
-			if (refObjRef == null) throw new NullPointerException("refObjRefcannot be null");
-
-			final Object field = getFieldValue(refObjRef.object(), referencingObjectField.getReferencingObjectFieldName());
-
-			ReplicationReference existing = objRefs.get(field);
-			if (existing != null) return existing;
-
-			out = objRefs.put(field, uuid, refObjRef.version());
-		}
-
-		return out;
-	}
-
-	protected abstract Session getRefSession();
-
-	public final ReplicationReference produceReferenceByUUID(final Db4oUUID uuid, Class hint) {
-		ensureReplicationActive();
-
-		if (uuid == null) throw new IllegalArgumentException("uuid cannot be null");
-		if (hint == null) throw new IllegalArgumentException("hint cannot be null");
-
-		if (_collectionHandler.canHandle(hint)) {
-			return produceCollectionReferenceByUUID(uuid);
-		} else {
-			return produceObjectReferenceByUUID(uuid, hint);
-		}
-	}
-
-	protected abstract ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid, Class hint);
-
-	public final ReplicationReference produceReference(Object obj, Object referencingObj, String fieldName) {
-		ensureReplicationActive();
-
-		ReplicationReference existing = objRefs.get(obj);
-
-		if (existing != null) return existing;
-
-		if (_collectionHandler.canHandle(obj)) {
-			if (referencingObj == null)
-				return null;
-
-			return produceCollectionReference(obj, referencingObj, fieldName);
-		} else {
-			return produceObjectReference(obj);
-		}
-	}
-
-	protected abstract ReplicationReference produceObjectReference(Object obj);
-
-	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference,
-			ReplicationReference referencingObjCounterPartRef, String fieldName) {
-		ensureReplicationActive();
-
-		if (obj == null) throw new NullPointerException("obj is null");
-		if (counterpartReference == null) throw new NullPointerException("counterpartReference is null");
-
-		if (_collectionHandler.canHandle(obj)) {
-
-			if (referencingObjCounterPartRef == null || fieldName == null)
-				return null;
-
-			ReplicationReference cachedReference = objRefs.get(obj);
-			if (cachedReference != null) return cachedReference;
-
-			return referenceClonedCollection(obj, counterpartReference, referencingObjCounterPartRef, fieldName);
-		} else {
-			Db4oUUID uuid = counterpartReference.uuid();
-			long version = counterpartReference.version();
-
-			return objRefs.put(obj, uuid, version);
-		}
-	}
-
-	protected ReplicationProviderSignature getById(long sigId) {
-		return (ReplicationProviderSignature) getRefSession().get(ReplicationProviderSignature.class, new Long(sigId));
-	}
-
-	protected void initEventListeners() {
-		Configuration cfg = getObjectConfig().getConfiguration();
-		cfg.setInterceptor(EmptyInterceptor.INSTANCE);
-		EventListeners eventListeners = cfg.getEventListeners();
-
-		eventListeners.setFlushEventListeners(createFlushEventListeners(eventListeners.getFlushEventListeners()));
-		eventListeners.setPostUpdateEventListeners(createPostUpdateListeners(eventListeners.getPostUpdateEventListeners()));
-		eventListeners.setPreDeleteEventListeners(new PreDeleteEventListener[]{myPreDeleteEventListener});
-
-		eventListeners.setPostInsertEventListeners(new PostInsertEventListener[]{objectInsertedListener});
-
-	}
-
-	private PeerSignature getPeerSignature(byte[] bytes) {
-		final List exisitingSigs = getRefSession().createCriteria(PeerSignature.class)
-				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, bytes))
-				.list();
-
-		if (exisitingSigs.size() == 1)
-			return (PeerSignature) exisitingSigs.get(0);
-		else if (exisitingSigs.size() == 0) return null;
-		else
-			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
-	}
-
-	protected ReplicationRecord getRecord(PeerSignature peerSignature) {
-		Criteria criteria = getRefSession().createCriteria(ReplicationRecord.class).createCriteria("peerSignature").add(Restrictions.eq("id", new Long(peerSignature.getId())));
-
-		final List exisitingRecords = criteria.list();
-		int count = exisitingRecords.size();
-
-		if (count == 0)
-			throw new RuntimeException("Record not found. Hibernate was unable to persist the record in the last replication round");
-		else if (count > 1)
-			throw new RuntimeException("Only one Record should exist for this peer");
-		else
-			return (ReplicationRecord) exisitingRecords.get(0);
-	}
-
-	public void syncVersionWithPeer(long version) {
-		ensureReplicationActive();
-
-		if (version < Constants.MIN_VERSION_NO)
-			throw new RuntimeException("version must be great than " + Constants.MIN_VERSION_NO);
-
-		_replicationRecord.setVersion(version);
-		getRefSession().saveOrUpdate(_replicationRecord);
-		getRefSession().flush();
-		if (getRecord(_peerSignature).getVersion() != version)
-			throw new RuntimeException("The version numbers of persisted record does not match the parameter");
-	}
-
-	public synchronized void commitReplicationTransaction(long raisedDatabaseVersion) {
-		ensureReplicationActive();
-		clearDeletedUuids();
-		commit();
-		_uuidsReplicatedInThisSession.clear();
-		_dirtyRefs.clear();
-		_inReplication = false;
-	}
-
-	protected Collection loadObject(Collection<HibernateObjectId> changedObjectIds) {
-		Set out = new HashSet();
-
-		for (HibernateObjectId hibernateObjectId : changedObjectIds)
-			out.add(loadObject(hibernateObjectId));
-
-		return out;
-	}
-
-	protected Object loadObject(HibernateObjectId hibernateObjectId) {
-		return getSession().load(hibernateObjectId.className, hibernateObjectId.hibernateId);
-	}
-
-	protected void init() {
-		initMappedClasses();
-		_mySig = Util.genMySignature(getRefSession());
-		_uuidLongPartSequence = initUuidLongPartGenerator();
-	}
-
-	protected void initMappedClasses() {
-		_mappedClasses = new HashSet();
-
-		Iterator classMappings = getObjectConfig().getConfiguration().getClassMappings();
-		while (classMappings.hasNext()) {
-			PersistentClass persistentClass = (PersistentClass) classMappings.next();
-			Class claxx = persistentClass.getMappedClass();
-
-			if (Util.skip(claxx))
-				continue;
-
-			_mappedClasses.add(persistentClass);
-		}
-	}
-
-	protected FlushEventListener[] createFlushEventListeners(FlushEventListener[] defaultListeners) {
-		FlushEventListener[] out;
-		final int count = defaultListeners.length;
-		out = new FlushEventListener[count + 1];
-		System.arraycopy(defaultListeners, 0, out, 0, count);
-		out[count] = myFlushEventListener;
-		return out;
-	}
-
-	protected PostUpdateEventListener[] createPostUpdateListeners(PostUpdateEventListener[] defaultListeners) {
-		return new PostUpdateEventListener[]{myPostUpdateEventListener};
-	}
+// --------------------- Interface ReplicationProvider ---------------------
 
 	public final ObjectSet objectsChangedSinceLastReplication() {
 		ensureReplicationActive();
@@ -552,53 +148,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		return new ObjectSetCollectionFacade(out);
 	}
 
-	public Session getSession() {
-		return _objectSession;
-	}
-
-	public Configuration getConfiguration() {
-		return getObjectConfig().getConfiguration();
-	}
-
-	protected abstract Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass);
-
-	public final String getName() {
-		return _name;
-	}
-
-	public void storeNew(Object object) {
-		ensureReplicationInActive();
-		Session s = getSession();
-		s.save(object);
-		s.flush();
-	}
-
-	public final void update(Object obj) {
-		ensureReplicationInActive();
-		if (!_collectionHandler.canHandle(obj)) {
-			getSession().flush();
-			getSession().update(obj);
-			getSession().flush();
-		}
-	}
-
-	public final ObjectSet getStoredObjects(Class aClass) {
-		if (_collectionHandler.canHandle(aClass))
-			throw new IllegalArgumentException("Hibernate does not query by Collection");
-
-		getSession().flush();
-
-		return new ObjectSetCollectionFacade(getSession().createCriteria(aClass).list());
-	}
-
-	public final void visitCachedReferences(Visitor4 visitor) {
-		ensureReplicationActive();
-
-		objRefs.visitEntries(visitor);
-	}
-
-	protected abstract RefConfig getRefConfig();
-
 	public final ObjectSet objectsChangedSinceLastReplication(Class clazz) {
 		ensureReplicationActive();
 		getSession().flush();
@@ -607,15 +156,161 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		return new ObjectSetCollectionFacade(getChangedObjectsSinceLastReplication(persistentClass));
 	}
 
-	public void deleteAllInstances(Class clazz) {
-		ensureReplicationInActive();
-		List col = getSession().createCriteria(clazz).list();
-		for (Object o : col)
-			delete(o);
+	public final ObjectSet uuidsDeletedSinceLastReplication() {
+		List<DeletedObject> results = getRefSession().createCriteria(DeletedObject.class).list();
+		Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
+
+		for (DeletedObject doo : results) {
+			out.add(Util.translate(doo));
+		}
+		return new ObjectSetCollectionFacade(out);
 	}
 
-	public void delete(Object obj) {
-		getSession().delete(obj);
+// --------------------- Interface ReplicationProviderInside ---------------------
+
+	public final void clearAllReferences() {
+		ensureReplicationActive();
+
+		_objRefs.clear();
+	}
+
+	public final synchronized void commitReplicationTransaction(long raisedDatabaseVersion) {
+		ensureReplicationActive();
+		clearDeletedUuids();
+		commit();
+		_uuidsReplicatedInThisSession.clear();
+		_dirtyRefs.clear();
+		_inReplication = false;
+	}
+
+	public final synchronized void destroy() {
+		_alive = false;
+
+		_session.close();
+		_sessionFactory.close();
+
+		_transaction = null;
+		_session = null;
+		_sessionFactory = null;
+
+		_mappedClasses = null;
+		_dirtyRefs = null;
+
+		_objRefs = null;
+		_uuidsReplicatedInThisSession = null;
+
+		_reflector = null;
+
+		destroyListeners();
+	}
+
+	public final long getCurrentVersion() {
+		ensureReplicationActive();
+
+		return _currentVersion;
+	}
+
+	public final Object getMonitor() {
+		return this;
+	}
+
+	public final ReadonlyReplicationProviderSignature getSignature() {
+		return _mySig;
+	}
+
+	public final boolean hasReplicationReferenceAlready(Object obj) {
+		ensureReplicationActive();
+
+		return _objRefs.get(obj) != null;
+	}
+
+	public final ReplicationReference produceReference(Object obj, Object referencingObj, String fieldName) {
+		ensureReplicationActive();
+
+		ReplicationReference existing = _objRefs.get(obj);
+
+		if (existing != null) return existing;
+
+		if (_collectionHandler.canHandle(obj)) {
+			if (referencingObj == null)
+				return null;
+
+			return produceCollectionReference(obj, referencingObj, fieldName);
+		} else {
+			return produceObjectReference(obj);
+		}
+	}
+
+	public ReplicationReference produceReferenceByUUID(final Db4oUUID uuid, Class hint) {
+		ensureReplicationActive();
+
+		if (uuid == null) throw new IllegalArgumentException("uuid cannot be null");
+		if (hint == null) throw new IllegalArgumentException("hint cannot be null");
+
+		if (_collectionHandler.canHandle(hint)) {
+			return produceCollectionReferenceByUUID(uuid);
+		} else {
+			return produceObjectReferenceByUUID(uuid, hint);
+		}
+	}
+
+	public final ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference,
+			ReplicationReference referencingObjCounterPartRef, String fieldName) {
+		ensureReplicationActive();
+
+		if (obj == null) throw new NullPointerException("obj is null");
+		if (counterpartReference == null) throw new NullPointerException("counterpartReference is null");
+
+		if (_collectionHandler.canHandle(obj)) {
+			if (referencingObjCounterPartRef == null || fieldName == null)
+				return null;
+
+			ReplicationReference cachedReference = _objRefs.get(obj);
+			if (cachedReference != null) return cachedReference;
+
+			return referenceClonedCollection(obj, counterpartReference, referencingObjCounterPartRef, fieldName);
+		} else {
+			Db4oUUID uuid = counterpartReference.uuid();
+			long version = counterpartReference.version();
+
+			return _objRefs.put(obj, uuid, version);
+		}
+	}
+
+	public final synchronized void rollbackReplication() {
+		ensureReplicationActive();
+
+		getObjectTransaction().rollback();
+		clearSession();
+
+		_transaction = getSession().beginTransaction();
+		clearAllReferences();
+		_dirtyRefs.clear();
+		_uuidsReplicatedInThisSession.clear();
+		_inReplication = false;
+	}
+
+	public final void startReplicationTransaction(ReadonlyReplicationProviderSignature aPeerSignature) {
+		ensureReplicationInActive();
+		clearSession();
+
+		byte[] peerSigBytes = aPeerSignature.getBytes();
+
+		if (Arrays.equals(peerSigBytes, getSignature().getBytes()))
+			throw new RuntimeException("peerSigBytes must not equal to my own sig");
+
+		getObjectTransaction().commit();
+		_transaction = getSession().beginTransaction();
+
+		_mySig = Util.genMySignature(getRefSession());
+
+		initPeerSigAndRecord(peerSigBytes);
+
+		_currentVersion = Util.getMaxVersion(getRefSession().connection()) + 1;
+
+		_uuidLongPartSequence = initUuidLongPartGenerator();
+
+		_inReplication = true;
 	}
 
 	public final void storeReplica(Object entity) {
@@ -626,7 +321,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
 		if (_collectionHandler.canHandle(entity)) return;
 
-		ReplicationReference ref = objRefs.get(entity);
+		ReplicationReference ref = _objRefs.get(entity);
 		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
 
 		_uuidsReplicatedInThisSession.add(ref.uuid());
@@ -643,81 +338,177 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		getSession().flush();
 	}
 
-	protected Transaction getObjectTransaction() {
-		return _objectTransaction;
-	}
-
-	public synchronized void rollbackReplication() {
+	public final void syncVersionWithPeer(long version) {
 		ensureReplicationActive();
 
-		getObjectTransaction().rollback();
+		if (version < Constants.MIN_VERSION_NO)
+			throw new RuntimeException("version must be great than " + Constants.MIN_VERSION_NO);
+
+		_replicationRecord.setVersion(version);
+		getRefSession().saveOrUpdate(_replicationRecord);
+		getRefSession().flush();
+		if (getRecord(_peerSignature).getVersion() != version)
+			throw new RuntimeException("The version numbers of persisted record does not match the parameter");
+	}
+
+	public final void visitCachedReferences(Visitor4 visitor) {
+		ensureReplicationActive();
+
+		_objRefs.visitEntries(visitor);
+	}
+
+	public final boolean wasChangedSinceLastReplication(ReplicationReference reference) {
+		ensureReplicationActive();
+		if (_uuidsReplicatedInThisSession.contains(reference.uuid())) return false;
+		return reference.version() > getLastReplicationVersion();
+	}
+
+// --------------------- Interface SimpleObjectContainer ---------------------
+
+	public final void activate(Object object) {
+		Hibernate.initialize(object);
+	}
+
+	public final void commit() {
+		getObjectTransaction().commit();
 		clearSession();
-
-		_objectTransaction = getSession().beginTransaction();
-		clearAllReferences();
-		_dirtyRefs.clear();
-		_uuidsReplicatedInThisSession.clear();
-		_inReplication = false;
+		_transaction = getSession().beginTransaction();
+		_uuidLongPartSequence = initUuidLongPartGenerator();
 	}
 
-	private void clearSession() {
-		getSession().clear();
+	public final void delete(Object obj) {
+		getSession().delete(obj);
 	}
 
-	protected RefConfig getRefCfg() {
+	public final void deleteAllInstances(Class clazz) {
+		ensureReplicationInActive();
+		List col = getSession().createCriteria(clazz).list();
+		for (Object o : col)
+			delete(o);
+	}
+
+	public final String getName() {
+		return _name;
+	}
+
+	public final ObjectSet getStoredObjects(Class aClass) {
+		if (_collectionHandler.canHandle(aClass))
+			throw new IllegalArgumentException("Hibernate does not query by Collection");
+
+		getSession().flush();
+
+		return new ObjectSetCollectionFacade(getSession().createCriteria(aClass).list());
+	}
+
+	public final void storeNew(Object object) {
+		ensureReplicationInActive();
+		Session s = getSession();
+		s.save(object);
+		s.flush();
+	}
+
+	public final void update(Object obj) {
+		ensureReplicationInActive();
+		if (!_collectionHandler.canHandle(obj)) {
+			getSession().flush();
+			getSession().update(obj);
+			getSession().flush();
+		}
+	}
+
+// -------------------------- OTHER METHODS --------------------------
+
+	protected abstract Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass);
+
+	protected abstract RefConfig getRefConfig();
+
+	protected abstract Session getRefSession();
+
+	protected abstract Uuid getUuid(Object obj);
+
+	protected abstract void incrementObjectVersion(PostUpdateEvent event);
+
+	protected abstract void objectInserted(PostInsertEvent event);
+
+	protected abstract ReplicationReference produceObjectReference(Object obj);
+
+	protected abstract ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid, Class hint);
+
+	protected abstract void saveOrUpdateReplicaMetadata(ReplicationReference ref);
+
+	protected void ensureReplicationActive() {
+		ensureAlive();
+		if (!isReplicationActive())
+			throw new UnsupportedOperationException("Method not supported because replication transaction is not active");
+	}
+
+	protected void ensureReplicationInActive() {
+		ensureAlive();
+		if (isReplicationActive())
+			throw new UnsupportedOperationException("Method not supported because replication transaction is active");
+	}
+
+	protected final ReplicationProviderSignature getById(long sigId) {
+		return (ReplicationProviderSignature) getRefSession().get(ReplicationProviderSignature.class, new Long(sigId));
+	}
+
+	protected long getLastReplicationVersion() {
+		ensureReplicationActive();
+
+		return getCurrentVersion() - 1;
+	}
+
+	protected ObjectConfig getObjectConfig() {
+		return _objectConfig;
+	}
+
+	protected ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
+		final List exisitingSigs = getRefSession().createCriteria(ReadonlyReplicationProviderSignature.class)
+				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, signaturePart))
+				.list();
+		if (exisitingSigs.size() == 1)
+			return (ReplicationProviderSignature) exisitingSigs.get(0);
+		else if (exisitingSigs.size() == 0) return null;
+		else
+			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
+	}
+
+	protected final RefConfig getRefCfg() {
 		return _refCfg;
 	}
 
-	public void commit() {
-		getObjectTransaction().commit();
-		clearSession();
-		_objectTransaction = getSession().beginTransaction();
-		_uuidLongPartSequence = initUuidLongPartGenerator();
-
-	}
-
-	public void startReplicationTransaction(ReadonlyReplicationProviderSignature aPeerSignature) {
-		ensureReplicationInActive();
-		clearSession();
-
-		byte[] peerSigBytes = aPeerSignature.getBytes();
-
-		if (Arrays.equals(peerSigBytes, getSignature().getBytes()))
-			throw new RuntimeException("peerSigBytes must not equal to my own sig");
-
-		getObjectTransaction().commit();
-		_objectTransaction = getSession().beginTransaction();
-
+	protected final void init() {
+		initMappedClasses();
 		_mySig = Util.genMySignature(getRefSession());
-
-		initPeerSigAndRecord(peerSigBytes);
-
-		_currentVersion = Util.getMaxVersion(getRefSession().connection()) + 1;
-
 		_uuidLongPartSequence = initUuidLongPartGenerator();
-
-		_inReplication = true;
 	}
 
-	protected UuidLongPartSequence _uuidLongPartSequence;
+	protected final void initEventListeners() {
+		Configuration cfg = getObjectConfig().getConfiguration();
+		cfg.setInterceptor(EmptyInterceptor.INSTANCE);
+		EventListeners eventListeners = cfg.getEventListeners();
 
-	public UuidLongPartSequence initUuidLongPartGenerator() {
-		Session _session = getRefSession();
+		eventListeners.setFlushEventListeners(createFlushEventListeners(eventListeners.getFlushEventListeners()));
+		eventListeners.setPostUpdateEventListeners(new PostUpdateEventListener[]{myPostUpdateEventListener});
+		eventListeners.setPreDeleteEventListeners(new PreDeleteEventListener[]{myPreDeleteEventListener});
 
-		final List exisitings = _session.createCriteria(UuidLongPartSequence.class).list();
-		final int count = exisitings.size();
-
-		if (count == 1)
-			return (UuidLongPartSequence) exisitings.get(0);
-		else if (count == 0) {
-			UuidLongPartSequence tmp = new UuidLongPartSequence();
-			_session.save(tmp);
-			return tmp;
-		} else
-			throw new RuntimeException("result size = " + count + ". It should be either 1 or 0");
+		eventListeners.setPostInsertEventListeners(new PostInsertEventListener[]{objectInsertedListener});
 	}
 
-	public long nextt() {
+	protected Object loadObject(HibernateObjectId hibernateObjectId) {
+		return getSession().load(hibernateObjectId.className, hibernateObjectId.hibernateId);
+	}
+
+	protected final Collection loadObject(Collection<HibernateObjectId> changedObjectIds) {
+		Set out = new HashSet();
+
+		for (HibernateObjectId hibernateObjectId : changedObjectIds)
+			out.add(loadObject(hibernateObjectId));
+
+		return out;
+	}
+
+	protected long nextt() {
 		_uuidLongPartSequence.increment();
 
 //		Serializable id = getRefSession().getIdentifier(_uuidLongPartSequence);
@@ -730,34 +521,38 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		getRefSession().createQuery("delete from " + DeletedObject.TABLE_NAME).executeUpdate();
 	}
 
-	public ObjectConfig getObjectConfig() {
-		return _objectConfig;
+	private void clearSession() {
+		getSession().clear();
 	}
 
-	protected abstract void incrementObjectVersion(PostUpdateEvent event);
-
-	public synchronized void destroy() {
-		_alive = false;
-
-		_objectSession.close();
-		_objectSessionFactory.close();
-
-		_objectTransaction = null;
-		_objectSession = null;
-		_objectSessionFactory = null;
-
-		_mappedClasses = null;
-		_dirtyRefs = null;
-
-		objRefs = null;
-		_uuidsReplicatedInThisSession = null;
-
-		_reflector = null;
-
-		destroyListeners();
+	private FlushEventListener[] createFlushEventListeners(FlushEventListener[] defaultListeners) {
+		FlushEventListener[] out;
+		final int count = defaultListeners.length;
+		out = new FlushEventListener[count + 1];
+		System.arraycopy(defaultListeners, 0, out, 0, count);
+		out[count] = myFlushEventListener;
+		return out;
 	}
 
-	protected void destroyListeners() {
+	private ReplicationReference createRefForCollection(Object collection, ReplicationReference referencingObjRef,
+			String fieldName, long uuidLong, long version) {
+		final byte[] signaturePart = referencingObjRef.uuid().getSignaturePart();
+
+		ReplicationComponentField rcf = produceReplicationComponentField(referencingObjRef.object().getClass().getName(), fieldName);
+		ReplicationComponentIdentity rci = new ReplicationComponentIdentity();
+
+		rci.setReferencingObjectField(rcf);
+		rci.setReferencingObjectUuidLongPart(referencingObjRef.uuid().getLongPart());
+		rci.setProvider(getProviderSignature(signaturePart));
+		rci.setUuidLongPart(uuidLong);
+
+		Db4oUUID uuid = new Db4oUUID(uuidLong, signaturePart);
+
+		getRefSession().save(rci);
+		return _objRefs.put(collection, uuid, version);
+	}
+
+	private void destroyListeners() {
 		EventListeners eventListeners = getObjectConfig().getConfiguration().getEventListeners();
 		FlushEventListener[] o1 = eventListeners.getFlushEventListeners();
 		FlushEventListener[] r1 = (FlushEventListener[]) ArrayUtils.removeElement(
@@ -794,29 +589,216 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		objectInsertedListener = null;
 	}
 
-	protected abstract void saveOrUpdateReplicaMetadata(ReplicationReference ref);
+	private void ensureAlive() {
+		if (!_alive)
+			throw new UnsupportedOperationException("This provider is dead because #destroy() is called");
+	}
 
-	public ObjectSet uuidsDeletedSinceLastReplication() {
-		List<DeletedObject> results = getRefSession().createCriteria(DeletedObject.class).list();
-		Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
+	private Object getFieldValue(Object refObject, String referencingObjectFieldName) {
+		final ReflectField declaredField = _reflector.forObject(refObject).getDeclaredField(referencingObjectFieldName);
 
-		for (DeletedObject doo : results) {
-			out.add(translate(doo));
+		declaredField.setAccessible();
+		final Object field = declaredField.get(refObject);
+		if (field == null) throw new NullPointerException("field cannot be null");
+
+		return field;
+	}
+
+	private Transaction getObjectTransaction() {
+		return _transaction;
+	}
+
+	private PeerSignature getPeerSignature(byte[] bytes) {
+		final List exisitingSigs = getRefSession().createCriteria(PeerSignature.class)
+				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, bytes))
+				.list();
+
+		if (exisitingSigs.size() == 1)
+			return (PeerSignature) exisitingSigs.get(0);
+		else if (exisitingSigs.size() == 0) return null;
+		else
+			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
+	}
+
+	private ReplicationRecord getRecord(PeerSignature peerSignature) {
+		Criteria criteria = getRefSession().createCriteria(ReplicationRecord.class).createCriteria("peerSignature").add(Restrictions.eq("id", new Long(peerSignature.getId())));
+
+		final List exisitingRecords = criteria.list();
+		int count = exisitingRecords.size();
+
+		if (count == 0)
+			throw new RuntimeException("Record not found. Hibernate was unable to persist the record in the last replication round");
+		else if (count > 1)
+			throw new RuntimeException("Only one Record should exist for this peer");
+		else
+			return (ReplicationRecord) exisitingRecords.get(0);
+	}
+
+	private void initMappedClasses() {
+		_mappedClasses = new HashSet();
+
+		Iterator classMappings = getObjectConfig().getConfiguration().getClassMappings();
+		while (classMappings.hasNext()) {
+			PersistentClass persistentClass = (PersistentClass) classMappings.next();
+			Class claxx = persistentClass.getMappedClass();
+
+			if (Util.skip(claxx))
+				continue;
+
+			_mappedClasses.add(persistentClass);
 		}
-		return new ObjectSetCollectionFacade(out);
 	}
 
-	protected Db4oUUID translate(DeletedObject doo) {
-		return translate(doo.getUuid());
+	private void initPeerSigAndRecord(byte[] peerSigBytes) {
+		PeerSignature existingPeerSignature = getPeerSignature(peerSigBytes);
+		if (existingPeerSignature == null) {
+			this._peerSignature = new PeerSignature(peerSigBytes);
+			getRefSession().save(this._peerSignature);
+			getRefSession().flush();
+			if (getPeerSignature(peerSigBytes) == null)
+				throw new RuntimeException("Cannot insert existingPeerSignature");
+			_replicationRecord = new ReplicationRecord();
+			_replicationRecord.setPeerSignature(_peerSignature);
+		} else {
+			this._peerSignature = existingPeerSignature;
+			_replicationRecord = getRecord(_peerSignature);
+		}
 	}
 
-	protected Db4oUUID translate(Uuid uuid) {
-		return new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes());
+	private UuidLongPartSequence initUuidLongPartGenerator() {
+		Session _session = getRefSession();
+
+		final List exisitings = _session.createCriteria(UuidLongPartSequence.class).list();
+		final int count = exisitings.size();
+
+		if (count == 1)
+			return (UuidLongPartSequence) exisitings.get(0);
+		else if (count == 0) {
+			UuidLongPartSequence tmp = new UuidLongPartSequence();
+			_session.save(tmp);
+			return tmp;
+		} else
+			throw new RuntimeException("result size = " + count + ". It should be either 1 or 0");
 	}
 
-	protected abstract Uuid getUuid(Object obj);
+	private boolean isReplicationActive() {
+		return _inReplication;
+	}
 
-	protected abstract void objectInserted(PostInsertEvent event);
+	private ReplicationReference produceCollectionReference(Object obj, Object referencingObj, String fieldName) {
+		final ReplicationReference refObjRef = produceReference(referencingObj, null, null);
+
+		if (refObjRef == null)
+			return null;
+		else {
+			ReplicationReference existingReference = produceCollectionReferenceByReferencingObjUuid(refObjRef, fieldName);
+			if (existingReference != null)
+				return existingReference;
+			else
+				return createRefForCollection(obj, refObjRef, fieldName, nextt(), _currentVersion);
+		}
+	}
+
+	private ReplicationReference produceCollectionReferenceByReferencingObjUuid(ReplicationReference refObjRef, String fieldName) {
+		Criteria criteria = getRefSession().createCriteria(ReplicationComponentIdentity.class);
+		criteria.add(Restrictions.eq("referencingObjectUuidLongPart", new Long(refObjRef.uuid().getLongPart())));
+		criteria.createCriteria("referencingObjectField").add(Restrictions.eq("referencingObjectFieldName", fieldName));
+		criteria.createCriteria("provider").add(Restrictions.eq("bytes", refObjRef.uuid().getSignaturePart()));
+
+		final List exisitings = criteria.list();
+		int count = exisitings.size();
+
+		ReplicationReference out;
+		if (count == 0) {
+			out = null;
+		} else if (count > 1) {
+			throw new RuntimeException("Only one Record should exist for this peer");
+		} else {
+			ReplicationComponentIdentity rci = (ReplicationComponentIdentity) exisitings.get(0);
+
+			final Object fieldValue = getFieldValue(refObjRef.object(), rci.getReferencingObjectField().getReferencingObjectFieldName());
+
+			final ReplicationReference cachedReference = _objRefs.get(fieldValue);
+			if (cachedReference != null) return cachedReference;
+
+			Db4oUUID fieldUuid = new Db4oUUID(rci.getUuidLongPart(), rci.getProvider().getBytes());
+			out = _objRefs.put(fieldValue, fieldUuid, refObjRef.version());
+		}
+
+		return out;
+	}
+
+	private ReplicationReference produceCollectionReferenceByUUID(Db4oUUID uuid) {
+		Criteria criteria = getRefSession().createCriteria(ReplicationComponentIdentity.class);
+		criteria.add(Restrictions.eq("uuidLongPart", new Long(uuid.getLongPart())));
+		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getSignaturePart()));
+
+		final List exisitings = criteria.list();
+		int count = exisitings.size();
+
+		ReplicationReference out;
+		if (count == 0) {
+			out = null;
+		} else if (count > 1) {
+			throw new RuntimeException("Only one Record should exist for this peer");
+		} else {
+			ReplicationComponentIdentity rci = (ReplicationComponentIdentity) exisitings.get(0);
+
+
+			Db4oUUID refObjUuid = new Db4oUUID(rci.getReferencingObjectUuidLongPart(), rci.getProvider().getBytes());
+
+			final Class hint;
+			final ReplicationComponentField referencingObjectField = rci.getReferencingObjectField();
+			try {
+				hint = Class.forName(referencingObjectField.getReferencingObjectClassName());
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			}
+
+			final ReplicationReference refObjRef = produceReferenceByUUID(refObjUuid, hint);
+			if (refObjRef == null) throw new NullPointerException("refObjRefcannot be null");
+
+			final Object field = getFieldValue(refObjRef.object(), referencingObjectField.getReferencingObjectFieldName());
+
+			ReplicationReference existing = _objRefs.get(field);
+			if (existing != null) return existing;
+
+			out = _objRefs.put(field, uuid, refObjRef.version());
+		}
+
+		return out;
+	}
+
+	private ReplicationComponentField produceReplicationComponentField(String referencingObjectClassName,
+			String referencingObjectFieldName) {
+		Criteria criteria = getRefSession().createCriteria(ReplicationComponentField.class);
+		criteria.add(Restrictions.eq("referencingObjectClassName", referencingObjectClassName));
+		criteria.add(Restrictions.eq("referencingObjectFieldName", referencingObjectFieldName));
+
+		final List exisitings = criteria.list();
+		int count = exisitings.size();
+
+		if (count == 0) {
+			ReplicationComponentField out = new ReplicationComponentField();
+			out.setReferencingObjectClassName(referencingObjectClassName);
+			out.setReferencingObjectFieldName(referencingObjectFieldName);
+			getRefSession().save(out);
+
+			//Double-check, you know Hibernate sometimes fail to save an object.
+			return produceReplicationComponentField(referencingObjectClassName, referencingObjectFieldName);
+		} else if (count > 1) {
+			throw new RuntimeException("Only one Record should exist for this peer");
+		} else {
+			return (ReplicationComponentField) exisitings.get(0);
+		}
+	}
+
+	private ReplicationReference referenceClonedCollection(Object obj, ReplicationReference counterpartReference,
+			ReplicationReference referencingObjRef, String fieldName) {
+		return createRefForCollection(obj, referencingObjRef, fieldName, counterpartReference.uuid().getLongPart(), counterpartReference.version());
+	}
+
+// -------------------------- INNER CLASSES --------------------------
 
 	final class MyFlushEventListener implements FlushEventListener {
 		public final void onFlush(FlushEvent event) throws HibernateException {
@@ -844,13 +826,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	final class MyPreDeleteEventListener implements PreDeleteEventListener {
-		private void addToDeletedObjects(PreDeleteEvent event) {
-			Uuid uuid = getUuid(event.getEntity());
-			DeletedObject deletedObject = new DeletedObject();
-			deletedObject.setUuid(uuid);
-			getRefSession().save(deletedObject);
-		}
-
 		public boolean onPreDelete(PreDeleteEvent event) {
 			boolean ret = false;
 
@@ -860,6 +835,13 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			addToDeletedObjects(event);
 
 			return ret;
+		}
+
+		private void addToDeletedObjects(PreDeleteEvent event) {
+			Uuid uuid = getUuid(event.getEntity());
+			DeletedObject deletedObject = new DeletedObject();
+			deletedObject.setUuid(uuid);
+			getRefSession().save(deletedObject);
 		}
 	}
 

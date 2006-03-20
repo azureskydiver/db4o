@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Shared {
+// -------------------------- STATIC METHODS --------------------------
 
 	public static long getVersion(Configuration cfg, Session session, Object obj) {
 		Connection connection = session.connection();

@@ -3,6 +3,8 @@ package com.db4o.replication.hibernate.impl.ref_as_columns;
 import java.sql.Types;
 
 public class Db4oColumns {
+// ------------------------------ FIELDS ------------------------------
+
 	/**
 	 * Column of the version number of an object.
 	 */
@@ -19,10 +21,14 @@ public class Db4oColumns {
 
 	public final int type;
 
+// --------------------------- CONSTRUCTORS ---------------------------
+
 	private Db4oColumns(String name, int sqlType) {
 		this.name = name;
 		this.type = sqlType;
 	}
+
+// ------------------------ CANONICAL METHODS ------------------------
 
 	public String toString() {
 		System.err.println("you shouldn't call this method. a bug? ");

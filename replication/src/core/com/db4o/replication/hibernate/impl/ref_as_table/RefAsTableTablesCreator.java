@@ -7,14 +7,22 @@ import org.hibernate.cfg.Environment;
 import org.hibernate.tool.hbm2ddl.SchemaValidator;
 
 public class RefAsTableTablesCreator implements TablesCreator {
+// ------------------------------ FIELDS ------------------------------
+
 	RefConfig cfg;
 
 	protected SchemaValidator validator;
+
+// --------------------------- CONSTRUCTORS ---------------------------
 
 	public RefAsTableTablesCreator(RefConfig aCfg) {
 		cfg = aCfg;
 		validator = new SchemaValidator(cfg.getConfiguration());
 	}
+
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface TablesCreator ---------------------
 
 	/**
 	 * @throws RuntimeException when tables/columns not found

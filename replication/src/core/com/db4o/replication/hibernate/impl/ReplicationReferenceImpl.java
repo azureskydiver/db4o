@@ -5,11 +5,19 @@ import com.db4o.inside.replication.ReplicationReference;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class ReplicationReferenceImpl implements ReplicationReference {
+// ------------------------------ FIELDS ------------------------------
+
 	private Object obj;
 	private final Db4oUUID uuid;
 	private long version;
 	private Object counterPart;
 	private boolean markedForReplicating;
+
+	public boolean isMarkedForReplicating() {
+		return markedForReplicating;
+	}
+
+// --------------------------- CONSTRUCTORS ---------------------------
 
 	public ReplicationReferenceImpl(Object obj, Db4oUUID uuid, long version) {
 		this.obj = obj;
@@ -17,21 +25,7 @@ public class ReplicationReferenceImpl implements ReplicationReference {
 		this.version = version;
 	}
 
-	public void setObject(Object obj) {
-		this.obj = obj;
-	}
-
-	public Object object() {
-		return obj;
-	}
-
-	public long version() {
-		return version;
-	}
-
-	public Db4oUUID uuid() {
-		return uuid;
-	}
+// ------------------------ CANONICAL METHODS ------------------------
 
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -53,22 +47,6 @@ public class ReplicationReferenceImpl implements ReplicationReference {
 		return result;
 	}
 
-	public Object counterpart() {
-		return counterPart;
-	}
-
-	public void setCounterpart(Object obj) {
-		counterPart = obj;
-	}
-
-	public void markForReplicating() {
-		markedForReplicating = true;
-	}
-
-	public boolean isMarkedForReplicating() {
-		return markedForReplicating;
-	}
-
 	public String toString() {
 		return new ToStringBuilder(this).
 				append("className", obj).
@@ -77,5 +55,38 @@ public class ReplicationReferenceImpl implements ReplicationReference {
 				append("counterPart", counterPart).
 				append("markedForReplicating", markedForReplicating).
 				toString();
+	}
+
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface ReplicationReference ---------------------
+
+
+	public Object counterpart() {
+		return counterPart;
+	}
+
+	public void markForReplicating() {
+		markedForReplicating = true;
+	}
+
+	public Object object() {
+		return obj;
+	}
+
+	public void setCounterpart(Object obj) {
+		counterPart = obj;
+	}
+
+	public Db4oUUID uuid() {
+		return uuid;
+	}
+
+	public long version() {
+		return version;
+	}
+
+	public void setObject(Object obj) {
+		this.obj = obj;
 	}
 }

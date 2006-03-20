@@ -9,6 +9,10 @@ import org.hibernate.event.PostUpdateEventListener;
 import java.io.Serializable;
 
 public class RefAsTableUpdateEventListener extends AbstractUpdateEventListener {
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface UpdateEventListener ---------------------
+
 	public void configure(Configuration cfg) {
 		new RefAsTableTablesCreator(RefAsTableConfiguration.produce(cfg)).createTables();
 		cfg.setInterceptor(this);

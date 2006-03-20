@@ -3,13 +3,11 @@ package com.db4o.replication.hibernate.metadata;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 public class ReplicationComponentField {
+// ------------------------------ FIELDS ------------------------------
+
 	public static final String TABLE_NAME = "ReplicationComponentField";
 
 	private String referencingObjectClassName;
-	private String referencingObjectFieldName;
-
-	public ReplicationComponentField() {
-	}
 
 	public String getReferencingObjectClassName() {
 		return referencingObjectClassName;
@@ -19,6 +17,8 @@ public class ReplicationComponentField {
 		this.referencingObjectClassName = referencingObjectClassName;
 	}
 
+	private String referencingObjectFieldName;
+
 	public String getReferencingObjectFieldName() {
 		return referencingObjectFieldName;
 	}
@@ -26,6 +26,13 @@ public class ReplicationComponentField {
 	public void setReferencingObjectFieldName(String referencingObjectFieldName) {
 		this.referencingObjectFieldName = referencingObjectFieldName;
 	}
+
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public ReplicationComponentField() {
+	}
+
+// ------------------------ CANONICAL METHODS ------------------------
 
 	public boolean equals(Object o) {
 		if (this == o) return true;

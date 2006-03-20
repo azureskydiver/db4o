@@ -6,6 +6,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import java.util.Arrays;
 
 public class ReplicationProviderSignature implements ReadonlyReplicationProviderSignature {
+// ------------------------------ FIELDS ------------------------------
 
 	/**
 	 * Table for storing ReplicationProviderSignature byte[].
@@ -21,17 +22,15 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 
 	private byte[] bytes;
 
-	private long id;
-
-	private long creationTime;
-
-	public ReplicationProviderSignature() {
+	public byte[] getBytes() {
+		return bytes;
 	}
 
-	public ReplicationProviderSignature(byte[] signature) {
+	public void setBytes(byte[] signature) {
 		this.bytes = signature;
-		this.creationTime = System.currentTimeMillis();
 	}
+
+	private long id;
 
 	public long getId() {
 		return id;
@@ -41,13 +40,7 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 		this.id = id;
 	}
 
-	public byte[] getBytes() {
-		return bytes;
-	}
-
-	public void setBytes(byte[] signature) {
-		this.bytes = signature;
-	}
+	private long creationTime;
 
 	public long getCreationTime() {
 		return creationTime;
@@ -56,6 +49,18 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 	public void setCreationTime(long creationTime) {
 		this.creationTime = creationTime;
 	}
+
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public ReplicationProviderSignature() {
+	}
+
+	public ReplicationProviderSignature(byte[] signature) {
+		this.bytes = signature;
+		this.creationTime = System.currentTimeMillis();
+	}
+
+// ------------------------ CANONICAL METHODS ------------------------
 
 	public boolean equals(Object o) {
 		if (this == o) return true;

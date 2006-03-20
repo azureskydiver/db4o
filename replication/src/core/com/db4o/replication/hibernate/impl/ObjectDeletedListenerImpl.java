@@ -15,10 +15,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class ObjectDeletedListenerImpl implements ObjectDeletedListener {
+// ------------------------------ FIELDS ------------------------------
+
 	protected final Map<Thread, Session> threadSessionMap = new HashMap();
+
+// --------------------------- CONSTRUCTORS ---------------------------
 
 	public ObjectDeletedListenerImpl() {
 	}
+
+// --------------------- GETTER / SETTER METHODS ---------------------
+
+	protected final Session getSession() {
+		Session session = threadSessionMap.get(Thread.currentThread());
+
+		if (session == null)
+			throw new RuntimeException("Unable to delete the replication reference of an object. Did you forget to call ReplicationConfigurator.refAsTableInstall(session, cfg) after opening a session?");
+		return session;
+	}
+
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface ObjectDeletedListener ---------------------
 
 	public void configure(Configuration cfg) {
 		EventListeners eventListeners = cfg.getEventListeners();
@@ -29,10 +47,16 @@ public abstract class ObjectDeletedListenerImpl implements ObjectDeletedListener
 		threadSessionMap.put(Thread.currentThread(), session);
 	}
 
+// --------------------- Interface PostDeleteEventListener ---------------------
+
+
 	public void onPostDelete(PostDeleteEvent event) {
 		insertDeleteRecord(event);
-
 	}
+
+// -------------------------- OTHER METHODS --------------------------
+
+	protected abstract Uuid getUuid(PostDeleteEvent event);
 
 	private void insertDeleteRecord(PostDeleteEvent event) {
 		Object entity = event.getEntity();
@@ -51,15 +75,5 @@ public abstract class ObjectDeletedListenerImpl implements ObjectDeletedListener
 		//ref.setHibernateObjectId(id);
 		ref.setVersion(Constants.MIN_VERSION_NO);
 		getSession().save(ref);
-	}
-
-	protected abstract Uuid getUuid(PostDeleteEvent event);
-
-	protected final Session getSession() {
-		Session session = threadSessionMap.get(Thread.currentThread());
-
-		if (session == null)
-			throw new RuntimeException("Unable to delete the replication reference of an object. Did you forget to call ReplicationConfigurator.refAsTableInstall(session, cfg) after opening a session?");
-		return session;
 	}
 }

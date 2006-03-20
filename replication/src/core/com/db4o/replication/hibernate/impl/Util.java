@@ -11,6 +11,8 @@ import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
 import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
+import com.db4o.replication.hibernate.metadata.Uuid;
+import com.db4o.ext.Db4oUUID;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
@@ -26,15 +28,16 @@ import java.sql.Types;
 import java.util.List;
 
 public class Util {
+// -------------------------- STATIC METHODS --------------------------
 
-	public static boolean skip(Object obj) {
-		return obj instanceof ReplicationRecord
-				|| obj instanceof ReadonlyReplicationProviderSignature
-				|| obj instanceof ReplicationComponentField
-				|| obj instanceof ReplicationComponentIdentity
-				|| obj instanceof UuidLongPartSequence
-				|| obj instanceof ObjectReference
-				|| obj instanceof DeletedObject;
+	public static boolean skip(Table table) {
+		return table.getName().equals(ReplicationProviderSignature.TABLE_NAME)
+				|| table.getName().equals(ReplicationRecord.TABLE_NAME)
+				|| table.getName().equals(ReplicationComponentField.TABLE_NAME)
+				|| table.getName().equals(ReplicationComponentIdentity.TABLE_NAME)
+				|| table.getName().equals(UuidLongPartSequence.TABLE_NAME)
+				|| table.getName().equals(ObjectReference.TABLE_NAME)
+				|| table.getName().equals(DeletedObject.TABLE_NAME);
 	}
 
 	public static boolean skip(Class claxx) {
@@ -49,14 +52,14 @@ public class Util {
 				|| claxx == DeletedObject.class;
 	}
 
-	public static boolean skip(Table table) {
-		return table.getName().equals(ReplicationProviderSignature.TABLE_NAME)
-				|| table.getName().equals(ReplicationRecord.TABLE_NAME)
-				|| table.getName().equals(ReplicationComponentField.TABLE_NAME)
-				|| table.getName().equals(ReplicationComponentIdentity.TABLE_NAME)
-				|| table.getName().equals(UuidLongPartSequence.TABLE_NAME)
-				|| table.getName().equals(ObjectReference.TABLE_NAME)
-				|| table.getName().equals(DeletedObject.TABLE_NAME);
+	public static boolean skip(Object obj) {
+		return obj instanceof ReplicationRecord
+				|| obj instanceof ReadonlyReplicationProviderSignature
+				|| obj instanceof ReplicationComponentField
+				|| obj instanceof ReplicationComponentIdentity
+				|| obj instanceof UuidLongPartSequence
+				|| obj instanceof ObjectReference
+				|| obj instanceof DeletedObject;
 	}
 
 	public static Statement getStatement(Connection connection) {
@@ -110,8 +113,8 @@ public class Util {
 			cfg.setProperty(key, "thread");
 	}
 
-	public static void dumpTable(String providerName, Session sess, String tableName) {
-		dumpTable(providerName, sess.connection(), tableName);
+	public static void dumpTable(HibernateReplicationProvider p, String s) {
+		dumpTable(p.getName(), p.getSession(), s);
 	}
 
 	public static void dumpTable(String providerName, Connection con, String tableName) {
@@ -139,6 +142,10 @@ public class Util {
 		} finally {
 			closeResultSet(rs);
 		}
+	}
+
+	public static void dumpTable(String providerName, Session sess, String tableName) {
+		dumpTable(providerName, sess.connection(), tableName);
 	}
 
 	public static void closePreparedStatement(PreparedStatement ps) {
@@ -176,10 +183,6 @@ public class Util {
 			cfg.addClass(aClass);
 	}
 
-	public static void dumpTable(HibernateReplicationProvider p, String s) {
-		dumpTable(p.getName(), p.getSession(), s);
-	}
-
 	public static MySignature genMySignature(Session session) {
 		final List sigs = session.createCriteria(MySignature.class).list();
 		final int mySigCount = sigs.size();
@@ -192,5 +195,30 @@ public class Util {
 			return (MySignature) sigs.get(0);
 		else
 			throw new RuntimeException("Number of MySignature should be exactly 1, but i got " + mySigCount);
+	}
+
+	protected static String flattenBytes(byte[] b) {
+		String out = "";
+		for (int i = 0; i < b.length; i++) {
+			out += ", " + b[i];
+		}
+		return out;
+	}
+
+	protected static void sleep(int i, String s) {
+		System.out.println(s);
+		try {
+			Thread.sleep(i * 1000);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+
+	public static Db4oUUID translate(Uuid uuid) {
+		return new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes());
+	}
+
+	public static Db4oUUID translate(DeletedObject doo) {
+		return translate(doo.getUuid());
 	}
 }

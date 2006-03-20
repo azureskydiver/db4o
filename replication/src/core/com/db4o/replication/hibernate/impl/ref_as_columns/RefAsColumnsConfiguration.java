@@ -6,7 +6,11 @@ import org.hibernate.cfg.Configuration;
 import java.util.HashMap;
 
 public class RefAsColumnsConfiguration extends RefConfig {
+// ------------------------------ FIELDS ------------------------------
+
 	private static HashMap<Configuration, RefAsColumnsConfiguration> cache = new HashMap<Configuration, RefAsColumnsConfiguration>();
+
+// -------------------------- STATIC METHODS --------------------------
 
 	public static RefAsColumnsConfiguration produce(Configuration cfg) {
 		RefAsColumnsConfiguration exist = cache.get(cfg);
@@ -17,6 +21,8 @@ public class RefAsColumnsConfiguration extends RefConfig {
 		cache.put(cfg, rc);
 		return rc;
 	}
+
+// --------------------------- CONSTRUCTORS ---------------------------
 
 	private RefAsColumnsConfiguration(Configuration aCfg) {
 		configuration = aCfg;

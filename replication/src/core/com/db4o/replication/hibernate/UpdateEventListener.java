@@ -10,13 +10,20 @@ import org.hibernate.event.PostUpdateEventListener;
 import java.io.Serializable;
 
 public interface UpdateEventListener extends Interceptor, PostUpdateEventListener {
-	public void onPostUpdate(PostUpdateEvent event);
+// ------------------------ INTERFACE METHODS ------------------------
 
-	public void onCollectionRemove(Object collection, Serializable key) throws CallbackException;
+// --------------------- Interface Interceptor ---------------------
+
 
 	public void onCollectionRecreate(Object collection, Serializable key) throws CallbackException;
 
+	public void onCollectionRemove(Object collection, Serializable key) throws CallbackException;
+
 	public void onCollectionUpdate(Object collection, Serializable key) throws CallbackException;
+
+// --------------------- Interface PostUpdateEventListener ---------------------
+
+	public void onPostUpdate(PostUpdateEvent event);
 
 	void configure(Configuration cfg);
 

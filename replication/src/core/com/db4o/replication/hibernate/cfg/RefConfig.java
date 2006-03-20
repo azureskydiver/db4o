@@ -11,8 +11,28 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.dialect.Dialect;
 
 public class RefConfig {
+// ------------------------------ FIELDS ------------------------------
+
 	protected Configuration configuration;
+
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
 	protected Dialect dialect;
+
+	public Dialect getDialect() {
+		return dialect;
+	}
+
+	protected void addClasses() {
+		Util.addClass(configuration, ReplicationProviderSignature.class);
+		Util.addClass(configuration, ReplicationRecord.class);
+		Util.addClass(configuration, ReplicationComponentIdentity.class);
+		Util.addClass(configuration, ReplicationComponentField.class);
+		Util.addClass(configuration, UuidLongPartSequence.class);
+		Util.addClass(configuration, DeletedObject.class);
+	}
 
 	protected void init() {
 		configuration.setProperty("hibernate.format_sql", "true");
@@ -25,23 +45,6 @@ public class RefConfig {
 
 		addClasses();
 		dialect = Dialect.getDialect(configuration.getProperties());
-	}
-
-	protected void addClasses() {
-		Util.addClass(configuration, ReplicationProviderSignature.class);
-		Util.addClass(configuration, ReplicationRecord.class);
-		Util.addClass(configuration, ReplicationComponentIdentity.class);
-		Util.addClass(configuration, ReplicationComponentField.class);
-		Util.addClass(configuration, UuidLongPartSequence.class);
-		Util.addClass(configuration, DeletedObject.class);
-	}
-
-	public Configuration getConfiguration() {
-		return configuration;
-	}
-
-	public Dialect getDialect() {
-		return dialect;
 	}
 
 	public String getType(int sqlType) {
