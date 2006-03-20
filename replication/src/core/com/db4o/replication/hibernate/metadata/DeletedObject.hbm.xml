@@ -35,7 +35,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		<natural-id mutable="false">
 			<component name="uuid">
 				<property name="longPart" column="longPart"/>
-				<many-to-one name="provider" column="provider"/>
+				<many-to-one name="provider" column="provider" cascade="none"/>
 			</component>
 		</natural-id>
 	</class>

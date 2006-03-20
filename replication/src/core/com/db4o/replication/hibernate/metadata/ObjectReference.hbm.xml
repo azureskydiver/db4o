@@ -39,7 +39,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 		<component name="uuid" unique="true">
 			<property name="longPart" column="longPart"/>
-			<many-to-one name="provider" column="provider"/>
+			<many-to-one name="provider" column="provider" cascade="none"/>
 		</component>
 
 		<property name="version" column="version"/>

@@ -20,6 +20,7 @@ import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.event.PostInsertEvent;
 import org.hibernate.event.PostUpdateEvent;
+import org.hibernate.event.PreDeleteEvent;
 import org.hibernate.mapping.PersistentClass;
 
 import java.io.Serializable;
@@ -61,7 +62,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 	protected Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
 		List<String> classNames = getTypeClassNames(persistentClass);
 
-		Criteria criteria = getRefSession().createCriteria(ObjectReference.class);
+		Criteria criteria = getSession().createCriteria(ObjectReference.class);
 		criteria.add(Restrictions.gt(ObjectReference.VERSION, getLastReplicationVersion()));
 		final Criterion nestedOr = build(classNames, ObjectReference.CLASS_NAME);
 		criteria.add(nestedOr);
@@ -77,9 +78,9 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		return loadObject(ids);
 	}
 
-	protected ObjectReference getRefById(Object obj) {
+	protected ObjectReference getObjectReferenceById(Object obj) {
 		Serializable id = getSession().getIdentifier(obj);
-		Criteria criteria = getRefSession().createCriteria(ObjectReference.class);
+		Criteria criteria = getSession().createCriteria(ObjectReference.class);
 		criteria.add(Restrictions.eq(ObjectReference.OBJECT_ID, id));
 		criteria.add(Restrictions.eq(ObjectReference.CLASS_NAME, obj.getClass().getName()));
 		List list = criteria.list();
@@ -96,12 +97,8 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		return _refCfg;
 	}
 
-	protected Session getRefSession() {
-		return getSession();
-	}
-
 	protected Uuid getUuid(Object obj) {
-		return getRefById(obj).getUuid();
+		return getObjectReferenceById(obj).getUuid();
 	}
 
 	protected void incrementObjectVersion(PostUpdateEvent event) {
@@ -109,20 +106,20 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		final Object entity = event.getEntity();
 		final long id = Shared.castAsLong(event.getId());
 
-		final Session sess = getRefSession();
+		final Session sess = getSession();
 		Shared.incrementObjectVersion(sess, entity, id);
 	}
 
 	protected void objectInserted(PostInsertEvent event) {
 		long id = Shared.castAsLong(event.getId());
-		Session s = getRefSession();
+		Session s = getSession();
 
 		ObjectReference ref = new ObjectReference();
 		ref.setClassName(event.getEntity().getClass().getName());
 		ref.setObjectId(id);
 
 		Uuid uuid = new Uuid();
-		uuid.setLongPart(nextt());
+		uuid.setLongPart(uuidGenerator.next());
 		uuid.setProvider(_mySig);
 		ref.setUuid(uuid);
 
@@ -134,7 +131,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 	protected ReplicationReference produceObjectReference(Object obj) {
 		if (!getSession().contains(obj)) return null;
 
-		final ObjectReference ref = getRefById(obj);
+		final ObjectReference ref = getObjectReferenceById(obj);
 
 		if (ref == null) throw new RuntimeException("ObjectReference must exist for " + obj);
 
@@ -148,7 +145,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		String queryString = "from " + ObjectReference.TABLE_NAME
 				+ " as " + alias + " where " + uuidPath + Uuid.LONG_PART + "=?"
 				+ " AND " + uuidPath + Uuid.PROVIDER + "." + ReplicationProviderSignature.BYTES + "=?";
-		Query c = getRefSession().createQuery(queryString);
+		Query c = getSession().createQuery(queryString);
 		c.setLong(0, uuid.getLongPart());
 		c.setBinary(1, uuid.getSignaturePart());
 
@@ -172,9 +169,9 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		final Object obj = ref.object();
 
 		final long id = Shared.castAsLong(getSession().getIdentifier(obj));
-		final Session s = getRefSession();
+		final Session s = getSession();
 
-		final ObjectReference exist = getRefById(obj);
+		final ObjectReference exist = getObjectReferenceById(obj);
 		if (exist == null) {
 			ReplicationProviderSignature provider = getProviderSignature(ref.uuid().getSignaturePart());
 
@@ -215,5 +212,14 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 			}
 		}
 		return out;
+	}
+
+	protected void objectToBeDeleted(PreDeleteEvent event) {
+		super.objectToBeDeleted(event);
+		ObjectReference ref = getObjectReferenceById(event.getEntity());
+
+		if (ref == null) throw new RuntimeException("ObjectReference must exist");
+
+		getSession().delete(ref);
 	}
 }

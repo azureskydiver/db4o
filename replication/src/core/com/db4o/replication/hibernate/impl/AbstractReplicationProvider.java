@@ -21,7 +21,6 @@ import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
 import com.db4o.replication.hibernate.metadata.Uuid;
-import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Criteria;
 import org.hibernate.EmptyInterceptor;
@@ -79,6 +78,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	 */
 	private PeerSignature _peerSignature;
 
+	protected UuidGenerator uuidGenerator;
+
 	private Set<PersistentClass> _mappedClasses;
 
 	private FlushEventListener myFlushEventListener = new MyFlushEventListener();
@@ -106,8 +107,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	private Set _uuidsReplicatedInThisSession = new HashSet();
 
 	private Reflector _reflector = ReplicationReflector.getInstance().reflector();
-
-	private UuidLongPartSequence _uuidLongPartSequence;
 
 	/**
 	 * Objects which meta data not yet updated.
@@ -157,7 +156,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	public final ObjectSet uuidsDeletedSinceLastReplication() {
-		List<DeletedObject> results = getRefSession().createCriteria(DeletedObject.class).list();
+		List<DeletedObject> results = getSession().createCriteria(DeletedObject.class).list();
 		Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
 
 		for (DeletedObject doo : results) {
@@ -302,15 +301,19 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		getObjectTransaction().commit();
 		_transaction = getSession().beginTransaction();
 
-		_mySig = Util.genMySignature(getRefSession());
+		_mySig = Util.genMySignature(getSession());
 
 		initPeerSigAndRecord(peerSigBytes);
 
-		_currentVersion = Util.getMaxVersion(getRefSession().connection()) + 1;
+		_currentVersion = Util.getMaxVersion(getSession().connection()) + 1;
 
-		_uuidLongPartSequence = initUuidLongPartGenerator();
+		initUuidGenerator();
 
 		_inReplication = true;
+	}
+
+	private void initUuidGenerator() {
+		uuidGenerator = new UuidGenerator(getSession());
 	}
 
 	public final void storeReplica(Object entity) {
@@ -345,8 +348,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			throw new RuntimeException("version must be great than " + Constants.MIN_VERSION_NO);
 
 		_replicationRecord.setVersion(version);
-		getRefSession().saveOrUpdate(_replicationRecord);
-		getRefSession().flush();
+		getSession().saveOrUpdate(_replicationRecord);
+		getSession().flush();
 		if (getRecord(_peerSignature).getVersion() != version)
 			throw new RuntimeException("The version numbers of persisted record does not match the parameter");
 	}
@@ -373,7 +376,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		getObjectTransaction().commit();
 		clearSession();
 		_transaction = getSession().beginTransaction();
-		_uuidLongPartSequence = initUuidLongPartGenerator();
+		initUuidGenerator();
 	}
 
 	public final void delete(Object obj) {
@@ -422,8 +425,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected abstract RefConfig getRefConfig();
 
-	protected abstract Session getRefSession();
-
 	protected abstract Uuid getUuid(Object obj);
 
 	protected abstract void incrementObjectVersion(PostUpdateEvent event);
@@ -448,10 +449,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			throw new UnsupportedOperationException("Method not supported because replication transaction is active");
 	}
 
-	protected final ReplicationProviderSignature getById(long sigId) {
-		return (ReplicationProviderSignature) getRefSession().get(ReplicationProviderSignature.class, new Long(sigId));
-	}
-
 	protected long getLastReplicationVersion() {
 		ensureReplicationActive();
 
@@ -463,7 +460,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	protected ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
-		final List exisitingSigs = getRefSession().createCriteria(ReadonlyReplicationProviderSignature.class)
+		final List exisitingSigs = getSession().createCriteria(ReadonlyReplicationProviderSignature.class)
 				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, signaturePart))
 				.list();
 		if (exisitingSigs.size() == 1)
@@ -479,8 +476,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected final void init() {
 		initMappedClasses();
-		_mySig = Util.genMySignature(getRefSession());
-		_uuidLongPartSequence = initUuidLongPartGenerator();
+		_mySig = Util.genMySignature(getSession());
+		initUuidGenerator();
 	}
 
 	protected final void initEventListeners() {
@@ -508,17 +505,21 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		return out;
 	}
 
-	protected long nextt() {
-		_uuidLongPartSequence.increment();
 
-//		Serializable id = getRefSession().getIdentifier(_uuidLongPartSequence);
-//		System.out.println("id = " + id);
+	protected void objectToBeDeleted(PreDeleteEvent event) {
+		deleteReplicationComponentIdentity(event);
+		addDeletedObject(event);
+	}
 
-		return _uuidLongPartSequence.getCurrent();
+	private void addDeletedObject(PreDeleteEvent event) {
+		Uuid uuid = getUuid(event.getEntity());
+		DeletedObject deletedObject = new DeletedObject();
+		deletedObject.setUuid(uuid);
+		getSession().save(deletedObject);
 	}
 
 	private void clearDeletedUuids() {
-		getRefSession().createQuery("delete from " + DeletedObject.TABLE_NAME).executeUpdate();
+		getSession().createQuery("delete from " + DeletedObject.TABLE_NAME).executeUpdate();
 	}
 
 	private void clearSession() {
@@ -548,8 +549,15 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 		Db4oUUID uuid = new Db4oUUID(uuidLong, signaturePart);
 
-		getRefSession().save(rci);
+		getSession().save(rci);
 		return _objRefs.put(collection, uuid, version);
+	}
+
+	private void deleteReplicationComponentIdentity(PreDeleteEvent event) {
+		ReplicationReference replicationReference = produceObjectReference(event.getEntity());
+		ReplicationComponentIdentity rci = getReplicationComponentIdentityByRefObjUuid(translate(replicationReference.uuid()));
+
+		if (rci != null) delete(rci);
 	}
 
 	private void destroyListeners() {
@@ -609,7 +617,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	private PeerSignature getPeerSignature(byte[] bytes) {
-		final List exisitingSigs = getRefSession().createCriteria(PeerSignature.class)
+		final List exisitingSigs = getSession().createCriteria(PeerSignature.class)
 				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, bytes))
 				.list();
 
@@ -621,7 +629,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	private ReplicationRecord getRecord(PeerSignature peerSignature) {
-		Criteria criteria = getRefSession().createCriteria(ReplicationRecord.class).createCriteria("peerSignature").add(Restrictions.eq("id", new Long(peerSignature.getId())));
+		Criteria criteria = getSession().createCriteria(ReplicationRecord.class).createCriteria("peerSignature").add(Restrictions.eq("id", new Long(peerSignature.getId())));
 
 		final List exisitingRecords = criteria.list();
 		int count = exisitingRecords.size();
@@ -632,6 +640,22 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			throw new RuntimeException("Only one Record should exist for this peer");
 		else
 			return (ReplicationRecord) exisitingRecords.get(0);
+	}
+
+	private ReplicationComponentIdentity getReplicationComponentIdentityByRefObjUuid(Uuid uuid) {
+		Criteria criteria = getSession().createCriteria(ReplicationComponentIdentity.class);
+		criteria.add(Restrictions.eq("referencingObjectUuidLongPart", uuid.getLongPart()));
+		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getProvider().getBytes()));
+
+		final List exisitings = criteria.list();
+		int count = exisitings.size();
+
+		if (count == 0)
+			return null;
+		else if (count > 1)
+			throw new RuntimeException("Duplicated ReplicationComponentIdentity");
+		else
+			return (ReplicationComponentIdentity) exisitings.get(0);
 	}
 
 	private void initMappedClasses() {
@@ -653,8 +677,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		PeerSignature existingPeerSignature = getPeerSignature(peerSigBytes);
 		if (existingPeerSignature == null) {
 			this._peerSignature = new PeerSignature(peerSigBytes);
-			getRefSession().save(this._peerSignature);
-			getRefSession().flush();
+			getSession().save(this._peerSignature);
+			getSession().flush();
 			if (getPeerSignature(peerSigBytes) == null)
 				throw new RuntimeException("Cannot insert existingPeerSignature");
 			_replicationRecord = new ReplicationRecord();
@@ -663,22 +687,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			this._peerSignature = existingPeerSignature;
 			_replicationRecord = getRecord(_peerSignature);
 		}
-	}
-
-	private UuidLongPartSequence initUuidLongPartGenerator() {
-		Session _session = getRefSession();
-
-		final List exisitings = _session.createCriteria(UuidLongPartSequence.class).list();
-		final int count = exisitings.size();
-
-		if (count == 1)
-			return (UuidLongPartSequence) exisitings.get(0);
-		else if (count == 0) {
-			UuidLongPartSequence tmp = new UuidLongPartSequence();
-			_session.save(tmp);
-			return tmp;
-		} else
-			throw new RuntimeException("result size = " + count + ". It should be either 1 or 0");
 	}
 
 	private boolean isReplicationActive() {
@@ -695,12 +703,12 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			if (existingReference != null)
 				return existingReference;
 			else
-				return createRefForCollection(obj, refObjRef, fieldName, nextt(), _currentVersion);
+				return createRefForCollection(obj, refObjRef, fieldName, uuidGenerator.next(), _currentVersion);
 		}
 	}
 
 	private ReplicationReference produceCollectionReferenceByReferencingObjUuid(ReplicationReference refObjRef, String fieldName) {
-		Criteria criteria = getRefSession().createCriteria(ReplicationComponentIdentity.class);
+		Criteria criteria = getSession().createCriteria(ReplicationComponentIdentity.class);
 		criteria.add(Restrictions.eq("referencingObjectUuidLongPart", new Long(refObjRef.uuid().getLongPart())));
 		criteria.createCriteria("referencingObjectField").add(Restrictions.eq("referencingObjectFieldName", fieldName));
 		criteria.createCriteria("provider").add(Restrictions.eq("bytes", refObjRef.uuid().getSignaturePart()));
@@ -729,7 +737,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	private ReplicationReference produceCollectionReferenceByUUID(Db4oUUID uuid) {
-		Criteria criteria = getRefSession().createCriteria(ReplicationComponentIdentity.class);
+		Criteria criteria = getSession().createCriteria(ReplicationComponentIdentity.class);
 		criteria.add(Restrictions.eq("uuidLongPart", new Long(uuid.getLongPart())));
 		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getSignaturePart()));
 
@@ -771,7 +779,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	private ReplicationComponentField produceReplicationComponentField(String referencingObjectClassName,
 			String referencingObjectFieldName) {
-		Criteria criteria = getRefSession().createCriteria(ReplicationComponentField.class);
+		Criteria criteria = getSession().createCriteria(ReplicationComponentField.class);
 		criteria.add(Restrictions.eq("referencingObjectClassName", referencingObjectClassName));
 		criteria.add(Restrictions.eq("referencingObjectFieldName", referencingObjectFieldName));
 
@@ -782,7 +790,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			ReplicationComponentField out = new ReplicationComponentField();
 			out.setReferencingObjectClassName(referencingObjectClassName);
 			out.setReferencingObjectFieldName(referencingObjectFieldName);
-			getRefSession().save(out);
+			getSession().save(out);
 
 			//Double-check, you know Hibernate sometimes fail to save an object.
 			return produceReplicationComponentField(referencingObjectClassName, referencingObjectFieldName);
@@ -796,6 +804,13 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	private ReplicationReference referenceClonedCollection(Object obj, ReplicationReference counterpartReference,
 			ReplicationReference referencingObjRef, String fieldName) {
 		return createRefForCollection(obj, referencingObjRef, fieldName, counterpartReference.uuid().getLongPart(), counterpartReference.version());
+	}
+
+	private Uuid translate(Db4oUUID db4oUUID) {
+		Uuid uuid = new Uuid();
+		uuid.setLongPart(db4oUUID.getLongPart());
+		uuid.setProvider(getProviderSignature(db4oUUID.getSignaturePart()));
+		return uuid;
 	}
 
 // -------------------------- INNER CLASSES --------------------------
@@ -832,16 +847,9 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			if (isReplicationActive()) return ret;
 			if (Util.skip(event.getEntity())) return ret;
 
-			addToDeletedObjects(event);
+			objectToBeDeleted(event);
 
 			return ret;
-		}
-
-		private void addToDeletedObjects(PreDeleteEvent event) {
-			Uuid uuid = getUuid(event.getEntity());
-			DeletedObject deletedObject = new DeletedObject();
-			deletedObject.setUuid(uuid);
-			getRefSession().save(deletedObject);
 		}
 	}
 

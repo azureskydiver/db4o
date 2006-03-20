@@ -13,7 +13,6 @@ import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import org.hibernate.FlushMode;
-import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.event.PostInsertEvent;
 import org.hibernate.event.PostUpdateEvent;
@@ -104,10 +103,6 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		return getRefCfg();
 	}
 
-	protected Session getRefSession() {
-		return getSession();
-	}
-
 	protected Uuid getUuid(Object obj) {
 		return (Uuid) getUuidAndVersion(obj)[0];
 	}
@@ -117,30 +112,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		String pkColumn = getObjectConfig().getPrimaryKeyColumnName(obj);
 		Serializable identifier = getSession().getIdentifier(obj);
 
-		String sql = "SELECT "
-				+ Db4oColumns.VERSION.name
-				+ ", " + Db4oColumns.UUID_LONG_PART.name
-				+ ", " + Db4oColumns.PROVIDER_ID.name
-				+ " FROM " + tableName
-				+ " where " + pkColumn + "=" + identifier;
-
-		ResultSet rs = null;
-
-		try {
-			rs = getSession().connection().createStatement().executeQuery(sql);
-
-			if (!rs.next()) throw new RuntimeException("record not found");
-
-			Uuid uuid = new Uuid();
-			uuid.setLongPart(rs.getLong(2));
-			uuid.setProvider(getById(rs.getLong(3)));
-
-			return new Object[]{uuid, rs.getLong(1)};
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			Util.closeResultSet(rs);
-		}
+		return Shared.getUuidAndVersion(tableName, pkColumn, identifier, getSession());
 	}
 
 	protected void incrementObjectVersion(PostUpdateEvent event) {
@@ -154,9 +126,9 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 	}
 
 	protected void objectInserted(PostInsertEvent event) {
-		Db4oUUID db4oUUID = new Db4oUUID(nextt(), _mySig.getBytes());
+		Db4oUUID db4oUUID = new Db4oUUID(uuidGenerator.next(), _mySig.getBytes());
 		ReplicationReference ref = new ReplicationReferenceImpl(event.getEntity(),
-				db4oUUID, Util.getMaxVersion(getRefSession().connection()) + 1);
+				db4oUUID, Util.getMaxVersion(getSession().connection()) + 1);
 		updateMetadata(ref, event.getId());
 	}
 

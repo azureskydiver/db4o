@@ -3,6 +3,7 @@ package com.db4o.test.replication.hibernate.ref_as_table;
 import com.db4o.replication.ReplicationConfigurator;
 import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.impl.ref_as_table.Shared;
+import com.db4o.replication.hibernate.metadata.Uuid;
 import com.db4o.test.Test;
 import com.db4o.test.replication.CollectionHolder;
 import com.db4o.test.replication.hibernate.AbstractReplicationConfiguratorTest;
@@ -23,6 +24,13 @@ public class ReplicationConfiguratorTestRefAsTable extends AbstractReplicationCo
 		cfg = HibernateUtil.createNewDbConfig();
 		Util.addClass(cfg, CollectionHolder.class);
 		ReplicationConfigurator.refAsTableConfigure(cfg);
+	}
+
+	protected void ensureDeleted(Uuid uuid) {
+	}
+
+	protected Uuid getUuid(Session session, Object aClass) {
+		return null;
 	}
 
 	protected Session openSession() {
