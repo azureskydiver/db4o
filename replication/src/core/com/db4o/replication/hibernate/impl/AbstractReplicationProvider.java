@@ -14,7 +14,6 @@ import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.cfg.ObjectConfig;
 import com.db4o.replication.hibernate.cfg.RefConfig;
 import com.db4o.replication.hibernate.metadata.DeletedObject;
-import com.db4o.replication.hibernate.metadata.MySignature;
 import com.db4o.replication.hibernate.metadata.PeerSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
@@ -49,6 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+
 public abstract class AbstractReplicationProvider implements HibernateReplicationProvider {
 // ------------------------------ FIELDS ------------------------------
 
@@ -64,21 +64,16 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected Transaction _transaction;
 
-	/**
-	 * The ReplicationProviderSignature of this  Hibernate-mapped database.
-	 */
-	protected MySignature _mySig;
-
 	protected ObjectReferenceMap _objRefs = new ObjectReferenceMap();
 
 	protected boolean _alive = false;
+
+	protected UuidGenerator uuidGenerator = new UuidGenerator();
 
 	/**
 	 * The Signature of the peer in the current Transaction.
 	 */
 	private PeerSignature _peerSignature;
-
-	protected UuidGenerator uuidGenerator;
 
 	private Set<PersistentClass> _mappedClasses;
 
@@ -214,7 +209,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 	public final ReadonlyReplicationProviderSignature getSignature() {
-		return _mySig;
+		return Util.genMySignature(getSession());
 	}
 
 	public final boolean hasReplicationReferenceAlready(Object obj) {
@@ -301,24 +296,16 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		getObjectTransaction().commit();
 		_transaction = getSession().beginTransaction();
 
-		_mySig = Util.genMySignature(getSession());
-
 		initPeerSigAndRecord(peerSigBytes);
 
 		_currentVersion = Util.getMaxVersion(getSession().connection()) + 1;
 
-		initUuidGenerator();
+		uuidGenerator.reset(getSession());
 
 		_inReplication = true;
 	}
 
-	private void initUuidGenerator() {
-		uuidGenerator = new UuidGenerator(getSession());
-	}
-
 	public final void storeReplica(Object entity) {
-//		if (_name.equals("A"))
-//			System.out.println("obj = " + obj);
 		ensureReplicationActive();
 
 		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
@@ -376,7 +363,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		getObjectTransaction().commit();
 		clearSession();
 		_transaction = getSession().beginTransaction();
-		initUuidGenerator();
+		uuidGenerator.reset(getSession());
 	}
 
 	public final void delete(Object obj) {
@@ -476,8 +463,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected final void init() {
 		initMappedClasses();
-		_mySig = Util.genMySignature(getSession());
-		initUuidGenerator();
+		uuidGenerator.reset(getSession());
 	}
 
 	protected final void initEventListeners() {
@@ -492,10 +478,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		eventListeners.setPostInsertEventListeners(new PostInsertEventListener[]{objectInsertedListener});
 	}
 
-	protected Object loadObject(HibernateObjectId hibernateObjectId) {
-		return getSession().load(hibernateObjectId.className, hibernateObjectId.hibernateId);
-	}
-
 	protected final Collection loadObject(Collection<HibernateObjectId> changedObjectIds) {
 		Set out = new HashSet();
 
@@ -505,10 +487,17 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		return out;
 	}
 
+	protected Object loadObject(HibernateObjectId hibernateObjectId) {
+		return getSession().load(hibernateObjectId.className, hibernateObjectId.hibernateId);
+	}
 
 	protected void objectToBeDeleted(PreDeleteEvent event) {
 		deleteReplicationComponentIdentity(event);
 		addDeletedObject(event);
+	}
+
+	protected Db4oUUID translate(Uuid uuid) {
+		return new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes());
 	}
 
 	private void addDeletedObject(PreDeleteEvent event) {
@@ -555,7 +544,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	private void deleteReplicationComponentIdentity(PreDeleteEvent event) {
 		ReplicationReference replicationReference = produceObjectReference(event.getEntity());
-		ReplicationComponentIdentity rci = getReplicationComponentIdentityByRefObjUuid(translate(replicationReference.uuid()));
+		ReplicationComponentIdentity rci = Util.getReplicationComponentIdentityByRefObjUuid(getSession(), translate(replicationReference.uuid()));
 
 		if (rci != null) delete(rci);
 	}
@@ -642,22 +631,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			return (ReplicationRecord) exisitingRecords.get(0);
 	}
 
-	private ReplicationComponentIdentity getReplicationComponentIdentityByRefObjUuid(Uuid uuid) {
-		Criteria criteria = getSession().createCriteria(ReplicationComponentIdentity.class);
-		criteria.add(Restrictions.eq("referencingObjectUuidLongPart", uuid.getLongPart()));
-		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getProvider().getBytes()));
-
-		final List exisitings = criteria.list();
-		int count = exisitings.size();
-
-		if (count == 0)
-			return null;
-		else if (count > 1)
-			throw new RuntimeException("Duplicated ReplicationComponentIdentity");
-		else
-			return (ReplicationComponentIdentity) exisitings.get(0);
-	}
-
 	private void initMappedClasses() {
 		_mappedClasses = new HashSet();
 
@@ -703,7 +676,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			if (existingReference != null)
 				return existingReference;
 			else
-				return createRefForCollection(obj, refObjRef, fieldName, uuidGenerator.next(), _currentVersion);
+				return createRefForCollection(obj, refObjRef, fieldName, uuidGenerator.next().getLongPart(), _currentVersion);
 		}
 	}
 

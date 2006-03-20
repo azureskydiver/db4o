@@ -32,8 +32,6 @@ public class ReplicationConfiguratorTestRefAsColumns extends AbstractReplication
 		ReplicationConfigurator.configure(cfg);
 	}
 
-	protected void ensureDeleted(Uuid uuid) {
-	}
 
 	protected Uuid getUuid(Session session, Object obj) {
 		String tName = objectConfig.getTableName(obj.getClass());

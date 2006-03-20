@@ -1,26 +1,37 @@
 package com.db4o.replication.hibernate.impl;
 
-import com.db4o.replication.hibernate.UpdateEventListener;
+import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
+import com.db4o.replication.hibernate.metadata.DeletedObject;
+import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
+import com.db4o.replication.hibernate.metadata.Uuid;
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.collection.PersistentCollection;
+import org.hibernate.event.EventListeners;
+import org.hibernate.event.PostInsertEventListener;
 import org.hibernate.event.PostUpdateEvent;
+import org.hibernate.event.PostUpdateEventListener;
+import org.hibernate.event.PreDeleteEvent;
+import org.hibernate.event.PreDeleteEventListener;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractUpdateEventListener extends EmptyInterceptor
-		implements UpdateEventListener {
+public abstract class AbstractObjectLifeCycleEventsListener extends EmptyInterceptor
+		implements ObjectLifeCycleEventsListener {
 // ------------------------------ FIELDS ------------------------------
 
 	protected final Map<Thread, Session> threadSessionMap = new HashMap();
+	protected final Map<Session, UuidGenerator> sessionUuidGeneratorMap = new HashMap();
+
+	//protected UuidGenerator uuidGenerator = new UuidGenerator();
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-	protected AbstractUpdateEventListener() {
+	protected AbstractObjectLifeCycleEventsListener() {
 		//empty
 	}
 
@@ -36,11 +47,14 @@ public abstract class AbstractUpdateEventListener extends EmptyInterceptor
 
 // ------------------------ INTERFACE METHODS ------------------------
 
-// --------------------- Interface UpdateEventListener ---------------------
-
+// --------------------- Interface ObjectLifeCycleEventsListener ---------------------
 
 	public void install(Session session, Configuration cfg) {
 		threadSessionMap.put(Thread.currentThread(), session);
+
+		UuidGenerator tmp = new UuidGenerator();
+		tmp.reset(session);
+		sessionUuidGeneratorMap.put(session, tmp);
 	}
 
 	public void onCollectionRemove(Object collection, Serializable key) throws CallbackException {
@@ -58,6 +72,29 @@ public abstract class AbstractUpdateEventListener extends EmptyInterceptor
 
 		ObjectUpdated(object, event.getId());
 	}
+
+	public boolean onPreDelete(PreDeleteEvent event) {
+		boolean veto = false;
+
+		deleteReplicationComponentIdentity(event);
+
+		Uuid uuid = getUuid(event.getEntity());
+		DeletedObject deletedObject = new DeletedObject();
+		deletedObject.setUuid(uuid);
+		getSession().save(deletedObject);
+
+		return veto;
+	}
+
+	private void deleteReplicationComponentIdentity(PreDeleteEvent event) {
+		Session s = getSession();
+		Uuid uuid = getUuid(event.getEntity());
+		ReplicationComponentIdentity rci = Util.getReplicationComponentIdentityByRefObjUuid(s, uuid);
+
+		if (rci != null) s.delete(rci);
+	}
+
+	protected abstract Uuid getUuid(Object entity);
 
 // -------------------------- OTHER METHODS --------------------------
 
@@ -79,5 +116,13 @@ public abstract class AbstractUpdateEventListener extends EmptyInterceptor
 	protected final Serializable getId(Object obj) {
 		Session session = getSession();
 		return session.getIdentifier(obj);
+	}
+
+	protected void setListeners(Configuration cfg) {
+		cfg.setInterceptor(this);
+		EventListeners eventListeners = cfg.getEventListeners();
+		eventListeners.setPostUpdateEventListeners(new PostUpdateEventListener[]{this});
+		eventListeners.setPostInsertEventListeners(new PostInsertEventListener[]{this});
+		eventListeners.setPreDeleteEventListeners(new PreDeleteEventListener[]{this});
 	}
 }

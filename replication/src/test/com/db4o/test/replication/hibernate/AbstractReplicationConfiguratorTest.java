@@ -1,8 +1,9 @@
 package com.db4o.test.replication.hibernate;
 
+import com.db4o.replication.hibernate.cfg.ObjectConfig;
 import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.Uuid;
-import com.db4o.replication.hibernate.cfg.ObjectConfig;
+import com.db4o.test.Test;
 import com.db4o.test.replication.CollectionHolder;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -67,6 +68,7 @@ public abstract class AbstractReplicationConfiguratorTest {
 		session.flush();
 
 		Uuid uuid = getUuid(session, ch);
+		Test.ensure(uuid != null);
 
 		ch._name = "changed";
 		tx.commit();
@@ -77,16 +79,18 @@ public abstract class AbstractReplicationConfiguratorTest {
 		session.delete(ch);
 		session.flush();
 
-		ensureDeleted(uuid);
+		ensureDeleted(session, uuid);
 
 		tx.commit();
 
 		session.close();
 	}
 
-	abstract protected void ensureDeleted(Uuid uuid);
+	protected void ensureDeleted(Session session, Uuid uuid) {
+		Test.ensure(Util.getDeletedObject(session, uuid) != null);
+	}
 
-	abstract protected Uuid getUuid(Session session, Object aClass);
+	abstract protected Uuid getUuid(Session session, Object obj);
 
 	public void tstCollectionUpdate() {
 		CollectionHolder ch = new CollectionHolder();

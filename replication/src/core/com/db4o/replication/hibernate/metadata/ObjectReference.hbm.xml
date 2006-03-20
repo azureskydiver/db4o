@@ -38,8 +38,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		</natural-id>
 
 		<component name="uuid" unique="true">
-			<property name="longPart" column="longPart"/>
-			<many-to-one name="provider" column="provider" cascade="none"/>
+			<property name="longPart" column="longPart" not-null="true"/>
+			<many-to-one name="provider" column="provider" cascade="none" not-null="true"/>
 		</component>
 
 		<property name="version" column="version"/>

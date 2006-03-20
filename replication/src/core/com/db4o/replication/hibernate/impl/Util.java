@@ -1,5 +1,6 @@
 package com.db4o.replication.hibernate.impl;
 
+import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.metadata.DeletedObject;
@@ -10,10 +11,14 @@ import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
-import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
 import com.db4o.replication.hibernate.metadata.Uuid;
-import com.db4o.ext.Db4oUUID;
+import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.mapping.Table;
@@ -197,6 +202,19 @@ public class Util {
 			throw new RuntimeException("Number of MySignature should be exactly 1, but i got " + mySigCount);
 	}
 
+	public static void initMySignature(Configuration cfg) {
+		SessionFactory sf = cfg.buildSessionFactory();
+		Session session = sf.openSession();
+		Transaction tx = session.beginTransaction();
+
+		if (session.createCriteria(MySignature.class).list().size() < 1)
+			session.save(MySignature.generateSignature());
+
+		tx.commit();
+		session.close();
+		sf.close();
+	}
+
 	protected static String flattenBytes(byte[] b) {
 		String out = "";
 		for (int i = 0; i < b.length; i++) {
@@ -220,5 +238,39 @@ public class Util {
 
 	public static Db4oUUID translate(DeletedObject doo) {
 		return translate(doo.getUuid());
+	}
+
+	public static DeletedObject getDeletedObject(Session session, Uuid uuid) {
+		String alias = "do";
+		String uuidPath = alias + "." + DeletedObject.UUID + ".";
+		String queryString = "from " + DeletedObject.TABLE_NAME
+				+ " as " + alias + " where " + uuidPath + Uuid.LONG_PART + "=?"
+				+ " AND " + uuidPath + Uuid.PROVIDER + "." + ReplicationProviderSignature.BYTES + "=?";
+		Query c = session.createQuery(queryString);
+		c.setLong(0, uuid.getLongPart());
+		c.setBinary(1, uuid.getProvider().getBytes());
+
+		List list = c.list();
+
+		if (list.size() == 0)
+			return null;
+		else
+			return (DeletedObject) list.get(0);
+	}
+
+	public static ReplicationComponentIdentity getReplicationComponentIdentityByRefObjUuid(Session session, Uuid uuid) {
+		Criteria criteria = session.createCriteria(ReplicationComponentIdentity.class);
+		criteria.add(Restrictions.eq("referencingObjectUuidLongPart", uuid.getLongPart()));
+		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getProvider().getBytes()));
+
+		final List exisitings = criteria.list();
+		int count = exisitings.size();
+
+		if (count == 0)
+			return null;
+		else if (count > 1)
+			throw new RuntimeException("Duplicated ReplicationComponentIdentity");
+		else
+			return (ReplicationComponentIdentity) exisitings.get(0);
 	}
 }
