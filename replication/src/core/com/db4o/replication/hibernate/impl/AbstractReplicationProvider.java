@@ -46,10 +46,8 @@ import org.hibernate.mapping.PersistentClass;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractReplicationProvider implements HibernateReplicationProvider {
@@ -91,7 +89,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	 */
 	protected PeerSignature _peerSignature;
 
-	protected Map _referencesByObject = new IdentityHashMap();
+	protected ObjectReferenceMap objRefs = new ObjectReferenceMap();
 	/**
 	 * The ReplicationRecord of {@link #_peerSignature}.
 	 */
@@ -191,23 +189,18 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	public final void clearAllReferences() {
 		ensureReplicationActive();
 
-		_referencesByObject.clear();
+		objRefs.clear();
 	}
 
 	public final boolean hasReplicationReferenceAlready(Object obj) {
 		ensureReplicationActive();
 
-		return getCachedReference(obj) != null;
+		return objRefs.get(obj) != null;
 	}
 
-	protected ReplicationReference getCachedReference(Object obj) {
-		return (ReplicationReference) _referencesByObject.get(obj);
-	}
 
 	protected ReplicationReference createReference(Object obj, Db4oUUID uuid, long version) {
-		ReplicationReference result = new ReplicationReferenceImpl(obj, uuid, version);
-		_referencesByObject.put(obj, result);
-		return result;
+		return objRefs.put(obj, uuid, version);
 	}
 
 	protected static void sleep(int i, String s) {
@@ -238,7 +231,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 			final Object fieldValue = getFieldValue(refObjRef.object(), rci.getReferencingObjectField().getReferencingObjectFieldName());
 
-			final ReplicationReference cachedReference = getCachedReference(fieldValue);
+			final ReplicationReference cachedReference = objRefs.get(fieldValue);
 			if (cachedReference != null) return cachedReference;
 
 			Db4oUUID fieldUuid = new Db4oUUID(rci.getUuidLongPart(), rci.getProvider().getBytes());
@@ -368,7 +361,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 			final Object field = getFieldValue(refObjRef.object(), referencingObjectField.getReferencingObjectFieldName());
 
-			ReplicationReference existing = getCachedReference(field);
+			ReplicationReference existing = objRefs.get(field);
 			if (existing != null) return existing;
 
 			out = createReference(field, uuid, refObjRef.version());
@@ -397,7 +390,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	public final ReplicationReference produceReference(Object obj, Object referencingObj, String fieldName) {
 		ensureReplicationActive();
 
-		ReplicationReference existing = getCachedReference(obj);
+		ReplicationReference existing = objRefs.get(obj);
 
 		if (existing != null) return existing;
 
@@ -425,7 +418,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			if (referencingObjCounterPartRef == null || fieldName == null)
 				return null;
 
-			ReplicationReference cachedReference = getCachedReference(obj);
+			ReplicationReference cachedReference = objRefs.get(obj);
 			if (cachedReference != null) return cachedReference;
 
 			return referenceClonedCollection(obj, counterpartReference, referencingObjCounterPartRef, fieldName);
@@ -603,10 +596,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	public final void visitCachedReferences(Visitor4 visitor) {
 		ensureReplicationActive();
 
-		Iterator i = _referencesByObject.values().iterator();
-		while (i.hasNext()) {
-			visitor.visit(i.next());
-		}
+		objRefs.visitEntries(visitor);
 	}
 
 	protected abstract RefConfig getRefConfig();
@@ -638,7 +628,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
 		if (_collectionHandler.canHandle(entity)) return;
 
-		ReplicationReference ref = getCachedReference(entity);
+		ReplicationReference ref = objRefs.get(entity);
 		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
 
 		_uuidsReplicatedInThisSession.add(ref.uuid());
@@ -761,7 +751,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		_mappedClasses = null;
 		_dirtyRefs = null;
 
-		_referencesByObject = null;
+		objRefs = null;
 		_uuidsReplicatedInThisSession = null;
 
 		_reflector = null;
