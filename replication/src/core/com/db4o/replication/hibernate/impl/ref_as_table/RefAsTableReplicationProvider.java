@@ -83,7 +83,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 			ObjectReference exist = (ObjectReference) exisitings.get(0);
 			Object obj = getSession().load(exist.getClassName(), exist.getObjectId());
 
-			return createReference(obj, uuid, exist.getVersion());
+			return objRefs.put(obj, uuid, exist.getVersion());
 		}
 	}
 
@@ -95,7 +95,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		if (ref == null) throw new RuntimeException("ObjectReference must exist for " + obj);
 
 		Uuid uuid = ref.getUuid();
-		return createReference(obj, new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes()), ref.getVersion());
+		return objRefs.put(obj, new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes()), ref.getVersion());
 	}
 
 	protected ObjectReference getRefById(Object obj) {

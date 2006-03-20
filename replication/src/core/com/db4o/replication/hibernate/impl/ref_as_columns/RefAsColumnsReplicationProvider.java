@@ -87,7 +87,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		Uuid uuid = (Uuid) uuidAndVersion[0];
 		long version = (Long) uuidAndVersion[1];
 
-		return createReference(obj, translate(uuid), version);
+		return objRefs.put(obj, translate(uuid), version);
 	}
 
 	protected Session getRefSession() {
@@ -115,10 +115,8 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 			ResultSet rs = _objectSession.connection().createStatement().executeQuery(sql);
 
 			if (rs.next())
-				return createReference(
-						loadObject(new HibernateObjectId(
-								(Serializable) rs.getObject(1), hint.getName())),
-						uuid, rs.getLong(2));
+				return objRefs.put(loadObject(new HibernateObjectId(
+						(Serializable) rs.getObject(1), hint.getName())), uuid, rs.getLong(2));
 			else
 				return null;
 
