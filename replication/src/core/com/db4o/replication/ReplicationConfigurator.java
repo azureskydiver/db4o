@@ -1,10 +1,8 @@
 package com.db4o.replication;
 
-import com.db4o.replication.hibernate.ObjectInsertedListener;
-import com.db4o.replication.hibernate.UpdateEventListener;
-import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsUpdateEventListener;
-import com.db4o.replication.hibernate.impl.ref_as_table.ObjectInsertedListenerImpl;
-import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableUpdateEventListener;
+import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
+import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsObjectLifeCycleEventsListener;
+import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableObjectLifeCycleEventsListener;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
@@ -35,10 +33,8 @@ import org.hibernate.cfg.Configuration;
  * @since dRS 1.0
  */
 public class ReplicationConfigurator {
-	private static UpdateEventListener refAsColumnstListener = new RefAsColumnsUpdateEventListener();
-	private static UpdateEventListener refAstablestListener = new RefAsTableUpdateEventListener();
-
-	private static ObjectInsertedListener objectInsertedListener = new ObjectInsertedListenerImpl();
+	private static ObjectLifeCycleEventsListener refAsColumnstListener = new RefAsColumnsObjectLifeCycleEventsListener();
+	private static ObjectLifeCycleEventsListener refAstablestListener = new RefAsTableObjectLifeCycleEventsListener();
 
 	/**
 	 * Registers object update event listeners to Configuration.
@@ -70,7 +66,6 @@ public class ReplicationConfigurator {
 	 */
 	public static void refAsTableConfigure(Configuration cfg) {
 		refAstablestListener.configure(cfg);
-		objectInsertedListener.configure(cfg);
 	}
 
 	/**
@@ -82,6 +77,5 @@ public class ReplicationConfigurator {
 	 */
 	public static void refAsTableInstall(Session s, Configuration cfg) {
 		refAstablestListener.install(s, cfg);
-		objectInsertedListener.install(s, cfg);
 	}
 }

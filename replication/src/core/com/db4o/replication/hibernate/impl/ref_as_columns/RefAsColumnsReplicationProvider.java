@@ -126,7 +126,7 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 	}
 
 	protected void objectInserted(PostInsertEvent event) {
-		Db4oUUID db4oUUID = new Db4oUUID(uuidGenerator.next(), _mySig.getBytes());
+		Db4oUUID db4oUUID = translate(uuidGenerator.next());
 		ReplicationReference ref = new ReplicationReferenceImpl(event.getEntity(),
 				db4oUUID, Util.getMaxVersion(getSession().connection()) + 1);
 		updateMetadata(ref, event.getId());

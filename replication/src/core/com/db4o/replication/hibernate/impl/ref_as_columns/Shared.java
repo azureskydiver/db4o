@@ -3,8 +3,8 @@ package com.db4o.replication.hibernate.impl.ref_as_columns;
 import com.db4o.replication.hibernate.cfg.ObjectConfig;
 import com.db4o.replication.hibernate.impl.Constants;
 import com.db4o.replication.hibernate.impl.Util;
-import com.db4o.replication.hibernate.metadata.Uuid;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
+import com.db4o.replication.hibernate.metadata.Uuid;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
@@ -84,9 +84,18 @@ public class Shared {
 
 			if (!rs.next()) throw new RuntimeException("record not found");
 
+			long longPart = rs.getLong(2);
+			long sigId = rs.getLong(3);
+
+			if (longPart == Constants.MIN_SEQ_NO)
+				throw new RuntimeException("uuid not found");
+
+			if (sigId == 0)
+				throw new RuntimeException("uuid not found");
+
 			Uuid uuid = new Uuid();
-			uuid.setLongPart(rs.getLong(2));
-			uuid.setProvider(getProviderSignatureById(session, rs.getLong(3)));
+			uuid.setLongPart(longPart);
+			uuid.setProvider(getProviderSignatureById(session, sigId));
 
 			return new Object[]{uuid, rs.getLong(1)};
 		} catch (SQLException e) {

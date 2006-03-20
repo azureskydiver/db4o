@@ -26,11 +26,8 @@ public class ReplicationConfiguratorTestRefAsTable extends AbstractReplicationCo
 		ReplicationConfigurator.refAsTableConfigure(cfg);
 	}
 
-	protected void ensureDeleted(Uuid uuid) {
-	}
-
-	protected Uuid getUuid(Session session, Object aClass) {
-		return null;
+	protected Uuid getUuid(Session session, Object obj) {
+		return Shared.getUuid(session, obj);
 	}
 
 	protected Session openSession() {

@@ -23,7 +23,6 @@ import org.hibernate.event.PostUpdateEvent;
 import org.hibernate.event.PreDeleteEvent;
 import org.hibernate.mapping.PersistentClass;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -78,27 +77,12 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		return loadObject(ids);
 	}
 
-	protected ObjectReference getObjectReferenceById(Object obj) {
-		Serializable id = getSession().getIdentifier(obj);
-		Criteria criteria = getSession().createCriteria(ObjectReference.class);
-		criteria.add(Restrictions.eq(ObjectReference.OBJECT_ID, id));
-		criteria.add(Restrictions.eq(ObjectReference.CLASS_NAME, obj.getClass().getName()));
-		List list = criteria.list();
-
-		if (list.size() == 0)
-			return null;
-		else if (list.size() == 1)
-			return (ObjectReference) list.get(0);
-		else
-			throw new RuntimeException("Duplicated uuid");
-	}
-
 	protected RefConfig getRefConfig() {
 		return _refCfg;
 	}
 
 	protected Uuid getUuid(Object obj) {
-		return getObjectReferenceById(obj).getUuid();
+		return Shared.getUuid(getSession(), obj);
 	}
 
 	protected void incrementObjectVersion(PostUpdateEvent event) {
@@ -118,20 +102,26 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		ref.setClassName(event.getEntity().getClass().getName());
 		ref.setObjectId(id);
 
-		Uuid uuid = new Uuid();
-		uuid.setLongPart(uuidGenerator.next());
-		uuid.setProvider(_mySig);
-		ref.setUuid(uuid);
+		ref.setUuid(uuidGenerator.next());
 
 		ref.setVersion(Util.getMaxVersion(s.connection()) + 1);
 
 		s.save(ref);
 	}
 
+	protected void objectToBeDeleted(PreDeleteEvent event) {
+		super.objectToBeDeleted(event);
+		ObjectReference ref = Shared.getObjectReferenceById(getSession(), event.getEntity());
+
+		if (ref == null) throw new RuntimeException("ObjectReference must exist");
+
+		getSession().delete(ref);
+	}
+
 	protected ReplicationReference produceObjectReference(Object obj) {
 		if (!getSession().contains(obj)) return null;
 
-		final ObjectReference ref = getObjectReferenceById(obj);
+		final ObjectReference ref = Shared.getObjectReferenceById(getSession(), obj);
 
 		if (ref == null) throw new RuntimeException("ObjectReference must exist for " + obj);
 
@@ -171,7 +161,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		final long id = Shared.castAsLong(getSession().getIdentifier(obj));
 		final Session s = getSession();
 
-		final ObjectReference exist = getObjectReferenceById(obj);
+		final ObjectReference exist = Shared.getObjectReferenceById(getSession(), obj);
 		if (exist == null) {
 			ReplicationProviderSignature provider = getProviderSignature(ref.uuid().getSignaturePart());
 
@@ -212,14 +202,5 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 			}
 		}
 		return out;
-	}
-
-	protected void objectToBeDeleted(PreDeleteEvent event) {
-		super.objectToBeDeleted(event);
-		ObjectReference ref = getObjectReferenceById(event.getEntity());
-
-		if (ref == null) throw new RuntimeException("ObjectReference must exist");
-
-		getSession().delete(ref);
 	}
 }
