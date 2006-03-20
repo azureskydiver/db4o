@@ -15,13 +15,13 @@ public class ObjectReferenceMap {
 		delegate = new IdentityHashMap();
 	}
 
-	protected ReplicationReference put(Object obj, Db4oUUID uuid, long version) {
+	public ReplicationReference put(Object obj, Db4oUUID uuid, long version) {
 		ReplicationReference result = new ReplicationReferenceImpl(obj, uuid, version);
 		delegate.put(obj, result);
 		return result;
 	}
 
-	protected ReplicationReference get(Object obj) {
+	public ReplicationReference get(Object obj) {
 		return delegate.get(obj);
 	}
 

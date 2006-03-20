@@ -113,6 +113,8 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 
 	protected boolean _alive = false;
 
+	CollectionRegistry collectionRegistry;
+
 	protected void initPeerSigAndRecord(byte[] peerSigBytes) {
 		PeerSignature existingPeerSignature = getPeerSignature(peerSigBytes);
 		if (existingPeerSignature == null) {
@@ -199,10 +201,6 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 	}
 
 
-	protected ReplicationReference createReference(Object obj, Db4oUUID uuid, long version) {
-		return objRefs.put(obj, uuid, version);
-	}
-
 	protected static void sleep(int i, String s) {
 		System.out.println(s);
 		try {
@@ -235,7 +233,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			if (cachedReference != null) return cachedReference;
 
 			Db4oUUID fieldUuid = new Db4oUUID(rci.getUuidLongPart(), rci.getProvider().getBytes());
-			out = createReference(fieldValue, fieldUuid, refObjRef.version());
+			out = objRefs.put(fieldValue, fieldUuid, refObjRef.version());
 		}
 
 		return out;
@@ -280,7 +278,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 		Db4oUUID uuid = new Db4oUUID(uuidLong, signaturePart);
 
 		getRefSession().save(rci);
-		return createReference(collection, uuid, version);
+		return objRefs.put(collection, uuid, version);
 	}
 
 	protected ReplicationComponentField produceReplicationComponentField(String referencingObjectClassName,
@@ -364,7 +362,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			ReplicationReference existing = objRefs.get(field);
 			if (existing != null) return existing;
 
-			out = createReference(field, uuid, refObjRef.version());
+			out = objRefs.put(field, uuid, refObjRef.version());
 		}
 
 		return out;
@@ -426,7 +424,7 @@ public abstract class AbstractReplicationProvider implements HibernateReplicatio
 			Db4oUUID uuid = counterpartReference.uuid();
 			long version = counterpartReference.version();
 
-			return createReference(obj, uuid, version);
+			return objRefs.put(obj, uuid, version);
 		}
 	}
 
