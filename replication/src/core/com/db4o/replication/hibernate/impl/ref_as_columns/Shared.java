@@ -3,6 +3,8 @@ package com.db4o.replication.hibernate.impl.ref_as_columns;
 import com.db4o.replication.hibernate.cfg.ObjectConfig;
 import com.db4o.replication.hibernate.impl.Constants;
 import com.db4o.replication.hibernate.impl.Util;
+import com.db4o.replication.hibernate.metadata.Uuid;
+import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
@@ -64,5 +66,37 @@ public class Shared {
 		} finally {
 			Util.closePreparedStatement(ps);
 		}
+	}
+
+	public static Object[] getUuidAndVersion(String tableName, String pkColumn,
+			Serializable identifier, Session session) {
+		String sql = "SELECT "
+				+ Db4oColumns.VERSION.name
+				+ ", " + Db4oColumns.UUID_LONG_PART.name
+				+ ", " + Db4oColumns.PROVIDER_ID.name
+				+ " FROM " + tableName
+				+ " where " + pkColumn + "=" + identifier;
+
+		ResultSet rs = null;
+
+		try {
+			rs = session.connection().createStatement().executeQuery(sql);
+
+			if (!rs.next()) throw new RuntimeException("record not found");
+
+			Uuid uuid = new Uuid();
+			uuid.setLongPart(rs.getLong(2));
+			uuid.setProvider(getProviderSignatureById(session, rs.getLong(3)));
+
+			return new Object[]{uuid, rs.getLong(1)};
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			Util.closeResultSet(rs);
+		}
+	}
+
+	public static ReplicationProviderSignature getProviderSignatureById(Session session, long sigId) {
+		return (ReplicationProviderSignature) session.get(ReplicationProviderSignature.class, sigId);
 	}
 }
