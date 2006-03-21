@@ -9,6 +9,7 @@ import com.db4o.test.replication.CollectionHolder;
 import com.db4o.test.replication.hibernate.AbstractReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.HibernateUtil;
 import org.hibernate.Session;
+import org.hibernate.FlushMode;
 import org.hibernate.cfg.Configuration;
 
 public class ReplicationConfiguratorTestRefAsTable extends AbstractReplicationConfiguratorTest {
@@ -32,6 +33,7 @@ public class ReplicationConfiguratorTestRefAsTable extends AbstractReplicationCo
 
 	protected Session openSession() {
 		Session session = sessionFactory.openSession();
+		session.setFlushMode(FlushMode.COMMIT);
 		ReplicationConfigurator.refAsTableInstall(session, cfg);
 		return session;
 	}

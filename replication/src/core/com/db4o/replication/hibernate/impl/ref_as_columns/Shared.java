@@ -14,7 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Shared {
+public final class Shared {
 // -------------------------- STATIC METHODS --------------------------
 
 	public static long getVersion(Configuration cfg, Session session, Object obj) {
@@ -45,29 +45,6 @@ public class Shared {
 		}
 	}
 
-	static void incrementObjectVersion(Connection connection, Serializable id, long newVersion,
-			String tableName, String primaryKeyColumnName) {
-		PreparedStatement ps = null;
-
-		try {
-			String sql = "UPDATE " + tableName + " SET " + Db4oColumns.VERSION.name + "=?"
-					+ " WHERE " + primaryKeyColumnName + " =?";
-			ps = connection.prepareStatement(sql);
-			ps.setLong(1, newVersion);
-			ps.setObject(2, id);
-
-			int affected = ps.executeUpdate();
-			if (affected != 1) {
-				throw new RuntimeException("Unable to update the version column");
-			}
-			ps.close();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			Util.closePreparedStatement(ps);
-		}
-	}
-
 	public static Object[] getUuidAndVersion(String tableName, String pkColumn,
 			Serializable identifier, Session session) {
 		String sql = "SELECT "
@@ -95,7 +72,7 @@ public class Shared {
 
 			Uuid uuid = new Uuid();
 			uuid.setLongPart(longPart);
-			uuid.setProvider(getProviderSignatureById(session, sigId));
+			uuid.setProvider((ReplicationProviderSignature) session.get(ReplicationProviderSignature.class, sigId));
 
 			return new Object[]{uuid, rs.getLong(1)};
 		} catch (SQLException e) {
@@ -103,10 +80,6 @@ public class Shared {
 		} finally {
 			Util.closeResultSet(rs);
 		}
-	}
-
-	public static ReplicationProviderSignature getProviderSignatureById(Session session, long sigId) {
-		return (ReplicationProviderSignature) session.get(ReplicationProviderSignature.class, sigId);
 	}
 
 	public static void updateMetadata(long version, long uuidLong, Serializable identifier,

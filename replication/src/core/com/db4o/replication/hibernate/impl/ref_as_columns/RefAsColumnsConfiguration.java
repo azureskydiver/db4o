@@ -5,10 +5,10 @@ import org.hibernate.cfg.Configuration;
 
 import java.util.HashMap;
 
-public class RefAsColumnsConfiguration extends RefConfig {
+public final class RefAsColumnsConfiguration extends RefConfig {
 // ------------------------------ FIELDS ------------------------------
 
-	private static HashMap<Configuration, RefAsColumnsConfiguration> cache = new HashMap<Configuration, RefAsColumnsConfiguration>();
+	private static final HashMap<Configuration, RefAsColumnsConfiguration> cache = new HashMap<Configuration, RefAsColumnsConfiguration>();
 
 // -------------------------- STATIC METHODS --------------------------
 

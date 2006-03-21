@@ -6,14 +6,12 @@ import com.db4o.replication.hibernate.cfg.ObjectConfig;
 import com.db4o.replication.hibernate.cfg.RefConfig;
 import com.db4o.replication.hibernate.impl.AbstractReplicationProvider;
 import com.db4o.replication.hibernate.impl.HibernateObjectId;
-import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import org.hibernate.FlushMode;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.event.PostInsertEvent;
-import org.hibernate.event.PostUpdateEvent;
 import org.hibernate.mapping.PersistentClass;
 
 import java.io.Serializable;
@@ -26,10 +24,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public final class RefAsColumnsReplicationProvider extends AbstractReplicationProvider {
-// ------------------------------ FIELDS ------------------------------
-
-	protected static final String IS_NULL = " IS NULL ";
-
 // --------------------------- CONSTRUCTORS ---------------------------
 
 	public RefAsColumnsReplicationProvider(Configuration cfg) {
@@ -40,6 +34,10 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		_name = name;
 
 		_refCfg = RefAsColumnsConfiguration.produce(cfg);
+
+		Util.initUuidLongPartSequence(cfg);
+		lifeCycleEventsListener = new MyObjectLifeCycleEventsListener();
+		lifeCycleEventsListener.configure(cfg);
 
 		_objectConfig = new ObjectConfig(cfg);
 
@@ -53,6 +51,9 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		_transaction = _session.beginTransaction();
 
 		init();
+
+		lifeCycleEventsListener.install(getSession(), cfg);
+
 		_alive = true;
 	}
 
@@ -86,35 +87,6 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 
 	protected RefConfig getRefConfig() {
 		return getRefCfg();
-	}
-
-	protected Uuid getUuid(Object obj) {
-		return (Uuid) getUuidAndVersion(obj)[0];
-	}
-
-	protected Object[] getUuidAndVersion(Object obj) {
-		String tableName = getObjectConfig().getTableName(obj.getClass());
-		String pkColumn = getObjectConfig().getPrimaryKeyColumnName(obj);
-		Serializable identifier = getSession().getIdentifier(obj);
-
-		return Shared.getUuidAndVersion(tableName, pkColumn, identifier, getSession());
-	}
-
-	protected void incrementObjectVersion(PostUpdateEvent event) {
-		//TODO performance sucks, but this method is called when testing only.
-		Object entity = event.getEntity();
-
-		Connection con = getSession().connection();
-		long newVer = Util.getMaxVersion(con) + 1;
-		Shared.incrementObjectVersion(con, event.getId(), newVer,
-				getObjectConfig().getTableName(entity.getClass()), getObjectConfig().getPrimaryKeyColumnName(entity));
-	}
-
-	protected void objectInserted(PostInsertEvent event) {
-		Db4oUUID db4oUUID = translate(uuidGenerator.next());
-		ReplicationReference ref = new ReplicationReferenceImpl(event.getEntity(),
-				db4oUUID, Util.getMaxVersion(getSession().connection()) + 1);
-		updateMetadata(ref, event.getId());
 	}
 
 	protected ReplicationReference produceObjectReference(Object obj) {
@@ -158,7 +130,12 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 	}
 
 	protected void saveOrUpdateReplicaMetadata(ReplicationReference ref) {
-		updateMetadata(ref, _session.getIdentifier(ref.object()));
+		String tableName = getObjectConfig().getTableName(ref.object().getClass());
+		String pkColumn = getObjectConfig().getPrimaryKeyColumnName(ref.object());
+
+		long sigId = getProviderSignature(ref.uuid().getSignaturePart()).getId();
+
+		Shared.updateMetadata(ref.version(), ref.uuid().getLongPart(), _session.getIdentifier(ref.object()), tableName, pkColumn, getSession(), sigId);
 	}
 
 	public final String getModifiedObjectCriterion() {
@@ -167,12 +144,25 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		return Db4oColumns.VERSION.name + " > " + getLastReplicationVersion();
 	}
 
-	private void updateMetadata(ReplicationReference ref, Serializable identifier) {
-		String tableName = getObjectConfig().getTableName(ref.object().getClass());
-		String pkColumn = getObjectConfig().getPrimaryKeyColumnName(ref.object());
+	private Object[] getUuidAndVersion(Object obj) {
+		String tableName = getObjectConfig().getTableName(obj.getClass());
+		String pkColumn = getObjectConfig().getPrimaryKeyColumnName(obj);
+		Serializable identifier = getSession().getIdentifier(obj);
 
-		long sigId = getProviderSignature(ref.uuid().getSignaturePart()).getId();
+		return Shared.getUuidAndVersion(tableName, pkColumn, identifier, getSession());
+	}
 
-		Shared.updateMetadata(ref.version(), ref.uuid().getLongPart(), identifier, tableName, pkColumn, getSession(), sigId);
+// -------------------------- INNER CLASSES --------------------------
+
+	final class MyObjectLifeCycleEventsListener extends RefAsColumnsObjectLifeCycleEventsListener {
+		public final void onPostInsert(PostInsertEvent event) {
+			if (!isReplicationActive())
+				super.onPostInsert(event);
+		}
+
+		protected final void ObjectUpdated(Object obj, Serializable id) {
+			if (!isReplicationActive())
+				super.ObjectUpdated(obj, id);
+		}
 	}
 }

@@ -4,6 +4,7 @@ import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
 import com.db4o.replication.hibernate.metadata.DeletedObject;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.Uuid;
+import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Session;
@@ -18,22 +19,17 @@ import org.hibernate.event.PreDeleteEventListener;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class AbstractObjectLifeCycleEventsListener extends EmptyInterceptor
 		implements ObjectLifeCycleEventsListener {
 // ------------------------------ FIELDS ------------------------------
 
-	protected final Map<Thread, Session> threadSessionMap = new HashMap();
-	protected final Map<Session, UuidGenerator> sessionUuidGeneratorMap = new HashMap();
-
-	//protected UuidGenerator uuidGenerator = new UuidGenerator();
-
-// --------------------------- CONSTRUCTORS ---------------------------
-
-	protected AbstractObjectLifeCycleEventsListener() {
-		//empty
-	}
+	private Set<Configuration> configs = new HashSet<Configuration>();
+	private Map<Thread, Session> threadSessionMap = new HashMap();
+	private boolean _alive = true;
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
@@ -49,23 +45,40 @@ public abstract class AbstractObjectLifeCycleEventsListener extends EmptyInterce
 
 // --------------------- Interface ObjectLifeCycleEventsListener ---------------------
 
+	public void configure(Configuration cfg) {
+		Util.initMySignature(cfg);
+		Util.initUuidLongPartSequence(cfg);
+
+		configs.add(cfg);
+		setListeners(cfg);
+	}
+
+	public final void destroy() {
+		_alive = false;
+		threadSessionMap.clear();
+		threadSessionMap = null;
+
+		for (Configuration cfg : configs)
+			resetListeners(cfg);
+
+		configs.clear();
+		configs = null;
+	}
+
 	public void install(Session session, Configuration cfg) {
 		threadSessionMap.put(Thread.currentThread(), session);
-
-		UuidGenerator tmp = new UuidGenerator();
-		tmp.reset(session);
-		sessionUuidGeneratorMap.put(session, tmp);
 	}
 
-	public void onCollectionRemove(Object collection, Serializable key) throws CallbackException {
+	public final void onCollectionRemove(Object collection, Serializable key) throws CallbackException {
 		collectionUpdated(collection);
 	}
 
-	public void onCollectionUpdate(Object collection, Serializable key) throws CallbackException {
+	public final void onCollectionUpdate(Object collection, Serializable key) throws CallbackException {
 		collectionUpdated(collection);
 	}
 
-	public void onPostUpdate(PostUpdateEvent event) {
+	public final void onPostUpdate(PostUpdateEvent event) {
+		ensureAlive();
 		Object object = event.getEntity();
 
 		if (Util.skip(object)) return;
@@ -73,34 +86,34 @@ public abstract class AbstractObjectLifeCycleEventsListener extends EmptyInterce
 		ObjectUpdated(object, event.getId());
 	}
 
-	public boolean onPreDelete(PreDeleteEvent event) {
+	public final boolean onPreDelete(PreDeleteEvent event) {
+		ensureAlive();
+
 		boolean veto = false;
 
+		objectDeleted(event);
+
+		return veto;
+	}
+
+// -------------------------- OTHER METHODS --------------------------
+
+	protected abstract void ObjectUpdated(Object obj, Serializable id);
+
+	protected abstract Uuid getUuid(Object entity);
+
+	protected final void ensureAlive() {if (!_alive) throw new RuntimeException("dead");}
+
+	protected void objectDeleted(PreDeleteEvent event) {
 		deleteReplicationComponentIdentity(event);
 
 		Uuid uuid = getUuid(event.getEntity());
 		DeletedObject deletedObject = new DeletedObject();
 		deletedObject.setUuid(uuid);
 		getSession().save(deletedObject);
-
-		return veto;
 	}
 
-	private void deleteReplicationComponentIdentity(PreDeleteEvent event) {
-		Session s = getSession();
-		Uuid uuid = getUuid(event.getEntity());
-		ReplicationComponentIdentity rci = Util.getReplicationComponentIdentityByRefObjUuid(s, uuid);
-
-		if (rci != null) s.delete(rci);
-	}
-
-	protected abstract Uuid getUuid(Object entity);
-
-// -------------------------- OTHER METHODS --------------------------
-
-	protected abstract void ObjectUpdated(Object obj, Serializable id);
-
-	protected final void collectionUpdated(Object collection) {
+	private void collectionUpdated(Object collection) {
 		if (!(collection instanceof PersistentCollection))
 			throw new RuntimeException(collection + " should always be PersistentCollection");
 
@@ -113,16 +126,58 @@ public abstract class AbstractObjectLifeCycleEventsListener extends EmptyInterce
 		ObjectUpdated(owner, id);
 	}
 
-	protected final Serializable getId(Object obj) {
+	private void deleteReplicationComponentIdentity(PreDeleteEvent event) {
+		Session s = getSession();
+		Uuid uuid = getUuid(event.getEntity());
+		ReplicationComponentIdentity rci = Util.getReplicationComponentIdentityByRefObjUuid(s, uuid);
+
+		if (rci != null) s.delete(rci);
+	}
+
+	private Serializable getId(Object obj) {
 		Session session = getSession();
 		return session.getIdentifier(obj);
 	}
 
-	protected void setListeners(Configuration cfg) {
+	private void resetListeners(Configuration cfg) {
+		cfg.setInterceptor(EmptyInterceptor.INSTANCE);
+		EventListeners el = cfg.getEventListeners();
+
+		PostUpdateEventListener[] o2 = el.getPostUpdateEventListeners();
+		PostUpdateEventListener[] r2 = (PostUpdateEventListener[])
+				ArrayUtils.removeElement(o2, this);
+		if ((o2.length - r2.length) != 1)
+			throw new RuntimeException("can't remove");
+		el.setPostUpdateEventListeners(r2);
+
+		PreDeleteEventListener[] o3 = el.getPreDeleteEventListeners();
+		PreDeleteEventListener[] r3 = (PreDeleteEventListener[])
+				ArrayUtils.removeElement(o3, this);
+		if ((o3.length - r3.length) != 1)
+			throw new RuntimeException("can't remove");
+		el.setPreDeleteEventListeners(r3);
+
+		PostInsertEventListener[] o4 = el.getPostInsertEventListeners();
+		PostInsertEventListener[] r4 = (PostInsertEventListener[])
+				ArrayUtils.removeElement(o4, this);
+		if ((o4.length - r4.length) != 1)
+			throw new RuntimeException("can't remove");
+
+		el.setPostInsertEventListeners(r4);
+	}
+
+	private void setListeners(Configuration cfg) {
 		cfg.setInterceptor(this);
-		EventListeners eventListeners = cfg.getEventListeners();
-		eventListeners.setPostUpdateEventListeners(new PostUpdateEventListener[]{this});
-		eventListeners.setPostInsertEventListeners(new PostInsertEventListener[]{this});
-		eventListeners.setPreDeleteEventListeners(new PreDeleteEventListener[]{this});
+
+		EventListeners el = cfg.getEventListeners();
+
+		el.setPostUpdateEventListeners((PostUpdateEventListener[])
+				ArrayUtils.add(el.getPostUpdateEventListeners(), this));
+
+		el.setPostInsertEventListeners((PostInsertEventListener[])
+				ArrayUtils.add(el.getPostInsertEventListeners(), this));
+
+		el.setPreDeleteEventListeners((PreDeleteEventListener[])
+				ArrayUtils.add(el.getPreDeleteEventListeners(), this));
 	}
 }

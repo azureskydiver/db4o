@@ -4,16 +4,16 @@ import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-public class ReplicationReferenceImpl implements ReplicationReference {
+public final class ReplicationReferenceImpl implements ReplicationReference {
 // ------------------------------ FIELDS ------------------------------
 
-	private Object obj;
+	private final Object obj;
 	private final Db4oUUID uuid;
-	private long version;
+	private final long version;
 	private Object counterPart;
 	private boolean markedForReplicating;
 
-	public boolean isMarkedForReplicating() {
+	public final boolean isMarkedForReplicating() {
 		return markedForReplicating;
 	}
 
@@ -27,7 +27,7 @@ public class ReplicationReferenceImpl implements ReplicationReference {
 
 // ------------------------ CANONICAL METHODS ------------------------
 
-	public boolean equals(Object o) {
+	public final boolean equals(Object o) {
 		if (this == o) return true;
 
 		if (o == null || o.getClass().getSuperclass() != o.getClass().getSuperclass()) return false;
@@ -35,19 +35,17 @@ public class ReplicationReferenceImpl implements ReplicationReference {
 		final ReplicationReference that = (ReplicationReferenceImpl) o;
 
 		if (version != that.version()) return false;
-		if (!uuid.equals(that.uuid())) return false;
-
-		return true;
+		return uuid.equals(that.uuid());
 	}
 
-	public int hashCode() {
+	public final int hashCode() {
 		int result;
 		result = uuid.hashCode();
 		result = 29 * result + (int) (version ^ (version >>> 32));
 		return result;
 	}
 
-	public String toString() {
+	public final String toString() {
 		return new ToStringBuilder(this).
 				append("className", obj).
 				append("objectId", uuid).
@@ -61,32 +59,27 @@ public class ReplicationReferenceImpl implements ReplicationReference {
 
 // --------------------- Interface ReplicationReference ---------------------
 
-
-	public Object counterpart() {
+	public final Object counterpart() {
 		return counterPart;
 	}
 
-	public void markForReplicating() {
+	public final void markForReplicating() {
 		markedForReplicating = true;
 	}
 
-	public Object object() {
+	public final Object object() {
 		return obj;
 	}
 
-	public void setCounterpart(Object obj) {
+	public final void setCounterpart(Object obj) {
 		counterPart = obj;
 	}
 
-	public Db4oUUID uuid() {
+	public final Db4oUUID uuid() {
 		return uuid;
 	}
 
-	public long version() {
+	public final long version() {
 		return version;
-	}
-
-	public void setObject(Object obj) {
-		this.obj = obj;
 	}
 }

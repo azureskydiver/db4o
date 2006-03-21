@@ -20,36 +20,20 @@ import org.hibernate.tool.hbm2ddl.TableMetadata;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Set;
 
-public class RefAsColumnsTablesCreator implements TablesCreator {
+public final class RefAsColumnsTablesCreator implements TablesCreator {
 // ------------------------------ FIELDS ------------------------------
 
-	protected static final String ALTER_TABLE = "ALTER TABLE ";
+	private static final String ALTER_TABLE = "ALTER TABLE ";
 
-	RefConfig cfg;
+	private final RefConfig cfg;
 
 	/**
 	 * Represents a dialect of SQL implemented by a particular RDBMS.
 	 */
-	protected Dialect dialect;
+	private final Dialect dialect;
 
-	/**
-	 * Comprehensive information about the database as a whole.
-	 */
-	protected DatabaseMetadata metadata;
-
-	/**
-	 * Hibernate mapped tables, excluding  {@link com.db4o.inside.replication.ReadonlyReplicationProviderSignature}
-	 * and {@link com.db4o.replication.hibernate.metadata.ReplicationRecord}.
-	 */
-	protected Set mappedTables;
-
-	protected Session session;
-
-	protected Connection connection;
-
-	protected RefAsColumnsSchemaValidator validator;
+	private final RefAsColumnsSchemaValidator validator;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -66,7 +50,7 @@ public class RefAsColumnsTablesCreator implements TablesCreator {
 	/**
 	 * @throws RuntimeException when tables/columns not found
 	 */
-	public void createTables() {
+	public final void createTables() {
 		if (cfg.getConfiguration().getProperties().get(Environment.HBM2DDL_AUTO).equals("validate"))
 			validator.validate();
 		else {
@@ -78,10 +62,11 @@ public class RefAsColumnsTablesCreator implements TablesCreator {
 
 	private void visitTables() {
 		SessionFactory sessionFactory = cfg.getConfiguration(). buildSessionFactory();
-		session = sessionFactory.openSession();
+		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
-		connection = session.connection();
+		Connection connection = session.connection();
 
+		DatabaseMetadata metadata;
 		try {
 			metadata = new DatabaseMetadata(connection, dialect);
 		} catch (SQLException e) {
@@ -104,8 +89,8 @@ public class RefAsColumnsTablesCreator implements TablesCreator {
 
 // -------------------------- INNER CLASSES --------------------------
 
-	class ModifyingTableVisitor implements Visitor4 {
-		protected final DatabaseMetadata metadata;
+	final class ModifyingTableVisitor implements Visitor4 {
+		final DatabaseMetadata metadata;
 		final Statement st;
 
 		public ModifyingTableVisitor(DatabaseMetadata metadata, Statement st) {
@@ -113,7 +98,7 @@ public class RefAsColumnsTablesCreator implements TablesCreator {
 			this.st = st;
 		}
 
-		public void visit(Object obj) {
+		public final void visit(Object obj) {
 			final Table table = (Table) obj;
 
 			if (colNotExist(table, Db4oColumns.VERSION))
@@ -128,7 +113,7 @@ public class RefAsColumnsTablesCreator implements TablesCreator {
 			}
 		}
 
-		protected boolean colNotExist(Table table, Db4oColumns db4oCol) {
+		final boolean colNotExist(Table table, Db4oColumns db4oCol) {
 			TableMetadata tableMetadata = metadata.getTableMetadata(table.getName(), table.getSchema(), table.getCatalog());
 			ColumnMetadata col = tableMetadata.getColumnMetadata(db4oCol.name);
 
@@ -152,7 +137,7 @@ public class RefAsColumnsTablesCreator implements TablesCreator {
 			}
 		}
 
-		protected void createDb4oColumns(Table table, Db4oColumns db4oCol) {
+		final void createDb4oColumns(Table table, Db4oColumns db4oCol) {
 			final String tableName = table.getQualifiedName(cfg.getDialect(), null, null);
 			String addcolStr = " " + cfg.getDialect().getAddColumnString() + " ";
 			final String sql = ALTER_TABLE + tableName + addcolStr + db4oCol.name + " " + cfg.getType(db4oCol.type);
@@ -170,7 +155,7 @@ public class RefAsColumnsTablesCreator implements TablesCreator {
 			}
 		}
 
-		protected String getDb4oSigIdFKConstraintString(Table table) {
+		final String getDb4oSigIdFKConstraintString(Table table) {
 			final String tableName = table.getQualifiedName(cfg.getDialect(), null, null);
 
 			final PersistentClass classMapping = cfg.getConfiguration().getClassMapping(ReplicationProviderSignature.class.getName());

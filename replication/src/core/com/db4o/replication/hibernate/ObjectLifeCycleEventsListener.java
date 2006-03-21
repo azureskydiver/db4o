@@ -38,5 +38,7 @@ public interface ObjectLifeCycleEventsListener extends
 
 	void configure(Configuration cfg);
 
+	void destroy();
+
 	void install(Session session, Configuration cfg);
 }

@@ -5,11 +5,11 @@ import com.db4o.foundation.ObjectSetAbstractFacade;
 import java.util.Collection;
 import java.util.Iterator;
 
-public class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
+final class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
 // ------------------------------ FIELDS ------------------------------
 
-	Collection _delegate;
-	Iterator _itor;
+	private final Collection _delegate;
+	private final Iterator _itor;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -22,22 +22,21 @@ public class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
 
 // --------------------- Interface List ---------------------
 
-
-	public boolean contains(Object o) {
+	public final boolean contains(Object o) {
 		return _delegate.contains(o);
 	}
 
 // --------------------- Interface ObjectSet ---------------------
 
-	public boolean hasNext() {
+	public final boolean hasNext() {
 		return _itor.hasNext();
 	}
 
-	public Object next() {
+	public final Object next() {
 		return _itor.next();
 	}
 
-	public int size() {
+	public final int size() {
 		return _delegate.size();
 	}
 }
