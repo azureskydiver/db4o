@@ -108,4 +108,31 @@ public class Shared {
 	public static ReplicationProviderSignature getProviderSignatureById(Session session, long sigId) {
 		return (ReplicationProviderSignature) session.get(ReplicationProviderSignature.class, sigId);
 	}
+
+	public static void updateMetadata(long version, long uuidLong, Serializable identifier,
+			String tableName, String pkColumn, Session session, long sigId) {
+		String sql = "UPDATE " + tableName + " SET " + Db4oColumns.VERSION.name + "=?"
+				+ ", " + Db4oColumns.UUID_LONG_PART.name + "=?"
+				+ ", " + Db4oColumns.PROVIDER_ID.name + "=?"
+				+ " WHERE " + pkColumn + " =?";
+
+		PreparedStatement ps = null;
+		try {
+			ps = session.connection().prepareStatement(sql);
+
+			ps.setLong(1, version);
+			ps.setLong(2, uuidLong);
+			ps.setLong(3, sigId);
+			ps.setObject(4, identifier);
+
+			int affected = ps.executeUpdate();
+			if (affected != 1) {
+				throw new RuntimeException("Unable to update db4o columns");
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			Util.closePreparedStatement(ps);
+		}
+	}
 }

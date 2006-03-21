@@ -1,7 +1,6 @@
 package com.db4o.replication.hibernate.impl.ref_as_table;
 
 import com.db4o.replication.hibernate.impl.AbstractObjectLifeCycleEventsListener;
-import com.db4o.replication.hibernate.impl.Constants;
 import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.impl.UuidGenerator;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
@@ -40,7 +39,8 @@ public class RefAsTableObjectLifeCycleEventsListener extends AbstractObjectLifeC
 
 		ref.setUuid(uuidGenerator.next());
 
-		ref.setVersion(Constants.MIN_VERSION_NO);
+		long ver = Util.getMaxVersion(getSession().connection()) + 1;
+		ref.setVersion(ver);
 		getSession().save(ref);
 	}
 
