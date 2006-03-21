@@ -26,8 +26,10 @@ public class XMLExporter {
 
 		try {
 			out = new PrintStream(new FileOutputStream(fileName));
+			out.println("<root>");
 			input.reset();
 			export(input);
+			out.println("</root>");
 		} finally {
 			if (out != null)
 				out.close();
