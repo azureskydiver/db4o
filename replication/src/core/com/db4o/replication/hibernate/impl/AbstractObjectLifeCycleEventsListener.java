@@ -6,10 +6,12 @@ import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.CallbackException;
+import org.hibernate.Criteria;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.collection.PersistentCollection;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.event.EventListeners;
 import org.hibernate.event.PostInsertEventListener;
 import org.hibernate.event.PostUpdateEvent;
@@ -20,6 +22,7 @@ import org.hibernate.event.PreDeleteEventListener;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -129,9 +132,20 @@ public abstract class AbstractObjectLifeCycleEventsListener extends EmptyInterce
 	private void deleteReplicationComponentIdentity(PreDeleteEvent event) {
 		Session s = getSession();
 		Uuid uuid = getUuid(event.getEntity());
-		ReplicationComponentIdentity rci = Util.getReplicationComponentIdentityByRefObjUuid(s, uuid);
 
-		if (rci != null) s.delete(rci);
+		Criteria criteria = s.createCriteria(ReplicationComponentIdentity.class);
+		criteria.add(Restrictions.eq("referencingObjectUuidLongPart", uuid.getLongPart()));
+		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getProvider().getBytes()));
+
+		final List exisitings = criteria.list();
+		int count = exisitings.size();
+
+		if (count == 0) {
+			//do nothing
+		} else if (count > 1)
+			throw new RuntimeException("Duplicated ReplicationComponentIdentity");
+		else
+			s.delete(exisitings.get(0));
 	}
 
 	private Serializable getId(Object obj) {
