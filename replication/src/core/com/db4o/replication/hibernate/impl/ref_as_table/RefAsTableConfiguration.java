@@ -7,10 +7,10 @@ import org.hibernate.cfg.Configuration;
 
 import java.util.HashMap;
 
-public class RefAsTableConfiguration extends RefConfig {
+public final class RefAsTableConfiguration extends RefConfig {
 // ------------------------------ FIELDS ------------------------------
 
-	private static HashMap<Configuration, RefAsTableConfiguration> cache = new HashMap<Configuration, RefAsTableConfiguration>();
+	private static final HashMap<Configuration, RefAsTableConfiguration> cache = new HashMap<Configuration, RefAsTableConfiguration>();
 
 // -------------------------- STATIC METHODS --------------------------
 
@@ -31,7 +31,7 @@ public class RefAsTableConfiguration extends RefConfig {
 		init();
 	}
 
-	protected void addClasses() {
+	protected final void addClasses() {
 		super.addClasses();
 		Util.addClass(configuration, ObjectReference.class);
 	}

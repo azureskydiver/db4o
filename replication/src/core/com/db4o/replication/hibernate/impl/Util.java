@@ -32,7 +32,7 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.List;
 
-public class Util {
+public final class Util {
 // -------------------------- STATIC METHODS --------------------------
 
 	public static boolean skip(Table table) {
@@ -122,7 +122,7 @@ public class Util {
 		dumpTable(p.getName(), p.getSession(), s);
 	}
 
-	public static void dumpTable(String providerName, Connection con, String tableName) {
+	private static void dumpTable(String providerName, Connection con, String tableName) {
 		ResultSet rs = null;
 
 		try {
@@ -149,7 +149,7 @@ public class Util {
 		}
 	}
 
-	public static void dumpTable(String providerName, Session sess, String tableName) {
+	private static void dumpTable(String providerName, Session sess, String tableName) {
 		dumpTable(providerName, sess.connection(), tableName);
 	}
 
@@ -209,6 +209,19 @@ public class Util {
 
 		if (session.createCriteria(MySignature.class).list().size() < 1)
 			session.save(MySignature.generateSignature());
+
+		tx.commit();
+		session.close();
+		sf.close();
+	}
+
+	public static void initUuidLongPartSequence(Configuration cfg) {
+		SessionFactory sf = cfg.buildSessionFactory();
+		Session session = sf.openSession();
+		Transaction tx = session.beginTransaction();
+
+		if (session.createCriteria(UuidLongPartSequence.class).list().size() < 1)
+			session.save(new UuidLongPartSequence());
 
 		tx.commit();
 		session.close();

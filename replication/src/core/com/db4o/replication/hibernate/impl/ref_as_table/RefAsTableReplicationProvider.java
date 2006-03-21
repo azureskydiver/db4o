@@ -19,17 +19,39 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.event.PostInsertEvent;
-import org.hibernate.event.PostUpdateEvent;
-import org.hibernate.event.PreDeleteEvent;
 import org.hibernate.mapping.PersistentClass;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
+public final class RefAsTableReplicationProvider extends AbstractReplicationProvider {
+// -------------------------- STATIC METHODS --------------------------
+
+	private static Criterion build(List<String> classNames, String fieldName) {
+		Disjunction disjunction = Restrictions.disjunction();
+
+		for (String s : classNames)
+			disjunction.add(Restrictions.eq(fieldName, s));
+		return disjunction;
+	}
+
+	private static List<String> getTypeClassNames(PersistentClass rootClass) {
+		List<String> out = new ArrayList<String>();
+		out.add(rootClass.getClassName());
+		if (rootClass.hasSubclasses()) {
+			final Iterator it = rootClass.getSubclassClosureIterator();
+			while (it.hasNext()) {
+				PersistentClass subC = (PersistentClass) it.next();
+				out.add(subC.getClassName());
+			}
+		}
+		return out;
+	}
+
 // --------------------------- CONSTRUCTORS ---------------------------
 
 	public RefAsTableReplicationProvider(Configuration cfg) {
@@ -37,10 +59,13 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 	}
 
 	public RefAsTableReplicationProvider(Configuration cfg, String name) {
-		//setCurrentSessionContext(cfg);
 		_name = name;
 
 		_refCfg = RefAsTableConfiguration.produce(cfg);
+
+		Util.initUuidLongPartSequence(cfg);
+		lifeCycleEventsListener = new MyObjectLifeCycleEventsListener();
+		lifeCycleEventsListener.configure(cfg);
 
 		_objectConfig = new ObjectConfig(cfg);
 
@@ -55,10 +80,12 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 
 		init();
 
+		lifeCycleEventsListener.install(getSession(), cfg);
+
 		_alive = true;
 	}
 
-	protected Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
+	protected final Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
 		List<String> classNames = getTypeClassNames(persistentClass);
 
 		Criteria criteria = getSession().createCriteria(ObjectReference.class);
@@ -77,48 +104,11 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		return loadObject(ids);
 	}
 
-	protected RefConfig getRefConfig() {
+	protected final RefConfig getRefConfig() {
 		return _refCfg;
 	}
 
-	protected Uuid getUuid(Object obj) {
-		return Shared.getUuid(getSession(), obj);
-	}
-
-	protected void incrementObjectVersion(PostUpdateEvent event) {
-		ensureReplicationInActive();
-		final Object entity = event.getEntity();
-		final long id = Shared.castAsLong(event.getId());
-
-		final Session sess = getSession();
-		Shared.incrementObjectVersion(sess, entity, id);
-	}
-
-	protected void objectInserted(PostInsertEvent event) {
-		long id = Shared.castAsLong(event.getId());
-		Session s = getSession();
-
-		ObjectReference ref = new ObjectReference();
-		ref.setClassName(event.getEntity().getClass().getName());
-		ref.setObjectId(id);
-
-		ref.setUuid(uuidGenerator.next());
-
-		ref.setVersion(Util.getMaxVersion(s.connection()) + 1);
-
-		s.save(ref);
-	}
-
-	protected void objectToBeDeleted(PreDeleteEvent event) {
-		super.objectToBeDeleted(event);
-		ObjectReference ref = Shared.getObjectReferenceById(getSession(), event.getEntity());
-
-		if (ref == null) throw new RuntimeException("ObjectReference must exist");
-
-		getSession().delete(ref);
-	}
-
-	protected ReplicationReference produceObjectReference(Object obj) {
+	protected final ReplicationReference produceObjectReference(Object obj) {
 		if (!getSession().contains(obj)) return null;
 
 		final ObjectReference ref = Shared.getObjectReferenceById(getSession(), obj);
@@ -129,7 +119,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		return _objRefs.put(obj, new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes()), ref.getVersion());
 	}
 
-	protected ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid, Class hint) {
+	protected final ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid, Class hint) {
 		String alias = "objRef";
 		String uuidPath = alias + "." + ObjectReference.UUID + ".";
 		String queryString = "from " + ObjectReference.TABLE_NAME
@@ -154,7 +144,7 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		}
 	}
 
-	protected void saveOrUpdateReplicaMetadata(ReplicationReference ref) {
+	protected final void saveOrUpdateReplicaMetadata(ReplicationReference ref) {
 		ensureReplicationActive();
 		final Object obj = ref.object();
 
@@ -183,24 +173,17 @@ public class RefAsTableReplicationProvider extends AbstractReplicationProvider {
 		}
 	}
 
-	private Criterion build(List<String> classNames, String fieldName) {
-		Disjunction disjunction = Restrictions.disjunction();
+// -------------------------- INNER CLASSES --------------------------
 
-		for (String s : classNames)
-			disjunction.add(Restrictions.eq(fieldName, s));
-		return disjunction;
-	}
-
-	private List<String> getTypeClassNames(PersistentClass rootClass) {
-		List<String> out = new ArrayList<String>();
-		out.add(rootClass.getClassName());
-		if (rootClass.hasSubclasses()) {
-			final Iterator it = rootClass.getSubclassClosureIterator();
-			while (it.hasNext()) {
-				PersistentClass subC = (PersistentClass) it.next();
-				out.add(subC.getClassName());
-			}
+	final class MyObjectLifeCycleEventsListener extends RefAsTableObjectLifeCycleEventsListener {
+		public final void onPostInsert(PostInsertEvent event) {
+			if (!isReplicationActive())
+				super.onPostInsert(event);
 		}
-		return out;
+
+		protected final void ObjectUpdated(Object obj, Serializable id) {
+			if (!isReplicationActive())
+				super.ObjectUpdated(obj, id);
+		}
 	}
 }

@@ -17,13 +17,13 @@ import org.hibernate.tool.hbm2ddl.TableMetadata;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class RefAsColumnsSchemaValidator {
+public final class RefAsColumnsSchemaValidator {
 // ------------------------------ FIELDS ------------------------------
 
-	protected SchemaValidator delegate;
-	protected SessionFactory sessionFactory;
-	protected final Dialect dialect;
-	private RefConfig cfg;
+	private final SchemaValidator delegate;
+	private SessionFactory sessionFactory;
+	private final Dialect dialect;
+	private final RefConfig cfg;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -34,11 +34,11 @@ public class RefAsColumnsSchemaValidator {
 		dialect = cfg.getDialect();
 	}
 
-	public void destroy() {
+	public final void destroy() {
 		sessionFactory.close();
 	}
 
-	public void validate() {
+	public final void validate() {
 		if (sessionFactory == null)
 			sessionFactory = cfg.getConfiguration(). buildSessionFactory();
 
@@ -65,21 +65,21 @@ public class RefAsColumnsSchemaValidator {
 
 // -------------------------- INNER CLASSES --------------------------
 
-	class ValidatingTableVisitor implements Visitor4 {
+	final class ValidatingTableVisitor implements Visitor4 {
 		final DatabaseMetadata metadata;
 
 		ValidatingTableVisitor(DatabaseMetadata metadata) {
 			this.metadata = metadata;
 		}
 
-		public void visit(Object obj) {
+		public final void visit(Object obj) {
 			final Table table = (Table) obj;
 			visitCol(table, Db4oColumns.VERSION);
 			visitCol(table, Db4oColumns.UUID_LONG_PART);
 			visitCol(table, Db4oColumns.PROVIDER_ID);
 		}
 
-		protected void visitCol(Table table, Db4oColumns db4oCol) {
+		final void visitCol(Table table, Db4oColumns db4oCol) {
 			TableMetadata tableMetadata = metadata.getTableMetadata(table.getName(), table.getSchema(), table.getCatalog());
 			ColumnMetadata col = tableMetadata.getColumnMetadata(db4oCol.name);
 

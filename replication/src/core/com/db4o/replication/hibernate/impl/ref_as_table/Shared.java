@@ -15,42 +15,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public class Shared {
+public final class Shared {
 // -------------------------- STATIC METHODS --------------------------
 
-	public static void ensureLong(Serializable id) {
+	public static long castAsLong(Serializable id) {
 		if (!(id instanceof Long))
 			throw new IllegalStateException("You must use 'long' as the type of the hibernate id");
-	}
-
-	public static long castAsLong(Serializable id) {
-		ensureLong(id);
-		return ((Long) id).longValue();
-	}
-
-	static void incrementObjectVersion(Connection con, String className, long id) {
-		long newVer = Util.getMaxVersion(con) + 1;
-		String sql = "UPDATE " + ObjectReference.TABLE_NAME
-				+ " SET " + ObjectReference.VERSION + " = " + newVer
-				+ " WHERE " + ObjectReference.CLASS_NAME + " = '" + className + "'"
-				+ " AND " + ObjectReference.OBJECT_ID + " = " + id;
-
-		final Statement st = Util.getStatement(con);
-
-		try {
-			final int affected = st.executeUpdate(sql);
-
-			if (affected != 1)
-				throw new RuntimeException("unable to update the version of an object");
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			Util.closeStatement(st);
-		}
-	}
-
-	static void incrementObjectVersion(Session sess, Object entity, long id) {
-		incrementObjectVersion(sess.connection(), entity.getClass().getName(), castAsLong(sess.getIdentifier(entity)));
+		return (Long) id;
 	}
 
 	public static long getVersion(Connection con, String className, long id) {

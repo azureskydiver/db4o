@@ -44,7 +44,7 @@ public class ReplicationConfiguratorTestRefAsColumns extends AbstractReplication
 	protected Session openSession() {
 		Session session = sessionFactory.openSession();
 		ReplicationConfigurator.install(session, cfg);
-		session.setFlushMode(FlushMode.AUTO);
+		session.setFlushMode(FlushMode.COMMIT);
 		return session;
 	}
 

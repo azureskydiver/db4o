@@ -6,12 +6,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Environment;
 import org.hibernate.tool.hbm2ddl.SchemaValidator;
 
-public class RefAsTableTablesCreator implements TablesCreator {
+public final class RefAsTableTablesCreator implements TablesCreator {
 // ------------------------------ FIELDS ------------------------------
 
-	RefConfig cfg;
+	private final RefConfig cfg;
 
-	protected SchemaValidator validator;
+	private final SchemaValidator validator;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -27,7 +27,7 @@ public class RefAsTableTablesCreator implements TablesCreator {
 	/**
 	 * @throws RuntimeException when tables/columns not found
 	 */
-	public void createTables() {
+	public final void createTables() {
 		if (cfg.getConfiguration().getProperties().get(Environment.HBM2DDL_AUTO).equals("validate"))
 			validator.validate();
 		else {

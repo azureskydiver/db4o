@@ -2,7 +2,7 @@ package com.db4o.replication.hibernate.impl;
 
 import java.io.Serializable;
 
-public class HibernateObjectId {
+public final class HibernateObjectId {
 // ------------------------------ FIELDS ------------------------------
 
 	public final Serializable hibernateId;
@@ -17,7 +17,7 @@ public class HibernateObjectId {
 
 // ------------------------ CANONICAL METHODS ------------------------
 
-	public String toString() {
+	public final String toString() {
 		return "HibernateObjectId, className = " + className + ", hibernateId = " + hibernateId;
 	}
 }

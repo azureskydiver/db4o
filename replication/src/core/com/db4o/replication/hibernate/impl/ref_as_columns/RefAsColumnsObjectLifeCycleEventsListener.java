@@ -11,26 +11,33 @@ import org.hibernate.event.PostInsertEvent;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RefAsColumnsObjectLifeCycleEventsListener extends AbstractObjectLifeCycleEventsListener {
 // ------------------------------ FIELDS ------------------------------
 
-	protected final Map<Session, ObjectConfig> sessionConfigurationMap = new HashMap();
-
-// --------------------------- CONSTRUCTORS ---------------------------
-
-	public RefAsColumnsObjectLifeCycleEventsListener() {
-		//empty
-	}
+	private final Map<Session, ObjectConfig> sessionConfigurationMap = new HashMap();
 
 // ------------------------ INTERFACE METHODS ------------------------
 
-// --------------------- Interface UpdateEventListener ---------------------
+// --------------------- Interface ObjectLifeCycleEventsListener ---------------------
 
+	public final void configure(Configuration cfg) {
+		new RefAsColumnsTablesCreator(RefAsColumnsConfiguration.produce(cfg)).createTables();
+		super.configure(cfg);
+	}
+
+	public final void install(Session session, Configuration cfg) {
+		super.install(session, cfg);
+		sessionConfigurationMap.put(session, new ObjectConfig(cfg));
+	}
 
 	public void onPostInsert(PostInsertEvent event) {
+		ensureAlive();
+
 		Object entity = event.getEntity();
 		if (Util.skip(entity)) return;
 
@@ -40,30 +47,8 @@ public class RefAsColumnsObjectLifeCycleEventsListener extends AbstractObjectLif
 		String pName = objectConfig.getPrimaryKeyColumnName(entity);
 
 		long ver = Util.getMaxVersion(getSession().connection()) + 1;
-		UuidGenerator uuidGenerator = sessionUuidGeneratorMap.get(getSession());
-		Uuid uuid = uuidGenerator.next();
+		Uuid uuid = UuidGenerator.next(getSession());
 		Shared.updateMetadata(ver, uuid.getLongPart(), id, tName, pName, getSession(), uuid.getProvider().getId());
-	}
-
-	public void configure(Configuration cfg) {
-		new RefAsColumnsTablesCreator(RefAsColumnsConfiguration.produce(cfg)).createTables();
-		Util.initMySignature(cfg);
-
-		setListeners(cfg);
-	}
-
-	public void install(Session session, Configuration cfg) {
-		super.install(session, cfg);
-		sessionConfigurationMap.put(session, new ObjectConfig(cfg));
-	}
-
-	protected Uuid getUuid(Object entity) {
-		ObjectConfig objectConfig = getObjectConfig();
-		String tName = objectConfig.getTableName(entity.getClass());
-		String pName = objectConfig.getPrimaryKeyColumnName(entity);
-		Serializable identifier = getSession().getIdentifier(entity);
-
-		return (Uuid) Shared.getUuidAndVersion(tName, pName, identifier, getSession())[0];
 	}
 
 	protected void ObjectUpdated(Object obj, Serializable id) {
@@ -75,10 +60,37 @@ public class RefAsColumnsObjectLifeCycleEventsListener extends AbstractObjectLif
 		String tableName = objectConfig.getTableName(obj.getClass());
 		String primaryKeyColumnName = objectConfig.getPrimaryKeyColumnName(obj);
 		Connection connection = session.connection();
-		Shared.incrementObjectVersion(connection, id, newVersion, tableName, primaryKeyColumnName);
+		PreparedStatement ps = null;
+
+		try {
+			String sql = "UPDATE " + tableName + " SET " + Db4oColumns.VERSION.name + "=?"
+					+ " WHERE " + primaryKeyColumnName + " =?";
+			ps = connection.prepareStatement(sql);
+			ps.setLong(1, newVersion);
+			ps.setObject(2, id);
+
+			int affected = ps.executeUpdate();
+			if (affected != 1) {
+				throw new RuntimeException("Unable to update the version column");
+			}
+			ps.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			Util.closePreparedStatement(ps);
+		}
 	}
 
-	protected final ObjectConfig getObjectConfig() {
+	protected final Uuid getUuid(Object entity) {
+		ObjectConfig objectConfig = getObjectConfig();
+		String tName = objectConfig.getTableName(entity.getClass());
+		String pName = objectConfig.getPrimaryKeyColumnName(entity);
+		Serializable identifier = getSession().getIdentifier(entity);
+
+		return (Uuid) Shared.getUuidAndVersion(tName, pName, identifier, getSession())[0];
+	}
+
+	private ObjectConfig getObjectConfig() {
 		return sessionConfigurationMap.get(getSession());
 	}
 }

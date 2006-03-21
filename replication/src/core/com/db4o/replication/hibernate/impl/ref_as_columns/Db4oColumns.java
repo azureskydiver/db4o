@@ -2,7 +2,7 @@ package com.db4o.replication.hibernate.impl.ref_as_columns;
 
 import java.sql.Types;
 
-public class Db4oColumns {
+public final class Db4oColumns {
 // ------------------------------ FIELDS ------------------------------
 
 	/**
@@ -30,7 +30,7 @@ public class Db4oColumns {
 
 // ------------------------ CANONICAL METHODS ------------------------
 
-	public String toString() {
+	public final String toString() {
 		System.err.println("you shouldn't call this method. a bug? ");
 		return name;
 	}

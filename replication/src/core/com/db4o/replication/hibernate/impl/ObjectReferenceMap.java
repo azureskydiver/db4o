@@ -8,10 +8,10 @@ import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ObjectReferenceMap {
+public final class ObjectReferenceMap {
 // ------------------------------ FIELDS ------------------------------
 
-	Map<Object, ReplicationReference> delegate;
+	private final Map<Object, ReplicationReference> delegate;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -19,15 +19,15 @@ public class ObjectReferenceMap {
 		delegate = new IdentityHashMap();
 	}
 
-	public void clear() {
+	public final void clear() {
 		delegate.clear();
 	}
 
-	public ReplicationReference get(Object obj) {
+	public final ReplicationReference get(Object obj) {
 		return delegate.get(obj);
 	}
 
-	public ReplicationReference put(Object obj, Db4oUUID uuid, long version) {
+	public final ReplicationReference put(Object obj, Db4oUUID uuid, long version) {
 		ReplicationReference result = new ReplicationReferenceImpl(obj, uuid, version);
 		delegate.put(obj, result);
 		return result;

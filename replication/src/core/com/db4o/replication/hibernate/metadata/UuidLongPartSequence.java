@@ -23,6 +23,14 @@ public class UuidLongPartSequence {
 		current = Constants.MIN_SEQ_NO;
 	}
 
+// ------------------------ CANONICAL METHODS ------------------------
+
+	public String toString() {
+		return "UuidLongPartSequence{" +
+				"current=" + current +
+				'}';
+	}
+
 	public void increment() {
 		current++;
 	}

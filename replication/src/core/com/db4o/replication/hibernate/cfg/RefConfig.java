@@ -15,13 +15,13 @@ public class RefConfig {
 
 	protected Configuration configuration;
 
-	public Configuration getConfiguration() {
+	public final Configuration getConfiguration() {
 		return configuration;
 	}
 
-	protected Dialect dialect;
+	private Dialect dialect;
 
-	public Dialect getDialect() {
+	public final Dialect getDialect() {
 		return dialect;
 	}
 
@@ -34,7 +34,7 @@ public class RefConfig {
 		Util.addClass(configuration, DeletedObject.class);
 	}
 
-	protected void init() {
+	protected final void init() {
 		configuration.setProperty("hibernate.format_sql", "true");
 		configuration.setProperty("hibernate.use_sql_comments", "true");
 		configuration.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.NoCacheProvider");
@@ -47,7 +47,7 @@ public class RefConfig {
 		dialect = Dialect.getDialect(configuration.getProperties());
 	}
 
-	public String getType(int sqlType) {
+	public final String getType(int sqlType) {
 		return dialect.getTypeName(sqlType);
 	}
 }
