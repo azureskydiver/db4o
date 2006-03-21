@@ -125,7 +125,14 @@ class InstanceNode implements IModelNode {
 	 * @see com.db4o.browser.gui.ITreeNode#mayHaveChildren()
 	 */
 	public boolean hasChildren() {
-        return _database.reflector().forObject(_instance).getDeclaredFields().length > 0;
+		ReflectClass curclazz=_database.reflector().forObject(_instance);
+		while(curclazz!=null) {
+			if(curclazz.getDeclaredFields().length > 0) {
+				return true;
+			}
+			curclazz=curclazz.getSuperclass();
+		}
+		return false;
 	}
 	
 	public boolean equals(Object obj) {
