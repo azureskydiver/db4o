@@ -17,8 +17,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.mapping.Table;
@@ -271,19 +269,4 @@ public final class Util {
 			return (DeletedObject) list.get(0);
 	}
 
-	public static ReplicationComponentIdentity getReplicationComponentIdentityByRefObjUuid(Session session, Uuid uuid) {
-		Criteria criteria = session.createCriteria(ReplicationComponentIdentity.class);
-		criteria.add(Restrictions.eq("referencingObjectUuidLongPart", uuid.getLongPart()));
-		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getProvider().getBytes()));
-
-		final List exisitings = criteria.list();
-		int count = exisitings.size();
-
-		if (count == 0)
-			return null;
-		else if (count > 1)
-			throw new RuntimeException("Duplicated ReplicationComponentIdentity");
-		else
-			return (ReplicationComponentIdentity) exisitings.get(0);
-	}
 }
