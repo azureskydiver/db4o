@@ -1,7 +1,6 @@
 package com.db4o.replication.hibernate.impl.ref_as_columns;
 
 import com.db4o.ext.Db4oUUID;
-import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.replication.hibernate.cfg.ObjectConfig;
 import com.db4o.replication.hibernate.cfg.RefConfig;
@@ -10,7 +9,6 @@ import com.db4o.replication.hibernate.impl.HibernateObjectId;
 import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
-import com.db4o.replication.hibernate.metadata.ReplicationRecord;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import org.hibernate.FlushMode;
 import org.hibernate.cfg.Configuration;
@@ -20,7 +18,6 @@ import org.hibernate.mapping.PersistentClass;
 
 import java.io.Serializable;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -28,18 +25,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Facade to a Hibernate-mapped database. During Instantiation of an instance of
- * this class, it will do <ol> <li> Registers {@link ReadonlyReplicationProviderSignature}
- * and {@link ReplicationRecord} with Hibernate. Hibernate generates
- * corresponding table if they do not exist. </li> <li> Each POJO is mapped to a
- * table in Hibernate, this Provider checks each table for the existence of
- * version, long part and the provider id columns. </li> <li> Creates a table to
- * hold the version/transaction number </li> </ol>
- *
- * @author Albert Kwan
- * @since 5.0
- */
 public final class RefAsColumnsReplicationProvider extends AbstractReplicationProvider {
 // ------------------------------ FIELDS ------------------------------
 
@@ -186,28 +171,8 @@ public final class RefAsColumnsReplicationProvider extends AbstractReplicationPr
 		String tableName = getObjectConfig().getTableName(ref.object().getClass());
 		String pkColumn = getObjectConfig().getPrimaryKeyColumnName(ref.object());
 
-		String sql = "UPDATE " + tableName + " SET " + Db4oColumns.VERSION.name + "=?"
-				+ ", " + Db4oColumns.UUID_LONG_PART.name + "=?"
-				+ ", " + Db4oColumns.PROVIDER_ID.name + "=?"
-				+ " WHERE " + pkColumn + " =?";
+		long sigId = getProviderSignature(ref.uuid().getSignaturePart()).getId();
 
-		PreparedStatement ps = null;
-		try {
-			ps = _session.connection().prepareStatement(sql);
-
-			ps.setLong(1, ref.version());
-			ps.setLong(2, ref.uuid().getLongPart());
-			ps.setLong(3, getProviderSignature(ref.uuid().getSignaturePart()).getId());
-			ps.setObject(4, identifier);
-
-			int affected = ps.executeUpdate();
-			if (affected != 1) {
-				throw new RuntimeException("Unable to update db4o columns");
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			Util.closePreparedStatement(ps);
-		}
+		Shared.updateMetadata(ref.version(), ref.uuid().getLongPart(), identifier, tableName, pkColumn, getSession(), sigId);
 	}
 }

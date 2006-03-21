@@ -20,6 +20,8 @@ import com.db4o.test.replication.hibernate.ref_as_columns.hsql.MapTestHsqlRefAsC
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.MapTestRefAsColumnsDb4o;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.ProviderTestRefAsColumns;
 import com.db4o.test.replication.hibernate.ref_as_columns.hsql.SimpleArrayTestRefAsColumns;
+import com.db4o.test.replication.hibernate.ref_as_columns.ReplicationConfiguratorTestRefAsColumns;
+import com.db4o.test.replication.hibernate.ref_as_table.ReplicationConfiguratorTestRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.AfterDeletionTestHsqlRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.FeaturesMainRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.ListTestHsqlRefAsTable;
@@ -29,7 +31,6 @@ import com.db4o.test.replication.hibernate.ref_as_table.hsql.ProviderTestHsqlRef
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.RefAsTableTablesCreatorTestHsql;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.SimpleArrayTestHsqlRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.SingleTypeCollectionTestHsqlRefAsTable;
-import com.db4o.test.replication.hibernate.ref_as_table.ReplicationConfiguratorTestRefAsTable;
 import com.db4o.test.replication.jdk11.R0to4RunnerCore;
 import com.db4o.test.replication.jdk11.SimpleParentChildCore;
 import com.db4o.test.replication.jdk14.R0to4RunnerCombinations;
@@ -52,7 +53,7 @@ public class ReplicationTestSuite extends TestSuite {
 				ProviderTestRefAsColumns.class,
 				ProviderTestHsqlRefAsTable.class,
 
-//				ReplicationConfiguratorTestRefAsColumns.class,
+				ReplicationConfiguratorTestRefAsColumns.class,
 				ReplicationConfiguratorTestRefAsTable.class,
 
 				TransientReplicationFeaturesMain.class,
