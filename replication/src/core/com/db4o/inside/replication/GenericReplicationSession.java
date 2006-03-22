@@ -71,6 +71,12 @@ public class GenericReplicationSession implements ReplicationSession {
 		}
 	}
 
+	
+	public void replicateDeletion(Db4oUUID uuid) {
+		throw new RuntimeException("TODO");
+	}
+
+	
 	private void activateGraphToBeReplicated(Object root) {
 		_traverser.traverseGraph(root, new Visitor() {
 			public boolean visit(Object object) {
