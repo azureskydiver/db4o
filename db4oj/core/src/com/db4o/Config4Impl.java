@@ -71,6 +71,8 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     	//= new NIOFileAdapter(512,3);
     	= new RandomAccessFileAdapter();
     
+    Collection4 _aliases;
+    
     int activationDepth() {
         return i_activationDepth;
     }
@@ -470,7 +472,26 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     public void weakReferences(boolean flag) {
         i_weakReferences = flag;
     }
-
+    
+    public void alias(Alias alias) {
+    	if (null == alias) throw new IllegalArgumentException("alias");
+    	if (null == _aliases) _aliases = new Collection4();
+    	_aliases.add(alias);
+    }
+    
+    public String resolveAlias(String runtimeType) {
+    	
+    	if (null == _aliases) return runtimeType;
+    	
+    	Iterator4 i = _aliases.iterator();
+    	while (i.hasNext()) {
+    		String resolved = ((Alias)i.next()).resolve(runtimeType);
+    		if (null != resolved) return resolved; 
+    	}
+    	
+    	return runtimeType;
+    }
+    
     ReflectClass reflectorFor(Object clazz) {
         
         clazz = Platform4.getClassForType(clazz);

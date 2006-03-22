@@ -961,7 +961,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     public Object comparableObject(Transaction a_trans, Object a_object) {
         return a_object;
     }
-
+    
     boolean init(
         YapStream a_stream,
         YapClass a_ancestor,
@@ -974,9 +974,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         
         i_ancestor = a_ancestor;
-        setConfig(a_stream.i_config.configClass(claxx.getName()));
         
-        if(! createConstructor(a_stream, claxx, claxx.getName(), false)){
+        Config4Impl config = a_stream.i_config;
+        String className = claxx.getName();		
+		setConfig(config.configClass(className));
+        
+        if(! createConstructor(a_stream, claxx, className, false)){
             return false;
         }
         
@@ -989,7 +992,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
                 _index = a_stream.createBTreeClassIndex(this, 0);
             }
         }
-        i_name = claxx.getName();
+        i_name = className;
         i_ancestor = a_ancestor;
         bitTrue(YapConst.CHECKED_CHANGES);
         

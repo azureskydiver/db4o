@@ -615,5 +615,11 @@ public interface Configuration {
      * @param milliseconds the time in milliseconds
      */
     public void weakReferenceCollectionInterval(int milliseconds);
+    
+    /**
+     * configures aliasing for class or namespaces/packages.
+     */
+    public void alias(Alias alias);
 
+	public String resolveAlias(String runtimeType);
 }
