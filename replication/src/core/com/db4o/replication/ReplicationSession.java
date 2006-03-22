@@ -2,6 +2,8 @@
 
 package com.db4o.replication;
 
+import com.db4o.ext.Db4oUUID;
+
 /**
  * Execute a round of replication between two ReplicationProviders.
  * <p/>
@@ -74,6 +76,7 @@ public interface ReplicationSession {
 	 * @see ConflictResolver
 	 */
 	public void replicate(Object obj);
+	public void replicateDeletion(Db4oUUID uuid);
 
 	/**
 	 * Rollbacks all changes done during the replication session. This call
@@ -95,4 +98,5 @@ public interface ReplicationSession {
 	 * @param to   objects will be copied to this provider if copies in "from" is newer
 	 */
 	public void setDirection(ReplicationProvider from, ReplicationProvider to);
+
 }

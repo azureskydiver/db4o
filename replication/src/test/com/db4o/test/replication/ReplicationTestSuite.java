@@ -47,7 +47,20 @@ import com.db4o.test.replication.transients.TransientSingleTypeCollectionReplica
 public class ReplicationTestSuite extends TestSuite {
 
 	public Class[] tests() {
+		System.err.println("Use tests2 below");
 		return new Class[]{
+				TransientReplicationFeaturesMain.class,
+		};
+	}
+				
+	public Class[] tests2() {
+		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
+		return new Class[]{
+				TransientReplicationFeaturesMain.class,
+				Db4oReplicationFeaturesMain.class,
+				FeaturesMainRefAsColumns.class,
+				FeaturesMainRefAsTable.class,
+
 				TransientReplicationProviderTest.class,
 				//TODO Db4oReplicationProviderTest.class,
 				ProviderTestRefAsColumns.class,
@@ -55,11 +68,6 @@ public class ReplicationTestSuite extends TestSuite {
 
 				ReplicationConfiguratorTestRefAsColumns.class,
 				ReplicationConfiguratorTestRefAsTable.class,
-
-				TransientReplicationFeaturesMain.class,
-				Db4oReplicationFeaturesMain.class,
-				FeaturesMainRefAsColumns.class,
-				FeaturesMainRefAsTable.class,
 
 				CollectionHandlerImplTest.class,
 				GetByUUID.class,
