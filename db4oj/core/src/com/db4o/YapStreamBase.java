@@ -1271,7 +1271,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     public abstract YapWriter readWriterByID(Transaction a_ta, int a_id);
 
-    abstract YapReader readReaderByID(Transaction a_ta, int a_id);
+    public abstract YapReader readReaderByID(Transaction a_ta, int a_id);
 
     private void reboot() {
         commit();

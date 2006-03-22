@@ -543,7 +543,7 @@ public class YapClient extends YapStream implements ExtClient {
 		}
 	}
 
-	final YapReader readReaderByID(Transaction a_ta, int a_id) {
+	public final YapReader readReaderByID(Transaction a_ta, int a_id) {
 		// TODO: read lightweight reader instead
 		return readWriterByID(a_ta, a_id);
 	}
