@@ -5,6 +5,7 @@ package com.db4o;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 
 /**
  * @exclude
@@ -140,10 +141,11 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     }
 
     YapClass getYapClass(ReflectClass a_class, boolean a_create) {
-        YapClass yapClass = (YapClass)i_yapClassByClass.get(a_class);
+    	
+    	YapClass yapClass = (YapClass)i_yapClassByClass.get(a_class);
         
-        if (yapClass == null) {
-            yapClass = (YapClass)i_yapClassByBytes.remove(asBytes(a_class.getName()));
+        if (yapClass == null) {        	        	
+            yapClass = (YapClass)i_yapClassByBytes.remove(getNameBytes(a_class.getName()));
             readYapClass(yapClass, a_class);
         }
 
@@ -196,14 +198,14 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         i_stream.setDirty(this);
         
         return yapClass;
-    }
-
-    YapClass getYapClass(int a_id) {
+    }    
+    
+	YapClass getYapClass(int a_id) {
         return readYapClass((YapClass)i_yapClassByID.get(a_id), null);
     }
 
     public YapClass getYapClass(String a_name) {
-        YapClass yapClass = (YapClass)i_yapClassByBytes.remove(asBytes(a_name));
+        YapClass yapClass = (YapClass)i_yapClassByBytes.remove(getNameBytes(a_name));
         readYapClass(yapClass, null);
         if (yapClass == null) {
             YapClassCollectionIterator i = iterator();
@@ -220,12 +222,20 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
     }
     
     public int getYapClassID(String name){
-        YapClass yc = (YapClass)i_yapClassByBytes.get(asBytes(name));
+        YapClass yc = (YapClass)i_yapClassByBytes.get(getNameBytes(name));
         if(yc != null){
             return yc.getID();
         }
         return 0;
     }
+
+	private byte[] getNameBytes(String name) {		
+		return asBytes(resolveAlias(name));
+	}
+
+	private String resolveAlias(String name) {
+		return i_stream.i_config.resolveAlias(name);
+	}
 
     void initOnUp(Transaction systemTrans) {
         i_yapClassCreationDepth++;
@@ -296,9 +306,9 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
         readAs.forEachKey(new Visitor4() {
             public void visit(Object a_object) {
                 String dbName = (String)a_object;
-                byte[] dbbytes = asBytes(dbName);
+                byte[] dbbytes = getNameBytes(dbName);
                 String useName = (String)readAs.get(dbName);
-                byte[] useBytes = asBytes(useName);
+                byte[] useBytes = getNameBytes(useName);
                 if(i_yapClassByBytes.get(useBytes) == null){
                     YapClass yc = (YapClass)i_yapClassByBytes.get(dbbytes);
                     if(yc != null){
