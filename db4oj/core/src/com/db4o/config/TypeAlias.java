@@ -6,6 +6,8 @@ public class TypeAlias implements Alias {
 	private String _runtimeType;
 
 	public TypeAlias(String storedType, String runtimeType) {
+		if (null == storedType) throw new IllegalArgumentException("storedType");
+		if (null == runtimeType) throw new IllegalArgumentException("runtimeType");
 		_storedType = storedType;
 		_runtimeType = runtimeType;
 	}
