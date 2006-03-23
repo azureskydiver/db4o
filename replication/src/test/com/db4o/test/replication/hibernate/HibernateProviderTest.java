@@ -3,8 +3,8 @@ package com.db4o.test.replication.hibernate;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
 import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
-import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
 import com.db4o.test.replication.provider.Car;
@@ -17,6 +17,31 @@ import java.util.Collection;
 import java.util.List;
 
 public class HibernateProviderTest extends ReplicationProviderTest {
+// -------------------------- STATIC METHODS --------------------------
+
+	protected static Configuration newCfg() {
+		Configuration configuration = HibernateUtil.createNewDbConfig();
+
+		configuration.addClass(Car.class);
+		configuration.addClass(Pilot.class);
+		configuration.addClass(ListHolder.class);
+		configuration.addClass(ListContent.class);
+		return configuration;
+	}
+
+	protected void destroySubject() {
+		subject.destroy();
+		subject = null;
+	}
+
+	protected TestableReplicationProviderInside prepareSubject() {
+		return new HibernateReplicationProviderImpl(newCfg());
+	}
+
+	protected boolean subjectSupportsRollback() {
+		return true;
+	}
+
 	public void testReplicationProvider() {
 		super.testReplicationProvider();
 		tstCollection();
@@ -66,28 +91,5 @@ public class HibernateProviderTest extends ReplicationProviderTest {
 		ensure(collectionRefFromBAfterClear.uuid().equals(collectionUuid));
 
 		destroySubject();
-	}
-
-	protected boolean subjectSupportsRollback() {
-		return true;
-	}
-
-	protected TestableReplicationProviderInside prepareSubject() {
-		return new RefAsColumnsReplicationProvider(newCfg());
-	}
-
-	protected static Configuration newCfg() {
-		Configuration configuration = HibernateUtil.createNewDbConfig();
-
-		configuration.addClass(Car.class);
-		configuration.addClass(Pilot.class);
-		configuration.addClass(ListHolder.class);
-		configuration.addClass(ListContent.class);
-		return configuration;
-	}
-
-	protected void destroySubject() {
-		subject.destroy();
-		subject = null;
 	}
 }

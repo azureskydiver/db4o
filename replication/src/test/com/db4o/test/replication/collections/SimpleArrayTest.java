@@ -14,7 +14,7 @@ public abstract class SimpleArrayTest extends ReplicationTestcase {
 
 		init();
 
-		delete(new Class[]{SimpleArrayHolder.class, SimpleArrayContent.class});
+		clean();
 
 		storeListToProviderA();
 
@@ -28,8 +28,12 @@ public abstract class SimpleArrayTest extends ReplicationTestcase {
 
 		replicateHolderStep3();
 
+		clean();
+
 		destroy();
 	}
+
+	protected void clean() {delete(new Class[]{SimpleArrayHolder.class, SimpleArrayContent.class});}
 
 	private void storeListToProviderA() {
 

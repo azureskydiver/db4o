@@ -27,13 +27,21 @@ public abstract class ReplicationTestcase {
 	protected void checkEmpty() {
 		ReplicationSession replication = Replication.begin(_providerA, _providerB);
 
-		if (_providerA.objectsChangedSinceLastReplication().hasNext())
-			throw new RuntimeException("_providerA database is not cleaned");
+		checkClean(_providerA);
+		checkClean(_providerB);
 
-		if (_providerB.objectsChangedSinceLastReplication().hasNext())
-			throw new RuntimeException("_providerB database is not cleaned");
+		replication.commit();
+	}
 
-		replication.rollback();
+	private void checkClean(TestableReplicationProviderInside p) {
+		ObjectSet remains = p.objectsChangedSinceLastReplication();
+		boolean notEmpty = false;
+		while (remains.hasNext()) {
+			notEmpty = true;
+			System.out.println("remained = " + remains.next().getClass());
+		}
+
+		if (notEmpty) throw new RuntimeException(p + " is not cleaned");
 	}
 
 	protected void printCombination(ProviderPair p) {
@@ -77,7 +85,11 @@ public abstract class ReplicationTestcase {
 	protected void init() {
 		_providerA = prepareProviderA();
 		_providerB = prepareProviderB();
+		clean();
+		checkEmpty();
 	}
+
+	protected abstract void clean();
 
 	protected void destroy() {
 		_providerA.destroy();

@@ -6,6 +6,7 @@ import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.test.Test;
 import com.db4o.test.replication.ReplicationTestcase;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public abstract class MapTest extends ReplicationTestcase {
@@ -14,7 +15,7 @@ public abstract class MapTest extends ReplicationTestcase {
 
 		init();
 
-		delete(new Class[]{MapContent.class, MapHolder.class, Map.class});
+		clean();
 
 		storeMapToProviderA();
 
@@ -28,8 +29,12 @@ public abstract class MapTest extends ReplicationTestcase {
 
 		replicateHolderStep3();
 
+		clean();
+
 		destroy();
 	}
+
+	protected void clean() {delete(new Class[]{MapContent.class, MapHolder.class, HashMap.class});}
 
 	private void storeMapToProviderA() {
 

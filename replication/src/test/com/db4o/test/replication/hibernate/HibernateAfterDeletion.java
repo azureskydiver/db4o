@@ -1,14 +1,18 @@
 package com.db4o.test.replication.hibernate;
 
+import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.replication.ReplicationAfterDeletionTest;
-import com.db4o.test.replication.SPCChild;
-import com.db4o.test.replication.SPCParent;
-import org.hibernate.cfg.Configuration;
 
-public abstract class HibernateAfterDeletion extends ReplicationAfterDeletionTest {
-	protected Configuration addClasses(Configuration cfg) {
-		cfg.addClass(SPCParent.class);
-		cfg.addClass(SPCChild.class);
-		return cfg;
+public class HibernateAfterDeletion extends ReplicationAfterDeletionTest {
+	protected TestableReplicationProviderInside prepareProviderA() {
+		return HibernateUtil.refAsTableProviderA();
+	}
+
+	protected TestableReplicationProviderInside prepareProviderB() {
+		return HibernateUtil.refAsTableProviderB();
+	}
+
+	public void test() {
+		super.test();
 	}
 }

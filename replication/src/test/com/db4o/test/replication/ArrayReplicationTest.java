@@ -11,8 +11,7 @@ import com.db4o.test.Test;
 public abstract class ArrayReplicationTest extends ReplicationTestcase {
 
 	public void testArrayReplication() {
-		_providerA = prepareProviderA();
-		_providerB = prepareProviderB();
+		init();
 
 		ArrayHolder h1 = new ArrayHolder("h1");
 		ArrayHolder h2 = new ArrayHolder("h2");
@@ -41,8 +40,12 @@ public abstract class ArrayReplicationTest extends ReplicationTestcase {
 		check((ArrayHolder) objects.next());
 		check((ArrayHolder) objects.next());
 
+		clean();
+
 		destroy();
 	}
+
+	protected void clean() {delete(new Class[]{ArrayHolder.class});}
 
 	private void check(ArrayHolder holder) {
 		if (holder._name.equals("h1"))

@@ -1,8 +1,7 @@
 package com.db4o.test.replication.hibernate;
 
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
-import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
-import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableReplicationProvider;
+import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
 import com.db4o.test.replication.CollectionHolder;
 import com.db4o.test.replication.Replicated;
 import com.db4o.test.replication.SPCChild;
@@ -20,13 +19,19 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 
 public class HibernateUtil {
+// ------------------------------ FIELDS ------------------------------
+
+	public static final Class[] mappings;
 	private static final String HSQL_CFG_XML = "com/db4o/test/replication/hibernate/hibernate-HSQL.cfg.xml";
 
 	protected static final String JDBC_URL_HEAD = "jdbc:hsqldb:mem:unique_";
 
 	protected static int jdbcUrlCounter = 0;
 
-	public static final Class[] mappings;
+	private static final String refAsTableA = createNewDbConfig().getProperty(Environment.URL);
+	private static final String refAsTableB = createNewDbConfig().getProperty(Environment.URL);
+
+// -------------------------- STATIC METHODS --------------------------
 
 	static {
 		mappings = new Class[]{CollectionHolder.class, Replicated.class,
@@ -44,26 +49,12 @@ public class HibernateUtil {
 		return cfg;
 	}
 
-	private static final String refAsTableA = createNewDbConfig().getProperty(Environment.URL);
-	private static final String refAsTableB = createNewDbConfig().getProperty(Environment.URL);
-
 	public static HibernateReplicationProvider refAsTableProviderA() {
-		return new RefAsTableReplicationProvider(addAllMappings(reuse(refAsTableA)), "refAsTableA");
+		return new HibernateReplicationProviderImpl(addAllMappings(reuse(refAsTableA)), "refAsTableA");
 	}
 
 	public static HibernateReplicationProvider refAsTableProviderB() {
-		return new RefAsTableReplicationProvider(addAllMappings(reuse(refAsTableB)), "refAsTableB");
-	}
-
-	private static final String refAsColumnsA = createNewDbConfig().getProperty(Environment.URL);
-	private static final String refAsColumnsB = createNewDbConfig().getProperty(Environment.URL);
-
-	public static HibernateReplicationProvider refAsColumnsProviderA() {
-		return new RefAsColumnsReplicationProvider(addAllMappings(reuse(refAsColumnsA)), "refAsColumnsB");
-	}
-
-	public static HibernateReplicationProvider refAsColumnsProviderB() {
-		return new RefAsColumnsReplicationProvider(addAllMappings(reuse(refAsColumnsB)), "refAsColumnsB");
+		return new HibernateReplicationProviderImpl(addAllMappings(reuse(refAsTableB)), "refAsTableB");
 	}
 
 	/**

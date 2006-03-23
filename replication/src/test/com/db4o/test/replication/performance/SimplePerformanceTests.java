@@ -13,7 +13,7 @@ public abstract class SimplePerformanceTests extends ReplicationTestcase {
 
 	public void test() {
 		init();
-		delete(new Class[]{SPTFlatObject.class});
+		clean();
 		startTimer();
 		storeObjects();
 		replicateAll(_providerA, _providerB);
@@ -25,6 +25,8 @@ public abstract class SimplePerformanceTests extends ReplicationTestcase {
 		replicateClass(_providerA, _providerB, SPTFlatObject.class);
 		logTime("Replicating class from A to B");
 	}
+
+	protected void clean() {delete(new Class[]{SPTFlatObject.class});}
 
 	private void storeObjects() {
 		for (int i = 0; i < TOTAL_OBJECTS; i++) {
