@@ -13,6 +13,7 @@ import com.db4o.replication.hibernate.metadata.ReplicationRecord;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -296,5 +297,27 @@ public final class Util {
 
 	public static Uuid getUuid(Session session, Object obj) {
 		return getObjectReferenceById(session, obj).getUuid();
+	}
+
+	public static ObjectReference getByUUID(Session session, Uuid uuid) {
+		String alias = "objRef";
+		String uuidPath = alias + "." + ObjectReference.UUID + ".";
+		String queryString = "from " + ObjectReference.TABLE_NAME
+				+ " as " + alias + " where " + uuidPath + Uuid.LONG_PART + "=?"
+				+ " AND " + uuidPath + Uuid.PROVIDER + "." + ReplicationProviderSignature.BYTES + "=?";
+		Query c = session.createQuery(queryString);
+		c.setLong(0, uuid.getLongPart());
+		c.setBinary(1, uuid.getProvider().getBytes());
+
+		final List exisitings = c.list();
+		int count = exisitings.size();
+
+		if (count == 0)
+			return null;
+		else if (count > 1)
+			throw new RuntimeException("Only one ObjectReference should exist");
+		else {
+			return (ObjectReference) exisitings.get(0);
+		}
 	}
 }

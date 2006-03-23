@@ -26,7 +26,6 @@ import org.hibernate.EmptyInterceptor;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -689,27 +688,16 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	private ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid) {
-		String alias = "objRef";
-		String uuidPath = alias + "." + ObjectReference.UUID + ".";
-		String queryString = "from " + ObjectReference.TABLE_NAME
-				+ " as " + alias + " where " + uuidPath + Uuid.LONG_PART + "=?"
-				+ " AND " + uuidPath + Uuid.PROVIDER + "." + ReplicationProviderSignature.BYTES + "=?";
-		Query c = getSession().createQuery(queryString);
-		c.setLong(0, uuid.getLongPart());
-		c.setBinary(1, uuid.getSignaturePart());
+		Uuid tmp = new Uuid();
+		tmp.setLongPart(uuid.getLongPart());
+		tmp.setProvider(getProviderSignature(uuid.getSignaturePart()));
 
-		final List exisitings = c.list();
-		int count = exisitings.size();
-
-		if (count == 0)
+		ObjectReference of = Util.getByUUID(getSession(), tmp);
+		if (of == null)
 			return null;
-		else if (count > 1)
-			throw new RuntimeException("Only one ObjectReference should exist");
 		else {
-			ObjectReference exist = (ObjectReference) exisitings.get(0);
-			Object obj = getSession().load(exist.getClassName(), exist.getObjectId());
-
-			return _objRefs.put(obj, uuid, exist.getVersion());
+			Object obj = getSession().load(of.getClassName(), of.getObjectId());
+			return _objRefs.put(obj, uuid, of.getVersion());
 		}
 	}
 
