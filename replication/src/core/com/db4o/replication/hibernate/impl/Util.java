@@ -13,14 +13,17 @@ import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.mapping.Table;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,14 +36,14 @@ import java.util.List;
 public final class Util {
 // -------------------------- STATIC METHODS --------------------------
 
-	public static boolean skip(Table table) {
-		return table.getName().equals(ReplicationProviderSignature.TABLE_NAME)
-				|| table.getName().equals(ReplicationRecord.TABLE_NAME)
-				|| table.getName().equals(ReplicationComponentField.TABLE_NAME)
-				|| table.getName().equals(ReplicationComponentIdentity.TABLE_NAME)
-				|| table.getName().equals(UuidLongPartSequence.TABLE_NAME)
-				|| table.getName().equals(ObjectReference.TABLE_NAME)
-				|| table.getName().equals(DeletedObject.TABLE_NAME);
+	public static boolean skip(Object obj) {
+		return obj instanceof ReplicationRecord
+				|| obj instanceof ReadonlyReplicationProviderSignature
+				|| obj instanceof ReplicationComponentField
+				|| obj instanceof ReplicationComponentIdentity
+				|| obj instanceof UuidLongPartSequence
+				|| obj instanceof ObjectReference
+				|| obj instanceof DeletedObject;
 	}
 
 	public static boolean skip(Class claxx) {
@@ -55,14 +58,14 @@ public final class Util {
 				|| claxx == DeletedObject.class;
 	}
 
-	public static boolean skip(Object obj) {
-		return obj instanceof ReplicationRecord
-				|| obj instanceof ReadonlyReplicationProviderSignature
-				|| obj instanceof ReplicationComponentField
-				|| obj instanceof ReplicationComponentIdentity
-				|| obj instanceof UuidLongPartSequence
-				|| obj instanceof ObjectReference
-				|| obj instanceof DeletedObject;
+	public static boolean skip(Table table) {
+		return table.getName().equals(ReplicationProviderSignature.TABLE_NAME)
+				|| table.getName().equals(ReplicationRecord.TABLE_NAME)
+				|| table.getName().equals(ReplicationComponentField.TABLE_NAME)
+				|| table.getName().equals(ReplicationComponentIdentity.TABLE_NAME)
+				|| table.getName().equals(UuidLongPartSequence.TABLE_NAME)
+				|| table.getName().equals(ObjectReference.TABLE_NAME)
+				|| table.getName().equals(DeletedObject.TABLE_NAME);
 	}
 
 	public static Statement getStatement(Connection connection) {
@@ -120,6 +123,10 @@ public final class Util {
 		dumpTable(p.getName(), p.getSession(), s);
 	}
 
+	private static void dumpTable(String providerName, Session sess, String tableName) {
+		dumpTable(providerName, sess.connection(), tableName);
+	}
+
 	private static void dumpTable(String providerName, Connection con, String tableName) {
 		ResultSet rs = null;
 
@@ -145,10 +152,6 @@ public final class Util {
 		} finally {
 			closeResultSet(rs);
 		}
-	}
-
-	private static void dumpTable(String providerName, Session sess, String tableName) {
-		dumpTable(providerName, sess.connection(), tableName);
 	}
 
 	public static void closePreparedStatement(PreparedStatement ps) {
@@ -243,12 +246,12 @@ public final class Util {
 		}
 	}
 
-	public static Db4oUUID translate(Uuid uuid) {
-		return new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes());
-	}
-
 	public static Db4oUUID translate(DeletedObject doo) {
 		return translate(doo.getUuid());
+	}
+
+	public static Db4oUUID translate(Uuid uuid) {
+		return new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes());
 	}
 
 	public static DeletedObject getDeletedObject(Session session, Uuid uuid) {
@@ -269,4 +272,56 @@ public final class Util {
 			return (DeletedObject) list.get(0);
 	}
 
+	public static long castAsLong(Serializable id) {
+		if (!(id instanceof Long))
+			throw new IllegalStateException("You must use 'long' as the type of the hibernate id");
+		return (Long) id;
+	}
+
+	public static long getVersion(Connection con, String className, long id) {
+		final Statement st = getStatement(con);
+
+		String sql = "SELECT " + ObjectReference.VERSION + " FROM " + ObjectReference.TABLE_NAME
+				+ " WHERE " + ObjectReference.CLASS_NAME + " = ?"
+				+ " AND " + ObjectReference.OBJECT_ID + " = ?";
+		final PreparedStatement ps = prepareStatement(con, sql);
+
+
+		ResultSet rs = null;
+		try {
+			ps.setString(1, className);
+			ps.setLong(2, id);
+
+			rs = ps.executeQuery();
+
+			if (!rs.next())
+				throw new RuntimeException("failed to get the version, the sql was = " + sql);
+
+			return rs.getLong(1);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			closeStatement(st);
+			closeResultSet(rs);
+		}
+	}
+
+	public static ObjectReference getObjectReferenceById(Session session, Object obj) {
+		Serializable id = session.getIdentifier(obj);
+		Criteria criteria = session.createCriteria(ObjectReference.class);
+		criteria.add(Restrictions.eq(ObjectReference.OBJECT_ID, id));
+		criteria.add(Restrictions.eq(ObjectReference.CLASS_NAME, obj.getClass().getName()));
+		List list = criteria.list();
+
+		if (list.size() == 0)
+			return null;
+		else if (list.size() == 1)
+			return (ObjectReference) list.get(0);
+		else
+			throw new RuntimeException("Duplicated uuid");
+	}
+
+	public static Uuid getUuid(Session session, Object obj) {
+		return getObjectReferenceById(session, obj).getUuid();
+	}
 }

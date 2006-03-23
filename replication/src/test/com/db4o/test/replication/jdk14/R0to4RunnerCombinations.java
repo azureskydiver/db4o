@@ -3,7 +3,7 @@ package com.db4o.test.replication.jdk14;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
-import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableReplicationProvider;
+import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
 import com.db4o.test.replication.hibernate.HibernateUtil;
 import com.db4o.test.replication.template.r0tor4.R0;
@@ -30,7 +30,7 @@ public class R0to4RunnerCombinations extends R0to4Runner {
 		TestableReplicationProviderInside a;
 		TestableReplicationProviderInside b;
 
-		a = new RefAsTableReplicationProvider(addClasses(HibernateUtil.createNewDbConfig()), "HSQL RefAsTable");
+		a = new HibernateReplicationProviderImpl(addClasses(HibernateUtil.createNewDbConfig()), "HSQL RefAsTable");
 		b = Db4oReplicationTestUtil.newProviderA();
 		addProviderPairs(a, b);
 

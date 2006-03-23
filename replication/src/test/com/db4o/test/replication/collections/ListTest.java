@@ -39,7 +39,7 @@ public abstract class ListTest extends ReplicationTestcase {
 	}
 
 
-	private void clean() {delete(new Class[]{ListContent.class, ListHolder.class, ArrayList.class});}
+	protected void clean() {delete(new Class[]{ListContent.class, ListHolder.class, ArrayList.class});}
 
 	private void storeListToProviderA() {
 

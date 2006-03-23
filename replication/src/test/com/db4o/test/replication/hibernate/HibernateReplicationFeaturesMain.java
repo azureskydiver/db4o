@@ -4,8 +4,12 @@ import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.replication.ReplicationFeaturesMain;
 
 public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
+// ------------------------------ FIELDS ------------------------------
+
 	protected TestableReplicationProviderInside hA;
 	protected TestableReplicationProviderInside hB;
+
+// --------------------------- CONSTRUCTORS ---------------------------
 
 	public HibernateReplicationFeaturesMain() {
 
@@ -17,5 +21,11 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 
 	protected TestableReplicationProviderInside prepareProviderB() {
 		return hB;
+	}
+
+	public void test() {
+		hA = HibernateUtil.refAsTableProviderA();
+		hB = HibernateUtil.refAsTableProviderB();
+		super.test();
 	}
 }

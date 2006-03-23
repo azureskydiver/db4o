@@ -9,9 +9,12 @@ import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
 public abstract class MixedTypesCollectionReplicationTest extends ReplicationTestcase {
+	protected void clean() {
+		delete(new Class[]{CollectionHolder.class});
+	}
+
 	public void testCollectionReplication() {
-		_providerA = prepareProviderA();
-		_providerB = prepareProviderB();
+		init();
 
 		CollectionHolder h1 = new CollectionHolder("h1");
 		CollectionHolder h2 = new CollectionHolder("h2");

@@ -51,6 +51,17 @@ public class ObjectConfig {
 		return tables;
 	}
 
+	public String getPrimaryKeyColumnName(Object entity) {
+		final String className = entity.getClass().getName();
+		final PersistentClass pClass = configuration.getClassMapping(className);
+
+		return getPrimaryKeyColumnName(pClass);
+	}
+
+	public String getPrimaryKeyColumnName(Class claxx) {
+		return getPrimaryKeyColumnName(configuration.getClassMapping(claxx.getName()));
+	}
+
 	public String getPrimaryKeyColumnName(PersistentClass pClass) {
 		PrimaryKey primaryKey = pClass.getTable().getPrimaryKey();
 		Iterator columnIterator = primaryKey.getColumnIterator();
@@ -63,17 +74,6 @@ public class ObjectConfig {
 		}
 
 		return pkColName;
-	}
-
-	public String getPrimaryKeyColumnName(Class claxx) {
-		return getPrimaryKeyColumnName(configuration.getClassMapping(claxx.getName()));
-	}
-
-	public String getPrimaryKeyColumnName(Object entity) {
-		final String className = entity.getClass().getName();
-		final PersistentClass pClass = configuration.getClassMapping(className);
-
-		return getPrimaryKeyColumnName(pClass);
 	}
 
 	public String getTableName(Class pClass) {

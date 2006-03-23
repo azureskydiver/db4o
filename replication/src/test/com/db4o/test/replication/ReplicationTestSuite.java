@@ -11,16 +11,16 @@ import com.db4o.test.replication.db4o.Db4oSingleTypeCollectionReplicationTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateListTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateSimpleArrayTest;
 import com.db4o.test.replication.db4o.hibernate.HibernateDb4oListTest;
-import com.db4o.test.replication.hibernate.ref_as_table.ReplicationConfiguratorTestRefAsTable;
-import com.db4o.test.replication.hibernate.ref_as_table.hsql.AfterDeletionTestHsqlRefAsTable;
-import com.db4o.test.replication.hibernate.ref_as_table.hsql.FeaturesMainRefAsTable;
-import com.db4o.test.replication.hibernate.ref_as_table.hsql.ListTestHsqlRefAsTable;
-import com.db4o.test.replication.hibernate.ref_as_table.hsql.MapTestHsqlRefAsTable;
-import com.db4o.test.replication.hibernate.ref_as_table.hsql.MapTestRefAsTableDb4o;
-import com.db4o.test.replication.hibernate.ref_as_table.hsql.ProviderTestHsqlRefAsTable;
-import com.db4o.test.replication.hibernate.ref_as_table.hsql.RefAsTableTablesCreatorTestHsql;
-import com.db4o.test.replication.hibernate.ref_as_table.hsql.SimpleArrayTestHsqlRefAsTable;
-import com.db4o.test.replication.hibernate.ref_as_table.hsql.SingleTypeCollectionTestHsqlRefAsTable;
+import com.db4o.test.replication.hibernate.Db4oHibernateMapTest;
+import com.db4o.test.replication.hibernate.HibernateAfterDeletion;
+import com.db4o.test.replication.hibernate.HibernateListTest;
+import com.db4o.test.replication.hibernate.HibernateMapTest;
+import com.db4o.test.replication.hibernate.HibernateProviderTest;
+import com.db4o.test.replication.hibernate.HibernateReplicationFeaturesMain;
+import com.db4o.test.replication.hibernate.HibernateSimpleArrayTest;
+import com.db4o.test.replication.hibernate.HibernateSingleTypeCollectionTest;
+import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
+import com.db4o.test.replication.hibernate.TablesCreatorTest;
 import com.db4o.test.replication.jdk11.R0to4RunnerCore;
 import com.db4o.test.replication.jdk11.SimpleParentChildCore;
 import com.db4o.test.replication.jdk14.R0to4RunnerCombinations;
@@ -46,57 +46,55 @@ public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
 		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
 		return new Class[]{
-				TransientReplicationFeaturesMain.class,
-				Db4oReplicationFeaturesMain.class,
-				FeaturesMainRefAsTable.class,
-
-				TransientReplicationProviderTest.class,
-				//TODO Db4oReplicationProviderTest.class,
-				ProviderTestHsqlRefAsTable.class,
-
-				ReplicationConfiguratorTestRefAsTable.class,
-
+				//General
 				CollectionHandlerImplTest.class,
+				ReplicationTraversalTest.class,
+				ReplicationFeatures.class,
+
+				//Transient
+				TransientReplicationFeaturesMain.class,
+				TransientReplicationProviderTest.class,
+				TransientListTest.class,
+				TransientMapTest.class,
+				TransientMixedTypesCollectionReplicationTest.class,
+				TransientArrayReplicationTest.class,
+				TransientSingleTypeCollectionReplicationTest.class,
+				TransientSimpleArrayTest.class,
+
+				//Hibernate
+				HibernateReplicationFeaturesMain.class,
+				HibernateProviderTest.class,
+				ReplicationConfiguratorTest.class,
+				TablesCreatorTest.class,
+				HibernateAfterDeletion.class,
+				HibernateListTest.class,
+				HibernateSingleTypeCollectionTest.class,
+				HibernateSimpleArrayTest.class,
+				HibernateMapTest.class,
+
+				//Db4o
+				Db4oReplicationFeaturesMain.class,
+				//TODO Db4oReplicationProviderTest.class,
 				GetByUUID.class,
-
-				RefAsTableTablesCreatorTestHsql.class,
-
 				Db4oReplicationAfterDeletionTest.class,
-				AfterDeletionTestHsqlRefAsTable.class,
+				Db4oListTest.class,
+				Db4oMapTest.class,
+				Db4oSingleTypeCollectionReplicationTest.class,
+				Db4oSimpleArrayTest.class,
+				Db4oArrayReplicationTest.class,
 
+				//Mixed
 				R0to4RunnerCore.class,
 				R0to4RunnerCombinations.class,
 
 				SimpleParentChildCore.class,
 				SimpleParentChildCombinations.class,
 
-				TransientListTest.class,
-				Db4oListTest.class,
-				HibernateDb4oListTest.class,
 				Db4oHibernateListTest.class,
-				ListTestHsqlRefAsTable.class,
 
-				TransientMapTest.class,
-				Db4oMapTest.class,
-				MapTestHsqlRefAsTable.class,
-				MapTestRefAsTableDb4o.class,
-
-				TransientSimpleArrayTest.class,
-				Db4oSimpleArrayTest.class,
+				Db4oHibernateMapTest.class,
 				Db4oHibernateSimpleArrayTest.class,
-				SimpleArrayTestHsqlRefAsTable.class,
-
-				TransientSingleTypeCollectionReplicationTest.class,
-				Db4oSingleTypeCollectionReplicationTest.class,
-				SingleTypeCollectionTestHsqlRefAsTable.class,
-
-				TransientMixedTypesCollectionReplicationTest.class,
-
-				TransientArrayReplicationTest.class,
-				Db4oArrayReplicationTest.class,
-
-				ReplicationTraversalTest.class,
-				ReplicationFeatures.class,
+				HibernateDb4oListTest.class,
 		};
 	}
 }

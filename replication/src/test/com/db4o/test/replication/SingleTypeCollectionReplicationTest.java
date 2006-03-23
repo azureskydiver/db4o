@@ -8,11 +8,13 @@ import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
+import java.util.Map;
+
 public abstract class SingleTypeCollectionReplicationTest extends ReplicationTestcase {
 	public void testCollectionReplication() {
 		init();
 		execute();
-		cleanUp();
+		clean();
 		destroy();
 	}
 
@@ -49,7 +51,7 @@ public abstract class SingleTypeCollectionReplicationTest extends ReplicationTes
 
 	}
 
-	protected void cleanUp() {
-		delete(new Class[]{CollectionHolder.class});
+	protected void clean() {
+		delete(new Class[]{CollectionHolder.class, Map.class});
 	}
 }
