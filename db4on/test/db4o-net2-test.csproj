@@ -99,6 +99,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\com\db4o\test\aliases\ClassAliasesTestCase.cs" />
     <Compile Include="src\com\db4o\test\AllTests.cs" />
     <Compile Include="src\com\db4o\test\AllTestsConfAll.cs" />
     <Compile Include="src\com\db4o\test\AllTestsConfSingle.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="src\com\db4o\test\cs\CsCustomTransientAttribute.cs" />
     <Compile Include="src\com\db4o\test\cs\CsDate.cs" />
     <Compile Include="src\com\db4o\test\cs\CsDelegate.cs" />
+    <Compile Include="src\com\db4o\test\cs\CsDisposableTestCase.cs" />
     <Compile Include="src\com\db4o\test\cs\CsEnum.cs" />
     <Compile Include="src\com\db4o\test\cs\CsEvaluationDelegate.cs" />
     <Compile Include="src\com\db4o\test\cs\CsImage.cs" />
