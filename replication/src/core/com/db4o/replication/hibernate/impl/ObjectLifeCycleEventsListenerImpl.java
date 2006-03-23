@@ -55,7 +55,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 // --------------------- Interface ObjectLifeCycleEventsListener ---------------------
 
 	public final void configure(Configuration cfg) {
-		new TablesCreatorImpl(new ReplicationConfiguration(cfg)).createTables();
+		new TablesCreatorImpl(ReplicationConfiguration.decorate(cfg)).createTables();
 
 		Util.initMySignature(cfg);
 		Util.initUuidLongPartSequence(cfg);
