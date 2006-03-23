@@ -1,7 +1,6 @@
 package com.db4o.test.replication.hibernate;
 
 import com.db4o.replication.ReplicationConfigurator;
-import com.db4o.replication.hibernate.cfg.ObjectConfig;
 import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import com.db4o.test.Test;
@@ -17,8 +16,6 @@ public class ReplicationConfiguratorTest {
 
 	protected SessionFactory sessionFactory;
 	protected Configuration cfg;
-
-	protected ObjectConfig objectConfig;
 
 	protected long initVer;
 

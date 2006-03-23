@@ -1,6 +1,6 @@
 package com.db4o.replication.hibernate.impl;
 
-public final class Constants {
+final class Constants {
 // ------------------------------ FIELDS ------------------------------
 
 	public static final long MIN_VERSION_NO = 100;

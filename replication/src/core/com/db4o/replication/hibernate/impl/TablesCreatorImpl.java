@@ -1,7 +1,7 @@
 package com.db4o.replication.hibernate.impl;
 
 import com.db4o.replication.hibernate.TablesCreator;
-import com.db4o.replication.hibernate.cfg.RefConfig;
+import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Environment;
 import org.hibernate.tool.hbm2ddl.SchemaValidator;
@@ -9,13 +9,13 @@ import org.hibernate.tool.hbm2ddl.SchemaValidator;
 public final class TablesCreatorImpl implements TablesCreator {
 // ------------------------------ FIELDS ------------------------------
 
-	private final RefConfig cfg;
+	private final ReplicationConfiguration cfg;
 
 	private final SchemaValidator validator;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
-	public TablesCreatorImpl(RefConfig aCfg) {
+	public TablesCreatorImpl(ReplicationConfiguration aCfg) {
 		cfg = aCfg;
 		validator = new SchemaValidator(cfg.getConfiguration());
 	}

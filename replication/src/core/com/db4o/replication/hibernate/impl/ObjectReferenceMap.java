@@ -8,7 +8,7 @@ import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public final class ObjectReferenceMap {
+final class ObjectReferenceMap {
 // ------------------------------ FIELDS ------------------------------
 
 	private final Map<Object, ReplicationReference> delegate;

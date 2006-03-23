@@ -1,7 +1,7 @@
 package com.db4o.replication.hibernate.impl;
 
 import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
-import com.db4o.replication.hibernate.cfg.RefConfig;
+import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
 import com.db4o.replication.hibernate.metadata.DeletedObject;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
@@ -42,7 +42,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
-	protected final Session getSession() {
+	private Session getSession() {
 		Session session = threadSessionMap.get(Thread.currentThread());
 
 		if (session == null)
@@ -54,8 +54,8 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 
 // --------------------- Interface ObjectLifeCycleEventsListener ---------------------
 
-	public void configure(Configuration cfg) {
-		new TablesCreatorImpl(new RefConfig(cfg)).createTables();
+	public final void configure(Configuration cfg) {
+		new TablesCreatorImpl(new ReplicationConfiguration(cfg)).createTables();
 
 		Util.initMySignature(cfg);
 		Util.initUuidLongPartSequence(cfg);
@@ -76,7 +76,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 		configs = null;
 	}
 
-	public void install(Session session, Configuration cfg) {
+	public final void install(Session session, Configuration cfg) {
 		threadSessionMap.put(Thread.currentThread(), session);
 	}
 
@@ -86,6 +86,32 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 
 	public final void onCollectionUpdate(Object collection, Serializable key) throws CallbackException {
 		collectionUpdated(collection);
+	}
+
+	public void onPostInsert(PostInsertEvent event) {
+		ensureAlive();
+
+		Object entity = event.getEntity();
+
+		if (Util.skip(entity)) return;
+
+		long id = Util.castAsLong(event.getId());
+
+		ObjectReference ref = new ObjectReference();
+		ref.setClassName(entity.getClass().getName());
+		ref.setObjectId(id);
+
+		ref.setUuid(UuidGenerator.next(getSession()));
+
+		long ver = Util.getMaxVersion(getSession().connection()) + 1;
+		ref.setVersion(ver);
+
+		try {
+			getSession().save(ref);
+		} catch (Exception e) {
+			System.out.println("ref = " + ref);
+			throw new RuntimeException(e);
+		}
 	}
 
 	public final void onPostUpdate(PostUpdateEvent event) {
@@ -107,11 +133,36 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 		return veto;
 	}
 
-// -------------------------- OTHER METHODS --------------------------
+	void ObjectUpdated(Object obj, Serializable id) {
+		final Session session = getSession();
+		Connection con = session.connection();
+		long newVer = Util.getMaxVersion(con) + 1;
+		String sql = "UPDATE " + ObjectReference.TABLE_NAME
+				+ " SET " + ObjectReference.VERSION + " = " + newVer
+				+ " WHERE " + ObjectReference.CLASS_NAME + " = '" + obj.getClass().getName() + "'"
+				+ " AND " + ObjectReference.OBJECT_ID + " = " + Util.castAsLong(session.getIdentifier(obj));
 
-	protected final void ensureAlive() {if (!_alive) throw new RuntimeException("dead");}
+		final Statement st = Util.getStatement(con);
 
-	protected void objectDeleted(PreDeleteEvent event) {
+		try {
+			final int affected = st.executeUpdate(sql);
+
+			if (affected != 1)
+				throw new RuntimeException("unable to update the version of an object");
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			Util.closeStatement(st);
+		}
+	}
+
+	private void ensureAlive() {if (!_alive) throw new RuntimeException("dead");}
+
+	private Uuid getUuid(Object entity) {
+		return Util.getUuid(getSession(), entity);
+	}
+
+	private void objectDeleted(PreDeleteEvent event) {
 		//deleteReplicationComponentIdentity(event);
 
 		Uuid uuid = getUuid(event.getEntity());
@@ -201,58 +252,5 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 
 		el.setPreDeleteEventListeners((PreDeleteEventListener[])
 				ArrayUtils.add(el.getPreDeleteEventListeners(), this));
-	}
-
-	protected final Uuid getUuid(Object entity) {
-		return Util.getUuid(getSession(), entity);
-	}
-
-	public void onPostInsert(PostInsertEvent event) {
-		ensureAlive();
-
-		Object entity = event.getEntity();
-
-		if (Util.skip(entity)) return;
-
-		long id = Util.castAsLong(event.getId());
-
-		ObjectReference ref = new ObjectReference();
-		ref.setClassName(entity.getClass().getName());
-		ref.setObjectId(id);
-
-		ref.setUuid(UuidGenerator.next(getSession()));
-
-		long ver = Util.getMaxVersion(getSession().connection()) + 1;
-		ref.setVersion(ver);
-
-		try {
-			getSession().save(ref);
-		} catch (Exception e) {
-			System.out.println("ref = " + ref);
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected void ObjectUpdated(Object obj, Serializable id) {
-		final Session session = getSession();
-		Connection con = session.connection();
-		long newVer = Util.getMaxVersion(con) + 1;
-		String sql = "UPDATE " + ObjectReference.TABLE_NAME
-				+ " SET " + ObjectReference.VERSION + " = " + newVer
-				+ " WHERE " + ObjectReference.CLASS_NAME + " = '" + obj.getClass().getName() + "'"
-				+ " AND " + ObjectReference.OBJECT_ID + " = " + Util.castAsLong(session.getIdentifier(obj));
-
-		final Statement st = Util.getStatement(con);
-
-		try {
-			final int affected = st.executeUpdate(sql);
-
-			if (affected != 1)
-				throw new RuntimeException("unable to update the version of an object");
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		} finally {
-			Util.closeStatement(st);
-		}
 	}
 }

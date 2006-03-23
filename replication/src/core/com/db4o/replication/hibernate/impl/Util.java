@@ -76,7 +76,7 @@ public final class Util {
 		}
 	}
 
-	public static PreparedStatement prepareStatement(Connection connection, String sql) {
+	private static PreparedStatement prepareStatement(Connection connection, String sql) {
 		try {
 			return connection.prepareStatement(sql);
 		} catch (SQLException e) {
@@ -164,7 +164,7 @@ public final class Util {
 		}
 	}
 
-	public static void closeResultSet(ResultSet rs) {
+	private static void closeResultSet(ResultSet rs) {
 		if (rs != null) {
 			try {
 				rs.close();
@@ -250,7 +250,7 @@ public final class Util {
 		return translate(doo.getUuid());
 	}
 
-	public static Db4oUUID translate(Uuid uuid) {
+	private static Db4oUUID translate(Uuid uuid) {
 		return new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes());
 	}
 
