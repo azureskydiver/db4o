@@ -1,7 +1,6 @@
 package com.db4o.replication.hibernate.cfg;
 
 import com.db4o.replication.hibernate.impl.Util;
-import com.db4o.replication.hibernate.metadata.DeletedObject;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
@@ -19,13 +18,12 @@ public final class ReplicationConfiguration {
 		Util.addClass(configuration, ReplicationComponentIdentity.class);
 		Util.addClass(configuration, ReplicationComponentField.class);
 		Util.addClass(configuration, UuidLongPartSequence.class);
-		Util.addClass(configuration, DeletedObject.class);
 		Util.addClass(configuration, ObjectReference.class);
 	}
 
 	public static Configuration decorate(Configuration configuration) {
-		configuration.setProperty("hibernate.format_sql", "true");
-		configuration.setProperty("hibernate.use_sql_comments", "true");
+		configuration.setProperty("hibernate.format_sql", "false");
+		configuration.setProperty("hibernate.use_sql_comments", "false");
 		configuration.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.NoCacheProvider");
 		configuration.setProperty("hibernate.cache.use_query_cache", "false");
 		configuration.setProperty("hibernate.cache.use_second_level_cache", "false");

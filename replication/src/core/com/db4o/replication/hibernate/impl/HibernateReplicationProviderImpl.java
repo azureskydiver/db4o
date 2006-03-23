@@ -13,7 +13,6 @@ import com.db4o.reflect.Reflector;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
 import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
-import com.db4o.replication.hibernate.metadata.DeletedObject;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.PeerSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentField;
@@ -192,12 +191,15 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	public final ObjectSet uuidsDeletedSinceLastReplication() {
-		List<DeletedObject> results = getSession().createCriteria(DeletedObject.class).list();
-		Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
+		Criteria criteria = getSession().createCriteria(ObjectReference.class);
+		criteria.add(Restrictions.eq(ObjectReference.DELETED, true));
 
-		for (DeletedObject doo : results) {
-			out.add(Util.translate(doo));
+		List<ObjectReference> results = criteria.list();
+		Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
+		for (ObjectReference of : results) {
+			out.add(Util.translate(of.getUuid()));
 		}
+
 		return new ObjectSetCollectionFacade(out);
 	}
 
@@ -211,7 +213,10 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	public final synchronized void commitReplicationTransaction(long raisedDatabaseVersion) {
 		ensureReplicationActive();
-		getSession().createQuery("delete from " + DeletedObject.TABLE_NAME).executeUpdate();
+
+		String sql = "delete " + ObjectReference.TABLE_NAME + " o where o." + ObjectReference.DELETED + " = 'T'";
+		getSession().createQuery(sql).executeUpdate();
+
 		commit();
 		_uuidsReplicatedInThisSession.clear();
 		_dirtyRefs.clear();
@@ -424,6 +429,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	public final void commit() {
+		getSession().flush();
 		getObjectTransaction().commit();
 		clearSession();
 		_transaction = getSession().beginTransaction();
