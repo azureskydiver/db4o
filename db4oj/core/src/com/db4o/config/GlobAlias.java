@@ -41,12 +41,12 @@ public class GlobAlias implements Alias {
 		}
 
 		private void invalidPattern() {
-			throw new  IllegalArgumentException("pattern");
+			throw new  IllegalArgumentException("glob pattern must contain one and only one '*' character");
 		}
 		
 		String[] split(String pattern) {
 			int index = pattern.indexOf('*');
-			if (-1 == index) invalidPattern();
+			if (-1 == index || index != pattern.lastIndexOf('*')) invalidPattern();
 			return new String[] {
 					pattern.substring(0, index),
 					pattern.substring(index+1)

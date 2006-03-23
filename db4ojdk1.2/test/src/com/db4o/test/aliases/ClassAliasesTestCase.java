@@ -23,13 +23,27 @@ public class ClassAliasesTestCase {
 		
 		assertData(container);
 	}
-
-	private void assertData(ObjectContainer container) {
-		ObjectSet os = container.query(Person2.class);
+	
+	public void testAliasedTypeIsStoredCorrectly() {
+		ObjectContainer container = Test.objectContainer();
+		container.ext().configure().alias(
+				// Person1 instances should be read as Person2 objects
+				new TypeAlias("com.db4o.test.aliases.Person1",
+						"com.db4o.test.aliases.Person2"));
 		
-		Test.ensureEquals(2, os.size());
-		ensureContains(os, new Person2("Homer Simpson"));
-		ensureContains(os, new Person2("John Cleese"));
+		container.set(new Person2("Homer Simpson"));
+		container.set(new Person2("John Cleese"));
+		
+		container = Test.reOpen();
+		ObjectSet os = container.query(Person1.class);
+		//Test.ensureEquals(0, os.size());
+		while (os.hasNext()) {
+			Object next = os.next();
+			System.out.println(next);
+			System.out.println(next.getClass());
+		}
+		assertData(container);
+
 	}
 	
 	public void testAccessingDotnetFromJava() throws Exception {
@@ -48,6 +62,14 @@ public class ClassAliasesTestCase {
 			container.close();
 		}
 	}
+	
+	private void assertData(ObjectContainer container) {
+		ObjectSet os = container.query(Person2.class);
+		
+		Test.ensureEquals(2, os.size());
+		ensureContains(os, new Person2("Homer Simpson"));
+		ensureContains(os, new Person2("John Cleese"));
+	}	
 
 	private ObjectContainer openDotnetDataFile() {
 		return Db4o.openFile(getDotnetDataFilePath());
@@ -68,6 +90,7 @@ public class ClassAliasesTestCase {
 	private void generateDotnetData() throws IOException {
 		new File(getDotnetDataFilePath()).delete();
 		String assembly = generateAssembly();
+		// XXX: use mono on linux to execute the assembly
 		exec(assembly + " " + getDotnetDataFilePath());
 	}
 
