@@ -1,4 +1,4 @@
-package com.db4o.test.replication.hibernate.ref_as_columns.postgresql;
+package com.db4o.test.replication.hibernate.ref_as_table.postgresql;
 
 import com.db4o.test.TestSuite;
 
@@ -7,7 +7,7 @@ public class PostgreSQLTestSuite extends TestSuite {
 		return new Class[]{
 				PostgreSQLMetaDataTablesCreatorTest.class,
 				PostgreSQLR0to4Runner.class,
-				PostgreSQLFeaturesMainRefAsColumns.class,
+				PostgreSQLFeaturesMain.class,
 				PostgreSQLMapTest.class,
 				PostgreSQLListTest.class,
 		};

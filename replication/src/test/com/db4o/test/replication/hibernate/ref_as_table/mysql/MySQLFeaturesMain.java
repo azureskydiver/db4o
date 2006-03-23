@@ -1,9 +1,9 @@
-package com.db4o.test.replication.hibernate.ref_as_columns.mysql;
+package com.db4o.test.replication.hibernate.ref_as_table.mysql;
 
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.FeaturesMainRefAsColumns;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.FeaturesMainRefAsTable;
 
-public class MySQLFeaturesMainRefAsColumns extends FeaturesMainRefAsColumns {
-	public MySQLFeaturesMainRefAsColumns() {
+public class MySQLFeaturesMain extends FeaturesMainRefAsTable {
+	public MySQLFeaturesMain() {
 
 	}
 

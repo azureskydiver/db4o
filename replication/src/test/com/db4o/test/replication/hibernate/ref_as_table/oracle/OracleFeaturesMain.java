@@ -1,9 +1,9 @@
-package com.db4o.test.replication.hibernate.ref_as_columns.oracle;
+package com.db4o.test.replication.hibernate.ref_as_table.oracle;
 
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.FeaturesMainRefAsColumns;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.FeaturesMainRefAsTable;
 
-public class OracleFeaturesMainRefAsColumns extends FeaturesMainRefAsColumns {
-	public OracleFeaturesMainRefAsColumns() {
+public class OracleFeaturesMain extends FeaturesMainRefAsTable {
+	public OracleFeaturesMain() {
 
 	}
 

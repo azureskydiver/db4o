@@ -1,4 +1,4 @@
-package com.db4o.test.replication.hibernate.ref_as_columns.hsql;
+package com.db4o.test.replication.hibernate;
 
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
@@ -7,7 +7,6 @@ import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
-import com.db4o.test.replication.hibernate.HibernateUtil;
 import com.db4o.test.replication.provider.Car;
 import com.db4o.test.replication.provider.Pilot;
 import com.db4o.test.replication.provider.ReplicationProviderTest;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ProviderTestRefAsColumns extends ReplicationProviderTest {
+public class HibernateProviderTest extends ReplicationProviderTest {
 	public void testReplicationProvider() {
 		super.testReplicationProvider();
 		tstCollection();

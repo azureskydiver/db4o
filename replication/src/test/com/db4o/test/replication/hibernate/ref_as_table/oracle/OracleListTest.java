@@ -1,24 +1,24 @@
-package com.db4o.test.replication.hibernate.ref_as_columns.mysql;
+package com.db4o.test.replication.hibernate.ref_as_table.oracle;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
 import com.db4o.test.replication.hibernate.HibernateUtil;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.ListTestHsqlRefAsColumns;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.ListTestHsqlRefAsTable;
 import org.hibernate.cfg.Configuration;
 
-public class MySQLListTest extends ListTestHsqlRefAsColumns {
+public class OracleListTest extends ListTestHsqlRefAsTable {
 
 	protected TestableReplicationProviderInside prepareProviderA() {
-		Configuration configuration = HibernateUtil.produceMySQLConfigA();
+		Configuration configuration = HibernateUtil.produceOracleConfigA();
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);
 		return new RefAsColumnsReplicationProvider(configuration, "A");
 	}
 
 	protected TestableReplicationProviderInside prepareProviderB() {
-		Configuration configuration = HibernateUtil.produceMySQLConfigB();
+		Configuration configuration = HibernateUtil.produceOracleConfigB();
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);
 		return new RefAsColumnsReplicationProvider(configuration, "B");

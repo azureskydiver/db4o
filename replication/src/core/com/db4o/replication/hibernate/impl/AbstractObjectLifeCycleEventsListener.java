@@ -108,7 +108,7 @@ public abstract class AbstractObjectLifeCycleEventsListener extends EmptyInterce
 	protected final void ensureAlive() {if (!_alive) throw new RuntimeException("dead");}
 
 	protected void objectDeleted(PreDeleteEvent event) {
-		deleteReplicationComponentIdentity(event);
+		//deleteReplicationComponentIdentity(event);
 
 		Uuid uuid = getUuid(event.getEntity());
 		DeletedObject deletedObject = new DeletedObject();
