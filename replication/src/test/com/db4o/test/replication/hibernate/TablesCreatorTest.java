@@ -26,8 +26,7 @@ public class TablesCreatorTest {
 
 	public void tstCreate() {
 		Configuration cfg = createCfg();
-		ReplicationConfiguration rc = new ReplicationConfiguration(cfg);
-		final TablesCreatorImpl creator = new TablesCreatorImpl(rc);
+		final TablesCreatorImpl creator = new TablesCreatorImpl(ReplicationConfiguration.decorate(cfg));
 
 		creator.createTables();
 	}
@@ -35,8 +34,7 @@ public class TablesCreatorTest {
 	public void tstValidate() {
 		Configuration cfg = validateCfg();
 
-		ReplicationConfiguration rc = new ReplicationConfiguration(cfg);
-		final TablesCreatorImpl creator = new TablesCreatorImpl(rc);
+		final TablesCreatorImpl creator = new TablesCreatorImpl(ReplicationConfiguration.decorate(cfg));
 
 		boolean exception = false;
 		try {
