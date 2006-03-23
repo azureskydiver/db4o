@@ -3,7 +3,6 @@
 package com.db4o.test.replication.jdk14;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.impl.ref_as_columns.RefAsColumnsReplicationProvider;
 import com.db4o.replication.hibernate.impl.ref_as_table.RefAsTableReplicationProvider;
 import com.db4o.test.replication.SPCChild;
 import com.db4o.test.replication.SPCParent;
@@ -21,16 +20,12 @@ public class SimpleParentChildCombinations extends SimpleParentChild {
 		TestableReplicationProviderInside a;
 		TestableReplicationProviderInside b;
 
-		a = new RefAsColumnsReplicationProvider(newCfg(), "HSQL RefAsColumns");
-		b = new RefAsColumnsReplicationProvider(newCfg(), "HSQL RefAsColumns");
-		addProviderPairs(a, b);
-
-		a = new RefAsColumnsReplicationProvider(newCfg(), "HSQL RefAsColumns");
+		a = new RefAsTableReplicationProvider(newCfg(), "HSQL RefAsTable");
 		b = Db4oReplicationTestUtil.newProviderA();
 		addProviderPairs(a, b);
 
 		a = Db4oReplicationTestUtil.newProviderA();
-		b = new RefAsColumnsReplicationProvider(newCfg(), "HSQL RefAsColumns");
+		b = new RefAsTableReplicationProvider(newCfg(), "HSQL RefAsTable");
 		addProviderPairs(a, b);
 
 		a = new RefAsTableReplicationProvider(newCfg(), "HSQL RefAsTable");

@@ -11,16 +11,6 @@ import com.db4o.test.replication.db4o.Db4oSingleTypeCollectionReplicationTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateListTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateSimpleArrayTest;
 import com.db4o.test.replication.db4o.hibernate.HibernateDb4oListTest;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.AfterDeletionHsqlRefAsColumns;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.FeaturesMainRefAsColumns;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HibernateSingleTypeCollectionReplicationTest;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.HsqlMetaDataTablesCreatorTest;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.ListTestHsqlRefAsColumns;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.MapTestHsqlRefAsColumns;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.MapTestRefAsColumnsDb4o;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.ProviderTestRefAsColumns;
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.SimpleArrayTestRefAsColumns;
-import com.db4o.test.replication.hibernate.ref_as_columns.ReplicationConfiguratorTestRefAsColumns;
 import com.db4o.test.replication.hibernate.ref_as_table.ReplicationConfiguratorTestRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.AfterDeletionTestHsqlRefAsTable;
 import com.db4o.test.replication.hibernate.ref_as_table.hsql.FeaturesMainRefAsTable;
@@ -46,37 +36,32 @@ import com.db4o.test.replication.transients.TransientSingleTypeCollectionReplica
 
 public class ReplicationTestSuite extends TestSuite {
 
-	public Class[] tests() {
+	public Class[] tests2() {
 		System.err.println("Use tests2 below");
 		return new Class[]{
 				TransientReplicationFeaturesMain.class,
 		};
 	}
-				
-	public Class[] tests2() {
+
+	public Class[] tests() {
 		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
 		return new Class[]{
 				TransientReplicationFeaturesMain.class,
 				Db4oReplicationFeaturesMain.class,
-				FeaturesMainRefAsColumns.class,
 				FeaturesMainRefAsTable.class,
 
 				TransientReplicationProviderTest.class,
 				//TODO Db4oReplicationProviderTest.class,
-				ProviderTestRefAsColumns.class,
 				ProviderTestHsqlRefAsTable.class,
 
-				ReplicationConfiguratorTestRefAsColumns.class,
 				ReplicationConfiguratorTestRefAsTable.class,
 
 				CollectionHandlerImplTest.class,
 				GetByUUID.class,
 
-				HsqlMetaDataTablesCreatorTest.class,
 				RefAsTableTablesCreatorTestHsql.class,
 
 				Db4oReplicationAfterDeletionTest.class,
-				AfterDeletionHsqlRefAsColumns.class,
 				AfterDeletionTestHsqlRefAsTable.class,
 
 				R0to4RunnerCore.class,
@@ -87,27 +72,22 @@ public class ReplicationTestSuite extends TestSuite {
 
 				TransientListTest.class,
 				Db4oListTest.class,
-				ListTestHsqlRefAsColumns.class,
 				HibernateDb4oListTest.class,
 				Db4oHibernateListTest.class,
 				ListTestHsqlRefAsTable.class,
 
 				TransientMapTest.class,
 				Db4oMapTest.class,
-				MapTestHsqlRefAsColumns.class,
 				MapTestHsqlRefAsTable.class,
-				MapTestRefAsColumnsDb4o.class,
 				MapTestRefAsTableDb4o.class,
 
 				TransientSimpleArrayTest.class,
 				Db4oSimpleArrayTest.class,
-				SimpleArrayTestRefAsColumns.class,
 				Db4oHibernateSimpleArrayTest.class,
 				SimpleArrayTestHsqlRefAsTable.class,
 
 				TransientSingleTypeCollectionReplicationTest.class,
 				Db4oSingleTypeCollectionReplicationTest.class,
-				HibernateSingleTypeCollectionReplicationTest.class,
 				SingleTypeCollectionTestHsqlRefAsTable.class,
 
 				TransientMixedTypesCollectionReplicationTest.class,
