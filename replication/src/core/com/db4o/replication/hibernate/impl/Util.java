@@ -3,7 +3,6 @@ package com.db4o.replication.hibernate.impl;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
-import com.db4o.replication.hibernate.metadata.DeletedObject;
 import com.db4o.replication.hibernate.metadata.MySignature;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.PeerSignature;
@@ -14,7 +13,6 @@ import com.db4o.replication.hibernate.metadata.ReplicationRecord;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -42,8 +40,7 @@ public final class Util {
 				|| obj instanceof ReplicationComponentField
 				|| obj instanceof ReplicationComponentIdentity
 				|| obj instanceof UuidLongPartSequence
-				|| obj instanceof ObjectReference
-				|| obj instanceof DeletedObject;
+				|| obj instanceof ObjectReference;
 	}
 
 	public static boolean skip(Class claxx) {
@@ -54,8 +51,7 @@ public final class Util {
 				|| claxx == ReplicationComponentField.class
 				|| claxx == ReplicationComponentIdentity.class
 				|| claxx == UuidLongPartSequence.class
-				|| claxx == ObjectReference.class
-				|| claxx == DeletedObject.class;
+				|| claxx == ObjectReference.class;
 	}
 
 	public static boolean skip(Table table) {
@@ -64,8 +60,7 @@ public final class Util {
 				|| table.getName().equals(ReplicationComponentField.TABLE_NAME)
 				|| table.getName().equals(ReplicationComponentIdentity.TABLE_NAME)
 				|| table.getName().equals(UuidLongPartSequence.TABLE_NAME)
-				|| table.getName().equals(ObjectReference.TABLE_NAME)
-				|| table.getName().equals(DeletedObject.TABLE_NAME);
+				|| table.getName().equals(ObjectReference.TABLE_NAME);
 	}
 
 	public static Statement getStatement(Connection connection) {
@@ -246,30 +241,8 @@ public final class Util {
 		}
 	}
 
-	public static Db4oUUID translate(DeletedObject doo) {
-		return translate(doo.getUuid());
-	}
-
-	private static Db4oUUID translate(Uuid uuid) {
+	public static Db4oUUID translate(Uuid uuid) {
 		return new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes());
-	}
-
-	public static DeletedObject getDeletedObject(Session session, Uuid uuid) {
-		String alias = "do";
-		String uuidPath = alias + "." + DeletedObject.UUID + ".";
-		String queryString = "from " + DeletedObject.TABLE_NAME
-				+ " as " + alias + " where " + uuidPath + Uuid.LONG_PART + "=?"
-				+ " AND " + uuidPath + Uuid.PROVIDER + "." + ReplicationProviderSignature.BYTES + "=?";
-		Query c = session.createQuery(queryString);
-		c.setLong(0, uuid.getLongPart());
-		c.setBinary(1, uuid.getProvider().getBytes());
-
-		List list = c.list();
-
-		if (list.size() == 0)
-			return null;
-		else
-			return (DeletedObject) list.get(0);
 	}
 
 	public static long castAsLong(Serializable id) {

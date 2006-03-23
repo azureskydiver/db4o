@@ -78,6 +78,7 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.delete(findPilot("Pilot2"));
 		subject.commit();
 
+		//Util.dumpTable((HibernateReplicationProvider) subject,"ObjectReference");
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		deletedUuids = subject.uuidsDeletedSinceLastReplication();
 		ensure(deletedUuids.contains(uuidCar1));

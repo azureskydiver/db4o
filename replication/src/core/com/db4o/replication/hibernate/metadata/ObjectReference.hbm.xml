@@ -43,6 +43,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		</component>
 
 		<property name="version" column="version"/>
+		<property name="deleted" column="deleted" type="true_false"/>
 
 	</class>
 </hibernate-mapping>

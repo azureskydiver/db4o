@@ -2,7 +2,6 @@ package com.db4o.replication.hibernate.impl;
 
 import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
 import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
-import com.db4o.replication.hibernate.metadata.DeletedObject;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.Uuid;
@@ -165,14 +164,9 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 	private void objectDeleted(PreDeleteEvent event) {
 		//deleteReplicationComponentIdentity(event);
 
-		Uuid uuid = getUuid(event.getEntity());
-		DeletedObject deletedObject = new DeletedObject();
-		deletedObject.setUuid(uuid);
-		getSession().save(deletedObject);
-
 		ObjectReference ref = Util.getObjectReferenceById(getSession(), event.getEntity());
-		if (ref == null) throw new RuntimeException("ObjectReference must exist");
-		getSession().delete(ref);
+		ref.setDeleted(true);
+		getSession().update(ref);
 	}
 
 	private void collectionUpdated(Object collection) {

@@ -42,7 +42,7 @@ public class ReplicationConfiguratorTest {
 	}
 
 	protected void ensureDeleted(Session session, Uuid uuid) {
-		Test.ensure(Util.getDeletedObject(session, uuid) != null);
+		Test.ensure(Util.getObjectReferenceById(session, uuid).isDeleted());
 	}
 
 	protected Uuid getUuid(Session session, Object obj) {
