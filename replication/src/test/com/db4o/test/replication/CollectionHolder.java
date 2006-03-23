@@ -10,21 +10,20 @@ import java.util.Map;
 import java.util.Set;
 
 public class CollectionHolder {
-	public String _name;
-	public Map _map = new HashMap();
-	public List _list = new LinkedList();
-	public Set _set = new HashSet();
-	public CollectionHolder _h2;
+	public String name;
+	public Map map = new HashMap();
+	public List list = new LinkedList();
+	public Set set = new HashSet();
 
 	public CollectionHolder() {
 	}
 
 	public CollectionHolder(String name) {
-		_name = name;
+		this.name = name;
 	}
 
 	public String toString() {
-		return _name + ", hashcode = " + hashCode();
+		return name + ", hashcode = " + hashCode();
 	}
 
 }

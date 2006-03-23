@@ -72,7 +72,7 @@ public final class Util {
 		}
 	}
 
-	private static PreparedStatement prepareStatement(Connection connection, String sql) {
+	public static PreparedStatement prepareStatement(Connection connection, String sql) {
 		try {
 			return connection.prepareStatement(sql);
 		} catch (SQLException e) {
@@ -119,11 +119,11 @@ public final class Util {
 		dumpTable(p.getName(), p.getSession(), s);
 	}
 
-	private static void dumpTable(String providerName, Session sess, String tableName) {
+	public static void dumpTable(String providerName, Session sess, String tableName) {
 		dumpTable(providerName, sess.connection(), tableName);
 	}
 
-	private static void dumpTable(String providerName, Connection con, String tableName) {
+	public static void dumpTable(String providerName, Connection con, String tableName) {
 		ResultSet rs = null;
 
 		try {
@@ -280,11 +280,10 @@ public final class Util {
 		}
 	}
 
-	public static ObjectReference getObjectReferenceById(Session session, Object obj) {
-		Serializable id = session.getIdentifier(obj);
+	public static ObjectReference getObjectReferenceById(Session session, String className, long id) {
 		Criteria criteria = session.createCriteria(ObjectReference.class);
 		criteria.add(Restrictions.eq(ObjectReference.OBJECT_ID, id));
-		criteria.add(Restrictions.eq(ObjectReference.CLASS_NAME, obj.getClass().getName()));
+		criteria.add(Restrictions.eq(ObjectReference.CLASS_NAME, className));
 		List list = criteria.list();
 
 		if (list.size() == 0)
@@ -296,7 +295,9 @@ public final class Util {
 	}
 
 	public static Uuid getUuid(Session session, Object obj) {
-		return getObjectReferenceById(session, obj).getUuid();
+		long id = Util.castAsLong(session.getIdentifier(obj));
+
+		return getObjectReferenceById(session, obj.getClass().getName(), id).getUuid();
 	}
 
 	public static ObjectReference getByUUID(Session session, Uuid uuid) {

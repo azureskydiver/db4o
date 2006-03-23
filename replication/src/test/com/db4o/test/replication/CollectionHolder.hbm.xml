@@ -31,17 +31,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
-		<property name="_name"/>
-		<set name="_set">
+		<property name="name"/>
+		<set name="set" table="theset">
 			<key column="holderId"/>
 			<element type="string"/>
 		</set>
-		<map name="_map">
+		<map name="map" table="themap">
 			<key column="holderId"/>
 			<map-key type="string"/>
 			<element type="string"/>
 		</map>
-		<list name="_list">
+		<list name="list" table="thelist">
 			<key column="holderId"/>
 			<list-index column="sortOrder"/>
 			<element type="string"/>
