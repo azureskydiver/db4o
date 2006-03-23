@@ -6,6 +6,11 @@ namespace j4o.util {
 
     public class Date {
 
+		public static long toJavaMilliseconds(DateTime dateTimeNet)
+		{
+			return dateTimeNet.Ticks / RATIO - DIFFERENCE_IN_TICKS;
+		}
+
         private static long DIFFERENCE_IN_TICKS = 62135604000000;
         private static long RATIO = 10000;
 
@@ -19,10 +24,10 @@ namespace j4o.util {
         }
 
         public Date(DateTime dateTimeNet) {
-            javaMilliSeconds = dateTimeNet.Ticks / RATIO - DIFFERENCE_IN_TICKS;
+            javaMilliSeconds = toJavaMilliseconds(dateTimeNet);
         }
 
-        public long getJavaMilliseconds() {
+    	public long getJavaMilliseconds() {
             return javaMilliSeconds;
         }
 
