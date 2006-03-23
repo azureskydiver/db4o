@@ -96,7 +96,8 @@ public class HibernateUtil {
 	}
 
 	public static Configuration produceOracleConfigA() {
-		return new Configuration().configure("com/db4o/test/replication/hibernate/ref_as_columns/oracle/hibernate-Oracle-A.cfg.xml");
+		Configuration cfg = new Configuration().configure("com/db4o/test/replication/hibernate/oracle/hibernate-Oracle-A.cfg.xml");
+		return addAllMappings(cfg);
 	}
 
 	public static Configuration produceOracleConfigB() {

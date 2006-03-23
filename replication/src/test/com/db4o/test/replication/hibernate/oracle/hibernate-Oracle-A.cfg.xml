@@ -17,7 +17,7 @@
 		<property name="hibernate.connection.pool_size">1</property>
 
 		<!-- SQL dialect -->
-		<property name="hibernate.dialect">org.hibernate.dialect.Oracle9Dialect</property>
+		<property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
 
 		<!-- Echo all executed SQL to stdout -->
 		<property name="hibernate.show_sql">false</property>

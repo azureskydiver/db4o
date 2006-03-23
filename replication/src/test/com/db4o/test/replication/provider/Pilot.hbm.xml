@@ -32,7 +32,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 			<generator class="native"/>
 		</id>
 
-		<property name="_name"/>
-		<property name="_age"/>
+		<property name="_name" column="name"/>
+		<property name="_age" column="age"/>
 	</class>
 </hibernate-mapping>

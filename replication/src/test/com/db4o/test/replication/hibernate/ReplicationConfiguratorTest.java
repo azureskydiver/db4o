@@ -5,7 +5,6 @@ import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import com.db4o.test.Test;
 import com.db4o.test.replication.CollectionHolder;
-import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -33,7 +32,7 @@ public class ReplicationConfiguratorTest {
 	}
 
 	protected void clean() {
-		Session session = sessionFactory.openSession();
+		Session session = openSession();
 		Transaction tx = session.beginTransaction();
 		session.createQuery("delete from CollectionHolder").executeUpdate();
 		tx.commit();
@@ -50,14 +49,16 @@ public class ReplicationConfiguratorTest {
 	}
 
 	protected void init() {
-		cfg = HibernateUtil.createNewDbConfig();
+		cfg = prepareCfg();
 		Util.addClass(cfg, CollectionHolder.class);
 		ReplicationConfigurator.configure(cfg);
 	}
 
+	protected Configuration prepareCfg() {return HibernateUtil.createNewDbConfig();}
+
 	protected Session openSession() {
 		Session session = sessionFactory.openSession();
-		session.setFlushMode(FlushMode.COMMIT);
+		//session.setFlushMode(FlushMode.COMMIT);
 		ReplicationConfigurator.install(session, cfg);
 		return session;
 	}
@@ -94,27 +95,27 @@ public class ReplicationConfiguratorTest {
 		session.save(ch);
 		session.flush();
 
-		ch._set.add("8");
+		ch.set.add("8");
 		session.flush();
 		checkVersion(cfg, session, ch, raisedVer);
 
-		ch._list.add("88");
+		ch.list.add("88");
 		session.flush();
 		checkVersion(cfg, session, ch, raisedVer);
 
-		ch._map.put("88", "88");
+		ch.map.put("88", "88");
 		session.flush();
 		checkVersion(cfg, session, ch, raisedVer);
 
-		ch._set = null;
+		ch.set = null;
 		session.flush();
 		checkVersion(cfg, session, ch, raisedVer);
 
-		ch._list = null;
+		ch.list = null;
 		session.flush();
 		checkVersion(cfg, session, ch, raisedVer);
 
-		ch._map = null;
+		ch.map = null;
 		session.flush();
 		checkVersion(cfg, session, ch, raisedVer);
 
@@ -135,15 +136,15 @@ public class ReplicationConfiguratorTest {
 		session.save(ch);
 		session.flush();
 
-		ch._set.add("8");
+		ch.set.add("8");
 		session.flush();
 		checkVersion(cfg, session, ch, raisedVer);
 
-		ch._list.add("88");
+		ch.list.add("88");
 		session.flush();
 		checkVersion(cfg, session, ch, raisedVer);
 
-		ch._map.put("88", "88");
+		ch.map.put("88", "88");
 		session.flush();
 		checkVersion(cfg, session, ch, raisedVer);
 		tx.commit();
@@ -168,7 +169,7 @@ public class ReplicationConfiguratorTest {
 		Uuid uuid = getUuid(session, ch);
 		Test.ensure(uuid != null);
 
-		ch._name = "changed";
+		ch.name = "changed";
 		tx.commit();
 
 		checkVersion(cfg, session, ch, raisedVer);

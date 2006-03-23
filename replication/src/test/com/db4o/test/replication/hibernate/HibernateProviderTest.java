@@ -3,7 +3,6 @@ package com.db4o.test.replication.hibernate;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
 import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
@@ -22,11 +21,15 @@ public class HibernateProviderTest extends ReplicationProviderTest {
 	protected static Configuration newCfg() {
 		Configuration configuration = HibernateUtil.createNewDbConfig();
 
+		addClasses(configuration);
+		return configuration;
+	}
+
+	protected static void addClasses(Configuration configuration) {
 		configuration.addClass(Car.class);
 		configuration.addClass(Pilot.class);
 		configuration.addClass(ListHolder.class);
 		configuration.addClass(ListContent.class);
-		return configuration;
 	}
 
 	protected void destroySubject() {
@@ -35,7 +38,7 @@ public class HibernateProviderTest extends ReplicationProviderTest {
 	}
 
 	protected TestableReplicationProviderInside prepareSubject() {
-		return new HibernateReplicationProviderImpl(newCfg());
+		return HibernateUtil.refAsTableProviderA();
 	}
 
 	protected boolean subjectSupportsRollback() {

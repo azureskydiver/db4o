@@ -11,7 +11,6 @@ import com.db4o.inside.replication.ReplicationReflector;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
-import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
 import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.PeerSignature;
@@ -65,7 +64,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private boolean _alive = false;
 
-	private ObjectLifeCycleEventsListener _lifeCycleEventsListener;
+	private ObjectLifeCycleEventsListenerImpl _lifeCycleEventsListener;
 
 	/**
 	 * The Signature of the peer in the current Transaction.
@@ -213,6 +212,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final synchronized void commitReplicationTransaction(long raisedDatabaseVersion) {
 		ensureReplicationActive();
 
+		ensureVersion(raisedDatabaseVersion);
+
 		String sql = "delete " + ObjectReference.TABLE_NAME + " o where o." + ObjectReference.DELETED + " = 'T'";
 		getSession().createQuery(sql).executeUpdate();
 
@@ -298,6 +299,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		if (uuid == null) throw new IllegalArgumentException("uuid cannot be null");
 		if (hint == null) throw new IllegalArgumentException("hint cannot be null");
 
+		getSession().flush();
+
 		if (_collectionHandler.canHandle(hint)) {
 			return produceCollectionReferenceByUUID(uuid);
 		} else {
@@ -331,7 +334,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final synchronized void rollbackReplication() {
 		ensureReplicationActive();
 
-		getObjectTransaction().rollback();
+		_transaction.rollback();
 		clearSession();
 
 		_transaction = getSession().beginTransaction();
@@ -343,15 +346,15 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	public final void startReplicationTransaction(ReadonlyReplicationProviderSignature aPeerSignature) {
 		ensureReplicationInActive();
+
+		_transaction.commit();
+		_transaction = getSession().beginTransaction();
 		clearSession();
 
 		byte[] peerSigBytes = aPeerSignature.getBytes();
 
 		if (Arrays.equals(peerSigBytes, getSignature().getBytes()))
 			throw new RuntimeException("peerSigBytes must not equal to my own sig");
-
-		getObjectTransaction().commit();
-		_transaction = getSession().beginTransaction();
 
 		final List exisitingSigs = getSession().createCriteria(PeerSignature.class)
 				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, peerSigBytes)).list();
@@ -404,9 +407,16 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		if (version < Constants.MIN_VERSION_NO)
 			throw new RuntimeException("version must be great than " + Constants.MIN_VERSION_NO);
 
+		ensureVersion(version);
+
 		_replicationRecord.setVersion(version);
 		getSession().saveOrUpdate(_replicationRecord);
 		getSession().flush();
+	}
+
+	private void ensureVersion(long version) {
+		if (version < getCurrentVersion())
+			throw new RuntimeException("version must be great than " + getCurrentVersion());
 	}
 
 	public final void visitCachedReferences(Visitor4 visitor) {
@@ -428,11 +438,13 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	public final void commit() {
-		getSession().flush();
-		getObjectTransaction().commit();
+		final Session session = getSession();
+
+
+		session.flush();
+		_transaction.commit();
 		clearSession();
-		_transaction = getSession().beginTransaction();
-		//uuidGenerator.reset(getSession());
+		_transaction = session.beginTransaction();
 	}
 
 	public final void delete(Object obj) {
@@ -516,7 +528,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
 		Criteria criteria = getSession().createCriteria(ObjectReference.class);
-		criteria.add(Restrictions.gt(ObjectReference.VERSION, getLastReplicationVersion()));
+		long lastReplicationVersion = getLastReplicationVersion();
+		criteria.add(Restrictions.gt(ObjectReference.VERSION, lastReplicationVersion));
 		Disjunction disjunction = Restrictions.disjunction();
 
 		List<String> names = new ArrayList<String>();
@@ -534,14 +547,12 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		criteria.add(disjunction);
 
-		Collection<HibernateObjectId> ids = new HashSet();
+		Set out = new HashSet();
 		for (Object o : criteria.list()) {
 			ObjectReference ref = (ObjectReference) o;
-			final HibernateObjectId hibernateObjectId = new HibernateObjectId(ref.getObjectId(), persistentClass.getRootClass().getClassName());
-			ids.add(hibernateObjectId);
+			out.add(getSession().load(persistentClass.getRootClass().getClassName(), ref.getObjectId()));
 		}
-
-		return loadObjects(ids);
+		return out;
 	}
 
 	private Object getFieldValue(Object refObject, String referencingObjectFieldName) {
@@ -560,10 +571,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return getCurrentVersion() - 1;
 	}
 
-	private Transaction getObjectTransaction() {
-		return _transaction;
-	}
-
 	private ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
 		final List exisitingSigs = getSession().createCriteria(ReplicationProviderSignature.class)
 				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, signaturePart))
@@ -577,19 +584,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private boolean isReplicationActive() {
 		return _inReplication;
-	}
-
-	private Object loadObject(HibernateObjectId hibernateObjectId) {
-		return getSession().load(hibernateObjectId.className, hibernateObjectId.hibernateId);
-	}
-
-	private Collection loadObjects(Collection<HibernateObjectId> changedObjectIds) {
-		Set out = new HashSet();
-
-		for (HibernateObjectId hibernateObjectId : changedObjectIds)
-			out.add(loadObject(hibernateObjectId));
-
-		return out;
 	}
 
 	private ReplicationReference produceCollectionReference(Object obj, Object referencingObj, String fieldName) {
@@ -678,8 +672,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private ReplicationReference produceObjectReference(Object obj) {
 		if (!getSession().contains(obj)) return null;
-
-		final ObjectReference ref = Util.getObjectReferenceById(getSession(), obj);
+		long id = Util.castAsLong(getSession().getIdentifier(obj));
+		final ObjectReference ref = Util.getObjectReferenceById(getSession(), obj.getClass().getName(), id);
 
 		if (ref == null) throw new RuntimeException("ObjectReference must exist for " + obj);
 
@@ -703,6 +697,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private ReplicationComponentField produceReplicationComponentField(String referencingObjectClassName,
 			String referencingObjectFieldName) {
+		getSession().flush();
 		Criteria criteria = getSession().createCriteria(ReplicationComponentField.class);
 		criteria.add(Restrictions.eq("referencingObjectClassName", referencingObjectClassName));
 		criteria.add(Restrictions.eq("referencingObjectFieldName", referencingObjectFieldName));
@@ -735,8 +730,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 				_dirtyRefs.remove(ref);
 
 				final Object obj = ref.object();
-
-				final ObjectReference exist = Util.getObjectReferenceById(getSession(), obj);
+				long id = Util.castAsLong(getSession().getIdentifier(obj));
+				final ObjectReference exist = Util.getObjectReferenceById(getSession(), obj.getClass().getName(), id);
 				if (exist == null) {
 					ReplicationProviderSignature provider = getProviderSignature(ref.uuid().getSignaturePart());
 
@@ -768,7 +763,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		protected final void ObjectUpdated(Object obj, Serializable id) {
 			if (!isReplicationActive())
-				super.ObjectUpdated(obj, id);
+				super.ObjectUpdated(obj, Util.castAsLong(id));
 		}
 	}
 }

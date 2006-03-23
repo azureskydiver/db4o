@@ -20,9 +20,9 @@ public abstract class SingleTypeCollectionReplicationTest extends ReplicationTes
 
 	void execute() {
 		CollectionHolder h1 = new CollectionHolder();
-		h1._map.put("1", "one");
-		h1._set.add("two");
-		h1._list.add("three");
+		h1.map.put("1", "one");
+		h1.set.add("two");
+		h1.list.add("three");
 
 		_providerA.storeNew(h1);
 		_providerA.activate(h1);
@@ -45,9 +45,9 @@ public abstract class SingleTypeCollectionReplicationTest extends ReplicationTes
 		Test.ensure(it.hasNext());
 
 		CollectionHolder replica = (CollectionHolder) it.next();
-		Test.ensureEquals("one", replica._map.get("1"));
-		Test.ensure(replica._set.contains("two"));
-		Test.ensureEquals("three", replica._list.get(0));
+		Test.ensureEquals("one", replica.map.get("1"));
+		Test.ensure(replica.set.contains("two"));
+		Test.ensureEquals("three", replica.list.get(0));
 
 	}
 

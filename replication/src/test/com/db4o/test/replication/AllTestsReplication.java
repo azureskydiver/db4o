@@ -10,7 +10,7 @@ public class AllTestsReplication extends AllTests {
 
 	public static void main(String[] args) {
 		Db4oReplicationTestUtil.configure();
-//		runSolo(MapTestHsqlRefAsColumns.class);
+		//runSolo(R0to4RunnerCombinations.class);
 //		runSolo(MapTestHsqlRefAsColumns.class);
 		new AllTestsReplication().run();
 		Db4oReplicationTestUtil.close();
