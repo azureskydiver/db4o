@@ -1,9 +1,9 @@
-package com.db4o.test.replication.hibernate.ref_as_columns.postgresql;
+package com.db4o.test.replication.hibernate.ref_as_table.postgresql;
 
-import com.db4o.test.replication.hibernate.ref_as_columns.RefAsColumnsMetaDataTablesCreatorTest;
+import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableTablesCreatorTest;
 import org.hibernate.cfg.Configuration;
 
-public class PostgreSQLMetaDataTablesCreatorTest extends RefAsColumnsMetaDataTablesCreatorTest {
+public class PostgreSQLMetaDataTablesCreatorTest extends RefAsTableTablesCreatorTest {
 	public void test() {
 		super.test();
 	}

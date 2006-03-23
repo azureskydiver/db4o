@@ -1,4 +1,4 @@
-package com.db4o.test.replication.hibernate.ref_as_columns.oracle;
+package com.db4o.test.replication.hibernate.ref_as_table.oracle;
 
 import com.db4o.test.TestSuite;
 
@@ -9,7 +9,7 @@ public class OracleTestSuite extends TestSuite {
 				OracleListTest.class,
 				OracleMapTest.class,
 				//OracleR0to4Runner.class,
-				OracleFeaturesMainRefAsColumns.class
+				OracleFeaturesMain.class
 		};
 	}
 }

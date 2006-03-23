@@ -1,10 +1,10 @@
-package com.db4o.test.replication.hibernate.ref_as_columns.oracle;
+package com.db4o.test.replication.hibernate.ref_as_table.oracle;
 
 import com.db4o.test.replication.hibernate.HibernateUtil;
-import com.db4o.test.replication.hibernate.ref_as_columns.RefAsColumnsMetaDataTablesCreatorTest;
+import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableTablesCreatorTest;
 import org.hibernate.cfg.Configuration;
 
-public class OracleMetaDataTablesCreatorTest extends RefAsColumnsMetaDataTablesCreatorTest {
+public class OracleMetaDataTablesCreatorTest extends RefAsTableTablesCreatorTest {
 	public void test() {
 		super.test();
 	}

@@ -1,9 +1,9 @@
-package com.db4o.test.replication.hibernate.ref_as_columns.mysql;
+package com.db4o.test.replication.hibernate.ref_as_table.mysql;
 
-import com.db4o.test.replication.hibernate.ref_as_columns.RefAsColumnsMetaDataTablesCreatorTest;
+import com.db4o.test.replication.hibernate.ref_as_table.RefAsTableTablesCreatorTest;
 import org.hibernate.cfg.Configuration;
 
-public class MySQLMetaDataTablesCreatorTest extends RefAsColumnsMetaDataTablesCreatorTest {
+public class MySQLMetaDataTablesCreatorTest extends RefAsTableTablesCreatorTest {
 	public void test() {
 		super.test();
 	}

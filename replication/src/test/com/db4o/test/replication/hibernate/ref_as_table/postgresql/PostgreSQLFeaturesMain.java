@@ -1,9 +1,9 @@
-package com.db4o.test.replication.hibernate.ref_as_columns.postgresql;
+package com.db4o.test.replication.hibernate.ref_as_table.postgresql;
 
-import com.db4o.test.replication.hibernate.ref_as_columns.hsql.FeaturesMainRefAsColumns;
+import com.db4o.test.replication.hibernate.ref_as_table.hsql.FeaturesMainRefAsTable;
 
-public class PostgreSQLFeaturesMainRefAsColumns extends FeaturesMainRefAsColumns {
-	public PostgreSQLFeaturesMainRefAsColumns() {
+public class PostgreSQLFeaturesMain extends FeaturesMainRefAsTable {
+	public PostgreSQLFeaturesMain() {
 
 	}
 
