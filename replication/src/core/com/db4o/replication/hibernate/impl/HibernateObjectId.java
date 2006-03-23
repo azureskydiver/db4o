@@ -2,7 +2,7 @@ package com.db4o.replication.hibernate.impl;
 
 import java.io.Serializable;
 
-public final class HibernateObjectId {
+final class HibernateObjectId {
 // ------------------------------ FIELDS ------------------------------
 
 	public final Serializable hibernateId;

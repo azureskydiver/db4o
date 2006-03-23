@@ -12,8 +12,7 @@ import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
-import com.db4o.replication.hibernate.cfg.ObjectConfig;
-import com.db4o.replication.hibernate.cfg.RefConfig;
+import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
 import com.db4o.replication.hibernate.metadata.DeletedObject;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.PeerSignature;
@@ -52,26 +51,24 @@ import java.util.List;
 import java.util.Set;
 
 
-public class HibernateReplicationProviderImpl implements HibernateReplicationProvider {
+public final class HibernateReplicationProviderImpl implements HibernateReplicationProvider {
 // ------------------------------ FIELDS ------------------------------
 
-	protected RefConfig _refCfg;
+	private final ReplicationConfiguration _refCfg;
 
-	protected ObjectConfig _objectConfig;
+	private final String _name;
 
-	protected String _name;
+	private Session _session;
 
-	protected Session _session;
+	private SessionFactory _sessionFactory;
 
-	protected SessionFactory _sessionFactory;
+	private Transaction _transaction;
 
-	protected Transaction _transaction;
+	private ObjectReferenceMap _objRefs = new ObjectReferenceMap();
 
-	protected ObjectReferenceMap _objRefs = new ObjectReferenceMap();
+	private boolean _alive = false;
 
-	protected boolean _alive = false;
-
-	protected ObjectLifeCycleEventsListener lifeCycleEventsListener;
+	private ObjectLifeCycleEventsListener lifeCycleEventsListener;
 
 	/**
 	 * The Signature of the peer in the current Transaction.
@@ -116,19 +113,17 @@ public class HibernateReplicationProviderImpl implements HibernateReplicationPro
 	public HibernateReplicationProviderImpl(Configuration cfg, String name) {
 		_name = name;
 
-		_refCfg = new RefConfig(cfg);
+		_refCfg = new ReplicationConfiguration(cfg);
 
 		Util.initUuidLongPartSequence(cfg);
 		lifeCycleEventsListener = new MyObjectLifeCycleEventsListener();
 		lifeCycleEventsListener.configure(cfg);
 
-		_objectConfig = new ObjectConfig(cfg);
-
 		new TablesCreatorImpl(getRefCfg()).createTables();
 
 		initEventListeners();
 
-		_sessionFactory = getObjectConfig().getConfiguration().buildSessionFactory();
+		_sessionFactory = getRefConfig().getConfiguration().buildSessionFactory();
 		_session = _sessionFactory.openSession();
 		_session.setFlushMode(FlushMode.COMMIT);
 		_transaction = _session.beginTransaction();
@@ -151,7 +146,7 @@ public class HibernateReplicationProviderImpl implements HibernateReplicationPro
 // --------------------- Interface HibernateReplicationProvider ---------------------
 
 	public final Configuration getConfiguration() {
-		return getObjectConfig().getConfiguration();
+		return getRefConfig().getConfiguration();
 	}
 
 	public final Session getSession() {
@@ -274,7 +269,7 @@ public class HibernateReplicationProviderImpl implements HibernateReplicationPro
 		if (_collectionHandler.canHandle(hint)) {
 			return produceCollectionReferenceByUUID(uuid);
 		} else {
-			return produceObjectReferenceByUUID(uuid, hint);
+			return produceObjectReferenceByUUID(uuid);
 		}
 	}
 
@@ -434,13 +429,13 @@ public class HibernateReplicationProviderImpl implements HibernateReplicationPro
 		}
 	}
 
-	protected final void ensureReplicationActive() {
+	private void ensureReplicationActive() {
 		ensureAlive();
 		if (!isReplicationActive())
 			throw new UnsupportedOperationException("Method not supported because replication transaction is not active");
 	}
 
-	protected final Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
+	private Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
 		List<String> classNames = getTypeClassNames(persistentClass);
 
 		Criteria criteria = getSession().createCriteria(ObjectReference.class);
@@ -459,17 +454,13 @@ public class HibernateReplicationProviderImpl implements HibernateReplicationPro
 		return loadObject(ids);
 	}
 
-	protected final long getLastReplicationVersion() {
+	private long getLastReplicationVersion() {
 		ensureReplicationActive();
 
 		return getCurrentVersion() - 1;
 	}
 
-	protected final ObjectConfig getObjectConfig() {
-		return _objectConfig;
-	}
-
-	protected final ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
+	private ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
 		final List exisitingSigs = getSession().createCriteria(ReadonlyReplicationProviderSignature.class)
 				.add(Restrictions.eq(ReplicationProviderSignature.BYTES, signaturePart))
 				.list();
@@ -480,32 +471,36 @@ public class HibernateReplicationProviderImpl implements HibernateReplicationPro
 			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
 	}
 
-	protected final RefConfig getRefCfg() {
+	private ReplicationConfiguration getRefCfg() {
 		return _refCfg;
 	}
 
-	protected final RefConfig getRefConfig() {
+	private ReplicationConfiguration getRefConfig() {
 		return _refCfg;
 	}
 
-	protected final void init() {
+	private void init() {
 		initMappedClasses();
 		//uuidGenerator.reset(getSession());
 	}
 
-	protected final void initEventListeners() {
-		Configuration cfg = getObjectConfig().getConfiguration();
+	private void initEventListeners() {
+		Configuration cfg = getConfiguration();
 		cfg.setInterceptor(EmptyInterceptor.INSTANCE);
 		EventListeners eventListeners = cfg.getEventListeners();
 
 		eventListeners.setFlushEventListeners(createFlushEventListeners(eventListeners.getFlushEventListeners()));
 	}
 
-	protected final boolean isReplicationActive() {
+	private boolean isReplicationActive() {
 		return _inReplication;
 	}
 
-	protected final Collection loadObject(Collection<HibernateObjectId> changedObjectIds) {
+	private Object loadObject(HibernateObjectId hibernateObjectId) {
+		return getSession().load(hibernateObjectId.className, hibernateObjectId.hibernateId);
+	}
+
+	private Collection loadObject(Collection<HibernateObjectId> changedObjectIds) {
 		Set out = new HashSet();
 
 		for (HibernateObjectId hibernateObjectId : changedObjectIds)
@@ -514,11 +509,7 @@ public class HibernateReplicationProviderImpl implements HibernateReplicationPro
 		return out;
 	}
 
-	protected final Object loadObject(HibernateObjectId hibernateObjectId) {
-		return getSession().load(hibernateObjectId.className, hibernateObjectId.hibernateId);
-	}
-
-	protected final ReplicationReference produceObjectReference(Object obj) {
+	private ReplicationReference produceObjectReference(Object obj) {
 		if (!getSession().contains(obj)) return null;
 
 		final ObjectReference ref = Util.getObjectReferenceById(getSession(), obj);
@@ -529,7 +520,7 @@ public class HibernateReplicationProviderImpl implements HibernateReplicationPro
 		return _objRefs.put(obj, new Db4oUUID(uuid.getLongPart(), uuid.getProvider().getBytes()), ref.getVersion());
 	}
 
-	protected final ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid, Class hint) {
+	private ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid) {
 		String alias = "objRef";
 		String uuidPath = alias + "." + ObjectReference.UUID + ".";
 		String queryString = "from " + ObjectReference.TABLE_NAME
@@ -554,7 +545,7 @@ public class HibernateReplicationProviderImpl implements HibernateReplicationPro
 		}
 	}
 
-	protected final void saveOrUpdateReplicaMetadata(ReplicationReference ref) {
+	private void saveOrUpdateReplicaMetadata(ReplicationReference ref) {
 		ensureReplicationActive();
 		final Object obj = ref.object();
 
@@ -627,7 +618,7 @@ public class HibernateReplicationProviderImpl implements HibernateReplicationPro
 	}
 
 	private void destroyListeners() {
-		EventListeners eventListeners = getObjectConfig().getConfiguration().getEventListeners();
+		EventListeners eventListeners = getConfiguration().getEventListeners();
 		FlushEventListener[] o1 = eventListeners.getFlushEventListeners();
 		FlushEventListener[] r1 = (FlushEventListener[]) ArrayUtils.removeElement(
 				o1, myFlushEventListener);
@@ -708,7 +699,7 @@ public class HibernateReplicationProviderImpl implements HibernateReplicationPro
 	private void initMappedClasses() {
 		_mappedClasses = new HashSet();
 
-		Iterator classMappings = getObjectConfig().getConfiguration().getClassMappings();
+		Iterator classMappings = getConfiguration().getClassMappings();
 		while (classMappings.hasNext()) {
 			PersistentClass persistentClass = (PersistentClass) classMappings.next();
 			Class claxx = persistentClass.getMappedClass();

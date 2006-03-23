@@ -6,7 +6,7 @@ import org.hibernate.Session;
 
 import java.util.List;
 
-public final class UuidGenerator {
+final class UuidGenerator {
 // -------------------------- STATIC METHODS --------------------------
 
 	public static Uuid next(Session session) {
