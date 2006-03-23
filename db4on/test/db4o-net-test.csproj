@@ -619,6 +619,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "src\com\db4o\test\aliases\ClassAliasesTestCase.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "src\com\db4o\test\cs\Cs.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -26,6 +26,8 @@ namespace com.db4o.test
 			{
 				ArrayList tests = new ArrayList();
 
+				tests.Add(typeof(aliases.ClassAliasesTestCase));
+
 				tests.Add(typeof(ArrayNOrder)); 
 				tests.Add(typeof(BackReferences));
 #if NET || NET_2_0 || MONO
@@ -49,6 +51,7 @@ namespace com.db4o.test
 				tests.Add(typeof(CrashSimulatingTest));
 				tests.Add(typeof(Circular1));
 				tests.Add(typeof(Circular2));
+
 				tests.Add(typeof(CollectionActivation));
 				tests.Add(typeof(Cs));
 				tests.Add(typeof(CsArrays));
