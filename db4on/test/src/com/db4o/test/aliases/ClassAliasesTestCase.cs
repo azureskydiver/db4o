@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using com.db4o.config;
 
 namespace com.db4o.test.aliases
@@ -134,8 +135,34 @@ public class Program {
 			String srcFile = buildTempPath("com/db4o/test/aliases/Program.java");
 			writeFile(srcFile, code);
 			/// XXX: locate javac in a non platform specific way
-			String stdout = exec("c:/java/jdk1.5.0_04/bin/javac.exe", "-cp " + db4ojarPath(), srcFile);
+			String stdout = exec(javacPath(), "-cp " + db4ojarPath(), srcFile);
 			//Console.WriteLine(stdout);
+		}
+
+		private string javacPath()
+		{
+			return readProperty(machinePropertiesPath(), "file.compiler.jdk1.3");
+		}
+
+		private string readProperty(string fname, string property)
+		{	
+			using (StreamReader reader=File.OpenText(fname))
+			{
+				string line = null;
+				while (null != (line = reader.ReadLine()))
+				{
+					if (line.StartsWith(property))
+					{
+						return line.Substring(property.Length+1);
+					}
+				}
+			}
+			throw new ArgumentException("property '" + property + "' not found in '" + fname + "'");
+		}
+
+		private string machinePropertiesPath()
+		{
+			return workspacePath("db4obuild/machine.properties");
 		}
 
 		private String exec(String program, params String[] arguments)
@@ -157,12 +184,17 @@ public class Program {
 
 		private String db4ojarPath()
 		{
-			string path = Path.Combine(FindParentDirectory("db4obuild"), "db4obuild/dist/java/lib/db4o-5.2-java1.2.jar");
+			return workspacePath("db4obuild/dist/java/lib/db4o-5.2-java1.2.jar");
+		}
+
+		private string workspacePath(string fname)
+		{
+			string path = Path.Combine(findParentDirectory("db4obuild"), fname);
 			Tester.ensure(path, File.Exists(path));
 			return path;
 		}
 
-		private string FindParentDirectory(string path)
+		private string findParentDirectory(string path)
 		{
 			string parent = Path.GetFullPath("..");
 			while (true)
