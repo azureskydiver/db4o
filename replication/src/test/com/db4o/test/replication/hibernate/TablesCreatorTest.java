@@ -20,8 +20,13 @@ public class TablesCreatorTest {
 	}
 
 	public void test() {
+		clean();
 		tstValidate();
 		tstCreate();
+	}
+
+	protected void clean() {
+
 	}
 
 	public void tstCreate() {

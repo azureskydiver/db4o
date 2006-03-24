@@ -4,32 +4,25 @@ import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
-import com.db4o.test.replication.collections.ListContent;
 import com.db4o.test.replication.collections.ListHolder;
-import com.db4o.test.replication.provider.Car;
-import com.db4o.test.replication.provider.Pilot;
 import com.db4o.test.replication.provider.ReplicationProviderTest;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class HibernateProviderTest extends ReplicationProviderTest {
+	protected Configuration cfg = HibernateUtil.refAsTableProviderA().getConfiguration();
+
 // -------------------------- STATIC METHODS --------------------------
 
-	protected static Configuration newCfg() {
-		Configuration configuration = HibernateUtil.createNewDbConfig();
 
-		addClasses(configuration);
-		return configuration;
-	}
-
-	protected static void addClasses(Configuration configuration) {
-		configuration.addClass(Car.class);
-		configuration.addClass(Pilot.class);
-		configuration.addClass(ListHolder.class);
-		configuration.addClass(ListContent.class);
+	protected void clean() {
+		final SchemaExport schemaExport = new SchemaExport(cfg);
+		schemaExport.setHaltOnError(true);
+		schemaExport.drop(false, true);
 	}
 
 	protected void destroySubject() {

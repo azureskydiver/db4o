@@ -19,7 +19,7 @@ public abstract class ListTest extends ReplicationTestcase {
 
 		clean();
 
-		//checkEmpty();
+		checkEmpty();
 
 		storeListToProviderA();
 
