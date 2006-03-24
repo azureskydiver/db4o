@@ -32,7 +32,7 @@ public class GenericReplicationSession implements ReplicationSession {
 	 * key = object originated from one provider
 	 * value = the counterpart ReplicationReference of the original object
 	 */
-	private Hashtable4 _originalCounterPartRefMap = new Hashtable4(10000);
+	private Hashtable4 _counterpartRefsByOriginal = new Hashtable4(10000);
 
 	public GenericReplicationSession(ReplicationProvider providerA, ReplicationProvider providerB, ConflictResolver resolver) {
 
@@ -72,45 +72,48 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	
-	public void replicate(Db4oUUID uuid) {
-		
-		ReplicationReference refA = _peerA.produceReferenceByUUID(uuid, null);
-		ReplicationReference refB = _peerB.produceReferenceByUUID(uuid, null);
-
-		if (refA != null && refB != null)
-			throw new RuntimeException("Object with given UUID must have been deleted in at least one of the databases being replicated.");
-		
-		if (refA == null && refB == null) return;  //Deleted in both - Do nothing
-
-		Object obj = refA == null
-			? refB.object()
-			: refA.object();
-			
-		replicate(obj);
-		
-		//Deleted in one
-			//No conflict - replicate (check direction)
-			//Conflict (deletion in one and object in the other)
-				//Resolver return null - do nothing
-				//Deletion prevails - replicate deletion (check direction)
-				//Object prevails - undo deletion (check direction)
-		
-		
-		//  A       1' ->  2' -> 3    (changed)
-		//  B       []  ->  []  -> 3    (deleted)
-		
-		//Results:
-		//TO_A:   []  -> []  -> 3
-		//TO_B:    1' -> 2' -> 3
-
-
-		
-		//  A       1* ->  2* -> 3    (new)
-		//  B           ->     -> 3    (non-existant)
-
-		
-		
-	}
+//	public void replicate(Db4oUUID uuid) {
+//		
+//		Object objA = _peerA.getObject(uuid);
+//		Object objB = _peerB.getObject(uuid);
+//
+//		ReplicationReference refA = _peerA.produceReferenceByUUID(uuid, null);
+//		ReplicationReference refB = _peerB.produceReferenceByUUID(uuid, null);
+//
+//		if (refA != null && refB != null)
+//			throw new RuntimeException("Object with given UUID must have been deleted in at least one of the databases being replicated.");
+//		
+//		if (refA == null && refB == null) return;  //Deleted in both - Do nothing
+//
+//		Object obj = refA == null
+//			? refB.object()
+//			: refA.object();
+//			
+//		replicate(obj);
+//		
+//		//Deleted in one
+//			//No conflict - replicate (check direction)
+//			//Conflict (deletion in one and object in the other)
+//				//Resolver return null - do nothing
+//				//Deletion prevails - replicate deletion (check direction)
+//				//Object prevails - undo deletion (check direction)
+//		
+//		
+//		//  A       1' ->  2' -> 3    (changed)
+//		//  B       []  ->  []  -> 3    (deleted)
+//		
+//		//Results:
+//		//TO_A:   []  -> []  -> 3
+//		//TO_B:    1' -> 2' -> 3
+//
+//
+//		
+//		//  A       1* ->  2* -> 3    (new)
+//		//  B           ->     -> 3    (non-existant)
+//
+//		
+//		
+//	}
 
 	
 	private void activateGraphToBeReplicated(Object root) {
@@ -168,8 +171,8 @@ public class GenericReplicationSession implements ReplicationSession {
 		destination.storeReplica(reference.counterpart());
 	}
 
-	ReplicationReference getReferencingObjectCounterPartRef(Object referencingObject) {
-		return (ReplicationReference) _originalCounterPartRefMap.get(referencingObject);
+	ReplicationReference getCounterpartRef(Object original) {
+		return (ReplicationReference) _counterpartRefsByOriginal.get(original);
 	}
 
 	private boolean activateObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) { //TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
@@ -198,27 +201,11 @@ public class GenericReplicationSession implements ReplicationSession {
 		else
 			refB = otherRef;
 
-		if (otherRef == null) {  //New object to the other peer.
-			if (_directionTo == owner) return false;
-
-			owner.activate(obj);
-
-			Object counterpart = emptyClone(owner, obj);
-
-			ownerRef.setCounterpart(counterpart);
-			ownerRef.markForReplicating();
-
-			otherRef = other.referenceNewObject(counterpart, ownerRef, getReferencingObjectCounterPartRef(referencingObject), fieldName);
-			_originalCounterPartRefMap.put(obj, otherRef);
-
-			// TODO: We might not need counterpart in otherRef. Check.
-			if (otherRef != null) {
-
-				otherRef.setCounterpart(obj);
-
-			}
-
-			return true;
+		if (otherRef == null) {
+			if (other.wasDeletedSinceLastReplication(uuid))
+				return handleDeletedObject(obj, ownerRef, owner, other, referencingObject, fieldName);
+				
+			return activateNewObject(obj, ownerRef, owner, other, referencingObject, fieldName);
 		}
 
 		ownerRef.setCounterpart(otherRef.object());
@@ -263,6 +250,46 @@ public class GenericReplicationSession implements ReplicationSession {
 		return true;
 	}
 
+
+	private boolean handleDeletedObject(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName) {
+//		if (_directionTo == owner) return false;
+//
+//		owner.activate(obj);
+//		
+//		Object counterpart = emptyClone(owner, obj);
+//
+//		ownerRef.setCounterpart(counterpart);
+//		ownerRef.markForReplicating();
+//
+//		ReplicationReference otherRef = other.referenceNewObject(counterpart, ownerRef, getCounterpartRef(referencingObject), fieldName);
+//		_counterpartRefsByOriginal.put(obj, otherRef);
+//
+//		// TODO: We might not need counterpart in otherRef. Check.
+//		otherRef.setCounterpart(obj);
+//
+//		return true;
+		throw new RuntimeException("TODO");
+	}
+
+	
+	private boolean activateNewObject(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName) {
+		if (_directionTo == owner) return false;
+
+		owner.activate(obj);
+		
+		Object counterpart = emptyClone(owner, obj);
+
+		ownerRef.setCounterpart(counterpart);
+		ownerRef.markForReplicating();
+
+		ReplicationReference otherRef = other.referenceNewObject(counterpart, ownerRef, getCounterpartRef(referencingObject), fieldName);
+		_counterpartRefsByOriginal.put(obj, otherRef);
+
+		// TODO: We might not need counterpart in otherRef. Check.
+		otherRef.setCounterpart(obj);
+
+		return true;
+	}
 
 	private Object emptyClone(ReplicationProviderInside sourceProvider, Object obj) {
 		if (obj == null) return null;
@@ -366,7 +393,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		_peerA = null;
 		_peerB = null;
-		_originalCounterPartRefMap = null;
+		_counterpartRefsByOriginal = null;
 	}
 
 	public void commit() {

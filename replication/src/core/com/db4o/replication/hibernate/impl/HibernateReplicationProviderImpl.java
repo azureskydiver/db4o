@@ -766,4 +766,12 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 				super.ObjectUpdated(obj, Util.castAsLong(id));
 		}
 	}
+
+	public Object getObject(Db4oUUID uuid) {
+		throw new RuntimeException("TODO");
+	}
+
+	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
+		throw new RuntimeException("TODO");
+	}
 }
