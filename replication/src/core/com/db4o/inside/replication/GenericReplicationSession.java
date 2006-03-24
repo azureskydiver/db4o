@@ -72,8 +72,44 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	
-	public void replicateDeletion(Db4oUUID uuid) {
-		throw new RuntimeException("TODO");
+	public void replicate(Db4oUUID uuid) {
+		
+		ReplicationReference refA = _peerA.produceReferenceByUUID(uuid, null);
+		ReplicationReference refB = _peerB.produceReferenceByUUID(uuid, null);
+
+		if (refA != null && refB != null)
+			throw new RuntimeException("Object with given UUID must have been deleted in at least one of the databases being replicated.");
+		
+		if (refA == null && refB == null) return;  //Deleted in both - Do nothing
+
+		Object obj = refA == null
+			? refB.object()
+			: refA.object();
+			
+		replicate(obj);
+		
+		//Deleted in one
+			//No conflict - replicate (check direction)
+			//Conflict (deletion in one and object in the other)
+				//Resolver return null - do nothing
+				//Deletion prevails - replicate deletion (check direction)
+				//Object prevails - undo deletion (check direction)
+		
+		
+		//  A       1' ->  2' -> 3    (changed)
+		//  B       []  ->  []  -> 3    (deleted)
+		
+		//Results:
+		//TO_A:   []  -> []  -> 3
+		//TO_B:    1' -> 2' -> 3
+
+
+		
+		//  A       1* ->  2* -> 3    (new)
+		//  B           ->     -> 3    (non-existant)
+
+		
+		
 	}
 
 	
@@ -142,6 +178,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		ReplicationReference refA = _peerA.produceReference(obj, referencingObject, fieldName);
 		ReplicationReference refB = _peerB.produceReference(obj, referencingObject, fieldName);
+		
 		if (refA == null && refB == null)
 			throw new RuntimeException("" + obj.getClass() + " " + obj + " must be stored in one of the databases being replicated."); //FIXME: Use db4o's standard for throwing exceptions.
 		if (refA != null && refB != null)

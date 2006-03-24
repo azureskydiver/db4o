@@ -76,7 +76,7 @@ public interface ReplicationSession {
 	 * @see ConflictResolver
 	 */
 	public void replicate(Object obj);
-	public void replicateDeletion(Db4oUUID uuid);
+	public void replicate(Db4oUUID uuid);
 
 	/**
 	 * Rollbacks all changes done during the replication session. This call
