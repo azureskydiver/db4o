@@ -13,16 +13,13 @@ import com.db4o.test.Test;
 import java.io.File;
 
 public class Db4oReplicationTestUtil {
-// ------------------------------ FIELDS ------------------------------
-
-	public static final String PROVIDER_B_FILE = "providerB.yap";
 	static boolean MEMORY_FILE = true;
 
 	static ObjectContainer ocB;
 
-// -------------------------- STATIC METHODS --------------------------
+	public static final String PROVIDER_B_FILE = "providerB.yap";
 
-	static {
+	public static void configure() {
 		Test.MEMORY_FILE = MEMORY_FILE;
 
 		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
