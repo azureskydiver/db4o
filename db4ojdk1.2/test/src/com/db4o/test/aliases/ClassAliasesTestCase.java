@@ -93,9 +93,7 @@ public class ClassAliasesTestCase {
 
 	private void generateDotnetData() throws IOException {
 		new File(getDotnetDataFilePath()).delete();
-		String assembly = generateAssembly();
-		// XXX: use mono on linux to execute the assembly
-		executeAssembly(assembly, getDotnetDataFilePath());
+		executeAssembly(generateAssembly(), getDotnetDataFilePath());
 	}
 
 	private String executeAssembly(String assembly, String args) throws IOException {
@@ -144,7 +142,10 @@ public class ClassAliasesTestCase {
 	}
 
 	private String db4odllPath() throws IOException {
-		return new File("../db4obuild/dist/dll/net/db4o.dll").getCanonicalPath();
+		String path = isLinux()
+			? "../db4obuild/dist/mono/dll/db4o.dll"
+			: "../db4obuild/dist/dll/net/db4o.dll";
+		return new File(path).getCanonicalPath();
 	}
 
 	private void writeFile(String fname, String contents) throws IOException {
