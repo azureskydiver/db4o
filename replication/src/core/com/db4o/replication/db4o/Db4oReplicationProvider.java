@@ -336,7 +336,11 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 	}
 
 	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
-		throw new RuntimeException("TODO");
+        throw new RuntimeException("TODO");
 	}
+
+    public void replicateDeletion(Db4oUUID db4oUUID) {
+        throw new RuntimeException("TODO");
+    }
 
 }

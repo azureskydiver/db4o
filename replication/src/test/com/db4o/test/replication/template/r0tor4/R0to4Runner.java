@@ -257,8 +257,8 @@ public abstract class R0to4Runner extends ReplicationTestcase {
 // -------------------------- INNER CLASSES --------------------------
 
 	private static class MyConflictResolver implements ConflictResolver {
-		public Object resolveConflict(ReplicationSession ignored, Object a, Object b) {
-			return null;
+		public int resolveConflict(ReplicationSession ignored, Object a, Object b) {
+            return ConflictResolver.DO_NOTHING;
 		}
 	}
 }

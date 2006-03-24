@@ -770,4 +770,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
 		throw new RuntimeException("TODO");
 	}
+
+    public void replicateDeletion(Db4oUUID db4oUUID) {
+        throw new RuntimeException("TODO");
+    }
 }

@@ -27,8 +27,8 @@ public abstract class ArrayReplicationTest extends ReplicationTestcase {
 		_providerB.storeNew(h1);
 
 		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ConflictResolver() {
-			public Object resolveConflict(ReplicationSession session, Object a, Object b) {
-				return null;
+			public int resolveConflict(ReplicationSession session, Object a, Object b) {
+				return ConflictResolver.DO_NOTHING;
 			}
 		});
 
