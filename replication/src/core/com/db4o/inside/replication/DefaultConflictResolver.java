@@ -24,7 +24,7 @@ public class DefaultConflictResolver implements ConflictResolver {
 
 	 @return null
 	 */
-	public Object resolveConflict(ReplicationSession session, Object copyA, Object copyB) {
+	public int resolveConflict(ReplicationSession session, Object copyA, Object copyB) {
         throw new ReplicationConflictException();
 	}
 }

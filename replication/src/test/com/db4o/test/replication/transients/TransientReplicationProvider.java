@@ -356,7 +356,11 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
-		throw new RuntimeException("TODO");
+		return _uuidsDeletedSinceLastReplication.contains(uuid);
 	}
+
+    public void replicateDeletion(Db4oUUID db4oUUID) {
+        throw new RuntimeException("TODO");
+    }
 
 }

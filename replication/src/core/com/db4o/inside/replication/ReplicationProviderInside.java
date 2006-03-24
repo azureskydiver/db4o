@@ -91,8 +91,10 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	void storeReplica(Object obj);
 
+    void replicateDeletion(Db4oUUID db4oUUID);
 
-	public void syncVersionWithPeer(long maxVersion);
+
+	void syncVersionWithPeer(long maxVersion);
 
 
 	/**
@@ -103,4 +105,5 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	void visitCachedReferences(Visitor4 visitor);
 
 	String getName();
+
 }

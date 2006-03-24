@@ -203,9 +203,9 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		if (otherRef == null) {
 			if (other.wasDeletedSinceLastReplication(uuid))
-				return handleDeletedObject(obj, ownerRef, owner, other, referencingObject, fieldName);
+				return handleDeletionInOther(obj, ownerRef, owner, other, referencingObject, fieldName);
 				
-			return activateNewObject(obj, ownerRef, owner, other, referencingObject, fieldName);
+			return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, true);
 		}
 
 		ownerRef.setCounterpart(otherRef.object());
@@ -227,10 +227,12 @@ public class GenericReplicationSession implements ReplicationSession {
 		if (conflict) {
 			_peerA.activate(objectA);
 			_peerB.activate(objectB);
-			prevailing = _resolver.resolveConflict(this, objectA, objectB);
-			if (prevailing == null) return false;
-			if (prevailing != objectA && prevailing != objectB)
-				throw new RuntimeException("ConflictResolver must return objectA, objectB or null."); //FIXME Use Db4o's standard exception throwing mechanism.
+
+            int action = _resolver.resolveConflict(this, objectA, objectB);
+
+            if (action == ConflictResolver.DO_NOTHING) return false;
+            if (action == ConflictResolver.A_PREVAILS) prevailing = objectA; 
+            if (action == ConflictResolver.B_PREVAILS) prevailing = objectB; 
 		}
 
 		ReplicationProviderInside prevailingPeer = prevailing == objectA ? _peerA : _peerB;
@@ -251,31 +253,42 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 
-	private boolean handleDeletedObject(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName) {
-//		if (_directionTo == owner) return false;
-//
-//		owner.activate(obj);
-//		
-//		Object counterpart = emptyClone(owner, obj);
-//
-//		ownerRef.setCounterpart(counterpart);
-//		ownerRef.markForReplicating();
-//
-//		ReplicationReference otherRef = other.referenceNewObject(counterpart, ownerRef, getCounterpartRef(referencingObject), fieldName);
-//		_counterpartRefsByOriginal.put(obj, otherRef);
-//
-//		// TODO: We might not need counterpart in otherRef. Check.
-//		otherRef.setCounterpart(obj);
-//
-//		return true;
-		throw new RuntimeException("TODO");
+	private boolean handleDeletionInOther(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName) {
+
+        boolean isConflict = false;
+        if (owner.wasChangedSinceLastReplication(ownerRef)) isConflict = true;
+        if (_directionTo == other) isConflict = true;
+        
+        Object prevailing = null;
+        if (isConflict) {
+            owner.activate(obj);
+
+            Object objectA = (owner == _peerA ? obj : null);
+            Object objectB = (owner == _peerB ? obj : null);
+            
+            int action = _resolver.resolveConflict(this, objectA, objectB);
+            
+            if (action == ConflictResolver.DO_NOTHING) return false;
+            if (action == ConflictResolver.A_PREVAILS) prevailing = objectA; 
+            if (action == ConflictResolver.B_PREVAILS) prevailing = objectB; 
+        }
+        
+        if (prevailing == null) { //Deletion has prevailed.
+            if (_directionTo == other) return false;
+            owner.replicateDeletion(ownerRef.uuid());
+            return true;
+        }
+
+        boolean needsToBeActivated = !isConflict; //Already activated if there was a conflict.
+        return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, needsToBeActivated);
+    
 	}
 
 	
-	private boolean activateNewObject(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName) {
+	private boolean handleNewObject(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName, boolean needsToBeActivated) {
 		if (_directionTo == owner) return false;
 
-		owner.activate(obj);
+		if (needsToBeActivated) owner.activate(obj);
 		
 		Object counterpart = emptyClone(owner, obj);
 

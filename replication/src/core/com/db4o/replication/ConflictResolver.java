@@ -24,11 +24,17 @@ public interface ConflictResolver {
 	 * Callback method, called by ReplicationSession when a conflict occurs.
 	 *
 	 * @param session ReplicationSession calling this method
-	 * @param copyA   copy of the object from Provider A
-	 * @param copyB   copy of the object from Provider B
+	 * @param copyA   copy of the object from Provider A (null if the object was deleted)
+	 * @param copyB   copy of the object from Provider B (null if the object was deleted)
 	 *
-	 * @return either copyA or copyB or null. If null, then the object is skipped.
+	 * @return either ConflictResolver.A_PREVAILS, ConflictResolver.B_PREVAILS
+     * or ConflictResolver.DO_NOTHING. If DO_NOTHING is returned then the object
+     * is skipped and no state is replicated in either direction.
 	 */
-	public Object resolveConflict(ReplicationSession session, Object copyA, Object copyB);
+	public int resolveConflict(ReplicationSession session, Object copyA, Object copyB);
 
+    static final int A_PREVAILS = 1;
+    static final int B_PREVAILS = 2;
+    static final int DO_NOTHING = 3;
+    
 }
