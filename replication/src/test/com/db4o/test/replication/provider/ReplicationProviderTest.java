@@ -14,6 +14,8 @@ public abstract class ReplicationProviderTest extends Test {
 	protected static final PeerSignature PEER_SIGNATURE = new PeerSignature(PEER_SIGNATURE_BYTES);
 
 	public void testReplicationProvider() {
+		clean();
+
 		prepare();
 		tstSignature();
 
@@ -35,7 +37,13 @@ public abstract class ReplicationProviderTest extends Test {
 		prepare();
 		tstDeletion();
 
+		clean();
+
 		destroySubject();
+	}
+
+	protected void clean() {
+		//do nothing
 	}
 
 	protected void prepare() {

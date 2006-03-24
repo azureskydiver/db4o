@@ -17,6 +17,8 @@ public abstract class MapTest extends ReplicationTestcase {
 
 		clean();
 
+		checkEmpty();
+
 		storeMapToProviderA();
 
 		replicateAllToProviderBFirstTime();

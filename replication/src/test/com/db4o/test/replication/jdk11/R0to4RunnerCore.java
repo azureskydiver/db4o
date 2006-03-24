@@ -29,10 +29,6 @@ public class R0to4RunnerCore extends R0to4Runner {
 		super.test();
 	}
 
-	protected void clean() {
-		delete(_providerA);
-		delete(_providerB);
-	}
 
 	@Override
 	protected TestableReplicationProviderInside prepareProviderA() {

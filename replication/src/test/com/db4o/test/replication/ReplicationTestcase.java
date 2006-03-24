@@ -21,7 +21,7 @@ public abstract class ReplicationTestcase {
 	protected Collection4 providerPairs = new Collection4();
 
 	protected ReplicationTestcase() {
-		initproviderPairs();
+		//do nothing
 	}
 
 	protected void checkEmpty() {

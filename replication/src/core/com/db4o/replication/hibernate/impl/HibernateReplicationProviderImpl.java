@@ -530,6 +530,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		Criteria criteria = getSession().createCriteria(ObjectReference.class);
 		long lastReplicationVersion = getLastReplicationVersion();
 		criteria.add(Restrictions.gt(ObjectReference.VERSION, lastReplicationVersion));
+		criteria.add(Restrictions.eq(ObjectReference.DELETED, false));
 		Disjunction disjunction = Restrictions.disjunction();
 
 		List<String> names = new ArrayList<String>();
