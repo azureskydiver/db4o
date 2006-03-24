@@ -11,6 +11,7 @@ import com.db4o.inside.replication.ReplicationReflector;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
+import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
 import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.PeerSignature;
@@ -64,7 +65,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private boolean _alive = false;
 
-	private ObjectLifeCycleEventsListenerImpl _lifeCycleEventsListener;
+	private ObjectLifeCycleEventsListener objectLifeCycleEventsListener = new MyObjectLifeCycleEventsListener();
 
 	/**
 	 * The Signature of the peer in the current Transaction.
@@ -106,31 +107,25 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	public HibernateReplicationProviderImpl(Configuration cfg, String name) {
 		_name = name;
-
-		this._cfg = ReplicationConfiguration.decorate(cfg);
-
-		Util.initUuidLongPartSequence(cfg);
-		_lifeCycleEventsListener = new MyObjectLifeCycleEventsListener();
-		_lifeCycleEventsListener.configure(cfg);
+		_cfg = ReplicationConfiguration.decorate(cfg);
 
 		new TablesCreatorImpl(_cfg).createTables();
+		Util.initUuidLongPartSequence(cfg);
 
 		_cfg.setInterceptor(EmptyInterceptor.INSTANCE);
-		EventListeners eventListeners = _cfg.getEventListeners();
-		FlushEventListener[] defaultListeners = _cfg.getEventListeners().getFlushEventListeners();
-		FlushEventListener[] out;
-		final int count = defaultListeners.length;
-		out = new FlushEventListener[count + 1];
-		System.arraycopy(defaultListeners, 0, out, 0, count);
-		out[count] = myFlushEventListener;
-		eventListeners.setFlushEventListeners(out);
+
+		EventListeners el = _cfg.getEventListeners();
+		el.setFlushEventListeners((FlushEventListener[])
+				ArrayUtils.add(el.getFlushEventListeners(), myFlushEventListener));
+
+		objectLifeCycleEventsListener.configure(cfg);
 
 		_sessionFactory = getConfiguration().buildSessionFactory();
 		_session = _sessionFactory.openSession();
 		_session.setFlushMode(FlushMode.COMMIT);
 		_transaction = _session.beginTransaction();
 
-		_lifeCycleEventsListener.install(getSession(), cfg);
+		objectLifeCycleEventsListener.install(getSession(), cfg);
 
 		_alive = true;
 	}
@@ -250,8 +245,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		eventListeners.setFlushEventListeners(r1);
 		myFlushEventListener = null;
 
-		_lifeCycleEventsListener.destroy();
-		_lifeCycleEventsListener = null;
+		objectLifeCycleEventsListener.destroy();
+		objectLifeCycleEventsListener = null;
 
 		_cfg = null;
 	}
