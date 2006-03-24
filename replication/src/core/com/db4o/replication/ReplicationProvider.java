@@ -3,6 +3,7 @@
 package com.db4o.replication;
 
 import com.db4o.ObjectSet;
+import com.db4o.ext.Db4oUUID;
 
 /**
  * Facade for persistence systems that provide replication support.
@@ -42,5 +43,7 @@ public interface ReplicationProvider {
 	 * @return newly created objects and changed objects since last replication
 	 */
 	ObjectSet uuidsDeletedSinceLastReplication();
+
+	Object getObject(Db4oUUID uuid);
 
 }

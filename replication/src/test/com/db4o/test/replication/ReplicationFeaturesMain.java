@@ -191,10 +191,10 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 
 
 		if (_containersToQueryFrom.contains(A)) {
-			replicateQueryingFrom(replication, _providerA);
+			replicateQueryingFrom(replication, _providerA, _providerB);
 		}
 		if (_containersToQueryFrom.contains(B)) {
-			replicateQueryingFrom(replication, _providerB);
+			replicateQueryingFrom(replication, _providerB, _providerA);
 		}
 
 		replication.commit();
@@ -423,8 +423,8 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 			}
 		});
 
-		replicateQueryingFrom(replication, _providerA);
-		replicateQueryingFrom(replication, _providerB);
+		replicateQueryingFrom(replication, _providerA, _providerB);
+		replicateQueryingFrom(replication, _providerB, _providerA);
 
 		replication.commit();
 	}
@@ -434,13 +434,17 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 			throw new RuntimeException(provider.getName() + " is not empty");
 	}
 
-	private static void replicateQueryingFrom(ReplicationSession replication, ReplicationProvider origin) {
+	private static void replicateQueryingFrom(ReplicationSession replication, ReplicationProvider origin, ReplicationProvider other) {
 		ObjectSet changes = origin.objectsChangedSinceLastReplication();
 		while (changes.hasNext()) replication.replicate(changes.next());
 		
 		ObjectSet deletions = origin.uuidsDeletedSinceLastReplication();
-		while (deletions.hasNext())
-			replication.replicate((Db4oUUID)deletions.next());
+		while (deletions.hasNext()) {
+			Db4oUUID uuid = (Db4oUUID)deletions.next();
+			Object obj = other.getObject(uuid);
+			if (obj == null) continue;
+			replication.replicate(obj);
+		}
 	}
 
 	private static void ensure(boolean condition) {

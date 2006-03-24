@@ -36,14 +36,14 @@ import com.db4o.test.replication.transients.TransientSingleTypeCollectionReplica
 
 public class ReplicationTestSuite extends TestSuite {
 
-	public Class[] tests2() {
+	public Class[] tests() {
 		System.err.println("Use tests2 below");
 		return new Class[]{
 				TransientReplicationFeaturesMain.class,
 		};
 	}
 
-	public Class[] tests() {
+	public Class[] tests2() {
 		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
 		return new Class[]{
 				//General

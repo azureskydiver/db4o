@@ -173,12 +173,12 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		if (uuid == null) {
 			return null;
 		}
-		Object object = getObjectByUUID(uuid);
+		Object object = getObject(uuid);
 		if (object == null) return null;
 		return produceReference(object, null, null);
 	}
 
-	private Object getObjectByUUID(Db4oUUID uuid) {
+	public Object getObject(Db4oUUID uuid) {
 		ObjectSet iter = getStoredObjects();
 		while (iter.hasNext()) {
 			Object candidate = iter.next();
@@ -354,4 +354,9 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	public ObjectSet uuidsDeletedSinceLastReplication() {
 		return new ObjectSetCollection4Facade(_uuidsDeletedSinceLastReplication);
 	}
+
+	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
+		throw new RuntimeException("TODO");
+	}
+
 }

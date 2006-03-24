@@ -66,6 +66,8 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint);
 
 	boolean wasChangedSinceLastReplication(ReplicationReference reference);
+	boolean wasDeletedSinceLastReplication(Db4oUUID uuid);
+
 
 	/**
 	 * Rollbacks all changes done during the replication session  and terminates the Transaction.
