@@ -440,7 +440,7 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		
 		ObjectSet deletions = origin.uuidsDeletedSinceLastReplication();
 		while (deletions.hasNext())
-			replication.replicateDeletion((Db4oUUID)deletions.next());
+			replication.replicate((Db4oUUID)deletions.next());
 	}
 
 	private static void ensure(boolean condition) {
