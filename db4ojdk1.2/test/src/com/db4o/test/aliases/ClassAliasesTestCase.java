@@ -10,6 +10,9 @@ import com.db4o.test.lib.File4;
 public class ClassAliasesTestCase {
 
 	public void testTypeAlias() {
+		
+		cleanUp();
+		
 		ObjectContainer container = Test.objectContainer();
 
 		container.set(new Person1("Homer Simpson"));
@@ -25,6 +28,9 @@ public class ClassAliasesTestCase {
 	}
 	
 	public void testAliasedTypeIsStoredCorrectly() {
+		
+		cleanUp();
+		
 		ObjectContainer container = Test.objectContainer();
 		container.ext().configure().alias(
 				// Person1 instances should be read as Person2 objects
@@ -35,15 +41,13 @@ public class ClassAliasesTestCase {
 		container.set(new Person2("John Cleese"));
 		
 		container = Test.reOpen();
-		ObjectSet os = container.query(Person1.class);
-		//Test.ensureEquals(0, os.size());
-		while (os.hasNext()) {
-			Object next = os.next();
-			System.out.println(next);
-			System.out.println(next.getClass());
-		}
 		assertData(container);
+		
+	}
 
+	private void cleanUp() {
+		Test.reOpen();
+		Test.deleteAllInstances(Person1.class);
 	}
 	
 	public void testAccessingDotnetFromJava() throws Exception {
@@ -91,7 +95,14 @@ public class ClassAliasesTestCase {
 		new File(getDotnetDataFilePath()).delete();
 		String assembly = generateAssembly();
 		// XXX: use mono on linux to execute the assembly
-		exec(assembly + " " + getDotnetDataFilePath());
+		executeAssembly(assembly, getDotnetDataFilePath());
+	}
+
+	private String executeAssembly(String assembly, String args) throws IOException {
+		String cmdLine = isLinux()
+			? "mono " + assembly + " " + args
+			: assembly + " " + args;
+		return exec(cmdLine);
 	}
 
 	private String generateAssembly() throws IOException {
@@ -114,9 +125,17 @@ public class ClassAliasesTestCase {
 		String exePath = buildTempPath("MyAssembly.exe");
 
 		new File4(db4odllPath()).copy(buildTempPath("db4o.dll"));
-		String cmdLine = "csc /target:exe /r:" + db4odllPath() + " /out:" + exePath + " " + srcFile;
+		String cmdLine = csharpCompiler() + " /target:exe /r:" + db4odllPath() + " /out:" + exePath + " " + srcFile;
 		exec(cmdLine);
 		return exePath;
+	}
+
+	private String csharpCompiler() {
+		return isLinux() ? "mcs" : "csc";
+	}
+
+	private boolean isLinux() {
+		return System.getProperty("os.name").toLowerCase().indexOf("linux") != -1;
 	}
 
 	private String exec(String cmdLine) throws IOException {
