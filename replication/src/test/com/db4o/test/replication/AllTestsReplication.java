@@ -5,13 +5,14 @@ package com.db4o.test.replication;
 import com.db4o.test.AllTests;
 import com.db4o.test.TestSuite;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
-import com.db4o.test.replication.jdk14.R0to4RunnerCombinations;
 
 public class AllTestsReplication extends AllTests {
 
 	public static void main(String[] args) {
-		runSolo(R0to4RunnerCombinations.class);
-		//new AllTestsReplication().run();
+		Db4oReplicationTestUtil.configure();
+		//runSolo(R0to4RunnerCombinations.class);
+//		runSolo(MapTestHsqlRefAsColumns.class);
+		new AllTestsReplication().run();
 		Db4oReplicationTestUtil.close();
 		System.exit(0);
 	}
