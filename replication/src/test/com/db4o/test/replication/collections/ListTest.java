@@ -35,9 +35,21 @@ public abstract class ListTest extends ReplicationTestcase {
 
 		clean();
 
+		checkEmpty();
+
 		destroy();
 	}
 
+
+	protected void checkEmpty() {
+		checkEmpty(_providerA);
+		checkEmpty(_providerB);
+	}
+
+	private void checkEmpty(TestableReplicationProviderInside inside) {
+		Test.ensureEquals(0, inside.getStoredObjects(ListContent.class).size());
+		Test.ensureEquals(0, inside.getStoredObjects(ListHolder.class).size());
+	}
 
 	protected void clean() {delete(new Class[]{ListContent.class, ListHolder.class, ArrayList.class});}
 

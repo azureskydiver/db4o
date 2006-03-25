@@ -18,10 +18,6 @@ public class OracleR0to4Runner extends R0to4Runner {
 		TestableReplicationProviderInside b;
 
 		a = new HibernateReplicationProviderImpl(HibernateUtil.produceOracleConfigA(), "A");
-		b = new HibernateReplicationProviderImpl(HibernateUtil.produceOracleConfigB(), "B");
-		addProviderPairs(a, b);
-
-		a = new HibernateReplicationProviderImpl(HibernateUtil.produceOracleConfigA(), "A");
 		b = Db4oReplicationTestUtil.newProviderB();
 		addProviderPairs(a, b);
 	}

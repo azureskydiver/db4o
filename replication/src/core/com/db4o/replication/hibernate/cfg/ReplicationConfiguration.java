@@ -22,13 +22,13 @@ public final class ReplicationConfiguration {
 	}
 
 	public static Configuration decorate(Configuration configuration) {
-		configuration.setProperty("hibernate.format_sql", "false");
-		configuration.setProperty("hibernate.use_sql_comments", "false");
-		configuration.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.NoCacheProvider");
-		configuration.setProperty("hibernate.cache.use_query_cache", "false");
-		configuration.setProperty("hibernate.cache.use_second_level_cache", "false");
-		configuration.setProperty("hibernate.cglib.use_reflection_optimizer", "true");
-		configuration.setProperty("hibernate.connection.release_mode", "after_transaction");
+//		configuration.setProperty("hibernate.format_sql", "false");
+//		configuration.setProperty("hibernate.use_sql_comments", "false");
+//		configuration.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.NoCacheProvider");
+//		configuration.setProperty("hibernate.cache.use_query_cache", "false");
+//		configuration.setProperty("hibernate.cache.use_second_level_cache", "false");
+//		configuration.setProperty("hibernate.cglib.use_reflection_optimizer", "true");
+//		configuration.setProperty("hibernate.connection.release_mode", "after_transaction");
 
 		addClasses(configuration);
 

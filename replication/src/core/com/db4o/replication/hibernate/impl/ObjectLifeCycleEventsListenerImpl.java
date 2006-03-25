@@ -27,6 +27,7 @@ import org.hibernate.event.PreDeleteEventListener;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +37,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 // ------------------------------ FIELDS ------------------------------
 
 	public Set<ObjectReference> dirtyNewRefs = new HashSet();
-	public Set<ObjectReference> dirtyUpdatedRefs = new HashSet();
+	public Set<HibernateObjectId> dirtyUpdatedRefs = new HashSet();
 	private Set<Configuration> configs = new HashSet<Configuration>();
 	private Map<Thread, Session> threadSessionMap = new HashMap();
 	private boolean _alive = true;
@@ -101,13 +102,11 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 
 		dirtyNewRefs.clear();
 
-		for (ObjectReference refT : dirtyUpdatedRefs) {
-			final ObjectReference persisted = Util.getObjectReferenceById(getSession(), refT.getClassName(), refT.getObjectId());
-			if (persisted == null) {
-				//do nothing
-			} else {
-				persisted.setVersion(ver);
-				getSession().update(persisted);
+		for (HibernateObjectId hid : dirtyUpdatedRefs) {
+			ObjectReference ref = Util.getObjectReferenceById(getSession(), hid.className, hid.hibernateId);
+			if (ref != null && !dirtyNewRefs.contains(ref)) {
+				ref.setVersion(ver);
+				getSession().update(ref);
 			}
 		}
 
@@ -150,43 +149,8 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 	}
 
 	void ObjectUpdated(Object obj, long id) {
-		final Session session = getSession();
-
-		ObjectReference ref = new ObjectReference();
-		ref.setObjectId(id);
-		ref.setClassName(obj.getClass().getName());
-
-		dirtyUpdatedRefs.add(ref);
-
-//		Connection con = session.connection();
-//		long newVer = Util.getMaxVersion(con) + 1;
-//			Util.dumpTable("that",getSession(), "ObjectReference");
-
-//		final ObjectReference ref = Util.getObjectReferenceById(session, obj, id);
-//		if (ref == null) {
-//			Util.dumpTable("that",getSession(), "ObjectReference");
-//			System.out.println("obj = " + obj);
-//			System.out.println("id = " + id);
-//			throw new RuntimeException("ObjectReference does not exist");
-//		}
-
-//		String sql = "UPDATE " + ObjectReference.TABLE_NAME
-//				+ " SET " + ObjectReference.VERSION + " = " + newVer
-//				+ " WHERE " + ObjectReference.CLASS_NAME + " = '" + obj.getClass().getName() + "'"
-//				+ " AND " + ObjectReference.OBJECT_ID + " = " + Util.castAsLong(session.getIdentifier(obj));
-//
-//		final Statement st = Util.getStatement(con);
-//
-//		try {
-//			final int affected = st.executeUpdate(sql);
-//
-//			if (affected != 1)
-//				throw new RuntimeException("unable to update the version of an object");
-//		} catch (SQLException e) {
-//			throw new RuntimeException(e);
-//		} finally {
-//			Util.closeStatement(st);
-//		}
+		HibernateObjectId hid = new HibernateObjectId(id, obj.getClass().getName());
+		dirtyUpdatedRefs.add(hid);
 	}
 
 	private void collectionUpdated(Object collection) {
@@ -210,14 +174,10 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getProvider().getBytes()));
 
 		final List exisitings = criteria.list();
-		int count = exisitings.size();
-
-		if (count == 0) {
-			//do nothing
-		} else if (count > 1)
-			throw new RuntimeException("Duplicated ReplicationComponentIdentity");
-		else
-			s.delete(exisitings.get(0));
+		for (Iterator iterator = exisitings.iterator(); iterator.hasNext();) {
+			Object o = iterator.next();
+			s.delete(o);
+		}
 	}
 
 	private void ensureAlive() {if (!_alive) throw new RuntimeException("dead");}
@@ -232,7 +192,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 	}
 
 	private void objectDeleted(PreDeleteEvent event) {
-		//deleteReplicationComponentIdentity(event);
+		deleteReplicationComponentIdentity(event);
 		ObjectReference ref = Util.getObjectReferenceById(getSession(), event.getEntity().getClass().getName(), Util.castAsLong(event.getId()));
 		ref.setDeleted(true);
 		getSession().update(ref);
