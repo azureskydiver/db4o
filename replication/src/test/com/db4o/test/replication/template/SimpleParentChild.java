@@ -19,6 +19,16 @@ public abstract class SimpleParentChild extends ReplicationTestcase {
 
 	protected void clean() {delete(new Class[]{SPCParent.class, SPCChild.class});}
 
+	@Override
+	protected TestableReplicationProviderInside prepareProviderA() {
+		throw new RuntimeException("REVISE");
+	}
+
+	@Override
+	protected TestableReplicationProviderInside prepareProviderB() {
+		throw new RuntimeException("REVISE");
+	}
+
 	private void actualTst() {
 		clean();
 

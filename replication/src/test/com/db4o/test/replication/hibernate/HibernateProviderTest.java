@@ -16,10 +16,10 @@ import java.util.List;
 public class HibernateProviderTest extends ReplicationProviderTest {
 // ------------------------------ FIELDS ------------------------------
 
-	protected Configuration cfg;
+	protected Configuration cfg = HibernateUtil.refAsTableProviderA().getConfiguration();
+	;
 
 	protected void clean() {
-		cfg = HibernateUtil.refAsTableProviderA().getConfiguration();
 		final SchemaExport schemaExport = new SchemaExport(cfg);
 		schemaExport.setHaltOnError(true);
 		schemaExport.drop(false, true);

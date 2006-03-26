@@ -6,7 +6,16 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 public class HibernateMapTest extends MapTest {
+// ------------------------------ FIELDS ------------------------------
+
 	protected Configuration cfg = HibernateUtil.refAsTableProviderA().getConfiguration();
+
+	protected void dropTables() {
+		final SchemaExport schemaExport = new SchemaExport(cfg);
+		schemaExport.setHaltOnError(true);
+		schemaExport.drop(false, true);
+	}
+
 	;
 
 	protected TestableReplicationProviderInside prepareProviderA() {
@@ -21,11 +30,5 @@ public class HibernateMapTest extends MapTest {
 		//dropTables();
 		super.test();
 		//dropTables();
-	}
-
-	protected void dropTables() {
-		final SchemaExport schemaExport = new SchemaExport(cfg);
-		schemaExport.setHaltOnError(true);
-		schemaExport.drop(false, true);
 	}
 }

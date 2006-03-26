@@ -25,9 +25,5 @@
 
 		<!-- Update the database schema if out of date -->
 		<property name="hibernate.hbm2ddl.auto">update</property>
-
-		<!-- Specify all your data entity classes here -->
-		<mapping resource="f1/stepbystep/Pilot.hbm.xml"/>
-		<mapping resource="f1/stepbystep/Car.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>
