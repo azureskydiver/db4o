@@ -34,9 +34,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 		<discriminator/>
 
-		<natural-id>
-			<property name="bytes" column="bytes" not-null="true"/>
-		</natural-id>
+		<!--Do not use <natural-id> for bytes, MySQL does not support it. -->
+		<property name="bytes" column="bytes" not-null="true"/>
 
 		<property name="creationTime" column="creationTime"/>
 

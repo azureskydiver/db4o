@@ -1,6 +1,9 @@
 package com.db4o.test.replication.hibernate.mysql;
 
+import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
+import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
 import com.db4o.test.replication.hibernate.HibernateReplicationFeaturesMain;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 
 public class MySQLFeaturesMain extends HibernateReplicationFeaturesMain {
 // --------------------------- CONSTRUCTORS ---------------------------
@@ -10,13 +13,9 @@ public class MySQLFeaturesMain extends HibernateReplicationFeaturesMain {
 	}
 
 	public void test() {
-//		cfgA = HibernateUtil.produceMySQLConfigA();
-//		cfgA.addClass(Replicated.class);
-//		pA = new RefAsColumnsReplicationProvider(cfgA, "A");
-//
-//		cfgB = HibernateUtil.produceMySQLConfigB();
-//		cfgB.addClass(Replicated.class);
-//		pB = new RefAsColumnsReplicationProvider(cfgB, "B");
+		hA = new HibernateReplicationProviderImpl(HibernateUtil.produceMySQLConfigA());
+		hB = Db4oReplicationTestUtil.newProviderB();
+
 		super.test();
 	}
 }
