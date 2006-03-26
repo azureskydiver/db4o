@@ -9,38 +9,18 @@ public class ReplicationComponentIdentity {
 
 	private long uuidLongPart;
 
-	public long getUuidLongPart() {
-		return uuidLongPart;
-	}
-
-	public void setUuidLongPart(long uuidLongPart) {
-		this.uuidLongPart = uuidLongPart;
-	}
-
 	private long referencingObjectUuidLongPart;
-
-	public long getReferencingObjectUuidLongPart() {
-		return referencingObjectUuidLongPart;
-	}
-
-	public void setReferencingObjectUuidLongPart(long referencingObjectUuidLongPart) {
-		this.referencingObjectUuidLongPart = referencingObjectUuidLongPart;
-	}
 
 	private ReplicationComponentField referencingObjectField;
 
-	public ReplicationComponentField getReferencingObjectField() {
-		return referencingObjectField;
-	}
-
-	public void setReferencingObjectField(ReplicationComponentField referencingObjectField) {
-		if (referencingObjectField == null)
-			throw new RuntimeException("referencingObjectField cannot be null");
-
-		this.referencingObjectField = referencingObjectField;
-	}
-
 	private ReplicationProviderSignature provider;
+
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public ReplicationComponentIdentity() {
+	}
+
+// --------------------- GETTER / SETTER METHODS ---------------------
 
 	public ReplicationProviderSignature getProvider() {
 		return provider;
@@ -53,9 +33,31 @@ public class ReplicationComponentIdentity {
 		this.provider = provider;
 	}
 
-// --------------------------- CONSTRUCTORS ---------------------------
+	public ReplicationComponentField getReferencingObjectField() {
+		return referencingObjectField;
+	}
 
-	public ReplicationComponentIdentity() {
+	public void setReferencingObjectField(ReplicationComponentField referencingObjectField) {
+		if (referencingObjectField == null)
+			throw new RuntimeException("referencingObjectField cannot be null");
+
+		this.referencingObjectField = referencingObjectField;
+	}
+
+	public long getReferencingObjectUuidLongPart() {
+		return referencingObjectUuidLongPart;
+	}
+
+	public void setReferencingObjectUuidLongPart(long referencingObjectUuidLongPart) {
+		this.referencingObjectUuidLongPart = referencingObjectUuidLongPart;
+	}
+
+	public long getUuidLongPart() {
+		return uuidLongPart;
+	}
+
+	public void setUuidLongPart(long uuidLongPart) {
+		this.uuidLongPart = uuidLongPart;
 	}
 
 // ------------------------ CANONICAL METHODS ------------------------

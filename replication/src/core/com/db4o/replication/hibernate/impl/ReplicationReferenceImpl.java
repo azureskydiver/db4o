@@ -13,16 +13,18 @@ public final class ReplicationReferenceImpl implements ReplicationReference {
 	private Object counterPart;
 	private boolean markedForReplicating;
 
-	public final boolean isMarkedForReplicating() {
-		return markedForReplicating;
-	}
-
 // --------------------------- CONSTRUCTORS ---------------------------
 
 	public ReplicationReferenceImpl(Object obj, Db4oUUID uuid, long version) {
 		this.obj = obj;
 		this.uuid = uuid;
 		this.version = version;
+	}
+
+// --------------------- GETTER / SETTER METHODS ---------------------
+
+	public final boolean isMarkedForReplicating() {
+		return markedForReplicating;
 	}
 
 // ------------------------ CANONICAL METHODS ------------------------

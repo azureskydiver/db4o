@@ -9,18 +9,20 @@ public class UuidLongPartSequence {
 
 	private long current;
 
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public UuidLongPartSequence() {
+		current = Constants.MIN_SEQ_NO;
+	}
+
+// --------------------- GETTER / SETTER METHODS ---------------------
+
 	public long getCurrent() {
 		return current;
 	}
 
 	public void setCurrent(long current) {
 		this.current = current;
-	}
-
-// --------------------------- CONSTRUCTORS ---------------------------
-
-	public UuidLongPartSequence() {
-		current = Constants.MIN_SEQ_NO;
 	}
 
 // ------------------------ CANONICAL METHODS ------------------------

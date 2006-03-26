@@ -9,6 +9,15 @@ public class ReplicationComponentField {
 
 	private String referencingObjectClassName;
 
+	private String referencingObjectFieldName;
+
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public ReplicationComponentField() {
+	}
+
+// --------------------- GETTER / SETTER METHODS ---------------------
+
 	public String getReferencingObjectClassName() {
 		return referencingObjectClassName;
 	}
@@ -17,19 +26,12 @@ public class ReplicationComponentField {
 		this.referencingObjectClassName = referencingObjectClassName;
 	}
 
-	private String referencingObjectFieldName;
-
 	public String getReferencingObjectFieldName() {
 		return referencingObjectFieldName;
 	}
 
 	public void setReferencingObjectFieldName(String referencingObjectFieldName) {
 		this.referencingObjectFieldName = referencingObjectFieldName;
-	}
-
-// --------------------------- CONSTRUCTORS ---------------------------
-
-	public ReplicationComponentField() {
 	}
 
 // ------------------------ CANONICAL METHODS ------------------------

@@ -409,11 +409,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		getSession().flush();
 	}
 
-	private void ensureVersion(long version) {
-		if (version < getCurrentVersion())
-			throw new RuntimeException("version must be great than " + getCurrentVersion());
-	}
-
 	public final void visitCachedReferences(Visitor4 visitor) {
 		ensureReplicationActive();
 
@@ -521,6 +516,11 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			throw new UnsupportedOperationException("Method not supported because replication transaction is active");
 	}
 
+	private void ensureVersion(long version) {
+		if (version < getCurrentVersion())
+			throw new RuntimeException("version must be great than " + getCurrentVersion());
+	}
+
 	private Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {
 		Criteria criteria = getSession().createCriteria(ObjectReference.class);
 		long lastReplicationVersion = getLastReplicationVersion();
@@ -565,6 +565,10 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		ensureReplicationActive();
 
 		return getCurrentVersion() - 1;
+	}
+
+	public Object getObject(Db4oUUID uuid) {
+		throw new RuntimeException("TODO");
 	}
 
 	private ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
@@ -716,6 +720,14 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 	}
 
+	public void replicateDeletion(Db4oUUID db4oUUID) {
+		throw new RuntimeException("TODO");
+	}
+
+	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
+		throw new RuntimeException("TODO");
+	}
+
 // -------------------------- INNER CLASSES --------------------------
 
 	private final class MyFlushEventListener implements FlushEventListener {
@@ -762,16 +774,4 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 				super.ObjectUpdated(obj, Util.castAsLong(id));
 		}
 	}
-
-	public Object getObject(Db4oUUID uuid) {
-		throw new RuntimeException("TODO");
-	}
-
-	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
-		throw new RuntimeException("TODO");
-	}
-
-    public void replicateDeletion(Db4oUUID db4oUUID) {
-        throw new RuntimeException("TODO");
-    }
 }
