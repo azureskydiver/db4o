@@ -170,7 +170,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			PersistentClass persistentClass = (PersistentClass) classMappings.next();
 			Class claxx = persistentClass.getMappedClass();
 
-			if (Util.skip(claxx))
+			if (Util.assignableFrom.fn(claxx))
 				continue;
 
 			mappedClasses.add(persistentClass);

@@ -118,7 +118,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 
 		Object entity = event.getEntity();
 
-		if (Util.skip(entity)) return;
+		if (Util.instanceOf.fn(entity)) return;
 		long id = Util.castAsLong(event.getId());
 
 		ObjectReference ref = new ObjectReference();
@@ -133,7 +133,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 		ensureAlive();
 		Object object = event.getEntity();
 
-		if (Util.skip(object)) return;
+		if (Util.instanceOf.fn(object)) return;
 
 		ObjectUpdated(object, Util.castAsLong(event.getId()));
 	}
@@ -160,7 +160,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 		PersistentCollection persistentCollection = ((PersistentCollection) collection);
 		Object owner = persistentCollection.getOwner();
 
-		if (Util.skip(owner)) return;
+		if (Util.instanceOf.fn(owner)) return;
 
 		ObjectUpdated(owner, getId(owner));
 	}
