@@ -1,12 +1,14 @@
 package com.db4o.test.traversal;
 
+import com.db4o.inside.traversal.Visitor;
+
 import java.util.Vector;
 
-import com.db4o.inside.traversal.Traverser;
-
-/** A polite visitor will visit objects only once.
- * It will not visit the same object over and over again. */
-public abstract class PoliteVisitor implements Traverser.Visitor {
+/**
+ * A polite visitor will visit objects only once.
+ * It will not visit the same object over and over again.
+ */
+public abstract class PoliteVisitor implements Visitor {
 
 	private final Vector _alreadyVisited = new Vector();
 
