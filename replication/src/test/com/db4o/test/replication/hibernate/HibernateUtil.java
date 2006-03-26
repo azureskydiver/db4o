@@ -83,26 +83,12 @@ public class HibernateUtil {
 		return addAllMappings(new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-A.cfg.xml"));
 	}
 
-	public static Configuration producePostgreSQLConfigB() {
-		return addAllMappings(new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-B.cfg.xml"));
-	}
-
 	public static Configuration produceMySQLConfigA() {
 		return addAllMappings(new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-A.cfg.xml"));
-	}
-
-	public static Configuration produceMySQLConfigB() {
-		return addAllMappings(new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-B.cfg.xml"));
 	}
 
 	public static Configuration produceOracleConfigA() {
 		Configuration cfg = new Configuration().configure("com/db4o/test/replication/hibernate/oracle/hibernate-Oracle-A.cfg.xml");
 		return addAllMappings(cfg);
-	}
-
-	public static Configuration produceOracleConfigB() {
-		//Uncomment if you have 2 instances of Oracle on 2 machines
-		//return new Configuration().configure("com/db4o/test/replication/hibernate/oracle/hibernate-Oracle-B.cfg.xml");
-		return addAllMappings(createNewDbConfig());
 	}
 }
