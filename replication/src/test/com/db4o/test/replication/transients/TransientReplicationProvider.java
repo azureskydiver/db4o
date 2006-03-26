@@ -14,7 +14,7 @@ import com.db4o.inside.replication.TestableReplicationProvider;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.inside.traversal.GenericTraverser;
 import com.db4o.inside.traversal.Traverser;
-import com.db4o.inside.traversal.Traverser.Visitor;
+import com.db4o.inside.traversal.Visitor;
 import com.db4o.reflect.Reflector;
 import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.replication.hibernate.metadata.MySignature;
@@ -329,7 +329,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		_uuidsDeletedSinceLastReplication.add(uuid);
 		_storedObjects.remove(obj);
 	}
-	
+
 	public class MyTraverser implements Traverser {
 		Traverser _delegate;
 
@@ -359,8 +359,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return _uuidsDeletedSinceLastReplication.contains(uuid);
 	}
 
-    public void replicateDeletion(Db4oUUID db4oUUID) {
-        throw new RuntimeException("TODO");
-    }
+	public void replicateDeletion(Db4oUUID db4oUUID) {
+		throw new RuntimeException("TODO");
+	}
 
 }

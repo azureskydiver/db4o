@@ -3,6 +3,7 @@ package com.db4o.inside.replication;
 import com.db4o.inside.traversal.CollectionFlattener;
 import com.db4o.inside.traversal.GenericTraverser;
 import com.db4o.inside.traversal.TraversedField;
+import com.db4o.inside.traversal.Visitor;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;

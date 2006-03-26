@@ -1,22 +1,11 @@
 package com.db4o.test.replication;
 
 import com.db4o.test.TestSuite;
-import com.db4o.test.replication.db4o.Db4oArrayReplicationTest;
-import com.db4o.test.replication.db4o.Db4oListTest;
-import com.db4o.test.replication.db4o.Db4oMapTest;
-import com.db4o.test.replication.db4o.Db4oReplicationAfterDeletionTest;
-import com.db4o.test.replication.db4o.Db4oReplicationFeaturesMain;
-import com.db4o.test.replication.db4o.Db4oSimpleArrayTest;
-import com.db4o.test.replication.db4o.Db4oSingleTypeCollectionReplicationTest;
 import com.db4o.test.replication.db4o.hibernate.Db4oHibernateListTest;
-import com.db4o.test.replication.db4o.hibernate.Db4oHibernateSimpleArrayTest;
-import com.db4o.test.replication.db4o.hibernate.HibernateDb4oListTest;
-import com.db4o.test.replication.hibernate.Db4oHibernateMapTest;
 import com.db4o.test.replication.hibernate.HibernateAfterDeletion;
 import com.db4o.test.replication.hibernate.HibernateListTest;
 import com.db4o.test.replication.hibernate.HibernateMapTest;
 import com.db4o.test.replication.hibernate.HibernateProviderTest;
-import com.db4o.test.replication.hibernate.HibernateReplicationFeaturesMain;
 import com.db4o.test.replication.hibernate.HibernateSimpleArrayTest;
 import com.db4o.test.replication.hibernate.HibernateSingleTypeCollectionTest;
 import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
@@ -36,14 +25,14 @@ import com.db4o.test.replication.transients.TransientSingleTypeCollectionReplica
 
 public class ReplicationTestSuite extends TestSuite {
 
-	public Class[] tests() {
+	public Class[] tests2() {
 		System.err.println("Use tests2 below");
 		return new Class[]{
 				TransientReplicationFeaturesMain.class,
 		};
 	}
 
-	public Class[] tests2() {
+	public Class[] tests() {
 		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
 		return new Class[]{
 				//General
@@ -52,7 +41,7 @@ public class ReplicationTestSuite extends TestSuite {
 				ReplicationFeatures.class,
 
 				//Transient
-				TransientReplicationFeaturesMain.class,
+				//TransientReplicationFeaturesMain.class,
 				TransientReplicationProviderTest.class,
 				TransientListTest.class,
 				TransientMapTest.class,
@@ -62,7 +51,7 @@ public class ReplicationTestSuite extends TestSuite {
 				TransientSimpleArrayTest.class,
 
 				//Hibernate
-				HibernateReplicationFeaturesMain.class,
+				//HibernateReplicationFeaturesMain.class,
 				HibernateProviderTest.class,
 				ReplicationConfiguratorTest.class,
 				TablesCreatorTest.class,
@@ -73,15 +62,15 @@ public class ReplicationTestSuite extends TestSuite {
 				HibernateMapTest.class,
 
 				//Db4o
-				Db4oReplicationFeaturesMain.class,
+				//Db4oReplicationFeaturesMain.class,
 				//TODO Db4oReplicationProviderTest.class,
 				GetByUUID.class,
-				Db4oReplicationAfterDeletionTest.class,
-				Db4oListTest.class,
-				Db4oMapTest.class,
-				Db4oSingleTypeCollectionReplicationTest.class,
-				Db4oSimpleArrayTest.class,
-				Db4oArrayReplicationTest.class,
+				//Db4oReplicationAfterDeletionTest.class,
+				//Db4oListTest.class,
+				//Db4oMapTest.class,
+				//Db4oSingleTypeCollectionReplicationTest.class,
+				//Db4oSimpleArrayTest.class,
+				//Db4oArrayReplicationTest.class,
 
 				//Mixed
 				R0to4RunnerCore.class,
@@ -92,9 +81,9 @@ public class ReplicationTestSuite extends TestSuite {
 
 				Db4oHibernateListTest.class,
 
-				Db4oHibernateMapTest.class,
-				Db4oHibernateSimpleArrayTest.class,
-				HibernateDb4oListTest.class,
+				//Db4oHibernateMapTest.class,
+				//Db4oHibernateSimpleArrayTest.class,
+				//HibernateDb4oListTest.class,
 		};
 	}
 }

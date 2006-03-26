@@ -51,6 +51,7 @@ import java.util.Set;
 public final class HibernateReplicationProviderImpl implements HibernateReplicationProvider {
 // ------------------------------ FIELDS ------------------------------
 
+	ObjectSetCollectionFacade uuidsDeletedSinceLastReplication;
 	private Configuration _cfg;
 
 	private final String _name;
@@ -150,6 +151,13 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 // --------------------- Interface ReplicationProvider ---------------------
 
+	public Object getObject(Db4oUUID db4oUuid) {
+		Uuid uuid = new Uuid();
+		uuid.setLongPart(db4oUuid.getLongPart());
+		uuid.setProvider(getProviderSignature(db4oUuid.getSignaturePart()));
+		return Util.getByUUID(getSession(), uuid);
+	}
+
 	public final ObjectSet objectsChangedSinceLastReplication() {
 		ensureReplicationActive();
 
@@ -184,16 +192,20 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	public final ObjectSet uuidsDeletedSinceLastReplication() {
-		Criteria criteria = getSession().createCriteria(ObjectReference.class);
-		criteria.add(Restrictions.eq(ObjectReference.DELETED, true));
+		if (uuidsDeletedSinceLastReplication == null) {
+			Criteria criteria = getSession().createCriteria(ObjectReference.class);
+			criteria.add(Restrictions.eq(ObjectReference.DELETED, true));
 
-		List<ObjectReference> results = criteria.list();
-		Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
-		for (ObjectReference of : results) {
-			out.add(Util.translate(of.getUuid()));
+			List<ObjectReference> results = criteria.list();
+			Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
+			for (ObjectReference of : results) {
+				out.add(Util.translate(of.getUuid()));
+			}
+
+			uuidsDeletedSinceLastReplication = new ObjectSetCollectionFacade(out);
 		}
 
-		return new ObjectSetCollectionFacade(out);
+		return uuidsDeletedSinceLastReplication;
 	}
 
 // --------------------- Interface ReplicationProviderInside ---------------------
@@ -215,6 +227,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		commit();
 		_uuidsReplicatedInThisSession.clear();
 		_dirtyRefs.clear();
+		uuidsDeletedSinceLastReplication = null;
+
 		_inReplication = false;
 	}
 
@@ -326,6 +340,10 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 	}
 
+	public void replicateDeletion(Db4oUUID db4oUUID) {
+		throw new RuntimeException("TODO");
+	}
+
 	public final synchronized void rollbackReplication() {
 		ensureReplicationActive();
 
@@ -336,6 +354,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		clearAllReferences();
 		_dirtyRefs.clear();
 		_uuidsReplicatedInThisSession.clear();
+		uuidsDeletedSinceLastReplication = null;
 		_inReplication = false;
 	}
 
@@ -419,6 +438,10 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		ensureReplicationActive();
 		if (_uuidsReplicatedInThisSession.contains(reference.uuid())) return false;
 		return reference.version() > getLastReplicationVersion();
+	}
+
+	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
+		return uuidsDeletedSinceLastReplication().contains(uuid);
 	}
 
 // --------------------- Interface SimpleObjectContainer ---------------------
@@ -565,10 +588,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		ensureReplicationActive();
 
 		return getCurrentVersion() - 1;
-	}
-
-	public Object getObject(Db4oUUID uuid) {
-		throw new RuntimeException("TODO");
 	}
 
 	private ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
@@ -718,14 +737,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		} else {
 			return (ReplicationComponentField) exisitings.get(0);
 		}
-	}
-
-	public void replicateDeletion(Db4oUUID db4oUUID) {
-		throw new RuntimeException("TODO");
-	}
-
-	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
-		throw new RuntimeException("TODO");
 	}
 
 // -------------------------- INNER CLASSES --------------------------

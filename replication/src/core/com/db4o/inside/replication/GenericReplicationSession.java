@@ -5,7 +5,7 @@ import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.traversal.TraversedField;
 import com.db4o.inside.traversal.Traverser;
-import com.db4o.inside.traversal.Traverser.Visitor;
+import com.db4o.inside.traversal.Visitor;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.replication.ConflictResolver;
@@ -71,9 +71,8 @@ public class GenericReplicationSession implements ReplicationSession {
 		}
 	}
 
-	
 //	public void replicate(Db4oUUID uuid) {
-//		
+//
 //		Object objA = _peerA.getObject(uuid);
 //		Object objB = _peerB.getObject(uuid);
 //
@@ -82,40 +81,40 @@ public class GenericReplicationSession implements ReplicationSession {
 //
 //		if (refA != null && refB != null)
 //			throw new RuntimeException("Object with given UUID must have been deleted in at least one of the databases being replicated.");
-//		
+//
 //		if (refA == null && refB == null) return;  //Deleted in both - Do nothing
 //
 //		Object obj = refA == null
 //			? refB.object()
 //			: refA.object();
-//			
+//
 //		replicate(obj);
-//		
+//
 //		//Deleted in one
 //			//No conflict - replicate (check direction)
 //			//Conflict (deletion in one and object in the other)
 //				//Resolver return null - do nothing
 //				//Deletion prevails - replicate deletion (check direction)
 //				//Object prevails - undo deletion (check direction)
-//		
-//		
+//
+//
 //		//  A       1' ->  2' -> 3    (changed)
 //		//  B       []  ->  []  -> 3    (deleted)
-//		
+//
 //		//Results:
 //		//TO_A:   []  -> []  -> 3
 //		//TO_B:    1' -> 2' -> 3
 //
 //
-//		
+//
 //		//  A       1* ->  2* -> 3    (new)
 //		//  B           ->     -> 3    (non-existant)
 //
-//		
-//		
+//
+//
 //	}
 
-	
+
 	private void activateGraphToBeReplicated(Object root) {
 		_traverser.traverseGraph(root, new Visitor() {
 			public boolean visit(Object object) {
@@ -181,7 +180,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		ReplicationReference refA = _peerA.produceReference(obj, referencingObject, fieldName);
 		ReplicationReference refB = _peerB.produceReference(obj, referencingObject, fieldName);
-		
+
 		if (refA == null && refB == null)
 			throw new RuntimeException("" + obj.getClass() + " " + obj + " must be stored in one of the databases being replicated."); //FIXME: Use db4o's standard for throwing exceptions.
 		if (refA != null && refB != null)
@@ -204,7 +203,7 @@ public class GenericReplicationSession implements ReplicationSession {
 		if (otherRef == null) {
 			if (other.wasDeletedSinceLastReplication(uuid))
 				return handleDeletionInOther(obj, ownerRef, owner, other, referencingObject, fieldName);
-				
+
 			return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, true);
 		}
 
@@ -228,11 +227,11 @@ public class GenericReplicationSession implements ReplicationSession {
 			_peerA.activate(objectA);
 			_peerB.activate(objectB);
 
-            int action = _resolver.resolveConflict(this, objectA, objectB);
+			int action = _resolver.resolveConflict(this, objectA, objectB);
 
-            if (action == ConflictResolver.DO_NOTHING) return false;
-            if (action == ConflictResolver.A_PREVAILS) prevailing = objectA; 
-            if (action == ConflictResolver.B_PREVAILS) prevailing = objectB; 
+			if (action == ConflictResolver.DO_NOTHING) return false;
+			if (action == ConflictResolver.A_PREVAILS) prevailing = objectA;
+			if (action == ConflictResolver.B_PREVAILS) prevailing = objectB;
 		}
 
 		ReplicationProviderInside prevailingPeer = prevailing == objectA ? _peerA : _peerB;
@@ -255,41 +254,41 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	private boolean handleDeletionInOther(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName) {
 
-        boolean isConflict = false;
-        if (owner.wasChangedSinceLastReplication(ownerRef)) isConflict = true;
-        if (_directionTo == other) isConflict = true;
-        
-        Object prevailing = null;
-        if (isConflict) {
-            owner.activate(obj);
+		boolean isConflict = false;
+		if (owner.wasChangedSinceLastReplication(ownerRef)) isConflict = true;
+		if (_directionTo == other) isConflict = true;
 
-            Object objectA = (owner == _peerA ? obj : null);
-            Object objectB = (owner == _peerB ? obj : null);
-            
-            int action = _resolver.resolveConflict(this, objectA, objectB);
-            
-            if (action == ConflictResolver.DO_NOTHING) return false;
-            if (action == ConflictResolver.A_PREVAILS) prevailing = objectA; 
-            if (action == ConflictResolver.B_PREVAILS) prevailing = objectB; 
-        }
-        
-        if (prevailing == null) { //Deletion has prevailed.
-            if (_directionTo == other) return false;
-            owner.replicateDeletion(ownerRef.uuid());
-            return true;
-        }
+		Object prevailing = null;
+		if (isConflict) {
+			owner.activate(obj);
 
-        boolean needsToBeActivated = !isConflict; //Already activated if there was a conflict.
-        return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, needsToBeActivated);
-    
+			Object objectA = (owner == _peerA ? obj : null);
+			Object objectB = (owner == _peerB ? obj : null);
+
+			int action = _resolver.resolveConflict(this, objectA, objectB);
+
+			if (action == ConflictResolver.DO_NOTHING) return false;
+			if (action == ConflictResolver.A_PREVAILS) prevailing = objectA;
+			if (action == ConflictResolver.B_PREVAILS) prevailing = objectB;
+		}
+
+		if (prevailing == null) { //Deletion has prevailed.
+			if (_directionTo == other) return false;
+			owner.replicateDeletion(ownerRef.uuid());
+			return true;
+		}
+
+		boolean needsToBeActivated = !isConflict; //Already activated if there was a conflict.
+		return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, needsToBeActivated);
+
 	}
 
-	
+
 	private boolean handleNewObject(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName, boolean needsToBeActivated) {
 		if (_directionTo == owner) return false;
 
 		if (needsToBeActivated) owner.activate(obj);
-		
+
 		Object counterpart = emptyClone(owner, obj);
 
 		ownerRef.setCounterpart(counterpart);
