@@ -35,13 +35,13 @@ import java.util.List;
 public final class Util {
 // -------------------------- STATIC METHODS --------------------------
 
-	public static boolean skip(Object obj) {
-		return obj instanceof ReplicationRecord
-				|| obj instanceof ReadonlyReplicationProviderSignature
-				|| obj instanceof ReplicationComponentField
-				|| obj instanceof ReplicationComponentIdentity
-				|| obj instanceof UuidLongPartSequence
-				|| obj instanceof ObjectReference;
+	public static boolean skip(Table table) {
+		return table.getName().equals(ReplicationProviderSignature.TABLE_NAME)
+				|| table.getName().equals(ReplicationRecord.TABLE_NAME)
+				|| table.getName().equals(ReplicationComponentField.TABLE_NAME)
+				|| table.getName().equals(ReplicationComponentIdentity.TABLE_NAME)
+				|| table.getName().equals(UuidLongPartSequence.TABLE_NAME)
+				|| table.getName().equals(ObjectReference.TABLE_NAME);
 	}
 
 	public static boolean skip(Class claxx) {
@@ -55,13 +55,13 @@ public final class Util {
 				|| claxx == ObjectReference.class;
 	}
 
-	public static boolean skip(Table table) {
-		return table.getName().equals(ReplicationProviderSignature.TABLE_NAME)
-				|| table.getName().equals(ReplicationRecord.TABLE_NAME)
-				|| table.getName().equals(ReplicationComponentField.TABLE_NAME)
-				|| table.getName().equals(ReplicationComponentIdentity.TABLE_NAME)
-				|| table.getName().equals(UuidLongPartSequence.TABLE_NAME)
-				|| table.getName().equals(ObjectReference.TABLE_NAME);
+	public static boolean skip(Object obj) {
+		return obj instanceof ReplicationRecord
+				|| obj instanceof ReadonlyReplicationProviderSignature
+				|| obj instanceof ReplicationComponentField
+				|| obj instanceof ReplicationComponentIdentity
+				|| obj instanceof UuidLongPartSequence
+				|| obj instanceof ObjectReference;
 	}
 
 	public static Statement getStatement(Connection connection) {
@@ -119,10 +119,6 @@ public final class Util {
 		dumpTable(p.getName(), p.getSession(), s);
 	}
 
-	public static void dumpTable(String providerName, Session sess, String tableName) {
-		dumpTable(providerName, sess.connection(), tableName);
-	}
-
 	public static void dumpTable(String providerName, Connection con, String tableName) {
 		ResultSet rs = null;
 
@@ -148,6 +144,10 @@ public final class Util {
 		} finally {
 			closeResultSet(rs);
 		}
+	}
+
+	public static void dumpTable(String providerName, Session sess, String tableName) {
+		dumpTable(providerName, sess.connection(), tableName);
 	}
 
 	public static void closePreparedStatement(PreparedStatement ps) {

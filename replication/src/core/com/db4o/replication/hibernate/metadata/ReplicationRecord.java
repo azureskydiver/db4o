@@ -9,15 +9,15 @@ public class ReplicationRecord {
 
 	private long version;
 
-	public long getVersion() {
-		return version;
-	}
-
-	public void setVersion(long version) {
-		this.version = version;
-	}
-
 	private PeerSignature peerSignature;
+
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public ReplicationRecord() {
+		version = 0;
+	}
+
+// --------------------- GETTER / SETTER METHODS ---------------------
 
 	public PeerSignature getPeerSignature() {
 		return peerSignature;
@@ -27,10 +27,12 @@ public class ReplicationRecord {
 		this.peerSignature = peerSignature;
 	}
 
-// --------------------------- CONSTRUCTORS ---------------------------
+	public long getVersion() {
+		return version;
+	}
 
-	public ReplicationRecord() {
-		version = 0;
+	public void setVersion(long version) {
+		this.version = version;
 	}
 
 // ------------------------ CANONICAL METHODS ------------------------

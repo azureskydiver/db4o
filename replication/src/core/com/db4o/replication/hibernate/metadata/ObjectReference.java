@@ -14,6 +14,20 @@ public class ObjectReference {
 
 	private String className;
 
+	private boolean deleted;
+
+	private long objectId;
+
+	private Uuid uuid;
+
+	private long version;
+
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public ObjectReference() {}
+
+// --------------------- GETTER / SETTER METHODS ---------------------
+
 	public String getClassName() {
 		return className;
 	}
@@ -21,18 +35,6 @@ public class ObjectReference {
 	public void setClassName(String className) {
 		this.className = className;
 	}
-
-	private boolean deleted;
-
-	public boolean isDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
-	private long objectId;
 
 	public long getObjectId() {
 		return objectId;
@@ -42,8 +44,6 @@ public class ObjectReference {
 		this.objectId = objectId;
 	}
 
-	private Uuid uuid;
-
 	public Uuid getUuid() {
 		return uuid;
 	}
@@ -51,8 +51,6 @@ public class ObjectReference {
 	public void setUuid(Uuid uuid) {
 		this.uuid = uuid;
 	}
-
-	private long version;
 
 	public long getVersion() {
 		return version;
@@ -62,9 +60,13 @@ public class ObjectReference {
 		this.version = version;
 	}
 
-// --------------------------- CONSTRUCTORS ---------------------------
+	public boolean isDeleted() {
+		return deleted;
+	}
 
-	public ObjectReference() {}
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 
 // ------------------------ CANONICAL METHODS ------------------------
 

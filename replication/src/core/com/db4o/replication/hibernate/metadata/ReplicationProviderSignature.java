@@ -22,33 +22,9 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 
 	private byte[] bytes;
 
-	public byte[] getBytes() {
-		return bytes;
-	}
-
-	public void setBytes(byte[] signature) {
-		this.bytes = signature;
-	}
-
 	private long id;
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	private long creationTime;
-
-	public long getCreationTime() {
-		return creationTime;
-	}
-
-	public void setCreationTime(long creationTime) {
-		this.creationTime = creationTime;
-	}
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -58,6 +34,32 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 	public ReplicationProviderSignature(byte[] signature) {
 		this.bytes = signature;
 		this.creationTime = System.currentTimeMillis();
+	}
+
+// --------------------- GETTER / SETTER METHODS ---------------------
+
+	public byte[] getBytes() {
+		return bytes;
+	}
+
+	public void setBytes(byte[] signature) {
+		this.bytes = signature;
+	}
+
+	public long getCreationTime() {
+		return creationTime;
+	}
+
+	public void setCreationTime(long creationTime) {
+		this.creationTime = creationTime;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 // ------------------------ CANONICAL METHODS ------------------------

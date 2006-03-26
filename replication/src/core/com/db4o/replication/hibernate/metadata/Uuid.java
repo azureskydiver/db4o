@@ -10,6 +10,15 @@ public class Uuid {
 
 	private long longPart;
 
+	private ReplicationProviderSignature provider;
+
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public Uuid() {
+	}
+
+// --------------------- GETTER / SETTER METHODS ---------------------
+
 	public long getLongPart() {
 		return longPart;
 	}
@@ -18,19 +27,12 @@ public class Uuid {
 		this.longPart = longPart;
 	}
 
-	private ReplicationProviderSignature provider;
-
 	public ReplicationProviderSignature getProvider() {
 		return provider;
 	}
 
 	public void setProvider(ReplicationProviderSignature provider) {
 		this.provider = provider;
-	}
-
-// --------------------------- CONSTRUCTORS ---------------------------
-
-	public Uuid() {
 	}
 
 // ------------------------ CANONICAL METHODS ------------------------

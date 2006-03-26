@@ -21,6 +21,10 @@ public interface ObjectLifeCycleEventsListener extends
 		PreDeleteEventListener, Interceptor, FlushEventListener {
 // ------------------------ INTERFACE METHODS ------------------------
 
+// --------------------- Interface FlushEventListener ---------------------
+
+	void onFlush(FlushEvent event) throws HibernateException;
+
 // --------------------- Interface Interceptor ---------------------
 
 	public void onCollectionRemove(Object collection, Serializable key) throws CallbackException;
@@ -33,7 +37,6 @@ public interface ObjectLifeCycleEventsListener extends
 
 // --------------------- Interface PostUpdateEventListener ---------------------
 
-	void onFlush(FlushEvent event) throws HibernateException;
 
 	public void onPostUpdate(PostUpdateEvent event);
 
