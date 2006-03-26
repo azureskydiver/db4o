@@ -11,6 +11,10 @@ public class TablesCreatorTest {
 	public TablesCreatorTest() {
 	}
 
+	protected void clean() {
+
+	}
+
 	protected Configuration createCfg() {
 		return HibernateUtil.createNewDbConfig();
 	}
@@ -23,10 +27,6 @@ public class TablesCreatorTest {
 		clean();
 		tstValidate();
 		tstCreate();
-	}
-
-	protected void clean() {
-
 	}
 
 	public void tstCreate() {

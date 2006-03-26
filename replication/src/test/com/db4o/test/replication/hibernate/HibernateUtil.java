@@ -80,19 +80,19 @@ public class HibernateUtil {
 	}
 
 	public static Configuration producePostgreSQLConfigA() {
-		return new Configuration().configure("com/db4o/test/replication/hibernate/ref_as_columns/postgresql/hibernate-PostgreSQL-A.cfg.xml");
+		return addAllMappings(new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-A.cfg.xml"));
 	}
 
 	public static Configuration producePostgreSQLConfigB() {
-		return new Configuration().configure("com/db4o/test/replication/hibernate/ref_as_columns/postgresql/hibernate-PostgreSQL-B.cfg.xml");
+		return addAllMappings(new Configuration().configure("com/db4o/test/replication/hibernate/postgresql/hibernate-PostgreSQL-B.cfg.xml"));
 	}
 
 	public static Configuration produceMySQLConfigA() {
-		return new Configuration().configure("com/db4o/test/replication/hibernate/ref_as_columns/mysql/hibernate-MySQL-A.cfg.xml");
+		return addAllMappings(new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-A.cfg.xml"));
 	}
 
 	public static Configuration produceMySQLConfigB() {
-		return new Configuration().configure("com/db4o/test/replication/hibernate/ref_as_columns/mysql/hibernate-MySQL-B.cfg.xml");
+		return addAllMappings(new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-B.cfg.xml"));
 	}
 
 	public static Configuration produceOracleConfigA() {

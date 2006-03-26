@@ -40,15 +40,4 @@ public class SimpleParentChildCombinations extends SimpleParentChild {
 		cfg.addClass(SPCChild.class);
 		return cfg;
 	}
-
-	@Override
-	protected TestableReplicationProviderInside prepareProviderA() {
-		throw new RuntimeException("REVISE");
-	}
-
-	@Override
-	protected TestableReplicationProviderInside prepareProviderB() {
-		throw new RuntimeException("REVISE");
-	}
-
 }

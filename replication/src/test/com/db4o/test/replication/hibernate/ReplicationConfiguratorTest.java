@@ -54,14 +54,14 @@ public class ReplicationConfiguratorTest {
 		ReplicationConfigurator.configure(cfg);
 	}
 
-	protected Configuration prepareCfg() {return HibernateUtil.createNewDbConfig();}
-
 	protected Session openSession() {
 		Session session = sessionFactory.openSession();
 		//session.setFlushMode(FlushMode.COMMIT);
 		ReplicationConfigurator.install(session, cfg);
 		return session;
 	}
+
+	protected Configuration prepareCfg() {return HibernateUtil.createNewDbConfig();}
 
 	private void oneRound() {
 		init();
