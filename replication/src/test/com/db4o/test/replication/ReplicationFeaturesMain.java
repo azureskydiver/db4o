@@ -52,6 +52,7 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
         tstWithDeletedObjectsIn(_NONE);
         tstWithDeletedObjectsIn(_setA);
         tstWithDeletedObjectsIn(_setB);
+        tstWithDeletedObjectsIn(_setBoth);
 
 		if (_intermittentErrors.length() > 0) {
 			System.err.println("Intermittent errors found in test combinations:" + _intermittentErrors);
