@@ -46,7 +46,6 @@ public class BTreeNode extends YapMeta{
     private Object[] _values;
     
     
-    
     /* Constructor for new nodes */
     public BTreeNode(BTree btree){
         _btree = btree;
@@ -61,20 +60,29 @@ public class BTreeNode extends YapMeta{
     }
     
     public BTreeNode add(Transaction trans){
-        Object obj = keyHandler().current();
         YapReader reader = prepareRead(trans);
         Searcher s = search(trans, reader);
         if(s._cursor < 0){
             s._cursor = 0;
         }
         if(isLeaf()){
-            // Check last comparison result and position beyond last
-            // if added is greater.
-            if(s._cmp < 0){
-                s._cursor ++;
+            if(s._cmp == 0){
+                prepareWrite(trans);
+                
+                
+                
+            }else{
+                // Check last comparison result and position beyond last
+                // if added is greater.
+                if(s._cmp < 0){
+                    s._cursor ++;
+                }
+                insert(trans, s._cursor);
+                _keys[s._cursor] = new BTreeAdd(trans, keyHandler().current());
+                if(handlesValues()){
+                    _values[s._cursor] = valueHandler().current();
+                }
             }
-            insert(trans, s._cursor);
-            _keys[s._cursor] = keyHandler().current();
         }else{
             BTreeNode splitChild = child(reader, s._cursor).add(trans);
             if(splitChild == null){
@@ -92,18 +100,8 @@ public class BTreeNode extends YapMeta{
         return null;
     }
     
-    void commit(Transaction trans){
-        
-    }
-    
-    private void compare(Searcher s, YapReader reader){
-        Indexable4 handler = keyHandler();
-        if(_keys != null){
-            s.resultIs(handler.compareTo(_keys[s._cursor]));
-        }else{
-            reader._offset = seekKey(s._cursor);
-            s.resultIs(handler.compareTo(handler.readIndexEntry(reader)));
-        }
+    private boolean canWrite(){
+        return _keys != null;
     }
     
     private BTreeNode child(YapReader reader, int index){
@@ -124,12 +122,27 @@ public class BTreeNode extends YapMeta{
         return _children[index] instanceof BTreeNode;
     }
     
-    private Indexable4 keyHandler(){
-        return _btree._keyHandler;
+    void commit(Transaction trans){
+        
+        
+    }
+    
+    private void compare(Searcher s, YapReader reader){
+        Indexable4 handler = keyHandler();
+        if(_keys != null){
+            s.resultIs(handler.compareTo(key(s._cursor)));
+        }else{
+            seekKey(reader, s._cursor);
+            s.resultIs(handler.compareTo(handler.readIndexEntry(reader)));
+        }
     }
     
     public byte getIdentifier() {
         return YapConst.BTREE_NODE;
+    }
+    
+    private boolean handlesValues(){
+        return _btree._valueHandler != Null.INSTANCE; 
     }
     
     private void insert(Transaction trans, int pos){
@@ -156,6 +169,41 @@ public class BTreeNode extends YapMeta{
         return _height == 0;
     }
     
+    private Object key(int index){
+        BTreePatch patch = keyPatch(index);
+        if(patch == null){
+            return _keys[index];
+        }
+        return patch._object;
+    }
+    
+    private Object key(Transaction trans, YapReader reader, int index){
+        if( _keys != null ){
+            return key(trans, index);
+        }
+        seekKey(reader, index);
+        return keyHandler().readIndexEntry(reader);
+    }
+    
+    private Object key(Transaction trans, int index){
+        BTreePatch patch = keyPatch(index);
+        if(patch == null){
+            return _keys[index];
+        }
+        return patch.getObject(trans);
+    }
+    
+    private BTreePatch keyPatch(int index){
+        if( _keys[index] instanceof BTreePatch){
+            return (BTreePatch)_keys[index];
+        }
+        return null;
+    }
+    
+    private Indexable4 keyHandler(){
+        return _btree._keyHandler;
+    }
+    
     BTreeNode newRoot(Transaction trans, BTreeNode peer){
         BTreeNode res = new BTreeNode(_btree);
         res._height = _height + 1;
@@ -172,7 +220,7 @@ public class BTreeNode extends YapMeta{
         int length = YapConst.YAPINT_LENGTH * 2;  // height, count
         length += _count * keyHandler().linkLength();
         if(isLeaf()){
-            if(valueHandler() != null){
+            if(handlesValues()){
                 length += _count * valueHandler().linkLength();
             }
         }else{
@@ -181,29 +229,6 @@ public class BTreeNode extends YapMeta{
         return length;
     }
     
-    public void readThis(Transaction a_trans, YapReader a_reader) {
-        _count = a_reader.readInt();
-        _height = a_reader.readInt();
-        for (int i = 0; i < _count; i++) {
-            _keys[i] = keyHandler().readIndexEntry(a_reader); 
-        }
-        if(isLeaf()){
-            if(valueHandler() != null){
-                for (int i = 0; i < _count; i++) {
-                    _values[i] = valueHandler().readIndexEntry(a_reader);
-                }
-            }
-        }else{
-            for (int i = 0; i < _count; i++) {
-                _children[i] = new Integer(a_reader.readInt());
-            }
-        }
-    }
-    
-    void rollback(Transaction trans){
-        
-    }
-
     private YapReader prepareRead(Transaction trans){
         if(canWrite()){
             return null;
@@ -218,11 +243,7 @@ public class BTreeNode extends YapMeta{
         
         return reader;
     }
-    
-    private boolean canWrite(){
-        return _keys != null;
-    }
-    
+
     private void prepareWrite(Transaction trans){
         if(canWrite()){
             return;
@@ -230,7 +251,7 @@ public class BTreeNode extends YapMeta{
         if(isNew()){
             _keys = new Object[MAX_ENTRIES];
             if(isLeaf()){
-                if(valueHandler() != null){
+                if(handlesValues()){
                     _values = new Object[MAX_ENTRIES];
                 }
             }else{
@@ -243,6 +264,66 @@ public class BTreeNode extends YapMeta{
         }
     }
     
+    public void readThis(Transaction a_trans, YapReader a_reader) {
+        _count = a_reader.readInt();
+        _height = a_reader.readInt();
+        boolean vals = handlesValues() && isLeaf();
+        for (int i = 0; i < _count; i++) {
+            _keys[i] = keyHandler().readIndexEntry(a_reader);
+            if(vals){
+                _values[i] = valueHandler().readIndexEntry(a_reader);
+            }
+        }
+        if(! isLeaf()){
+            for (int i = 0; i < _count; i++) {
+                _children[i] = new Integer(a_reader.readInt());
+            }
+        }
+    }
+    
+    public BTreeNode remove(Transaction trans){
+        YapReader reader = prepareRead(trans);
+        Searcher s = search(trans, reader);
+        if(s._cursor < 0){
+            return this;
+        }
+        if(isLeaf()){
+            if(s._cmp == 0){
+                prepareWrite(trans);
+                
+                Object obj = _keys[s._cursor];
+                
+                if(obj instanceof BTreePatch){
+                    
+                }
+                
+                
+                
+                
+            }else{
+                // Check last comparison result and position beyond last
+                // if added is greater.
+                if(s._cmp < 0){
+                    s._cursor ++;
+                }
+                insert(trans, s._cursor);
+                _keys[s._cursor] = new BTreeAdd(trans, keyHandler().current());
+                if(handlesValues()){
+                    _values[s._cursor] = valueHandler().current();
+                }
+            }
+        }else{
+            child(reader, s._cursor).remove(trans);
+            
+        }
+        return this;
+    }
+
+    
+    void rollback(Transaction trans){
+        
+    }
+    
     private Searcher search(Transaction trans, YapReader reader){
         Searcher s = new Searcher(_count);
         while(s.incomplete()){
@@ -251,21 +332,22 @@ public class BTreeNode extends YapMeta{
         return s;
     }
     
-    private int seekKey(int ix){
-        return LEADING_INT_LENGTH + (keyHandler().linkLength() * ix);
-    }
-    
-    private int seekChild(int ix){
-        return LEADING_INT_LENGTH + 
+    private void seekChild(YapReader reader, int ix){
+        reader._offset = LEADING_INT_LENGTH + 
              (keyHandler().linkLength() * _count) +
              (YapConst.YAPID_LENGTH * ix);
     }
     
-    private int seekValue(int ix){
+    private void seekKey(YapReader reader, int ix){
+        reader._offset = LEADING_INT_LENGTH + (keyHandler().linkLength() * ix);
+    }
+    
+    private void seekValue(YapReader reader, int ix){
         if(valueHandler() == null){
-            return seekKey(ix);
+            seekKey(reader, ix);
+            return;
         }
-        return LEADING_INT_LENGTH + 
+        reader._offset = LEADING_INT_LENGTH + 
             (keyHandler().linkLength() * _count) +
             (valueHandler().linkLength() * ix);
     }
@@ -300,7 +382,12 @@ public class BTreeNode extends YapMeta{
     public void traverseKeys(Transaction trans, Visitor4 visitor){
         YapReader reader = prepareRead(trans);
         if(isLeaf()){
-            
+            for (int i = 0; i < _count; i++) {
+                Object obj = key(trans,reader, i);
+                if(obj != Null.INSTANCE){
+                    visitor.visit(obj);
+                }
+            }
         }else{
             for (int i = 0; i < _count; i++) {
                 child(reader,i).traverseKeys(trans, visitor);
@@ -308,28 +395,68 @@ public class BTreeNode extends YapMeta{
         }
     }
     
-    private Indexable4 valueHandler(){
-        return _btree._valueHandler;
-    }
-
-    public void writeThis(Transaction trans, YapReader a_writer) {
-        
-        // TODO: The following write is not transactional yet.
-        //       Prior to writing we will have to look into 
-        //       identifying changes made by other transactions
-        
-        a_writer.writeInt(_count);
-        a_writer.writeInt(_height);
-        for (int i = 0; i < _count; i++) {
-            keyHandler().writeIndexEntry(a_writer, _keys[i]);
+    public void traverseValues(Transaction trans, Visitor4 visitor){
+        if(! handlesValues()){
+            traverseKeys(trans, visitor);
+            return;
         }
+        YapReader reader = prepareRead(trans);
         if(isLeaf()){
-            if(valueHandler() != null){
-                for (int i = 0; i < _count; i++) {
-                    valueHandler().writeIndexEntry(a_writer, _values[i]);
+            for (int i = 0; i < _count; i++) {
+                if(key(trans,reader, i) != Null.INSTANCE){
+                    visitor.visit(value(reader, i));
                 }
             }
         }else{
+            for (int i = 0; i < _count; i++) {
+                child(reader,i).traverseValues(trans, visitor);
+            }
+        }
+    }
+    
+    private Object value(YapReader reader, int index){
+        if( _values != null ){
+            return _values[index];
+        }
+        seekValue(reader, index);
+        return valueHandler().readIndexEntry(reader);
+    }
+
+    
+    private Indexable4 valueHandler(){
+        return _btree._valueHandler;
+    }
+    
+    
+    public void writeThis(Transaction trans, YapReader a_writer) {
+        if(isLeaf()){
+            int count = 0;
+            int startOffset = a_writer._offset;
+            a_writer.incrementOffset(YapConst.YAPINT_LENGTH * 2);
+            
+            boolean vals = handlesValues();
+            for (int i = 0; i < _count; i++) {
+                Object obj = key(trans, i);
+                if(obj != Null.INSTANCE){
+                    count ++;
+                    keyHandler().writeIndexEntry(a_writer, obj);
+                    if(vals){
+                        valueHandler().writeIndexEntry(a_writer, _values[i]);
+                    }
+                }
+            }
+            
+            int endOffset = a_writer._offset;
+            a_writer._offset = startOffset;
+            a_writer.writeInt(count);
+            a_writer.writeInt(_height);
+            a_writer._offset = endOffset;
+        }else{
+            a_writer.writeInt(_count);
+            a_writer.writeInt(_height);
+            for (int i = 0; i < _count; i++) {
+                keyHandler().writeIndexEntry(a_writer, _keys[i]);
+            }
             for (int i = 0; i < _count; i++) {
                 a_writer.writeIDOf(trans, _children[i]);
             }

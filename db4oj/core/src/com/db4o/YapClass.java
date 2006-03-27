@@ -847,15 +847,15 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             return 0;
         }
         
-        if(Debug.useOldClassIndex){
-            if (i_index != null) {
-                return i_index.entryCount(ta);
-            }
-        }
-        
         if(Debug.useBTrees){
             if(_index != null){
                 return _index.size();
+            }
+        }
+        
+        if(Debug.useOldClassIndex){
+            if (i_index != null) {
+                return i_index.entryCount(ta);
             }
         }
         
@@ -863,7 +863,29 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     final Tree getIndex(Transaction a_trans) {
-        if (hasIndex()) {
+        
+        if(!hasIndex()){
+            return null;
+        }
+        
+        if(Debug.useBTrees){
+            
+            // 
+            
+            TreeInt zero = new TreeInt(0);
+            final Tree[] tree = new Tree[]{zero};
+            _index.traverseKeys(a_trans, new Visitor4() {
+                public void visit(Object obj) {
+                    // TODO Auto-generated method stub
+            
+                }
+            
+            });
+            tree[0] = tree[0].removeNode(zero);
+            return tree[0];
+        }
+        
+        if(Debug.useOldClassIndex){
             ClassIndex ci = getIndex();
             if (ci != null) {
                 return ci.cloneForYapClass(a_trans, getID());
