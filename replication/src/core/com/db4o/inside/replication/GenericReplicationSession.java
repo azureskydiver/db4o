@@ -158,11 +158,23 @@ public class GenericReplicationSession implements ReplicationSession {
 	private void storeChangedObjectsIn(final ReplicationProviderInside destination) {
 		final ReplicationProviderInside source = other(destination);
 		if (_directionTo == source) return;
+		
+		destination.visitCachedReferences(new Visitor4() {
+			public void visit(Object obj) {
+				deleteInDestination((ReplicationReference) obj, destination);
+			}
+		});
+		
 		source.visitCachedReferences(new Visitor4() {
 			public void visit(Object obj) {
 				storeChangedCounterpartInDestination((ReplicationReference) obj, destination);
 			}
 		});
+	}
+
+	private void deleteInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
+		if (!reference.isMarkedForDeleting()) return;
+		destination.replicateDeletion(reference);
 	}
 
 	private void storeChangedCounterpartInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
@@ -274,7 +286,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		if (prevailing == null) { //Deletion has prevailed.
 			if (_directionTo == other) return false;
-			owner.replicateDeletion(ownerRef.uuid());
+			ownerRef.markForDeleting();
 			return true;
 		}
 

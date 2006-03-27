@@ -16,14 +16,34 @@ import com.db4o.inside.traversal.GenericTraverser;
 import com.db4o.inside.traversal.Traverser;
 import com.db4o.inside.traversal.Visitor;
 import com.db4o.reflect.Reflector;
-import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
-import com.db4o.replication.hibernate.metadata.MySignature;
 
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class TransientReplicationProvider implements TestableReplicationProvider, TestableReplicationProviderInside {
+
+	public class MySignature implements ReadonlyReplicationProviderSignature {
+
+		private final byte[] _bytes;
+
+		public MySignature(byte[] signature) {
+			_bytes = signature;
+		}
+
+		public long getId() {
+			throw new RuntimeException("Never used?");
+		}
+
+		public byte[] getBytes() {
+			return _bytes;
+		}
+
+		public long getCreationTime() {
+			throw new RuntimeException("Never used?");
+		}
+
+	}
 
 	private final String _name;
 
@@ -45,8 +65,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	private Collection4 _uuidsDeletedSinceLastReplication = new Collection4();
 
 	public TransientReplicationProvider(byte[] signature, String name) {
-		_signature = new MySignature();
-		_signature.setBytes(signature);
+		_signature = new MySignature(signature);
 		_name = name;
 
 		ReplicationReflector reflector = ReplicationReflector.getInstance();
@@ -146,12 +165,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		Db4oUUID uuid = counterpartReference.uuid();
 		long version = counterpartReference.version();
 
-		return createReference(obj, uuid, version);
-	}
-
-	private ReplicationReference createReference(Object obj, Db4oUUID uuid, long version) {
-		ReplicationReference result = new ReplicationReferenceImpl(obj, uuid, version);
-		_referencesByObject.put(obj, result);
+		ReplicationReference result = createReferenceFor(obj);
+		store(obj, uuid, version);
 		return result;
 	}
 
@@ -191,8 +206,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return getStoredObjects(Object.class);
 	}
 
-	public void setSignature(byte[] b) {
-	}
 
 	public ObjectSet getStoredObjects(Class clazz) {
 		Collection4 result = new Collection4();
@@ -258,6 +271,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		private final Object _object;
 		private Object _counterpart;
 		private boolean _isMarkedForReplicating;
+		private boolean _isMarkedForDeleting;
 
 		MyReplicationReference(Object object) {
 			if (object == null) throw new IllegalArgumentException();
@@ -290,6 +304,14 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 		public boolean isMarkedForReplicating() {
 			return _isMarkedForReplicating;
+		}
+
+		public void markForDeleting() {
+			_isMarkedForDeleting = true;
+		}
+
+		public boolean isMarkedForDeleting() {
+			return _isMarkedForDeleting;
 		}
 
 	}
@@ -359,8 +381,9 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return _uuidsDeletedSinceLastReplication.contains(uuid);
 	}
 
-	public void replicateDeletion(Db4oUUID db4oUUID) {
-		throw new RuntimeException("TODO");
+	public void replicateDeletion(ReplicationReference reference) {
+		_uuidsReplicatedInThisSession.add(reference.uuid());
+		_storedObjects.remove(reference.object());
 	}
 
 }

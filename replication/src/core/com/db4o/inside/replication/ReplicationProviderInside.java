@@ -91,7 +91,7 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	void storeReplica(Object obj);
 
-    void replicateDeletion(Db4oUUID db4oUUID);
+    void replicateDeletion(ReplicationReference reference);
 
 
 	void syncVersionWithPeer(long maxVersion);

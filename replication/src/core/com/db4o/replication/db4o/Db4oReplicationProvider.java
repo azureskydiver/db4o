@@ -339,7 +339,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
         throw new RuntimeException("TODO");
 	}
 
-    public void replicateDeletion(Db4oUUID db4oUUID) {
+    public void replicateDeletion(ReplicationReference reference) {
         throw new RuntimeException("TODO");
     }
 
