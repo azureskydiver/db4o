@@ -132,21 +132,16 @@ class Msg implements Cloneable{
 		return false; // since not processed
 	}
 
-	static final Msg readMessage(Transaction a_trans, YapSocket sock) throws Db4oException {
+	static final Msg readMessage(Transaction a_trans, YapSocket sock) throws IOException {
 		YapWriter reader = new YapWriter(a_trans, YapConst.MESSAGE_LENGTH);
-		try {
-			if(!reader.read(sock)) {
-				return null;
-			}
-			Msg message = i_messages[reader.readInt()].readPayLoad(a_trans, sock, reader);
-			if (Debug.messages) {
-				System.out.println(message + " arrived at " + a_trans.i_stream);
-			}
-			return message;
-
-		} catch (Exception exc) {
-		    throw new Db4oException(exc);
+		if(!reader.read(sock)) {
+			return null;
 		}
+		Msg message = i_messages[reader.readInt()].readPayLoad(a_trans, sock, reader);
+		if (Debug.messages) {
+			System.out.println(message + " arrived at " + a_trans.i_stream);
+		}
+		return message;
 	}
 
 	Msg readPayLoad(Transaction a_trans, YapSocket sock, YapWriter reader)
