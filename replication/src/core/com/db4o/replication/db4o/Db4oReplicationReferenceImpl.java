@@ -20,6 +20,7 @@ public class Db4oReplicationReferenceImpl extends YapObject implements Replicati
     private Object _counterPart;
     
     private boolean _markedForReplicating;
+    private boolean _markedForDeleting;
     
     Db4oReplicationReferenceImpl(ObjectInfo objectInfo){
         YapObject yo = (YapObject)objectInfo;
@@ -88,6 +89,14 @@ public class Db4oReplicationReferenceImpl extends YapObject implements Replicati
 
     public boolean isMarkedForReplicating() {
         return _markedForReplicating;
+    }
+
+    public void markForDeleting() {
+        _markedForDeleting = true;
+    }
+
+    public boolean isMarkedForDeleting() {
+        return _markedForDeleting;
     }
 
     public Db4oDatabase signaturePart() {

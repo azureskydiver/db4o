@@ -12,6 +12,7 @@ public final class ReplicationReferenceImpl implements ReplicationReference {
 	private final long version;
 	private Object counterPart;
 	private boolean markedForReplicating;
+	private boolean markedForDeleting;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
@@ -25,6 +26,10 @@ public final class ReplicationReferenceImpl implements ReplicationReference {
 
 	public final boolean isMarkedForReplicating() {
 		return markedForReplicating;
+	}
+
+	public final boolean isMarkedForDeleting() {
+		return markedForDeleting;
 	}
 
 // ------------------------ CANONICAL METHODS ------------------------
@@ -67,6 +72,10 @@ public final class ReplicationReferenceImpl implements ReplicationReference {
 
 	public final void markForReplicating() {
 		markedForReplicating = true;
+	}
+
+	public final void markForDeleting() {
+		markedForDeleting = true;
 	}
 
 	public final Object object() {

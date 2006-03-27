@@ -37,8 +37,6 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 
 	private int round = 0;
 
-	protected boolean printRound = false;
-
 	public void configure() {
 		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
 		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
@@ -124,8 +122,9 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 
 	private void runCurrentCombination() {
 		_testCombination++;
-		System.out.println("" + _testCombination + " =================================");
-
+		//System.out.println("" + _testCombination + " =================================");
+		//printCombination();
+		
 		if (_testCombination < 0)  //Use this to skip some combinations and avoid waiting.
 			return;
 
@@ -138,8 +137,8 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 				_errors++;
 //                if (_errors == 10) {
 				if (_errors == 1) {
-					printCombination();
 					sleep(100);
+					printCombination();
 					throw rx;
 				}
 			}
@@ -206,17 +205,6 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		checkNames();
 
 		clean();
-		printRound();
-	}
-
-	private void printRound() {
-		if (!printRound)
-			return;
-
-		round++;
-
-		if ((round % 10) == 0)
-			System.out.println("round = " + round++);
 	}
 
 
@@ -252,6 +240,7 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 
 		return (hasDeletions(inspectedContainer));
 	}
+	
 
 	private boolean isNewNameExpected(String origin, String inspected) {
 		if (!_containersWithNewObjects.contains(origin)) return false;
@@ -278,23 +267,28 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
         if (!wasReplicationTriggered()) return false;
         if (!_direction.contains(other(container))) return false;
         
-        if (_objectsToPrevailInConflicts.contains(container)) return true;
+        if (wasConflict())
+        	return _objectsToPrevailInConflicts.contains(container);
 
-        if (_containersWithChangedObjects.contains(other(container))) return false;
-        if (_containersWithDeletedObjects.contains(other(container))) return false;
-
-        if (_containersWithChangedObjects.contains(container)) return true;
-        if (_containersWithDeletedObjects.contains(container)) return true;
-        
-        return false;
+        return modifiedContainers().contains(container);
     }
 
+	private boolean wasConflict() {
+        if (!wasReplicationTriggered()) return false;
+        return modifiedContainers().containsAll(_direction);
+	}
+
+	private Set modifiedContainers() {
+		Set result = new HashSet();
+		result.addAll(_containersWithChangedObjects);
+		result.addAll(_containersWithDeletedObjects);
+		return result;
+	}
+
 	private boolean wasReplicationTriggered() {
-		Set containersToTriggerReplication = new HashSet();
-		containersToTriggerReplication.addAll(_containersWithChangedObjects);
-		containersToTriggerReplication.addAll(_containersWithDeletedObjects);
-		containersToTriggerReplication.retainAll(_containersToQueryFrom);
-		return !containersToTriggerReplication.isEmpty();
+		Set triggers = modifiedContainers();
+		triggers.retainAll(_containersToQueryFrom);
+		return !triggers.isEmpty();
 	}
 
 	private boolean hasChanges(String container) {
@@ -351,10 +345,10 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 	}
 
 	private void checkName(TestableReplicationProviderInside container, String name, boolean isExpected) {
-		System.out.println("");
-		System.out.println(name + (isExpected ? " " : " NOT") + " expected in container " + containerName(container));
+		//System.out.println("");
+		//System.out.println(name + (isExpected ? " " : " NOT") + " expected in container " + containerName(container));
 		Replicated obj = find(container, name);
-		System.out.println("obj = " + obj);
+		//System.out.println("obj = " + obj);
 		if (isExpected) {
 			ensure(obj != null);
 		} else {

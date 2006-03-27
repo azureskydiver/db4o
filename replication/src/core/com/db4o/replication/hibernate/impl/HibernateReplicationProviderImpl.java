@@ -340,7 +340,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 	}
 
-	public void replicateDeletion(Db4oUUID db4oUUID) {
+	public void replicateDeletion(ReplicationReference reference) {
 		throw new RuntimeException("TODO");
 	}
 

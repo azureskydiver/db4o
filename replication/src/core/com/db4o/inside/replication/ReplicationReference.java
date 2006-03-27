@@ -22,8 +22,10 @@ public interface ReplicationReference {
 	void setCounterpart(Object obj);
 
 	void markForReplicating();
-
 	boolean isMarkedForReplicating();
+
+	void markForDeleting();
+	boolean isMarkedForDeleting();
 
 
 }

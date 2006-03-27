@@ -9,11 +9,11 @@ public class TransientReplicationFeaturesMain extends ReplicationFeaturesMain {
 	private TestableReplicationProviderInside a = new TransientReplicationProvider(new byte[]{1}, "A");
 	private TestableReplicationProviderInside b = new TransientReplicationProvider(new byte[]{2}, "B");
 
-	protected TestableReplicationProviderInside prepareProviderB() {
+	protected TestableReplicationProviderInside prepareProviderA() {
 		return a;
 	}
 
-	protected TestableReplicationProviderInside prepareProviderA() {
+	protected TestableReplicationProviderInside prepareProviderB() {
 		return b;
 	}
 
