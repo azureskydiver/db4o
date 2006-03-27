@@ -233,7 +233,7 @@ public abstract class YapFile extends YapStream {
                         }
                     }
                     
-                    if(Debug.useOldClassIndex){
+                    if(Debug.useOldClassIndex && ! Debug.useBTrees){
                     
                         Tree tree = yapClass.getIndex(ta);
                         if (tree != null) {

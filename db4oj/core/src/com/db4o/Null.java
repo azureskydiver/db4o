@@ -2,8 +2,19 @@
 
 package com.db4o;
 
-class Null implements YapComparable{
+import com.db4o.inside.ix.*;
+
+/**
+ * @exclude
+ */
+public class Null implements Indexable4{
     
+    public static final Indexable4 INSTANCE = new Null();
+
+    public Object comparableObject(Transaction trans, Object indexEntry) {
+        return null;
+    }
+
     public int compareTo(Object a_obj) {
         if(a_obj == null) {
             return 0;
@@ -31,12 +42,21 @@ class Null implements YapComparable{
 		return false;
 	}
 
+    public int linkLength() {
+        return 0;
+    }
+
 	public YapComparable prepareComparison(Object obj) {
 		// do nothing
 		return this;
 	}
 	
-	static final YapComparable INSTANCE = new Null();
+    public Object readIndexEntry(YapReader a_reader) {
+        return null;
+    }
 
+    public void writeIndexEntry(YapReader a_writer, Object a_object) {
+        // do nothing
+    }
 }
 

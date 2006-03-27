@@ -16,17 +16,17 @@ public class BTree extends YapMeta{
     final Indexable4 _valueHandler;
     
     BTreeNode _root;
-    
+   
     /**
      * All instantiated nodes are held in this tree. 
      */
-    private Tree _nodes;  
+    private TreeIntWeakObject _nodes;  
     
     private int _size;
     
     public BTree(int id, Indexable4 keyHandler, Indexable4 valueHandler){
         _keyHandler = keyHandler;
-        _valueHandler = valueHandler;
+        _valueHandler = (valueHandler == null) ? Null.INSTANCE : valueHandler;
         if(id > 0){
             setID(id);
             setStateDeactivated();
@@ -49,10 +49,9 @@ public class BTree extends YapMeta{
     
     public void commit(final Transaction trans){
         if(_nodes != null){
-            _nodes.traverse(new Visitor4() {
+            _nodes = _nodes.traverseRemoveEmpty(new Visitor4() {
                 public void visit(Object obj) {
-                    BTreeNode node = (BTreeNode) ((TreeIntObject)obj).i_object;
-                    node.commit(trans);
+                    ((BTreeNode)obj).commit(trans);
                 }
             });
         }
@@ -61,10 +60,9 @@ public class BTree extends YapMeta{
     
     public void rollback(final Transaction trans){
         if(_nodes != null){
-            _nodes.traverse(new Visitor4() {
+            _nodes = _nodes.traverseRemoveEmpty(new Visitor4() {
                 public void visit(Object obj) {
-                    BTreeNode node = (BTreeNode) ((TreeIntObject)obj).i_object;
-                    node.rollback(trans);
+                    ((BTreeNode)obj).rollback(trans);
                 }
             });
         }
@@ -85,22 +83,19 @@ public class BTree extends YapMeta{
     }
     
     BTreeNode produceNode(int id){
-        TreeIntObject tio = new TreeIntObject(id);
-        _nodes = Tree.add(_nodes, tio);
-        tio = (TreeIntObject)tio.duplicateOrThis();
-        if(tio.i_object != null){
-            Object obj = Platform4.weakReferenceTarget(tio.i_object);
-            if(obj != null){
-                return (BTreeNode)obj;
-            }
+        TreeIntWeakObject tio = new TreeIntWeakObject(id);
+        _nodes = (TreeIntWeakObject)Tree.add(_nodes, tio);
+        tio = (TreeIntWeakObject)tio.duplicateOrThis();
+        BTreeNode node = (BTreeNode)tio.getObject();
+        if(node == null){
+            node = new BTreeNode(this, id);
+            tio.setObject(node);
         }
-        BTreeNode node = new BTreeNode(this, id);
-        tio.i_object = Platform4.createWeakReference(node);
         return node;
     }
     
     void addNode(int id, BTreeNode node){
-        _nodes = Tree.add(_nodes, new TreeIntObject(id, node));
+        _nodes = (TreeIntWeakObject)Tree.add(_nodes, new TreeIntWeakObject(id, node));
     }
 
     public void readThis(Transaction a_trans, YapReader a_reader) {
