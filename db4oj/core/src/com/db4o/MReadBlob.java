@@ -10,7 +10,7 @@ import com.db4o.foundation.network.*;
 
 class MReadBlob extends MsgBlob {
 
-    void processClient(YapSocket sock) {
+    void processClient(YapSocket sock) throws IOException {
         Msg message = Msg.readMessage(getTransaction(), sock);
         if (message.equals(Msg.LENGTH)) {
             try {

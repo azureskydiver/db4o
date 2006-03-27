@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import java.io.IOException;
+
 import com.db4o.foundation.network.*;
 
 final class YapServerThread extends Thread {
@@ -130,6 +132,12 @@ final class YapServerThread extends Thread {
                 if(! messageProcessor()){
                     break;
                 }
+            } catch (IOException e) {
+            	if (Deploy.debug) {
+                    e.printStackTrace();
+                }
+            	break;
+            	
             } catch (Exception e) {
                 if (i_mainStream == null || i_mainStream.isClosed()) {
                     break;
@@ -141,7 +149,7 @@ final class YapServerThread extends Thread {
             
             // TODO: Optimize - this doesn't need to be in the loop of executing statements
 
-            if (i_nullMessages > 20 || (System.currentTimeMillis() - i_lastClientMessage > i_config.i_timeoutPingClients)) {
+            if (i_nullMessages > 20 || pingClientTimeoutReached()) {
                 if (i_pingAttempts > 5) {
                     // 
                     getStream().logMsg(33, i_clientName);
@@ -154,8 +162,12 @@ final class YapServerThread extends Thread {
         }
         close();
     }
+
+	private boolean pingClientTimeoutReached() {
+		return (System.currentTimeMillis() - i_lastClientMessage > i_config.i_timeoutPingClients);
+	}
     
-    private boolean messageProcessor(){
+    private boolean messageProcessor() throws IOException{
         
         Msg message = Msg.readMessage(getTransaction(), i_socket);
         if(message == null){

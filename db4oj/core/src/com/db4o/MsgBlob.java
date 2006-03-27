@@ -20,7 +20,7 @@ abstract class MsgBlob extends MsgD {
         return Status.ERROR;
     }
 
-    abstract void processClient(YapSocket sock);
+    abstract void processClient(YapSocket sock) throws IOException;
 
     BlobImpl serverGetBlobImpl() {
         BlobImpl blobImpl = null;
