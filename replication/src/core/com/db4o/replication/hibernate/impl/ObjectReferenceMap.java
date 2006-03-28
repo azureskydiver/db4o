@@ -39,6 +39,10 @@ final class ObjectReferenceMap {
 		while (i.hasNext())
 			visitor.visit(i.next());
 	}
+
+	public String toString() {
+		return delegate.toString();
+	}
 }
 
 

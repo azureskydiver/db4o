@@ -2,10 +2,6 @@
 
 package com.db4o.test.replication;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.db4o.Db4o;
 import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
@@ -15,6 +11,10 @@ import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.ReplicationProvider;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 
@@ -49,10 +49,10 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		_setBoth.addAll(_setA);
 		_setBoth.addAll(_setB);
 
-        tstWithDeletedObjectsIn(_NONE);
-        tstWithDeletedObjectsIn(_setA);
-        tstWithDeletedObjectsIn(_setB);
-        tstWithDeletedObjectsIn(_setBoth);
+		tstWithDeletedObjectsIn(_NONE);
+		tstWithDeletedObjectsIn(_setA);
+		tstWithDeletedObjectsIn(_setB);
+		tstWithDeletedObjectsIn(_setBoth);
 
 		if (_intermittentErrors.length() > 0) {
 			System.err.println("Intermittent errors found in test combinations:" + _intermittentErrors);
@@ -71,15 +71,15 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		delete(new Class[]{Replicated.class});
 	}
 
-    private void tstWithDeletedObjectsIn(Set containers) {
-        _containersWithDeletedObjects = containers;
+	private void tstWithDeletedObjectsIn(Set containers) {
+		_containersWithDeletedObjects = containers;
 
-        tstDirection(_setA);
-        tstDirection(_setB);
-        tstDirection(_setBoth);
-    }
+		tstDirection(_setA);
+		tstDirection(_setB);
+		tstDirection(_setBoth);
+	}
 
-    private void tstDirection(Set direction) {
+	private void tstDirection(Set direction) {
 		_direction = direction;
 
 		tstQueryingFrom(_setA);
@@ -116,8 +116,8 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 
 	private void tstWithObjectsPrevailingConflicts(Set containers) {
 		_objectsToPrevailInConflicts = containers;
-        
-        runCurrentCombination();
+
+		runCurrentCombination();
 	}
 
 
@@ -125,7 +125,7 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		_testCombination++;
 		//System.out.println("" + _testCombination + " =================================");
 		//printCombination();
-		
+
 		if (_testCombination < 0)  //Use this to skip some combinations and avoid waiting.
 			return;
 
@@ -157,6 +157,7 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 	}
 
 	private void printCombination() {
+		System.out.println("" + _testCombination + " =================================");
 		System.out.println("New Objects In: " + print(_containersWithNewObjects));
 		System.out.println("Changed Objects In: " + print(_containersWithChangedObjects));
 		System.out.println("Deleted Objects In: " + print(_containersWithDeletedObjects));
@@ -175,11 +176,11 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 
 			public int resolveConflict(ReplicationSession session, Object a, Object b) {
 				if (_objectsToPrevailInConflicts.isEmpty())
-                    return ConflictResolver.DO_NOTHING;
-                
+					return ConflictResolver.DO_NOTHING;
+
 				return _objectsToPrevailInConflicts.contains(A)
-                    ? ConflictResolver.A_PREVAILS
-                    : ConflictResolver.B_PREVAILS;
+						? ConflictResolver.A_PREVAILS
+						: ConflictResolver.B_PREVAILS;
 			}
 
 		});
@@ -241,7 +242,7 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 
 		return (hasDeletions(inspectedContainer));
 	}
-	
+
 
 	private boolean isNewNameExpected(String origin, String inspected) {
 		if (!_containersWithNewObjects.contains(origin)) return false;
@@ -252,31 +253,31 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 	}
 
 	private boolean isChangedNameExpected(String changedContainer, String inspectedContainer) {
-        if (isDeletionExpected(inspectedContainer)) return false;
+		if (isDeletionExpected(inspectedContainer)) return false;
 
-        String other = other(inspectedContainer);
-        if (prevailedInReplication(other))
-            return isChangedNameExpected(changedContainer, other);
-        
-        if (!inspectedContainer.equals(changedContainer)) return false;
-        if (!hasChanges(inspectedContainer)) return false;
+		String other = other(inspectedContainer);
+		if (prevailedInReplication(other))
+			return isChangedNameExpected(changedContainer, other);
+
+		if (!inspectedContainer.equals(changedContainer)) return false;
+		if (!hasChanges(inspectedContainer)) return false;
 
 		return true;
 	}
 
-    private boolean prevailedInReplication(String container) {
-        if (!wasReplicationTriggered()) return false;
-        if (!_direction.contains(other(container))) return false;
-        
-        if (wasConflict())
-        	return _objectsToPrevailInConflicts.contains(container);
+	private boolean prevailedInReplication(String container) {
+		if (!wasReplicationTriggered()) return false;
+		if (!_direction.contains(other(container))) return false;
 
-        return modifiedContainers().contains(container);
-    }
+		if (wasConflict())
+			return _objectsToPrevailInConflicts.contains(container);
+
+		return modifiedContainers().contains(container);
+	}
 
 	private boolean wasConflict() {
-        if (!wasReplicationTriggered()) return false;
-        return modifiedContainers().containsAll(_direction);
+		if (!wasReplicationTriggered()) return false;
+		return modifiedContainers().containsAll(_direction);
 	}
 
 	private Set modifiedContainers() {
@@ -321,7 +322,7 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 			deleteObject(_providerB, "oldFromA");
 			deleteObject(_providerB, "oldFromB");
 		}
-		
+
 		if (hasChanges(A)) {
 			changeObject(_providerA, "oldFromA", "oldFromAChangedInA");
 			changeObject(_providerA, "oldFromB", "oldFromBChangedInA");
@@ -331,6 +332,8 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 			changeObject(_providerB, "oldFromB", "oldFromBChangedInB");
 		}
 
+		_providerA.commit();
+		_providerB.commit();
 	}
 
 	private void changeObject(TestableReplicationProviderInside container, String name, String newName) {
@@ -417,7 +420,7 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 
 		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ConflictResolver() {
 			public int resolveConflict(ReplicationSession session, Object a, Object b) {
-                return ConflictResolver.DO_NOTHING;
+				return ConflictResolver.DO_NOTHING;
 			}
 		});
 
@@ -434,11 +437,14 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 
 	private static void replicateQueryingFrom(ReplicationSession replication, ReplicationProvider origin, ReplicationProvider other) {
 		ObjectSet changes = origin.objectsChangedSinceLastReplication();
-		while (changes.hasNext()) replication.replicate(changes.next());
-		
+		while (changes.hasNext()) {
+			Object changed = changes.next();
+			replication.replicate(changed);
+		}
+
 		ObjectSet deletions = origin.uuidsDeletedSinceLastReplication();
 		while (deletions.hasNext()) {
-			Db4oUUID uuid = (Db4oUUID)deletions.next();
+			Db4oUUID uuid = (Db4oUUID) deletions.next();
 			Object obj = other.getObject(uuid);
 			if (obj == null) continue;
 			replication.replicate(obj);

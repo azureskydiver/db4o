@@ -66,6 +66,7 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint);
 
 	boolean wasChangedSinceLastReplication(ReplicationReference reference);
+
 	boolean wasDeletedSinceLastReplication(Db4oUUID uuid);
 
 
@@ -91,7 +92,7 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	void storeReplica(Object obj);
 
-    void replicateDeletion(ReplicationReference reference);
+	void replicateDeletion(ReplicationReference reference);
 
 
 	void syncVersionWithPeer(long maxVersion);
@@ -106,4 +107,5 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 
 	String getName();
 
+	void updateCounterpart(Object updated);
 }
