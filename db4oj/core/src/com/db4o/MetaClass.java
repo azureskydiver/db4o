@@ -11,8 +11,10 @@ package com.db4o;
  */
 public class MetaClass implements Internal4{
 	
-	// XXX: check the need for this field
+	/** persistent field, don't touch */
 	public String name;
+    
+    /** persistent field, don't touch */
 	public MetaField[] fields;
 	
 	public MetaClass(){
