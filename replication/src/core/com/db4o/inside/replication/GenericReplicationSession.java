@@ -1,6 +1,7 @@
 package com.db4o.inside.replication;
 
 import com.db4o.ext.Db4oUUID;
+import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.traversal.TraversedField;
@@ -180,8 +181,15 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	private void storeChangedCounterpartInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
 		if (!reference.isMarkedForReplicating()) return;
+
+		Object ori = reference.object();
+		if (processedOriginals.contains(ori))
+			return;
 		destination.storeReplica(reference.counterpart());
+		processedOriginals.add(ori);
 	}
+
+	private Collection4 processedOriginals = new Collection4();
 
 	ReplicationReference getCounterpartRef(Object original) {
 		return (ReplicationReference) _counterpartRefsByOriginal.get(original);
@@ -420,6 +428,7 @@ public class GenericReplicationSession implements ReplicationSession {
 		_peerA = null;
 		_peerB = null;
 		_counterpartRefsByOriginal = null;
+		processedOriginals = null;
 	}
 
 	public void commit() {
