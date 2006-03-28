@@ -87,9 +87,13 @@ namespace j4o.lang
 
 		public static String getProperty(String key) 
 		{
+#if CF_1_0 || CF_2_0
+			return key.Equals("line.separator") ? "\n" : null;
+#else
 			return key.Equals("line.separator")
 				? Environment.NewLine
 				: null;
+#endif
 		}
 
 		public static object getReferenceTarget(WeakReference reference) 
