@@ -473,7 +473,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
         i_weakReferences = flag;
     }
     
-    public void alias(Alias alias) {
+    public void addAlias(Alias alias) {
     	if (null == alias) throw new IllegalArgumentException("alias");
     	if (null == _aliases) _aliases = new Collection4();
     	_aliases.add(alias);
