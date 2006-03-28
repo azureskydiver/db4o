@@ -21,6 +21,10 @@ public class UpdatingDb4oVersions {
     List list;
     Map map;
     String name;
+    
+    public void configure(){
+        Db4o.configure().allowVersionUpdates(true);
+    }
 
     public void store(){
         if(Test.isClientServer()){
