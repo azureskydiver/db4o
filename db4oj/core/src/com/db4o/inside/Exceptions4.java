@@ -23,7 +23,7 @@ public class Exceptions4 {
 
     public static final void throwRuntimeException (int code, String msg, Throwable cause) {
     	Messages.logErr(Db4o.configure(), code,msg, cause);
-        throw new RuntimeException(Messages.get(code, msg));
+        throw new Db4oException(Messages.get(code, msg));
     }
     
     public static final void notSupported(){
