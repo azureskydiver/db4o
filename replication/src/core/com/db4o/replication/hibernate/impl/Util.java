@@ -287,7 +287,9 @@ public final class Util {
 	public static Uuid getUuid(Session session, Object obj) {
 		long id = Util.castAsLong(session.getIdentifier(obj));
 
-		return getObjectReferenceById(session, obj.getClass().getName(), id).getUuid();
+		ObjectReference of = getObjectReferenceById(session, obj.getClass().getName(), id);
+		if (of == null) return null;
+		return of.getUuid();
 	}
 
 	public static ObjectReference getByUUID(Session session, Uuid uuid) {

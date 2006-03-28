@@ -151,6 +151,10 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		store(obj, ref.uuid(), ref.version());
 	}
 
+	public void updateCounterpart(Object obj) {
+		storeReplica(obj);
+	}
+
 	public ReplicationReference produceReference(Object obj, Object unused, String unused2) {
 
 		ReplicationReference cached = getCachedReference(obj);
@@ -235,6 +239,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return _name;
 	}
 
+
 	public void transientProviderSpecificStore(Object obj) {
 		ObjectInfo info = getInfo(obj);
 		if (info == null)
@@ -314,6 +319,15 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			return _isMarkedForDeleting;
 		}
 
+		boolean objectIsNew;
+
+		public void markCounterpartAsNew() {
+			objectIsNew = true;
+		}
+
+		public boolean isCounterpartNew() {
+			return objectIsNew;
+		}
 	}
 
 

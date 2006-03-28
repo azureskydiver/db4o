@@ -51,7 +51,6 @@ import java.util.Set;
 public final class HibernateReplicationProviderImpl implements HibernateReplicationProvider {
 // ------------------------------ FIELDS ------------------------------
 
-	ObjectSetCollectionFacade uuidsDeletedSinceLastReplication;
 	private Configuration _cfg;
 
 	private final String _name;
@@ -89,7 +88,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private final CollectionHandler _collectionHandler = new CollectionHandlerImpl();
 
-	private Set<Db4oUUID> _uuidsReplicatedInThisSession = new HashSet();
+	private Set<Db4oUUID> _uuidsReplicatedInThisSession = new HashSet<Db4oUUID>();
 
 	private Reflector _reflector = ReplicationReflector.getInstance().reflector();
 
@@ -152,10 +151,14 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 // --------------------- Interface ReplicationProvider ---------------------
 
 	public Object getObject(Db4oUUID db4oUuid) {
-		Uuid uuid = new Uuid();
-		uuid.setLongPart(db4oUuid.getLongPart());
-		uuid.setProvider(getProviderSignature(db4oUuid.getSignaturePart()));
-		return Util.getByUUID(getSession(), uuid);
+		ObjectReference ref = Util.getByUUID(getSession(), translate(db4oUuid));
+
+		if (ref == null) return null;
+
+		Object loaded = getSession().get(ref.getClassName(), ref.getObjectId());
+		if (loaded == null) return null;
+
+		return loaded;
 	}
 
 	public final ObjectSet objectsChangedSinceLastReplication() {
@@ -192,18 +195,18 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	public final ObjectSet uuidsDeletedSinceLastReplication() {
-		if (uuidsDeletedSinceLastReplication == null) {
-			Criteria criteria = getSession().createCriteria(ObjectReference.class);
-			criteria.add(Restrictions.eq(ObjectReference.DELETED, true));
+		ObjectSetCollectionFacade uuidsDeletedSinceLastReplication;
 
-			List<ObjectReference> results = criteria.list();
-			Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
-			for (ObjectReference of : results) {
-				out.add(Util.translate(of.getUuid()));
-			}
+		Criteria criteria = getSession().createCriteria(ObjectReference.class);
+		criteria.add(Restrictions.eq(ObjectReference.DELETED, true));
 
-			uuidsDeletedSinceLastReplication = new ObjectSetCollectionFacade(out);
+		List<ObjectReference> results = criteria.list();
+		Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
+		for (ObjectReference of : results) {
+			out.add(Util.translate(of.getUuid()));
 		}
+
+		uuidsDeletedSinceLastReplication = new ObjectSetCollectionFacade(out);
 
 		return uuidsDeletedSinceLastReplication;
 	}
@@ -221,13 +224,18 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		ensureVersion(raisedDatabaseVersion);
 
+		getSession().flush();
+
+//		System.out.println("HibernateReplicationProviderImpl.commitReplicationTransaction");
+//		Util.dumpTable(this, "Replicated");
+//		Util.dumpTable(this, "ObjectReference");
+
 		String sql = "delete " + ObjectReference.TABLE_NAME + " o where o." + ObjectReference.DELETED + " = 'T'";
 		getSession().createQuery(sql).executeUpdate();
 
 		commit();
 		_uuidsReplicatedInThisSession.clear();
 		_dirtyRefs.clear();
-		uuidsDeletedSinceLastReplication = null;
 
 		_inReplication = false;
 	}
@@ -341,7 +349,13 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	public void replicateDeletion(ReplicationReference reference) {
-		throw new RuntimeException("TODO");
+		ensureReplicationActive();
+		_uuidsReplicatedInThisSession.add(reference.uuid());
+		Object object = reference.object();
+		getSession().delete(object);
+		//System.out.println("deleted object = " + object);
+		getSession().flush();
+		//Util.dumpTable(this, "Replicated");
 	}
 
 	public final synchronized void rollbackReplication() {
@@ -354,12 +368,13 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		clearAllReferences();
 		_dirtyRefs.clear();
 		_uuidsReplicatedInThisSession.clear();
-		uuidsDeletedSinceLastReplication = null;
 		_inReplication = false;
 	}
 
 	public final void startReplicationTransaction(ReadonlyReplicationProviderSignature aPeerSignature) {
 		ensureReplicationInActive();
+		ensureCommitted();
+		setCommitted(false);
 
 		_transaction.commit();
 		_transaction = getSession().beginTransaction();
@@ -390,10 +405,21 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_currentVersion = Util.getMaxVersion(getSession().connection()) + 1;
 
 		_inReplication = true;
+
+//		System.out.println("HibernateReplicationProviderImpl.startReplicationTransaction");
+//		Util.dumpTable(this, "Replicated");
+//		Util.dumpTable(this, "ObjectReference");
+	}
+
+	private void ensureCommitted() {
+		if (!simpleObjectContainerCommitCalled)
+			throw new RuntimeException("Please call commit() first");
 	}
 
 	public final void storeReplica(Object entity) {
 		ensureReplicationActive();
+
+		getSession().flush();
 
 		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
 		if (_collectionHandler.canHandle(entity)) return;
@@ -413,6 +439,38 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_dirtyRefs.add(ref);
 
 		getSession().flush();
+	}
+
+	public void updateCounterpart(Object entity) {
+		ensureReplicationActive();
+
+		getSession().flush();
+
+		//Hibernate does not treat Collection as 1st class object, so storing a Collection is no-op
+		if (_collectionHandler.canHandle(entity)) return;
+
+		ReplicationReference ref = _objRefs.get(entity);
+		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
+
+		_uuidsReplicatedInThisSession.add(ref.uuid());
+
+		getSession().update(entity);
+
+		_dirtyRefs.add(ref);
+
+		getSession().flush();
+	}
+
+
+	private Object loadObject(ObjectReference of) {
+		return getSession().get(of.getClassName(), of.getObjectId());
+	}
+
+	Uuid translate(Db4oUUID du) {
+		Uuid uuid = new Uuid();
+		uuid.setLongPart(du.getLongPart());
+		uuid.setProvider(getProviderSignature(du.getSignaturePart()));
+		return uuid;
 	}
 
 	public final void syncVersionWithPeer(long version) {
@@ -450,6 +508,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		Hibernate.initialize(object);
 	}
 
+	boolean simpleObjectContainerCommitCalled = false;
+
 	public final void commit() {
 		final Session session = getSession();
 
@@ -458,10 +518,18 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_transaction.commit();
 		clearSession();
 		_transaction = session.beginTransaction();
+		setCommitted(true);
+
+
+	}
+
+	private void setCommitted(boolean b) {
+		simpleObjectContainerCommitCalled = b;
 	}
 
 	public final void delete(Object obj) {
 		getSession().delete(obj);
+		setCommitted(false);
 	}
 
 	public final void deleteAllInstances(Class clazz) {
@@ -474,6 +542,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final String getName() {
 		return _name;
 	}
+
 
 	public final ObjectSet getStoredObjects(Class aClass) {
 		if (_collectionHandler.canHandle(aClass))
@@ -489,6 +558,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		Session s = getSession();
 		s.save(object);
 		s.flush();
+		setCommitted(false);
 	}
 
 	public final void update(Object obj) {
@@ -498,6 +568,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			getSession().update(obj);
 			getSession().flush();
 		}
+		setCommitted(false);
 	}
 
 	private void clearSession() {
@@ -701,15 +772,19 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	private ReplicationReference produceObjectReferenceByUUID(Db4oUUID uuid) {
-		Uuid tmp = new Uuid();
-		tmp.setLongPart(uuid.getLongPart());
-		tmp.setProvider(getProviderSignature(uuid.getSignaturePart()));
-
-		ObjectReference of = Util.getByUUID(getSession(), tmp);
+		ObjectReference of = Util.getByUUID(getSession(), translate(uuid));
 		if (of == null)
 			return null;
 		else {
+			if (of.isDeleted()) return null;
+
 			Object obj = getSession().load(of.getClassName(), of.getObjectId());
+
+//			if (obj == null) {
+//				System.out.println("of = " + of);
+//				Util.dumpTable(this, "Replicated");
+//			}
+
 			return _objRefs.put(obj, uuid, of.getVersion());
 		}
 	}
@@ -750,23 +825,30 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 				final Object obj = ref.object();
 				long id = Util.castAsLong(getSession().getIdentifier(obj));
-				final ObjectReference exist = Util.getObjectReferenceById(getSession(), obj.getClass().getName(), id);
-				if (exist == null) {
-					ReplicationProviderSignature provider = getProviderSignature(ref.uuid().getSignaturePart());
 
+				Uuid uuid = translate(ref.uuid());
+
+				final ObjectReference exist = Util.getByUUID(getSession(), uuid);
+				if (exist == null) {
 					ObjectReference tmp = new ObjectReference();
 					tmp.setClassName(obj.getClass().getName());
 					tmp.setObjectId(Util.castAsLong(getSession().getIdentifier(obj)));
-
-					Uuid uuid = new Uuid();
-					uuid.setLongPart(ref.uuid().getLongPart());
-					uuid.setProvider(provider);
 					tmp.setUuid(uuid);
-
 					tmp.setVersion(ref.version());
-
-					getSession().save(tmp);
+					try {
+						getSession().save(tmp);
+					} catch (HibernateException e) {
+						Util.dumpTable(HibernateReplicationProviderImpl.this, "ObjectReference");
+						System.out.println("tmp = " + tmp);
+						throw new RuntimeException(e);
+					}
 				} else {
+					if (!exist.getClassName().equals(obj.getClass().getName()))
+						throw new RuntimeException("Same classname expected");
+
+					if (exist.getObjectId() != id) //deletion rollback case, id may change
+						exist.setObjectId(id);
+
 					exist.setVersion(ref.version());
 					getSession().update(exist);
 				}

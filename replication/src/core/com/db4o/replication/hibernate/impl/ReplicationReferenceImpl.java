@@ -7,6 +7,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 public final class ReplicationReferenceImpl implements ReplicationReference {
 // ------------------------------ FIELDS ------------------------------
 
+	private boolean objectIsNew;
 	private final Object obj;
 	private final Db4oUUID uuid;
 	private final long version;
@@ -24,12 +25,12 @@ public final class ReplicationReferenceImpl implements ReplicationReference {
 
 // --------------------- GETTER / SETTER METHODS ---------------------
 
-	public final boolean isMarkedForReplicating() {
-		return markedForReplicating;
-	}
-
 	public final boolean isMarkedForDeleting() {
 		return markedForDeleting;
+	}
+
+	public final boolean isMarkedForReplicating() {
+		return markedForReplicating;
 	}
 
 // ------------------------ CANONICAL METHODS ------------------------
@@ -70,12 +71,20 @@ public final class ReplicationReferenceImpl implements ReplicationReference {
 		return counterPart;
 	}
 
-	public final void markForReplicating() {
-		markedForReplicating = true;
+	public boolean isCounterpartNew() {
+		return objectIsNew;
 	}
 
 	public final void markForDeleting() {
 		markedForDeleting = true;
+	}
+
+	public final void markForReplicating() {
+		markedForReplicating = true;
+	}
+
+	public void markCounterpartAsNew() {
+		objectIsNew = true;
 	}
 
 	public final Object object() {

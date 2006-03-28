@@ -271,18 +271,19 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		whereModified(q);
 		return q.execute();
 	}
-	
-    /**
+
+	/**
 	 * adds a constraint to the passed Query to query only for objects that
 	 * were modified since the last replication process between this and the
 	 * other ObjectContainer involved in the current replication process.
-	 * @param query the Query to be constrained 
+	 *
+	 * @param query the Query to be constrained
 	 */
 	public void whereModified(Query query) {
 		query.descend(VirtualField.VERSION).constrain(
 				new Long(getLastReplicationVersion())).greater();
 	}
-	
+
 	public ObjectSet getStoredObjects(Class type) {
 		return _stream.query(type);
 	}
@@ -297,6 +298,10 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 
 	public String getName() {
 		return _name;
+	}
+
+	public void updateCounterpart(Object updated) {
+		throw new RuntimeException("TODO");
 	}
 
 	public void destroy() {
@@ -314,9 +319,9 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		while (objectSet.hasNext()) delete(objectSet.next());
 	}
 
-    public void delete(Object obj) {
-        _stream.delete(obj);
-    }
+	public void delete(Object obj) {
+		_stream.delete(obj);
+	}
 
 	public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
 		if (_idsReplicatedInThisSession != null) {
@@ -336,11 +341,11 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 	}
 
 	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
-        throw new RuntimeException("TODO");
+		throw new RuntimeException("TODO");
 	}
 
-    public void replicateDeletion(ReplicationReference reference) {
-        throw new RuntimeException("TODO");
-    }
+	public void replicateDeletion(ReplicationReference reference) {
+		throw new RuntimeException("TODO");
+	}
 
 }

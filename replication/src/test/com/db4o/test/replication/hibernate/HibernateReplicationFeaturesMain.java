@@ -2,6 +2,7 @@ package com.db4o.test.replication.hibernate;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.replication.ReplicationFeaturesMain;
+import com.db4o.test.replication.transients.TransientReplicationProvider;
 
 public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 // ------------------------------ FIELDS ------------------------------
@@ -25,7 +26,8 @@ public class HibernateReplicationFeaturesMain extends ReplicationFeaturesMain {
 
 	public void test() {
 		hA = HibernateUtil.refAsTableProviderA();
-		hB = HibernateUtil.refAsTableProviderB();
+		hB = new TransientReplicationProvider(new byte[]{1}, "TransientReplicationProvider");
+		//hB = HibernateUtil.refAsTableProviderB();
 		super.test();
 	}
 }

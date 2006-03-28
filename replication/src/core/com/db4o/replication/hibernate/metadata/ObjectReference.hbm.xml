@@ -33,14 +33,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		</id>
 
 		<natural-id mutable="false">
-			<property name="className" column="className"/>
-			<property name="objectId" column="objectId"/>
+			<component name="uuid">
+				<property name="longPart" column="longPart" not-null="true"/>
+				<many-to-one name="provider" column="provider" cascade="none" not-null="true"/>
+			</component>
 		</natural-id>
 
-		<component name="uuid" unique="true">
-			<property name="longPart" column="longPart" not-null="true"/>
-			<many-to-one name="provider" column="provider" cascade="none" not-null="true"/>
-		</component>
+		<property name="className" column="className"/>
+		<property name="objectId" column="objectId"/>
 
 		<property name="version" column="version"/>
 		<property name="deleted" column="deleted" type="true_false"/>

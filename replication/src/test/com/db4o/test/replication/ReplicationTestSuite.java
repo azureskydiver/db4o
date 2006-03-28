@@ -6,6 +6,7 @@ import com.db4o.test.replication.hibernate.HibernateAfterDeletion;
 import com.db4o.test.replication.hibernate.HibernateListTest;
 import com.db4o.test.replication.hibernate.HibernateMapTest;
 import com.db4o.test.replication.hibernate.HibernateProviderTest;
+import com.db4o.test.replication.hibernate.HibernateReplicationFeaturesMain;
 import com.db4o.test.replication.hibernate.HibernateSimpleArrayTest;
 import com.db4o.test.replication.hibernate.HibernateSingleTypeCollectionTest;
 import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
@@ -25,14 +26,15 @@ import com.db4o.test.replication.transients.TransientSingleTypeCollectionReplica
 
 public class ReplicationTestSuite extends TestSuite {
 
-	public Class[] tests2() {
+	public Class[] tests() {
 		System.err.println("Use tests2 below");
 		return new Class[]{
 				TransientReplicationFeaturesMain.class,
+				HibernateReplicationFeaturesMain.class,
 		};
 	}
 
-	public Class[] tests() {
+	public Class[] tests2() {
 		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
 		return new Class[]{
 				//General

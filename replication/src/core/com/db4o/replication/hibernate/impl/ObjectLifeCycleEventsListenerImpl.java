@@ -169,6 +169,8 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 		Session s = getSession();
 		Uuid uuid = getUuid(event.getEntity());
 
+		if (uuid == null) return;
+
 		Criteria criteria = s.createCriteria(ReplicationComponentIdentity.class);
 		criteria.add(Restrictions.eq("referencingObjectUuidLongPart", uuid.getLongPart()));
 		criteria.createCriteria("provider").add(Restrictions.eq("bytes", uuid.getProvider().getBytes()));
@@ -192,8 +194,14 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 	}
 
 	private void objectDeleted(PreDeleteEvent event) {
+//		System.out.println("event.getEntity() = " + event.getEntity());
+//		System.out.println("event.getId() = " + event.getId());
+//		Util.dumpTable("sfs", getSession(), "Replicated");
+//		Util.dumpTable("sfs", getSession(), "ObjectReference");
+
 		deleteReplicationComponentIdentity(event);
 		ObjectReference ref = Util.getObjectReferenceById(getSession(), event.getEntity().getClass().getName(), Util.castAsLong(event.getId()));
+		if (ref == null) return;
 		ref.setDeleted(true);
 		getSession().update(ref);
 	}

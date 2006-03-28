@@ -57,6 +57,7 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	public void replicate(Object root) {
+		//System.out.println("GenericReplicationSession.replicate");
 		try {
 			activateGraphToBeReplicated(root);
 
@@ -158,13 +159,13 @@ public class GenericReplicationSession implements ReplicationSession {
 	private void storeChangedObjectsIn(final ReplicationProviderInside destination) {
 		final ReplicationProviderInside source = other(destination);
 		if (_directionTo == source) return;
-		
+
 		destination.visitCachedReferences(new Visitor4() {
 			public void visit(Object obj) {
 				deleteInDestination((ReplicationReference) obj, destination);
 			}
 		});
-		
+
 		source.visitCachedReferences(new Visitor4() {
 			public void visit(Object obj) {
 				storeChangedCounterpartInDestination((ReplicationReference) obj, destination);
@@ -297,6 +298,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 
 	private boolean handleNewObject(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName, boolean needsToBeActivated) {
+		//System.out.println("handleNewObject = " + obj);
 		if (_directionTo == owner) return false;
 
 		if (needsToBeActivated) owner.activate(obj);
