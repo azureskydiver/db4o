@@ -14,9 +14,11 @@ public class MigrationConnection {
     public final YapStream _peerB;
 
     private final Hashtable4 _referenceMap;
+    private final Hashtable4 _identityMap;
 
     public MigrationConnection(YapStream peerA, YapStream peerB) {
         _referenceMap = new Hashtable4(1);
+        _identityMap = new Hashtable4(1);
         _peerA = peerA;
         _peerB = peerB;
     }
@@ -35,6 +37,11 @@ public class MigrationConnection {
         
         _referenceMap.put(System.identityHashCode(obj), ref);
     }
+    
+    public void mapIdentity(Object obj, Object otherObj) {
+        _identityMap.put(System.identityHashCode(obj), otherObj);
+    }
+
 
     public YapObject referenceFor(Object obj) {
         int hcode = System.identityHashCode(obj);
@@ -42,6 +49,12 @@ public class MigrationConnection {
         _referenceMap.remove(hcode);
         return ref;
     }
+    
+    public Object identityFor(Object obj) {
+        int hcode = System.identityHashCode(obj);
+        return _identityMap.get(hcode);
+    }
+
     
     public void terminate(){
         _peerA.migrateFrom(null);

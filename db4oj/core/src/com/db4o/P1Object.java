@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.inside.replication.*;
+
 /**
  * base class for all database aware objects
  * @exclude
@@ -107,8 +109,10 @@ public class P1Object implements Db4oTypeImpl{
         YapStream fromStream = fromTrans.i_stream;
         YapStream toStream = toTrans.i_stream;
         
+        MigrationConnection mgc = fromStream.i_handlers.i_migration;
+        
         synchronized(fromStream.lock()){
-		
+            
     		int id = toStream.oldReplicationHandles(this);
             
             if(id == -1){
@@ -121,11 +125,18 @@ public class P1Object implements Db4oTypeImpl{
     			return toStream.getByID(id);
     		}
             
-            P1Object replica = (P1Object)createDefault(toTrans);
-			
+            if(mgc != null){
+                Object otherObj = mgc.identityFor(this);
+                if(otherObj != null){
+                    return otherObj;
+                }
+            }
             
-            if(fromStream.i_handlers.i_migration != null){
-                fromStream.i_handlers.i_migration.mapReference(replica, i_yapObject);
+            P1Object replica = (P1Object)createDefault(toTrans);
+            
+            if(mgc != null){
+                mgc.mapReference(replica, i_yapObject);
+                mgc.mapIdentity(this, replica);
             }
 			
             replica.store(0);
