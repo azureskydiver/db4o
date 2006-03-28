@@ -8,14 +8,38 @@ import com.db4o.foundation.*;
  * @exclude
  */
 public class StackRecorder {
+    
 	// exclude addCase()/record() + newTrace()
+    
 	private static final int EXCLUDEDEPTH = 2;
+    
 	private static StackTrace _curTrace;
+    
 	private static Collection4 _traces=new Collection4();
+    
+    private static Collection4 _includes;
+    
+    private static Collection4 _excludes;
+    
 	
 	public static void addCase(String caseInfo) {
 		_curTrace=newTrace(caseInfo);
 	}
+    
+    public static void addInclude(String classNameSubstring){
+        if(_includes == null){
+            _includes = new Collection4();
+        }
+        _includes.add(classNameSubstring);
+    }
+    
+    public static void addExclude(String classNameSubstring){
+        if(_excludes == null){
+            _excludes = new Collection4();
+        }
+        _excludes.add(classNameSubstring);
+    }
+    
 
 	public static void record() {
 		StackTrace trace=newTrace(null);
@@ -23,13 +47,61 @@ public class StackRecorder {
 			_traces.add(trace);
 		}
 	}
+    
+    public static void record(Object obj){
+        if(obj == null){
+            return;
+        }
+        Class clazz = (obj instanceof Class) ? (Class)obj : obj.getClass();
+        if(recordClass(clazz)){
+            record();
+        }
+    }
+    
+    private static boolean recordClass(Class clazz){
+        
+        String className = clazz.getName();
+        
+        if(_excludes != null){
+            Iterator4 i = _excludes.iterator();
+            while(i.hasNext()){
+                String name = (String)i.next();
+                if(className.indexOf(name) >= 0){
+                    return false;
+                }
+            }
+        }
+        
+        boolean onNotFound = true;
+        
+        if(_includes != null){
+            onNotFound = false;
+            Iterator4 i = _includes.iterator();
+            while(i.hasNext()){
+                String name = (String)i.next();
+                if(className.indexOf(name) >= 0){
+                    onNotFound = true;
+                }
+            }
+        }
+        
+        
+        Class claxx = clazz.getSuperclass();
+        if(claxx != null){
+            if ( recordClass(claxx)){
+                return true;
+            }
+        }
+        
+        return onNotFound;
+    }
 	
 	public static void logAll() {
 		Iterator4 iter=_traces.strictIterator();
 		while(iter.hasNext()) {
 			System.out.println(iter.next());
 			if(iter.hasNext()) {
-				System.out.println("---");
+				System.out.println("\n---\n");
 			}
 		}
 	}
