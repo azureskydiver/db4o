@@ -19,7 +19,7 @@ public class ClassAliasesTestCase {
 		container.set(new Person1("John Cleese"));
 		
 		container = Test.reOpen();
-		container.ext().configure().alias(
+		container.ext().configure().addAlias(
 				// Person1 instances should be read as Person2 objects
 				new TypeAlias("com.db4o.test.aliases.Person1",
 						"com.db4o.test.aliases.Person2"));
@@ -32,7 +32,7 @@ public class ClassAliasesTestCase {
 		cleanUp();
 		
 		ObjectContainer container = Test.objectContainer();
-		container.ext().configure().alias(
+		container.ext().configure().addAlias(
 				// Person1 instances should be read as Person2 objects
 				new TypeAlias("com.db4o.test.aliases.Person1",
 						"com.db4o.test.aliases.Person2"));
@@ -53,8 +53,8 @@ public class ClassAliasesTestCase {
 	public void testAccessingDotnetFromJava() throws Exception {
 		generateDotnetData();
 		ObjectContainer container = openDotnetDataFile();
-		container.ext().configure().alias(
-				new GlobAlias(
+		container.ext().configure().addAlias(
+				new WildcardAlias(
 						"com.db4o.test.aliases.*, MyAssembly",
 						"com.db4o.test.aliases.*"));
 //				new TypeAlias(
@@ -109,9 +109,9 @@ public class ClassAliasesTestCase {
 			"class Program {" +
 				"static void Main(string[] args) {" +
 					"string fname = args[0];" +
-					"using (ObjectContainer container = Db4o.openFile(fname)) {" +
-						"container.set(new Person2(\"Homer Simpson\"));" +
-						"container.set(new Person2(\"John Cleese\"));" +
+					"using (ObjectContainer container = Db4o.OpenFile(fname)) {" +
+						"container.Set(new Person2(\"Homer Simpson\"));" +
+						"container.Set(new Person2(\"John Cleese\"));" +
 					"}" +
 					"System.Console.WriteLine(\"success\");" + 
 				"}" +
@@ -143,7 +143,7 @@ public class ClassAliasesTestCase {
 
 	private String db4odllPath() throws IOException {
 		String path = isLinux()
-			? "../db4obuild/dist/mono/legacy/db4o.dll"
+			? "../db4obuild/dist/mono/dll/db4o.dll"
 			: "../db4obuild/dist/dll/net/db4o.dll";
 		return new File(path).getCanonicalPath();
 	}
