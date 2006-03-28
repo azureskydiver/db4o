@@ -29,6 +29,11 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	private final Traverser _traverser;
 
+    private Collection4 _processedUuids = new Collection4();
+    {
+        System.out.println("Carl, help us use Hashtable4 instead of Collection4.");
+    }
+
 	/**
 	 * key = object originated from one provider
 	 * value = the counterpart ReplicationReference of the original object
@@ -182,14 +187,11 @@ public class GenericReplicationSession implements ReplicationSession {
 	private void storeChangedCounterpartInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
 		if (!reference.isMarkedForReplicating()) return;
 
-		Object ori = reference.object();
-		if (processedOriginals.contains(ori))
-			return;
+		Db4oUUID uuid = reference.uuid();
+		if (_processedUuids.contains(uuid)) return;
+        _processedUuids.add(uuid);
 		destination.storeReplica(reference.counterpart());
-		processedOriginals.add(ori);
 	}
-
-	private Collection4 processedOriginals = new Collection4();
 
 	ReplicationReference getCounterpartRef(Object original) {
 		return (ReplicationReference) _counterpartRefsByOriginal.get(original);
@@ -428,7 +430,7 @@ public class GenericReplicationSession implements ReplicationSession {
 		_peerA = null;
 		_peerB = null;
 		_counterpartRefsByOriginal = null;
-		processedOriginals = null;
+		_processedUuids = null;
 	}
 
 	public void commit() {

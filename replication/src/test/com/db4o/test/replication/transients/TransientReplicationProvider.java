@@ -60,7 +60,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	private ReadonlyReplicationProviderSignature _peerSignature;
 
 	private long _lastReplicationVersion;
-	private final Collection4 _uuidsReplicatedInThisSession = new Collection4();
 
 	private Collection4 _uuidsDeletedSinceLastReplication = new Collection4();
 
@@ -99,7 +98,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
-		_uuidsReplicatedInThisSession.clear();
 		_uuidsDeletedSinceLastReplication.clear();
 	}
 
@@ -140,7 +138,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	private void store(Object obj, Db4oUUID uuid, long version) {
 		if (obj == null) throw new RuntimeException();
 		_storedObjects.put(obj, new ObjectInfo(uuid, version));
-		_uuidsReplicatedInThisSession.add(uuid);
 	}
 
 	public void storeReplica(Object obj) {
@@ -168,7 +165,9 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference unused, String unused2) {
 		Db4oUUID uuid = counterpartReference.uuid();
 		long version = counterpartReference.version();
-
+        
+        if (getObject(uuid) != null) throw new RuntimeException("Object exists already.");
+        
 		ReplicationReference result = createReferenceFor(obj);
 		store(obj, uuid, version);
 		return result;
@@ -344,7 +343,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public String toString() {
-		return _name;
+		return "TransientReplicationProvider " + _name;
 	}
 
 	public void destroy() {
@@ -383,7 +382,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
-		if (_uuidsReplicatedInThisSession.contains(reference.uuid())) return false;
 		return reference.version() > _lastReplicationVersion;
 	}
 
@@ -396,7 +394,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public void replicateDeletion(ReplicationReference reference) {
-		_uuidsReplicatedInThisSession.add(reference.uuid());
 		_storedObjects.remove(reference.object());
 	}
 

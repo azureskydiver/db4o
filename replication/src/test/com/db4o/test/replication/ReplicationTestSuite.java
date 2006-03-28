@@ -1,36 +1,21 @@
 package com.db4o.test.replication;
 
-import com.db4o.test.TestSuite;
-import com.db4o.test.replication.db4o.hibernate.Db4oHibernateListTest;
-import com.db4o.test.replication.hibernate.HibernateAfterDeletion;
-import com.db4o.test.replication.hibernate.HibernateListTest;
-import com.db4o.test.replication.hibernate.HibernateMapTest;
-import com.db4o.test.replication.hibernate.HibernateProviderTest;
-import com.db4o.test.replication.hibernate.HibernateReplicationFeaturesMain;
-import com.db4o.test.replication.hibernate.HibernateSimpleArrayTest;
-import com.db4o.test.replication.hibernate.HibernateSingleTypeCollectionTest;
-import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
-import com.db4o.test.replication.hibernate.TablesCreatorTest;
-import com.db4o.test.replication.jdk11.R0to4RunnerCore;
-import com.db4o.test.replication.jdk11.SimpleParentChildCore;
-import com.db4o.test.replication.jdk14.R0to4RunnerCombinations;
-import com.db4o.test.replication.jdk14.SimpleParentChildCombinations;
-import com.db4o.test.replication.provider.TransientReplicationProviderTest;
-import com.db4o.test.replication.transients.TransientArrayReplicationTest;
-import com.db4o.test.replication.transients.TransientListTest;
-import com.db4o.test.replication.transients.TransientMapTest;
-import com.db4o.test.replication.transients.TransientMixedTypesCollectionReplicationTest;
-import com.db4o.test.replication.transients.TransientReplicationFeaturesMain;
-import com.db4o.test.replication.transients.TransientSimpleArrayTest;
-import com.db4o.test.replication.transients.TransientSingleTypeCollectionReplicationTest;
+import com.db4o.test.*;
+import com.db4o.test.replication.db4o.hibernate.*;
+import com.db4o.test.replication.hibernate.*;
+import com.db4o.test.replication.jdk11.*;
+import com.db4o.test.replication.jdk14.*;
+import com.db4o.test.replication.provider.*;
+import com.db4o.test.replication.transients.*;
 
 public class ReplicationTestSuite extends TestSuite {
 
 	public Class[] tests() {
 		System.err.println("Use tests2 below");
 		return new Class[]{
-				TransientReplicationFeaturesMain.class,
-				HibernateReplicationFeaturesMain.class,
+                TransientReplicationFeaturesMain.class,
+                HibernateReplicationFeaturesMain.class,
+                MultiProviderReplicationFeaturesMain.class,
 		};
 	}
 
