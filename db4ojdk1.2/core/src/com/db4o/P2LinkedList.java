@@ -466,14 +466,6 @@ public class P2LinkedList extends P1Collection implements Db4oList {
         } else {
             if (a_trans != getTrans()) {
                 return replicate(getTrans(), a_trans);
-                
-// Test fix for replication duplication. Not a good idea.                
-                
-//                Object replicated =  asReplicated(getTrans(), a_trans);
-//                if (replicated != null){
-//                    return replicated;
-//                }
-                
             }
         }
         return this;
