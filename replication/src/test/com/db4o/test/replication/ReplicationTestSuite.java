@@ -10,7 +10,7 @@ import com.db4o.test.replication.transients.*;
 
 public class ReplicationTestSuite extends TestSuite {
 
-	public Class[] tests() {
+	public Class[] tests2() {
 		System.err.println("Use tests2 below");
 		return new Class[]{
                 TransientReplicationFeaturesMain.class,
@@ -19,10 +19,10 @@ public class ReplicationTestSuite extends TestSuite {
 		};
 	}
 
-	public Class[] tests2() {
+	public Class[] tests() {
 		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
 		return new Class[]{
-				//General
+                //General
 				CollectionHandlerImplTest.class,
 				ReplicationTraversalTest.class,
 				ReplicationFeatures.class,
@@ -38,7 +38,8 @@ public class ReplicationTestSuite extends TestSuite {
 				TransientSimpleArrayTest.class,
 
 				//Hibernate
-				//HibernateReplicationFeaturesMain.class,
+				//HibernateReplicationFeaturesMain.class, use MultiProviderReplicationFeaturesMain.class, instead
+
 				HibernateProviderTest.class,
 				ReplicationConfiguratorTest.class,
 				TablesCreatorTest.class,
