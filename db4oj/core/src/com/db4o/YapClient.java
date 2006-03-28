@@ -41,6 +41,8 @@ public class YapClient extends YapStream implements ExtClient {
 
 	private Db4oDatabase i_db;
 
+	private boolean _doFinalize=true;
+
 	private YapClient() {
 		super(null);
 	}
@@ -126,7 +128,8 @@ public class YapClient extends YapStream implements ExtClient {
 
 	boolean close2() {
 		if (null != _readerThread && _readerThread.isClosed()) {
-			throw new Db4oException("Connection is already closed.");
+			//throw new Db4oException("Connection is already closed.");
+			return true;
 		}
 		try {
 			Msg.COMMIT_OK.write(this, i_socket);
@@ -252,6 +255,10 @@ public class YapClient extends YapStream implements ExtClient {
 		return false;
 	}
 
+	protected boolean doFinalize() {
+		return _doFinalize;
+	}
+	
 	final YapWriter expectedByteResponse(Msg expectedMessage) {
 		Msg msg = expectedResponse(expectedMessage);
 		if (msg == null) {
@@ -309,16 +316,17 @@ public class YapClient extends YapStream implements ExtClient {
 						return message;
 					}
 
-					if (_readerThread.isClosed()) {
-						// Exceptions4.throwRuntimeException(20, name());
-						throw new Db4oException("Connection already closed.");
-					}
+					throwOnClosed();
 					messageQueueLock.snooze(i_config.i_timeoutClientSocket);
-					if (_readerThread.isClosed()) {
-						// Exceptions4.throwRuntimeException(20, name());
-						throw new Db4oException("Connection already closed.");
-					}
+					throwOnClosed();
 					return retrieveMessage();
+				}
+
+				private void throwOnClosed() {
+					if (_readerThread.isClosed()) {
+						_doFinalize=false;
+						Exceptions4.throwRuntimeException(20, name());
+					}
 				}
 
 				private Msg retrieveMessage() {

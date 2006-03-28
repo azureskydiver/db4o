@@ -222,7 +222,12 @@ public final class YapConfigBlock implements Runnable
 			Exceptions4.throwRuntimeException(17);
 		}
         if(oldLength != LENGTH){
+        	// TODO: instead of bailing out, somehow trigger wrapping the stream's io adapter in
+        	// a readonly decorator, issue a  notification and continue?
             if(! _stream.i_config.i_readonly  && ! _stream.i_config._allowVersionUpdates){
+            	if(_stream.i_config.i_automaticShutDown) {
+            		Platform4.removeShutDownHook(_stream, _stream.i_lock);
+            	}
                 Exceptions4.throwRuntimeException(65);
             }
         }

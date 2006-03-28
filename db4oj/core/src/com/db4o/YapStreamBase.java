@@ -519,6 +519,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return true;
     }
 
+    protected boolean doFinalize() {
+    	return true;
+    }
+    
     void emergencyClose() {
         i_classCollection = null;
         i_references.stopTimer();
@@ -566,10 +570,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
 	
     protected void finalize() {
-        if (i_config == null || i_config.i_automaticShutDown) {
-            failedToShutDown();
-        }
-    }
+		if (doFinalize() && (i_config == null || i_config.i_automaticShutDown)) {
+			failedToShutDown();
+		}
+	}
 
     void gc() {
         i_references.pollReferenceQueue();
@@ -591,6 +595,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             try {
                 get2(ta, template, res);
             } catch (Throwable t) {
+            	Exceptions4.catchAll(t);
                 fatalException(t);
             }
         }

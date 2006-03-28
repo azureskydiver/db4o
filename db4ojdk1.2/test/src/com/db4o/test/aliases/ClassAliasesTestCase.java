@@ -143,7 +143,7 @@ public class ClassAliasesTestCase {
 
 	private String db4odllPath() throws IOException {
 		String path = isLinux()
-			? "../db4obuild/dist/mono/dll/db4o.dll"
+			? "../db4obuild/dist/mono/legacy/db4o.dll"
 			: "../db4obuild/dist/dll/net/db4o.dll";
 		return new File(path).getCanonicalPath();
 	}
