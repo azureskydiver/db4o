@@ -1,17 +1,10 @@
 package com.db4o.inside.replication;
 
-import com.db4o.ext.Db4oUUID;
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.Hashtable4;
-import com.db4o.foundation.Visitor4;
-import com.db4o.inside.traversal.TraversedField;
-import com.db4o.inside.traversal.Traverser;
-import com.db4o.inside.traversal.Visitor;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.replication.ConflictResolver;
-import com.db4o.replication.ReplicationProvider;
-import com.db4o.replication.ReplicationSession;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.inside.traversal.*;
+import com.db4o.reflect.*;
+import com.db4o.replication.*;
 
 public class GenericReplicationSession implements ReplicationSession {
 
@@ -29,17 +22,14 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	private final Traverser _traverser;
 
-	private Collection4 _processedUuids = new Collection4();
+	private Hashtable4 _processedUuids = new Hashtable4(1000);
 
-	static {
-		System.out.println("Carl, help us use Hashtable4 instead of Collection4.");
-	}
 
 	/**
 	 * key = object originated from one provider
 	 * value = the counterpart ReplicationReference of the original object
 	 */
-	private Hashtable4 _counterpartRefsByOriginal = new Hashtable4(10000);
+	private Hashtable4 _counterpartRefsByOriginal = new Hashtable4(1000);
 
 	public GenericReplicationSession(ReplicationProvider providerA, ReplicationProvider providerB, ConflictResolver resolver) {
 
@@ -187,10 +177,6 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	private void storeChangedCounterpartInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
 		if (!reference.isMarkedForReplicating()) return;
-
-		Db4oUUID uuid = reference.uuid();
-		if (_processedUuids.contains(uuid)) return;
-		_processedUuids.add(uuid);
 		destination.storeReplica(reference.counterpart());
 	}
 
@@ -216,6 +202,8 @@ public class GenericReplicationSession implements ReplicationSession {
 		ReplicationProviderInside other = other(owner);
 
 		Db4oUUID uuid = ownerRef.uuid();
+        if (_processedUuids.get(uuid) != null) return false;
+        _processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
 
 		ReplicationReference otherRef = other.produceReferenceByUUID(uuid, obj.getClass());
 
