@@ -9,15 +9,9 @@ import com.db4o.test.replication.ReplicationTestcase;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class MapTest extends ReplicationTestcase {
+public class MapTest extends ReplicationTestcase {
 
-	public void test() {
-
-		init();
-
-		clean();
-
-		checkEmpty();
+    protected void actualTest() {
 
 		storeMapToProviderA();
 
@@ -30,12 +24,6 @@ public abstract class MapTest extends ReplicationTestcase {
 		addElementInProviderA();
 
 		replicateHolderStep3();
-
-		clean();
-
-		checkEmpty();
-
-		destroy();
 	}
 
 	protected void checkEmpty() {
@@ -141,4 +129,8 @@ public abstract class MapTest extends ReplicationTestcase {
 			}
 		}
 	}
+
+    public void test() {
+        super.test();
+    }
 }

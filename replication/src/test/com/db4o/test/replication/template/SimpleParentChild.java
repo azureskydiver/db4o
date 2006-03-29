@@ -5,34 +5,15 @@ package com.db4o.test.replication.template;
 import com.db4o.foundation.Iterator4;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.Test;
-import com.db4o.test.replication.ProviderPair;
 import com.db4o.test.replication.ReplicationTestcase;
 import com.db4o.test.replication.SPCChild;
 import com.db4o.test.replication.SPCParent;
 
-public abstract class SimpleParentChild extends ReplicationTestcase {
-// --------------------------- CONSTRUCTORS ---------------------------
-
-	public SimpleParentChild() {
-		super();
-	}
+public class SimpleParentChild extends ReplicationTestcase {
 
 	protected void clean() {delete(new Class[]{SPCParent.class, SPCChild.class});}
 
-	@Override
-	protected TestableReplicationProviderInside prepareProviderA() {
-		throw new RuntimeException("REVISE");
-	}
-
-	@Override
-	protected TestableReplicationProviderInside prepareProviderB() {
-		throw new RuntimeException("REVISE");
-	}
-
-	private void actualTst() {
-		clean();
-
-		checkEmpty();
+	protected void actualTest() {
 
 		storeParentAndChildToProviderA();
 
@@ -45,10 +26,6 @@ public abstract class SimpleParentChild extends ReplicationTestcase {
 		modifyParentAndChildInProviderA();
 
 		replicateParentClassStep3();
-
-		clean();
-
-		destroy();
 	}
 
 	private void ensureNames(TestableReplicationProviderInside provider, String parentName, String childName) {
@@ -120,16 +97,6 @@ public abstract class SimpleParentChild extends ReplicationTestcase {
 	}
 
 	public void test() {
-		initproviderPairs();
-
-		final Iterator4 it = providerPairs.strictIterator();
-
-		while (it.hasNext()) {
-			ProviderPair p = (ProviderPair) it.next();
-			init(p);
-			printCombination(p);
-			actualTst();
-		}
-		providerPairs = null;
+		super.test();
 	}
 }

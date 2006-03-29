@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
+public class ReplicationFeaturesMain extends ReplicationTestcase {
 
 	private final Set _setA = new HashSet(1);
 	private final Set _setB = new HashSet(1);
@@ -42,7 +42,7 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
 	}
 
-	public void test() {
+	protected void actualTest() {
 		_setA.add(A);
 		_setB.add(B);
 
@@ -62,9 +62,6 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		System.out.println("=========================== TODO:");
 		System.out.println("Peek for conflict");
 		System.out.println("Run test on JDK1.");
-
-		clean();
-		destroy();
 	}
 
 	protected void clean() {
@@ -404,8 +401,8 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 	}
 
 	private void initState() {
-		_providerA = prepareProviderA();
-		_providerB = prepareProviderB();
+//		_providerA = prepareProviderA();
+//		_providerB = prepareProviderB();
 
 		//clean();
 
@@ -460,6 +457,10 @@ public abstract class ReplicationFeaturesMain extends ReplicationTestcase {
 		if (containerSet.size() == 2) return "BOTH";
 		return (String) containerSet.iterator().next();
 	}
+
+    public void test() {
+        super.test();
+    }
 
 
 }

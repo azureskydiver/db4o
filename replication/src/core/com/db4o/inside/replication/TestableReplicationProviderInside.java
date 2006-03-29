@@ -4,4 +4,6 @@ package com.db4o.inside.replication;
 
 public interface TestableReplicationProviderInside extends ReplicationProviderInside, SimpleObjectContainer {
 
+    boolean supportsMultiDimensionalArrays();
+
 }

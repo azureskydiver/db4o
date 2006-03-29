@@ -397,4 +397,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		_storedObjects.remove(reference.object());
 	}
 
+    public boolean supportsMultiDimensionalArrays() {
+        return true;
+    }
+
 }

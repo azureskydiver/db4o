@@ -2,22 +2,33 @@
 
 package com.db4o.test.replication;
 
-import com.db4o.test.AllTests;
-import com.db4o.test.TestSuite;
-import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
+import com.db4o.test.*;
+import com.db4o.test.replication.db4o.*;
+import com.db4o.test.replication.hibernate.*;
+import com.db4o.test.replication.transients.*;
 
 public class AllTestsReplication extends AllTests {
 
-	public static void main(String[] args) {
-		Db4oReplicationTestUtil.configure();
-		//runSolo(R0to4RunnerCombinations.class);
-//		runSolo(MapTestHsqlRefAsColumns.class);
-		new AllTestsReplication().run();
-		Db4oReplicationTestUtil.close();
-		System.exit(0);
-	}
+    public static void main(String[] args) {
+        new AllTestsReplication().run();
+//        System.exit(0);
+    }
 
-	protected void addTestSuites(TestSuite suites) {
+    public void run() {
+        Db4oReplicationTestUtil.configure();
+        registerProviderPairs();
+        super.run();
+        Db4oReplicationTestUtil.close();
+    }
+    
+	private void registerProviderPairs() {
+        ReplicationTestcase.registerProviderPair(new TransientReplicationProvider(new byte[] {65}, "A"), new TransientReplicationProvider(new byte[] {66}, "B"));
+        ReplicationTestcase.registerProviderPair(HibernateUtil.refAsTableProviderA(), HibernateUtil.refAsTableProviderB());
+//      ReplicationTestcase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), Db4oReplicationTestUtil.newProviderB());
+//      ReplicationTestcase.registerProviderPair(HibernateUtil.produceMySQLConfigA());
+    }
+
+    protected void addTestSuites(TestSuite suites) {
 		CLIENT_SERVER = false;
 		suites.add(new ReplicationTestSuite());
 	}

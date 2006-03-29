@@ -8,13 +8,9 @@ import com.db4o.test.Test;
 import com.db4o.test.replication.ReplicationTestcase;
 
 
-public abstract class SimpleArrayTest extends ReplicationTestcase {
+public class SimpleArrayTest extends ReplicationTestcase {
 
-	public void test() {
-
-		init();
-
-		clean();
+    protected void actualTest() {
 
 		storeListToProviderA();
 
@@ -27,10 +23,6 @@ public abstract class SimpleArrayTest extends ReplicationTestcase {
 		addElementInProviderA();
 
 		replicateHolderStep3();
-
-		clean();
-
-		destroy();
 	}
 
 	protected void clean() {delete(new Class[]{SimpleArrayHolder.class, SimpleArrayContent.class});}
@@ -120,4 +112,8 @@ public abstract class SimpleArrayTest extends ReplicationTestcase {
 			}
 		}
 	}
+
+    public void test() {
+        super.test();
+    }
 }
