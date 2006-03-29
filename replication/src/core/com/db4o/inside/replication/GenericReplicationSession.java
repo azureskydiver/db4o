@@ -202,9 +202,6 @@ public class GenericReplicationSession implements ReplicationSession {
 		ReplicationProviderInside other = other(owner);
 
 		Db4oUUID uuid = ownerRef.uuid();
-        if (_processedUuids.get(uuid) != null) return false;
-        _processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
-
 		ReplicationReference otherRef = other.produceReferenceByUUID(uuid, obj.getClass());
 
 		if (refA == null)
@@ -213,7 +210,9 @@ public class GenericReplicationSession implements ReplicationSession {
 			refB = otherRef;
 
 		if (otherRef == null) {
-			if (other.wasDeletedSinceLastReplication(uuid))
+            markAsProcessed(uuid);
+
+            if (other.wasDeletedSinceLastReplication(uuid))
 				return handleDeletionInOther(obj, ownerRef, owner, other, referencingObject, fieldName);
 
 			return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, true);
@@ -221,6 +220,10 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		ownerRef.setCounterpart(otherRef.object());
 
+        if (wasProcessed(uuid)) return false;
+        markAsProcessed(uuid);
+
+        
 		Object objectA = refA.object();
 		Object objectB = refB.object();
 
@@ -262,6 +265,14 @@ public class GenericReplicationSession implements ReplicationSession {
 		ownerRef.markForReplicating();
 		return true;
 	}
+
+    private boolean wasProcessed(Db4oUUID uuid) {
+        return _processedUuids.get(uuid) != null;
+    }
+
+    private void markAsProcessed(Db4oUUID uuid) {
+        _processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
+    }
 
 
 	private boolean handleDeletionInOther(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName) {
@@ -312,7 +323,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		// TODO: We might not need counterpart in otherRef. Check.
 		otherRef.setCounterpart(obj);
-
+        
 		return true;
 	}
 

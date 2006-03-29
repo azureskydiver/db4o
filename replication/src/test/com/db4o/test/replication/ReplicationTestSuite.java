@@ -10,17 +10,16 @@ import com.db4o.test.replication.transients.*;
 
 public class ReplicationTestSuite extends TestSuite {
 
-	public Class[] tests() {
+	public Class[] tests2() {
 		System.err.println("Use tests2 below");
 		return new Class[]{
-                TransientListTest.class,
-//                TransientReplicationFeaturesMain.class,
-//                HibernateReplicationFeaturesMain.class,
-//                MultiProviderReplicationFeaturesMain.class,
+                TransientReplicationFeaturesMain.class,
+                HibernateReplicationFeaturesMain.class,
+                MultiProviderReplicationFeaturesMain.class,
 		};
 	}
 
-	public Class[] tests2() {
+	public Class[] tests() {
 		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
 		return new Class[]{
                 //General
