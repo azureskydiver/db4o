@@ -67,7 +67,11 @@ namespace com.db4o
 				if (shutDownStreams == null)
 				{
 					shutDownStreams = new ArrayList();
-					Compat.addShutDownHook(new EventHandler(OnShutDown));
+#if !CF_1_0 && !CF_2_0
+					EventHandler handler = new EventHandler(OnShutDown);
+					AppDomain.CurrentDomain.ProcessExit += handler;
+					AppDomain.CurrentDomain.DomainUnload += handler;
+#endif
 				}
 				shutDownStreams.Add(stream);
 			}
@@ -115,7 +119,12 @@ namespace com.db4o
 
 		internal static long doubleToLong(double a_double)
 		{
-			return Compat.doubleToLong(a_double);
+#if CF_1_0 || CF_2_0
+			// XXX: what to do here?
+			return 0;
+#else
+			return BitConverter.DoubleToInt64Bits(a_double);
+#endif
 		}
 
 		internal static QConEvaluation evaluationCreate(Transaction a_trans, Object example)
@@ -263,7 +272,7 @@ namespace com.db4o
 
 		internal static void getDefaultConfiguration(Config4Impl config)
 		{
-			if (Compat.compact())
+			if (isCompact())
 			{
 				config.singleThreadedClient(true);
 				config.weakReferenceCollectionInterval(0);
@@ -287,10 +296,19 @@ namespace com.db4o
 			translate(config, new Queue(), new TQueue());
 			translate(config, new Stack(), new TStack());
 
-			if (! Compat.compact())
+			if (!isCompact())
 			{
 				translate(config, "System.Collections.SortedList, mscorlib", new TDictionary());
 			}
+		}
+
+		public static bool isCompact()
+		{
+#if CF_1_0 || CF_2_0
+			return true;
+#else
+			return false;
+#endif
 		}
 
 		internal static bool isMono()
@@ -402,7 +420,12 @@ namespace com.db4o
 
 		internal static double longToDouble(long l)
 		{
-			return Compat.longToDouble(l);
+#if CF_1_0 || CF_2_0
+			// XXX: what to do here?
+			return 0;
+#else
+			return BitConverter.Int64BitsToDouble(l);
+#endif
 		}
 
 		internal static void Lock(RandomAccessFile raf)
@@ -528,7 +551,14 @@ namespace com.db4o
 
 		internal static object wrapEvaluation(object evaluation)
 		{
-			return Compat.wrapEvaluation(evaluation);
+#if CF_1_0 || CF_2_0
+			// FIXME: How to better support EvaluationDelegate on the CompactFramework?
+			return evaluation;
+#else
+			return (evaluation is EvaluationDelegate)
+				? new EvaluationDelegateWrapper((EvaluationDelegate) evaluation)
+				: evaluation;
+#endif
 		}
 
 		internal static bool isTransient(ReflectClass clazz)

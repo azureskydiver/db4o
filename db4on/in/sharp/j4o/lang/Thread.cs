@@ -50,17 +50,27 @@ namespace j4o.lang
 		public void setName(string name) 
 		{
 			this._name = name;
+#if !CF_1_0 && !CF_2_0
 			if(_thread != null && name != null) 
 			{
 				try 
 				{
-					com.db4o.Compat.threadSetName(_thread, name);
+					_thread.Name = _name;
 				} 
-				catch(Exception e) 
+				catch (Exception ignored) 
 				{
-					// do nothing
 				}
 			}
+#endif
+		}
+
+		public string getName()
+		{
+#if !CF_1_0 && !CF_2_0
+			return _thread != null ? _thread.Name : _name;
+#else
+			return "";
+#endif
 		}
 
 		public void setPriority(int priority) 

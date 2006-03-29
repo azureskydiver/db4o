@@ -12,7 +12,7 @@ namespace com.db4o.test.soda {
 
     public class SodaTestThreadedRegression : SodaTest, Runnable {
         private static Object Lock = new Object();
-        private static int RUNS = Compat.compact() ? 10 : 100;
+        private static int RUNS = Platform4.isCompact() ? 10 : 100;
         private STClass[] classes;
         private static volatile int runningThreads;
       

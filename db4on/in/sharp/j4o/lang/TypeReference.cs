@@ -218,6 +218,11 @@ namespace j4o.lang
 			_rank = rank;
 		}
 
+		public int Rank
+		{
+			get { return _rank; }
+		}
+
 		public override Type Resolve()
 		{
 			return Array.CreateInstance(_elementType.Resolve(), new int[_rank]).GetType();

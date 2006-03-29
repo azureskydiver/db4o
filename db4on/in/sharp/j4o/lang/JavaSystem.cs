@@ -1,6 +1,7 @@
 /* Copyright (C) 2004	db4objects Inc.	  http://www.db4o.com */
 
 using System;
+using System.Threading;
 using j4o.io;
 using System.Reflection;
 
@@ -116,14 +117,25 @@ namespace j4o.lang
 			return BitConverter.ToSingle(BitConverter.GetBytes(value), 0);
 		}
 
+		public static void wait(object obj, long timeout) 
+		{
+#if !CF_1_0 && !CF_2_0
+			Monitor.Wait(obj, (int) timeout);
+#endif
+		}
+
 		public static void notify(object obj) 
 		{
-			com.db4o.Compat.notify(obj);
+#if !CF_1_0 && !CF_2_0
+			Monitor.Pulse(obj);
+#endif
 		}
 
 		public static void notifyAll(object obj) 
 		{
-			com.db4o.Compat.notifyAll(obj);
+#if !CF_1_0 && !CF_2_0
+			Monitor.PulseAll(obj);
+#endif
 		}
 
 		public static void printStackTrace(Exception exception) 
@@ -144,11 +156,6 @@ namespace j4o.lang
 		public static void runFinalizersOnExit(bool flag) 
 		{
 			// do nothing
-		}
-
-		public static void wait(object obj, long timeout) 
-		{
-			com.db4o.Compat.wait(obj, timeout);
 		}
 	}
 }

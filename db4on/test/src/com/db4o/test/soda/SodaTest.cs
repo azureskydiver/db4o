@@ -309,7 +309,7 @@ namespace com.db4o.test.soda
 			}
 			if (!QUIET) 
 			{
-				println(msg + Compat.stackTrace());
+				println(msg + Tester.stackTrace());
 			}
 		}
       
