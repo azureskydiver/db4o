@@ -29,10 +29,11 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	private final Traverser _traverser;
 
-    private Collection4 _processedUuids = new Collection4();
-    {
-        System.out.println("Carl, help us use Hashtable4 instead of Collection4.");
-    }
+	private Collection4 _processedUuids = new Collection4();
+
+	static {
+		System.out.println("Carl, help us use Hashtable4 instead of Collection4.");
+	}
 
 	/**
 	 * key = object originated from one provider
@@ -189,7 +190,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		Db4oUUID uuid = reference.uuid();
 		if (_processedUuids.contains(uuid)) return;
-        _processedUuids.add(uuid);
+		_processedUuids.add(uuid);
 		destination.storeReplica(reference.counterpart());
 	}
 

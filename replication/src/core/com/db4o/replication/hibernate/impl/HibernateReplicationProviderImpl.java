@@ -88,8 +88,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private final CollectionHandler _collectionHandler = new CollectionHandlerImpl();
 
-	private Set<Db4oUUID> _uuidsReplicatedInThisSession = new HashSet<Db4oUUID>();
-
 	private Reflector _reflector = ReplicationReflector.getInstance().reflector();
 
 	/**
@@ -234,7 +232,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		getSession().createQuery(sql).executeUpdate();
 
 		commit();
-		_uuidsReplicatedInThisSession.clear();
 		_dirtyRefs.clear();
 
 		_inReplication = false;
@@ -253,7 +250,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_dirtyRefs = null;
 
 		_objRefs = null;
-		_uuidsReplicatedInThisSession = null;
 
 		_reflector = null;
 
@@ -350,7 +346,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	public void replicateDeletion(ReplicationReference reference) {
 		ensureReplicationActive();
-		_uuidsReplicatedInThisSession.add(reference.uuid());
 		Object object = reference.object();
 		getSession().delete(object);
 		//System.out.println("deleted object = " + object);
@@ -367,7 +362,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_transaction = getSession().beginTransaction();
 		clearAllReferences();
 		_dirtyRefs.clear();
-		_uuidsReplicatedInThisSession.clear();
 		_inReplication = false;
 	}
 
@@ -427,7 +421,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		ReplicationReference ref = _objRefs.get(entity);
 		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
 
-		_uuidsReplicatedInThisSession.add(ref.uuid());
 
 		final Session s = getSession();
 		if (s.contains(entity)) {
@@ -452,7 +445,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		ReplicationReference ref = _objRefs.get(entity);
 		if (ref == null) throw new RuntimeException("Reference should always be available before storeReplica");
 
-		_uuidsReplicatedInThisSession.add(ref.uuid());
 
 		getSession().update(entity);
 
@@ -494,7 +486,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	public final boolean wasChangedSinceLastReplication(ReplicationReference reference) {
 		ensureReplicationActive();
-		if (_uuidsReplicatedInThisSession.contains(reference.uuid())) return false;
 		return reference.version() > getLastReplicationVersion();
 	}
 
