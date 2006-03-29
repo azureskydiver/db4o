@@ -8,10 +8,10 @@ namespace j4o.io {
 
 	public class BufferedInputStream : InputStream {
 
-		public BufferedInputStream(InputStream stream) : base(Compat.buffer(stream.UnderlyingStream)) {
+		public BufferedInputStream(InputStream stream) : base(stream.buffered()) {
 		}
 
-		public BufferedInputStream(InputStream stream, int bufferSize) : base(Compat.buffer(stream.UnderlyingStream, bufferSize)) {
+		public BufferedInputStream(InputStream stream, int bufferSize) : base(stream.buffered(bufferSize)) {
 		}
 
 	}

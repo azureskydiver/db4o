@@ -60,7 +60,7 @@ namespace com.db4o.test {
         public static void Main(String[] args) {
             new j4o.io.File(file).delete();
             if (normal) {
-				Compat.threadSetName(System.Threading.Thread.CurrentThread, "Main Thread");
+				j4o.lang.Thread.currentThread().setName("Main Thread");
                 Regression re = new Regression();
                 re.run();
             }
@@ -72,7 +72,7 @@ namespace com.db4o.test {
             RTestable[] clazzes = testClasses();
             mainLoop(clazzes);
             time = j4o.lang.JavaSystem.currentTimeMillis() - time;
-            Console.WriteLine(Compat.threadGetName(System.Threading.Thread.CurrentThread) + ": " + time + " ms.");
+            Console.WriteLine(currentThreadName() + ": " + time + " ms.");
             returnedThreads++;
             if (returnedThreads >= openedThreads) {
                 if (j4o.lang.JavaSystem.getLengthOf(i_errors) == 0) {
@@ -92,7 +92,7 @@ namespace com.db4o.test {
             int run = 0;
             for (int k = 0; k < runs; k++) {
                 run++;
-                Console.WriteLine(Compat.threadGetName(System.Threading.Thread.CurrentThread) + " regression run:" + run);
+                Console.WriteLine(currentThreadName() + " regression run:" + run);
                 closeFile = false;
                 for (int i = 0; i < 1; i++) {
                     for (int j = 0; j < clazzes.Length; j++) {
@@ -104,8 +104,13 @@ namespace com.db4o.test {
             ObjectContainer con = open();
             con.close();
         }
-      
-        internal void cycle(RTestable clazz, int a_run) {
+
+    	private static string currentThreadName()
+    	{
+    		return j4o.lang.Thread.currentThread().getName();
+    	}
+
+    	internal void cycle(RTestable clazz, int a_run) {
             if (LOG_CLASS_NAMES) {
                 Console.WriteLine("Testing class: " + clazz.GetType().Name);
             }

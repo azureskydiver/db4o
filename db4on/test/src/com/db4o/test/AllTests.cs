@@ -48,7 +48,7 @@ namespace com.db4o.test
 		public AllTests() : base() 
 		{
 			Tester.currentRunner = this;
-			if(Compat.compact())
+			if (Platform4.isCompact())
 			{
 				EMBEDDED_CLIENT = true;
                 SERVER_PORT = 0;

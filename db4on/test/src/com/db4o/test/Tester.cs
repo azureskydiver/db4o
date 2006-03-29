@@ -220,12 +220,21 @@ namespace com.db4o.test
 		public static void error(string message) 
 		{
 			errorCount++;
-			Console.WriteLine("!!! TEST CASE FAILED !!! [" + message + "]" + Compat.stackTrace());
+			Console.WriteLine("!!! TEST CASE FAILED !!! [" + message + "]" + stackTrace());
+		}
+
+		public static string stackTrace()
+		{
+#if CF_1_0 || CF_2_0
+			return "";
+#else
+			return new StackTrace(true).ToString();
+#endif
 		}
 
 		public static void error(Exception error)
 		{   
-#if CF_1_0
+#if CF_1_0 || CF_2_0
 			Console.WriteLine("!!! TEST CASE FAILED !!! [" + error.Message + "]");
 #else
 			errorCount++;

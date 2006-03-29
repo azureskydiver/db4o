@@ -62,7 +62,11 @@ namespace j4o.io
 
 		public bool isDirectory()
 		{
-			return Compat.isDirectory(_path);
+#if CF_1_0 || CF_2_0
+			return System.IO.Directory.Exists(_path);
+#else
+			return (System.IO.File.GetAttributes(_path) & FileAttributes.Directory) != 0;
+#endif
 		}
 
 		public long length()
