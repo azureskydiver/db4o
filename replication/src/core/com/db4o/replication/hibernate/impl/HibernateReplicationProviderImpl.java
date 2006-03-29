@@ -858,4 +858,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 				super.ObjectUpdated(obj, Util.castAsLong(id));
 		}
 	}
+
+    public boolean supportsMultiDimensionalArrays() {
+        return false;
+    }
 }

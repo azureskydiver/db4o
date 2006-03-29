@@ -12,14 +12,13 @@ import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
-import com.db4o.test.replication.ProviderPair;
 import com.db4o.test.replication.ReplicationTestcase;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public abstract class R0to4Runner extends ReplicationTestcase {
+public class R0to4Runner extends ReplicationTestcase {
 // ------------------------------ FIELDS ------------------------------
 
 	private final static ConflictResolver _ignoreConflictHandler = new MyConflictResolver();
@@ -57,16 +56,6 @@ public abstract class R0to4Runner extends ReplicationTestcase {
 		}
 
 		provider.commit();
-	}
-
-	@Override
-	protected TestableReplicationProviderInside prepareProviderA() {
-		throw new RuntimeException("REVISE");
-	}
-
-	@Override
-	protected TestableReplicationProviderInside prepareProviderB() {
-		throw new RuntimeException("REVISE");
 	}
 
 	private void compareR4(TestableReplicationProviderInside a, TestableReplicationProviderInside b, boolean isSameExpected) {
@@ -200,22 +189,10 @@ public abstract class R0to4Runner extends ReplicationTestcase {
 	}
 
 	public void test() {
-		initproviderPairs();
-		final Iterator4 it = providerPairs.strictIterator();
-
-		while (it.hasNext()) {
-			ProviderPair pair = (ProviderPair) it.next();
-			init(pair);
-			printCombination(pair);
-			tst();
-		}
-
-		providerPairs.clear();
-		providerPairs = null;
+		super.test();
 	}
 
-	private void tst() {
-		checkEmpty();
+	protected void actualTest() {
 
 		init(_providerA);
 
@@ -232,10 +209,6 @@ public abstract class R0to4Runner extends ReplicationTestcase {
 		replicateR4(_providerA, _providerB);
 
 		ensureR4Same(_providerA, _providerB);
-
-		clean();
-
-		destroy();
 	}
 
 	protected void checkEmpty() {

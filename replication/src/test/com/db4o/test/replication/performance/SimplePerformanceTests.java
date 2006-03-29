@@ -6,14 +6,12 @@ import com.db4o.ObjectSet;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.replication.ReplicationTestcase;
 
-public abstract class SimplePerformanceTests extends ReplicationTestcase {
+public class SimplePerformanceTests extends ReplicationTestcase {
 
 	private static final int TOTAL_OBJECTS = 10000;
 	private static final int CHANGED_OBJECTS = 100;
 
-	public void test() {
-		init();
-		clean();
+    protected void actualTest() {
 		startTimer();
 		storeObjects();
 		replicateAll(_providerA, _providerB);
@@ -49,6 +47,10 @@ public abstract class SimplePerformanceTests extends ReplicationTestcase {
 		provider.commit();
 		logTime("Commit " + name);
 	}
+
+    public void test() {
+        super.test();
+    }
 
 
 }

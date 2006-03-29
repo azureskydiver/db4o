@@ -8,13 +8,12 @@ import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
-public abstract class MixedTypesCollectionReplicationTest extends ReplicationTestcase {
+public class MixedTypesCollectionReplicationTest extends ReplicationTestcase {
 	protected void clean() {
 		delete(new Class[]{CollectionHolder.class});
 	}
 
-	public void testCollectionReplication() {
-		init();
+	protected void actualTest() {
 
 		CollectionHolder h1 = new CollectionHolder("h1");
 		CollectionHolder h2 = new CollectionHolder("h2");
@@ -57,8 +56,6 @@ public abstract class MixedTypesCollectionReplicationTest extends ReplicationTes
 		ObjectSet objects = _providerA.getStoredObjects(CollectionHolder.class);
 		check((CollectionHolder) objects.next(), h1, h2);
 		check((CollectionHolder) objects.next(), h1, h2);
-
-		destroy();
 	}
 
 	private void check(CollectionHolder holder, CollectionHolder original1, CollectionHolder original2) {
@@ -96,5 +93,9 @@ public abstract class MixedTypesCollectionReplicationTest extends ReplicationTes
 		CollectionHolder remaining = (CollectionHolder) holder.set.iterator().next();
 		Test.ensureEquals("h1", remaining.name);
 	}
+
+    public void test() {
+        super.test();
+    }
 
 }

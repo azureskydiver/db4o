@@ -3,20 +3,13 @@
 package com.db4o.test.replication;
 
 
-public abstract class ReplicationAfterDeletionTest extends ReplicationTestcase {
+public class ReplicationAfterDeletionTest extends ReplicationTestcase {
 
-	public void test() {
-		init();
-
-		clean();
+	protected void actualTest() {
 		replicate();
 
 		clean();
 		replicate();
-
-		clean();
-
-		destroy();
 	}
 
 	protected void clean() {delete(new Class[]{SPCChild.class, SPCParent.class});}
@@ -29,5 +22,9 @@ public abstract class ReplicationAfterDeletionTest extends ReplicationTestcase {
 
 		replicateAll(_providerA, _providerB);
 	}
+
+    public void test() {
+        super.test();
+    }
 
 }

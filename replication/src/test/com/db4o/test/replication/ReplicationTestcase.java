@@ -9,6 +9,7 @@ import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
+import com.db4o.test.replication.transients.*;
 
 
 public abstract class ReplicationTestcase {
@@ -18,11 +19,31 @@ public abstract class ReplicationTestcase {
 	protected TestableReplicationProviderInside _providerA;
 	protected TestableReplicationProviderInside _providerB;
 
-	protected Collection4 providerPairs = new Collection4();
+	static private final Collection4 PROVIDER_PAIRS = new Collection4();
 
-	protected ReplicationTestcase() {
-		//do nothing
-	}
+    public void test() {
+        Iterator4 it = PROVIDER_PAIRS.iterator();
+        while (it.hasNext()) {
+            prepareNextProviderPair((ProviderPair)it.next());
+            doActualTest();
+        }
+    }
+    
+    private void doActualTest() {
+        try {
+            actualTest();
+        } finally {
+            clean();
+            checkEmpty();
+        }
+    }
+
+    private void prepareNextProviderPair(ProviderPair pair) {
+        _providerA = pair._providerA;
+        _providerB = pair._providerB;
+    }
+
+    protected abstract void actualTest();
 
 	protected void checkEmpty() {
 		ReplicationSession replication = Replication.begin(_providerA, _providerB);
@@ -54,13 +75,13 @@ public abstract class ReplicationTestcase {
 		System.out.println(out);
 	}
 
-	protected void init(ProviderPair p) {
-		_providerA = p._providerA;
-		_providerB = p._providerB;
-	}
+//	protected void init(ProviderPair p) {
+//		_providerA = p._providerA;
+//		_providerB = p._providerB;
+//	}
 
-	protected void addProviderPairs(TestableReplicationProviderInside a, TestableReplicationProviderInside b) {
-		final Iterator4 it = providerPairs.iterator();
+	public static void addProviderPair(TestableReplicationProviderInside a, TestableReplicationProviderInside b) {
+		final Iterator4 it = PROVIDER_PAIRS.iterator();
 		while (it.hasNext()) {
 			ProviderPair pair = (ProviderPair) it.next();
 
@@ -70,23 +91,7 @@ public abstract class ReplicationTestcase {
 			if ((b == pair._providerA) || (b == pair._providerB))
 				throw new RuntimeException("Do not reuse providers");
 		}
-		providerPairs.add(new ProviderPair(a, b));
-	}
-
-	//TODO make abstract
-	protected void initproviderPairs() {
-
-	}
-
-	protected abstract TestableReplicationProviderInside prepareProviderA();
-
-	protected abstract TestableReplicationProviderInside prepareProviderB();
-
-	protected void init() {
-		_providerA = prepareProviderA();
-		_providerB = prepareProviderB();
-		clean();
-		checkEmpty();
+		PROVIDER_PAIRS.add(new ProviderPair(a, b));
 	}
 
 	protected abstract void clean();
@@ -171,6 +176,10 @@ public abstract class ReplicationTestcase {
 		System.out.println(msg + " " + duration + "ms");
 		_timer = System.currentTimeMillis();
 	}
+
+    public static void registerProviderPair(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB) {
+        PROVIDER_PAIRS.add(new ProviderPair(providerA, providerB));
+    }
 
 
 }

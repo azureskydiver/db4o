@@ -11,15 +11,9 @@ import com.db4o.test.replication.ReplicationTestcase;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ListTest extends ReplicationTestcase {
+public class ListTest extends ReplicationTestcase {
 
-	public void test() {
-
-		init();
-
-		clean();
-
-		checkEmpty();
+	protected void actualTest() {
 
 		storeListToProviderA();
 
@@ -32,12 +26,6 @@ public abstract class ListTest extends ReplicationTestcase {
 		addElementInProviderA();
 
 		replicateHolderStep3();
-
-		clean();
-
-		checkEmpty();
-
-		destroy();
 	}
 
 
@@ -144,4 +132,9 @@ public abstract class ListTest extends ReplicationTestcase {
 			}
 		}
 	}
+
+
+    public void test() {
+        super.test();
+    }
 }

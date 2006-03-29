@@ -8,11 +8,13 @@ import com.db4o.replication.ConflictResolver;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
-public abstract class ArrayReplicationTest extends ReplicationTestcase {
+public class ArrayReplicationTest extends ReplicationTestcase {
 
-	public void testArrayReplication() {
-		init();
+	protected void actualTest() {
 
+        if (!_providerA.supportsMultiDimensionalArrays()) return;
+        if (!_providerB.supportsMultiDimensionalArrays()) return;
+        
 		ArrayHolder h1 = new ArrayHolder("h1");
 		ArrayHolder h2 = new ArrayHolder("h2");
 
@@ -39,10 +41,6 @@ public abstract class ArrayReplicationTest extends ReplicationTestcase {
 		ObjectSet objects = _providerA.getStoredObjects(ArrayHolder.class);
 		check((ArrayHolder) objects.next());
 		check((ArrayHolder) objects.next());
-
-		clean();
-
-		destroy();
 	}
 
 	protected void clean() {delete(new Class[]{ArrayHolder.class});}
@@ -70,4 +68,8 @@ public abstract class ArrayReplicationTest extends ReplicationTestcase {
 		Test.ensure(holder._arrayN[2][0] == null);
 	}
 
+    public void test() {
+        super.test();
+    }
+    
 }
