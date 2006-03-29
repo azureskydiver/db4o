@@ -7,6 +7,7 @@ import org.apache.tools.ant.*;
 public class VersionInfoAntTask extends Task {
     
     private int major;
+	private int minor;
     
     private String path;
     private String version;
@@ -29,6 +30,10 @@ public class VersionInfoAntTask extends Task {
     
     public void setMajor(int major){
         this.major = major;
+    }
+    
+    public void setMinor(int minor) {
+    	this.minor = minor;
     }
     
     public void setVersion(String version){
@@ -80,6 +85,7 @@ public class VersionInfoAntTask extends Task {
 	            pr.println("public class Db4oVersion {");
                 pr.println("    public static final String NAME = \"" + version + "\";");
                 pr.println("    public static final int MAJOR = " + major + ";");
+                pr.println("    public static final int MINOR = " + minor + ";");
 	            pr.println("}");
 	        }else{
 		        pr.println("using System.Reflection;");

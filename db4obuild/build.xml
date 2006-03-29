@@ -67,9 +67,9 @@
 		<mkdir dir="${dir.dist.dll.mono}" />
 		<loadfile property="content.gplheader" srcfile="${file.gplheader}" encoding="iso-8859-1" />
 		<loadfile property="content.copyrightheader" srcfile="${file.copyrightheader}" encoding="iso-8859-1" />
-		<versioninfo path="${dir.j.core.src}/com/db4o" java="true" version="${db4o.version.full}" major="${db4o.version.major}" />
-		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
-		<versioninfo path="${dir.n.core.src}/compact" compact="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
+		<versioninfo path="${dir.j.core.src}/com/db4o" java="true" version="${db4o.version.full}" major="${db4o.version.major}" minor="${db4o.version.minor}" />
+		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" minor="${db4o.version.minor}"/>
+		<versioninfo path="${dir.n.core.src}/compact" compact="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 	</target>
 
 	<target name="clean" description="Delete all generated files">
@@ -347,7 +347,7 @@
 	</target>
 	
 	<target name="compilecoredll-net">
-		<versioninfo path="${src.dir}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}" />
+		<versioninfo path="${src.dir}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 		<csc
 			srcdir="${src.dir}"
 			targettype="library"
@@ -366,7 +366,7 @@
 	</target>
 	
 	<target name="compilecoredll-compact">
-		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
+		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 		<delete dir="${dir.dist.net.compile}" />
 		<copy todir="${dir.dist.net.compile}">
 			<fileset dir="${src.dir}">
@@ -375,7 +375,7 @@
 				<!-- <exclude name="external/**" /> -->
 			</fileset>
 		</copy>			
-		<versioninfo path="${dir.dist.net.compile}/compact" compact="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}" />
+		<versioninfo path="${dir.dist.net.compile}/compact" compact="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 		<copy file="${file.keypair}" todir="${dir.dist.net.compile}" />		
 		<mkdir dir="${dir.dist.dll.compact}" />
 		<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
@@ -478,7 +478,7 @@
 	</target>
 	
 	<target name="do-compiledllmono">
-		<versioninfo path="${src.dir}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}" />
+		<versioninfo path="${src.dir}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 		<csc srcdir="${src.dir}"
 			targettype="library"
 			destfile="${file.dll.mono}"
@@ -490,7 +490,7 @@
 			<include name="**/*.cs" />
 			<exclude name="compact*/**" />
 		</csc>
-		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
+		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 	</target>
 
 	<target name="compiledllmono" depends="init, sharpen">
@@ -879,8 +879,8 @@
 				<exclude name=".*" />
 			</fileset>
 		</copy>
-		<versioninfo path="${dir.dist.net.src.core}/src/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
-		<versioninfo path="${dir.dist.net.src.core}/src/compact" compact="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
+		<versioninfo path="${dir.dist.net.src.core}/src/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
+		<versioninfo path="${dir.dist.net.src.core}/src/compact" compact="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 		<mkdir dir="${dir.dist.net.src.tools}" />
 		<copy todir="${dir.dist.net.src.tools}">
 			<fileset dir="${dir.tools}">
@@ -1039,7 +1039,7 @@
 				<exclude name="**/compact*/**"/>
 			</fileset>
 		</copy>
-		<versioninfo path="${dir.dist.mono.src.core}/src/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" />
+		<versioninfo path="${dir.dist.mono.src.core}/src/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 		<mkdir dir="${dir.dist.mono.src.tools}" />
 		<copy todir="${dir.dist.mono.src.tools}">
 			<fileset dir="${dir.n.tools}">

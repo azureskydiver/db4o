@@ -55,7 +55,7 @@ namespace com.db4o.test.aliases
 			container.set(new Person1("John Cleese"));
 		
 			container = Tester.reOpen();
-			container.ext().configure().alias(
+			container.ext().configure().addAlias(
 				// Person1 instances should be read as Person2 objects
 				new TypeAlias(
 				"com.db4o.test.aliases.Person1, db4o-net-test",
@@ -76,8 +76,8 @@ namespace com.db4o.test.aliases
 			generateJavaData();
 			using (ObjectContainer container = openJavaDataFile())
 			{
-				container.ext().configure().alias(
-					new GlobAlias(
+				container.ext().configure().addAlias(
+					new WildcardAlias(
 					"com.db4o.test.aliases.*",
 					"com.db4o.test.aliases.*, db4o-net-test"));
 				assertData(container);
@@ -103,7 +103,7 @@ namespace com.db4o.test.aliases
 		{
 			File.Delete(getJavaDataFile());
 			generateClassFile();
-			string stdout = exec("java", "-cp ." + Path.PathSeparator + db4ojarPath(), "com.db4o.test.aliases.Program", getJavaDataFile());
+			string stdout = exec("java", "-cp ." + Path.PathSeparator + db4ojarPath(), "com.db4o.test.aliases.Program", quote(getJavaDataFile()));
 			Console.WriteLine(stdout);
 		}
 		
@@ -132,16 +132,22 @@ public class Program {
 	}
 }";
 		
-			String srcFile = buildTempPath("com/db4o/test/aliases/Program.java");
+			string srcFile = buildTempPath("com/db4o/test/aliases/Program.java");
 			writeFile(srcFile, code);
-			/// XXX: locate javac in a non platform specific way
-			String stdout = exec(javacPath(), "-cp " + db4ojarPath(), srcFile);
-			//Console.WriteLine(stdout);
+			string stdout = exec(javacPath(), "-classpath " + db4ojarPath(), quote(srcFile));
+			Console.WriteLine(stdout);
 		}
+	    
+	    static string quote(string s)
+	    {
+            return "\"" + s + "\"";
+	    }
 
 		private string javacPath()
 		{
-			return readProperty(machinePropertiesPath(), "file.compiler.jdk1.3");
+            string path = readProperty(machinePropertiesPath(), "file.compiler.jdk1.3");
+            Tester.ensure(System.IO.File.Exists(path));
+			return path;
 		}
 
 		private string readProperty(string fname, string property)
@@ -184,7 +190,8 @@ public class Program {
 
 		private String db4ojarPath()
 		{
-			return workspacePath("db4obuild/dist/java/lib/db4o-5.2-java1.2.jar");
+            string db4oVersion = string.Format("{0}.{1}", Db4oVersion.MAJOR, Db4oVersion.MINOR);
+			return workspacePath("db4obuild/dist/java/lib/db4o-" + db4oVersion + "-java1.2.jar");
 		}
 
 		private string workspacePath(string fname)
