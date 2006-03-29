@@ -158,12 +158,14 @@ public class ClassAliasesTestCase {
 	}
 
 	private String readStdOut(Process p) throws IOException {
+		
+		String lineSeparator = System.getProperty("line.separator");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		StringWriter writer = new StringWriter();
 		String line = null;
 		while (null != (line = reader.readLine())) {
 			writer.write(line);
-			writer.write("\n");
+			writer.write(lineSeparator);
 		}
 		return writer.toString();
 	}

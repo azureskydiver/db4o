@@ -26,7 +26,9 @@ namespace com.db4o.test
 			{
 				ArrayList tests = new ArrayList();
 
+#if NET || NET_2_0 || MONO
 				tests.Add(typeof(aliases.ClassAliasesTestCase));
+#endif
 
 				tests.Add(typeof(ArrayNOrder)); 
 				tests.Add(typeof(BackReferences));
