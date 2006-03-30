@@ -68,7 +68,7 @@ public abstract class FreespaceManager {
     public abstract void debug();
     
     final int discardLimit(){
-        return _file.i_config.i_discardFreeSpace;
+        return _file.i_config.discardFreeSpace();
     }
     
     public abstract void endCommit();

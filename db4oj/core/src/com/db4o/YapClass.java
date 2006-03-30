@@ -375,7 +375,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     int checkUpdateDepthUnspecified(YapStream a_stream) {
-        int depth = a_stream.i_config.i_updateDepth + 1;
+        int depth = a_stream.i_config.updateDepth() + 1;
         if (i_config != null && i_config.i_updateDepth != 0) {
             depth = i_config.i_updateDepth + 1;
         }
@@ -489,7 +489,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             a_stream.logMsg(7, a_name);
         }
         
-        if (a_stream.i_config.i_exceptionsOnNotStorable) {
+        if (a_stream.i_config.exceptionsOnNotStorable()) {
             throw new ObjectNotStorableException(a_class);
         }
 
@@ -1329,7 +1329,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if(res != YapConst.DEFAULT){
             return res == YapConst.YES;
         }
-        return (i_stream.i_config.i_callConstructors == YapConst.YES);
+        return (i_stream.i_config.callConstructors() == YapConst.YES);
     }
     
     private final int callConstructorSpecialized(){

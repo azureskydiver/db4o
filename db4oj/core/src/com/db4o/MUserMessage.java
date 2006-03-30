@@ -7,9 +7,9 @@ import com.db4o.foundation.network.*;
 final class MUserMessage extends MsgObject {
 	final boolean processMessageAtServer(YapSocket sock) {
 	    YapStream stream = getStream();
-		if (stream.i_config.i_messageRecipient != null) {
+		if (stream.i_config.messageRecipient() != null) {
 			this.unmarshall();
-			stream.i_config.i_messageRecipient.processMessage(
+			stream.i_config.messageRecipient().processMessage(
 				stream,
 				stream.unmarshall(payLoad));
 		}

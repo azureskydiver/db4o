@@ -22,51 +22,51 @@ public final class Config4Impl
 
 implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfiguration {
 
-    int              i_activationDepth                  = 5;
-    boolean          _allowVersionUpdates;
-    boolean          i_automaticShutDown                = true;
-    byte			 i_blockSize						= 1;  // TODO: set this to 8, when implementation is done
-    String           i_blobPath;
-    boolean          i_callbacks                        = true;
-    int			 	 i_callConstructors;
-    boolean          i_classActivationDepthConfigurable = true;
-    ClassLoader      i_classLoader;
-    boolean          i_detectSchemaChanges              = true;
-    boolean          i_disableCommitRecovery;
-    public int       i_discardFreeSpace;
-    byte             i_encoding                         = YapConst.UNICODE;
-    boolean          i_encrypt;
-    Hashtable4       i_exceptionalClasses               = new Hashtable4(16);
-    boolean          i_exceptionsOnNotStorable;
-    public boolean   _flushFileBuffers                  = true;
-    public byte      _freespaceSystem;                   
-    public int       i_generateUUIDs;
-    public int       i_generateVersionNumbers;
-    boolean 			i_internStrings = false;
-    boolean			 i_isServer = false;
-    boolean          i_lockFile                         = true;
-    int              i_messageLevel                     = YapConst.NONE;
-    MessageRecipient i_messageRecipient;
-    MessageSender    i_messageSender;
-	boolean          _optimizeNQ                        = true;
-    PrintStream      i_outStream;
-    String           i_password;
-    Hashtable4       _readAs                            = new Hashtable4(16);
-    boolean          i_readonly;
+    private int              i_activationDepth                  = 5;
+    private boolean          _allowVersionUpdates;
+    private boolean          i_automaticShutDown                = true;
+    private byte			 i_blockSize						= 1;  // TODO: set this to 8, when implementation is done
+    private String           i_blobPath;
+    private boolean          i_callbacks                        = true;
+    private int			 	 i_callConstructors;
+    private boolean          i_classActivationDepthConfigurable = true;
+    private ClassLoader      i_classLoader;
+    private boolean          i_detectSchemaChanges              = true;
+    private boolean          i_disableCommitRecovery;
+    private int       i_discardFreeSpace;
+    private byte             i_encoding                         = YapConst.UNICODE;
+    private boolean          i_encrypt;
+    private Hashtable4       i_exceptionalClasses               = new Hashtable4(16);
+    private boolean          i_exceptionsOnNotStorable;
+    private boolean   _flushFileBuffers                  = true;
+    private byte      _freespaceSystem;                   
+    private int       i_generateUUIDs;
+    private int       i_generateVersionNumbers;
+    private boolean 		 i_internStrings = false;
+    private boolean			 i_isServer = false;
+    private boolean          i_lockFile                         = true;
+    private int              i_messageLevel                     = YapConst.NONE;
+    private MessageRecipient i_messageRecipient;
+    private MessageSender    i_messageSender;
+	private boolean          _optimizeNQ                        = true;
+    private PrintStream      i_outStream;
+    private String           i_password;
+    private Hashtable4       _readAs                            = new Hashtable4(16);
+    private boolean          i_readonly;
     private Reflector _configuredReflector;
     private GenericReflector _reflector;
-    Collection4      i_rename;
-    int              i_reservedStorageSpace;
-    boolean          i_singleThreadedClient;
-    YapStream        i_stream;                                                           // is null until deepClone is called
-    boolean          i_testConstructors                 = true;
-    int              i_timeoutClientSocket              = YapConst.CLIENT_SOCKET_TIMEOUT;
-    int              i_timeoutPingClients               = YapConst.CONNECTION_TIMEOUT;
-    int              i_timeoutServerSocket              = YapConst.SERVER_SOCKET_TIMEOUT;
-    int              i_updateDepth;
-    int              i_weakReferenceCollectionInterval  = 1000;
-    boolean          i_weakReferences                   = true;
-    IoAdapter        i_ioAdapter 
+    private Collection4      i_rename;
+    private int              i_reservedStorageSpace;
+    private boolean          i_singleThreadedClient;
+    private YapStream        i_stream;                                                           // is null until deepClone is called
+    private boolean          i_testConstructors                 = true;
+    private int              i_timeoutClientSocket              = YapConst.CLIENT_SOCKET_TIMEOUT;
+    private int              i_timeoutPingClients               = YapConst.CONNECTION_TIMEOUT;
+    private int              i_timeoutServerSocket              = YapConst.SERVER_SOCKET_TIMEOUT;
+    private int              i_updateDepth;
+    private int              i_weakReferenceCollectionInterval  = 1000;
+    private boolean          i_weakReferences                   = true;
+    private IoAdapter        i_ioAdapter 
     	// NOTE: activate this config to trigger the defragment failure
     	//= new NIOFileAdapter(512,3);
     	= new RandomAccessFileAdapter();
@@ -510,6 +510,170 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
         
         return reflector().forObject(clazz);
     }
+
+	boolean allowVersionUpdates() {
+		return _allowVersionUpdates;
+	}
+
+	boolean automaticShutDown() {
+		return i_automaticShutDown;
+	}
+
+	byte blockSize() {
+		return i_blockSize;
+	}
+
+	String blobPath() {
+		return i_blobPath;
+	}
+
+	boolean callbacks() {
+		return i_callbacks;
+	}
+
+	int callConstructors() {
+		return i_callConstructors;
+	}
+
+	boolean classActivationDepthConfigurable() {
+		return i_classActivationDepthConfigurable;
+	}
+
+	ClassLoader classLoader() {
+		return i_classLoader;
+	}
+
+	boolean detectSchemaChanges() {
+		return i_detectSchemaChanges;
+	}
+
+	boolean commitRecoveryDisabled() {
+		return i_disableCommitRecovery;
+	}
+
+	public int discardFreeSpace() {
+		return i_discardFreeSpace;
+	}
+
+	byte encoding() {
+		return i_encoding;
+	}
+
+	boolean encrypt() {
+		return i_encrypt;
+	}
+
+	Hashtable4 exceptionalClasses() {
+		return i_exceptionalClasses;
+	}
+
+	boolean exceptionsOnNotStorable() {
+		return i_exceptionsOnNotStorable;
+	}
+
+	public boolean flushFileBuffers() {
+		return _flushFileBuffers;
+	}
+
+	byte freespaceSystem() {
+		return _freespaceSystem;
+	}
+
+	int generateUUIDs() {
+		return i_generateUUIDs;
+	}
+
+	int generateVersionNumbers() {
+		return i_generateVersionNumbers;
+	}
+
+	boolean internStrings() {
+		return i_internStrings;
+	}
+	
+	void isServer(boolean flag){
+		i_isServer = flag;
+	}
+
+	boolean isServer() {
+		return i_isServer;
+	}
+
+	boolean lockFile() {
+		return i_lockFile;
+	}
+
+	int messageLevel() {
+		return i_messageLevel;
+	}
+
+	MessageRecipient messageRecipient() {
+		return i_messageRecipient;
+	}
+
+	MessageSender messageSender() {
+		return i_messageSender;
+	}
+
+	boolean optimizeNQ() {
+		return _optimizeNQ;
+	}
+
+	String password() {
+		return i_password;
+	}
+
+	Hashtable4 readAs() {
+		return _readAs;
+	}
+
+	boolean readonly() {
+		return i_readonly;
+	}
+
+	Collection4 rename() {
+		return i_rename;
+	}
+
+	int reservedStorageSpace() {
+		return i_reservedStorageSpace;
+	}
+
+	boolean singleThreadedClient() {
+		return i_singleThreadedClient;
+	}
+
+	boolean testConstructors() {
+		return i_testConstructors;
+	}
+
+	int timeoutClientSocket() {
+		return i_timeoutClientSocket;
+	}
+
+	int timeoutPingClients() {
+		return i_timeoutPingClients;
+	}
+
+	int timeoutServerSocket() {
+		return i_timeoutServerSocket;
+	}
+
+	int updateDepth() {
+		return i_updateDepth;
+	}
+
+	int weakReferenceCollectionInterval() {
+		return i_weakReferenceCollectionInterval;
+	}
+
+	boolean weakReferences() {
+		return i_weakReferences;
+	}
+
+	IoAdapter ioAdapter() {
+		return i_ioAdapter;
+	}
 
 
     

@@ -121,7 +121,7 @@ public final class YapString extends YapIndependantType {
         if (length > 0) {
             String str = i_stringIo.read(a_bytes, length);
             if(! Deploy.csharp){
-                if(_stream.i_config.i_internStrings){
+                if(_stream.i_config.internStrings()){
                     str = str.intern();
                 }
             }

@@ -75,13 +75,13 @@ public abstract class YapFile extends YapStream {
 
     void configureNewFile() {
         
-        _freespaceManager = FreespaceManager.createNew(this, i_config._freespaceSystem);
+        _freespaceManager = FreespaceManager.createNew(this, i_config.freespaceSystem());
         
         if(Debug.freespaceChecker){
             _fmChecker = new FreespaceManagerRam(this);
         }
         
-        blockSize(i_config.i_blockSize);
+        blockSize(i_config.blockSize());
         i_writeAt = blocksFor(HEADER_LENGTH);
         _configBlock = new YapConfigBlock(this);
         _configBlock.write();
@@ -562,10 +562,10 @@ public abstract class YapFile extends YapStream {
             _fmChecker.start(0);
         }
         
-        if(i_config._freespaceSystem != 0  || _configBlock._freespaceSystem == FreespaceManager.FM_LEGACY_RAM){
-            if(_freespaceManager.systemType() != i_config._freespaceSystem){
-                FreespaceManager newFM = FreespaceManager.createNew(this, i_config._freespaceSystem);
-                int fmSlot = _configBlock.newFreespaceSlot(i_config._freespaceSystem);
+        if(i_config.freespaceSystem() != 0  || _configBlock._freespaceSystem == FreespaceManager.FM_LEGACY_RAM){
+            if(_freespaceManager.systemType() != i_config.freespaceSystem()){
+                FreespaceManager newFM = FreespaceManager.createNew(this, i_config.freespaceSystem());
+                int fmSlot = _configBlock.newFreespaceSlot(i_config.freespaceSystem());
                 newFM.start(fmSlot);
                 _freespaceManager.migrate(newFM);
                 FreespaceManager oldFM = _freespaceManager;
@@ -599,7 +599,7 @@ public abstract class YapFile extends YapStream {
         writeHeader(false);
         Transaction trans = _configBlock.getTransactionToCommit();
         if (trans != null) {
-            if (!i_config.i_disableCommitRecovery) {
+            if (!i_config.commitRecoveryDisabled()) {
                 trans.writeOld();
             }
         }

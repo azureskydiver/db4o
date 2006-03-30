@@ -43,13 +43,13 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         
         boolean modified = false;
         
-        if(i_generateVersionNumbers != a_config.i_generateVersionNumbers){
-            i_generateVersionNumbers = a_config.i_generateVersionNumbers;
+        if(i_generateVersionNumbers != a_config.generateVersionNumbers()){
+            i_generateVersionNumbers = a_config.generateVersionNumbers();
             modified = true;
         }
         
-        if(i_generateUUIDs != a_config.i_generateUUIDs){
-            i_generateUUIDs = a_config.i_generateUUIDs;
+        if(i_generateUUIDs != a_config.generateUUIDs()){
+            i_generateUUIDs = a_config.generateUUIDs();
             modified = true;
         }
         

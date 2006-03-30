@@ -301,7 +301,7 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
             i_yapClassByBytes.put(yapClass.readName(a_trans), yapClass);
         }
         
-        final Hashtable4 readAs = i_stream.i_config._readAs; 
+        final Hashtable4 readAs = i_stream.i_config.readAs(); 
         
         readAs.forEachKey(new Visitor4() {
             public void visit(Object a_object) {
