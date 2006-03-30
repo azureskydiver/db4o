@@ -839,7 +839,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         if (Platform4.hasNio()) {
             return false;
         }
-        if (i_config.readonly()) {
+        if (i_config.isReadOnly()) {
             return false;
         }
         return i_config.lockFile();

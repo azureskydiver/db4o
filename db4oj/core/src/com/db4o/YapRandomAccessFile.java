@@ -232,7 +232,7 @@ public class YapRandomAccessFile extends YapFile {
                 
                 try {
                     boolean lockFile = Debug.lockFile && i_config.lockFile()
-                        && (!i_config.readonly());
+                        && (!i_config.isReadOnly());
                     i_file = ioAdapter.open(fileName(), lockFile, 0);
                     if (needsLockFileThread() && Debug.lockFile) {
                         i_timerFile = ioAdapter.open(fileName(), false, 0);
@@ -343,7 +343,7 @@ public class YapRandomAccessFile extends YapFile {
     }
 
     void writeBytes(YapReader a_bytes, int address, int addressOffset) {
-        if (i_config.readonly()) {
+        if (i_config.isReadOnly()) {
             return;
         }
         if (Deploy.debug && !Deploy.flush) {
@@ -385,7 +385,7 @@ public class YapRandomAccessFile extends YapFile {
     public void writeXBytes(int a_address, int a_length) {
         if (Debug.xbytes) {
             if (Deploy.flush) {
-                if (!i_config.readonly()) {
+                if (!i_config.isReadOnly()) {
                     if(a_address > 0 && a_length > 0){
                         try {
                             if(DTrace.enabled){
