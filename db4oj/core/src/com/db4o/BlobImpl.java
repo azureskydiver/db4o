@@ -195,7 +195,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
     }
 
     private String serverPath() throws IOException {
-        String path = i_stream.i_config.i_blobPath;
+        String path = i_stream.i_config.blobPath();
         if (path == null) {
             path = "blobs";
         }

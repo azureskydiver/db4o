@@ -50,7 +50,7 @@ public class YapRandomAccessFile extends YapFile {
                 Exceptions4.throwRuntimeException(61);
             }
             try {
-                i_backupFile = i_config.i_ioAdapter.open(path, true, i_file.getLength());
+                i_backupFile = i_config.ioAdapter().open(path, true, i_file.getLength());
             } catch (Exception e) {
                 i_backupFile = null;
                 Exceptions4.throwRuntimeException(12, path);
@@ -223,7 +223,7 @@ public class YapRandomAccessFile extends YapFile {
         try {
             if (fileName().length() > 0) {
                 
-                IoAdapter ioAdapter = i_config.i_ioAdapter;
+                IoAdapter ioAdapter = i_config.ioAdapter();
                 
                 if(! ioAdapter.exists(fileName())){
                     isNew = true;
@@ -231,8 +231,8 @@ public class YapRandomAccessFile extends YapFile {
                 }
                 
                 try {
-                    boolean lockFile = Debug.lockFile && i_config.i_lockFile
-                        && (!i_config.i_readonly);
+                    boolean lockFile = Debug.lockFile && i_config.lockFile()
+                        && (!i_config.readonly());
                     i_file = ioAdapter.open(fileName(), lockFile, 0);
                     if (needsLockFileThread() && Debug.lockFile) {
                         i_timerFile = ioAdapter.open(fileName(), false, 0);
@@ -244,8 +244,8 @@ public class YapRandomAccessFile extends YapFile {
                 }
                 if (isNew) {
                     configureNewFile();
-                    if (i_config.i_reservedStorageSpace > 0) {
-                        reserve(i_config.i_reservedStorageSpace);
+                    if (i_config.reservedStorageSpace() > 0) {
+                        reserve(i_config.reservedStorageSpace());
                     }
                     write(false);
                     writeHeader(false);
@@ -343,7 +343,7 @@ public class YapRandomAccessFile extends YapFile {
     }
 
     void writeBytes(YapReader a_bytes, int address, int addressOffset) {
-        if (i_config.i_readonly) {
+        if (i_config.readonly()) {
             return;
         }
         if (Deploy.debug && !Deploy.flush) {
@@ -385,7 +385,7 @@ public class YapRandomAccessFile extends YapFile {
     public void writeXBytes(int a_address, int a_length) {
         if (Debug.xbytes) {
             if (Deploy.flush) {
-                if (!i_config.i_readonly) {
+                if (!i_config.readonly()) {
                     if(a_address > 0 && a_length > 0){
                         try {
                             if(DTrace.enabled){

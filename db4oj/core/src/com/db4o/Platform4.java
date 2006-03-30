@@ -71,7 +71,7 @@ public final class Platform4 {
                     setAccessibleCheck = YapConst.YES;
                 } else {
                     setAccessibleCheck = YapConst.NO;
-                    if (Db4o.i_config.i_messageLevel >= 0) {
+                    if (Db4o.i_config.messageLevel() >= 0) {
                         Messages.logErr(Db4o.i_config, 47, null, null);
                     }
                 }
@@ -97,7 +97,7 @@ public final class Platform4 {
     }
     
     static final Reflector createReflector(Config4Impl config){
-        return new JdkReflector(config.i_classLoader);
+        return new JdkReflector(config.classLoader());
     }
 
     static final Object createReferenceQueue() {
@@ -214,7 +214,7 @@ public final class Platform4 {
     	hasCollections();
     	hasShutDownHook();
         
-        if(config.i_classLoader == null){
+        if(config.classLoader() == null){
             // If we're in an Eclipse classloader, use that.  Otherwise,
             // use the context class loader.
             //String classloaderName = Db4o.class.getClassLoader().getClass().getName();

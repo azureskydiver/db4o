@@ -53,7 +53,7 @@ public class YapClient extends YapStream implements ExtClient {
 	public YapClient(String fakeServerFile) {
 		this();
 		synchronized (lock()) {
-			_singleThreaded = i_config.i_singleThreadedClient;
+			_singleThreaded = i_config.singleThreadedClient();
 			if (Debug.fakeServer) {
 				Debug.serverStream = (YapFile) Db4o.openFile(fakeServerFile);
 				Debug.clientStream = this;
@@ -73,7 +73,7 @@ public class YapClient extends YapStream implements ExtClient {
 			throws IOException {
 		this();
 		synchronized (lock()) {
-			_singleThreaded = i_config.i_singleThreadedClient;
+			_singleThreaded = i_config.singleThreadedClient();
 
 			// TODO: Experiment with packetsize and noDelay
 			// socket.setSendBufferSize(100);
@@ -214,7 +214,7 @@ public class YapClient extends YapStream implements ExtClient {
 			return false;
 		}
 		if (resp.equals(Msg.FAILED)) {
-			if (i_config.i_exceptionsOnNotStorable) {
+			if (i_config.exceptionsOnNotStorable()) {
 				throw new ObjectNotStorableException(a_class);
 			}
 			return false;
@@ -317,7 +317,7 @@ public class YapClient extends YapStream implements ExtClient {
 					}
 
 					throwOnClosed();
-					messageQueueLock.snooze(i_config.i_timeoutClientSocket);
+					messageQueueLock.snooze(i_config.timeoutClientSocket());
 					throwOnClosed();
 					return retrieveMessage();
 				}

@@ -190,7 +190,7 @@ public final class YapHandlers {
             }
         }
         
-        if (! _masterStream.i_config.i_testConstructors) {
+        if (! _masterStream.i_config.testConstructors()) {
             return true;
         }
         
@@ -346,14 +346,14 @@ public final class YapHandlers {
     }
     
     void initEncryption(Config4Impl a_config){
-        if (a_config.i_encrypt && a_config.i_password != null
-            && a_config.i_password.length() > 0) {
+        if (a_config.encrypt() && a_config.password() != null
+            && a_config.password().length() > 0) {
             i_encrypt = true;
-            i_encryptor = new byte[a_config.i_password.length()];
+            i_encryptor = new byte[a_config.password().length()];
             for (int i = 0; i < i_encryptor.length; i++) {
-                i_encryptor[i] = (byte) (a_config.i_password.charAt(i) & 0xff);
+                i_encryptor[i] = (byte) (a_config.password().charAt(i) & 0xff);
             }
-            i_lastEncryptorByte = a_config.i_password.length() - 1;
+            i_lastEncryptorByte = a_config.password().length() - 1;
         } else {
             i_encrypt = false;
             i_encryptor = null;

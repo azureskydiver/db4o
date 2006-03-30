@@ -50,7 +50,7 @@ final class YapServerThread extends Thread {
         i_mainTrans = new Transaction(aStream, aStream.getSystemTransaction());
         try {
             i_socket = aSocket;
-            i_socket.setSoTimeout(((Config4Impl)aServer.configure()).i_timeoutServerSocket);
+            i_socket.setSoTimeout(((Config4Impl)aServer.configure()).timeoutServerSocket());
 
             // TODO: Experiment with packetsize and noDelay
             // i_socket.setSendBufferSize(100);
@@ -164,7 +164,7 @@ final class YapServerThread extends Thread {
     }
 
 	private boolean pingClientTimeoutReached() {
-		return (System.currentTimeMillis() - i_lastClientMessage > i_config.i_timeoutPingClients);
+		return (System.currentTimeMillis() - i_lastClientMessage > i_config.timeoutPingClients());
 	}
     
     private boolean messageProcessor() throws IOException{
@@ -279,8 +279,7 @@ final class YapServerThread extends Thread {
                 i_substituteStream = (YapFile) Db4o.openFile(fileName);
                 i_substituteTrans =
                     new Transaction(i_substituteStream, i_substituteStream.getSystemTransaction());
-                i_substituteStream.i_config.i_messageRecipient =
-                    i_mainStream.i_config.i_messageRecipient;
+                i_substituteStream.i_config.setMessageRecipient(i_mainStream.i_config.messageRecipient());
                 Msg.OK.write(getStream(), i_socket);
             } catch (Exception e) {
                 if (Debug.atHome) {

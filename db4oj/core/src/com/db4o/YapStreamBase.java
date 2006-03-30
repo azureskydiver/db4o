@@ -140,7 +140,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
     final void activate1(Transaction ta, Object a_activate) {
-        activate1(ta, a_activate, i_config.i_activationDepth);
+        activate1(ta, a_activate, i_config.activationDepth());
     }
 
     public final void activate1(Transaction ta, Object a_activate, int a_depth) {
@@ -498,7 +498,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 
                 if(delete5(ta, yo, a_cascade, userCall)){
                 	yc.dispatchEvent(_this, obj, EventDispatcher.DELETE);
-                    if (i_config.i_messageLevel > YapConst.STATE) {
+                    if (i_config.messageLevel() > YapConst.STATE) {
                         message("" + yo.getID() + " delete " + yo.getYapClass().getName());
                     }
                 }
@@ -512,7 +512,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     boolean detectSchemaChanges() {
         // overriden in YapClient
-        return i_config.i_detectSchemaChanges;
+        return i_config.detectSchemaChanges();
     }
     
     public boolean dispatchsEvents() {
@@ -570,7 +570,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
 	
     protected void finalize() {
-		if (doFinalize() && (i_config == null || i_config.i_automaticShutDown)) {
+		if (doFinalize() && (i_config == null || i_config.automaticShutDown())) {
 			failedToShutDown();
 		}
 	}
@@ -839,14 +839,14 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         if (Platform4.hasNio()) {
             return false;
         }
-        if (i_config.i_readonly) {
+        if (i_config.readonly()) {
             return false;
         }
-        return i_config.i_lockFile;
+        return i_config.lockFile();
     }
 
     boolean hasShutDownHook() {
-        return i_config.i_automaticShutDown;
+        return i_config.automaticShutDown();
     }
 
     final void hcTreeAdd(YapObject a_yo) {
@@ -917,7 +917,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     void initialize1() {
 
         i_config = (Config4Impl) ((DeepClone) Db4o.configure()).deepClone(this);
-        i_handlers = new YapHandlers(_this, i_config.i_encoding, i_config.reflector());
+        i_handlers = new YapHandlers(_this, i_config.encoding(), i_config.reflector());
         
         if (i_references != null) {
             gc();
@@ -966,7 +966,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         initializeEssentialClasses();
         rename(i_config);
         i_classCollection.initOnUp(i_systemTrans);
-        if (i_config.i_detectSchemaChanges) {
+        if (i_config.detectSchemaChanges()) {
             i_systemTrans.commit();
         }
     }
@@ -1325,7 +1325,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     void rename(Config4Impl config) {
         boolean renamedOne = false;
-        if (config.i_rename != null) {
+        if (config.rename() != null) {
             renamedOne = rename1(config);
         }
         i_classCollection.checkChanges();
@@ -1337,7 +1337,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     protected boolean rename1(Config4Impl config) {
         boolean renamedOne = false;
         try {
-            Iterator4 i = config.i_rename.iterator();
+            Iterator4 i = config.rename().iterator();
             while (i.hasNext()) {
                 Rename ren = (Rename) i.next();
                 if (get(ren).size() == 0) {
@@ -1593,7 +1593,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 //                        }
                         
     				}
-    				if (i_config.i_messageLevel > YapConst.STATE) {
+    				if (i_config.messageLevel() > YapConst.STATE) {
     					message("" + yapObject.getID() + " new " + yapObject.getYapClass().getName());
     				}
                     

@@ -17,7 +17,7 @@ class YapReferences implements Runnable {
     YapReferences(YapStream a_stream) {
         _stream = a_stream;
         _weak = (!(a_stream instanceof YapObjectCarrier)
-            && Platform4.hasWeakReferences() && a_stream.i_config.i_weakReferences);
+            && Platform4.hasWeakReferences() && a_stream.i_config.weakReferences());
         _queue = _weak ? Platform4.createReferenceQueue() : null;
     }
 
@@ -45,11 +45,11 @@ class YapReferences implements Runnable {
     		return;
     	}
         
-        if(! _stream.i_config.i_weakReferences){
+        if(! _stream.i_config.weakReferences()){
             return;
         }
     	
-        if (_stream.i_config.i_weakReferenceCollectionInterval <= 0) {
+        if (_stream.i_config.weakReferenceCollectionInterval() <= 0) {
         	return;
         }
 
@@ -57,7 +57,7 @@ class YapReferences implements Runnable {
         	return;
         }
         
-        _timer = new SimpleTimer(this, _stream.i_config.i_weakReferenceCollectionInterval, "db4o WeakReference collector");
+        _timer = new SimpleTimer(this, _stream.i_config.weakReferenceCollectionInterval(), "db4o WeakReference collector");
     }
 
     void stopTimer() {

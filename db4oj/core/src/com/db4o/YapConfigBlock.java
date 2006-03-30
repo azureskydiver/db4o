@@ -70,8 +70,8 @@ public final class YapConfigBlock implements Runnable
 	
 	YapConfigBlock(YapFile stream){
 		_stream = stream;
-        _encoding = stream.i_config.i_encoding;
-        _freespaceSystem = FreespaceManager.checkType(stream.i_config._freespaceSystem);
+        _encoding = stream.i_config.encoding();
+        _freespaceSystem = FreespaceManager.checkType(stream.i_config.freespaceSystem());
 		_opentime = processID();
 		if(lockFile()){
 			writeHeaderLock();
@@ -162,8 +162,8 @@ public final class YapConfigBlock implements Runnable
     
     private byte[] passwordToken() {
         byte[] pwdtoken=new byte[ENCRYPTION_PASSWORD_LENGTH];
-        String fullpwd=_stream.i_config.i_password;
-        if(_stream.i_config.i_encrypt && fullpwd!=null) {
+        String fullpwd=_stream.i_config.password();
+        if(_stream.i_config.encrypt() && fullpwd!=null) {
             try {
                 byte[] pwdbytes=new YapStringIO().write(fullpwd);
                 YapWriter encwriter=new YapWriter(_stream.i_trans,pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
@@ -224,8 +224,8 @@ public final class YapConfigBlock implements Runnable
         if(oldLength != LENGTH){
         	// TODO: instead of bailing out, somehow trigger wrapping the stream's io adapter in
         	// a readonly decorator, issue a  notification and continue?
-            if(! _stream.i_config.i_readonly  && ! _stream.i_config._allowVersionUpdates){
-            	if(_stream.i_config.i_automaticShutDown) {
+            if(! _stream.i_config.readonly()  && ! _stream.i_config.allowVersionUpdates()){
+            	if(_stream.i_config.automaticShutDown()) {
             		Platform4.removeShutDownHook(_stream, _stream.i_lock);
             	}
                 Exceptions4.throwRuntimeException(65);

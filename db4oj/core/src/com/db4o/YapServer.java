@@ -25,24 +25,24 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable, YapSocketFak
         i_yapFile = a_yapFile;
         Config4Impl config = (Config4Impl) i_yapFile.configure();
         config.callbacks(false);
-        config.i_isServer = true;
+        config.isServer(true);
         
         a_yapFile.getYapClass(a_yapFile.i_handlers.ICLASS_STATICCLASS, true);
         
         // make sure all configured YapClasses are up in the repository
-        config.i_exceptionalClasses.forEachValue(new Visitor4() {
+        config.exceptionalClasses().forEachValue(new Visitor4() {
             public void visit(Object a_object) {
                 a_yapFile.getYapClass(a_yapFile.reflector().forName(((Config4Class)a_object).getName()), true);
             }
         });
         
-        if (config.i_messageLevel == 0) {
-            config.i_messageLevel = 1;
+        if (config.messageLevel() == 0) {
+            config.messageLevel(1);
         }
         if (a_port > 0) {
             try {
                 i_serverSocket = new YapServerSocket(a_port);
-                i_serverSocket.setSoTimeout(config.i_timeoutServerSocket);
+                i_serverSocket.setSoTimeout(config.timeoutServerSocket());
             } catch (IOException e) {
                 Exceptions4.throwRuntimeException(30, "" + a_port);
             }
@@ -159,7 +159,7 @@ class YapServer implements ObjectServer, ExtObjectServer, Runnable, YapSocketFak
     }
 
     public YapSocketFake openClientSocket() {
-    	int timeout = ((Config4Impl)configure()).i_timeoutClientSocket;
+    	int timeout = ((Config4Impl)configure()).timeoutClientSocket();
         YapSocketFake clientFake = new YapSocketFake(this, timeout);
         YapSocketFake serverFake = new YapSocketFake(this, timeout, clientFake);
         try {

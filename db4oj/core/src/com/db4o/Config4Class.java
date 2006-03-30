@@ -59,7 +59,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
         if((i_cascadeOnActivate == -1)  && a_depth > 1){
             a_depth = 1;
         }
-        if (i_config.i_classActivationDepthConfigurable) {
+        if (i_config.classActivationDepthConfigurable()) {
             if (i_minimumActivationDepth != 0) {
                 if (a_depth < i_minimumActivationDepth) {
                     a_depth = i_minimumActivationDepth;
@@ -246,7 +246,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
            return;
        }
        _writeAs = i_name;
-       i_config._readAs.put(_writeAs, claxx.getName());
+       i_config.readAs().put(_writeAs, claxx.getName());
    }
 
     public void rename(String newName) {

@@ -428,7 +428,7 @@ public class Transaction {
         if(DTrace.enabled){
             DTrace.TRANS_FLUSH.log();
         }
-        if(i_file.i_config._flushFileBuffers){
+        if(i_file.i_config.flushFileBuffers()){
             i_file.syncFiles();
         }
     }
