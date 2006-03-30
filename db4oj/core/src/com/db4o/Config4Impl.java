@@ -627,7 +627,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 		return _readAs;
 	}
 
-	boolean readonly() {
+	boolean isReadOnly() {
 		return i_readonly;
 	}
 

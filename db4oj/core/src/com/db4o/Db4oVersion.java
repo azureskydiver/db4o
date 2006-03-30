@@ -8,4 +8,5 @@ package com.db4o;
 public class Db4oVersion {
     public static final String NAME = "5.2.004";
     public static final int MAJOR = 5;
+    public static final int MINOR = 2;
 }

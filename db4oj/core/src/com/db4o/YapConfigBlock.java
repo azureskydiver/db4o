@@ -224,7 +224,7 @@ public final class YapConfigBlock implements Runnable
         if(oldLength != LENGTH){
         	// TODO: instead of bailing out, somehow trigger wrapping the stream's io adapter in
         	// a readonly decorator, issue a  notification and continue?
-            if(! _stream.i_config.readonly()  && ! _stream.i_config.allowVersionUpdates()){
+            if(! _stream.i_config.isReadOnly()  && ! _stream.i_config.allowVersionUpdates()){
             	if(_stream.i_config.automaticShutDown()) {
             		Platform4.removeShutDownHook(_stream, _stream.i_lock);
             	}
