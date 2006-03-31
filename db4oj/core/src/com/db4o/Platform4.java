@@ -433,7 +433,7 @@ public final class Platform4 {
     }
 
     // FIXME: functionality should really be in IoAdapter
-    public static final void lock(Object file) {
+    public static final void lockFile(Object file) {
         if (!hasNio()) {
             return;
         }
@@ -445,7 +445,13 @@ public final class Platform4 {
             return;
         }
         
-        jdk().lock(file);
+        jdk().lockFile(file);
+    }
+    
+    public static final void unlockFile(Object file) {
+        if (hasNio()) {
+            jdk().unlockFile(file);
+        }
     }
 
     static final double longToDouble(long a_long) {
@@ -597,12 +603,6 @@ public final class Platform4 {
         		new NetULong(stream),
         		new NetUShort(stream)
         };
-    }
-
-    public static final void unlock(Object file) {
-        if (hasNio()) {
-            jdk().unlock(file);
-        }
     }
     
     static byte[] updateClassName(byte[] bytes) {
