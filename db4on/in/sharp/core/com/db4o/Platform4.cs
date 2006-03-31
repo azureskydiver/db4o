@@ -428,10 +428,15 @@ namespace com.db4o
 #endif
 		}
 
-		internal static void Lock(object raf)
+		internal static void lockFile(object raf)
 		{
 			// do nothing. C# RAF is locked automatically upon opening
 		}
+		
+		internal static void unlockFile(object randomaccessfile)
+		{
+			// do nothing. C# RAF is unlocked automatically upon closing
+		}		
 
 		internal static void markTransient(String marker)
 		{
@@ -507,11 +512,6 @@ namespace com.db4o
 				// TODO: why the object is being logged instead of the error?
 				Unobfuscated.logErr(config, 48, obj.ToString(), null);
 			}
-		}
-
-		internal static void unlock(object randomaccessfile)
-		{
-			// do nothing. C# RAF is unlocked automatically upon closing
 		}
 
 		internal static byte[] updateClassName(byte[] bytes)

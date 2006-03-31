@@ -93,7 +93,7 @@ public class JDK {
 		
 	}
 	
-	synchronized void lock(Object file) {
+	synchronized void lockFile(Object file) {
 	}
 	
     /**
@@ -133,7 +133,7 @@ public class JDK {
         return false;
     }
 	
-	synchronized void unlock(Object file) {
+	synchronized void unlockFile(Object file) {
 	}
     
     public Object weakReferenceTarget(Object weakRef){
