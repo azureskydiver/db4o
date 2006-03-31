@@ -376,8 +376,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     int checkUpdateDepthUnspecified(YapStream a_stream) {
         int depth = a_stream.i_config.updateDepth() + 1;
-        if (i_config != null && i_config.i_updateDepth != 0) {
-            depth = i_config.i_updateDepth + 1;
+        if (i_config != null && i_config.updateDepth() != 0) {
+            depth = i_config.updateDepth() + 1;
         }
         if (i_ancestor != null) {
             int ancestordepth = i_ancestor.checkUpdateDepthUnspecified(a_stream);
@@ -676,7 +676,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if(! generateVirtual()){
             return false;
         }
-        int configValue = (i_config == null) ? 0 : i_config.i_generateUUIDs;
+        int configValue = (i_config == null) ? 0 : i_config.generateUUIDs();
         return generate1(i_stream.bootRecord().i_generateUUIDs, configValue); 
     }
 
@@ -684,7 +684,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if(! generateVirtual()){
             return false;
         }
-        int configValue = (i_config == null) ? 0 : i_config.i_generateVersionNumbers;
+        int configValue = (i_config == null) ? 0 : i_config.generateVersionNumbers();
         return generate1(i_stream.bootRecord().i_generateVersionNumbers, configValue); 
     }
     
@@ -721,8 +721,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     Object getComparableObject(Object forObject) {
         if (i_config != null) {
-            if (i_config.i_queryAttributeProvider != null) {
-                return i_config.i_queryAttributeProvider.attribute(forObject);
+            if (i_config.queryAttributeProvider() != null) {
+                return i_config.queryAttributeProvider().attribute(forObject);
             }
         }
         return forObject;
@@ -1310,8 +1310,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     
     private String nameToWrite(){
         String name = i_name;
-        if(i_config != null && i_config._writeAs != null){
-            return i_config._writeAs;
+        if(i_config != null && i_config.writeAs() != null){
+            return i_config.writeAs();
         }
         if(i_name == null){
             return "";
@@ -1850,7 +1850,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             if (config == null) {
                 return false;
             }
-            if (!config.i_storeTransientFields) {
+            if (!config.storeTransientFields()) {
                 return false;
             }
         }
@@ -1882,7 +1882,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if (!bitIsTrue(YapConst.STATIC_FIELDS_STORED) || force) {
             bitTrue(YapConst.STATIC_FIELDS_STORED);
             boolean store = 
-                (i_config != null && i_config.i_persistStaticFieldValues)
+                (i_config != null && i_config.staticFieldValuesArePersisted())
             || Platform4.storeStaticFieldValues(trans.reflector(), classReflector()); 
             
             if (store) {

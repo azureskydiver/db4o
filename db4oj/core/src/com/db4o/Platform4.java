@@ -487,7 +487,7 @@ public final class Platform4 {
         if(classConfig == null){
             return;
         }
-        classConfig._maintainMetaClass = false;
+        classConfig.maintainMetaClass(false);
         classConfig.readAs(DB4O_PACKAGE + className);
     }
 

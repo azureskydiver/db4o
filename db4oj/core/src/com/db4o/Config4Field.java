@@ -7,12 +7,18 @@ import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 class Config4Field extends Config4Abstract implements ObjectField, Cloneable, DeepClone {
-    Config4Class i_class;
-    ReflectField i_fieldReflector;
-    boolean i_queryEvaluation = true;
-    int i_indexed = 0;
-    MetaField i_metaField;
-    boolean i_initialized;
+	
+    private Config4Class i_class;
+    
+    private ReflectField i_fieldReflector;
+    
+    private boolean i_queryEvaluation = true;
+    
+    private int i_indexed = 0;
+    
+    private MetaField i_metaField;
+    
+    private boolean i_initialized;
 
     Config4Field(Config4Class a_class, String a_name) {
         i_class = a_class;
@@ -52,7 +58,7 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
     }
 
     public void rename(String newName) {
-        i_class.i_config.rename(new Rename(i_class.getName(), i_name, newName));
+        i_class.config().rename(new Rename(i_class.getName(), i_name, newName));
         i_name = newName;
     }
 
@@ -79,7 +85,7 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
 	                boolean indexInitCalled = false;
 	                
 	            	YapFile stream = (YapFile)anyStream;
-	                i_metaField = i_class.i_metaClass.ensureField(systemTrans, i_name);
+	                i_metaField = i_class.metaClass().ensureField(systemTrans, i_name);
 	                if (i_indexed == 1) {
 	                    if (i_metaField.index == null) {
 	                        i_metaField.index = new MetaIndex();
@@ -147,5 +153,10 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
             i_initialized = true;
         }
     }
+
+	boolean queryEvaluation() {
+		return i_queryEvaluation;
+	}
+
 
 }
