@@ -21,72 +21,247 @@ import com.db4o.reflect.generic.*;
 public final class Config4Impl
 
 implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfiguration {
+	private Hashtable4 _config=new Hashtable4(50);
+	
+	private static class BoolWrapper implements DeepClone {
+		final static BoolWrapper TRUE=new BoolWrapper(true);
+		final static BoolWrapper FALSE=new BoolWrapper(false);
 
-    private int              i_activationDepth                  = 5;
-    private boolean          _allowVersionUpdates;
-    private boolean          i_automaticShutDown                = true;
-    private byte			 i_blockSize						= 1;  // TODO: set this to 8, when implementation is done
-    private String           i_blobPath;
-    private boolean          i_callbacks                        = true;
-    private int			 	 i_callConstructors;
-    private boolean          i_classActivationDepthConfigurable = true;
+		static BoolWrapper valueOf(boolean value) {
+			return (value ? TRUE : FALSE);
+		}
+		
+		final boolean value;
+		
+		BoolWrapper(boolean value) {
+			this.value=value;
+		}
+		
+		public Object deepClone(Object context) {
+			return this;
+		}
+		
+		boolean booleanValue() {
+			return value;
+		}
+	}
+
+	private static class IntWrapper implements DeepClone {
+		final int value;
+		
+		IntWrapper(int value) {
+			this.value=value;
+		}
+		
+		public Object deepClone(Object context) {
+			return this;
+		}
+		
+		int intValue() {
+			return value;
+		}
+	}
+
+	private static class ByteWrapper implements DeepClone {
+		final byte value;
+		
+		ByteWrapper(byte value) {
+			this.value=value;
+		}
+		
+		public Object deepClone(Object context) {
+			return this;
+		}
+		
+		byte byteValue() {
+			return value;
+		}
+	}
+
+	private static class StringWrapper implements DeepClone {
+		final String value;
+		
+		StringWrapper(String value) {
+			this.value=value;
+		}
+		
+		public Object deepClone(Object context) {
+			return this;
+		}
+		
+		public String toString() {
+			return value;
+		}
+	}
+
+	private static class KeySpec {
+		final Object key=new Object();
+		final Object defaultValue;
+		
+		KeySpec(byte defaultValue) {
+			this(new ByteWrapper(defaultValue));
+		}
+
+		KeySpec(int defaultValue) {
+			this(new IntWrapper(defaultValue));
+		}
+
+		KeySpec(boolean defaultValue) {
+			this(BoolWrapper.valueOf(defaultValue));
+		}
+
+		KeySpec(String defaultValue) {
+			this(new StringWrapper(defaultValue));
+		}
+
+		KeySpec(Object defaultValue) {
+			this.defaultValue=defaultValue;
+		}		
+	}
+	
+	private final static KeySpec ACTIVATION_DEPTH=new KeySpec(5);
+//    private int              i_activationDepth                  = 5;
+	private final static KeySpec ALLOW_VERSION_UPDATES=new KeySpec(false);
+//    private boolean          _allowVersionUpdates;
+	private final static KeySpec AUTOMATIC_SHUTDOWN=new KeySpec(true);
+//    private boolean          i_automaticShutDown                = true;
+	private final static KeySpec BLOCKSIZE=new KeySpec((byte)1);
+//	private byte			 i_blockSize						= 1;  // TODO: set this to 8, when implementation is done
+	private final static KeySpec BLOBPATH=new KeySpec(null);
+//    private String           i_blobPath;
+	private final static KeySpec CALLBACKS=new KeySpec(true);
+//    private boolean          i_callbacks                        = true;
+	private final static KeySpec CALL_CONSTRUCTORS=new KeySpec(YapConst.DEFAULT);
+//    private int			 	 i_callConstructors;
+	private final static KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE=new KeySpec(true);
+//    private boolean          i_classActivationDepthConfigurable = true;
+	private final static KeySpec CLASSLOADER=new KeySpec(null);
     private ClassLoader      i_classLoader;
-    private boolean          i_detectSchemaChanges              = true;
-    private boolean          i_disableCommitRecovery;
-    private int       i_discardFreeSpace;
-    private byte             i_encoding                         = YapConst.UNICODE;
-    private boolean          i_encrypt;
-    private Hashtable4       i_exceptionalClasses               = new Hashtable4(16);
-    private boolean          i_exceptionsOnNotStorable;
-    private boolean   _flushFileBuffers                  = true;
-    private byte      _freespaceSystem;                   
-    private int       i_generateUUIDs;
-    private int       i_generateVersionNumbers;
-    private boolean 		 i_internStrings = false;
-    private boolean			 i_isServer = false;
-    private boolean          i_lockFile                         = true;
-    private int              i_messageLevel                     = YapConst.NONE;
-    private MessageRecipient i_messageRecipient;
-    private MessageSender    i_messageSender;
-	private boolean          _optimizeNQ                        = true;
-    private PrintStream      i_outStream;
-    private String           i_password;
-    private Hashtable4       _readAs                            = new Hashtable4(16);
-    private boolean          i_readonly;
-    private Reflector _configuredReflector;
-    private GenericReflector _reflector;
-    private Collection4      i_rename;
-    private int              i_reservedStorageSpace;
-    private boolean          i_singleThreadedClient;
-    private YapStream        i_stream;                                                           // is null until deepClone is called
-    private boolean          i_testConstructors                 = true;
-    private int              i_timeoutClientSocket              = YapConst.CLIENT_SOCKET_TIMEOUT;
-    private int              i_timeoutPingClients               = YapConst.CONNECTION_TIMEOUT;
-    private int              i_timeoutServerSocket              = YapConst.SERVER_SOCKET_TIMEOUT;
-    private int              i_updateDepth;
-    private int              i_weakReferenceCollectionInterval  = 1000;
-    private boolean          i_weakReferences                   = true;
-    private IoAdapter        i_ioAdapter 
+	private final static KeySpec DETECT_SCHEMA_CHANGES=new KeySpec(true);
+//    private boolean          i_detectSchemaChanges              = true;
+	private final static KeySpec DISABLE_COMMIT_RECOVERY=new KeySpec(false);
+//	private boolean          i_disableCommitRecovery;
+	private final static KeySpec DISCARD_FREESPACE=new KeySpec(0);
+//    private int       i_discardFreeSpace;
+	private final static KeySpec ENCODING=new KeySpec(YapConst.UNICODE);
+//    private byte             i_encoding                         = YapConst.UNICODE;
+	private final static KeySpec ENCRYPT=new KeySpec(false);
+//    private boolean          i_encrypt;
+	private final static KeySpec EXCEPTIONAL_CLASSES=new KeySpec(new Hashtable4(16));
+//    private Hashtable4       i_exceptionalClasses               = new Hashtable4(16);
+	private final static KeySpec EXCEPTIONS_ON_NOT_STORABLE=new KeySpec(false);
+//    private boolean          i_exceptionsOnNotStorable;
+	private final static KeySpec FLUSH_FILE_BUFFERS=new KeySpec(true);
+//    private boolean   _flushFileBuffers                  = true;
+	private final static KeySpec FREESPACE_SYSTEM=new KeySpec(FreespaceManager.FM_DEFAULT);
+//    private byte      _freespaceSystem;                   
+	private final static KeySpec GENERATE_UUIDS=new KeySpec(0);
+//    private int       i_generateUUIDs;
+	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(0);
+//    private int       i_generateVersionNumbers;
+	private final static KeySpec INTERN_STRINGS=new KeySpec(false);
+//    private boolean 		 i_internStrings = false;
+	private final static KeySpec IS_SERVER=new KeySpec(false);
+//    private boolean			 i_isServer = false;
+	private final static KeySpec LOCK_FILE=new KeySpec(true);
+//    private boolean          i_lockFile                         = true;
+	private final static KeySpec MESSAGE_LEVEL=new KeySpec(YapConst.NONE);
+//    private int              i_messageLevel                     = YapConst.NONE;
+    private MessageRecipient i_messageRecipient; // XXX
+    private MessageSender    i_messageSender; // XXX
+	private final static KeySpec OPTIMIZE_NQ=new KeySpec(true);
+//	private boolean          _optimizeNQ                        = true;
+    private PrintStream      i_outStream; // XXX
+	private final static KeySpec PASSWORD=new KeySpec((String)null);
+//    private String           i_password;
+	private final static KeySpec READ_AS=new KeySpec(new Hashtable4(16));
+//    private Hashtable4       _readAs                            = new Hashtable4(16);
+	private final static KeySpec READ_ONLY=new KeySpec(false);
+//    private boolean          i_readonly;
+    private Reflector _configuredReflector; // XXX
+    private GenericReflector _reflector; // XXX
+    private Collection4      i_rename; // XXX (filled from the outside with 'real' strings)
+	private final static KeySpec RESERVED_STORAGE_SPACE=new KeySpec(0);
+//    private int              i_reservedStorageSpace;
+	private final static KeySpec SINGLE_THREADED_CLIENT=new KeySpec(false);
+//    private boolean          i_singleThreadedClient;
+    private YapStream        i_stream; // XXX                                                           // is null until deepClone is called
+	private final static KeySpec TEST_CONSTRUCTORS=new KeySpec(true);
+//    private boolean          i_testConstructors                 = true;
+	private final static KeySpec TIMEOUT_CLIENT_SOCKET=new KeySpec(YapConst.CLIENT_SOCKET_TIMEOUT);
+//    private int              i_timeoutClientSocket              = YapConst.CLIENT_SOCKET_TIMEOUT;
+	private final static KeySpec TIMEOUT_PING_CLIENTS=new KeySpec(YapConst.CONNECTION_TIMEOUT);
+//    private int              i_timeoutPingClients               = YapConst.CONNECTION_TIMEOUT;
+	private final static KeySpec TIMEOUT_SERVER_SOCKET=new KeySpec(YapConst.SERVER_SOCKET_TIMEOUT);
+//    private int              i_timeoutServerSocket              = YapConst.SERVER_SOCKET_TIMEOUT;
+	private final static KeySpec UPDATE_DEPTH=new KeySpec(0);
+//    private int              i_updateDepth;
+	private final static KeySpec WEAK_REFERENCE_COLLECTION_INTERVAL=new KeySpec(1000);
+//    private int              i_weakReferenceCollectionInterval  = 1000;
+	private final static KeySpec WEAK_REFERENCES=new KeySpec(true);
+//    private boolean          i_weakReferences                   = true;
+    private IoAdapter        i_ioAdapter // XXX
     	// NOTE: activate this config to trigger the defragment failure
     	//= new NIOFileAdapter(512,3);
     	= new RandomAccessFileAdapter();
     
-    Collection4 _aliases;
+    private Collection4 _aliases; // strange stringwrapper cast problem - how should this get in for this key?
+    
+    private void put(KeySpec spec,byte value) {
+    	put(spec,new ByteWrapper(value));
+    }
+
+    private void put(KeySpec spec,boolean value) {
+    	put(spec,BoolWrapper.valueOf(value));
+    }
+
+    private void put(KeySpec spec,int value) {
+    	put(spec,new IntWrapper(value));
+    }
+
+    private void put(KeySpec spec,String value) {
+    	put(spec,new StringWrapper(value));
+    }
+
+    private void put(KeySpec spec,Object value) {
+    	_config.put(spec.key,value);
+    }
+
+    private byte getAsByte(KeySpec spec) {
+    	return ((ByteWrapper)get(spec)).byteValue();
+    }
+
+    private boolean getAsBoolean(KeySpec spec) {
+    	return ((BoolWrapper)get(spec)).booleanValue();
+    }
+
+    private int getAsInt(KeySpec spec) {
+    	return ((IntWrapper)get(spec)).intValue();
+    }
+
+    private String getAsString(KeySpec spec) {
+    	return ((StringWrapper)get(spec)).toString();
+    }
+
+    private Object get(KeySpec spec) {
+        Object value=_config.get(spec.key);
+        return (value==null ? spec.defaultValue : value);
+    }
     
     int activationDepth() {
-        return i_activationDepth;
+    	return getAsInt(ACTIVATION_DEPTH);
     }
 
     public void activationDepth(int depth) {
-        i_activationDepth = depth;
+    	put(ACTIVATION_DEPTH,depth);
     }
     
     public void allowVersionUpdates(boolean flag){
-        _allowVersionUpdates = flag;
+    	put(ALLOW_VERSION_UPDATES,flag);
     }
 
     public void automaticShutDown(boolean flag) {
-        i_automaticShutDown = flag;
+    	put(AUTOMATIC_SHUTDOWN,flag);
     }
     
     public void blockSize(int bytes){
@@ -98,24 +273,23 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
            Exceptions4.throwRuntimeException(46);   // see readable message for code in Messages.java
        }
        
-       i_blockSize = (byte)bytes;
+       put(BLOCKSIZE,(byte)bytes);
     }
 
     public void callbacks(boolean turnOn) {
-        i_callbacks = turnOn;
+        put(CALLBACKS,turnOn);
     }
     
     public void callConstructors(boolean flag){
-        i_callConstructors = flag ? YapConst.YES : YapConst.NO;
+        put(CALL_CONSTRUCTORS,(flag ? YapConst.YES : YapConst.NO));
     }
 
     public void classActivationDepthConfigurable(boolean turnOn) {
-        i_classActivationDepthConfigurable = turnOn;
+        put(CLASS_ACTIVATION_DEPTH_CONFIGURABLE,turnOn);
     }
 
     Config4Class configClass(String className) {
-        Config4Class config = (Config4Class) i_exceptionalClasses
-            .get(className);
+		Config4Class config = (Config4Class)exceptionalClasses().get(className);
 
         if (Debug.configureAllClasses) {
             if (config == null) {
@@ -157,13 +331,14 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
         } catch (CloneNotSupportedException e) {
             // wont happen
         }
+        ret._config=(Hashtable4)_config.deepClone(this);
         ret.i_stream = (YapStream) param;
-        if (i_exceptionalClasses != null) {
-            ret.i_exceptionalClasses = (Hashtable4) i_exceptionalClasses
-                .deepClone(ret);
+        Hashtable4 exceptionalClasses=exceptionalClasses();
+        if (exceptionalClasses != null) {
+            ret.put(EXCEPTIONAL_CLASSES,exceptionalClasses.deepClone(ret));
         }
         if (i_rename != null) {
-            ret.i_rename = (Collection4) i_rename.deepClone(ret);
+            ret.i_rename=(Collection4)i_rename.deepClone(ret);
         }
         if(_reflector != null){
         	ret._reflector = (GenericReflector)_reflector.deepClone(ret);
@@ -172,24 +347,24 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     public void detectSchemaChanges(boolean flag) {
-        i_detectSchemaChanges = flag;
+        put(DETECT_SCHEMA_CHANGES,flag);
     }
 
     public void disableCommitRecovery() {
-        i_disableCommitRecovery = true;
+        put(DISABLE_COMMIT_RECOVERY,true);
     }
 
     public void discardFreeSpace(int bytes) {
-        i_discardFreeSpace = bytes;
+        put(DISCARD_FREESPACE,bytes);
     }
     
     public void discardSmallerThan(int byteCount) {
-        i_discardFreeSpace = byteCount;
+        discardFreeSpace(byteCount);
     }
 
     public void encrypt(boolean flag) {
         globalSettingOnly();
-        i_encrypt = flag;
+        put(ENCRYPT,flag);
     }
 
     void ensureDirExists(String path) throws IOException {
@@ -208,11 +383,11 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     public void exceptionsOnNotStorable(boolean flag) {
-        i_exceptionsOnNotStorable = flag;
+        put(EXCEPTIONS_ON_NOT_STORABLE,flag);
     }
     
     public void flushFileBuffers(boolean flag){
-        _flushFileBuffers = flag;
+        put(FLUSH_FILE_BUFFERS,flag);
     }
 
     public FreespaceConfiguration freespace() {
@@ -220,7 +395,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
     
     public void generateUUIDs(int setting) {
-        i_generateUUIDs = setting;
+        put(GENERATE_UUIDS,setting);
         storeStreamBootRecord();
     }
     
@@ -238,7 +413,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     public void generateVersionNumbers(int setting) {
-        i_generateVersionNumbers = setting;
+        put(GENERATE_VERSION_NUMBERS,setting);
         storeStreamBootRecord();
     }
 
@@ -254,7 +429,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
     
     public void internStrings(boolean doIntern) {
-    	i_internStrings=doIntern;
+    	put(INTERN_STRINGS,doIntern);
     }
     
     public void io(IoAdapter adapter){
@@ -263,7 +438,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     public void lockDatabaseFile(boolean flag) {
-        i_lockFile = flag;
+    	put(LOCK_FILE,flag);
     }
     
     public void markTransient(String marker) {
@@ -271,18 +446,18 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     public void messageLevel(int level) {
-        i_messageLevel = level;
+    	put(MESSAGE_LEVEL,level);
         if (i_outStream == null) {
             setOut(System.out);
         }
     }
 
     public void optimizeNativeQueries(boolean optimizeNQ) {
-    	_optimizeNQ=optimizeNQ;
+    	put(OPTIMIZE_NQ,optimizeNQ);
     }
     
     public boolean optimizeNativeQueries() {
-    	return _optimizeNQ;
+    	return getAsBoolean(OPTIMIZE_NQ);
     }
     
     public ObjectClass objectClass(Object clazz) {
@@ -299,10 +474,11 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
             className = claxx.getName();
         }
         
-        Config4Class c4c = (Config4Class) i_exceptionalClasses.get(className);
+        Hashtable4 exceptionalClasses=exceptionalClasses();
+        Config4Class c4c = (Config4Class) exceptionalClasses.get(className);
         if (c4c == null) {
             c4c = new Config4Class(this, className);
-            i_exceptionalClasses.put(className, c4c);
+            exceptionalClasses.put(className, c4c);
         }
         return c4c;
     }
@@ -313,12 +489,12 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 
     public void password(String pw) {
         globalSettingOnly();
-        i_password = pw;
+        put(PASSWORD,pw);
     }
 
     public void readOnly(boolean flag) {
         globalSettingOnly();
-        i_readonly = flag;
+        put(READ_ONLY,flag);
     }
 
 	GenericReflector reflector() {
@@ -372,12 +548,13 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     public void reserveStorageSpace(long byteCount) {
-        i_reservedStorageSpace = (int) byteCount;
-        if (i_reservedStorageSpace < 0) {
-            i_reservedStorageSpace = 0;
+        int reservedStorageSpace = (int) byteCount;
+        if (reservedStorageSpace < 0) {
+            reservedStorageSpace = 0;
         }
+        put(RESERVED_STORAGE_SPACE,reservedStorageSpace);
         if (i_stream != null) {
-            i_stream.reserve(i_reservedStorageSpace);
+            i_stream.reserve(reservedStorageSpace);
         }
     }
 
@@ -403,11 +580,12 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 
     public void setBlobPath(String path) throws IOException {
         ensureDirExists(path);
-        i_blobPath = path;
+        put(BLOBPATH,path);
     }
 
     public void setClassLoader(ClassLoader classLoader) {
-        i_classLoader = classLoader;
+    	i_classLoader=classLoader;
+//        put(CLASSLOADER,classLoader);
         reflectWith(Platform4.createReflector(this));
     }
 
@@ -425,65 +603,68 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     public void singleThreadedClient(boolean flag) {
-        i_singleThreadedClient = flag;
+    	put(SINGLE_THREADED_CLIENT,flag);
     }
 
     public void testConstructors(boolean flag) {
-        i_testConstructors = flag;
+    	put(TEST_CONSTRUCTORS,flag);
     }
 
     public void timeoutClientSocket(int milliseconds) {
-        i_timeoutClientSocket = milliseconds;
+    	put(TIMEOUT_CLIENT_SOCKET,milliseconds);
     }
 
     public void timeoutPingClients(int milliseconds) {
-        i_timeoutPingClients = milliseconds;
+    	put(TIMEOUT_PING_CLIENTS,milliseconds);
     }
 
     public void timeoutServerSocket(int milliseconds) {
-        i_timeoutServerSocket = milliseconds;
+    	put(TIMEOUT_SERVER_SOCKET,milliseconds);
 
     }
 
     public void unicode(boolean unicodeOn) {
-        if (unicodeOn) {
-            i_encoding = YapConst.UNICODE;
-        } else {
-            i_encoding = YapConst.ISO8859;
-        }
+    	put(ENCODING,(unicodeOn ? YapConst.UNICODE : YapConst.ISO8859));
     }
 
     public void updateDepth(int depth) {
-        i_updateDepth = depth;
+    	put(UPDATE_DEPTH,depth);
     }
 
     public void useRamSystem() {
-        _freespaceSystem = FreespaceManager.FM_RAM;
+        put(FREESPACE_SYSTEM,FreespaceManager.FM_RAM);
     }
 
     public void useIndexSystem() {
-        _freespaceSystem = FreespaceManager.FM_IX;
+        put(FREESPACE_SYSTEM,FreespaceManager.FM_IX);
     }
     
     public void weakReferenceCollectionInterval(int milliseconds) {
-        i_weakReferenceCollectionInterval = milliseconds;
+    	put(WEAK_REFERENCE_COLLECTION_INTERVAL,milliseconds);
     }
 
     public void weakReferences(boolean flag) {
-        i_weakReferences = flag;
+    	put(WEAK_REFERENCES,flag);
+    }
+    
+    private Collection4 aliases() {
+    	if (null == _aliases) {
+    		_aliases = new Collection4();
+    	}
+    	return _aliases;
     }
     
     public void addAlias(Alias alias) {
     	if (null == alias) throw new IllegalArgumentException("alias");
-    	if (null == _aliases) _aliases = new Collection4();
-    	_aliases.add(alias);
+    	aliases().add(alias);
     }
     
     public String resolveAlias(String runtimeType) {
+
+    	Collection4 aliases=aliases();
+    	if (null == aliases) return runtimeType;
     	
-    	if (null == _aliases) return runtimeType;
-    	
-    	Iterator4 i = _aliases.iterator();
+    	Iterator4 i = aliases.iterator();
     	while (i.hasNext()) {
     		String resolved = ((Alias)i.next()).resolve(runtimeType);
     		if (null != resolved) return resolved; 
@@ -511,100 +692,101 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
         return reflector().forObject(clazz);
     }
 
-	boolean allowVersionUpdates() {
-		return _allowVersionUpdates;
+	public boolean allowVersionUpdates() {
+		return getAsBoolean(ALLOW_VERSION_UPDATES);
 	}
 
 	boolean automaticShutDown() {
-		return i_automaticShutDown;
+		return getAsBoolean(AUTOMATIC_SHUTDOWN);
 	}
 
 	byte blockSize() {
-		return i_blockSize;
+		return getAsByte(BLOCKSIZE);
 	}
 
 	String blobPath() {
-		return i_blobPath;
+		return getAsString(BLOBPATH);
 	}
 
 	boolean callbacks() {
-		return i_callbacks;
+		return getAsBoolean(CALLBACKS);
 	}
 
 	int callConstructors() {
-		return i_callConstructors;
+		return getAsInt(CALL_CONSTRUCTORS);
 	}
 
 	boolean classActivationDepthConfigurable() {
-		return i_classActivationDepthConfigurable;
+		return getAsBoolean(CLASS_ACTIVATION_DEPTH_CONFIGURABLE);
 	}
 
 	ClassLoader classLoader() {
 		return i_classLoader;
+		//return (ClassLoader)get(CLASSLOADER);
 	}
 
 	boolean detectSchemaChanges() {
-		return i_detectSchemaChanges;
+		return getAsBoolean(DETECT_SCHEMA_CHANGES);
 	}
 
 	boolean commitRecoveryDisabled() {
-		return i_disableCommitRecovery;
+		return getAsBoolean(DISABLE_COMMIT_RECOVERY);
 	}
 
 	public int discardFreeSpace() {
-		return i_discardFreeSpace;
+		return getAsInt(DISCARD_FREESPACE);
 	}
 
 	byte encoding() {
-		return i_encoding;
+		return getAsByte(ENCODING);
 	}
 
 	boolean encrypt() {
-		return i_encrypt;
+		return getAsBoolean(ENCRYPT);
 	}
 
 	Hashtable4 exceptionalClasses() {
-		return i_exceptionalClasses;
+		return (Hashtable4)get(EXCEPTIONAL_CLASSES);
 	}
 
 	boolean exceptionsOnNotStorable() {
-		return i_exceptionsOnNotStorable;
+		return getAsBoolean(EXCEPTIONS_ON_NOT_STORABLE);
 	}
 
 	public boolean flushFileBuffers() {
-		return _flushFileBuffers;
+		return getAsBoolean(FLUSH_FILE_BUFFERS);
 	}
 
 	byte freespaceSystem() {
-		return _freespaceSystem;
+		return getAsByte(FREESPACE_SYSTEM);
 	}
 
 	int generateUUIDs() {
-		return i_generateUUIDs;
+		return getAsInt(GENERATE_UUIDS);
 	}
 
 	int generateVersionNumbers() {
-		return i_generateVersionNumbers;
+		return getAsInt(GENERATE_VERSION_NUMBERS);
 	}
 
 	boolean internStrings() {
-		return i_internStrings;
+		return getAsBoolean(INTERN_STRINGS);
 	}
 	
 	void isServer(boolean flag){
-		i_isServer = flag;
+		put(IS_SERVER,flag);
 	}
 
 	boolean isServer() {
-		return i_isServer;
+		return getAsBoolean(IS_SERVER);
 	}
 
 	boolean lockFile() {
-		return i_lockFile;
+		return getAsBoolean(LOCK_FILE);
 	}
 
 	int messageLevel() {
-		return i_messageLevel;
+		return getAsInt(MESSAGE_LEVEL);
 	}
 
 	MessageRecipient messageRecipient() {
@@ -616,19 +798,19 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 	}
 
 	boolean optimizeNQ() {
-		return _optimizeNQ;
+		return getAsBoolean(OPTIMIZE_NQ);
 	}
 
 	String password() {
-		return i_password;
+		return getAsString(PASSWORD);
 	}
 
 	Hashtable4 readAs() {
-		return _readAs;
+		return (Hashtable4)get(READ_AS);
 	}
 
 	boolean isReadOnly() {
-		return i_readonly;
+		return getAsBoolean(READ_ONLY);
 	}
 
 	Collection4 rename() {
@@ -636,45 +818,42 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 	}
 
 	int reservedStorageSpace() {
-		return i_reservedStorageSpace;
+		return getAsInt(RESERVED_STORAGE_SPACE);
 	}
 
 	boolean singleThreadedClient() {
-		return i_singleThreadedClient;
+		return getAsBoolean(SINGLE_THREADED_CLIENT);
 	}
 
 	boolean testConstructors() {
-		return i_testConstructors;
+		return getAsBoolean(TEST_CONSTRUCTORS);
 	}
 
 	int timeoutClientSocket() {
-		return i_timeoutClientSocket;
+		return getAsInt(TIMEOUT_CLIENT_SOCKET);
 	}
 
 	int timeoutPingClients() {
-		return i_timeoutPingClients;
+		return getAsInt(TIMEOUT_PING_CLIENTS);
 	}
 
 	int timeoutServerSocket() {
-		return i_timeoutServerSocket;
+		return getAsInt(TIMEOUT_SERVER_SOCKET);
 	}
 
 	int updateDepth() {
-		return i_updateDepth;
+		return getAsInt(UPDATE_DEPTH);
 	}
 
 	int weakReferenceCollectionInterval() {
-		return i_weakReferenceCollectionInterval;
+		return getAsInt(WEAK_REFERENCE_COLLECTION_INTERVAL);
 	}
 
 	boolean weakReferences() {
-		return i_weakReferences;
+		return getAsBoolean(WEAK_REFERENCES);
 	}
 
 	IoAdapter ioAdapter() {
 		return i_ioAdapter;
 	}
-
-
-    
 }
