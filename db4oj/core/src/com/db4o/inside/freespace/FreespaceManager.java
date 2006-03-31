@@ -9,6 +9,7 @@ public abstract class FreespaceManager {
     
     final YapFile     _file;
 
+    public static final byte FM_DEFAULT = 0;
     public static final byte FM_LEGACY_RAM = 1;
     public static final byte FM_RAM = 2;
     public static final byte FM_IX = 3;
@@ -20,7 +21,7 @@ public abstract class FreespaceManager {
     }
 
     public static byte checkType(byte systemType){
-        if(systemType == 0){
+        if(systemType == FM_DEFAULT){
             return FM_RAM;    
         }
         return systemType;
