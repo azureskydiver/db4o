@@ -7,7 +7,7 @@ namespace j4o.lang
 {
 	public class IdentityHashCodeProvider
 	{
-#if !CF_1_0 && !CF_2_0
+#if NET_2_0 || MONO
 		public static int identityHashCode(object obj)
 		{
 			return System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj);
@@ -25,6 +25,7 @@ namespace j4o.lang
 		{
 			Assembly assembly = typeof(object).Assembly;
 
+	#if CF_1_0 || CF_2_0
 			// CompactFramework
 			try
 			{
@@ -38,7 +39,7 @@ namespace j4o.lang
 			catch (Exception e)
 			{
 			}
-
+	#endif
 			// We may be running the CF app on .NET Framework 1.1
 			// for profiling, let's give that a chance
 			try
@@ -53,11 +54,6 @@ namespace j4o.lang
 			catch (Exception e)
 			{
 			}
-
-			// and for completeness sake, let's provide .NET Framework 1.0
-			// compliance also so we can debug the CF app there too
-			return (typeof(object)).GetMethod("GetHashCode");
-
 			return null;
 		}
 #endif
