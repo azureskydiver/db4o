@@ -1311,6 +1311,7 @@
 				<exclude name="com/db4o/reflect/jdk/**/*.*" />
 				<exclude name="com/db4o/foundation/Lock4.cs" />
 				<exclude name="com/db4o/JDK_*.cs" />
+				<exclude name="com/db4o/JDKReflect*.cs" />
 				<exclude name="com/db4o/JavaOnly.cs" />
 				<exclude name="com/db4o/config/TSerializable.cs" />
 				<exclude name="com/db4o/config/TCollection.cs" />
