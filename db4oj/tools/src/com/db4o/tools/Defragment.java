@@ -7,6 +7,7 @@ import java.lang.reflect.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.types.*;
 
 /**
@@ -38,6 +39,11 @@ import com.db4o.types.*;
  * may need to be restored.
  */
 public class Defragment {
+    
+    
+    private static Hashtable4 _secondClassNames;
+    
+    
 	/**
 	 * the main method is the only entry point
 	 */
@@ -63,6 +69,22 @@ public class Defragment {
 			System.out.println("Usage: java com.db4o.tools.Defragment <database filename>");
 		}
 	}
+    
+    /**
+     * allows to specify a class to be treated as "second class".
+     * Second class objects are not migrated to the new database on their own. A second
+     * class objects is only migrated, if it is referenced by another object.
+     * @param className the fully qualified classname, including the package name for Java, 
+     * including the namespaces and assembly name for .NET. Format examples:<br>
+     * Java: 'com.db4o.f1.Pilot'<br>
+     * .NET: 'com.db4o.f1.Pilot, MyAssembly'   
+     */
+    public static void setSecondClass(String className){
+        if(_secondClassNames == null){
+            _secondClassNames = new Hashtable4(1);
+        }
+        _secondClassNames.put(className, className);
+    }
 	
 	/**
 	 * programmatic interface to run Defragment with a forced delete of a possible
@@ -150,31 +172,56 @@ public class Defragment {
 	}
 
 	private void migrateClasses(ObjectContainer origin, ObjectContainer destination, StoredClass[] classes) {
-		for (int i = 0; i < classes.length; i++) {
 
-			if (classes[i] != null) {
-				long[] ids = classes[i].getIDs();
-				origin.ext().purge();
-				destination.commit();
-				destination.ext().purge();
-				for (int j = 0; j < ids.length; j++) {
-					Object obj = origin.ext().getByID(ids[j]);
-
-					// prevent possible constructor side effects
-					origin.activate(obj, 1);
-					origin.deactivate(obj, 2);
-
-					origin.activate(obj, 3);
-					destination.set(obj);
-
-					// Both Containers keep track of state individually,
-					// so we need to make sure, both know, the object is deactivated
-					origin.deactivate(obj, 1);
-					destination.deactivate(obj, 1);
-				}
-			}
+        for (int i = 0; i < classes.length; i++) {
+            if(migrateClass(origin, destination, classes[i], true)){
+                classes[i] = null;
+            }
 		}
+        if(_secondClassNames != null){
+            for (int i = 0; i < classes.length; i++) {
+                migrateClass(origin, destination, classes[i], false);
+            }
+        }
+        
 	}
+    
+    private boolean migrateClass(ObjectContainer origin, ObjectContainer destination, StoredClass clazz, boolean firstClassPass){
+        if(clazz == null){
+            return false;
+        }
+        if(firstClassPass){
+            if(_secondClassNames != null){
+                if(_secondClassNames.get(clazz.getName()) != null){
+                    return false;
+                }
+            }
+        }
+            
+        long[] ids = clazz.getIDs();
+        origin.ext().purge();
+        destination.commit();
+        destination.ext().purge();
+        for (int j = 0; j < ids.length; j++) {
+            Object obj = origin.ext().getByID(ids[j]);
+            
+            if(firstClassPass || destination.ext().isStored(obj)){
+
+                // prevent possible constructor side effects
+                origin.activate(obj, 1);
+                origin.deactivate(obj, 2);
+    
+                origin.activate(obj, 3);
+                destination.set(obj);
+    
+                // Both Containers keep track of state individually,
+                // so we need to make sure, both know, the object is deactivated
+                origin.deactivate(obj, 1);
+                destination.deactivate(obj, 1);
+            }
+        }
+        return true;
+    }
 
 	private void removeSubclasses(StoredClass[] classes) throws ClassNotFoundException {
 		// rule out inheritance dependancies
