@@ -4,7 +4,9 @@ package com.db4o.test.replication;
 
 import com.db4o.ObjectSet;
 import com.db4o.inside.replication.GenericReplicationSession;
-import com.db4o.replication.ConflictResolver;
+import com.db4o.replication.ObjectState;
+import com.db4o.replication.ReplicationEvent;
+import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
@@ -43,11 +45,7 @@ public class MixedTypesCollectionReplicationTest extends ReplicationTestcase {
 		_providerB.storeNew(h2);
 		_providerB.storeNew(h1);
 
-		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ConflictResolver() {
-			public int resolveConflict(ReplicationSession session, Object a, Object b) {
-                return ConflictResolver.DO_NOTHING;
-			}
-		});
+		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB);
 
 		replication.replicate(h2); //Traverses to h1.
 

@@ -135,7 +135,7 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.referenceNewObject(object1, ref, null, null);
 
 		subject.storeReplica(object1);
-		ensure(!subject.wasChangedSinceLastReplication(ref));
+		ensure(!subject.wasModifiedSinceLastReplication(ref));
 
 		subject.rollbackReplication();
 

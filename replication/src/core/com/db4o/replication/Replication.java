@@ -3,7 +3,7 @@
 package com.db4o.replication;
 
 import com.db4o.ObjectContainer;
-import com.db4o.inside.replication.DefaultConflictResolver;
+import com.db4o.inside.replication.DefaultReplicationEventListener;
 import com.db4o.inside.replication.GenericReplicationSession;
 import com.db4o.replication.db4o.Db4oReplicationProvider;
 import com.db4o.replication.hibernate.impl.HibernateReplicationProviderImpl;
@@ -16,7 +16,7 @@ import org.hibernate.cfg.Configuration;
  * @author Klaus Wuestefeld
  * @version 1.0
  * @see ReplicationProvider
- * @see ConflictResolver
+ * @see ReplicationEventListener
  * @see org.hibernate.cfg.Configuration
  * @since dRS 1.0
  */
@@ -25,7 +25,7 @@ public class Replication {
 	/**
 	 * begins a replication session between db4o and db4o.
 	 */
-	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2, ConflictResolver resolver) {
+	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2, ReplicationEventListener resolver) {
 		return begin(wrap(oc1), wrap(oc2), resolver);
 	}
 
@@ -33,7 +33,7 @@ public class Replication {
 	 * begins a replication session between db4o and db4o, no conflict resolver.
 	 *
 	 * @throws ReplicationConflictException when conflicts occur
-	 * @see ConflictResolver
+	 * @see ReplicationEventListener
 	 */
 	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2) {
 		return begin(oc1, oc2, null);
@@ -42,7 +42,7 @@ public class Replication {
 	/**
 	 * begins a replication session between db4o and Hibernate
 	 */
-	public static ReplicationSession begin(ObjectContainer oc, Configuration cfg, ConflictResolver resolver) {
+	public static ReplicationSession begin(ObjectContainer oc, Configuration cfg, ReplicationEventListener resolver) {
 		return begin(wrap(oc), wrap(cfg), resolver);
 	}
 
@@ -51,7 +51,7 @@ public class Replication {
 	 * resolver.
 	 *
 	 * @throws ReplicationConflictException when conflicts occur
-	 * @see ConflictResolver
+	 * @see ReplicationEventListener
 	 */
 	public static ReplicationSession begin(ObjectContainer oc, Configuration cfg) {
 		return begin(oc, cfg, null);
@@ -60,7 +60,7 @@ public class Replication {
 	/**
 	 * begins a replication session between Hibernate and Hibernate
 	 */
-	public static ReplicationSession begin(Configuration cfg1, Configuration cfg2, ConflictResolver resolver) {
+	public static ReplicationSession begin(Configuration cfg1, Configuration cfg2, ReplicationEventListener resolver) {
 		return begin(wrap(cfg1), wrap(cfg2), resolver);
 	}
 
@@ -69,7 +69,7 @@ public class Replication {
 	 * resolver
 	 *
 	 * @throws ReplicationConflictException when conflicts occur
-	 * @see ConflictResolver
+	 * @see ReplicationEventListener
 	 */
 	public static ReplicationSession begin(Configuration cfg1, Configuration cfg2) {
 		return begin(cfg1, cfg2, null);
@@ -78,9 +78,9 @@ public class Replication {
 	/**
 	 * begins a replication session between two ReplicatoinProviders
 	 */
-	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB, ConflictResolver resolver) {
+	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB, ReplicationEventListener resolver) {
 		if (resolver == null) {
-			resolver = new DefaultConflictResolver();
+			resolver = new DefaultReplicationEventListener();
 		}
 		return new GenericReplicationSession(providerA, providerB, resolver);
 	}
@@ -90,7 +90,7 @@ public class Replication {
 	 * resolver
 	 *
 	 * @throws ReplicationConflictException when conflicts occur
-	 * @see ConflictResolver
+	 * @see ReplicationEventListener
 	 */
 	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB) {
 		return begin(providerA, providerB, null);
