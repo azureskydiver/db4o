@@ -428,7 +428,7 @@ namespace com.db4o
 #endif
 		}
 
-		internal static void Lock(RandomAccessFile raf)
+		internal static void Lock(object raf)
 		{
 			// do nothing. C# RAF is locked automatically upon opening
 		}
@@ -509,7 +509,7 @@ namespace com.db4o
 			}
 		}
 
-		internal static void unlock(RandomAccessFile randomaccessfile)
+		internal static void unlock(object randomaccessfile)
 		{
 			// do nothing. C# RAF is unlocked automatically upon closing
 		}

@@ -2,9 +2,7 @@
 
 package com.db4o;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
+import java.util.Date;
 
 import com.db4o.config.*;
 import com.db4o.foundation.*;
@@ -113,11 +111,7 @@ public final class Platform4 {
     }
     
     static Object deserialize(byte[] bytes) {
-        try {
-            return new ObjectInputStream(new ByteArrayInputStream(bytes)).readObject();
-        } catch (Exception e) {
-        }
-        return null;
+    	return jdk().deserialize(bytes);
     }
     
     static final long doubleToLong(double a_double) {
@@ -194,11 +188,7 @@ public final class Platform4 {
     }
 
     static final String format(Date date, boolean showTime) {
-        String fmt = "yyyy-MM-dd";
-        if (showTime) {
-            fmt += " HH:mm:ss";
-        }
-        return new SimpleDateFormat(fmt).format(date);
+    	return jdk().format(date, showTime);
     }
 
     public static Object getClassForType(Object obj) {
@@ -442,7 +432,8 @@ public final class Platform4 {
         }
     }
 
-    public static final void lock(RandomAccessFile file) {
+    // FIXME: functionality should really be in IoAdapter
+    public static final void lock(Object file) {
         if (!hasNio()) {
             return;
         }
@@ -554,9 +545,7 @@ public final class Platform4 {
     }
     
     static final byte[] serialize(Object obj) throws Exception{
-        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-        new ObjectOutputStream(byteStream).writeObject(obj);
-        return byteStream.toByteArray();
+    	return jdk().serialize(obj);
     }
 
     public static final void setAccessible(Object a_accessible) {
@@ -610,7 +599,7 @@ public final class Platform4 {
         };
     }
 
-    public static final void unlock(RandomAccessFile file) {
+    public static final void unlock(Object file) {
         if (hasNio()) {
             jdk().unlock(file);
         }

@@ -11,6 +11,10 @@ public class Db4oException extends RuntimeException {
 		this(cause.toString());
 		_cause = cause;
 	}
+	
+	public Db4oException(int messageConstant){
+		this(Messages.get(messageConstant));
+	}
 
 	public Exception cause() {
 		return _cause;
