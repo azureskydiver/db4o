@@ -40,6 +40,10 @@ public class JDK {
 	Object createYapRef(Object a_queue, YapObject a_yapObject, Object a_object) {
 		return null;
 	}
+	
+    Object deserialize(byte[] bytes) {
+    	throw new Db4oException(Messages.NOT_IMPLEMENTED);
+    }
 
 	void forEachCollectionElement(Object a_object, Visitor4 a_visitor) {
         if(! Deploy.csharp){
@@ -55,6 +59,10 @@ public class JDK {
                 }
             }
         }
+	}
+	
+	String format(Date date, boolean showTime) {
+		return date.toString();
 	}
 	
 	ClassLoader getContextClassLoader(){
@@ -85,7 +93,7 @@ public class JDK {
 		
 	}
 	
-	synchronized void lock(RandomAccessFile file) {
+	synchronized void lock(Object file) {
 	}
 	
     /**
@@ -113,6 +121,10 @@ public class JDK {
 	public Constructor serializableConstructor(Class clazz){
 	    return null;
 	}
+	
+    byte[] serialize(Object obj) throws Exception{
+    	throw new Db4oException(Messages.NOT_IMPLEMENTED);
+    }
 
 	void setAccessible(Object a_accessible) {
 	}
@@ -121,7 +133,7 @@ public class JDK {
         return false;
     }
 	
-	synchronized void unlock(RandomAccessFile file) {
+	synchronized void unlock(Object file) {
 	}
     
     public Object weakReferenceTarget(Object weakRef){

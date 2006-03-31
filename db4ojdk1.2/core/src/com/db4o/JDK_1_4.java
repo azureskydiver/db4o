@@ -16,7 +16,7 @@ class JDK_1_4 extends JDK_1_3 {
 	private Constructor objectConstructor;
 	private Method factoryMethod;
 	
-	synchronized void lock(RandomAccessFile file) {
+	synchronized void lock(Object file) {
 		Object channel = invoke(file, "getChannel", null, null);
 		Object fl = invoke(channel, "tryLock", null, null); 
 		if(fl == null){
@@ -28,7 +28,7 @@ class JDK_1_4 extends JDK_1_3 {
 		fileLocks.put(file, fl);
 	}
 	
-	synchronized void unlock(RandomAccessFile file) {
+	synchronized void unlock(Object file) {
 		if(fileLocks != null){
 			Object fl = fileLocks.get(file);
 			if(fl != null){

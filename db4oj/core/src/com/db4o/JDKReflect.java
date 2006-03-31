@@ -2,7 +2,13 @@
 
 package com.db4o;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.db4o.reflect.generic.*;
 
@@ -18,6 +24,22 @@ class JDKReflect extends JDK {
     Class constructorClass(){
         return Constructor.class;
     }
+    
+    Object deserialize(byte[] bytes) {
+        try {
+            return new ObjectInputStream(new ByteArrayInputStream(bytes)).readObject();
+        } catch (Exception e) {
+        }
+        return null;
+    }
+    
+	String format(Date date, boolean showTime) {
+        String fmt = "yyyy-MM-dd";
+        if (showTime) {
+            fmt += " HH:mm:ss";
+        }
+        return new SimpleDateFormat(fmt).format(date);
+	}
 	
     /**
      * use for system classes only, since not ClassLoader
@@ -84,5 +106,13 @@ class JDKReflect extends JDK {
             reflector.registerCollectionUpdateDepth(java.util.Hashtable.class, 3);
         }
     }
+    
+    byte[] serialize(Object obj) throws Exception{
+        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        new ObjectOutputStream(byteStream).writeObject(obj);
+        return byteStream.toByteArray();
+    }
+
+
 
 }

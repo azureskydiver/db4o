@@ -12,6 +12,7 @@ import com.db4o.config.*;
 public final class Messages
 {
     public final static int FATAL_MSG_ID=44;
+    public final static int NOT_IMPLEMENTED=49;
 	
     private static String[] i_messages;
 	
@@ -95,8 +96,7 @@ public final class Messages
 						"This method can only be called before opening the database file.",
 						"AccessibleObject#setAccessible() is not available. Private fields can not be stored.",
 						"ObjectTranslator could not be installed: %.",
-						"",  // replacement for expiration message below
-						// "This trial version will expire on " +  Platform.format(new Date(Lic.expirationDate), false) + ".",
+						"Not implemented",
 						"% closed by ShutdownHook.", // 50
 						"This constraint is not persistent. It has no database identity.",
 						"Add at least one ObjectContainer to the Cluster", 
