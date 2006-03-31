@@ -9,41 +9,41 @@ import com.db4o.reflect.*;
 class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     DeepClone {
 
-    int			 	   i_callConstructor;
+    private int			 	   i_callConstructor;
     
-    Config4Impl        i_config;
+    private Config4Impl        i_config;
 
     private Hashtable4 i_exceptionalFields;
 
-    int                i_generateUUIDs;
+    private int                i_generateUUIDs;
     
-    int                i_generateVersionNumbers;
+    private int                i_generateVersionNumbers;
     
     /**
      * We are running into cyclic dependancies on reading the PBootRecord
      * object, if we maintain MetaClass information there 
      */
-    boolean            _maintainMetaClass = true;
+    private boolean            _maintainMetaClass = true;
 
-    int                i_maximumActivationDepth;
+    private int                i_maximumActivationDepth;
 
-    MetaClass          i_metaClass;
+    private MetaClass          i_metaClass;
 
-    int                i_minimumActivationDepth;
+    private int                i_minimumActivationDepth;
 
-    boolean            i_persistStaticFieldValues;
+    private boolean            i_persistStaticFieldValues;
     
-    ObjectAttribute    i_queryAttributeProvider;
+    private ObjectAttribute    i_queryAttributeProvider;
     
-    boolean            i_storeTransientFields;
+    private boolean            i_storeTransientFields;
     
     private ObjectTranslator   _translator;
 
-    String             _translatorName;
+    private String             _translatorName;
     
-    int                i_updateDepth;
+    private int                i_updateDepth;
     
-    String             _writeAs;
+    private String             _writeAs;
     
     private boolean    _processing;
 
@@ -234,7 +234,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
             Config4Field field = (Config4Field) i_exceptionalFields
                 .get(fieldName);
             if (field != null) {
-                return field.i_queryEvaluation;
+                return field.queryEvaluation();
             }
         }
         return true;
@@ -272,5 +272,45 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     public void updateDepth(int depth) {
         i_updateDepth = depth;
     }
+
+	Config4Impl config() {
+		return i_config;
+	}
+
+	int generateUUIDs() {
+		return i_generateUUIDs;
+	}
+
+	int generateVersionNumbers() {
+		return i_generateVersionNumbers;
+	}
+
+	void maintainMetaClass(boolean flag){
+		_maintainMetaClass = flag;
+	}
+
+	MetaClass metaClass() {
+		return i_metaClass;
+	}
+
+	boolean staticFieldValuesArePersisted() {
+		return i_persistStaticFieldValues;
+	}
+
+	ObjectAttribute queryAttributeProvider() {
+		return i_queryAttributeProvider;
+	}
+
+	boolean storeTransientFields() {
+		return i_storeTransientFields;
+	}
+
+	int updateDepth() {
+		return i_updateDepth;
+	}
+
+	String writeAs() {
+		return _writeAs;
+	}
 
 }

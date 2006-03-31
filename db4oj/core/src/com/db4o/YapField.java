@@ -499,7 +499,7 @@ public class YapField implements StoredField {
                 }
             }
             if (Debug.indexAllFields) {
-                i_config.i_indexed = 1;
+                i_config.indexed(true);
             }
         }
     }
