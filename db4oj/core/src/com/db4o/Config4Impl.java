@@ -95,7 +95,6 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 	}
 
 	private static class KeySpec {
-		final Object key=new Object();
 		final Object defaultValue;
 		
 		KeySpec(byte defaultValue) {
@@ -224,7 +223,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     private void put(KeySpec spec,Object value) {
-    	_config.put(spec.key,value);
+    	_config.put(spec,value);
     }
 
     private byte getAsByte(KeySpec spec) {
@@ -244,7 +243,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     private Object get(KeySpec spec) {
-        Object value=_config.get(spec.key);
+        Object value=_config.get(spec);
         return (value==null ? spec.defaultValue : value);
     }
     
