@@ -484,7 +484,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_objRefs.visitEntries(visitor);
 	}
 
-	public final boolean wasChangedSinceLastReplication(ReplicationReference reference) {
+	public final boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
 		ensureReplicationActive();
 		return reference.version() > getLastReplicationVersion();
 	}

@@ -323,7 +323,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		_stream.delete(obj);
 	}
 
-	public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
+	public boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
 		if (_idsReplicatedInThisSession != null) {
 			int id = (int) _stream.getID(reference.object());
 			if (_idsReplicatedInThisSession.find(new TreeInt(id)) != null) return false;

@@ -4,11 +4,14 @@ package com.db4o.test.replication.template.r0tor4;
 
 import com.db4o.ObjectSet;
 import com.db4o.foundation.Iterator4;
+import com.db4o.inside.replication.GenericReplicationSession;
 import com.db4o.inside.replication.ReplicationReflector;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
-import com.db4o.replication.ConflictResolver;
+import com.db4o.replication.ObjectState;
+import com.db4o.replication.ReplicationEvent;
+import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
@@ -20,8 +23,6 @@ import java.util.Set;
 
 public class R0to4Runner extends ReplicationTestcase {
 // ------------------------------ FIELDS ------------------------------
-
-	private final static ConflictResolver _ignoreConflictHandler = new MyConflictResolver();
 
 	private static final int LINKERS = 4;
 
@@ -143,7 +144,7 @@ public class R0to4Runner extends ReplicationTestcase {
 	}
 
 	private int replicateAll(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB, boolean modifiedOnly) {
-		ReplicationSession replication = Replication.begin(peerA, peerB, _ignoreConflictHandler);
+		ReplicationSession replication = Replication.begin(peerA, peerB);
 
 		ObjectSet it = modifiedOnly
 				? peerA.objectsChangedSinceLastReplication(R0.class)
@@ -227,11 +228,4 @@ public class R0to4Runner extends ReplicationTestcase {
 		Test.ensureEquals(0, storedObjectsB.size());
 	}
 
-// -------------------------- INNER CLASSES --------------------------
-
-	private static class MyConflictResolver implements ConflictResolver {
-		public int resolveConflict(ReplicationSession ignored, Object a, Object b) {
-            return ConflictResolver.DO_NOTHING;
-		}
-	}
 }

@@ -65,7 +65,7 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint);
 
-	boolean wasChangedSinceLastReplication(ReplicationReference reference);
+	boolean wasModifiedSinceLastReplication(ReplicationReference reference);
 
 	boolean wasDeletedSinceLastReplication(Db4oUUID uuid);
 

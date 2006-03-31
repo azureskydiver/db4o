@@ -381,7 +381,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		}
 	}
 
-	public boolean wasChangedSinceLastReplication(ReplicationReference reference) {
+	public boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
 		return reference.version() > _lastReplicationVersion;
 	}
 

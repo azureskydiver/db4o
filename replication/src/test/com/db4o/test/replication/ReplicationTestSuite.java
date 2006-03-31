@@ -1,19 +1,22 @@
 package com.db4o.test.replication;
 
-import com.db4o.test.*;
-import com.db4o.test.replication.collections.*;
-import com.db4o.test.replication.collections.map.*;
-import com.db4o.test.replication.hibernate.*;
-import com.db4o.test.replication.performance.*;
-import com.db4o.test.replication.provider.*;
-import com.db4o.test.replication.template.*;
-import com.db4o.test.replication.template.r0tor4.*;
+import com.db4o.test.TestSuite;
+import com.db4o.test.replication.collections.ListTest;
+import com.db4o.test.replication.collections.SimpleArrayTest;
+import com.db4o.test.replication.collections.map.MapTest;
+import com.db4o.test.replication.hibernate.HibernateProviderTest;
+import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
+import com.db4o.test.replication.hibernate.TablesCreatorTest;
+import com.db4o.test.replication.provider.TransientReplicationProviderTest;
+import com.db4o.test.replication.template.SimpleParentChild;
+import com.db4o.test.replication.template.r0tor4.R0to4Runner;
 
 public class ReplicationTestSuite extends TestSuite {
 
 	public Class[] tests2() {
 		System.err.println("Use tests2 below");
-		return new Class[]{
+		return new Class[] {
+			ReplicationFeaturesMain.class,
 		};
 	}
 

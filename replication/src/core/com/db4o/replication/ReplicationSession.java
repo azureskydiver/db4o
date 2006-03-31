@@ -73,7 +73,7 @@ public interface ReplicationSession {
 	 * were replicated.
 	 *
 	 * @param obj the object to be replicated.
-	 * @see ConflictResolver
+	 * @see ReplicationEventListener
 	 */
 	public void replicate(Object obj);
 

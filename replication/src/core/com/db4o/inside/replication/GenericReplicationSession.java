@@ -18,7 +18,10 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	private ReplicationProvider _directionTo; //null means bidirectional replication.
 
-	private final ConflictResolver _resolver;
+	private final ReplicationEventListener _listener;
+	private final ReplicationEventImpl _event = new ReplicationEventImpl();
+	private ObjectStateImpl _stateInA = _event._stateInProviderA;
+	private ObjectStateImpl _stateInB = _event._stateInProviderB;
 
 	private final Traverser _traverser;
 
@@ -31,7 +34,8 @@ public class GenericReplicationSession implements ReplicationSession {
 	 */
 	private Hashtable4 _counterpartRefsByOriginal = new Hashtable4(1000);
 
-	public GenericReplicationSession(ReplicationProvider providerA, ReplicationProvider providerB, ConflictResolver resolver) {
+
+	public GenericReplicationSession(ReplicationProvider providerA, ReplicationProvider providerB, ReplicationEventListener listener) {
 
 		_reflector = ReplicationReflector.getInstance();
 		_collectionHandler = new CollectionHandlerImpl(_reflector.reflector());
@@ -39,7 +43,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		_peerA = (ReplicationProviderInside) providerA;
 		_peerB = (ReplicationProviderInside) providerB;
-		_resolver = resolver;
+		_listener = listener;
 
 		synchronized (_peerA.getMonitor()) {
 			synchronized (_peerB.getMonitor()) {
@@ -50,7 +54,7 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	public GenericReplicationSession(ReplicationProviderInside _peerA, ReplicationProviderInside _peerB) {
-		this(_peerA, _peerB, new DefaultConflictResolver());
+		this(_peerA, _peerB, new DefaultReplicationEventListener());
 	}
 
 	public void replicate(Object root) {
@@ -223,12 +227,11 @@ public class GenericReplicationSession implements ReplicationSession {
         if (wasProcessed(uuid)) return false;
         markAsProcessed(uuid);
 
-        
 		Object objectA = refA.object();
 		Object objectB = refB.object();
 
-		boolean changedInA = _peerA.wasChangedSinceLastReplication(refA);
-		boolean changedInB = _peerB.wasChangedSinceLastReplication(refB);
+		boolean changedInA = _peerA.wasModifiedSinceLastReplication(refA);
+		boolean changedInB = _peerB.wasModifiedSinceLastReplication(refB);
 
 		if (!changedInA && !changedInB) return false;
 
@@ -242,11 +245,16 @@ public class GenericReplicationSession implements ReplicationSession {
 			_peerA.activate(objectA);
 			_peerB.activate(objectB);
 
-			int action = _resolver.resolveConflict(this, objectA, objectB);
+			_event.resetAction();
+			_event._isConflict = true;
+			_stateInA.setAll(objectA, false, changedInA, false);
+			_stateInB.setAll(objectB, false, changedInB, false);
+			_listener.onReplicate(_event);
 
-			if (action == ConflictResolver.DO_NOTHING) return false;
-			if (action == ConflictResolver.A_PREVAILS) prevailing = objectA;
-			if (action == ConflictResolver.B_PREVAILS) prevailing = objectB;
+			if (!_event._actionWasChosen) throwReplicationConflictException();
+			if (_event._actionChosen == null) return false;
+			if (_event._actionChosen == _stateInA) prevailing = objectA;
+			if (_event._actionChosen == _stateInB) prevailing = objectB;
 		}
 
 		ReplicationProviderInside prevailingPeer = prevailing == objectA ? _peerA : _peerB;
@@ -266,6 +274,11 @@ public class GenericReplicationSession implements ReplicationSession {
 		return true;
 	}
 
+	private void throwReplicationConflictException() {
+		throw new ReplicationConflictException("A replication conflict ocurred and the ReplicationEventListener, if any, did not choose which state should override the other.");
+	}
+
+
     private boolean wasProcessed(Db4oUUID uuid) {
         return _processedUuids.get(uuid) != null;
     }
@@ -278,21 +291,30 @@ public class GenericReplicationSession implements ReplicationSession {
 	private boolean handleDeletionInOther(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName) {
 
 		boolean isConflict = false;
-		if (owner.wasChangedSinceLastReplication(ownerRef)) isConflict = true;
+		boolean wasModified = owner.wasModifiedSinceLastReplication(ownerRef);
+		if (wasModified) isConflict = true;
 		if (_directionTo == other) isConflict = true;
 
 		Object prevailing = null;
 		if (isConflict) {
 			owner.activate(obj);
 
-			Object objectA = (owner == _peerA ? obj : null);
-			Object objectB = (owner == _peerB ? obj : null);
+			_event.resetAction();
+			_event._isConflict = true;
+			if (owner == _peerA) {
+				_stateInA.setAll(obj, false, wasModified, false);
+				_stateInB.setAll(null, false, false, true);
+			} else { //owner == _peerB
+				_stateInA.setAll(null, false, false, true);
+				_stateInB.setAll(obj, false, wasModified, false);
+			}
+			_listener.onReplicate(_event);
 
-			int action = _resolver.resolveConflict(this, objectA, objectB);
-
-			if (action == ConflictResolver.DO_NOTHING) return false;
-			if (action == ConflictResolver.A_PREVAILS) prevailing = objectA;
-			if (action == ConflictResolver.B_PREVAILS) prevailing = objectB;
+			if (!_event._actionWasChosen)
+				throwReplicationConflictException();
+			if (_event._actionChosen == null) return false;
+			if (_event._actionChosen == _stateInA) prevailing = _stateInA.getObject();
+			if (_event._actionChosen == _stateInB) prevailing = _stateInB.getObject();
 		}
 
 		if (prevailing == null) { //Deletion has prevailed.

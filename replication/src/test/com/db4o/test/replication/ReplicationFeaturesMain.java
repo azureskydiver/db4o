@@ -7,7 +7,9 @@ import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.GenericReplicationSession;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.replication.ConflictResolver;
+import com.db4o.replication.ObjectState;
+import com.db4o.replication.ReplicationEvent;
+import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationProvider;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
@@ -169,15 +171,20 @@ public class ReplicationFeaturesMain extends ReplicationTestcase {
 
 		performChanges();
 
-		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ConflictResolver() {
+		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ReplicationEventListener() {
 
-			public int resolveConflict(ReplicationSession session, Object a, Object b) {
-				if (_objectsToPrevailInConflicts.isEmpty())
-					return ConflictResolver.DO_NOTHING;
-
-				return _objectsToPrevailInConflicts.contains(A)
-						? ConflictResolver.A_PREVAILS
-						: ConflictResolver.B_PREVAILS;
+			public void onReplicate(ReplicationEvent event) {
+				if (!event.isConflict()) return;
+				
+				if (_objectsToPrevailInConflicts.isEmpty()) {
+					event.overrideWith(null);
+					return;
+				}
+				
+				ObjectState override = _objectsToPrevailInConflicts.contains(A)
+						? event.stateInProviderA()
+						: event.stateInProviderB();
+				event.overrideWith(override);
 			}
 
 		});
@@ -349,7 +356,6 @@ public class ReplicationFeaturesMain extends ReplicationTestcase {
 		//System.out.println("");
 		//System.out.println(name + (isExpected ? " " : " NOT") + " expected in container " + containerName(container));
 		Replicated obj = find(container, name);
-		//System.out.println("obj = " + obj);
 		if (isExpected) {
 			ensure(obj != null);
 		} else {
@@ -401,11 +407,6 @@ public class ReplicationFeaturesMain extends ReplicationTestcase {
 	}
 
 	private void initState() {
-//		_providerA = prepareProviderA();
-//		_providerB = prepareProviderB();
-
-		//clean();
-
 		checkEmpty(_providerA);
 		checkEmpty(_providerB);
 
@@ -415,11 +416,7 @@ public class ReplicationFeaturesMain extends ReplicationTestcase {
 		_providerA.commit();
 		_providerB.commit();
 
-		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ConflictResolver() {
-			public int resolveConflict(ReplicationSession session, Object a, Object b) {
-				return ConflictResolver.DO_NOTHING;
-			}
-		});
+		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB);
 
 		replicateQueryingFrom(replication, _providerA, _providerB);
 		replicateQueryingFrom(replication, _providerB, _providerA);

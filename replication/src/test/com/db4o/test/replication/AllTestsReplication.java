@@ -23,9 +23,9 @@ public class AllTestsReplication extends AllTests {
     
 	private void registerProviderPairs() {
         ReplicationTestcase.registerProviderPair(new TransientReplicationProvider(new byte[] {65}, "A"), new TransientReplicationProvider(new byte[] {66}, "B"));
-        ReplicationTestcase.registerProviderPair(HibernateUtil.refAsTableProviderA(), HibernateUtil.refAsTableProviderB());
-//      ReplicationTestcase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), Db4oReplicationTestUtil.newProviderB());
-//      ReplicationTestcase.registerProviderPair(HibernateUtil.produceMySQLConfigA());
+//        ReplicationTestcase.registerProviderPair(HibernateUtil.refAsTableProviderA(), HibernateUtil.refAsTableProviderB());
+//        ReplicationTestcase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), Db4oReplicationTestUtil.newProviderB());
+//        ReplicationTestcase.registerProviderPair(HibernateUtil.produceMySQLConfigA());
     }
 
     protected void addTestSuites(TestSuite suites) {
