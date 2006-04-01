@@ -2,33 +2,73 @@
 
 package com.db4o;
 
+import com.db4o.foundation.KeySpec;
+import com.db4o.foundation.KeySpecHashtable4;
+
 abstract class Config4Abstract
 {
-	int i_cascadeOnActivate = 0;
-	int i_cascadeOnDelete = 0;
-	int i_cascadeOnUpdate = 0;
-	String i_name;
+	protected KeySpecHashtable4 _config;
+
+	private final static KeySpec CASCADE_ON_ACTIVATE=new KeySpec(YapConst.DEFAULT);
+//	int i_cascadeOnActivate = 0;
+	private final static KeySpec CASCADE_ON_DELETE=new KeySpec(YapConst.DEFAULT);
+//	int i_cascadeOnDelete = 0;
+	private final static KeySpec CASCADE_ON_UPDATE=new KeySpec(YapConst.DEFAULT);
+//	int i_cascadeOnUpdate = 0;
+	private final static KeySpec NAME=new KeySpec(null);
+//	String i_name;
+
+	public Config4Abstract() {
+		this(new KeySpecHashtable4(10));
+	}
+	
+	protected Config4Abstract(KeySpecHashtable4 config) {
+		_config=(KeySpecHashtable4)config.deepClone(this);
+	}
 	
 	public void cascadeOnActivate(boolean flag){
-		i_cascadeOnActivate = flag ? 1 : -1;
+		putThreeValued(CASCADE_ON_ACTIVATE,flag);
 	}
 	
 	public void cascadeOnDelete(boolean flag){
-		i_cascadeOnDelete = flag ? 1 : -1;
+		putThreeValued(CASCADE_ON_DELETE,flag);
 	}
 	
 	public void cascadeOnUpdate(boolean flag){
-		i_cascadeOnUpdate = flag ? 1 : -1;
+		putThreeValued(CASCADE_ON_UPDATE,flag);
 	}
 
+	protected void putThreeValued(KeySpec spec,boolean flag) {
+		_config.put(spec, flag ? YapConst.YES : YapConst.NO);
+	}
+	
+	public int cascadeOnActivate(){
+		return cascade(CASCADE_ON_ACTIVATE);
+	}
+	
+	public int cascadeOnDelete(){
+		return cascade(CASCADE_ON_DELETE);
+	}
+	
+	public int cascadeOnUpdate(){
+		return cascade(CASCADE_ON_UPDATE);
+	}
+
+	private int cascade(KeySpec spec) {
+		return _config.getAsInt(spec);
+	}
+	
 	abstract String className();
 	
 	public boolean equals(Object obj){
-		return i_name.equals(((Config4Abstract)obj).i_name);
+		return getName().equals(((Config4Abstract)obj).getName());
 	}
 
 	public String getName(){
-		return i_name;
+		return _config.getAsString(NAME);
 	}
 	
+	protected void setName(String name) {
+		_config.put(NAME,name);
+	}
 }

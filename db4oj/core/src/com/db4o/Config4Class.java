@@ -6,68 +6,91 @@ import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
-class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
+class Config4Class extends Config4Abstract implements ObjectClass,
     DeepClone {
 
-    private int			 	   i_callConstructor;
+	private final static KeySpec CALL_CONSTRUCTOR=new KeySpec(0);
+//    private int			 	   i_callConstructor;
     
-    private Config4Impl        i_config;
+	private final static KeySpec CONFIG=new KeySpec(null);
+//    private Config4Impl        i_config;
 
-    private Hashtable4 i_exceptionalFields;
+	private final static KeySpec EXCEPTIONAL_FIELDS=new KeySpec(null);
+//    private Hashtable4 i_exceptionalFields;
 
-    private int                i_generateUUIDs;
+	private final static KeySpec GENERATE_UUIDS=new KeySpec(0);
+//    private int                i_generateUUIDs;
     
-    private int                i_generateVersionNumbers;
+	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(0);
+//    private int                i_generateVersionNumbers;
     
     /**
      * We are running into cyclic dependancies on reading the PBootRecord
      * object, if we maintain MetaClass information there 
      */
-    private boolean            _maintainMetaClass = true;
+	private final static KeySpec MAINTAIN_METACLASS=new KeySpec(true);
+//    private boolean            _maintainMetaClass = true;
 
-    private int                i_maximumActivationDepth;
+	private final static KeySpec MAXIMUM_ACTIVATION_DEPTH=new KeySpec(0);
+//    private int                i_maximumActivationDepth;
 
-    private MetaClass          i_metaClass;
+	private final static KeySpec METACLASS=new KeySpec(null);
+//    private MetaClass          i_metaClass;
 
-    private int                i_minimumActivationDepth;
+	private final static KeySpec MINIMUM_ACTIVATION_DEPTH=new KeySpec(0);
+//    private int                i_minimumActivationDepth;
 
-    private boolean            i_persistStaticFieldValues;
+	private final static KeySpec PERSIST_STATIC_FIELD_VALUES=new KeySpec(false);
+//    private boolean            i_persistStaticFieldValues;
     
-    private ObjectAttribute    i_queryAttributeProvider;
+	private final static KeySpec QUERY_ATTRIBUTE_PROVIDER=new KeySpec(null);
+//    private ObjectAttribute    i_queryAttributeProvider;
     
-    private boolean            i_storeTransientFields;
+	private final static KeySpec STORE_TRANSIENT_FIELDS=new KeySpec(false);
+//    private boolean            i_storeTransientFields;
     
-    private ObjectTranslator   _translator;
+	private final static KeySpec TRANSLATOR=new KeySpec(null);
+//    private ObjectTranslator   _translator;
 
-    private String             _translatorName;
+	private final static KeySpec TRANSLATOR_NAME=new KeySpec((String)null);
+//    private String             _translatorName;
     
-    private int                i_updateDepth;
+	private final static KeySpec UPDATE_DEPTH=new KeySpec(0);
+//    private int                i_updateDepth;
     
-    private String             _writeAs;
+	private final static KeySpec WRITE_AS=new KeySpec((String)null);
+//    private String             _writeAs;
     
-    private boolean    _processing;
+	private final static KeySpec PROCESSING=new KeySpec(false);
+//    private boolean    _processing;
 
-    Config4Class(Config4Impl a_configuration, String a_name) {
-        i_config = a_configuration;
-        i_name = a_name;
+    protected Config4Class(KeySpecHashtable4 config) {
+    	super(config);
+    }
+
+	Config4Class(Config4Impl a_configuration, String a_name) {
+        _config.put(CONFIG,a_configuration);
+        setName(a_name);
     }
 
     int adjustActivationDepth(int a_depth) {
-        if ((i_cascadeOnActivate == 1)&& a_depth < 2) {
+        if ((cascadeOnActivate() == YapConst.YES)&& a_depth < 2) {
             a_depth = 2;
         }
-        if((i_cascadeOnActivate == -1)  && a_depth > 1){
+        if((cascadeOnActivate() == YapConst.NO)  && a_depth > 1){
             a_depth = 1;
         }
-        if (i_config.classActivationDepthConfigurable()) {
-            if (i_minimumActivationDepth != 0) {
-                if (a_depth < i_minimumActivationDepth) {
-                    a_depth = i_minimumActivationDepth;
+        if (config().classActivationDepthConfigurable()) {
+        	int minimumActivationDepth=_config.getAsInt(MINIMUM_ACTIVATION_DEPTH);
+            if (minimumActivationDepth != 0) {
+                if (a_depth < minimumActivationDepth) {
+                    a_depth = minimumActivationDepth;
                 }
             }
-            if (i_maximumActivationDepth != 0) {
-                if (a_depth > i_maximumActivationDepth) {
-                    a_depth = i_maximumActivationDepth;
+        	int maximumActivationDepth=_config.getAsInt(MAXIMUM_ACTIVATION_DEPTH);
+            if (maximumActivationDepth != 0) {
+                if (a_depth > maximumActivationDepth) {
+                    a_depth = maximumActivationDepth;
                 }
             }
         }
@@ -75,7 +98,7 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     }
     
     public void callConstructor(boolean flag){
-        i_callConstructor = flag ? YapConst.YES : YapConst.NO;
+    	putThreeValued(CALL_CONSTRUCTOR, flag);
     }
 
     String className() {
@@ -83,34 +106,23 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     }
     
     ReflectClass classReflector() throws ClassNotFoundException {
-    	return i_config.reflector().forName(i_name);
+    	return config().reflector().forName(getName());
     }
 
     public void compare(ObjectAttribute comparator) {
-        i_queryAttributeProvider = comparator;
+        _config.put(QUERY_ATTRIBUTE_PROVIDER,comparator);
     }
 
     Config4Field configField(String fieldName) {
-        if (i_exceptionalFields == null) {
+    	Hashtable4 exceptionalFields=exceptionalFieldsOrNull();
+        if (exceptionalFields == null) {
             return null;
         }
-        return (Config4Field) i_exceptionalFields.get(fieldName);
+        return (Config4Field) exceptionalFields.get(fieldName);
     }
 
     public Object deepClone(Object param){
-        Config4Class ret = null;
-        try {
-            ret = (Config4Class) clone();
-            ret._processing = false;
-        } catch (CloneNotSupportedException e) {
-            // won't happen
-        }
-        ret.i_config = (Config4Impl) param;
-        if (i_exceptionalFields != null) {
-            ret.i_exceptionalFields = (Hashtable4) i_exceptionalFields
-                .deepClone(ret);
-        }
-        return ret;
+        return new Config4Class(_config);
     }
 
 	public void enableReplication(boolean setting) {
@@ -119,78 +131,87 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
 	}
     
     public void generateUUIDs(boolean setting) {
-        i_generateUUIDs = setting ? YapConst.YES : YapConst.NO;
+    	putThreeValued(GENERATE_UUIDS, setting);
     }
 
     public void generateVersionNumbers(boolean setting) {
-        i_generateVersionNumbers = setting ? YapConst.YES : YapConst.NO;
+    	putThreeValued(GENERATE_VERSION_NUMBERS, setting);
     }
 
     public ObjectTranslator getTranslator() {
-        if (_translator != null) {
-        	return _translator;
+    	ObjectTranslator translator=(ObjectTranslator)_config.get(TRANSLATOR);
+        if (translator != null) {
+        	return translator;
         }
-        
-        if (_translatorName == null) {
+
+        String translatorName=_config.getAsString(TRANSLATOR_NAME);
+        if (translatorName == null) {
         	return null;
         }
         
         try {
-            _translator = (ObjectTranslator) i_config.reflector().forName(
-                _translatorName).newInstance();
+            translator = (ObjectTranslator) config().reflector().forName(
+                translatorName).newInstance();
         } catch (Throwable t) {
             if (! Deploy.csharp){
             	// TODO: why?
                 try{
-                    _translator = (ObjectTranslator) Class.forName(_translatorName).newInstance();
-                    if(_translator != null){
-                        return _translator;
+                    translator = (ObjectTranslator) Class.forName(translatorName).newInstance();
+                    if(translator != null){
+                    	translate(translator);
+                        return translator;
                     }
                 }catch(Throwable th){
                 }
             }
-            Messages.logErr(i_config, 48, _translatorName, null);
-            _translatorName = null;
+            Messages.logErr(config(), 48, translatorName, null);
+            translateOnDemand(null);
         }
-        return _translator;
+        translate(translator);
+        return translator;
     }
 
     public boolean initOnUp(Transaction systemTrans, final int[] metaClassID) {
-        if(_processing){
+    	boolean processing=_config.getAsBoolean(PROCESSING);
+        if(processing){
             return false;
         }
-        _processing = true;
+        _config.put(PROCESSING,true);
         if (Tuning.fieldIndices) {
             YapStream stream = systemTrans.i_stream;
             if (stream.maintainsIndices()) {
-                if(_maintainMetaClass){
-                    
+            	boolean maintainMetaClass=_config.getAsBoolean(MAINTAIN_METACLASS);
+                if(maintainMetaClass){
+                    MetaClass metaClass=metaClass();
                     if(metaClassID[0] > 0){
-                        i_metaClass = (MetaClass)stream.getByID1(systemTrans, metaClassID[0]);
+                        metaClass = (MetaClass)stream.getByID1(systemTrans, metaClassID[0]);
+                        _config.put(METACLASS, metaClass);
                     }
                     
-                    if(i_metaClass == null){
-                        i_metaClass = (MetaClass) stream.get1(systemTrans,new MetaClass(i_name)).next();
-                        metaClassID[0] = stream.getID1(systemTrans, i_metaClass);
+                    if(metaClass == null){
+                        metaClass = (MetaClass) stream.get1(systemTrans,new MetaClass(getName())).next();
+                        _config.put(METACLASS, metaClass);
+                        metaClassID[0] = stream.getID1(systemTrans, metaClass);
                     }
                             
-                    if (i_metaClass == null) {
-                        i_metaClass = new MetaClass(i_name);
-                        stream.setInternal(systemTrans, i_metaClass, Integer.MAX_VALUE, false);
-                        metaClassID[0] = stream.getID1(systemTrans, i_metaClass);
+                    if (metaClass == null) {
+                        metaClass = new MetaClass(getName());
+                        _config.put(METACLASS, metaClass);
+                        stream.setInternal(systemTrans, metaClass, Integer.MAX_VALUE, false);
+                        metaClassID[0] = stream.getID1(systemTrans, metaClass);
                     } else {
-                        stream.activate1(systemTrans, i_metaClass,
+                        stream.activate1(systemTrans, metaClass,
                             Integer.MAX_VALUE);
                     }
                 }
             }
         }
-        _processing = false;
+        _config.put(PROCESSING, false);
         return true;
     }
 
     Object instantiate(YapStream a_stream, Object a_toTranslate) {
-        return ((ObjectConstructor) _translator).onInstantiate(a_stream,
+        return ((ObjectConstructor) _config.get(TRANSLATOR)).onInstantiate(a_stream,
             a_toTranslate);
     }
 
@@ -199,39 +220,52 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
     }
 
     public void maximumActivationDepth(int depth) {
-        i_maximumActivationDepth = depth;
+    	_config.put(MAXIMUM_ACTIVATION_DEPTH,depth);
     }
 
     public void minimumActivationDepth(int depth) {
-        i_minimumActivationDepth = depth;
+    	_config.put(MINIMUM_ACTIVATION_DEPTH,depth);
     }
     
     public int callConstructor() {
-        if(_translator != null){
+        if(_config.get(TRANSLATOR) != null){
             return YapConst.YES;
         }
-        return i_callConstructor;
+        return _config.getAsInt(CALL_CONSTRUCTOR);
+    }
+
+    private Hashtable4 exceptionalFieldsOrNull() {
+    	return (Hashtable4)_config.get(EXCEPTIONAL_FIELDS);
+
+    }
+    
+    private Hashtable4 exceptionalFields() {
+    	Hashtable4 exceptionalFields=exceptionalFieldsOrNull();
+        if (exceptionalFields == null) {
+            exceptionalFields = new Hashtable4(16);
+            _config.put(EXCEPTIONAL_FIELDS,exceptionalFields);
+        }
+        return exceptionalFields;
     }
     
     public ObjectField objectField(String fieldName) {
-        if (i_exceptionalFields == null) {
-            i_exceptionalFields = new Hashtable4(16);
-        }
-        Config4Field c4f = (Config4Field) i_exceptionalFields.get(fieldName);
+    	Hashtable4 exceptionalFields=exceptionalFields();
+        Config4Field c4f = (Config4Field) exceptionalFields.get(fieldName);
         if (c4f == null) {
             c4f = new Config4Field(this, fieldName);
-            i_exceptionalFields.put(fieldName, c4f);
+            exceptionalFields.put(fieldName, c4f);
         }
         return c4f;
     }
 
     public void persistStaticFieldValues() {
-        i_persistStaticFieldValues = true;
+        _config.put(PERSIST_STATIC_FIELD_VALUES, true);
     }
 
     boolean queryEvaluation(String fieldName) {
-        if (i_exceptionalFields != null) {
-            Config4Field field = (Config4Field) i_exceptionalFields
+    	Hashtable4 exceptionalFields=exceptionalFieldsOrNull();
+        if (exceptionalFields != null) {
+            Config4Field field = (Config4Field) exceptionalFields
                 .get(fieldName);
             if (field != null) {
                 return field.queryEvaluation();
@@ -239,78 +273,79 @@ class Config4Class extends Config4Abstract implements ObjectClass, Cloneable,
         }
         return true;
     }
-    
-   public void readAs(Object clazz) {
-       ReflectClass claxx = i_config.reflectorFor(clazz);
+
+    public void readAs(Object clazz) {
+	   Config4Impl config=config();
+       ReflectClass claxx = config.reflectorFor(clazz);
        if (claxx == null) {
            return;
        }
-       _writeAs = i_name;
-       i_config.readAs().put(_writeAs, claxx.getName());
+       _config.put(WRITE_AS,getName());
+       config.readAs().put(getName(), claxx.getName());
    }
 
     public void rename(String newName) {
-        i_config.rename(new Rename("", i_name, newName));
-        i_name = newName;
+        config().rename(new Rename("", getName(), newName));
+        setName(newName);
     }
 
     public void storeTransientFields(boolean flag) {
-        i_storeTransientFields = flag;
+    	_config.put(STORE_TRANSIENT_FIELDS, flag);
     }
 
     public void translate(ObjectTranslator translator) {
         if (translator == null) {
-            _translatorName = null;
+            _config.put(TRANSLATOR_NAME, null);
         }
-        _translator = translator;
+        _config.put(TRANSLATOR, translator);
     }
 
     void translateOnDemand(String a_translatorName) {
-        _translatorName = a_translatorName;
+        _config.put(TRANSLATOR_NAME,a_translatorName);
     }
 
     public void updateDepth(int depth) {
-        i_updateDepth = depth;
+    	_config.put(UPDATE_DEPTH, depth);
     }
 
 	Config4Impl config() {
-		return i_config;
+		return (Config4Impl)_config.get(CONFIG);
 	}
 
 	int generateUUIDs() {
-		return i_generateUUIDs;
+		return _config.getAsInt(GENERATE_UUIDS);
 	}
 
 	int generateVersionNumbers() {
-		return i_generateVersionNumbers;
+		return _config.getAsInt(GENERATE_VERSION_NUMBERS);
 	}
 
 	void maintainMetaClass(boolean flag){
-		_maintainMetaClass = flag;
+		_config.put(MAINTAIN_METACLASS,flag);
 	}
 
 	MetaClass metaClass() {
-		return i_metaClass;
+		return (MetaClass)_config.get(METACLASS);
 	}
 
 	boolean staticFieldValuesArePersisted() {
-		return i_persistStaticFieldValues;
+		return _config.getAsBoolean(PERSIST_STATIC_FIELD_VALUES);
 	}
 
 	ObjectAttribute queryAttributeProvider() {
-		return i_queryAttributeProvider;
+		return (ObjectAttribute)_config.get(QUERY_ATTRIBUTE_PROVIDER);
 	}
 
 	boolean storeTransientFields() {
-		return i_storeTransientFields;
+		return _config.getAsBoolean(STORE_TRANSIENT_FIELDS);
 	}
 
 	int updateDepth() {
-		return i_updateDepth;
+		return _config.getAsInt(UPDATE_DEPTH);
 	}
 
 	String writeAs() {
-		return _writeAs;
+		return _config.getAsString(WRITE_AS);
 	}
 
 }
