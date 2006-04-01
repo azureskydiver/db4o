@@ -23,6 +23,7 @@ public final class Config4Impl
 implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfiguration {
 	private Hashtable4 _config=new Hashtable4(50);
 	
+	/*
 	private static class BoolWrapper implements DeepClone {
 		final static BoolWrapper TRUE=new BoolWrapper(true);
 		final static BoolWrapper FALSE=new BoolWrapper(false);
@@ -93,24 +94,20 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 			return value;
 		}
 	}
-
+*/
 	private static class KeySpec {
 		final Object defaultValue;
 		
 		KeySpec(byte defaultValue) {
-			this(new ByteWrapper(defaultValue));
+			this(new Byte(defaultValue));
 		}
 
 		KeySpec(int defaultValue) {
-			this(new IntWrapper(defaultValue));
+			this(new Integer(defaultValue));
 		}
 
 		KeySpec(boolean defaultValue) {
-			this(BoolWrapper.valueOf(defaultValue));
-		}
-
-		KeySpec(String defaultValue) {
-			this(new StringWrapper(defaultValue));
+			this(new Boolean(defaultValue));
 		}
 
 		KeySpec(Object defaultValue) {
@@ -179,7 +176,9 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 //    private boolean          i_readonly;
     private Reflector _configuredReflector; // XXX
     private GenericReflector _reflector; // XXX
-    private Collection4      i_rename; // XXX (filled from the outside with 'real' strings)
+    
+	private final static KeySpec RENAME=new KeySpec(null);
+//    private Collection4      i_rename; // (filled from the outside with 'real' strings)
 	private final static KeySpec RESERVED_STORAGE_SPACE=new KeySpec(0);
 //    private int              i_reservedStorageSpace;
 	private final static KeySpec SINGLE_THREADED_CLIENT=new KeySpec(false);
@@ -203,23 +202,20 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     	// NOTE: activate this config to trigger the defragment failure
     	//= new NIOFileAdapter(512,3);
     	= new RandomAccessFileAdapter();
-    
-    private Collection4 _aliases; // strange stringwrapper cast problem - how should this get in for this key?
+  
+	private final static KeySpec ALIASES=new KeySpec(null);
+//    private Collection4 _aliases; // strange stringwrapper cast problem - how should this get in for this key?
     
     private void put(KeySpec spec,byte value) {
-    	put(spec,new ByteWrapper(value));
+    	put(spec,new Byte(value));
     }
 
     private void put(KeySpec spec,boolean value) {
-    	put(spec,BoolWrapper.valueOf(value));
+    	put(spec,new Boolean(value));
     }
 
     private void put(KeySpec spec,int value) {
-    	put(spec,new IntWrapper(value));
-    }
-
-    private void put(KeySpec spec,String value) {
-    	put(spec,new StringWrapper(value));
+    	put(spec,new Integer(value));
     }
 
     private void put(KeySpec spec,Object value) {
@@ -227,19 +223,19 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     private byte getAsByte(KeySpec spec) {
-    	return ((ByteWrapper)get(spec)).byteValue();
+    	return ((Byte)get(spec)).byteValue();
     }
 
     private boolean getAsBoolean(KeySpec spec) {
-    	return ((BoolWrapper)get(spec)).booleanValue();
+    	return ((Boolean)get(spec)).booleanValue();
     }
 
     private int getAsInt(KeySpec spec) {
-    	return ((IntWrapper)get(spec)).intValue();
+    	return ((Integer)get(spec)).intValue();
     }
 
     private String getAsString(KeySpec spec) {
-    	return ((StringWrapper)get(spec)).toString();
+    	return (String)get(spec);
     }
 
     private Object get(KeySpec spec) {
@@ -336,8 +332,9 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
         if (exceptionalClasses != null) {
             ret.put(EXCEPTIONAL_CLASSES,exceptionalClasses.deepClone(ret));
         }
-        if (i_rename != null) {
-            ret.i_rename=(Collection4)i_rename.deepClone(ret);
+        Collection4 rename=rename();
+        if (rename != null) {
+            ret.put(RENAME,rename.deepClone(ret));
         }
         if(_reflector != null){
         	ret._reflector = (GenericReflector)_reflector.deepClone(ret);
@@ -540,10 +537,12 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     void rename(Rename a_rename) {
-        if (i_rename == null) {
-            i_rename = new Collection4();
+    	Collection4 rename=rename();
+        if (rename == null) {
+            rename = new Collection4();
+            put(RENAME,rename);
         }
-        i_rename.add(a_rename);
+        rename.add(a_rename);
     }
 
     public void reserveStorageSpace(long byteCount) {
@@ -647,10 +646,12 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
     
     private Collection4 aliases() {
-    	if (null == _aliases) {
-    		_aliases = new Collection4();
+    	Collection4 aliases=(Collection4)get(ALIASES);
+    	if (null == aliases) {
+    		aliases = new Collection4();
+    		put(ALIASES,aliases);
     	}
-    	return _aliases;
+    	return aliases;
     }
     
     public void addAlias(Alias alias) {
@@ -813,7 +814,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 	}
 
 	Collection4 rename() {
-		return i_rename;
+		return (Collection4)get(RENAME);
 	}
 
 	int reservedStorageSpace() {

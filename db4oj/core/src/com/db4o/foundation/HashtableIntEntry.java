@@ -25,7 +25,12 @@ class HashtableIntEntry implements Cloneable, DeepClone {
         } catch (CloneNotSupportedException e) {
             // wont happen
         }
-        hie.i_object = ((DeepClone)i_object).deepClone(obj);
+        if(i_object instanceof DeepClone) {
+        	hie.i_object = ((DeepClone)i_object).deepClone(obj);
+        }
+        else {
+        	hie.i_object = i_object;
+        }
         if(i_next != null){
             hie.i_next = (HashtableIntEntry)i_next.deepClone(obj);    
         }
