@@ -6,92 +6,96 @@ import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
-class Config4Field extends Config4Abstract implements ObjectField, Cloneable, DeepClone {
-	
-    private Config4Class i_class;
+class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
+	private final static KeySpec CLASS=new KeySpec(null);
+//    private Config4Class i_class;
     
-    private ReflectField i_fieldReflector;
+	private final static KeySpec FIELD_REFLECTOR=new KeySpec(null);
+//    private ReflectField i_fieldReflector;
     
-    private boolean i_queryEvaluation = true;
+	private final static KeySpec QUERY_EVALUATION=new KeySpec(true);
+//    private boolean i_queryEvaluation = true;
     
-    private int i_indexed = 0;
+	private final static KeySpec INDEXED=new KeySpec(YapConst.DEFAULT);
+//    private int i_indexed = 0;
     
-    private MetaField i_metaField;
+	private final static KeySpec METAFIELD=new KeySpec(null);
+//    private MetaField i_metaField;
     
-    private boolean i_initialized;
+	private final static KeySpec INITIALIZED=new KeySpec(false);
+//    private boolean i_initialized;
 
+	protected Config4Field(KeySpecHashtable4 config) {
+		super(config);
+	}
+	
     Config4Field(Config4Class a_class, String a_name) {
-        i_class = a_class;
-        i_name = a_name;
+        _config.put(CLASS, a_class);
+        setName(a_name);
     }
 
+    private Config4Class classConfig() {
+    	return (Config4Class)_config.get(CLASS);
+    }
+    
     String className() {
-        return i_class.getName();
+        return classConfig().getName();
     }
 
     public Object deepClone(Object param) {
-        Config4Field ret = null;
-        try {
-            ret = (Config4Field) clone();
-            ret.i_metaField = null;
-            ret.i_initialized = false;
-        } catch (CloneNotSupportedException e) {
-            // won't happen
-        }
-        ret.i_class = (Config4Class) param;
-        return ret;
+        return new Config4Field(_config);
     }
 
     private ReflectField fieldReflector() {
-        if (i_fieldReflector == null) {
+    	ReflectField fieldReflector=(ReflectField)_config.get(FIELD_REFLECTOR);
+        if (fieldReflector == null) {
             try {
-                i_fieldReflector = i_class.classReflector().getDeclaredField(getName());
-                i_fieldReflector.setAccessible();
+                fieldReflector = classConfig().classReflector().getDeclaredField(getName());
+                fieldReflector.setAccessible();
+                _config.put(FIELD_REFLECTOR, fieldReflector);
             } catch (Exception e) {
             }
         }
-        return i_fieldReflector;
+        return fieldReflector;
     }
 
     public void queryEvaluation(boolean flag) {
-        i_queryEvaluation = flag;
+    	_config.put(QUERY_EVALUATION, flag);
     }
 
     public void rename(String newName) {
-        i_class.config().rename(new Rename(i_class.getName(), i_name, newName));
-        i_name = newName;
+        classConfig().config().rename(new Rename(className(), getName(), newName));
+        setName(newName);
     }
 
     public void indexed(boolean flag) {
-        if (flag) {
-            i_indexed = 1;
-        } else {
-            i_indexed = -1;
-        }
+    	putThreeValued(INDEXED, flag);
     }
 
     public void initOnUp(Transaction systemTrans, YapField yapField) {
-        if (!i_initialized) {
+        if (!_config.getAsBoolean(INITIALIZED)) {
             YapStream anyStream = systemTrans.i_stream;
             if(Tuning.fieldIndices){
 	            if (anyStream.maintainsIndices()) {
 	                if(Debug.indexAllFields){
-	                    i_indexed = 1;
+	                    indexed(true);
 	                }
 	                if (! yapField.supportsIndex()) {
-	                    i_indexed = -1;
+	                    indexed(false);
 	                }
 	                
 	                boolean indexInitCalled = false;
 	                
 	            	YapFile stream = (YapFile)anyStream;
-	                i_metaField = i_class.metaClass().ensureField(systemTrans, i_name);
-	                if (i_indexed == 1) {
-	                    if (i_metaField.index == null) {
-	                        i_metaField.index = new MetaIndex();
-	                        stream.setInternal(systemTrans, i_metaField.index, YapConst.UNSPECIFIED, false);
-	                        stream.setInternal(systemTrans, i_metaField, YapConst.UNSPECIFIED, false);
-	                        yapField.initIndex(systemTrans, i_metaField.index);
+	                MetaField metaField = classConfig().metaClass().ensureField(systemTrans, getName());
+	                _config.put(METAFIELD, metaField);
+	                int indexed=_config.getAsInt(INDEXED);
+	                if (indexed == YapConst.YES) {
+	                    if (metaField.index == null) {
+	                        metaField.index = new MetaIndex();
+	                        stream.setInternal(systemTrans, metaField.index, YapConst.UNSPECIFIED, false);
+	                        stream.setInternal(systemTrans, metaField, YapConst.UNSPECIFIED, false);
+	                        yapField.initIndex(systemTrans, metaField.index);
 	                        indexInitCalled = true;
 	        				if (stream.i_config.messageLevel() > YapConst.NONE) {
 	        					stream.message("creating index " + yapField.toString());
@@ -126,12 +130,12 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
 	        				}
 	                    }
 	                }
-	                if (i_indexed == -1) {
-	                    if (i_metaField.index != null) {
+	                if (indexed == YapConst.NO) {
+	                    if (metaField.index != null) {
 	        				if (stream.i_config.messageLevel() > YapConst.NONE) {
 	        					stream.message("dropping index " + yapField.toString());
 	        				}
-	                        MetaIndex mi = i_metaField.index;
+	                        MetaIndex mi = metaField.index;
 	                        if (mi.indexLength > 0) {
 	                            stream.free(mi.indexAddress, mi.indexLength);
 	                        }
@@ -139,23 +143,23 @@ class Config4Field extends Config4Abstract implements ObjectField, Cloneable, De
 	                            stream.free(mi.patchAddress, mi.patchLength);
 	                        }
 	                        stream.delete1(systemTrans, mi, false);
-	                        i_metaField.index = null;
-	                        stream.setInternal(systemTrans, i_metaField, YapConst.UNSPECIFIED, false);
+	                        metaField.index = null;
+	                        stream.setInternal(systemTrans, metaField, YapConst.UNSPECIFIED, false);
 	                    }
 	                }
-	                if (i_metaField.index != null) {
+	                if (metaField.index != null) {
 	                    if(! indexInitCalled){
-	                        yapField.initIndex(systemTrans, i_metaField.index);
+	                        yapField.initIndex(systemTrans, metaField.index);
 	                    }
 	                }
 	            }
             }
-            i_initialized = true;
+            _config.put(INITIALIZED, true);
         }
     }
 
 	boolean queryEvaluation() {
-		return i_queryEvaluation;
+		return _config.getAsBoolean(QUERY_EVALUATION);
 	}
 
 

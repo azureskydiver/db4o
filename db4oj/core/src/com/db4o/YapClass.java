@@ -365,7 +365,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if (depth == YapConst.UNSPECIFIED) {
             depth = checkUpdateDepthUnspecified(a_bytes.getStream());
         }
-        if (classReflector().isCollection() || (config != null && (config.i_cascadeOnDelete == 1 || config.i_cascadeOnUpdate == 1))) {
+        if (classReflector().isCollection() || (config != null && (config.cascadeOnDelete() == YapConst.YES || config.cascadeOnUpdate() == YapConst.YES))) {
             int depthBorder = reflector().collectionUpdateDepth(classReflector());
             if (depth < depthBorder) {
                 depth = depthBorder;
@@ -563,7 +563,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     void deleteMembers(YapWriter a_bytes, int a_type, boolean isUpdate) {
         try{
 	        Config4Class config = configOrAncestorConfig();
-	        if (config != null && (config.i_cascadeOnDelete == 1)) {
+	        if (config != null && (config.cascadeOnDelete() == YapConst.YES)) {
 	            int preserveCascade = a_bytes.cascadeDeletes();
 	            if (classReflector().isCollection()) {
 	                int newCascade =
@@ -1070,7 +1070,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
         boolean doFields =
             (a_bytes.getInstantiationDepth() > 0)
-                || (i_config != null && (i_config.i_cascadeOnActivate == 1));
+                || (i_config != null && (i_config.cascadeOnActivate() == YapConst.YES));
 
         if (create) {
             if (configInstantiates()) {

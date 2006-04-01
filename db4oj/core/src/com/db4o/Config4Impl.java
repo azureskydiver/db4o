@@ -20,100 +20,8 @@ import com.db4o.reflect.generic.*;
  */
 public final class Config4Impl
 
-implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfiguration {
-	private Hashtable4 _config=new Hashtable4(50);
-	
-	/*
-	private static class BoolWrapper implements DeepClone {
-		final static BoolWrapper TRUE=new BoolWrapper(true);
-		final static BoolWrapper FALSE=new BoolWrapper(false);
-
-		static BoolWrapper valueOf(boolean value) {
-			return (value ? TRUE : FALSE);
-		}
-		
-		final boolean value;
-		
-		BoolWrapper(boolean value) {
-			this.value=value;
-		}
-		
-		public Object deepClone(Object context) {
-			return this;
-		}
-		
-		boolean booleanValue() {
-			return value;
-		}
-	}
-
-	private static class IntWrapper implements DeepClone {
-		final int value;
-		
-		IntWrapper(int value) {
-			this.value=value;
-		}
-		
-		public Object deepClone(Object context) {
-			return this;
-		}
-		
-		int intValue() {
-			return value;
-		}
-	}
-
-	private static class ByteWrapper implements DeepClone {
-		final byte value;
-		
-		ByteWrapper(byte value) {
-			this.value=value;
-		}
-		
-		public Object deepClone(Object context) {
-			return this;
-		}
-		
-		byte byteValue() {
-			return value;
-		}
-	}
-
-	private static class StringWrapper implements DeepClone {
-		final String value;
-		
-		StringWrapper(String value) {
-			this.value=value;
-		}
-		
-		public Object deepClone(Object context) {
-			return this;
-		}
-		
-		public String toString() {
-			return value;
-		}
-	}
-*/
-	private static class KeySpec {
-		final Object defaultValue;
-		
-		KeySpec(byte defaultValue) {
-			this(new Byte(defaultValue));
-		}
-
-		KeySpec(int defaultValue) {
-			this(new Integer(defaultValue));
-		}
-
-		KeySpec(boolean defaultValue) {
-			this(new Boolean(defaultValue));
-		}
-
-		KeySpec(Object defaultValue) {
-			this.defaultValue=defaultValue;
-		}		
-	}
+implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
+	private KeySpecHashtable4 _config=new KeySpecHashtable4(50);
 	
 	private final static KeySpec ACTIVATION_DEPTH=new KeySpec(5);
 //    private int              i_activationDepth                  = 5;
@@ -132,7 +40,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 	private final static KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE=new KeySpec(true);
 //    private boolean          i_classActivationDepthConfigurable = true;
 	private final static KeySpec CLASSLOADER=new KeySpec(null);
-    private ClassLoader      i_classLoader;
+//    private ClassLoader      i_classLoader;
 	private final static KeySpec DETECT_SCHEMA_CHANGES=new KeySpec(true);
 //    private boolean          i_detectSchemaChanges              = true;
 	private final static KeySpec DISABLE_COMMIT_RECOVERY=new KeySpec(false);
@@ -163,19 +71,25 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 //    private boolean          i_lockFile                         = true;
 	private final static KeySpec MESSAGE_LEVEL=new KeySpec(YapConst.NONE);
 //    private int              i_messageLevel                     = YapConst.NONE;
-    private MessageRecipient i_messageRecipient; // XXX
-    private MessageSender    i_messageSender; // XXX
+	private final static KeySpec MESSAGE_RECIPIENT=new KeySpec(null);
+//    private MessageRecipient i_messageRecipient;
+	// TODO: who uses this at all?
+//	private final static KeySpec MESSAGE_SENDER=new KeySpec(null);
+//    private MessageSender    i_messageSender;
 	private final static KeySpec OPTIMIZE_NQ=new KeySpec(true);
 //	private boolean          _optimizeNQ                        = true;
-    private PrintStream      i_outStream; // XXX
+	private final static KeySpec OUTSTREAM=new KeySpec(null);
+//    private PrintStream      i_outStream; 
 	private final static KeySpec PASSWORD=new KeySpec((String)null);
 //    private String           i_password;
 	private final static KeySpec READ_AS=new KeySpec(new Hashtable4(16));
 //    private Hashtable4       _readAs                            = new Hashtable4(16);
 	private final static KeySpec READ_ONLY=new KeySpec(false);
 //    private boolean          i_readonly;
-    private Reflector _configuredReflector; // XXX
-    private GenericReflector _reflector; // XXX
+	private final static KeySpec CONFIGURED_REFLECTOR=new KeySpec(null);
+//    private Reflector _configuredReflector;
+	private final static KeySpec REFLECTOR=new KeySpec(null);
+//    private GenericReflector _reflector;
     
 	private final static KeySpec RENAME=new KeySpec(null);
 //    private Collection4      i_rename; // (filled from the outside with 'real' strings)
@@ -183,7 +97,6 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 //    private int              i_reservedStorageSpace;
 	private final static KeySpec SINGLE_THREADED_CLIENT=new KeySpec(false);
 //    private boolean          i_singleThreadedClient;
-    private YapStream        i_stream; // XXX                                                           // is null until deepClone is called
 	private final static KeySpec TEST_CONSTRUCTORS=new KeySpec(true);
 //    private boolean          i_testConstructors                 = true;
 	private final static KeySpec TIMEOUT_CLIENT_SOCKET=new KeySpec(YapConst.CLIENT_SOCKET_TIMEOUT);
@@ -198,14 +111,18 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 //    private int              i_weakReferenceCollectionInterval  = 1000;
 	private final static KeySpec WEAK_REFERENCES=new KeySpec(true);
 //    private boolean          i_weakReferences                   = true;
-    private IoAdapter        i_ioAdapter // XXX
+	private final static KeySpec IOADAPTER=new KeySpec(new RandomAccessFileAdapter());
+//    private IoAdapter        i_ioAdapter // XXX
     	// NOTE: activate this config to trigger the defragment failure
     	//= new NIOFileAdapter(512,3);
-    	= new RandomAccessFileAdapter();
-  
+//    	= new RandomAccessFileAdapter();  
 	private final static KeySpec ALIASES=new KeySpec(null);
 //    private Collection4 _aliases; // strange stringwrapper cast problem - how should this get in for this key?
     
+	// kept as an instance variable for the time being
+	private YapStream        i_stream; // XXX                                                           // is null until deepClone is called
+
+/*	
     private void put(KeySpec spec,byte value) {
     	put(spec,new Byte(value));
     }
@@ -240,23 +157,23 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 
     private Object get(KeySpec spec) {
         Object value=_config.get(spec);
-        return (value==null ? spec.defaultValue : value);
+        return (value==null ? spec.defaultValue() : value);
     }
-    
+*/    
     int activationDepth() {
-    	return getAsInt(ACTIVATION_DEPTH);
+    	return _config.getAsInt(ACTIVATION_DEPTH);
     }
 
     public void activationDepth(int depth) {
-    	put(ACTIVATION_DEPTH,depth);
+    	_config.put(ACTIVATION_DEPTH,depth);
     }
     
     public void allowVersionUpdates(boolean flag){
-    	put(ALLOW_VERSION_UPDATES,flag);
+    	_config.put(ALLOW_VERSION_UPDATES,flag);
     }
 
     public void automaticShutDown(boolean flag) {
-    	put(AUTOMATIC_SHUTDOWN,flag);
+    	_config.put(AUTOMATIC_SHUTDOWN,flag);
     }
     
     public void blockSize(int bytes){
@@ -268,19 +185,19 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
            Exceptions4.throwRuntimeException(46);   // see readable message for code in Messages.java
        }
        
-       put(BLOCKSIZE,(byte)bytes);
+       _config.put(BLOCKSIZE,(byte)bytes);
     }
 
     public void callbacks(boolean turnOn) {
-        put(CALLBACKS,turnOn);
+        _config.put(CALLBACKS,turnOn);
     }
     
     public void callConstructors(boolean flag){
-        put(CALL_CONSTRUCTORS,(flag ? YapConst.YES : YapConst.NO));
+        _config.put(CALL_CONSTRUCTORS,(flag ? YapConst.YES : YapConst.NO));
     }
 
     public void classActivationDepthConfigurable(boolean turnOn) {
-        put(CLASS_ACTIVATION_DEPTH_CONFIGURABLE,turnOn);
+        _config.put(CLASS_ACTIVATION_DEPTH_CONFIGURABLE,turnOn);
     }
 
     Config4Class configClass(String className) {
@@ -320,38 +237,22 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     public Object deepClone(Object param) {
-        Config4Impl ret = null;
-        try {
-            ret = (Config4Impl) this.clone();
-        } catch (CloneNotSupportedException e) {
-            // wont happen
-        }
-        ret._config=(Hashtable4)_config.deepClone(this);
+        Config4Impl ret = new Config4Impl();
+        ret._config=(KeySpecHashtable4)_config.deepClone(this);
         ret.i_stream = (YapStream) param;
-        Hashtable4 exceptionalClasses=exceptionalClasses();
-        if (exceptionalClasses != null) {
-            ret.put(EXCEPTIONAL_CLASSES,exceptionalClasses.deepClone(ret));
-        }
-        Collection4 rename=rename();
-        if (rename != null) {
-            ret.put(RENAME,rename.deepClone(ret));
-        }
-        if(_reflector != null){
-        	ret._reflector = (GenericReflector)_reflector.deepClone(ret);
-        }
         return ret;
     }
 
     public void detectSchemaChanges(boolean flag) {
-        put(DETECT_SCHEMA_CHANGES,flag);
+        _config.put(DETECT_SCHEMA_CHANGES,flag);
     }
 
     public void disableCommitRecovery() {
-        put(DISABLE_COMMIT_RECOVERY,true);
+        _config.put(DISABLE_COMMIT_RECOVERY,true);
     }
 
     public void discardFreeSpace(int bytes) {
-        put(DISCARD_FREESPACE,bytes);
+        _config.put(DISCARD_FREESPACE,bytes);
     }
     
     public void discardSmallerThan(int byteCount) {
@@ -360,7 +261,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 
     public void encrypt(boolean flag) {
         globalSettingOnly();
-        put(ENCRYPT,flag);
+        _config.put(ENCRYPT,flag);
     }
 
     void ensureDirExists(String path) throws IOException {
@@ -375,15 +276,16 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     PrintStream errStream() {
-        return i_outStream == null ? System.err : i_outStream;
+    	PrintStream outStream=outStreamOrNull();
+        return outStream == null ? System.err : outStream;
     }
 
     public void exceptionsOnNotStorable(boolean flag) {
-        put(EXCEPTIONS_ON_NOT_STORABLE,flag);
+        _config.put(EXCEPTIONS_ON_NOT_STORABLE,flag);
     }
     
     public void flushFileBuffers(boolean flag){
-        put(FLUSH_FILE_BUFFERS,flag);
+        _config.put(FLUSH_FILE_BUFFERS,flag);
     }
 
     public FreespaceConfiguration freespace() {
@@ -391,7 +293,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
     
     public void generateUUIDs(int setting) {
-        put(GENERATE_UUIDS,setting);
+        _config.put(GENERATE_UUIDS,setting);
         storeStreamBootRecord();
     }
     
@@ -409,7 +311,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     public void generateVersionNumbers(int setting) {
-        put(GENERATE_VERSION_NUMBERS,setting);
+        _config.put(GENERATE_VERSION_NUMBERS,setting);
         storeStreamBootRecord();
     }
 
@@ -425,16 +327,16 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
     
     public void internStrings(boolean doIntern) {
-    	put(INTERN_STRINGS,doIntern);
+    	_config.put(INTERN_STRINGS,doIntern);
     }
     
     public void io(IoAdapter adapter){
         globalSettingOnly();
-        i_ioAdapter = adapter;
+        _config.put(IOADAPTER,adapter);
     }
 
     public void lockDatabaseFile(boolean flag) {
-    	put(LOCK_FILE,flag);
+    	_config.put(LOCK_FILE,flag);
     }
     
     public void markTransient(String marker) {
@@ -442,18 +344,18 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     public void messageLevel(int level) {
-    	put(MESSAGE_LEVEL,level);
-        if (i_outStream == null) {
+    	_config.put(MESSAGE_LEVEL,level);
+        if (outStream() == null) {
             setOut(System.out);
         }
     }
 
     public void optimizeNativeQueries(boolean optimizeNQ) {
-    	put(OPTIMIZE_NQ,optimizeNQ);
+    	_config.put(OPTIMIZE_NQ,optimizeNQ);
     }
     
     public boolean optimizeNativeQueries() {
-    	return getAsBoolean(OPTIMIZE_NQ);
+    	return _config.getAsBoolean(OPTIMIZE_NQ);
     }
     
     public ObjectClass objectClass(Object clazz) {
@@ -479,32 +381,40 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
         return c4c;
     }
 
+    private PrintStream outStreamOrNull() {
+    	return (PrintStream)_config.get(OUTSTREAM);
+    }
+    
     PrintStream outStream() {
-        return i_outStream == null ? System.out : i_outStream;
+    	PrintStream outStream=outStreamOrNull();
+        return outStream == null ? System.out : outStream;
     }
 
     public void password(String pw) {
         globalSettingOnly();
-        put(PASSWORD,pw);
+        _config.put(PASSWORD,pw);
     }
 
     public void readOnly(boolean flag) {
         globalSettingOnly();
-        put(READ_ONLY,flag);
+        _config.put(READ_ONLY,flag);
     }
 
 	GenericReflector reflector() {
-		if(_reflector == null){
-			if(_configuredReflector == null){
-				_configuredReflector = Platform4.createReflector(this);	
+		GenericReflector reflector=(GenericReflector)_config.get(REFLECTOR);
+		if(reflector == null){
+			Reflector configuredReflector=(Reflector)_config.get(CONFIGURED_REFLECTOR);
+			if(configuredReflector == null){
+				_config.put(CONFIGURED_REFLECTOR,Platform4.createReflector(this));	
 			}
-            _reflector = new GenericReflector(null, _configuredReflector);
-            _configuredReflector.setParent(_reflector);
+			reflector=new GenericReflector(null, configuredReflector);
+            _config.put(REFLECTOR,reflector);
+            configuredReflector.setParent(reflector);
 		}
-		if(! _reflector.hasTransaction() && i_stream != null){
-			_reflector.setTransaction(i_stream.i_systemTrans);
+		if(! reflector.hasTransaction() && i_stream != null){
+			reflector.setTransaction(i_stream.i_systemTrans);
 		}
-		return _reflector;
+		return reflector;
 	}
 
 	public void reflectWith(Reflector reflect) {
@@ -516,8 +426,8 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
         if (reflect == null) {
             throw new NullPointerException();
         }
-        _configuredReflector = reflect;
-		_reflector=null;
+        _config.put(CONFIGURED_REFLECTOR,reflect);
+		_config.put(REFLECTOR,null);
     }
 
     public void refreshClasses() {
@@ -540,7 +450,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     	Collection4 rename=rename();
         if (rename == null) {
             rename = new Collection4();
-            put(RENAME,rename);
+            _config.put(RENAME,rename);
         }
         rename.add(a_rename);
     }
@@ -550,7 +460,7 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
         if (reservedStorageSpace < 0) {
             reservedStorageSpace = 0;
         }
-        put(RESERVED_STORAGE_SPACE,reservedStorageSpace);
+        _config.put(RESERVED_STORAGE_SPACE,reservedStorageSpace);
         if (i_stream != null) {
             i_stream.reserve(reservedStorageSpace);
         }
@@ -578,21 +488,20 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
 
     public void setBlobPath(String path) throws IOException {
         ensureDirExists(path);
-        put(BLOBPATH,path);
+        _config.put(BLOBPATH,path);
     }
 
     public void setClassLoader(ClassLoader classLoader) {
-    	i_classLoader=classLoader;
-//        put(CLASSLOADER,classLoader);
+        _config.put(CLASSLOADER,classLoader);
         reflectWith(Platform4.createReflector(this));
     }
 
     public void setMessageRecipient(MessageRecipient messageRecipient) {
-        i_messageRecipient = messageRecipient;
+    	_config.put(MESSAGE_RECIPIENT,messageRecipient);
     }
 
     public void setOut(PrintStream outStream) {
-        i_outStream = outStream;
+        _config.put(OUTSTREAM,outStream);
         if (i_stream != null) {
             i_stream.logMsg(19, Db4o.version());
         } else {
@@ -601,55 +510,55 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
     public void singleThreadedClient(boolean flag) {
-    	put(SINGLE_THREADED_CLIENT,flag);
+    	_config.put(SINGLE_THREADED_CLIENT,flag);
     }
 
     public void testConstructors(boolean flag) {
-    	put(TEST_CONSTRUCTORS,flag);
+    	_config.put(TEST_CONSTRUCTORS,flag);
     }
 
     public void timeoutClientSocket(int milliseconds) {
-    	put(TIMEOUT_CLIENT_SOCKET,milliseconds);
+    	_config.put(TIMEOUT_CLIENT_SOCKET,milliseconds);
     }
 
     public void timeoutPingClients(int milliseconds) {
-    	put(TIMEOUT_PING_CLIENTS,milliseconds);
+    	_config.put(TIMEOUT_PING_CLIENTS,milliseconds);
     }
 
     public void timeoutServerSocket(int milliseconds) {
-    	put(TIMEOUT_SERVER_SOCKET,milliseconds);
+    	_config.put(TIMEOUT_SERVER_SOCKET,milliseconds);
 
     }
 
     public void unicode(boolean unicodeOn) {
-    	put(ENCODING,(unicodeOn ? YapConst.UNICODE : YapConst.ISO8859));
+    	_config.put(ENCODING,(unicodeOn ? YapConst.UNICODE : YapConst.ISO8859));
     }
 
     public void updateDepth(int depth) {
-    	put(UPDATE_DEPTH,depth);
+    	_config.put(UPDATE_DEPTH,depth);
     }
 
     public void useRamSystem() {
-        put(FREESPACE_SYSTEM,FreespaceManager.FM_RAM);
+        _config.put(FREESPACE_SYSTEM,FreespaceManager.FM_RAM);
     }
 
     public void useIndexSystem() {
-        put(FREESPACE_SYSTEM,FreespaceManager.FM_IX);
+        _config.put(FREESPACE_SYSTEM,FreespaceManager.FM_IX);
     }
     
     public void weakReferenceCollectionInterval(int milliseconds) {
-    	put(WEAK_REFERENCE_COLLECTION_INTERVAL,milliseconds);
+    	_config.put(WEAK_REFERENCE_COLLECTION_INTERVAL,milliseconds);
     }
 
     public void weakReferences(boolean flag) {
-    	put(WEAK_REFERENCES,flag);
+    	_config.put(WEAK_REFERENCES,flag);
     }
     
     private Collection4 aliases() {
-    	Collection4 aliases=(Collection4)get(ALIASES);
+    	Collection4 aliases=(Collection4)_config.get(ALIASES);
     	if (null == aliases) {
     		aliases = new Collection4();
-    		put(ALIASES,aliases);
+    		_config.put(ALIASES,aliases);
     	}
     	return aliases;
     }
@@ -693,167 +602,162 @@ implements Configuration, Cloneable, DeepClone, MessageSender, FreespaceConfigur
     }
 
 	public boolean allowVersionUpdates() {
-		return getAsBoolean(ALLOW_VERSION_UPDATES);
+		return _config.getAsBoolean(ALLOW_VERSION_UPDATES);
 	}
 
 	boolean automaticShutDown() {
-		return getAsBoolean(AUTOMATIC_SHUTDOWN);
+		return _config.getAsBoolean(AUTOMATIC_SHUTDOWN);
 	}
 
 	byte blockSize() {
-		return getAsByte(BLOCKSIZE);
+		return _config.getAsByte(BLOCKSIZE);
 	}
 
 	String blobPath() {
-		return getAsString(BLOBPATH);
+		return _config.getAsString(BLOBPATH);
 	}
 
 	boolean callbacks() {
-		return getAsBoolean(CALLBACKS);
+		return _config.getAsBoolean(CALLBACKS);
 	}
 
 	int callConstructors() {
-		return getAsInt(CALL_CONSTRUCTORS);
+		return _config.getAsInt(CALL_CONSTRUCTORS);
 	}
 
 	boolean classActivationDepthConfigurable() {
-		return getAsBoolean(CLASS_ACTIVATION_DEPTH_CONFIGURABLE);
+		return _config.getAsBoolean(CLASS_ACTIVATION_DEPTH_CONFIGURABLE);
 	}
 
 	ClassLoader classLoader() {
-		return i_classLoader;
-		//return (ClassLoader)get(CLASSLOADER);
+		return (ClassLoader)_config.get(CLASSLOADER);
 	}
 
 	boolean detectSchemaChanges() {
-		return getAsBoolean(DETECT_SCHEMA_CHANGES);
+		return _config.getAsBoolean(DETECT_SCHEMA_CHANGES);
 	}
 
 	boolean commitRecoveryDisabled() {
-		return getAsBoolean(DISABLE_COMMIT_RECOVERY);
+		return _config.getAsBoolean(DISABLE_COMMIT_RECOVERY);
 	}
 
 	public int discardFreeSpace() {
-		return getAsInt(DISCARD_FREESPACE);
+		return _config.getAsInt(DISCARD_FREESPACE);
 	}
 
 	byte encoding() {
-		return getAsByte(ENCODING);
+		return _config.getAsByte(ENCODING);
 	}
 
 	boolean encrypt() {
-		return getAsBoolean(ENCRYPT);
+		return _config.getAsBoolean(ENCRYPT);
 	}
 
 	Hashtable4 exceptionalClasses() {
-		return (Hashtable4)get(EXCEPTIONAL_CLASSES);
+		return (Hashtable4)_config.get(EXCEPTIONAL_CLASSES);
 	}
 
 	boolean exceptionsOnNotStorable() {
-		return getAsBoolean(EXCEPTIONS_ON_NOT_STORABLE);
+		return _config.getAsBoolean(EXCEPTIONS_ON_NOT_STORABLE);
 	}
 
 	public boolean flushFileBuffers() {
-		return getAsBoolean(FLUSH_FILE_BUFFERS);
+		return _config.getAsBoolean(FLUSH_FILE_BUFFERS);
 	}
 
 	byte freespaceSystem() {
-		return getAsByte(FREESPACE_SYSTEM);
+		return _config.getAsByte(FREESPACE_SYSTEM);
 	}
 
 	int generateUUIDs() {
-		return getAsInt(GENERATE_UUIDS);
+		return _config.getAsInt(GENERATE_UUIDS);
 	}
 
 	int generateVersionNumbers() {
-		return getAsInt(GENERATE_VERSION_NUMBERS);
+		return _config.getAsInt(GENERATE_VERSION_NUMBERS);
 	}
 
 	boolean internStrings() {
-		return getAsBoolean(INTERN_STRINGS);
+		return _config.getAsBoolean(INTERN_STRINGS);
 	}
 	
 	void isServer(boolean flag){
-		put(IS_SERVER,flag);
+		_config.put(IS_SERVER,flag);
 	}
 
 	boolean isServer() {
-		return getAsBoolean(IS_SERVER);
+		return _config.getAsBoolean(IS_SERVER);
 	}
 
 	boolean lockFile() {
-		return getAsBoolean(LOCK_FILE);
+		return _config.getAsBoolean(LOCK_FILE);
 	}
 
 	int messageLevel() {
-		return getAsInt(MESSAGE_LEVEL);
+		return _config.getAsInt(MESSAGE_LEVEL);
 	}
 
 	MessageRecipient messageRecipient() {
-		return i_messageRecipient;
-	}
-
-	MessageSender messageSender() {
-		return i_messageSender;
+		return (MessageRecipient)_config.get(MESSAGE_RECIPIENT);
 	}
 
 	boolean optimizeNQ() {
-		return getAsBoolean(OPTIMIZE_NQ);
+		return _config.getAsBoolean(OPTIMIZE_NQ);
 	}
 
 	String password() {
-		return getAsString(PASSWORD);
+		return _config.getAsString(PASSWORD);
 	}
 
 	Hashtable4 readAs() {
-		return (Hashtable4)get(READ_AS);
+		return (Hashtable4)_config.get(READ_AS);
 	}
 
 	boolean isReadOnly() {
-		return getAsBoolean(READ_ONLY);
+		return _config.getAsBoolean(READ_ONLY);
 	}
 
 	Collection4 rename() {
-		return (Collection4)get(RENAME);
+		return (Collection4)_config.get(RENAME);
 	}
 
 	int reservedStorageSpace() {
-		return getAsInt(RESERVED_STORAGE_SPACE);
+		return _config.getAsInt(RESERVED_STORAGE_SPACE);
 	}
 
 	boolean singleThreadedClient() {
-		return getAsBoolean(SINGLE_THREADED_CLIENT);
+		return _config.getAsBoolean(SINGLE_THREADED_CLIENT);
 	}
 
 	boolean testConstructors() {
-		return getAsBoolean(TEST_CONSTRUCTORS);
+		return _config.getAsBoolean(TEST_CONSTRUCTORS);
 	}
 
 	int timeoutClientSocket() {
-		return getAsInt(TIMEOUT_CLIENT_SOCKET);
+		return _config.getAsInt(TIMEOUT_CLIENT_SOCKET);
 	}
 
 	int timeoutPingClients() {
-		return getAsInt(TIMEOUT_PING_CLIENTS);
+		return _config.getAsInt(TIMEOUT_PING_CLIENTS);
 	}
 
 	int timeoutServerSocket() {
-		return getAsInt(TIMEOUT_SERVER_SOCKET);
+		return _config.getAsInt(TIMEOUT_SERVER_SOCKET);
 	}
 
 	int updateDepth() {
-		return getAsInt(UPDATE_DEPTH);
+		return _config.getAsInt(UPDATE_DEPTH);
 	}
 
 	int weakReferenceCollectionInterval() {
-		return getAsInt(WEAK_REFERENCE_COLLECTION_INTERVAL);
+		return _config.getAsInt(WEAK_REFERENCE_COLLECTION_INTERVAL);
 	}
 
 	boolean weakReferences() {
-		return getAsBoolean(WEAK_REFERENCES);
+		return _config.getAsBoolean(WEAK_REFERENCES);
 	}
 
 	IoAdapter ioAdapter() {
-		return i_ioAdapter;
+		return (IoAdapter)_config.get(IOADAPTER);
 	}
 }

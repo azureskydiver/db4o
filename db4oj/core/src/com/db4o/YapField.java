@@ -337,13 +337,13 @@ public class YapField implements StoredField {
             	dotnetValueType = Platform4.isValueType(i_handler.classReflector());	
             }
             
-            if ((i_config != null && i_config.i_cascadeOnDelete == 1)
+            if ((i_config != null && i_config.cascadeOnDelete() == YapConst.YES)
                 || dotnetValueType) {
                 int preserveCascade = a_bytes.cascadeDeletes();
                 a_bytes.setCascadeDeletes(1);
                 i_handler.deleteEmbedded(a_bytes);
                 a_bytes.setCascadeDeletes(preserveCascade);
-            }else if(i_config != null && i_config.i_cascadeOnDelete == -1){
+            }else if(i_config != null && i_config.cascadeOnDelete() == YapConst.NO){
                 int preserveCascade = a_bytes.cascadeDeletes();
                 a_bytes.setCascadeDeletes(0);
                 i_handler.deleteEmbedded(a_bytes);
@@ -600,7 +600,7 @@ public class YapField implements StoredField {
 		int memberId = 0;
 
         if (a_object != null
-            && ((a_config != null && (a_config.i_cascadeOnUpdate == 1)) || (i_config != null && (i_config.i_cascadeOnUpdate == 1)))) {
+            && ((a_config != null && (a_config.cascadeOnUpdate() == YapConst.YES)) || (i_config != null && (i_config.cascadeOnUpdate() == YapConst.YES)))) {
             int min = 1;
             if (i_yapClass.isCollection(a_object)) {
             	GenericReflector reflector = i_yapClass.reflector();
