@@ -180,7 +180,7 @@ public abstract class YapFile extends YapStream {
             i_prefetchedIDs.traverse(new Visitor4() {
 
                 public void visit(Object a_object) {
-                    free(((TreeInt) a_object).i_key, YapConst.POINTER_LENGTH);
+                    free(((TreeInt) a_object)._key, YapConst.POINTER_LENGTH);
                 }
             });
         }
@@ -240,7 +240,7 @@ public abstract class YapFile extends YapStream {
                             tree.traverse(new Visitor4() {
     
                                 public void visit(Object obj) {
-                                    int id = ((TreeInt) obj).i_key;
+                                    int id = ((TreeInt) obj)._key;
                                     TreeInt newNode = new TreeInt(id);
                                     duplicates[0] = Tree
                                         .add(duplicates[0], newNode);

@@ -52,8 +52,8 @@ public class QConJoin extends QCon {
 		boolean res =
 			i_evaluator.not(
 				i_and
-					? ((a_pending.i_result + a_secondResult) > 0)
-					: (a_pending.i_result + a_secondResult) > -4);
+					? ((a_pending._result + a_secondResult) > 0)
+					: (a_pending._result + a_secondResult) > -4);
 					
 		if (hasJoins()) {
 			Iterator4 i = iterateJoins();

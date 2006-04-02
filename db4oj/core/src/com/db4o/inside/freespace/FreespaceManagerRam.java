@@ -23,7 +23,7 @@ public class FreespaceManagerRam extends FreespaceManager {
         FreeSlotNode addressNode = new FreeSlotNode(a_address);
         addressNode.createPeer(a_length);
         _freeByAddress = Tree.add(_freeByAddress, addressNode);
-        _freeBySize = Tree.add(_freeBySize, addressNode.i_peer);
+        _freeBySize = Tree.add(_freeBySize, addressNode._peer);
     }
 
     public void beginCommit() {
@@ -71,21 +71,21 @@ public class FreespaceManagerRam extends FreespaceManager {
         }
         
         a_length = _file.blocksFor(a_length);
-        _finder.i_key = a_address;
+        _finder._key = a_address;
         FreeSlotNode sizeNode;
         FreeSlotNode addressnode = (FreeSlotNode) Tree.findSmaller(_freeByAddress, _finder);
         if ((addressnode != null)
-            && ((addressnode.i_key + addressnode.i_peer.i_key) == a_address)) {
-            sizeNode = addressnode.i_peer;
+            && ((addressnode._key + addressnode._peer._key) == a_address)) {
+            sizeNode = addressnode._peer;
             _freeBySize = _freeBySize.removeNode(sizeNode);
-            sizeNode.i_key += a_length;
+            sizeNode._key += a_length;
             FreeSlotNode secondAddressNode = (FreeSlotNode) Tree
                 .findGreaterOrEqual(_freeByAddress, _finder);
             if ((secondAddressNode != null)
-                && (a_address + a_length == secondAddressNode.i_key)) {
-                sizeNode.i_key += secondAddressNode.i_peer.i_key;
+                && (a_address + a_length == secondAddressNode._key)) {
+                sizeNode._key += secondAddressNode._peer._key;
                 _freeBySize = _freeBySize
-                    .removeNode(secondAddressNode.i_peer);
+                    .removeNode(secondAddressNode._peer);
                 _freeByAddress = _freeByAddress
                     .removeNode(secondAddressNode);
             }
@@ -95,12 +95,12 @@ public class FreespaceManagerRam extends FreespaceManager {
             addressnode = (FreeSlotNode) Tree.findGreaterOrEqual(
                 _freeByAddress, _finder);
             if ((addressnode != null)
-                && (a_address + a_length == addressnode.i_key)) {
-                sizeNode = addressnode.i_peer;
+                && (a_address + a_length == addressnode._key)) {
+                sizeNode = addressnode._peer;
                 _freeByAddress = _freeByAddress.removeNode(addressnode);
                 _freeBySize = _freeBySize.removeNode(sizeNode);
-                sizeNode.i_key += a_length;
-                addressnode.i_key = a_address;
+                sizeNode._key += a_length;
+                addressnode._key = a_address;
                 addressnode.removeChildren();
                 sizeNode.removeChildren();
                 _freeByAddress = Tree.add(_freeByAddress, addressnode);
@@ -136,18 +136,18 @@ public class FreespaceManagerRam extends FreespaceManager {
     
     public int getSlot1(int length) {
         length = _file.blocksFor(length);
-        _finder.i_key = length;
-        _finder.i_object = null;
+        _finder._key = length;
+        _finder._object = null;
         _freeBySize = FreeSlotNode.removeGreaterOrEqual((FreeSlotNode) _freeBySize, _finder);
 
-        if (_finder.i_object == null) {
+        if (_finder._object == null) {
             return 0;
         }
             
-        FreeSlotNode node = (FreeSlotNode) _finder.i_object;
-        int blocksFound = node.i_key;
-        int address = node.i_peer.i_key;
-        _freeByAddress = _freeByAddress.removeNode(node.i_peer);
+        FreeSlotNode node = (FreeSlotNode) _finder._object;
+        int blocksFound = node._key;
+        int address = node._peer._key;
+        _freeByAddress = _freeByAddress.removeNode(node._peer);
         if (blocksFound > length) {
             addFreeSlotNodes(address + length, blocksFound - length);
         }
@@ -160,8 +160,8 @@ public class FreespaceManagerRam extends FreespaceManager {
             _freeByAddress.traverse(new Visitor4() {
                 public void visit(Object a_object) {
                     FreeSlotNode fsn = (FreeSlotNode)a_object;
-                    int address = fsn.i_key;
-                    int length = fsn.i_peer.i_key;
+                    int address = fsn._key;
+                    int length = fsn._peer._key;
                     newFM.free(address, length);
                 }
             });
@@ -189,7 +189,7 @@ public class FreespaceManagerRam extends FreespaceManager {
             _freeBySize.traverse(new Visitor4() {
 
                 public void visit(Object a_object) {
-                    FreeSlotNode node = ((FreeSlotNode) a_object).i_peer;
+                    FreeSlotNode node = ((FreeSlotNode) a_object)._peer;
                     addressTree[0] = Tree.add(addressTree[0], node);
                 }
             });

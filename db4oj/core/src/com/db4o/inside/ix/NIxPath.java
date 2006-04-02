@@ -52,4 +52,9 @@ public class NIxPath extends Tree {
         return str;
     }
 
+    public Object shallowClone() {
+    	NIxPath path=new NIxPath(_head,_takePreceding,_takeMatches,_takeSubsequent,_type);
+    	super.shallowCloneInternal(path);
+    	return path;
+    }
 }

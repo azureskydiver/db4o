@@ -224,7 +224,7 @@ public class Index4 {
                         
                         public void visit(Object a_object) {
                             IxTree ixTree = (IxTree) a_object;
-                            if (ixTree.i_version == ft.i_version) {
+                            if (ixTree._version == ft.i_version) {
                                 if (!(ixTree instanceof IxFileRange)) {
                                     ixTree.beginMerge();
                                     tree[0] = Tree.add(tree[0], ixTree);

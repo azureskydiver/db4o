@@ -9,7 +9,7 @@ import com.db4o.inside.freespace.*;
  * Index Path to represent a list of traversed index tree entries,
  * used by IxTraverser
  */
-class IxPath implements Cloneable, Visitor4 {
+class IxPath implements ShallowClone,Visitor4 {
 
     int                 i_comparisonResult;
 
@@ -51,9 +51,9 @@ class IxPath implements Cloneable, Visitor4 {
 
     void addPrecedingToCandidatesTree(Visitor4 visitor) {
         _visitor = visitor;
-        if (i_tree.i_preceding != null) {
-            if (i_next == null || i_next.i_tree != i_tree.i_preceding) {
-                i_tree.i_preceding.traverse(this);
+        if (i_tree._preceding != null) {
+            if (i_next == null || i_next.i_tree != i_tree._preceding) {
+                i_tree._preceding.traverse(this);
             }
         }
         if (i_lowerAndUpperMatch != null) {
@@ -69,9 +69,9 @@ class IxPath implements Cloneable, Visitor4 {
 
     void addSubsequentToCandidatesTree(Visitor4 visitor) {
         _visitor = visitor;
-        if (i_tree.i_subsequent != null) {
-            if (i_next == null || i_next.i_tree != i_tree.i_subsequent) {
-                i_tree.i_subsequent.traverse(this);
+        if (i_tree._subsequent != null) {
+            if (i_next == null || i_next.i_tree != i_tree._subsequent) {
+                i_tree._subsequent.traverse(this);
             }
         }
         if (i_lowerAndUpperMatch != null) {
@@ -166,9 +166,9 @@ class IxPath implements Cloneable, Visitor4 {
         if(visitor.visited()){
             return;
         }
-        if(i_tree.i_preceding != null){
-            if (i_next == null || i_next.i_tree != i_tree.i_preceding) {
-                ((IxTree)i_tree.i_preceding).visitLast(visitor);
+        if(i_tree._preceding != null){
+            if (i_next == null || i_next.i_tree != i_tree._preceding) {
+                ((IxTree)i_tree._preceding).visitLast(visitor);
             }
         }
     }
@@ -193,9 +193,9 @@ class IxPath implements Cloneable, Visitor4 {
         if(visitor.visited()){
             return;
         }
-        if(i_tree.i_subsequent != null){
-            if (i_next == null || i_next.i_tree != i_tree.i_subsequent) {
-                ((IxTree)i_tree.i_subsequent).visitFirst(visitor);
+        if(i_tree._subsequent != null){
+            if (i_next == null || i_next.i_tree != i_tree._subsequent) {
+                ((IxTree)i_tree._subsequent).visitFirst(visitor);
             }
         }
     }
@@ -215,9 +215,9 @@ class IxPath implements Cloneable, Visitor4 {
 
     int countPreceding(boolean a_takenulls) {
         int preceding = 0;
-        if (i_tree.i_preceding != null) {
-            if (i_next == null || i_next.i_tree != i_tree.i_preceding) {
-                preceding += i_tree.i_preceding.size();
+        if (i_tree._preceding != null) {
+            if (i_next == null || i_next.i_tree != i_tree._preceding) {
+                preceding += i_tree._preceding.size();
             }
         }
         if (i_lowerAndUpperMatch != null) {
@@ -237,9 +237,9 @@ class IxPath implements Cloneable, Visitor4 {
 
     int countSubsequent() {
         int subsequent = 0;
-        if (i_tree.i_subsequent != null) {
-            if (i_next == null || i_next.i_tree != i_tree.i_subsequent) {
-                subsequent += i_tree.i_subsequent.size();
+        if (i_tree._subsequent != null) {
+            if (i_next == null || i_next.i_tree != i_tree._subsequent) {
+                subsequent += i_tree._subsequent.size();
             }
         }
         if (i_lowerAndUpperMatch != null) {
@@ -253,13 +253,15 @@ class IxPath implements Cloneable, Visitor4 {
         return subsequent;
     }
 
-    IxPath shallowClone() {
-        try {
-            return (IxPath) this.clone();
-        } catch (CloneNotSupportedException e) {
-
-        }
-        return null;
+    public Object shallowClone() {
+    	int[] lowerAndUpperMatch=null;
+    	if(i_lowerAndUpperMatch!=null) {
+    		lowerAndUpperMatch=new int[]{i_lowerAndUpperMatch[0],i_lowerAndUpperMatch[1]};
+    	}
+    	IxPath ret=new IxPath(i_traverser,i_next,i_tree,i_comparisonResult,lowerAndUpperMatch);
+    	ret.i_upperNull=i_upperNull;
+    	ret._visitor=_visitor;
+        return ret;
     }
 
     public String toString() {

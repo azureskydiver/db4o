@@ -13,7 +13,7 @@ public class IxRemove extends IxPatch {
 
     public IxRemove(IndexTransaction a_ft, int a_parentID, Object a_value) {
         super(a_ft, a_parentID, a_value);
-        i_size = 0;
+        _size = 0;
     }
     
     public int ownSize() {
@@ -24,7 +24,7 @@ public class IxRemove extends IxPatch {
         if(! Debug4.prettyToStrings){
             return super.toString();
         }
-        String str = "IxRemove " + i_parentID + "\n " + handler().comparableObject(trans(), i_value);
+        String str = "IxRemove " + _parentID + "\n " + handler().comparableObject(trans(), _value);
         return str;
     }
     
@@ -47,5 +47,11 @@ public class IxRemove extends IxPatch {
 
     public void visitAll(IntObjectVisitor visitor) {
         // do nothing
+    }
+    
+    public Object shallowClone() {
+    	IxRemove remove=new IxRemove(_fieldTransaction,_parentID,_value);
+    	super.shallowCloneInternal(remove);
+    	return remove;
     }
 }

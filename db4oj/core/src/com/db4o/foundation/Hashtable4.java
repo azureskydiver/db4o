@@ -6,7 +6,7 @@ package com.db4o.foundation;
 /**
  * @exclude 
  */
-public class Hashtable4 implements Cloneable, DeepClone {
+public class Hashtable4 implements DeepClone {
     
     private static final float FILL = 0.5F;
 
@@ -15,6 +15,8 @@ public class Hashtable4 implements Cloneable, DeepClone {
     private int i_maximumSize;
     private int i_size;
     private HashtableIntEntry[] i_table;
+    
+    protected Hashtable4() {}
     
     public Hashtable4(int a_size){
         a_size = newSize(a_size);  // legacy for .NET conversion
@@ -32,12 +34,14 @@ public class Hashtable4 implements Cloneable, DeepClone {
     }
     
     public Object deepClone(Object obj) {
-        Hashtable4 ret = null;
-        try {
-            ret = (Hashtable4)clone();
-        } catch (CloneNotSupportedException e) {
-            // wont happen
-        }
+        return deepCloneInternal(new Hashtable4(),obj);
+    }
+    
+    protected Hashtable4 deepCloneInternal(Hashtable4 ret,Object obj) {
+        ret.i_mask=i_mask;
+        ret.i_maximumSize=i_maximumSize;
+        ret.i_size=i_size;
+        ret.i_tableSize=i_tableSize;
         ret.i_table = new HashtableIntEntry[i_tableSize];
         for (int i = 0; i < i_tableSize; i++) {
             if(i_table[i] != null){

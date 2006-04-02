@@ -7,24 +7,28 @@ package com.db4o;
  */
 class QOrder extends Tree{
 	
-	final QConObject i_constraint;
-	final QCandidate i_candidate;
+	final QConObject _constraint;
+	final QCandidate _candidate;
 	
 	QOrder(QConObject a_constraint, QCandidate a_candidate){
-		i_constraint = a_constraint;
-		i_candidate = a_candidate;
+		_constraint = a_constraint;
+		_candidate = a_candidate;
 	}
 
 	public int compare(Tree a_to) {
-		if(i_constraint.i_comparator.isSmaller(i_candidate.value())){
-			return i_constraint.i_orderID;	
+		if(_constraint.i_comparator.isSmaller(_candidate.value())){
+			return _constraint.i_orderID;	
 		}
-		if(i_constraint.i_comparator.isEqual(i_candidate.value())){
+		if(_constraint.i_comparator.isEqual(_candidate.value())){
 			return 0;	
 		}
-		return - i_constraint.i_orderID;	
+		return - _constraint.i_orderID;	
 	}
 
-	
+	public Object shallowClone() {
+		QOrder order= new QOrder(_constraint,_candidate);
+		super.shallowCloneInternal(order);
+		return order;
+	}
 }
 

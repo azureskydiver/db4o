@@ -38,7 +38,7 @@ import com.db4o.inside.slots.*;
     	final Tree[] tree = new Tree[]{Tree.deepClone(i_root, null)}; 
         a_trans.traverseAddedClassIDs(a_yapClassID, new Visitor4() {
             public void visit(Object obj) {
-				tree[0] = Tree.add(tree[0], new TreeInt(((TreeInt) obj).i_key));
+				tree[0] = Tree.add(tree[0], new TreeInt(((TreeInt) obj)._key));
             }
         });
         a_trans.traverseRemovedClassIDs(a_yapClassID, new Visitor4() {
@@ -90,7 +90,7 @@ import com.db4o.inside.slots.*;
         final int[] i = new int[] { 0 };
         tree.traverse(new Visitor4() {
             public void visit(Object obj) {
-                ids[i[0]++] = ((TreeInt) obj).i_key;
+                ids[i[0]++] = ((TreeInt) obj)._key;
             }
         });
         return ids;

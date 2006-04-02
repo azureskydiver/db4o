@@ -7,11 +7,15 @@ package com.db4o;
  */
 public class TreeStringObject extends TreeString {
 
-    public final Object i_object;
+	public final Object _object;
 
-    public TreeStringObject(String a_key, Object a_object) {
-        super(a_key);
-        this.i_object = a_object;
-    }
+	public TreeStringObject(String a_key, Object a_object) {
+		super(a_key);
+		this._object = a_object;
+	}
 
+	public Object shallowClone() {
+		TreeStringObject tso = new TreeStringObject(_key, _object);
+		return shallowCloneInternal(tso);
+	}
 }

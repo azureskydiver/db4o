@@ -50,8 +50,8 @@ public final class TreeReader
 	private final Tree linkUp(Tree a_preceding, int a_level){
 		Tree node = (Tree)i_template.read(i_bytes);
 		i_current++;
-		node.i_preceding = a_preceding;
-		node.i_subsequent = linkDown(a_level + 1);
+		node._preceding = a_preceding;
+		node._subsequent = linkDown(a_level + 1);
 		node.calculateSize();
 		if(i_current < i_size){
 			return linkUp(node, a_level - 1);
@@ -66,8 +66,8 @@ public final class TreeReader
 			if(a_level < i_levels) {
 				Tree preceding = linkDown(a_level + 1);
 				Tree node = (Tree)i_template.read(i_bytes);
-				node.i_preceding = preceding;
-				node.i_subsequent = linkDown(a_level + 1);
+				node._preceding = preceding;
+				node._subsequent = linkDown(a_level + 1);
 				node.calculateSize();
 				return node;
 			}else {

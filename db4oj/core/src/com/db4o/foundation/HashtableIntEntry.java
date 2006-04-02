@@ -6,11 +6,13 @@ package com.db4o.foundation;
 /**
  * 
  */
-class HashtableIntEntry implements Cloneable, DeepClone {
+class HashtableIntEntry implements DeepClone {
     
     int i_key;
     Object i_object;
     HashtableIntEntry i_next;
+    
+    protected HashtableIntEntry() {}
     
     HashtableIntEntry(int a_hash, Object a_object) {
         i_key = a_hash;
@@ -18,13 +20,12 @@ class HashtableIntEntry implements Cloneable, DeepClone {
     }
 
     public Object deepClone(Object obj) {
-        HashtableIntEntry hie = null;
-        // TODO: move to Cool.cloneIgnoringException
-        try {
-            hie = (HashtableIntEntry)clone();
-        } catch (CloneNotSupportedException e) {
-            // wont happen
-        }
+    	return deepCloneInternal(new HashtableIntEntry(), obj);
+    }
+    
+    protected HashtableIntEntry deepCloneInternal(HashtableIntEntry hie,Object obj) {
+        hie.i_key=i_key;
+        hie.i_next=i_next;
         if(i_object instanceof DeepClone) {
         	hie.i_object = ((DeepClone)i_object).deepClone(obj);
         }

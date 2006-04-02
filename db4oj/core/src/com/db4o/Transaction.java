@@ -82,7 +82,7 @@ public class Transaction {
         TreeIntObject[] node = new TreeIntObject[] { new TreeIntObject(
             a_yapClassID)};
         a_tree = createClassIndexNode(a_tree, node);
-        node[0].i_object = Tree.add((Tree) node[0].i_object, new TreeInt(a_id));
+        node[0]._object = Tree.add((Tree) node[0]._object, new TreeInt(a_id));
         return a_tree;
     }
 
@@ -118,13 +118,13 @@ public class Transaction {
                                 // if another transaction has deleted it. We are taking care
                                 // of possible nulls in #delete4().
                                 
-                                Object[] arr  = finalThis.i_stream.getObjectAndYapObjectByID(finalThis, info.i_key);
+                                Object[] arr  = finalThis.i_stream.getObjectAndYapObjectByID(finalThis, info._key);
                                 obj = arr[0];
                                 info._reference = (YapObject)arr[1]; 
                             }
                             i_stream.delete4(finalThis,info._reference , obj, info._cascade, false);
                         }
-                        i_delete = Tree.add(i_delete, new DeleteInfo(info.i_key, null, false, info._cascade)); 
+                        i_delete = Tree.add(i_delete, new DeleteInfo(info._key, null, false, info._cascade)); 
                     }
                 });
             } while (foundOne[0]);
@@ -260,7 +260,7 @@ public class Transaction {
             if(_dirtyBTrees != null){
                 _dirtyBTrees.traverse(new Visitor4() {
                     public void visit(Object obj) {
-                        BTree btree = (BTree) ((TreeIntObject)obj).i_object;
+                        BTree btree = (BTree) ((TreeIntObject)obj)._object;
                         btree.commit(Transaction.this);
                     }
                 });
@@ -579,7 +579,7 @@ public class Transaction {
             TreeIntObject node = (TreeIntObject) ((TreeInt) a_tree)
                 .find(a_yapClassID);
             if (node != null) {
-                node.i_object = Tree.removeLike((Tree) node.i_object,
+                node._object = Tree.removeLike((Tree) node._object,
                     new TreeInt(a_id));
             }
         }
@@ -607,7 +607,7 @@ public class Transaction {
                 if(_dirtyBTrees != null){
                     _dirtyBTrees.traverse(new Visitor4() {
                         public void visit(Object obj) {
-                            BTree btree = (BTree) ((TreeIntObject)obj).i_object;
+                            BTree btree = (BTree) ((TreeIntObject)obj)._object;
                             btree.rollback(Transaction.this);
                         }
                     });
@@ -752,8 +752,8 @@ public class Transaction {
         if (a_tree != null) {
             TreeIntObject node = (TreeIntObject) ((TreeInt) a_tree)
                 .find(a_yapClassID);
-            if (node != null && node.i_object != null) {
-                ((Tree) node.i_object).traverse(visitor);
+            if (node != null && node._object != null) {
+                ((Tree) node._object).traverse(visitor);
             }
         }
     }
@@ -775,21 +775,21 @@ public class Transaction {
 
                 public void visit(Object obj) {
                     TreeIntObject node = (TreeIntObject) obj;
-                    YapClass yapClass = i_stream.i_classCollection.getYapClass(node.i_key);
+                    YapClass yapClass = i_stream.i_classCollection.getYapClass(node._key);
                     final ClassIndex classIndex = yapClass.getIndex();
-                    if (node.i_object != null) {
+                    if (node._object != null) {
                         Visitor4 visitor = null;
                         if (a_add) {
                             visitor = new Visitor4() {
                                 public void visit(Object a_object) {
-                                    classIndex.add(((TreeInt) a_object).i_key);
+                                    classIndex.add(((TreeInt) a_object)._key);
                                 }
                             };
                         } else {
                             visitor = new Visitor4() {
 
                                 public void visit(Object a_object) {
-                                    int id = ((TreeInt) a_object).i_key;
+                                    int id = ((TreeInt) a_object)._key;
                                     YapObject yo = i_stream.getYapObject(id);
                                     if (yo != null) {
                                         i_stream.yapObjectGCd(yo);
@@ -799,7 +799,7 @@ public class Transaction {
 
                             };
                         }
-                        ((Tree) node.i_object).traverse(visitor);
+                        ((Tree) node._object).traverse(visitor);
                         if (!a_indices.containsByIdentity(classIndex)) {
                             a_indices.add(classIndex);
                         }

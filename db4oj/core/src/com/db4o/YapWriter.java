@@ -132,7 +132,7 @@ public final class YapWriter extends YapReader {
         if (i_embedded != null) {
             i_embedded.traverse(new Visitor4() {
                 public void visit(Object a_object) {
-                    a_visitor.visit((YapWriter) ((TreeIntObject)a_object).i_object);
+                    a_visitor.visit((YapWriter) ((TreeIntObject)a_object)._object);
                 }
             });
         }
@@ -200,7 +200,7 @@ public final class YapWriter extends YapReader {
         int length = readInt();
         Tree tio = TreeInt.find(i_embedded, id);
         if (tio != null) {
-            return (YapWriter) ((TreeIntObject)tio).i_object;
+            return (YapWriter) ((TreeIntObject)tio)._object;
         }
         YapWriter bytes = i_trans.i_stream.readObjectWriterByAddress(i_trans, id, length);
         if (bytes != null) {

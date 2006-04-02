@@ -7,10 +7,10 @@ package com.db4o;
  */
 class QPending extends Tree{
 	
-	final QConJoin			i_join;
-	QCon 					i_constraint;
+	final QConJoin			_join;
+	QCon 					_constraint;
 	
-	int 					i_result;
+	int 					_result;
 
 	// Constants, so QConJoin.evaluatePending is made easy:
 	static final int FALSE = -4;
@@ -18,18 +18,25 @@ class QPending extends Tree{
 	static final int TRUE = 2;
 	
 	QPending(QConJoin a_join, QCon a_constraint, boolean a_firstResult){
-		i_join = a_join;
-		i_constraint = a_constraint;
+		_join = a_join;
+		_constraint = a_constraint;
 		
-		i_result = a_firstResult ? TRUE : FALSE;
+		_result = a_firstResult ? TRUE : FALSE;
 	}
 	
 	public int compare(Tree a_to) {
-		return i_constraint.i_id - ((QPending)a_to).i_constraint.i_id;
+		return _constraint.i_id - ((QPending)a_to)._constraint.i_id;
 	}
 
 	void changeConstraint(){
-		i_constraint = i_join.getOtherConstraint(i_constraint);
+		_constraint = _join.getOtherConstraint(_constraint);
+	}
+
+	public Object shallowClone() {
+		QPending pending = new QPending(_join, _constraint, false);
+		pending._result=_result;
+		super.shallowCloneInternal(pending);
+		return pending;
 	}
 }
 
