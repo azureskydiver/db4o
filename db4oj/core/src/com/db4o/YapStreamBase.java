@@ -1153,7 +1153,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
                 YapConst.TRANSIENT, false);
 
         } else {
-            return tio.i_object;
+            return tio._object;
         }
     }
 

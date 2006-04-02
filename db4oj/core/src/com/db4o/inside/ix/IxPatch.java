@@ -10,27 +10,27 @@ import com.db4o.foundation.*;
  */
 public abstract class IxPatch extends IxTree {
 
-    int    i_parentID;
+    int    _parentID;
 
-    Object i_value;
+    Object _value;
 
-    Queue4 i_queue;    // queue of patch objects for the same parent
+    Queue4 _queue;    // queue of patch objects for the same parent
 
     IxPatch(IndexTransaction a_ft, int a_parentID, Object a_value) {
         super(a_ft);
-        i_parentID = a_parentID;
-        i_value = a_value;
+        _parentID = a_parentID;
+        _value = a_value;
     }
 
     public Tree add(final Tree a_new) {
         int cmp = compare(a_new);
         if (cmp == 0) {
             IxPatch patch = (IxPatch) a_new;
-            cmp = i_parentID - patch.i_parentID;
+            cmp = _parentID - patch._parentID;
 
             if (cmp == 0) {
 
-                Queue4 queue = i_queue;
+                Queue4 queue = _queue;
 
                 if (queue == null) {
                     queue = new Queue4();
@@ -38,9 +38,9 @@ public abstract class IxPatch extends IxTree {
                 }
 
                 queue.add(patch);
-                patch.i_queue = queue;
-                patch.i_subsequent = i_subsequent;
-                patch.i_preceding = i_preceding;
+                patch._queue = queue;
+                patch._subsequent = _subsequent;
+                patch._preceding = _preceding;
                 patch.calculateSize();
                 return patch;
             }
@@ -49,9 +49,15 @@ public abstract class IxPatch extends IxTree {
     }
 
     public int compare(Tree a_to) {
-        Indexable4 handler = i_fieldTransaction.i_index._handler;
-        return handler.compareTo(handler.comparableObject(trans(), i_value));
+        Indexable4 handler = _fieldTransaction.i_index._handler;
+        return handler.compareTo(handler.comparableObject(trans(), _value));
     }
-    
 
+    protected Tree shallowCloneInternal(Tree tree) {
+    	IxPatch patch=(IxPatch)super.shallowCloneInternal(tree);
+    	patch._parentID=_parentID;
+    	patch._value=_value;
+    	patch._queue=_queue;
+    	return patch;
+    }
 }

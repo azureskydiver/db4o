@@ -4,6 +4,10 @@ package com.db4o.foundation;
  * @exclude
  */
 public class KeySpecHashtable4 extends Hashtable4 {
+	private KeySpecHashtable4() {
+		super();
+	}
+	
 	public KeySpecHashtable4(int a_size) {
 		super(a_size);
 	}
@@ -43,5 +47,9 @@ public class KeySpecHashtable4 extends Hashtable4 {
     public Object get(KeySpec spec) {
         Object value=super.get(spec);
         return (value==null ? spec.defaultValue() : value);
+    }
+    
+    public Object deepClone(Object obj) {
+    	return deepCloneInternal(new KeySpecHashtable4(), obj);
     }
 }

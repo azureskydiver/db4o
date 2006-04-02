@@ -322,7 +322,7 @@ public abstract class QQueryBase implements Unversioned {
         
 		tree.traverse(new Visitor4() {
 			public void visit(Object a_object) {
-				resLocal.add(((TreeInt)a_object).i_key);
+				resLocal.add(((TreeInt)a_object)._key);
 			}
 		});
 		sort(resLocal);
@@ -412,7 +412,7 @@ public abstract class QQueryBase implements Unversioned {
                         public void visit(Object a_object) {
                             QCandidate candidate = (QCandidate)a_object;
                             if (candidate.include()) {
-                                TreeInt ids = new TreeInt(candidate.i_key);
+                                TreeInt ids = new TreeInt(candidate._key);
                                 final TreeInt[] idsNew = new TreeInt[1];
                                 Iterator4 itPath = fieldPath.iterator();
                                 while (itPath.hasNext()) {
@@ -421,7 +421,7 @@ public abstract class QQueryBase implements Unversioned {
                                     if (ids != null) {
                                         ids.traverse(new Visitor4() {
                                             public void visit(Object treeInt) {
-                                                int id = ((TreeInt)treeInt).i_key;
+                                                int id = ((TreeInt)treeInt)._key;
                                                 YapWriter reader =
                                                     i_trans.i_stream.readWriterByID(i_trans, id);
                                                 if (reader != null) {
@@ -445,7 +445,7 @@ public abstract class QQueryBase implements Unversioned {
                                 if(ids != null){
                                     ids.traverse(new Visitor4() {
 	                                    public void visit(Object treeInt) {
-	                                        result.addKeyCheckDuplicates(((TreeInt)treeInt).i_key);
+	                                        result.addKeyCheckDuplicates(((TreeInt)treeInt)._key);
 	                                    }
 	                                });
                                 }

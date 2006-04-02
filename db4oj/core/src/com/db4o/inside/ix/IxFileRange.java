@@ -21,7 +21,7 @@ class IxFileRange extends IxTree{
         _address = a_address;
         _addressOffset = addressOffset;
         _entries = a_entries;
-        i_size = a_entries;
+        _size = a_entries;
     }
     
     public Tree add(final Tree a_new){
@@ -38,7 +38,7 @@ class IxFileRange extends IxTree{
     }
     
     private final IxFileRangeReader reader(){
-        return i_fieldTransaction.i_index.fileRangeReader();
+        return _fieldTransaction.i_index.fileRangeReader();
     }
     
     public void incrementAddress(int length) {
@@ -111,8 +111,8 @@ class IxFileRange extends IxTree{
     }
     
     public void visitFirst(FreespaceVisitor visitor){
-        if(i_preceding != null){
-            ((IxTree)i_preceding).visitFirst(visitor);
+        if(_preceding != null){
+            ((IxTree)_preceding).visitFirst(visitor);
             if(visitor.visited()){
                 return;
             }
@@ -121,8 +121,8 @@ class IxFileRange extends IxTree{
     }
     
     public void visitLast(FreespaceVisitor visitor){
-        if(i_subsequent != null){
-            ((IxTree)i_subsequent).visitLast(visitor);
+        if(_subsequent != null){
+            ((IxTree)_subsequent).visitLast(visitor);
             if(visitor.visited()){
                 return;
             }
@@ -139,7 +139,13 @@ class IxFileRange extends IxTree{
         int parentID = fileReader.readInt();
         visitor.visit(parentID, val);
     }
-    
 
-
+	public Object shallowClone() {
+		IxFileRange range=new IxFileRange(_fieldTransaction,_address,_addressOffset,_entries);
+		super.shallowCloneInternal(range);
+		if(_lowerAndUpperMatches!=null) {
+			range._lowerAndUpperMatches=new int[]{_lowerAndUpperMatches[0],_lowerAndUpperMatches[1]};
+		}
+		return range;
+	}
 }

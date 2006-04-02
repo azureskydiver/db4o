@@ -21,7 +21,7 @@ final class TransactionClient extends Transaction {
                 public void visit(Object a_object) {
                     DeleteInfo info = (DeleteInfo) a_object;
                     if (info._delete && info._reference != null) {
-                        i_yapObjectsToGc = Tree.add(i_yapObjectsToGc, new TreeIntObject(info.i_key, info._reference));
+                        i_yapObjectsToGc = Tree.add(i_yapObjectsToGc, new TreeIntObject(info._key, info._reference));
                     }
                 }
             });
@@ -36,7 +36,7 @@ final class TransactionClient extends Transaction {
         if(i_yapObjectsToGc != null){
             i_yapObjectsToGc.traverse(new Visitor4() {
                 public void visit(Object a_object) {
-                    YapObject yo = (YapObject)((TreeIntObject) a_object).i_object;
+                    YapObject yo = (YapObject)((TreeIntObject) a_object)._object;
                     i_stream.yapObjectGCd(yo);
                 }
             });

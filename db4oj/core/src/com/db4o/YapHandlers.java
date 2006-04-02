@@ -224,7 +224,7 @@ public final class YapHandlers {
                     sortedConstructors.traverse(new Visitor4() {
                         public void visit(Object a_object) {
                             if(! foundConstructor[0]) {
-	                            ReflectConstructor constructor = (ReflectConstructor)((TreeIntObject)a_object).i_object;
+	                            ReflectConstructor constructor = (ReflectConstructor)((TreeIntObject)a_object)._object;
 	                            try {
 	                                ReflectClass[] pTypes = constructor.getParameterTypes();
 	                                Object[] parms = new Object[pTypes.length];

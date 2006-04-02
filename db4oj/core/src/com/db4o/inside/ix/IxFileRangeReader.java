@@ -45,7 +45,7 @@ class IxFileRangeReader {
 
             if (cmp == 0) {
                 int parentID = _reader.readInt();
-                cmp = parentID - ((IxPatch) newTree).i_parentID;
+                cmp = parentID - ((IxPatch) newTree)._parentID;
             }
             if (cmp > 0) {
                 _upper = _cursor - 1;
@@ -61,19 +61,19 @@ class IxFileRangeReader {
                 if (newTree instanceof IxRemove) {
                     IxRemove ir = (IxRemove) newTree;
                     if (_cursor == 0) {
-                        newTree.i_preceding = fileRange.i_preceding;
+                        newTree._preceding = fileRange._preceding;
                         if (fileRange._entries == 1) {
-                            newTree.i_subsequent = fileRange.i_subsequent;
+                            newTree._subsequent = fileRange._subsequent;
                             return newTree.balanceCheckNulls();
                         }
                         fileRange._entries--;
                         fileRange.incrementAddress(_slotLength);
-                        fileRange.i_preceding = null;
-                        newTree.i_subsequent = fileRange;
+                        fileRange._preceding = null;
+                        newTree._subsequent = fileRange;
                     } else if (_cursor + 1 == fileRange._entries) {
-                        newTree.i_preceding = fileRange;
-                        newTree.i_subsequent = fileRange.i_subsequent;
-                        fileRange.i_subsequent = null;
+                        newTree._preceding = fileRange;
+                        newTree._subsequent = fileRange._subsequent;
+                        fileRange._subsequent = null;
                         fileRange._entries--;
                     } else {
                         return insert(fileRange, newTree, _cursor, 0);
@@ -82,10 +82,10 @@ class IxFileRangeReader {
                     return newTree.balanceCheckNulls();
                 } else {
                     if (_cursor == 0) {
-                        newTree.i_subsequent = fileRange;
+                        newTree._subsequent = fileRange;
                         return newTree.rotateLeft();
                     } else if (_cursor == fileRange._entries) {
-                        newTree.i_preceding = fileRange;
+                        newTree._preceding = fileRange;
                         return newTree.rotateRight();
                     }
                     return insert(fileRange, newTree, _cursor, cmp);
@@ -225,12 +225,12 @@ class IxFileRangeReader {
         }
 
         fileRange._entries = a_cmp < 0 ? a_cursor + 1 : a_cursor;
-        IxFileRange ifr = new IxFileRange(fileRange.i_fieldTransaction, _baseAddress,
+        IxFileRange ifr = new IxFileRange(fileRange._fieldTransaction, _baseAddress,
             _baseAddressOffset + newAddressOffset, newEntries);
-        ifr.i_subsequent = fileRange.i_subsequent;
-        fileRange.i_subsequent = null;
-        a_new.i_preceding = fileRange.balanceCheckNulls();
-        a_new.i_subsequent = ifr.balanceCheckNulls();
+        ifr._subsequent = fileRange._subsequent;
+        fileRange._subsequent = null;
+        a_new._preceding = fileRange.balanceCheckNulls();
+        a_new._subsequent = ifr.balanceCheckNulls();
         return a_new.balance();
     }
 

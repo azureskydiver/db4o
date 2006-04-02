@@ -11,7 +11,7 @@ import com.db4o.inside.freespace.*;
  */
 public class IxAdd extends IxPatch {
     
-    boolean i_keepRemoved;
+    boolean _keepRemoved;
 
     public IxAdd(IndexTransaction a_ft, int a_parentID, Object a_value) {
         super(a_ft, a_parentID, a_value);
@@ -19,24 +19,24 @@ public class IxAdd extends IxPatch {
     
     void beginMerge(){
         super.beginMerge();
-        handler().prepareComparison( handler().comparableObject(trans(), i_value));
+        handler().prepareComparison( handler().comparableObject(trans(), _value));
     }
     
     public void visit(Object obj){
-        ((Visitor4)obj).visit(new Integer(i_parentID));
+        ((Visitor4)obj).visit(new Integer(_parentID));
     }
     
     public void visit(Visitor4 visitor, int[] lowerAndUpperMatch){
-        visitor.visit(new Integer(i_parentID));
+        visitor.visit(new Integer(_parentID));
     }
     
     public void freespaceVisit(FreespaceVisitor visitor, int index){
-        visitor.visit(i_parentID, ((Integer)i_value).intValue());
+        visitor.visit(_parentID, ((Integer)_value).intValue());
     }
     
     public int write(Indexable4 a_handler, YapWriter a_writer) {
-        a_handler.writeIndexEntry(a_writer, i_value);
-        a_writer.writeInt(i_parentID);
+        a_handler.writeIndexEntry(a_writer, _value);
+        a_writer.writeInt(_parentID);
         a_writer.writeForward();
         return 1;
     }
@@ -45,12 +45,18 @@ public class IxAdd extends IxPatch {
         if(! Debug4.prettyToStrings){
             return super.toString();
         }
-        String str = "IxAdd "  + i_parentID + "\n " + handler().comparableObject(trans(), i_value);
+        String str = "IxAdd "  + _parentID + "\n " + handler().comparableObject(trans(), _value);
         return str;
     }
 
     public void visitAll(IntObjectVisitor visitor) {
-        visitor.visit(i_parentID, handler().comparableObject(trans(), i_value));
+        visitor.visit(_parentID, handler().comparableObject(trans(), _value));
     }
 
+    public Object shallowClone() {
+    	IxAdd add=new IxAdd(_fieldTransaction,_parentID,_value);
+    	super.shallowCloneInternal(add);
+    	add._keepRemoved=_keepRemoved;
+    	return add;
+    }
 }

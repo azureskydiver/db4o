@@ -103,7 +103,7 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 	public void visit(Object a_tree) {
 		QCandidate candidate = (QCandidate) a_tree;
 		if (candidate.include()) {
-		    addKeyCheckDuplicates(candidate.i_key);
+		    addKeyCheckDuplicates(candidate._key);
 		}
 	}
 	
@@ -111,7 +111,7 @@ class QueryResultImpl extends IntArrayList implements Visitor4, QueryResult {
 	    if(i_checkDuplicates){
 	        TreeInt newNode = new TreeInt(a_key);
 	        i_candidates = Tree.add(i_candidates, newNode);
-	        if(newNode.i_size == 0){
+	        if(newNode._size == 0){
 	            return;
 	        }
 	    }

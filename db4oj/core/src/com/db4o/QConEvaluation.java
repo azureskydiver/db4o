@@ -71,7 +71,7 @@ public class QConEvaluation extends QCon {
 		QCandidate candidate = (QCandidate) obj;
 		try {
 			Platform4.evaluationEvaluate(i_evaluation, candidate);
-			if (!candidate.i_include) {
+			if (!candidate._include) {
 				doNotInclude(candidate.getRoot());
 			}
 		} catch (Exception e) {

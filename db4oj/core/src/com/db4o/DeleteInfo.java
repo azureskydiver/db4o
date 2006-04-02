@@ -15,6 +15,10 @@ class DeleteInfo extends TreeInt{
         _delete = delete;
         _cascade = cascade;
     }
+    public Object shallowClone() {
+    	DeleteInfo deleteinfo= new DeleteInfo(0,_reference, _delete, _cascade);
+    	return shallowCloneInternal(deleteinfo);
+    }
     
 
 }

@@ -76,19 +76,19 @@ public class NIxPathNode {
             return _next.compare(other._next, myType, otherType);
         }
         
-        if(_tree.i_subsequent == otherNext){
+        if(_tree._subsequent == otherNext){
             return -1;
         }
 
         if(Debug.ixTrees){
-            Debug.expect(_tree.i_preceding == otherNext);
+            Debug.expect(_tree._preceding == otherNext);
         }
         
         return 1;
     }
     
     boolean ascending(){
-        return _tree.i_subsequent == _next._tree;
+        return _tree._subsequent == _next._tree;
     }
     
     boolean carriesTheSame(NIxPathNode node) {
@@ -100,9 +100,9 @@ public class NIxPathNode {
     
     int countPreceding() {
         int preceding = 0;
-        if (_tree.i_preceding != null) {
-            if (_next == null || _next._tree != _tree.i_preceding) {
-                preceding += _tree.i_preceding.size();
+        if (_tree._preceding != null) {
+            if (_next == null || _next._tree != _tree._preceding) {
+                preceding += _tree._preceding.size();
             }
         }
         if (_lowerAndUpperMatch != null) {
@@ -130,9 +130,9 @@ public class NIxPathNode {
     
     int countSubsequent() {
         int subsequent = 0;
-        if (_tree.i_subsequent != null) {
-            if (_next == null || _next._tree != _tree.i_subsequent) {
-                subsequent += _tree.i_subsequent.size();
+        if (_tree._subsequent != null) {
+            if (_next == null || _next._tree != _tree._subsequent) {
+                subsequent += _tree._subsequent.size();
             }
         }
         if (_lowerAndUpperMatch != null) {
@@ -191,9 +191,9 @@ public class NIxPathNode {
     }
     
     void traversePreceding(Visitor4Dispatch dispatcher) {
-        if (_tree.i_preceding != null) {
-            if (_next == null || _next._tree != _tree.i_preceding) {
-                _tree.i_preceding.traverse(dispatcher);
+        if (_tree._preceding != null) {
+            if (_next == null || _next._tree != _tree._preceding) {
+                _tree._preceding.traverse(dispatcher);
             }
         }
         if (_lowerAndUpperMatch != null) {
@@ -213,9 +213,9 @@ public class NIxPathNode {
     }
     
     void traverseSubsequent(Visitor4Dispatch dispatcher) {
-        if (_tree.i_subsequent != null) {
-            if (_next == null || _next._tree != _tree.i_subsequent) {
-                _tree.i_subsequent.traverse(dispatcher);
+        if (_tree._subsequent != null) {
+            if (_next == null || _next._tree != _tree._subsequent) {
+                _tree._subsequent.traverse(dispatcher);
             }
         }
         if (_lowerAndUpperMatch != null) {

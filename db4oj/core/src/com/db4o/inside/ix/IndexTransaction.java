@@ -70,11 +70,11 @@ public class IndexTransaction implements Visitor4{
 	public void visit(Object obj){
 	    if(obj instanceof IxPatch){
 		    IxPatch tree = (IxPatch)obj;
-		    if(tree.i_queue != null){
-		        Queue4 queue = tree.i_queue;
-		        tree.i_queue = null;
+		    if(tree._queue != null){
+		        Queue4 queue = tree._queue;
+		        tree._queue = null;
 		        while((tree = (IxPatch)queue.next()) != null){
-		            tree.i_queue = null;
+		            tree._queue = null;
 		            addPatchToRoot(tree);
 		        }
 		    }else{
@@ -84,9 +84,9 @@ public class IndexTransaction implements Visitor4{
 	}
 	
 	private void addPatchToRoot(IxPatch tree){
-	    if(tree.i_version != i_version){
+	    if(tree._version != i_version){
 	        tree.beginMerge();
-	        tree.handler().prepareComparison(tree.handler().comparableObject(i_trans, tree.i_value));
+	        tree.handler().prepareComparison(tree.handler().comparableObject(i_trans, tree._value));
 		    if(i_root == null){
 		        i_root = tree;
 		    } else{

@@ -7,11 +7,11 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-public abstract class Tree implements Cloneable, Readable{
+public abstract class Tree implements ShallowClone,Readable{
     
-	public Tree i_preceding;
-	public int i_size = 1;
-	public Tree i_subsequent;
+	public Tree _preceding;
+	public int _size = 1;
+	public Tree _subsequent;
 	
 	public static final Tree add(Tree a_old, Tree a_new){
 		if(a_old == null){
@@ -33,24 +33,24 @@ public abstract class Tree implements Cloneable, Readable{
      */
 	public Tree add(final Tree a_new, final int a_cmp){
 	    if(a_cmp < 0){
-	        if(i_subsequent == null){
-	            i_subsequent = a_new;
-	            i_size ++;
+	        if(_subsequent == null){
+	            _subsequent = a_new;
+	            _size ++;
 	        }else{
-	            i_subsequent = i_subsequent.add(a_new);
-	            if(i_preceding == null){
+	            _subsequent = _subsequent.add(a_new);
+	            if(_preceding == null){
 	                return rotateLeft();
 	            }else{
 	                return balance();
 	            }
 	        }
 	    }else if(a_cmp > 0 || a_new.duplicates()){
-	        if(i_preceding == null){
-	            i_preceding = a_new;
-	            i_size ++;
+	        if(_preceding == null){
+	            _preceding = a_new;
+	            _size ++;
 	        }else{
-	            i_preceding = i_preceding.add(a_new);
-	            if(i_subsequent == null){
+	            _preceding = _preceding.add(a_new);
+	            if(_subsequent == null){
 	                return rotateRight();
 	            }else{
 	                return balance();
@@ -71,14 +71,14 @@ public abstract class Tree implements Cloneable, Readable{
      * allows doing find() and add() in one run.
      */
     public Tree duplicateOrThis(){
-        if(i_size == 0){
-            return i_preceding;
+        if(_size == 0){
+            return _preceding;
         }
         return this;
     }
 	
 	public final Tree balance(){
-		int cmp = i_subsequent.nodes() - i_preceding.nodes(); 
+		int cmp = _subsequent.nodes() - _preceding.nodes(); 
 		if(cmp < -2){
 			return rotateRight();
 		}else if(cmp > 2){
@@ -90,13 +90,13 @@ public abstract class Tree implements Cloneable, Readable{
 	}
 	
 	public Tree balanceCheckNulls(){
-	    if(i_subsequent == null){
-	        if(i_preceding == null){
+	    if(_subsequent == null){
+	        if(_preceding == null){
                 setSizeOwn();
 	            return this;
 	        }
 	        return rotateRight();
-	    }else if(i_preceding == null){
+	    }else if(_preceding == null){
 	        return rotateLeft();
 	    }
 	    return balance();
@@ -125,14 +125,14 @@ public abstract class Tree implements Cloneable, Readable{
 
 	
 	public void calculateSize(){
-		if(i_preceding == null){
-			if (i_subsequent == null){
+		if(_preceding == null){
+			if (_subsequent == null){
 				setSizeOwn();
 			}else{
                 setSizeOwnSubsequent();
 			}
 		}else{
-			if(i_subsequent == null){
+			if(_subsequent == null){
                 setSizeOwnPreceding();
 			}else{
                 setSizeOwnPrecedingSubsequent();
@@ -154,20 +154,16 @@ public abstract class Tree implements Cloneable, Readable{
 			return null;
 		}
 		Tree newNode = a_tree.deepClone(a_param);
-		newNode.i_size = a_tree.i_size;
+		newNode._size = a_tree._size;
         newNode.nodes( a_tree.nodes());
-		newNode.i_preceding = Tree.deepClone(a_tree.i_preceding, a_param); 
-		newNode.i_subsequent = Tree.deepClone(a_tree.i_subsequent, a_param); 
+		newNode._preceding = Tree.deepClone(a_tree._preceding, a_param); 
+		newNode._subsequent = Tree.deepClone(a_tree._subsequent, a_param); 
 		return newNode;
 	}
 	
 	
 	public Tree deepClone(Object a_param){
-	    try {
-            return (Tree)this.clone();
-        } catch (CloneNotSupportedException e) {
-        }
-        return null;
+        return (Tree)this.shallowClone();
 	}
 	
 	public boolean duplicates(){
@@ -175,11 +171,11 @@ public abstract class Tree implements Cloneable, Readable{
 	}
 	
 	final Tree filter(final VisitorBoolean a_filter){
-		if(i_preceding != null){
-			i_preceding = i_preceding.filter(a_filter);
+		if(_preceding != null){
+			_preceding = _preceding.filter(a_filter);
 		}
-		if(i_subsequent != null){
-			i_subsequent = i_subsequent.filter(a_filter);
+		if(_subsequent != null){
+			_subsequent = _subsequent.filter(a_filter);
 		}
 		if(! a_filter.isVisit(this)){
 			return remove();
@@ -197,13 +193,13 @@ public abstract class Tree implements Cloneable, Readable{
 	public final Tree find(final Tree a_tree){
 		int cmp = compare(a_tree);
 		if (cmp < 0){
-			if(i_subsequent != null){
-				return i_subsequent.find(a_tree);
+			if(_subsequent != null){
+				return _subsequent.find(a_tree);
 			}
 		}else{
 			if (cmp > 0){
-				if(i_preceding != null){
-					return i_preceding.find(a_tree);
+				if(_preceding != null){
+					return _preceding.find(a_tree);
 				}
 			}else{
 				return this;
@@ -221,13 +217,13 @@ public abstract class Tree implements Cloneable, Readable{
 			return a_in; // the highest node in the hierarchy !!!
 		}else{
 			if(cmp > 0){
-				Tree node = findGreaterOrEqual(a_in.i_preceding, a_finder);
+				Tree node = findGreaterOrEqual(a_in._preceding, a_finder);
 				if(node != null){
 					return node;
 				}
 				return a_in;
 			}else{
-				return findGreaterOrEqual(a_in.i_subsequent, a_finder);
+				return findGreaterOrEqual(a_in._subsequent, a_finder);
 			}
 		}
 	}
@@ -239,33 +235,33 @@ public abstract class Tree implements Cloneable, Readable{
 		}
 		int cmp = a_in.compare(a_node);
 		if(cmp < 0){
-			Tree node = findSmaller(a_in.i_subsequent, a_node);
+			Tree node = findSmaller(a_in._subsequent, a_node);
 			if(node != null){
 				return node;
 			}
 			return a_in;
 		}else{
-			return findSmaller(a_in.i_preceding, a_node);
+			return findSmaller(a_in._preceding, a_node);
 		}
 	}
     
     public final Tree first(){
-        if(i_preceding == null){
+        if(_preceding == null){
             return this;
         }
-        return i_preceding.first();
+        return _preceding.first();
     }
     
 	void isDuplicateOf(Tree a_tree){
-		i_size = 0;
-        i_preceding = a_tree;
+		_size = 0;
+        _preceding = a_tree;
 	}
 	
     /**
      * @return the number of nodes in this tree for balancing
      */
     public int nodes(){
-        return i_size;
+        return _size;
     }
     
     public void nodes(int count){
@@ -289,29 +285,29 @@ public abstract class Tree implements Cloneable, Readable{
 	}
 
 	public Tree remove(){
-		if(i_subsequent != null && i_preceding != null){
-			i_subsequent = i_subsequent.rotateSmallestUp();
-			i_subsequent.i_preceding = i_preceding;
-			i_subsequent.calculateSize();
-			return i_subsequent;
+		if(_subsequent != null && _preceding != null){
+			_subsequent = _subsequent.rotateSmallestUp();
+			_subsequent._preceding = _preceding;
+			_subsequent.calculateSize();
+			return _subsequent;
 		}
-		if(i_subsequent != null){
-			return i_subsequent;
+		if(_subsequent != null){
+			return _subsequent;
 		}
-		return i_preceding;
+		return _preceding;
 	}
 	
 	public void removeChildren(){
-		i_preceding = null;
-		i_subsequent = null;
+		_preceding = null;
+		_subsequent = null;
 		setSizeOwn();
 	}
     
     public Tree removeFirst(){
-        if(i_preceding == null){
-            return i_subsequent;
+        if(_preceding == null){
+            return _subsequent;
         }
-        i_preceding = i_preceding.removeFirst();
+        _preceding = _preceding.removeFirst();
         calculateSize();
         return this;
     }
@@ -329,12 +325,12 @@ public abstract class Tree implements Cloneable, Readable{
 			return remove();
 		}
 		if (cmp > 0){
-			if(i_preceding != null){
-				i_preceding = i_preceding.removeLike(a_find);
+			if(_preceding != null){
+				_preceding = _preceding.removeLike(a_find);
 			}
 		}else{
-			if(i_subsequent != null){
-				i_subsequent = i_subsequent.removeLike(a_find);
+			if(_subsequent != null){
+				_subsequent = _subsequent.removeLike(a_find);
 			}
 		}
 		calculateSize();
@@ -347,13 +343,13 @@ public abstract class Tree implements Cloneable, Readable{
 		}
 		int cmp = compare(a_tree);
 		if (cmp >= 0){
-			if(i_preceding != null){
-				i_preceding = i_preceding.removeNode(a_tree);
+			if(_preceding != null){
+				_preceding = _preceding.removeNode(a_tree);
 			}
 		}
 		if(cmp <= 0){
-			if(i_subsequent != null){
-				i_subsequent = i_subsequent.removeNode(a_tree);	
+			if(_subsequent != null){
+				_subsequent = _subsequent.removeNode(a_tree);	
 			}
 		}
 		calculateSize();
@@ -361,61 +357,61 @@ public abstract class Tree implements Cloneable, Readable{
 	}
     
 	public final Tree rotateLeft(){
-		Tree tree = i_subsequent;
-		i_subsequent = tree.i_preceding;
+		Tree tree = _subsequent;
+		_subsequent = tree._preceding;
 		calculateSize();
-		tree.i_preceding = this;
-		if(tree.i_subsequent == null){
+		tree._preceding = this;
+		if(tree._subsequent == null){
             tree.setSizeOwnPlus(this);
 		}else{
-            tree.setSizeOwnPlus(this, tree.i_subsequent);
+            tree.setSizeOwnPlus(this, tree._subsequent);
 		}
 		return tree;
 	}
 
 	public final Tree rotateRight(){
-		Tree tree = i_preceding;
-		i_preceding = tree.i_subsequent;
+		Tree tree = _preceding;
+		_preceding = tree._subsequent;
 		calculateSize();
-		tree.i_subsequent = this;
-		if(tree.i_preceding == null){
+		tree._subsequent = this;
+		if(tree._preceding == null){
             tree.setSizeOwnPlus(this);
 		}else{
-            tree.setSizeOwnPlus(this, tree.i_preceding);
+            tree.setSizeOwnPlus(this, tree._preceding);
 		}
 		return tree;
 	}
 	
 	private final Tree rotateSmallestUp(){
-		if(i_preceding != null){
-			i_preceding = i_preceding.rotateSmallestUp();
+		if(_preceding != null){
+			_preceding = _preceding.rotateSmallestUp();
 			return rotateRight();
 		}
 		return this;
 	}
     
     public void setSizeOwn(){
-        i_size = ownSize();
+        _size = ownSize();
     }
     
     public void setSizeOwnPrecedingSubsequent(){
-        i_size = ownSize() + i_preceding.i_size + i_subsequent.i_size;
+        _size = ownSize() + _preceding._size + _subsequent._size;
     }
     
     public void setSizeOwnPreceding(){
-        i_size = ownSize() + i_preceding.i_size;
+        _size = ownSize() + _preceding._size;
     }
     
     public void setSizeOwnSubsequent(){
-        i_size = ownSize() + i_subsequent.i_size;
+        _size = ownSize() + _subsequent._size;
     }
     
     public void setSizeOwnPlus(Tree tree){
-        i_size = ownSize() + tree.i_size;
+        _size = ownSize() + tree._size;
     }
     
     public void setSizeOwnPlus(Tree tree1, Tree tree2){
-        i_size = ownSize() + tree1.i_size + tree2.i_size;
+        _size = ownSize() + tree1._size + tree2._size;
     }
 	
 	public static int size(Tree a_tree){
@@ -429,7 +425,7 @@ public abstract class Tree implements Cloneable, Readable{
      * @return the number of objects represented.
      */
 	public int size(){
-		return i_size;
+		return _size;
 	}
     
     public static final void traverse(Tree tree, Visitor4 visitor){
@@ -440,21 +436,21 @@ public abstract class Tree implements Cloneable, Readable{
     }
     
 	public final void traverse(final Visitor4 a_visitor){
-		if(i_preceding != null){
-			i_preceding.traverse(a_visitor);
+		if(_preceding != null){
+			_preceding.traverse(a_visitor);
 		}
 		a_visitor.visit(this);
-		if(i_subsequent != null){
-			i_subsequent.traverse(a_visitor);
+		if(_subsequent != null){
+			_subsequent.traverse(a_visitor);
 		}
 	}
 	
 	public final void traverseFromLeaves(Visitor4 a_visitor){
-	    if(i_preceding != null){
-	        i_preceding.traverseFromLeaves(a_visitor);
+	    if(_preceding != null){
+	        _preceding.traverseFromLeaves(a_visitor);
 	    }
-	    if(i_subsequent != null){
-	        i_subsequent.traverseFromLeaves(a_visitor);
+	    if(_subsequent != null){
+	        _subsequent.traverseFromLeaves(a_visitor);
 	    }
 	    a_visitor.visit(this);
 	}
@@ -505,5 +501,11 @@ public abstract class Tree implements Cloneable, Readable{
 //	    }
 //	    return max;
 //	}
-	
+
+	protected Tree shallowCloneInternal(Tree tree) {
+		tree._preceding=_preceding;
+		tree._size=_size;
+		tree._subsequent=_subsequent;
+		return tree;
+	}
 }

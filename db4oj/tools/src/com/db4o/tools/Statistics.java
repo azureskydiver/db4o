@@ -76,7 +76,7 @@ public class Statistics {
 			printHeader("UNAVAILABLE");
 			unavailable.traverse(new Visitor4() {
 				public void visit(Object obj) {
-					System.out.println(((TreeString) obj).i_key);
+					System.out.println(((TreeString) obj)._key);
 				}
 			});
 		}
@@ -84,7 +84,7 @@ public class Statistics {
 			printHeader("NO PUBLIC CONSTRUCTOR");
 			noConstructor.traverse(new Visitor4() {
 				public void visit(Object obj) {
-					System.out.println(((TreeString) obj).i_key);
+					System.out.println(((TreeString) obj)._key);
 				}
 			});
 		}
@@ -102,13 +102,13 @@ public class Statistics {
 			all.traverse(new Visitor4() {
 				public void visit(Object obj) {
 					TreeStringObject node = (TreeStringObject) obj;
-					long[] newIDs = ((StoredClass)node.i_object).getIDs();
+					long[] newIDs = ((StoredClass)node._object).getIDs();
 					for (int j = 0; j < newIDs.length; j++) {
 						if (ids[0].find(new TreeInt((int) newIDs[j])) == null) {
 							ids[0] = (TreeInt) ids[0].add(new TreeInt((int) newIDs[j]));
 						}
 					}
-					System.out.println(node.i_key + ": " + newIDs.length);
+					System.out.println(node._key + ": " + newIDs.length);
 				}
 			});
 

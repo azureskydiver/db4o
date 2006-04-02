@@ -8,583 +8,615 @@ import com.db4o.query.*;
 import com.db4o.reflect.*;
 
 /**
- * Represents an actual object in the database. Forms a tree structure,
- * indexed by id. Can have dependents that are doNotInclude'd in the
- * query result when this is doNotInclude'd.
+ * Represents an actual object in the database. Forms a tree structure, indexed
+ * by id. Can have dependents that are doNotInclude'd in the query result when
+ * this is doNotInclude'd.
  * 
  * @exclude
  */
 public class QCandidate extends TreeInt implements Candidate, Orderable {
 
-    // db4o ID is stored in i_key;
-    
-    // db4o byte stream storing the object
-    YapReader i_bytes;
+	// db4o ID is stored in i_key;
 
-    final QCandidates i_candidates;
+	// db4o byte stream storing the object
+	YapReader _bytes;
 
-    // Dependant candidates
-    private List4 i_dependants;
+	final QCandidates _candidates;
 
-    // whether to include in the result set
-    // may use id for optimisation ???
-    boolean i_include = true;
+	// Dependant candidates
+	private List4 _dependants;
 
-    private Object i_member;
+	// whether to include in the result set
+	// may use id for optimisation ???
+	boolean _include = true;
 
-    // Comparable
-    Orderable i_order;
+	private Object _member;
 
-    // Possible pending joins on children
-    Tree i_pendingJoins;
+	// Comparable
+	Orderable _order;
 
-    // The evaluation root to compare all ORs
-    private QCandidate i_root;
+	// Possible pending joins on children
+	Tree _pendingJoins;
 
-    // the YapClass of this object
-    YapClass i_yapClass;
+	// The evaluation root to compare all ORs
+	private QCandidate _root;
 
-    // temporary yapField and member for one field during evaluation
-    YapField i_yapField; // null denotes null object
+	// the YapClass of this object
+	YapClass _yapClass;
 
-    private QCandidate() {
-        super(0);
-        i_candidates = null;
-        // dummy constructor to get "this" out of declaration for C#
-    }
+	// temporary yapField and member for one field during evaluation
+	YapField _yapField; // null denotes null object
 
-    QCandidate(QCandidates candidates, Object obj, int id, boolean include) {
-        super(id);
-        if(DTrace.enabled){
-            DTrace.CREATE_CANDIDATE.log(id);
-        }
-        i_candidates = candidates;
-        i_order = this;
-        i_member = obj;
-        i_include = include;
-    }
+	private QCandidate(QCandidates qcandidates) {
+		super(0);
+		_candidates = qcandidates;
+	}
 
-    void addDependant(QCandidate a_candidate) {
-        i_dependants = new List4(i_dependants, a_candidate);
-    }
+	private QCandidate() {
+		this(null);
+		// dummy constructor to get "this" out of declaration for C#
+	}
 
-    private void checkInstanceOfCompare() {
-        if (i_member instanceof Compare) {
-            i_member = ((Compare)i_member).compare();
-            YapFile stream = getStream();
-            i_yapClass = stream.getYapClass(stream.reflector().forObject(i_member), false);
-            i_key = (int)stream.getID(i_member);
-            i_bytes = stream.readReaderByID(getTransaction(), i_key);
-        }
-    }
+	QCandidate(QCandidates candidates, Object obj, int id, boolean include) {
+		super(id);
+		if (DTrace.enabled) {
+			DTrace.CREATE_CANDIDATE.log(id);
+		}
+		_candidates = candidates;
+		_order = this;
+		_member = obj;
+		_include = include;
+	}
 
-	///
-    /// <Tree Code>
-	///
-	
-    public int compare(Tree a_to) {
-        return i_order.compareTo(((QCandidate)a_to).i_order);
-    }
+	public Object shallowClone() {
+		QCandidate qcan = new QCandidate(_candidates);
+		qcan._bytes = _bytes;
+		qcan._dependants = _dependants;
+		qcan._include = _include;
+		qcan._member = _member;
+		qcan._order = _order;
+		qcan._pendingJoins = _pendingJoins;
+		qcan._root = _root;
+		qcan._yapClass = _yapClass;
+		qcan._yapField = _yapField;
 
-    public int compareTo(Object a_object) {
-        return i_key - ((TreeInt)a_object).i_key;
-    }
+		return super.shallowCloneInternal(qcan);
+	}
 
-    boolean createChild(final QCandidates a_candidates) {
-    	if (!i_include) {
-    		return false;
-    	}
-    	
-    	QCandidate candidate = null;
-    	
-    	if (i_yapField != null) {
-    		TypeHandler4 handler = i_yapField.getHandler();
-    		if (handler != null) {
-    			
-    			final YapReader[] arrayBytes = { i_bytes };
-    			final TypeHandler4 arrayWrapper =
-    				handler.readArrayWrapper(getTransaction(), arrayBytes);
-    			
-    			if (arrayWrapper != null) {
-    				
-    				final int offset = arrayBytes[0]._offset;
-    				boolean outerRes = true;
-    				
-    				// The following construct is worse than not ideal.
-    				// For each constraint it completely reads the
-    				// underlying structure again. The structure could b
-    				// kept fairly easy. TODO: Optimize!
-    				
-    				Iterator4 i = a_candidates.iterateConstraints();
+	void addDependant(QCandidate a_candidate) {
+		_dependants = new List4(_dependants, a_candidate);
+	}
+
+	private void checkInstanceOfCompare() {
+		if (_member instanceof Compare) {
+			_member = ((Compare) _member).compare();
+			YapFile stream = getStream();
+			_yapClass = stream.getYapClass(stream.reflector()
+					.forObject(_member), false);
+			_key = (int) stream.getID(_member);
+			_bytes = stream.readReaderByID(getTransaction(), _key);
+		}
+	}
+
+	// /
+	// / <Tree Code>
+	// /
+
+	public int compare(Tree a_to) {
+		return _order.compareTo(((QCandidate) a_to)._order);
+	}
+
+	public int compareTo(Object a_object) {
+		return _key - ((TreeInt) a_object)._key;
+	}
+
+	boolean createChild(final QCandidates a_candidates) {
+		if (!_include) {
+			return false;
+		}
+
+		QCandidate candidate = null;
+
+		if (_yapField != null) {
+			TypeHandler4 handler = _yapField.getHandler();
+			if (handler != null) {
+
+				final YapReader[] arrayBytes = { _bytes };
+				final TypeHandler4 arrayWrapper = handler.readArrayWrapper(
+						getTransaction(), arrayBytes);
+
+				if (arrayWrapper != null) {
+
+					final int offset = arrayBytes[0]._offset;
+					boolean outerRes = true;
+
+					// The following construct is worse than not ideal.
+					// For each constraint it completely reads the
+					// underlying structure again. The structure could b
+					// kept fairly easy. TODO: Optimize!
+
+					Iterator4 i = a_candidates.iterateConstraints();
 					while (i.hasNext()) {
-						
-						QCon qcon = (QCon)i.next();
+
+						QCon qcon = (QCon) i.next();
 						QField qf = qcon.getField();
-						if (qf == null || qf.i_name.equals(i_yapField.getName())) {
-							
+						if (qf == null || qf.i_name.equals(_yapField.getName())) {
+
 							QCon tempParent = qcon.i_parent;
 							qcon.setParent(null);
-							
-							final QCandidates candidates =
-								new QCandidates(a_candidates.i_trans, null, qf);
+
+							final QCandidates candidates = new QCandidates(
+									a_candidates.i_trans, null, qf);
 							candidates.addConstraint(qcon);
-							
+
 							qcon.setCandidates(candidates);
-							arrayWrapper.readCandidates(arrayBytes[0], candidates);
+							arrayWrapper.readCandidates(arrayBytes[0],
+									candidates);
 							arrayBytes[0]._offset = offset;
-							
+
 							final boolean isNot = qcon.isNot();
 							if (isNot) {
 								qcon.removeNot();
 							}
-							
+
 							candidates.evaluate();
-							
+
 							final Tree[] pending = new Tree[1];
 							final boolean[] innerRes = { isNot };
 							candidates.traverse(new Visitor4() {
 								public void visit(Object obj) {
-									
-									QCandidate cand = (QCandidate)obj;
-									
+
+									QCandidate cand = (QCandidate) obj;
+
 									if (cand.include()) {
 										innerRes[0] = !isNot;
 									}
-									
+
 									// Collect all pending subresults.
-									
-									if(cand.i_pendingJoins != null){
-										cand.i_pendingJoins.traverse(new Visitor4() {
-											public void visit(Object a_object) {
-												QPending newPending = (QPending)a_object;
-												
-												// We need to change
-												// the
-												// constraint here, so
-												// our
-												// pending collector
-												// uses
-												// the right
-												// comparator.
-												newPending.changeConstraint();
-												QPending oldPending =
-													(QPending)Tree.find(
-															pending[0],
-															newPending);
-												if (oldPending != null) {
-													
-													// We only keep one
-													// pending result
-													// for
-													// all array
-													// elements.
-													// and memorize,
-													// whether we had a
-													// true or a false
-													// result.
-													// or both.
-													
-													if (oldPending.i_result
-															!= newPending.i_result) {
-														oldPending.i_result = QPending.BOTH;
+
+									if (cand._pendingJoins != null) {
+										cand._pendingJoins
+												.traverse(new Visitor4() {
+													public void visit(
+															Object a_object) {
+														QPending newPending = (QPending) a_object;
+
+														// We need to change
+														// the
+														// constraint here, so
+														// our
+														// pending collector
+														// uses
+														// the right
+														// comparator.
+														newPending
+																.changeConstraint();
+														QPending oldPending = (QPending) Tree
+																.find(
+																		pending[0],
+																		newPending);
+														if (oldPending != null) {
+
+															// We only keep one
+															// pending result
+															// for
+															// all array
+															// elements.
+															// and memorize,
+															// whether we had a
+															// true or a false
+															// result.
+															// or both.
+
+															if (oldPending._result != newPending._result) {
+																oldPending._result = QPending.BOTH;
+															}
+
+														} else {
+															pending[0] = Tree
+																	.add(
+																			pending[0],
+																			newPending);
+														}
 													}
-													
-												} else {
-													pending[0] =
-														Tree.add(pending[0], newPending);
-												}
-											}
-										});
+												});
 									}
 								}
 							});
-							
+
 							if (isNot) {
 								qcon.not();
 							}
-							
+
 							// In case we had pending subresults, we
 							// need to communicate
 							// them up to our root.
 							if (pending[0] != null) {
 								pending[0].traverse(new Visitor4() {
 									public void visit(Object a_object) {
-										getRoot().evaluate((QPending)a_object);
+										getRoot().evaluate((QPending) a_object);
 									}
 								});
 							}
-							
+
 							if (!innerRes[0]) {
-								
+
 								if (Deploy.debugQueries) {
-									System.out.println( 
-											"  Array evaluation false. Constraint:"
-											+ qcon.i_id);
+									System.out
+											.println("  Array evaluation false. Constraint:"
+													+ qcon.i_id);
 								}
-								
+
 								// Again this could be double triggering.
 								// 
 								// We want to clean up the "No route"
 								// at some stage.
-								
-								qcon.visit(getRoot(), qcon.i_evaluator.not(false));
-								
+
+								qcon.visit(getRoot(), qcon.i_evaluator
+										.not(false));
+
 								outerRes = false;
 							}
-							
+
 							qcon.setParent(tempParent);
-							
+
 						}
 					}
-    				
-    				
-    				return outerRes;
-    			}
-    			
-    			// We may get simple types here too, if the YapField was null
-    			// in the higher level simple evaluation. Evaluate these
-    			// immediately.
-    			
-    			if (handler.getType() == YapConst.TYPE_SIMPLE) {
-    				a_candidates.i_currentConstraint.visit(this);
-    				return true;
-    			}
-    		}
-    	}
-    	
-    	if (candidate == null) {
-    		candidate = readSubCandidate(a_candidates);
-        	if (candidate == null) {
-        		return false;
-        	}
-    	}
 
-    	// fast early check for YapClass
-    	if (a_candidates.i_yapClass != null && a_candidates.i_yapClass.isStrongTyped()) {
-    		if (i_yapField != null) {
-    			TypeHandler4 handler = i_yapField.getHandler();
-    			if (handler != null && (handler.getType() == YapConst.TYPE_CLASS)) {
-    				YapClass yc = (YapClass)handler;
-    				if (yc instanceof YapClassAny) {
-    					yc = candidate.readYapClass();
-    				}
-    				if (!yc.canHold(a_candidates.i_yapClass.classReflector())) {
-    					return false;
-    				}
-    			}
-    		}
-    	}
-    	
-    	addDependant(a_candidates.addByIdentity(candidate));
-    	return true;
-    }
+					return outerRes;
+				}
 
-    void doNotInclude() {
-        i_include = false;
-        if (i_dependants != null) {
-            Iterator4 i = new Iterator4Impl(i_dependants);
-            i_dependants = null;
-            while (i.hasNext()) {
-                ((QCandidate)i.next()).doNotInclude();
-            }
-        }
-    }
+				// We may get simple types here too, if the YapField was null
+				// in the higher level simple evaluation. Evaluate these
+				// immediately.
 
-    public boolean duplicates() {
-        return i_order.hasDuplicates();
-    }
+				if (handler.getType() == YapConst.TYPE_SIMPLE) {
+					a_candidates.i_currentConstraint.visit(this);
+					return true;
+				}
+			}
+		}
 
-    boolean evaluate(final QConObject a_constraint, final QE a_evaluator) {
-        if(a_evaluator.identity()){
-            return a_evaluator.evaluate(a_constraint, this, null);
-        }
-        if (i_member == null) {
-            i_member = value();
-        }
-        return a_evaluator.evaluate(a_constraint, this, a_constraint.translate(i_member));
-    }
+		if (candidate == null) {
+			candidate = readSubCandidate(a_candidates);
+			if (candidate == null) {
+				return false;
+			}
+		}
 
-    boolean evaluate(QPending a_pending) {
+		// fast early check for YapClass
+		if (a_candidates.i_yapClass != null
+				&& a_candidates.i_yapClass.isStrongTyped()) {
+			if (_yapField != null) {
+				TypeHandler4 handler = _yapField.getHandler();
+				if (handler != null
+						&& (handler.getType() == YapConst.TYPE_CLASS)) {
+					YapClass yc = (YapClass) handler;
+					if (yc instanceof YapClassAny) {
+						yc = candidate.readYapClass();
+					}
+					if (!yc.canHold(a_candidates.i_yapClass.classReflector())) {
+						return false;
+					}
+				}
+			}
+		}
 
-        if (Deploy.debugQueries) {
-            System.out.println(
-                "Pending arrived Join: "
-                    + a_pending.i_join.i_id
-                    + " Constraint:"
-                    + a_pending.i_constraint.i_id
-                    + " res:"
-                    + a_pending.i_result);
-        }
+		addDependant(a_candidates.addByIdentity(candidate));
+		return true;
+	}
 
-        QPending oldPending = (QPending)Tree.find(i_pendingJoins, a_pending);
+	void doNotInclude() {
+		_include = false;
+		if (_dependants != null) {
+			Iterator4 i = new Iterator4Impl(_dependants);
+			_dependants = null;
+			while (i.hasNext()) {
+				((QCandidate) i.next()).doNotInclude();
+			}
+		}
+	}
 
-        if (oldPending == null) {
-            a_pending.changeConstraint();
-            i_pendingJoins = Tree.add(i_pendingJoins, a_pending);
-            return true;
-        } else {
-            i_pendingJoins = i_pendingJoins.removeNode(oldPending);
-            oldPending.i_join.evaluatePending(this, oldPending, a_pending, a_pending.i_result);
-            return false;
-        }
+	public boolean duplicates() {
+		return _order.hasDuplicates();
+	}
 
-    }
-    
-    ReflectClass classReflector(){
-        readYapClass();
-        if (i_yapClass == null) {
-            return null;
-        }
-        return i_yapClass.classReflector();
-    }
+	boolean evaluate(final QConObject a_constraint, final QE a_evaluator) {
+		if (a_evaluator.identity()) {
+			return a_evaluator.evaluate(a_constraint, this, null);
+		}
+		if (_member == null) {
+			_member = value();
+		}
+		return a_evaluator.evaluate(a_constraint, this, a_constraint
+				.translate(_member));
+	}
 
-    /// ***<Candidate interface code>***
-    
-    public ObjectContainer objectContainer(){
-        return getStream();
-    }
+	boolean evaluate(QPending a_pending) {
 
-    public Object getObject() {
-        Object obj = value(true);
-        if(obj instanceof YapReader) {
-            /* CHANGED (pr) */
-            YapReader reader=(YapReader)obj;
-            int offset=reader._offset;
-            obj = reader.toString(getTransaction());
-            reader._offset=offset;
-        }
-        return obj;
-    }
+		if (Deploy.debugQueries) {
+			System.out.println("Pending arrived Join: " + a_pending._join.i_id
+					+ " Constraint:" + a_pending._constraint.i_id + " res:"
+					+ a_pending._result);
+		}
 
-    QCandidate getRoot() {
-        return i_root == null ? this : i_root;
-    }
+		QPending oldPending = (QPending) Tree.find(_pendingJoins, a_pending);
 
-    private YapFile getStream() {
-        return getTransaction().i_file;
-    }
+		if (oldPending == null) {
+			a_pending.changeConstraint();
+			_pendingJoins = Tree.add(_pendingJoins, a_pending);
+			return true;
+		} else {
+			_pendingJoins = _pendingJoins.removeNode(oldPending);
+			oldPending._join.evaluatePending(this, oldPending, a_pending,
+					a_pending._result);
+			return false;
+		}
 
-    private Transaction getTransaction() {
-        return i_candidates.i_trans;
-    }
+	}
 
-    public boolean hasDuplicates() {
+	ReflectClass classReflector() {
+		readYapClass();
+		if (_yapClass == null) {
+			return null;
+		}
+		return _yapClass.classReflector();
+	}
 
-        // Subcandidates are evaluated along with their constraints
-        // in one big QCandidates object. The tree can have duplicates
-        // so evaluation can be cascaded up to different roots.
+	// / ***<Candidate interface code>***
 
-        return i_root != null;
-    }
+	public ObjectContainer objectContainer() {
+		return getStream();
+	}
 
-    public void hintOrder(int a_order, boolean a_major) {
-        i_order = new Order();
-        i_order.hintOrder(a_order, a_major);
-    }
+	public Object getObject() {
+		Object obj = value(true);
+		if (obj instanceof YapReader) {
+			/* CHANGED (pr) */
+			YapReader reader = (YapReader) obj;
+			int offset = reader._offset;
+			obj = reader.toString(getTransaction());
+			reader._offset = offset;
+		}
+		return obj;
+	}
 
-    public boolean include() {
-        return i_include;
-    }
+	QCandidate getRoot() {
+		return _root == null ? this : _root;
+	}
 
-    /**
+	private YapFile getStream() {
+		return getTransaction().i_file;
+	}
+
+	private Transaction getTransaction() {
+		return _candidates.i_trans;
+	}
+
+	public boolean hasDuplicates() {
+
+		// Subcandidates are evaluated along with their constraints
+		// in one big QCandidates object. The tree can have duplicates
+		// so evaluation can be cascaded up to different roots.
+
+		return _root != null;
+	}
+
+	public void hintOrder(int a_order, boolean a_major) {
+		_order = new Order();
+		_order.hintOrder(a_order, a_major);
+	}
+
+	public boolean include() {
+		return _include;
+	}
+
+	/**
 	 * For external interface use only. Call doNotInclude() internally so
 	 * dependancies can be checked.
 	 */
-    public void include(boolean flag) {
-        // TODO:
-        // Internal and external flag may need to be handled seperately.
-        i_include = flag;
-    }
+	public void include(boolean flag) {
+		// TODO:
+		// Internal and external flag may need to be handled seperately.
+		_include = flag;
+	}
 
-    void isDuplicateOf(Tree a_tree) {
-        i_size = 0;
-        i_root = (QCandidate)a_tree;
-    }
-    
-    private ReflectClass memberClass(){
-    	return getTransaction().reflector().forObject(i_member);
-    }
+	void isDuplicateOf(Tree a_tree) {
+		_size = 0;
+		_root = (QCandidate) a_tree;
+	}
 
-    YapComparable prepareComparison(YapStream a_stream, Object a_constraint) {
-        if (i_yapField != null) {
-            return i_yapField.prepareComparison(a_constraint);
-        }
-        if (i_yapClass == null) {
-        	
-            YapClass yc = null;
-            if (i_bytes != null) {
-                yc = a_stream.getYapClass(a_stream.reflector().forObject(a_constraint), true);
-            } else {
-                if (i_member != null) {
-                    yc = a_stream.getYapClass(a_stream.reflector().forObject(i_member), false);
-                }
-            }
-            if (yc != null) {
-                if (i_member != null && i_member.getClass().isArray()) {
-                    TypeHandler4 ydt = (TypeHandler4)yc.prepareComparison(a_constraint);
-                    if (a_stream.reflector().array().isNDimensional(memberClass())) {
-                        YapArrayN yan = new YapArrayN(a_stream, ydt, false);
-                        return yan;
-                    } else {
-                        YapArray ya = new YapArray(a_stream, ydt, false);
-                        return ya;
-                    }
-                } else {
-                    return yc.prepareComparison(a_constraint);
-                }
-            }
-            return null;
-        } else {
-            return i_yapClass.prepareComparison(a_constraint);
-        }
-    }
+	private ReflectClass memberClass() {
+		return getTransaction().reflector().forObject(_member);
+	}
 
-    private void read() {
-        if (i_include) {
-            if (i_bytes == null) {
-                if (i_key > 0) {
-                    if(DTrace.enabled){
-                        DTrace.CANDIDATE_READ.log(i_key);
-                    }
-                    i_bytes = getStream().readReaderByID(getTransaction(), i_key);
-                    if (i_bytes == null) {
-                        i_include = false;
-                    }
-                } else {
-                    i_include = false;
-                }
-            }
-        }
-    }
+	YapComparable prepareComparison(YapStream a_stream, Object a_constraint) {
+		if (_yapField != null) {
+			return _yapField.prepareComparison(a_constraint);
+		}
+		if (_yapClass == null) {
 
-    private QCandidate readSubCandidate(QCandidates candidateCollection) {
-        int id = 0;
-        read();
-        if (i_bytes != null) {
-            final int offset = i_bytes._offset;
+			YapClass yc = null;
+			if (_bytes != null) {
+				yc = a_stream.getYapClass(a_stream.reflector().forObject(
+						a_constraint), true);
+			} else {
+				if (_member != null) {
+					yc = a_stream.getYapClass(a_stream.reflector().forObject(
+							_member), false);
+				}
+			}
+			if (yc != null) {
+				if (_member != null && _member.getClass().isArray()) {
+					TypeHandler4 ydt = (TypeHandler4) yc
+							.prepareComparison(a_constraint);
+					if (a_stream.reflector().array().isNDimensional(
+							memberClass())) {
+						YapArrayN yan = new YapArrayN(a_stream, ydt, false);
+						return yan;
+					} else {
+						YapArray ya = new YapArray(a_stream, ydt, false);
+						return ya;
+					}
+				} else {
+					return yc.prepareComparison(a_constraint);
+				}
+			}
+			return null;
+		} else {
+			return _yapClass.prepareComparison(a_constraint);
+		}
+	}
 
-            try {
-                id = i_bytes.readInt();
-            } catch (Exception e) {
-                return null;
-            }
-            i_bytes._offset = offset;
+	private void read() {
+		if (_include) {
+			if (_bytes == null) {
+				if (_key > 0) {
+					if (DTrace.enabled) {
+						DTrace.CANDIDATE_READ.log(_key);
+					}
+					_bytes = getStream().readReaderByID(getTransaction(), _key);
+					if (_bytes == null) {
+						_include = false;
+					}
+				} else {
+					_include = false;
+				}
+			}
+		}
+	}
 
-            if (id != 0) {
-                QCandidate candidate = new QCandidate(candidateCollection, null, id, true);
-                candidate.i_root = getRoot();
-                return candidate;
-            }
-        }
-        return null;
-    }
+	private QCandidate readSubCandidate(QCandidates candidateCollection) {
+		int id = 0;
+		read();
+		if (_bytes != null) {
+			final int offset = _bytes._offset;
 
-    private void readThis(boolean a_activate) {
-        read();
+			try {
+				id = _bytes.readInt();
+			} catch (Exception e) {
+				return null;
+			}
+			_bytes._offset = offset;
 
-        Transaction trans = getTransaction();
-        if (trans != null) {
+			if (id != 0) {
+				QCandidate candidate = new QCandidate(candidateCollection,
+						null, id, true);
+				candidate._root = getRoot();
+				return candidate;
+			}
+		}
+		return null;
+	}
 
-            i_member = trans.i_stream.getByID1(trans, i_key);
+	private void readThis(boolean a_activate) {
+		read();
 
-            if (i_member != null && (a_activate || i_member instanceof Compare)) {
-                trans.i_stream.activate1(trans, i_member);
-                checkInstanceOfCompare();
-            }
-        }
-    }
+		Transaction trans = getTransaction();
+		if (trans != null) {
 
-    YapClass readYapClass() {
-        if (i_yapClass == null) {
-            read();
-            if (i_bytes != null) {
+			_member = trans.i_stream.getByID1(trans, _key);
 
-                i_bytes._offset = 0;
-                if (Deploy.debug) {
-                    i_bytes.readBegin(0, YapConst.YAPOBJECT);
-                }
-                YapStream stream = getStream();
-                i_yapClass = stream.getYapClass(i_bytes.readInt());
-                if(i_yapClass != null){
-	                if (  stream.i_handlers.ICLASS_COMPARE.isAssignableFrom(i_yapClass.classReflector())){
-	                    readThis(false);
-	                }
-                }
-            }
-        }
-        return i_yapClass;
-    }
+			if (_member != null && (a_activate || _member instanceof Compare)) {
+				trans.i_stream.activate1(trans, _member);
+				checkInstanceOfCompare();
+			}
+		}
+	}
 
-    public String toString() {
-        if(! Debug4.prettyToStrings){
-            return super.toString();
-        }
-        String str = "QCandidate ";
-        if (i_yapClass != null) {
-            str += "\n   YapClass " + i_yapClass.getName();
-        }
-        if (i_yapField != null) {
-            str += "\n   YapField " + i_yapField.getName();
-        }
-        if (i_member != null) {
-            str += "\n   Member " + i_member.toString();
-        }
-        if (i_root != null) {
-            str += "\n  rooted by:\n";
-            str += i_root.toString();
-        } else {
-            str += "\n  ROOT";
-        }
-        return str;
-    }
+	YapClass readYapClass() {
+		if (_yapClass == null) {
+			read();
+			if (_bytes != null) {
 
-    void useField(QField a_field) {
-        read();
-        if (i_bytes == null) {
-            i_yapField = null;
-        } else {
-            readYapClass();
-            i_member = null;
-            if (a_field == null) {
-                i_yapField = null;
-            } else {
-                if(i_yapClass == null){
-                    i_yapField = null;
-                }else{
-	                i_yapField = a_field.getYapField(i_yapClass);
-	                if (i_yapField == null | ! i_yapClass.findOffset(i_bytes, i_yapField)) {
-	                    if (i_yapClass.holdsAnyClass()) {
-	                        i_yapField = null;
-	                    } else {
-	                        i_yapField = new YapFieldNull();
-	                    }
-	                }
-                }
-            }
-        }
-    }
+				_bytes._offset = 0;
+				if (Deploy.debug) {
+					_bytes.readBegin(0, YapConst.YAPOBJECT);
+				}
+				YapStream stream = getStream();
+				_yapClass = stream.getYapClass(_bytes.readInt());
+				if (_yapClass != null) {
+					if (stream.i_handlers.ICLASS_COMPARE
+							.isAssignableFrom(_yapClass.classReflector())) {
+						readThis(false);
+					}
+				}
+			}
+		}
+		return _yapClass;
+	}
 
-    Object value() {
-        return value(false);
-    }
+	public String toString() {
+		if (!Debug4.prettyToStrings) {
+			return super.toString();
+		}
+		String str = "QCandidate ";
+		if (_yapClass != null) {
+			str += "\n   YapClass " + _yapClass.getName();
+		}
+		if (_yapField != null) {
+			str += "\n   YapField " + _yapField.getName();
+		}
+		if (_member != null) {
+			str += "\n   Member " + _member.toString();
+		}
+		if (_root != null) {
+			str += "\n  rooted by:\n";
+			str += _root.toString();
+		} else {
+			str += "\n  ROOT";
+		}
+		return str;
+	}
 
-    // TODO: This is only used for Evaluations. Handling may need
-    // to be different for collections also.
-    Object value(boolean a_activate) {
-        if (i_member == null) {
-            if (i_yapField == null) {
-                readThis(a_activate);
-            } else {
-                int offset = i_bytes._offset;
-                try {
-                    i_member = i_yapField.readQuery(getTransaction(), i_bytes);
-                } catch (CorruptionException ce) {
-                    i_member = null;
-                }
-                i_bytes._offset = offset;
-                checkInstanceOfCompare();
-            }
-        }
-        return i_member;
-    }
+	void useField(QField a_field) {
+		read();
+		if (_bytes == null) {
+			_yapField = null;
+		} else {
+			readYapClass();
+			_member = null;
+			if (a_field == null) {
+				_yapField = null;
+			} else {
+				if (_yapClass == null) {
+					_yapField = null;
+				} else {
+					_yapField = a_field.getYapField(_yapClass);
+					if (_yapField == null
+							| !_yapClass.findOffset(_bytes, _yapField)) {
+						if (_yapClass.holdsAnyClass()) {
+							_yapField = null;
+						} else {
+							_yapField = new YapFieldNull();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	Object value() {
+		return value(false);
+	}
+
+	// TODO: This is only used for Evaluations. Handling may need
+	// to be different for collections also.
+	Object value(boolean a_activate) {
+		if (_member == null) {
+			if (_yapField == null) {
+				readThis(a_activate);
+			} else {
+				int offset = _bytes._offset;
+				try {
+					_member = _yapField.readQuery(getTransaction(), _bytes);
+				} catch (CorruptionException ce) {
+					_member = null;
+				}
+				_bytes._offset = offset;
+				checkInstanceOfCompare();
+			}
+		}
+		return _member;
+	}
 }

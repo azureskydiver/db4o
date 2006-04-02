@@ -51,8 +51,8 @@ public class IxTraverser{
     private void addAll(Visitor4 visitor, Tree a_tree){
         if(a_tree != null){
             ((IxTree)a_tree).visit(visitor, null);
-            addAll(visitor, a_tree.i_preceding);
-            addAll(visitor, a_tree.i_subsequent);
+            addAll(visitor, a_tree._preceding);
+            addAll(visitor, a_tree._subsequent);
         }
     }
 
@@ -61,7 +61,7 @@ public class IxTraverser{
             if (a_path.i_next == null) {
                 addSubsequent(visitor, a_path);
             } else {
-                if (a_path.i_next.i_tree == a_path.i_tree.i_preceding) {
+                if (a_path.i_next.i_tree == a_path.i_tree._preceding) {
                     addSubsequent(visitor, a_path);
                 } else {
                     addPathTree(visitor, a_path);
@@ -79,7 +79,7 @@ public class IxTraverser{
 
     private void addPreceding(Visitor4 visitor, IxPath a_path) {
         addPathTree(visitor, a_path);
-        addAll(visitor, a_path.i_tree.i_preceding);
+        addAll(visitor, a_path.i_tree._preceding);
     }
 
     private void addSmaller(Visitor4 visitor, IxPath a_path) {
@@ -87,7 +87,7 @@ public class IxTraverser{
             if (a_path.i_next == null) {
                 addPreceding(visitor, a_path);
             } else {
-                if (a_path.i_next.i_tree == a_path.i_tree.i_subsequent) {
+                if (a_path.i_next.i_tree == a_path.i_tree._subsequent) {
                     addPreceding(visitor, a_path);
                 } else {
                     addPathTree(visitor, a_path);
@@ -99,7 +99,7 @@ public class IxTraverser{
 
     private void addSubsequent(Visitor4 visitor, IxPath a_path) {
         addPathTree(visitor, a_path);
-        addAll(visitor, a_path.i_tree.i_subsequent);
+        addAll(visitor, a_path.i_tree._subsequent);
     }
     
     private NIxPath createNIxPath(NIxPathNode head, boolean takePreceding, boolean takeMatches, boolean takeSubsequent, int pathType){
@@ -135,7 +135,7 @@ public class IxTraverser{
         if (a_path.i_next == null) {
             return a_sum + countSubsequent(a_path);
         } else {
-            if (a_path.i_next.i_tree == a_path.i_tree.i_preceding) {
+            if (a_path.i_next.i_tree == a_path.i_tree._preceding) {
                 a_sum += countSubsequent(a_path);
             } else {
                 a_sum += a_path.countMatching();
@@ -145,14 +145,14 @@ public class IxTraverser{
     }
     
     private int countPreceding(IxPath a_path) {
-        return Tree.size(a_path.i_tree.i_preceding) + a_path.countMatching();
+        return Tree.size(a_path.i_tree._preceding) + a_path.countMatching();
     }
     
     private int countSmaller(IxPath a_path, int a_sum) {
         if (a_path.i_next == null) {
             return a_sum + countPreceding(a_path);
         } else {
-            if (a_path.i_next.i_tree == a_path.i_tree.i_subsequent) {
+            if (a_path.i_next.i_tree == a_path.i_tree._subsequent) {
                 a_sum += countPreceding(a_path);
             } else {
                 a_sum += a_path.countMatching();
@@ -178,7 +178,7 @@ public class IxTraverser{
     }
 
     private int countSubsequent(IxPath a_path) {
-        return Tree.size(a_path.i_tree.i_subsequent) + a_path.countMatching();
+        return Tree.size(a_path.i_tree._subsequent) + a_path.countMatching();
     }
 
     private void delayedAppend(IxTree a_tree, int a_comparisonResult, int[] lowerAndUpperMatch) {
@@ -192,13 +192,13 @@ public class IxTraverser{
 
     private void findBoth() {
         if (i_greatTail.i_comparisonResult == 0) {
-            findSmallestEqualFromEqual((IxTree)i_greatTail.i_tree.i_preceding);
+            findSmallestEqualFromEqual((IxTree)i_greatTail.i_tree._preceding);
             resetDelayedAppend();
-            findGreatestEqualFromEqual((IxTree)i_greatTail.i_tree.i_subsequent);
+            findGreatestEqualFromEqual((IxTree)i_greatTail.i_tree._subsequent);
         } else if (i_greatTail.i_comparisonResult < 0) {
-            findBoth1((IxTree)i_greatTail.i_tree.i_subsequent);
+            findBoth1((IxTree)i_greatTail.i_tree._subsequent);
         } else {
-            findBoth1((IxTree)i_greatTail.i_tree.i_preceding);
+            findBoth1((IxTree)i_greatTail.i_tree._preceding);
         }
     }
 
@@ -225,11 +225,11 @@ public class IxTraverser{
     
     private void findNullPath1(IxPath[] headTail) {
         if(headTail[1].i_comparisonResult == 0){
-            findGreatestNullFromNull(headTail, (IxTree)headTail[1].i_tree.i_subsequent);
+            findGreatestNullFromNull(headTail, (IxTree)headTail[1].i_tree._subsequent);
         } else if (headTail[1].i_comparisonResult < 0) {
-            findNullPath2(headTail, (IxTree)headTail[1].i_tree.i_subsequent);
+            findNullPath2(headTail, (IxTree)headTail[1].i_tree._subsequent);
         } else {
-            findNullPath2(headTail, (IxTree)headTail[1].i_tree.i_preceding);
+            findNullPath2(headTail, (IxTree)headTail[1].i_tree._preceding);
         }
     }
     
@@ -250,9 +250,9 @@ public class IxTraverser{
                 resetDelayedAppend();
             }
             if (res > 0) {
-                findGreatestNullFromNull(headTail, (IxTree)tree.i_preceding);
+                findGreatestNullFromNull(headTail, (IxTree)tree._preceding);
             } else {
-                findGreatestNullFromNull(headTail, (IxTree)tree.i_subsequent);
+                findGreatestNullFromNull(headTail, (IxTree)tree._subsequent);
             }
         }
     }
@@ -277,7 +277,7 @@ public class IxTraverser{
             i_greatHead = new IxPath(this, null, a_tree, res, a_tree.lowerAndUpperMatch());
             i_greatTail = i_greatHead;
             
-            i_smallHead = i_greatHead.shallowClone();
+            i_smallHead = (IxPath)i_greatHead.shallowClone();
             i_smallTail = i_smallHead;
 
             findBoth();
@@ -327,12 +327,12 @@ public class IxTraverser{
         if (res == 0) {
             findGreatestEqualFromEqual(a_tree);
         } else if (res < 0) {
-            if (a_tree.i_subsequent != null) {
-                findGreatestEqual((IxTree)a_tree.i_subsequent);
+            if (a_tree._subsequent != null) {
+                findGreatestEqual((IxTree)a_tree._subsequent);
             }
         } else {
-            if (a_tree.i_preceding != null) {
-                findGreatestEqual((IxTree)a_tree.i_preceding);
+            if (a_tree._preceding != null) {
+                findGreatestEqual((IxTree)a_tree._preceding);
             }
         }
     }
@@ -346,9 +346,9 @@ public class IxTraverser{
                 resetDelayedAppend();
             }
             if (res > 0) {
-                findGreatestEqualFromEqual((IxTree)a_tree.i_preceding);
+                findGreatestEqualFromEqual((IxTree)a_tree._preceding);
             } else {
-                findGreatestEqualFromEqual((IxTree)a_tree.i_subsequent);
+                findGreatestEqualFromEqual((IxTree)a_tree._subsequent);
             }
         }
     }
@@ -359,12 +359,12 @@ public class IxTraverser{
         if (res == 0) {
             findSmallestEqualFromEqual(a_tree);
         } else if (res < 0) {
-            if (a_tree.i_subsequent != null) {
-                findSmallestEqual((IxTree)a_tree.i_subsequent);
+            if (a_tree._subsequent != null) {
+                findSmallestEqual((IxTree)a_tree._subsequent);
             }
         } else {
-            if (a_tree.i_preceding != null) {
-                findSmallestEqual((IxTree)a_tree.i_preceding);
+            if (a_tree._preceding != null) {
+                findSmallestEqual((IxTree)a_tree._preceding);
             }
         }
     }
@@ -378,9 +378,9 @@ public class IxTraverser{
                 resetDelayedAppend();
             }
             if (res < 0) {
-                findSmallestEqualFromEqual((IxTree)a_tree.i_subsequent);
+                findSmallestEqualFromEqual((IxTree)a_tree._subsequent);
             } else {
-                findSmallestEqualFromEqual((IxTree)a_tree.i_preceding);
+                findSmallestEqualFromEqual((IxTree)a_tree._preceding);
             }
         }
     }

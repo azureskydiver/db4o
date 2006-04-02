@@ -108,7 +108,7 @@ abstract class YapFieldVirtual extends YapField {
                         && migrateYapObject.i_virtualAttributes != null
                         && migrateYapObject.i_virtualAttributes.i_database != null) {
                         migrating = true;
-                        a_yapObject.i_virtualAttributes = migrateYapObject.i_virtualAttributes
+                        a_yapObject.i_virtualAttributes = (VirtualAttributes)migrateYapObject.i_virtualAttributes
                             .shallowClone();
                         if(migrateYapObject.i_virtualAttributes.i_database != null){
                             migrateYapObject.i_virtualAttributes.i_database.bind(trans);

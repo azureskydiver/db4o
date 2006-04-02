@@ -63,7 +63,7 @@ public final class QCandidates implements Visitor4 {
 
     QCandidate addByIdentity(QCandidate candidate) {
         i_root = Tree.add(i_root, candidate);
-        if(candidate.i_size == 0){
+        if(candidate._size == 0){
         	
         	// This means that the candidate was already present
         	// and QCandidate does not allow duplicates.
@@ -113,7 +113,7 @@ public final class QCandidates implements Visitor4 {
     	a_ordered.traverse(new Visitor4() {
     		public void visit(Object a_object) {
     			QOrder qo = (QOrder) a_object;
-    			QCandidate candidate = qo.i_candidate.getRoot();
+    			QCandidate candidate = qo._candidate.getRoot();
     			candidate.hintOrder(placement[0]++, major);
     		}
     	});
@@ -134,9 +134,9 @@ public final class QCandidates implements Visitor4 {
     	Iterator4 i = col.iterator();
     	while(i.hasNext()){
     		QCandidate candidate = (QCandidate) i.next();
-    		candidate.i_preceding = null;
-    		candidate.i_subsequent = null;
-    		candidate.i_size = 1;
+    		candidate._preceding = null;
+    		candidate._subsequent = null;
+    		candidate._size = 1;
     		newTree[0] = Tree.add(newTree[0], candidate);
     	}
     	
@@ -213,7 +213,7 @@ public final class QCandidates implements Visitor4 {
         final boolean[] ret = new boolean[] { true };
         traverse(new Visitor4() {
             public void visit(Object obj) {
-                if (((QCandidate) obj).i_include) {
+                if (((QCandidate) obj)._include) {
                     ret[0] = false;
                 }
             }
@@ -226,7 +226,7 @@ public final class QCandidates implements Visitor4 {
             i_root.traverse(a_host);
             i_root = i_root.filter(new VisitorBoolean() {
                 public boolean isVisit(Object a_candidate) {
-                    return ((QCandidate) a_candidate).i_include;
+                    return ((QCandidate) a_candidate)._include;
                 }
             });
         }
@@ -256,7 +256,7 @@ public final class QCandidates implements Visitor4 {
     				newRoot[0] =
     					Tree.add(
     							newRoot[0],
-								new QCandidate(finalThis, null, ((TreeInt) obj).i_key, true));
+								new QCandidate(finalThis, null, ((TreeInt) obj)._key, true));
     			}
     		});
     		
@@ -264,7 +264,7 @@ public final class QCandidates implements Visitor4 {
     		// use a TreeInt for the removeLike call
     		i_trans.traverseRemovedClassIDs(i_yapClass.getID(), new Visitor4() {
     			public void visit(Object obj) {
-    				newRoot[0] = Tree.removeLike(newRoot[0], new QCandidate(finalThis, null, ((TreeInt) obj).i_key, true));
+    				newRoot[0] = Tree.removeLike(newRoot[0], new QCandidate(finalThis, null, ((TreeInt) obj)._key, true));
     			}
     		});
     		

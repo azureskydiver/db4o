@@ -11,57 +11,52 @@ import com.db4o.inside.freespace.*;
  */
 public abstract class IxTree extends Tree implements Visitor4{
     
-    IndexTransaction i_fieldTransaction;
+    IndexTransaction _fieldTransaction;
     
-    int i_version;
+    int _version;
     
     int _nodes = 1;
     
     IxTree(IndexTransaction a_ft){
-        i_fieldTransaction = a_ft;
-        i_version = a_ft.i_version;
+        _fieldTransaction = a_ft;
+        _version = a_ft.i_version;
     }
     
     public Tree add(final Tree a_new, final int a_cmp){
         if(a_cmp < 0){
-            if(i_subsequent == null){
-                i_subsequent = a_new;
+            if(_subsequent == null){
+                _subsequent = a_new;
             }else{
-                i_subsequent = i_subsequent.add(a_new);
+                _subsequent = _subsequent.add(a_new);
             }
         }else {
-            if(i_preceding == null){
-                i_preceding = a_new;
+            if(_preceding == null){
+                _preceding = a_new;
             }else{
-                i_preceding = i_preceding.add(a_new);
+                _preceding = _preceding.add(a_new);
             }
         }
         return balanceCheckNulls();
     }
     
     void beginMerge(){
-        i_preceding = null;
-        i_subsequent = null;
+        _preceding = null;
+        _subsequent = null;
         setSizeOwn();
     }
     
-    public Tree deepClone(Object a_param){
-        try {
-            IxTree tree = (IxTree)this.clone();
-            tree.i_fieldTransaction = (IndexTransaction)a_param;
-            return tree;
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+    public Tree deepClone(Object a_param) {
+		IxTree tree = (IxTree) this.shallowClone();
+		tree._fieldTransaction = (IndexTransaction) a_param;
+		return tree;
+	}
     
     final Indexable4 handler(){
-        return i_fieldTransaction.i_index._handler;
+        return _fieldTransaction.i_index._handler;
     }
     
     final Index4 index(){
-        return i_fieldTransaction.i_index;
+        return _fieldTransaction.i_index;
     }
     
     /**
@@ -87,17 +82,17 @@ public abstract class IxTree extends Tree implements Visitor4{
     
     public void setSizeOwnPrecedingSubsequent(){
         super.setSizeOwnPrecedingSubsequent();
-        _nodes = 1 + i_preceding.nodes() + i_subsequent.nodes();
+        _nodes = 1 + _preceding.nodes() + _subsequent.nodes();
     }
     
     public void setSizeOwnPreceding(){
         super.setSizeOwnPreceding();
-        _nodes = 1 + i_preceding.nodes();
+        _nodes = 1 + _preceding.nodes();
     }
     
     public void setSizeOwnSubsequent(){
         super.setSizeOwnSubsequent();
-        _nodes = 1 + i_subsequent.nodes();
+        _nodes = 1 + _subsequent.nodes();
     }
     
     public final void setSizeOwnPlus(Tree tree){
@@ -119,7 +114,7 @@ public abstract class IxTree extends Tree implements Visitor4{
     }
     
     final Transaction trans(){
-        return i_fieldTransaction.i_trans;
+        return _fieldTransaction.i_trans;
     }
     
     public abstract void visit(Object obj);
@@ -133,8 +128,8 @@ public abstract class IxTree extends Tree implements Visitor4{
     public abstract int write(Indexable4 a_handler, YapWriter a_writer);
     
     public void visitFirst(FreespaceVisitor visitor){
-        if(i_preceding != null){
-            ((IxTree)i_preceding).visitFirst(visitor);
+        if(_preceding != null){
+            ((IxTree)_preceding).visitFirst(visitor);
             if(visitor.visited()){
                 return;
             }
@@ -143,8 +138,8 @@ public abstract class IxTree extends Tree implements Visitor4{
         if(visitor.visited()){
             return;
         }
-        if(i_subsequent != null){
-            ((IxTree)i_subsequent).visitFirst(visitor);
+        if(_subsequent != null){
+            ((IxTree)_subsequent).visitFirst(visitor);
             if(visitor.visited()){
                 return;
             }
@@ -152,8 +147,8 @@ public abstract class IxTree extends Tree implements Visitor4{
     }
     
     public void visitLast(FreespaceVisitor visitor){
-        if(i_subsequent != null){
-            ((IxTree)i_subsequent).visitLast(visitor);
+        if(_subsequent != null){
+            ((IxTree)_subsequent).visitLast(visitor);
             if(visitor.visited()){
                 return;
             }
@@ -162,13 +157,19 @@ public abstract class IxTree extends Tree implements Visitor4{
         if(visitor.visited()){
             return;
         }
-        if(i_preceding != null){
-            ((IxTree)i_preceding).visitLast(visitor);
+        if(_preceding != null){
+            ((IxTree)_preceding).visitLast(visitor);
             if(visitor.visited()){
                 return;
             }
         }
     }
     
-
+    protected Tree shallowCloneInternal(Tree tree) {
+    	IxTree ixTree=(IxTree)super.shallowCloneInternal(tree);
+    	ixTree._fieldTransaction=_fieldTransaction;
+    	ixTree._version=_version;
+    	ixTree._nodes=_nodes;
+    	return ixTree;
+    }
 }
