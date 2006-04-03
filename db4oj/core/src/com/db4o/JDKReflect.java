@@ -23,6 +23,10 @@ import com.db4o.reflect.jdk.JdkReflector;
  */
 class JDKReflect extends JDK {
     
+	protected Coercion createCoercion() {
+		return new CoercionReflect();
+	}
+	
     Class constructorClass(){
         return Constructor.class;
     }

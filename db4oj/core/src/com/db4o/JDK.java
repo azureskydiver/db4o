@@ -15,6 +15,18 @@ import com.db4o.types.*;
  * @exclude
  */
 public class JDK {
+	private Coercion _coercion=null;
+	
+	Coercion coercion() {
+		if(_coercion==null) {
+			_coercion=createCoercion();
+		}
+		return _coercion;
+	}
+	
+	protected Coercion createCoercion() {
+		return new CoercionJDK();
+	}
 	
 	Thread addShutdownHook(Runnable a_runnable){
 		return null;
