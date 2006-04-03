@@ -2,8 +2,7 @@
 
 package com.db4o;
 
-import com.db4o.foundation.Coercion4;
-import com.db4o.reflect.*;
+import com.db4o.reflect.ReflectClass;
 
 
 final class YDouble extends YLong
@@ -15,7 +14,7 @@ final class YDouble extends YLong
     }
     
     public Object coerce(ReflectClass claxx, Object obj) {
-    	return Coercion4.toDouble(obj);
+    	return Platform4.jdk().coercion().toDouble(obj);
     }
 
 	public Object defaultValue(){
