@@ -125,7 +125,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		//System.out.println("" + _testCombination + " =================================");
 		//printCombination();
 
-		if (_testCombination < 0)  //Use this to skip some combinations and avoid waiting.
+		if (_testCombination < 537)  //Use this to skip some combinations and avoid waiting.
 			return;
 
 		int _errors = 0;
