@@ -10,7 +10,6 @@ import com.db4o.handlers.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-import com.db4o.reflect.jdk.*;
 import com.db4o.types.*;
 
 /**
@@ -94,8 +93,8 @@ public final class Platform4 {
         return jdk().collections((YapStream)a_object);
     }
     
-    static final Reflector createReflector(Config4Impl config){
-        return new JdkReflector(config.classLoader());
+    static final Reflector createReflector(Object classLoader){
+        return jdk().createReflector(classLoader);
     }
 
     static final Object createReferenceQueue() {
@@ -204,23 +203,10 @@ public final class Platform4 {
     	hasCollections();
     	hasShutDownHook();
         
-        if(config.classLoader() == null){
-            // If we're in an Eclipse classloader, use that.  Otherwise,
-            // use the context class loader.
-            //String classloaderName = Db4o.class.getClassLoader().getClass().getName();
-            
-            ClassLoader cl = jdk().getContextClassLoader();
-            
-            // FIXME: The new reflector does not like the ContextCloader at all.
-            //        Resolve hierarchies.
-            
-            // if (cl == null || classloaderName.indexOf("eclipse") >= 0) {
-                cl = Db4o.class.getClassLoader();
-            // }
-            
-            config.setClassLoader(cl);
-        }
-        
+    	if(config.reflector()==null) {
+    		config.reflectWith(jdk().createReflector(null));
+    	}
+    	
         config.objectClass("java.lang.StringBuffer").compare(new ObjectAttribute() {
             public Object attribute(Object original) {
                 if (original instanceof StringBuffer) {

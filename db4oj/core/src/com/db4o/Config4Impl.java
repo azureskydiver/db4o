@@ -405,7 +405,8 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 		if(reflector == null){
 			Reflector configuredReflector=(Reflector)_config.get(CONFIGURED_REFLECTOR);
 			if(configuredReflector == null){
-				_config.put(CONFIGURED_REFLECTOR,Platform4.createReflector(this));	
+				configuredReflector=Platform4.createReflector(classLoader());
+				_config.put(CONFIGURED_REFLECTOR,configuredReflector);	
 			}
 			reflector=new GenericReflector(null, configuredReflector);
             _config.put(REFLECTOR,reflector);
@@ -491,9 +492,8 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
         _config.put(BLOBPATH,path);
     }
 
-    public void setClassLoader(ClassLoader classLoader) {
-        _config.put(CLASSLOADER,classLoader);
-        reflectWith(Platform4.createReflector(this));
+    public void setClassLoader(Object classLoader) {
+        reflectWith(Platform4.createReflector(classLoader));
     }
 
     public void setMessageRecipient(MessageRecipient messageRecipient) {
@@ -629,8 +629,8 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 		return _config.getAsBoolean(CLASS_ACTIVATION_DEPTH_CONFIGURABLE);
 	}
 
-	ClassLoader classLoader() {
-		return (ClassLoader)_config.get(CLASSLOADER);
+	Object classLoader() {
+		return _config.get(CLASSLOADER);
 	}
 
 	boolean detectSchemaChanges() {

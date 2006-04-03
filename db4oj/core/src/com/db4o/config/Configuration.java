@@ -524,8 +524,9 @@ public interface Configuration {
      * configures db4o to use a custom ClassLoader.
      * <br><br>
      * @param classLoader the ClassLoader to be used
+     * @deprecated use reflectWith(new JdkReflector(classLoader)) instead
      */
-    public void setClassLoader(ClassLoader classLoader);
+    public void setClassLoader(Object classLoader);
 
     /**
      * sets the MessageRecipient to receive Client Server messages.

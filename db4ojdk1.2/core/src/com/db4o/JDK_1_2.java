@@ -41,7 +41,7 @@ class JDK_1_2 extends JDKReflect {
         return new YapRef(a_queue, a_yapObject, a_object);
     }
 
-    ClassLoader getContextClassLoader() {
+    Object getContextClassLoader() {
         return Thread.currentThread().getContextClassLoader();
     }
 
