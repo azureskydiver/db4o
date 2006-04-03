@@ -2,13 +2,22 @@
 
 package com.db4o;
 
+
 class MsgObject extends MsgD {
 	private static final int LENGTH_FOR_ALL = YapConst.YAPID_LENGTH + (YapConst.YAPINT_LENGTH * 3);
 	private static final int LENGTH_FOR_FIRST = LENGTH_FOR_ALL;
 	
-	int i_id;
-	int i_address;
+	int _id;
+	int _address;
 	
+	public MsgObject() {
+		super();
+	}
+
+	public MsgObject(MsgCloneMarker marker) {
+		super(marker);
+	}
+
 	MsgD getWriter(YapWriter bytes, int[] prependInts) {
 		int lengthNeeded = bytes.getLength() + LENGTH_FOR_FIRST;
 		if(prependInts != null){
@@ -21,11 +30,11 @@ class MsgObject extends MsgD {
 		MsgD message = getWriterForLength(bytes.getTransaction(), lengthNeeded);
 		if(prependInts != null){
 		    for (int i = 0; i < prependInts.length; i++) {
-		        message.payLoad.writeInt(prependInts[i]);    
+		        message._payLoad.writeInt(prependInts[i]);    
             }
 		}
-		message.payLoad.writeInt(embeddedCount);
-		bytes.appendTo(message.payLoad, -1);
+		message._payLoad.writeInt(embeddedCount);
+		bytes.appendTo(message._payLoad, -1);
 		return message;
 	}
 
@@ -46,25 +55,35 @@ class MsgObject extends MsgD {
 	}
 
 	public final YapWriter unmarshall(int addLengthBeforeFirst) {
-		payLoad.setTransaction(getTransaction());
-		int embeddedCount = payLoad.readInt();
-		int length = payLoad.readInt();
+		_payLoad.setTransaction(getTransaction());
+		int embeddedCount = _payLoad.readInt();
+		int length = _payLoad.readInt();
 		if (length == 0) {
 			return null;  // does this happen ?
 		}
-		i_id = payLoad.readInt();
-		i_address = payLoad.readInt();
+		_id = _payLoad.readInt();
+		_address = _payLoad.readInt();
 		if(embeddedCount == 0){
-			payLoad.removeFirstBytes(LENGTH_FOR_FIRST + addLengthBeforeFirst);
+			_payLoad.removeFirstBytes(LENGTH_FOR_FIRST + addLengthBeforeFirst);
 		}else{
-			payLoad._offset += length;
+			_payLoad._offset += length;
 			YapWriter[] embedded = new YapWriter[embeddedCount + 1];
-			embedded[0] = payLoad;
-			new YapWriter(payLoad, embedded, 1);  // this line cascades and adds all embedded YapBytes 
-			payLoad.trim4(LENGTH_FOR_FIRST + addLengthBeforeFirst, length);
+			embedded[0] = _payLoad;
+			new YapWriter(_payLoad, embedded, 1);  // this line cascades and adds all embedded YapBytes 
+			_payLoad.trim4(LENGTH_FOR_FIRST + addLengthBeforeFirst, length);
 		}
-		payLoad.useSlot(i_id, i_address, length);
-		return payLoad;
+		_payLoad.useSlot(_id, _address, length);
+		return _payLoad;
 	}
 
+	protected Msg shallowCloneInternal(Msg msg) {
+		MsgObject clone=(MsgObject)super.shallowCloneInternal(msg);
+		clone._id=_id;
+		clone._address=_address;
+		return clone;
+	}
+	
+	public Object shallowClone() {
+		return shallowCloneInternal(new MsgObject(MsgCloneMarker.INSTANCE));
+	}
 }

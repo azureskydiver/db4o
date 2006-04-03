@@ -232,7 +232,7 @@ public class YapClient extends YapStream implements ExtClient {
 		if (!super.createYapClass(a_yapClass, a_class, a_superYapClass)) {
 			return false;
 		}
-		a_yapClass.setID(message.i_id);
+		a_yapClass.setID(message._id);
 		a_yapClass.readName1(getSystemTransaction(), bytes);
 		i_classCollection.addYapClass(a_yapClass);
 		i_classCollection.readYapClass(a_yapClass, a_class);
@@ -485,9 +485,9 @@ public class YapClient extends YapStream implements ExtClient {
 			for (int i = 0; i < embeddedMessageCount; i++) {
 				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT
 						.clone(qResult.i_trans);
-				mso.payLoad = message.payLoad.readYapBytes();
-				if (mso.payLoad != null) {
-					mso.payLoad.incrementOffset(YapConst.MESSAGE_LENGTH);
+				mso._payLoad = message._payLoad.readYapBytes();
+				if (mso._payLoad != null) {
+					mso._payLoad.incrementOffset(YapConst.MESSAGE_LENGTH);
 					YapWriter reader = mso.unmarshall(YapConst.MESSAGE_LENGTH);
 					prefetched[position[i]] = new YapObject(idsToGet[i])
 							.readPrefetch(this, qResult.i_trans, reader);

@@ -2,9 +2,17 @@
 
 package com.db4o;
 
-import com.db4o.foundation.network.*;
+import com.db4o.foundation.network.YapSocket;
 
 final class MReadMultipleObjects extends MsgD {
+	public MReadMultipleObjects() {
+		super();
+	}
+
+	public MReadMultipleObjects(MsgCloneMarker marker) {
+		super(marker);
+	}
+
 	final boolean processMessageAtServer(YapSocket sock) {
 
 		int size = readInt();
@@ -15,7 +23,7 @@ final class MReadMultipleObjects extends MsgD {
 		YapWriter bytes = null;		
 		synchronized (stream.i_lock) {
 			for (int i = 0; i < size; i++) {
-				int id = this.payLoad.readInt();
+				int id = this._payLoad.readInt();
 				try {
 					bytes =
 						stream.readWriterByID(
@@ -33,7 +41,7 @@ final class MReadMultipleObjects extends MsgD {
 						}
 					}
 					ret[i] = Msg.OBJECT_TO_CLIENT.getWriter(bytes);
-					length += ret[i].payLoad.getLength();
+					length += ret[i]._payLoad.getLength();
 				}
 			}
 		}
@@ -44,11 +52,15 @@ final class MReadMultipleObjects extends MsgD {
 			if(ret[i] == null){
 				multibytes.writeInt(0);
 			}else{
-				multibytes.writeInt(ret[i].payLoad.getLength());
-				multibytes.payLoad.append(ret[i].payLoad._buffer);
+				multibytes.writeInt(ret[i]._payLoad.getLength());
+				multibytes._payLoad.append(ret[i]._payLoad._buffer);
 			}
 		}
 		multibytes.write(stream, sock);
 		return true;
 	}
+    
+    public Object shallowClone() {
+    	return super.shallowCloneInternal(new MReadMultipleObjects(MsgCloneMarker.INSTANCE));
+    }
 }

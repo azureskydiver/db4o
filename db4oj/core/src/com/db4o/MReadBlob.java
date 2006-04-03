@@ -2,33 +2,43 @@
 
 package com.db4o;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
-import com.db4o.ext.*;
-import com.db4o.foundation.network.*;
+import com.db4o.ext.Status;
+import com.db4o.foundation.network.YapSocket;
 
 
 class MReadBlob extends MsgBlob {
+	public MReadBlob() {
+		super();
+	}
+
+	public MReadBlob(MsgCloneMarker marker) {
+		super(marker);
+	}
+
 
     void processClient(YapSocket sock) throws IOException {
         Msg message = Msg.readMessage(getTransaction(), sock);
         if (message.equals(Msg.LENGTH)) {
             try {
-                i_currentByte = 0;
-                i_length = message.getPayLoad().readInt();
-                i_blob.getStatusFrom(this);
-                i_blob.setStatus(Status.PROCESSING);
-                copy(sock,this.i_blob.getClientOutputStream(),i_length,true);
+                _currentByte = 0;
+                _length = message.getPayLoad().readInt();
+                _blob.getStatusFrom(this);
+                _blob.setStatus(Status.PROCESSING);
+                copy(sock,this._blob.getClientOutputStream(),_length,true);
                 message = Msg.readMessage(getTransaction(), sock);
                 if (message.equals(Msg.OK)) {
-                    this.i_blob.setStatus(Status.COMPLETED);
+                    this._blob.setStatus(Status.COMPLETED);
                 } else {
-                    this.i_blob.setStatus(Status.ERROR);
+                    this._blob.setStatus(Status.ERROR);
                 }
             } catch (Exception e) {
             }
         } else if (message.equals(Msg.ERROR)) {
-            this.i_blob.setStatus(Status.ERROR);
+            this._blob.setStatus(Status.ERROR);
         }
 
     }
@@ -50,5 +60,9 @@ class MReadBlob extends MsgBlob {
             Msg.ERROR.write(stream, sock);
         }
         return true;
+    }
+    
+    public Object shallowClone() {
+    	return shallowCloneInternal(new MReadBlob(MsgCloneMarker.INSTANCE));
     }
 }

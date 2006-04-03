@@ -2,9 +2,17 @@
 
 package com.db4o;
 
-import com.db4o.foundation.network.*;
+import com.db4o.foundation.network.YapSocket;
 
 final class MGetInternalIDs extends MsgD {
+	public MGetInternalIDs() {
+		super();
+	}
+
+	public MGetInternalIDs(MsgCloneMarker marker) {
+		super(marker);
+	}
+
 	final boolean processMessageAtServer(YapSocket sock) {
 		YapWriter bytes = this.getByteLoad();
 		long[] ids;
@@ -26,4 +34,8 @@ final class MGetInternalIDs extends MsgD {
 		message.write(stream, sock);
 		return true;
 	}
+    
+    public Object shallowClone() {
+    	return super.shallowCloneInternal(new MGetInternalIDs(MsgCloneMarker.INSTANCE));
+    }
 }

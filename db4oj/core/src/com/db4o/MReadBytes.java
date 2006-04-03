@@ -2,23 +2,30 @@
 
 package com.db4o;
 
-import com.db4o.foundation.network.*;
+import com.db4o.foundation.network.YapSocket;
 
 final class MReadBytes extends MsgD {
+	public MReadBytes() {
+		super();
+	}
+
+	public MReadBytes(MsgCloneMarker marker) {
+		super(marker);
+	}
 	
 	final YapWriter getByteLoad() {
-		int address = this.payLoad.readInt();
-		int length = this.payLoad.getLength() - (YapConst.YAPINT_LENGTH);
-		this.payLoad.removeFirstBytes(YapConst.YAPINT_LENGTH);
-		this.payLoad.useSlot(address, length);
-		return this.payLoad;
+		int address = this._payLoad.readInt();
+		int length = this._payLoad.getLength() - (YapConst.YAPINT_LENGTH);
+		this._payLoad.removeFirstBytes(YapConst.YAPINT_LENGTH);
+		this._payLoad.useSlot(address, length);
+		return this._payLoad;
 	}
 
 	final MsgD getWriter(YapWriter bytes) {
 		MsgD message =
 			this.getWriterForLength(bytes.getTransaction(), bytes.getLength() + YapConst.YAPINT_LENGTH);
-		message.payLoad.writeInt(bytes.getAddress());
-		message.payLoad.append(bytes._buffer);
+		message._payLoad.writeInt(bytes.getAddress());
+		message._payLoad.append(bytes._buffer);
 		return message;
 	}
 	
@@ -39,4 +46,8 @@ final class MReadBytes extends MsgD {
 		}
 		return true;
 	}
+    
+    public Object shallowClone() {
+    	return super.shallowCloneInternal(new MReadBytes(MsgCloneMarker.INSTANCE));
+    }
 }

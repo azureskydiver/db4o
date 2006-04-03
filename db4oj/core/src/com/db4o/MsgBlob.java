@@ -2,20 +2,32 @@
 
 package com.db4o;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import com.db4o.ext.*;
-import com.db4o.foundation.network.*;
+import com.db4o.ext.Status;
+import com.db4o.foundation.network.YapSocket;
 
 abstract class MsgBlob extends MsgD {
 
-    BlobImpl i_blob;
-    int i_currentByte;
-    int i_length;
+    BlobImpl _blob;
+    int _currentByte;
+    int _length;
+
+	public MsgBlob() {
+		super();
+	}
+
+	public MsgBlob(MsgCloneMarker marker) {
+		super(marker);
+	}
 
     double getStatus() {
-        if (i_length != 0) {
-            return (double) i_currentByte / (double) i_length;
+        if (_length != 0) {
+            return (double) _currentByte / (double) _length;
         }
         return Status.ERROR;
     }
@@ -24,7 +36,7 @@ abstract class MsgBlob extends MsgD {
 
     BlobImpl serverGetBlobImpl() {
         BlobImpl blobImpl = null;
-        int id = payLoad.readInt();
+        int id = _payLoad.readInt();
         YapStream stream = getStream();
         synchronized (stream.i_lock) {
             blobImpl = (BlobImpl) stream.getByID1(getTransaction(), id);
@@ -49,7 +61,7 @@ abstract class MsgBlob extends MsgD {
             out.write(buffer,0,curread);
             totalread+=curread;
             if(update) {
-                i_currentByte+=curread;
+                _currentByte+=curread;
             }
         }
         out.flush();
@@ -63,9 +75,17 @@ abstract class MsgBlob extends MsgD {
         while((bytesread=rawin.read(buffer))>=0) {
             sock.write(buffer,0,bytesread);
             if(update) {
-                i_currentByte+=bytesread;
+                _currentByte+=bytesread;
             }
         }
         in.close();
+    }
+    
+    protected Msg shallowCloneInternal(Msg msg) {
+    	MsgBlob clone=(MsgBlob)super.shallowCloneInternal(msg);
+    	clone._blob=_blob;
+    	clone._currentByte=_currentByte;
+    	clone._length=_length;
+    	return clone;
     }
 }

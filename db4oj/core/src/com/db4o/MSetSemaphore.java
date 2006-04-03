@@ -2,9 +2,17 @@
 
 package com.db4o;
 
-import com.db4o.foundation.network.*;
+import com.db4o.foundation.network.YapSocket;
 
 final class MSetSemaphore extends MsgD {
+	public MSetSemaphore() {
+		super();
+	}
+
+	public MSetSemaphore(MsgCloneMarker marker) {
+		super(marker);
+	}
+
 	final boolean processMessageAtServer(YapSocket sock) {
 		int timeout = readInt();
 		String name = readString();
@@ -17,4 +25,8 @@ final class MSetSemaphore extends MsgD {
 		}
 		return true;
 	}
+    
+    public Object shallowClone() {
+    	return super.shallowCloneInternal(new MSetSemaphore(MsgCloneMarker.INSTANCE));
+    }
 }

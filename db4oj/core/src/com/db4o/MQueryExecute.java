@@ -2,10 +2,18 @@
 
 package com.db4o;
 
-import com.db4o.foundation.network.*;
+import com.db4o.foundation.network.YapSocket;
 
 final class MQueryExecute extends MsgObject {
-    
+	
+	public MQueryExecute() {
+		super();
+	}
+
+	public MQueryExecute(MsgCloneMarker marker) {
+		super(marker);
+	}
+
 	boolean processMessageAtServer(YapSocket sock) {
 		Transaction trans = getTransaction();
 		YapStream stream = getStream();
@@ -18,7 +26,7 @@ final class MQueryExecute extends MsgObject {
             // synchronisation block for better performance but
             // produced inconsistent results, cause unknown.
 
-            QQuery query = (QQuery) stream.unmarshall(payLoad);
+            QQuery query = (QQuery) stream.unmarshall(_payLoad);
             
             query.unmarshall(getTransaction());
 			try {
@@ -29,5 +37,9 @@ final class MQueryExecute extends MsgObject {
 		}
         writeQueryResult(getTransaction(), qr, sock);
 		return true;
+	}
+	
+	public Object shallowClone() {
+		return shallowCloneInternal(new MQueryExecute(MsgCloneMarker.INSTANCE));
 	}
 }
