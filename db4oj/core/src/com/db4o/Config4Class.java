@@ -182,25 +182,25 @@ class Config4Class extends Config4Abstract implements ObjectClass,
             if (stream.maintainsIndices()) {
             	boolean maintainMetaClass=_config.getAsBoolean(MAINTAIN_METACLASS);
                 if(maintainMetaClass){
-                    MetaClass metaClass=metaClass();
+                    MetaClass metaClassRef=metaClass();
                     if(metaClassID[0] > 0){
-                        metaClass = (MetaClass)stream.getByID1(systemTrans, metaClassID[0]);
-                        _config.put(METACLASS, metaClass);
+                        metaClassRef = (MetaClass)stream.getByID1(systemTrans, metaClassID[0]);
+                        _config.put(METACLASS, metaClassRef);
                     }
                     
-                    if(metaClass == null){
-                        metaClass = (MetaClass) stream.get1(systemTrans,new MetaClass(getName())).next();
-                        _config.put(METACLASS, metaClass);
-                        metaClassID[0] = stream.getID1(systemTrans, metaClass);
+                    if(metaClassRef == null){
+                        metaClassRef = (MetaClass) stream.get1(systemTrans,new MetaClass(getName())).next();
+                        _config.put(METACLASS, metaClassRef);
+                        metaClassID[0] = stream.getID1(systemTrans, metaClassRef);
                     }
                             
-                    if (metaClass == null) {
-                        metaClass = new MetaClass(getName());
-                        _config.put(METACLASS, metaClass);
-                        stream.setInternal(systemTrans, metaClass, Integer.MAX_VALUE, false);
-                        metaClassID[0] = stream.getID1(systemTrans, metaClass);
+                    if (metaClassRef == null) {
+                        metaClassRef = new MetaClass(getName());
+                        _config.put(METACLASS, metaClassRef);
+                        stream.setInternal(systemTrans, metaClassRef, Integer.MAX_VALUE, false);
+                        metaClassID[0] = stream.getID1(systemTrans, metaClassRef);
                     } else {
-                        stream.activate1(systemTrans, metaClass,
+                        stream.activate1(systemTrans, metaClassRef,
                             Integer.MAX_VALUE);
                     }
                 }
@@ -240,20 +240,20 @@ class Config4Class extends Config4Abstract implements ObjectClass,
     }
     
     private Hashtable4 exceptionalFields() {
-    	Hashtable4 exceptionalFields=exceptionalFieldsOrNull();
-        if (exceptionalFields == null) {
-            exceptionalFields = new Hashtable4(16);
-            _config.put(EXCEPTIONAL_FIELDS,exceptionalFields);
+    	Hashtable4 exceptionalFieldsCollection=exceptionalFieldsOrNull();
+        if (exceptionalFieldsCollection == null) {
+            exceptionalFieldsCollection = new Hashtable4(16);
+            _config.put(EXCEPTIONAL_FIELDS,exceptionalFieldsCollection);
         }
-        return exceptionalFields;
+        return exceptionalFieldsCollection;
     }
     
     public ObjectField objectField(String fieldName) {
-    	Hashtable4 exceptionalFields=exceptionalFields();
-        Config4Field c4f = (Config4Field) exceptionalFields.get(fieldName);
+    	Hashtable4 exceptionalFieldsCollection=exceptionalFields();
+        Config4Field c4f = (Config4Field) exceptionalFieldsCollection.get(fieldName);
         if (c4f == null) {
             c4f = new Config4Field(this, fieldName);
-            exceptionalFields.put(fieldName, c4f);
+            exceptionalFieldsCollection.put(fieldName, c4f);
         }
         return c4f;
     }
@@ -275,13 +275,13 @@ class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
     public void readAs(Object clazz) {
-	   Config4Impl config=config();
-       ReflectClass claxx = config.reflectorFor(clazz);
+	   Config4Impl configRef=config();
+       ReflectClass claxx = configRef.reflectorFor(clazz);
        if (claxx == null) {
            return;
        }
        _config.put(WRITE_AS,getName());
-       config.readAs().put(getName(), claxx.getName());
+       configRef.readAs().put(getName(), claxx.getName());
    }
 
     public void rename(String newName) {

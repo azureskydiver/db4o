@@ -115,20 +115,20 @@ namespace com.db4o.tools {
 
     internal class StatisticsPrintKey : Visitor4{
         public void visit(Object obj){
-            Console.WriteLine(((TreeString)obj).i_key);           
+            Console.WriteLine(((TreeString)obj)._key);           
         }
     }
 
     internal class StatisticsPrintNodes : Visitor4{
         public void visit(Object obj){
             TreeStringObject node = (TreeStringObject)obj;
-            long[] newIDs = ((StoredClass)node.i_object).getIDs();
+            long[] newIDs = ((StoredClass)node._object).getIDs();
             for (int j = 0; j < newIDs.Length; j ++) {
                 if (Statistics.ids.find(new TreeInt((int)newIDs[j])) == null) {
                     Statistics.ids = (TreeInt)Statistics.ids.add(new TreeInt((int)newIDs[j]));
                 }
             }
-            Console.WriteLine(node.i_key + ": " + newIDs.Length);
+            Console.WriteLine(node._key + ": " + newIDs.Length);
         }
 
     }

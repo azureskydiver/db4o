@@ -372,11 +372,11 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
             className = claxx.getName();
         }
         
-        Hashtable4 exceptionalClasses=exceptionalClasses();
-        Config4Class c4c = (Config4Class) exceptionalClasses.get(className);
+        Hashtable4 xClasses=exceptionalClasses();
+        Config4Class c4c = (Config4Class) xClasses.get(className);
         if (c4c == null) {
             c4c = new Config4Class(this, className);
-            exceptionalClasses.put(className, c4c);
+            xClasses.put(className, c4c);
         }
         return c4c;
     }
@@ -448,12 +448,12 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     }
 
     void rename(Rename a_rename) {
-    	Collection4 rename=rename();
-        if (rename == null) {
-            rename = new Collection4();
-            _config.put(RENAME,rename);
+    	Collection4 renameCollection=rename();
+        if (renameCollection == null) {
+            renameCollection = new Collection4();
+            _config.put(RENAME,renameCollection);
         }
-        rename.add(a_rename);
+        renameCollection.add(a_rename);
     }
 
     public void reserveStorageSpace(long byteCount) {
@@ -555,12 +555,12 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     }
     
     private Collection4 aliases() {
-    	Collection4 aliases=(Collection4)_config.get(ALIASES);
-    	if (null == aliases) {
-    		aliases = new Collection4();
-    		_config.put(ALIASES,aliases);
+    	Collection4 aliasesCollection=(Collection4)_config.get(ALIASES);
+    	if (null == aliasesCollection) {
+    		aliasesCollection = new Collection4();
+    		_config.put(ALIASES,aliasesCollection);
     	}
-    	return aliases;
+    	return aliasesCollection;
     }
     
     public void addAlias(Alias alias) {
@@ -570,10 +570,10 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
     
     public String resolveAlias(String runtimeType) {
 
-    	Collection4 aliases=aliases();
-    	if (null == aliases) return runtimeType;
+    	Collection4 configuredAliases=aliases();
+    	if (null == configuredAliases) return runtimeType;
     	
-    	Iterator4 i = aliases.iterator();
+    	Iterator4 i = configuredAliases.iterator();
     	while (i.hasNext()) {
     		String resolved = ((Alias)i.next()).resolve(runtimeType);
     		if (null != resolved) return resolved; 

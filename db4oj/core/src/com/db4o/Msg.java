@@ -75,7 +75,7 @@ class Msg implements ShallowClone {
 		_name = aName;
 	}
 	
-	protected final static class MsgCloneMarker {
+	public final static class MsgCloneMarker {
 		public final static MsgCloneMarker INSTANCE=new MsgCloneMarker();
 		
 		private MsgCloneMarker() {}
