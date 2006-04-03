@@ -61,6 +61,7 @@ public class SimpleParentChild extends ReplicationTestCase {
 		SPCParent parent = (SPCParent) getOneInstance(_providerB, SPCParent.class);
 		parent.setName("p2");
 		_providerB.update(parent);
+		_providerB.commit();
 
 		ensureNames(_providerB, "p2", "c1");
 	}

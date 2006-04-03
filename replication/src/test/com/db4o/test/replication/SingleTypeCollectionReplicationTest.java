@@ -19,6 +19,7 @@ public class SingleTypeCollectionReplicationTest extends ReplicationTestCase {
 
 		_providerA.storeNew(h1);
 		_providerA.activate(h1);
+		_providerA.commit();
 
 		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB);
 
