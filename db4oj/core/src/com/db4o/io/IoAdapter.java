@@ -87,14 +87,15 @@ public abstract class IoAdapter {
         write(buffer);
     }
     
+    /**
+     * deletes the given path from whatever 'file system' is addressed
+     */
+    public abstract void delete(String path);
     
     /**
      * checks whether a file exists 
      */
-    public boolean exists(String path){
-        File existingFile = new File(path);
-        return  existingFile.exists() && existingFile.length() > 0;
-    }
+    public abstract boolean exists(String path);
     
 	/**
      * implement to return the absolute length of the file 

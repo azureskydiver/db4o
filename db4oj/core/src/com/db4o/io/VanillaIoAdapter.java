@@ -23,6 +23,14 @@ public abstract class VanillaIoAdapter extends IoAdapter {
         _delegate.close();
     }
 
+    public void delete(String path) {
+    	_delegate.delete(path);
+    }
+    
+    public boolean exists(String path) {
+    	return _delegate.exists(path);
+    }
+    
     public long getLength() throws IOException {
         return _delegate.getLength();
     }

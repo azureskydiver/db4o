@@ -211,20 +211,19 @@ public class YapRandomAccessFile extends YapFile {
 
     private void open() throws Exception {
         boolean isNew = false;
+        IoAdapter ioAdapter = i_config.ioAdapter();
         if (Deploy.debug) {
             if (Deploy.deleteFile) {
                 System.out.println("Debug option set to DELETE file.");
                 try {
-                    new java.io.File(i_session.fileName()).delete();
+                    ioAdapter.delete(i_session.fileName());
                 } catch (Exception e) {
                 }
             }
         }
         try {
             if (fileName().length() > 0) {
-                
-                IoAdapter ioAdapter = i_config.ioAdapter();
-                
+                                
                 if(! ioAdapter.exists(fileName())){
                     isNew = true;
                     logMsg(14, fileName());

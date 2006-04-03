@@ -34,6 +34,15 @@ public class RandomAccessFileAdapter extends IoAdapter {
         }
         _delegate.close();
     }
+    
+	public void delete(String path) {
+		new File(path).delete();
+	}
+
+    public boolean exists(String path){
+        File existingFile = new File(path);
+        return  existingFile.exists() && existingFile.length() > 0;
+    }
 
     public long getLength() throws IOException {
         return _delegate.length();
