@@ -32,7 +32,7 @@ public class Db4oReplicationReferenceImpl extends YapObject implements Replicati
 		Transaction trans = yo.getTrans();
 		VirtualAttributes va = yo.virtualAttributes(trans);
 		if (va != null) {
-			setVirtualAttributes(va.shallowClone());
+			setVirtualAttributes((VirtualAttributes) va.shallowClone());
 		} else {
 			// No virtu
 			setVirtualAttributes(new VirtualAttributes());
