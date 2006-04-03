@@ -17,14 +17,6 @@ abstract class MsgBlob extends MsgD {
     int _currentByte;
     int _length;
 
-	public MsgBlob() {
-		super();
-	}
-
-	public MsgBlob(MsgCloneMarker marker) {
-		super(marker);
-	}
-
     double getStatus() {
         if (_length != 0) {
             return (double) _currentByte / (double) _length;
@@ -79,13 +71,5 @@ abstract class MsgBlob extends MsgD {
             }
         }
         in.close();
-    }
-    
-    protected Msg shallowCloneInternal(Msg msg) {
-    	MsgBlob clone=(MsgBlob)super.shallowCloneInternal(msg);
-    	clone._blob=_blob;
-    	clone._currentByte=_currentByte;
-    	clone._length=_length;
-    	return clone;
     }
 }

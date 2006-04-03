@@ -11,15 +11,6 @@ import com.db4o.foundation.network.YapSocket;
 
 
 class MReadBlob extends MsgBlob {
-	public MReadBlob() {
-		super();
-	}
-
-	public MReadBlob(MsgCloneMarker marker) {
-		super(marker);
-	}
-
-
     void processClient(YapSocket sock) throws IOException {
         Msg message = Msg.readMessage(getTransaction(), sock);
         if (message.equals(Msg.LENGTH)) {
@@ -60,9 +51,5 @@ class MReadBlob extends MsgBlob {
             Msg.ERROR.write(stream, sock);
         }
         return true;
-    }
-    
-    public Object shallowClone() {
-    	return shallowCloneInternal(new MReadBlob(MsgCloneMarker.INSTANCE));
     }
 }

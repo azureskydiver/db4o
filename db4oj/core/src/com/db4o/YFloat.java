@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -14,7 +15,7 @@ final class YFloat extends YInt {
     }
     
     public Object coerce(ReflectClass claxx, Object obj) {
-    	return Platform4.jdk().coercion().toFloat(obj);
+    	return Coercion4.toFloat(obj);
     }
 
 	public Object defaultValue(){

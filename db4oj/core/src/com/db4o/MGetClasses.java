@@ -5,14 +5,6 @@ package com.db4o;
 import com.db4o.foundation.network.YapSocket;
 
 final class MGetClasses extends MsgD {
-	public MGetClasses() {
-		super();
-	}
-
-	public MGetClasses(MsgCloneMarker marker) {
-		super(marker);
-	}
-
 	final boolean processMessageAtServer(YapSocket sock) {
 	    YapStream stream = getStream();
 		synchronized (stream.i_lock) {
@@ -36,8 +28,4 @@ final class MGetClasses extends MsgD {
 		message.write(stream, sock);
 		return true;
 	}
-    
-    public Object shallowClone() {
-    	return super.shallowCloneInternal(new MGetClasses(MsgCloneMarker.INSTANCE));
-    }
 }

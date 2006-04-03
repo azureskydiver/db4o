@@ -10,7 +10,7 @@ import com.db4o.foundation.network.*;
 /**
  * Messages for Client/Server Communication
  */
-class Msg implements ShallowClone {
+class Msg implements Cloneable {
 
 	static int _idGenerator = 1;
 	private static Msg[] _messages = new Msg[60];
@@ -75,17 +75,14 @@ class Msg implements ShallowClone {
 		_name = aName;
 	}
 	
-	public final static class MsgCloneMarker {
-		public final static MsgCloneMarker INSTANCE=new MsgCloneMarker();
-		
-		private MsgCloneMarker() {}
-	}
-	
-	protected Msg(MsgCloneMarker marker) {}
-	
 	final Msg clone(Transaction a_trans) {
-		Msg msg = (Msg) shallowClone();
-		msg._trans = a_trans;
+		Msg msg = null;
+		try {
+			msg=(Msg) clone();
+			msg._trans = a_trans;
+		} catch (CloneNotSupportedException e) {
+			// shouldn't happen
+		}
 		return msg;
 	}
 	
@@ -226,16 +223,4 @@ class Msg implements ShallowClone {
 		writer.writeQueryResult(qr);
 		message.write(a_trans.i_stream, sock);
 	}
-
-	protected Msg shallowCloneInternal(Msg msg) {
-		msg._msgID=_msgID;
-		msg._name=_name;
-		msg._trans=_trans;
-		return msg;
-	}
-	
-	public Object shallowClone() {
-		return shallowCloneInternal(new Msg(MsgCloneMarker.INSTANCE));
-	}
-
 }

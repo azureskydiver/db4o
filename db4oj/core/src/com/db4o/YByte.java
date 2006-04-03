@@ -2,7 +2,8 @@
 
 package com.db4o;
 
-import com.db4o.reflect.ReflectClass;
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
 
 
 final class YByte extends YapJavaClass
@@ -17,7 +18,7 @@ final class YByte extends YapJavaClass
     }
     
     public Object coerce(ReflectClass claxx, Object obj) {
-    	return Platform4.jdk().coercion().toSByte(obj);
+    	return Coercion4.toSByte(obj);
     }
 
 	public int getID(){

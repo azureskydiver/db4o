@@ -9,13 +9,4 @@ final class MUseTransaction extends MsgD {
 	public MUseTransaction() {
 		super();
 	}
-
-	public MUseTransaction(MsgCloneMarker marker) {
-		super(marker);
-	}
-
-	
-	public Object shallowClone() {
-		return shallowCloneInternal(new MUseTransaction(MsgCloneMarker.INSTANCE));
-	}
 }

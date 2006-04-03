@@ -5,15 +5,6 @@ package com.db4o;
 import com.db4o.foundation.network.YapSocket;
 
 final class MQueryExecute extends MsgObject {
-	
-	public MQueryExecute() {
-		super();
-	}
-
-	public MQueryExecute(MsgCloneMarker marker) {
-		super(marker);
-	}
-
 	boolean processMessageAtServer(YapSocket sock) {
 		Transaction trans = getTransaction();
 		YapStream stream = getStream();
@@ -37,9 +28,5 @@ final class MQueryExecute extends MsgObject {
 		}
         writeQueryResult(getTransaction(), qr, sock);
 		return true;
-	}
-	
-	public Object shallowClone() {
-		return shallowCloneInternal(new MQueryExecute(MsgCloneMarker.INSTANCE));
 	}
 }

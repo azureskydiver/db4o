@@ -5,14 +5,6 @@ package com.db4o;
 import com.db4o.foundation.network.YapSocket;
 
 final class MTaIsDeleted extends MsgD {
-	public MTaIsDeleted() {
-		super();
-	}
-
-	public MTaIsDeleted(MsgCloneMarker marker) {
-		super(marker);
-	}
-
 	final boolean processMessageAtServer(YapSocket sock) {
 	    YapStream stream = getStream();
 		synchronized (stream.i_lock) {
@@ -21,9 +13,5 @@ final class MTaIsDeleted extends MsgD {
 			Msg.TA_IS_DELETED.getWriterForInt(getTransaction(), ret).write(stream, sock);
 		}
 		return true;
-	}
-	
-	public Object shallowClone() {
-		return shallowCloneInternal(new MTaIsDeleted(MsgCloneMarker.INSTANCE));
 	}
 }

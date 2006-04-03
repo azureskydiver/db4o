@@ -9,14 +9,6 @@ import com.db4o.foundation.network.YapSocket;
  * 
  */
 class MObjectByUuid extends MsgD {
-	public MObjectByUuid() {
-		super();
-	}
-
-	public MObjectByUuid(MsgCloneMarker marker) {
-		super(marker);
-	}
-    
 	final boolean processMessageAtServer(YapSocket sock) {
 		long uuid = readLong();
 		byte[] signature = readBytes();
@@ -39,8 +31,4 @@ class MObjectByUuid extends MsgD {
 		Msg.OBJECT_BY_UUID.getWriterForInt(trans, id).write(stream,sock); 
 		return true;
 	}
-    
-    public Object shallowClone() {
-    	return super.shallowCloneInternal(new MObjectByUuid(MsgCloneMarker.INSTANCE));
-    }
 }

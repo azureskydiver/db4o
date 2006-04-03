@@ -1,12 +1,7 @@
-package com.db4o;
+package com.db4o.foundation;
 
-import com.db4o.foundation.No4;
-
-/**
- * @exclude
- */
-public class CoercionReflect implements Coercion {
-	public Object toSByte(Object obj) {
+public class Coercion4 {
+	public static Object toSByte(Object obj) {
         if(obj instanceof Byte){
             return obj;
         }
@@ -19,7 +14,7 @@ public class CoercionReflect implements Coercion {
         return No4.INSTANCE;
 	}
 
-	public Object toShort(Object obj) {
+	public static Object toShort(Object obj) {
         if(obj instanceof Short){
             return obj;
         }
@@ -32,7 +27,7 @@ public class CoercionReflect implements Coercion {
         return No4.INSTANCE;
 	}
 
-	public Object toInt(Object obj) {
+	public static Object toInt(Object obj) {
         if(obj instanceof Integer){
             return obj;
         }
@@ -45,7 +40,7 @@ public class CoercionReflect implements Coercion {
         return No4.INSTANCE;
 	}
 
-	public Object toLong(Object obj) {
+	public static Object toLong(Object obj) {
         if(obj instanceof Long){
             return obj;
         }
@@ -58,7 +53,7 @@ public class CoercionReflect implements Coercion {
         return No4.INSTANCE;
 	}
 
-	public Object toFloat(Object obj) {
+	public static Object toFloat(Object obj) {
         if(obj instanceof Float){
             return obj;
         }
@@ -71,7 +66,7 @@ public class CoercionReflect implements Coercion {
         return No4.INSTANCE;
 	}
 
-	public Object toDouble(Object obj) {
+	public static Object toDouble(Object obj) {
         if(obj instanceof Double){
             return obj;
         }

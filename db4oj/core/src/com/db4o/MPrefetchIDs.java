@@ -5,14 +5,6 @@ package com.db4o;
 import com.db4o.foundation.network.YapSocket;
 
 final class MPrefetchIDs extends Msg {
-	public MPrefetchIDs() {
-		super();
-	}
-
-	public MPrefetchIDs(MsgCloneMarker marker) {
-		super(marker);
-	}
-
 	final boolean processMessageAtServer(YapSocket sock) {
 		YapFile stream = (YapFile) getStream();
 		MsgD reply =
@@ -27,9 +19,5 @@ final class MPrefetchIDs extends Msg {
 		}
 		reply.write(stream, sock);
 		return true;
-	}
-
-	public Object shallowClone() {
-		return shallowCloneInternal(new MPrefetchIDs(MsgCloneMarker.INSTANCE));
 	}
 }

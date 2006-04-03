@@ -5,14 +5,6 @@ package com.db4o;
 import com.db4o.foundation.network.YapSocket;
 
 final class MDelete extends MsgD {
-	public MDelete() {
-		super();
-	}
-
-	public MDelete(MsgCloneMarker marker) {
-		super(marker);
-	}
-
 	final boolean processMessageAtServer(YapSocket sock) {
 		YapWriter bytes = this.getByteLoad();
 		YapStream stream = getStream();
@@ -31,8 +23,4 @@ final class MDelete extends MsgD {
 		}
 		return true;
 	}
-    
-    public Object shallowClone() {
-    	return super.shallowCloneInternal(new MDelete(MsgCloneMarker.INSTANCE));
-    }
 }

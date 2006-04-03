@@ -9,14 +9,6 @@ import com.db4o.foundation.network.YapSocket;
  * get the classname for an internal ID
  */
 final class MClassNameForID extends MsgD{
-	public MClassNameForID() {
-		super();
-	}
-
-	public MClassNameForID(MsgCloneMarker marker) {
-		super(marker);
-	}
-
     final boolean processMessageAtServer(YapSocket sock) {
         int id = _payLoad.readInt();
         String name = "";
@@ -36,9 +28,5 @@ final class MClassNameForID extends MsgD{
         }
         Msg.CLASS_NAME_FOR_ID.getWriterForString(getTransaction(), name).write(stream, sock);
         return true;
-    }
-    
-    public Object shallowClone() {
-    	return super.shallowCloneInternal(new MClassNameForID(MsgCloneMarker.INSTANCE));
     }
 }
