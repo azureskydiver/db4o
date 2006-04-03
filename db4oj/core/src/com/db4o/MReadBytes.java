@@ -5,14 +5,6 @@ package com.db4o;
 import com.db4o.foundation.network.YapSocket;
 
 final class MReadBytes extends MsgD {
-	public MReadBytes() {
-		super();
-	}
-
-	public MReadBytes(MsgCloneMarker marker) {
-		super(marker);
-	}
-	
 	final YapWriter getByteLoad() {
 		int address = this._payLoad.readInt();
 		int length = this._payLoad.getLength() - (YapConst.YAPINT_LENGTH);
@@ -46,8 +38,4 @@ final class MReadBytes extends MsgD {
 		}
 		return true;
 	}
-    
-    public Object shallowClone() {
-    	return super.shallowCloneInternal(new MReadBytes(MsgCloneMarker.INSTANCE));
-    }
 }

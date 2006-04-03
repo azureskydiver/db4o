@@ -5,14 +5,6 @@ package com.db4o;
 import com.db4o.foundation.network.YapSocket;
 
 final class MGetAll extends Msg {
-	public MGetAll() {
-		super();
-	}
-
-	public MGetAll(MsgCloneMarker marker) {
-		super(marker);
-	}
-
 	final boolean processMessageAtServer(YapSocket sock) {
 		QueryResultImpl qr;
 		YapStream stream = getStream();
@@ -25,9 +17,5 @@ final class MGetAll extends Msg {
 		}
 		this.writeQueryResult(getTransaction(), qr, sock);
 		return true;
-	}
-
-	public Object shallowClone() {
-		return shallowCloneInternal(new MGetAll(MsgCloneMarker.INSTANCE));
 	}
 }

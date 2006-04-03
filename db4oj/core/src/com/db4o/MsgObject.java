@@ -10,14 +10,6 @@ class MsgObject extends MsgD {
 	int _id;
 	int _address;
 	
-	public MsgObject() {
-		super();
-	}
-
-	public MsgObject(MsgCloneMarker marker) {
-		super(marker);
-	}
-
 	MsgD getWriter(YapWriter bytes, int[] prependInts) {
 		int lengthNeeded = bytes.getLength() + LENGTH_FOR_FIRST;
 		if(prependInts != null){
@@ -74,16 +66,5 @@ class MsgObject extends MsgD {
 		}
 		_payLoad.useSlot(_id, _address, length);
 		return _payLoad;
-	}
-
-	protected Msg shallowCloneInternal(Msg msg) {
-		MsgObject clone=(MsgObject)super.shallowCloneInternal(msg);
-		clone._id=_id;
-		clone._address=_address;
-		return clone;
-	}
-	
-	public Object shallowClone() {
-		return shallowCloneInternal(new MsgObject(MsgCloneMarker.INSTANCE));
 	}
 }

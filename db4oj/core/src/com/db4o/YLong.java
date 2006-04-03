@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.foundation.*;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -15,7 +16,7 @@ class YLong extends YapJavaClass
     }
     
     public Object coerce(ReflectClass claxx, Object obj) {
-    	return Platform4.jdk().coercion().toLong(obj);
+    	return Coercion4.toLong(obj);
     }
     
     public Object defaultValue(){

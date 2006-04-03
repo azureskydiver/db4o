@@ -5,14 +5,6 @@ package com.db4o;
 import com.db4o.foundation.network.YapSocket;
 
 final class MWriteUpdate extends MsgObject {
-	public MWriteUpdate() {
-		super();
-	}
-
-	public MWriteUpdate(MsgCloneMarker marker) {
-		super(marker);
-	}
-
 	final boolean processMessageAtServer(YapSocket sock) {
 	    int yapClassId = _payLoad.readInt();
 	    YapFile stream = (YapFile)getStream();
@@ -25,8 +17,4 @@ final class MWriteUpdate extends MsgObject {
 		}
 		return true;
 	}
-	
-	public Object shallowClone() {
-		return shallowCloneInternal(new MWriteUpdate(MsgCloneMarker.INSTANCE));
-	}	
 }

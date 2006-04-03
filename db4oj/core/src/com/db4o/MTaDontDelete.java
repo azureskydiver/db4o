@@ -9,14 +9,6 @@ import com.db4o.foundation.network.YapSocket;
  * 
  */
 class MTaDontDelete extends MsgD {
-	public MTaDontDelete() {
-		super();
-	}
-
-	public MTaDontDelete(MsgCloneMarker marker) {
-		super(marker);
-	}
- 
 	final boolean processMessageAtServer(YapSocket in) {
         int classID = _payLoad.readInt();
 	    int id = _payLoad.readInt();
@@ -26,9 +18,5 @@ class MTaDontDelete extends MsgD {
 	        trans.dontDelete(classID, id);
 	        return true;
 	    }
-	}
-	
-	public Object shallowClone() {
-		return shallowCloneInternal(new MTaDontDelete(MsgCloneMarker.INSTANCE));
 	}
 }

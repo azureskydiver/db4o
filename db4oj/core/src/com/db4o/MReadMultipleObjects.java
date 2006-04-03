@@ -5,14 +5,6 @@ package com.db4o;
 import com.db4o.foundation.network.YapSocket;
 
 final class MReadMultipleObjects extends MsgD {
-	public MReadMultipleObjects() {
-		super();
-	}
-
-	public MReadMultipleObjects(MsgCloneMarker marker) {
-		super(marker);
-	}
-
 	final boolean processMessageAtServer(YapSocket sock) {
 
 		int size = readInt();
@@ -59,8 +51,4 @@ final class MReadMultipleObjects extends MsgD {
 		multibytes.write(stream, sock);
 		return true;
 	}
-    
-    public Object shallowClone() {
-    	return super.shallowCloneInternal(new MReadMultipleObjects(MsgCloneMarker.INSTANCE));
-    }
 }

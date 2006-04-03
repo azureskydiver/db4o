@@ -21,10 +21,6 @@ class MsgD extends Msg{
 		super(aName);
 	}
 
-	MsgD(MsgCloneMarker marker) {
-		super(marker);
-	}
-	
 	void fakePayLoad(Transaction a_trans) {
 		if (Debug.fakeServer) {
 			_payLoad.removeFirstBytes(YapConst.YAPINT_LENGTH * 2);
@@ -152,15 +148,5 @@ class MsgD extends Msg{
 	final void writeString(String aStr) {
 		_payLoad.writeInt(aStr.length());
 		YapConst.stringIO.write(_payLoad, aStr);
-	}
-
-	protected Msg shallowCloneInternal(Msg msg) {
-		MsgD clone=(MsgD)super.shallowCloneInternal(msg);
-		clone._payLoad=_payLoad;
-		return clone;
-	}
-	
-	public Object shallowClone() {
-		return shallowCloneInternal(new MsgD(MsgCloneMarker.INSTANCE));
 	}
 }

@@ -5,14 +5,6 @@ package com.db4o;
 import com.db4o.foundation.network.YapSocket;
 
 final class MUserMessage extends MsgObject {
-	public MUserMessage() {
-		super();
-	}
-
-	public MUserMessage(MsgCloneMarker marker) {
-		super(marker);
-	}
-
 	final boolean processMessageAtServer(YapSocket sock) {
 	    YapStream stream = getStream();
 		if (stream.i_config.messageRecipient() != null) {
@@ -22,9 +14,5 @@ final class MUserMessage extends MsgObject {
 				stream.unmarshall(_payLoad));
 		}
 		return true;
-	}
-	
-	public Object shallowClone() {
-		return shallowCloneInternal(new MUserMessage(MsgCloneMarker.INSTANCE));
 	}
 }

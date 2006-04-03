@@ -8,15 +8,6 @@ import com.db4o.foundation.network.YapSocket;
  * 
  */
 class MTaDelete extends MsgD {
-	public MTaDelete() {
-		super();
-	}
-
-	public MTaDelete(MsgCloneMarker marker) {
-		super(marker);
-	}
-
-    
 	final boolean processMessageAtServer(YapSocket in) {
 	    int id = _payLoad.readInt();
 	    int cascade = _payLoad.readInt();
@@ -27,9 +18,5 @@ class MTaDelete extends MsgD {
 	        trans.delete((YapObject)arr[1], cascade);
 	        return true;
 	    }
-	}
-
-	public Object shallowClone() {
-		return shallowCloneInternal(new MTaDelete(MsgCloneMarker.INSTANCE));
 	}
 }
