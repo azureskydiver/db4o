@@ -1,6 +1,6 @@
 namespace com.db4o.test.net2
 {
-#if NET_2_0
+#if NET_2_0 || CF_2_0
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -61,6 +61,21 @@ namespace com.db4o.test.net2
 
 
         }
+        
+        class NamedHolderQuery : com.db4o.query.Predicate
+        {
+            string _name;
+            
+            public NamedHolderQuery(string name)
+            {
+                _name = name;
+            }
+            
+            public bool Match(LHolder1 candidate)
+            {
+                return candidate._name == _name;
+            }
+        }
 
         private LHolder1 QueryForNamedHolder(string name)
         {
@@ -70,8 +85,6 @@ namespace com.db4o.test.net2
             });
             return holderList[0];
         }
-
-
     }
 
     public class LHolder1

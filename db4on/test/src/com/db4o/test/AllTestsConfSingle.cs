@@ -25,8 +25,20 @@ namespace com.db4o.test
 			get
 			{
 				ArrayList tests = new ArrayList();
+                
+#if NET_2_0 || CF_2_0
+                tests.Add(typeof(net2.Net2GenericList));
+#endif
+			    
+#if NET_2_0
+                tests.Add(typeof(net2.Net2GenericOtherCollections));
+				tests.Add(typeof(net2.Net2GenericContainers));
+				tests.Add(typeof(net2.Net2GenericDictionary));
+                tests.Add(typeof(net2.Net2NullableTypes));
+#endif
 
                 tests.Add(typeof(SimplestPossible));
+			    
 #if NET || NET_2_0 || MONO
                 tests.Add(typeof(aliases.ClassAliasesTestCase));
 #endif
@@ -38,13 +50,7 @@ namespace com.db4o.test
                 tests.Add(typeof(com.db4o.test.nativequeries.NQRegressionTests));
                 tests.Add(typeof(com.db4o.test.nativequeries.cats.TestCatConsistency));
                 tests.Add(typeof(com.db4o.test.nativequeries.StringComparisonTestCase));
-                
-#if NET_2_0
-				tests.Add(typeof(net2.Net2GenericContainers));
-				tests.Add(typeof(net2.Net2GenericDictionary));
-				tests.Add(typeof(net2.Net2GenericList));
-				tests.Add(typeof(net2.Net2GenericOtherCollections));
-#endif
+
 
 				return (Type[]) tests.ToArray(typeof (Type));
 			}

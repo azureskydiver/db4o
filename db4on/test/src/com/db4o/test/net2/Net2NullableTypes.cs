@@ -1,7 +1,7 @@
 namespace com.db4o.test.net2
 {
-#if NET_2_0
-	using System;
+#if NET_2_0 || CF_2_0
+    using System;
 	using System.Collections.Generic;
 	using System.Text;
 	using com.db4o;

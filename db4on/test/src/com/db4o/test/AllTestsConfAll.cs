@@ -118,7 +118,7 @@ namespace com.db4o.test
 				tests.Add(typeof(nativequeries.OptimizationFailuresTestCase));
 				tests.Add(typeof(nativequeries.StringComparisonTestCase));
 
-#if NET_2_0
+#if NET_2_0 || CF_2_0
 				tests.Add(typeof(net2.Net2GenericContainers));
 				tests.Add(typeof(net2.Net2GenericDictionary));
 				tests.Add(typeof(net2.Net2GenericList));
