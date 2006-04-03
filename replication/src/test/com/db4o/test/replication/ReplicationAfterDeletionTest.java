@@ -3,7 +3,7 @@
 package com.db4o.test.replication;
 
 
-public class ReplicationAfterDeletionTest extends ReplicationTestcase {
+public class ReplicationAfterDeletionTest extends ReplicationTestCase {
 
 	protected void actualTest() {
 		replicate();
@@ -23,8 +23,8 @@ public class ReplicationAfterDeletionTest extends ReplicationTestcase {
 		replicateAll(_providerA, _providerB);
 	}
 
-    public void test() {
-        super.test();
-    }
+	public void test() {
+		super.test();
+	}
 
 }

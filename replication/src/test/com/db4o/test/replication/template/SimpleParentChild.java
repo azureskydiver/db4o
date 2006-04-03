@@ -2,14 +2,13 @@
 
 package com.db4o.test.replication.template;
 
-import com.db4o.foundation.Iterator4;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.Test;
-import com.db4o.test.replication.ReplicationTestcase;
+import com.db4o.test.replication.ReplicationTestCase;
 import com.db4o.test.replication.SPCChild;
 import com.db4o.test.replication.SPCParent;
 
-public class SimpleParentChild extends ReplicationTestcase {
+public class SimpleParentChild extends ReplicationTestCase {
 
 	protected void clean() {delete(new Class[]{SPCParent.class, SPCChild.class});}
 

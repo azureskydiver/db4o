@@ -4,14 +4,14 @@ import com.db4o.ObjectSet;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.test.Test;
-import com.db4o.test.replication.ReplicationTestcase;
+import com.db4o.test.replication.ReplicationTestCase;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapTest extends ReplicationTestcase {
+public class MapTest extends ReplicationTestCase {
 
-    protected void actualTest() {
+	protected void actualTest() {
 
 		storeMapToProviderA();
 
@@ -130,7 +130,7 @@ public class MapTest extends ReplicationTestcase {
 		}
 	}
 
-    public void test() {
-        super.test();
-    }
+	public void test() {
+		super.test();
+	}
 }

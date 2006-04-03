@@ -4,19 +4,16 @@ package com.db4o.test.replication;
 
 import com.db4o.ObjectSet;
 import com.db4o.inside.replication.GenericReplicationSession;
-import com.db4o.replication.ObjectState;
-import com.db4o.replication.ReplicationEvent;
-import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
-public class ArrayReplicationTest extends ReplicationTestcase {
+public class ArrayReplicationTest extends ReplicationTestCase {
 
 	protected void actualTest() {
 
-        if (!_providerA.supportsMultiDimensionalArrays()) return;
-        if (!_providerB.supportsMultiDimensionalArrays()) return;
-        
+		if (!_providerA.supportsMultiDimensionalArrays()) return;
+		if (!_providerB.supportsMultiDimensionalArrays()) return;
+
 		ArrayHolder h1 = new ArrayHolder("h1");
 		ArrayHolder h2 = new ArrayHolder("h2");
 
@@ -66,8 +63,8 @@ public class ArrayReplicationTest extends ReplicationTestcase {
 		Test.ensure(holder._arrayN[2][0] == null);
 	}
 
-    public void test() {
-        super.test();
-    }
-    
+	public void test() {
+		super.test();
+	}
+
 }

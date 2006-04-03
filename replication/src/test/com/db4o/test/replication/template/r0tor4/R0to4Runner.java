@@ -3,25 +3,20 @@
 package com.db4o.test.replication.template.r0tor4;
 
 import com.db4o.ObjectSet;
-import com.db4o.foundation.Iterator4;
-import com.db4o.inside.replication.GenericReplicationSession;
 import com.db4o.inside.replication.ReplicationReflector;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
-import com.db4o.replication.ObjectState;
-import com.db4o.replication.ReplicationEvent;
-import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
-import com.db4o.test.replication.ReplicationTestcase;
+import com.db4o.test.replication.ReplicationTestCase;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class R0to4Runner extends ReplicationTestcase {
+public class R0to4Runner extends ReplicationTestCase {
 // ------------------------------ FIELDS ------------------------------
 
 	private static final int LINKERS = 4;

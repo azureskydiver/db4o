@@ -4,13 +4,10 @@ package com.db4o.test.replication;
 
 import com.db4o.ObjectSet;
 import com.db4o.inside.replication.GenericReplicationSession;
-import com.db4o.replication.ObjectState;
-import com.db4o.replication.ReplicationEvent;
-import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
-public class MixedTypesCollectionReplicationTest extends ReplicationTestcase {
+public class MixedTypesCollectionReplicationTest extends ReplicationTestCase {
 	protected void clean() {
 		delete(new Class[]{CollectionHolder.class});
 	}
@@ -92,8 +89,8 @@ public class MixedTypesCollectionReplicationTest extends ReplicationTestcase {
 		Test.ensureEquals("h1", remaining.name);
 	}
 
-    public void test() {
-        super.test();
-    }
+	public void test() {
+		super.test();
+	}
 
 }
