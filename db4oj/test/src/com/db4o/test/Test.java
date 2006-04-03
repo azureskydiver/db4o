@@ -91,6 +91,7 @@ public class Test extends AllTests {
         if (isClientServer()) {
             server().close();
             fileName = FILE_SERVER;
+            objectServer=null;
         }
         try {
             new Defragment().run(fileName, true);
