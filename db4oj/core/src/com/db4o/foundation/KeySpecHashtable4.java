@@ -13,18 +13,18 @@ public class KeySpecHashtable4 extends Hashtable4 {
 	}
 	
     public void put(KeySpec spec,byte value) {
-    	put(spec,new Byte(value));
+    	super.put(spec,new Byte(value));
     }
 
     public void put(KeySpec spec,boolean value) {
-    	put(spec,new Boolean(value));
+    	super.put(spec,new Boolean(value));
     }
 
     public void put(KeySpec spec,int value) {
-    	put(spec,new Integer(value));
+    	super.put(spec,new Integer(value));
     }
 
-    public void put(KeySpec spec,Object value) {
+    public void put(KeySpec spec, Object value) {
     	super.put(spec,value);
     }
 

@@ -4,25 +4,25 @@ package com.db4o.foundation;
  * @exclude
  */
 public class KeySpec {
-	private final Object defaultValue;
+	private final Object _defaultValue;
 	
 	public KeySpec(byte defaultValue) {
-		this(new Byte(defaultValue));
+		_defaultValue = new Byte(defaultValue);
 	}
 
 	public KeySpec(int defaultValue) {
-		this(new Integer(defaultValue));
+		_defaultValue = new Integer(defaultValue);
 	}
 
 	public KeySpec(boolean defaultValue) {
-		this(new Boolean(defaultValue));
+		_defaultValue = new Boolean(defaultValue);
 	}
 
 	public KeySpec(Object defaultValue) {
-		this.defaultValue=defaultValue;
+		_defaultValue = defaultValue;
 	}
 
 	public Object defaultValue() {
-		return defaultValue;
+		return _defaultValue;
 	}		
 }

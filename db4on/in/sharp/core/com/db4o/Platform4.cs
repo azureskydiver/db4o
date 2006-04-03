@@ -57,7 +57,7 @@ namespace com.db4o
 
 		internal static JDK jdk()
 		{
-			throw new NotSupportedException();
+            return new JDK();
 		}
 
 		internal static void addShutDownHook(Object stream, Object streamLock)
@@ -97,7 +97,7 @@ namespace com.db4o
 			return new P2Collections(a_object);
 		}
 
-		internal static Reflector createReflector(Config4Impl config)
+		internal static Reflector createReflector(Object config)
 		{
 			return new NetReflector();
 		}
