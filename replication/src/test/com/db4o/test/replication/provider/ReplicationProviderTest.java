@@ -262,6 +262,8 @@ public abstract class ReplicationProviderTest extends Test {
 		subject.update(pilot);
 		subject.update(car);
 
+		subject.commit();
+
 		subject.startReplicationTransaction(PEER_SIGNATURE);
 		ensure(subject.objectsChangedSinceLastReplication().size() == 2);
 
