@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -65,7 +64,7 @@ public class JDK {
 		return date.toString();
 	}
 	
-	ClassLoader getContextClassLoader(){
+	Object getContextClassLoader(){
 		return null;
 	}
 
@@ -140,4 +139,7 @@ public class JDK {
         return weakRef;
     }
     
+    public Reflector createReflector(Object classLoader) {
+    	return null;
+    }
 }

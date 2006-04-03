@@ -10,7 +10,9 @@ import java.lang.reflect.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.db4o.reflect.Reflector;
 import com.db4o.reflect.generic.*;
+import com.db4o.reflect.jdk.JdkReflector;
 
 /**
  * 
@@ -113,6 +115,17 @@ class JDKReflect extends JDK {
         return byteStream.toByteArray();
     }
 
-
-
+    public Reflector createReflector(Object classLoader) {
+    	if(classLoader==null) {
+            classLoader=getContextClassLoader();
+            
+            // FIXME: The new reflector does not like the ContextCloader at all.
+            //        Resolve hierarchies.
+            
+            // if (cl == null || classloaderName.indexOf("eclipse") >= 0) {
+                classLoader= Db4o.class.getClassLoader();
+            // }
+    	}
+    	return new JdkReflector((ClassLoader)classLoader);
+    }
 }
