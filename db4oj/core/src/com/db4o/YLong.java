@@ -53,7 +53,7 @@ class YLong extends YapJavaClass
 		if (Deploy.debug){
 			a_bytes.readBegin(YapConst.YAPLONG);
 			if(Deploy.debugLong){
-				l_return = new Long(new YapStringIO().read(a_bytes, YapConst.LONG_BYTES).trim()).longValue(); 
+				l_return = Long.parseLong(new YapStringIO().read(a_bytes, YapConst.LONG_BYTES).trim()); 
 			}else{
 				for (int i = 0; i < YapConst.LONG_BYTES; i++){
 					l_return = (l_return << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);

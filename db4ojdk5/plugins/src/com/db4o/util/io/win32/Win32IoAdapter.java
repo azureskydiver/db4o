@@ -1,5 +1,6 @@
 package com.db4o.util.io.win32;
 
+import java.io.File;
 import java.io.IOException;
 
 import com.db4o.io.IoAdapter;
@@ -26,6 +27,15 @@ public class Win32IoAdapter extends IoAdapter {
 		closeFile(getHandle());
 		_handle = 0;
 	}
+
+	public void delete(String path) {
+		new File(path).delete();
+	}
+
+    public boolean exists(String path){
+        File existingFile = new File(path);
+        return  existingFile.exists() && existingFile.length() > 0;
+    }
 
 	public long getLength() throws IOException {
 		return getLength(getHandle());
