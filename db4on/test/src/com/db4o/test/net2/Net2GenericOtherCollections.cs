@@ -1,8 +1,8 @@
 namespace com.db4o.test.net2
 {
-#if NET_2_0
+#if NET_2_0 || CF_2_0
 
-	using System;
+    using System;
 	using System.Collections.Generic;
 	using com.db4o.ext;
 
@@ -36,7 +36,9 @@ namespace com.db4o.test.net2
     {
         LinkedList <CItem> linkedList;
         Queue<CItem> queue;
+#if !CF_2_0
         SortedDictionary<CItem,string> sortedDictionary;
+#endif
         SortedList<CItem,string> sortedList;
         Stack<CItem> stack;
 
@@ -53,12 +55,13 @@ namespace com.db4o.test.net2
             {
                 queue.Enqueue(new CItem("q" + i));
             }
-
+#if !CF_2_0
             sortedDictionary = new SortedDictionary<CItem, string>();
             for (int i = 0; i < 10; i++)
             {
                 sortedDictionary.Add(new CItem("sd" + i), "sd" + i);
             }
+#endif
 
             sortedList = new SortedList<CItem,string>();
             for (int i = 0; i < 10; i++)
@@ -84,7 +87,7 @@ namespace com.db4o.test.net2
             {
                 Tester.ensure(queue.Dequeue().Equals(new CItem("q" + i)));
             }
-
+#if !CF_2_0
             // Sorted dictionary needs explicit activation since it uses a TreeSet underneath.
             oc.activate(sortedDictionary, int.MaxValue);
             for (int i = 0; i < 10; i++)
@@ -92,6 +95,7 @@ namespace com.db4o.test.net2
                 Object obj = sortedDictionary[new CItem("sd" + i)];
                 Tester.ensure(obj.Equals("sd" + i));
             }
+#endif
 
             for (int i = 0; i < 10; i++)
             {
@@ -114,10 +118,10 @@ namespace com.db4o.test.net2
 
             queue.Enqueue(new CItem("update"));
             oc.set(queue);
-
+#if !CF_2_0
             sortedDictionary.Add(new CItem("update"), "update");
             oc.set(sortedDictionary);
-
+#endif
             sortedList.Add(new CItem("update"), "update");
             oc.set(sortedList);
 

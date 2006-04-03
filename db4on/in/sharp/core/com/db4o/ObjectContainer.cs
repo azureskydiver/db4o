@@ -393,7 +393,7 @@ namespace com.db4o
 		/// <seealso cref="com.db4o.ext.ObjectCallbacks">Using callbacks</seealso>
 		void set(object obj);
 		
-#if NET_2_0
+#if NET_2_0 || CF_2_0
         /// <summary>.NET 2.0 Native Query interface.</summary>
         /// <remarks>
         /// Native Query Interface.

@@ -142,7 +142,7 @@ namespace j4o.lang
 
 		private Assembly LoadUnversionedAssembly(AssemblyName unversioned)
 		{	
-#if CF_1_0
+#if CF_1_0 || CF_2_0
             return Assembly.Load(unversioned);
 #else
 			Assembly found = Assembly.LoadWithPartialName(unversioned.FullName);
@@ -256,7 +256,7 @@ namespace j4o.lang
 
 		public override Type Resolve()
 		{
-#if NET_2_0
+#if NET_2_0 || CF_2_0
 			Type baseType = base.Resolve();
 			return _genericArguments.Length > 0
 				? baseType.MakeGenericType(Resolve(_genericArguments))

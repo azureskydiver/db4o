@@ -1,4 +1,5 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+using System;
 using com.db4o.foundation;
 using com.db4o.nativequery.expr;
 using com.db4o.nativequery.optimization;
@@ -53,15 +54,19 @@ namespace com.db4o.inside.query
 			return q.execute();
 		}
 
-#if NET_2_0
+#if NET_2_0 || CF_2_0
         public virtual System.Collections.Generic.IList<Extent> execute<Extent>(System.Predicate<Extent> match,
                                                                                 com.db4o.query.QueryComparator comparator)
         {
+    #if CF_2_0
+            return executeUnoptimized<Extent>(queryForExtent<Extent>(comparator), match);
+    #else
             // XXX: check GetDelegateList().Length
             // only 1 delegate must be allowed
             // although we could use it as a filter chain
             // (and)
             return ExecuteImpl<Extent>(match, match.Target, match.Method, match, comparator);
+    #endif
         }
 #endif
 
@@ -86,9 +91,7 @@ namespace com.db4o.inside.query
                                                                         System.Predicate<Extent> match,
                                                                         com.db4o.query.QueryComparator comparator)
         {
-            com.db4o.query.Query q = _container.query();
-            q.constrain(typeof(Extent));
-            q.sortBy(comparator);
+            com.db4o.query.Query q = queryForExtent<Extent>(comparator);
             try
             {
                 if (OptimizeNativeQueries())
@@ -103,11 +106,23 @@ namespace com.db4o.inside.query
             {
                 OnQueryOptimizationFailure(e);
             }
-            q.constrain(new GenericPredicateEvaluation<Extent>(match));
-            OnQueryExecution(match, QueryExecutionKind.Unoptimized);
-
-            return WrapQueryResult<Extent>(q);
+            return executeUnoptimized(q, match);
         }
+
+        private System.Collections.Generic.IList<Extent> executeUnoptimized<Extent>(Query q, Predicate<Extent> match)
+	    {
+	        q.constrain(new GenericPredicateEvaluation<Extent>(match));
+	        OnQueryExecution(match, QueryExecutionKind.Unoptimized);
+	        return WrapQueryResult<Extent>(q);
+	    }
+
+	    private com.db4o.query.Query queryForExtent<Extent>(com.db4o.query.QueryComparator comparator)
+	    {
+            com.db4o.query.Query q = _container.query();
+            q.constrain(typeof(Extent));
+            q.sortBy(comparator);
+            return q;
+	    }
 
         private static System.Collections.Generic.IList<Extent> WrapQueryResult<Extent>(com.db4o.query.Query q)
         {
@@ -165,7 +180,7 @@ namespace com.db4o.inside.query
 		}
 	}
 
-#if NET_2_0
+#if NET_2_0 || CF_2_0
     class GenericPredicateEvaluation<T> : DelegateEnvelope, com.db4o.query.Evaluation
     {
         public GenericPredicateEvaluation(System.Predicate<T> predicate)

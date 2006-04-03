@@ -5,6 +5,7 @@ using System.Collections;
 using com.db4o.config;
 using com.db4o.ext;
 using com.db4o.foundation;
+using com.db4o.inside.query;
 using com.db4o.query;
 using com.db4o.reflect;
 using com.db4o.reflect.generic;

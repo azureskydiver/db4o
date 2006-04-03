@@ -234,7 +234,7 @@ namespace com.db4o.test
 
 		public static void error(Exception error)
 		{   
-#if CF_1_0 || CF_2_0
+#if CF_1_0
 			Console.WriteLine("!!! TEST CASE FAILED !!! [" + error.Message + "]");
 #else
 			errorCount++;

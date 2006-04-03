@@ -43,7 +43,7 @@ namespace com.db4o
             return query(match, new ComparerAdaptor(comparer));
         }
 	    
-#if NET_2_0
+#if NET_2_0 || CF_2_0
 	    class GenericComparerAdaptor<T> : com.db4o.query.QueryComparator
 	    {
             private System.Collections.Generic.IComparer<T> _comparer;

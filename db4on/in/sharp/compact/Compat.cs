@@ -6,12 +6,15 @@ using System.Reflection;
 using com.db4o.reflect;
 using j4o.lang;
 
+#if CF_1_0
+// not need for CF_2_0
 namespace System.Runtime.CompilerServices
 {
 	internal class IsVolatile
 	{
 	}
 }
+#endif
 
 namespace com.db4o
 {

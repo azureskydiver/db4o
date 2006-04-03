@@ -218,6 +218,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\com\db4o\test\cs\CsDelegate.cs" />
+    <Compile Include="src\com\db4o\test\cs\CsDisposableTestCase.cs" />
     <Compile Include="src\com\db4o\test\cs\CsEnum.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -230,6 +231,7 @@
     <Compile Include="src\com\db4o\test\cs\CsStructs.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\com\db4o\test\cs\CsStructsRegression.cs" />
     <Compile Include="src\com\db4o\test\cs\CsType.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -318,6 +320,13 @@
     <Compile Include="src\com\db4o\test\nativequeries\OptimizationFailuresTestCase.cs" />
     <Compile Include="src\com\db4o\test\nativequeries\Predicates.cs" />
     <Compile Include="src\com\db4o\test\nativequeries\StringComparisonTestCase.cs" />
+    <Compile Include="src\com\db4o\test\net2\Net2GenericContainers.cs" />
+    <Compile Include="src\com\db4o\test\net2\Net2GenericDictionary.cs" />
+    <Compile Include="src\com\db4o\test\net2\Net2GenericList.cs" />
+    <Compile Include="src\com\db4o\test\net2\Net2GenericOtherCollections.cs" />
+    <Compile Include="src\com\db4o\test\net2\Net2NullableTypes.cs" />
+    <Compile Include="src\com\db4o\test\net2\Net2QueryForClass.cs" />
+    <Compile Include="src\com\db4o\test\net2\Net2SimpleGenericType.cs" />
     <Compile Include="src\com\db4o\test\NoInstanceStored.cs">
       <SubType>Code</SubType>
     </Compile>

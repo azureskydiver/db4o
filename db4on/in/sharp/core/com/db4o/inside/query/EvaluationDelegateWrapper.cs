@@ -5,7 +5,7 @@ using System.Reflection;
 using com.db4o;
 using com.db4o.query;
 
-namespace com.db4o
+namespace com.db4o.inside.query
 {
     // TODO: Use DelegateEnvelope to build a generic delegate translator
     internal class DelegateEnvelope
@@ -40,39 +40,45 @@ namespace com.db4o
         private void Marshal()
         {
             _delegateType = _content.GetType();
+#if !CF_1_0 && !CF_2_0
             _target = _content.Target;
             _method = _content.Method.Name;
             _type = _content.Method.DeclaringType;
+#endif
         }
 
         private Delegate Unmarshal()
         {
+#if CF_1_0 || CF_2_0
+            throw new NotSupportedException();
+#else
             return (null == _target)
-                ? System.Delegate.CreateDelegate(_delegateType, _type, _method)
-                : System.Delegate.CreateDelegate(_delegateType, _target, _method);
+                       ? System.Delegate.CreateDelegate(_delegateType, _type, _method)
+                       : System.Delegate.CreateDelegate(_delegateType, _target, _method);
+#endif
         }
     }
 
-	internal class EvaluationDelegateWrapper : DelegateEnvelope, Evaluation
-	{	
-		public EvaluationDelegateWrapper()
-		{
-		}
+    internal class EvaluationDelegateWrapper : DelegateEnvelope, Evaluation
+    {	
+        public EvaluationDelegateWrapper()
+        {
+        }
 		
-		public EvaluationDelegateWrapper(EvaluationDelegate evaluation) : base(evaluation)
-		{	
-		}
+        public EvaluationDelegateWrapper(EvaluationDelegate evaluation) : base(evaluation)
+        {	
+        }
 		
-		EvaluationDelegate GetEvaluationDelegate()
-		{
+        EvaluationDelegate GetEvaluationDelegate()
+        {
             return (EvaluationDelegate)GetContent();
-		}
+        }
 		
-		public void evaluate(Candidate candidate)
-		{
-			// use starting _ for PascalCase conversion purposes
-			EvaluationDelegate _evaluation = GetEvaluationDelegate();
-			_evaluation(candidate);
-		}
-	}
+        public void evaluate(Candidate candidate)
+        {
+            // use starting _ for PascalCase conversion purposes
+            EvaluationDelegate _evaluation = GetEvaluationDelegate();
+            _evaluation(candidate);
+        }
+    }
 }
