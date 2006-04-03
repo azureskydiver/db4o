@@ -368,7 +368,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final void startReplicationTransaction(ReadonlyReplicationProviderSignature aPeerSignature) {
 		ensureReplicationInActive();
 		ensureCommitted();
-		setCommitted(false);
 
 		_transaction.commit();
 		_transaction = getSession().beginTransaction();
@@ -499,7 +498,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		Hibernate.initialize(object);
 	}
 
-	boolean simpleObjectContainerCommitCalled = false;
+	boolean simpleObjectContainerCommitCalled = true;
 
 	public final void commit() {
 		final Session session = getSession();
@@ -859,7 +858,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 	}
 
-    public boolean supportsMultiDimensionalArrays() {
-        return false;
-    }
+	public boolean supportsMultiDimensionalArrays() {
+		return false;
+	}
 }
