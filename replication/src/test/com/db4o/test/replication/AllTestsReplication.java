@@ -5,7 +5,7 @@ package com.db4o.test.replication;
 import com.db4o.test.AllTests;
 import com.db4o.test.TestSuite;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
-import com.db4o.test.replication.transients.TransientReplicationProvider;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 
 public class AllTestsReplication extends AllTests {
 
@@ -22,8 +22,8 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	private void registerProviderPairs() {
-		ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65}, "A"), new TransientReplicationProvider(new byte[]{66}, "B"));
-//        ReplicationTestcase.registerProviderPair(HibernateUtil.refAsTableProviderA(), HibernateUtil.refAsTableProviderB());
+		//ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65}, "A"), new TransientReplicationProvider(new byte[]{66}, "B"));
+		ReplicationTestCase.registerProviderPair(HibernateUtil.refAsTableProviderA(), HibernateUtil.refAsTableProviderB());
 //        ReplicationTestcase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), Db4oReplicationTestUtil.newProviderB());
 //        ReplicationTestcase.registerProviderPair(HibernateUtil.produceMySQLConfigA());
 	}

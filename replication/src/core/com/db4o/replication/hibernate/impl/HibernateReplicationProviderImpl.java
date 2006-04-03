@@ -51,6 +51,7 @@ import java.util.Set;
 public final class HibernateReplicationProviderImpl implements HibernateReplicationProvider {
 // ------------------------------ FIELDS ------------------------------
 
+	boolean simpleObjectContainerCommitCalled = true;
 	private Configuration _cfg;
 
 	private final String _name;
@@ -404,11 +405,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 //		Util.dumpTable(this, "ObjectReference");
 	}
 
-	private void ensureCommitted() {
-		if (!simpleObjectContainerCommitCalled)
-			throw new RuntimeException("Please call commit() first");
-	}
-
 	public final void storeReplica(Object entity) {
 		ensureReplicationActive();
 
@@ -433,6 +429,19 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		getSession().flush();
 	}
 
+	public final void syncVersionWithPeer(long version) {
+		ensureReplicationActive();
+
+		if (version < Constants.MIN_VERSION_NO)
+			throw new RuntimeException("version must be great than " + Constants.MIN_VERSION_NO);
+
+		ensureVersion(version);
+
+		_replicationRecord.setVersion(version);
+		getSession().saveOrUpdate(_replicationRecord);
+		getSession().flush();
+	}
+
 	public void updateCounterpart(Object entity) {
 		ensureReplicationActive();
 
@@ -452,35 +461,14 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		getSession().flush();
 	}
 
-
-	private Object loadObject(ObjectReference of) {
-		return getSession().get(of.getClassName(), of.getObjectId());
-	}
-
-	Uuid translate(Db4oUUID du) {
-		Uuid uuid = new Uuid();
-		uuid.setLongPart(du.getLongPart());
-		uuid.setProvider(getProviderSignature(du.getSignaturePart()));
-		return uuid;
-	}
-
-	public final void syncVersionWithPeer(long version) {
-		ensureReplicationActive();
-
-		if (version < Constants.MIN_VERSION_NO)
-			throw new RuntimeException("version must be great than " + Constants.MIN_VERSION_NO);
-
-		ensureVersion(version);
-
-		_replicationRecord.setVersion(version);
-		getSession().saveOrUpdate(_replicationRecord);
-		getSession().flush();
-	}
-
 	public final void visitCachedReferences(Visitor4 visitor) {
 		ensureReplicationActive();
 
 		_objRefs.visitEntries(visitor);
+	}
+
+	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
+		return uuidsDeletedSinceLastReplication().contains(uuid);
 	}
 
 	public final boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
@@ -488,17 +476,11 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return reference.version() > getLastReplicationVersion();
 	}
 
-	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
-		return uuidsDeletedSinceLastReplication().contains(uuid);
-	}
-
 // --------------------- Interface SimpleObjectContainer ---------------------
 
 	public final void activate(Object object) {
 		Hibernate.initialize(object);
 	}
-
-	boolean simpleObjectContainerCommitCalled = true;
 
 	public final void commit() {
 		final Session session = getSession();
@@ -509,12 +491,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		clearSession();
 		_transaction = session.beginTransaction();
 		setCommitted(true);
-
-
-	}
-
-	private void setCommitted(boolean b) {
-		simpleObjectContainerCommitCalled = b;
 	}
 
 	public final void delete(Object obj) {
@@ -532,7 +508,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final String getName() {
 		return _name;
 	}
-
 
 	public final ObjectSet getStoredObjects(Class aClass) {
 		if (_collectionHandler.canHandle(aClass))
@@ -561,6 +536,17 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		setCommitted(false);
 	}
 
+// --------------------- Interface TestableReplicationProviderInside ---------------------
+
+
+	public boolean supportsHybridCollection() {
+		return false;
+	}
+
+	public boolean supportsMultiDimensionalArrays() {
+		return false;
+	}
+
 	private void clearSession() {
 		getSession().clear();
 	}
@@ -586,6 +572,11 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	private void ensureAlive() {
 		if (!_alive)
 			throw new UnsupportedOperationException("This provider is dead because #destroy() is called");
+	}
+
+	private void ensureCommitted() {
+		if (!simpleObjectContainerCommitCalled)
+			throw new RuntimeException("Please call commit() first");
 	}
 
 	private void ensureReplicationActive() {
@@ -664,6 +655,10 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private boolean isReplicationActive() {
 		return _inReplication;
+	}
+
+	private Object loadObject(ObjectReference of) {
+		return getSession().get(of.getClassName(), of.getObjectId());
 	}
 
 	private ReplicationReference produceCollectionReference(Object obj, Object referencingObj, String fieldName) {
@@ -804,6 +799,17 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 	}
 
+	private void setCommitted(boolean b) {
+		simpleObjectContainerCommitCalled = b;
+	}
+
+	Uuid translate(Db4oUUID du) {
+		Uuid uuid = new Uuid();
+		uuid.setLongPart(du.getLongPart());
+		uuid.setProvider(getProviderSignature(du.getSignaturePart()));
+		return uuid;
+	}
+
 // -------------------------- INNER CLASSES --------------------------
 
 	private final class MyFlushEventListener implements FlushEventListener {
@@ -856,9 +862,5 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			if (!isReplicationActive())
 				super.ObjectUpdated(obj, Util.castAsLong(id));
 		}
-	}
-
-	public boolean supportsMultiDimensionalArrays() {
-		return false;
 	}
 }
