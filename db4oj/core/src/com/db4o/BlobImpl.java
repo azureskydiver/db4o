@@ -120,7 +120,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
                 i_stream.set(this);
                 int id = (int) i_stream.getID(this);
                 msg = (MsgBlob) Msg.WRITE_BLOB.getWriterForInt(i_trans, id);
-                msg.i_blob = this;
+                msg._blob = this;
                 i_status = Status.QUEUED;
             }
             ((YapClient) i_stream).processBlobMessage(msg);
@@ -225,7 +225,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
             i_file = file;
             MsgBlob msg =
                 (MsgBlob) Msg.READ_BLOB.getWriterForInt(i_trans, (int) i_stream.getID(this));
-            msg.i_blob = this;
+            msg._blob = this;
             i_status = Status.QUEUED;
             ((YapClient) i_stream).processBlobMessage(msg);
         } else {

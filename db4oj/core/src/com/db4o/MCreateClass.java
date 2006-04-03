@@ -2,10 +2,18 @@
 
 package com.db4o;
 
-import com.db4o.foundation.network.*;
-import com.db4o.reflect.*;
+import com.db4o.foundation.network.YapSocket;
+import com.db4o.reflect.ReflectClass;
 
 final class MCreateClass extends MsgD {
+	public MCreateClass() {
+		super();
+	}
+
+	public MCreateClass(MsgCloneMarker marker) {
+		super(marker);
+	}
+
     final boolean processMessageAtServer(YapSocket sock) {
         YapStream stream = getStream();
         Transaction trans = stream.getSystemTransaction();
@@ -42,5 +50,9 @@ final class MCreateClass extends MsgD {
         }
         Msg.FAILED.write(stream, sock);
         return true;
+    }
+    
+    public Object shallowClone() {
+    	return super.shallowCloneInternal(new MCreateClass(MsgCloneMarker.INSTANCE));
     }
 }

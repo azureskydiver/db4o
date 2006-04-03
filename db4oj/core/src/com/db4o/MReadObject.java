@@ -2,9 +2,17 @@
 
 package com.db4o;
 
-import com.db4o.foundation.network.*;
+import com.db4o.foundation.network.YapSocket;
 
 final class MReadObject extends MsgD {
+	public MReadObject() {
+		super();
+	}
+
+	public MReadObject(MsgCloneMarker marker) {
+		super(marker);
+	}
+
 	final boolean processMessageAtServer(YapSocket sock) {
 		YapWriter bytes = null;
 
@@ -15,7 +23,7 @@ final class MReadObject extends MsgD {
 
 		synchronized (stream.i_lock) {
 			try {
-				bytes = stream.readWriterByID(this.getTransaction(), this.payLoad.readInt());
+				bytes = stream.readWriterByID(this.getTransaction(), this._payLoad.readInt());
 			} catch (Exception e) {
 				bytes = null;
 				if (Deploy.debug) {
@@ -29,4 +37,8 @@ final class MReadObject extends MsgD {
 		Msg.OBJECT_TO_CLIENT.getWriter(bytes).write(stream, sock);
 		return true;
 	}
+    
+    public Object shallowClone() {
+    	return super.shallowCloneInternal(new MReadObject(MsgCloneMarker.INSTANCE));
+    }
 }

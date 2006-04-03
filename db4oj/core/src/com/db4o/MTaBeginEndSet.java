@@ -2,18 +2,30 @@
 
 package com.db4o;
 
-import com.db4o.foundation.network.*;
+import com.db4o.foundation.network.YapSocket;
 
 
 /**
  * 
  */
 class MTaBeginEndSet extends Msg {
+	public MTaBeginEndSet() {
+		super();
+	}
+
+	public MTaBeginEndSet(MsgCloneMarker marker) {
+		super(marker);
+	}
+
     
 	final boolean processMessageAtServer(YapSocket in) {
 	    synchronized (getStream().i_lock) {
 	        getTransaction().beginEndSet();
 	        return true;
 	    }
+	}
+	
+	public Object shallowClone() {
+		return shallowCloneInternal(new MTaBeginEndSet(MsgCloneMarker.INSTANCE));
 	}
 }

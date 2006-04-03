@@ -2,25 +2,37 @@
 
 package com.db4o;
 
-import com.db4o.foundation.network.*;
+import com.db4o.foundation.network.YapSocket;
 
 final class MWriteNew extends MsgObject {
+	public MWriteNew() {
+		super();
+	}
+
+	public MWriteNew(MsgCloneMarker marker) {
+		super(marker);
+	}
+
     final boolean processMessageAtServer(YapSocket sock) {
-        int yapClassId = payLoad.readInt();
+        int yapClassId = _payLoad.readInt();
         YapFile stream = (YapFile)getStream();
         unmarshall(YapConst.YAPINT_LENGTH);
         synchronized (stream.i_lock) {
             YapClass yc = stream.getYapClass(yapClassId);
-            payLoad.writeEmbedded();
-            stream.prefetchedIDConsumed(payLoad.getID());
-            payLoad.address(stream.getSlot(payLoad.getLength()));
-            yc.addFieldIndices(payLoad, true);
-            stream.writeNew(yc, payLoad);
+            _payLoad.writeEmbedded();
+            stream.prefetchedIDConsumed(_payLoad.getID());
+            _payLoad.address(stream.getSlot(_payLoad.getLength()));
+            yc.addFieldIndices(_payLoad, true);
+            stream.writeNew(yc, _payLoad);
             getTransaction().writePointer(
-                payLoad.getID(),
-                payLoad.getAddress(),
-                payLoad.getLength());
+                _payLoad.getID(),
+                _payLoad.getAddress(),
+                _payLoad.getLength());
         }
         return true;
     }
+	
+	public Object shallowClone() {
+		return shallowCloneInternal(new MWriteNew(MsgCloneMarker.INSTANCE));
+	}
 }

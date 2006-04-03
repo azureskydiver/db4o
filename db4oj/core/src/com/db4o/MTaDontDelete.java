@@ -2,17 +2,24 @@
 
 package com.db4o;
 
-import com.db4o.foundation.network.*;
+import com.db4o.foundation.network.YapSocket;
 
 
 /**
  * 
  */
 class MTaDontDelete extends MsgD {
-    
+	public MTaDontDelete() {
+		super();
+	}
+
+	public MTaDontDelete(MsgCloneMarker marker) {
+		super(marker);
+	}
+ 
 	final boolean processMessageAtServer(YapSocket in) {
-        int classID = payLoad.readInt();
-	    int id = payLoad.readInt();
+        int classID = _payLoad.readInt();
+	    int id = _payLoad.readInt();
 	    Transaction trans = getTransaction();
 	    YapStream stream = trans.i_stream;
 	    synchronized (stream.i_lock) {
@@ -20,5 +27,8 @@ class MTaDontDelete extends MsgD {
 	        return true;
 	    }
 	}
-
+	
+	public Object shallowClone() {
+		return shallowCloneInternal(new MTaDontDelete(MsgCloneMarker.INSTANCE));
+	}
 }

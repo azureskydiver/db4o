@@ -10,14 +10,14 @@ import com.db4o.foundation.network.*;
 /**
  * Messages for Client/Server Communication
  */
-class Msg implements Cloneable{
+class Msg implements ShallowClone {
 
-	static int idGenererator = 1;
-	int i_msgID;
-	String i_name;
-	Transaction i_trans;
+	static int _idGenerator = 1;
+	private static Msg[] _messages = new Msg[60];
 
-	private static Msg[] i_messages = new Msg[60];
+	int _msgID;
+	String _name;
+	Transaction _trans;
 
 	public static final MsgD CLASS_NAME_FOR_ID = new MClassNameForID();
 	public static final Msg CLOSE = new Msg("CLOSE");
@@ -66,23 +66,27 @@ class Msg implements Cloneable{
 	public static final MsgD WRITE_UPDATE_DELETE_MEMBERS = new MWriteUpdateDeleteMembers();
 
 	Msg() {
-		i_msgID = idGenererator++;
-		i_messages[i_msgID] = this;
+		_msgID = _idGenerator++;
+		_messages[_msgID] = this;
 	}
 
 	Msg(String aName) {
 		this();
-		i_name = aName;
+		_name = aName;
 	}
 	
+	protected final static class MsgCloneMarker {
+		public final static MsgCloneMarker INSTANCE=new MsgCloneMarker();
+		
+		private MsgCloneMarker() {}
+	}
+	
+	protected Msg(MsgCloneMarker marker) {}
+	
 	final Msg clone(Transaction a_trans) {
-	    try {
-	        Msg msg = (Msg)this.clone();
-	        msg.i_trans = a_trans;
-	        return msg;
-	    } catch (CloneNotSupportedException e) {
-	        return null;
-	    }
+		Msg msg = (Msg) shallowClone();
+		msg._trans = a_trans;
+		return msg;
 	}
 	
 	public final boolean equals(Object obj) {
@@ -92,12 +96,12 @@ class Msg implements Cloneable{
 		if(obj==null||obj.getClass()!=this.getClass()) {
 			return false;
 		}
-	    return i_msgID == ((Msg) obj).i_msgID;
+	    return _msgID == ((Msg) obj)._msgID;
 	}
 	
 
 	void fakePayLoad(Transaction a_trans) {
-	    i_trans = a_trans;
+	    _trans = a_trans;
 		// do nothing
 	}
 
@@ -110,14 +114,14 @@ class Msg implements Cloneable{
 	}
 
 	final String getName() {
-		if (i_name == null) {
+		if (_name == null) {
 			return getClass().getName();
 		}
-		return i_name;
+		return _name;
 	}
 
 	Transaction getTransaction() {
-		return i_trans;
+		return _trans;
 	}
 	
 	YapStream getStream(){
@@ -137,7 +141,7 @@ class Msg implements Cloneable{
 		if(!reader.read(sock)) {
 			return null;
 		}
-		Msg message = i_messages[reader.readInt()].readPayLoad(a_trans, sock, reader);
+		Msg message = _messages[reader.readInt()].readPayLoad(a_trans, sock, reader);
 		if (Debug.messages) {
 			System.out.println(message + " arrived at " + a_trans.i_stream);
 		}
@@ -153,7 +157,7 @@ class Msg implements Cloneable{
 	}
 
 	final void setTransaction(Transaction aTrans) {
-		i_trans = aTrans;
+		_trans = aTrans;
 	}
 
 	final public String toString() {
@@ -211,7 +215,7 @@ class Msg implements Cloneable{
 
 	YapWriter getPayLoad() {
 		YapWriter writer = new YapWriter(getTransaction(), YapConst.MESSAGE_LENGTH);
-		writer.writeInt(i_msgID);
+		writer.writeInt(_msgID);
 		return writer;
 	}
 
@@ -221,6 +225,17 @@ class Msg implements Cloneable{
 		YapWriter writer = message.getPayLoad();
 		writer.writeQueryResult(qr);
 		message.write(a_trans.i_stream, sock);
+	}
+
+	protected Msg shallowCloneInternal(Msg msg) {
+		msg._msgID=_msgID;
+		msg._name=_name;
+		msg._trans=_trans;
+		return msg;
+	}
+	
+	public Object shallowClone() {
+		return shallowCloneInternal(new Msg(MsgCloneMarker.INSTANCE));
 	}
 
 }

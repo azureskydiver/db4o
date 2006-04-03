@@ -2,16 +2,16 @@
 
 package com.db4o;
 
-import java.io.*;
+import java.io.IOException;
 
-import com.db4o.foundation.network.*;
+import com.db4o.foundation.network.YapSocket;
 
 /**
  * Messages with Data for Client/Server Communication
  */
 class MsgD extends Msg{
 
-	YapWriter payLoad;
+	YapWriter _payLoad;
 
 	MsgD() {
 		super();
@@ -21,31 +21,35 @@ class MsgD extends Msg{
 		super(aName);
 	}
 
+	MsgD(MsgCloneMarker marker) {
+		super(marker);
+	}
+	
 	void fakePayLoad(Transaction a_trans) {
 		if (Debug.fakeServer) {
-			payLoad.removeFirstBytes(YapConst.YAPINT_LENGTH * 2);
-			payLoad._offset = 0;
-			payLoad.setTransaction(a_trans);
+			_payLoad.removeFirstBytes(YapConst.YAPINT_LENGTH * 2);
+			_payLoad._offset = 0;
+			_payLoad.setTransaction(a_trans);
 		}
 	}
 
 	YapWriter getByteLoad() {
-		return payLoad;
+		return _payLoad;
 	}
 
 	final YapWriter getPayLoad() {
-		return payLoad;
+		return _payLoad;
 	}
 	
 	final MsgD getWriterForLength(Transaction a_trans, int length) {
 		MsgD message = (MsgD)clone(a_trans);
-		message.payLoad = new YapWriter(a_trans, length + YapConst.MESSAGE_LENGTH);
-		message.writeInt(i_msgID);
+		message._payLoad = new YapWriter(a_trans, length + YapConst.MESSAGE_LENGTH);
+		message.writeInt(_msgID);
 		message.writeInt(length);
 		if(a_trans.i_parentTransaction == null){
-		    message.payLoad.append(YapConst.SYSTEM_TRANS);
+		    message._payLoad.append(YapConst.SYSTEM_TRANS);
 		}else{
-		    message.payLoad.append(YapConst.USER_TRANS);
+		    message._payLoad.append(YapConst.USER_TRANS);
 		}
 		return message;
 	}
@@ -99,20 +103,20 @@ class MsgD extends Msg{
 
 	MsgD getWriter(YapWriter bytes) {
 		MsgD message = getWriterForLength(bytes.getTransaction(), bytes.getLength());
-		message.payLoad.append(bytes._buffer);
+		message._payLoad.append(bytes._buffer);
 		return message;
 	}
 	
 	byte[] readBytes(){
-	    return payLoad.readBytes(readInt());
+	    return _payLoad.readBytes(readInt());
 	}
 
 	final int readInt() {
-		return payLoad.readInt();
+		return _payLoad.readInt();
 	}
 	
 	final long readLong(){
-	    return YLong.readLong(payLoad);
+	    return YLong.readLong(_payLoad);
 	}
 
 	final Msg readPayLoad(Transaction a_trans, YapSocket sock, YapWriter reader)
@@ -122,32 +126,41 @@ class MsgD extends Msg{
 		    a_trans = a_trans.i_parentTransaction;
 		}
 		final MsgD command = (MsgD)clone(a_trans);
-		command.payLoad = new YapWriter(a_trans, length);
-		command.payLoad.read(sock);
+		command._payLoad = new YapWriter(a_trans, length);
+		command._payLoad.read(sock);
 		return command;
 	}
 
 	final String readString() {
 		int length = readInt();
-		return YapConst.stringIO.read(payLoad, length);
+		return YapConst.stringIO.read(_payLoad, length);
 	}
 	
 	final void writeBytes(byte[] aBytes){
 	    writeInt(aBytes.length);
-	    payLoad.append(aBytes);
+	    _payLoad.append(aBytes);
 	}
 
 	final void writeInt(int aInt) {
-		payLoad.writeInt(aInt);
+		_payLoad.writeInt(aInt);
 	}
 	
 	final void writeLong(long aLong){
-	    YLong.writeLong(aLong, payLoad);
+	    YLong.writeLong(aLong, _payLoad);
 	}
 
 	final void writeString(String aStr) {
-		payLoad.writeInt(aStr.length());
-		YapConst.stringIO.write(payLoad, aStr);
+		_payLoad.writeInt(aStr.length());
+		YapConst.stringIO.write(_payLoad, aStr);
 	}
 
+	protected Msg shallowCloneInternal(Msg msg) {
+		MsgD clone=(MsgD)super.shallowCloneInternal(msg);
+		clone._payLoad=_payLoad;
+		return clone;
+	}
+	
+	public Object shallowClone() {
+		return shallowCloneInternal(new MsgD(MsgCloneMarker.INSTANCE));
+	}
 }
