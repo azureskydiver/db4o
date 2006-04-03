@@ -56,7 +56,7 @@ public class YInt extends YapJavaClass {
             a_bytes.readBegin(YapConst.YAPINTEGER);
             if (Deploy.debugLong) {
                 ret =
-                    new Integer(new YapStringIO().read(a_bytes, YapConst.INTEGER_BYTES).trim())
+                    Integer.valueOf(new YapStringIO().read(a_bytes, YapConst.INTEGER_BYTES).trim())
                         .intValue();
             } else {
                 for (int i = 0; i < YapConst.INTEGER_BYTES; i++) {

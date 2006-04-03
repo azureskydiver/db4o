@@ -62,6 +62,15 @@ public class NIOFileAdapter extends IoAdapter {
 		//System.err.println("Hits: "+hits+", Misses: "+misses);
 	}
 
+	public void delete(String path) {
+		new File(path).delete();
+	}
+	
+    public boolean exists(String path){
+        File existingFile = new File(path);
+        return  existingFile.exists() && existingFile.length() > 0;
+    }
+
 	public long getLength() throws IOException {
 		return _size;
 	}
