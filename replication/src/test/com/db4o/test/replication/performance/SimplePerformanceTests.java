@@ -4,14 +4,14 @@ package com.db4o.test.replication.performance;
 
 import com.db4o.ObjectSet;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
-import com.db4o.test.replication.ReplicationTestcase;
+import com.db4o.test.replication.ReplicationTestCase;
 
-public class SimplePerformanceTests extends ReplicationTestcase {
+public class SimplePerformanceTests extends ReplicationTestCase {
 
 	private static final int TOTAL_OBJECTS = 10000;
 	private static final int CHANGED_OBJECTS = 100;
 
-    protected void actualTest() {
+	protected void actualTest() {
 		startTimer();
 		storeObjects();
 		replicateAll(_providerA, _providerB);
@@ -48,9 +48,9 @@ public class SimplePerformanceTests extends ReplicationTestcase {
 		logTime("Commit " + name);
 	}
 
-    public void test() {
-        super.test();
-    }
+	public void test() {
+		super.test();
+	}
 
 
 }

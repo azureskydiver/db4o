@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ReplicationFeaturesMain extends ReplicationTestcase {
+public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 	private final Set _setA = new HashSet(1);
 	private final Set _setB = new HashSet(1);
@@ -175,12 +175,12 @@ public class ReplicationFeaturesMain extends ReplicationTestcase {
 
 			public void onReplicate(ReplicationEvent event) {
 				if (!event.isConflict()) return;
-				
+
 				if (_objectsToPrevailInConflicts.isEmpty()) {
 					event.overrideWith(null);
 					return;
 				}
-				
+
 				ObjectState override = _objectsToPrevailInConflicts.contains(A)
 						? event.stateInProviderA()
 						: event.stateInProviderB();
@@ -455,9 +455,9 @@ public class ReplicationFeaturesMain extends ReplicationTestcase {
 		return (String) containerSet.iterator().next();
 	}
 
-    public void test() {
-        super.test();
-    }
+	public void test() {
+		super.test();
+	}
 
 
 }

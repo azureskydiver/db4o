@@ -6,12 +6,12 @@ import com.db4o.ObjectSet;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.test.Test;
-import com.db4o.test.replication.ReplicationTestcase;
+import com.db4o.test.replication.ReplicationTestCase;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListTest extends ReplicationTestcase {
+public class ListTest extends ReplicationTestCase {
 
 	protected void actualTest() {
 
@@ -134,7 +134,7 @@ public class ListTest extends ReplicationTestcase {
 	}
 
 
-    public void test() {
-        super.test();
-    }
+	public void test() {
+		super.test();
+	}
 }

@@ -5,12 +5,12 @@ package com.db4o.test.replication.collections;
 import com.db4o.ObjectSet;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.Test;
-import com.db4o.test.replication.ReplicationTestcase;
+import com.db4o.test.replication.ReplicationTestCase;
 
 
-public class SimpleArrayTest extends ReplicationTestcase {
+public class SimpleArrayTest extends ReplicationTestCase {
 
-    protected void actualTest() {
+	protected void actualTest() {
 
 		storeListToProviderA();
 
@@ -113,7 +113,7 @@ public class SimpleArrayTest extends ReplicationTestcase {
 		}
 	}
 
-    public void test() {
-        super.test();
-    }
+	public void test() {
+		super.test();
+	}
 }
