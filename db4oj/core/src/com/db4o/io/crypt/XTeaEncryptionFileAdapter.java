@@ -133,6 +133,14 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 		_adapter.close();
 	}
 
+	public void delete(String path) {
+		_adapter.delete(path);
+	}
+	
+	public boolean exists(String path) {
+		return _adapter.exists(path);
+	}
+	
 	/**
 	 * implement to return the absolute length of the file
 	 */

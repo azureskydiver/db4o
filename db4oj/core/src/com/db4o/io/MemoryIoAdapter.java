@@ -26,7 +26,6 @@ import com.db4o.foundation.*;
  */
 public class MemoryIoAdapter extends IoAdapter{
 
-    private String _name;
     private byte[] _bytes;
     private int _length;
     private int _seekPos;
@@ -40,7 +39,6 @@ public class MemoryIoAdapter extends IoAdapter{
     }
     
     private MemoryIoAdapter(MemoryIoAdapter adapter, String name, byte[] bytes){
-        _name = name;
         _bytes = bytes;
         _length = bytes.length;
         _growBy = adapter._growBy;
@@ -96,6 +94,10 @@ public class MemoryIoAdapter extends IoAdapter{
      */
     public void close() throws IOException {
         // do nothing
+    }
+    
+    public void delete(String path) {
+    	_memoryFiles.remove(path);
     }
     
     /**
