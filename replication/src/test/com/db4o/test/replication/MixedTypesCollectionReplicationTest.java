@@ -13,6 +13,8 @@ public class MixedTypesCollectionReplicationTest extends ReplicationTestCase {
 	}
 
 	protected void actualTest() {
+		if (!_providerA.supportsHybridCollection()) return;
+		if (!_providerB.supportsHybridCollection()) return;
 
 		CollectionHolder h1 = new CollectionHolder("h1");
 		CollectionHolder h2 = new CollectionHolder("h2");

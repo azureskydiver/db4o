@@ -348,8 +348,12 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		throw new RuntimeException("TODO");
 	}
 
-    public boolean supportsMultiDimensionalArrays() {
-        return true;
-    }
+	public boolean supportsMultiDimensionalArrays() {
+		return true;
+	}
+
+	public boolean supportsHybridCollection() {
+		return true;
+	}
 
 }

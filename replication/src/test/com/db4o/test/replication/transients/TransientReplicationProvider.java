@@ -165,9 +165,9 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference unused, String unused2) {
 		Db4oUUID uuid = counterpartReference.uuid();
 		long version = counterpartReference.version();
-        
-        if (getObject(uuid) != null) throw new RuntimeException("Object exists already.");
-        
+
+		if (getObject(uuid) != null) throw new RuntimeException("Object exists already.");
+
 		ReplicationReference result = createReferenceFor(obj);
 		store(obj, uuid, version);
 		return result;
@@ -397,8 +397,12 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		_storedObjects.remove(reference.object());
 	}
 
-    public boolean supportsMultiDimensionalArrays() {
-        return true;
-    }
+	public boolean supportsMultiDimensionalArrays() {
+		return true;
+	}
+
+	public boolean supportsHybridCollection() {
+		return true;
+	}
 
 }
