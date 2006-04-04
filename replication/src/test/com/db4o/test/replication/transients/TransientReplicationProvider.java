@@ -163,6 +163,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference unused, String unused2) {
+        System.out.println("referenceNewObject: " + obj + "  UUID: " + counterpartReference.uuid());
 		Db4oUUID uuid = counterpartReference.uuid();
 		long version = counterpartReference.version();
 

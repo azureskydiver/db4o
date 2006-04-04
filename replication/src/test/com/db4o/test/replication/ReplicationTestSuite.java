@@ -13,14 +13,14 @@ import com.db4o.test.replication.template.r0tor4.R0to4Runner;
 
 public class ReplicationTestSuite extends TestSuite {
 
-	public Class[] tests2() {
+	public Class[] tests() {
 		System.err.println("Use tests2 below");
 		return new Class[] {
 			ReplicationFeaturesMain.class,
 		};
 	}
 
-	public Class[] tests() {
+	public Class[] tests2() {
 		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
 		return new Class[]{
                 

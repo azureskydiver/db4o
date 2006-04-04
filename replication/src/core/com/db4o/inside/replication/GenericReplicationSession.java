@@ -214,6 +214,8 @@ public class GenericReplicationSession implements ReplicationSession {
 			refB = otherRef;
 
 		if (otherRef == null) {
+            System.out.println("Comment next line to expose hibernate difference and improve transient test");
+            if (wasProcessed(uuid)) return false;
             markAsProcessed(uuid);
 
             if (other.wasDeletedSinceLastReplication(uuid))
