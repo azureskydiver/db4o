@@ -58,17 +58,17 @@ public class Db4oUUID {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		final Db4oUUID db4oUUID = (Db4oUUID) o;
+		final Db4oUUID other = (Db4oUUID) o;
 
-		if (longPart != db4oUUID.longPart) return false;
+		if (longPart != other.longPart) return false;
 		if (signaturePart == null) {
-			return db4oUUID.signaturePart == null;
+			return other.signaturePart == null;
 		}
-		if (signaturePart.length != db4oUUID.signaturePart.length) {
+		if (signaturePart.length != other.signaturePart.length) {
 			return false;
 		}
 		for (int i = 0; i < signaturePart.length; i++) {
-			if (signaturePart[i] != db4oUUID.signaturePart[i]) {
+			if (signaturePart[i] != other.signaturePart[i]) {
 				return false;
 			}
 		}
