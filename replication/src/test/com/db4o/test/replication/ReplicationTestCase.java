@@ -21,7 +21,7 @@ public abstract class ReplicationTestCase {
 	static private final Collection4 PROVIDER_PAIRS = new Collection4();
 
 	public void test() {
-		Iterator4 it = PROVIDER_PAIRS.iterator();
+		Iterator4 it = PROVIDER_PAIRS.strictIterator();
 		while (it.hasNext()) {
 			prepareNextProviderPair((ProviderPair) it.next());
 			doActualTest();
@@ -40,6 +40,7 @@ public abstract class ReplicationTestCase {
 	private void prepareNextProviderPair(ProviderPair pair) {
 		_providerA = pair._providerA;
 		_providerB = pair._providerB;
+        System.out.println("   Provider pair: " + _providerA + "  -  " + _providerB);
 	}
 
 	protected abstract void actualTest();
@@ -78,20 +79,6 @@ public abstract class ReplicationTestCase {
 //		_providerA = p._providerA;
 //		_providerB = p._providerB;
 //	}
-
-	public static void addProviderPair(TestableReplicationProviderInside a, TestableReplicationProviderInside b) {
-		final Iterator4 it = PROVIDER_PAIRS.iterator();
-		while (it.hasNext()) {
-			ProviderPair pair = (ProviderPair) it.next();
-
-			if ((a == pair._providerA) || (a == pair._providerB))
-				throw new RuntimeException("Do not reuse providers");
-
-			if ((b == pair._providerA) || (b == pair._providerB))
-				throw new RuntimeException("Do not reuse providers");
-		}
-		PROVIDER_PAIRS.add(new ProviderPair(a, b));
-	}
 
 	protected abstract void clean();
 
