@@ -62,21 +62,6 @@ namespace com.db4o.test.net2
 
         }
         
-        class NamedHolderQuery : com.db4o.query.Predicate
-        {
-            string _name;
-            
-            public NamedHolderQuery(string name)
-            {
-                _name = name;
-            }
-            
-            public bool Match(LHolder1 candidate)
-            {
-                return candidate._name == _name;
-            }
-        }
-
         private LHolder1 QueryForNamedHolder(string name)
         {
             IList<LHolder1> holderList = Tester.objectContainer().query<LHolder1>(delegate(LHolder1 holder)
