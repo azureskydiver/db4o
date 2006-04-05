@@ -9,14 +9,15 @@ final class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
 // ------------------------------ FIELDS ------------------------------
 
 	private final Collection _delegate;
-	private final Iterator _itor;
+	private Iterator _itor;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
 	public ObjectSetCollectionFacade(Collection delegate_) {
 		_delegate = delegate_;
-		_itor = _delegate.iterator();
+		reset();
 	}
+
 
 // ------------------------ INTERFACE METHODS ------------------------
 
@@ -43,4 +44,9 @@ final class ObjectSetCollectionFacade extends ObjectSetAbstractFacade {
 	public Collection getDelegate() {
 		return _delegate;
 	}
+
+	public void reset() {
+		_itor = _delegate.iterator();
+	}
+
 }

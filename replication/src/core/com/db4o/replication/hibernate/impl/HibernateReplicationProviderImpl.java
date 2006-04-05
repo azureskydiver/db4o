@@ -132,7 +132,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 // ------------------------ CANONICAL METHODS ------------------------
 
 	public final String toString() {
-		return "name = " + _name;
+		return _name;
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
