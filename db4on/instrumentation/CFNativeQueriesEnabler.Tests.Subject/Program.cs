@@ -5,8 +5,7 @@ using com.db4o;
 using com.db4o.inside.query;
 
 namespace CFNativeQueriesEnabler.Tests.Subject
-{
-    // TODO: more than one query invocation per method
+{   
     // TODO: query invocation with comparator
     // TODO: query invocation with comparison
     public class Program
@@ -36,6 +35,8 @@ namespace CFNativeQueriesEnabler.Tests.Subject
             TestInlineClosureDelegate();
             TestStaticMemberDelegate();
             TestInstanceMemberDelegate();
+            TestInlineStaticDelegateInsideExpression();
+            TestMultipleQueryInvocations();
         }
 
         public static void SetUp()
@@ -60,6 +61,53 @@ namespace CFNativeQueriesEnabler.Tests.Subject
             }
         }
 
+        public static void TestInlineClosureDelegate()
+        {
+            using (ObjectContainer container = OpenDatabase())
+            {
+                string name = null;
+                name = "foo";
+                IList<Item> items = container.query<Item>(delegate(Item candidate)
+                {
+                    return candidate.Name == name;
+                });
+                CheckResult(items);
+            }
+        }
+
+        public static void TestStaticMemberDelegate()
+        {
+            using (ObjectContainer container = OpenDatabase())
+            {
+                IList<Item> items = container.query<Item>(Program.MatchFoo);
+                CheckResult(items);
+            }
+        }
+
+        public static void TestMultipleQueryInvocations()
+        {
+            using (ObjectContainer container = OpenDatabase())
+            {
+                CheckResult(container.query<Item>(Program.MatchFoo));
+                CheckResult(container.query<Item>(Program.MatchFoo));
+                CheckResult(container.query<Item>(Program.MatchFoo));
+            }
+        }
+
+        delegate ObjectContainer ObjectContainerAccessor();
+        
+        public static void TestInlineStaticDelegateInsideExpression()
+        {
+            using (ObjectContainer container = OpenDatabase())
+            {
+                ObjectContainerAccessor getter = delegate { return container; };
+                CheckResult(getter().query<Item>(delegate(Item candidate)
+                {
+                    return candidate.Name == "foo";
+                }));
+            }
+        }
+
         private static ObjectContainer OpenDatabase()
         {
             ObjectContainer container = Db4o.openFile(DatabaseFile);
@@ -77,29 +125,6 @@ namespace CFNativeQueriesEnabler.Tests.Subject
         static void OnQueryOptimizationFailure(object sender, com.db4o.inside.query.QueryOptimizationFailureEventArgs args)
         {
             throw new ApplicationException(args.Reason.Message, args.Reason);
-        }
-
-        public static void TestInlineClosureDelegate()
-        {
-            using (ObjectContainer container = OpenDatabase())
-            {
-                string name = null;
-                name = "foo";
-                IList<Item> items = container.query<Item>(delegate(Item candidate)
-                {
-                    return candidate.Name == name;
-                });
-                CheckResult(items);
-            }
-        }
-        
-        public static void TestStaticMemberDelegate()
-        {
-            using (ObjectContainer container = OpenDatabase())
-            {
-                IList<Item> items = container.query<Item>(Program.MatchFoo);
-                CheckResult(items);
-            }
         }
         
         public static void TestInstanceMemberDelegate()
@@ -121,7 +146,7 @@ namespace CFNativeQueriesEnabler.Tests.Subject
         {
             return candidate.Name == "foo";
         }
-        
+    
         class QueryItemByName
         {
             string _name;

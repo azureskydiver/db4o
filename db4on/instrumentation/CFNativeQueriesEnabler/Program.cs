@@ -44,12 +44,26 @@ namespace CFNativeQueriesEnabler
 
         void ProcessQueryCalls(MethodDefinition method)
         {
+            if (null == method.Body) return;
+
+            foreach (Instruction instr in CollectQueryCalls(method))
+            {
+                ProcessQueryCall(method, instr);
+            }
+        }
+
+        private List<Instruction> CollectQueryCalls(MethodDefinition method)
+        {
+            return new List<Instruction>(EnumerateQueryCalls(method));
+        }
+
+        private IEnumerable<Instruction> EnumerateQueryCalls(MethodDefinition method)
+        {
             foreach (Instruction instr in method.Body.Instructions)
             {
                 if (IsObjectContainerQueryOnPredicateCall(instr))
                 {
-                    ProcessQueryCall(method, instr);
-                    break;
+                    yield return instr;
                 }
             }
         }
@@ -95,8 +109,9 @@ namespace CFNativeQueriesEnabler
         private void ReplaceByExecuteMeta(CilWorker worker, Instruction queryCallInstruction, MethodReference targetMethod)
         {
             TypeReference extent = GetQueryCallExtent(queryCallInstruction);
-
+            
             worker.InsertBefore(queryCallInstruction, worker.Create(OpCodes.Ldtoken, targetMethod));
+            worker.InsertBefore(queryCallInstruction, worker.Create(OpCodes.Call, GetMethodFromHandle()));
             
             worker.InsertBefore(queryCallInstruction, worker.Create(OpCodes.Newobj,
                                                                     GetMetaPredicateConstructor(extent)));
@@ -106,6 +121,11 @@ namespace CFNativeQueriesEnabler
                                                                InstantiateGenericMethod(
                                                                    NativeQueryHandler_ExecuteMeta,
                                                                    extent)));
+        }
+
+        private MethodReference GetMethodFromHandle()
+        {
+            return Import(typeof(MethodBase).GetMethod("GetMethodFromHandle", new Type[] { typeof(System.RuntimeMethodHandle) }));
         }
 
         private void InsertGetNativeQueryHandlerBefore(CilWorker worker, Instruction instruction)
@@ -124,17 +144,22 @@ namespace CFNativeQueriesEnabler
 
         static System.Reflection.ConstructorInfo MetaDelegate_ConstructorInfo = MetaDelegateType.GetConstructors()[0];
 
-        private MethodReference GetMetaPredicateConstructor(TypeReference extent)
+        MethodReference GetMetaPredicateConstructor(TypeReference extent)
         {
-            GenericInstanceType concretePredicate = InstantiateGenericType(Import(PredicateType), extent);
-            GenericInstanceType concreteMetaDelegate = InstantiateGenericType(Import(MetaDelegateType), concretePredicate);
-            
-            MethodReference ctor = Import(MetaDelegate_ConstructorInfo);
-
-            // TODO: CECIL needs something like a
-            // GenericParameterRef or to make TypeReference implement IGenericParameterProvider
-            TypeReference typeRef = concreteMetaDelegate;
-            return InstantiateGenericMethod(ctor, typeRef);
+            // MetaPredicate<System.Predicate<extent> >
+            GenericInstanceType concretePredicate = InstantiateGenericType(
+                                                        Import(PredicateType),
+                                                        extent);
+            TypeReference metaDelegate = Import(MetaDelegateType);
+            GenericInstanceType concreteMetaDelegate = InstantiateGenericType(
+                                                        metaDelegate,
+                                                        concretePredicate);
+            MethodReference ctor = new MethodReference(MethodDefinition.Ctor, concreteMetaDelegate, Import(typeof(void)), true, false, MethodCallingConvention.Default);
+            ctor.Parameters.Add(new ParameterDefinition(Import(typeof(object))));
+            ctor.Parameters.Add(new ParameterDefinition(metaDelegate.GenericParameters[0]));
+            ctor.Parameters.Add(new ParameterDefinition(Import(typeof(System.Reflection.MethodBase))));
+            _assembly.MainModule.MemberReferences.Add(ctor);
+            return ctor;
         }
 
         private GenericInstanceType InstantiateGenericType(TypeReference genericTypeDefinition, params TypeReference[] arguments)
@@ -248,7 +273,7 @@ namespace CFNativeQueriesEnabler
             if (instr.OpCode.Value != OpCodes.Callvirt.Value) return false;
             GenericInstanceMethod methodRef = instr.Operand as GenericInstanceMethod;
             if (null == methodRef) return false;
-            if ("query" != methodRef.Name) return false;
+            if (1 == string.Compare("query", methodRef.Name, true)) return false;
             if (1 != methodRef.Parameters.Count) return false;
             return IsSystemPredicateInstance(methodRef.Parameters[0].ParameterType);
         }
