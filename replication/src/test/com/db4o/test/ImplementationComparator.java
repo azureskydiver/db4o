@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import com.db4o.ObjectSet;
+import com.db4o.foundation.Cool;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.inside.replication.ReplicationReference;
 
@@ -16,57 +17,98 @@ public class ImplementationComparator implements InvocationHandler {
 	private final Object _backup;
 	private final Hashtable4 _ignoredMethods = new Hashtable4(10);
 
+	private final Object _hotProxy;
+	private final Object _backupProxy;
+	
+	private boolean _hotResultReady = false;
+	private String _hotMethodCalled;
+	private Object _hotResult;
 
-	public static Object createGiven(Object hot, Object backup, String[] ignoredMethods) {
-		ImplementationComparator handler = new ImplementationComparator(hot, backup, ignoredMethods);
-		return handler.proxyInstance();
-	}
 
 	public ImplementationComparator(Object hot, Object backup, String[] ignoredMethods) {
 		_hot = hot;
 		_backup = backup;
+
+		_hotProxy = proxyFor(_hot);
+		_backupProxy = proxyFor(_backup);
+		
 		for (int i = 0; i < ignoredMethods.length; i++) {
 			_ignoredMethods.put(ignoredMethods[i], ignoredMethods[i]); //Using it as a Set.
 		}
 	}
 
-	private Object proxyInstance() {
-		return Proxy.newProxyInstance(_hot.getClass().getClassLoader(), interfaces(), this);
+	
+	private Object proxyFor(Object obj) {
+		Class clazz = obj.getClass();
+		return Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), this);
 	}
 
-	private Class<?>[] interfaces() {
-		return _hot.getClass().getInterfaces();
+
+	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+		if (proxy == _hotProxy) return invokeOnHot(method, args);
+		if (proxy == _backupProxy) return invokeOnBackup(method, args);
+		throw new RuntimeException();
+	}
+	
+	synchronized private Object invokeOnBackup(Method method, Object[] args) throws Throwable {
+		System.out.println("> > > > > > > > > B " + method.getName());
+		if (!_hotResultReady) wait();
+		_hotResultReady = false;
+		notify();
+
+
+		Cool.sleepIgnoringInterruption(1000);
+		
+		
+		Object result = invoke2(_backup, method, args);
+		if (!_hotMethodCalled.equals(method.getName()))
+			throw new RuntimeException("Different method called. Hot: " + _hotMethodCalled + "  Backup: " + method.getName());
+		if (!compare(_hotResult, result))
+			handleDifference(method, _hotResult, result);
+
+		return throwIfException(result);
 	}
 
-	public Object invoke(Object hot, Method method, Object[] args) throws Throwable {
-		Object hotResult = invoke2(_hot, method, args);
-		Object backupResult = invoke2(_backup, method, args);
 
-		if (backupResult == null) {
-			if (hotResult == null) return null;
-			handleDifference(method, hotResult, backupResult);
-			return null;
-		}
-
-		if (hotResult instanceof ObjectSet) {
-			if (!haveEqualContents((ObjectSet)hotResult, (ObjectSet)backupResult))
-				handleDifference(method, hotResult, backupResult);
-			return hotResult;
-		}
-
-		if (hotResult instanceof ReplicationReference) {
-			if (!sameReference((ReplicationReference)hotResult, (ReplicationReference)backupResult))
-				handleDifference(method, hotResult, backupResult);
-			return hotResult;
-		}
-
-		if (!backupResult.equals(hotResult)) 
-			handleDifference(method, hotResult, backupResult);
+	synchronized private Object invokeOnHot(Method method, Object[] args) throws Throwable {
+		System.out.println("> > > > > > > > > H " + method.getName());
 		
-		if (hotResult instanceof InvocationTargetException)
-			throw ((InvocationTargetException)hotResult).getTargetException();
+		if (method.getName().equals("hasReplicationReferenceAlready")) new RuntimeException().printStackTrace();
 		
-		return hotResult;
+		if (_hotResultReady) wait();
+		_hotResultReady = true;
+		notify();
+
+		
+		Cool.sleepIgnoringInterruption(1000);
+
+		
+		_hotMethodCalled = method.getName();
+		_hotResult = invoke2(_hot, method, args);
+	
+		return throwIfException(_hotResult);
+	}
+
+
+	private Object throwIfException(Object result) throws Throwable {
+		if (result instanceof InvocationTargetException)
+			throw ((InvocationTargetException)result).getTargetException();
+
+		return result;
+	}
+
+	
+	public boolean compare(Object hotResult, Object backupResult) throws Throwable {
+
+		if (backupResult == null) return hotResult == null;
+
+		if (hotResult instanceof ObjectSet)
+			return haveEqualContents((ObjectSet)hotResult, (ObjectSet)backupResult);
+
+		if (hotResult instanceof ReplicationReference)
+			return sameReference((ReplicationReference)hotResult, (ReplicationReference)backupResult);
+
+		return backupResult.equals(hotResult);
 	}
 
 	private boolean sameReference(ReplicationReference ref, ReplicationReference ref2) {
@@ -90,7 +132,10 @@ public class ImplementationComparator implements InvocationHandler {
 		if (_ignoredMethods.get(method.getName()) != null) return;
 		printIfInvocationTargetException(hotResult);
 		printIfInvocationTargetException(backupResult);
-		throw new RuntimeException("Different results for method " + method.getName() + ".  Hot: " + hotResult + "  Backup: " + backupResult);
+		
+		RuntimeException rx = new RuntimeException("Different results for method " + method.getName() + ".  Hot: " + hotResult + "  Backup: " + backupResult);
+		rx.printStackTrace();
+		throw rx;
 	}
 
 	private void printIfInvocationTargetException(Object obj) {
@@ -104,6 +149,14 @@ public class ImplementationComparator implements InvocationHandler {
 		} catch (InvocationTargetException e) {
 			return e;
 		}
+	}
+
+	public Object hotProxy() {
+		return _hotProxy;
+	}
+
+	public Object backupProxy() {
+		return _backupProxy;
 	}
 	
 }

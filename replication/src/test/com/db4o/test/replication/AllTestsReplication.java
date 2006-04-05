@@ -23,14 +23,13 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	private void registerProviderPairs() {
-		String[] ignoredMethods = new String[]{"toString", "getMonitor", "getSignature"};
-//		TestableReplicationProviderInside comparator = (TestableReplicationProviderInside)ImplementationComparator.createGiven(HibernateUtil.refAsTableProviderA(), new TransientReplicationProvider(new byte[]{65}, "refAsTableA"), ignoredMethods);
-		TestableReplicationProviderInside comparator = (TestableReplicationProviderInside)ImplementationComparator.createGiven(new TransientReplicationProvider(new byte[]{65}, "refAsTableA"), new TransientReplicationProvider(new byte[]{65}, "refAsTableA"), ignoredMethods);
-		ReplicationTestCase.registerProviderPair(comparator, new TransientReplicationProvider(new byte[]{66}, "B"));
+//		String[] ignoredMethods = new String[]{"toString", "getMonitor", "getSignature"};
+//		TestableReplicationProviderInside comparator = (TestableReplicationProviderInside)ImplementationComparator.createGiven(new TransientReplicationProvider(new byte[]{65}, "refAsTableA"), new TransientReplicationProvider(new byte[]{65}, "refAsTableA"), ignoredMethods);
+//		ReplicationTestCase.registerProviderPair(comparator, new TransientReplicationProvider(new byte[]{66}, "B"));
 
 		ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65}, "A"), new TransientReplicationProvider(new byte[]{66}, "B"));
 
-		ReplicationTestCase.registerProviderPair(HibernateUtil.refAsTableProviderA(), HibernateUtil.refAsTableProviderB());
+//		ReplicationTestCase.registerProviderPair(HibernateUtil.refAsTableProviderA(), HibernateUtil.refAsTableProviderB());
 //        ReplicationTestcase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), Db4oReplicationTestUtil.newProviderB());
 //        ReplicationTestcase.registerProviderPair(HibernateUtil.produceMySQLConfigA());
 	}
