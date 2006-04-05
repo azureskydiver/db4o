@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
-using System.Text;
 using com.db4o.inside.query;
 
 namespace CFNativeQueriesEnabler.Tests
@@ -37,30 +34,23 @@ namespace CFNativeQueriesEnabler.Tests
         {
             new CFNativeQueriesEnabler.Program(TestSubject).Run();
         }
-
+        
         private void RunTests()
         {
             CFNativeQueriesEnabler.Tests.Subject.Program.QueryExecution += AssertIsMetaPredicateExecution;
             CFNativeQueriesEnabler.Tests.Subject.Program.SetUp();
 
-            int nFailures = 0;
-            int nTests = 0;
-            foreach (MethodInfo method in typeof(CFNativeQueriesEnabler.Tests.Subject.Program).GetMethods(BindingFlags.Public | BindingFlags.Static))
-            {
-                if (!method.Name.StartsWith("Test")) continue;
-
-                ++nTests;
-                try
-                {
-                    method.Invoke(null, null);
-                }
-                catch (TargetInvocationException x)
-                {
-                    Console.WriteLine("{0}) {1}: {2}", ++nFailures, method.Name, x.InnerException);
-                    Console.WriteLine();
-                }
-            }
-            Console.WriteLine("{0} out of {1} tests passed.", nTests-nFailures, nTests);
+            TestRunner runner = new TestRunner();
+            runner.RunTestCase(typeof(CFNativeQueriesEnabler.Tests.Subject.Program));
+            runner.RunTest("AssemblyVerification", VerifyAssembly);
+            runner.Report();
+            
+        }
+        
+        private static void VerifyAssembly()
+        {
+            string output = shell("peverify.exe", TestSubject);
+            if (output.ToUpper().Contains("WARNING")) throw new ApplicationException(output);
         }
         
         private void AssertIsMetaPredicateExecution(object sender, QueryExecutionEventArgs args)
@@ -73,16 +63,22 @@ namespace CFNativeQueriesEnabler.Tests
 
         private void RunTestsOutOfProcess()
         {
-            Process p = StartProcess(TestSubject);
+            shell(TestSubject);
+        }
+
+        private static string shell(string fname, params string[] args)
+        {
+            Process p = StartProcess(fname, args);
             string output = p.StandardOutput.ReadToEnd();
             p.WaitForExit();
             if (p.ExitCode != 0)
             {
                 throw new ApplicationException(output);
             }
+            return output;
         }
 
-        public static Process StartProcess(string filename)
+        public static Process StartProcess(string filename, params string[] args)
         {
             Process p = new Process();
             p.StartInfo.CreateNoWindow = true;
@@ -91,6 +87,7 @@ namespace CFNativeQueriesEnabler.Tests
             p.StartInfo.RedirectStandardInput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.FileName = filename;
+            p.StartInfo.Arguments = string.Join(" ", args);
             p.Start();
             return p;
         }
