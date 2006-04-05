@@ -33,12 +33,19 @@ namespace Mono.Cecil {
 
 	public sealed class GenericInstanceType : TypeSpecification, IGenericInstanceType {
 
-		public int Arity {
-			get { return GenericArguments.Count; }
+		private GenericArgumentCollection m_genArgs;
+
+		public GenericArgumentCollection GenericArguments {
+			get {
+				if (m_genArgs == null)
+					m_genArgs = new GenericArgumentCollection (this);
+				return m_genArgs;
+			}
 		}
 
 		public override bool IsValueType {
 			set { m_isValueType = value; }
+			get { return m_isValueType; }
 		}
 
 		public override string FullName {

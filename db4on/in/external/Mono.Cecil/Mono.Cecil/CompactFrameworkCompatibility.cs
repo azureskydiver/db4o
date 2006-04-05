@@ -25,7 +25,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-#if CF_1_0 || CF_2_0
+#if CF_1_0
 namespace System {
 	
 	internal class NotImplementedException : System.Exception {
@@ -39,7 +39,9 @@ namespace System {
 		}
 	}
 }
+#endif
 
+#if CF_1_0 || CF_2_0
 namespace System.Security {
 	
 	public class PermissionSet {

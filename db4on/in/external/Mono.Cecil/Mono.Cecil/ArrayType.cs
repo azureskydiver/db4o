@@ -54,28 +54,35 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public override string FullName {
-			get {
-				StringBuilder sb = new StringBuilder ();
-				sb.Append (base.FullName);
-				sb.Append ("[");
-				for (int i = 0; i < m_dimensions.Count; i++) {
-					IArrayDimension dim = m_dimensions [i];
-					string rank = dim.ToString ();
-					if (i < m_dimensions.Count - 1)
-						sb.Append (",");
-					if (rank.Length > 0) {
-						sb.Append (" ");
-						sb.Append (rank);
-					}
-				}
-				sb.Append ("]");
-				return sb.ToString ();
-			}
+		public override string Name {
+			get { return string.Concat (base.Name, Suffix ()); }
 		}
 
-		internal ArrayType (TypeReference elementsType, ArrayShape shape) : this (elementsType)
+		public override string FullName {
+			get { return string.Concat (base.FullName, Suffix ()); }
+		}
+
+		string Suffix ()
 		{
+			StringBuilder sb = new StringBuilder ();
+			sb.Append ("[");
+			for (int i = 0; i < m_dimensions.Count; i++) {
+				IArrayDimension dim = m_dimensions [i];
+				string rank = dim.ToString ();
+				if (i < m_dimensions.Count - 1)
+					sb.Append (",");
+				if (rank.Length > 0) {
+					sb.Append (" ");
+					sb.Append (rank);
+				}
+			}
+			sb.Append ("]");
+			return sb.ToString ();
+		}
+
+		internal ArrayType (TypeReference elementsType, ArrayShape shape) : base (elementsType)
+		{
+			m_dimensions = new ArrayDimensionCollection (this);
 			for (int i = 0; i < shape.Rank; i++) {
 				int lower = 0, upper = 0;
 				if (i < shape.NumSizes)

@@ -36,7 +36,7 @@ namespace Mono.Cecil {
 		string m_name;
 		GenericParamAttributes m_attributes;
 		IGenericParameterProvider m_owner;
-		TypeReferenceCollection m_constraints;
+		ConstraintCollection m_constraints;
 
 		public int Position {
 			get { return m_position; }
@@ -52,10 +52,10 @@ namespace Mono.Cecil {
 			get { return m_owner; }
 		}
 
-		public TypeReferenceCollection Constraints {
+		public ConstraintCollection Constraints {
 			get {
 				if (m_constraints == null)
-					m_constraints = new TypeReferenceCollection (null);
+					m_constraints = new ConstraintCollection (this);
 
 				return m_constraints;
 			}
@@ -66,9 +66,9 @@ namespace Mono.Cecil {
 				if (m_name != null)
 					return m_name;
 
-				if (m_owner is TypeDefinition)
+				if (m_owner is TypeReference)
 					return string.Concat ("!", m_position.ToString ());
-				else if (m_owner is MethodDefinition)
+				else if (m_owner is MethodReference)
 					return string.Concat ("!!", m_position.ToString ());
 				else
 					throw new InvalidOperationException ();
@@ -97,6 +97,27 @@ namespace Mono.Cecil {
 		{
 			m_name = name;
 			m_owner = owner;
+		}
+
+		internal static GenericParameter Clone (GenericParameter gp, ImportContext context)
+		{
+			GenericParameter ngp;
+			if (gp.Owner is TypeReference)
+				ngp = new GenericParameter (gp.m_name, context.GenericContext.Type);
+			else if (gp.Owner is MethodReference)
+				ngp = new GenericParameter (gp.m_name, context.GenericContext.Method);
+			else
+				throw new NotSupportedException ();
+
+			ngp.Position = gp.Owner.GenericParameters.IndexOf (gp);
+			ngp.Attributes = gp.Attributes;
+
+			foreach (TypeReference constraint in gp.Constraints)
+				ngp.Constraints.Add (context.Import (constraint));
+			foreach (CustomAttribute ca in gp.CustomAttributes)
+				ngp.CustomAttributes.Add (CustomAttribute.Clone (ca, context));
+
+			return ngp;
 		}
 	}
 }

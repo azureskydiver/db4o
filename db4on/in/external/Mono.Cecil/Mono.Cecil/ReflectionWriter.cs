@@ -48,8 +48,11 @@ namespace Mono.Cecil {
 		MetadataTableWriter m_tableWriter;
 		MetadataRowWriter m_rowWriter;
 
+		IList m_typeDefStack;
 		IList m_methodStack;
 		IList m_fieldStack;
+		IList m_genericParamStack;
+		IDictionary m_typeSpecCache;
 
 		uint m_methodIndex;
 		uint m_fieldIndex;
@@ -100,8 +103,11 @@ namespace Mono.Cecil {
 		{
 			m_mod = mod;
 
+			m_typeDefStack = new ArrayList ();
 			m_methodStack = new ArrayList ();
 			m_fieldStack = new ArrayList ();
+			m_genericParamStack = new ArrayList ();
+			m_typeSpecCache = new Hashtable ();
 
 			m_methodIndex = 1;
 			m_fieldIndex = 1;
@@ -140,17 +146,21 @@ namespace Mono.Cecil {
 		bool IsTypeSpec (ITypeReference type)
 		{
 			return type is IArrayType || type is IFunctionPointerType ||
-				type is IPointerType || type is IGenericInstance;
+				type is IPointerType || type is IGenericInstance || type is IGenericParameter;
 		}
 
 		public MetadataToken GetTypeDefOrRefToken (ITypeReference type)
 		{
 			if (IsTypeSpec (type)) {
+				uint sig = m_sigWriter.AddTypeSpec (GetTypeSpecSig (type));
+				if (m_typeSpecCache.Contains (sig))
+					return (m_typeSpecCache [sig] as TypeReference).MetadataToken;
+
 				TypeSpecTable tsTable = m_tableWriter.GetTypeSpecTable ();
-				TypeSpecRow tsRow = m_rowWriter.CreateTypeSpecRow (
-					m_sigWriter.AddTypeSpec (GetTypeSpecSig (type)));
+				TypeSpecRow tsRow = m_rowWriter.CreateTypeSpecRow (sig);
 				tsTable.Rows.Add (tsRow);
 				type.MetadataToken = new MetadataToken (TokenType.TypeSpec, (uint) tsTable.Rows.Count);
+				m_typeSpecCache [sig] = type;
 				return type.MetadataToken;
 			} else if (type != null)
 				return type.MetadataToken;
@@ -160,10 +170,18 @@ namespace Mono.Cecil {
 
 		public MetadataToken GetMethodSpecToken (GenericInstanceMethod gim)
 		{
+			uint sig = m_sigWriter.AddMethodSpec (GetMethodSpecSig (gim));
 			MethodSpecTable msTable = m_tableWriter.GetMethodSpecTable ();
+
+			for (int i = 0; i < msTable.Rows.Count; i++) {
+				MethodSpecRow row = msTable [i];
+				if (row.Method == gim.ElementMethod.MetadataToken && row.Instantiation == sig)
+					return MetadataToken.FromMetadataRow (TokenType.MethodSpec, i);
+			}
+
 			MethodSpecRow msRow = m_rowWriter.CreateMethodSpecRow (
 				gim.ElementMethod.MetadataToken,
-				m_sigWriter.AddMethodSpec (GetMethodSpecSig (gim)));
+				sig);
 			msTable.Rows.Add (msRow);
 			gim.MetadataToken = new MetadataToken (TokenType.MethodSpec, (uint) msTable.Rows.Count);
 			return gim.MetadataToken;
@@ -171,18 +189,11 @@ namespace Mono.Cecil {
 
 		public override void VisitModuleDefinition (ModuleDefinition mod)
 		{
-			// ensure that everything is loaded before writing
-			foreach (TypeDefinition type in mod.Types) {
-				foreach (MethodDefinition meth in type.Methods)
-					meth.LoadBody ();
-				foreach (MethodDefinition ctor in type.Constructors)
-					ctor.LoadBody ();
-			}
+			mod.FullLoad ();
 		}
 
 		public override void VisitTypeDefinitionCollection (TypeDefinitionCollection types)
 		{
-			ArrayList orderedTypes = new ArrayList (types.Count);
 			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
 
 			if (types [Constants.ModuleType] == null)
@@ -190,19 +201,19 @@ namespace Mono.Cecil {
 						Constants.ModuleType, string.Empty, (TypeAttributes) 0));
 
 			foreach (ITypeDefinition t in types)
-				orderedTypes.Add (t);
+				m_typeDefStack.Add (t);
 
-			orderedTypes.Sort (TableComparers.TypeDef.Instance);
+			(m_typeDefStack as ArrayList).Sort (TableComparers.TypeDef.Instance);
 
-			for (int i = 0; i < orderedTypes.Count; i++) {
-				TypeDefinition t = (TypeDefinition) orderedTypes [i];
+			for (int i = 0; i < m_typeDefStack.Count; i++) {
+				TypeDefinition t = (TypeDefinition) m_typeDefStack [i];
 				if (t.Module.Assembly != m_mod.Assembly)
 					throw new ReflectionException ("A type as not been correctly imported");
 
 				t.MetadataToken = new MetadataToken (TokenType.TypeDef, (uint) (i + 1));
 			}
 
-			foreach (TypeDefinition t in orderedTypes) {
+			foreach (TypeDefinition t in m_typeDefStack) {
 				TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
 					t.Attributes,
 					m_mdWriter.AddString (t.Name),
@@ -212,14 +223,16 @@ namespace Mono.Cecil {
 					0);
 
 				tdTable.Rows.Add (tdRow);
-
-				if (t.LayoutInfo.HasLayoutInfo)
-					WriteLayout (t);
 			}
+		}
 
-			for (int i = 0; i < orderedTypes.Count; i++) {
+		public void CompleteTypeDefinitions ()
+		{
+			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
+
+			for (int i = 0; i < m_typeDefStack.Count; i++) {
 				TypeDefRow tdRow = tdTable [i];
-				TypeDefinition t = (TypeDefinition) orderedTypes [i];
+				TypeDefinition t = (TypeDefinition) m_typeDefStack [i];
 				tdRow.FieldList = m_fieldIndex;
 				tdRow.MethodList = m_methodIndex;
 				foreach (FieldDefinition field in t.Fields)
@@ -228,12 +241,19 @@ namespace Mono.Cecil {
 					VisitMethodDefinition (ctor);
 				foreach (MethodDefinition meth in t.Methods)
 					VisitMethodDefinition (meth);
+
+				if (t.LayoutInfo.HasLayoutInfo)
+					WriteLayout (t);
 			}
 
-			foreach (FieldDefinition field in m_fieldStack)
+			foreach (FieldDefinition field in m_fieldStack) {
 				VisitCustomAttributeCollection (field.CustomAttributes);
+				if (field.MarshalSpec != null)
+					VisitMarshalSpec (field.MarshalSpec);
+			}
 
 			foreach (MethodDefinition meth in m_methodStack) {
+				VisitGenericParameterCollection (meth.GenericParameters);
 				VisitOverrideCollection (meth.Overrides);
 				VisitCustomAttributeCollection (meth.CustomAttributes);
 				VisitSecurityDeclarationCollection (meth.SecurityDeclarations);
@@ -241,7 +261,7 @@ namespace Mono.Cecil {
 					VisitPInvokeInfo (meth.PInvokeInfo);
 			}
 
-			foreach (TypeDefinition t in orderedTypes)
+			foreach (TypeDefinition t in m_typeDefStack)
 				t.Accept (this);
 		}
 
@@ -315,30 +335,9 @@ namespace Mono.Cecil {
 			if (parameters.Count == 0)
 				return;
 
-			GenericParamTable gpTable = m_tableWriter.GetGenericParamTable ();
-			GenericParamConstraintTable gpcTable = m_tableWriter.GetGenericParamConstraintTable ();
-
-			for (int i = 0; i < parameters.Count; i++) {
-
-				GenericParameter gp = parameters [i];
-				GenericParamRow gpRow = m_rowWriter.CreateGenericParamRow (
-					(ushort) i,
-					gp.Attributes,
-					gp.Owner.MetadataToken,
-					m_mdWriter.AddString (gp.Name));
-
-				gpTable.Rows.Add (gpRow);
-
-				if (gp.Constraints.Count == 0)
-					continue;
-
-				foreach (TypeReference constraint in gp.Constraints) {
-					GenericParamConstraintRow gpcRow = m_rowWriter.CreateGenericParamConstraintRow (
-						(uint) gpTable.Rows.Count,
-						GetTypeDefOrRefToken (constraint));
-
-					gpcTable.Rows.Add (gpcRow);
-				}
+			foreach (GenericParameter gp in parameters) {
+				m_genericParamStack.Add (gp);
+				VisitCustomAttributeCollection (gp.CustomAttributes);
 			}
 		}
 
@@ -405,16 +404,29 @@ namespace Mono.Cecil {
 
 			ushort seq = 1;
 			ParamTable pTable = m_tableWriter.GetParamTable ();
-			foreach (ParameterDefinition param in parameters) {
-				ParamRow pRow = m_rowWriter.CreateParamRow (
-					param.Attributes,
-					seq++,
-					m_mdWriter.AddString (param.Name));
+			foreach (ParameterDefinition param in parameters)
+				InsertParameter (pTable, param, seq++);
+		}
 
-				pTable.Rows.Add (pRow);
-				param.MetadataToken = new MetadataToken (TokenType.Param, (uint) pTable.Rows.Count);
-				m_paramIndex++;
-			}
+		void InsertParameter (ParamTable pTable, ParameterDefinition param, ushort seq)
+		{
+			ParamRow pRow = m_rowWriter.CreateParamRow (
+				param.Attributes,
+				seq,
+				m_mdWriter.AddString (param.Name));
+
+			pTable.Rows.Add (pRow);
+			param.MetadataToken = new MetadataToken (TokenType.Param, (uint) pTable.Rows.Count);
+
+			if (param.MarshalSpec != null)
+				param.MarshalSpec.Accept (this);
+
+			if (param.HasConstant)
+				WriteConstant (param, param.ParameterType);
+
+			VisitCustomAttributeCollection (param.CustomAttributes);
+
+			m_paramIndex++;
 		}
 
 		public override void VisitMethodDefinition (MethodDefinition method)
@@ -436,13 +448,7 @@ namespace Mono.Cecil {
 			if (method.ReturnType.CustomAttributes.Count > 0 || method.ReturnType.MarshalSpec != null) {
 				ParameterDefinition param = (method.ReturnType as MethodReturnType).Parameter;
 				ParamTable pTable = m_tableWriter.GetParamTable ();
-				ParamRow pRow = m_rowWriter.CreateParamRow (
-					param.Attributes,
-					0,
-					0);
-
-				pTable.Rows.Add (pRow);
-				param.MetadataToken = new MetadataToken (TokenType.Param, (uint) pTable.Rows.Count);
+				InsertParameter (pTable, param, 0);
 			}
 
 			VisitParameterDefinitionCollection (method.Parameters);
@@ -510,7 +516,7 @@ namespace Mono.Cecil {
 			m_fieldIndex++;
 
 			if (field.HasConstant)
-				WriteConstant (field, field.MetadataToken, field.FieldType);
+				WriteConstant (field, field.FieldType);
 
 			if (field.LayoutInfo.HasLayoutInfo)
 				WriteLayout (field);
@@ -549,19 +555,10 @@ namespace Mono.Cecil {
 			if (property.SetMethod != null)
 				WriteSemantic (MethodSemanticsAttributes.Setter, property, property.SetMethod);
 
+			if (property.HasConstant)
+				WriteConstant (property, property.PropertyType);
+
 			m_propertyIndex++;
-		}
-
-		private MetadataToken GetMetadataToken (IHasSecurity container)
-		{
-			if (container is IAssemblyDefinition)
-				return new MetadataToken (TokenType.Assembly, 1);
-
-			IMetadataTokenProvider provider = (container as IMetadataTokenProvider);
-			if (container == null)
-				throw new ReflectionException ("Unknown Security Declaration parent");
-
-			return provider.MetadataToken;
 		}
 
 		public override void VisitSecurityDeclarationCollection (SecurityDeclarationCollection secDecls)
@@ -569,14 +566,13 @@ namespace Mono.Cecil {
 			if (secDecls.Count == 0)
 				return;
 
-			MetadataToken parent = GetMetadataToken (secDecls.Container);
 			DeclSecurityTable dsTable = m_tableWriter.GetDeclSecurityTable ();
 			foreach (SecurityDeclaration secDec in secDecls) {
 				DeclSecurityRow dsRow = m_rowWriter.CreateDeclSecurityRow (
 					secDec.Action,
-					parent,
-					m_mdWriter.AddBlob (
-						m_mod.GetAsByteArray (secDec)));
+					secDecls.Container.MetadataToken,
+					m_mdWriter.AddBlob (secDec.IsReadable ?
+						m_mod.GetAsByteArray (secDec) : secDec.Blob));
 
 				dsTable.Rows.Add (dsRow);
 			}
@@ -621,7 +617,7 @@ namespace Mono.Cecil {
 			fmTable.Rows.Add (fmRow);
 		}
 
-		void WriteConstant (IHasConstant hc, MetadataToken parent, TypeReference type)
+		void WriteConstant (IHasConstant hc, TypeReference type)
 		{
 			ConstantTable cTable = m_tableWriter.GetConstantTable ();
 			ElementType et;
@@ -636,7 +632,7 @@ namespace Mono.Cecil {
 
 			ConstantRow cRow = m_rowWriter.CreateConstantRow (
 				et,
-				parent,
+				hc.MetadataToken,
 				m_mdWriter.AddBlob (EncodeConstant (et, hc.Constant)));
 
 			cTable.Rows.Add (cRow);
@@ -678,54 +674,103 @@ namespace Mono.Cecil {
 		void SortTables ()
 		{
 			TablesHeap th = m_mdWriter.GetMetadataRoot ().Streams.TablesHeap;
+			th.Sorted = 0;
 
 			if (th.HasTable (typeof (NestedClassTable)))
 				m_tableWriter.GetNestedClassTable ().Rows.Sort (
 					TableComparers.NestedClass.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (NestedClassTable)));
 
 			if (th.HasTable (typeof (InterfaceImplTable)))
 				m_tableWriter.GetInterfaceImplTable ().Rows.Sort (
 					TableComparers.InterfaceImpl.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (InterfaceImplTable)));
 
 			if (th.HasTable (typeof (ConstantTable)))
 				m_tableWriter.GetConstantTable ().Rows.Sort (
 					TableComparers.Constant.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (ConstantTable)));
 
 			if (th.HasTable (typeof (MethodSemanticsTable)))
 				m_tableWriter.GetMethodSemanticsTable ().Rows.Sort (
 					TableComparers.MethodSem.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (MethodSemanticsTable)));
 
 			if (th.HasTable (typeof (FieldMarshalTable)))
 				m_tableWriter.GetFieldMarshalTable ().Rows.Sort (
 					TableComparers.FieldMarshal.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (FieldMarshalTable)));
 
 			if (th.HasTable (typeof (ClassLayoutTable)))
 				m_tableWriter.GetClassLayoutTable ().Rows.Sort (
 					TableComparers.TypeLayout.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (ClassLayoutTable)));
 
 			if (th.HasTable (typeof (FieldLayoutTable)))
 				m_tableWriter.GetFieldLayoutTable ().Rows.Sort (
 					TableComparers.FieldLayout.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (FieldLayoutTable)));
 
 			if (th.HasTable (typeof (ImplMapTable)))
 				m_tableWriter.GetImplMapTable ().Rows.Sort (
 					TableComparers.PInvoke.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (ImplMapTable)));
 
 			if (th.HasTable (typeof (FieldRVATable)))
 				m_tableWriter.GetFieldRVATable ().Rows.Sort (
 					TableComparers.FieldRVA.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (FieldRVATable)));
 
 			if (th.HasTable (typeof (MethodImplTable)))
 				m_tableWriter.GetMethodImplTable ().Rows.Sort (
 					TableComparers.Override.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (MethodImplTable)));
 
 			if (th.HasTable (typeof (CustomAttributeTable)))
 				m_tableWriter.GetCustomAttributeTable ().Rows.Sort (
 					TableComparers.CustomAttribute.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (CustomAttributeTable)));
 
 			if (th.HasTable (typeof (DeclSecurityTable)))
 				m_tableWriter.GetDeclSecurityTable ().Rows.Sort (
 					TableComparers.SecurityDeclaration.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (DeclSecurityTable)));
+		}
+
+		void CompleteGenericTables ()
+		{
+			if (m_genericParamStack.Count == 0)
+				return;
+
+			TablesHeap th = m_mdWriter.GetMetadataRoot ().Streams.TablesHeap;
+			GenericParamTable gpTable = m_tableWriter.GetGenericParamTable ();
+			GenericParamConstraintTable gpcTable = m_tableWriter.GetGenericParamConstraintTable ();
+
+			(m_genericParamStack as ArrayList).Sort (TableComparers.GenericParam.Instance);
+
+			foreach (GenericParameter gp in m_genericParamStack) {
+				GenericParamRow gpRow = m_rowWriter.CreateGenericParamRow (
+					(ushort) gp.Owner.GenericParameters.IndexOf (gp),
+					gp.Attributes,
+					gp.Owner.MetadataToken,
+					m_mdWriter.AddString (gp.Name));
+
+				gpTable.Rows.Add (gpRow);
+
+				if (gp.Constraints.Count == 0)
+					continue;
+
+				foreach (TypeReference constraint in gp.Constraints) {
+					GenericParamConstraintRow gpcRow = m_rowWriter.CreateGenericParamConstraintRow (
+						(uint) gpTable.Rows.Count,
+						GetTypeDefOrRefToken (constraint));
+
+					gpcTable.Rows.Add (gpcRow);
+				}
+			}
+
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (GenericParamTable)));
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (GenericParamConstraintTable)));
 		}
 
 		public override void TerminateModuleDefinition (ModuleDefinition module)
@@ -735,6 +780,7 @@ namespace Mono.Cecil {
 			VisitCustomAttributeCollection (module.CustomAttributes);
 
 			SortTables ();
+			CompleteGenericTables ();
 
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
 			for (int i = 0; i < m_methodStack.Count; i++) {
@@ -808,6 +854,9 @@ namespace Mono.Cecil {
 		byte [] EncodeConstant (ElementType et, object value)
 		{
 			m_constWriter.Empty ();
+
+			if (value == null)
+				et = ElementType.Class;
 
 			switch (et) {
 			case ElementType.Boolean :
@@ -905,9 +954,9 @@ namespace Mono.Cecil {
 			if (type is IGenericParameter) {
 				GenericParameter gp = type as GenericParameter;
 				int pos = gp.Owner.GenericParameters.IndexOf (gp);
-				if (gp.Owner is TypeDefinition)
+				if (gp.Owner is TypeReference)
 					return new VAR (pos);
-				else if (gp.Owner is MethodDefinition)
+				else if (gp.Owner is MethodReference)
 					return new MVAR (pos);
 				else
 					throw new ReflectionException ("Unkown generic parameter type");
@@ -1017,7 +1066,7 @@ namespace Mono.Cecil {
 		{
 			Param [] ret = new Param [parameters.Count];
 			for (int i = 0; i < ret.Length; i++) {
-				IParameterDefinition pDef =parameters [i];
+				IParameterDefinition pDef = parameters [i];
 				Param p = new Param ();
 				p.CustomMods = GetCustomMods (pDef.ParameterType);
 				if (pDef.ParameterType.FullName == Constants.TypedReference)
@@ -1067,7 +1116,11 @@ namespace Mono.Cecil {
 
 		public MethodRefSig GetMethodRefSig (IMethodReference meth)
 		{
+			if (meth.GenericParameters.Count > 0)
+				return GetMethodDefSig (meth);
+
 			MethodRefSig methSig = new MethodRefSig ();
+
 			CompleteMethodSig (meth, methSig);
 
 			if ((meth.CallingConvention & MethodCallingConvention.C) != 0)
@@ -1082,15 +1135,17 @@ namespace Mono.Cecil {
 			return methSig;
 		}
 
-		public MethodDefSig GetMethodDefSig (IMethodDefinition meth)
+		public MethodDefSig GetMethodDefSig (IMethodReference meth)
 		{
 			MethodDefSig sig = new MethodDefSig ();
+
+			CompleteMethodSig (meth, sig);
+
 			if (meth.GenericParameters.Count > 0) {
 				sig.CallingConvention |= 0x10;
 				sig.GenericParameterCount = meth.GenericParameters.Count;
 			}
 
-			CompleteMethodSig (meth, sig);
 			return sig;
 		}
 
@@ -1148,7 +1203,7 @@ namespace Mono.Cecil {
 		public MethodSpec GetMethodSpecSig (GenericInstanceMethod gim)
 		{
 			GenericInstSignature gis = new GenericInstSignature ();
-			gis.Arity = gim.Arity;
+			gis.Arity = gim.GenericArguments.Count;
 			gis.Types = new SigType [gis.Arity];
 			for (int i = 0; i < gis.Arity; i++)
 				gis.Types [i] = GetSigType (gim.GenericArguments [i]);
@@ -1214,7 +1269,7 @@ namespace Mono.Cecil {
 				MarshalSig.CustomMarshaler cm = new MarshalSig.CustomMarshaler ();
 				cm.Guid = cmd.Guid.ToString ();
 				cm.UnmanagedType = cmd.UnmanagedType;
-				cm.ManagedType = cmd.ManagedType.FullName;
+				cm.ManagedType = cmd.ManagedType;
 				cm.Cookie = cmd.Cookie;
 				ms.Spec = cm;
 			} else if (mSpec is FixedArrayDesc) {

@@ -163,8 +163,7 @@ namespace Mono.Cecil.Metadata {
 
 			uint pointer = (uint) m_stringWriter.BaseStream.Position;
 			m_stringCache [str] = pointer;
-			foreach (char c in str)
-				m_stringWriter.Write (c);
+			m_stringWriter.Write (Encoding.UTF8.GetBytes (str));
 			m_stringWriter.Write ('\0');
 			return pointer;
 		}
@@ -174,8 +173,9 @@ namespace Mono.Cecil.Metadata {
 			if (data == null || data.Length == 0)
 				return 0;
 
-			// COMPACT FRAMEWORK NOTE: Encoding.GetString(byte[]) is not supported
-			string key = Encoding.ASCII.GetString (data, 0, data.Length);
+			// using CompactFramework compatible version of
+			// Convert.ToBase64String
+			string key = Convert.ToBase64String (data, 0, data.Length);
 			if (m_blobCache.Contains (key))
 				return (uint) m_blobCache [key];
 
@@ -253,8 +253,10 @@ namespace Mono.Cecil.Metadata {
 				// so we must calculate the signature size based on
 				// the size of the public key (minus the 32 byte header)
 				int size = m_assembly.Name.PublicKey.Length;
-				if (size > 0)
+				if (size > 32)
 					return (uint) (size - 32);
+				// note: size == 16 for the ECMA "key" which is replaced
+				// by the runtime with a 1024 bits key (128 bytes)
 			}
 			return 128; // default strongname signature size
 		}
@@ -334,8 +336,7 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter.Write (header.MinorVersion);
 			m_binaryWriter.Write (header.Reserved);
 			m_binaryWriter.Write (header.Version.Length + 3 & (~3));
-			foreach (char c in header.Version)
-				m_binaryWriter.Write (c);
+			m_binaryWriter.Write (Encoding.ASCII.GetBytes (header.Version));
 			m_binaryWriter.QuadAlign ();
 			m_binaryWriter.Write (header.Flags);
 			m_binaryWriter.Write ((ushort) m_root.Streams.Count);
@@ -375,8 +376,7 @@ namespace Mono.Cecil.Metadata {
 
 				size += (uint) (container.BaseStream.Length + 3 & (~3));
 				m_binaryWriter.Write (size);
-				foreach (char c in name)
-					m_binaryWriter.Write (c);
+				m_binaryWriter.Write (Encoding.ASCII.GetBytes (name));
 				m_binaryWriter.QuadAlign ();
 			}
 		}

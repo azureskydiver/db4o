@@ -53,16 +53,27 @@ namespace Mono.Cecil {
 		IMetadataTokenProvider LookupByToken (TokenType table, int rid);
 
 		TypeReference Import (Type type);
+		TypeReference Import (Type type, TypeDefinition context);
 		MethodReference Import (SR.MethodBase meth);
+		MethodReference Import (SR.MethodBase meth, TypeDefinition context);
 		FieldReference Import (SR.FieldInfo field);
+		FieldReference Import (SR.FieldInfo field, TypeDefinition context);
 
 		TypeReference Import (TypeReference type);
+		TypeReference Import (TypeReference type, TypeDefinition context);
 		MethodReference Import (MethodReference meth);
+		MethodReference Import (MethodReference meth, TypeDefinition context);
 		FieldReference Import (FieldReference field);
+		FieldReference Import (FieldReference field, TypeDefinition context);
 
-		TypeDefinition Import (TypeDefinition type);
-		MethodDefinition Import (MethodDefinition meth);
-		FieldDefinition Import (FieldDefinition field);
+		TypeDefinition Inject (TypeDefinition type);
+		TypeDefinition Inject (TypeDefinition type, TypeDefinition context);
+		MethodDefinition Inject (MethodDefinition meth);
+		MethodDefinition Inject (MethodDefinition meth, TypeDefinition context);
+		FieldDefinition Inject (FieldDefinition field);
+		FieldDefinition Inject (FieldDefinition field, TypeDefinition context);
+
+		void FullLoad ();
 
 		byte [] GetAsByteArray (CustomAttribute ca);
 		byte [] GetAsByteArray (SecurityDeclaration dec);

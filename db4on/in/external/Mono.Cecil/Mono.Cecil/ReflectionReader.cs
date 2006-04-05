@@ -151,8 +151,14 @@ namespace Mono.Cecil {
 				TypeReference declaringType = GetTypeDefOrRef (mrefRow.Class, context);
 				GenericContext nc = context.Clone ();
 
-				if (mrefRow.Class.TokenType == TokenType.TypeSpec)
-					nc.TypeArguments = declaringType.GenericArguments;
+				if (declaringType is GenericInstanceType) {
+					TypeReference ct = declaringType;
+					while (ct is GenericInstanceType)
+						ct = (ct as GenericInstanceType).ElementType;
+
+					nc.Type = ct;
+					nc.AllowCreation = ct.GetType () == typeof (TypeReference);
+				}
 
 				if (sig is FieldSig) {
 					FieldSig fs = sig as FieldSig;
@@ -168,6 +174,14 @@ namespace Mono.Cecil {
 						name, ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
 					methref.DeclaringType = declaringType;
 
+					if (sig is MethodDefSig) {
+						int arity = (sig as MethodDefSig).GenericParameterCount;
+						for (int i = 0; i < arity; i++)
+							methref.GenericParameters.Add (new GenericParameter (i, methref));
+					}
+
+					nc.Method = methref;
+
 					methref.ReturnType = GetMethodReturnType (ms, nc);
 
 					methref.ReturnType.Method = methref;
@@ -179,7 +193,7 @@ namespace Mono.Cecil {
 						methref.Parameters.Add (pdef);
 					}
 					member = methref;
-					nc.MethodArguments = methref.GenericArguments;
+					nc.Method = methref;
 				}
 				break;
 			case TokenType.Method :
@@ -232,24 +246,18 @@ namespace Mono.Cecil {
 			MethodSpecRow msRow = msTable [index];
 
 			MethodSpec sig = m_sigReader.GetMethodSpec (msRow.Instantiation);
-			GenericArgumentCollection methArgs = new GenericArgumentCollection (null);
-			foreach (SigType st in sig.Signature.Types)
-				methArgs.Add (GetTypeRefFromSig (st, context));
-
-			GenericContext nc = context.Clone ();
-			nc.MethodArguments = methArgs;
 
 			MethodReference meth;
 			if (msRow.Method.TokenType == TokenType.Method)
 				meth = GetMethodDefAt (msRow.Method.RID);
 			else if (msRow.Method.TokenType == TokenType.MemberRef)
-				meth = (MethodReference) GetMemberRefAt (msRow.Method.RID, nc);
+				meth = (MethodReference) GetMemberRefAt (msRow.Method.RID, context);
 			else
 				throw new ReflectionException ("Unknown method type for method spec");
 
 			gim = new GenericInstanceMethod (meth);
-			foreach (TypeReference arg in methArgs)
-				gim.GenericArguments.Add (arg);
+			foreach (SigType st in sig.Signature.Types)
+				gim.GenericArguments.Add (GetTypeRefFromSig (st, context));
 
 			m_methodSpecs [index] = gim;
 
@@ -282,9 +290,10 @@ namespace Mono.Cecil {
 			if (coreType == null) {
 				if (m_corlib == null) {
 					foreach (IAssemblyNameReference ar in m_module.AssemblyReferences) {
-						if (ar.Name == Constants.Corlib)
+						if (ar.Name == Constants.Corlib) {
 							m_corlib = ar;
-						break;
+							break;
+						}
 					}
 				}
 
@@ -604,7 +613,11 @@ namespace Mono.Cecil {
 						pRow = paramTable [start];
 
 					if (pRow != null && pRow.Sequence == 0) { // ret type
-						retparam = new ParameterDefinition (string.Empty, 0, (ParamAttributes) 0, null);
+						retparam = new ParameterDefinition (
+							m_root.Streams.StringsHeap [pRow.Name],
+							0,
+							pRow.Flags,
+							null);
 						retparam.Method = mdef;
 						m_parameters [start] = retparam;
 						start++;
@@ -791,7 +804,7 @@ namespace Mono.Cecil {
 				MarshalSig.CustomMarshaler cmsig = (MarshalSig.CustomMarshaler) ms.Spec;
 				cmd.Guid = cmsig.Guid.Length > 0 ? new Guid (cmsig.Guid) : new Guid ();
 				cmd.UnmanagedType = cmsig.UnmanagedType;
-				cmd.ManagedType = m_module.Types [cmsig.ManagedType];
+				cmd.ManagedType = cmsig.ManagedType;
 				cmd.Cookie = cmsig.Cookie;
 				return cmd;
 			} else if (ms.Spec is MarshalSig.FixedArray) {
@@ -925,22 +938,39 @@ namespace Mono.Cecil {
 				return fnptr;
 			case ElementType.Var:
 				VAR var = t as VAR;
-				return context.TypeArguments [var.Index];
+				if (context.AllowCreation)
+					CheckGenericParameters (context, var);
+
+				if (context.Type is GenericInstanceType)
+					return (context.Type as GenericInstanceType).GenericArguments [var.Index];
+				else
+					return context.Type.GenericParameters [var.Index];
 			case ElementType.MVar:
 				MVAR mvar = t as MVAR;
-				return context.MethodArguments [mvar.Index];
+				if (context.Method is GenericInstanceMethod)
+					return (context.Method as GenericInstanceMethod).GenericArguments [mvar.Index];
+				else
+					return context.Method.GenericParameters [mvar.Index];
 			case ElementType.GenericInst:
 				GENERICINST ginst = t as GENERICINST;
 				GenericInstanceType instance = new GenericInstanceType (GetTypeDefOrRef (ginst.Type, context));
 				instance.IsValueType = ginst.ValueType;
+
 				for (int i = 0; i < ginst.Signature.Arity; i++)
-					instance.GenericArguments.Add (GetTypeRefFromSig (ginst.Signature.Types [i], context));
+					instance.GenericArguments.Add (GetTypeRefFromSig (
+						ginst.Signature.Types [i], context));
 
 				return instance;
 			default:
 				break;
 			}
 			return null;
+		}
+
+		void CheckGenericParameters (GenericContext context, VAR v)
+		{
+			for (int i = context.Type.GenericParameters.Count; i <= v.Index; i++)
+				context.Type.GenericParameters.Add (new GenericParameter (i, context.Type));
 		}
 
 		protected object GetConstant (uint pos, ElementType elemType)
