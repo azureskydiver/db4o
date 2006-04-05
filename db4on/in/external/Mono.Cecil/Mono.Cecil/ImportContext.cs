@@ -1,10 +1,10 @@
 //
-// IHasMarshalSpec.cs
+// ImportContext.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2006 Evaluant RC S.A.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,8 +28,49 @@
 
 namespace Mono.Cecil {
 
-	public interface IHasMarshalSpec : IMetadataTokenProvider {
+	internal class ImportContext {
 
-		MarshalDesc MarshalSpec { get; set; }
+		GenericContext m_genContext;
+		ReflectionHelper m_helper;
+
+		public GenericContext GenericContext {
+			get { return m_genContext; }
+		}
+
+		public ImportContext ()
+		{
+			m_genContext = new GenericContext ();
+		}
+
+		public ImportContext (ReflectionHelper helper) : this ()
+		{
+			m_helper = helper;
+		}
+
+		public ImportContext (IGenericParameterProvider provider)
+		{
+			m_genContext = new GenericContext (provider);
+		}
+
+		public ImportContext (ReflectionHelper helper, IGenericParameterProvider provider)
+		{
+			m_helper = helper;
+			m_genContext = new GenericContext (provider);
+		}
+
+		public TypeReference Import (TypeReference type)
+		{
+			return m_helper == null ? type : m_helper.ImportTypeReference (type, this);
+		}
+
+		public MethodReference Import (MethodReference meth)
+		{
+			return m_helper == null ? meth : m_helper.ImportMethodReference (meth, this);
+		}
+
+		public FieldReference Import (FieldReference field)
+		{
+			return m_helper == null ? field : m_helper.ImportFieldReference (field, this);
+		}
 	}
 }

@@ -1,3 +1,330 @@
+2006-04-04  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyInfo.cs: Go 0.4.
+
+	* Mono.Cecil.Metadata/MetadataHeap.cs
+	  Mono.Cecil.Metadata/MetadataStream.cs:
+		Read #- stream has well.
+
+	* Mono.Cecil/ReflectionHelper.cs:
+		Implement Import stuff for System.Type and SR.*
+
+2006-04-03	Rodrigo B. de Oliveira	<rodrigobamboo@gmail.com>
+
+	* Mono.Cecil/SecurityDeclarationReader.cs
+	  Mono.Cecil/TypeReferenceCollection.cs
+	  Mono.Cecil/CompactFrameworkCompatibility.cs
+	  Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/AssemblyName.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  Mono.Cecil/TypeDefinitionCollection.cs
+	  CodeGen/templates/NamedCollectionImplem.cs
+	  Mono.Cecil.Metadata/CultureUtils.cs
+	  cecil.build:
+		CompactFramework 2.0 support through CF_2_0 compilation symbol.
+
+2006-04-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil/GenericParameter.cs
+	  Mono.Cecil/ReflectionHelper.cs
+	  Mono.Cecil/FieldDefinition.cs
+	  Mono.Cecil/CustomAttribute.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/IModuleDefinition.cs
+	  Mono.Cecil/ImportContext.cs
+	  Mono.Cecil/AssemblyName.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/EventDefinition.cs
+	  Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/GenericContext.cs
+	  Mono.Cecil/ParameterDefinition.cs
+	  Mono.Cecil/PropertyDefinition.cs
+	  Mono.Cecil.Cil/MethodBody.cs:
+		Work on generic assemblies manipulation via
+		import stuff.
+
+2006-03-31  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyFlags.cs:
+		Add a Retargetable flag used on the CF.
+
+2006-03-30  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/SecurityDeclarationReader.cs:
+		Don't crash if the declaration is empty.
+
+	* Mono.Cecil/ParamAttributes.cs:
+		Update the Optional flag.
+	  Mono.Cecil/ReflectionWriter.cs:
+		Fix the encoding of nullref.
+		Fixes #77959. Based on a patch by
+		Armand Du Plessis < armand@dotnet.org.za>
+
+2006-03-29  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IHasSecurity.cs
+	  Mono.Cecil/IHasConstant.cs
+	  Mono.Cecil/IHasMarshalSpec.cs:
+	  Mono.Cecil/MethodReturnType.cs
+	  Mono.Cecil/AssemblyDefinition.cs:
+		Implement IMetadataTokenProvider.
+
+	* Mono.Cecil/StructureReader.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Use more the token providers.
+
+2006-03-28  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/MarshalDesc.cs
+	  Mono.Cecil/IMarshalSpec.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Fix round-tripping of assemblies using
+		COM stuff.
+
+2006-03-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Metadata/MetadataToken.cs:
+		Override GetHashCode as we override Equals.
+
+	* Mono.Cecil/TableComparers.cs:
+		Fix the ordering of generic parameters.
+		This revision roundtrips C5. Yeah! 
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Fix method spec "caching"
+	  Mono.Cecil.Cil/OpCode.cs:
+		Override ToString ();
+	  Mono.Cecil.Metadata/MetadataToken.cs:
+		Implement operator ==
+
+	* Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/TableComparers.cs:
+		Better handling of generic tables sorting.
+
+	* Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/TableComparers.cs:
+		Sort generic tables as well.
+
+2006-03-27	Rodrigo B. de Oliveira	<rodrigobamboo@gmail.com>
+	* Mono.Cecil.Metadata/MetadataWriter.cs:
+		Use CompactFramework compatible version of
+		System.Convert.ToBase64String.
+
+2006-03-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil/GenericParameter.cs
+	  Mono.Cecil/ConstraintCollection.cs
+	  Mono.Cecil/IGenericParameter.cs
+	  Mono.Cecil/IConstraintCollection.cs
+	  CodeGen/cecil.xml:
+		Add a ConstraintCollection to be used within
+		generic parameters.
+
+	* Mono.Cecil/GenericInstanceType.cs:
+		Correctly return if the instance is a value type
+		or not.
+
+2006-03-25  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ModuleDefinition.cs:
+		Support the unreadable security declarations
+		when converting one to byte [].
+
+	* Mono.Cecil/IModuleDefinition.cs
+	  Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Add a FullLoad method on a module.
+
+	* Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Fix a  few bugs in generics type emitting.
+
+	* Mono.Cecil.Cil/CodeWriter.cs:
+		Cache local sig as well.
+
+2006-03-24  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Cache method specs as well.
+
+	* CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Binary/ImageWriter.cs:
+		Replace the foreach char pattern by
+		Encoding.GetBytes
+
+2006-03-23  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/TypeReferenceCollection.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  Mono.Cecil/TypeDefinitionCollection.cs
+	  CodeGen/templates/NamedCollectionImplem.cs
+	  CodeGen/templates/ImageReader.cs:
+		Ensure type with the same name are added
+		to the collection.
+
+	* Mono.Cecil.Metadata/MetadataWriter.cs:
+		Ensure every blob signature is unique.
+
+	* Mono.Cecil/IModuleDefinition.cs
+	  Mono.Cecil/ModuleDefinition.cs:
+		Rename method to avoid confusion.
+
+2006-03-22  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/CodeWriter.cs:
+		Precisely detect whether we emit fat seh or not.
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Avoid duplicates in the typespec table.
+
+2006-03-21  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Correctly write generic parameters.
+
+	* Mono.Cecil/SecurityDeclarationReader.cs
+	  Mono.Cecil/SecurityDeclaration.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Fix for security declarations reading on .net 2.0.
+
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/GenericContext.cs:
+		Fix test case RoundtripTestFixture.boo.
+
+2006-03-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Metadata/MetadataReader.cs:
+		#Strings heap is utf8, fix #77820.
+
+2006-03-08  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/cecil-gen-tests.rb
+	  CodeGen/templates/Tests.cs:
+		Start of a very small infrastructure to use tests from
+		rotor/mono with Cecil.
+
+	* Mono.Cecil/IMethod.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/CodeWriter.cs:
+		Add support for the very special case ldarg 0.
+		Patch idea by Vladislav Spivak <spivak@mainsoft.com>
+
+2006-03-07  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/ImageReader.cs
+	  Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/StructureReader.cs
+	  Mono.Cecil.Binary/Image.cs
+	  Mono.Cecil.Binary/ImageReader.cs:
+		Allow users to get a loaded image using
+		Image.GetImage as they have no access to
+		the ImageReader.
+
+2006-03-06  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Signatures/SignatureReader.cs:
+		Fix array reading in custom attributes.
+
+2006-03-06  Joshua Tauberer <tauberer@for.net>
+
+	* Mono.Cecil/TypeAttributes.cs: Fixed typo
+	  in value for Abstract.
+
+2006-02-27  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/IndexedCollectionImplem.cs
+	  CodeGen/templates/IIndexedCollection.cs
+	  Mono.Cecil.Cil/InstructionCollection.cs
+	  Mono.Cecil.Cil/IInstructionCollection.cs:
+		Small API fix, prevent the user from not using
+		the CilWorker.
+
+	* Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/Label.cs:
+		Remove Label.
+
+	* Mono.Cecil/ReflectionReader.cs:
+		Fix typo.
+
+2006-02-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Signatures/SignatureWriter.cs:
+		Fix a bug when a value is null in a custom attribute.
+
+2006-02-20  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Mono.Cecil.Metadata/MetadataWriter.cs:
+		Fix GetStrongNameSignatureSize to handle the ECMA pseudo-key.
+
+2006-02-07  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyInfos.cs:
+		Tag this version 0.3, as users are happy with it.
+
+2006-01-26  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/CustomAttribute.cs:
+		Fix cloning of non readable attributes.
+
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Signatures/MethodRefSig.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs
+	  Mono.Cecil.Signatures/MethodDefSig.cs:
+		Work on generics.
+
+	* Mono.Cecil/ArrayType.cs
+	  Mono.Cecil/ReferenceType.cs
+	  Mono.Cecil/PointerType.cs:
+		Fix names of typespecs.
+
+	* Mono.Cecil/TypeReferenceCollection.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  CodeGen/templates/NamedCollectionImplem.cs:
+		Allow multiple key by names in type references.
+
+2006-01-25  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyFactory.cs:
+		Don't trap exceptions.
+
+	* Mono.Cecil/GenericParameter.cs
+	  Mono.Cecil/IMethod.cs
+	  Mono.Cecil/GenericInstanceType.cs
+	  Mono.Cecil/TypeReference.cs
+	  Mono.Cecil/GenericInstanceMethod.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/IGenericArgumentCollection.cs
+	  Mono.Cecil/ITypeReference.cs
+	  Mono.Cecil/IGenericInstance.cs
+	  Mono.Cecil/GenericArgumentCollection.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/MethodReference.cs
+	  Mono.Cecil/ITypeDefinition.cs
+	  Mono.Cecil/IGenericArgumentProvider.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/GenericContext.cs
+	  CodeGen/cecil.xml:
+		Clean the generic api. This is not stable yet.
+
+2006-01-24  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ArrayType.cs:
+		Bug reported by  Vladislav Spivak (spivak@mainsoft.com).
+		Fix a bug in array handling.
+	* Mono.Cecil/ConstructorCollection.cs
+	  CodeGen/templates/IndexedCollectionImplem.cs:
+		Bug reported by Oleg Varchovsky (olegv@mainsoft.com).
+		Fix the lookup of constructors.
+
 2006-01-19  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyName.cs:

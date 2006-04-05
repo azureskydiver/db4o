@@ -80,7 +80,7 @@ namespace Mono.Cecil {
 
 		public byte [] PublicKeyToken {
 			get {
-#if !CF_1_0
+#if !CF_1_0 && !CF_2_0
 				if ((m_publicKeyToken == null || m_publicKeyToken.Length == 0) && (m_publicKey != null && m_publicKey.Length > 0)) {
 					HashAlgorithm ha = null;
 					switch (m_hashAlgo) {
@@ -157,6 +157,11 @@ namespace Mono.Cecil {
 			m_culture = culture;
 			m_version = version;
 			m_hashAlgo = AssemblyHashAlgorithm.None;
+		}
+
+		public override string ToString ()
+		{
+			return this.FullName;
 		}
 
 		public virtual void Accept (IReflectionStructureVisitor visitor)

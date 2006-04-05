@@ -61,11 +61,14 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public SecurityDeclaration FromByteArray (SecurityAction action, byte[] declaration)
+		public SecurityDeclaration FromByteArray (SecurityAction action, byte [] declaration)
 		{
 			SecurityDeclaration dec = new SecurityDeclaration (action);
 #if !CF_1_0 && !CF_2_0
 			dec.PermissionSet = new PermissionSet (SSP.PermissionState.None);
+
+			if (declaration == null || declaration.Length == 0)
+				return dec;
 
 			if (declaration[0] == 0x2e) {
 				// new binary format introduced in 2.0
@@ -79,6 +82,12 @@ namespace Mono.Cecil {
 				for (int i = 0; i < numattr; i++) {
 					pos = start;
 					SSP.SecurityAttribute sa = CreateSecurityAttribute (br, declaration, pos, out start);
+					if (sa == null) {
+						dec.IsReadable = false;
+						dec.Blob = declaration;
+						return dec;
+					}
+
 					IPermission p = sa.CreatePermission ();
 					dec.PermissionSet.AddPermission (p);
 				}
@@ -86,8 +95,9 @@ namespace Mono.Cecil {
 				Parser.LoadXml (Encoding.Unicode.GetString (declaration));
 				try {
 					dec.PermissionSet.FromXml (Parser.ToXml ());
-				}
-				catch {
+				} catch {
+					dec.IsReadable = false;
+					dec.Blob = declaration;
 				}
 			}
 #endif
@@ -99,8 +109,15 @@ namespace Mono.Cecil {
 		{
 			string cname = SignatureReader.ReadUTF8String (permset, pos, out start);
 			Type secattr = Type.GetType (cname);
+
 			// note: the SecurityAction parameter isn't important to generate the XML
-			SSP.SecurityAttribute sa = (Activator.CreateInstance (secattr, action) as SSP.SecurityAttribute);
+			SSP.SecurityAttribute sa = null;
+			try {
+				 sa = (Activator.CreateInstance (secattr, action) as SSP.SecurityAttribute);
+			} catch {}
+
+			if (sa == null)
+				return null;
 
 			// encoded length of all parameters (we don't need the value - except the updated pos)
 			Utilities.ReadCompressedInteger (permset, start, out pos);
@@ -112,6 +129,9 @@ namespace Mono.Cecil {
 			for (int j = 0; j < numparams; j++) {
 				bool read = false;
 				CustomAttrib.NamedArg na = sr.ReadNamedArg (permset, br, ref read);
+				if (!read)
+					return null;
+
 				if (na.Field) {
 					FieldInfo fi = secattr.GetField (na.FieldOrPropName);
 					fi.SetValue (sa, na.FixedArg.Elems[0].Value);

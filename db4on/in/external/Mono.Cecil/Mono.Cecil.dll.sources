@@ -17,6 +17,7 @@
 ./Mono.Cecil/CallSite.cs
 ./Mono.Cecil/CompactFrameworkCompatibility.cs
 ./Mono.Cecil/Constants.cs
+./Mono.Cecil/ConstraintCollection.cs
 ./Mono.Cecil/ConstructorCollection.cs
 ./Mono.Cecil/CustomAttribute.cs
 ./Mono.Cecil/CustomAttributeCollection.cs
@@ -48,6 +49,7 @@
 ./Mono.Cecil/IAssemblyNameReferenceCollection.cs
 ./Mono.Cecil/ICallSite.cs
 ./Mono.Cecil/IClassLayoutInfo.cs
+./Mono.Cecil/IConstraintCollection.cs
 ./Mono.Cecil/IConstructorCollection.cs
 ./Mono.Cecil/ICustomAttribute.cs
 ./Mono.Cecil/ICustomAttributeCollection.cs
@@ -62,7 +64,6 @@
 ./Mono.Cecil/IFieldLayoutInfo.cs
 ./Mono.Cecil/IFunctionPointerType.cs
 ./Mono.Cecil/IGenericArgumentCollection.cs
-./Mono.Cecil/IGenericArgumentProvider.cs
 ./Mono.Cecil/IGenericInstance.cs
 ./Mono.Cecil/IGenericInstanceMethod.cs
 ./Mono.Cecil/IGenericInstanceType.cs
@@ -91,6 +92,7 @@
 ./Mono.Cecil/IModuleDefinitionCollection.cs
 ./Mono.Cecil/IModuleReference.cs
 ./Mono.Cecil/IModuleReferenceCollection.cs
+./Mono.Cecil/ImportContext.cs
 ./Mono.Cecil/INestedTypeCollection.cs
 ./Mono.Cecil/InterfaceCollection.cs
 ./Mono.Cecil/IOverrideCollection.cs
@@ -285,7 +287,6 @@
 ./Mono.Cecil.Cil/InstructionCollection.cs
 ./Mono.Cecil.Cil/IVariable.cs
 ./Mono.Cecil.Cil/IVariableDefinitionCollection.cs
-./Mono.Cecil.Cil/Label.cs
 ./Mono.Cecil.Cil/MethodBody.cs
 ./Mono.Cecil.Cil/MethodDataSection.cs
 ./Mono.Cecil.Cil/MethodHeader.cs

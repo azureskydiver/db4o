@@ -270,6 +270,7 @@ namespace Mono.Cecil.Signatures {
 
 		void Write (MethodSpec ms)
 		{
+			Write (0x0a);
 			Write (ms.Signature);
 		}
 
@@ -440,6 +441,10 @@ namespace Mono.Cecil.Signatures {
 				break;
 			case ElementType.String :
 			case ElementType.Type :
+				if (elem.Value == null) {
+					writer.Write ((byte) 0xff);
+					return;
+				}
 				string s = (string) elem.Value;
 				byte [] data = Encoding.UTF8.GetBytes (s);
 				Utilities.WriteCompressedInteger (writer, data.Length);

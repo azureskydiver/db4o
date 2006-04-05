@@ -62,6 +62,7 @@ namespace Mono.Cecil {
 			if (!m_tHeap.HasTable (typeof (AssemblyTable)))
 				throw new ReflectionException ("No assembly manifest");
 
+			asm.MetadataToken = new MetadataToken (TokenType.Assembly, 1);
 			m_asmDef = asm;
 
 			switch (m_img.MetadataRoot.Header.Version) {
@@ -193,7 +194,7 @@ namespace Mono.Cecil {
 							throw new FileNotFoundException ("Module not found : " + name);
 
 						try {
-							ImageReader module = new ImageReader (location.FullName);
+							ImageReader module = ImageReader.Read (location.FullName);
 							mt = module.Image.MetadataRoot.Streams.TablesHeap [typeof(ModuleTable)] as ModuleTable;
 							if (mt == null || mt.Rows.Count != 1)
 								throw new ReflectionException ("Can not read module : " + name);
