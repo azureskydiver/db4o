@@ -32,4 +32,17 @@ public class Replicated {
 	public void setLink(Replicated link) {
 		this.link = link;
 	}
+
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (!(o instanceof Replicated)) return false;
+		return ((Replicated)o).name.equals(name);
+	}
+
+	public int hashCode() {
+		if (name == null) return 0;
+		return name.hashCode();
+	}
+	
+	
 }

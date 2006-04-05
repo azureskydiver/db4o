@@ -8,7 +8,9 @@ import com.db4o.foundation.Iterator4;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
+import com.db4o.test.ImplementationComparator;
 import com.db4o.test.Test;
+import com.db4o.test.replication.transients.TransientReplicationProvider;
 
 
 public abstract class ReplicationTestCase {
@@ -24,13 +26,46 @@ public abstract class ReplicationTestCase {
 		Iterator4 it = PROVIDER_PAIRS.strictIterator();
 		while (it.hasNext()) {
 			prepareNextProviderPair((ProviderPair) it.next());
+			startBackupTestInParallel();
 			doActualTest();
 		}
+	}
+
+	private void startBackupTestInParallel() {
+		ReplicationTestCase backup;
+		try {
+			backup = (ReplicationTestCase)getClass().newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException();
+		}
+
+		backup._providerA = new TransientReplicationProvider(new byte[]{65}, "A");
+		backup._providerB = new TransientReplicationProvider(new byte[]{66}, "B");
+
+		String[] ignoredMethods = new String[]{"getMonitor", "getSignature"};
+		ImplementationComparator comparator = new ImplementationComparator(_providerA, backup._providerA, ignoredMethods);
+		
+		_providerA = (TestableReplicationProviderInside)comparator.hotProxy();
+		backup._providerA = (TestableReplicationProviderInside)comparator.backupProxy();
+		
+		backup.doActualTestInParallel();
+	}
+
+	private void doActualTestInParallel() {
+		(new Thread() {
+			public void run() {
+				doActualTest();
+			}
+		}).start();
 	}
 
 	private void doActualTest() {
 		try {
 			actualTest();
+		} catch (RuntimeException rx) {
+			rx.printStackTrace();
+			throw rx;
 		} finally {
 			clean();
 			checkEmpty();
