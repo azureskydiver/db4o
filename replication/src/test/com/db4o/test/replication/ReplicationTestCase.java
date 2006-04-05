@@ -55,7 +55,8 @@ public abstract class ReplicationTestCase {
 	}
 
 	private void checkClean(TestableReplicationProviderInside p) {
-		ObjectSet remains = p.objectsChangedSinceLastReplication();
+		Object objs = p.objectsChangedSinceLastReplication();
+		ObjectSet remains = (ObjectSet)objs;
 		boolean notEmpty = false;
 		while (remains.hasNext()) {
 			notEmpty = true;

@@ -31,4 +31,8 @@ public class ObjectSetCollection4Facade extends ObjectSetAbstractFacade {
         if (_currentIterator == null) _currentIterator = _delegate.iterator();
         return _currentIterator;
     }
+
+	public void reset() {
+		_currentIterator = null;
+	}
 }

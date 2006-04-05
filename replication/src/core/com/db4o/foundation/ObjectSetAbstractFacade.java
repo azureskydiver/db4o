@@ -16,10 +16,6 @@ public abstract class ObjectSetAbstractFacade implements ObjectSet {
 		throw notSupported();
 	}
 
-	public void reset() {
-		throw notSupported();
-	}
-
 	public boolean isEmpty() {
 		throw notSupported();
 	}

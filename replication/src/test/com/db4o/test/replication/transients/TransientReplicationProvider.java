@@ -344,7 +344,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public String toString() {
-		return "TransientReplicationProvider " + _name;
+		return _name;
 	}
 
 	public void destroy() {
