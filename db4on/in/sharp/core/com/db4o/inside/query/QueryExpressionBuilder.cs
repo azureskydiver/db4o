@@ -59,7 +59,7 @@ namespace com.db4o.inside.query
             }
         }
 
-		public static Expression FromMethod(System.Reflection.MethodInfo method)
+		public static Expression FromMethod(System.Reflection.MethodBase method)
 		{
 			if (method == null) throw new ArgumentNullException("method");
             Expression e = (Expression)_expressionCachingStrategy.Get(method);
@@ -88,7 +88,7 @@ namespace com.db4o.inside.query
 			return assembly;
 		}
 
-		private static Type[] GetParameterTypes(MethodInfo method)
+		private static Type[] GetParameterTypes(MethodBase method)
 		{
 			ParameterInfo[] parameters = method.GetParameters();
 			Type[] types = new Type[parameters.Length];
@@ -125,7 +125,7 @@ namespace com.db4o.inside.query
 			return module.Types[fullName];
 		}
 
-		private static string GetAssemblyLocation(MethodInfo method)
+		private static string GetAssemblyLocation(MethodBase method)
 		{
 			return method.DeclaringType.Module.FullyQualifiedName;
 		}
