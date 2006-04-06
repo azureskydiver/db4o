@@ -22,28 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class TransientReplicationProvider implements TestableReplicationProvider, TestableReplicationProviderInside {
-
-	public class MySignature implements ReadonlyReplicationProviderSignature {
-
-		private final byte[] _bytes;
-
-		public MySignature(byte[] signature) {
-			_bytes = signature;
-		}
-
-		public long getId() {
-			throw new RuntimeException("Never used?");
-		}
-
-		public byte[] getBytes() {
-			return _bytes;
-		}
-
-		public long getCreationTime() {
-			throw new RuntimeException("Never used?");
-		}
-
-	}
+// ------------------------------ FIELDS ------------------------------
 
 	private final String _name;
 
@@ -63,6 +42,12 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 	private Collection4 _uuidsDeletedSinceLastReplication = new Collection4();
 
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public TransientReplicationProvider(byte[] signature) {
+		this(signature, null);
+	}
+
 	public TransientReplicationProvider(byte[] signature, String name) {
 		_signature = new MySignature(signature);
 		_name = name;
@@ -72,41 +57,24 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		_traverser = new MyTraverser(reflector.reflector(), _collectionHandler);
 	}
 
-	public TransientReplicationProvider(byte[] signature) {
-		this(signature, null);
+// ------------------------ CANONICAL METHODS ------------------------
+
+	public String toString() {
+		return _name;
 	}
 
+// ------------------------ INTERFACE METHODS ------------------------
 
-	public ReadonlyReplicationProviderSignature getSignature() {
-		return _signature;
-	}
+// --------------------- Interface ReplicationProvider ---------------------
 
-	public Object getMonitor() {
-		return this;
-	}
 
-	public void startReplicationTransaction(ReadonlyReplicationProviderSignature peerSignature) {
-		if (_peerSignature != null)
-			if (! _peerSignature.equals(peerSignature)) {
-				throw new IllegalArgumentException("This provider can only replicate with a single peer.");
-			}
-		_peerSignature = peerSignature;
-	}
-
-	public void syncVersionWithPeer(long version) {
-		_lastReplicationVersion = version;
-	}
-
-	public void commitReplicationTransaction(long raisedDatabaseVersion) {
-		_uuidsDeletedSinceLastReplication.clear();
-	}
-
-	public void rollbackReplication() {
-		throw new UnsupportedOperationException();
-	}
-
-	public long getCurrentVersion() {
-		return _lastReplicationVersion + 1;
+	public Object getObject(Db4oUUID uuid) {
+		ObjectSet iter = getStoredObjects();
+		while (iter.hasNext()) {
+			Object candidate = iter.next();
+			if (getInfo(candidate)._uuid.equals(uuid)) return candidate;
+		}
+		return null;
 	}
 
 	public ObjectSet objectsChangedSinceLastReplication() {
@@ -123,69 +91,56 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return new ObjectSetCollection4Facade(result);
 	}
 
-	private boolean wasChangedSinceLastReplication(Object candidate) {
-		return getInfo(candidate)._version > _lastReplicationVersion;
+	public ObjectSet uuidsDeletedSinceLastReplication() {
+		return new ObjectSetCollection4Facade(_uuidsDeletedSinceLastReplication);
 	}
 
-	private ObjectInfo getInfo(Object candidate) {
-		return (ObjectInfo) _storedObjects.get(candidate);
+// --------------------- Interface ReplicationProviderInside ---------------------
+
+
+	public void activate(Object object) {
+		_activatedObjects.put(object, object);
 	}
 
-	public long getLastReplicationVersion() {
-		return _lastReplicationVersion;
+	public void clearAllReferences() {
+		_referencesByObject.clear();
 	}
 
-	private void store(Object obj, Db4oUUID uuid, long version) {
-		if (obj == null) throw new RuntimeException();
-		_storedObjects.put(obj, new ObjectInfo(uuid, version));
+	public void commitReplicationTransaction(long raisedDatabaseVersion) {
+		_uuidsDeletedSinceLastReplication.clear();
 	}
 
-	public void storeReplica(Object obj) {
-		ReplicationReference ref = getCachedReference(obj);
-		if (ref == null) {
-			throw new RuntimeException();
-		}
-		store(obj, ref.uuid(), ref.version());
+	public void destroy() {
+		// do nothing
 	}
 
-	public void updateCounterpart(Object obj) {
-		storeReplica(obj);
+	public long getCurrentVersion() {
+		return _lastReplicationVersion + 1;
+	}
+
+	public Object getMonitor() {
+		return this;
+	}
+
+	public String getName() {
+		return _name;
+	}
+
+	public ReadonlyReplicationProviderSignature getSignature() {
+		return _signature;
+	}
+
+	public boolean hasReplicationReferenceAlready(Object obj) {
+		return getCachedReference(obj) != null;
 	}
 
 	public ReplicationReference produceReference(Object obj, Object unused, String unused2) {
-
 		ReplicationReference cached = getCachedReference(obj);
 		if (cached != null) return cached;
 
 		if (!isStored(obj)) return null;
 
 		return createReferenceFor(obj);
-	}
-
-	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference unused, String unused2) {
-        System.out.println("referenceNewObject: " + obj + "  UUID: " + counterpartReference.uuid());
-		Db4oUUID uuid = counterpartReference.uuid();
-		long version = counterpartReference.version();
-
-		if (getObject(uuid) != null) throw new RuntimeException("Object exists already.");
-
-		ReplicationReference result = createReferenceFor(obj);
-		store(obj, uuid, version);
-		return result;
-	}
-
-	private boolean isStored(Object obj) {
-		return getInfo(obj) != null;
-	}
-
-	private ReplicationReference getCachedReference(Object obj) {
-		return (ReplicationReference) _referencesByObject.get(obj);
-	}
-
-	private ReplicationReference createReferenceFor(Object obj) {
-		MyReplicationReference result = new MyReplicationReference(obj);
-		_referencesByObject.put(obj, result);
-		return result;
 	}
 
 	public ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hintIgnored) {
@@ -197,19 +152,82 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return produceReference(object, null, null);
 	}
 
-	public Object getObject(Db4oUUID uuid) {
-		ObjectSet iter = getStoredObjects();
-		while (iter.hasNext()) {
-			Object candidate = iter.next();
-			if (getInfo(candidate)._uuid.equals(uuid)) return candidate;
+	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference unused, String unused2) {
+		//System.out.println("referenceNewObject: " + obj + "  UUID: " + counterpartReference.uuid());
+		Db4oUUID uuid = counterpartReference.uuid();
+		long version = counterpartReference.version();
+
+		if (getObject(uuid) != null) throw new RuntimeException("Object exists already.");
+
+		ReplicationReference result = createReferenceFor(obj);
+		store(obj, uuid, version);
+		return result;
+	}
+
+	public void replicateDeletion(ReplicationReference reference) {
+		_storedObjects.remove(reference.object());
+	}
+
+	public void rollbackReplication() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void startReplicationTransaction(ReadonlyReplicationProviderSignature peerSignature) {
+		if (_peerSignature != null)
+			if (! _peerSignature.equals(peerSignature)) {
+				throw new IllegalArgumentException("This provider can only replicate with a single peer.");
+			}
+		_peerSignature = peerSignature;
+	}
+
+	public void storeReplica(Object obj) {
+		ReplicationReference ref = getCachedReference(obj);
+		if (ref == null) {
+			throw new RuntimeException();
 		}
-		return null;
+		store(obj, ref.uuid(), ref.version());
 	}
 
-	public ObjectSet getStoredObjects() {
-		return getStoredObjects(Object.class);
+	public void syncVersionWithPeer(long version) {
+		_lastReplicationVersion = version;
 	}
 
+	public void updateCounterpart(Object obj) {
+		storeReplica(obj);
+	}
+
+	public void visitCachedReferences(Visitor4 visitor) {
+		Iterator i = _referencesByObject.values().iterator();
+		while (i.hasNext()) {
+			visitor.visit(i.next());
+		}
+	}
+
+	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
+		return _uuidsDeletedSinceLastReplication.contains(uuid);
+	}
+
+	public boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
+		return reference.version() > _lastReplicationVersion;
+	}
+
+// --------------------- Interface SimpleObjectContainer ---------------------
+
+
+	public void commit() {
+		// do nothing
+	}
+
+	public void delete(Object obj) {
+		Db4oUUID uuid = produceReference(obj, null, null).uuid();
+		_uuidsDeletedSinceLastReplication.add(uuid);
+		_storedObjects.remove(obj);
+	}
+
+	public void deleteAllInstances(Class clazz) {
+		ObjectSet iterator = getStoredObjects(clazz);
+		while (iterator.hasNext()) delete(iterator.next());
+	}
 
 	public ObjectSet getStoredObjects(Class clazz) {
 		Collection4 result = new Collection4();
@@ -235,10 +253,51 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		transientProviderSpecificStore(o);
 	}
 
-	public String getName() {
-		return _name;
+// --------------------- Interface TestableReplicationProviderInside ---------------------
+
+
+	public boolean supportsHybridCollection() {
+		return true;
 	}
 
+	public boolean supportsMultiDimensionalArrays() {
+		return true;
+	}
+
+	public Map activatedObjects() {
+		return _activatedObjects;
+	}
+
+	private ReplicationReference createReferenceFor(Object obj) {
+		MyReplicationReference result = new MyReplicationReference(obj);
+		_referencesByObject.put(obj, result);
+		return result;
+	}
+
+	private ReplicationReference getCachedReference(Object obj) {
+		return (ReplicationReference) _referencesByObject.get(obj);
+	}
+
+	private ObjectInfo getInfo(Object candidate) {
+		return (ObjectInfo) _storedObjects.get(candidate);
+	}
+
+	public long getLastReplicationVersion() {
+		return _lastReplicationVersion;
+	}
+
+	public ObjectSet getStoredObjects() {
+		return getStoredObjects(Object.class);
+	}
+
+	private boolean isStored(Object obj) {
+		return getInfo(obj) != null;
+	}
+
+	private void store(Object obj, Db4oUUID uuid, long version) {
+		if (obj == null) throw new RuntimeException();
+		_storedObjects.put(obj, new ObjectInfo(uuid, version));
+	}
 
 	public void transientProviderSpecificStore(Object obj) {
 		ObjectInfo info = getInfo(obj);
@@ -248,31 +307,33 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			info._version = getCurrentVersion();
 	}
 
-	public boolean hasReplicationReferenceAlready(Object obj) {
-		return getCachedReference(obj) != null;
+	private boolean wasChangedSinceLastReplication(Object candidate) {
+		return getInfo(candidate)._version > _lastReplicationVersion;
 	}
 
-	public void visitCachedReferences(Visitor4 visitor) {
-		Iterator i = _referencesByObject.values().iterator();
-		while (i.hasNext()) {
-			visitor.visit(i.next());
+// -------------------------- INNER CLASSES --------------------------
+
+	public class MySignature implements ReadonlyReplicationProviderSignature {
+		private final byte[] _bytes;
+
+		public MySignature(byte[] signature) {
+			_bytes = signature;
+		}
+
+		public long getId() {
+			throw new RuntimeException("Never used?");
+		}
+
+		public byte[] getBytes() {
+			return _bytes;
+		}
+
+		public long getCreationTime() {
+			throw new RuntimeException("Never used?");
 		}
 	}
 
-	public void clearAllReferences() {
-		_referencesByObject.clear();
-	}
-
-	public void activate(Object object) {
-		_activatedObjects.put(object, object);
-	}
-
-	public Map activatedObjects() {
-		return _activatedObjects;
-	}
-
 	private class MyReplicationReference implements ReplicationReference {
-
 		private final Object _object;
 		private Object _counterpart;
 		private boolean _isMarkedForReplicating;
@@ -330,9 +391,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		}
 	}
 
-
 	private static class ObjectInfo {
-
 		private final Db4oUUID _uuid;
 		private long _version;
 
@@ -340,30 +399,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			_uuid = uuid;
 			_version = version;
 		}
-
-	}
-
-	public String toString() {
-		return _name;
-	}
-
-	public void destroy() {
-		// do nothing
-	}
-
-	public void commit() {
-		// do nothing
-	}
-
-	public void deleteAllInstances(Class clazz) {
-		ObjectSet iterator = getStoredObjects(clazz);
-		while (iterator.hasNext()) delete(iterator.next());
-	}
-
-	public void delete(Object obj) {
-		Db4oUUID uuid = produceReference(obj, null, null).uuid();
-		_uuidsDeletedSinceLastReplication.add(uuid);
-		_storedObjects.remove(obj);
 	}
 
 	public class MyTraverser implements Traverser {
@@ -381,29 +416,4 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			_delegate.extendTraversalTo(disconnected);
 		}
 	}
-
-	public boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
-		return reference.version() > _lastReplicationVersion;
-	}
-
-	public ObjectSet uuidsDeletedSinceLastReplication() {
-		return new ObjectSetCollection4Facade(_uuidsDeletedSinceLastReplication);
-	}
-
-	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
-		return _uuidsDeletedSinceLastReplication.contains(uuid);
-	}
-
-	public void replicateDeletion(ReplicationReference reference) {
-		_storedObjects.remove(reference.object());
-	}
-
-	public boolean supportsMultiDimensionalArrays() {
-		return true;
-	}
-
-	public boolean supportsHybridCollection() {
-		return true;
-	}
-
 }

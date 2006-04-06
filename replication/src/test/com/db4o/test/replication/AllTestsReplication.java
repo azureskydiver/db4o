@@ -23,7 +23,7 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	private void registerProviderPairs() {
-//		ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65}, "A"), new TransientReplicationProvider(new byte[]{66}, "B"));
+		ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65}, "A"), new TransientReplicationProvider(new byte[]{66}, "B"));
 
 		ReplicationTestCase.registerProviderPair(HibernateUtil.refAsTableProviderA(), HibernateUtil.refAsTableProviderB());
 //        ReplicationTestcase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), Db4oReplicationTestUtil.newProviderB());

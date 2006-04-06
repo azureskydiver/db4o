@@ -14,7 +14,7 @@ import com.db4o.replication.ReplicationProvider;
 import com.db4o.replication.ReplicationSession;
 
 public class GenericReplicationSession implements ReplicationSession {
-
+// ------------------------------ FIELDS ------------------------------
 
 	private final ReplicationReflector _reflector;
 
@@ -41,9 +41,13 @@ public class GenericReplicationSession implements ReplicationSession {
 	 */
 	private Hashtable4 _counterpartRefsByOriginal = new Hashtable4(1000);
 
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public GenericReplicationSession(ReplicationProviderInside _peerA, ReplicationProviderInside _peerB) {
+		this(_peerA, _peerB, new DefaultReplicationEventListener());
+	}
 
 	public GenericReplicationSession(ReplicationProvider providerA, ReplicationProvider providerB, ReplicationEventListener listener) {
-
 		_reflector = ReplicationReflector.getInstance();
 		_collectionHandler = new CollectionHandlerImpl(_reflector.reflector());
 		_traverser = new ReplicationTraverser(_reflector.reflector(), _collectionHandler);
@@ -60,8 +64,53 @@ public class GenericReplicationSession implements ReplicationSession {
 		}
 	}
 
-	public GenericReplicationSession(ReplicationProviderInside _peerA, ReplicationProviderInside _peerB) {
-		this(_peerA, _peerB, new DefaultReplicationEventListener());
+// ------------------------ INTERFACE METHODS ------------------------
+
+// --------------------- Interface ReplicationSession ---------------------
+
+
+	public void checkConflict(Object root) {
+		try {
+			activateGraphToBeReplicated(root);
+		} finally {
+			_peerA.clearAllReferences();
+			_peerB.clearAllReferences();
+		}
+	}
+
+	public void close() {
+		_peerA.destroy();
+		_peerB.destroy();
+
+		_peerA = null;
+		_peerB = null;
+		_counterpartRefsByOriginal = null;
+		_processedUuids = null;
+	}
+
+	public void commit() {
+		synchronized (_peerA.getMonitor()) {
+			synchronized (_peerB.getMonitor()) {
+				long maxVersion = _peerA.getCurrentVersion() > _peerB.getCurrentVersion()
+						? _peerA.getCurrentVersion() : _peerB.getCurrentVersion();
+
+				_peerA.syncVersionWithPeer(maxVersion);
+				_peerB.syncVersionWithPeer(maxVersion);
+
+				maxVersion ++;
+
+				_peerA.commitReplicationTransaction(maxVersion);
+				_peerB.commitReplicationTransaction(maxVersion);
+			}
+		}
+	}
+
+	public ReplicationProvider providerA() {
+		return _peerA;
+	}
+
+	public ReplicationProvider providerB() {
+		return _peerB;
 	}
 
 	public void replicate(Object root) {
@@ -80,49 +129,17 @@ public class GenericReplicationSession implements ReplicationSession {
 		}
 	}
 
-//	public void replicate(Db4oUUID uuid) {
-//
-//		Object objA = _peerA.getObject(uuid);
-//		Object objB = _peerB.getObject(uuid);
-//
-//		ReplicationReference refA = _peerA.produceReferenceByUUID(uuid, null);
-//		ReplicationReference refB = _peerB.produceReferenceByUUID(uuid, null);
-//
-//		if (refA != null && refB != null)
-//			throw new RuntimeException("Object with given UUID must have been deleted in at least one of the databases being replicated.");
-//
-//		if (refA == null && refB == null) return;  //Deleted in both - Do nothing
-//
-//		Object obj = refA == null
-//			? refB.object()
-//			: refA.object();
-//
-//		replicate(obj);
-//
-//		//Deleted in one
-//			//No conflict - replicate (check direction)
-//			//Conflict (deletion in one and object in the other)
-//				//Resolver return null - do nothing
-//				//Deletion prevails - replicate deletion (check direction)
-//				//Object prevails - undo deletion (check direction)
-//
-//
-//		//  A       1' ->  2' -> 3    (changed)
-//		//  B       []  ->  []  -> 3    (deleted)
-//
-//		//Results:
-//		//TO_A:   []  -> []  -> 3
-//		//TO_B:    1' -> 2' -> 3
-//
-//
-//
-//		//  A       1* ->  2* -> 3    (new)
-//		//  B           ->     -> 3    (non-existant)
-//
-//
-//
-//	}
+	public void rollback() {
+		_peerA.rollbackReplication();
+		_peerB.rollbackReplication();
+	}
 
+	public void setDirection(ReplicationProvider replicateFrom, ReplicationProvider replicateTo) {
+		if (replicateFrom == _peerA && replicateTo == _peerB)
+			_directionTo = _peerB;
+		if (replicateFrom == _peerB && replicateTo == _peerA)
+			_directionTo = _peerA;
+	}
 
 	private void activateGraphToBeReplicated(Object root) {
 		_traverser.traverseGraph(root, new Visitor() {
@@ -135,64 +152,6 @@ public class GenericReplicationSession implements ReplicationSession {
 				}
 			}
 		});
-	}
-
-	private void copyStateAcross(final ReplicationProviderInside sourceProvider) {
-		if (_directionTo == sourceProvider) return;
-		sourceProvider.visitCachedReferences(new Visitor4() {
-			public void visit(Object obj) {
-				copyStateAcross((ReplicationReference) obj, sourceProvider);
-			}
-		});
-	}
-
-	private void copyStateAcross(ReplicationReference sourceRef, ReplicationProviderInside sourceProvider) {
-		if (!sourceRef.isMarkedForReplicating()) return;
-		copyStateAcross(sourceRef.object(), sourceRef.counterpart(), sourceProvider);
-	}
-
-	private void copyStateAcross(Object source, Object dest, final ReplicationProviderInside sourceProvider) {
-		ReflectClass claxx = _reflector.forObject(source);
-		if (_collectionHandler.canHandle(claxx)) {
-			_collectionHandler.copyState(source, dest, new CounterpartFinder() {
-				public Object findCounterpart(Object original) {
-					return GenericReplicationSession.this.findCounterpart(original, sourceProvider);
-				}
-			});
-			return;
-		}
-		copyFieldValuesAcross(source, dest, claxx, sourceProvider);
-	}
-
-	private void storeChangedObjectsIn(final ReplicationProviderInside destination) {
-		final ReplicationProviderInside source = other(destination);
-		if (_directionTo == source) return;
-
-		destination.visitCachedReferences(new Visitor4() {
-			public void visit(Object obj) {
-				deleteInDestination((ReplicationReference) obj, destination);
-			}
-		});
-
-		source.visitCachedReferences(new Visitor4() {
-			public void visit(Object obj) {
-				storeChangedCounterpartInDestination((ReplicationReference) obj, destination);
-			}
-		});
-	}
-
-	private void deleteInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
-		if (!reference.isMarkedForDeleting()) return;
-		destination.replicateDeletion(reference);
-	}
-
-	private void storeChangedCounterpartInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
-		if (!reference.isMarkedForReplicating()) return;
-		destination.storeReplica(reference.counterpart());
-	}
-
-	ReplicationReference getCounterpartRef(Object original) {
-		return (ReplicationReference) _counterpartRefsByOriginal.get(original);
 	}
 
 	private boolean activateObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) { //TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
@@ -281,22 +240,104 @@ public class GenericReplicationSession implements ReplicationSession {
 		return true;
 	}
 
-	private void throwReplicationConflictException() {
-		throw new ReplicationConflictException("A replication conflict ocurred and the ReplicationEventListener, if any, did not choose which state should override the other.");
+	private Object arrayClone(Object original, ReflectClass claxx, ReplicationProviderInside sourceProvider) {
+		ReflectClass componentType = _reflector.getComponentType(claxx);
+		int[] dimensions = _reflector.arrayDimensions(original);
+		Object result = _reflector.newArrayInstance(componentType, dimensions);
+		Object[] flatContents = _reflector.arrayContents(original); //TODO Optimize: Copy the structure without flattening. Do this in ReflectArray.
+		if (!claxx.isSecondClass())
+			replaceWithCounterparts(flatContents, sourceProvider);
+		_reflector.arrayShape(flatContents, 0, result, dimensions, 0);
+		return result;
 	}
 
-
-	private boolean wasProcessed(Db4oUUID uuid) {
-		return _processedUuids.get(uuid) != null;
+	private Object collectionClone(Object original, ReflectClass claxx) {
+		return _collectionHandler.emptyClone(original, claxx);
 	}
 
-	private void markAsProcessed(Db4oUUID uuid) {
-		_processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
+	private void copyFieldValuesAcross(Object src, Object dest, ReflectClass claxx, ReplicationProviderInside sourceProvider) {
+		ReflectField[] fields;
+
+		fields = claxx.getDeclaredFields();
+		for (int i = 0; i < fields.length; i++) {
+			ReflectField field = fields[i];
+			if (field.isStatic()) continue;
+			if (field.isTransient()) continue;
+			field.setAccessible(); //TODO Optimization: Do this in the field constructor;
+			Object value = field.get(src);
+			field.set(dest, findCounterpart(value, sourceProvider));
+		}
+
+		ReflectClass superclass = claxx.getSuperclass();
+		if (superclass == null) return;
+		copyFieldValuesAcross(src, dest, superclass, sourceProvider);
 	}
 
+	private void copyStateAcross(final ReplicationProviderInside sourceProvider) {
+		if (_directionTo == sourceProvider) return;
+		sourceProvider.visitCachedReferences(new Visitor4() {
+			public void visit(Object obj) {
+				copyStateAcross((ReplicationReference) obj, sourceProvider);
+			}
+		});
+	}
+
+	private void copyStateAcross(ReplicationReference sourceRef, ReplicationProviderInside sourceProvider) {
+		if (!sourceRef.isMarkedForReplicating()) return;
+		copyStateAcross(sourceRef.object(), sourceRef.counterpart(), sourceProvider);
+	}
+
+	private void copyStateAcross(Object source, Object dest, final ReplicationProviderInside sourceProvider) {
+		ReflectClass claxx = _reflector.forObject(source);
+		if (_collectionHandler.canHandle(claxx)) {
+			_collectionHandler.copyState(source, dest, new CounterpartFinder() {
+				public Object findCounterpart(Object original) {
+					return GenericReplicationSession.this.findCounterpart(original, sourceProvider);
+				}
+			});
+			return;
+		}
+		copyFieldValuesAcross(source, dest, claxx, sourceProvider);
+	}
+
+	private void deleteInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
+		if (!reference.isMarkedForDeleting()) return;
+		destination.replicateDeletion(reference);
+	}
+
+	private Object emptyClone(ReplicationProviderInside sourceProvider, Object obj) {
+		if (obj == null) return null;
+		ReflectClass claxx = _reflector.forObject(obj);
+		if (claxx.isSecondClass()) return obj;
+		if (claxx.isArray()) return arrayClone(obj, claxx, sourceProvider);
+		if (_collectionHandler.canHandle(claxx)) {
+			return collectionClone(obj, claxx);
+		}
+		claxx.skipConstructor(true); // FIXME This is ridiculously slow to do every time. Should ALWAYS be done automatically in the reflector.
+		Object result = claxx.newInstance();
+		if (result == null)
+			throw new RuntimeException("Unable to create a new instance of " + obj.getClass()); //FIXME Use db4o's standard of throwing exceptions.
+		return result;
+	}
+
+	public Object findCounterpart(Object value, ReplicationProviderInside sourceProvider) {
+		if (value == null) return null;
+		ReflectClass claxx = _reflector.forObject(value);
+		if (claxx.isArray()) return arrayClone(value, claxx, sourceProvider);
+		if (claxx.isSecondClass()) return value;
+
+		//if value is a Collection, result should be found by passing in just the value
+		Object result = sourceProvider.produceReference(value, null, null).counterpart();
+		if (result == null)
+			throw new NullPointerException("unable to find the counterpart of " + value + " of class " + value.getClass());
+		return result;
+	}
+
+	ReplicationReference getCounterpartRef(Object original) {
+		return (ReplicationReference) _counterpartRefsByOriginal.get(original);
+	}
 
 	private boolean handleDeletionInOther(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName) {
-
 		boolean isConflict = false;
 		boolean wasModified = owner.wasModifiedSinceLastReplication(ownerRef);
 		if (wasModified) isConflict = true;
@@ -332,9 +373,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		boolean needsToBeActivated = !isConflict; //Already activated if there was a conflict.
 		return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, needsToBeActivated);
-
 	}
-
 
 	private boolean handleNewObject(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName, boolean needsToBeActivated) {
 		//System.out.println("handleNewObject = " + obj);
@@ -356,65 +395,12 @@ public class GenericReplicationSession implements ReplicationSession {
 		return true;
 	}
 
-	private Object emptyClone(ReplicationProviderInside sourceProvider, Object obj) {
-		if (obj == null) return null;
-		ReflectClass claxx = _reflector.forObject(obj);
-		if (claxx.isSecondClass()) return obj;
-		if (claxx.isArray()) return arrayClone(obj, claxx, sourceProvider);
-		if (_collectionHandler.canHandle(claxx)) {
-			return collectionClone(obj, claxx);
-		}
-		claxx.skipConstructor(true); // FIXME This is ridiculously slow to do every time. Should ALWAYS be done automatically in the reflector.
-		Object result = claxx.newInstance();
-		if (result == null)
-			throw new RuntimeException("Unable to create a new instance of " + obj.getClass()); //FIXME Use db4o's standard of throwing exceptions.
-		return result;
+	private void markAsProcessed(Db4oUUID uuid) {
+		_processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
 	}
 
-	private void copyFieldValuesAcross(Object src, Object dest, ReflectClass claxx, ReplicationProviderInside sourceProvider) {
-		ReflectField[] fields;
-
-		fields = claxx.getDeclaredFields();
-		for (int i = 0; i < fields.length; i++) {
-			ReflectField field = fields[i];
-			if (field.isStatic()) continue;
-			if (field.isTransient()) continue;
-			field.setAccessible(); //TODO Optimization: Do this in the field constructor;
-			Object value = field.get(src);
-			field.set(dest, findCounterpart(value, sourceProvider));
-		}
-
-		ReflectClass superclass = claxx.getSuperclass();
-		if (superclass == null) return;
-		copyFieldValuesAcross(src, dest, superclass, sourceProvider);
-	}
-
-	public Object findCounterpart(Object value, ReplicationProviderInside sourceProvider) {
-		if (value == null) return null;
-		ReflectClass claxx = _reflector.forObject(value);
-		if (claxx.isArray()) return arrayClone(value, claxx, sourceProvider);
-		if (claxx.isSecondClass()) return value;
-
-		//if value is a Collection, result should be found by passing in just the value
-		Object result = sourceProvider.produceReference(value, null, null).counterpart();
-		if (result == null)
-			throw new NullPointerException("unable to find the counterpart of " + value + " of class " + value.getClass());
-		return result;
-	}
-
-	private Object collectionClone(Object original, ReflectClass claxx) {
-		return _collectionHandler.emptyClone(original, claxx);
-	}
-
-	private Object arrayClone(Object original, ReflectClass claxx, ReplicationProviderInside sourceProvider) {
-		ReflectClass componentType = _reflector.getComponentType(claxx);
-		int[] dimensions = _reflector.arrayDimensions(original);
-		Object result = _reflector.newArrayInstance(componentType, dimensions);
-		Object[] flatContents = _reflector.arrayContents(original); //TODO Optimize: Copy the structure without flattening. Do this in ReflectArray.
-		if (!claxx.isSecondClass())
-			replaceWithCounterparts(flatContents, sourceProvider);
-		_reflector.arrayShape(flatContents, 0, result, dimensions, 0);
-		return result;
+	private ReplicationProviderInside other(ReplicationProviderInside peer) {
+		return peer == _peerA ? _peerB : _peerA;
 	}
 
 	private void replaceWithCounterparts(Object[] objects, ReplicationProviderInside sourceProvider) {
@@ -431,66 +417,33 @@ public class GenericReplicationSession implements ReplicationSession {
 		}
 	}
 
-	private ReplicationProviderInside other(ReplicationProviderInside peer) {
-		return peer == _peerA ? _peerB : _peerA;
+	private void storeChangedCounterpartInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
+		if (!reference.isMarkedForReplicating()) return;
+		destination.storeReplica(reference.counterpart());
 	}
 
-	public void checkConflict(Object root) {
-		try {
-			activateGraphToBeReplicated(root);
-		} finally {
-			_peerA.clearAllReferences();
-			_peerB.clearAllReferences();
-		}
-	}
+	private void storeChangedObjectsIn(final ReplicationProviderInside destination) {
+		final ReplicationProviderInside source = other(destination);
+		if (_directionTo == source) return;
 
-	public ReplicationProvider providerA() {
-		return _peerA;
-	}
-
-	public ReplicationProvider providerB() {
-		return _peerB;
-	}
-
-	public void close() {
-		_peerA.destroy();
-		_peerB.destroy();
-
-		_peerA = null;
-		_peerB = null;
-		_counterpartRefsByOriginal = null;
-		_processedUuids = null;
-	}
-
-	public void commit() {
-		synchronized (_peerA.getMonitor()) {
-			synchronized (_peerB.getMonitor()) {
-
-				long maxVersion = _peerA.getCurrentVersion() > _peerB.getCurrentVersion()
-						? _peerA.getCurrentVersion() : _peerB.getCurrentVersion();
-
-				_peerA.syncVersionWithPeer(maxVersion);
-				_peerB.syncVersionWithPeer(maxVersion);
-
-				maxVersion ++;
-
-				_peerA.commitReplicationTransaction(maxVersion);
-				_peerB.commitReplicationTransaction(maxVersion);
+		destination.visitCachedReferences(new Visitor4() {
+			public void visit(Object obj) {
+				deleteInDestination((ReplicationReference) obj, destination);
 			}
+		});
 
-		}
+		source.visitCachedReferences(new Visitor4() {
+			public void visit(Object obj) {
+				storeChangedCounterpartInDestination((ReplicationReference) obj, destination);
+			}
+		});
 	}
 
-	public void rollback() {
-		_peerA.rollbackReplication();
-		_peerB.rollbackReplication();
+	private void throwReplicationConflictException() {
+		throw new ReplicationConflictException("A replication conflict ocurred and the ReplicationEventListener, if any, did not choose which state should override the other.");
 	}
 
-	public void setDirection(ReplicationProvider replicateFrom, ReplicationProvider replicateTo) {
-		if (replicateFrom == _peerA && replicateTo == _peerB)
-			_directionTo = _peerB;
-		if (replicateFrom == _peerB && replicateTo == _peerA)
-			_directionTo = _peerA;
+	private boolean wasProcessed(Db4oUUID uuid) {
+		return _processedUuids.get(uuid) != null;
 	}
-
 }

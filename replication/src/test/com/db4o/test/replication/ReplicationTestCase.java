@@ -12,41 +12,31 @@ import com.db4o.test.Test;
 
 
 public abstract class ReplicationTestCase {
+// ------------------------------ FIELDS ------------------------------
 
-	private long _timer;
+	static private final Collection4 PROVIDER_PAIRS = new Collection4();
 
 	protected TestableReplicationProviderInside _providerA;
 	protected TestableReplicationProviderInside _providerB;
 
-	static private final Collection4 PROVIDER_PAIRS = new Collection4();
+	private long _timer;
 
-	public void test() {
-		Iterator4 it = PROVIDER_PAIRS.strictIterator();
-		while (it.hasNext()) {
-			prepareNextProviderPair((ProviderPair) it.next());
-			doActualTest();
-		}
+// -------------------------- STATIC METHODS --------------------------
+
+	public static void registerProviderPair(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB) {
+		PROVIDER_PAIRS.add(new ProviderPair(providerA, providerB));
 	}
 
-
-	private void doActualTest() {
-		try {
-			actualTest();
-			clean();
-			checkEmpty();
-		} catch (RuntimeException rx) {
-			rx.printStackTrace();
-			throw rx;
-		}
-	}
-
-	private void prepareNextProviderPair(ProviderPair pair) {
-		_providerA = pair._providerA;
-		_providerB = pair._providerB;
-		System.out.println("   Provider pair: " + _providerA + "  -  " + _providerB);
-	}
+// -------------------------- OTHER METHODS --------------------------
 
 	protected abstract void actualTest();
+
+//	protected void init(ProviderPair p) {
+//		_providerA = p._providerA;
+//		_providerB = p._providerB;
+//	}
+
+	protected abstract void clean();
 
 	protected void checkEmpty() {
 		ReplicationSession replication = Replication.begin(_providerA, _providerB);
@@ -57,16 +47,53 @@ public abstract class ReplicationTestCase {
 		replication.commit();
 	}
 
-	private void checkClean(TestableReplicationProviderInside p) {
-		Object objs = p.objectsChangedSinceLastReplication();
-		ObjectSet remains = (ObjectSet) objs;
-		boolean notEmpty = false;
-		while (remains.hasNext()) {
-			notEmpty = true;
-			System.out.println("remained = " + remains.next().getClass());
+	protected void delete(Class[] classes) {
+		for (int i = 0; i < classes.length; i++) {
+			_providerA.deleteAllInstances(classes[i]);
+			_providerB.deleteAllInstances(classes[i]);
 		}
+		_providerA.commit();
+		_providerB.commit();
+	}
 
-		if (notEmpty) throw new RuntimeException(p + " is not cleaned");
+	protected void destroy() {
+		_providerA.destroy();
+		_providerB.destroy();
+
+		_providerA = null;
+		_providerB = null;
+	}
+
+	protected void ensureInstanceCount(TestableReplicationProviderInside provider, Class clazz, int count) {
+		ObjectSet objectSet = provider.getStoredObjects(clazz);
+		while (objectSet.hasNext()) {
+			count --;
+			objectSet.next();
+		}
+		if (count != 0) {
+			int xxx = 1;
+		}
+		Test.ensure(count == 0);
+	}
+
+	protected void ensureOneInstance(TestableReplicationProviderInside provider, Class clazz) {
+		ensureInstanceCount(provider, clazz, 1);
+	}
+
+	protected Object getOneInstance(TestableReplicationProviderInside provider, Class clazz) {
+		ObjectSet objectSet = provider.getStoredObjects(clazz);
+
+		if (!objectSet.hasNext())
+			throw new RuntimeException("object not found");
+
+		return objectSet.next();
+	}
+
+	protected void logTime(String msg) {
+		long time = System.currentTimeMillis();
+		long duration = time - _timer;
+		System.out.println(msg + " " + duration + "ms");
+		_timer = System.currentTimeMillis();
 	}
 
 	protected void printCombination(ProviderPair p) {
@@ -77,30 +104,6 @@ public abstract class ReplicationTestCase {
 		String out = "Test = " + claxx + ", provider A = " + pa + ", provider B = " + pb;
 
 		System.out.println(out);
-	}
-
-//	protected void init(ProviderPair p) {
-//		_providerA = p._providerA;
-//		_providerB = p._providerB;
-//	}
-
-	protected abstract void clean();
-
-	protected void destroy() {
-		_providerA.destroy();
-		_providerB.destroy();
-
-		_providerA = null;
-		_providerB = null;
-	}
-
-	protected void delete(Class[] classes) {
-		for (int i = 0; i < classes.length; i++) {
-			_providerA.deleteAllInstances(classes[i]);
-			_providerB.deleteAllInstances(classes[i]);
-		}
-		_providerA.commit();
-		_providerB.commit();
 	}
 
 	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
@@ -119,22 +122,6 @@ public abstract class ReplicationTestCase {
 		replication.commit();
 	}
 
-	protected void ensureOneInstance(TestableReplicationProviderInside provider, Class clazz) {
-		ensureInstanceCount(provider, clazz, 1);
-	}
-
-	protected void ensureInstanceCount(TestableReplicationProviderInside provider, Class clazz, int count) {
-		ObjectSet objectSet = provider.getStoredObjects(clazz);
-		while (objectSet.hasNext()) {
-			count --;
-			objectSet.next();
-		}
-		if (count != 0) {
-			int xxx = 1;
-		}
-		Test.ensure(count == 0);
-	}
-
 	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {
 		//System.out.println("ReplicationTestcase.replicateClass");
 		ReplicationSession replication = Replication.begin(providerA, providerB);
@@ -147,29 +134,44 @@ public abstract class ReplicationTestCase {
 		replication.commit();
 	}
 
-	protected Object getOneInstance(TestableReplicationProviderInside provider, Class clazz) {
-		ObjectSet objectSet = provider.getStoredObjects(clazz);
-
-		if (!objectSet.hasNext())
-			throw new RuntimeException("object not found");
-
-		return objectSet.next();
-	}
-
 	protected void startTimer() {
 		_timer = System.currentTimeMillis();
 	}
 
-	protected void logTime(String msg) {
-		long time = System.currentTimeMillis();
-		long duration = time - _timer;
-		System.out.println(msg + " " + duration + "ms");
-		_timer = System.currentTimeMillis();
+	private void checkClean(TestableReplicationProviderInside p) {
+		Object objs = p.objectsChangedSinceLastReplication();
+		ObjectSet remains = (ObjectSet) objs;
+		boolean notEmpty = false;
+		while (remains.hasNext()) {
+			notEmpty = true;
+			System.out.println("remained = " + remains.next().getClass());
+		}
+
+		if (notEmpty) throw new RuntimeException(p + " is not cleaned");
 	}
 
-	public static void registerProviderPair(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB) {
-		PROVIDER_PAIRS.add(new ProviderPair(providerA, providerB));
+	private void doActualTest() {
+		try {
+			actualTest();
+			clean();
+			checkEmpty();
+		} catch (RuntimeException rx) {
+			rx.printStackTrace();
+			throw rx;
+		}
 	}
 
+	private void prepareNextProviderPair(ProviderPair pair) {
+		_providerA = pair._providerA;
+		_providerB = pair._providerB;
+		System.out.println("   Provider pair: " + _providerA + "  -  " + _providerB);
+	}
 
+	public void test() {
+		Iterator4 it = PROVIDER_PAIRS.strictIterator();
+		while (it.hasNext()) {
+			prepareNextProviderPair((ProviderPair) it.next());
+			doActualTest();
+		}
+	}
 }

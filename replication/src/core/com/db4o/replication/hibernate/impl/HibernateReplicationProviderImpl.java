@@ -540,7 +540,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 // --------------------- Interface TestableReplicationProviderInside ---------------------
 
-
 	public boolean supportsHybridCollection() {
 		return false;
 	}
@@ -657,10 +656,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private boolean isReplicationActive() {
 		return _inReplication;
-	}
-
-	private Object loadObject(ObjectReference of) {
-		return getSession().get(of.getClassName(), of.getObjectId());
 	}
 
 	private ReplicationReference produceCollectionReference(Object obj, Object referencingObj, String fieldName) {
