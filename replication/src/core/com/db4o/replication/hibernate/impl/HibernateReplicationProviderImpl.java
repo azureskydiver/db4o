@@ -326,7 +326,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			ReplicationReference referencingObjCounterPartRef, String fieldName) {
 		ensureReplicationActive();
 
-        System.out.println("referenceNewObject: " + obj + "  UUID: " + counterpartReference.uuid());
+		//System.out.println("referenceNewObject: " + obj + "  UUID: " + counterpartReference.uuid());
 
 		if (obj == null) throw new NullPointerException("obj is null");
 		if (counterpartReference == null) throw new NullPointerException("counterpartReference is null");
@@ -848,6 +848,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 						exist.setObjectId(id);
 
 					exist.setVersion(ref.version());
+					exist.setDeleted(false);
 					getSession().update(exist);
 				}
 			}
