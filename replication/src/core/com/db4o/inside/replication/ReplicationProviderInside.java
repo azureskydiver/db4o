@@ -8,10 +8,7 @@ import com.db4o.replication.ReplicationProvider;
 
 
 public interface ReplicationProviderInside extends ReplicationProvider {
-
 	public void activate(Object object);
-
-	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference referencingObjRef, String fieldName);
 
 	/**
 	 * Activates the fields, e.g. Collections, arrays, of an object
@@ -20,12 +17,12 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	void clearAllReferences();
 
+	public void commitReplicationTransaction(long raisedDatabaseVersion);
+
 	/**
 	 * Destroys this provider and frees up resources.
 	 */
 	public void destroy();
-
-	public void commitReplicationTransaction(long raisedDatabaseVersion);
 
 	/**
 	 * Returns the current transaction serial number.
@@ -35,6 +32,8 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	long getCurrentVersion();
 
 	public Object getMonitor();
+
+	String getName();
 
 	ReadonlyReplicationProviderSignature getSignature();
 
@@ -65,9 +64,9 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint);
 
-	boolean wasModifiedSinceLastReplication(ReplicationReference reference);
+	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference referencingObjRef, String fieldName);
 
-	boolean wasDeletedSinceLastReplication(Db4oUUID uuid);
+	void replicateDeletion(ReplicationReference reference);
 
 
 	/**
@@ -92,10 +91,10 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	void storeReplica(Object obj);
 
-	void replicateDeletion(ReplicationReference reference);
-
 
 	void syncVersionWithPeer(long maxVersion);
+
+	void updateCounterpart(Object updated);
 
 
 	/**
@@ -105,7 +104,7 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	void visitCachedReferences(Visitor4 visitor);
 
-	String getName();
+	boolean wasDeletedSinceLastReplication(Db4oUUID uuid);
 
-	void updateCounterpart(Object updated);
+	boolean wasModifiedSinceLastReplication(ReplicationReference reference);
 }

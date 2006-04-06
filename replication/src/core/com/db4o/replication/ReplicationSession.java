@@ -2,8 +2,6 @@
 
 package com.db4o.replication;
 
-import com.db4o.ext.Db4oUUID;
-
 /**
  * Execute a round of replication between two ReplicationProviders.
  * <p/>
@@ -22,8 +20,6 @@ import com.db4o.ext.Db4oUUID;
  * @since dRS 1.0
  */
 public interface ReplicationSession {
-
-
 	/**
 	 * checks if an object has been modified in both replication providers
 	 * since the last time the two replication providers were replicated.
@@ -97,5 +93,4 @@ public interface ReplicationSession {
 	 * @param to   objects will be copied to this provider if copies in "from" is newer
 	 */
 	public void setDirection(ReplicationProvider from, ReplicationProvider to);
-
 }

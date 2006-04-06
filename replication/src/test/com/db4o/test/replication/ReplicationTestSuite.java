@@ -13,39 +13,33 @@ import com.db4o.test.replication.template.r0tor4.R0to4Runner;
 
 public class ReplicationTestSuite extends TestSuite {
 
-	public Class[] tests() {
+	public Class[] tests2() {
 		System.err.println("Use tests2 below");
-		return new Class[] {
-			ReplicationFeaturesMain.class,
+		return new Class[]{
+				ReplicationFeaturesMain.class,
 		};
 	}
 
-	public Class[] tests2() {
+	public Class[] tests() {
 		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
 		return new Class[]{
-                
-                ArrayReplicationTest.class,
-                ListTest.class,
-                MapTest.class,
-                MixedTypesCollectionReplicationTest.class,
-                R0to4Runner.class,
-                ReplicationAfterDeletionTest.class,
-                ReplicationFeaturesMain.class,
-                SimpleArrayTest.class,
-                SimpleParentChild.class,
-                //SimplePerformanceTests.class,
-                SingleTypeCollectionReplicationTest.class,
-                
-                //General
+
+				ArrayReplicationTest.class,
+				ListTest.class,
+				MapTest.class,
+				MixedTypesCollectionReplicationTest.class,
+				R0to4Runner.class,
+				ReplicationAfterDeletionTest.class,
+				ReplicationFeaturesMain.class,
+				SimpleArrayTest.class,
+				SimpleParentChild.class,
+				SingleTypeCollectionReplicationTest.class,
+
+				//General
 				CollectionHandlerImplTest.class,
 				ReplicationTraversalTest.class,
 
-				//Transient
 				TransientReplicationProviderTest.class,
-
-				//Hibernate
-				//HibernateReplicationFeaturesMain.class, use MultiProviderReplicationFeaturesMain.class, instead
-
 				HibernateProviderTest.class,
 				ReplicationConfiguratorTest.class,
 				TablesCreatorTest.class,
@@ -60,7 +54,7 @@ public class ReplicationTestSuite extends TestSuite {
 				//Db4oSingleTypeCollectionReplicationTest.class,
 				//Db4oSimpleArrayTest.class,
 				//Db4oArrayReplicationTest.class,
-                DatabaseUnicityTest.class,
+				DatabaseUnicityTest.class,
 
 		};
 	}
