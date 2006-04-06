@@ -16,14 +16,14 @@ namespace com.db4o.inside.query
     {
         public readonly DelegateType Delegate;
         public readonly object Target;
-        public readonly System.Reflection.MethodInfo Method;
+        public readonly System.Reflection.MethodBase Method;
 
         // IMPORTANT: don't change the order of parameters here because it is
         // assumed by the instrumentation tool to be exactly like this:
         //  1) target object
         //  2) delegate reference
         //  3) method info object
-        public MetaDelegate(object target, DelegateType delegateRef, System.Reflection.MethodInfo method)
+        public MetaDelegate(object target, DelegateType delegateRef, System.Reflection.MethodBase method)
         {
             this.Target = target;
             this.Method = method;
@@ -87,7 +87,7 @@ namespace com.db4o.inside.query
         private System.Collections.Generic.IList<Extent> ExecuteImpl<Extent>(
                                                                         object originalPredicate,
                                                                         object matchTarget,
-                                                                        System.Reflection.MethodInfo matchMethod,
+                                                                        System.Reflection.MethodBase matchMethod,
                                                                         System.Predicate<Extent> match,
                                                                         com.db4o.query.QueryComparator comparator)
         {
@@ -160,7 +160,7 @@ namespace com.db4o.inside.query
             return _container.ext().configure().optimizeNativeQueries();
         }
 
-		void optimizeQuery(Query q, object predicate, System.Reflection.MethodInfo filterMethod)
+		void optimizeQuery(Query q, object predicate, System.Reflection.MethodBase filterMethod)
 		{
 			// TODO: cache predicate expressions here
 			Expression expression = QueryExpressionBuilder.FromMethod(filterMethod);
