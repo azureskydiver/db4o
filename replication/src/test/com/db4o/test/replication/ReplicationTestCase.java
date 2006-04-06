@@ -32,19 +32,18 @@ public abstract class ReplicationTestCase {
 	private void doActualTest() {
 		try {
 			actualTest();
+			clean();
+			checkEmpty();
 		} catch (RuntimeException rx) {
 			rx.printStackTrace();
 			throw rx;
-		} finally {
-			clean();
-			checkEmpty();
 		}
 	}
 
 	private void prepareNextProviderPair(ProviderPair pair) {
 		_providerA = pair._providerA;
 		_providerB = pair._providerB;
-        System.out.println("   Provider pair: " + _providerA + "  -  " + _providerB);
+		System.out.println("   Provider pair: " + _providerA + "  -  " + _providerB);
 	}
 
 	protected abstract void actualTest();
@@ -60,7 +59,7 @@ public abstract class ReplicationTestCase {
 
 	private void checkClean(TestableReplicationProviderInside p) {
 		Object objs = p.objectsChangedSinceLastReplication();
-		ObjectSet remains = (ObjectSet)objs;
+		ObjectSet remains = (ObjectSet) objs;
 		boolean notEmpty = false;
 		while (remains.hasNext()) {
 			notEmpty = true;

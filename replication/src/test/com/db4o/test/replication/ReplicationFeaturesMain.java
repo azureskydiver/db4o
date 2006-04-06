@@ -51,8 +51,8 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		_setBoth.addAll(_setA);
 		_setBoth.addAll(_setB);
 
-        _testCombination = 0;
-        
+		_testCombination = 0;
+
 		tstWithDeletedObjectsIn(_NONE);
 		tstWithDeletedObjectsIn(_setA);
 		tstWithDeletedObjectsIn(_setB);
@@ -124,10 +124,10 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 	private void runCurrentCombination() {
 		_testCombination++;
-		System.out.println("" + _testCombination + " =================================");
+		//System.out.println("" + _testCombination + " =================================");
 		//printCombination();
 
-		if (_testCombination < 537)  //Use this to skip some combinations and avoid waiting.
+		if (_testCombination < 0)  //Use this to skip some combinations and avoid waiting.
 			return;
 
 		int _errors = 0;

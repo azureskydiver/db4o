@@ -1,10 +1,17 @@
 package com.db4o.inside.replication;
 
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.inside.traversal.*;
-import com.db4o.reflect.*;
-import com.db4o.replication.*;
+import com.db4o.ext.Db4oUUID;
+import com.db4o.foundation.Hashtable4;
+import com.db4o.foundation.Visitor4;
+import com.db4o.inside.traversal.TraversedField;
+import com.db4o.inside.traversal.Traverser;
+import com.db4o.inside.traversal.Visitor;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
+import com.db4o.replication.ReplicationConflictException;
+import com.db4o.replication.ReplicationEventListener;
+import com.db4o.replication.ReplicationProvider;
+import com.db4o.replication.ReplicationSession;
 
 public class GenericReplicationSession implements ReplicationSession {
 
@@ -207,7 +214,6 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		Db4oUUID uuid = ownerRef.uuid();
 		ReplicationReference otherRef = other.produceReferenceByUUID(uuid, obj.getClass());
-		if (1==1) throw new RuntimeException();
 
 		if (refA == null)
 			refA = otherRef;
@@ -215,9 +221,9 @@ public class GenericReplicationSession implements ReplicationSession {
 			refB = otherRef;
 
 		if (otherRef == null) {
-            markAsProcessed(uuid);
+			markAsProcessed(uuid);
 
-            if (other.wasDeletedSinceLastReplication(uuid))
+			if (other.wasDeletedSinceLastReplication(uuid))
 				return handleDeletionInOther(obj, ownerRef, owner, other, referencingObject, fieldName);
 
 			return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, true);
@@ -225,8 +231,8 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		ownerRef.setCounterpart(otherRef.object());
 
-        if (wasProcessed(uuid)) return false;
-        markAsProcessed(uuid);
+		if (wasProcessed(uuid)) return false;
+		markAsProcessed(uuid);
 
 		Object objectA = refA.object();
 		Object objectB = refB.object();
@@ -280,13 +286,13 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 
-    private boolean wasProcessed(Db4oUUID uuid) {
-        return _processedUuids.get(uuid) != null;
-    }
+	private boolean wasProcessed(Db4oUUID uuid) {
+		return _processedUuids.get(uuid) != null;
+	}
 
-    private void markAsProcessed(Db4oUUID uuid) {
-        _processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
-    }
+	private void markAsProcessed(Db4oUUID uuid) {
+		_processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
+	}
 
 
 	private boolean handleDeletionInOther(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName) {
@@ -346,7 +352,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		// TODO: We might not need counterpart in otherRef. Check.
 		otherRef.setCounterpart(obj);
-        
+
 		return true;
 	}
 
