@@ -207,6 +207,7 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		Db4oUUID uuid = ownerRef.uuid();
 		ReplicationReference otherRef = other.produceReferenceByUUID(uuid, obj.getClass());
+		if (1==1) throw new RuntimeException();
 
 		if (refA == null)
 			refA = otherRef;
@@ -214,8 +215,6 @@ public class GenericReplicationSession implements ReplicationSession {
 			refB = otherRef;
 
 		if (otherRef == null) {
-            System.out.println("Comment next line to expose hibernate difference and improve transient test");
-            if (wasProcessed(uuid)) return false;
             markAsProcessed(uuid);
 
             if (other.wasDeletedSinceLastReplication(uuid))
