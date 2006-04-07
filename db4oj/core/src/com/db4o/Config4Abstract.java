@@ -10,13 +10,12 @@ abstract class Config4Abstract
 	protected KeySpecHashtable4 _config;
 
 	private final static KeySpec CASCADE_ON_ACTIVATE=new KeySpec(YapConst.DEFAULT);
-//	int i_cascadeOnActivate = 0;
+    
 	private final static KeySpec CASCADE_ON_DELETE=new KeySpec(YapConst.DEFAULT);
-//	int i_cascadeOnDelete = 0;
+    
 	private final static KeySpec CASCADE_ON_UPDATE=new KeySpec(YapConst.DEFAULT);
-//	int i_cascadeOnUpdate = 0;
-	private final static KeySpec NAME=new KeySpec(null);
-//	String i_name;
+
+    private final static KeySpec NAME=new KeySpec(null);
 
 	public Config4Abstract() {
 		this(new KeySpecHashtable4(10));
