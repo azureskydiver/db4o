@@ -7,23 +7,18 @@ import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
+    
 	private final static KeySpec CLASS=new KeySpec(null);
-//    private Config4Class i_class;
     
 	private final static KeySpec FIELD_REFLECTOR=new KeySpec(null);
-//    private ReflectField i_fieldReflector;
     
 	private final static KeySpec QUERY_EVALUATION=new KeySpec(true);
-//    private boolean i_queryEvaluation = true;
     
 	private final static KeySpec INDEXED=new KeySpec(YapConst.DEFAULT);
-//    private int i_indexed = 0;
     
 	private final static KeySpec METAFIELD=new KeySpec(null);
-//    private MetaField i_metaField;
     
 	private final static KeySpec INITIALIZED=new KeySpec(false);
-//    private boolean i_initialized;
 
 	protected Config4Field(KeySpecHashtable4 config) {
 		super(config);

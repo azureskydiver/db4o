@@ -10,59 +10,42 @@ class Config4Class extends Config4Abstract implements ObjectClass,
     DeepClone {
 
 	private final static KeySpec CALL_CONSTRUCTOR=new KeySpec(0);
-//    private int			 	   i_callConstructor;
     
 	private final static KeySpec CONFIG=new KeySpec(null);
-//    private Config4Impl        i_config;
 
 	private final static KeySpec EXCEPTIONAL_FIELDS=new KeySpec(null);
-//    private Hashtable4 i_exceptionalFields;
 
 	private final static KeySpec GENERATE_UUIDS=new KeySpec(0);
-//    private int                i_generateUUIDs;
     
 	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(0);
-//    private int                i_generateVersionNumbers;
     
     /**
      * We are running into cyclic dependancies on reading the PBootRecord
      * object, if we maintain MetaClass information there 
      */
 	private final static KeySpec MAINTAIN_METACLASS=new KeySpec(true);
-//    private boolean            _maintainMetaClass = true;
 
 	private final static KeySpec MAXIMUM_ACTIVATION_DEPTH=new KeySpec(0);
-//    private int                i_maximumActivationDepth;
 
 	private final static KeySpec METACLASS=new KeySpec(null);
-//    private MetaClass          i_metaClass;
 
 	private final static KeySpec MINIMUM_ACTIVATION_DEPTH=new KeySpec(0);
-//    private int                i_minimumActivationDepth;
 
 	private final static KeySpec PERSIST_STATIC_FIELD_VALUES=new KeySpec(false);
-//    private boolean            i_persistStaticFieldValues;
     
 	private final static KeySpec QUERY_ATTRIBUTE_PROVIDER=new KeySpec(null);
-//    private ObjectAttribute    i_queryAttributeProvider;
     
 	private final static KeySpec STORE_TRANSIENT_FIELDS=new KeySpec(false);
-//    private boolean            i_storeTransientFields;
     
 	private final static KeySpec TRANSLATOR=new KeySpec(null);
-//    private ObjectTranslator   _translator;
 
 	private final static KeySpec TRANSLATOR_NAME=new KeySpec((String)null);
-//    private String             _translatorName;
     
 	private final static KeySpec UPDATE_DEPTH=new KeySpec(0);
-//    private int                i_updateDepth;
     
 	private final static KeySpec WRITE_AS=new KeySpec((String)null);
-//    private String             _writeAs;
     
-	private final static KeySpec PROCESSING=new KeySpec(false);
-//    private boolean    _processing;
+	private boolean _processing;
 
     protected Config4Class(KeySpecHashtable4 config) {
     	super(config);
@@ -172,11 +155,10 @@ class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
     public boolean initOnUp(Transaction systemTrans, final int[] metaClassID) {
-    	boolean processing=_config.getAsBoolean(PROCESSING);
-        if(processing){
+        if(_processing){
             return false;
         }
-        _config.put(PROCESSING,true);
+        _processing = true;
         if (Tuning.fieldIndices) {
             YapStream stream = systemTrans.i_stream;
             if (stream.maintainsIndices()) {
@@ -206,7 +188,7 @@ class Config4Class extends Config4Abstract implements ObjectClass,
                 }
             }
         }
-        _config.put(PROCESSING, false);
+        _processing = false;
         return true;
     }
 

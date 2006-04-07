@@ -21,145 +21,109 @@ import com.db4o.reflect.generic.*;
 public final class Config4Impl
 
 implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
+    
 	private KeySpecHashtable4 _config=new KeySpecHashtable4(50);
 	
 	private final static KeySpec ACTIVATION_DEPTH=new KeySpec(5);
-//    private int              i_activationDepth                  = 5;
+    
 	private final static KeySpec ALLOW_VERSION_UPDATES=new KeySpec(false);
-//    private boolean          _allowVersionUpdates;
-	private final static KeySpec AUTOMATIC_SHUTDOWN=new KeySpec(true);
-//    private boolean          i_automaticShutDown                = true;
-	private final static KeySpec BLOCKSIZE=new KeySpec((byte)1);
-//	private byte			 i_blockSize						= 1;  // TODO: set this to 8, when implementation is done
+
+    private final static KeySpec AUTOMATIC_SHUTDOWN=new KeySpec(true);
+
+    //  TODO: consider setting default to 8, it's more efficient with freespace.
+    private final static KeySpec BLOCKSIZE=new KeySpec((byte)1);
+    
 	private final static KeySpec BLOBPATH=new KeySpec(null);
-//    private String           i_blobPath;
+    
 	private final static KeySpec CALLBACKS=new KeySpec(true);
-//    private boolean          i_callbacks                        = true;
+    
 	private final static KeySpec CALL_CONSTRUCTORS=new KeySpec(YapConst.DEFAULT);
-//    private int			 	 i_callConstructors;
+    
 	private final static KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE=new KeySpec(true);
-//    private boolean          i_classActivationDepthConfigurable = true;
+    
 	private final static KeySpec CLASSLOADER=new KeySpec(null);
-//    private ClassLoader      i_classLoader;
+    
 	private final static KeySpec DETECT_SCHEMA_CHANGES=new KeySpec(true);
-//    private boolean          i_detectSchemaChanges              = true;
+    
 	private final static KeySpec DISABLE_COMMIT_RECOVERY=new KeySpec(false);
-//	private boolean          i_disableCommitRecovery;
+    
 	private final static KeySpec DISCARD_FREESPACE=new KeySpec(0);
-//    private int       i_discardFreeSpace;
+    
 	private final static KeySpec ENCODING=new KeySpec(YapConst.UNICODE);
-//    private byte             i_encoding                         = YapConst.UNICODE;
+    
 	private final static KeySpec ENCRYPT=new KeySpec(false);
-//    private boolean          i_encrypt;
+    
 	private final static KeySpec EXCEPTIONAL_CLASSES=new KeySpec(new Hashtable4(16));
-//    private Hashtable4       i_exceptionalClasses               = new Hashtable4(16);
+    
 	private final static KeySpec EXCEPTIONS_ON_NOT_STORABLE=new KeySpec(false);
-//    private boolean          i_exceptionsOnNotStorable;
+    
 	private final static KeySpec FLUSH_FILE_BUFFERS=new KeySpec(true);
-//    private boolean   _flushFileBuffers                  = true;
+    
 	private final static KeySpec FREESPACE_SYSTEM=new KeySpec(FreespaceManager.FM_DEFAULT);
-//    private byte      _freespaceSystem;                   
+    
 	private final static KeySpec GENERATE_UUIDS=new KeySpec(0);
-//    private int       i_generateUUIDs;
+    
 	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(0);
-//    private int       i_generateVersionNumbers;
+    
 	private final static KeySpec INTERN_STRINGS=new KeySpec(false);
-//    private boolean 		 i_internStrings = false;
+    
 	private final static KeySpec IS_SERVER=new KeySpec(false);
-//    private boolean			 i_isServer = false;
+    
 	private final static KeySpec LOCK_FILE=new KeySpec(true);
-//    private boolean          i_lockFile                         = true;
+    
 	private final static KeySpec MESSAGE_LEVEL=new KeySpec(YapConst.NONE);
-//    private int              i_messageLevel                     = YapConst.NONE;
+    
 	private final static KeySpec MESSAGE_RECIPIENT=new KeySpec(null);
-//    private MessageRecipient i_messageRecipient;
+    
 	// TODO: who uses this at all?
 //	private final static KeySpec MESSAGE_SENDER=new KeySpec(null);
 //    private MessageSender    i_messageSender;
+    
 	private final static KeySpec OPTIMIZE_NQ=new KeySpec(true);
-//	private boolean          _optimizeNQ                        = true;
+    
 	private final static KeySpec OUTSTREAM=new KeySpec(null);
-//    private PrintStream      i_outStream; 
+    
 	private final static KeySpec PASSWORD=new KeySpec((String)null);
-//    private String           i_password;
+    
 	private final static KeySpec READ_AS=new KeySpec(new Hashtable4(16));
-//    private Hashtable4       _readAs                            = new Hashtable4(16);
+    
 	private final static KeySpec READ_ONLY=new KeySpec(false);
-//    private boolean          i_readonly;
+    
 	private final static KeySpec CONFIGURED_REFLECTOR=new KeySpec(null);
-//    private Reflector _configuredReflector;
+    
 	private final static KeySpec REFLECTOR=new KeySpec(null);
-//    private GenericReflector _reflector;
     
 	private final static KeySpec RENAME=new KeySpec(null);
-//    private Collection4      i_rename; // (filled from the outside with 'real' strings)
+    
 	private final static KeySpec RESERVED_STORAGE_SPACE=new KeySpec(0);
-//    private int              i_reservedStorageSpace;
+    
 	private final static KeySpec SINGLE_THREADED_CLIENT=new KeySpec(false);
-//    private boolean          i_singleThreadedClient;
+    
 	private final static KeySpec TEST_CONSTRUCTORS=new KeySpec(true);
-//    private boolean          i_testConstructors                 = true;
+    
 	private final static KeySpec TIMEOUT_CLIENT_SOCKET=new KeySpec(YapConst.CLIENT_SOCKET_TIMEOUT);
-//    private int              i_timeoutClientSocket              = YapConst.CLIENT_SOCKET_TIMEOUT;
+    
 	private final static KeySpec TIMEOUT_PING_CLIENTS=new KeySpec(YapConst.CONNECTION_TIMEOUT);
-//    private int              i_timeoutPingClients               = YapConst.CONNECTION_TIMEOUT;
+    
 	private final static KeySpec TIMEOUT_SERVER_SOCKET=new KeySpec(YapConst.SERVER_SOCKET_TIMEOUT);
-//    private int              i_timeoutServerSocket              = YapConst.SERVER_SOCKET_TIMEOUT;
+    
 	private final static KeySpec UPDATE_DEPTH=new KeySpec(0);
-//    private int              i_updateDepth;
+    
 	private final static KeySpec WEAK_REFERENCE_COLLECTION_INTERVAL=new KeySpec(1000);
-//    private int              i_weakReferenceCollectionInterval  = 1000;
+    
 	private final static KeySpec WEAK_REFERENCES=new KeySpec(true);
-//    private boolean          i_weakReferences                   = true;
+    
 	private final static KeySpec IOADAPTER=new KeySpec(new RandomAccessFileAdapter());
-//    private IoAdapter        i_ioAdapter // XXX
+    
     	// NOTE: activate this config to trigger the defragment failure
     	//= new NIOFileAdapter(512,3);
-//    	= new RandomAccessFileAdapter();  
-	private final static KeySpec ALIASES=new KeySpec(null);
-//    private Collection4 _aliases; // strange stringwrapper cast problem - how should this get in for this key?
     
-	// kept as an instance variable for the time being
-	private YapStream        i_stream; // XXX                                                           // is null until deepClone is called
+	private final static KeySpec ALIASES=new KeySpec(null);
+    
+	//  is null in the global configuration until deepClone is called
+	private YapStream        i_stream;                                                   
 
-/*	
-    private void put(KeySpec spec,byte value) {
-    	put(spec,new Byte(value));
-    }
 
-    private void put(KeySpec spec,boolean value) {
-    	put(spec,new Boolean(value));
-    }
-
-    private void put(KeySpec spec,int value) {
-    	put(spec,new Integer(value));
-    }
-
-    private void put(KeySpec spec,Object value) {
-    	_config.put(spec,value);
-    }
-
-    private byte getAsByte(KeySpec spec) {
-    	return ((Byte)get(spec)).byteValue();
-    }
-
-    private boolean getAsBoolean(KeySpec spec) {
-    	return ((Boolean)get(spec)).booleanValue();
-    }
-
-    private int getAsInt(KeySpec spec) {
-    	return ((Integer)get(spec)).intValue();
-    }
-
-    private String getAsString(KeySpec spec) {
-    	return (String)get(spec);
-    }
-
-    private Object get(KeySpec spec) {
-        Object value=_config.get(spec);
-        return (value==null ? spec.defaultValue() : value);
-    }
-*/    
     int activationDepth() {
     	return _config.getAsInt(ACTIVATION_DEPTH);
     }
