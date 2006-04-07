@@ -17,8 +17,14 @@ public class TreeIntWeakObject extends TreeIntObject {
 	}
 
 	public Object shallowClone() {
-		return super.shallowCloneInternal(new TreeIntWeakObject(_key));
+        return shallowCloneInternal(new TreeIntWeakObject(_key)); 
 	}
+    
+    protected Tree shallowCloneInternal(Tree tree) {
+        TreeIntWeakObject tiwo = (TreeIntWeakObject) super.shallowCloneInternal(tree);
+        tiwo.setObject(getObject());
+        return tiwo;
+    }
 
 	public Object getObject() {
 		return Platform4.weakReferenceTarget(_object);
