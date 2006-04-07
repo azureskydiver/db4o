@@ -19,12 +19,10 @@ public class TreeIntObject extends TreeInt {
 	}
 
 	public Object shallowClone() {
-
 		return shallowCloneInternal(new TreeIntObject(_key));
 	}
 
 	protected Tree shallowCloneInternal(Tree tree) {
-
 		TreeIntObject tio = (TreeIntObject) super.shallowCloneInternal(tree);
 		tio._object = _object;
 		return tio;
