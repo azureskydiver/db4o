@@ -1,7 +1,5 @@
 package com.db4o.replication.hibernate.metadata;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 public class ObjectReference {
 // ------------------------------ FIELDS ------------------------------
 
@@ -71,12 +69,12 @@ public class ObjectReference {
 // ------------------------ CANONICAL METHODS ------------------------
 
 	public String toString() {
-		return new ToStringBuilder(this).
-				append(CLASS_NAME, className).
-				append(OBJECT_ID, objectId).
-				append(UUID, uuid).
-				append(VERSION, version).
-				append(DELETED, deleted).
-				toString();
+		return "ObjectReference{" +
+				"className='" + className + '\'' +
+				", deleted=" + deleted +
+				", objectId=" + objectId +
+				", uuid=" + uuid +
+				", version=" + version +
+				'}';
 	}
 }

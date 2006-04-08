@@ -20,7 +20,6 @@ import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
 import com.db4o.replication.hibernate.metadata.Uuid;
-import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Criteria;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.FlushMode;
@@ -115,7 +114,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		EventListeners el = _cfg.getEventListeners();
 		el.setFlushEventListeners((FlushEventListener[])
-				ArrayUtils.add(el.getFlushEventListeners(), myFlushEventListener));
+				Util.add(el.getFlushEventListeners(), myFlushEventListener));
 
 		objectLifeCycleEventsListener.configure(cfg);
 
@@ -256,7 +255,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		EventListeners eventListeners = getConfiguration().getEventListeners();
 		FlushEventListener[] o1 = eventListeners.getFlushEventListeners();
-		FlushEventListener[] r1 = (FlushEventListener[]) ArrayUtils.removeElement(
+		FlushEventListener[] r1 = (FlushEventListener[]) Util.removeElement(
 				o1, myFlushEventListener);
 		if ((o1.length - r1.length) != 1)
 			throw new RuntimeException("can't remove");

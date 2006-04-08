@@ -2,7 +2,6 @@ package com.db4o.replication.hibernate.impl;
 
 import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.ReplicationReference;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 public final class ReplicationReferenceImpl implements ReplicationReference {
 // ------------------------------ FIELDS ------------------------------
@@ -53,14 +52,16 @@ public final class ReplicationReferenceImpl implements ReplicationReference {
 		return result;
 	}
 
-	public final String toString() {
-		return new ToStringBuilder(this).
-				append("className", obj).
-				append("objectId", uuid).
-				append("version", version).
-				append("counterPart", counterPart).
-				append("markedForReplicating", markedForReplicating).
-				toString();
+	public String toString() {
+		return "ReplicationReferenceImpl{" +
+				"objectIsNew=" + objectIsNew +
+				", obj=" + obj +
+				", uuid=" + uuid +
+				", version=" + version +
+				", counterPart=" + counterPart +
+				", markedForReplicating=" + markedForReplicating +
+				", markedForDeleting=" + markedForDeleting +
+				'}';
 	}
 
 // ------------------------ INTERFACE METHODS ------------------------
@@ -75,16 +76,16 @@ public final class ReplicationReferenceImpl implements ReplicationReference {
 		return objectIsNew;
 	}
 
+	public void markCounterpartAsNew() {
+		objectIsNew = true;
+	}
+
 	public final void markForDeleting() {
 		markedForDeleting = true;
 	}
 
 	public final void markForReplicating() {
 		markedForReplicating = true;
-	}
-
-	public void markCounterpartAsNew() {
-		objectIsNew = true;
 	}
 
 	public final Object object() {

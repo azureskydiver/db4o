@@ -1,7 +1,5 @@
 package com.db4o.replication.hibernate.metadata;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 public class Uuid {
 // ------------------------------ FIELDS ------------------------------
 
@@ -54,9 +52,9 @@ public class Uuid {
 	}
 
 	public String toString() {
-		return new ToStringBuilder(this).
-				append(LONG_PART, longPart).
-				append(PROVIDER, provider).
-				toString();
+		return "Uuid{" +
+				"longPart=" + longPart +
+				", provider=" + provider +
+				'}';
 	}
 }
