@@ -1,7 +1,6 @@
 package com.db4o.replication.hibernate.metadata;
 
 import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.util.Arrays;
 
@@ -85,9 +84,10 @@ public class ReplicationProviderSignature implements ReadonlyReplicationProvider
 	}
 
 	public String toString() {
-		return new ToStringBuilder(this).
-				append(ID, id).
-				append(BYTES, bytes).
-				toString();
+		return "ReplicationProviderSignature{" +
+				"bytes=" + bytes +
+				", id=" + id +
+				", creationTime=" + creationTime +
+				'}';
 	}
 }

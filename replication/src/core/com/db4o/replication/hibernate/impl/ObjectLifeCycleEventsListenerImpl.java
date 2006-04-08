@@ -5,7 +5,6 @@ import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
 import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.Uuid;
-import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.CallbackException;
 import org.hibernate.Criteria;
 import org.hibernate.EmptyInterceptor;
@@ -212,27 +211,27 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 
 		PostUpdateEventListener[] o2 = el.getPostUpdateEventListeners();
 		PostUpdateEventListener[] r2 = (PostUpdateEventListener[])
-				ArrayUtils.removeElement(o2, this);
+				Util.removeElement(o2, this);
 		if ((o2.length - r2.length) != 1)
 			throw new RuntimeException("can't remove");
 		el.setPostUpdateEventListeners(r2);
 
 		PreDeleteEventListener[] o3 = el.getPreDeleteEventListeners();
 		PreDeleteEventListener[] r3 = (PreDeleteEventListener[])
-				ArrayUtils.removeElement(o3, this);
+				Util.removeElement(o3, this);
 		if ((o3.length - r3.length) != 1)
 			throw new RuntimeException("can't remove");
 		el.setPreDeleteEventListeners(r3);
 
 		PostInsertEventListener[] o4 = el.getPostInsertEventListeners();
 		PostInsertEventListener[] r4 = (PostInsertEventListener[])
-				ArrayUtils.removeElement(o4, this);
+				Util.removeElement(o4, this);
 		if ((o4.length - r4.length) != 1)
 			throw new RuntimeException("can't remove");
 
 		FlushEventListener[] o5 = el.getFlushEventListeners();
 		FlushEventListener[] r5 = (FlushEventListener[])
-				ArrayUtils.removeElement(o5, this);
+				Util.removeElement(o5, this);
 		if ((o5.length - r5.length) != 1)
 			throw new RuntimeException("can't remove");
 
@@ -245,15 +244,15 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 		EventListeners el = cfg.getEventListeners();
 
 		el.setPostUpdateEventListeners((PostUpdateEventListener[])
-				ArrayUtils.add(el.getPostUpdateEventListeners(), this));
+				Util.add(el.getPostUpdateEventListeners(), this));
 
 		el.setPostInsertEventListeners((PostInsertEventListener[])
-				ArrayUtils.add(el.getPostInsertEventListeners(), this));
+				Util.add(el.getPostInsertEventListeners(), this));
 
 		el.setPreDeleteEventListeners((PreDeleteEventListener[])
-				ArrayUtils.add(el.getPreDeleteEventListeners(), this));
+				Util.add(el.getPreDeleteEventListeners(), this));
 
 		el.setFlushEventListeners((FlushEventListener[])
-				ArrayUtils.add(el.getFlushEventListeners(), this));
+				Util.add(el.getFlushEventListeners(), this));
 	}
 }

@@ -20,6 +20,7 @@ import org.hibernate.cfg.Environment;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -106,6 +107,10 @@ public final class Util {
 		dumpTable(p.getName(), p.getSession(), s);
 	}
 
+	public static void dumpTable(String providerName, Session sess, String tableName) {
+		dumpTable(providerName, sess.connection(), tableName);
+	}
+
 	public static void dumpTable(String providerName, Connection con, String tableName) {
 		ResultSet rs = null;
 
@@ -131,10 +136,6 @@ public final class Util {
 		} finally {
 			closeResultSet(rs);
 		}
-	}
-
-	public static void dumpTable(String providerName, Session sess, String tableName) {
-		dumpTable(providerName, sess.connection(), tableName);
 	}
 
 	public static void closePreparedStatement(PreparedStatement ps) {
@@ -309,5 +310,46 @@ public final class Util {
 		else {
 			return (ObjectReference) exisitings.get(0);
 		}
+	}
+
+	public static Object[] removeElement(Object[] array, Object element) {
+		final int length = array.length;
+		int index = indexOf(array, element);
+
+		if (index > -1) {
+			Object[] out = newArray(array, length - 1);
+			System.arraycopy(array, 0, out, 0, index);
+			if (index < length - 1) {
+				System.arraycopy(array, index + 1, out, index, length - index - 1);
+			}
+			return out;
+		} else {
+			return clone(array);
+		}
+	}
+
+	private static int indexOf(Object[] array, Object element) {
+		for (int i = 0; i < array.length; i++)
+			if (array[i].equals(element))
+				return i;
+		return -1;
+	}
+
+	private static Object[] clone(Object[] array) {
+		Object[] out = newArray(array, array.length);
+		System.arraycopy(array, 0, out, 0, array.length);
+		return out;
+	}
+
+	public static Object[] add(Object[] array, Object element) {
+		final int length = array.length;
+		Object[] out = newArray(array, length + 1);
+		System.arraycopy(array, 0, out, 0, length);
+		out[length] = element;
+		return out;
+	}
+
+	private static Object[] newArray(Object[] array, int length) {
+		return (Object[]) Array.newInstance(array.getClass().getComponentType(), length);
 	}
 }

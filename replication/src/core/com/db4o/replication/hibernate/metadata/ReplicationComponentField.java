@@ -1,7 +1,5 @@
 package com.db4o.replication.hibernate.metadata;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 public class ReplicationComponentField {
 // ------------------------------ FIELDS ------------------------------
 
@@ -56,6 +54,9 @@ public class ReplicationComponentField {
 	}
 
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		return "ReplicationComponentField{" +
+				"referencingObjectClassName='" + referencingObjectClassName + '\'' +
+				", referencingObjectFieldName='" + referencingObjectFieldName + '\'' +
+				'}';
 	}
 }

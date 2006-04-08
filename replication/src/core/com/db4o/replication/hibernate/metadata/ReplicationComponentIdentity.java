@@ -1,7 +1,5 @@
 package com.db4o.replication.hibernate.metadata;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 public class ReplicationComponentIdentity {
 // ------------------------------ FIELDS ------------------------------
 
@@ -86,6 +84,11 @@ public class ReplicationComponentIdentity {
 	}
 
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
+		return "ReplicationComponentIdentity{" +
+				"uuidLongPart=" + uuidLongPart +
+				", referencingObjectUuidLongPart=" + referencingObjectUuidLongPart +
+				", referencingObjectField=" + referencingObjectField +
+				", provider=" + provider +
+				'}';
 	}
 }
