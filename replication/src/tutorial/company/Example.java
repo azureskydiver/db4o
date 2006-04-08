@@ -3,7 +3,11 @@ package company;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.replication.*;
+import com.db4o.replication.ObjectState;
+import com.db4o.replication.Replication;
+import com.db4o.replication.ReplicationEvent;
+import com.db4o.replication.ReplicationEventListener;
+import com.db4o.replication.ReplicationSession;
 import org.hibernate.cfg.Configuration;
 
 public class Example {
@@ -16,7 +20,16 @@ public class Example {
 		Configuration hibernateConfiguration = new Configuration().configure("hibernate.cfg.xml");
 
 		//Start a Replication Session
-		ReplicationSession replication = Replication.begin(objectContainer, hibernateConfiguration);
+		ReplicationEventListener resolver = new ReplicationEventListener() {
+			public void onReplicate(ReplicationEvent event) {
+				if (event.isConflict()) {
+					ObjectState chosenObjectState = event.stateInProviderA();
+					event.overrideWith(chosenObjectState);
+				}
+			}
+		};
+
+		ReplicationSession replication = Replication.begin(objectContainer, hibernateConfiguration, resolver);
 
 		//Query for changed objects
 		ObjectSet changedObjects = replication.providerB().objectsChangedSinceLastReplication();
