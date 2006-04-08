@@ -1,6 +1,5 @@
 <project name="drs" default="run-example" basedir=".">
-	<description>dRS build file. Shared by both the cvs module and the
-		distribution.</description>
+	<description>dRS build file. Shared by both the cvs module and the distribution.</description>
 	<property file="machine.properties"/>
 	<property file="ant.properties"/>
 
@@ -11,7 +10,7 @@
 		<fileset dir="${drs.dir.dist.lib}">
 			<include name="*.jar"/>
 		</fileset>
-		<pathelement location="${file.java1.2.jar}"/>
+		<pathelement location="${file.java5.jar}"/>
 		<pathelement location="${file.test.jar}"/>
 		<pathelement location="${drs.dir.dist.classes}"/>
 	</path>
@@ -27,8 +26,7 @@
 		<delete dir="${drs.dir.test}/temp"/>
 	</target>
 
-	<macrodef name="buildjar"
-	          description="compile, jar classes for various src folders">
+	<macrodef name="buildjar" description="compile, jar classes for various src folders">
 		<attribute name="srcdir"/>
 		<attribute name="classpathrefid"/>
 		<attribute name="include"/>
@@ -54,34 +52,31 @@
 		</sequential>
 	</macrodef>
 
-	<target name="build-core" depends="init"
-	        description="jar the core src of drs">
+	<target name="build-core" depends="init" description="jar the core src of drs">
 		<buildjar
 				srcdir="${drs.dir.src.core}"
-		        classpathrefid="class.path"
-		        jar="${file.drs.core.jar}"
-		        exclude="log4j.xml"
-		        include="**/*.xml"/>
+				classpathrefid="class.path"
+				jar="${file.drs.core.jar}"
+				exclude="log4j.xml"
+				include="**/*.xml"/>
 	</target>
 
-	<target name="build-example" depends="build-core"
-	        description="jar the example src of drs">
+	<target name="build-example" depends="build-core" description="jar the example src of drs">
 		<buildjar
 				srcdir="${drs.dir.src.tutorial}"
-		        classpathrefid="class.path"
-		        jar="${file.drs.tutorial.jar}"
-		        exclude="log4j.xml"
-		        include="**/*.xml"/>
+				classpathrefid="class.path"
+				jar="${file.drs.tutorial.jar}"
+				exclude="log4j.xml"
+				include="**/*.xml"/>
 	</target>
 
-	<target name="build-regression" depends="build-core"
-	        description="jar the test src of drs">
+	<target name="build-regression" depends="build-core" description="jar the test src of drs">
 		<buildjar
 				srcdir="${drs.dir.src.test}"
-		        classpathrefid="class.path"
-		        jar="${file.drs.test.jar}"
-		        exclude="log4j.xml"
-		        include="**/*.xml"/>
+				classpathrefid="class.path"
+				jar="${file.drs.test.jar}"
+				exclude="log4j.xml"
+				include="**/*.xml"/>
 	</target>
 
 	<target name="build-all" depends="clean">
@@ -93,11 +88,11 @@
 	<target name="javadoc">
 		<javadoc
 				destdir="${drs.dir.dist.api}"
-		        author="true"
-		        version="true"
-		        use="true"
-		        windowtitle="dRS API"
-		        classpathref="class.path">
+				author="true"
+				version="true"
+				use="true"
+				windowtitle="dRS API"
+				classpathref="class.path">
 			<fileset dir="${drs.dir.src.core}" defaultexcludes="yes">
 				<include name="com/db4o/replication/*.java"/>
 			</fileset>
@@ -139,7 +134,7 @@
 			<zipfileset file="${file.drs.test.jar}"
 			            fullpath="${zipbasedir}/lib/${filename.drs.test.jar}"/>
 		</zip>
-		<unzip src="${file.drs.zip}" dest="${drs.dir.dist}"/>		
+		<unzip src="${file.drs.zip}" dest="${drs.dir.dist}"/>
 	</target>
 
 	<target name="copyLog4j">
@@ -156,7 +151,6 @@
 
 	<target name="run-regression" depends="build-regression, copyLog4j">
 		<java classname="com.db4o.test.replication.AllTestsReplication">
-			<jvmarg line="-Xms512m -Xmx1024m"/>
 			<classpath refid="class.path"/>
 		</java>
 	</target>
