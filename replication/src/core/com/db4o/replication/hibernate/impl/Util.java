@@ -10,7 +10,6 @@ import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
-import net.sf.jga.fn.property.InstanceOf;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -33,25 +32,23 @@ import java.util.List;
 public final class Util {
 // ------------------------------ FIELDS ------------------------------
 
-	public static final Class[] metadataClasses = new Class[]{ReplicationRecord.class, ReplicationProviderSignature.class,
+	public static final Class[] metadataClasses = new Class[]{
+			ReplicationRecord.class, ReplicationProviderSignature.class,
 			ReplicationComponentField.class, ReplicationComponentIdentity.class,
 			UuidLongPartSequence.class, ObjectReference.class};
 
-	static final UnaryDisjunction<AssignableFrom> assignableFrom;
-
-	static final UnaryDisjunction<InstanceOf> instanceOf;
-
 // -------------------------- STATIC METHODS --------------------------
 
-	static {
-		UnaryDisjunction<AssignableFrom> disjunction1 = new UnaryDisjunction();
-		UnaryDisjunction<InstanceOf> disjunction2 = new UnaryDisjunction();
-		for (Class aClass : metadataClasses) {
-			disjunction1.add(new AssignableFrom<Class>(aClass));
-			disjunction2.add(new InstanceOf<Class>(aClass));
-		}
-		assignableFrom = disjunction1;
-		instanceOf = disjunction2;
+	public static boolean isAssignableFrom(Class claxx) {
+		for (Class aClass : metadataClasses)
+			if (aClass.isAssignableFrom(claxx)) return true;
+		return false;
+	}
+
+	public static Boolean isInstanceOf(Object entity) {
+		for (Class aClass : metadataClasses)
+			if (aClass.isInstance(entity)) return true;
+		return false;
 	}
 
 	public static Statement getStatement(Connection connection) {
@@ -109,10 +106,6 @@ public final class Util {
 		dumpTable(p.getName(), p.getSession(), s);
 	}
 
-	public static void dumpTable(String providerName, Session sess, String tableName) {
-		dumpTable(providerName, sess.connection(), tableName);
-	}
-
 	public static void dumpTable(String providerName, Connection con, String tableName) {
 		ResultSet rs = null;
 
@@ -138,6 +131,10 @@ public final class Util {
 		} finally {
 			closeResultSet(rs);
 		}
+	}
+
+	public static void dumpTable(String providerName, Session sess, String tableName) {
+		dumpTable(providerName, sess.connection(), tableName);
 	}
 
 	public static void closePreparedStatement(PreparedStatement ps) {
