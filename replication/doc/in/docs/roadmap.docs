@@ -15,15 +15,16 @@ This section describes the features supported in current release and features pl
 - Inheritance hierarchies
 - Standard Primitive Types
 - One-To-One Relations
-- Many-To-One Relations 
+- One-To-Many Relations 
+- Many-To-One Relations
 
 - UUID generation for db4o and Hibernate
 - Version number generation for db4o and Hibernate
 - Queries for changed objects
 - Parent-to-Child traversal along changed objects
 - Collection Replication
-
+- Replication Event System
+- Replication of deleted objects
 
 .2 Unsupported Features ..
-- Collection types other than List
-- Asymmetrical Arrays
+- Multidimensional Arrays in Hibernate replication

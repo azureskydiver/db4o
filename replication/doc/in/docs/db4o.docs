@@ -43,7 +43,7 @@ ObjectContainer desktop = db4o.OpenFile("desktop.yap");
 
 ReplicationSession replication = Replication.begin(handheld, desktop);
 
-ObjectSet changed = replication.getProviderA().objectsChangedSinceLastReplication(); 
+ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication();
 
 while (changed.hasNext()) 
 	replication.replicate(changed.next()); 
@@ -56,7 +56,7 @@ We start by opening two ObjectContainers. The next line, creates the Replication
 contains all of the replication-related logic.
 
 After creating the session, there is an interesting line:
-.c ObjectSet changed = replication.getProviderA().objectsChangedSinceLastReplication(); ..
+.c ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication(); ..
 This line of code will get the provider associated with the first of our sources (the handheld ._
 ObjectContainer in this case). Then it finds all of the objects that have been updated or created. ._
 The new/modified objects will be returned in an enumerable ObjectSet.
@@ -64,7 +64,7 @@ The new/modified objects will be returned in an enumerable ObjectSet.
 After that comes a simple loop where the resulting objects are replicated one at a time.
 
 The replication.commit() call at the end is importaint. This line will save all of the changes we 
-have made, and end any needed transactions. Forgetting to make this call will probably result in ._
+have made, and end any needed transactions. Forgetting to make this call will result in ._
 your replication changes being discarded when your application ends, or your ObjectContainers are ._
 closed.
 

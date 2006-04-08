@@ -3,8 +3,8 @@
 This documentation is intended to introduce you to the db4o Replication System (dRS).
 
 
-The dRS system provides replication functionality to periodically synchronize ._
-databases that work disconnected from eachother, such as remote autonomous servers ._
+dRS provides replication functionality to periodically synchronize ._
+databases that work disconnected from each other, such as remote autonomous servers ._
 or handheld devices synchronizing with central servers.
 
 

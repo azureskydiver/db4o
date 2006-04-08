@@ -4,7 +4,7 @@
 
 .2 Hibernate Replication Provider ..
 To extend the replication functionality to RDBMS, we utilize Hibernate as the bridge between db4o and RDBMS. ._
-HibernateReplicationProvider class implements the ReplicationProvider interface of the db4o replication system. ._
+HibernateReplicationProvider class implements the ReplicationProvider interface of the db4o replication System. ._
 HibernateReplicationProvider is the facade to a Hibernate-mapped database. It makes use of Hibernate to ._
 extract object data and save them relational tables.
 
