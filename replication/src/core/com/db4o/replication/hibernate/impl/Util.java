@@ -16,7 +16,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
@@ -27,7 +26,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.List;
 
 public final class Util {
@@ -52,32 +50,6 @@ public final class Util {
 		return false;
 	}
 
-	public static Statement getStatement(Connection connection) {
-		try {
-			return connection.createStatement();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public static PreparedStatement prepareStatement(Connection connection, String sql) {
-		try {
-			return connection.prepareStatement(sql);
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public static boolean oracleTypeMatches(int expected, int actual) {
-		if (expected == actual)
-			return true;
-
-		if (expected != Types.BIGINT)
-			throw new UnsupportedOperationException("Only support Types.BIGINT");
-
-		return actual == Types.DECIMAL;
-	}
-
 	public static long getMaxVersion(Connection con) {
 		String sql = "SELECT max(" + ReplicationRecord.VERSION + ") from " + ReplicationRecord.TABLE_NAME;
 		Statement st = null;
@@ -95,12 +67,6 @@ public final class Util {
 			closeStatement(st);
 			closeResultSet(rs);
 		}
-	}
-
-	public static void setCurrentSessionContext(Configuration cfg) {
-		String key = Environment.CURRENT_SESSION_CONTEXT_CLASS;
-		if (cfg.getProperty(key) == null)
-			cfg.setProperty(key, "thread");
 	}
 
 	public static void dumpTable(HibernateReplicationProvider p, String s) {
@@ -138,7 +104,7 @@ public final class Util {
 		}
 	}
 
-	public static void closePreparedStatement(PreparedStatement ps) {
+	private static void closePreparedStatement(PreparedStatement ps) {
 		if (ps != null) {
 			try {
 				ps.close();
@@ -158,7 +124,7 @@ public final class Util {
 		}
 	}
 
-	public static void closeStatement(Statement st) {
+	private static void closeStatement(Statement st) {
 		if (st != null) {
 			try {
 				st.close();
@@ -241,16 +207,14 @@ public final class Util {
 	}
 
 	public static long getVersion(Connection con, String className, long id) {
-		final Statement st = getStatement(con);
-
 		String sql = "SELECT " + ObjectReference.VERSION + " FROM " + ObjectReference.TABLE_NAME
 				+ " WHERE " + ObjectReference.CLASS_NAME + " = ?"
 				+ " AND " + ObjectReference.OBJECT_ID + " = ?";
-		final PreparedStatement ps = prepareStatement(con, sql);
 
-
+		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
+			ps = con.prepareStatement(sql);
 			ps.setString(1, className);
 			ps.setLong(2, id);
 
@@ -263,12 +227,12 @@ public final class Util {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
-			closeStatement(st);
 			closeResultSet(rs);
+			closePreparedStatement(ps);
 		}
 	}
 
-	public static ObjectReference getObjectReferenceById(Session session, String className, long id) {
+	static ObjectReference getObjectReferenceById(Session session, String className, long id) {
 		Criteria criteria = session.createCriteria(ObjectReference.class);
 		criteria.add(Restrictions.eq(ObjectReference.OBJECT_ID, id));
 		criteria.add(Restrictions.eq(ObjectReference.CLASS_NAME, className));
