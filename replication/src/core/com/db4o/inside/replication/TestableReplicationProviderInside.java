@@ -7,4 +7,6 @@ public interface TestableReplicationProviderInside extends ReplicationProviderIn
 	boolean supportsMultiDimensionalArrays();
 
 	boolean supportsHybridCollection();
+
+	boolean supportsRollback();
 }

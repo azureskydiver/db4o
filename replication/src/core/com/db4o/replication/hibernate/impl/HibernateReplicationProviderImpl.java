@@ -547,6 +547,10 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return false;
 	}
 
+	public boolean supportsRollback() {
+		return true;
+	}
+
 	private void clearSession() {
 		getSession().clear();
 	}

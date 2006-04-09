@@ -7,7 +7,7 @@ import org.hibernate.cfg.Configuration;
 
 
 /**
- * Utility class to configure Hibernate object update listeners to
+ * Configures Hibernate object update listeners to
  * generate object version numbers in everyday day usage.
  * <p/>
  * Version numbers are required for replication to identify modified
@@ -28,7 +28,7 @@ import org.hibernate.cfg.Configuration;
  * </pre>
  *
  * @author Albert Kwan
- * @version 1.0
+ * @version 1.2
  * @since dRS 1.0
  */
 public class ReplicationConfigurator {
@@ -36,7 +36,7 @@ public class ReplicationConfigurator {
 
 	/**
 	 * Registers object update event listeners to Configuration.
-	 * If required drs tables and columns do not exist, create them automatically.
+	 * If required drs tables do not exist, create them automatically.
 	 * <p/> This method must be called before calling Configuration.buildSessionFactory();
 	 *
 	 * @param cfg a properly configured Configuration

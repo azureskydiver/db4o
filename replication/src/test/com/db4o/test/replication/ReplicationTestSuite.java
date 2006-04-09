@@ -4,10 +4,9 @@ import com.db4o.test.TestSuite;
 import com.db4o.test.replication.collections.ListTest;
 import com.db4o.test.replication.collections.SimpleArrayTest;
 import com.db4o.test.replication.collections.map.MapTest;
-import com.db4o.test.replication.hibernate.HibernateProviderTest;
 import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.TablesCreatorTest;
-import com.db4o.test.replication.provider.TransientReplicationProviderTest;
+import com.db4o.test.replication.provider.ReplicationProviderTest;
 import com.db4o.test.replication.template.SimpleParentChild;
 import com.db4o.test.replication.template.r0tor4.R0to4Runner;
 
@@ -23,6 +22,7 @@ public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
 		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
 		return new Class[]{
+				ReplicationProviderTest.class,
 
 				ArrayReplicationTest.class,
 				ListTest.class,
@@ -39,8 +39,6 @@ public class ReplicationTestSuite extends TestSuite {
 				CollectionHandlerImplTest.class,
 				ReplicationTraversalTest.class,
 
-				TransientReplicationProviderTest.class,
-				HibernateProviderTest.class,
 				ReplicationConfiguratorTest.class,
 				TablesCreatorTest.class,
 
