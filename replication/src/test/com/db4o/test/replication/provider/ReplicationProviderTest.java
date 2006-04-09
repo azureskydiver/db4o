@@ -2,108 +2,100 @@ package com.db4o.test.replication.provider;
 
 import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
+import com.db4o.inside.replication.ReadonlyReplicationProviderSignature;
 import com.db4o.inside.replication.ReplicationReference;
-import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
-import com.db4o.replication.hibernate.metadata.PeerSignature;
 import com.db4o.test.Test;
+import com.db4o.test.replication.ReplicationTestCase;
+import com.db4o.test.replication.collections.ListHolder;
+import com.db4o.test.replication.hibernate.HibernateUtil;
 
-public abstract class ReplicationProviderTest extends Test {
-	protected TestableReplicationProviderInside subject;
-	protected static final byte[] PEER_SIGNATURE_BYTES = new byte[]{1, 2, 3, 4};
-	protected static final PeerSignature PEER_SIGNATURE = new PeerSignature(PEER_SIGNATURE_BYTES);
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-	public void testReplicationProvider() {
-		clean();
+public class ReplicationProviderTest extends ReplicationTestCase {
+// ------------------------------ FIELDS ------------------------------
 
-		prepare();
-		tstSignature();
-
-		prepare();
-		tstVersionIncrement();
-
-		prepare();
-		tstObjectsChangedSinceLastReplication();
-
-		prepare();
-		tstReferences();
-
-		prepare();
-		tstStore();
-
-		prepare();
-		tstRollback();
-
-		prepare();
-		tstDeletion();
-
-		clean();
-
-		destroySubject();
-	}
+	protected byte[] PEER_SIGNATURE_BYTES;
+	protected ReadonlyReplicationProviderSignature PEER_SIGNATURE;
 
 	protected void clean() {
-		//do nothing
-	}
-
-	protected void prepare() {
-		if (subject != null) destroySubject();
-		subject = prepareSubject();
+		for (int i = 0; i < HibernateUtil.mappings.length; i++) {
+			Class aClass = HibernateUtil.mappings[i];
+			_providerA.deleteAllInstances(aClass);
+		}
 	}
 
 	protected void tstDeletion() {
-		subject.storeNew(new Pilot("Pilot1", 42));
-		subject.storeNew(new Pilot("Pilot2", 43));
-		subject.commit();
+		_providerA.storeNew(new Pilot("Pilot1", 42));
+		_providerA.storeNew(new Pilot("Pilot2", 43));
+		_providerA.commit();
 
-		subject.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
 		Db4oUUID uuidPilot1 = uuid(findPilot("Pilot1"));
-		subject.syncVersionWithPeer(9999);
-		subject.commitReplicationTransaction(10005);
+		_providerA.syncVersionWithPeer(9999);
+		_providerA.commitReplicationTransaction(10005);
 
-		subject.storeNew(new Pilot("Pilot3", 44));
+		_providerA.storeNew(new Pilot("Pilot3", 44));
 
-		subject.delete(findPilot("Pilot1"));
+		_providerA.delete(findPilot("Pilot1"));
 
 		Car car = new Car("Car1");
 		car._pilot = findPilot("Pilot2");
-		subject.storeNew(car);
+		_providerA.storeNew(car);
 
-		subject.commit();
+		_providerA.commit();
 
-		subject.startReplicationTransaction(PEER_SIGNATURE);
-		ObjectSet deletedUuids = subject.uuidsDeletedSinceLastReplication();
-		ensure(deletedUuids.next().equals(uuidPilot1));
-		ensure(!deletedUuids.hasNext());
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		ObjectSet deletedUuids = _providerA.uuidsDeletedSinceLastReplication();
+		Test.ensure(deletedUuids.next().equals(uuidPilot1));
+		Test.ensure(!deletedUuids.hasNext());
 
 		Db4oUUID uuidCar1 = uuid(findCar("Car1"));
 		Db4oUUID uuidPilot2 = uuid(findPilot("Pilot2"));
 
-		subject.syncVersionWithPeer(12000);
-		subject.commitReplicationTransaction(12500);
+		_providerA.syncVersionWithPeer(12000);
+		_providerA.commitReplicationTransaction(12500);
 
-		subject.delete(findCar("Car1"));
-		subject.delete(findPilot("Pilot2"));
-		subject.commit();
+		_providerA.delete(findCar("Car1"));
+		_providerA.delete(findPilot("Pilot2"));
+		_providerA.commit();
 
-		subject.startReplicationTransaction(PEER_SIGNATURE);
-		deletedUuids = subject.uuidsDeletedSinceLastReplication();
-		ensure(deletedUuids.contains(uuidCar1));
-		ensure(deletedUuids.contains(uuidPilot2));
-		ensure(deletedUuids.size() == 2);
-		subject.commitReplicationTransaction(13000);
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		deletedUuids = _providerA.uuidsDeletedSinceLastReplication();
+		Test.ensure(deletedUuids.contains(uuidCar1));
+		Test.ensure(deletedUuids.contains(uuidPilot2));
+		Test.ensure(deletedUuids.size() == 2);
+		_providerA.commitReplicationTransaction(13000);
 
-		subject.deleteAllInstances(Car.class);
-		subject.deleteAllInstances(Pilot.class);
-		subject.commit();
+		_providerA.deleteAllInstances(Car.class);
+		_providerA.deleteAllInstances(Pilot.class);
+		_providerA.commit();
 	}
 
-	private Db4oUUID uuid(Object obj) {
-		return subject.produceReference(obj, null, null).uuid();
+	public void actualTest() {
+		PEER_SIGNATURE_BYTES = _providerB.getSignature().getBytes();
+		PEER_SIGNATURE = _providerB.getSignature();
+		tstSignature();
+
+		tstVersionIncrement();
+
+		tstObjectsChangedSinceLastReplication();
+
+		tstReferences();
+
+		tstStore();
+
+		tstRollback();
+
+		tstDeletion();
+
+		tstCollection();
 	}
 
 	private Object findCar(String model) {
-		ObjectSet cars = subject.getStoredObjects(Car.class);
+		ObjectSet cars = _providerA.getStoredObjects(Car.class);
 		while (cars.hasNext()) {
 			Car candidate = (Car) cars.next();
 			if (candidate.getModel().equals(model)) return candidate;
@@ -112,7 +104,7 @@ public abstract class ReplicationProviderTest extends Test {
 	}
 
 	private Pilot findPilot(String name) {
-		ObjectSet pilots = subject.getStoredObjects(Pilot.class);
+		ObjectSet pilots = _providerA.getStoredObjects(Pilot.class);
 		while (pilots.hasNext()) {
 			Pilot candidate = (Pilot) pilots.next();
 			if (candidate._name.equals(name)) return candidate;
@@ -120,189 +112,236 @@ public abstract class ReplicationProviderTest extends Test {
 		return null;
 	}
 
-	protected abstract TestableReplicationProviderInside prepareSubject();
-
-	protected abstract void destroySubject();
-
-	private void tstRollback() {
-		if (!subjectSupportsRollback()) return;
-
-		subject.startReplicationTransaction(PEER_SIGNATURE);
-		Pilot object1 = new Pilot("John Cleese", 42);
-		Db4oUUID uuid = new Db4oUUID(5678, PEER_SIGNATURE_BYTES);
-
-		ReplicationReference ref = new ReplicationReferenceImpl(object1, uuid, 1);
-		subject.referenceNewObject(object1, ref, null, null);
-
-		subject.storeReplica(object1);
-		ensure(!subject.wasModifiedSinceLastReplication(ref));
-
-		subject.rollbackReplication();
-
-		subject.startReplicationTransaction(PEER_SIGNATURE);
-		ensure(null == subject.produceReference(object1, null, null));
-		ReplicationReference byUUID = subject.produceReferenceByUUID(uuid, object1.getClass());
-		ensure(null == byUUID);
+	public void test() {
+		super.test();
 	}
 
-	protected abstract boolean subjectSupportsRollback();
+	private void tstCollection() {
+		System.out.println("ReplicationProviderTest.tstCollection");
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
 
-	private void tstStore() {
-		subject.startReplicationTransaction(PEER_SIGNATURE);
-		Pilot object1 = new Pilot("John Cleese", 42);
-		Db4oUUID uuid = new Db4oUUID(1234, PEER_SIGNATURE_BYTES);
+		Db4oUUID listHolderUuid = new Db4oUUID(1234, PEER_SIGNATURE_BYTES);
 
-		ReplicationReference ref = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", uuid, 1);
-		subject.referenceNewObject(object1, ref, null, null);
+		ListHolder listHolderFromA = new ListHolder("i am a list");
 
-		subject.storeReplica(object1);
-		ReplicationReference reference = subject.produceReferenceByUUID(uuid, object1.getClass());
-		ensure(subject.produceReference(object1, null, null) == reference);
-		ensure(reference.object() == object1);
-		subject.syncVersionWithPeer(8500);
-		subject.commitReplicationTransaction(8800);
+		ReplicationReference refFromA = new ReplicationReferenceImpl(listHolderFromA, listHolderUuid, 9555);
 
-		subject.startReplicationTransaction(PEER_SIGNATURE);
-		ObjectSet<Pilot> storedObjects = subject.getStoredObjects(Pilot.class);
-		ensure(storedObjects.hasNext());
+		ListHolder listHolderClonedInB = new ListHolder("i am a list");
 
-		Pilot reloaded = storedObjects.next();
+		_providerA.referenceNewObject(listHolderClonedInB, refFromA, null, null);
+		_providerA.storeReplica(listHolderClonedInB);
+		ReplicationReference listHolderFromB = _providerA.produceReference(listHolderClonedInB, null, null);
+		Test.ensure(listHolderFromB.object() == listHolderClonedInB);
 
-		ensure(!storedObjects.hasNext());
+		Collection collectionInB = listHolderClonedInB.getList();
 
-		ensure(subject.produceReference(reloaded, null, null).equals(reference));
+		ReplicationReference collectionRefFromB = _providerA.produceReference(collectionInB, listHolderClonedInB, "list");
+		Test.ensure(collectionRefFromB.object() == collectionInB);
 
-		reloaded._name = "i am updated";
-		subject.storeReplica(reloaded);
+		final Db4oUUID collectionUuid = collectionRefFromB.uuid();
+		ReplicationReference collectionRefFromA = new ReplicationReferenceImpl(new ArrayList(), collectionUuid, 9555);
 
-		subject.clearAllReferences();
+		_providerA.referenceNewObject(collectionInB, collectionRefFromA, listHolderFromB, "list");
+		_providerA.storeReplica(collectionInB);
+		Test.ensure(_providerA.produceReference(collectionInB, null, null) == collectionRefFromB);
+		Test.ensure(_providerA.produceReference(collectionInB, null, null).object() == collectionInB);
 
-		subject.syncVersionWithPeer(9000);
-		subject.commitReplicationTransaction(9250);
+		final ReplicationReference byUuid = _providerA.produceReferenceByUUID(collectionUuid, List.class);
+		Test.ensure(byUuid != null);
 
-		subject.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.clearAllReferences();
+		final ReplicationReference refFromBAfterClear = _providerA.produceReferenceByUUID(listHolderUuid, ListHolder.class);
+		Test.ensure(refFromBAfterClear != null);
 
-		reference = subject.produceReferenceByUUID(uuid, reloaded.getClass());
-		ensure(((Pilot) reference.object())._name.equals("i am updated"));
-		subject.syncVersionWithPeer(9500);
-		subject.commitReplicationTransaction(9800);
-		subject.deleteAllInstances(Pilot.class);
-		subject.commit();
+		final ListHolder listHolderInBAfterClear = ((ListHolder) refFromBAfterClear.object());
+		final ReplicationReference collectionRefFromBAfterClear = _providerA.produceReference(listHolderInBAfterClear.getList(), listHolderInBAfterClear, "list");
+		Test.ensure(collectionRefFromBAfterClear != null);
+
+		Test.ensure(collectionRefFromBAfterClear.uuid().equals(collectionUuid));
+
+		_providerA.rollbackReplication();
 	}
-
-	private void tstReferences() {
-		subject.storeNew(new Pilot("tst References", 42));
-		subject.commit();
-
-		subject.startReplicationTransaction(PEER_SIGNATURE);
-
-		Pilot object1 = (Pilot) subject.getStoredObjects(Pilot.class).next();
-
-		ReplicationReference reference = subject.produceReference(object1, null, null);
-		ensure(reference.object() == object1);
-
-		Db4oUUID uuid = reference.uuid();
-		ReplicationReference ref2 = subject.produceReferenceByUUID(uuid, Pilot.class);
-		ensure(ref2.equals(reference));
-
-		subject.clearAllReferences();
-		ensure(!subject.hasReplicationReferenceAlready(object1));
-		Db4oUUID db4oUUID = subject.produceReference(object1, null, null).uuid();
-		//TODO implements Db4oUUID.equals, don't use hashcode to compare
-		ensure(db4oUUID.equals(uuid));
-		subject.syncVersionWithPeer(7500);
-		subject.commitReplicationTransaction(8000);
-		subject.deleteAllInstances(Pilot.class);
-		subject.commit();
-	}
-
 
 	private void tstObjectsChangedSinceLastReplication() {
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Pilot object2 = new Pilot("Terry Gilliam", 53);
 		Car object3 = new Car("Volvo");
 
-		subject.storeNew(object1);
-		subject.storeNew(object2);
-		subject.storeNew(object3);
+		_providerA.storeNew(object1);
+		_providerA.storeNew(object2);
+		_providerA.storeNew(object3);
 
-		subject.commit();
+		_providerA.commit();
 
-		subject.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
 
-		int i = subject.objectsChangedSinceLastReplication().size();
-		ensure(i == 3);
+		int i = _providerA.objectsChangedSinceLastReplication().size();
+		Test.ensure(i == 3);
 
 
-		ObjectSet pilots = subject.objectsChangedSinceLastReplication(Pilot.class);
-		ensure(pilots.size() == 2);
-		ensure(pilots.contains(findPilot("John Cleese")));
-		ensure(pilots.contains(findPilot("Terry Gilliam")));
+		ObjectSet pilots = _providerA.objectsChangedSinceLastReplication(Pilot.class);
+		Test.ensure(pilots.size() == 2);
+		Test.ensure(pilots.contains(findPilot("John Cleese")));
+		Test.ensure(pilots.contains(findPilot("Terry Gilliam")));
 
-		ObjectSet cars = subject.objectsChangedSinceLastReplication(Car.class);
-		ensure(cars.hasNext());
-		ensure(((Car) cars.next()).getModel().equals("Volvo"));
-		ensure(!cars.hasNext());
+		ObjectSet cars = _providerA.objectsChangedSinceLastReplication(Car.class);
+		Test.ensure(cars.hasNext());
+		Test.ensure(((Car) cars.next()).getModel().equals("Volvo"));
+		Test.ensure(!cars.hasNext());
 
-		subject.syncVersionWithPeer(6000);
-		subject.commitReplicationTransaction(6001);
+		_providerA.syncVersionWithPeer(6000);
+		_providerA.commitReplicationTransaction(6001);
 
-		subject.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
 
-		ensure(!subject.objectsChangedSinceLastReplication().hasNext());
-		subject.syncVersionWithPeer(6005);
-		subject.commitReplicationTransaction(6500);
+		Test.ensure(!_providerA.objectsChangedSinceLastReplication().hasNext());
+		_providerA.syncVersionWithPeer(6005);
+		_providerA.commitReplicationTransaction(6500);
 
-		Pilot pilot = (Pilot) subject.getStoredObjects(Pilot.class).next();
+		Pilot pilot = (Pilot) _providerA.getStoredObjects(Pilot.class).next();
 		pilot._name = "Terry Jones";
 
-		Car car = (Car) subject.getStoredObjects(Car.class).next();
+		Car car = (Car) _providerA.getStoredObjects(Car.class).next();
 		car.setModel("McLaren");
 
-		subject.update(pilot);
-		subject.update(car);
+		_providerA.update(pilot);
+		_providerA.update(car);
 
-		subject.commit();
+		_providerA.commit();
 
-		subject.startReplicationTransaction(PEER_SIGNATURE);
-		ensure(subject.objectsChangedSinceLastReplication().size() == 2);
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		Test.ensure(_providerA.objectsChangedSinceLastReplication().size() == 2);
 
-		pilots = subject.objectsChangedSinceLastReplication(Pilot.class);
-		ensure(((Pilot) pilots.next())._name.equals("Terry Jones"));
-		ensure(!pilots.hasNext());
+		pilots = _providerA.objectsChangedSinceLastReplication(Pilot.class);
+		Test.ensure(((Pilot) pilots.next())._name.equals("Terry Jones"));
+		Test.ensure(!pilots.hasNext());
 
-		cars = subject.objectsChangedSinceLastReplication(Car.class);
-		ensure(((Car) cars.next()).getModel().equals("McLaren"));
-		ensure(!cars.hasNext());
-		subject.syncVersionWithPeer(6800);
-		subject.commitReplicationTransaction(7000);
+		cars = _providerA.objectsChangedSinceLastReplication(Car.class);
+		Test.ensure(((Car) cars.next()).getModel().equals("McLaren"));
+		Test.ensure(!cars.hasNext());
+		_providerA.syncVersionWithPeer(6800);
+		_providerA.commitReplicationTransaction(7000);
 
-		subject.deleteAllInstances(Pilot.class);
-		subject.deleteAllInstances(Car.class);
-		subject.commit();
+		_providerA.deleteAllInstances(Pilot.class);
+		_providerA.deleteAllInstances(Car.class);
+		_providerA.commit();
 	}
 
+	private void tstReferences() {
+		_providerA.storeNew(new Pilot("tst References", 42));
+		_providerA.commit();
 
-	private void tstVersionIncrement() {
-		subject.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
 
-		// This won't work for db4o: There is no guarantee that the version starts with 1.
-		// ensure(subject.getCurrentVersion() == 1);
+		Pilot object1 = (Pilot) _providerA.getStoredObjects(Pilot.class).next();
 
-		subject.syncVersionWithPeer(5000);
-		subject.commitReplicationTransaction(5001);
+		ReplicationReference reference = _providerA.produceReference(object1, null, null);
+		Test.ensure(reference.object() == object1);
 
-		subject.startReplicationTransaction(PEER_SIGNATURE);
+		Db4oUUID uuid = reference.uuid();
+		ReplicationReference ref2 = _providerA.produceReferenceByUUID(uuid, Pilot.class);
+		Test.ensure(ref2.equals(reference));
 
-		long version = subject.getCurrentVersion();
-
-		ensure(version >= 5000 && version <= 5002);
+		_providerA.clearAllReferences();
+		Test.ensure(!_providerA.hasReplicationReferenceAlready(object1));
+		Db4oUUID db4oUUID = _providerA.produceReference(object1, null, null).uuid();
+		//TODO implements Db4oUUID.equals, don't use hashcode to compare
+		Test.ensure(db4oUUID.equals(uuid));
+		_providerA.syncVersionWithPeer(7500);
+		_providerA.commitReplicationTransaction(8000);
+		_providerA.deleteAllInstances(Pilot.class);
+		_providerA.commit();
 	}
 
+	private void tstRollback() {
+		if (!_providerA.supportsRollback()) return;
+
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		Pilot object1 = new Pilot("John Cleese", 42);
+		Db4oUUID uuid = new Db4oUUID(5678, PEER_SIGNATURE_BYTES);
+
+		ReplicationReference ref = new ReplicationReferenceImpl(object1, uuid, 1);
+		_providerA.referenceNewObject(object1, ref, null, null);
+
+		_providerA.storeReplica(object1);
+		Test.ensure(!_providerA.wasModifiedSinceLastReplication(ref));
+
+		_providerA.rollbackReplication();
+
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		Test.ensure(null == _providerA.produceReference(object1, null, null));
+		ReplicationReference byUUID = _providerA.produceReferenceByUUID(uuid, object1.getClass());
+		Test.ensure(null == byUUID);
+		_providerA.rollbackReplication();
+	}
 
 	private void tstSignature() {
-		ensure(subject.getSignature() != null);
+		Test.ensure(_providerA.getSignature() != null);
 	}
 
+	private void tstStore() {
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		Pilot object1 = new Pilot("John Cleese", 42);
+		Db4oUUID uuid = new Db4oUUID(1234, PEER_SIGNATURE_BYTES);
 
+		ReplicationReference ref = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", uuid, 1);
+		_providerA.referenceNewObject(object1, ref, null, null);
+
+		_providerA.storeReplica(object1);
+		ReplicationReference reference = _providerA.produceReferenceByUUID(uuid, object1.getClass());
+		Test.ensure(_providerA.produceReference(object1, null, null) == reference);
+		Test.ensure(reference.object() == object1);
+		_providerA.syncVersionWithPeer(8500);
+		_providerA.commitReplicationTransaction(8800);
+
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		ObjectSet<Pilot> storedObjects = _providerA.getStoredObjects(Pilot.class);
+		Test.ensure(storedObjects.hasNext());
+
+		Pilot reloaded = storedObjects.next();
+
+		Test.ensure(!storedObjects.hasNext());
+
+		Test.ensure(_providerA.produceReference(reloaded, null, null).equals(reference));
+
+		reloaded._name = "i am updated";
+		_providerA.storeReplica(reloaded);
+
+		_providerA.clearAllReferences();
+
+		_providerA.syncVersionWithPeer(9000);
+		_providerA.commitReplicationTransaction(9250);
+
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+
+		reference = _providerA.produceReferenceByUUID(uuid, reloaded.getClass());
+		Test.ensure(((Pilot) reference.object())._name.equals("i am updated"));
+		_providerA.syncVersionWithPeer(9500);
+		_providerA.commitReplicationTransaction(9800);
+		_providerA.deleteAllInstances(Pilot.class);
+		_providerA.commit();
+	}
+
+	private void tstVersionIncrement() {
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+
+		// This won't work for db4o: There is no guarantee that the version starts with 1.
+		// Test.ensure(_providerA.getCurrentVersion() == 1);
+
+		_providerA.syncVersionWithPeer(5000);
+		_providerA.commitReplicationTransaction(5001);
+
+		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+
+		long version = _providerA.getCurrentVersion();
+
+		Test.ensure(version >= 5000 && version <= 5002);
+
+		_providerA.syncVersionWithPeer(5003);
+		_providerA.commitReplicationTransaction(5005);
+	}
+
+	private Db4oUUID uuid(Object obj) {
+		return _providerA.produceReference(obj, null, null).uuid();
+	}
 }

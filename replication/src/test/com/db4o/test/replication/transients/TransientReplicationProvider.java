@@ -260,6 +260,10 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return true;
 	}
 
+	public boolean supportsRollback() {
+		return false;
+	}
+
 	public boolean supportsMultiDimensionalArrays() {
 		return true;
 	}

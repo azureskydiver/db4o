@@ -28,8 +28,8 @@ public class HibernateUtil {
 
 	protected static int jdbcUrlCounter = 0;
 
-	private static final String refAsTableA = createNewDbConfig().getProperty(Environment.URL);
-	private static final String refAsTableB = createNewDbConfig().getProperty(Environment.URL);
+	private static final String aUrl = createNewDbConfig().getProperty(Environment.URL);
+	private static final String bUrl = createNewDbConfig().getProperty(Environment.URL);
 
 // -------------------------- STATIC METHODS --------------------------
 
@@ -49,12 +49,12 @@ public class HibernateUtil {
 		return cfg;
 	}
 
-	public static HibernateReplicationProvider refAsTableProviderA() {
-		return new HibernateReplicationProviderImpl(addAllMappings(reuse(refAsTableA)), "refAsTableA");
+	public static HibernateReplicationProvider newProviderA() {
+		return new HibernateReplicationProviderImpl(addAllMappings(reuse(aUrl)), "Hibernate providerA");
 	}
 
-	public static HibernateReplicationProvider refAsTableProviderB() {
-		return new HibernateReplicationProviderImpl(addAllMappings(reuse(refAsTableB)), "refAsTableB");
+	public static HibernateReplicationProvider newProviderB() {
+		return new HibernateReplicationProviderImpl(addAllMappings(reuse(bUrl)), "Hibernate providerB");
 	}
 
 	/**
@@ -87,8 +87,8 @@ public class HibernateUtil {
 		return addAllMappings(new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-A.cfg.xml"));
 	}
 
-	public static Configuration produceOracleConfigA() {
+	public static HibernateReplicationProvider produceOracleConfigA() {
 		Configuration cfg = new Configuration().configure("com/db4o/test/replication/hibernate/oracle/hibernate-Oracle-A.cfg.xml");
-		return addAllMappings(cfg);
+		return new HibernateReplicationProviderImpl(addAllMappings(cfg), "Oracle providerA");
 	}
 }
