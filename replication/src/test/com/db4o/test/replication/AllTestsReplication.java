@@ -2,16 +2,19 @@
 
 package com.db4o.test.replication;
 
+import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
 import com.db4o.test.AllTests;
 import com.db4o.test.TestSuite;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
 import com.db4o.test.replication.hibernate.HibernateUtil;
+import com.db4o.test.replication.transients.TransientReplicationProvider;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
 
 public class AllTestsReplication extends AllTests {
 
 	public static void main(String[] args) {
 		new AllTestsReplication().run();
-//        System.exit(0);
 	}
 
 	public void run() {
@@ -22,12 +25,24 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	private void registerProviderPairs() {
-		//ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65}, "A"), new TransientReplicationProvider(new byte[]{66}, "B"));
+		//mock();
+		hsql();
+		//oracle();
+	}
 
-		ReplicationTestCase.registerProviderPair(HibernateUtil.newProviderA(), HibernateUtil.newProviderB());
+	private void mock() {
+		ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65}, "A"), new TransientReplicationProvider(new byte[]{66}, "B"));
+	}
 
-		//ReplicationTestCase.registerProviderPair(HibernateUtil.produceOracleConfigA(), Db4oReplicationTestUtil.newProviderB());
-//        ReplicationTestcase.registerProviderPair(HibernateUtil.produceMySQLConfigA());
+	private void hsql() {ReplicationTestCase.registerProviderPair(HibernateUtil.newProviderA(), HibernateUtil.newProviderB());}
+
+	private void oracle() {
+		Configuration tmp = HibernateUtil.oracleConfigA();
+		ReplicationConfiguration.decorate(tmp);
+		HibernateUtil.addAllMappings(tmp);
+		new SchemaExport(tmp).drop(false, true);
+
+		ReplicationTestCase.registerProviderPair(HibernateUtil.newOracleProviderA(), new TransientReplicationProvider(new byte[]{66}, "B"));
 	}
 
 	protected void addTestSuites(TestSuite suites) {

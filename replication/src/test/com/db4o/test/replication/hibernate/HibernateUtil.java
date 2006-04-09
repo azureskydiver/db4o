@@ -87,8 +87,11 @@ public class HibernateUtil {
 		return addAllMappings(new Configuration().configure("com/db4o/test/replication/hibernate/mysql/hibernate-MySQL-A.cfg.xml"));
 	}
 
-	public static HibernateReplicationProvider produceOracleConfigA() {
-		Configuration cfg = new Configuration().configure("com/db4o/test/replication/hibernate/oracle/hibernate-Oracle-A.cfg.xml");
-		return new HibernateReplicationProviderImpl(addAllMappings(cfg), "Oracle providerA");
+	public static HibernateReplicationProvider newOracleProviderA() {
+		return new HibernateReplicationProviderImpl(addAllMappings(oracleConfigA()), "Oracle A");
+	}
+
+	public static Configuration oracleConfigA() {
+		return new Configuration().configure("com/db4o/test/replication/hibernate/oracle/hibernate-Oracle-A.cfg.xml");
 	}
 }

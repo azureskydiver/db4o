@@ -1,16 +1,18 @@
 package com.db4o.test.replication.hibernate;
 
 import com.db4o.replication.ReplicationConfigurator;
+import com.db4o.replication.hibernate.HibernateReplicationProvider;
 import com.db4o.replication.hibernate.impl.Util;
 import com.db4o.replication.hibernate.metadata.Uuid;
 import com.db4o.test.Test;
 import com.db4o.test.replication.CollectionHolder;
+import com.db4o.test.replication.ReplicationTestCase;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-public class ReplicationConfiguratorTest {
+public class ReplicationConfiguratorTest extends ReplicationTestCase {
 // ------------------------------ FIELDS ------------------------------
 
 	protected SessionFactory sessionFactory;
@@ -24,6 +26,13 @@ public class ReplicationConfiguratorTest {
 
 	public ReplicationConfiguratorTest() {
 
+	}
+
+	protected void actualTest() {
+		if (_providerA instanceof HibernateReplicationProvider) {
+			oneRound();
+			oneRound();
+		}
 	}
 
 	protected void checkVersion(Configuration cfg, Session session, Object obj, long expected) {
@@ -64,6 +73,7 @@ public class ReplicationConfiguratorTest {
 	protected Configuration prepareCfg() {return HibernateUtil.createNewDbConfig();}
 
 	private void oneRound() {
+		System.out.println("ReplicationConfiguratorTest.oneRound");
 		init();
 
 		sessionFactory = cfg.buildSessionFactory();
@@ -77,12 +87,10 @@ public class ReplicationConfiguratorTest {
 		tstCollectionUpdate();
 		tstCollectionRemove();
 
-		clean();
 	}
 
 	public void test() {
-		oneRound();
-		oneRound();
+		super.test();
 	}
 
 	public void tstCollectionRemove() {
@@ -94,6 +102,9 @@ public class ReplicationConfiguratorTest {
 
 		session.save(ch);
 		session.flush();
+
+		Uuid uuid = getUuid(session, ch);
+		Test.ensure(uuid != null);
 
 		ch.set.add("8");
 		session.flush();
@@ -120,7 +131,11 @@ public class ReplicationConfiguratorTest {
 		checkVersion(cfg, session, ch, raisedVer);
 
 		session.delete(ch);
+		session.flush();
+		ensureDeleted(session, uuid);
 		tx.commit();
+
+		//Util.dumpTable("a", session, "ObjectReference");
 
 		session.close();
 	}
@@ -135,6 +150,9 @@ public class ReplicationConfiguratorTest {
 
 		session.save(ch);
 		session.flush();
+
+		Uuid uuid = getUuid(session, ch);
+		Test.ensure(uuid != null);
 
 		ch.set.add("8");
 		session.flush();
@@ -151,6 +169,9 @@ public class ReplicationConfiguratorTest {
 
 		tx = session.beginTransaction();
 		session.delete(ch);
+		session.flush();
+
+		ensureDeleted(session, uuid);
 		tx.commit();
 
 		session.close();
