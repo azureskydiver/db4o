@@ -9,7 +9,7 @@ The basics are already covered in .l First Steps .. . Let's re-iterate some of t
 
 .2 hibernate.cfg.xml ..
 It is important that "hibernate.hbm2ddl.auto" be set to "update" because the system will create some extra tables ._
-to store the metadata of replication.
+to store the metadata for replication to work properly.
 .c
 <property name="hibernate.hbm2ddl.auto">update</property>
 ..
@@ -26,7 +26,7 @@ is required for replication to work properly.
 .c
 <hibernate-mapping default-access="field" default-lazy="false" default-cascade="all">
 ..
-You have to define a identity column for the object.
+You must define an artificial identity column for the object.
 .c
 <id column="id" type="long">
 	<generator class="native"/>
@@ -390,6 +390,8 @@ objectContainer.close();
 Our replication system supports Java array and Collections. Simply use the <one-to-many> or <many-to-many> ._
 mappings in hbm files, then you can replicate the objects in Collections successfully.
 
+Remember that a Collection must not be shared by two owners, otherwise, hibernate will throw an exception.
+
 .1 Keeping track of object changes ..
 After replication completes, objects are synchronized across db4o and RDBMS. ._
 Later, in the next round replication, you can replicate objects that are changed ._
@@ -424,11 +426,9 @@ dRS does that.
 In chapter 3  .l db4oReplication db4o replication ..  , you have already seen that dRS uses UUID to identify an object. ._
 To store this metadate in relational database, dRS will do the following:
 1) - Creates a "ReplicationProviderSignature" table to store the signature of the database system that originates the object (the second part of UUID)
-2) - For each entity object table, e.g. Car, Pilot tables
- a - creates a column named "drs_uuid_long_part" to store the object ID (the first part of UUID)
- b - creates a column named "drs_provider_id" to store the foreign key which points to the ReplicationProviderSignature
+2) - Creates a "ObjectReference" table to store the UUIDs and version numbers of objects
 
-During replication, dRS will makes use of these tables and columns to uniquely identify objects.
+During replication, dRS will makes use of these tables to uniquely identify objects.
 
 .2 Generating UUID for new objects ..
 As mentioned above, object is identified by both the first part and second part of UUID. ._
@@ -437,7 +437,7 @@ They only differs in the first part of UUID. So dRS needs to have the ability to
 first part for each new object.
 
 To do so, dRS generate the first parts of new objects as a sequence of integers. ._
-dRS creates a table named "UUID_LONG_PART_SEQUENCE" to store the current sequence number. ._
+dRS creates a table named "UuidLongPartSequence" to store the current sequence number. ._
 When a new object is saved, dRS asks the table for the sequence number and uses it as the first ._
 part of UUID of that object.
 
@@ -455,53 +455,41 @@ replication is 11. dRS uses this number to compare with the version number of ob
 version number is larger than the replication version number, then dRS knows the object is changed since ._
 last replication.
 
-.2 List of dRS tables and columns ..
+.2 List of dRS tables ..
 
 .3 dRS tables ..
  - ReplicationComponentField
  - ReplicationComponentIdentity
  - ReplicationProviderSignature
  - ReplicationRecord
- - uuid_long_part_sequence
+ - UuidLongPartSequence
+ - ObjectReference
 
 Oracle 9i/10g dialect of the DDL
 .c
-create table ReplicationComponentField (id number(10,0) not null, referencingObjectClassName varchar2(255 char) not null, referencingObjectFieldName varchar2(255 char) not null, primary key (id), unique (referencingObjectClassName, referencingObjectFieldName));
-create table ReplicationComponentIdentity (id number(10,0) not null, uuidLongPart number(19,0) not null, referencingObjectUuidLongPart number(19,0) not null, referencingObjectField number(10,0) not null, provider number(19,0), primary key (id), unique (uuidLongPart, referencingObjectUuidLongPart, referencingObjectField));
-create table ReplicationProviderSignature (drs_provider_id number(19,0) not null, class varchar2(255 char) not null, bytes raw(255), creationTime number(19,0), primary key (drs_provider_id));
-create table ReplicationRecord (id number(19,0) not null, version number(19,0), primary key (id));
-create table uuid_long_part_sequence (unused_id number(10,0) not null, current_seq_number number(19,0), primary key (unused_id));
-
-alter table ReplicationComponentIdentity add constraint FK4BFE028F150828D2 foreign key (provider) references ReplicationProviderSignature;
-alter table ReplicationComponentIdentity add constraint FK4BFE028F8E65D9F6 foreign key (referencingObjectField) references ReplicationComponentField;
-alter table ReplicationRecord add constraint FK7F31971DFC6E5FCB foreign key (id) references ReplicationProviderSignature;
+create table ObjectReference (id number(19,0) not null, longPart number(19,0) not null, provider number(19,0) not null, className varchar2(255), objectId number(19,0), version number(19,0), deleted char(1), primary key (id), unique (longPart, provider))
+create table ReplicationComponentField (id number(19,0) not null, referencingObjectClassName varchar2(255) not null, referencingObjectFieldName varchar2(255) not null, primary key (id), unique (referencingObjectClassName, referencingObjectFieldName))
+create table ReplicationComponentIdentity (id number(19,0) not null, uuidLongPart number(19,0) not null, provider number(19,0) not null, referencingObjectUuidLongPart number(19,0) not null, referencingObjectField number(19,0) not null, primary key (id), unique (uuidLongPart, provider))
+create table ReplicationProviderSignature (drs_provider_id number(19,0) not null, class varchar2(255) not null, bytes raw(255) not null, creationTime number(19,0), primary key (drs_provider_id))
+create table ReplicationRecord (id number(19,0) not null, version number(19,0) not null, primary key (id))
+create table UuidLongPartSequence (unused_id number(19,0) not null, current_seq_number number(19,0) not null, primary key (unused_id))
+alter table ObjectReference add constraint FK82F9AAAC8071AB25 foreign key (provider) references ReplicationProviderSignature
+alter table ReplicationComponentIdentity add constraint FK4BFE028F9FC4B083 foreign key (referencingObjectField) references ReplicationComponentField
+alter table ReplicationComponentIdentity add constraint FK4BFE028F8071AB25 foreign key (provider) references ReplicationProviderSignature
+alter table ReplicationRecord add constraint FK7F31971DB6D8E1D8 foreign key (id) references ReplicationProviderSignature
 ..
 
 To find out the dialect of other RDBMS, run any of the dRS example with your RDBMS, set the output level ._
 in log4j.xml from "FATAL" to "DEBUG". Search for entries of "SchemaUpdate" , then you will find out the ._
 DDL of your RDBMS dialect.
 
-.3 dRS columns ..
-For each table for persisted object, e.g. Car or Pilot, the following columns are created:
- - drs_uuid_long_part 
- - drs_version 
- - drs_provider_id 
-
-Oracle 9i/10g dialect of the DDL
-.c
-ALTER TABLE Car add drs_uuid_long_part number(19,0);
-ALTER TABLE Car add drs_version number(19,0);
-ALTER TABLE Car add drs_provider_id number(19,0);
-ALTER TABLE Car add constraint DB4O_Car foreign key (drs_provider_id) references ReplicationProviderSignature;
-..
-
 .2 Turning off the automatic creation of dRS tables and columns ..
 In some situations, you may not have the privilege to create or alter tables. You may need to ask your DBA ._
-to create the tables and columns for you before using dRS.
+to create the tables for you before using dRS.
 
 You can turn off the automatic creation of dRS tables and columns by changing the "hibernate.hbm2ddl.auto" ._
 property to "validate" in hibernate.cfg.xml. By doing so, dRS will not create or alter any tables. Rather, ._
-it will check the existence of the dRS tables and columns before starting replication.
+it will check the existence of the dRS tables before starting replication.
 
-If the required dRS tables and columns do not exist, dRS will throw a RuntimeException notifying the user ._
-and the replication will not begin.
+If the required dRS tables do not exist, dRS will throw a RuntimeException notifying the user ._
+and the replication will halt.
