@@ -15,7 +15,7 @@ package com.db4o.replication;
  *
  * @author Albert Kwan
  * @author Klaus Wuestefeld
- * @version 1.0
+ * @version 1.2
  * @see Replication
  * @since dRS 1.0
  */
