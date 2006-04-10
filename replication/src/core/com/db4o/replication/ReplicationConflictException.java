@@ -3,9 +3,9 @@
 package com.db4o.replication;
 
 public class ReplicationConflictException extends RuntimeException {
+// --------------------------- CONSTRUCTORS ---------------------------
 
 	public ReplicationConflictException(String message) {
 		super(message);
 	}
-	
 }

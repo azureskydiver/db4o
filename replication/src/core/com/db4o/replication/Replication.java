@@ -14,54 +14,24 @@ import org.hibernate.cfg.Configuration;
  *
  * @author Albert Kwan
  * @author Klaus Wuestefeld
- * @version 1.0
+ * @version 1.2
  * @see ReplicationProvider
  * @see ReplicationEventListener
  * @see org.hibernate.cfg.Configuration
  * @since dRS 1.0
  */
 public class Replication {
+// -------------------------- STATIC METHODS --------------------------
 
 	/**
-	 * begins a replication session between db4o and db4o.
-	 */
-	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2, ReplicationEventListener resolver) {
-		return begin(wrap(oc1), wrap(oc2), resolver);
-	}
-
-	/**
-	 * begins a replication session between db4o and db4o, no conflict resolver.
+	 * begins a replication session between two ReplicationProviders, no conflict
+	 * resolver
 	 *
 	 * @throws ReplicationConflictException when conflicts occur
 	 * @see ReplicationEventListener
 	 */
-	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2) {
-		return begin(oc1, oc2, null);
-	}
-
-	/**
-	 * begins a replication session between db4o and Hibernate
-	 */
-	public static ReplicationSession begin(ObjectContainer oc, Configuration cfg, ReplicationEventListener resolver) {
-		return begin(wrap(oc), wrap(cfg), resolver);
-	}
-
-	/**
-	 * begins a replication session between db4o and Hibernate, no conflict
-	 * resolver.
-	 *
-	 * @throws ReplicationConflictException when conflicts occur
-	 * @see ReplicationEventListener
-	 */
-	public static ReplicationSession begin(ObjectContainer oc, Configuration cfg) {
-		return begin(oc, cfg, null);
-	}
-
-	/**
-	 * begins a replication session between Hibernate and Hibernate
-	 */
-	public static ReplicationSession begin(Configuration cfg1, Configuration cfg2, ReplicationEventListener resolver) {
-		return begin(wrap(cfg1), wrap(cfg2), resolver);
+	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB) {
+		return begin(providerA, providerB, null);
 	}
 
 	/**
@@ -76,6 +46,27 @@ public class Replication {
 	}
 
 	/**
+	 * begins a replication session between db4o and Hibernate, no conflict
+	 * resolver.
+	 *
+	 * @throws ReplicationConflictException when conflicts occur
+	 * @see ReplicationEventListener
+	 */
+	public static ReplicationSession begin(ObjectContainer oc, Configuration cfg) {
+		return begin(oc, cfg, null);
+	}
+
+	/**
+	 * begins a replication session between db4o and db4o, no conflict resolver.
+	 *
+	 * @throws ReplicationConflictException when conflicts occur
+	 * @see ReplicationEventListener
+	 */
+	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2) {
+		return begin(oc1, oc2, null);
+	}
+
+	/**
 	 * begins a replication session between two ReplicatoinProviders
 	 */
 	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB, ReplicationEventListener resolver) {
@@ -86,14 +77,24 @@ public class Replication {
 	}
 
 	/**
-	 * begins a replication session between two ReplicationProviders, no conflict
-	 * resolver
-	 *
-	 * @throws ReplicationConflictException when conflicts occur
-	 * @see ReplicationEventListener
+	 * begins a replication session between Hibernate and Hibernate
 	 */
-	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB) {
-		return begin(providerA, providerB, null);
+	public static ReplicationSession begin(Configuration cfg1, Configuration cfg2, ReplicationEventListener resolver) {
+		return begin(wrap(cfg1), wrap(cfg2), resolver);
+	}
+
+	/**
+	 * begins a replication session between db4o and Hibernate
+	 */
+	public static ReplicationSession begin(ObjectContainer oc, Configuration cfg, ReplicationEventListener resolver) {
+		return begin(wrap(oc), wrap(cfg), resolver);
+	}
+
+	/**
+	 * begins a replication session between db4o and db4o.
+	 */
+	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2, ReplicationEventListener resolver) {
+		return begin(wrap(oc1), wrap(oc2), resolver);
 	}
 
 	private static ReplicationProvider wrap(Object obj) {

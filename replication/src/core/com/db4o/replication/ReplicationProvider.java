@@ -14,12 +14,19 @@ import com.db4o.ext.Db4oUUID;
  *
  * @author Albert Kwan
  * @author Klaus Wuestefeld
- * @version 1.0
+ * @version 1.2
  * @see ReplicationSession
  * @see Replication
  * @since dRS 1.0
  */
 public interface ReplicationProvider {
+	/**
+	 * Get the object from this provider.
+	 *
+	 * @param uuid the UUID of the object
+	 * @return the object
+	 */
+	Object getObject(Db4oUUID uuid);
 
 	/**
 	 * Returns newly created objects and changed objects since last replication.
@@ -32,7 +39,6 @@ public interface ReplicationProvider {
 	 * Returns newly created objects and changed objects since last replication..
 	 *
 	 * @param clazz the type of objects interested
-	 *
 	 * @return newly created objects and changed objects of the type specified in the clazz parameter since last replication
 	 */
 	ObjectSet objectsChangedSinceLastReplication(Class clazz);
@@ -43,7 +49,4 @@ public interface ReplicationProvider {
 	 * @return newly created objects and changed objects since last replication
 	 */
 	ObjectSet uuidsDeletedSinceLastReplication();
-
-	Object getObject(Db4oUUID uuid);
-
 }
