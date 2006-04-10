@@ -84,6 +84,26 @@ namespace com.db4o.inside.query
             return ExecuteImpl<Extent>(predicate, predicate.Target, predicate.Method, predicate.Delegate, comparator);
 	    }
 	    
+	    public static System.Collections.Generic.IList<Extent> ExecuteInstrumentedStaticDelegateQuery<Extent>(ObjectContainer container,
+                                                                                    System.Predicate<Extent> predicate,
+                                                                                    RuntimeMethodHandle predicateMethodHandle)
+	    {
+            return ExecuteInstrumentedDelegateQuery(container, null, predicate, predicateMethodHandle);
+	    }
+
+        public static System.Collections.Generic.IList<Extent> ExecuteInstrumentedDelegateQuery<Extent>(ObjectContainer container,
+                                                                                    object target,
+                                                                                    System.Predicate<Extent> predicate,
+                                                                                    RuntimeMethodHandle predicateMethodHandle)
+        {
+            return ((YapStream)container).getNativeQueryHandler().ExecuteMeta(
+                new MetaDelegate<Predicate<Extent>>(
+                    target,
+                    predicate,
+                    System.Reflection.MethodBase.GetMethodFromHandle(predicateMethodHandle)),
+                null);
+        }
+	    
         private System.Collections.Generic.IList<Extent> ExecuteImpl<Extent>(
                                                                         object originalPredicate,
                                                                         object matchTarget,

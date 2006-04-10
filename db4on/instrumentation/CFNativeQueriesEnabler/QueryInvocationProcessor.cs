@@ -13,30 +13,22 @@ namespace CFNativeQueriesEnabler
         private AssemblyDefinition _assembly;
 
         private TypeReference _System_Predicate;
-        private TypeReference _System_Reflection_MethodBase;
         private TypeReference _System_Object;
         private TypeReference _System_Void;
-        private MethodReference _System_Reflection_MethodBase_GetMethodFromHandle;
-
-        private TypeReference _MetaDelegate;
-        private TypeReference _YapStream;
-        private MethodReference _YapStream_GetNativeQueryHandler;
-        private MethodReference _NativeQueryHandler_ExecuteMeta;
         
-        private Dictionary<TypeReference, MethodReference> _cachedMetaPredicateConstructors = new Dictionary<TypeReference, MethodReference>();
-            
+        private TypeReference _YapStream;
+        private MethodReference _NativeQueryHandler_ExecuteInstrumentedDelegateQuery;
+        private MethodReference _NativeQueryHandler_ExecuteInstrumentedStaticDelegateQuery;
+        
         public QueryInvocationProcessor(AssemblyDefinition assembly)
         {
             _assembly = assembly;
             _YapStream = Import(typeof(YapStream));
             _System_Predicate = Import(typeof(System.Predicate<object>).GetGenericTypeDefinition());
-            _MetaDelegate = Import(typeof(MetaDelegate<object>).GetGenericTypeDefinition());
-            _System_Reflection_MethodBase = Import(typeof(System.Reflection.MethodBase));
             _System_Object = Import(typeof(object));
             _System_Void = Import(typeof(void));
-            _YapStream_GetNativeQueryHandler = Import(typeof(YapStream).GetMethod("GetNativeQueryHandler", BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase));
-            _System_Reflection_MethodBase_GetMethodFromHandle = Import(typeof(MethodBase).GetMethod("GetMethodFromHandle", new Type[] { typeof(System.RuntimeMethodHandle) }));
-            _NativeQueryHandler_ExecuteMeta = Import(typeof(com.db4o.inside.query.NativeQueryHandler).GetMethod("ExecuteMeta"));
+            _NativeQueryHandler_ExecuteInstrumentedDelegateQuery = Import(typeof(com.db4o.inside.query.NativeQueryHandler).GetMethod("ExecuteInstrumentedDelegateQuery", BindingFlags.Public|BindingFlags.Static));
+            _NativeQueryHandler_ExecuteInstrumentedStaticDelegateQuery = Import(typeof(com.db4o.inside.query.NativeQueryHandler).GetMethod("ExecuteInstrumentedStaticDelegateQuery", BindingFlags.Public | BindingFlags.Static));
         }
 
         public void Process(MethodDefinition parent, Instruction queryInvocation)
@@ -63,71 +55,33 @@ namespace CFNativeQueriesEnabler
         private void ProcessPredicateCreationPattern(CilWorker worker, Instruction queryInvocation)
         {
             MethodReference predicateMethod = GetMethodReferenceFromInlinePredicatePattern(queryInvocation);
-            Instruction queryPatternStart = GetNthPrevious(queryInvocation, 3);
-            InsertGetNativeQueryHandlerBefore(worker, queryPatternStart);
-
-            worker.InsertAfter(queryPatternStart, worker.Create(OpCodes.Dup)); // target object
-
-            ReplaceByExecuteMeta(worker, queryInvocation, GetMethodReferenceFromInlinePredicatePattern(queryInvocation));
+            
+            Instruction ldftn = GetNthPrevious(queryInvocation, 2);
+            worker.InsertBefore(ldftn, worker.Create(OpCodes.Dup));
+            
+            worker.InsertBefore(queryInvocation, worker.Create(OpCodes.Ldtoken, predicateMethod));
+            
+            // At this point the stack is like this:
+            //     runtime method handle, delegate reference, target object, ObjectContainer
+            worker.Replace(queryInvocation,
+                           worker.Create(OpCodes.Call,
+                                         InstantiateGenericMethod(
+                                             _NativeQueryHandler_ExecuteInstrumentedDelegateQuery,
+                                             GetQueryCallExtent(queryInvocation))));
         }
 
         private void ProcessCachedStaticFieldPattern(CilWorker worker, Instruction queryInvocation)
         {
-            Instruction queryPatternStart = GetNthPrevious(queryInvocation, 8);
-            InsertGetNativeQueryHandlerBefore(worker, queryPatternStart);
+            MethodReference predicateMethod = GetMethodReferenceFromStaticFieldPattern(queryInvocation);
+            worker.InsertBefore(queryInvocation, worker.Create(OpCodes.Ldtoken, predicateMethod));
 
-            worker.InsertBefore(queryPatternStart, worker.Create(OpCodes.Ldnull)); // target object
-
-            ReplaceByExecuteMeta(worker, queryInvocation, GetMethodReferenceFromStaticFieldPattern(queryInvocation));
-        }
-
-        private void ReplaceByExecuteMeta(CilWorker worker, Instruction queryInvocation, MethodReference targetMethod)
-        {
-            TypeReference extent = GetQueryCallExtent(queryInvocation);
-
-            worker.InsertBefore(queryInvocation, worker.Create(OpCodes.Ldtoken, targetMethod));
-            worker.InsertBefore(queryInvocation, worker.Create(OpCodes.Call, _System_Reflection_MethodBase_GetMethodFromHandle));
-
-            worker.InsertBefore(queryInvocation, worker.Create(OpCodes.Newobj,
-                                                                    GetMetaPredicateConstructor(extent)));
-            worker.InsertBefore(queryInvocation, worker.Create(OpCodes.Ldnull)); // comparator
-
-            worker.Replace(queryInvocation, worker.Create(OpCodes.Callvirt,
-                                                               InstantiateGenericMethod(
-                                                                   _NativeQueryHandler_ExecuteMeta,
-                                                                   extent)));
-        }
-
-        private void InsertGetNativeQueryHandlerBefore(CilWorker worker, Instruction instruction)
-        {
-            worker.InsertBefore(instruction, worker.Create(OpCodes.Castclass, _YapStream));
-            worker.InsertBefore(instruction,
-                                worker.Create(OpCodes.Callvirt,
-                                              _YapStream_GetNativeQueryHandler));
-        }
-
-        MethodReference GetMetaPredicateConstructor(TypeReference extent)
-        {
-            MethodReference ctor = null;
-            if (!_cachedMetaPredicateConstructors.TryGetValue(extent, out ctor))
-            {
-                ctor = CreateMetaPredicateConstructor(extent);
-                _cachedMetaPredicateConstructors.Add(extent, ctor);
-            }
-            return ctor;
-        }
-
-        private MethodReference CreateMetaPredicateConstructor(TypeReference extent)
-        {
-            // MetaPredicate<System.Predicate<extent> >
-            GenericInstanceType concretePredicate = InstantiateGenericType(_System_Predicate, extent);
-            GenericInstanceType concreteMetaDelegate = InstantiateGenericType(_MetaDelegate, concretePredicate);
-            MethodReference ctor = new MethodReference(MethodDefinition.Ctor, concreteMetaDelegate, _System_Void, true, false, MethodCallingConvention.Default);
-            ctor.Parameters.Add(new ParameterDefinition(_System_Object));
-            ctor.Parameters.Add(new ParameterDefinition(_MetaDelegate.GenericParameters[0]));
-            ctor.Parameters.Add(new ParameterDefinition(_System_Reflection_MethodBase));
-            _assembly.MainModule.MemberReferences.Add(ctor);
-            return ctor;
+            // At this point the stack is like this:
+            //     runtime method handle, delegate reference, ObjectContainer
+            worker.Replace(queryInvocation,
+                           worker.Create(OpCodes.Call,
+                                         InstantiateGenericMethod(
+                                             _NativeQueryHandler_ExecuteInstrumentedStaticDelegateQuery,
+                                             GetQueryCallExtent(queryInvocation))));
         }
 
         private GenericInstanceType InstantiateGenericType(TypeReference genericTypeDefinition, params TypeReference[] arguments)
@@ -171,17 +125,6 @@ namespace CFNativeQueriesEnabler
         private MethodReference Import(MethodBase method)
         {
             return _assembly.MainModule.Import(method);
-        }
-
-        private Instruction RemoveNPrevious(CilWorker worker, Instruction instr, int n)
-        {
-            Instruction previous = instr;
-            for (int i = 0; i < n; ++i)
-            {
-                previous = previous.Previous;
-                worker.Remove(previous);
-            }
-            return previous;
         }
 
         private MethodReference GetMethodReferenceFromStaticFieldPattern(Instruction instr)
