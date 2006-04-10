@@ -9,6 +9,15 @@ import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
+import com.db4o.test.replication.collections.ListContent;
+import com.db4o.test.replication.collections.ListHolder;
+import com.db4o.test.replication.collections.SimpleArrayContent;
+import com.db4o.test.replication.collections.SimpleArrayHolder;
+import com.db4o.test.replication.collections.map.MapContent;
+import com.db4o.test.replication.collections.map.MapHolder;
+import com.db4o.test.replication.provider.Car;
+import com.db4o.test.replication.provider.Pilot;
+import com.db4o.test.replication.template.r0tor4.R0;
 
 
 public abstract class ReplicationTestCase {
@@ -20,6 +29,16 @@ public abstract class ReplicationTestCase {
 	protected TestableReplicationProviderInside _providerB;
 
 	private long _timer;
+	public static final Class[] mappings;
+
+	static {
+		mappings = new Class[]{CollectionHolder.class, Replicated.class,
+				SPCParent.class, SPCChild.class,
+				ListHolder.class, ListContent.class,
+				MapHolder.class, MapContent.class,
+				SimpleArrayContent.class, SimpleArrayHolder.class,
+				R0.class, Pilot.class, Car.class};
+	}
 
 // -------------------------- STATIC METHODS --------------------------
 
@@ -36,7 +55,15 @@ public abstract class ReplicationTestCase {
 //		_providerB = p._providerB;
 //	}
 
-	protected abstract void clean();
+	protected void clean() {
+		for (int i = 0; i < mappings.length; i++) {
+			_providerA.deleteAllInstances(mappings[i]);
+			_providerB.deleteAllInstances(mappings[i]);
+		}
+
+		_providerA.commit();
+		_providerB.commit();
+	}
 
 	protected void checkEmpty() {
 		ReplicationSession replication = Replication.begin(_providerA, _providerB);
