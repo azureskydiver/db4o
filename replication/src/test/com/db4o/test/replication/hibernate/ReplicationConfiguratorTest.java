@@ -41,12 +41,14 @@ public class ReplicationConfiguratorTest extends ReplicationTestCase {
 	}
 
 	protected void clean() {
-		Session session = openSession();
-		Transaction tx = session.beginTransaction();
-		session.createQuery("delete from CollectionHolder").executeUpdate();
-		tx.commit();
-		session.close();
-		sessionFactory.close();
+		if (_providerA instanceof HibernateReplicationProvider) {
+			Session session = openSession();
+			Transaction tx = session.beginTransaction();
+			session.createQuery("delete from CollectionHolder").executeUpdate();
+			tx.commit();
+			session.close();
+			sessionFactory.close();
+		}
 	}
 
 	protected void ensureDeleted(Session session, Uuid uuid) {

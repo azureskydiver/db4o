@@ -25,8 +25,8 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	private void registerProviderPairs() {
-		//mock();
 		hsql();
+		mock();
 		//oracle();
 	}
 
