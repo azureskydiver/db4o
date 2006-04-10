@@ -8,7 +8,6 @@ import com.db4o.replication.hibernate.impl.ReplicationReferenceImpl;
 import com.db4o.test.Test;
 import com.db4o.test.replication.ReplicationTestCase;
 import com.db4o.test.replication.collections.ListHolder;
-import com.db4o.test.replication.hibernate.HibernateUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,8 +20,8 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 	protected ReadonlyReplicationProviderSignature PEER_SIGNATURE;
 
 	protected void clean() {
-		for (int i = 0; i < HibernateUtil.mappings.length; i++) {
-			Class aClass = HibernateUtil.mappings[i];
+		for (int i = 0; i < mappings.length; i++) {
+			Class aClass = mappings[i];
 			_providerA.deleteAllInstances(aClass);
 		}
 		_providerA.deleteAllInstances(ArrayList.class);
