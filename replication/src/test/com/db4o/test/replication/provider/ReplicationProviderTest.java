@@ -25,6 +25,9 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 			Class aClass = HibernateUtil.mappings[i];
 			_providerA.deleteAllInstances(aClass);
 		}
+		_providerA.deleteAllInstances(ArrayList.class);
+
+		_providerA.commit();
 	}
 
 	protected void tstDeletion() {
@@ -130,19 +133,21 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		_providerA.referenceNewObject(listHolderClonedInB, refFromA, null, null);
 		_providerA.storeReplica(listHolderClonedInB);
-		ReplicationReference listHolderFromB = _providerA.produceReference(listHolderClonedInB, null, null);
-		Test.ensure(listHolderFromB.object() == listHolderClonedInB);
+		ReplicationReference listHolderFromBRef = _providerA.produceReference(listHolderClonedInB, null, null);
+		Test.ensure(listHolderFromBRef.object() == listHolderClonedInB);
 
 		Collection collectionInB = listHolderClonedInB.getList();
 
+		final Db4oUUID collectionUuid = new Db4oUUID(9588, PEER_SIGNATURE_BYTES);
+
+		ReplicationReference collectionRefFromA = new ReplicationReferenceImpl(new ArrayList(), collectionUuid, 9555);
+		_providerA.referenceNewObject(collectionInB, collectionRefFromA, listHolderFromBRef, "list");
+		_providerA.storeReplica(collectionInB);
+
 		ReplicationReference collectionRefFromB = _providerA.produceReference(collectionInB, listHolderClonedInB, "list");
+		Test.ensure(collectionRefFromB != null);
 		Test.ensure(collectionRefFromB.object() == collectionInB);
 
-		final Db4oUUID collectionUuid = collectionRefFromB.uuid();
-		ReplicationReference collectionRefFromA = new ReplicationReferenceImpl(new ArrayList(), collectionUuid, 9555);
-
-		_providerA.referenceNewObject(collectionInB, collectionRefFromA, listHolderFromB, "list");
-		_providerA.storeReplica(collectionInB);
 		Test.ensure(_providerA.produceReference(collectionInB, null, null) == collectionRefFromB);
 		Test.ensure(_providerA.produceReference(collectionInB, null, null).object() == collectionInB);
 
@@ -159,7 +164,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		Test.ensure(collectionRefFromBAfterClear.uuid().equals(collectionUuid));
 
-		_providerA.rollbackReplication();
+		_providerA.commitReplicationTransaction(15000);
 	}
 
 	private void tstObjectsChangedSinceLastReplication() {
