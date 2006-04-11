@@ -1,12 +1,9 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.test.replication.template;
+package com.db4o.test.replication;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.test.Test;
-import com.db4o.test.replication.ReplicationTestCase;
-import com.db4o.test.replication.SPCChild;
-import com.db4o.test.replication.SPCParent;
 
 public class SimpleParentChild extends ReplicationTestCase {
 

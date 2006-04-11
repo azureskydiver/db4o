@@ -17,7 +17,7 @@ import com.db4o.test.replication.collections.map.MapContent;
 import com.db4o.test.replication.collections.map.MapHolder;
 import com.db4o.test.replication.provider.Car;
 import com.db4o.test.replication.provider.Pilot;
-import com.db4o.test.replication.template.r0tor4.R0;
+import com.db4o.test.replication.r0tor4.R0;
 
 
 public abstract class ReplicationTestCase {

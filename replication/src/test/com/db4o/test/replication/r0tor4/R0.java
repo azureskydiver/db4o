@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.test.replication.template.r0tor4;
+package com.db4o.test.replication.r0tor4;
 
 
 public class R0 {
