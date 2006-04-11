@@ -19,7 +19,7 @@ public interface ReplicationEvent {
 	/**
 	 * The user can choose to override the prevailing object.
 	 *
-	 * @param chosen the ObjectState of the prevailing object
+	 * @param chosen the ObjectState of the prevailing object or null if you want to skip the replication of this object.
 	 */
 	void overrideWith(ObjectState chosen);
 

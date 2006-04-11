@@ -10,6 +10,8 @@ import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationSession;
 import org.hibernate.cfg.Configuration;
 
+import java.util.List;
+
 public class Example {
 	public static void main(String[] args) {
 
@@ -19,8 +21,16 @@ public class Example {
 		//Read the Hibernate Config file (in the classpath)
 		Configuration hibernateConfiguration = new Configuration().configure("hibernate.cfg.xml");
 
-		//Start a Replication Session
-		ReplicationEventListener resolver = new ReplicationEventListener() {
+//Start a Replication Session
+		ReplicationEventListener listener;
+		listener = new ReplicationEventListener() {
+			public void onReplicate(ReplicationEvent event) {
+				if (event.stateInProviderA().getObject() instanceof List)
+					event.stopTraversal();
+			}
+		};
+
+		listener = new ReplicationEventListener() {
 			public void onReplicate(ReplicationEvent event) {
 				if (event.isConflict()) {
 					ObjectState chosenObjectState = event.stateInProviderA();
@@ -29,7 +39,7 @@ public class Example {
 			}
 		};
 
-		ReplicationSession replication = Replication.begin(objectContainer, hibernateConfiguration, resolver);
+		ReplicationSession replication = Replication.begin(objectContainer, hibernateConfiguration, listener);
 
 		//Query for changed objects
 		ObjectSet changedObjects = replication.providerB().objectsChangedSinceLastReplication();
