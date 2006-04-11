@@ -23,13 +23,15 @@ import com.db4o.test.replication.template.r0tor4.R0;
 public abstract class ReplicationTestCase {
 // ------------------------------ FIELDS ------------------------------
 
+	public static final Class[] mappings;
 	static private final Collection4 PROVIDER_PAIRS = new Collection4();
 
 	protected TestableReplicationProviderInside _providerA;
 	protected TestableReplicationProviderInside _providerB;
 
 	private long _timer;
-	public static final Class[] mappings;
+
+// -------------------------- STATIC METHODS --------------------------
 
 	static {
 		mappings = new Class[]{CollectionHolder.class, Replicated.class,
@@ -40,8 +42,6 @@ public abstract class ReplicationTestCase {
 				R0.class, Pilot.class, Car.class};
 	}
 
-// -------------------------- STATIC METHODS --------------------------
-
 	public static void registerProviderPair(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB) {
 		PROVIDER_PAIRS.add(new ProviderPair(providerA, providerB));
 	}
@@ -49,6 +49,15 @@ public abstract class ReplicationTestCase {
 // -------------------------- OTHER METHODS --------------------------
 
 	protected abstract void actualTest();
+
+	protected void checkEmpty() {
+		ReplicationSession replication = Replication.begin(_providerA, _providerB);
+
+		checkClean(_providerA);
+		checkClean(_providerB);
+
+		replication.commit();
+	}
 
 //	protected void init(ProviderPair p) {
 //		_providerA = p._providerA;
@@ -63,15 +72,6 @@ public abstract class ReplicationTestCase {
 
 		_providerA.commit();
 		_providerB.commit();
-	}
-
-	protected void checkEmpty() {
-		ReplicationSession replication = Replication.begin(_providerA, _providerB);
-
-		checkClean(_providerA);
-		checkClean(_providerB);
-
-		replication.commit();
 	}
 
 	protected void delete(Class[] classes) {

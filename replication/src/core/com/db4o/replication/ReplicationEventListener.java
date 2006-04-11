@@ -3,9 +3,8 @@
 package com.db4o.replication;
 
 /**
- * Defines the contract for handling of update events generated from a session.
- * Users can implement this interface to resolve replication conflicts
- * according to their own business rules.
+ * Defines the contract for handling of replication events generated from a replication session.
+ * Users can implement this interface to resolve replication conflicts according to their own business rules.
  *
  * @author Albert Kwan
  * @author Klaus Wuestefeld
