@@ -24,7 +24,7 @@ class ObjectStateImpl implements ObjectState {
 	public boolean wasDeleted() {
 		return _wasDeleted;
 	}
-	
+
 	void setAll(Object obj, boolean isNew, boolean wasModified, boolean wasDeleted) {
 		_object = obj;
 		_isNew = isNew;
@@ -32,4 +32,13 @@ class ObjectStateImpl implements ObjectState {
 		_wasDeleted = wasDeleted;
 	}
 
+
+	public String toString() {
+		return "ObjectStateImpl{" +
+				"_object=" + _object +
+				", _isNew=" + _isNew +
+				", _wasModified=" + _wasModified +
+				", _wasDeleted=" + _wasDeleted +
+				'}';
+	}
 }

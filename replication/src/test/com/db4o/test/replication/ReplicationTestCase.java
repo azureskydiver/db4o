@@ -7,6 +7,7 @@ import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.Replication;
+import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 import com.db4o.test.replication.collections.ListContent;
@@ -144,6 +145,22 @@ public abstract class ReplicationTestCase {
 		while (allObjects.hasNext()) {
 			Object changed = allObjects.next();
 			//System.out.println("changed = " + changed);
+			replication.replicate(changed);
+		}
+		replication.commit();
+	}
+
+	protected void replicateAll(
+			TestableReplicationProviderInside from, TestableReplicationProviderInside to, ReplicationEventListener listener) {
+		ReplicationSession replication = Replication.begin(from, to, listener);
+		ObjectSet allObjects = from.objectsChangedSinceLastReplication();
+
+		if (!allObjects.hasNext())
+			throw new RuntimeException("Can't find any objects to replicate");
+
+		while (allObjects.hasNext()) {
+			Object changed = allObjects.next();
+			System.out.println("changed = " + changed);
 			replication.replicate(changed);
 		}
 		replication.commit();

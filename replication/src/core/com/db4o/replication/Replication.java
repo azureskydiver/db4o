@@ -69,32 +69,32 @@ public class Replication {
 	/**
 	 * begins a replication session between two ReplicatoinProviders
 	 */
-	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB, ReplicationEventListener resolver) {
-		if (resolver == null) {
-			resolver = new DefaultReplicationEventListener();
+	public static ReplicationSession begin(ReplicationProvider providerA, ReplicationProvider providerB, ReplicationEventListener listener) {
+		if (listener == null) {
+			listener = new DefaultReplicationEventListener();
 		}
-		return new GenericReplicationSession(providerA, providerB, resolver);
+		return new GenericReplicationSession(providerA, providerB, listener);
 	}
 
 	/**
 	 * begins a replication session between Hibernate and Hibernate
 	 */
-	public static ReplicationSession begin(Configuration cfg1, Configuration cfg2, ReplicationEventListener resolver) {
-		return begin(wrap(cfg1), wrap(cfg2), resolver);
+	public static ReplicationSession begin(Configuration cfg1, Configuration cfg2, ReplicationEventListener listener) {
+		return begin(wrap(cfg1), wrap(cfg2), listener);
 	}
 
 	/**
 	 * begins a replication session between db4o and Hibernate
 	 */
-	public static ReplicationSession begin(ObjectContainer oc, Configuration cfg, ReplicationEventListener resolver) {
-		return begin(wrap(oc), wrap(cfg), resolver);
+	public static ReplicationSession begin(ObjectContainer oc, Configuration cfg, ReplicationEventListener listener) {
+		return begin(wrap(oc), wrap(cfg), listener);
 	}
 
 	/**
 	 * begins a replication session between db4o and db4o.
 	 */
-	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2, ReplicationEventListener resolver) {
-		return begin(wrap(oc1), wrap(oc2), resolver);
+	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2, ReplicationEventListener listener) {
+		return begin(wrap(oc1), wrap(oc2), listener);
 	}
 
 	private static ReplicationProvider wrap(Object obj) {

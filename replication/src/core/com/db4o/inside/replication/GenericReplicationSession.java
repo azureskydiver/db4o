@@ -207,20 +207,32 @@ public class GenericReplicationSession implements ReplicationSession {
 		if (changedInB && _directionTo == _peerB) conflict = true;
 
 		Object prevailing = obj;
+
+		_peerA.activate(objectA);
+		_peerB.activate(objectB);
+
+		_event.resetAction();
+		_event._isConflict = conflict;
+		_stateInA.setAll(objectA, false, changedInA, false);
+		_stateInB.setAll(objectB, false, changedInB, false);
+		_listener.onReplicate(_event);
+
 		if (conflict) {
-			_peerA.activate(objectA);
-			_peerB.activate(objectB);
-
-			_event.resetAction();
-			_event._isConflict = true;
-			_stateInA.setAll(objectA, false, changedInA, false);
-			_stateInB.setAll(objectB, false, changedInB, false);
-			_listener.onReplicate(_event);
-
 			if (!_event._actionWasChosen) throwReplicationConflictException();
 			if (_event._actionChosen == null) return false;
 			if (_event._actionChosen == _stateInA) prevailing = objectA;
 			if (_event._actionChosen == _stateInB) prevailing = objectB;
+		} else {
+
+			if (_event._actionWasChosen) {
+
+				if (_event._actionChosen == _stateInA) prevailing = objectA;
+				if (_event._actionChosen == _stateInB) prevailing = objectB;
+				if (_event._actionChosen == null) return false;
+			} else {
+				if (changedInA) prevailing = objectA;
+				if (changedInB) prevailing = objectB;
+			}
 		}
 
 		ReplicationProviderInside prevailingPeer = prevailing == objectA ? _peerA : _peerB;

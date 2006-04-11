@@ -13,6 +13,10 @@ public class SPCParent {
 
 	}
 
+	public SPCParent(String name) {
+		this.name = name;
+	}
+
 	public SPCParent(SPCChild child, String name) {
 		this.child = child;
 		this.name = name;
@@ -36,7 +40,11 @@ public class SPCParent {
 		this.name = name;
 	}
 
+
 	public String toString() {
-		return "name = " + name + ", child =  " + child;
+		return "SPCParent{" +
+				"child=" + child +
+				", name='" + name + '\'' +
+				'}';
 	}
 }

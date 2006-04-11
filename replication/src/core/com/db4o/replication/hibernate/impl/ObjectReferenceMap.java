@@ -28,6 +28,7 @@ final class ObjectReferenceMap {
 	}
 
 	public final ReplicationReference put(Object obj, Db4oUUID uuid, long version) {
+		if (delegate.containsKey(obj)) throw new RuntimeException("key already existed");
 		ReplicationReference result = new ReplicationReferenceImpl(obj, uuid, version);
 		delegate.put(obj, result);
 		return result;
@@ -42,6 +43,13 @@ final class ObjectReferenceMap {
 
 	public String toString() {
 		return delegate.toString();
+	}
+
+	public ReplicationReference getByUUID(Db4oUUID uuid) {
+		for (ReplicationReference ref : delegate.values())
+			if (ref.uuid().equals(uuid))
+				return ref;
+		return null;
 	}
 }
 
