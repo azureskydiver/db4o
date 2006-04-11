@@ -26,7 +26,7 @@ namespace j4o.lang
 
 		public static long currentTimeMillis() 
 		{
-			return j4o.util.Date.toJavaMilliseconds(DateTime.Now);
+			return j4o.util.Date.toJavaMilliseconds(DateTime.Now.ToUniversalTime);
 		}
 
 		public static int floatToIntBits(float value) 
