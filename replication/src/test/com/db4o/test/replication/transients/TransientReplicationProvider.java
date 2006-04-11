@@ -250,6 +250,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 	}
 
 	public void update(Object o) {
+		//TODO klaus, did you forget to traverse?
 		transientProviderSpecificStore(o);
 	}
 

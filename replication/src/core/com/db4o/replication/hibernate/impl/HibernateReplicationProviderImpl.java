@@ -293,7 +293,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		ensureReplicationActive();
 
 		ReplicationReference existing = _objRefs.get(obj);
-
 		if (existing != null) return existing;
 
 		if (_collectionHandler.canHandle(obj)) {
@@ -313,6 +312,9 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		if (hint == null) throw new IllegalArgumentException("hint cannot be null");
 
 		getSession().flush();
+
+		ReplicationReference exist = _objRefs.getByUUID(uuid);
+		if (exist != null) return exist;
 
 		if (_collectionHandler.canHandle(hint)) {
 			return produceCollectionReferenceByUUID(uuid);
