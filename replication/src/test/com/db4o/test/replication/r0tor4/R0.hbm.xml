@@ -7,7 +7,7 @@
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-access="field" default-lazy="false">
-	<class name="com.db4o.test.replication.template.r0tor4.R0" table="R0">
+	<class name="com.db4o.test.replication.r0tor4.R0" table="R0">
 		<id column="id" type="long">
 			<generator class="native"/>
 		</id>
@@ -15,16 +15,16 @@
 		<property name="name"/>
 		<many-to-one name="r0" cascade="all"/>
 		<many-to-one name="r1" cascade="all"/>
-		<subclass name="com.db4o.test.replication.template.r0tor4.R1">
+		<subclass name="com.db4o.test.replication.r0tor4.R1">
 			<many-to-one name="circle1" cascade="all"/>
 			<many-to-one name="r2" cascade="all"/>
-			<subclass name="com.db4o.test.replication.template.r0tor4.R2">
+			<subclass name="com.db4o.test.replication.r0tor4.R2">
 				<many-to-one name="circle2" cascade="all"/>
 				<many-to-one name="r3" cascade="all"/>
-				<subclass name="com.db4o.test.replication.template.r0tor4.R3">
+				<subclass name="com.db4o.test.replication.r0tor4.R3">
 					<many-to-one name="circle3" cascade="all"/>
 					<many-to-one name="r4" cascade="all"/>
-					<subclass name="com.db4o.test.replication.template.r0tor4.R4">
+					<subclass name="com.db4o.test.replication.r0tor4.R4">
 						<many-to-one name="circle4" cascade="all"/>
 					</subclass>
 				</subclass>

@@ -7,8 +7,7 @@ import com.db4o.test.replication.collections.map.MapTest;
 import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.TablesCreatorTest;
 import com.db4o.test.replication.provider.ReplicationProviderTest;
-import com.db4o.test.replication.template.SimpleParentChild;
-import com.db4o.test.replication.template.r0tor4.R0to4Runner;
+import com.db4o.test.replication.r0tor4.R0to4Runner;
 
 public class ReplicationTestSuite extends TestSuite {
 
