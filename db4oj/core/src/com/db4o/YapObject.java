@@ -367,7 +367,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
                 i_yapClass.readVirtualAttributes(a_trans, this);
             }
 	    }else{
-            if(i_virtualAttributes.i_database == null || i_virtualAttributes.i_uuid == 0){
+            if(! i_virtualAttributes.suppliesUUID()){
                 if(i_yapClass.hasVirtualAttributes()){
                     i_yapClass.readVirtualAttributes(a_trans, this);
                 }

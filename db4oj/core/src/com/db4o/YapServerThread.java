@@ -231,7 +231,7 @@ final class YapServerThread extends Thread {
             YapStream stream = getStream();
             long ver = 0;
             synchronized(stream){
-                ver = getStream().bootRecord().i_versionGenerator;
+                ver = getStream().bootRecord().currentVersion();
             }
             Msg.ID_LIST.getWriterForLong(getTransaction(), ver).write(getStream(), i_socket);
             return true;

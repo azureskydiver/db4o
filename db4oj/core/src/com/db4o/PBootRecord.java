@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 /**
  * database boot record. Responsible for ID generation, version generation and
@@ -14,14 +15,24 @@ import com.db4o.ext.*;
 public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
 
     transient YapFile         i_stream;
+    
     public Db4oDatabase       i_db;
+    
     public long               i_uuidGenerator;
+    
     public long               i_versionGenerator;
+    
     public int                i_generateVersionNumbers;
+    
     public int                i_generateUUIDs;
+    
     private transient boolean i_dirty;
 
     public MetaIndex          i_uuidMetaIndex;
+    
+    private transient TimeStampIdGenerator _uuidTimeGenerator;
+    
+    private transient TimeStampIdGenerator _versionTimeGenerator;
     
     
     public PBootRecord(){
@@ -30,10 +41,15 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
     public int activationDepth() {
         return Integer.MAX_VALUE;
     }
+    
+    private void createVersionTimeGenerator(){
+        if(_versionTimeGenerator == null){
+            _versionTimeGenerator = new TimeStampIdGenerator(i_versionGenerator); 
+        }
+    }
 
     void init(Config4Impl a_config) {
         i_db = Db4oDatabase.generate();
-        i_uuidGenerator = Unobfuscated.randomLong();
         i_uuidMetaIndex = new MetaIndex();
         initConfig(a_config);
         i_dirty = true;
@@ -54,39 +70,6 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         }
         
         return modified;
-        
-        
-        // Below is a reflection-based approach to copy all fields with the same name.
-        // Let's stay in manual mode for now so db4o can run without reflection.
-        
-        
-//        Class myClass = this.getClass();
-//        Class configClass = a_config.getClass();
-//        Field[] fields = myClass.getDeclaredFields();
-//        for (int i = 0; i < fields.length; i++) {
-//            try {
-//                Field field = configClass.getField(fields[i].getName());
-//                if (field != null) {
-//                    Object obj = field.get(a_config);
-//                    if (obj != null) {
-//                        YapClass yc = i_stream.i_handlers.getYapClassStatic(
-//                        		a_config.reflector().forObject(obj)
-//                            );
-//                        if (yc instanceof YapClassPrimitive) {
-//                            YapJavaClass yjc = (YapJavaClass) ((YapClassPrimitive) yc).i_handler;
-//                            if (!yjc.primitiveNull().equals(obj)) {
-//                                fields[i].set(this, obj);
-//                                modified = true;
-//                            }
-//                        }
-//                    }
-//                }
-//            } catch (Exception e) {
-//                // e.printStackTrace();
-//            }
-//        }
-//        return modified;
-        
     }
     
     MetaIndex getUUIDMetaIndex(){
@@ -108,7 +91,21 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
 
     long newUUID() {
         i_dirty = true;
-        return i_uuidGenerator++;
+        if(_uuidTimeGenerator == null){
+            _uuidTimeGenerator = new TimeStampIdGenerator(i_uuidGenerator);
+        }
+        i_uuidGenerator = _uuidTimeGenerator.generate();
+        return i_uuidGenerator;
+    }
+    
+    public void raiseVersion(long a_minimumVersion) {
+        if (i_versionGenerator < a_minimumVersion) {
+            createVersionTimeGenerator();
+            _versionTimeGenerator.minimumNext(a_minimumVersion);
+            i_versionGenerator = a_minimumVersion;
+            setDirty();
+            store(1);
+        }
     }
     
     public void setDirty(){
@@ -117,7 +114,8 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
 
     public void store(int a_depth) {
         if (i_dirty) {
-            i_versionGenerator++;
+            createVersionTimeGenerator();
+            i_versionGenerator = _versionTimeGenerator.generate();
             i_stream.showInternalClasses(true);
             super.store(a_depth);
             i_stream.showInternalClasses(false);
@@ -125,8 +123,14 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         i_dirty = false;
     }
 
-    long version() {
+    long nextVersion() {
         i_dirty = true;
+        createVersionTimeGenerator();
+        i_versionGenerator = _versionTimeGenerator.generate();
+        return i_versionGenerator;
+    }
+    
+    long currentVersion(){
         return i_versionGenerator;
     }
 

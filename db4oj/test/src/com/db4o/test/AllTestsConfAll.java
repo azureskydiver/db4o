@@ -2,8 +2,6 @@
 
 package com.db4o.test;
 
-import com.db4o.*;
-import com.db4o.test.acid.*;
 import com.db4o.test.cluster.*;
 import com.db4o.test.conjunctions.*;
 import com.db4o.test.constraints.*;
@@ -11,6 +9,7 @@ import com.db4o.test.foundation.Collection4TestCase;
 import com.db4o.test.interfaces.*;
 import com.db4o.test.nativequery.*;
 import com.db4o.test.soda.*;
+import com.db4o.test.virtualfields.*;
 
 public class AllTestsConfAll extends TestSuite{
 
@@ -21,9 +20,8 @@ public class AllTestsConfAll extends TestSuite{
         suites.add(new ConstraintsTestSuite());
         suites.add(new ConjunctionsTestSuite());
         suites.add(new InterfacesTestSuite());
-        if(Db4oVersion.MAJOR >= 5){
-            suites.add(new NativeQueryTestSuite());
-        }
+        suites.add(new NativeQueryTestSuite());
+        suites.add(new VirtualFieldsTestSuite());
 	}
     
     public Class[] tests(){

@@ -12,7 +12,9 @@ import com.db4o.foundation.ShallowClone;
 public class VirtualAttributes implements ShallowClone{
     
     public Db4oDatabase i_database;
+    
     public long i_version;
+    
     public long i_uuid;
     
     public Object shallowClone() {
@@ -21,6 +23,10 @@ public class VirtualAttributes implements ShallowClone{
     	va.i_version=i_version;
     	va.i_uuid=i_uuid;
     	return va;
+    }
+    
+    boolean suppliesUUID(){
+        return i_database != null && i_uuid != 0;
     }
 
 }
