@@ -98,7 +98,7 @@ public abstract class YapFile extends YapStream {
     }
 
     long currentVersion() {
-        return _bootRecord.i_versionGenerator;
+        return _bootRecord.currentVersion();
     }
 
     void initNewClassCollection() {
@@ -434,11 +434,7 @@ public abstract class YapFile extends YapStream {
     }
 
     public void raiseVersion(long a_minimumVersion) {
-        if (_bootRecord.i_versionGenerator < a_minimumVersion) {
-            _bootRecord.i_versionGenerator = a_minimumVersion;
-            _bootRecord.setDirty();
-            _bootRecord.store(1);
-        }
+        _bootRecord.raiseVersion(a_minimumVersion);
     }
 
     public YapWriter readWriterByID(Transaction a_ta, int a_id) {

@@ -16,7 +16,7 @@ class YapFieldVersion extends YapFieldVirtual {
     }
     
     void addFieldIndex(YapWriter a_writer, boolean a_new) {
-        YLong.writeLong(a_writer.getStream().bootRecord().version(), a_writer);
+        YLong.writeLong(a_writer.getStream().bootRecord().nextVersion(), a_writer);
     }
     
     void delete(YapWriter a_bytes, boolean isUpdate) {
@@ -32,7 +32,7 @@ class YapFieldVersion extends YapFieldVirtual {
         PBootRecord br = stream.bootRecord();
         if (!a_migrating) {
             if (br != null) {
-                a_yapObject.i_virtualAttributes.i_version = br.version();
+                a_yapObject.i_virtualAttributes.i_version = br.nextVersion();
             }
         }else{
             if(br != null){
