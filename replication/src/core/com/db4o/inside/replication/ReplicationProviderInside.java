@@ -30,6 +30,8 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 * @return the current transaction serial number
 	 */
 	long getCurrentVersion();
+    
+    long getLastReplicationVersion();
 
 	public Object getMonitor();
 

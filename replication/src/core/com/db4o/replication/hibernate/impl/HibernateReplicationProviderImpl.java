@@ -642,7 +642,10 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return field;
 	}
 
-	private long getLastReplicationVersion() {
+	public long getLastReplicationVersion() {
+        
+        // FIXME: Please Albert, this has to be generated from _replicationRecor._version
+        
 		ensureReplicationActive();
 
 		return getCurrentVersion() - 1;
