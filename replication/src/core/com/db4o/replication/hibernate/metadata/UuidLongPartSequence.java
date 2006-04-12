@@ -1,6 +1,6 @@
 package com.db4o.replication.hibernate.metadata;
 
-import com.db4o.replication.hibernate.impl.Constants;
+import com.db4o.foundation.*;
 
 public class UuidLongPartSequence {
 // ------------------------------ FIELDS ------------------------------
@@ -8,11 +8,13 @@ public class UuidLongPartSequence {
 	public static final String TABLE_NAME = "UuidLongPartSequence";
 
 	private long current;
+    
+    private transient TimeStampIdGenerator _generator;
 
 // --------------------------- CONSTRUCTORS ---------------------------
 
 	public UuidLongPartSequence() {
-		current = Constants.MIN_SEQ_NO;
+		
 	}
 
 // --------------------- GETTER / SETTER METHODS ---------------------
@@ -32,8 +34,14 @@ public class UuidLongPartSequence {
 				"current=" + current +
 				'}';
 	}
+    
+    public long getNext(){
+        if(_generator == null){
+            _generator = new TimeStampIdGenerator(current);
+        }
+        current = _generator.generate();
+        return current;
+    }
+    
 
-	public void increment() {
-		current++;
-	}
 }
