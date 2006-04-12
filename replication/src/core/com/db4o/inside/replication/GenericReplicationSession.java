@@ -31,6 +31,8 @@ public class GenericReplicationSession implements ReplicationSession {
 	private ObjectStateImpl _stateInB = _event._stateInProviderB;
 
 	private final Traverser _traverser;
+    
+    private long _lastReplicationVersion;
 
 	private Hashtable4 _processedUuids = new Hashtable4(1000);
 
@@ -60,6 +62,13 @@ public class GenericReplicationSession implements ReplicationSession {
 			synchronized (_peerB.getMonitor()) {
 				_peerA.startReplicationTransaction(_peerB.getSignature());
 				_peerB.startReplicationTransaction(_peerA.getSignature());
+                
+                long versionA = _peerA.getLastReplicationVersion();
+                long versionB = _peerB.getLastReplicationVersion();
+                
+                // FIXME: cr work in progress here
+                // _lastReplicationVersion = _
+                
 			}
 		}
 	}
@@ -181,6 +190,9 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		if (otherRef == null) {
 			markAsProcessed(uuid);
+            
+            // FIXME: cr work in progress here
+            // if(ownerRef.version() )
 
 			if (other.wasDeletedSinceLastReplication(uuid))
 				return handleDeletionInOther(obj, ownerRef, owner, other, referencingObject, fieldName);
