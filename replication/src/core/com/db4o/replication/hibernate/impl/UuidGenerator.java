@@ -17,10 +17,9 @@ final class UuidGenerator {
 			throw new RuntimeException("UuidLongPartSequence not found");
 		else {
 			UuidLongPartSequence uuidLongPartSequence = (UuidLongPartSequence) exisitings.get(0);
-			uuidLongPartSequence.increment();
 
 			Uuid out = new Uuid();
-			out.setLongPart(uuidLongPartSequence.getCurrent());
+			out.setLongPart(uuidLongPartSequence.getNext());
 			out.setProvider(Util.genMySignature(session));
 
 			return out;

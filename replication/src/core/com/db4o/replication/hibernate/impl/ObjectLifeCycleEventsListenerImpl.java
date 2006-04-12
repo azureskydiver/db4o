@@ -1,5 +1,6 @@
 package com.db4o.replication.hibernate.impl;
 
+import com.db4o.foundation.*;
 import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
 import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
 import com.db4o.replication.hibernate.metadata.ObjectReference;
@@ -91,7 +92,12 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 
 	public void onFlush(FlushEvent event) throws HibernateException {
 		final Session s = getSession();
-		final long ver = Util.getMaxVersion(s.connection()) + 1;
+        
+        // FIXME: The following two lines require a query, that is too
+        // expensive for every flush. Instead there should be a 
+        // TimeStampIdGenerator associated with every Session.
+		final long maxVersion = Util.getMaxVersion(s.connection()) ;
+        final long ver = new TimeStampIdGenerator(maxVersion).generate();
 
 		for (ObjectReference ref : dirtyNewRefs) {
 			ref.setUuid(UuidGenerator.next(s));
