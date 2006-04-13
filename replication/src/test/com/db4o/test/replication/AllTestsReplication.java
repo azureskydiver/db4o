@@ -25,8 +25,8 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	private void registerProviderPairs() {
-        db4o();
-		// hsql();
+		//db4o();
+		hsql();
 		//mock();
 		//oracle();
 	}
@@ -34,10 +34,10 @@ public class AllTestsReplication extends AllTests {
 	private void mock() {
 		ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65}, "A"), new TransientReplicationProvider(new byte[]{66}, "B"));
 	}
-    
-    private void db4o(){
-        ReplicationTestCase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), Db4oReplicationTestUtil.newProviderB());
-    }
+
+	private void db4o() {
+		ReplicationTestCase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), Db4oReplicationTestUtil.newProviderB());
+	}
 
 	private void hsql() {ReplicationTestCase.registerProviderPair(HibernateUtil.newProviderA(), HibernateUtil.newProviderB());}
 

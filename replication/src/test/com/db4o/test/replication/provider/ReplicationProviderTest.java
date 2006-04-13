@@ -36,8 +36,10 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		_providerA.startReplicationTransaction(PEER_SIGNATURE);
 		Db4oUUID uuidPilot1 = uuid(findPilot("Pilot1"));
-		_providerA.syncVersionWithPeer(9999);
-		_providerA.commitReplicationTransaction(10005);
+		long ver;
+		ver = _providerA.getCurrentVersion();
+		_providerA.syncVersionWithPeer(ver);
+		_providerA.commitReplicationTransaction(ver + 1);
 
 		_providerA.storeNew(new Pilot("Pilot3", 44));
 
@@ -57,8 +59,10 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Db4oUUID uuidCar1 = uuid(findCar("Car1"));
 		Db4oUUID uuidPilot2 = uuid(findPilot("Pilot2"));
 
-		_providerA.syncVersionWithPeer(12000);
-		_providerA.commitReplicationTransaction(12500);
+		ver = _providerA.getCurrentVersion();
+
+		_providerA.syncVersionWithPeer(ver);
+		_providerA.commitReplicationTransaction(ver + 1);
 
 		_providerA.delete(findCar("Car1"));
 		_providerA.delete(findPilot("Pilot2"));
@@ -69,7 +73,10 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Test.ensure(deletedUuids.contains(uuidCar1));
 		Test.ensure(deletedUuids.contains(uuidPilot2));
 		Test.ensure(deletedUuids.size() == 2);
-		_providerA.commitReplicationTransaction(13000);
+
+		ver = _providerA.getCurrentVersion();
+
+		_providerA.commitReplicationTransaction(ver);
 
 		_providerA.deleteAllInstances(Car.class);
 		_providerA.deleteAllInstances(Pilot.class);
@@ -80,8 +87,6 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		PEER_SIGNATURE_BYTES = _providerB.getSignature().getBytes();
 		PEER_SIGNATURE = _providerB.getSignature();
 		tstSignature();
-
-		tstVersionIncrement();
 
 		tstObjectsChangedSinceLastReplication();
 
@@ -162,20 +167,21 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Test.ensure(collectionRefFromBAfterClear != null);
 
 		Test.ensure(collectionRefFromBAfterClear.uuid().equals(collectionUuid));
+		long ver;
+		ver = _providerA.getCurrentVersion();
 
-		_providerA.commitReplicationTransaction(15000);
+		_providerA.commitReplicationTransaction(ver);
 	}
 
 	private void tstObjectsChangedSinceLastReplication() {
-        
-        
-        // FIXME:
-        // This test can't work any longer since version numbers reflect a timestamp.
-        if(true){
-            return;
-        }
-        
-        
+
+		// FIXME:
+		// This test can't work any longer since version numbers reflect a timestamp.
+		if (true) {
+			return;
+		}
+
+
 		Pilot object1 = new Pilot("John Cleese", 42);
 		Pilot object2 = new Pilot("Terry Gilliam", 53);
 		Car object3 = new Car("Volvo");
@@ -260,8 +266,9 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Db4oUUID db4oUUID = _providerA.produceReference(object1, null, null).uuid();
 		//TODO implements Db4oUUID.equals, don't use hashcode to compare
 		Test.ensure(db4oUUID.equals(uuid));
-		_providerA.syncVersionWithPeer(7500);
-		_providerA.commitReplicationTransaction(8000);
+		long ver = _providerA.getCurrentVersion();
+		_providerA.syncVersionWithPeer(ver);
+		_providerA.commitReplicationTransaction(ver + 1);
 		_providerA.deleteAllInstances(Pilot.class);
 		_providerA.commit();
 	}
@@ -304,8 +311,12 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		ReplicationReference reference = _providerA.produceReferenceByUUID(uuid, object1.getClass());
 		Test.ensure(_providerA.produceReference(object1, null, null) == reference);
 		Test.ensure(reference.object() == object1);
-		_providerA.syncVersionWithPeer(8500);
-		_providerA.commitReplicationTransaction(8800);
+
+		long ver;
+		ver = _providerA.getCurrentVersion();
+
+		_providerA.syncVersionWithPeer(ver);
+		_providerA.commitReplicationTransaction(ver + 1);
 
 		_providerA.startReplicationTransaction(PEER_SIGNATURE);
 		ObjectSet<Pilot> storedObjects = _providerA.getStoredObjects(Pilot.class);
@@ -322,43 +333,22 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		_providerA.clearAllReferences();
 
-		_providerA.syncVersionWithPeer(9000);
-		_providerA.commitReplicationTransaction(9250);
+		ver = _providerA.getCurrentVersion();
+
+		_providerA.syncVersionWithPeer(ver);
+		_providerA.commitReplicationTransaction(ver + 1);
 
 		_providerA.startReplicationTransaction(PEER_SIGNATURE);
 
 		reference = _providerA.produceReferenceByUUID(uuid, reloaded.getClass());
 		Test.ensure(((Pilot) reference.object())._name.equals("i am updated"));
-		_providerA.syncVersionWithPeer(9500);
-		_providerA.commitReplicationTransaction(9800);
+
+		ver = _providerA.getCurrentVersion();
+
+		_providerA.syncVersionWithPeer(ver);
+		_providerA.commitReplicationTransaction(ver + 1);
 		_providerA.deleteAllInstances(Pilot.class);
 		_providerA.commit();
-	}
-
-	private void tstVersionIncrement() {
-        
-        // FIXME:
-        // This test can't work any longer since version numbers reflect a timestamp.
-        if(true){
-            return;
-        }
-        
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
-
-		// This won't work for db4o: There is no guarantee that the version starts with 1.
-		// Test.ensure(_providerA.getCurrentVersion() == 1);
-
-		_providerA.syncVersionWithPeer(5000);
-		_providerA.commitReplicationTransaction(5001);
-
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
-
-		long version = _providerA.getCurrentVersion();
-
-		Test.ensure(version >= 5000 && version <= 5002);
-
-		_providerA.syncVersionWithPeer(5003);
-		_providerA.commitReplicationTransaction(5005);
 	}
 
 	private Db4oUUID uuid(Object obj) {
