@@ -2,6 +2,7 @@ package com.db4o.replication.hibernate.impl;
 
 import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
+import com.db4o.foundation.TimeStampIdGenerator;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.replication.CollectionHandler;
 import com.db4o.inside.replication.CollectionHandlerImpl;
@@ -399,12 +400,12 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		} else
 			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
 
-		_currentVersion = Util.getMaxVersion(getSession().connection()) + 1;
+		_currentVersion = new TimeStampIdGenerator(_replicationRecord.getVersion()).generate();
 
 		_inReplication = true;
 
 //		System.out.println("HibernateReplicationProviderImpl.startReplicationTransaction");
-//		Util.dumpTable(this, "Replicated");
+//		Util.dumpTable(this, "ReplicationRecord");
 //		Util.dumpTable(this, "ObjectReference");
 	}
 
@@ -643,12 +644,9 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	public long getLastReplicationVersion() {
-        
-        // FIXME: Please Albert, this has to be generated from _replicationRecor._version
-        
 		ensureReplicationActive();
 
-		return getCurrentVersion() - 1;
+		return _replicationRecord.getVersion();
 	}
 
 	private ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
