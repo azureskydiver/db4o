@@ -152,21 +152,12 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private void activateGraphToBeReplicated(Object root) {
-		_traverser.traverseGraph(root, new Visitor() {
-			public boolean visit(Object object) {
-				if (object instanceof TraversedField) {
-					final TraversedField traversedField = ((TraversedField) object);
-					return activateObjectToBeReplicated(traversedField.getValue(), traversedField.getReferencingObject(), traversedField.getName());
-				} else {
-					return activateObjectToBeReplicated(object, null, null);
-				}
-			}
-		});
+		_traverser.traverseGraph(root, new ReplicationVisitor());
 	}
 
 	private boolean activateObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) { //TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
-		if (_peerA.hasReplicationReferenceAlready(obj)) return false;
-		if (_peerB.hasReplicationReferenceAlready(obj)) return false;
+//		if (_peerA.hasReplicationReferenceAlready(obj)) return false;  //TODO won't work in the case of extendTraversalTo
+//		if (_peerB.hasReplicationReferenceAlready(obj)) return false;
 
 		ReplicationReference refA = _peerA.produceReference(obj, referencingObject, fieldName);
 		ReplicationReference refB = _peerB.produceReference(obj, referencingObject, fieldName);
@@ -233,6 +224,9 @@ public class GenericReplicationSession implements ReplicationSession {
 		_stateInB.setAll(objectB, false, changedInB, TimeStampIdGenerator.idToMilliseconds(otherRef.version()));
 		_listener.onReplicate(_event);
 
+		if (_event._actionShouldStopTraversal)
+			return false;
+
 		if (conflict) {
 			if (!_event._actionWasChosen) throwReplicationConflictException();
 			if (_event._actionChosen == null) return false;
@@ -260,7 +254,8 @@ public class GenericReplicationSession implements ReplicationSession {
 		if (prevailing != obj) {
 			otherRef.setCounterpart(obj);
 			otherRef.markForReplicating();
-			_traverser.extendTraversalTo(prevailing); //Now we start traversing objects on the other peer! Is that cool or what? ;)
+			markAsNotProcessed(uuid);
+			_traverser.extendTraversalTo(prevailing, new ReplicationVisitor()); //Now we start traversing objects on the other peer! Is that cool or what? ;)
 			return false;
 		}
 
@@ -431,6 +426,10 @@ public class GenericReplicationSession implements ReplicationSession {
 		_processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
 	}
 
+	private void markAsNotProcessed(Db4oUUID uuid) {
+		_processedUuids.remove(uuid);
+	}
+
 	private ReplicationProviderInside other(ReplicationProviderInside peer) {
 		return peer == _peerA ? _peerB : _peerA;
 	}
@@ -477,5 +476,16 @@ public class GenericReplicationSession implements ReplicationSession {
 
 	private boolean wasProcessed(Db4oUUID uuid) {
 		return _processedUuids.get(uuid) != null;
+	}
+
+	private class ReplicationVisitor implements Visitor {
+		public boolean visit(Object object) {
+			if (object instanceof TraversedField) {
+				final TraversedField traversedField = ((TraversedField) object);
+				return activateObjectToBeReplicated(traversedField.getValue(), traversedField.getReferencingObject(), traversedField.getName());
+			} else {
+				return activateObjectToBeReplicated(object, null, null);
+			}
+		}
 	}
 }

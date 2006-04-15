@@ -1,6 +1,7 @@
 package com.db4o.inside.traversal;
 
-import com.db4o.foundation.*;
+import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.Queue4;
 import com.db4o.reflect.ReflectArray;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
@@ -28,11 +29,10 @@ public class GenericTraverser implements Traverser {
 	}
 
 	protected void traverseObject(Object object, Visitor visitor) {
-        if (!visitor.visit(object)){
-            return;
-        }
+		if (!visitor.visit(object))
+			return;
 
-        ReflectClass claxx = _reflector.forObject(object);
+		ReflectClass claxx = _reflector.forObject(object);
 		traverseFields(object, claxx);
 	}
 
@@ -72,26 +72,33 @@ public class GenericTraverser implements Traverser {
 	}
 
 	protected void queueUpForTraversing(Object object) {
-		if (object == null) return;
-        ReflectClass claxx = _reflector.forObject(object);
-		if (isSecondClass(claxx)) return;
+		if (object == null)
+			return;
 
-        if (_collectionFlattener.canHandle(claxx)) {
-            traverseCollection(object);
-        }else{
-            if (claxx.isArray()) {
-                traverseArray(object);
-                return;
-            }
-        }
+		ReflectClass claxx = _reflector.forObject(object);
+		if (isSecondClass(claxx))
+			return;
+
+		if (_collectionFlattener.canHandle(claxx)) {
+			traverseCollection(object);
+		} else {
+			if (claxx.isArray()) {
+				traverseArray(object);
+				return;
+			}
+		}
+		queueAdd(object);
+	}
+
+	protected void queueAdd(Object object) {
 		_queue.add(object);
 	}
 
-    protected boolean isSecondClass(ReflectClass claxx){
-        //      TODO Optimization: Compute this lazily in ReflectClass;
-        if (claxx.isSecondClass()) return true;
-        return claxx.isArray() && claxx.getComponentType().isSecondClass();
-    }
+	protected boolean isSecondClass(ReflectClass claxx) {
+		//      TODO Optimization: Compute this lazily in ReflectClass;
+		if (claxx.isSecondClass()) return true;
+		return claxx.isArray() && claxx.getComponentType().isSecondClass();
+	}
 
 
 	final Object[] contents(Object array) { //FIXME Eliminate duplication. Move this to ReflectArray. This logic is in the GenericReplicationSessio too.
@@ -109,7 +116,7 @@ public class GenericTraverser implements Traverser {
 		return result;
 	}
 
-	public void extendTraversalTo(Object disconnected) {
-		queueUpForTraversing(disconnected);
+	public void extendTraversalTo(Object disconnected, Visitor visitor) {
+		traverseGraph(disconnected, visitor);
 	}
 }
