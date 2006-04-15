@@ -7,7 +7,7 @@ class ObjectStateImpl implements ObjectState {
 	private Object _object;
 	private boolean _isNew;
 	private boolean _wasModified;
-	private boolean _wasDeleted;
+	private long _modificationDate;
 
 	public Object getObject() {
 		return _object;
@@ -21,15 +21,15 @@ class ObjectStateImpl implements ObjectState {
 		return _wasModified;
 	}
 
-	public boolean wasDeleted() {
-		return _wasDeleted;
+	public long modificationDate() {
+		return _modificationDate;
 	}
 
-	void setAll(Object obj, boolean isNew, boolean wasModified, boolean wasDeleted) {
+	void setAll(Object obj, boolean isNew, boolean wasModified, long modificationDate) {
 		_object = obj;
 		_isNew = isNew;
 		_wasModified = wasModified;
-		_wasDeleted = wasDeleted;
+		_modificationDate = modificationDate;
 	}
 
 
@@ -38,7 +38,7 @@ class ObjectStateImpl implements ObjectState {
 				"_object=" + _object +
 				", _isNew=" + _isNew +
 				", _wasModified=" + _wasModified +
-				", _wasDeleted=" + _wasDeleted +
+				", _modificationDate=" + _modificationDate +
 				'}';
 	}
 }

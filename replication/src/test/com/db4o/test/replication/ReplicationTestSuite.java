@@ -14,7 +14,7 @@ public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests2() {
 		System.err.println("Use tests2 below");
 		return new Class[]{
-				ReplicationFeaturesMain.class,
+				ReplicationEventTest.class,
 		};
 	}
 
