@@ -417,8 +417,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			_delegate.traverseGraph(object, visitor);
 		}
 
-		public void extendTraversalTo(Object disconnected) {
-			_delegate.extendTraversalTo(disconnected);
+		public void extendTraversalTo(Object disconnected, Visitor visitor) {
+			_delegate.extendTraversalTo(disconnected, visitor);
 		}
 	}
 }

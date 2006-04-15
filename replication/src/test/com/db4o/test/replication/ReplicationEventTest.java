@@ -9,20 +9,21 @@ public class ReplicationEventTest extends ReplicationTestCase {
 // ------------------------------ FIELDS ------------------------------
 
 	private static final String IN_A = "in A";
+	private static final String MODIFIED_IN_A = "modified in A";
 	private static final String MODIFIED_IN_B = "modified in B";
 
 	protected void actualTest() {
-//
-//tstNoAction();
-//		clean();
-		tstOverrideWithA();
+		tstNoAction();
 		clean();
-//
-//		tstOverrideWithB();
-//		clean();
-//
-//		tstStopTraversal();
-//		clean();
+
+		tstOverrideWhenNoConflicts();
+		clean();
+
+		tstOverrideWhenConflicts();
+		clean();
+
+		tstStopTraversal();
+		clean();
 	}
 
 	private void ensureNames(TestableReplicationProviderInside provider, String parentName, String childName) {
@@ -41,6 +42,16 @@ public class ReplicationEventTest extends ReplicationTestCase {
 	private void ensureOneInstanceOfParentAndChild(TestableReplicationProviderInside provider) {
 		ensureOneInstance(provider, SPCParent.class);
 		ensureOneInstance(provider, SPCChild.class);
+	}
+
+	private void modifyInProviderA() {
+		SPCParent parent = (SPCParent) getOneInstance(_providerA, SPCParent.class);
+		parent.setName(MODIFIED_IN_A);
+		parent.getChild().setName(MODIFIED_IN_A);
+		_providerA.update(parent);
+		_providerA.commit();
+
+		ensureNames(_providerA, MODIFIED_IN_A, MODIFIED_IN_A);
 	}
 
 	private void modifyInProviderB() {
@@ -89,29 +100,66 @@ public class ReplicationEventTest extends ReplicationTestCase {
 		ensureNames(_providerB, MODIFIED_IN_B, MODIFIED_IN_B);
 	}
 
-	private void tstOverrideWithA() {
+	private void tstOverrideWhenNoConflicts() {
 		storeParentAndChildToProviderA();
 		replicateAllToProviderBFirstTime();
 		modifyInProviderB();
 
 		ReplicationEventListener listener = new ReplicationEventListener() {
 			public void onReplicate(ReplicationEvent event) {
-				event.overrideWith(event.stateInProviderB()); //because i pass _providerA as the second param of replicateAll()
+				Test.ensure(!event.isConflict());
+				event.overrideWith(event.stateInProviderB());
 			}
 		};
 
-		System.out.println("====================================Begin debug");
 		replicateAll(_providerB, _providerA, listener);
 
 		ensureNames(_providerA, IN_A, IN_A);
 		ensureNames(_providerB, IN_A, IN_A);
 	}
 
-	private void tstOverrideWithB() {
-		throw new UnsupportedOperationException("fs");
+	private void tstOverrideWhenConflicts() {
+		storeParentAndChildToProviderA();
+		replicateAllToProviderBFirstTime();
+
+		//introduce conflicts
+		modifyInProviderA();
+		modifyInProviderB();
+
+		ReplicationEventListener listener = new ReplicationEventListener() {
+			public void onReplicate(ReplicationEvent event) {
+				Test.ensure(event.isConflict());
+
+				if (event.isConflict())
+					event.overrideWith(event.stateInProviderB());
+			}
+		};
+
+		replicateAll(_providerA, _providerB, listener);
+
+		ensureNames(_providerA, MODIFIED_IN_B, MODIFIED_IN_B);
+		ensureNames(_providerB, MODIFIED_IN_B, MODIFIED_IN_B);
 	}
 
 	private void tstStopTraversal() {
-		throw new UnsupportedOperationException("fs");
+		storeParentAndChildToProviderA();
+		replicateAllToProviderBFirstTime();
+
+		//introduce conflicts
+		modifyInProviderA();
+		modifyInProviderB();
+
+		ReplicationEventListener listener = new ReplicationEventListener() {
+			public void onReplicate(ReplicationEvent event) {
+				Test.ensure(event.isConflict());
+
+				event.stopTraversal();
+			}
+		};
+
+		replicateAll(_providerA, _providerB, listener);
+
+		ensureNames(_providerA, MODIFIED_IN_A, MODIFIED_IN_A);
+		ensureNames(_providerB, MODIFIED_IN_B, MODIFIED_IN_B);
 	}
 }

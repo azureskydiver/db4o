@@ -30,7 +30,6 @@ public class ReplicationTraverser extends GenericTraverser {
 	}
 
 	protected void traverseFields(Object object, ReflectClass claxx) {
-
 		ReflectField[] fields;
 
 		fields = claxx.getDeclaredFields();
@@ -62,14 +61,14 @@ public class ReplicationTraverser extends GenericTraverser {
 				currentFieldName = null;
 				currentFieldOwner = null;
 			} else {
-				_queue.add(object);
+				queueAdd(object);
 			}
 			traverseCollection(object);
 		} else {
 			if (claxx.isArray()) {
 				traverseArray(object);
 			} else {
-				_queue.add(object);
+				queueAdd(object);
 			}
 		}
 	}
