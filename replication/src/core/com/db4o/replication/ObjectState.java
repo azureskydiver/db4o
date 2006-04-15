@@ -24,16 +24,16 @@ public interface ObjectState {
 	boolean isNew();
 
 	/**
-	 * Was the object deleted since last replication?
-	 *
-	 * @return true when the object was deleted since last replication
-	 */
-	boolean wasDeleted();
-
-	/**
 	 * Was the object modified since last replication?
 	 *
 	 * @return true when the object was modified since last replication
 	 */
 	boolean wasModified();
+
+	/**
+	 * The time when the object is modified in a provider.
+	 *
+	 * @return time when the object is modified in a provider.
+	 */
+	long modificationDate();
 }

@@ -99,6 +99,8 @@ public class ReplicationEventTest extends ReplicationTestCase {
 				event.overrideWith(event.stateInProviderB()); //because i pass _providerA as the second param of replicateAll()
 			}
 		};
+
+		System.out.println("====================================Begin debug");
 		replicateAll(_providerB, _providerA, listener);
 
 		ensureNames(_providerA, IN_A, IN_A);

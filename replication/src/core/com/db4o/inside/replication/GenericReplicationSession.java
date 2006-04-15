@@ -2,6 +2,7 @@ package com.db4o.inside.replication;
 
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Hashtable4;
+import com.db4o.foundation.TimeStampIdGenerator;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.traversal.TraversedField;
 import com.db4o.inside.traversal.Traverser;
@@ -225,8 +226,11 @@ public class GenericReplicationSession implements ReplicationSession {
 
 		_event.resetAction();
 		_event._isConflict = conflict;
-		_stateInA.setAll(objectA, false, changedInA, false);
-		_stateInB.setAll(objectB, false, changedInB, false);
+
+		_event._creationDate = TimeStampIdGenerator.idToMilliseconds(uuid.getLongPart());
+
+		_stateInA.setAll(objectA, false, changedInA, TimeStampIdGenerator.idToMilliseconds(ownerRef.version()));
+		_stateInB.setAll(objectB, false, changedInB, TimeStampIdGenerator.idToMilliseconds(otherRef.version()));
 		_listener.onReplicate(_event);
 
 		if (conflict) {
@@ -373,12 +377,16 @@ public class GenericReplicationSession implements ReplicationSession {
 
 			_event.resetAction();
 			_event._isConflict = true;
+			_event._creationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.uuid().getLongPart());
+
+			long modificationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.version());
+
 			if (owner == _peerA) {
-				_stateInA.setAll(obj, false, wasModified, false);
-				_stateInB.setAll(null, false, false, true);
+				_stateInA.setAll(obj, false, wasModified, modificationDate);
+				_stateInB.setAll(null, false, false, -1);
 			} else { //owner == _peerB
-				_stateInA.setAll(null, false, false, true);
-				_stateInB.setAll(obj, false, wasModified, false);
+				_stateInA.setAll(null, false, false, -1);
+				_stateInB.setAll(obj, false, wasModified, modificationDate);
 			}
 			_listener.onReplicate(_event);
 

@@ -7,37 +7,40 @@ package com.db4o.foundation;
  * @exclude
  */
 public class TimeStampIdGenerator {
-    
-    private long _next;
-    
-    public TimeStampIdGenerator(long minimumNext){
-        _next = minimumNext;
-    }
-    
-    public long generate(){
-        
-        long t = System.currentTimeMillis();
-        
-        t = t >> 15;
-        
-        if(t <= _next){
-            _next ++;
-        }else{
-            _next = t;
-        }
-        return _next;
-    }
-    
-    public void minimumNext(long newMinimum){
-        _next = newMinimum;
-    }
-    
-    public long minimumNext(){
-        return _next;
-    }
-    
-    public static long idToMilliseconds(long id){
-        return id << 15;
-    }
-    
+// ------------------------------ FIELDS ------------------------------
+
+	private long _next;
+
+// -------------------------- STATIC METHODS --------------------------
+
+	public static long idToMilliseconds(long id) {
+		return id >> 15;
+	}
+
+// --------------------------- CONSTRUCTORS ---------------------------
+
+	public TimeStampIdGenerator(long minimumNext) {
+		_next = minimumNext;
+	}
+
+	public long generate() {
+		long t = System.currentTimeMillis();
+
+		t = t << 15;
+
+		if (t <= _next) {
+			_next ++;
+		} else {
+			_next = t;
+		}
+		return _next;
+	}
+
+	public long minimumNext() {
+		return _next;
+	}
+
+	public void minimumNext(long newMinimum) {
+		_next = newMinimum;
+	}
 }

@@ -12,7 +12,8 @@ final class ReplicationEventImpl implements ReplicationEvent {
 	ObjectState _actionChosen;
 	boolean _actionWasChosen;
 	boolean _actionShouldStopTraversal;
-	
+	long _creationDate;
+
 	public ObjectState stateInProviderA() {
 		return _stateInProviderA;
 	}
@@ -21,10 +22,14 @@ final class ReplicationEventImpl implements ReplicationEvent {
 		return _stateInProviderB;
 	}
 
+	public long objectCreationDate() {
+		return _creationDate;
+	}
+
 	public boolean isConflict() {
 		return _isConflict;
 	}
-	
+
 	public void overrideWith(ObjectState chosen) {
 		if (_actionWasChosen) throw new RuntimeException(); //FIXME Use Db4o's standard exception throwing.
 		_actionWasChosen = true;
@@ -39,6 +44,7 @@ final class ReplicationEventImpl implements ReplicationEvent {
 		_actionChosen = null;
 		_actionWasChosen = false;
 		_actionShouldStopTraversal = false;
+		_creationDate = -1;
 	}
 
 }

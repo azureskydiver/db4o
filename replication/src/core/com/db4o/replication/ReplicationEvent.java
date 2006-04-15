@@ -38,6 +38,13 @@ public interface ReplicationEvent {
 	ObjectState stateInProviderB();
 
 	/**
+	 * The time when the object is created in one provider.
+	 *
+	 * @return time when the object is created in one provider.
+	 */
+	long objectCreationDate();
+
+	/**
 	 * Stop the replication of this object and the traversal to its child objects.
 	 */
 	void stopTraversal();

@@ -27,11 +27,11 @@ public class AllTestsReplication extends AllTests {
 	private void registerProviderPairs() {
 		//db4o();
 		hsql();
-		//mock();
+		//transients();
 		//oracle();
 	}
 
-	private void mock() {
+	private void transients() {
 		ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65}, "A"), new TransientReplicationProvider(new byte[]{66}, "B"));
 	}
 
