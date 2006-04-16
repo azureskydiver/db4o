@@ -22,6 +22,12 @@
             	<text x:id="Password" x:style="BORDER|PASSWORD">
             		<layoutData x:class="gridData" minimumWidth="200" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" horizontalSpan="2"/>
             	</text>
+            	<label text=""/>
+            	<label text="(Leave empty if not encrypted)">
+					<layoutData x:class="gridData" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL" horizontalSpan="2"/>
+            	</label>
+             	<label text="Read only:"/>
+            	<button x:id="ReadOnly" x:style="CHECK" />
             </x:children>
         </composite>
     </x:children>

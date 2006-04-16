@@ -3,24 +3,15 @@
  */
 package com.db4o.browser.gui.controllers.tree;
 
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ve.sweet.controllers.RefreshService;
-import org.eclipse.ve.sweet.objectviewer.IEditStateListener;
-import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ve.sweet.controllers.*;
+import org.eclipse.ve.sweet.objectviewer.*;
 
-import com.db4o.browser.gui.controllers.BrowserTabController;
-import com.db4o.browser.gui.controllers.IBrowserController;
-import com.db4o.browser.gui.controllers.SelectionChangedController;
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
-import com.db4o.browser.model.nodes.ClassNode;
-import com.db4o.browser.model.nodes.IModelNode;
+import com.db4o.browser.gui.controllers.*;
+import com.db4o.browser.model.*;
+import com.db4o.browser.model.nodes.*;
 
 /**
  * TreeController.
@@ -31,14 +22,16 @@ public class TreeController implements IBrowserController {
 	private final BrowserTabController parent;
 	private final TreeViewer viewer;
 	private final SelectionChangedController selectionListener;
+	private Button deleteButton;
 	
-	public TreeController(final BrowserTabController parent, Tree tree) {
+	public TreeController(final BrowserTabController parent, Tree tree, Button deleteButton) {
 		this.parent = parent;
 		this.viewer = new TreeViewer(tree);
+		this.deleteButton=deleteButton;
 		
         viewer.setContentProvider(new TreeContentProvider());
         viewer.setLabelProvider(new TreeLabelProvider());
-		final TreeSelectionChangedController treeSelectionChangedController = new TreeSelectionChangedController();
+		final TreeSelectionChangedController treeSelectionChangedController = new TreeSelectionChangedController(deleteButton,parent);
 		viewer.addSelectionChangedListener(treeSelectionChangedController);
         
         tree.addMouseListener(new MouseAdapter() {
@@ -97,11 +90,19 @@ public class TreeController implements IBrowserController {
 			oldInput.removeSelectionChangedListener(selectionListener);
 		
 		viewer.setInput(input);
+		if(selection==null) {
+	        unselect();
+		}
 		input.addSelectionChangedListener(selectionListener);
 	}
 
+	private void unselect() {
+		viewer.setSelection(StructuredSelection.EMPTY);
+		deleteButton.setEnabled(false);
+	}
+
     public void deselectAll() {
-        viewer.setSelection(StructuredSelection.EMPTY);
+        unselect();
         viewer.collapseAll();
     }
 }

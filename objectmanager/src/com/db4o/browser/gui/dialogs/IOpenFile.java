@@ -7,9 +7,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-public interface IOpenScrambledFile {
+public interface IOpenFile {
     Text getFileName();
     Button getBrowseButton();
     Text getPassword();
     Label getHelpArea();
+    Button getReadOnly();
 }

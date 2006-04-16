@@ -3,16 +3,14 @@
  */
 package com.db4o.browser.gui.controllers.tree;
 
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.widgets.*;
 
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
-import com.swtworkbench.community.xswt.metalogger.Logger;
+import com.db4o.browser.gui.controllers.*;
+import com.db4o.browser.model.*;
+import com.db4o.browser.model.nodes.field.*;
+import com.swtworkbench.community.xswt.metalogger.*;
 
 /**
  * TreeSelectionChangedController.  When the tree's selection changes, updates
@@ -26,6 +24,22 @@ public class TreeSelectionChangedController implements
 	private int treeSelectionChanging=0;
     
     private GraphPosition lastSelection = null;
+    
+    private Button deleteButton;
+
+    public TreeSelectionChangedController(Button deleteButton,final BrowserTabController tabCtrl) {
+    	this.deleteButton=deleteButton;
+
+        deleteButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println(lastSelection.getCurrent().getEditValue().getClass());
+				System.out.println(lastSelection.getCurrent().getDatabase());
+				lastSelection.getCurrent().getDatabase().delete(lastSelection.getCurrent().getEditValue());
+				tabCtrl.dirty();
+			}
+        });
+
+    }
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
@@ -48,7 +62,7 @@ public class TreeSelectionChangedController implements
                 if (model.isPathSelectionChangable()) {
                     model.setSelectedPath(node);
                     lastSelection = node;
-
+                    deleteButton.setEnabled((node.getCurrent() instanceof FieldNode));
                 	source.refresh();
                 } else if (lastSelection != null) {
                     Display.getCurrent().asyncExec(new Runnable() {
@@ -60,6 +74,9 @@ public class TreeSelectionChangedController implements
                     lastSelection = node;
                     throw new RuntimeException(getClass().getName() + ": Cannot reset the selection back to null!");
                 }
+			}
+			else {
+				deleteButton.setEnabled(false);
 			}
 		} catch (Throwable t) {
         	String message = "Exception handling tree selection change.\n" +

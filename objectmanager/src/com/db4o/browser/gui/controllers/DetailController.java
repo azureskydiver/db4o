@@ -3,32 +3,20 @@
  */
 package com.db4o.browser.gui.controllers;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.ve.sweet.CannotSaveException;
-import org.eclipse.ve.sweet.controllers.RefreshService;
-import org.eclipse.ve.sweet.objectviewer.IEditStateListener;
-import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
+import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.internal.layout.*;
+import org.eclipse.ve.sweet.*;
+import org.eclipse.ve.sweet.controllers.*;
+import org.eclipse.ve.sweet.objectviewer.*;
 
-import com.db4o.browser.gui.views.DbBrowserPane;
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
-import com.db4o.browser.model.nodes.IModelNode;
-import com.swtworkbench.community.xswt.metalogger.Logger;
+import com.db4o.browser.gui.views.*;
+import com.db4o.browser.model.*;
+import com.db4o.browser.model.nodes.*;
+import com.swtworkbench.community.xswt.metalogger.*;
 
 /**
  * DetailController.  A Controller for the detail pane of the browser.
@@ -41,6 +29,8 @@ public class DetailController implements IBrowserController {
 	private BrowserTabController parent;
     private IGraphIterator input = null;
     private GraphPosition selection;
+	private static final Color WHITE = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
+	private IObjectViewer objectViewer = null;
 
 	/**
 	 * Constructor DetailController.  Create an MVC controller to manage the detail pane.
@@ -64,17 +54,32 @@ public class DetailController implements IBrowserController {
 
 	private SelectionListener saveEdits = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
-			try {
-				objectViewer.commit();
-			} catch (CannotSaveException e1) {
-				// The user has already been informed...
+			if(objectViewer!=null) {
+				try {
+					objectViewer.commit();
+				} catch (CannotSaveException e1) {
+					// The user has already been informed...
+				}
 			}
+			else {
+				BrowserCore.getDefault().getDatabase(parent.getCurrentConnection()).commit();
+			}
+			ui.getCancelButton().setEnabled(false);
+			ui.getSaveButton().setEnabled(false);
 		}
 	};
 	
 	private SelectionListener cancelEdits = new SelectionAdapter() {
 		public void widgetSelected(SelectionEvent e) {
-			objectViewer.rollback();
+			if(objectViewer!=null) {
+				objectViewer.rollback();
+			}
+			else {
+				BrowserCore.getDefault().getDatabase(parent.getCurrentConnection()).rollback();
+			}
+			ui.getCancelButton().setEnabled(false);
+			ui.getSaveButton().setEnabled(false);
+			parent.reopen();
 		};
 	};
 
@@ -122,10 +127,10 @@ public class DetailController implements IBrowserController {
 			}
             
 		}
+		else {
+			discardObjectViewer();
+		}
 	}
-
-	private static final Color WHITE = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-	private IObjectViewer objectViewer = null;
     
 	private void buildUI(IGraphIterator input) {
 		if (!input.hasParent()) {
@@ -144,13 +149,9 @@ public class DetailController implements IBrowserController {
         input.selectNextChild();
         
         // Remove the old state
-        if (objectViewer != null) {
-        	objectViewer.removeObjectListener(RefreshService.getDefault());
-	        this.parent.getEditStateController().removeObjectViewer(objectViewer);
-        }
+        discardObjectViewer(); 
 
         // Create an ObjectViewer on the parent if it can be edited
-        objectViewer = null; 
         if (parent.getEditValue() != null) {
             objectViewer = parent.getDatabase().construct(parent.getEditValue());
             this.parent.getEditStateController().addObjectViewer(objectViewer);
@@ -158,10 +159,11 @@ public class DetailController implements IBrowserController {
         }
         
         // Build the layout: start with the container Composite
+        
         Composite detailViewHolder = new Composite(parentComposite, SWT.NULL);
         detailViewHolder.setLayout(new GridLayout(2, false));
         detailViewHolder.setBackground(WHITE);
-        
+
         // Build each row by iterating over the fields
         while (input.hasNext()) {
             IModelNode fieldToDisplay = (IModelNode) input.next();
@@ -204,6 +206,14 @@ public class DetailController implements IBrowserController {
             parentComposite.setBounds(new Rectangle(0, 0, preferredSize.x, preferredSize.y));
         parentComposite.layout(true);
     }
+
+	private void discardObjectViewer() {
+		if (objectViewer != null) {
+        	objectViewer.removeObjectListener(RefreshService.getDefault());
+	        this.parent.getEditStateController().removeObjectViewer(objectViewer);
+        }
+        objectViewer = null;
+	}
 
 	private void createReadonlyField(Composite detailViewHolder, IModelNode fieldToDisplay) {
 		Label fieldValue = new Label(detailViewHolder, SWT.NULL);

@@ -38,6 +38,7 @@ public class QueryTabController extends BrowserTabController {
     public QueryTabController(QueryController queryController, CTabFolder folder, QueryBrowserPane ui, ReflectClass clazz) {
         super(ui, queryController);
         this.databaseBrowserController = queryController.getBrowserController();
+        currentConnection(databaseBrowserController.getCurrentConnection());
         this.database = BrowserCore.getDefault().getDatabase(databaseBrowserController.getCurrentConnection());
         
         // Also enable/disable the query button based on editor state
@@ -72,4 +73,8 @@ public class QueryTabController extends BrowserTabController {
         runQuery();
     }
 
+    protected boolean internalSetInput() {
+    	runQuery();
+    	return true;
+    }
 }

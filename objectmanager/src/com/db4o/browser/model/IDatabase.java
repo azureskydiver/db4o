@@ -43,4 +43,9 @@ public interface IDatabase {
     public abstract IObjectViewer construct();
     
     public abstract IObjectViewer construct(Object toEdit);
+    
+    void delete(Object obj);
+    
+    void rollback();
+    void commit();
 }
