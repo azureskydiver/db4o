@@ -46,7 +46,7 @@ import org.eclipse.ve.sweet.hinthandler.IHintHandler;
 import com.db4o.Db4o;
 import com.db4o.browser.gui.controllers.BrowserTabController;
 import com.db4o.browser.gui.controllers.QueryController;
-import com.db4o.browser.gui.dialogs.OpenScrambledFile;
+import com.db4o.browser.gui.dialogs.OpenFile;
 import com.db4o.browser.gui.dialogs.SelectServer;
 import com.db4o.browser.gui.views.DbBrowserPane;
 import com.db4o.browser.model.BrowserCore;
@@ -192,9 +192,10 @@ public class StandaloneBrowser implements IControlFactory {
         BrowserCore.getDefault().addBrowserCoreListener(browserCoreListener);
 		
         if (commandLineFileName != null) {
-        	browserController.open(commandLineFileName);
-        	setTabText(commandLineFileName);
-        	setOpenedDatabaseMenuChoiceState();
+        	if(browserController.open(commandLineFileName)) {
+        		setTabText(commandLineFileName);
+        		setOpenedDatabaseMenuChoiceState();
+        	}
         }
 	}
     
@@ -234,7 +235,6 @@ public class StandaloneBrowser implements IControlFactory {
         Map choices = XSWT.createl(shell, "menu.xswt", getClass());
 		
         open = (MenuItem) choices.get("Open");
-        openScrambledFile = (MenuItem) choices.get("OpenScrambledFile");
         openServer = (MenuItem) choices.get("OpenServer");
         closeAll = (MenuItem) choices.get("CloseAllDatabases");
         xmlExport = (MenuItem) choices.get("XMLExport");
@@ -244,31 +244,33 @@ public class StandaloneBrowser implements IControlFactory {
 		preferences = (MenuItem) choices.get("Preferences");
         helpAbout = (MenuItem)choices.get("HelpAbout");
         
+//        open.addSelectionListener(new SelectionAdapter() {
+//            public void widgetSelected(SelectionEvent e) {
+//                FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+//                dialog.setFilterExtensions(new String[]{"*.yap", "*"});
+//                String file = dialog.open();
+//                if (file != null) {
+//                    setTabText(file);
+//                    browserController.open(file);
+//                    setOpenedDatabaseMenuChoiceState();
+//                }
+//            }
+//        });
+        
         open.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-                dialog.setFilterExtensions(new String[]{"*.yap", "*"});
-                String file = dialog.open();
-                if (file != null) {
-                    setTabText(file);
-                    browserController.open(file);
-                    setOpenedDatabaseMenuChoiceState();
-                }
-            }
-        });
-        
-        openScrambledFile.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                OpenScrambledFile dialog = new OpenScrambledFile(shell);
+                OpenFile dialog = new OpenFile(shell);
                 if (dialog.open() == Window.OK) {
                     String file = dialog.getFileName();
                     String password = dialog.getPassword();
-
+                    boolean readOnly=dialog.getReadOnly();
                     try {
-                        Db4o.configure().encrypt(true);
-                        Db4o.configure().password(password);
+                    	if(password!=null&&password.length()>0) {
+	                        Db4o.configure().encrypt(true);
+	                        Db4o.configure().password(password);
+                    	}
                         try {
-                            if (browserController.open(file)) {
+                            if (browserController.open(file,readOnly)) {
                                 setTabText(file);
                                 setOpenedDatabaseMenuChoiceState();
                             }
@@ -295,7 +297,8 @@ public class StandaloneBrowser implements IControlFactory {
                     int port = dialog.getPort();
                     String user = dialog.getUser();
                     String password = dialog.getPassword();
-                    if (browserController.open(host, port, user, password)) {
+                    boolean readOnly=dialog.getReadOnly();
+                    if (browserController.open(host, port, user, password,readOnly)) {
                         setTabText(host + ":" + port);
                     }
                     setOpenedDatabaseMenuChoiceState();
@@ -409,7 +412,8 @@ public class StandaloneBrowser implements IControlFactory {
         SWTProgram.registerCloseListener(BrowserCore.getDefault());
         SWTProgram.runWithLog(new StandaloneBrowser(args));
         
-        db4ologger.close();
+        // NPE from finalizer thread
+        // db4ologger.close();
         Logger.log().debug(SWTProgram.class, new Date().toString() + ": Application shutdown");
 	}
 

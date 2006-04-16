@@ -31,6 +31,8 @@
             	<text x:id="Password" x:style="BORDER|PASSWORD">
             		<layoutData x:class="gridData" minimumWidth="200" grabExcessHorizontalSpace="true" horizontalAlignment="GridData.FILL"/>
             	</text>
+            	<label text="Read only:"/>
+            	<button x:id="ReadOnly" x:style="CHECK" />
             </x:children>
         </composite>
     </x:children>

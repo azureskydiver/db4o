@@ -6,20 +6,21 @@ package com.db4o.binding.dataeditors.db4o;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.eclipse.core.commands.operations.*;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ve.sweet.CannotSaveException;
 import org.eclipse.ve.sweet.fieldviewer.FieldViewerFactory;
 import org.eclipse.ve.sweet.fieldviewer.IFieldViewer;
 import org.eclipse.ve.sweet.hinthandler.DelegatingHintHandler;
 import org.eclipse.ve.sweet.hinthandler.IHintHandler;
-import org.eclipse.ve.sweet.objectviewer.IEditStateListener;
-import org.eclipse.ve.sweet.objectviewer.IEditedObject;
-import org.eclipse.ve.sweet.objectviewer.IInputChangeListener;
-import org.eclipse.ve.sweet.objectviewer.IObjectViewer;
-import org.eclipse.ve.sweet.objectviewer.IPropertyEditor;
+import org.eclipse.ve.sweet.objectviewer.*;
 import org.eclipse.ve.sweet.reflect.RelaxedDuckType;
 
+import sun.reflect.generics.reflectiveObjects.*;
+
 import com.db4o.ObjectContainer;
+import com.db4o.browser.model.*;
+import com.sun.corba.se.impl.transport.*;
 
 /**
  * Db4oObject.
@@ -28,6 +29,7 @@ import com.db4o.ObjectContainer;
  */
 public class Db4oObject implements IObjectViewer {
     private ObjectContainer database;
+    private IObjectViewerFactory editorFactory;
 
     private Object input = null;
     private IEditedObject inputBean = null;
@@ -47,15 +49,16 @@ public class Db4oObject implements IObjectViewer {
     /**
      * @param database
      */
-    public Db4oObject(ObjectContainer database) {
+    public Db4oObject(ObjectContainer database,IObjectViewerFactory editorFactory) {
         this.database = database;
+        this.editorFactory=editorFactory;
     }
     
     /* (non-Javadoc)
      * @see com.db4o.binding.dataeditors.IObjectEditor#setInput(java.lang.Object)
      */
     public boolean setInput(Object input) {
-        if (this.input != null && (!validateAndSaveEditedFields() || !validateAndSaveObject() || input == null)) {
+        if (this.input != null && (validateAndSaveEditedFields()!=null || validateAndSaveObject()!=null || input == null)) {
             return false;
         }
         try {
@@ -122,39 +125,51 @@ public class Db4oObject implements IObjectViewer {
         return result;
     }
 
+
+	public IObjectViewer bind(String propertyName) {
+		return bind(propertyName,editorFactory);
+	}
+
+	// FIXME
+	public IObjectViewer bind(String propertyName, IObjectViewerFactory factory) {
+		throw new NotImplementedException();
+	}
+
     /* (non-Javadoc)
      * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#verifyAndSaveEditedFields()
      */
-    public boolean validateAndSaveEditedFields() {
+    public String validateAndSaveEditedFields() {
         for (Iterator bindingsIter = bindings.iterator(); bindingsIter.hasNext();) {
             IFieldViewer field = (IFieldViewer) bindingsIter.next();
             if (field.isDirty()) {
-                if (field.validate() != null) {
-                    return false;
+                String validateMsg = field.validate();
+				if (validateMsg != null) {
+                    return validateMsg;
                 }
                 try {
                     field.save();
                 } catch (CannotSaveException e) {
-                    return false;
+                    return e.getMessage();
                 }
             }
         }
-        return true;
+        return null;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.ve.sweet.dataeditors.IObjectEditor#verifyAndSaveObject()
      */
-    public boolean validateAndSaveObject() {
+    public String validateAndSaveObject() {
         /*
          * The return type for RelaxedDuckType is false for boolean types if
          * the method does not exist.  So we have to test explicitly here...
          */
-        if (RelaxedDuckType.includes(input, "verifyObject", new Class[] {}) && !inputBean.validateObject()) {
-            return false;
+        String validateMsg = inputBean.validateObject();
+		if (RelaxedDuckType.includes(input, "verifyObject", new Class[] {}) && validateMsg!=null) {
+            return validateMsg;
         }
         database.set(input);
-        return true;
+        return null;
     }
     
     /* (non-Javadoc)
@@ -171,12 +186,14 @@ public class Db4oObject implements IObjectViewer {
         if (input == null) {
             return;
         }
-        if (!validateAndSaveEditedFields())
-            throw new CannotSaveException("Unable to save edited fields");
+        String validateFieldsMsg = validateAndSaveEditedFields();
+		if (validateFieldsMsg!=null)
+            throw new CannotSaveException("Unable to save edited fields: "+validateFieldsMsg);
         
         // Ask the bean to verify itself for consistency
-        if (!validateAndSaveObject())
-            throw new CannotSaveException("Unable to save object");
+        String validateObjectMsg = validateAndSaveObject();
+		if (validateObjectMsg!=null)
+            throw new CannotSaveException("Unable to save object: "+validateObjectMsg);
         
         // Let the bean itself know it is about to be saved
         inputBean.commit();
@@ -295,5 +312,4 @@ public class Db4oObject implements IObjectViewer {
             listener.inputChanged(newInput);
         }
     }
-
 }

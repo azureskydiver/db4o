@@ -53,9 +53,9 @@ public class Db4oDatabase implements IDatabase {
     public void reopen() {
         closeIfOpen();
         container = spec.connect();
-        editorFactory = new Db4oObjectEditorFactory(container);
         if (container == null)
             throw new IllegalArgumentException("Could not open: " + spec.path());
+        editorFactory = new Db4oObjectEditorFactory(container);
     }
     
     /* (non-Javadoc)
@@ -84,6 +84,10 @@ public class Db4oDatabase implements IDatabase {
             "j4o.lang.AssemblyNameHint, db4o",
             "java.lang.Object"
         };
+        
+        // YYY
+        System.out.println("PURGE");
+        container.ext().purge();
         
         // Get the known classes
         ReflectClass[] knownClasses = container.ext().knownClasses();
@@ -161,7 +165,12 @@ public class Db4oDatabase implements IDatabase {
 	}
 	
 	public Object byId(long id) {
-		return container.ext().getByID(id);
+		Object obj=container.ext().getByID(id);
+// YYY
+//		System.out.println("REFRESH: "+obj);
+		container.ext().deactivate(obj,Integer.MAX_VALUE);
+		container.ext().refresh(obj, Integer.MAX_VALUE);
+		return obj;
 	}
 	
 	/* (non-Javadoc)
@@ -191,6 +200,17 @@ public class Db4oDatabase implements IDatabase {
         return editor;
     }
 
+	public void delete(Object obj) {
+		container.delete(obj);
+	}
+
+	public void rollback() {
+		container.rollback();
+	}
+
+	public void commit() {
+		container.commit();
+	}
 }
 
 

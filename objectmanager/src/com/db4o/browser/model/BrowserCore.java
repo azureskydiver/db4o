@@ -29,15 +29,6 @@ public class BrowserCore implements ICloseListener {
 	private LinkedList databases = new LinkedList();
     private HashMap dbMap = new HashMap();  // Maps path/filename to database
     
-    /**
-     * @param databasePath
-     * @return the database corresponding to databasePath
-     */
-    public IDatabase getDatabase(String databasePath) {
-		Db4oConnectionSpec spec = new Db4oFileConnectionSpec(databasePath, Db4oConnectionSpec.PREFERENCE_IS_READ_ONLY);
-        return getDatabase(spec);
-    }
-
 	public IDatabase getDatabase(Db4oConnectionSpec spec) {
 		IDatabase requested = (IDatabase) dbMap.get(spec.path());
 		if (requested == null) {
@@ -91,11 +82,6 @@ public class BrowserCore implements ICloseListener {
         }
         IDatabase current = (IDatabase) databases.getLast();
         return current.graphIterator();
-    }
-    
-    public IGraphIterator iterator(Db4oConnectionSpec spec, String selectedClass) {
-        IDatabase requested = getDatabase(spec);
-        return requested.graphIterator(selectedClass);
     }
     
     public IGraphIterator iterator(Db4oConnectionSpec spec) {

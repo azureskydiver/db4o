@@ -3,29 +3,23 @@
  */
 package com.db4o.browser.gui.controllers;
 
-import java.io.FileNotFoundException;
-import java.util.HashMap;
+import java.io.*;
+import java.util.*;
 import java.util.List;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.ve.sweet.controllers.IEditStateController;
-import org.eclipse.ve.sweet.controllers.swt.SWTEditStateController;
+import org.eclipse.swt.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ve.sweet.controllers.*;
+import org.eclipse.ve.sweet.controllers.swt.*;
+import org.eclipse.ve.sweet.metalogger.*;
 
-import com.db4o.browser.gui.controllers.tree.TreeController;
-import com.db4o.browser.gui.dialogs.IListPopulator;
-import com.db4o.browser.gui.dialogs.ListSelector;
-import com.db4o.browser.gui.views.DbBrowserPane;
-import com.db4o.browser.model.BrowserCore;
-import com.db4o.browser.model.Db4oConnectionSpec;
-import com.db4o.browser.model.Db4oFileConnectionSpec;
-import com.db4o.browser.model.Db4oSocketConnectionSpec;
-import com.db4o.browser.model.GraphPosition;
-import com.db4o.browser.model.IGraphIterator;
-import com.db4o.browser.model.nodes.ClassNode;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.browser.gui.controllers.tree.*;
+import com.db4o.browser.gui.dialogs.*;
+import com.db4o.browser.gui.views.*;
+import com.db4o.browser.model.*;
+import com.db4o.browser.model.nodes.*;
+import com.db4o.reflect.*;
 
 /**
  * BrowserTabController.  The root MVC Controller for a browser (root) tab.
@@ -63,7 +57,7 @@ public class BrowserTabController implements IBrowserController {
 		// Initialize the ObjectTree's controllers
 		selectionChangedController = new SelectionChangedController();
 		
-		treeController = new TreeController(this, ui.getObjectTree());
+		treeController = new TreeController(this, ui.getObjectTree(), ui.getDeleteButton());
 		detailController = new DetailController(this, ui);
 		navigationController = new NavigationController(ui.getLeftButton(), ui.getRightButton());
         searchController = new SearchController(this, ui, navigationController);
@@ -74,6 +68,12 @@ public class BrowserTabController implements IBrowserController {
 		editStateController.addControl(ui.getSaveButton(), true);
 		
         addQueryButtonHandler();
+	}
+	
+	public void dirty() {
+		ui.getSaveButton().setEnabled(true);
+		ui.getCancelButton().setEnabled(true);
+		reopen();
 	}
 	
 	public IEditStateController getEditStateController() {
@@ -108,11 +108,19 @@ public class BrowserTabController implements IBrowserController {
 	 * @param file The platform-specific path/file name.
 	 */
 	public boolean open(String file) {
-        return open(new Db4oFileConnectionSpec(file, Db4oConnectionSpec.PREFERENCE_IS_READ_ONLY)); 
+        return open(file, Db4oConnectionSpec.preferenceIsReadOnly()); 
 	}
-    
+
+	public boolean open(String file,boolean readOnly) {
+        return open(new Db4oFileConnectionSpec(file, readOnly)); 
+	}
+
     public boolean open(String host, int port, String user, String password) {
-        return open(new Db4oSocketConnectionSpec(host, port, user, password,Db4oConnectionSpec.PREFERENCE_IS_READ_ONLY));
+    	return open(host,port,user,password,Db4oConnectionSpec.preferenceIsReadOnly());
+    }
+
+    public boolean open(String host, int port, String user, String password, boolean readOnly) {
+        return open(new Db4oSocketConnectionSpec(host, port, user, password,readOnly));
     }
     
     private boolean open(Db4oConnectionSpec spec){
@@ -124,18 +132,22 @@ public class BrowserTabController implements IBrowserController {
         internalSetInput();
     }
 
-    private boolean internalSetInput() {
-        IGraphIterator i;
-        i = BrowserCore.getDefault().iterator(currentConnection);
-//        try {
-//        } catch (Exception e) {
-//            Logger.log().error(e, "Unexpected exception opening connection");
-//            MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
-//            messageBox.setText("Error");
-//            messageBox.setMessage(e.getClass().getName() + ": " + e.getMessage());
-//            messageBox.open();
-//            return false;
-//        }
+    protected void currentConnection(Db4oConnectionSpec connection) {
+    	currentConnection=connection;
+    }
+    
+    protected boolean internalSetInput() {
+        IGraphIterator i=null;
+        try {
+            i = BrowserCore.getDefault().iterator(currentConnection);
+        } catch (Exception e) {
+            Logger.log().error(e, "Unexpected exception opening connection");
+            MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
+            messageBox.setText("Error");
+            messageBox.setMessage(e.getClass().getName() + ": " + e.getMessage());
+            messageBox.open();
+            return false;
+        }
         setInput(i, null);
         return true;
     }

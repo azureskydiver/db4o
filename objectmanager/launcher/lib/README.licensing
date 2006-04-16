@@ -11,7 +11,7 @@ The following files are licensed under the following terms:
 Db4o software:
 ==============
 
-db4o-4.5-java1.4.jar
+db4o-5.2-java1.2.jar
 Java classes and XML files in objectmanager.jar
 	- GNU General Public License (See note)
 	
@@ -23,7 +23,7 @@ Eclipse software:
 =================
 
 All SWT files in the 'linux' and 'windows' folders
-jface.jar, osgi_core.jar, runtime.jar
+jface.jar, osgi_core.jar, runtime.jar, org.eclipse.ve.sweet_1.0.0-jar
 	- Eclipse Public License
 
 
@@ -32,22 +32,12 @@ Apache software:
 
 jakarta-oro-2.7.7.jar
 	- Apache Software License 1.1
-ls
-
-KXML:
-=====
-
-kxml-plugin.jar
-xmlpull_1_1_3_1.jar
-	- KXML License
 
 XSWT:
 =====
 
 xswt.jar
 	- Common Public License
-
-
 
 NOTE: The GNU General Public License is widely regarded to be ambiguous.
 At db4objects, we have prepared a GPL interpretation policy to disambiguate 

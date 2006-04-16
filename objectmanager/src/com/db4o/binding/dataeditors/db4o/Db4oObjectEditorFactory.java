@@ -17,7 +17,7 @@ public class Db4oObjectEditorFactory implements IObjectViewerFactory {
     }
     
     public IObjectViewer construct() {
-        return new Db4oObject(database);
+        return new Db4oObject(database,this);
     }
 
 }

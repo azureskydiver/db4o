@@ -21,20 +21,20 @@ import org.eclipse.ve.sweet.validator.IValidator;
 
 import com.swtworkbench.community.xswt.XSWT;
 
-public class OpenScrambledFile extends Dialog {
+public class OpenFile extends Dialog {
 
-    public OpenScrambledFile(Shell shell) {
+    public OpenFile(Shell shell) {
         super(shell);
         setBlockOnOpen(true);
     }
     
-    private IOpenScrambledFile pane;
+    private IOpenFile pane;
 
     protected Control createDialogArea(Composite composite) {
         Composite holder = (Composite) super.createDialogArea(composite);
         
-        pane = (IOpenScrambledFile) XSWT.createl(holder,
-                "openScrambledFile.xswt", getClass(), IOpenScrambledFile.class);
+        pane = (IOpenFile) XSWT.createl(holder,
+                "openFile.xswt", getClass(), IOpenFile.class);
         
         pane.getFileName().addVerifyListener(verifyFileName);
         pane.getBrowseButton().addSelectionListener(browseForFile);
@@ -110,10 +110,12 @@ public class OpenScrambledFile extends Dialog {
     
     private String fileName = "";
     private String password = "";
+    private boolean readOnly=false;
     
     protected void okPressed() {
         fileName = pane.getFileName().getText();
         password = pane.getPassword().getText();
+        readOnly=pane.getReadOnly().getSelection();
         super.okPressed();
     }
 
@@ -131,4 +133,7 @@ public class OpenScrambledFile extends Dialog {
         return fileName;
     }
     
+    public boolean getReadOnly() {
+    	return readOnly;
+    }
 }

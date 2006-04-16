@@ -89,6 +89,7 @@ public class SelectServer extends Dialog {
     private int port;
     private String username = "";
     private String password = "";
+    private boolean readOnly;
     
     protected void okPressed() {
         hostName = pane.getHostName().getText();
@@ -96,6 +97,7 @@ public class SelectServer extends Dialog {
         port = ((Integer)converter.convert(pane.getHostPort().getText())).intValue();
         username = pane.getUsername().getText();
         password = pane.getPassword().getText();
+        readOnly=pane.getReadOnly().getSelection();
         super.okPressed();
     }
 
@@ -121,4 +123,7 @@ public class SelectServer extends Dialog {
         return password;
     }
     
+    public boolean getReadOnly() {
+    	return readOnly;
+    }
 }

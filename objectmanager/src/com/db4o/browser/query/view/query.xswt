@@ -22,6 +22,7 @@
 
 				    	<button x:id="CancelButton" enabled="false" toolTipText="Cancel" image="com.db4o.browser.gui.views.DbBrowserPane cancel.gif"/>
 				    	<button x:id="SaveButton" enabled="false" toolTipText="Save" image="com.db4o.browser.gui.views.DbBrowserPane save.gif"/>
+				    	<button x:id="DeleteButton" enabled="false" toolTipText="Delete" image="com.db4o.browser.gui.views.DbBrowserPane cancel.gif"/>
 
 		            	<label text="|"/>
 

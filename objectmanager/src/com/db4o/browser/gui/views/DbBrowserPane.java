@@ -149,6 +149,13 @@ public class DbBrowserPane extends Composite {
     	return (Button) contents.get("SaveButton");
     }
 
+    /**
+     * @return the Delete button
+     */
+    public Button getDeleteButton() {
+    	return (Button) contents.get("DeleteButton");
+    }
+
 }
 
 
