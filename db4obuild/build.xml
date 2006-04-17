@@ -797,7 +797,7 @@
 	<target name="zipnet-pascalcase" depends="init, configure-net1.1-pascalcase, pascalcase, vsdoc, do-zipnet-pascalcase">
 	</target>
 	
-	<target name="zipnet-pascalcase2" depends="init, configure-net2-pascalcase, pascalcase, ndoc, do-zipnet-pascalcase">
+	<target name="zipnet-pascalcase2" depends="init, configure-net2-pascalcase, pascalcase, ndoc, net2-instrumentation, do-zipnet-pascalcase">
 	</target>
 	
 	<target name="configure-net1.1">
@@ -937,7 +937,6 @@
 				<exclude name="**/external/**" />
 			</sources>
 		</filehead>
-
 	
 		<copy todir="${dir.dist.net.build}">
 			<fileset dir="${dir.dist}" includes="dll/**/**" />
@@ -1295,6 +1294,18 @@
 		</exec>		
 	</target>	
 	
+	<target name="net2-instrumentation" depends="pascalcase">
+		
+		<property name="dir.n.instrumentation" location="../db4on/instrumentation" />
+		
+		<ant antfile="${dir.n.instrumentation}/build.xml"
+			target="test"
+			inheritall="false">
+		</ant>
+		
+		<copy todir="${dir.dist.dll.net}" file="${dir.n.instrumentation}/bin/CFNativeQueriesEnabler.exe" />
+	</target>
+	
 	<target name="pascalcase" depends="sharpen-pascalcase">
 		
 		<antcall target="compilecoredll-compact">
@@ -1412,7 +1423,7 @@
 
 	</target>	
 	
-	<target name="cecil-update">
+	<target name="cecil-update" description="updates db4o local copy of the Mono.Cecil library">
 		<property name="dir.cecil" location="/projects/cecil" />
 		
 		<copy todir="${dir.n.in}/external/Mono.Cecil">			

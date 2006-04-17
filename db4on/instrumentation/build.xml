@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<project name="db4o instrumentation tool" default="build">	
+
+	<property name="output.dir" location="bin" />	
+	<property name="db4o.dir" location="../../db4obuild/dist/dll/net" />
+	<property name="db4o.dll" location="${db4o.dir}/db4o.dll" />
+
+	<target name="build" depends="init">
+		<csc outputfile="${output.dir}/CFNativeQueriesEnabler.exe"
+			targettype="exe"
+			debug="true">
+			<src dir="CFNativeQueriesEnabler">
+				<include name="**/*.cs" />
+			</src>
+			<reference dir="${output.dir}">
+				<include name="db4o.dll" />
+			</reference>
+		</csc>
+	</target>
+	
+	<target name="test" depends="rebuild">
+		
+		<csc outputfile="${output.dir}/CFNativeQueriesEnabler.Tests.Subject.exe"
+			targettype="exe"
+			debug="true">
+			<src dir="CFNativeQueriesEnabler.Tests.Subject">
+				<include name="**/*.cs" />
+			</src>
+			<reference dir="${output.dir}">
+				<include name="db4o.dll" />
+			</reference>
+		</csc>
+		
+		<csc outputfile="${output.dir}/CFNativeQueriesEnabler.Tests.exe"
+			targettype="exe"
+			debug="true">
+			<src dir="CFNativeQueriesEnabler.Tests">
+				<include name="**/*.cs" />
+			</src>
+			<reference dir="${output.dir}">
+				<include name="db4o.dll" />
+				<include name="CFNativeQueriesEnabler.exe" />
+				<include name="CFNativeQueriesEnabler.Tests.Subject.exe" />
+			</reference>
+		</csc>
+		
+		<exec executable="${output.dir}/CFNativeQueriesEnabler.Tests.exe"
+			failonerror="true"
+			dir="${output.dir}">
+		</exec>
+	</target>
+	
+	<target name="init">
+		<mkdir dir="${output.dir}" />
+		<copy file="${db4o.dll}" todir="${output.dir}" />
+	</target>
+	
+	<target name="clean">
+		<delete>
+			<fileset dir="${output.dir}">
+				<include name="CFNativeQueriesEnabler.*" />
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="rebuild" depends="clean, build">
+	</target>
+	
+</project>
