@@ -10,7 +10,7 @@
 	file.jvm.jdk1.5=<path to jdk 1.5 java vm executable>
 	file.rt.jar=<JDK1.3 compatible runtime jar>
 	font.pdf.base=<true type font>
-	dir.dll.wince=<path to .NET CE dll, leave empty if not available>
+	dir.compactframework=<path to the 2.0 version of the compact framework, leave empty if not available>
 	eclipse.home=<eclipse home dir>
 	csc.executable.path.net2=<path to csc.exe for .NET 2.0>
 
@@ -21,7 +21,7 @@
 	file.jvm.jdk1.5=/usr/java/jdk1.5.0_03.32bit/bin/java
 	file.rt.jar=C:/j2sdk1.4.2_02/jre/lib/rt.jar
 	font.pdf.base=C:/WINDOWS/Fonts/VERDANA.TTF
-	dir.dll.wince=C:/Program Files/Microsoft Visual Studio .NET 2003/CompactFrameworkSDK/v1.0.5000/Windows CE/
+	dir.compactframework=C:/Arquivos de programas/Microsoft Visual Studio 8/SmartDevices/SDK/CompactFramework/2.0/
 	eclipse.home=c:/Program Files/Eclipse	
 	csc.executable.path.net2=C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
 -->
@@ -380,7 +380,7 @@
 		<mkdir dir="${dir.dist.dll.compact}" />
 		<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
 			<arg value="/optimize" />
-			<arg value="/define:CF_1_0" />
+			<arg value="/define:${csharp.defines.cf}" />
 			<arg value="/out:${file.dll.compact}" />
 			<arg value="/doc:${file.xml.compact}" />
 			<arg value="/target:library" />
@@ -813,6 +813,10 @@
 		</fail>
 		
 		<property name="csharp.defines" value="NET" />
+		
+		<property name="csharp.defines.cf" value="CF_1_0" />		
+		<property name="dir.dll.wince" value="${dir.compactframework}v1.0/WindowsCE/" />
+			
 		<property name="installer.package.guid" value="${installer.package.guid.net1}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net1}" />
 		<property name="installer.package.suffix" value="net" />
@@ -829,6 +833,9 @@
 		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
 		
 		<property name="csharp.defines" value="NET_2_0" />
+		<property name="csharp.defines.cf" value="CF_2_0" />		
+		<property name="dir.dll.wince" value="${dir.compactframework}v2.0/WindowsCE/" />
+		
 		<property name="installer.package.suffix" value="net2" />
 		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
@@ -850,6 +857,8 @@
 			<param name="file.dll.net" value="${legacy.net.dll.dir}/db4o.dll" />
 			<param name="file.xml.net" value="${legacy.net.dll.dir}/db4o.xml" />
 			<param name="csharp.defines" value="NET" />
+			<param name="csharp.defines.cf" value="CF_1_0" />
+			<param name="dir.dll.wince" value="${dir.compactframework}v1.0/WindowsCE/" />
 			<param name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
 		</antcall>
 	</target>
