@@ -28,6 +28,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="db4o, Version=5.3.1.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\db4obuild\dist\dll\net\db4o.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -38,10 +42,6 @@
     <Compile Include="TestRunner.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\core\db4o-net2.csproj">
-      <Project>{7A07E089-078C-433A-BD15-60763FE3B8F2}</Project>
-      <Name>db4o-net2</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CFNativeQueriesEnabler.Tests.Subject\CFNativeQueriesEnabler.Tests.Subject.csproj">
       <Project>{E7749C92-4A39-4CDA-A998-F5F09CCB3D79}</Project>
       <Name>CFNativeQueriesEnabler.Tests.Subject</Name>
