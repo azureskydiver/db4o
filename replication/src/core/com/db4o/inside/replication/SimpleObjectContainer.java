@@ -10,16 +10,26 @@ public interface SimpleObjectContainer {
 
 	public void commit();
 
-    public void delete(Object obj);
+	public void delete(Object obj);
 
-    public void deleteAllInstances(Class clazz);
+	public void deleteAllInstances(Class clazz);
 
 	public String getName();
 
 	public ObjectSet getStoredObjects(Class type);
 
+	/**
+	 * Will cascade to save the whole graph of objects
+	 *
+	 * @param o
+	 */
 	public void storeNew(Object o);
 
+	/**
+	 * It won't cascade. Use it with caution.
+	 *
+	 * @param o
+	 */
 	public void update(Object o);
 
 }

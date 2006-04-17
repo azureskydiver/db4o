@@ -156,9 +156,6 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private boolean activateObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) { //TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
-//		if (_peerA.hasReplicationReferenceAlready(obj)) return false;  //TODO won't work in the case of extendTraversalTo
-//		if (_peerB.hasReplicationReferenceAlready(obj)) return false;
-
 		ReplicationReference refA = _peerA.produceReference(obj, referencingObject, fieldName);
 		ReplicationReference refB = _peerB.produceReference(obj, referencingObject, fieldName);
 
@@ -367,6 +364,7 @@ public class GenericReplicationSession implements ReplicationSession {
 		if (_directionTo == other) isConflict = true;
 
 		Object prevailing = null;
+		//TODO onReplicate here
 		if (isConflict) {
 			owner.activate(obj);
 
@@ -402,11 +400,32 @@ public class GenericReplicationSession implements ReplicationSession {
 		return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, needsToBeActivated);
 	}
 
-	private boolean handleNewObject(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName, boolean needsToBeActivated) {
-		//System.out.println("handleNewObject = " + obj);
+	private boolean handleNewObject(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner,
+			ReplicationProviderInside other, Object referencingObject, String fieldName, boolean needsToBeActivated) {
 		if (_directionTo == owner) return false;
 
 		if (needsToBeActivated) owner.activate(obj);
+
+		_event.resetAction();
+		_event._isConflict = false;
+		_event._creationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.uuid().getLongPart());
+
+		if (owner == _peerA) {
+			_stateInA.setAll(obj, true, false, -1);
+			_stateInB.setAll(null, false, false, -1);
+		} else {
+			_stateInA.setAll(null, false, false, -1);
+			_stateInB.setAll(obj, true, false, -1);
+		}
+
+		_listener.onReplicate(_event);
+
+		if (_event._actionShouldStopTraversal)
+			return false;
+
+		if (_event._actionWasChosen)
+			if (_event._actionChosen.getObject() != obj)
+				throw new RuntimeException("You can only choose the new object or stop traversal");
 
 		Object counterpart = emptyClone(owner, obj);
 
