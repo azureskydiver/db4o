@@ -25,7 +25,7 @@ public class ReplicationTraversalTest {
 		//_peerA.transientProviderSpecificStore(obj2);
 		//_peerA.transientProviderSpecificStore(obj3);
 
-		ReplicationSession replication = new GenericReplicationSession(_peerA, _peerB, null);
+		ReplicationSession replication = new GenericReplicationSession(_peerA, _peerB);
 		replication.replicate(obj1);
 
 		Test.ensure(_peerA.activatedObjects().containsKey(obj1));

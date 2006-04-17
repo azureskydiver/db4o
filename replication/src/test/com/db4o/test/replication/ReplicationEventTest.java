@@ -1,6 +1,7 @@
 package com.db4o.test.replication;
 
 import com.db4o.inside.replication.TestableReplicationProviderInside;
+import com.db4o.replication.ObjectState;
 import com.db4o.replication.ReplicationEvent;
 import com.db4o.replication.ReplicationEventListener;
 import com.db4o.test.Test;
@@ -16,6 +17,15 @@ public class ReplicationEventTest extends ReplicationTestCase {
 		tstNoAction();
 		clean();
 
+		tstNewObject();
+		clean();
+
+		//tstDeletionPrevail();
+		clean();
+
+		//tstDeletionNotPrevail();
+		clean();
+
 		tstOverrideWhenNoConflicts();
 		clean();
 
@@ -24,6 +34,65 @@ public class ReplicationEventTest extends ReplicationTestCase {
 
 		tstStopTraversal();
 		clean();
+	}
+
+	private void tstDeletionPrevail() {
+		throw new UnsupportedOperationException("fs");
+	}
+
+	private void tstDeletionNotPrevail() {
+		throw new UnsupportedOperationException("fs");
+	}
+
+	class BooleanClosure {
+		private boolean value;
+
+		public BooleanClosure(boolean value) {
+			this.value = value;
+		}
+
+		void setValue(boolean v) {
+			value = v;
+		}
+
+		public boolean getValue() {
+			return value;
+		}
+	}
+
+	private void tstNewObject() {
+		storeParentAndChildToProviderA();
+
+		final BooleanClosure invoked = new BooleanClosure(false);
+
+		ReplicationEventListener listener = new ReplicationEventListener() {
+			public void onReplicate(ReplicationEvent event) {
+				invoked.setValue(true);
+
+				final ObjectState stateA = event.stateInProviderA();
+				final ObjectState stateB = event.stateInProviderB();
+
+				Test.ensure(stateA.isNew());
+				Test.ensure(!stateB.isNew());
+
+				Test.ensure(stateA.getObject() != null);
+				Test.ensure(stateB.getObject() == null);
+
+				event.stopTraversal();
+			}
+		};
+
+		replicateAll(_providerA, _providerB, listener);
+
+		Test.ensure(invoked.getValue());
+
+		ensureNames(_providerA, IN_A, IN_A);
+		ensureNotExist(_providerB, SPCParent.class);
+		ensureNotExist(_providerB, SPCChild.class);
+	}
+
+	private void ensureNotExist(TestableReplicationProviderInside provider, Class type) {
+		Test.ensure(! provider.getStoredObjects(type).hasNext());
 	}
 
 	private void ensureNames(TestableReplicationProviderInside provider, String parentName, String childName) {
@@ -47,8 +116,10 @@ public class ReplicationEventTest extends ReplicationTestCase {
 	private void modifyInProviderA() {
 		SPCParent parent = (SPCParent) getOneInstance(_providerA, SPCParent.class);
 		parent.setName(MODIFIED_IN_A);
-		parent.getChild().setName(MODIFIED_IN_A);
+		SPCChild child = parent.getChild();
+		child.setName(MODIFIED_IN_A);
 		_providerA.update(parent);
+		_providerA.update(child);
 		_providerA.commit();
 
 		ensureNames(_providerA, MODIFIED_IN_A, MODIFIED_IN_A);
@@ -60,7 +131,7 @@ public class ReplicationEventTest extends ReplicationTestCase {
 		SPCChild child = parent.getChild();
 		child.setName(MODIFIED_IN_B);
 		_providerB.update(parent);
-		//_providerB.update(child);
+		_providerB.update(child);
 		_providerB.commit();
 
 		ensureNames(_providerB, MODIFIED_IN_B, MODIFIED_IN_B);
