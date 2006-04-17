@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CFNativeQueriesEnabler.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CecilSpikes", "..\CecilSpikes\CecilSpikes.csproj", "{1765C36A-3DCA-46DA-8077-EBC899C61B4E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenNETCFSpikes", "..\OpenNETCFSpikes\OpenNETCFSpikes.csproj", "{4DC7A707-0BBD-401E-B63E-8CC6330E9690}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{1765C36A-3DCA-46DA-8077-EBC899C61B4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1765C36A-3DCA-46DA-8077-EBC899C61B4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1765C36A-3DCA-46DA-8077-EBC899C61B4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DC7A707-0BBD-401E-B63E-8CC6330E9690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DC7A707-0BBD-401E-B63E-8CC6330E9690}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DC7A707-0BBD-401E-B63E-8CC6330E9690}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DC7A707-0BBD-401E-B63E-8CC6330E9690}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
