@@ -17,22 +17,16 @@ to do any query analysis at runtime.
 The Solution
 ------------
 
-The instrumentation tool works by replacing invocations of:
+The instrumentation tool works by replacing invocations to:
 
     ObjectContainer.Query<Extent>(System.Predicate<Extent> match)
 	
 by:
 
-    NativeQueryHandler.ExecuteMeta<Extent>(
-			com.db4o.inside.query.MetaDelegate<System.Predicate<Extent>> match)
+    NativeQueryHandler.ExecuteQuery<Extent>(...)
 			
-inserting the appropriate MetaDelegate construction into the stack whenever
+inserting the appropriate stack adjustments instructions whenever
 possible.
-
-MetaDelegate is a structure which holds the delegate reference along with
-its target object and method thus providing the missing CompactFramework 
-API properties.
-
 
 CFNativeQueries.Enabler.Tests
 =============================
