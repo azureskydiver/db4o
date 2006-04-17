@@ -21,7 +21,7 @@ public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
 		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
 		return new Class[]{
-				ReplicationEventTest.class,
+				//ReplicationEventTest.class,
 				ReplicationConfiguratorTest.class,
 				ReplicationProviderTest.class,
 
