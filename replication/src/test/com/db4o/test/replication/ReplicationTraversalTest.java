@@ -21,9 +21,9 @@ public class ReplicationTraversalTest {
 		obj2.setLink(obj3);
 		obj3.setLink(obj1);
 
-		_peerA.transientProviderSpecificStore(obj1);
-		_peerA.transientProviderSpecificStore(obj2);
-		_peerA.transientProviderSpecificStore(obj3);
+		_peerA.storeNew(obj1);
+		//_peerA.transientProviderSpecificStore(obj2);
+		//_peerA.transientProviderSpecificStore(obj3);
 
 		ReplicationSession replication = new GenericReplicationSession(_peerA, _peerB, null);
 		replication.replicate(obj1);

@@ -57,8 +57,10 @@ public class ReplicationEventTest extends ReplicationTestCase {
 	private void modifyInProviderB() {
 		SPCParent parent = (SPCParent) getOneInstance(_providerB, SPCParent.class);
 		parent.setName(MODIFIED_IN_B);
-		parent.getChild().setName(MODIFIED_IN_B);
+		SPCChild child = parent.getChild();
+		child.setName(MODIFIED_IN_B);
 		_providerB.update(parent);
+		//_providerB.update(child);
 		_providerB.commit();
 
 		ensureNames(_providerB, MODIFIED_IN_B, MODIFIED_IN_B);
