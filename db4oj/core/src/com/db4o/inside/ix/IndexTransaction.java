@@ -70,11 +70,10 @@ public class IndexTransaction implements Visitor4{
 	public void visit(Object obj){
 	    if(obj instanceof IxPatch){
 		    IxPatch tree = (IxPatch)obj;
-		    if(tree._queue != null){
-		        Queue4 queue = tree._queue;
-		        tree._queue = null;
+		    if(tree.hasQueue()){
+		        Queue4 queue = tree.detachQueue();
 		        while((tree = (IxPatch)queue.next()) != null){
-		            tree._queue = null;
+		            tree.detachQueue();
 		            addPatchToRoot(tree);
 		        }
 		    }else{
