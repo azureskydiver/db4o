@@ -14,7 +14,7 @@ public abstract class IxPatch extends IxTree {
 
     Object _value;
 
-    Queue4 _queue;    // queue of patch objects for the same parent
+    private Queue4 _queue;    // queue of patch objects for the same parent
 
     IxPatch(IndexTransaction a_ft, int a_parentID, Object a_value) {
         super(a_ft);
@@ -52,6 +52,16 @@ public abstract class IxPatch extends IxTree {
         Indexable4 handler = _fieldTransaction.i_index._handler;
         return handler.compareTo(handler.comparableObject(trans(), _value));
     }
+    
+    public boolean hasQueue() {
+		return _queue != null;
+	}
+
+	public Queue4 detachQueue() {
+		Queue4 queue = _queue;
+        this._queue = null;
+        return queue;
+	}
 
     protected Tree shallowCloneInternal(Tree tree) {
     	IxPatch patch=(IxPatch)super.shallowCloneInternal(tree);
