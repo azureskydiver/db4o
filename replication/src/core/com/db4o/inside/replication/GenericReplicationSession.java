@@ -15,8 +15,6 @@ import com.db4o.replication.ReplicationProvider;
 import com.db4o.replication.ReplicationSession;
 
 public class GenericReplicationSession implements ReplicationSession {
-// ------------------------------ FIELDS ------------------------------
-
 	private final ReplicationReflector _reflector;
 
 	private final CollectionHandler _collectionHandler;
@@ -44,8 +42,6 @@ public class GenericReplicationSession implements ReplicationSession {
 	 */
 	private Hashtable4 _counterpartRefsByOriginal = new Hashtable4(1000);
 
-// --------------------------- CONSTRUCTORS ---------------------------
-
 	public GenericReplicationSession(ReplicationProviderInside _peerA, ReplicationProviderInside _peerB) {
 		this(_peerA, _peerB, new DefaultReplicationEventListener());
 	}
@@ -69,15 +65,11 @@ public class GenericReplicationSession implements ReplicationSession {
 
 				// TODO FIXME: cr work in progress here
 				// _lastReplicationVersion = _
-
 			}
 		}
 	}
 
-// ------------------------ INTERFACE METHODS ------------------------
-
 // --------------------- Interface ReplicationSession ---------------------
-
 
 	public void checkConflict(Object root) {
 		try {
@@ -156,6 +148,7 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private boolean activateObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) { //TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
+		//System.out.println("obj = " + obj.hashCode());
 		ReplicationReference refA = _peerA.produceReference(obj, referencingObject, fieldName);
 		ReplicationReference refB = _peerB.produceReference(obj, referencingObject, fieldName);
 
@@ -230,9 +223,7 @@ public class GenericReplicationSession implements ReplicationSession {
 			if (_event._actionChosen == _stateInA) prevailing = objectA;
 			if (_event._actionChosen == _stateInB) prevailing = objectB;
 		} else {
-
 			if (_event._actionWasChosen) {
-
 				if (_event._actionChosen == _stateInA) prevailing = objectA;
 				if (_event._actionChosen == _stateInB) prevailing = objectB;
 				if (_event._actionChosen == null) return false;
@@ -357,34 +348,38 @@ public class GenericReplicationSession implements ReplicationSession {
 		return (ReplicationReference) _counterpartRefsByOriginal.get(original);
 	}
 
-	private boolean handleDeletionInOther(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner, ReplicationProviderInside other, Object referencingObject, String fieldName) {
+	private boolean handleDeletionInOther(Object obj, ReplicationReference ownerRef,
+			ReplicationProviderInside owner, ReplicationProviderInside other,
+			Object referencingObject, String fieldName) {
 		boolean isConflict = false;
 		boolean wasModified = owner.wasModifiedSinceLastReplication(ownerRef);
 		if (wasModified) isConflict = true;
 		if (_directionTo == other) isConflict = true;
 
-		Object prevailing = null;
-		//TODO onReplicate here
-		if (isConflict) {
-			owner.activate(obj);
+		Object prevailing = null; //by default, deletion prevails
+		if (isConflict) owner.activate(obj);
 
-			_event.resetAction();
-			_event._isConflict = true;
-			_event._creationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.uuid().getLongPart());
+		_event.resetAction();
+		_event._isConflict = isConflict;
 
-			long modificationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.version());
+		_event._creationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.uuid().getLongPart());
+		long modificationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.version());
 
-			if (owner == _peerA) {
-				_stateInA.setAll(obj, false, wasModified, modificationDate);
-				_stateInB.setAll(null, false, false, -1);
-			} else { //owner == _peerB
-				_stateInA.setAll(null, false, false, -1);
-				_stateInB.setAll(obj, false, wasModified, modificationDate);
-			}
-			_listener.onReplicate(_event);
+		if (owner == _peerA) {
+			_stateInA.setAll(obj, false, wasModified, modificationDate);
+			_stateInB.setAll(null, false, false, -1);
+		} else { //owner == _peerB
+			_stateInA.setAll(null, false, false, -1);
+			_stateInB.setAll(obj, false, wasModified, modificationDate);
+		}
 
-			if (!_event._actionWasChosen)
-				throwReplicationConflictException();
+		_listener.onReplicate(_event);
+
+		if (_event._actionShouldStopTraversal) return false;
+
+		if (isConflict && !_event._actionWasChosen) throwReplicationConflictException();
+
+		if (_event._actionWasChosen) {
 			if (_event._actionChosen == null) return false;
 			if (_event._actionChosen == _stateInA) prevailing = _stateInA.getObject();
 			if (_event._actionChosen == _stateInB) prevailing = _stateInB.getObject();
@@ -441,12 +436,12 @@ public class GenericReplicationSession implements ReplicationSession {
 		return true;
 	}
 
-	private void markAsProcessed(Db4oUUID uuid) {
-		_processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
-	}
-
 	private void markAsNotProcessed(Db4oUUID uuid) {
 		_processedUuids.remove(uuid);
+	}
+
+	private void markAsProcessed(Db4oUUID uuid) {
+		_processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
 	}
 
 	private ReplicationProviderInside other(ReplicationProviderInside peer) {

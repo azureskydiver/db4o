@@ -265,6 +265,10 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return false;
 	}
 
+	public boolean supportsCascadeDelete() {
+		return false;
+	}
+
 	public boolean supportsMultiDimensionalArrays() {
 		return true;
 	}

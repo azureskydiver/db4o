@@ -554,6 +554,10 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return true;
 	}
 
+	public boolean supportsCascadeDelete() {
+		return true;
+	}
+
 	private void clearSession() {
 		getSession().clear();
 	}

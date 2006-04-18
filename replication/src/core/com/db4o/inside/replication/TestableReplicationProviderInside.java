@@ -9,4 +9,6 @@ public interface TestableReplicationProviderInside extends ReplicationProviderIn
 	boolean supportsHybridCollection();
 
 	boolean supportsRollback();
+
+	boolean supportsCascadeDelete();
 }
