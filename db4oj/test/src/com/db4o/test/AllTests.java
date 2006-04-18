@@ -207,24 +207,46 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     }
     
     public static void run(Class clazz){
-        AllTests allTests = new AllTests();
-        allTests._testCases=new Class[]{clazz};
-        allTests.run();
+        run(new Class[]{clazz});
+    }
+    
+    public static void run(TestSuite suite){
+        run(suite.tests());
+    }
+    
+    public static void run(Class[] classes){
+        run(true, true, classes);
     }
     
     public static void runSolo(Class clazz){
-        AllTests allTests = new AllTests();
-        allTests._testCases=new Class[]{clazz};
-        allTests.SOLO = true;
-        allTests.CLIENT_SERVER = false;
-        allTests.run();
+        runSolo(new Class[]{clazz});
+    }
+    
+    public static void runSolo(TestSuite suite){
+        runSolo(suite.tests());
+    }
+    
+    public static void runSolo(Class[] classes){
+        run(true, false, classes);
     }
     
     public static void runClientServer(Class clazz){
+        runClientServer(new Class[]{clazz});
+    }
+    
+    public static void runClientServer(TestSuite suite){
+        runClientServer(suite.tests());
+    }
+    
+    public static void runClientServer(Class[] classes){
+        run(false, true, classes);
+    }
+    
+    public static void run(boolean solo, boolean clientServer, Class[] classes){
         AllTests allTests = new AllTests();
-        allTests._testCases=new Class[]{clazz};
-        allTests.SOLO = false;
-        allTests.CLIENT_SERVER = true;
+        allTests._testCases=classes;
+        allTests.SOLO = solo;
+        allTests.CLIENT_SERVER = clientServer;
         allTests.run();
     }
 
