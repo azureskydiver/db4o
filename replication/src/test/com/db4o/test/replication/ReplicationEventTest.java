@@ -7,8 +7,6 @@ import com.db4o.replication.ReplicationEventListener;
 import com.db4o.test.Test;
 
 public class ReplicationEventTest extends ReplicationTestCase {
-// ------------------------------ FIELDS ------------------------------
-
 	private static final String IN_A = "in A";
 	private static final String MODIFIED_IN_A = "modified in A";
 	private static final String MODIFIED_IN_B = "modified in B";
@@ -20,12 +18,6 @@ public class ReplicationEventTest extends ReplicationTestCase {
 		tstNewObject();
 		clean();
 
-		//tstDeletionPrevail();
-		clean();
-
-		//tstDeletionNotPrevail();
-		clean();
-
 		tstOverrideWhenNoConflicts();
 		clean();
 
@@ -34,65 +26,25 @@ public class ReplicationEventTest extends ReplicationTestCase {
 
 		tstStopTraversal();
 		clean();
+
+		tstDeletionDefaultPrevail();
+		clean();
+
+		tstDeletionOverrideToPrevail();
+		clean();
+
+		tstDeletionNotPrevail();
+		clean();
 	}
 
-	private void tstDeletionPrevail() {
-		throw new UnsupportedOperationException("fs");
-	}
+	private void deleteInProviderA() {
+		_providerA.deleteAllInstances(SPCParent.class);
+		_providerA.deleteAllInstances(SPCChild.class);
 
-	private void tstDeletionNotPrevail() {
-		throw new UnsupportedOperationException("fs");
-	}
+		_providerA.commit();
 
-	class BooleanClosure {
-		private boolean value;
-
-		public BooleanClosure(boolean value) {
-			this.value = value;
-		}
-
-		void setValue(boolean v) {
-			value = v;
-		}
-
-		public boolean getValue() {
-			return value;
-		}
-	}
-
-	private void tstNewObject() {
-		storeParentAndChildToProviderA();
-
-		final BooleanClosure invoked = new BooleanClosure(false);
-
-		ReplicationEventListener listener = new ReplicationEventListener() {
-			public void onReplicate(ReplicationEvent event) {
-				invoked.setValue(true);
-
-				final ObjectState stateA = event.stateInProviderA();
-				final ObjectState stateB = event.stateInProviderB();
-
-				Test.ensure(stateA.isNew());
-				Test.ensure(!stateB.isNew());
-
-				Test.ensure(stateA.getObject() != null);
-				Test.ensure(stateB.getObject() == null);
-
-				event.stopTraversal();
-			}
-		};
-
-		replicateAll(_providerA, _providerB, listener);
-
-		Test.ensure(invoked.getValue());
-
-		ensureNames(_providerA, IN_A, IN_A);
-		ensureNotExist(_providerB, SPCParent.class);
-		ensureNotExist(_providerB, SPCChild.class);
-	}
-
-	private void ensureNotExist(TestableReplicationProviderInside provider, Class type) {
-		Test.ensure(! provider.getStoredObjects(type).hasNext());
+		ensureNotExist(_providerA, SPCChild.class);
+		ensureNotExist(_providerA, SPCParent.class);
 	}
 
 	private void ensureNames(TestableReplicationProviderInside provider, String parentName, String childName) {
@@ -106,6 +58,10 @@ public class ReplicationEventTest extends ReplicationTestCase {
 
 		Test.ensure(parent.getName().equals(parentName));
 		Test.ensureEquals(childName, parent.getChild().getName());
+	}
+
+	private void ensureNotExist(TestableReplicationProviderInside provider, Class type) {
+		Test.ensure(! provider.getStoredObjects(type).hasNext());
 	}
 
 	private void ensureOneInstanceOfParentAndChild(TestableReplicationProviderInside provider) {
@@ -157,6 +113,134 @@ public class ReplicationEventTest extends ReplicationTestCase {
 		super.test();
 	}
 
+	private void tstDeletionDefaultPrevail() {
+		storeParentAndChildToProviderA();
+		replicateAllToProviderBFirstTime();
+		deleteInProviderA();
+
+		final BooleanClosure invoked = new BooleanClosure(false);
+
+		ReplicationEventListener listener = new ReplicationEventListener() {
+			public void onReplicate(ReplicationEvent event) {
+				invoked.setValue(true);
+
+				final ObjectState stateA = event.stateInProviderA();
+				final ObjectState stateB = event.stateInProviderB();
+
+				Test.ensure(stateA.getObject() == null);
+				Test.ensure(stateB.getObject() != null);
+
+				if (stateB.getObject() instanceof SPCChild && _providerB.supportsCascadeDelete())
+					event.stopTraversal();
+			}
+		};
+
+		replicateAll(_providerA, _providerB, listener);
+
+		Test.ensure(invoked.getValue());
+
+		ensureNotExist(_providerA, SPCParent.class);
+		ensureNotExist(_providerA, SPCChild.class);
+
+		ensureNotExist(_providerB, SPCParent.class);
+		ensureNotExist(_providerB, SPCChild.class);
+	}
+
+	private void tstDeletionNotPrevail() {
+		storeParentAndChildToProviderA();
+		replicateAllToProviderBFirstTime();
+		deleteInProviderA();
+
+		final BooleanClosure invoked = new BooleanClosure(false);
+
+		ReplicationEventListener listener = new ReplicationEventListener() {
+			public void onReplicate(ReplicationEvent event) {
+				invoked.setValue(true);
+
+				final ObjectState stateA = event.stateInProviderA();
+				final ObjectState stateB = event.stateInProviderB();
+
+				Test.ensure(stateA.getObject() == null);
+				Test.ensure(stateB.getObject() != null);
+
+				event.overrideWith(stateB);
+			}
+		};
+
+		replicateAll(_providerA, _providerB, listener);
+
+		Test.ensure(invoked.getValue());
+
+		ensureNames(_providerA, IN_A, IN_A);
+		ensureNames(_providerB, IN_A, IN_A);
+	}
+
+	private void tstDeletionOverrideToPrevail() {
+		storeParentAndChildToProviderA();
+		replicateAllToProviderBFirstTime();
+		deleteInProviderA();
+
+		final BooleanClosure invoked = new BooleanClosure(false);
+
+		ReplicationEventListener listener = new ReplicationEventListener() {
+			public void onReplicate(ReplicationEvent event) {
+				invoked.setValue(true);
+
+				final ObjectState stateA = event.stateInProviderA();
+				final ObjectState stateB = event.stateInProviderB();
+
+				Test.ensure(stateA.getObject() == null);
+				Test.ensure(stateB.getObject() != null);
+
+				if (stateB.getObject() instanceof SPCChild && _providerB.supportsCascadeDelete())
+					event.stopTraversal();
+				else
+					event.overrideWith(stateA);
+			}
+		};
+
+		replicateAll(_providerA, _providerB, listener);
+
+		Test.ensure(invoked.getValue());
+
+		ensureNotExist(_providerA, SPCParent.class);
+		ensureNotExist(_providerA, SPCChild.class);
+
+		ensureNotExist(_providerB, SPCParent.class);
+		ensureNotExist(_providerB, SPCChild.class);
+	}
+
+	private void tstNewObject() {
+		storeParentAndChildToProviderA();
+
+		final BooleanClosure invoked = new BooleanClosure(false);
+
+		ReplicationEventListener listener = new ReplicationEventListener() {
+			public void onReplicate(ReplicationEvent event) {
+				invoked.setValue(true);
+
+				final ObjectState stateA = event.stateInProviderA();
+				final ObjectState stateB = event.stateInProviderB();
+
+				Test.ensure(stateA.isNew());
+				Test.ensure(!stateB.isNew());
+
+				Test.ensure(stateA.getObject() != null);
+				Test.ensure(stateB.getObject() == null);
+
+				event.stopTraversal();
+			}
+		};
+
+		replicateAll(_providerA, _providerB, listener);
+
+		Test.ensure(invoked.getValue());
+
+		ensureNames(_providerA, IN_A, IN_A);
+		ensureNotExist(_providerB, SPCParent.class);
+		ensureNotExist(_providerB, SPCChild.class);
+	}
+
 	private void tstNoAction() {
 		storeParentAndChildToProviderA();
 		replicateAllToProviderBFirstTime();
@@ -171,24 +255,6 @@ public class ReplicationEventTest extends ReplicationTestCase {
 
 		ensureNames(_providerA, MODIFIED_IN_B, MODIFIED_IN_B);
 		ensureNames(_providerB, MODIFIED_IN_B, MODIFIED_IN_B);
-	}
-
-	private void tstOverrideWhenNoConflicts() {
-		storeParentAndChildToProviderA();
-		replicateAllToProviderBFirstTime();
-		modifyInProviderB();
-
-		ReplicationEventListener listener = new ReplicationEventListener() {
-			public void onReplicate(ReplicationEvent event) {
-				Test.ensure(!event.isConflict());
-				event.overrideWith(event.stateInProviderB());
-			}
-		};
-
-		replicateAll(_providerB, _providerA, listener);
-
-		ensureNames(_providerA, IN_A, IN_A);
-		ensureNames(_providerB, IN_A, IN_A);
 	}
 
 	private void tstOverrideWhenConflicts() {
@@ -214,6 +280,24 @@ public class ReplicationEventTest extends ReplicationTestCase {
 		ensureNames(_providerB, MODIFIED_IN_B, MODIFIED_IN_B);
 	}
 
+	private void tstOverrideWhenNoConflicts() {
+		storeParentAndChildToProviderA();
+		replicateAllToProviderBFirstTime();
+		modifyInProviderB();
+
+		ReplicationEventListener listener = new ReplicationEventListener() {
+			public void onReplicate(ReplicationEvent event) {
+				Test.ensure(!event.isConflict());
+				event.overrideWith(event.stateInProviderB());
+			}
+		};
+
+		replicateAll(_providerB, _providerA, listener);
+
+		ensureNames(_providerA, IN_A, IN_A);
+		ensureNames(_providerB, IN_A, IN_A);
+	}
+
 	private void tstStopTraversal() {
 		storeParentAndChildToProviderA();
 		replicateAllToProviderBFirstTime();
@@ -234,5 +318,21 @@ public class ReplicationEventTest extends ReplicationTestCase {
 
 		ensureNames(_providerA, MODIFIED_IN_A, MODIFIED_IN_A);
 		ensureNames(_providerB, MODIFIED_IN_B, MODIFIED_IN_B);
+	}
+
+	class BooleanClosure {
+		private boolean value;
+
+		public BooleanClosure(boolean value) {
+			this.value = value;
+		}
+
+		void setValue(boolean v) {
+			value = v;
+		}
+
+		public boolean getValue() {
+			return value;
+		}
 	}
 }

@@ -360,4 +360,8 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		return false;
 	}
 
+	public boolean supportsCascadeDelete() {
+		return true;
+	}
+
 }

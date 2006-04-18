@@ -13,6 +13,7 @@
 		<property name="hibernate.dialect">org.hibernate.dialect.HSQLDialect</property>
 		<property name="hibernate.show_sql">false</property>
 		<property name="hibernate.hbm2ddl.auto">update</property>
+		<property name="hibernate.jdbc.batch_size">0</property>
 	</session-factory>
 </hibernate-configuration>
 

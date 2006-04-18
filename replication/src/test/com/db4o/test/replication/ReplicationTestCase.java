@@ -3,6 +3,7 @@
 package com.db4o.test.replication;
 
 import com.db4o.ObjectSet;
+import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
@@ -153,16 +154,23 @@ public abstract class ReplicationTestCase {
 	protected void replicateAll(
 			TestableReplicationProviderInside from, TestableReplicationProviderInside to, ReplicationEventListener listener) {
 		ReplicationSession replication = Replication.begin(from, to, listener);
+
 		ObjectSet allObjects = from.objectsChangedSinceLastReplication();
-
-		if (!allObjects.hasNext())
-			throw new RuntimeException("Can't find any objects to replicate");
-
 		while (allObjects.hasNext()) {
 			Object changed = allObjects.next();
 			//System.out.println("changed = " + changed);
 			replication.replicate(changed);
 		}
+
+		ObjectSet deletions = from.uuidsDeletedSinceLastReplication();
+		while (deletions.hasNext()) {
+			Db4oUUID uuid = (Db4oUUID) deletions.next();
+			Object counterpart = to.getObject(uuid);
+			//System.out.println("counterpart = " + counterpart);
+			if (counterpart == null) continue;
+			replication.replicate(counterpart);
+		}
+
 		replication.commit();
 	}
 
