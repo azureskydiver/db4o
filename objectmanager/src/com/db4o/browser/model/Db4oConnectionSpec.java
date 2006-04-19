@@ -90,6 +90,7 @@ public abstract class Db4oConnectionSpec {
 		}
 	}
 	
+	public abstract String shortPath();
 	public abstract String path();
 	protected abstract ObjectContainer connectInternal();
 }

@@ -34,4 +34,8 @@ public class Db4oSocketConnectionSpec extends Db4oConnectionSpec {
 		}
 	}
 
+	public String shortPath() {
+		return path();
+	}
+
 }

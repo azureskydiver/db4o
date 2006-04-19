@@ -16,49 +16,26 @@
  */
 package com.db4o.browser.gui.standalone;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Date;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
-import org.eclipse.jface.window.Window;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ve.sweet.hinthandler.HintHandler;
-import org.eclipse.ve.sweet.hinthandler.IHintHandler;
+import org.eclipse.jface.window.*;
+import org.eclipse.swt.*;
+import org.eclipse.swt.custom.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ve.sweet.hinthandler.*;
 
-import com.db4o.Db4o;
-import com.db4o.browser.gui.controllers.BrowserTabController;
-import com.db4o.browser.gui.controllers.QueryController;
-import com.db4o.browser.gui.dialogs.OpenFile;
-import com.db4o.browser.gui.dialogs.SelectServer;
-import com.db4o.browser.gui.views.DbBrowserPane;
-import com.db4o.browser.model.BrowserCore;
-import com.db4o.browser.model.IBrowserCoreListener;
-import com.db4o.browser.model.IGraphIterator;
-import com.db4o.browser.model.TheNullGraphIterator;
-import com.db4o.browser.prefs.PreferenceUI;
-import com.swtworkbench.community.xswt.XSWT;
-import com.swtworkbench.community.xswt.metalogger.FileLogger;
-import com.swtworkbench.community.xswt.metalogger.Logger;
-import com.swtworkbench.community.xswt.metalogger.StdLogger;
-import com.swtworkbench.community.xswt.metalogger.TeeLogger;
+import com.db4o.*;
+import com.db4o.browser.gui.controllers.*;
+import com.db4o.browser.gui.dialogs.*;
+import com.db4o.browser.gui.views.*;
+import com.db4o.browser.model.*;
+import com.db4o.browser.prefs.*;
+import com.swtworkbench.community.xswt.*;
+import com.swtworkbench.community.xswt.metalogger.*;
 
 /**
  * Class StandaloneBrowser.
@@ -192,7 +169,8 @@ public class StandaloneBrowser implements IControlFactory {
         BrowserCore.getDefault().addBrowserCoreListener(browserCoreListener);
 		
         if (commandLineFileName != null) {
-        	if(browserController.open(commandLineFileName)) {
+        	Db4oConnectionSpec spec=new Db4oFileConnectionSpec(commandLineFileName,false);
+        	if(browserController.open(spec)) {
         		setTabText(commandLineFileName);
         		setOpenedDatabaseMenuChoiceState();
         	}
@@ -206,8 +184,8 @@ public class StandaloneBrowser implements IControlFactory {
     }
     
     private MenuItem open;
-    private MenuItem openScrambledFile;
     private MenuItem openServer;
+    private MenuItem openRecent;
     private MenuItem closeAll;
     private MenuItem xmlExport;
     private MenuItem query;
@@ -234,8 +212,21 @@ public class StandaloneBrowser implements IControlFactory {
 	private void buildMenuBar(final Shell shell) {
         Map choices = XSWT.createl(shell, "menu.xswt", getClass());
 		
+        Menu fileMenu=(Menu)choices.get("fileMenu");
+        fileMenu.addMenuListener(new MenuListener() {
+			public void menuHidden(MenuEvent e) {
+			}
+
+			public void menuShown(MenuEvent e) {
+				Db4oConnectionSpec spec=(Db4oConnectionSpec)PreferencesCore.getDefault().getPreference(RecentlyOpenedPreferences.RECENTLY_OPENED_PREFERENCES_ID);
+				openRecent.setEnabled(spec!=null);
+				openRecent.setText("Open "+(spec==null ? "recent" : spec.shortPath()));
+			}
+        });
+        
         open = (MenuItem) choices.get("Open");
         openServer = (MenuItem) choices.get("OpenServer");
+        openRecent = (MenuItem) choices.get("OpenRecent");
         closeAll = (MenuItem) choices.get("CloseAllDatabases");
         xmlExport = (MenuItem) choices.get("XMLExport");
         query = (MenuItem) choices.get("Query");
@@ -243,7 +234,15 @@ public class StandaloneBrowser implements IControlFactory {
         closeWindow = (MenuItem) choices.get("Close");
 		preferences = (MenuItem) choices.get("Preferences");
         helpAbout = (MenuItem)choices.get("HelpAbout");
-        
+
+        openRecent.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				Db4oConnectionSpec spec=(Db4oConnectionSpec)PreferencesCore.getDefault().getPreference(RecentlyOpenedPreferences.RECENTLY_OPENED_PREFERENCES_ID);
+				if(spec!=null) {
+					openBySpec(spec);
+				}
+			}
+        });
 //        open.addSelectionListener(new SelectionAdapter() {
 //            public void widgetSelected(SelectionEvent e) {
 //                FileDialog dialog = new FileDialog(shell, SWT.OPEN);
@@ -269,17 +268,8 @@ public class StandaloneBrowser implements IControlFactory {
 	                        Db4o.configure().encrypt(true);
 	                        Db4o.configure().password(password);
                     	}
-                        try {
-                            if (browserController.open(file,readOnly)) {
-                                setTabText(file);
-                                setOpenedDatabaseMenuChoiceState();
-                            }
-                        } catch (Throwable ex) {
-                            MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
-                            messageBox.setText("Error");
-                            messageBox.setMessage(ex.getMessage() + "\n\nPossibly incorrect password?");
-                            messageBox.open();
-                        }
+                    	Db4oConnectionSpec spec=new Db4oFileConnectionSpec(file,readOnly);
+                        openBySpec(spec);
                     } finally {
                         Db4o.configure().encrypt(false);
                         Db4o.configure().password(null);
@@ -298,10 +288,8 @@ public class StandaloneBrowser implements IControlFactory {
                     String user = dialog.getUser();
                     String password = dialog.getPassword();
                     boolean readOnly=dialog.getReadOnly();
-                    if (browserController.open(host, port, user, password,readOnly)) {
-                        setTabText(host + ":" + port);
-                    }
-                    setOpenedDatabaseMenuChoiceState();
+                    Db4oConnectionSpec spec=new Db4oSocketConnectionSpec(host,port,user,password,readOnly);
+                    openBySpec(spec);
                 }
             }
         });
@@ -380,6 +368,21 @@ public class StandaloneBrowser implements IControlFactory {
 		    }
 		    queryController.close(openedViews[view]);
 		}
+	}
+
+	private void openBySpec(Db4oConnectionSpec spec) {
+        try {
+    		if (browserController.open(spec)) {
+    		    setTabText(spec.shortPath());
+    		    setOpenedDatabaseMenuChoiceState();
+    		}
+        } 
+        catch (Throwable ex) {
+            MessageBox messageBox = new MessageBox(ui.getShell(), SWT.ICON_ERROR);
+            messageBox.setText("Error");
+            messageBox.setMessage(ex.getMessage() + "\n\nPossibly incorrect password?");
+            messageBox.open();
+        }
 	}
 
 	private IBrowserCoreListener browserCoreListener = new IBrowserCoreListener() {

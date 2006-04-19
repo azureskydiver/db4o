@@ -86,8 +86,8 @@ public class Db4oDatabase implements IDatabase {
         };
         
         // YYY
-        System.out.println("PURGE");
-        container.ext().purge();
+        //System.out.println("PURGE");
+        //container.ext().purge();
         
         // Get the known classes
         ReflectClass[] knownClasses = container.ext().knownClasses();
