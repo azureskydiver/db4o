@@ -63,8 +63,7 @@ public class GenericReplicationSession implements ReplicationSession {
 				if (_peerA.getLastReplicationVersion() != _peerB.getLastReplicationVersion())
 					throw new RuntimeException("Version numbers must be the same");
 
-				// TODO FIXME: cr work in progress here
-				// _lastReplicationVersion = _
+				_lastReplicationVersion = _peerA.getLastReplicationVersion();
 			}
 		}
 	}
@@ -170,20 +169,15 @@ public class GenericReplicationSession implements ReplicationSession {
 		else
 			refB = otherRef;
 
-		if (otherRef == null) {
+		if (otherRef == null) { //If an object is only present in one ReplicationProvider
 			markAsProcessed(uuid);
 
-			// TODO FIXME: cr work in progress here
-			// if(ownerRef.version() )
+			long creationTime = ownerRef.uuid().getLongPart();
 
-//If an object is only present in one ReplicationProvider,
-//  - if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
-//  - if it was created before the last time two ReplicationProviders were replicated it has to be treated as deleted.
-
-			if (other.wasDeletedSinceLastReplication(uuid))
+			if (creationTime > _lastReplicationVersion) //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
+				return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, true);
+			else // if it was created before the last time two ReplicationProviders were replicated it has to be treated as deleted.
 				return handleDeletionInOther(obj, ownerRef, owner, other, referencingObject, fieldName);
-
-			return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, true);
 		}
 
 		ownerRef.setCounterpart(otherRef.object());
