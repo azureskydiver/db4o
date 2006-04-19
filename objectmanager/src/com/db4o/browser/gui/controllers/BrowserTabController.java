@@ -19,6 +19,8 @@ import com.db4o.browser.gui.dialogs.*;
 import com.db4o.browser.gui.views.*;
 import com.db4o.browser.model.*;
 import com.db4o.browser.model.nodes.*;
+import com.db4o.browser.prefs.PreferencesCore;
+import com.db4o.browser.prefs.RecentlyOpenedPreferences;
 import com.db4o.reflect.*;
 
 /**
@@ -101,30 +103,12 @@ public class BrowserTabController implements IBrowserController {
             queryController.open(toOpen, currentConnection.path());
         }
     }
-
-    /**
-     * Method open.  Open a database file.
-     * 
-	 * @param file The platform-specific path/file name.
-	 */
-	public boolean open(String file) {
-        return open(file, Db4oConnectionSpec.preferenceIsReadOnly()); 
-	}
-
-	public boolean open(String file,boolean readOnly) {
-        return open(new Db4oFileConnectionSpec(file, readOnly)); 
-	}
-
-    public boolean open(String host, int port, String user, String password) {
-    	return open(host,port,user,password,Db4oConnectionSpec.preferenceIsReadOnly());
-    }
-
-    public boolean open(String host, int port, String user, String password, boolean readOnly) {
-        return open(new Db4oSocketConnectionSpec(host, port, user, password,readOnly));
-    }
     
-    private boolean open(Db4oConnectionSpec spec){
-        currentConnection = spec;
+    public boolean open(Db4oConnectionSpec spec){
+        currentConnection(spec);
+        PreferencesCore.getDefault().registerPreference(RecentlyOpenedPreferences.RECENTLY_OPENED_PREFERENCES_ID, spec);
+        PreferencesCore.getDefault().commit();
+        System.out.println(PreferencesCore.getDefault().getPreference(RecentlyOpenedPreferences.RECENTLY_OPENED_PREFERENCES_ID));
         return internalSetInput();
     }
 

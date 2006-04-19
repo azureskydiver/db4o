@@ -150,6 +150,10 @@ public class PreferencesCore {
 			ImageDescriptor image, Class preferencePageClass, Object preference) {
 		PreferenceUI.registerPreferencePage(id, name, image,
 				preferencePageClass.getName());
+		registerPreference(id, preference);
+	}
+
+	public void registerPreference(String id, Object preference) {
 		preferenceStore.put(id, preference);
 	}
 

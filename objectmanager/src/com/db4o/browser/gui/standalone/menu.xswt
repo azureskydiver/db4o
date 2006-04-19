@@ -18,6 +18,7 @@
 				<x:children>
 					<menuItem x:id="Open" text="&amp;Open File..."/>
 					<menuItem x:id="OpenServer" text="Connect to &amp;Server..."/>
+					<menuItem x:id="OpenRecent" text="Open recent"/>
 					<menuItem x:id="CloseAllDatabases" enabled="false" text="Close &amp;all Databases"/>
 					<menuItem x:style="SEPARATOR"/>
 					<menuItem x:id="XMLExport" enabled="false" text="Export to &amp;XML..."/>
