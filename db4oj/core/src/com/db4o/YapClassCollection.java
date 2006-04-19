@@ -5,7 +5,6 @@ package com.db4o;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;
-import com.db4o.reflect.generic.*;
 
 /**
  * @exclude
