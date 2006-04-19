@@ -60,8 +60,8 @@ public class GenericReplicationSession implements ReplicationSession {
 				_peerA.startReplicationTransaction(_peerB.getSignature());
 				_peerB.startReplicationTransaction(_peerA.getSignature());
 
-				long versionA = _peerA.getLastReplicationVersion();
-				long versionB = _peerB.getLastReplicationVersion();
+				if (_peerA.getLastReplicationVersion() != _peerB.getLastReplicationVersion())
+					throw new RuntimeException("Version numbers must be the same");
 
 				// TODO FIXME: cr work in progress here
 				// _lastReplicationVersion = _
@@ -175,6 +175,10 @@ public class GenericReplicationSession implements ReplicationSession {
 
 			// TODO FIXME: cr work in progress here
 			// if(ownerRef.version() )
+
+//If an object is only present in one ReplicationProvider,
+//  - if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
+//  - if it was created before the last time two ReplicationProviders were replicated it has to be treated as deleted.
 
 			if (other.wasDeletedSinceLastReplication(uuid))
 				return handleDeletionInOther(obj, ownerRef, owner, other, referencingObject, fieldName);

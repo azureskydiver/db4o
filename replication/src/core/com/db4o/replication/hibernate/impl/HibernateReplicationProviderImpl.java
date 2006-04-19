@@ -221,7 +221,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final synchronized void commitReplicationTransaction(long raisedDatabaseVersion) {
 		ensureReplicationActive();
 
-		ensureVersion(raisedDatabaseVersion);
+		_replicationRecord.setVersion(raisedDatabaseVersion);
+		getSession().saveOrUpdate(_replicationRecord);
 
 		getSession().flush();
 
@@ -439,8 +440,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		if (version < Constants.MIN_VERSION_NO)
 			throw new RuntimeException("version must be great than " + Constants.MIN_VERSION_NO);
 
-		ensureVersion(version);
-
 		_replicationRecord.setVersion(version);
 		getSession().saveOrUpdate(_replicationRecord);
 		getSession().flush();
@@ -600,11 +599,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		ensureAlive();
 		if (isReplicationActive())
 			throw new UnsupportedOperationException("Method not supported because replication transaction is active");
-	}
-
-	private void ensureVersion(long version) {
-		if (version < getCurrentVersion())
-			throw new RuntimeException("version must be great than " + getCurrentVersion());
 	}
 
 	private Collection getChangedObjectsSinceLastReplication(PersistentClass persistentClass) {

@@ -16,8 +16,9 @@ import java.util.List;
 public class ReplicationProviderTest extends ReplicationTestCase {
 // ------------------------------ FIELDS ------------------------------
 
-	protected byte[] PEER_SIGNATURE_BYTES;
-	protected ReadonlyReplicationProviderSignature PEER_SIGNATURE;
+	protected byte[] B_SIGNATURE_BYTES;
+	protected ReadonlyReplicationProviderSignature B_SIGNATURE;
+	private ReadonlyReplicationProviderSignature A_SIGNATURE;
 
 	protected void clean() {
 		for (int i = 0; i < mappings.length; i++) {
@@ -32,14 +33,19 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 	protected void tstDeletion() {
 		_providerA.storeNew(new Pilot("Pilot1", 42));
 		_providerA.storeNew(new Pilot("Pilot2", 43));
+
 		_providerA.commit();
 
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(B_SIGNATURE);
+		_providerB.startReplicationTransaction(A_SIGNATURE);
+
 		Db4oUUID uuidPilot1 = uuid(findPilot("Pilot1"));
 		long ver;
 		ver = _providerA.getCurrentVersion();
 		_providerA.syncVersionWithPeer(ver);
+
 		_providerA.commitReplicationTransaction(ver + 1);
+		_providerB.commitReplicationTransaction(ver + 1);
 
 		_providerA.storeNew(new Pilot("Pilot3", 44));
 
@@ -51,7 +57,9 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		_providerA.commit();
 
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(B_SIGNATURE);
+		_providerB.startReplicationTransaction(A_SIGNATURE);
+
 		ObjectSet deletedUuids = _providerA.uuidsDeletedSinceLastReplication();
 		Test.ensure(deletedUuids.next().equals(uuidPilot1));
 		Test.ensure(!deletedUuids.hasNext());
@@ -62,13 +70,17 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		ver = _providerA.getCurrentVersion();
 
 		_providerA.syncVersionWithPeer(ver);
+
 		_providerA.commitReplicationTransaction(ver + 1);
+		_providerB.commitReplicationTransaction(ver + 1);
 
 		_providerA.delete(findCar("Car1"));
 		_providerA.delete(findPilot("Pilot2"));
 		_providerA.commit();
 
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(B_SIGNATURE);
+		_providerB.startReplicationTransaction(A_SIGNATURE);
+
 		deletedUuids = _providerA.uuidsDeletedSinceLastReplication();
 		Test.ensure(deletedUuids.contains(uuidCar1));
 		Test.ensure(deletedUuids.contains(uuidPilot2));
@@ -77,6 +89,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		ver = _providerA.getCurrentVersion();
 
 		_providerA.commitReplicationTransaction(ver);
+		_providerB.commitReplicationTransaction(ver);
 
 		_providerA.deleteAllInstances(Car.class);
 		_providerA.deleteAllInstances(Pilot.class);
@@ -84,8 +97,11 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 	}
 
 	public void actualTest() {
-		PEER_SIGNATURE_BYTES = _providerB.getSignature().getBytes();
-		PEER_SIGNATURE = _providerB.getSignature();
+		B_SIGNATURE_BYTES = _providerB.getSignature().getBytes();
+
+		A_SIGNATURE = _providerA.getSignature();
+		B_SIGNATURE = _providerB.getSignature();
+
 		tstSignature();
 
 		tstObjectsChangedSinceLastReplication();
@@ -125,9 +141,11 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 	private void tstCollection() {
 		System.out.println("ReplicationProviderTest.tstCollection");
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(B_SIGNATURE);
+		_providerB.startReplicationTransaction(A_SIGNATURE);
 
-		Db4oUUID listHolderUuid = new Db4oUUID(1234, PEER_SIGNATURE_BYTES);
+
+		Db4oUUID listHolderUuid = new Db4oUUID(1234, B_SIGNATURE_BYTES);
 
 		ListHolder listHolderFromA = new ListHolder("i am a list");
 
@@ -142,7 +160,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		Collection collectionInB = listHolderClonedInB.getList();
 
-		final Db4oUUID collectionUuid = new Db4oUUID(9588, PEER_SIGNATURE_BYTES);
+		final Db4oUUID collectionUuid = new Db4oUUID(9588, B_SIGNATURE_BYTES);
 
 		ReplicationReference collectionRefFromA = new ReplicationReferenceImpl(new ArrayList(), collectionUuid, 9555);
 		_providerA.referenceNewObject(collectionInB, collectionRefFromA, listHolderFromBRef, "list");
@@ -171,6 +189,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		ver = _providerA.getCurrentVersion();
 
 		_providerA.commitReplicationTransaction(ver);
+		_providerB.commitReplicationTransaction(ver);
 	}
 
 	private void tstObjectsChangedSinceLastReplication() {
@@ -192,7 +211,9 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		_providerA.commit();
 
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(B_SIGNATURE);
+		_providerB.startReplicationTransaction(A_SIGNATURE);
+
 
 		int i = _providerA.objectsChangedSinceLastReplication().size();
 		Test.ensure(i == 3);
@@ -209,13 +230,18 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Test.ensure(!cars.hasNext());
 
 		_providerA.syncVersionWithPeer(6000);
-		_providerA.commitReplicationTransaction(6001);
 
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.commitReplicationTransaction(6001);
+		_providerB.commitReplicationTransaction(6001);
+
+		_providerA.startReplicationTransaction(B_SIGNATURE);
+		_providerB.startReplicationTransaction(A_SIGNATURE);
 
 		Test.ensure(!_providerA.objectsChangedSinceLastReplication().hasNext());
 		_providerA.syncVersionWithPeer(6005);
+
 		_providerA.commitReplicationTransaction(6500);
+		_providerB.commitReplicationTransaction(6500);
 
 		Pilot pilot = (Pilot) _providerA.getStoredObjects(Pilot.class).next();
 		pilot._name = "Terry Jones";
@@ -228,7 +254,9 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		_providerA.commit();
 
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(B_SIGNATURE);
+		_providerB.startReplicationTransaction(A_SIGNATURE);
+
 		Test.ensure(_providerA.objectsChangedSinceLastReplication().size() == 2);
 
 		pilots = _providerA.objectsChangedSinceLastReplication(Pilot.class);
@@ -239,7 +267,9 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Test.ensure(((Car) cars.next()).getModel().equals("McLaren"));
 		Test.ensure(!cars.hasNext());
 		_providerA.syncVersionWithPeer(6800);
+
 		_providerA.commitReplicationTransaction(7000);
+		_providerB.commitReplicationTransaction(7000);
 
 		_providerA.deleteAllInstances(Pilot.class);
 		_providerA.deleteAllInstances(Car.class);
@@ -250,7 +280,8 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		_providerA.storeNew(new Pilot("tst References", 42));
 		_providerA.commit();
 
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(B_SIGNATURE);
+		_providerB.startReplicationTransaction(A_SIGNATURE);
 
 		Pilot object1 = (Pilot) _providerA.getStoredObjects(Pilot.class).next();
 
@@ -268,7 +299,10 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Test.ensure(db4oUUID.equals(uuid));
 		long ver = _providerA.getCurrentVersion();
 		_providerA.syncVersionWithPeer(ver);
+
 		_providerA.commitReplicationTransaction(ver + 1);
+		_providerB.commitReplicationTransaction(ver + 1);
+
 		_providerA.deleteAllInstances(Pilot.class);
 		_providerA.commit();
 	}
@@ -276,9 +310,11 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 	private void tstRollback() {
 		if (!_providerA.supportsRollback()) return;
 
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(B_SIGNATURE);
+		_providerB.startReplicationTransaction(A_SIGNATURE);
+
 		Pilot object1 = new Pilot("John Cleese", 42);
-		Db4oUUID uuid = new Db4oUUID(5678, PEER_SIGNATURE_BYTES);
+		Db4oUUID uuid = new Db4oUUID(5678, B_SIGNATURE_BYTES);
 
 		ReplicationReference ref = new ReplicationReferenceImpl(object1, uuid, 1);
 		_providerA.referenceNewObject(object1, ref, null, null);
@@ -288,11 +324,12 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		_providerA.rollbackReplication();
 
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(B_SIGNATURE);
 		Test.ensure(null == _providerA.produceReference(object1, null, null));
 		ReplicationReference byUUID = _providerA.produceReferenceByUUID(uuid, object1.getClass());
 		Test.ensure(null == byUUID);
 		_providerA.rollbackReplication();
+		_providerB.rollbackReplication();
 	}
 
 	private void tstSignature() {
@@ -300,9 +337,11 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 	}
 
 	private void tstStore() {
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.startReplicationTransaction(B_SIGNATURE);
+		_providerB.startReplicationTransaction(A_SIGNATURE);
+
 		Pilot object1 = new Pilot("John Cleese", 42);
-		Db4oUUID uuid = new Db4oUUID(1234, PEER_SIGNATURE_BYTES);
+		Db4oUUID uuid = new Db4oUUID(1234, B_SIGNATURE_BYTES);
 
 		ReplicationReference ref = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", uuid, 1);
 		_providerA.referenceNewObject(object1, ref, null, null);
@@ -316,9 +355,13 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		ver = _providerA.getCurrentVersion();
 
 		_providerA.syncVersionWithPeer(ver);
-		_providerA.commitReplicationTransaction(ver + 1);
 
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.commitReplicationTransaction(ver + 1);
+		_providerB.commitReplicationTransaction(ver + 1);
+
+		_providerA.startReplicationTransaction(B_SIGNATURE);
+		_providerB.startReplicationTransaction(A_SIGNATURE);
+
 		ObjectSet<Pilot> storedObjects = _providerA.getStoredObjects(Pilot.class);
 		Test.ensure(storedObjects.hasNext());
 
@@ -336,9 +379,13 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		ver = _providerA.getCurrentVersion();
 
 		_providerA.syncVersionWithPeer(ver);
-		_providerA.commitReplicationTransaction(ver + 1);
 
-		_providerA.startReplicationTransaction(PEER_SIGNATURE);
+		_providerA.commitReplicationTransaction(ver + 1);
+		_providerB.commitReplicationTransaction(ver + 1);
+
+		_providerA.startReplicationTransaction(B_SIGNATURE);
+		_providerB.startReplicationTransaction(A_SIGNATURE);
+
 
 		reference = _providerA.produceReferenceByUUID(uuid, reloaded.getClass());
 		Test.ensure(((Pilot) reference.object())._name.equals("i am updated"));
@@ -346,7 +393,10 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		ver = _providerA.getCurrentVersion();
 
 		_providerA.syncVersionWithPeer(ver);
+
 		_providerA.commitReplicationTransaction(ver + 1);
+		_providerB.commitReplicationTransaction(ver + 1);
+
 		_providerA.deleteAllInstances(Pilot.class);
 		_providerA.commit();
 	}
