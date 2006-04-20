@@ -162,15 +162,6 @@ public abstract class ReplicationTestCase {
 			replication.replicate(changed);
 		}
 
-		ObjectSet deletions = from.uuidsDeletedSinceLastReplication();
-		while (deletions.hasNext()) {
-			Db4oUUID uuid = (Db4oUUID) deletions.next();
-			Object counterpart = to.getObject(uuid);
-			//System.out.println("counterpart = " + counterpart);
-			if (counterpart == null) continue;
-			replication.replicate(counterpart);
-		}
-
 		replication.commit();
 	}
 

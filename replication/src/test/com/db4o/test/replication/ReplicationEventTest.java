@@ -27,14 +27,14 @@ public class ReplicationEventTest extends ReplicationTestCase {
 		tstStopTraversal();
 		clean();
 
-		tstDeletionDefaultPrevail();
-		clean();
-
-		tstDeletionOverrideToPrevail();
-		clean();
-
-		tstDeletionNotPrevail();
-		clean();
+//		tstDeletionDefaultPrevail();
+//		clean();
+//
+//		tstDeletionOverrideToPrevail();
+//		clean();
+//
+//		tstDeletionNotPrevail();
+//		clean();
 	}
 
 	private void deleteInProviderA() {
