@@ -74,6 +74,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>$(ProjectDir)/../bin/CFNativeQueriesEnabler.exe $(TargetPath)</PostBuildEvent>
+    <PostBuildEvent>$(ProjectDir)/../CFNativeQueriesEnabler/bin/Debug/CFNativeQueriesEnabler.exe $(TargetPath)</PostBuildEvent>
   </PropertyGroup>
 </Project>
