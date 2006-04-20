@@ -21,14 +21,6 @@ import com.db4o.ext.Db4oUUID;
  */
 public interface ReplicationProvider {
 	/**
-	 * Get the object from this provider.
-	 *
-	 * @param uuid the UUID of the object
-	 * @return the object
-	 */
-	Object getObject(Db4oUUID uuid);
-
-	/**
 	 * Returns newly created objects and changed objects since last replication.
 	 *
 	 * @return newly created objects and changed objects since last replication
@@ -42,11 +34,4 @@ public interface ReplicationProvider {
 	 * @return newly created objects and changed objects of the type specified in the clazz parameter since last replication
 	 */
 	ObjectSet objectsChangedSinceLastReplication(Class clazz);
-
-	/**
-	 * Returns the UUIDs of the objects deleted since last replication.
-	 *
-	 * @return newly created objects and changed objects since last replication
-	 */
-	ObjectSet uuidsDeletedSinceLastReplication();
 }

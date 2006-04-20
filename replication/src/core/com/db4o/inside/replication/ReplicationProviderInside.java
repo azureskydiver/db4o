@@ -107,7 +107,5 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	void visitCachedReferences(Visitor4 visitor);
 
-	boolean wasDeletedSinceLastReplication(Db4oUUID uuid);
-
 	boolean wasModifiedSinceLastReplication(ReplicationReference reference);
 }
