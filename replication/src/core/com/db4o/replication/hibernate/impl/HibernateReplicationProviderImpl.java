@@ -268,6 +268,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		ensureReplicationActive();
 
 		//TODO FIXME, attach the version generator to replication session, gen current version on the fly
+		//ak: tried that but it breaks test cases
 		return _currentVersion;
 	}
 
