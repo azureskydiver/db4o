@@ -49,8 +49,6 @@ import java.util.Set;
 
 
 public final class HibernateReplicationProviderImpl implements HibernateReplicationProvider {
-// ------------------------------ FIELDS ------------------------------
-
 	boolean simpleObjectContainerCommitCalled = true;
 	private Configuration _cfg;
 
@@ -98,8 +96,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private boolean _inReplication = false;
 
-// --------------------------- CONSTRUCTORS ---------------------------
-
 	public HibernateReplicationProviderImpl(Configuration cfg) {
 		this(cfg, null);
 	}
@@ -129,13 +125,9 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_alive = true;
 	}
 
-// ------------------------ CANONICAL METHODS ------------------------
-
 	public final String toString() {
 		return _name;
 	}
-
-// ------------------------ INTERFACE METHODS ------------------------
 
 // --------------------- Interface HibernateReplicationProvider ---------------------
 
@@ -223,8 +215,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		//TODO remove store record, raise the version generator
 		//TODO maybe: create a table to share version generator
-		_replicationRecord.setVersion(raisedDatabaseVersion);
-		getSession().saveOrUpdate(_replicationRecord);
 
 		getSession().flush();
 
@@ -278,6 +268,12 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		//TODO FIXME, attach the version generator to replication session, gen current version on the fly
 		return _currentVersion;
+	}
+
+	public long getLastReplicationVersion() {
+		ensureReplicationActive();
+
+		return _replicationRecord.getVersion();
 	}
 
 	public final Object getMonitor() {
@@ -544,6 +540,11 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 // --------------------- Interface TestableReplicationProviderInside ---------------------
 
+
+	public boolean supportsCascadeDelete() {
+		return true;
+	}
+
 	public boolean supportsHybridCollection() {
 		return false;
 	}
@@ -553,10 +554,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	}
 
 	public boolean supportsRollback() {
-		return true;
-	}
-
-	public boolean supportsCascadeDelete() {
 		return true;
 	}
 
@@ -642,12 +639,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		if (field == null) throw new NullPointerException("field cannot be null");
 
 		return field;
-	}
-
-	public long getLastReplicationVersion() {
-		ensureReplicationActive();
-
-		return _replicationRecord.getVersion();
 	}
 
 	private ReplicationProviderSignature getProviderSignature(byte[] signaturePart) {
@@ -813,8 +804,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		uuid.setProvider(getProviderSignature(du.getSignaturePart()));
 		return uuid;
 	}
-
-// -------------------------- INNER CLASSES --------------------------
 
 	private final class MyFlushEventListener implements FlushEventListener {
 		public final void onFlush(FlushEvent event) throws HibernateException {
