@@ -213,7 +213,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final synchronized void commitReplicationTransaction(long raisedDatabaseVersion) {
 		ensureReplicationActive();
 
-		//TODO remove store record, raise the version generator
+		//TODO raise the version generator
+
 		//TODO maybe: create a table to share version generator
 
 		getSession().flush();
@@ -666,7 +667,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			if (existingReference != null)
 				return existingReference;
 			else
-				return createRefForCollection(obj, refObjRef, fieldName, UuidGenerator.next(getSession()).getLongPart(), _currentVersion);
+				return createRefForCollection(obj, refObjRef, fieldName, UuidGenerator.next(getSession()).getLongPart(), getCurrentVersion());
 		}
 	}
 
