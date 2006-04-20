@@ -20,7 +20,7 @@
 .e Encryption ..
 .e RefactoringAndSchemaEvolution ..
 .e Tuning ..
-.? java .e NQOptimization .. ..?
+.e NQOptimization ..
 .e Maintenance ..
 .e Replication ..
 .e Semaphores ..
