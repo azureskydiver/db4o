@@ -364,4 +364,7 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		return true;
 	}
 
+	public String toString() {
+		return getName();
+	}
 }

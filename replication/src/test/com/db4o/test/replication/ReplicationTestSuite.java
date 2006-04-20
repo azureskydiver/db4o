@@ -6,19 +6,19 @@ import com.db4o.test.replication.collections.SimpleArrayTest;
 import com.db4o.test.replication.collections.map.MapTest;
 import com.db4o.test.replication.hibernate.ReplicationConfiguratorTest;
 import com.db4o.test.replication.hibernate.TablesCreatorTest;
-import com.db4o.test.replication.provider.ReplicationProviderTest;
 import com.db4o.test.replication.r0tor4.R0to4Runner;
+import com.db4o.test.replication.provider.ReplicationProviderTest;
 
 public class ReplicationTestSuite extends TestSuite {
 
-	public Class[] tests2() {
+	public Class[] tests() {
 		System.err.println("Use tests2 below");
 		return new Class[]{
-				ReplicationEventTest.class,
+				ArrayReplicationTest.class,
 		};
 	}
 
-	public Class[] tests() {
+	public Class[] tests2() {
 		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
 		return new Class[]{
 				ReplicationEventTest.class,
