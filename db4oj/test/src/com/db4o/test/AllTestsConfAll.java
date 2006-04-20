@@ -82,6 +82,7 @@ public class AllTestsConfAll extends TestSuite{
 	        ObjectContainerIsTransient.class,
 			ObjectSetIDs.class,
 			ParameterizedEvaluation.class,
+            PeekPersisted.class,
 	        PersistStaticFieldValues.class,
             
             // disabled because it fails due to fix
