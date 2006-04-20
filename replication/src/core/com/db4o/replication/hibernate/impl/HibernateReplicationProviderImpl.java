@@ -221,6 +221,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final synchronized void commitReplicationTransaction(long raisedDatabaseVersion) {
 		ensureReplicationActive();
 
+		//TODO remove store record, raise the version generator
+		//TODO maybe: create a table to share version generator
 		_replicationRecord.setVersion(raisedDatabaseVersion);
 		getSession().saveOrUpdate(_replicationRecord);
 
@@ -274,6 +276,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	public final long getCurrentVersion() {
 		ensureReplicationActive();
 
+		//TODO FIXME, attach the version generator to replication session, gen current version on the fly
 		return _currentVersion;
 	}
 
