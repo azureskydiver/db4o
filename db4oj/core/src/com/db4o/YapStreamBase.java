@@ -1146,12 +1146,15 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
 
     Object peekPersisted1(Transaction a_ta, int a_id, int a_depth) {
+        if(a_depth < 0){
+            return null;
+        }
         TreeInt ti = new TreeInt(a_id);
         TreeIntObject tio = (TreeIntObject) Tree.find(i_justPeeked, ti);
         if (tio == null) {
             return new YapObject(a_id).read(a_ta, null, null, a_depth,
                 YapConst.TRANSIENT, false);
-
+    
         } else {
             return tio._object;
         }
