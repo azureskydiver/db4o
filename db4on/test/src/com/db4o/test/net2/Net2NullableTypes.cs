@@ -77,12 +77,24 @@ namespace com.db4o.test.net2
 		public void testIntQuery()
 		{	
 			ObjectSet os = Tester.objectContainer().get(new NullableContainer(42));
-			Tester.ensureEquals(1, os.size());
-
-			NullableContainer found = (NullableContainer)os.next();
-			Tester.ensureEquals(42, found.intValue.Value);
-			Tester.ensure(!found.dateValue.HasValue);
+		    checkIntValueQueryResult(os);
 		}
+
+        public void testSodaQuery()
+        {
+            Query q = Tester.objectContainer().query();
+            q.constrain(typeof(NullableContainer));
+            q.descend("intValue").constrain(42);
+            checkIntValueQueryResult(q.execute());
+        }
+
+	    private static void checkIntValueQueryResult(ObjectSet os)
+	    {
+	        Tester.ensureEquals(1, os.size());
+	        NullableContainer found = (NullableContainer)os.next();
+	        Tester.ensureEquals(42, found.intValue.Value);
+	        Tester.ensure(!found.dateValue.HasValue);
+	    }
 
 	}
 #endif
