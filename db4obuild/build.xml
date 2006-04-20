@@ -929,20 +929,21 @@
 			<fileset dir="${dir.j.tutorial.out.vb}">
 				<include name="**/**" />
 			</fileset>
-		</copy>
+		</copy>	
 	
+		<copy todir="${dir.dist.net.build}">
+			<fileset dir="${dir.dist}" includes="dll/**/**" />
+			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
+			<fileset dir="${dir.config}" includes="README.txt" />
+			<fileset dir="${dir.dist.net.instrumentation}" includes="**/**" />
+		</copy>
+		
 		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
 			<sources dir="${dir.dist.net.build.src}">
 				<include name="**/*.cs" />
 				<exclude name="**/external/**" />
 			</sources>
 		</filehead>
-	
-		<copy todir="${dir.dist.net.build}">
-			<fileset dir="${dir.dist}" includes="dll/**/**" />
-			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
-			<fileset dir="${dir.config}" includes="README.txt" />
-		</copy>
 		
 		<mkdir dir="${dir.dist.net.build}/doc/api" />
 		
@@ -1303,7 +1304,32 @@
 			inheritall="false">
 		</ant>
 		
-		<copy todir="${dir.dist.dll.net}" file="${dir.n.instrumentation}/bin/CFNativeQueriesEnabler.exe" />
+		<copy todir="${dir.dist.net.instrumentation}">
+			<fileset dir="${dir.n.instrumentation}">
+				<include name="bin/CFNativeQueriesEnabler.exe" />
+				<include name="bin/db4o.dll" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${dir.dist.net.instrumentation}/src/instrumentation">				
+			<fileset dir="${dir.n.instrumentation}">
+				<include name="CFNativeQueriesEnabler/**/*.cs" />
+				<include name="CFNativeQueriesEnabler/**/*.csproj" />
+				<include name="CFNativeQueriesEnabler/**/*.sln" />
+				
+				<include name="CFNativeQueriesEnabler.Tests/**/*.cs" />
+				<include name="CFNativeQueriesEnabler.Tests/**/*.csproj" />
+				<include name="CFNativeQueriesEnabler.Tests/**/*.sln" />
+				
+				<include name="CFNativeQueriesEnabler.Tests.Subject/**/*.cs" />
+				<include name="CFNativeQueriesEnabler.Tests.Subject/**/*.csproj" />
+				<include name="CFNativeQueriesEnabler.Tests.Subject/**/*.sln" />
+				
+				<include name="CFNativeQueriesEnabler.Example/**/*.cs" />
+				<include name="CFNativeQueriesEnabler.Example/**/*.csproj" />
+				<include name="CFNativeQueriesEnabler.Example/**/*.sln" />
+			</fileset>
+		</copy>
 	</target>
 	
 	<target name="pascalcase" depends="sharpen-pascalcase">
