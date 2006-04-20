@@ -10,16 +10,17 @@ import com.db4o.test.replication.r0tor4.R0to4Runner;
 import com.db4o.test.replication.provider.ReplicationProviderTest;
 
 public class ReplicationTestSuite extends TestSuite {
-
 	public Class[] tests() {
-		System.err.println("Use tests2 below");
+		return all();
+	}
+
+	public Class[] testsOne() {
 		return new Class[]{
-				ArrayReplicationTest.class,
+				R0to4Runner.class,
 		};
 	}
 
-	public Class[] tests2() {
-		System.err.println("Uncomment Db4oReplicationProviderTest in ReplicationTestSuite");
+	private static Class[] all() {
 		return new Class[]{
 				ReplicationEventTest.class,
 				ReplicationConfiguratorTest.class,
@@ -39,21 +40,35 @@ public class ReplicationTestSuite extends TestSuite {
 				//General
 				CollectionHandlerImplTest.class,
 				ReplicationTraversalTest.class,
-
 				TablesCreatorTest.class,
-
-				//Db4o
-				//Db4oReplicationFeaturesMain.class,
-				//TODO Db4oReplicationProviderTest.class,
 				GetByUUID.class,
-				//Db4oReplicationAfterDeletionTest.class,
-				//Db4oListTest.class,
-				//Db4oMapTest.class,
-				//Db4oSingleTypeCollectionReplicationTest.class,
-				//Db4oSimpleArrayTest.class,
-				//Db4oArrayReplicationTest.class,
 				DatabaseUnicityTest.class,
+		};
+	}
 
+	public Class[] db4o() {
+		return new Class[]{
+				ReplicationEventTest.class,
+				ReplicationConfiguratorTest.class,
+				//ReplicationProviderTest.class,
+
+				//TODO StackOverflowError when running with db4o ArrayReplicationTest.class,
+				//ListTest.class,
+				//MapTest.class,
+				//TODO StackOverflowError when running with db4o MixedTypesCollectionReplicationTest.class,
+				//TODO StackOverflowError when running with db4o R0to4Runner.class,
+				//ReplicationAfterDeletionTest.class,
+				//ReplicationFeaturesMain.class,
+				SimpleArrayTest.class,
+				SimpleParentChild.class,
+				SingleTypeCollectionReplicationTest.class,
+
+				//General
+				CollectionHandlerImplTest.class,
+				ReplicationTraversalTest.class,
+				TablesCreatorTest.class,
+				GetByUUID.class,
+				DatabaseUnicityTest.class,
 		};
 	}
 }
