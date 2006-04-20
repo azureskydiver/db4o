@@ -57,7 +57,7 @@ public final class YapConst
 	
 	static final int	WRITE_LOOP			= (INTEGER_BYTES - 1) * 8;
 	
-	static final int	OBJECT_LENGTH		= ADDED_LENGTH;
+	public static final int	OBJECT_LENGTH		= ADDED_LENGTH;
 
 	public static final int	POINTER_LENGTH		= (YAPINT_LENGTH * 2) +  ADDED_LENGTH;
 	

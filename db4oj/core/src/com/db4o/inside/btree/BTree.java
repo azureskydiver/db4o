@@ -18,7 +18,10 @@ public class BTree extends YapMeta{
     BTreeNode _root;
    
     /**
-     * All instantiated nodes are held in this tree. 
+     * All instantiated nodes are held in this tree. From here the nodes
+     * are only referred to by weak references, so they can be garbage
+     * collected automatically, as soon as they are no longer referenced
+     * from the hard references in the BTreeNode#_children array.
      */
     private TreeIntWeakObject _nodes;  
     
@@ -37,11 +40,12 @@ public class BTree extends YapMeta{
     }
     
     public void add(Transaction trans, Object value){
+        trans.dirtyBTree(this);
         _keyHandler.prepareComparison(value);
         ensureActive(trans);
-        BTreeNode split = _root.add(trans);
-        if(split != null){
-            _root = _root.newRoot(trans, split);
+        Object addResult = _root.add(trans);
+        if(addResult instanceof BTreeNode){
+            _root = _root.newRoot(trans, (BTreeNode)addResult);
             setStateDirty();
         }
         _size ++;
@@ -59,13 +63,14 @@ public class BTree extends YapMeta{
     }
     
     public void rollback(final Transaction trans){
-        if(_nodes != null){
-            _nodes = _nodes.traverseRemoveEmpty(new Visitor4() {
-                public void visit(Object obj) {
-                    ((BTreeNode)obj).rollback(trans);
-                }
-            });
+        if(_nodes == null){
+            return;
         }
+        _nodes = _nodes.traverseRemoveEmpty(new Visitor4() {
+            public void visit(Object obj) {
+                ((BTreeNode)obj).rollback(trans);
+            }
+        });
     }
     
     private void ensureActive(Transaction trans){
@@ -79,7 +84,7 @@ public class BTree extends YapMeta{
     }
     
     public int ownLength() {
-        return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
+        return YapConst.OBJECT_LENGTH + YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
     }
     
     BTreeNode produceNode(int id){
@@ -113,9 +118,10 @@ public class BTree extends YapMeta{
     }
     
     public void traverseKeys(Transaction trans, Visitor4 visitor){
-        if(_root != null){
-            _root.traverseKeys(trans, visitor);
+        if(_root == null){
+            return;
         }
+        _root.traverseKeys(trans, visitor);
     }
 
 
