@@ -57,6 +57,7 @@
 		<mkdir dir="${dir.dist.jars}" />
 		<mkdir dir="${dir.sharpen}" />
 		<mkdir dir="${dir.dist.net.build.src}" />
+		<mkdir dir="${dir.dist.net.instrumentation}" />
 		<mkdir dir="${dir.dist.mono.build.src}" />
 		<mkdir dir="${dir.dist.doctor}" />
 		<mkdir dir="${dir.dist.doc.api}" />
@@ -1302,6 +1303,7 @@
 		<ant antfile="${dir.n.instrumentation}/build.xml"
 			target="test"
 			inheritall="false">
+			<property name="csc.executable" value="${csc.executable}"></property>
 		</ant>
 		
 		<copy todir="${dir.dist.net.instrumentation}">

@@ -4,11 +4,13 @@
 	<property name="output.dir" location="bin" />	
 	<property name="db4o.dir" location="../../db4obuild/dist/dll/net" />
 	<property name="db4o.dll" location="${db4o.dir}/db4o.dll" />
+	<property name="csc.executable" location="csc" />
 
 	<target name="build" depends="init">
 		<csc outputfile="${output.dir}/CFNativeQueriesEnabler.exe"
 			targettype="exe"
-			debug="true">
+			debug="true"
+			executable="${csc.executable}">
 			<src dir="CFNativeQueriesEnabler">
 				<include name="**/*.cs" />
 			</src>
@@ -22,7 +24,8 @@
 		
 		<csc outputfile="${output.dir}/CFNativeQueriesEnabler.Tests.Subject.exe"
 			targettype="exe"
-			debug="true">
+			debug="true"
+			executable="${csc.executable}">
 			<src dir="CFNativeQueriesEnabler.Tests.Subject">
 				<include name="**/*.cs" />
 			</src>
@@ -33,7 +36,8 @@
 		
 		<csc outputfile="${output.dir}/CFNativeQueriesEnabler.Tests.exe"
 			targettype="exe"
-			debug="true">
+			debug="true"
+			executable="${csc.executable}">
 			<src dir="CFNativeQueriesEnabler.Tests">
 				<include name="**/*.cs" />
 			</src>
@@ -56,7 +60,7 @@
 	</target>
 	
 	<target name="clean">
-		<delete>
+		<delete failonerror="false">
 			<fileset dir="${output.dir}">
 				<include name="CFNativeQueriesEnabler.*" />
 			</fileset>
