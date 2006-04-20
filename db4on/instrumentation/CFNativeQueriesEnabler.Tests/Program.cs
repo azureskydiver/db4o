@@ -52,8 +52,11 @@ namespace CFNativeQueriesEnabler.Tests
 
 		private static void VerifyAssembly()
 		{
-			string output = shell("peverify.exe", TestSubject);
-			if (output.ToUpper().Contains("WARNING")) throw new ApplicationException(output);
+			ProcessOutput output = shell("peverify.exe", TestSubject);
+			string stdout = output.StdOut;
+			if (stdout.Contains("1.1.4322.573")) return; // ignore older peverify version errors
+			if (output.ExitCode == 0 && !stdout.ToUpper().Contains("WARNING")) return;
+			throw new ApplicationException(stdout);
 		}
 
 		private void AssertIsMetaPredicateExecution(object sender, QueryExecutionEventArgs args)
@@ -68,16 +71,20 @@ namespace CFNativeQueriesEnabler.Tests
 		{
 			shell(TestSubject);
 		}
+		
+		class ProcessOutput
+		{
+			public int ExitCode;
+			public string StdOut;
+		}
 
-		private static string shell(string fname, params string[] args)
+		private static ProcessOutput shell(string fname, params string[] args)
 		{
 			Process p = StartProcess(fname, args);
-			string output = p.StandardOutput.ReadToEnd();
+			ProcessOutput output = new ProcessOutput();
+			output.StdOut = p.StandardOutput.ReadToEnd();
 			p.WaitForExit();
-			if (p.ExitCode != 0)
-			{
-				throw new ApplicationException(output);
-			}
+			output.ExitCode = p.ExitCode;
 			return output;
 		}
 
