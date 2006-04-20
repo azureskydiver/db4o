@@ -18,8 +18,8 @@ public class Test extends AllTests {
     private static ExtObjectContainer _replica;
 
     static AllTests currentRunner;
-    static boolean clientServer = true;
-    public static boolean runServer = true;
+    public static boolean clientServer = true;
+    static boolean runServer = true;
     static int errorCount = 0;
     static int assertionCount = 0;
     static int run;
