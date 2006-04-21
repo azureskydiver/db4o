@@ -19,8 +19,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ReplicationFeaturesMain extends ReplicationTestCase {
-// ------------------------------ FIELDS ------------------------------
-
 	private static final String A = "A";
 	private static final String B = "B";
 
@@ -38,17 +36,6 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 	private String _intermittentErrors = "";
 	private int _testCombination;
-
-// -------------------------- STATIC METHODS --------------------------
-
-	static private void sleep(int millis) {
-		try {
-			Thread.sleep(millis);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
 	private static void fail(String string) {
 		System.err.println(string);
 		throw new RuntimeException(string);

@@ -3,7 +3,6 @@
 package com.db4o.test.replication;
 
 import com.db4o.ObjectSet;
-import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
@@ -23,8 +22,6 @@ import com.db4o.test.replication.r0tor4.R0;
 
 
 public abstract class ReplicationTestCase {
-// ------------------------------ FIELDS ------------------------------
-
 	public static final Class[] mappings;
 	static private final Collection4 PROVIDER_PAIRS = new Collection4();
 
@@ -32,9 +29,6 @@ public abstract class ReplicationTestCase {
 	protected TestableReplicationProviderInside _providerB;
 
 	private long _timer;
-
-// -------------------------- STATIC METHODS --------------------------
-
 	static {
 		mappings = new Class[]{CollectionHolder.class, Replicated.class,
 				SPCParent.class, SPCChild.class,
@@ -48,7 +42,13 @@ public abstract class ReplicationTestCase {
 		PROVIDER_PAIRS.add(new ProviderPair(providerA, providerB));
 	}
 
-// -------------------------- OTHER METHODS --------------------------
+	protected static void sleep(int millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	protected abstract void actualTest();
 
@@ -202,6 +202,8 @@ public abstract class ReplicationTestCase {
 			rx.printStackTrace();
 			throw rx;
 		}
+
+		sleep(0);
 	}
 
 	private void prepareNextProviderPair(ProviderPair pair) {
