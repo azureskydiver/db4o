@@ -5,12 +5,12 @@ package com.db4o.foundation;
 /**
  * 
  */
-class HashtableObjectEntry extends HashtableIntEntry{
-    
-    Object i_objectKey;
-    
-    private HashtableObjectEntry() {
-    	super();
+class HashtableObjectEntry extends HashtableIntEntry {
+	
+	Object i_objectKey;
+	
+	private HashtableObjectEntry() {
+		super();
     }
     
     HashtableObjectEntry(Object a_key, Object a_object) {
@@ -29,4 +29,18 @@ class HashtableObjectEntry extends HashtableIntEntry{
     	ret.i_objectKey=i_objectKey;
     	return ret;
     }
+    
+    public boolean sameKeyAs(HashtableIntEntry other) {
+    		return other instanceof HashtableObjectEntry
+    			? hasKey(((HashtableObjectEntry)other).i_objectKey)
+    			: false;
+    }
+
+	public boolean hasKey(Object key) {
+		return i_objectKey.equals(key);
+	}
+	
+	public void acceptKeyVisitor(Visitor4 visitor) {
+		visitor.visit(i_objectKey);
+	}
 }

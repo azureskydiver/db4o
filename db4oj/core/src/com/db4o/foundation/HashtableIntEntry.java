@@ -37,4 +37,12 @@ class HashtableIntEntry implements DeepClone {
         }
         return hie;
     }
+
+	public boolean sameKeyAs(HashtableIntEntry other) {
+		return i_key == other.i_key;
+	}
+
+	public void acceptKeyVisitor(Visitor4 visitor) {
+		visitor.visit(new Integer(i_key));
+	}
 }

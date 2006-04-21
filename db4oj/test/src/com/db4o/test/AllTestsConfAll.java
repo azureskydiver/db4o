@@ -6,6 +6,7 @@ import com.db4o.test.cluster.*;
 import com.db4o.test.conjunctions.*;
 import com.db4o.test.constraints.*;
 import com.db4o.test.foundation.Collection4TestCase;
+import com.db4o.test.foundation.FoundationTestSuite;
 import com.db4o.test.interfaces.*;
 import com.db4o.test.nativequery.*;
 import com.db4o.test.soda.*;
@@ -19,6 +20,7 @@ public class AllTestsConfAll extends TestSuite{
         suites.add(this);
         suites.add(new ConstraintsTestSuite());
         suites.add(new ConjunctionsTestSuite());
+        suites.add(new FoundationTestSuite());
         suites.add(new InterfacesTestSuite());
         suites.add(new NativeQueryTestSuite());
         suites.add(new VirtualFieldsTestSuite());
@@ -47,7 +49,6 @@ public class AllTestsConfAll extends TestSuite{
             ChangeIdentity.class,
 	        Circular1.class,
 	        Circular2.class,
-	        Collection4TestCase.class,
 	    	ComparatorSort.class,
 	        // takes too long in JDK1.1 setup due to locking timeout
             // CrashSimulatingTest.class,
