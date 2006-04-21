@@ -163,35 +163,35 @@ namespace Mono.Cecil.Cil {
 							m_reflectWriter.MetadataWriter.AddUserString (instr.Operand as string)));
 					break;
 				case OperandType.InlineField :
-					if (instr.Operand is IFieldReference)
-						WriteToken ((instr.Operand as IFieldReference).MetadataToken);
+					if (instr.Operand is FieldReference)
+						WriteToken ((instr.Operand as FieldReference).MetadataToken);
 					else
 						throw new ReflectionException ("Wrong operand for InlineField: {0}",
 							instr.Operand.GetType ().FullName);
 					break;
 				case OperandType.InlineMethod :
-					if (instr.Operand is IGenericInstanceMethod)
+					if (instr.Operand is GenericInstanceMethod)
 						WriteToken (m_reflectWriter.GetMethodSpecToken (instr.Operand as GenericInstanceMethod));
-					else if (instr.Operand is IMethodReference)
-						WriteToken ((instr.Operand as IMethodReference).MetadataToken);
+					else if (instr.Operand is MethodReference)
+						WriteToken ((instr.Operand as MethodReference).MetadataToken);
 					else
 						throw new ReflectionException ("Wrong operand for InlineMethod: {0}",
 							instr.Operand.GetType ().FullName);
 					break;
 				case OperandType.InlineType :
-					if (instr.Operand is ITypeReference)
+					if (instr.Operand is TypeReference)
 						WriteToken (m_reflectWriter.GetTypeDefOrRefToken (
-								instr.Operand as ITypeReference));
+								instr.Operand as TypeReference));
 					else
 						throw new ReflectionException ("Wrong operand for InlineType: {0}",
 							instr.Operand.GetType ().FullName);
 					break;
 
 				case OperandType.InlineTok :
-					if (instr.Operand is ITypeReference)
+					if (instr.Operand is TypeReference)
 						WriteToken (m_reflectWriter.GetTypeDefOrRefToken (
-								instr.Operand as ITypeReference));
-					else if (instr.Operand is IGenericInstanceMethod)
+								instr.Operand as TypeReference));
+					else if (instr.Operand is GenericInstanceMethod)
 						WriteToken (m_reflectWriter.GetMethodSpecToken (instr.Operand as GenericInstanceMethod));
 					else if (instr.Operand is IMetadataTokenProvider)
 						WriteToken ((instr.Operand as IMetadataTokenProvider).MetadataToken);
@@ -233,27 +233,33 @@ namespace Mono.Cecil.Cil {
 			m_codeWriter.BaseStream.Position = pos;
 		}
 
-		bool IsRangeFat (Instruction start, Instruction end)
+		int GetLength (Instruction start, Instruction end, Instruction last)
 		{
-			return end.Offset - start.Offset >= 256 || start.Offset >= 65536;
+			return (end == null ? last.Offset + last.OpCode.Size : end.Offset) - start.Offset;
 		}
 
-		bool IsFat (ExceptionHandlerCollection seh)
+		bool IsRangeFat (Instruction start, Instruction end, Instruction last)
+		{
+			return GetLength (start, end, last) >= 256 ||
+				start.Offset >= 65536;
+		}
+
+		bool IsFat (ExceptionHandlerCollection seh, Instruction last)
 		{
 			for (int i = 0; i < seh.Count; i++) {
-				IExceptionHandler eh = seh [i];
-				if (IsRangeFat (eh.TryStart, eh.TryEnd))
+				ExceptionHandler eh = seh [i];
+				if (IsRangeFat (eh.TryStart, eh.TryEnd, last))
 					return true;
 
 				switch (eh.Type) {
 				case ExceptionHandlerType.Catch :
 				case ExceptionHandlerType.Fault :
 				case ExceptionHandlerType.Finally :
-					if (IsRangeFat (eh.HandlerStart, eh.HandlerEnd))
+					if (IsRangeFat (eh.HandlerStart, eh.HandlerEnd, last))
 						return true;
 					break;
 				case ExceptionHandlerType.Filter :
-					if (IsRangeFat (eh.FilterStart, eh.FilterEnd))
+					if (IsRangeFat (eh.FilterStart, eh.FilterEnd, last))
 						return true;
 					break;
 				}
@@ -265,8 +271,9 @@ namespace Mono.Cecil.Cil {
 		void WriteExceptionHandlerCollection (ExceptionHandlerCollection seh)
 		{
 			m_codeWriter.QuadAlign ();
+			Instruction last = seh.Container.Instructions [seh.Container.Instructions.Count - 1];
 
-			if (!IsFat (seh)) {
+			if (!IsFat (seh, last)) {
 				m_codeWriter.Write ((byte) MethodDataSection.EHTable);
 				m_codeWriter.Write ((byte) (seh.Count * 12 + 4));
 				m_codeWriter.Write (new byte [2]);
@@ -275,7 +282,7 @@ namespace Mono.Cecil.Cil {
 					m_codeWriter.Write ((ushort) eh.TryStart.Offset);
 					m_codeWriter.Write ((byte) (eh.TryEnd.Offset - eh.TryStart.Offset));
 					m_codeWriter.Write ((ushort) eh.HandlerStart.Offset);
-					m_codeWriter.Write ((byte) (eh.HandlerEnd.Offset - eh.HandlerStart.Offset));
+					m_codeWriter.Write ((byte) GetLength (eh.HandlerStart, eh.HandlerEnd, last));
 					WriteHandlerSpecific (eh);
 				}
 			} else {
@@ -286,7 +293,7 @@ namespace Mono.Cecil.Cil {
 					m_codeWriter.Write ((uint) eh.TryStart.Offset);
 					m_codeWriter.Write ((uint) (eh.TryEnd.Offset - eh.TryStart.Offset));
 					m_codeWriter.Write ((uint) eh.HandlerStart.Offset);
-					m_codeWriter.Write ((uint) (eh.HandlerEnd.Offset - eh.HandlerStart.Offset));
+					m_codeWriter.Write ((uint) GetLength (eh.HandlerStart, eh.HandlerEnd, last));
 					WriteHandlerSpecific (eh);
 				}
 			}
@@ -377,15 +384,18 @@ namespace Mono.Cecil.Cil {
 			lvs.LocalVariables = new LocalVarSig.LocalVariable [lvs.Count];
 			for (int i = 0; i < lvs.Count; i++) {
 				LocalVarSig.LocalVariable lv = new LocalVarSig.LocalVariable ();
-				ITypeReference type = vars [i].Variable;
+				TypeReference type = vars [i].VariableType;
+
+				lv.CustomMods = m_reflectWriter.GetCustomMods (type);
+
 				if (type is PinnedType) {
 					lv.Constraint |= Constraint.Pinned;
 					type = (type as PinnedType).ElementType;
 				}
 
-				if (type is IReferenceType) {
+				if (type is ReferenceType) {
 					lv.ByRef = true;
-					type = (type as IReferenceType).ElementType;
+					type = (type as ReferenceType).ElementType;
 				}
 
 				lv.Type = m_reflectWriter.GetSigType (type);
@@ -395,7 +405,7 @@ namespace Mono.Cecil.Cil {
 			return lvs;
 		}
 
-		void ComputeMaxStack (IInstructionCollection instructions)
+		void ComputeMaxStack (InstructionCollection instructions)
 		{
 			InstructionCollection ehs = new InstructionCollection (null);
 			foreach (ExceptionHandler eh in instructions.Container.ExceptionHandlers)
