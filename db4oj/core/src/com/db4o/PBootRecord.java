@@ -18,8 +18,6 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
     
     public Db4oDatabase       i_db;
     
-    public long               i_uuidGenerator;
-    
     public long               i_versionGenerator;
     
     public int                i_generateVersionNumbers;
@@ -29,8 +27,6 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
     private transient boolean i_dirty;
 
     public MetaIndex          i_uuidMetaIndex;
-    
-    private transient TimeStampIdGenerator _uuidTimeGenerator;
     
     private transient TimeStampIdGenerator _versionTimeGenerator;
     
@@ -90,12 +86,7 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
     }
 
     long newUUID() {
-        i_dirty = true;
-        if(_uuidTimeGenerator == null){
-            _uuidTimeGenerator = new TimeStampIdGenerator(i_uuidGenerator);
-        }
-        i_uuidGenerator = _versionTimeGenerator.generate();
-        return i_uuidGenerator;
+        return nextVersion();
     }
     
     public void raiseVersion(long a_minimumVersion) {
