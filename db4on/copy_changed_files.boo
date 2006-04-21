@@ -30,10 +30,14 @@ def IsExistingFile(file as string):
 	return false if not File.Exists(file)
 	return not (FileAttributes.Directory & File.GetAttributes(file))
 	
+def CecilPair(path as string):
+	return ("in/external/Mono.Cecil/${path}", "core/src/external/${path}")
+	
 directories = (
 	("in/sharp", "core/src"),
 	("in/external/Cecil.FlowAnalysis", "core/src/external"),
-	("in/external/Mono.Cecil", "core/src/external/Mono.Cecil"),
+	CecilPair("Mono.Cecil"),
+	CecilPair("Mono.Cecil.Metadata"),
 )
 
 for srcDir, targetDir in directories:
