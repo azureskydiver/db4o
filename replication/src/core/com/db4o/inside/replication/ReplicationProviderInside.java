@@ -69,7 +69,7 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 
 	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference referencingObjRef, String fieldName);
 
-	void replicateDeletion(ReplicationReference reference);
+	
 
 
 	/**
