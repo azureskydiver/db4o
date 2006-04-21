@@ -309,11 +309,6 @@ public class GenericReplicationSession implements ReplicationSession {
 		copyFieldValuesAcross(source, dest, claxx, sourceProvider);
 	}
 
-	private void deleteInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
-		if (!reference.isMarkedForDeleting()) return;
-		destination.replicateDeletion(reference);
-	}
-
 	private Object emptyClone(ReplicationProviderInside sourceProvider, Object obj) {
 		if (obj == null) return null;
 		ReflectClass claxx = _reflector.forObject(obj);
@@ -468,12 +463,6 @@ public class GenericReplicationSession implements ReplicationSession {
 	private void storeChangedObjectsIn(final ReplicationProviderInside destination) {
 		final ReplicationProviderInside source = other(destination);
 		if (_directionTo == source) return;
-
-		destination.visitCachedReferences(new Visitor4() {
-			public void visit(Object obj) {
-				deleteInDestination((ReplicationReference) obj, destination);
-			}
-		});
 
 		source.visitCachedReferences(new Visitor4() {
 			public void visit(Object obj) {
