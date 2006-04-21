@@ -124,4 +124,21 @@ public class Db4oReplicationReferenceImpl extends YapObject implements Replicati
 		return virtualAttributes(null);
 	}
 
+	public final boolean equals(Object o) {
+		if (this == o) return true;
+
+		if (o == null || o.getClass().getSuperclass() != o.getClass().getSuperclass()) return false;
+
+		final ReplicationReference that = (ReplicationReference) o;
+
+		if (version() != that.version()) return false;
+		return uuid().equals(that.uuid());
+	}
+
+	public final int hashCode() {
+		int result;
+		result = uuid().hashCode();
+		result = 29 * result + (int) (version() ^ (version() >>> 32));
+		return result;
+	}
 }
