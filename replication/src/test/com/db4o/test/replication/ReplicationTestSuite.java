@@ -11,12 +11,12 @@ import com.db4o.test.replication.provider.ReplicationProviderTest;
 
 public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
-		return all();
+		return db4o();
 	}
 
 	public Class[] testsOne() {
 		return new Class[]{
-				R0to4Runner.class,
+				ReplicationFeaturesMain.class,
 		};
 	}
 
@@ -50,15 +50,15 @@ public class ReplicationTestSuite extends TestSuite {
 		return new Class[]{
 				ReplicationEventTest.class,
 				ReplicationConfiguratorTest.class,
-				//ReplicationProviderTest.class,
+				ReplicationProviderTest.class,
 
 				//TODO StackOverflowError when running with db4o ArrayReplicationTest.class,
-				//ListTest.class,
-				//MapTest.class,
+				ListTest.class,
+				MapTest.class,
 				//TODO StackOverflowError when running with db4o MixedTypesCollectionReplicationTest.class,
 				//TODO StackOverflowError when running with db4o R0to4Runner.class,
-				//ReplicationAfterDeletionTest.class,
-				//ReplicationFeaturesMain.class,
+				ReplicationAfterDeletionTest.class,
+				ReplicationFeaturesMain.class,
 				SimpleArrayTest.class,
 				SimpleParentChild.class,
 				SingleTypeCollectionReplicationTest.class,

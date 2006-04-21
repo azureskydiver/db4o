@@ -175,9 +175,6 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Test.ensure(_providerA.produceReference(collectionInB, null, null) == collectionRefFromB);
 		Test.ensure(_providerA.produceReference(collectionInB, null, null).object() == collectionInB);
 
-		final ReplicationReference byUuid = _providerA.produceReferenceByUUID(collectionUuid, List.class);
-		Test.ensure(byUuid != null);
-
 		_providerA.clearAllReferences();
 		final ReplicationReference refFromBAfterClear = _providerA.produceReferenceByUUID(listHolderUuid, ListHolder.class);
 		Test.ensure(refFromBAfterClear != null);
