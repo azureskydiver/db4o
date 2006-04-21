@@ -94,7 +94,7 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         if(_uuidTimeGenerator == null){
             _uuidTimeGenerator = new TimeStampIdGenerator(i_uuidGenerator);
         }
-        i_uuidGenerator = _uuidTimeGenerator.generate();
+        i_uuidGenerator = _versionTimeGenerator.generate();
         return i_uuidGenerator;
     }
     
