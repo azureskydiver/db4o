@@ -118,7 +118,7 @@ namespace Mono.Cecil {
 			m_constWriter = new MemoryBinaryWriter ();
 		}
 
-		public ITypeReference GetCoreType (string name)
+		public TypeReference GetCoreType (string name)
 		{
 			return m_mod.Controller.Reader.SearchCoreType (name);
 		}
@@ -143,13 +143,12 @@ namespace Mono.Cecil {
 			return (uint) m_mod.ModuleReferences.IndexOf (modRef) + 1;
 		}
 
-		bool IsTypeSpec (ITypeReference type)
+		bool IsTypeSpec (TypeReference type)
 		{
-			return type is IArrayType || type is IFunctionPointerType ||
-				type is IPointerType || type is IGenericInstance || type is IGenericParameter;
+			return type is TypeSpecification || type is GenericParameter;
 		}
 
-		public MetadataToken GetTypeDefOrRefToken (ITypeReference type)
+		public MetadataToken GetTypeDefOrRefToken (TypeReference type)
 		{
 			if (IsTypeSpec (type)) {
 				uint sig = m_sigWriter.AddTypeSpec (GetTypeSpecSig (type));
@@ -198,9 +197,9 @@ namespace Mono.Cecil {
 
 			if (types [Constants.ModuleType] == null)
 				types.Add (new TypeDefinition (
-						Constants.ModuleType, string.Empty, (TypeAttributes) 0));
+						Constants.ModuleType, string.Empty, TypeAttributes.NotPublic));
 
-			foreach (ITypeDefinition t in types)
+			foreach (TypeDefinition t in types)
 				m_typeDefStack.Add (t);
 
 			(m_typeDefStack as ArrayList).Sort (TableComparers.TypeDef.Instance);
@@ -242,7 +241,7 @@ namespace Mono.Cecil {
 				foreach (MethodDefinition meth in t.Methods)
 					VisitMethodDefinition (meth);
 
-				if (t.LayoutInfo.HasLayoutInfo)
+				if (t.HasLayoutInfo)
 					WriteLayout (t);
 			}
 
@@ -253,6 +252,9 @@ namespace Mono.Cecil {
 			}
 
 			foreach (MethodDefinition meth in m_methodStack) {
+				VisitCustomAttributeCollection (meth.ReturnType.CustomAttributes);
+				foreach (ParameterDefinition param in meth.Parameters)
+					VisitCustomAttributeCollection (param.CustomAttributes);
 				VisitGenericParameterCollection (meth.GenericParameters);
 				VisitOverrideCollection (meth.Overrides);
 				VisitCustomAttributeCollection (meth.CustomAttributes);
@@ -315,10 +317,10 @@ namespace Mono.Cecil {
 			MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
 			foreach (MemberReference member in members) {
 				uint sig = 0;
-				if (member is IFieldReference)
-					sig = m_sigWriter.AddFieldSig (GetFieldSig (member as IFieldReference));
-				else if (member is IMethodReference)
-					sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as IMethodReference));
+				if (member is FieldReference)
+					sig = m_sigWriter.AddFieldSig (GetFieldSig (member as FieldReference));
+				else if (member is MethodReference)
+					sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as MethodReference));
 				MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
 					GetTypeDefOrRefToken (member.DeclaringType),
 					m_mdWriter.AddString (member.Name),
@@ -335,10 +337,8 @@ namespace Mono.Cecil {
 			if (parameters.Count == 0)
 				return;
 
-			foreach (GenericParameter gp in parameters) {
+			foreach (GenericParameter gp in parameters)
 				m_genericParamStack.Add (gp);
-				VisitCustomAttributeCollection (gp.CustomAttributes);
-			}
 		}
 
 		public override void VisitInterfaceCollection (InterfaceCollection interfaces)
@@ -374,7 +374,7 @@ namespace Mono.Cecil {
 			MethodImplTable miTable = m_tableWriter.GetMethodImplTable ();
 			foreach (MethodReference ov in meths) {
 				MethodImplRow miRow = m_rowWriter.CreateMethodImplRow (
-					GetRidFor (meths.Container.DeclaringType as ITypeDefinition),
+					GetRidFor (meths.Container.DeclaringType as TypeDefinition),
 					new MetadataToken (TokenType.Method, GetRidFor (meths.Container)),
 					ov.MetadataToken);
 
@@ -424,9 +424,13 @@ namespace Mono.Cecil {
 			if (param.HasConstant)
 				WriteConstant (param, param.ParameterType);
 
-			VisitCustomAttributeCollection (param.CustomAttributes);
-
 			m_paramIndex++;
+		}
+
+		bool RequiresParameterRow (MethodReturnType mrt)
+		{
+			return mrt.HasConstant || mrt.MarshalSpec != null ||
+				mrt.CustomAttributes.Count > 0 || mrt.Parameter.Attributes != (ParamAttributes) 0;
 		}
 
 		public override void VisitMethodDefinition (MethodDefinition method)
@@ -445,11 +449,8 @@ namespace Mono.Cecil {
 			method.MetadataToken = new MetadataToken (TokenType.Method, (uint) mTable.Rows.Count);
 			m_methodIndex++;
 
-			if (method.ReturnType.CustomAttributes.Count > 0 || method.ReturnType.MarshalSpec != null) {
-				ParameterDefinition param = (method.ReturnType as MethodReturnType).Parameter;
-				ParamTable pTable = m_tableWriter.GetParamTable ();
-				InsertParameter (pTable, param, 0);
-			}
+			if (RequiresParameterRow (method.ReturnType))
+				InsertParameter (m_tableWriter.GetParamTable (), method.ReturnType.Parameter, 0);
 
 			VisitParameterDefinitionCollection (method.Parameters);
 		}
@@ -518,7 +519,7 @@ namespace Mono.Cecil {
 			if (field.HasConstant)
 				WriteConstant (field, field.FieldType);
 
-			if (field.LayoutInfo.HasLayoutInfo)
+			if (field.HasLayoutInfo)
 				WriteLayout (field);
 
 			m_fieldStack.Add (field);
@@ -586,9 +587,9 @@ namespace Mono.Cecil {
 			CustomAttributeTable caTable = m_tableWriter.GetCustomAttributeTable ();
 			foreach (CustomAttribute ca in customAttrs) {
 				MetadataToken parent;
-				if (customAttrs.Container is IAssemblyDefinition)
+				if (customAttrs.Container is AssemblyDefinition)
 					parent = new MetadataToken (TokenType.Assembly, 1);
-				else if (customAttrs.Container is IModuleDefinition)
+				else if (customAttrs.Container is ModuleDefinition)
 					parent = new MetadataToken (TokenType.Module, 1);
 				else if (customAttrs.Container is IMetadataTokenProvider)
 					parent = (customAttrs.Container as IMetadataTokenProvider).MetadataToken;
@@ -611,7 +612,7 @@ namespace Mono.Cecil {
 		{
 			FieldMarshalTable fmTable = m_tableWriter.GetFieldMarshalTable ();
 			FieldMarshalRow fmRow = m_rowWriter.CreateFieldMarshalRow (
-				((IMetadataTokenProvider) marshalSpec.Container).MetadataToken,
+				marshalSpec.Container.MetadataToken,
 				m_sigWriter.AddMarshalSig (GetMarshalSig (marshalSpec)));
 
 			fmTable.Rows.Add (fmRow);
@@ -642,7 +643,7 @@ namespace Mono.Cecil {
 		{
 			FieldLayoutTable flTable = m_tableWriter.GetFieldLayoutTable ();
 			FieldLayoutRow flRow = m_rowWriter.CreateFieldLayoutRow (
-				field.LayoutInfo.Offset,
+				field.Offset,
 				GetRidFor (field));
 
 			flTable.Rows.Add (flRow);
@@ -652,15 +653,15 @@ namespace Mono.Cecil {
 		{
 			ClassLayoutTable clTable = m_tableWriter.GetClassLayoutTable ();
 			ClassLayoutRow clRow = m_rowWriter.CreateClassLayoutRow (
-				type.LayoutInfo.PackingSize,
-				type.LayoutInfo.ClassSize,
+				type.PackingSize,
+				type.ClassSize,
 				GetRidFor (type));
 
 			clTable.Rows.Add (clRow);
 		}
 
 		void WriteSemantic (MethodSemanticsAttributes attrs,
-			IMemberDefinition member, MethodDefinition meth)
+			IMetadataTokenProvider member, MethodDefinition meth)
 		{
 			MethodSemanticsTable msTable = m_tableWriter.GetMethodSemanticsTable ();
 			MethodSemanticsRow msRow = m_rowWriter.CreateMethodSemanticsRow (
@@ -756,6 +757,9 @@ namespace Mono.Cecil {
 					m_mdWriter.AddString (gp.Name));
 
 				gpTable.Rows.Add (gpRow);
+				gp.MetadataToken = new MetadataToken (TokenType.GenericParam, (uint) gpTable.Rows.Count);
+
+				VisitCustomAttributeCollection (gp.CustomAttributes);
 
 				if (gp.Constraints.Count == 0)
 					continue;
@@ -779,8 +783,8 @@ namespace Mono.Cecil {
 			VisitSecurityDeclarationCollection (module.Assembly.SecurityDeclarations);
 			VisitCustomAttributeCollection (module.CustomAttributes);
 
-			SortTables ();
 			CompleteGenericTables ();
+			SortTables ();
 
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
 			for (int i = 0; i < m_methodStack.Count; i++) {
@@ -791,7 +795,7 @@ namespace Mono.Cecil {
 
 			if (m_fieldStack.Count > 0) {
 				FieldRVATable frTable = null;
-				foreach (IFieldDefinition field in m_fieldStack) {
+				foreach (FieldDefinition field in m_fieldStack) {
 					if (field.InitialValue != null && field.InitialValue.Length > 0) {
 						if (frTable == null)
 							frTable = m_tableWriter.GetFieldRVATable ();
@@ -846,6 +850,8 @@ namespace Mono.Cecil {
 				return ElementType.String;
 			case Constants.Type :
 				return ElementType.Type;
+			case Constants.Object :
+				return ElementType.Object;
 			default:
 				return ElementType.Class;
 			}
@@ -908,7 +914,7 @@ namespace Mono.Cecil {
 			return m_constWriter.ToArray ();
 		}
 
-		public SigType GetSigType (ITypeReference type)
+		public SigType GetSigType (TypeReference type)
 		{
 			string name = type.FullName;
 
@@ -951,7 +957,7 @@ namespace Mono.Cecil {
 				return new SigType (ElementType.TypedByRef);
 			}
 
-			if (type is IGenericParameter) {
+			if (type is GenericParameter) {
 				GenericParameter gp = type as GenericParameter;
 				int pos = gp.Owner.GenericParameters.IndexOf (gp);
 				if (gp.Owner is TypeReference)
@@ -972,8 +978,8 @@ namespace Mono.Cecil {
 					gi.Signature.Types [i] = GetSigType (git.GenericArguments [i]);
 
 				return gi;
-			} else if (type is IArrayType) {
-				IArrayType aryType = type as IArrayType;
+			} else if (type is ArrayType) {
+				ArrayType aryType = type as ArrayType;
 				if (aryType.IsSizedArray) {
 					SZARRAY szary = new SZARRAY ();
 					szary.Type = GetSigType (aryType.ElementType);
@@ -983,30 +989,42 @@ namespace Mono.Cecil {
 				// not optimized
 				ArrayShape shape = new ArrayShape ();
 				shape.Rank = aryType.Dimensions.Count;
-				shape.Sizes = new int [shape.Rank];
-				shape.LoBounds = new int [shape.Rank];
+				shape.NumSizes = 0;
+
+				for (int i = 0; i < shape.Rank; i++) {
+					ArrayDimension dim = aryType.Dimensions [i];
+					if (dim.UpperBound > 0)
+						shape.NumSizes++;
+				}
+
+				shape.Sizes = new int [shape.NumSizes];
+				shape.NumLoBounds = shape.Rank;
+				shape.LoBounds = new int [shape.NumLoBounds];
 
 				for (int i = 0; i < shape.Rank; i++) {
 					ArrayDimension dim = aryType.Dimensions [i];
 					shape.LoBounds [i] = dim.LowerBound;
-					shape.Sizes [i] = dim.UpperBound - dim.LowerBound + 1;
+					if (dim.UpperBound > 0)
+						shape.Sizes [i] = dim.UpperBound - dim.LowerBound + 1;
 				}
 
 				ARRAY ary = new ARRAY ();
 				ary.Shape = shape;
 				ary.Type = GetSigType (aryType.ElementType);
 				return ary;
-			} else if (type is IPointerType) {
+			} else if (type is PointerType) {
 				PTR p = new PTR ();
-				ITypeReference elementType = (type as IPointerType).ElementType;
+				TypeReference elementType = (type as PointerType).ElementType;
 				p.Void = elementType.FullName == Constants.Void;
 				if (!p.Void) {
 					p.CustomMods = GetCustomMods (elementType);
 					p.PtrType = GetSigType (elementType);
 				}
 				return p;
-			} else if (type is IFunctionPointerType) {
+			} else if (type is FunctionPointerType) {
 				throw new NotImplementedException ("Function pointer are not implemented"); // TODO
+			} else if (type is TypeSpecification) {
+				return GetSigType ((type as TypeSpecification).ElementType);
 			} else if (type.IsValueType) {
 				VALUETYPE vt = new VALUETYPE ();
 				vt.Type = GetTypeDefOrRefToken (type);
@@ -1018,41 +1036,41 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public CustomMod [] GetCustomMods (ITypeReference type)
+		public CustomMod [] GetCustomMods (TypeReference type)
 		{
-			if (!(type is IModifierType))
+			if (!(type is ModType))
 				return new CustomMod [0];
 
 			ArrayList cmods = new ArrayList ();
-			ITypeReference cur = type;
-			while (cur is IModifierType) {
-				if (cur is IModifierOptional) {
+			TypeReference cur = type;
+			while (cur is ModType) {
+				if (cur is ModifierOptional) {
 					CustomMod cmod = new CustomMod ();
 					cmod.CMOD = CustomMod.CMODType.OPT;
-					cmod.TypeDefOrRef = GetTypeDefOrRefToken ((cur as IModifierOptional).ModifierType);
+					cmod.TypeDefOrRef = GetTypeDefOrRefToken ((cur as ModifierOptional).ModifierType);
 					cmods.Add (cmod);
-				} else if (cur is IModifierRequired) {
+				} else if (cur is ModifierRequired) {
 					CustomMod cmod = new CustomMod ();
 					cmod.CMOD = CustomMod.CMODType.REQD;
-					cmod.TypeDefOrRef = GetTypeDefOrRefToken ((cur as IModifierRequired).ModifierType);
+					cmod.TypeDefOrRef = GetTypeDefOrRefToken ((cur as ModifierRequired).ModifierType);
 					cmods.Add (cmod);
 				}
 
-				cur = (cur as IModifierType).ElementType;
+				cur = (cur as ModType).ElementType;
 			}
 
 			return cmods.ToArray (typeof (CustomMod)) as CustomMod [];
 		}
 
-		public Signature GetMemberRefSig (IMemberReference member)
+		public Signature GetMemberRefSig (MemberReference member)
 		{
-			if (member is IFieldReference)
-				return GetFieldSig (member as IFieldReference);
+			if (member is FieldReference)
+				return GetFieldSig (member as FieldReference);
 			else
-				return GetMemberRefSig (member as IMethodReference);
+				return GetMemberRefSig (member as MethodReference);
 		}
 
-		public FieldSig GetFieldSig (IFieldReference field)
+		public FieldSig GetFieldSig (FieldReference field)
 		{
 			FieldSig sig = new FieldSig ();
 			sig.CallingConvention |= 0x6;
@@ -1062,19 +1080,19 @@ namespace Mono.Cecil {
 			return sig;
 		}
 
-		Param [] GetParametersSig (IParameterDefinitionCollection parameters)
+		Param [] GetParametersSig (ParameterDefinitionCollection parameters)
 		{
 			Param [] ret = new Param [parameters.Count];
 			for (int i = 0; i < ret.Length; i++) {
-				IParameterDefinition pDef = parameters [i];
+				ParameterDefinition pDef = parameters [i];
 				Param p = new Param ();
 				p.CustomMods = GetCustomMods (pDef.ParameterType);
 				if (pDef.ParameterType.FullName == Constants.TypedReference)
 					p.TypedByRef = true;
-				else if (pDef.ParameterType is IReferenceType) {
+				else if (pDef.ParameterType is ReferenceType) {
 					p.ByRef = true;
 					p.Type = GetSigType (
-						(pDef.ParameterType as IReferenceType).ElementType);
+						(pDef.ParameterType as ReferenceType).ElementType);
 				} else
 					p.Type = GetSigType (pDef.ParameterType);
 				ret [i] = p;
@@ -1082,7 +1100,7 @@ namespace Mono.Cecil {
 			return ret;
 		}
 
-		void CompleteMethodSig (IMethodReference meth, MethodSig sig)
+		void CompleteMethodSig (MethodReference meth, MethodSig sig)
 		{
 			sig.HasThis = meth.HasThis;
 			sig.ExplicitThis = meth.ExplicitThis;
@@ -1104,17 +1122,17 @@ namespace Mono.Cecil {
 				rtSig.Void = true;
 			else if (meth.ReturnType.ReturnType.FullName == Constants.TypedReference)
 				rtSig.TypedByRef = true;
-			else if (meth.ReturnType.ReturnType is IReferenceType) {
+			else if (meth.ReturnType.ReturnType is ReferenceType) {
 				rtSig.ByRef = true;
 				rtSig.Type = GetSigType (
-					(meth.ReturnType.ReturnType as IReferenceType).ElementType);
+					(meth.ReturnType.ReturnType as ReferenceType).ElementType);
 			} else
 				rtSig.Type = GetSigType (meth.ReturnType.ReturnType);
 
 			sig.RetType = rtSig;
 		}
 
-		public MethodRefSig GetMethodRefSig (IMethodReference meth)
+		public MethodRefSig GetMethodRefSig (MethodReference meth)
 		{
 			if (meth.GenericParameters.Count > 0)
 				return GetMethodDefSig (meth);
@@ -1135,7 +1153,7 @@ namespace Mono.Cecil {
 			return methSig;
 		}
 
-		public MethodDefSig GetMethodDefSig (IMethodReference meth)
+		public MethodDefSig GetMethodDefSig (MethodReference meth)
 		{
 			MethodDefSig sig = new MethodDefSig ();
 
@@ -1149,7 +1167,7 @@ namespace Mono.Cecil {
 			return sig;
 		}
 
-		public PropertySig GetPropertySig (IPropertyDefinition prop)
+		public PropertySig GetPropertySig (PropertyDefinition prop)
 		{
 			PropertySig ps = new PropertySig ();
 			ps.CallingConvention |= 0x8;
@@ -1157,9 +1175,9 @@ namespace Mono.Cecil {
 			bool hasThis;
 			bool explicitThis;
 			MethodCallingConvention mcc;
-			IParameterDefinitionCollection parameters = prop.Parameters;
+			ParameterDefinitionCollection parameters = prop.Parameters;
 
-			IMethodDefinition meth;
+			MethodDefinition meth;
 			if (prop.GetMethod != null)
 				meth = prop.GetMethod;
 			else if (prop.SetMethod != null)
@@ -1194,7 +1212,7 @@ namespace Mono.Cecil {
 			return ps;
 		}
 
-		public TypeSpec GetTypeSpecSig (ITypeReference type)
+		public TypeSpec GetTypeSpecSig (TypeReference type)
 		{
 			TypeSpec ts = new TypeSpec (GetSigType (type));
 			return ts;
@@ -1211,48 +1229,119 @@ namespace Mono.Cecil {
 			return new MethodSpec (gis);
 		}
 
-		public CustomAttrib GetCustomAttributeSig (ICustomAttribute ca)
+		string GetObjectTypeName (object o)
+		{
+			Type t = o.GetType ();
+			return string.Concat (t.Namespace, ".", t.Name);
+		}
+
+		CustomAttrib.Elem CreateElem (TypeReference type, object value)
+		{
+			CustomAttrib.Elem elem = new CustomAttrib.Elem ();
+			elem.Value = value;
+			elem.ElemType = type;
+			elem.FieldOrPropType = GetCorrespondingType (type.FullName);
+
+			switch (elem.FieldOrPropType) {
+			case ElementType.Boolean :
+			case ElementType.Char :
+			case ElementType.R4 :
+			case ElementType.R8 :
+			case ElementType.I1 :
+			case ElementType.I2 :
+			case ElementType.I4 :
+			case ElementType.I8 :
+			case ElementType.U1 :
+			case ElementType.U2 :
+			case ElementType.U4 :
+			case ElementType.U8 :
+				elem.Simple = true;
+				break;
+			case ElementType.String:
+				elem.String = true;
+				break;
+			case ElementType.Type:
+				elem.Type = true;
+				break;
+			case ElementType.Object:
+				elem.BoxedValueType = true;
+				if (value == null)
+					elem.FieldOrPropType = ElementType.String;
+				else
+					elem.FieldOrPropType = GetCorrespondingType (
+						GetObjectTypeName (value));
+				break;
+			}
+
+			return elem;
+		}
+
+		CustomAttrib.FixedArg CreateFixedArg (TypeReference type, object value)
+		{
+			CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
+			if (value is object []) {
+				fa.SzArray = true;
+				object [] values = value as object [];
+				TypeReference obj = ((ArrayType) type).ElementType;
+				fa.NumElem = (uint) values.Length;
+				fa.Elems = new CustomAttrib.Elem [values.Length];
+				for (int i = 0; i < values.Length; i++)
+					fa.Elems [i] = CreateElem (obj, values [i]);
+			} else {
+				fa.Elems = new CustomAttrib.Elem [1];
+				fa.Elems [0] = CreateElem (type, value);
+			}
+
+			return fa;
+		}
+
+		CustomAttrib.NamedArg CreateNamedArg (TypeReference type, string name,
+			object value, bool field)
+		{
+			CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
+			na.Field = field;
+			na.Property = !field;
+
+			na.FieldOrPropName = name;
+			na.FixedArg = CreateFixedArg (type, value);
+
+			return na;
+		}
+
+		public CustomAttrib GetCustomAttributeSig (CustomAttribute ca)
 		{
 			CustomAttrib cas = new CustomAttrib (ca.Constructor);
 			cas.Prolog = CustomAttrib.StdProlog;
 
-			cas.FixedArgs = new CustomAttrib.FixedArg [0];
-
 			cas.FixedArgs = new CustomAttrib.FixedArg [ca.Constructor.Parameters.Count];
 
-			for (int i = 0; i < cas.FixedArgs.Length; i++) {
-				object o = ca.ConstructorParameters [i];
-				CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
-//				if (o is object []) {
-//					object [] values = o as object [];
-//					fa.Elems = new CustomAttrib.Elem [values.Length];
-//					for (int j = 0; j < values.Length; j++) {
-//						CustomAttrib.Elem elem = new CustomAttrib.Elem ();
-//						elem.Value = values [j];
-//						elem.FieldOrPropType = ElementType.Object;
-//						elem.ElemType = ca.Constructor.Parameters [i].ParameterType;
-//						fa.Elems [j] = elem;
-//					}
-//				} else {
-					fa.Elems = new CustomAttrib.Elem [1];
-					fa.Elems [0].Value = o;
-					fa.Elems [0].ElemType = ca.Constructor.Parameters [i].ParameterType;
-					fa.Elems [0].FieldOrPropType = GetCorrespondingType (fa.Elems [0].ElemType.FullName);
-					if (fa.Elems [0].FieldOrPropType == ElementType.Class)
-						fa.Elems [0].FieldOrPropType = ElementType.I4; // buggy
-//				}
+			for (int i = 0; i < cas.FixedArgs.Length; i++)
+				cas.FixedArgs [i] = CreateFixedArg (
+					ca.Constructor.Parameters [i].ParameterType, ca.ConstructorParameters [i]);
 
-				cas.FixedArgs [i] = fa;
+			int nn = ca.Fields.Count + ca.Properties.Count;
+			cas.NumNamed = (ushort) nn;
+			cas.NamedArgs = new CustomAttrib.NamedArg [nn];
+
+			if (cas.NamedArgs.Length > 0) {
+				int curs = 0;
+				foreach (DictionaryEntry entry in ca.Fields) {
+					string field = (string) entry.Key;
+					cas.NamedArgs [curs++] = CreateNamedArg (
+						ca.GetFieldType (field), field, entry.Value, true);
+				}
+
+				foreach (DictionaryEntry entry in ca.Properties) {
+					string property = (string) entry.Key;
+					cas.NamedArgs [curs++] = CreateNamedArg (
+						ca.GetPropertyType (property), property, entry.Value, false);
+				}
 			}
-
-			cas.NumNamed = 0;
-
-			cas.NamedArgs = new CustomAttrib.NamedArg [0];
 
 			return cas;
 		}
 
-		public MarshalSig GetMarshalSig (IMarshalSpec mSpec)
+		public MarshalSig GetMarshalSig (MarshalDesc mSpec)
 		{
 			MarshalSig ms = new MarshalSig (mSpec.NativeIntrinsic);
 

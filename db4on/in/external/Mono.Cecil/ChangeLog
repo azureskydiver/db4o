@@ -1,6 +1,120 @@
+2006-04-21  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil.Binary/MemoryBinaryWriter.cs:
+		Use MemoryStream::WriteTo when it's possible.
+
+2006-04-21	Rodrigo B. de Oliveira	<rodrigobamboo@gmail.com>
+
+	* Mono.Cecil/SecurityDeclaration.cs
+	  Mono.Cecil/ISecurityDeclaration.cs
+	  Mono.Cecil/SecurityDeclarationCollection.cs
+	  Mono.Cecil/ModuleDefinition.cs:
+	  	Patch by Almann T. Goo (almann.goo@gmail.com) conditionally
+		removing references to PermissionSet when compiling for the CompactFramework.
+		
+	* Mono.Cecil/CompactFrameworkCompatibility.cs:
+		System.Security.PermissionSet definition no longer needed.
+
+2006-04-21  Jb Evain  <jbevain@gmail.com>
+
+	* *Collection.cs:
+		Fix typo in RemoveAt.
+
+2006-04-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Fix writing of complex arrays.
+		Now we roundtrip SharpDevelop.
+
+	* Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/TableComparers.cs:
+		Ensure <Module> will always be the first type.
+		Fix roundtrip of Nemerle.
+
+2006-04-19  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/CodeWriter.cs:
+		Handle the case where an handler points after the last
+		instruction. Now we roundtrip db4o.
+
+	* Mono.Cecil/IIndexedCollection.cs:
+	  *Collection.cs:
+		Make every collection implement an indexed collection.
+
+2006-04-15  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/CustomAttribute.cs:
+		Fix handling of types.
+
+2006-04-11  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/FieldDefinition.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/IField.cs
+	  Mono.Cecil/ITypeDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/AggressiveReflectionReader.cs
+	  Mono.Cecil.Cil/IVariable.cs
+	  Mono.Cecil.Cil/MethodBody.cs
+	  Mono.Cecil.Cil/VariableDefinition.cs
+	  Mono.Cecil.Cil/CodeWriter.cs:
+		Don't use interfaces internally.
+
+	* Mono.Cecil/TypeReference.cs:
+		Make TypeReference extend MemberReference.
+
+	* Mono.Cecil/Modifiers.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Signatures/LocalVarSig.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Fix modifiers on localvar signatures.
+		Fix roundtrip of delphi assemblies.
+
+	* Mono.Cecil/CustomAttribute.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs 
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		Work on complex custom attributes encoding.
+
+	* Mono.Cecil/TableComparers.cs:
+		Style.
+
+2006-04-09  Eyal Alaluf  <eyala@mainsoft.com>
+
+    * Mono.Cecil/ReflectionReader.cs
+	    Cannot assume that TypeRefs are ordered is such a way that an outer
+		class index comes always before all its inner classes.
+
+2006-04-06  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		Clean up things a little bit prior ending
+		custom attribute encoding.
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Write custom attributes of parameters
+		onyl when all methods have their tokens.
+
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/AggressiveReflectionReader.cs:
+		Handle custom attributes on generic parameters.
+
+2006-04-05  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Ensure the param[0] is written when it should be.
+
 2006-04-04  Jb Evain  <jbevain@gmail.com>
 
-	* Mono.Cecil/AssemblyInfo.cs: Go 0.4.
+	* Mono.Cecil/ReflectionHelper.cs:
+		Remove an unused hack.
+
+	* Mono.Cecil/AssemblyInfo.cs: Go 0.4.1
 
 	* Mono.Cecil.Metadata/MetadataHeap.cs
 	  Mono.Cecil.Metadata/MetadataStream.cs:
