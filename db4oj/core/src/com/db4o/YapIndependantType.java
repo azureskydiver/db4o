@@ -12,8 +12,7 @@ import com.db4o.reflect.*;
  * 
  * @exclude
  */
-public abstract class YapIndependantType implements TypeHandler4
-{
+public abstract class YapIndependantType implements TypeHandler4 {
     final YapStream _stream;
     
     public YapIndependantType(YapStream stream) {
@@ -76,5 +75,4 @@ public abstract class YapIndependantType implements TypeHandler4
     public abstract Object comparableObject(Transaction trans, Object indexEntry);
     public abstract Object readIndexEntry(YapReader a_reader);
     public abstract void writeIndexEntry(YapReader a_writer, Object a_object);
-
 }
