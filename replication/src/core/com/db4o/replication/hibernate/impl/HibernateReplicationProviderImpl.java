@@ -49,7 +49,8 @@ import java.util.Set;
 
 
 public final class HibernateReplicationProviderImpl implements HibernateReplicationProvider {
-	boolean simpleObjectContainerCommitCalled = true;
+	private boolean simpleObjectContainerCommitCalled = true;
+
 	private Configuration _cfg;
 
 	private final String _name;
@@ -78,13 +79,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 	 */
 	private ReplicationRecord _replicationRecord;
 
-	/**
-	 * Current transaction number = {@link #getLastReplicationVersion()} + 1. The
-	 * minimum version number is 1, when this database is never replicated with
-	 * other peers.
-	 */
-	private long _currentVersion;
-
 	private final CollectionHandler _collectionHandler = new CollectionHandlerImpl();
 
 	private Reflector _reflector = ReplicationReflector.getInstance().reflector();
@@ -96,6 +90,8 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private boolean _inReplication = false;
 
+	private final TimeStampIdGenerator _generator;
+
 	public HibernateReplicationProviderImpl(Configuration cfg) {
 		this(cfg, null);
 	}
@@ -105,7 +101,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_cfg = ReplicationConfiguration.decorate(cfg);
 
 		new TablesCreatorImpl(_cfg).createTables();
-		Util.initUuidLongPartSequence(cfg);
 
 		_cfg.setInterceptor(EmptyInterceptor.INSTANCE);
 
@@ -122,87 +117,14 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 		objectLifeCycleEventsListener.install(getSession(), cfg);
 
+		_generator = GeneratorMap.get(_session);
+
 		_alive = true;
 	}
 
-	public final String toString() {
-		return _name;
+	public final void activate(Object object) {
+		Hibernate.initialize(object);
 	}
-
-// --------------------- Interface HibernateReplicationProvider ---------------------
-
-	public final Configuration getConfiguration() {
-		return _cfg;
-	}
-
-	public final Session getSession() {
-		return _session;
-	}
-
-// --------------------- Interface ReplicationProvider ---------------------
-
-	public Object getObject(Db4oUUID db4oUuid) {
-		ObjectReference ref = Util.getByUUID(getSession(), translate(db4oUuid));
-
-		if (ref == null) return null;
-
-		Object loaded = getSession().get(ref.getClassName(), ref.getObjectId());
-		if (loaded == null) return null;
-
-		return loaded;
-	}
-
-	public final ObjectSet objectsChangedSinceLastReplication() {
-		ensureReplicationActive();
-
-		getSession().flush();
-
-		Set<PersistentClass> mappedClasses = new HashSet();
-
-		Iterator classMappings = getConfiguration().getClassMappings();
-		while (classMappings.hasNext()) {
-			PersistentClass persistentClass = (PersistentClass) classMappings.next();
-			Class claxx = persistentClass.getMappedClass();
-
-			if (Util.isAssignableFrom(claxx))
-				continue;
-
-			mappedClasses.add(persistentClass);
-		}
-
-		Set out = new HashSet();
-		for (PersistentClass persistentClass : mappedClasses)
-			out.addAll(getChangedObjectsSinceLastReplication(persistentClass));
-
-		return new ObjectSetCollectionFacade(out);
-	}
-
-	public final ObjectSet objectsChangedSinceLastReplication(Class clazz) {
-		ensureReplicationActive();
-		getSession().flush();
-
-		PersistentClass persistentClass = getConfiguration().getClassMapping(clazz.getName());
-		return new ObjectSetCollectionFacade(getChangedObjectsSinceLastReplication(persistentClass));
-	}
-
-	public final ObjectSet uuidsDeletedSinceLastReplication() {
-		ObjectSetCollectionFacade uuidsDeletedSinceLastReplication;
-
-		Criteria criteria = getSession().createCriteria(ObjectReference.class);
-		criteria.add(Restrictions.eq(ObjectReference.DELETED, true));
-
-		List<ObjectReference> results = criteria.list();
-		Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
-		for (ObjectReference of : results) {
-			out.add(Util.translate(of.getUuid()));
-		}
-
-		uuidsDeletedSinceLastReplication = new ObjectSetCollectionFacade(out);
-
-		return uuidsDeletedSinceLastReplication;
-	}
-
-// --------------------- Interface ReplicationProviderInside ---------------------
 
 	public final void clearAllReferences() {
 		ensureReplicationActive();
@@ -210,26 +132,40 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_objRefs.clear();
 	}
 
+	public final void commit() {
+		final Session session = getSession();
+
+
+		session.flush();
+		_transaction.commit();
+		clearSession();
+		_transaction = session.beginTransaction();
+		setCommitted(true);
+	}
+
 	public final synchronized void commitReplicationTransaction(long raisedDatabaseVersion) {
 		ensureReplicationActive();
 
-		//TODO raise the version generator
-
-		//TODO maybe: create a table to share version generator
-
 		getSession().flush();
 
-//		System.out.println("HibernateReplicationProviderImpl.commitReplicationTransaction");
-//		Util.dumpTable(this, "Replicated");
-//		Util.dumpTable(this, "ObjectReference");
-
-		String sql = "delete " + ObjectReference.TABLE_NAME + " o where o." + ObjectReference.DELETED + " = 'T'";
-		getSession().createQuery(sql).executeUpdate();
+		_generator.setMinimumNext(raisedDatabaseVersion);
 
 		commit();
 		_dirtyRefs.clear();
 
 		_inReplication = false;
+	}
+
+	public final void delete(Object obj) {
+		getSession().delete(obj);
+		setCommitted(false);
+	}
+
+	public final void deleteAllInstances(Class clazz) {
+		ensureReplicationInActive();
+		List col = getSession().createCriteria(clazz).list();
+		for (Object o : col)
+			delete(o);
 	}
 
 	public final synchronized void destroy() {
@@ -264,12 +200,14 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_cfg = null;
 	}
 
+	public final Configuration getConfiguration() {
+		return _cfg;
+	}
+
 	public final long getCurrentVersion() {
 		ensureReplicationActive();
 
-		//TODO FIXME, attach the version generator to replication session, gen current version on the fly
-		//ak: tried that but it breaks test cases
-		return _currentVersion;
+		return _generator.generate();
 	}
 
 	public long getLastReplicationVersion() {
@@ -282,8 +220,69 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return this;
 	}
 
+	public final String getName() {
+		return _name;
+	}
+
+	public Object getObject(Db4oUUID db4oUuid) {
+		ObjectReference ref = Util.getByUUID(getSession(), translate(db4oUuid));
+
+		if (ref == null) return null;
+
+		Object loaded = getSession().get(ref.getClassName(), ref.getObjectId());
+		if (loaded == null) return null;
+
+		return loaded;
+	}
+
+	public final Session getSession() {
+		return _session;
+	}
+
 	public final ReadonlyReplicationProviderSignature getSignature() {
 		return Util.genMySignature(getSession());
+	}
+
+	public final ObjectSet getStoredObjects(Class aClass) {
+		if (_collectionHandler.canHandle(aClass))
+			throw new IllegalArgumentException("Hibernate does not query by Collection");
+
+		getSession().flush();
+
+		return new ObjectSetCollectionFacade(getSession().createCriteria(aClass).list());
+	}
+
+	public final ObjectSet objectsChangedSinceLastReplication() {
+		ensureReplicationActive();
+
+		getSession().flush();
+
+		Set<PersistentClass> mappedClasses = new HashSet();
+
+		Iterator classMappings = getConfiguration().getClassMappings();
+		while (classMappings.hasNext()) {
+			PersistentClass persistentClass = (PersistentClass) classMappings.next();
+			Class claxx = persistentClass.getMappedClass();
+
+			if (Util.isAssignableFrom(claxx))
+				continue;
+
+			mappedClasses.add(persistentClass);
+		}
+
+		Set out = new HashSet();
+		for (PersistentClass persistentClass : mappedClasses)
+			out.addAll(getChangedObjectsSinceLastReplication(persistentClass));
+
+		return new ObjectSetCollectionFacade(out);
+	}
+
+	public final ObjectSet objectsChangedSinceLastReplication(Class clazz) {
+		ensureReplicationActive();
+		getSession().flush();
+
+		PersistentClass persistentClass = getConfiguration().getClassMapping(clazz.getName());
+		return new ObjectSetCollectionFacade(getChangedObjectsSinceLastReplication(persistentClass));
 	}
 
 	public final ReplicationReference produceReference(Object obj, Object referencingObj, String fieldName) {
@@ -396,13 +395,17 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		} else
 			throw new RuntimeException("result size = " + exisitingSigs.size() + ". It should be either 1 or 0");
 
-		_currentVersion = new TimeStampIdGenerator(_replicationRecord.getVersion()).generate();
+		_generator.setMinimumNext(_replicationRecord.getVersion());
 
 		_inReplication = true;
+	}
 
-//		System.out.println("HibernateReplicationProviderImpl.startReplicationTransaction");
-//		Util.dumpTable(this, "ReplicationRecord");
-//		Util.dumpTable(this, "ObjectReference");
+	public final void storeNew(Object object) {
+		ensureReplicationInActive();
+		Session s = getSession();
+		s.save(object);
+		s.flush();
+		setCommitted(false);
 	}
 
 	public final void storeReplica(Object entity) {
@@ -429,6 +432,22 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		getSession().flush();
 	}
 
+	public boolean supportsCascadeDelete() {
+		return true;
+	}
+
+	public boolean supportsHybridCollection() {
+		return false;
+	}
+
+	public boolean supportsMultiDimensionalArrays() {
+		return false;
+	}
+
+	public boolean supportsRollback() {
+		return true;
+	}
+
 	public final void syncVersionWithPeer(long version) {
 		ensureReplicationActive();
 
@@ -438,6 +457,20 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		_replicationRecord.setVersion(version);
 		getSession().saveOrUpdate(_replicationRecord);
 		getSession().flush();
+	}
+
+	public final String toString() {
+		return _name;
+	}
+
+	public final void update(Object obj) {
+		ensureReplicationInActive();
+		if (!_collectionHandler.canHandle(obj)) {
+			getSession().flush();
+			getSession().update(obj);
+			getSession().flush();
+		}
+		setCommitted(false);
 	}
 
 	public void updateCounterpart(Object entity) {
@@ -459,6 +492,23 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		getSession().flush();
 	}
 
+	public final ObjectSet uuidsDeletedSinceLastReplication() {
+		ObjectSetCollectionFacade uuidsDeletedSinceLastReplication;
+
+		Criteria criteria = getSession().createCriteria(ObjectReference.class);
+		criteria.add(Restrictions.eq(ObjectReference.DELETED, true));
+
+		List<ObjectReference> results = criteria.list();
+		Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
+		for (ObjectReference of : results) {
+			out.add(Util.translate(of.getUuid()));
+		}
+
+		uuidsDeletedSinceLastReplication = new ObjectSetCollectionFacade(out);
+
+		return uuidsDeletedSinceLastReplication;
+	}
+
 	public final void visitCachedReferences(Visitor4 visitor) {
 		ensureReplicationActive();
 
@@ -474,83 +524,11 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return reference.version() > getLastReplicationVersion();
 	}
 
-// --------------------- Interface SimpleObjectContainer ---------------------
-
-	public final void activate(Object object) {
-		Hibernate.initialize(object);
-	}
-
-	public final void commit() {
-		final Session session = getSession();
-
-
-		session.flush();
-		_transaction.commit();
-		clearSession();
-		_transaction = session.beginTransaction();
-		setCommitted(true);
-	}
-
-	public final void delete(Object obj) {
-		getSession().delete(obj);
-		setCommitted(false);
-	}
-
-	public final void deleteAllInstances(Class clazz) {
-		ensureReplicationInActive();
-		List col = getSession().createCriteria(clazz).list();
-		for (Object o : col)
-			delete(o);
-	}
-
-	public final String getName() {
-		return _name;
-	}
-
-	public final ObjectSet getStoredObjects(Class aClass) {
-		if (_collectionHandler.canHandle(aClass))
-			throw new IllegalArgumentException("Hibernate does not query by Collection");
-
-		getSession().flush();
-
-		return new ObjectSetCollectionFacade(getSession().createCriteria(aClass).list());
-	}
-
-	public final void storeNew(Object object) {
-		ensureReplicationInActive();
-		Session s = getSession();
-		s.save(object);
-		s.flush();
-		setCommitted(false);
-	}
-
-	public final void update(Object obj) {
-		ensureReplicationInActive();
-		if (!_collectionHandler.canHandle(obj)) {
-			getSession().flush();
-			getSession().update(obj);
-			getSession().flush();
-		}
-		setCommitted(false);
-	}
-
-// --------------------- Interface TestableReplicationProviderInside ---------------------
-
-
-	public boolean supportsCascadeDelete() {
-		return true;
-	}
-
-	public boolean supportsHybridCollection() {
-		return false;
-	}
-
-	public boolean supportsMultiDimensionalArrays() {
-		return false;
-	}
-
-	public boolean supportsRollback() {
-		return true;
+	Uuid translate(Db4oUUID du) {
+		Uuid uuid = new Uuid();
+		uuid.setLongPart(du.getLongPart());
+		uuid.setProvider(getProviderSignature(du.getSignaturePart()));
+		return uuid;
 	}
 
 	private void clearSession() {
@@ -662,7 +640,7 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			if (existingReference != null)
 				return existingReference;
 			else
-				return createRefForCollection(obj, refObjRef, fieldName, UuidGenerator.next(getSession()).getLongPart(), getCurrentVersion());
+				return createRefForCollection(obj, refObjRef, fieldName, _generator.generate(), getCurrentVersion());
 		}
 	}
 
@@ -792,13 +770,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 
 	private void setCommitted(boolean b) {
 		simpleObjectContainerCommitCalled = b;
-	}
-
-	Uuid translate(Db4oUUID du) {
-		Uuid uuid = new Uuid();
-		uuid.setLongPart(du.getLongPart());
-		uuid.setProvider(getProviderSignature(du.getSignaturePart()));
-		return uuid;
 	}
 
 	private final class MyFlushEventListener implements FlushEventListener {

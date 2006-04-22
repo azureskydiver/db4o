@@ -32,36 +32,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
-		implements ObjectLifeCycleEventsListener {
-// ------------------------------ FIELDS ------------------------------
+public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implements ObjectLifeCycleEventsListener {
+	private final Set<ObjectReference> dirtyNewRefs = new HashSet();
 
-	public Set<ObjectReference> dirtyNewRefs = new HashSet();
-	public Set<HibernateObjectId> dirtyUpdatedRefs = new HashSet();
+	private final Set<HibernateObjectId> dirtyUpdatedRefs = new HashSet();
+
 	private Set<Configuration> configs = new HashSet<Configuration>();
+
 	private Map<Thread, Session> threadSessionMap = new HashMap();
+
 	private boolean _alive = true;
-	private Map<Session, TimeStampIdGenerator> sessionTimeStampIdGeneratorMap = new HashMap();
-
-// --------------------- GETTER / SETTER METHODS ---------------------
-
-	private Session getSession() {
-		Session session = threadSessionMap.get(Thread.currentThread());
-
-		if (session == null)
-			throw new RuntimeException("Unable to update the version number of an object. Did you forget to call ReplicationConfigurator.install(session, cfg) after opening a session?");
-		return session;
-	}
-
-// ------------------------ INTERFACE METHODS ------------------------
-
-// --------------------- Interface ObjectLifeCycleEventsListener ---------------------
 
 	public final void configure(Configuration cfg) {
 		new TablesCreatorImpl(ReplicationConfiguration.decorate(cfg)).createTables();
 
 		Util.initMySignature(cfg);
-		Util.initUuidLongPartSequence(cfg);
 
 		configs.add(cfg);
 		setListeners(cfg);
@@ -82,8 +67,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 	public final void install(Session session, Configuration cfg) {
 		threadSessionMap.put(Thread.currentThread(), session);
 
-//		final long maxVersion = Util.getMaxVersion(session.connection());
-//		sessionTimeStampIdGeneratorMap.put(session,new TimeStampIdGenerator(maxVersion));
+		GeneratorMap.put(session,new TimeStampIdGenerator());
 	}
 
 	public final void onCollectionRemove(Object collection, Serializable key) throws CallbackException {
@@ -94,25 +78,18 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 		collectionUpdated(collection);
 	}
 
-	public void onFlush(FlushEvent event) throws HibernateException {
+	public final void onFlush(FlushEvent event) throws HibernateException {
 		final Session s = getSession();
-		//final long ver = sessionTimeStampIdGeneratorMap.get(s).generate();
 
-		// TODO: FIXME The following two lines require a query, that is too
-		// expensive for every flush. Instead there should be a
-		// TimeStampIdGenerator associated with every Session.
-		// albert: This cannot be done because a session is shared by many replication sessions.
-
-		// albert: How about we use TimeStampIdGenerator(0)?
-		// This solution won't work. I tested it.
-		// Reason : a replication start and end within 1 milisecond, then an object is updated in that very same milisec.
-
-		final long maxVersion = Util.getMaxVersion(s.connection());
-		final long ver = new TimeStampIdGenerator(maxVersion).generate();
+		TimeStampIdGenerator generator = GeneratorMap.get(s);
 
 		for (ObjectReference ref : dirtyNewRefs) {
-			ref.setUuid(UuidGenerator.next(s));
-			ref.setVersion(ver);
+			Uuid uuid = new Uuid();
+			uuid.setLongPart(generator.generate());
+			uuid.setProvider(Util.genMySignature(s));
+
+			ref.setUuid(uuid);
+			ref.setVersion(generator.generate());
 			getSession().save(ref);
 		}
 
@@ -121,7 +98,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 		for (HibernateObjectId hid : dirtyUpdatedRefs) {
 			ObjectReference ref = Util.getObjectReferenceById(getSession(), hid.className, hid.hibernateId);
 			if (ref != null && !dirtyNewRefs.contains(ref)) {
-				ref.setVersion(ver);
+				ref.setVersion(generator.generate());
 				getSession().update(ref);
 			}
 		}
@@ -164,7 +141,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 		return veto;
 	}
 
-	void ObjectUpdated(Object obj, long id) {
+	protected void ObjectUpdated(Object obj, long id) {
 		HibernateObjectId hid = new HibernateObjectId(id, obj.getClass().getName());
 		dirtyUpdatedRefs.add(hid);
 	}
@@ -205,16 +182,19 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor
 		return (Long) session.getIdentifier(obj);
 	}
 
+	private Session getSession() {
+		Session session = threadSessionMap.get(Thread.currentThread());
+
+		if (session == null)
+			throw new RuntimeException("Unable to update the version number of an object. Did you forget to call ReplicationConfigurator.install(session, cfg) after opening a session?");
+		return session;
+	}
+
 	private Uuid getUuid(Object entity) {
 		return Util.getUuid(getSession(), entity);
 	}
 
 	private void objectDeleted(PreDeleteEvent event) {
-//		System.out.println("event.getEntity() = " + event.getEntity());
-//		System.out.println("event.getId() = " + event.getId());
-//		Util.dumpTable("sfs", getSession(), "Replicated");
-//		Util.dumpTable("sfs", getSession(), "ObjectReference");
-
 		deleteReplicationComponentIdentity(event);
 		ObjectReference ref = Util.getObjectReferenceById(getSession(), event.getEntity().getClass().getName(), Util.castAsLong(event.getId()));
 		if (ref == null) return;
