@@ -3,7 +3,6 @@
 package com.db4o.replication;
 
 import com.db4o.ObjectSet;
-import com.db4o.ext.Db4oUUID;
 
 /**
  * Facade for persistence systems that provide replication support.
@@ -21,14 +20,14 @@ import com.db4o.ext.Db4oUUID;
  */
 public interface ReplicationProvider {
 	/**
-	 * Returns newly created objects and changed objects since last replication.
+	 * Returns newly created objects and changed objects since last replication with the opposite provider.
 	 *
-	 * @return newly created objects and changed objects since last replication
+	 * @return newly created objects and changed objects since last replication with the opposite provider.
 	 */
 	ObjectSet objectsChangedSinceLastReplication();
 
 	/**
-	 * Returns newly created objects and changed objects since last replication..
+	 * Returns newly created objects and changed objects since last replication with the opposite provider.
 	 *
 	 * @param clazz the type of objects interested
 	 * @return newly created objects and changed objects of the type specified in the clazz parameter since last replication

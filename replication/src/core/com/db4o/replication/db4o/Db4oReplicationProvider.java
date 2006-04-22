@@ -101,13 +101,11 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		}
 	}
 
-
 	public void syncVersionWithPeer(long version) {
 		long versionTest = getCurrentVersion();
 		_replicationRecord._version = version;
 		_replicationRecord.store(_stream);
 	}
-
 
 	public void commitReplicationTransaction(long raisedDatabaseVersion) {
 
@@ -237,13 +235,6 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		return produceReference(obj, null, null);
 	}
 
-	public boolean hasReplicationReferenceAlready(Object obj) {
-		if (_referencesByObject == null) {
-			return false;
-		}
-		return _referencesByObject.find(obj) != null;
-	}
-
 	public void visitCachedReferences(final Visitor4 visitor) {
 		if (_referencesByObject != null) {
 			_referencesByObject.traverse(new Visitor4() {
@@ -330,22 +321,6 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 		}
 
 		return reference.version() > getLastReplicationVersion();
-	}
-
-	public ObjectSet uuidsDeletedSinceLastReplication() {
-		throw new RuntimeException("TODO");
-	}
-
-	public Object getObject(Db4oUUID uuid) {
-		throw new RuntimeException("TODO");
-	}
-
-	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
-		throw new RuntimeException("TODO");
-	}
-
-	public void replicateDeletion(ReplicationReference reference) {
-		throw new RuntimeException("TODO");
 	}
 
 	public boolean supportsMultiDimensionalArrays() {

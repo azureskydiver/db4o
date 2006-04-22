@@ -14,27 +14,30 @@ import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationProvider;
 import com.db4o.replication.ReplicationSession;
 
-public class GenericReplicationSession implements ReplicationSession {
+public final class GenericReplicationSession implements ReplicationSession {
 	private final ReplicationReflector _reflector;
 
 	private final CollectionHandler _collectionHandler;
 
-	private ReplicationProviderInside _peerA;
-	private ReplicationProviderInside _peerB;
+	private ReplicationProviderInside _providerA;
+
+	private ReplicationProviderInside _providerB;
 
 	private ReplicationProvider _directionTo; //null means bidirectional replication.
 
 	private final ReplicationEventListener _listener;
+
 	private final ReplicationEventImpl _event = new ReplicationEventImpl();
-	private ObjectStateImpl _stateInA = _event._stateInProviderA;
-	private ObjectStateImpl _stateInB = _event._stateInProviderB;
+
+	private final ObjectStateImpl _stateInA = _event._stateInProviderA;
+
+	private final ObjectStateImpl _stateInB = _event._stateInProviderB;
 
 	private final Traverser _traverser;
 
 	private long _lastReplicationVersion;
 
 	private Hashtable4 _processedUuids = new Hashtable4(1000);
-
 
 	/**
 	 * key = object originated from one provider
@@ -51,99 +54,97 @@ public class GenericReplicationSession implements ReplicationSession {
 		_collectionHandler = new CollectionHandlerImpl(_reflector.reflector());
 		_traverser = new ReplicationTraverser(_reflector.reflector(), _collectionHandler);
 
-		_peerA = (ReplicationProviderInside) providerA;
-		_peerB = (ReplicationProviderInside) providerB;
+		_providerA = (ReplicationProviderInside) providerA;
+		_providerB = (ReplicationProviderInside) providerB;
 		_listener = listener;
 
-		synchronized (_peerA.getMonitor()) {
-			synchronized (_peerB.getMonitor()) {
-				_peerA.startReplicationTransaction(_peerB.getSignature());
-				_peerB.startReplicationTransaction(_peerA.getSignature());
+		synchronized (_providerA.getMonitor()) {
+			synchronized (_providerB.getMonitor()) {
+				_providerA.startReplicationTransaction(_providerB.getSignature());
+				_providerB.startReplicationTransaction(_providerA.getSignature());
 
-				if (_peerA.getLastReplicationVersion() != _peerB.getLastReplicationVersion())
+				if (_providerA.getLastReplicationVersion() != _providerB.getLastReplicationVersion())
 					throw new RuntimeException("Version numbers must be the same");
 
-				_lastReplicationVersion = _peerA.getLastReplicationVersion();
+				_lastReplicationVersion = _providerA.getLastReplicationVersion();
 			}
 		}
 	}
 
-// --------------------- Interface ReplicationSession ---------------------
-
-	public void checkConflict(Object root) {
+	public final void checkConflict(Object root) {
 		try {
 			activateGraphToBeReplicated(root);
 		} finally {
-			_peerA.clearAllReferences();
-			_peerB.clearAllReferences();
+			_providerA.clearAllReferences();
+			_providerB.clearAllReferences();
 		}
 	}
 
-	public void close() {
-		_peerA.destroy();
-		_peerB.destroy();
+	public final void close() {
+		_providerA.destroy();
+		_providerB.destroy();
 
-		_peerA = null;
-		_peerB = null;
+		_providerA = null;
+		_providerB = null;
 		_counterpartRefsByOriginal = null;
 		_processedUuids = null;
 	}
 
-	public void commit() {
-		synchronized (_peerA.getMonitor()) {
-			synchronized (_peerB.getMonitor()) {
-				long maxVersion = _peerA.getCurrentVersion() > _peerB.getCurrentVersion()
-						? _peerA.getCurrentVersion() : _peerB.getCurrentVersion();
+	public final void commit() {
+		synchronized (_providerA.getMonitor()) {
+			synchronized (_providerB.getMonitor()) {
+				long maxVersion = _providerA.getCurrentVersion() > _providerB.getCurrentVersion()
+						? _providerA.getCurrentVersion() : _providerB.getCurrentVersion();
 
-				_peerA.syncVersionWithPeer(maxVersion);
-				_peerB.syncVersionWithPeer(maxVersion);
+				_providerA.syncVersionWithPeer(maxVersion);
+				_providerB.syncVersionWithPeer(maxVersion);
 
 				maxVersion ++;
 
-				_peerA.commitReplicationTransaction(maxVersion);
-				_peerB.commitReplicationTransaction(maxVersion);
+				_providerA.commitReplicationTransaction(maxVersion);
+				_providerB.commitReplicationTransaction(maxVersion);
 			}
 		}
 	}
 
-	public ReplicationProvider providerA() {
-		return _peerA;
+	public final ReplicationProvider providerA() {
+		return _providerA;
 	}
 
-	public ReplicationProvider providerB() {
-		return _peerB;
+	public final ReplicationProvider providerB() {
+		return _providerB;
 	}
 
-	public void replicate(Object root) {
+	public final void replicate(Object root) {
 		//System.out.println("GenericReplicationSession.replicate");
 		try {
 			activateGraphToBeReplicated(root);
 
-			copyStateAcross(_peerA);
-			copyStateAcross(_peerB);
+			copyStateAcross(_providerA);
+			copyStateAcross(_providerB);
 
-			storeChangedObjectsIn(_peerA);
-			storeChangedObjectsIn(_peerB);
+			storeChangedObjectsIn(_providerA);
+			storeChangedObjectsIn(_providerB);
 		} finally {
-			_peerA.clearAllReferences();
-			_peerB.clearAllReferences();
+			_providerA.clearAllReferences();
+			_providerB.clearAllReferences();
 		}
 	}
 
-	public void replicateDeleted(Class extent) {
-
+	public final void replicateDeleted(Class extent) {
+		  //
 	}
 
-	public void rollback() {
-		_peerA.rollbackReplication();
-		_peerB.rollbackReplication();
+	public final void rollback() {
+		_providerA.rollbackReplication();
+		_providerB.rollbackReplication();
 	}
 
-	public void setDirection(ReplicationProvider replicateFrom, ReplicationProvider replicateTo) {
-		if (replicateFrom == _peerA && replicateTo == _peerB)
-			_directionTo = _peerB;
-		if (replicateFrom == _peerB && replicateTo == _peerA)
-			_directionTo = _peerA;
+	public final void setDirection(ReplicationProvider replicateFrom, ReplicationProvider replicateTo) {
+		if (replicateFrom == _providerA && replicateTo == _providerB)
+			_directionTo = _providerB;
+		if (replicateFrom == _providerB && replicateTo == _providerA)
+			_directionTo = _providerA;
 	}
 
 	private void activateGraphToBeReplicated(Object root) {
@@ -153,15 +154,15 @@ public class GenericReplicationSession implements ReplicationSession {
 	private boolean activateObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) { //TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
 		//System.out.println("obj = " + obj.getClass() + ", hashcode = " + obj.hashCode());
 
-		ReplicationReference refA = _peerA.produceReference(obj, referencingObject, fieldName);
-		ReplicationReference refB = _peerB.produceReference(obj, referencingObject, fieldName);
+		ReplicationReference refA = _providerA.produceReference(obj, referencingObject, fieldName);
+		ReplicationReference refB = _providerB.produceReference(obj, referencingObject, fieldName);
 
 		if (refA == null && refB == null)
 			throw new RuntimeException("" + obj.getClass() + " " + obj + " must be stored in one of the databases being replicated."); //FIXME: Use db4o's standard for throwing exceptions.
 		if (refA != null && refB != null)
 			throw new RuntimeException("" + obj.getClass() + " " + obj + " cannot be referenced by both databases being replicated."); //FIXME: Use db4o's standard for throwing exceptions.
 
-		ReplicationProviderInside owner = refA == null ? _peerB : _peerA;
+		ReplicationProviderInside owner = refA == null ? _providerB : _providerA;
 		ReplicationReference ownerRef = refA == null ? refB : refA;
 
 		ReplicationProviderInside other = other(owner);
@@ -197,20 +198,20 @@ public class GenericReplicationSession implements ReplicationSession {
 		Object objectA = refA.object();
 		Object objectB = refB.object();
 
-		boolean changedInA = _peerA.wasModifiedSinceLastReplication(refA);
-		boolean changedInB = _peerB.wasModifiedSinceLastReplication(refB);
+		boolean changedInA = _providerA.wasModifiedSinceLastReplication(refA);
+		boolean changedInB = _providerB.wasModifiedSinceLastReplication(refB);
 
 		if (!changedInA && !changedInB) return false;
 
 		boolean conflict = false;
 		if (changedInA && changedInB) conflict = true;
-		if (changedInA && _directionTo == _peerA) conflict = true;
-		if (changedInB && _directionTo == _peerB) conflict = true;
+		if (changedInA && _directionTo == _providerA) conflict = true;
+		if (changedInB && _directionTo == _providerB) conflict = true;
 
 		Object prevailing = obj;
 
-		_peerA.activate(objectA);
-		_peerB.activate(objectB);
+		_providerA.activate(objectA);
+		_providerB.activate(objectB);
 
 		_event.resetAction();
 		_event._isConflict = conflict;
@@ -240,7 +241,7 @@ public class GenericReplicationSession implements ReplicationSession {
 			}
 		}
 
-		ReplicationProviderInside prevailingPeer = prevailing == objectA ? _peerA : _peerB;
+		ReplicationProviderInside prevailingPeer = prevailing == objectA ? _providerA : _providerB;
 		if (_directionTo == prevailingPeer) return false;
 
 		if (!conflict)
@@ -250,7 +251,7 @@ public class GenericReplicationSession implements ReplicationSession {
 			otherRef.setCounterpart(obj);
 			otherRef.markForReplicating();
 			markAsNotProcessed(uuid);
-			_traverser.extendTraversalTo(prevailing, new ReplicationVisitor()); //Now we start traversing objects on the other peer! Is that cool or what? ;)
+			_traverser.extendTraversalTo(prevailing); //Now we start traversing objects on the other peer! Is that cool or what? ;)
 			return false;
 		}
 
@@ -333,7 +334,7 @@ public class GenericReplicationSession implements ReplicationSession {
 		return result;
 	}
 
-	public Object findCounterpart(Object value, ReplicationProviderInside sourceProvider) {
+	private Object findCounterpart(Object value, ReplicationProviderInside sourceProvider) {
 		if (value == null) return null;
 		ReflectClass claxx = _reflector.forObject(value);
 		if (claxx.isArray()) return arrayClone(value, claxx, sourceProvider);
@@ -346,7 +347,7 @@ public class GenericReplicationSession implements ReplicationSession {
 		return result;
 	}
 
-	ReplicationReference getCounterpartRef(Object original) {
+	private ReplicationReference getCounterpartRef(Object original) {
 		return (ReplicationReference) _counterpartRefsByOriginal.get(original);
 	}
 
@@ -367,10 +368,10 @@ public class GenericReplicationSession implements ReplicationSession {
 		_event._creationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.uuid().getLongPart());
 		long modificationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.version());
 
-		if (owner == _peerA) {
+		if (owner == _providerA) {
 			_stateInA.setAll(obj, false, wasModified, modificationDate);
 			_stateInB.setAll(null, false, false, -1);
-		} else { //owner == _peerB
+		} else { //owner == _providerB
 			_stateInA.setAll(null, false, false, -1);
 			_stateInB.setAll(obj, false, wasModified, modificationDate);
 		}
@@ -407,7 +408,7 @@ public class GenericReplicationSession implements ReplicationSession {
 		_event._isConflict = false;
 		_event._creationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.uuid().getLongPart());
 
-		if (owner == _peerA) {
+		if (owner == _providerA) {
 			_stateInA.setAll(obj, true, false, -1);
 			_stateInB.setAll(null, false, false, -1);
 		} else {
@@ -451,7 +452,7 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private ReplicationProviderInside other(ReplicationProviderInside peer) {
-		return peer == _peerA ? _peerB : _peerA;
+		return peer == _providerA ? _providerB : _providerA;
 	}
 
 	private void putCounterpartRef(Object obj, ReplicationReference otherRef) {
@@ -498,8 +499,8 @@ public class GenericReplicationSession implements ReplicationSession {
 		return _processedUuids.get(uuid) != null;
 	}
 
-	private class ReplicationVisitor implements Visitor {
-		public boolean visit(Object object) {
+	private final class ReplicationVisitor implements Visitor {
+		public final boolean visit(Object object) {
 			if (object instanceof TraversedField) {
 				final TraversedField traversedField = ((TraversedField) object);
 				return activateObjectToBeReplicated(traversedField.getValue(), traversedField.getReferencingObject(), traversedField.getName());
