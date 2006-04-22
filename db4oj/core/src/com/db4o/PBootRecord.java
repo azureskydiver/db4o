@@ -8,39 +8,39 @@ import com.db4o.foundation.*;
 /**
  * database boot record. Responsible for ID generation, version generation and
  * holding a reference to the Db4oDatabase object of the ObjectContainer
- * 
+ *
  * @exclude
  * @persistent
  */
 public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
 
     transient YapFile         i_stream;
-    
+
     public Db4oDatabase       i_db;
-    
+
     public long               i_versionGenerator;
-    
+
     public int                i_generateVersionNumbers;
-    
+
     public int                i_generateUUIDs;
-    
+
     private transient boolean i_dirty;
 
     public MetaIndex          i_uuidMetaIndex;
-    
+
     private transient TimeStampIdGenerator _versionTimeGenerator;
-    
-    
+
+
     public PBootRecord(){
     }
 
     public int activationDepth() {
         return Integer.MAX_VALUE;
     }
-    
+
     private void createVersionTimeGenerator(){
         if(_versionTimeGenerator == null){
-            _versionTimeGenerator = new TimeStampIdGenerator(i_versionGenerator); 
+            _versionTimeGenerator = new TimeStampIdGenerator(i_versionGenerator);
         }
     }
 
@@ -52,24 +52,24 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
     }
 
     boolean initConfig(Config4Impl a_config) {
-        
+
         boolean modified = false;
-        
+
         if(i_generateVersionNumbers != a_config.generateVersionNumbers()){
             i_generateVersionNumbers = a_config.generateVersionNumbers();
             modified = true;
         }
-        
+
         if(i_generateUUIDs != a_config.generateUUIDs()){
             i_generateUUIDs = a_config.generateUUIDs();
             modified = true;
         }
-        
+
         return modified;
     }
-    
+
     MetaIndex getUUIDMetaIndex(){
-        
+
         // TODO: This is legacy code for old database files.
         // Newer versions create i_uuidMetaIndex when PBootRecord
         // is created. Remove this code after June 2006.
@@ -81,24 +81,24 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
             i_stream.showInternalClasses(false);
             systemTrans.commit();
         }
-        
+
         return i_uuidMetaIndex;
     }
 
     long newUUID() {
         return nextVersion();
     }
-    
+
     public void raiseVersion(long a_minimumVersion) {
         if (i_versionGenerator < a_minimumVersion) {
             createVersionTimeGenerator();
-            _versionTimeGenerator.minimumNext(a_minimumVersion);
+            _versionTimeGenerator.setMinimumNext(a_minimumVersion);
             i_versionGenerator = a_minimumVersion;
             setDirty();
             store(1);
         }
     }
-    
+
     public void setDirty(){
         i_dirty = true;
     }
@@ -120,7 +120,7 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         i_versionGenerator = _versionTimeGenerator.generate();
         return i_versionGenerator;
     }
-    
+
     long currentVersion(){
         return i_versionGenerator;
     }
