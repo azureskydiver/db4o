@@ -130,6 +130,10 @@ public class GenericReplicationSession implements ReplicationSession {
 		}
 	}
 
+	public void replicateDeleted(Class extent) {
+
+	}
+
 	public void rollback() {
 		_peerA.rollbackReplication();
 		_peerB.rollbackReplication();
