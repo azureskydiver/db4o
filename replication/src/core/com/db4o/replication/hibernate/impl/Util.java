@@ -9,7 +9,6 @@ import com.db4o.replication.hibernate.metadata.ReplicationComponentIdentity;
 import com.db4o.replication.hibernate.metadata.ReplicationProviderSignature;
 import com.db4o.replication.hibernate.metadata.ReplicationRecord;
 import com.db4o.replication.hibernate.metadata.Uuid;
-import com.db4o.replication.hibernate.metadata.UuidLongPartSequence;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -29,15 +28,10 @@ import java.sql.Statement;
 import java.util.List;
 
 public final class Util {
-// ------------------------------ FIELDS ------------------------------
-
 	public static final Class[] metadataClasses = new Class[]{
 			ReplicationRecord.class, ReplicationProviderSignature.class,
 			ReplicationComponentField.class, ReplicationComponentIdentity.class,
-			UuidLongPartSequence.class, ObjectReference.class};
-
-// -------------------------- STATIC METHODS --------------------------
-
+			ObjectReference.class};
 	public static boolean isAssignableFrom(Class claxx) {
 		for (Class aClass : metadataClasses)
 			if (aClass.isAssignableFrom(claxx)) return true;
@@ -73,10 +67,6 @@ public final class Util {
 		dumpTable(p.getName(), p.getSession(), s);
 	}
 
-	public static void dumpTable(String providerName, Session sess, String tableName) {
-		dumpTable(providerName, sess.connection(), tableName);
-	}
-
 	public static void dumpTable(String providerName, Connection con, String tableName) {
 		ResultSet rs = null;
 
@@ -102,6 +92,10 @@ public final class Util {
 		} finally {
 			closeResultSet(rs);
 		}
+	}
+
+	public static void dumpTable(String providerName, Session sess, String tableName) {
+		dumpTable(providerName, sess.connection(), tableName);
 	}
 
 	private static void closePreparedStatement(PreparedStatement ps) {
@@ -160,19 +154,6 @@ public final class Util {
 
 		if (session.createCriteria(MySignature.class).list().size() < 1)
 			session.save(MySignature.generateSignature());
-
-		tx.commit();
-		session.close();
-		sf.close();
-	}
-
-	public static void initUuidLongPartSequence(Configuration cfg) {
-		SessionFactory sf = cfg.buildSessionFactory();
-		Session session = sf.openSession();
-		Transaction tx = session.beginTransaction();
-
-		if (session.createCriteria(UuidLongPartSequence.class).list().size() < 1)
-			session.save(new UuidLongPartSequence());
 
 		tx.commit();
 		session.close();

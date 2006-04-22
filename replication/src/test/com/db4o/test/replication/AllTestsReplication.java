@@ -4,8 +4,8 @@ package com.db4o.test.replication;
 
 import com.db4o.replication.hibernate.cfg.ReplicationConfiguration;
 import com.db4o.test.AllTests;
-import com.db4o.test.TestSuite;
 import com.db4o.test.Test;
+import com.db4o.test.TestSuite;
 import com.db4o.test.replication.db4o.Db4oReplicationTestUtil;
 import com.db4o.test.replication.hibernate.HibernateUtil;
 import com.db4o.test.replication.transients.TransientReplicationProvider;
@@ -31,7 +31,19 @@ public class AllTestsReplication extends AllTests {
 		transients();
 		hsql();
 		db4o();
+
+		hsqlDb4o();
+		db4oHsql();
+
 		//oracle();
+	}
+
+	private void db4oHsql() {
+		ReplicationTestCase.registerProviderPair(Db4oReplicationTestUtil.newProviderA(), HibernateUtil.newProviderB());
+	}
+
+	private void hsqlDb4o() {
+		ReplicationTestCase.registerProviderPair(HibernateUtil.newProviderA(), Db4oReplicationTestUtil.newProviderB());
 	}
 
 	private void transients() {

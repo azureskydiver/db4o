@@ -32,12 +32,7 @@ import org.hibernate.cfg.Configuration;
  * @since dRS 1.0
  */
 public class ReplicationConfigurator {
-// ------------------------------ FIELDS ------------------------------
-
 	private static ObjectLifeCycleEventsListener refAstablestListener = new ObjectLifeCycleEventsListenerImpl();
-
-// -------------------------- STATIC METHODS --------------------------
-
 	/**
 	 * Registers object update event listeners to Configuration.
 	 * If required drs tables do not exist, create them automatically.

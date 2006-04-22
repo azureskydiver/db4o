@@ -284,6 +284,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 	private void tstRollback() {
 		if (!_providerA.supportsRollback()) return;
+		if (!_providerB.supportsRollback()) return;
 
 		startReplication();
 
