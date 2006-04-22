@@ -2,7 +2,6 @@
 
 package com.db4o.test;
 
-import com.db4o.*;
 import com.db4o.test.nativequery.*;
 import com.db4o.test.replication.old.*;
 
@@ -16,9 +15,7 @@ public class AllTestsJdk1_2 extends AllTests{
     	super.addTestSuites(suites);
     	suites.add(new Jdk1_2TestSuite());
         suites.add(new ReplicationTestSuite());
-        if(Db4oVersion.MAJOR >= 5){
-            suites.add(new NativeQueryTestSuite());
-        }
+        suites.add(new NativeQueryTestSuite());
 	}
 
 }
