@@ -147,7 +147,8 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private boolean activateObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) { //TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
-		//System.out.println("obj = " + obj.hashCode());
+		//System.out.println("obj = " + obj.getClass() + ", hashcode = " + obj.hashCode());
+
 		ReplicationReference refA = _peerA.produceReference(obj, referencingObject, fieldName);
 		ReplicationReference refB = _peerB.produceReference(obj, referencingObject, fieldName);
 
@@ -162,7 +163,9 @@ public class GenericReplicationSession implements ReplicationSession {
 		ReplicationProviderInside other = other(owner);
 
 		Db4oUUID uuid = ownerRef.uuid();
+		//System.out.println("uuid = " + uuid);
 		ReplicationReference otherRef = other.produceReferenceByUUID(uuid, obj.getClass());
+		//System.out.println("otherRef = " + otherRef);
 
 		if (refA == null)
 			refA = otherRef;
@@ -174,7 +177,9 @@ public class GenericReplicationSession implements ReplicationSession {
 
 			long creationTime = ownerRef.uuid().getLongPart();
 
-			if (creationTime > _lastReplicationVersion) //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
+			boolean newObject = creationTime > _lastReplicationVersion;
+			//System.out.println("newObject = " + newObject);
+			if (newObject) //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
 				return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, true);
 			else // if it was created before the last time two ReplicationProviders were replicated it has to be treated as deleted.
 				return handleDeletionInOther(obj, ownerRef, owner, other, referencingObject, fieldName);
@@ -421,7 +426,8 @@ public class GenericReplicationSession implements ReplicationSession {
 		ownerRef.markForReplicating();
 
 		ReplicationReference otherRef = other.referenceNewObject(counterpart, ownerRef, getCounterpartRef(referencingObject), fieldName);
-		_counterpartRefsByOriginal.put(obj, otherRef);
+
+		putCounterpartRef(obj, otherRef);
 
 		// TODO: We might not need counterpart in otherRef. Check.
 		otherRef.setCounterpart(obj);
@@ -434,11 +440,20 @@ public class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private void markAsProcessed(Db4oUUID uuid) {
-		_processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
+		if (_processedUuids.get(uuid) == null)
+			_processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
+
+		//TODO else, perhaps throw exception since it should never occur
 	}
 
 	private ReplicationProviderInside other(ReplicationProviderInside peer) {
 		return peer == _peerA ? _peerB : _peerA;
+	}
+
+	private void putCounterpartRef(Object obj, ReplicationReference otherRef) {
+		if (_counterpartRefsByOriginal.get(obj) == null)
+			_counterpartRefsByOriginal.put(obj, otherRef);
+		//TODO else, perhaps throw exception since it should never occur
 	}
 
 	private void replaceWithCounterparts(Object[] objects, ReplicationProviderInside sourceProvider) {
