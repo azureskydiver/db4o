@@ -11,7 +11,7 @@ import com.db4o.test.replication.provider.ReplicationProviderTest;
 
 public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
-		return db4o();
+		return all();
 	}
 
 	public Class[] testsOne() {
