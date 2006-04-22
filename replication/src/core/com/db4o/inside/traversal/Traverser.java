@@ -15,6 +15,6 @@ public interface Traverser {
 	 * for the received object too, using the current visitor. Used to
 	 * extend the traversal to a possibly disconnected object graph.
 	 */
-	void extendTraversalTo(Object disconnected, Visitor visitor);
+	void extendTraversalTo(Object disconnected);
 
 }

@@ -115,10 +115,6 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		return _signature;
 	}
 
-	public boolean hasReplicationReferenceAlready(Object obj) {
-		return getCachedReference(obj) != null;
-	}
-
 	public ReplicationReference produceReference(Object obj, Object unused, String unused2) {
 		ReplicationReference cached = getCachedReference(obj);
 		if (cached != null) return cached;
@@ -416,8 +412,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			_delegate.traverseGraph(object, visitor);
 		}
 
-		public void extendTraversalTo(Object disconnected, Visitor visitor) {
-			_delegate.extendTraversalTo(disconnected, visitor);
+		public void extendTraversalTo(Object disconnected) {
+			_delegate.extendTraversalTo(disconnected);
 		}
 	}
 }

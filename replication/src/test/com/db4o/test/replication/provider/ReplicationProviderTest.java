@@ -274,9 +274,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Test.ensure(ref2.equals(reference));
 
 		_providerA.clearAllReferences();
-		Test.ensure(!_providerA.hasReplicationReferenceAlready(object1));
 		Db4oUUID db4oUUID = _providerA.produceReference(object1, null, null).uuid();
-		//TODO implements Db4oUUID.equals, don't use hashcode to compare
 		Test.ensure(db4oUUID.equals(uuid));
 		commitReplication();
 

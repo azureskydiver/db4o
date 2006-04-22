@@ -7,8 +7,8 @@ import com.db4o.foundation.Visitor4;
 import com.db4o.replication.ReplicationProvider;
 
 
-public interface ReplicationProviderInside extends ReplicationProvider {
-	public void activate(Object object);
+interface ReplicationProviderInside extends ReplicationProvider {
+	void activate(Object object);
 
 	/**
 	 * Activates the fields, e.g. Collections, arrays, of an object
@@ -17,12 +17,12 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	void clearAllReferences();
 
-	public void commitReplicationTransaction(long raisedDatabaseVersion);
+	void commitReplicationTransaction(long raisedDatabaseVersion);
 
 	/**
 	 * Destroys this provider and frees up resources.
 	 */
-	public void destroy();
+	void destroy();
 
 	/**
 	 * Returns the current transaction serial number.
@@ -33,20 +33,11 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 
 	long getLastReplicationVersion();
 
-	public Object getMonitor();
+	Object getMonitor();
 
 	String getName();
 
 	ReadonlyReplicationProviderSignature getSignature();
-
-	/**
-	 * Determines if this Provider has the ReplicationReference of an object
-	 *
-	 * @param obj object concerned
-	 * @return true if this provider has the ReplicationReference
-	 * @deprecated
-	 */
-	boolean hasReplicationReferenceAlready(Object obj);
 
 	/**
 	 * Returns the ReplicationReference of an object
@@ -67,10 +58,7 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	ReplicationReference produceReferenceByUUID(Db4oUUID uuid, Class hint);
 
-	public ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference referencingObjRef, String fieldName);
-
-	
-
+	ReplicationReference referenceNewObject(Object obj, ReplicationReference counterpartReference, ReplicationReference referencingObjRef, String fieldName);
 
 	/**
 	 * Rollbacks all changes done during the replication session  and terminates the Transaction.
@@ -85,7 +73,6 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	void startReplicationTransaction(ReadonlyReplicationProviderSignature peerSignature);
 
-
 	/**
 	 * Stores the new replicated state of obj. It can also be a new object to this
 	 * provider.
@@ -94,11 +81,9 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 	 */
 	void storeReplica(Object obj);
 
-
 	void syncVersionWithPeer(long maxVersion);
 
 	void updateCounterpart(Object updated);
-
 
 	/**
 	 * Visits the object of each cached ReplicationReference.

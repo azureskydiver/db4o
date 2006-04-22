@@ -116,7 +116,7 @@ public class GenericTraverser implements Traverser {
 		return result;
 	}
 
-	public void extendTraversalTo(Object disconnected, Visitor visitor) {
+	public void extendTraversalTo(Object disconnected) {
 		queueUpForTraversing(disconnected);
 	}
 }

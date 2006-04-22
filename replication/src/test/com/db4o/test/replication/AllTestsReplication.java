@@ -28,9 +28,9 @@ public class AllTestsReplication extends AllTests {
 	}
 
 	private void registerProviderPairs() {
-		//hsql();
-		//db4o();
 		transients();
+		hsql();
+		db4o();
 		//oracle();
 	}
 

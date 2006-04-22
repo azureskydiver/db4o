@@ -286,12 +286,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return Util.genMySignature(getSession());
 	}
 
-	public final boolean hasReplicationReferenceAlready(Object obj) {
-		ensureReplicationActive();
-
-		return _objRefs.get(obj) != null;
-	}
-
 	public final ReplicationReference produceReference(Object obj, Object referencingObj, String fieldName) {
 		ensureReplicationActive();
 

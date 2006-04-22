@@ -14,61 +14,37 @@ public class ReplicationTestSuite extends TestSuite {
 		return all();
 	}
 
-	public Class[] testsOne() {
-		return new Class[]{
-				ReplicationFeaturesMain.class,
-		};
-	}
-
-	private static Class[] all() {
+	private Class[] all() {
 		return new Class[]{
 				ReplicationEventTest.class,
 				ReplicationConfiguratorTest.class,
 				ReplicationProviderTest.class,
 
-				ArrayReplicationTest.class,
 				ListTest.class,
 				MapTest.class,
-				MixedTypesCollectionReplicationTest.class,
+				ReplicationAfterDeletionTest.class,
+				ReplicationFeaturesMain.class,
+				SimpleArrayTest.class,
+				SimpleParentChild.class,
+				SingleTypeCollectionReplicationTest.class,
+
+				//General
+				CollectionHandlerImplTest.class,
+				ReplicationTraversalTest.class,
+				TablesCreatorTest.class,
+				GetByUUID.class,
+				DatabaseUnicityTest.class,
+
+				//db4o won't pass these
 				R0to4Runner.class,
-				ReplicationAfterDeletionTest.class,
-				ReplicationFeaturesMain.class,
-				SimpleArrayTest.class,
-				SimpleParentChild.class,
-				SingleTypeCollectionReplicationTest.class,
-
-				//General
-				CollectionHandlerImplTest.class,
-				ReplicationTraversalTest.class,
-				TablesCreatorTest.class,
-				GetByUUID.class,
-				DatabaseUnicityTest.class,
+				ArrayReplicationTest.class,
+				MixedTypesCollectionReplicationTest.class,
 		};
 	}
 
-	public Class[] db4o() {
+	private Class[] testsOne() {
 		return new Class[]{
-				ReplicationEventTest.class,
-				ReplicationConfiguratorTest.class,
-				ReplicationProviderTest.class,
-
-				//TODO StackOverflowError when running with db4o ArrayReplicationTest.class,
-				ListTest.class,
-				MapTest.class,
-				//TODO StackOverflowError when running with db4o MixedTypesCollectionReplicationTest.class,
-				//TODO StackOverflowError when running with db4o R0to4Runner.class,
-				ReplicationAfterDeletionTest.class,
 				ReplicationFeaturesMain.class,
-				SimpleArrayTest.class,
-				SimpleParentChild.class,
-				SingleTypeCollectionReplicationTest.class,
-
-				//General
-				CollectionHandlerImplTest.class,
-				ReplicationTraversalTest.class,
-				TablesCreatorTest.class,
-				GetByUUID.class,
-				DatabaseUnicityTest.class,
 		};
 	}
 }
