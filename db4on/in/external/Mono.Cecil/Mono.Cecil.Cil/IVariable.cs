@@ -37,6 +37,6 @@ namespace Mono.Cecil.Cil {
 	}
 
 	public interface IVariableDefinition : IVariableReference {
-		TypeReference VariableType { get; set; }
+		TypeReference Variable { get; set; }
 	}
 }

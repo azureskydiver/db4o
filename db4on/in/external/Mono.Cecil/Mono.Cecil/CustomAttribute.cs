@@ -58,37 +58,21 @@ namespace Mono.Cecil {
 
 		public IDictionary Fields {
 			get {
-				if (m_fields == null)
+				if (m_fields == null) {
 					m_fields = new Hashtable ();
-
+					m_fieldTypes = new Hashtable ();
+				}
 				return m_fields;
 			}
 		}
 
 		public IDictionary Properties {
 			get {
-				if (m_properties == null)
+				if (m_properties == null) {
 					m_properties = new Hashtable ();
-
-				return m_properties;
-			}
-		}
-
-		internal IDictionary FieldTypes {
-			get {
-				if (m_fieldTypes == null)
-					m_fieldTypes = new Hashtable ();
-
-				return m_fieldTypes;
-			}
-		}
-
-		internal IDictionary PropertyTypes {
-			get {
-				if (m_propTypes == null)
 					m_propTypes = new Hashtable ();
-
-				return m_propTypes;
+				}
+				return m_properties;
 			}
 		}
 
@@ -110,22 +94,22 @@ namespace Mono.Cecil {
 
 		public TypeReference GetFieldType (string fieldName)
 		{
-			return (TypeReference) this.FieldTypes [fieldName];
+			return (TypeReference) m_fieldTypes [fieldName];
 		}
 
 		public TypeReference GetPropertyType (string propertyName)
 		{
-			return (TypeReference) this.PropertyTypes [propertyName];
+			return (TypeReference) m_propTypes [propertyName];
 		}
 
 		public void SetFieldType (string fieldName, ITypeReference type)
 		{
-			this.FieldTypes [fieldName] = type;
+			m_fieldTypes [fieldName] = type;
 		}
 
 		public void SetPropertyType (string propertyName, ITypeReference type)
 		{
-			this.PropertyTypes [propertyName] = type;
+			m_propTypes [propertyName] = type;
 		}
 
 		object ICloneable.Clone ()
@@ -136,12 +120,6 @@ namespace Mono.Cecil {
 		public CustomAttribute Clone ()
 		{
 			return Clone (this, new ImportContext ());
-		}
-
-		static void Clone (IDictionary original, IDictionary target)
-		{
-			foreach (DictionaryEntry entry in original)
-				target.Add (entry.Key, entry.Value);
 		}
 
 		internal static CustomAttribute Clone (CustomAttribute custattr, ImportContext context)
@@ -155,10 +133,10 @@ namespace Mono.Cecil {
 
 			foreach (object o in custattr.ConstructorParameters)
 				ca.ConstructorParameters.Add (o);
-			Clone (custattr.Fields, ca.Fields);
-			Clone (custattr.FieldTypes, ca.FieldTypes);
-			Clone (custattr.Properties, ca.Properties);
-			Clone (custattr.PropertyTypes, ca.PropertyTypes);
+			foreach (DictionaryEntry de in custattr.Fields)
+				ca.Fields.Add (de.Key, de.Value);
+			foreach (DictionaryEntry de in custattr.Properties)
+				ca.Properties.Add (de.Key, de.Value);
 			return ca;
 		}
 

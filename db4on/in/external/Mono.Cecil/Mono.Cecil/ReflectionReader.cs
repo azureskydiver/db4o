@@ -62,7 +62,7 @@ namespace Mono.Cecil {
 		protected GenericInstanceMethod [] m_methodSpecs;
 
 		bool m_isCorlib;
-		AssemblyNameReference m_corlib;
+		IAssemblyNameReference m_corlib;
 
 		protected SignatureReader m_sigReader;
 		protected CodeReader m_codeReader;
@@ -289,7 +289,7 @@ namespace Mono.Cecil {
 			TypeReference coreType =  m_module.TypeReferences [fullName] as TypeReference;
 			if (coreType == null) {
 				if (m_corlib == null) {
-					foreach (AssemblyNameReference ar in m_module.AssemblyReferences) {
+					foreach (IAssemblyNameReference ar in m_module.AssemblyReferences) {
 						if (ar.Name == Constants.Corlib) {
 							m_corlib = ar;
 							break;
@@ -397,8 +397,39 @@ namespace Mono.Cecil {
 
 				m_typeRefs = new TypeReference [typesRef.Rows.Count];
 
-				for (int i = 0; i < typesRef.Rows.Count; i++)
-					AddTypeRef (typesRef, i);
+				for (int i = 0; i < typesRef.Rows.Count; i++) {
+					TypeRefRow type = typesRef [i];
+					IMetadataScope scope = null;
+					TypeReference parent = null;
+					switch (type.ResolutionScope.TokenType) {
+					case TokenType.AssemblyRef :
+						scope = m_module.AssemblyReferences [(int) type.ResolutionScope.RID - 1];
+						break;
+					case TokenType.ModuleRef :
+						scope = m_module.ModuleReferences [(int) type.ResolutionScope.RID - 1];
+						break;
+					case TokenType.Module :
+						scope = m_module.Assembly.Modules [(int) type.ResolutionScope.RID - 1];
+						break;
+					case TokenType.TypeRef :
+						parent = GetTypeRefAt (type.ResolutionScope.RID);
+						scope = parent.Scope;
+						break;
+					}
+
+					TypeReference t = new TypeReference (
+						m_root.Streams.StringsHeap [type.Name],
+						m_root.Streams.StringsHeap [type.Namespace],
+						scope);
+					t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeRef, i);
+
+					if (parent != null)
+						t.DeclaringType = parent;
+
+					m_typeRefs [i] = t;
+					m_module.TypeReferences.Add (t);
+				}
+
 			} else
 				m_typeRefs = new TypeReference [0];
 
@@ -418,45 +449,6 @@ namespace Mono.Cecil {
 			CompleteMethods ();
 			ReadAllFields ();
 			ReadMemberReferences ();
-		}
-
-		void AddTypeRef (TypeRefTable typesRef, int i)
-		{
-			// Check if index has been already added.
-			if (m_typeRefs [i] != null)
-				return;
-
-			TypeRefRow type = typesRef [i];
-			IMetadataScope scope = null;
-			TypeReference parent = null;
-			switch (type.ResolutionScope.TokenType) {
-			case TokenType.AssemblyRef :
-				scope = m_module.AssemblyReferences [(int) type.ResolutionScope.RID - 1];
-				break;
-			case TokenType.ModuleRef :
-				scope = m_module.ModuleReferences [(int) type.ResolutionScope.RID - 1];
-				break;
-			case TokenType.Module :
-				scope = m_module.Assembly.Modules [(int) type.ResolutionScope.RID - 1];
-				break;
-			case TokenType.TypeRef :
-				AddTypeRef (typesRef, (int) type.ResolutionScope.RID - 1);
-				parent = GetTypeRefAt (type.ResolutionScope.RID);
-				scope = parent.Scope;
-				break;
-			}
-
-			TypeReference t = new TypeReference (
-				m_root.Streams.StringsHeap [type.Name],
-				m_root.Streams.StringsHeap [type.Namespace],
-				scope);
-			t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeRef, i);
-
-			if (parent != null)
-				t.DeclaringType = parent;
-
-			m_typeRefs [i] = t;
-			m_module.TypeReferences.Add (t);
 		}
 
 		void ReadTypeSpecs ()
@@ -497,7 +489,6 @@ namespace Mono.Cecil {
 				GenericParameter gp = new GenericParameter ((int) gpRow.Number, owner);
 				gp.Attributes = gpRow.Flags;
 				gp.Name = MetadataRoot.Streams.StringsHeap [gpRow.Name];
-				gp.MetadataToken = MetadataToken.FromMetadataRow (TokenType.GenericParam, i);
 
 				owner.GenericParameters.Add (gp);
 				m_genericParameters [i] = gp;
@@ -709,7 +700,7 @@ namespace Mono.Cecil {
 				if (etRow.Implementation.TokenType != TokenType.ExportedType)
 					continue;
 
-				TypeReference owner = buffer [etRow.Implementation.RID - 1];
+				ITypeReference owner = buffer [etRow.Implementation.RID - 1];
 				string name = m_root.Streams.StringsHeap [etRow.TypeName];
 				buffer [i] = m_module.TypeReferences [string.Concat (owner.FullName, '/', name)];
 			}
@@ -835,7 +826,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public TypeReference GetModifierType (CustomMod [] cmods, TypeReference type)
+		protected TypeReference GetModifierType (CustomMod [] cmods, TypeReference type)
 		{
 			TypeReference ret = type;
 			for (int i = cmods.Length - 1; i >= 0; i--) {
@@ -1025,10 +1016,10 @@ namespace Mono.Cecil {
 
 		protected void SetInitialValue (FieldDefinition field)
 		{
-			if (field.RVA != RVA.Zero && field.FieldType is TypeDefinition) {
+			if (field.RVA != RVA.Zero && field.FieldType is ITypeDefinition) {
 				BinaryReader br = this.Module.ImageReader.MetadataReader.GetDataReader (field.RVA);
 				field.InitialValue = br.ReadBytes (
-					(int) (field.FieldType as TypeDefinition).ClassSize);
+					(int) (field.FieldType as ITypeDefinition).LayoutInfo.ClassSize);
 			} else
 				field.InitialValue = new byte [0];
 		}

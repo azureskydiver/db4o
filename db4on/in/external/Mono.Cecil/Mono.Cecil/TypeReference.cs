@@ -28,22 +28,31 @@
 
 namespace Mono.Cecil {
 
-	public class TypeReference : MemberReference, ITypeReference {
+	using System;
+	using System.Reflection;
 
+	using Mono.Cecil.Metadata;
+
+	public class TypeReference : ITypeReference {
+
+		string m_name;
 		string m_namespace;
 		bool m_fullNameDiscarded;
 		string m_fullName;
 		protected bool m_isValueType;
+		TypeReference m_decType;
 		protected IMetadataScope m_scope;
-		protected ModuleDefinition m_module;
+		MetadataToken m_token;
 
 		CustomAttributeCollection m_customAttrs;
 		GenericParameterCollection m_genparams;
 
-		public override string Name {
-			get { return base.Name; }
+		protected ModuleDefinition m_module;
+
+		public virtual string Name {
+			get { return m_name; }
 			set {
-				base.Name = value;
+				m_name = value;
 				m_fullNameDiscarded = true;
 			}
 		}
@@ -56,6 +65,14 @@ namespace Mono.Cecil {
 			}
 		}
 
+		public virtual TypeReference DeclaringType {
+			get { return m_decType; }
+			set {
+				m_decType = value;
+				m_fullNameDiscarded = true;
+			}
+		}
+
 		public virtual bool IsValueType {
 			get { return m_isValueType; }
 			set { m_isValueType = value; }
@@ -64,6 +81,11 @@ namespace Mono.Cecil {
 		public ModuleDefinition Module {
 			get { return m_module; }
 			set { m_module = value; }
+		}
+
+		public MetadataToken MetadataToken {
+			get { return m_token; }
+			set { m_token = value; }
 		}
 
 		public CustomAttributeCollection CustomAttributes {
@@ -85,8 +107,8 @@ namespace Mono.Cecil {
 
 		public virtual IMetadataScope Scope {
 			get {
-				if (this.DeclaringType != null)
-					return this.DeclaringType.Scope;
+				if (m_decType != null)
+					return m_decType.Scope;
 
 				return m_scope;
 			}
@@ -97,20 +119,21 @@ namespace Mono.Cecil {
 				if (m_fullName != null && !m_fullNameDiscarded)
 					return m_fullName;
 
-				if (this.DeclaringType != null)
-					return string.Concat (this.DeclaringType.FullName, "/", this.Name);
+				if (m_decType != null)
+					return string.Concat (m_decType.FullName, "/", m_name);
 
 				if (m_namespace == null || m_namespace.Length == 0)
-					return this.Name;
+					return m_name;
 
-				m_fullName = string.Concat (m_namespace, ".", this.Name);
+				m_fullName = string.Concat (m_namespace, ".", m_name);
 				m_fullNameDiscarded = false;
 				return m_fullName;
 			}
 		}
 
-		protected TypeReference (string name, string ns) : base (name)
+		protected TypeReference (string name, string ns)
 		{
+			m_name = name;
 			m_namespace = ns;
 			m_fullNameDiscarded = false;
 		}

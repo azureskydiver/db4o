@@ -47,13 +47,6 @@ namespace Mono.Cecil {
 				if (a == null || b == null)
 					throw new ReflectionException ("TypeDefComparer can only compare TypeDefinition");
 
-				if (a.FullName == Constants.ModuleType && b.FullName == Constants.ModuleType)
-					return 0;
-				else if (a.FullName == Constants.ModuleType)
-					return -1;
-				else if (b.FullName == Constants.ModuleType)
-					return 1;
-
 				return Comparer.Default.Compare (a.FullName, b.FullName);
 			}
 		}
@@ -118,11 +111,11 @@ namespace Mono.Cecil {
 				InterfaceImplRow b = y as InterfaceImplRow;
 
 				int klass = Comparer.Default.Compare (a.Class, b.Class);
-
-				if (klass == 0)
+				if (klass == 0) {
 					return Comparer.Default.Compare (
 						Utilities.CompressMetadataToken (CodedIndex.TypeDefOrRef, a.Interface),
 						Utilities.CompressMetadataToken (CodedIndex.TypeDefOrRef, b.Interface));
+				}
 
 				return klass;
 			}
@@ -262,14 +255,21 @@ namespace Mono.Cecil {
 				GenericParameter a = x as GenericParameter;
 				GenericParameter b = y as GenericParameter;
 
-				int token = Comparer.Default.Compare (
-					Utilities.CompressMetadataToken (CodedIndex.TypeOrMethodDef, a.Owner.MetadataToken),
-					Utilities.CompressMetadataToken (CodedIndex.TypeOrMethodDef, b.Owner.MetadataToken));
+				uint ta = Utilities.CompressMetadataToken (CodedIndex.TypeOrMethodDef, a.Owner.MetadataToken);
+				uint tb = Utilities.CompressMetadataToken (CodedIndex.TypeOrMethodDef, b.Owner.MetadataToken);
 
-				if (token == 0)
-					return Comparer.Default.Compare (a.Position, b.Position);
-
-				return token;
+				if (ta < tb)
+					return -1;
+				else if (ta > tb)
+					return 1;
+				else {
+					if (a.Position < b.Position)
+						return -1;
+					else if (a.Position > b.Position)
+						return 1;
+					else
+						return 0;
+				}
 			}
 		}
 	}

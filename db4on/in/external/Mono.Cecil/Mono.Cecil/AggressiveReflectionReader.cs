@@ -307,7 +307,7 @@ namespace Mono.Cecil {
 				} else
 					cattr = BuildCustomAttribute (ctor, ca);
 
-				CustomAttributeCollection owner = null;
+				ICustomAttributeCollection owner = null;
 				switch (caRow.Parent.TokenType) {
 				case TokenType.Assembly :
 					owner = this.Module.Assembly.CustomAttributes;
@@ -335,9 +335,6 @@ namespace Mono.Cecil {
 					break;
 				case TokenType.Param :
 					owner = GetParamDefAt (caRow.Parent.RID).CustomAttributes;
-					break;
-				case TokenType.GenericParam :
-					owner = GetGenericParameterAt (caRow.Parent.RID).CustomAttributes;
 					break;
 				default :
 					//TODO: support other ?

@@ -35,10 +35,11 @@ namespace Mono.Cecil {
 		TypeReference FieldType { get; set; }
 	}
 
-	public interface IFieldDefinition : IMemberDefinition, IFieldReference, IFieldLayoutInfo,
+	public interface IFieldDefinition : IMemberDefinition, IFieldReference,
 		ICustomAttributeProvider, IHasMarshalSpec, IHasConstant, IReflectionVisitable {
 
 		FieldAttributes Attributes { get; set; }
+		IFieldLayoutInfo LayoutInfo { get; }
 
 		RVA RVA { get; set; }
 		byte [] InitialValue { get; set; }
