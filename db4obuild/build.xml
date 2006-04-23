@@ -42,6 +42,13 @@
 			<path path="${path.classpath.full}" />
 		</classpath>
 	</taskdef>
+	
+	<taskdef name="updateAssemblyHintPath" classname="com.db4o.devtools.ant.UpdateAssemblyHintPath">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
 
 	<taskdef name="versioninfo" classname="com.db4o.devtools.ant.VersionInfoAntTask" classpath="${dir.build.lib}/exttools.jar">
 		<classpath>
@@ -1332,6 +1339,19 @@
 				<include name="CFNativeQueriesEnabler.Example/**/*.sln" />
 			</fileset>
 		</copy>
+		
+		<updateAssemblyHintPath to="../../../dll/net/db4o.dll">
+			<projectFiles dir="${dir.dist.net.instrumentation}/src/instrumentation">
+				<include name="**/*.csproj" />
+				<exclude name="**/*.Example.csproj" />
+			</projectFiles>
+		</updateAssemblyHintPath>
+		
+		<updateAssemblyHintPath to="../../../dll/compact/db4o.dll">
+			<projectFiles dir="${dir.dist.net.instrumentation}/src/instrumentation">
+				<include name="**/*.Example.csproj" />
+			</projectFiles>
+		</updateAssemblyHintPath>
 	</target>
 	
 	<target name="pascalcase" depends="sharpen-pascalcase">

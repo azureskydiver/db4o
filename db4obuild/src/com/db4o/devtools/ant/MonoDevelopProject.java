@@ -11,7 +11,7 @@ public class MonoDevelopProject extends CSharpProject {
 	}
 
 	@Override
-	protected Element getFilesContainerElement() throws Exception {
+	protected Element resetFilesContainerElement() throws Exception {
 		Element contents = selectElement("/Project/Contents");
 		if (null == contents) invalidProjectFile();
 		return contents;
