@@ -33,7 +33,7 @@ namespace Mono.Cecil.Cil {
 		string m_name;
 		int m_index;
 		MethodDefinition m_method;
-		TypeReference m_variableType;
+		TypeReference m_variable;
 
 		public string Name {
 			get { return m_name; }
@@ -50,14 +50,14 @@ namespace Mono.Cecil.Cil {
 			set { m_method = value; }
 		}
 
-		public TypeReference VariableType {
-			get { return m_variableType; }
-			set { m_variableType = value; }
+		public TypeReference Variable {
+			get { return m_variable; }
+			set { m_variable = value; }
 		}
 
-		public VariableDefinition (TypeReference variableType)
+		public VariableDefinition (TypeReference variable)
 		{
-			m_variableType = variableType;
+			m_variable = variable;
 		}
 
 		public VariableDefinition (string name, int index, MethodDefinition method, TypeReference variable) :

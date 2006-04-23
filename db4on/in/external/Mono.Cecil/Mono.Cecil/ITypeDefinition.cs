@@ -30,10 +30,11 @@ namespace Mono.Cecil {
 
 	using System;
 
-	public interface ITypeDefinition : ITypeReference, IMemberDefinition, IHasSecurity, IClassLayoutInfo {
+	public interface ITypeDefinition : ITypeReference, IMemberDefinition, IHasSecurity {
 
 		TypeAttributes Attributes { get; set; }
 		TypeReference BaseType { get; set; }
+		IClassLayoutInfo LayoutInfo { get; }
 
 		bool IsAbstract { get; set; }
 		bool IsBeforeFieldInit { get; set; }

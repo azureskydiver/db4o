@@ -171,7 +171,6 @@ namespace Mono.Cecil.Signatures {
 
 		void Write (LocalVarSig.LocalVariable var)
 		{
-			Write (var.CustomMods);
 			if ((var.Constraint & Constraint.Pinned) != 0)
 				Write (ElementType.Pinned);
 			if (var.ByRef)
@@ -403,13 +402,6 @@ namespace Mono.Cecil.Signatures {
 
 		void Write (CustomAttrib.Elem elem, MemoryBinaryWriter writer) // TODO
 		{
-			if (elem.String)
-				elem.FieldOrPropType = ElementType.String;
-			else if (elem.Type)
-				elem.FieldOrPropType = ElementType.Type;
-			else if (elem.BoxedValueType)
-				Write (elem.FieldOrPropType);
-
 			switch (elem.FieldOrPropType) {
 			case ElementType.Boolean :
 				writer.Write ((byte) ((bool) elem.Value ? 1 : 0));
@@ -448,24 +440,15 @@ namespace Mono.Cecil.Signatures {
 				writer.Write ((long) elem.Value);
 				break;
 			case ElementType.String :
-				string s = elem.Value as string;
-				if (s == null)
-					writer.Write ((byte) 0xff);
-				else if (s.Length == 0)
-					writer.Write ((byte) 0x00);
-				else
-					Write (s);
-				break;
 			case ElementType.Type :
-				string t = elem.Value as string;
-				if (t == null || t.Length == 0)
-					throw new NotSupportedException ("Null types not allowed in custom attributes");
-				Write (t);
-				break;
-			case ElementType.Object :
-				if (elem.Value != null)
-					throw new NotSupportedException ("Unknown state");
-				writer.Write ((byte) 0xff);
+				if (elem.Value == null) {
+					writer.Write ((byte) 0xff);
+					return;
+				}
+				string s = (string) elem.Value;
+				byte [] data = Encoding.UTF8.GetBytes (s);
+				Utilities.WriteCompressedInteger (writer, data.Length);
+				writer.Write (data);
 				break;
 			default :
 				throw new NotImplementedException ("WriteElem " + elem.FieldOrPropType.ToString ());
