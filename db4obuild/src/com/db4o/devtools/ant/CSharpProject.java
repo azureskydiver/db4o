@@ -3,6 +3,7 @@ package com.db4o.devtools.ant;
 import java.io.File;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
@@ -10,6 +11,7 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
@@ -46,10 +48,12 @@ public abstract class CSharpProject {
 	
 	protected CSharpProject(Document document) throws Exception {
 		_document = document;
-		_files = getFilesContainerElement();
 	}
 
-	public void addFile(String file) {
+	public void addFile(String file) throws Exception {
+		if (null == _files) {
+			_files = resetFilesContainerElement();
+		}
 		String relativePath = prepareFileNameForNode(file);
 		_files.appendChild(createFileNode(relativePath));
 	}
@@ -58,7 +62,7 @@ public abstract class CSharpProject {
 		return file.replace('/', '\\');
 	}
 
-	public void addFiles(String[] files) {
+	public void addFiles(String[] files) throws Exception {
 		for (int i=0; i<files.length; ++i) {
 			String file = files[i];
 			addFile(file);
@@ -70,12 +74,20 @@ public abstract class CSharpProject {
 		serializer.writeToURI(_document, uri);
 	}
 	
-	protected abstract Element getFilesContainerElement() throws Exception;
+	protected abstract Element resetFilesContainerElement() throws Exception;
 
 	protected abstract Node createFileNode(String file);
 
 	protected Element selectElement(String xpath) throws XPathExpressionException {
-		return (Element)XPathFactory.newInstance().newXPath().evaluate(xpath, _document, XPathConstants.NODE);
+		return (Element)newXPath().evaluate(xpath, _document, XPathConstants.NODE);
+	}
+	
+	protected NodeList selectNodes(String xpath) throws XPathExpressionException {
+		return (NodeList)newXPath().evaluate(xpath, _document, XPathConstants.NODESET);
+	}
+
+	private XPath newXPath() {
+		return XPathFactory.newInstance().newXPath();
 	}
 	
 	protected Element createElement(String tagName) {
@@ -84,6 +96,14 @@ public abstract class CSharpProject {
 
 	protected void invalidProjectFile() {
 		throw new RuntimeException("Invalid project file");
+	}
+
+	public String getHintPathFor(String assemblyName) throws Exception {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setHintPathFor(String assemblyName, String hintPath) throws Exception {
+		throw new UnsupportedOperationException();
 	}
 
 }

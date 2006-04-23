@@ -11,7 +11,7 @@ public class CSharp2003Project extends CSharpProject {
 		super(document);
 	}
 
-	protected Element getFilesContainerElement() throws Exception {
+	protected Element resetFilesContainerElement() throws Exception {
 		Element files = selectElement(getXPathExpression());
 		if (null == files) {
 			invalidProjectFile();
