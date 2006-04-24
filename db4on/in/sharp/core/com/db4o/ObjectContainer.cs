@@ -329,9 +329,61 @@ namespace com.db4o
 		/// </returns>
 		com.db4o.ObjectSet query(com.db4o.query.Predicate predicate);
 
+		/// <summary>Native Query Interface.</summary>
+		/// <remarks>
+		/// Native Query Interface. Queries as with
+		/// <see cref="M:com.db4o.ObjectContainer.query(com.db4o.query.Predicate)">com.db4o.ObjectContainer.query(Predicate)</see>
+		/// ,
+		/// but will sort the resulting
+		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
+		/// according to the given
+		/// <see cref="com.db4o.query.QueryComparator">com.db4o.query.QueryComparator</see>
+		/// .
+		/// </remarks>
+		/// <param name="predicate">
+		/// the
+		/// <see cref="com.db4o.query.Predicate">com.db4o.query.Predicate</see>
+		/// containing the native query expression.
+		/// </param>
+		/// <param name="comparator">
+		/// the
+		/// <see cref="com.db4o.query.QueryComparator">com.db4o.query.QueryComparator</see>
+		/// specifiying the sort order of the result
+		/// </param>
+		/// <returns>
+		/// the
+		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
+		/// returned by the query.
+		/// </returns>
 		com.db4o.ObjectSet query(com.db4o.query.Predicate predicate, com.db4o.query.QueryComparator
 			 comparator);
 
+		/// <summary>Native Query Interface.</summary>
+		/// <remarks>
+		/// Native Query Interface. Queries as with
+		/// <see cref="M:com.db4o.ObjectContainer.query(com.db4o.query.Predicate)">com.db4o.ObjectContainer.query(Predicate)</see>
+		/// ,
+		/// but will sort the resulting
+		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
+		/// according to the given
+		/// <see cref="System.Collections.IComparer">System.Collections.IComparer</see>
+		/// .
+		/// </remarks>
+		/// <param name="predicate">
+		/// the
+		/// <see cref="com.db4o.query.Predicate">com.db4o.query.Predicate</see>
+		/// containing the native query expression.
+		/// </param>
+		/// <param name="comparator">
+		/// the
+		/// <see cref="System.Collections.IComparer">System.Collections.IComparer</see>
+		/// specifiying the sort order of the result
+		/// </param>
+		/// <returns>
+		/// the
+		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
+		/// returned by the query.
+		/// </returns>
         com.db4o.ObjectSet query(com.db4o.query.Predicate predicate, System.Collections.IComparer comparer);
 
 		/// <summary>rolls back the running transaction.</summary>
@@ -480,8 +532,60 @@ namespace com.db4o
         /// </returns>
         System.Collections.Generic.IList<Extent> query<Extent>(System.Predicate<Extent> match);
         
+		/// <summary>Native Query Interface.</summary>
+		/// <remarks>
+		/// Native Query Interface. Queries as with
+		/// <see cref="M:com.db4o.ObjectContainer.query(com.db4o.query.Predicate)">com.db4o.ObjectContainer.query(Predicate)</see>
+		/// ,
+		/// but will sort the resulting
+		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
+		/// according to the given
+		/// <see cref="System.Collections.Generic.IComparer">System.Collections.Generic.IComparer</see>
+		/// .
+		/// </remarks>
+		/// <param name="predicate">
+		/// the
+		/// <see cref="com.db4o.query.Predicate">com.db4o.query.Predicate</see>
+		/// containing the native query expression.
+		/// </param>
+		/// <param name="comparator">
+		/// the
+		/// <see cref="System.Collections.Generic.IComparer">System.Collections.Generic.IComparer</see>
+		/// specifiying the sort order of the result
+		/// </param>
+		/// <returns>
+		/// the
+		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
+		/// returned by the query.
+		/// </returns>
         System.Collections.Generic.IList<Extent> query<Extent>(System.Predicate<Extent> match, System.Collections.Generic.IComparer<Extent> comparer);
 
+		/// <summary>Native Query Interface.</summary>
+		/// <remarks>
+		/// Native Query Interface. Queries as with
+		/// <see cref="M:com.db4o.ObjectContainer.query(com.db4o.query.Predicate)">com.db4o.ObjectContainer.query(Predicate)</see>
+		/// ,
+		/// but will sort the resulting
+		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
+		/// according to the given
+		/// <see cref="System.Comparison">System.Comparison</see>
+		/// .
+		/// </remarks>
+		/// <param name="predicate">
+		/// the
+		/// <see cref="com.db4o.query.Predicate">com.db4o.query.Predicate</see>
+		/// containing the native query expression.
+		/// </param>
+		/// <param name="comparator">
+		/// the
+		/// <see cref="System.Comparison">System.Comparison</see>
+		/// specifiying the sort order of the result
+		/// </param>
+		/// <returns>
+		/// the
+		/// <see cref="com.db4o.ObjectSet">com.db4o.ObjectSet</see>
+		/// returned by the query.
+		/// </returns>
         System.Collections.Generic.IList<Extent> query<Extent>(System.Predicate<Extent> match, System.Comparison<Extent> comparison);
         
 
