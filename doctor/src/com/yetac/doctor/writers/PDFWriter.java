@@ -238,7 +238,7 @@ public class PDFWriter extends AbstractWriter {
     }
     
     private String convert(String str){
-    	return str.replace(String.valueOf(TAB), PDF_TAB);
+    	return str.replaceAll(String.valueOf(TAB), PDF_TAB);
     }
 
     public void write(String str) {
