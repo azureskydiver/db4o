@@ -73,6 +73,12 @@ namespace com.db4o.test.aliases
 	
 		public void testAccessingJavaFromDotnet()
 		{
+			if (!File.Exists(db4ojarPath()))
+			{
+				Console.WriteLine("{0} not found, skipping java compatibility test.", db4ojarPath());
+				return;
+			}
+			
 			generateJavaData();
 			using (ObjectContainer container = openJavaDataFile())
 			{
@@ -168,7 +174,9 @@ public class Program {
 
 		private string machinePropertiesPath()
 		{
-			return workspacePath("db4obuild/machine.properties");
+			string path = workspacePath("db4obuild/machine.properties");
+			Tester.ensure(path, File.Exists(path));
+			return path;
 		}
 
 		private String exec(String program, params String[] arguments)
@@ -196,9 +204,7 @@ public class Program {
 
 		private string workspacePath(string fname)
 		{
-			string path = Path.Combine(findParentDirectory("db4obuild"), fname);
-			Tester.ensure(path, File.Exists(path));
-			return path;
+			return Path.Combine(findParentDirectory("db4obuild"), fname);
 		}
 
 		private string findParentDirectory(string path)
