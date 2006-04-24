@@ -70,9 +70,9 @@ class ByteBuffer4 {
             Integer ret = (Integer)i_lock.run(new Closure4() {
                 public Object run() throws Exception {
                     waitForAvailable();
-                    int ret = i_cache[i_readOffset++];
+                    int retVal = i_cache[i_readOffset++];
                     checkDiscardCache();
-                    return new Integer(ret);
+                    return new Integer(retVal);
                 }
             
             });
