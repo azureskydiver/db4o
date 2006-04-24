@@ -315,9 +315,11 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 
 	public class MySignature implements ReadonlyReplicationProviderSignature {
 		private final byte[] _bytes;
+		private long creatimeTime;
 
 		public MySignature(byte[] signature) {
 			_bytes = signature;
+			creatimeTime = System.currentTimeMillis();
 		}
 
 		public long getId() {
@@ -329,7 +331,7 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 		}
 
 		public long getCreationTime() {
-			throw new RuntimeException("Never used?");
+			return creatimeTime;
 		}
 	}
 

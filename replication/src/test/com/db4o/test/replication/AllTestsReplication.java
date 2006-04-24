@@ -32,6 +32,7 @@ public class AllTestsReplication extends AllTests {
 		hsql();
 		db4o();
 
+		transientdb4o();
 		hsqlDb4o();
 		db4oHsql();
 
@@ -48,6 +49,10 @@ public class AllTestsReplication extends AllTests {
 
 	private void transients() {
 		ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65}, "Transient A"), new TransientReplicationProvider(new byte[]{66}, "Transient B"));
+	}
+
+	private void transientdb4o() {
+		ReplicationTestCase.registerProviderPair(new TransientReplicationProvider(new byte[]{65,58,89}, "Transient A"), Db4oReplicationTestUtil.newProviderB());
 	}
 
 	private void db4o() {
