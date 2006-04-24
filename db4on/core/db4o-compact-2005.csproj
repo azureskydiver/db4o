@@ -40,7 +40,7 @@
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>DEBUG;TRACE;CF_1_0</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;CF_2_0</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <FileAlignment>4096</FileAlignment>
@@ -61,7 +61,7 @@
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DebugSymbols>false</DebugSymbols>
-    <DefineConstants>TRACE;CF_1_0</DefineConstants>
+    <DefineConstants>TRACE;CF_2_0</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
     <FileAlignment>4096</FileAlignment>
