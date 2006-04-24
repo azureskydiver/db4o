@@ -43,7 +43,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 	/**
 	 * Purpose: handle circular references
-	 * TODO maybe performance bottleneck if the object graph is huge
+	 * TODO Big Refactoring: Evolve this to handle ALL reference logic (!) and remove it from the providers. 
 	 */
 	private Hashtable4 _processedObjectsWithinReplicate;
 
@@ -79,7 +79,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 		}
 
 		resetCounterpartRefsByOriginal();
-		resetProcessedObjects();
+		resetProcessedObjectsInThisReplicateCall();
 		resetProcessedUuids();
 	}
 
@@ -139,7 +139,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 		} finally {
 			_providerA.clearAllReferences();
 			_providerB.clearAllReferences();
-			resetProcessedObjects();
+			resetProcessedObjectsInThisReplicateCall();
 			resetCounterpartRefsByOriginal();
 		}
 	}
@@ -490,7 +490,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 		_counterpartRefsByOriginal = new Hashtable4(SIZE);
 	}
 
-	private void resetProcessedObjects(){
+	private void resetProcessedObjectsInThisReplicateCall(){
 		_processedObjectsWithinReplicate = new Hashtable4(SIZE);
 	}
 

@@ -320,10 +320,11 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		ReplicationReference ref = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", uuid, 1);
 
 		_providerA.referenceNewObject(object1, ref, null, null);
-		checkReference(object1, uuid);
 
 		_providerA.storeReplica(object1);
-		checkReference(object1, uuid);
+		ReplicationReference reference = _providerA.produceReferenceByUUID(uuid, object1.getClass());
+		Test.ensure(_providerA.produceReference(object1, null, null) == reference);
+		Test.ensure(reference.object() == object1);
 
 		commitReplication();
 		startReplication();
@@ -335,7 +336,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		Test.ensure(!storedObjects.hasNext());
 
-		ReplicationReference reference = _providerA.produceReferenceByUUID(uuid, object1.getClass());
+		reference = _providerA.produceReferenceByUUID(uuid, object1.getClass());
 		Test.ensure(_providerA.produceReference(reloaded, null, null).equals(reference));
 
 		reloaded._name = "i am updated";
@@ -355,12 +356,6 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		_providerA.deleteAllInstances(Pilot.class);
 		_providerA.commit();
-	}
-
-	private void checkReference(Pilot object1, Db4oUUID uuid) {
-		ReplicationReference reference = _providerA.produceReferenceByUUID(uuid, object1.getClass());
-		Test.ensure(_providerA.produceReference(object1, null, null) == reference);
-		Test.ensure(reference.object() == object1);
 	}
 
 	private Db4oUUID uuid(Object obj) {
