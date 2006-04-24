@@ -77,7 +77,6 @@ public class ReplicationConfiguratorTest extends ReplicationTestCase {
 	protected Configuration prepareCfg() {return HibernateUtil.createNewDbConfig();}
 
 	private void oneRound() {
-		System.out.println("ReplicationConfiguratorTest.oneRound");
 		init();
 
 		sessionFactory = cfg.buildSessionFactory();

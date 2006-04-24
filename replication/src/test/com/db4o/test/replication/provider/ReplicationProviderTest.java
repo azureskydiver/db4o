@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+//FIXME This test should test a single ReplicationProvider and does not require _providerB. It does not need to extend ReplicationTestCase with all its provider combinations.
 public class ReplicationProviderTest extends ReplicationTestCase {
 	protected byte[] B_SIGNATURE_BYTES;
 	protected ReadonlyReplicationProviderSignature B_SIGNATURE;
@@ -143,7 +144,6 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 	private void tstCollection() {
 		clean();
-		System.out.println("ReplicationProviderTest.tstCollection");
 		startReplication();
 
 
@@ -318,12 +318,12 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 		Db4oUUID uuid = new Db4oUUID(1234, B_SIGNATURE_BYTES);
 
 		ReplicationReference ref = new ReplicationReferenceImpl("ignoredSinceInOtherProvider", uuid, 1);
+
 		_providerA.referenceNewObject(object1, ref, null, null);
+		checkReference(object1, uuid);
 
 		_providerA.storeReplica(object1);
-		ReplicationReference reference = _providerA.produceReferenceByUUID(uuid, object1.getClass());
-		Test.ensure(_providerA.produceReference(object1, null, null) == reference);
-		Test.ensure(reference.object() == object1);
+		checkReference(object1, uuid);
 
 		commitReplication();
 		startReplication();
@@ -335,6 +335,7 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		Test.ensure(!storedObjects.hasNext());
 
+		ReplicationReference reference = _providerA.produceReferenceByUUID(uuid, object1.getClass());
 		Test.ensure(_providerA.produceReference(reloaded, null, null).equals(reference));
 
 		reloaded._name = "i am updated";
@@ -354,6 +355,12 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		_providerA.deleteAllInstances(Pilot.class);
 		_providerA.commit();
+	}
+
+	private void checkReference(Pilot object1, Db4oUUID uuid) {
+		ReplicationReference reference = _providerA.produceReferenceByUUID(uuid, object1.getClass());
+		Test.ensure(_providerA.produceReference(object1, null, null) == reference);
+		Test.ensure(reference.object() == object1);
 	}
 
 	private Db4oUUID uuid(Object obj) {
