@@ -128,7 +128,6 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 
 	public final void replicate(Object root) {
-		//System.out.println("GenericReplicationSession.replicate");
 		try {
 			activateGraphToBeReplicated(root);
 
@@ -146,7 +145,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 
 	public final void replicateDeleted(Class extent) {
-		  //
+		  throw new UnsupportedOperationException();
 	}
 
 	public final void rollback() {
@@ -165,8 +164,8 @@ public final class GenericReplicationSession implements ReplicationSession {
 		_traverser.traverseGraph(root, new ReplicationVisitor());
 	}
 
-	private boolean activateObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) { //TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
-		//System.out.println("obj = " + obj.getClass() + ", hashcode = " + obj.hashCode());
+	private boolean activateObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) {
+		//TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
 
 		if (_processedObjectsWithinReplicate.get(obj)!=null) return false;
 		_processedObjectsWithinReplicate.put(obj, obj);
@@ -185,23 +184,21 @@ public final class GenericReplicationSession implements ReplicationSession {
 		ReplicationProviderInside other = other(owner);
 
 		Db4oUUID uuid = ownerRef.uuid();
-		//System.out.println("uuid = " + uuid);
 		ReplicationReference otherRef = other.produceReferenceByUUID(uuid, obj.getClass());
-		//System.out.println("otherRef = " + otherRef);
 
 		if (refA == null)
 			refA = otherRef;
 		else
 			refB = otherRef;
 
+		//TODO for circular referenced object, otherRef should not be null in the subsequent pass.
+		//But db4o always return null. A bug. check!
 		if (otherRef == null) { //If an object is only present in one ReplicationProvider
 			markAsProcessed(uuid);
 
 			long creationTime = ownerRef.uuid().getLongPart();
 
-			boolean newObject = creationTime > _lastReplicationVersion;
-			//System.out.println("newObject = " + newObject);
-			if (newObject) //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
+			if (creationTime > _lastReplicationVersion) //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
 				return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, true);
 			else // if it was created before the last time two ReplicationProviders were replicated it has to be treated as deleted.
 				return handleDeletionInOther(obj, ownerRef, owner, other, referencingObject, fieldName);
@@ -451,9 +448,6 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 		putCounterpartRef(obj, otherRef);
 
-		// TODO: We might not need counterpart in otherRef. Check.
-		otherRef.setCounterpart(obj);
-
 		return true;
 	}
 
@@ -464,8 +458,8 @@ public final class GenericReplicationSession implements ReplicationSession {
 	private void markAsProcessed(Db4oUUID uuid) {
 		if (_processedUuidsWithinSession.get(uuid) == null)
 			_processedUuidsWithinSession.put(uuid, uuid); //Using this Hashtable4 as a Set.
-
-		//TODO else, perhaps throw exception since it should never occur
+		else
+			throw new RuntimeException("should be unreachable");
 	}
 
 	private ReplicationProviderInside other(ReplicationProviderInside peer) {
@@ -475,7 +469,8 @@ public final class GenericReplicationSession implements ReplicationSession {
 	private void putCounterpartRef(Object obj, ReplicationReference otherRef) {
 		if (_counterpartRefsByOriginal.get(obj) == null)
 			_counterpartRefsByOriginal.put(obj, otherRef);
-		//TODO else, perhaps throw exception since it should never occur
+		else
+			throw new RuntimeException("should be unreachable");
 	}
 
 	private void replaceWithCounterparts(Object[] objects, ReplicationProviderInside sourceProvider) {
