@@ -269,6 +269,14 @@ public interface ObjectContainer {
      */
     public ObjectSet query(Predicate predicate);
 
+    /**
+     * Native Query Interface. Queries as with {@link com.db4o.ObjectContainer#query(com.db4o.query.Predicate)},
+     * but will sort the resulting {@link com.db4o.ObjectSet} according to the given {@link com.db4o.query.QueryComparator}.
+     * 
+     * @param predicate the {@link Predicate} containing the native query expression.
+     * @param comparator the {@link QueryComparator} specifiying the sort order of the result
+     * @return the {@link ObjectSet} returned by the query.
+     */
     public ObjectSet query(Predicate predicate,QueryComparator comparator);
 
     /**
