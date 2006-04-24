@@ -6,8 +6,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk1.2"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.ve.sweet"/>
 	<classpathentry kind="lib" path="launcher/lib/xmlpull_1_1_3_1.jar"/>
 	<classpathentry kind="lib" path="launcher/lib/kxml-plugin.jar"/>
+	<classpathentry kind="lib" path="launcher/lib/org.eclipse.ve.sweet_1.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
