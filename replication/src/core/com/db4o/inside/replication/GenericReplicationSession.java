@@ -205,8 +205,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 		}
 
 		ownerRef.setCounterpart(otherRef.object());
-
-		if (wasProcessed(uuid)) return false;
+		if (wasProcessed(uuid)) return false;  //Has to be done AFTER the counterpart is set.
 		markAsProcessed(uuid);
 
 		Object objectA = refA.object();
