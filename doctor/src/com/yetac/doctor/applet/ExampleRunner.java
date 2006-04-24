@@ -89,12 +89,18 @@ public class ExampleRunner {
             executeInternal(exampleMethod);
         }
         
-        private void callSetClassloader() throws ClassNotFoundException,NoSuchMethodException,IllegalAccessException,InvocationTargetException {
-            Method configureMethod = db4oClass.getMethod("configure",new Class[] {});
-            Object config = configureMethod.invoke(db4oClass, new Class[] {});
-            Class configClass = classLoader.loadClass("com.db4o.config.Configuration");
-            Method setClassLoaderMethod = configClass.getMethod("setClassLoader",new Class[] { ClassLoader.class });
-            setClassLoaderMethod.invoke(config, new Object[] { classLoader });
+        // TODO: setCL() is deprecated, replace with reflectWith() call
+        private void callSetClassloader() throws Exception {
+            try {
+				Method configureMethod = db4oClass.getMethod("configure",new Class[] {});
+				Object config = configureMethod.invoke(db4oClass, new Class[] {});
+				Class configClass = classLoader.loadClass("com.db4o.config.Configuration");
+				Method setClassLoaderMethod = configClass.getMethod("setClassLoader",new Class[] { Object.class });
+				setClassLoaderMethod.invoke(config, new Object[] { classLoader });
+			} catch (Exception exc) {
+				exc.printStackTrace();
+				throw exc;
+			}
         }
 
         protected Object applyMethod(Class clazz,String methodName,Object target,Class[] argtypes,Object[] params) throws Exception {
