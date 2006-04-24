@@ -15,6 +15,8 @@ import com.db4o.replication.ReplicationProvider;
 import com.db4o.replication.ReplicationSession;
 
 public final class GenericReplicationSession implements ReplicationSession {
+	private static final int SIZE = 10000;
+
 	private final ReplicationReflector _reflector;
 
 	private final CollectionHandler _collectionHandler;
@@ -37,13 +39,19 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 	private long _lastReplicationVersion;
 
-	private Hashtable4 _processedUuids = new Hashtable4(1000);
+	private Hashtable4 _processedUuidsWithinSession;
+
+	/**
+	 * Purpose: handle circular references
+	 * TODO maybe performance bottleneck if the object graph is huge
+	 */
+	private Hashtable4 _processedObjectsWithinReplicate;
 
 	/**
 	 * key = object originated from one provider
 	 * value = the counterpart ReplicationReference of the original object
 	 */
-	private Hashtable4 _counterpartRefsByOriginal = new Hashtable4(1000);
+	private Hashtable4 _counterpartRefsByOriginal;
 
 	public GenericReplicationSession(ReplicationProviderInside _peerA, ReplicationProviderInside _peerB) {
 		this(_peerA, _peerB, new DefaultReplicationEventListener());
@@ -69,6 +77,10 @@ public final class GenericReplicationSession implements ReplicationSession {
 				_lastReplicationVersion = _providerA.getLastReplicationVersion();
 			}
 		}
+
+		resetCounterpartRefsByOriginal();
+		resetProcessedObjects();
+		resetProcessedUuids();
 	}
 
 	public final void checkConflict(Object root) {
@@ -87,7 +99,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 		_providerA = null;
 		_providerB = null;
 		_counterpartRefsByOriginal = null;
-		_processedUuids = null;
+		_processedUuidsWithinSession = null;
 	}
 
 	public final void commit() {
@@ -128,6 +140,8 @@ public final class GenericReplicationSession implements ReplicationSession {
 		} finally {
 			_providerA.clearAllReferences();
 			_providerB.clearAllReferences();
+			resetProcessedObjects();
+			resetCounterpartRefsByOriginal();
 		}
 	}
 
@@ -153,6 +167,9 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 	private boolean activateObjectToBeReplicated(Object obj, Object referencingObject, String fieldName) { //TODO Optimization: keep track of the peer we are traversing to avoid having to look in both.
 		//System.out.println("obj = " + obj.getClass() + ", hashcode = " + obj.hashCode());
+
+		if (_processedObjectsWithinReplicate.get(obj)!=null) return false;
+		_processedObjectsWithinReplicate.put(obj, obj);
 
 		ReplicationReference refA = _providerA.produceReference(obj, referencingObject, fieldName);
 		ReplicationReference refB = _providerB.produceReference(obj, referencingObject, fieldName);
@@ -441,12 +458,12 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private void markAsNotProcessed(Db4oUUID uuid) {
-		_processedUuids.remove(uuid);
+		_processedUuidsWithinSession.remove(uuid);
 	}
 
 	private void markAsProcessed(Db4oUUID uuid) {
-		if (_processedUuids.get(uuid) == null)
-			_processedUuids.put(uuid, uuid); //Using this Hashtable4 as a Set.
+		if (_processedUuidsWithinSession.get(uuid) == null)
+			_processedUuidsWithinSession.put(uuid, uuid); //Using this Hashtable4 as a Set.
 
 		//TODO else, perhaps throw exception since it should never occur
 	}
@@ -475,6 +492,18 @@ public final class GenericReplicationSession implements ReplicationSession {
 		}
 	}
 
+	private void resetCounterpartRefsByOriginal(){
+		_counterpartRefsByOriginal = new Hashtable4(SIZE);
+	}
+
+	private void resetProcessedObjects(){
+		_processedObjectsWithinReplicate = new Hashtable4(SIZE);
+	}
+
+	private void resetProcessedUuids(){
+		_processedUuidsWithinSession = new Hashtable4(SIZE);
+	}
+
 	private void storeChangedCounterpartInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
 		if (!reference.isMarkedForReplicating()) return;
 		destination.storeReplica(reference.counterpart());
@@ -496,7 +525,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 	}
 
 	private boolean wasProcessed(Db4oUUID uuid) {
-		return _processedUuids.get(uuid) != null;
+		return _processedUuidsWithinSession.get(uuid) != null;
 	}
 
 	private final class ReplicationVisitor implements Visitor {

@@ -20,9 +20,13 @@ import com.db4o.test.replication.provider.Car;
 import com.db4o.test.replication.provider.Pilot;
 import com.db4o.test.replication.r0tor4.R0;
 
+import java.util.Map;
+
 
 public abstract class ReplicationTestCase {
 	public static final Class[] mappings;
+	public static final Class[] extraMappingsForCleaning = new Class[]{Map.class};
+
 	static private final Collection4 PROVIDER_PAIRS = new Collection4();
 
 	protected TestableReplicationProviderInside _providerA;
@@ -70,6 +74,11 @@ public abstract class ReplicationTestCase {
 		for (int i = 0; i < mappings.length; i++) {
 			_providerA.deleteAllInstances(mappings[i]);
 			_providerB.deleteAllInstances(mappings[i]);
+		}
+
+		for (int i = 0; i < extraMappingsForCleaning.length; i++) {
+			_providerA.deleteAllInstances(extraMappingsForCleaning[i]);
+			_providerB.deleteAllInstances(extraMappingsForCleaning[i]);
 		}
 
 		_providerA.commit();
