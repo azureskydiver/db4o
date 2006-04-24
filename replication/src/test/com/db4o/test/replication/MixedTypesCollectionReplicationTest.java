@@ -8,10 +8,6 @@ import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
 
 public class MixedTypesCollectionReplicationTest extends ReplicationTestCase {
-	protected void clean() {
-		delete(new Class[]{CollectionHolder.class});
-	}
-
 	protected void actualTest() {
 		if (!_providerA.supportsHybridCollection()) return;
 		if (!_providerB.supportsHybridCollection()) return;
