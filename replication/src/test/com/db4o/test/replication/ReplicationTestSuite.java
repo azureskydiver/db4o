@@ -35,7 +35,6 @@ public class ReplicationTestSuite extends TestSuite {
 				GetByUUID.class,
 				DatabaseUnicityTest.class,
 
-				//db4o won't pass these
 				R0to4Runner.class,
 				ArrayReplicationTest.class,
 				MixedTypesCollectionReplicationTest.class,
