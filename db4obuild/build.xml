@@ -461,6 +461,7 @@
 	</target>
 
 	<target name="do-compiletestsmono">
+		<mkdir dir="${dir.dist.dll.mono}"/>
 		<csc srcdir="${src.dir}"
 			targettype="exe"
 			destfile="${file.exe.tests.mono}"
