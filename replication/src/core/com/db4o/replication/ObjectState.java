@@ -12,7 +12,7 @@ public interface ObjectState {
 	/**
 	 * The entity.
 	 *
-	 * @return The entity
+	 * @return null if the object has been deleted or if it was not replicated in previous replications.
 	 */
 	Object getObject();
 

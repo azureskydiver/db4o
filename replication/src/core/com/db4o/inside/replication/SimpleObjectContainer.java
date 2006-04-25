@@ -16,8 +16,6 @@ public interface SimpleObjectContainer {
 
 	public String getName();
 
-	public ObjectSet getStoredObjects(Class type);
-
 	/**
 	 * Will cascade to save the whole graph of objects
 	 *

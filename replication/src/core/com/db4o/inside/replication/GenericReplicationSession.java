@@ -1,5 +1,6 @@
 package com.db4o.inside.replication;
 
+import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.TimeStampIdGenerator;
@@ -52,6 +53,8 @@ public final class GenericReplicationSession implements ReplicationSession {
 	 * value = the counterpart ReplicationReference of the original object
 	 */
 	private Hashtable4 _counterpartRefsByOriginal;
+
+	private boolean _replicatingDeletions;
 
 	public GenericReplicationSession(ReplicationProviderInside _peerA, ReplicationProviderInside _peerB) {
 		this(_peerA, _peerB, new DefaultReplicationEventListener());
@@ -144,10 +147,24 @@ public final class GenericReplicationSession implements ReplicationSession {
 		}
 	}
 
-	public final void replicateDeleted(Class extent) {
-		  throw new UnsupportedOperationException();
+	
+	public void replicateDeletions(Class extent) {
+		if (_directionTo != _providerA) replicateDeletions(extent, _providerB);
+		if (_directionTo != _providerB) replicateDeletions(extent, _providerA);
 	}
 
+	
+	private void replicateDeletions(Class extent, ReplicationProviderInside provider) {
+		_replicatingDeletions = true;
+		try {
+			ObjectSet instances = provider.getStoredObjects(extent);
+			while (instances.hasNext()) replicate(instances.next());
+		} finally {
+			_replicatingDeletions = false;
+		}
+	}
+	
+	
 	public final void rollback() {
 		_providerA.rollbackReplication();
 		_providerB.rollbackReplication();
@@ -198,11 +215,14 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 			long creationTime = ownerRef.uuid().getLongPart();
 
-			if (creationTime > _lastReplicationVersion) //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
+			if (creationTime > _lastReplicationVersion) { //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
+				if (_replicatingDeletions) return false;
 				return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, true);
-			else // if it was created before the last time two ReplicationProviders were replicated it has to be treated as deleted.
-				return handleDeletionInOther(obj, ownerRef, owner, other, referencingObject, fieldName);
+			} else // if it was created before the last time two ReplicationProviders were replicated it has to be treated as deleted.
+				return handleMissingObjectInOther(obj, ownerRef, owner, other, referencingObject, fieldName);
 		}
+
+		if (_replicatingDeletions) return false;
 
 		ownerRef.setCounterpart(otherRef.object());
 		if (wasProcessed(uuid)) return false;  //Has to be done AFTER the counterpart is set.
@@ -332,6 +352,11 @@ public final class GenericReplicationSession implements ReplicationSession {
 		copyFieldValuesAcross(source, dest, claxx, sourceProvider);
 	}
 
+	private void deleteInDestination(ReplicationReference reference, ReplicationProviderInside destination) {
+		if (!reference.isMarkedForDeleting()) return;
+		destination.replicateDeletion(reference.uuid());
+	}
+
 	private Object emptyClone(ReplicationProviderInside sourceProvider, Object obj) {
 		if (obj == null) return null;
 		ReflectClass claxx = _reflector.forObject(obj);
@@ -364,7 +389,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 		return (ReplicationReference) _counterpartRefsByOriginal.get(original);
 	}
 
-	private boolean handleDeletionInOther(Object obj, ReplicationReference ownerRef,
+	private boolean handleMissingObjectInOther(Object obj, ReplicationReference ownerRef,
 			ReplicationProviderInside owner, ReplicationProviderInside other,
 			Object referencingObject, String fieldName) {
 		boolean isConflict = false;
@@ -506,6 +531,12 @@ public final class GenericReplicationSession implements ReplicationSession {
 	private void storeChangedObjectsIn(final ReplicationProviderInside destination) {
 		final ReplicationProviderInside source = other(destination);
 		if (_directionTo == source) return;
+
+		destination.visitCachedReferences(new Visitor4() {
+			public void visit(Object obj) {
+				deleteInDestination((ReplicationReference) obj, destination);
+			}
+		});
 
 		source.visitCachedReferences(new Visitor4() {
 			public void visit(Object obj) {
