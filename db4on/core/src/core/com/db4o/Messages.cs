@@ -5,6 +5,8 @@ namespace com.db4o
 	{
 		public const int FATAL_MSG_ID = 44;
 
+		public const int NOT_IMPLEMENTED = 49;
+
 		private static string[] i_messages;
 
 		public static string get(int a_code)
@@ -29,7 +31,8 @@ namespace com.db4o
 				int pos = msg.IndexOf("%", 0);
 				if (pos > -1)
 				{
-					msg = msg.Substring(0, pos) + "'" + param + "'" + msg.Substring(pos + 1);
+					msg = j4o.lang.JavaSystem.substring(msg, 0, pos) + "'" + param + "'" + j4o.lang.JavaSystem.substring
+						(msg, pos + 1);
 				}
 			}
 			return msg;
@@ -48,7 +51,7 @@ namespace com.db4o
 					, "Uncaught Exception. Engine closed.", "writing log for %", "% is closed. close() was called or open() failed."
 					, "Filename not specified.", "The database file is locked by another process.", 
 					"Class not available: %. Check CLASSPATH settings.", "finalized while performing a task.\n DO NOT USE CTRL + C OR System.exit() TO STOP THE ENGINE."
-					, "Please mail the following to info@db4o.com:\n <db4o stacktrace>", "</db4o stacktrace>"
+					, "Please mail the following to exception@db4o.com:\n <db4o stacktrace>", "</db4o stacktrace>"
 					, "Creation of lock file failed: %", "Previous session was not shut down correctly"
 					, "This method call is only possible on stored objects", "Could not open port: %"
 					, "Server listening on port: %", "Client % connected.", "Client % timed out and closed."
@@ -58,7 +61,7 @@ namespace com.db4o
 					, "Failed to connect to server.", "No blob data stored.", "Uncaught Exception. db4o engine closed."
 					, "Add constructor that won't throw exceptions, configure constructor calls, or provide a translator to class % and make sure the class is deployed to the server with the same package/namespace + assembly name."
 					, "This method can only be called before opening the database file.", "AccessibleObject#setAccessible() is not available. Private fields can not be stored."
-					, "ObjectTranslator could not be installed: %.", "", "% closed by ShutdownHook."
+					, "ObjectTranslator could not be installed: %.", "Not implemented", "% closed by ShutdownHook."
 					, "This constraint is not persistent. It has no database identity.", "Add at least one ObjectContainer to the Cluster"
 					, "Unsupported Operation", "Database password does not match user-provided password."
 					, "Thread interrupted.", "Password can not be null.", "Classes does not match.", 
@@ -66,6 +69,7 @@ namespace com.db4o
 					, "Backups can not be run from clients and memory files.", "Backup in progress."
 					, "Only use persisted first class objects as keys for IdentityHashMap.", "This functionality is only available from version 5.0 onwards."
 					, "By convention a Predicate needs the following method: public boolean match(ExtentClass extent){}"
+					, "Old database file format detected. To allow automatic updates call Db4o.configure().allowVersionUpdates(true)."
 					 };
 			}
 		}
@@ -95,7 +99,7 @@ namespace com.db4o
 			{
 				c4i = (com.db4o.Config4Impl)com.db4o.Db4o.configure();
 			}
-			if (c4i.i_messageLevel > com.db4o.YapConst.NONE)
+			if (c4i.messageLevel() > com.db4o.YapConst.NONE)
 			{
 				new com.db4o.Message(msg, code, c4i.outStream());
 			}

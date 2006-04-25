@@ -1,113 +1,117 @@
 namespace com.db4o
 {
 	internal class Config4Field : com.db4o.Config4Abstract, com.db4o.config.ObjectField
-		, j4o.lang.Cloneable, com.db4o.foundation.DeepClone
+		, com.db4o.foundation.DeepClone
 	{
-		internal com.db4o.Config4Class i_class;
+		private static readonly com.db4o.foundation.KeySpec CLASS = new com.db4o.foundation.KeySpec
+			(null);
 
-		internal com.db4o.reflect.ReflectField i_fieldReflector;
+		private static readonly com.db4o.foundation.KeySpec FIELD_REFLECTOR = new com.db4o.foundation.KeySpec
+			(null);
 
-		internal bool i_queryEvaluation = true;
+		private static readonly com.db4o.foundation.KeySpec QUERY_EVALUATION = new com.db4o.foundation.KeySpec
+			(true);
 
-		internal int i_indexed = 0;
+		private static readonly com.db4o.foundation.KeySpec INDEXED = new com.db4o.foundation.KeySpec
+			(com.db4o.YapConst.DEFAULT);
 
-		internal com.db4o.MetaField i_metaField;
+		private static readonly com.db4o.foundation.KeySpec METAFIELD = new com.db4o.foundation.KeySpec
+			(null);
 
-		internal bool i_initialized;
+		private static readonly com.db4o.foundation.KeySpec INITIALIZED = new com.db4o.foundation.KeySpec
+			(false);
+
+		protected Config4Field(com.db4o.foundation.KeySpecHashtable4 config) : base(config
+			)
+		{
+		}
 
 		internal Config4Field(com.db4o.Config4Class a_class, string a_name)
 		{
-			i_class = a_class;
-			i_name = a_name;
+			_config.put(CLASS, a_class);
+			setName(a_name);
+		}
+
+		private com.db4o.Config4Class classConfig()
+		{
+			return (com.db4o.Config4Class)_config.get(CLASS);
 		}
 
 		internal override string className()
 		{
-			return i_class.getName();
+			return classConfig().getName();
 		}
 
 		public virtual object deepClone(object param)
 		{
-			com.db4o.Config4Field ret = null;
-			try
-			{
-				ret = (com.db4o.Config4Field)j4o.lang.JavaSystem.clone(this);
-				ret.i_metaField = null;
-				ret.i_initialized = false;
-			}
-			catch (j4o.lang.CloneNotSupportedException e)
-			{
-			}
-			ret.i_class = (com.db4o.Config4Class)param;
-			return ret;
+			return new com.db4o.Config4Field(_config);
 		}
 
 		private com.db4o.reflect.ReflectField fieldReflector()
 		{
-			if (i_fieldReflector == null)
+			com.db4o.reflect.ReflectField fieldReflector = (com.db4o.reflect.ReflectField)_config
+				.get(FIELD_REFLECTOR);
+			if (fieldReflector == null)
 			{
 				try
 				{
-					i_fieldReflector = i_class.classReflector().getDeclaredField(getName());
-					i_fieldReflector.setAccessible();
+					fieldReflector = classConfig().classReflector().getDeclaredField(getName());
+					fieldReflector.setAccessible();
+					_config.put(FIELD_REFLECTOR, fieldReflector);
 				}
 				catch (System.Exception e)
 				{
 				}
 			}
-			return i_fieldReflector;
+			return fieldReflector;
 		}
 
 		public virtual void queryEvaluation(bool flag)
 		{
-			i_queryEvaluation = flag;
+			_config.put(QUERY_EVALUATION, flag);
 		}
 
 		public virtual void rename(string newName)
 		{
-			i_class.i_config.rename(new com.db4o.Rename(i_class.getName(), i_name, newName));
-			i_name = newName;
+			classConfig().config().rename(new com.db4o.Rename(className(), getName(), newName
+				));
+			setName(newName);
 		}
 
 		public virtual void indexed(bool flag)
 		{
-			if (flag)
-			{
-				i_indexed = 1;
-			}
-			else
-			{
-				i_indexed = -1;
-			}
+			putThreeValued(INDEXED, flag);
 		}
 
 		public virtual void initOnUp(com.db4o.Transaction systemTrans, com.db4o.YapField 
 			yapField)
 		{
-			if (!i_initialized)
+			if (!_config.getAsBoolean(INITIALIZED))
 			{
 				com.db4o.YapStream anyStream = systemTrans.i_stream;
 				if (anyStream.maintainsIndices())
 				{
 					if (!yapField.supportsIndex())
 					{
-						i_indexed = -1;
+						indexed(false);
 					}
 					bool indexInitCalled = false;
 					com.db4o.YapFile stream = (com.db4o.YapFile)anyStream;
-					i_metaField = i_class.i_metaClass.ensureField(systemTrans, i_name);
-					if (i_indexed == 1)
+					com.db4o.MetaField metaField = classConfig().metaClass().ensureField(systemTrans, 
+						getName());
+					_config.put(METAFIELD, metaField);
+					int indexedFlag = _config.getAsInt(INDEXED);
+					if (indexedFlag == com.db4o.YapConst.YES)
 					{
-						if (i_metaField.index == null)
+						if (metaField.index == null)
 						{
-							i_metaField.index = new com.db4o.MetaIndex();
-							stream.setInternal(systemTrans, i_metaField.index, com.db4o.YapConst.UNSPECIFIED, 
-								false);
-							stream.setInternal(systemTrans, i_metaField, com.db4o.YapConst.UNSPECIFIED, false
+							metaField.index = new com.db4o.MetaIndex();
+							stream.setInternal(systemTrans, metaField.index, com.db4o.YapConst.UNSPECIFIED, false
 								);
-							yapField.initIndex(systemTrans, i_metaField.index);
+							stream.setInternal(systemTrans, metaField, com.db4o.YapConst.UNSPECIFIED, false);
+							yapField.initIndex(systemTrans, metaField.index);
 							indexInitCalled = true;
-							if (stream.i_config.i_messageLevel > com.db4o.YapConst.NONE)
+							if (stream.i_config.messageLevel() > com.db4o.YapConst.NONE)
 							{
 								stream.message("creating index " + yapField.ToString());
 							}
@@ -146,15 +150,15 @@ namespace com.db4o
 							}
 						}
 					}
-					if (i_indexed == -1)
+					if (indexedFlag == com.db4o.YapConst.NO)
 					{
-						if (i_metaField.index != null)
+						if (metaField.index != null)
 						{
-							if (stream.i_config.i_messageLevel > com.db4o.YapConst.NONE)
+							if (stream.i_config.messageLevel() > com.db4o.YapConst.NONE)
 							{
 								stream.message("dropping index " + yapField.ToString());
 							}
-							com.db4o.MetaIndex mi = i_metaField.index;
+							com.db4o.MetaIndex mi = metaField.index;
 							if (mi.indexLength > 0)
 							{
 								stream.free(mi.indexAddress, mi.indexLength);
@@ -164,21 +168,25 @@ namespace com.db4o
 								stream.free(mi.patchAddress, mi.patchLength);
 							}
 							stream.delete1(systemTrans, mi, false);
-							i_metaField.index = null;
-							stream.setInternal(systemTrans, i_metaField, com.db4o.YapConst.UNSPECIFIED, false
-								);
+							metaField.index = null;
+							stream.setInternal(systemTrans, metaField, com.db4o.YapConst.UNSPECIFIED, false);
 						}
 					}
-					if (i_metaField.index != null)
+					if (metaField.index != null)
 					{
 						if (!indexInitCalled)
 						{
-							yapField.initIndex(systemTrans, i_metaField.index);
+							yapField.initIndex(systemTrans, metaField.index);
 						}
 					}
 				}
-				i_initialized = true;
+				_config.put(INITIALIZED, true);
 			}
+		}
+
+		internal virtual bool queryEvaluation()
+		{
+			return _config.getAsBoolean(QUERY_EVALUATION);
 		}
 	}
 }

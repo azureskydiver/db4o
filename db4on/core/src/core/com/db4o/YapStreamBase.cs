@@ -92,7 +92,7 @@ namespace com.db4o
 
 		internal void activate1(com.db4o.Transaction ta, object a_activate)
 		{
-			activate1(ta, a_activate, i_config.i_activationDepth);
+			activate1(ta, a_activate, i_config.activationDepth());
 		}
 
 		public void activate1(com.db4o.Transaction ta, object a_activate, int a_depth)
@@ -337,6 +337,9 @@ namespace com.db4o
 		internal abstract com.db4o.ClassIndex createClassIndex(com.db4o.YapClass a_yapClass
 			);
 
+		internal abstract com.db4o.inside.btree.BTree createBTreeClassIndex(com.db4o.YapClass
+			 a_yapClass, int id);
+
 		internal abstract com.db4o.QueryResultImpl createQResult(com.db4o.Transaction a_ta
 			);
 
@@ -501,7 +504,7 @@ namespace com.db4o
 					if (delete5(ta, yo, a_cascade, userCall))
 					{
 						yc.dispatchEvent(_this, obj, com.db4o.EventDispatcher.DELETE);
-						if (i_config.i_messageLevel > com.db4o.YapConst.STATE)
+						if (i_config.messageLevel() > com.db4o.YapConst.STATE)
 						{
 							message("" + yo.getID() + " delete " + yo.getYapClass().getName());
 						}
@@ -516,10 +519,15 @@ namespace com.db4o
 
 		internal virtual bool detectSchemaChanges()
 		{
-			return i_config.i_detectSchemaChanges;
+			return i_config.detectSchemaChanges();
 		}
 
 		public virtual bool dispatchsEvents()
+		{
+			return true;
+		}
+
+		protected virtual bool doFinalize()
 		{
 			return true;
 		}
@@ -585,7 +593,7 @@ namespace com.db4o
 
 		~YapStreamBase()
 		{
-			if (i_config == null || i_config.i_automaticShutDown)
+			if (doFinalize() && (i_config == null || i_config.automaticShutDown()))
 			{
 				failedToShutDown();
 			}
@@ -616,6 +624,7 @@ namespace com.db4o
 			}
 			catch (System.Exception t)
 			{
+				com.db4o.inside.Exceptions4.catchAll(t);
 				fatalException(t);
 			}
 			i_entryCounter--;
@@ -756,6 +765,10 @@ namespace com.db4o
 				{
 					yo = new com.db4o.YapObject(a_id);
 					arr[0] = yo.read(ta, null, null, 0, com.db4o.YapConst.ADD_TO_ID_TREE, true);
+					if (arr[0] == null)
+					{
+						return arr;
+					}
 					if (arr[0] != yo.getObject())
 					{
 						return getObjectAndYapObjectByID(ta, a_id);
@@ -800,10 +813,6 @@ namespace com.db4o
 			if (a_class == null)
 			{
 				return null;
-			}
-			if (a_class.getName().IndexOf("YapStream") > 0)
-			{
-				int xxx = 1;
 			}
 			if ((!showInternalClasses()) && i_handlers.ICLASS_INTERNAL.isAssignableFrom(a_class
 				))
@@ -893,16 +902,16 @@ namespace com.db4o
 			{
 				return false;
 			}
-			if (i_config.i_readonly)
+			if (i_config.isReadOnly())
 			{
 				return false;
 			}
-			return i_config.i_lockFile;
+			return i_config.lockFile();
 		}
 
 		internal virtual bool hasShutDownHook()
 		{
-			return i_config.i_automaticShutDown;
+			return i_config.automaticShutDown();
 		}
 
 		internal void hcTreeAdd(com.db4o.YapObject a_yo)
@@ -941,7 +950,7 @@ namespace com.db4o
 		{
 			i_config = (com.db4o.Config4Impl)((com.db4o.foundation.DeepClone)com.db4o.Db4o.configure
 				()).deepClone(this);
-			i_handlers = new com.db4o.YapHandlers(_this, i_config.i_encoding, i_config.reflector
+			i_handlers = new com.db4o.YapHandlers(_this, i_config.encoding(), i_config.reflector
 				());
 			if (i_references != null)
 			{
@@ -986,7 +995,7 @@ namespace com.db4o
 			initializeEssentialClasses();
 			rename(i_config);
 			i_classCollection.initOnUp(i_systemTrans);
-			if (i_config.i_detectSchemaChanges)
+			if (i_config.detectSchemaChanges())
 			{
 				i_systemTrans.commit();
 			}
@@ -1188,9 +1197,6 @@ namespace com.db4o
 			i_needsUpdate = new com.db4o.foundation.List4(i_needsUpdate, a_yapClass);
 		}
 
-		internal abstract com.db4o.YapWriter newObject(com.db4o.Transaction a_trans, com.db4o.YapMeta
-			 a_object);
-
 		internal abstract int newUserObject();
 
 		public virtual object peekPersisted(object a_object, int a_depth, bool a_committed
@@ -1217,6 +1223,10 @@ namespace com.db4o
 		internal virtual object peekPersisted1(com.db4o.Transaction a_ta, int a_id, int a_depth
 			)
 		{
+			if (a_depth < 0)
+			{
+				return null;
+			}
 			com.db4o.TreeInt ti = new com.db4o.TreeInt(a_id);
 			com.db4o.TreeIntObject tio = (com.db4o.TreeIntObject)com.db4o.Tree.find(i_justPeeked
 				, ti);
@@ -1227,7 +1237,7 @@ namespace com.db4o
 			}
 			else
 			{
-				return tio.i_object;
+				return tio._object;
 			}
 		}
 
@@ -1375,8 +1385,8 @@ namespace com.db4o
 		public abstract com.db4o.YapWriter readWriterByID(com.db4o.Transaction a_ta, int 
 			a_id);
 
-		internal abstract com.db4o.YapReader readReaderByID(com.db4o.Transaction a_ta, int
-			 a_id);
+		public abstract com.db4o.YapReader readReaderByID(com.db4o.Transaction a_ta, int 
+			a_id);
 
 		private void reboot()
 		{
@@ -1384,7 +1394,7 @@ namespace com.db4o
 			int ccID = i_classCollection.getID();
 			i_references.stopTimer();
 			initialize2();
-			i_classCollection.setID(_this, ccID);
+			i_classCollection.setID(ccID);
 			i_classCollection.read(i_systemTrans);
 		}
 
@@ -1436,7 +1446,7 @@ namespace com.db4o
 		internal virtual void rename(com.db4o.Config4Impl config)
 		{
 			bool renamedOne = false;
-			if (config.i_rename != null)
+			if (config.rename() != null)
 			{
 				renamedOne = rename1(config);
 			}
@@ -1452,7 +1462,7 @@ namespace com.db4o
 			bool renamedOne = false;
 			try
 			{
-				com.db4o.foundation.Iterator4 i = config.i_rename.iterator();
+				com.db4o.foundation.Iterator4 i = config.rename().iterator();
 				while (i.hasNext())
 				{
 					com.db4o.Rename ren = (com.db4o.Rename)i.next();
@@ -1614,6 +1624,11 @@ namespace com.db4o
 				i_entryCounter--;
 				throw e;
 			}
+			catch (com.db4o.ext.Db4oException exc)
+			{
+				id = 0;
+				throw exc;
+			}
 			catch (System.Exception t)
 			{
 				id = 0;
@@ -1716,7 +1731,7 @@ namespace com.db4o
 						{
 							((com.db4o.Db4oTypeImpl)a_object).setTrans(a_trans);
 						}
-						if (i_config.i_messageLevel > com.db4o.YapConst.STATE)
+						if (i_config.messageLevel() > com.db4o.YapConst.STATE)
 						{
 							message("" + yapObject.getID() + " new " + yapObject.getYapClass().getName());
 						}
@@ -1992,9 +2007,6 @@ namespace com.db4o
 			return obj;
 		}
 
-		internal abstract com.db4o.YapWriter updateObject(com.db4o.Transaction a_trans, com.db4o.YapMeta
-			 a_object);
-
 		public virtual long version()
 		{
 			lock (i_lock)
@@ -2022,7 +2034,7 @@ namespace com.db4o
 		{
 			hcTreeRemove(yo);
 			idTreeRemove(yo.getID());
-			yo.setID(_this, -1);
+			yo.setID(-1);
 			com.db4o.Platform4.killYapRef(yo.i_object);
 		}
 

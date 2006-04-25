@@ -3,7 +3,7 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public abstract class YapMeta
 	{
-		internal int i_id = 0;
+		internal int i_id;
 
 		protected int i_state = 2;
 
@@ -56,7 +56,7 @@ namespace com.db4o
 			return i_id;
 		}
 
-		internal abstract byte getIdentifier();
+		public abstract byte getIdentifier();
 
 		public bool isActive()
 		{
@@ -69,6 +69,11 @@ namespace com.db4o
 				));
 		}
 
+		public virtual bool isNew()
+		{
+			return i_id == 0;
+		}
+
 		public virtual int linkLength()
 		{
 			return com.db4o.YapConst.YAPID_LENGTH;
@@ -79,9 +84,9 @@ namespace com.db4o
 			bitFalse(com.db4o.YapConst.CACHED_DIRTY);
 		}
 
-		internal abstract int ownLength();
+		public abstract int ownLength();
 
-		internal virtual void read(com.db4o.Transaction a_trans)
+		public virtual void read(com.db4o.Transaction a_trans)
 		{
 			try
 			{
@@ -105,26 +110,26 @@ namespace com.db4o
 			}
 		}
 
-		internal abstract void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader 
-			a_reader);
+		public abstract void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader a_reader
+			);
 
-		internal virtual void setID(com.db4o.YapStream a_stream, int a_id)
+		public virtual void setID(int a_id)
 		{
 			i_id = a_id;
 		}
 
-		internal void setStateClean()
+		public void setStateClean()
 		{
 			bitTrue(com.db4o.YapConst.ACTIVE);
 			bitTrue(com.db4o.YapConst.CLEAN);
 		}
 
-		internal void setStateDeactivated()
+		public void setStateDeactivated()
 		{
 			bitFalse(com.db4o.YapConst.ACTIVE);
 		}
 
-		internal virtual void setStateDirty()
+		public virtual void setStateDirty()
 		{
 			bitTrue(com.db4o.YapConst.ACTIVE);
 			bitFalse(com.db4o.YapConst.CLEAN);
@@ -142,23 +147,34 @@ namespace com.db4o
 			}
 		}
 
-		internal com.db4o.YapWriter write(com.db4o.Transaction a_trans)
+		public void write(com.db4o.Transaction a_trans)
 		{
-			if (writeObjectBegin())
+			if (!writeObjectBegin())
 			{
-				com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.i_stream;
-				com.db4o.YapWriter writer = (getID() == 0) ? stream.newObject(a_trans, this) : stream
-					.updateObject(a_trans, this);
-				writeThis(writer);
-				((com.db4o.YapFile)stream).writeObject(this, writer);
-				if (isActive())
-				{
-					setStateClean();
-				}
-				endProcessing();
-				return writer;
+				return;
 			}
-			return null;
+			com.db4o.YapFile stream = (com.db4o.YapFile)a_trans.i_stream;
+			int address = 0;
+			int length = ownLength();
+			com.db4o.YapReader writer = new com.db4o.YapReader(length);
+			if (isNew())
+			{
+				com.db4o.inside.slots.Pointer4 ptr = stream.newSlot(a_trans, length);
+				setID(ptr._id);
+				address = ptr._address;
+			}
+			else
+			{
+				address = stream.getSlot(length);
+				a_trans.slotFreeOnRollbackCommitSetPointer(i_id, address, length);
+			}
+			writeThis(a_trans, writer);
+			((com.db4o.YapFile)stream).writeObject(this, writer, address);
+			if (isActive())
+			{
+				setStateClean();
+			}
+			endProcessing();
 		}
 
 		internal virtual bool writeObjectBegin()
@@ -170,25 +186,14 @@ namespace com.db4o
 			return false;
 		}
 
-		internal virtual void writeOwnID(com.db4o.YapWriter a_writer)
+		internal virtual void writeOwnID(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+			)
 		{
-			write(a_writer.getTransaction());
+			write(trans);
 			a_writer.writeInt(getID());
 		}
 
-		internal abstract void writeThis(com.db4o.YapWriter a_writer);
-
-		internal static void writeIDOf(com.db4o.YapMeta a_object, com.db4o.YapWriter a_writer
-			)
-		{
-			if (a_object != null)
-			{
-				a_object.writeOwnID(a_writer);
-			}
-			else
-			{
-				a_writer.writeInt(0);
-			}
-		}
+		public abstract void writeThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+			);
 	}
 }

@@ -22,6 +22,16 @@ namespace com.db4o.io
 			_delegate.close();
 		}
 
+		public override void delete(string path)
+		{
+			_delegate.delete(path);
+		}
+
+		public override bool exists(string path)
+		{
+			return _delegate.exists(path);
+		}
+
 		public override long getLength()
 		{
 			return _delegate.getLength();

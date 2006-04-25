@@ -6,7 +6,7 @@ namespace com.db4o.inside.ix
 		public IxRemove(com.db4o.inside.ix.IndexTransaction a_ft, int a_parentID, object 
 			a_value) : base(a_ft, a_parentID, a_value)
 		{
-			i_size = 0;
+			_size = 0;
 		}
 
 		public override int ownSize()
@@ -17,8 +17,8 @@ namespace com.db4o.inside.ix
 		public override string ToString()
 		{
 			return base.ToString();
-			string str = "IxRemove " + i_parentID + "\n " + handler().comparableObject(trans(
-				), i_value);
+			string str = "IxRemove " + _parentID + "\n " + handler().comparableObject(trans()
+				, _value);
 			return str;
 		}
 
@@ -44,6 +44,14 @@ namespace com.db4o.inside.ix
 
 		public override void visitAll(com.db4o.foundation.IntObjectVisitor visitor)
 		{
+		}
+
+		public override object shallowClone()
+		{
+			com.db4o.inside.ix.IxRemove remove = new com.db4o.inside.ix.IxRemove(_fieldTransaction
+				, _parentID, _value);
+			base.shallowCloneInternal(remove);
+			return remove;
 		}
 	}
 }

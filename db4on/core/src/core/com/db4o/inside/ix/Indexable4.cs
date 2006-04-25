@@ -9,6 +9,6 @@ namespace com.db4o.inside.ix
 
 		object readIndexEntry(com.db4o.YapReader a_reader);
 
-		void writeIndexEntry(com.db4o.YapWriter a_writer, object a_object);
+		void writeIndexEntry(com.db4o.YapReader a_writer, object a_object);
 	}
 }

@@ -389,7 +389,7 @@ namespace com.db4o
 			a_bytes.writeInt(-yapClassID);
 		}
 
-		public override void writeIndexEntry(com.db4o.YapWriter a_writer, object a_object
+		public override void writeIndexEntry(com.db4o.YapReader a_writer, object a_object
 			)
 		{
 			throw com.db4o.YapConst.virtualException();
@@ -436,6 +436,11 @@ namespace com.db4o
 		{
 			i_handler.prepareComparison(obj);
 			return this;
+		}
+
+		public override object current()
+		{
+			return i_handler.current();
 		}
 
 		public override int compareTo(object a_obj)

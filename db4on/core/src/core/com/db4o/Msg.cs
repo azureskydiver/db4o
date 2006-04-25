@@ -3,15 +3,15 @@ namespace com.db4o
 	/// <summary>Messages for Client/Server Communication</summary>
 	internal class Msg : j4o.lang.Cloneable
 	{
-		internal static int idGenererator = 1;
+		internal static int _idGenerator = 1;
 
-		internal int i_msgID;
+		private static com.db4o.Msg[] _messages = new com.db4o.Msg[60];
 
-		internal string i_name;
+		internal int _msgID;
 
-		internal com.db4o.Transaction i_trans;
+		internal string _name;
 
-		private static com.db4o.Msg[] i_messages = new com.db4o.Msg[60];
+		internal com.db4o.Transaction _trans;
 
 		public static readonly com.db4o.MsgD CLASS_NAME_FOR_ID = new com.db4o.MClassNameForID
 			();
@@ -121,27 +121,27 @@ namespace com.db4o
 
 		internal Msg()
 		{
-			i_msgID = idGenererator++;
-			i_messages[i_msgID] = this;
+			_msgID = _idGenerator++;
+			_messages[_msgID] = this;
 		}
 
 		internal Msg(string aName) : this()
 		{
-			i_name = aName;
+			_name = aName;
 		}
 
 		internal com.db4o.Msg clone(com.db4o.Transaction a_trans)
 		{
+			com.db4o.Msg msg = null;
 			try
 			{
-				com.db4o.Msg msg = (com.db4o.Msg)j4o.lang.JavaSystem.clone(this);
-				msg.i_trans = a_trans;
-				return msg;
+				msg = (com.db4o.Msg)j4o.lang.JavaSystem.clone(this);
+				msg._trans = a_trans;
 			}
 			catch (j4o.lang.CloneNotSupportedException e)
 			{
-				return null;
 			}
+			return msg;
 		}
 
 		public sealed override bool Equals(object obj)
@@ -155,12 +155,12 @@ namespace com.db4o
 			{
 				return false;
 			}
-			return i_msgID == ((com.db4o.Msg)obj).i_msgID;
+			return _msgID == ((com.db4o.Msg)obj)._msgID;
 		}
 
 		internal virtual void fakePayLoad(com.db4o.Transaction a_trans)
 		{
-			i_trans = a_trans;
+			_trans = a_trans;
 		}
 
 		/// <summary>
@@ -174,16 +174,16 @@ namespace com.db4o
 
 		internal string getName()
 		{
-			if (i_name == null)
+			if (_name == null)
 			{
 				return j4o.lang.Class.getClassForObject(this).getName();
 			}
-			return i_name;
+			return _name;
 		}
 
 		internal virtual com.db4o.Transaction getTransaction()
 		{
-			return i_trans;
+			return _trans;
 		}
 
 		internal virtual com.db4o.YapStream getStream()
@@ -203,20 +203,13 @@ namespace com.db4o
 		{
 			com.db4o.YapWriter reader = new com.db4o.YapWriter(a_trans, com.db4o.YapConst.MESSAGE_LENGTH
 				);
-			try
+			if (!reader.read(sock))
 			{
-				if (!reader.read(sock))
-				{
-					return null;
-				}
-				com.db4o.Msg message = i_messages[reader.readInt()].readPayLoad(a_trans, sock, reader
-					);
-				return message;
+				return null;
 			}
-			catch (System.Exception e)
-			{
-			}
-			return null;
+			com.db4o.Msg message = _messages[reader.readInt()].readPayLoad(a_trans, sock, reader
+				);
+			return message;
 		}
 
 		internal virtual com.db4o.Msg readPayLoad(com.db4o.Transaction a_trans, com.db4o.foundation.network.YapSocket
@@ -232,7 +225,7 @@ namespace com.db4o
 
 		internal void setTransaction(com.db4o.Transaction aTrans)
 		{
-			i_trans = aTrans;
+			_trans = aTrans;
 		}
 
 		public sealed override string ToString()
@@ -260,7 +253,7 @@ namespace com.db4o
 		{
 			com.db4o.YapWriter writer = new com.db4o.YapWriter(getTransaction(), com.db4o.YapConst
 				.MESSAGE_LENGTH);
-			writer.writeInt(i_msgID);
+			writer.writeInt(_msgID);
 			return writer;
 		}
 

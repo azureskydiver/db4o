@@ -76,12 +76,11 @@ namespace com.db4o.io
 			write(buffer);
 		}
 
+		/// <summary>deletes the given path from whatever 'file system' is addressed</summary>
+		public abstract void delete(string path);
+
 		/// <summary>checks whether a file exists</summary>
-		public virtual bool exists(string path)
-		{
-			j4o.io.File existingFile = new j4o.io.File(path);
-			return existingFile.exists() && existingFile.length() > 0;
-		}
+		public abstract bool exists(string path);
 
 		/// <summary>implement to return the absolute length of the file</summary>
 		public abstract long getLength();

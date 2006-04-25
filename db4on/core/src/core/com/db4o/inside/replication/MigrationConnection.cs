@@ -9,9 +9,12 @@ namespace com.db4o.inside.replication
 
 		private readonly com.db4o.foundation.Hashtable4 _referenceMap;
 
+		private readonly com.db4o.foundation.Hashtable4 _identityMap;
+
 		public MigrationConnection(com.db4o.YapStream peerA, com.db4o.YapStream peerB)
 		{
 			_referenceMap = new com.db4o.foundation.Hashtable4(1);
+			_identityMap = new com.db4o.foundation.Hashtable4(1);
 			_peerA = peerA;
 			_peerB = peerB;
 		}
@@ -21,12 +24,23 @@ namespace com.db4o.inside.replication
 			_referenceMap.put(j4o.lang.JavaSystem.identityHashCode(obj), _ref);
 		}
 
+		public virtual void mapIdentity(object obj, object otherObj)
+		{
+			_identityMap.put(j4o.lang.JavaSystem.identityHashCode(obj), otherObj);
+		}
+
 		public virtual com.db4o.YapObject referenceFor(object obj)
 		{
 			int hcode = j4o.lang.JavaSystem.identityHashCode(obj);
 			com.db4o.YapObject _ref = (com.db4o.YapObject)_referenceMap.get(hcode);
 			_referenceMap.remove(hcode);
 			return _ref;
+		}
+
+		public virtual object identityFor(object obj)
+		{
+			int hcode = j4o.lang.JavaSystem.identityHashCode(obj);
+			return _identityMap.get(hcode);
 		}
 
 		public virtual void terminate()

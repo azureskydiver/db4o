@@ -55,7 +55,7 @@ namespace com.db4o
 			return l_return;
 		}
 
-		public override void write(object a_object, com.db4o.YapWriter a_bytes)
+		public override void write(object a_object, com.db4o.YapReader a_bytes)
 		{
 			if (!com.db4o.Deploy.csharp && a_object == null)
 			{
@@ -67,7 +67,7 @@ namespace com.db4o
 			}
 		}
 
-		internal static void writeLong(long a_long, com.db4o.YapWriter a_bytes)
+		internal static void writeLong(long a_long, com.db4o.YapReader a_bytes)
 		{
 			for (int i = 0; i < com.db4o.YapConst.LONG_BYTES; i++)
 			{
@@ -84,17 +84,6 @@ namespace com.db4o
 			}
 		}
 
-		internal static long readLong(com.db4o.YapWriter writer)
-		{
-			long l_return = 0;
-			for (int i = 0; i < com.db4o.YapConst.LONG_BYTES; i++)
-			{
-				l_return = (l_return << 8) + (writer._buffer[writer._offset++] & unchecked((int)(
-					0xff)));
-			}
-			return l_return;
-		}
-
 		protected long i_compareTo;
 
 		internal virtual long val(object obj)
@@ -105,6 +94,11 @@ namespace com.db4o
 		internal override void prepareComparison1(object obj)
 		{
 			i_compareTo = val(obj);
+		}
+
+		public override object current1()
+		{
+			return i_compareTo;
 		}
 
 		internal override bool isEqual1(object obj)

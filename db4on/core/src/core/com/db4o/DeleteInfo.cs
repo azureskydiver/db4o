@@ -15,5 +15,12 @@ namespace com.db4o
 			_delete = delete;
 			_cascade = cascade;
 		}
+
+		public override object shallowClone()
+		{
+			com.db4o.DeleteInfo deleteinfo = new com.db4o.DeleteInfo(0, _reference, _delete, 
+				_cascade);
+			return shallowCloneInternal(deleteinfo);
+		}
 	}
 }

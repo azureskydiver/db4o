@@ -14,7 +14,7 @@ namespace com.db4o
 		{
 			_stream = a_stream;
 			_weak = (!(a_stream is com.db4o.YapObjectCarrier) && com.db4o.Platform4.hasWeakReferences
-				() && a_stream.i_config.i_weakReferences);
+				() && a_stream.i_config.weakReferences());
 			_queue = _weak ? com.db4o.Platform4.createReferenceQueue() : null;
 		}
 
@@ -46,11 +46,11 @@ namespace com.db4o
 			{
 				return;
 			}
-			if (!_stream.i_config.i_weakReferences)
+			if (!_stream.i_config.weakReferences())
 			{
 				return;
 			}
-			if (_stream.i_config.i_weakReferenceCollectionInterval <= 0)
+			if (_stream.i_config.weakReferenceCollectionInterval() <= 0)
 			{
 				return;
 			}
@@ -58,8 +58,8 @@ namespace com.db4o
 			{
 				return;
 			}
-			_timer = new com.db4o.foundation.SimpleTimer(this, _stream.i_config.i_weakReferenceCollectionInterval
-				, "db4o WeakReference collector");
+			_timer = new com.db4o.foundation.SimpleTimer(this, _stream.i_config.weakReferenceCollectionInterval
+				(), "db4o WeakReference collector");
 		}
 
 		internal virtual void stopTimer()

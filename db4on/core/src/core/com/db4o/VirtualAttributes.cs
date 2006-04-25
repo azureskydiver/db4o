@@ -1,7 +1,7 @@
 namespace com.db4o
 {
 	/// <exclude></exclude>
-	public class VirtualAttributes : j4o.lang.Cloneable
+	public class VirtualAttributes : com.db4o.foundation.ShallowClone
 	{
 		public com.db4o.ext.Db4oDatabase i_database;
 
@@ -9,16 +9,18 @@ namespace com.db4o
 
 		public long i_uuid;
 
-		public virtual com.db4o.VirtualAttributes shallowClone()
+		public virtual object shallowClone()
 		{
-			try
-			{
-				return (com.db4o.VirtualAttributes)j4o.lang.JavaSystem.clone(this);
-			}
-			catch (System.Exception e)
-			{
-			}
-			return null;
+			com.db4o.VirtualAttributes va = new com.db4o.VirtualAttributes();
+			va.i_database = i_database;
+			va.i_version = i_version;
+			va.i_uuid = i_uuid;
+			return va;
+		}
+
+		internal virtual bool suppliesUUID()
+		{
+			return i_database != null && i_uuid != 0;
 		}
 	}
 }

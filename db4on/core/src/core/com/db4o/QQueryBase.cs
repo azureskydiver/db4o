@@ -374,7 +374,7 @@ namespace com.db4o
 
 			public void visit(object a_object)
 			{
-				resLocal.add(((com.db4o.TreeInt)a_object).i_key);
+				resLocal.add(((com.db4o.TreeInt)a_object)._key);
 			}
 
 			private readonly QQueryBase _enclosing;
@@ -494,7 +494,7 @@ namespace com.db4o
 				com.db4o.QCandidate candidate = (com.db4o.QCandidate)a_object;
 				if (candidate.include())
 				{
-					com.db4o.TreeInt ids = new com.db4o.TreeInt(candidate.i_key);
+					com.db4o.TreeInt ids = new com.db4o.TreeInt(candidate._key);
 					com.db4o.TreeInt[] idsNew = new com.db4o.TreeInt[1];
 					com.db4o.foundation.Iterator4 itPath = fieldPath.iterator();
 					while (itPath.hasNext())
@@ -526,7 +526,7 @@ namespace com.db4o
 
 				public void visit(object treeInt)
 				{
-					int id = ((com.db4o.TreeInt)treeInt).i_key;
+					int id = ((com.db4o.TreeInt)treeInt)._key;
 					com.db4o.YapWriter reader = this._enclosing._enclosing.i_trans.i_stream.readWriterByID
 						(this._enclosing._enclosing.i_trans, id);
 					if (reader != null)
@@ -555,7 +555,7 @@ namespace com.db4o
 
 				public void visit(object treeInt)
 				{
-					result.addKeyCheckDuplicates(((com.db4o.TreeInt)treeInt).i_key);
+					result.addKeyCheckDuplicates(((com.db4o.TreeInt)treeInt)._key);
 				}
 
 				private readonly _AnonymousInnerClass411 _enclosing;

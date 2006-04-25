@@ -134,6 +134,7 @@ namespace com.db4o
 		{
 			com.db4o.YapStream fromStream = fromTrans.i_stream;
 			com.db4o.YapStream toStream = toTrans.i_stream;
+			com.db4o.inside.replication.MigrationConnection mgc = fromStream.i_handlers.i_migration;
 			lock (fromStream.Lock())
 			{
 				int id = toStream.oldReplicationHandles(this);
@@ -145,10 +146,19 @@ namespace com.db4o
 				{
 					return toStream.getByID(id);
 				}
-				com.db4o.P1Object replica = (com.db4o.P1Object)createDefault(toTrans);
-				if (fromStream.i_handlers.i_migration != null)
+				if (mgc != null)
 				{
-					fromStream.i_handlers.i_migration.mapReference(replica, i_yapObject);
+					object otherObj = mgc.identityFor(this);
+					if (otherObj != null)
+					{
+						return otherObj;
+					}
+				}
+				com.db4o.P1Object replica = (com.db4o.P1Object)createDefault(toTrans);
+				if (mgc != null)
+				{
+					mgc.mapReference(replica, i_yapObject);
+					mgc.mapIdentity(this, replica);
 				}
 				replica.store(0);
 				return replica;

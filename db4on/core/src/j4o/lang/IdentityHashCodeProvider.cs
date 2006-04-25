@@ -1,6 +1,7 @@
 /* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */
 
-using com.db4o;
+using System;
+using System.Reflection;
 
 namespace j4o.lang
 {
@@ -12,17 +13,48 @@ namespace j4o.lang
 			return System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj);
 		}
 #else
-		public delegate int HashCodeFunction(object o);
-
-		private static HashCodeFunction _hashCode = Compat.getIdentityHashCodeFunction();
-
 		public static int identityHashCode(object obj)
 		{
-			if (obj == null)
+			if (obj == null) return 0;
+			return (int) _hashMethod.Invoke(null, new object[] { obj });
+		}
+
+		private static MethodInfo _hashMethod = getIdentityHashCodeMethod();
+
+		private static MethodInfo getIdentityHashCodeMethod()
+		{
+			Assembly assembly = typeof(object).Assembly;
+
+	#if CF_1_0 || CF_2_0
+			// CompactFramework
+			try
 			{
-				return 0;
+				Type t = assembly.GetType("System.PInvoke.EE");
+				return t.GetMethod(
+					"Object_GetHashCode",
+					BindingFlags.Public |
+					BindingFlags.NonPublic |
+					BindingFlags.Static);
 			}
-			return _hashCode(obj);
+			catch (Exception e)
+			{
+			}
+	#endif
+			// We may be running the CF app on .NET Framework 1.1
+			// for profiling, let's give that a chance
+			try
+			{
+				Type t = assembly.GetType(
+					"System.Runtime.CompilerServices.RuntimeHelpers");
+				return t.GetMethod(
+					"GetHashCode",
+					BindingFlags.Public |
+					BindingFlags.Static);
+			}
+			catch (Exception e)
+			{
+			}
+			return null;
 		}
 #endif
 	}

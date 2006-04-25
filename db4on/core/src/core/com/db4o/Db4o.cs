@@ -111,7 +111,7 @@ namespace com.db4o
 		{
 			lock (com.db4o.Db4o.Lock)
 			{
-				return new com.db4o.YapClient(new com.db4o.foundation.network.YapClientSocket(hostName
+				return new com.db4o.YapClient(new com.db4o.foundation.network.YapSocketReal(hostName
 					, port), user, password, true);
 			}
 		}

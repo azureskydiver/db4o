@@ -59,7 +59,7 @@ namespace com.db4o
 			return new j4o.util.Date(ret);
 		}
 
-		public override void write(object a_object, com.db4o.YapWriter a_bytes)
+		public override void write(object a_object, com.db4o.YapReader a_bytes)
 		{
 			if (a_object == null)
 			{
@@ -69,6 +69,11 @@ namespace com.db4o
 			{
 				writeLong(((j4o.util.Date)a_object).getTime(), a_bytes);
 			}
+		}
+
+		public override object current1()
+		{
+			return new j4o.util.Date(i_compareTo);
 		}
 
 		internal static string now()

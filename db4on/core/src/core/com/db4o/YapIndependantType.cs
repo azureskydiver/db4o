@@ -89,8 +89,10 @@ namespace com.db4o
 
 		public abstract object readIndexEntry(com.db4o.YapReader a_reader);
 
-		public abstract void writeIndexEntry(com.db4o.YapWriter a_writer, object a_object
+		public abstract void writeIndexEntry(com.db4o.YapReader a_writer, object a_object
 			);
+
+		public abstract object current();
 
 		public abstract void appendEmbedded3(com.db4o.YapWriter arg1);
 

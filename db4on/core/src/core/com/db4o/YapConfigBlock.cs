@@ -63,9 +63,9 @@ namespace com.db4o
 		internal YapConfigBlock(com.db4o.YapFile stream)
 		{
 			_stream = stream;
-			_encoding = stream.i_config.i_encoding;
+			_encoding = stream.i_config.encoding();
 			_freespaceSystem = com.db4o.inside.freespace.FreespaceManager.checkType(stream.i_config
-				._freespaceSystem);
+				.freespaceSystem());
 			_opentime = processID();
 			if (lockFile())
 			{
@@ -163,8 +163,8 @@ namespace com.db4o
 		private byte[] passwordToken()
 		{
 			byte[] pwdtoken = new byte[ENCRYPTION_PASSWORD_LENGTH];
-			string fullpwd = _stream.i_config.i_password;
-			if (_stream.i_config.i_encrypt && fullpwd != null)
+			string fullpwd = _stream.i_config.password();
+			if (_stream.i_config.encrypt() && fullpwd != null)
 			{
 				try
 				{
@@ -208,6 +208,17 @@ namespace com.db4o
 			if (oldLength > LENGTH || oldLength < MINIMUM_LENGTH)
 			{
 				com.db4o.inside.Exceptions4.throwRuntimeException(17);
+			}
+			if (oldLength != LENGTH)
+			{
+				if (!_stream.i_config.isReadOnly() && !_stream.i_config.allowVersionUpdates())
+				{
+					if (_stream.i_config.automaticShutDown())
+					{
+						com.db4o.Platform4.removeShutDownHook(_stream, _stream.i_lock);
+					}
+					com.db4o.inside.Exceptions4.throwRuntimeException(65);
+				}
 			}
 			long lastOpenTime = com.db4o.YLong.readLong(reader);
 			long lastAccessTime = com.db4o.YLong.readLong(reader);

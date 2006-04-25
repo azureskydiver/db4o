@@ -9,19 +9,19 @@ namespace com.db4o
 			{
 				try
 				{
-					i_currentByte = 0;
-					i_length = message.getPayLoad().readInt();
-					i_blob.getStatusFrom(this);
-					i_blob.setStatus(com.db4o.ext.Status.PROCESSING);
-					copy(sock, this.i_blob.getClientOutputStream(), i_length, true);
+					_currentByte = 0;
+					_length = message.getPayLoad().readInt();
+					_blob.getStatusFrom(this);
+					_blob.setStatus(com.db4o.ext.Status.PROCESSING);
+					copy(sock, this._blob.getClientOutputStream(), _length, true);
 					message = com.db4o.Msg.readMessage(getTransaction(), sock);
 					if (message.Equals(com.db4o.Msg.OK))
 					{
-						this.i_blob.setStatus(com.db4o.ext.Status.COMPLETED);
+						this._blob.setStatus(com.db4o.ext.Status.COMPLETED);
 					}
 					else
 					{
-						this.i_blob.setStatus(com.db4o.ext.Status.ERROR);
+						this._blob.setStatus(com.db4o.ext.Status.ERROR);
 					}
 				}
 				catch (System.Exception e)
@@ -32,7 +32,7 @@ namespace com.db4o
 			{
 				if (message.Equals(com.db4o.Msg.ERROR))
 				{
-					this.i_blob.setStatus(com.db4o.ext.Status.ERROR);
+					this._blob.setStatus(com.db4o.ext.Status.ERROR);
 				}
 			}
 		}

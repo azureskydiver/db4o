@@ -21,20 +21,20 @@ namespace com.db4o
 			i_yapFile = a_yapFile;
 			com.db4o.Config4Impl config = (com.db4o.Config4Impl)i_yapFile.configure();
 			config.callbacks(false);
-			config.i_isServer = true;
+			config.isServer(true);
 			a_yapFile.getYapClass(a_yapFile.i_handlers.ICLASS_STATICCLASS, true);
-			config.i_exceptionalClasses.forEachValue(new _AnonymousInnerClass33(this, a_yapFile
+			config.exceptionalClasses().forEachValue(new _AnonymousInnerClass33(this, a_yapFile
 				));
-			if (config.i_messageLevel == 0)
+			if (config.messageLevel() == 0)
 			{
-				config.i_messageLevel = 1;
+				config.messageLevel(1);
 			}
 			if (a_port > 0)
 			{
 				try
 				{
 					i_serverSocket = new com.db4o.foundation.network.YapServerSocket(a_port);
-					i_serverSocket.setSoTimeout(config.i_timeoutServerSocket);
+					i_serverSocket.setSoTimeout(config.timeoutServerSocket());
 				}
 				catch (System.IO.IOException e)
 				{
@@ -189,7 +189,7 @@ namespace com.db4o
 
 		public virtual com.db4o.foundation.network.YapSocketFake openClientSocket()
 		{
-			int timeout = ((com.db4o.Config4Impl)configure()).i_timeoutClientSocket;
+			int timeout = ((com.db4o.Config4Impl)configure()).timeoutClientSocket();
 			com.db4o.foundation.network.YapSocketFake clientFake = new com.db4o.foundation.network.YapSocketFake
 				(this, timeout);
 			com.db4o.foundation.network.YapSocketFake serverFake = new com.db4o.foundation.network.YapSocketFake

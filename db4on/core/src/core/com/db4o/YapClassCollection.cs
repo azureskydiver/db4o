@@ -178,7 +178,7 @@ namespace com.db4o
 			return col;
 		}
 
-		internal override byte getIdentifier()
+		public override byte getIdentifier()
 		{
 			return com.db4o.YapConst.YAPCLASSCOLLECTION;
 		}
@@ -195,8 +195,8 @@ namespace com.db4o
 			com.db4o.YapClass yapClass = (com.db4o.YapClass)i_yapClassByClass.get(a_class);
 			if (yapClass == null)
 			{
-				yapClass = (com.db4o.YapClass)i_yapClassByBytes.remove(asBytes(a_class.getName())
-					);
+				yapClass = (com.db4o.YapClass)i_yapClassByBytes.remove(getNameBytes(a_class.getName
+					()));
 				readYapClass(yapClass, a_class);
 			}
 			if (yapClass != null || (!a_create))
@@ -248,8 +248,8 @@ namespace com.db4o
 
 		public com.db4o.YapClass getYapClass(string a_name)
 		{
-			com.db4o.YapClass yapClass = (com.db4o.YapClass)i_yapClassByBytes.remove(asBytes(
-				a_name));
+			com.db4o.YapClass yapClass = (com.db4o.YapClass)i_yapClassByBytes.remove(getNameBytes
+				(a_name));
 			readYapClass(yapClass, null);
 			if (yapClass == null)
 			{
@@ -270,12 +270,23 @@ namespace com.db4o
 
 		public int getYapClassID(string name)
 		{
-			com.db4o.YapClass yc = (com.db4o.YapClass)i_yapClassByBytes.get(asBytes(name));
+			com.db4o.YapClass yc = (com.db4o.YapClass)i_yapClassByBytes.get(getNameBytes(name
+				));
 			if (yc != null)
 			{
 				return yc.getID();
 			}
 			return 0;
+		}
+
+		private byte[] getNameBytes(string name)
+		{
+			return asBytes(resolveAlias(name));
+		}
+
+		private string resolveAlias(string name)
+		{
+			return i_stream.i_config.resolveAlias(name);
 		}
 
 		internal void initOnUp(com.db4o.Transaction systemTrans)
@@ -323,7 +334,7 @@ namespace com.db4o
 			return new com.db4o.YapClassCollectionIterator(this, i_classes._first);
 		}
 
-		internal override int ownLength()
+		public override int ownLength()
 		{
 			return com.db4o.YapConst.OBJECT_LENGTH + com.db4o.YapConst.YAPINT_LENGTH + (i_classes
 				.size() * com.db4o.YapConst.YAPID_LENGTH);
@@ -338,7 +349,7 @@ namespace com.db4o
 			}
 		}
 
-		internal sealed override void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader
+		public sealed override void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader
 			 a_reader)
 		{
 			int classCount = a_reader.readInt();
@@ -347,18 +358,18 @@ namespace com.db4o
 			{
 				com.db4o.YapClass yapClass = new com.db4o.YapClass(i_stream, null);
 				int id = a_reader.readInt();
-				yapClass.setID(i_stream, id);
+				yapClass.setID(id);
 				i_classes.add(yapClass);
 				i_yapClassByID.put(id, yapClass);
 				i_yapClassByBytes.put(yapClass.readName(a_trans), yapClass);
 			}
-			com.db4o.foundation.Hashtable4 readAs = i_stream.i_config._readAs;
-			readAs.forEachKey(new _AnonymousInnerClass296(this, readAs));
+			com.db4o.foundation.Hashtable4 readAs = i_stream.i_config.readAs();
+			readAs.forEachKey(new _AnonymousInnerClass305(this, readAs));
 		}
 
-		private sealed class _AnonymousInnerClass296 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass305 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass296(YapClassCollection _enclosing, com.db4o.foundation.Hashtable4
+			public _AnonymousInnerClass305(YapClassCollection _enclosing, com.db4o.foundation.Hashtable4
 				 readAs)
 			{
 				this._enclosing = _enclosing;
@@ -368,9 +379,9 @@ namespace com.db4o
 			public void visit(object a_object)
 			{
 				string dbName = (string)a_object;
-				byte[] dbbytes = this._enclosing.asBytes(dbName);
+				byte[] dbbytes = this._enclosing.getNameBytes(dbName);
 				string useName = (string)readAs.get(dbName);
-				byte[] useBytes = this._enclosing.asBytes(useName);
+				byte[] useBytes = this._enclosing.getNameBytes(useName);
 				if (this._enclosing.i_yapClassByBytes.get(useBytes) == null)
 				{
 					com.db4o.YapClass yc = (com.db4o.YapClass)this._enclosing.i_yapClassByBytes.get(dbbytes
@@ -487,13 +498,14 @@ namespace com.db4o
 			return sclasses;
 		}
 
-		internal override void writeThis(com.db4o.YapWriter a_writer)
+		public override void writeThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+			)
 		{
 			a_writer.writeInt(i_classes.size());
 			com.db4o.foundation.Iterator4 i = i_classes.iterator();
 			while (i.hasNext())
 			{
-				writeIDOf((com.db4o.YapClass)i.next(), a_writer);
+				a_writer.writeIDOf(trans, i.next());
 			}
 		}
 

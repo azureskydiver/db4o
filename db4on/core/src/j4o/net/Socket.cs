@@ -33,6 +33,11 @@ namespace j4o.net
 			return _out;
 		}
 
+		public int getPort() 
+		{
+			return ((IPEndPoint)base._delegate.RemoteEndPoint).Port;
+		}
+
 		override protected void Initialize(NativeSocket socket)
 		{
 			base.Initialize(socket);

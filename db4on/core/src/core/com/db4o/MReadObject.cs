@@ -11,7 +11,7 @@ namespace com.db4o
 			{
 				try
 				{
-					bytes = stream.readWriterByID(this.getTransaction(), this.payLoad.readInt());
+					bytes = stream.readWriterByID(this.getTransaction(), this._payLoad.readInt());
 				}
 				catch (System.Exception e)
 				{

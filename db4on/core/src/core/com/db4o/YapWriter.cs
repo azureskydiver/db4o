@@ -178,7 +178,7 @@ namespace com.db4o
 
 			public void visit(object a_object)
 			{
-				a_visitor.visit((com.db4o.YapWriter)((com.db4o.TreeIntObject)a_object).i_object);
+				a_visitor.visit((com.db4o.YapWriter)((com.db4o.TreeIntObject)a_object)._object);
 			}
 
 			private readonly YapWriter _enclosing;
@@ -262,7 +262,7 @@ namespace com.db4o
 			com.db4o.Tree tio = com.db4o.TreeInt.find(i_embedded, id);
 			if (tio != null)
 			{
-				return (com.db4o.YapWriter)((com.db4o.TreeIntObject)tio).i_object;
+				return (com.db4o.YapWriter)((com.db4o.TreeIntObject)tio)._object;
 			}
 			com.db4o.YapWriter bytes = i_trans.i_stream.readObjectWriterByAddress(i_trans, id
 				, length);
@@ -367,7 +367,7 @@ namespace com.db4o
 
 		internal void write()
 		{
-			i_trans.i_file.writeBytes(this);
+			i_trans.i_file.writeBytes(this, i_address, _addressOffset);
 		}
 
 		internal void writeEmbedded()
@@ -406,7 +406,7 @@ namespace com.db4o
 		public void writeEncrypt()
 		{
 			i_trans.i_stream.i_handlers.encrypt(this);
-			i_trans.i_file.writeBytes(this);
+			i_trans.i_file.writeBytes(this, i_address, _addressOffset);
 			i_trans.i_stream.i_handlers.decrypt(this);
 		}
 
@@ -425,7 +425,7 @@ namespace com.db4o
 
 		internal void writeShortString(string a_string)
 		{
-			i_trans.i_stream.i_handlers.i_stringHandler.writeShort(a_string, this);
+			writeShortString(i_trans, a_string);
 		}
 
 		public void moveForward(int length)

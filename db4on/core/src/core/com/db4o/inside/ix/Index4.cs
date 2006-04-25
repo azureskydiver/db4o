@@ -235,12 +235,12 @@ namespace com.db4o.inside.ix
 			public void visit(object a_object)
 			{
 				com.db4o.inside.ix.IxTree ixTree = (com.db4o.inside.ix.IxTree)a_object;
-				if (ixTree.i_version == ft.i_version)
+				if (ixTree._version == ft.i_version)
 				{
 					if (!(ixTree is com.db4o.inside.ix.IxFileRange))
 					{
 						ixTree.beginMerge();
-						tree[0] = tree[0].add(ixTree);
+						tree[0] = com.db4o.Tree.add(tree[0], ixTree);
 					}
 				}
 			}

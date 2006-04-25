@@ -29,6 +29,17 @@ namespace com.db4o
 		internal virtual object activatedKey(int a_depth)
 		{
 			checkActive();
+			if (a_depth < 0)
+			{
+				com.db4o.Transaction trans = getTrans();
+				if (trans != null)
+				{
+					if (trans.i_stream.i_config.activationDepth() < 1)
+					{
+						a_depth = 1;
+					}
+				}
+			}
 			activate(i_key, a_depth);
 			return i_key;
 		}

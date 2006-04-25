@@ -4,6 +4,8 @@ namespace com.db4o.inside.freespace
 	{
 		internal readonly com.db4o.YapFile _file;
 
+		public const byte FM_DEFAULT = 0;
+
 		public const byte FM_LEGACY_RAM = 1;
 
 		public const byte FM_RAM = 2;
@@ -19,7 +21,7 @@ namespace com.db4o.inside.freespace
 
 		public static byte checkType(byte systemType)
 		{
-			if (systemType == 0)
+			if (systemType == FM_DEFAULT)
 			{
 				return FM_RAM;
 			}
@@ -79,7 +81,7 @@ namespace com.db4o.inside.freespace
 
 		internal int discardLimit()
 		{
-			return _file.i_config.i_discardFreeSpace;
+			return _file.i_config.discardFreeSpace();
 		}
 
 		public abstract void endCommit();

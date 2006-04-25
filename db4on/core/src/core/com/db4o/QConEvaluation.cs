@@ -70,7 +70,7 @@ namespace com.db4o
 			try
 			{
 				com.db4o.Platform4.evaluationEvaluate(i_evaluation, candidate);
-				if (!candidate.i_include)
+				if (!candidate._include)
 				{
 					doNotInclude(candidate.getRoot());
 				}

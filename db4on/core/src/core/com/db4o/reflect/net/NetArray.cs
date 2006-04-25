@@ -1,3 +1,5 @@
+using System;
+
 namespace com.db4o.reflect.net
 {
 
@@ -74,22 +76,36 @@ namespace com.db4o.reflect.net
             return ((System.Array)array).GetLength(0);
 		}
 
-
 		public virtual bool isNDimensional(com.db4o.reflect.ReflectClass a_class)
 		{
-            return Compat.getArrayRank(((NetClass)a_class).getNetType()) > 1;
+			Type type = getNetType(a_class);
+			return getArrayRank(type) > 1;
+		}
+
+		private static Type getNetType(ReflectClass a_class)
+		{
+			return ((NetClass)a_class).getNetType();
+		}
+
+		private int getArrayRank(Type type)
+		{
+#if CF_1_0 || CF_2_0
+			return ((j4o.lang.ArrayTypeReference)j4o.lang.TypeReference.FromType(type)).Rank;
+#else
+			return type.GetArrayRank();
+#endif
 		}
 
 		public virtual object newInstance(com.db4o.reflect.ReflectClass componentType, int
 			 length)
 		{
-            return System.Array.CreateInstance(((NetClass)componentType).getNetType(), length);
+            return System.Array.CreateInstance(getNetType(componentType), length);
 		}
 
 		public virtual object newInstance(com.db4o.reflect.ReflectClass componentType, int[]
 			 dimensions)
 		{
-            return System.Array.CreateInstance(((NetClass)componentType).getNetType(), dimensions);
+            return System.Array.CreateInstance(getNetType(componentType), dimensions);
 		}
 
 		public virtual void set(object onArray, int index, object element)

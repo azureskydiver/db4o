@@ -192,7 +192,7 @@ namespace com.db4o
 					return true;
 				}
 			}
-			if (!_masterStream.i_config.i_testConstructors)
+			if (!_masterStream.i_config.testConstructors())
 			{
 				return true;
 			}
@@ -253,7 +253,7 @@ namespace com.db4o
 				if (!foundConstructor[0])
 				{
 					com.db4o.reflect.ReflectConstructor constructor = (com.db4o.reflect.ReflectConstructor
-						)((com.db4o.TreeIntObject)a_object).i_object;
+						)((com.db4o.TreeIntObject)a_object)._object;
 					try
 					{
 						com.db4o.reflect.ReflectClass[] pTypes = constructor.getParameterTypes();
@@ -398,17 +398,17 @@ namespace com.db4o
 
 		internal void initEncryption(com.db4o.Config4Impl a_config)
 		{
-			if (a_config.i_encrypt && a_config.i_password != null && j4o.lang.JavaSystem.getLengthOf
-				(a_config.i_password) > 0)
+			if (a_config.encrypt() && a_config.password() != null && j4o.lang.JavaSystem.getLengthOf
+				(a_config.password()) > 0)
 			{
 				i_encrypt = true;
-				i_encryptor = new byte[j4o.lang.JavaSystem.getLengthOf(a_config.i_password)];
+				i_encryptor = new byte[j4o.lang.JavaSystem.getLengthOf(a_config.password())];
 				for (int i = 0; i < i_encryptor.Length; i++)
 				{
-					i_encryptor[i] = (byte)(j4o.lang.JavaSystem.getCharAt(a_config.i_password, i) & unchecked(
+					i_encryptor[i] = (byte)(j4o.lang.JavaSystem.getCharAt(a_config.password(), i) & unchecked(
 						(int)(0xff)));
 				}
-				i_lastEncryptorByte = j4o.lang.JavaSystem.getLengthOf(a_config.i_password) - 1;
+				i_lastEncryptorByte = j4o.lang.JavaSystem.getLengthOf(a_config.password()) - 1;
 			}
 			else
 			{

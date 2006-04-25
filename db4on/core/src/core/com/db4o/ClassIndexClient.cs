@@ -35,7 +35,7 @@ namespace com.db4o
 			return ids;
 		}
 
-		internal override void read(com.db4o.Transaction a_trans)
+		public override void read(com.db4o.Transaction a_trans)
 		{
 		}
 
@@ -43,15 +43,12 @@ namespace com.db4o
 		{
 		}
 
-		internal override void setID(com.db4o.YapStream a_stream, int a_id)
-		{
-		}
-
 		internal void write(com.db4o.YapStream a_stream)
 		{
 		}
 
-		internal sealed override void writeOwnID(com.db4o.YapWriter a_writer)
+		internal sealed override void writeOwnID(com.db4o.Transaction trans, com.db4o.YapReader
+			 a_writer)
 		{
 			a_writer.writeInt(0);
 		}

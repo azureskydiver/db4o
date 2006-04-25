@@ -9,24 +9,24 @@ namespace com.db4o
 			{
 				try
 				{
-					i_currentByte = 0;
-					i_length = this.i_blob.getLength();
-					i_blob.getStatusFrom(this);
-					i_blob.setStatus(com.db4o.ext.Status.PROCESSING);
-					j4o.io.FileInputStream inBlob = this.i_blob.getClientInputStream();
+					_currentByte = 0;
+					_length = this._blob.getLength();
+					_blob.getStatusFrom(this);
+					_blob.setStatus(com.db4o.ext.Status.PROCESSING);
+					j4o.io.FileInputStream inBlob = this._blob.getClientInputStream();
 					copy(inBlob, sock, true);
 					sock.flush();
 					com.db4o.YapStream stream = getStream();
 					message = com.db4o.Msg.readMessage(getTransaction(), sock);
 					if (message.Equals(com.db4o.Msg.OK))
 					{
-						stream.deactivate(i_blob, int.MaxValue);
-						stream.activate(i_blob, int.MaxValue);
-						this.i_blob.setStatus(com.db4o.ext.Status.COMPLETED);
+						stream.deactivate(_blob, int.MaxValue);
+						stream.activate(_blob, int.MaxValue);
+						this._blob.setStatus(com.db4o.ext.Status.COMPLETED);
 					}
 					else
 					{
-						this.i_blob.setStatus(com.db4o.ext.Status.ERROR);
+						this._blob.setStatus(com.db4o.ext.Status.ERROR);
 					}
 				}
 				catch (System.Exception e)

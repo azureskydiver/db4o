@@ -51,7 +51,7 @@ namespace com.db4o
 			public void visit(object obj)
 			{
 				tree[0] = com.db4o.Tree.add(tree[0], new com.db4o.TreeInt(((com.db4o.TreeInt)obj)
-					.i_key));
+					._key));
 			}
 
 			private readonly ClassIndex _enclosing;
@@ -103,7 +103,7 @@ namespace com.db4o
 			return reader.readInt();
 		}
 
-		internal sealed override byte getIdentifier()
+		public sealed override byte getIdentifier()
 		{
 			return com.db4o.YapConst.YAPINDEX;
 		}
@@ -133,7 +133,7 @@ namespace com.db4o
 
 			public void visit(object obj)
 			{
-				ids[i[0]++] = ((com.db4o.TreeInt)obj).i_key;
+				ids[i[0]++] = ((com.db4o.TreeInt)obj)._key;
 			}
 
 			private readonly ClassIndex _enclosing;
@@ -154,7 +154,7 @@ namespace com.db4o
 			return _yapClass.getStream();
 		}
 
-		internal sealed override int ownLength()
+		public sealed override int ownLength()
 		{
 			return com.db4o.YapConst.OBJECT_LENGTH + byteCount();
 		}
@@ -164,7 +164,7 @@ namespace com.db4o
 			throw com.db4o.YapConst.virtualException();
 		}
 
-		internal sealed override void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader
+		public sealed override void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader
 			 a_reader)
 		{
 			i_root = new com.db4o.TreeReader(a_reader, new com.db4o.TreeInt(0)).read();
@@ -180,12 +180,13 @@ namespace com.db4o
 			a_stream.setDirty(this);
 		}
 
-		public virtual void write(com.db4o.YapWriter a_writer)
+		public virtual void write(com.db4o.YapReader a_writer)
 		{
-			writeThis(a_writer);
+			writeThis(null, a_writer);
 		}
 
-		internal sealed override void writeThis(com.db4o.YapWriter a_writer)
+		public sealed override void writeThis(com.db4o.Transaction trans, com.db4o.YapReader
+			 a_writer)
 		{
 			com.db4o.Tree.write(a_writer, i_root);
 		}

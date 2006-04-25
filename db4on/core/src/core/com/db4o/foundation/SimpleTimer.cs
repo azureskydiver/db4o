@@ -14,6 +14,7 @@ namespace com.db4o.foundation
 			_runnable = runnable;
 			_interval = interval;
 			j4o.lang.Thread thread = new j4o.lang.Thread(this);
+			thread.setDaemon(true);
 			thread.setName(name);
 			thread.start();
 		}

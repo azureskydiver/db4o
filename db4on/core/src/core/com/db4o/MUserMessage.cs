@@ -6,10 +6,10 @@ namespace com.db4o
 			 sock)
 		{
 			com.db4o.YapStream stream = getStream();
-			if (stream.i_config.i_messageRecipient != null)
+			if (stream.i_config.messageRecipient() != null)
 			{
 				this.unmarshall();
-				stream.i_config.i_messageRecipient.processMessage(stream, stream.unmarshall(payLoad
+				stream.i_config.messageRecipient().processMessage(stream, stream.unmarshall(_payLoad
 					));
 			}
 			return true;

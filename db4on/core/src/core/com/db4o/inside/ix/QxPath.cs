@@ -28,6 +28,17 @@ namespace com.db4o.inside.ix
 			_depth = depth;
 		}
 
+		public override object shallowClone()
+		{
+			com.db4o.inside.ix.QxPath qpath = new com.db4o.inside.ix.QxPath(_processor, _parent
+				, _constraint, _depth);
+			qpath._indexTraversers = _indexTraversers;
+			qpath._ixPaths = _ixPaths;
+			qpath._nCandidates = _nCandidates;
+			qpath._candidates = _candidates;
+			return base.shallowCloneInternal(qpath);
+		}
+
 		internal virtual void buildPaths()
 		{
 			int id = _constraint.identityID();
@@ -62,15 +73,15 @@ namespace com.db4o.inside.ix
 			}
 			_indexTraversers = new com.db4o.inside.ix.IxTraverser[] { new com.db4o.inside.ix.IxTraverser
 				() };
-			i_key = ((com.db4o.QConObject)_constraint).findBoundsQuery(_indexTraversers[0]);
-			if (i_key < 0)
+			_key = ((com.db4o.QConObject)_constraint).findBoundsQuery(_indexTraversers[0]);
+			if (_key < 0)
 			{
 				return;
 			}
-			if (i_key > 0)
+			if (_key > 0)
 			{
 				_ixPaths = new com.db4o.inside.ix.NIxPaths[] { _indexTraversers[0].convert() };
-				expectNixCount(_ixPaths[0], i_key);
+				expectNixCount(_ixPaths[0], _key);
 			}
 			_processor.addPath(this);
 		}
@@ -104,13 +115,13 @@ namespace com.db4o.inside.ix
 			}
 			for (int i = 0; i < _indexTraversers.Length; i++)
 			{
-				_indexTraversers[i].visitAll(new _AnonymousInnerClass130(this));
+				_indexTraversers[i].visitAll(new _AnonymousInnerClass140(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass130 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass140 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass130(QxPath _enclosing)
+			public _AnonymousInnerClass140(QxPath _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -142,15 +153,15 @@ namespace com.db4o.inside.ix
 			{
 				if (_ixPaths[i] != null)
 				{
-					_ixPaths[i].traverse(new _AnonymousInnerClass152(this));
+					_ixPaths[i].traverse(new _AnonymousInnerClass162(this));
 				}
 			}
 			compareLoadedNixPaths();
 		}
 
-		private sealed class _AnonymousInnerClass152 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass162 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass152(QxPath _enclosing)
+			public _AnonymousInnerClass162(QxPath _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -182,12 +193,12 @@ namespace com.db4o.inside.ix
 					.size(_nCandidates));
 				return;
 			}
-			com.db4o.Tree.traverse(_nCandidates, new _AnonymousInnerClass180(this));
+			com.db4o.Tree.traverse(_nCandidates, new _AnonymousInnerClass191(this));
 		}
 
-		private sealed class _AnonymousInnerClass180 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass191 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass180(QxPath _enclosing)
+			public _AnonymousInnerClass191(QxPath _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -222,7 +233,7 @@ namespace com.db4o.inside.ix
 			_ixPaths = new com.db4o.inside.ix.NIxPaths[candidates.size()];
 			int[] ix = new int[] { 0 };
 			bool[] err = new bool[] { false };
-			candidates.traverse(new _AnonymousInnerClass214(this, ix, err));
+			candidates.traverse(new _AnonymousInnerClass224(this, ix, err));
 			if (err[0])
 			{
 				return;
@@ -230,9 +241,9 @@ namespace com.db4o.inside.ix
 			_processor.addPath(this);
 		}
 
-		private sealed class _AnonymousInnerClass214 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass224 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass214(QxPath _enclosing, int[] ix, bool[] err)
+			public _AnonymousInnerClass224(QxPath _enclosing, int[] ix, bool[] err)
 			{
 				this._enclosing = _enclosing;
 				this.ix = ix;
@@ -244,10 +255,10 @@ namespace com.db4o.inside.ix
 				int idx = ix[0]++;
 				this._enclosing._indexTraversers[idx] = new com.db4o.inside.ix.IxTraverser();
 				int count = this._enclosing._indexTraversers[idx].findBoundsQuery(this._enclosing
-					._constraint, ((com.db4o.TreeInt)a_object).i_key);
+					._constraint, ((com.db4o.TreeInt)a_object)._key);
 				if (count >= 0)
 				{
-					this._enclosing.i_key += count;
+					this._enclosing._key += count;
 				}
 				else
 				{
@@ -298,16 +309,16 @@ namespace com.db4o.inside.ix
 			{
 				if (other._ixPaths[i] != null)
 				{
-					other._ixPaths[i]._paths.traverse(new _AnonymousInnerClass278(this));
+					other._ixPaths[i]._paths.traverse(new _AnonymousInnerClass287(this));
 				}
 			}
 			int newCount = _ixPaths[0].count();
-			i_key += newCount - oldCount;
+			_key += newCount - oldCount;
 		}
 
-		private sealed class _AnonymousInnerClass278 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass287 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass278(QxPath _enclosing)
+			public _AnonymousInnerClass287(QxPath _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}

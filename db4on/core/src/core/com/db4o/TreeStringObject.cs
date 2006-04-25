@@ -3,11 +3,17 @@ namespace com.db4o
 	/// <exclude></exclude>
 	public class TreeStringObject : com.db4o.TreeString
 	{
-		public readonly object i_object;
+		public readonly object _object;
 
 		public TreeStringObject(string a_key, object a_object) : base(a_key)
 		{
-			this.i_object = a_object;
+			this._object = a_object;
+		}
+
+		public override object shallowClone()
+		{
+			com.db4o.TreeStringObject tso = new com.db4o.TreeStringObject(_key, _object);
+			return shallowCloneInternal(tso);
 		}
 	}
 }

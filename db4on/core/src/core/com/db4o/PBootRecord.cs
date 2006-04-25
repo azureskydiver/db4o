@@ -14,8 +14,6 @@ namespace com.db4o
 
 		public com.db4o.ext.Db4oDatabase i_db;
 
-		public long i_uuidGenerator;
-
 		public long i_versionGenerator;
 
 		public int i_generateVersionNumbers;
@@ -27,6 +25,9 @@ namespace com.db4o
 
 		public com.db4o.MetaIndex i_uuidMetaIndex;
 
+		[com.db4o.Transient]
+		private com.db4o.foundation.TimeStampIdGenerator _versionTimeGenerator;
+
 		public PBootRecord()
 		{
 		}
@@ -36,10 +37,18 @@ namespace com.db4o
 			return int.MaxValue;
 		}
 
+		private void createVersionTimeGenerator()
+		{
+			if (_versionTimeGenerator == null)
+			{
+				_versionTimeGenerator = new com.db4o.foundation.TimeStampIdGenerator(i_versionGenerator
+					);
+			}
+		}
+
 		internal virtual void init(com.db4o.Config4Impl a_config)
 		{
 			i_db = com.db4o.ext.Db4oDatabase.generate();
-			i_uuidGenerator = com.db4o.Unobfuscated.randomLong();
 			i_uuidMetaIndex = new com.db4o.MetaIndex();
 			initConfig(a_config);
 			i_dirty = true;
@@ -48,14 +57,14 @@ namespace com.db4o
 		internal virtual bool initConfig(com.db4o.Config4Impl a_config)
 		{
 			bool modified = false;
-			if (i_generateVersionNumbers != a_config.i_generateVersionNumbers)
+			if (i_generateVersionNumbers != a_config.generateVersionNumbers())
 			{
-				i_generateVersionNumbers = a_config.i_generateVersionNumbers;
+				i_generateVersionNumbers = a_config.generateVersionNumbers();
 				modified = true;
 			}
-			if (i_generateUUIDs != a_config.i_generateUUIDs)
+			if (i_generateUUIDs != a_config.generateUUIDs())
 			{
-				i_generateUUIDs = a_config.i_generateUUIDs;
+				i_generateUUIDs = a_config.generateUUIDs();
 				modified = true;
 			}
 			return modified;
@@ -77,8 +86,19 @@ namespace com.db4o
 
 		internal virtual long newUUID()
 		{
-			i_dirty = true;
-			return i_uuidGenerator++;
+			return nextVersion();
+		}
+
+		public virtual void raiseVersion(long a_minimumVersion)
+		{
+			if (i_versionGenerator < a_minimumVersion)
+			{
+				createVersionTimeGenerator();
+				_versionTimeGenerator.setMinimumNext(a_minimumVersion);
+				i_versionGenerator = a_minimumVersion;
+				setDirty();
+				store(1);
+			}
 		}
 
 		public virtual void setDirty()
@@ -90,7 +110,8 @@ namespace com.db4o
 		{
 			if (i_dirty)
 			{
-				i_versionGenerator++;
+				createVersionTimeGenerator();
+				i_versionGenerator = _versionTimeGenerator.generate();
 				i_stream.showInternalClasses(true);
 				base.store(a_depth);
 				i_stream.showInternalClasses(false);
@@ -98,9 +119,16 @@ namespace com.db4o
 			i_dirty = false;
 		}
 
-		internal virtual long version()
+		internal virtual long nextVersion()
 		{
 			i_dirty = true;
+			createVersionTimeGenerator();
+			i_versionGenerator = _versionTimeGenerator.generate();
+			return i_versionGenerator;
+		}
+
+		internal virtual long currentVersion()
+		{
 			return i_versionGenerator;
 		}
 	}

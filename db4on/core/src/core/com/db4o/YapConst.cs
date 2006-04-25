@@ -51,6 +51,10 @@ namespace com.db4o
 
 		internal const byte YAPNULL = (byte)'0';
 
+		public const byte BTREE = (byte)'T';
+
+		public const byte BTREE_NODE = (byte)'B';
+
 		internal const int IDENTIFIER_LENGTH = (com.db4o.Deploy.debug && com.db4o.Deploy.
 			identifiers) ? 1 : 0;
 
@@ -77,13 +81,13 @@ namespace com.db4o
 
 		public const int YAPINT_LENGTH = INTEGER_BYTES + ADDED_LENGTH;
 
-		internal const int YAPID_LENGTH = YAPINT_LENGTH;
+		public const int YAPID_LENGTH = YAPINT_LENGTH;
 
 		internal const int YAPLONG_LENGTH = LONG_BYTES + ADDED_LENGTH;
 
 		internal const int WRITE_LOOP = (INTEGER_BYTES - 1) * 8;
 
-		internal const int OBJECT_LENGTH = ADDED_LENGTH;
+		public const int OBJECT_LENGTH = ADDED_LENGTH;
 
 		public const int POINTER_LENGTH = (YAPINT_LENGTH * 2) + ADDED_LENGTH;
 

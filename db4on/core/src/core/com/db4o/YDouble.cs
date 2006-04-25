@@ -39,7 +39,7 @@ namespace com.db4o
 			return com.db4o.Platform4.longToDouble(ret);
 		}
 
-		public override void write(object a_object, com.db4o.YapWriter a_bytes)
+		public override void write(object a_object, com.db4o.YapReader a_bytes)
 		{
 			if (!com.db4o.Deploy.csharp && a_object == null)
 			{
@@ -61,6 +61,11 @@ namespace com.db4o
 		internal override void prepareComparison1(object obj)
 		{
 			i_compareToDouble = dval(obj);
+		}
+
+		public override object current1()
+		{
+			return System.Convert.ToDouble(i_compareTo);
 		}
 
 		internal override bool isEqual1(object obj)

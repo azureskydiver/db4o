@@ -29,6 +29,7 @@
 namespace Mono.Cecil.Cil {
 
 	using System;
+	using System.Collections;
 
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
@@ -41,11 +42,15 @@ namespace Mono.Cecil.Cil {
 		MemoryBinaryWriter m_binaryWriter;
 		MemoryBinaryWriter m_codeWriter;
 
+		IDictionary m_localSigCache;
+
 		public CodeWriter (ReflectionWriter reflectWriter, MemoryBinaryWriter writer)
 		{
 			m_reflectWriter = reflectWriter;
 			m_binaryWriter = writer;
 			m_codeWriter = new MemoryBinaryWriter ();
+
+			m_localSigCache = new Hashtable ();
 		}
 
 		public RVA WriteMethodBody (MethodDefinition meth)
@@ -74,6 +79,8 @@ namespace Mono.Cecil.Cil {
 		int GetParameterIndex (MethodBody body, ParameterDefinition p)
 		{
 			int idx = body.Method.Parameters.IndexOf (p);
+			if (idx == -1 && p == body.Method.This)
+				return 0;
 			if (body.Method.HasThis)
 				idx++;
 
@@ -226,15 +233,33 @@ namespace Mono.Cecil.Cil {
 			m_codeWriter.BaseStream.Position = pos;
 		}
 
+		bool IsRangeFat (Instruction start, Instruction end)
+		{
+			return end.Offset - start.Offset >= 256 || start.Offset >= 65536;
+		}
+
 		bool IsFat (ExceptionHandlerCollection seh)
 		{
-			bool fat = false;
-			for (int i = 0; i < seh.Count && !fat; i++) {
+			for (int i = 0; i < seh.Count; i++) {
 				IExceptionHandler eh = seh [i];
-				fat = eh.TryEnd.Offset - eh.TryStart.Offset > 255;
+				if (IsRangeFat (eh.TryStart, eh.TryEnd))
+					return true;
+
+				switch (eh.Type) {
+				case ExceptionHandlerType.Catch :
+				case ExceptionHandlerType.Fault :
+				case ExceptionHandlerType.Finally :
+					if (IsRangeFat (eh.HandlerStart, eh.HandlerEnd))
+						return true;
+					break;
+				case ExceptionHandlerType.Filter :
+					if (IsRangeFat (eh.FilterStart, eh.FilterEnd))
+						return true;
+					break;
+				}
 			}
 
-			return fat;
+			return false;
 		}
 
 		void WriteExceptionHandlerCollection (ExceptionHandlerCollection seh)
@@ -293,13 +318,21 @@ namespace Mono.Cecil.Cil {
 		public override void VisitVariableDefinitionCollection (VariableDefinitionCollection variables)
 		{
 			MethodBody body = variables.Container;
+			uint sig = m_reflectWriter.SignatureWriter.AddLocalVarSig (
+					GetLocalVarSig (variables));
+
+			if (m_localSigCache.Contains (sig)) {
+				body.LocalVarToken = (int) m_localSigCache [sig];
+				return;
+			}
+
 			StandAloneSigTable sasTable = m_reflectWriter.MetadataTableWriter.GetStandAloneSigTable ();
 			StandAloneSigRow sasRow = m_reflectWriter.MetadataRowWriter.CreateStandAloneSigRow (
-				m_reflectWriter.SignatureWriter.AddLocalVarSig (
-					GetLocalVarSig (variables)));
+				sig);
 
 			sasTable.Rows.Add (sasRow);
 			body.LocalVarToken = sasTable.Rows.Count;
+			m_localSigCache [sig] = body.LocalVarToken;
 		}
 
 		public override void TerminateMethodBody (MethodBody body)

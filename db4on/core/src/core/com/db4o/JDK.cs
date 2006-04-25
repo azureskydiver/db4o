@@ -24,10 +24,20 @@ namespace com.db4o
 			return null;
 		}
 
+		public virtual object createWeakReference(object obj)
+		{
+			return obj;
+		}
+
 		internal virtual object createYapRef(object a_queue, com.db4o.YapObject a_yapObject
 			, object a_object)
 		{
 			return null;
+		}
+
+		internal virtual object deserialize(byte[] bytes)
+		{
+			throw new com.db4o.ext.Db4oException(com.db4o.Messages.NOT_IMPLEMENTED);
 		}
 
 		internal virtual void forEachCollectionElement(object a_object, com.db4o.foundation.Visitor4
@@ -35,7 +45,12 @@ namespace com.db4o
 		{
 		}
 
-		internal virtual j4o.lang.ClassLoader getContextClassLoader()
+		internal virtual string format(j4o.util.Date date, bool showTime)
+		{
+			return date.ToString();
+		}
+
+		internal virtual object getContextClassLoader()
 		{
 			return null;
 		}
@@ -59,7 +74,7 @@ namespace com.db4o
 		{
 		}
 
-		internal virtual void Lock(j4o.io.RandomAccessFile file)
+		internal virtual void lockFile(object file)
 		{
 			lock (this)
 			{
@@ -96,6 +111,11 @@ namespace com.db4o
 			return null;
 		}
 
+		internal virtual byte[] serialize(object obj)
+		{
+			throw new com.db4o.ext.Db4oException(com.db4o.Messages.NOT_IMPLEMENTED);
+		}
+
 		internal virtual void setAccessible(object a_accessible)
 		{
 		}
@@ -106,11 +126,21 @@ namespace com.db4o
 			return false;
 		}
 
-		internal virtual void unlock(j4o.io.RandomAccessFile file)
+		internal virtual void unlockFile(object file)
 		{
 			lock (this)
 			{
 			}
+		}
+
+		public virtual object weakReferenceTarget(object weakRef)
+		{
+			return weakRef;
+		}
+
+		public virtual com.db4o.reflect.Reflector createReflector(object classLoader)
+		{
+			return null;
 		}
 	}
 }

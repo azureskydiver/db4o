@@ -12,8 +12,10 @@ namespace com.db4o
 	/// <persistent></persistent>
 	public class MetaClass : com.db4o.Internal4
 	{
+		/// <summary>persistent field, don't touch</summary>
 		public string name;
 
+		/// <summary>persistent field, don't touch</summary>
 		public com.db4o.MetaField[] fields;
 
 		public MetaClass()

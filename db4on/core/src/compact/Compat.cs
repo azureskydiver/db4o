@@ -5,154 +5,21 @@ using System.IO;
 using System.Reflection;
 using com.db4o.reflect;
 using j4o.lang;
-using Thread=System.Threading.Thread;
 
+#if CF_1_0
+// not need for CF_2_0
 namespace System.Runtime.CompilerServices
 {
 	internal class IsVolatile
 	{
 	}
 }
+#endif
 
 namespace com.db4o
 {
 	/// <exclude />
 	public class Compat
 	{
-		private static MethodInfo _hashMethod = getIdentityHashCodeMethod();
-
-		private static MethodInfo getIdentityHashCodeMethod()
-		{
-			Assembly assembly = typeof(object).Assembly;
-
-			// CompactFramework
-			try
-			{
-				Type t = assembly.GetType("System.PInvoke.EE");
-				return t.GetMethod(
-					"Object_GetHashCode",
-					BindingFlags.Public |
-					BindingFlags.NonPublic |
-					BindingFlags.Static);
-			}
-			catch (Exception e)
-			{
-			}
-
-			// We may be running the CF app on .NET Framework 1.1
-			// for profiling, let's give that a chance
-			try
-			{
-				Type t = assembly.GetType(
-					"System.Runtime.CompilerServices.RuntimeHelpers");
-				return t.GetMethod(
-					"GetHashCode",
-					BindingFlags.Public |
-					BindingFlags.Static);
-			}
-			catch (Exception e)
-			{
-			}
-
-			// and for completeness sake, let's provide .NET Framework 1.0
-			// compliance also so we can debug the CF app there too
-			return (typeof(Object)).GetMethod("GetHashCode");
-
-			return null;
-		}
-
-		private static int _identityHashCode(object o)
-		{
-			return (int) _hashMethod.Invoke(null, new object[] {o});
-		}
-
-		public static IdentityHashCodeProvider.HashCodeFunction getIdentityHashCodeFunction()
-		{
-			return new IdentityHashCodeProvider.HashCodeFunction(_identityHashCode);
-		}
-
-		public static void addShutDownHook(EventHandler handler)
-		{
-		}
-
-		public static Stream buffer(Stream stream)
-		{
-			return stream;
-		}
-
-		public static Stream buffer(Stream stream, int bufferSize)
-		{
-			return stream;
-		}
-
-		public static bool compact()
-		{
-			return true;
-		}
-
-		public static long doubleToLong(double a_double)
-		{
-			return 0;
-		}
-
-		public static int getArrayRank(Type type)
-		{
-			if (type.Name.EndsWith(",]"))
-			{
-				return 2;
-			}
-			return 1;
-		}
-
-		public static bool isDirectory(string path)
-		{
-			return Directory.Exists(path);
-		}
-
-		public static void lockFileStream(FileStream fs)
-		{
-		}
-
-		public static double longToDouble(long a_long)
-		{
-			return 0;
-		}
-
-		public static void notify(object obj)
-		{
-		}
-
-		public static void notifyAll(object obj)
-		{
-		}
-
-		public static ReflectConstructor serializationConstructor(Type type)
-		{
-			return null;
-		}
-
-		public static string stackTrace()
-		{
-			return "";
-		}
-
-		public static void threadSetName(Thread thread, string name)
-		{
-		}
-
-		public static string threadGetName(Thread thread)
-		{
-			return "";
-		}
-
-		public static void wait(object obj, long timeout)
-		{
-		}
-
-		internal static object wrapEvaluation(object evaluation)
-		{
-			// FIXME: How to better support EvaluationDelegate on the CompactFramework?
-			return evaluation;
-		}
 	}
 }

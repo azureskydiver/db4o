@@ -3,40 +3,40 @@ namespace com.db4o.inside.ix
 	/// <exclude></exclude>
 	public abstract class IxTree : com.db4o.Tree, com.db4o.foundation.Visitor4
 	{
-		internal com.db4o.inside.ix.IndexTransaction i_fieldTransaction;
+		internal com.db4o.inside.ix.IndexTransaction _fieldTransaction;
 
-		internal int i_version;
+		internal int _version;
 
 		internal int _nodes = 1;
 
 		internal IxTree(com.db4o.inside.ix.IndexTransaction a_ft)
 		{
-			i_fieldTransaction = a_ft;
-			i_version = a_ft.i_version;
+			_fieldTransaction = a_ft;
+			_version = a_ft.i_version;
 		}
 
 		public override com.db4o.Tree add(com.db4o.Tree a_new, int a_cmp)
 		{
 			if (a_cmp < 0)
 			{
-				if (i_subsequent == null)
+				if (_subsequent == null)
 				{
-					i_subsequent = a_new;
+					_subsequent = a_new;
 				}
 				else
 				{
-					i_subsequent = i_subsequent.add(a_new);
+					_subsequent = _subsequent.add(a_new);
 				}
 			}
 			else
 			{
-				if (i_preceding == null)
+				if (_preceding == null)
 				{
-					i_preceding = a_new;
+					_preceding = a_new;
 				}
 				else
 				{
-					i_preceding = i_preceding.add(a_new);
+					_preceding = _preceding.add(a_new);
 				}
 			}
 			return balanceCheckNulls();
@@ -44,35 +44,26 @@ namespace com.db4o.inside.ix
 
 		internal virtual void beginMerge()
 		{
-			i_preceding = null;
-			i_subsequent = null;
+			_preceding = null;
+			_subsequent = null;
 			setSizeOwn();
 		}
 
 		public override com.db4o.Tree deepClone(object a_param)
 		{
-			try
-			{
-				com.db4o.inside.ix.IxTree tree = (com.db4o.inside.ix.IxTree)j4o.lang.JavaSystem.clone
-					(this);
-				tree.i_fieldTransaction = (com.db4o.inside.ix.IndexTransaction)a_param;
-				return tree;
-			}
-			catch (j4o.lang.CloneNotSupportedException e)
-			{
-				j4o.lang.JavaSystem.printStackTrace(e);
-			}
-			return null;
+			com.db4o.inside.ix.IxTree tree = (com.db4o.inside.ix.IxTree)this.shallowClone();
+			tree._fieldTransaction = (com.db4o.inside.ix.IndexTransaction)a_param;
+			return tree;
 		}
 
 		internal com.db4o.inside.ix.Indexable4 handler()
 		{
-			return i_fieldTransaction.i_index._handler;
+			return _fieldTransaction.i_index._handler;
 		}
 
 		internal com.db4o.inside.ix.Index4 index()
 		{
-			return i_fieldTransaction.i_index;
+			return _fieldTransaction.i_index;
 		}
 
 		/// <summary>
@@ -103,19 +94,19 @@ namespace com.db4o.inside.ix
 		public override void setSizeOwnPrecedingSubsequent()
 		{
 			base.setSizeOwnPrecedingSubsequent();
-			_nodes = 1 + i_preceding.nodes() + i_subsequent.nodes();
+			_nodes = 1 + _preceding.nodes() + _subsequent.nodes();
 		}
 
 		public override void setSizeOwnPreceding()
 		{
 			base.setSizeOwnPreceding();
-			_nodes = 1 + i_preceding.nodes();
+			_nodes = 1 + _preceding.nodes();
 		}
 
 		public override void setSizeOwnSubsequent()
 		{
 			base.setSizeOwnSubsequent();
-			_nodes = 1 + i_subsequent.nodes();
+			_nodes = 1 + _subsequent.nodes();
 		}
 
 		public sealed override void setSizeOwnPlus(com.db4o.Tree tree)
@@ -143,7 +134,7 @@ namespace com.db4o.inside.ix
 
 		internal com.db4o.Transaction trans()
 		{
-			return i_fieldTransaction.i_trans;
+			return _fieldTransaction.i_trans;
 		}
 
 		public abstract void visit(object obj);
@@ -162,9 +153,9 @@ namespace com.db4o.inside.ix
 		public virtual void visitFirst(com.db4o.inside.freespace.FreespaceVisitor visitor
 			)
 		{
-			if (i_preceding != null)
+			if (_preceding != null)
 			{
-				((com.db4o.inside.ix.IxTree)i_preceding).visitFirst(visitor);
+				((com.db4o.inside.ix.IxTree)_preceding).visitFirst(visitor);
 				if (visitor.visited())
 				{
 					return;
@@ -175,9 +166,9 @@ namespace com.db4o.inside.ix
 			{
 				return;
 			}
-			if (i_subsequent != null)
+			if (_subsequent != null)
 			{
-				((com.db4o.inside.ix.IxTree)i_subsequent).visitFirst(visitor);
+				((com.db4o.inside.ix.IxTree)_subsequent).visitFirst(visitor);
 				if (visitor.visited())
 				{
 					return;
@@ -187,9 +178,9 @@ namespace com.db4o.inside.ix
 
 		public virtual void visitLast(com.db4o.inside.freespace.FreespaceVisitor visitor)
 		{
-			if (i_subsequent != null)
+			if (_subsequent != null)
 			{
-				((com.db4o.inside.ix.IxTree)i_subsequent).visitLast(visitor);
+				((com.db4o.inside.ix.IxTree)_subsequent).visitLast(visitor);
 				if (visitor.visited())
 				{
 					return;
@@ -200,14 +191,24 @@ namespace com.db4o.inside.ix
 			{
 				return;
 			}
-			if (i_preceding != null)
+			if (_preceding != null)
 			{
-				((com.db4o.inside.ix.IxTree)i_preceding).visitLast(visitor);
+				((com.db4o.inside.ix.IxTree)_preceding).visitLast(visitor);
 				if (visitor.visited())
 				{
 					return;
 				}
 			}
+		}
+
+		protected override com.db4o.Tree shallowCloneInternal(com.db4o.Tree tree)
+		{
+			com.db4o.inside.ix.IxTree ixTree = (com.db4o.inside.ix.IxTree)base.shallowCloneInternal
+				(tree);
+			ixTree._fieldTransaction = _fieldTransaction;
+			ixTree._version = _version;
+			ixTree._nodes = _nodes;
+			return ixTree;
 		}
 	}
 }

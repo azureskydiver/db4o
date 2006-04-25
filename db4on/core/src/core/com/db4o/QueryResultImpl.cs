@@ -25,7 +25,7 @@ namespace com.db4o
 		{
 			com.db4o.YapStream stream = i_trans.i_stream;
 			stream.beginEndActivation();
-			stream.activate2(i_trans, obj, stream.i_config.i_activationDepth);
+			stream.activate2(i_trans, obj, stream.i_config.activationDepth());
 			stream.beginEndActivation();
 			return obj;
 		}
@@ -102,7 +102,7 @@ namespace com.db4o
 			com.db4o.QCandidate candidate = (com.db4o.QCandidate)a_tree;
 			if (candidate.include())
 			{
-				addKeyCheckDuplicates(candidate.i_key);
+				addKeyCheckDuplicates(candidate._key);
 			}
 		}
 
@@ -112,7 +112,7 @@ namespace com.db4o
 			{
 				com.db4o.TreeInt newNode = new com.db4o.TreeInt(a_key);
 				i_candidates = com.db4o.Tree.add(i_candidates, newNode);
-				if (newNode.i_size == 0)
+				if (newNode._size == 0)
 				{
 					return;
 				}

@@ -19,6 +19,15 @@ namespace com.db4o.inside.slots
 		{
 		}
 
+		public override object shallowClone()
+		{
+			com.db4o.inside.slots.SlotChange sc = new com.db4o.inside.slots.SlotChange(0);
+			sc._action = _action;
+			sc._newSlot = _newSlot;
+			sc._shared = _shared;
+			return base.shallowCloneInternal(sc);
+		}
+
 		private void doFreeOnCommit()
 		{
 			setBit(FREE_ON_COMMIT_BIT);
@@ -51,7 +60,7 @@ namespace com.db4o.inside.slots
 				return;
 			}
 			doFreeOnCommit();
-			com.db4o.inside.slots.ReferencedSlot refSlot = file.produceFreeOnCommitEntry(i_key
+			com.db4o.inside.slots.ReferencedSlot refSlot = file.produceFreeOnCommitEntry(_key
 				);
 			if (refSlot.addReferenceIsFirst())
 			{
@@ -135,11 +144,11 @@ namespace com.db4o.inside.slots
 			_newSlot = new com.db4o.inside.slots.Slot(address, length);
 		}
 
-		public override void write(com.db4o.YapWriter writer)
+		public override void write(com.db4o.YapReader writer)
 		{
 			if (isSetPointer())
 			{
-				writer.writeInt(i_key);
+				writer.writeInt(_key);
 				writer.writeInt(_newSlot._address);
 				writer.writeInt(_newSlot._length);
 			}
@@ -149,7 +158,7 @@ namespace com.db4o.inside.slots
 		{
 			if (isSetPointer())
 			{
-				trans.writePointer(i_key, _newSlot._address, _newSlot._length);
+				trans.writePointer(_key, _newSlot._address, _newSlot._length);
 			}
 		}
 	}

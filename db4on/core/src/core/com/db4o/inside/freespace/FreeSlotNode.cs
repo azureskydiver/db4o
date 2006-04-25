@@ -5,16 +5,24 @@ namespace com.db4o.inside.freespace
 	{
 		public static int sizeLimit;
 
-		internal com.db4o.inside.freespace.FreeSlotNode i_peer;
+		internal com.db4o.inside.freespace.FreeSlotNode _peer;
 
 		internal FreeSlotNode(int a_key) : base(a_key)
 		{
 		}
 
+		public override object shallowClone()
+		{
+			com.db4o.inside.freespace.FreeSlotNode frslot = new com.db4o.inside.freespace.FreeSlotNode
+				(_key);
+			frslot._peer = _peer;
+			return base.shallowCloneInternal(frslot);
+		}
+
 		internal void createPeer(int a_key)
 		{
-			i_peer = new com.db4o.inside.freespace.FreeSlotNode(a_key);
-			i_peer.i_peer = this;
+			_peer = new com.db4o.inside.freespace.FreeSlotNode(a_key);
+			_peer._peer = this;
 		}
 
 		public override bool duplicates()
@@ -34,33 +42,33 @@ namespace com.db4o.inside.freespace
 			{
 				return null;
 			}
-			int cmp = a_in.i_key - a_finder.i_key;
+			int cmp = a_in._key - a_finder._key;
 			if (cmp == 0)
 			{
-				a_finder.i_object = a_in;
+				a_finder._object = a_in;
 				return a_in.remove();
 			}
 			else
 			{
 				if (cmp > 0)
 				{
-					a_in.i_preceding = removeGreaterOrEqual((com.db4o.inside.freespace.FreeSlotNode)a_in
-						.i_preceding, a_finder);
-					if (a_finder.i_object != null)
+					a_in._preceding = removeGreaterOrEqual((com.db4o.inside.freespace.FreeSlotNode)a_in
+						._preceding, a_finder);
+					if (a_finder._object != null)
 					{
-						a_in.i_size--;
+						a_in._size--;
 						return a_in;
 					}
-					a_finder.i_object = a_in;
+					a_finder._object = a_in;
 					return a_in.remove();
 				}
 				else
 				{
-					a_in.i_subsequent = removeGreaterOrEqual((com.db4o.inside.freespace.FreeSlotNode)
-						a_in.i_subsequent, a_finder);
-					if (a_finder.i_object != null)
+					a_in._subsequent = removeGreaterOrEqual((com.db4o.inside.freespace.FreeSlotNode)a_in
+						._subsequent, a_finder);
+					if (a_finder._object != null)
 					{
-						a_in.i_size--;
+						a_in._size--;
 					}
 					return a_in;
 				}
@@ -81,19 +89,19 @@ namespace com.db4o.inside.freespace
 			return null;
 		}
 
-		public sealed override void write(com.db4o.YapWriter a_writer)
+		public sealed override void write(com.db4o.YapReader a_writer)
 		{
-			a_writer.writeInt(i_key);
-			a_writer.writeInt(i_peer.i_key);
+			a_writer.writeInt(_key);
+			a_writer.writeInt(_peer._key);
 		}
 
 		public override string ToString()
 		{
 			return base.ToString();
-			string str = "FreeSlotNode " + i_key;
-			if (i_peer != null)
+			string str = "FreeSlotNode " + _key;
+			if (_peer != null)
 			{
-				str += " peer: " + i_peer.i_key;
+				str += " peer: " + _peer._key;
 			}
 			return str;
 		}

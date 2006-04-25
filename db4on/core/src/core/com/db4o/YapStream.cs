@@ -4,10 +4,18 @@ namespace com.db4o
     using com.db4o.inside.query;
     using com.db4o.ext;
 
+	/// <summary>
+	/// </summary>
+	/// <exclude />
 	public abstract class YapStream : com.db4o.YapStreamBase, ObjectContainer, ExtObjectContainer
 	{
 		internal YapStream(com.db4o.YapStream a_parent) : base(a_parent)
 		{
+		}
+
+		void System.IDisposable.Dispose()
+		{
+			close();
 		}
 
         public abstract com.db4o.ext.Db4oDatabase identity();
@@ -35,7 +43,7 @@ namespace com.db4o
             return query(match, new ComparerAdaptor(comparer));
         }
 	    
-#if NET_2_0
+#if NET_2_0 || CF_2_0
 	    class GenericComparerAdaptor<T> : com.db4o.query.QueryComparator
 	    {
             private System.Collections.Generic.IComparer<T> _comparer;
@@ -51,6 +59,19 @@ namespace com.db4o
             }
 	    }
 
+        class GenericComparisonAdaptor<T> : DelegateEnvelope, com.db4o.query.QueryComparator
+        {
+            public GenericComparisonAdaptor(System.Comparison<T> comparer) : base(comparer)
+            {
+            }
+
+            public int compare(object first, object second)
+            {
+                System.Comparison<T> _comparer = (System.Comparison<T>)GetContent();
+                return _comparer((T) first, (T) second);
+            }
+        }
+
         public System.Collections.Generic.IList<Extent> query<Extent>(Predicate<Extent> match)
         {
             if (null == match) throw new ArgumentNullException("match");
@@ -62,6 +83,15 @@ namespace com.db4o
             if (null == match) throw new ArgumentNullException("match");
             com.db4o.query.QueryComparator comparator = null != comparer
                                                             ? new GenericComparerAdaptor<Extent>(comparer)
+                                                            : null;
+            return getNativeQueryHandler().execute(match, comparator);
+        }
+
+        public System.Collections.Generic.IList<Extent> query<Extent>(Predicate<Extent> match, System.Comparison<Extent> comparison)
+        {
+            if (null == match) throw new ArgumentNullException("match");
+            com.db4o.query.QueryComparator comparator = null != comparison
+                                                            ? new GenericComparisonAdaptor<Extent>(comparison)
                                                             : null;
             return getNativeQueryHandler().execute(match, comparator);
         }

@@ -2,17 +2,17 @@ namespace com.db4o
 {
 	internal abstract class MsgBlob : com.db4o.MsgD
 	{
-		internal com.db4o.BlobImpl i_blob;
+		internal com.db4o.BlobImpl _blob;
 
-		internal int i_currentByte;
+		internal int _currentByte;
 
-		internal int i_length;
+		internal int _length;
 
 		internal virtual double getStatus()
 		{
-			if (i_length != 0)
+			if (_length != 0)
 			{
-				return (double)i_currentByte / (double)i_length;
+				return (double)_currentByte / (double)_length;
 			}
 			return com.db4o.ext.Status.ERROR;
 		}
@@ -22,7 +22,7 @@ namespace com.db4o
 		internal virtual com.db4o.BlobImpl serverGetBlobImpl()
 		{
 			com.db4o.BlobImpl blobImpl = null;
-			int id = payLoad.readInt();
+			int id = _payLoad.readInt();
 			com.db4o.YapStream stream = getStream();
 			lock (stream.i_lock)
 			{
@@ -51,7 +51,7 @@ namespace com.db4o
 				totalread += curread;
 				if (update)
 				{
-					i_currentByte += curread;
+					_currentByte += curread;
 				}
 			}
 			_out.flush();
@@ -69,7 +69,7 @@ namespace com.db4o
 				sock.write(buffer, 0, bytesread);
 				if (update)
 				{
-					i_currentByte += bytesread;
+					_currentByte += bytesread;
 				}
 			}
 			_in.close();

@@ -4,19 +4,19 @@ namespace com.db4o
 	{
 		internal sealed override com.db4o.YapWriter getByteLoad()
 		{
-			int address = this.payLoad.readInt();
-			int length = this.payLoad.getLength() - (com.db4o.YapConst.YAPINT_LENGTH);
-			this.payLoad.removeFirstBytes(com.db4o.YapConst.YAPINT_LENGTH);
-			this.payLoad.useSlot(address, length);
-			return this.payLoad;
+			int address = this._payLoad.readInt();
+			int length = this._payLoad.getLength() - (com.db4o.YapConst.YAPINT_LENGTH);
+			this._payLoad.removeFirstBytes(com.db4o.YapConst.YAPINT_LENGTH);
+			this._payLoad.useSlot(address, length);
+			return this._payLoad;
 		}
 
 		internal sealed override com.db4o.MsgD getWriter(com.db4o.YapWriter bytes)
 		{
 			com.db4o.MsgD message = this.getWriterForLength(bytes.getTransaction(), bytes.getLength
 				() + com.db4o.YapConst.YAPINT_LENGTH);
-			message.payLoad.writeInt(bytes.getAddress());
-			message.payLoad.append(bytes._buffer);
+			message._payLoad.writeInt(bytes.getAddress());
+			message._payLoad.append(bytes._buffer);
 			return message;
 		}
 

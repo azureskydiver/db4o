@@ -50,8 +50,8 @@ namespace com.db4o
 			int pos = name.LastIndexOf(".");
 			if (pos > 0)
 			{
-				i_ext = name.Substring(pos);
-				return name.Substring(0, pos);
+				i_ext = j4o.lang.JavaSystem.substring(name, pos);
+				return j4o.lang.JavaSystem.substring(name, 0, pos);
 			}
 			else
 			{
@@ -157,7 +157,7 @@ namespace com.db4o
 					i_stream.set(this);
 					int id = (int)i_stream.getID(this);
 					msg = (com.db4o.MsgBlob)com.db4o.Msg.WRITE_BLOB.getWriterForInt(i_trans, id);
-					msg.i_blob = this;
+					msg._blob = this;
 					i_status = com.db4o.ext.Status.QUEUED;
 				}
 				((com.db4o.YapClient)i_stream).processBlobMessage(msg);
@@ -254,7 +254,7 @@ namespace com.db4o
 
 		private string serverPath()
 		{
-			string path = i_stream.i_config.i_blobPath;
+			string path = i_stream.i_config.blobPath();
 			if (path == null)
 			{
 				path = "blobs";
@@ -291,7 +291,7 @@ namespace com.db4o
 				i_file = file;
 				com.db4o.MsgBlob msg = (com.db4o.MsgBlob)com.db4o.Msg.READ_BLOB.getWriterForInt(i_trans
 					, (int)i_stream.getID(this));
-				msg.i_blob = this;
+				msg._blob = this;
 				i_status = com.db4o.ext.Status.QUEUED;
 				((com.db4o.YapClient)i_stream).processBlobMessage(msg);
 			}

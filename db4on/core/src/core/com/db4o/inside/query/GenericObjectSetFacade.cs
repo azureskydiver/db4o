@@ -4,7 +4,7 @@ using com.db4o.ext;
 
 namespace com.db4o.inside.query
 {
-#if NET_2_0
+#if NET_2_0 || CF_2_0
     /// <summary>
     /// List based objectSet implementation
     /// </summary>

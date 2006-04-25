@@ -19,7 +19,7 @@ namespace com.db4o
 			int pos = className.IndexOf(".Net");
 			if (pos >= 0)
 			{
-				return "System." + className.Substring(pos + 4) + ", mscorlib";
+				return "System." + j4o.lang.JavaSystem.substring(className, pos + 4) + ", mscorlib";
 			}
 			return j4o.lang.Class.getClassForObject(defaultValue()).getName();
 		}
@@ -83,7 +83,7 @@ namespace com.db4o
 
 		public abstract void write(object obj, byte[] bytes, int offset);
 
-		public override void write(object a_object, com.db4o.YapWriter a_bytes)
+		public override void write(object a_object, com.db4o.YapReader a_bytes)
 		{
 			int offset = a_bytes._offset;
 			if (a_object != null)
@@ -96,6 +96,11 @@ namespace com.db4o
 		internal override void prepareComparison1(object obj)
 		{
 			i_compareTo = obj;
+		}
+
+		public override object current1()
+		{
+			return i_compareTo;
 		}
 
 		internal override bool isEqual1(object obj)

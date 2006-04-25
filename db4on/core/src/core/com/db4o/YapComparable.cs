@@ -12,5 +12,7 @@ namespace com.db4o
 		bool isGreater(object obj);
 
 		bool isSmaller(object obj);
+
+		object current();
 	}
 }

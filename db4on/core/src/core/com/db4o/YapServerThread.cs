@@ -46,8 +46,8 @@ namespace com.db4o
 			try
 			{
 				i_socket = aSocket;
-				i_socket.setSoTimeout(((com.db4o.Config4Impl)aServer.configure()).i_timeoutServerSocket
-					);
+				i_socket.setSoTimeout(((com.db4o.Config4Impl)aServer.configure()).timeoutServerSocket
+					());
 			}
 			catch (System.Exception e)
 			{
@@ -139,6 +139,10 @@ namespace com.db4o
 						break;
 					}
 				}
+				catch (System.IO.IOException e)
+				{
+					break;
+				}
 				catch (System.Exception e)
 				{
 					if (i_mainStream == null || i_mainStream.isClosed())
@@ -146,8 +150,7 @@ namespace com.db4o
 						break;
 					}
 				}
-				if (i_nullMessages > 20 || (j4o.lang.JavaSystem.currentTimeMillis() - i_lastClientMessage
-					 > i_config.i_timeoutPingClients))
+				if (i_nullMessages > 20 || pingClientTimeoutReached())
 				{
 					if (i_pingAttempts > 5)
 					{
@@ -163,6 +166,12 @@ namespace com.db4o
 				}
 			}
 			close();
+		}
+
+		private bool pingClientTimeoutReached()
+		{
+			return (j4o.lang.JavaSystem.currentTimeMillis() - i_lastClientMessage > i_config.
+				timeoutPingClients());
 		}
 
 		private bool messageProcessor()
@@ -215,6 +224,11 @@ namespace com.db4o
 			{
 				return true;
 			}
+			if (com.db4o.Msg.PING.Equals(message))
+			{
+				com.db4o.Msg.OK.write(getStream(), i_socket);
+				return true;
+			}
 			if (com.db4o.Msg.CLOSE.Equals(message))
 			{
 				com.db4o.Msg.CLOSE.write(getStream(), i_socket);
@@ -234,7 +248,7 @@ namespace com.db4o
 				long ver = 0;
 				lock (stream)
 				{
-					ver = getStream().bootRecord().i_versionGenerator;
+					ver = getStream().bootRecord().currentVersion();
 				}
 				com.db4o.Msg.ID_LIST.getWriterForLong(getTransaction(), ver).write(getStream(), i_socket
 					);
@@ -284,7 +298,8 @@ namespace com.db4o
 					i_substituteStream = (com.db4o.YapFile)com.db4o.Db4o.openFile(fileName);
 					i_substituteTrans = new com.db4o.Transaction(i_substituteStream, i_substituteStream
 						.getSystemTransaction());
-					i_substituteStream.i_config.i_messageRecipient = i_mainStream.i_config.i_messageRecipient;
+					i_substituteStream.i_config.setMessageRecipient(i_mainStream.i_config.messageRecipient
+						());
 					com.db4o.Msg.OK.write(getStream(), i_socket);
 				}
 				catch (System.Exception e)

@@ -46,7 +46,7 @@ namespace com.db4o.inside.freespace
 				, slotLength());
 			_addressIx._index._metaIndex.write(writer);
 			_lengthIx._index._metaIndex.write(writer);
-			if (_file.i_config._flushFileBuffers)
+			if (_file.i_config.flushFileBuffers())
 			{
 				_file.syncFiles();
 			}

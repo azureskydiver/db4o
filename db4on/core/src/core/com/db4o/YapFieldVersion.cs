@@ -10,7 +10,13 @@ namespace com.db4o
 
 		internal override void addFieldIndex(com.db4o.YapWriter a_writer, bool a_new)
 		{
-			com.db4o.YLong.writeLong(a_writer.getStream().bootRecord().version(), a_writer);
+			com.db4o.YLong.writeLong(a_writer.getStream().bootRecord().nextVersion(), a_writer
+				);
+		}
+
+		internal override void delete(com.db4o.YapWriter a_bytes, bool isUpdate)
+		{
+			a_bytes.incrementOffset(linkLength());
 		}
 
 		internal override void instantiate1(com.db4o.Transaction a_trans, com.db4o.YapObject
@@ -28,7 +34,7 @@ namespace com.db4o
 			{
 				if (br != null)
 				{
-					a_yapObject.i_virtualAttributes.i_version = br.version();
+					a_yapObject.i_virtualAttributes.i_version = br.nextVersion();
 				}
 			}
 			else
