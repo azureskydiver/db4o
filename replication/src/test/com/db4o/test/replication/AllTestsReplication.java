@@ -16,6 +16,7 @@ public class AllTestsReplication extends AllTests {
 
 	public static void main(String[] args) {
 		new AllTestsReplication().run();
+		System.err.println("Correct traversal behavior");
 	}
 
 	public void run() {

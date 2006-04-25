@@ -8,6 +8,7 @@ import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.GenericReplicationSession;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ObjectState;
+import com.db4o.replication.ReplicationConflictException;
 import com.db4o.replication.ReplicationEvent;
 import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationProvider;
@@ -41,12 +42,20 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		throw new RuntimeException(string);
 	}
 
-	private static void replicateQueryingFrom(ReplicationSession replication, ReplicationProvider origin, ReplicationProvider other) {
+	private void replicateQueryingFrom(ReplicationSession replication, ReplicationProvider origin, ReplicationProvider other) {
 		ObjectSet changes = origin.objectsChangedSinceLastReplication();
 		while (changes.hasNext()) {
 			Object changed = changes.next();
 			replication.replicate(changed);
 		}
+	}
+
+	private boolean isReplicationConflictExceptionExpected() {
+		return wasConflict() && isDefaultReplicationBehaviorAllowed();
+	}
+
+	private boolean isDefaultReplicationBehaviorAllowed() {
+		return _objectsToPrevailInConflicts != null && _objectsToPrevailInConflicts.isEmpty();
 	}
 
 	private static void ensure(boolean condition) {
@@ -94,14 +103,18 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	}
 
 	private void checkName(TestableReplicationProviderInside container, String name, boolean isExpected) {
-		//System.out.println("");
-		//System.out.println(name + (isExpected ? " " : " NOT") + " expected in container " + containerName(container));
+		System.out.println("");
+		System.out.println(name + (isExpected ? " " : " NOT") + " expected in container " + containerName(container));
 		Replicated obj = find(container, name);
 		if (isExpected) {
 			ensure(obj != null);
 		} else {
 			ensure(obj == null);
 		}
+	}
+
+	private String containerName(TestableReplicationProviderInside container) {
+		return container == _providerA ? "A" : "B";
 	}
 
 	private void checkNames() {
@@ -140,12 +153,12 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ReplicationEventListener() {
 			public void onReplicate(ReplicationEvent event) {
-				if (!event.isConflict()) return;
-
-				if (_objectsToPrevailInConflicts.isEmpty()) {
+				if (_objectsToPrevailInConflicts == null) {
 					event.overrideWith(null);
 					return;
 				}
+
+				if (_objectsToPrevailInConflicts.isEmpty()) return;  //Default replication behaviour.
 
 				ObjectState override = _objectsToPrevailInConflicts.contains(A)
 						? event.stateInProviderA()
@@ -155,16 +168,16 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		});
 
 		if (_direction.size() == 1) {
-			if (_direction.contains(A)) {
-				replication.setDirection(_providerB, _providerA);
-			}
-			if (_direction.contains(B)) {
-				replication.setDirection(_providerA, _providerB);
-			}
+			if (_direction.contains(A))	replication.setDirection(_providerB, _providerA);
+			if (_direction.contains(B))	replication.setDirection(_providerA, _providerB);
 		}
 
-
-		replicate(replication);
+		try {
+			replicate(replication);
+			ensure(!isReplicationConflictExceptionExpected());
+		} catch (ReplicationConflictException e) {
+			ensure(isReplicationConflictExceptionExpected());
+		}
 
 		replication.commit();
 
@@ -318,13 +331,15 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		if (!wasReplicationTriggered()) return false;
 		if (!_direction.contains(other(container))) return false;
 
-		if (wasConflict())
-			return _objectsToPrevailInConflicts.contains(container);
+		if (_objectsToPrevailInConflicts == null) return false;
+		if (_objectsToPrevailInConflicts.contains(container)) return true;
+		if (_objectsToPrevailInConflicts.contains(other(container))) return false;
 
 		return modifiedContainers().contains(container);
 	}
 
 	private String print(Set containerSet) {
+		if (containerSet == null) return "null";
 		if (containerSet.isEmpty()) return "NONE";
 		if (containerSet.size() == 2) return "BOTH";
 		return (String) containerSet.iterator().next();
@@ -345,7 +360,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		//System.out.println("" + _testCombination + " =================================");
 		//printCombination();
 
-		if (_testCombination < 0)  //Use this to skip some combinations and avoid waiting.
+		if (_testCombination < 74)  //Use this to skip some combinations and avoid waiting.
 			return;
 
 		int _errors = 0;
@@ -394,6 +409,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		tstWithObjectsPrevailingConflicts(_NONE);
 		tstWithObjectsPrevailingConflicts(_setA);
 		tstWithObjectsPrevailingConflicts(_setB);
+		tstWithObjectsPrevailingConflicts(null);
 	}
 
 	private void tstWithDeletedObjectsIn(Set containers) {

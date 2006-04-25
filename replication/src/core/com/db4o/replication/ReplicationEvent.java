@@ -17,9 +17,9 @@ public interface ReplicationEvent {
 	boolean isConflict();
 
 	/**
-	 * The user can choose to override the prevailing object.
+	 * Overrides default replication behaviour with some state chosen by the user.
 	 *
-	 * @param chosen the ObjectState of the prevailing object or null if you want to skip the replication of this object.
+	 * @param chosen the ObjectState of the prevailing object or null if replication should ignore this object and not traverse to its referenced objects.
 	 */
 	void overrideWith(ObjectState chosen);
 
@@ -45,7 +45,7 @@ public interface ReplicationEvent {
 	long objectCreationDate();
 
 	/**
-	 * Stop the replication of this object and the traversal to its child objects.
+	 * The replication process will not traverse to objects referenced by the current one.
 	 */
 	void stopTraversal();
 }
