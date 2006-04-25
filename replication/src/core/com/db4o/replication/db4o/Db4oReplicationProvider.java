@@ -342,4 +342,8 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 	public String toString() {
 		return getName();
 	}
+
+	public void replicateDeletion(Db4oUUID uuid) {
+		throw new RuntimeException("TODO");
+	}
 }

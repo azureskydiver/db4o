@@ -78,12 +78,12 @@ public interface ReplicationSession {
 	 * Cascade delete is disabled, regardless the user's settings.
 	 * <p/>
 	 * If the deletion violates referential integrity, exception will be thrown.
-	 * You could use the dRS replication callback to check whether the object to
-	 * be deleted violates referential integrity. If yes, you could stop traversal.
+	 * You can use the dRS replication callback to check whether the object to
+	 * be deleted violates referential integrity. If so, you can stop traversal.
 	 *
 	 * @param extent the Class that you want to delete
 	 */
-	public void replicateDeleted(Class extent);
+	public void replicateDeletions(Class extent);
 
 	/**
 	 * Rollbacks all changes done during the replication session. This call

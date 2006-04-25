@@ -2,6 +2,7 @@
 
 package com.db4o.inside.replication;
 
+import com.db4o.ObjectSet;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Visitor4;
 import com.db4o.replication.ReplicationProvider;
@@ -23,6 +24,8 @@ interface ReplicationProviderInside extends ReplicationProvider {
 	 * Destroys this provider and frees up resources.
 	 */
 	void destroy();
+
+	public ObjectSet getStoredObjects(Class type);
 
 	/**
 	 * Returns the current transaction serial number.
@@ -93,4 +96,6 @@ interface ReplicationProviderInside extends ReplicationProvider {
 	void visitCachedReferences(Visitor4 visitor);
 
 	boolean wasModifiedSinceLastReplication(ReplicationReference reference);
+
+	void replicateDeletion(Db4oUUID uuid);
 }

@@ -62,9 +62,10 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 		_testCombination = 0;
 
-		tstDirection(_setA);
-		tstDirection(_setB);
-		tstDirection(_setBoth);
+		tstWithDeletedObjectsIn(_NONE);
+		tstWithDeletedObjectsIn(_setA);
+		tstWithDeletedObjectsIn(_setB);
+		tstWithDeletedObjectsIn(_setBoth);
 
 		if (_intermittentErrors.length() > 0) {
 			System.err.println("Intermittent errors found in test combinations:" + _intermittentErrors);
@@ -163,18 +164,24 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		}
 
 
-		if (_containersToQueryFrom.contains(A)) {
-			replicateQueryingFrom(replication, _providerA, _providerB);
-		}
-		if (_containersToQueryFrom.contains(B)) {
-			replicateQueryingFrom(replication, _providerB, _providerA);
-		}
+		replicate(replication);
 
 		replication.commit();
 
 		checkNames();
 
 		clean();
+	}
+
+	private void replicate(final ReplicationSession replication) {
+		if (_containersToQueryFrom.contains(A))
+			replicateQueryingFrom(replication, _providerA, _providerB);
+
+		if (_containersToQueryFrom.contains(B))
+			replicateQueryingFrom(replication, _providerB, _providerA);
+		
+		if (!_containersWithDeletedObjects.isEmpty())
+			replication.replicateDeletions(Replicated.class);
 	}
 
 	private Replicated find(TestableReplicationProviderInside container, String name) {
@@ -213,7 +220,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	}
 
 	private boolean hasDeletions(String container) {
-		return false;
+		return _containersWithDeletedObjects.contains(container);
 	}
 
 	private void initState() {
@@ -269,7 +276,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	private Set modifiedContainers() {
 		Set result = new HashSet();
 		result.addAll(_containersWithChangedObjects);
-		//result.addAll(_containersWithDeletedObjects);
+		result.addAll(_containersWithDeletedObjects);
 		return result;
 	}
 
@@ -285,14 +292,14 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			_providerB.storeNew(new Replicated("newFromB"));
 		}
 
-//		if (hasDeletions(A)) {
-//			deleteObject(_providerA, "oldFromA");
-//			deleteObject(_providerA, "oldFromB");
-//		}
-//		if (hasDeletions(B)) {
-//			deleteObject(_providerB, "oldFromA");
-//			deleteObject(_providerB, "oldFromB");
-//		}
+		if (hasDeletions(A)) {
+			deleteObject(_providerA, "oldFromA");
+			deleteObject(_providerA, "oldFromB");
+		}
+		if (hasDeletions(B)) {
+			deleteObject(_providerB, "oldFromA");
+			deleteObject(_providerB, "oldFromB");
+		}
 
 		if (hasChanges(A)) {
 			changeObject(_providerA, "oldFromA", "oldFromAChangedInA");
@@ -327,7 +334,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		System.out.println("" + _testCombination + " =================================");
 		System.out.println("New Objects In: " + print(_containersWithNewObjects));
 		System.out.println("Changed Objects In: " + print(_containersWithChangedObjects));
-		//System.out.println("Deleted Objects In: " + print(_containersWithDeletedObjects));
+		System.out.println("Deleted Objects In: " + print(_containersWithDeletedObjects));
 		System.out.println("Querying From: " + print(_containersToQueryFrom));
 		System.out.println("Direction: To " + print(_direction));
 		System.out.println("Prevailing Conflicts: " + print(_objectsToPrevailInConflicts));

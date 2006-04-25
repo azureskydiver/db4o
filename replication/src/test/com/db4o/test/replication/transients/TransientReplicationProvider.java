@@ -418,4 +418,8 @@ public class TransientReplicationProvider implements TestableReplicationProvider
 			_delegate.extendTraversalTo(disconnected);
 		}
 	}
+
+	public void replicateDeletion(Db4oUUID uuid) {
+		_storedObjects.remove(getObject(uuid));
+	}
 }
