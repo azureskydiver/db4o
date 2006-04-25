@@ -104,6 +104,15 @@ namespace com.db4o
 			ift.add(parentID, i_handler.indexEntry(valueOrID));
 		}
 
+		internal virtual void removeIndexEntry(com.db4o.Transaction trans, int parentID, 
+			object valueOrID)
+		{
+			i_handler.prepareComparison(valueOrID);
+			com.db4o.inside.ix.IndexTransaction ift = getIndex(trans).dirtyIndexTransaction(trans
+				);
+			ift.remove(parentID, i_handler.indexEntry(valueOrID));
+		}
+
 		public virtual bool alive()
 		{
 			if (i_state == AVAILABLE)
@@ -345,7 +354,7 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual void delete(com.db4o.YapWriter a_bytes)
+		internal virtual void delete(com.db4o.YapWriter a_bytes, bool isUpdate)
 		{
 			if (alive())
 			{
@@ -360,15 +369,13 @@ namespace com.db4o
 					catch (com.db4o.CorruptionException e)
 					{
 					}
-					i_handler.prepareComparison(obj);
-					com.db4o.inside.ix.IndexTransaction ift = i_index.dirtyIndexTransaction(a_bytes.getTransaction
-						());
-					ift.remove(a_bytes.getID(), i_handler.indexEntry(obj));
+					removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), obj);
 					a_bytes._offset = offset;
 				}
 				bool dotnetValueType = false;
 				dotnetValueType = com.db4o.Platform4.isValueType(i_handler.classReflector());
-				if ((i_config != null && i_config.i_cascadeOnDelete == 1) || dotnetValueType)
+				if ((i_config != null && i_config.cascadeOnDelete() == com.db4o.YapConst.YES) || 
+					dotnetValueType)
 				{
 					int preserveCascade = a_bytes.cascadeDeletes();
 					a_bytes.setCascadeDeletes(1);
@@ -377,7 +384,7 @@ namespace com.db4o
 				}
 				else
 				{
-					if (i_config != null && i_config.i_cascadeOnDelete == -1)
+					if (i_config != null && i_config.cascadeOnDelete() == com.db4o.YapConst.NO)
 					{
 						int preserveCascade = a_bytes.cascadeDeletes();
 						a_bytes.setCascadeDeletes(0);
@@ -672,8 +679,9 @@ namespace com.db4o
 			 a_bytes, com.db4o.Config4Class a_config, bool a_new)
 		{
 			int memberId = 0;
-			if (a_object != null && ((a_config != null && (a_config.i_cascadeOnUpdate == 1)) 
-				|| (i_config != null && (i_config.i_cascadeOnUpdate == 1))))
+			if (a_object != null && ((a_config != null && (a_config.cascadeOnUpdate() == com.db4o.YapConst
+				.YES)) || (i_config != null && (i_config.cascadeOnUpdate() == com.db4o.YapConst.
+				YES))))
 			{
 				int min = 1;
 				if (i_yapClass.isCollection(a_object))
@@ -846,16 +854,16 @@ namespace com.db4o
 			return a_handler;
 		}
 
-		internal virtual void writeThis(com.db4o.YapWriter a_writer, com.db4o.YapClass a_onClass
-			)
+		internal virtual void writeThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+			, com.db4o.YapClass a_onClass)
 		{
 			alive();
-			a_writer.writeShortString(i_name);
+			a_writer.writeShortString(trans, i_name);
 			if (i_handler is com.db4o.YapClass)
 			{
 				if (i_handler.getID() == 0)
 				{
-					a_writer.getStream().needsUpdate(a_onClass);
+					trans.i_stream.needsUpdate(a_onClass);
 				}
 			}
 			int wrapperID = 0;

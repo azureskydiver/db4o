@@ -14,6 +14,8 @@ namespace com.db4o
 
 		private com.db4o.ClassIndex i_index;
 
+		private com.db4o.inside.btree.BTree _index;
+
 		protected string i_name;
 
 		protected int i_objectLength;
@@ -395,8 +397,9 @@ namespace com.db4o
 			{
 				depth = checkUpdateDepthUnspecified(a_bytes.getStream());
 			}
-			if (classReflector().isCollection() || (config != null && (config.i_cascadeOnDelete
-				 == 1 || config.i_cascadeOnUpdate == 1)))
+			if (classReflector().isCollection() || (config != null && (config.cascadeOnDelete
+				() == com.db4o.YapConst.YES || config.cascadeOnUpdate() == com.db4o.YapConst.YES
+				)))
 			{
 				int depthBorder = reflector().collectionUpdateDepth(classReflector());
 				if (depth < depthBorder)
@@ -409,10 +412,10 @@ namespace com.db4o
 
 		internal virtual int checkUpdateDepthUnspecified(com.db4o.YapStream a_stream)
 		{
-			int depth = a_stream.i_config.i_updateDepth + 1;
-			if (i_config != null && i_config.i_updateDepth != 0)
+			int depth = a_stream.i_config.updateDepth() + 1;
+			if (i_config != null && i_config.updateDepth() != 0)
 			{
-				depth = i_config.i_updateDepth + 1;
+				depth = i_config.updateDepth() + 1;
 			}
 			if (i_ancestor != null)
 			{
@@ -510,8 +513,8 @@ namespace com.db4o
 			}
 			if (a_class != null)
 			{
-				if (a_stream.i_handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class) 
-                    || Platform4.isTransient(a_class))
+				if (a_stream.i_handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class) || com.db4o.Platform4
+					.isTransient(a_class))
 				{
 					a_class = null;
 				}
@@ -537,7 +540,7 @@ namespace com.db4o
 			{
 				a_stream.logMsg(7, a_name);
 			}
-			if (a_stream.i_config.i_exceptionsOnNotStorable)
+			if (a_stream.i_config.exceptionsOnNotStorable())
 			{
 				throw new com.db4o.ext.ObjectNotStorableException(a_class);
 			}
@@ -578,7 +581,7 @@ namespace com.db4o
 		{
 			removeFromIndex(a_bytes.getTransaction(), a_bytes.getID());
 			deleteMembers(a_bytes, a_bytes.getTransaction().i_stream.i_handlers.arrayType(a_object
-				));
+				), false);
 		}
 
 		public virtual void deleteEmbedded(com.db4o.YapWriter a_bytes)
@@ -619,12 +622,13 @@ namespace com.db4o
 			}
 		}
 
-		internal virtual void deleteMembers(com.db4o.YapWriter a_bytes, int a_type)
+		internal virtual void deleteMembers(com.db4o.YapWriter a_bytes, int a_type, bool 
+			isUpdate)
 		{
 			try
 			{
 				com.db4o.Config4Class config = configOrAncestorConfig();
-				if (config != null && (config.i_cascadeOnDelete == 1))
+				if (config != null && (config.cascadeOnDelete() == com.db4o.YapConst.YES))
 				{
 					int preserveCascade = a_bytes.cascadeDeletes();
 					if (classReflector().isCollection())
@@ -641,12 +645,12 @@ namespace com.db4o
 					{
 						a_bytes.setCascadeDeletes(1);
 					}
-					deleteMembers1(a_bytes, a_type);
+					deleteMembers1(a_bytes, a_type, isUpdate);
 					a_bytes.setCascadeDeletes(preserveCascade);
 				}
 				else
 				{
-					deleteMembers1(a_bytes, a_type);
+					deleteMembers1(a_bytes, a_type, isUpdate);
 				}
 			}
 			catch (System.Exception e)
@@ -654,16 +658,17 @@ namespace com.db4o
 			}
 		}
 
-		private void deleteMembers1(com.db4o.YapWriter a_bytes, int a_type)
+		private void deleteMembers1(com.db4o.YapWriter a_bytes, int a_type, bool isUpdate
+			)
 		{
 			int length = readFieldLength(a_bytes);
 			for (int i = 0; i < length; i++)
 			{
-				i_fields[i].delete(a_bytes);
+				i_fields[i].delete(a_bytes, isUpdate);
 			}
 			if (i_ancestor != null)
 			{
-				i_ancestor.deleteMembers(a_bytes, a_type);
+				i_ancestor.deleteMembers(a_bytes, a_type, isUpdate);
 			}
 		}
 
@@ -740,7 +745,7 @@ namespace com.db4o
 			{
 				return false;
 			}
-			int configValue = (i_config == null) ? 0 : i_config.i_generateUUIDs;
+			int configValue = (i_config == null) ? 0 : i_config.generateUUIDs();
 			return generate1(i_stream.bootRecord().i_generateUUIDs, configValue);
 		}
 
@@ -750,7 +755,7 @@ namespace com.db4o
 			{
 				return false;
 			}
-			int configValue = (i_config == null) ? 0 : i_config.i_generateVersionNumbers;
+			int configValue = (i_config == null) ? 0 : i_config.generateVersionNumbers();
 			return generate1(i_stream.bootRecord().i_generateVersionNumbers, configValue);
 		}
 
@@ -797,9 +802,9 @@ namespace com.db4o
 		{
 			if (i_config != null)
 			{
-				if (i_config.i_queryAttributeProvider != null)
+				if (i_config.queryAttributeProvider() != null)
 				{
-					return i_config.i_queryAttributeProvider.attribute(forObject);
+					return i_config.queryAttributeProvider().attribute(forObject);
 				}
 			}
 			return forObject;
@@ -848,7 +853,7 @@ namespace com.db4o
 			return a_yapClass.getHigherHierarchy1(this);
 		}
 
-		internal override byte getIdentifier()
+		public override byte getIdentifier()
 		{
 			return com.db4o.YapConst.YAPCLASS;
 		}
@@ -935,6 +940,15 @@ namespace com.db4o
 			return false;
 		}
 
+		internal virtual com.db4o.inside.btree.BTree index()
+		{
+			if (!stateOK())
+			{
+				return null;
+			}
+			return _index;
+		}
+
 		internal virtual com.db4o.ClassIndex getIndex()
 		{
 			if (stateOK() && i_index != null)
@@ -947,7 +961,11 @@ namespace com.db4o
 
 		internal virtual int indexEntryCount(com.db4o.Transaction ta)
 		{
-			if (stateOK() && i_index != null)
+			if (!stateOK())
+			{
+				return 0;
+			}
+			if (i_index != null)
 			{
 				return i_index.entryCount(ta);
 			}
@@ -956,13 +974,14 @@ namespace com.db4o
 
 		internal com.db4o.Tree getIndex(com.db4o.Transaction a_trans)
 		{
-			if (hasIndex())
+			if (!hasIndex())
 			{
-				com.db4o.ClassIndex ci = getIndex();
-				if (ci != null)
-				{
-					return ci.cloneForYapClass(a_trans, getID());
-				}
+				return null;
+			}
+			com.db4o.ClassIndex ci = getIndex();
+			if (ci != null)
+			{
+				return ci.cloneForYapClass(a_trans, getID());
 			}
 			return null;
 		}
@@ -1031,13 +1050,13 @@ namespace com.db4o
 		public virtual com.db4o.YapField getYapField(string name)
 		{
 			com.db4o.YapField[] yf = new com.db4o.YapField[1];
-			forEachYapField(new _AnonymousInnerClass895(this, name, yf));
+			forEachYapField(new _AnonymousInnerClass947(this, name, yf));
 			return yf[0];
 		}
 
-		private sealed class _AnonymousInnerClass895 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass947 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass895(YapClass _enclosing, string name, com.db4o.YapField[]
+			public _AnonymousInnerClass947(YapClass _enclosing, string name, com.db4o.YapField[]
 				 yf)
 			{
 				this._enclosing = _enclosing;
@@ -1103,8 +1122,10 @@ namespace com.db4o
 			, com.db4o.reflect.ReflectClass claxx, bool errMessages)
 		{
 			i_ancestor = a_ancestor;
-			setConfig(a_stream.i_config.configClass(claxx.getName()));
-			if (!createConstructor(a_stream, claxx, claxx.getName(), false))
+			com.db4o.Config4Impl config = a_stream.i_config;
+			string className = claxx.getName();
+			setConfig(config.configClass(className));
+			if (!createConstructor(a_stream, claxx, className, false))
 			{
 				return false;
 			}
@@ -1113,7 +1134,7 @@ namespace com.db4o
 			{
 				i_index = a_stream.createClassIndex(this);
 			}
-			i_name = claxx.getName();
+			i_name = className;
 			i_ancestor = a_ancestor;
 			bitTrue(com.db4o.YapConst.CHECKED_CHANGES);
 			return true;
@@ -1173,7 +1194,7 @@ namespace com.db4o
 					()));
 			}
 			bool doFields = (a_bytes.getInstantiationDepth() > 0) || (i_config != null && (i_config
-				.i_cascadeOnActivate == 1));
+				.cascadeOnActivate() == com.db4o.YapConst.YES));
 			if (create)
 			{
 				if (configInstantiates())
@@ -1462,9 +1483,9 @@ namespace com.db4o
 		private string nameToWrite()
 		{
 			string name = i_name;
-			if (i_config != null && i_config._writeAs != null)
+			if (i_config != null && i_config.writeAs() != null)
 			{
-				return i_config._writeAs;
+				return i_config.writeAs();
 			}
 			if (i_name == null)
 			{
@@ -1486,7 +1507,7 @@ namespace com.db4o
 			{
 				return res == com.db4o.YapConst.YES;
 			}
-			return (i_stream.i_config.i_callConstructors == com.db4o.YapConst.YES);
+			return (i_stream.i_config.callConstructors() == com.db4o.YapConst.YES);
 		}
 
 		private int callConstructorSpecialized()
@@ -1520,10 +1541,11 @@ namespace com.db4o
 			return i_objectLength;
 		}
 
-		internal override int ownLength()
+		public override int ownLength()
 		{
 			int len = i_stream.stringIO().shortLength(nameToWrite()) + com.db4o.YapConst.OBJECT_LENGTH
-				 + (com.db4o.YapConst.YAPINT_LENGTH * 2) + (com.db4o.YapConst.YAPID_LENGTH * 2);
+				 + (com.db4o.YapConst.YAPINT_LENGTH * 2) + (com.db4o.YapConst.YAPID_LENGTH);
+			len += com.db4o.YapConst.YAPID_LENGTH;
 			if (i_fields != null)
 			{
 				for (int i = 0; i < i_fields.Length; i++)
@@ -1666,15 +1688,15 @@ namespace com.db4o
 				{
 					int[] idgen = { -2 };
 					a_candidates.i_trans.i_stream.activate1(trans, obj, 2);
-					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1448(this
+					com.db4o.Platform4.forEachCollectionElement(obj, new _AnonymousInnerClass1518(this
 						, trans, idgen, a_candidates));
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass1448 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass1518 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass1448(YapClass _enclosing, com.db4o.Transaction trans, 
+			public _AnonymousInnerClass1518(YapClass _enclosing, com.db4o.Transaction trans, 
 				int[] idgen, com.db4o.QCandidates a_candidates)
 			{
 				this._enclosing = _enclosing;
@@ -1875,7 +1897,7 @@ namespace com.db4o
 					i_index = i_stream.createClassIndex(this);
 					if (indexID > 0)
 					{
-						i_index.setID(i_stream, indexID);
+						i_index.setID(indexID);
 					}
 					i_index.setStateDeactivated();
 				}
@@ -1904,8 +1926,8 @@ namespace com.db4o
 			return false;
 		}
 
-		internal override void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader 
-			a_reader)
+		public override void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader a_reader
+			)
 		{
 			throw com.db4o.YapConst.virtualException();
 		}
@@ -1967,11 +1989,6 @@ namespace com.db4o
 			{
 				i_config = config;
 			}
-		}
-
-		internal override void setID(com.db4o.YapStream a_stream, int a_id)
-		{
-			base.setID(a_stream, a_id);
 		}
 
 		internal virtual void setName(string a_name)
@@ -2040,7 +2057,7 @@ namespace com.db4o
 				{
 					return false;
 				}
-				if (!config.i_storeTransientFields)
+				if (!config.storeTransientFields())
 				{
 					return false;
 				}
@@ -2077,7 +2094,7 @@ namespace com.db4o
 			if (!bitIsTrue(com.db4o.YapConst.STATIC_FIELDS_STORED) || force)
 			{
 				bitTrue(com.db4o.YapConst.STATIC_FIELDS_STORED);
-				bool store = (i_config != null && i_config.i_persistStaticFieldValues) || com.db4o.Platform4
+				bool store = (i_config != null && i_config.staticFieldValuesArePersisted()) || com.db4o.Platform4
 					.storeStaticFieldValues(trans.reflector(), classReflector());
 				if (store)
 				{
@@ -2198,7 +2215,7 @@ namespace com.db4o
 			return base.writeObjectBegin();
 		}
 
-		public virtual void writeIndexEntry(com.db4o.YapWriter a_writer, object a_object)
+		public virtual void writeIndexEntry(com.db4o.YapReader a_writer, object a_object)
 		{
 			a_writer.writeInt(((int)a_object));
 		}
@@ -2220,12 +2237,13 @@ namespace com.db4o
 			return id;
 		}
 
-		internal override void writeThis(com.db4o.YapWriter a_writer)
+		public override void writeThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+			)
 		{
-			a_writer.writeShortString(nameToWrite());
+			a_writer.writeShortString(trans, nameToWrite());
 			a_writer.writeInt(_metaClassID);
-			writeIDOf(i_ancestor, a_writer);
-			writeIDOf(i_index, a_writer);
+			a_writer.writeIDOf(trans, i_ancestor);
+			a_writer.writeIDOf(trans, i_index);
 			if (i_fields == null)
 			{
 				a_writer.writeInt(0);
@@ -2235,7 +2253,7 @@ namespace com.db4o
 				a_writer.writeInt(i_fields.Length);
 				for (int i = 0; i < i_fields.Length; i++)
 				{
-					i_fields[i].writeThis(a_writer, this);
+					i_fields[i].writeThis(trans, a_writer, this);
 				}
 			}
 		}
@@ -2267,6 +2285,15 @@ namespace com.db4o
 				i_compareTo = null;
 			}
 			return this;
+		}
+
+		public virtual object current()
+		{
+			if (i_compareTo == null)
+			{
+				return null;
+			}
+			return i_lastID;
 		}
 
 		public virtual int compareTo(object a_obj)

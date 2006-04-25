@@ -19,17 +19,19 @@ namespace com.db4o
 
 		internal int[] prefetchedIDs = new int[com.db4o.YapConst.PREFETCH_ID_COUNT];
 
-		internal com.db4o.YapClientThread readerThread;
+		private com.db4o.YapClientThread _readerThread;
 
 		internal int remainingIDs;
 
 		private string switchedToFile;
 
-		private bool singleThreaded;
+		private bool _singleThreaded;
 
 		private string userName;
 
 		private com.db4o.ext.Db4oDatabase i_db;
+
+		private bool _doFinalize = true;
 
 		private YapClient() : base(null)
 		{
@@ -39,7 +41,7 @@ namespace com.db4o
 		{
 			lock (Lock())
 			{
-				singleThreaded = i_config.i_singleThreadedClient;
+				_singleThreaded = i_config.singleThreadedClient();
 				throw new j4o.lang.RuntimeException("This constructor is for Debug.fakeServer use only."
 					);
 				initialize3();
@@ -52,7 +54,7 @@ namespace com.db4o
 		{
 			lock (Lock())
 			{
-				singleThreaded = i_config.i_singleThreadedClient;
+				_singleThreaded = i_config.singleThreadedClient();
 				if (password == null)
 				{
 					throw new System.ArgumentNullException(com.db4o.Messages.get(56));
@@ -73,18 +75,24 @@ namespace com.db4o
 					i_references.stopTimer();
 					throw e;
 				}
-				if (!singleThreaded)
+				if (!_singleThreaded)
 				{
-					readerThread = new com.db4o.YapClientThread(this, socket, messageQueue, messageQueueLock
-						);
-					readerThread.setName("db4o message client for user " + user);
-					readerThread.start();
+					startReaderThread(socket, user);
 				}
 				logMsg(36, ToString());
 				readThis();
 				initialize3();
 				com.db4o.Platform4.postOpen(this);
 			}
+		}
+
+		private void startReaderThread(com.db4o.foundation.network.YapSocket socket, string
+			 user)
+		{
+			_readerThread = new com.db4o.YapClientThread(this, socket, messageQueue, messageQueueLock
+				);
+			_readerThread.setName("db4o message client for user " + user);
+			_readerThread.start();
 		}
 
 		public override void backup(string path)
@@ -99,6 +107,10 @@ namespace com.db4o
 
 		internal override bool close2()
 		{
+			if (null != _readerThread && _readerThread.isClosed())
+			{
+				return true;
+			}
 			try
 			{
 				com.db4o.Msg.COMMIT_OK.write(this, i_socket);
@@ -106,6 +118,7 @@ namespace com.db4o
 			}
 			catch (System.Exception e)
 			{
+				com.db4o.inside.Exceptions4.catchAll(e);
 			}
 			try
 			{
@@ -113,16 +126,18 @@ namespace com.db4o
 			}
 			catch (System.Exception e)
 			{
+				com.db4o.inside.Exceptions4.catchAll(e);
 			}
 			try
 			{
-				if (!singleThreaded)
+				if (!_singleThreaded)
 				{
-					readerThread.close();
+					_readerThread.close();
 				}
 			}
 			catch (System.Exception e)
 			{
+				com.db4o.inside.Exceptions4.catchAll(e);
 			}
 			try
 			{
@@ -130,6 +145,7 @@ namespace com.db4o
 			}
 			catch (System.Exception e)
 			{
+				com.db4o.inside.Exceptions4.catchAll(e);
 			}
 			bool ret = base.close2();
 			return ret;
@@ -138,6 +154,12 @@ namespace com.db4o
 		internal sealed override void commit1()
 		{
 			i_trans.commit();
+		}
+
+		internal sealed override com.db4o.inside.btree.BTree createBTreeClassIndex(com.db4o.YapClass
+			 a_yapClass, int id)
+		{
+			return new com.db4o.inside.btree.ClientBTree(id, new com.db4o.YInt(this), null);
 		}
 
 		internal sealed override com.db4o.ClassIndex createClassIndex(com.db4o.YapClass a_yapClass
@@ -194,7 +216,7 @@ namespace com.db4o
 			}
 			if (resp.Equals(com.db4o.Msg.FAILED))
 			{
-				if (i_config.i_exceptionsOnNotStorable)
+				if (i_config.exceptionsOnNotStorable())
 				{
 					throw new com.db4o.ext.ObjectNotStorableException(a_class);
 				}
@@ -215,7 +237,7 @@ namespace com.db4o
 			{
 				return false;
 			}
-			a_yapClass.setID(this, message.i_id);
+			a_yapClass.setID(message._id);
 			a_yapClass.readName1(getSystemTransaction(), bytes);
 			i_classCollection.addYapClass(a_yapClass);
 			i_classCollection.readYapClass(a_yapClass, a_class);
@@ -239,6 +261,11 @@ namespace com.db4o
 		internal override bool detectSchemaChanges()
 		{
 			return false;
+		}
+
+		protected override bool doFinalize()
+		{
+			return _doFinalize;
 		}
 
 		internal com.db4o.YapWriter expectedByteResponse(com.db4o.Msg expectedMessage)
@@ -276,88 +303,107 @@ namespace com.db4o
 		/// <summary>may return null, if no message is returned.</summary>
 		/// <remarks>
 		/// may return null, if no message is returned. Error handling is weak and
-		/// should ideally be able to trigger some sort of state listener
-		/// (connection dead) on the client.
+		/// should ideally be able to trigger some sort of state listener (connection
+		/// dead) on the client.
 		/// </remarks>
 		internal virtual com.db4o.Msg getResponse()
 		{
-			if (singleThreaded)
+			return _singleThreaded ? getResponseSingleThreaded() : getResponseMultiThreaded();
+		}
+
+		private com.db4o.Msg getResponseMultiThreaded()
+		{
+			try
 			{
-				while (i_socket != null)
-				{
-					try
-					{
-						com.db4o.Msg message = com.db4o.Msg.readMessage(i_trans, i_socket);
-						if (com.db4o.Msg.PING.Equals(message))
-						{
-							writeMsg(com.db4o.Msg.OK);
-						}
-						else
-						{
-							if (com.db4o.Msg.CLOSE.Equals(message))
-							{
-								logMsg(35, ToString());
-								close();
-								return null;
-							}
-							else
-							{
-								if (message != null)
-								{
-									return message;
-								}
-							}
-						}
-					}
-					catch (System.Exception e)
-					{
-					}
-				}
-				return null;
+				return (com.db4o.Msg)messageQueueLock.run(new _AnonymousInnerClass312(this));
 			}
-			else
+			catch (System.Exception ex)
 			{
-				try
-				{
-					return (com.db4o.Msg)messageQueueLock.run(new _AnonymousInnerClass288(this));
-				}
-				catch (System.Exception ex)
-				{
-					return null;
-				}
+				com.db4o.inside.Exceptions4.catchAll(ex);
+				return null;
 			}
 		}
 
-		private sealed class _AnonymousInnerClass288 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass312 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass288(YapClient _enclosing)
+			public _AnonymousInnerClass312(YapClient _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
 			public object run()
 			{
-				com.db4o.Msg message = null;
-				message = (com.db4o.Msg)this._enclosing.messageQueue.next();
+				com.db4o.Msg message = this.retrieveMessage();
 				if (message != null)
 				{
 					return message;
 				}
-				if (this._enclosing.readerThread.isClosed())
+				this.throwOnClosed();
+				this._enclosing.messageQueueLock.snooze(this._enclosing.i_config.timeoutClientSocket
+					());
+				this.throwOnClosed();
+				return this.retrieveMessage();
+			}
+
+			private void throwOnClosed()
+			{
+				if (this._enclosing._readerThread.isClosed())
 				{
+					this._enclosing._doFinalize = false;
 					com.db4o.inside.Exceptions4.throwRuntimeException(20, this._enclosing.name());
 				}
-				this._enclosing.messageQueueLock.snooze(this._enclosing.i_config.i_timeoutClientSocket
-					);
-				if (this._enclosing.readerThread.isClosed())
-				{
-					com.db4o.inside.Exceptions4.throwRuntimeException(20, this._enclosing.name());
-				}
+			}
+
+			private com.db4o.Msg retrieveMessage()
+			{
+				com.db4o.Msg message = null;
 				message = (com.db4o.Msg)this._enclosing.messageQueue.next();
+				if (message != null)
+				{
+					if (com.db4o.Msg.ERROR.Equals(message))
+					{
+						throw new com.db4o.ext.Db4oException("Client connection error");
+					}
+				}
 				return message;
 			}
 
 			private readonly YapClient _enclosing;
+		}
+
+		private com.db4o.Msg getResponseSingleThreaded()
+		{
+			while (i_socket != null)
+			{
+				try
+				{
+					com.db4o.Msg message = com.db4o.Msg.readMessage(i_trans, i_socket);
+					if (com.db4o.Msg.PING.Equals(message))
+					{
+						writeMsg(com.db4o.Msg.OK);
+					}
+					else
+					{
+						if (com.db4o.Msg.CLOSE.Equals(message))
+						{
+							logMsg(35, ToString());
+							close();
+							return null;
+						}
+						else
+						{
+							if (message != null)
+							{
+								return message;
+							}
+						}
+					}
+				}
+				catch (System.Exception e)
+				{
+				}
+			}
+			return null;
 		}
 
 		internal override com.db4o.YapClass getYapClass(int a_id)
@@ -435,12 +481,6 @@ namespace com.db4o
 			return false;
 		}
 
-		internal sealed override com.db4o.YapWriter newObject(com.db4o.Transaction a_trans
-			, com.db4o.YapMeta a_object)
-		{
-			throw com.db4o.YapConst.virtualException();
-		}
-
 		internal sealed override int newUserObject()
 		{
 			com.db4o.YapWriter reader = null;
@@ -505,10 +545,10 @@ namespace com.db4o
 				{
 					com.db4o.MsgObject mso = (com.db4o.MsgObject)com.db4o.Msg.OBJECT_TO_CLIENT.clone(
 						qResult.i_trans);
-					mso.payLoad = message.payLoad.readYapBytes();
-					if (mso.payLoad != null)
+					mso._payLoad = message._payLoad.readYapBytes();
+					if (mso._payLoad != null)
 					{
-						mso.payLoad.incrementOffset(com.db4o.YapConst.MESSAGE_LENGTH);
+						mso._payLoad.incrementOffset(com.db4o.YapConst.MESSAGE_LENGTH);
 						com.db4o.YapWriter reader = mso.unmarshall(com.db4o.YapConst.MESSAGE_LENGTH);
 						prefetched[position[i]] = new com.db4o.YapObject(idsToGet[i]).readPrefetch(this, 
 							qResult.i_trans, reader);
@@ -589,7 +629,7 @@ namespace com.db4o
 			}
 		}
 
-		internal sealed override com.db4o.YapReader readReaderByID(com.db4o.Transaction a_ta
+		public sealed override com.db4o.YapReader readReaderByID(com.db4o.Transaction a_ta
 			, int a_id)
 		{
 			return readWriterByID(a_ta, a_id);
@@ -610,7 +650,7 @@ namespace com.db4o
 		{
 			writeMsg(com.db4o.Msg.GET_CLASSES.getWriter(i_systemTrans));
 			com.db4o.YapWriter bytes = expectedByteResponse(com.db4o.Msg.GET_CLASSES);
-			i_classCollection.setID(this, bytes.readInt());
+			i_classCollection.setID(bytes.readInt());
 			createStringIO(bytes.readByte());
 			i_classCollection.read(i_systemTrans);
 			i_classCollection.refreshClasses();
@@ -713,12 +753,6 @@ namespace com.db4o
 			return "Client Connection " + userName;
 		}
 
-		internal sealed override com.db4o.YapWriter updateObject(com.db4o.Transaction a_trans
-			, com.db4o.YapMeta a_object)
-		{
-			throw com.db4o.YapConst.virtualException();
-		}
-
 		internal override void write(bool shuttingDown)
 		{
 		}
@@ -752,6 +786,24 @@ namespace com.db4o
 			 a_bytes)
 		{
 			writeMsg(com.db4o.Msg.WRITE_UPDATE.getWriter(a_yapClass, a_bytes));
+		}
+
+		public virtual bool isAlive()
+		{
+			try
+			{
+				writeMsg(com.db4o.Msg.PING);
+				return expectedResponse(com.db4o.Msg.OK) != null;
+			}
+			catch (com.db4o.ext.Db4oException exc)
+			{
+				return false;
+			}
+		}
+
+		public virtual com.db4o.foundation.network.YapSocket socket()
+		{
+			return i_socket;
 		}
 	}
 }

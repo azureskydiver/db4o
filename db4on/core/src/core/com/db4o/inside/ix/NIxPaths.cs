@@ -20,9 +20,9 @@ namespace com.db4o.inside.ix
 
 		internal virtual void add(com.db4o.inside.ix.NIxPath path)
 		{
-			path.i_size = 1;
-			path.i_preceding = null;
-			path.i_subsequent = null;
+			path._size = 1;
+			path._preceding = null;
+			path._subsequent = null;
 			_paths = com.db4o.Tree.add(_paths, path);
 		}
 
@@ -193,7 +193,7 @@ namespace com.db4o.inside.ix
 			{
 				return a_sum + countPreceding(a_path);
 			}
-			if (a_path._next._tree == a_path._tree.i_subsequent)
+			if (a_path._next._tree == a_path._tree._subsequent)
 			{
 				a_sum += countPreceding(a_path);
 			}
@@ -214,7 +214,7 @@ namespace com.db4o.inside.ix
 			{
 				return a_sum + countSubsequent(a_path);
 			}
-			if (a_path._next._tree == a_path._tree.i_preceding)
+			if (a_path._next._tree == a_path._tree._preceding)
 			{
 				a_sum += countSubsequent(a_path);
 			}
@@ -227,12 +227,12 @@ namespace com.db4o.inside.ix
 
 		private int countPreceding(com.db4o.inside.ix.NIxPathNode a_path)
 		{
-			return com.db4o.Tree.size(a_path._tree.i_preceding) + a_path.countMatching();
+			return com.db4o.Tree.size(a_path._tree._preceding) + a_path.countMatching();
 		}
 
 		private int countSubsequent(com.db4o.inside.ix.NIxPathNode a_path)
 		{
-			return com.db4o.Tree.size(a_path._tree.i_subsequent) + a_path.countMatching();
+			return com.db4o.Tree.size(a_path._tree._subsequent) + a_path.countMatching();
 		}
 
 		internal virtual void traverse(com.db4o.foundation.Visitor4 visitor)
@@ -356,7 +356,7 @@ namespace com.db4o.inside.ix
 				traversePreceding(a_path, dispatcher);
 				return;
 			}
-			if (a_path._next._tree == a_path._tree.i_subsequent)
+			if (a_path._next._tree == a_path._tree._subsequent)
 			{
 				traversePreceding(a_path, dispatcher);
 			}
@@ -379,7 +379,7 @@ namespace com.db4o.inside.ix
 				traverseSubsequent(a_path, dispatcher);
 				return;
 			}
-			if (a_path._next._tree == a_path._tree.i_preceding)
+			if (a_path._next._tree == a_path._tree._preceding)
 			{
 				traverseSubsequent(a_path, dispatcher);
 			}
@@ -394,14 +394,14 @@ namespace com.db4o.inside.ix
 			 dispatcher)
 		{
 			a_path.traverseMatching(dispatcher);
-			com.db4o.Tree.traverse(a_path._tree.i_preceding, dispatcher);
+			com.db4o.Tree.traverse(a_path._tree._preceding, dispatcher);
 		}
 
 		private void traverseSubsequent(com.db4o.inside.ix.NIxPathNode a_path, com.db4o.foundation.Visitor4Dispatch
 			 dispatcher)
 		{
 			a_path.traverseMatching(dispatcher);
-			com.db4o.Tree.traverse(a_path._tree.i_subsequent, dispatcher);
+			com.db4o.Tree.traverse(a_path._tree._subsequent, dispatcher);
 		}
 	}
 }

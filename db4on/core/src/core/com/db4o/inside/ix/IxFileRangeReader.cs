@@ -1,5 +1,6 @@
 namespace com.db4o.inside.ix
 {
+	/// <exclude></exclude>
 	internal class IxFileRangeReader
 	{
 		private int _baseAddress;
@@ -44,7 +45,7 @@ namespace com.db4o.inside.ix
 				if (cmp == 0)
 				{
 					int parentID = _reader.readInt();
-					cmp = parentID - ((com.db4o.inside.ix.IxPatch)newTree).i_parentID;
+					cmp = parentID - ((com.db4o.inside.ix.IxPatch)newTree)._parentID;
 				}
 				if (cmp > 0)
 				{
@@ -71,24 +72,24 @@ namespace com.db4o.inside.ix
 							com.db4o.inside.ix.IxRemove ir = (com.db4o.inside.ix.IxRemove)newTree;
 							if (_cursor == 0)
 							{
-								newTree.i_preceding = fileRange.i_preceding;
+								newTree._preceding = fileRange._preceding;
 								if (fileRange._entries == 1)
 								{
-									newTree.i_subsequent = fileRange.i_subsequent;
+									newTree._subsequent = fileRange._subsequent;
 									return newTree.balanceCheckNulls();
 								}
 								fileRange._entries--;
 								fileRange.incrementAddress(_slotLength);
-								fileRange.i_preceding = null;
-								newTree.i_subsequent = fileRange;
+								fileRange._preceding = null;
+								newTree._subsequent = fileRange;
 							}
 							else
 							{
 								if (_cursor + 1 == fileRange._entries)
 								{
-									newTree.i_preceding = fileRange;
-									newTree.i_subsequent = fileRange.i_subsequent;
-									fileRange.i_subsequent = null;
+									newTree._preceding = fileRange;
+									newTree._subsequent = fileRange._subsequent;
+									fileRange._subsequent = null;
 									fileRange._entries--;
 								}
 								else
@@ -103,14 +104,14 @@ namespace com.db4o.inside.ix
 						{
 							if (_cursor == 0)
 							{
-								newTree.i_subsequent = fileRange;
+								newTree._subsequent = fileRange;
 								return newTree.rotateLeft();
 							}
 							else
 							{
 								if (_cursor == fileRange._entries)
 								{
-									newTree.i_preceding = fileRange;
+									newTree._preceding = fileRange;
 									return newTree.rotateRight();
 								}
 							}
@@ -279,12 +280,12 @@ namespace com.db4o.inside.ix
 			int newEntries = fileRange._entries - a_cursor - incStartNewAt;
 			fileRange._entries = a_cmp < 0 ? a_cursor + 1 : a_cursor;
 			com.db4o.inside.ix.IxFileRange ifr = new com.db4o.inside.ix.IxFileRange(fileRange
-				.i_fieldTransaction, _baseAddress, _baseAddressOffset + newAddressOffset, newEntries
+				._fieldTransaction, _baseAddress, _baseAddressOffset + newAddressOffset, newEntries
 				);
-			ifr.i_subsequent = fileRange.i_subsequent;
-			fileRange.i_subsequent = null;
-			a_new.i_preceding = fileRange.balanceCheckNulls();
-			a_new.i_subsequent = ifr.balanceCheckNulls();
+			ifr._subsequent = fileRange._subsequent;
+			fileRange._subsequent = null;
+			a_new._preceding = fileRange.balanceCheckNulls();
+			a_new._subsequent = ifr.balanceCheckNulls();
 			return a_new.balance();
 		}
 

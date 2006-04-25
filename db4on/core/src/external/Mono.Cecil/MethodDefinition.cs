@@ -44,7 +44,6 @@ namespace Mono.Cecil {
 		MethodSemanticsAttributes m_semAttrs;
 		SecurityDeclarationCollection m_secDecls;
 		CustomAttributeCollection m_customAttrs;
-		GenericParameterCollection m_genparams;
 
 		ModuleDefinition m_module;
 
@@ -52,6 +51,7 @@ namespace Mono.Cecil {
 		RVA m_rva;
 		OverrideCollection m_overrides;
 		PInvokeInfo m_pinvoke;
+		readonly ParameterDefinition m_this;
 
 		public MethodAttributes Attributes {
 			get { return m_attributes; }
@@ -96,17 +96,6 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public GenericParameterCollection GenericParameters {
-			get {
-				if (m_genparams == null) {
-					m_genparams = new GenericParameterCollection (this);
-					m_genparams.OnGenericParameterAdded += new GenericParameterEventHandler (OnGenericParameterAdded);
-				}
-
-				return m_genparams;
-			}
-		}
-
 		public RVA RVA {
 			get { return m_rva; }
 			set { m_rva = value; }
@@ -132,6 +121,10 @@ namespace Mono.Cecil {
 
 				return m_overrides;
 			}
+		}
+
+		public ParameterDefinition This {
+			get { return m_this; }
 		}
 
 		public bool IsAbstract {
@@ -230,11 +223,17 @@ namespace Mono.Cecil {
 			m_rva = rva;
 			m_attributes = attrs;
 			m_implAttrs = implAttrs;
+
+			if (!IsStatic)
+				m_this = new ParameterDefinition ("this", 0, (ParamAttributes) 0, null);
 		}
 
 		internal MethodDefinition (string name, MethodAttributes attrs) : base (name)
 		{
 			m_attributes = attrs;
+
+			if (!IsStatic)
+				m_this = new ParameterDefinition ("this", 0, (ParamAttributes) 0, null);
 		}
 
 		public MethodDefinition (string name, MethodAttributes attrs, TypeReference returnType) :
@@ -263,16 +262,10 @@ namespace Mono.Cecil {
 
 		public MethodDefinition Clone ()
 		{
-			return Clone (this, null);
+			return Clone (this, new ImportContext (this));
 		}
 
-		void OnGenericParameterAdded (object sender, GenericParameterEventArgs ea)
-		{
-			ea.GenericParameter.Position = m_genparams.Count + 1;
-			GenericArguments.Add (ea.GenericParameter);
-		}
-
-		internal static MethodDefinition Clone (MethodDefinition meth, ReflectionHelper helper)
+		internal static MethodDefinition Clone (MethodDefinition meth, ImportContext context)
 		{
 			MethodDefinition nm = new MethodDefinition (
 				meth.Name,
@@ -283,9 +276,12 @@ namespace Mono.Cecil {
 				meth.ExplicitThis,
 				meth.CallingConvention);
 
-			nm.ReturnType.ReturnType =
-				helper == null ? meth.ReturnType.ReturnType :
-					helper.ImportTypeReference (meth.ReturnType.ReturnType);
+			context.GenericContext.Method = nm;
+
+			foreach (GenericParameter p in meth.GenericParameters)
+				nm.GenericParameters.Add (GenericParameter.Clone (p, context));
+
+			nm.ReturnType.ReturnType = context.Import (meth.ReturnType.ReturnType);
 
 			if (meth.ReturnType.HasConstant)
 				nm.ReturnType.Constant = meth.ReturnType.Constant;
@@ -294,21 +290,21 @@ namespace Mono.Cecil {
 				nm.ReturnType.MarshalSpec = meth.ReturnType.MarshalSpec;
 
 			foreach (CustomAttribute ca in meth.ReturnType.CustomAttributes)
-				nm.ReturnType.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+				nm.ReturnType.CustomAttributes.Add (CustomAttribute.Clone (ca, context));
 
 			if (meth.PInvokeInfo != null)
 				nm.PInvokeInfo = meth.PInvokeInfo; // TODO: import module ?
 			foreach (ParameterDefinition param in meth.Parameters)
-				nm.Parameters.Add (ParameterDefinition.Clone (param, helper));
+				nm.Parameters.Add (ParameterDefinition.Clone (param, context));
 			foreach (MethodReference ov in meth.Overrides)
-				nm.Overrides.Add (helper == null ? ov : helper.ImportMethodReference (ov));
+				nm.Overrides.Add (context.Import (ov));
 			foreach (CustomAttribute ca in meth.CustomAttributes)
-				nm.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+				nm.CustomAttributes.Add (CustomAttribute.Clone (ca, context));
 			foreach (SecurityDeclaration sec in meth.SecurityDeclarations)
 				nm.SecurityDeclarations.Add (SecurityDeclaration.Clone (sec));
 
 			if (meth.Body != null)
-				nm.Body = MethodBody.Clone (meth.Body, nm, helper);
+				nm.Body = MethodBody.Clone (meth.Body, nm, context);
 
 			return nm;
 		}

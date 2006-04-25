@@ -6,7 +6,7 @@ namespace com.db4o
 		internal sealed override bool processMessageAtServer(com.db4o.foundation.network.YapSocket
 			 sock)
 		{
-			int id = payLoad.readInt();
+			int id = _payLoad.readInt();
 			string name = "";
 			com.db4o.YapStream stream = getStream();
 			lock (stream.i_lock)

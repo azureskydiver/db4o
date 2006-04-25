@@ -60,22 +60,22 @@ namespace com.db4o.ext
 			{
 				return false;
 			}
-			com.db4o.ext.Db4oUUID db4oUUID = (com.db4o.ext.Db4oUUID)o;
-			if (longPart != db4oUUID.longPart)
+			com.db4o.ext.Db4oUUID other = (com.db4o.ext.Db4oUUID)o;
+			if (longPart != other.longPart)
 			{
 				return false;
 			}
 			if (signaturePart == null)
 			{
-				return db4oUUID.signaturePart == null;
+				return other.signaturePart == null;
 			}
-			if (signaturePart.Length != db4oUUID.signaturePart.Length)
+			if (signaturePart.Length != other.signaturePart.Length)
 			{
 				return false;
 			}
 			for (int i = 0; i < signaturePart.Length; i++)
 			{
-				if (signaturePart[i] != db4oUUID.signaturePart[i])
+				if (signaturePart[i] != other.signaturePart[i])
 				{
 					return false;
 				}

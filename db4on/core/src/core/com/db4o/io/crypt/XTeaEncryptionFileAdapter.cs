@@ -68,6 +68,16 @@ namespace com.db4o.io.crypt
 			_adapter.close();
 		}
 
+		public override void delete(string path)
+		{
+			_adapter.delete(path);
+		}
+
+		public override bool exists(string path)
+		{
+			return _adapter.exists(path);
+		}
+
 		/// <summary>implement to return the absolute length of the file</summary>
 		public override long getLength()
 		{

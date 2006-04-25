@@ -18,7 +18,7 @@ namespace com.db4o.inside.freespace
 				(a_address);
 			addressNode.createPeer(a_length);
 			_freeByAddress = com.db4o.Tree.add(_freeByAddress, addressNode);
-			_freeBySize = com.db4o.Tree.add(_freeBySize, addressNode.i_peer);
+			_freeBySize = com.db4o.Tree.add(_freeBySize, addressNode._peer);
 		}
 
 		public override void beginCommit()
@@ -44,23 +44,23 @@ namespace com.db4o.inside.freespace
 				return;
 			}
 			a_length = _file.blocksFor(a_length);
-			_finder.i_key = a_address;
+			_finder._key = a_address;
 			com.db4o.inside.freespace.FreeSlotNode sizeNode;
 			com.db4o.inside.freespace.FreeSlotNode addressnode = (com.db4o.inside.freespace.FreeSlotNode
 				)com.db4o.Tree.findSmaller(_freeByAddress, _finder);
-			if ((addressnode != null) && ((addressnode.i_key + addressnode.i_peer.i_key) == a_address
+			if ((addressnode != null) && ((addressnode._key + addressnode._peer._key) == a_address
 				))
 			{
-				sizeNode = addressnode.i_peer;
+				sizeNode = addressnode._peer;
 				_freeBySize = _freeBySize.removeNode(sizeNode);
-				sizeNode.i_key += a_length;
+				sizeNode._key += a_length;
 				com.db4o.inside.freespace.FreeSlotNode secondAddressNode = (com.db4o.inside.freespace.FreeSlotNode
 					)com.db4o.Tree.findGreaterOrEqual(_freeByAddress, _finder);
-				if ((secondAddressNode != null) && (a_address + a_length == secondAddressNode.i_key
+				if ((secondAddressNode != null) && (a_address + a_length == secondAddressNode._key
 					))
 				{
-					sizeNode.i_key += secondAddressNode.i_peer.i_key;
-					_freeBySize = _freeBySize.removeNode(secondAddressNode.i_peer);
+					sizeNode._key += secondAddressNode._peer._key;
+					_freeBySize = _freeBySize.removeNode(secondAddressNode._peer);
 					_freeByAddress = _freeByAddress.removeNode(secondAddressNode);
 				}
 				sizeNode.removeChildren();
@@ -70,13 +70,13 @@ namespace com.db4o.inside.freespace
 			{
 				addressnode = (com.db4o.inside.freespace.FreeSlotNode)com.db4o.Tree.findGreaterOrEqual
 					(_freeByAddress, _finder);
-				if ((addressnode != null) && (a_address + a_length == addressnode.i_key))
+				if ((addressnode != null) && (a_address + a_length == addressnode._key))
 				{
-					sizeNode = addressnode.i_peer;
+					sizeNode = addressnode._peer;
 					_freeByAddress = _freeByAddress.removeNode(addressnode);
 					_freeBySize = _freeBySize.removeNode(sizeNode);
-					sizeNode.i_key += a_length;
-					addressnode.i_key = a_address;
+					sizeNode._key += a_length;
+					addressnode._key = a_address;
 					addressnode.removeChildren();
 					sizeNode.removeChildren();
 					_freeByAddress = com.db4o.Tree.add(_freeByAddress, addressnode);
@@ -105,19 +105,19 @@ namespace com.db4o.inside.freespace
 		public virtual int getSlot1(int length)
 		{
 			length = _file.blocksFor(length);
-			_finder.i_key = length;
-			_finder.i_object = null;
+			_finder._key = length;
+			_finder._object = null;
 			_freeBySize = com.db4o.inside.freespace.FreeSlotNode.removeGreaterOrEqual((com.db4o.inside.freespace.FreeSlotNode
 				)_freeBySize, _finder);
-			if (_finder.i_object == null)
+			if (_finder._object == null)
 			{
 				return 0;
 			}
 			com.db4o.inside.freespace.FreeSlotNode node = (com.db4o.inside.freespace.FreeSlotNode
-				)_finder.i_object;
-			int blocksFound = node.i_key;
-			int address = node.i_peer.i_key;
-			_freeByAddress = _freeByAddress.removeNode(node.i_peer);
+				)_finder._object;
+			int blocksFound = node._key;
+			int address = node._peer._key;
+			_freeByAddress = _freeByAddress.removeNode(node._peer);
 			if (blocksFound > length)
 			{
 				addFreeSlotNodes(address + length, blocksFound - length);
@@ -127,12 +127,15 @@ namespace com.db4o.inside.freespace
 
 		public override void migrate(com.db4o.inside.freespace.FreespaceManager newFM)
 		{
-			_freeByAddress.traverse(new _AnonymousInnerClass158(this, newFM));
+			if (_freeByAddress != null)
+			{
+				_freeByAddress.traverse(new _AnonymousInnerClass160(this, newFM));
+			}
 		}
 
-		private sealed class _AnonymousInnerClass158 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass160 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass158(FreespaceManagerRam _enclosing, com.db4o.inside.freespace.FreespaceManager
+			public _AnonymousInnerClass160(FreespaceManagerRam _enclosing, com.db4o.inside.freespace.FreespaceManager
 				 newFM)
 			{
 				this._enclosing = _enclosing;
@@ -143,8 +146,8 @@ namespace com.db4o.inside.freespace
 			{
 				com.db4o.inside.freespace.FreeSlotNode fsn = (com.db4o.inside.freespace.FreeSlotNode
 					)a_object;
-				int address = fsn.i_key;
-				int length = fsn.i_peer.i_key;
+				int address = fsn._key;
+				int length = fsn._peer._key;
 				newFM.free(address, length);
 			}
 
@@ -174,16 +177,16 @@ namespace com.db4o.inside.freespace
 			com.db4o.Tree[] addressTree = new com.db4o.Tree[1];
 			if (_freeBySize != null)
 			{
-				_freeBySize.traverse(new _AnonymousInnerClass186(this, addressTree));
+				_freeBySize.traverse(new _AnonymousInnerClass189(this, addressTree));
 			}
 			_freeByAddress = addressTree[0];
 			_file.free(freeSlotsID, com.db4o.YapConst.POINTER_LENGTH);
 			_file.free(reader.getAddress(), reader.getLength());
 		}
 
-		private sealed class _AnonymousInnerClass186 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass189 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass186(FreespaceManagerRam _enclosing, com.db4o.Tree[] addressTree
+			public _AnonymousInnerClass189(FreespaceManagerRam _enclosing, com.db4o.Tree[] addressTree
 				)
 			{
 				this._enclosing = _enclosing;
@@ -193,7 +196,7 @@ namespace com.db4o.inside.freespace
 			public void visit(object a_object)
 			{
 				com.db4o.inside.freespace.FreeSlotNode node = ((com.db4o.inside.freespace.FreeSlotNode
-					)a_object).i_peer;
+					)a_object)._peer;
 				addressTree[0] = com.db4o.Tree.add(addressTree[0], node);
 			}
 
@@ -224,13 +227,13 @@ namespace com.db4o.inside.freespace
 			}
 			int freeBySizeID = 0;
 			int length = com.db4o.Tree.byteCount(_freeBySize);
-			int[] slot = _file.newSlot(trans(), length);
-			freeBySizeID = slot[0];
+			com.db4o.inside.slots.Pointer4 ptr = _file.newSlot(trans(), length);
+			freeBySizeID = ptr._id;
 			com.db4o.YapWriter sdwriter = new com.db4o.YapWriter(trans(), length);
-			sdwriter.useSlot(freeBySizeID, slot[1], length);
+			sdwriter.useSlot(freeBySizeID, ptr._address, length);
 			com.db4o.Tree.write(sdwriter, _freeBySize);
 			sdwriter.writeEncrypt();
-			trans().writePointer(slot[0], slot[1], length);
+			trans().writePointer(ptr._id, ptr._address, length);
 			return freeBySizeID;
 		}
 	}

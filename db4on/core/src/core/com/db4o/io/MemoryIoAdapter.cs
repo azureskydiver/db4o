@@ -24,8 +24,6 @@ namespace com.db4o.io
 	/// </remarks>
 	public class MemoryIoAdapter : com.db4o.io.IoAdapter
 	{
-		private string _name;
-
 		private byte[] _bytes;
 
 		private int _length;
@@ -45,7 +43,6 @@ namespace com.db4o.io
 		private MemoryIoAdapter(com.db4o.io.MemoryIoAdapter adapter, string name, byte[] 
 			bytes)
 		{
-			_name = name;
 			_bytes = bytes;
 			_length = bytes.Length;
 			_growBy = adapter._growBy;
@@ -115,6 +112,11 @@ namespace com.db4o.io
 		/// <remarks>for internal processing only.</remarks>
 		public override void close()
 		{
+		}
+
+		public override void delete(string path)
+		{
+			_memoryFiles.remove(path);
 		}
 
 		/// <summary>for internal processing only.</summary>

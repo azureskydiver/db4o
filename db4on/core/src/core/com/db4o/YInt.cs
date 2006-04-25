@@ -50,7 +50,7 @@ namespace com.db4o
 			return a_bytes.readInt();
 		}
 
-		public override void write(object a_object, com.db4o.YapWriter a_bytes)
+		public override void write(object a_object, com.db4o.YapReader a_bytes)
 		{
 			if (!com.db4o.Deploy.csharp && a_object == null)
 			{
@@ -77,6 +77,11 @@ namespace com.db4o
 		internal override void prepareComparison1(object obj)
 		{
 			i_compareTo = val(obj);
+		}
+
+		public override object current1()
+		{
+			return i_compareTo;
 		}
 
 		internal override bool isEqual1(object obj)

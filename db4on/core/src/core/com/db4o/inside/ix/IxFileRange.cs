@@ -18,7 +18,7 @@ namespace com.db4o.inside.ix
 			_address = a_address;
 			_addressOffset = addressOffset;
 			_entries = a_entries;
-			i_size = a_entries;
+			_size = a_entries;
 		}
 
 		public override com.db4o.Tree add(com.db4o.Tree a_new)
@@ -39,7 +39,7 @@ namespace com.db4o.inside.ix
 
 		private com.db4o.inside.ix.IxFileRangeReader reader()
 		{
-			return i_fieldTransaction.i_index.fileRangeReader();
+			return _fieldTransaction.i_index.fileRangeReader();
 		}
 
 		public virtual void incrementAddress(int length)
@@ -142,9 +142,9 @@ namespace com.db4o.inside.ix
 		public override void visitFirst(com.db4o.inside.freespace.FreespaceVisitor visitor
 			)
 		{
-			if (i_preceding != null)
+			if (_preceding != null)
 			{
-				((com.db4o.inside.ix.IxTree)i_preceding).visitFirst(visitor);
+				((com.db4o.inside.ix.IxTree)_preceding).visitFirst(visitor);
 				if (visitor.visited())
 				{
 					return;
@@ -156,9 +156,9 @@ namespace com.db4o.inside.ix
 		public override void visitLast(com.db4o.inside.freespace.FreespaceVisitor visitor
 			)
 		{
-			if (i_subsequent != null)
+			if (_subsequent != null)
 			{
-				((com.db4o.inside.ix.IxTree)i_subsequent).visitLast(visitor);
+				((com.db4o.inside.ix.IxTree)_subsequent).visitLast(visitor);
 				if (visitor.visited())
 				{
 					return;
@@ -177,6 +177,19 @@ namespace com.db4o.inside.ix
 			int val = fileReader.readInt();
 			int parentID = fileReader.readInt();
 			visitor.visit(parentID, val);
+		}
+
+		public override object shallowClone()
+		{
+			com.db4o.inside.ix.IxFileRange range = new com.db4o.inside.ix.IxFileRange(_fieldTransaction
+				, _address, _addressOffset, _entries);
+			base.shallowCloneInternal(range);
+			if (_lowerAndUpperMatches != null)
+			{
+				range._lowerAndUpperMatches = new int[] { _lowerAndUpperMatches[0], _lowerAndUpperMatches
+					[1] };
+			}
+			return range;
 		}
 	}
 }

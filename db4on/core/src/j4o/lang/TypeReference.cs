@@ -142,7 +142,7 @@ namespace j4o.lang
 
 		private Assembly LoadUnversionedAssembly(AssemblyName unversioned)
 		{	
-#if CF_1_0
+#if CF_1_0 || CF_2_0
             return Assembly.Load(unversioned);
 #else
 			Assembly found = Assembly.LoadWithPartialName(unversioned.FullName);
@@ -218,6 +218,11 @@ namespace j4o.lang
 			_rank = rank;
 		}
 
+		public int Rank
+		{
+			get { return _rank; }
+		}
+
 		public override Type Resolve()
 		{
 			return Array.CreateInstance(_elementType.Resolve(), new int[_rank]).GetType();
@@ -251,7 +256,7 @@ namespace j4o.lang
 
 		public override Type Resolve()
 		{
-#if NET_2_0
+#if NET_2_0 || CF_2_0
 			Type baseType = base.Resolve();
 			return _genericArguments.Length > 0
 				? baseType.MakeGenericType(Resolve(_genericArguments))

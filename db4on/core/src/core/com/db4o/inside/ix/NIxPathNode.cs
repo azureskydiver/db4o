@@ -59,7 +59,7 @@ namespace com.db4o.inside.ix
 			{
 				return _next.compare(other._next, myType, otherType);
 			}
-			if (_tree.i_subsequent == otherNext)
+			if (_tree._subsequent == otherNext)
 			{
 				return -1;
 			}
@@ -68,7 +68,7 @@ namespace com.db4o.inside.ix
 
 		internal virtual bool ascending()
 		{
-			return _tree.i_subsequent == _next._tree;
+			return _tree._subsequent == _next._tree;
 		}
 
 		internal virtual bool carriesTheSame(com.db4o.inside.ix.NIxPathNode node)
@@ -83,11 +83,11 @@ namespace com.db4o.inside.ix
 		internal virtual int countPreceding()
 		{
 			int preceding = 0;
-			if (_tree.i_preceding != null)
+			if (_tree._preceding != null)
 			{
-				if (_next == null || _next._tree != _tree.i_preceding)
+				if (_next == null || _next._tree != _tree._preceding)
 				{
-					preceding += _tree.i_preceding.size();
+					preceding += _tree._preceding.size();
 				}
 			}
 			if (_lowerAndUpperMatch != null)
@@ -124,11 +124,11 @@ namespace com.db4o.inside.ix
 		internal virtual int countSubsequent()
 		{
 			int subsequent = 0;
-			if (_tree.i_subsequent != null)
+			if (_tree._subsequent != null)
 			{
-				if (_next == null || _next._tree != _tree.i_subsequent)
+				if (_next == null || _next._tree != _tree._subsequent)
 				{
-					subsequent += _tree.i_subsequent.size();
+					subsequent += _tree._subsequent.size();
 				}
 			}
 			if (_lowerAndUpperMatch != null)
@@ -189,11 +189,11 @@ namespace com.db4o.inside.ix
 		internal virtual void traversePreceding(com.db4o.foundation.Visitor4Dispatch dispatcher
 			)
 		{
-			if (_tree.i_preceding != null)
+			if (_tree._preceding != null)
 			{
-				if (_next == null || _next._tree != _tree.i_preceding)
+				if (_next == null || _next._tree != _tree._preceding)
 				{
-					_tree.i_preceding.traverse(dispatcher);
+					_tree._preceding.traverse(dispatcher);
 				}
 			}
 			if (_lowerAndUpperMatch != null)
@@ -220,11 +220,11 @@ namespace com.db4o.inside.ix
 		internal virtual void traverseSubsequent(com.db4o.foundation.Visitor4Dispatch dispatcher
 			)
 		{
-			if (_tree.i_subsequent != null)
+			if (_tree._subsequent != null)
 			{
-				if (_next == null || _next._tree != _tree.i_subsequent)
+				if (_next == null || _next._tree != _tree._subsequent)
 				{
-					_tree.i_subsequent.traverse(dispatcher);
+					_tree._subsequent.traverse(dispatcher);
 				}
 			}
 			if (_lowerAndUpperMatch != null)

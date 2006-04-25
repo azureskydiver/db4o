@@ -7,9 +7,9 @@ namespace com.db4o
 
 		private const int LENGTH_FOR_FIRST = LENGTH_FOR_ALL;
 
-		internal int i_id;
+		internal int _id;
 
-		internal int i_address;
+		internal int _address;
 
 		internal virtual com.db4o.MsgD getWriter(com.db4o.YapWriter bytes, int[] prependInts
 			)
@@ -29,11 +29,11 @@ namespace com.db4o
 			{
 				for (int i = 0; i < prependInts.Length; i++)
 				{
-					message.payLoad.writeInt(prependInts[i]);
+					message._payLoad.writeInt(prependInts[i]);
 				}
 			}
-			message.payLoad.writeInt(embeddedCount);
-			bytes.appendTo(message.payLoad, -1);
+			message._payLoad.writeInt(embeddedCount);
+			bytes.appendTo(message._payLoad, -1);
 			return message;
 		}
 
@@ -61,29 +61,29 @@ namespace com.db4o
 
 		public com.db4o.YapWriter unmarshall(int addLengthBeforeFirst)
 		{
-			payLoad.setTransaction(getTransaction());
-			int embeddedCount = payLoad.readInt();
-			int length = payLoad.readInt();
+			_payLoad.setTransaction(getTransaction());
+			int embeddedCount = _payLoad.readInt();
+			int length = _payLoad.readInt();
 			if (length == 0)
 			{
 				return null;
 			}
-			i_id = payLoad.readInt();
-			i_address = payLoad.readInt();
+			_id = _payLoad.readInt();
+			_address = _payLoad.readInt();
 			if (embeddedCount == 0)
 			{
-				payLoad.removeFirstBytes(LENGTH_FOR_FIRST + addLengthBeforeFirst);
+				_payLoad.removeFirstBytes(LENGTH_FOR_FIRST + addLengthBeforeFirst);
 			}
 			else
 			{
-				payLoad._offset += length;
+				_payLoad._offset += length;
 				com.db4o.YapWriter[] embedded = new com.db4o.YapWriter[embeddedCount + 1];
-				embedded[0] = payLoad;
-				new com.db4o.YapWriter(payLoad, embedded, 1);
-				payLoad.trim4(LENGTH_FOR_FIRST + addLengthBeforeFirst, length);
+				embedded[0] = _payLoad;
+				new com.db4o.YapWriter(_payLoad, embedded, 1);
+				_payLoad.trim4(LENGTH_FOR_FIRST + addLengthBeforeFirst, length);
 			}
-			payLoad.useSlot(i_id, i_address, length);
-			return payLoad;
+			_payLoad.useSlot(_id, _address, length);
+			return _payLoad;
 		}
 	}
 }

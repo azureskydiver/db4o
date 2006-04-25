@@ -146,7 +146,7 @@ namespace com.db4o
 			return true;
 		}
 
-		public override void writeIndexEntry(com.db4o.YapWriter a_writer, object a_object
+		public override void writeIndexEntry(com.db4o.YapReader a_writer, object a_object
 			)
 		{
 			if (a_object == null)
@@ -243,6 +243,11 @@ namespace com.db4o
 			}
 			i_compareTo = val(obj);
 			return this;
+		}
+
+		public override object current()
+		{
+			return i_compareTo;
 		}
 
 		public override int compareTo(object obj)

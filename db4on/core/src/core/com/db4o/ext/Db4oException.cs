@@ -1,0 +1,39 @@
+namespace com.db4o.ext
+{
+	/// <summary>
+	/// db4o exception wrapper: Exceptions occurring during internal processing
+	/// will be proliferated to the client calling code encapsulated in an exception
+	/// of rhis type.
+	/// </summary>
+	/// <remarks>
+	/// db4o exception wrapper: Exceptions occurring during internal processing
+	/// will be proliferated to the client calling code encapsulated in an exception
+	/// of rhis type. The original exception, if any, is available through
+	/// <see cref="com.db4o.ext.Db4oException.cause">com.db4o.ext.Db4oException.cause</see>
+	/// .
+	/// </remarks>
+	public class Db4oException : j4o.lang.RuntimeException
+	{
+		private System.Exception _cause;
+
+		public Db4oException(string msg) : base(msg)
+		{
+		}
+
+		public Db4oException(System.Exception cause) : this(cause.ToString())
+		{
+			_cause = cause;
+		}
+
+		public Db4oException(int messageConstant) : this(com.db4o.Messages.get(messageConstant
+			))
+		{
+		}
+
+		/// <returns>The originating exception, if any</returns>
+		public virtual System.Exception cause()
+		{
+			return _cause;
+		}
+	}
+}

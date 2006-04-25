@@ -44,5 +44,13 @@ namespace com.db4o.inside.ix
 			}
 			return str;
 		}
+
+		public override object shallowClone()
+		{
+			com.db4o.inside.ix.NIxPath path = new com.db4o.inside.ix.NIxPath(_head, _takePreceding
+				, _takeMatches, _takeSubsequent, _type);
+			base.shallowCloneInternal(path);
+			return path;
+		}
 	}
 }

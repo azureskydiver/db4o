@@ -1,0 +1,33 @@
+namespace com.db4o.foundation
+{
+	/// <exclude></exclude>
+	public class KeySpec
+	{
+		private readonly object _defaultValue;
+
+		public KeySpec(byte defaultValue)
+		{
+			_defaultValue = defaultValue;
+		}
+
+		public KeySpec(int defaultValue)
+		{
+			_defaultValue = defaultValue;
+		}
+
+		public KeySpec(bool defaultValue)
+		{
+			_defaultValue = defaultValue;
+		}
+
+		public KeySpec(object defaultValue)
+		{
+			_defaultValue = defaultValue;
+		}
+
+		public virtual object defaultValue()
+		{
+			return _defaultValue;
+		}
+	}
+}

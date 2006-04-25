@@ -73,13 +73,12 @@ namespace com.db4o.inside.ix
 			if (obj is com.db4o.inside.ix.IxPatch)
 			{
 				com.db4o.inside.ix.IxPatch tree = (com.db4o.inside.ix.IxPatch)obj;
-				if (tree.i_queue != null)
+				if (tree.hasQueue())
 				{
-					com.db4o.foundation.Queue4 queue = tree.i_queue;
-					tree.i_queue = null;
+					com.db4o.foundation.Queue4 queue = tree.detachQueue();
 					while ((tree = (com.db4o.inside.ix.IxPatch)queue.next()) != null)
 					{
-						tree.i_queue = null;
+						tree.detachQueue();
 						addPatchToRoot(tree);
 					}
 				}
@@ -92,10 +91,10 @@ namespace com.db4o.inside.ix
 
 		private void addPatchToRoot(com.db4o.inside.ix.IxPatch tree)
 		{
-			if (tree.i_version != i_version)
+			if (tree._version != i_version)
 			{
 				tree.beginMerge();
-				tree.handler().prepareComparison(tree.handler().comparableObject(i_trans, tree.i_value
+				tree.handler().prepareComparison(tree.handler().comparableObject(i_trans, tree._value
 					));
 				if (i_root == null)
 				{
@@ -115,13 +114,13 @@ namespace com.db4o.inside.ix
 				return 0;
 			}
 			int[] leaves = { 0 };
-			i_root.traverse(new _AnonymousInnerClass103(this, leaves));
+			i_root.traverse(new _AnonymousInnerClass102(this, leaves));
 			return leaves[0];
 		}
 
-		private sealed class _AnonymousInnerClass103 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass102 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass103(IndexTransaction _enclosing, int[] leaves)
+			public _AnonymousInnerClass102(IndexTransaction _enclosing, int[] leaves)
 			{
 				this._enclosing = _enclosing;
 				this.leaves = leaves;
@@ -154,14 +153,14 @@ namespace com.db4o.inside.ix
 			}
 			else
 			{
-				i_root.traverse(new _AnonymousInnerClass125(this, sb));
+				i_root.traverse(new _AnonymousInnerClass124(this, sb));
 			}
 			return sb.ToString();
 		}
 
-		private sealed class _AnonymousInnerClass125 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass124 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass125(IndexTransaction _enclosing, j4o.lang.StringBuffer
+			public _AnonymousInnerClass124(IndexTransaction _enclosing, j4o.lang.StringBuffer
 				 sb)
 			{
 				this._enclosing = _enclosing;

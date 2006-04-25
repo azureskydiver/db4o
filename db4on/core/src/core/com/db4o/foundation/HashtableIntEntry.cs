@@ -1,6 +1,6 @@
 namespace com.db4o.foundation
 {
-	internal class HashtableIntEntry : j4o.lang.Cloneable, com.db4o.foundation.DeepClone
+	internal class HashtableIntEntry : com.db4o.foundation.DeepClone
 	{
 		internal int i_key;
 
@@ -14,22 +14,43 @@ namespace com.db4o.foundation
 			i_object = a_object;
 		}
 
+		protected HashtableIntEntry()
+		{
+		}
+
+		public virtual void acceptKeyVisitor(com.db4o.foundation.Visitor4 visitor)
+		{
+			visitor.visit(i_key);
+		}
+
 		public virtual object deepClone(object obj)
 		{
-			com.db4o.foundation.HashtableIntEntry hie = null;
-			try
+			return deepCloneInternal(new com.db4o.foundation.HashtableIntEntry(), obj);
+		}
+
+		public virtual bool sameKeyAs(com.db4o.foundation.HashtableIntEntry other)
+		{
+			return i_key == other.i_key;
+		}
+
+		protected virtual com.db4o.foundation.HashtableIntEntry deepCloneInternal(com.db4o.foundation.HashtableIntEntry
+			 entry, object obj)
+		{
+			entry.i_key = i_key;
+			entry.i_next = i_next;
+			if (i_object is com.db4o.foundation.DeepClone)
 			{
-				hie = (com.db4o.foundation.HashtableIntEntry)j4o.lang.JavaSystem.clone(this);
+				entry.i_object = ((com.db4o.foundation.DeepClone)i_object).deepClone(obj);
 			}
-			catch (j4o.lang.CloneNotSupportedException e)
+			else
 			{
+				entry.i_object = i_object;
 			}
-			hie.i_object = ((com.db4o.foundation.DeepClone)i_object).deepClone(obj);
 			if (i_next != null)
 			{
-				hie.i_next = (com.db4o.foundation.HashtableIntEntry)i_next.deepClone(obj);
+				entry.i_next = (com.db4o.foundation.HashtableIntEntry)i_next.deepClone(obj);
 			}
-			return hie;
+			return entry;
 		}
 	}
 }

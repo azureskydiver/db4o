@@ -3,11 +3,11 @@ namespace com.db4o
 	/// <exclude></exclude>
 	internal class QPending : com.db4o.Tree
 	{
-		internal readonly com.db4o.QConJoin i_join;
+		internal readonly com.db4o.QConJoin _join;
 
-		internal com.db4o.QCon i_constraint;
+		internal com.db4o.QCon _constraint;
 
-		internal int i_result;
+		internal int _result;
 
 		internal const int FALSE = -4;
 
@@ -18,19 +18,27 @@ namespace com.db4o
 		internal QPending(com.db4o.QConJoin a_join, com.db4o.QCon a_constraint, bool a_firstResult
 			)
 		{
-			i_join = a_join;
-			i_constraint = a_constraint;
-			i_result = a_firstResult ? TRUE : FALSE;
+			_join = a_join;
+			_constraint = a_constraint;
+			_result = a_firstResult ? TRUE : FALSE;
 		}
 
 		public override int compare(com.db4o.Tree a_to)
 		{
-			return i_constraint.i_id - ((com.db4o.QPending)a_to).i_constraint.i_id;
+			return _constraint.i_id - ((com.db4o.QPending)a_to)._constraint.i_id;
 		}
 
 		internal virtual void changeConstraint()
 		{
-			i_constraint = i_join.getOtherConstraint(i_constraint);
+			_constraint = _join.getOtherConstraint(_constraint);
+		}
+
+		public override object shallowClone()
+		{
+			com.db4o.QPending pending = new com.db4o.QPending(_join, _constraint, false);
+			pending._result = _result;
+			base.shallowCloneInternal(pending);
+			return pending;
 		}
 	}
 }

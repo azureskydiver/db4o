@@ -140,12 +140,13 @@ namespace com.db4o
 			return true;
 		}
 
-		internal override void writeBytes(com.db4o.YapWriter a_bytes)
+		internal override void writeBytes(com.db4o.YapReader a_bytes, int address, int addressOffset
+			)
 		{
-			int address = a_bytes.getAddress() + a_bytes.addressOffset();
+			int fullAddress = address + addressOffset;
 			int length = a_bytes.getLength();
-			j4o.lang.JavaSystem.arraycopy(a_bytes._buffer, 0, memoryFileBytes(address + length
-				), address, length);
+			j4o.lang.JavaSystem.arraycopy(a_bytes._buffer, 0, memoryFileBytes(fullAddress + length
+				), fullAddress, length);
 		}
 
 		private byte[] memoryFileBytes(int a_lastByte)

@@ -36,10 +36,7 @@ namespace com.db4o
 		{
 		}
 
-		internal override void delete(com.db4o.YapWriter a_bytes)
-		{
-			a_bytes.incrementOffset(linkLength());
-		}
+		internal abstract override void delete(com.db4o.YapWriter a_bytes, bool isUpdate);
 
 		internal override object getOrCreate(com.db4o.Transaction a_trans, object a_OnObject
 			)
@@ -113,8 +110,8 @@ namespace com.db4o
 							.i_virtualAttributes.i_database != null)
 						{
 							migrating = true;
-							a_yapObject.i_virtualAttributes = migrateYapObject.i_virtualAttributes.shallowClone
-								();
+							a_yapObject.i_virtualAttributes = (com.db4o.VirtualAttributes)migrateYapObject.i_virtualAttributes
+								.shallowClone();
 							if (migrateYapObject.i_virtualAttributes.i_database != null)
 							{
 								migrateYapObject.i_virtualAttributes.i_database.bind(trans);
@@ -167,10 +164,10 @@ namespace com.db4o
 			instantiate1(a_trans, a_yapObject, a_reader);
 		}
 
-		internal override void writeThis(com.db4o.YapWriter a_writer, com.db4o.YapClass a_onClass
-			)
+		internal override void writeThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+			, com.db4o.YapClass a_onClass)
 		{
-			a_writer.writeShortString(i_name);
+			a_writer.writeShortString(trans, i_name);
 		}
 	}
 }

@@ -48,7 +48,6 @@ namespace Mono.Cecil {
 		EventDefinitionCollection m_events;
 		PropertyDefinitionCollection m_properties;
 		SecurityDeclarationCollection m_secDecls;
-		GenericParameterCollection m_genparams;
 
 		public TypeAttributes Attributes {
 			get { return m_attributes; }
@@ -179,17 +178,6 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public GenericParameterCollection GenericParameters {
-			get {
-				if (m_genparams == null) {
-					m_genparams = new GenericParameterCollection (this);
-					m_genparams.OnGenericParameterAdded += new GenericParameterEventHandler (OnGenericParameterAdded);
-				}
-
-				return m_genparams;
-			}
-		}
-
 		public bool IsAbstract {
 			get { return (m_attributes & TypeAttributes.Abstract) != 0; }
 			set {
@@ -278,11 +266,15 @@ namespace Mono.Cecil {
 		void OnMethodAdded (object sender, MethodDefinitionEventArgs ea)
 		{
 			AttachMember (ea.MethodDefinition);
+			if (!ea.MethodDefinition.IsStatic)
+				ea.MethodDefinition.This.ParameterType = this;
 		}
 
 		void OnMethodRemoved (object sender, MethodDefinitionEventArgs ea)
 		{
 			DetachMember (ea.MethodDefinition);
+			if (!ea.MethodDefinition.IsStatic)
+				ea.MethodDefinition.This.ParameterType = null;
 		}
 
 		void OnFieldAdded (object sender, FieldDefinitionEventArgs ea)
@@ -298,11 +290,15 @@ namespace Mono.Cecil {
 		void OnCtorAdded (object sender, ConstructorEventArgs ea)
 		{
 			AttachMember (ea.Constructor);
+			if (!ea.Constructor.IsStatic)
+				ea.Constructor.This.ParameterType = this;
 		}
 
 		void OnCtorRemoved (object sender, ConstructorEventArgs ea)
 		{
 			DetachMember (ea.Constructor);
+			if (!ea.Constructor.IsStatic)
+				ea.Constructor.This.ParameterType = null;
 		}
 
 		void OnEventAdded (object sender, EventDefinitionEventArgs ea)
@@ -361,12 +357,6 @@ namespace Mono.Cecil {
 			member.DeclaringType = null;
 		}
 
-		void OnGenericParameterAdded (object sender, GenericParameterEventArgs ea)
-		{
-			ea.GenericParameter.Position = m_genparams.Count + 1;
-			GenericArguments.Add (ea.GenericParameter);
-		}
-
 		object ICloneable.Clone ()
 		{
 			return this.Clone ();
@@ -374,18 +364,23 @@ namespace Mono.Cecil {
 
 		public TypeDefinition Clone ()
 		{
-			return Clone (this, null);
+			return Clone (this, new ImportContext (null, this));
 		}
 
-		internal static TypeDefinition Clone (TypeDefinition type, ReflectionHelper helper)
+		internal static TypeDefinition Clone (TypeDefinition type, ImportContext context)
 		{
 			TypeDefinition nt = new TypeDefinition (
 				type.Name,
 				type.Namespace,
 				type.Attributes);
 
+			context.GenericContext.Type = nt;
+
+			foreach (GenericParameter p in type.GenericParameters)
+				nt.GenericParameters.Add (GenericParameter.Clone (p, context));
+
 			if (type.BaseType != null)
-				nt.BaseType = helper == null ? type.BaseType : helper.ImportTypeReference (type.BaseType);
+				nt.BaseType = context.Import (type.BaseType);
 
 			if (type.LayoutInfo.HasLayoutInfo) {
 				nt.LayoutInfo.ClassSize = type.LayoutInfo.ClassSize;
@@ -393,21 +388,21 @@ namespace Mono.Cecil {
 			}
 
 			foreach (FieldDefinition field in type.Fields)
-				nt.Fields.Add (FieldDefinition.Clone (field, helper));
+				nt.Fields.Add (FieldDefinition.Clone (field, context));
 			foreach (MethodDefinition ctor in type.Constructors)
-				nt.Constructors.Add (MethodDefinition.Clone (ctor, helper));
+				nt.Constructors.Add (MethodDefinition.Clone (ctor, context));
 			foreach (MethodDefinition meth in type.Methods)
-				nt.Methods.Add (MethodDefinition.Clone (meth, helper));
+				nt.Methods.Add (MethodDefinition.Clone (meth, context));
 			foreach (EventDefinition evt in type.Events)
-				nt.Events.Add (EventDefinition.Clone (evt, helper));
+				nt.Events.Add (EventDefinition.Clone (evt, context));
 			foreach (PropertyDefinition prop in type.Properties)
-				nt.Properties.Add (PropertyDefinition.Clone (prop, helper));
+				nt.Properties.Add (PropertyDefinition.Clone (prop, context));
 			foreach (TypeReference intf in type.Interfaces)
-				nt.Interfaces.Add (helper == null ? intf : helper.ImportTypeReference (intf));
+				nt.Interfaces.Add (context.Import (intf));
 			foreach (TypeDefinition nested in type.NestedTypes)
-				nt.NestedTypes.Add (Clone (nested, helper));
+				nt.NestedTypes.Add (Clone (nested, context));
 			foreach (CustomAttribute ca in type.CustomAttributes)
-				nt.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+				nt.CustomAttributes.Add (CustomAttribute.Clone (ca, context));
 			foreach (SecurityDeclaration dec in type.SecurityDeclarations)
 				nt.SecurityDeclarations.Add (SecurityDeclaration.Clone (dec));
 

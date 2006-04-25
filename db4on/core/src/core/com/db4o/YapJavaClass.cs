@@ -161,14 +161,14 @@ namespace com.db4o
 			return true;
 		}
 
-		public abstract void write(object a_object, com.db4o.YapWriter a_bytes);
+		public abstract void write(object a_object, com.db4o.YapReader a_bytes);
 
 		public virtual bool writeArray(object array, com.db4o.YapWriter reader)
 		{
 			return false;
 		}
 
-		public virtual void writeIndexEntry(com.db4o.YapWriter a_writer, object a_object)
+		public virtual void writeIndexEntry(com.db4o.YapReader a_writer, object a_object)
 		{
 			write(a_object, a_writer);
 		}
@@ -195,7 +195,18 @@ namespace com.db4o
 			return this;
 		}
 
+		public virtual object current()
+		{
+			if (i_compareToIsNull)
+			{
+				return null;
+			}
+			return current1();
+		}
+
 		internal abstract void prepareComparison1(object obj);
+
+		public abstract object current1();
 
 		public virtual int compareTo(object obj)
 		{

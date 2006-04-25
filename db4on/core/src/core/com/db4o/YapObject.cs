@@ -57,7 +57,7 @@ namespace com.db4o
 				com.db4o.YapStream stream = ta.i_stream;
 				if (a_refresh)
 				{
-					if (stream.i_config.i_messageLevel > com.db4o.YapConst.ACTIVATION)
+					if (stream.i_config.messageLevel() > com.db4o.YapConst.ACTIVATION)
 					{
 						stream.message("" + getID() + " refresh " + i_yapClass.getName());
 					}
@@ -79,7 +79,7 @@ namespace com.db4o
 							return;
 						}
 					}
-					if (stream.i_config.i_messageLevel > com.db4o.YapConst.ACTIVATION)
+					if (stream.i_config.messageLevel() > com.db4o.YapConst.ACTIVATION)
 					{
 						stream.message("" + getID() + " activate " + i_yapClass.getName());
 					}
@@ -144,7 +144,7 @@ namespace com.db4o
 						((com.db4o.Db4oTypeImpl)obj).preDeactivate();
 					}
 					com.db4o.YapStream stream = a_trans.i_stream;
-					if (stream.i_config.i_messageLevel > com.db4o.YapConst.ACTIVATION)
+					if (stream.i_config.messageLevel() > com.db4o.YapConst.ACTIVATION)
 					{
 						stream.message("" + getID() + " deactivate " + i_yapClass.getName());
 					}
@@ -154,7 +154,7 @@ namespace com.db4o
 			}
 		}
 
-		internal override byte getIdentifier()
+		public override byte getIdentifier()
 		{
 			return com.db4o.YapConst.YAPOBJECT;
 		}
@@ -206,7 +206,7 @@ namespace com.db4o
 			return i_yapClass;
 		}
 
-		internal override int ownLength()
+		public override int ownLength()
 		{
 			return i_yapClass.objectLength();
 		}
@@ -277,7 +277,7 @@ namespace com.db4o
 			return readObject;
 		}
 
-		internal sealed override void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader
+		public sealed override void readThis(com.db4o.Transaction a_trans, com.db4o.YapReader
 			 a_bytes)
 		{
 		}
@@ -285,11 +285,6 @@ namespace com.db4o
 		private com.db4o.YapClass readYapClass(com.db4o.YapWriter a_reader)
 		{
 			return a_reader.getStream().getYapClass(a_reader.readInt());
-		}
-
-		internal override void setID(com.db4o.YapStream a_stream, int a_id)
-		{
-			i_id = a_id;
 		}
 
 		internal virtual void setObjectWeak(com.db4o.YapStream a_stream, object a_object)
@@ -337,7 +332,7 @@ namespace com.db4o
 			{
 				throw new com.db4o.ext.ObjectNotStorableException(i_yapClass.classReflector());
 			}
-			setID(stream, stream.newUserObject());
+			setID(stream.newUserObject());
 			beginProcessing();
 			bitTrue(com.db4o.YapConst.CONTINUE);
 			if (!(i_yapClass is com.db4o.YapClassPrimitive))
@@ -368,7 +363,7 @@ namespace com.db4o
 			}
 			else
 			{
-				if (i_virtualAttributes.i_database == null || i_virtualAttributes.i_uuid == 0)
+				if (!i_virtualAttributes.suppliesUUID())
 				{
 					if (i_yapClass.hasVirtualAttributes())
 					{
@@ -384,7 +379,8 @@ namespace com.db4o
 			i_virtualAttributes = at;
 		}
 
-		internal override void writeThis(com.db4o.YapWriter a_writer)
+		public override void writeThis(com.db4o.Transaction trans, com.db4o.YapReader a_writer
+			)
 		{
 		}
 
@@ -403,7 +399,7 @@ namespace com.db4o
 						endProcessing();
 						return;
 					}
-					if (a_trans.i_stream.i_config.i_messageLevel > com.db4o.YapConst.STATE)
+					if (a_trans.i_stream.i_config.messageLevel() > com.db4o.YapConst.STATE)
 					{
 						a_trans.i_stream.message("" + getID() + " update " + i_yapClass.getName());
 					}

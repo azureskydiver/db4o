@@ -11,6 +11,15 @@ namespace com.db4o.inside.slots
 		{
 		}
 
+		public override object shallowClone()
+		{
+			com.db4o.inside.slots.ReferencedSlot rs = new com.db4o.inside.slots.ReferencedSlot
+				(_key);
+			rs._slot = _slot;
+			rs._references = _references;
+			return base.shallowCloneInternal(rs);
+		}
+
 		public virtual void pointTo(com.db4o.inside.slots.Slot slot)
 		{
 			_slot = slot;

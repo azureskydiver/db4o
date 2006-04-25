@@ -34,4 +34,20 @@ namespace com.db4o.inside.query
 		}
 		#endregion
 	}
+    
+    public class NullCachingStrategy : ICachingStrategy
+    {
+        public static readonly ICachingStrategy Default = new NullCachingStrategy();
+        
+        #region ICachingStrategy Members
+        public void Add(object key, object item)
+        {   
+        }
+
+        public object Get(object key)
+        {
+            return null;
+        }
+        #endregion
+    }
 }

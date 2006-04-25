@@ -20,7 +20,7 @@ namespace com.db4o.io
 			}
 			if (lockFile)
 			{
-				com.db4o.Platform4.Lock(_delegate);
+				com.db4o.Platform4.lockFile(_delegate);
 			}
 		}
 
@@ -28,12 +28,23 @@ namespace com.db4o.io
 		{
 			try
 			{
-				com.db4o.Platform4.unlock(_delegate);
+				com.db4o.Platform4.unlockFile(_delegate);
 			}
 			catch (System.Exception e)
 			{
 			}
 			_delegate.close();
+		}
+
+		public override void delete(string path)
+		{
+			new j4o.io.File(path).delete();
+		}
+
+		public override bool exists(string path)
+		{
+			j4o.io.File existingFile = new j4o.io.File(path);
+			return existingFile.exists() && existingFile.length() > 0;
 		}
 
 		public override long getLength()

@@ -45,7 +45,7 @@ namespace com.db4o
 				}
 				try
 				{
-					i_backupFile = i_config.i_ioAdapter.open(path, true, i_file.getLength());
+					i_backupFile = i_config.ioAdapter().open(path, true, i_file.getLength());
 				}
 				catch (System.Exception e)
 				{
@@ -242,11 +242,11 @@ namespace com.db4o
 		private void open()
 		{
 			bool isNew = false;
+			com.db4o.io.IoAdapter ioAdapter = i_config.ioAdapter();
 			try
 			{
 				if (j4o.lang.JavaSystem.getLengthOf(fileName()) > 0)
 				{
-					com.db4o.io.IoAdapter ioAdapter = i_config.i_ioAdapter;
 					if (!ioAdapter.exists(fileName()))
 					{
 						isNew = true;
@@ -254,8 +254,8 @@ namespace com.db4o
 					}
 					try
 					{
-						bool lockFile = com.db4o.Debug.lockFile && i_config.i_lockFile && (!i_config.i_readonly
-							);
+						bool lockFile = com.db4o.Debug.lockFile && i_config.lockFile() && (!i_config.isReadOnly
+							());
 						i_file = ioAdapter.open(fileName(), lockFile, 0);
 						if (needsLockFileThread() && com.db4o.Debug.lockFile)
 						{
@@ -273,9 +273,9 @@ namespace com.db4o
 					if (isNew)
 					{
 						configureNewFile();
-						if (i_config.i_reservedStorageSpace > 0)
+						if (i_config.reservedStorageSpace() > 0)
 						{
-							reserve(i_config.i_reservedStorageSpace);
+							reserve(i_config.reservedStorageSpace());
 						}
 						write(false);
 						writeHeader(false);
@@ -324,8 +324,7 @@ namespace com.db4o
 			lock (i_lock)
 			{
 				int address = getSlot(byteCount);
-				com.db4o.YapWriter yb = new com.db4o.YapWriter(i_systemTrans, address, byteCount);
-				writeBytes(yb);
+				writeBytes(new com.db4o.YapReader(byteCount), address, 0);
 				free(address, byteCount);
 			}
 		}
@@ -366,9 +365,10 @@ namespace com.db4o
 			return true;
 		}
 
-		internal override void writeBytes(com.db4o.YapWriter a_bytes)
+		internal override void writeBytes(com.db4o.YapReader a_bytes, int address, int addressOffset
+			)
 		{
-			if (i_config.i_readonly)
+			if (i_config.isReadOnly())
 			{
 				return;
 			}
@@ -380,16 +380,25 @@ namespace com.db4o
 			{
 				if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 				{
-					if (a_bytes.getID() != com.db4o.YapConst.IGNORE_ID)
+					bool doCheck = true;
+					if (a_bytes is com.db4o.YapWriter)
 					{
-						checkXBytes(a_bytes.getAddress(), a_bytes.addressOffset(), a_bytes.getLength());
+						com.db4o.YapWriter writer = (com.db4o.YapWriter)a_bytes;
+						if (writer.getID() == com.db4o.YapConst.IGNORE_ID)
+						{
+							doCheck = false;
+						}
+					}
+					if (doCheck)
+					{
+						checkXBytes(address, addressOffset, a_bytes.getLength());
 					}
 				}
-				i_file.blockSeek(a_bytes.getAddress(), a_bytes.addressOffset());
+				i_file.blockSeek(address, addressOffset);
 				i_file.write(a_bytes._buffer, a_bytes.getLength());
 				if (i_backupFile != null)
 				{
-					i_backupFile.blockSeek(a_bytes.getAddress(), a_bytes.addressOffset());
+					i_backupFile.blockSeek(address, addressOffset);
 					i_backupFile.write(a_bytes._buffer, a_bytes.getLength());
 				}
 			}

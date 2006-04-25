@@ -17,7 +17,7 @@ namespace com.db4o
 			{
 				i_objectID = a_constraint.getObjectID();
 			}
-			return a_candidate.i_key == i_objectID;
+			return a_candidate._key == i_objectID;
 		}
 	}
 }

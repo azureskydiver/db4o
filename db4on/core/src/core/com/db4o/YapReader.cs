@@ -176,5 +176,42 @@ namespace com.db4o
 			b[--o] = (byte)(a_int >>= 8);
 			b[--o] = (byte)(a_int >>= 8);
 		}
+
+		public virtual void writeIDOf(com.db4o.Transaction trans, object obj)
+		{
+			if (obj == null)
+			{
+				writeInt(0);
+				return;
+			}
+			if (obj is com.db4o.YapMeta)
+			{
+				((com.db4o.YapMeta)obj).writeOwnID(trans, this);
+				return;
+			}
+			writeInt(((int)obj));
+		}
+
+		public virtual void writeIDOf(com.db4o.Transaction trans, com.db4o.YapMeta yapMeta
+			)
+		{
+			if (yapMeta == null)
+			{
+				writeInt(0);
+				return;
+			}
+			yapMeta.writeOwnID(trans, this);
+		}
+
+		public virtual void writeIDOf(com.db4o.Transaction trans, int i)
+		{
+			writeInt(i);
+		}
+
+		internal virtual void writeShortString(com.db4o.Transaction trans, string a_string
+			)
+		{
+			trans.i_stream.i_handlers.i_stringHandler.writeShort(a_string, this);
+		}
 	}
 }

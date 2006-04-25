@@ -29,6 +29,8 @@ namespace com.db4o.inside.query
 	{	
         private static ICachingStrategy _assemblyCachingStrategy = new SingleItemCachingStrategy();
 
+        private static ICachingStrategy _expressionCachingStrategy = new SingleItemCachingStrategy();
+
 		public static ICachingStrategy AssemblyCachingStrategy
 		{
 			get
@@ -43,9 +45,25 @@ namespace com.db4o.inside.query
 			}
 		}
 
-		public static Expression FromMethod(System.Reflection.MethodInfo method)
+        public static ICachingStrategy ExpressionCachingStrategy
+        {
+            get
+            {
+                return _expressionCachingStrategy;
+            }
+
+            set
+            {
+                if (null == value) throw new ArgumentNullException("ExpressionCachingStrategy");
+                _expressionCachingStrategy = value;
+            }
+        }
+
+		public static Expression FromMethod(System.Reflection.MethodBase method)
 		{
 			if (method == null) throw new ArgumentNullException("method");
+            Expression e = (Expression)_expressionCachingStrategy.Get(method);
+            if (e != null) return e;
 
 			string location = GetAssemblyLocation(method);
             IAssemblyDefinition assembly = GetAssembly(location);            
@@ -53,7 +71,10 @@ namespace com.db4o.inside.query
 			if (null == type) UnsupportedPredicate(string.Format("Unable to load type '{0}' from assembly '{1}'", method.DeclaringType.FullName, location));
 			IMethodDefinition methodDef = type.Methods.GetMethod(method.Name,  GetParameterTypes(method));
 			if (null == methodDef) UnsupportedPredicate(string.Format("Unable to load the definition of '{0}' from assembly '{1}'", method, location));
-			return FromMethodDefinition(methodDef);
+		    
+			e = FromMethodDefinition(methodDef);
+		    _expressionCachingStrategy.Add(method, e);
+            return e;
 		}
 		
 		private static IAssemblyDefinition GetAssembly(string location)
@@ -67,7 +88,7 @@ namespace com.db4o.inside.query
 			return assembly;
 		}
 
-		private static Type[] GetParameterTypes(MethodInfo method)
+		private static Type[] GetParameterTypes(MethodBase method)
 		{
 			ParameterInfo[] parameters = method.GetParameters();
 			Type[] types = new Type[parameters.Length];
@@ -104,7 +125,7 @@ namespace com.db4o.inside.query
 			return module.Types[fullName];
 		}
 
-		private static string GetAssemblyLocation(MethodInfo method)
+		private static string GetAssemblyLocation(MethodBase method)
 		{
 			return method.DeclaringType.Module.FullyQualifiedName;
 		}
@@ -377,7 +398,7 @@ namespace com.db4o.inside.query
 					return;
 				}
 
-				if (method.DeclaringType.FullName == "System.String")
+			    if (IsSystemString(method.DeclaringType))
 				{
 					ProcessStringMethod(node, methodRef);
 					return;
@@ -386,11 +407,27 @@ namespace com.db4o.inside.query
 				ProcessRegularMethodInvocation(node, methodRef);
 			}
 
-			private void ProcessStringMethod(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
+		    private static bool IsSystemString(TypeReference type)
+		    {
+		        return type.FullName == "System.String";
+		    }
+
+		    private void ProcessStringMethod(IMethodInvocationExpression node, IMethodReferenceExpression methodRef)
 			{
 				IMethodReference method = methodRef.Method;
+		        
+		        if (method.Parameters.Count != 1
+		            || !IsSystemString(method.Parameters[0].ParameterType))
+		        {
+                    UnsupportedExpression(methodRef);
+		        }
+		        
 				switch (method.Name)
 				{
+                    case "Contains":
+                        PushComparison(methodRef.Target, node.Arguments[0], ComparisonOperator.CONTAINS);
+                        break;
+				        
 					case "StartsWith":
 						PushComparison(methodRef.Target, node.Arguments[0], ComparisonOperator.STARTSWITH);
 						break;

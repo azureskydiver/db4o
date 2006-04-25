@@ -55,5 +55,7 @@ namespace com.db4o.ext
 		/// are discarded during the switching process.<br /><br />
 		/// </remarks>
 		void switchToMainFile();
+
+		bool isAlive();
 	}
 }

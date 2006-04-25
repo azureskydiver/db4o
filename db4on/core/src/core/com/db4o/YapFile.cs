@@ -66,8 +66,8 @@ namespace com.db4o
 		internal virtual void configureNewFile()
 		{
 			_freespaceManager = com.db4o.inside.freespace.FreespaceManager.createNew(this, i_config
-				._freespaceSystem);
-			blockSize(i_config.i_blockSize);
+				.freespaceSystem());
+			blockSize(i_config.blockSize());
 			i_writeAt = blocksFor(HEADER_LENGTH);
 			_configBlock = new com.db4o.YapConfigBlock(this);
 			_configBlock.write();
@@ -84,7 +84,7 @@ namespace com.db4o
 
 		internal override long currentVersion()
 		{
-			return _bootRecord.i_versionGenerator;
+			return _bootRecord.currentVersion();
 		}
 
 		internal virtual void initNewClassCollection()
@@ -96,6 +96,18 @@ namespace com.db4o
 			)
 		{
 			return new com.db4o.ClassIndex(yapClass);
+		}
+
+		internal sealed override com.db4o.inside.btree.BTree createBTreeClassIndex(com.db4o.YapClass
+			 a_yapClass, int id)
+		{
+			com.db4o.inside.btree.BTree btree = new com.db4o.inside.btree.BTree(id, new com.db4o.YInt
+				(this), null);
+			if (id == 0)
+			{
+				btree.write(getSystemTransaction());
+			}
+			return btree;
 		}
 
 		internal sealed override com.db4o.QueryResultImpl createQResult(com.db4o.Transaction
@@ -159,21 +171,21 @@ namespace com.db4o
 		{
 			if (i_prefetchedIDs != null)
 			{
-				i_prefetchedIDs.traverse(new _AnonymousInnerClass171(this));
+				i_prefetchedIDs.traverse(new _AnonymousInnerClass180(this));
 			}
 			i_prefetchedIDs = null;
 		}
 
-		private sealed class _AnonymousInnerClass171 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass180 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass171(YapFile _enclosing)
+			public _AnonymousInnerClass180(YapFile _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
 			public void visit(object a_object)
 			{
-				this._enclosing.free(((com.db4o.TreeInt)a_object).i_key, com.db4o.YapConst.POINTER_LENGTH
+				this._enclosing.free(((com.db4o.TreeInt)a_object)._key, com.db4o.YapConst.POINTER_LENGTH
 					);
 			}
 
@@ -211,10 +223,13 @@ namespace com.db4o
 					com.db4o.reflect.ReflectClass claxx = yapClass.classReflector();
 					if (claxx == null || !(i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)))
 					{
-						com.db4o.Tree tree = yapClass.getIndex(ta);
-						if (tree != null)
+						if (com.db4o.Debug.useOldClassIndex && !com.db4o.Debug.useBTrees)
 						{
-							tree.traverse(new _AnonymousInnerClass210(this, duplicates, a_res));
+							com.db4o.Tree tree = yapClass.getIndex(ta);
+							if (tree != null)
+							{
+								tree.traverse(new _AnonymousInnerClass240(this, duplicates, a_res));
+							}
 						}
 					}
 				}
@@ -222,9 +237,9 @@ namespace com.db4o
 			a_res.reset();
 		}
 
-		private sealed class _AnonymousInnerClass210 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass240 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass210(YapFile _enclosing, com.db4o.Tree[] duplicates, com.db4o.QueryResultImpl
+			public _AnonymousInnerClass240(YapFile _enclosing, com.db4o.Tree[] duplicates, com.db4o.QueryResultImpl
 				 a_res)
 			{
 				this._enclosing = _enclosing;
@@ -234,7 +249,7 @@ namespace com.db4o
 
 			public void visit(object obj)
 			{
-				int id = ((com.db4o.TreeInt)obj).i_key;
+				int id = ((com.db4o.TreeInt)obj)._key;
 				com.db4o.TreeInt newNode = new com.db4o.TreeInt(id);
 				duplicates[0] = com.db4o.Tree.add(duplicates[0], newNode);
 				if (newNode.size() != 0)
@@ -365,23 +380,24 @@ namespace com.db4o
 			return i_isServer;
 		}
 
-		internal sealed override com.db4o.YapWriter newObject(com.db4o.Transaction a_trans
-			, com.db4o.YapMeta a_object)
+		internal com.db4o.YapWriter newObject(com.db4o.Transaction a_trans, com.db4o.YapMeta
+			 a_object)
 		{
 			int length = a_object.ownLength();
-			int[] slot = newSlot(a_trans, length);
-			a_object.setID(this, slot[0]);
+			com.db4o.inside.slots.Pointer4 ptr = newSlot(a_trans, length);
+			a_object.setID(ptr._id);
 			com.db4o.YapWriter writer = new com.db4o.YapWriter(a_trans, length);
-			writer.useSlot(slot[0], slot[1], length);
+			writer.useSlot(ptr._id, ptr._address, length);
 			return writer;
 		}
 
-		public int[] newSlot(com.db4o.Transaction a_trans, int a_length)
+		public com.db4o.inside.slots.Pointer4 newSlot(com.db4o.Transaction a_trans, int a_length
+			)
 		{
 			int id = getPointerSlot();
 			int address = getSlot(a_length);
 			a_trans.setPointer(id, address, a_length);
-			return new int[] { id, address };
+			return new com.db4o.inside.slots.Pointer4(id, address);
 		}
 
 		internal sealed override int newUserObject()
@@ -432,12 +448,7 @@ namespace com.db4o
 
 		public override void raiseVersion(long a_minimumVersion)
 		{
-			if (_bootRecord.i_versionGenerator < a_minimumVersion)
-			{
-				_bootRecord.i_versionGenerator = a_minimumVersion;
-				_bootRecord.setDirty();
-				_bootRecord.store(1);
-			}
+			_bootRecord.raiseVersion(a_minimumVersion);
 		}
 
 		public override com.db4o.YapWriter readWriterByID(com.db4o.Transaction a_ta, int 
@@ -446,8 +457,8 @@ namespace com.db4o
 			return (com.db4o.YapWriter)readReaderOrWriterByID(a_ta, a_id, false);
 		}
 
-		internal override com.db4o.YapReader readReaderByID(com.db4o.Transaction a_ta, int
-			 a_id)
+		public override com.db4o.YapReader readReaderByID(com.db4o.Transaction a_ta, int 
+			a_id)
 		{
 			return readReaderOrWriterByID(a_ta, a_id, true);
 		}
@@ -515,21 +526,21 @@ namespace com.db4o
 			_configBlock = new com.db4o.YapConfigBlock(this);
 			_configBlock.read(myreader.readInt());
 			myreader.incrementOffset(com.db4o.YapConst.YAPID_LENGTH);
-			i_classCollection.setID(this, myreader.readInt());
+			i_classCollection.setID(myreader.readInt());
 			i_classCollection.read(i_systemTrans);
 			int freespaceID = myreader.readInt();
 			_freespaceManager = com.db4o.inside.freespace.FreespaceManager.createNew(this, _configBlock
 				._freespaceSystem);
 			_freespaceManager.read(freespaceID);
 			_freespaceManager.start(_configBlock._freespaceAddress);
-			if (i_config._freespaceSystem != 0 || _configBlock._freespaceSystem == com.db4o.inside.freespace.FreespaceManager
+			if (i_config.freespaceSystem() != 0 || _configBlock._freespaceSystem == com.db4o.inside.freespace.FreespaceManager
 				.FM_LEGACY_RAM)
 			{
-				if (_freespaceManager.systemType() != i_config._freespaceSystem)
+				if (_freespaceManager.systemType() != i_config.freespaceSystem())
 				{
 					com.db4o.inside.freespace.FreespaceManager newFM = com.db4o.inside.freespace.FreespaceManager
-						.createNew(this, i_config._freespaceSystem);
-					int fmSlot = _configBlock.newFreespaceSlot(i_config._freespaceSystem);
+						.createNew(this, i_config.freespaceSystem());
+					int fmSlot = _configBlock.newFreespaceSlot(i_config.freespaceSystem());
 					newFM.start(fmSlot);
 					_freespaceManager.migrate(newFM);
 					com.db4o.inside.freespace.FreespaceManager oldFM = _freespaceManager;
@@ -567,7 +578,7 @@ namespace com.db4o
 			com.db4o.Transaction trans = _configBlock.getTransactionToCommit();
 			if (trans != null)
 			{
-				if (!i_config.i_disableCommitRecovery)
+				if (!i_config.commitRecoveryDisabled())
 				{
 					trans.writeOld();
 				}
@@ -600,15 +611,15 @@ namespace com.db4o
 			{
 				lock (i_semaphores)
 				{
-					i_semaphores.forEachKeyForIdentity(new _AnonymousInnerClass593(this), ta);
+					i_semaphores.forEachKeyForIdentity(new _AnonymousInnerClass622(this), ta);
 					j4o.lang.JavaSystem.notifyAll(i_semaphores);
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass593 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass622 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass593(YapFile _enclosing)
+			public _AnonymousInnerClass622(YapFile _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -711,8 +722,8 @@ namespace com.db4o
 			return fileName();
 		}
 
-		internal sealed override com.db4o.YapWriter updateObject(com.db4o.Transaction a_trans
-			, com.db4o.YapMeta a_object)
+		internal com.db4o.YapWriter updateObject(com.db4o.Transaction a_trans, com.db4o.YapMeta
+			 a_object)
 		{
 			int length = a_object.ownLength();
 			int id = a_object.getID();
@@ -734,7 +745,8 @@ namespace com.db4o
 
 		internal abstract bool writeAccessTime();
 
-		internal abstract void writeBytes(com.db4o.YapWriter a_Bytes);
+		internal abstract void writeBytes(com.db4o.YapReader a_Bytes, int address, int addressOffset
+			);
 
 		internal sealed override void writeDirty()
 		{
@@ -797,17 +809,18 @@ namespace com.db4o
 		internal sealed override void writeNew(com.db4o.YapClass a_yapClass, com.db4o.YapWriter
 			 aWriter)
 		{
-			writeObject(null, aWriter);
+			writeObject(null, aWriter, aWriter.getAddress());
 			if (maintainsIndices())
 			{
 				a_yapClass.addToIndex(this, aWriter.getTransaction(), aWriter.getID());
 			}
 		}
 
-		internal void writeObject(com.db4o.YapMeta a_object, com.db4o.YapWriter a_writer)
+		internal void writeObject(com.db4o.YapMeta a_object, com.db4o.YapReader a_writer, 
+			int address)
 		{
 			i_handlers.encrypt(a_writer);
-			writeBytes(a_writer);
+			writeBytes(a_writer, address, 0);
 		}
 
 		internal virtual void writeBootRecord()

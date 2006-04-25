@@ -55,7 +55,7 @@ namespace com.db4o
 		internal com.db4o.QCandidate addByIdentity(com.db4o.QCandidate candidate)
 		{
 			i_root = com.db4o.Tree.add(i_root, candidate);
-			if (candidate.i_size == 0)
+			if (candidate._size == 0)
 			{
 				return candidate.getRoot();
 			}
@@ -98,9 +98,9 @@ namespace com.db4o
 			while (i.hasNext())
 			{
 				com.db4o.QCandidate candidate = (com.db4o.QCandidate)i.next();
-				candidate.i_preceding = null;
-				candidate.i_subsequent = null;
-				candidate.i_size = 1;
+				candidate._preceding = null;
+				candidate._subsequent = null;
+				candidate._size = 1;
 				newTree[0] = com.db4o.Tree.add(newTree[0], candidate);
 			}
 			i_root = newTree[0];
@@ -142,7 +142,7 @@ namespace com.db4o
 			public void visit(object a_object)
 			{
 				com.db4o.QOrder qo = (com.db4o.QOrder)a_object;
-				com.db4o.QCandidate candidate = qo.i_candidate.getRoot();
+				com.db4o.QCandidate candidate = qo._candidate.getRoot();
 				candidate.hintOrder(placement[0]++, major);
 			}
 
@@ -260,7 +260,7 @@ namespace com.db4o
 
 			public void visit(object obj)
 			{
-				if (((com.db4o.QCandidate)obj).i_include)
+				if (((com.db4o.QCandidate)obj)._include)
 				{
 					ret[0] = false;
 				}
@@ -290,7 +290,7 @@ namespace com.db4o
 
 			public bool isVisit(object a_candidate)
 			{
-				return ((com.db4o.QCandidate)a_candidate).i_include;
+				return ((com.db4o.QCandidate)a_candidate)._include;
 			}
 
 			private readonly QCandidates _enclosing;
@@ -337,7 +337,7 @@ namespace com.db4o
 			public void visit(object obj)
 			{
 				newRoot[0] = com.db4o.Tree.add(newRoot[0], new com.db4o.QCandidate(finalThis, null
-					, ((com.db4o.TreeInt)obj).i_key, true));
+					, ((com.db4o.TreeInt)obj)._key, true));
 			}
 
 			private readonly QCandidates _enclosing;
@@ -360,7 +360,7 @@ namespace com.db4o
 			public void visit(object obj)
 			{
 				newRoot[0] = com.db4o.Tree.removeLike(newRoot[0], new com.db4o.QCandidate(finalThis
-					, null, ((com.db4o.TreeInt)obj).i_key, true));
+					, null, ((com.db4o.TreeInt)obj)._key, true));
 			}
 
 			private readonly QCandidates _enclosing;

@@ -8,6 +8,14 @@ namespace com.db4o.foundation.network
 
 		private j4o.io.InputStream _in;
 
+		private string _hostName;
+
+		public YapSocketReal(string hostName, int port) : this(new j4o.net.Socket(hostName
+			, port))
+		{
+			_hostName = hostName;
+		}
+
 		public YapSocketReal(j4o.net.Socket socket)
 		{
 			_socket = socket;
@@ -64,7 +72,12 @@ namespace com.db4o.foundation.network
 
 		public virtual com.db4o.foundation.network.YapSocket openParalellSocket()
 		{
-			throw new System.IO.IOException();
+			if (_hostName == null)
+			{
+				throw new System.IO.IOException("Cannot open parallel socket - invalid state.");
+			}
+			return new com.db4o.foundation.network.YapSocketReal(_hostName, _socket.getPort()
+				);
 		}
 	}
 }

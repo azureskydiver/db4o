@@ -9,11 +9,14 @@ namespace com.db4o
 
 		private com.db4o.Tree i_addToClassIndex;
 
-		private byte[] i_bytes = new byte[com.db4o.YapConst.POINTER_LENGTH];
+		private readonly byte[] _pointerBuffer = new byte[com.db4o.YapConst.POINTER_LENGTH
+			];
 
 		public com.db4o.Tree i_delete;
 
 		private com.db4o.foundation.List4 i_dirtyFieldIndexes;
+
+		private com.db4o.Tree _dirtyBTrees;
 
 		public readonly com.db4o.YapFile i_file;
 
@@ -54,7 +57,7 @@ namespace com.db4o
 			com.db4o.TreeIntObject[] node = new com.db4o.TreeIntObject[] { new com.db4o.TreeIntObject
 				(a_yapClassID) };
 			a_tree = createClassIndexNode(a_tree, node);
-			node[0].i_object = com.db4o.Tree.add((com.db4o.Tree)node[0].i_object, new com.db4o.TreeInt
+			node[0]._object = com.db4o.Tree.add((com.db4o.Tree)node[0]._object, new com.db4o.TreeInt
 				(a_id));
 			return a_tree;
 		}
@@ -77,7 +80,7 @@ namespace com.db4o
 					foundOne[0] = false;
 					com.db4o.Tree delete = i_delete;
 					i_delete = null;
-					delete.traverse(new _AnonymousInnerClass99(this, foundOne, finalThis));
+					delete.traverse(new _AnonymousInnerClass104(this, foundOne, finalThis));
 				}
 				while (foundOne[0]);
 			}
@@ -85,9 +88,9 @@ namespace com.db4o
 			i_writtenUpdateDeletedMembers = null;
 		}
 
-		private sealed class _AnonymousInnerClass99 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass104 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass99(Transaction _enclosing, bool[] foundOne, com.db4o.Transaction
+			public _AnonymousInnerClass104(Transaction _enclosing, bool[] foundOne, com.db4o.Transaction
 				 finalThis)
 			{
 				this._enclosing = _enclosing;
@@ -108,8 +111,7 @@ namespace com.db4o
 					}
 					if (obj == null)
 					{
-						object[] arr = finalThis.i_stream.getObjectAndYapObjectByID(finalThis, info.i_key
-							);
+						object[] arr = finalThis.i_stream.getObjectAndYapObjectByID(finalThis, info._key);
 						obj = arr[0];
 						info._reference = (com.db4o.YapObject)arr[1];
 					}
@@ -117,7 +119,7 @@ namespace com.db4o
 						false);
 				}
 				this._enclosing.i_delete = com.db4o.Tree.add(this._enclosing.i_delete, new com.db4o.DeleteInfo
-					(info.i_key, null, false, info._cascade));
+					(info._key, null, false, info._cascade));
 			}
 
 			private readonly Transaction _enclosing;
@@ -130,6 +132,7 @@ namespace com.db4o
 		private void clearAll()
 		{
 			_slotChanges = null;
+			_dirtyBTrees = null;
 			i_addToClassIndex = null;
 			i_removeFromClassIndex = null;
 			i_dirtyFieldIndexes = null;
@@ -256,7 +259,7 @@ namespace com.db4o
 			int[] slotSetPointerCount = { 0 };
 			if (_slotChanges != null)
 			{
-				_slotChanges.traverse(new _AnonymousInnerClass264(this, slotSetPointerCount));
+				_slotChanges.traverse(new _AnonymousInnerClass283(this, slotSetPointerCount));
 			}
 			if (slotSetPointerCount[0] > 0)
 			{
@@ -277,9 +280,9 @@ namespace com.db4o
 			}
 		}
 
-		private sealed class _AnonymousInnerClass264 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass283 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass264(Transaction _enclosing, int[] slotSetPointerCount)
+			public _AnonymousInnerClass283(Transaction _enclosing, int[] slotSetPointerCount)
 			{
 				this._enclosing = _enclosing;
 				this.slotSetPointerCount = slotSetPointerCount;
@@ -362,6 +365,10 @@ namespace com.db4o
 			}
 		}
 
+		public virtual void dirtyBTree(com.db4o.inside.btree.BTree btree)
+		{
+		}
+
 		internal virtual void dontDelete(int classID, int a_id)
 		{
 			com.db4o.DeleteInfo info = (com.db4o.DeleteInfo)com.db4o.TreeInt.find(i_delete, a_id
@@ -408,7 +415,7 @@ namespace com.db4o
 
 		private void flushFile()
 		{
-			if (i_file.i_config._flushFileBuffers)
+			if (i_file.i_config.flushFileBuffers())
 			{
 				i_file.syncFiles();
 			}
@@ -422,13 +429,13 @@ namespace com.db4o
 			}
 			if (_slotChanges != null)
 			{
-				_slotChanges.traverse(new _AnonymousInnerClass420(this));
+				_slotChanges.traverse(new _AnonymousInnerClass444(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass420 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass444 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass420(Transaction _enclosing)
+			public _AnonymousInnerClass444(Transaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -441,7 +448,7 @@ namespace com.db4o
 			private readonly Transaction _enclosing;
 		}
 
-		internal virtual com.db4o.inside.slots.Slot getSlotInformation(int a_id)
+		public virtual com.db4o.inside.slots.Slot getSlotInformation(int a_id)
 		{
 			if (a_id == 0)
 			{
@@ -464,11 +471,11 @@ namespace com.db4o
 					return parentSlot;
 				}
 			}
-			i_file.readBytes(i_bytes, a_id, com.db4o.YapConst.POINTER_LENGTH);
-			int address = (i_bytes[3] & 255) | (i_bytes[2] & 255) << 8 | (i_bytes[1] & 255) <<
-				 16 | i_bytes[0] << 24;
-			int length = (i_bytes[7] & 255) | (i_bytes[6] & 255) << 8 | (i_bytes[5] & 255) <<
-				 16 | i_bytes[4] << 24;
+			i_file.readBytes(_pointerBuffer, a_id, com.db4o.YapConst.POINTER_LENGTH);
+			int address = (_pointerBuffer[3] & 255) | (_pointerBuffer[2] & 255) << 8 | (_pointerBuffer
+				[1] & 255) << 16 | _pointerBuffer[0] << 24;
+			int length = (_pointerBuffer[7] & 255) | (_pointerBuffer[6] & 255) << 8 | (_pointerBuffer
+				[5] & 255) << 16 | _pointerBuffer[4] << 24;
 			return new com.db4o.inside.slots.Slot(address, length);
 		}
 
@@ -497,15 +504,15 @@ namespace com.db4o
 			if (count > 0)
 			{
 				com.db4o.Transaction finalThis = this;
-				ixTraverser.visitAll(new _AnonymousInnerClass491(this, finalThis, a_signature, ret
+				ixTraverser.visitAll(new _AnonymousInnerClass515(this, finalThis, a_signature, ret
 					));
 			}
 			return ret;
 		}
 
-		private sealed class _AnonymousInnerClass491 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass515 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass491(Transaction _enclosing, com.db4o.Transaction finalThis
+			public _AnonymousInnerClass515(Transaction _enclosing, com.db4o.Transaction finalThis
 				, byte[] a_signature, object[] ret)
 			{
 				this._enclosing = _enclosing;
@@ -584,7 +591,7 @@ namespace com.db4o
 					find(a_yapClassID);
 				if (node != null)
 				{
-					node.i_object = com.db4o.Tree.removeLike((com.db4o.Tree)node.i_object, new com.db4o.TreeInt
+					node._object = com.db4o.Tree.removeLike((com.db4o.Tree)node._object, new com.db4o.TreeInt
 						(a_id));
 				}
 			}
@@ -606,16 +613,16 @@ namespace com.db4o
 				}
 				if (_slotChanges != null)
 				{
-					_slotChanges.traverse(new _AnonymousInnerClass576(this));
+					_slotChanges.traverse(new _AnonymousInnerClass600(this));
 				}
 				rollBackTransactionListeners();
 				clearAll();
 			}
 		}
 
-		private sealed class _AnonymousInnerClass576 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass600 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass576(Transaction _enclosing)
+			public _AnonymousInnerClass600(Transaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -705,6 +712,15 @@ namespace com.db4o
 			return true;
 		}
 
+		public virtual com.db4o.Transaction systemTransaction()
+		{
+			if (i_parentTransaction != null)
+			{
+				return i_parentTransaction;
+			}
+			return this;
+		}
+
 		public override string ToString()
 		{
 			return i_stream.ToString();
@@ -723,9 +739,9 @@ namespace com.db4o
 			{
 				com.db4o.TreeIntObject node = (com.db4o.TreeIntObject)((com.db4o.TreeInt)a_tree).
 					find(a_yapClassID);
-				if (node != null && node.i_object != null)
+				if (node != null && node._object != null)
 				{
-					((com.db4o.Tree)node.i_object).traverse(visitor);
+					((com.db4o.Tree)node._object).traverse(visitor);
 				}
 			}
 		}
@@ -741,13 +757,13 @@ namespace com.db4o
 		{
 			if (a_tree != null)
 			{
-				a_tree.traverse(new _AnonymousInnerClass732(this, a_add, a_indices));
+				a_tree.traverse(new _AnonymousInnerClass774(this, a_add, a_indices));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass732 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass774 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass732(Transaction _enclosing, bool a_add, com.db4o.foundation.Collection4
+			public _AnonymousInnerClass774(Transaction _enclosing, bool a_add, com.db4o.foundation.Collection4
 				 a_indices)
 			{
 				this._enclosing = _enclosing;
@@ -759,20 +775,20 @@ namespace com.db4o
 			{
 				com.db4o.TreeIntObject node = (com.db4o.TreeIntObject)obj;
 				com.db4o.YapClass yapClass = this._enclosing.i_stream.i_classCollection.getYapClass
-					(node.i_key);
+					(node._key);
 				com.db4o.ClassIndex classIndex = yapClass.getIndex();
-				if (node.i_object != null)
+				if (node._object != null)
 				{
 					com.db4o.foundation.Visitor4 visitor = null;
 					if (a_add)
 					{
-						visitor = new _AnonymousInnerClass741(this, classIndex);
+						visitor = new _AnonymousInnerClass783(this, classIndex);
 					}
 					else
 					{
-						visitor = new _AnonymousInnerClass747(this, classIndex);
+						visitor = new _AnonymousInnerClass789(this, classIndex);
 					}
-					((com.db4o.Tree)node.i_object).traverse(visitor);
+					((com.db4o.Tree)node._object).traverse(visitor);
 					if (!a_indices.containsByIdentity(classIndex))
 					{
 						a_indices.add(classIndex);
@@ -780,9 +796,9 @@ namespace com.db4o
 				}
 			}
 
-			private sealed class _AnonymousInnerClass741 : com.db4o.foundation.Visitor4
+			private sealed class _AnonymousInnerClass783 : com.db4o.foundation.Visitor4
 			{
-				public _AnonymousInnerClass741(_AnonymousInnerClass732 _enclosing, com.db4o.ClassIndex
+				public _AnonymousInnerClass783(_AnonymousInnerClass774 _enclosing, com.db4o.ClassIndex
 					 classIndex)
 				{
 					this._enclosing = _enclosing;
@@ -791,17 +807,17 @@ namespace com.db4o
 
 				public void visit(object a_object)
 				{
-					classIndex.add(((com.db4o.TreeInt)a_object).i_key);
+					classIndex.add(((com.db4o.TreeInt)a_object)._key);
 				}
 
-				private readonly _AnonymousInnerClass732 _enclosing;
+				private readonly _AnonymousInnerClass774 _enclosing;
 
 				private readonly com.db4o.ClassIndex classIndex;
 			}
 
-			private sealed class _AnonymousInnerClass747 : com.db4o.foundation.Visitor4
+			private sealed class _AnonymousInnerClass789 : com.db4o.foundation.Visitor4
 			{
-				public _AnonymousInnerClass747(_AnonymousInnerClass732 _enclosing, com.db4o.ClassIndex
+				public _AnonymousInnerClass789(_AnonymousInnerClass774 _enclosing, com.db4o.ClassIndex
 					 classIndex)
 				{
 					this._enclosing = _enclosing;
@@ -810,7 +826,7 @@ namespace com.db4o
 
 				public void visit(object a_object)
 				{
-					int id = ((com.db4o.TreeInt)a_object).i_key;
+					int id = ((com.db4o.TreeInt)a_object)._key;
 					com.db4o.YapObject yo = this._enclosing._enclosing.i_stream.getYapObject(id);
 					if (yo != null)
 					{
@@ -819,7 +835,7 @@ namespace com.db4o
 					classIndex.remove(id);
 				}
 
-				private readonly _AnonymousInnerClass732 _enclosing;
+				private readonly _AnonymousInnerClass774 _enclosing;
 
 				private readonly com.db4o.ClassIndex classIndex;
 			}
@@ -874,14 +890,14 @@ namespace com.db4o
 		{
 			if (_slotChanges != null)
 			{
-				_slotChanges.traverse(new _AnonymousInnerClass823(this));
+				_slotChanges.traverse(new _AnonymousInnerClass865(this));
 				flushFile();
 			}
 		}
 
-		private sealed class _AnonymousInnerClass823 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass865 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass823(Transaction _enclosing)
+			public _AnonymousInnerClass865(Transaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -924,7 +940,7 @@ namespace com.db4o
 				}
 			}
 			objectBytes.setCascadeDeletes(a_cascade);
-			a_yc.deleteMembers(objectBytes, a_type);
+			a_yc.deleteMembers(objectBytes, a_type, true);
 			slotFreeOnCommit(a_id, objectBytes.getAddress(), objectBytes.getLength());
 		}
 	}

@@ -83,7 +83,7 @@ namespace com.db4o.foundation.network
 		{
 			try
 			{
-				int ret = (int)i_lock.run(new _AnonymousInnerClass71(this));
+				int ret = (int)i_lock.run(new _AnonymousInnerClass70(this));
 				return ret;
 			}
 			catch (System.IO.IOException iex)
@@ -96,9 +96,9 @@ namespace com.db4o.foundation.network
 			return -1;
 		}
 
-		private sealed class _AnonymousInnerClass71 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass70 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass71(ByteBuffer4 _enclosing)
+			public _AnonymousInnerClass70(ByteBuffer4 _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -106,9 +106,9 @@ namespace com.db4o.foundation.network
 			public object run()
 			{
 				this._enclosing.waitForAvailable();
-				int ret = this._enclosing.i_cache[this._enclosing.i_readOffset++];
+				int retVal = this._enclosing.i_cache[this._enclosing.i_readOffset++];
 				this._enclosing.checkDiscardCache();
-				return ret;
+				return retVal;
 			}
 
 			private readonly ByteBuffer4 _enclosing;
@@ -118,7 +118,7 @@ namespace com.db4o.foundation.network
 		{
 			try
 			{
-				int ret = (int)i_lock.run(new _AnonymousInnerClass91(this, a_length, a_bytes, a_offset
+				int ret = (int)i_lock.run(new _AnonymousInnerClass90(this, a_length, a_bytes, a_offset
 					));
 				return ret;
 			}
@@ -132,9 +132,9 @@ namespace com.db4o.foundation.network
 			return -1;
 		}
 
-		private sealed class _AnonymousInnerClass91 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass90 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass91(ByteBuffer4 _enclosing, int a_length, byte[] a_bytes
+			public _AnonymousInnerClass90(ByteBuffer4 _enclosing, int a_length, byte[] a_bytes
 				, int a_offset)
 			{
 				this._enclosing = _enclosing;
@@ -201,16 +201,16 @@ namespace com.db4o.foundation.network
 		{
 			try
 			{
-				i_lock.run(new _AnonymousInnerClass139(this, len, bytes, off));
+				i_lock.run(new _AnonymousInnerClass138(this, len, bytes, off));
 			}
 			catch (System.Exception e)
 			{
 			}
 		}
 
-		private sealed class _AnonymousInnerClass139 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass138 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass139(ByteBuffer4 _enclosing, int len, byte[] bytes, int
+			public _AnonymousInnerClass138(ByteBuffer4 _enclosing, int len, byte[] bytes, int
 				 off)
 			{
 				this._enclosing = _enclosing;
@@ -242,16 +242,16 @@ namespace com.db4o.foundation.network
 		{
 			try
 			{
-				i_lock.run(new _AnonymousInnerClass157(this, i));
+				i_lock.run(new _AnonymousInnerClass156(this, i));
 			}
 			catch (System.Exception e)
 			{
 			}
 		}
 
-		private sealed class _AnonymousInnerClass157 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass156 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass157(ByteBuffer4 _enclosing, int i)
+			public _AnonymousInnerClass156(ByteBuffer4 _enclosing, int i)
 			{
 				this._enclosing = _enclosing;
 				this.i = i;

@@ -66,13 +66,13 @@ namespace com.db4o
 			}
 			com.db4o.EventDispatcher dispatcher = null;
 			int count = 0;
-			if (a_stream.i_config.i_callbacks)
+			if (a_stream.i_config.callbacks())
 			{
 				count = COUNT;
 			}
 			else
 			{
-				if (a_stream.i_config.i_isServer)
+				if (a_stream.i_config.isServer())
 				{
 					count = SERVER_COUNT;
 				}
@@ -109,7 +109,8 @@ namespace com.db4o
 
 		private static string toPascalCase(string name)
 		{
-			return name.Substring(0, 1).ToUpper() + name.Substring(1);
+			return j4o.lang.JavaSystem.substring(name, 0, 1).ToUpper() + j4o.lang.JavaSystem.substring
+				(name, 1);
 		}
 	}
 }

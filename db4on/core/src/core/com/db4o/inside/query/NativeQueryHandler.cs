@@ -1,4 +1,5 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+using System;
 using com.db4o.foundation;
 using com.db4o.nativequery.expr;
 using com.db4o.nativequery.optimization;
@@ -6,6 +7,31 @@ using com.db4o.query;
 
 namespace com.db4o.inside.query
 {
+#if NET_2_0 || CF_2_0
+    /// <summary>
+    /// Supplies the information missing in the CompactFramework System.Delegate API: Target and Method.
+    /// </summary>
+    /// <typeparam name="DelegateType"></typeparam>
+    public class MetaDelegate<DelegateType>
+    {
+        public readonly DelegateType Delegate;
+        public readonly object Target;
+        public readonly System.Reflection.MethodBase Method;
+
+        // IMPORTANT: don't change the order of parameters here because it is
+        // assumed by the instrumentation tool to be exactly like this:
+        //  1) target object
+        //  2) delegate reference
+        //  3) method info object
+        public MetaDelegate(object target, DelegateType delegateRef, System.Reflection.MethodBase method)
+        {
+            this.Target = target;
+            this.Method = method;
+            this.Delegate = delegateRef;
+        }
+    }
+#endif
+    
 	public class NativeQueryHandler
 	{
 		private ObjectContainer _container;
@@ -28,22 +54,70 @@ namespace com.db4o.inside.query
 			return q.execute();
 		}
 
-#if NET_2_0
-        public virtual System.Collections.Generic.IList<Extent> execute<Extent>(System.Predicate<Extent> match, com.db4o.query.QueryComparator comparator)
+#if NET_2_0 || CF_2_0
+        public virtual System.Collections.Generic.IList<Extent> execute<Extent>(System.Predicate<Extent> match,
+                                                                                com.db4o.query.QueryComparator comparator)
         {
-            com.db4o.query.Query q = _container.query();
-            q.constrain(typeof(Extent));
-            q.sortBy(comparator);
+    #if CF_2_0
+            return executeUnoptimized<Extent>(queryForExtent<Extent>(comparator), match);
+    #else
+            // XXX: check GetDelegateList().Length
+            // only 1 delegate must be allowed
+            // although we could use it as a filter chain
+            // (and)
+            return ExecuteImpl<Extent>(match, match.Target, match.Method, match, comparator);
+    #endif
+        }
+#endif
+
+#if NET_2_0 || CF_2_0
+	    /// <summary>
+	    /// ExecuteMeta should not generally be called by user's code. Calls to ExecuteMeta should
+	    /// be inserted by an instrumentation tool.
+	    /// </summary>
+	    /// <typeparam name="Extent"></typeparam>
+	    /// <param name="predicate"></param>
+	    /// <param name="comparator"></param>
+	    /// <returns></returns>
+        public System.Collections.Generic.IList<Extent> ExecuteMeta<Extent>(MetaDelegate<System.Predicate<Extent>> predicate, com.db4o.query.QueryComparator comparator)
+	    {
+            return ExecuteImpl<Extent>(predicate, predicate.Target, predicate.Method, predicate.Delegate, comparator);
+	    }
+	    
+	    public static System.Collections.Generic.IList<Extent> ExecuteInstrumentedStaticDelegateQuery<Extent>(ObjectContainer container,
+                                                                                    System.Predicate<Extent> predicate,
+                                                                                    RuntimeMethodHandle predicateMethodHandle)
+	    {
+            return ExecuteInstrumentedDelegateQuery(container, null, predicate, predicateMethodHandle);
+	    }
+
+        public static System.Collections.Generic.IList<Extent> ExecuteInstrumentedDelegateQuery<Extent>(ObjectContainer container,
+                                                                                    object target,
+                                                                                    System.Predicate<Extent> predicate,
+                                                                                    RuntimeMethodHandle predicateMethodHandle)
+        {
+            return ((YapStream)container).getNativeQueryHandler().ExecuteMeta(
+                new MetaDelegate<Predicate<Extent>>(
+                    target,
+                    predicate,
+                    System.Reflection.MethodBase.GetMethodFromHandle(predicateMethodHandle)),
+                null);
+        }
+	    
+        private System.Collections.Generic.IList<Extent> ExecuteImpl<Extent>(
+                                                                        object originalPredicate,
+                                                                        object matchTarget,
+                                                                        System.Reflection.MethodBase matchMethod,
+                                                                        System.Predicate<Extent> match,
+                                                                        com.db4o.query.QueryComparator comparator)
+        {
+            com.db4o.query.Query q = queryForExtent<Extent>(comparator);
             try
             {
                 if (OptimizeNativeQueries())
                 {
-					// XXX: check GetDelegateList().Length
-					// only 1 delegate must be allowed
-					// although we could use it as a filter chain
-					// (and)
-                    optimizeQuery(q, match.Target, match.Method);
-                    OnQueryExecution(match, QueryExecutionKind.Unoptimized);
+                    optimizeQuery(q, matchTarget, matchMethod);
+                    OnQueryExecution(originalPredicate, QueryExecutionKind.DynamicallyOptimized);
 
                     return WrapQueryResult<Extent>(q);
                 }
@@ -52,11 +126,23 @@ namespace com.db4o.inside.query
             {
                 OnQueryOptimizationFailure(e);
             }
-            q.constrain(new GenericPredicateEvaluation<Extent>(match));
-            OnQueryExecution(match, QueryExecutionKind.DynamicallyOptimized);
-
-            return WrapQueryResult<Extent>(q);
+            return executeUnoptimized(q, match);
         }
+
+        private System.Collections.Generic.IList<Extent> executeUnoptimized<Extent>(Query q, Predicate<Extent> match)
+	    {
+	        q.constrain(new GenericPredicateEvaluation<Extent>(match));
+	        OnQueryExecution(match, QueryExecutionKind.Unoptimized);
+	        return WrapQueryResult<Extent>(q);
+	    }
+
+	    private com.db4o.query.Query queryForExtent<Extent>(com.db4o.query.QueryComparator comparator)
+	    {
+            com.db4o.query.Query q = _container.query();
+            q.constrain(typeof(Extent));
+            q.sortBy(comparator);
+            return q;
+	    }
 
         private static System.Collections.Generic.IList<Extent> WrapQueryResult<Extent>(com.db4o.query.Query q)
         {
@@ -64,6 +150,7 @@ namespace com.db4o.inside.query
             return new com.db4o.inside.query.GenericObjectSetFacade<Extent>(qr);
         }
 #endif
+
 
 		private Query configureQuery(com.db4o.query.Predicate predicate)
 		{
@@ -93,7 +180,7 @@ namespace com.db4o.inside.query
             return _container.ext().configure().optimizeNativeQueries();
         }
 
-		void optimizeQuery(Query q, object predicate, System.Reflection.MethodInfo filterMethod)
+		void optimizeQuery(Query q, object predicate, System.Reflection.MethodBase filterMethod)
 		{
 			// TODO: cache predicate expressions here
 			Expression expression = QueryExpressionBuilder.FromMethod(filterMethod);
@@ -102,22 +189,18 @@ namespace com.db4o.inside.query
 
 		private void OnQueryExecution(object predicate, QueryExecutionKind kind)
 		{
-			if (null != QueryExecution)
-            {
-				QueryExecution(this, new QueryExecutionEventArgs(predicate, kind));
-            }
+            if (null == QueryExecution) return;
+		    QueryExecution(this, new QueryExecutionEventArgs(predicate, kind));
 		}
 
 		private void OnQueryOptimizationFailure(System.Exception e)
 		{
-			if (null != QueryOptimizationFailure)
-			{
-				QueryOptimizationFailure(this, new QueryOptimizationFailureEventArgs(e));
-			}
+            if (null == QueryOptimizationFailure) return;
+		    QueryOptimizationFailure(this, new QueryOptimizationFailureEventArgs(e));
 		}
 	}
 
-#if NET_2_0
+#if NET_2_0 || CF_2_0
     class GenericPredicateEvaluation<T> : DelegateEnvelope, com.db4o.query.Evaluation
     {
         public GenericPredicateEvaluation(System.Predicate<T> predicate)

@@ -11,7 +11,7 @@ namespace com.db4o
 			this.unmarshall();
 			lock (stream.i_lock)
 			{
-				com.db4o.QQuery query = (com.db4o.QQuery)stream.unmarshall(payLoad);
+				com.db4o.QQuery query = (com.db4o.QQuery)stream.unmarshall(_payLoad);
 				query.unmarshall(getTransaction());
 				try
 				{

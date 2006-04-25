@@ -66,7 +66,7 @@ namespace com.db4o
 					i_object = i_yapClass.getComparableObject(a_object);
 					if (a_object != i_object)
 					{
-						i_attributeProvider = i_yapClass.i_config.i_queryAttributeProvider;
+						i_attributeProvider = i_yapClass.i_config.queryAttributeProvider();
 						i_yapClass = a_trans.i_stream.getYapClass(a_trans.reflector().forObject(i_object)
 							, true);
 					}

@@ -2,8 +2,6 @@ namespace com.db4o
 {
 	internal class YapClientThread : j4o.lang.Thread
 	{
-		private j4o.lang.Thread streamThread;
-
 		private com.db4o.YapClient i_stream;
 
 		private com.db4o.foundation.network.YapSocket i_socket;
@@ -21,7 +19,6 @@ namespace com.db4o
 				i_stream = client;
 				this.messageQueue = messageQueue;
 				i_socket = a_socket;
-				streamThread = j4o.lang.Thread.currentThread();
 				this.messageQueueLock = messageQueueLock;
 			}
 		}
@@ -53,8 +50,17 @@ namespace com.db4o
 					{
 						return;
 					}
-					com.db4o.Msg message = com.db4o.Msg.readMessage(i_stream.getTransaction(), i_socket
-						);
+					com.db4o.Msg message;
+					try
+					{
+						message = com.db4o.Msg.readMessage(i_stream.getTransaction(), i_socket);
+					}
+					catch (System.Exception exc)
+					{
+						messageQueueLock.run(new _AnonymousInnerClass46(this));
+						close();
+						return;
+					}
 					if (i_stream == null)
 					{
 						return;
@@ -77,22 +83,39 @@ namespace com.db4o
 						}
 						else
 						{
-							if (message != null)
-							{
-								messageQueueLock.run(new _AnonymousInnerClass67(this, message));
-							}
+							messageQueueLock.run(new _AnonymousInnerClass82(this, message));
 						}
 					}
 				}
-				catch (System.Exception e)
+				catch (System.Exception exc)
 				{
+					close();
+					return;
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass67 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass46 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass67(YapClientThread _enclosing, com.db4o.Msg message)
+			public _AnonymousInnerClass46(YapClientThread _enclosing)
+			{
+				this._enclosing = _enclosing;
+			}
+
+			public object run()
+			{
+				this._enclosing.messageQueue.add(com.db4o.Msg.ERROR);
+				this._enclosing.close();
+				this._enclosing.messageQueueLock.awake();
+				return null;
+			}
+
+			private readonly YapClientThread _enclosing;
+		}
+
+		private sealed class _AnonymousInnerClass82 : com.db4o.foundation.Closure4
+		{
+			public _AnonymousInnerClass82(YapClientThread _enclosing, com.db4o.Msg message)
 			{
 				this._enclosing = _enclosing;
 				this.message = message;

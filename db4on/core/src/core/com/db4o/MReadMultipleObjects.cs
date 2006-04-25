@@ -14,7 +14,7 @@ namespace com.db4o
 			{
 				for (int i = 0; i < size; i++)
 				{
-					int id = this.payLoad.readInt();
+					int id = this._payLoad.readInt();
 					try
 					{
 						bytes = stream.readWriterByID(getTransaction(), id);
@@ -33,7 +33,7 @@ namespace com.db4o
 						{
 						}
 						ret[i] = com.db4o.Msg.OBJECT_TO_CLIENT.getWriter(bytes);
-						length += ret[i].payLoad.getLength();
+						length += ret[i]._payLoad.getLength();
 					}
 				}
 			}
@@ -48,8 +48,8 @@ namespace com.db4o
 				}
 				else
 				{
-					multibytes.writeInt(ret[i].payLoad.getLength());
-					multibytes.payLoad.append(ret[i].payLoad._buffer);
+					multibytes.writeInt(ret[i]._payLoad.getLength());
+					multibytes._payLoad.append(ret[i]._payLoad._buffer);
 				}
 			}
 			multibytes.write(stream, sock);

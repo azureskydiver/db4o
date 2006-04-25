@@ -4,7 +4,7 @@ namespace com.db4o.inside.ix
 	/// Index Path to represent a list of traversed index tree entries,
 	/// used by IxTraverser
 	/// </summary>
-	internal class IxPath : j4o.lang.Cloneable, com.db4o.foundation.Visitor4
+	internal class IxPath : com.db4o.foundation.ShallowClone, com.db4o.foundation.Visitor4
 	{
 		internal int i_comparisonResult;
 
@@ -57,11 +57,11 @@ namespace com.db4o.inside.ix
 			)
 		{
 			_visitor = visitor;
-			if (i_tree.i_preceding != null)
+			if (i_tree._preceding != null)
 			{
-				if (i_next == null || i_next.i_tree != i_tree.i_preceding)
+				if (i_next == null || i_next.i_tree != i_tree._preceding)
 				{
-					i_tree.i_preceding.traverse(this);
+					i_tree._preceding.traverse(this);
 				}
 			}
 			if (i_lowerAndUpperMatch != null)
@@ -82,11 +82,11 @@ namespace com.db4o.inside.ix
 			visitor)
 		{
 			_visitor = visitor;
-			if (i_tree.i_subsequent != null)
+			if (i_tree._subsequent != null)
 			{
-				if (i_next == null || i_next.i_tree != i_tree.i_subsequent)
+				if (i_next == null || i_next.i_tree != i_tree._subsequent)
 				{
-					i_tree.i_subsequent.traverse(this);
+					i_tree._subsequent.traverse(this);
 				}
 			}
 			if (i_lowerAndUpperMatch != null)
@@ -213,11 +213,11 @@ namespace com.db4o.inside.ix
 			{
 				return;
 			}
-			if (i_tree.i_preceding != null)
+			if (i_tree._preceding != null)
 			{
-				if (i_next == null || i_next.i_tree != i_tree.i_preceding)
+				if (i_next == null || i_next.i_tree != i_tree._preceding)
 				{
-					((com.db4o.inside.ix.IxTree)i_tree.i_preceding).visitLast(visitor);
+					((com.db4o.inside.ix.IxTree)i_tree._preceding).visitLast(visitor);
 				}
 			}
 		}
@@ -252,11 +252,11 @@ namespace com.db4o.inside.ix
 			{
 				return;
 			}
-			if (i_tree.i_subsequent != null)
+			if (i_tree._subsequent != null)
 			{
-				if (i_next == null || i_next.i_tree != i_tree.i_subsequent)
+				if (i_next == null || i_next.i_tree != i_tree._subsequent)
 				{
-					((com.db4o.inside.ix.IxTree)i_tree.i_subsequent).visitFirst(visitor);
+					((com.db4o.inside.ix.IxTree)i_tree._subsequent).visitFirst(visitor);
 				}
 			}
 		}
@@ -281,11 +281,11 @@ namespace com.db4o.inside.ix
 		internal virtual int countPreceding(bool a_takenulls)
 		{
 			int preceding = 0;
-			if (i_tree.i_preceding != null)
+			if (i_tree._preceding != null)
 			{
-				if (i_next == null || i_next.i_tree != i_tree.i_preceding)
+				if (i_next == null || i_next.i_tree != i_tree._preceding)
 				{
-					preceding += i_tree.i_preceding.size();
+					preceding += i_tree._preceding.size();
 				}
 			}
 			if (i_lowerAndUpperMatch != null)
@@ -313,11 +313,11 @@ namespace com.db4o.inside.ix
 		internal virtual int countSubsequent()
 		{
 			int subsequent = 0;
-			if (i_tree.i_subsequent != null)
+			if (i_tree._subsequent != null)
 			{
-				if (i_next == null || i_next.i_tree != i_tree.i_subsequent)
+				if (i_next == null || i_next.i_tree != i_tree._subsequent)
 				{
-					subsequent += i_tree.i_subsequent.size();
+					subsequent += i_tree._subsequent.size();
 				}
 			}
 			if (i_lowerAndUpperMatch != null)
@@ -335,16 +335,19 @@ namespace com.db4o.inside.ix
 			return subsequent;
 		}
 
-		internal virtual com.db4o.inside.ix.IxPath shallowClone()
+		public virtual object shallowClone()
 		{
-			try
+			int[] lowerAndUpperMatch = null;
+			if (i_lowerAndUpperMatch != null)
 			{
-				return (com.db4o.inside.ix.IxPath)j4o.lang.JavaSystem.clone(this);
+				lowerAndUpperMatch = new int[] { i_lowerAndUpperMatch[0], i_lowerAndUpperMatch[1]
+					 };
 			}
-			catch (j4o.lang.CloneNotSupportedException e)
-			{
-			}
-			return null;
+			com.db4o.inside.ix.IxPath ret = new com.db4o.inside.ix.IxPath(i_traverser, i_next
+				, i_tree, i_comparisonResult, lowerAndUpperMatch);
+			ret.i_upperNull = i_upperNull;
+			ret._visitor = _visitor;
+			return ret;
 		}
 
 		public override string ToString()

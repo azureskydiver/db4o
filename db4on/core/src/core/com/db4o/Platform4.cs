@@ -5,6 +5,7 @@ using System.Collections;
 using com.db4o.config;
 using com.db4o.ext;
 using com.db4o.foundation;
+using com.db4o.inside.query;
 using com.db4o.query;
 using com.db4o.reflect;
 using com.db4o.reflect.generic;
@@ -57,7 +58,7 @@ namespace com.db4o
 
 		internal static JDK jdk()
 		{
-			throw new NotSupportedException();
+            throw new NotSupportedException();
 		}
 
 		internal static void addShutDownHook(Object stream, Object streamLock)
@@ -67,7 +68,11 @@ namespace com.db4o
 				if (shutDownStreams == null)
 				{
 					shutDownStreams = new ArrayList();
-					Compat.addShutDownHook(new EventHandler(OnShutDown));
+#if !CF_1_0 && !CF_2_0
+					EventHandler handler = new EventHandler(OnShutDown);
+					AppDomain.CurrentDomain.ProcessExit += handler;
+					AppDomain.CurrentDomain.DomainUnload += handler;
+#endif
 				}
 				shutDownStreams.Add(stream);
 			}
@@ -93,7 +98,7 @@ namespace com.db4o
 			return new P2Collections(a_object);
 		}
 
-		internal static Reflector createReflector(Config4Impl config)
+		internal static Reflector createReflector(Object config)
 		{
 			return new NetReflector();
 		}
@@ -103,6 +108,11 @@ namespace com.db4o
 			return new YapReferenceQueue();
 		}
 
+        public static Object createWeakReference(Object obj)
+        {
+            return new WeakReference(obj, false);
+        }
+
 		internal static Object createYapRef(Object referenceQueue, Object yapObject, Object obj)
 		{
 			return new YapRef(referenceQueue, yapObject, obj);
@@ -110,7 +120,12 @@ namespace com.db4o
 
 		internal static long doubleToLong(double a_double)
 		{
-			return Compat.doubleToLong(a_double);
+#if CF_1_0 || CF_2_0
+			// XXX: what to do here?
+			return 0;
+#else
+			return BitConverter.DoubleToInt64Bits(a_double);
+#endif
 		}
 
 		internal static QConEvaluation evaluationCreate(Transaction a_trans, Object example)
@@ -258,7 +273,7 @@ namespace com.db4o
 
 		internal static void getDefaultConfiguration(Config4Impl config)
 		{
-			if (Compat.compact())
+			if (isCompact())
 			{
 				config.singleThreadedClient(true);
 				config.weakReferenceCollectionInterval(0);
@@ -282,10 +297,19 @@ namespace com.db4o
 			translate(config, new Queue(), new TQueue());
 			translate(config, new Stack(), new TStack());
 
-			if (! Compat.compact())
+			if (!isCompact())
 			{
 				translate(config, "System.Collections.SortedList, mscorlib", new TDictionary());
 			}
+		}
+
+		public static bool isCompact()
+		{
+#if CF_1_0 || CF_2_0
+			return true;
+#else
+			return false;
+#endif
 		}
 
 		internal static bool isMono()
@@ -397,13 +421,23 @@ namespace com.db4o
 
 		internal static double longToDouble(long l)
 		{
-			return Compat.longToDouble(l);
+#if CF_1_0 || CF_2_0
+			// XXX: what to do here?
+			return 0;
+#else
+			return BitConverter.Int64BitsToDouble(l);
+#endif
 		}
 
-		internal static void Lock(RandomAccessFile raf)
+		internal static void lockFile(object raf)
 		{
 			// do nothing. C# RAF is locked automatically upon opening
 		}
+		
+		internal static void unlockFile(object randomaccessfile)
+		{
+			// do nothing. C# RAF is unlocked automatically upon closing
+		}		
 
 		internal static void markTransient(String marker)
 		{
@@ -481,11 +515,6 @@ namespace com.db4o
 			}
 		}
 
-		internal static void unlock(RandomAccessFile randomaccessfile)
-		{
-			// do nothing. C# RAF is unlocked automatically upon closing
-		}
-
 		internal static byte[] updateClassName(byte[] bytes)
 		{
 			for (int i = 0; i < oldAssemblyNames.Length; i++)
@@ -511,9 +540,26 @@ namespace com.db4o
 			return bytes;
 		}
 
+        public static Object weakReferenceTarget(Object weakRef)
+        {
+            WeakReference wr = weakRef as WeakReference;
+            if(wr != null) 
+            {
+                return wr.Target;
+            }
+            return weakRef;
+        }
+
 		internal static object wrapEvaluation(object evaluation)
 		{
-			return Compat.wrapEvaluation(evaluation);
+#if CF_1_0 || CF_2_0
+			// FIXME: How to better support EvaluationDelegate on the CompactFramework?
+			return evaluation;
+#else
+			return (evaluation is EvaluationDelegate)
+				? new EvaluationDelegateWrapper((EvaluationDelegate) evaluation)
+				: evaluation;
+#endif
 		}
 
 		internal static bool isTransient(ReflectClass clazz)
@@ -524,20 +570,25 @@ namespace com.db4o
 				|| type.IsSubclassOf(typeof(Delegate));
 		}
 
-		private static Type GetNetType(ReflectClass clazz)
-		{
-			if (null == clazz)
-			{
-				return null;
-			}
+        private static Type GetNetType(ReflectClass clazz)
+        {
+	        if (null == clazz)
+	        {
+		        return null;
+	        }
 
-			NetClass netClass = clazz as NetClass;
-			if (null != netClass)
-			{
-				return netClass.getNetType();
-			}
-			return GetNetType(clazz.getDelegate());
-		}
+	        NetClass netClass = clazz as NetClass;
+	        if (null != netClass)
+	        {
+		        return netClass.getNetType();
+	        }
+            ReflectClass claxx = clazz.getDelegate();
+            if(claxx == clazz)
+            {
+                return null;
+            }
+	        return GetNetType(claxx);
+        }
 
 		internal static YapTypeAbstract[] types(YapStream stream)
 		{

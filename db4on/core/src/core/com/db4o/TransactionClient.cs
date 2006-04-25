@@ -36,7 +36,7 @@ namespace com.db4o
 				if (info._delete && info._reference != null)
 				{
 					this._enclosing.i_yapObjectsToGc = com.db4o.Tree.add(this._enclosing.i_yapObjectsToGc
-						, new com.db4o.TreeIntObject(info.i_key, info._reference));
+						, new com.db4o.TreeIntObject(info._key, info._reference));
 				}
 			}
 
@@ -63,7 +63,7 @@ namespace com.db4o
 
 			public void visit(object a_object)
 			{
-				com.db4o.YapObject yo = (com.db4o.YapObject)((com.db4o.TreeIntObject)a_object).i_object;
+				com.db4o.YapObject yo = (com.db4o.YapObject)((com.db4o.TreeIntObject)a_object)._object;
 				this._enclosing.i_stream.yapObjectGCd(yo);
 			}
 

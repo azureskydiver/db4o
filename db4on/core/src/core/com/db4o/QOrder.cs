@@ -3,28 +3,35 @@ namespace com.db4o
 	/// <exclude></exclude>
 	internal class QOrder : com.db4o.Tree
 	{
-		internal readonly com.db4o.QConObject i_constraint;
+		internal readonly com.db4o.QConObject _constraint;
 
-		internal readonly com.db4o.QCandidate i_candidate;
+		internal readonly com.db4o.QCandidate _candidate;
 
 		internal QOrder(com.db4o.QConObject a_constraint, com.db4o.QCandidate a_candidate
 			)
 		{
-			i_constraint = a_constraint;
-			i_candidate = a_candidate;
+			_constraint = a_constraint;
+			_candidate = a_candidate;
 		}
 
 		public override int compare(com.db4o.Tree a_to)
 		{
-			if (i_constraint.i_comparator.isSmaller(i_candidate.value()))
+			if (_constraint.i_comparator.isSmaller(_candidate.value()))
 			{
-				return i_constraint.i_orderID;
+				return _constraint.i_orderID;
 			}
-			if (i_constraint.i_comparator.isEqual(i_candidate.value()))
+			if (_constraint.i_comparator.isEqual(_candidate.value()))
 			{
 				return 0;
 			}
-			return -i_constraint.i_orderID;
+			return -_constraint.i_orderID;
+		}
+
+		public override object shallowClone()
+		{
+			com.db4o.QOrder order = new com.db4o.QOrder(_constraint, _candidate);
+			base.shallowCloneInternal(order);
+			return order;
 		}
 	}
 }

@@ -46,8 +46,8 @@ namespace com.db4o.inside.ix
 			if (a_tree != null)
 			{
 				((com.db4o.inside.ix.IxTree)a_tree).visit(visitor, null);
-				addAll(visitor, a_tree.i_preceding);
-				addAll(visitor, a_tree.i_subsequent);
+				addAll(visitor, a_tree._preceding);
+				addAll(visitor, a_tree._subsequent);
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace com.db4o.inside.ix
 				}
 				else
 				{
-					if (a_path.i_next.i_tree == a_path.i_tree.i_preceding)
+					if (a_path.i_next.i_tree == a_path.i_tree._preceding)
 					{
 						addSubsequent(visitor, a_path);
 					}
@@ -88,7 +88,7 @@ namespace com.db4o.inside.ix
 			 a_path)
 		{
 			addPathTree(visitor, a_path);
-			addAll(visitor, a_path.i_tree.i_preceding);
+			addAll(visitor, a_path.i_tree._preceding);
 		}
 
 		private void addSmaller(com.db4o.foundation.Visitor4 visitor, com.db4o.inside.ix.IxPath
@@ -102,7 +102,7 @@ namespace com.db4o.inside.ix
 				}
 				else
 				{
-					if (a_path.i_next.i_tree == a_path.i_tree.i_subsequent)
+					if (a_path.i_next.i_tree == a_path.i_tree._subsequent)
 					{
 						addPreceding(visitor, a_path);
 					}
@@ -119,7 +119,7 @@ namespace com.db4o.inside.ix
 			 a_path)
 		{
 			addPathTree(visitor, a_path);
-			addAll(visitor, a_path.i_tree.i_subsequent);
+			addAll(visitor, a_path.i_tree._subsequent);
 		}
 
 		private com.db4o.inside.ix.NIxPath createNIxPath(com.db4o.inside.ix.NIxPathNode head
@@ -169,7 +169,7 @@ namespace com.db4o.inside.ix
 			}
 			else
 			{
-				if (a_path.i_next.i_tree == a_path.i_tree.i_preceding)
+				if (a_path.i_next.i_tree == a_path.i_tree._preceding)
 				{
 					a_sum += countSubsequent(a_path);
 				}
@@ -183,7 +183,7 @@ namespace com.db4o.inside.ix
 
 		private int countPreceding(com.db4o.inside.ix.IxPath a_path)
 		{
-			return com.db4o.Tree.size(a_path.i_tree.i_preceding) + a_path.countMatching();
+			return com.db4o.Tree.size(a_path.i_tree._preceding) + a_path.countMatching();
 		}
 
 		private int countSmaller(com.db4o.inside.ix.IxPath a_path, int a_sum)
@@ -194,7 +194,7 @@ namespace com.db4o.inside.ix
 			}
 			else
 			{
-				if (a_path.i_next.i_tree == a_path.i_tree.i_subsequent)
+				if (a_path.i_next.i_tree == a_path.i_tree._subsequent)
 				{
 					a_sum += countPreceding(a_path);
 				}
@@ -237,7 +237,7 @@ namespace com.db4o.inside.ix
 
 		private int countSubsequent(com.db4o.inside.ix.IxPath a_path)
 		{
-			return com.db4o.Tree.size(a_path.i_tree.i_subsequent) + a_path.countMatching();
+			return com.db4o.Tree.size(a_path.i_tree._subsequent) + a_path.countMatching();
 		}
 
 		private void delayedAppend(com.db4o.inside.ix.IxTree a_tree, int a_comparisonResult
@@ -260,21 +260,21 @@ namespace com.db4o.inside.ix
 		{
 			if (i_greatTail.i_comparisonResult == 0)
 			{
-				findSmallestEqualFromEqual((com.db4o.inside.ix.IxTree)i_greatTail.i_tree.i_preceding
+				findSmallestEqualFromEqual((com.db4o.inside.ix.IxTree)i_greatTail.i_tree._preceding
 					);
 				resetDelayedAppend();
-				findGreatestEqualFromEqual((com.db4o.inside.ix.IxTree)i_greatTail.i_tree.i_subsequent
+				findGreatestEqualFromEqual((com.db4o.inside.ix.IxTree)i_greatTail.i_tree._subsequent
 					);
 			}
 			else
 			{
 				if (i_greatTail.i_comparisonResult < 0)
 				{
-					findBoth1((com.db4o.inside.ix.IxTree)i_greatTail.i_tree.i_subsequent);
+					findBoth1((com.db4o.inside.ix.IxTree)i_greatTail.i_tree._subsequent);
 				}
 				else
 				{
-					findBoth1((com.db4o.inside.ix.IxTree)i_greatTail.i_tree.i_preceding);
+					findBoth1((com.db4o.inside.ix.IxTree)i_greatTail.i_tree._preceding);
 				}
 			}
 		}
@@ -310,19 +310,18 @@ namespace com.db4o.inside.ix
 			if (headTail[1].i_comparisonResult == 0)
 			{
 				findGreatestNullFromNull(headTail, (com.db4o.inside.ix.IxTree)headTail[1].i_tree.
-					i_subsequent);
+					_subsequent);
 			}
 			else
 			{
 				if (headTail[1].i_comparisonResult < 0)
 				{
-					findNullPath2(headTail, (com.db4o.inside.ix.IxTree)headTail[1].i_tree.i_subsequent
+					findNullPath2(headTail, (com.db4o.inside.ix.IxTree)headTail[1].i_tree._subsequent
 						);
 				}
 				else
 				{
-					findNullPath2(headTail, (com.db4o.inside.ix.IxTree)headTail[1].i_tree.i_preceding
-						);
+					findNullPath2(headTail, (com.db4o.inside.ix.IxTree)headTail[1].i_tree._preceding);
 				}
 			}
 		}
@@ -352,11 +351,11 @@ namespace com.db4o.inside.ix
 				}
 				if (res > 0)
 				{
-					findGreatestNullFromNull(headTail, (com.db4o.inside.ix.IxTree)tree.i_preceding);
+					findGreatestNullFromNull(headTail, (com.db4o.inside.ix.IxTree)tree._preceding);
 				}
 				else
 				{
-					findGreatestNullFromNull(headTail, (com.db4o.inside.ix.IxTree)tree.i_subsequent);
+					findGreatestNullFromNull(headTail, (com.db4o.inside.ix.IxTree)tree._subsequent);
 				}
 			}
 		}
@@ -372,7 +371,7 @@ namespace com.db4o.inside.ix
 				i_greatHead = new com.db4o.inside.ix.IxPath(this, null, a_tree, res, a_tree.lowerAndUpperMatch
 					());
 				i_greatTail = i_greatHead;
-				i_smallHead = i_greatHead.shallowClone();
+				i_smallHead = (com.db4o.inside.ix.IxPath)i_greatHead.shallowClone();
 				i_smallTail = i_smallHead;
 				findBoth();
 				int span = 0;
@@ -434,16 +433,16 @@ namespace com.db4o.inside.ix
 			{
 				if (res < 0)
 				{
-					if (a_tree.i_subsequent != null)
+					if (a_tree._subsequent != null)
 					{
-						findGreatestEqual((com.db4o.inside.ix.IxTree)a_tree.i_subsequent);
+						findGreatestEqual((com.db4o.inside.ix.IxTree)a_tree._subsequent);
 					}
 				}
 				else
 				{
-					if (a_tree.i_preceding != null)
+					if (a_tree._preceding != null)
 					{
-						findGreatestEqual((com.db4o.inside.ix.IxTree)a_tree.i_preceding);
+						findGreatestEqual((com.db4o.inside.ix.IxTree)a_tree._preceding);
 					}
 				}
 			}
@@ -462,11 +461,11 @@ namespace com.db4o.inside.ix
 				}
 				if (res > 0)
 				{
-					findGreatestEqualFromEqual((com.db4o.inside.ix.IxTree)a_tree.i_preceding);
+					findGreatestEqualFromEqual((com.db4o.inside.ix.IxTree)a_tree._preceding);
 				}
 				else
 				{
-					findGreatestEqualFromEqual((com.db4o.inside.ix.IxTree)a_tree.i_subsequent);
+					findGreatestEqualFromEqual((com.db4o.inside.ix.IxTree)a_tree._subsequent);
 				}
 			}
 		}
@@ -483,16 +482,16 @@ namespace com.db4o.inside.ix
 			{
 				if (res < 0)
 				{
-					if (a_tree.i_subsequent != null)
+					if (a_tree._subsequent != null)
 					{
-						findSmallestEqual((com.db4o.inside.ix.IxTree)a_tree.i_subsequent);
+						findSmallestEqual((com.db4o.inside.ix.IxTree)a_tree._subsequent);
 					}
 				}
 				else
 				{
-					if (a_tree.i_preceding != null)
+					if (a_tree._preceding != null)
 					{
-						findSmallestEqual((com.db4o.inside.ix.IxTree)a_tree.i_preceding);
+						findSmallestEqual((com.db4o.inside.ix.IxTree)a_tree._preceding);
 					}
 				}
 			}
@@ -511,11 +510,11 @@ namespace com.db4o.inside.ix
 				}
 				if (res < 0)
 				{
-					findSmallestEqualFromEqual((com.db4o.inside.ix.IxTree)a_tree.i_subsequent);
+					findSmallestEqualFromEqual((com.db4o.inside.ix.IxTree)a_tree._subsequent);
 				}
 				else
 				{
-					findSmallestEqualFromEqual((com.db4o.inside.ix.IxTree)a_tree.i_preceding);
+					findSmallestEqualFromEqual((com.db4o.inside.ix.IxTree)a_tree._preceding);
 				}
 			}
 		}
