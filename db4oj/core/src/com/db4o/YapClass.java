@@ -367,7 +367,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         if (classReflector().isCollection() || (config != null && (config.cascadeOnDelete() == YapConst.YES || config.cascadeOnUpdate() == YapConst.YES))) {
             int depthBorder = reflector().collectionUpdateDepth(classReflector());
-            if (depth < depthBorder) {
+            if (depth>Integer.MIN_VALUE && depth < depthBorder) {
                 depth = depthBorder;
             }
         }
