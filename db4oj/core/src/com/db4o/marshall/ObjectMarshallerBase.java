@@ -5,7 +5,7 @@ package com.db4o.marshall;
 import com.db4o.*;
 
 
-abstract class ObjectMarshallerBase implements ObjectMarshaller {
+public abstract class ObjectMarshallerBase implements ObjectMarshaller {
 
     protected YapWriter createWriter(Transaction a_trans, YapObject yo, int a_updateDepth) {
         int id = yo.getID();
