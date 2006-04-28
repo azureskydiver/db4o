@@ -4,7 +4,7 @@ package com.db4o;
 
 import com.db4o.reflect.*;
 
-final class EventDispatcher
+public final class EventDispatcher
 {
 	private static final String[] events = {
 		"objectCanDelete",
@@ -25,7 +25,7 @@ final class EventDispatcher
 	static final int ACTIVATE = 2;
 	static final int DEACTIVATE = 3;
 	static final int NEW = 4;
-	static final int UPDATE = 5;
+	public static final int UPDATE = 5;
 	static final int CAN_ACTIVATE = 6;
 	static final int CAN_DEACTIVATE = 7;
 	static final int CAN_NEW = 8;

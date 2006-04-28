@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
 import com.db4o.inside.replication.*;
 
 /**
@@ -59,7 +60,7 @@ public class P1Object implements Db4oTypeImpl{
     }
 
     public Object createDefault(Transaction a_trans) {
-        throw YapConst.virtualException();
+        throw Exceptions4.virtualException();
     }
     
     void deactivate(){

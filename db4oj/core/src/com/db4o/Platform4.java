@@ -7,6 +7,7 @@ import java.util.Date;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.handlers.*;
+import com.db4o.inside.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -601,7 +602,7 @@ public final class Platform4 {
     }
 
 	public static Object wrapEvaluation(Object evaluation) {
-		throw YapConst.virtualException();
+		throw Exceptions4.virtualException();
 	}
 
 	public static boolean isTransient(ReflectClass a_class) {

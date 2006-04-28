@@ -249,7 +249,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		int classCollectionID = _stream.i_classCollection.getID();
 		YapWriter classcollreader = _stream.readWriterByID(_trans, classCollectionID);
         if (Deploy.debug) {
-            classcollreader.readBegin(classCollectionID, YapConst.YAPCLASSCOLLECTION);
+            classcollreader.readBegin(YapConst.YAPCLASSCOLLECTION);
         }
         
 		int numclasses = classcollreader.readInt();
@@ -291,7 +291,7 @@ public class GenericReflector implements Reflector, DeepClone {
         
 		YapWriter classreader=_stream.readWriterByID(_trans,id);
         if (Deploy.debug) {
-            classreader.readBegin(id, YapConst.YAPCLASS);
+            classreader.readBegin(YapConst.YAPCLASS);
         }
 		int namelength= classreader.readInt();
 		String classname= _stream.stringIO().read(classreader,namelength);
@@ -325,7 +325,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		
 		YapWriter classreader=_stream.readWriterByID(_trans,id);
         if (Deploy.debug) {
-            classreader.readBegin(id, YapConst.YAPCLASS);
+            classreader.readBegin(YapConst.YAPCLASS);
         }
 		int namelength= classreader.readInt();
 		String classname= _stream.stringIO().read(classreader,namelength);

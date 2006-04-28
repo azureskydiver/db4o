@@ -6,7 +6,7 @@ import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
-class Config4Class extends Config4Abstract implements ObjectClass,
+public class Config4Class extends Config4Abstract implements ObjectClass,
     DeepClone {
 
 	private final static KeySpec CALL_CONSTRUCTOR=new KeySpec(0);

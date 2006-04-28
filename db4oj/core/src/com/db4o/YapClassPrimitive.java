@@ -3,10 +3,11 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 
-class YapClassPrimitive extends YapClass{
+public class YapClassPrimitive extends YapClass{
     
     final TypeHandler4 i_handler;
 
@@ -112,7 +113,7 @@ class YapClassPrimitive extends YapClass{
 	    return false;
 	}
 
-    Object instantiate(YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_addToIDTree) {
+    Object instantiate(YapObject a_yapObject, Object a_object, ObjectMarshaller marshaller, YapWriter a_bytes, boolean a_addToIDTree) {
         if (a_object == null) {
             try {
                 a_object = i_handler.read(a_bytes);
@@ -125,7 +126,7 @@ class YapClassPrimitive extends YapClass{
         return a_object;
     }
     
-    Object instantiateTransient(YapObject a_yapObject, Object a_object, YapWriter a_bytes) {
+    Object instantiateTransient(YapObject a_yapObject, Object a_object, ObjectMarshaller marshaller, YapWriter a_bytes) {
         try {
             return i_handler.read(a_bytes);
         } catch (CorruptionException ce) {
@@ -133,7 +134,7 @@ class YapClassPrimitive extends YapClass{
         }
     }
 
-    void instantiateFields(YapObject a_yapObject, Object a_onObject, YapWriter a_bytes) {
+    void instantiateFields(YapObject a_yapObject, Object a_onObject, ObjectMarshaller marshaller, YapWriter a_bytes) {
         Object obj = null;
         try {
             obj = i_handler.read(a_bytes);
@@ -149,19 +150,39 @@ class YapClassPrimitive extends YapClass{
         return i_id == YapHandlers.ANY_ARRAY_ID || i_id == YapHandlers.ANY_ARRAY_N_ID;
     }
     
-    boolean isPrimitive(){
+    public boolean isPrimitive(){
         return true;
     }
     
 	boolean isStrongTyped(){
 		return false;
 	}
+    
+    // FIXME: MS Temporary primitive marshalling, will go into special marshaller.
+    public void marshall(Transaction trans, YapObject yo, Object obj){
+        int id = yo.getID();
+        int address = -1;
+        int length = objectLength();
+        if(! trans.i_stream.isClient()){
+            address = trans.i_file.getSlot(length); 
+        }
+        trans.setPointer(id, address, length);
+        YapWriter writer = new YapWriter(trans, length);
+        writer.useSlot(id, address, length);
+        if (Deploy.debug) {
+            writer.writeBegin(YapConst.YAPOBJECT, length);
+        }
+        writer.writeInt(getID());
+        i_handler.writeNew(obj, writer);
+        writer.writeEnd();
+        trans.i_stream.writeNew(this, writer);
+    }
 
-    void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_new) {
+    public void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_new) {
         i_handler.writeNew(a_object, a_bytes);
     }
 
-    void marshallNew(YapObject a_yapObject, YapWriter a_bytes, Object a_object) {
+    public void marshallNew(YapObject a_yapObject, YapWriter a_bytes, Object a_object) {
         i_handler.writeNew(a_object, a_bytes);
     }
 

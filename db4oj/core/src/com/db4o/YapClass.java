@@ -7,6 +7,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.*;
+import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -16,12 +17,12 @@ import com.db4o.reflect.generic.*;
  */
 public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseSystemTransaction {
 
-    YapClass i_ancestor;
+    public YapClass i_ancestor;
 
     Config4Class i_config;
     int _metaClassID;
     
-    YapField[] i_fields;
+    public YapField[] i_fields;
     
     private ClassIndex i_index;
     
@@ -77,7 +78,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     final void addFieldIndices(YapWriter a_writer, boolean a_new) {
         if(hasIndex() || hasVirtualAttributes()){
-            readObjectHeader(a_writer, a_writer.getID());
+            ObjectHeader.skip(i_stream, this, a_writer);
 	        addFieldIndices1(a_writer, a_new);
         }
     }
@@ -359,7 +360,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
 
-    void checkUpdateDepth(YapWriter a_bytes) {
+    public void checkUpdateDepth(YapWriter a_bytes) {
         int depth = a_bytes.getUpdateDepth();
         Config4Class config = configOrAncestorConfig();
         if (depth == YapConst.UNSPECIFIED) {
@@ -422,7 +423,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return i_config != null && i_config.instantiates();
     }
 
-    Config4Class configOrAncestorConfig() {
+    public Config4Class configOrAncestorConfig() {
         if (i_config != null) {
             return i_config;
         }
@@ -515,10 +516,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     void delete(YapWriter a_bytes, Object a_object) {
-        readObjectHeader(a_bytes, a_bytes.getID());
-//        if (Lic.expires) {
-//            dontDeleteLic(a_object);
-//        }
+        ObjectHeader.skip(i_stream, this, a_bytes);
         delete1(a_bytes, a_object);
     }
 
@@ -603,7 +601,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
 
-    final boolean dispatchEvent(YapStream stream, Object obj, int message) {
+    public final boolean dispatchEvent(YapStream stream, Object obj, int message) {
         if (_eventDispatcher != null) {
             if(stream.dispatchsEvents()){
                 return _eventDispatcher.dispatch(stream, obj, message);
@@ -633,32 +631,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     boolean findOffset(YapReader a_bytes, YapField a_field) {
-        // TODO: rename to "moveTo"
         if (a_bytes == null) {
             return false;
         }
         a_bytes._offset = 0;
-        if (Deploy.debug) {
-            a_bytes.readBegin(0, YapConst.YAPOBJECT);
-        }
-        a_bytes.incrementOffset(YapConst.YAPID_LENGTH); // YapClass ID
-        return findOffset1(a_bytes, a_field);
-    }
 
-    boolean findOffset1(YapReader a_bytes, YapField a_field) {
-        int length = Debug.atHome ? readFieldLengthSodaAtHome(a_bytes) : readFieldLength(a_bytes);
-        for (int i = 0; i < length; i++) {
-            if (i_fields[i] == a_field) {
-                return true;
-            }
-            a_bytes.incrementOffset(i_fields[i].linkLength());
-        }
-
-        if (i_ancestor != null) {
-            return i_ancestor.findOffset1(a_bytes, a_field);
-        } else {
-            return false;
-        }
+        return new ObjectHeader(i_stream, this, a_bytes)._marshaller.findOffset(this, a_bytes, a_field);
     }
 
     void forEachYapField(Visitor4 visitor) {
@@ -1054,7 +1032,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         storeStaticFieldValues(systemTrans, false);
     }
 
-    Object instantiate(YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_addToIDTree) {
+    Object instantiate(YapObject a_yapObject, Object a_object, ObjectMarshaller marshaller, YapWriter a_bytes, boolean a_addToIDTree) {
 
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
@@ -1127,7 +1105,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         if (doFields) {
             if(dispatchEvent(stream, a_object, EventDispatcher.CAN_ACTIVATE)){
 	            a_yapObject.setStateClean();
-	            instantiateFields(a_yapObject, a_object, a_bytes);
+	            instantiateFields(a_yapObject, a_object, marshaller, a_bytes);
 	            dispatchEvent(stream, a_object, EventDispatcher.ACTIVATE);
             }else{
                 if (create) {
@@ -1146,7 +1124,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return a_object;
     }
 
-    Object instantiateTransient(YapObject a_yapObject, Object a_object, YapWriter a_bytes) {
+    Object instantiateTransient(YapObject a_yapObject, Object a_object, ObjectMarshaller marshaller, YapWriter a_bytes) {
 
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
@@ -1183,21 +1161,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
             stream.instantiating(false);
         }
         stream.peeked(a_yapObject.getID(), a_object);
-        instantiateFields(a_yapObject, a_object, a_bytes);
+        instantiateFields(a_yapObject, a_object, marshaller, a_bytes);
         return a_object;
     }
 
-    void instantiateFields(YapObject a_yapObject, Object a_onObject, YapWriter a_bytes) {
-        int length = readFieldLength(a_bytes);
-        try {
-            for (int i = 0; i < length; i++) {
-                i_fields[i].instantiate(a_yapObject, a_onObject, a_bytes);
-            }
-            if (i_ancestor != null) {
-                i_ancestor.instantiateFields(a_yapObject, a_onObject, a_bytes);
-            }
-        } catch (CorruptionException ce) {
-        }
+    void instantiateFields(YapObject a_yapObject, Object a_onObject, ObjectMarshaller marshaller, YapWriter a_bytes) {
+        marshaller.instantiateFields(this, a_yapObject, a_onObject, a_bytes);
     }
 
     public Object indexEntry(Object a_object) {
@@ -1227,7 +1196,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return _isEnum;
     }
     
-    boolean isPrimitive(){
+    public boolean isPrimitive(){
         return false;
     }
 
@@ -1241,58 +1210,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     
     boolean isValueType(){
         return Platform4.isValueType(classReflector());
-    }
-
-    void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_new) {
-        Config4Class config = configOrAncestorConfig();
-        a_bytes.writeInt(i_fields.length);
-        for (int i = 0; i < i_fields.length; i++) {
-            Object obj = i_fields[i].getOrCreate(a_bytes.getTransaction(), a_object);
-            if (obj instanceof Db4oTypeImpl) {
-                obj = ((Db4oTypeImpl)obj).storedTo(a_bytes.getTransaction());
-            }
-            i_fields[i].marshall(a_yapObject, obj, a_bytes, config, a_new);
-        }
-        if (i_ancestor != null) {
-            i_ancestor.marshall(a_yapObject, a_object, a_bytes, a_new);
-        }
-    }
-
-    void marshallNew(YapObject a_yapObject, YapWriter a_bytes, Object a_object) {
-        checkUpdateDepth(a_bytes);
-        marshall(a_yapObject, a_object, a_bytes, true);
-    }
-
-    void marshallUpdate(
-        Transaction a_trans,
-        int a_id,
-        int a_updateDepth,
-        YapObject a_yapObject,
-        Object a_object
-        ) {
-
-        int length = objectLength();
-
-        YapWriter writer = new YapWriter(a_trans, length);
-        writer.setUpdateDepth(a_updateDepth);
-        checkUpdateDepth(writer);
-        writer.useSlot(a_id, 0, length);
-        if (Deploy.debug) {
-            writer.writeBegin(YapConst.YAPOBJECT, length);
-        }
-        writer.writeInt(getID());
-        marshall(a_yapObject, a_object, writer, false);
-        if (Deploy.debug) {
-            writer.writeEnd();
-            writer.debugCheckBytes();
-        }
-        YapStream stream = a_trans.i_stream;
-        stream.writeUpdate(this, writer);
-        if (a_yapObject.isActive()) {
-            a_yapObject.setStateClean();
-        }
-        a_yapObject.endProcessing();
-        dispatchEvent(stream, a_object, EventDispatcher.UPDATE);
     }
 
     int memberLength() {
@@ -1348,7 +1265,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return YapConst.DEFAULT;
     }
 
-    int objectLength() {
+    public int objectLength() {
         if (i_objectLength == 0) {
             i_objectLength = memberLength() + YapConst.OBJECT_LENGTH + YapConst.YAPID_LENGTH;
         }
@@ -1529,7 +1446,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
     }
 
-    int readFieldLength(YapReader a_bytes) {
+    public int readFieldLength(YapReader a_bytes) {
         int length = a_bytes.readInt();
         if (length > i_fields.length) {
             if (Debug.atHome) {
@@ -1547,7 +1464,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return length;
     }
 
-    int readFieldLengthSodaAtHome(YapReader a_bytes) {
+    public int readFieldLengthSodaAtHome(YapReader a_bytes) {
         if (Debug.atHome) {
             int length = a_bytes.readInt();
             if (length > i_fields.length) {
@@ -1578,7 +1495,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         i_reader = a_reader;
         try {
             if (Deploy.debug) {
-                a_reader.readBegin(getID(), getIdentifier());
+                a_reader.readBegin(getIdentifier());
             }
             int len = a_reader.readInt();
 
@@ -1609,25 +1526,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         return null;
     }
-
-    void readObjectHeader(YapReader a_reader, int a_objectID) {
-        if (Deploy.debug) {
-            a_reader.readBegin(a_objectID, YapConst.YAPOBJECT);
-            if (a_reader.readInt() != getID()) {
-                if (a_objectID != 0) {
-                    System.out.println("YapObject readHeader: YapClass does not match.");
-                }
-            }
-        }else{
-            a_reader.incrementOffset(YapConst.YAPID_LENGTH);
-        }
-    }
     
     void readVirtualAttributes(Transaction a_trans, YapObject a_yapObject) {
         int id = a_yapObject.getID();
         YapStream stream = a_trans.i_stream;
         YapReader reader = stream.readReaderByID(a_trans, id);
-        readObjectHeader(reader, id);
+        new ObjectHeader(stream, this, reader);
         readVirtualAttributes1(a_trans, reader, a_yapObject);
     }
     
@@ -1745,7 +1649,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     }
 
     public void readThis(Transaction a_trans, YapReader a_reader) {
-        throw YapConst.virtualException();
+        throw Exceptions4.virtualException();
     }
 
     void refresh() {

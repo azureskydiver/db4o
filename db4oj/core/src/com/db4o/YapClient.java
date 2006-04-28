@@ -288,7 +288,7 @@ public class YapClient extends YapStream implements ExtClient {
 	}
 
 	final void free(int a_address, int a_length) {
-		throw YapConst.virtualException();
+		throw Exceptions4.virtualException();
 	}
 
 	void getAll(Transaction ta, QueryResultImpl a_res) {
@@ -369,7 +369,7 @@ public class YapClient extends YapStream implements ExtClient {
 		return null;
 	}
 
-	YapClass getYapClass(int a_id) {
+	public YapClass getYapClass(int a_id) {
 		YapClass yc = super.getYapClass(a_id);
 		if (yc != null) {
 			return yc;
@@ -407,7 +407,7 @@ public class YapClient extends YapStream implements ExtClient {
 		return i_db;
 	}
 
-	boolean isClient() {
+	public boolean isClient() {
 		return true;
 	}
 
@@ -521,7 +521,7 @@ public class YapClient extends YapStream implements ExtClient {
 	}
 
 	void readBytes(byte[] bytes, int address, int addressOffset, int length) {
-		throw YapConst.virtualException();
+		throw Exceptions4.virtualException();
 	}
 
 	void readBytes(byte[] a_bytes, int a_address, int a_length) {
@@ -676,12 +676,16 @@ public class YapClient extends YapStream implements ExtClient {
 	final void writeNew(YapClass a_yapClass, YapWriter aWriter) {
 		writeMsg(Msg.WRITE_NEW.getWriter(a_yapClass, aWriter));
 	}
+    
+    final void writeObject(YapMeta a_object, YapReader a_writer, int address) {
+        Exceptions4.shouldNeverBeCalled();
+    }
 
 	final void writeTransactionPointer(int a_address) {
 		// do nothing
 	}
 
-	final void writeUpdate(YapClass a_yapClass, YapWriter a_bytes) {
+	public final void writeUpdate(YapClass a_yapClass, YapWriter a_bytes) {
 		writeMsg(Msg.WRITE_UPDATE.getWriter(a_yapClass, a_bytes));
 	}
 

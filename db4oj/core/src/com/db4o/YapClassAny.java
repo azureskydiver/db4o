@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 
@@ -19,9 +20,9 @@ final class YapClassAny extends YapClass {
 	}
 
 	public static void appendEmbedded(YapWriter a_bytes) {
-		YapClass yc = readYapClass(a_bytes);
-		if (yc != null) {
-			yc.appendEmbedded1(a_bytes);
+        ObjectHeader oh = new ObjectHeader(a_bytes);
+		if (oh._yapClass != null) {
+            oh._yapClass.appendEmbedded1(a_bytes);
 		}
 	}
 
@@ -43,9 +44,9 @@ final class YapClassAny extends YapClass {
 				a_bytes.getStream().readWriterByID(a_bytes.getTransaction(), objectID);
 			if (reader != null) {
 				reader.setCascadeDeletes(a_bytes.cascadeDeletes());
-				YapClass yapClass = readYapClass(reader);
-				if(yapClass != null){
-				    yapClass.deleteEmbedded1(reader, objectID);
+                ObjectHeader oh = new ObjectHeader(reader);
+				if(oh._yapClass != null){
+				    oh._yapClass.deleteEmbedded1(reader, objectID);
 				}
 			}
 		}
@@ -86,11 +87,11 @@ final class YapClassAny extends YapClass {
 			YapWriter reader =
 				a_trans.i_stream.readWriterByID(a_trans, id);
 			if (reader != null) {
-				YapClass yc = readYapClass(reader);
+                ObjectHeader oh = new ObjectHeader(reader);
 				try {
-					if (yc != null) {
+					if (oh._yapClass != null) {
 						a_bytes[0] = reader;
-						return yc.readArrayWrapper1(a_bytes);
+						return oh._yapClass.readArrayWrapper1(a_bytes);
 					}
 				} catch (Exception e) {
 					// TODO: Check Exception Types
@@ -99,13 +100,6 @@ final class YapClassAny extends YapClass {
 			}
 		}
 		return null;
-	}
-
-	static final YapClass readYapClass(YapWriter a_reader) {
-		if (Deploy.debug) {
-			a_reader.readBegin(0, YapConst.YAPOBJECT);
-		}
-		return a_reader.getStream().getYapClass(a_reader.readInt());
 	}
 	
     public boolean supportsIndex() {

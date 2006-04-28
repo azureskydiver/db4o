@@ -46,7 +46,7 @@ abstract class YapFieldVirtual extends YapField {
     
     abstract void delete(YapWriter a_bytes, boolean isUpdate);
     
-    Object getOrCreate(Transaction a_trans, Object a_OnObject) {
+    public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
         // This is the first part of marshalling
         // Virtual fields do it all in #marshall() so it's fine to return null here
         return null;
@@ -62,7 +62,7 @@ abstract class YapFieldVirtual extends YapField {
         }
     }
 
-    void instantiate(YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
+    public void instantiate(YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
         throws CorruptionException {
         if (a_yapObject.i_virtualAttributes == null) {
             a_yapObject.i_virtualAttributes = new VirtualAttributes();
@@ -76,7 +76,7 @@ abstract class YapFieldVirtual extends YapField {
     	// do nothing
     }
 
-    void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes,
+    public void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes,
         Config4Class a_config, boolean a_new) {
         Transaction trans = a_bytes.i_trans;
         

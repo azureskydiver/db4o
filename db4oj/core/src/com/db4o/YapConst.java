@@ -19,7 +19,7 @@ public final class YapConst
 	public static final byte	YAPCLASSCOLLECTION	= (byte)'A';
 	public static final byte	YAPCLASS			= (byte)'C';
 	static final byte	YAPFIELD			= (byte)'F';
-	static final byte	YAPOBJECT			= (byte)'O';
+	public static final byte	YAPOBJECT			= (byte)'O';
 	static final byte	YAPARRAY			= (byte)'N';
 	static final byte	YAPARRAYN			= (byte)'Z';
 	static final byte	YAPINDEX			= (byte)'X';
@@ -155,10 +155,6 @@ public final class YapConst
     
 	static final YapStringIOUnicode stringIO = new YapStringIOUnicode();
 	
-	public static RuntimeException virtualException(){
-		return new RuntimeException();
-	}
-	
 	private static final Object init(){
         CLASS_OBJECT = new Object().getClass();
         CLASS_COMPARE = db4oClass("config.Compare");
@@ -178,8 +174,6 @@ public final class YapConst
 		
 	    return null;
 	}
-	
-	
 	
 	private static final Class db4oClass(String name){
         return classForName("com.db4o." + name);

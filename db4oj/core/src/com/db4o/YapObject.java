@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 /**
@@ -88,40 +89,19 @@ public class YapObject extends YapMeta implements ObjectInfo{
                 DTrace.CONTINUESET.log(getID());
             }
             
-		    YapStream stream = a_trans.i_stream;
 			bitFalse(YapConst.CONTINUE);
-			Object obj = getObject();
-			
-			int id = getID();
-			int length = ownLength();
-			int address = -1;
-			if(! stream.isClient()){
-			    address = ((YapFile)stream).getSlot(length); 
-			}
-			a_trans.setPointer(id, address, length);
-	        YapWriter writer = new YapWriter(a_trans, length);
-	        writer.useSlot(id, address, length);
-	        if (Deploy.debug) {
-	            writer.writeBegin(getIdentifier(), length);
-	        }
-			writer.setUpdateDepth(a_updateDepth);
-			writer.writeInt(i_yapClass.getID());
-			
-			i_yapClass.marshallNew(this, writer, obj);
+            
+            YapWriter writer = MarshallerVersion.objectMarshaller().marshallNew(a_trans, this, a_updateDepth);
 
-			if (Deploy.debug) {
-				writer.writeEnd();
-				writer.debugCheckBytes();
-			}
-
+            YapStream stream = a_trans.i_stream;
 			stream.writeNew(i_yapClass, writer);
 
+            Object obj = getObject();
 			i_yapClass.dispatchEvent(stream, obj, EventDispatcher.NEW);
 			
-			// TODO: Weak reference creation not necessary for
-			//       primitive objects, since reference to YapObject
-			//       should get lost immediately
-			i_object = stream.i_references.createYapRef(this, obj);
+            if(! i_yapClass.isPrimitive()){
+                i_object = stream.i_references.createYapRef(this, obj);
+            }
 			
 			setStateClean();
 			endProcessing();
@@ -215,8 +195,10 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				a_reader = stream.readWriterByID(ta, getID());
 			}
 			if (a_reader != null) {
+                
+                ObjectHeader header = new ObjectHeader(stream, a_reader);
 			    
-				i_yapClass = readYapClass(a_reader);
+				i_yapClass = header._yapClass;
 
 				if (i_yapClass == null) {
 					return null;
@@ -238,9 +220,9 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				a_reader.setUpdateDepth(addToIDTree);
 				
 				if(addToIDTree == YapConst.TRANSIENT){
-				    a_object = i_yapClass.instantiateTransient(this, a_object, a_reader);
+				    a_object = i_yapClass.instantiateTransient(this, a_object, header._marshaller, a_reader);
 				}else{
-				    a_object = i_yapClass.instantiate(this, a_object, a_reader, addToIDTree == YapConst.ADD_TO_ID_TREE);
+				    a_object = i_yapClass.instantiate(this, a_object, header._marshaller, a_reader, addToIDTree == YapConst.ADD_TO_ID_TREE);
 				}
 				
 			}
@@ -253,8 +235,10 @@ public class YapObject extends YapMeta implements ObjectInfo{
 
 		Object readObject = null;
 		if (beginProcessing()) {
+            
+            ObjectHeader header = new ObjectHeader(a_stream, a_reader);
 
-			i_yapClass = readYapClass(a_reader);
+			i_yapClass = header._yapClass;
 
 			if (i_yapClass == null) {
 				return null;
@@ -271,7 +255,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			// TODO: optimize  
 			a_reader.setInstantiationDepth(i_yapClass.configOrAncestorConfig() == null ? 1 : 0);
 
-			readObject = i_yapClass.instantiate(this, getObject(), a_reader, true);
+			readObject = i_yapClass.instantiate(this, getObject(), header._marshaller, a_reader, true);
 			
 			endProcessing();
 		}
@@ -285,13 +269,6 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		}
 	}
 
-	private final YapClass readYapClass(YapWriter a_reader) {
-		if (Deploy.debug) {
-			a_reader.readBegin(getID(), getIdentifier());
-		}
-		return a_reader.getStream().getYapClass(a_reader.readInt());
-	}
-    
 	void setObjectWeak(YapStream a_stream, Object a_object) {
 		if (a_stream.i_references._weak) {
 			if(i_object != null){
@@ -334,7 +311,6 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	    // will be ended in continueset()
 		beginProcessing();
 		
-		bitTrue(YapConst.CONTINUE);
 
 		// We may still consider to have Arrays as full objects.
 		// It would need special handling, to remove them from
@@ -343,18 +319,16 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		// Removing SecondClass objects from the reference tree
 		// causes problems in C/S cascaded delete.
 
-		if (/*!(a_object instanceof SecondClass)  && */
-			!(i_yapClass instanceof YapClassPrimitive) /*|| clazz.isArray()*/
-			) {
-		    
-			return true;
-		} else {
-		    
-			// Primitive Objects will not be stored
-			// in the identity map.
-			continueSet(a_trans, a_updateDepth);
+		if (i_yapClass.isPrimitive()){
+            
+            ((YapClassPrimitive)i_yapClass).marshall(a_trans, this, a_object);
+            
+			return false;
 		}
-		return false;
+        
+        bitTrue(YapConst.CONTINUE);
+    
+		return true;
 	}
 	
 	public VirtualAttributes virtualAttributes(Transaction a_trans){
@@ -424,8 +398,9 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				setStateClean();
 	
 				a_trans.writeUpdateDeleteMembers(getID(), i_yapClass, a_trans.i_stream.i_handlers.arrayType(obj), 0);
-	
-				i_yapClass.marshallUpdate(a_trans, getID(), a_updatedepth, this, obj);
+                
+                MarshallerVersion.objectMarshaller().marshallUpdate(a_trans, i_yapClass, getID(), a_updatedepth, this, obj);
+				
 		    } else{
 		        endProcessing();
 		    }
@@ -793,7 +768,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		            if(writer != null){
 		                str += "\nAddress=" + writer.getAddress();
 		            }
-		            YapClass yc = readYapClass(writer);
+		            YapClass yc = new ObjectHeader(stream, writer)._yapClass;
 		            if(yc != i_yapClass){
 		                str += "\nYapClass corruption";
 		            }else{

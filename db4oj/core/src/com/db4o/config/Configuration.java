@@ -254,6 +254,9 @@ public interface Configuration {
      * @param flag true for turning encryption on, false for turning encryption 
      * off.
      * @see #password
+     * @deprecated Please use:
+     * Db4o.configure().io(new XTeaEncryptionFileAdapter(password)) or any of the
+     * other XTeaEncryptionFileAdapter constructors.
      */
     public void encrypt(boolean flag);
     

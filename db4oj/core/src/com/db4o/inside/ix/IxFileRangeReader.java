@@ -59,7 +59,6 @@ class IxFileRangeReader {
                 }
             } else {
                 if (newTree instanceof IxRemove) {
-                    IxRemove ir = (IxRemove) newTree;
                     if (_cursor == 0) {
                         newTree._preceding = fileRange._preceding;
                         if (fileRange._entries == 1) {

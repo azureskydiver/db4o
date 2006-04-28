@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.foundation.*;
+import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -530,11 +531,11 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			if (_bytes != null) {
 
 				_bytes._offset = 0;
-				if (Deploy.debug) {
-					_bytes.readBegin(0, YapConst.YAPOBJECT);
-				}
-				YapStream stream = getStream();
-				_yapClass = stream.getYapClass(_bytes.readInt());
+                
+                YapStream stream = getStream();
+                ObjectHeader objectHeader = new ObjectHeader(stream, _bytes);
+				_yapClass = objectHeader._yapClass;
+                
 				if (_yapClass != null) {
 					if (stream.i_handlers.ICLASS_COMPARE
 							.isAssignableFrom(_yapClass.classReflector())) {
@@ -573,25 +574,25 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		read();
 		if (_bytes == null) {
 			_yapField = null;
-		} else {
-			readYapClass();
-			_member = null;
-			if (a_field == null) {
+            return;
+		} 
+		readYapClass();
+		_member = null;
+		if (a_field == null) {
+			_yapField = null;
+            return;
+		} 
+		if (_yapClass == null) {
+			_yapField = null;
+            return;
+		} 
+		_yapField = a_field.getYapField(_yapClass);
+		if (_yapField == null
+				| !_yapClass.findOffset(_bytes, _yapField)) {
+			if (_yapClass.holdsAnyClass()) {
 				_yapField = null;
 			} else {
-				if (_yapClass == null) {
-					_yapField = null;
-				} else {
-					_yapField = a_field.getYapField(_yapClass);
-					if (_yapField == null
-							| !_yapClass.findOffset(_bytes, _yapField)) {
-						if (_yapClass.holdsAnyClass()) {
-							_yapField = null;
-						} else {
-							_yapField = new YapFieldNull();
-						}
-					}
-				}
+				_yapField = new YapFieldNull();
 			}
 		}
 	}

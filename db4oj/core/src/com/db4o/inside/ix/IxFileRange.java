@@ -53,8 +53,6 @@ class IxFileRange extends IxTree{
         if(! Debug4.prettyToStrings){
             return super.toString();
         }
-        YapFile yf = stream();
-        Transaction transaction = trans();
         YapReader fileReader = new YapReader(slotLength());
         final StringBuffer sb = new StringBuffer();
         sb.append("IxFileRange");
@@ -127,7 +125,6 @@ class IxFileRange extends IxTree{
                 return;
             }
         }
-        int lastIndex = _entries - 1;
         freespaceVisit(visitor, _entries - 1);
     }
     

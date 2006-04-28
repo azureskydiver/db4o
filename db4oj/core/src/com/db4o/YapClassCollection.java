@@ -315,8 +315,6 @@ public final class YapClassCollection extends YapMeta implements UseSystemTransa
                         yc.setConfig(i_stream.i_config.configClass(dbName));
                         i_yapClassByBytes.put(dbbytes, null);
                         i_yapClassByBytes.put(useBytes, yc);
-                    }else{
-                        int xxx = 1;
                     }
                 }
             }

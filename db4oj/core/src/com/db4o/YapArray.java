@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
 import com.db4o.inside.slots.*;
 import com.db4o.reflect.*;
 
@@ -88,7 +89,7 @@ class YapArray extends YapIndependantType {
                         length);
                 if (bytes != null) {
                     if (Deploy.debug) {
-                        bytes.readBegin(bytes.getAddress(), identifier());
+                        bytes.readBegin(identifier());
                     }
                     bytes.setCascadeDeletes(a_bytes.cascadeDeletes());
                     for (int i = elementCount(trans, bytes); i > 0; i--) {
@@ -111,7 +112,7 @@ class YapArray extends YapIndependantType {
                 a_bytes.getStream().readObjectWriterByAddress(trans, address, length);
             if (bytes != null) {
                 if (Deploy.debug) {
-                    bytes.readBegin(bytes.getAddress(), identifier());
+                    bytes.readBegin(identifier());
                 }
                 for (int i = elementCount(trans, bytes); i > 0; i--) {
                     int id = bytes.readInt();
@@ -163,7 +164,7 @@ class YapArray extends YapIndependantType {
     }
     
     public Object comparableObject(Transaction a_trans, Object a_object){
-        throw YapConst.virtualException();
+        throw Exceptions4.virtualException();
     }
 
     int objectLength(Object a_object) {
@@ -183,7 +184,7 @@ class YapArray extends YapIndependantType {
 			return null;
 		}
 		if (Deploy.debug) {
-			bytes.readBegin(bytes.getAddress(), identifier());
+			bytes.readBegin(identifier());
 		}
 		bytes.setUpdateDepth(a_bytes.getUpdateDepth());
 		bytes.setInstantiationDepth(a_bytes.getInstantiationDepth());
@@ -196,7 +197,7 @@ class YapArray extends YapIndependantType {
     
     public Object readIndexEntry(YapReader a_reader) {
         // TODO: implement
-        throw YapConst.virtualException();
+        throw Exceptions4.virtualException();
     }
     
 	public Object readQuery(Transaction a_trans, YapReader a_reader, boolean a_toArray) throws CorruptionException{
@@ -360,7 +361,7 @@ class YapArray extends YapIndependantType {
     
     public void writeIndexEntry(YapReader a_writer, Object a_object) {
         // TODO: implement
-        throw YapConst.virtualException();
+        throw Exceptions4.virtualException();
     }
     
     public int writeNew(Object a_object, YapWriter a_bytes) {

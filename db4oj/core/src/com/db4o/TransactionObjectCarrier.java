@@ -35,7 +35,7 @@ class TransactionObjectCarrier extends Transaction{
 //      do nothing
     }
 	
-	void setPointer(int a_id, int a_address, int a_length) {
+	public void setPointer(int a_id, int a_address, int a_length) {
 		writePointer(a_id, a_address, a_length);
 	}
     

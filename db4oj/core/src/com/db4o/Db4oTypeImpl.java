@@ -5,7 +5,7 @@ package com.db4o;
 /** 
  * marker interface for special db4o datatypes
  */
-interface Db4oTypeImpl extends TransactionAware {
+public interface Db4oTypeImpl extends TransactionAware {
 	
 	int adjustReadDepth(int a_depth);
     
