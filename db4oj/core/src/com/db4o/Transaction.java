@@ -6,6 +6,7 @@ import com.db4o.foundation.*;
 import com.db4o.inside.btree.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.slots.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 /**
@@ -636,7 +637,7 @@ public class Transaction {
         i_address = a_address;
     }
 
-    void setPointer(int a_id, int a_address, int a_length) {
+    public void setPointer(int a_id, int a_address, int a_length) {
         if(Debug.checkSychronization){
             i_stream.i_lock.notify();
         }
@@ -889,7 +890,8 @@ public class Transaction {
             }
             return;
         }
-        a_yc.readObjectHeader(objectBytes, a_id);
+        
+        ObjectHeader.skip(i_stream, a_yc, objectBytes);
         
         DeleteInfo info = (DeleteInfo)TreeInt.find(i_delete, a_id);
         if(info != null){

@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.config.*;
 import com.db4o.foundation.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
@@ -101,7 +102,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
                                 YapWriter writer = stream.readWriterByID(systemTrans, (int)ids[i]);
                                 if(writer != null){
                                     Object obj = null;
-                                    YapClass yapClassObject = YapClassAny.readYapClass(writer);
+                                    YapClass yapClassObject = new ObjectHeader(stream, writer)._yapClass;
                                     if(yapClassObject != null){
 	                                    if(yapClassObject.findOffset(writer, yapField)){
                                             try {

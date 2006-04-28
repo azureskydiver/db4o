@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
@@ -211,7 +212,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     }
 
     boolean evaluate(QCandidate a_candidate) {
-        throw YapConst.virtualException();
+        throw Exceptions4.virtualException();
     }
 
     void evaluateChildren() {
@@ -407,7 +408,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     }
     
     public IxTree indexRoot(){
-        throw YapConst.virtualException();
+        throw Exceptions4.virtualException();
     }
 
     boolean isNot() {

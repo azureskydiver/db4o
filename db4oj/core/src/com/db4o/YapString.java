@@ -81,7 +81,7 @@ public final class YapString extends YapIndependantType {
 			return null;
 		}
 		if (Deploy.debug) {
-			bytes.readBegin(0, YapConst.YAPSTRING);
+			bytes.readBegin(YapConst.YAPSTRING);
 		}
 		String ret = readShort(bytes);
 		if (Deploy.debug) {

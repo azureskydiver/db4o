@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 import com.db4o.inside.slots.*;
 
 /**
@@ -71,7 +72,7 @@ import com.db4o.inside.slots.*;
             return 0;
         }
         if (Deploy.debug) {
-            reader.readBegin(getID(), getIdentifier());
+            reader.readBegin(getIdentifier());
         }
         return reader.readInt();
     }
@@ -110,7 +111,7 @@ import com.db4o.inside.slots.*;
     }
 
     public final Object read(YapReader a_reader) {
-    	throw YapConst.virtualException();
+    	throw Exceptions4.virtualException();
     }
 
     public final void readThis(Transaction a_trans, YapReader a_reader) {

@@ -803,7 +803,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     }
     
 
-    YapClass getYapClass(int a_id) {
+    public YapClass getYapClass(int a_id) {
     	if(DTrace.enabled){
     		DTrace.YAPCLASS_BY_ID.log(a_id);
     	}
@@ -1018,7 +1018,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
      * This method will make it easier to refactor than
      * an "instanceof YapClient" check.
      */
-    boolean isClient() {
+    public boolean isClient() {
         return false;
     }
 
@@ -1588,13 +1588,6 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
     				hcTreeAdd(yapObject);
     				if(a_object instanceof Db4oTypeImpl){
     				    ((Db4oTypeImpl)a_object).setTrans(a_trans);
-                        
-                        // FIXME: the following could speed up things
-                        
-//                        if(a_object instanceof P1Object){
-//                            ((P1Object)a_object).setYapObject(yapObject);
-//                        }
-                        
     				}
     				if (i_config.messageLevel() > YapConst.STATE) {
     					message("" + yapObject.getID() + " new " + yapObject.getYapClass().getName());
@@ -1833,7 +1826,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     abstract void writeTransactionPointer(int a_address);
 
-    abstract void writeUpdate(YapClass a_yapClass, YapWriter a_bytes);
+    public abstract void writeUpdate(YapClass a_yapClass, YapWriter a_bytes);
 
     final void yapObjectGCd(YapObject yo) {
         

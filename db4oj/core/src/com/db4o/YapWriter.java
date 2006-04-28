@@ -98,7 +98,7 @@ public final class YapWriter extends YapReader {
         return i_cascadeDelete;
     }
 
-    void debugCheckBytes() {
+    public void debugCheckBytes() {
         if (Debug.xbytes) {
             if (_offset != i_length) {
                 // Db4o.log("!!! YapBytes.debugCheckBytes not all bytes used");
@@ -251,7 +251,7 @@ public final class YapWriter extends YapReader {
         i_trans = aTrans;
     }
 
-    void setUpdateDepth(int a_depth) {
+    public void setUpdateDepth(int a_depth) {
         i_updateDepth = a_depth;
     }
 

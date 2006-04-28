@@ -821,7 +821,7 @@ public abstract class YapFile extends YapStream {
             }
             return bytes;
         } else {
-            throw YapConst.virtualException();
+            throw Exceptions4.virtualException();
         }
     }
 
@@ -837,7 +837,7 @@ public abstract class YapFile extends YapStream {
         bytes.write();
     }
 
-    final void writeUpdate(YapClass a_yapClass, YapWriter a_bytes) {
+    public final void writeUpdate(YapClass a_yapClass, YapWriter a_bytes) {
         Transaction trans = a_bytes.getTransaction();
         int id = a_bytes.getID();
         int length = a_bytes.getLength();

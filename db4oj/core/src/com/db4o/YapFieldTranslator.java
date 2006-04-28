@@ -30,11 +30,11 @@ final class YapFieldTranslator extends YapField
 		}
 	}
 	
-	Object getOrCreate(Transaction a_trans, Object a_OnObject) {
+	public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
 		return getOn(a_trans, a_OnObject);
 	}
 
-	void instantiate(YapObject a_yapObject, Object a_onObject, YapWriter a_bytes) throws CorruptionException{
+	public void instantiate(YapObject a_yapObject, Object a_onObject, YapWriter a_bytes) throws CorruptionException{
 		Object toSet = read(a_bytes);
 
 		// Activation of members is necessary on purpose here.

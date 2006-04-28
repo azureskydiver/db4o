@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.inside.*;
 
 /**
  * @exclude
@@ -269,7 +270,7 @@ public abstract class Tree implements ShallowClone,Readable{
     }
     
 	public int ownLength(){
-		throw YapConst.virtualException();
+		throw Exceptions4.virtualException();
 	}
 	
 	public int ownSize(){
@@ -277,11 +278,11 @@ public abstract class Tree implements ShallowClone,Readable{
 	}
 	
 	static Tree read(Tree a_tree, YapReader a_bytes){
-		throw YapConst.virtualException();
+		throw Exceptions4.virtualException();
 	}
 	
 	public Object read(YapReader a_bytes){
-		throw YapConst.virtualException();
+		throw Exceptions4.virtualException();
 	}
 
 	public Tree remove(){
@@ -456,7 +457,7 @@ public abstract class Tree implements ShallowClone,Readable{
 	}
 	
 	boolean variableLength(){
-		throw YapConst.virtualException();
+		throw Exceptions4.virtualException();
 	}
 	
 	public static void write(final YapReader a_writer, Tree a_tree){
@@ -478,7 +479,7 @@ public abstract class Tree implements ShallowClone,Readable{
 
 	
 	public void write(YapReader a_writer){
-		throw YapConst.virtualException();
+		throw Exceptions4.virtualException();
 	}
 
 	

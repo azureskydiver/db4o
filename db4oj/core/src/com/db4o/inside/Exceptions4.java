@@ -36,4 +36,12 @@ public class Exceptions4 {
     		throw (Db4oException)exc;
     	}
     }
+    
+    public static RuntimeException shouldNeverBeCalled(){
+       throw new RuntimeException();
+    }
+
+    public static RuntimeException virtualException(){
+        throw new RuntimeException();
+    }
 }

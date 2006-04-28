@@ -21,7 +21,7 @@ public class YapReader {
 		_buffer = new byte[a_length];
 	}
 	
-    void append(byte a_byte) {
+    public void append(byte a_byte) {
         _buffer[_offset++] = a_byte;
     }
 
@@ -66,7 +66,7 @@ public class YapReader {
         a_stream.readBytes(_buffer, a_address, addressOffset, getLength());
     }
 	
-	void readBegin(byte a_identifier) {
+    public final void readBegin(byte a_identifier) {
 		if (Deploy.debug) {
 			if (Deploy.brackets) {
 				if (readByte() != YapConst.YAPBEGIN) {
@@ -81,12 +81,6 @@ public class YapReader {
 			}
 		}
 	}
-
-    public void readBegin(int a_id, byte a_identifier) {
-        if (Deploy.debug) {
-            readBegin(a_identifier);
-        }
-    }
 	
 	public byte readByte() {
 		return _buffer[_offset++];
@@ -173,13 +167,13 @@ public class YapReader {
         }
     }
     
-    void writeBegin(byte a_identifier, int a_length) {
+    public void writeBegin(byte a_identifier, int a_length) {
         if (Deploy.debug) {
             writeBegin(a_identifier);
         }
     }
     
-    void writeEnd() {
+    public void writeEnd() {
         if (Deploy.debug && Deploy.brackets) {
             append(YapConst.YAPEND);
         }

@@ -2,6 +2,6 @@
 
 package com.db4o;
 
-class CorruptionException extends Exception{
+public class CorruptionException extends Exception{
 
 }

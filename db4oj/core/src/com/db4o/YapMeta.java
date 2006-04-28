@@ -45,7 +45,7 @@ public abstract class YapMeta {
         }
     }
 
-    void endProcessing() {
+    public void endProcessing() {
         bitFalse(YapConst.PROCESSING);
     }
 
@@ -83,7 +83,7 @@ public abstract class YapMeta {
                 YapReader reader = a_trans.i_stream.readReaderByID(a_trans, getID());
                 if (reader != null) {
                     if (Deploy.debug) {
-                        reader.readBegin(getID(), getIdentifier());
+                        reader.readBegin(getIdentifier());
                     }
                     readThis(a_trans, reader);
                     setStateOnRead(reader);

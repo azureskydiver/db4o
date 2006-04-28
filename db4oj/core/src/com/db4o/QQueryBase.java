@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.foundation.*;
 import com.db4o.inside.query.*;
+import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.types.*;
@@ -340,6 +341,7 @@ public abstract class QQueryBase implements Unversioned {
     }
 
     void executeLocal(final QueryResultImpl result) {
+        final YapStream stream = i_trans.i_stream;
         boolean checkDuplicates = false;
         boolean topLevel = true;
         List4 candidateCollection = null;
@@ -423,16 +425,10 @@ public abstract class QQueryBase implements Unversioned {
                                             public void visit(Object treeInt) {
                                                 int id = ((TreeInt)treeInt)._key;
                                                 YapWriter reader =
-                                                    i_trans.i_stream.readWriterByID(i_trans, id);
+                                                    stream.readWriterByID(i_trans, id);
                                                 if (reader != null) {
-                                                    if (Deploy.debug) {
-                                                        reader.readBegin(id, YapConst.YAPOBJECT);
-                                                    }
-                                                    YapClass yc =
-                                                        i_trans.i_stream.getYapClass(
-                                                            reader.readInt());
-                                                    idsNew[0] =
-                                                        yc.collectFieldIDs(
+                                                    ObjectHeader oh = new ObjectHeader(stream, reader);
+                                                    idsNew[0] = oh._yapClass.collectFieldIDs(
                                                             idsNew[0],
                                                             reader,
                                                             fieldName);

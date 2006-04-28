@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.inside.*;
+
 /**
  * client class index. Largly intended to do nothing or
  * redirect functionality to the server.
@@ -13,7 +15,7 @@ final class ClassIndexClient extends ClassIndex {
 	}
 
 	void add(int a_id){
-		throw YapConst.virtualException();
+		throw Exceptions4.virtualException();
 	}
     
     void ensureActive(){

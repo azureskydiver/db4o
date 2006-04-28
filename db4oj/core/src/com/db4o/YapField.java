@@ -435,7 +435,7 @@ public class YapField implements StoredField {
      * dirty hack for com.db4o.types some of them need to be set automatically
      * TODO: Derive from YapField for Db4oTypes
      */
-    Object getOrCreate(Transaction a_trans, Object a_OnObject) {
+    public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
         if (alive()) {
             try {
                 Object obj = i_javaField.get(a_OnObject);
@@ -516,7 +516,7 @@ public class YapField implements StoredField {
         }
     }
 
-    void instantiate(YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
+    public void instantiate(YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
         throws CorruptionException {
         if (alive()) {
             Object toSet = null;
@@ -593,7 +593,7 @@ public class YapField implements StoredField {
         return null;
     }
 
-    void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes,
+    public void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes,
         Config4Class a_config, boolean a_new) {
         // alive needs to be checked by all callers: Done
 		
