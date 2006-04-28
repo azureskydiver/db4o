@@ -217,7 +217,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 			if (creationTime > _lastReplicationVersion) { //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
 				if (_replicatingDeletions) return false;
-				return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, true);
+				return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, true, false);
 			} else // if it was created before the last time two ReplicationProviders were replicated it has to be treated as deleted.
 				return handleMissingObjectInOther(obj, ownerRef, owner, other, referencingObject, fieldName);
 		}
@@ -255,25 +255,22 @@ public final class GenericReplicationSession implements ReplicationSession {
 		_stateInB.setAll(objectB, false, changedInB, TimeStampIdGenerator.idToMilliseconds(otherRef.version()));
 		_listener.onReplicate(_event);
 
-		if (_event._actionShouldStopTraversal)
-			return false;
-
 		if (conflict) {
 			if (!_event._actionWasChosen) throwReplicationConflictException();
-			if (_event._actionChosen == null) return false;
-			if (_event._actionChosen == _stateInA) prevailing = objectA;
-			if (_event._actionChosen == _stateInB) prevailing = objectB;
+			if (_event._actionChosenState == null) return false;
+			if (_event._actionChosenState == _stateInA) prevailing = objectA;
+			if (_event._actionChosenState == _stateInB) prevailing = objectB;
 		} else {
 			if (_event._actionWasChosen) {
-				if (_event._actionChosen == _stateInA) prevailing = objectA;
-				if (_event._actionChosen == _stateInB) prevailing = objectB;
-				if (_event._actionChosen == null) return false;
+				if (_event._actionChosenState == _stateInA) prevailing = objectA;
+				if (_event._actionChosenState == _stateInB) prevailing = objectB;
+				if (_event._actionChosenState == null) return false;
 			} else {
 				if (changedInA) prevailing = objectA;
 				if (changedInB) prevailing = objectB;
 			}
 		}
-
+		
 		ReplicationProviderInside prevailingPeer = prevailing == objectA ? _providerA : _providerB;
 		if (_directionTo == prevailingPeer) return false;
 
@@ -285,11 +282,11 @@ public final class GenericReplicationSession implements ReplicationSession {
 			otherRef.markForReplicating();
 			markAsNotProcessed(uuid);
 			_traverser.extendTraversalTo(prevailing); //Now we start traversing objects on the other peer! Is that cool or what? ;)
-			return false;
+		} else {
+			ownerRef.markForReplicating();
 		}
 
-		ownerRef.markForReplicating();
-		return true;
+		return !_event._actionShouldStopTraversal;
 	}
 
 	private Object arrayClone(Object original, ReflectClass claxx, ReplicationProviderInside sourceProvider) {
@@ -416,53 +413,51 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 		_listener.onReplicate(_event);
 
-		if (_event._actionShouldStopTraversal) return false;
-
 		if (isConflict && !_event._actionWasChosen) throwReplicationConflictException();
 
 		if (_event._actionWasChosen) {
-			if (_event._actionChosen == null) return false;
-			if (_event._actionChosen == _stateInA) prevailing = _stateInA.getObject();
-			if (_event._actionChosen == _stateInB) prevailing = _stateInB.getObject();
+			if (_event._actionChosenState == null) return false;
+			if (_event._actionChosenState == _stateInA) prevailing = _stateInA.getObject();
+			if (_event._actionChosenState == _stateInB) prevailing = _stateInB.getObject();
 		}
 
 		if (prevailing == null) { //Deletion has prevailed.
 			if (_directionTo == other) return false;
 			ownerRef.markForDeleting();
-			return true;
+			return !_event._actionShouldStopTraversal;
 		}
 
 		boolean needsToBeActivated = !isConflict; //Already activated if there was a conflict.
-		return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, needsToBeActivated);
+		return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, needsToBeActivated, true);
 	}
 
 	private boolean handleNewObject(Object obj, ReplicationReference ownerRef, ReplicationProviderInside owner,
-			ReplicationProviderInside other, Object referencingObject, String fieldName, boolean needsToBeActivated) {
+			ReplicationProviderInside other, Object referencingObject, String fieldName, boolean needsToBeActivated, boolean listenerAlreadyNotified) {
 		if (_directionTo == owner) return false;
 
 		if (needsToBeActivated) owner.activate(obj);
 
-		_event.resetAction();
-		_event._isConflict = false;
-		_event._creationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.uuid().getLongPart());
-
-		if (owner == _providerA) {
-			_stateInA.setAll(obj, true, false, -1);
-			_stateInB.setAll(null, false, false, -1);
-		} else {
-			_stateInA.setAll(null, false, false, -1);
-			_stateInB.setAll(obj, true, false, -1);
+		if (!listenerAlreadyNotified) {
+			_event.resetAction();
+			_event._isConflict = false;
+			_event._creationDate = TimeStampIdGenerator.idToMilliseconds(ownerRef.uuid().getLongPart());
+	
+			if (owner == _providerA) {
+				_stateInA.setAll(obj, true, false, -1);
+				_stateInB.setAll(null, false, false, -1);
+			} else {
+				_stateInA.setAll(null, false, false, -1);
+				_stateInB.setAll(obj, true, false, -1);
+			}
+	
+			_listener.onReplicate(_event);
+	
+			if (_event._actionWasChosen) {
+				if (_event._actionChosenState == null) return false;
+				if (_event._actionChosenState.getObject() != obj) return false;
+			}
 		}
-
-		_listener.onReplicate(_event);
-
-		if (_event._actionShouldStopTraversal)
-			return false;
-
-		if (_event._actionWasChosen)
-			if (_event._actionChosen.getObject() != obj)
-				throw new RuntimeException("You can only choose the new object or stop traversal");
-
+		
 		Object counterpart = emptyClone(owner, obj);
 
 		ownerRef.setCounterpart(counterpart);
@@ -471,6 +466,8 @@ public final class GenericReplicationSession implements ReplicationSession {
 		ReplicationReference otherRef = other.referenceNewObject(counterpart, ownerRef, getCounterpartRef(referencingObject), fieldName);
 
 		putCounterpartRef(obj, otherRef);
+
+		if (_event._actionShouldStopTraversal) return false;
 
 		return true;
 	}

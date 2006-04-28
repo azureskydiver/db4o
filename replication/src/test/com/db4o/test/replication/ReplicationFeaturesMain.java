@@ -33,7 +33,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	private Set _containersWithNewObjects;
 	private Set _containersWithChangedObjects;
 	private Set _containersWithDeletedObjects;
-	private Set _objectsToPrevailInConflicts;
+	private Set _containerStateToPrevail;
 
 	private String _intermittentErrors = "";
 	private int _testCombination;
@@ -50,12 +50,16 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		}
 	}
 
-	private boolean isReplicationConflictExceptionExpected() {
-		return wasConflict() && isDefaultReplicationBehaviorAllowed();
+	private boolean isReplicationConflictExceptionExpectedQueryingFrom(String container) {
+		return wasConflictQueryingFrom(container) && isDefaultReplicationBehaviorAllowed();
+	}
+
+	private boolean isReplicationConflictExceptionExpectedReplicatingDeletions() {
+		return false;
 	}
 
 	private boolean isDefaultReplicationBehaviorAllowed() {
-		return _objectsToPrevailInConflicts != null && _objectsToPrevailInConflicts.isEmpty();
+		return _containerStateToPrevail != null && _containerStateToPrevail.isEmpty();
 	}
 
 	private static void ensure(boolean condition) {
@@ -153,14 +157,14 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 		final ReplicationSession replication = new GenericReplicationSession(_providerA, _providerB, new ReplicationEventListener() {
 			public void onReplicate(ReplicationEvent event) {
-				if (_objectsToPrevailInConflicts == null) {
+				if (_containerStateToPrevail == null) {
 					event.overrideWith(null);
 					return;
 				}
 
-				if (_objectsToPrevailInConflicts.isEmpty()) return;  //Default replication behaviour.
+				if (_containerStateToPrevail.isEmpty()) return;  //Default replication behaviour.
 
-				ObjectState override = _objectsToPrevailInConflicts.contains(A)
+				ObjectState override = _containerStateToPrevail.contains(A)
 						? event.stateInProviderA()
 						: event.stateInProviderB();
 				event.overrideWith(override);
@@ -172,12 +176,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			if (_direction.contains(B))	replication.setDirection(_providerA, _providerB);
 		}
 
-		try {
-			replicate(replication);
-			ensure(!isReplicationConflictExceptionExpected());
-		} catch (ReplicationConflictException e) {
-			ensure(isReplicationConflictExceptionExpected());
-		}
+		replicate(replication);
 
 		replication.commit();
 
@@ -187,14 +186,34 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	}
 
 	private void replicate(final ReplicationSession replication) {
-		if (_containersToQueryFrom.contains(A))
-			replicateQueryingFrom(replication, _providerA, _providerB);
 
-		if (_containersToQueryFrom.contains(B))
-			replicateQueryingFrom(replication, _providerB, _providerA);
+		replicate(replication, A);
 		
-		if (!_containersWithDeletedObjects.isEmpty())
-			replication.replicateDeletions(Replicated.class);
+		replicate(replication, B);
+		
+		try {
+			if (!_containersWithDeletedObjects.isEmpty())
+				replication.replicateDeletions(Replicated.class);
+
+			ensure(!isReplicationConflictExceptionExpectedReplicatingDeletions());
+		} catch (ReplicationConflictException e) {
+			ensure(isReplicationConflictExceptionExpectedReplicatingDeletions());
+		}
+
+	}
+
+	private void replicate(final ReplicationSession replication, String originName) {
+		ReplicationProvider origin = container(originName);
+		ReplicationProvider destination = container(other(originName));
+		
+		try {
+			if (_containersToQueryFrom.contains(originName))
+				replicateQueryingFrom(replication, origin, destination);
+
+			ensure(!isReplicationConflictExceptionExpectedQueryingFrom(originName));
+		} catch (ReplicationConflictException e) {
+			ensure(isReplicationConflictExceptionExpectedQueryingFrom(originName));
+		}
 	}
 
 	private Replicated find(TestableReplicationProviderInside container, String name) {
@@ -276,6 +295,11 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	private boolean isNewNameExpected(String origin, String inspected) {
 		if (!_containersWithNewObjects.contains(origin)) return false;
 		if (origin.equals(inspected)) return true;
+		
+		if (_containerStateToPrevail == null) return false;
+		if (_containerStateToPrevail.contains(inspected)) return false;
+		if (isReplicationConflictExceptionExpectedQueryingFrom(origin)) return false;
+		
 		if (!_containersToQueryFrom.contains(origin)) return false;
 		return _direction.contains(inspected);
 	}
@@ -283,7 +307,8 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	private boolean isOldNameExpected(String inspectedContainer) {
 		if (isDeletionExpected(inspectedContainer)) return false;
 		if (isChangedNameExpected(A, inspectedContainer)) return false;
-		return !isChangedNameExpected(B, inspectedContainer);
+		if (isChangedNameExpected(B, inspectedContainer)) return false;
+		return true;
 	}
 
 	private Set modifiedContainers() {
@@ -328,13 +353,14 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	}
 
 	private boolean prevailedInReplication(String container) {
-		if (!wasReplicationTriggered()) return false;
+		if (!wasReplicationTriggeredQueryingFrom(A) && !wasReplicationTriggeredQueryingFrom(B)) return false;
 		if (!_direction.contains(other(container))) return false;
 
-		if (_objectsToPrevailInConflicts == null) return false;
-		if (_objectsToPrevailInConflicts.contains(container)) return true;
-		if (_objectsToPrevailInConflicts.contains(other(container))) return false;
-
+		if (_containerStateToPrevail == null) return false;
+		if (_containerStateToPrevail.contains(container)) return true;
+		if (_containerStateToPrevail.contains(other(container))) return false;
+		if (wasConflictQueryingFrom(A) && wasConflictQueryingFrom(B)) return false; //Because state was not overriden and ReplicationException was thrown.
+		
 		return modifiedContainers().contains(container);
 	}
 
@@ -352,7 +378,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		System.out.println("Deleted Objects In: " + print(_containersWithDeletedObjects));
 		System.out.println("Querying From: " + print(_containersToQueryFrom));
 		System.out.println("Direction: To " + print(_direction));
-		System.out.println("Prevailing Conflicts: " + print(_objectsToPrevailInConflicts));
+		System.out.println("Prevailing State: " + print(_containerStateToPrevail));
 	}
 
 	private void runCurrentCombination() {
@@ -360,7 +386,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		//System.out.println("" + _testCombination + " =================================");
 		//printCombination();
 
-		if (_testCombination < 74)  //Use this to skip some combinations and avoid waiting.
+		if (_testCombination < 13)  //Use this when debugging to skip some combinations and avoid waiting.
 			return;
 
 		int _errors = 0;
@@ -406,10 +432,10 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	private void tstWithChangedObjectsIn(Set containers) {
 		_containersWithChangedObjects = containers;
 
-		tstWithObjectsPrevailingConflicts(_NONE);
-		tstWithObjectsPrevailingConflicts(_setA);
-		tstWithObjectsPrevailingConflicts(_setB);
-		tstWithObjectsPrevailingConflicts(null);
+		tstWithContainerStateToPrevail(_NONE);
+		tstWithContainerStateToPrevail(_setA);
+		tstWithContainerStateToPrevail(_setB);
+		tstWithContainerStateToPrevail(null);
 	}
 
 	private void tstWithDeletedObjectsIn(Set containers) {
@@ -429,20 +455,18 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		tstWithChangedObjectsIn(_setBoth);
 	}
 
-	private void tstWithObjectsPrevailingConflicts(Set containers) {
-		_objectsToPrevailInConflicts = containers;
+	private void tstWithContainerStateToPrevail(Set containers) {
+		_containerStateToPrevail = containers;
 
 		runCurrentCombination();
 	}
 
-	private boolean wasConflict() {
-		if (!wasReplicationTriggered()) return false;
+	private boolean wasConflictQueryingFrom(String container) {
+		if (!wasReplicationTriggeredQueryingFrom(container)) return false;
 		return modifiedContainers().containsAll(_direction);
 	}
 
-	private boolean wasReplicationTriggered() {
-		Set triggers = modifiedContainers();
-		triggers.retainAll(_containersToQueryFrom);
-		return !triggers.isEmpty();
+	private boolean wasReplicationTriggeredQueryingFrom(String container) {
+		return _containersToQueryFrom.contains(container) && modifiedContainers().contains(container);
 	}
 }
