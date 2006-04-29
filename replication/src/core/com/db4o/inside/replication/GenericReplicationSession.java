@@ -54,7 +54,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 	 */
 	private Hashtable4 _counterpartRefsByOriginal;
 
-	private boolean _replicatingDeletions;
+	private boolean _isReplicatingDeletions;
 
 	public GenericReplicationSession(ReplicationProviderInside _peerA, ReplicationProviderInside _peerB) {
 		this(_peerA, _peerB, new DefaultReplicationEventListener());
@@ -149,18 +149,18 @@ public final class GenericReplicationSession implements ReplicationSession {
 
 	
 	public void replicateDeletions(Class extent) {
-		if (_directionTo != _providerA) replicateDeletions(extent, _providerB);
-		if (_directionTo != _providerB) replicateDeletions(extent, _providerA);
+		replicateDeletions(extent, _providerA);
+		replicateDeletions(extent, _providerB);
 	}
 
 	
 	private void replicateDeletions(Class extent, ReplicationProviderInside provider) {
-		_replicatingDeletions = true;
+		_isReplicatingDeletions = true;
 		try {
 			ObjectSet instances = provider.getStoredObjects(extent);
 			while (instances.hasNext()) replicate(instances.next());
 		} finally {
-			_replicatingDeletions = false;
+			_isReplicatingDeletions = false;
 		}
 	}
 	
@@ -216,13 +216,13 @@ public final class GenericReplicationSession implements ReplicationSession {
 			long creationTime = ownerRef.uuid().getLongPart();
 
 			if (creationTime > _lastReplicationVersion) { //if it was created after the last time two ReplicationProviders were replicated it has to be treated as new.
-				if (_replicatingDeletions) return false;
+				if (_isReplicatingDeletions) return false;
 				return handleNewObject(obj, ownerRef, owner, other, referencingObject, fieldName, true, false);
 			} else // if it was created before the last time two ReplicationProviders were replicated it has to be treated as deleted.
 				return handleMissingObjectInOther(obj, ownerRef, owner, other, referencingObject, fieldName);
 		}
 
-		if (_replicatingDeletions) return false;
+		if (_isReplicatingDeletions) return false;
 
 		ownerRef.setCounterpart(otherRef.object());
 		if (wasProcessed(uuid)) return false;  //Has to be done AFTER the counterpart is set.
