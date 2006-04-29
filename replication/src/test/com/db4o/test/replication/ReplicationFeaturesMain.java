@@ -58,13 +58,18 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		if (exception != null) throw exception;
 	}
 
-	private boolean isReplicationConflictExceptionExpectedQueryingFrom(String container, boolean firstPass) {
-		if (!firstPass) return false;
-		return wasConflictQueryingFrom(container) && isDefaultReplicationBehaviorAllowed();
+	private boolean isReplicationConflictExceptionExpectedReplicatingModifications() {
+		return wasConflictReplicatingModifications() && isDefaultReplicationBehaviorAllowed();
 	}
 
 	private boolean isReplicationConflictExceptionExpectedReplicatingDeletions() {
-		return false;
+		return wasConflictReplicatingDeletions() && isDefaultReplicationBehaviorAllowed();
+	}
+
+	private boolean wasConflictReplicatingDeletions() {
+		if (_containersWithDeletedObjects.size() != 1) return false;
+		if (_direction.size() != 1) return false;
+		return _direction.containsAll(_containersWithDeletedObjects);
 	}
 
 	private boolean isDefaultReplicationBehaviorAllowed() {
@@ -185,20 +190,27 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			if (_direction.contains(B))	replication.setDirection(_providerA, _providerB);
 		}
 
-		replicate(replication);
+		boolean successful = tryToReplicate(replication);
 
-		replication.commit();
-
-		checkNames();
+		if (successful) {
+			replication.commit();
+			checkNames();
+		}
 
 		clean();
 	}
 
-	private void replicate(final ReplicationSession replication) {
+	private boolean tryToReplicate(final ReplicationSession replication) {
 
-		boolean firstPass = true;
-		if (replicate(replication, A, firstPass)) firstPass = false;
-		replicate(replication, B, firstPass);
+		try {
+			replicate(replication, A);
+			replicate(replication, B);
+			ensure(!isReplicationConflictExceptionExpectedReplicatingModifications());
+		} catch (ReplicationConflictException e) {
+			System.out.println("Conflict exception.");
+			ensure(isReplicationConflictExceptionExpectedReplicatingModifications());
+			return false;
+		}
 		
 		try {
 			if (!_containersWithDeletedObjects.isEmpty())
@@ -207,26 +219,19 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			ensure(!isReplicationConflictExceptionExpectedReplicatingDeletions());
 		} catch (ReplicationConflictException e) {
 			ensure(isReplicationConflictExceptionExpectedReplicatingDeletions());
+			return false;
 		}
 
+		return true;
 	}
 
-	private boolean replicate(final ReplicationSession replication, String originName, boolean firstPass) {
+	private void replicate(final ReplicationSession replication, String originName) {
 		ReplicationProvider origin = container(originName);
 		ReplicationProvider destination = container(other(originName));
 		
-		try {
-			if (_containersToQueryFrom.contains(originName)) {
-				replicateQueryingFrom(replication, origin, destination);
-				ensure(!isReplicationConflictExceptionExpectedQueryingFrom(originName, firstPass));
-				return true;
-			}
-			return false;
-		} catch (ReplicationConflictException e) {
-			System.out.println("Conflict exception.");
-			ensure(isReplicationConflictExceptionExpectedQueryingFrom(originName, firstPass));
-			return true;
-		}
+		if (!_containersToQueryFrom.contains(originName)) return;
+
+		replicateQueryingFrom(replication, origin, destination);
 	}
 
 	private Replicated find(TestableReplicationProviderInside container, String name) {
@@ -298,7 +303,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			return hasLocalChanges;
 
 		String other = other(inspectedContainer);
-		if (_direction.contains(other)) return hasLocalChanges;
+		if (isDirectionTo(other)) return hasLocalChanges;
 
 		boolean hasRemoteChanges = hasChanges(other) && changedContainer == other;
 		
@@ -306,15 +311,17 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			if (wasReplicationTriggered()) 	return hasRemoteChanges;
 
 		//_containerStateToPrevail is empty (default replication behaviour)
-		if (!wasConflict()) {
-			if (wasReplicationTriggered())
-				return hasRemoteChanges;
-		}
+		if (wasReplicationTriggered() && hasChanges(other))
+			return hasRemoteChanges;
 		
 		return hasLocalChanges;
 	}
 
-	private boolean wasConflict() {
+	private boolean isDirectionTo(String container) {
+		return _direction.size() == 1 && _direction.contains(container);
+	}
+
+	private boolean wasConflictReplicatingModifications() {
 		return wasConflictQueryingFrom(A) || wasConflictQueryingFrom(B);
 	}
 
@@ -331,7 +338,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			return hasDeletions(inspectedContainer);
 
 		String other = other(inspectedContainer);
-		if (_direction.contains(other)) return hasDeletions(inspectedContainer);
+		if (isDirectionTo(other)) return hasDeletions(inspectedContainer);
 		
 		if (_containerStateToPrevail.contains(other))
 			return hasDeletions(other);
@@ -358,12 +365,12 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		return true;
 	}
 
-	private Set modifiedContainers() {
-		Set result = new HashSet();
-		result.addAll(_containersWithChangedObjects);
-		result.addAll(_containersWithDeletedObjects);
-		return result;
-	}
+//	private Set modifiedContainers() {
+//		Set result = new HashSet();
+//		result.addAll(_containersWithChangedObjects);
+//		result.addAll(_containersWithDeletedObjects);
+//		return result;
+//	}
 
 	private String other(String aOrB) {
 		return aOrB.equals(A) ? B : A;
@@ -433,7 +440,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		System.out.println("" + _testCombination + " =================================");
 		printCombination();
 
-		if (_testCombination < 141)  //Use this when debugging to skip some combinations and avoid waiting.
+		if (_testCombination < 581)  //Use this when debugging to skip some combinations and avoid waiting.
 			return;
 
 		int _errors = 0;
@@ -510,10 +517,10 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 	private boolean wasConflictQueryingFrom(String container) {
 		if (!wasReplicationTriggeredQueryingFrom(container)) return false;
-		return modifiedContainers().containsAll(_direction);
+		return _containersWithChangedObjects.containsAll(_direction);
 	}
 
 	private boolean wasReplicationTriggeredQueryingFrom(String container) {
-		return _containersToQueryFrom.contains(container) && modifiedContainers().contains(container);
+		return _containersToQueryFrom.contains(container) && _containersWithChangedObjects.contains(container);
 	}
 }
