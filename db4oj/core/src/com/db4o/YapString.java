@@ -45,11 +45,14 @@ public final class YapString extends YapIndependantType {
     }
 
     public Object comparableObject(Transaction a_trans, Object a_object){
-        if(a_object != null){
-            int[] slot = (int[]) a_object;
-            return a_trans.i_stream.readObjectReaderByAddress(slot[0], slot[1]);
+        if(a_object == null){
+            return null;
         }
-        return null;
+        if(a_object instanceof YapReader){
+            return a_object;    
+        }
+        int[] slot = (int[]) a_object;
+        return a_trans.i_stream.readObjectReaderByAddress(slot[0], slot[1]);
     }
     
     public boolean equals(TypeHandler4 a_dataType) {
@@ -73,9 +76,11 @@ public final class YapString extends YapIndependantType {
     }
 
     public Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException {
-        i_lastIo = a_bytes.readEmbeddedObject();
-        
-        return read1(i_lastIo);
+        return read1(a_bytes.readEmbeddedObject());
+    }
+    
+    public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
+        return a_writer.readEmbeddedObject();
     }
     
     Object read1(YapReader bytes) throws CorruptionException {
@@ -145,15 +150,14 @@ public final class YapString extends YapIndependantType {
             a_writer.writeInt(0);
             a_writer.writeInt(0);
         }else{
-            int[] slot = (int[])a_object;
-            a_writer.writeInt(slot[0]);
-            a_writer.writeInt(slot[1]);
+            YapWriter writer = (YapWriter)a_object;
+            a_writer.writeInt(writer.getAddress());
+            a_writer.writeInt(writer.getLength());
         }
     }
     
-    public int writeNew(Object a_object, YapWriter a_bytes) {
-        MarshallerFamily.current()._string.marshall(this, a_object, a_bytes);
-		return -1;
+    public Object writeNew(Object a_object, YapWriter a_bytes) {
+        return MarshallerFamily.current()._string.marshall(this, a_object, a_bytes);
     }
 
     final void writeShort(String a_string, YapReader a_bytes) {
@@ -193,12 +197,8 @@ public final class YapString extends YapIndependantType {
         return null;
     }
     
-	public void prepareLastIoComparison(Transaction a_trans, Object obj) {
-	    if(obj == null) {
-	        i_compareTo = null;    
-	    }else {
-	        i_compareTo = i_lastIo;
-	    }
+	public void prepareComparison(Transaction a_trans, Object obj) {
+	    i_compareTo = (YapReader)obj;    
 	}
 
     public YapComparable prepareComparison(Object obj) {

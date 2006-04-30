@@ -421,7 +421,8 @@ public class YapClient extends YapStream implements ExtClient {
 			message.writeString(userName);
 			message.writeString(password);
 			message.write(this, a_socket);
-			if (!Msg.OK.equals(Msg.readMessage(i_systemTrans, a_socket))) {
+            Msg msg = Msg.readMessage(i_systemTrans, a_socket);
+			if (!Msg.OK.equals(msg)) {
 				throw new IOException(Messages.get(42));
 			}
 		}
