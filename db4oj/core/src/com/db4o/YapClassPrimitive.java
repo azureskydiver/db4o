@@ -220,9 +220,9 @@ public class YapClassPrimitive extends YapClass{
         return false;
     }
     
-    public int writeNew(Object a_object, YapWriter a_bytes) {
+    public Object writeNew(Object a_object, YapWriter a_bytes) {
         MarshallerFamily.current()._primitive.marshall(i_handler, a_object, a_bytes);
-        return -1;
+        return a_object;
     }
 
 

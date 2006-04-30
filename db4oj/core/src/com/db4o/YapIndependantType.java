@@ -20,7 +20,6 @@ public abstract class YapIndependantType implements TypeHandler4 {
         _stream = stream;
     }
     
-    public YapWriter i_lastIo;
     
     public Object coerce(ReflectClass claxx, Object obj) {
         return canHold(claxx) ? obj : No4.INSTANCE;
@@ -38,13 +37,6 @@ public abstract class YapIndependantType implements TypeHandler4 {
 			a_bytes.getTransaction().slotFreeOnCommit(address, address, length);
 		}
 	}
-	
-    public Object indexEntry(Object a_object){
-        if(a_object == null){
-            return null;
-        }
-        return new int[] {i_lastIo.getAddress(),i_lastIo.getLength()};
-    }
     
     public final int linkLength(){
         return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
@@ -58,7 +50,7 @@ public abstract class YapIndependantType implements TypeHandler4 {
         return false;
     }
 	
-    public Object readIndexValueOrID(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
+    public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
         return read(mf, a_writer);
     }
 	

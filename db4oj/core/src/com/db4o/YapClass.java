@@ -1169,10 +1169,6 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         mf._object.instantiateFields(this, a_yapObject, a_onObject, a_bytes);
     }
 
-    public Object indexEntry(Object a_object) {
-        return new Integer(i_lastID);
-    }
-    
     public boolean indexNullHandling() {
         return true;
     }
@@ -1479,7 +1475,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return new Integer(a_reader.readInt());
     }
     
-    public Object readIndexValueOrID(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
+    public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
         return readIndexEntry(a_writer);
     }
 
@@ -1900,20 +1896,19 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         a_writer.writeInt(((Integer)a_object).intValue());
     }
 
-    public int writeNew(Object a_object, YapWriter a_bytes) {
-		int id = 0; 
+    public Object writeNew(Object a_object, YapWriter a_bytes) {
         if (a_object == null) {
             a_bytes.writeInt(0);
-        } else {
-            id =
-                a_bytes.getStream().setInternal(
+            return new Integer(0);
+        }
+
+		int id = a_bytes.getStream().setInternal(
                     a_bytes.getTransaction(),
                     a_object,
                     a_bytes.getUpdateDepth(), true);
-            a_bytes.writeInt(id);
-        }
-		i_lastID = id;
-		return id;
+        
+        a_bytes.writeInt(id);
+		return new Integer(id);
     }
 
     public void writeThis(Transaction trans, YapReader a_writer) {
@@ -1946,7 +1941,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
 
     private ReflectClass i_compareTo;
     
-	public void prepareLastIoComparison(Transaction a_trans, Object obj) {
+	public void prepareComparison(Transaction a_trans, Object obj) {
 	    prepareComparison(obj);
 	}
 

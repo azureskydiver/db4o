@@ -31,26 +31,26 @@ public interface TypeHandler4 extends Indexable4
 	
 	boolean equals(TypeHandler4 a_dataType); // needed for YapField.equals
 	
-	Object indexEntry(Object a_object);
-    
     boolean indexNullHandling(); 
 	
-	void prepareLastIoComparison(Transaction a_trans, Object obj);
+	void prepareComparison(Transaction a_trans, Object obj);
 	
 	ReflectClass primitiveClassReflector();
 	
 	Object read(MarshallerFamily mf, YapWriter writer) throws CorruptionException;
     
-	Object readIndexValueOrID(MarshallerFamily mf, YapWriter writer) throws CorruptionException;
+	Object readIndexEntry(MarshallerFamily mf, YapWriter writer) throws CorruptionException;
 	
 	Object readQuery(Transaction trans, YapReader reader, boolean toArray) throws CorruptionException;
 	
 	boolean supportsIndex();
 	
-    // returns the ID for first class objects,
-    // 0 for null in first class object fields
-    // -1 for primitives
-	int writeNew(Object a_object, YapWriter a_bytes);
+    // returns the index entry, the same as readIndexEntry
+    // can be:
+    // - actual object for primitives
+    // - Integer(id) for classes
+    // - YapReader for strings
+	Object writeNew(Object a_object, YapWriter a_bytes);
 	
 	public int getType ();
 	

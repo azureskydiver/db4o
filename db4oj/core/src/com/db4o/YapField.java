@@ -86,26 +86,26 @@ public class YapField implements StoredField {
             a_writer.incrementOffset(linkLength());
         } else {
             try {
-                addIndexEntry(a_writer, i_handler.readIndexValueOrID(mf, a_writer));
+                addIndexEntry(a_writer, i_handler.readIndexEntry(mf, a_writer));
             } catch (CorruptionException e) {
             }
         }
     }
 
-    protected void addIndexEntry(YapWriter a_bytes, Object valueOrID) {
-        addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), valueOrID);
+    protected void addIndexEntry(YapWriter a_bytes, Object indexEntry) {
+        addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), indexEntry);
     }
 
-    void addIndexEntry(Transaction a_trans, int parentID, Object valueOrID) {
-        i_handler.prepareLastIoComparison(a_trans, valueOrID);
+    void addIndexEntry(Transaction a_trans, int parentID, Object indexEntry) {
+        i_handler.prepareComparison(a_trans, indexEntry);
         IndexTransaction ift = getIndex(a_trans).dirtyIndexTransaction(a_trans);
-        ift.add(parentID, i_handler.indexEntry(valueOrID));
+        ift.add(parentID, indexEntry);
     }
     
-    void removeIndexEntry(Transaction trans, int parentID, Object valueOrID){
-        i_handler.prepareComparison(valueOrID);
+    void removeIndexEntry(Transaction trans, int parentID, Object indexEntry){
+        i_handler.prepareComparison(indexEntry);
         IndexTransaction ift = getIndex(trans).dirtyIndexTransaction(trans);
-        ift.remove(parentID, i_handler.indexEntry(valueOrID));
+        ift.remove(parentID, indexEntry);
     }
     
 
@@ -203,7 +203,6 @@ public class YapField implements StoredField {
                 return false;
             }
             if (a_evaluator instanceof QEIdentity) {
-                
                 yc.i_lastID = a_qco.getObjectID();
             }
         }
@@ -323,7 +322,7 @@ public class YapField implements StoredField {
                 int offset = a_bytes._offset;
                 Object obj = null;
                 try {
-                    obj = i_handler.readIndexValueOrID(mf, a_bytes);
+                    obj = i_handler.readIndexEntry(mf, a_bytes);
                 } catch (CorruptionException e) {
                     if(Debug.atHome){
                         e.printStackTrace();
@@ -600,9 +599,9 @@ public class YapField implements StoredField {
     public void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes,
         Config4Class a_config, boolean a_new) {
         // alive needs to be checked by all callers: Done
+        
+        Object indexEntry = null;
 		
-		int memberId = 0;
-
         if (a_object != null
             && ((a_config != null && (a_config.cascadeOnUpdate() == YapConst.YES)) || (i_config != null && (i_config.cascadeOnUpdate() == YapConst.YES)))) {
             int min = 1;
@@ -614,19 +613,13 @@ public class YapField implements StoredField {
             if (updateDepth < min) {
                 a_bytes.setUpdateDepth(min);
             }
-            memberId = i_handler.writeNew(a_object, a_bytes);
+            indexEntry = i_handler.writeNew(a_object, a_bytes);
             a_bytes.setUpdateDepth(updateDepth);
         } else {
-            memberId = i_handler.writeNew(a_object, a_bytes);
+            indexEntry = i_handler.writeNew(a_object, a_bytes);
         }
         if (i_index != null) {
-            if(memberId == -1){
-                // primitive
-                addIndexEntry(a_bytes, a_object);
-            }else{
-                // first class object
-                addIndexEntry(a_bytes, new Integer(memberId));
-            }
+            addIndexEntry(a_bytes, indexEntry);
         }
     }
 

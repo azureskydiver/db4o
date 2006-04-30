@@ -62,10 +62,6 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return a_stream.i_handlers.i_yapClasses[getID() - 1];
     }
 
-    public Object indexEntry(Object a_object) {
-        return a_object;
-    }
-    
     public boolean indexNullHandling() {
         return false;
     }
@@ -74,7 +70,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return a_object;
     }
 
-    public void prepareLastIoComparison(Transaction a_trans, Object obj) {
+    public void prepareComparison(Transaction a_trans, Object obj) {
         prepareComparison(obj);
     }
 
@@ -114,7 +110,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return null;
     }
     
-    public Object readIndexValueOrID(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
+    public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
         return read(mf, a_writer);
     }
     
@@ -153,14 +149,14 @@ public abstract class YapJavaClass implements TypeHandler4 {
         write(a_object, a_writer);
     }
 
-    public int writeNew(Object a_object, YapWriter a_bytes) {
+    public Object writeNew(Object a_object, YapWriter a_bytes) {
         if (Deploy.csharp) {
             if (a_object == null) {
                 a_object = primitiveNull();
             }
         }
         write(a_object, a_bytes);
-		return -1;
+		return a_object;
     }
 
     public YapComparable prepareComparison(Object obj) {

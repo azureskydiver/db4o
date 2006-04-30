@@ -174,13 +174,12 @@ class YapArray extends YapIndependantType {
             + (_reflectArray.getLength(a_object) * i_handler.linkLength());
     }
     
-	public void prepareLastIoComparison(Transaction a_trans, Object obj) {
+	public void prepareComparison(Transaction a_trans, Object obj) {
 	    prepareComparison(obj);
 	}
 
     public Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException{
 		YapWriter bytes = a_bytes.readEmbeddedObject();
-		i_lastIo = bytes;
 		if (bytes == null) {
 			return null;
 		}
@@ -365,27 +364,26 @@ class YapArray extends YapIndependantType {
         throw Exceptions4.virtualException();
     }
     
-    public int writeNew(Object a_object, YapWriter a_bytes) {
+    public Object writeNew(Object a_object, YapWriter a_bytes) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();
-        } else {
-            int length = objectLength(a_object);
-            YapWriter bytes = new YapWriter(a_bytes.getTransaction(), length);
-            bytes.setUpdateDepth(a_bytes.getUpdateDepth());
-            if (Deploy.debug) {
-                bytes.writeBegin(identifier(), length);
-            }
-            writeNew1(a_object, bytes);
-            if (Deploy.debug) {
-                bytes.writeEnd();
-            }
-            bytes.setID(a_bytes._offset);
-            i_lastIo = bytes;
-            a_bytes.getStream().writeEmbedded(a_bytes, bytes);
-            a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
-            a_bytes.writeInt(length);
+            return null;
         }
-		return -1;
+        int length = objectLength(a_object);
+        YapWriter bytes = new YapWriter(a_bytes.getTransaction(), length);
+        bytes.setUpdateDepth(a_bytes.getUpdateDepth());
+        if (Deploy.debug) {
+            bytes.writeBegin(identifier(), length);
+        }
+        writeNew1(a_object, bytes);
+        if (Deploy.debug) {
+            bytes.writeEnd();
+        }
+        bytes.setID(a_bytes._offset);
+        a_bytes.getStream().writeEmbedded(a_bytes, bytes);
+        a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
+        a_bytes.writeInt(length);
+        return a_object;
     }
 
     void writeNew1(Object a_object, YapWriter a_bytes) {
