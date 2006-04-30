@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 
@@ -71,8 +72,9 @@ public final class YapString extends YapIndependantType {
         return true;
     }
 
-    public Object read(YapWriter a_bytes) throws CorruptionException {
+    public Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException {
         i_lastIo = a_bytes.readEmbeddedObject();
+        
         return read1(i_lastIo);
     }
     
@@ -150,26 +152,7 @@ public final class YapString extends YapIndependantType {
     }
     
     public int writeNew(Object a_object, YapWriter a_bytes) {
-        if (a_object == null) {
-            a_bytes.writeEmbeddedNull();
-        } else {
-            String str = (String) a_object;
-            int length = i_stringIo.length(str);
-            YapWriter bytes = new YapWriter(a_bytes.getTransaction(), length);
-            if (Deploy.debug) {
-                bytes.writeBegin(YapConst.YAPSTRING, length);
-            }
-            bytes.writeInt(str.length());
-            i_stringIo.write(bytes, str);
-            if (Deploy.debug) {
-                bytes.writeEnd();
-            }
-            bytes.setID(a_bytes._offset);
-            i_lastIo = bytes;
-            a_bytes.getStream().writeEmbedded(a_bytes, bytes);
-            a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
-            a_bytes.writeInt(length);
-        }
+        MarshallerFamily.current()._string.marshall(this, a_object, a_bytes);
 		return -1;
     }
 

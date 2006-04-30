@@ -89,7 +89,7 @@ public class YapClassPrimitive extends YapClass{
 			
     }
 
-    void deleteMembers(YapWriter a_bytes, int a_type, boolean isUpdate) {
+    void deleteMembers(MarshallerFamily mf, YapWriter a_bytes, int a_type, boolean isUpdate) {
         if (a_type == YapConst.TYPE_ARRAY) {
             new YapArray(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
         } else if (a_type == YapConst.TYPE_NARRAY) {
@@ -113,10 +113,10 @@ public class YapClassPrimitive extends YapClass{
 	    return false;
 	}
 
-    Object instantiate(YapObject a_yapObject, Object a_object, ObjectMarshaller marshaller, YapWriter a_bytes, boolean a_addToIDTree) {
+    Object instantiate(YapObject a_yapObject, Object a_object, MarshallerFamily mf, YapWriter a_bytes, boolean a_addToIDTree) {
         if (a_object == null) {
             try {
-                a_object = i_handler.read(a_bytes);
+                a_object = i_handler.read(mf, a_bytes);
             } catch (CorruptionException ce) {
                 return null;
             }
@@ -126,18 +126,18 @@ public class YapClassPrimitive extends YapClass{
         return a_object;
     }
     
-    Object instantiateTransient(YapObject a_yapObject, Object a_object, ObjectMarshaller marshaller, YapWriter a_bytes) {
+    Object instantiateTransient(YapObject a_yapObject, Object a_object, MarshallerFamily mf, YapWriter a_bytes) {
         try {
-            return i_handler.read(a_bytes);
+            return i_handler.read(mf, a_bytes);
         } catch (CorruptionException ce) {
             return null;
         }
     }
 
-    void instantiateFields(YapObject a_yapObject, Object a_onObject, ObjectMarshaller marshaller, YapWriter a_bytes) {
+    void instantiateFields(YapObject a_yapObject, Object a_onObject, MarshallerFamily mf, YapWriter a_bytes) {
         Object obj = null;
         try {
-            obj = i_handler.read(a_bytes);
+            obj = i_handler.read(mf, a_bytes);
         } catch (CorruptionException ce) {
             obj = null;
         }
@@ -159,8 +159,9 @@ public class YapClassPrimitive extends YapClass{
 	}
     
     // FIXME: MS Temporary primitive marshalling, will go into special marshaller.
-    public void marshall(Transaction trans, YapObject yo, Object obj){
-        int id = yo.getID();
+    public int marshall(Transaction trans, Object obj){
+        YapStream stream = trans.i_stream;
+        int id = stream.newUserObject();
         int address = -1;
         int length = objectLength();
         if(! trans.i_stream.isClient()){
@@ -176,6 +177,7 @@ public class YapClassPrimitive extends YapClass{
         i_handler.writeNew(obj, writer);
         writer.writeEnd();
         trans.i_stream.writeNew(this, writer);
+        return id;
     }
 
     public void marshall(YapObject a_yapObject, Object a_object, YapWriter a_bytes, boolean a_new) {
@@ -217,5 +219,11 @@ public class YapClassPrimitive extends YapClass{
     final boolean writeObjectBegin() {
         return false;
     }
+    
+    public int writeNew(Object a_object, YapWriter a_bytes) {
+        MarshallerFamily.current()._primitive.marshall(i_handler, a_object, a_bytes);
+        return -1;
+    }
+
 
 }

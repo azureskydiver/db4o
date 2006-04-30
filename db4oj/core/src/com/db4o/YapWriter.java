@@ -310,7 +310,7 @@ public final class YapWriter extends YapReader {
         i_embedded = null; // no reuse !!!
     }
 
-    void writeEmbeddedNull() {
+    public void writeEmbeddedNull() {
         writeInt(0);
         writeInt(0);
     }

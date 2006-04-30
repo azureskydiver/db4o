@@ -1124,7 +1124,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         i_needsUpdate = new List4(i_needsUpdate, a_yapClass);
     }
 
-    abstract int newUserObject();
+    public abstract int newUserObject();
 
     public Object peekPersisted(Object a_object, int a_depth,
         boolean a_committed) {
@@ -1820,9 +1820,9 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     abstract void writeDirty();
 
-    abstract void writeEmbedded(YapWriter a_parent, YapWriter a_child);
+    public abstract void writeEmbedded(YapWriter a_parent, YapWriter a_child);
 
-    abstract void writeNew(YapClass a_yapClass, YapWriter aWriter);
+    public abstract void writeNew(YapClass a_yapClass, YapWriter aWriter);
 
     abstract void writeTransactionPointer(int a_address);
 

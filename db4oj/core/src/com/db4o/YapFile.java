@@ -399,7 +399,7 @@ public abstract class YapFile extends YapStream {
         return new Pointer4(id, address);
     }
 
-    final int newUserObject() {
+    public final int newUserObject() {
         return getPointerSlot();
     }
 
@@ -750,7 +750,7 @@ public abstract class YapFile extends YapStream {
         writeBootRecord();
     }
     
-    final void writeEmbedded(YapWriter a_parent, YapWriter a_child) {
+    public final void writeEmbedded(YapWriter a_parent, YapWriter a_child) {
         int length = a_child.getLength();
         int address = getSlot(length);
         a_child.getTransaction().slotFreeOnRollback(address, address, length);
@@ -791,8 +791,11 @@ public abstract class YapFile extends YapStream {
         syncFiles();
     }
 
-    final void writeNew(YapClass a_yapClass, YapWriter aWriter) {
+    public final void writeNew(YapClass a_yapClass, YapWriter aWriter) {
         writeObject(null, aWriter, aWriter.getAddress());
+        if(a_yapClass == null){
+            return;
+        }
         if (maintainsIndices()) {
             a_yapClass.addToIndex(this, aWriter.getTransaction(), aWriter
                 .getID());

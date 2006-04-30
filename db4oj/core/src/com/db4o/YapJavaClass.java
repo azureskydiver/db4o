@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 /**
@@ -95,7 +96,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return read1(reader);
     }
 
-    public Object read(YapWriter writer) throws CorruptionException {
+    public Object read(MarshallerFamily mf, YapWriter writer) throws CorruptionException {
         return read1(writer);
     }
 
@@ -113,8 +114,8 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return null;
     }
     
-    public Object readIndexValueOrID(YapWriter a_writer) throws CorruptionException{
-        return read(a_writer);
+    public Object readIndexValueOrID(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
+        return read(mf, a_writer);
     }
     
     public ReflectClass classReflector(){

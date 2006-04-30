@@ -891,7 +891,7 @@ public class Transaction {
             return;
         }
         
-        ObjectHeader.skip(i_stream, a_yc, objectBytes);
+        ObjectHeader oh = new ObjectHeader(i_stream, a_yc, objectBytes);
         
         DeleteInfo info = (DeleteInfo)TreeInt.find(i_delete, a_id);
         if(info != null){
@@ -901,7 +901,7 @@ public class Transaction {
         }
         
         objectBytes.setCascadeDeletes(a_cascade);
-        a_yc.deleteMembers(objectBytes, a_type, true);
+        a_yc.deleteMembers(oh._marshallerFamily, objectBytes, a_type, true);
         slotFreeOnCommit(a_id, objectBytes.getAddress(), objectBytes.getLength());
     }
 }

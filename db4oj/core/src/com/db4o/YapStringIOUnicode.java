@@ -32,7 +32,7 @@ public final class YapStringIOUnicode extends YapStringIO{
 //		return true;
 //	}
 	
-	int length(String a_string){
+	public int length(String a_string){
 		return (a_string.length() * 2) + YapConst.OBJECT_LENGTH + YapConst.YAPINT_LENGTH;
 	}
 	
@@ -58,7 +58,7 @@ public final class YapStringIOUnicode extends YapStringIO{
 		return (a_string.length() * 2)  + YapConst.YAPINT_LENGTH;
 	}
 	
-	void write(YapReader bytes, String string){
+	public void write(YapReader bytes, String string){
 	    final int len = writetoBuffer(string);
 	    for (int i = 0; i < len; i ++){
 			bytes._buffer[bytes._offset++] = (byte) (chars[i] & 0xff);

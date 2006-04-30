@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.foundation.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 
@@ -19,7 +20,7 @@ public abstract class YapIndependantType implements TypeHandler4 {
         _stream = stream;
     }
     
-    YapWriter i_lastIo;
+    public YapWriter i_lastIo;
     
     public Object coerce(ReflectClass claxx, Object obj) {
         return canHold(claxx) ? obj : No4.INSTANCE;
@@ -57,8 +58,8 @@ public abstract class YapIndependantType implements TypeHandler4 {
         return false;
     }
 	
-    public Object readIndexValueOrID(YapWriter a_writer) throws CorruptionException{
-        return read(a_writer);
+    public Object readIndexValueOrID(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
+        return read(mf, a_writer);
     }
 	
     public boolean writeArray(Object array, YapWriter reader) {

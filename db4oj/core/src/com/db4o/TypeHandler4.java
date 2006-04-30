@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.inside.ix.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 /**
@@ -38,9 +39,9 @@ public interface TypeHandler4 extends Indexable4
 	
 	ReflectClass primitiveClassReflector();
 	
-	Object read(YapWriter writer) throws CorruptionException;
+	Object read(MarshallerFamily mf, YapWriter writer) throws CorruptionException;
     
-	Object readIndexValueOrID(YapWriter writer) throws CorruptionException;
+	Object readIndexValueOrID(MarshallerFamily mf, YapWriter writer) throws CorruptionException;
 	
 	Object readQuery(Transaction trans, YapReader reader, boolean toArray) throws CorruptionException;
 	

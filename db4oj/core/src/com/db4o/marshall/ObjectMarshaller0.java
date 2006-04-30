@@ -7,7 +7,7 @@ import com.db4o.*;
 /**
  * @exclude
  */
-class ObjectMarshaller0 extends ObjectMarshallerBase {
+class ObjectMarshaller0 extends ObjectMarshaller {
     
     protected int fieldLength(YapField yf, YapObject yo){
         return yf.linkLength();
@@ -35,7 +35,7 @@ class ObjectMarshaller0 extends ObjectMarshallerBase {
         int length = yc.readFieldLength(a_bytes);
         try {
             for (int i = 0; i < length; i++) {
-                yc.i_fields[i].instantiate(a_yapObject, a_onObject, a_bytes);
+                yc.i_fields[i].instantiate(_family, a_yapObject, a_onObject, a_bytes);
             }
             if (yc.i_ancestor != null) {
                 instantiateFields(yc.i_ancestor, a_yapObject, a_onObject, a_bytes);

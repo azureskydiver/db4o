@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 /**
@@ -45,13 +46,13 @@ final class YapArrayN extends YapArray {
             + (elementCount(dim) * i_handler.linkLength());
     }
 
-    final Object read1(YapWriter a_bytes) throws CorruptionException {
+    final Object read1(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException {
 		Object[] ret = new Object[1];
 		int[] dim = read1Create(a_bytes.getTransaction(), a_bytes, ret);
 		if(ret[0] != null){
 	        Object[] objects = new Object[elementCount(dim)];
 	        for (int i = 0; i < objects.length; i++) {
-	            objects[i] = i_handler.read(a_bytes);
+	            objects[i] = i_handler.read(mf, a_bytes);
 	        }
             _reflectArray.shape(objects, 0, ret[0], dim, 0);
 		}

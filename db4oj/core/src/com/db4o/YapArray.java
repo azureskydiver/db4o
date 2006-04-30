@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.inside.*;
 import com.db4o.inside.slots.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 class YapArray extends YapIndependantType {
@@ -177,7 +178,7 @@ class YapArray extends YapIndependantType {
 	    prepareComparison(obj);
 	}
 
-    public Object read(YapWriter a_bytes) throws CorruptionException{
+    public Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException{
 		YapWriter bytes = a_bytes.readEmbeddedObject();
 		i_lastIo = bytes;
 		if (bytes == null) {
@@ -188,7 +189,7 @@ class YapArray extends YapIndependantType {
 		}
 		bytes.setUpdateDepth(a_bytes.getUpdateDepth());
 		bytes.setInstantiationDepth(a_bytes.getInstantiationDepth());
-        Object array = read1(bytes);
+        Object array = read1(mf, bytes);
         if (Deploy.debug) {
             bytes.readEnd();
         }
@@ -226,7 +227,7 @@ class YapArray extends YapIndependantType {
 		return ret;
 	}
 
-    Object read1(YapWriter a_bytes) throws CorruptionException{
+    Object read1(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException{
 		int[] elements = new int[1];
 		Object ret = readCreate(a_bytes.getTransaction(), a_bytes, elements);
 		if (ret != null){
@@ -234,7 +235,7 @@ class YapArray extends YapIndependantType {
                 return ret;
             }
 			for (int i = 0; i < elements[0]; i++) {
-				_reflectArray.set(ret, i, i_handler.read(a_bytes));
+				_reflectArray.set(ret, i, i_handler.read(mf, a_bytes));
 			}	
 		}
         return ret;
