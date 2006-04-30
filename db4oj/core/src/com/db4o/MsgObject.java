@@ -35,6 +35,9 @@ class MsgObject extends MsgD {
 	}
 	
 	MsgD getWriter(YapClass a_yapClass, YapWriter bytes) {
+        if(a_yapClass == null){
+            return getWriter(bytes, new int[]{0});
+        }
 		return getWriter(bytes, new int[]{ a_yapClass.getID()});
 	}
 	

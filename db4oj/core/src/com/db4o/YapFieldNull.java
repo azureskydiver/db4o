@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.marshall.*;
+
 class YapFieldNull extends YapField{
     
     public YapFieldNull(){
@@ -12,7 +14,7 @@ class YapFieldNull extends YapField{
 		return Null.INSTANCE;
 	}
 	
-	Object read(YapWriter a_bytes) {
+	Object read(MarshallerFamily mf,  YapWriter a_bytes) {
 		return null;
 	}
 	

@@ -5,6 +5,7 @@ package com.db4o;
 import com.db4o.foundation.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.replication.*;
+import com.db4o.marshall.*;
 
 /**
  * 
@@ -15,9 +16,7 @@ abstract class YapFieldVirtual extends YapField {
         super(null);
     }
     
-    void addFieldIndex(YapWriter a_writer, boolean a_new) {
-        a_writer.incrementOffset(linkLength());
-    }
+    abstract void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new);
     
     public void appendEmbedded2(YapWriter a_bytes) {
         a_bytes.incrementOffset(linkLength());
@@ -44,7 +43,7 @@ abstract class YapFieldVirtual extends YapField {
         // do nothing
     }
     
-    abstract void delete(YapWriter a_bytes, boolean isUpdate);
+    abstract void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate);
     
     public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
         // This is the first part of marshalling
@@ -62,7 +61,7 @@ abstract class YapFieldVirtual extends YapField {
         }
     }
 
-    public void instantiate(YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
+    public void instantiate(MarshallerFamily mf, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
         throws CorruptionException {
         if (a_yapObject.i_virtualAttributes == null) {
             a_yapObject.i_virtualAttributes = new VirtualAttributes();

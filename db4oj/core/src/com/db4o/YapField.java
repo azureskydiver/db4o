@@ -7,6 +7,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.ix.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 
@@ -80,12 +81,12 @@ public class YapField implements StoredField {
         i_state = AVAILABLE;
     }
 
-    void addFieldIndex(YapWriter a_writer, boolean a_new) {
+    void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new) {
         if (i_index == null) {
             a_writer.incrementOffset(linkLength());
         } else {
             try {
-                addIndexEntry(a_writer, i_handler.readIndexValueOrID(a_writer));
+                addIndexEntry(a_writer, i_handler.readIndexValueOrID(mf, a_writer));
             } catch (CorruptionException e) {
             }
         }
@@ -316,13 +317,13 @@ public class YapField implements StoredField {
         }
     }
 
-    void delete(YapWriter a_bytes, boolean isUpdate) {
+    void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
         if (alive()) {
             if (i_index != null) {
                 int offset = a_bytes._offset;
                 Object obj = null;
                 try {
-                    obj = i_handler.readIndexValueOrID(a_bytes);
+                    obj = i_handler.readIndexValueOrID(mf, a_bytes);
                 } catch (CorruptionException e) {
                     if(Debug.atHome){
                         e.printStackTrace();
@@ -379,9 +380,12 @@ public class YapField implements StoredField {
                             YapWriter writer = stream.readWriterByID(stream
                                 .getTransaction(), id);
                             if (writer != null) {
-                                if (i_yapClass.findOffset(writer, this)) {
+                                
+                                writer._offset = 0;
+                                ObjectHeader oh = new ObjectHeader(stream, i_yapClass, writer);
+                                if(oh.objectMarshaller().findOffset(i_yapClass,writer, this)){
                                     try {
-                                        return read(writer);
+                                        return read(oh._marshallerFamily, writer);
                                     } catch (CorruptionException e) {
                                         if (Debug.atHome) {
                                             e.printStackTrace();
@@ -516,12 +520,12 @@ public class YapField implements StoredField {
         }
     }
 
-    public void instantiate(YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
+    public void instantiate(MarshallerFamily mf, YapObject a_yapObject, Object a_onObject, YapWriter a_bytes)
         throws CorruptionException {
         if (alive()) {
             Object toSet = null;
             try {
-                toSet = read(a_bytes);
+                toSet = read(mf, a_bytes);
             } catch (Exception e) {
                 throw new CorruptionException();
             }
@@ -647,11 +651,11 @@ public class YapField implements StoredField {
         return new QField(a_trans, i_name, this, yapClassID, i_arrayPosition);
     }
 
-    Object read(YapWriter a_bytes) throws CorruptionException {
+    Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException {
         if (!alive()) {
             return null;
         }
-        return i_handler.read(a_bytes);
+        return i_handler.read(mf, a_bytes);
     }
 
     Object readQuery(Transaction a_trans, YapReader a_reader)
@@ -785,14 +789,14 @@ public class YapField implements StoredField {
         return sb.toString();
     }
 
-    public String toString(YapWriter writer, YapObject yapObject, int depth, int maxDepth) throws CorruptionException {
+    public String toString(MarshallerFamily mf, YapWriter writer, YapObject yapObject, int depth, int maxDepth) throws CorruptionException {
         String str = "\n Field " + i_name;
         if (! alive()) {
             writer.incrementOffset(linkLength());
         }else{
             Object obj = null;
             try{
-                obj = read(writer);
+                obj = read(mf, writer);
             }catch(Exception e){
                 // can happen
             }

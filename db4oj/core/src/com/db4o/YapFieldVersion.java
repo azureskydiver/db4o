@@ -3,6 +3,7 @@
 package com.db4o;
 
 import com.db4o.ext.*;
+import com.db4o.marshall.*;
 
 /**
  * 
@@ -15,11 +16,11 @@ class YapFieldVersion extends YapFieldVirtual {
         i_handler = new YLong(stream);
     }
     
-    void addFieldIndex(YapWriter a_writer, boolean a_new) {
+    void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new) {
         YLong.writeLong(a_writer.getStream().bootRecord().nextVersion(), a_writer);
     }
     
-    void delete(YapWriter a_bytes, boolean isUpdate) {
+    void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
         a_bytes.incrementOffset(linkLength());
     }
 

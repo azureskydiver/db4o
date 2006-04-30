@@ -431,7 +431,7 @@ public class YapClient extends YapStream implements ExtClient {
 		return false;
 	}
 
-	final int newUserObject() {
+	public final int newUserObject() {
 		YapWriter reader = null;
 		if (remainingIDs < 1) {
 			writeMsg(Msg.PREFETCH_IDS);
@@ -665,7 +665,7 @@ public class YapClient extends YapStream implements ExtClient {
 		// do nothing
 	}
 
-	final void writeEmbedded(YapWriter a_parent, YapWriter a_child) {
+	public final void writeEmbedded(YapWriter a_parent, YapWriter a_child) {
 		a_parent.addEmbedded(a_child);
 	}
 
@@ -673,7 +673,7 @@ public class YapClient extends YapStream implements ExtClient {
 		a_message.write(this, i_socket);
 	}
 
-	final void writeNew(YapClass a_yapClass, YapWriter aWriter) {
+	public final void writeNew(YapClass a_yapClass, YapWriter aWriter) {
 		writeMsg(Msg.WRITE_NEW.getWriter(a_yapClass, aWriter));
 	}
     

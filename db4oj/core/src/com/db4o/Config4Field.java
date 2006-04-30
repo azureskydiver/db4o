@@ -102,11 +102,12 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
                                 YapWriter writer = stream.readWriterByID(systemTrans, (int)ids[i]);
                                 if(writer != null){
                                     Object obj = null;
-                                    YapClass yapClassObject = new ObjectHeader(stream, writer)._yapClass;
+                                    ObjectHeader oh = new ObjectHeader(stream, writer);
+                                    YapClass yapClassObject = oh._yapClass;
                                     if(yapClassObject != null){
 	                                    if(yapClassObject.findOffset(writer, yapField)){
                                             try {
-                                                obj = yapField.i_handler.readIndexValueOrID(writer);
+                                                obj = yapField.i_handler.readIndexValueOrID(oh._marshallerFamily, writer);
                                             } catch (CorruptionException e) {
                                                 if(Deploy.debug || Debug.atHome){
                                                     e.printStackTrace();

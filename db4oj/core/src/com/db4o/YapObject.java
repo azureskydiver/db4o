@@ -91,7 +91,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
             
 			bitFalse(YapConst.CONTINUE);
             
-            YapWriter writer = MarshallerVersion.objectMarshaller().marshallNew(a_trans, this, a_updateDepth);
+            YapWriter writer = MarshallerFamily.current()._object.marshallNew(a_trans, this, a_updateDepth);
 
             YapStream stream = a_trans.i_stream;
 			stream.writeNew(i_yapClass, writer);
@@ -220,9 +220,9 @@ public class YapObject extends YapMeta implements ObjectInfo{
 				a_reader.setUpdateDepth(addToIDTree);
 				
 				if(addToIDTree == YapConst.TRANSIENT){
-				    a_object = i_yapClass.instantiateTransient(this, a_object, header._marshaller, a_reader);
+				    a_object = i_yapClass.instantiateTransient(this, a_object, header._marshallerFamily, a_reader);
 				}else{
-				    a_object = i_yapClass.instantiate(this, a_object, header._marshaller, a_reader, addToIDTree == YapConst.ADD_TO_ID_TREE);
+				    a_object = i_yapClass.instantiate(this, a_object, header._marshallerFamily, a_reader, addToIDTree == YapConst.ADD_TO_ID_TREE);
 				}
 				
 			}
@@ -255,7 +255,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			// TODO: optimize  
 			a_reader.setInstantiationDepth(i_yapClass.configOrAncestorConfig() == null ? 1 : 0);
 
-			readObject = i_yapClass.instantiate(this, getObject(), header._marshaller, a_reader, true);
+			readObject = i_yapClass.instantiate(this, getObject(), header._marshallerFamily, a_reader, true);
 			
 			endProcessing();
 		}
@@ -306,10 +306,6 @@ public class YapObject extends YapMeta implements ObjectInfo{
 			throw new ObjectNotStorableException(i_yapClass.classReflector());
 		}
 		    
-	    setID(stream.newUserObject());
-
-	    // will be ended in continueset()
-		beginProcessing();
 		
 
 		// We may still consider to have Arrays as full objects.
@@ -321,11 +317,16 @@ public class YapObject extends YapMeta implements ObjectInfo{
 
 		if (i_yapClass.isPrimitive()){
             
-            ((YapClassPrimitive)i_yapClass).marshall(a_trans, this, a_object);
+            setID(((YapClassPrimitive)i_yapClass).marshall(a_trans, a_object)); 
             
 			return false;
 		}
-        
+
+        setID(stream.newUserObject());
+
+        // will be ended in continueset()
+        beginProcessing();
+
         bitTrue(YapConst.CONTINUE);
     
 		return true;
@@ -399,7 +400,7 @@ public class YapObject extends YapMeta implements ObjectInfo{
 	
 				a_trans.writeUpdateDeleteMembers(getID(), i_yapClass, a_trans.i_stream.i_handlers.arrayType(obj), 0);
                 
-                MarshallerVersion.objectMarshaller().marshallUpdate(a_trans, i_yapClass, getID(), a_updatedepth, this, obj);
+                MarshallerFamily.current()._object.marshallUpdate(a_trans, i_yapClass, getID(), a_updatedepth, this, obj);
 				
 		    } else{
 		        endProcessing();
@@ -768,11 +769,12 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		            if(writer != null){
 		                str += "\nAddress=" + writer.getAddress();
 		            }
-		            YapClass yc = new ObjectHeader(stream, writer)._yapClass;
+                    ObjectHeader oh = new ObjectHeader(stream, writer);
+		            YapClass yc = oh._yapClass;
 		            if(yc != i_yapClass){
 		                str += "\nYapClass corruption";
 		            }else{
-		                str += yc.toString(writer, this, 0, 5);
+		                str += yc.toString(oh._marshallerFamily, writer, this, 0, 5);
 		            }
 		        }
 		    }

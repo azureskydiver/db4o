@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.inside.ix.*;
+import com.db4o.marshall.*;
 
 /**
  * 
@@ -18,7 +19,7 @@ class YapFieldUUID extends YapFieldVirtual {
         i_handler = new YLong(stream);
     }
     
-    void addFieldIndex(YapWriter a_writer, boolean a_new) {
+    void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new) {
 
         int offset = a_writer._offset;
         int id = a_writer.readInt();
@@ -43,7 +44,7 @@ class YapFieldUUID extends YapFieldVirtual {
         }
     }
     
-    void delete(YapWriter a_bytes, boolean isUpdate) {
+    void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {
         if(isUpdate){
             a_bytes.incrementOffset(linkLength());
             return;

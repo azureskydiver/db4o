@@ -10,11 +10,13 @@ final class MWriteNew extends MsgObject {
         YapFile stream = (YapFile)getStream();
         unmarshall(YapConst.YAPINT_LENGTH);
         synchronized (stream.i_lock) {
-            YapClass yc = stream.getYapClass(yapClassId);
+            YapClass yc = yapClassId == 0 ? null : stream.getYapClass(yapClassId);
             _payLoad.writeEmbedded();
             stream.prefetchedIDConsumed(_payLoad.getID());
             _payLoad.address(stream.getSlot(_payLoad.getLength()));
-            yc.addFieldIndices(_payLoad, true);
+            if(yc != null){
+                yc.addFieldIndices(_payLoad, true);
+            }
             stream.writeNew(yc, _payLoad);
             getTransaction().writePointer(
                 _payLoad.getID(),
