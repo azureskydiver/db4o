@@ -25,6 +25,8 @@ import org.hibernate.event.PreDeleteEvent;
 import org.hibernate.event.PreDeleteEventListener;
 
 import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -33,9 +35,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implements ObjectLifeCycleEventsListener {
+	private final static String DELETE_SQL = "delete from " + ObjectReference.TABLE_NAME
+			+ " where longPart = ? "
+			+ " AND provider = ?";
+
 	private final Set<ObjectReference> dirtyNewRefs = new HashSet();
 
 	private final Set<HibernateObjectId> dirtyUpdatedRefs = new HashSet();
+
+	private final Set<ObjectReference> deletedRefs = new HashSet();
 
 	private Set<Configuration> configs = new HashSet<Configuration>();
 
@@ -67,7 +75,7 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 	public final void install(Session session, Configuration cfg) {
 		threadSessionMap.put(Thread.currentThread(), session);
 
-		GeneratorMap.put(session,new TimeStampIdGenerator());
+		GeneratorMap.put(session, new TimeStampIdGenerator());
 	}
 
 	public final void onCollectionRemove(Object collection, Serializable key) throws CallbackException {
@@ -97,13 +105,14 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 
 		for (HibernateObjectId hid : dirtyUpdatedRefs) {
 			ObjectReference ref = Util.getObjectReferenceById(getSession(), hid.className, hid.hibernateId);
-			if (ref != null && !dirtyNewRefs.contains(ref)) {
+			if (ref != null && !dirtyNewRefs.contains(ref) && !deletedRefs.contains(ref)) {
 				ref.setVersion(generator.generate());
 				getSession().update(ref);
 			}
 		}
 
 		dirtyUpdatedRefs.clear();
+		deletedRefs.clear();
 	}
 
 	public void onPostInsert(PostInsertEvent event) {
@@ -158,6 +167,24 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 		ObjectUpdated(owner, getId(owner));
 	}
 
+	private void deleteObjectRef(ObjectReference ref) {
+		Session s = getSession();
+
+		try {
+			PreparedStatement ps = s.connection().prepareStatement(DELETE_SQL);
+			ps.setLong(1, ref.getUuid().getLongPart());
+			ps.setLong(2, ref.getUuid().getProvider().getId());
+
+			int affected = ps.executeUpdate();
+			if (affected != 1)
+				throw new RuntimeException("can't delete the ObjectRef " + ref);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+
+		s.evict(ref);
+	}
+
 	private void deleteReplicationComponentIdentity(PreDeleteEvent event) {
 		Session s = getSession();
 		Uuid uuid = getUuid(event.getEntity());
@@ -196,10 +223,12 @@ public class ObjectLifeCycleEventsListenerImpl extends EmptyInterceptor implemen
 
 	private void objectDeleted(PreDeleteEvent event) {
 		deleteReplicationComponentIdentity(event);
+
 		ObjectReference ref = Util.getObjectReferenceById(getSession(), event.getEntity().getClass().getName(), Util.castAsLong(event.getId()));
 		if (ref == null) return;
-		ref.setDeleted(true);
-		getSession().update(ref);
+
+		deletedRefs.add(ref);
+		deleteObjectRef(ref);
 	}
 
 	private void resetListeners(Configuration cfg) {

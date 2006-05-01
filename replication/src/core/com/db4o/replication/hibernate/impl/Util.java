@@ -67,6 +67,10 @@ public final class Util {
 		dumpTable(p.getName(), p.getSession(), s);
 	}
 
+	public static void dumpTable(String providerName, Session sess, String tableName) {
+		dumpTable(providerName, sess.connection(), tableName);
+	}
+
 	public static void dumpTable(String providerName, Connection con, String tableName) {
 		ResultSet rs = null;
 
@@ -92,10 +96,6 @@ public final class Util {
 		} finally {
 			closeResultSet(rs);
 		}
-	}
-
-	public static void dumpTable(String providerName, Session sess, String tableName) {
-		dumpTable(providerName, sess.connection(), tableName);
 	}
 
 	private static void closePreparedStatement(PreparedStatement ps) {

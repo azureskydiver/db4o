@@ -43,7 +43,5 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 		<property name="objectId" column="objectId"/>
 
 		<property name="version" column="version"/>
-		<property name="deleted" column="deleted" type="true_false"/>
-
 	</class>
 </hibernate-mapping>
