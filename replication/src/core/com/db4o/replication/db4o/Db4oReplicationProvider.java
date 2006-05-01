@@ -9,6 +9,7 @@ import com.db4o.Transaction;
 import com.db4o.Tree;
 import com.db4o.TreeInt;
 import com.db4o.YapStream;
+import com.db4o.config.Configuration;
 import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ObjectInfo;
@@ -50,6 +51,10 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 	}
 
 	public Db4oReplicationProvider(ObjectContainer objectContainer, String name) {
+		Configuration cfg = objectContainer.ext().configure();
+		cfg.objectClass(Object.class).cascadeOnDelete(false);
+		cfg.callbacks(false);
+
 		_name = name;
 		_stream = (YapStream) objectContainer;
 		_reflector = _stream.reflector();
@@ -344,6 +349,9 @@ public class Db4oReplicationProvider implements TestableReplicationProvider, Db4
 	}
 
 	public void replicateDeletion(Db4oUUID uuid) {
-		throw new RuntimeException("TODO");
+		Object obj = _stream.getByUUID(uuid);
+		if (obj == null) return;
+
+		_stream.delete(obj);
 	}
 }
