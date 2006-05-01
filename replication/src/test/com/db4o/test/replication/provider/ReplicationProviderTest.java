@@ -30,17 +30,10 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 	}
 
 	protected void tstDeletion() {
-		//TODO deletion cases comment out, wait for new implementation
-		if (true) return;
 		_providerA.storeNew(new Pilot("Pilot1", 42));
 		_providerA.storeNew(new Pilot("Pilot2", 43));
 
 		_providerA.commit();
-
-		startReplication();
-
-		Db4oUUID uuidPilot1 = uuid(findPilot("Pilot1"));
-		commitReplication();
 
 		_providerA.storeNew(new Pilot("Pilot3", 44));
 
@@ -54,31 +47,23 @@ public class ReplicationProviderTest extends ReplicationTestCase {
 
 		startReplication();
 
-//		ObjectSet deletedUuids = _providerA.uuidsDeletedSinceLastReplication();
-//		Test.ensure(deletedUuids.next().equals(uuidPilot1));
-//		Test.ensure(!deletedUuids.hasNext());
-//
-//		Db4oUUID uuidCar1 = uuid(findCar("Car1"));
-//		Db4oUUID uuidPilot2 = uuid(findPilot("Pilot2"));
-//
-//		commitReplication();
-//
-//		_providerA.delete(findCar("Car1"));
-//		_providerA.delete(findPilot("Pilot2"));
-//		_providerA.commit();
-//
-//		startReplication();
-//
-//		deletedUuids = _providerA.uuidsDeletedSinceLastReplication();
-//		Test.ensure(deletedUuids.contains(uuidCar1));
-//		Test.ensure(deletedUuids.contains(uuidPilot2));
-//		Test.ensure(deletedUuids.size() == 2);
-//
-//		commitReplication();
-//
-//		_providerA.deleteAllInstances(Car.class);
-//		_providerA.deleteAllInstances(Pilot.class);
-//		_providerA.commit();
+		Db4oUUID uuidCar1 = uuid(findCar("Car1"));
+		Test.ensure(uuidCar1!= null);
+		_providerA.replicateDeletion(uuidCar1);
+
+		commitReplication();
+
+		Test.ensure(findCar("Car1")== null);
+
+		startReplication();
+
+		Db4oUUID uuidPilot2 = uuid(findPilot("Pilot2"));
+		Test.ensure(uuidPilot2!= null);
+		_providerA.replicateDeletion(uuidPilot2);
+
+		commitReplication();
+
+		Test.ensure(findPilot("Pilot2")== null);
 	}
 
 	public void actualTest() {

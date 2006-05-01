@@ -224,17 +224,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		return _name;
 	}
 
-	public Object getObject(Db4oUUID db4oUuid) {
-		ObjectReference ref = Util.getByUUID(getSession(), translate(db4oUuid));
-
-		if (ref == null) return null;
-
-		Object loaded = getSession().get(ref.getClassName(), ref.getObjectId());
-		if (loaded == null) return null;
-
-		return loaded;
-	}
-
 	public final Session getSession() {
 		return _session;
 	}
@@ -344,13 +333,15 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		}
 	}
 
-	public void replicateDeletion(ReplicationReference reference) {
-		ensureReplicationActive();
-		Object object = reference.object();
-		getSession().delete(object);
-		//System.out.println("deleted object = " + object);
-		getSession().flush();
-		//Util.dumpTable(this, "Replicated");
+	public void replicateDeletion(Db4oUUID uuid) {
+		ObjectReference ref = Util.getByUUID(getSession(), translate(uuid));
+
+		if (ref == null) return;
+
+		Object loaded = getSession().get(ref.getClassName(), ref.getObjectId());
+		if (loaded == null) return;
+
+		getSession().delete(loaded);
 	}
 
 	public final synchronized void rollbackReplication() {
@@ -492,31 +483,10 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		getSession().flush();
 	}
 
-	public final ObjectSet uuidsDeletedSinceLastReplication() {
-		ObjectSetCollectionFacade uuidsDeletedSinceLastReplication;
-
-		Criteria criteria = getSession().createCriteria(ObjectReference.class);
-		criteria.add(Restrictions.eq(ObjectReference.DELETED, true));
-
-		List<ObjectReference> results = criteria.list();
-		Collection<Db4oUUID> out = new HashSet<Db4oUUID>(results.size());
-		for (ObjectReference of : results) {
-			out.add(Util.translate(of.getUuid()));
-		}
-
-		uuidsDeletedSinceLastReplication = new ObjectSetCollectionFacade(out);
-
-		return uuidsDeletedSinceLastReplication;
-	}
-
 	public final void visitCachedReferences(Visitor4 visitor) {
 		ensureReplicationActive();
 
 		_objRefs.visitEntries(visitor);
-	}
-
-	public boolean wasDeletedSinceLastReplication(Db4oUUID uuid) {
-		return uuidsDeletedSinceLastReplication().contains(uuid);
 	}
 
 	public final boolean wasModifiedSinceLastReplication(ReplicationReference reference) {
@@ -579,7 +549,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		Criteria criteria = getSession().createCriteria(ObjectReference.class);
 		long lastReplicationVersion = getLastReplicationVersion();
 		criteria.add(Restrictions.gt(ObjectReference.VERSION, lastReplicationVersion));
-		criteria.add(Restrictions.eq(ObjectReference.DELETED, false));
 		Disjunction disjunction = Restrictions.disjunction();
 
 		List<String> names = new ArrayList<String>();
@@ -730,8 +699,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 		if (of == null)
 			return null;
 		else {
-			if (of.isDeleted()) return null;
-
 			Object obj = getSession().load(of.getClassName(), of.getObjectId());
 
 //			if (obj == null) {
@@ -806,7 +773,6 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 						exist.setObjectId(id);
 
 					exist.setVersion(ref.version());
-					exist.setDeleted(false);
 					getSession().update(exist);
 				}
 			}
@@ -823,9 +789,5 @@ public final class HibernateReplicationProviderImpl implements HibernateReplicat
 			if (!isReplicationActive())
 				super.ObjectUpdated(obj, Util.castAsLong(id));
 		}
-	}
-
-	public void replicateDeletion(Db4oUUID uuid) {
-		throw new RuntimeException("TODO");
 	}
 }
