@@ -5,7 +5,7 @@ package com.db4o;
 import com.db4o.foundation.KeySpec;
 import com.db4o.foundation.KeySpecHashtable4;
 
-abstract class Config4Abstract
+public abstract class Config4Abstract
 {
 	protected KeySpecHashtable4 _config;
 
