@@ -16,14 +16,14 @@ public class ReplicationTestSuite extends TestSuite {
 
 	private Class[] all() {
 		return new Class[]{
-				//ReplicationEventTest.class,
+				ReplicationEventTest.class,
 				ReplicationConfiguratorTest.class,
 				ReplicationProviderTest.class,
 
 				ListTest.class,
 				MapTest.class,
 				ReplicationAfterDeletionTest.class,
-				//ReplicationFeaturesMain.class,
+				ReplicationFeaturesMain.class,
 				SimpleArrayTest.class,
 				SimpleParentChild.class,
 				SingleTypeCollectionReplicationTest.class,
@@ -41,9 +41,9 @@ public class ReplicationTestSuite extends TestSuite {
 		};
 	}
 
-	private Class[] testsOne() {
+	private Class[] one() {
 		return new Class[]{
-				ReplicationProviderTest.class,
+			ReplicationProviderTest.class,
 		};
 	}
 }
