@@ -23,7 +23,7 @@ final class YapFieldTranslator extends YapField
 		setOn(a_trans.i_stream, a_onObject, null);
 	}
 
-	Object getOn(Transaction a_trans, Object a_OnObject){
+	public Object getOn(Transaction a_trans, Object a_OnObject){
 		try{
 			return i_translator.onStore(a_trans.i_stream, a_OnObject);
 		}catch(Throwable t){

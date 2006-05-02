@@ -13,19 +13,19 @@ public class MarshallerFamily {
 
     public final PrimitiveMarshaller0       _primitive;
 
-    public final StringMarshaller0          _string;
+    public final StringMarshaller          _string;
     
 
     private final static MarshallerFamily[] allVersions     = new MarshallerFamily[] {
         new MarshallerFamily(new ObjectMarshaller0(), new PrimitiveMarshaller0(),
             new StringMarshaller0()),
-        new MarshallerFamily(new ObjectMarshaller0(), new PrimitiveMarshaller0(),
-            new StringMarshaller0())                        };
+        new MarshallerFamily(new ObjectMarshaller1(), new PrimitiveMarshaller0(),
+            new StringMarshaller1())                        };
 
     private static final int                CURRENT_VERSION = DEBUG ? 0 : allVersions.length - 1;
 
     private MarshallerFamily(ObjectMarshaller objectMarshaller,
-        PrimitiveMarshaller0 primitiveMarshaller, StringMarshaller0 stringMarshaller) {
+        PrimitiveMarshaller0 primitiveMarshaller, StringMarshaller stringMarshaller) {
         _object = objectMarshaller;
         _object._family = this;
         _primitive = primitiveMarshaller;

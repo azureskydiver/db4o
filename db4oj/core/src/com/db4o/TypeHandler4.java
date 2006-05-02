@@ -31,7 +31,9 @@ public interface TypeHandler4 extends Indexable4
 	
 	boolean equals(TypeHandler4 a_dataType); // needed for YapField.equals
 	
-    boolean indexNullHandling(); 
+    boolean indexNullHandling();
+    
+    int marshalledLength(MarshallerFamily mf, Object obj);
 	
 	void prepareComparison(Transaction a_trans, Object obj);
 	

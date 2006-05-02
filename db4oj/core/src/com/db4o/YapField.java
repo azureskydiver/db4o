@@ -81,7 +81,7 @@ public class YapField implements StoredField {
         i_state = AVAILABLE;
     }
 
-    void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new) {
+    public void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new) {
         if (i_index == null) {
             a_writer.incrementOffset(linkLength());
         } else {
@@ -422,14 +422,14 @@ public class YapField implements StoredField {
         return i_handler;
     }
 
-    Object getOn(Transaction a_trans, Object a_OnObject) {
+    public Object getOn(Transaction a_trans, Object a_OnObject) {
         if (alive()) {
             try {
                 return i_javaField.get(a_OnObject);
             } catch (Throwable t) {
+                // this is typically the case, if a field is removed from an
+                // object.
             }
-            // this is typically the case, if a field is removed from an
-            // object.
         }
         return null;
     }
@@ -547,6 +547,7 @@ public class YapField implements StoredField {
         return i_isArray;
     }
 
+    
     public int linkLength() {
         alive();
         if (i_handler == null) {
@@ -555,6 +556,19 @@ public class YapField implements StoredField {
         }
         return i_handler.linkLength();
     }
+    
+    // similar to #linklength(), actually marshaller specific, 
+    // written here for now, since YapField knows better what
+    // to do, when i_handler is null.
+    public int marshalledLength(MarshallerFamily mf, Object obj){
+        alive();
+        if (i_handler == null) {
+            // must be a YapClass
+            return YapConst.YAPID_LENGTH;
+        }
+        return i_handler.marshalledLength(mf, obj);
+    }
+    
 
     void loadHandler(YapStream a_stream) {
         if (i_handlerID < 1) {
@@ -658,7 +672,7 @@ public class YapField implements StoredField {
 
     YapField readThis(YapStream a_stream, YapReader a_reader) {
         try {
-            i_name = StringMarshaller0.readShort(a_stream, a_reader);
+            i_name = StringMarshaller.readShort(a_stream, a_reader);
         } catch (CorruptionException ce) {
             i_handler = null;
             return this;

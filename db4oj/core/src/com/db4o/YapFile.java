@@ -43,11 +43,6 @@ public abstract class YapFile extends YapStream {
         super(a_parent);
     }
     
-    public byte blockSize(){
-        return 1;
-    }
-
-    
     void blockSize(int blockSize){
         // do nothing, overwridden in YapRandomAccessFile 
     }
@@ -274,13 +269,6 @@ public abstract class YapFile extends YapStream {
         }
             
         return id;
-    }
-    
-    public int blocksFor(long bytes){
-        int blockLen = blockSize();
-        int result = (int)(bytes / blockLen);
-        if (bytes % blockLen != 0) result++;
-        return result;
     }
     
     public int getSlot(int a_length){

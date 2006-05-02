@@ -16,8 +16,8 @@ class YapFieldVersion extends YapFieldVirtual {
         i_handler = new YLong(stream);
     }
     
-    void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new) {
-        YLong.writeLong(a_writer.getStream().bootRecord().nextVersion(), a_writer);
+    public void addFieldIndex(MarshallerFamily mf, YapWriter writer, boolean isnew) {
+        YLong.writeLong(writer.getStream().bootRecord().nextVersion(), writer);
     }
     
     void delete(MarshallerFamily mf, YapWriter a_bytes, boolean isUpdate) {

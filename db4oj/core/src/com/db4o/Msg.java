@@ -35,7 +35,8 @@ class Msg implements Cloneable {
 	public static final MsgD ID_LIST = new MsgD("ID_LIST");
 	public static final Msg IDENTITY = new Msg("IDENTITY");
 	public static final MsgD LENGTH = new MsgD("LENGTH");
-	public static final MsgD LOGIN = new MsgD("LOGIN");
+    public static final MsgD LOGIN = new MsgD("LOGIN");
+    public static final MsgD LOGIN_OK = new MsgD("LOGIN_OK");
 	public static final Msg NULL = new Msg("NULL");
 	public static final MsgD OBJECT_BY_UUID = new MObjectByUuid();
 	public static final MsgObject OBJECT_TO_CLIENT = new MsgObject();

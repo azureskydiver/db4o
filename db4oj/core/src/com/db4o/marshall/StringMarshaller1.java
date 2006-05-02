@@ -5,10 +5,13 @@ package com.db4o.marshall;
 import com.db4o.*;
 
 
-public class StringMarshaller0 extends StringMarshaller{
+public class StringMarshaller1 extends StringMarshaller{
     
     public int marshalledLength(YapStream stream, Object obj) {
-        return linkLength();
+        if(obj == null){
+            return 0;
+        }
+        return stream.alignToBlockSize( stream.stringIO().length((String)obj) );
     }
 
 

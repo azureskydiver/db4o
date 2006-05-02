@@ -16,7 +16,7 @@ abstract class YapFieldVirtual extends YapField {
         super(null);
     }
     
-    abstract void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new);
+    public abstract void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new);
     
     public void appendEmbedded2(YapWriter a_bytes) {
         a_bytes.incrementOffset(linkLength());
