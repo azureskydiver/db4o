@@ -4,9 +4,20 @@
 	
 	<property name="drs.src.dir" location="../replication/src" />
 	<property name="drs.net.dir" location="${dir.dist}/drs.net" />
+	<property name="drs.net.bin.dir" location="${drs.net.dir}/bin" />
 	<property name="conversion.workspace.dir" location="${drs.net.dir}/workspace" />
 	
 	<target name="build" depends="sharpen">
+		
+		<property name="drs.dll" location="${drs.net.bin.dir}/drs.dll" />
+		
+		<csc outputfile="${drs.dll}"
+			targettype="library"
+			srcdir="${conversion.workspace.dir}/drscsharp">
+			<reference dir="${drs.net.bin.dir}">
+				<include name="db4o.dll" />
+			</reference>
+		</csc>
 	</target>
 	
 	<target name="sharpen" depends="prepare-conversion-workspace, install-javatocsharp-plugin">
@@ -31,5 +42,8 @@
 	</target>
 	
 	<target name="init">
+		<mkdir dir="${drs.net.dir}" />
+		<mkdir dir="${drs.net.bin.dir}" />
+		<copy file="${file.dll.net}" todir="${drs.net.bin.dir}" />
 	</target>
 </project>
