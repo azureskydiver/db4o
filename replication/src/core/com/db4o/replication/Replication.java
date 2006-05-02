@@ -18,8 +18,6 @@ import com.db4o.replication.db4o.Db4oReplicationProvider;
  * @since dRS 1.0
  */
 public class Replication {
-// -------------------------- STATIC METHODS --------------------------
-
 	/**
 	 * begins a replication session between two ReplicationProviders, no conflict
 	 * resolver
@@ -55,13 +53,6 @@ public class Replication {
 	 * begins a replication session between db4o and db4o.
 	 */
 	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2, ReplicationEventListener listener) {
-		return begin(wrap(oc1), wrap(oc2), listener);
-	}
-
-	public static ReplicationProvider wrap(Object obj) {
-		if (obj instanceof ObjectContainer) {
-			return new Db4oReplicationProvider((ObjectContainer) obj);
-		}
-		throw new IllegalArgumentException();
+		return begin(new Db4oReplicationProvider(oc1), new Db4oReplicationProvider(oc2), listener);
 	}
 }
