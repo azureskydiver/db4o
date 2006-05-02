@@ -2,9 +2,12 @@
 
 package com.db4o.test.replication;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.db4o.Db4o;
 import com.db4o.ObjectSet;
-import com.db4o.ext.Db4oUUID;
 import com.db4o.inside.replication.GenericReplicationSession;
 import com.db4o.inside.replication.TestableReplicationProviderInside;
 import com.db4o.replication.ObjectState;
@@ -14,10 +17,6 @@ import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationProvider;
 import com.db4o.replication.ReplicationSession;
 import com.db4o.test.Test;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ReplicationFeaturesMain extends ReplicationTestCase {
 	private static final String A = "A";
@@ -68,8 +67,12 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 	private boolean wasConflictReplicatingDeletions() {
 		if (_containersWithDeletedObjects.size() != 1) return false;
+		String container = (String)_containersWithDeletedObjects.iterator().next();
+
+		if (hasChanges(other(container))) return true;
+
 		if (_direction.size() != 1) return false;
-		return _direction.containsAll(_containersWithDeletedObjects);
+		return _direction.contains(container);
 	}
 
 	private boolean isDefaultReplicationBehaviorAllowed() {
@@ -99,9 +102,6 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			Test.ensure(false);
 		}
 
-		System.out.println("=========================== TODO:");
-		System.out.println("Peek for conflict");
-		System.out.println("Run test on JDK1.");
 	}
 
 	protected void clean() {
@@ -121,8 +121,8 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	}
 
 	private void checkName(TestableReplicationProviderInside container, String name, boolean isExpected) {
-		System.out.println("");
-		System.out.println(name + (isExpected ? " " : " NOT") + " expected in container " + containerName(container));
+		out("");
+		out(name + (isExpected ? " " : " NOT") + " expected in container " + containerName(container));
 		Replicated obj = find(container, name);
 		if (isExpected) {
 			ensure(obj != null);
@@ -207,17 +207,18 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			replicate(replication, B);
 			ensure(!isReplicationConflictExceptionExpectedReplicatingModifications());
 		} catch (ReplicationConflictException e) {
-			System.out.println("Conflict exception.");
+			out("Conflict exception during modification replication.");
 			ensure(isReplicationConflictExceptionExpectedReplicatingModifications());
 			return false;
 		}
 		
 		try {
-			if (!_containersWithDeletedObjects.isEmpty())
+			if (isDeletionReplicationTriggered())
 				replication.replicateDeletions(Replicated.class);
 
 			ensure(!isReplicationConflictExceptionExpectedReplicatingDeletions());
 		} catch (ReplicationConflictException e) {
+			out("Conflict exception during deletion replication.");
 			ensure(isReplicationConflictExceptionExpectedReplicatingDeletions());
 			return false;
 		}
@@ -291,30 +292,44 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		replication.commit();
 	}
 
+	
 	private boolean isChangedNameExpected(String changedContainer, String inspectedContainer) {
+		if (!hasChanges(changedContainer)) return false;
 		if (isDeletionExpected(inspectedContainer)) return false;
+		if (isDeletionExpected(changedContainer)) return false;
 
-		boolean hasLocalChanges = hasChanges(inspectedContainer) && changedContainer == inspectedContainer;
+		if (inspectedContainer == changedContainer)
+			return !didReceiveRemoteState(inspectedContainer);
 		
-		if (_containerStateToPrevail == null)
-			return hasLocalChanges;
+		return didReceiveRemoteState(inspectedContainer);
+	}
 
-		if (_containerStateToPrevail.contains(inspectedContainer))
-			return hasLocalChanges;
-
+	
+	private boolean didReceiveRemoteState(String inspectedContainer) {
 		String other = other(inspectedContainer);
-		if (isDirectionTo(other)) return hasLocalChanges;
 
-		boolean hasRemoteChanges = hasChanges(other) && changedContainer == other;
-		
-		if (_containerStateToPrevail.contains(other))
-			if (wasReplicationTriggered()) 	return hasRemoteChanges;
+		if (isDirectionTo(other)) return false;
 
-		//_containerStateToPrevail is empty (default replication behaviour)
-		if (wasReplicationTriggered() && hasChanges(other))
-			return hasRemoteChanges;
+		if (_containerStateToPrevail == null) return false;
+
+		if (_containerStateToPrevail.contains(inspectedContainer)) return false;
+
+		if (_containerStateToPrevail.contains(other)) {
+			if (isModificationReplicationTriggered()) return true;
+			if (isDeletionReplicationTriggered()) return true;
+			return false;
+		}
+
+		//No override to prevail. Default replication behavior.
+
+		if (hasChanges(inspectedContainer)) return false; //A conflict would have been ignored long ago.
 		
-		return hasLocalChanges;
+		return isModificationReplicationTriggered();
+	}
+
+	
+	private boolean isDeletionReplicationTriggered() {
+		return !_containersWithDeletedObjects.isEmpty();
 	}
 
 	private boolean isDirectionTo(String container) {
@@ -322,12 +337,12 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	}
 
 	private boolean wasConflictReplicatingModifications() {
-		return wasConflictQueryingFrom(A) || wasConflictQueryingFrom(B);
+		return wasConflictWhileReplicatingModificationsQueryingFrom(A) || wasConflictWhileReplicatingModificationsQueryingFrom(B);
 	}
 
 
-	private boolean wasReplicationTriggered() {
-		return wasReplicationTriggeredQueryingFrom(A) || wasReplicationTriggeredQueryingFrom(B);
+	private boolean isModificationReplicationTriggered() {
+		return wasModificationReplicationTriggeredQueryingFrom(A) || wasModificationReplicationTriggeredQueryingFrom(B);
 	}
 
 	private boolean isDeletionExpected(String inspectedContainer) {
@@ -344,7 +359,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			return hasDeletions(other);
 		
 		//_containerStateToPrevail is empty (default replication behaviour)
-		return !_containersWithDeletedObjects.isEmpty();
+		return isDeletionReplicationTriggered();
 	}
 
 	private boolean isNewNameExpected(String origin, String inspected) {
@@ -365,12 +380,6 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		return true;
 	}
 
-//	private Set modifiedContainers() {
-//		Set result = new HashSet();
-//		result.addAll(_containersWithChangedObjects);
-//		result.addAll(_containersWithDeletedObjects);
-//		return result;
-//	}
 
 	private String other(String aOrB) {
 		return aOrB.equals(A) ? B : A;
@@ -406,17 +415,6 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		_providerB.commit();
 	}
 
-//	private boolean prevailedInReplication(String container) {
-//		if (!wasReplicationTriggeredQueryingFrom(A) && !wasReplicationTriggeredQueryingFrom(B)) return false;
-//		if (!_direction.contains(other(container))) return false;
-//
-//		if (_containerStateToPrevail == null) return false;
-//		if (_containerStateToPrevail.contains(container)) return true;
-//		if (_containerStateToPrevail.contains(other(container))) return false;
-//		if (wasConflictQueryingFrom(A) && wasConflictQueryingFrom(B)) return false; //Because state was not overriden and ReplicationException was thrown.
-//		
-//		return modifiedContainers().contains(container);
-//	}
 
 	private String print(Set containerSet) {
 		if (containerSet == null) return "null";
@@ -426,21 +424,21 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	}
 
 	private void printCombination() {
-		System.out.println("" + _testCombination + " =================================");
-		System.out.println("New Objects In: " + print(_containersWithNewObjects));
-		System.out.println("Changed Objects In: " + print(_containersWithChangedObjects));
-		System.out.println("Deleted Objects In: " + print(_containersWithDeletedObjects));
-		System.out.println("Querying From: " + print(_containersToQueryFrom));
-		System.out.println("Direction: To " + print(_direction));
-		System.out.println("Prevailing State: " + print(_containerStateToPrevail));
+		out("" + _testCombination + " =================================");
+		out("New Objects In: " + print(_containersWithNewObjects));
+		out("Changed Objects In: " + print(_containersWithChangedObjects));
+		out("Deleted Objects In: " + print(_containersWithDeletedObjects));
+		out("Querying From: " + print(_containersToQueryFrom));
+		out("Direction: To " + print(_direction));
+		out("Prevailing State: " + print(_containerStateToPrevail));
 	}
 
 	private void runCurrentCombination() {
 		_testCombination++;
-		System.out.println("" + _testCombination + " =================================");
+		out("" + _testCombination + " =================================");
 		printCombination();
 
-		if (_testCombination < 581)  //Use this when debugging to skip some combinations and avoid waiting.
+		if (_testCombination < 0)  //Use this when debugging to skip some combinations and avoid waiting.
 			return;
 
 		int _errors = 0;
@@ -460,6 +458,10 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		}
 		if (_errors > 0)
 			_intermittentErrors += "\n\t Combination: " + _testCombination + " (" + _errors + " errors)";
+	}
+
+	private static void out(String string) {
+//		System.out.println(string);
 	}
 
 	public void test() {
@@ -515,12 +517,15 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		runCurrentCombination();
 	}
 
-	private boolean wasConflictQueryingFrom(String container) {
-		if (!wasReplicationTriggeredQueryingFrom(container)) return false;
-		return _containersWithChangedObjects.containsAll(_direction);
+	private boolean wasConflictWhileReplicatingModificationsQueryingFrom(String container) {
+		if (!wasModificationReplicationTriggeredQueryingFrom(container)) return false;
+		if (_containersWithChangedObjects.containsAll(_direction)) return true;
+		return hasDeletions(other(container));
 	}
 
-	private boolean wasReplicationTriggeredQueryingFrom(String container) {
-		return _containersToQueryFrom.contains(container) && _containersWithChangedObjects.contains(container);
+	private boolean wasModificationReplicationTriggeredQueryingFrom(String container) {
+		if (!_containersToQueryFrom.contains(container)) return false;
+		if (_containersWithDeletedObjects.contains(container)) return false;
+		return _containersWithChangedObjects.contains(container);
 	}
 }

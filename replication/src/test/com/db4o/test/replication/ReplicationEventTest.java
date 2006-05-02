@@ -228,7 +228,7 @@ public class ReplicationEventTest extends ReplicationTestCase {
 				Test.ensure(stateA.getObject() != null);
 				Test.ensure(stateB.getObject() == null);
 
-				event.stopTraversal();
+				event.overrideWith(null);
 			}
 		};
 
@@ -310,7 +310,7 @@ public class ReplicationEventTest extends ReplicationTestCase {
 			public void onReplicate(ReplicationEvent event) {
 				Test.ensure(event.isConflict());
 
-				event.stopTraversal();
+				event.overrideWith(null);
 			}
 		};
 
