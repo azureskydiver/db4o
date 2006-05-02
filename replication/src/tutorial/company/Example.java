@@ -4,10 +4,11 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.replication.ObjectState;
-import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationEvent;
 import com.db4o.replication.ReplicationEventListener;
 import com.db4o.replication.ReplicationSession;
+import com.db4o.replication.hibernate.HibernateReplication;
+
 import org.hibernate.cfg.Configuration;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class Example {
 			}
 		};
 
-		ReplicationSession replication = Replication.begin(objectContainer, hibernateConfiguration, listener);
+		ReplicationSession replication = HibernateReplication.begin(objectContainer, hibernateConfiguration, listener);
 
 		//Query for changed objects
 		ObjectSet changedObjects = replication.providerB().objectsChangedSinceLastReplication();

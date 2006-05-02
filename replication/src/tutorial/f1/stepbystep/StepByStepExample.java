@@ -5,9 +5,10 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.ext.ExtDb4o;
 import com.db4o.query.Predicate;
-import com.db4o.replication.Replication;
-import com.db4o.replication.ReplicationConfigurator;
 import com.db4o.replication.ReplicationSession;
+import com.db4o.replication.hibernate.HibernateReplication;
+import com.db4o.replication.hibernate.ReplicationConfigurator;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -75,7 +76,7 @@ public class StepByStepExample {
 		Configuration hibernate = new Configuration().configure(hibernateConfigurationFileName);
 
 		System.out.println("Starting the first round of replication between db4o and Hibernate");
-		ReplicationSession replication = Replication.begin(db4o, hibernate);
+		ReplicationSession replication = HibernateReplication.begin(db4o, hibernate);
 
 		ObjectSet allObjects = replication.providerA().objectsChangedSinceLastReplication();
 		System.out.println("Iterating all objects changed in db4o, replicating them to Hibernate");
@@ -130,7 +131,7 @@ public class StepByStepExample {
 		Configuration hibernate = new Configuration().configure(hibernateConfigurationFileName);
 
 		System.out.println("Starting the second round of replication between db4o and Hibernate");
-		ReplicationSession replication = Replication.begin(db4o, hibernate);
+		ReplicationSession replication = HibernateReplication.begin(db4o, hibernate);
 
 		ObjectSet allObjects = replication.providerB().objectsChangedSinceLastReplication();
 		System.out.println("Iterating all objects changed in Hibernate, replicating them to db4o");
@@ -176,7 +177,7 @@ public class StepByStepExample {
 		Configuration hibernate = new Configuration().configure(hibernateConfigurationFileName);
 
 		System.out.println("Starting the final round of replication between db4o and Hibernate");
-		ReplicationSession replication = Replication.begin(db4o, hibernate);
+		ReplicationSession replication = HibernateReplication.begin(db4o, hibernate);
 
 		ObjectSet allObjects = replication.providerA().objectsChangedSinceLastReplication(Pilot.class);
 		System.out.println("Iterating all Pilots changed in db4o, replicating them to Hibernate");

@@ -1,6 +1,5 @@
-package com.db4o.replication;
+package com.db4o.replication.hibernate;
 
-import com.db4o.replication.hibernate.ObjectLifeCycleEventsListener;
 import com.db4o.replication.hibernate.impl.ObjectLifeCycleEventsListenerImpl;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
