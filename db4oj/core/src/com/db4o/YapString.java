@@ -74,6 +74,10 @@ public final class YapString extends YapIndependantType {
     public boolean indexNullHandling() {
         return true;
     }
+    
+    public int marshalledLength(MarshallerFamily mf, Object obj){
+        return mf._string.marshalledLength(_stream, obj);
+    }
 
     public Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException {
         return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes);
@@ -152,7 +156,7 @@ public final class YapString extends YapIndependantType {
             return (YapReader)obj;
         }
         if(obj instanceof String) {
-            return StringMarshaller0.writeShort(_stream, (String)obj);
+            return StringMarshaller.writeShort(_stream, (String)obj);
         }
         return null;
     }

@@ -138,15 +138,20 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		return i_object;
 	}
     
+    public YapStream getStream(){
+        if(i_yapClass == null){
+            return null;
+        }
+        return i_yapClass.getStream();
+    }
+    
     // this method will only work client-side or on
     // single ObjectContainers, after the YapClass
     // is set.
     public Transaction getTrans(){
-        if(i_yapClass != null){
-            YapStream stream = i_yapClass.getStream();
-            if(stream != null){
-                return stream.getTransaction();
-            }
+        YapStream stream = getStream();
+        if(stream != null){
+            return stream.getTransaction();
         }
         return null;
     }

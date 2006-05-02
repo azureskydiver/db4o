@@ -76,6 +76,10 @@ class YapArray extends YapIndependantType {
         }
         return tree;
     }
+    
+    public Object comparableObject(Transaction a_trans, Object a_object){
+        throw Exceptions4.virtualException();
+    }
 
     public final void deleteEmbedded(YapWriter a_bytes) {
         int address = a_bytes.readInt();
@@ -164,8 +168,8 @@ class YapArray extends YapIndependantType {
         return i_handler.indexNullHandling();
     }
     
-    public Object comparableObject(Transaction a_trans, Object a_object){
-        throw Exceptions4.virtualException();
+    public int marshalledLength(MarshallerFamily mf, Object obj) {
+        return 0;
     }
 
     int objectLength(Object a_object) {

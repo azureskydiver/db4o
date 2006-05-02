@@ -39,6 +39,10 @@ public abstract class YapJavaClass implements TypeHandler4 {
     public Object coerce(ReflectClass claxx, Object obj) {
         return canHold(claxx) ? obj : No4.INSTANCE;
     }
+    
+    public Object comparableObject(Transaction a_trans, Object a_object) {
+        return a_object;
+    }
 
     public void copyValue(Object a_from, Object a_to) {
         // do nothing
@@ -65,9 +69,9 @@ public abstract class YapJavaClass implements TypeHandler4 {
     public boolean indexNullHandling() {
         return false;
     }
-
-    public Object comparableObject(Transaction a_trans, Object a_object) {
-        return a_object;
+    
+    public int marshalledLength(MarshallerFamily mf, Object obj) {
+        return 0;
     }
 
     public void prepareComparison(Transaction a_trans, Object obj) {

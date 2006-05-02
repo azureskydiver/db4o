@@ -9,8 +9,12 @@ import com.db4o.*;
  */
 class ObjectMarshaller0 extends ObjectMarshaller {
     
-    protected int fieldLength(YapField yf, YapObject yo){
+    protected int linkLength(YapField yf, YapObject yo){
         return yf.linkLength();
+    }
+    
+    protected int marshalledLength(YapField yf, YapObject yo){
+        return 0;
     }
     
     public boolean findOffset(YapClass yc, YapReader a_bytes, YapField a_field) {
@@ -43,7 +47,6 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         } catch (CorruptionException ce) {
         }
     }
-
     
     public YapWriter marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth){
         
@@ -106,7 +109,8 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         }
     }
 
-
-
+    protected int objectLength(YapObject yo) {
+        return headerLength() + linkLength(yo.getYapClass(), yo);
+    }
 
 }

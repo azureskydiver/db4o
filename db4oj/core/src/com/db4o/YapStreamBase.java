@@ -195,6 +195,10 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
             }
         }
     }
+    
+    public int alignToBlockSize(int length){
+        return blocksFor(length) * blockSize();
+    }
 
     public void bind(Object obj, long id) {
         synchronized (i_lock) {
@@ -235,6 +239,17 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         a_yapObject.setStateDirty();
         idTreeAdd(a_yapObject);
         hcTreeAdd(a_yapObject);
+    }
+    
+    public byte blockSize() {
+        return 1;
+    }
+
+    public int blocksFor(long bytes) {
+        int blockLen = blockSize();
+        int result = (int)(bytes / blockLen);
+        if (bytes % blockLen != 0) result++;
+        return result;
     }
     
     public abstract PBootRecord bootRecord();

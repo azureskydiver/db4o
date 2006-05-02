@@ -11,8 +11,15 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     
     private static final byte VERSION = (byte)1;
     
-    protected int fieldLength(YapField yf, YapObject yo){
+    protected int linkLength(YapField yf, YapObject yo){
         return yf.linkLength();
+    }
+    
+    protected int marshalledLength(YapField yf, YapObject yo){
+        Transaction trans = yo.getTrans();
+        Object parentObject = yo.getObject();
+        Object child = yf.getOn(trans, parentObject);
+        return yf.marshalledLength(_family, child);
     }
     
     public boolean findOffset(YapClass yc, YapReader a_bytes, YapField a_field) {
@@ -45,7 +52,10 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
         } catch (CorruptionException ce) {
         }
     }
-
+    
+    protected int objectLength(YapObject yo){
+        return alignedBaseLength(yo) + marshalledLength(yo.getYapClass(), yo);
+    }
     
     public YapWriter marshallNew(Transaction a_trans, YapObject yo, int a_updateDepth){
         
@@ -110,6 +120,20 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
             marshall(yapClass.i_ancestor, a_yapObject, a_object, a_bytes, a_new);
         }
     }
+    
+    protected int marshalledLength(YapClass yc, YapObject yo) {
+        int length = 0;
+        if (yc.i_ancestor != null) {
+            length += marshalledLength(yc.i_ancestor, yo);
+        }
+        if (yc.i_fields != null) {
+            for (int i = 0; i < yc.i_fields.length; i++) {
+                length += marshalledLength(yc.i_fields[i], yo);
+            }
+        }
+        return length;
+    }
+
 
 
 }

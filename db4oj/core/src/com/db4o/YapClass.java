@@ -79,17 +79,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     final void addFieldIndices(YapWriter a_writer, boolean a_new) {
         if(hasIndex() || hasVirtualAttributes()){
             ObjectHeader oh = new ObjectHeader(i_stream, this, a_writer);
-	        addFieldIndices1(oh._marshallerFamily, a_writer, a_new);
-        }
-    }
-
-    private final void addFieldIndices1(MarshallerFamily mf, YapWriter a_writer, boolean a_new) {
-        int fieldCount = a_writer.readInt();
-        for (int i = 0; i < fieldCount; i++) {
-            i_fields[i].addFieldIndex(mf, a_writer, a_new);
-        }
-        if (i_ancestor != null) {
-            i_ancestor.addFieldIndices1(mf, a_writer, a_new);
+            oh._marshallerFamily._object.addFieldIndices(this, a_writer, a_new);
         }
     }
     
@@ -1199,6 +1189,10 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
     boolean isValueType(){
         return Platform4.isValueType(classReflector());
     }
+    
+    public int marshalledLength(MarshallerFamily mf, Object obj) {
+        return 0;
+    }
 
     int memberLength() {
         int length = YapConst.YAPINT_LENGTH;
@@ -1991,6 +1985,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         return str;
     }
+
 
 
 

@@ -19,28 +19,28 @@ class YapFieldUUID extends YapFieldVirtual {
         i_handler = new YLong(stream);
     }
     
-    void addFieldIndex(MarshallerFamily mf, YapWriter a_writer, boolean a_new) {
+    public void addFieldIndex(MarshallerFamily mf, YapWriter writer, boolean isnew) {
 
-        int offset = a_writer._offset;
-        int id = a_writer.readInt();
-        long uuid = YLong.readLong(a_writer);
-        a_writer._offset = offset;
+        int offset = writer._offset;
+        int id = writer.readInt();
+        long uuid = YLong.readLong(writer);
+        writer._offset = offset;
         
-        YapFile yf = (YapFile)a_writer.getStream();
+        YapFile yf = (YapFile)writer.getStream();
         
         if(id == 0){
-            a_writer.writeInt(yf.identity().getID(a_writer.getTransaction()));
+            writer.writeInt(yf.identity().getID(writer.getTransaction()));
         }else{
-            a_writer.incrementOffset(YapConst.YAPINT_LENGTH);
+            writer.incrementOffset(YapConst.YAPINT_LENGTH);
         }
         
         if(uuid == 0){
             uuid = yf.bootRecord().newUUID();
         }
-        YLong.writeLong(uuid, a_writer);
+        YLong.writeLong(uuid, writer);
         
-        if(a_new){
-            addIndexEntry(a_writer, new Long(uuid));
+        if(isnew){
+            addIndexEntry(writer, new Long(uuid));
         }
     }
     

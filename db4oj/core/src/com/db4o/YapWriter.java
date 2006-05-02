@@ -10,6 +10,9 @@ import com.db4o.foundation.network.*;
 /**
  * public for .NET conversion reasons
  * 
+ * TODO: Split this class for individual usecases. Only use the member
+ * variables needed for the respective usecase.
+ * 
  * @exclude
  */
 public final class YapWriter extends YapReader {
@@ -31,6 +34,8 @@ public final class YapWriter extends YapReader {
     // carries updatedepth depth through the update process
     // and carries instantiation information through the reading process 
     private int i_updateDepth = 1;
+    
+    public int _payloadOffset;
 
     public YapWriter(Transaction a_trans, int a_initialBufferSize) {
         i_trans = a_trans;

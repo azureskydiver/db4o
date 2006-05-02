@@ -42,6 +42,9 @@ public class YapClient extends YapStream implements ExtClient {
 	private Db4oDatabase i_db;
 
 	private boolean _doFinalize=true;
+    
+    private byte _blockSize = 1;
+    
 
 	private YapClient() {
 		super(null);
@@ -120,6 +123,10 @@ public class YapClient extends YapStream implements ExtClient {
 	public void backup(String path) throws IOException {
 		Exceptions4.throwRuntimeException(60);
 	}
+    
+    public byte blockSize() {
+        return _blockSize;
+    }
 
 	public PBootRecord bootRecord() {
 		// not available on clients
@@ -422,9 +429,10 @@ public class YapClient extends YapStream implements ExtClient {
 			message.writeString(password);
 			message.write(this, a_socket);
             Msg msg = Msg.readMessage(i_systemTrans, a_socket);
-			if (!Msg.OK.equals(msg)) {
+			if (!Msg.LOGIN_OK.equals(msg)) {
 				throw new IOException(Messages.get(42));
 			}
+            _blockSize = (byte)msg.getPayLoad().readInt();
 		}
 	}
 
