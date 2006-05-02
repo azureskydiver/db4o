@@ -205,11 +205,12 @@ public abstract class ReplicationTestCase {
 	private void doActualTest() {
 		try {
 			actualTest();
-			clean();
-			checkEmpty();
 		} catch (RuntimeException rx) {
 			rx.printStackTrace();
 			throw rx;
+		} finally {
+			clean();
+			checkEmpty();
 		}
 
 		sleep(0);
