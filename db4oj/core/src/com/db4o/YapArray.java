@@ -200,7 +200,7 @@ class YapArray extends YapIndependantType {
         throw Exceptions4.virtualException();
     }
     
-	public Object readQuery(Transaction a_trans, YapReader a_reader, boolean a_toArray) throws CorruptionException{
+	public Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader, boolean a_toArray) throws CorruptionException{
 		YapReader bytes = a_reader.readEmbeddedObject(a_trans);
 		if (bytes == null) {
 			return null;
@@ -208,19 +208,19 @@ class YapArray extends YapIndependantType {
 		if(Deploy.debug){
 		    bytes.readBegin(identifier());
 		}
-		Object array = read1Query(a_trans, bytes);
+		Object array = read1Query(a_trans,mf, bytes);
 		if (Deploy.debug) {
 			bytes.readEnd();
 		}
 		return array;
 	}
 	
-	Object read1Query(Transaction a_trans, YapReader a_reader) throws CorruptionException{
+	Object read1Query(Transaction a_trans, MarshallerFamily mf, YapReader a_reader) throws CorruptionException{
 		int[] elements = new int[1];
         Object ret = readCreate(a_trans, a_reader, elements);
 		if(ret != null){
 			for (int i = 0; i < elements[0]; i++) {
-                _reflectArray.set(ret, i, i_handler.readQuery(a_trans, a_reader, true));
+                _reflectArray.set(ret, i, i_handler.readQuery(a_trans, mf, a_reader, true));
 			}
 		}
 		return ret;

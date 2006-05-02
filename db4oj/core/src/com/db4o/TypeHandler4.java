@@ -41,7 +41,7 @@ public interface TypeHandler4 extends Indexable4
     
 	Object readIndexEntry(MarshallerFamily mf, YapWriter writer) throws CorruptionException;
 	
-	Object readQuery(Transaction trans, YapReader reader, boolean toArray) throws CorruptionException;
+	Object readQuery(Transaction trans, MarshallerFamily mf, YapReader reader, boolean toArray) throws CorruptionException;
 	
 	boolean supportsIndex();
 	

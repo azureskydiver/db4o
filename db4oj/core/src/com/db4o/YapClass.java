@@ -609,34 +609,26 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         }
         return true;
     }
-
-    
-//  The following code was a fix attempt for the circular dependancies bug in the 3.0 BETA.
-//  It should not be necessary, if we make sure that YapObject#continueSet() is executed
-//  late every time.
-    
-//    void ensureFieldYapclasses(Transaction a_trans, Object a_obj){
-//        if(i_fields != null){
-//            for (int i = 0; i < i_fields.length; i++) {
-//                i_fields[i].ensureFieldYapclasses(a_trans, a_obj);
-//            }
-//        }
-//        if(i_ancestor != null){
-//            i_ancestor.ensureFieldYapclasses(a_trans, a_obj);
-//        }
-//    }
     
     public final boolean equals(TypeHandler4 a_dataType) {
         return (this == a_dataType);
     }
 
-    boolean findOffset(YapReader a_bytes, YapField a_field) {
+    // Scrolls offset in passed reader to the offset the passed field should
+    // be read at.
+	// returns null if not successful, or MarshallerFamily from header
+	// if it is successful
+    final MarshallerFamily findOffset(YapReader a_bytes, YapField a_field) {
         if (a_bytes == null) {
-            return false;
+            return null;
         }
         a_bytes._offset = 0;
-
-        return new ObjectHeader(i_stream, this, a_bytes).objectMarshaller().findOffset(this, a_bytes, a_field);
+        ObjectHeader oh = new ObjectHeader(i_stream, this, a_bytes);
+        boolean res = oh.objectMarshaller().findOffset(this, a_bytes, a_field);
+        if(! res){
+            return null;
+        }
+        return oh._marshallerFamily;
     }
 
     void forEachYapField(Visitor4 visitor) {
@@ -1370,7 +1362,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass, UseS
         return null;
     }
     
-    public Object readQuery(Transaction a_trans, YapReader a_reader, boolean a_toArray) {
+    public Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader, boolean a_toArray) {
         try {
             return a_trans.i_stream.getByID2(a_trans, a_reader.readInt());
         } catch (Exception e) {

@@ -47,6 +47,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 	// temporary yapField and member for one field during evaluation
 	YapField _yapField; // null denotes null object
+    
+    MarshallerFamily _marshallerFamily;
 
 	private QCandidate(QCandidates qcandidates) {
 		super(0);
@@ -71,7 +73,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 	public Object shallowClone() {
 		QCandidate qcan = new QCandidate(_candidates);
-		qcan._bytes = _bytes;
+        qcan.setBytes(_bytes);
 		qcan._dependants = _dependants;
 		qcan._include = _include;
 		qcan._member = _member;
@@ -95,7 +97,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			_yapClass = stream.getYapClass(stream.reflector()
 					.forObject(_member), false);
 			_key = (int) stream.getID(_member);
-			_bytes = stream.readReaderByID(getTransaction(), _key);
+            setBytes(stream.readReaderByID(getTransaction(), _key));
 		}
 	}
 
@@ -373,10 +375,9 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	public Object getObject() {
 		Object obj = value(true);
 		if (obj instanceof YapReader) {
-			/* CHANGED (pr) */
 			YapReader reader = (YapReader) obj;
 			int offset = reader._offset;
-			obj = reader.toString(getTransaction());
+            obj = _marshallerFamily._string.readFromOwnSlot(getStream(), reader); 
 			reader._offset = offset;
 		}
 		return obj;
@@ -476,7 +477,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 					if (DTrace.enabled) {
 						DTrace.CANDIDATE_READ.log(_key);
 					}
-					_bytes = getStream().readReaderByID(getTransaction(), _key);
+                    setBytes(getStream().readReaderByID(getTransaction(), _key));
 					if (_bytes == null) {
 						_include = false;
 					}
@@ -587,8 +588,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
             return;
 		} 
 		_yapField = a_field.getYapField(_yapClass);
-		if (_yapField == null
-				| !_yapClass.findOffset(_bytes, _yapField)) {
+        
+        _marshallerFamily = _yapClass.findOffset(_bytes, _yapField);
+        
+		if (_yapField == null || _marshallerFamily == null ) {
 			if (_yapClass.holdsAnyClass()) {
 				_yapField = null;
 			} else {
@@ -610,7 +613,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			} else {
 				int offset = _bytes._offset;
 				try {
-					_member = _yapField.readQuery(getTransaction(), _bytes);
+					_member = _yapField.readQuery(getTransaction(),_marshallerFamily, _bytes);
 				} catch (CorruptionException ce) {
 					_member = null;
 				}
@@ -620,4 +623,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		}
 		return _member;
 	}
+    
+    void setBytes(YapReader bytes){
+        _bytes = bytes;
+    }
 }

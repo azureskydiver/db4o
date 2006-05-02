@@ -1252,7 +1252,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
 
     abstract void readBytes(byte[] bytes, int address, int addressOffset, int length);
 
-    final YapReader readObjectReaderByAddress(int a_address, int a_length) {
+    public final YapReader readObjectReaderByAddress(int a_address, int a_length) {
         if (a_address > 0) {
 
             // TODO: possibly load from cache here
@@ -1265,7 +1265,7 @@ public abstract class YapStreamBase implements TransientClass, Internal4, YapStr
         return null;
     }
 
-    final YapWriter readObjectWriterByAddress(Transaction a_trans,
+    public final YapWriter readObjectWriterByAddress(Transaction a_trans,
         int a_address, int a_length) {
         if (a_address > 0) {
             // TODO:

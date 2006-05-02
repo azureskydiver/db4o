@@ -76,25 +76,11 @@ public final class YapString extends YapIndependantType {
     }
 
     public Object read(MarshallerFamily mf, YapWriter a_bytes) throws CorruptionException {
-        return read1(a_bytes.readEmbeddedObject());
+        return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes);
     }
     
     public Object readIndexEntry(MarshallerFamily mf, YapWriter a_writer) throws CorruptionException{
-        return a_writer.readEmbeddedObject();
-    }
-    
-    Object read1(YapReader bytes) throws CorruptionException {
-		if (bytes == null) {
-			return null;
-		}
-		if (Deploy.debug) {
-			bytes.readBegin(YapConst.YAPSTRING);
-		}
-		String ret = readShort(bytes);
-		if (Deploy.debug) {
-			bytes.readEnd();
-		}
-		return ret;
+        return mf._string.readIndexEntry(a_writer);
     }
     
     public TypeHandler4 readArrayWrapper(Transaction a_trans, YapReader[] a_bytes) {
@@ -110,32 +96,15 @@ public final class YapString extends YapIndependantType {
         return new int[] {a_reader.readInt(), a_reader.readInt()};
     }
 
-	public Object readQuery(Transaction a_trans, YapReader a_reader, boolean a_toArray) throws CorruptionException{
-	    YapReader reader = a_reader.readEmbeddedObject(a_trans);
+	public Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader, boolean a_toArray) throws CorruptionException{
+	    YapReader reader = mf._string.readSlotFromParentSlot(a_trans.i_stream, a_reader);
 	    if(a_toArray) {
 	        if(reader != null) {
-	            return reader.toString(a_trans);
+                return mf._string.readFromOwnSlot(a_trans.i_stream, reader);
 	        }
 	    }
 	    return reader;
 	}
-	
-    final String readShort(YapReader a_bytes) throws CorruptionException {
-        int length = a_bytes.readInt();
-        if (length > YapConst.MAXIMUM_BLOCK_SIZE) {
-            throw new CorruptionException();
-        }
-        if (length > 0) {
-            String str = i_stringIo.read(a_bytes, length);
-            if(! Deploy.csharp){
-                if(_stream.i_config.internStrings()){
-                    str = str.intern();
-                }
-            }
-            return str;
-        }
-        return "";
-    }
     
     void setStringIo(YapStringIO a_io) {
         i_stringIo = a_io;
@@ -157,7 +126,7 @@ public final class YapString extends YapIndependantType {
     }
     
     public Object writeNew(Object a_object, YapWriter a_bytes) {
-        return MarshallerFamily.current()._string.marshall(this, a_object, a_bytes);
+        return MarshallerFamily.current()._string.marshall(a_object, a_bytes);
     }
 
     final void writeShort(String a_string, YapReader a_bytes) {
@@ -183,16 +152,7 @@ public final class YapString extends YapIndependantType {
             return (YapReader)obj;
         }
         if(obj instanceof String) {
-            String str = (String)obj;
-            YapReader reader = new YapReader(i_stringIo.length(str));
-            if(Deploy.debug) {
-                reader.writeBegin(YapConst.YAPSTRING, i_stringIo.length(str));
-            }
-            writeShort(str, reader);
-            if(Deploy.debug) {
-                reader.writeEnd();
-            }
-            return reader;
+            return StringMarshaller0.writeShort(_stream, (String)obj);
         }
         return null;
     }

@@ -98,7 +98,7 @@ public class YapReader {
 	    _offset += length;
 	}
     
-	final YapReader readEmbeddedObject(Transaction a_trans) {
+	public final YapReader readEmbeddedObject(Transaction a_trans) {
 		return a_trans.i_stream.readObjectReaderByAddress(readInt(), readInt());
 	}
 	
@@ -107,7 +107,7 @@ public class YapReader {
 		a_stream.i_handlers.decrypt(this);
 	}
 
-    void readEnd() {
+    public void readEnd() {
         if (Deploy.debug && Deploy.brackets) {
             if (readByte() != YapConst.YAPEND) {
                 throw new RuntimeException("YapBytes.readEnd() YAPEND expected");
@@ -145,9 +145,16 @@ public class YapReader {
         System.arraycopy(a_bytes, 0, _buffer, 0, getLength());
     }
     
-    String toString(Transaction a_trans) {
+    public String toString() {
         try {
-            return (String)a_trans.i_stream.i_handlers.i_stringHandler.read1(this);
+            String str = "";
+            for (int i = 0; i < _buffer.length; i++) {
+                if(i > 0){
+                   str += " , ";
+                }
+                str += _buffer[i];
+            }
+            return str;
         } catch (Exception e) {
             if(Deploy.debug || Debug.atHome) {
                 e.printStackTrace();

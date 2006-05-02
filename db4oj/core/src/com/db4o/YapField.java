@@ -651,14 +651,14 @@ public class YapField implements StoredField {
         return i_handler.read(mf, a_bytes);
     }
 
-    Object readQuery(Transaction a_trans, YapReader a_reader)
+    Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader)
         throws CorruptionException {
-        return i_handler.readQuery(a_trans, a_reader, false);
+        return i_handler.readQuery(a_trans, mf, a_reader, false);
     }
 
     YapField readThis(YapStream a_stream, YapReader a_reader) {
         try {
-            i_name = a_stream.i_handlers.i_stringHandler.readShort(a_reader);
+            i_name = StringMarshaller0.readShort(a_stream, a_reader);
         } catch (CorruptionException ce) {
             i_handler = null;
             return this;

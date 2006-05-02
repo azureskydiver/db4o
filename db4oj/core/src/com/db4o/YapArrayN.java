@@ -60,13 +60,13 @@ final class YapArrayN extends YapArray {
     }
     
     
-	final Object read1Query(Transaction a_trans, YapReader a_bytes) throws CorruptionException {
+	final Object read1Query(Transaction a_trans, MarshallerFamily mf, YapReader a_bytes) throws CorruptionException {
 		Object[] ret = new Object[1];
 		int[] dim = read1Create(a_trans, a_bytes, ret);
         if(ret[0] != null){
 			Object[] objects = new Object[elementCount(dim)];
 			for (int i = 0; i < objects.length; i++) {
-				objects[i] = i_handler.readQuery(a_trans, a_bytes, true);
+				objects[i] = i_handler.readQuery(a_trans, mf, a_bytes, true);
 			}
             _reflectArray.shape(objects, 0, ret[0], dim, 0);
         }
