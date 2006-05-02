@@ -16,6 +16,6 @@ import com.db4o.replication.*;
  @since dRS 1.0 */
 public class DefaultReplicationEventListener implements ReplicationEventListener {
 
-	public void onReplicate(ReplicationEvent event) {}
+	public void onReplicate(ReplicationEvent e) {}
 	
 }

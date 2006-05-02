@@ -15,7 +15,7 @@ public interface ReplicationEventListener {
 	/**
 	 * invoked when a replication of an object occurs.
 	 *
-	 * @param event
+	 * @param e
 	 */
-	void onReplicate(ReplicationEvent event);
+	void onReplicate(ReplicationEvent e);
 }
