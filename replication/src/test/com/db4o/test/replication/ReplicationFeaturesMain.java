@@ -53,7 +53,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 				exception = e;
 			}
 		}
-		
+
 		if (exception != null) throw exception;
 	}
 
@@ -192,10 +192,10 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 		boolean successful = tryToReplicate(replication);
 
-		if (successful) {
-			replication.commit();
+		replication.commit();
+
+		if (successful)
 			checkNames();
-		}
 
 		clean();
 	}
@@ -211,7 +211,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 			ensure(isReplicationConflictExceptionExpectedReplicatingModifications());
 			return false;
 		}
-		
+
 		try {
 			if (isDeletionReplicationTriggered())
 				replication.replicateDeletions(Replicated.class);
@@ -229,7 +229,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	private void replicate(final ReplicationSession replication, String originName) {
 		ReplicationProvider origin = container(originName);
 		ReplicationProvider destination = container(other(originName));
-		
+
 		if (!_containersToQueryFrom.contains(originName)) return;
 
 		replicateQueryingFrom(replication, origin, destination);
@@ -292,7 +292,7 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		replication.commit();
 	}
 
-	
+
 	private boolean isChangedNameExpected(String changedContainer, String inspectedContainer) {
 		if (!hasChanges(changedContainer)) return false;
 		if (isDeletionExpected(inspectedContainer)) return false;
@@ -300,11 +300,11 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 		if (inspectedContainer == changedContainer)
 			return !didReceiveRemoteState(inspectedContainer);
-		
+
 		return didReceiveRemoteState(inspectedContainer);
 	}
 
-	
+
 	private boolean didReceiveRemoteState(String inspectedContainer) {
 		String other = other(inspectedContainer);
 
@@ -323,11 +323,11 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 		//No override to prevail. Default replication behavior.
 
 		if (hasChanges(inspectedContainer)) return false; //A conflict would have been ignored long ago.
-		
+
 		return isModificationReplicationTriggered();
 	}
 
-	
+
 	private boolean isDeletionReplicationTriggered() {
 		return !_containersWithDeletedObjects.isEmpty();
 	}
@@ -354,10 +354,10 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 
 		String other = other(inspectedContainer);
 		if (isDirectionTo(other)) return hasDeletions(inspectedContainer);
-		
+
 		if (_containerStateToPrevail.contains(other))
 			return hasDeletions(other);
-		
+
 		//_containerStateToPrevail is empty (default replication behaviour)
 		return isDeletionReplicationTriggered();
 	}
@@ -365,10 +365,10 @@ public class ReplicationFeaturesMain extends ReplicationTestCase {
 	private boolean isNewNameExpected(String origin, String inspected) {
 		if (!_containersWithNewObjects.contains(origin)) return false;
 		if (origin.equals(inspected)) return true;
-		
+
 		if (_containerStateToPrevail == null) return false;
 		if (_containerStateToPrevail.contains(inspected)) return false;
-		
+
 		if (!_containersToQueryFrom.contains(origin)) return false;
 		return _direction.contains(inspected);
 	}
