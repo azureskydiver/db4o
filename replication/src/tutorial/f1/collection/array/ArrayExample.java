@@ -4,8 +4,9 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.ext.ExtDb4o;
-import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
+import com.db4o.replication.hibernate.HibernateReplication;
+
 import f1.collection.Car;
 import org.hibernate.cfg.Configuration;
 
@@ -40,7 +41,7 @@ public class ArrayExample {
 
 		Configuration config = new Configuration().configure("f1/collection/array/hibernate.cfg.xml");
 
-		ReplicationSession replication = Replication.begin(objectContainer, config);
+		ReplicationSession replication = HibernateReplication.begin(objectContainer, config);
 
 		ObjectSet changed = replication.providerA().objectsChangedSinceLastReplication();
 

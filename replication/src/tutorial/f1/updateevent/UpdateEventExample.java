@@ -1,6 +1,7 @@
 package f1.updateevent;
 
-import com.db4o.replication.ReplicationConfigurator;
+import com.db4o.replication.hibernate.ReplicationConfigurator;
+
 import f1.collection.Car;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

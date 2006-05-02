@@ -4,8 +4,9 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.ext.ExtDb4o;
-import com.db4o.replication.Replication;
 import com.db4o.replication.ReplicationSession;
+import com.db4o.replication.hibernate.HibernateReplication;
+
 import org.hibernate.cfg.Configuration;
 
 import java.io.File;
@@ -29,7 +30,7 @@ public class SingleObjectExample {
 
 		Configuration config = new Configuration().configure("f1/singleobject/hibernate.cfg.xml");
 
-		ReplicationSession replication = Replication.begin(objectContainer, config);
+		ReplicationSession replication = HibernateReplication.begin(objectContainer, config);
 		ObjectSet it = replication.providerA().objectsChangedSinceLastReplication();
 
 		while (it.hasNext()) {
