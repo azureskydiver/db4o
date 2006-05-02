@@ -8,7 +8,7 @@ import com.db4o.foundation.Visitor4;
 import com.db4o.replication.ReplicationProvider;
 
 
-interface ReplicationProviderInside extends ReplicationProvider {
+public interface ReplicationProviderInside extends ReplicationProvider {
 	void activate(Object object);
 
 	/**
