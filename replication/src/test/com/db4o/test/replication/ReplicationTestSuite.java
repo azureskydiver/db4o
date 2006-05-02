@@ -11,7 +11,7 @@ import com.db4o.test.replication.provider.ReplicationProviderTest;
 
 public class ReplicationTestSuite extends TestSuite {
 	public Class[] tests() {
-		return one();
+		return all();
 	}
 
 	private Class[] all() {
@@ -23,7 +23,6 @@ public class ReplicationTestSuite extends TestSuite {
 				ListTest.class,
 				MapTest.class,
 				ReplicationAfterDeletionTest.class,
-				ReplicationFeaturesMain.class,
 				SimpleArrayTest.class,
 				SimpleParentChild.class,
 				SingleTypeCollectionReplicationTest.class,
@@ -38,6 +37,7 @@ public class ReplicationTestSuite extends TestSuite {
 				R0to4Runner.class,
 				ArrayReplicationTest.class,
 				MixedTypesCollectionReplicationTest.class,
+				ReplicationFeaturesMain.class,
 		};
 	}
 

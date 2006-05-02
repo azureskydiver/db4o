@@ -40,10 +40,6 @@ public class SingleTypeCollectionReplicationTest extends ReplicationTestCase {
 		Test.ensureEquals("three", replica.list.get(0));
 	}
 
-	protected void clean() {
-		delete(new Class[]{CollectionHolder.class, Map.class});
-	}
-
 	public void test() {
 		super.test();
 	}
