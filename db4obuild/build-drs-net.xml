@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project name="drs.net" default="build">
+	<import file="common.xml" />
+	
+	<property name="drs.src.dir" location="../replication/src" />
+	<property name="drs.net.dir" location="${dir.dist}/drs.net" />
+	<property name="conversion.workspace.dir" location="${drs.net.dir}/workspace" />
+	
+	<target name="build" depends="sharpen">
+	</target>
+	
+	<target name="sharpen" depends="prepare-conversion-workspace, install-javatocsharp-plugin">
+		<sharpen srcfolder="drs/core" workspace="${conversion.workspace.dir}">
+			<args>
+				<arg value="-cp" />
+				<arg path="${file.java5.jar}" />
+			</args>
+		</sharpen>
+	</target>
+	
+	<target name="prepare-conversion-workspace" depends="init">
+		<delete dir="${conversion.workspace.dir}" />
+		<mkdir dir="${conversion.workspace.dir}" />
+		
+		<copy todir="${conversion.workspace.dir}/drs">
+			<fileset dir="${drs.src.dir}">
+				<include name="core/**/*.java" />
+				<exclude name="**/hibernate/**" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="init">
+	</target>
+</project>

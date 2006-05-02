@@ -25,9 +25,7 @@
 	eclipse.home=c:/Program Files/Eclipse	
 	csc.executable.path.net2=C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
 -->
-	<property environment="env" />
-	<property file="machine.properties" />
-	<property file="ant.properties" />
+	<import file="common.xml" />
 	
 	<taskdef name="filehead" classname="com.db4o.devtools.ant.FileHeadAntTask">
 		<classpath>
@@ -1113,39 +1111,8 @@
 		<copy todir="${dir.dist.mono}/doc/api">
 			<fileset dir="${dir.dist.ndoc}" includes="**/**" />
 		</copy>
-	</target>
-	
-	<target name="install-javatocsharp-plugin">
+	</target>	
 		
-		<property name="javatocsharp.core.dir" location="../javatocsharp.core" />
-		
-		<mkdir dir="${javatocsharp.core.dir}/bin" />
-		
-		<echo>${eclipse.home}/plugins</echo>
-		<javac debug="true" source="1.5" destdir="${javatocsharp.core.dir}/bin" srcdir="${javatocsharp.core.dir}/src">
-			<classpath>
-				<fileset dir="${eclipse.home}/plugins">
-					<include name="org.eclipse.osgi_*/osgi.jar" />
-					<include name="org.eclipse.core.resources_*/resources.jar" />
-					<include name="org.eclipse.core.runtime_*/runtime.jar" />
-					<include name="org.eclipse.jdt.core_*/jdtcore.jar" />
-					<!-- redundant entries: in newer eclipse installs those reside in jars -->
-					<include name="org.eclipse.osgi_*.jar" />
-					<include name="org.eclipse.core.resources_*.jar" />
-					<include name="org.eclipse.core.runtime_*.jar" />
-					<include name="org.eclipse.jdt.core_*.jar" />
-				</fileset>
-			</classpath>
-		</javac>
-		
-		<property name="plugin.dir" value="${plugins.home}/javatocsharp.core_1.0.0" />
-		<delete dir="${plugin.dir}" />
-		<mkdir dir="${plugin.dir}" />
-		<jar destfile="${plugin.dir}/javatocsharp.jar" basedir="${javatocsharp.core.dir}/bin" />
-		<copy todir="${plugin.dir}" file="${javatocsharp.core.dir}/plugin.xml" />
-
-	</target>
-	
 	<target name="prepare-conversion-workspace" depends="init">
 		<delete dir="${target.dir}" />
 		<mkdir dir="${target.dir}" />
@@ -1395,7 +1362,7 @@
 				
 			</fileset>
 		</copy>
-	</target>
+	</target>	
 	
 	<target name="sharpen" description="create .NET sources" depends="install-javatocsharp-plugin" unless="skip.conversion">
 		
@@ -1405,18 +1372,8 @@
 			<param name="target.dir" value="${sharpen.src.dir}" />
 		</antcall>
 		
-		<java jvm="${file.jvm.jdk1.5}" classname="org.eclipse.core.launcher.Main" fork="yes" failonerror="true">
-			<classpath>
-				<pathelement location="${eclipse.home}/startup.jar" />
-			</classpath>
-			
-			<arg value="-data" />
-			<arg file="${sharpen.src.dir}" />
-			<arg value="-application" />
-			<arg value="javatocsharp.core.application" />
-			<arg value="db4oj/core/src" />
-			
-		</java>
+		<sharpen workspace="${sharpen.src.dir}" srcfolder="db4oj/core/src">
+		</sharpen>
 		
 		<antcall target="copy-sharpened-files">
 			<param name="src.dir" value="${sharpen.src.dir}/db4ojcsharp/src" />
