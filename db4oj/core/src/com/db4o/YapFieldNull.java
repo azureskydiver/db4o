@@ -18,7 +18,7 @@ class YapFieldNull extends YapField{
 		return null;
 	}
 	
-	Object readQuery(Transaction a_trans, YapReader a_reader) throws CorruptionException {
+	Object readQuery(Transaction a_trans, MarshallerFamily mf, YapReader a_reader) throws CorruptionException {
 		return null;
 	}
 }

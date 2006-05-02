@@ -107,8 +107,8 @@ public final class YapConst
 	static final int PREFETCH_ID_COUNT = 10;
 	static final int PREFETCH_OBJECT_COUNT = 10;
 	
-	// chaos fixery
-	static final int MAXIMUM_BLOCK_SIZE = 70000000; // 70 MB 
+	// TODO: Consider to make configurable
+    public static final int MAXIMUM_BLOCK_SIZE = 70000000; // 70 MB   
 	static final int MAXIMUM_ARRAY_ENTRIES = 7000000; // 7 Million 
 	static final int MAXIMUM_ARRAY_ENTRIES_PRIMITIVE = MAXIMUM_ARRAY_ENTRIES * 100; // 70 MB for byte arrays
 	

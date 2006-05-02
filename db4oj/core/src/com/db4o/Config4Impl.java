@@ -641,7 +641,7 @@ implements Configuration, DeepClone, MessageSender, FreespaceConfiguration {
 		return _config.getAsInt(GENERATE_VERSION_NUMBERS);
 	}
 
-	boolean internStrings() {
+	public boolean internStrings() {
 		return _config.getAsBoolean(INTERN_STRINGS);
 	}
 	

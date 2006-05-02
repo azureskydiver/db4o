@@ -87,7 +87,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return null;
     }
 
-    public Object readQuery(Transaction trans, YapReader reader, boolean toArray)
+    public Object readQuery(Transaction trans, MarshallerFamily mf, YapReader reader, boolean toArray)
         throws CorruptionException {
         return read1(reader);
     }
