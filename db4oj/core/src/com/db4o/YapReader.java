@@ -140,6 +140,12 @@ public class YapReader {
         }
 		
     }
+    
+    public YapReader readPayloadReader(int offset, int length){
+        YapReader payLoad = new YapReader(length);
+        System.arraycopy(_buffer,offset, payLoad._buffer, 0, length);
+        return payLoad;
+    }
 
     void replaceWith(byte[] a_bytes) {
         System.arraycopy(a_bytes, 0, _buffer, 0, getLength());

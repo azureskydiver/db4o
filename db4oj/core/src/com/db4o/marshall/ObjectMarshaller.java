@@ -34,19 +34,17 @@ public abstract class ObjectMarshaller {
             address = trans.i_file.getSlot(length); 
         }
         trans.setPointer(id, address, length);
-        YapWriter writer = createWriter(trans, updateDepth, id, address, length);
-        
-        writer._payloadOffset = alignedBaseLength(yo);
-        return writer;
+        return createWriter(trans, yo, updateDepth, id, address, length);
     }
 
-    protected YapWriter createWriter(Transaction a_trans, int a_updateDepth, int id, int address, int length) {
+    protected YapWriter createWriter(Transaction a_trans, YapObject yo, int a_updateDepth, int id, int address, int length) {
         YapWriter writer = new YapWriter(a_trans, length);
         writer.useSlot(id, address, length);
         if (Deploy.debug) {
             writer.writeBegin(YapConst.YAPOBJECT, length);
         }
         writer.setUpdateDepth(a_updateDepth);
+        writer._payloadOffset = alignedBaseLength(yo);
         return writer;
     }
     

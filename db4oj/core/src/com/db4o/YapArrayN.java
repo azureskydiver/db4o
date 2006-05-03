@@ -103,7 +103,10 @@ final class YapArrayN extends YapArray {
         }
         Object[] objects = allElements(a_object);
         for (int i = 0; i < objects.length; i++) {
-            i_handler.writeNew(element(objects, i), a_bytes);
+            
+            // FIXME: SM remove marshallerfamily 0
+
+            i_handler.writeNew(MarshallerFamily.forVersion(0), element(objects, i), a_bytes);
         }
     }
 

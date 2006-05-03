@@ -319,11 +319,16 @@ public class YapObject extends YapMeta implements ObjectInfo{
 		
 		// Removing SecondClass objects from the reference tree
 		// causes problems in C/S cascaded delete.
+        
+        
 
+		// FIXME: SM In the final version of the new marshaller 
+		//        primitives should never show up here.
 		if (i_yapClass.isPrimitive()){
-            
-            setID(((YapClassPrimitive)i_yapClass).marshall(a_trans, a_object)); 
-            
+            YapClassPrimitive ycp = (YapClassPrimitive)i_yapClass;
+            TypeHandler4 handler = ycp.i_handler;
+            int id = MarshallerFamily.current()._primitive.marshall(a_trans, ycp, a_object, null);
+            setID(id);
 			return false;
 		}
 

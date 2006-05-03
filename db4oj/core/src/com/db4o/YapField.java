@@ -341,15 +341,15 @@ public class YapField implements StoredField {
                 || dotnetValueType) {
                 int preserveCascade = a_bytes.cascadeDeletes();
                 a_bytes.setCascadeDeletes(1);
-                i_handler.deleteEmbedded(a_bytes);
+                i_handler.deleteEmbedded(mf, a_bytes);
                 a_bytes.setCascadeDeletes(preserveCascade);
             }else if(i_config != null && i_config.cascadeOnDelete() == YapConst.NO){
                 int preserveCascade = a_bytes.cascadeDeletes();
                 a_bytes.setCascadeDeletes(0);
-                i_handler.deleteEmbedded(a_bytes);
+                i_handler.deleteEmbedded(mf, a_bytes);
                 a_bytes.setCascadeDeletes(preserveCascade);
             } else {
-                i_handler.deleteEmbedded(a_bytes);
+                i_handler.deleteEmbedded(mf, a_bytes);
             }
         }
     }

@@ -7,31 +7,14 @@ import com.db4o.*;
 
 public abstract class StringMarshaller {
     
+    
+    public abstract boolean inlinedStrings();
+    
     protected final int linkLength(){
         return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;
     }
     
-    public Object marshall(Object a_object, YapWriter a_bytes) {
-        if (a_object == null) {
-            a_bytes.writeEmbeddedNull();
-            return null;
-        }
-        
-        YapStream stream = a_bytes.getStream();
-        String str = (String) a_object;
-        int length = stream.stringIO().length(str);
-        
-        YapWriter bytes = new YapWriter(a_bytes.getTransaction(), length);
-        
-        writeShort(stream, str, bytes);
-        
-        bytes.setID(a_bytes._offset);
-        
-        a_bytes.getStream().writeEmbedded(a_bytes, bytes);
-        a_bytes.incrementOffset(YapConst.YAPID_LENGTH);
-        a_bytes.writeInt(length);
-        return bytes;
-    }
+    public abstract Object marshall(Object a_object, YapWriter a_bytes);
     
     public static YapReader writeShort(YapStream stream, String str){
         YapReader reader = new YapReader(stream.stringIO().length(str));
@@ -51,9 +34,7 @@ public abstract class StringMarshaller {
         }
     }
     
-    public YapWriter readIndexEntry(YapWriter parentSlot) throws CorruptionException{
-        return parentSlot.getStream().readObjectWriterByAddress(parentSlot.getTransaction(), parentSlot.readInt(), parentSlot.readInt());
-    }
+    public abstract YapWriter readIndexEntry(YapWriter parentSlot) throws CorruptionException;
     
     public String readFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException {
         return read(stream, readSlotFromParentSlot(stream, reader));
@@ -62,9 +43,7 @@ public abstract class StringMarshaller {
     // TODO: Instead of working with YapReader objects to transport
     // string buffers, we should consider to have a specific string
     // buffer class, that allows comparisons and carries it's encoding.
-    public YapReader readSlotFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException {
-        return reader.readEmbeddedObject(stream.getTransaction());
-    }
+    public abstract YapReader readSlotFromParentSlot(YapStream stream, YapReader reader) throws CorruptionException;
     
     public String readFromOwnSlot(YapStream stream, YapReader reader){
         try {
@@ -77,7 +56,7 @@ public abstract class StringMarshaller {
         return "";
     }
     
-    public String read(YapStream stream, YapReader reader) throws CorruptionException {
+    private final String read(YapStream stream, YapReader reader) throws CorruptionException {
         if (reader == null) {
             return null;
         }

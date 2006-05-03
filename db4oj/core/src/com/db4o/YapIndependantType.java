@@ -28,15 +28,8 @@ public abstract class YapIndependantType implements TypeHandler4 {
 	public final void copyValue(Object a_from, Object a_to){
 		// do nothing
 	}
-	
-	/** overriden in YapArray */
-	public void deleteEmbedded(YapWriter a_bytes){
-		int address = a_bytes.readInt();
-		int length = a_bytes.readInt();
-		if(address > 0){
-			a_bytes.getTransaction().slotFreeOnCommit(address, address, length);
-		}
-	}
+    
+    public abstract void deleteEmbedded(MarshallerFamily mf, YapWriter a_bytes);
     
     public final int linkLength(){
         return YapConst.YAPINT_LENGTH + YapConst.YAPID_LENGTH;

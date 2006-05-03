@@ -92,9 +92,9 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
         Object a_object
         ) {
 
-        int length = yapClass.objectLength() + 1;
+        int length = objectLength(a_yapObject);
         
-        YapWriter writer = createWriter(a_trans, a_updateDepth, a_id, 0, length);
+        YapWriter writer = createWriter(a_trans, a_yapObject, a_updateDepth, a_id, 0, length);
         
         yapClass.checkUpdateDepth(writer);
         

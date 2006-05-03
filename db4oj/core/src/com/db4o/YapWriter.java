@@ -328,6 +328,34 @@ public final class YapWriter extends YapReader {
         i_trans.i_file.writeBytes(this, i_address, _addressOffset);
         i_trans.i_stream.i_handlers.decrypt(this);
     }
+    
+    public void writePayload(YapReader payLoad){
+        System.arraycopy(payLoad._buffer, 0, _buffer, _payloadOffset, payLoad._buffer.length);
+        _payloadOffset += payLoad._buffer.length;
+    }
+    
+    public YapWriter readPayloadWriter(int offset, int length){
+        
+        YapStream stream = getStream();
+        
+        int blockedOffset = offset / stream.blockSize();
+        
+        // FIXME: SM Check block conditions 
+        if( (offset % stream.blockSize()) != 0 ){
+            throw new RuntimeException("SM check here");
+        }
+        
+        int payLoadAddress = i_address + blockedOffset;
+        
+        YapWriter payLoad = new YapWriter(i_trans, payLoadAddress, length);
+        System.arraycopy(_buffer,offset, payLoad._buffer, 0, length);
+        
+        payLoad.setID(payLoadAddress);
+        payLoad._addressOffset = _addressOffset;
+        
+        return payLoad;
+    }
+
 
 
     // turning writing around since our Collection world is the wrong
